@@ -81,7 +81,12 @@ class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
 
-    public final void deleteEmbedded(YapWriter a_bytes) {
+    public final void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
+        
+        // FIXME: SM remove
+        mf = MarshallerFamily.forVersion(0);
+        
+        
         int address = a_bytes.readInt();
         int length = a_bytes.readInt();
         if (address > 0) {
@@ -98,7 +103,7 @@ class YapArray extends YapIndependantType {
                     }
                     bytes.setCascadeDeletes(a_bytes.cascadeDeletes());
                     for (int i = elementCount(trans, bytes); i > 0; i--) {
-                        i_handler.deleteEmbedded(bytes);
+                        i_handler.deleteEmbedded(mf, bytes);
                     }
                 }
             }
@@ -183,6 +188,10 @@ class YapArray extends YapIndependantType {
 	}
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
+        
+        // FIXME: SM remove
+        mf = MarshallerFamily.forVersion(0);
+
 		YapWriter bytes = a_bytes.readEmbeddedObject();
 		if (bytes == null) {
 			return null;
@@ -231,6 +240,10 @@ class YapArray extends YapIndependantType {
 	}
 
     Object read1(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
+
+        // FIXME: SM remove
+        mf = MarshallerFamily.forVersion(0);
+        
 		int[] elements = new int[1];
 		Object ret = readCreate(a_bytes.getTransaction(), a_bytes, elements);
 		if (ret != null){
@@ -368,6 +381,10 @@ class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes){
+        return writeNew(a_object, a_bytes);
+    }
+    
     public Object writeNew(Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
@@ -401,7 +418,10 @@ class YapArray extends YapIndependantType {
         }
         
         for (int i = 0; i < elements; i++) {
-            i_handler.writeNew(_reflectArray.get(a_object, i), a_bytes);
+            
+            // FIXME: SM remove marshallerfamily 0
+            
+            i_handler.writeNew(MarshallerFamily.forVersion(0), _reflectArray.get(a_object, i), a_bytes);
         }
     }
 

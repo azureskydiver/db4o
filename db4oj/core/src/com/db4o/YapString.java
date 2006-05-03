@@ -55,6 +55,16 @@ public final class YapString extends YapIndependantType {
         return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
     }
     
+    public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes){
+        
+        int address = a_bytes.readInt();
+        int length = a_bytes.readInt();
+        
+        if(address > 0  && ! mf._string.inlinedStrings()){
+            a_bytes.getTransaction().slotFreeOnCommit(address, address, length);
+        }
+    }
+    
     public boolean equals(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
@@ -131,6 +141,10 @@ public final class YapString extends YapIndependantType {
     
     public Object writeNew(Object a_object, YapWriter a_bytes) {
         return MarshallerFamily.current()._string.marshall(a_object, a_bytes);
+    }
+    
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
+        return mf._string.marshall(a_object, a_bytes);
     }
 
     final void writeShort(String a_string, YapReader a_bytes) {

@@ -515,18 +515,18 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         deleteMembers(mf, a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object), false);
     }
 
-    public void deleteEmbedded(YapWriter a_bytes) {
+    public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
         if (a_bytes.cascadeDeletes() > 0) {
             int id = a_bytes.readInt();
             if (id > 0) {
-                deleteEmbedded1(a_bytes, id);
+                deleteEmbedded1(mf, a_bytes, id);
             }
         } else {
             a_bytes.incrementOffset(linkLength());
         }
     }
 
-    void deleteEmbedded1(YapWriter a_bytes, int a_id) {
+    void deleteEmbedded1(MarshallerFamily mf, YapWriter a_bytes, int a_id) {
         if (a_bytes.cascadeDeletes() > 0) {
         	
         	YapStream stream = a_bytes.getStream();
@@ -1880,6 +1880,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     public void writeIndexEntry(YapReader a_writer, Object a_object) {
         a_writer.writeInt(((Integer)a_object).intValue());
+    }
+    
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes){
+        return writeNew(a_object, a_bytes);
     }
 
     public Object writeNew(Object a_object, YapWriter a_bytes) {

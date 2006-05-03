@@ -25,7 +25,7 @@ public interface TypeHandler4 extends Indexable4
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);
 	
-	void deleteEmbedded(YapWriter a_bytes);
+	void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes);
 	
 	int getID();
 	
@@ -53,6 +53,9 @@ public interface TypeHandler4 extends Indexable4
     // - Integer(id) for classes
     // - YapReader for strings
 	Object writeNew(Object a_object, YapWriter a_bytes);
+    
+    // FIXME: SM temporary signature to get string to work in untyped variables
+    Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes);
 	
 	public int getType ();
 	

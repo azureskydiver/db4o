@@ -37,7 +37,7 @@ final class YapClassAny extends YapClass {
 		}
 	}
 
-	public void deleteEmbedded(YapWriter a_bytes) {
+	public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
 		int objectID = a_bytes.readInt();
 		if (objectID > 0) {
 			YapWriter reader =
@@ -46,7 +46,11 @@ final class YapClassAny extends YapClass {
 				reader.setCascadeDeletes(a_bytes.cascadeDeletes());
                 ObjectHeader oh = new ObjectHeader(reader);
 				if(oh._yapClass != null){
-				    oh._yapClass.deleteEmbedded1(reader, objectID);
+                    
+                    // FIXME: SM remove
+                    mf = MarshallerFamily.forVersion(0);
+                    
+				    oh._yapClass.deleteEmbedded1(mf, reader, objectID);
 				}
 			}
 		}
@@ -94,6 +98,11 @@ final class YapClassAny extends YapClass {
 						return oh._yapClass.readArrayWrapper1(a_bytes);
 					}
 				} catch (Exception e) {
+                    
+                    if(Debug.atHome){
+                        e.printStackTrace();
+                    }
+                    
 					// TODO: Check Exception Types
 					// Errors typically occur, if classes don't match
 				}

@@ -9,7 +9,7 @@ import com.db4o.reflect.*;
 
 public class YapClassPrimitive extends YapClass{
     
-    final TypeHandler4 i_handler;
+    public final TypeHandler4 i_handler;
 
     YapClassPrimitive(YapStream a_stream, TypeHandler4 a_handler) {
     	super(a_stream, a_handler.classReflector());
@@ -51,7 +51,7 @@ public class YapClassPrimitive extends YapClass{
     	return i_handler.classReflector();
     }
     
-    void deleteEmbedded1(YapWriter a_bytes, int a_id) {
+    void deleteEmbedded1(MarshallerFamily mf, YapWriter a_bytes, int a_id) {
         
         if(i_handler instanceof YapArray){
             YapArray ya = (YapArray)i_handler;
@@ -79,7 +79,7 @@ public class YapClassPrimitive extends YapClass{
             // Any-In-Any: Ignore delete 
             a_bytes.incrementOffset(i_handler.linkLength());
         }else{
-            i_handler.deleteEmbedded(a_bytes);
+            i_handler.deleteEmbedded(mf, a_bytes);
         }
 		
 		// TODO: Was this freeing call necessary? 
@@ -158,34 +158,14 @@ public class YapClassPrimitive extends YapClass{
 		return false;
 	}
     
-    // FIXME: MS Temporary primitive marshalling, will go into special marshaller.
-    public int marshall(Transaction trans, Object obj){
-        YapStream stream = trans.i_stream;
-        int id = stream.newUserObject();
-        int address = -1;
-        int length = objectLength();
-        if(! trans.i_stream.isClient()){
-            address = trans.i_file.getSlot(length); 
-        }
-        trans.setPointer(id, address, length);
-        YapWriter writer = new YapWriter(trans, length);
-        writer.useSlot(id, address, length);
-        if (Deploy.debug) {
-            writer.writeBegin(YapConst.YAPOBJECT, length);
-        }
-        writer.writeInt(getID());
-        i_handler.writeNew(obj, writer);
-        writer.writeEnd();
-        trans.i_stream.writeNew(this, writer);
-        return id;
-    }
-
     public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
-        i_handler.writeNew(a_object, a_bytes);
+        // FIXME: SM remove MF
+        i_handler.writeNew(MarshallerFamily.forVersion(0), a_object, a_bytes);
     }
-
+    
     public void marshallNew(YapObject a_yapObject, YapWriter a_bytes, Object a_object) {
-        i_handler.writeNew(a_object, a_bytes);
+        // FIXME: SM remove MF
+        i_handler.writeNew(MarshallerFamily.forVersion(0), a_object, a_bytes);
     }
 
     int memberLength() {
@@ -221,7 +201,7 @@ public class YapClassPrimitive extends YapClass{
     }
     
     public Object writeNew(Object a_object, YapWriter a_bytes) {
-        MarshallerFamily.current()._primitive.marshall(i_handler, a_object, a_bytes);
+        MarshallerFamily.current()._primitive.marshall(a_bytes.getTransaction(), this, a_object, a_bytes);
         return a_object;
     }
 

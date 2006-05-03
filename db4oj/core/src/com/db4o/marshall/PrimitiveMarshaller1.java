@@ -5,7 +5,7 @@ package com.db4o.marshall;
 import com.db4o.*;
 
 
-public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
+public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
     
     public int marshall(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, YapWriter parentWriter){
         
@@ -31,7 +31,8 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             }
             writer.writeInt(yapClassPrimitive.getID());
             
-            handler.writeNew( obj, writer);
+            // FIXME: SM Temporary fix to marshall strings in untyped variables to             // old format
+            handler.writeNew(MarshallerFamily.forVersion(0), obj, writer);
             
             writer.writeEnd();
             trans.i_stream.writeNew(yapClassPrimitive, writer);

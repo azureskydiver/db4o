@@ -50,7 +50,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     public abstract Object defaultValue();
 
-    public void deleteEmbedded(YapWriter a_bytes) {
+    public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());
     }
 
@@ -151,6 +151,10 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     public void writeIndexEntry(YapReader a_writer, Object a_object) {
         write(a_object, a_writer);
+    }
+    
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes){
+        return writeNew(a_object, a_bytes);
     }
 
     public Object writeNew(Object a_object, YapWriter a_bytes) {
