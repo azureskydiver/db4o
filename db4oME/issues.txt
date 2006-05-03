@@ -1,0 +1,13 @@
+Brutally removed:
+
+- Client/Server: Msg, *Client*, *Server*
+- Blob
+- JDK reflector
+- Net* (primitive wrappers)
+- NQ
+- Coercion (Number superclass is missing)
+
+Open issues:
+
+- Unobfuscated: UUID/INetAddress
+- String#lastIndexOf & Co.
