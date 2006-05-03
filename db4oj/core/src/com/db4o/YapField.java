@@ -316,7 +316,7 @@ public class YapField implements StoredField {
         }
     }
 
-    void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
+    public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         if (alive()) {
             if (i_index != null) {
                 int offset = a_bytes._offset;

@@ -44,7 +44,7 @@ class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
-    void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
+    public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         if(isUpdate){
             a_bytes.incrementOffset(linkLength());
             return;

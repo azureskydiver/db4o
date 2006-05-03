@@ -329,13 +329,20 @@ public final class YapWriter extends YapReader {
         i_trans.i_stream.i_handlers.decrypt(this);
     }
     
-    public void writePayload(YapReader payLoad){
+    public void writePayload(YapWriter payLoad){
         System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);
-        _payloadOffset += payLoad._buffer.length;
+        transferPayLoadAddress(payLoad, _payloadOffset);
+        _payloadOffset += getStream().alignToBlockSize(payLoad._buffer.length);
     }
     
     public YapWriter readPayloadWriter(int offset, int length){
-        
+        YapWriter payLoad = new YapWriter(i_trans, 0, length);
+        System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
+        transferPayLoadAddress(payLoad, offset);
+        return payLoad;
+    }
+
+    private void transferPayLoadAddress(YapWriter toWriter, int offset) {
         YapStream stream = getStream();
         
         int blockedOffset = offset / stream.blockSize();
@@ -345,15 +352,10 @@ public final class YapWriter extends YapReader {
             throw new RuntimeException("SM check here");
         }
         
-        int payLoadAddress = i_address + blockedOffset;
+        toWriter.i_address = i_address + blockedOffset;
+        toWriter.i_id = toWriter.i_address;
+        toWriter._addressOffset = _addressOffset;
         
-        YapWriter payLoad = new YapWriter(i_trans, payLoadAddress, length);
-        System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
-        
-        payLoad.setID(payLoadAddress);
-        payLoad._addressOffset = _addressOffset;
-        
-        return payLoad;
     }
 
 

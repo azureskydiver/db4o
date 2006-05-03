@@ -9,12 +9,24 @@ import com.db4o.*;
  */
 class ObjectMarshaller0 extends ObjectMarshaller {
     
-    protected int linkLength(YapField yf, YapObject yo){
-        return yf.linkLength();
+    public void addFieldIndices(YapClass yc, YapWriter writer, boolean isNew) {
+        int fieldCount = writer.readInt();
+        for (int i = 0; i < fieldCount; i++) {
+            yc.i_fields[i].addFieldIndex(_family, writer, isNew);
+        }
+        if (yc.i_ancestor != null) {
+            addFieldIndices(yc.i_ancestor, writer, isNew);
+        }
     }
     
-    protected int marshalledLength(YapField yf, YapObject yo){
-        return 0;
+    public void deleteMembers(YapClass yc, YapWriter a_bytes, int a_type, boolean isUpdate){
+        int length = yc.readFieldLength(a_bytes);
+        for (int i = 0; i < length; i++) {
+            yc.i_fields[i].delete(_family, a_bytes, isUpdate);
+        }
+        if (yc.i_ancestor != null) {
+            deleteMembers(yc.i_ancestor, a_bytes, a_type, isUpdate);
+        }
     }
     
     public boolean findOffset(YapClass yc, YapReader a_bytes, YapField a_field) {
@@ -48,6 +60,29 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
     }
     
+    protected int linkLength(YapField yf, YapObject yo){
+        return yf.linkLength();
+    }
+    
+    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
+        Config4Class config = yapClass.configOrAncestorConfig();
+        a_bytes.writeInt(yapClass.i_fields.length);
+        for (int i = 0; i < yapClass.i_fields.length; i++) {
+            Object obj = yapClass.i_fields[i].getOrCreate(a_bytes.getTransaction(), a_object);
+            if (obj instanceof Db4oTypeImpl) {
+                obj = ((Db4oTypeImpl)obj).storedTo(a_bytes.getTransaction());
+            }
+            yapClass.i_fields[i].marshall(a_yapObject, obj, a_bytes, config, a_new);
+        }
+        if (yapClass.i_ancestor != null) {
+            marshall(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new);
+        }
+    }
+    
+    protected int marshalledLength(YapField yf, YapObject yo){
+        return 0;
+    }
+
     public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
         YapWriter writer = createWriter(a_trans, yo, a_updateDepth);
@@ -71,7 +106,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return writer;
     }
 
-
     public void marshallUpdate(
         Transaction a_trans,
         YapClass yapClass,
@@ -91,22 +125,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         marshall(yapClass, a_yapObject, a_object, writer, false);
         
         marshallUpdateWrite(a_trans, yapClass, a_yapObject, a_object, writer);
-    }
-
-
-    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
-        Config4Class config = yapClass.configOrAncestorConfig();
-        a_bytes.writeInt(yapClass.i_fields.length);
-        for (int i = 0; i < yapClass.i_fields.length; i++) {
-            Object obj = yapClass.i_fields[i].getOrCreate(a_bytes.getTransaction(), a_object);
-            if (obj instanceof Db4oTypeImpl) {
-                obj = ((Db4oTypeImpl)obj).storedTo(a_bytes.getTransaction());
-            }
-            yapClass.i_fields[i].marshall(a_yapObject, obj, a_bytes, config, a_new);
-        }
-        if (yapClass.i_ancestor != null) {
-            marshall(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new);
-        }
     }
 
     protected int objectLength(YapObject yo) {

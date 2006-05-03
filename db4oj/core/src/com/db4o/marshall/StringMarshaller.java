@@ -16,45 +16,7 @@ public abstract class StringMarshaller {
     
     public abstract Object marshall(Object a_object, YapWriter a_bytes);
     
-    public static YapReader writeShort(YapStream stream, String str){
-        YapReader reader = new YapReader(stream.stringIO().length(str));
-        writeShort(stream, str, reader);
-        return reader;
-    }
-    
-    public static void writeShort(YapStream stream, String str, YapReader reader){
-        int length = str.length();
-        if (Deploy.debug) {
-            reader.writeBegin(YapConst.YAPSTRING, length);
-        }
-        reader.writeInt(length);
-        stream.stringIO().write(reader, str);
-        if (Deploy.debug) {
-            reader.writeEnd();
-        }
-    }
-    
-    public abstract YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException;
-    
-    public String readFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
-        return read(stream, readSlotFromParentSlot(stream, reader));
-    }
-    
-    // TODO: Instead of working with YapReader objects to transport
-    // string buffers, we should consider to have a specific string
-    // buffer class, that allows comparisons and carries it's encoding.
-    public abstract YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException;
-    
-    public String readFromOwnSlot(YapStream stream, YapReader reader){
-        try {
-            return read(stream, reader);
-        } catch (Exception e) {
-            if(Deploy.debug || Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
+    public abstract int marshalledLength(YapStream stream, Object obj);
     
     private final String read(YapStream stream, YapReader reader) throws CorruptionException {
         if (reader == null) {
@@ -69,6 +31,23 @@ public abstract class StringMarshaller {
         }
         return ret;
     }
+    
+    public String readFromOwnSlot(YapStream stream, YapReader reader){
+        try {
+            return read(stream, reader);
+        } catch (Exception e) {
+            if(Deploy.debug || Debug.atHome) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+    
+    public String readFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
+        return read(stream, readSlotFromParentSlot(stream, reader));
+    }
+    
+    public abstract YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException;
     
     public static String readShort(YapStream stream, YapReader a_bytes) throws CorruptionException {
         int length = a_bytes.readInt();
@@ -87,7 +66,29 @@ public abstract class StringMarshaller {
         return "";
     }
 
-    public abstract int marshalledLength(YapStream stream, Object obj);
 
+    // TODO: Instead of working with YapReader objects to transport
+    // string buffers, we should consider to have a specific string
+    // buffer class, that allows comparisons and carries it's encoding.
+    public abstract YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException;
+
+    public static YapReader writeShort(YapStream stream, String str){
+        YapReader reader = new YapReader(stream.stringIO().length(str));
+        writeShort(stream, str, reader);
+        return reader;
+    }
+    
+    public static void writeShort(YapStream stream, String str, YapReader reader){
+        int length = str.length();
+        if (Deploy.debug) {
+            reader.writeBegin(YapConst.YAPSTRING, length);
+        }
+        reader.writeInt(length);
+        stream.stringIO().write(reader, str);
+        if (Deploy.debug) {
+            reader.writeEnd();
+        }
+    }
+    
 
 }
