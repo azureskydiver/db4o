@@ -563,10 +563,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	            } else {
 	                a_bytes.setCascadeDeletes(1);
 	            }
-	            deleteMembers1(mf, a_bytes, a_type, isUpdate);
+                mf._object.deleteMembers(this, a_bytes, a_type, isUpdate);
 	            a_bytes.setCascadeDeletes(preserveCascade);
 	        } else {
-	            deleteMembers1(mf, a_bytes, a_type, isUpdate);
+                mf._object.deleteMembers(this, a_bytes, a_type, isUpdate);
 	        }
         }catch(Exception e){
             
@@ -578,16 +578,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             if(Debug.atHome){
                 e.printStackTrace();
             }
-        }
-    }
-
-   private void deleteMembers1(MarshallerFamily mf, YapWriter a_bytes, int a_type, boolean isUpdate) {
-        int length = readFieldLength(a_bytes);
-        for (int i = 0; i < length; i++) {
-            i_fields[i].delete(mf, a_bytes, isUpdate);
-        }
-        if (i_ancestor != null) {
-            i_ancestor.deleteMembers(mf, a_bytes, a_type, isUpdate);
         }
     }
 

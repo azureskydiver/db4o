@@ -827,14 +827,18 @@ public abstract class YapFile extends YapStream {
         }
         bytes.write();
     }
+    
+    final void getSlotForUpdate(YapWriter forWriter){
+        Transaction trans = forWriter.getTransaction();
+        int id = forWriter.getID();
+        int length = forWriter.getLength();
+        int address = getSlot(length);
+        forWriter.address(address);
+        trans.slotFreeOnRollbackSetPointer(id, address, length);
+    }
 
     public final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
-        Transaction trans = a_bytes.getTransaction();
-        int id = a_bytes.getID();
-        int length = a_bytes.getLength();
-        int address = getSlot(length);
-        a_bytes.address(address);
-        trans.slotFreeOnRollbackSetPointer(id, address, length);
+        getSlotForUpdate(a_bytes);
         i_handlers.encrypt(a_bytes);
         a_bytes.write();
     }

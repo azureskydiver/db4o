@@ -11,13 +11,6 @@ public class StringMarshaller1 extends StringMarshaller{
         return true;
     }
     
-    public int marshalledLength(YapStream stream, Object obj) {
-        if(obj == null){
-            return 0;
-        }
-        return stream.alignToBlockSize( stream.stringIO().length((String)obj) );
-    }
-    
     public Object marshall(Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
@@ -37,20 +30,30 @@ public class StringMarshaller1 extends StringMarshaller{
         return bytes;
     }
     
+    public int marshalledLength(YapStream stream, Object obj) {
+        if(obj == null){
+            return 0;
+        }
+        return stream.alignToBlockSize( stream.stringIO().length((String)obj) );
+    }
+    
     public YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException{
         int payLoadOffSet = parentSlot.readInt();
         int length = parentSlot.readInt();
+        if(payLoadOffSet == 0){
+            return null;
+        }
         return parentSlot.readPayloadWriter(payLoadOffSet, length);
     }
     
     public YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
         int payLoadOffSet = reader.readInt();
         int length = reader.readInt();
+        if(payLoadOffSet == 0){
+            return null;
+        }
         return reader.readPayloadReader(payLoadOffSet, length);
     }
-
-    
-    
 
 
 

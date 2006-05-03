@@ -43,7 +43,7 @@ abstract class YapFieldVirtual extends YapField {
         // do nothing
     }
     
-    abstract void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate);
+    public abstract void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate);
     
     public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling

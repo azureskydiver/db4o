@@ -20,7 +20,7 @@ class YapFieldVersion extends YapFieldVirtual {
         YLong.writeLong(writer.getStream().bootRecord().nextVersion(), writer);
     }
     
-    void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
+    public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         a_bytes.incrementOffset(linkLength());
     }
 

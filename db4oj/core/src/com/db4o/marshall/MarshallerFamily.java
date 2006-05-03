@@ -7,7 +7,7 @@ package com.db4o.marshall;
  */
 public class MarshallerFamily {
 
-    private static final boolean            DEBUG           = true;
+    private static final boolean            LEGACY           = true;
 
     public final ObjectMarshaller           _object;
 
@@ -22,7 +22,7 @@ public class MarshallerFamily {
         new MarshallerFamily(new ObjectMarshaller1(), new PrimitiveMarshaller1(),
             new StringMarshaller1())                        };
 
-    private static final int                CURRENT_VERSION = DEBUG ? 0 : allVersions.length - 1;
+    private static final int                CURRENT_VERSION = LEGACY ? 0 : allVersions.length - 1;
 
     private MarshallerFamily(ObjectMarshaller objectMarshaller,
         PrimitiveMarshaller primitiveMarshaller, StringMarshaller stringMarshaller) {

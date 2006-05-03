@@ -8,22 +8,12 @@ public abstract class ObjectMarshaller {
     
     public MarshallerFamily _family;
     
-    
-    public void addFieldIndices(YapClass yc, YapWriter writer, boolean isNew) {
-        int fieldCount = writer.readInt();
-        for (int i = 0; i < fieldCount; i++) {
-            yc.i_fields[i].addFieldIndex(_family, writer, isNew);
-        }
-        if (yc.i_ancestor != null) {
-            addFieldIndices(yc.i_ancestor, writer, isNew);
-        }
-    }
+    public abstract void addFieldIndices(YapClass yc, YapWriter writer, boolean isNew) ;
     
     protected int alignedBaseLength(YapObject yo){
         int len = linkLength(yo.getYapClass(), yo) + headerLength();
         return yo.getStream().alignToBlockSize(len);
     }
-
 
     protected YapWriter createWriter(Transaction trans, YapObject yo, int updateDepth) {
         int id = yo.getID();
@@ -48,12 +38,29 @@ public abstract class ObjectMarshaller {
         return writer;
     }
     
-    public abstract boolean findOffset(YapClass yc, YapReader a_bytes, YapField a_field);
+    public abstract void deleteMembers(YapClass yc, YapWriter a_bytes, int a_type, boolean isUpdate);
     
-    public abstract void instantiateFields(YapClass yc, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes);
+    public abstract boolean findOffset(YapClass yc, YapReader a_bytes, YapField a_field);
     
     protected abstract int headerLength();
     
+    public abstract void instantiateFields(YapClass yc, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes);
+    
+    protected int linkLength(YapClass yc, YapObject yo) {
+        int length = YapConst.YAPINT_LENGTH;
+        if (yc.i_ancestor != null) {
+            length += linkLength(yc.i_ancestor, yo);
+        }
+        if (yc.i_fields != null) {
+            for (int i = 0; i < yc.i_fields.length; i++) {
+                length += linkLength(yc.i_fields[i], yo);
+            }
+        }
+        return length;
+    }
+    
+    protected abstract int linkLength(YapField yf, YapObject yo);
+
     public abstract YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth);
     
     public abstract void marshallUpdate(
@@ -64,8 +71,7 @@ public abstract class ObjectMarshaller {
         YapObject a_yapObject,
         Object a_object
         );
-
-
+    
     protected void marshallUpdateWrite(Transaction a_trans, YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter writer) {
         if (Deploy.debug) {
             writer.writeEnd();
@@ -81,25 +87,6 @@ public abstract class ObjectMarshaller {
     }
     
     protected abstract int objectLength(YapObject yo);
-    
-    protected int linkLength(YapClass yc, YapObject yo) {
-        int length = YapConst.YAPINT_LENGTH;
-        if (yc.i_ancestor != null) {
-            length += linkLength(yc.i_ancestor, yo);
-        }
-        if (yc.i_fields != null) {
-            for (int i = 0; i < yc.i_fields.length; i++) {
-                length += linkLength(yc.i_fields[i], yo);
-            }
-        }
-        return length;
-    }
-    
-    
-    protected abstract int linkLength(YapField yf, YapObject yo);
-    
-
- 
     
 
 }

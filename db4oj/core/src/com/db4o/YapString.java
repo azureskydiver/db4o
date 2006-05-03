@@ -93,10 +93,6 @@ public final class YapString extends YapIndependantType {
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes);
     }
     
-    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
-        return mf._string.readIndexEntry(a_writer);
-    }
-    
     public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         // virtual and do nothing
         return null;
@@ -106,10 +102,22 @@ public final class YapString extends YapIndependantType {
         // do nothing
     }
 
+    /**
+     * This readIndexEntry method reads from the parent slot.
+     * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
+     */
+    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+        return mf._string.readIndexEntry(a_writer);
+    }
+
+    /**
+     * This readIndexEntry method reads from the actual index in the file.
+     * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
+     */
     public Object readIndexEntry(YapReader a_reader) {
         return new int[] {a_reader.readInt(), a_reader.readInt()};
     }
-
+    
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
 	    YapReader reader = mf._string.readSlotFromParentSlot(a_trans.i_stream, a_reader);
 	    if(a_toArray) {
