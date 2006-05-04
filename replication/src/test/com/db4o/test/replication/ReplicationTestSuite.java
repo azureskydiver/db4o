@@ -3,6 +3,7 @@ package com.db4o.test.replication;
 import com.db4o.test.TestSuite;
 import com.db4o.test.replication.collections.ListTest;
 import com.db4o.test.replication.collections.SimpleArrayTest;
+import com.db4o.test.replication.collections.Db4oListTest;
 import com.db4o.test.replication.collections.map.MapTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
@@ -21,6 +22,7 @@ public class ReplicationTestSuite extends TestSuite {
 				ReplicationProviderTest.class,
 
 				ListTest.class,
+				Db4oListTest.class,
 				MapTest.class,
 				ReplicationAfterDeletionTest.class,
 				SimpleArrayTest.class,
@@ -43,7 +45,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] one() {
 		return new Class[]{
-			ListTest.class,
+			Db4oListTest.class,
 		};
 	}
 }

@@ -30,7 +30,7 @@ public class ListTest extends ReplicationTestCase {
 
 	private void storeListToProviderA() {
 
-		ListHolder lh = new ListHolder("h1");
+		ListHolder lh = createHolder();
 		ListContent lc1 = new ListContent("c1");
 		ListContent lc2 = new ListContent("c2");
 		lh.add(lc1);
@@ -39,6 +39,12 @@ public class ListTest extends ReplicationTestCase {
 		_providerA.commit();
 
 		ensureContent(_providerA, new String[]{"h1"}, new String[]{"c1", "c2"});
+	}
+
+	protected ListHolder createHolder() {
+		ListHolder lh = new ListHolder("h1");
+		lh.setList(new ArrayList());
+		return lh;
 	}
 
 	private void replicateAllToProviderBFirstTime() {

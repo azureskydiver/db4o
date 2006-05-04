@@ -125,10 +125,12 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Db4oUUID listHolderUuid = new Db4oUUID(548494595, B_SIGNATURE_BYTES);
 
 		ListHolder listHolderFromA = new ListHolder("i am a list");
+		listHolderFromA.setList(new ArrayList());
 
 		ReplicationReference refFromA = new ReplicationReferenceImpl(listHolderFromA, listHolderUuid, 9555);
 
 		ListHolder listHolderClonedInB = new ListHolder("i am a list");
+		listHolderClonedInB.setList(new ArrayList());
 
 		_providerA.referenceNewObject(listHolderClonedInB, refFromA, null, null);
 		_providerA.storeReplica(listHolderClonedInB);
