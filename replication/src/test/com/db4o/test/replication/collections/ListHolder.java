@@ -17,7 +17,6 @@ public class ListHolder {
     
     public ListHolder(String name){
         this.name = name;
-        this.list = new ArrayList();
     }
     
     public void add(ListContent obj){

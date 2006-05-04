@@ -14,6 +14,7 @@ import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.VirtualField;
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.Db4oReplicationReference;
 import com.db4o.inside.replication.Db4oReplicationReferenceProvider;
@@ -353,5 +354,9 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		if (obj == null) return;
 
 		_stream.delete(obj);
+	}
+
+	public ExtObjectContainer getObjectContainer(){
+		return _stream;
 	}
 }
