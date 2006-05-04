@@ -39,6 +39,7 @@ public class AllTestsReplication extends AllTests {
 
 		//oracle();
 		//mysql();
+		//postgresql();
 	}
 
 	private void db4oHsql() {
@@ -73,6 +74,15 @@ public class AllTestsReplication extends AllTests {
 		Configuration tmp = HibernateUtil.produceMySQLConfigA();
 		cleanDb(tmp);
 		ReplicationTestCase.registerProviderPair(new HibernateReplicationProviderImpl(tmp, "mysql"), new TransientReplicationProvider(new byte[]{69}, "B"));
+	}
+
+	private void postgresql() {
+		Configuration a = HibernateUtil.producePostgreSQLConfigA();
+		cleanDb(a);
+
+		Configuration b = HibernateUtil.producePostgreSQLConfigB();
+		cleanDb(b);
+		ReplicationTestCase.registerProviderPair(new HibernateReplicationProviderImpl(a, "postgresql"), new HibernateReplicationProviderImpl(b, "postgresql B"));
 	}
 
 	private void cleanDb(Configuration tmp) {

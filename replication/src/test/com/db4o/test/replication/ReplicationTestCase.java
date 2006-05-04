@@ -21,11 +21,12 @@ import com.db4o.test.replication.provider.Pilot;
 import com.db4o.test.replication.r0tor4.R0;
 
 import java.util.Map;
+import java.util.List;
 
 
 public abstract class ReplicationTestCase {
 	public static final Class[] mappings;
-	public static final Class[] extraMappingsForCleaning = new Class[]{Map.class};
+	public static final Class[] extraMappingsForCleaning = new Class[]{Map.class, List.class};
 
 	static private final Collection4 PROVIDER_PAIRS = new Collection4();
 
@@ -33,6 +34,7 @@ public abstract class ReplicationTestCase {
 	protected TestableReplicationProviderInside _providerB;
 
 	private long _timer;
+
 	static {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
 				SPCParent.class, SPCChild.class,
@@ -56,19 +58,10 @@ public abstract class ReplicationTestCase {
 
 	protected abstract void actualTest();
 
-	protected void checkEmpty() {
-		ReplicationSession replication = Replication.begin(_providerA, _providerB);
-
+	private void checkEmpty() {
 		checkClean(_providerA);
 		checkClean(_providerB);
-
-		replication.commit();
 	}
-
-//	protected void init(ProviderPair p) {
-//		_providerA = p._providerA;
-//		_providerB = p._providerB;
-//	}
 
 	protected void clean() {
 		for (int i = 0; i < mappings.length; i++) {
@@ -191,15 +184,18 @@ public abstract class ReplicationTestCase {
 	}
 
 	private void checkClean(TestableReplicationProviderInside p) {
-		Object objs = p.objectsChangedSinceLastReplication();
-		ObjectSet remains = (ObjectSet) objs;
-		boolean notEmpty = false;
-		while (remains.hasNext()) {
-			notEmpty = true;
-			System.out.println("remained = " + remains.next().getClass());
-		}
+		for (int i = 0; i < mappings.length; i++) {
+			ObjectSet remains = p.getStoredObjects(mappings[i]);
+			Test.ensureEquals(0, remains.size());
 
-		if (notEmpty) throw new RuntimeException(p + " is not cleaned");
+			boolean notEmpty = false;
+			while (remains.hasNext()) {
+				notEmpty = true;
+				System.out.println("remained = " + remains.next().getClass());
+			}
+
+			if (notEmpty) throw new RuntimeException(p + " is not cleaned");
+		}
 	}
 
 	private void doActualTest() {

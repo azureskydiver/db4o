@@ -206,21 +206,4 @@ public class R0to4Runner extends ReplicationTestCase {
 
 		ensureR4Same(_providerA, _providerB);
 	}
-
-	protected void checkEmpty() {
-		ObjectSet storedObjectsA = _providerA.getStoredObjects(R0.class);
-//		while (storedObjectsA.hasNext()) {
-//			Object aaa = storedObjectsA.next();
-//			System.out.println("aaa = " + aaa);
-//		}
-		Test.ensureEquals(0, storedObjectsA.size());
-
-		ObjectSet storedObjectsB = _providerB.getStoredObjects(R0.class);
-//		while (storedObjectsB.hasNext()) {
-//			Object bbbb = storedObjectsB.next();
-//			System.out.println("bbbb = " + bbbb);
-//		}
-		Test.ensureEquals(0, storedObjectsB.size());
-	}
-
 }
