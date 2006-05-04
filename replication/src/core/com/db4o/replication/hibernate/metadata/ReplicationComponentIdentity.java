@@ -1,8 +1,6 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class ReplicationComponentIdentity {
-// ------------------------------ FIELDS ------------------------------
-
 	public static final String TABLE_NAME = "ReplicationComponentIdentity";
 
 	private long uuidLongPart;
@@ -12,13 +10,22 @@ public class ReplicationComponentIdentity {
 	private ReplicationComponentField referencingObjectField;
 
 	private ReplicationProviderSignature provider;
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
 	public ReplicationComponentIdentity() {
 	}
 
-// --------------------- GETTER / SETTER METHODS ---------------------
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		final ReplicationComponentIdentity that = (ReplicationComponentIdentity) o;
+
+		if (referencingObjectUuidLongPart != that.referencingObjectUuidLongPart) return false;
+		if (uuidLongPart != that.uuidLongPart) return false;
+		if (!referencingObjectField.equals(that.referencingObjectField)) return false;
+		if (!provider.equals(that.provider)) return false;
+
+		return true;
+	}
 
 	public ReplicationProviderSignature getProvider() {
 		return provider;
@@ -56,22 +63,6 @@ public class ReplicationComponentIdentity {
 
 	public void setUuidLongPart(long uuidLongPart) {
 		this.uuidLongPart = uuidLongPart;
-	}
-
-// ------------------------ CANONICAL METHODS ------------------------
-
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		final ReplicationComponentIdentity that = (ReplicationComponentIdentity) o;
-
-		if (referencingObjectUuidLongPart != that.referencingObjectUuidLongPart) return false;
-		if (uuidLongPart != that.uuidLongPart) return false;
-		if (!referencingObjectField.equals(that.referencingObjectField)) return false;
-		if (!provider.equals(that.provider)) return false;
-
-		return true;
 	}
 
 	public int hashCode() {

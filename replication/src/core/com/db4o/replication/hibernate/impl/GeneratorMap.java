@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GeneratorMap {
-	private static Map<Session, TimeStampIdGenerator> sessionTimeStampIdGeneratorMap = new HashMap();
+	private static Map<Session, TimeStampIdGenerator> _sessionTimeStampIdGeneratorMap = new HashMap();
 
 	static void put(Session s, TimeStampIdGenerator t) {
-		sessionTimeStampIdGeneratorMap.put(s, t);
+		_sessionTimeStampIdGeneratorMap.put(s, t);
 	}
 
 	static TimeStampIdGenerator get(Session s) {
-		return sessionTimeStampIdGeneratorMap.get(s);
+		return _sessionTimeStampIdGeneratorMap.get(s);
 	}
 }

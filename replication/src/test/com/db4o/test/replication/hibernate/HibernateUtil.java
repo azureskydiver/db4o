@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate;
 
-import com.db4o.replication.hibernate.HibernateReplicationProvider;
+import com.db4o.replication.hibernate.impl.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.ReplicationTestCase;
 import org.hibernate.cfg.Configuration;

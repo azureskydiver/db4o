@@ -9,7 +9,7 @@ package com.db4o.replication;
  * <pre>
  * ReplicationSession session = Replication.begin(objectContainer1, objectContainer2);
  * session.replicate(object);
- * session.commitReplicationTransaction();
+ * session.commit();
  * session.close();
  * </pre>
  *
@@ -30,7 +30,7 @@ public interface ReplicationSession {
 
 
 	/**
-	 * Closes this session and frees used ressources. Sessions that were opened
+	 * Closes this session and frees used resources. Sessions that were opened
 	 * during the creation of ReplicationProviders will be closed as well.
 	 * <p/>
 	 * Hibernate Sessions created from Hibernate Configurations will be closed.

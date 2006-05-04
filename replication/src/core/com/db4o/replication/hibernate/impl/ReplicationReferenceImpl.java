@@ -4,35 +4,29 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 
 public final class ReplicationReferenceImpl implements ReplicationReference {
-// ------------------------------ FIELDS ------------------------------
+	private boolean _objectIsNew;
 
-	private boolean objectIsNew;
-	private final Object obj;
-	private final Db4oUUID uuid;
-	private final long version;
-	private Object counterPart;
-	private boolean markedForReplicating;
-	private boolean markedForDeleting;
+	private final Object _obj;
 
-// --------------------------- CONSTRUCTORS ---------------------------
+	private final Db4oUUID _uuid;
+
+	private final long _version;
+
+	private Object _counterPart;
+
+	private boolean _markedForReplicating;
+
+	private boolean _markedForDeleting;
 
 	public ReplicationReferenceImpl(Object obj, Db4oUUID uuid, long version) {
-		this.obj = obj;
-		this.uuid = uuid;
-		this.version = version;
+		this._obj = obj;
+		this._uuid = uuid;
+		this._version = version;
 	}
 
-// --------------------- GETTER / SETTER METHODS ---------------------
-
-	public final boolean isMarkedForDeleting() {
-		return markedForDeleting;
+	public final Object counterpart() {
+		return _counterPart;
 	}
-
-	public final boolean isMarkedForReplicating() {
-		return markedForReplicating;
-	}
-
-// ------------------------ CANONICAL METHODS ------------------------
 
 	public final boolean equals(Object o) {
 		if (this == o) return true;
@@ -41,66 +35,66 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 
 		final ReplicationReference that = (ReplicationReferenceImpl) o;
 
-		if (version != that.version()) return false;
-		return uuid.equals(that.uuid());
+		if (_version != that.version()) return false;
+		return _uuid.equals(that.uuid());
 	}
 
 	public final int hashCode() {
 		int result;
-		result = uuid.hashCode();
-		result = 29 * result + (int) (version ^ (version >>> 32));
+		result = _uuid.hashCode();
+		result = 29 * result + (int) (_version ^ (_version >>> 32));
 		return result;
+	}
+
+	public boolean isCounterpartNew() {
+		return _objectIsNew;
+	}
+
+	public final boolean isMarkedForDeleting() {
+		return _markedForDeleting;
+	}
+
+	public final boolean isMarkedForReplicating() {
+		return _markedForReplicating;
+	}
+
+	public void markCounterpartAsNew() {
+		_objectIsNew = true;
+	}
+
+	public final void markForDeleting() {
+		_markedForDeleting = true;
+	}
+
+	public final void markForReplicating() {
+		_markedForReplicating = true;
+	}
+
+	public final Object object() {
+		return _obj;
+	}
+
+	public final void setCounterpart(Object obj) {
+		_counterPart = obj;
 	}
 
 	public String toString() {
 		return "ReplicationReferenceImpl{" +
-				"objectIsNew=" + objectIsNew +
-				", obj=" + obj +
-				", uuid=" + uuid +
-				", version=" + version +
-				", counterPart=" + counterPart +
-				", markedForReplicating=" + markedForReplicating +
-				", markedForDeleting=" + markedForDeleting +
+				"_objectIsNew=" + _objectIsNew +
+				", _obj=" + _obj +
+				", _uuid=" + _uuid +
+				", _version=" + _version +
+				", _counterPart=" + _counterPart +
+				", _markedForReplicating=" + _markedForReplicating +
+				", _markedForDeleting=" + _markedForDeleting +
 				'}';
 	}
 
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface ReplicationReference ---------------------
-
-	public final Object counterpart() {
-		return counterPart;
-	}
-
-	public boolean isCounterpartNew() {
-		return objectIsNew;
-	}
-
-	public void markCounterpartAsNew() {
-		objectIsNew = true;
-	}
-
-	public final void markForDeleting() {
-		markedForDeleting = true;
-	}
-
-	public final void markForReplicating() {
-		markedForReplicating = true;
-	}
-
-	public final Object object() {
-		return obj;
-	}
-
-	public final void setCounterpart(Object obj) {
-		counterPart = obj;
-	}
-
 	public final Db4oUUID uuid() {
-		return uuid;
+		return _uuid;
 	}
 
 	public final long version() {
-		return version;
+		return _version;
 	}
 }

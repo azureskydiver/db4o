@@ -13,14 +13,14 @@ import com.db4o.replication.db4o.Db4oReplicationProvider;
  * @author Albert Kwan
  * @author Klaus Wuestefeld
  * @version 1.2
+ * @see com.db4o.replication.hibernate.HibernateReplication
  * @see ReplicationProvider
  * @see ReplicationEventListener
  * @since dRS 1.0
  */
 public class Replication {
 	/**
-	 * begins a replication session between two ReplicationProviders, no conflict
-	 * resolver
+	 * Begins a replication session between two ReplicationProviders without ReplicationEventListener.
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
 	 * @see ReplicationEventListener
@@ -30,7 +30,7 @@ public class Replication {
 	}
 
 	/**
-	 * begins a replication session between db4o and db4o, no conflict resolver.
+	 * Begins a replication session between db4o and db4o without ReplicationEventListener.
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
 	 * @see ReplicationEventListener
@@ -40,9 +40,10 @@ public class Replication {
 	}
 
 	/**
-	 * begins a replication session between two ReplicatoinProviders
+	 * Begins a replication session between two ReplicatoinProviders.
 	 */
-	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener) {
+	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB,
+			ReplicationEventListener listener) {
 		if (listener == null) {
 			listener = new DefaultReplicationEventListener();
 		}
@@ -50,9 +51,10 @@ public class Replication {
 	}
 
 	/**
-	 * begins a replication session between db4o and db4o.
+	 * Begins a replication session between db4o and db4o.
 	 */
-	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ReplicationEventListener listener) {
+	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2,
+			ReplicationEventListener listener) {
 		return begin(new Db4oReplicationProvider(oc1), new Db4oReplicationProvider(oc2), listener);
 	}
 }

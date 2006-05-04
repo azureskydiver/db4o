@@ -50,7 +50,7 @@ public class ObjectReference {
 
 	public String toString() {
 		return "ObjectReference{" +
-				"className='" + className + '\'' +
+				"_className='" + className + '\'' +
 				", objectId=" + objectId +
 				", uuid=" + uuid +
 				", version=" + version +

@@ -1,4 +1,4 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.impl;
 
 import org.hibernate.CallbackException;
 import org.hibernate.HibernateException;
@@ -16,37 +16,27 @@ import org.hibernate.event.PreDeleteEventListener;
 
 import java.io.Serializable;
 
+/**
+ * @author Albert Kwan
+ */
 public interface ObjectLifeCycleEventsListener extends
 		PostInsertEventListener, PostUpdateEventListener,
 		PreDeleteEventListener, Interceptor, FlushEventListener {
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface FlushEventListener ---------------------
-
-	void onFlush(FlushEvent event) throws HibernateException;
-
-// --------------------- Interface Interceptor ---------------------
-
 	public void onCollectionRemove(Object collection, Serializable key) throws CallbackException;
 
 	public void onCollectionUpdate(Object collection, Serializable key) throws CallbackException;
 
-// --------------------- Interface PostInsertEventListener ---------------------
-
-	void onPostInsert(PostInsertEvent event);
-
-// --------------------- Interface PostUpdateEventListener ---------------------
-
-
 	public void onPostUpdate(PostUpdateEvent event);
-
-// --------------------- Interface PreDeleteEventListener ---------------------
-
-	boolean onPreDelete(PreDeleteEvent event);
 
 	void configure(Configuration cfg);
 
 	void destroy();
 
 	void install(Session session, Configuration cfg);
+
+	void onFlush(FlushEvent event) throws HibernateException;
+
+	void onPostInsert(PostInsertEvent event);
+
+	boolean onPreDelete(PreDeleteEvent event);
 }

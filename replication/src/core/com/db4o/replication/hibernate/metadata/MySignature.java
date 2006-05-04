@@ -23,16 +23,12 @@ package com.db4o.replication.hibernate.metadata;
 import com.db4o.Unobfuscated;
 
 public class MySignature extends ReplicationProviderSignature {
-// -------------------------- STATIC METHODS --------------------------
-
 	public static MySignature generateSignature() {
 		MySignature out = new MySignature();
 		out.setBytes(Unobfuscated.generateSignature());
 		out.setCreationTime(System.currentTimeMillis());
 		return out;
 	}
-
-// --------------------------- CONSTRUCTORS ---------------------------
 
 	public MySignature() {
 		super();

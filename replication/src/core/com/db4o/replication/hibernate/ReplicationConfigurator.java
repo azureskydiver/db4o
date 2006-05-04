@@ -1,6 +1,7 @@
 package com.db4o.replication.hibernate;
 
 import com.db4o.replication.hibernate.impl.ObjectLifeCycleEventsListenerImpl;
+import com.db4o.replication.hibernate.impl.ObjectLifeCycleEventsListener;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -31,7 +32,7 @@ import org.hibernate.cfg.Configuration;
  * @since dRS 1.0
  */
 public class ReplicationConfigurator {
-	private static ObjectLifeCycleEventsListener refAstablestListener = new ObjectLifeCycleEventsListenerImpl();
+	private static ObjectLifeCycleEventsListener listener = new ObjectLifeCycleEventsListenerImpl();
 	/**
 	 * Registers object update event listeners to Configuration.
 	 * If required drs tables do not exist, create them automatically.
@@ -40,7 +41,7 @@ public class ReplicationConfigurator {
 	 * @param cfg a properly configured Configuration
 	 */
 	public static void configure(Configuration cfg) {
-		refAstablestListener.configure(cfg);
+		listener.configure(cfg);
 	}
 
 	/**
@@ -51,6 +52,6 @@ public class ReplicationConfigurator {
 	 * @param cfg a Configuration that has previously been passed to ReplicationConfigurator.configure();
 	 */
 	public static void install(Session s, Configuration cfg) {
-		refAstablestListener.install(s, cfg);
+		listener.install(s, cfg);
 	}
 }

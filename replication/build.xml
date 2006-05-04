@@ -95,6 +95,7 @@
 				classpathref="class.path">
 			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
 				<include name="com/db4o/replication/*.java"/>
+				<include name="com/db4o/replication/hibernate/*.java"/>
 			</fileset>
 		</javadoc>
 	</target>

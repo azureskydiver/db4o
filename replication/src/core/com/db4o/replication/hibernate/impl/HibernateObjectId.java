@@ -1,21 +1,14 @@
 package com.db4o.replication.hibernate.impl;
 
 final class HibernateObjectId {
-// ------------------------------ FIELDS ------------------------------
-
-	public final long hibernateId;
-	public final String className;
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
+	public final long _hibernateId;
+	public final String _className;
 	public HibernateObjectId(long hibernateId, String className) {
-		this.hibernateId = hibernateId;
-		this.className = className;
+		this._hibernateId = hibernateId;
+		this._className = className;
 	}
 
-// ------------------------ CANONICAL METHODS ------------------------
-
 	public final String toString() {
-		return "HibernateObjectId, className = " + className + ", hibernateId = " + hibernateId;
+		return "HibernateObjectId, _className = " + _className + ", _hibernateId = " + _hibernateId;
 	}
 }

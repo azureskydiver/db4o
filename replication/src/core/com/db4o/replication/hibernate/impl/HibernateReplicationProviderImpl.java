@@ -11,9 +11,6 @@ import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
-import com.db4o.replication.hibernate.HibernateReplicationProvider;
-import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
-import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
@@ -49,7 +46,7 @@ import java.util.Set;
 
 
 public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
-	private boolean simpleObjectContainerCommitCalled = true;
+	private boolean _simpleObjectContainerCommitCalled = true;
 
 	private Configuration _cfg;
 
@@ -65,14 +62,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean _alive = false;
 
-	private ObjectLifeCycleEventsListener objectLifeCycleEventsListener = new MyObjectLifeCycleEventsListener();
+	private ObjectLifeCycleEventsListener _listener = new MyObjectLifeCycleEventsListener();
 
 	/**
 	 * The Signature of the peer in the current Transaction.
 	 */
 	private PeerSignature _peerSignature;
 
-	private FlushEventListener myFlushEventListener = new MyFlushEventListener();
+	private FlushEventListener _flushEventListener = new MyFlushEventListener();
 
 	/**
 	 * The ReplicationRecord of {@link #_peerSignature}.
@@ -100,22 +97,22 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_name = name;
 		_cfg = ReplicationConfiguration.decorate(cfg);
 
-		new TablesCreatorImpl(_cfg).createTables();
+		new TablesCreatorImpl(_cfg).validateOrCreate();
 
 		_cfg.setInterceptor(EmptyInterceptor.INSTANCE);
 
 		EventListeners el = _cfg.getEventListeners();
 		el.setFlushEventListeners((FlushEventListener[])
-				Util.add(el.getFlushEventListeners(), myFlushEventListener));
+				Util.add(el.getFlushEventListeners(), _flushEventListener));
 
-		objectLifeCycleEventsListener.configure(cfg);
+		_listener.configure(cfg);
 
 		_sessionFactory = getConfiguration().buildSessionFactory();
 		_session = _sessionFactory.openSession();
 		_session.setFlushMode(FlushMode.COMMIT);
 		_transaction = _session.beginTransaction();
 
-		objectLifeCycleEventsListener.install(getSession(), cfg);
+		_listener.install(getSession(), cfg);
 
 		_generator = GeneratorMap.get(_session);
 
@@ -187,15 +184,15 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		EventListeners eventListeners = getConfiguration().getEventListeners();
 		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
 		FlushEventListener[] r1 = (FlushEventListener[]) Util.removeElement(
-				o1, myFlushEventListener);
+				o1, _flushEventListener);
 		if ((o1.length - r1.length) != 1)
 			throw new RuntimeException("can't remove");
 
 		eventListeners.setFlushEventListeners(r1);
-		myFlushEventListener = null;
+		_flushEventListener = null;
 
-		objectLifeCycleEventsListener.destroy();
-		objectLifeCycleEventsListener = null;
+		_listener.destroy();
+		_listener = null;
 
 		_cfg = null;
 	}
@@ -311,8 +308,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference,
 			ReplicationReference referencingObjCounterPartRef, String fieldName) {
 		ensureReplicationActive();
-
-		//System.out.println("referenceNewObject: " + obj + "  UUID: " + counterpartReference.uuid());
 
 		if (obj == null) throw new NullPointerException("obj is null");
 		if (counterpartReference == null) throw new NullPointerException("counterpartReference is null");
@@ -442,9 +437,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final void syncVersionWithPeer(long version) {
 		ensureReplicationActive();
 
-		if (version < Constants.MIN_VERSION_NO)
-			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
-
 		_replicationRecord.setVersion(version);
 		getSession().saveOrUpdate(_replicationRecord);
 		getSession().flush();
@@ -529,7 +521,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	private void ensureCommitted() {
-		if (!simpleObjectContainerCommitCalled)
+		if (!_simpleObjectContainerCommitCalled)
 			throw new RuntimeException("Please call commit() first");
 	}
 
@@ -701,11 +693,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		else {
 			Object obj = getSession().load(of.getClassName(), of.getObjectId());
 
-//			if (obj == null) {
-//				System.out.println("of = " + of);
-//				Util.dumpTable(this, "Replicated");
-//			}
-
 			return _objRefs.put(obj, uuid, of.getVersion());
 		}
 	}
@@ -736,7 +723,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	private void setCommitted(boolean b) {
-		simpleObjectContainerCommitCalled = b;
+		_simpleObjectContainerCommitCalled = b;
 	}
 
 	private final class MyFlushEventListener implements FlushEventListener {
@@ -761,8 +748,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 					try {
 						getSession().save(tmp);
 					} catch (HibernateException e) {
-						Util.dumpTable(HibernateReplicationProviderImpl.this, "ObjectReference");
-						System.out.println("tmp = " + tmp);
 						throw new RuntimeException(e);
 					}
 				} else {
