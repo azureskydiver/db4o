@@ -19,16 +19,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	protected ReadonlyReplicationProviderSignature B_SIGNATURE;
 	private ReadonlyReplicationProviderSignature A_SIGNATURE;
 
-	protected void clean() {
-		for (int i = 0; i < mappings.length; i++) {
-			Class aClass = mappings[i];
-			_providerA.deleteAllInstances(aClass);
-		}
-		_providerA.deleteAllInstances(ArrayList.class);
-
-		_providerA.commit();
-	}
-
 	protected void tstDeletion() {
 		_providerA.storeNew(new Pilot("Pilot1", 42));
 		_providerA.storeNew(new Pilot("Pilot2", 43));
