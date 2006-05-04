@@ -151,7 +151,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         if (yapClass != null || (!a_create)) {
             return yapClass;
         }
-        
+
         yapClass = (YapClass)i_creating.get(a_class);
         
         if(yapClass != null){
@@ -176,7 +176,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
             addYapClass(yapClass);
             addMembers = true;
         }
-        
+
         int id = yapClass.getID();
         if(id == 0){
             yapClass.write(i_stream.getSystemTransaction());

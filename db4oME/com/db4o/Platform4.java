@@ -347,28 +347,28 @@ public final class Platform4 {
     }
     
     private static void createJdk() {
-    	
-        if (classIsAvailable("java.lang.reflect.Method")){
-            jdkWrapper = (JDK)createInstance("com.db4o.JDKReflect");
-        }
-
-        if (classIsAvailable(Platform4.ACCESSIBLEOBJECT)){
-        	jdkWrapper = createJDKWrapper("1_2");
-        }
-        
-        if (jdk().methodIsAvailable("java.lang.Runtime","addShutdownHook",
-                new Class[] { Thread.class })){
-        	jdkWrapper = createJDKWrapper("1_3");
-        }
-
-        if(classIsAvailable("java.nio.channels.FileLock")){
-        	jdkWrapper = createJDKWrapper("1_4");
-        }
-        
-        if(classIsAvailable("java.lang.Enum")){
-        	jdkWrapper = createJDKWrapper("5");
-        }
-        
+    	jdkWrapper=new JDK();
+//        if (classIsAvailable("java.lang.reflect.Method")){
+//            jdkWrapper = (JDK)createInstance("com.db4o.JDKReflect");
+//        }
+//
+//        if (classIsAvailable(Platform4.ACCESSIBLEOBJECT)){
+//        	jdkWrapper = createJDKWrapper("1_2");
+//        }
+//        
+//        if (jdk().methodIsAvailable("java.lang.Runtime","addShutdownHook",
+//                new Class[] { Thread.class })){
+//        	jdkWrapper = createJDKWrapper("1_3");
+//        }
+//
+//        if(classIsAvailable("java.nio.channels.FileLock")){
+//        	jdkWrapper = createJDKWrapper("1_4");
+//        }
+//        
+//        if(classIsAvailable("java.lang.Enum")){
+//        	jdkWrapper = createJDKWrapper("5");
+//        }
+//        
     }
     
     private static JDK createJDKWrapper(String name){

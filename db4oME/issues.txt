@@ -7,7 +7,11 @@ Brutally removed:
 - NQ
 - Coercion (Number superclass is missing)
 
-Open issues:
+Smaller issues:
 
 - Unobfuscated: UUID/INetAddress
 - String#lastIndexOf & Co.
+
+Design issues:
+
+- No int.class/Integer.TYPE, etc. in CLDC, used in YapJavaClass

@@ -30,7 +30,8 @@ public class YInt extends YapJavaClass {
     }
 
     protected Class primitiveJavaClass() {
-        return int.class;
+        //return int.class;
+		return null;
     }
 
     public int linkLength() {

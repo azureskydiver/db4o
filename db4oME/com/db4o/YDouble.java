@@ -27,7 +27,8 @@ final class YDouble extends YLong
 	}
 	
 	protected Class primitiveJavaClass(){
-		return double.class;
+		//return double.class;
+		return null;
 	}
 	
 	Object primitiveNull(){

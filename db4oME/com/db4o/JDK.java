@@ -9,6 +9,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.reflect.self.*;
 import com.db4o.types.*;
 
 /**
@@ -139,6 +140,6 @@ public class JDK {
     }
     
     public Reflector createReflector(Object classLoader) {
-    	return null;
+    	return new NullReflector();
     }
 }
