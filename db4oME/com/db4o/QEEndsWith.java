@@ -12,6 +12,6 @@ public class QEEndsWith extends QEStringCmp
 	}
 
 	protected boolean compareStrings(String candidate, String constraint) {
-		return candidate.lastIndexOf(constraint)==candidate.length()-constraint.length();
+		return J2MEUtil.lastIndexOf(candidate,constraint)==candidate.length()-constraint.length();
 	}
 }

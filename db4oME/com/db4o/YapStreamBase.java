@@ -1444,7 +1444,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     final int setAfterReplication(Transaction ta, Object obj, int depth,  boolean checkJust) {
-        
         if (obj instanceof Db4oType) {
             Db4oType db4oType = db4oTypeStored(ta, obj);
             if (db4oType != null) {
@@ -1468,6 +1467,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 id = 0;
                 throw exc;
             } catch (Throwable t) {
+            	t.printStackTrace();
                 id = 0;
                 fatalException(t);
             }

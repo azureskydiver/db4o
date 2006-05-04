@@ -138,6 +138,10 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     	_config.put(AUTOMATIC_SHUTDOWN,flag);
     }
     
+    public Config4Impl() {
+    	System.out.println("generating config");
+    }
+    
     public void blockSize(int bytes){
        if (bytes < 1 || bytes > 127) {
            Exceptions4.throwRuntimeException(1);
@@ -357,6 +361,9 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 			Reflector configuredReflector=(Reflector)_config.get(CONFIGURED_REFLECTOR);
 			if(configuredReflector == null){
 				configuredReflector=Platform4.createReflector(classLoader());
+				if(configuredReflector==null) {
+					return null;
+				}
 				_config.put(CONFIGURED_REFLECTOR,configuredReflector);	
 			}
 			reflector=new GenericReflector(null, configuredReflector);

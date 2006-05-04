@@ -31,7 +31,8 @@ final class YBoolean extends YapJavaClass
 	}
 	
 	protected Class primitiveJavaClass(){
-		return boolean.class;
+		//return boolean.class;
+		return null;
 	}
 	
 	Object primitiveNull(){

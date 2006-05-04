@@ -502,7 +502,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
             final String childIndent = "   " + indent;
             String name = getClass().getName();
-            int pos = name.lastIndexOf(".") + 1;
+            int pos = J2MEUtil.lastIndexOf(name,".") + 1;
             name = name.substring(pos);
             System.out.println(indent + name + " " + logObject() + "   " + i_id);
             // System.out.println(indent + "JOINS");

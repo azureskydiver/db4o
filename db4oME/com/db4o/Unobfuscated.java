@@ -22,9 +22,9 @@ public class Unobfuscated {
 	    YapWriter writer = new YapWriter(null, 300);
 	    if(! Deploy.csharp) {
 		    try {
-	            new YapStringIO().write(writer, java.net.InetAddress.getLocalHost().getHostName());
+	            new YapStringIO().write(writer, "localhost");
 	            writer.append((byte)0);
-	            writer.append(java.net.InetAddress.getLocalHost().getAddress());
+	            writer.append(new byte[]{127,0,0,1});
 	        } catch (Exception e) {
 	        }
 	    }
