@@ -3,6 +3,7 @@
 package com.db4o.test.replication;
 
 import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
+import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.test.AllTests;
 import com.db4o.test.Test;
 import com.db4o.test.TestSuite;
@@ -37,6 +38,7 @@ public class AllTestsReplication extends AllTests {
 		db4oHsql();
 
 		//oracle();
+		//mysql();
 	}
 
 	private void db4oHsql() {
@@ -63,11 +65,20 @@ public class AllTestsReplication extends AllTests {
 
 	private void oracle() {
 		Configuration tmp = HibernateUtil.oracleConfigA();
+		cleanDb(tmp);
+		ReplicationTestCase.registerProviderPair(HibernateUtil.newOracleProviderA(), new TransientReplicationProvider(new byte[]{66}, "B"));
+	}
+
+	private void mysql() {
+		Configuration tmp = HibernateUtil.produceMySQLConfigA();
+		cleanDb(tmp);
+		ReplicationTestCase.registerProviderPair(new HibernateReplicationProviderImpl(tmp, "mysql"), new TransientReplicationProvider(new byte[]{69}, "B"));
+	}
+
+	private void cleanDb(Configuration tmp) {
 		ReplicationConfiguration.decorate(tmp);
 		HibernateUtil.addAllMappings(tmp);
 		new SchemaExport(tmp).drop(false, true);
-
-		ReplicationTestCase.registerProviderPair(HibernateUtil.newOracleProviderA(), new TransientReplicationProvider(new byte[]{66}, "B"));
 	}
 
 	protected void addTestSuites(TestSuite suites) {
