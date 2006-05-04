@@ -58,7 +58,11 @@ public class HibernateUtil {
 	}
 
 	public static Configuration producePostgreSQLConfigA() {
-		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-A.cfg.xml"));
+		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-A.cfg.xml");
+	}
+
+	public static Configuration producePostgreSQLConfigB() {
+		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-B.cfg.xml");
 	}
 
 	public static Configuration produceMySQLConfigA() {

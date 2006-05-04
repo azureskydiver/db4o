@@ -26,18 +26,6 @@ public class MapTest extends ReplicationTestCase {
 		replicateHolderStep3();
 	}
 
-	protected void checkEmpty() {
-		checkEmpty(_providerA);
-		checkEmpty(_providerB);
-	}
-
-	private void checkEmpty(TestableReplicationProviderInside inside) {
-		Test.ensureEquals(0, inside.getStoredObjects(MapContent.class).size());
-		Test.ensureEquals(0, inside.getStoredObjects(MapHolder.class).size());
-	}
-
-	protected void clean() {delete(new Class[]{MapContent.class, MapHolder.class, HashMap.class});}
-
 	private void storeMapToProviderA() {
 
 		MapHolder mh = new MapHolder("h1");

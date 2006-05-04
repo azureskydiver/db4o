@@ -28,19 +28,6 @@ public class ListTest extends ReplicationTestCase {
 		replicateHolderStep3();
 	}
 
-
-	protected void checkEmpty() {
-		checkEmpty(_providerA);
-		checkEmpty(_providerB);
-	}
-
-	private void checkEmpty(TestableReplicationProviderInside inside) {
-		Test.ensureEquals(0, inside.getStoredObjects(ListContent.class).size());
-		Test.ensureEquals(0, inside.getStoredObjects(ListHolder.class).size());
-	}
-
-	protected void clean() {delete(new Class[]{ListContent.class, ListHolder.class, ArrayList.class});}
-
 	private void storeListToProviderA() {
 
 		ListHolder lh = new ListHolder("h1");
