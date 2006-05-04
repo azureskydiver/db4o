@@ -6,28 +6,22 @@ import java.util.Collection;
 import java.util.Iterator;
 
 final class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
-// ------------------------------ FIELDS ------------------------------
-
 	private final Collection _delegate;
-	private Iterator _itor;
 
-// --------------------------- CONSTRUCTORS ---------------------------
+	private Iterator _itor;
 
 	public ObjectSetCollectionFacade(Collection delegate_) {
 		_delegate = delegate_;
 		reset();
 	}
 
-
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface List ---------------------
-
 	public final boolean contains(Object o) {
 		return _delegate.contains(o);
 	}
 
-// --------------------- Interface ObjectSet ---------------------
+	public Collection getDelegate() {
+		return _delegate;
+	}
 
 	public final boolean hasNext() {
 		return _itor.hasNext();
@@ -37,16 +31,11 @@ final class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 		return _itor.next();
 	}
 
-	public final int size() {
-		return _delegate.size();
-	}
-
-	public Collection getDelegate() {
-		return _delegate;
-	}
-
 	public void reset() {
 		_itor = _delegate.iterator();
 	}
 
+	public final int size() {
+		return _delegate.size();
+	}
 }

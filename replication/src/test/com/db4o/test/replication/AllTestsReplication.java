@@ -2,7 +2,7 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
+import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
 import com.db4o.test.AllTests;
 import com.db4o.test.Test;
 import com.db4o.test.TestSuite;

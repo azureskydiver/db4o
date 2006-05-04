@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate;
 
-import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
+import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
 import com.db4o.replication.hibernate.impl.TablesCreatorImpl;
 import com.db4o.test.Test;
 import org.hibernate.cfg.Configuration;
@@ -33,7 +33,7 @@ public class TablesCreatorTest {
 		Configuration cfg = createCfg();
 		final TablesCreatorImpl creator = new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg));
 
-		creator.createTables();
+		creator.validateOrCreate();
 	}
 
 	public void tstValidate() {
@@ -43,7 +43,7 @@ public class TablesCreatorTest {
 
 		boolean exception = false;
 		try {
-			creator.createTables();
+			creator.validateOrCreate();
 		} catch (RuntimeException e) {
 			exception = true;
 		}

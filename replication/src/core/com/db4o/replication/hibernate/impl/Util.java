@@ -1,7 +1,6 @@
 package com.db4o.replication.hibernate.impl;
 
 import com.db4o.ext.Db4oUUID;
-import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.metadata.MySignature;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
@@ -28,47 +27,25 @@ import java.sql.Statement;
 import java.util.List;
 
 public final class Util {
-	public static final Class[] metadataClasses = new Class[]{
+	public static final Class[] _metadataClasses = new Class[]{
 			ReplicationRecord.class, ReplicationProviderSignature.class,
 			ReplicationComponentField.class, ReplicationComponentIdentity.class,
 			ObjectReference.class};
+
 	public static boolean isAssignableFrom(Class claxx) {
-		for (Class aClass : metadataClasses)
+		for (Class aClass : _metadataClasses)
 			if (aClass.isAssignableFrom(claxx)) return true;
 		return false;
 	}
 
 	public static Boolean isInstanceOf(Object entity) {
-		for (Class aClass : metadataClasses)
+		for (Class aClass : _metadataClasses)
 			if (aClass.isInstance(entity)) return true;
 		return false;
 	}
 
-	public static long getMaxVersion(Connection con) {
-		String sql = "SELECT max(" + ReplicationRecord.VERSION + ") from " + ReplicationRecord.TABLE_NAME;
-		Statement st = null;
-		ResultSet rs = null;
-		try {
-			st = con.createStatement();
-			rs = st.executeQuery(sql);
-
-			if (!rs.next())
-				throw new RuntimeException("failed to get the max version, the sql was = " + sql);
-			return Math.max(rs.getLong(1), Constants.MIN_VERSION_NO);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			closeStatement(st);
-			closeResultSet(rs);
-		}
-	}
-
 	public static void dumpTable(HibernateReplicationProvider p, String s) {
 		dumpTable(p.getName(), p.getSession(), s);
-	}
-
-	public static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	public static void dumpTable(String providerName, Connection con, String tableName) {
@@ -96,6 +73,10 @@ public final class Util {
 		} finally {
 			closeResultSet(rs);
 		}
+	}
+
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	private static void closePreparedStatement(PreparedStatement ps) {

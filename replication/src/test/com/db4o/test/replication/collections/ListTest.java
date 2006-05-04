@@ -4,7 +4,7 @@ package com.db4o.test.replication.collections;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProvider;
+import com.db4o.replication.hibernate.impl.HibernateReplicationProvider;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestCase;
 

@@ -1,8 +1,6 @@
 package com.db4o.replication.hibernate.impl;
 
 import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
-import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.Uuid;
@@ -39,41 +37,41 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 			+ " where longPart = ? "
 			+ " AND provider = ?";
 
-	private final Set<ObjectReference> dirtyNewRefs = new HashSet();
+	private final Set<ObjectReference> _dirtyNewRefs = new HashSet();
 
-	private final Set<HibernateObjectId> dirtyUpdatedRefs = new HashSet();
+	private final Set<HibernateObjectId> _dirtyUpdatedRefs = new HashSet();
 
-	private final Set<ObjectReference> deletedRefs = new HashSet();
+	private final Set<ObjectReference> _deletedRefs = new HashSet();
 
-	private Set<Configuration> configs = new HashSet<Configuration>();
+	private Set<Configuration> _configs = new HashSet<Configuration>();
 
-	private Map<Thread, Session> threadSessionMap = new HashMap();
+	private Map<Thread, Session> _threadSessionMap = new HashMap();
 
 	private boolean _alive = true;
 
 	public final void configure(Configuration cfg) {
-		new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg)).createTables();
+		new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg)).validateOrCreate();
 
 		Util.initMySignature(cfg);
 
-		configs.add(cfg);
+		_configs.add(cfg);
 		setListeners(cfg);
 	}
 
 	public final void destroy() {
 		_alive = false;
-		threadSessionMap.clear();
-		threadSessionMap = null;
+		_threadSessionMap.clear();
+		_threadSessionMap = null;
 
-		for (Configuration cfg : configs)
+		for (Configuration cfg : _configs)
 			resetListeners(cfg);
 
-		configs.clear();
-		configs = null;
+		_configs.clear();
+		_configs = null;
 	}
 
 	public final void install(Session session, Configuration cfg) {
-		threadSessionMap.put(Thread.currentThread(), session);
+		_threadSessionMap.put(Thread.currentThread(), session);
 
 		GeneratorMap.put(session, new TimeStampIdGenerator());
 	}
@@ -91,7 +89,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 
 		TimeStampIdGenerator generator = GeneratorMap.get(s);
 
-		for (ObjectReference ref : dirtyNewRefs) {
+		for (ObjectReference ref : _dirtyNewRefs) {
 			Uuid uuid = new Uuid();
 			uuid.setLongPart(generator.generate());
 			uuid.setProvider(Util.genMySignature(s));
@@ -101,18 +99,18 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 			getSession().save(ref);
 		}
 
-		dirtyNewRefs.clear();
+		_dirtyNewRefs.clear();
 
-		for (HibernateObjectId hid : dirtyUpdatedRefs) {
-			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid.className, hid.hibernateId);
-			if (ref != null && !dirtyNewRefs.contains(ref) && !deletedRefs.contains(ref)) {
+		for (HibernateObjectId hid : _dirtyUpdatedRefs) {
+			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid._className, hid._hibernateId);
+			if (ref != null && !_dirtyNewRefs.contains(ref) && !_deletedRefs.contains(ref)) {
 				ref.setVersion(generator.generate());
 				getSession().update(ref);
 			}
 		}
 
-		dirtyUpdatedRefs.clear();
-		deletedRefs.clear();
+		_dirtyUpdatedRefs.clear();
+		_deletedRefs.clear();
 	}
 
 	public void onPostInsert(PostInsertEvent event) {
@@ -128,7 +126,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		ref.setClassName(entity.getClass().getName());
 		ref.setObjectId(id);
 
-		dirtyNewRefs.add(ref);
+		_dirtyNewRefs.add(ref);
 	}
 
 	public final void onPostUpdate(PostUpdateEvent event) {
@@ -152,7 +150,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 
 	protected void ObjectUpdated(Object obj, long id) {
 		HibernateObjectId hid = new HibernateObjectId(id, obj.getClass().getName());
-		dirtyUpdatedRefs.add(hid);
+		_dirtyUpdatedRefs.add(hid);
 	}
 
 	private void collectionUpdated(Object collection) {
@@ -210,7 +208,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 	}
 
 	private Session getSession() {
-		Session session = threadSessionMap.get(Thread.currentThread());
+		Session session = _threadSessionMap.get(Thread.currentThread());
 
 		if (session == null)
 			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
@@ -227,7 +225,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		ObjectReference ref = Util.getObjectReferenceById(getSession(), event.getEntity().getClass().getName(), Util.castAsLong(event.getId()));
 		if (ref == null) return;
 
-		deletedRefs.add(ref);
+		_deletedRefs.add(ref);
 		deleteObjectRef(ref);
 	}
 

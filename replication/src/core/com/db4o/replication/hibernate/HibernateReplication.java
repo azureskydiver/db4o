@@ -10,10 +10,20 @@ import com.db4o.replication.ReplicationSession;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 
+/**
+ * Factory to create ReplicationSessions.
+ *
+ * @author Albert Kwan
+ * @author Klaus Wuestefeld
+ * @version 1.2
+ * @see com.db4o.replication.Replication
+ * @see com.db4o.replication.ReplicationProvider
+ * @see ReplicationEventListener
+ * @since dRS 1.2
+ */
 public class HibernateReplication {
 	/**
-	 * begins a replication session between db4o and Hibernate, no conflict
-	 * resolver.
+	 * Begins a replication session between db4o and Hibernate without ReplicationEventListener.
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
 	 * @see ReplicationEventListener
@@ -23,8 +33,7 @@ public class HibernateReplication {
 	}
 
 	/**
-	 * begins a replication session between Hibernate and Hibernate, no conflict
-	 * resolver
+	 * Begins a replication session between Hibernate and Hibernate without ReplicationEventListener.
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
 	 * @see ReplicationEventListener
@@ -34,16 +43,19 @@ public class HibernateReplication {
 	}
 
 	/**
-	 * begins a replication session between db4o and Hibernate
+	 * Begins a replication session between db4o and Hibernate.
 	 */
-	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg, ReplicationEventListener listener) {
+	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg,
+			ReplicationEventListener listener) {
 		return Replication.begin(new Db4oReplicationProvider(oc), new HibernateReplicationProviderImpl(cfg), listener);
 	}
 
 	/**
-	 * begins a replication session between Hibernate and Hibernate
+	 * Begins a replication session between Hibernate and Hibernate
 	 */
-	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2, ReplicationEventListener listener) {
-		return Replication.begin(new HibernateReplicationProviderImpl(cfg1), new HibernateReplicationProviderImpl(cfg2), listener);
+	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2,
+			ReplicationEventListener listener) {
+		return Replication.begin(new HibernateReplicationProviderImpl(cfg1), new HibernateReplicationProviderImpl(cfg2),
+				listener);
 	}
 }

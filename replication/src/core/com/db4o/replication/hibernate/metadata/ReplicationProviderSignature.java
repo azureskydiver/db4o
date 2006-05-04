@@ -5,8 +5,6 @@ import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import java.util.Arrays;
 
 public class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
-// ------------------------------ FIELDS ------------------------------
-
 	/**
 	 * Table for storing ReplicationProviderSignature byte[].
 	 */
@@ -24,9 +22,6 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 	private long id;
 
 	private long creationTime;
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
 	public ReplicationProviderSignature() {
 	}
 
@@ -35,7 +30,18 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 		this.creationTime = System.currentTimeMillis();
 	}
 
-// --------------------- GETTER / SETTER METHODS ---------------------
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		final ReplicationProviderSignature that = (ReplicationProviderSignature) o;
+
+		if (creationTime != that.creationTime) return false;
+		if (id != that.id) return false;
+		if (!Arrays.equals(bytes, that.bytes)) return false;
+
+		return true;
+	}
 
 	public byte[] getBytes() {
 		return bytes;
@@ -59,21 +65,6 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-// ------------------------ CANONICAL METHODS ------------------------
-
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		final ReplicationProviderSignature that = (ReplicationProviderSignature) o;
-
-		if (creationTime != that.creationTime) return false;
-		if (id != that.id) return false;
-		if (!Arrays.equals(bytes, that.bytes)) return false;
-
-		return true;
 	}
 
 	public int hashCode() {

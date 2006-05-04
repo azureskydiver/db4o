@@ -1,21 +1,25 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class Uuid {
-// ------------------------------ FIELDS ------------------------------
-
 	public static final String LONG_PART = "longPart";
 	public static final String PROVIDER = "provider";
 
 	private long longPart;
 
 	private ReplicationProviderSignature provider;
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
 	public Uuid() {
 	}
 
-// --------------------- GETTER / SETTER METHODS ---------------------
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		final Uuid uuid = (Uuid) o;
+
+		if (longPart != uuid.longPart) return false;
+
+		return true;
+	}
 
 	public long getLongPart() {
 		return longPart;
@@ -31,20 +35,6 @@ public class Uuid {
 
 	public void setProvider(ReplicationProviderSignature provider) {
 		this.provider = provider;
-	}
-
-// ------------------------ CANONICAL METHODS ------------------------
-
-	public boolean equals(Object o) {
-		System.out.println("Uuid.equals");
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		final Uuid uuid = (Uuid) o;
-
-		if (longPart != uuid.longPart) return false;
-
-		return true;
 	}
 
 	public int hashCode() {

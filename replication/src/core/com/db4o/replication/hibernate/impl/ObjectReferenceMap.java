@@ -9,47 +9,43 @@ import java.util.Iterator;
 import java.util.Map;
 
 final class ObjectReferenceMap {
-// ------------------------------ FIELDS ------------------------------
-
-	private final Map<Object, ReplicationReference> delegate;
-
-// --------------------------- CONSTRUCTORS ---------------------------
+	private final Map<Object, ReplicationReference> _delegate;
 
 	public ObjectReferenceMap() {
-		delegate = new IdentityHashMap();
+		_delegate = new IdentityHashMap();
 	}
 
 	public final void clear() {
-		delegate.clear();
+		_delegate.clear();
 	}
 
 	public final ReplicationReference get(Object obj) {
-		return delegate.get(obj);
-	}
-
-	public final ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
-		if (delegate.containsKey(obj)) throw new RuntimeException("key already existed");
-		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
-		delegate.put(obj, result);
-		return result;
-	}
-
-	public final void visitEntries(Visitor4 visitor) {
-		Iterator i = delegate.values().iterator();
-
-		while (i.hasNext())
-			visitor.visit(i.next());
-	}
-
-	public String toString() {
-		return delegate.toString();
+		return _delegate.get(obj);
 	}
 
 	public ReplicationReference getByUUID(Db4oUUID uuid) {
-		for (ReplicationReference ref : delegate.values())
+		for (ReplicationReference ref : _delegate.values())
 			if (ref.uuid().equals(uuid))
 				return ref;
 		return null;
+	}
+
+	public final ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
+		if (_delegate.containsKey(obj)) throw new RuntimeException("key already existed");
+		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
+		_delegate.put(obj, result);
+		return result;
+	}
+
+	public String toString() {
+		return _delegate.toString();
+	}
+
+	public final void visitEntries(Visitor4 visitor) {
+		Iterator i = _delegate.values().iterator();
+
+		while (i.hasNext())
+			visitor.visit(i.next());
 	}
 }
 
