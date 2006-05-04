@@ -62,7 +62,7 @@ public class HibernateUtil {
 	}
 
 	public static Configuration produceMySQLConfigA() {
-		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml"));
+		return new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml");
 	}
 
 	public static HibernateReplicationProvider newOracleProviderA() {
