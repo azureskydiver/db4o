@@ -42,21 +42,11 @@ ReplicationSession replication = Replication.begin(objectContainer, hibernateCon
 When an object is deleted since last replication in provider A and you would like to replicate this changes ._
 to provider B, you can make use of the dRS to handle that.
 
-The ReplicationProvider interface provides a method uuidsDeletedSinceLastReplication(), ._
-which returns the UUIDs of the objects deleted since last replication. Given a UUID, you then call ._
-getObject(Db4oUUID uuid) of the other provider, if it does not return null, it means the counterpart of ._
-the deleted object exists in the other provider. You could replicate the deletion as follow:
+You could replicate the deletion as follow:
 
 .c //Start the replication
 ReplicationSession replication = Replication.begin(objectContainer, hibernateConfiguration);
-
-ObjectSet deletions = replication.providerA().uuidsDeletedSinceLastReplication();
-while (deletions.hasNext()) {
-	Db4oUUID uuid = (Db4oUUID) deletions.next();
-	Object obj = other.getObject(uuid);
-	if (obj == null) continue;
-	replication.replicate(obj);
-}
+replication.replicateDeletions(Pilot.class);
 ..
 
 The deletion will then be replicated across to the other provider.
