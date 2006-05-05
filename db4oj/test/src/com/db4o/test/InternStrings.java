@@ -19,6 +19,7 @@ public class InternStrings {
 	}
 	
 	public void store() {
+        Test.deleteAllInstances(this);
 		String name="Foo";
 		Test.store(new InternStrings(name));
 		Test.store(new InternStrings(name));

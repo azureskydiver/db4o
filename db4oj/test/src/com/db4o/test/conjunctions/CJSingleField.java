@@ -22,6 +22,7 @@ public class CJSingleField implements CJHasID{
     }
     
     public void store(){
+        Test.deleteAllInstances(CJSingleField.class);
         store(1);
         store(2);
         store(3);

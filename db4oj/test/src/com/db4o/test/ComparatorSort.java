@@ -58,6 +58,7 @@ public class ComparatorSort {
 	}
 	
 	public void store() {
+        Test.deleteAllInstances(this);
 		for(int i=0;i<4;i++) {
 			Test.store(new ComparatorSort(i,String.valueOf(3-i)));
 		}

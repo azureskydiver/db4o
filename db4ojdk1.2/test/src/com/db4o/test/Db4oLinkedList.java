@@ -55,14 +55,7 @@ public class Db4oLinkedList {
         checkHelper(i_helper);
         runElementTest(true);
         
-        close();
-        
-        try {
-            new Defragment().run(currentFileName(), true);
-        } finally {
-            
-            reOpen();
-        }
+        Test.defragment();
         
        restoreMembers();
        checkHelper(i_helper);

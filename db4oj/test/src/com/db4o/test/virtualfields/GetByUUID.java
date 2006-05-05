@@ -24,6 +24,7 @@ public class GetByUUID {
     }
     
     public void store(){
+        Test.deleteAllInstances(GetByUUID.class);
         Test.store(new GetByUUID("one"));
         Test.store(new GetByUUID("two"));
     }

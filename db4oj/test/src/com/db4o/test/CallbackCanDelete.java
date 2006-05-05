@@ -21,6 +21,7 @@ public class CallbackCanDelete {
     }
     
     public void storeOne(){
+        Test.deleteAllInstances(this);
         _name = "p1";
         _next = new CallbackCanDelete("c1", null);
     }

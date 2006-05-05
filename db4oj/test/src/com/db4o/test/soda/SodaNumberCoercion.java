@@ -36,6 +36,7 @@ public class SodaNumberCoercion {
 	}
 
 	public void store() {
+        Test.deleteAllInstances(Thing.class);
 		Test.store(new Thing((byte)10,(short)10,10,10L,10f,10d));
 		Test.store(new Thing((byte)100,(short)100,100,100L,100f,100d));
 		Test.store(new Thing((byte)42,(short)42,42,42L,42f,42d));
