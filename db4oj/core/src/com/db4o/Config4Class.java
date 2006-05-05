@@ -8,10 +8,10 @@ import com.db4o.reflect.*;
 
 public class Config4Class extends Config4Abstract implements ObjectClass,
     DeepClone {
+    
+    private final Config4Impl _configImpl;
 
 	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(0);
-    
-	private final static KeySpec CONFIG=new KeySpec(null);
 
 	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
 
@@ -47,12 +47,13 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     
 	private boolean _processing;
 
-    protected Config4Class(KeySpecHashtable4 config) {
+    protected Config4Class(Config4Impl configuration, KeySpecHashtable4 config) {
     	super(config);
+        _configImpl = configuration;
     }
 
 	Config4Class(Config4Impl a_configuration, String a_name) {
-        _config.put(CONFIG,a_configuration);
+        _configImpl = a_configuration;
         setName(a_name);
     }
 
@@ -105,7 +106,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public Object deepClone(Object param){
-        return new Config4Class(_config);
+        return new Config4Class((Config4Impl)param,_config);
     }
 
 	public void enableReplication(boolean setting) {
@@ -291,7 +292,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
 	Config4Impl config() {
-		return (Config4Impl)_config.get(CONFIG);
+		return _configImpl;
 	}
 
 	int generateUUIDs() {

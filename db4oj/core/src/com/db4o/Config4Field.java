@@ -9,7 +9,7 @@ import com.db4o.reflect.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     
-	private final static KeySpec CLASS=new KeySpec(null);
+    private final Config4Class _configClass;
     
 	private final static KeySpec FIELD_REFLECTOR=new KeySpec(null);
     
@@ -19,19 +19,20 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     
 	private final static KeySpec METAFIELD=new KeySpec(null);
     
-	private final static KeySpec INITIALIZED=new KeySpec(false);
+    private boolean _initialized;
 
-	protected Config4Field(KeySpecHashtable4 config) {
+	protected Config4Field(Config4Class a_class, KeySpecHashtable4 config) {
 		super(config);
+        _configClass = a_class;
 	}
 	
     Config4Field(Config4Class a_class, String a_name) {
-        _config.put(CLASS, a_class);
+        _configClass = a_class;
         setName(a_name);
     }
 
     private Config4Class classConfig() {
-    	return (Config4Class)_config.get(CLASS);
+    	return _configClass;
     }
     
     String className() {
@@ -39,7 +40,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     }
 
     public Object deepClone(Object param) {
-        return new Config4Field(_config);
+        return new Config4Field((Config4Class)param, _config);
     }
 
     private ReflectField fieldReflector() {
@@ -69,7 +70,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     }
 
     public void initOnUp(Transaction systemTrans, YapField yapField) {
-        if (!_config.getAsBoolean(INITIALIZED)) {
+        if (!_initialized) {
             YapStream anyStream = systemTrans.i_stream;
             if(Tuning.fieldIndices){
 	            if (anyStream.maintainsIndices()) {
@@ -151,7 +152,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	                }
 	            }
             }
-            _config.put(INITIALIZED, true);
+            _initialized = true;
         }
     }
 
