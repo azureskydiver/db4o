@@ -15,6 +15,7 @@ public class ParameterizedEvaluation implements Serializable {
     public String str;
     
     public void store(){
+        Test.deleteAllInstances(this);
         store("one");
         store("fun");
         store("ton");

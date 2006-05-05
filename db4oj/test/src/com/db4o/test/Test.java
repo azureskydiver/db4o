@@ -94,7 +94,19 @@ public class Test extends AllTests {
             objectServer=null;
         }
         try {
+            if(MEMORY_FILE){
+                new File(fileName).delete();
+                RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+                raf.write(memoryFileContent);
+                raf.close();
+            }
             new Defragment().run(fileName, true);
+            if(MEMORY_FILE){
+                RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+                memoryFileContent = new byte[(int)raf.length()];
+                raf.read(memoryFileContent);
+                raf.close();
+            }
            
         } catch(Exception e){
             e.printStackTrace();

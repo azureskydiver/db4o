@@ -22,6 +22,7 @@ public class CascadeDeleteFalse {
     }
     
     public void storeOne(){
+        Test.deleteAllInstances(CascadeDeleteFalseHelper.class);
         h1 = new CascadeDeleteFalseHelper();
         h2 = new CascadeDeleteFalseHelper();
         h3 = new CascadeDeleteFalseHelper();

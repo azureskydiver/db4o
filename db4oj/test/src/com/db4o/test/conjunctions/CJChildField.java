@@ -23,6 +23,7 @@ public class CJChildField implements CJHasID{
     }
     
     public void store(){
+        Test.deleteAllInstances(CJChildField.class);
         for (int i = 0; i < 20; i++) {
             store(i);
         }

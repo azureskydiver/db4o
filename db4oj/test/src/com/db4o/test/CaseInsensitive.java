@@ -22,6 +22,7 @@ public class CaseInsensitive implements Serializable {
     }
     
     public void store(){
+        Test.deleteAllInstances(this);
         Test.store(new CaseInsensitive("HelloWorld"));
     }
     

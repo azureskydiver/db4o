@@ -20,6 +20,7 @@ public class Cat {
     }
     
     public void store(){
+        Test.deleteAllInstances(Cat.class);
         Test.store(new Cat("Fritz"));
         Test.store(new Cat("Garfield"));
         Test.store(new Cat("Tom"));

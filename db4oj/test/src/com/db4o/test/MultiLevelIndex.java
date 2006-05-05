@@ -17,6 +17,7 @@ public class MultiLevelIndex {
     }
     
     public void store(){
+        Test.deleteAllInstances(this);
         store1(3);
         store1(2);
         store1(5);
