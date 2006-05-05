@@ -5,7 +5,7 @@
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="field" default-lazy="false"
-                   default-cascade="all">
+                   default-cascade="save-update">
 	<class name="f1.one_to_one.Pilot">
 		<id column="id" type="long">
 			<generator class="foreign">

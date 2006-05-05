@@ -20,11 +20,12 @@ specified automatically. This way, you can save the time needed in creating tabl
 For each persisted class, you need to define a mapping file for Hibernate to understand how to store and load ._
 the objects. Here are some important information:
 
-If you do not define getter/setter for property, make default-access="field". default-lazy="false" default-cascade="all" ._
-is required for replication to work properly.
+If you do not define getter/setter for property, make default-access="field". default-lazy="false" default-cascade="save-update" ._
+is required for replication to work properly. Note, you should not set the cascade style to "delete", otherwise deletion replication ._
+will not work.
 
 .c
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 ..
 You must define an artificial identity column for the object.
 .c
@@ -51,7 +52,7 @@ public class Helmet {
 ..
 A one-to-one association to another persistent class is declared using a one-to-one element.
 .c
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.one_to_one.Pilot">
 		<id column="id" type="long">
 			<generator class="native"/>
@@ -117,7 +118,7 @@ public class Car {
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.Car">
 		<id column="id" type="long">
 			<generator class="native"/>
@@ -138,7 +139,7 @@ public class Pilot {
 }
 ..
 .c
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.array.Pilot">
 		<id column="id" type="long">
 			<generator class="native"/>
@@ -146,7 +147,7 @@ public class Pilot {
 
 		<property name="name"/>
 
-		<array name="cars" table="cars" cascade="all">
+		<array name="cars" table="cars">
 			<key column="pilotId"/>
 			<list-index column="sortOrder"/>
 			<one-to-many class="f1.collection.Car"/>
@@ -205,7 +206,7 @@ public class Pilot {
 ..
 Map the List using the list tag in Pilot.hbm.xml
 .c
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.list.Pilot">
 		<id column="id" type="long">
 			<generator class="native"/>
@@ -270,7 +271,7 @@ public class Pilot {
 ..
 Use the set tag.
 .c
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.set.Pilot">
 		<id column="id" type="long">
 			<generator class="native"/>
@@ -333,7 +334,7 @@ public class Pilot {
 ..
 Use the map element to define the Map in the hbm file.
 .c
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.map.Pilot">
 		<id column="id" type="long">
 			<generator class="native"/>
