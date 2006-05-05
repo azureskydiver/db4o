@@ -22,28 +22,28 @@ public abstract class SelfReflectionRegistry {
 	public abstract ClassInfo infoFor(Class clazz);
 
 	public Object arrayFor(Class clazz,int length) {
-		if(Integer.class.isAssignableFrom(clazz)||int.class.isAssignableFrom(clazz)) {
+		if(Integer.class.isAssignableFrom(clazz)) {
 			return new int[length];
 		}
-		if(Long.class.isAssignableFrom(clazz)||long.class.isAssignableFrom(clazz)) {
+		if(Long.class.isAssignableFrom(clazz)) {
 			return new long[length];
 		}
-		if(Short.class.isAssignableFrom(clazz)||short.class.isAssignableFrom(clazz)) {
+		if(Short.class.isAssignableFrom(clazz)) {
 			return new short[length];
 		}
-		if(Boolean.class.isAssignableFrom(clazz)||boolean.class.isAssignableFrom(clazz)) {
+		if(Boolean.class.isAssignableFrom(clazz)) {
 			return new boolean[length];
 		}
-		if(Byte.class.isAssignableFrom(clazz)||byte.class.isAssignableFrom(clazz)) {
+		if(Byte.class.isAssignableFrom(clazz)) {
 			return new byte[length];
 		}
-		if(Character.class.isAssignableFrom(clazz)||char.class.isAssignableFrom(clazz)) {
+		if(Character.class.isAssignableFrom(clazz)) {
 			return new char[length];
 		}
-		if(Float.class.isAssignableFrom(clazz)||float.class.isAssignableFrom(clazz)) {
+		if(Float.class.isAssignableFrom(clazz)) {
 			return new float[length];
 		}
-		if(Double.class.isAssignableFrom(clazz)||double.class.isAssignableFrom(clazz)) {
+		if(Double.class.isAssignableFrom(clazz)) {
 			return new double[length];
 		}
 		if(String.class.isAssignableFrom(clazz)) {

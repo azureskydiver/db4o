@@ -17,3 +17,4 @@ Design issues:
 - No int.class/Integer.TYPE, etc. in CLDC, used in YapJavaClass
 
 several IDS's compile differenty
+-Xheapsize:1m
