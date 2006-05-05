@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate;
 
-import com.db4o.replication.hibernate.impl.ObjectLifeCycleEventsListenerImpl;
 import com.db4o.replication.hibernate.impl.ObjectLifeCycleEventsListener;
+import com.db4o.replication.hibernate.impl.ObjectLifeCycleEventsListenerImpl;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -25,6 +25,12 @@ import org.hibernate.cfg.Configuration;
  * Session session = sessionFactory.openSession();
  * // Let the ReplicationConfigurator install the listeners to the Session
  * ReplicationConfigurator.install(session, cfg);
+ * Transaction tx = session.beginTransaction();
+ * Pilot john = (Pilot) session.createCriteria(Pilot.class) .add(Restrictions.eq("name", "John")).list().get(0);
+ * john.name = "Anna";
+ * // Remember to call flush() before commit()
+ * session.flush();
+ * tx.commit();
  * </pre>
  *
  * @author Albert Kwan
@@ -33,6 +39,7 @@ import org.hibernate.cfg.Configuration;
  */
 public class ReplicationConfigurator {
 	private static ObjectLifeCycleEventsListener listener = new ObjectLifeCycleEventsListenerImpl();
+
 	/**
 	 * Registers object update event listeners to Configuration.
 	 * If required drs tables do not exist, create them automatically.
