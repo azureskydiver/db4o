@@ -400,7 +400,7 @@ since last round of replication. This section describes how do you configure ._
 dRS to detect object changes.
 
 dRS detects object changes by listening the the object update events thrown by Hibernate. ._
-In your day to day usage of Hibernate, you can enable the listening by following this code:
+In your day to day usage of Hibernate, you can enable the listening by following this code.
 .c
 // Read or create the Configuration as usual
 Configuration cfg = new Configuration().configure("your-hibernate.cfg.xml");
@@ -412,6 +412,12 @@ SessionFactory sessionFactory = cfg.buildSessionFactory();
 Session session = sessionFactory.openSession();
 // Let the ReplicationConfigurator install the listeners to the Session
 ReplicationConfigurator.install(session, cfg);
+Transaction tx = session.beginTransaction();
+Pilot john = (Pilot) session.createCriteria(Pilot.class) .add(Restrictions.eq("name", "John")).list().get(0);
+john.name = "Anna";
+// Remember to call flush() before commit()
+session.flush();
+tx.commit();
 ..
 
 Here you can see, you can create the Configuration and the Session objects as usual. ._
@@ -430,17 +436,6 @@ To store this metadate in relational database, dRS will do the following:
 2) - Creates a "ObjectReference" table to store the UUIDs and version numbers of objects
 
 During replication, dRS will makes use of these tables to uniquely identify objects.
-
-.2 Generating UUID for new objects ..
-As mentioned above, object is identified by both the first part and second part of UUID. ._
-For objects that originates from the same database, they will share the same second part of UUID. ._
-They only differs in the first part of UUID. So dRS needs to have the ability to generate unique ._
-first part for each new object.
-
-To do so, dRS generate the first parts of new objects as a sequence of integers. ._
-dRS creates a table named "UuidLongPartSequence" to store the current sequence number. ._
-When a new object is saved, dRS asks the table for the sequence number and uses it as the first ._
-part of UUID of that object.
 
 .2 Replication histories ..
 dRS creates a table called "ReplicationRecord" to store the histories of replication. ._
@@ -463,7 +458,6 @@ last replication.
  - ReplicationComponentIdentity
  - ReplicationProviderSignature
  - ReplicationRecord
- - UuidLongPartSequence
  - ObjectReference
 
 Oracle 9i/10g dialect of the DDL
@@ -473,7 +467,6 @@ create table ReplicationComponentField (id number(19,0) not null, referencingObj
 create table ReplicationComponentIdentity (id number(19,0) not null, uuidLongPart number(19,0) not null, provider number(19,0) not null, referencingObjectUuidLongPart number(19,0) not null, referencingObjectField number(19,0) not null, primary key (id), unique (uuidLongPart, provider))
 create table ReplicationProviderSignature (drs_provider_id number(19,0) not null, class varchar2(255) not null, bytes raw(255) not null, creationTime number(19,0), primary key (drs_provider_id))
 create table ReplicationRecord (id number(19,0) not null, version number(19,0) not null, primary key (id))
-create table UuidLongPartSequence (unused_id number(19,0) not null, current_seq_number number(19,0) not null, primary key (unused_id))
 alter table ObjectReference add constraint FK82F9AAAC8071AB25 foreign key (provider) references ReplicationProviderSignature
 alter table ReplicationComponentIdentity add constraint FK4BFE028F9FC4B083 foreign key (referencingObjectField) references ReplicationComponentField
 alter table ReplicationComponentIdentity add constraint FK4BFE028F8071AB25 foreign key (provider) references ReplicationProviderSignature
