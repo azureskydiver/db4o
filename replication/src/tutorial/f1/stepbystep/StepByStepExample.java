@@ -114,6 +114,7 @@ public class StepByStepExample {
 		System.out.println("Changing the name of Pilot from 'John' to 'Anna'");
 		john.name = "Anna";
 
+		session.flush();    //Remember to call flush() before commit()
 		tx.commit();
 
 		session.close();
