@@ -6,7 +6,7 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
 	<class name="com.db4o.test.replication.collections.SimpleArrayHolder">
 		<id column="id" type="long">
 			<generator class="native"/>

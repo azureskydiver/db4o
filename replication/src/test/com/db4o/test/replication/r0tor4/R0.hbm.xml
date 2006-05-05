@@ -6,26 +6,26 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="field" default-lazy="false">
+<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="com.db4o.test.replication.r0tor4.R0" table="R0">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 		<discriminator/>
 		<property name="name"/>
-		<many-to-one name="r0" cascade="all"/>
-		<many-to-one name="r1" cascade="all"/>
+		<many-to-one name="r0"/>
+		<many-to-one name="r1"/>
 		<subclass name="com.db4o.test.replication.r0tor4.R1">
-			<many-to-one name="circle1" cascade="all"/>
-			<many-to-one name="r2" cascade="all"/>
+			<many-to-one name="circle1"/>
+			<many-to-one name="r2"/>
 			<subclass name="com.db4o.test.replication.r0tor4.R2">
-				<many-to-one name="circle2" cascade="all"/>
-				<many-to-one name="r3" cascade="all"/>
+				<many-to-one name="circle2"/>
+				<many-to-one name="r3"/>
 				<subclass name="com.db4o.test.replication.r0tor4.R3">
-					<many-to-one name="circle3" cascade="all"/>
-					<many-to-one name="r4" cascade="all"/>
+					<many-to-one name="circle3"/>
+					<many-to-one name="r4"/>
 					<subclass name="com.db4o.test.replication.r0tor4.R4">
-						<many-to-one name="circle4" cascade="all"/>
+						<many-to-one name="circle4"/>
 					</subclass>
 				</subclass>
 			</subclass>

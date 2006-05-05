@@ -6,7 +6,7 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
+<hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
 	<class name="com.db4o.test.replication.collections.ListHolder">
 		<id column="id" type="long">
 			<generator class="native"/>
@@ -14,7 +14,7 @@
 
 		<property name="name"/>
 
-		<list name="list" table="ListContent" cascade="all">
+		<list name="list" table="ListContent">
 			<key column="ListHolderId"/>
 			<list-index column="sortOrder"/>
 			<one-to-many class="com.db4o.test.replication.collections.ListContent"/>
