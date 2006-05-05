@@ -48,7 +48,13 @@ public class KeySpecHashtable4 extends Hashtable4 {
 
     public Object get(KeySpec spec) {
         Object value=super.get(spec);
-        return (value==null ? spec.defaultValue() : value);
+        if(value == null){
+            value = spec.defaultValue();
+            if(value != null){
+                super.put(spec, value);
+            }
+        }
+        return value;
     }
     
     public Object deepClone(Object obj) {
