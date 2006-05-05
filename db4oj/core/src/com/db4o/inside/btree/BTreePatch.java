@@ -37,9 +37,12 @@ public abstract class BTreePatch {
         return patch.getObject(trans);
     }
     
-    
-    
-    
+    public String toString(){
+        if(_object == null){
+            return "[NULL]";
+        }
+        return _object.toString();
+    }
     
 
 }

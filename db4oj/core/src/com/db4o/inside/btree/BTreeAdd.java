@@ -16,8 +16,10 @@ public class BTreeAdd extends BTreePatch{
         }
         return super.getObject(trans);
     }
-
     
+    public String toString() {
+        return "+B " + super.toString();
+    }
     
 
 }

@@ -16,6 +16,10 @@ public class BTreeRemove extends BTreePatch {
         }
         return super.getObject(trans);
     }
+    
+    public String toString() {
+        return "-B " + super.toString();
+    }
 
 
 }

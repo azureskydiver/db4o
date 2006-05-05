@@ -97,20 +97,19 @@ public class BTreeNode extends YapMeta{
             }
             
         }else{
-            
-            Object addResult = child(reader, s._cursor).add(trans);
+            BTreeNode childNode = child(reader, s._cursor);
+            Object addResult = childNode.add(trans);
             if(addResult == null){
                 return null;
             }
             prepareWrite(trans);
+            _keys[s._cursor] = childNode._keys[0];
             if(addResult instanceof BTreeNode){
                 BTreeNode splitChild = (BTreeNode)addResult;
                 s._cursor ++;
                 insert(trans, s._cursor);
                 _keys[s._cursor] = splitChild._keys[0];
                 _children[s._cursor] = splitChild;
-            } else{
-                _keys[s._cursor] = addResult;
             }
         }
         
@@ -444,6 +443,7 @@ public class BTreeNode extends YapMeta{
             System.arraycopy(_children, HALF_ENTRIES, res._children, 0, HALF_ENTRIES);
         }
         res._count = HALF_ENTRIES;
+        res._height = _height;
         
         _count = HALF_ENTRIES;
         
@@ -541,6 +541,35 @@ public class BTreeNode extends YapMeta{
         a_writer.writeInt(_height);
         a_writer._offset = endOffset;
 
+    }
+    
+    public String toString() {
+        if(_count == 0 && _height == 0){
+            return "Node not loaded";
+        }
+        String str = "BTreeNode";
+        str += " count:" + _count;
+        str += " height:" + _height;
+        
+        if(_keys != null){
+            
+            str += " { ";
+            
+            boolean first = true;
+            
+            for (int i = 0; i < _keys.length; i++) {
+                if(_keys[i] != null){
+                    if(! first){
+                        str += ", ";
+                    }
+                    str += _keys[i].toString();
+                    first = false;
+                }
+            }
+            
+            str += " }";
+        }
+        return str;
     }
     
 
