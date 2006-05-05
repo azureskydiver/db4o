@@ -47,6 +47,10 @@ final class YapArrayN extends YapArray {
     }
 
     final Object read1(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
+        
+        // FIXME: SM remove
+        mf = MarshallerFamily.forVersion(0);
+
 		Object[] ret = new Object[1];
 		int[] dim = read1Create(a_bytes.getTransaction(), a_bytes, ret);
 		if(ret[0] != null){
@@ -61,6 +65,10 @@ final class YapArrayN extends YapArray {
     
     
 	final Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_bytes) throws CorruptionException {
+        
+        // FIXME: SM remove
+        mf = MarshallerFamily.forVersion(0);
+        
 		Object[] ret = new Object[1];
 		int[] dim = read1Create(a_trans, a_bytes, ret);
         if(ret[0] != null){
@@ -102,11 +110,15 @@ final class YapArrayN extends YapArray {
             a_bytes.writeInt(dim[i]);
         }
         Object[] objects = allElements(a_object);
+        
+        // FIXME: SM should be current MarshallerFamily
+        MarshallerFamily mf = MarshallerFamily.forVersion(0);
+        
         for (int i = 0; i < objects.length; i++) {
             
             // FIXME: SM remove marshallerfamily 0
 
-            i_handler.writeNew(MarshallerFamily.forVersion(0), element(objects, i), a_bytes);
+            i_handler.writeNew(mf, element(objects, i), a_bytes);
         }
     }
 

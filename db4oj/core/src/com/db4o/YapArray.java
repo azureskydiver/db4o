@@ -214,6 +214,10 @@ class YapArray extends YapIndependantType {
     }
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+        
+        // FIXME: SM remove
+        mf = MarshallerFamily.forVersion(0);
+        
 		YapReader bytes = a_reader.readEmbeddedObject(a_trans);
 		if (bytes == null) {
 			return null;
@@ -229,6 +233,10 @@ class YapArray extends YapIndependantType {
 	}
 	
 	Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_reader) throws CorruptionException{
+        
+        // FIXME: SM remove
+        mf = MarshallerFamily.forVersion(0);
+
 		int[] elements = new int[1];
         Object ret = readCreate(a_trans, a_reader, elements);
 		if(ret != null){
@@ -417,11 +425,11 @@ class YapArray extends YapIndependantType {
             return;
         }
         
+        // FIXME: SM Should be current MarshallerFamily
+        MarshallerFamily mf = MarshallerFamily.forVersion(0);
+
         for (int i = 0; i < elements; i++) {
-            
-            // FIXME: SM remove marshallerfamily 0
-            
-            i_handler.writeNew(MarshallerFamily.forVersion(0), _reflectArray.get(a_object, i), a_bytes);
+            i_handler.writeNew(mf, _reflectArray.get(a_object, i), a_bytes);
         }
     }
 
