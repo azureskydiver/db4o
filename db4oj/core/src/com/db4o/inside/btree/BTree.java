@@ -40,8 +40,8 @@ public class BTree extends YapMeta{
         Object addResult = _root.add(trans);
         if(addResult instanceof BTreeNode){
             _root = _root.newRoot(trans, (BTreeNode)addResult);
-            setStateDirty();
         }
+        setStateDirty();
         _size ++;
     }
     
@@ -71,9 +71,7 @@ public class BTree extends YapMeta{
 
         if(isNew()){
             setStateDirty();
-            _root = new BTreeNode(this);
-            _root.prepareArrays();
-            _root.setStateDirty();
+            _root = new BTreeNode(this, 0, 0);
             write(trans.systemTransaction());
             setStateClean();
             _nodes = new TreeIntWeakObject(_root.getID(), _root);
@@ -106,7 +104,7 @@ public class BTree extends YapMeta{
         tio = (TreeIntWeakObject)tio.duplicateOrThis();
         BTreeNode node = (BTreeNode)tio.getObject();
         if(node == null){
-            node = new BTreeNode(this, id);
+            node = new BTreeNode(id, this);
             tio.setObject(node);
         }
         return node;
