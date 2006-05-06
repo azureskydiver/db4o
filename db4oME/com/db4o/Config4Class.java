@@ -158,7 +158,6 @@ class Config4Class extends Config4Abstract implements ObjectClass,
         if(_processing){
             return false;
         }
-        System.err.println("XXX J2ME getyapclassA");
         _processing = true;
         if (Tuning.fieldIndices) {
             YapStream stream = systemTrans.i_stream;

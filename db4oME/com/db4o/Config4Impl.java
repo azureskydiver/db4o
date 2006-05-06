@@ -138,10 +138,6 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     	_config.put(AUTOMATIC_SHUTDOWN,flag);
     }
     
-    public Config4Impl() {
-    	System.out.println("generating config");
-    }
-    
     public void blockSize(int bytes){
        if (bytes < 1 || bytes > 127) {
            Exceptions4.throwRuntimeException(1);
