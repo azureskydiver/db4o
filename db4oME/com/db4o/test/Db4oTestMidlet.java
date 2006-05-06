@@ -51,8 +51,12 @@ public class Db4oTestMidlet extends MIDlet {
                 Db4o.configure().objectClass(Animal.class).objectField("_name").indexed(true);
                 long start=System.currentTimeMillis();
                 ObjectContainer db=Db4o.openFile("test.yap");
+                Dog oldDog=null;
 		for(int i=0;i<100;i++) {
-			db.set(new Dog("Laika"+i,i));
+                    Dog curDog=new Dog("Laika"+i,i,(oldDog!=null ? new Dog[]{oldDog} : new Dog[0]),new int[]{i});
+                    System.out.println(curDog);
+                    db.set(curDog);
+                    oldDog=curDog;
 		}
 		db.commit();
 		db.close();
@@ -64,7 +68,7 @@ public class Db4oTestMidlet extends MIDlet {
                 System.out.println("Query took "+(System.currentTimeMillis()-start)+" ms");
                 start=System.currentTimeMillis();
 		while(result.hasNext()) {
-			result.next();
+                    System.out.println(result.next());
 		}
                 System.out.println("Activation took "+(System.currentTimeMillis()-start)+" ms");
 		db.close();
