@@ -9,6 +9,7 @@ import com.db4o.test.foundation.Collection4TestCase;
 import com.db4o.test.foundation.FoundationTestSuite;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.nativequery.*;
+import com.db4o.test.performance.*;
 import com.db4o.test.soda.*;
 import com.db4o.test.virtualfields.*;
 
@@ -68,6 +69,7 @@ public class AllTestsConfAll extends TestSuite{
 			GreaterOrEqual.class,
 			IndexedByIdentity.class,
 			IndexCreateDrop.class,
+            IndexQueryingIsFast.class,
 			IndexedUpdatesWithNull.class,
 			InternStrings.class,
             InvalidUUID.class,
