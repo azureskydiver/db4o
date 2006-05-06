@@ -14,11 +14,11 @@ public class BTreeIntIndex {
         
         BTree btree = new BTree(0, new YInt(stream()), null);
         
-        
         addValues(btree);
         expect(btree, SORTED);
         
         btree.commit(trans());
+        
         
         int id = btree.getID();
         Test.reOpen();
@@ -26,9 +26,6 @@ public class BTreeIntIndex {
         btree = new BTree(id, new YInt(stream()), null);
         
         expect(btree, SORTED);
-        
-        
-        
     }
     
     
