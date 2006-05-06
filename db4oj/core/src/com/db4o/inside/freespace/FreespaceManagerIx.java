@@ -56,7 +56,7 @@ public class FreespaceManagerIx extends FreespaceManager{
 
         _addressIx._index.commitFreeSpace(_lengthIx._index);
         
-        YapWriter writer = new YapWriter(_file.i_systemTrans, _slotAddress, slotLength());
+        YapWriter writer = new YapWriter(_file.getSystemTransaction(), _slotAddress, slotLength());
         _addressIx._index._metaIndex.write(writer);
         _lengthIx._index._metaIndex.write(writer);
         if (Debug.xbytes) {

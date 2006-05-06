@@ -45,7 +45,7 @@ public abstract class FreespaceManager {
     }
     
     static void slotEntryToZeroes(YapFile file, int address){
-        YapWriter writer = new YapWriter(file.i_systemTrans, address, slotLength());
+        YapWriter writer = new YapWriter(file.getSystemTransaction(), address, slotLength());
         for (int i = 0; i < INTS_IN_SLOT; i++) {
             writer.writeInt(0);
         }
