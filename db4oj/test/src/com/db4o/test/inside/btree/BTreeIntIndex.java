@@ -11,13 +11,26 @@ import com.db4o.test.*;
 public class BTreeIntIndex {
     
     public void test(){
-        BTree btree = createBTree();
+        
+        BTree btree = new BTree(0, new YInt(stream()), null);
+        
+        
         addValues(btree);
+        expect(btree, SORTED);
+        
+        btree.commit(trans());
+        
+        int id = btree.getID();
+        Test.reOpen();
+        
+        btree = new BTree(id, new YInt(stream()), null);
         
         expect(btree, SORTED);
         
         
+        
     }
+    
     
     private void addValues(BTree btree){
         Transaction trans = trans(); 
@@ -30,39 +43,29 @@ public class BTreeIntIndex {
         final int[] cursor = new int[] {0};
         btree.traverseKeys(trans(), new Visitor4() {
             public void visit(Object obj) {
-                // Test.ensure(((Integer)obj).intValue() == values[cursor[0]]);
-                
-                System.out.println(obj);
-                
+                Test.ensure(((Integer)obj).intValue() == values[cursor[0]]);
                 cursor[0] ++;
             }
         });
         Test.ensure(cursor[0] == values.length);
     }
     
+    private YapStream stream(){
+        return (YapStream) Test.objectContainer();
+    }
+    
     private Transaction trans(){
-        YapStream stream = (YapStream) Test.objectContainer();
-        return stream.getTransaction();
+        return stream().getTransaction();
     }
     
-    private BTree createBTree(){
-        YapStream stream = (YapStream) Test.objectContainer();
-        Transaction systemTrans = stream.getSystemTransaction();
-        
-        BTree btree = new BTree(0, new YInt(stream), null);
-        btree.write(systemTrans);
-        
-        return btree;
+    private Transaction systemTrans(){
+        return stream().getSystemTransaction();
     }
     
     
-    static final int[] VALUES = {3, 234, 55, 87, 2, 1, 101, 59, 70};
+    static final int[] VALUES = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
     
-    static final int[] SORTED = {1, 2, 3, 55, 59, 70, 87, 101, 234};
-    
-//    static final int[] VALUES = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
-//    
-//    static final int[] SORTED = {1, 2, 3, 55, 59, 70, 87, 101, 234, 288, 300};
+    static final int[] SORTED = {1, 2, 3, 55, 59, 70, 87, 101, 234, 288, 300};
     
     
     

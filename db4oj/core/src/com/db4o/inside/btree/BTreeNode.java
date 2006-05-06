@@ -97,6 +97,15 @@ public class BTreeNode extends YapMeta{
             }
             
         }else{
+            
+            // Check last comparison result and step back one if added
+            // is smaller than last comparison.
+            
+            if(s._cmp > 0 && s._cursor > 0){
+                s._cursor --;
+            }
+            
+            
             BTreeNode childNode = child(reader, s._cursor);
             Object addResult = childNode.add(trans);
             if(addResult == null){
@@ -221,11 +230,22 @@ public class BTreeNode extends YapMeta{
         System.arraycopy(_keys, pos, _keys, pos + 1, len);
         if(_values != null){
             System.arraycopy(_values, pos, _values, pos + 1, len);
+            if(Debug.atHome){
+                for (int i = _count + 1; i < _values.length; i++) {
+                    _values[i] = null;
+                }
+            }
         }
         if(_children != null){
             System.arraycopy(_children, pos, _children, pos + 1, len);
+            if(Debug.atHome){
+                for (int i = _count + 1; i < _children.length; i++) {
+                    _children[i] = null;
+                }
+            }
         }
         _count++;
+        
     }
     
     private boolean isLeaf(){
@@ -314,7 +334,7 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    private void prepareArrays(){
+    void prepareArrays(){
         _keys = new Object[MAX_ENTRIES];
         if(isLeaf()){
             if(handlesValues()){
@@ -417,11 +437,6 @@ public class BTreeNode extends YapMeta{
             seekKey(reader, ix);
         }
     }
-
-    
-    
-    
-
     
     public void setID(int a_id) {
         if(getID() == 0){
@@ -437,10 +452,21 @@ public class BTreeNode extends YapMeta{
         if(_values != null){
             res._values = new Object[MAX_ENTRIES];
             System.arraycopy(_values, HALF_ENTRIES, res._values, 0, HALF_ENTRIES);
+            if(Debug.atHome){
+                for (int i = HALF_ENTRIES; i < _values.length; i++) {
+                    _values[i] = null;
+                }
+            }
         }
         if(_children != null){
             res._children = new Object[MAX_ENTRIES];
             System.arraycopy(_children, HALF_ENTRIES, res._children, 0, HALF_ENTRIES);
+            if(Debug.atHome){
+                for (int i = HALF_ENTRIES; i < _children.length; i++) {
+                    _children[i] = null;
+                }
+            }
+
         }
         res._count = HALF_ENTRIES;
         res._height = _height;
@@ -557,7 +583,7 @@ public class BTreeNode extends YapMeta{
             
             boolean first = true;
             
-            for (int i = 0; i < _keys.length; i++) {
+            for (int i = 0; i < _count; i++) {
                 if(_keys[i] != null){
                     if(! first){
                         str += ", ";

@@ -30,19 +30,13 @@ public class BTree extends YapMeta{
     public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
-        if(id > 0){
-            setID(id);
-            setStateDeactivated();
-        }else{
-            _root = new BTreeNode(this);
-            setStateDirty();
-        }
+        setID(id);
+        setStateDeactivated();
     }
     
     public void add(Transaction trans, Object value){
-        trans.dirtyBTree(this);
+        ensureDirty(trans);
         _keyHandler.prepareComparison(value);
-        ensureActive(trans);
         Object addResult = _root.add(trans);
         if(addResult instanceof BTreeNode){
             _root = _root.newRoot(trans, (BTreeNode)addResult);
@@ -59,7 +53,7 @@ public class BTree extends YapMeta{
                 }
             });
         }
-        write(trans);
+        write(trans.systemTransaction());
     }
     
     public void rollback(final Transaction trans){
@@ -74,11 +68,30 @@ public class BTree extends YapMeta{
     }
     
     private void ensureActive(Transaction trans){
+
+        if(isNew()){
+            setStateDirty();
+            _root = new BTreeNode(this);
+            _root.prepareArrays();
+            _root.setStateDirty();
+            write(trans.systemTransaction());
+            setStateClean();
+            _nodes = new TreeIntWeakObject(_root.getID(), _root);
+            return;
+        }
+        
         if(! isActive()){
             read(trans.systemTransaction());
         }
+        
     }
-
+    
+    private void ensureDirty(Transaction trans){
+        ensureActive(trans);
+        trans.dirtyBTree(this);
+        setStateDirty();
+    }
+    
     public byte getIdentifier() {
         return YapConst.BTREE;
     }
@@ -118,6 +131,7 @@ public class BTree extends YapMeta{
     }
     
     public void traverseKeys(Transaction trans, Visitor4 visitor){
+        ensureActive(trans);
         if(_root == null){
             return;
         }
