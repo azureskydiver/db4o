@@ -211,7 +211,7 @@ public class FreespaceManagerRam extends FreespaceManager {
     }
     
     private final Transaction trans(){
-        return _file.i_systemTrans;
+        return _file.getSystemTransaction();
     }
 
     public int write(boolean shuttingDown){
