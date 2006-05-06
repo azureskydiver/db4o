@@ -25,4 +25,8 @@ public abstract class Animal implements Being, SelfReflectable {
 			_name=(String)value;
 		}
 	}
+        
+        public String toString() {
+            return _name;
+        }
 }
