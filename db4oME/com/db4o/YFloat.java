@@ -27,8 +27,7 @@ final class YFloat extends YInt {
 	}
 
 	protected Class primitiveJavaClass() {
-		//return float.class;
-		return null;
+		return Float.class;
 	}
 
 	Object primitiveNull() {

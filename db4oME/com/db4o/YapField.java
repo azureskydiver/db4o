@@ -523,6 +523,7 @@ public class YapField implements StoredField {
             try {
                 toSet = read(a_bytes);
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new CorruptionException();
             }
             if (i_db4oType != null) {

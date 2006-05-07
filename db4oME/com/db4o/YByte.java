@@ -38,8 +38,7 @@ final class YByte extends YapJavaClass
 	}
 
 	protected Class primitiveJavaClass(){
-		//return byte.class;
-		return null;
+		return Byte.class;
 	}
 	
 	Object primitiveNull(){

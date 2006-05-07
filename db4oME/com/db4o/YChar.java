@@ -26,8 +26,7 @@ final class YChar extends YapJavaClass {
 	}
 
 	protected Class primitiveJavaClass() {
-		//return char.class;
-		return null;
+		return Character.class;
 	}
 
 	Object primitiveNull() {
