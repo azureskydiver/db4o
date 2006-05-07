@@ -1,5 +1,13 @@
 package com.db4o.test;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import javax.microedition.io.*;
+import javax.microedition.io.file.*;
 import javax.microedition.midlet.*;
 import javax.microedition.rms.*;
 
@@ -31,11 +39,16 @@ public class Db4oTestMidlet extends MIDlet {
 		}
 	}
 
-	private static void runTest() throws ClassNotFoundException, RecordStoreException {
-		try {
-			RecordStore.deleteRecordStore("test.yap");
-		} catch (Exception e) {
-		}
+        private final static boolean DELETE=true;
+        private final static int RECORDSIZE=1024;
+        
+	private static void runTest() throws ClassNotFoundException, RecordStoreException, IOException {
+                if(DELETE) {
+                    try {
+                                RecordStore.deleteRecordStore("test.yap");
+                        } catch (Exception e) {
+                        }
+                }
                 String[] stores=RecordStore.listRecordStores();
                 System.out.println("Found "+(stores!=null ? stores.length : 0)+" stores");
                 if(stores!=null) {
@@ -44,7 +57,7 @@ public class Db4oTestMidlet extends MIDlet {
                     }
                 }
 		IoAdapter io =
-			new RecordStoreIoAdapter(1024);
+			new RecordStoreIoAdapter(RECORDSIZE);
 			//new MemoryIoAdapter();
 		Db4o.configure().io(io);
                 Db4o.configure().reflectWith(new SelfReflector(new RegressionDogSelfReflectionRegistry()));
@@ -72,6 +85,8 @@ public class Db4oTestMidlet extends MIDlet {
 		}
                 System.out.println("Activation took "+(System.currentTimeMillis()-start)+" ms");
 		db.close();
+                
+                //copyToYapFile("test.yap");
 	}
 
 	public static void main(String[] args) {
@@ -81,4 +96,22 @@ public class Db4oTestMidlet extends MIDlet {
 			e.printStackTrace();
 		}
 	}
+        
+        private static void copyToYapFile(String fileName) throws RecordStoreException,IOException {
+            Enumeration roots=FileSystemRegistry.listRoots();
+            String firstRoot=(String)roots.nextElement();
+            //String url="file:///"+firstRoot+fileName;
+            String url="file:///root1/output.yap";
+            System.out.println(url);
+            OutputConnection conn=(OutputConnection)Connector.open(url,Connector.WRITE);
+            System.out.println(conn.getClass());
+            OutputStream out=conn.openOutputStream();
+            RecordStore store=RecordStore.openRecordStore(fileName,false);
+            for(int recIdx=0;recIdx<store.getNumRecords();recIdx++) {
+                byte[] page=store.getRecord(recIdx+1);
+                out.write(page);
+            }
+            out.close();
+            store.closeRecordStore();
+        }
 }

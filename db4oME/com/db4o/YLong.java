@@ -28,8 +28,7 @@ class YLong extends YapJavaClass
 	}
 	
 	protected Class primitiveJavaClass(){
-		//return long.class;
-		return null;
+		return Long.class;
 	}
 	
 	public int linkLength(){

@@ -32,8 +32,7 @@ final class YShort extends YapJavaClass
 	}
 	
 	protected Class primitiveJavaClass(){
-		//return short.class;
-		return null;
+		return Short.class;
 	}
 	
 	Object primitiveNull(){

@@ -73,7 +73,6 @@ public class Dog extends Animal {
 
     /* GENERATE */
 	public Object self_get(String fieldName) {
-                System.out.println("Getting "+fieldName);
 		if(fieldName.equals("_age")) {
 			return new Integer(_age);
 		}
@@ -88,8 +87,6 @@ public class Dog extends Animal {
 
     /* GENERATE */
 	public void self_set(String fieldName,Object value) {
-                System.out.println("Setting "+fieldName+"="+value);
-
 		if(fieldName.equals("_age")) {
 			_age=((Integer)value).intValue();
 			return;
