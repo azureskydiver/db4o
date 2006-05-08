@@ -46,6 +46,14 @@ public class BTreeNode extends YapMeta{
     private Object[] _values;
     
     
+    private int _parentID;
+    
+    private int _previousID;
+    
+    private int _nextID;
+    
+    
+    
     /* Constructor for new nodes */
     public BTreeNode(BTree btree, int count, int height){
         _btree = btree;
@@ -53,6 +61,7 @@ public class BTreeNode extends YapMeta{
         _height = height;
         prepareArrays();
         setStateDirty();
+        btree.addNewNode(this);
     }
     
     /* Constructor for existing nodes, requires valid ID */
@@ -72,9 +81,6 @@ public class BTreeNode extends YapMeta{
         YapReader reader = prepareRead(trans);
         
         Searcher s = search(trans, reader);
-        if(s._cursor < 0){
-            s._cursor = 0;
-        }
         
         if(isLeaf()){
             
@@ -101,13 +107,6 @@ public class BTreeNode extends YapMeta{
             
         }else{
             
-            // Check last comparison result and step back one if added
-            // is smaller than last comparison.
-            
-            if(s._cmp > 0 && s._cursor > 0){
-                s._cursor --;
-            }
-            
             BTreeNode childNode = child(reader, s._cursor);
             Object addResult = childNode.add(trans);
             if(addResult == null){
@@ -117,14 +116,13 @@ public class BTreeNode extends YapMeta{
             _keys[s._cursor] = childNode._keys[0];
             if(addResult instanceof BTreeNode){
                 BTreeNode splitChild = (BTreeNode)addResult;
-                s._cursor ++;
-                insert(trans, s._cursor);
-                _keys[s._cursor] = splitChild._keys[0];
-                _children[s._cursor] = splitChild;
+                int splitCursor = s._cursor + 1;
+                insert(trans, splitCursor);
+                _keys[splitCursor] = splitChild._keys[0];
+                _children[splitCursor] = splitChild;
             }
         }
         
-        setStateDirty();
         if(_count == MAX_ENTRIES){
             return split(trans);
         }
@@ -145,6 +143,10 @@ public class BTreeNode extends YapMeta{
             return (BTreeNode)_children[index];
         }
         BTreeNode child = _btree.produceNode(childID(reader, index));
+        
+        // TODO: Check exactly, when we want to keep a reference
+        // to children. This should probably happen from the child.
+        
         if(_children != null){
             _children[index] = child; 
         }
@@ -180,7 +182,46 @@ public class BTreeNode extends YapMeta{
             return;
         }
         
+        
+        // TODO: Here we are doing writes twice.
+        // New nodes will already have been written in BTree#commit().
+        // Currently they are rewritten on commit.
+        setStateDirty();
         write(trans);
+        
+        
+        if(isLeaf()){
+            
+            boolean vals = handlesValues();
+            
+            Object[] tempKeys = new Object[MAX_ENTRIES];
+            Object[] tempValues = vals ? new Object[MAX_ENTRIES] : null; 
+            
+            int count = 0;
+        
+            for (int i = 0; i < _count; i++) {
+                Object key = _keys[i];
+                BTreePatch patch = keyPatch(i);
+                if(patch != null){
+                    key = patch.commit(trans);
+                }
+                if(key != No4.INSTANCE){
+                    tempKeys[count] = key;
+                    if(vals){
+                        tempValues[count] = _values[i];
+                    }
+                    count ++;
+                }
+            }
+            
+            _keys = tempKeys;
+            _values = tempValues;
+            
+            _count = count;
+            
+            // TODO: Merge nodes here on low _count value.
+        }
+        
     }
     
     private boolean isDirty(Transaction trans){
@@ -229,11 +270,11 @@ public class BTreeNode extends YapMeta{
                 return _keys[ix];
             }
             Object obj = patch.getObject(trans);
-            if(obj != Null.INSTANCE){
+            if(obj != No4.INSTANCE){
                 return obj;
             }
         }
-        return Null.INSTANCE;
+        return No4.INSTANCE;
     }
     
     public byte getIdentifier() {
@@ -387,57 +428,93 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    public BTreeNode remove(Transaction trans){
+    public void remove(Transaction trans){
         YapReader reader = prepareRead(trans);
+        
         Searcher s = search(trans, reader);
         if(s._cursor < 0){
-            return this;
+            return;
         }
+        
         if(isLeaf()){
-            if(s._cmp == 0){
-                prepareWrite(trans);
-                
-                Object obj = _keys[s._cursor];
-                
-                if(obj instanceof BTreePatch){
-                    
-                }
-                
-                
-                
-                
-            }else{
-                // Check last comparison result and position beyond last
-                // if added is greater.
-                if(s._cmp < 0){
-                    s._cursor ++;
-                }
-                insert(trans, s._cursor);
-                _keys[s._cursor] = new BTreeAdd(trans, keyHandler().current());
-                if(handlesValues()){
-                    _values[s._cursor] = valueHandler().current();
-                }
-            }
-        }else{
-            child(reader, s._cursor).remove(trans);
             
+            if(s._cmp != 0){
+                return;
+            }
+            
+            prepareWrite(trans);
+            
+            BTreeRemove btr = new BTreeRemove(trans, keyHandler().current());
+            
+            BTreePatch patch = keyPatch(s._cursor);
+            if(patch != null){
+                _keys[s._cursor] = patch.append(btr);
+            }else{
+                _keys[s._cursor] = btr;    
+            }
+            
+            return;
         }
-        return this;
+            
+        child(reader, s._cursor).remove(trans);
     }
-
     
     void rollback(Transaction trans){
         
-        int xxx = 1;
+        if(! canWrite()){
+            return;
+        }
         
+        if(isLeaf()){
+            
+            boolean vals = handlesValues();
+            
+            Object[] tempKeys = new Object[MAX_ENTRIES];
+            Object[] tempValues = vals ? new Object[MAX_ENTRIES] : null; 
+            
+            int count = 0;
         
-        
+            for (int i = 0; i < _count; i++) {
+                Object key = _keys[i];
+                BTreePatch patch = keyPatch(i);
+                if(patch != null){
+                    key = patch.rollback(trans);
+                }
+                if(key != No4.INSTANCE){
+                    tempKeys[count] = key;
+                    if(vals){
+                        tempValues[count] = _values[i];
+                    }
+                    count ++;
+                }
+            }
+            
+            _keys = tempKeys;
+            _values = tempValues;
+            
+            _count = count;
+            
+            // TODO: Merge nodes here on low _count value.
+        }
     }
     
     private Searcher search(Transaction trans, YapReader reader){
         Searcher s = new Searcher(_count);
         while(s.incomplete()){
             compare(s, reader);
+        }
+        if(s._cursor < 0){
+            s._cursor = 0;
+        }else{
+            if(! isLeaf()){
+            
+                // Check last comparison result and step back one if added
+                // is smaller than last comparison.
+                
+                if(s._cmp > 0 && s._cursor > 0){
+                    s._cursor --;
+                }
+            }
         }
         return s;
     }
@@ -463,13 +540,6 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    public void setID(int a_id) {
-        if(getID() == 0){
-            _btree.addNode(a_id, this);
-        }
-        super.setID(a_id);
-    }
-
     private BTreeNode split(Transaction trans){
         BTreeNode res = new BTreeNode(_btree, HALF_ENTRIES, _height);
         System.arraycopy(_keys, HALF_ENTRIES, res._keys, 0, HALF_ENTRIES);
@@ -503,7 +573,7 @@ public class BTreeNode extends YapMeta{
         if(isLeaf()){
             for (int i = 0; i < _count; i++) {
                 Object obj = key(trans,reader, i);
-                if(obj != Null.INSTANCE){
+                if(obj != No4.INSTANCE){
                     visitor.visit(obj);
                 }
             }
@@ -522,7 +592,7 @@ public class BTreeNode extends YapMeta{
         YapReader reader = prepareRead(trans);
         if(isLeaf()){
             for (int i = 0; i < _count; i++) {
-                if(key(trans,reader, i) != Null.INSTANCE){
+                if(key(trans,reader, i) != No4.INSTANCE){
                     visitor.visit(value(reader, i));
                 }
             }
@@ -558,7 +628,7 @@ public class BTreeNode extends YapMeta{
             boolean vals = handlesValues();
             for (int i = 0; i < _count; i++) {
                 Object obj = key(trans, i);
-                if(obj != Null.INSTANCE){
+                if(obj != No4.INSTANCE){
                     count ++;
                     keyHandler().writeIndexEntry(a_writer, obj);
                     if(vals){
@@ -571,7 +641,7 @@ public class BTreeNode extends YapMeta{
                 if(childLoaded(i)){
                     BTreeNode child = (BTreeNode)_children[i];
                     Object childKey = child.firstKey(trans);
-                    if(childKey != Null.INSTANCE){
+                    if(childKey != No4.INSTANCE){
                         count ++;
                         keyHandler().writeIndexEntry(a_writer, childKey);
                         a_writer.writeIDOf(trans, child);
