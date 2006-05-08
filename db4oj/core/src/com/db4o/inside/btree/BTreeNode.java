@@ -92,13 +92,13 @@ public class BTreeNode extends YapMeta{
 //            if(s._cmp == 0){
 //                
 //            }
-                
             
-            // Check last comparison result and position beyond last
-            // if added is greater.
+            // Leaf only: Check last comparison result and position
+            //            beyond last if added is greater.
             if(s._cmp < 0){
                 s._cursor ++;
             }
+            
             insert(trans, s._cursor);
             _keys[s._cursor] = new BTreeAdd(trans, keyHandler().current());
             if(handlesValues()){
