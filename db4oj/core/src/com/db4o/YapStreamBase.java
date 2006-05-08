@@ -100,7 +100,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     // used for YapClass and YapClassCollection
     // may be parent or equal to i_trans
-    protected Transaction             i_systemTrans;
+    Transaction             i_systemTrans;
 
     // used for Objects
     Transaction             i_trans;

@@ -13,7 +13,7 @@ public abstract class BTreePatch {
     
     protected final Transaction _transaction;
     
-    protected final Object _object;
+    final Object _object;
 
     public BTreePatch(Transaction transaction, Object obj) {
         _transaction = transaction;
