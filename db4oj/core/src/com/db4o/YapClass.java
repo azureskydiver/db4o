@@ -820,16 +820,15 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         if(Debug.useBTrees){
             
-            // 
+            // TODO: Index should work with BTrees only, no more conversion
+            // to TreeInt should be necessary.
             
             TreeInt zero = new TreeInt(0);
             final Tree[] tree = new Tree[]{zero};
             _index.traverseKeys(a_trans, new Visitor4() {
                 public void visit(Object obj) {
-                    // TODO Auto-generated method stub
-            
+                    tree[0] = tree[0].add(new TreeInt(((Integer)obj).intValue()));
                 }
-            
             });
             tree[0] = tree[0].removeNode(zero);
             return tree[0];
