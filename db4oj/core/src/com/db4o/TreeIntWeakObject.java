@@ -13,7 +13,8 @@ public class TreeIntWeakObject extends TreeIntObject {
 	}
 
 	public TreeIntWeakObject(int key, Object obj) {
-		super(key, Platform4.createWeakReference(obj));
+		super(key);
+        setObject(obj);
 	}
 
 	public Object shallowClone() {
@@ -31,7 +32,7 @@ public class TreeIntWeakObject extends TreeIntObject {
 	}
 
 	public void setObject(Object obj) {
-		_object = Platform4.createWeakReference(obj);
+	    _object = Platform4.createWeakReference(obj);
 	}
 
 	public final TreeIntWeakObject traverseRemoveEmpty(final Visitor4 visitor) {

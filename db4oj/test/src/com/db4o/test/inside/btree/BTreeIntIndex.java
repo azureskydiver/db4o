@@ -19,6 +19,16 @@ public class BTreeIntIndex {
         
         btree.commit(trans());
         
+        expect(btree, SORTED);
+        
+        removeValues(btree);
+        
+        expect(btree, REMOVED);
+        
+        btree.rollback(trans());
+        
+        expect(btree, SORTED);
+        
         
         int id = btree.getID();
         Test.reOpen();
@@ -26,6 +36,20 @@ public class BTreeIntIndex {
         btree = new BTree(id, new YInt(stream()), null);
         
         expect(btree, SORTED);
+        
+        removeValues(btree);
+        
+        expect(btree, REMOVED);
+        
+        btree.commit(trans());
+        
+        expect(btree, REMOVED);
+        
+    }
+    
+    private void removeValues(BTree btree){
+        btree.remove(trans(), new Integer(3));
+        btree.remove(trans(), new Integer(101));
     }
     
     
@@ -40,6 +64,9 @@ public class BTreeIntIndex {
         final int[] cursor = new int[] {0};
         btree.traverseKeys(trans(), new Visitor4() {
             public void visit(Object obj) {
+                
+                // System.out.println(obj);
+                
                 Test.ensure(((Integer)obj).intValue() == values[cursor[0]]);
                 cursor[0] ++;
             }
@@ -64,7 +91,7 @@ public class BTreeIntIndex {
     
     static final int[] SORTED = {1, 2, 3, 55, 59, 70, 87, 101, 234, 288, 300};
     
-    
+    static final int[] REMOVED = {1, 2, 55, 59, 70, 87, 234, 288, 300};
     
     
     

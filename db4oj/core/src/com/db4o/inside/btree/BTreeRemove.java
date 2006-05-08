@@ -2,24 +2,27 @@
 package com.db4o.inside.btree;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
-
+/**
+ * @exclude
+ */
 public class BTreeRemove extends BTreePatch {
 
     public BTreeRemove(Transaction transaction, Object obj) {
         super(transaction, obj);
     }
     
-    public Object getObject(Transaction trans) {
-        if(trans == _transaction){
-            return Null.INSTANCE;
-        }
-        return super.getObject(trans);
+    protected Object getObject() {
+        return No4.INSTANCE;
+    }
+    
+    protected Object rolledBack(){
+        return _object;
     }
     
     public String toString() {
         return "-B " + super.toString();
     }
-
-
+    
 }
