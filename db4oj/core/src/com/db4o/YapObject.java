@@ -807,32 +807,5 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	    return "Exception in YapObject analyzer";
 	}
 
-// Unused, keep for possible future use
-    
-//    public void remarshall(Transaction trans){
-//        YapStream stream = trans.i_stream;
-//        YapWriter writer = stream.readWriterByID(trans, getID());
-//        writer._offset = 0;
-//        if (Deploy.debug) {
-//            writer.writeBegin(YapConst.YAPOBJECT, writer.getLength());
-//        }
-//        writer.writeInt(i_yapClass.getID());
-//        i_yapClass.marshall(this, getObject(), writer, false);
-//        if (Deploy.debug) {
-//            writer.writeEnd();
-//            writer.debugCheckBytes();
-//        }
-//        
-//        if(Deploy.debug){
-//            if(stream instanceof YapFile){
-//                YapFile yf = (YapFile)stream;
-//                yf.writeXBytes(writer.getAddress(), writer.getLength());
-//            }
-//        }
-//        writer.writeEncrypt();
-//    }
-    
-
-
     
 }
