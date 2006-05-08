@@ -139,6 +139,12 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         
         YapWriter writer = createWriter(a_trans, a_yapObject, a_updateDepth, a_id, 0, length);
         
+        if(a_trans.i_file != null){
+            // Running in single mode or on server.
+            // We need the slot now, so indexes can adjust to address.
+            a_trans.i_file.getSlotForUpdate(writer);
+        }
+        
         yapClass.checkUpdateDepth(writer);
         
         writer.writeInt(- yapClass.getID());

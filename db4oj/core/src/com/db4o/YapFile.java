@@ -824,7 +824,7 @@ public abstract class YapFile extends YapStream {
         bytes.write();
     }
     
-    final void getSlotForUpdate(YapWriter forWriter){
+    public final void getSlotForUpdate(YapWriter forWriter){
         Transaction trans = forWriter.getTransaction();
         int id = forWriter.getID();
         int length = forWriter.getLength();
@@ -834,7 +834,9 @@ public abstract class YapFile extends YapStream {
     }
 
     public final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
-        getSlotForUpdate(a_bytes);
+        if(a_bytes.getAddress() == 0){
+            getSlotForUpdate(a_bytes);
+        }
         i_handlers.encrypt(a_bytes);
         a_bytes.write();
     }
