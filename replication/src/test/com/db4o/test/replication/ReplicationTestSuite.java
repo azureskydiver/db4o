@@ -17,12 +17,13 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] all() {
 		return new Class[]{
+				Simplest.class,
 				ReplicationEventTest.class,
 				ReplicationConfiguratorTest.class,
 				ReplicationProviderTest.class,
 
 				ListTest.class,
-				Db4oListTest.class,
+				//Db4oListTest.class,
 				MapTest.class,
 				ReplicationAfterDeletionTest.class,
 				SimpleArrayTest.class,
@@ -45,7 +46,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] one() {
 		return new Class[]{
-			Db4oListTest.class,
+			R0to4Runner.class,
 		};
 	}
 }
