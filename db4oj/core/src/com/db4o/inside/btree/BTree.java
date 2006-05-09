@@ -31,11 +31,23 @@ public class BTree extends YapMeta{
     
     private int _size;
     
-    public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
+    private Visitor4 _removeListener;
+    
+    
+    //  just for debugging purposes for now
+    private String _name;
+    
+    
+    public BTree(String name, int id, Indexable4 keyHandler, Indexable4 valueHandler){
+        _name = name;
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         setID(id);
         setStateDeactivated();
+    }
+    
+    public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
+        this(null, id, keyHandler, valueHandler);
     }
     
     public void add(Transaction trans, Object value){
@@ -132,6 +144,10 @@ public class BTree extends YapMeta{
         return YapConst.BTREE;
     }
     
+    public void setRemoveListener(Visitor4 vis){
+        _removeListener = vis;
+    }
+    
     public int ownLength() {
         return 1 + YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
     }
@@ -154,6 +170,12 @@ public class BTree extends YapMeta{
     
     void addNewNode(BTreeNode node){
         _newNodes = new List4(_newNodes, node);
+    }
+    
+    void notifyRemoveListener(Object obj){
+        if(_removeListener != null){
+            _removeListener.visit(obj);
+        }
     }
 
     public void readThis(Transaction a_trans, YapReader a_reader) {
@@ -178,6 +200,13 @@ public class BTree extends YapMeta{
             return;
         }
         _root.traverseKeys(trans, visitor);
+    }
+    
+    public String toString() {
+        if(_name == null){
+            return super.toString();
+        }
+        return "BTree for " + _name;
     }
 
 

@@ -13,11 +13,16 @@ public class BTreeRemove extends BTreePatch {
         super(transaction, obj);
     }
     
+    protected Object committed(BTree btree){
+        btree.notifyRemoveListener(_object);
+        return No4.INSTANCE;
+    }
+    
     protected Object getObject() {
         return No4.INSTANCE;
     }
     
-    protected Object rolledBack(){
+    protected Object rolledBack(BTree btree){
         return _object;
     }
     

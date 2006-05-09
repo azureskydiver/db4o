@@ -245,31 +245,41 @@ public final class QCandidates implements Visitor4 {
     	if (!isEmpty()) {
     		return;
     	}
-    	final QCandidates finalThis = this;
-    	if (i_yapClass.getIndex() != null) {
-    		final Tree[] newRoot =
-    		{
-    				TreeInt.toQCandidate(i_yapClass.getIndexRoot(), this)
-    		};
-    		i_trans.traverseAddedClassIDs(i_yapClass.getID(), new Visitor4() {
-    			public void visit(Object obj) {
-    				newRoot[0] =
-    					Tree.add(
-    							newRoot[0],
-								new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
-    			}
-    		});
-    		
-    		// QCandidate has it's own compare routine, so we can't 
-    		// use a TreeInt for the removeLike call
-    		i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new Visitor4() {
-    			public void visit(Object obj) {
-    				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
-    			}
-    		});
-    		
-    		i_root = newRoot[0];
-    	}
+        
+        if(Debug.useOldClassIndex){
+            
+            final QCandidates finalThis = this;
+        
+        	if (i_yapClass.getIndex() != null) {
+        		final Tree[] newRoot =
+        		{
+        				TreeInt.toQCandidate(i_yapClass.getIndexRoot(), this)
+        		};
+        		i_trans.traverseAddedClassIDs(i_yapClass.getID(), new Visitor4() {
+        			public void visit(Object obj) {
+        				newRoot[0] =
+        					Tree.add(
+        							newRoot[0],
+    								new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
+        			}
+        		});
+        		
+        		// QCandidate has it's own compare routine, so we can't 
+        		// use a TreeInt for the removeLike call
+        		i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new Visitor4() {
+        			public void visit(Object obj) {
+        				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
+        			}
+        		});
+        		
+        		i_root = newRoot[0];
+        	}
+        }
+        
+        if(Debug.useBTrees){
+            i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
+        }
+        
     }
 
     void setCurrentConstraint(QCon a_constraint) {

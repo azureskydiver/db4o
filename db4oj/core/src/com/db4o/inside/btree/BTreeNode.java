@@ -22,7 +22,7 @@ public class BTreeNode extends YapMeta{
 
     private static final int HALF_ENTRIES = MAX_ENTRIES / 2;
     
-    private static final int SLOT_LEADING_LENGTH = YapConst.OBJECT_LENGTH +  YapConst.YAPINT_LENGTH * 2; 
+    private static final int SLOT_LEADING_LENGTH = YapConst.LEADING_LENGTH +  YapConst.YAPINT_LENGTH * 2; 
 
     
     final BTree _btree;
@@ -203,7 +203,7 @@ public class BTreeNode extends YapMeta{
                 Object key = _keys[i];
                 BTreePatch patch = keyPatch(i);
                 if(patch != null){
-                    key = patch.commit(trans);
+                    key = patch.commit(trans, _btree);
                 }
                 if(key != No4.INSTANCE){
                     tempKeys[count] = key;
@@ -380,6 +380,12 @@ public class BTreeNode extends YapMeta{
         }
         
         YapReader reader = trans.i_file.readReaderByID(trans, getID());
+        
+        if (Deploy.debug) {
+            reader.readBegin(getIdentifier());
+        }
+        
+        
         _count = reader.readInt();
         _height = reader.readInt();
         
@@ -387,16 +393,21 @@ public class BTreeNode extends YapMeta{
     }
 
     private void prepareWrite(Transaction trans){
+        
         if(canWrite()){
+            setStateDirty();
             return;
         }
+        
         if(isNew()){
-            prepareArrays();
+            setStateDirty();
             return;
         }
+        
         if(! isActive()){
             prepareArrays();
             read(trans);
+            setStateDirty();
         }
     }
     
@@ -478,7 +489,7 @@ public class BTreeNode extends YapMeta{
                 Object key = _keys[i];
                 BTreePatch patch = keyPatch(i);
                 if(patch != null){
-                    key = patch.rollback(trans);
+                    key = patch.rollback(trans, _btree);
                 }
                 if(key != No4.INSTANCE){
                     tempKeys[count] = key;

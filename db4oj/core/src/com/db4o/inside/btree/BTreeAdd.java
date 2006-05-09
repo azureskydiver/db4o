@@ -17,7 +17,12 @@ public class BTreeAdd extends BTreePatch{
         return _object;
     }
     
-    protected Object rolledBack(){
+    protected Object committed(BTree btree){
+        return _object;
+    }
+    
+    protected Object rolledBack(BTree btree){
+        btree.notifyRemoveListener(_object);
         return No4.INSTANCE;
     }
     
