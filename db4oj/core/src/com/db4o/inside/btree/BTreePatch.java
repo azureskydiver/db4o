@@ -33,7 +33,11 @@ public abstract class BTreePatch {
         return this;
     }
     
-    public Object commit(Transaction trans){
+    public Object commit(Transaction trans, BTree btree){
+        return commit(trans, btree, true);
+    }
+    
+    private Object commit(Transaction trans, BTree btree, boolean firstInList){
         if(_transaction == trans){
             if(_next != null){
                 return _next;
@@ -41,7 +45,7 @@ public abstract class BTreePatch {
             return getObject();
         }
         if(_next != null){
-            Object newNext = _next.commit(trans);
+            Object newNext = _next.commit(trans, btree, false);
             if(newNext instanceof BTreePatch){
                 _next = (BTreePatch)newNext;
             } else{
@@ -50,6 +54,8 @@ public abstract class BTreePatch {
         }
         return this;
     }
+    
+    protected abstract Object committed(BTree btree);
     
     public BTreePatch forTransaction(Transaction trans){
         if(_transaction == trans){
@@ -71,16 +77,20 @@ public abstract class BTreePatch {
     
     protected abstract Object getObject();
     
+    public Object rollback(Transaction trans, BTree btree){
+        return rollback(trans, btree, true);
+    }
     
-    public Object rollback(Transaction trans){
+    
+    public Object rollback(Transaction trans, BTree btree, boolean firstInList){
         if(_transaction == trans){
             if(_next != null){
                 return _next;
             }
-            return rolledBack();
+            return rolledBack(btree);
         }
         if(_next != null){
-            Object newNext = _next.rollback(trans);
+            Object newNext = _next.rollback(trans, btree, false);
             if(newNext instanceof BTreePatch){
                 _next = (BTreePatch)newNext;
             } else{
@@ -90,7 +100,7 @@ public abstract class BTreePatch {
         return this;
     }
     
-    protected abstract Object rolledBack();
+    protected abstract Object rolledBack(BTree btree);
     
     public String toString(){
         if(_object == null){

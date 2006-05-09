@@ -41,7 +41,7 @@ public final class YapConst
 	static final int	BRACKETS_BYTES		= (Deploy.debug && Deploy.brackets)?1:0;
 	static final int	BRACKETS_LENGTH		= BRACKETS_BYTES * 2;
 
-	static final int	LEADING_LENGTH		= IDENTIFIER_LENGTH + BRACKETS_BYTES;
+	public static final int	LEADING_LENGTH		= IDENTIFIER_LENGTH + BRACKETS_BYTES;
 	static final int	ADDED_LENGTH		= IDENTIFIER_LENGTH + BRACKETS_LENGTH;
 
 	static final int	SHORT_BYTES			= 2;

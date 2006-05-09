@@ -591,6 +591,17 @@ public class Transaction {
             
             beginEndSet();
             
+            if(Debug.useBTrees){
+                if(_dirtyBTrees != null){
+                    _dirtyBTrees.traverse(new Visitor4() {
+                        public void visit(Object obj) {
+                            BTree btree = (BTree) ((TreeIntObject)obj)._object;
+                            btree.rollback(Transaction.this);
+                        }
+                    });
+                }
+            }
+            
             if (i_dirtyFieldIndexes != null) {
                 Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
                 while (i.hasNext()) {
@@ -603,16 +614,6 @@ public class Transaction {
                         ((SlotChange)a_object).rollback(i_file);
                     }
                 });
-            }
-            if(Debug.useBTrees){
-                if(_dirtyBTrees != null){
-                    _dirtyBTrees.traverse(new Visitor4() {
-                        public void visit(Object obj) {
-                            BTree btree = (BTree) ((TreeIntObject)obj)._object;
-                            btree.rollback(Transaction.this);
-                        }
-                    });
-                }
             }
             
             rollBackTransactionListeners();
@@ -770,6 +771,9 @@ public class Transaction {
         final boolean a_add, final Collection4 a_indices) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
+        }
+        if(! Debug.useOldClassIndex){
+            return;
         }
         if (a_tree != null) {
             a_tree.traverse(new Visitor4() {

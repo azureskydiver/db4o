@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.query.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
@@ -297,14 +298,21 @@ public abstract class QQueryBase implements Unversioned {
 		if(clazzconstr.hasChildren() || clazz.isArray()) {
 			return null;
 		}
-		
-		ClassIndex classIndex = clazz.getIndex();
-		if(classIndex == null) {
-			return null;
-		}
+        
+        if(Debug.useBTrees){
+            if(clazz.index() == null){
+                return null;
+            }
+        }
+        
+        if(Debug.useOldClassIndex){
+    		if(clazz.getIndex() == null) {
+    			return null;
+    		}
+        }
 					
 		if (i_trans.i_stream.isClient()) {
-			long[] ids = classIndex.getInternalIDs(i_trans, clazz.getID());
+			long[] ids = clazz.getIDs(i_trans); 
 			QResultClient resClient = new QResultClient(i_trans, ids.length);
 			for (int i = 0; i < ids.length; i++) {
 				resClient.add((int)ids[i]);
@@ -313,7 +321,7 @@ public abstract class QQueryBase implements Unversioned {
 			return resClient;
 		}
 		
-		Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
+		Tree tree = clazz.getIndex(i_trans);
 		
 		if(tree == null) {
 			return new QueryResultImpl(i_trans);  // empty result
