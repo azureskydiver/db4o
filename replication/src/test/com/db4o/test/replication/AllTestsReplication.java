@@ -21,6 +21,7 @@ public class AllTestsReplication extends AllTests {
 
 	public void run() {
 		Test.clientServer = false;
+		//Test.clientServer = true;
 
 		Db4oReplicationTestUtil.configure();
 		registerProviderPairs();

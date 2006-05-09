@@ -80,7 +80,7 @@ class InstanceReplicationPreparer implements Visitor {
 		_obj = obj;
 		_referencingObject = referencingObject;
 		_fieldName = fieldName;
-		
+
 		ReplicationReference refA = _providerA.produceReference(_obj, _referencingObject, _fieldName);
 		ReplicationReference refB = _providerB.produceReference(_obj, _referencingObject, _fieldName);
 
@@ -127,7 +127,9 @@ class InstanceReplicationPreparer implements Visitor {
 		Object objectB = refB.object();
 
 		boolean changedInA = _providerA.wasModifiedSinceLastReplication(refA);
+		System.out.println("changedInA = " + changedInA);
 		boolean changedInB = _providerB.wasModifiedSinceLastReplication(refB);
+		System.out.println("changedInB = " + changedInB);
 
 		if (!changedInA && !changedInB) return false;
 
@@ -165,7 +167,7 @@ class InstanceReplicationPreparer implements Visitor {
 				if (changedInB) prevailing = objectB;
 			}
 		}
-		
+
 		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _providerA : _providerB;
 		if (_directionTo == prevailingPeer) return false;
 
@@ -184,19 +186,19 @@ class InstanceReplicationPreparer implements Visitor {
 		return !_event._actionShouldStopTraversal;
 	}
 
-	
+
 	private void markAsNotProcessed(Db4oUUID uuid) {
 		_uuidsProcessedInSession.remove(uuid);
 	}
 
-	
+
 	private void markAsProcessed(Db4oUUID uuid) {
 		if (_uuidsProcessedInSession.get(uuid) != null) throw new RuntimeException("illegal state");
 
 		_uuidsProcessedInSession.put(uuid, uuid); //Using this Hashtable4 as a Set.
 	}
 
-	
+
 	private boolean wasProcessed(Db4oUUID uuid) {
 		return _uuidsProcessedInSession.get(uuid) != null;
 	}
@@ -214,16 +216,16 @@ class InstanceReplicationPreparer implements Visitor {
 		boolean wasModified = owner.wasModifiedSinceLastReplication(ownerRef);
 		if (wasModified) isConflict = true;
 		if (_directionTo == other) isConflict = true;
-	
+
 		Object prevailing = null; //by default, deletion prevails
 		if (isConflict) owner.activate(obj);
-	
+
 		_event.resetAction();
 		_event._isConflict = isConflict;
-	
+
 		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
 		long modificationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.version());
-	
+
 		if (owner == _providerA) {
 			_stateInA.setAll(obj, false, wasModified, modificationDate);
 			_stateInB.setAll(null, false, false, -1);
@@ -231,23 +233,23 @@ class InstanceReplicationPreparer implements Visitor {
 			_stateInA.setAll(null, false, false, -1);
 			_stateInB.setAll(obj, false, wasModified, modificationDate);
 		}
-	
+
 		_listener.onReplicate(_event);
-	
+
 		if (isConflict && !_event._actionWasChosen) throwReplicationConflictException();
-	
+
 		if (_event._actionWasChosen) {
 			if (_event._actionChosenState == null) return false;
 			if (_event._actionChosenState == _stateInA) prevailing = _stateInA.getObject();
 			if (_event._actionChosenState == _stateInB) prevailing = _stateInB.getObject();
 		}
-	
+
 		if (prevailing == null) { //Deletion has prevailed.
 			if (_directionTo == other) return false;
 			ownerRef.markForDeleting();
 			return !_event._actionShouldStopTraversal;
 		}
-	
+
 		boolean needsToBeActivated = !isConflict; //Already activated if there was a conflict.
 		return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated, true);
 	}

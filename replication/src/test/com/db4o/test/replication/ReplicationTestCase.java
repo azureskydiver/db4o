@@ -114,8 +114,8 @@ public abstract class ReplicationTestCase {
 	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
 		ObjectSet objectSet = provider.getStoredObjects(clazz);
 
-		if (!objectSet.hasNext())
-			throw new RuntimeException("object not found");
+		if (1 != objectSet.size())
+			throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + provider);
 
 		return objectSet.next();
 	}
@@ -173,7 +173,7 @@ public abstract class ReplicationTestCase {
 		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
 		while (allObjects.hasNext()) {
 			final Object obj = allObjects.next();
-			//System.out.println("obj = " + obj);
+			System.out.println("obj = " + obj);
 			replication.replicate(obj);
 		}
 		replication.commit();

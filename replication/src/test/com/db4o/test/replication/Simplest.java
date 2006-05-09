@@ -19,17 +19,13 @@ public class Simplest extends ReplicationTestCase {
 
 		modifyInProviderA();
 
-		replicateParentClassStep3();
+		replicateStep3();
 	}
 
 	private void ensureNames(TestableReplicationProviderInside provider, String childName) {
-		ensureOneInstanceOfParentAndChild(provider);
-		SPCChild child = getTheObject(provider);
-		Test.ensure(child.getName().equals(childName));
-	}
-
-	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {
 		ensureOneInstance(provider, SPCChild.class);
+		SPCChild child = getTheObject(provider);
+		Test.ensureEquals(childName,child.getName());
 	}
 
 	private SPCChild getTheObject(TestableReplicationProviderInside provider) {
@@ -71,8 +67,11 @@ public class Simplest extends ReplicationTestCase {
 		ensureNames(_providerB, "c1");
 	}
 
-	private void replicateParentClassStep3() {
+	private void replicateStep3() {
+		System.out.println("BEGIN DEBUG");
 		replicateClass(_providerA, _providerB, SPCChild.class);
+		System.out.println("END DEBUG");
+
 
 		ensureNames(_providerA, "c3");
 		ensureNames(_providerB, "c3");
