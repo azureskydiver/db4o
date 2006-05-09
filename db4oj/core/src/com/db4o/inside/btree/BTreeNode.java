@@ -18,7 +18,7 @@ import com.db4o.inside.ix.*;
  */
 public class BTreeNode extends YapMeta{
     
-    private static final int MAX_ENTRIES = 4;
+    private static final int MAX_ENTRIES = 100;
 
     private static final int HALF_ENTRIES = MAX_ENTRIES / 2;
     
