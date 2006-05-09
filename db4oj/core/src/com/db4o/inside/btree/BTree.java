@@ -35,7 +35,7 @@ public class BTree extends YapMeta{
     
     
     //  just for debugging purposes for now
-    private String _name;
+    public String _name;
     
     
     public BTree(String name, int id, Indexable4 keyHandler, Indexable4 valueHandler){
@@ -43,7 +43,11 @@ public class BTree extends YapMeta{
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         setID(id);
-        setStateDeactivated();
+        if(id == 0){
+            setStateDirty();
+        }else{
+            setStateDeactivated();
+        }
     }
     
     public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
@@ -130,6 +134,10 @@ public class BTree extends YapMeta{
         
         if(! isActive()){
             read(trans.systemTransaction());
+        }
+        
+        if(_root == null){
+            _root = new BTreeNode(this, 0, 0);
         }
         
     }

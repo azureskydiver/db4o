@@ -196,7 +196,7 @@ public class YapClassPrimitive extends YapClass{
         return true;
     }
 
-    final boolean writeObjectBegin() {
+    public final boolean writeObjectBegin() {
         return false;
     }
     

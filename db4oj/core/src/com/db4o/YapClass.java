@@ -1905,7 +1905,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return false;
     }
 
-    boolean writeObjectBegin() {
+    public boolean writeObjectBegin() {
         if (!stateOK()) {
             return false;
         }

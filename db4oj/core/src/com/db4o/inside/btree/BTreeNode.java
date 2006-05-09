@@ -172,6 +172,13 @@ public class BTreeNode extends YapMeta{
         return _children[index] instanceof BTreeNode;
     }
     
+    private boolean childCanSupplyFirstKey(int index){
+        if(! childLoaded(index)){
+            return false;
+        }
+        return ((BTreeNode)_children[index])._keys != null;
+    }
+    
     void commit(Transaction trans){
         
         if(! canWrite()){
@@ -400,6 +407,7 @@ public class BTreeNode extends YapMeta{
         }
         
         if(isNew()){
+            prepareArrays();
             setStateDirty();
             return;
         }
@@ -627,6 +635,13 @@ public class BTreeNode extends YapMeta{
         return _btree._valueHandler;
     }
     
+    public boolean writeObjectBegin() {
+        if(_keys == null){
+            return false;
+        }
+        return super.writeObjectBegin();
+    }
+    
     
     public void writeThis(Transaction trans, YapReader a_writer) {
         
@@ -649,7 +664,7 @@ public class BTreeNode extends YapMeta{
             }
         }else{
             for (int i = 0; i < _count; i++) {
-                if(childLoaded(i)){
+                if(childCanSupplyFirstKey(i)){
                     BTreeNode child = (BTreeNode)_children[i];
                     Object childKey = child.firstKey(trans);
                     if(childKey != No4.INSTANCE){
