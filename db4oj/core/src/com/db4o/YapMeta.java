@@ -174,7 +174,7 @@ public abstract class YapMeta {
 
     }
 
-    boolean writeObjectBegin() {
+    public boolean writeObjectBegin() {
         if (isDirty()) {
             return beginProcessing();
         }
