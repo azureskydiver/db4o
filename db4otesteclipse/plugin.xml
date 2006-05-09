@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="db4otesteclipse.runtestmenu.type"
+            objectClass="org.eclipse.jdt.core.IType">
+         <action
+               class="db4otesteclipse.RunTestAction"
+               icon="d.gif"
+               id="db4otesteclipse.runtestmenu.type.action"
+               label="Run db4o test"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="db4otesteclipse.runtestmenu.cu"
+            objectClass="org.eclipse.jdt.core.ICompilationUnit">
+         <action
+               class="db4otesteclipse.RunTestAction"
+               icon="d.gif"
+               id="db4otesteclipse.runtestmenu.cu.action"
+               label="Run db4o test"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="db4otesteclipse.runtestmenu.pf"
+            objectClass="org.eclipse.jdt.core.IPackageFragment">
+         <action
+               class="db4otesteclipse.RunTestAction"
+               icon="d.gif"
+               id="db4otesteclipse.runtestmenu.pf.action"
+               label="Run db4o tests"/>
+      </objectContribution>
+   </extension>
+
+</plugin>
