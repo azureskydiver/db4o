@@ -254,9 +254,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
-		System.out.println("reference = " + reference);
+		//System.out.println("reference = " + reference);
 		boolean markedForReplicating = reference.isMarkedForReplicating();
-		System.out.println("markedForReplicating = " + markedForReplicating);
+		//System.out.println("markedForReplicating = " + markedForReplicating);
 		if (!markedForReplicating) return;
 		destination.storeReplica(reference.counterpart());
 	}

@@ -46,7 +46,7 @@ public abstract class Debug extends Debug4 {
     
     static final boolean lockFile = true;
 
-    static final boolean longTimeOuts = false;
+    public static boolean longTimeOuts = false;
 
     static YapFile serverStream;
     static YapClient clientStream;

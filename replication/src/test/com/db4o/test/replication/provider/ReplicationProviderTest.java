@@ -77,7 +77,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		tstDeletion();
 
-		tstCollection();
+		//tstCollection();
 	}
 
 	private void tstObjectUpdate() {
@@ -93,8 +93,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		SPCChild reloaded2 = getOneChildFromA();
 		reloaded2.setName("c3");
 
+		//System.out.println("==============BEGIN DEBUG");
 		_providerA.update(reloaded2);
 		_providerA.commit();
+		//System.out.println("==============END DEBUG");
 
 		startReplication();
 		SPCChild reloaded3 = getOneChildFromA();
@@ -183,7 +185,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(collectionRefFromB != null);
 		Test.ensure(collectionRefFromB.object() == collectionInB);
 
-		Test.ensure(_providerA.produceReference(collectionInB, null, null) == collectionRefFromB);
+		Test.ensure(_providerA.produceReference(collectionInB, null, null).equals( collectionRefFromB));
 		Test.ensure(_providerA.produceReference(collectionInB, null, null).object() == collectionInB);
 
 		_providerA.clearAllReferences();
@@ -334,7 +336,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.storeReplica(object1);
 		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
-		Test.ensure(_providerA.produceReference(object1, null, null) == reference);
+		Test.ensure(_providerA.produceReference(object1, null, null).equals(reference) );
 		Test.ensure(reference.object() == object1);
 
 		commitReplication();

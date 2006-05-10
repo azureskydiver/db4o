@@ -11,6 +11,7 @@ import com.db4o.test.AllTestsConfAll;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
+import com.db4o.Debug;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
@@ -26,7 +27,9 @@ public class AllTestsReplication extends AllTests {
 		new File(AllTestsConfAll.FILE_SERVER).delete();
 
 		Test.clientServer = false;
-		//Test.clientServer = true;
+		Test.clientServer = true;
+
+		Debug.longTimeOuts = true; //It takes more than 5 sec for the tests to initialize
 
 		Db4oReplicationTestUtil.configure();
 		registerProviderPairs();
@@ -35,13 +38,13 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		//db4o();
+		db4o();
 
-		transients();
-		hsql();
-		db4otransient();
-//		hsqlDb4o();
-//		db4oHsql();
+		//transients();
+		//hsql();
+		//db4otransient();
+		//hsqlDb4o();
+		//db4oHsql();
 
 		//oracle();
 		//mysql();

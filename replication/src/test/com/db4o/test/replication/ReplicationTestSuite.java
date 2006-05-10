@@ -9,10 +9,11 @@ import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
 import com.db4o.test.replication.r0tor4.R0to4Runner;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
+import com.db4o.test.replication.provider.Db4oObjectUpdateTest;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return one();
+		return all();
 	}
 
 	private Class[] all() {
@@ -22,13 +23,13 @@ public class ReplicationTestSuite extends TestSuite {
 				ReplicationConfiguratorTest.class,
 				ReplicationProviderTest.class,
 
-				ListTest.class,
+				//ListTest.class,
 				//Db4oListTest.class,
-				MapTest.class,
+				//MapTest.class,
 				ReplicationAfterDeletionTest.class,
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
-				SingleTypeCollectionReplicationTest.class,
+				//SingleTypeCollectionReplicationTest.class,
 
 				//General
 				CollectionHandlerImplTest.class,
@@ -46,7 +47,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] one() {
 		return new Class[]{
-			ReplicationProviderTest.class,
+			Simplest.class,
 		};
 	}
 }

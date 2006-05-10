@@ -173,7 +173,7 @@ public abstract class ReplicationTestCase {
 		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
 		while (allObjects.hasNext()) {
 			final Object obj = allObjects.next();
-			System.out.println("obj = " + obj);
+			//System.out.println("obj = " + obj);
 			replication.replicate(obj);
 		}
 		replication.commit();
