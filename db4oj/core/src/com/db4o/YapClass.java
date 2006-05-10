@@ -750,12 +750,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return new long[0];
         }
         
+        final long[] ids;
+        
         if(trans.i_stream.isClient()){
             YapClient stream = (YapClient)trans.i_stream;
             stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, getID()));
             YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
             int size = reader.readInt();
-            long[] ids = new long[size];
+            ids = new long[size];
             for (int i = 0; i < size; i++) {
                 ids[i] = reader.readInt();
             }
@@ -767,18 +769,18 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             if(tree == null){
                 return new long[0];
             }
-            final long[] ids = new long[tree.size()];
-            final int[] i = new int[] { 0 };
+            ids = new long[tree.size()];
+            final int[] inc = new int[] { 0 };
             tree.traverse(new Visitor4() {
                 public void visit(Object obj) {
-                    ids[i[0]++] = ((TreeInt) obj)._key;
+                    ids[inc[0]++] = ((TreeInt) obj)._key;
                 }
             });
             return ids;
         }
 
         if(Debug.useBTrees){
-            final long[] ids = new long[_index.size(trans)];
+            ids = new long[_index.size(trans)];
             final int[] count = new int[]{0};
             _index.traverseKeys(trans, new Visitor4() {
                 public void visit(Object obj) {
