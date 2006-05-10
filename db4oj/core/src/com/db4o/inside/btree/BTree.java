@@ -17,7 +17,7 @@ public class BTree extends YapMeta{
     
     final Indexable4 _valueHandler;
     
-    BTreeNode _root;
+    private BTreeNode _root;
    
     /**
      * All instantiated nodes are held in this tree. From here the nodes
@@ -33,6 +33,8 @@ public class BTree extends YapMeta{
     
     private Visitor4 _removeListener;
     
+    private Hashtable4 _transactions;
+    
     
     //  just for debugging purposes for now
     public String _name;
@@ -42,6 +44,7 @@ public class BTree extends YapMeta{
         _name = name;
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
+        _transactions = new Hashtable4(1);
         setID(id);
         if(id == 0){
             setStateDirty();
@@ -62,18 +65,15 @@ public class BTree extends YapMeta{
             _root = _root.newRoot(trans, (BTreeNode)addResult);
         }
         setStateDirty();
-        
-        // TODO: Size needs to be transactional
-        _size ++;
-        
+        sizeChanged(trans, 1);
     }
     
     public void remove(Transaction trans, Object value){
         ensureDirty(trans);
         _keyHandler.prepareComparison(value);
         _root.remove(trans);
+        sizeChanged(trans, -1);
     }
-    
 
     private void ensureNewNodesReferenced(Transaction trans){
         
@@ -92,6 +92,12 @@ public class BTree extends YapMeta{
     
     public void commit(final Transaction trans){
         
+        BTreeTransaction btt = (BTreeTransaction)_transactions.get(trans);
+        if(btt != null){
+            _size += btt._resize;
+        }
+        _transactions.remove(trans);
+        
         ensureNewNodesReferenced(trans);
         
         // TODO: Here we are doing writes twice.
@@ -109,6 +115,8 @@ public class BTree extends YapMeta{
     }
     
     public void rollback(final Transaction trans){
+        
+        _transactions.remove(trans);
         
         ensureNewNodesReferenced(trans);
         
@@ -198,7 +206,12 @@ public class BTree extends YapMeta{
         a_writer.writeIDOf(trans, _root);
     }
     
-    public int size(){
+    public int size(Transaction trans){
+        ensureActive(trans);
+        BTreeTransaction btt = (BTreeTransaction)_transactions.get(trans);
+        if(btt != null){
+            return _size + btt._resize;
+        }
         return _size;
     }
     
@@ -215,6 +228,20 @@ public class BTree extends YapMeta{
             return super.toString();
         }
         return "BTree for " + _name;
+    }
+    
+    BTreeTransaction produceTransaction(Transaction trans){
+        BTreeTransaction btt = (BTreeTransaction)_transactions.get(trans);
+        if(btt == null){
+            btt = new BTreeTransaction();
+            _transactions.put(trans, btt);
+        }
+        return btt;
+    }
+    
+    private void sizeChanged(Transaction trans, int changeBy){
+        BTreeTransaction btt = produceTransaction(trans);
+        btt._resize += changeBy;
     }
 
 
