@@ -733,33 +733,65 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     public long[] getIDs() {
         synchronized(i_stream.i_lock){
-	        if (stateOK()) {
-	            return getIDs(i_stream.getTransaction());
-	        }
-	        return new long[0];
+	        if (! stateOK()) {
+                return new long[0];
+            }
+	        return getIDs(i_stream.getTransaction());
         }
     }
 
     public long[] getIDs(Transaction trans) {
-        if (stateOK() && hasIndex()) {
-            if(Debug.useOldClassIndex){
-                return getIndex().getInternalIDs(trans, getID());
-            }
-            if(Debug.useBTrees){
-                final long[] ids = new long[_index.size(trans)];
-                final int[] count = new int[]{0};
-                _index.traverseKeys(trans, new Visitor4() {
-                    public void visit(Object obj) {
-                        int id = ((Integer)obj).intValue();
-                        if(id > 0){
-                            ids[count[0]] = id;
-                            count[0] ++;
-                        }
-                    }
-                });
-                return ids;
-            }
+        
+        if (! stateOK()){
+            return new long[0];
         }
+        
+        if( ! hasIndex() ){
+            return new long[0];
+        }
+        
+        if(trans.i_stream.isClient()){
+            YapClient stream = (YapClient)trans.i_stream;
+            stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, getID()));
+            YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
+            int size = reader.readInt();
+            long[] ids = new long[size];
+            for (int i = 0; i < size; i++) {
+                ids[i] = reader.readInt();
+            }
+            return ids;
+        }
+        
+        if(Debug.useOldClassIndex){
+            Tree tree = getIndex().cloneForYapClass(trans, getID());
+            if(tree == null){
+                return new long[0];
+            }
+            final long[] ids = new long[tree.size()];
+            final int[] i = new int[] { 0 };
+            tree.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    ids[i[0]++] = ((TreeInt) obj)._key;
+                }
+            });
+            return ids;
+        }
+
+        if(Debug.useBTrees){
+            final long[] ids = new long[_index.size(trans)];
+            final int[] count = new int[]{0};
+            _index.traverseKeys(trans, new Visitor4() {
+                public void visit(Object obj) {
+                    int id = ((Integer)obj).intValue();
+                    if(id > 0){
+                        ids[count[0]] = id;
+                        count[0] ++;
+                    }
+                }
+            });
+            return ids;
+        }
+        
         return new long[0];
     }
 

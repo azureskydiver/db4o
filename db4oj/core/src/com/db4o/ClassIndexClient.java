@@ -22,18 +22,6 @@ final class ClassIndexClient extends ClassIndex {
         // do nothing
     }
 	
-	long[] getInternalIDs(Transaction trans, int yapClassID){
-		YapClient stream = (YapClient)trans.i_stream;
-		stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, yapClassID));
-		YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
-		int size = reader.readInt();
-		long[] ids = new long[size];
-		for (int i = 0; i < size; i++) {
-			ids[i] = reader.readInt();
-		}
-		return ids;
-	}
-	
 	public void read(Transaction a_trans) {
 		// do nothing
 	}
