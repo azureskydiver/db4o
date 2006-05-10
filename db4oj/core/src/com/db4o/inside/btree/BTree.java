@@ -33,7 +33,7 @@ public class BTree extends YapMeta{
     
     private Visitor4 _removeListener;
     
-    private Hashtable4 _transactions;
+    private Hashtable4 _sizesByTransaction;
     
     
     //  just for debugging purposes for now
@@ -44,7 +44,7 @@ public class BTree extends YapMeta{
         _name = name;
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
-        _transactions = new Hashtable4(1);
+        _sizesByTransaction = new Hashtable4(1);
         setID(id);
         if(id == 0){
             setStateDirty();
@@ -60,9 +60,9 @@ public class BTree extends YapMeta{
     public void add(Transaction trans, Object value){
         ensureDirty(trans);
         _keyHandler.prepareComparison(value);
-        Object addResult = _root.add(trans);
-        if(addResult instanceof BTreeNode){
-            _root = _root.newRoot(trans, (BTreeNode)addResult);
+        BTreeNode rootOrSplit = _root.add(trans);
+        if(rootOrSplit != null && rootOrSplit != _root){
+            _root = _root.newRoot(trans, rootOrSplit);
         }
         setStateDirty();
         sizeChanged(trans, 1);
@@ -92,11 +92,11 @@ public class BTree extends YapMeta{
     
     public void commit(final Transaction trans){
         
-        BTreeTransaction btt = (BTreeTransaction)_transactions.get(trans);
-        if(btt != null){
-            _size += btt._resize;
+        Integer sizeDiff = (Integer)_sizesByTransaction.get(trans);
+        if(sizeDiff != null){
+            _size += sizeDiff.intValue();
         }
-        _transactions.remove(trans);
+        _sizesByTransaction.remove(trans);
         
         ensureNewNodesReferenced(trans);
         
@@ -116,7 +116,7 @@ public class BTree extends YapMeta{
     
     public void rollback(final Transaction trans){
         
-        _transactions.remove(trans);
+        _sizesByTransaction.remove(trans);
         
         ensureNewNodesReferenced(trans);
         
@@ -134,7 +134,7 @@ public class BTree extends YapMeta{
 
         if(isNew()){
             setStateDirty();
-            _root = new BTreeNode(this, 0, 0);
+            _root = new BTreeNode(this, 0, true);
             write(trans.systemTransaction());
             setStateClean();
             return;
@@ -145,7 +145,7 @@ public class BTree extends YapMeta{
         }
         
         if(_root == null){
-            _root = new BTreeNode(this, 0, 0);
+            _root = new BTreeNode(this, 0, true);
         }
         
     }
@@ -208,9 +208,9 @@ public class BTree extends YapMeta{
     
     public int size(Transaction trans){
         ensureActive(trans);
-        BTreeTransaction btt = (BTreeTransaction)_transactions.get(trans);
-        if(btt != null){
-            return _size + btt._resize;
+        Integer sizeDiff = (Integer)_sizesByTransaction.get(trans);
+        if(sizeDiff != null){
+            return _size + sizeDiff.intValue();
         }
         return _size;
     }
@@ -230,18 +230,12 @@ public class BTree extends YapMeta{
         return "BTree for " + _name;
     }
     
-    BTreeTransaction produceTransaction(Transaction trans){
-        BTreeTransaction btt = (BTreeTransaction)_transactions.get(trans);
-        if(btt == null){
-            btt = new BTreeTransaction();
-            _transactions.put(trans, btt);
-        }
-        return btt;
-    }
-    
     private void sizeChanged(Transaction trans, int changeBy){
-        BTreeTransaction btt = produceTransaction(trans);
-        btt._resize += changeBy;
+        Integer sizeDiff = (Integer)_sizesByTransaction.get(trans);
+        if(sizeDiff == null){
+            _sizesByTransaction.put(trans, new Integer(changeBy));
+        }
+        _sizesByTransaction.put(trans, new Integer(sizeDiff.intValue() + changeBy));
     }
 
 
