@@ -19,7 +19,7 @@ class HashtableObjectEntry extends HashtableIntEntry {
 		i_objectKey = a_key;
 	}
 
-	private HashtableObjectEntry() {
+	protected HashtableObjectEntry() {
 		super();
 	}
 
@@ -28,11 +28,13 @@ class HashtableObjectEntry extends HashtableIntEntry {
 	}
 
 	public Object deepClone(Object obj) {
-		HashtableObjectEntry ret = new HashtableObjectEntry();
-		deepCloneInternal(ret, obj);
-		ret.i_objectKey = i_objectKey;
-		return ret;
+        return deepCloneInternal(new HashtableObjectEntry(), obj);
 	}
+    
+    protected HashtableIntEntry deepCloneInternal(HashtableIntEntry entry, Object obj) {
+        ((HashtableObjectEntry)entry).i_objectKey = i_objectKey;
+        return super.deepCloneInternal(entry, obj);
+    }
 
 	public boolean hasKey(Object key) {
 		return i_objectKey.equals(key);

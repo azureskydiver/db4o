@@ -8,6 +8,14 @@ class HashtableByteArrayEntry extends HashtableObjectEntry {
 	public HashtableByteArrayEntry(byte[] bytes, Object value) {
 		super(hash(bytes), bytes, value);
 	}
+    
+    private HashtableByteArrayEntry(){
+        super();
+    }
+    
+    public Object deepClone(Object obj) {
+        return deepCloneInternal(new HashtableByteArrayEntry(), obj);
+    }
 
 	public boolean hasKey(Object key) {
 		if (key instanceof byte[]) {
