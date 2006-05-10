@@ -746,10 +746,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 return getIndex().getInternalIDs(trans, getID());
             }
             if(Debug.useBTrees){
-                final long[] ids = new long[_index.size()];
-                // TODO: Temporary: size of BTree is inconsistent
-                //       with actual count for transactions so
-                //       count along here.
+                final long[] ids = new long[_index.size(trans)];
                 final int[] count = new int[]{0};
                 _index.traverseKeys(trans, new Visitor4() {
                     public void visit(Object obj) {
@@ -760,12 +757,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                         }
                     }
                 });
-                if(count[0] == ids.length){
-                    return ids;
-                }
-                long[] res = new long[count[0]];
-                System.arraycopy(ids, 0, res,0, count[0]);
-                return res;
+                return ids;
             }
         }
         return new long[0];
@@ -839,7 +831,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         if(Debug.useBTrees){
             if(_index != null){
-                return _index.size();
+                return _index.size(ta);
             }
         }
         

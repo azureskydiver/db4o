@@ -42,7 +42,7 @@ public abstract class BTreePatch {
             if(_next != null){
                 return _next;
             }
-            return getObject();
+            return committed(btree);
         }
         if(_next != null){
             Object newNext = _next.commit(trans, btree, false);
