@@ -429,8 +429,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     private void createBTreeIndex(int btreeID){
         if(hasIndex()){
-            _index = i_stream.createBTreeClassIndex(this, btreeID);
             if( ! i_stream.isClient()){
+                _index = i_stream.createBTreeClassIndex(this, btreeID);
                 _index.setRemoveListener(new Visitor4() {
                     public void visit(Object obj) {
                         int id = ((Integer)obj).intValue();

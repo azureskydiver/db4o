@@ -38,7 +38,7 @@ public final class YapConst
     public static final byte   BTREE_NODE          = (byte)'B';               
 	
 	static final int	IDENTIFIER_LENGTH	= (Deploy.debug && Deploy.identifiers)?1:0;
-	static final int	BRACKETS_BYTES		= (Deploy.debug && Deploy.brackets)?1:0;
+	public static final int	BRACKETS_BYTES		= (Deploy.debug && Deploy.brackets)?1:0;
 	static final int	BRACKETS_LENGTH		= BRACKETS_BYTES * 2;
 
 	public static final int	LEADING_LENGTH		= IDENTIFIER_LENGTH + BRACKETS_BYTES;

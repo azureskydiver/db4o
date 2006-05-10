@@ -16,7 +16,7 @@ public class Searcher {
     
     public int _cmp;
     
-    private int _for;
+    private int _target;
     
     private static final int ANY = 0;
     
@@ -67,13 +67,13 @@ public class Searcher {
             return;
         }
         
-        if(_for == ANY){
+        if(_target == ANY){
             _lower = _cursor;
             _upper = _cursor;
             return;
         }
         
-        if(_for == HIGHEST){
+        if(_target == HIGHEST){
             _lower = _cursor;
             return;
         }
@@ -84,11 +84,11 @@ public class Searcher {
     }
     
     void highest(){
-        _for = HIGHEST;
+        _target = HIGHEST;
     }
     
     void lowest(){
-        _for = LOWEST;
+        _target = LOWEST;
     }
 
 }

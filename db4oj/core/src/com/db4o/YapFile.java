@@ -473,7 +473,7 @@ public abstract class YapFile extends YapStream {
             // differentiate here in debug mode.
 
             if (Debug.atHome) {
-                System.out.println("YapFile.WriterByID failed for ID: " + a_id);
+                System.out.println("YapFile.readReaderOrWriterByID failed for ID: " + a_id);
                 e.printStackTrace();
             }
         }
