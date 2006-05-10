@@ -18,7 +18,7 @@ import com.db4o.inside.ix.*;
  */
 public class BTreeNode extends YapMeta{
     
-    private static final int MAX_ENTRIES = 100;
+    private static final int MAX_ENTRIES = 4;
 
     private static final int HALF_ENTRIES = MAX_ENTRIES / 2;
     
@@ -674,7 +674,7 @@ public class BTreeNode extends YapMeta{
                     }
                 }else{
                     count ++;
-                    keyHandler().writeIndexEntry(a_writer, _keys[i]);
+                    keyHandler().writeIndexEntry(a_writer, key(i));
                     a_writer.writeIDOf(trans, _children[i]);
                 }
             }

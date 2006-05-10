@@ -1683,7 +1683,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     void removeFromIndex(Transaction ta, int id) {
         if (hasIndex()) {
-            ta.removeFromClassIndex(getID(), id);
+            if(Debug.useOldClassIndex){
+                ta.removeFromClassIndex(getID(), id);
+            }
+            if(Debug.useBTrees){
+                _index.remove(ta, new Integer(id));
+            }
         }
         if (i_ancestor != null) {
             i_ancestor.removeFromIndex(ta, id);
