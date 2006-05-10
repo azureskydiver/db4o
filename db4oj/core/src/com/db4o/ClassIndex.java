@@ -80,22 +80,6 @@ import com.db4o.inside.slots.*;
     public final byte getIdentifier() {
         return YapConst.YAPINDEX;
     }
-
-
-    long[] getInternalIDs(Transaction a_trans, int a_yapClassID) {
-    	Tree tree = cloneForYapClass(a_trans, a_yapClassID);
-    	if(tree == null){
-    		return new long[0];
-    	}
-        final long[] ids = new long[tree.size()];
-        final int[] i = new int[] { 0 };
-        tree.traverse(new Visitor4() {
-            public void visit(Object obj) {
-                ids[i[0]++] = ((TreeInt) obj)._key;
-            }
-        });
-        return ids;
-    }
     
     TreeInt getRoot(){
         ensureActive();
