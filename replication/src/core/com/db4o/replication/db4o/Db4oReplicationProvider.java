@@ -8,13 +8,14 @@ import com.db4o.ReplicationRecord;
 import com.db4o.Transaction;
 import com.db4o.Tree;
 import com.db4o.TreeInt;
+import com.db4o.YapClient;
 import com.db4o.YapStream;
 import com.db4o.config.Configuration;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.VirtualField;
-import com.db4o.ext.ExtObjectContainer;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.Db4oReplicationReference;
 import com.db4o.inside.replication.Db4oReplicationReferenceProvider;
@@ -185,6 +186,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 			}
 		}
 
+		refresh(obj);
+
 		ObjectInfo objectInfo = _stream.getObjectInfo(obj);
 
 		if (objectInfo == null) {
@@ -196,6 +199,12 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		addReference(newNode);
 
 		return newNode;
+	}
+
+	private void refresh(Object obj) {
+		//TODO FIXME, fix for C/S, not required in SOLO
+		if (_stream instanceof YapClient)
+			_stream.refresh(obj, 999);
 	}
 
 	private void addReference(Db4oReplicationReferenceImpl newNode) {
@@ -356,7 +365,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		_stream.delete(obj);
 	}
 
-	public ExtObjectContainer getObjectContainer(){
+	public ExtObjectContainer getObjectContainer() {
 		return _stream;
 	}
 }

@@ -127,9 +127,9 @@ class InstanceReplicationPreparer implements Visitor {
 		Object objectB = refB.object();
 
 		boolean changedInA = _providerA.wasModifiedSinceLastReplication(refA);
-		System.out.println("changedInA = " + changedInA);
+		//System.out.println("changedInA = " + changedInA);
 		boolean changedInB = _providerB.wasModifiedSinceLastReplication(refB);
-		System.out.println("changedInB = " + changedInB);
+		//System.out.println("changedInB = " + changedInB);
 
 		if (!changedInA && !changedInB) return false;
 

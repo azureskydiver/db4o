@@ -68,9 +68,9 @@ public class Simplest extends ReplicationTestCase {
 	}
 
 	private void replicateStep3() {
-		System.out.println("BEGIN DEBUG");
+		//System.out.println("BEGIN DEBUG");
 		replicateClass(_providerA, _providerB, SPCChild.class);
-		System.out.println("END DEBUG");
+		//System.out.println("END DEBUG");
 
 
 		ensureNames(_providerA, "c3");
