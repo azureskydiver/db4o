@@ -7,13 +7,14 @@ import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestCase;
+import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.collections.ListHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 //FIXME This test should test a single ReplicationProvider and does not require _providerB. It does not need to extend ReplicationTestCase with all its provider combinations.
+
 public class ReplicationProviderTest extends ReplicationTestCase {
 	protected byte[] B_SIGNATURE_BYTES;
 	protected ReadonlyReplicationProviderSignature B_SIGNATURE;
@@ -38,22 +39,22 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		startReplication();
 
 		Db4oUUID uuidCar1 = uuid(findCar("Car1"));
-		Test.ensure(uuidCar1!= null);
+		Test.ensure(uuidCar1 != null);
 		_providerA.replicateDeletion(uuidCar1);
 
 		commitReplication();
 
-		Test.ensure(findCar("Car1")== null);
+		Test.ensure(findCar("Car1") == null);
 
 		startReplication();
 
 		Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
-		Test.ensure(uuidPilot2!= null);
+		Test.ensure(uuidPilot2 != null);
 		_providerA.replicateDeletion(uuidPilot2);
 
 		commitReplication();
 
-		Test.ensure(findPilot("Pilot2")== null);
+		Test.ensure(findPilot("Pilot2") == null);
 	}
 
 	public void actualTest() {
@@ -61,6 +62,8 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		A_SIGNATURE = _providerA.getSignature();
 		B_SIGNATURE = _providerB.getSignature();
+
+		tstObjectUpdate();
 
 		tstSignature();
 
@@ -75,6 +78,37 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		tstDeletion();
 
 		tstCollection();
+	}
+
+	private void tstObjectUpdate() {
+		SPCChild child = new SPCChild("c1");
+		_providerA.storeNew(child);
+		_providerA.commit();
+
+		startReplication();
+		SPCChild reloaded = getOneChildFromA();
+		long oldVer = _providerA.produceReference(reloaded, null, null).version();
+		commitReplication();
+
+		SPCChild reloaded2 = getOneChildFromA();
+		reloaded2.setName("c3");
+
+		_providerA.update(reloaded2);
+		_providerA.commit();
+
+		startReplication();
+		SPCChild reloaded3 = getOneChildFromA();
+		long newVer = _providerA.produceReference(reloaded3, null, null).version();
+		commitReplication();
+
+		Test.ensure(newVer > oldVer);
+	}
+
+	private SPCChild getOneChildFromA() {
+		ObjectSet storedObjects = _providerA.getStoredObjects(SPCChild.class);
+		Test.ensureEquals(1, storedObjects.size());
+		Test.ensure(storedObjects.hasNext());
+		return (SPCChild) storedObjects.next();
 	}
 
 	public void commitReplication() {

@@ -46,7 +46,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] one() {
 		return new Class[]{
-			Simplest.class,
+			ReplicationProviderTest.class,
 		};
 	}
 }

@@ -7,11 +7,14 @@ import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.test.AllTests;
 import com.db4o.test.Test;
 import com.db4o.test.TestSuite;
+import com.db4o.test.AllTestsConfAll;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+
+import java.io.File;
 
 public class AllTestsReplication extends AllTests {
 
@@ -20,6 +23,8 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	public void run() {
+		new File(AllTestsConfAll.FILE_SERVER).delete();
+
 		Test.clientServer = false;
 		//Test.clientServer = true;
 
@@ -30,11 +35,11 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		db4o();
+		//db4o();
 
-//		transients();
-//		hsql();
-//		transientdb4o();
+		transients();
+		hsql();
+		db4otransient();
 //		hsqlDb4o();
 //		db4oHsql();
 
@@ -55,8 +60,8 @@ public class AllTestsReplication extends AllTests {
 		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "Transient A"), new TransientReplicationProvider(new byte[]{66}, "Transient B"));
 	}
 
-	private void transientdb4o() {
-		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65,58,89}, "Transient A"), Db4oReplicationTestUtil.newProviderB());
+	private void db4otransient() {
+		ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), new TransientReplicationProvider(new byte[]{65,58,89}, "Transient B") );
 	}
 
 	private void db4o() {
