@@ -2,16 +2,17 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
+import com.db4o.Debug;
+import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
 import com.db4o.test.AllTests;
+import com.db4o.test.AllTestsConfAll;
 import com.db4o.test.Test;
 import com.db4o.test.TestSuite;
-import com.db4o.test.AllTestsConfAll;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
-import com.db4o.Debug;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
@@ -64,11 +65,15 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void db4otransient() {
-		ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), new TransientReplicationProvider(new byte[]{65,58,89}, "Transient B") );
+		ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), new TransientReplicationProvider(new byte[]{65, 58, 89}, "Transient B"));
 	}
 
 	private void db4o() {
-		ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
+		if (Test.clientServer) {
+			//Db4oClientServerReplicationProvider providerA = new Db4oClientServerReplicationProvider(Test.objectContainer(), "db4o C/S", Test.SERVER_HOSTNAME, Test.SERVER_PORT, Test.DB4O_USER, Test.DB4O_PASSWORD);
+			ReplicationTestCase.registerProviderPair(new Db4oReplicationProvider(Test.objectContainer(), "db4o C/S a"), Db4oReplicationTestUtil.newProviderB());
+		} else
+			ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
 	}
 
 	private void hsql() {ReplicationTestCase.registerProviderPair(HibernateUtil.newProviderA(), HibernateUtil.newProviderB());}
