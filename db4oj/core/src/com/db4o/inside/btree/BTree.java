@@ -27,8 +27,6 @@ public class BTree extends YapMeta{
      */
     private TreeIntWeakObject _nodes;
     
-    private List4 _newNodes;
-    
     private int _size;
     
     private Visitor4 _removeListener;
@@ -40,21 +38,25 @@ public class BTree extends YapMeta{
     public String _name;
     
     
-    public BTree(String name, int id, Indexable4 keyHandler, Indexable4 valueHandler){
+    public BTree(String name, Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
         _name = name;
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         _sizesByTransaction = new Hashtable4(1);
-        setID(id);
         if(id == 0){
             setStateDirty();
+            _root = new BTreeNode(this, 0, true, 0, 0, 0);
+            _root.write(trans.systemTransaction());
+            addNode(_root);
+            write(trans.systemTransaction());
         }else{
+            setID(id);
             setStateDeactivated();
         }
     }
     
-    public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
-        this(null, id, keyHandler, valueHandler);
+    public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
+        this(null, trans, id, keyHandler, valueHandler);
     }
     
     public void add(Transaction trans, Object value){
@@ -62,7 +64,9 @@ public class BTree extends YapMeta{
         _keyHandler.prepareComparison(value);
         BTreeNode rootOrSplit = _root.add(trans);
         if(rootOrSplit != null && rootOrSplit != _root){
-            _root = _root.newRoot(trans, rootOrSplit);
+            _root = new BTreeNode(trans, _root, rootOrSplit);
+            _root.write(trans.systemTransaction());
+            addNode(_root);
         }
         setStateDirty();
         sizeChanged(trans, 1);
@@ -75,20 +79,6 @@ public class BTree extends YapMeta{
         sizeChanged(trans, -1);
     }
 
-    private void ensureNewNodesReferenced(Transaction trans){
-        
-        Transaction systemTrans = trans.systemTransaction();
-        
-        Iterator4 iter = new Iterator4Impl(_newNodes);
-        while(iter.hasNext()){
-            BTreeNode node = (BTreeNode)iter.next();
-            node.write(systemTrans);
-            _nodes = (TreeIntWeakObject)Tree.add(_nodes, new TreeIntWeakObject(node.getID(), node));
-        }
-        
-        _newNodes = null;
-
-    }
     
     public void commit(final Transaction trans){
         
@@ -97,8 +87,6 @@ public class BTree extends YapMeta{
             _size += sizeDiff.intValue();
         }
         _sizesByTransaction.remove(trans);
-        
-        ensureNewNodesReferenced(trans);
         
         // TODO: Here we are doing writes twice.
         // New nodes will already have been written above.
@@ -118,8 +106,6 @@ public class BTree extends YapMeta{
         
         _sizesByTransaction.remove(trans);
         
-        ensureNewNodesReferenced(trans);
-        
         if(_nodes == null){
             return;
         }
@@ -131,23 +117,9 @@ public class BTree extends YapMeta{
     }
     
     private void ensureActive(Transaction trans){
-
-        if(isNew()){
-            setStateDirty();
-            _root = new BTreeNode(this, 0, true);
-            write(trans.systemTransaction());
-            setStateClean();
-            return;
-        }
-        
         if(! isActive()){
             read(trans.systemTransaction());
         }
-        
-        if(_root == null){
-            _root = new BTreeNode(this, 0, true);
-        }
-        
     }
     
     private void ensureDirty(Transaction trans){
@@ -180,12 +152,8 @@ public class BTree extends YapMeta{
         return node;
     }
     
-    void addNode(int id, BTreeNode node){
-        _nodes = (TreeIntWeakObject)Tree.add(_nodes, new TreeIntWeakObject(id, node));
-    }
-    
-    void addNewNode(BTreeNode node){
-        _newNodes = new List4(_newNodes, node);
+    void addNode(BTreeNode node){
+        _nodes = (TreeIntWeakObject)Tree.add(_nodes, new TreeIntWeakObject(node.getID(), node));
     }
     
     void notifyRemoveListener(Object obj){
@@ -234,6 +202,7 @@ public class BTree extends YapMeta{
         Integer sizeDiff = (Integer)_sizesByTransaction.get(trans);
         if(sizeDiff == null){
             _sizesByTransaction.put(trans, new Integer(changeBy));
+            return;
         }
         _sizesByTransaction.put(trans, new Integer(sizeDiff.intValue() + changeBy));
     }

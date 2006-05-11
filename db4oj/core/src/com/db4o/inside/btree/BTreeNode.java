@@ -48,22 +48,29 @@ public class BTreeNode extends YapMeta{
     private Object[] _values;
     
     
-//    private int _parentID;
-//    
-//    private int _previousID;
-//    
-//    private int _nextID;
+    private int _parentID;
+    
+    private int _previousID;
+    
+    private int _nextID;
     
     
     
     /* Constructor for new nodes */
-    public BTreeNode(BTree btree, int count, boolean isLeaf){
+    public BTreeNode(BTree btree, 
+                     int count, 
+                     boolean isLeaf,
+                     int parentID, 
+                     int previousID, 
+                     int nextID){
         _btree = btree;
+        _parentID = parentID;
+        _previousID = previousID;
+        _nextID = nextID;
         _count = count;
         _isLeaf = isLeaf;
         prepareArrays();
         setStateDirty();
-        btree.addNewNode(this);
     }
     
     /* Constructor for existing nodes, requires valid ID */
@@ -72,6 +79,24 @@ public class BTreeNode extends YapMeta{
         setID(id);
         setStateDeactivated();
     }
+    
+    // root constructor
+    public BTreeNode(Transaction trans, BTreeNode firstChild, BTreeNode secondChild){
+        this(firstChild._btree, 2, false, 0, 0, 0);
+        _keys[0] = firstChild._keys[0];
+        _children[0] = firstChild;
+        _keys[1] = secondChild._keys[0];
+        _children[1] = secondChild;
+        
+        write(trans.systemTransaction());
+        
+        firstChild._parentID = getID();
+        secondChild._parentID = getID();
+        
+        
+    }
+    
+
     
     
     /**
@@ -359,16 +384,6 @@ public class BTreeNode extends YapMeta{
         return _btree._keyHandler;
     }
     
-    BTreeNode newRoot(Transaction trans, BTreeNode peer){
-        BTreeNode res = new BTreeNode(_btree, 2, false );
-        res._keys[0] = _keys[0];
-        res._children[0] = this;
-        res._keys[1] = peer._keys[0];
-        res._children[1] = peer;
-        res.write(trans);
-        return res;
-    }
-    
     public int ownLength() {
         return SLOT_LEADING_LENGTH
           + (_count * entryLength())
@@ -562,7 +577,7 @@ public class BTreeNode extends YapMeta{
     }
     
     private BTreeNode split(Transaction trans){
-        BTreeNode res = new BTreeNode(_btree, HALF_ENTRIES, _isLeaf);
+        BTreeNode res = new BTreeNode(_btree, HALF_ENTRIES, _isLeaf,_parentID, getID(), _nextID);
         System.arraycopy(_keys, HALF_ENTRIES, res._keys, 0, HALF_ENTRIES);
         for (int i = HALF_ENTRIES; i < _keys.length; i++) {
             _keys[i] = null;
@@ -583,6 +598,14 @@ public class BTreeNode extends YapMeta{
         }
         
         _count = HALF_ENTRIES;
+        
+        res.write(trans.systemTransaction());
+        _btree.addNode(res);
+        
+        int oldNextID = _nextID;
+        _nextID = res.getID();
+        
+        
         
         return res;
     }
