@@ -48,6 +48,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 	private final String _name;
 
+	private int _replicationRounds = 0;
+
 	public Db4oReplicationProvider(ObjectContainer objectContainer) {
 		this(objectContainer, "null");
 	}
@@ -106,6 +108,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 			long localInitialVersion = _stream.version();
 		}
+
+		_replicationRounds++;
 	}
 
 	public void syncVersionWithPeer(long version) {
@@ -203,8 +207,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 	private void refresh(Object obj) {
 		//TODO FIXME, fix for C/S, not required in SOLO
-		if (_stream instanceof YapClient)
-			_stream.refresh(obj, 999);
+		if (_replicationRounds > 0 && _stream instanceof YapClient)
+			_stream.refresh(obj, 1);
 	}
 
 	private void addReference(Db4oReplicationReferenceImpl newNode) {
