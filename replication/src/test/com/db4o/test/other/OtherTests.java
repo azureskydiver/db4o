@@ -21,7 +21,8 @@ public class OtherTests extends AllTests {
 class OtherTestSuite extends TestSuite {
 	public Class[] tests() {
 		return new Class[]{
-				ObjectVersionTest.class
+				ObjectVersionTest.class,
+				CollectionUuidTest.class
 		};
 	}
 }
