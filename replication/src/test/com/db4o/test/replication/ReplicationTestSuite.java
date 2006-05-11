@@ -13,7 +13,7 @@ import com.db4o.test.replication.provider.Db4oObjectUpdateTest;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return all();
+		return one();
 	}
 
 	private Class[] all() {
@@ -47,7 +47,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] one() {
 		return new Class[]{
-			Simplest.class,
+			ReplicationProviderTest.class,
 		};
 	}
 }

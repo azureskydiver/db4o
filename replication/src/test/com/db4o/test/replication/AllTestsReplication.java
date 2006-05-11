@@ -3,6 +3,7 @@
 package com.db4o.test.replication;
 
 import com.db4o.Debug;
+import com.db4o.foundation.Debug4;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
@@ -31,6 +32,7 @@ public class AllTestsReplication extends AllTests {
 		Test.clientServer = true;
 
 		Debug.longTimeOuts = true; //It takes more than 5 sec for the tests to initialize
+		Debug4.prettyToStrings = true;
 
 		Db4oReplicationTestUtil.configure();
 		registerProviderPairs();

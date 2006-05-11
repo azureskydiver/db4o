@@ -4,6 +4,7 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
+import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestCase;
@@ -12,6 +13,7 @@ import com.db4o.test.replication.collections.ListHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 //FIXME This test should test a single ReplicationProvider and does not require _providerB. It does not need to extend ReplicationTestCase with all its provider combinations.
 
@@ -19,6 +21,35 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	protected byte[] B_SIGNATURE_BYTES;
 	protected ReadonlyReplicationProviderSignature B_SIGNATURE;
 	private ReadonlyReplicationProviderSignature A_SIGNATURE;
+
+	public void actualTest() {
+		B_SIGNATURE_BYTES = _providerB.getSignature().getBytes();
+
+		A_SIGNATURE = _providerA.getSignature();
+		B_SIGNATURE = _providerB.getSignature();
+
+		tstObjectUpdate();
+
+		tstSignature();
+
+		tstObjectsChangedSinceLastReplication();
+
+		tstReferences();
+
+		tstStore();
+
+		tstRollback();
+
+		tstDeletion();
+
+		tstCollectionReferences();
+
+		tstCollection();
+	}
+
+	public void test() {
+		super.test();
+	}
 
 	protected void tstDeletion() {
 		_providerA.storeNew(new Pilot("Pilot1", 42));
@@ -57,63 +88,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(findPilot("Pilot2") == null);
 	}
 
-	public void actualTest() {
-		B_SIGNATURE_BYTES = _providerB.getSignature().getBytes();
-
-		A_SIGNATURE = _providerA.getSignature();
-		B_SIGNATURE = _providerB.getSignature();
-
-		tstObjectUpdate();
-
-		tstSignature();
-
-		tstObjectsChangedSinceLastReplication();
-
-		tstReferences();
-
-		tstStore();
-
-		tstRollback();
-
-		tstDeletion();
-
-		//tstCollection();
-	}
-
-	private void tstObjectUpdate() {
-		SPCChild child = new SPCChild("c1");
-		_providerA.storeNew(child);
-		_providerA.commit();
-
-		startReplication();
-		SPCChild reloaded = getOneChildFromA();
-		long oldVer = _providerA.produceReference(reloaded, null, null).version();
-		commitReplication();
-
-		SPCChild reloaded2 = getOneChildFromA();
-		reloaded2.setName("c3");
-
-		//System.out.println("==============BEGIN DEBUG");
-		_providerA.update(reloaded2);
-		_providerA.commit();
-		//System.out.println("==============END DEBUG");
-
-		startReplication();
-		SPCChild reloaded3 = getOneChildFromA();
-		long newVer = _providerA.produceReference(reloaded3, null, null).version();
-		commitReplication();
-
-		Test.ensure(newVer > oldVer);
-	}
-
-	private SPCChild getOneChildFromA() {
-		ObjectSet storedObjects = _providerA.getStoredObjects(SPCChild.class);
-		Test.ensureEquals(1, storedObjects.size());
-		Test.ensure(storedObjects.hasNext());
-		return (SPCChild) storedObjects.next();
-	}
-
-	public void commitReplication() {
+	private void commitReplication() {
 		long maxVersion = _providerA.getCurrentVersion() > _providerB.getCurrentVersion()
 				? _providerA.getCurrentVersion() : _providerB.getCurrentVersion();
 
@@ -144,13 +119,23 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		return null;
 	}
 
+	private ArrayList getOneArrayListFromA() {
+		ObjectSet storedObjects = _providerA.getStoredObjects(ArrayList.class);
+		Test.ensureEquals(1, storedObjects.size());
+		Test.ensure(storedObjects.hasNext());
+		return (ArrayList) storedObjects.next();
+	}
+
+	private SPCChild getOneChildFromA() {
+		ObjectSet storedObjects = _providerA.getStoredObjects(SPCChild.class);
+		Test.ensureEquals(1, storedObjects.size());
+		Test.ensure(storedObjects.hasNext());
+		return (SPCChild) storedObjects.next();
+	}
+
 	private void startReplication() {
 		_providerA.startReplicationTransaction(B_SIGNATURE);
 		_providerB.startReplicationTransaction(A_SIGNATURE);
-	}
-
-	public void test() {
-		super.test();
 	}
 
 	private void tstCollection() {
@@ -185,7 +170,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(collectionRefFromB != null);
 		Test.ensure(collectionRefFromB.object() == collectionInB);
 
-		Test.ensure(_providerA.produceReference(collectionInB, null, null).equals( collectionRefFromB));
+		Test.ensure(_providerA.produceReference(collectionInB, null, null).equals(collectionRefFromB));
 		Test.ensure(_providerA.produceReference(collectionInB, null, null).object() == collectionInB);
 
 		_providerA.clearAllReferences();
@@ -193,11 +178,71 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(refFromBAfterClear != null);
 
 		final ListHolder listHolderInBAfterClear = ((ListHolder) refFromBAfterClear.object());
-		final ReplicationReference collectionRefFromBAfterClear = _providerA.produceReference(listHolderInBAfterClear.getList(), listHolderInBAfterClear, "list");
+		List list = listHolderInBAfterClear.getList();
+		Test.ensure(list != null);
+		System.out.println("begin");
+		final ReplicationReference collectionRefFromBAfterClear = _providerA.produceReference(list, listHolderInBAfterClear, "list");
 		Test.ensure(collectionRefFromBAfterClear != null);
 
-		Test.ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
+		Db4oUUID uuid = collectionRefFromBAfterClear.uuid();
+		System.out.println("uuid = " + uuid);
+		Test.ensure(uuid != null);
+		Test.ensure(uuid.equals(collectionUuid));
 		commitReplication();
+	}
+
+	private void tstCollectionReferences() {
+		if (!(_providerA instanceof Db4oReplicationProvider))
+			return;
+
+		ArrayList arraylist = new ArrayList();
+		arraylist.add("i am that list!");
+
+		_providerA.storeNew(arraylist);
+		_providerA.commit();
+
+		startReplication();
+		ArrayList reloaded = getOneArrayListFromA();
+
+		Test.ensureEquals(arraylist, reloaded);
+
+		ReplicationReference ref = _providerA.produceReference(reloaded, null, null);
+		Test.ensure(ref != null);
+		Test.ensure(ref.object() != null);
+		Test.ensureEquals(arraylist, ref.object());
+
+		Db4oUUID uuid = ref.uuid();
+		Test.ensure(uuid != null);
+
+		commitReplication();
+
+		clean();
+	}
+
+	private void tstObjectUpdate() {
+		SPCChild child = new SPCChild("c1");
+		_providerA.storeNew(child);
+		_providerA.commit();
+
+		startReplication();
+		SPCChild reloaded = getOneChildFromA();
+		long oldVer = _providerA.produceReference(reloaded, null, null).version();
+		commitReplication();
+
+		SPCChild reloaded2 = getOneChildFromA();
+		reloaded2.setName("c3");
+
+		//System.out.println("==============BEGIN DEBUG");
+		_providerA.update(reloaded2);
+		_providerA.commit();
+		//System.out.println("==============END DEBUG");
+
+		startReplication();
+		SPCChild reloaded3 = getOneChildFromA();
+		long newVer = _providerA.produceReference(reloaded3, null, null).version();
+		commitReplication();
+
+		Test.ensure(newVer > oldVer);
 	}
 
 	private void tstObjectsChangedSinceLastReplication() {
@@ -336,7 +381,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.storeReplica(object1);
 		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
-		Test.ensure(_providerA.produceReference(object1, null, null).equals(reference) );
+		Test.ensure(_providerA.produceReference(object1, null, null).equals(reference));
 		Test.ensure(reference.object() == object1);
 
 		commitReplication();
