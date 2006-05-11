@@ -62,6 +62,7 @@
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
 				<exclude name="**/hibernate/**" />
+				<exclude name="**/VectorFlattener.java" />
 			</fileset>
 		</copy>
 	</target>
