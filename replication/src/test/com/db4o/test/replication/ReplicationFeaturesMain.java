@@ -16,7 +16,6 @@ import com.db4o.replication.ReplicationEvent;
 import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
-import com.db4o.test.Test;
 
 public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private static final String A = "A";
@@ -99,7 +98,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		if (_intermittentErrors.length() > 0) {
 			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
-			Test.ensure(false);
+			ensure(false);
 		}
 
 	}
