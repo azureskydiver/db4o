@@ -173,7 +173,7 @@ public class YapClient extends YapStream implements ExtClient {
 	}
 
 	final BTree createBTreeClassIndex(YapClass a_yapClass, int id) {
-		return new ClientBTree(id, new YInt(this), null);
+		return new ClientBTree(getTransaction(), id, new YInt(this), null);
 	}
 
 	final ClassIndex createClassIndex(YapClass a_yapClass) {

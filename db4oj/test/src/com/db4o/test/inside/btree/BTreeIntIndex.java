@@ -12,7 +12,7 @@ public class BTreeIntIndex {
     
     public void test(){
         
-        BTree btree = new BTree(0, new YInt(stream()), null);
+        BTree btree = new BTree(trans(), 0, new YInt(stream()), null);
         
         addValues(btree);
         expect(btree, SORTED);
@@ -33,7 +33,7 @@ public class BTreeIntIndex {
         int id = btree.getID();
         Test.reOpen();
         
-        btree = new BTree(id, new YInt(stream()), null);
+        btree = new BTree(trans(), id, new YInt(stream()), null);
         
         expect(btree, SORTED);
         
