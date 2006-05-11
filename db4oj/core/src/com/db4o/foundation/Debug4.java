@@ -3,5 +3,5 @@
 package com.db4o.foundation;
 
 public class Debug4 {
-	public static boolean prettyToStrings = false;
+	public static final boolean prettyToStrings = false;
 }
