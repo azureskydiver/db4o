@@ -4,6 +4,27 @@
 	<property file="machine.properties" />
 	<property file="ant.properties" />
 	
+	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
+	<taskdef name="updatecsharpproject" classname="com.db4o.devtools.ant.UpdateCSharpProjectAntTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
+	<taskdef name="updateAssemblyHintPath" classname="com.db4o.devtools.ant.UpdateAssemblyHintPath">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
 	<macrodef name="sharpen">
 		<attribute name="workspace" />
 		<attribute name="srcfolder" />
