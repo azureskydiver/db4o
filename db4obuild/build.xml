@@ -27,27 +27,6 @@
 -->
 	<import file="common.xml" />
 	
-	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
-		<classpath>
-			<pathelement location="${dir.build.bin}" />
-			<path path="${path.classpath.full}" />
-		</classpath>
-	</taskdef>
-	
-	<taskdef name="updatecsharpproject" classname="com.db4o.devtools.ant.UpdateCSharpProjectAntTask">
-		<classpath>
-			<pathelement location="${dir.build.bin}" />
-			<path path="${path.classpath.full}" />
-		</classpath>
-	</taskdef>
-	
-	<taskdef name="updateAssemblyHintPath" classname="com.db4o.devtools.ant.UpdateAssemblyHintPath">
-		<classpath>
-			<pathelement location="${dir.build.bin}" />
-			<path path="${path.classpath.full}" />
-		</classpath>
-	</taskdef>
-
 	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask" classpath="${dir.build.lib}/exttools.jar">
 		<classpath>
 			<pathelement location="${dir.build.lib}/exttools.jar" />
