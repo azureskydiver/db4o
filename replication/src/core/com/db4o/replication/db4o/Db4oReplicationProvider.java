@@ -198,6 +198,9 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 			return null;
 		}
 
+		Db4oUUID uuid = objectInfo.getUUID();
+			if (uuid==null) throw new NullPointerException();
+
 		Db4oReplicationReferenceImpl newNode = new Db4oReplicationReferenceImpl(objectInfo);
 
 		addReference(newNode);
