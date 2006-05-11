@@ -35,19 +35,19 @@ class InstanceReplicationPreparer implements Visitor {
 	 */
 	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(10000);
 	
-	private final ReplicationEventImpl _event = new ReplicationEventImpl();
-	private final ObjectStateImpl _stateInA = _event._stateInProviderA;
-	private final ObjectStateImpl _stateInB = _event._stateInProviderB;
+	private final ReplicationEventImpl _event;
+	private final ObjectStateImpl _stateInA;
+	private final ObjectStateImpl _stateInB;
 
 	private Object _obj;
 	private Object _referencingObject;
-	private String _fieldName;
-
-
-
-	
+	private String _fieldName;	
 	
 	InstanceReplicationPreparer(ReplicationProviderInside providerA, ReplicationProviderInside providerB, ReplicationProvider directionTo, ReplicationEventListener listener, boolean isReplicatingOnlyDeletions, long lastReplicationVersion, Hashtable4 uuidsProcessedInSession, Traverser traverser, ReplicationReflector reflector, CollectionHandler collectionHandler) {
+		_event = new ReplicationEventImpl();
+		_stateInA = _event._stateInProviderA;
+		_stateInB = _event._stateInProviderB;
+		
 		_providerA = providerA;
 		_providerB = providerB;
 		_directionTo = directionTo;
