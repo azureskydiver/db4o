@@ -1,4 +1,4 @@
-package com.db4o.test.replication.provider;
+package com.db4o.test.other;
 
 import com.db4o.YapClient;
 import com.db4o.ext.ExtObjectContainer;

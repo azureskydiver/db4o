@@ -6,7 +6,7 @@ import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
 import com.db4o.test.replication.r0tor4.R0to4Runner;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
-import com.db4o.test.replication.provider.ObjectVersionTest;
+import com.db4o.test.other.ObjectVersionTest;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
