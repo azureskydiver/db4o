@@ -196,25 +196,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 			return;
 
 		ArrayList arraylist = new ArrayList();
-		arraylist.add("i am that list!");
-
 		_providerA.storeNew(arraylist);
-		_providerA.commit();
-
-		startReplication();
-		ArrayList reloaded = getOneArrayListFromA();
-
-		Test.ensureEquals(arraylist, reloaded);
-
-		ReplicationReference ref = _providerA.produceReference(reloaded, null, null);
-		Test.ensure(ref != null);
-		Test.ensure(ref.object() != null);
-		Test.ensureEquals(arraylist, ref.object());
-
+		ReplicationReference ref = _providerA.produceReference(arraylist, null, null);
 		Db4oUUID uuid = ref.uuid();
 		Test.ensure(uuid != null);
-
-		commitReplication();
 
 		clean();
 	}
