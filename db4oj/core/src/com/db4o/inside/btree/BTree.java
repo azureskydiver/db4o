@@ -82,9 +82,9 @@ public class BTree extends YapMeta{
     
     public void commit(final Transaction trans){
         
-        Integer sizeDiff = (Integer)_sizesByTransaction.get(trans);
+        Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff != null){
-            _size += sizeDiff.intValue();
+            _size += ((Integer) sizeDiff).intValue();
         }
         _sizesByTransaction.remove(trans);
         
@@ -176,9 +176,9 @@ public class BTree extends YapMeta{
     
     public int size(Transaction trans){
         ensureActive(trans);
-        Integer sizeDiff = (Integer)_sizesByTransaction.get(trans);
+        Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff != null){
-            return _size + sizeDiff.intValue();
+            return _size + ((Integer) sizeDiff).intValue();
         }
         return _size;
     }
@@ -199,12 +199,12 @@ public class BTree extends YapMeta{
     }
     
     private void sizeChanged(Transaction trans, int changeBy){
-        Integer sizeDiff = (Integer)_sizesByTransaction.get(trans);
+        Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff == null){
             _sizesByTransaction.put(trans, new Integer(changeBy));
             return;
         }
-        _sizesByTransaction.put(trans, new Integer(sizeDiff.intValue() + changeBy));
+        _sizesByTransaction.put(trans, new Integer(((Integer) sizeDiff).intValue() + changeBy));
     }
 
 
