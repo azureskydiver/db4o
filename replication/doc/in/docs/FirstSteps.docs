@@ -1,5 +1,5 @@
 .n
-.a First Steps ..
+.a FirstSteps ..
 .0 First Steps ..
 
 To get started as simply as possible, we are going to reuse the Pilot class from the db4o tutorial.
@@ -60,7 +60,7 @@ while (changed.hasNext())
 This code will get a list of all of the updated objects, and then replicate them to the destination ._
 database. Easy! 
 
-But wait, there's one importaint last step:
+But wait, there's one important last step:
 
 .c //commit all of our changes to both databases.
 replication.commit(); ..

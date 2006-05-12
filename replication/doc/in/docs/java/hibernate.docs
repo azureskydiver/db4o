@@ -5,7 +5,7 @@
 In this chapter, we will look into several examples that showcase the Hibernate Replication feature.
 .1 Basics
 Let's take a look at what you have to do in order to use the Hibernate Replication feature. ._
-The basics are already covered in .l First Steps .. . Let's re-iterate some of the important points:
+The basics are already covered in  .l FirstSteps First Steps .. . Let's re-iterate some of the important points:
 
 .2 hibernate.cfg.xml ..
 It is important that "hibernate.hbm2ddl.auto" be set to "update" because the system will create some extra tables ._
@@ -27,13 +27,45 @@ will not work.
 .c
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 ..
-You must define an artificial identity column for the object.
+You must define an artificial identity column for the object. The type must be "long".
 .c
 <id column="id" type="long">
 	<generator class="native"/>
 </id>
 ..
 For complete reference in using Hibernate, please refer to the Hibernate reference ( .l http://www.hibernate.org/hib_docs/v3/reference/en/html_single/ ..)
+
+.1 Keeping track of object changes ..
+After replication completes, objects are synchronized across db4o and RDBMS. ._
+Later, in the next round replication, you can replicate objects that are changed ._
+since last round of replication. This section describes how do you configure ._
+dRS to detect object changes.
+
+dRS detects object changes by listening the the object update events thrown by Hibernate. ._ 
+In your day to day usage of Hibernate, you can enable the listening by following ._
+this code.
+
+.c 
+// Read or create the Configuration as usual
+Configuration cfg = new Configuration().configure("your-hibernate.cfg.xml");
+// Let the ReplicationConfigurator adjust the configuration
+ReplicationConfigurator.configure(cfg);
+// Create the SessionFactory as usual
+SessionFactory sessionFactory = cfg.buildSessionFactory();
+// Create the Session as usual
+Session session = sessionFactory.openSession();
+// Let the ReplicationConfigurator install the listeners to the Session
+ReplicationConfigurator.install(session, cfg);
+Transaction tx = session.beginTransaction();
+Pilot john = (Pilot) session.createCriteria(Pilot.class) .add(Restrictions.eq("name", "John")).list().get(0);
+john.name = "Anna";
+// Remember to call flush() before commit()
+session.flush();
+tx.commit();
+..
+
+Here you can see, you can create the Configuration and the Session objects as usual. ._
+dRS will automatically install the listeners to Hibernate.
 
 .1 Examples ..
 .a One-to-one ..
@@ -392,36 +424,6 @@ Our replication system supports Java array and Collections. Simply use the <one-
 mappings in hbm files, then you can replicate the objects in Collections successfully.
 
 Remember that a Collection must not be shared by two owners, otherwise, hibernate will throw an exception.
-
-.1 Keeping track of object changes ..
-After replication completes, objects are synchronized across db4o and RDBMS. ._
-Later, in the next round replication, you can replicate objects that are changed ._
-since last round of replication. This section describes how do you configure ._
-dRS to detect object changes.
-
-dRS detects object changes by listening the the object update events thrown by Hibernate. ._
-In your day to day usage of Hibernate, you can enable the listening by following this code.
-.c
-// Read or create the Configuration as usual
-Configuration cfg = new Configuration().configure("your-hibernate.cfg.xml");
-// Let the ReplicationConfigurator adjust the configuration
-ReplicationConfigurator.configure(cfg);
-// Create the SessionFactory as usual
-SessionFactory sessionFactory = cfg.buildSessionFactory();
-// Create the Session as usual
-Session session = sessionFactory.openSession();
-// Let the ReplicationConfigurator install the listeners to the Session
-ReplicationConfigurator.install(session, cfg);
-Transaction tx = session.beginTransaction();
-Pilot john = (Pilot) session.createCriteria(Pilot.class) .add(Restrictions.eq("name", "John")).list().get(0);
-john.name = "Anna";
-// Remember to call flush() before commit()
-session.flush();
-tx.commit();
-..
-
-Here you can see, you can create the Configuration and the Session objects as usual. ._
-dRS will automatically install the listeners to Hibernate.
 
 .1 How dRS modifies database schema ..
 So far we have seen that dRS allows you to replicate objects between db4o and relational database. ._

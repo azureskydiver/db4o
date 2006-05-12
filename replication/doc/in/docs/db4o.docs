@@ -63,7 +63,7 @@ The new/modified objects will be returned in an enumerable ObjectSet.
 
 After that comes a simple loop where the resulting objects are replicated one at a time.
 
-The replication.commit() call at the end is importaint. This line will save all of the changes we 
+The replication.commit() call at the end is important. This line will save all of the changes we 
 have made, and end any needed transactions. Forgetting to make this call will result in ._
 your replication changes being discarded when your application ends, or your ObjectContainers are ._
 closed.
