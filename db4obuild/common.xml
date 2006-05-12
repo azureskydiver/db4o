@@ -27,7 +27,7 @@
 	
 	<macrodef name="sharpen">
 		<attribute name="workspace" />
-		<attribute name="srcfolder" />
+		<attribute name="resource" />
 		
 		<element name="args" optional="yes" />
 		
@@ -41,7 +41,7 @@
 				<arg file="@{workspace}" />
 				<arg value="-application" />
 				<arg value="javatocsharp.core.application" />
-				<arg value="@{srcfolder}" />
+				<arg value="@{resource}" />
 				
 				<args />
 					

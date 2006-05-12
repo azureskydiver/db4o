@@ -1145,18 +1145,11 @@
 			<param name="target.dir" value="${dir.sharpen.pc}" />
 		</antcall>
 			
-		<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
-			<classpath>
-				<pathelement location="${eclipse.home}/startup.jar" />
-			</classpath>
-			
-			<arg value="-data" />
-			<arg file="${dir.sharpen.pc}" />
-			<arg value="-application" />
-			<arg value="javatocsharp.core.application" />
-			<arg value="db4oj/core/src" />
-			<arg value="-pascalcase" />
-		</java>
+		<sharpen workspace="${dir.sharpen.pc}" resource="db4oj/core/src">
+			<args>
+				<arg value="-pascalcase" />
+			</args>
+		</sharpen>
 		
 		<ant antfile="build-converter.xml" inheritall="false">
 		</ant>		
@@ -1351,7 +1344,7 @@
 			<param name="target.dir" value="${sharpen.src.dir}" />
 		</antcall>
 		
-		<sharpen workspace="${sharpen.src.dir}" srcfolder="db4oj/core/src">
+		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
 		</sharpen>
 		
 		<antcall target="copy-sharpened-files">
