@@ -10,7 +10,7 @@
 	<property name="drs.net.in.dir" location="${drs.net.dir}/in" />
 	<property name="conversion.workspace.dir" location="${dir.dist}/drs.net/workspace" />
 	
-	<target name="build" depends="update-csharp-project">
+	<target name="build" depends="update-csharp-projects">
 		
 		<property name="drs.dll" location="${drs.net.bin.dir}/drs.dll" />
 		
@@ -24,16 +24,20 @@
 	</target>
 	
 	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
-		<sharpen srcfolder="drs/core" workspace="${conversion.workspace.dir}">
+		<sharpen resource="drs/core" workspace="${conversion.workspace.dir}">
 			<args>
 				<arg value="-cp" />
 				<arg path="${file.java5.jar}" />
+				
+				<arg value="-srcfolder" />
+				<arg value="test" />
+				
 				<arg value="-pascalcase" />
 			</args>
 		</sharpen>
 	</target>
 		
-	<target name="update-csharp-project" depends="sharpen">
+	<target name="update-csharp-projects" depends="sharpen">
 		<delete dir="${drs.net.src.dir}" />
 		<mkdir dir="${drs.net.src.dir}" />
 		<copy todir="${drs.net.src.dir}">
@@ -61,6 +65,10 @@
 		<copy todir="${conversion.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
+				
+				<include name="test/**/ReplicationTestCase.java" />
+				<include name="test/**/ReplicationFeaturesMain.java" />
+				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>
