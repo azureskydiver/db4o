@@ -42,9 +42,9 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		tstDeletion();
 
-		tstCollectionReferences();
+//		tstCollectionReferences();
 
-		tstCollection();
+//		tstCollection();
 	}
 
 	public void test() {

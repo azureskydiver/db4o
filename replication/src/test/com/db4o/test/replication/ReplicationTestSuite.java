@@ -10,7 +10,7 @@ import com.db4o.test.other.ObjectVersionTest;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return one();
+		return all();
 	}
 
 	private Class[] all() {
