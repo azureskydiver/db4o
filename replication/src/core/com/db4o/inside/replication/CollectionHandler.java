@@ -8,5 +8,7 @@ public interface CollectionHandler extends CollectionFlattener {
 	Object emptyClone(Object originalCollection, ReflectClass originalCollectionClass);
 
 	void copyState(Object original, Object dest, CounterpartFinder finder);
+	
+	Object cloneWithCounterparts(Object original, ReflectClass claxx, CounterpartFinder elementCloner);
 
 }

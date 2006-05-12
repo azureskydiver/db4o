@@ -4,6 +4,7 @@ import com.db4o.ObjectSet;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.traversal.Traverser;
+import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.replication.ReplicationEventListener;
@@ -41,7 +42,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener) {
 		_reflector = ReplicationReflector.getInstance();
 		_collectionHandler = new CollectionHandlerImpl(_reflector.reflector());
-		_traverser = new ReplicationTraverser(_reflector.reflector(), _collectionHandler);
+		_traverser = new GenericTraverser(_reflector.reflector(), _collectionHandler);
 
 		_providerA = (ReplicationProviderInside) providerA;
 		_providerB = (ReplicationProviderInside) providerB;
@@ -201,14 +202,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	private void copyStateAcross(Object source, Object dest, final ReplicationProviderInside sourceProvider) {
 		ReflectClass claxx = _reflector.forObject(source);
-		if (_collectionHandler.canHandle(claxx)) {
-			_collectionHandler.copyState(source, dest, new CounterpartFinder() {
-				public Object findCounterpart(Object original) {
-					return GenericReplicationSession.this.findCounterpart(original, sourceProvider);
-				}
-			});
-			return;
-		}
+		
 		copyFieldValuesAcross(source, dest, claxx, sourceProvider);
 	}
 
@@ -222,12 +216,27 @@ public final class GenericReplicationSession implements ReplicationSession {
 		ReflectClass claxx = _reflector.forObject(value);
 		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
 		if (claxx.isSecondClass()) return value;
+		if (_collectionHandler.canHandle(value)){
+			return collectionClone(value, claxx, sourceProvider);
+		}
 
 		//if value is a Collection, result should be found by passing in just the value
-		Object result = sourceProvider.produceReference(value, null, null).counterpart();
+		ReplicationReference ref = sourceProvider.produceReference(value, null, null);
+		if (ref == null)
+			throw new NullPointerException("unable to find the ref of " + value + " of class " + value.getClass());
+		
+		Object result = ref.counterpart();
 		if (result == null)
 			throw new NullPointerException("unable to find the counterpart of " + value + " of class " + value.getClass());
 		return result;
+	}
+	
+	private  Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
+		return _collectionHandler.cloneWithCounterparts(original, claxx, new CounterpartFinder() {
+			public Object findCounterpart(Object original) {
+				return GenericReplicationSession.this.findCounterpart(original, sourceProvider);
+			}
+		});
 	}
 
 	private ReplicationProviderInside other(ReplicationProviderInside peer) {

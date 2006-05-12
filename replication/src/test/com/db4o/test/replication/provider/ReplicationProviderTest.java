@@ -4,16 +4,10 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestCase;
 import com.db4o.test.replication.SPCChild;
-import com.db4o.test.replication.collections.ListHolder;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 //FIXME This test should test a single ReplicationProvider and does not require _providerB. It does not need to extend ReplicationTestCase with all its provider combinations.
 
@@ -41,10 +35,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		tstRollback();
 
 		tstDeletion();
-
-//		tstCollectionReferences();
-
-//		tstCollection();
 	}
 
 	public void test() {
@@ -119,13 +109,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		return null;
 	}
 
-	private ArrayList getOneArrayListFromA() {
-		ObjectSet storedObjects = _providerA.getStoredObjects(ArrayList.class);
-		Test.ensureEquals(1, storedObjects.size());
-		Test.ensure(storedObjects.hasNext());
-		return (ArrayList) storedObjects.next();
-	}
-
 	private SPCChild getOneChildFromA() {
 		ObjectSet storedObjects = _providerA.getStoredObjects(SPCChild.class);
 		Test.ensureEquals(1, storedObjects.size());
@@ -136,72 +119,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	private void startReplication() {
 		_providerA.startReplicationTransaction(B_SIGNATURE);
 		_providerB.startReplicationTransaction(A_SIGNATURE);
-	}
-
-	private void tstCollection() {
-		clean();
-		startReplication();
-
-
-		Db4oUUID listHolderUuid = new Db4oUUID(548494595, B_SIGNATURE_BYTES);
-
-		ListHolder listHolderFromA = new ListHolder("i am a list");
-		listHolderFromA.setList(new ArrayList());
-
-		ReplicationReference refFromA = new ReplicationReferenceImpl(listHolderFromA, listHolderUuid, 9555);
-
-		ListHolder listHolderClonedInB = new ListHolder("i am a list");
-		listHolderClonedInB.setList(new ArrayList());
-
-		_providerA.referenceNewObject(listHolderClonedInB, refFromA, null, null);
-		_providerA.storeReplica(listHolderClonedInB);
-		ReplicationReference listHolderFromBRef = _providerA.produceReference(listHolderClonedInB, null, null);
-		Test.ensure(listHolderFromBRef.object() == listHolderClonedInB);
-
-		Collection collectionInB = listHolderClonedInB.getList();
-
-		final Db4oUUID collectionUuid = new Db4oUUID(9588, B_SIGNATURE_BYTES);
-
-		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
-		_providerA.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromBRef, "list");
-		_providerA.storeReplica(collectionInB);
-
-		ReplicationReference collectionRefFromB = _providerA.produceReference(collectionInB, listHolderClonedInB, "list");
-		Test.ensure(collectionRefFromB != null);
-		Test.ensure(collectionRefFromB.object() == collectionInB);
-
-		Test.ensure(_providerA.produceReference(collectionInB, null, null).equals(collectionRefFromB));
-		Test.ensure(_providerA.produceReference(collectionInB, null, null).object() == collectionInB);
-
-		_providerA.clearAllReferences();
-		final ReplicationReference refFromBAfterClear = _providerA.produceReferenceByUUID(listHolderUuid, ListHolder.class);
-		Test.ensure(refFromBAfterClear != null);
-
-		final ListHolder listHolderInBAfterClear = ((ListHolder) refFromBAfterClear.object());
-		List list = listHolderInBAfterClear.getList();
-		Test.ensure(list != null);
-		System.out.println("begin");
-		final ReplicationReference collectionRefFromBAfterClear = _providerA.produceReference(list, listHolderInBAfterClear, "list");
-		Test.ensure(collectionRefFromBAfterClear != null);
-
-		Db4oUUID uuid = collectionRefFromBAfterClear.uuid();
-		System.out.println("uuid = " + uuid);
-		Test.ensure(uuid != null);
-		Test.ensure(uuid.equals(collectionUuid));
-		commitReplication();
-	}
-
-	private void tstCollectionReferences() {
-		if (!(_providerA instanceof Db4oReplicationProvider))
-			return;
-
-		ArrayList arraylist = new ArrayList();
-		_providerA.storeNew(arraylist);
-		ReplicationReference ref = _providerA.produceReference(arraylist, null, null);
-		Db4oUUID uuid = ref.uuid();
-		Test.ensure(uuid != null);
-
-		clean();
 	}
 
 	private void tstObjectUpdate() {
@@ -231,13 +148,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	}
 
 	private void tstObjectsChangedSinceLastReplication() {
-		// FIXME:
-		// This test can't work any longer since version numbers reflect a timestamp.
-		if (true) {
-			return;
-		}
-
-
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Pilot object2 = new Pilot("Terry Gilliam", 53);
 		Car object3 = new Car("Volvo");

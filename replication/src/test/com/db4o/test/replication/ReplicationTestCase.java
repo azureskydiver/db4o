@@ -97,14 +97,7 @@ public abstract class ReplicationTestCase {
 
 	protected void ensureInstanceCount(TestableReplicationProviderInside provider, Class clazz, int count) {
 		ObjectSet objectSet = provider.getStoredObjects(clazz);
-		while (objectSet.hasNext()) {
-			count --;
-			objectSet.next();
-		}
-		if (count != 0) {
-			int xxx = 1;
-		}
-		Test.ensure(count == 0);
+		Test.ensureEquals(count, objectSet.size());
 	}
 
 	protected void ensureOneInstance(TestableReplicationProviderInside provider, Class clazz) {

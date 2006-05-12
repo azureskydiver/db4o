@@ -81,13 +81,16 @@ public class GenericTraverser implements Traverser {
 
 		if (_collectionFlattener.canHandle(claxx)) {
 			traverseCollection(object);
-		} else {
-			if (claxx.isArray()) {
-				traverseArray(object);
-				return;
-			}
+			return;
 		}
+		
+		if (claxx.isArray()) {
+			traverseArray(object);
+			return;
+		}
+		
 		queueAdd(object);
+
 	}
 
 	protected void queueAdd(Object object) {
