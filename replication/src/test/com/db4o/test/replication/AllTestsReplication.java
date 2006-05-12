@@ -29,10 +29,8 @@ public class AllTestsReplication extends AllTests {
 		new File(AllTestsConfAll.FILE_SERVER).delete();
 
 		Test.clientServer = false;
-		Test.clientServer = true;
-
-		Debug.longTimeOuts = true; //It takes more than 5 sec for the tests to initialize
-		//Debug4.prettyToStrings = true;
+		//Test.clientServer = true;
+		//Debug.longTimeOuts = true; //ReplicationFeaturesMain fails if set to false in C/S
 
 		Db4oReplicationTestUtil.configure();
 		registerProviderPairs();
@@ -43,11 +41,11 @@ public class AllTestsReplication extends AllTests {
 	private void registerProviderPairs() {
 		db4o();
 
-		//transients();
-		//hsql();
-		//db4otransient();
-		//hsqlDb4o();
-		//db4oHsql();
+		transients();
+		hsql();
+		db4otransient();
+		hsqlDb4o();
+		db4oHsql();
 
 		//oracle();
 		//mysql();

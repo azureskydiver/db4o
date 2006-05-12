@@ -49,4 +49,4 @@ ReplicationSession replication = Replication.begin(objectContainer, hibernateCon
 replication.replicateDeletions(Pilot.class);
 ..
 
-The deletion will then be replicated across to the other provider.
+The deletion will then be replicated to the other provider.
