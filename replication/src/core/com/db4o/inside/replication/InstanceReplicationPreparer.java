@@ -65,11 +65,6 @@ class InstanceReplicationPreparer implements Visitor {
 		if (_objectsPreparedToReplicate.get(obj) != null) return false;
 		_objectsPreparedToReplicate.put(obj, obj);
 
-		if (obj instanceof TraversedField) {
-			final TraversedField traversedField = ((TraversedField) obj);
-			return prepareObjectToBeReplicated(traversedField.getValue(), traversedField.getReferencingObject(), traversedField.getName());
-		}
-
 		return prepareObjectToBeReplicated(obj, null, null);
 	}
 

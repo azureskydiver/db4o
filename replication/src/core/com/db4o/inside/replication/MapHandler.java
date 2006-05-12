@@ -1,13 +1,13 @@
 package com.db4o.inside.replication;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MapHandler implements CollectionHandler {
 
@@ -46,7 +46,7 @@ public class MapHandler implements CollectionHandler {
 	}
 
 	public Object emptyClone(Object original, ReflectClass originalCollectionClass) {
-			return new HashMap(((Map)original).size());
+		return new HashMap(((Map) original).size());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -67,5 +67,13 @@ public class MapHandler implements CollectionHandler {
 
 	}
 
+	public Object cloneWithCounterparts(Object originalMap, ReflectClass claxx, CounterpartFinder elementCloner) {
+		Map original = (Map) originalMap;
 
+		Map result = (Map) emptyClone(original, claxx);
+
+		copyState(original, result, elementCloner);
+
+		return result;
+	}
 }

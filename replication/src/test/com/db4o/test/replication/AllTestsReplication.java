@@ -39,8 +39,10 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		db4o();
+		// In SOLO, you can run all combinations together
+		// In C/S, you can't run all combinations together, it causes db4o connection to timeout.
 
+		db4o();
 		transients();
 		hsql();
 		db4otransient();

@@ -99,9 +99,9 @@ public class MapTest extends ReplicationTestCase {
 		int holderCount = holderNames.length;
 		ensureInstanceCount(provider, MapHolder.class, holderCount);
 
-		//Hibernate does not query by Collection
-		if (!(provider instanceof HibernateReplicationProvider))
-			ensureInstanceCount(provider, Map.class, holderCount);
+		// After dropping generating uuid for collection, it does not
+		//  make sense to count collection because collection is never reused
+		// ensureInstanceCount(provider, Map.class, holderCount);
 
 		int i = 0;
 		ObjectSet objectSet = provider.getStoredObjects(MapHolder.class);

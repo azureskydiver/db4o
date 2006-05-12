@@ -4,7 +4,6 @@ package com.db4o.test.replication.collections;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.impl.HibernateReplicationProvider;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestCase;
 
@@ -107,9 +106,9 @@ public class ListTest extends ReplicationTestCase {
 		int holderCount = holderNames.length;
 		ensureInstanceCount(provider, ListHolder.class, holderCount);
 
-		//Hibernate does not support query by Collection
-		if (!(provider instanceof HibernateReplicationProvider))
-			ensureInstanceCount(provider, ArrayList.class, holderCount);
+		// After dropping generating uuid for collection, it does not
+		//  make sense to count collection because collection is never reused
+		//	ensureInstanceCount(provider, ArrayList.class, holderCount);
 
 		int i = 0;
 		ObjectSet objectSet = provider.getStoredObjects(ListHolder.class);

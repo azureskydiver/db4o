@@ -73,6 +73,18 @@ public class CollectionHandlerImpl implements CollectionHandler {
 			doCopyState(original, destination, counterpartFinder);
 	}
 
+	public Object cloneWithCounterparts(Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {
+		if (_mapHandler.canHandle(claxx))
+			return _mapHandler.cloneWithCounterparts(originalCollection, claxx, counterpartFinder);
+
+		Collection original = (Collection) originalCollection;
+		Collection result = (Collection) emptyClone(originalCollection, claxx);
+
+		copyState(original, result, counterpartFinder);
+
+		return result;
+	}
+
 	@SuppressWarnings("unchecked")
 	private void doCopyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
 		Collection originalCollection = (Collection) original;
