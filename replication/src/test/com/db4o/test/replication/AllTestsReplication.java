@@ -32,7 +32,7 @@ public class AllTestsReplication extends AllTests {
 		Test.clientServer = true;
 
 		Debug.longTimeOuts = true; //It takes more than 5 sec for the tests to initialize
-		Debug4.prettyToStrings = true;
+		//Debug4.prettyToStrings = true;
 
 		Db4oReplicationTestUtil.configure();
 		registerProviderPairs();
