@@ -108,7 +108,7 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	protected void addTestSuites(TestSuite suites) {
-		//CLIENT_SERVER = false;
+		CLIENT_SERVER = false;
 		suites.add(new ReplicationTestSuite());
 	}
 }
