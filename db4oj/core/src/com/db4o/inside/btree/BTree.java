@@ -25,13 +25,15 @@ public class BTree extends YapMeta{
      * collected automatically, as soon as they are no longer referenced
      * from the hard references in the BTreeNode#_children array.
      */
-    private TreeIntWeakObject _nodes;
+    private TreeIntObject _nodes;
     
     private int _size;
     
     private Visitor4 _removeListener;
     
     private Hashtable4 _sizesByTransaction;
+    
+    private Queue4 _processing;
     
     
     //  just for debugging purposes for now
@@ -82,24 +84,35 @@ public class BTree extends YapMeta{
     
     public void commit(final Transaction trans){
         
+        final Transaction systemTransAction = trans.systemTransaction();
+        
         Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff != null){
             _size += ((Integer) sizeDiff).intValue();
         }
         _sizesByTransaction.remove(trans);
         
-        // TODO: Here we are doing writes twice.
-        // New nodes will already have been written above.
-        // Currently they are rewritten on commit.
-        
         if(_nodes != null){
-            _nodes = _nodes.traverseRemoveEmpty(new Visitor4() {
-                public void visit(Object obj) {
-                    ((BTreeNode)obj).commit(trans);
-                }
-            });
+            
+            processAllNodes();
+            while(_processing.hasNext()){
+                ((BTreeNode)_processing.next()).commit(trans);
+            }
+            _processing = null;
+            
+            if(_nodes != null){
+                _nodes.traverse(new Visitor4() {
+                    public void visit(Object obj) {
+                        BTreeNode node = (BTreeNode)((TreeIntObject)obj).getObject();
+                        node.setStateDirty();
+                        node.write(systemTransAction);
+                    }
+                });
+            }
         }
-        write(trans.systemTransaction());
+        
+        setStateDirty();
+        write(systemTransAction);
     }
     
     public void rollback(final Transaction trans){
@@ -109,9 +122,22 @@ public class BTree extends YapMeta{
         if(_nodes == null){
             return;
         }
-        _nodes = _nodes.traverseRemoveEmpty(new Visitor4() {
+        
+        processAllNodes();
+        while(_processing.hasNext()){
+            ((BTreeNode)_processing.next()).rollback(trans);
+        }
+        _processing = null;
+        
+        
+
+    }
+    
+    private void processAllNodes(){
+        _processing = new Queue4();
+        _nodes.traverse(new Visitor4() {
             public void visit(Object obj) {
-                ((BTreeNode)obj).rollback(trans);
+                _processing.add(((TreeIntObject)obj).getObject());
             }
         });
     }
@@ -141,19 +167,31 @@ public class BTree extends YapMeta{
     }
     
     BTreeNode produceNode(int id){
-        TreeIntWeakObject tio = new TreeIntWeakObject(id);
-        _nodes = (TreeIntWeakObject)Tree.add(_nodes, tio);
-        tio = (TreeIntWeakObject)tio.duplicateOrThis();
+        TreeIntObject addtio = new TreeIntObject(id);
+        _nodes = (TreeIntObject)Tree.add(_nodes, addtio);
+        TreeIntObject tio = (TreeIntObject)addtio.duplicateOrThis();
         BTreeNode node = (BTreeNode)tio.getObject();
         if(node == null){
             node = new BTreeNode(id, this);
             tio.setObject(node);
+            addToProcessing(node);
         }
         return node;
     }
     
     void addNode(BTreeNode node){
-        _nodes = (TreeIntWeakObject)Tree.add(_nodes, new TreeIntWeakObject(node.getID(), node));
+        _nodes = (TreeIntObject)Tree.add(_nodes, new TreeIntObject(node.getID(), node));
+        addToProcessing(node);
+    }
+    
+    void addToProcessing(BTreeNode node){
+        if(_processing != null){
+            _processing.add(node);
+        }
+    }
+    
+    void removeNode(BTreeNode node){
+        _nodes = (TreeIntObject)_nodes.removeLike(new TreeInt(node.getID()));
     }
     
     void notifyRemoveListener(Object obj){

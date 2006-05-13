@@ -7,6 +7,7 @@ import com.db4o.test.conjunctions.*;
 import com.db4o.test.constraints.*;
 import com.db4o.test.foundation.Collection4TestCase;
 import com.db4o.test.foundation.FoundationTestSuite;
+import com.db4o.test.inside.btree.*;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.nativequery.*;
 import com.db4o.test.performance.*;
@@ -19,6 +20,7 @@ public class AllTestsConfAll extends TestSuite{
 	
     protected void addTestSuites(TestSuite suites) {
         suites.add(this);
+        suites.add(new BTreeTestSuite());
         suites.add(new ConstraintsTestSuite());
         suites.add(new ConjunctionsTestSuite());
         suites.add(new FoundationTestSuite());
