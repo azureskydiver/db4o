@@ -35,6 +35,10 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
 	private final static KeySpec BLOBPATH=new KeySpec(null);
     
+    private final static KeySpec BTREE_NODE_SIZE=new KeySpec(100);
+    
+    private final static KeySpec BTREE_CACHE_HEIGHT=new KeySpec(0);
+    
 	private final static KeySpec CALLBACKS=new KeySpec(true);
     
 	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(YapConst.DEFAULT);
@@ -150,6 +154,14 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
        }
        
        _config.put(BLOCKSIZE,(byte)bytes);
+    }
+    
+    public void bTreeNodeSize(int size){
+        _config.put(BTREE_NODE_SIZE,size);
+    }
+    
+    public void bTreeCacheHeight(int height){
+        _config.put(BTREE_CACHE_HEIGHT,height);
     }
 
     public void callbacks(boolean turnOn) {
@@ -576,7 +588,15 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 	byte blockSize() {
 		return _config.getAsByte(BLOCKSIZE);
 	}
-
+    
+    int bTreeNodeSize() {
+        return _config.getAsInt(BTREE_NODE_SIZE);
+    }
+    
+    int bTreeCacheHeight(){
+        return _config.getAsInt(BTREE_CACHE_HEIGHT);
+    }
+    
 	String blobPath() {
 		return _config.getAsString(BLOBPATH);
 	}
