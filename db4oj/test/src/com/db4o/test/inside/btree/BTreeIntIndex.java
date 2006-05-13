@@ -11,6 +11,9 @@ import com.db4o.test.*;
 public class BTreeIntIndex {
     
     public void test(){
+        if(Test.isClientServer()){
+            return;
+        }
         
         BTree btree = new BTree(4, 0, trans(), 0, new YInt(stream()), null);
         
@@ -35,7 +38,6 @@ public class BTreeIntIndex {
         btree.rollback(trans());
         
         expect(btree, SORTED);
-        
         
         int id = btree.getID();
         Test.reOpen();
@@ -98,6 +100,7 @@ public class BTreeIntIndex {
         final int[] cursor = new int[] {0};
         btree.traverseKeys(trans(), new Visitor4() {
             public void visit(Object obj) {
+                // System.out.println(obj);
                 Test.ensure(((Integer)obj).intValue() == values[cursor[0]]);
                 cursor[0] ++;
             }
