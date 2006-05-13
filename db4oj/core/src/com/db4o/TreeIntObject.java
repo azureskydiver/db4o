@@ -27,6 +27,14 @@ public class TreeIntObject extends TreeInt {
 		tio._object = _object;
 		return tio;
 	}
+    
+    public Object getObject() {
+        return _object;
+    }
+    
+    public void setObject(Object obj) {
+        _object = obj;
+    }
 
 	public Object read(YapReader a_bytes) {
 		int key = a_bytes.readInt();

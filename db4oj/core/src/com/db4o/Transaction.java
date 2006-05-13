@@ -717,6 +717,17 @@ public class Transaction {
         produceSlotChange(a_id).freeOnRollbackSetPointer(a_address, a_length);
     }
     
+    public void slotFreePointerOnCommit(int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        Slot slot = getSlotInformation(a_id);
+        if(slot == null){
+            return;
+        }
+        slotFreeOnCommit(a_id, slot._address, slot._length);
+    }
+    
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
