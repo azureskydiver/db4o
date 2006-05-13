@@ -15,7 +15,7 @@
 				<include name="**/*.cs" />
 			</src>
 			<reference dir="${output.dir}">
-				<include name="db4o.dll" />
+				<include name="*.dll" />
 			</reference>
 		</csc>
 	</target>
@@ -56,15 +56,15 @@
 	
 	<target name="init">
 		<mkdir dir="${output.dir}" />
-		<copy file="${db4o.dll}" todir="${output.dir}" />
+		<copy todir="${output.dir}">
+			<fileset dir="${db4o.dir}">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="clean">
-		<delete failonerror="false">
-			<fileset dir="${output.dir}">
-				<include name="CFNativeQueriesEnabler.*" />
-			</fileset>
-		</delete>
+		<delete dir="${output.dir}" failonerror="false" />
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
