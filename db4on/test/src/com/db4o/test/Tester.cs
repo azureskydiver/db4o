@@ -256,7 +256,7 @@ namespace com.db4o.test
 			String fileName1 = clientServer ? FILE_SERVER : FILE_SOLO;
 			try 
 			{
-				return (int)j4o.lang.JavaSystem.getLengthOf(new File(fileName1));
+				return (int)new File(fileName1).length();
 			}  
 			catch (System.IO.IOException e) 
 			{

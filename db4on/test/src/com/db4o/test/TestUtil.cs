@@ -60,7 +60,7 @@ namespace com.db4o.test {
             return;
          }
          a_list.add(a_Compare);
-         if (a_path == null || j4o.lang.JavaSystem.getLengthOf(a_path) < 1) if (a_Compare != null) {
+         if (a_path == null || a_path.Length < 1) if (a_Compare != null) {
             a_path = j4o.lang.Class.getClassForObject(a_Compare).getName() + ":";
          } else {
             if (a_With != null) a_path = j4o.lang.Class.getClassForObject(a_With).getName() + ":";

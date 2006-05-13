@@ -17,7 +17,7 @@ namespace com.db4o.test.soda.utils {
         }
       
         public bool isEqual(Object a_compare, Object a_with, String a_path, ArrayList a_list) {
-            if (a_path == null || j4o.lang.JavaSystem.getLengthOf(a_path) < 1) {
+            if (a_path == null || a_path.Length < 1) {
                 if (a_compare != null) {
                     a_path = j4o.lang.Class.getClassForObject(a_compare).getName() + ":";
                 } else {

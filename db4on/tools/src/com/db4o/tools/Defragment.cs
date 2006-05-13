@@ -287,7 +287,7 @@ namespace com.db4o.tools
 						int bufferSize1 = 64000;
 						RandomAccessFile rafIn = new RandomAccessFile(getAbsolutePath(), "r");
 						RandomAccessFile rafOut = new RandomAccessFile(toPath, "rw");
-						long len = j4o.lang.JavaSystem.getLengthOf(rafIn);
+						long len = rafIn.length();
 						byte[] bytes = new byte[bufferSize1];
 						while (len > 0)
 						{

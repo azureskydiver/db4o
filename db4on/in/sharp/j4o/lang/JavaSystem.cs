@@ -18,12 +18,6 @@ namespace j4o.lang
 			Array.Copy((Array)source, sourceIndex, (Array)destination, destinationIndex, length);
 		}
 
-		public static object clone(object obj) 
-		{
-			MethodInfo method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
-			return method.Invoke(obj, null);
-		}
-
 		public static long currentTimeMillis() 
 		{
 			return j4o.util.Date.toJavaMilliseconds(DateTime.Now.ToUniversalTime());
@@ -69,21 +63,6 @@ namespace j4o.lang
 			return null == value
 				? "null"
 				: value.ToString();
-		}
-
-		public static int getLengthOf(String str) 
-		{
-			return str.Length;
-		}
-
-		public static long getLengthOf(RandomAccessFile raf) 
-		{
-			return raf.length();
-		}
-
-		public static long getLengthOf(File file) 
-		{
-			return file.length();
 		}
 
 		public static String getProperty(String key) 
