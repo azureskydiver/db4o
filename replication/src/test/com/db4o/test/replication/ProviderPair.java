@@ -2,7 +2,7 @@ package com.db4o.test.replication;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 
-class ProviderPair {
+public class ProviderPair {
 	final TestableReplicationProviderInside _providerA;
 	final TestableReplicationProviderInside _providerB;
 
