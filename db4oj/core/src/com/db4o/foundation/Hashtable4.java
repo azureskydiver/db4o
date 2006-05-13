@@ -32,6 +32,10 @@ public class Hashtable4 implements DeepClone {
 
 	protected Hashtable4() {
 	}
+	
+	public int size() {
+		return i_size;
+	}
 
 	public Object deepClone(Object obj) {
 		return deepCloneInternal(new Hashtable4(), obj);
