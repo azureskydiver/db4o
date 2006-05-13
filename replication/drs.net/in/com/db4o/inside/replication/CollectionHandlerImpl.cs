@@ -17,8 +17,8 @@ namespace com.db4o.inside.replication
 		{
 			_mapHandler = new com.db4o.inside.replication.MapHandler(reflector);
 			_reflector = reflector;
-//			_reflectCollectionClass = reflector.ForClass(j4o.lang.Class.GetClassForType(typeof(
-//				j4o.util.Collection)));
+			_reflectCollectionClass = reflector.ForClass(j4o.lang.Class.GetClassForType(typeof(
+				System.Collections.ICollection)));
 		}
 
 		public virtual bool CanHandle(com.db4o.reflect.ReflectClass claxx)
@@ -47,18 +47,13 @@ namespace com.db4o.inside.replication
 			{
 				return _mapHandler.EmptyClone(originalCollection, originalCollectionClass);
 			}
-//			j4o.util.Collection original = (j4o.util.Collection)originalCollection;
-//			if (original is j4o.util.List)
-//			{
-//				return new j4o.util.ArrayList(original.Size());
-//			}
-//			if (original is j4o.util.Set)
-//			{
-//				return new j4o.util.HashSet(original.Size());
-//			}
-//			return _reflector.ForClass(j4o.lang.Class.GetClassForObject(original)).NewInstance
-//				();
-			return null;
+			System.Collections.ICollection original = (System.Collections.ICollection)originalCollection;
+			if (original is System.Collections.IList)
+			{
+				return new System.Collections.ArrayList(original.Count);
+			}
+			return _reflector.ForClass(j4o.lang.Class.GetClassForObject(original)).NewInstance
+				();
 		}
 
 		public virtual com.db4o.foundation.Iterator4 IteratorFor(object collection)
@@ -67,15 +62,14 @@ namespace com.db4o.inside.replication
 			{
 				return _mapHandler.IteratorFor(collection);
 			}
-//			j4o.util.Collection subject = (j4o.util.Collection)collection;
-//			com.db4o.foundation.Collection4 result = new com.db4o.foundation.Collection4();
-//			j4o.util.Iterator it = subject.Iterator();
-//			while (it.HasNext())
-//			{
-//				result.Add(it.Next());
-//			}
-//			return result.Iterator();
-			return null;
+			System.Collections.ICollection subject = (System.Collections.ICollection)collection;
+			com.db4o.foundation.Collection4 result = new com.db4o.foundation.Collection4();
+			System.Collections.IEnumerator it = subject.GetEnumerator();
+			while (it.MoveNext())
+			{
+				result.Add(it.Current);
+			}
+			return result.Iterator();
 		}
 
 		public virtual void CopyState(object original, object destination, com.db4o.inside.replication.CounterpartFinder
@@ -91,19 +85,36 @@ namespace com.db4o.inside.replication
 			}
 		}
 
+		public virtual object CloneWithCounterparts(object originalCollection, com.db4o.reflect.ReflectClass
+			 claxx, com.db4o.inside.replication.CounterpartFinder counterpartFinder)
+		{
+			if (_mapHandler.CanHandle(claxx))
+			{
+				return _mapHandler.CloneWithCounterparts(originalCollection, claxx, counterpartFinder
+					);
+			}
+			System.Collections.ICollection original = (System.Collections.ICollection)originalCollection;
+			System.Collections.ICollection result = (System.Collections.ICollection)EmptyClone
+				(originalCollection, claxx);
+			CopyState(original, result, counterpartFinder);
+			return result;
+		}
+
 		private void DoCopyState(object original, object destination, com.db4o.inside.replication.CounterpartFinder
 			 counterpartFinder)
 		{
-//			j4o.util.Collection originalCollection = (j4o.util.Collection)original;
-//			j4o.util.Collection destinationCollection = (j4o.util.Collection)destination;
-//			destinationCollection.Clear();
-//			j4o.util.Iterator it = originalCollection.Iterator();
-//			while (it.HasNext())
-//			{
-//				object element = it.Next();
-//				object counterpart = counterpartFinder.FindCounterpart(element);
-//				destinationCollection.Add(counterpart);
-//			}
+			System.Collections.ICollection originalCollection = (System.Collections.ICollection
+				)original;
+			System.Collections.IList destinationCollection = (System.Collections.IList
+				)destination;
+			destinationCollection.Clear();
+			System.Collections.IEnumerator it = originalCollection.GetEnumerator();
+			while (it.MoveNext())
+			{
+				object element = it.Current;
+				object counterpart = counterpartFinder.FindCounterpart(element);
+				destinationCollection.Add(counterpart);
+			}
 		}
 	}
 }
