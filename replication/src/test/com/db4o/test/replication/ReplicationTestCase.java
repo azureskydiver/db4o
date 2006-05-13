@@ -9,7 +9,6 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
-import com.db4o.test.Test;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.collections.SimpleArrayContent;
@@ -94,10 +93,23 @@ public abstract class ReplicationTestCase {
 		_providerA = null;
 		_providerB = null;
 	}
+	
+	protected static void ensure(boolean condition, String message) {
+		if (!condition) throw new RuntimeException(message);
+	}
+	
+	protected static void ensure(boolean condition) {
+		ensure(condition, "");
+	}
+	
+	protected static void ensureEquals(Object expected, Object actual) {
+		if (expected.equals(actual)) return;
+		ensure(false, "'" + expected + "' != '" + actual + "'");
+	}
 
 	protected void ensureInstanceCount(TestableReplicationProviderInside provider, Class clazz, int count) {
 		ObjectSet objectSet = provider.getStoredObjects(clazz);
-		Test.ensureEquals(count, objectSet.size());
+		ensureEquals(count, objectSet.size());
 	}
 
 	protected void ensureOneInstance(TestableReplicationProviderInside provider, Class clazz) {
@@ -120,7 +132,7 @@ public abstract class ReplicationTestCase {
 		_timer = System.currentTimeMillis();
 	}
 
-	protected void printCombination(ProviderPair p) {
+	public void printCombination(ProviderPair p) {
 		String claxx = this.getClass().getName();
 		String pa = p._providerA.getName();
 		String pb = p._providerB.getName();
@@ -179,7 +191,7 @@ public abstract class ReplicationTestCase {
 	private void checkClean(TestableReplicationProviderInside p) {
 		for (int i = 0; i < mappings.length; i++) {
 			ObjectSet remains = p.getStoredObjects(mappings[i]);
-			Test.ensureEquals(0, remains.size());
+			ensureEquals(0, remains.size());
 
 			boolean notEmpty = false;
 			while (remains.hasNext()) {
