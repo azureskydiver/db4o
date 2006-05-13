@@ -18,16 +18,21 @@ public class Hashtable4TestCase {
 		Test.ensureEquals("foo", table.get(key1));
 		Test.ensureEquals("bar", table.get(key2));
 		Test.ensureEquals(2, keyCount(table));
+		Test.ensureEquals(2, table.size());
 		
 		table.put(key3, "baz");
 		Test.ensureEquals("foo", table.get(key1));
 		Test.ensureEquals("baz", table.get(key2));
 		Test.ensureEquals(2, keyCount(table));
+		Test.ensureEquals(2, table.size());
 		
 		Test.ensureEquals("baz", table.remove(key2));
 		Test.ensureEquals(1, keyCount(table));
+		Test.ensureEquals(1, table.size());
+		
 		Test.ensureEquals("foo", table.remove(key1));
 		Test.ensureEquals(0, keyCount(table));
+		Test.ensureEquals(0, table.size());
 	}
 	
 	public void testSameKeyTwice() {
