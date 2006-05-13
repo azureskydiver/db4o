@@ -2,7 +2,6 @@
 
 package com.db4o.inside.replication;
 
-import com.db4o.ObjectSet;
 
 public interface SimpleObjectContainer {
 
@@ -13,8 +12,6 @@ public interface SimpleObjectContainer {
 	public void delete(Object obj);
 
 	public void deleteAllInstances(Class clazz);
-
-	public String getName();
 
 	/**
 	 * Will cascade to save the whole graph of objects
