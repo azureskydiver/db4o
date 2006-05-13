@@ -2,12 +2,12 @@
 
 package com.db4o.test.replication;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ObjectState;
@@ -17,21 +17,73 @@ import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 
+class Set4 {
+	public static final Set4 EMPTY_SET = new Set4(0);
+	
+	Hashtable4 _table;
+	
+	public Set4(int size) {
+		_table = new Hashtable4(size);
+	}
+	
+	public void add(Object element) {
+		_table.put(element, element);
+	}
+	
+	public void addAll(Set4 other) {
+		other._table.forEachKey(new Visitor4() {
+			public void visit(Object element) {
+				add(element);
+			}
+		});
+	}
+	
+	public boolean isEmpty() {
+		return _table.size() == 0;
+	}
+	
+	public int size() {
+		return _table.size();
+	}
+	
+	public boolean contains(Object element) {
+		return _table.get(element) != null;
+	}
+	
+	public boolean containsAll(Set4 other) {
+		Iterator4 i = other.iterator();
+		while (i.hasNext()) {
+			if (!contains(i.next())) return false;
+		}
+		return true;
+	}
+	
+	public Iterator4 iterator() {
+		final Collection4 elements = new Collection4();
+		_table.forEachKey(new Visitor4() {
+			public void visit(Object element) {
+				elements.add(element);
+			}
+		});
+		return elements.iterator();
+	}
+}
+
 public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private static final String A = "A";
 	private static final String B = "B";
 
-	private final Set _setA = new HashSet(1);
-	private final Set _setB = new HashSet(1);
-	private final Set _setBoth = new HashSet(2);
-	private final Set _NONE = Collections.EMPTY_SET;
+	private final Set4 _setA = new Set4(1);
+	private final Set4 _setB = new Set4(1);
+	private final Set4 _setBoth = new Set4(2);
+	private final Set4 _NONE = Set4.EMPTY_SET;
 
-	private Set _direction;
-	private Set _containersToQueryFrom;
-	private Set _containersWithNewObjects;
-	private Set _containersWithChangedObjects;
-	private Set _containersWithDeletedObjects;
-	private Set _containerStateToPrevail;
+	private Set4 _direction;
+	private Set4 _containersToQueryFrom;
+	private Set4 _containersWithNewObjects;
+	private Set4 _containersWithChangedObjects;
+	private Set4 _containersWithDeletedObjects;
+	private Set4 _containerStateToPrevail;
 
 	private String _intermittentErrors = "";
 	private int _testCombination;
@@ -76,10 +128,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private boolean isDefaultReplicationBehaviorAllowed() {
 		return _containerStateToPrevail != null && _containerStateToPrevail.isEmpty();
-	}
-
-	private static void ensure(boolean condition) {
-		if (!condition) throw new RuntimeException();
 	}
 
 	protected void actualTest() {
@@ -169,18 +217,18 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		performChanges();
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ReplicationEventListener() {
-			public void onReplicate(ReplicationEvent event) {
+			public void onReplicate(ReplicationEvent e) {
 				if (_containerStateToPrevail == null) {
-					event.overrideWith(null);
+					e.overrideWith(null);
 					return;
 				}
 
 				if (_containerStateToPrevail.isEmpty()) return;  //Default replication behaviour.
 
 				ObjectState override = _containerStateToPrevail.contains(A)
-						? event.stateInProviderA()
-						: event.stateInProviderB();
-				event.overrideWith(override);
+						? e.stateInProviderA()
+						: e.stateInProviderB();
+				e.overrideWith(override);
 			}
 		});
 
@@ -415,7 +463,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 
-	private String print(Set containerSet) {
+	private String print(Set4 containerSet) {
 		if (containerSet == null) return "null";
 		if (containerSet.isEmpty()) return "NONE";
 		if (containerSet.size() == 2) return "BOTH";
@@ -467,7 +515,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		super.test();
 	}
 
-	private void tstDirection(Set direction) {
+	private void tstDirection(Set4 direction) {
 		_direction = direction;
 
 		tstQueryingFrom(_setA);
@@ -475,7 +523,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstQueryingFrom(_setBoth);
 	}
 
-	private void tstQueryingFrom(Set containersToQueryFrom) {
+	private void tstQueryingFrom(Set4 containersToQueryFrom) {
 		_containersToQueryFrom = containersToQueryFrom;
 
 		tstWithNewObjectsIn(_NONE);
@@ -484,7 +532,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstWithNewObjectsIn(_setBoth);
 	}
 
-	private void tstWithChangedObjectsIn(Set containers) {
+	private void tstWithChangedObjectsIn(Set4 containers) {
 		_containersWithChangedObjects = containers;
 
 		tstWithContainerStateToPrevail(_NONE);
@@ -493,7 +541,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstWithContainerStateToPrevail(null);
 	}
 
-	private void tstWithDeletedObjectsIn(Set containers) {
+	private void tstWithDeletedObjectsIn(Set4 containers) {
 		_containersWithDeletedObjects = containers;
 
 		tstDirection(_setA);
@@ -501,7 +549,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstDirection(_setBoth);
 	}
 
-	private void tstWithNewObjectsIn(Set containersWithNewObjects) {
+	private void tstWithNewObjectsIn(Set4 containersWithNewObjects) {
 		_containersWithNewObjects = containersWithNewObjects;
 
 		tstWithChangedObjectsIn(_NONE);
@@ -510,7 +558,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstWithChangedObjectsIn(_setBoth);
 	}
 
-	private void tstWithContainerStateToPrevail(Set containers) {
+	private void tstWithContainerStateToPrevail(Set4 containers) {
 		_containerStateToPrevail = containers;
 
 		runCurrentCombination();
@@ -526,5 +574,5 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		if (!_containersToQueryFrom.contains(container)) return false;
 		if (_containersWithDeletedObjects.contains(container)) return false;
 		return _containersWithChangedObjects.contains(container);
-	}
+	}	
 }
