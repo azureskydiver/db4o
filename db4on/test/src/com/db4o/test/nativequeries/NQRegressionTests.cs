@@ -820,7 +820,7 @@ namespace com.db4o.test.nativequeries
 			}
 			finally
 			{
-                handler.QueryExecution -= new QueryExecutionHandler(listener.OnQueryExecution);
+				handler.QueryExecution -= new QueryExecutionHandler(listener.OnQueryExecution);
 			}
 		}
 

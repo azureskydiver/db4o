@@ -75,7 +75,7 @@ namespace com.db4o.test {
             Console.WriteLine(currentThreadName() + ": " + time + " ms.");
             returnedThreads++;
             if (returnedThreads >= openedThreads) {
-                if (j4o.lang.JavaSystem.getLengthOf(i_errors) == 0) {
+                if (i_errors.Length == 0) {
                     ObjectContainer con = open();
                     int objectCount = con.get(null).size();
                     con.close();
