@@ -18,10 +18,6 @@ import com.db4o.inside.ix.*;
  */
 public class BTreeNode extends YapMeta{
     
-    private static final int MAX_ENTRIES = 4;
-
-    private static final int HALF_ENTRIES = MAX_ENTRIES / 2;
-    
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (YapConst.YAPINT_LENGTH * 4) + 1; 
  
     private static final int SLOT_LEADING_LENGTH = YapConst.LEADING_LENGTH  + COUNT_LEAF_AND_3_LINK_LENGTH;
@@ -148,7 +144,7 @@ public class BTreeNode extends YapMeta{
             }
         }
         
-        if(_count == MAX_ENTRIES){
+        if(_count >= _btree._nodeSize){
             return split(trans);
         }
         
@@ -234,8 +230,8 @@ public class BTreeNode extends YapMeta{
             
             boolean vals = handlesValues();
             
-            Object[] tempKeys = new Object[MAX_ENTRIES];
-            Object[] tempValues = vals ? new Object[MAX_ENTRIES] : null; 
+            Object[] tempKeys = new Object[_btree._nodeSize];
+            Object[] tempValues = vals ? new Object[_btree._nodeSize] : null; 
             
             int count = 0;
         
@@ -533,13 +529,13 @@ public class BTreeNode extends YapMeta{
         if(_keys != null){
             return;
         }
-        _keys = new Object[MAX_ENTRIES];
+        _keys = new Object[_btree._nodeSize];
         if(_isLeaf){
             if(handlesValues()){
-                _values = new Object[MAX_ENTRIES];
+                _values = new Object[_btree._nodeSize];
             }
         }else{
-            _children = new Object[MAX_ENTRIES];
+            _children = new Object[_btree._nodeSize];
         }
     }
     
@@ -612,8 +608,8 @@ public class BTreeNode extends YapMeta{
             
             boolean vals = handlesValues();
             
-            Object[] tempKeys = new Object[MAX_ENTRIES];
-            Object[] tempValues = vals ? new Object[MAX_ENTRIES] : null; 
+            Object[] tempKeys = new Object[_btree._nodeSize];
+            Object[] tempValues = vals ? new Object[_btree._nodeSize] : null; 
             
             int count = 0;
         
@@ -685,28 +681,29 @@ public class BTreeNode extends YapMeta{
     
     private BTreeNode split(Transaction trans){
         
-        BTreeNode res = new BTreeNode(_btree, HALF_ENTRIES, _isLeaf,_parentID, getID(), _nextID);
         
-        System.arraycopy(_keys, HALF_ENTRIES, res._keys, 0, HALF_ENTRIES);
-        for (int i = HALF_ENTRIES; i < _keys.length; i++) {
+        BTreeNode res = new BTreeNode(_btree, _btree._halfNodeSize, _isLeaf,_parentID, getID(), _nextID);
+        
+        System.arraycopy(_keys, _btree._halfNodeSize, res._keys, 0, _btree._halfNodeSize);
+        for (int i = _btree._halfNodeSize; i < _keys.length; i++) {
             _keys[i] = null;
         }
         if(_values != null){
-            res._values = new Object[MAX_ENTRIES];
-            System.arraycopy(_values, HALF_ENTRIES, res._values, 0, HALF_ENTRIES);
-            for (int i = HALF_ENTRIES; i < _values.length; i++) {
+            res._values = new Object[_btree._nodeSize];
+            System.arraycopy(_values, _btree._halfNodeSize, res._values, 0, _btree._halfNodeSize);
+            for (int i = _btree._halfNodeSize; i < _values.length; i++) {
                 _values[i] = null;
             }
         }
         if(_children != null){
-            res._children = new Object[MAX_ENTRIES];
-            System.arraycopy(_children, HALF_ENTRIES, res._children, 0, HALF_ENTRIES);
-            for (int i = HALF_ENTRIES; i < _children.length; i++) {
+            res._children = new Object[_btree._nodeSize];
+            System.arraycopy(_children, _btree._halfNodeSize, res._children, 0, _btree._halfNodeSize);
+            for (int i = _btree._halfNodeSize; i < _children.length; i++) {
                 _children[i] = null;
             }
         }
         
-        _count = HALF_ENTRIES;
+        _count = _btree._halfNodeSize;
         
         res.write(trans.systemTransaction());
         _btree.addNode(res);
@@ -718,7 +715,7 @@ public class BTreeNode extends YapMeta{
         setNextID(trans, splitID);
 
         if(_children != null){
-            for (int i = 0; i < HALF_ENTRIES; i++) {
+            for (int i = 0; i < _btree._halfNodeSize; i++) {
                 if(res._children[i] == null){
                     break;
                 }

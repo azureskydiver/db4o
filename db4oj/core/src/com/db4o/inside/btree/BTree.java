@@ -35,13 +35,17 @@ public class BTree extends YapMeta{
     
     private Queue4 _processing;
     
+    int _nodeSize;
     
-    //  just for debugging purposes for now
-    public String _name;
+    int _halfNodeSize;
+    
+    private final int _cacheHeight;
     
     
-    public BTree(String name, Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
-        _name = name;
+    public BTree(int nodeSize, int cacheHeight, Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
+        _halfNodeSize = nodeSize / 2;
+        _nodeSize = _halfNodeSize * 2;
+        _cacheHeight = cacheHeight;
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         _sizesByTransaction = new Hashtable4(1);
@@ -55,10 +59,6 @@ public class BTree extends YapMeta{
             setID(id);
             setStateDeactivated();
         }
-    }
-    
-    public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
-        this(null, trans, id, keyHandler, valueHandler);
     }
     
     public void add(Transaction trans, Object value){
@@ -128,10 +128,10 @@ public class BTree extends YapMeta{
             ((BTreeNode)_processing.next()).rollback(trans);
         }
         _processing = null;
-        
-        
 
     }
+    
+    
     
     private void processAllNodes(){
         _processing = new Queue4();
@@ -163,7 +163,7 @@ public class BTree extends YapMeta{
     }
     
     public int ownLength() {
-        return 1 + YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
+        return 1 + YapConst.OBJECT_LENGTH + (YapConst.YAPINT_LENGTH * 2) + YapConst.YAPID_LENGTH;
     }
     
     BTreeNode produceNode(int id){
@@ -203,12 +203,15 @@ public class BTree extends YapMeta{
     public void readThis(Transaction a_trans, YapReader a_reader) {
         a_reader.incrementOffset(1);  // first byte is version, for possible future format changes
         _size = a_reader.readInt();
+        _nodeSize = a_reader.readInt();
+        _halfNodeSize = _nodeSize / 2;
         _root = produceNode(a_reader.readInt());
     }
     
     public void writeThis(Transaction trans, YapReader a_writer) {
         a_writer.append(BTREE_VERSION);
         a_writer.writeInt(_size);
+        a_writer.writeInt(_nodeSize);
         a_writer.writeIDOf(trans, _root);
     }
     
@@ -227,13 +230,6 @@ public class BTree extends YapMeta{
             return;
         }
         _root.traverseKeys(trans, visitor);
-    }
-    
-    public String toString() {
-        if(_name == null){
-            return super.toString();
-        }
-        return "BTree for " + _name;
     }
     
     private void sizeChanged(Transaction trans, int changeBy){

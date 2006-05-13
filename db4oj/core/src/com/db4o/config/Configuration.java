@@ -153,6 +153,34 @@ public interface Configuration {
      * @param bytes the size in bytes from 1 to 127
      */
     public void blockSize(int bytes);
+    
+    
+    /**
+     * configures the size of BTree nodes in indexes.
+     * <br><br>Default setting: 100
+     * <br>Lower values will allow a lower memory footprint
+     * and more efficient reading and writing of small slots.
+     * <br>Higher values will reduce the overall number of
+     * read and write operations and allow better performance
+     * at the cost of more RAM use.
+     * @param size the number of elements held in one BTree node.
+     */
+    public void bTreeNodeSize(int size);
+    
+    
+    /**
+     * configures caching of BTree nodes.
+     * <br><br>Clean BTree nodes will be unloaded on #commit and
+     * #rollback unless they are configured as cached here.
+     * <br><br>Default setting: 0
+     * <br>Possible settings: 1, 2 or 3
+     * <br><br> The potential number of cached BTree nodes can be
+     * calculated with the following forumula:<br>
+     * maxCachedNodes = bTreeNodeSize ^ bTreeCacheHeight    
+     * @param height the height of the cache from the root
+     */
+    public void bTreeCacheHeight(int height);
+    
 
     /**
      * turns callback methods on and off.
