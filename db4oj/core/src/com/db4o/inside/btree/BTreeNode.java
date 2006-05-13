@@ -50,6 +50,8 @@ public class BTreeNode extends YapMeta{
     
     private int _nextID;
     
+    private boolean _cached;
+    
     private boolean _dead;
     
     
@@ -107,13 +109,14 @@ public class BTreeNode extends YapMeta{
         if(_isLeaf){
             
             prepareWrite(trans);
-            
 
+            
             // TODO: Anything special on exact match?  Possibly compare value part also?
             
 //            if(s._cmp == 0){
 //                
 //            }
+            
             
             // Leaf only: Check last comparison result and position
             //            beyond last if added is greater.
@@ -171,13 +174,13 @@ public class BTreeNode extends YapMeta{
             return (BTreeNode)_children[index];
         }
         BTreeNode child = _btree.produceNode(childID(reader, index));
+
+        if(_children != null){
+            if(_cached || child.canWrite()){
+                _children[index] = child;
+            }
+        }
         
-        // TODO: Check exactly, when we want to keep a reference
-        // to children. This should probably happen from the child.
-        
-//        if(_children != null){
-//            _children[index] = child; 
-//        }
         return child;
     }
     
@@ -215,6 +218,8 @@ public class BTreeNode extends YapMeta{
         if(_dead){
             return;
         }
+        
+        _cached = false;
 
         if(! canWrite()){
             return;
@@ -265,14 +270,14 @@ public class BTreeNode extends YapMeta{
             
             // TODO: Merge nodes here on low _count value.
             
-        }else{
-        
-            for (int i = 0; i < _count; i++) {
-                BTreePatch patch = keyPatch(i);
-                if(patch != null){
-                    _keys[i] = child(i).firstKey(trans);
-                }
-            }
+//        }else{
+//        
+//            for (int i = 0; i < _count; i++) {
+//                BTreePatch patch = keyPatch(i);
+//                if(patch != null){
+//                    _keys[i] = child(i).firstKey(trans);
+//                }
+//            }
         }
         
         if(_keys[0] != keyZero){
@@ -298,6 +303,17 @@ public class BTreeNode extends YapMeta{
         
         _btree.removeNode(this);
         
+    }
+    
+    void holdChildrenAsIDs(){
+        if(_children == null){
+            return;
+        }
+        for (int i = 0; i < _count; i++) {
+            if(_children[i] instanceof BTreeNode){
+                _children[i] = new Integer( ((BTreeNode)_children[i]).getID() );
+            }
+        }
     }
     
     private void removeChild(Transaction trans, BTreeNode child) {
@@ -335,6 +351,7 @@ public class BTreeNode extends YapMeta{
         for (int i = 0; i < _count; i++) {
             if(childID(i) == id){
                 _keys[i] = child._keys[0];
+                _children[i] = child;
                 if(i == 0){
                     tellParentAboutChangedKey(trans);
                 }
@@ -480,6 +497,28 @@ public class BTreeNode extends YapMeta{
         return _btree._keyHandler;
     }
     
+    void markAsCached(int height){
+        _cached = true;
+        _btree.addNode(this);
+        
+        if( _isLeaf || (_children == null)){
+            return;
+        }
+        
+        height --;
+        
+        if(height < 1){
+            holdChildrenAsIDs();
+            return;
+        }
+        
+        for (int i = 0; i < _count; i++) {
+            if(_children[i] instanceof BTreeNode){
+                ((BTreeNode)_children[i]).markAsCached(height);
+            }
+        }
+    }
+    
     public int ownLength() {
         return SLOT_LEADING_LENGTH
           + (_count * entryLength())
@@ -487,10 +526,18 @@ public class BTreeNode extends YapMeta{
     }
     
     private YapReader prepareRead(Transaction trans){
+
         if(canWrite()){
             return null;
         }
+        
         if(isNew()){
+            return null;
+        }
+        
+        if(_cached){
+            read(trans.systemTransaction());
+            _btree.addToProcessing(this);
             return null;
         }
         
@@ -517,8 +564,6 @@ public class BTreeNode extends YapMeta{
         }
         
         if(_keys == null){
-        
-        // if(! isActive()){
             read(trans.systemTransaction());
             setStateDirty();
             _btree.addToProcessing(this);
@@ -592,6 +637,10 @@ public class BTreeNode extends YapMeta{
                 _keys[s._cursor] = btr;    
             }
             
+            if(s._cursor == 0){
+                tellParentAboutChangedKey(trans);
+            }
+            
             return;
         }
             
@@ -605,6 +654,8 @@ public class BTreeNode extends YapMeta{
         }
         
         if(_isLeaf){
+            
+            Object keyZero = _keys[0];
             
             boolean vals = handlesValues();
             
@@ -632,6 +683,12 @@ public class BTreeNode extends YapMeta{
             _values = tempValues;
             
             _count = count;
+            
+            
+            if(keyZero != _keys[0]){
+                tellParentAboutChangedKey(trans);
+            }
+            
             
             // TODO: Merge nodes here on low _count value.
         }
@@ -734,6 +791,31 @@ public class BTreeNode extends YapMeta{
     private void pointPreviousTo(Transaction trans, int id){
         if(_previousID != 0){
             _btree.produceNode(_previousID).setNextID(trans, id);
+        }
+    }
+    
+    void purge(){
+        if(_dead){
+            _keys = null;
+            _values = null;
+            _children = null;
+            return;
+        }
+        
+        if(_cached){
+            return;
+        }
+        
+        if(_keys == null){
+            return;
+        }
+        
+        for (int i = 0; i < _count; i++) {
+            if(_keys[i] instanceof BTreePatch){
+                holdChildrenAsIDs();
+                _btree.addNode(this);
+                return;
+            }
         }
     }
     

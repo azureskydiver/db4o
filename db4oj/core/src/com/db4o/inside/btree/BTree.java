@@ -101,6 +101,7 @@ public class BTree extends YapMeta{
             _processing = null;
             
             if(_nodes != null){
+                
                 _nodes.traverse(new Visitor4() {
                     public void visit(Object obj) {
                         BTreeNode node = (BTreeNode)((TreeIntObject)obj).getObject();
@@ -108,11 +109,15 @@ public class BTree extends YapMeta{
                         node.write(systemTransAction);
                     }
                 });
+                
             }
+            
         }
         
         setStateDirty();
         write(systemTransAction);
+        
+        purge();
     }
     
     public void rollback(final Transaction trans){
@@ -128,10 +133,32 @@ public class BTree extends YapMeta{
             ((BTreeNode)_processing.next()).rollback(trans);
         }
         _processing = null;
-
+        
+        purge();
     }
     
-    
+    private void purge(){
+        if(_nodes == null){
+            return;
+        }
+        
+        Tree temp = _nodes;
+        _nodes = null;
+        
+        if(_cacheHeight > 0){
+            _root.markAsCached(_cacheHeight);
+        }else{
+            _root.holdChildrenAsIDs();
+            addNode(_root);
+        }
+        
+        temp.traverse(new Visitor4() {
+            public void visit(Object obj) {
+                BTreeNode node = (BTreeNode)((TreeIntObject)obj).getObject();
+                node.purge();
+            }
+        });
+    }
     
     private void processAllNodes(){
         _processing = new Queue4();
