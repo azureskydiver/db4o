@@ -21,6 +21,18 @@ import com.db4o.config.*;
 public class AllTests extends AllTestsConfAll implements Runnable {
 
     public static void main(String[] args) {
+    	if(args!=null&&args.length>0&&args[0].startsWith("-")) {
+    		boolean solo=false;
+    		boolean cs=false;
+    		if("-solo".equals(args[0])||"-full".equals(args[0])) {
+    			solo=true;
+    		}
+    		if("-cs".equals(args[0])||"-full".equals(args[0])) {
+    			solo=true;
+    		}
+    		AllTests.run(solo, cs, testCasesFromArgs(args));
+    		return;
+    	}
         new AllTests(args).run();
     }
     
@@ -52,7 +64,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
 
     	
         if(testcasenames!=null&&testcasenames.length>0) {
-            testCasesFromArgs(testcasenames);
+            _testCases=testCasesFromArgs(testcasenames);
         } else{
             testCasesFromTestSuites();
         }
@@ -273,8 +285,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     }
     
     private void testCasesFromTestSuites() {
-    	_testCases = new Class[0];
-        
+    	_testCases=new Class[0];
         _testSuites = new Vector();
     	
     	addTestSuites(this);
@@ -293,17 +304,22 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     	return result;
 	}
 
-	private void testCasesFromArgs(String[] testcasenames) {
-        _testCases=new Class[testcasenames.length];
-        for (int testidx = 0; testidx < testcasenames.length; testidx++) {
+	private static Class[] testCasesFromArgs(String[] testcasenames) {
+		return testCasesFromArgs(testcasenames,0);
+    }
+
+	private static Class[] testCasesFromArgs(String[] testcasenames,int offset) {
+        Class[] testCases=new Class[testcasenames.length-offset];
+        for (int testidx = offset; testidx < testcasenames.length; testidx++) {
             try {
-                _testCases[testidx]=Class.forName(testcasenames[testidx]);
+                testCases[testidx-offset]=Class.forName(testcasenames[testidx]);
             } catch (ClassNotFoundException e) {
                 System.err.println("Test case class not found: "+testcasenames[testidx]);
                 e.printStackTrace();
                 System.exit(0);
             }
         }
+        return testCases;
     }
 
 	
