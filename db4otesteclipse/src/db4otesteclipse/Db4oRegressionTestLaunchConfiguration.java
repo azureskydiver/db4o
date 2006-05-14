@@ -1,10 +1,8 @@
 package db4otesteclipse;
 
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
 import org.eclipse.jdt.launching.*;
 
-public class Db4oRegressionTestLaunchConfiguration extends AbstractJavaLaunchConfigurationDelegate {
-	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-	}
+public class Db4oRegressionTestLaunchConfiguration extends JavaLaunchDelegate {
+	public final static String LAUNCHCONFIG_ID="db4otesteclipse.launchconfig.type";
+	public final static String TESTTYPES_KEY="db4otesteclipse.testtypes";
 }

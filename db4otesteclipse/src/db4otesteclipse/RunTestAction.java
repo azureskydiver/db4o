@@ -11,16 +11,21 @@ import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.ui.*;
 
-public class RunTestAction implements IObjectActionDelegate {
+public abstract class RunTestAction implements IObjectActionDelegate {
 	private static final String TESTCLASS_NAME = "com.db4o.test.AllTests";
 	private ISelection selection;
+	private String mode;
 	
+	protected RunTestAction(String mode) {
+		this.mode = mode;
+	}
+
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
 	public void run(IAction action) {
 		try {
-			Set testTypes=collectTestTypes();
+			List testTypes=collectTestTypes();
 			if(testTypes.isEmpty()) {
 				return;
 			}
@@ -39,7 +44,7 @@ public class RunTestAction implements IObjectActionDelegate {
 		this.selection=selection;
 	}
 
-	private String parameterString(Set testTypes) {
+	private String parameterString(List testTypes) {
 		StringBuffer buf=new StringBuffer();
 		boolean firstRun=true;
 		for (Iterator testTypeIter = testTypes.iterator(); testTypeIter.hasNext();firstRun=false) {
@@ -52,7 +57,7 @@ public class RunTestAction implements IObjectActionDelegate {
 		return buf.toString();
 	}
 
-	private IJavaProject containerForTypes(Set testTypes) {
+	private IJavaProject containerForTypes(List testTypes) {
 		IJavaProject container=null;
 		for (Iterator testTypeIter = testTypes.iterator(); testTypeIter.hasNext();) {
 			IType type = (IType) testTypeIter.next();
@@ -69,52 +74,61 @@ public class RunTestAction implements IObjectActionDelegate {
 		return container;
 	}
 
-	private ILaunchConfiguration getLaunchConfig(IJavaProject javaProject,Set testTypes) throws CoreException {
+	private ILaunchConfiguration getLaunchConfig(IJavaProject javaProject,List testTypes) throws CoreException {
 		ILaunchManager launchMgr=DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType launchType=launchMgr.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+		//ILaunchConfigurationType launchType=launchMgr.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+		ILaunchConfigurationType launchType=launchMgr.getLaunchConfigurationType(Db4oRegressionTestLaunchConfiguration.LAUNCHCONFIG_ID);
 		String name=nameForTestTypes(testTypes);
-		ILaunchConfiguration config=findExistingLaunchConfig(launchMgr,launchType,name);
+		ILaunchConfiguration config=findExistingLaunchConfig(launchMgr,launchType,testTypes,name);
 		if(config!=null) {
 			return config;
 		}
-		ILaunchConfigurationWorkingCopy workingCopy = createLaunchConfig(javaProject,name);
+		ILaunchConfigurationWorkingCopy workingCopy = createLaunchConfig(javaProject,launchType,name);
 		configureLaunchConfig(javaProject, testTypes, workingCopy);
-		return workingCopy.doSave();
+		try {
+			return workingCopy.doSave();
+		}
+		catch(RuntimeException exc) {
+			exc.printStackTrace();
+			throw exc;
+		}
 	}
 
-	private ILaunchConfiguration findExistingLaunchConfig(ILaunchManager launchMgr,ILaunchConfigurationType launchType,String name) throws CoreException {
+	private ILaunchConfiguration findExistingLaunchConfig(ILaunchManager launchMgr,ILaunchConfigurationType launchType,List testTypes,String name) throws CoreException {
 		ILaunchConfiguration[] launchConfigs=launchMgr.getLaunchConfigurations(launchType);
 		for (int launchConfigIdx = 0; launchConfigIdx < launchConfigs.length; launchConfigIdx++) {
+			List curTestTypes=launchConfigs[launchConfigIdx].getAttribute(Db4oRegressionTestLaunchConfiguration.TESTTYPES_KEY, (List)null);
 			if(launchConfigs[launchConfigIdx].getName().equals(name)) {
-				return launchConfigs[launchConfigIdx];
+				if(namesForTestTypes(testTypes).equals(curTestTypes)) {
+					return launchConfigs[launchConfigIdx];
+				}
 			}
 		}
 		return null;
 	}
 	
-	private ILaunchConfigurationWorkingCopy createLaunchConfig(IJavaProject javaProject,String name) throws CoreException {
-		ILaunchManager launchMgr=DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType launchType=launchMgr.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+	private ILaunchConfigurationWorkingCopy createLaunchConfig(IJavaProject javaProject,ILaunchConfigurationType launchType,String name) throws CoreException {
 		ILaunchConfigurationWorkingCopy workingCopy = launchType.newInstance(javaProject.getProject(),name);
 		return workingCopy;
 	}
 
-	private void configureLaunchConfig(IJavaProject javaProject, Set testTypes, ILaunchConfigurationWorkingCopy workingCopy) throws CoreException {
+	private void configureLaunchConfig(IJavaProject javaProject, List testTypes, ILaunchConfigurationWorkingCopy workingCopy) throws CoreException {
 		String args = parameterString(testTypes);
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				TESTCLASS_NAME);
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, 
-				args.toString());
+				"-"+mode+" "+args);
 		IRuntimeClasspathEntry projectClasspath=JavaRuntime.newDefaultProjectClasspathEntry(javaProject);
 		List classPath=new ArrayList();
 		classPath.add(projectClasspath.getMemento());
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classPath);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
+		workingCopy.setAttribute(Db4oRegressionTestLaunchConfiguration.TESTTYPES_KEY, namesForTestTypes(testTypes));
 	}
 	
-	private Set collectTestTypes() throws CoreException {
+	private List collectTestTypes() throws CoreException {
 		Set testTypes=new HashSet();
 		if(selection instanceof IStructuredSelection) {
 			IStructuredSelection structured=(IStructuredSelection)selection;
@@ -122,7 +136,13 @@ public class RunTestAction implements IObjectActionDelegate {
 				collectTestTypes(iter.next(),testTypes);
 			}
 		}
-		return testTypes;
+		List sorted=new ArrayList(testTypes);
+		Collections.sort(sorted,new Comparator() {
+			public int compare(Object a, Object b) {
+				return ((IType)a).getFullyQualifiedName().compareTo(((IType)b).getFullyQualifiedName());
+			}
+		});
+		return sorted;
 	}
 	
 	private void collectTestTypes(Object selected,Set testTypes) throws CoreException {
@@ -192,19 +212,23 @@ public class RunTestAction implements IObjectActionDelegate {
 		return true;
 	}
 	
-	private String nameForTestTypes(Set testTypes) {
-		StringBuffer name=new StringBuffer();
-		boolean firstRun=true;
-		for (Iterator testIter = testTypes.iterator(); testIter.hasNext();firstRun=false) {
-			IType type = (IType) testIter.next();
-			if(!firstRun) {
-				name.append(',');
-			}
-			name.append(type.getFullyQualifiedName());
+	private String nameForTestTypes(List testTypes) {
+		String name=((IType)testTypes.iterator().next()).getFullyQualifiedName();
+		if(testTypes.size()>1) {
+			name+=",...["+testTypes.size()+"]";
 		}
-		return name.toString();
+		name+=" "+mode.toUpperCase();
+		return name;
 	}
 
+	private List namesForTestTypes(List testTypes) {
+		List names=new ArrayList(testTypes.size());
+		for (Iterator iter = testTypes.iterator(); iter.hasNext();) {
+			names.add(((IType)iter.next()).getFullyQualifiedName());
+		}
+		return names;
+	}
+	
 	private void log(String msg) {
 		Activator.log(new Status(Status.INFO,Activator.PLUGIN_ID,0,msg,null));
 	}
