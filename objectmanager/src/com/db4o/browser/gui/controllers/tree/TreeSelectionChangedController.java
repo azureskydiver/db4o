@@ -32,8 +32,8 @@ public class TreeSelectionChangedController implements
 
         deleteButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println(lastSelection.getCurrent().getEditValue().getClass());
-				System.out.println(lastSelection.getCurrent().getDatabase());
+				//System.out.println(lastSelection.getCurrent().getEditValue().getClass());
+				//System.out.println(lastSelection.getCurrent().getDatabase());
 				lastSelection.getCurrent().getDatabase().delete(lastSelection.getCurrent().getEditValue());
 				tabCtrl.dirty();
 			}

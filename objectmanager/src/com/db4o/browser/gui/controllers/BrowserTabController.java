@@ -108,7 +108,7 @@ public class BrowserTabController implements IBrowserController {
         currentConnection(spec);
         PreferencesCore.getDefault().registerPreference(RecentlyOpenedPreferences.RECENTLY_OPENED_PREFERENCES_ID, spec);
         PreferencesCore.getDefault().commit();
-        System.out.println(PreferencesCore.getDefault().getPreference(RecentlyOpenedPreferences.RECENTLY_OPENED_PREFERENCES_ID));
+        //System.out.println(PreferencesCore.getDefault().getPreference(RecentlyOpenedPreferences.RECENTLY_OPENED_PREFERENCES_ID));
         return internalSetInput();
     }
 
