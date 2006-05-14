@@ -28,9 +28,9 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     			solo=true;
     		}
     		if("-cs".equals(args[0])||"-full".equals(args[0])) {
-    			solo=true;
+    			cs=true;
     		}
-    		AllTests.run(solo, cs, testCasesFromArgs(args));
+    		AllTests.run(solo, cs, testCasesFromArgs(args,1));
     		return;
     	}
         new AllTests(args).run();
