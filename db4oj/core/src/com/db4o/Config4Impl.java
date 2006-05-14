@@ -37,7 +37,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
     private final static KeySpec BTREE_NODE_SIZE=new KeySpec(100);
     
-    private final static KeySpec BTREE_CACHE_HEIGHT=new KeySpec(0);
+    private final static KeySpec BTREE_CACHE_HEIGHT=new KeySpec(1);
     
 	private final static KeySpec CALLBACKS=new KeySpec(true);
     
