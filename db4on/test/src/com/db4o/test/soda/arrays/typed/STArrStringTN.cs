@@ -36,7 +36,7 @@ namespace com.db4o.test.soda.arrays.typed {
          content1[0,1,1] = "johy";
          arr1[4] = new STArrStringTN(content1);
          Object[] ret1 = new Object[arr1.Length];
-         j4o.lang.JavaSystem.arraycopy(arr1, 0, ret1, 0, arr1.Length);
+		 System.Array.Copy(arr1, 0, ret1, 0, arr1.Length);
          return ret1;
       }
       

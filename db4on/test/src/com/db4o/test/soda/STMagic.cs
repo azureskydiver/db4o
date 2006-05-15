@@ -59,8 +59,8 @@ namespace com.db4o.test.soda {
             Object[] stDoubles1 = new STDouble().store();
             Object[] stStrings1 = new STString().store();
             Object[] res1 = new Object[stDoubles1.Length + stStrings1.Length];
-            j4o.lang.JavaSystem.arraycopy(stDoubles1, 0, res1, 0, stDoubles1.Length);
-            j4o.lang.JavaSystem.arraycopy(stStrings1, 0, res1, stDoubles1.Length, stStrings1.Length);
+			System.Array.Copy(stDoubles1, 0, res1, 0, stDoubles1.Length);
+			System.Array.Copy(stStrings1, 0, res1, stDoubles1.Length, stStrings1.Length);
             st.expect(q1, res1);
         }
       

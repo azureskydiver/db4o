@@ -100,7 +100,7 @@ namespace com.db4o.test {
             i_map.Keys.CopyTo(arr1, 0);
             tDefaultArray(arr1);
             String[] cmp1 = new String[DEFAULT.Length];
-            j4o.lang.JavaSystem.arraycopy(DEFAULT, 0, cmp1, 0, DEFAULT.Length);
+			System.Array.Copy(DEFAULT, 0, cmp1, 0, DEFAULT.Length);
             i1 = i_map.Keys.GetEnumerator();
             while (i1.MoveNext()) {
                 String str2 = (String)i1.Current;
@@ -226,7 +226,7 @@ namespace com.db4o.test {
         private void tDefaultArray(Object[] arr) {
             Tester.ensure(arr.Length == DEFAULT.Length);
             String[] str1 = new String[DEFAULT.Length];
-            j4o.lang.JavaSystem.arraycopy(DEFAULT, 0, str1, 0, DEFAULT.Length);
+			System.Array.Copy(DEFAULT, 0, str1, 0, DEFAULT.Length);
             for (int i1 = 0; i1 < arr.Length; i1++) {
                 bool found1 = false;
                 for (int j1 = 0; j1 < str1.Length; j1++) {
