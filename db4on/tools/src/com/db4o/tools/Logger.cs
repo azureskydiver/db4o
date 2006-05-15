@@ -271,7 +271,7 @@ namespace com.db4o.tools {
                 return a_classes;
             }
             Class[] classes1 = new Class[a_classes.Length + 1];
-            j4o.lang.JavaSystem.arraycopy(a_classes, 0, classes1, 0, a_classes.Length);
+			System.Array.Copy(a_classes, 0, classes1, 0, a_classes.Length);
             classes1[a_classes.Length] = clazz1;
             return getClassHierarchy(classes1);
         }

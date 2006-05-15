@@ -29,7 +29,7 @@ namespace com.db4o.test.types {
       internal Object[] allClassesButThis() {
          Object[] all = Regression.allClasses();
          Object[] classes = new Object[all.Length - 1];
-         j4o.lang.JavaSystem.arraycopy(all, 0, classes, 0, all.Length - 1);
+		 System.Array.Copy(all, 0, classes, 0, all.Length - 1);
          return classes;
       }
    }

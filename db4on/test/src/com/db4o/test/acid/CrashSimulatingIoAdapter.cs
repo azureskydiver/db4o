@@ -36,7 +36,7 @@ namespace com.db4o.test.acid
 		{
 			base.write(buffer, length);
 			byte[] copy = new byte[buffer.Length];
-			j4o.lang.JavaSystem.arraycopy(buffer, 0, copy, 0, buffer.Length);
+			System.Array.Copy(buffer, 0, copy, 0, buffer.Length);
 			batch.add(copy, curPos, length);
 		}
 

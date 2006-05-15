@@ -12,12 +12,6 @@ namespace j4o.lang
 		public static PrintStream _out = new ConsoleWriter();
 		public static PrintStream err = new ConsoleWriter();
 
-		public static void arraycopy(object source, int sourceIndex, object destination,
-			int destinationIndex, int length) 
-		{
-			Array.Copy((Array)source, sourceIndex, (Array)destination, destinationIndex, length);
-		}
-
 		public static long currentTimeMillis() 
 		{
 			return j4o.util.Date.toJavaMilliseconds(DateTime.Now.ToUniversalTime());

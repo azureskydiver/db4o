@@ -38,7 +38,7 @@ namespace com.db4o.test.types {
       public void compare(Entry[] a_cmp, int oneOrTwo, bool keysOnly) {
          Entry[] tests = test(oneOrTwo);
          Entry[] cmp = new Entry[a_cmp.Length];
-         j4o.lang.JavaSystem.arraycopy(a_cmp, 0, cmp, 0, a_cmp.Length);
+		 System.Array.Copy(a_cmp, 0, cmp, 0, a_cmp.Length);
          if (cmp == null) {
             Regression.addError("Entry:argument is null");
             return;
