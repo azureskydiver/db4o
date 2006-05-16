@@ -116,7 +116,7 @@ public interface Configuration {
      * to reverse this process. It is not ensured that updated
      * database files can be read with older db4o versions.  
      * In some cases (Example: using ObjectManager) it may not be
-     * desirable to update database files automatically therfore
+     * desirable to update database files automatically therefore
      * automatic updating is turned off by default for  
      * security reasons.
      * <br><br>Call this method to turn automatic database file
