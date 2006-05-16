@@ -90,6 +90,20 @@ public class Transaction {
     public void addTransactionListener(TransactionListener a_listener) {
         i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
+    
+    private void appendSlotChanges(final YapWriter writer){
+        
+        if(i_parentTransaction != null){
+            i_parentTransaction.appendSlotChanges(writer);
+        }
+        
+        Tree.traverse(_slotChanges, new Visitor4() {
+            public void visit(Object obj) {
+                ((Tree)obj).write(writer);
+            }
+        });
+        
+    }
 
     void beginEndSet() {
         if(Debug.checkSychronization){
@@ -273,36 +287,31 @@ public class Transaction {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        
-        if(i_parentTransaction != null){
-            i_parentTransaction.commit6WriteChanges();
-        }
             
-        final int slotSetPointerCount[]  = {0};
+        final int slotSetPointerCount = countSlotChanges();
         
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    SlotChange slot = (SlotChange)obj;
-                    if(slot.isSetPointer()){
-                        slotSetPointerCount[0] ++;
-                    }
-                }
-            });
-        }
-        if (slotSetPointerCount[0] > 0) {
-            int length = (((slotSetPointerCount[0] * 3) + 2) * YapConst.YAPINT_LENGTH);
+        if (slotSetPointerCount > 0) {
+            int length = (((slotSetPointerCount * 3) + 2) * YapConst.YAPINT_LENGTH);
             int address = i_file.getSlot(length);
             final YapWriter bytes = new YapWriter(this, address, length);
             bytes.writeInt(length);
-            Tree.write(bytes, _slotChanges, slotSetPointerCount[0]);
+            bytes.writeInt(slotSetPointerCount);
+            
+            appendSlotChanges(bytes);
+            
             bytes.write();
             flushFile();
+            
             i_stream.writeTransactionPointer(address);
             flushFile();
-            writeSlots();
+            
+            if(writeSlots()){
+                flushFile();
+            }
+            
             i_stream.writeTransactionPointer(0);
             flushFile();
+            
             i_file.free(address, length);
         }
     }
@@ -327,6 +336,29 @@ public class Transaction {
         }
     }
     
+    private int countSlotChanges(){
+        
+        int count = 0;
+        
+        if(i_parentTransaction != null){
+            count += i_parentTransaction.countSlotChanges();
+        }
+        
+        final int slotSetPointerCount[]  = {count};
+        
+        if(_slotChanges != null){
+            _slotChanges.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    SlotChange slot = (SlotChange)obj;
+                    if(slot.isSetPointer()){
+                        slotSetPointerCount[0] ++;
+                    }
+                }
+            });
+        }
+        
+        return slotSetPointerCount[0];
+    }
 
     private final Tree createClassIndexNode(Tree a_tree, Tree[] a_node) {
         if(Debug.checkSychronization){
@@ -838,7 +870,9 @@ public class Transaction {
                 bytes.read();
                 bytes.incrementOffset(YapConst.YAPINT_LENGTH);
                 _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
-                writeSlots();
+                if(writeSlots()){
+                    flushFile();
+                }
                 i_stream.writeTransactionPointer(0);
                 flushFile();
                 freeOnCommit();
@@ -873,18 +907,30 @@ public class Transaction {
     }
     
     
-    private void writeSlots() {
+    private boolean writeSlots() {
+        
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
+        
+        boolean ret = false;
+        
+        if(i_parentTransaction != null){
+            if(i_parentTransaction.writeSlots()){
+                ret = true;
+            }
+        }
+        
         if(_slotChanges != null){
             _slotChanges.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     ((SlotChange)a_object).writePointer(Transaction.this);
                 }
             });
-            flushFile();
+            ret = true;
         }
+        
+        return ret;
     }
     
     void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
