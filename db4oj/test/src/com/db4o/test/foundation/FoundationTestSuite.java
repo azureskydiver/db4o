@@ -6,6 +6,7 @@ public class FoundationTestSuite extends TestSuite{
 	
     public Class[] tests(){
         return new Class[] {
+            BitMap4TestCase.class,
             Collection4TestCase.class,
             Hashtable4TestCase.class
         };
