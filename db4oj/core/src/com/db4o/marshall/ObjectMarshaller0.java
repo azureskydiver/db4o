@@ -3,33 +3,34 @@
 package com.db4o.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
 /**
  * @exclude
  */
 class ObjectMarshaller0 extends ObjectMarshaller {
     
-    public void addFieldIndices(YapClass yc, YapWriter writer, boolean isNew) {
+    public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, YapWriter writer, boolean isNew) {
         int fieldCount = writer.readInt();
         for (int i = 0; i < fieldCount; i++) {
             yc.i_fields[i].addFieldIndex(_family, writer, isNew);
         }
         if (yc.i_ancestor != null) {
-            addFieldIndices(yc.i_ancestor, writer, isNew);
+            addFieldIndices(yc.i_ancestor, attributes, writer, isNew);
         }
     }
     
-    public void deleteMembers(YapClass yc, YapWriter a_bytes, int a_type, boolean isUpdate){
+    public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate){
         int length = yc.readFieldLength(a_bytes);
         for (int i = 0; i < length; i++) {
             yc.i_fields[i].delete(_family, a_bytes, isUpdate);
         }
         if (yc.i_ancestor != null) {
-            deleteMembers(yc.i_ancestor, a_bytes, a_type, isUpdate);
+            deleteMembers(yc.i_ancestor, attributes, a_bytes, a_type, isUpdate);
         }
     }
     
-    public boolean findOffset(YapClass yc, YapReader a_bytes, YapField a_field) {
+    public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, YapReader a_bytes, YapField a_field) {
         int length = Debug.atHome ? yc.readFieldLengthSodaAtHome(a_bytes) : yc.readFieldLength(a_bytes);
         for (int i = 0; i < length; i++) {
             if (yc.i_fields[i] == a_field) {
@@ -40,21 +41,21 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         if (yc.i_ancestor == null) {
             return false;
         }
-        return findOffset(yc.i_ancestor, a_bytes, a_field);
+        return findOffset(yc.i_ancestor, attributes, a_bytes, a_field);
     }
     
     protected final int headerLength(){
         return YapConst.OBJECT_LENGTH + YapConst.YAPID_LENGTH;
     }
     
-    public void instantiateFields(YapClass yc, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
+    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
         int length = yc.readFieldLength(a_bytes);
         try {
             for (int i = 0; i < length; i++) {
                 yc.i_fields[i].instantiate(_family, a_yapObject, a_onObject, a_bytes);
             }
             if (yc.i_ancestor != null) {
-                instantiateFields(yc.i_ancestor, a_yapObject, a_onObject, a_bytes);
+                instantiateFields(yc.i_ancestor, attributes, a_yapObject, a_onObject, a_bytes);
             }
         } catch (CorruptionException ce) {
         }
@@ -85,7 +86,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 
     public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
-        YapWriter writer = createWriter(a_trans, yo, a_updateDepth);
+        YapWriter writer = createWriter(a_trans, yo, null, a_updateDepth);
         
         YapClass yc = yo.getYapClass();
         Object obj = yo.getObject();
@@ -117,7 +118,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 
         int length = yapClass.objectLength();
         
-        YapWriter writer = createWriter(a_trans,a_yapObject, a_updateDepth, a_id, 0, length);
+        YapWriter writer = createWriter(a_trans,a_yapObject, null, a_updateDepth, a_id, 0, length);
         
         yapClass.checkUpdateDepth(writer);
         
@@ -127,8 +128,12 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         marshallUpdateWrite(a_trans, yapClass, a_yapObject, a_object, writer);
     }
 
-    protected int objectLength(YapObject yo) {
+    protected int objectLength(YapObject yo, ObjectHeaderAttributes attributes) {
         return headerLength() + linkLength(yo.getYapClass(), yo);
+    }
+
+    public ObjectHeaderAttributes readHeaderAttributes(YapReader reader) {
+        return null;
     }
 
 }

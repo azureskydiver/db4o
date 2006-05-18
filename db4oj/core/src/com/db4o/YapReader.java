@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 /**
  * public for .NET conversion reasons.
  * 
@@ -81,6 +83,12 @@ public class YapReader {
 			}
 		}
 	}
+    
+    public BitMap4 readBitMap(int bitCount){
+        BitMap4 map = new BitMap4(_buffer, _offset, bitCount);
+        _offset += map.marshalledLength();
+        return map;
+    }
 	
 	public byte readByte() {
 		return _buffer[_offset++];
@@ -184,6 +192,11 @@ public class YapReader {
         if (Deploy.debug) {
             writeBegin(a_identifier);
         }
+    }
+    
+    public void writeBitMap(BitMap4 nullBitMap) {
+        nullBitMap.writeTo(_buffer, _offset);
+        _offset += nullBitMap.marshalledLength();
     }
     
     public void writeEnd() {

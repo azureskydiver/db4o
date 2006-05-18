@@ -79,7 +79,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     final void addFieldIndices(YapWriter a_writer, boolean a_new) {
         if(hasIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(i_stream, this, a_writer);
-            oh._marshallerFamily._object.addFieldIndices(this, a_writer, a_new);
+            oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, a_new);
         }
     }
     
@@ -524,12 +524,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     final void delete(YapWriter a_bytes, Object a_object) {
         ObjectHeader oh = new ObjectHeader(i_stream, this, a_bytes);
-        delete1(oh._marshallerFamily, a_bytes, a_object);
+        delete1(oh._marshallerFamily, oh._headerAttributes, a_bytes, a_object);
     }
 
-    private final void delete1(MarshallerFamily mf, YapWriter a_bytes, Object a_object) {
+    private final void delete1(MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, Object a_object) {
         removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
-        deleteMembers(mf, a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object), false);
+        deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object), false);
     }
 
     public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
@@ -565,7 +565,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    void deleteMembers(MarshallerFamily mf, YapWriter a_bytes, int a_type, boolean isUpdate) {
+    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate) {
         try{
 	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.cascadeOnDelete() == YapConst.YES)) {
@@ -580,10 +580,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	            } else {
 	                a_bytes.setCascadeDeletes(1);
 	            }
-                mf._object.deleteMembers(this, a_bytes, a_type, isUpdate);
+                mf._object.deleteMembers(this, attributes, a_bytes, a_type, isUpdate);
 	            a_bytes.setCascadeDeletes(preserveCascade);
 	        } else {
-                mf._object.deleteMembers(this, a_bytes, a_type, isUpdate);
+                mf._object.deleteMembers(this, attributes, a_bytes, a_type, isUpdate);
 	        }
         }catch(Exception e){
             
@@ -610,6 +610,16 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     public final boolean equals(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
+    
+    public final int fieldCount(){
+        int count = i_fields.length;
+        
+        if(i_ancestor != null){
+            count += i_ancestor.fieldCount();
+        }
+        
+        return count;
+    }
 
     // Scrolls offset in passed reader to the offset the passed field should
     // be read at.
@@ -621,7 +631,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         a_bytes._offset = 0;
         ObjectHeader oh = new ObjectHeader(i_stream, this, a_bytes);
-        boolean res = oh.objectMarshaller().findOffset(this, a_bytes, a_field);
+        boolean res = oh.objectMarshaller().findOffset(this, oh._headerAttributes, a_bytes, a_field);
         if(! res){
             return null;
         }
@@ -1072,8 +1082,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         storeStaticFieldValues(systemTrans, false);
     }
 
-    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, YapWriter a_bytes, boolean a_addToIDTree) {
-
+    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, boolean a_addToIDTree) {
+        
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
 
@@ -1145,7 +1155,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (doFields) {
             if(dispatchEvent(stream, a_object, EventDispatcher.CAN_ACTIVATE)){
 	            a_yapObject.setStateClean();
-	            instantiateFields(a_yapObject, a_object, mf, a_bytes);
+	            instantiateFields(a_yapObject, a_object, mf, attributes, a_bytes);
 	            dispatchEvent(stream, a_object, EventDispatcher.ACTIVATE);
             }else{
                 if (create) {
@@ -1164,7 +1174,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return a_object;
     }
 
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, YapWriter a_bytes) {
+    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes) {
 
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1201,12 +1211,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             stream.instantiating(false);
         }
         stream.peeked(a_yapObject.getID(), a_object);
-        instantiateFields(a_yapObject, a_object, mf, a_bytes);
+        instantiateFields(a_yapObject, a_object, mf, attributes, a_bytes);
         return a_object;
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf, YapWriter a_bytes) {
-        mf._object.instantiateFields(this, a_yapObject, a_onObject, a_bytes);
+    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, YapWriter a_bytes) {
+        mf._object.instantiateFields(this, attributes, a_yapObject, a_onObject, a_bytes);
     }
 
     public boolean indexNullHandling() {

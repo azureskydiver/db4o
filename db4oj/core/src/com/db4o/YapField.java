@@ -382,7 +382,7 @@ public class YapField implements StoredField {
                                 
                                 writer._offset = 0;
                                 ObjectHeader oh = new ObjectHeader(stream, i_yapClass, writer);
-                                if(oh.objectMarshaller().findOffset(i_yapClass,writer, this)){
+                                if(oh.objectMarshaller().findOffset(i_yapClass,oh._headerAttributes, writer, this)){
                                     try {
                                         return read(oh._marshallerFamily, writer);
                                     } catch (CorruptionException e) {

@@ -89,7 +89,7 @@ public class YapClassPrimitive extends YapClass{
 			
     }
 
-    void deleteMembers(MarshallerFamily mf, YapWriter a_bytes, int a_type, boolean isUpdate) {
+    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate) {
         if (a_type == YapConst.TYPE_ARRAY) {
             new YapArray(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         } else if (a_type == YapConst.TYPE_NARRAY) {
@@ -113,7 +113,7 @@ public class YapClassPrimitive extends YapClass{
 	    return false;
 	}
 
-    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, YapWriter a_bytes, boolean a_addToIDTree) {
+    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, boolean a_addToIDTree) {
         if (a_object == null) {
             try {
                 a_object = i_handler.read(mf, a_bytes);
@@ -126,7 +126,7 @@ public class YapClassPrimitive extends YapClass{
         return a_object;
     }
     
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, YapWriter a_bytes) {
+    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes) {
         try {
             return i_handler.read(mf, a_bytes);
         } catch (CorruptionException ce) {
@@ -134,7 +134,7 @@ public class YapClassPrimitive extends YapClass{
         }
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf, YapWriter a_bytes) {
+    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes) {
         Object obj = null;
         try {
             obj = i_handler.read(mf, a_bytes);

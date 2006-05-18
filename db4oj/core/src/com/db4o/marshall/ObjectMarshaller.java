@@ -3,48 +3,52 @@
 package com.db4o.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
 public abstract class ObjectMarshaller {
     
     public MarshallerFamily _family;
     
-    public abstract void addFieldIndices(YapClass yc, YapWriter writer, boolean isNew) ;
+    public abstract void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, YapWriter writer, boolean isNew) ;
     
-    protected int alignedBaseLength(YapObject yo){
+    protected int alignedBaseLength(YapObject yo, ObjectHeaderAttributes attributes){
         int len = linkLength(yo.getYapClass(), yo) + headerLength();
+        if(attributes != null){
+            len += attributes.marshalledLength();
+        }
         return yo.getStream().alignToBlockSize(len);
     }
 
-    protected YapWriter createWriter(Transaction trans, YapObject yo, int updateDepth) {
+    protected YapWriter createWriter(Transaction trans, YapObject yo, ObjectHeaderAttributes attributes, int updateDepth) {
         int id = yo.getID();
         int address = -1;
-        int length = objectLength(yo);
+        int length = objectLength(yo, attributes);
         
         if(! trans.i_stream.isClient()){
             address = trans.i_file.getSlot(length); 
         }
         trans.setPointer(id, address, length);
-        return createWriter(trans, yo, updateDepth, id, address, length);
+        return createWriter(trans, yo, attributes, updateDepth, id, address, length);
     }
 
-    protected YapWriter createWriter(Transaction a_trans, YapObject yo, int a_updateDepth, int id, int address, int length) {
+    protected YapWriter createWriter(Transaction a_trans, YapObject yo, ObjectHeaderAttributes attributes, int a_updateDepth, int id, int address, int length) {
         YapWriter writer = new YapWriter(a_trans, length);
         writer.useSlot(id, address, length);
         if (Deploy.debug) {
             writer.writeBegin(YapConst.YAPOBJECT, length);
         }
         writer.setUpdateDepth(a_updateDepth);
-        writer._payloadOffset = alignedBaseLength(yo);
+        writer._payloadOffset = alignedBaseLength(yo, attributes);
         return writer;
     }
     
-    public abstract void deleteMembers(YapClass yc, YapWriter a_bytes, int a_type, boolean isUpdate);
+    public abstract void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate);
     
-    public abstract boolean findOffset(YapClass yc, YapReader a_bytes, YapField a_field);
+    public abstract boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, YapReader a_bytes, YapField a_field);
     
     protected abstract int headerLength();
     
-    public abstract void instantiateFields(YapClass yc, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes);
+    public abstract void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes);
     
     protected int linkLength(YapClass yc, YapObject yo) {
         int length = YapConst.YAPINT_LENGTH;
@@ -86,7 +90,9 @@ public abstract class ObjectMarshaller {
         yapClass.dispatchEvent(stream, a_object, EventDispatcher.UPDATE);
     }
     
-    protected abstract int objectLength(YapObject yo);
+    protected abstract int objectLength(YapObject yo, ObjectHeaderAttributes attributes);
+
+    public abstract ObjectHeaderAttributes readHeaderAttributes(YapReader reader);
     
 
 }
