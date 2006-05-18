@@ -962,7 +962,7 @@ public class Transaction {
         }
         
         objectBytes.setCascadeDeletes(a_cascade);
-        a_yc.deleteMembers(oh._marshallerFamily, objectBytes, a_type, true);
+        a_yc.deleteMembers(oh._marshallerFamily, oh._headerAttributes, objectBytes, a_type, true);
         slotFreeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
     }
 }

@@ -14,6 +14,8 @@ public class ObjectHeader {
     
     public final MarshallerFamily _marshallerFamily;
     
+    public final ObjectHeaderAttributes _headerAttributes;
+    
     public ObjectHeader(YapStream stream, YapReader reader){
         if (Deploy.debug) {
             reader.readBegin(YapConst.YAPOBJECT);
@@ -30,6 +32,9 @@ public class ObjectHeader {
             marshallerVersion = reader.readByte();
         }
         _marshallerFamily = MarshallerFamily.forVersion(marshallerVersion);
+        
+        _headerAttributes = _marshallerFamily._object.readHeaderAttributes(reader);
+        
     }
     
     public ObjectHeader(YapWriter writer){
@@ -42,28 +47,25 @@ public class ObjectHeader {
             reader.readBegin(YapConst.YAPOBJECT);
         }
         int id = reader.readInt();
-        byte mIdx=0;
+        byte marshallerVersion=0;
         if(id < 0) {
-            if (Deploy.debug) {
-                id=-id;
-            }
-            mIdx = reader.readByte();
+            marshallerVersion = reader.readByte();
         }
-        _marshallerFamily = MarshallerFamily.forVersion(mIdx);
+        _marshallerFamily = MarshallerFamily.forVersion(marshallerVersion);
         if (Deploy.debug) {
+            if(id < 0){
+                id = -id;
+            }
             int ycID = yc.getID();
             if (id != ycID) {
                 System.out.println("ObjectHeader::init YapClass does not match. Expected ID: " + ycID + " Read ID: " + id);
             }
         }
+        _headerAttributes = _marshallerFamily._object.readHeaderAttributes(reader);
     }
     
-    /**
-     * @return Returns the marshaller.
-     */
     public ObjectMarshaller objectMarshaller() {
         return _marshallerFamily._object;
     }
-    
 
 }

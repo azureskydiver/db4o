@@ -225,9 +225,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				a_reader.setUpdateDepth(addToIDTree);
 				
 				if(addToIDTree == YapConst.TRANSIENT){
-				    a_object = i_yapClass.instantiateTransient(this, a_object, header._marshallerFamily, a_reader);
+				    a_object = i_yapClass.instantiateTransient(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader);
 				}else{
-				    a_object = i_yapClass.instantiate(this, a_object, header._marshallerFamily, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
+				    a_object = i_yapClass.instantiate(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
 				}
 				
 			}
@@ -260,7 +260,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			// TODO: optimize  
 			a_reader.setInstantiationDepth(i_yapClass.configOrAncestorConfig() == null ? 1 : 0);
 
-			readObject = i_yapClass.instantiate(this, getObject(), header._marshallerFamily, a_reader, true);
+			readObject = i_yapClass.instantiate(this, getObject(), header._marshallerFamily, header._headerAttributes, a_reader, true);
 			
 			endProcessing();
 		}
