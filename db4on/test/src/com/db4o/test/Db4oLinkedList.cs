@@ -2,12 +2,15 @@
 
 using System;
 using System.Collections;
+
+using Db4o.Tools;
+
 using j4o.lang;
 using j4o.util;
 using com.db4o;
 using com.db4o.ext;
 using com.db4o.query;
-using com.db4o.tools;
+
 namespace com.db4o.test {
 
     /**

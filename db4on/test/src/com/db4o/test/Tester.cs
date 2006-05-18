@@ -2,16 +2,19 @@
 
 using System;
 using System.Diagnostics;
-using com.db4o.foundation;
+
+using Db4o.Tools;
+
 using j4o.lang;
 using j4o.io;
+
 using com.db4o;
 using com.db4o.ext;
+using com.db4o.foundation;
 using com.db4o.query;
-using com.db4o.tools;
 
-namespace com.db4o.test 
-{
+namespace com.db4o.test  {
+	
 	public class Tester : AllTests 
 	{
 		private static ObjectServer objectServer;

@@ -26,14 +26,6 @@
 	csc.executable.path.net2=C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 -->
 	<import file="common.xml" />
-	
-	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask" classpath="${dir.build.lib}/exttools.jar">
-		<classpath>
-			<pathelement location="${dir.build.lib}/exttools.jar" />
-			<pathelement location="${dir.build.bin}" />
-			<path path="${path.classpath.full}" />
-		</classpath>
-	</taskdef>
 
 	<target name="init" description="Basic initialization">
 		<tstamp />
@@ -357,9 +349,8 @@
 			<fileset dir="${src.dir}">
 				<include name="**/*.cs" />
 				<exclude name="net/**" />
-				<!-- <exclude name="external/**" /> -->
 			</fileset>
-		</copy>			
+		</copy>
 		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />		
 		<mkdir dir="${dir.dist.dll.compact}" />
@@ -378,14 +369,60 @@
 		</exec>
 	</target>
 	
+	<target name="compiletools-net" depends="copy-tools-sources">
+		<csc srcdir="${dir.dist.net.compile}"
+			targettype="library"
+			destfile="${file.dll.tools.net}"
+			debug="true"
+			definitions="NET">
+			
+			<reference dir="${dir.dist.dll.net}">
+				<include name="${file.name.dll}" />
+			</reference>
+		</csc>
+	</target>
+		
+	<target name="compiletools-compact" depends="copy-tools-sources">
+		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
+			<arg value="/optimize" />
+			<arg value="/define:${csharp.defines.cf}" />
+			<arg value="/out:${file.dll.tools.compact}" />
+			<arg value="/target:library" />
+			<arg value="/warn:1" />
+			<arg value="/noconfig" />
+			<arg value="/nostdlib" />
+			<arg value="/r:${dir.dll.wince}mscorlib.dll" />
+			<arg value="/r:${dir.dll.wince}System.dll" />
+			<arg value="/r:${file.dll.compact}" />
+			<arg value="/recurse:*.cs" />
+		</exec>
+	</target>
+	
 	<target name="compiledllnet" depends="init, sharpen">
 		
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
+		<!-- <antcall target="compiletools-net" /> -->
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
+		<!-- <antcall target="compiletools-compact" /> -->
+	</target>
+	
+	<target name="copy-tools-sources">
+		<delete dir="${dir.dist.net.compile}" />
+		<copy todir="${dir.dist.net.compile}">
+			<fileset dir="${dir.dist.pascalcase}/tools">
+				<include name="**/*.cs" />
+				<exclude name="Libs/**/AssemblyInfo.cs" />
+				<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
+				<exclude name="Libs/Cecil.FlowAnalysis/codegen/**/*.*" />
+				<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
+			</fileset>
+		</copy>
+		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />
+		<assemblykey keyfile="${dir.dist.net.compile}/${filename.keyfile}" assemblyinfo="${dir.dist.net.compile}/AssemblyInfo.cs" />
 	</target>
 	
 	<target name="runtestsnet" depends="configure-net1.1, compiletestsnet">
@@ -393,18 +430,7 @@
 		</exec>
 	</target>
 	
-	<target name="compiletestsnet" depends="compiledllnet">
-		<csc srcdir="${dir.n.tools}/src"
-			targettype="library"
-			destfile="${dir.dist.dll.net}/db4o-net-tools.dll"
-			debug="true"
-			definitions="NET">
-			
-			<reference dir="${dir.dist.dll.net}">
-				<include name="db4o.dll" />
-			</reference>
-		</csc>
-		
+	<target name="compiletestsnet" depends="compiledllnet">	
 		<csc srcdir="${dir.n.test}/src"
 			targettype="exe"
 			destfile="${dir.dist.dll.net}/db4o-net-test.exe"
@@ -415,8 +441,8 @@
 			<exclude name="compact*/**" />
 			
 			<reference dir="${dir.dist.dll.net}">
-				<include name="db4o.dll" />
-				<include name="db4o-net-tools.dll" />
+				<include name="${file.name.dll}" />
+				<include name="${file.name.tools.dll}" />
 				<include name="System.Drawing.dll" />
 			</reference>
 		</csc>
@@ -432,7 +458,7 @@
 			<exclude name="compact*/**" />
 
 			<reference dir="${dir.dist.dll.mono}">
-				<include name="db4o.dll" />
+				<include name="${file.name.dll}" />
 			</reference>
 		</csc>
 	</target>
@@ -450,7 +476,7 @@
 			<exclude name="compact*/**" />
 			
 			<reference dir="${dir.dist.dll.mono}">
-				<include name="db4o.dll" />
+				<include name="${file.name.dll}" />
 				<include name="${file.name.dll.tools.mono}" />
 			</reference>
 		</csc>
@@ -838,10 +864,10 @@
 		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
 		
 		<antcall target="compiledllnet">
-			<param name="file.dll.compact" value="${legacy.compact.dll.dir}/db4o.dll" />
-			<param name="file.xml.compact" value="${legacy.compact.dll.dir}/db4o.xml" />
-			<param name="file.dll.net" value="${legacy.net.dll.dir}/db4o.dll" />
-			<param name="file.xml.net" value="${legacy.net.dll.dir}/db4o.xml" />
+			<param name="file.dll.compact" value="${legacy.compact.dll.dir}/${file.name.dll}" />
+			<param name="file.xml.compact" value="${legacy.compact.dll.dir}/${file.name.xml}" />
+			<param name="file.dll.net" value="${legacy.net.dll.dir}/${file.name.dll}" />
+			<param name="file.xml.net" value="${legacy.net.dll.dir}/${file.name.xml}" />
 			<param name="csharp.defines" value="NET" />
 			<param name="csharp.defines.cf" value="CF_1_0" />
 			<param name="dir.dll.wince" value="${dir.compactframework}v1.0/WindowsCE/" />
@@ -993,19 +1019,19 @@
 		<echo message="MONO LEGACY: core" />
 		<antcall target="compiledllmono">
 			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
-			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/db4o.dll" />
-			<param name="file.xml.mono" location="${dir.dist.mono.legacy}/db4o.xml" />
+			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/${file.name.dll}" />
+			<param name="file.xml.mono" location="${dir.dist.mono.legacy}/${file.name.xml}" />
 		</antcall>
 		<echo message="MONO LEGACY: tools" />
 		<antcall target="compiletoolsmono">
 			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
-			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/db4o.dll" />
+			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/${file.name.dll}" />
 			<param name="file.dll.tools.mono" location="${dir.dist.mono.legacy}/${file.name.dll.tools.mono}" />
 		</antcall>
 		<echo message="MONO LEGACY: tests" />
 		<antcall target="compiletestsmono">
 			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
-			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/db4o.dll" />
+			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/${file.name.dll}" />
 			<param name="file.dll.tools.mono" location="${dir.dist.mono.legacy}/${file.name.dll.tools.mono}" />
 			<param name="file.exe.tests.mono" location="${dir.dist.mono.legacy}/${file.name.exe.tests.mono}" />
 		</antcall>
@@ -1167,16 +1193,26 @@
 		<antcall target="execute-pascalcase-converter">
 			<param name="src.dir" location="${dir.n.in.sharp}" />
 			<param name="target.dir" location="${target.dir}/src" />
-		</antcall>		
-		
-		<antcall target="copy-external-files">
-			<param name="target.dir" value="${target.dir}/src" />
 		</antcall>
+		
+		<delete dir="${dir.dist.net.compile}" />
+		<copy todir="${dir.dist.net.compile}">
+			<fileset dir="${dir.n.tools}">
+				<include name="**/*.*" />
+				<exclude name="Libs/**/*.*" />
+			</fileset>
+		</copy>
 		
 		<antcall target="execute-pascalcase-converter">
-			<param name="src.dir" location="${dir.n.tools}/src" />
-			<param name="target.dir" location="${dir.dist.pascalcase}/tools/src" />
+			<param name="src.dir" location="${dir.dist.net.compile}" />
+			<param name="target.dir" location="${dir.dist.pascalcase}/tools" />
 		</antcall>
+		
+		<copy todir="${dir.dist.pascalcase}/tools">
+			<fileset dir="${dir.n.tools}">
+				<include name="Libs/**/*.*" />
+			</fileset>
+		</copy>
 		
 		<antcall target="execute-pascalcase-converter">
 			<param name="src.dir" location="${dir.n.test}/src" />
@@ -1255,8 +1291,8 @@
 		
 		<copy todir="${dir.dist.net.instrumentation}">
 			<fileset dir="${dir.n.instrumentation}">
-				<include name="bin/CFNativeQueriesEnabler.exe" />
-				<include name="bin/db4o.dll" />
+				<include name="bin/*.dll" />
+				<include name="bin/*.exe" />
 			</fileset>
 		</copy>
 		
@@ -1280,14 +1316,14 @@
 			</fileset>
 		</copy>
 		
-		<updateAssemblyHintPath to="../../../dll/net/db4o.dll">
+		<updateAssemblyHintPath to="../../../dll/net/${file.name.dll}">
 			<projectFiles dir="${dir.dist.net.instrumentation}/src/instrumentation">
 				<include name="**/*.csproj" />
 				<exclude name="**/*.Example.csproj" />
 			</projectFiles>
 		</updateAssemblyHintPath>
 		
-		<updateAssemblyHintPath to="../../../dll/compact/db4o.dll">
+		<updateAssemblyHintPath to="../../../dll/compact/${file.name.dll}">
 			<projectFiles dir="${dir.dist.net.instrumentation}/src/instrumentation">
 				<include name="**/*.Example.csproj" />
 			</projectFiles>
@@ -1299,9 +1335,15 @@
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
+		
+		<antcall target="compiletools-compact">
+		</antcall>
 
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${target.dir}/src" />
+		</antcall>
+		
+		<antcall target="compiletools-net">
 		</antcall>
 		
 		<ant dir="${dir.dist.pascalcase}/tutorial">
@@ -1337,7 +1379,7 @@
 	</target>	
 	
 	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin" unless="skip.conversion">
-		
+
 		<property name="sharpen.src.dir" location="${dir.sharpen}/legacy" />
 		
 		<antcall target="prepare-conversion-workspace">
@@ -1357,11 +1399,7 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-		
-		<antcall target="copy-external-files">
-			<param name="target.dir" value="${dir.n.core.src}" />
-		</antcall>		
-		
+			
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-net.csproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
@@ -1380,7 +1418,6 @@
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
-				<!-- <exclude name="src/external/**" /> -->
 			</sources>
 		</updatecsharpproject>
 		
@@ -1388,7 +1425,6 @@
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
-				<!-- <exclude name="src/external/**" /> -->
 			</sources>
 		</updatecsharpproject>
 		
@@ -1398,8 +1434,32 @@
 				<exclude name="src/compact*/**" />
 			</sources>
 		</updatecsharpproject>
-
-	</target>	
+		
+		<fileset id="tools.sources" dir="${dir.n.tools}">
+			<include name="**/*.cs" />
+			<exclude name="Libs/**/AssemblyInfo.cs" />
+			<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
+			<exclude name="Libs/Cecil.FlowAnalysis/codegen/**/*.*" />
+			<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
+		</fileset>
+		
+		<updatecsharpproject projectfile="${dir.n.tools}/db4o-compact-tools.csdproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.tools}/db4o-compact-tools-2005.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.tools}/db4o-net2-tools.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.tools}/db4o-net-tools.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+	</target>
 	
 	<target name="cecil-update" description="updates db4o local copy of the Mono.Cecil library">
 		<property name="dir.cecil" location="/projects/cecil" />
@@ -1426,30 +1486,12 @@
 		</copy>
 	</target>
 	
-	<target name="copy-external-files">
-		<!-- external libraries: Mono.Cecil and Cecil.FlowAnalysis -->
-		<copy todir="${target.dir}/external" overwrite="true">
-			<fileset dir="${dir.n.in}/external/Mono.Cecil">
-				<include name="Mono.*/*.cs" />
-				<exclude name="**/AssemblyInfo.cs" />
-			</fileset>
-		</copy>		
-		<copy todir="${target.dir}/external" overwrite="true">
-			<fileset dir="${dir.n.in}/external/Cecil.FlowAnalysis">
-				<include name="Cecil.FlowAnalysis/**/*.cs" />
-				<exclude name="Cecil.FlowAnalysis/AssemblyInfo.cs" />
-			</fileset>
-		</copy>
-	</target>
-	
 	<target name="doctor" depends="init, compilecorejava, compilejtutorial" description="Run all doctor tasks">
 		<ant antfile="run-doctor.xml" />
 	</target>
 
 	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
-	<target name="buildnet" depends="doctor, zipnet" description="Full NET build" />
-	
 	<target name="buildnet-pascalcase" depends="zipnet-pascalcase" description="Full PascalCase NET build" />
 	
 	<target name="buildnet-pascalcase2" depends="zipnet-pascalcase2" description="Full PascalCase NET 2.0 build" />

@@ -38,6 +38,8 @@ namespace com.db4o.inside.query
 
 		private Db4oNQOptimizer _enhancer;
 
+		private ExpressionBuilder _builder;
+
 		public event QueryExecutionHandler QueryExecution;
 
 		public event QueryOptimizationFailureHandler QueryOptimizationFailure;
@@ -182,8 +184,11 @@ namespace com.db4o.inside.query
 
 		void optimizeQuery(Query q, object predicate, System.Reflection.MethodBase filterMethod)
 		{
+			if (_builder == null)
+				_builder = ExpressionBuilderFactory.CreateExpressionBuilder();
+	
 			// TODO: cache predicate expressions here
-			Expression expression = QueryExpressionBuilder.FromMethod(filterMethod);
+			Expression expression = _builder.FromMethod(filterMethod);
 			new SODAQueryBuilder().optimizeQuery(expression, q, predicate);
 		}
 

@@ -18,7 +18,7 @@
 			targettype="library"
 			srcdir="${drs.net.src.dir}">
 			<reference dir="${drs.net.bin.dir}">
-				<include name="db4o.dll" />
+				<include name="${file.name.dll}" />
 			</reference>
 		</csc>
 	</target>

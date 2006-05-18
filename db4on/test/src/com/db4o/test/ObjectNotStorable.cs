@@ -1,10 +1,13 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
+
+using Db4o.Tools;
+
 using j4o.lang;
 using j4o.io;
 using com.db4o;
-using com.db4o.tools;
+
 namespace com.db4o.test {
 
    public class ObjectNotStorable : Runnable {

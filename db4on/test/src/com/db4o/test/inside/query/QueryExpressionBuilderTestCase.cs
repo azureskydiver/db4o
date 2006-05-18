@@ -2,10 +2,11 @@ using System;
 using com.db4o.inside.query;
 using com.db4o.nativequery.expr.cmp.field;
 using com.db4o.test.nativequeries;
-
+using Db4o.Tools.NativeQueries;
 namespace com.db4o.test.inside.query
 {
 	using System;
+
 	using com.db4o.nativequery.expr;
 	using com.db4o.nativequery.expr.cmp;
 	
@@ -47,7 +48,7 @@ namespace com.db4o.test.inside.query
 		private Expression ExpressionFromPredicate(Type type)
 		{
 			// XXX: move knowledge about IMethodDefinition to QueryExpressionBuilder
-			return QueryExpressionBuilder.FromMethod(type.GetMethod("Match"));
+			return (new QueryExpressionBuilder()).FromMethod(type.GetMethod("Match"));
 		}
 	}
 }

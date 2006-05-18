@@ -112,7 +112,7 @@ namespace CFNativeQueriesEnabler.Tests.Subject
 
 		private static ObjectContainer OpenDatabase()
 		{
-			ObjectContainer container = Db4o.OpenFile(DatabaseFile);
+			ObjectContainer container = Db4oFactory.OpenFile(DatabaseFile);
 			NativeQueryHandler handler = ((YapStream)container).GetNativeQueryHandler();
 			handler.QueryExecution += OnQueryExecution;
 			handler.QueryOptimizationFailure += OnQueryOptimizationFailure;
