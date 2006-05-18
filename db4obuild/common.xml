@@ -25,6 +25,22 @@
 		</classpath>
 	</taskdef>
 	
+	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask" classpath="${dir.build.lib}/exttools.jar">
+		<classpath>
+			<pathelement location="${dir.build.lib}/exttools.jar" />
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
+	<taskdef name="assemblykey" classname="com.db4o.devtools.ant.UpdateAssemblyKeyTask" classpath="${dir.build.lib}/exttools.jar">
+		<classpath>
+			<pathelement location="${dir.build.lib}/exttools.jar" />
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
 	<macrodef name="sharpen">
 		<attribute name="workspace" />
 		<attribute name="resource" />

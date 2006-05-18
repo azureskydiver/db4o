@@ -3,7 +3,7 @@
 
 	<property name="output.dir" location="bin" />	
 	<property name="db4o.dir" location="../../db4obuild/dist/dll/net" />
-	<property name="db4o.dll" location="${db4o.dir}/db4o.dll" />
+	<property name="db4o.dll" location="${db4o.dir}/${file.name.dll}" />
 	<property name="csc.executable" location="csc" />
 
 	<target name="build" depends="init">
@@ -30,7 +30,7 @@
 				<include name="**/*.cs" />
 			</src>
 			<reference dir="${output.dir}">
-				<include name="db4o.dll" />
+				<include name="*.dll" />
 			</reference>
 		</csc>
 		
@@ -42,7 +42,7 @@
 				<include name="**/*.cs" />
 			</src>
 			<reference dir="${output.dir}">
-				<include name="db4o.dll" />
+				<include name="*.dll" />
 				<include name="CFNativeQueriesEnabler.exe" />
 				<include name="CFNativeQueriesEnabler.Tests.Subject.exe" />
 			</reference>

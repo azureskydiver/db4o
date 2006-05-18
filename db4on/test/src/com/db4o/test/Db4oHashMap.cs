@@ -3,11 +3,13 @@
 using System;
 using System.Collections;
 
+using Db4o.Tools;
+
 using com.db4o;
 using com.db4o.ext;
 using com.db4o.query;
-using com.db4o.tools;
 using com.db4o.types;
+
 namespace com.db4o.test {
 
     /**

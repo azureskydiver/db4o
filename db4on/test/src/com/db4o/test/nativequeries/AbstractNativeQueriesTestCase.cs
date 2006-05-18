@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+
+using Db4o.Tools.NativeQueries;
+
 using com.db4o.inside.query;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
@@ -41,7 +45,7 @@ namespace com.db4o.test.nativequeries
 		private Query QueryFromPredicate(object predicate)
 		{
 			MethodInfo match = predicate.GetType().GetMethod("Match");
-			Expression expression = QueryExpressionBuilder.FromMethod(match);
+			Expression expression = (new QueryExpressionBuilder ()).FromMethod(match);
 			Query q = Tester.query();
 			q.constrain(match.GetParameters()[0].ParameterType);
 			new SODAQueryBuilder().optimizeQuery(expression, q, predicate);

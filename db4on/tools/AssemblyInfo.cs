@@ -2,6 +2,7 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
 [assembly: AssemblyTitle("db4o - tools")]
 [assembly: AssemblyDescription("db4o tools 4.6.004 .NET")]
 [assembly: AssemblyConfiguration(".NET")]
@@ -11,6 +12,3 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]	
 [assembly: AssemblyVersion("4.6.004")]
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("")]
-[assembly: AssemblyKeyName("")]

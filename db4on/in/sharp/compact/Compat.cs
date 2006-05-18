@@ -14,6 +14,20 @@ namespace System.Runtime.CompilerServices
 	{
 	}
 }
+
+namespace System
+{
+	class NotImplementedException : Exception
+	{
+		internal NotImplementedException ()
+		{
+		}
+
+		internal NotImplementedException (string message) : base (message)
+		{
+		}
+	}
+}
 #endif
 
 namespace com.db4o
