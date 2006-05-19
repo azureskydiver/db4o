@@ -623,8 +623,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     // Scrolls offset in passed reader to the offset the passed field should
     // be read at.
-	// returns null if not successful, or MarshallerFamily from header
-	// if it is successful
+    //
+	// returns null if not successful or if the field value at this offset is null
+    // returns MarshallerFamily from the object header if it is successful and
+    //         if the value at this offset is not null
     final MarshallerFamily findOffset(YapReader a_bytes, YapField a_field) {
         if (a_bytes == null) {
             return null;
@@ -1954,6 +1956,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public void writeIndexEntry(YapReader a_writer, Object a_object) {
+        
+        if(a_object == null){
+            a_writer.writeInt(0);
+            return;
+        }
+        
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
@@ -2019,6 +2027,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             }
             i_compareTo = reflector().forObject(obj);
         } else {
+            i_lastID = 0;
             i_compareTo = null;
         }
         return this;

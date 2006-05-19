@@ -136,4 +136,16 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return null;
     }
 
+    public Object readIndexEntry(YapClass yc, ObjectHeaderAttributes attributes, YapField yf, YapWriter reader) {
+        if(yc == null){
+            return null;
+        }
+        
+        if(! findOffset(yc, attributes, reader, yf)){
+            return null;
+        }
+        
+        return yf.readIndexEntry(_family, reader);
+    }
+
 }

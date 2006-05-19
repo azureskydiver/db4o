@@ -6,6 +6,11 @@ import com.db4o.foundation.*;
 
 /**
  * Query Index Path
+ * 
+ * Stuff to know:
+ * Derived from TreeInt to be able to sort.
+ * _key in TreeInt == count found
+ * 
  */
 class QxPath extends TreeInt {
 
@@ -73,7 +78,7 @@ class QxPath extends TreeInt {
 		}
 
 		_indexTraversers = new IxTraverser[] { new IxTraverser() };
-
+        
 		_key = ((QConObject) _constraint).findBoundsQuery(_indexTraversers[0]);
 
 		if (_key < 0) {
@@ -108,7 +113,7 @@ class QxPath extends TreeInt {
 	}
 
 	void load() {
-		loadFromIndexTraversers();
+		loadFromIndexTraversers(); // FIXME: Why do load from old IndexTraversers here?
 		loadFromNixPaths();
 		if (_parent == null) {
 			return;
@@ -269,7 +274,7 @@ class QxPath extends TreeInt {
 	boolean onSameFieldAs(QxPath other) {
 		return _constraint.onSameFieldAs(other._constraint);
 	}
-
+    
 	Tree toQCandidates(QCandidates candidates) {
 		if (Debug.useNIxPaths) {
 			return TreeInt.toQCandidate((TreeInt) _nCandidates, candidates);

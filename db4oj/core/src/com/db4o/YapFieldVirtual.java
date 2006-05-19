@@ -30,6 +30,10 @@ abstract class YapFieldVirtual extends YapField {
         return fieldName.equals(getName()); 
     }
     
+    public boolean canUseNullBitmap(){
+        return false;
+    }
+    
     void collectConstraints(Transaction a_trans, QConObject a_parent,
         Object a_template, Visitor4 a_visitor) {
         
@@ -55,9 +59,9 @@ abstract class YapFieldVirtual extends YapField {
         return a_stream.stringIO().shortLength(i_name);
     }
 
-    void initIndex(YapStream a_stream, MetaIndex a_metaIndex) {
+    void initIndex(Transaction systemTrans, MetaIndex metaIndex) {
         if (i_index == null) {
-            i_index = new Index4(a_stream.getSystemTransaction(), getHandler(),a_metaIndex, false);
+            i_index = new Index4(systemTrans, getHandler(),metaIndex, false);
         }
     }
 
