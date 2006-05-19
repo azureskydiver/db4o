@@ -91,6 +91,8 @@ public abstract class ObjectMarshaller {
     }
     
     protected abstract int objectLength(YapObject yo, ObjectHeaderAttributes attributes);
+    
+    public abstract Object readIndexEntry(YapClass yc, ObjectHeaderAttributes attributes, YapField yf, YapWriter reader);
 
     public abstract ObjectHeaderAttributes readHeaderAttributes(YapReader reader);
     

@@ -151,7 +151,7 @@ public final class YapWriter extends YapReader {
         return _addressOffset;
     }
 
-    int getID() {
+    public int getID() {
         return i_id;
     }
 

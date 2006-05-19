@@ -11,40 +11,80 @@ import com.db4o.foundation.*;
  */
 public class ObjectMarshaller1 extends ObjectMarshaller{
     
+    static final boolean NULLBITMAP = false;
+    
     static final byte VERSION = (byte)1;
     
     public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, YapWriter writer, boolean isNew) {
+        addDeclaredFieldIndices(yc, (ObjectHeaderAttributes1) attributes, writer, 0, isNew);
+    }
+
+    // FIXME: remove, when Bitmap format is used for writing
+    private void inc(YapField yf, YapReader writer){
+        if(! NULLBITMAP){
+            writer.incrementOffset(yf.linkLength());
+        }
+    }
+    
+    private void addDeclaredFieldIndices(YapClass yc, ObjectHeaderAttributes1 attributes, YapWriter writer, int fieldIndex, boolean isNew) {
         int fieldCount = writer.readInt();
         for (int i = 0; i < fieldCount; i++) {
-            yc.i_fields[i].addFieldIndex(_family, writer, isNew);
+            if(attributes._nullBitMap.isTrue(fieldIndex)){
+                yc.i_fields[i].addIndexEntry(writer.getTransaction(), writer.getID(), null);
+                inc(yc.i_fields[i], writer);
+            }else{
+                yc.i_fields[i].addFieldIndex(_family, writer, isNew);
+            }
+            fieldIndex ++;
         }
         if (yc.i_ancestor != null) {
-            addFieldIndices(yc.i_ancestor, attributes, writer, isNew);
+            addDeclaredFieldIndices(yc.i_ancestor, attributes, writer, fieldIndex, isNew);
         }
     }
     
     public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate){
+        deleteDeclaredMembers(yc, (ObjectHeaderAttributes1) attributes, a_bytes, a_type, 0, isUpdate);
+    }
+    
+    public void deleteDeclaredMembers(YapClass yc, ObjectHeaderAttributes1 attributes, YapWriter a_bytes, int a_type, int fieldIndex, boolean isUpdate){
         int length = yc.readFieldLength(a_bytes);
         for (int i = 0; i < length; i++) {
-            yc.i_fields[i].delete(_family, a_bytes, isUpdate);
+            if(attributes._nullBitMap.isTrue(fieldIndex)){
+                yc.i_fields[i].removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), null);
+                inc(yc.i_fields[i], a_bytes);
+            }else{
+                yc.i_fields[i].delete(_family, a_bytes, isUpdate);
+            }
+            fieldIndex ++;
         }
         if (yc.i_ancestor != null) {
-            deleteMembers(yc.i_ancestor, attributes, a_bytes, a_type, isUpdate);
+            deleteDeclaredMembers(yc.i_ancestor, attributes, a_bytes, a_type, fieldIndex, isUpdate);
         }
     }
     
     public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, YapReader a_bytes, YapField a_field) {
+        return findDeclaredOffset(yc, (ObjectHeaderAttributes1) attributes, a_bytes, a_field, 0);
+    }
+    
+    public boolean findDeclaredOffset(YapClass yc, ObjectHeaderAttributes1 attributes, YapReader a_bytes, YapField a_field, int fieldIndex) {
         int length = Debug.atHome ? yc.readFieldLengthSodaAtHome(a_bytes) : yc.readFieldLength(a_bytes);
         for (int i = 0; i < length; i++) {
+            
             if (yc.i_fields[i] == a_field) {
-                return true;
+                return ! attributes._nullBitMap.isTrue(fieldIndex); 
             }
-            a_bytes.incrementOffset(yc.i_fields[i].linkLength());
+            if(attributes._nullBitMap.isTrue(fieldIndex)){
+                inc(yc.i_fields[i], a_bytes);
+            }else{
+                a_bytes.incrementOffset(yc.i_fields[i].linkLength());
+            }
+            
+            fieldIndex ++;
         }
         if (yc.i_ancestor == null) {
             return false;
         }
-        return findOffset(yc.i_ancestor, attributes, a_bytes, a_field);
+        return findDeclaredOffset(yc.i_ancestor, attributes, a_bytes, a_field, fieldIndex);
     }
     
     protected final int headerLength(){
@@ -54,13 +94,25 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     }
     
     public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
+        instantiateDeclaredFields(yc, (ObjectHeaderAttributes1) attributes, a_yapObject, a_onObject, a_bytes, 0);
+    }
+    
+    public void instantiateDeclaredFields(YapClass yc, ObjectHeaderAttributes1 attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes, int fieldIndex) {
         int length = yc.readFieldLength(a_bytes);
         try {
             for (int i = 0; i < length; i++) {
-                yc.i_fields[i].instantiate(_family, a_yapObject, a_onObject, a_bytes);
+                
+                if(attributes._nullBitMap.isTrue(fieldIndex)){
+                    yc.i_fields[i].set(a_onObject, null);
+                    inc(yc.i_fields[i], a_bytes);
+                }else{
+                    yc.i_fields[i].instantiate(_family, a_yapObject, a_onObject, a_bytes);
+                }
+                
+                fieldIndex ++;
             }
             if (yc.i_ancestor != null) {
-                instantiateFields(yc.i_ancestor, attributes, a_yapObject, a_onObject, a_bytes);
+                instantiateDeclaredFields(yc.i_ancestor, attributes, a_yapObject, a_onObject, a_bytes, fieldIndex);
             }
         } catch (CorruptionException ce) {
         }
@@ -71,38 +123,62 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         return yf.linkLength();
     }
 
-    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, ObjectHeaderAttributes1 attributes, YapWriter a_bytes, boolean a_new) {
+    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, ObjectHeaderAttributes1 attributes, YapWriter a_bytes, int fieldIndex, boolean a_new) {
         Config4Class config = yapClass.configOrAncestorConfig();
-        a_bytes.writeInt(yapClass.i_fields.length);
-        for (int i = 0; i < yapClass.i_fields.length; i++) {
-            Object obj = yapClass.i_fields[i].getOrCreate(a_bytes.getTransaction(), a_object);
-            if (obj instanceof Db4oTypeImpl) {
-                obj = ((Db4oTypeImpl)obj).storedTo(a_bytes.getTransaction());
+        Transaction trans = a_bytes.getTransaction();
+        int numFields = yapClass.i_fields.length;
+        a_bytes.writeInt(numFields);
+        for (int i = 0; i < numFields; i++) {
+            
+            YapField yf = yapClass.i_fields[i];
+            
+            if(true || ! attributes._nullBitMap.isTrue(fieldIndex)){
+                
+                Object obj = yf.getOrCreate(trans, a_object);
+                if (obj instanceof Db4oTypeImpl) {
+                    obj = ((Db4oTypeImpl)obj).storedTo(trans);
+                }
+                yf.marshall(a_yapObject, obj, a_bytes, config, a_new);
+            } else{
+                yf.addIndexEntry(trans, a_bytes.getID(), null);
+                inc(yapClass.i_fields[i], a_bytes);
             }
-            yapClass.i_fields[i].marshall(a_yapObject, obj, a_bytes, config, a_new);
+                
+            fieldIndex ++;
         }
+        
+        
         if (yapClass.i_ancestor != null) {
-            marshall(yapClass.i_ancestor, a_yapObject, a_object, attributes, a_bytes, a_new);
+            marshall(yapClass.i_ancestor, a_yapObject, a_object, attributes, a_bytes,fieldIndex, a_new);
         }
     }
     
-    protected int marshalledLength(YapClass yc, YapObject yo) {
+    private int marshalledLength(YapClass yc, YapObject yo, ObjectHeaderAttributes1 attributes, int fieldIndex) {
         int length = 0;
-        if (yc.i_ancestor != null) {
-            length += marshalledLength(yc.i_ancestor, yo);
-        }
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {
-                length += marshalledLength(yc.i_fields[i], yo);
+                length += marshalledLength(yc.i_fields[i], yo, attributes, fieldIndex);
+                fieldIndex ++;
             }
+        }
+        if (yc.i_ancestor != null) {
+            length += marshalledLength(yc.i_ancestor, yo, attributes, fieldIndex);
         }
         return length;
     }
     
-    protected int marshalledLength(YapField yf, YapObject yo){
+    private int marshalledLength(YapField yf, YapObject yo, ObjectHeaderAttributes1 attributes, int fieldIndex){
         Transaction trans = yo.getTrans();
         Object parentObject = yo.getObject();
         Object child = yf.getOn(trans, parentObject);
+        
+        if( child == null && yf.canUseNullBitmap()){
+            attributes._nullBitMap.setTrue(fieldIndex);
+            if(NULLBITMAP){
+                return 0; 
+            }
+        }
+        
         return yf.marshalledLength(_family, child);
     }
 
@@ -136,7 +212,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
             attributes.write(writer);
             
             yc.checkUpdateDepth(writer);
-            marshall(yc, yo, obj, attributes, writer, true);
+            marshall(yc, yo, obj, attributes, writer, 0, true);
         }
 
         if (Deploy.debug) {
@@ -173,18 +249,31 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         writer.writeInt(- yapClass.getID());
         attributes.write(writer);
         
-        marshall(yapClass, a_yapObject, a_object, attributes, writer, false);
+        marshall(yapClass, a_yapObject, a_object, attributes, writer,0, false);
         
         marshallUpdateWrite(a_trans, yapClass, a_yapObject, a_object, writer);
     }
     
     protected int objectLength(YapObject yo, ObjectHeaderAttributes attributes){
-        return alignedBaseLength(yo, attributes) + marshalledLength(yo.getYapClass(), yo);
+        return alignedBaseLength(yo, attributes) + marshalledLength(yo.getYapClass(), yo, (ObjectHeaderAttributes1)attributes, 0);
     }
     
     public ObjectHeaderAttributes readHeaderAttributes(YapReader reader) {
         return new ObjectHeaderAttributes1(reader);
     }
+    
+    public Object readIndexEntry(YapClass yc, ObjectHeaderAttributes attributes, YapField yf, YapWriter reader) {
+        if(yc == null){
+            return null;
+        }
+        
+        if(! findOffset(yc, attributes, reader, yf)){
+            return null;
+        }
+        
+        return yf.readIndexEntry(_family, reader);
+    }
+
 
 
 }

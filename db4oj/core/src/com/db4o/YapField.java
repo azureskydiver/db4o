@@ -82,27 +82,44 @@ public class YapField implements StoredField {
     }
 
     public void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
-        if (i_index == null) {
+        if (! hasIndex()) {
             a_writer.incrementOffset(linkLength());
-        } else {
-            try {
-                addIndexEntry(a_writer, i_handler.readIndexEntry(mf, a_writer));
-            } catch (CorruptionException e) {
-            }
+            return;
         }
+        
+        addIndexEntry(a_writer, readIndexEntry(mf, a_writer));
     }
 
     protected void addIndexEntry(YapWriter a_bytes, Object indexEntry) {
         addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), indexEntry);
     }
 
-    void addIndexEntry(Transaction a_trans, int parentID, Object indexEntry) {
+    public void addIndexEntry(Transaction a_trans, int parentID, Object indexEntry) {
+        if (! hasIndex()) {
+            return;
+        }
         i_handler.prepareComparison(a_trans, indexEntry);
         IndexTransaction ift = getIndex(a_trans).dirtyIndexTransaction(a_trans);
         ift.add(parentID, indexEntry);
     }
     
-    void removeIndexEntry(Transaction trans, int parentID, Object indexEntry){
+    public boolean canUseNullBitmap(){
+        return true;
+    }
+    
+    // alive() checked
+    public Object readIndexEntry(MarshallerFamily mf, YapWriter writer){
+        try {
+            return i_handler.readIndexEntry(mf, writer);
+        } catch (CorruptionException e) {
+        }
+        return null;
+    }
+    
+    public void removeIndexEntry(Transaction trans, int parentID, Object indexEntry){
+        if (! hasIndex()) {
+            return;
+        }
         i_handler.prepareComparison(indexEntry);
         IndexTransaction ift = getIndex(trans).dirtyIndexTransaction(trans);
         ift.remove(parentID, indexEntry);
@@ -240,6 +257,7 @@ public class YapField implements StoredField {
             while (j.hasNext()) {
                 obj = j.next();
                 if (obj != null) {
+                    
                     if (i_isPrimitive) {
                         if (i_handler instanceof YapJavaClass) {
                             if (obj.equals(((YapJavaClass) i_handler)
@@ -248,6 +266,7 @@ public class YapField implements StoredField {
                             }
                         }
                     }
+                    
                     if(Deploy.csharp){
                         if(Platform4.ignoreAsConstraint(obj)){
                             return;
@@ -295,22 +314,22 @@ public class YapField implements StoredField {
 
     void deactivate(Transaction a_trans, Object a_onObject, int a_depth) {
         if (!alive()) {
-        	return;
+            return;
         }
         try {
             boolean isEnumClass = i_yapClass.isEnum();
-			if (i_isPrimitive && !i_isArray) {
+            if (i_isPrimitive && !i_isArray) {
                 if(!isEnumClass) {
                     i_javaField.set(a_onObject, ((YapJavaClass) i_handler)
                         .primitiveNull());
                 }
                 return;
-			}
+            }
             if (a_depth > 0) {
                 cascadeActivation(a_trans, a_onObject, a_depth, false);
             }
             if(!isEnumClass) {
-            	i_javaField.set(a_onObject, null);
+                i_javaField.set(a_onObject, null);
             }
         } catch (Throwable t) {
         }
@@ -334,7 +353,7 @@ public class YapField implements StoredField {
             
             boolean dotnetValueType = false;
             if(Deploy.csharp){
-            	dotnetValueType = Platform4.isValueType(i_handler.classReflector());	
+                dotnetValueType = Platform4.isValueType(i_handler.classReflector());    
             }
             
             if ((i_config != null && i_config.cascadeOnDelete() == YapConst.YES)
@@ -406,7 +425,7 @@ public class YapField implements StoredField {
 
     YapClass getFieldYapClass(YapStream a_stream) {
         // alive needs to be checked by all callers: Done
-		return i_handler.getYapClass(a_stream);
+        return i_handler.getYapClass(a_stream);
     }
     
     Index4 getIndex(Transaction a_trans){
@@ -475,10 +494,10 @@ public class YapField implements StoredField {
     }
     
     public YapStream getStream(){
-    	if(i_yapClass == null){
-    		return null;
-    	}
-    	return i_yapClass.getStream();
+        if(i_yapClass == null){
+            return null;
+        }
+        return i_yapClass.getStream();
     }
 
     boolean hasIndex() {
@@ -521,26 +540,25 @@ public class YapField implements StoredField {
 
     public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
         throws CorruptionException {
-        if (alive()) {
-            Object toSet = null;
-            try {
-                toSet = read(mf, a_bytes);
-            } catch (Exception e) {
-                throw new CorruptionException();
-            }
-            if (i_db4oType != null) {
-                if (toSet != null) {
-                    ((Db4oTypeImpl) toSet).setTrans(a_bytes.getTransaction());
-                }
-            }
-            try {
-                i_javaField.set(a_onObject, toSet);
-            } catch (Throwable t) {
-                if(Debug.atHome){
-                    t.printStackTrace();
-                }
+        
+        if (! alive()) {
+            return;
+        }
+            
+        Object toSet = null;
+        try {
+            toSet = read(mf, a_bytes);
+        } catch (Exception e) {
+            throw new CorruptionException();
+        }
+        if (i_db4oType != null) {
+            if (toSet != null) {
+                ((Db4oTypeImpl) toSet).setTrans(a_bytes.getTransaction());
             }
         }
+        
+        set(a_onObject, toSet);
+        
     }
 
     public boolean isArray() {
@@ -560,7 +578,7 @@ public class YapField implements StoredField {
     // similar to #linklength(), actually marshaller specific, 
     // written here for now, since YapField knows better what
     // to do, when i_handler is null.
-    public int marshalledLength(MarshallerFamily mf, Object obj){
+    public final int marshalledLength(MarshallerFamily mf, Object obj){
         alive();
         if (i_handler == null) {
             // must be a YapClass
@@ -590,7 +608,7 @@ public class YapField implements StoredField {
 
     private TypeHandler4 loadJavaField1() {
         try {
-        	YapStream stream = i_yapClass.getStream();
+            YapStream stream = i_yapClass.getStream();
             i_javaField = i_yapClass.classReflector().getDeclaredField(
                 i_name);
             if (i_javaField == null) {
@@ -615,12 +633,12 @@ public class YapField implements StoredField {
         // alive needs to be checked by all callers: Done
         
         Object indexEntry = null;
-		
+        
         if (a_object != null
             && ((a_config != null && (a_config.cascadeOnUpdate() == YapConst.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == YapConst.YES)))) {
             int min = 1;
             if (i_yapClass.isCollection(a_object)) {
-            	GenericReflector reflector = i_yapClass.reflector();
+                GenericReflector reflector = i_yapClass.reflector();
                 min = reflector.collectionUpdateDepth(reflector.forObject(a_object));
             }
             int updateDepth = a_bytes.getUpdateDepth();
@@ -632,9 +650,8 @@ public class YapField implements StoredField {
         } else {
             indexEntry = i_handler.writeNew(a_object, a_bytes);
         }
-        if (i_index != null) {
-            addIndexEntry(a_bytes, indexEntry);
-        }
+        
+        addIndexEntry(a_bytes, indexEntry);
     }
 
     int ownLength(YapStream a_stream) {
@@ -723,6 +740,17 @@ public class YapField implements StoredField {
 
     void setArrayPosition(int a_index) {
         i_arrayPosition = a_index;
+    }
+    
+    public final void set(Object onObject, Object obj){
+        
+        try {
+            i_javaField.set(onObject, obj);
+        } catch (Throwable t) {
+            if(Debug.atHome){
+                t.printStackTrace();
+            }
+        }
     }
 
     void setName(String a_name) {
