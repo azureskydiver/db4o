@@ -70,7 +70,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return false;
     }
     
-    public int marshalledLength(MarshallerFamily mf, Object obj) {
+    public int marshalledLength(Object obj) {
         return 0;
     }
 

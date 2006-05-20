@@ -21,7 +21,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
     
     public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate){
-        int length = yc.readFieldLength(a_bytes);
+        int length = yc.readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             yc.i_fields[i].delete(_family, a_bytes, isUpdate);
         }
@@ -31,7 +31,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
     
     public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, YapReader a_bytes, YapField a_field) {
-        int length = Debug.atHome ? yc.readFieldLengthSodaAtHome(a_bytes) : yc.readFieldLength(a_bytes);
+        int length = Debug.atHome ? yc.readFieldCountSodaAtHome(a_bytes) : yc.readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             if (yc.i_fields[i] == a_field) {
                 return true;
@@ -49,7 +49,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
     
     public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
-        int length = yc.readFieldLength(a_bytes);
+        int length = yc.readFieldCount(a_bytes);
         try {
             for (int i = 0; i < length; i++) {
                 yc.i_fields[i].instantiate(_family, a_yapObject, a_onObject, a_bytes);
@@ -61,7 +61,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
     }
     
-    protected int linkLength(YapClass yc, YapObject yo, ObjectHeaderAttributes attributes) {
+    private int linkLength(YapClass yc, YapObject yo) {
         int length = YapConst.YAPINT_LENGTH;
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {
@@ -69,7 +69,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
             }
         }
         if (yc.i_ancestor != null) {
-            length += linkLength(yc.i_ancestor, yo, attributes);
+            length += linkLength(yc.i_ancestor, yo);
         }
         return length;
     }
@@ -78,7 +78,15 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return yf.linkLength();
     }
     
-    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
+    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter writer, boolean a_new) {
+        marshallDeclaredFields(yapClass, a_yapObject, a_object, writer, a_new);
+        if (Deploy.debug) {
+            writer.writeEnd();
+            writer.debugCheckBytes();
+        }
+    }
+    
+    private void marshallDeclaredFields(YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
         Config4Class config = yapClass.configOrAncestorConfig();
         a_bytes.writeInt(yapClass.i_fields.length);
         for (int i = 0; i < yapClass.i_fields.length; i++) {
@@ -89,7 +97,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
             yapClass.i_fields[i].marshall(a_yapObject, obj, a_bytes, config, a_new);
         }
         if (yapClass.i_ancestor != null) {
-            marshall(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new);
+            marshallDeclaredFields(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new);
         }
     }
     
@@ -99,7 +107,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 
     public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
-        YapWriter writer = createWriter(a_trans, yo, null, a_updateDepth);
+        YapWriter writer = createWriterForNew(a_trans, yo, a_updateDepth, objectLength(yo));
         
         YapClass yc = yo.getYapClass();
         Object obj = yo.getObject();
@@ -111,38 +119,30 @@ class ObjectMarshaller0 extends ObjectMarshaller {
             yc.checkUpdateDepth(writer);
             marshall(yc, yo, obj, writer, true);
         }
-
-        if (Deploy.debug) {
-            writer.writeEnd();
-            writer.debugCheckBytes();
-        }
-        
         return writer;
     }
 
     public void marshallUpdate(
-        Transaction a_trans,
-        YapClass yapClass,
-        int a_id,
-        int a_updateDepth,
-        YapObject a_yapObject,
-        Object a_object
+        Transaction trans,
+        int updateDepth,
+        YapObject yapObject,
+        Object obj
         ) {
-
-        int length = yapClass.objectLength();
         
-        YapWriter writer = createWriter(a_trans,a_yapObject, null, a_updateDepth, a_id, 0, length);
+        YapWriter writer = createWriterForUpdate(trans,updateDepth, yapObject.getID(), 0, objectLength(yapObject));
+        
+        YapClass yapClass = yapObject.getYapClass();
         
         yapClass.checkUpdateDepth(writer);
         
         writer.writeInt(yapClass.getID());
-        marshall(yapClass, a_yapObject, a_object, writer, false);
+        marshall(yapClass, yapObject, obj, writer, false);
         
-        marshallUpdateWrite(a_trans, yapClass, a_yapObject, a_object, writer);
+        marshallUpdateWrite(trans, yapObject, obj, writer);
     }
 
-    protected int objectLength(YapObject yo, ObjectHeaderAttributes attributes) {
-        return headerLength() + linkLength(yo.getYapClass(), yo, attributes);
+    private int objectLength(YapObject yo) {
+        return headerLength() + linkLength(yo.getYapClass(), yo);
     }
 
     public ObjectHeaderAttributes readHeaderAttributes(YapReader reader) {
@@ -162,7 +162,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
     
     public void readVirtualAttributes(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes attributes, YapReader reader){
-        int length = yc.readFieldLength(reader);
+        int length = yc.readFieldCount(reader);
         for (int i = 0; i < length; i++) {
             yc.i_fields[i].readVirtualAttribute(trans, reader, yo);
         }

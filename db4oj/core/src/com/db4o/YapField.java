@@ -578,13 +578,13 @@ public class YapField implements StoredField {
     // similar to #linklength(), actually marshaller specific, 
     // written here for now, since YapField knows better what
     // to do, when i_handler is null.
-    public final int marshalledLength(MarshallerFamily mf, Object obj){
+    public final int marshalledLength( Object obj){
         alive();
         if (i_handler == null) {
             // must be a YapClass
             return YapConst.YAPID_LENGTH;
         }
-        return i_handler.marshalledLength(mf, obj);
+        return i_handler.marshalledLength(obj);
     }
     
 

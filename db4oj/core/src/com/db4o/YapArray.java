@@ -173,7 +173,7 @@ class YapArray extends YapIndependantType {
         return i_handler.indexNullHandling();
     }
     
-    public int marshalledLength(MarshallerFamily mf, Object obj) {
+    public int marshalledLength(Object obj) {
         return 0;
     }
 

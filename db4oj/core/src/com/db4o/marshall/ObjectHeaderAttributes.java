@@ -8,6 +8,5 @@ package com.db4o.marshall;
  */
 public abstract class ObjectHeaderAttributes {
     
-    public abstract int marshalledLength();
 
 }
