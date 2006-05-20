@@ -13,7 +13,15 @@ public class MonoDevelopProject extends CSharpProject {
 	@Override
 	protected Element resetFilesContainerElement() throws Exception {
 		Element contents = selectElement("/Project/Contents");
-		if (null == contents) invalidProjectFile();
+		if (null == contents)
+			invalidProjectFile();
+		
+		if (contents.hasChildNodes()) {
+			Node old = contents;
+			contents = createElement("Contents");
+			old.getParentNode().replaceChild(contents, old);
+		}
+		
 		return contents;
 	}
 
