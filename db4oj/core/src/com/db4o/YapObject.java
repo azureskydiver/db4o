@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -178,7 +179,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	}
 
 	public int ownLength() {
-		return i_yapClass.objectLength();
+        throw Exceptions4.shouldNeverBeCalled();
 	}
 
 	final Object read(
@@ -410,7 +411,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	
 				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.i_stream.i_handlers.arrayType(obj), 0);
                 
-                MarshallerFamily.current()._object.marshallUpdate(a_trans, i_yapClass, getID(), a_updatedepth, this, obj);
+                MarshallerFamily.current()._object.marshallUpdate(a_trans, a_updatedepth, this, obj);
 				
 		    } else{
 		        endProcessing();

@@ -33,7 +33,7 @@ public interface TypeHandler4 extends Indexable4
 	
     boolean indexNullHandling();
     
-    int marshalledLength(MarshallerFamily mf, Object obj);
+    int marshalledLength(Object obj);
 	
 	void prepareComparison(Transaction a_trans, Object obj);
 	

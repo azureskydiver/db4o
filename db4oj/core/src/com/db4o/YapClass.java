@@ -30,7 +30,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     
     protected String i_name;
-    protected int i_objectLength;
 
     protected final YapStream i_stream;
 
@@ -257,7 +256,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public void appendEmbedded1(YapWriter a_bytes) {
-        int length = readFieldLength(a_bytes);
+        int length = readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             i_fields[i].appendEmbedded2(a_bytes);
         }
@@ -395,7 +394,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     TreeInt collectFieldIDs(TreeInt tree, YapWriter a_bytes, String name) {
-        int length = readFieldLength(a_bytes);
+        int length = readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             if (name.equals(i_fields[i].getName())) {
                 tree = i_fields[i].collectIDs(tree, a_bytes);
@@ -1004,7 +1003,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     void incrementFieldsOffset1(YapReader a_bytes) {
-        int length = Debug.atHome ? readFieldLengthSodaAtHome(a_bytes) : readFieldLength(a_bytes);
+        int length = Debug.atHome ? readFieldCountSodaAtHome(a_bytes) : readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             i_fields[i].incrementOffset(a_bytes);
         }
@@ -1260,23 +1259,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return Platform4.isValueType(classReflector());
     }
     
-    public int marshalledLength(MarshallerFamily mf, Object obj) {
+    public int marshalledLength(Object obj) {
         return 0;
     }
 
-    int memberLength() {
-        int length = YapConst.YAPINT_LENGTH;
-        if (i_ancestor != null) {
-            length += i_ancestor.memberLength();
-        }
-        if (i_fields != null) {
-            for (int i = 0; i < i_fields.length; i++) {
-                length += i_fields[i].linkLength();
-            }
-        }
-        return length;
-    }
-    
     private String nameToWrite(){
         String name = i_name;
         if(i_config != null && i_config.writeAs() != null){
@@ -1315,13 +1301,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return i_ancestor.callConstructorSpecialized();
         }
         return YapConst.DEFAULT;
-    }
-
-    public int objectLength() {
-        if (i_objectLength == 0) {
-            i_objectLength = memberLength() + YapConst.OBJECT_LENGTH + YapConst.YAPID_LENGTH;
-        }
-        return i_objectLength;
     }
 
     public int ownLength() {
@@ -1503,31 +1482,31 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    public int readFieldLength(YapReader a_bytes) {
-        int length = a_bytes.readInt();
-        if (length > i_fields.length) {
+    public final int readFieldCount(YapReader a_bytes) {
+        int count = a_bytes.readInt();
+        if (count > i_fields.length) {
             if (Debug.atHome) {
                 System.out.println(
-                    "YapClass.readFieldLength "
+                    "YapClass.readFieldCount "
                         + getName()
-                        + " length to high:"
-                        + length
+                        + " count to high:"
+                        + count
                         + " i_fields:"
                         + i_fields.length);
                 new Exception().printStackTrace();
             }
             return i_fields.length;
         }
-        return length;
+        return count;
     }
 
-    public int readFieldLengthSodaAtHome(YapReader a_bytes) {
+    public int readFieldCountSodaAtHome(YapReader a_bytes) {
         if (Debug.atHome) {
-            int length = a_bytes.readInt();
-            if (length > i_fields.length) {
+            int count = a_bytes.readInt();
+            if (count > i_fields.length) {
                 return i_fields.length;
             }
-            return length;
+            return count;
         }
         return 0;
     }
@@ -2053,7 +2032,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public String toString(MarshallerFamily mf, YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
-        int length = readFieldLength(writer);
+        int length = readFieldCount(writer);
         String str = "";
         for (int i = 0; i < length; i++) {
             str += i_fields[i].toString(mf, writer, yapObject, depth + 1, maxDepth);

@@ -10,12 +10,11 @@ import com.db4o.reflect.*;
 public class YapClassPrimitive extends YapClass{
     
     public final TypeHandler4 i_handler;
-
+    
     YapClassPrimitive(YapStream a_stream, TypeHandler4 a_handler) {
     	super(a_stream, a_handler.classReflector());
         i_fields = YapField.EMPTY_ARRAY;
         i_handler = a_handler;
-        i_objectLength = memberLength();
     }
 
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
@@ -163,13 +162,13 @@ public class YapClassPrimitive extends YapClass{
         i_handler.writeNew(MarshallerFamily.forVersion(0), a_object, a_bytes);
     }
     
-    public void marshallNew(YapObject a_yapObject, YapWriter a_bytes, Object a_object) {
+    public void marshallNew(YapObject a_yapObject, YapWriter writer, Object a_object) {
         // FIXME: SM remove MF
-        i_handler.writeNew(MarshallerFamily.forVersion(0), a_object, a_bytes);
-    }
-
-    int memberLength() {
-        return i_handler.linkLength() + YapConst.OBJECT_LENGTH + YapConst.YAPID_LENGTH;
+        i_handler.writeNew(MarshallerFamily.forVersion(0), a_object, writer);
+        if (Deploy.debug) {
+            writer.writeEnd();
+            writer.debugCheckBytes();
+        }
     }
 
     public YapComparable prepareComparison(Object a_constraint) {

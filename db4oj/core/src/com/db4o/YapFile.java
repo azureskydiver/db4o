@@ -369,18 +369,6 @@ public abstract class YapFile extends YapStream {
         return i_isServer;
     }
 
-    final YapWriter newObject(Transaction a_trans, YapMeta a_object) {
-        int length = a_object.ownLength();
-        Pointer4 ptr = newSlot(a_trans, length);
-        a_object.setID(ptr._id);
-        YapWriter writer = new YapWriter(a_trans, length);
-        writer.useSlot(ptr._id, ptr._address, length);
-        if (Deploy.debug) {
-            writer.writeBegin(a_object.getIdentifier(), length);
-        }
-        return writer;
-    }
-
     public final Pointer4 newSlot(Transaction a_trans, int a_length) {
         int id = getPointerSlot();
         int address = getSlot(a_length);
@@ -694,22 +682,6 @@ public abstract class YapFile extends YapStream {
             return super.toString();
         }
         return fileName();
-    }
-
-    final YapWriter updateObject(Transaction a_trans, YapMeta a_object) {
-        int length = a_object.ownLength();
-        int id = a_object.getID();
-        int address = getSlot(length);
-        
-        a_trans.slotFreeOnRollbackCommitSetPointer(id, address, length);
-        
-        YapWriter writer = a_trans.i_stream.getWriter(a_trans, length);
-        writer.useSlot(id, address, length);
-
-        if (Deploy.debug) {
-            writer.writeBegin(a_object.getIdentifier(), length);
-        }
-        return writer;
     }
 
     void write(boolean shuttingDown) {

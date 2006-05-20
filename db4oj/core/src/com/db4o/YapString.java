@@ -85,8 +85,8 @@ public final class YapString extends YapIndependantType {
         return true;
     }
     
-    public int marshalledLength(MarshallerFamily mf, Object obj){
-        return mf._string.marshalledLength(_stream, obj);
+    public int marshalledLength(Object obj){
+        return MarshallerFamily.current()._string.marshalledLength(_stream, obj);
     }
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
