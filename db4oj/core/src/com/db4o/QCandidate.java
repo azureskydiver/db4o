@@ -125,6 +125,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (handler != null) {
 
 				final YapReader[] arrayBytes = { _bytes };
+                
 				final TypeHandler4 arrayWrapper = handler.readArrayWrapper(
 						getTransaction(), arrayBytes);
 
@@ -279,6 +280,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				}
 			}
 		}
+        
+        if(_yapField == null || _yapField instanceof YapFieldNull){
+            return false;
+        }
 
 		if (candidate == null) {
 			candidate = readSubCandidate(a_candidates);
@@ -593,8 +598,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         
 		if (_yapField == null || _marshallerFamily == null ) {
 			if (_yapClass.holdsAnyClass()) {
+                // TODO: What does this mean?
 				_yapField = null;
 			} else {
+                // TODO: And now what does this mean and whats the difference?
+
 				_yapField = new YapFieldNull();
 			}
 		}
