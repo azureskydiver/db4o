@@ -1588,18 +1588,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         int id = a_yapObject.getID();
         YapStream stream = a_trans.i_stream;
         YapReader reader = stream.readReaderByID(a_trans, id);
-        new ObjectHeader(stream, this, reader);
-        readVirtualAttributes1(a_trans, reader, a_yapObject);
-    }
-    
-    private void readVirtualAttributes1(Transaction a_trans, YapReader a_reader, YapObject a_yapObject){
-        int length = readFieldLength(a_reader);
-        for (int i = 0; i < length; i++) {
-            i_fields[i].readVirtualAttribute(a_trans, a_reader, a_yapObject);
-        }
-        if (i_ancestor != null) {
-            i_ancestor.readVirtualAttributes1(a_trans, a_reader, a_yapObject);
-        }
+        ObjectHeader oh = new ObjectHeader(stream, this, reader);
+        oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
     }
     
 	GenericReflector reflector() {

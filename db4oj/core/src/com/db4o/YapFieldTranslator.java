@@ -15,6 +15,10 @@ final class YapFieldTranslator extends YapField
 		YapStream stream = a_yapClass.getStream();
 		configure(stream.reflector().forClass(a_translator.storedClass()), false);
 	}
+    
+    public boolean canUseNullBitmap(){
+        return false;
+    }
 
 	void deactivate(Transaction a_trans, Object a_onObject, int a_depth){
 		if(a_depth > 0){

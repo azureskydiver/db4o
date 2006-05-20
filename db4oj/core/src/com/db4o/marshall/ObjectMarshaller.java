@@ -12,7 +12,7 @@ public abstract class ObjectMarshaller {
     public abstract void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, YapWriter writer, boolean isNew) ;
     
     protected int alignedBaseLength(YapObject yo, ObjectHeaderAttributes attributes){
-        int len = linkLength(yo.getYapClass(), yo) + headerLength();
+        int len = linkLength(yo.getYapClass(), yo, attributes) + headerLength();
         if(attributes != null){
             len += attributes.marshalledLength();
         }
@@ -50,20 +50,7 @@ public abstract class ObjectMarshaller {
     
     public abstract void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes);
     
-    protected int linkLength(YapClass yc, YapObject yo) {
-        int length = YapConst.YAPINT_LENGTH;
-        if (yc.i_ancestor != null) {
-            length += linkLength(yc.i_ancestor, yo);
-        }
-        if (yc.i_fields != null) {
-            for (int i = 0; i < yc.i_fields.length; i++) {
-                length += linkLength(yc.i_fields[i], yo);
-            }
-        }
-        return length;
-    }
-    
-    protected abstract int linkLength(YapField yf, YapObject yo);
+    protected abstract int linkLength(YapClass yc, YapObject yo, ObjectHeaderAttributes attributes);
 
     public abstract YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth);
     
@@ -95,6 +82,8 @@ public abstract class ObjectMarshaller {
     public abstract Object readIndexEntry(YapClass yc, ObjectHeaderAttributes attributes, YapField yf, YapWriter reader);
 
     public abstract ObjectHeaderAttributes readHeaderAttributes(YapReader reader);
+    
+    public abstract void readVirtualAttributes(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes attributes, YapReader reader);
     
 
 }

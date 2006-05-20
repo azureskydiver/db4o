@@ -4,14 +4,13 @@ package com.db4o.marshall;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 
 /**
  * @exclude
  */
 public class ObjectMarshaller1 extends ObjectMarshaller{
     
-    static final boolean NULLBITMAP = false;
+    static final boolean NULLBITMAP = true;
     
     static final byte VERSION = (byte)1;
     
@@ -119,9 +118,38 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     }
 
     
-    protected int linkLength(YapField yf, YapObject yo){
+    private int linkLength(YapField yf, YapObject yo, ObjectHeaderAttributes1 attributes, int fieldIndex){
+        
+        Object child = yf.getOrCreate(yo.getTrans(), yo.getObject());
+        
+        if( child == null && yf.canUseNullBitmap()){
+            attributes._nullBitMap.setTrue(fieldIndex);
+            if(NULLBITMAP){
+                return 0; 
+            }
+        }
+        
         return yf.linkLength();
     }
+    
+    protected int linkLength(YapClass yc, YapObject yo, ObjectHeaderAttributes attributes) {
+        return linkLengthDeclared(yc, yo, (ObjectHeaderAttributes1) attributes, 0);
+    }
+    
+    private int linkLengthDeclared(YapClass yc, YapObject yo, ObjectHeaderAttributes1 attributes, int fieldIndex) {
+        int length = YapConst.YAPINT_LENGTH;
+        if (yc.i_fields != null) {
+            for (int i = 0; i < yc.i_fields.length; i++) {
+                length += linkLength(yc.i_fields[i], yo, attributes, fieldIndex);
+                fieldIndex ++;
+            }
+        }
+        if (yc.i_ancestor != null) {
+            length += linkLengthDeclared(yc.i_ancestor, yo, attributes, fieldIndex);
+        }
+        return length;
+    }
+
 
     private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, ObjectHeaderAttributes1 attributes, YapWriter a_bytes, int fieldIndex, boolean a_new) {
         Config4Class config = yapClass.configOrAncestorConfig();
@@ -132,7 +160,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
             
             YapField yf = yapClass.i_fields[i];
             
-            if(true || ! attributes._nullBitMap.isTrue(fieldIndex)){
+            if(! attributes._nullBitMap.isTrue(fieldIndex)){
                 
                 Object obj = yf.getOrCreate(trans, a_object);
                 if (obj instanceof Db4oTypeImpl) {
@@ -168,9 +196,8 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     }
     
     private int marshalledLength(YapField yf, YapObject yo, ObjectHeaderAttributes1 attributes, int fieldIndex){
-        Transaction trans = yo.getTrans();
-        Object parentObject = yo.getObject();
-        Object child = yf.getOn(trans, parentObject);
+        
+        Object child = yf.getOrCreate(yo.getTrans(), yo.getObject());
         
         if( child == null && yf.canUseNullBitmap()){
             attributes._nullBitMap.setTrue(fieldIndex);
@@ -273,7 +300,22 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         
         return yf.readIndexEntry(_family, reader);
     }
+    
+    public void readVirtualAttributes(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes attributes, YapReader reader){
+        readVirtualAttributesDeclared(trans, yc, yo, (ObjectHeaderAttributes1) attributes, reader, 0);
+    }
 
-
+    private void readVirtualAttributesDeclared(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes1 attributes, YapReader reader, int fieldCount){
+        int length = yc.readFieldLength(reader);
+        for (int i = 0; i < length; i++) {
+            if(! attributes._nullBitMap.isTrue(fieldCount)){
+                yc.i_fields[i].readVirtualAttribute(trans, reader, yo);
+            }
+            fieldCount ++;
+        }
+        if (yc.i_ancestor != null) {
+            readVirtualAttributesDeclared(trans, yc.i_ancestor, yo, attributes, reader, fieldCount);
+        }
+    }
 
 }

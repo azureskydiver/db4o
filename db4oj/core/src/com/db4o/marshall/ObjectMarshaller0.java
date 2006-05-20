@@ -61,6 +61,19 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
     }
     
+    protected int linkLength(YapClass yc, YapObject yo, ObjectHeaderAttributes attributes) {
+        int length = YapConst.YAPINT_LENGTH;
+        if (yc.i_fields != null) {
+            for (int i = 0; i < yc.i_fields.length; i++) {
+                length += linkLength(yc.i_fields[i], yo);
+            }
+        }
+        if (yc.i_ancestor != null) {
+            length += linkLength(yc.i_ancestor, yo, attributes);
+        }
+        return length;
+    }
+    
     protected int linkLength(YapField yf, YapObject yo){
         return yf.linkLength();
     }
@@ -129,7 +142,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
 
     protected int objectLength(YapObject yo, ObjectHeaderAttributes attributes) {
-        return headerLength() + linkLength(yo.getYapClass(), yo);
+        return headerLength() + linkLength(yo.getYapClass(), yo, attributes);
     }
 
     public ObjectHeaderAttributes readHeaderAttributes(YapReader reader) {
@@ -146,6 +159,16 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
         
         return yf.readIndexEntry(_family, reader);
+    }
+    
+    public void readVirtualAttributes(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes attributes, YapReader reader){
+        int length = yc.readFieldLength(reader);
+        for (int i = 0; i < length; i++) {
+            yc.i_fields[i].readVirtualAttribute(trans, reader, yo);
+        }
+        if (yc.i_ancestor != null) {
+            readVirtualAttributes(trans, yc.i_ancestor, yo, attributes, reader);
+        }
     }
 
 }
