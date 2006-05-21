@@ -53,6 +53,11 @@ final class YDate extends YLong
 	}
 	
 	public void write(Object a_object, YapReader a_bytes){
+        // TODO: This is a temporary fix to prevent exceptions with
+        // Marshaller.LEGACY.  
+        if(a_object == null){
+            a_object = new Date(0);
+        }
 		writeLong(((Date)a_object).getTime(), a_bytes);
 	}
     
