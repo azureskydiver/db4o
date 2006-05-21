@@ -31,6 +31,7 @@ public final class YapConfigBlock implements Runnable
 	// 5 bytes of the encryption password
     // byte   freespace system used
     // int    freespace address
+    // int    converter version
     
     private final Object		_timeWriterLock = new Object();
 	private final YapFile		_stream;
@@ -54,12 +55,13 @@ public final class YapConfigBlock implements Runnable
     private static final int    PASSWORD_OFFSET = INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET+ENCRYPTION_PASSWORD_LENGTH;
     private static final int    FREESPACE_SYSTEM_OFFSET = PASSWORD_OFFSET + 1; 
     private static final int    FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + YapConst.YAPINT_LENGTH; 
+    private static final int    CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + YapConst.YAPINT_LENGTH;
 	
 	
 	// complete possible data in config block
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
-		+ (YapConst.YAPINT_LENGTH * 5)		// (two transaction pointers, PDB ID, lost int, freespace address
+		+ (YapConst.YAPINT_LENGTH * 6)		// (two transaction pointers, PDB ID, lost int, freespace address, converter_version
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
 		
@@ -67,6 +69,7 @@ public final class YapConfigBlock implements Runnable
 	byte						_encoding;
     byte                        _freespaceSystem;
     int                         _freespaceAddress;
+    private int                 _converterVersion;
 	
 	YapConfigBlock(YapFile stream){
 		_stream = stream;
@@ -274,6 +277,10 @@ public final class YapConfigBlock implements Runnable
             _freespaceAddress = reader.readInt();
         }
         
+        if(oldLength > CONVERTER_VERSION_OFFSET){
+            _converterVersion = reader.readInt();
+        }
+        
         ensureFreespaceSlot();
 		
 		if(lockFile() && ( lastAccessTime != 0)){
@@ -321,12 +328,20 @@ public final class YapConfigBlock implements Runnable
 			}
 		}
 	}
+    
+    public void converterVersion(int ver){
+        _converterVersion = ver;
+    }
+    
+    public int converterVersion(){
+        return _converterVersion;
+    }
 	
 	void syncFiles(){
 		_stream.syncFiles();
 	}
 	
-	void write() {
+	public void write() {
         
 		headerLockOverwritten();
 		_address = _stream.getSlot(LENGTH);
@@ -347,6 +362,7 @@ public final class YapConfigBlock implements Runnable
         writer.append(_freespaceSystem);
         ensureFreespaceSlot();
         YInt.writeInt(_freespaceAddress, writer);
+        YInt.writeInt(_converterVersion, writer);
 		writer.write();
 		writePointer();
 	}
