@@ -38,8 +38,12 @@ public class Exceptions4 {
     }
     
     public static RuntimeException shouldNeverBeCalled(){
-       throw new RuntimeException();
-    }
+        throw new RuntimeException();
+     }
+
+    public static RuntimeException shouldNeverHappen(){
+        throw new RuntimeException();
+     }
 
     public static RuntimeException virtualException(){
         throw new RuntimeException();

@@ -1949,7 +1949,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 		return new Integer(id);
     }
 
-    public void writeThis(Transaction trans, YapReader a_writer) {
+    public final void writeThis(Transaction trans, YapReader a_writer) {
         
         a_writer.writeShortString(trans, nameToWrite());
         a_writer.writeInt(_metaClassID);
