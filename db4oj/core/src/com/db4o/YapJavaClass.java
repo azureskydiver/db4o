@@ -150,18 +150,15 @@ public abstract class YapJavaClass implements TypeHandler4 {
     }
 
     public void writeIndexEntry(YapReader a_writer, Object a_object) {
+        if (a_object == null) {
+            a_object = primitiveNull();
+        }
         write(a_object, a_writer);
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes){
-        return writeNew(a_object, a_bytes);
-    }
-
-    public Object writeNew(Object a_object, YapWriter a_bytes) {
-        if (Deploy.csharp) {
-            if (a_object == null) {
-                a_object = primitiveNull();
-            }
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
+        if (a_object == null) {
+            a_object = primitiveNull();
         }
         write(a_object, a_bytes);
 		return a_object;

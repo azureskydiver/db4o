@@ -31,7 +31,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             }
             writer.writeInt(yapClassPrimitive.getID());
             
-            handler.writeNew( obj, writer);
+            handler.writeNew(_family, obj, writer);
             
             writer.writeEnd();
             trans.i_stream.writeNew(yapClassPrimitive, writer);

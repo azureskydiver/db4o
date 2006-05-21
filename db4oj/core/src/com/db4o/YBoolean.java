@@ -62,14 +62,10 @@ final class YBoolean extends YapJavaClass
 			a_bytes.writeBegin(YapConst.YAPBOOLEAN);
 		}
 		byte set;
-		if (a_object == null){
-			set = NULL;
-		} else {
-			if(((Boolean)a_object).booleanValue()){
-				set = TRUE;
-			}else{
-				set = FALSE;
-			}
+		if(((Boolean)a_object).booleanValue()){
+			set = TRUE;
+		}else{
+			set = FALSE;
 		}
 		a_bytes.append(set);
 		if(Deploy.debug){

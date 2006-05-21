@@ -7,7 +7,7 @@ package com.db4o.marshall;
  */
 public class MarshallerFamily {
 
-    private static final boolean            LEGACY           = true;
+    public static final boolean            LEGACY           = true;
 
     public final ObjectMarshaller           _object;
 
@@ -29,6 +29,7 @@ public class MarshallerFamily {
         _object = objectMarshaller;
         _object._family = this;
         _primitive = primitiveMarshaller;
+        _primitive._family = this;
         _string = stringMarshaller;
     }
 

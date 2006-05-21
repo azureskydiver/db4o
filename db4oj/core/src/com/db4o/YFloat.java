@@ -35,23 +35,13 @@ final class YFloat extends YInt {
 	}
 
 	Object read1(YapReader a_bytes) {
-		int ret = readInt(a_bytes);
-		if(! Deploy.csharp){
-			if (ret == Integer.MAX_VALUE) {
-				return null;
-			}
-		}
-		return new Float(Float.intBitsToFloat(ret));
+		return new Float(Float.intBitsToFloat(readInt(a_bytes)));
 	}
 
 	public void write(Object a_object, YapReader a_bytes) {
-		if (! Deploy.csharp && a_object == null) {
-			writeInt(Integer.MAX_VALUE, a_bytes);
-		} else {
-			writeInt(
-				Float.floatToIntBits(((Float) a_object).floatValue()),
-				a_bytes);
-		}
+		writeInt(
+			Float.floatToIntBits(((Float) a_object).floatValue()),
+			a_bytes);
 	}
 
 	// Comparison_______________________

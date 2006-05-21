@@ -60,13 +60,7 @@ final class YByte extends YapJavaClass
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPBYTE);
 		}
-		byte set;
-		if (a_object == null){
-			set = (byte)0;
-		} else {
-			set = ((Byte)a_object).byteValue();
-		}
-		a_bytes.append(set);
+		a_bytes.append(((Byte)a_object).byteValue());
 		if(Deploy.debug){
 			a_bytes.writeEnd();
 		}
