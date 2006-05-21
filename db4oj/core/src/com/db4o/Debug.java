@@ -3,16 +3,16 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 
 /**
  * @exclude
  */
 public abstract class Debug extends Debug4 {
     
-
-    public static final boolean useOldClassIndex = true;
+    public static final boolean useOldClassIndex = MarshallerFamily.LEGACY;
     
-    public static final boolean useBTrees = false;
+    public static final boolean useBTrees = ! MarshallerFamily.LEGACY;
     
     public static final boolean useNIxPaths = true;
     
