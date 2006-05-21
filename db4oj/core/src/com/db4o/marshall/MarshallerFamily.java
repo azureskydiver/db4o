@@ -8,7 +8,7 @@ package com.db4o.marshall;
 public class MarshallerFamily {
 
     public static final boolean            LEGACY           = true;
-
+    
     public final ObjectMarshaller           _object;
 
     public final PrimitiveMarshaller       _primitive;
@@ -17,9 +17,13 @@ public class MarshallerFamily {
     
 
     private final static MarshallerFamily[] allVersions     = new MarshallerFamily[] {
-        new MarshallerFamily(new ObjectMarshaller0(), new PrimitiveMarshaller0(),
+        new MarshallerFamily(
+            new ObjectMarshaller0(), 
+            new PrimitiveMarshaller0(),
             new StringMarshaller0()),
-        new MarshallerFamily(new ObjectMarshaller1(), new PrimitiveMarshaller1(),
+        new MarshallerFamily(
+            new ObjectMarshaller1(), 
+            new PrimitiveMarshaller1(),
             new StringMarshaller1())                        };
 
     private static final int                CURRENT_VERSION = LEGACY ? 0 : allVersions.length - 1;

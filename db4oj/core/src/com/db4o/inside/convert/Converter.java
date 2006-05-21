@@ -6,25 +6,24 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.convert.conversions.*;
+import com.db4o.marshall.*;
 
 /**
  * @exclude
  */
 public class Converter {
     
-    /**
-     * redundant count to prevent loading all the Conversions classes
-     * into the ClassLoader if not needed.
-     */
-    private static final int VERSION = 1;
+    public static final int VERSION = MarshallerFamily.LEGACY ? 0 : 5;
     
     private Hashtable4 _conversions;
     
-    public static final void convert(YapConfigBlock config){
+    public static final boolean convert(YapFile file, YapConfigBlock config){
         if(config.converterVersion() >= VERSION){
-            return;
+            return false;
         }
-        new Converter().run(config);
+        Converter converter = new Converter();
+        converter.run(file, config);
+        return true;
     }
     
     private Converter(){
@@ -42,11 +41,12 @@ public class Converter {
         _conversions.put(idx, conversion);
     }
     
-    private void run(YapConfigBlock config){
+    private void run(YapFile file, YapConfigBlock config){
         int start = config.converterVersion();
         for (int i = start; i <= VERSION; i++) {
             Conversion conversion = (Conversion)_conversions.get(i);
             if(conversion != null){
+                conversion.setFile(file);
                 conversion.run();
             }
         }

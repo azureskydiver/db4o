@@ -365,8 +365,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     abstract ClassIndex createClassIndex(YapClass a_yapClass);
 
-    abstract BTree createBTreeClassIndex(YapClass a_yapClass, int id);
-
     abstract QueryResultImpl createQResult(Transaction a_ta);
 
     void createStringIO(byte encoding) {

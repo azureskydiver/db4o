@@ -11,7 +11,11 @@ import com.db4o.inside.convert.*;
 public class CommonConversions {
     
     public CommonConversions(Converter converter){
-        converter.register(1, new ClassIndexesToBTrees());
+        
+        // Start with '5' to allow adding further converters to fix
+        // possible remaining old problems before class indexes are
+        // updated
+        converter.register(5, new ClassIndexesToBTrees());
     }
 
 }
