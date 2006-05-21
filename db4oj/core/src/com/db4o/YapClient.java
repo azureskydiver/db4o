@@ -172,15 +172,6 @@ public class YapClient extends YapStream implements ExtClient {
 		i_trans.commit();
 	}
 
-	final BTree createBTreeClassIndex(YapClass a_yapClass, int id) {
-		return new ClientBTree(
-            i_config.bTreeNodeSize(), 
-            i_config.bTreeCacheHeight(),  
-            getTransaction(), 
-            id, 
-            new YInt(this), null);
-	}
-
 	final ClassIndex createClassIndex(YapClass a_yapClass) {
 		return new ClassIndexClient(a_yapClass);
 	}

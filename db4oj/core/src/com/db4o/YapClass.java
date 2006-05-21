@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
+import com.db4o.inside.convert.conversions.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -427,19 +428,17 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     private void createBTreeIndex(int btreeID){
-        if(hasIndex()){
-            if( ! i_stream.isClient()){
-                _index = i_stream.createBTreeClassIndex(this, btreeID);
-                _index.setRemoveListener(new Visitor4() {
-                    public void visit(Object obj) {
-                        int id = ((Integer)obj).intValue();
-                        YapObject yo = i_stream.getYapObject(id);
-                        if (yo != null) {
-                            i_stream.yapObjectGCd(yo);
-                        }
+        if(hasIndex()  && ! i_stream.isClient()){
+            _index = ((YapFile)i_stream).createBTreeClassIndex(this, btreeID);
+            _index.setRemoveListener(new Visitor4() {
+                public void visit(Object obj) {
+                    int id = ((Integer)obj).intValue();
+                    YapObject yo = i_stream.getYapObject(id);
+                    if (yo != null) {
+                        i_stream.yapObjectGCd(yo);
                     }
-                });
-            }
+                }
+            });
         }
     }
 
@@ -1533,6 +1532,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             if (Deploy.debug) {
                 a_reader.readBegin(getIdentifier());
             }
+            
             int len = a_reader.readInt();
 
             len = len * a_trans.i_stream.stringIO().bytesPerChar();
@@ -1636,18 +1636,28 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	        checkDb4oType();
             
             if(Debug.useOldClassIndex){
-                int indexID = i_reader.readInt();
+                int classIndexId = i_reader.readInt();
                 if (hasIndex()) {
                     i_index = i_stream.createClassIndex(this);
-                    if (indexID > 0) {
-                        i_index.setID(indexID);
+                    if (classIndexId > 0) {
+                        i_index.setID(classIndexId);
                     }
                     i_index.setStateDeactivated();
                 }
             }
             
             if(Debug.useBTrees){
-                createBTreeIndex(i_reader.readInt());
+                int indexId = i_reader.readInt();
+                if(! i_stream.isClient()  && hasIndex()  && _index == null){
+                    YapFile yf = (YapFile)i_stream;
+                    if(indexId < 0){
+                        createBTreeIndex(- indexId);
+                    }else{
+                        createBTreeIndex(0);
+                        new ClassIndexesToBTrees().convert(yf, indexId, _index);
+                        yf.setDirty(this);
+                    }
+                }
             }
             
 	        i_fields = new YapField[i_reader.readInt()];
@@ -1961,7 +1971,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         
         if(Debug.useBTrees){
-            a_writer.writeIDOf(trans, _index);
+            if(_index == null){
+                a_writer.writeInt(0);
+            }else{
+                _index.write(trans);
+                a_writer.writeInt(- _index.getID());
+            }
         }
         
         if (i_fields == null) {

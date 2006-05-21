@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
+import com.db4o.inside.convert.*;
 import com.db4o.inside.freespace.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
@@ -79,6 +80,7 @@ public abstract class YapFile extends YapStream {
         blockSize(i_config.blockSize());
         i_writeAt = blocksFor(HEADER_LENGTH);
         _configBlock = new YapConfigBlock(this);
+        _configBlock.converterVersion(Converter.VERSION);
         _configBlock.write();
         _configBlock.go();
         initNewClassCollection();
@@ -91,7 +93,7 @@ public abstract class YapFile extends YapStream {
         }
         
     }
-
+    
     long currentVersion() {
         return _bootRecord.currentVersion();
     }
@@ -575,6 +577,9 @@ public abstract class YapFile extends YapStream {
             if (!i_config.commitRecoveryDisabled()) {
                 trans.writeOld();
             }
+        }
+        if(Converter.convert(this, _configBlock)){
+            getTransaction().commit();
         }
     }
 
