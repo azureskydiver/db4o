@@ -389,11 +389,7 @@ class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes){
-        return writeNew(a_object, a_bytes);
-    }
-    
-    public Object writeNew(Object a_object, YapWriter a_bytes) {
+    public final Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
             return null;

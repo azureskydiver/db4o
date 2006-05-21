@@ -79,8 +79,14 @@ abstract class YapFieldVirtual extends YapField {
     	// do nothing
     }
 
-    public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
-        Config4Class a_config, boolean a_new) {
+    public final void marshall(
+            YapObject a_yapObject, 
+            Object a_object,
+            MarshallerFamily mf, 
+            YapWriter a_bytes,
+            Config4Class a_config, 
+            boolean a_new) {
+        
         Transaction trans = a_bytes.i_trans;
         
         if(! trans.supportsVirtualFields()){

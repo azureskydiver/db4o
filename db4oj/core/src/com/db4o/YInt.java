@@ -42,13 +42,7 @@ public class YInt extends YapJavaClass {
     }
 
     Object read1(YapReader a_bytes) {
-        int ret = readInt(a_bytes);
-        if (!Deploy.csharp) {
-            if (ret == Integer.MAX_VALUE) {
-                return null;
-            }
-        }
-        return new Integer(ret);
+        return new Integer(readInt(a_bytes));
     }
 
     static final int readInt(YapReader a_bytes) {
@@ -72,11 +66,7 @@ public class YInt extends YapJavaClass {
     }
 
     public void write(Object a_object, YapReader a_bytes) {
-        if (!Deploy.csharp && a_object == null) {
-            writeInt(Integer.MAX_VALUE, a_bytes);
-        } else {
-            writeInt(((Integer) a_object).intValue(), a_bytes);
-        }
+        writeInt(((Integer) a_object).intValue(), a_bytes);
     }
 
     static final void writeInt(int a_int, YapReader a_bytes) {

@@ -40,13 +40,7 @@ final class YShort extends YapJavaClass
 	}
 	
 	Object read1(YapReader a_bytes){
-		short ret = readShort(a_bytes);
-		if(! Deploy.csharp){
-			if(ret == Short.MAX_VALUE){
-				return null;
-			}
-		}
-		return new Short(ret);
+		return new Short(readShort(a_bytes));
 	}
 	
 	static final short readShort(YapReader a_bytes){
@@ -64,11 +58,7 @@ final class YShort extends YapJavaClass
 	}
 
 	public void write(Object a_object, YapReader a_bytes){
-		if (! Deploy.csharp && a_object == null){
-			writeShort(Short.MAX_VALUE,a_bytes);
-		} else {
-			writeShort(((Short)a_object).shortValue(), a_bytes);
-		}
+	    writeShort(((Short)a_object).shortValue(), a_bytes);
 	}
 	
 	static final void writeShort(int a_short, YapReader a_bytes){

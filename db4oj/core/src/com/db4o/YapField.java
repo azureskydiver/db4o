@@ -628,30 +628,36 @@ public class YapField implements StoredField {
         return null;
     }
 
-    public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
-        Config4Class a_config, boolean a_new) {
+    public void marshall(
+            YapObject yo, 
+            Object obj, 
+            MarshallerFamily mf,
+            YapWriter writer,
+            Config4Class config, 
+            boolean isNew) {
+        
         // alive needs to be checked by all callers: Done
         
         Object indexEntry = null;
         
-        if (a_object != null
-            && ((a_config != null && (a_config.cascadeOnUpdate() == YapConst.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == YapConst.YES)))) {
+        if (obj != null
+            && ((config != null && (config.cascadeOnUpdate() == YapConst.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == YapConst.YES)))) {
             int min = 1;
-            if (i_yapClass.isCollection(a_object)) {
+            if (i_yapClass.isCollection(obj)) {
                 GenericReflector reflector = i_yapClass.reflector();
-                min = reflector.collectionUpdateDepth(reflector.forObject(a_object));
+                min = reflector.collectionUpdateDepth(reflector.forObject(obj));
             }
-            int updateDepth = a_bytes.getUpdateDepth();
+            int updateDepth = writer.getUpdateDepth();
             if (updateDepth < min) {
-                a_bytes.setUpdateDepth(min);
+                writer.setUpdateDepth(min);
             }
-            indexEntry = i_handler.writeNew(a_object, a_bytes);
-            a_bytes.setUpdateDepth(updateDepth);
+            indexEntry = i_handler.writeNew(mf, obj, writer);
+            writer.setUpdateDepth(updateDepth);
         } else {
-            indexEntry = i_handler.writeNew(a_object, a_bytes);
+            indexEntry = i_handler.writeNew(mf, obj, writer);
         }
         
-        addIndexEntry(a_bytes, indexEntry);
+        addIndexEntry(writer, indexEntry);
     }
 
     int ownLength(YapStream a_stream) {

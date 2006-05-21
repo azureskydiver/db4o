@@ -1934,11 +1934,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes){
-        return writeNew(a_object, a_bytes);
-    }
-
-    public Object writeNew(Object a_object, YapWriter a_bytes) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeInt(0);
             return new Integer(0);

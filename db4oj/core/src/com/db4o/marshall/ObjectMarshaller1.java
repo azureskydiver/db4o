@@ -124,7 +124,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
                 if (child instanceof Db4oTypeImpl) {
                     child = ((Db4oTypeImpl)child).storedTo(trans);
                 }
-                yf.marshall(yo, child, writer, config, isNew);
+                yf.marshall(yo, child, _family, writer, config, isNew);
             } else{
                 yf.addIndexEntry(trans, writer.getID(), null);
             }

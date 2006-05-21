@@ -94,7 +94,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
             if (obj instanceof Db4oTypeImpl) {
                 obj = ((Db4oTypeImpl)obj).storedTo(a_bytes.getTransaction());
             }
-            yapClass.i_fields[i].marshall(a_yapObject, obj, a_bytes, config, a_new);
+            yapClass.i_fields[i].marshall(a_yapObject, obj, _family, a_bytes, config, a_new);
         }
         if (yapClass.i_ancestor != null) {
             marshallDeclaredFields(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new);

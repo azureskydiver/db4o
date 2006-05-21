@@ -35,21 +35,11 @@ final class YDouble extends YLong
 	}
 	
 	Object read1(YapReader a_bytes){
-		long ret = readLong(a_bytes);
-		if(! Deploy.csharp){
-			if(ret == Long.MAX_VALUE){
-				return null;
-			}
-		}
-		return new Double(Platform4.longToDouble(ret));
+		return new Double(Platform4.longToDouble(readLong(a_bytes)));
 	}
 	
 	public void write(Object a_object, YapReader a_bytes){
-		if (! Deploy.csharp && a_object == null){
-			writeLong(Long.MAX_VALUE,a_bytes);
-		} else {
-			writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()), a_bytes);
-		}
+		writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()), a_bytes);
 	}
 	
 	

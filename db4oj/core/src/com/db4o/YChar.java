@@ -43,11 +43,6 @@ final class YChar extends YapJavaClass {
 			a_bytes.readEnd();
 		}
 		char ret = (char) ((b1 & 0xff) | ((b2 & 0xff) << 8));
-		if(! Deploy.csharp){
-			if (ret == Character.MAX_VALUE) {
-				return null;
-			}
-		}
 		return new Character(ret);
 	}
 
@@ -55,14 +50,9 @@ final class YChar extends YapJavaClass {
 		if (Deploy.debug) {
 			a_bytes.writeBegin(YapConst.YAPCHAR);
 		}
-		char l_char;
-		if (! Deploy.csharp && a_object == null) {
-			l_char = Character.MAX_VALUE;
-		} else {
-			l_char = ((Character) a_object).charValue();
-		}
-		a_bytes.append((byte) (l_char & 0xff));
-		a_bytes.append((byte) (l_char >> 8));
+		char char_ = ((Character) a_object).charValue();
+		a_bytes.append((byte) (char_ & 0xff));
+		a_bytes.append((byte) (char_ >> 8));
 		if (Deploy.debug) {
 			a_bytes.writeEnd();
 		}

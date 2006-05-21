@@ -49,19 +49,11 @@ final class YDate extends YLong
 	}
 	
 	Object read1(YapReader a_bytes){
-		long ret = readLong(a_bytes);
-		if(ret == Long.MAX_VALUE){
-			return null;
-		}
-		return new Date(ret);
+		return new Date(readLong(a_bytes));
 	}
 	
 	public void write(Object a_object, YapReader a_bytes){
-		if (a_object == null){
-			writeLong(Long.MAX_VALUE,a_bytes);
-		} else {
-			writeLong(((Date)a_object).getTime(), a_bytes);
-		}
+		writeLong(((Date)a_object).getTime(), a_bytes);
 	}
     
     public Object current1(){

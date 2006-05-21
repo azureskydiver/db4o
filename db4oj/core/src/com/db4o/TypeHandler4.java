@@ -47,14 +47,6 @@ public interface TypeHandler4 extends Indexable4
 	
 	boolean supportsIndex();
 	
-    // returns the index entry, the same as readIndexEntry
-    // can be:
-    // - actual object for primitives
-    // - Integer(id) for classes
-    // - YapReader for strings
-	Object writeNew(Object a_object, YapWriter a_bytes);
-    
-    // FIXME: SM temporary signature to get string to work in untyped variables
     Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes);
 	
 	public int getType ();

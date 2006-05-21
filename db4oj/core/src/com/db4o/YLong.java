@@ -40,13 +40,7 @@ class YLong extends YapJavaClass
 	}
 	
 	Object read1(YapReader a_bytes){
-		long ret = readLong(a_bytes);
-		if(! Deploy.csharp){
-			if(ret == Long.MAX_VALUE){
-				return null;
-			}
-		}
-		return new Long(ret);
+		return new Long(readLong(a_bytes));
 	}
 	
 	static final long readLong(YapReader a_bytes){
@@ -70,11 +64,7 @@ class YLong extends YapJavaClass
 	}
 
 	public void write(Object a_object, YapReader a_bytes){
-		if (! Deploy.csharp && a_object == null){
-			writeLong(Long.MAX_VALUE,a_bytes);
-		} else {
-			writeLong(((Long)a_object).longValue(), a_bytes);
-		}
+	    writeLong(((Long)a_object).longValue(), a_bytes);
 	}
 	
 	static final void writeLong(long a_long, YapReader a_bytes){
