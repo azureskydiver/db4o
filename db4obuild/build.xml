@@ -797,10 +797,10 @@
 		</zip>
 	</target>
 
-	<target name="zipnet" depends="init, configure-net1.1, compileall-net, vsdoc, do-zipnet">
+	<target name="zipnet" depends="init, configure-net1.1, compilenet-all, vsdoc, do-zipnet-pascalcase">
 	</target>
 	
-	<target name="zipnet2" depends="init, configure-net2, compileall-net, ndoc, net2-instrumentation, do-zipnet">
+	<target name="zipnet2" depends="init, configure-net2, compilenet-all, ndoc, net2-instrumentation, do-zipnet-pascalcase">
 	</target>
 	
 	<target name="configure-net1.1">
@@ -841,7 +841,7 @@
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
-	<target name="do-zipnet">
+	<target name="do-zipnet-pascalcase">
 		<antcall target="doctor">
 		</antcall>
 		
@@ -949,7 +949,7 @@
 			
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		
-		<antcall target="sharpen-compileall-net">
+		<antcall target="sharpen">
 		</antcall>
 			
 		<echo message="MONO PASCALCASE" />
@@ -1077,7 +1077,7 @@
 		</copy>
 	</target>
 	
-	<target name="net2-instrumentation" depends="compileall-net">
+	<target name="net2-instrumentation" depends="compilenet-all">
 		
 		<property name="dir.n.instrumentation" location="../db4on/instrumentation" />
 		
@@ -1128,7 +1128,7 @@
 		</updateAssemblyHintPath>
 	</target>
 	
-	<target name="compileall-net" depends="sharpen">
+	<target name="compilenet-all" depends="sharpen">
 		
 		<antcall target="compilecoredll-compact">
 		</antcall>
@@ -1184,7 +1184,7 @@
 		
 		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
 			<args>
-				<arg value="-compileall-net" />
+				<arg value="-pascalcase" />
 			</args>
 		</sharpen>
 		
