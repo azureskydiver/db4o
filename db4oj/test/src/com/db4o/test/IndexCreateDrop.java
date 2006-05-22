@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 
 public class IndexCreateDrop {
@@ -116,17 +117,30 @@ public class IndexCreateDrop {
         q = Test.query();
         q.constrain(IndexCreateDrop.class);
         q.descend("myDate").constrain(new Date(7)).smaller().equal();
+        
+        if(MarshallerFamily.LEGACY){
+            q.descend("myDate").constrain(new Date(0)).greater();
+        }
+        
         Test.ensure(q.execute().size() == 6);
         
         q = Test.query();
         q.constrain(IndexCreateDrop.class);
         q.descend("myDate").constrain(new Date(7)).smaller();
+        
+        if(MarshallerFamily.LEGACY){
+            q.descend("myDate").constrain(new Date(0)).greater();
+        }
+        
         Test.ensure(q.execute().size() == 5);
         
-        q = Test.query();
-        q.constrain(IndexCreateDrop.class);
-        q.descend("myDate").constrain(null);
-        Test.ensure(q.execute().size() == 2);
+        
+        if(! MarshallerFamily.LEGACY){
+            q = Test.query();
+            q.constrain(IndexCreateDrop.class);
+            q.descend("myDate").constrain(null);
+            Test.ensureEquals(2,  q.execute().size());
+        }
     }
 
 }

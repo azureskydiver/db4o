@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 
 public class CreateIndex {
@@ -68,15 +69,20 @@ public class CreateIndex {
     }
     
     private void tQueryIntWrapper(){
+        
         Query q = Test.query();
+        q.constrain(CreateIndex.class);
+        q.descend("i_intWrapper").constrain(new Integer(4)).greater().equal();
+        tExpectInts(q, new int[] { 5, 7 });
+
+        if(MarshallerFamily.LEGACY){
+            return;
+        }
+        q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_intWrapper").constrain(new Integer(4)).smaller();
         tExpectInts(q, new int[] { 1, 2, 3, 3 });
         
-        q = Test.query();
-        q.constrain(CreateIndex.class);
-        q.descend("i_intWrapper").constrain(new Integer(4)).greater().equal();
-        tExpectInts(q, new int[] { 5, 7 });
     }
 
     private void tQueryInts(int expectedZeroSize) {
