@@ -7,7 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
-import com.db4o.marshall.*;
+import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
