@@ -797,19 +797,10 @@
 		</zip>
 	</target>
 
-	<target name="zipnet" depends="init, configure-net1.1, compiledllnet, compilentutorial, vsdoc" description="Zip .NET distribution">
-		<antcall target="create-zipnet">
-			<param name="dir.core" value="${dir.n.core}" />
-			<param name="dir.tools" value="${dir.n.tools}" />
-			<param name="dir.test" value="${dir.n.test}" />
-			<param name="dir.tutorial" value="${dir.n.tutorial}" />
-		</antcall>
+	<target name="zipnet" depends="init, configure-net1.1, compileall-net, vsdoc, do-zipnet">
 	</target>
 	
-	<target name="zipnet-pascalcase" depends="init, configure-net1.1-pascalcase, pascalcase, vsdoc, do-zipnet-pascalcase">
-	</target>
-	
-	<target name="zipnet-pascalcase2" depends="init, configure-net2-pascalcase, pascalcase, ndoc, net2-instrumentation, do-zipnet-pascalcase">
+	<target name="zipnet2" depends="init, configure-net2, compileall-net, ndoc, net2-instrumentation, do-zipnet">
 	</target>
 	
 	<target name="configure-net1.1">
@@ -832,12 +823,9 @@
 		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
 		<property name="installer.package.suffix" value="net" />
-	</target>
-	
-	<target name="configure-net1.1-pascalcase" depends="configure-net1.1">
 	</target>	
 	
-	<target name="configure-net2-pascalcase">
+	<target name="configure-net2">
 		
 		<property name="target.framework.version" value="2.0" />
 		
@@ -853,9 +841,8 @@
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
-	<target name="do-zipnet-pascalcase">
+	<target name="do-zipnet">
 		<antcall target="doctor">
-			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
 		</antcall>
 		
 		<antcall target="create-zipnet">
@@ -962,37 +949,30 @@
 			
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		
-		<antcall target="sharpen-pascalcase">
+		<antcall target="sharpen-compileall-net">
 		</antcall>
-		
-		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
 			
 		<echo message="MONO PASCALCASE" />
 		<echo message="MONO PASCALCASE: core" />
 		<antcall target="do-compiledllmono">
-			<param name="src.dir" location="${dir.dist.pascalcase}/core/src" />
+			<param name="src.dir" location="${dir.n.core.src}" />
 		</antcall>
 		<echo message="MONO PASCALCASE: tools" />
 		<antcall target="do-compiletoolsmono">
-			<param name="src.dir" location="${dir.dist.pascalcase}/tools/src" />
+			<param name="src.dir" location="${dir.n.tools.src}" />
 		</antcall>
 		<echo message="MONO PASCALCASE: tests" />
 		<antcall target="do-compiletestsmono">
-			<param name="src.dir" location="${dir.dist.pascalcase}/test/src" />
+			<param name="src.dir" location="${dir.n.test.src}" />
 		</antcall>
 		
 		<antcall target="ndocmono">
 		</antcall>
 		
 		<antcall target="doctor">
-			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
 		</antcall>
 		
 		<antcall target="prepare-mono-distro">
-			<param name="dir.n.core" location="${dir.dist.pascalcase}/core" />
-			<param name="dir.n.tools" location="${dir.dist.pascalcase}/tools" />
-			<param name="dir.n.test" location="${dir.dist.pascalcase}/test" />
-			<param name="dir.n.tutorial" location="${dir.dist.pascalcase}/tutorial" />
 		</antcall>
 	</target>
 	
@@ -1097,25 +1077,7 @@
 		</copy>
 	</target>
 	
-	<target name="generate-vb-tutorial">
-		<!-- don't convert for now, pending issues
-		<antcall target="execute-pascalcase-converter">
-			<param name="src.dir" location="${dir.n.tutorial}/db4o-tutorial-chapters" />
-			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial/vb/db4o-tutorial-chapters" />
-			<param name="converter.args" value="-vb" />
-		</antcall>
-		-->
-		
-		<copy todir="${dir.dist.pascalcase}/tutorial/vb">
-			<fileset dir="${dir.n.tutorial}/vb">
-				<include name="**/*.vb" />
-				<include name="**/*.vbproj" />
-				<include name="**/*.sln" />
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="net2-instrumentation" depends="pascalcase">
+	<target name="net2-instrumentation" depends="compileall-net">
 		
 		<property name="dir.n.instrumentation" location="../db4on/instrumentation" />
 		
@@ -1166,7 +1128,7 @@
 		</updateAssemblyHintPath>
 	</target>
 	
-	<target name="pascalcase" depends="sharpen">
+	<target name="compileall-net" depends="sharpen">
 		
 		<antcall target="compilecoredll-compact">
 		</antcall>
@@ -1222,7 +1184,7 @@
 		
 		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
 			<args>
-				<arg value="-pascalcase" />
+				<arg value="-compileall-net" />
 			</args>
 		</sharpen>
 		
@@ -1329,15 +1291,15 @@
 
 	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
-	<target name="buildnet-pascalcase" depends="zipnet-pascalcase" description="Full PascalCase NET build" />
+	<target name="buildnet" depends="zipnet" description="Full PascalCase NET build" />
 	
-	<target name="buildnet-pascalcase2" depends="zipnet-pascalcase2" description="Full PascalCase NET 2.0 build" />
+	<target name="buildnet2" depends="zipnet2" description="Full PascalCase NET 2.0 build" />
 	
 	<target name="buildmono" depends="zipmono-pascalcase" description="Full Mono build (now PascalCase)" />
 
-	<target name="buildall" depends="clean, buildjava, buildnet-pascalcase" description="Full clean build" />
+	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	
-	<target name="buildall2" depends="clean, buildjava, buildnet-pascalcase2" description="Full clean build (.net 2 runtime)" />
+	<target name="buildall2" depends="clean, buildjava, buildnet2" description="Full clean build (.net 2 runtime)" />
 	
 	<target name="serversidecopy">
 		<copy todir="${dir.server.downloads}" overwrite="true">
