@@ -69,6 +69,9 @@
 			<fileset dir="${dir.n.core.src}">
 				<include name="**/*.cs" />
 			</fileset>
+			<fileset dir="${dir.build}">
+				<include name="*.yap" />
+			</fileset>
 		</delete>
 		<ant dir="${dir.n.tutorial}" target="clean"/>
 	</target>
