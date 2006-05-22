@@ -3,7 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
-import com.db4o.marshall.*;
+import com.db4o.inside.marshall.*;
 
 final class YapFieldTranslator extends YapField
 {

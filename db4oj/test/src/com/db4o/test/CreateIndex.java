@@ -3,7 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.marshall.*;
+import com.db4o.inside.marshall.*;
 import com.db4o.query.*;
 
 public class CreateIndex {

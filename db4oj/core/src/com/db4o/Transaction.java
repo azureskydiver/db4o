@@ -5,8 +5,8 @@ package com.db4o;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
+import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
-import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 /**
