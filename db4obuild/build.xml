@@ -107,6 +107,7 @@
 		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
 			<sources dir="${dir.n.tools}">
 				<include name="**/*.cs" />
+				<exclude name="Libs/**/*.*" />
 			</sources>
 		</filehead>
 	</target>
@@ -324,9 +325,9 @@
 	</target>
 	
 	<target name="compilecoredll-net">
-		<versioninfo path="${src.dir}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
+		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<csc
-			srcdir="${src.dir}"
+			srcdir="${dir.n.core.src}"
 			targettype="library"
 			destfile="${file.dll.net}"
 			docfile="${file.xml.net}"
@@ -343,10 +344,9 @@
 	</target>
 	
 	<target name="compilecoredll-compact">
-		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<delete dir="${dir.dist.net.compile}" />
 		<copy todir="${dir.dist.net.compile}">
-			<fileset dir="${src.dir}">
+			<fileset dir="${dir.n.core.src}">
 				<include name="**/*.cs" />
 				<exclude name="net/**" />
 			</fileset>
@@ -413,7 +413,7 @@
 	<target name="copy-tools-sources">
 		<delete dir="${dir.dist.net.compile}" />
 		<copy todir="${dir.dist.net.compile}">
-			<fileset dir="${dir.dist.pascalcase}/tools">
+			<fileset dir="${dir.n.tools}">
 				<include name="**/*.cs" />
 				<exclude name="Libs/**/AssemblyInfo.cs" />
 				<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
@@ -853,41 +853,16 @@
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
-	<target name="compile-legacy">
-		<property name="legacy.dir" location="${dir.dist.net.build}/legacy" />
-		<property name="legacy.compact.dll.dir" location="${legacy.dir}/dll/compact" />
-		<property name="legacy.net.dll.dir" location="${legacy.dir}/dll/net" />
-		
-		<mkdir dir="${legacy.compact.dll.dir}" />
-		<mkdir dir="${legacy.net.dll.dir}" />
-		
-		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
-		
-		<antcall target="compiledllnet">
-			<param name="file.dll.compact" value="${legacy.compact.dll.dir}/${file.name.dll}" />
-			<param name="file.xml.compact" value="${legacy.compact.dll.dir}/${file.name.xml}" />
-			<param name="file.dll.net" value="${legacy.net.dll.dir}/${file.name.dll}" />
-			<param name="file.xml.net" value="${legacy.net.dll.dir}/${file.name.xml}" />
-			<param name="csharp.defines" value="NET" />
-			<param name="csharp.defines.cf" value="CF_1_0" />
-			<param name="dir.dll.wince" value="${dir.compactframework}v1.0/WindowsCE/" />
-			<param name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
-		</antcall>
-	</target>
-		
 	<target name="do-zipnet-pascalcase">
 		<antcall target="doctor">
 			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
 		</antcall>
 		
-		<antcall target="compile-legacy">
-		</antcall>
-		
 		<antcall target="create-zipnet">
-			<param name="dir.core" value="${dir.dist.pascalcase}/core" />
-			<param name="dir.tools" value="${dir.dist.pascalcase}/tools" />
-			<param name="dir.test" value="${dir.dist.pascalcase}/test" />
-			<param name="dir.tutorial" value="${dir.dist.pascalcase}/tutorial" />
+			<param name="dir.core" value="${dir.n.core}" />
+			<param name="dir.tools" value="${dir.n.tools}" />
+			<param name="dir.test" value="${dir.n.test}" />
+			<param name="dir.tutorial" value="${dir.n.tutorial}" />
 		</antcall>
 	</target>
 		
@@ -953,7 +928,7 @@
 		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
 			<sources dir="${dir.dist.net.build.src}">
 				<include name="**/*.cs" />
-				<exclude name="**/external/**" />
+				<exclude name="**/tools/Libs/**" />
 			</sources>
 		</filehead>
 		
@@ -999,7 +974,7 @@
 		</antcall>
 		<echo message="MONO PASCALCASE: tools" />
 		<antcall target="do-compiletoolsmono">
-			<param name="src.dir" location="${dir.dist.pascalcase}/tools" />
+			<param name="src.dir" location="${dir.dist.pascalcase}/tools/src" />
 		</antcall>
 		<echo message="MONO PASCALCASE: tests" />
 		<antcall target="do-compiletestsmono">
@@ -1011,29 +986,6 @@
 		
 		<antcall target="doctor">
 			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
-		</antcall>
-		
-		<!-- legacy dll -->
-		<echo message="MONO LEGACY" />
-		<mkdir dir="${dir.dist.mono.legacy}" />
-		<echo message="MONO LEGACY: core" />
-		<antcall target="compiledllmono">
-			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
-			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/${file.name.dll}" />
-			<param name="file.xml.mono" location="${dir.dist.mono.legacy}/${file.name.xml}" />
-		</antcall>
-		<echo message="MONO LEGACY: tools" />
-		<antcall target="compiletoolsmono">
-			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
-			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/${file.name.dll}" />
-			<param name="file.dll.tools.mono" location="${dir.dist.mono.legacy}/${file.name.dll.tools.mono}" />
-		</antcall>
-		<echo message="MONO LEGACY: tests" />
-		<antcall target="compiletestsmono">
-			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
-			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/${file.name.dll}" />
-			<param name="file.dll.tools.mono" location="${dir.dist.mono.legacy}/${file.name.dll.tools.mono}" />
-			<param name="file.exe.tests.mono" location="${dir.dist.mono.legacy}/${file.name.exe.tests.mono}" />
 		</antcall>
 		
 		<antcall target="prepare-mono-distro">
@@ -1163,122 +1115,6 @@
 		</copy>
 	</target>
 	
-	<target name="sharpen-pascalcase" depends="install-javatocsharp-plugin">	
-		
-		<property name="dir.sharpen.pc" location="${dir.sharpen}/pascalcase" />		
-		
-		<antcall target="prepare-conversion-workspace">
-			<param name="target.dir" value="${dir.sharpen.pc}" />
-		</antcall>
-			
-		<sharpen workspace="${dir.sharpen.pc}" resource="db4oj/core/src">
-			<args>
-				<arg value="-pascalcase" />
-			</args>
-		</sharpen>
-		
-		<ant antfile="build-converter.xml" inheritall="false">
-		</ant>		
-		
-		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
-		<property name="target.dir" value="${dir.dist.pascalcase}/core" />
-		<delete dir="${target.dir}" />
-		<mkdir dir="${target.dir}" />
-		
-		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${dir.sharpen.pc}/db4ojcsharp/src" />
-			<param name="target.dir" value="${target.dir}/src/core" />
-		</antcall>
-		
-		<antcall target="execute-pascalcase-converter">
-			<param name="src.dir" location="${dir.n.in.sharp}" />
-			<param name="target.dir" location="${target.dir}/src" />
-		</antcall>
-		
-		<delete dir="${dir.dist.net.compile}" />
-		<copy todir="${dir.dist.net.compile}">
-			<fileset dir="${dir.n.tools}">
-				<include name="**/*.*" />
-				<exclude name="Libs/**/*.*" />
-			</fileset>
-		</copy>
-		
-		<antcall target="execute-pascalcase-converter">
-			<param name="src.dir" location="${dir.dist.net.compile}" />
-			<param name="target.dir" location="${dir.dist.pascalcase}/tools" />
-		</antcall>
-		
-		<copy todir="${dir.dist.pascalcase}/tools">
-			<fileset dir="${dir.n.tools}">
-				<include name="Libs/**/*.*" />
-			</fileset>
-		</copy>
-		
-		<antcall target="execute-pascalcase-converter">
-			<param name="src.dir" location="${dir.n.test}/src" />
-			<param name="target.dir" location="${dir.dist.pascalcase}/test/src" />
-		</antcall>
-		
-		<antcall target="execute-pascalcase-converter">
-			<param name="src.dir" location="${dir.n.tutorial}" />
-			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial" />
-		</antcall>
-		
-		<antcall target="generate-vb-tutorial" />
-		
-		<copy todir="${dir.dist.pascalcase}">
-			<fileset dir="${dir.n}">
-				<include name="**/test/AssemblyInfo.cs" />
-				<include name="**/tools/AssemblyInfo.cs" />
-				
-				<include name="**/*.resx" />
-				<include name="**/*.resources" />
-				<include name="**/*.ico" />
-				<include name="**/lib/*.dll" />
-				<include name="tutorial/build.xml" />
-				<include name="tutorial/**/*.config" />
-				
-				<!-- Visual Studio files -->
-				<include name="**/*.csproj" />
-				<include name="**/*.csdproj" />
-				<include name="**/*.sln" />
-				
-				<!-- MonoDevelop files -->
-				<include name="**/*.mdp" />
-				<include name="**/*.mds" />				
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="execute-pascalcase-converter">
-		<property name="pascalcase.converter.exe" value="bin/CSharpConverter.exe" />
-		<property name="converter.args" value="" />
-		
-		<condition property="mono" value="true">
-			<os family="unix" />
-		</condition>
-			
-		<antcall target="execute-pascalcase-converter-mono" />
-		<antcall target="execute-pascalcase-converter-dotnet" />
-	</target>
-		
-	<target name="execute-pascalcase-converter-dotnet" unless="mono">
-		<exec executable="${pascalcase.converter.exe}" failonerror="true">
-			<arg file="${src.dir}" />
-			<arg file="${target.dir}" />
-			<arg value="${converter.args}" />
-		</exec>
-	</target>
-		
-	<target name="execute-pascalcase-converter-mono" if="mono">
-		<exec executable="mono" failonerror="true">
-			<arg file="${pascalcase.converter.exe}" />
-			<arg file="${src.dir}" />
-			<arg file="${target.dir}" />
-			<arg value="${converter.args}" />
-		</exec>		
-	</target>	
-	
 	<target name="net2-instrumentation" depends="pascalcase">
 		
 		<property name="dir.n.instrumentation" location="../db4on/instrumentation" />
@@ -1330,23 +1166,21 @@
 		</updateAssemblyHintPath>
 	</target>
 	
-	<target name="pascalcase" depends="sharpen-pascalcase">
+	<target name="pascalcase" depends="sharpen">
 		
 		<antcall target="compilecoredll-compact">
-			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
 		
 		<antcall target="compiletools-compact">
 		</antcall>
 
 		<antcall target="compilecoredll-net">
-			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
 		
 		<antcall target="compiletools-net">
 		</antcall>
 		
-		<ant dir="${dir.dist.pascalcase}/tutorial">
+		<ant dir="${dir.n.tutorial}">
 			<property name="dir.db4obuild" location="." />
 		</ant>
 		
@@ -1380,13 +1214,16 @@
 	
 	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin" unless="skip.conversion">
 
-		<property name="sharpen.src.dir" location="${dir.sharpen}/legacy" />
+		<property name="sharpen.src.dir" location="${dir.sharpen}" />
 		
 		<antcall target="prepare-conversion-workspace">
 			<param name="target.dir" value="${sharpen.src.dir}" />
 		</antcall>
 		
 		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
+			<args>
+				<arg value="-pascalcase" />
+			</args>
 		</sharpen>
 		
 		<antcall target="copy-sharpened-files">
