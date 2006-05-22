@@ -15,7 +15,7 @@ class TransactionObjectCarrier extends Transaction{
 		// do nothing
 	}
 	
-    void slotFreeOnCommit(int a_id, int a_address, int a_length) {
+    public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
 //      do nothing
     }
     

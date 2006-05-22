@@ -153,6 +153,10 @@ public class YapClassPrimitive extends YapClass{
         return true;
     }
     
+    public int isSecondClass(){
+        return YapConst.UNKNOWN;
+    }
+    
 	boolean isStrongTyped(){
 		return false;
 	}

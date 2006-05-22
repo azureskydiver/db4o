@@ -7,23 +7,23 @@ import com.db4o.reflect.*;
 
 /**
  * n-dimensional array
- *
+ * @exclude
  */
-final class YapArrayN extends YapArray {
+public final class YapArrayN extends YapArray {
 	
 	
-    YapArrayN(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
+    public YapArrayN(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream, a_handler, a_isPrimitive);
     }
 
-    final Object[] allElements(Object a_array) {
+    public final Object[] allElements(Object a_array) {
         int[] dim = _reflectArray.dimensions(a_array);
         Object[] flat = new Object[elementCount(dim)];
         _reflectArray.flatten(a_array, dim, 0, flat, 0);
         return flat;
     }
 
-    final int elementCount(Transaction a_trans, YapReader a_bytes) {
+    public final int elementCount(Transaction a_trans, YapReader a_bytes) {
         return elementCount(readDimensions(a_trans, a_bytes, new ReflectClass[1]));
     }
 
@@ -35,39 +35,47 @@ final class YapArrayN extends YapArray {
         return elements;
     }
 
-    final byte identifier() {
+    public final byte identifier() {
         return YapConst.YAPARRAYN;
     }
 
-    final int objectLength(Object a_object) {
+    public final int objectLength(Object a_object) {
         int[] dim = _reflectArray.dimensions(a_object);
         return YapConst.OBJECT_LENGTH
-            + (YapConst.YAPINT_LENGTH * ((Debug.arrayTypes ? 2 : 1) + dim.length))
+            + (YapConst.YAPINT_LENGTH * (2 + dim.length))
             + (elementCount(dim) * i_handler.linkLength());
     }
 
-    final Object read1(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
-        
-        // FIXME: SM remove
-        mf = MarshallerFamily.forVersion(0);
 
+    public final Object read1(MarshallerFamily mf, YapWriter reader) throws CorruptionException {
+        
+        if (Deploy.debug) {
+            reader.readBegin(identifier());
+        }
+        
 		Object[] ret = new Object[1];
-		int[] dim = read1Create(a_bytes.getTransaction(), a_bytes, ret);
+		int[] dim = read1Create(reader.getTransaction(), reader, ret);
 		if(ret[0] != null){
 	        Object[] objects = new Object[elementCount(dim)];
 	        for (int i = 0; i < objects.length; i++) {
-	            objects[i] = i_handler.read(mf, a_bytes);
+	            objects[i] = i_handler.read(mf, reader);
 	        }
             _reflectArray.shape(objects, 0, ret[0], dim, 0);
 		}
+        
+        if (Deploy.debug) {
+            reader.readEnd();
+        }
+        
         return ret[0];
     }
     
     
-	final Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_bytes) throws CorruptionException {
+	public final Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_bytes) throws CorruptionException {
         
-        // FIXME: SM remove
-        mf = MarshallerFamily.forVersion(0);
+        if(Deploy.debug){
+            a_bytes.readBegin(identifier());
+        }
         
 		Object[] ret = new Object[1];
 		int[] dim = read1Create(a_trans, a_bytes, ret);
@@ -78,6 +86,11 @@ final class YapArrayN extends YapArray {
 			}
             _reflectArray.shape(objects, 0, ret[0], dim, 0);
         }
+        
+        if (Deploy.debug) {
+            a_bytes.readEnd();
+        }
+
 		return ret[0];
 	}
 
@@ -102,24 +115,30 @@ final class YapArrayN extends YapArray {
         return dim;
     }
 
-    final void writeNew1(Object a_object, YapWriter a_bytes) {
-        int[] dim = _reflectArray.dimensions(a_object);
-        writeClass(a_object, a_bytes);
-        a_bytes.writeInt(dim.length);
-        for (int i = 0; i < dim.length; i++) {
-            a_bytes.writeInt(dim[i]);
-        }
-        Object[] objects = allElements(a_object);
+    public final void writeNew1(Object obj, YapWriter writer, int length) {
         
-        // FIXME: SM should be current MarshallerFamily
-        MarshallerFamily mf = MarshallerFamily.forVersion(0);
+        if (Deploy.debug) {
+            writer.writeBegin(identifier(), length);
+        }
+        
+        int[] dim = _reflectArray.dimensions(obj);
+        writeClass(obj, writer);
+        writer.writeInt(dim.length);
+        for (int i = 0; i < dim.length; i++) {
+            writer.writeInt(dim[i]);
+        }
+        Object[] objects = allElements(obj);
+        
+        MarshallerFamily mf = MarshallerFamily.current();
         
         for (int i = 0; i < objects.length; i++) {
-            
-            // FIXME: SM remove marshallerfamily 0
-
-            i_handler.writeNew(mf, element(objects, i), a_bytes);
+            i_handler.writeNew(mf, element(objects, i), writer);
         }
+        
+        if (Deploy.debug) {
+            writer.writeEnd();
+        }
+        
     }
 
     private Object element(Object a_array, int a_position) {

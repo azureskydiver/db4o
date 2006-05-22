@@ -67,10 +67,18 @@ final class YapClassAny extends YapClass {
 	boolean hasIndex() {
 	    return false;
 	}
+    
+    public boolean hasFixedLength(){
+        return false;
+    }
 
 	public boolean holdsAnyClass() {
 		return true;
 	}
+    
+    public int isSecondClass(){
+        return YapConst.UNKNOWN;
+    }
 	
 	boolean isStrongTyped(){
 		return false;

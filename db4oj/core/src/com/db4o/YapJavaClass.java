@@ -66,8 +66,16 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
 
+    public boolean hasFixedLength(){
+        return true;
+    }
+    
     public boolean indexNullHandling() {
         return false;
+    }
+    
+    public int isSecondClass(){
+        return YapConst.YES;
     }
     
     public int marshalledLength(Object obj) {

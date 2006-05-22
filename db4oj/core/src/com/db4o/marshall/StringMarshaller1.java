@@ -11,22 +11,19 @@ public class StringMarshaller1 extends StringMarshaller{
         return true;
     }
     
-    public Object marshall(Object a_object, YapWriter a_bytes) {
-        if (a_object == null) {
-            a_bytes.writeEmbeddedNull();
+    public Object marshall(Object obj, YapWriter writer) {
+        if (obj == null) {
+            writer.writeEmbeddedNull();
             return null;
         }
         
-        YapStream stream = a_bytes.getStream();
-        String str = (String) a_object;
+        YapStream stream = writer.getStream();
+        String str = (String) obj;
         int length = stream.stringIO().length(str);
         
-        a_bytes.writeInt(a_bytes._payloadOffset);
-        a_bytes.writeInt(length);
-        
-        YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
+        YapWriter bytes = new YapWriter(writer.getTransaction(), length);
         writeShort(stream, str, bytes);
-        a_bytes.writePayload(bytes);
+        writer.writePayload(bytes);
         return bytes;
     }
     

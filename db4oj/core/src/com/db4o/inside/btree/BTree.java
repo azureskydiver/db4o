@@ -20,10 +20,7 @@ public class BTree extends YapMeta{
     private BTreeNode _root;
    
     /**
-     * All instantiated nodes are held in this tree. From here the nodes
-     * are only referred to by weak references, so they can be garbage
-     * collected automatically, as soon as they are no longer referenced
-     * from the hard references in the BTreeNode#_children array.
+     * All instantiated nodes are held in this tree. 
      */
     private TreeIntObject _nodes;
     

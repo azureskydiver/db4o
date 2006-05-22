@@ -85,6 +85,10 @@ public final class YapString extends YapIndependantType {
         return true;
     }
     
+    public int isSecondClass(){
+        return YapConst.YES;
+    }
+    
     public int marshalledLength(Object obj){
         return MarshallerFamily.current()._string.marshalledLength(_stream, obj);
     }

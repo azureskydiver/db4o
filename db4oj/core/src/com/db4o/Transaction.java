@@ -693,7 +693,7 @@ public class Transaction {
         slot.setPointer(0, 0);
     }
 
-    void slotFreeOnCommit(int a_id, int a_address, int a_length) {
+    public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
