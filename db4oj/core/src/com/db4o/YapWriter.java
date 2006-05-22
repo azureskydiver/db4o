@@ -99,7 +99,7 @@ public final class YapWriter extends YapReader {
         return newID[0];
     }
 
-    int cascadeDeletes() {
+    public int cascadeDeletes() {
         return i_cascadeDelete;
     }
 
@@ -155,7 +155,7 @@ public final class YapWriter extends YapReader {
         return i_id;
     }
 
-    int getInstantiationDepth() {
+    public int getInstantiationDepth() {
         return i_instantionDepth;
     }
 
@@ -171,7 +171,7 @@ public final class YapWriter extends YapReader {
         return i_trans;
     }
 
-    int getUpdateDepth() {
+    public int getUpdateDepth() {
         return i_updateDepth;
     }
     
@@ -180,7 +180,15 @@ public final class YapWriter extends YapReader {
         System.arraycopy(_buffer, 0, bytes, 0, _offset);
         return bytes;
     }
-
+    
+    public int preparePayloadRead() {
+        int newPayLoadOffset = readInt();
+        int length = readInt();
+        int linkOffSet = _offset;
+        _offset = newPayLoadOffset;
+        _payloadOffset += length;
+        return linkOffSet;
+    }
 
     public void read() {
         i_trans.i_stream.readBytes(_buffer, i_address,_addressOffset, i_length);
@@ -200,16 +208,22 @@ public final class YapWriter extends YapReader {
 		return true;
     }
 
-    final YapWriter readEmbeddedObject() {
+    public final YapWriter readEmbeddedObject() {
         int id = readInt();
         int length = readInt();
+        YapWriter bytes = null;
         Tree tio = TreeInt.find(i_embedded, id);
         if (tio != null) {
-            return (YapWriter) ((TreeIntObject)tio)._object;
+            bytes = (YapWriter) ((TreeIntObject)tio)._object; 
+        }else{
+            bytes = i_trans.i_stream.readObjectWriterByAddress(i_trans, id, length);
+            if (bytes != null) {
+                bytes.setID(id);
+            }
         }
-        YapWriter bytes = i_trans.i_stream.readObjectWriterByAddress(i_trans, id, length);
-        if (bytes != null) {
-            bytes.setID(id);
+        if(bytes != null){
+            bytes.setUpdateDepth(getUpdateDepth());
+            bytes.setInstantiationDepth(getInstantiationDepth());
         }
         return bytes;
     }
@@ -240,7 +254,7 @@ public final class YapWriter extends YapReader {
         i_address = a_address;
     }
 
-    void setCascadeDeletes(int depth) {
+    public void setCascadeDeletes(int depth) {
         i_cascadeDelete = depth;
     }
 
@@ -248,7 +262,7 @@ public final class YapWriter extends YapReader {
         i_id = a_id;
     }
 
-    void setInstantiationDepth(int a_depth) {
+    public void setInstantiationDepth(int a_depth) {
         i_instantionDepth = a_depth;
     }
 
@@ -330,6 +344,8 @@ public final class YapWriter extends YapReader {
     }
     
     public void writePayload(YapWriter payLoad){
+        writeInt(_payloadOffset);
+        writeInt(payLoad.getLength());
         System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);
         transferPayLoadAddress(payLoad, _payloadOffset);
         _payloadOffset += getStream().alignToBlockSize(payLoad._buffer.length);
@@ -394,5 +410,6 @@ public final class YapWriter extends YapReader {
         }
         return "id " + i_id + " adr " + i_address + " len " + i_length;
     }
+
 
 }

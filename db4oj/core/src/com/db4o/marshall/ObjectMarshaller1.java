@@ -139,8 +139,6 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     
     public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
-        YapClass yc = yo.getYapClass();
-        
         ObjectHeaderAttributes1 attributes = new ObjectHeaderAttributes1(yo);
         
         YapWriter writer = createWriterForNew(

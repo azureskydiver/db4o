@@ -9,6 +9,8 @@ public class MarshallerFamily {
 
     public static final boolean            LEGACY           = true;
     
+    public final ArrayMarshaller           _array;
+    
     public final ObjectMarshaller           _object;
 
     public final PrimitiveMarshaller       _primitive;
@@ -18,18 +20,25 @@ public class MarshallerFamily {
 
     private final static MarshallerFamily[] allVersions     = new MarshallerFamily[] {
         new MarshallerFamily(
+            new ArrayMarshaller0(),
             new ObjectMarshaller0(), 
             new PrimitiveMarshaller0(),
             new StringMarshaller0()),
         new MarshallerFamily(
+            new ArrayMarshaller1(),
             new ObjectMarshaller1(), 
             new PrimitiveMarshaller1(),
             new StringMarshaller1())                        };
 
     private static final int                CURRENT_VERSION = LEGACY ? 0 : allVersions.length - 1;
 
-    private MarshallerFamily(ObjectMarshaller objectMarshaller,
-        PrimitiveMarshaller primitiveMarshaller, StringMarshaller stringMarshaller) {
+    private MarshallerFamily(
+            ArrayMarshaller arrayMarshaller,
+            ObjectMarshaller objectMarshaller,
+            PrimitiveMarshaller primitiveMarshaller, 
+            StringMarshaller stringMarshaller) {
+        _array = arrayMarshaller;
+        _array._family = this;
         _object = objectMarshaller;
         _object._family = this;
         _primitive = primitiveMarshaller;

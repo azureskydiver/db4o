@@ -31,6 +31,10 @@ public abstract class YapIndependantType implements TypeHandler4 {
     
     public abstract void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes);
     
+    public boolean hasFixedLength(){
+        return false;
+    }
+    
     public final int linkLength(){
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
     }

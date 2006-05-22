@@ -982,6 +982,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return yf[0];
 
     }
+    
+    public boolean hasFixedLength(){
+        return true;
+    }
 
     public boolean hasField(YapStream a_stream, String a_field) {
     	if(classReflector().isCollection()){
@@ -1244,6 +1248,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     public boolean isPrimitive(){
         return false;
+    }
+    
+    public int isSecondClass(){
+        return YapConst.NO;
     }
 
     /**

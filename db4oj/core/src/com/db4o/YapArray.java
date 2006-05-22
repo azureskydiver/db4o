@@ -7,14 +7,17 @@ import com.db4o.inside.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
-class YapArray extends YapIndependantType {
+/**
+ * @exclude
+ */
+public class YapArray extends YapIndependantType {
 	
-	final YapStream _stream;
-    final TypeHandler4 i_handler;
-    final boolean i_isPrimitive;
-    final ReflectArray _reflectArray;
+	public final YapStream _stream;
+    public final TypeHandler4 i_handler;
+    public final boolean i_isPrimitive;
+    public final ReflectArray _reflectArray;
 
-    YapArray(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
+    public YapArray(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
     	_stream = stream;
         i_handler = a_handler;
@@ -22,7 +25,7 @@ class YapArray extends YapIndependantType {
         _reflectArray = stream.reflector().array();
     }
 
-    Object[] allElements(Object a_object) {
+    public Object[] allElements(Object a_object) {
         Object[] all = new Object[_reflectArray.getLength(a_object)];
         for (int i = all.length - 1; i >= 0; i--) {
             all[i] = _reflectArray.get(a_object, i);
@@ -82,33 +85,7 @@ class YapArray extends YapIndependantType {
     }
 
     public final void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
-        
-        // FIXME: SM remove
-        mf = MarshallerFamily.forVersion(0);
-        
-        
-        int address = a_bytes.readInt();
-        int length = a_bytes.readInt();
-        if (address > 0) {
-        	Transaction trans = a_bytes.getTransaction();
-            if (a_bytes.cascadeDeletes() > 0 && i_handler instanceof YapClass) {
-                YapWriter bytes =
-                    a_bytes.getStream().readObjectWriterByAddress(
-                        trans,
-                        address,
-                        length);
-                if (bytes != null) {
-                    if (Deploy.debug) {
-                        bytes.readBegin(identifier());
-                    }
-                    bytes.setCascadeDeletes(a_bytes.cascadeDeletes());
-                    for (int i = elementCount(trans, bytes); i > 0; i--) {
-                        i_handler.deleteEmbedded(mf, bytes);
-                    }
-                }
-            }
-            trans.slotFreeOnCommit(address, address, length);
-        }
+        mf._array.deleteEmbedded(this, a_bytes);
     }
 
     public final void deletePrimitiveEmbedded(
@@ -134,12 +111,10 @@ class YapArray extends YapIndependantType {
         }
     }
 
-    int elementCount(Transaction a_trans, YapReader a_bytes) {
-        if (Debug.arrayTypes) {
-            int typeOrLength = a_bytes.readInt();
-            if (typeOrLength >= 0) {
-                return typeOrLength;
-            }
+    public int elementCount(Transaction a_trans, YapReader a_bytes) {
+        int typeOrLength = a_bytes.readInt();
+        if (typeOrLength >= 0) {
+            return typeOrLength;
         }
         return a_bytes.readInt();
     }
@@ -165,7 +140,7 @@ class YapArray extends YapIndependantType {
         return i_handler.getYapClass(a_stream);
     }
 
-    byte identifier() {
+    public byte identifier() {
         return YapConst.YAPARRAY;
     }
     
@@ -173,13 +148,17 @@ class YapArray extends YapIndependantType {
         return i_handler.indexNullHandling();
     }
     
+    public int isSecondClass(){
+        return i_handler.isSecondClass();
+    }
+    
     public int marshalledLength(Object obj) {
-        return 0;
+        return MarshallerFamily.current()._array.marshalledLength(this, obj);
     }
 
-    int objectLength(Object a_object) {
+    public int objectLength(Object a_object) {
         return YapConst.OBJECT_LENGTH
-            + YapConst.YAPINT_LENGTH * (Debug.arrayTypes ? 2 : 1)
+            + YapConst.YAPINT_LENGTH * 2
             + (_reflectArray.getLength(a_object) * i_handler.linkLength());
     }
     
@@ -187,25 +166,8 @@ class YapArray extends YapIndependantType {
 	    prepareComparison(obj);
 	}
 
-    public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
-        
-        // FIXME: SM remove
-        mf = MarshallerFamily.forVersion(0);
-
-		YapWriter bytes = a_bytes.readEmbeddedObject();
-		if (bytes == null) {
-			return null;
-		}
-		if (Deploy.debug) {
-			bytes.readBegin(identifier());
-		}
-		bytes.setUpdateDepth(a_bytes.getUpdateDepth());
-		bytes.setInstantiationDepth(a_bytes.getInstantiationDepth());
-        Object array = read1(mf, bytes);
-        if (Deploy.debug) {
-            bytes.readEnd();
-        }
-        return array;
+    public final Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
+        return mf._array.read(this, a_bytes);
     }
     
     public Object readIndexEntry(YapReader a_reader) {
@@ -213,29 +175,15 @@ class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
-        
-        // FIXME: SM remove
-        mf = MarshallerFamily.forVersion(0);
-        
-		YapReader bytes = a_reader.readEmbeddedObject(a_trans);
-		if (bytes == null) {
-			return null;
-		}
-		if(Deploy.debug){
-		    bytes.readBegin(identifier());
-		}
-		Object array = read1Query(a_trans,mf, bytes);
-		if (Deploy.debug) {
-			bytes.readEnd();
-		}
-		return array;
+	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+        return mf._array.readQuery(this, a_trans, a_reader);
 	}
 	
-	Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_reader) throws CorruptionException{
-        
-        // FIXME: SM remove
-        mf = MarshallerFamily.forVersion(0);
+	public Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_reader) throws CorruptionException{
+
+        if(Deploy.debug){
+            a_reader.readBegin(identifier());
+        }
 
 		int[] elements = new int[1];
         Object ret = readCreate(a_trans, a_reader, elements);
@@ -244,24 +192,34 @@ class YapArray extends YapIndependantType {
                 _reflectArray.set(ret, i, i_handler.readQuery(a_trans, mf, a_reader, true));
 			}
 		}
+        if (Deploy.debug) {
+            a_reader.readEnd();
+        }
+        
 		return ret;
 	}
 
-    Object read1(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
-
-        // FIXME: SM remove
-        mf = MarshallerFamily.forVersion(0);
+    public Object read1(MarshallerFamily mf, YapWriter reader) throws CorruptionException{
         
+        if (Deploy.debug) {
+            reader.readBegin(identifier());
+        }
+
 		int[] elements = new int[1];
-		Object ret = readCreate(a_bytes.getTransaction(), a_bytes, elements);
+		Object ret = readCreate(reader.getTransaction(), reader, elements);
 		if (ret != null){
-            if(i_handler.readArray(ret, a_bytes)){
+            if(i_handler.readArray(ret, reader)){
                 return ret;
             }
 			for (int i = 0; i < elements[0]; i++) {
-				_reflectArray.set(ret, i, i_handler.read(mf, a_bytes));
+				_reflectArray.set(ret, i, i_handler.read(mf, reader));
 			}	
 		}
+        
+        if (Deploy.debug) {
+            reader.readEnd();
+        }
+
         return ret;
     }
 
@@ -295,10 +253,10 @@ class YapArray extends YapIndependantType {
         }
     }
     
-    int readElementsAndClass(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz){
+    final int readElementsAndClass(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz){
         int elements = a_bytes.readInt();
         clazz[0] = i_handler.classReflector();
-        if (Debug.arrayTypes && elements < 0) {
+        if (elements < 0) {
             
             // TODO: This one is a terrible low-frequency blunder !!!
             // If YapClass-ID == 99999 then we will get ignore.
@@ -346,42 +304,40 @@ class YapArray extends YapIndependantType {
     }
 
     void writeClass(Object a_object, YapWriter a_bytes){
-        if (Debug.arrayTypes) {
-            int yapClassID = 0;
-            
-            Reflector reflector = a_bytes.i_trans.reflector();
-            
-            ReflectClass claxx = _reflectArray.getComponentType(reflector.forObject(a_object));
-            
-            boolean primitive = false;
-            if(! Deploy.csharp){
-                if(claxx.isPrimitive()){
-                    primitive = true;
-                }
+        int yapClassID = 0;
+        
+        Reflector reflector = a_bytes.i_trans.reflector();
+        
+        ReflectClass claxx = _reflectArray.getComponentType(reflector.forObject(a_object));
+        
+        boolean primitive = false;
+        if(! Deploy.csharp){
+            if(claxx.isPrimitive()){
+                primitive = true;
             }
-            YapStream stream = a_bytes.getStream();
-            if(primitive){
-                claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
-            }
-            YapClass yc = stream.getYapClass(claxx, true);
-            if (yc != null) {
-                yapClassID = yc.getID();
-            }
-            if(yapClassID == 0){
-                
-                // TODO: This one is a terrible low-frequency blunder !!!
-                // If YapClass-ID == 99999 then we will get IGNORE back.
-                // Discovered on adding the primitives
-                yapClassID = - YapConst.IGNORE_ID;
-                
-            } else{
-                if(primitive){
-                    yapClassID -= YapConst.PRIMITIVE;
-                }
-            }
-
-            a_bytes.writeInt(- yapClassID);
         }
+        YapStream stream = a_bytes.getStream();
+        if(primitive){
+            claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
+        }
+        YapClass yc = stream.getYapClass(claxx, true);
+        if (yc != null) {
+            yapClassID = yc.getID();
+        }
+        if(yapClassID == 0){
+            
+            // TODO: This one is a terrible low-frequency blunder !!!
+            // If YapClass-ID == 99999 then we will get IGNORE back.
+            // Discovered on adding the primitives
+            yapClassID = - YapConst.IGNORE_ID;
+            
+        } else{
+            if(primitive){
+                yapClassID -= YapConst.PRIMITIVE;
+            }
+        }
+
+        a_bytes.writeInt(- yapClassID);
     }
     
     public void writeIndexEntry(YapReader a_writer, Object a_object) {
@@ -390,43 +346,30 @@ class YapArray extends YapIndependantType {
     }
     
     public final Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
-        if (a_object == null) {
-            a_bytes.writeEmbeddedNull();
-            return null;
-        }
-        int length = objectLength(a_object);
-        YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
-        bytes.setUpdateDepth(a_bytes.getUpdateDepth());
-        if (Deploy.debug) {
-            bytes.writeBegin(identifier(), length);
-        }
-        writeNew1(a_object, bytes);
-        if (Deploy.debug) {
-            bytes.writeEnd();
-        }
-        bytes.setID(a_bytes._offset);
-        a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-        a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
-        a_bytes.writeInt(length);
-        return a_object;
+        return mf._array.writeNew(this, a_object, a_bytes);
     }
 
-    void writeNew1(Object a_object, YapWriter a_bytes) {
-        writeClass(a_object, a_bytes);
+    public void writeNew1(Object obj, YapWriter writer, int length) {
+        
+        if (Deploy.debug) {
+            writer.writeBegin(identifier(), length);
+        }
+        
+        writeClass(obj, writer);
 		
-		int elements = _reflectArray.getLength(a_object);
-        a_bytes.writeInt(elements);
+		int elements = _reflectArray.getLength(obj);
+        writer.writeInt(elements);
         
-        if(i_handler.writeArray(a_object, a_bytes)){
-            return;
+        if(! i_handler.writeArray(obj, writer)){
+            for (int i = 0; i < elements; i++) {
+                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), writer);
+            }
         }
         
-        // FIXME: SM Should be current MarshallerFamily
-        MarshallerFamily mf = MarshallerFamily.forVersion(0);
-
-        for (int i = 0; i < elements; i++) {
-            i_handler.writeNew(mf, _reflectArray.get(a_object, i), a_bytes);
+        if (Deploy.debug) {
+            writer.writeEnd();
         }
+        
     }
 
     // Comparison_______________________
