@@ -999,7 +999,7 @@
 		</antcall>
 		<echo message="MONO PASCALCASE: tools" />
 		<antcall target="do-compiletoolsmono">
-			<param name="src.dir" location="${dir.dist.pascalcase}/tools/src" />
+			<param name="src.dir" location="${dir.dist.pascalcase}/tools" />
 		</antcall>
 		<echo message="MONO PASCALCASE: tests" />
 		<antcall target="do-compiletestsmono">
