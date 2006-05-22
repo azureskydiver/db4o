@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -10,10 +10,10 @@ namespace com.db4o
 
 		internal YapRef(Object queue, Object yapObject, Object obj) : base(obj, false){
 			this.yapObject = yapObject;
-			((YapReferenceQueue) queue).add(this);
+			((YapReferenceQueue) queue).Add(this);
 		}
 
-		public object get(){
+		public object Get(){
 			return this.Target;
 		}
 	}

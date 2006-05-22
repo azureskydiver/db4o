@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -11,22 +11,22 @@ namespace com.db4o.test {
       public KeepCollectionContent() : base() {
       }
       
-      public void store() {
-         Tester.deleteAllInstances(new Atom());
-         Tester.deleteAllInstances(new System.Collections.Hashtable());
-         Tester.deleteAllInstances(new ArrayList());
+      public void Store() {
+         Tester.DeleteAllInstances(new Atom());
+         Tester.DeleteAllInstances(new System.Collections.Hashtable());
+         Tester.DeleteAllInstances(new ArrayList());
          System.Collections.Hashtable ht1 = new System.Collections.Hashtable();
          ht1.Add(new Atom(), new Atom());
-         Tester.store(ht1);
+         Tester.Store(ht1);
          ArrayList al1 = new ArrayList();
          al1.Add(new Atom());
-         Tester.store(al1);
+         Tester.Store(al1);
       }
       
-      public void test() {
-         Tester.deleteAllInstances(new System.Collections.Hashtable());
-         Tester.deleteAllInstances(new ArrayList());
-         Tester.ensureOccurrences(new Atom(), 3);
+      public void Test() {
+         Tester.DeleteAllInstances(new System.Collections.Hashtable());
+         Tester.DeleteAllInstances(new ArrayList());
+         Tester.EnsureOccurrences(new Atom(), 3);
       }
    }
 }

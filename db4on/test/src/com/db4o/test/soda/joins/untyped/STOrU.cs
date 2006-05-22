@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -26,7 +26,7 @@ namespace com.db4o.test.soda.joins.untyped {
             return "STOr: int:" + orInt + " str:" + orString;
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STOrU(0, "hi"),
                                    new STOrU(5, null),
@@ -35,195 +35,195 @@ namespace com.db4o.test.soda.joins.untyped {
                                    new STOrU(Int32.MaxValue - 1, null)         };
         }
       
-        public void testSmallerGreater() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU());
-            Query sub1 = q1.descend("orInt");
-            sub1.constrain(30000).greater().or(sub1.constrain(6).smaller());
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestSmallerGreater() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU());
+            Query sub1 = q1.Descend("orInt");
+            sub1.Constrain(30000).Greater().Or(sub1.Constrain(6).Smaller());
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[4]         });
         }
       
-        public void testGreaterGreater() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU());
-            Query sub1 = q1.descend("orInt");
-            sub1.constrain(System.Convert.ToInt32(30000)).greater().or(sub1.constrain(System.Convert.ToInt32(5)).greater());
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestGreaterGreater() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU());
+            Query sub1 = q1.Descend("orInt");
+            sub1.Constrain(System.Convert.ToInt32(30000)).Greater().Or(sub1.Constrain(System.Convert.ToInt32(5)).Greater());
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[2],
                                           r1[3],
                                           r1[4]         });
         }
       
-        public void testGreaterEquals() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU());
-            Query sub1 = q1.descend("orInt");
-            sub1.constrain(1000).greater().or(sub1.constrain(0));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestGreaterEquals() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU());
+            Query sub1 = q1.Descend("orInt");
+            sub1.Constrain(1000).Greater().Or(sub1.Constrain(0));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[3],
                                           r1[4]         });
         }
       
-        public void testEqualsNull() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(1000, null));
-            q1.descend("orInt").constraints().or(q1.descend("orString").constrain(null));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestEqualsNull() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(1000, null));
+            q1.Descend("orInt").Constraints().Or(q1.Descend("orString").Constrain(null));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[2],
                                           r1[4]         });
         }
       
-        public void testAndOrAnd() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(5)).and(q1.descend("orString").constrain(null)).or(q1.descend("orInt").constrain(System.Convert.ToInt32(1000)).and(q1.descend("orString").constrain("joho")));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestAndOrAnd() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).And(q1.Descend("orString").Constrain(null)).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(1000)).And(q1.Descend("orString").Constrain("joho")));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[2]         });
         }
       
-        public void testOrAndOr() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(5)).or(q1.descend("orString").constrain(null)).and(q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain("joho")));
-            st.expectOne(q1, store()[4]);
+        public void TestOrAndOr() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).Or(q1.Descend("orString").Constrain(null)).And(q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain("joho")));
+            st.ExpectOne(q1, Store()[4]);
         }
       
-        public void testOrOrAnd() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain("joho")).or(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).and(q1.descend("orString").constrain(null)));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestOrOrAnd() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain("joho")).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).And(q1.Descend("orString").Constrain(null)));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[2],
                                           r1[4]         });
         }
       
-        public void testMultiOrAnd() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain("joho")).or(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).and(q1.descend("orString").constrain("joho"))).or(q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain(null)).and(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).or(q1.descend("orString").constrain(null))));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestMultiOrAnd() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain("joho")).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).And(q1.Descend("orString").Constrain("joho"))).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain(null)).And(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).Or(q1.Descend("orString").Constrain(null))));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[2],
                                           r1[4]         });
         }
       
-        public void testNotSmallerGreater() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU());
-            Query sub1 = q1.descend("orInt");
-            sub1.constrain(30000).greater().or(sub1.constrain(1000).smaller()).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotSmallerGreater() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU());
+            Query sub1 = q1.Descend("orInt");
+            sub1.Constrain(30000).Greater().Or(sub1.Constrain(1000).Smaller()).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[2],
                                           r1[3]
                                                   });
         }
       
-        public void testNotGreaterGreater() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU());
-            Query sub1 = q1.descend("orInt");
-            sub1.constrain(30000).greater().or(sub1.constrain(5).greater()).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotGreaterGreater() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU());
+            Query sub1 = q1.Descend("orInt");
+            sub1.Constrain(30000).Greater().Or(sub1.Constrain(5).Greater()).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[1]
             });
         }
       
-        public void testNotGreaterEquals() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU());
-            Query sub1 = q1.descend("orInt");
-            sub1.constrain(1000).greater().or(sub1.constrain(0)).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotGreaterEquals() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU());
+            Query sub1 = q1.Descend("orInt");
+            sub1.Constrain(1000).Greater().Or(sub1.Constrain(0)).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[1],
                                           r1[2]         });
         }
       
-        public void testNotEqualsNull() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(1000, null));
-            q1.descend("orInt").constraints().or(q1.descend("orString").constrain(null)).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotEqualsNull() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(1000, null));
+            q1.Descend("orInt").Constraints().Or(q1.Descend("orString").Constrain(null)).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[3]         });
         }
       
-        public void testNotAndOrAnd() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(5)).and(q1.descend("orString").constrain(null)).or(q1.descend("orInt").constrain(System.Convert.ToInt32(1000)).and(q1.descend("orString").constrain("joho"))).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotAndOrAnd() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).And(q1.Descend("orString").Constrain(null)).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(1000)).And(q1.Descend("orString").Constrain("joho"))).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[3],
                                           r1[4]         });
         }
       
-        public void testNotOrAndOr() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(5)).or(q1.descend("orString").constrain(null)).and(q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain("joho"))).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotOrAndOr() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).Or(q1.Descend("orString").Constrain(null)).And(q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain("joho"))).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[1],
                                           r1[2],
                                           r1[3]         });
         }
       
-        public void testNotOrOrAnd() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain("joho")).or(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).and(q1.descend("orString").constrain(null))).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotOrOrAnd() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain("joho")).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).And(q1.Descend("orString").Constrain(null))).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[3]         });
         }
       
-        public void testNotMultiOrAnd() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain("joho")).or(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).and(q1.descend("orString").constrain("joho"))).or(q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain(null)).and(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).or(q1.descend("orString").constrain(null)))).not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotMultiOrAnd() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain("joho")).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).And(q1.Descend("orString").Constrain("joho"))).Or(q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain(null)).And(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).Or(q1.Descend("orString").Constrain(null)))).Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[3]         });
         }
       
-        public void testOrNotAndOr() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).or(q1.descend("orString").constrain("joho")).not().and(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).or(q1.descend("orString").constrain(null)));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestOrNotAndOr() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).Or(q1.Descend("orString").Constrain("joho")).Not().And(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).Or(q1.Descend("orString").Constrain(null)));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1]         });
         }
       
-        public void testAndNotAndAnd() {
-            Query q1 = st.query();
-            q1.constrain(new STOrU(0, null));
-            q1.descend("orInt").constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).and(q1.descend("orString").constrain(null)).not().and(q1.descend("orInt").constrain(System.Convert.ToInt32(5)).or(q1.descend("orString").constrain("osoo")));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestAndNotAndAnd() {
+            Query q1 = st.Query();
+            q1.Constrain(new STOrU(0, null));
+            q1.Descend("orInt").Constrain(System.Convert.ToInt32(Int32.MaxValue - 1)).And(q1.Descend("orString").Constrain(null)).Not().And(q1.Descend("orInt").Constrain(System.Convert.ToInt32(5)).Or(q1.Descend("orString").Constrain("osoo")));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[3]         });
         }

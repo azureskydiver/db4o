@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using com.db4o.config;
 
 namespace com.db4o.test.cs
@@ -7,9 +7,9 @@ namespace com.db4o.test.cs
 	{
 		public event EventHandler Crash;
 
-		public void objectOnActivate(ObjectContainer container)
+		public void ObjectOnActivate(ObjectContainer container)
 		{
-			Tester.ensureEquals(null, Crash);
+			Tester.EnsureEquals(null, Crash);
 			Crash += new EventHandler(Boom);
 		}
 
@@ -30,7 +30,7 @@ namespace com.db4o.test.cs
 
 		public static void Assert()
 		{
-			Tester.ensureEquals("Boom!!!!", OnActivateEventStrategy.Message);
+			Tester.EnsureEquals("Boom!!!!", OnActivateEventStrategy.Message);
 		}
 
 		static void Boom(object sender, EventArgs args)
@@ -52,27 +52,27 @@ namespace com.db4o.test.cs
 			Bang(this, EventArgs.Empty);
 		}
 
-        public void storeOne()
+        public void StoreOne()
 		{
 			this.Bang += new EventHandler(OnBang);
 			this.UntypedDelegate = new EventHandler(OnBang);
         }
 
-        public void testOne()
+        public void TestOne()
 		{
 			// delegate fields are simply not stored
-			Tester.ensureEquals(null, Bang);
-			Tester.ensureEquals(null, UntypedDelegate);
+			Tester.EnsureEquals(null, Bang);
+			Tester.EnsureEquals(null, UntypedDelegate);
         }
 		
-		public void testOnActivateEventStrategy()
+		public void TestOnActivateEventStrategy()
 		{
-			Tester.deleteAllInstances(typeof(OnActivateEventStrategy));
-			Tester.store(new OnActivateEventStrategy());
-            Tester.reOpenAll();
+			Tester.DeleteAllInstances(typeof(OnActivateEventStrategy));
+			Tester.Store(new OnActivateEventStrategy());
+            Tester.ReOpenAll();
             
 			OnActivateEventStrategy.Prepare();
-			OnActivateEventStrategy obj = (OnActivateEventStrategy)Tester.objectContainer().get(typeof(OnActivateEventStrategy)).next();
+			OnActivateEventStrategy obj = (OnActivateEventStrategy)Tester.ObjectContainer().Get(typeof(OnActivateEventStrategy)).Next();
 			obj.RaiseCrash();
 			OnActivateEventStrategy.Assert();
 		}

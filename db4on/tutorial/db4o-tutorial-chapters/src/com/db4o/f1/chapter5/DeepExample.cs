@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using com.db4o;
 
@@ -9,69 +9,69 @@ namespace com.db4o.f1.chapter5
         public static void Main(string[] args)
         {
             File.Delete(Util.YapFileName);
-            ObjectContainer db = Db4o.openFile(Util.YapFileName);
+            ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
             try
             {
-                storeCar(db);
-                db.close();
-                setCascadeOnUpdate();
-                db = Db4o.openFile(Util.YapFileName);
-                takeManySnapshots(db);
-                db.close();
-                db = Db4o.openFile(Util.YapFileName);
-                retrieveAllSnapshots(db);
-                db.close();
-                db = Db4o.openFile(Util.YapFileName);
-                retrieveSnapshotsSequentially(db);
-                retrieveSnapshotsSequentiallyImproved(db);
-                db.close();
-                setActivationDepth();
-                db = Db4o.openFile(Util.YapFileName);
-                retrieveSnapshotsSequentially(db);
+                StoreCar(db);
+                db.Close();
+                SetCascadeOnUpdate();
+                db = Db4o.OpenFile(Util.YapFileName);
+                TakeManySnapshots(db);
+                db.Close();
+                db = Db4o.OpenFile(Util.YapFileName);
+                RetrieveAllSnapshots(db);
+                db.Close();
+                db = Db4o.OpenFile(Util.YapFileName);
+                RetrieveSnapshotsSequentially(db);
+                RetrieveSnapshotsSequentiallyImproved(db);
+                db.Close();
+                SetActivationDepth();
+                db = Db4o.OpenFile(Util.YapFileName);
+                RetrieveSnapshotsSequentially(db);
             }
             finally
             {
-                db.close();
+                db.Close();
             }
         }
         
-        public static void storeCar(ObjectContainer db)
+        public static void StoreCar(ObjectContainer db)
         {
             Pilot pilot = new Pilot("Rubens Barrichello", 99);
             Car car = new Car("BMW");
             car.Pilot = pilot;
-            db.set(car);
+            db.Set(car);
         }
         
-        public static void setCascadeOnUpdate()
+        public static void SetCascadeOnUpdate()
         {
-            Db4o.configure().objectClass(typeof(Car)).cascadeOnUpdate(true);
+            Db4o.Configure().ObjectClass(typeof(Car)).CascadeOnUpdate(true);
         }
         
-        public static void takeManySnapshots(ObjectContainer db)
+        public static void TakeManySnapshots(ObjectContainer db)
         {
-            ObjectSet result = db.get(typeof(Car));
-            Car car = (Car)result.next();
+            ObjectSet result = db.Get(typeof(Car));
+            Car car = (Car)result.Next();
             for (int i=0; i<5; i++)
             {
                 car.Snapshot();
             }
-            db.set(car);
+            db.Set(car);
         }
         
-        public static void retrieveAllSnapshots(ObjectContainer db)
+        public static void RetrieveAllSnapshots(ObjectContainer db)
         {
-            ObjectSet result = db.get(typeof(SensorReadout));
-            while (result.hasNext())
+            ObjectSet result = db.Get(typeof(SensorReadout));
+            while (result.HasNext())
             {
-                Console.WriteLine(result.next());
+                Console.WriteLine(result.Next());
             }
         }
         
-        public static void retrieveSnapshotsSequentially(ObjectContainer db)
+        public static void RetrieveSnapshotsSequentially(ObjectContainer db)
         {
-            ObjectSet result = db.get(typeof(Car));
-            Car car = (Car)result.next();
+            ObjectSet result = db.Get(typeof(Car));
+            Car car = (Car)result.Next();
             SensorReadout readout = car.GetHistory();
             while (readout != null)
             {
@@ -80,23 +80,23 @@ namespace com.db4o.f1.chapter5
             }
         }
         
-        public static void retrieveSnapshotsSequentiallyImproved(ObjectContainer db)
+        public static void RetrieveSnapshotsSequentiallyImproved(ObjectContainer db)
         {
-            ObjectSet result = db.get(typeof(Car));
-            Car car = (Car)result.next();
+            ObjectSet result = db.Get(typeof(Car));
+            Car car = (Car)result.Next();
             SensorReadout readout = car.GetHistory();
             while (readout != null)
             {
-                db.activate(readout, 1);
+                db.Activate(readout, 1);
                 Console.WriteLine(readout);
                 readout = readout.Next;
             }
         }
         
-        public static void setActivationDepth()
+        public static void SetActivationDepth()
         {
-            Db4o.configure().objectClass(typeof(TemperatureSensorReadout))
-                .cascadeOnActivate(true);
+            Db4o.Configure().ObjectClass(typeof(TemperatureSensorReadout))
+                .CascadeOnActivate(true);
         }
         
     }

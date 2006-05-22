@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -20,7 +20,7 @@ namespace com.db4o.test.soda.classes.simple {
             i_date = a_date;
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STDate(new DateTime(1000)),
                                    new STDate(new DateTime(4000)),
@@ -29,58 +29,58 @@ namespace com.db4o.test.soda.classes.simple {
                                    new STDate(new DateTime(7000))         };
         }
       
-        public void testEquals() {
-            Query q1 = st.query();
-            q1.constrain(store()[1]);
-            st.expectOne(q1, store()[1]);
+        public void TestEquals() {
+            Query q1 = st.Query();
+            q1.Constrain(Store()[1]);
+            st.ExpectOne(q1, Store()[1]);
         }
       
-        public void testGreater() {
-            Query q1 = st.query();
-            q1.constrain(store()[2]);
-            q1.descend("i_date").constraints().greater();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestGreater() {
+            Query q1 = st.Query();
+            q1.Constrain(Store()[2]);
+            q1.Descend("i_date").Constraints().Greater();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[3],
                                           r1[4]         });
         }
       
-        public void testSmaller() {
-            Query q1 = st.query();
-            q1.constrain(store()[4]);
-            q1.descend("i_date").constraints().smaller();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestSmaller() {
+            Query q1 = st.Query();
+            q1.Constrain(Store()[4]);
+            q1.Descend("i_date").Constraints().Smaller();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[1],
                                           r1[2],
                                           r1[3]         });
         }
 
-        public void testGreaterOrEqual(){
-            Query q = st.query();
-            q.constrain(store()[2]);
-            q.descend("i_date").constraints().greater().equal();
-            Object[] r = store();
-            st.expect(q, new Object[] {r[2], r[3], r[4]});
+        public void TestGreaterOrEqual(){
+            Query q = st.Query();
+            q.Constrain(Store()[2]);
+            q.Descend("i_date").Constraints().Greater().Equal();
+            Object[] r = Store();
+            st.Expect(q, new Object[] {r[2], r[3], r[4]});
         }
 
-        public void testNotGreaterOrEqual() {
-            Query q1 = st.query();
-            q1.constrain(store()[3]);
-            q1.descend("i_date").constraints().not().greater().equal();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotGreaterOrEqual() {
+            Query q1 = st.Query();
+            q1.Constrain(Store()[3]);
+            q1.Descend("i_date").Constraints().Not().Greater().Equal();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[1],
                                           r1[2]         });
         }
       
-        public void testNull() {
-            Query q1 = st.query();
-            q1.constrain(new STDate());
-            q1.descend("i_date").constrain(null);
-            st.expectNone(q1);
+        public void TestNull() {
+            Query q1 = st.Query();
+            q1.Constrain(new STDate());
+            q1.Descend("i_date").Constrain(null);
+            st.ExpectNone(q1);
         }
     }
       

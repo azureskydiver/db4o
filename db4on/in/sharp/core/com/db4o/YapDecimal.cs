@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -9,15 +9,15 @@ namespace com.db4o
         public YapDecimal(com.db4o.YapStream stream) : base(stream) {
         }
 
-        public override int compare(Object o1, Object o2){
+        public override int Compare(Object o1, Object o2){
             return ((decimal)o2 > (decimal)o1) ? 1 : -1;
         }
 
-        public override Object defaultValue(){
+        public override Object DefaultValue(){
             return (decimal)0;
         }
       
-        public override Object read(byte[] bytes, int offset){
+        public override Object Read(byte[] bytes, int offset){
             int[] ints = new int[4];
             offset += 3;
             for(int i = 0; i < 4; i ++){
@@ -27,11 +27,11 @@ namespace com.db4o
             return new Decimal(ints);
         }
 
-        public override int typeID(){
+        public override int TypeID(){
             return 21;
         }
       
-        public override void write(Object obj, byte[] bytes, int offset){
+        public override void Write(Object obj, byte[] bytes, int offset){
             decimal dec = (decimal)obj;
             int[] ints = Decimal.GetBits(dec);
             offset += 4;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -9,16 +9,16 @@ namespace com.db4o.test.cs
 	{
         int[,] ints;
 
-        public void store(){
-            Tester.deleteAllInstances(this);
+        public void Store(){
+            Tester.DeleteAllInstances(this);
             ints = new int[2,2];
             ints[0,0] = 10;
-            Tester.store(this);
+            Tester.Store(this);
         }
 
-        public void test(){
-            CsArrays csa = (CsArrays)Tester.getOne(this);
-            Tester.ensure(csa.ints[0,0] == 10);
+        public void Test(){
+            CsArrays csa = (CsArrays)Tester.GetOne(this);
+            Tester.Ensure(csa.ints[0,0] == 10);
         }
 	}
 }

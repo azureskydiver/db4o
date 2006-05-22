@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -25,55 +25,55 @@ namespace com.db4o.test.soda.engines.db4o {
          * starts a db4o server. <br>To test with a remote server:<br> - set IN_PROCESS_SERVER to false - start STDb4oClientServer on the server - run SodaTest on the client - STDb4oClientServer needs to be uncommented in SodaTest#ENGINES The server can be stopped with CTRL + C.
          */
         public static void Main(String[] args) {
-            new File(FILE).delete();
-            ObjectServer server1 = Db4o.openServer(FILE, PORT);
-            server1.grantAccess(USER, PASS);
-            server1.ext().configure().messageLevel(-1);
+            new File(FILE).Delete();
+            ObjectServer server1 = Db4o.OpenServer(FILE, PORT);
+            server1.GrantAccess(USER, PASS);
+            server1.Ext().Configure().MessageLevel(-1);
         }
       
-        public void reset() {
-            new File(FILE).delete();
+        public void Reset() {
+            new File(FILE).Delete();
         }
       
-        public Query query() {
-            return con.query();
+        public Query Query() {
+            return con.Query();
         }
       
-        public void open() {
-            Db4o.configure().messageLevel(-1);
+        public void Open() {
+            Db4o.Configure().MessageLevel(-1);
             if (IN_PROCESS_SERVER) {
-                server = Db4o.openServer(FILE, PORT);
-                server.grantAccess(USER, PASS);
+                server = Db4o.OpenServer(FILE, PORT);
+                server.GrantAccess(USER, PASS);
                 try {
-                    Thread.sleep(1000);
+                    Thread.Sleep(1000);
                 }  catch (Exception e) {
-                    j4o.lang.JavaSystem.printStackTrace(e);
+                    j4o.lang.JavaSystem.PrintStackTrace(e);
                 }
             }
             try {
-                con = Db4o.openClient(HOST, PORT, USER, PASS);
+                con = Db4o.OpenClient(HOST, PORT, USER, PASS);
             }  catch (Exception e) {
-                j4o.lang.JavaSystem.printStackTrace(e);
+                j4o.lang.JavaSystem.PrintStackTrace(e);
             }
         }
       
-        public void close() {
-            con.close();
+        public void Close() {
+            con.Close();
             if (IN_PROCESS_SERVER) {
-                server.close();
+                server.Close();
             }
         }
       
-        public void store(Object obj) {
-            con.set(obj);
+        public void Store(Object obj) {
+            con.Set(obj);
         }
       
-        public void commit() {
-            con.commit();
+        public void Commit() {
+            con.Commit();
         }
       
-        public void delete(Object obj) {
-            con.delete(obj);
+        public void Delete(Object obj) {
+            con.Delete(obj);
         }
     }
 }

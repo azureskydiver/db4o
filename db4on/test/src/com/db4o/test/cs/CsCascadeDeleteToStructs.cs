@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -11,22 +11,22 @@ namespace com.db4o.test.cs
 	{
 		CDSStruct myStruct;
 
-		public void storeOne()
+		public void StoreOne()
 		{
 			myStruct = new CDSStruct(3,"hi");
 		}
 
-		public void testOne()
+		public void TestOne()
 		{
-			Tester.ensureOccurrences(myStruct,1);
+			Tester.EnsureOccurrences(myStruct,1);
 			myStruct.foo = 44;
 			myStruct.bar = "cool";
-			Tester.objectContainer().set(this);
-			Tester.ensureOccurrences(myStruct,1);
+			Tester.ObjectContainer().Set(this);
+			Tester.EnsureOccurrences(myStruct,1);
 
-			Tester.objectContainer().delete(this);
-			Tester.commit();
-			Tester.ensureOccurrences(myStruct,0);
+			Tester.ObjectContainer().Delete(this);
+			Tester.Commit();
+			Tester.EnsureOccurrences(myStruct,0);
 		}
 
 	}

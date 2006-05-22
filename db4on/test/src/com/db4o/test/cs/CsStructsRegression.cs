@@ -1,36 +1,36 @@
-using System;
+﻿using System;
 using com.db4o.query;
 
 namespace com.db4o.test.cs
 {
 	public class CsStructsRegression
 	{
-		public void store()
+		public void Store()
 		{
-			Tester.store(new Item());
-			Tester.store(new Item(1));
-			Tester.store(new Item(2));
+			Tester.Store(new Item());
+			Tester.Store(new Item(1));
+			Tester.Store(new Item(2));
 		}
 
-		public void testConstrainOnNullableValue()
+		public void TestConstrainOnNullableValue()
 		{
-			checkQueryById(1);
-			checkQueryById(2);
+			CheckQueryById(1);
+			CheckQueryById(2);
 		}
 
-		private static void checkQueryById(int id)
+		private static void CheckQueryById(int id)
 		{
-			ObjectSet os = queryById(id);
-			Tester.ensureEquals(1, os.size());
-			Tester.ensureEquals(id, ((Item)os.next()).Id);
+			ObjectSet os = QueryById(id);
+			Tester.EnsureEquals(1, os.Size());
+			Tester.EnsureEquals(id, ((Item)os.Next()).Id);
 		}
 
-		private static ObjectSet queryById(int id)
+		private static ObjectSet QueryById(int id)
 		{
-			Query q = Tester.query();
-			q.constrain(typeof(Item));
-			q.descend("_id").descend("_value").constrain(id);
-			return q.execute();
+			Query q = Tester.Query();
+			q.Constrain(typeof(Item));
+			q.Descend("_id").Descend("_value").Constrain(id);
+			return q.Execute();
 		}
 	}
 

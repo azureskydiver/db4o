@@ -1,4 +1,4 @@
-using com.db4o.query;
+﻿using com.db4o.query;
 
 namespace com.db4o.test.soda
 {
@@ -14,19 +14,19 @@ namespace com.db4o.test.soda
 			}
 		}
 		
-		public void store()
+		public void Store()
 		{
-			Tester.store(new Thing(10));
-			Tester.store(new Thing(100));
-			Tester.store(new Thing(42));
+			Tester.Store(new Thing(10));
+			Tester.Store(new Thing(100));
+			Tester.Store(new Thing(42));
 		}
 		
-		public void testIntQueryOnLongField()
+		public void TestIntQueryOnLongField()
 		{
-			Query q = Tester.query();
-			q.constrain(typeof (Thing));
-			q.descend("value").constrain(100);
-			Tester.ensureEquals(1, q.execute().Count, "testIntQueryOnLongField");
+			Query q = Tester.Query();
+			q.Constrain(typeof (Thing));
+			q.Descend("value").Constrain(100);
+			Tester.EnsureEquals(1, q.Execute().Count, "testIntQueryOnLongField");
 		}
 		
 	}

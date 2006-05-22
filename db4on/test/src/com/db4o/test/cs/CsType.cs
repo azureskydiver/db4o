@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace com.db4o.test.cs
 {
@@ -7,16 +7,16 @@ namespace com.db4o.test.cs
 		Type myType;
 		Type stringType;
 
-		public void storeOne() 
+		public void StoreOne() 
 		{
 			myType = this.GetType();
 			stringType = typeof(String);
 		}
 
-		public void testOne() 
+		public void TestOne() 
 		{
-			Tester.ensureEquals(this.GetType(), myType);
-			Tester.ensureEquals(typeof(String), stringType);
+			Tester.EnsureEquals(this.GetType(), myType);
+			Tester.EnsureEquals(typeof(String), stringType);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -21,7 +21,7 @@ namespace com.db4o.test.soda.classes.typedhierarchy {
          foo1 = str;
       }
       
-      public Object[] store() {
+      public Object[] Store() {
          return new Object[]{
             new STETH1(),
 new STETH1("str1"),
@@ -35,36 +35,36 @@ new STETH4("str1a", "str2", "str4"),
 new STETH4("str1b", "str2a", "str4")         };
       }
       
-      public void testStrNull() {
-         Query q1 = st.query();
-         q1.constrain(new STETH1());
-         q1.descend("foo1").constrain(null);
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestStrNull() {
+         Query q1 = st.Query();
+         q1.Constrain(new STETH1());
+         q1.Descend("foo1").Constrain(null);
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[2],
 r1[4],
 r1[7]         });
       }
       
-      public void testTwoNull() {
-         Query q1 = st.query();
-         q1.constrain(new STETH1());
-         q1.descend("foo1").constrain(null);
-         q1.descend("foo3").constrain(null);
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestTwoNull() {
+         Query q1 = st.Query();
+         q1.Constrain(new STETH1());
+         q1.Descend("foo1").Constrain(null);
+         q1.Descend("foo3").Constrain(null);
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[2],
 r1[4],
 r1[7]         });
       }
       
-      public void testClass() {
-         Query q1 = st.query();
-         q1.constrain(Class.getClassForType(typeof(STETH2)));
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestClass() {
+         Query q1 = st.Query();
+         q1.Constrain(Class.GetClassForType(typeof(STETH2)));
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[2],
 r1[3],
 r1[4],
@@ -75,11 +75,11 @@ r1[8],
 r1[9]         });
       }
       
-      public void testOrClass() {
-         Query q1 = st.query();
-         q1.constrain(Class.getClassForType(typeof(STETH3))).or(q1.constrain(Class.getClassForType(typeof(STETH4))));
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestOrClass() {
+         Query q1 = st.Query();
+         q1.Constrain(Class.GetClassForType(typeof(STETH3))).Or(q1.Constrain(Class.GetClassForType(typeof(STETH4))));
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[4],
 r1[5],
 r1[6],
@@ -88,33 +88,33 @@ r1[8],
 r1[9]         });
       }
       
-      public void testAndClass() {
-         Query q1 = st.query();
-         q1.constrain(Class.getClassForType(typeof(STETH1)));
-         q1.constrain(Class.getClassForType(typeof(STETH4)));
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestAndClass() {
+         Query q1 = st.Query();
+         q1.Constrain(Class.GetClassForType(typeof(STETH1)));
+         q1.Constrain(Class.GetClassForType(typeof(STETH4)));
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[7],
 r1[8],
 r1[9]         });
       }
       
-      public void testParalellDescendantPaths() {
-         Query q1 = st.query();
-         q1.constrain(Class.getClassForType(typeof(STETH3))).or(q1.constrain(Class.getClassForType(typeof(STETH4))));
-         q1.descend("foo3").constrain("str3").or(q1.descend("foo4").constrain("str4"));
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestParalellDescendantPaths() {
+         Query q1 = st.Query();
+         q1.Constrain(Class.GetClassForType(typeof(STETH3))).Or(q1.Constrain(Class.GetClassForType(typeof(STETH4))));
+         q1.Descend("foo3").Constrain("str3").Or(q1.Descend("foo4").Constrain("str4"));
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[5],
 r1[8],
 r1[9]         });
       }
       
-      public void testOrObjects() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(r1[3]).or(q1.constrain(r1[5]));
-         st.expect(q1, new Object[]{
+      public void TestOrObjects() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(r1[3]).Or(q1.Constrain(r1[5]));
+         st.Expect(q1, new Object[]{
             r1[3],
 r1[5]         });
       }

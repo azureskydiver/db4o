@@ -1,4 +1,4 @@
-namespace com.db4o.test.net2
+﻿namespace com.db4o.test.net2
 {
 #if NET_2_0 || CF_2_0
     using System;
@@ -14,7 +14,7 @@ namespace com.db4o.test.net2
     {
 
 
-        public void store()
+        public void Store()
         {
             LHolder1 lh1 = new LHolder1();
             lh1._name = "root";
@@ -31,40 +31,40 @@ namespace com.db4o.test.net2
             lh3.CreateLists();
             lh3._name = "update";
 
-            Tester.store(lh1);
-            Tester.store(lh2);
-            Tester.store(lh3);
+            Tester.Store(lh1);
+            Tester.Store(lh2);
+            Tester.Store(lh3);
         }
 
 
-        public void test()
+        public void Test()
         {
             LHolder1 root = QueryForNamedHolder("root");
             root.CheckListsBeforeUpdate();
 
             LHolder1 updateHolder = QueryForNamedHolder("update");
             updateHolder.UpdateLists();
-            updateHolder.StoreLists(Tester.objectContainer());
+            updateHolder.StoreLists(Tester.ObjectContainer());
 
-            Tester.reOpen();
+            Tester.ReOpen();
 
             updateHolder = QueryForNamedHolder("update");
             updateHolder.CheckListsAfterUpdate();
 
-            Query q = Tester.objectContainer().query();
-            q.constrain(typeof(LHolder1));
-            q.descend("nList1").descend("_name").constrain("update");
-            ObjectSet objectSet = q.execute();
-            Tester.ensure(objectSet.size() == 1);
-            LHolder1 lh1 = (LHolder1 )objectSet.next();
-            Tester.ensure(updateHolder == lh1);
+            Query q = Tester.ObjectContainer().Query();
+            q.Constrain(typeof(LHolder1));
+            q.Descend("nList1").Descend("_name").Constrain("update");
+            ObjectSet objectSet = q.Execute();
+            Tester.Ensure(objectSet.Size() == 1);
+            LHolder1 lh1 = (LHolder1 )objectSet.Next();
+            Tester.Ensure(updateHolder == lh1);
 
 
         }
         
         private LHolder1 QueryForNamedHolder(string name)
         {
-            IList<LHolder1> holderList = Tester.objectContainer().query<LHolder1>(delegate(LHolder1 holder)
+            IList<LHolder1> holderList = Tester.ObjectContainer().Query<LHolder1>(delegate(LHolder1 holder)
             {
                 return holder._name == name;
             });
@@ -128,10 +128,10 @@ namespace com.db4o.test.net2
 
         public void StoreLists(ObjectContainer oc)
         {
-            oc.set(nList1);
-            oc.set(nList2);
-            oc.set(gList1);
-            oc.set(gList2);
+            oc.Set(nList1);
+            oc.Set(nList2);
+            oc.Set(gList1);
+            oc.Set(gList2);
         }
 
         public void CheckListsBeforeUpdate()
@@ -153,10 +153,10 @@ namespace com.db4o.test.net2
 
         private void CheckList(IList list, object[] expectedContent)
         {
-            Tester.ensure(list.Count == expectedContent.Length);
+            Tester.Ensure(list.Count == expectedContent.Length);
             for (int i = 0; i < expectedContent.Length; i++) 
             { 
-                Tester.ensure(list[i].Equals(expectedContent[i]));
+                Tester.Ensure(list[i].Equals(expectedContent[i]));
             }
         }
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using j4o.io;
 using NativeSocket=System.Net.Sockets.Socket;
@@ -23,17 +23,17 @@ namespace j4o.net
 			Initialize(socket);
 		}
 
-		public InputStream getInputStream()
+		public InputStream GetInputStream()
 		{
 			return _in;
 		}
 
-		public OutputStream getOutputStream()
+		public OutputStream GetOutputStream()
 		{
 			return _out;
 		}
 
-		public int getPort() 
+		public int GetPort() 
 		{
 			return ((IPEndPoint)base._delegate.RemoteEndPoint).Port;
 		}

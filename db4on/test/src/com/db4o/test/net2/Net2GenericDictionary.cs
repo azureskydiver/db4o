@@ -1,4 +1,4 @@
-namespace com.db4o.test.net2
+﻿namespace com.db4o.test.net2
 {
 #if NET_2_0 || CF_2_0
     using System;
@@ -14,7 +14,7 @@ namespace com.db4o.test.net2
     {
 
 
-        public void store()
+        public void Store()
         {
             DHolder1 dh1 = new DHolder1();
             dh1._name = "root";
@@ -31,22 +31,22 @@ namespace com.db4o.test.net2
             dh3.CreateDicts();
             dh3._name = "update";
 
-            Tester.store(dh1);
-            Tester.store(dh2);
-            Tester.store(dh3);
+            Tester.Store(dh1);
+            Tester.Store(dh2);
+            Tester.Store(dh3);
         }
 
 
-        public void test()
+        public void Test()
         {
             DHolder1 root = QueryForNamedHolder("root");
             root.CheckDictsBeforeUpdate();
 
             DHolder1 updateHolder = QueryForNamedHolder("update");
             updateHolder.UpdateDicts();
-            updateHolder.StoreDicts(Tester.objectContainer());
+            updateHolder.StoreDicts(Tester.ObjectContainer());
 
-            Tester.reOpen();
+            Tester.ReOpen();
 
             updateHolder = QueryForNamedHolder("update");
             updateHolder.CheckDictsAfterUpdate();
@@ -54,7 +54,7 @@ namespace com.db4o.test.net2
 
         private DHolder1 QueryForNamedHolder(string name)
         {
-            IList<DHolder1> holderList = Tester.objectContainer().query<DHolder1>(delegate(DHolder1 holder)
+            IList<DHolder1> holderList = Tester.ObjectContainer().Query<DHolder1>(delegate(DHolder1 holder)
             {
                 return holder._name == name;
             });
@@ -120,10 +120,10 @@ namespace com.db4o.test.net2
 
         public void StoreDicts(ObjectContainer oc)
         {
-            oc.set(nDict1);
-            oc.set(nDict2);
-            oc.set(gDict1);
-            oc.set(gDict2);
+            oc.Set(nDict1);
+            oc.Set(nDict2);
+            oc.Set(gDict1);
+            oc.Set(gDict2);
         }
 
         public void CheckDictsBeforeUpdate()
@@ -145,13 +145,13 @@ namespace com.db4o.test.net2
 
         private void CheckDict(IDictionary dict, object[] expectedContent)
         {
-            Tester.ensure(dict.Count == expectedContent.Length);
+            Tester.Ensure(dict.Count == expectedContent.Length);
             for (int i = 0; i < expectedContent.Length; i++) 
             {
                 Named named = expectedContent[i] as Named;
                 String name = named.Name();
                 string str = (string)dict[expectedContent[i]];
-                Tester.ensure(str.Equals(name));
+                Tester.Ensure(str.Equals(name));
             }
         }
 

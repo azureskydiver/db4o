@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -13,38 +13,38 @@ namespace com.db4o.test {
         public String name;
         public Callbacks parent;
 		
-        public void objectOnActivate(ObjectContainer container)
+        public void ObjectOnActivate(ObjectContainer container)
         {
 		    
             Callbacks.called[Callbacks.ACTIVATE] = true;
 		    
 		    
-            container.activate(parent, 3);
+            container.Activate(parent, 3);
         }
 		
-        public void objectOnDeactivate(ObjectContainer container)
+        public void ObjectOnDeactivate(ObjectContainer container)
         {
-            container.deactivate(parent, 3);
+            container.Deactivate(parent, 3);
         }
 		
-        public void objectOnDelete(ObjectContainer container)
+        public void ObjectOnDelete(ObjectContainer container)
         {
-            container.delete(parent);
+            container.Delete(parent);
         }
 		
-        public void objectOnNew(ObjectContainer container)
+        public void ObjectOnNew(ObjectContainer container)
         {
-            container.set(parent);
+            container.Set(parent);
         }
 		
-        public void objectOnUpdate(ObjectContainer container)
+        public void ObjectOnUpdate(ObjectContainer container)
         {
 		    
             // circular sets are necessary in many cases
             // Don' stop them!
 		    
             // Accordingly the following will produce an endless loop
-            // container.set(parent);
+            // container.Set(parent);
         }
     }
 }

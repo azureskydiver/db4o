@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o;
@@ -9,58 +9,58 @@ namespace com.db4o.test
 	{
         Object arr;
 	
-        public void testSimpleLongInObject(){
+        public void TestSimpleLongInObject(){
             int call = 0;
             PrimitiveArrayFileSize pafs = new PrimitiveArrayFileSize();
             for (int i = 0; i < 12; i++) {
                 pafs.arr = new long[100];
-                Tester.store(pafs);
-                checkFileSize(call++);
-                Tester.commit();
-                checkFileSize(call++);
+                Tester.Store(pafs);
+                CheckFileSize(call++);
+                Tester.Commit();
+                CheckFileSize(call++);
             }
         }
 	
-        public void testLongWrapperInObject(){
+        public void TestLongWrapperInObject(){
             int call = 0;
             PrimitiveArrayFileSize pafs = new PrimitiveArrayFileSize();
             for (int i = 0; i < 12; i++) {
-                pafs.arr = longWrapperArray();
-                Tester.store(pafs);
-                checkFileSize(call++);
-                Tester.commit();
-                checkFileSize(call++);
+                pafs.arr = LongWrapperArray();
+                Tester.Store(pafs);
+                CheckFileSize(call++);
+                Tester.Commit();
+                CheckFileSize(call++);
             }
         }
 	
-//        public void testSimpleLongInHashMap(){
+//        public void TestSimpleLongInHashMap(){
 //            HashMap hm = new HashMap();
 //            int call = 0;
 //            for (int i = 0; i < 12; i++) {
 //                long[] lll = new long[100];
 //                lll[0] = 99999;
-//                hm.put("test", lll);
-//                Tester.store(hm);
-//                checkFileSize(call++);
-//                Tester.commit();
-//                checkFileSize(call++);
+//                hm.Put("test", lll);
+//                Tester.Store(hm);
+//                CheckFileSize(call++);
+//                Tester.Commit();
+//                CheckFileSize(call++);
 //            }
 //        }
 	
-//        public void testLongWrapperInHashMap(){
+//        public void TestLongWrapperInHashMap(){
 //            HashMap hm = new HashMap();
 //            int call = 0;
 //            for (int i = 0; i < 12; i++) {
-//                hm.put("test", longWrapperArray());
-//                Tester.store(hm);
-//                checkFileSize(call++);
-//                Tester.commit();
-//                checkFileSize(call++);
+//                hm.Put("test", LongWrapperArray());
+//                Tester.Store(hm);
+//                CheckFileSize(call++);
+//                Tester.Commit();
+//                CheckFileSize(call++);
 //            }
 //        }
 	
 	
-        private long[] longWrapperArray(){
+        private long[] LongWrapperArray(){
             long[] larr = new long[100];
             for (int j = 0; j < larr.Length; j++) {
                 larr[j] = j;
@@ -70,9 +70,9 @@ namespace com.db4o.test
 	
 	
 	
-        private void checkFileSize(int call){
-            if(Tester.canCheckFileSize()){
-                int newFileLength = Tester.fileLength();
+        private void CheckFileSize(int call){
+            if(Tester.CanCheckFileSize()){
+                int newFileLength = Tester.FileLength();
 			
                 // Interesting for manual tests:
                 // Console.WriteLine(newFileLength);
@@ -90,7 +90,7 @@ namespace com.db4o.test
                             // may be necessary for commit space extension
                         }else{
                             // now we want constant behaviour
-                            Tester.error();
+                            Tester.Error();
                         }
                     }
                 }

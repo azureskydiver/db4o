@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -18,13 +18,13 @@ namespace com.db4o.test {
          member.member.member = this;
       }
       
-      public void test() {
-         ObjectContainer con1 = Tester.objectContainer();
-         con1.get(new QueryNonExistant(true));
-         Tester.ensureOccurrences(new QueryNonExistant(), 0);
-         Query q1 = con1.query();
-         q1.constrain(new QueryNonExistant(true));
-         Tester.ensure(q1.execute().size() == 0);
+      public void Test() {
+         ObjectContainer con1 = Tester.ObjectContainer();
+         con1.Get(new QueryNonExistant(true));
+         Tester.EnsureOccurrences(new QueryNonExistant(), 0);
+         Query q1 = con1.Query();
+         q1.Constrain(new QueryNonExistant(true));
+         Tester.Ensure(q1.Execute().Size() == 0);
       }
       
       public class QueryNonExistant1 {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Threading;
@@ -47,180 +47,180 @@ namespace com.db4o.test {
         private static int returnedThreads = 0;
         private bool closeFile;
       
-        public static void addError(String err) {
+        public static void AddError(String err) {
 
             for (int i = 0; i < expectedErrors.Length; i++) {
                 if (err.Equals(expectedErrors[i])) {
                     return;
                 }
             }
-            i_errors = i_errors + err + j4o.lang.JavaSystem.getProperty("line.separator");
+            i_errors = i_errors + err + j4o.lang.JavaSystem.GetProperty("line.separator");
         }
       
         public static void Main(String[] args) {
-            new j4o.io.File(file).delete();
+            new j4o.io.File(file).Delete();
             if (normal) {
-				j4o.lang.Thread.currentThread().setName("Main Thread");
+				j4o.lang.Thread.CurrentThread().SetName("Main Thread");
                 Regression re = new Regression();
-                re.run();
+                re.Run();
             }
         }
       
-        public virtual void run() {
+        public virtual void Run() {
             openedThreads++;
-            long time = j4o.lang.JavaSystem.currentTimeMillis();
-            RTestable[] clazzes = testClasses();
-            mainLoop(clazzes);
-            time = j4o.lang.JavaSystem.currentTimeMillis() - time;
-            Console.WriteLine(currentThreadName() + ": " + time + " ms.");
+            long time = j4o.lang.JavaSystem.CurrentTimeMillis();
+            RTestable[] clazzes = TestClasses();
+            MainLoop(clazzes);
+            time = j4o.lang.JavaSystem.CurrentTimeMillis() - time;
+            Console.WriteLine(CurrentThreadName() + ": " + time + " ms.");
             returnedThreads++;
             if (returnedThreads >= openedThreads) {
                 if (i_errors.Length == 0) {
-                    ObjectContainer con = open();
-                    int objectCount = con.get(null).size();
-                    con.close();
+                    ObjectContainer con = Open();
+                    int objectCount = con.Get(null).Size();
+                    con.Close();
                     Console.WriteLine(profileOnly ? "Profile run completed." : "Regression Tester Passed. " + objectCount + " objects.");
                 } else {
                     Console.WriteLine("!!! Regression Tester Failed. !!!");
                 }
-                Console.WriteLine(Db4o.version());
+                Console.WriteLine(Db4o.Version());
                 Console.WriteLine(i_errors);
             }
         }
       
-        public void mainLoop(RTestable[] clazzes) {
+        public void MainLoop(RTestable[] clazzes) {
             int run = 0;
             for (int k = 0; k < runs; k++) {
                 run++;
-                Console.WriteLine(currentThreadName() + " regression run:" + run);
+                Console.WriteLine(CurrentThreadName() + " regression run:" + run);
                 closeFile = false;
                 for (int i = 0; i < 1; i++) {
                     for (int j = 0; j < clazzes.Length; j++) {
-                        cycle(clazzes[j], run);
+                        Cycle(clazzes[j], run);
                     }
                 }
                 closeFile = true;
             }
-            ObjectContainer con = open();
-            con.close();
+            ObjectContainer con = Open();
+            con.Close();
         }
 
-    	private static string currentThreadName()
+    	private static string CurrentThreadName()
     	{
-    		return j4o.lang.Thread.currentThread().getName();
+    		return j4o.lang.Thread.CurrentThread().GetName();
     	}
 
-    	internal void cycle(RTestable clazz, int a_run) {
+    	internal void Cycle(RTestable clazz, int a_run) {
             if (LOG_CLASS_NAMES) {
                 Console.WriteLine("Testing class: " + clazz.GetType().Name);
             }
-            Object obj = clazz.newInstance();
-            ObjectContainer con = open();
-            Object get = clazz.newInstance();
-            ObjectSet set = con.get(get);
-            while (set.hasNext()) {
-                con.delete(set.next());
+            Object obj = clazz.NewInstance();
+            ObjectContainer con = Open();
+            Object get = clazz.NewInstance();
+            ObjectSet set = con.Get(get);
+            while (set.HasNext()) {
+                con.Delete(set.Next());
             }
-            clazz.set(obj, 1);
-            con.set(obj);
-            con = close(con);
-            compare(con, get, clazz, 1, 1);
-            clazz.set(get, 1);
-            compare(con, get, clazz, 1, 1);
-            con = close(con);
+            clazz.Set(obj, 1);
+            con.Set(obj);
+            con = Close(con);
+            Compare(con, get, clazz, 1, 1);
+            clazz.Set(get, 1);
+            Compare(con, get, clazz, 1, 1);
+            con = Close(con);
             for (int i = 0; i < 4; i++) {
-                obj = clazz.newInstance();
-                clazz.set(obj, 1);
-                con.set(obj);
+                obj = clazz.NewInstance();
+                clazz.Set(obj, 1);
+                con.Set(obj);
             }
-            con = close(con);
-            compare(con, get, clazz, 1, 5);
-            con = close(con);
-            set = con.get(get);
-            obj = set.next();
-            con.delete(obj);
-            con = close(con);
-            compare(con, get, clazz, 1, 4);
-            con = close(con);
-            set = con.get(get);
-            obj = set.next();
-            clazz.set(obj, 2);
-            con.set(obj);
-            con = close(con);
-            compare(con, get, clazz, 1, 3);
-            con = close(con);
-            clazz.set(get, 2);
-            compare(con, get, clazz, 2, 1);
-            con = close(con);
-            if (clazz.ver3()) {
-                set = con.get(get);
-                obj = set.next();
-                clazz.set(obj, 3);
-                con.set(obj);
-                con = close(con);
-                clazz.set(get, 1);
-                compare(con, get, clazz, 1, 3);
-                con = close(con);
-                clazz.set(get, 3);
-                compare(con, get, clazz, 3, 1);
-                con.close();
+            con = Close(con);
+            Compare(con, get, clazz, 1, 5);
+            con = Close(con);
+            set = con.Get(get);
+            obj = set.Next();
+            con.Delete(obj);
+            con = Close(con);
+            Compare(con, get, clazz, 1, 4);
+            con = Close(con);
+            set = con.Get(get);
+            obj = set.Next();
+            clazz.Set(obj, 2);
+            con.Set(obj);
+            con = Close(con);
+            Compare(con, get, clazz, 1, 3);
+            con = Close(con);
+            clazz.Set(get, 2);
+            Compare(con, get, clazz, 2, 1);
+            con = Close(con);
+            if (clazz.Ver3()) {
+                set = con.Get(get);
+                obj = set.Next();
+                clazz.Set(obj, 3);
+                con.Set(obj);
+                con = Close(con);
+                clazz.Set(get, 1);
+                Compare(con, get, clazz, 1, 3);
+                con = Close(con);
+                clazz.Set(get, 3);
+                Compare(con, get, clazz, 3, 1);
+                con.Close();
             }
-            con.close();
+            con.Close();
         }
       
-        public void compare(ObjectContainer con, Object get, RTestable clazz, int ver, int count) {
-            ObjectSet set = con.get(get);
+        public void Compare(ObjectContainer con, Object get, RTestable clazz, int ver, int count) {
+            ObjectSet set = con.Get(get);
             if (!profileOnly) {
-                set.reset();
-                if (set.size() == count) {
-                    while (set.hasNext()) {
-                        Object res = set.next();
-                        clazz.compare(con, res, ver);
+                set.Reset();
+                if (set.Size() == count) {
+                    while (set.HasNext()) {
+                        Object res = set.Next();
+                        clazz.Compare(con, res, ver);
                         if (deactivate) {
-                            con.deactivate(res, 1);
-                            con.activate(res, Int32.MaxValue);
-                            clazz.compare(con, res, ver);
+                            con.Deactivate(res, 1);
+                            con.Activate(res, Int32.MaxValue);
+                            clazz.Compare(con, res, ver);
                         }
                     }
                 } else {
-                    Regression.addError(j4o.lang.Class.getClassForObject(clazz).getName() + ":offcount:expected" + count + ":actual:" + set.size());
+                    Regression.AddError(j4o.lang.Class.GetClassForObject(clazz).GetName() + ":offcount:expected" + count + ":actual:" + set.Size());
                 }
             }
         }
       
-        public ObjectContainer open() {
-            return openContainer();
+        public ObjectContainer Open() {
+            return OpenContainer();
         }
       
-        public void configure() {
-            Configuration config = Db4o.configure();
-            config.activationDepth(12);
-            ObjectClass oc = config.objectClass("com.db4o.test.DeepUpdate");
-            oc.updateDepth(2);
-            oc = config.objectClass("com.db4o.test.Debug");
-            oc.updateDepth(5);
+        public void Configure() {
+            Configuration config = Db4o.Configure();
+            config.ActivationDepth(12);
+            ObjectClass oc = config.ObjectClass("com.db4o.test.DeepUpdate");
+            oc.UpdateDepth(2);
+            oc = config.ObjectClass("com.db4o.test.Debug");
+            oc.UpdateDepth(5);
         }
       
-        public ObjectContainer openContainer() {
-            configure();
-            ObjectContainer con = Db4o.openFile(file);
+        public ObjectContainer OpenContainer() {
+            Configure();
+            ObjectContainer con = Db4o.OpenFile(file);
             return con;
         }
       
-        public ObjectContainer close(ObjectContainer con) {
+        public ObjectContainer Close(ObjectContainer con) {
             if (closeFile) {
-                con.close();
-                return open();
+                con.Close();
+                return Open();
             }
             return con;
         }
       
-        internal Object newInstance(Class a_class) {
+        internal Object NewInstance(Class a_class) {
             try {
-                return a_class.newInstance();
+                return a_class.NewInstance();
             }
             catch (Exception t) {}
-            Console.WriteLine("NewInstance failed:" + a_class.getName());
+            Console.WriteLine("NewInstance failed:" + a_class.GetName());
             return null;
         }
         static internal String[] expectedErrors = {"1e3==null:com.db4o.test.types.ArrayTypedPrivate, db4otest:oByte:", "1e0==null:com.db4o.test.types.ArrayTypedPrivate, db4otest:nByte:", "1e3==null:com.db4o.test.types.ArrayTypedPublic, db4otest:oByte:", "1e0==null:com.db4o.test.types.ArrayTypedPublic, db4otest:nByte:", "com.db4o.test.types.Empty, db4otest:offcount:expected3:actual:4", "com.db4o.test.types.Empty, db4otest:offcount:expected1:actual:4", "f1==null:com.db4o.test.types.MasterMonster, db4otest:ooo:nByte:", "1e3==null:com.db4o.test.types.MasterMonster, db4otest:ooo:oByte:", "1e0==null:com.db4o.test.types.MasterMonster, db4otest:ooo:nByte:", "com.db4o.test.types.RecursiveTypedPrivate, db4otest:offcount:expected1:actual:11", "com.db4o.test.types.RecursiveUnTypedPrivate, db4otest:offcount:expected1:actual:11", "com.db4o.test.types.RecursiveTypedPublic, db4otest:offcount:expected1:actual:11", "com.db4o.test.types.RecursiveUnTypedPublic, db4otest:offcount:expected1:actual:11", "f1==null:com.db4o.test.types.TypedPrivate, db4otest:nByte:", "f1==null:com.db4o.test.types.TypedPublic, db4otest:nByte:"};
@@ -231,13 +231,13 @@ namespace com.db4o.test {
         public static int SAME = 3;
         public static int UPDATED = 0;
       
-        public static RTestable[] allClasses() {
+        public static RTestable[] AllClasses() {
             return new RTestable[]{new ArrayInObjectPrivate(), new ArrayMixedInObjectPublic(), new ArrayTypedPublic(), new BiParentTypedPrivate(), new BiParentTypedPublic(), new BiParentUnTypedPrivate(), new BiParentUnTypedPublic(), new CSharpTypes(), new DeepUpdate(), new Empty(), new InterfacePrivate(), new InterfacePublic(), new ObjectSimplePrivate(), new ObjectSimplePublic(), new RecursiveTypedPrivate(), new RecursiveTypedPublic(), new RecursiveUnTypedPrivate(), new RecursiveUnTypedPublic(), new SelfReference(), new UntypedPrivate(), new UntypedPublic()/*, new TypedPrivate()*/  };
         }
       
-        public virtual RTestable[] testClasses() {
+        public virtual RTestable[] TestClasses() {
             if (!debug) {
-                return allClasses();
+                return AllClasses();
             }
             return new RTestable[]{new CSharpTypes()};
         }

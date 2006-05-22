@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -15,38 +15,38 @@ namespace com.db4o.test.soda.engines.db4o {
       private String FILE = "soda.yap";
       
       public static void Main(String[] arguments) {
-         JavaSystem._out.println(Db4o.version());
+         JavaSystem._out.Println(Db4o.Version());
       }
       private com.db4o.ObjectContainer con;
       
-      public void reset() {
-         new File(FILE).delete();
+      public void Reset() {
+         new File(FILE).Delete();
       }
       
-      public Query query() {
-         return con.query();
+      public Query Query() {
+         return con.Query();
       }
       
-      public void open() {
-         Db4o.configure().messageLevel(-1);
-         Db4o.configure().activationDepth(7);
-         con = Db4o.openFile(FILE);
+      public void Open() {
+         Db4o.Configure().MessageLevel(-1);
+         Db4o.Configure().ActivationDepth(7);
+         con = Db4o.OpenFile(FILE);
       }
       
-      public void close() {
-         con.close();
+      public void Close() {
+         con.Close();
       }
       
-      public void store(Object obj) {
-         con.set(obj);
+      public void Store(Object obj) {
+         con.Set(obj);
       }
       
-      public void commit() {
-         con.commit();
+      public void Commit() {
+         con.Commit();
       }
       
-      public void delete(Object obj) {
-         con.delete(obj);
+      public void Delete(Object obj) {
+         con.Delete(obj);
       }
    }
 }

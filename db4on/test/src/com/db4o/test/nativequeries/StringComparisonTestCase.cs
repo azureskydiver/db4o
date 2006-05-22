@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using com.db4o.ext;
 using com.db4o.query;
 
@@ -96,19 +96,19 @@ namespace com.db4o.test.nativequeries
 		private NamedThing _friday;
 		private NamedThing _round;
 
-		void setUpData()
+		void SetUpData()
 		{
-			Tester.deleteAllInstances(typeof(NamedThing));
-			Tester.store(_frisbee = new NamedThing("Frisbee"));
-			Tester.store(_bee = new NamedThing("Bee"));
-			Tester.store(_friday = new NamedThing("Friday"));
-			Tester.store(_robinson = new NamedThing("Robinson Crusoe"));
-			Tester.store(_round = new NamedThing("Round Robin"));
+			Tester.DeleteAllInstances(typeof(NamedThing));
+			Tester.Store(_frisbee = new NamedThing("Frisbee"));
+			Tester.Store(_bee = new NamedThing("Bee"));
+			Tester.Store(_friday = new NamedThing("Friday"));
+			Tester.Store(_robinson = new NamedThing("Robinson Crusoe"));
+			Tester.Store(_round = new NamedThing("Round Robin"));
 		}
 
-		public void testStartsWith()
+		public void TestStartsWith()
 		{
-			setUpData();
+			SetUpData();
 			AssertNQResult(new NameStartsWith("Fri"), _frisbee, _friday);
 			AssertNQResult(new NameStartsWith("Bee"), _bee);
 			AssertNQResult(new NameStartsWith("r"));
@@ -116,9 +116,9 @@ namespace com.db4o.test.nativequeries
 		}
 
 #if NET_2_0
-		public void testContains()
+		public void TestContains()
 		{
-			setUpData();
+			SetUpData();
 			AssertNQResult(new NameContains("Fri"), _frisbee, _friday);
 			AssertNQResult(new NameContains("ee"), _frisbee, _bee);
 			AssertNQResult(new NameContains("r"), _frisbee, _friday, _robinson);
@@ -126,9 +126,9 @@ namespace com.db4o.test.nativequeries
 		}
 #endif
 
-		public void testEndsWith()
+		public void TestEndsWith()
 		{
-			setUpData();
+			SetUpData();
 			AssertNQResult(new NameEndsWith("ee"), _frisbee, _bee);
 			AssertNQResult(new NameEndsWith("day"), _friday);
 			AssertNQResult(new NameEndsWith("Y"));
@@ -136,9 +136,9 @@ namespace com.db4o.test.nativequeries
 			AssertNQResult(new NameEndsWith("e"), _frisbee, _bee, _robinson);
 		}
 
-		public void testEquals()
+		public void TestEquals()
 		{
-			setUpData();
+			SetUpData();
 			AssertNQResult(new NameEquals("Bee"), _bee);
 			AssertNQResult(new NameEquals("Round Robin"), _round);
 			AssertNQResult(new NameEquals("ee"));

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -27,184 +27,184 @@ namespace com.db4o.test {
         public String name;
         public CallbackHelper helper;
 	
-        public void storeOne()
+        public void StoreOne()
         {
             // helper = new CallbackHelper();
             // helper.parent = this;
             name = "stored";
         }
 	
-        public void testOne()
+        public void TestOne()
         {
 	    
-            ObjectContainer oc = Tester.objectContainer();
+            ObjectContainer oc = Tester.ObjectContainer();
 	    
-            ensure(ACTIVATE);
-            ensureNot(DEACTIVATE);
-            ensureNot(DELETE);
-            ensure(NEW);
-            ensureNot(UPDATE);
+            Ensure(ACTIVATE);
+            EnsureNot(DEACTIVATE);
+            EnsureNot(DELETE);
+            Ensure(NEW);
+            EnsureNot(UPDATE);
 	    
-            ensure(CAN_ACTIVATE);
-            ensureNot(CAN_DEACTIVATE);
-            ensureNot(CAN_DELETE);
-            ensure(CAN_NEW);
-            ensureNot(CAN_UPDATE);
-            noneCalled();
-	    
-            returnValue = false;
-            oc.deactivate(this,3);
-            ensure(CAN_DEACTIVATE);
-            ensureNot(DEACTIVATE);
-            Tester.ensure(name.Equals("stored"));
-            noneCalled();
-	    
-            returnValue = true;
-            oc.deactivate(this,3);
-            ensure(CAN_DEACTIVATE);
-            ensure(DEACTIVATE);
-            Tester.ensure(name == null);
-            noneCalled();
+            Ensure(CAN_ACTIVATE);
+            EnsureNot(CAN_DEACTIVATE);
+            EnsureNot(CAN_DELETE);
+            Ensure(CAN_NEW);
+            EnsureNot(CAN_UPDATE);
+            NoneCalled();
 	    
             returnValue = false;
-            oc.activate(this,3);
-            ensure(CAN_ACTIVATE);
-            ensureNot(ACTIVATE);
-            Tester.ensure(name == null);
-            noneCalled();
+            oc.Deactivate(this,3);
+            Ensure(CAN_DEACTIVATE);
+            EnsureNot(DEACTIVATE);
+            Tester.Ensure(name.Equals("stored"));
+            NoneCalled();
 	    
             returnValue = true;
-            oc.activate(this,3);
-            ensure(CAN_ACTIVATE);
-            ensure(ACTIVATE);
-            Tester.ensure(name.Equals("stored"));
-            noneCalled();
+            oc.Deactivate(this,3);
+            Ensure(CAN_DEACTIVATE);
+            Ensure(DEACTIVATE);
+            Tester.Ensure(name == null);
+            NoneCalled();
+	    
+            returnValue = false;
+            oc.Activate(this,3);
+            Ensure(CAN_ACTIVATE);
+            EnsureNot(ACTIVATE);
+            Tester.Ensure(name == null);
+            NoneCalled();
+	    
+            returnValue = true;
+            oc.Activate(this,3);
+            Ensure(CAN_ACTIVATE);
+            Ensure(ACTIVATE);
+            Tester.Ensure(name.Equals("stored"));
+            NoneCalled();
 	    
             returnValue = false;
             name = "modified";
-            oc.set(this);
-            ensure(CAN_UPDATE);
-            ensureNot(UPDATE);
+            oc.Set(this);
+            Ensure(CAN_UPDATE);
+            EnsureNot(UPDATE);
             returnValue = true;
-            oc.ext().refresh(this, 3);
-            Tester.ensure(name.Equals("stored"));
-            noneCalled();
+            oc.Ext().Refresh(this, 3);
+            Tester.Ensure(name.Equals("stored"));
+            NoneCalled();
 	    
             returnValue = true;
             name = "modified";
-            oc.set(this);
-            ensure(CAN_UPDATE);
-            ensure(UPDATE);
-            oc.ext().refresh(this, 3);
-            Tester.ensure(name.Equals("modified"));
-            noneCalled();
+            oc.Set(this);
+            Ensure(CAN_UPDATE);
+            Ensure(UPDATE);
+            oc.Ext().Refresh(this, 3);
+            Tester.Ensure(name.Equals("modified"));
+            NoneCalled();
 	    
             // Tester endless loops
             helper = new CallbackHelper();
             helper.name = "helper";
             helper.parent = this;
-            oc.set(this);
-            oc.activate(this, 3);
-            oc.deactivate(this, 3);
+            oc.Set(this);
+            oc.Activate(this, 3);
+            oc.Deactivate(this, 3);
 	    
-            oc.activate(this, 1);
-            oc.deactivate(this.helper, 1);
+            oc.Activate(this, 1);
+            oc.Deactivate(this.helper, 1);
             returnValue = false;
-            noneCalled();
-            oc.activate(this, 3);
-            ensureNot(ACTIVATE);
+            NoneCalled();
+            oc.Activate(this, 3);
+            EnsureNot(ACTIVATE);
 	    
-            noneCalled();
+            NoneCalled();
             returnValue = true;
         }
 	
-        public bool objectCanActivate(ObjectContainer container)
+        public bool ObjectCanActivate(ObjectContainer container)
         {
             called[CAN_ACTIVATE] = true;
             return returnValue;
         }
 
-        public bool objectCanDeactivate(ObjectContainer container)
+        public bool ObjectCanDeactivate(ObjectContainer container)
         {
             called[CAN_DEACTIVATE] = true;
             return returnValue;
         }
 	
-        public bool objectCanDelete(ObjectContainer container)
+        public bool ObjectCanDelete(ObjectContainer container)
         {
             called[CAN_ACTIVATE] = true;
             return returnValue;
         }
 	
-        public bool objectCanNew(ObjectContainer container)
+        public bool ObjectCanNew(ObjectContainer container)
         {
             called[CAN_NEW] = true;
             return returnValue;
         }
 	
-        public bool objectCanUpdate(ObjectContainer container)
+        public bool ObjectCanUpdate(ObjectContainer container)
         {
             called[CAN_UPDATE] = true;
             return returnValue;
         }
 	
-        public void objectOnActivate(ObjectContainer container)
+        public void ObjectOnActivate(ObjectContainer container)
         {
             called[ACTIVATE] = true;
             if(helper != null)
             {
-                container.activate(helper, 3);
+                container.Activate(helper, 3);
             }
         }
 	
-        public void objectOnDeactivate(ObjectContainer container)
+        public void ObjectOnDeactivate(ObjectContainer container)
         {
             called[DEACTIVATE] = true;
             if(helper != null)
             {
-                container.deactivate(helper, 3);
+                container.Deactivate(helper, 3);
             }
         }
 	
-        public void objectOnDelete(ObjectContainer container)
+        public void ObjectOnDelete(ObjectContainer container)
         {
             called[DELETE] = true;
             if(helper != null)
             {
-                container.delete(helper);
+                container.Delete(helper);
             }
         }
 	
-        public void objectOnNew(ObjectContainer container)
+        public void ObjectOnNew(ObjectContainer container)
         {
             called[NEW] = true;
             if(helper != null)
             {
-                container.set(helper);
+                container.Set(helper);
             }
         }	
 	
-        public void objectOnUpdate(ObjectContainer container)
+        public void ObjectOnUpdate(ObjectContainer container)
         {
             called[UPDATE] = true;
             if(helper != null)
             {
-                container.set(helper);
+                container.Set(helper);
             }
         }
 	
-        private void ensure(int eventPos)
+        private void Ensure(int eventPos)
         {
-            Tester.ensure(called[eventPos]);
+            Tester.Ensure(called[eventPos]);
         }
 	
-        private void ensureNot(int eventPos)
+        private void EnsureNot(int eventPos)
         {
-            Tester.ensure(! called[eventPos]);
+            Tester.Ensure(! called[eventPos]);
         }
 
 	
-        private void noneCalled()
+        private void NoneCalled()
         {
             for (int i = 0; i <= CAN_UPDATE; i++) 
             {

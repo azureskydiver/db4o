@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+ï»¿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.query;
@@ -14,39 +14,39 @@ namespace com.db4o.test
     
         static int COUNT = 10;
     
-        public void configure()
+        public void Configure()
         {
-            Db4o.configure().objectClass(this).objectField("atom").indexed(true);
+            Db4o.Configure().ObjectClass(this).ObjectField("atom").Indexed(true);
         }
     
-        public void store()
+        public void Store()
         {
             for (int i = 0; i < COUNT; i++) 
             {
                 IndexedByIdentity ibi = new IndexedByIdentity();
                 ibi.atom = new Atom("ibi" + i);
-                Tester.store(ibi);
+                Tester.Store(ibi);
             } 
         }
     
-        public void test()
+        public void Test()
         {
         
             for (int i = 0; i < COUNT; i++) 
             {
-                Query q = Tester.query();
-                q.constrain(typeof(Atom));
-                q.descend("name").constrain("ibi" + i);
-                ObjectSet objectSet = q.execute();
-                Atom child = (Atom)objectSet.next();
-                // child.name = "rünzelbrünft";
-                q = Tester.query();
-                q.constrain(typeof(IndexedByIdentity));
-                q.descend("atom").constrain(child).identity();
-                objectSet = q.execute();
-                Tester.ensure(objectSet.size() == 1);
-                IndexedByIdentity ibi = (IndexedByIdentity)objectSet.next();
-                Tester.ensure(ibi.atom == child);
+                Query q = Tester.Query();
+                q.Constrain(typeof(Atom));
+                q.Descend("name").Constrain("ibi" + i);
+                ObjectSet objectSet = q.Execute();
+                Atom child = (Atom)objectSet.Next();
+                // child.name = "rÃ¼nzelbrÃ¼nft";
+                q = Tester.Query();
+                q.Constrain(typeof(IndexedByIdentity));
+                q.Descend("atom").Constrain(child).Identity();
+                objectSet = q.Execute();
+                Tester.Ensure(objectSet.Size() == 1);
+                IndexedByIdentity ibi = (IndexedByIdentity)objectSet.Next();
+                Tester.Ensure(ibi.atom == child);
             }
         }
     

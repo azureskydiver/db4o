@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 
 namespace com.db4o.test
@@ -30,15 +30,15 @@ namespace com.db4o.test
 			get { return _value; }
 		}
 
-		public void store()
+		public void Store()
 		{
-			Tester.store(new ObjectSetAsList(42));
-			Tester.store(new ObjectSetAsList(1));
+			Tester.Store(new ObjectSetAsList(42));
+			Tester.Store(new ObjectSetAsList(1));
 		}
 
-		public void testEnumerable()
+		public void TestEnumerable()
 		{
-			ObjectSet os = getObjectSet();
+			ObjectSet os = GetObjectSet();
 			for (int i=0; i<2; ++i)
 			{
 				int sum = 0;
@@ -46,14 +46,14 @@ namespace com.db4o.test
 				{
 					sum += item.Value;
 				}
-				Tester.ensureEquals(43, sum);
+				Tester.EnsureEquals(43, sum);
 			}
 		}
 
-		public void testList()
+		public void TestList()
 		{
-			IList os = getObjectSet();
-			Tester.ensureEquals(2, os.Count);
+			IList os = GetObjectSet();
+			Tester.EnsureEquals(2, os.Count);
 
 			int sum = 0;
 			for (int i=0; i<os.Count; ++i)
@@ -61,42 +61,42 @@ namespace com.db4o.test
 				ObjectSetAsList item = (ObjectSetAsList)os[i];
 				sum += item.Value;
 			}
-			Tester.ensureEquals(43, sum);
+			Tester.EnsureEquals(43, sum);
 		}
 		
-		public void testIndexOfAndContains()
+		public void TestIndexOfAndContains()
 		{
-			IList os = getObjectSet();
+			IList os = GetObjectSet();
 
-			Tester.ensureEquals(0, os.IndexOf(os[0]));
-			Tester.ensureEquals(1, os.IndexOf(os[1]));
-			Tester.ensure(os.Contains(os[0]));
-			Tester.ensure(os.Contains(os[1]));
-			Tester.ensure("Contains is not by value", !os.Contains(new ObjectSetAsList(42)));
+			Tester.EnsureEquals(0, os.IndexOf(os[0]));
+			Tester.EnsureEquals(1, os.IndexOf(os[1]));
+			Tester.Ensure(os.Contains(os[0]));
+			Tester.Ensure(os.Contains(os[1]));
+			Tester.Ensure("Contains is not by value", !os.Contains(new ObjectSetAsList(42)));
 		}
 
-		public void testAccessOrder() 
+		public void TestAccessOrder() 
 		{
-			ObjectSet os = getObjectSet();
+			ObjectSet os = GetObjectSet();
 			for(int i=0;i<os.Count;i++) {
-				Tester.ensure(os.hasNext());
-				Tester.ensure(os.next()==os[i]);
+				Tester.Ensure(os.HasNext());
+				Tester.Ensure(os.Next()==os[i]);
 			}
-			Tester.ensure(!os.hasNext());
+			Tester.Ensure(!os.HasNext());
 		}
 
-		public void testCopyTo()
+		public void TestCopyTo()
 		{
-			IList os = getObjectSet();
+			IList os = GetObjectSet();
 			ObjectSetAsList[] items = new ObjectSetAsList[2];
 			os.CopyTo(items, 0);
-			Tester.ensureEquals(items[0], os[0]);
-			Tester.ensureEquals(items[1], os[1]);
+			Tester.EnsureEquals(items[0], os[0]);
+			Tester.EnsureEquals(items[1], os[1]);
 		}
 
-		private ObjectSet getObjectSet()
+		private ObjectSet GetObjectSet()
 		{
-			return Tester.objectContainer().get(typeof(ObjectSetAsList));
+			return Tester.ObjectContainer().Get(typeof(ObjectSetAsList));
 		}
 	}
 }

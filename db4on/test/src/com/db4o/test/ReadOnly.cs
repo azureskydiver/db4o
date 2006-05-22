@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -16,35 +16,35 @@ namespace com.db4o.test {
       public String myString;
       
       public static void Main(String[] args) {
-         Db4o.configure().readOnly(true);
-         new ReadOnly().spendSomeTime();
-         Db4o.configure().readOnly(false);
+         Db4o.Configure().ReadOnly(true);
+         new ReadOnly().SpendSomeTime();
+         Db4o.Configure().ReadOnly(false);
       }
       
-      public void run() {
-         setUp();
-         test();
-         Db4o.configure().readOnly(false);
+      public void Run() {
+         SetUp();
+         Test();
+         Db4o.Configure().ReadOnly(false);
       }
       
-      private void setUp() {
-         new File(FILE).delete();
-         ObjectContainer con1 = Db4o.openFile(FILE);
+      private void SetUp() {
+         new File(FILE).Delete();
+         ObjectContainer con1 = Db4o.OpenFile(FILE);
          for (int i1 = 0; i1 < COUNT; i1++) {
             ReadOnly ro1 = new ReadOnly();
             ro1.myString = MY_STRING + i1;
-            con1.set(ro1);
+            con1.Set(ro1);
          }
-         con1.close();
+         con1.Close();
       }
       
-      private void test() {
-         Db4o.configure().readOnly(true);
-         checkCount();
-         ObjectContainer con1 = Db4o.openFile(FILE);
-         con1.set(new ReadOnly());
-         con1.close();
-         checkCount();
+      private void Test() {
+         Db4o.Configure().ReadOnly(true);
+         CheckCount();
+         ObjectContainer con1 = Db4o.OpenFile(FILE);
+         con1.Set(new ReadOnly());
+         con1.Close();
+         CheckCount();
          try {
             {
             }
@@ -54,22 +54,22 @@ namespace com.db4o.test {
          }
       }
       
-      private void spendSomeTime() {
-         Db4o.configure().readOnly(true);
-         ObjectContainer con1 = Db4o.openFile(FILE);
-         ObjectSet set1 = con1.get(new ReadOnly());
-         while (set1.hasNext()) {
-            ReadOnly ro1 = (ReadOnly)set1.next();
+      private void SpendSomeTime() {
+         Db4o.Configure().ReadOnly(true);
+         ObjectContainer con1 = Db4o.OpenFile(FILE);
+         ObjectSet set1 = con1.Get(new ReadOnly());
+         while (set1.HasNext()) {
+            ReadOnly ro1 = (ReadOnly)set1.Next();
             if (ro1.myString.Equals(MY_STRING + "1")) {
-               j4o.lang.JavaSystem._out.println("O.K. " + ro1.myString);
+               j4o.lang.JavaSystem._out.Println("O.K. " + ro1.myString);
             }
             if (ro1.myString.Equals(MY_STRING + (COUNT - 1))) {
-               j4o.lang.JavaSystem._out.println("O.K. " + ro1.myString);
+               j4o.lang.JavaSystem._out.Println("O.K. " + ro1.myString);
             }
             lock (this) {
                try {
                   {
-                     j4o.lang.JavaSystem.wait(this, 50);
+                     j4o.lang.JavaSystem.Wait(this, 50);
                   }
                }  catch (Exception e) {
                   {
@@ -77,17 +77,17 @@ namespace com.db4o.test {
                }
             }
          }
-         con1.close();
+         con1.Close();
       }
       
-      private void checkCount() {
-         Db4o.configure().readOnly(true);
-         ObjectContainer con1 = Db4o.openFile(FILE);
-         int size1 = con1.get(new ReadOnly()).size();
+      private void CheckCount() {
+         Db4o.Configure().ReadOnly(true);
+         ObjectContainer con1 = Db4o.OpenFile(FILE);
+         int size1 = con1.Get(new ReadOnly()).Size();
          if (size1 != COUNT) {
             throw new RuntimeException("ReadOnly.test: unexpected number of objects:" + size1);
          }
-         con1.close();
+         con1.Close();
       }
    }
 }

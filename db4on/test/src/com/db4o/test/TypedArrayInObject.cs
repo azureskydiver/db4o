@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.foundation;
@@ -10,24 +10,24 @@ namespace com.db4o.test
 	{
         Object obj;
 	
-        public void store(){
-            Tester.deleteAllInstances(this);
+        public void Store(){
+            Tester.DeleteAllInstances(this);
             TypedArrayInObject taio = new TypedArrayInObject();
             Atom[] mols = new Atom[1];
             mols[0] = new Atom("TypedArrayInObject"); 
             taio.obj = mols;
-            Tester.store(taio);
+            Tester.Store(taio);
         }
 
         class EnsureAtom : Visitor4{
-            public void visit(Object obj) {
+            public void Visit(Object obj) {
                 TypedArrayInObject taio = (TypedArrayInObject)obj;
-                Tester.ensure(taio.obj is Atom[]);
+                Tester.Ensure(taio.obj is Atom[]);
             }
         }
 	
-        public void test(){
-            Tester.forEach(new TypedArrayInObject(), new EnsureAtom());
+        public void Test(){
+            Tester.ForEach(new TypedArrayInObject(), new EnsureAtom());
         }
 
 

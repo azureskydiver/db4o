@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -19,7 +19,7 @@ namespace com.db4o.test.soda.classes.wrapper.untyped {
             i_boolean = System.Convert.ToBoolean(a_boolean);
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STBooleanWU(false),
                                    new STBooleanWU(true),
@@ -28,51 +28,51 @@ namespace com.db4o.test.soda.classes.wrapper.untyped {
                                    new STBooleanWU()         };
         }
       
-        public void testEqualsTrue() {
-            Query q1 = st.query();
-            q1.constrain(new STBooleanWU(true));
-            Object[] r1 = store();
-            st.expectOne(q1, new STBooleanWU(true));
+        public void TestEqualsTrue() {
+            Query q1 = st.Query();
+            q1.Constrain(new STBooleanWU(true));
+            Object[] r1 = Store();
+            st.ExpectOne(q1, new STBooleanWU(true));
         }
       
-        public void testEqualsFalse() {
-            Query q1 = st.query();
-            q1.constrain(new STBooleanWU(false));
-            q1.descend(DESCENDANT).constrain(System.Convert.ToBoolean(false));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestEqualsFalse() {
+            Query q1 = st.Query();
+            q1.Constrain(new STBooleanWU(false));
+            q1.Descend(DESCENDANT).Constrain(System.Convert.ToBoolean(false));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[2],
                                           r1[3]
                                       });
         }
       
-        public void testNull() {
-            Query q1 = st.query();
-            q1.constrain(new STBooleanWU());
-            q1.descend(DESCENDANT).constrain(null);
-            Object[] r1 = store();
-            st.expectOne(q1, new STBooleanWU());
+        public void TestNull() {
+            Query q1 = st.Query();
+            q1.Constrain(new STBooleanWU());
+            q1.Descend(DESCENDANT).Constrain(null);
+            Object[] r1 = Store();
+            st.ExpectOne(q1, new STBooleanWU());
         }
       
-        public void testNullOrTrue() {
-            Query q1 = st.query();
-            q1.constrain(new STBooleanWU());
-            Query qd1 = q1.descend(DESCENDANT);
-            qd1.constrain(null).or(qd1.constrain(System.Convert.ToBoolean(true)));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNullOrTrue() {
+            Query q1 = st.Query();
+            q1.Constrain(new STBooleanWU());
+            Query qd1 = q1.Descend(DESCENDANT);
+            qd1.Constrain(null).Or(qd1.Constrain(System.Convert.ToBoolean(true)));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[4]         });
         }
       
-        public void testNotNullAndFalse() {
-            Query q1 = st.query();
-            q1.constrain(new STBooleanWU());
-            Query qd1 = q1.descend(DESCENDANT);
-            qd1.constrain(null).not().and(qd1.constrain(System.Convert.ToBoolean(false)));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotNullAndFalse() {
+            Query q1 = st.Query();
+            q1.Constrain(new STBooleanWU());
+            Query qd1 = q1.Descend(DESCENDANT);
+            qd1.Constrain(null).Not().And(qd1.Constrain(System.Convert.ToBoolean(false)));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[2],
                                           r1[3]         });

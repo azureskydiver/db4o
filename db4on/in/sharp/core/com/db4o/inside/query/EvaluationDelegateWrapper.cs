@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Reflection;
@@ -74,7 +74,7 @@ namespace com.db4o.inside.query
             return (EvaluationDelegate)GetContent();
         }
 		
-        public void evaluate(Candidate candidate)
+        public void Evaluate(Candidate candidate)
         {
             // use starting _ for PascalCase conversion purposes
             EvaluationDelegate _evaluation = GetEvaluationDelegate();

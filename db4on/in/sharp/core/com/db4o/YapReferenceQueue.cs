@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using com.db4o.ext;
 using com.db4o.foundation;
@@ -9,19 +9,19 @@ namespace com.db4o {
 
         private List4 list;
 
-        internal void add(YapRef reference) {
+        internal void Add(YapRef reference) {
             lock(this){
                 list = new List4(list, reference);
             }
         }
 
-        internal void poll(ExtObjectContainer objectContainer) {
+        internal void Poll(ExtObjectContainer objectContainer) {
             List4 remove = null;
             lock(this){
                 Iterator4 i = new Iterator4Impl(list);
                 list = null;
-                while(i.hasNext()){
-                    YapRef yapRef = (YapRef)i.next();
+                while(i.HasNext()){
+                    YapRef yapRef = (YapRef)i.Next();
                     if(yapRef.IsAlive){
                         list = new List4(list, yapRef);
                     }else{
@@ -30,8 +30,8 @@ namespace com.db4o {
                 }
             }
             Iterator4 j = new Iterator4Impl(remove);
-            while(j.hasNext() && (!objectContainer.isClosed())){
-                objectContainer.purge(j.next());
+            while(j.HasNext() && (!objectContainer.IsClosed())){
+                objectContainer.Purge(j.Next());
             }
         }
     }

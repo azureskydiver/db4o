@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -21,7 +21,7 @@ namespace com.db4o.test.soda.collections {
             }
         }
       
-        protected ExtendHashtable vec(Object[] objects) {
+        protected ExtendHashtable Vec(Object[] objects) {
             ExtendHashtable h1 = new ExtendHashtable();
             for (int i1 = 0; i1 < objects.Length; i1++) {
                 h1.Add(objects[i1], i1);
@@ -29,57 +29,57 @@ namespace com.db4o.test.soda.collections {
             return h1;
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
-                                   vec(new Object[]{
+                                   Vec(new Object[]{
                                                        System.Convert.ToInt32(6778),
                                                        System.Convert.ToInt32(6779)            }),
-                                   vec(new Object[]{
+                                   Vec(new Object[]{
                                                        System.Convert.ToInt32(6778),
                                                        System.Convert.ToInt32(6789)            }),
-                                   vec(new Object[]{
+                                   Vec(new Object[]{
                                                        "foo677",
                                                        new STElement("bar677", "barbar677")            }),
-                                   vec(new Object[]{
+                                   Vec(new Object[]{
                                                        "foo6772",
                                                        new STElement("bar677", "barbar2677")            })         };
         }
       
-        public void testDefaultContainsInteger() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(vec(new Object[]{
+        public void TestDefaultContainsInteger() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Vec(new Object[]{
                                              System.Convert.ToInt32(6778)         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[1]         });
         }
       
-        public void testDefaultContainsString() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(vec(new Object[]{
+        public void TestDefaultContainsString() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Vec(new Object[]{
                                              "foo677"         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[2]         });
         }
       
-        public void testDefaultContainsTwo() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(vec(new Object[]{
+        public void TestDefaultContainsTwo() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Vec(new Object[]{
                                              System.Convert.ToInt32(6778),
                                              System.Convert.ToInt32(6789)         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[1]         });
         }
       
-        public void testDefaultContainsObject() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(vec(new Object[]{
+        public void TestDefaultContainsObject() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Vec(new Object[]{
                                              new STElement("bar677", null)         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[2],
                                           r1[3]         });
         }

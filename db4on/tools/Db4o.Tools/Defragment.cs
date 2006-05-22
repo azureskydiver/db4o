@@ -1,6 +1,7 @@
-/* Copyright (C) 2004-2006   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004-2006   db4objects Inc.   http://www.db4o.com */
 
-namespace Db4o.Tools {
+namespace Db4o.Tools
+{
 
 	using System;
 
@@ -45,18 +46,19 @@ namespace Db4o.Tools {
     * You may also run this task programmatically on a scheduled basis. In this
     * case note that <code>Defragment</code> modifies db4o configuration
     * parameters. You may have to restore them for your application. See the
-    * private methods Defragment#configureDb4o() and Db4o#restoreConfiguration()
+    * private methods Defragment#ConfigureDb4o() and Db4o#RestoreConfiguration()
     * in the sourcecode of com.db4o.tools.Defragment.cs for the exact changed
     * parameters that may need to be restored.
     */
 	public class Defragment
 	{
-		static readonly j4o.lang.Class ObjectClass = j4o.lang.Class.getClassForType(typeof(object));
-		
+		static readonly j4o.lang.Class ObjectClass = j4o.lang.Class.GetClassForType(typeof(object));
+
 		/**
-       * the main method is the only entry point
-       */
-		public Defragment() : base()
+	   * the main method is the only entry point
+	   */
+		public Defragment()
+			: base()
 		{
 		}
 
@@ -70,7 +72,7 @@ namespace Db4o.Tools {
 			if (args != null && args.Length > 0)
 			{
 				bool forceBackupDelete1 = args.Length > 1 && "!".Equals(args[1]);
-				new Defragment().run(args[0], forceBackupDelete1);
+				new Defragment().Run(args[0], forceBackupDelete1);
 			}
 			else
 			{
@@ -87,62 +89,62 @@ namespace Db4o.Tools {
        * @param forceBackupDelete forces deleting an old backup.
        * <b>Not recommended.</b>
        */
-		public void run(String filename, bool forceBackupDelete)
+		public void Run(String filename, bool forceBackupDelete)
 		{
 			File file = new File(filename);
-			if (file.exists())
+			if (file.Exists())
 			{
 				bool canRun = true;
-				ExtFile backupTest = new ExtFile(file.getAbsolutePath() + ".bak");
-				if (backupTest.exists())
+				ExtFile backupTest = new ExtFile(file.GetAbsolutePath() + ".bak");
+				if (backupTest.Exists())
 				{
 					if (forceBackupDelete)
 					{
-						backupTest.delete();
+						backupTest.Delete();
 					}
 					else
 					{
 						canRun = false;
 						Console.WriteLine("A backup file with the name ");
-						Console.WriteLine("\'" + backupTest.getAbsolutePath() + "\'");
+						Console.WriteLine("\'" + backupTest.GetAbsolutePath() + "\'");
 						Console.WriteLine("already exists.");
 						Console.WriteLine("Remove this file before calling \'Defragment\'.");
 					}
 				}
 				if (canRun)
 				{
-					file.renameTo(backupTest);
+					file.RenameTo(backupTest);
 					try
 					{
-						configureDb4o();
-						ObjectContainer readFrom = Db4o.openFile(backupTest.getAbsolutePath());
-						ObjectContainer writeTo = Db4o.openFile(file.getAbsolutePath());
-						writeTo.ext().migrateFrom(readFrom);
-						migrate(readFrom, writeTo);
-						readFrom.close();
-						writeTo.close();
+						ConfigureDb4o();
+						ObjectContainer readFrom = Db4o.OpenFile(backupTest.GetAbsolutePath());
+						ObjectContainer writeTo = Db4o.OpenFile(file.GetAbsolutePath());
+						writeTo.Ext().MigrateFrom(readFrom);
+						Migrate(readFrom, writeTo);
+						readFrom.Close();
+						writeTo.Close();
 						Console.WriteLine("Defragment operation completed successfully.");
 					}
 					catch (Exception e)
 					{
 						Console.WriteLine("Defragment operation failed.");
-						j4o.lang.JavaSystem.printStackTrace(e);
+						j4o.lang.JavaSystem.PrintStackTrace(e);
 						try
 						{
-							new File(filename).delete();
-							backupTest.copy(filename);
+							new File(filename).Delete();
+							backupTest.Copy(filename);
 						}
 						catch (Exception ex)
 						{
 							Console.WriteLine("Restore failed.");
 							Console.WriteLine("Please use the backup file:");
-							Console.WriteLine("\'" + backupTest.getAbsolutePath() + "\'");
+							Console.WriteLine("\'" + backupTest.GetAbsolutePath() + "\'");
 							return;
 						}
 						Console.WriteLine("The original file was restored.");
 						try
 						{
-							new File(backupTest.getAbsolutePath()).delete();
+							new File(backupTest.GetAbsolutePath()).Delete();
 						}
 						catch (Exception ignored)
 						{
@@ -150,59 +152,59 @@ namespace Db4o.Tools {
 					}
 					finally
 					{
-						restoreConfiguration();
+						RestoreConfiguration();
 					}
 				}
 			}
 			else
 			{
-				Console.WriteLine("File \'" + file.getAbsolutePath() + "\' does not exist.");
+				Console.WriteLine("File \'" + file.GetAbsolutePath() + "\' does not exist.");
 			}
 		}
 
-		private void configureDb4o()
+		private void ConfigureDb4o()
 		{
-			Db4o.configure().activationDepth(0);
-			Db4o.configure().callbacks(false);
-			Db4o.configure().classActivationDepthConfigurable(false);
-			Db4o.configure().weakReferences(false);
+			Db4o.Configure().ActivationDepth(0);
+			Db4o.Configure().Callbacks(false);
+			Db4o.Configure().ClassActivationDepthConfigurable(false);
+			Db4o.Configure().WeakReferences(false);
 		}
 
-		private void restoreConfiguration()
+		private void RestoreConfiguration()
 		{
-			Db4o.configure().activationDepth(5);
-			Db4o.configure().callbacks(true);
-			Db4o.configure().classActivationDepthConfigurable(true);
-			Db4o.configure().weakReferences(true);
+			Db4o.Configure().ActivationDepth(5);
+			Db4o.Configure().Callbacks(true);
+			Db4o.Configure().ClassActivationDepthConfigurable(true);
+			Db4o.Configure().WeakReferences(true);
 		}
 
-		private void migrate(ObjectContainer origin, ObjectContainer destination)
+		private void Migrate(ObjectContainer origin, ObjectContainer destination)
 		{
-			StoredClass[] classes = origin.ext().storedClasses();
-			filterAbstractSecondAndNotFoundClasses(classes);
-			filterSubclasses(classes);
-			migrateClasses(origin, destination, classes);
+			StoredClass[] classes = origin.Ext().StoredClasses();
+			FilterAbstractSecondAndNotFoundClasses(classes);
+			FilterSubclasses(classes);
+			MigrateClasses(origin, destination, classes);
 		}
 
-		private static void migrateClasses(ObjectContainer origin, ObjectContainer destination, StoredClass[] classes)
+		private static void MigrateClasses(ObjectContainer origin, ObjectContainer destination, StoredClass[] classes)
 		{
 			for (int i = 0; i < classes.Length; i++)
 			{
 				if (classes[i] != null)
 				{
-					long[] ids = classes[i].getIDs();
-					origin.ext().purge();
-					destination.commit();
-					destination.ext().purge();
+					long[] ids = classes[i].GetIDs();
+					origin.Ext().Purge();
+					destination.Commit();
+					destination.Ext().Purge();
 					for (int j = 0; j < ids.Length; j++)
 					{
-						Object obj = origin.ext().getByID(ids[j]);
-						origin.activate(obj, 1);
-						origin.deactivate(obj, 2);
-						origin.activate(obj, 3);
-						destination.set(obj);
-						origin.deactivate(obj, 1);
-						destination.deactivate(obj, 1);
+						Object obj = origin.Ext().GetByID(ids[j]);
+						origin.Activate(obj, 1);
+						origin.Deactivate(obj, 2);
+						origin.Activate(obj, 3);
+						destination.Set(obj);
+						origin.Deactivate(obj, 1);
+						destination.Deactivate(obj, 1);
 					}
 				}
 			}
@@ -210,10 +212,10 @@ namespace Db4o.Tools {
 
 		/// <summary>
 		/// Remove subclasses from the list since objects from subclasses will be
-		/// returned by superclass.getIds()
+		/// returned by superclass.GetIds()
 		/// </summary>
 		/// <param name="classes"></param>
-		private static void filterSubclasses(StoredClass[] classes)
+		private static void FilterSubclasses(StoredClass[] classes)
 		{
 			for (int i = 0; i < classes.Length; i++)
 			{
@@ -222,22 +224,22 @@ namespace Db4o.Tools {
 					continue;
 				}
 
-				Class javaClass = Class.forName(classes[i].getName());
-				if (isSubclass(classes, javaClass))
+				Class javaClass = Class.ForName(classes[i].GetName());
+				if (IsSubclass(classes, javaClass))
 				{
 					classes[i] = null;
 				}
 			}
 		}
 
-		private static bool isSubclass(StoredClass[] classes, Class candidate)
+		private static bool IsSubclass(StoredClass[] classes, Class candidate)
 		{
 			for (int j = 0; j < classes.Length; j++)
 			{
 				if (classes[j] != null)
 				{
-					Class superClass1 = Class.forName(classes[j].getName());
-					if (candidate != superClass1 && superClass1.isAssignableFrom(candidate))
+					Class superClass1 = Class.ForName(classes[j].GetName());
+					if (candidate != superClass1 && superClass1.IsAssignableFrom(candidate))
 					{
 						return true;
 					}
@@ -246,17 +248,17 @@ namespace Db4o.Tools {
 			return false;
 		}
 
-		private static void filterAbstractSecondAndNotFoundClasses(StoredClass[] classes)
+		private static void FilterAbstractSecondAndNotFoundClasses(StoredClass[] classes)
 		{
 			for (int i = 0; i < classes.Length; i++)
 			{
 				try
 				{
-					Class javaClass = Class.forName(classes[i].getName());
+					Class javaClass = Class.ForName(classes[i].GetName());
 					if (javaClass == null
 						|| javaClass == ObjectClass
-						|| isSecondClass(javaClass)
-						|| Modifier.isAbstract(javaClass.getModifiers()))
+						|| IsSecondClass(javaClass)
+						|| Modifier.IsAbstract(javaClass.GetModifiers()))
 					{
 						classes[i] = null;
 					}
@@ -268,48 +270,49 @@ namespace Db4o.Tools {
 			}
 		}
 
-		private static bool isSecondClass(Class javaClass)
+		private static bool IsSecondClass(Class javaClass)
 		{
-			return Class.getClassForType(typeof(SecondClass)).isAssignableFrom(javaClass);
+			return Class.GetClassForType(typeof(SecondClass)).IsAssignableFrom(javaClass);
 		}
 
 		private class ExtFile : File
 		{
-			public ExtFile(String path) : base(path)
+			public ExtFile(String path)
+				: base(path)
 			{
 			}
 
-			public ExtFile copy(String toPath)
+			public ExtFile Copy(String toPath)
 			{
 				try
 				{
 					{
-						new ExtFile(toPath).mkdirs();
-						new ExtFile(toPath).delete();
+						new ExtFile(toPath).Mkdirs();
+						new ExtFile(toPath).Delete();
 						int bufferSize1 = 64000;
-						RandomAccessFile rafIn = new RandomAccessFile(getAbsolutePath(), "r");
+						RandomAccessFile rafIn = new RandomAccessFile(GetAbsolutePath(), "r");
 						RandomAccessFile rafOut = new RandomAccessFile(toPath, "rw");
-						long len = rafIn.length();
+						long len = rafIn.Length();
 						byte[] bytes = new byte[bufferSize1];
 						while (len > 0)
 						{
 							len -= bufferSize1;
 							if (len < 0)
 							{
-								bytes = new byte[(int) (len + bufferSize1)];
+								bytes = new byte[(int)(len + bufferSize1)];
 							}
-							rafIn.read(bytes);
-							rafOut.write(bytes);
+							rafIn.Read(bytes);
+							rafOut.Write(bytes);
 						}
-						rafIn.close();
-						rafOut.close();
+						rafIn.Close();
+						rafOut.Close();
 						return new ExtFile(toPath);
 					}
 				}
 				catch (Exception e)
 				{
 					{
-						j4o.lang.JavaSystem.printStackTrace(e);
+						j4o.lang.JavaSystem.PrintStackTrace(e);
 						throw e;
 					}
 				}

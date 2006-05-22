@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.foundation;
@@ -7,22 +7,22 @@ namespace com.db4o.test {
     public class CascadeToArray {
         Object[] objects;
 
-        public void configure() {
-            Db4o.configure().objectClass(this).cascadeOnUpdate(true);
-            Db4o.configure().objectClass(this).cascadeOnDelete(true);
+        public void Configure() {
+            Db4o.Configure().ObjectClass(this).CascadeOnUpdate(true);
+            Db4o.Configure().ObjectClass(this).CascadeOnDelete(true);
         }
 
-        public void store() {
-            Tester.deleteAllInstances(this);
-            Tester.deleteAllInstances(new Atom());
+        public void Store() {
+            Tester.DeleteAllInstances(this);
+            Tester.DeleteAllInstances(new Atom());
             CascadeToArray cta = new CascadeToArray();
             cta.objects = new Object[] {new Atom("stored1"), new Atom(new Atom("storedChild1"), "stored2")};
-            Tester.store(cta);
-            Tester.commit();
+            Tester.Store(cta);
+            Tester.Commit();
         }
 
         class CheckUpdate1 : Visitor4{
-            public void visit(Object obj) {
+            public void Visit(Object obj) {
                 CascadeToArray cta = (CascadeToArray) obj;
                 for (int i = 0; i < cta.objects.Length; i++) {
                     Atom atom = (Atom) cta.objects[i];
@@ -32,33 +32,33 @@ namespace com.db4o.test {
                         atom.child.name = "updated";
                     }
                 }
-                Tester.store(cta);
+                Tester.Store(cta);
             }
         }
 
         class CheckUpdate2 : Visitor4{
-            public void visit(Object obj) {
+            public void Visit(Object obj) {
                 CascadeToArray cta = (CascadeToArray) obj;
                 for (int i = 0; i < cta.objects.Length; i++) {
                     Atom atom = (Atom) cta.objects[i];
-                    Tester.ensure(atom.name.Equals("updated"));
+                    Tester.Ensure(atom.name.Equals("updated"));
                     if(atom.child != null){
-                        Tester.ensure( ! atom.child.name.Equals("updated"));
+                        Tester.Ensure( ! atom.child.name.Equals("updated"));
                     }
                 }
             }
         }
 
-        public void test() {
-            Tester.forEach(this, new CheckUpdate1());
-            Tester.reOpen();
-            Tester.forEach(this, new CheckUpdate2());
+        public void Test() {
+            Tester.ForEach(this, new CheckUpdate1());
+            Tester.ReOpen();
+            Tester.ForEach(this, new CheckUpdate2());
 		
             // Cascade-On-Delete Tester: We only want one Atom to remain.
-            Tester.commit();
-            Tester.reOpen();
-            Tester.deleteAllInstances(this);
-            Tester.ensureOccurrences(new Atom(), 1);
+            Tester.Commit();
+            Tester.ReOpen();
+            Tester.DeleteAllInstances(this);
+            Tester.EnsureOccurrences(new Atom(), 1);
         }
     }
 }

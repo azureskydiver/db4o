@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o;
@@ -20,7 +20,7 @@ namespace com.db4o.test.soda.joins.untyped {
             this.dateOrdered = new j4o.util.Date( new DateTime(year, month, day));
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STAndBooleanDate(false, 2002, 11, 1),
                                    new STAndBooleanDate(false, 2002, 12, 3),

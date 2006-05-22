@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -19,89 +19,89 @@ namespace com.db4o.test {
          int step1 = 0;
          switch (step1) {
          case 0:
-            Tester.printStatistics();
+            Tester.PrintStatistics();
             break;
          
          case 1:
-            killSingleUser();
+            KillSingleUser();
             break;
          
          case 2:
-            testSingleUser();
+            TestSingleUser();
             break;
          
          case 3:
-            killServer1();
+            KillServer1();
             break;
          
          case 4:
-            testServer1();
+            TestServer1();
             break;
          
          case 5:
-            killServer2();
+            KillServer2();
             break;
          
          case 6:
-            testServer2();
+            TestServer2();
             break;
          
          }
       }
       
-      public static void killSingleUser() {
+      public static void KillSingleUser() {
          Tester.runServer = false;
          Tester.clientServer = false;
-         Tester.delete();
-         ObjectContainer con1 = Tester.open();
-         con1.set(new VMTermination("willbethere"));
-         con1.commit();
+         Tester.Delete();
+         ObjectContainer con1 = Tester.Open();
+         con1.Set(new VMTermination("willbethere"));
+         con1.Commit();
          // Environment.Exit(0);
       }
       
-      public static void testSingleUser() {
+      public static void TestSingleUser() {
          Tester.runServer = false;
          Tester.clientServer = false;
-         ObjectContainer con1 = Tester.open();
-         Tester.ensureOccurrences(new VMTermination(), 1);
-         Tester.logAll();
-         Tester.end();
+         ObjectContainer con1 = Tester.Open();
+         Tester.EnsureOccurrences(new VMTermination(), 1);
+         Tester.LogAll();
+         Tester.End();
       }
       
-      public static void killServer1() {
+      public static void KillServer1() {
          Tester.runServer = true;
          Tester.clientServer = true;
-         Tester.delete();
-         ObjectContainer con1 = Tester.open();
-         con1.set(new VMTermination("willbethere"));
-         con1.commit();
+         Tester.Delete();
+         ObjectContainer con1 = Tester.Open();
+         con1.Set(new VMTermination("willbethere"));
+         con1.Commit();
          // Environment.Exit(0);
       }
       
-      public static void testServer1() {
+      public static void TestServer1() {
          Tester.runServer = true;
          Tester.clientServer = true;
-         ObjectContainer con1 = Tester.open();
-         Tester.ensureOccurrences(new VMTermination(), 1);
-         Tester.logAll();
-         Tester.end();
+         ObjectContainer con1 = Tester.Open();
+         Tester.EnsureOccurrences(new VMTermination(), 1);
+         Tester.LogAll();
+         Tester.End();
       }
       
-      public static void killServer2() {
+      public static void KillServer2() {
          Tester.runServer = true;
          Tester.clientServer = true;
-         ObjectContainer con1 = Tester.open();
-         con1.set(new VMTermination("willbethere"));
-         con1.commit();
+         ObjectContainer con1 = Tester.Open();
+         con1.Set(new VMTermination("willbethere"));
+         con1.Commit();
       }
       
-      public static void testServer2() {
+      public static void TestServer2() {
          Tester.runServer = true;
          Tester.clientServer = true;
-         ObjectContainer con1 = Tester.open();
-         Tester.ensureOccurrences(new VMTermination(), 2);
-         Tester.logAll();
-         Tester.end();
+         ObjectContainer con1 = Tester.Open();
+         Tester.EnsureOccurrences(new VMTermination(), 2);
+         Tester.LogAll();
+         Tester.End();
       }
    }
 }

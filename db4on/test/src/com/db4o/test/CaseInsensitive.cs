@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 using com.db4o.query;
 
@@ -18,20 +18,20 @@ namespace com.db4o.test {
             this.name = name;
         }
     
-        public void store(){
-            Tester.store(new CaseInsensitive("HelloWorld"));
+        public void Store(){
+            Tester.Store(new CaseInsensitive("HelloWorld"));
         }
     
-        public void test(){
-            Tester.ensure(queryingCaseInsensitiveResults("heLLOworld") == 1);
+        public void Test(){
+            Tester.Ensure(QueryingCaseInsensitiveResults("heLLOworld") == 1);
         }
     
-        private int queryingCaseInsensitiveResults(string name){
-            ObjectContainer objectContainer = Tester.objectContainer();
-            Query q = objectContainer.query();
-            q.constrain(typeof(CaseInsensitive));
-            q.constrain(new CaseInsensitiveEvaluation(name));
-            return q.execute().size();
+        private int QueryingCaseInsensitiveResults(string name){
+            ObjectContainer objectContainer = Tester.ObjectContainer();
+            Query q = objectContainer.Query();
+            q.Constrain(typeof(CaseInsensitive));
+            q.Constrain(new CaseInsensitiveEvaluation(name));
+            return q.Execute().Size();
         }
     }
 
@@ -44,9 +44,9 @@ namespace com.db4o.test {
             this.name = name;
         }
 
-        public void evaluate(Candidate candidate) {
-            CaseInsensitive ci = (CaseInsensitive)candidate.getObject();
-            candidate.include(ci.name.ToLower().Equals(name.ToLower()));
+        public void Evaluate(Candidate candidate) {
+            CaseInsensitive ci = (CaseInsensitive)candidate.GetObject();
+            candidate.Include(ci.name.ToLower().Equals(name.ToLower()));
         }
     }
 }

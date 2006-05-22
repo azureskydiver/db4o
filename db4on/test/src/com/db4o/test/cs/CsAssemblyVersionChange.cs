@@ -1,9 +1,6 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using System.CodeDom;
-using System.CodeDom.Compiler;
 
 namespace com.db4o.test.cs
 {
@@ -20,17 +17,7 @@ namespace com.db4o.test.cs
 
 		protected static readonly string DataFile = Path.Combine(Path.GetTempPath(), "test.yap");
 
-		public virtual string BaseCode
-		{
-			get
-            {
-                return IsPascalCase
-                    ? BaseCodePascalCase
-                    : BaseCodeCamelCase;
-            }
-		}
-
-		public void test()
+		public void Test()
 		{
 			string version1Code = "[assembly: System.Reflection.AssemblyVersion(\"1.0.0.0\")]";
 			string version2Code = "[assembly: System.Reflection.AssemblyVersion(\"2.0.0.0\")]";
@@ -40,7 +27,7 @@ namespace com.db4o.test.cs
 
 			CompilationServices.EmitAssembly(Path.Combine(appDomain1BasePath, TestAssemblyName), BaseCode, version1Code);
 			CompilationServices.EmitAssembly(Path.Combine(appDomain2BasePath, TestAssemblyName), BaseCode, version2Code);
-            
+
 			if (File.Exists(DataFile))
 			{
 				File.Delete(DataFile);
@@ -48,16 +35,16 @@ namespace com.db4o.test.cs
 
 			try
 			{
-				ExecuteTestMethodInAppDomain(appDomain1BasePath, "store");
-				ExecuteTestMethodInAppDomain(appDomain2BasePath, "load");
+				ExecuteTestMethodInAppDomain(appDomain1BasePath, "Store");
+				ExecuteTestMethodInAppDomain(appDomain2BasePath, "Load");
 			}
 			catch (Exception e)
 			{
 				while (e is TargetInvocationException)
 				{
-					e = ((TargetInvocationException)e).InnerException;
+					e = e.InnerException;
 				}
-				Tester.error(e);
+				Tester.Error(e);
 			}
 		}
 
@@ -72,7 +59,7 @@ namespace com.db4o.test.cs
 			}
 
 			public void Execute()
-			{	
+			{
 				Assembly testAssembly = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TestAssemblyName));
 				Type type = testAssembly.GetType("Tester", true);
 				MethodInfo method = type.GetMethod(_methodName);
@@ -109,150 +96,17 @@ namespace com.db4o.test.cs
 			File.Copy(fname, Path.Combine(dir, Path.GetFileName(fname)), true);
 		}
 
-        bool IsPascalCase
-        {
-            get
-            {
-                return GetType().GetMethod("Test") != null;
-            }
-        }
-
-        string BaseCodeCamelCase
-        {
-            get
-            {
+		string BaseCode
+		{
+			get
+			{
 #if NET_2_0
-                #region .NET 2.0 version
-                return @"
-using System;
-using System.IO;
-using com.db4o;
-
-public class SimpleGenericType<T>
-{
-	public T value;
-
-	public SimpleGenericType(T value)
-	{
-		this.value = value;
-	}
-}
-
-public class Tester
-{
-	public static void store(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			container.set(new SimpleGenericType<string>(""spam""));
-			container.set(new SimpleGenericType<SimpleGenericType<string>>(new SimpleGenericType<string>(""eggs"")));
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	public static void load(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			ObjectSet os = container.get(typeof(SimpleGenericType<string>));
-			assertEquals(2, os.size());
-			
-			os = container.get(typeof(SimpleGenericType<SimpleGenericType<string>>));
-			assertEquals(1, os.size());
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	static void assertEquals(object expected, object actual)
-	{
-		if (!Object.Equals(expected, actual))
-		{
-			throw new ApplicationException(string.Format(""'{0}' != '{1}'"", expected, actual));
-		}
-	}
-}
-            ";
-#endregion
-#else
-                #region .NET 1.1 version
+				#region .NET 2.0 version
 				return @"
 using System;
 using System.IO;
 using com.db4o;
 
-public class ST
-{
-	public int value;
-
-	public ST(int value)
-	{
-		this.value = value;
-	}
-}
-
-public class Tester
-{
-	public static void store(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			container.set(new ST(42));
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	public static void load(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			ObjectSet os = container.get(typeof(ST));
-			assertEquals(1, os.size());
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	static void assertEquals(object expected, object actual)
-	{
-		if (!Object.Equals(expected, actual))
-		{
-			throw new ApplicationException();
-		}
-	}
-}
-            ";
-#endregion
-#endif
-
-            }
-        }
-        
-        string BaseCodePascalCase
-        {
-            get
-            {
-#if NET_2_0
-                #region .NET 2.0 version
-                return @"
-using System;
-using System.IO;
-using com.db4o;
-
 public class SimpleGenericType<T>
 {
 	public T value;
@@ -265,7 +119,7 @@ public class SimpleGenericType<T>
 
 public class Tester
 {
-	public static void store(string fname)
+	public static void Store(string fname)
 	{
 		ObjectContainer container = Db4o.OpenFile(fname);
 		try
@@ -279,16 +133,16 @@ public class Tester
 		}
 	}
 	
-	public static void load(string fname)
+	public static void Load(string fname)
 	{
 		ObjectContainer container = Db4o.OpenFile(fname);
 		try
 		{
 			ObjectSet os = container.Get(typeof(SimpleGenericType<int>));
-			assertEquals(2, os.Size());
+			AssertEquals(2, os.Size());
 			
 			os = container.Get(typeof(SimpleGenericType<SimpleGenericType<int>>));
-			assertEquals(1, os.Size());
+			AssertEquals(1, os.Size());
 		}
 		finally
 		{
@@ -296,7 +150,7 @@ public class Tester
 		}
 	}
 	
-	static void assertEquals(object expected, object actual)
+	static void AssertEquals(object expected, object actual)
 	{
 		if (!Object.Equals(expected, actual))
 		{
@@ -305,9 +159,9 @@ public class Tester
 	}
 }
             ";
-                #endregion
+				#endregion
 #else
-                #region .NET 1.1 version
+				#region .NET 1.1 version
 				return @"
 using System;
 using System.IO;
@@ -325,7 +179,7 @@ public class ST
 
 public class Tester
 {
-	public static void store(string fname)
+	public static void Store(string fname)
 	{
 		ObjectContainer container = Db4o.OpenFile(fname);
 		try
@@ -338,13 +192,13 @@ public class Tester
 		}
 	}
 	
-	public static void load(string fname)
+	public static void Load(string fname)
 	{
 		ObjectContainer container = Db4o.OpenFile(fname);
 		try
 		{
 			ObjectSet os = container.Get(typeof(ST));
-			assertEquals(1, os.Size());
+			AssertEquals(1, os.Size());
 		}
 		finally
 		{
@@ -352,7 +206,7 @@ public class Tester
 		}
 	}
 	
-	static void assertEquals(object expected, object actual)
+	static void AssertEquals(object expected, object actual)
 	{
 		if (!Object.Equals(expected, actual))
 		{
@@ -361,10 +215,10 @@ public class Tester
 	}
 }
             ";
-                #endregion
+				#endregion
 #endif
 
-            }
-        }
-    }
+			}
+		}
+	}
 }

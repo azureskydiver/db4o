@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -24,7 +24,7 @@ namespace com.db4o.test.soda.collections {
             }
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STArrayListT(),
                                    new STArrayListT(new Object[0]),
@@ -48,83 +48,83 @@ namespace com.db4o.test.soda.collections {
                                                                     new STElement("bar", "barbar2")            })         };
         }
       
-        public void testDefaultContainsInteger() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(new STArrayListT(new Object[]{
+        public void TestDefaultContainsInteger() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(new STArrayListT(new Object[]{
                                                           System.Convert.ToInt32(17)         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[3],
                                           r1[4]         });
         }
       
-        public void testDefaultContainsString() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(new STArrayListT(new Object[]{
+        public void TestDefaultContainsString() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(new STArrayListT(new Object[]{
                                                           "foo"         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[5]         });
         }
       
-        public void testDefaultContainsTwo() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(new STArrayListT(new Object[]{
+        public void TestDefaultContainsTwo() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(new STArrayListT(new Object[]{
                                                           System.Convert.ToInt32(17),
                                                           System.Convert.ToInt32(25)         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[4]         });
         }
       
-        public void testDescendOne() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(Class.getClassForType(typeof(STArrayListT)));
-            q1.descend("col").constrain(System.Convert.ToInt32(17));
-            st.expect(q1, new Object[]{
+        public void TestDescendOne() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Class.GetClassForType(typeof(STArrayListT)));
+            q1.Descend("col").Constrain(System.Convert.ToInt32(17));
+            st.Expect(q1, new Object[]{
                                           r1[3],
                                           r1[4]         });
         }
       
-        public void testDescendTwo() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(Class.getClassForType(typeof(STArrayListT)));
-            Query qElements1 = q1.descend("col");
-            qElements1.constrain(System.Convert.ToInt32(17));
-            qElements1.constrain(System.Convert.ToInt32(25));
-            st.expect(q1, new Object[]{
+        public void TestDescendTwo() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Class.GetClassForType(typeof(STArrayListT)));
+            Query qElements1 = q1.Descend("col");
+            qElements1.Constrain(System.Convert.ToInt32(17));
+            qElements1.Constrain(System.Convert.ToInt32(25));
+            st.Expect(q1, new Object[]{
                                           r1[4]         });
         }
       
-        public void testDescendSmaller() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(Class.getClassForType(typeof(STArrayListT)));
-            Query qElements1 = q1.descend("col");
-            qElements1.constrain(System.Convert.ToInt32(3)).smaller();
-            st.expect(q1, new Object[]{
+        public void TestDescendSmaller() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Class.GetClassForType(typeof(STArrayListT)));
+            Query qElements1 = q1.Descend("col");
+            qElements1.Constrain(System.Convert.ToInt32(3)).Smaller();
+            st.Expect(q1, new Object[]{
                                           r1[2],
                                           r1[3]         });
         }
       
-        public void testDefaultContainsObject() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(new STArrayListT(new Object[]{
+        public void TestDefaultContainsObject() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(new STArrayListT(new Object[]{
                                                           new STElement("bar", null)         }));
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           r1[5],
                                           r1[6]         });
         }
       
-        public void testDescendToObject() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(new STArrayListT());
-            q1.descend("col").descend("foo1").constrain("bar");
-            st.expect(q1, new Object[]{
+        public void TestDescendToObject() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(new STArrayListT());
+            q1.Descend("col").Descend("foo1").Constrain("bar");
+            st.Expect(q1, new Object[]{
                                           r1[5],
                                           r1[6]         });
         }

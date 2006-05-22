@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using com.db4o;
 using com.db4o.messaging;
@@ -12,7 +12,7 @@ namespace com.db4o.f1.chapter5
     /// StopServer. The StartServer instance is used as a MessageRecipient 
     /// and reacts to receiving an instance of a StopServer object.
     /// Note that all user classes need to be present on the server side
-    /// and that all possible Db4o.configure() calls to alter the db4o
+    /// and that all possible Db4o.Configure() calls to alter the db4o
     /// configuration need to be executed on the client and on the server.
     /// </summary>
     public class StartServer : ServerConfiguration, MessageRecipient
@@ -28,28 +28,28 @@ namespace com.db4o.f1.chapter5
         /// </summary>
         public static void Main(string[] arguments)
         {
-            new StartServer().runServer();
+            new StartServer().RunServer();
         } 
 
         /// <summary>
-        /// opens the ObjectServer, and waits forever until close() is called
+        /// opens the ObjectServer, and waits forever until Close() is called
         /// or a StopServer message is being received.
         /// </summary>
-        public void runServer()
+        public void RunServer()
         {
             lock(this)
             {
-                ObjectServer db4oServer = Db4o.openServer(FILE, PORT);
-                db4oServer.grantAccess(USER, PASS);
+                ObjectServer db4oServer = Db4o.OpenServer(FILE, PORT);
+                db4oServer.GrantAccess(USER, PASS);
                 
                 // Using the messaging functionality to redirect all
                 // messages to this.processMessage
-                db4oServer.ext().configure().setMessageRecipient(this);
+                db4oServer.Ext().Configure().SetMessageRecipient(this);
                 try
                 {
                     if (! stop)
                     {
-                        // wait forever for notify() from close()
+                        // wait forever for Notify() from Close()
                         Monitor.Wait(this);   
                     }
                 }
@@ -57,26 +57,26 @@ namespace com.db4o.f1.chapter5
                 {
                     Console.WriteLine(e.ToString());
                 }
-                db4oServer.close();
+                db4oServer.Close();
             }
         }
 
         /// <summary>
         /// messaging callback
-        /// see com.db4o.messaging.MessageRecipient#processMessage()
+        /// see com.db4o.messaging.MessageRecipient#ProcessMessage()
         /// </summary>
-        public void processMessage(ObjectContainer con, object message)
+        public void ProcessMessage(ObjectContainer con, object message)
         {
             if (message is StopServer)
             {
-                close();
+                Close();
             }
         }
 
         /// <summary>
         /// closes this server.
         /// </summary>
-        public void close()
+        public void Close()
         {
             lock(this)
             {

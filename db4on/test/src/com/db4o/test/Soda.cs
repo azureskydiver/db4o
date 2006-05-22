@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -11,17 +11,17 @@ namespace com.db4o.test {
       public Soda() : base() {
       }
       
-      public void test() {
+      public void Test() {
          SodaTest st1 = new SodaTest();
-         if (Tester.isClientServer()) {
-             st1.run(SodaTest.CLASSES, new STEngine[]{
+         if (Tester.IsClientServer()) {
+             st1.Run(SodaTest.CLASSES, new STEngine[]{
                                                          new STDb4oClientServer()            }, true);
          } else {
-             st1.run(SodaTest.CLASSES, new STEngine[]{
+             st1.Run(SodaTest.CLASSES, new STEngine[]{
                                                          new STDb4o()            }, true);
          }
-         Tester.ensure(SodaTest.failedClassesSize() == 0);
-         Tester.assertionCount += SodaTest.testCaseCount();
+         Tester.Ensure(SodaTest.FailedClassesSize() == 0);
+         Tester.assertionCount += SodaTest.TestCaseCount();
       }
    }
 }

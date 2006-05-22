@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using com.db4o;
 using com.db4o.messaging;
 
@@ -23,7 +23,7 @@ namespace com.db4o.f1.chapter5
             try
             {
                 // connect to the server
-                objectContainer = Db4o.openClient(HOST, PORT, USER, PASS);
+                objectContainer = Db4o.OpenClient(HOST, PORT, USER, PASS);
             }
             catch (Exception e)
             {
@@ -33,14 +33,14 @@ namespace com.db4o.f1.chapter5
             if (objectContainer != null)
             {
                 // get the messageSender for the ObjectContainer 
-                MessageSender messageSender = objectContainer.ext()
-                    .configure().getMessageSender();
+                MessageSender messageSender = objectContainer.Ext()
+                    .Configure().GetMessageSender();
 
                 // send an instance of a StopServer object
-                messageSender.send(new StopServer());
+                messageSender.Send(new StopServer());
                 
                 // close the ObjectContainer 
-                objectContainer.close();
+                objectContainer.Close();
             }
         }
     }

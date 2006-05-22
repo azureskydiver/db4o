@@ -1,4 +1,4 @@
-namespace com.db4o.test.net2
+﻿namespace com.db4o.test.net2
 {
 #if NET_2_0 || CF_2_0
 
@@ -8,26 +8,26 @@ namespace com.db4o.test.net2
 
     public class Net2GenericOtherCollections
     {
-        public void store()
+        public void Store()
         {
             CHolder ch = new CHolder();
             ch.CreateCollections();
-            Tester.store(ch);
+            Tester.Store(ch);
         }
 
-        public void test()
+        public void Test()
         {
             CHolder ch = QueryHolder();
             ch.TestBeforeUpdate();
             ch.Update();
-            Tester.reOpen();
+            Tester.ReOpen();
             ch = QueryHolder();
             ch.TestAfterUpdate();
         }
 
         private CHolder QueryHolder()
         {
-            return Tester.objectContainer().query<CHolder>(typeof(CHolder))[0];
+            return Tester.ObjectContainer().Query<CHolder>(typeof(CHolder))[0];
         }
 
     }
@@ -79,65 +79,65 @@ namespace com.db4o.test.net2
 
         public void TestBeforeUpdate()
         {
-            ExtObjectContainer oc = Tester.objectContainer();
+            ExtObjectContainer oc = Tester.ObjectContainer();
 
-            Tester.ensure(linkedList.Last.Value.Equals(new CItem("ll9")));
+            Tester.Ensure(linkedList.Last.Value.Equals(new CItem("ll9")));
 
             for (int i = 0; i < 10; i++)
             {
-                Tester.ensure(queue.Dequeue().Equals(new CItem("q" + i)));
+                Tester.Ensure(queue.Dequeue().Equals(new CItem("q" + i)));
             }
 #if !CF_2_0
             // Sorted dictionary needs explicit activation since it uses a TreeSet underneath.
-            oc.activate(sortedDictionary, int.MaxValue);
+            oc.Activate(sortedDictionary, int.MaxValue);
             for (int i = 0; i < 10; i++)
             {
                 Object obj = sortedDictionary[new CItem("sd" + i)];
-                Tester.ensure(obj.Equals("sd" + i));
+                Tester.Ensure(obj.Equals("sd" + i));
             }
 #endif
 
             for (int i = 0; i < 10; i++)
             {
-                Tester.ensure(sortedList[new CItem("sl" + i)].Equals("sl" + i));
+                Tester.Ensure(sortedList[new CItem("sl" + i)].Equals("sl" + i));
             }
 
             for (int i = 9; i >= 0; i--)
             {
-                Tester.ensure(stack.Pop().Equals(new CItem("st" + i)));
+                Tester.Ensure(stack.Pop().Equals(new CItem("st" + i)));
             }
 
         }
 
         public void Update()
         {
-            ObjectContainer oc = Tester.objectContainer();
+            ObjectContainer oc = Tester.ObjectContainer();
             
             linkedList.AddLast(new CItem("update"));
-            oc.set(linkedList);
+            oc.Set(linkedList);
 
             queue.Enqueue(new CItem("update"));
-            oc.set(queue);
+            oc.Set(queue);
 #if !CF_2_0
             sortedDictionary.Add(new CItem("update"), "update");
-            oc.set(sortedDictionary);
+            oc.Set(sortedDictionary);
 #endif
             sortedList.Add(new CItem("update"), "update");
-            oc.set(sortedList);
+            oc.Set(sortedList);
 
             stack.Push(new CItem("update"));
-            oc.set(stack);
+            oc.Set(stack);
         }
 
         public void TestAfterUpdate()
         {
-            Tester.ensure(linkedList.Last.Value.Equals(new CItem("update")));
+            Tester.Ensure(linkedList.Last.Value.Equals(new CItem("update")));
 
-            Tester.ensure(queue.Dequeue().Equals(new CItem("update")));
+            Tester.Ensure(queue.Dequeue().Equals(new CItem("update")));
 
-            Tester.ensure(sortedList[new CItem("update")].Equals("update"));
+            Tester.Ensure(sortedList[new CItem("update")].Equals("update"));
 
-            Tester.ensure(stack.Pop().Equals(new CItem("update")));
+            Tester.Ensure(stack.Pop().Equals(new CItem("update")));
 
         }
 

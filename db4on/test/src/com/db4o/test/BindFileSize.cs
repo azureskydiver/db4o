@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -14,33 +14,33 @@ namespace com.db4o.test {
       public BindFileSize(int Length) : base() {
          StringBuffer sb1 = new StringBuffer();
          for (int i1 = 0; i1 < Length; i1++) {
-            sb1.append("g");
+            sb1.Append("g");
          }
          this.foo = sb1.ToString();
       }
       
-      public void store() {
-         Tester.deleteAllInstances(this);
-         Tester.store(new BindFileSize(LENGTH));
+      public void Store() {
+         Tester.DeleteAllInstances(this);
+         Tester.Store(new BindFileSize(LENGTH));
       }
       
-      public void testGrowth() {
+      public void TestGrowth() {
          int call1 = 0;
-         BindFileSize bfs1 = (BindFileSize)Tester.getOne(this);
-         long id1 = Tester.objectContainer().getID(bfs1);
+         BindFileSize bfs1 = (BindFileSize)Tester.GetOne(this);
+         long id1 = Tester.ObjectContainer().GetID(bfs1);
          for (int i1 = 0; i1 < 12; i1++) {
             bfs1 = new BindFileSize(LENGTH);
-            Tester.objectContainer().bind(bfs1, id1);
-            Tester.objectContainer().set(bfs1);
-            Tester.commit();
-            checkFileSize(call1++);
-            Tester.reOpen();
+            Tester.ObjectContainer().Bind(bfs1, id1);
+            Tester.ObjectContainer().Set(bfs1);
+            Tester.Commit();
+            CheckFileSize(call1++);
+            Tester.ReOpen();
          }
       }
       
-      private void checkFileSize(int call) {
-         if (Tester.canCheckFileSize()) {
-            int newFileLength1 = Tester.fileLength();
+      private void CheckFileSize(int call) {
+         if (Tester.CanCheckFileSize()) {
+            int newFileLength1 = Tester.FileLength();
             if (call == 6) {
                jumps = 0;
                fileLength = newFileLength1;
@@ -50,7 +50,7 @@ namespace com.db4o.test {
                      fileLength = newFileLength1;
                      jumps++;
                   } else {
-                     Tester.error();
+                     Tester.Error();
                   }
                }
             }

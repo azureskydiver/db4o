@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -11,7 +11,7 @@ namespace com.db4o.test.types {
       public ObjectSimplePublic3() : base() {
       }
       
-      public override void set(int ver) {
+      public override void Set(int ver) {
          if (ver == 1) {
             name = "OneONEOneONEOneONEOneONEOneONEOneONE";
          } else {

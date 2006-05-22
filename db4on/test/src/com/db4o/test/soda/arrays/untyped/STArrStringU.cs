@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -18,7 +18,7 @@ namespace com.db4o.test.soda.arrays.untyped {
          strArr = arr;
       }
       
-      public Object[] store() {
+      public Object[] Store() {
          return new Object[]{
             new STArrStringU(),
 new STArrStringU(new Object[]{
@@ -37,66 +37,66 @@ new STArrStringU(new Object[]{
 "johy"            })         };
       }
       
-      public void testDefaultContainsOne() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(new STArrStringU(new Object[]{
+      public void TestDefaultContainsOne() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(new STArrStringU(new Object[]{
             "bar"         }));
-         st.expect(q1, new Object[]{
+         st.Expect(q1, new Object[]{
             r1[3],
 r1[4]         });
       }
       
-      public void testDefaultContainsTwo() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(new STArrStringU(new Object[]{
+      public void TestDefaultContainsTwo() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(new STArrStringU(new Object[]{
             "foo",
 "bar"         }));
-         st.expect(q1, new Object[]{
+         st.Expect(q1, new Object[]{
             r1[3]         });
       }
       
-      public void testDescendOne() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrStringU)));
-         q1.descend("strArr").constrain("bar");
-         st.expect(q1, new Object[]{
+      public void TestDescendOne() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrStringU)));
+         q1.Descend("strArr").Constrain("bar");
+         st.Expect(q1, new Object[]{
             r1[3],
 r1[4]         });
       }
       
-      public void testDescendTwo() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrStringU)));
-         Query qElements1 = q1.descend("strArr");
-         qElements1.constrain("foo");
-         qElements1.constrain("bar");
-         st.expect(q1, new Object[]{
+      public void TestDescendTwo() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrStringU)));
+         Query qElements1 = q1.Descend("strArr");
+         qElements1.Constrain("foo");
+         qElements1.Constrain("bar");
+         st.Expect(q1, new Object[]{
             r1[3]         });
       }
       
-      public void testDescendOneNot() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrStringU)));
-         q1.descend("strArr").constrain("bar").not();
-         st.expect(q1, new Object[]{
+      public void TestDescendOneNot() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrStringU)));
+         q1.Descend("strArr").Constrain("bar").Not();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[1],
 r1[2]         });
       }
       
-      public void testDescendTwoNot() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrStringU)));
-         Query qElements1 = q1.descend("strArr");
-         qElements1.constrain("foo").not();
-         qElements1.constrain("bar").not();
-         st.expect(q1, new Object[]{
+      public void TestDescendTwoNot() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrStringU)));
+         Query qElements1 = q1.Descend("strArr");
+         qElements1.Constrain("foo").Not();
+         qElements1.Constrain("bar").Not();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[1],
 r1[2]         });

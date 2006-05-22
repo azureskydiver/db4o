@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -47,7 +47,7 @@ namespace com.db4o.test.soda.classes.untypedhierarchy {
       public STInnerClasses() : base() {
       }
       
-      public Object[] store() {
+      public Object[] Store() {
          return new Object[]{
             new Parent(new FirstClass("Example")),
 new Parent(new FirstClass("no Example"))         };
@@ -56,18 +56,18 @@ new Parent(new FirstClass("no Example"))         };
       /**
        * Only 
        */
-      public void testNothing() {
-         Query q1 = st.query();
-         Query q21 = q1.descend("child");
-         Object[] r1 = store();
-         st.expect(q1, r1);
+      public void TestNothing() {
+         Query q1 = st.Query();
+         Query q21 = q1.Descend("child");
+         Object[] r1 = Store();
+         st.Expect(q1, r1);
       }
       
       /**
        * Start the test.
        */
       public static void Main(String[] args) {
-          new SodaTest().run(new STClass[] { new STInnerClasses()}, new STEngine[] {new STDb4o()}, false);
+          new SodaTest().Run(new STClass[] { new STInnerClasses()}, new STEngine[] {new STDb4o()}, false);
       }
    }
 }

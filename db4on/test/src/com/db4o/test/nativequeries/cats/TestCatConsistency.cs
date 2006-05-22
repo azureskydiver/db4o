@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using com.db4o;
 using com.db4o.ext;
@@ -9,31 +9,31 @@ namespace com.db4o.test.nativequeries.cats
 {
     public class TestCatConsistency
     {
-        public void store()
+        public void Store()
         {
-            storeCats();
+            StoreCats();
         }
 
-        public void test()
+        public void Test()
         {
-            ExtObjectContainer oc = Tester.objectContainer();
+            ExtObjectContainer oc = Tester.ObjectContainer();
             try
             {   
-                oc.configure().optimizeNativeQueries(true);
-                runTests();
-                oc.configure().optimizeNativeQueries(false);
-                runTests();
+                oc.Configure().OptimizeNativeQueries(true);
+                RunTests();
+                oc.Configure().OptimizeNativeQueries(false);
+                RunTests();
             }
             finally
             {
-                oc.configure().optimizeNativeQueries(true);
+                oc.Configure().OptimizeNativeQueries(true);
             }
 
         }
 
         public class NoneFound : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
                 return cat._age == 7;
             }
@@ -41,7 +41,7 @@ namespace com.db4o.test.nativequeries.cats
 
         public class AgeOne : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
                 return cat._age == 1;
             }
@@ -49,7 +49,7 @@ namespace com.db4o.test.nativequeries.cats
 
         public class FatherAgeOne : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
                 return cat._father._age == 1;
             }
@@ -57,7 +57,7 @@ namespace com.db4o.test.nativequeries.cats
 
         public class GrandFatherName : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
                 return cat._father._father._firstName == "Edwin";
             }
@@ -65,7 +65,7 @@ namespace com.db4o.test.nativequeries.cats
 
         public class OrFatherName : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
                 return (cat._father._father != null && cat._father._father._firstName == "Edwin")
                     || cat._father._firstName == "Edwin";
@@ -74,7 +74,7 @@ namespace com.db4o.test.nativequeries.cats
 
         public class AddToAge : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
                 return cat._age + 1 == 2;
             }
@@ -82,92 +82,92 @@ namespace com.db4o.test.nativequeries.cats
 
         public class TwoGetters : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
-                return cat.getFirstName() == "Occam"
-                    && cat.getAge() == 1;
+                return cat.GetFirstName() == "Occam"
+                    && cat.GetAge() == 1;
             }
         }
 
         public class CalculatedGetter : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
-                return cat.getFullName() == "Achat Leo Lenis";
+                return cat.GetFullName() == "Achat Leo Lenis";
             }
         }
 
         public class GetterNull : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
-                return cat.getFullName() == null;
+                return cat.GetFullName() == null;
             }
         }
 
         public class StartsWith : Predicate
         {
-            public bool match(Cat cat)
+            public bool Match(Cat cat)
             {
                 return cat._firstName.StartsWith("A");
             }
         }
 
-        public void runTests()
+        public void RunTests()
         {
-            expect(new NoneFound());
-            expect(new AgeOne(), "Occam", "Vahiné");
-            expect(new FatherAgeOne(), "Achat", "Acrobat");
-            expect(new GrandFatherName(), "Achat", "Acrobat" );
-            expect(new OrFatherName(), "Achat", "Acrobat", "Occam");
-            expect(new AddToAge(), "Occam", "Vahiné");
-            expect(new TwoGetters(), "Occam");
-            expect(new CalculatedGetter(), "Achat");
-            expect(new GetterNull());
-            expect(new StartsWith(), "Achat", "Acrobat");
+            Expect(new NoneFound());
+            Expect(new AgeOne(), "Occam", "VahinÃ©");
+            Expect(new FatherAgeOne(), "Achat", "Acrobat");
+            Expect(new GrandFatherName(), "Achat", "Acrobat" );
+            Expect(new OrFatherName(), "Achat", "Acrobat", "Occam");
+            Expect(new AddToAge(), "Occam", "VahinÃ©");
+            Expect(new TwoGetters(), "Occam");
+            Expect(new CalculatedGetter(), "Achat");
+            Expect(new GetterNull());
+            Expect(new StartsWith(), "Achat", "Acrobat");
 
 #if NET_2_0
 
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
                 return cat._age == 7;
             });
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
                 return cat._age == 1;
-            }, "Occam", "Vahiné");
-            expect<Cat>(delegate(Cat cat)
+            }, "Occam", "VahinÃ©");
+            Expect<Cat>(delegate(Cat cat)
             {
                 return cat._father._age == 1;
             }, "Achat", "Acrobat");
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
                 return cat._father._father._firstName == "Edwin";
             }, "Achat", "Acrobat");
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
                 return (cat._father._father != null &&
                         cat._father._father._firstName == "Edwin")
                     || cat._father._firstName == "Edwin";
             }, "Achat", "Acrobat", "Occam");
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
                 return cat._age + 1 == 2;
-            }, "Occam", "Vahiné");
-            expect<Cat>(delegate(Cat cat)
+            }, "Occam", "VahinÃ©");
+            Expect<Cat>(delegate(Cat cat)
             {
-                return cat.getFirstName() == "Occam"
-                    && cat.getAge() == 1;
+                return cat.GetFirstName() == "Occam"
+                    && cat.GetAge() == 1;
             }, "Occam");
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
-                return cat.getFullName() == "Achat Leo Lenis";
+                return cat.GetFullName() == "Achat Leo Lenis";
             }, "Achat");
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
-                return cat.getFullName() == null;
+                return cat.GetFullName() == null;
             });
-            expect<Cat>(delegate(Cat cat)
+            Expect<Cat>(delegate(Cat cat)
             {
                 return cat._firstName.StartsWith("A");
             }, "Achat", "Acrobat");
@@ -175,7 +175,7 @@ namespace com.db4o.test.nativequeries.cats
 
         }
 
-        public void storeCats()
+        public void StoreCats()
         {
 
             Cat winni = new Cat();
@@ -187,20 +187,20 @@ namespace com.db4o.test.nativequeries.cats
             Cat bachi = new Cat();
             bachi._sex = Animal.FEMALE;
             bachi._firstName = "Frau Bachmann";
-            bachi._lastName = "von der Bärenhöhle";
+            bachi._lastName = "von der BÃ¤renhÃ¶hle";
             bachi._age = 10;
 
             Cat occam = new Cat();
             occam._sex = Animal.MALE;
             occam._firstName = "Occam";
-            occam._lastName = "von der Bärenhöhle";
+            occam._lastName = "von der BÃ¤renhÃ¶hle";
             occam._age = 1;
             occam._father = winni;
             occam._mother = bachi;
 
             Cat zora = new Cat();
             zora._sex = Animal.FEMALE;
-            zora._firstName = "Vahiné";
+            zora._firstName = "VahinÃ©";
             zora._lastName = "des Fauves et Or";
             zora._age = 1;
 
@@ -218,26 +218,26 @@ namespace com.db4o.test.nativequeries.cats
             acrobat._father = occam;
             acrobat._mother = zora;
 
-            Tester.store(achat);
-            Tester.store(acrobat);
+            Tester.Store(achat);
+            Tester.Store(acrobat);
 
             Cat trulla = new Cat();
             trulla._firstName = "Trulla";
-            Tester.store(trulla);
+            Tester.Store(trulla);
 
         }
 
-        private void expect(Predicate predicate, params string[] names)
+        private void Expect(Predicate predicate, params string[] names)
         {
-            IList list = Tester.objectContainer().query(predicate);
-            expect(list, names);
+            IList list = Tester.ObjectContainer().Query(predicate);
+            Expect(list, names);
         }
 
 #if NET_2_0
-        private void expect<Extent>(Predicate<Extent> match, params string[] names)
+        private void Expect<Extent>(Predicate<Extent> match, params string[] names)
         {
-            System.Collections.Generic.IList<Extent> list = Tester.objectContainer().query(match);
-            expect(ToUntypedList(list), names);
+            System.Collections.Generic.IList<Extent> list = Tester.ObjectContainer().Query(match);
+            Expect(ToUntypedList(list), names);
         }
 
         private static IList ToUntypedList<T>(System.Collections.Generic.IList<T> list)
@@ -251,7 +251,7 @@ namespace com.db4o.test.nativequeries.cats
         }
 #endif
 
-        private void expect(IList list, string[] names)
+        private void Expect(IList list, string[] names)
         {
             if (names == null)
             {
@@ -273,11 +273,11 @@ namespace com.db4o.test.nativequeries.cats
                         }
                     }
                 }
-                Tester.ensure(good);
+                Tester.Ensure(good);
             }
             for (int j = 0; j < names.Length; j++)
             {
-                Tester.ensureEquals(null, names[j]);
+                Tester.EnsureEquals(null, names[j]);
             }
 
         }

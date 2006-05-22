@@ -1,4 +1,4 @@
-namespace db4obrowser
+﻿namespace db4obrowser
 {
     using System;
     using System.IO;
@@ -69,14 +69,14 @@ namespace db4obrowser
                 return false;
             }       
             
-            ObjectContainer container = Db4o.openFile(Util.YapFileName);
+            ObjectContainer container = Db4o.OpenFile(Util.YapFileName);
             try
             {
                 method.Invoke(null, new object[] { container });
             }
             finally
             {
-                container.close();
+                container.Close();
             }
             return true;
         }
@@ -88,14 +88,14 @@ namespace db4obrowser
                 return false;
             }
             
-            ObjectServer server = Db4o.openServer(Util.YapFileName, 0);
+            ObjectServer server = Db4o.OpenServer(Util.YapFileName, 0);
             try
             {                
                 method.Invoke(null, new object[] { server });
             }
             finally
             {
-                server.close();
+                server.Close();
             }
             return true;
         }
@@ -107,15 +107,15 @@ namespace db4obrowser
                 return false;
             }
             
-            ObjectServer server = Db4o.openServer(Util.YapFileName, Util.ServerPort);
+            ObjectServer server = Db4o.OpenServer(Util.YapFileName, Util.ServerPort);
             try
             {   
-                server.grantAccess(Util.ServerUser, Util.ServerPassword);
+                server.GrantAccess(Util.ServerUser, Util.ServerPassword);
                 method.Invoke(null, new object[] { Util.ServerPort, Util.ServerUser, Util.ServerPassword });                
             }
             finally
             {
-                server.close();
+                server.Close();
             }
             return true;
         }

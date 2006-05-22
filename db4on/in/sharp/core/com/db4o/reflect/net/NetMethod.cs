@@ -1,4 +1,4 @@
-namespace com.db4o.reflect.net
+﻿namespace com.db4o.reflect.net
 {
 	public class NetMethod : com.db4o.reflect.ReflectMethod
 	{
@@ -12,16 +12,16 @@ namespace com.db4o.reflect.net
 			this.method = method;
 		}
 
-		public com.db4o.reflect.ReflectClass getReturnType() 
+		public com.db4o.reflect.ReflectClass GetReturnType() 
 		{
-			return _reflector.forClass(method.getReturnType());
+			return _reflector.ForClass(method.GetReturnType());
 		}
 
-		public virtual object invoke(object onObject, object[] parameters)
+		public virtual object Invoke(object onObject, object[] parameters)
 		{
 			try
 			{
-				return method.invoke(onObject, parameters);
+				return method.Invoke(onObject, parameters);
 			}
 			catch (System.Exception e)
 			{

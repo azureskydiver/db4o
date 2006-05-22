@@ -1,4 +1,4 @@
-namespace com.db4o.test.acid
+﻿namespace com.db4o.test.acid
 {
 	public class CrashSimulatingIoAdapter : com.db4o.io.VanillaIoAdapter
 	{
@@ -14,36 +14,36 @@ namespace com.db4o.test.acid
 
 		private CrashSimulatingIoAdapter(com.db4o.io.IoAdapter delegateAdapter, string path
 			, bool lockFile, long initialLength, com.db4o.test.acid.CrashSimulatingBatch batch
-			) : base(delegateAdapter.open(path, lockFile, initialLength))
+			) : base(delegateAdapter.Open(path, lockFile, initialLength))
 		{
 			this.batch = batch;
 		}
 
-		public override com.db4o.io.IoAdapter open(string path, bool lockFile, long initialLength
+		public override com.db4o.io.IoAdapter Open(string path, bool lockFile, long initialLength
 			)
 		{
 			return new com.db4o.test.acid.CrashSimulatingIoAdapter(_delegate, path, lockFile, 
 				initialLength, batch);
 		}
 
-		public override void seek(long pos)
+		public override void Seek(long pos)
 		{
 			curPos = pos;
-			base.seek(pos);
+			base.Seek(pos);
 		}
 
-		public override void write(byte[] buffer, int length)
+		public override void Write(byte[] buffer, int length)
 		{
-			base.write(buffer, length);
+			base.Write(buffer, length);
 			byte[] copy = new byte[buffer.Length];
 			System.Array.Copy(buffer, 0, copy, 0, buffer.Length);
-			batch.add(copy, curPos, length);
+			batch.Add(copy, curPos, length);
 		}
 
-		public override void sync()
+		public override void Sync()
 		{
-			base.sync();
-			batch.sync();
+			base.Sync();
+			batch.Sync();
 		}
 	}
 }

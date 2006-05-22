@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,43 +10,43 @@ namespace com.db4o.test {
       public ExtMethods() : base() {
       }
       
-      public void test() {
+      public void Test() {
          ExtMethods em1 = new ExtMethods();
-         Tester.store(em1);
-         ExtObjectContainer eoc1 = Tester.objectContainer();
-         Tester.ensure(!eoc1.isClosed());
-         Tester.ensure(eoc1.isActive(em1));
-         Tester.ensure(eoc1.isStored(em1));
-         eoc1.deactivate(em1, 1);
-         Tester.ensure(!eoc1.isActive(em1));
-         eoc1.activate(em1, 1);
-         Tester.ensure(eoc1.isActive(em1));
-         long id1 = eoc1.getID(em1);
-         Tester.ensure(eoc1.isCached(id1));
-         eoc1.purge(em1);
-         Tester.ensure(!eoc1.isCached(id1));
-         Tester.ensure(!eoc1.isStored(em1));
-         Tester.ensure(!eoc1.isActive(em1));
-         eoc1.bind(em1, id1);
-         Tester.ensure(eoc1.isCached(id1));
-         Tester.ensure(eoc1.isStored(em1));
-         Tester.ensure(eoc1.isActive(em1));
-         ExtMethods em21 = (ExtMethods)eoc1.getByID(id1);
-         Tester.ensure(em1 == em21);
-         eoc1.purge();
-         Tester.ensure(eoc1.isCached(id1));
-         Tester.ensure(eoc1.isStored(em1));
-         Tester.ensure(eoc1.isActive(em1));
-         em21 = (ExtMethods)eoc1.getByID(id1);
-         Tester.ensure(em1 == em21);
-         Tester.delete(em21);
-         Tester.commit();
-         Tester.ensure(!eoc1.isCached(id1));
-         Tester.ensure(!eoc1.isStored(em21));
-         Tester.ensure(!eoc1.isActive(em21));
-         Tester.ensure(!eoc1.isStored(null));
-         Tester.ensure(!eoc1.isActive(null));
-         Tester.ensure(!eoc1.isCached(0));
+         Tester.Store(em1);
+         ExtObjectContainer eoc1 = Tester.ObjectContainer();
+         Tester.Ensure(!eoc1.IsClosed());
+         Tester.Ensure(eoc1.IsActive(em1));
+         Tester.Ensure(eoc1.IsStored(em1));
+         eoc1.Deactivate(em1, 1);
+         Tester.Ensure(!eoc1.IsActive(em1));
+         eoc1.Activate(em1, 1);
+         Tester.Ensure(eoc1.IsActive(em1));
+         long id1 = eoc1.GetID(em1);
+         Tester.Ensure(eoc1.IsCached(id1));
+         eoc1.Purge(em1);
+         Tester.Ensure(!eoc1.IsCached(id1));
+         Tester.Ensure(!eoc1.IsStored(em1));
+         Tester.Ensure(!eoc1.IsActive(em1));
+         eoc1.Bind(em1, id1);
+         Tester.Ensure(eoc1.IsCached(id1));
+         Tester.Ensure(eoc1.IsStored(em1));
+         Tester.Ensure(eoc1.IsActive(em1));
+         ExtMethods em21 = (ExtMethods)eoc1.GetByID(id1);
+         Tester.Ensure(em1 == em21);
+         eoc1.Purge();
+         Tester.Ensure(eoc1.IsCached(id1));
+         Tester.Ensure(eoc1.IsStored(em1));
+         Tester.Ensure(eoc1.IsActive(em1));
+         em21 = (ExtMethods)eoc1.GetByID(id1);
+         Tester.Ensure(em1 == em21);
+         Tester.Delete(em21);
+         Tester.Commit();
+         Tester.Ensure(!eoc1.IsCached(id1));
+         Tester.Ensure(!eoc1.IsStored(em21));
+         Tester.Ensure(!eoc1.IsActive(em21));
+         Tester.Ensure(!eoc1.IsStored(null));
+         Tester.Ensure(!eoc1.IsActive(null));
+         Tester.Ensure(!eoc1.IsCached(0));
       }
    }
 }

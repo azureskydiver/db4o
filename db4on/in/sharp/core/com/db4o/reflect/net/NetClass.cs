@@ -1,4 +1,4 @@
-namespace com.db4o.reflect.net
+﻿namespace com.db4o.reflect.net
 {
 	/// <summary>Reflection implementation for Class to map to .NET reflection.</summary>
 	/// <remarks>Reflection implementation for Class to map to .NET reflection.</remarks>
@@ -18,17 +18,17 @@ namespace com.db4o.reflect.net
 		{
 			_reflector = reflector;
 			_clazz = clazz;
-			_type = clazz.getNetType();
+			_type = clazz.GetNetType();
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getComponentType()
+		public virtual com.db4o.reflect.ReflectClass GetComponentType()
 		{
-			return _reflector.forClass(_clazz.getComponentType());
+			return _reflector.ForClass(_clazz.GetComponentType());
 		}
 
-		public virtual com.db4o.reflect.ReflectConstructor[] getDeclaredConstructors()
+		public virtual com.db4o.reflect.ReflectConstructor[] GetDeclaredConstructors()
 		{
-			j4o.lang.reflect.Constructor[] constructors = _clazz.getDeclaredConstructors();
+			j4o.lang.reflect.Constructor[] constructors = _clazz.GetDeclaredConstructors();
 			com.db4o.reflect.ReflectConstructor[] reflectors = new com.db4o.reflect.ReflectConstructor
 				[constructors.Length];
 			for (int i = 0; i < constructors.Length; i++)
@@ -38,11 +38,11 @@ namespace com.db4o.reflect.net
 			return reflectors;
 		}
 
-		public virtual com.db4o.reflect.ReflectField getDeclaredField(string name)
+		public virtual com.db4o.reflect.ReflectField GetDeclaredField(string name)
 		{
 			try
 			{
-				return new com.db4o.reflect.net.NetField(_reflector, _clazz.getDeclaredField(name));
+				return new com.db4o.reflect.net.NetField(_reflector, _clazz.GetDeclaredField(name));
 			}
 			catch (System.Exception e)
 			{
@@ -50,9 +50,9 @@ namespace com.db4o.reflect.net
 			}
 		}
 
-		public virtual com.db4o.reflect.ReflectField[] getDeclaredFields()
+		public virtual com.db4o.reflect.ReflectField[] GetDeclaredFields()
 		{
-			j4o.lang.reflect.Field[] fields = _clazz.getDeclaredFields();
+			j4o.lang.reflect.Field[] fields = _clazz.GetDeclaredFields();
 			com.db4o.reflect.ReflectField[] reflectors = new com.db4o.reflect.ReflectField[fields.Length];
 			for (int i = 0; i < reflectors.Length; i++)
 			{
@@ -61,19 +61,19 @@ namespace com.db4o.reflect.net
 			return reflectors;
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getDelegate()
+		public virtual com.db4o.reflect.ReflectClass GetDelegate()
 		{
 			return this;
 		}
 
-		public virtual com.db4o.reflect.ReflectMethod getMethod(
+		public virtual com.db4o.reflect.ReflectMethod GetMethod(
 			string methodName, 
 			com.db4o.reflect.ReflectClass[] paramClasses)
 		{
 			try
 			{
-				j4o.lang.reflect.Method method = _clazz.getMethod(methodName, com.db4o.reflect.net.NetReflector
-					.toNative(paramClasses));
+				j4o.lang.reflect.Method method = _clazz.GetMethod(methodName, com.db4o.reflect.net.NetReflector
+					.ToNative(paramClasses));
 				if (method == null)
 				{
 					return null;
@@ -86,70 +86,70 @@ namespace com.db4o.reflect.net
 			}
 		}
 
-		public virtual string getName()
+		public virtual string GetName()
 		{
-			return _clazz.getName();
+			return _clazz.GetName();
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getSuperclass()
+		public virtual com.db4o.reflect.ReflectClass GetSuperclass()
 		{
-			return _reflector.forClass(_clazz.getSuperclass());
+			return _reflector.ForClass(_clazz.GetSuperclass());
 		}
 
-		public virtual bool isAbstract()
+		public virtual bool IsAbstract()
 		{
-			return j4o.lang.reflect.Modifier.isAbstract(_clazz.getModifiers());
+			return j4o.lang.reflect.Modifier.IsAbstract(_clazz.GetModifiers());
 		}
 
-		public virtual bool isArray()
+		public virtual bool IsArray()
 		{
-			return _clazz.isArray();
+			return _clazz.IsArray();
 		}
 
-		public virtual bool isAssignableFrom(com.db4o.reflect.ReflectClass type)
+		public virtual bool IsAssignableFrom(com.db4o.reflect.ReflectClass type)
 		{
 			if (!(type is com.db4o.reflect.net.NetClass))
 			{
 				return false;
 			}
-			return _clazz.isAssignableFrom(((com.db4o.reflect.net.NetClass)type).getJavaClass(
+			return _clazz.IsAssignableFrom(((com.db4o.reflect.net.NetClass)type).GetJavaClass(
 				));
 		}
 
-		public virtual bool isInstance(object obj)
+		public virtual bool IsInstance(object obj)
 		{
-			return _clazz.isInstance(obj);
+			return _clazz.IsInstance(obj);
 		}
 
-		public virtual bool isInterface()
+		public virtual bool IsInterface()
 		{
-			return _clazz.isInterface();
+			return _clazz.IsInterface();
 		}
 
-		public virtual bool isCollection() 
+		public virtual bool IsCollection() 
 		{
-			return _reflector.isCollection(this);
+			return _reflector.IsCollection(this);
 		}
 
-		public virtual bool isPrimitive()
+		public virtual bool IsPrimitive()
 		{
-			return _clazz.isPrimitive();
+			return _clazz.IsPrimitive();
 		}
 		
-		public virtual bool isSecondClass() 
+		public virtual bool IsSecondClass() 
 		{
-			return isPrimitive();
+			return IsPrimitive();
 		}
 
-		public virtual object newInstance()
+		public virtual object NewInstance()
 		{
 			try
 			{
 				if (_constructor == null)
 				{
-					return _clazz.newInstance();
+					return _clazz.NewInstance();
 				}
-				return _constructor.newInstance(constructorParams);
+				return _constructor.NewInstance(constructorParams);
 			}
 			catch (System.Exception t)
 			{
@@ -157,35 +157,35 @@ namespace com.db4o.reflect.net
 			return null;
 		}
 
-		internal virtual j4o.lang.Class getJavaClass()
+		internal virtual j4o.lang.Class GetJavaClass()
 		{
 			return _clazz;
 		}
 
-		public virtual System.Type getNetType() 
+		public virtual System.Type GetNetType() 
 		{
 			return _type;
 		}
 
-		public virtual com.db4o.reflect.Reflector reflector()
+		public virtual com.db4o.reflect.Reflector Reflector()
 		{
 			return _reflector;
 		}
 
-		public virtual bool skipConstructor(bool flag)
+		public virtual bool SkipConstructor(bool flag)
 		{
 #if !CF_1_0 && !CF_2_0
 			if (flag) 
 			{
-				ReflectConstructor constructor = new SerializationConstructor(getNetType());
+				ReflectConstructor constructor = new SerializationConstructor(GetNetType());
 				if (constructor != null)
 				{
 					try
 					{
-						object o = constructor.newInstance(null);
+						object o = constructor.NewInstance(null);
 						if (o != null)
 						{
-							useConstructor(constructor, null);
+							UseConstructor(constructor, null);
 							return true;
 						}
 					}
@@ -195,16 +195,16 @@ namespace com.db4o.reflect.net
 				}
 			}
 #endif
-			useConstructor(null, null);
+			UseConstructor(null, null);
 			return false;
 		}
 
 		public override string ToString()
 		{
-			return "CClass: " + _clazz.getName();
+			return "CClass: " + _clazz.GetName();
 		}
 
-		public virtual void useConstructor(
+		public virtual void UseConstructor(
 			com.db4o.reflect.ReflectConstructor constructor, 
 			object[] _params)
 		{
@@ -212,7 +212,7 @@ namespace com.db4o.reflect.net
 			constructorParams = _params;
 		}
 		
-		public virtual object[] toArray(object obj) 
+		public virtual object[] ToArray(object obj) 
 		{
 			// handled in GenericClass
 			return null;

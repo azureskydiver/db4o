@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -25,31 +25,33 @@ namespace com.db4o.test
 			get
 			{
 				ArrayList tests = new ArrayList();
-                
-#if NET_2_0 || CF_2_0
-                tests.Add(typeof(net2.Net2GenericList));
-#endif
-			    
-#if NET_2_0
-                tests.Add(typeof(net2.Net2GenericOtherCollections));
-				tests.Add(typeof(net2.Net2GenericContainers));
-				tests.Add(typeof(net2.Net2GenericDictionary));
-                tests.Add(typeof(net2.Net2NullableTypes));
-#endif
 
-                tests.Add(typeof(SimplestPossible));
-			    
-#if NET || NET_2_0 || MONO
-                tests.Add(typeof(aliases.ClassAliasesTestCase));
-#endif
-                tests.Add(typeof(CsStructsRegression));
-                tests.Add(typeof(Db4oHashMap));
-                tests.Add(typeof(CrashSimulatingTest));
-                tests.Add(typeof(com.db4o.test.nativequeries.Cat));
-                tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
-                tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
-                tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
-                tests.Add(typeof(com.db4o.test.nativequeries.StringComparisonTestCase));
+				tests.Add(typeof(inside.query.QueryExpressionBuilderTestCase));
+//                
+//#if NET_2_0 || CF_2_0
+//                tests.Add(typeof(net2.Net2GenericList));
+//#endif
+//			    
+//#if NET_2_0
+//                tests.Add(typeof(net2.Net2GenericOtherCollections));
+//				tests.Add(typeof(net2.Net2GenericContainers));
+//				tests.Add(typeof(net2.Net2GenericDictionary));
+//                tests.Add(typeof(net2.Net2NullableTypes));
+//#endif
+//
+//                tests.Add(typeof(SimplestPossible));
+//			    
+//#if NET || NET_2_0 || MONO
+//                tests.Add(typeof(aliases.ClassAliasesTestCase));
+//#endif
+//                tests.Add(typeof(CsStructsRegression));
+//                tests.Add(typeof(Db4oHashMap));
+//                tests.Add(typeof(CrashSimulatingTest));
+//                tests.Add(typeof(com.db4o.test.nativequeries.Cat));
+//                tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
+//                tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
+//                tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
+//                tests.Add(typeof(com.db4o.test.nativequeries.StringComparisonTestCase));
 
 
 				return (Type[]) tests.ToArray(typeof (Type));
@@ -78,7 +80,7 @@ namespace com.db4o.test
 		internal bool CLIENT_SERVER = true;
 
         /**
-         * use ObjectServer#openClient() instead of Db4o.openClient()
+         * use ObjectServer#OpenClient() instead of Db4o.OpenClient()
          */
         public static bool EMBEDDED_CLIENT = false;
 

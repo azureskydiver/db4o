@@ -1,4 +1,4 @@
-using com.db4o.inside.query;
+﻿using com.db4o.inside.query;
 
 namespace com.db4o.test.nativequeries
 {
@@ -13,7 +13,7 @@ namespace com.db4o.test.nativequeries
 				this.id = id;
 			}
 
-			public virtual int getId()
+			public virtual int GetId()
 			{
 				return id;
 			}
@@ -35,23 +35,23 @@ namespace com.db4o.test.nativequeries
 				this.prev = prev;
 			}
 
-			public virtual float getValue()
+			public virtual float GetValue()
 			{
 				return value;
 			}
 
-			public virtual string getName()
+			public virtual string GetName()
 			{
 				return name;
 			}
 
-			public virtual com.db4o.test.nativequeries.NQRegressionTests.Data getPrev()
+			public virtual com.db4o.test.nativequeries.NQRegressionTests.Data GetPrev()
 			{
 				return prev;
 			}
 		}
 
-		public virtual void store()
+		public virtual void Store()
 		{
 			com.db4o.test.nativequeries.NQRegressionTests.Data a = new com.db4o.test.nativequeries.NQRegressionTests.Data
 				(1, 1.1f, "Aa", null);
@@ -61,15 +61,15 @@ namespace com.db4o.test.nativequeries
 				(3, 2.2f, "Cc", b);
 			com.db4o.test.nativequeries.NQRegressionTests.Data cc = new com.db4o.test.nativequeries.NQRegressionTests.Data
 				(3, 3.3f, "Cc", null);
-			com.db4o.test.Tester.store(a);
-			com.db4o.test.Tester.store(b);
-			com.db4o.test.Tester.store(c);
-			com.db4o.test.Tester.store(cc);
+			com.db4o.test.Tester.Store(a);
+			com.db4o.test.Tester.Store(b);
+			com.db4o.test.Tester.Store(c);
+			com.db4o.test.Tester.Store(cc);
 		}
 
 		private abstract class ExpectingPredicate : com.db4o.query.Predicate
 		{
-			public abstract int expected();
+			public abstract int Expected();
 		}
 
 		private sealed class _AnonymousInnerClass72 : com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate
@@ -78,12 +78,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 0;
 			}
 
-			public bool match(object candidate)
+			public bool Match(object candidate)
 			{
 				return true;
 			}
@@ -95,12 +95,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 4;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return true;
 			}
@@ -112,12 +112,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id == 1;
 			}
@@ -129,12 +129,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id == 3;
 			}
@@ -146,12 +146,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.value == 1.1f;
 			}
@@ -163,12 +163,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.value == 3.3f;
 			}
@@ -180,12 +180,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.name=="Aa";
 			}
@@ -197,12 +197,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.name=="Cc";
 			}
@@ -214,12 +214,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id < 2;
 			}
@@ -231,12 +231,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id > 2;
 			}
@@ -248,12 +248,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id <= 2;
 			}
@@ -265,12 +265,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 3;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id >= 2;
 			}
@@ -282,12 +282,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.value > 2.9f;
 			}
@@ -299,14 +299,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getPrev() != null && candidate.getPrev().getId() >= 1;
+				return candidate.GetPrev() != null && candidate.GetPrev().GetId() >= 1;
 			}
 		}
 
@@ -316,14 +316,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.getPrev() != null) && ("Bb"==candidate.getPrev().getName(
+				return (candidate.GetPrev() != null) && ("Bb"==candidate.GetPrev().GetName(
 					));
 			}
 		}
@@ -334,14 +334,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 0;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getPrev() != null && candidate.getPrev().getName()=="";
+				return candidate.GetPrev() != null && candidate.GetPrev().GetName()=="";
 			}
 		}
 
@@ -351,14 +351,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getId() == 2;
+				return candidate.GetId() == 2;
 			}
 		}
 
@@ -368,14 +368,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getId() < 2;
+				return candidate.GetId() < 2;
 			}
 		}
 
@@ -385,14 +385,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getId() > 2;
+				return candidate.GetId() > 2;
 			}
 		}
 
@@ -402,14 +402,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getId() <= 2;
+				return candidate.GetId() <= 2;
 			}
 		}
 
@@ -419,14 +419,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 3;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getId() >= 2;
+				return candidate.GetId() >= 2;
 			}
 		}
 
@@ -436,14 +436,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getName()=="Cc";
+				return candidate.GetName()=="Cc";
 			}
 		}
 
@@ -453,12 +453,12 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 3;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return !(candidate.id == 1);
 			}
@@ -470,14 +470,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return !(candidate.getId() > 2);
+				return !(candidate.GetId() > 2);
 			}
 		}
 
@@ -487,14 +487,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return !(candidate.getName()=="Cc");
+				return !(candidate.GetName()=="Cc");
 			}
 		}
 
@@ -504,14 +504,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id > 1) && candidate.getName()=="Cc";
+				return (candidate.id > 1) && candidate.GetName()=="Cc";
 			}
 		}
 
@@ -521,14 +521,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id > 1) && (candidate.getId() <= 2);
+				return (candidate.id > 1) && (candidate.GetId() <= 2);
 			}
 		}
 
@@ -538,14 +538,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 0;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id > 1) && (candidate.getId() < 1);
+				return (candidate.id > 1) && (candidate.GetId() < 1);
 			}
 		}
 
@@ -555,14 +555,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 3;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id == 1) || candidate.getName()=="Cc";
+				return (candidate.id == 1) || candidate.GetName()=="Cc";
 			}
 		}
 
@@ -572,14 +572,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 4;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id > 1) || (candidate.getId() <= 2);
+				return (candidate.id > 1) || (candidate.GetId() <= 2);
 			}
 		}
 
@@ -589,14 +589,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 3;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id <= 1) || (candidate.getId() >= 3);
+				return (candidate.id <= 1) || (candidate.GetId() >= 3);
 			}
 		}
 
@@ -606,14 +606,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return ((candidate.id >= 1) || candidate.getName()=="Cc") && candidate.getId
+				return ((candidate.id >= 1) || candidate.GetName()=="Cc") && candidate.GetId
 					() < 3;
 			}
 		}
@@ -624,14 +624,14 @@ namespace com.db4o.test.nativequeries
 			{
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return ((candidate.id == 2) || candidate.getId() <= 1) && !(candidate.getName()=="Bb");
+				return ((candidate.id == 2) || candidate.GetId() <= 1) && !(candidate.GetName()=="Bb");
 			}
 		}
 
@@ -643,12 +643,12 @@ namespace com.db4o.test.nativequeries
 
 			private int id = 2;
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 3;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id >= this.id;
 			}
@@ -662,14 +662,14 @@ namespace com.db4o.test.nativequeries
 
 			private string name = "Bb";
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getName()==this.name;
+				return candidate.GetName()==this.name;
 			}
 		}
 
@@ -681,12 +681,12 @@ namespace com.db4o.test.nativequeries
 
 			private int id = 2;
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
 				return candidate.id >= this.id + 1;
 			}
@@ -700,19 +700,19 @@ namespace com.db4o.test.nativequeries
 
 			private int factor = 2;
 
-			private int calc()
+			private int Calc()
 			{
 				return this.factor + 1;
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 2;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.id >= this.calc();
+				return candidate.id >= this.Calc();
 			}
 		}
 
@@ -724,19 +724,19 @@ namespace com.db4o.test.nativequeries
 
 			private float predFactor = 2.0f;
 
-			private float calc()
+			private float Calc()
 			{
 				return this.predFactor * 1.1f;
 			}
 
-			public override int expected()
+			public override int Expected()
 			{
 				return 1;
 			}
 
-			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
+			public bool Match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getValue() == this.calc();
+				return candidate.GetValue() == this.Calc();
 			}
 		}
 
@@ -773,10 +773,10 @@ namespace com.db4o.test.nativequeries
 				new _AnonymousInnerClass243(),
 				new _AnonymousInnerClass249(),
 				new _AnonymousInnerClass256(),
-				new _AnonymousInnerClass262(), // (candidate.id > 1) || (candidate.getId() <= 2)
+				new _AnonymousInnerClass262(), // (candidate.id > 1) || (candidate.GetId() <= 2)
 				new _AnonymousInnerClass268(),
 				new _AnonymousInnerClass275(),
-				new _AnonymousInnerClass281(), // ((candidate.id == 2) || candidate.getId() <= 1) && !(candidate.getName()=="Bb")
+				new _AnonymousInnerClass281(), // ((candidate.id == 2) || candidate.GetId() <= 1) && !(candidate.GetName()=="Bb")
 				new _AnonymousInnerClass288(),
 				new _AnonymousInnerClass296(),
 				
@@ -786,37 +786,37 @@ namespace com.db4o.test.nativequeries
 				// new _AnonymousInnerClass325() // arithmetics/float
 			};
 
-		public virtual void testAll()
+		public virtual void TestAll()
 		{
 			for (int predIdx = 0; predIdx < PREDICATES.Length; predIdx++)
 			{
 				com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate predicate = PREDICATES
 					[predIdx];
-				assertNQResult(predicate);
+				AssertNQResult(predicate);
 			}
 		}
 
-		private void assertNQResult(com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate
+		private void AssertNQResult(com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate
 			 filter)
 		{
 			// System.Console.WriteLine(filter.GetType());
-			com.db4o.ObjectContainer db = com.db4o.test.Tester.objectContainer();
+			com.db4o.ObjectContainer db = com.db4o.test.Tester.ObjectContainer();
 			
 			QueryExecutionListener listener = new QueryExecutionListener(filter);
-			NativeQueryHandler handler = ((com.db4o.YapStream)db).getNativeQueryHandler();
+			NativeQueryHandler handler = ((com.db4o.YapStream)db).GetNativeQueryHandler();
 			handler.QueryExecution += new QueryExecutionHandler(listener.OnQueryExecution);
 			try
 			{
-				db.ext().configure().optimizeNativeQueries(false);
-				com.db4o.ObjectSet raw = db.query(filter);
-				db.ext().configure().optimizeNativeQueries(true);
-				com.db4o.ObjectSet optimized = db.query(filter);
-				com.db4o.test.Tester.ensureEquals(raw.size(),optimized.size());
-				for(int resultIdx=0;resultIdx<raw.size();resultIdx++) 
+				db.Ext().Configure().OptimizeNativeQueries(false);
+				com.db4o.ObjectSet raw = db.Query(filter);
+				db.Ext().Configure().OptimizeNativeQueries(true);
+				com.db4o.ObjectSet optimized = db.Query(filter);
+				com.db4o.test.Tester.EnsureEquals(raw.Size(),optimized.Size());
+				for(int resultIdx=0;resultIdx<raw.Size();resultIdx++) 
 				{
-					com.db4o.test.Tester.ensureEquals(raw.ext().get(resultIdx),optimized.ext().get(resultIdx));
+					com.db4o.test.Tester.EnsureEquals(raw.Ext().Get(resultIdx),optimized.Ext().Get(resultIdx));
 				}
-				com.db4o.test.Tester.ensureEquals(filter.expected(), raw.size());
+				com.db4o.test.Tester.EnsureEquals(filter.Expected(), raw.Size());
 			}
 			finally
 			{
@@ -838,18 +838,18 @@ namespace com.db4o.test.nativequeries
 
 			public void OnQueryExecution(object sender, QueryExecutionEventArgs args)
 			{
-				com.db4o.test.Tester.ensureEquals(args.Predicate, filter);
+				com.db4o.test.Tester.EnsureEquals(args.Predicate, filter);
 				switch (this.run)
 				{
 					case 0:
 					{
-						Tester.ensureEquals(QueryExecutionKind.Unoptimized, args.ExecutionKind);
+						Tester.EnsureEquals(QueryExecutionKind.Unoptimized, args.ExecutionKind);
 						break;
 					}
 
 					case 1:
 					{
-						Tester.ensureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
+						Tester.EnsureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
 						break;
 					}
 				}

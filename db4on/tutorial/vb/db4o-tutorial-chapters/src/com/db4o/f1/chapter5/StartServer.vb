@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Threading
 Imports com.db4o
 Imports com.db4o.messaging
@@ -10,7 +10,7 @@ Namespace com.db4o.f1.chapter5
 	''' StopServer. The StartServer instance is used as a MessageRecipient 
 	''' and reacts to receiving an instance of a StopServer object.
 	''' Note that all user classes need to be present on the server side
-	''' and that all possible Db4o.configure() calls to alter the db4o
+	''' and that all possible Db4o.Configure() calls to alter the db4o
 	''' configuration need to be executed on the client and on the server.
 	''' </summary>
 	Public Class StartServer
@@ -31,7 +31,7 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		''' <summary>
-		''' opens the ObjectServer, and waits forever until close() is called
+		''' opens the ObjectServer, and waits forever until Close() is called
 		''' or a StopServer message is being received.
 		''' </summary>
 		Public Sub RunServer()
@@ -43,7 +43,7 @@ Namespace com.db4o.f1.chapter5
 				db4oServer.Ext().Configure().SetMessageRecipient(Me)
 				Try
 					If Not [stop] Then
-						' wait forever for notify() from close()
+						' wait forever for Notify() from Close()
 						Monitor.Wait(Me)
 					End If
 				Catch e As Exception
@@ -55,7 +55,7 @@ Namespace com.db4o.f1.chapter5
 
 		''' <summary>
 		''' messaging callback
-		''' see com.db4o.messaging.MessageRecipient#processMessage()
+		''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
 		''' </summary>
         Public Sub ProcessMessage(ByVal con As ObjectContainer, ByVal message As Object) Implements MessageRecipient.ProcessMessage
             If TypeOf message Is StopServer Then

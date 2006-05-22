@@ -1,4 +1,4 @@
-namespace com.db4o.reflect.net
+﻿namespace com.db4o.reflect.net
 {
 
 	public class NetField : com.db4o.reflect.ReflectField
@@ -14,41 +14,41 @@ namespace com.db4o.reflect.net
 			this.field = field;
 		}
 
-		public virtual string getName()
+		public virtual string GetName()
 		{
-			return field.getName();
+			return field.GetName();
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getType()
+		public virtual com.db4o.reflect.ReflectClass GetType()
 		{
-			return reflector.forClass(field.getType());
+			return reflector.ForClass(field.GetType());
 		}
 
-		public virtual bool isPublic()
+		public virtual bool IsPublic()
 		{
-			return j4o.lang.reflect.Modifier.isPublic(field.getModifiers());
+			return j4o.lang.reflect.Modifier.IsPublic(field.GetModifiers());
 		}
 
-		public virtual bool isStatic()
+		public virtual bool IsStatic()
 		{
-			return j4o.lang.reflect.Modifier.isStatic(field.getModifiers());
+			return j4o.lang.reflect.Modifier.IsStatic(field.GetModifiers());
 		}
 
-		public virtual bool isTransient()
+		public virtual bool IsTransient()
 		{
-			return j4o.lang.reflect.Modifier.isTransient(field.getModifiers());
+			return j4o.lang.reflect.Modifier.IsTransient(field.GetModifiers());
 		}
 
-		public virtual void setAccessible()
+		public virtual void SetAccessible()
 		{
-			com.db4o.Platform4.setAccessible(field);
+			com.db4o.Platform4.SetAccessible(field);
 		}
 
-		public virtual object get(object onObject)
+		public virtual object Get(object onObject)
 		{
 			try
 			{
-				return field.get(onObject);
+				return field.Get(onObject);
 			}
 			catch (System.Exception e)
 			{
@@ -56,11 +56,11 @@ namespace com.db4o.reflect.net
 			}
 		}
 
-		public virtual void set(object onObject, object attribute)
+		public virtual void Set(object onObject, object attribute)
 		{
 			try
 			{
-				field.set(onObject, attribute);
+				field.Set(onObject, attribute);
 			}
 			catch (System.Exception e)
 			{

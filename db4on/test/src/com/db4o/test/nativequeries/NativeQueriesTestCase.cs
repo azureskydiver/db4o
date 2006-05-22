@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace com.db4o.test.nativequeries
 {
@@ -11,17 +11,17 @@ namespace com.db4o.test.nativequeries
 
 		public void Test()
 		{
-			Tester.deleteAllInstances(typeof(Data));
+			Tester.DeleteAllInstances(typeof(Data));
 
 			_a = new Data(1, "Aa", null, DateTime.Today.AddDays(5), Priority.High);
 			_b = new Data(2, "Bb", _a, DateTime.Today.AddDays(10), Priority.High);
 			_c1 = new Data(3 ,"Cc",_b, DateTime.Today.AddDays(15), Priority.Low);
 			_c2 = new Data(3, "Cc", null, DateTime.Today.AddDays(20), Priority.Low);
 
-			Tester.store(_a);
-			Tester.store(_b);
-			Tester.store(_c1);
-			Tester.store(_c2);
+			Tester.Store(_a);
+			Tester.Store(_b);
+			Tester.Store(_c1);
+			Tester.Store(_c2);
 
 //		}
 //

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.ext;
@@ -18,25 +18,25 @@ namespace com.db4o.test
 		internal static String BLOB_FILE_OUT = "regressionBlobOut.txt";
 		internal Blob blob;
 
-		internal void configure()
+		internal void Configure()
 		{
 			try
 			{
-				Db4o.configure().setBlobPath(AllTestsConfSingle.BLOB_PATH);
+				Db4o.Configure().SetBlobPath(AllTestsConfSingle.BLOB_PATH);
 			}
 			catch (Exception e)
 			{
-				JavaSystem.printStackTrace(e);
+				JavaSystem.PrintStackTrace(e);
 			}
 		}
 
-		internal void storeOne()
+		internal void StoreOne()
 		{
 		}
 
-		public void testOne()
+		public void TestOne()
 		{
-			if (new File(AllTestsConfSingle.BLOB_PATH).exists())
+			if (new File(AllTestsConfSingle.BLOB_PATH).Exists())
 			{
 				try
 				{
@@ -52,46 +52,46 @@ namespace com.db4o.test
 								107,
 								115
 							};
-						new File(BLOB_FILE_IN).delete();
-						new File(BLOB_FILE_OUT).delete();
+						new File(BLOB_FILE_IN).Delete();
+						new File(BLOB_FILE_OUT).Delete();
 
 						RandomAccessFile fw1 = new RandomAccessFile(BLOB_FILE_IN, "rw");
-						fw1.write(chout1);
-						fw1.close();
-						blob.readFrom(new File(BLOB_FILE_IN));
-						double status1 = blob.getStatus();
+						fw1.Write(chout1);
+						fw1.Close();
+						blob.ReadFrom(new File(BLOB_FILE_IN));
+						double status1 = blob.GetStatus();
 						while (status1 > Status.COMPLETED)
 						{
-							Thread.sleep(50);
-							status1 = blob.getStatus();
+							Thread.Sleep(50);
+							status1 = blob.GetStatus();
 						}
-						blob.writeTo(new File(BLOB_FILE_OUT));
-						status1 = blob.getStatus();
+						blob.WriteTo(new File(BLOB_FILE_OUT));
+						status1 = blob.GetStatus();
 						while (status1 > Status.COMPLETED)
 						{
-							Thread.sleep(50);
-							status1 = blob.getStatus();
+							Thread.Sleep(50);
+							status1 = blob.GetStatus();
 						}
 						File resultingFile1 = new File(BLOB_FILE_OUT);
-						Tester.ensure(resultingFile1.exists());
-						if (resultingFile1.exists())
+						Tester.Ensure(resultingFile1.Exists());
+						if (resultingFile1.Exists())
 						{
 							RandomAccessFile fr1 = new RandomAccessFile(BLOB_FILE_OUT, "rw");
 							byte[] chin1 = new byte[chout1.Length];
-							fr1.read(chin1);
+							fr1.Read(chin1);
 							for (int i1 = 0; i1 < chin1.Length; i1++)
 							{
-								Tester.ensure(chout1[i1] == chin1[i1]);
+								Tester.Ensure(chout1[i1] == chin1[i1]);
 							}
-							fr1.close();
+							fr1.Close();
 						}
 					}
 				}
 				catch (Exception e)
 				{
 					{
-						Tester.ensure(false);
-						JavaSystem.printStackTrace(e);
+						Tester.Ensure(false);
+						JavaSystem.PrintStackTrace(e);
 					}
 				}
 			}

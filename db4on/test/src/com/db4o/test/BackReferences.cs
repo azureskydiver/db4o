@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -11,18 +11,18 @@ namespace com.db4o.test {
     public class BackReferences {
 
         public static void Main(String[] args) {
-            ObjectContainer objectContainer = Db4o.openFile("BackReferences.yap");
+            ObjectContainer objectContainer = Db4o.OpenFile("BackReferences.yap");
             BR_Person person= new BR_Person();
             BR_Address address=new BR_Address();
             address.ID="Test1";
             person.AddAddress(address);
-            objectContainer.set(person);
-            objectContainer.commit();
-            Query q = objectContainer.query();
-            q.constrain(typeof(BR_Person));
-            ObjectSet objectSet = q.execute();
-            while(objectSet.hasNext()){
-                person = (BR_Person)objectSet.next();
+            objectContainer.Set(person);
+            objectContainer.Commit();
+            Query q = objectContainer.Query();
+            q.Constrain(typeof(BR_Person));
+            ObjectSet objectSet = q.Execute();
+            while(objectSet.HasNext()){
+                person = (BR_Person)objectSet.Next();
                 address = (BR_Address)person.addresses["Test1"];
                 if(address.ID.Equals("Test1")){
                     Console.WriteLine("OK Test1");
@@ -35,26 +35,26 @@ namespace com.db4o.test {
                     throw new Exception();
                 }
             }
-            objectContainer.close();
+            objectContainer.Close();
         }
 
-        public void store(){
+        public void Store(){
             BR_Person person= new BR_Person();
             BR_Address address=new BR_Address();
             address.ID="Test1";
             person.AddAddress(address);
-            Tester.store(person);
+            Tester.Store(person);
         }
 
-        public void test(){
-            Query q = Tester.query();
-            q.constrain(typeof(BR_Person));
-            ObjectSet objectSet = q.execute();
-            while(objectSet.hasNext()){
-                BR_Person person = (BR_Person)objectSet.next();
+        public void Test(){
+            Query q = Tester.Query();
+            q.Constrain(typeof(BR_Person));
+            ObjectSet objectSet = q.Execute();
+            while(objectSet.HasNext()){
+                BR_Person person = (BR_Person)objectSet.Next();
                 BR_Address address = (BR_Address)person.addresses["Test1"];
-                Tester.ensure(address.ID.Equals("Test1"));
-                Tester.ensure(address.Owner == person);
+                Tester.Ensure(address.ID.Equals("Test1"));
+                Tester.Ensure(address.Owner == person);
             }
         }
     }

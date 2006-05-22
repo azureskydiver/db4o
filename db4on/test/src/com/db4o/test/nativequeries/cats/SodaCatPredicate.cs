@@ -1,4 +1,4 @@
-
+﻿
 using com.db4o;
 
 namespace com.db4o.test.nativequeries.cats
@@ -7,31 +7,31 @@ namespace com.db4o.test.nativequeries.cats
 	{
 		private int _count;
 
-		public virtual void sodaQuery(ObjectContainer oc)
+		public virtual void SodaQuery(ObjectContainer oc)
 		{
-			com.db4o.query.Query q = oc.query();
-			q.constrain(typeof(Cat));
-			constrain(q);
-			q.execute();
+			com.db4o.query.Query q = oc.Query();
+			q.Constrain(typeof(Cat));
+			Constrain(q);
+			q.Execute();
 		}
 
-		public abstract void constrain(com.db4o.query.Query q);
+		public abstract void Constrain(com.db4o.query.Query q);
 
 #if NET_2_0
-        public abstract void delegateNQ(ObjectContainer oc);
+        public abstract void DelegateNQ(ObjectContainer oc);
 #endif
 
-		public virtual void setCount(int count)
+		public virtual void SetCount(int count)
 		{
 			_count = count;
 		}
 
-		public virtual int lower()
+		public virtual int Lower()
 		{
 			return _count / 2 - 1;
 		}
 
-		public virtual int upper()
+		public virtual int Upper()
 		{
 			return _count / 2 + 1;
 		}

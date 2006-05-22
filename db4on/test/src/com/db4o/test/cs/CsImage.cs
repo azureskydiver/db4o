@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Drawing;
@@ -17,19 +17,19 @@ namespace com.db4o.test.cs
         Image image;
         Bitmap bitmap;
 
-        public void configure(){
-            Db4o.configure().objectClass(typeof(Image)).translate(new TNull());
-            Db4o.configure().objectClass(typeof(Bitmap)).translate(new com.db4o.config.TSerializable());
+        public void Configure(){
+            Db4o.Configure().ObjectClass(typeof(Image)).Translate(new TNull());
+            Db4o.Configure().ObjectClass(typeof(Bitmap)).Translate(new com.db4o.config.TSerializable());
         }
 
-//        public void storeOne(){
+//        public void StoreOne(){
 //            image = Image.FromFile(IMAGE_PATH);
 //            bitmap = (Bitmap)Image.FromFile(IMAGE_PATH);
 //        }
 
-        public void testOne(){
-            Tester.ensure(image != null);
-            Tester.ensure(bitmap != null);
+        public void TestOne(){
+            Tester.Ensure(image != null);
+            Tester.Ensure(bitmap != null);
         }
 
 	}

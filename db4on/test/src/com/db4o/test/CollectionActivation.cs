@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -12,30 +12,30 @@ namespace com.db4o.test
         IList myList;
         static long id;
 
-        public void storeOne()
+        public void StoreOne()
         {
-            ExtObjectContainer objectContainer = Tester.objectContainer();
-            myList = objectContainer.collections().newLinkedList();
+            ExtObjectContainer objectContainer = Tester.ObjectContainer();
+            myList = objectContainer.Collections().NewLinkedList();
             CollectionActivationElement cae = new CollectionActivationElement("test");
 			cae.value = 42;
-            objectContainer.set(cae);
-            id = objectContainer.getID(cae);
+            objectContainer.Set(cae);
+            id = objectContainer.GetID(cae);
             myList.Add(cae);
         }
 
-        public void testOne()
+        public void TestOne()
         {   
 			CollectionActivationElement cae = null;
 
-			ExtObjectContainer objectContainer = Tester.objectContainer();
-			objectContainer.activate(this, int.MaxValue);
+			ExtObjectContainer objectContainer = Tester.ObjectContainer();
+			objectContainer.Activate(this, int.MaxValue);
 
-            cae = (CollectionActivationElement)objectContainer.getByID(id);
-            Tester.ensure("objects got by id should not be activated", cae.name == null);
+            cae = (CollectionActivationElement)objectContainer.GetByID(id);
+            Tester.Ensure("objects got by id should not be activated", cae.name == null);
 
             cae = (CollectionActivationElement)myList[0];
-            Tester.ensure(cae.name != null && cae.name == "test");
-			Tester.ensure(42 == cae.value);
+            Tester.Ensure(cae.name != null && cae.name == "test");
+			Tester.Ensure(42 == cae.value);
         }
     }
 

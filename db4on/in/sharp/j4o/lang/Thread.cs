@@ -2,9 +2,9 @@
 
 using System;
 
-namespace j4o.lang 
+namespace j4o.lang
 {
-	public class Thread : Runnable 
+	public class Thread : Runnable
 	{
 		public const int MIN_PRIORITY = 0;
 
@@ -13,58 +13,58 @@ namespace j4o.lang
 		private string _name;
 
 		private System.Threading.Thread _thread;
-        
+
 		private bool _isDaemon;
 
 		static int idGenerator = 1;
 
-		public Thread() 
+		public Thread()
 		{
 			_target = this;
 		}
 
-		public Thread(Runnable target) 
+		public Thread(Runnable target)
 		{
 			this._target = target;
 		}
 
-		public Thread(System.Threading.Thread thread) 
+		public Thread(System.Threading.Thread thread)
 		{
 			this._thread = thread;
 		}
 
-		public static Thread currentThread() 
+		public static Thread CurrentThread()
 		{
 			return new Thread(System.Threading.Thread.CurrentThread);
 		}
 
-		public ClassLoader getContextClassLoader() 
+		public ClassLoader GetContextClassLoader()
 		{
 			return null;
 		}
 
-		public virtual void run() 
+		public virtual void Run()
 		{
 		}
 
-		public void setName(string name) 
+		public void SetName(string name)
 		{
 			this._name = name;
 #if !CF_1_0 && !CF_2_0
-			if(_thread != null && name != null) 
+			if (_thread != null && name != null)
 			{
-				try 
+				try
 				{
 					_thread.Name = _name;
-				} 
-				catch (Exception ignored) 
+				}
+				catch (Exception ignored)
 				{
 				}
 			}
 #endif
 		}
 
-		public string getName()
+		public string GetName()
 		{
 #if !CF_1_0 && !CF_2_0
 			return _thread != null ? _thread.Name : _name;
@@ -73,43 +73,42 @@ namespace j4o.lang
 #endif
 		}
 
-		public void setPriority(int priority) 
+		public void SetPriority(int priority)
 		{
 			// TODO: how ?
 		}
 
-		public void setPriority(System.Threading.ThreadPriority priority) 
+		public void SetPriority(System.Threading.ThreadPriority priority)
 		{
 			_thread.Priority = priority;
 		}
 
-		public static void sleep(long milliseconds) 
+		public static void Sleep(long milliseconds)
 		{
 			System.Threading.Thread.Sleep((int)milliseconds);
 		}
 
-		public void start() 
+		public void Start()
 		{
-			_thread = new System.Threading.Thread(new System.Threading.ThreadStart(_run));
+			_thread = new System.Threading.Thread(new System.Threading.ThreadStart(EntryPoint));
 #if !CF_1_0
 			_thread.IsBackground = _isDaemon;
 #endif
-			if (_name != null) 
+			if (_name != null)
 			{
-				setName(_name);
+				SetName(_name);
 			}
 			_thread.Start();
 		}
-		
-		public void setDaemon(bool isDaemon)
+
+		public void SetDaemon(bool isDaemon)
 		{
 			_isDaemon = isDaemon;
 		}
-		
-		// HACK: for PascalCase conversion purposes
-		private void _run() 
+
+		private void EntryPoint()
 		{
-			_target.run();
+			_target.Run();
 		}
 
 	}

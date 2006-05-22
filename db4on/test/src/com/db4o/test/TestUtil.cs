@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.foundation;
@@ -11,7 +11,7 @@ namespace com.db4o.test {
       public TestUtil() : base() {
       }
       
-      static internal bool hasPublicConstructor(Class a_class) {
+      static internal bool HasPublicConstructor(Class a_class) {
           
 
          if (a_class == null) {
@@ -26,7 +26,7 @@ namespace com.db4o.test {
 
          try {
             {
-               Object o1 = a_class.newInstance();
+               Object o1 = a_class.NewInstance();
                if (o1 != null) return true;
             }
          }  catch (Exception t) {
@@ -36,162 +36,162 @@ namespace com.db4o.test {
          return false;
       }
       
-      static internal Object normalizeNArray(Object a_object) {
-         if (j4o.lang.reflect.JavaArray.getLength(a_object) > 0) {
-            Object first1 = j4o.lang.reflect.JavaArray.get(a_object, 0);
-            if (first1 != null && j4o.lang.Class.getClassForObject(first1).isArray()) {
-               int[] dim1 = arrayDimensions(a_object);
-               Object all1 = (Object)new Object[arrayElementCount(dim1)];
-               normalizeNArray1(a_object, all1, 0, dim1, 0);
+      static internal Object NormalizeNArray(Object a_object) {
+         if (j4o.lang.reflect.JavaArray.GetLength(a_object) > 0) {
+            Object first1 = j4o.lang.reflect.JavaArray.Get(a_object, 0);
+            if (first1 != null && j4o.lang.Class.GetClassForObject(first1).IsArray()) {
+               int[] dim1 = ArrayDimensions(a_object);
+               Object all1 = (Object)new Object[ArrayElementCount(dim1)];
+               NormalizeNArray1(a_object, all1, 0, dim1, 0);
                return all1;
             }
          }
          return a_object;
       }
       
-      public static void compare(com.db4o.ObjectContainer a_con, Object a_Compare, Object a_With, String a_path, Collection4 a_list) {
+      public static void Compare(com.db4o.ObjectContainer a_con, Object a_Compare, Object a_With, String a_path, Collection4 a_list) {
          
-            a_con.activate(a_With, 1);
+            a_con.Activate(a_With, 1);
          
          if (a_list == null) {
             a_list = new Collection4();
          }
-         if (a_list.containsByIdentity(a_Compare)) {
+         if (a_list.ContainsByIdentity(a_Compare)) {
             return;
          }
-         a_list.add(a_Compare);
+         a_list.Add(a_Compare);
          if (a_path == null || a_path.Length < 1) if (a_Compare != null) {
-            a_path = j4o.lang.Class.getClassForObject(a_Compare).getName() + ":";
+            a_path = j4o.lang.Class.GetClassForObject(a_Compare).GetName() + ":";
          } else {
-            if (a_With != null) a_path = j4o.lang.Class.getClassForObject(a_With).getName() + ":";
+            if (a_With != null) a_path = j4o.lang.Class.GetClassForObject(a_With).GetName() + ":";
          }
          String path1 = a_path;
          if (a_Compare == null) if (a_With == null) {
             return;
          } else {
-            Regression.addError("1==null:" + path1);
+            Regression.AddError("1==null:" + path1);
             return;
          }
          if (a_With == null) {
-            Regression.addError("2==null:" + path1);
+            Regression.AddError("2==null:" + path1);
             return;
          }
-         Class l_Class1 = j4o.lang.Class.getClassForObject(a_Compare);
-         if (!l_Class1.isInstance(a_With)) {
-            Regression.addError("class!=:" + path1 + l_Class1.getName() + ":" + j4o.lang.Class.getClassForObject(a_With).getName());
+         Class l_Class1 = j4o.lang.Class.GetClassForObject(a_Compare);
+         if (!l_Class1.IsInstance(a_With)) {
+            Regression.AddError("class!=:" + path1 + l_Class1.GetName() + ":" + j4o.lang.Class.GetClassForObject(a_With).GetName());
             return;
          }
-         Field[] l_Fields1 = l_Class1.getDeclaredFields();
+         Field[] l_Fields1 = l_Class1.GetDeclaredFields();
          for (int i1 = 0; i1 < l_Fields1.Length; i1++) {
-            if (storeableField(l_Class1, l_Fields1[i1])) {
-               Platform4.setAccessible(l_Fields1[i1]);
+            if (StoreableField(l_Class1, l_Fields1[i1])) {
+               Platform4.SetAccessible(l_Fields1[i1]);
                try {
                   {
-                     path1 = a_path + l_Fields1[i1].getName() + ":";
-                     Object l_Compare1 = l_Fields1[i1].get(a_Compare);
-                     Object l_With1 = l_Fields1[i1].get(a_With);
+                     path1 = a_path + l_Fields1[i1].GetName() + ":";
+                     Object l_Compare1 = l_Fields1[i1].Get(a_Compare);
+                     Object l_With1 = l_Fields1[i1].Get(a_With);
                      if (l_Compare1 == null) {
                         if (l_With1 != null) {
-                           Regression.addError("f1==null:" + path1);
+                           Regression.AddError("f1==null:" + path1);
                         }
-                     } else if (l_With1 == null) Regression.addError("f2==null:" + path1); else if (j4o.lang.Class.getClassForObject(l_Compare1).isArray()) {
-                        if (!j4o.lang.Class.getClassForObject(l_With1).isArray()) {
-                           Regression.addError("f2!=array:" + path1);
+                     } else if (l_With1 == null) Regression.AddError("f2==null:" + path1); else if (j4o.lang.Class.GetClassForObject(l_Compare1).IsArray()) {
+                        if (!j4o.lang.Class.GetClassForObject(l_With1).IsArray()) {
+                           Regression.AddError("f2!=array:" + path1);
                         } else {
-                           l_Compare1 = normalizeNArray(l_Compare1);
-                           l_With1 = normalizeNArray(l_With1);
-                           int l_len1 = j4o.lang.reflect.JavaArray.getLength(l_Compare1);
-                           if (l_len1 != j4o.lang.reflect.JavaArray.getLength(l_With1)) {
-                              Regression.addError("arraylen!=:" + path1);
+                           l_Compare1 = NormalizeNArray(l_Compare1);
+                           l_With1 = NormalizeNArray(l_With1);
+                           int l_len1 = j4o.lang.reflect.JavaArray.GetLength(l_Compare1);
+                           if (l_len1 != j4o.lang.reflect.JavaArray.GetLength(l_With1)) {
+                              Regression.AddError("arraylen!=:" + path1);
                            } else {
-                              bool l_persistentArray1 = hasPublicConstructor(l_Fields1[i1].getType().getComponentType());
+                              bool l_persistentArray1 = HasPublicConstructor(l_Fields1[i1].GetType().GetComponentType());
                               for (int j1 = 0; j1 < l_len1; j1++) {
-                                 Object l_ElementCompare1 = j4o.lang.reflect.JavaArray.get(l_Compare1, j1);
-                                 Object l_ElementWith1 = j4o.lang.reflect.JavaArray.get(l_With1, j1);
+                                 Object l_ElementCompare1 = j4o.lang.reflect.JavaArray.Get(l_Compare1, j1);
+                                 Object l_ElementWith1 = j4o.lang.reflect.JavaArray.Get(l_With1, j1);
                                  if (l_persistentArray1) {
-                                    compare(a_con, l_ElementCompare1, l_ElementWith1, path1, a_list);
+                                    Compare(a_con, l_ElementCompare1, l_ElementWith1, path1, a_list);
                                  } else if (l_ElementCompare1 == null) {
                                     if (l_ElementWith1 != null) {
-                                       Regression.addError("1e" + j1 + "==null:" + path1);
+                                       Regression.AddError("1e" + j1 + "==null:" + path1);
                                     }
                                  } else if (l_ElementWith1 == null) {
-                                    Regression.addError("2e" + j1 + "==null:" + path1);
+                                    Regression.AddError("2e" + j1 + "==null:" + path1);
                                  } else {
-                                    Class elementCompareClass1 = j4o.lang.Class.getClassForObject(l_ElementCompare1);
-                                    if (elementCompareClass1 != j4o.lang.Class.getClassForObject(l_ElementWith1)) {
-                                       Regression.addError("e" + j1 + "!=class:" + path1 + elementCompareClass1.ToString() + ":" + j4o.lang.Class.getClassForObject(l_ElementWith1).ToString());
-                                    } else if (hasPublicConstructor(elementCompareClass1)) {
-                                       compare(a_con, l_ElementCompare1, l_ElementWith1, path1, a_list);
+                                    Class elementCompareClass1 = j4o.lang.Class.GetClassForObject(l_ElementCompare1);
+                                    if (elementCompareClass1 != j4o.lang.Class.GetClassForObject(l_ElementWith1)) {
+                                       Regression.AddError("e" + j1 + "!=class:" + path1 + elementCompareClass1.ToString() + ":" + j4o.lang.Class.GetClassForObject(l_ElementWith1).ToString());
+                                    } else if (HasPublicConstructor(elementCompareClass1)) {
+                                       Compare(a_con, l_ElementCompare1, l_ElementWith1, path1, a_list);
                                     } else {
-                                       if (!l_ElementCompare1.Equals(l_ElementWith1)) Regression.addError("e" + j1 + "!=:" + path1 + l_ElementCompare1.ToString() + ":" + l_ElementWith1.ToString());
+                                       if (!l_ElementCompare1.Equals(l_ElementWith1)) Regression.AddError("e" + j1 + "!=:" + path1 + l_ElementCompare1.ToString() + ":" + l_ElementWith1.ToString());
                                     }
                                  }
                               }
                            }
                         }
-                     } else if (hasPublicConstructor(l_Fields1[i1].getType())) compare(a_con, l_Compare1, l_With1, path1, a_list); else if (!l_Compare1.Equals(l_With1)) Regression.addError("!=:" + path1);
+                     } else if (HasPublicConstructor(l_Fields1[i1].GetType())) Compare(a_con, l_Compare1, l_With1, path1, a_list); else if (!l_Compare1.Equals(l_With1)) Regression.AddError("!=:" + path1);
                   }
                }  catch (Exception e) {
                   {
-                     Regression.addError("Exception:" + path1);
+                     Regression.AddError("Exception:" + path1);
                   }
                }
             }
          }
       }
       
-      static internal int[] arrayDimensions(Object a_object) {
+      static internal int[] ArrayDimensions(Object a_object) {
          int count1 = 0;
-         for (Class clazz1 = j4o.lang.Class.getClassForObject(a_object); clazz1.isArray(); clazz1 = clazz1.getComponentType()) count1++;
+         for (Class clazz1 = j4o.lang.Class.GetClassForObject(a_object); clazz1.IsArray(); clazz1 = clazz1.GetComponentType()) count1++;
          int[] dim1 = new int[count1];
          for (int i1 = 0; i1 < count1; i1++) {
-            dim1[i1] = j4o.lang.reflect.JavaArray.getLength(a_object);
-            a_object = j4o.lang.reflect.JavaArray.get(a_object, 0);
+            dim1[i1] = j4o.lang.reflect.JavaArray.GetLength(a_object);
+            a_object = j4o.lang.reflect.JavaArray.Get(a_object, 0);
          }
          return dim1;
       }
       
-      static internal int normalizeNArray1(Object a_object, Object a_all, int a_next, int[] a_dim, int a_index) {
+      static internal int NormalizeNArray1(Object a_object, Object a_all, int a_next, int[] a_dim, int a_index) {
          if (a_index == a_dim.Length - 1) {
-            for (int i1 = 0; i1 < a_dim[a_index]; i1++) j4o.lang.reflect.JavaArray.set(a_all, a_next++, j4o.lang.reflect.JavaArray.get(a_object, i1));
+            for (int i1 = 0; i1 < a_dim[a_index]; i1++) j4o.lang.reflect.JavaArray.Set(a_all, a_next++, j4o.lang.reflect.JavaArray.Get(a_object, i1));
          } else {
-            for (int i1 = 0; i1 < a_dim[a_index]; i1++) a_next = normalizeNArray1(j4o.lang.reflect.JavaArray.get(a_object, i1), a_all, a_next, a_dim, a_index + 1);
+            for (int i1 = 0; i1 < a_dim[a_index]; i1++) a_next = NormalizeNArray1(j4o.lang.reflect.JavaArray.Get(a_object, i1), a_all, a_next, a_dim, a_index + 1);
          }
          return a_next;
       }
       
-      static internal int arrayElementCount(int[] a_dim) {
+      static internal int ArrayElementCount(int[] a_dim) {
          int elements1 = a_dim[0];
          for (int i1 = 1; i1 < a_dim.Length; i1++) elements1 *= a_dim[i1];
          return elements1;
       }
       
-      static internal String nl() {
-         return j4o.lang.JavaSystem.getProperty("line.separator");
+      static internal String Nl() {
+         return j4o.lang.JavaSystem.GetProperty("line.separator");
       }
 
-       public static bool storeableField(Class a_class, Field a_field) {
-           return (!Modifier.isStatic(a_field.getModifiers()))
-               && (!Modifier.isTransient(a_field.getModifiers())
-               & !(a_field.getName().IndexOf("$") > -1));
+       public static bool StoreableField(Class a_class, Field a_field) {
+           return (!Modifier.IsStatic(a_field.GetModifiers()))
+               && (!Modifier.IsTransient(a_field.GetModifiers())
+               & !(a_field.GetName().IndexOf("$") > -1));
        }
 
 
        private static Class[] SIMPLE_CLASSES = {
-                                                   Class.getClassForType(typeof(Boolean)),
-                                                   Class.getClassForType(typeof(Byte)),
-                                                   Class.getClassForType(typeof(Char)),
-                                                   Class.getClassForType(typeof(Double)),
-                                                   Class.getClassForType(typeof(Int16)),
-                                                   Class.getClassForType(typeof(Int32)),
-                                                   Class.getClassForType(typeof(Int64)),
-                                                   Class.getClassForType(typeof(SByte)),
-                                                   Class.getClassForType(typeof(Single)),
-                                                   Class.getClassForType(typeof(String)),
-                                                   Class.getClassForType(typeof(UInt32)),
-                                                   Class.getClassForType(typeof(UInt16)),
-                                                   Class.getClassForType(typeof(UInt64)),
-                                                   Class.getClassForType(typeof(j4o.util.Date))      };
+                                                   Class.GetClassForType(typeof(Boolean)),
+                                                   Class.GetClassForType(typeof(Byte)),
+                                                   Class.GetClassForType(typeof(Char)),
+                                                   Class.GetClassForType(typeof(Double)),
+                                                   Class.GetClassForType(typeof(Int16)),
+                                                   Class.GetClassForType(typeof(Int32)),
+                                                   Class.GetClassForType(typeof(Int64)),
+                                                   Class.GetClassForType(typeof(SByte)),
+                                                   Class.GetClassForType(typeof(Single)),
+                                                   Class.GetClassForType(typeof(String)),
+                                                   Class.GetClassForType(typeof(UInt32)),
+                                                   Class.GetClassForType(typeof(UInt16)),
+                                                   Class.GetClassForType(typeof(UInt64)),
+                                                   Class.GetClassForType(typeof(j4o.util.Date))      };
 
 
    }

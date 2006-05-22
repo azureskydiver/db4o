@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Reflection;
@@ -22,21 +22,21 @@ namespace j4o.lang.reflect
         	_modifiers = -1;
         }
         
-        public Object get(Object obj)
+        public Object Get(Object obj)
         {
             return _fieldInfo.GetValue(obj);
         }
 
-        public int getModifiers()
+        public int GetModifiers()
         {
             if (_modifiers == -1)
             {
-            	_modifiers = composeModifiers();
+            	_modifiers = ComposeModifiers();
             }
             return _modifiers;
         }
 
-        private int composeModifiers()
+        private int ComposeModifiers()
         {
             int modifiers = 0;
             if (_fieldInfo.IsFamilyAndAssembly)
@@ -65,13 +65,13 @@ namespace j4o.lang.reflect
                 modifiers |= Modifier.STATIC;
             }
 
-            if (checkForTransient(_fieldInfo.GetCustomAttributes(true)))
+            if (CheckForTransient(_fieldInfo.GetCustomAttributes(true)))
             {
                 modifiers |= Modifier.TRANSIENT;
             }
             else if (_eventInfo != null)
             {
-                if (checkForTransient(_eventInfo.GetCustomAttributes(true)))
+                if (CheckForTransient(_eventInfo.GetCustomAttributes(true)))
                 {
                     modifiers |= Modifier.TRANSIENT;
                 }
@@ -79,7 +79,7 @@ namespace j4o.lang.reflect
             return modifiers;
         }
 
-		private bool checkForTransient(object[] attributes)
+		private bool CheckForTransient(object[] attributes)
 		{
 			if (attributes == null) return false;
 
@@ -93,21 +93,21 @@ namespace j4o.lang.reflect
 			return false;
 		}
 
-        public String getName()
+        public String GetName()
         {
             return _fieldInfo.Name;
         }
 
-        public Class getType()
+        public Class GetType()
         {
             if (_fieldClass == null)
             {
-            	_fieldClass = Class.getClassForType(_fieldInfo.FieldType);
+            	_fieldClass = Class.GetClassForType(_fieldInfo.FieldType);
             }
             return _fieldClass;
         }
 
-        public static void markTransient(string attributeName)
+        public static void MarkTransient(string attributeName)
         {
             if (_transientMarkers == null)
             {
@@ -120,7 +120,7 @@ namespace j4o.lang.reflect
             _transientMarkers.Add(attributeName);
         }
 
-        public void set(Object obj, Object value)
+        public void Set(Object obj, Object value)
         {
         	_fieldInfo.SetValue(obj, value);
         }

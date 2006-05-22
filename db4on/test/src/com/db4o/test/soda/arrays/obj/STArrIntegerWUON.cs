@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -18,7 +18,7 @@ namespace com.db4o.test.soda.arrays.obj {
          intArr = arr;
       }
       
-      public Object[] store() {
+      public Object[] Store() {
          STArrIntegerWUON[] arr1 = new STArrIntegerWUON[5];
          arr1[0] = new STArrIntegerWUON();
          Object[,,] content1 = new Object[0,0,0];
@@ -43,67 +43,67 @@ namespace com.db4o.test.soda.arrays.obj {
          return ret1;
       }
       
-      public void testDefaultContainsOne() {
-         Query q1 = st.query();
-         Object[] r1 = store();
+      public void TestDefaultContainsOne() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
          Object[,,] content1 = new Object[1,1,1];
          content1[0,0,0] = System.Convert.ToInt32(17);
-         q1.constrain(new STArrIntegerWUON(content1));
-         st.expect(q1, new Object[]{
+         q1.Constrain(new STArrIntegerWUON(content1));
+         st.Expect(q1, new Object[]{
             r1[3],
 r1[4]         });
       }
       
-      public void testDefaultContainsTwo() {
-         Query q1 = st.query();
-         Object[] r1 = store();
+      public void TestDefaultContainsTwo() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
          Object[,,] content1 = new Object[2,1,1];
          content1[0,0,0] = System.Convert.ToInt32(17);
          content1[1,0,0] = System.Convert.ToInt32(25);
-         q1.constrain(new STArrIntegerWUON(content1));
-         st.expect(q1, new Object[]{
+         q1.Constrain(new STArrIntegerWUON(content1));
+         st.Expect(q1, new Object[]{
             r1[4]         });
       }
       
-      public void testDescendOne() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrIntegerWUON)));
-         q1.descend("intArr").constrain(System.Convert.ToInt32(17));
-         st.expect(q1, new Object[]{
+      public void TestDescendOne() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrIntegerWUON)));
+         q1.Descend("intArr").Constrain(System.Convert.ToInt32(17));
+         st.Expect(q1, new Object[]{
             r1[3],
 r1[4]         });
       }
       
-      public void testDescendTwo() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrIntegerWUON)));
-         Query qElements1 = q1.descend("intArr");
-         qElements1.constrain(System.Convert.ToInt32(17));
-         qElements1.constrain(System.Convert.ToInt32(25));
-         st.expect(q1, new Object[]{
+      public void TestDescendTwo() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrIntegerWUON)));
+         Query qElements1 = q1.Descend("intArr");
+         qElements1.Constrain(System.Convert.ToInt32(17));
+         qElements1.Constrain(System.Convert.ToInt32(25));
+         st.Expect(q1, new Object[]{
             r1[4]         });
       }
       
-      public void testDescendSmaller() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrIntegerWUON)));
-         Query qElements1 = q1.descend("intArr");
-         qElements1.constrain(System.Convert.ToInt32(3)).smaller();
-         st.expect(q1, new Object[]{
+      public void TestDescendSmaller() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrIntegerWUON)));
+         Query qElements1 = q1.Descend("intArr");
+         qElements1.Constrain(System.Convert.ToInt32(3)).Smaller();
+         st.Expect(q1, new Object[]{
             r1[2],
 r1[3]         });
       }
       
-      public void testDescendNotSmaller() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrIntegerWUON)));
-         Query qElements1 = q1.descend("intArr");
-         qElements1.constrain(System.Convert.ToInt32(3)).smaller();
-         st.expect(q1, new Object[]{
+      public void TestDescendNotSmaller() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrIntegerWUON)));
+         Query qElements1 = q1.Descend("intArr");
+         qElements1.Constrain(System.Convert.ToInt32(3)).Smaller();
+         st.Expect(q1, new Object[]{
             r1[2],
 r1[3]         });
       }

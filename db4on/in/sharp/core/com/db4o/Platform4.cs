@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -29,11 +29,11 @@ namespace com.db4o
 
 		private static byte[][] oldAssemblies;
 
-		public static object[] collectionToArray(YapStream stream, object obj)
+		public static object[] CollectionToArray(YapStream stream, object obj)
 		{
-			Collection4 col = flattenCollection(stream, obj);
-			object[] ret = new object[col.size()];
-			col.toArray(ret);
+			Collection4 col = FlattenCollection(stream, obj);
+			object[] ret = new object[col.Size()];
+			col.ToArray(ret);
 			return ret;
 		}
 
@@ -48,20 +48,20 @@ namespace com.db4o
 				shortAssemblyName = fullAssemblyName.Substring(0, pos);
 			}
 			YapStringIO stringIO = new YapStringIOUnicode();
-			assembly = stringIO.write(shortAssemblyName);
+			assembly = stringIO.Write(shortAssemblyName);
 			oldAssemblies = new byte[oldAssemblyNames.Length][];
 			for (int i = 0; i < oldAssemblyNames.Length; i++)
 			{
-				oldAssemblies[i] = stringIO.write(oldAssemblyNames[i]);
+				oldAssemblies[i] = stringIO.Write(oldAssemblyNames[i]);
 			}
 		}
 
-		internal static JDK jdk()
+		internal static JDK Jdk()
 		{
             throw new NotSupportedException();
 		}
 
-		internal static void addShutDownHook(Object stream, Object streamLock)
+		internal static void AddShutDownHook(Object stream, Object streamLock)
 		{
 			lock (typeof(Platform4))
 			{
@@ -78,47 +78,47 @@ namespace com.db4o
 			}
 		}
 
-		internal static byte[] serialize(Object obj)
+		internal static byte[] Serialize(Object obj)
 		{
 			throw new NotSupportedException();
 		}
 
-		internal static Object deserialize(byte[] bytes)
+		internal static Object Deserialize(byte[] bytes)
 		{
 			throw new NotSupportedException();
 		}
 
-		internal static bool canSetAccessible()
+		internal static bool CanSetAccessible()
 		{
 			return true;
 		}
 
-		internal static Db4oCollections collections(Object a_object)
+		internal static Db4oCollections Collections(Object a_object)
 		{
 			return new P2Collections(a_object);
 		}
 
-		internal static Reflector createReflector(Object config)
+		internal static Reflector CreateReflector(Object config)
 		{
 			return new NetReflector();
 		}
 
-		internal static Object createReferenceQueue()
+		internal static Object CreateReferenceQueue()
 		{
 			return new YapReferenceQueue();
 		}
 
-        public static Object createWeakReference(Object obj)
+        public static Object CreateWeakReference(Object obj)
         {
             return new WeakReference(obj, false);
         }
 
-		internal static Object createYapRef(Object referenceQueue, Object yapObject, Object obj)
+		internal static Object CreateYapRef(Object referenceQueue, Object yapObject, Object obj)
 		{
 			return new YapRef(referenceQueue, yapObject, obj);
 		}
 
-		internal static long doubleToLong(double a_double)
+		internal static long DoubleToLong(double a_double)
 		{
 #if CF_1_0 || CF_2_0
 			// XXX: what to do here?
@@ -128,7 +128,7 @@ namespace com.db4o
 #endif
 		}
 
-		internal static QConEvaluation evaluationCreate(Transaction a_trans, Object example)
+		internal static QConEvaluation EvaluationCreate(Transaction a_trans, Object example)
 		{
 			if (example is Evaluation || example is EvaluationDelegate)
 			{
@@ -137,12 +137,12 @@ namespace com.db4o
 			return null;
 		}
 
-		internal static void evaluationEvaluate(Object a_evaluation, Candidate a_candidate)
+		internal static void EvaluationEvaluate(Object a_evaluation, Candidate a_candidate)
 		{
 			Evaluation eval = a_evaluation as Evaluation;
 			if (eval != null)
 			{
-				eval.evaluate(a_candidate);
+				eval.Evaluate(a_candidate);
 			}
 			else
 			{
@@ -155,32 +155,32 @@ namespace com.db4o
 			}
 		}
 
-		internal static Collection4 flattenCollection(YapStream stream, Object obj)
+		internal static Collection4 FlattenCollection(YapStream stream, Object obj)
 		{
 			Collection4 collection41 = new Collection4();
-			flattenCollection1(stream, obj, collection41);
+			FlattenCollection1(stream, obj, collection41);
 			return collection41;
 		}
 
-		internal static void flattenCollection1(YapStream stream, Object obj, Collection4 collection4)
+		internal static void FlattenCollection1(YapStream stream, Object obj, Collection4 collection4)
 		{
 			Array arr = obj as Array;
 			if (arr != null)
 			{
-				ReflectArray reflectArray = stream.reflector().array();
+				ReflectArray reflectArray = stream.Reflector().Array();
 
 				Object[] flat = new Object[arr.Length];
 
-				reflectArray.flatten(obj, reflectArray.dimensions(obj), 0, flat, 0);
+				reflectArray.Flatten(obj, reflectArray.Dimensions(obj), 0, flat, 0);
 				for (int i = 0; i < flat.Length; i ++)
 				{
-					flattenCollection1(stream, flat[i], collection4);
+					FlattenCollection1(stream, flat[i], collection4);
 				}
 			}
 			else
 			{
 				// If obj implements IEnumerable, add all elements to collection4
-				IEnumerator enumerator = getCollectionEnumerator(obj, true);
+				IEnumerator enumerator = GetCollectionEnumerator(obj, true);
 
 				// Add elements to collection if conversion was succesful
 				if (enumerator != null)
@@ -190,7 +190,7 @@ namespace com.db4o
 						IDictionaryEnumerator dictEnumerator = enumerator as IDictionaryEnumerator;
 						while (enumerator.MoveNext())
 						{
-							flattenCollection1(stream, dictEnumerator.Key, collection4);
+							FlattenCollection1(stream, dictEnumerator.Key, collection4);
 						}
 					}
 					else
@@ -198,64 +198,64 @@ namespace com.db4o
 						while (enumerator.MoveNext())
 						{
 							// recursive call to flatten Collections in Collections
-							flattenCollection1(stream, enumerator.Current, collection4);
+							FlattenCollection1(stream, enumerator.Current, collection4);
 						}
 					}
 				}
 				else
 				{
 					// If obj is not a Collection, it still needs to be collected.
-					collection4.add(obj);
+					collection4.Add(obj);
 				}
 			}
 		}
 
-		internal static void forEachCollectionElement(Object obj, Visitor4 visitor)
+		internal static void ForEachCollectionElement(Object obj, Visitor4 visitor)
 		{
-			IEnumerator enumerator = getCollectionEnumerator(obj, false);
+			IEnumerator enumerator = GetCollectionEnumerator(obj, false);
 			if (enumerator != null)
 			{
-				// If obj is a map (IDictionary in .NET speak) call visit() with the key
+				// If obj is a map (IDictionary in .NET speak) call Visit() with the key
 				// otherwise use the element itself
 				if (enumerator is IDictionaryEnumerator)
 				{
 					IDictionaryEnumerator dictEnumerator = enumerator as IDictionaryEnumerator;
 					while (enumerator.MoveNext())
 					{
-						visitor.visit(dictEnumerator.Key);
+						visitor.Visit(dictEnumerator.Key);
 					}
 				}
 				else
 				{
 					while (enumerator.MoveNext())
 					{
-						visitor.visit(enumerator.Current);
+						visitor.Visit(enumerator.Current);
 					}
 				}
 			}
 		}
 
-		internal static String format(j4o.util.Date date, bool showSeconds)
+		internal static String Format(j4o.util.Date date, bool showSeconds)
 		{
 			String fmt = "yyyy-MM-dd";
 			if (showSeconds)
 			{
 				fmt += " HH:mm:ss";
 			}
-			return new DateTime(date.getTicks()).ToString(fmt);
+			return new DateTime(date.GetTicks()).ToString(fmt);
 		}
 
-		public static Object getClassForType(Object obj)
+		public static Object GetClassForType(Object obj)
 		{
 			Type t = obj as Type;
 			if (t != null)
 			{
-				return Class.getClassForType(t);
+				return Class.GetClassForType(t);
 			}
 			return obj;
 		}
 
-		internal static IEnumerator getCollectionEnumerator(object obj, bool allowArray)
+		internal static IEnumerator GetCollectionEnumerator(object obj, bool allowArray)
 		{
 			IEnumerable enumerable = obj as IEnumerable;
 			if (enumerable != null)
@@ -271,39 +271,39 @@ namespace com.db4o
 			return null;
 		}
 
-		internal static void getDefaultConfiguration(Config4Impl config)
+		internal static void GetDefaultConfiguration(Config4Impl config)
 		{
-			if (isCompact())
+			if (IsCompact())
 			{
-				config.singleThreadedClient(true);
-				config.weakReferenceCollectionInterval(0);
+				config.SingleThreadedClient(true);
+				config.WeakReferenceCollectionInterval(0);
 			}
 
-			translate(config, Class.getClassForType(typeof(Class)).getName(), new TClass());
-			translate(config, Class.getClassForType(typeof(Delegate)).getName(), new TNull());
-			translate(config, Class.getClassForType(typeof(Type)).getName(), new TType());
+			Translate(config, Class.GetClassForType(typeof(Class)).GetName(), new TClass());
+			Translate(config, Class.GetClassForType(typeof(Delegate)).GetName(), new TNull());
+			Translate(config, Class.GetClassForType(typeof(Type)).GetName(), new TType());
 
-			if (isMono())
+			if (IsMono())
 			{
-				translate(config, "System.MonoType, mscorlib", new TType());
+				Translate(config, "System.MonoType, mscorlib", new TType());
 			}
 			else
 			{
-				translate(config, "System.RuntimeType, mscorlib", new TType());
+				Translate(config, "System.RuntimeType, mscorlib", new TType());
 			}
 
-			translate(config, new ArrayList(), new TList());
-			translate(config, new Hashtable(), new TDictionary());
-			translate(config, new Queue(), new TQueue());
-			translate(config, new Stack(), new TStack());
+			Translate(config, new ArrayList(), new TList());
+			Translate(config, new Hashtable(), new TDictionary());
+			Translate(config, new Queue(), new TQueue());
+			Translate(config, new Stack(), new TStack());
 
-			if (!isCompact())
+			if (!IsCompact())
 			{
-				translate(config, "System.Collections.SortedList, mscorlib", new TDictionary());
+				Translate(config, "System.Collections.SortedList, mscorlib", new TDictionary());
 			}
 		}
 
-		public static bool isCompact()
+		public static bool IsCompact()
 		{
 #if CF_1_0 || CF_2_0
 			return true;
@@ -312,52 +312,52 @@ namespace com.db4o
 #endif
 		}
 
-		internal static bool isMono()
+		internal static bool IsMono()
 		{
 			return null != Type.GetType("System.MonoType, mscorlib");
 		}
 
-		public static Object getTypeForClass(Object obj)
+		public static Object GetTypeForClass(Object obj)
 		{
 			Class clazz = obj as Class;
 			if (clazz != null)
 			{
-				return clazz.getNetType();
+				return clazz.GetNetType();
 			}
 			return obj;
 		}
 
-		internal static Object getYapRefObject(Object obj)
+		internal static Object GetYapRefObject(Object obj)
 		{
 			YapRef yapRef = obj as YapRef;
 			if (yapRef != null)
 			{
-				return yapRef.get();
+				return yapRef.Get();
 			}
 			return obj;
 		}
 
-		internal static bool hasCollections()
+		internal static bool HasCollections()
 		{
 			return true;
 		}
 
-		internal static bool hasLockFileThread()
+		internal static bool HasLockFileThread()
 		{
 			return false;
 		}
 
-		internal static bool hasNio()
+		internal static bool HasNio()
 		{
 			return false;
 		}
 
-		internal static bool hasWeakReferences()
+		internal static bool HasWeakReferences()
 		{
 			return true;
 		}
 
-		internal static bool ignoreAsConstraint(Object obj)
+		internal static bool IgnoreAsConstraint(Object obj)
 		{
 			Type t = obj.GetType();
 			if (t.IsEnum)
@@ -370,11 +370,11 @@ namespace com.db4o
 			return false;
 		}
 
-		internal static bool isCollectionTranslator(Config4Class config4class)
+		internal static bool IsCollectionTranslator(Config4Class config4class)
 		{
 			if (config4class != null)
 			{
-				ObjectTranslator ot = config4class.getTranslator();
+				ObjectTranslator ot = config4class.GetTranslator();
 				if (ot != null)
 				{
 					return ot is TList || ot is TDictionary || ot is TQueue || ot is TStack;
@@ -383,7 +383,7 @@ namespace com.db4o
 			return false;
 		}
 
-		public static bool isSimple(Class a_class)
+		public static bool IsSimple(Class a_class)
 		{
 			for (int i1 = 0; i1 < SIMPLE_CLASSES.Length; i1++)
 			{
@@ -395,22 +395,22 @@ namespace com.db4o
 			return false;
 		}
 
-		internal static bool isValueType(ReflectClass claxx)
+		internal static bool IsValueType(ReflectClass claxx)
 		{
 			if (claxx == null)
 			{
 				return false;
 			}
-			claxx = claxx.getDelegate();
+			claxx = claxx.GetDelegate();
 			NetClass netClass = claxx as NetClass;
 			if (netClass == null)
 			{
 				return false;
 			}
-			return netClass.getNetType().IsValueType;
+			return netClass.GetNetType().IsValueType;
 		}
 
-		internal static void killYapRef(Object obj)
+		internal static void KillYapRef(Object obj)
 		{
 			YapRef yr = obj as YapRef;
 			if (yr != null)
@@ -419,7 +419,7 @@ namespace com.db4o
 			}
 		}
 
-		internal static double longToDouble(long l)
+		internal static double LongToDouble(long l)
 		{
 #if CF_1_0 || CF_2_0
 			// XXX: what to do here?
@@ -429,47 +429,47 @@ namespace com.db4o
 #endif
 		}
 
-		internal static void lockFile(object raf)
+		internal static void LockFile(object raf)
 		{
 			// do nothing. C# RAF is locked automatically upon opening
 		}
 		
-		internal static void unlockFile(object randomaccessfile)
+		internal static void UnlockFile(object randomaccessfile)
 		{
 			// do nothing. C# RAF is unlocked automatically upon closing
 		}		
 
-		internal static void markTransient(String marker)
+		internal static void MarkTransient(String marker)
 		{
-			Field.markTransient(marker);
+			Field.MarkTransient(marker);
 		}
 
-		internal static bool callConstructor()
+		internal static bool CallConstructor()
 		{
 			return false;
 		}
 
-		internal static void pollReferenceQueue(Object stream, Object referenceQueue)
+		internal static void PollReferenceQueue(Object stream, Object referenceQueue)
 		{
-			((YapReferenceQueue) referenceQueue).poll((ExtObjectContainer) stream);
+			((YapReferenceQueue) referenceQueue).Poll((ExtObjectContainer) stream);
 		}
 
-		internal static void postOpen(ObjectContainer objectContainer)
-		{
-		}
-
-		internal static void preClose(ObjectContainer objectContainer)
+		internal static void PostOpen(ObjectContainer objectContainer)
 		{
 		}
 
-		public static void registerCollections(GenericReflector reflector)
+		internal static void PreClose(ObjectContainer objectContainer)
 		{
-			reflector.registerCollectionUpdateDepth(
-				Class.getClassForType(typeof(IDictionary)),
+		}
+
+		public static void RegisterCollections(GenericReflector reflector)
+		{
+			reflector.RegisterCollectionUpdateDepth(
+				Class.GetClassForType(typeof(IDictionary)),
 				3);
 		}
 
-		internal static void removeShutDownHook(Object yapStream, Object streamLock)
+		internal static void RemoveShutDownHook(Object yapStream, Object streamLock)
 		{
 			lock (typeof(Platform4))
 			{
@@ -480,7 +480,7 @@ namespace com.db4o
 			}
 		}
 
-		public static void setAccessible(Object obj)
+		public static void SetAccessible(Object obj)
 		{
 			// do nothing
 		}
@@ -491,31 +491,31 @@ namespace com.db4o
 			{
 				foreach (object stream in shutDownStreams)
 				{
-					Unobfuscated.shutDownHookCallback(stream);
+					Unobfuscated.ShutDownHookCallback(stream);
 				}
 			}
 		}
 
-		public static bool storeStaticFieldValues(Reflector reflector, ReflectClass clazz)
+		public static bool StoreStaticFieldValues(Reflector reflector, ReflectClass clazz)
 		{
 			return false;
 		}
 
 
-		private static void translate(Config4Impl config, object obj, ObjectTranslator translator)
+		private static void Translate(Config4Impl config, object obj, ObjectTranslator translator)
 		{
 			try
 			{
-				config.objectClass(obj).translate(translator);
+				config.ObjectClass(obj).Translate(translator);
 			}
 			catch (Exception ex)
 			{
 				// TODO: why the object is being logged instead of the error?
-				Unobfuscated.logErr(config, 48, obj.ToString(), null);
+				Unobfuscated.LogErr(config, 48, obj.ToString(), null);
 			}
 		}
 
-		internal static byte[] updateClassName(byte[] bytes)
+		internal static byte[] UpdateClassName(byte[] bytes)
 		{
 			for (int i = 0; i < oldAssemblyNames.Length; i++)
 			{
@@ -540,7 +540,7 @@ namespace com.db4o
 			return bytes;
 		}
 
-        public static Object weakReferenceTarget(Object weakRef)
+        public static Object WeakReferenceTarget(Object weakRef)
         {
             WeakReference wr = weakRef as WeakReference;
             if(wr != null) 
@@ -550,7 +550,7 @@ namespace com.db4o
             return weakRef;
         }
 
-		internal static object wrapEvaluation(object evaluation)
+		internal static object WrapEvaluation(object evaluation)
 		{
 #if CF_1_0 || CF_2_0
 			// FIXME: How to better support EvaluationDelegate on the CompactFramework?
@@ -562,7 +562,7 @@ namespace com.db4o
 #endif
 		}
 
-		internal static bool isTransient(ReflectClass clazz)
+		internal static bool IsTransient(ReflectClass clazz)
 		{
 			System.Type type = GetNetType(clazz);
 			if (null == type) return false;
@@ -580,9 +580,9 @@ namespace com.db4o
 	        NetClass netClass = clazz as NetClass;
 	        if (null != netClass)
 	        {
-		        return netClass.getNetType();
+		        return netClass.GetNetType();
 	        }
-            ReflectClass claxx = clazz.getDelegate();
+            ReflectClass claxx = clazz.GetDelegate();
             if(claxx == clazz)
             {
                 return null;
@@ -590,7 +590,7 @@ namespace com.db4o
 	        return GetNetType(claxx);
         }
 
-		internal static YapTypeAbstract[] types(YapStream stream)
+		internal static YapTypeAbstract[] Types(YapStream stream)
 		{
 			return new YapTypeAbstract[]
 				{
@@ -605,16 +605,16 @@ namespace com.db4o
 		}
 
 		private static Class[] SIMPLE_CLASSES = {
-		                                        	Class.getClassForType(typeof(Int32)),
-		                                        	Class.getClassForType(typeof(Int64)),
-		                                        	Class.getClassForType(typeof(Single)),
-		                                        	Class.getClassForType(typeof(Boolean)),
-		                                        	Class.getClassForType(typeof(Double)),
-		                                        	Class.getClassForType(typeof(Byte)),
-		                                        	Class.getClassForType(typeof(Char)),
-		                                        	Class.getClassForType(typeof(Int16)),
-		                                        	Class.getClassForType(typeof(String)),
-		                                        	Class.getClassForType(typeof(Date))
+		                                        	Class.GetClassForType(typeof(Int32)),
+		                                        	Class.GetClassForType(typeof(Int64)),
+		                                        	Class.GetClassForType(typeof(Single)),
+		                                        	Class.GetClassForType(typeof(Boolean)),
+		                                        	Class.GetClassForType(typeof(Double)),
+		                                        	Class.GetClassForType(typeof(Byte)),
+		                                        	Class.GetClassForType(typeof(Char)),
+		                                        	Class.GetClassForType(typeof(Int16)),
+		                                        	Class.GetClassForType(typeof(String)),
+		                                        	Class.GetClassForType(typeof(Date))
 		                                        };
 	}
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.IO;
 
@@ -25,25 +25,25 @@ namespace com.db4o.test
         IDictionary map;
         string name;
 
-        public void store(){
-            if(Tester.isClientServer()){
+        public void Store(){
+            if(Tester.IsClientServer()){
                 return;
             }
-            string file = PATH + fileName();
+            string file = PATH + FileName();
             Directory.CreateDirectory(PATH);
             File.Delete(file);
-            ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
+            ExtObjectContainer objectContainer = Db4o.OpenFile(file).Ext();
             UpdatingDb4oVersions udv = new UpdatingDb4oVersions();
             udv.name = "check";
-            udv.list = objectContainer.collections().newLinkedList();
-            udv.map = objectContainer.collections().newHashMap(1);
-            objectContainer.set(udv);
+            udv.list = objectContainer.Collections().NewLinkedList();
+            udv.map = objectContainer.Collections().NewHashMap(1);
+            objectContainer.Set(udv);
             udv.list.Add("check");
             udv.map["check"] = "check";
-            objectContainer.close();
+            objectContainer.Close();
         }
 
-        public void test(){
+        public void Test(){
 
             String shortName = GetType().FullName;
 
@@ -55,7 +55,7 @@ namespace com.db4o.test
             }
             String fullyQualifiedTypeName  = GetType().FullName + ", " + shortAssemblyName;
 
-            if(Tester.isClientServer()){
+            if(Tester.IsClientServer()){
                 return;
             }
             for(int i = 0; i < VERSIONS.Length; i ++){
@@ -64,28 +64,28 @@ namespace com.db4o.test
                     String testFile = PATH + VERSIONS[i] + ".yap";
                     File.Delete(testFile);
                     File.Copy(oldFile, testFile, true);
-                    ExtObjectContainer objectContainer = Db4o.openFile(testFile).ext();
-                    StoredClass[] storedClasses = objectContainer.storedClasses();
+                    ExtObjectContainer objectContainer = Db4o.OpenFile(testFile).Ext();
+                    StoredClass[] storedClasses = objectContainer.StoredClasses();
                     for(int j = 0; j < storedClasses.Length; j ++){
-                        if(storedClasses[j].getName().StartsWith(shortName)){
-                            string oldName = storedClasses[j].getName();
-                            storedClasses[j].rename(fullyQualifiedTypeName);
+                        if(storedClasses[j].GetName().StartsWith(shortName)){
+                            string oldName = storedClasses[j].GetName();
+                            storedClasses[j].Rename(fullyQualifiedTypeName);
                             Console.WriteLine("Renamed " + oldName + " to " + fullyQualifiedTypeName);
                         }
                     }
 
-                    objectContainer.close();
-                    objectContainer = Db4o.openFile(testFile).ext();
-                    Query q = objectContainer.query();
-                    q.constrain(typeof(UpdatingDb4oVersions));
-                    ObjectSet objectSet = q.execute();
-                    Tester.ensure(objectSet.size() == 1);
-                    UpdatingDb4oVersions udv = (UpdatingDb4oVersions)objectSet.next();
-                    Tester.ensure(udv.name.Equals("check"));
-                    Tester.ensure(udv.list.Count == 1);
-                    Tester.ensure(udv.list[0].Equals("check"));
-                    Tester.ensure(udv.map["check"].Equals("check"));
-                    objectContainer.close();
+                    objectContainer.Close();
+                    objectContainer = Db4o.OpenFile(testFile).Ext();
+                    Query q = objectContainer.Query();
+                    q.Constrain(typeof(UpdatingDb4oVersions));
+                    ObjectSet objectSet = q.Execute();
+                    Tester.Ensure(objectSet.Size() == 1);
+                    UpdatingDb4oVersions udv = (UpdatingDb4oVersions)objectSet.Next();
+                    Tester.Ensure(udv.name.Equals("check"));
+                    Tester.Ensure(udv.list.Count == 1);
+                    Tester.Ensure(udv.list[0].Equals("check"));
+                    Tester.Ensure(udv.map["check"].Equals("check"));
+                    objectContainer.Close();
                 }else{
                     Console.WriteLine("Version upgrade check failed. File not found:");
                     Console.WriteLine(oldFile);
@@ -93,8 +93,8 @@ namespace com.db4o.test
             }
         }
 
-        private static string fileName(){
-            return Db4o.version().Replace(" ", "_") + ".yap";
+        private static string FileName(){
+            return Db4o.Version().Replace(" ", "_") + ".yap";
         }
 	}
 }

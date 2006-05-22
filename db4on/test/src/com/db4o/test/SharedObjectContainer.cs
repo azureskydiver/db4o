@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -11,19 +11,19 @@ namespace com.db4o.test {
       }
       internal String name;
       
-      public void storeOne() {
+      public void StoreOne() {
          name = "hi";
       }
       
-      public void testOne() {
-         if (!Tester.isClientServer()) {
+      public void TestOne() {
+         if (!Tester.IsClientServer()) {
             for (int i1 = 0; i1 < 30; i1++) {
-               ObjectContainer con1 = Db4o.openFile(Tester.FILE_SOLO);
-               Object obj1 = con1.get(new SharedObjectContainer()).next();
-               Tester.ensure(obj1 == this);
-               con1.close();
+               ObjectContainer con1 = Db4o.OpenFile(Tester.FILE_SOLO);
+               Object obj1 = con1.Get(new SharedObjectContainer()).Next();
+               Tester.Ensure(obj1 == this);
+               con1.Close();
             }
-            Tester.ensure(!Tester.objectContainer().ext().isClosed());
+            Tester.Ensure(!Tester.ObjectContainer().Ext().IsClosed());
          }
       }
    }

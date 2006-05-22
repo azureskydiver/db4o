@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -25,51 +25,51 @@ namespace com.db4o.test
 		public static void Main(String[] args) 
 		{
 
-			//            Configuration conf = Db4o.configure();
-			//            conf.messageLevel(-1);
+			//            Configuration conf = Db4o.Configure();
+			//            conf.MessageLevel(-1);
 			//
-			//            //        conf.automaticShutDown(false);
-			//            //        conf.lockDatabaseFile(false);
-			//            //        conf.singleThreadedClient(true);
-			//            //        conf.automaticShutDown(false);
-			//            //        conf.lockDatabaseFile(false);
-			//            //        conf.weakReferences(false);
-			//            //        conf.callbacks(false);
-			//            //        conf.detectSchemaChanges(false);
-			//            //        conf.testConstructors(false);
-			//            //        conf.discardFreeSpace(Integer.MAX_VALUE);
-			//            //        conf.encrypt(true);
+			//            //        conf.AutomaticShutDown(false);
+			//            //        conf.LockDatabaseFile(false);
+			//            //        conf.SingleThreadedClient(true);
+			//            //        conf.AutomaticShutDown(false);
+			//            //        conf.LockDatabaseFile(false);
+			//            //        conf.WeakReferences(false);
+			//            //        conf.Callbacks(false);
+			//            //        conf.DetectSchemaChanges(false);
+			//            //        conf.TestConstructors(false);
+			//            //        conf.DiscardFreeSpace(Integer.MAX_VALUE);
+			//            //        conf.Encrypt(true);
 			//
 			//            // BenchMark.Main(null);
 			//
-			new AllTests().run();
+			new AllTests().Run();
 		}
 
 		public AllTests() : base() 
 		{
 			Tester.currentRunner = this;
-			if (Platform4.isCompact())
+			if (Platform4.IsCompact())
 			{
 				EMBEDDED_CLIENT = true;
                 SERVER_PORT = 0;
 			}
 		}
 
-		public void run1()
+		public void Run1()
 		{
-			Thread.sleep(4000);
+			Thread.Sleep(4000);
 		}
       
-		public virtual void run() 
+		public virtual void Run() 
 		{
-			Db4o.configure().messageLevel(-1);
-			logConfiguration();
-			long time1 = JavaSystem.currentTimeMillis();
+			Db4o.Configure().MessageLevel(-1);
+			LogConfiguration();
+			long time1 = JavaSystem.CurrentTimeMillis();
 			if(DELETE_FILE)
 			{
-				Tester.delete();
+				Tester.Delete();
 			}
-			configure();
+			Configure();
             
 			for (Tester.run = 1; Tester.run <= RUNS; Tester.run++) 
 			{
@@ -78,17 +78,17 @@ namespace com.db4o.test
 				{
 					Tester.runServer = false;
 					Tester.clientServer = false;
-					runTests();
+					RunTests();
 				}
 				if (CLIENT_SERVER) 
 				{
 					Tester.runServer = !REMOTE_SERVER;
 					Tester.clientServer = true;
-					runTests();
+					RunTests();
 				}
-				Tester.end();
+				Tester.End();
 			}
-			time1 = JavaSystem.currentTimeMillis() - time1;
+			time1 = JavaSystem.CurrentTimeMillis() - time1;
 			Console.WriteLine("\n\nAllTests completed.\nAssertions: " + Tester.assertionCount + "\nTime: " + time1 + "ms");
 			if(Tester.errorCount == 0)
 			{
@@ -100,123 +100,123 @@ namespace com.db4o.test
 			}
 		}
       
-		protected void configure() 
+		protected void Configure() 
 		{
 			for (int i1 = 0; i1 < TESTS.Length; i1++) 
 			{
-				Object toTest1 = newInstance(TESTS[i1]);
-				runMethod(toTest1, "configure");
+				Object toTest1 = NewInstance(TESTS[i1]);
+				RunMethod(toTest1, "configure");
 			}
 		}
       
-		private void runTests() 
+		private void RunTests() 
 		{
 			String cs = Tester.clientServer ? "C/S" : "SOLO";
             foreach (Type test in TESTS)
 			{
 				Console.WriteLine(cs + " testing " +  test.Name);
-				Object toTest1 = newInstance(test);
-				Tester.open();
-				if(! runStoreOne(toTest1))
+				Object toTest1 = NewInstance(test);
+				Tester.Open();
+				if(! RunStoreOne(toTest1))
 				{
-					runMethod(toTest1, "store");
+					RunMethod(toTest1, "store");
 				}
-				Tester.commit();
-				Tester.close();
-				Tester.open();
-				toTest1 = newInstance(test);
-				runTestOne(toTest1);
-				toTest1 = newInstance(test);
-				Method[] methods1 = Class.getClassForType(test).getDeclaredMethods();
+				Tester.Commit();
+				Tester.Close();
+				Tester.Open();
+				toTest1 = NewInstance(test);
+				RunTestOne(toTest1);
+				toTest1 = NewInstance(test);
+				Method[] methods1 = Class.GetClassForType(test).GetDeclaredMethods();
 				for (int j1 = 0; j1 < methods1.Length; j1++) 
 				{
 					Method method1 = methods1[j1];
-					String methodName = method1.getName();
-					if (!equalsIgnoringCase(methodName, "testOne")) 
+					String methodName = method1.GetName();
+					if (!EqualsIgnoringCase(methodName, "testOne")) 
 					{
-						Tester.runIfTestMethod(method1, toTest1);
+						Tester.RunIfTestMethod(method1, toTest1);
 					}
 				}
-				Tester.close();
+				Tester.Close();
 			}
 		}
 
-		private Object newInstance(Type type) 
+		private Object NewInstance(Type type) 
 		{
-			Class clazz = Class.getClassForType(type);
+			Class clazz = Class.GetClassForType(type);
 			try 
 			{
-				return clazz.newInstance();
+				return clazz.NewInstance();
 			}  
 			catch (Exception e) 
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
-			Console.WriteLine("Instantiation failed. Class:" + clazz.getName());
+			Console.WriteLine("Instantiation failed. Class:" + clazz.GetName());
 			return null;
 		}
       
-		private void runMethod(Object onObject, String methodName) 
+		private void RunMethod(Object onObject, String methodName) 
 		{
 			try 
 			{
-				Method method1 = getMethod(onObject, methodName);
+				Method method1 = GetMethod(onObject, methodName);
 				if (method1 != null) 
 				{
-					method1.invoke(onObject, null);
+					method1.Invoke(onObject, null);
 				} 
 			}  
 			catch (Exception e) 
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
 		}
 
-		private bool runStoreOne(Object onObject) 
+		private bool RunStoreOne(Object onObject) 
 		{
 			try 
 			{
-				Method method = getMethod(onObject, "storeOne");
+				Method method = GetMethod(onObject, "storeOne");
 				if (method != null) 
 				{
-					Tester.deleteAllInstances(onObject);
-					method.invoke(onObject, null);
-					Tester.store(onObject);
+					Tester.DeleteAllInstances(onObject);
+					method.Invoke(onObject, null);
+					Tester.Store(onObject);
 					return true;
 				}
 			} 
 			catch (Exception e) 
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
 			return false;
 		}
 
-		private bool runTestOne(Object onObject) 
+		private bool RunTestOne(Object onObject) 
 		{
 			try 
 			{
-				Method method = getMethod(onObject, "testOne");
+				Method method = GetMethod(onObject, "testOne");
 				if (method != null) 
 				{
-					onObject = Tester.getOne(onObject);
-					method.invoke(onObject, null);
+					onObject = Tester.GetOne(onObject);
+					method.Invoke(onObject, null);
 					return true;
 				}
 			} 
 			catch (Exception e) 
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
 			return false;
 		}
 
-		private Method getMethod(Object onObject, string methodName)
+		private Method GetMethod(Object onObject, string methodName)
 		{
-			Class clazz = Class.getClassForObject(onObject);
-			foreach (Method m in clazz.getDeclaredMethods()) 
+			Class clazz = Class.GetClassForObject(onObject);
+			foreach (Method m in clazz.GetDeclaredMethods()) 
 			{
-				if (equalsIgnoringCase(methodName, m.getName()))
+				if (EqualsIgnoringCase(methodName, m.GetName()))
 				{
 					return m;
 				}
@@ -224,14 +224,14 @@ namespace com.db4o.test
 			return null;
 		}
 
-		private bool equalsIgnoringCase(string a, string b)
+		private bool EqualsIgnoringCase(string a, string b)
 		{
 			return 0 == string.Compare(a, b, true);
 		}
       
-		protected void logConfiguration() 
+		protected void LogConfiguration() 
 		{
-			Console.WriteLine("\nRunning " + typeof(AllTests).FullName + " against\n" + Db4o.version() + "\n");
+			Console.WriteLine("\nRunning " + typeof(AllTests).FullName + " against\n" + Db4o.Version() + "\n");
 			Console.WriteLine("Using " + typeof(AllTests).BaseType.FullName + ".\n");
 			Console.WriteLine("SERVER_HOSTNAME: " + SERVER_HOSTNAME);
 			Console.WriteLine("SERVER_PORT: " + SERVER_PORT);

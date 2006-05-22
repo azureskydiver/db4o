@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 using System;
 using com.db4o.ext;
 
@@ -31,7 +31,7 @@ namespace com.db4o.inside.query
         {
             get
             {
-                return (T)_delegate.get(index);
+                return (T)_delegate.Get(index);
             }
             set
             {
@@ -68,12 +68,12 @@ namespace com.db4o.inside.query
         {
             lock (this.SyncRoot)
             {
-                int id = (int)_delegate.objectContainer().ext().getID(value);
+                int id = (int)_delegate.ObjectContainer().Ext().GetID(value);
                 if (id <= 0)
                 {
                     return -1;
                 }
-                return _delegate.indexOf(id);
+                return _delegate.IndexOf(id);
             }
         }
 
@@ -105,7 +105,7 @@ namespace com.db4o.inside.query
         {
             get
             {
-                return _delegate.size();
+                return _delegate.Size();
             }
         }
 
@@ -127,7 +127,7 @@ namespace com.db4o.inside.query
         {
             get
             {
-                return _delegate.streamLock();
+                return _delegate.StreamLock();
             }
         }
 

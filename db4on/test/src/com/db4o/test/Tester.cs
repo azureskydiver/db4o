@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Diagnostics;
@@ -35,12 +35,7 @@ namespace com.db4o.test  {
 
 		public static bool COMPARE_INTERNAL_OK = false;
 
-		public static void Main(String[] args) 
-		{
-			throw new RuntimeException("This class is not intended to be run. Run AllTests.java.");
-		}
-      
-		public static bool canCheckFileSize() 
+		public static bool CanCheckFileSize() 
 		{
 			if (currentRunner != null) 
 			{
@@ -49,7 +44,7 @@ namespace com.db4o.test  {
 			return false;
 		}
 
-		private static Type classOf(Object obj)
+		private static Type ClassOf(Object obj)
 		{
 			if(obj == null)
 			{
@@ -61,47 +56,47 @@ namespace com.db4o.test  {
 			}
 			if(obj is Class)
 			{
-				return ((Class)obj).getNetType();
+				return ((Class)obj).GetNetType();
 			}
 			return obj.GetType();
 		}
 
-		public static void closeAll()
+		public static void CloseAll()
 		{
-			Tester.close();
-			if (Tester.isClientServer())
+			Tester.Close();
+			if (Tester.IsClientServer())
 			{
-				Tester.server().close();
+				Tester.Server().Close();
 			}
 		}
       
-		public static void close() 
+		public static void Close() 
 		{
 			if (null != oc) 
 			{
-				while (!oc.close()) 
+				while (!oc.Close()) 
 				{
 				}
 				oc = null;
 			}
 		}
       
-		public static void commit() 
+		public static void Commit() 
 		{
-			oc.commit();
+			oc.Commit();
 		}
 		
-		public static void commitSync(ExtObjectContainer client1, ExtObjectContainer client2) 
+		public static void CommitSync(ExtObjectContainer client1, ExtObjectContainer client2) 
 		{
-			client1.setSemaphore("sem", 0);
-			client1.commit();
-			client1.releaseSemaphore("sem");
-			Tester.ensure(client2.setSemaphore("sem", 5000));
-			client2.releaseSemaphore("sem");
+			client1.SetSemaphore("sem", 0);
+			client1.Commit();
+			client1.ReleaseSemaphore("sem");
+			Tester.Ensure(client2.SetSemaphore("sem", 5000));
+			client2.ReleaseSemaphore("sem");
 		}
 		
 
-		public static ObjectServer currentServer()
+		public static ObjectServer CurrentServer()
 		{
 			if(clientServer && runServer)
 			{
@@ -110,68 +105,68 @@ namespace com.db4o.test  {
 			return null;
 		}
 
-		public static void delete() 
+		public static void Delete() 
 		{
-			new File(FILE_SOLO).delete();
-			new File(FILE_SERVER).delete();
+			new File(FILE_SOLO).Delete();
+			new File(FILE_SERVER).Delete();
 		}
       
-		public static void delete(Object obj) 
+		public static void Delete(Object obj) 
 		{
-			objectContainer().delete(obj);
+			ObjectContainer().Delete(obj);
 		}
       
-		public static void deleteAllInstances(Object obj) 
+		public static void DeleteAllInstances(Object obj) 
 		{
 			try 
 			{
-				Query q = objectContainer().query();
-				q.constrain(classOf(obj));
-				ObjectSet set1 = q.execute();
-				while (set1.hasNext()) 
+				Query q = ObjectContainer().Query();
+				q.Constrain(ClassOf(obj));
+				ObjectSet set1 = q.Execute();
+				while (set1.HasNext()) 
 				{
-					objectContainer().delete(set1.next());
+					ObjectContainer().Delete(set1.Next());
 				}
 			}  
 			catch (Exception e) 
 			{
-				error(e);
+				Error(e);
 			}
 		}
       
-		public static void end() 
+		public static void End() 
 		{
-			close();
+			Close();
 			if (objectServer != null) 
 			{
-				Thread.sleep(1000);
-				objectServer.close();
+				Thread.Sleep(1000);
+				objectServer.Close();
 				objectServer = null;
 			}
 		}
       
-		public static bool ensure(bool condition) 
+		public static bool Ensure(bool condition) 
 		{
-			return ensure(string.Empty, condition);
+			return Ensure(string.Empty, condition);
 		}
 
-		public static bool ensure(string message, bool condition) 
+		public static bool Ensure(string message, bool condition) 
 		{
 			assertionCount++;
 			if (!condition) 
 			{
-				error(message);
+				Error(message);
 				return false;
 			}
 			return true;
 		}
 		
-		public static bool ensureEquals(object expected, object actual)
+		public static bool EnsureEquals(object expected, object actual)
 		{
-			return ensureEquals(expected, actual, null);
+			return EnsureEquals(expected, actual, null);
 		}
 
-		public static bool ensureEquals(object expected, object actual, string message)
+		public static bool EnsureEquals(object expected, object actual, string message)
 		{
 			bool eq = true;
 			if(expected == null)
@@ -185,13 +180,13 @@ namespace com.db4o.test  {
 			string text = message == null
 			              	? string.Format("'{0}' != '{1}'", expected, actual)
 			              	: string.Format("{0} - '{1}' != '{2}'", message, expected, actual);
-			return ensure(text, eq);
+			return Ensure(text, eq);
 		}
       
-		public static void ensureOccurrences(Object obj, int count) 
+		public static void EnsureOccurrences(Object obj, int count) 
 		{
-			int occ = occurrences(obj);
-			ensure(occ == count);
+			int occ = Occurrences(obj);
+			Ensure(occ == count);
 			if(occ != count)
 			{
 				Console.WriteLine("Expected: " + count + " Found: " + occ);
@@ -199,34 +194,34 @@ namespace com.db4o.test  {
             
 		}
 
-		public static void runIfTestMethod(j4o.lang.reflect.Method method, object target)
+		public static void RunIfTestMethod(j4o.lang.reflect.Method method, object target)
 		{
-			string name = method.getName();
+			string name = method.GetName();
 			if (name.StartsWith("test") || name.StartsWith("Test")) 
 			{
 				try 
 				{
-					method.invoke(target, null);
+					method.Invoke(target, null);
 				}  
 				catch (Exception e) 
 				{
-					Tester.error(e);     
+					Tester.Error(e);     
 				}
 			}
 		}
       
-		public static void error() 
+		public static void Error() 
 		{
-			error(string.Empty);
+			Error(string.Empty);
 		}
 
-		public static void error(string message) 
+		public static void Error(string message) 
 		{
 			errorCount++;
-			Console.WriteLine("!!! TEST CASE FAILED !!! [" + message + "]" + stackTrace());
+			Console.WriteLine("!!! TEST CASE FAILED !!! [" + message + "]" + StackTrace());
 		}
 
-		public static string stackTrace()
+		public static string StackTrace()
 		{
 #if CF_1_0 || CF_2_0
 			return "";
@@ -235,108 +230,108 @@ namespace com.db4o.test  {
 #endif
 		}
 
-		public static void error(Exception error)
+		public static void Error(Exception error)
 		{   
 #if CF_1_0
 			Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]");
 #else
 			errorCount++;
-			error = getRootCause(error);
+			error = GetRootCause(error);
 			Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]" + error.StackTrace);
 
 #endif
 		}
 
-		private static Exception getRootCause(Exception error)
+		private static Exception GetRootCause(Exception error)
 		{
 			return null != error.GetBaseException()
 				? error.GetBaseException()
 				: error;
 		}
 
-		public static int fileLength() 
+		public static int FileLength() 
 		{
 			String fileName1 = clientServer ? FILE_SERVER : FILE_SOLO;
 			try 
 			{
-				return (int)new File(fileName1).length();
+				return (int)new File(fileName1).Length();
 			}  
 			catch (System.IO.IOException e) 
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
+				j4o.lang.JavaSystem.PrintStackTrace(e);
 			}
 			return 0;
 		}
       
-		public static void forEach(Object obj, Visitor4 vis) 
+		public static void ForEach(Object obj, Visitor4 vis) 
 		{
-			ObjectContainer con1 = objectContainer();
-			con1.deactivate(obj, Int32.MaxValue);
-			ObjectSet set1 = oc.get(obj);
-			while (set1.hasNext()) 
+			ObjectContainer con1 = ObjectContainer();
+			con1.Deactivate(obj, Int32.MaxValue);
+			ObjectSet set1 = oc.Get(obj);
+			while (set1.HasNext()) 
 			{
-				vis.visit(set1.next());
+				vis.Visit(set1.Next());
 			}
 		}
       
-		public static Object getOne(Object obj) 
+		public static Object GetOne(Object obj) 
 		{
-			Query q = oc.query();
-			q.constrain(classOf(obj));
-			ObjectSet set = q.execute();
-			if (set.size() != 1) 
+			Query q = oc.Query();
+			q.Constrain(ClassOf(obj));
+			ObjectSet set = q.Execute();
+			if (set.Size() != 1) 
 			{
-				error();
+				Error();
 			}
-			return set.next();
+			return set.Next();
 		}
 
-		public static bool isClientServer()
+		public static bool IsClientServer()
 		{
-			return currentServer() != null;
+			return CurrentServer() != null;
 		}
       
-		public static void log(Query q) 
+		public static void Log(Query q) 
 		{
-			ObjectSet set1 = q.execute();
-			while (set1.hasNext()) 
+			ObjectSet set1 = q.Execute();
+			while (set1.HasNext()) 
 			{
-				Logger.log(oc, set1.next());
+				Logger.Log(oc, set1.Next());
 			}
 		}
       
-		public static void logAll() 
+		public static void LogAll() 
 		{
-			ObjectSet set1 = oc.get(null);
-			while (set1.hasNext()) 
+			ObjectSet set1 = oc.Get(null);
+			while (set1.HasNext()) 
 			{
-				Logger.log(oc, set1.next());
+				Logger.Log(oc, set1.Next());
 			}
 		}
       
-		public static ExtObjectContainer objectContainer() 
+		public static ExtObjectContainer ObjectContainer() 
 		{
 			if (oc == null) 
 			{
-				open();
+				Open();
 			}
 			return oc;
 		}
       
-		public static int occurrences(Object obj) 
+		public static int Occurrences(Object obj) 
 		{
-			Query q = oc.query();
-			q.constrain(classOf(obj));
-			return q.execute().size();
+			Query q = oc.Query();
+			q.Constrain(ClassOf(obj));
+			return q.Execute().Size();
 		}
       
-		public static ExtObjectContainer open() 
+		public static ExtObjectContainer Open() 
 		{
 			if (runServer && clientServer && objectServer == null) 
 			{
-				objectServer = Db4o.openServer(FILE_SERVER, SERVER_PORT);
-				objectServer.grantAccess(DB4O_USER, DB4O_PASSWORD);
-				objectServer.ext().configure().messageLevel(0);
+				objectServer = Db4o.OpenServer(FILE_SERVER, SERVER_PORT);
+				objectServer.GrantAccess(DB4O_USER, DB4O_PASSWORD);
+				objectServer.Ext().Configure().MessageLevel(0);
 			}
 			if (clientServer) 
 			{
@@ -344,85 +339,85 @@ namespace com.db4o.test  {
 				{
                     if (EMBEDDED_CLIENT)
                     {
-                        oc = objectServer.openClient().ext();
+                        oc = objectServer.OpenClient().Ext();
                     }
                     else
                     {
-                        oc = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
+                        oc = Db4o.OpenClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).Ext();
                     }
                     
 				}  
 				catch (Exception e) 
 				{
-					j4o.lang.JavaSystem.printStackTrace(e);
+					j4o.lang.JavaSystem.PrintStackTrace(e);
 					return null;
 				}
 			} 
 			else 
 			{
-				oc = Db4o.openFile(FILE_SOLO).ext();
+				oc = Db4o.OpenFile(FILE_SOLO).Ext();
 			}
 			return oc;
 		}
 
-		public static ObjectContainer reOpenServer()
+		public static ObjectContainer ReOpenServer()
 		{
 			if(runServer && clientServer)
 			{
-				close();
-				objectServer.close();
+				Close();
+				objectServer.Close();
 				objectServer = null;
 				try 
 				{
-					Thread.sleep(100);
+					Thread.Sleep(100);
 				} 
 				catch (Exception e) 
 				{
 				}
-				return open();
+				return Open();
 			}
 			else
 			{
-				return reOpen();
+				return ReOpen();
 			}
 		}
       
-		public static Query query() 
+		public static Query Query() 
 		{
-			return objectContainer().query();
+			return ObjectContainer().Query();
 		}
 
-		public static void reOpenAll()
+		public static void ReOpenAll()
 		{
-			if (Tester.isClientServer())
+			if (Tester.IsClientServer())
 			{
-				Tester.reOpenServer();
+				Tester.ReOpenServer();
 			}
-			Tester.reOpen();
+			Tester.ReOpen();
 		}
       
-		public static ObjectContainer reOpen() 
+		public static ObjectContainer ReOpen() 
 		{
-			close();
-			return open();
+			Close();
+			return Open();
 		}
       
-		public static void rollBack() 
+		public static void RollBack() 
 		{
-			objectContainer().rollback();
+			ObjectContainer().Rollback();
 		}
 
-		public static ObjectServer server()
+		public static ObjectServer Server()
 		{
 			return objectServer;
 		}
 
-		public static void store(Object obj) 
+		public static void Store(Object obj) 
 		{
-			objectContainer().set(obj);
+			ObjectContainer().Set(obj);
 		}
       
-		public static void printStatistics() 
+		public static void PrintStatistics() 
 		{
 			Statistics.Main(new String[] { FILE_SOLO });
 		}

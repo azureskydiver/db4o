@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,20 +10,20 @@ namespace com.db4o.test {
       public SetSemaphore() : base() {
       }
       
-      public void test() {
-         ExtObjectContainer client11 = Tester.objectContainer();
-         Tester.ensure(client11.setSemaphore("hi", 0));
-         Tester.ensure(client11.setSemaphore("hi", 0));
+      public void Test() {
+         ExtObjectContainer client11 = Tester.ObjectContainer();
+         Tester.Ensure(client11.SetSemaphore("hi", 0));
+         Tester.Ensure(client11.SetSemaphore("hi", 0));
          if (Tester.clientServer) {
-            ExtObjectContainer client21 = Tester.open();
-            ExtObjectContainer client31 = Tester.open();
-            ExtObjectContainer client41 = Tester.open();
-            ExtObjectContainer client51 = Tester.open();
-            Tester.ensure(!client21.setSemaphore("hi", 0));
-            client11.releaseSemaphore("hi");
-            Tester.ensure(client21.setSemaphore("hi", 30));
-            Tester.ensure(!client11.setSemaphore("hi", 0));
-            Tester.ensure(!client31.setSemaphore("hi", 0));
+            ExtObjectContainer client21 = Tester.Open();
+            ExtObjectContainer client31 = Tester.Open();
+            ExtObjectContainer client41 = Tester.Open();
+            ExtObjectContainer client51 = Tester.Open();
+            Tester.Ensure(!client21.SetSemaphore("hi", 0));
+            client11.ReleaseSemaphore("hi");
+            Tester.Ensure(client21.SetSemaphore("hi", 30));
+            Tester.Ensure(!client11.SetSemaphore("hi", 0));
+            Tester.Ensure(!client31.SetSemaphore("hi", 0));
             new GetAndRelease(client31);
             new GetAndRelease(client21);
             new GetAndRelease(client11);
@@ -31,30 +31,30 @@ namespace com.db4o.test {
             new GetAndRelease(client51);
             try {
                {
-                  Thread.sleep(1000);
+                  Thread.Sleep(1000);
                }
             }  catch (Exception e) {
                {
-                  j4o.lang.JavaSystem.printStackTrace(e);
+                  j4o.lang.JavaSystem.PrintStackTrace(e);
                }
             }
-            Tester.ensure(client11.setSemaphore("hi", 0));
-            client11.close();
+            Tester.Ensure(client11.SetSemaphore("hi", 0));
+            client11.Close();
             new GetAndRelease(client31);
             new GetAndRelease(client21);
             try {
                {
-                  Thread.sleep(1000);
+                  Thread.Sleep(1000);
                }
             }  catch (Exception e) {
                {
-                  j4o.lang.JavaSystem.printStackTrace(e);
+                  j4o.lang.JavaSystem.PrintStackTrace(e);
                }
             }
-            client21.close();
-            client31.close();
-            client41.close();
-            client51.setSemaphore("hi", 1000);
+            client21.Close();
+            client31.Close();
+            client41.Close();
+            client51.SetSemaphore("hi", 1000);
          }
       }
       
@@ -63,26 +63,26 @@ namespace com.db4o.test {
          
          public GetAndRelease(ExtObjectContainer client) : base() {
             this.client = client;
-            new Thread(this).start();
+            new Thread(this).Start();
          }
          
-         public void run() {
-            long time1 = j4o.lang.JavaSystem.currentTimeMillis();
-            if (!client.ext().isClosed())
+         public void Run() {
+            long time1 = j4o.lang.JavaSystem.CurrentTimeMillis();
+            if (!client.Ext().IsClosed())
             {
                 try{
-                    Tester.ensure(client.setSemaphore("hi", 50000));
-                    time1 = j4o.lang.JavaSystem.currentTimeMillis() - time1;
+                    Tester.Ensure(client.SetSemaphore("hi", 50000));
+                    time1 = j4o.lang.JavaSystem.CurrentTimeMillis() - time1;
                     Console.WriteLine("Time to get semaphore: " + time1);
-                    Thread.sleep(50);
+                    Thread.Sleep(50);
                     Console.WriteLine("About to release semaphore.");
-                    client.releaseSemaphore("hi");
+                    client.ReleaseSemaphore("hi");
                 }
                 catch (Exception e)
                 {
-                    if (!client.ext().isClosed())
+                    if (!client.Ext().IsClosed())
                     {
-                        j4o.lang.JavaSystem.printStackTrace(e);
+                        j4o.lang.JavaSystem.PrintStackTrace(e);
                     }
                 }
             }

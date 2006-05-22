@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.IO;
 using com.db4o;
@@ -11,110 +11,110 @@ namespace com.db4o.f1.chapter3
 		public static void Main(string[] args)
 		{
 			File.Delete(Util.YapFileName);            
-			ObjectContainer db = Db4o.openFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
 			try
 			{
-				storeFirstCar(db);
-				storeSecondCar(db);
-				retrieveAllSensorReadouts(db);
-				retrieveSensorReadoutQBE(db);
-				retrieveCarQBE(db);
-				retrieveCollections(db);
-				retrieveArrays(db);
-				retrieveSensorReadoutQuery(db);
-				retrieveCarQuery(db);
-				db.close();
-				updateCarPart1();
-				db = Db4o.openFile(Util.YapFileName);
-				updateCarPart2(db);
-				updateCollection(db);
-				db.close();
-				deleteAllPart1();
-				db=Db4o.openFile(Util.YapFileName);
-				deleteAllPart2(db);
-				retrieveAllSensorReadouts(db);
+				StoreFirstCar(db);
+				StoreSecondCar(db);
+				RetrieveAllSensorReadouts(db);
+				RetrieveSensorReadoutQBE(db);
+				RetrieveCarQBE(db);
+				RetrieveCollections(db);
+				RetrieveArrays(db);
+				RetrieveSensorReadoutQuery(db);
+				RetrieveCarQuery(db);
+				db.Close();
+				UpdateCarPart1();
+				db = Db4o.OpenFile(Util.YapFileName);
+				UpdateCarPart2(db);
+				UpdateCollection(db);
+				db.Close();
+				DeleteAllPart1();
+				db=Db4o.OpenFile(Util.YapFileName);
+				DeleteAllPart2(db);
+				RetrieveAllSensorReadouts(db);
 			}
 			finally
 			{
-				db.close();
+				db.Close();
 			}
 		}
         
-		public static void storeFirstCar(ObjectContainer db)
+		public static void StoreFirstCar(ObjectContainer db)
 		{
 			Car car1 = new Car("Ferrari");
 			Pilot pilot1 = new Pilot("Michael Schumacher", 100);
 			car1.Pilot = pilot1;
-			db.set(car1);
+			db.Set(car1);
 		}
         
-		public static void storeSecondCar(ObjectContainer db)
+		public static void StoreSecondCar(ObjectContainer db)
 		{
 			Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
 			Car car2 = new Car("BMW");
 			car2.Pilot = pilot2;
 			car2.Snapshot();
 			car2.Snapshot();
-			db.set(car2);       
+			db.Set(car2);       
 		}
         
-		public static void retrieveAllSensorReadouts(ObjectContainer db)
+		public static void RetrieveAllSensorReadouts(ObjectContainer db)
 		{
-			ObjectSet result = db.get(typeof(SensorReadout));
-			listResult(result);
+			ObjectSet result = db.Get(typeof(SensorReadout));
+			ListResult(result);
 		}
         
-		public static void retrieveSensorReadoutQBE(ObjectContainer db)
+		public static void RetrieveSensorReadoutQBE(ObjectContainer db)
 		{
 			SensorReadout proto = new SensorReadout(new double[] { 0.3, 0.1 }, DateTime.MinValue, null);
-			ObjectSet result = db.get(proto);
-			listResult(result);
+			ObjectSet result = db.Get(proto);
+			ListResult(result);
 		}
         
-		public static void retrieveCarQBE(ObjectContainer db)
+		public static void RetrieveCarQBE(ObjectContainer db)
 		{
 			SensorReadout protoReadout = new SensorReadout(new double[] { 0.6, 0.2 }, DateTime.MinValue, null);
 			IList protoHistory = new ArrayList();
 			protoHistory.Add(protoReadout);
 			Car protoCar = new Car(null, protoHistory);
-			ObjectSet result = db.get(protoCar);
-			listResult(result);
+			ObjectSet result = db.Get(protoCar);
+			ListResult(result);
 		}
         
-		public static void retrieveCollections(ObjectContainer db)
+		public static void RetrieveCollections(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new ArrayList());
-			listResult(result);
+			ObjectSet result = db.Get(new ArrayList());
+			ListResult(result);
 		}
         
-		public static void retrieveArrays(ObjectContainer db)
+		public static void RetrieveArrays(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new double[] { 0.6, 0.4 });
-			listResult(result);
+			ObjectSet result = db.Get(new double[] { 0.6, 0.4 });
+			ListResult(result);
 		}
         
-		public static void retrieveSensorReadoutQuery(ObjectContainer db)
+		public static void RetrieveSensorReadoutQuery(ObjectContainer db)
 		{
-			Query query = db.query();
-			query.constrain(typeof(SensorReadout));
-			Query valueQuery = query.descend("_values");
-			valueQuery.constrain(0.3);
-			valueQuery.constrain(0.1);
-			ObjectSet results = query.execute();
-			listResult(results);
+			Query query = db.Query();
+			query.Constrain(typeof(SensorReadout));
+			Query valueQuery = query.Descend("_values");
+			valueQuery.Constrain(0.3);
+			valueQuery.Constrain(0.1);
+			ObjectSet results = query.Execute();
+			ListResult(results);
 		}
         
-		public static void retrieveCarQuery(ObjectContainer db)
+		public static void RetrieveCarQuery(ObjectContainer db)
 		{
-			Query query = db.query();
-			query.constrain(typeof(Car));
-			Query historyQuery = query.descend("_history");
-			historyQuery.constrain(typeof(SensorReadout));
-			Query valueQuery = historyQuery.descend("_values");
-			valueQuery.constrain(0.3);
-			valueQuery.constrain(0.1);
-			ObjectSet results = query.execute();
-			listResult(results);
+			Query query = db.Query();
+			query.Constrain(typeof(Car));
+			Query historyQuery = query.Descend("_history");
+			historyQuery.Constrain(typeof(SensorReadout));
+			Query valueQuery = historyQuery.Descend("_values");
+			valueQuery.Constrain(0.3);
+			valueQuery.Constrain(0.1);
+			ObjectSet results = query.Execute();
+			ListResult(results);
 		}
 
 		public class RetrieveSensorReadoutPredicate : Predicate
@@ -126,10 +126,10 @@ namespace com.db4o.f1.chapter3
 			}
 		}
         
-		public static void retrieveSensorReadoutNative(ObjectContainer db) 
+		public static void RetrieveSensorReadoutNative(ObjectContainer db) 
 		{
-			ObjectSet results = db.query(new RetrieveSensorReadoutPredicate());
-			listResult(results);
+			ObjectSet results = db.Query(new RetrieveSensorReadoutPredicate());
+			ListResult(results);
 		}
 
 		public class RetrieveCarPredicate : Predicate
@@ -148,36 +148,36 @@ namespace com.db4o.f1.chapter3
 			}
 		}
 
-		public static void retrieveCarNative(ObjectContainer db)
+		public static void RetrieveCarNative(ObjectContainer db)
 		{
-			ObjectSet results = db.query(new RetrieveCarPredicate());
-			listResult(results);
+			ObjectSet results = db.Query(new RetrieveCarPredicate());
+			ListResult(results);
 		}
 
-		public static void updateCarPart1()
+		public static void UpdateCarPart1()
 		{
-			Db4o.configure().objectClass(typeof(Car)).cascadeOnUpdate(true);
+			Db4o.Configure().ObjectClass(typeof(Car)).CascadeOnUpdate(true);
 		}
         
-		public static void updateCarPart2(ObjectContainer db)
+		public static void UpdateCarPart2(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("BMW", null));
-			Car car = (Car)result.next();
+			ObjectSet result = db.Get(new Car("BMW", null));
+			Car car = (Car)result.Next();
 			car.Snapshot();
-			db.set(car);
-			retrieveAllSensorReadouts(db);
+			db.Set(car);
+			RetrieveAllSensorReadouts(db);
 		}
         
-		public static void updateCollection(ObjectContainer db)
+		public static void UpdateCollection(ObjectContainer db)
 		{
-			Query query = db.query();
-			query.constrain(typeof(Car));
-			ObjectSet result = query.descend("_history").execute();
-			IList history = (IList)result.next();
+			Query query = db.Query();
+			query.Constrain(typeof(Car));
+			ObjectSet result = query.Descend("_history").Execute();
+			IList history = (IList)result.Next();
 			history.RemoveAt(0);
-			db.set(history);
+			db.Set(history);
 			Car proto = new Car(null, null);
-			result = db.get(proto);
+			result = db.Get(proto);
 			foreach (Car car in result)
 			{	
 				foreach (object readout in car.History)
@@ -187,22 +187,22 @@ namespace com.db4o.f1.chapter3
 			}
 		}
         
-		public static void deleteAllPart1()
+		public static void DeleteAllPart1()
 		{
-			Db4o.configure().objectClass(typeof(Car)).cascadeOnDelete(true);
+			Db4o.Configure().ObjectClass(typeof(Car)).CascadeOnDelete(true);
 		}
 
-		public static void deleteAllPart2(ObjectContainer db)
+		public static void DeleteAllPart2(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car(null, null));
+			ObjectSet result = db.Get(new Car(null, null));
 			foreach (object car in result)
 			{
-				db.delete(car);
+				db.Delete(car);
 			}
-			ObjectSet readouts = db.get(new SensorReadout(null, DateTime.MinValue, null));
+			ObjectSet readouts = db.Get(new SensorReadout(null, DateTime.MinValue, null));
 			foreach (object readout in readouts)
 			{
-				db.delete(readout);
+				db.Delete(readout);
 			}
 		}
 	}

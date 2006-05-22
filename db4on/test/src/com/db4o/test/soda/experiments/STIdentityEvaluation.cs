@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,7 +10,7 @@ namespace com.db4o.test.soda.experiments {
     public class STIdentityEvaluation : STClass1 {
         [Transient] public static SodaTest st;
       
-        public Object[] store() {
+        public Object[] Store() {
             Helper helperA1 = new Helper("aaa");
             return new Object[]{
                                    new STIdentityEvaluation(null),
@@ -29,35 +29,35 @@ namespace com.db4o.test.soda.experiments {
             this.helper = h;
         }
       
-        public void test() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(new Helper("aaa"));
-            ObjectSet os = q1.execute();
-            Helper helperA1 = (Helper)os.next();
-            q1 = st.query();
-            q1.constrain(Class.getClassForType(typeof(STIdentityEvaluation)));
-            q1.descend("helper").constrain(helperA1).identity();
-            q1.constrain(new EvaluateIdentity());
-            st.expect(q1, new Object[]{
+        public void Test() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(new Helper("aaa"));
+            ObjectSet os = q1.Execute();
+            Helper helperA1 = (Helper)os.Next();
+            q1 = st.Query();
+            q1.Constrain(Class.GetClassForType(typeof(STIdentityEvaluation)));
+            q1.Descend("helper").Constrain(helperA1).Identity();
+            q1.Constrain(new EvaluateIdentity());
+            st.Expect(q1, new Object[]{
                                          r1[1],
                                          r1[2],
                                          r1[3]         });
         }
 
         class EvaluateIdentity : Evaluation{
-            public void evaluate(Candidate candidate) {
-                candidate.include(true);
+            public void Evaluate(Candidate candidate) {
+                candidate.Include(true);
             }
         }
 
       
-        public void testMemberClassConstraint() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            q1.constrain(Class.getClassForType(typeof(STIdentityEvaluation)));
-            q1.descend("helper").constrain(typeof(HelperDerivate));
-            st.expect(q1, new Object[]{
+        public void TestMemberClassConstraint() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            q1.Constrain(Class.GetClassForType(typeof(STIdentityEvaluation)));
+            q1.Descend("helper").Constrain(typeof(HelperDerivate));
+            st.Expect(q1, new Object[]{
                                           r1[4]         });
         }
       

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -13,18 +13,18 @@ namespace com.db4o.test.cs
 
         String myPersistent;
 
-        public void configure(){
-            Db4o.configure().markTransient("com.db4o.test.cs.CustomTransient");
+        public void Configure(){
+            Db4o.Configure().MarkTransient("com.db4o.test.cs.CustomTransient");
         }
 
-        public void storeOne(){
+        public void StoreOne(){
             myTransient = "trans";
             myPersistent = "pers";
         }
 
-        public void testOne(){
-            Tester.ensure(myTransient == null);
-            Tester.ensure(myPersistent.Equals("pers"));
+        public void TestOne(){
+            Tester.Ensure(myTransient == null);
+            Tester.Ensure(myPersistent.Equals("pers"));
         }
 	}
 

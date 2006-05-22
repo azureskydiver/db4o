@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -12,25 +12,25 @@ namespace com.db4o.test
 
         public int val;
 
-        public void store()
+        public void Store()
         {
             for(int i = 0; i <= MAX; i++)
             {
                 MaxByEvaluation mbe = new MaxByEvaluation();
                 mbe.val = i;
-                Tester.store(mbe);
+                Tester.Store(mbe);
             }
         }
 
-        public void test()
+        public void Test()
         {
-            Query q = Tester.query();
-            q.constrain(typeof(MaxByEvaluation));
-            q.descend("val").constrain(new EvalCallbackForMax());
-            ObjectSet objectSet = q.execute();
-            Tester.ensure(objectSet.size() == 1);
-            MaxByEvaluation mbe = (MaxByEvaluation)objectSet.next();
-            Tester.ensure(mbe.val == MAX);
+            Query q = Tester.Query();
+            q.Constrain(typeof(MaxByEvaluation));
+            q.Descend("val").Constrain(new EvalCallbackForMax());
+            ObjectSet objectSet = q.Execute();
+            Tester.Ensure(objectSet.Size() == 1);
+            MaxByEvaluation mbe = (MaxByEvaluation)objectSet.Next();
+            Tester.Ensure(mbe.val == MAX);
         }
     }
 
@@ -39,19 +39,19 @@ namespace com.db4o.test
         private int currentMax;
         private Candidate currentCandidate;
 
-        public void evaluate(Candidate candidate)
+        public void Evaluate(Candidate candidate)
         {
-            int current = (int)candidate.getObject();
+            int current = (int)candidate.GetObject();
             if(currentCandidate != null)
             {
                 if(currentMax > current)
                 {
-                    candidate.include(false);
+                    candidate.Include(false);
                     return;
                 }
-                currentCandidate.include(false);
+                currentCandidate.Include(false);
             }
-            candidate.include(true);
+            candidate.Include(true);
             currentCandidate = candidate;
             currentMax = current;
         }

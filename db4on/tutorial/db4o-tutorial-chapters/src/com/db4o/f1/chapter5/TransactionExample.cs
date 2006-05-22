@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using com.db4o;
 using com.db4o.f1;
@@ -10,68 +10,68 @@ namespace com.db4o.f1.chapter5
         public static void Main(string[] args)
         {
             File.Delete(Util.YapFileName);
-            ObjectContainer db=Db4o.openFile(Util.YapFileName);
+            ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
             try
             {
-                storeCarCommit(db);
-                db.close();
-                db = Db4o.openFile(Util.YapFileName);
-                listAllCars(db);
-                storeCarRollback(db);
-                db.close();
-                db = Db4o.openFile(Util.YapFileName);
-                listAllCars(db);
-                carSnapshotRollback(db);
-                carSnapshotRollbackRefresh(db);
+                StoreCarCommit(db);
+                db.Close();
+                db = Db4o.OpenFile(Util.YapFileName);
+                ListAllCars(db);
+                StoreCarRollback(db);
+                db.Close();
+                db = Db4o.OpenFile(Util.YapFileName);
+                ListAllCars(db);
+                CarSnapshotRollback(db);
+                CarSnapshotRollbackRefresh(db);
             }
             finally
             {
-                db.close();
+                db.Close();
             }
         }
         
-        public static void storeCarCommit(ObjectContainer db)
+        public static void StoreCarCommit(ObjectContainer db)
         {
             Pilot pilot = new Pilot("Rubens Barrichello", 99);
             Car car = new Car("BMW");
             car.Pilot = pilot;
-            db.set(car);
-            db.commit();
+            db.Set(car);
+            db.Commit();
         }
     
-        public static void listAllCars(ObjectContainer db)
+        public static void ListAllCars(ObjectContainer db)
         {
-            ObjectSet result = db.get(typeof(Car));
-            listResult(result);
+            ObjectSet result = db.Get(typeof(Car));
+            ListResult(result);
         }
         
-        public static void storeCarRollback(ObjectContainer db)
+        public static void StoreCarRollback(ObjectContainer db)
         {
             Pilot pilot = new Pilot("Michael Schumacher", 100);
             Car car = new Car("Ferrari");
             car.Pilot = pilot;
-            db.set(car);
-            db.rollback();
+            db.Set(car);
+            db.Rollback();
         }
     
-        public static void carSnapshotRollback(ObjectContainer db)
+        public static void CarSnapshotRollback(ObjectContainer db)
         {
-            ObjectSet result = db.get(new Car("BMW"));
-            Car car = (Car)result.next();
+            ObjectSet result = db.Get(new Car("BMW"));
+            Car car = (Car)result.Next();
             car.Snapshot();
-            db.set(car);
-            db.rollback();
+            db.Set(car);
+            db.Rollback();
             Console.WriteLine(car);
         }
     
-        public static void carSnapshotRollbackRefresh(ObjectContainer db)
+        public static void CarSnapshotRollbackRefresh(ObjectContainer db)
         {
-            ObjectSet result=db.get(new Car("BMW"));
-            Car car=(Car)result.next();
+            ObjectSet result=db.Get(new Car("BMW"));
+            Car car=(Car)result.Next();
             car.Snapshot();
-            db.set(car);
-            db.rollback();
-            db.ext().refresh(car, int.MaxValue);
+            db.Set(car);
+            db.Rollback();
+            db.Ext().Refresh(car, int.MaxValue);
             Console.WriteLine(car);
         }
     }

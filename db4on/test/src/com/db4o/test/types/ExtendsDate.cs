@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,37 +10,37 @@ namespace com.db4o.test.types {
       public ExtendsDate() : base() {
       }
       
-      public void compare(ObjectContainer con, Object obj, int ver) {
-         TestUtil.compare(con, set(newInstance(), ver), obj, "", null);
+      public void Compare(ObjectContainer con, Object obj, int ver) {
+         TestUtil.Compare(con, Set(NewInstance(), ver), obj, "", null);
       }
       
       public override bool Equals(Object obj) {
          if (obj != null) {
             if (obj is ExtendsDate) {
-               return getTime() == ((ExtendsDate)obj).getTime();
+               return GetTime() == ((ExtendsDate)obj).GetTime();
             }
          }
          return false;
       }
       
-      public Object newInstance() {
+      public Object NewInstance() {
          return new ExtendsDate();
       }
       
-      public Object set(Object obj, int ver) {
-         ((ExtendsDate)obj).set(ver);
+      public Object Set(Object obj, int ver) {
+         ((ExtendsDate)obj).Set(ver);
          return obj;
       }
       
-      public void set(int ver) {
-         setTime(ver);
+      public void Set(int ver) {
+         SetTime(ver);
       }
       
-      public bool jdk2() {
+      public bool Jdk2() {
          return false;
       }
       
-      public bool ver3() {
+      public bool Ver3() {
          return false;
       }
    }

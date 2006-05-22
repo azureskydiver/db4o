@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using com.db4o;
 
 namespace com.db4o.f1
@@ -13,7 +13,7 @@ namespace com.db4o.f1
 		
 		public readonly static string ServerPassword = "password";
 
-		public static void listResult(ObjectSet result)
+		public static void ListResult(ObjectSet result)
 		{
 			Console.WriteLine(result.Count);
 			foreach (object item in result)
@@ -22,28 +22,28 @@ namespace com.db4o.f1
 			}
 		}
 
-		public static void listRefreshedResult(ObjectContainer container, ObjectSet items, int depth)
+		public static void ListRefreshedResult(ObjectContainer container, ObjectSet items, int depth)
 		{
 			Console.WriteLine(items.Count);
 			foreach (object item in items)
 			{	
-				container.ext().refresh(item, depth);
+				container.Ext().Refresh(item, depth);
 				Console.WriteLine(item);
 			}
 		}
 		
-		public static void retrieveAll(ObjectContainer db) 
+		public static void RetrieveAll(ObjectContainer db) 
 		{
-			ObjectSet result = db.get(typeof(Object));
-			listResult(result);
+			ObjectSet result = db.Get(typeof(Object));
+			ListResult(result);
 		}
 		
-		public static void deleteAll(ObjectContainer db) 
+		public static void DeleteAll(ObjectContainer db) 
 		{
-			ObjectSet result = db.get(typeof(Object));
+			ObjectSet result = db.Get(typeof(Object));
 			foreach (object item in result)
 			{
-				db.delete(item);
+				db.Delete(item);
 			}
 		}		
 	}

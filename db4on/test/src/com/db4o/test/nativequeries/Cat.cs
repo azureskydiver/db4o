@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
+﻿/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 using System;
 using com.db4o;
 using com.db4o.query;
@@ -19,13 +19,13 @@ namespace com.db4o.test.nativequeries
 			this.name = name;
 		}
 
-		public void store()
+		public void Store()
 		{
-			Tester.store(new Cat("Tom"));
-			Tester.store(new Cat("Occam"));
-			Tester.store(new Cat("Fritz"));
-			Tester.store(new Cat("Garfield"));
-			Tester.store(new Cat("Zora"));
+			Tester.Store(new Cat("Tom"));
+			Tester.Store(new Cat("Occam"));
+			Tester.Store(new Cat("Fritz"));
+			Tester.Store(new Cat("Garfield"));
+			Tester.Store(new Cat("Zora"));
 		}
 
 		class CatComparer : IComparer
@@ -42,51 +42,51 @@ namespace com.db4o.test.nativequeries
 		{
 			public static readonly Predicate Instance = new AllCatsPredicate();
 
-			public bool match(Cat candidate)
+			public bool Match(Cat candidate)
 			{
 				return true;
 			}
 		}
 
-		public void testComparer()
+		public void TestComparer()
 		{
-			ObjectSet result = Tester.objectContainer().query(AllCatsPredicate.Instance, CatComparer.Instance);
-			assertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
+			ObjectSet result = Tester.ObjectContainer().Query(AllCatsPredicate.Instance, CatComparer.Instance);
+			AssertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
 		}
 
-		public void testOrPredicate()
+		public void TestOrPredicate()
 		{
 			if (Db4oVersion.MAJOR >= 5)
 			{
-				ObjectContainer objectContainer = Tester.objectContainer();
-				ObjectSet objectSet = objectContainer.query(new OrPredicate());
-				Tester.ensureEquals(2, objectSet.Count);
-				ensureContains(objectSet, "Occam");
-				ensureContains(objectSet, "Zora");
+				ObjectContainer objectContainer = Tester.ObjectContainer();
+				ObjectSet objectSet = objectContainer.Query(new OrPredicate());
+				Tester.EnsureEquals(2, objectSet.Count);
+				EnsureContains(objectSet, "Occam");
+				EnsureContains(objectSet, "Zora");
 			}
 		}
 
 		public class OrPredicate : Predicate
 		{
-			public bool match(Cat cat)
+			public bool Match(Cat cat)
 			{
 				return cat.name == "Occam" || cat.name == "Zora";
 			}
 		}
 
 #if NET_2_0 || CF_2_0
-		public void testGenericPredicate()
+		public void TestGenericPredicate()
 		{
 			if (Db4oVersion.MAJOR >= 5)
 			{
-				ObjectContainer objectContainer = Tester.objectContainer();
-				System.Collections.Generic.IList<Cat> found = objectContainer.query<Cat>(delegate(Cat c)
+				ObjectContainer objectContainer = Tester.ObjectContainer();
+				System.Collections.Generic.IList<Cat> found = objectContainer.Query<Cat>(delegate(Cat c)
 				{
 					return c.name == "Occam" || c.name == "Zora";
 				});
-				Tester.ensureEquals(2, found.Count);
-				ensureContains(found, "Occam");
-				ensureContains(found, "Zora");
+				Tester.EnsureEquals(2, found.Count);
+				EnsureContains(found, "Occam");
+				EnsureContains(found, "Zora");
 			}
 		}
 
@@ -100,15 +100,15 @@ namespace com.db4o.test.nativequeries
 			}
 		}
 
-		public void testGenericComparer()
+		public void TestGenericComparer()
 		{
-			System.Collections.Generic.IList<Cat> result = Tester.objectContainer().query(GenericCatComparer.Instance);
-			assertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
+			System.Collections.Generic.IList<Cat> result = Tester.ObjectContainer().Query(GenericCatComparer.Instance);
+			AssertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
 		}
 
-		public void testGenericComparison()
+		public void TestGenericComparison()
 		{
-			System.Collections.Generic.IList<Cat> result = Tester.objectContainer().query<Cat>(delegate(Cat candidate)
+			System.Collections.Generic.IList<Cat> result = Tester.ObjectContainer().Query<Cat>(delegate(Cat candidate)
 																								   {
 																									   return true;
 																								   },
@@ -119,28 +119,28 @@ namespace com.db4o.test.nativequeries
 																											CompareTo
 																											(x.name);
 																								});
-			assertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
+			AssertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
 		}
 
 #endif
 
-		private void assertCatOrder(IEnumerable cats, params string[] catNames)
+		private void AssertCatOrder(IEnumerable cats, params string[] catNames)
 		{
 			IEnumerator e = cats.GetEnumerator();
 			for (int i = 0; i < catNames.Length; ++i)
 			{
-				if (!Tester.ensure(e.MoveNext())) break;
-				if (!Tester.ensureEquals(catNames[i], ((Cat)e.Current).name)) break;
+				if (!Tester.Ensure(e.MoveNext())) break;
+				if (!Tester.EnsureEquals(catNames[i], ((Cat)e.Current).name)) break;
 			}
 		}
 
-		private void ensureContains(IEnumerable objectSet, string catName)
+		private void EnsureContains(IEnumerable objectSet, string catName)
 		{
 			foreach (Cat cat in objectSet)
 			{
 				if (cat.name == catName) return;
 			}
-			Tester.ensure(catName + " expected!", false);
+			Tester.Ensure(catName + " expected!", false);
 		}
 	}
 }

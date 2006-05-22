@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -18,7 +18,7 @@ namespace com.db4o.test.soda.classes.wrapper.typed {
          i_double = System.Convert.ToDouble(a_double);
       }
       
-      public Object[] store() {
+      public Object[] Store() {
          return new Object[]{
             new STDoubleWT(0),
 new STDoubleWT(0),
@@ -27,56 +27,56 @@ new STDoubleWT(99.99),
 new STDoubleWT(909.0)         };
       }
       
-      public void testEquals() {
-         Query q1 = st.query();
-         q1.constrain(new STDoubleWT(0));
-         q1.descend("i_double").constrain(System.Convert.ToDouble(0));
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestEquals() {
+         Query q1 = st.Query();
+         q1.Constrain(new STDoubleWT(0));
+         q1.Descend("i_double").Constrain(System.Convert.ToDouble(0));
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[1]         });
       }
       
-      public void testGreater() {
-         Query q1 = st.query();
-         q1.constrain(new STDoubleWT(1));
-         q1.descend("i_double").constraints().greater();
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestGreater() {
+         Query q1 = st.Query();
+         q1.Constrain(new STDoubleWT(1));
+         q1.Descend("i_double").Constraints().Greater();
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[2],
 r1[3],
 r1[4]         });
       }
       
-      public void testSmaller() {
-         Query q1 = st.query();
-         q1.constrain(new STDoubleWT(1));
-         q1.descend("i_double").constraints().smaller();
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestSmaller() {
+         Query q1 = st.Query();
+         q1.Constrain(new STDoubleWT(1));
+         q1.Descend("i_double").Constraints().Smaller();
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[1]         });
       }
       
-      public void testGreaterOrEqual() {
-         Query q1 = st.query();
-         q1.constrain(store()[2]);
-         q1.descend("i_double").constraints().greater().equal();
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestGreaterOrEqual() {
+         Query q1 = st.Query();
+         q1.Constrain(Store()[2]);
+         q1.Descend("i_double").Constraints().Greater().Equal();
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[2],
 r1[3],
 r1[4]         });
       }
       
-      public void testGreaterAndNot() {
-         Query q1 = st.query();
-         q1.constrain(new STDoubleWT());
-         Query val1 = q1.descend("i_double");
-         val1.constrain(System.Convert.ToDouble(0)).greater();
-         val1.constrain(System.Convert.ToDouble(99.99)).not();
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestGreaterAndNot() {
+         Query q1 = st.Query();
+         q1.Constrain(new STDoubleWT());
+         Query val1 = q1.Descend("i_double");
+         val1.Constrain(System.Convert.ToDouble(0)).Greater();
+         val1.Constrain(System.Convert.ToDouble(99.99)).Not();
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[2],
 r1[4]         });
       }
