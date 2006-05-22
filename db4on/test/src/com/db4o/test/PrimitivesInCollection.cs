@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -11,17 +11,17 @@ namespace com.db4o.test
 
 		IList list;
 
-		public void storeOne()
+		public void StoreOne()
 		{
-			list = Tester.objectContainer().collections().newLinkedList();
+			list = Tester.ObjectContainer().Collections().NewLinkedList();
 			list.Add(1);
 			list.Add("hi");
 		}
 
-		public void testOne()
+		public void TestOne()
 		{
-			Tester.ensure(list.Contains(1));
-			Tester.ensure(list.Contains("hi"));
+			Tester.Ensure(list.Contains(1));
+			Tester.Ensure(list.Contains("hi"));
 		}
 	}
 }

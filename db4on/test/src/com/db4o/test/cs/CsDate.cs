@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Reflection;
@@ -26,78 +26,78 @@ namespace com.db4o.test.cs
 			dateTime = value;
 		}
 
-        public void store()
+        public void Store()
 		{
-            Tester.deleteAllInstances(this);
-            Tester.store(new CsDate(DateTime.Now));
+            Tester.DeleteAllInstances(this);
+            Tester.Store(new CsDate(DateTime.Now));
         }
 
-		public void testTrivialQuery() 
+		public void TestTrivialQuery() 
 		{
-			Query q = Tester.query();
-			q.constrain(typeof(CsDate));
-			ObjectSet os = q.execute();
-			Tester.ensure(os.size() == 1);
+			Query q = Tester.Query();
+			q.Constrain(typeof(CsDate));
+			ObjectSet os = q.Execute();
+			Tester.Ensure(os.Size() == 1);
 		}
 
-		public void testQueryByExample() 
+		public void TestQueryByExample() 
 		{
 			CsDate template = new CsDate();
-			Tester.getOne(template);
+			Tester.GetOne(template);
 
 			template.dateTime = new DateTime(0);
-			Tester.getOne(template);
+			Tester.GetOne(template);
 
 			template.dateTime = new DateTime(100);
-			ObjectSet os = Tester.objectContainer().get(template);
-			Tester.ensure(os.size() == 0);
+			ObjectSet os = Tester.ObjectContainer().Get(template);
+			Tester.Ensure(os.Size() == 0);
 		}
 
-		public void testDeactivation()
+		public void TestDeactivation()
 		{
 			CsDate template = new CsDate(new DateTime(100));
-            Tester.objectContainer().deactivate(template, int.MaxValue);
-            Tester.ensure(template.dateTime.Equals(new DateTime(0)));
+            Tester.ObjectContainer().Deactivate(template, int.MaxValue);
+            Tester.Ensure(template.dateTime.Equals(new DateTime(0)));
         }
 
-		public void testSODA() 
+		public void TestSODA() 
 		{
 			DateTime before = DateTime.Now.AddDays(-1);
 			DateTime after = DateTime.Now.AddDays(1);
 
-			Query q = Tester.query();
-			q.constrain(typeof(CsDate));
-			q.descend("dateTime").constrain(before).smaller();
-			Tester.ensure(0 == q.execute().size());
+			Query q = Tester.Query();
+			q.Constrain(typeof(CsDate));
+			q.Descend("dateTime").Constrain(before).Smaller();
+			Tester.Ensure(0 == q.Execute().Size());
 
-			q = Tester.query();
-			q.constrain(typeof(CsDate));
-			q.descend("dateTime").constrain(after).greater();
-			Tester.ensure(0 == q.execute().size());
+			q = Tester.Query();
+			q.Constrain(typeof(CsDate));
+			q.Descend("dateTime").Constrain(after).Greater();
+			Tester.Ensure(0 == q.Execute().Size());
 
-			q = Tester.query();
-			q.constrain(typeof(CsDate));
-			q.descend("dateTime").constrain(before).greater();
-			Tester.ensure(1 == q.execute().size());
+			q = Tester.Query();
+			q.Constrain(typeof(CsDate));
+			q.Descend("dateTime").Constrain(before).Greater();
+			Tester.Ensure(1 == q.Execute().Size());
 
-			q = Tester.query();
-			q.constrain(typeof(CsDate));
-			q.descend("dateTime").constrain(after).smaller();
-			Tester.ensure(1 == q.execute().size());
+			q = Tester.Query();
+			q.Constrain(typeof(CsDate));
+			q.Descend("dateTime").Constrain(after).Smaller();
+			Tester.Ensure(1 == q.Execute().Size());
 
-			q = Tester.query();
-			q.constrain(typeof(CsDate));
-			q.descend("flag").constrain(true);
-			q.descend("dateTime").constrain(before).greater();
-			q.descend("dateTime").constrain(after).smaller();
-			Tester.ensure(1 == q.execute().size());
+			q = Tester.Query();
+			q.Constrain(typeof(CsDate));
+			q.Descend("flag").Constrain(true);
+			q.Descend("dateTime").Constrain(before).Greater();
+			q.Descend("dateTime").Constrain(after).Smaller();
+			Tester.Ensure(1 == q.Execute().Size());
 
-			q = Tester.query();
-			q.constrain(typeof(CsDate));
-			q.descend("flag").constrain(false);
-			q.descend("dateTime").constrain(before).greater();
-			q.descend("dateTime").constrain(after).smaller();
-			Tester.ensure(0 == q.execute().size());
+			q = Tester.Query();
+			q.Constrain(typeof(CsDate));
+			q.Descend("flag").Constrain(false);
+			q.Descend("dateTime").Constrain(before).Greater();
+			q.Descend("dateTime").Constrain(after).Smaller();
+			Tester.Ensure(0 == q.Execute().Size());
 		}
 	}
 }

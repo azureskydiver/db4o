@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -7,18 +7,18 @@ namespace com.db4o.test.soda {
 
    public interface STEngine {
       
-      void reset();
+      void Reset();
       
-      Query query();
+      Query Query();
       
-      void open();
+      void Open();
       
-      void close();
+      void Close();
       
-      void store(Object obj);
+      void Store(Object obj);
       
-      void commit();
+      void Commit();
       
-      void delete(Object obj);
+      void Delete(Object obj);
    }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.IO;
 using com.db4o.ext;
@@ -67,20 +67,20 @@ namespace com.db4o.test.nativequeries
 		ArrayList _failures = new ArrayList();
 
 		/*
-		public void store()
+		public void Store()
 		{
 			Node node = null;
-			Tester.store(node = new Node(null, 3));
-			Tester.store(node = new Node(node, 2));
-			Tester.store(node = new Node(node, 1));
+			Tester.Store(node = new Node(null, 3));
+			Tester.Store(node = new Node(node, 2));
+			Tester.Store(node = new Node(node, 1));
 		}*/
 
-		public void testRecursiveCandidateMethod()
+		public void TestRecursiveCandidateMethod()
 		{
 			ExpectFailure("this._next.get_FollowedBy3()", new FollowedBy3Predicate());
 		}
 
-		public void testRecursivePredicateMethod()
+		public void TestRecursivePredicateMethod()
 		{
 			ExpectFailure("this.Match(candidate.get_Next())", new FollowedByPredicate(2));
 		}
@@ -89,16 +89,16 @@ namespace com.db4o.test.nativequeries
 		{
 			_failures.Clear();
 
-			ExtObjectContainer container = Tester.objectContainer();
-			container.configure().optimizeNativeQueries(true);
+			ExtObjectContainer container = Tester.ObjectContainer();
+			container.Configure().OptimizeNativeQueries(true);
 
-			NativeQueryHandler handler = ((YapStream)container).getNativeQueryHandler();
+			NativeQueryHandler handler = ((YapStream)container).GetNativeQueryHandler();
 			handler.QueryOptimizationFailure += new QueryOptimizationFailureHandler(OnOptimizationFailure);
 			try
 			{
-				ObjectSet result = container.query(predicate);
-				Tester.ensureEquals(1, _failures.Count,  join(_failures));
-				Tester.ensureEquals("Unsupported expression: " + expression, ((Exception)_failures[0]).Message);
+				container.Query(predicate);
+				Tester.EnsureEquals(1, _failures.Count,  Join(_failures));
+				Tester.EnsureEquals("Unsupported expression: " + expression, ((Exception)_failures[0]).Message);
 			}
 			finally
 			{
@@ -106,7 +106,7 @@ namespace com.db4o.test.nativequeries
 			}
 		}
 
-		private string join(IList items)
+		private string Join(IList items)
 		{
 			StringWriter writer = new StringWriter();
 			foreach (object item in items)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -17,25 +17,25 @@ namespace com.db4o {
 
         public int Count{
             get{
-                lock (i_map.streamLock()) {
-                    i_map.checkActive();
+                lock (i_map.StreamLock()) {
+                    i_map.CheckActive();
                     return i_map.i_size;
                 }
             }
         }
 
         public void CopyTo(Array arr, int pos){
-            lock (i_map.streamLock()) {
-                i_map.checkActive();
+            lock (i_map.StreamLock()) {
+                i_map.CheckActive();
                 P2HashMapKeyIterator i = new P2HashMapKeyIterator(i_map);
-                while (i.hasNext()) {
-                    arr.SetValue(i.next(), pos++);
+                while (i.HasNext()) {
+                    arr.SetValue(i.Next(), pos++);
                 }
             }
         }
 
         public IEnumerator GetEnumerator(){
-            i_map.checkActive();
+            i_map.CheckActive();
             return new P2HashMapKeyIterator(i_map);
         }
 
@@ -47,8 +47,8 @@ namespace com.db4o {
 
         public Object SyncRoot{
             get{
-                i_map.checkActive();
-                return i_map.streamLock();
+                i_map.CheckActive();
+                return i_map.StreamLock();
             }
         }
     }

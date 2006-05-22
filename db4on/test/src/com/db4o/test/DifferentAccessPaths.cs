@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.query;
@@ -9,31 +9,31 @@ namespace com.db4o.test
 	{
         String foo;
 
-        public void store(){
-            Tester.deleteAllInstances(this);
+        public void Store(){
+            Tester.DeleteAllInstances(this);
             DifferentAccessPaths dap = new DifferentAccessPaths();
             dap.foo = "hi";
-            Tester.store(dap);
+            Tester.Store(dap);
             dap = new DifferentAccessPaths();
             dap.foo = "hi too";
-            Tester.store(dap);
+            Tester.Store(dap);
         }
 
-        public void test(){
-            DifferentAccessPaths dap = query();
+        public void Test(){
+            DifferentAccessPaths dap = Query();
             for(int i = 0; i < 10; i ++){
-                Tester.ensure(dap == query());
+                Tester.Ensure(dap == Query());
             }
-            Tester.objectContainer().purge(dap);
-            Tester.ensure(dap != query());
+            Tester.ObjectContainer().Purge(dap);
+            Tester.Ensure(dap != Query());
         }
 
-        private DifferentAccessPaths query(){
-            Query q = Tester.query();
-            q.constrain(typeof(DifferentAccessPaths));
-            q.descend("foo").constrain("hi");
-            ObjectSet os = q.execute();
-            DifferentAccessPaths dap = (DifferentAccessPaths)os.next();
+        private DifferentAccessPaths Query(){
+            Query q = Tester.Query();
+            q.Constrain(typeof(DifferentAccessPaths));
+            q.Descend("foo").Constrain("hi");
+            ObjectSet os = q.Execute();
+            DifferentAccessPaths dap = (DifferentAccessPaths)os.Next();
             return dap;
         }
 

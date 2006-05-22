@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
@@ -16,16 +16,16 @@ namespace com.db4o.test.nativequeries
 	{
 		protected void AssertNQResult(object predicate, params object[] expected)
 		{
-			ObjectSet os = QueryFromPredicate(predicate).execute();
+			ObjectSet os = QueryFromPredicate(predicate).Execute();
 			string actualString = ToString(os);
-			if (!Tester.ensure("Expected: " + ToString(expected) + ", Actual: " + actualString, expected.Length == os.size()))
+			if (!Tester.Ensure("Expected: " + ToString(expected) + ", Actual: " + actualString, expected.Length == os.Size()))
 			{
 				return;
 			}
 
 			foreach (object item in expected)
 			{
-				Tester.ensure("Expected item: " + item + " but got: " + actualString, os.Contains(item));
+				Tester.Ensure("Expected item: " + item + " but got: " + actualString, os.Contains(item));
 			}
 		}
 
@@ -46,9 +46,9 @@ namespace com.db4o.test.nativequeries
 		{
 			MethodInfo match = predicate.GetType().GetMethod("Match");
 			Expression expression = (new QueryExpressionBuilder ()).FromMethod(match);
-			Query q = Tester.query();
-			q.constrain(match.GetParameters()[0].ParameterType);
-			new SODAQueryBuilder().optimizeQuery(expression, q, predicate);
+			Query q = Tester.Query();
+			q.Constrain(match.GetParameters()[0].ParameterType);
+			new SODAQueryBuilder().OptimizeQuery(expression, q, predicate);
 			return q;
 		}
 	}

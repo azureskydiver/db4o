@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using com.db4o;
 using com.db4o.f1;
@@ -9,48 +9,48 @@ namespace com.db4o.f1.chapter6
     {
         public static void Main(string[] args)
         {
-            tryStoreWithCallConstructors();
-            tryStoreWithoutCallConstructors();
-            storeWithTranslator();
+            TryStoreWithCallConstructors();
+            TryStoreWithoutCallConstructors();
+            StoreWithTranslator();
         }
         
-        public static void tryStoreWithCallConstructors()
+        public static void TryStoreWithCallConstructors()
         {
-            Db4o.configure().exceptionsOnNotStorable(true);
-            Db4o.configure().objectClass(typeof(CultureInfo))
-                .callConstructor(true);
-            tryStoreAndRetrieve();
+            Db4o.Configure().ExceptionsOnNotStorable(true);
+            Db4o.Configure().ObjectClass(typeof(CultureInfo))
+                .CallConstructor(true);
+            TryStoreAndRetrieve();
         }
         
-        public static void tryStoreWithoutCallConstructors()
+        public static void TryStoreWithoutCallConstructors()
         {
-            Db4o.configure().objectClass(typeof(CultureInfo))
-                .callConstructor(false);
+            Db4o.Configure().ObjectClass(typeof(CultureInfo))
+                .CallConstructor(false);
             // trying to store objects that hold onto
             // system resources can be pretty nasty
             // uncomment the following line to see
             // how nasty it can be
-            //tryStoreAndRetrieve();
+            //TryStoreAndRetrieve();
         }
         
-        public static void storeWithTranslator()
+        public static void StoreWithTranslator()
         {
-            Db4o.configure().objectClass(typeof(CultureInfo))
-                .translate(new CultureInfoTranslator());
-            tryStoreAndRetrieve();
-            Db4o.configure().objectClass(typeof(CultureInfo))
-                .translate(null);
+            Db4o.Configure().ObjectClass(typeof(CultureInfo))
+                .Translate(new CultureInfoTranslator());
+            TryStoreAndRetrieve();
+            Db4o.Configure().ObjectClass(typeof(CultureInfo))
+                .Translate(null);
         }
         
-        public static void tryStoreAndRetrieve()
+        public static void TryStoreAndRetrieve()
         {
-            ObjectContainer db = Db4o.openFile(Util.YapFileName);
+            ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
             try
             {
                 string[] champs = new string[] { "Ayrton Senna", "Nelson Piquet" };
                 LocalizedItemList LocalizedItemList = new LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs);
                 System.Console.WriteLine("ORIGINAL: {0}", LocalizedItemList);
-                db.set(LocalizedItemList);
+                db.Set(LocalizedItemList);
             }
             catch (Exception x)
             {
@@ -59,22 +59,22 @@ namespace com.db4o.f1.chapter6
             }
             finally
             {
-                db.close();
+                db.Close();
             }
-            db = Db4o.openFile(Util.YapFileName);
+            db = Db4o.OpenFile(Util.YapFileName);
             try
             {
-                ObjectSet result = db.get(typeof(LocalizedItemList));
-                while (result.hasNext())
+                ObjectSet result = db.Get(typeof(LocalizedItemList));
+                while (result.HasNext())
                 {
-                    LocalizedItemList LocalizedItemList = (LocalizedItemList)result.next();
+                    LocalizedItemList LocalizedItemList = (LocalizedItemList)result.Next();
                     System.Console.WriteLine("RETRIEVED: {0}", LocalizedItemList);
-                    db.delete(LocalizedItemList);
+                    db.Delete(LocalizedItemList);
                 }
             }
             finally
             {
-                db.close();
+                db.Close();
             }
         }
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.query;
@@ -9,25 +9,25 @@ namespace com.db4o.test
 	public class UnknownClass
 	{
 
-        public void store(){
-            Tester.store(new Atom());
+        public void Store(){
+            Tester.Store(new Atom());
 
-//            Tester.store(new UnknownClass());
-//            Tester.commit();
-//            Query q = Tester.query();
-//            q.constrain(typeof(UnknownClass));
-//            ObjectSet objectSet = q.execute();
-//            while(objectSet.hasNext()){
-//                Tester.delete(objectSet.next());
+//            Tester.Store(new UnknownClass());
+//            Tester.Commit();
+//            Query q = Tester.Query();
+//            q.Constrain(typeof(UnknownClass));
+//            ObjectSet objectSet = q.Execute();
+//            while(objectSet.HasNext()){
+//                Tester.Delete(objectSet.Next());
 //            }
-//            Tester.commit();
+//            Tester.Commit();
 
         }
     
-        public void test(){
-            Query q = Tester.query();
-            q.constrain(typeof(UnknownClass));
-            Tester.ensure(q.execute().size() == 0);
+        public void Test(){
+            Query q = Tester.Query();
+            q.Constrain(typeof(UnknownClass));
+            Tester.Ensure(q.Execute().Size() == 0);
         }
 
     }

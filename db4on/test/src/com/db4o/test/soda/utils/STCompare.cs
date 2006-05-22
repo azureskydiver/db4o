@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -12,17 +12,17 @@ namespace com.db4o.test.soda.utils {
         public STCompare() : base() {
         }
       
-        public bool isEqual(Object a_compare, Object a_with) {
-            return isEqual(a_compare, a_with, null, null);
+        public bool IsEqual(Object a_compare, Object a_with) {
+            return IsEqual(a_compare, a_with, null, null);
         }
       
-        public bool isEqual(Object a_compare, Object a_with, String a_path, ArrayList a_list) {
+        public bool IsEqual(Object a_compare, Object a_with, String a_path, ArrayList a_list) {
             if (a_path == null || a_path.Length < 1) {
                 if (a_compare != null) {
-                    a_path = j4o.lang.Class.getClassForObject(a_compare).getName() + ":";
+                    a_path = j4o.lang.Class.GetClassForObject(a_compare).GetName() + ":";
                 } else {
                     if (a_with != null) {
-                        a_path = j4o.lang.Class.getClassForObject(a_with).getName() + ":";
+                        a_path = j4o.lang.Class.GetClassForObject(a_with).GetName() + ":";
                     }
                 }
             }
@@ -33,11 +33,11 @@ namespace com.db4o.test.soda.utils {
             if (a_with == null) {
                 return false;
             }
-            Class clazz1 = j4o.lang.Class.getClassForObject(a_compare);
-            if (clazz1 != j4o.lang.Class.getClassForObject(a_with)) {
+            Class clazz1 = j4o.lang.Class.GetClassForObject(a_compare);
+            if (clazz1 != j4o.lang.Class.GetClassForObject(a_with)) {
                 return false;
             }
-            if (isSimple(clazz1)) {
+            if (IsSimple(clazz1)) {
                 return a_compare.Equals(a_with);
             }
             if (a_list == null) {
@@ -69,7 +69,7 @@ namespace com.db4o.test.soda.utils {
                     bool ok = false;
                     enw = elementsWith.GetEnumerator();
                     while(enw.MoveNext()){
-                        if(!ok && isEqual(enc.Current, enw.Current)){
+                        if(!ok && IsEqual(enc.Current, enw.Current)){
                             ok = true;
                         } else{
                             temp.Add(enw.Current);
@@ -83,14 +83,14 @@ namespace com.db4o.test.soda.utils {
                 return elementsWith.Count == 0;
             }
 
-            Field[] fields1 = clazz1.getDeclaredFields();
+            Field[] fields1 = clazz1.GetDeclaredFields();
             for (int i1 = 0; i1 < fields1.Length; i1++) {
-                if (storeableField(clazz1, fields1[i1])) {
-                    Platform4.setAccessible(fields1[i1]);
+                if (StoreableField(clazz1, fields1[i1])) {
+                    Platform4.SetAccessible(fields1[i1]);
                     try { {
-                              path1 = a_path + fields1[i1].getName() + ":";
-                              Object compare1 = fields1[i1].get(a_compare);
-                              Object with1 = fields1[i1].get(a_with);
+                              path1 = a_path + fields1[i1].GetName() + ":";
+                              Object compare1 = fields1[i1].Get(a_compare);
+                              Object with1 = fields1[i1].Get(a_with);
                               if (compare1 == null) {
                                   if (with1 != null) {
                                       return false;
@@ -98,20 +98,20 @@ namespace com.db4o.test.soda.utils {
                               } else if (with1 == null) {
                                   return false;
                               } else {
-                                  if (j4o.lang.Class.getClassForObject(compare1).isArray()) {
-                                      if (!j4o.lang.Class.getClassForObject(with1).isArray()) {
+                                  if (j4o.lang.Class.GetClassForObject(compare1).IsArray()) {
+                                      if (!j4o.lang.Class.GetClassForObject(with1).IsArray()) {
                                           return false;
                                       } else {
-                                          compare1 = normalizeNArray(compare1);
-                                          with1 = normalizeNArray(with1);
-                                          int len1 = j4o.lang.reflect.JavaArray.getLength(compare1);
-                                          if (len1 != j4o.lang.reflect.JavaArray.getLength(with1)) {
+                                          compare1 = NormalizeNArray(compare1);
+                                          with1 = NormalizeNArray(with1);
+                                          int len1 = j4o.lang.reflect.JavaArray.GetLength(compare1);
+                                          if (len1 != j4o.lang.reflect.JavaArray.GetLength(with1)) {
                                               return false;
                                           } else {
                                               for (int j1 = 0; j1 < len1; j1++) {
-                                                  Object elementCompare1 = j4o.lang.reflect.JavaArray.get(compare1, j1);
-                                                  Object elementWith1 = j4o.lang.reflect.JavaArray.get(with1, j1);
-                                                  if (!isEqual(elementCompare1, elementWith1, path1, a_list)) {
+                                                  Object elementCompare1 = j4o.lang.reflect.JavaArray.Get(compare1, j1);
+                                                  Object elementWith1 = j4o.lang.reflect.JavaArray.Get(with1, j1);
+                                                  if (!IsEqual(elementCompare1, elementWith1, path1, a_list)) {
                                                       return false;
                                                   } else if (elementCompare1 == null) {
                                                       if (elementWith1 != null) {
@@ -120,12 +120,12 @@ namespace com.db4o.test.soda.utils {
                                                   } else if (elementWith1 == null) {
                                                       return false;
                                                   } else {
-                                                      Class elementCompareClass1 = j4o.lang.Class.getClassForObject(elementCompare1);
-                                                      if (elementCompareClass1 != j4o.lang.Class.getClassForObject(elementWith1)) {
+                                                      Class elementCompareClass1 = j4o.lang.Class.GetClassForObject(elementCompare1);
+                                                      if (elementCompareClass1 != j4o.lang.Class.GetClassForObject(elementWith1)) {
                                                           return false;
                                                       }
-                                                      if (hasPublicConstructor(elementCompareClass1)) {
-                                                          if (!isEqual(elementCompare1, elementWith1, path1, a_list)) {
+                                                      if (HasPublicConstructor(elementCompareClass1)) {
+                                                          if (!IsEqual(elementCompare1, elementWith1, path1, a_list)) {
                                                               return false;
                                                           }
                                                       } else if (!elementCompare1.Equals(elementWith1)) {
@@ -135,8 +135,8 @@ namespace com.db4o.test.soda.utils {
                                               }
                                           }
                                       }
-                                  } else if (hasPublicConstructor(fields1[i1].getType())) {
-                                      if (!isEqual(compare1, with1, path1, a_list)) {
+                                  } else if (HasPublicConstructor(fields1[i1].GetType())) {
+                                      if (!IsEqual(compare1, with1, path1, a_list)) {
                                           return false;
                                       }
                                   } else {
@@ -147,8 +147,8 @@ namespace com.db4o.test.soda.utils {
                               }
                           }
                     } catch (Exception e) { {
-                                                j4o.lang.JavaSystem.err.println("STCompare failure executing path:" + path1);
-                                                j4o.lang.JavaSystem.printStackTrace(e);
+                                                j4o.lang.JavaSystem.err.Println("STCompare failure executing path:" + path1);
+                                                j4o.lang.JavaSystem.PrintStackTrace(e);
                                                 return false;
                                             }
                     }
@@ -157,10 +157,10 @@ namespace com.db4o.test.soda.utils {
             return true;
         }
       
-        internal bool hasPublicConstructor(Class a_class) {
-            if (a_class != Class.getClassForType(typeof(String))) {
+        internal bool HasPublicConstructor(Class a_class) {
+            if (a_class != Class.GetClassForType(typeof(String))) {
                 try { {
-                          return a_class.newInstance() != null;
+                          return a_class.NewInstance() != null;
                       }
                 }  catch (Exception t) { {
                                          }
@@ -169,19 +169,19 @@ namespace com.db4o.test.soda.utils {
             return false;
         }
 
-        internal Object normalizeNArray(Object a_object) {
+        internal Object NormalizeNArray(Object a_object) {
             Array arr = (Array)a_object;
             if(arr.Rank > 1){
                 Object[] flat = new Object[arr.Length];
-                int[] dim = arrayDimensions(a_object);
+                int[] dim = ArrayDimensions(a_object);
                 int[] currentDimensions = new int[dim.Length];
-                normalizeNArray1(arr, dim, 0, currentDimensions, flat, 0);
+                NormalizeNArray1(arr, dim, 0, currentDimensions, flat, 0);
                 return flat;
             }
             return arr;
         }
 
-        protected static int normalizeNArray1(
+        protected static int NormalizeNArray1(
             Array shaped,
             int[] allDimensions,
             int currentDimension,
@@ -195,7 +195,7 @@ namespace com.db4o.test.soda.utils {
             }else{
                 for (currentDimensions[currentDimension] = 0; currentDimensions[currentDimension] < allDimensions[currentDimension]; currentDimensions[currentDimension]++) {
                     flatElement =
-                        normalizeNArray1(
+                        NormalizeNArray1(
                         shaped,
                         allDimensions,
                         currentDimension + 1,
@@ -207,7 +207,7 @@ namespace com.db4o.test.soda.utils {
             return flatElement;
         }
 
-        public static int[] arrayDimensions(Object obj) {
+        public static int[] ArrayDimensions(Object obj) {
             Array array = (Array)obj;
             int[] dim = new int[array.Rank];
             for(int i = 0; i < dim.Length; i ++){
@@ -216,11 +216,11 @@ namespace com.db4o.test.soda.utils {
             return dim;
         }
       
-        public bool storeableField(Class a_class, Field a_field) {
-            return !Modifier.isStatic(a_field.getModifiers()) && !Modifier.isTransient(a_field.getModifiers()) & !(a_field.getName().IndexOf("__") > -1);
+        public bool StoreableField(Class a_class, Field a_field) {
+            return !Modifier.IsStatic(a_field.GetModifiers()) && !Modifier.IsTransient(a_field.GetModifiers()) & !(a_field.GetName().IndexOf("__") > -1);
         }
       
-        public static bool isSimple(Class a_class) {
+        public static bool IsSimple(Class a_class) {
             for (int i1 = 0; i1 < SIMPLE_CLASSES.Length; i1++) {
                 if (a_class == SIMPLE_CLASSES[i1]) {
                     return true;
@@ -229,19 +229,19 @@ namespace com.db4o.test.soda.utils {
             return false;
         }
         private static Class[] SIMPLE_CLASSES = {
-                                                    Class.getClassForType(typeof(Boolean)),
-                                                    Class.getClassForType(typeof(Byte)),
-                                                    Class.getClassForType(typeof(Char)),
-                                                    Class.getClassForType(typeof(Double)),
-                                                    Class.getClassForType(typeof(Int16)),
-                                                    Class.getClassForType(typeof(Int32)),
-                                                    Class.getClassForType(typeof(Int64)),
-                                                    Class.getClassForType(typeof(SByte)),
-                                                    Class.getClassForType(typeof(Single)),
-                                                    Class.getClassForType(typeof(String)),
-                                                    Class.getClassForType(typeof(UInt32)),
-                                                    Class.getClassForType(typeof(UInt16)),
-                                                    Class.getClassForType(typeof(UInt64)),
-                                                    Class.getClassForType(typeof(j4o.util.Date))      };
+                                                    Class.GetClassForType(typeof(Boolean)),
+                                                    Class.GetClassForType(typeof(Byte)),
+                                                    Class.GetClassForType(typeof(Char)),
+                                                    Class.GetClassForType(typeof(Double)),
+                                                    Class.GetClassForType(typeof(Int16)),
+                                                    Class.GetClassForType(typeof(Int32)),
+                                                    Class.GetClassForType(typeof(Int64)),
+                                                    Class.GetClassForType(typeof(SByte)),
+                                                    Class.GetClassForType(typeof(Single)),
+                                                    Class.GetClassForType(typeof(String)),
+                                                    Class.GetClassForType(typeof(UInt32)),
+                                                    Class.GetClassForType(typeof(UInt16)),
+                                                    Class.GetClassForType(typeof(UInt64)),
+                                                    Class.GetClassForType(typeof(j4o.util.Date))      };
     }
 }

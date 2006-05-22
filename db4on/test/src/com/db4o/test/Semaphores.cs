@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -11,27 +11,27 @@ namespace com.db4o.test {
       public Semaphores() : base() {
       }
       
-      public void test() {
-         ExtObjectContainer eoc1 = Tester.objectContainer();
-         eoc1.setSemaphore("SEM", 0);
-         Tester.ensure(eoc1.setSemaphore("SEM", 0) == true);
+      public void Test() {
+         ExtObjectContainer eoc1 = Tester.ObjectContainer();
+         eoc1.SetSemaphore("SEM", 0);
+         Tester.Ensure(eoc1.SetSemaphore("SEM", 0) == true);
          if (Tester.clientServer) {
             ExtObjectContainer client21 = null;
             try {
                {
-                  client21 = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
-                  Tester.ensure(client21.setSemaphore("SEM", 0) == false);
-                  eoc1.releaseSemaphore("SEM");
-                  Tester.ensure(client21.setSemaphore("SEM", 0) == true);
+                  client21 = Db4o.OpenClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).Ext();
+                  Tester.Ensure(client21.SetSemaphore("SEM", 0) == false);
+                  eoc1.ReleaseSemaphore("SEM");
+                  Tester.Ensure(client21.SetSemaphore("SEM", 0) == true);
                }
             }  catch (Exception e) {
                {
-                  j4o.lang.JavaSystem.printStackTrace(e);
+                  j4o.lang.JavaSystem.PrintStackTrace(e);
                   return;
                }
             }
          } else {
-            eoc1.releaseSemaphore("SEM");
+            eoc1.ReleaseSemaphore("SEM");
          }
       }
    }

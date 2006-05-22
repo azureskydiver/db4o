@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -15,26 +15,26 @@ namespace com.db4o.test.cs {
         public CsCollections(){
         }
 
-        public void store(){
-            Tester.deleteAllInstances(this);
+        public void Store(){
+            Tester.DeleteAllInstances(this);
             CsCollections csc = new CsCollections();
-            csc.fill();
-            Tester.store(csc);
-            Tester.commit();
+            csc.Fill();
+            Tester.Store(csc);
+            Tester.Commit();
         }
 
-        public void test(){
-            CsCollections csc = (CsCollections)Tester.getOne(this);
-            csc.check();
+        public void Test(){
+            CsCollections csc = (CsCollections)Tester.GetOne(this);
+            csc.Check();
         }
 
-        private void fill(){
+        private void Fill(){
             
             arrayList = new ArrayList();
-            fill(arrayList);
+            Fill(arrayList);
             
             hashTable = new Hashtable();
-            fill(hashTable);
+            Fill(hashTable);
 
             queue = new Queue();
             queue.Enqueue(1);
@@ -47,20 +47,20 @@ namespace com.db4o.test.cs {
             stack.Push(new Atom("foo"));
         }
 
-        private void check(){
-            check(arrayList);
-            check(hashTable);
+        private void Check(){
+            Check(arrayList);
+            Check(hashTable);
 
-            Tester.ensure(queue.Dequeue().Equals(1));
-            Tester.ensure(queue.Dequeue().Equals("hi"));
-            Tester.ensure(queue.Dequeue().Equals(new Atom("foo")));
+            Tester.Ensure(queue.Dequeue().Equals(1));
+            Tester.Ensure(queue.Dequeue().Equals("hi"));
+            Tester.Ensure(queue.Dequeue().Equals(new Atom("foo")));
 
-            Tester.ensure(stack.Pop().Equals(new Atom("foo")));
-            Tester.ensure(stack.Pop().Equals("hi"));
-            Tester.ensure(stack.Pop().Equals(1));
+            Tester.Ensure(stack.Pop().Equals(new Atom("foo")));
+            Tester.Ensure(stack.Pop().Equals("hi"));
+            Tester.Ensure(stack.Pop().Equals(1));
         }
 
-        private void fill(IList list){
+        private void Fill(IList list){
             list.Add(1);
             list.Add(null);
             list.Add(new Atom("foo"));
@@ -68,25 +68,25 @@ namespace com.db4o.test.cs {
         }
 
 
-        private void check(IList list){
-            Tester.ensure(list[0].Equals(1));
-            Tester.ensure(list[1] == null);
-            Tester.ensure(list[2].Equals(new Atom("foo")));
-            Tester.ensure(list[3].Equals("foo"));
+        private void Check(IList list){
+            Tester.Ensure(list[0].Equals(1));
+            Tester.Ensure(list[1] == null);
+            Tester.Ensure(list[2].Equals(new Atom("foo")));
+            Tester.Ensure(list[3].Equals("foo"));
         }
 
-        private void fill(IDictionary dict){
+        private void Fill(IDictionary dict){
             dict[1] = 1;
             dict["hey"] = "ho";
             dict[new Atom("foo")] = new Atom("bar");
             dict[4] = "Yoman";
         }
 
-        private void check(IDictionary dict){
-            Tester.ensure(dict[1].Equals(1));
-            Tester.ensure(dict["hey"].Equals("ho"));
-            Tester.ensure(dict[new Atom("foo")].Equals(new Atom("bar")));
-            Tester.ensure(dict[4].Equals("Yoman"));
+        private void Check(IDictionary dict){
+            Tester.Ensure(dict[1].Equals(1));
+            Tester.Ensure(dict["hey"].Equals("ho"));
+            Tester.Ensure(dict[new Atom("foo")].Equals(new Atom("bar")));
+            Tester.Ensure(dict[4].Equals("Yoman"));
         }
 
     }

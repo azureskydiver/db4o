@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -12,35 +12,35 @@ namespace com.db4o.test {
       }
       static internal String FILE = "ServerRevokeAccessTest.yap";
       
-      public void test() {
-         if (!Tester.isClientServer() && Tester.currentRunner.CLIENT_SERVER) {
+      public void Test() {
+         if (!Tester.IsClientServer() && Tester.currentRunner.CLIENT_SERVER) {
             try {
                {
-                  new File(FILE).delete();
-                  ObjectServer server1 = Db4o.openServer(FILE, AllTests.SERVER_PORT);
+                  new File(FILE).Delete();
+                  ObjectServer server1 = Db4o.OpenServer(FILE, AllTests.SERVER_PORT);
                   String user1 = "hohohi";
                   String password1 = "hohoho";
-                  server1.grantAccess(user1, password1);
-                  ObjectContainer con1 = Db4o.openClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, user1, password1);
-                  Tester.ensure(con1 != null);
-                  con1.close();
-                  server1.ext().revokeAccess(user1);
+                  server1.GrantAccess(user1, password1);
+                  ObjectContainer con1 = Db4o.OpenClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, user1, password1);
+                  Tester.Ensure(con1 != null);
+                  con1.Close();
+                  server1.Ext().RevokeAccess(user1);
                   bool exceptionThrown1 = false;
                   try {
                      {
-                        con1 = Db4o.openClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, user1, password1);
+                        con1 = Db4o.OpenClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, user1, password1);
                      }
                   }  catch (Exception e) {
                      {
                         exceptionThrown1 = true;
                      }
                   }
-                  Tester.ensure(exceptionThrown1);
-                  server1.close();
+                  Tester.Ensure(exceptionThrown1);
+                  server1.Close();
                }
             }  catch (Exception e) {
                {
-                  j4o.lang.JavaSystem.printStackTrace(e);
+                  j4o.lang.JavaSystem.PrintStackTrace(e);
                }
             }
          }

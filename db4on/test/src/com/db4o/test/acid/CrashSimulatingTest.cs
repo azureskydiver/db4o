@@ -1,4 +1,4 @@
-using com.db4o.test;
+﻿using com.db4o.test;
 using System.IO;
 
 namespace com.db4o.test.acid
@@ -24,78 +24,78 @@ namespace com.db4o.test.acid
 			_name = name;
 		}
 
-		public virtual void test()
+		public virtual void Test()
 		{
-			if (Tester.isClientServer())
+			if (Tester.IsClientServer())
 			{
 				return;
 			}
-			new j4o.io.File(FILE).delete();
-			new j4o.io.File(PATH).mkdirs();
-			createFile();
+			new j4o.io.File(FILE).Delete();
+			new j4o.io.File(PATH).Mkdirs();
+			CreateFile();
 			com.db4o.test.acid.CrashSimulatingIoAdapter adapterFactory = new com.db4o.test.acid.CrashSimulatingIoAdapter
 				(new com.db4o.io.RandomAccessFileAdapter());
-			com.db4o.Db4o.configure().io(adapterFactory);
-			com.db4o.ObjectContainer oc = com.db4o.Db4o.openFile(FILE);
-			com.db4o.ObjectSet objectSet = oc.get(new com.db4o.test.acid.CrashSimulatingTest(
+			com.db4o.Db4o.Configure().Io(adapterFactory);
+			com.db4o.ObjectContainer oc = com.db4o.Db4o.OpenFile(FILE);
+			com.db4o.ObjectSet objectSet = oc.Get(new com.db4o.test.acid.CrashSimulatingTest(
 				null, "three"));
-			oc.delete(objectSet.next());
-			oc.set(new com.db4o.test.acid.CrashSimulatingTest(null, "four"));
-			oc.set(new com.db4o.test.acid.CrashSimulatingTest(null, "five"));
-			oc.set(new com.db4o.test.acid.CrashSimulatingTest(null, "six"));
-			oc.set(new com.db4o.test.acid.CrashSimulatingTest(null, "seven"));
-			oc.set(new com.db4o.test.acid.CrashSimulatingTest(null, "eight"));
-			oc.set(new com.db4o.test.acid.CrashSimulatingTest(null, "nine"));
-			oc.commit();
-			oc.close();
-			com.db4o.Db4o.configure().io(new com.db4o.io.RandomAccessFileAdapter());
-			int count = adapterFactory.batch.writeVersions(FILE);
-			checkFiles("R", adapterFactory.batch.numSyncs());
-			checkFiles("W", count);
-			j4o.lang.JavaSystem._out.println("Total versions: " + count);
+			oc.Delete(objectSet.Next());
+			oc.Set(new com.db4o.test.acid.CrashSimulatingTest(null, "four"));
+			oc.Set(new com.db4o.test.acid.CrashSimulatingTest(null, "five"));
+			oc.Set(new com.db4o.test.acid.CrashSimulatingTest(null, "six"));
+			oc.Set(new com.db4o.test.acid.CrashSimulatingTest(null, "seven"));
+			oc.Set(new com.db4o.test.acid.CrashSimulatingTest(null, "eight"));
+			oc.Set(new com.db4o.test.acid.CrashSimulatingTest(null, "nine"));
+			oc.Commit();
+			oc.Close();
+			com.db4o.Db4o.Configure().Io(new com.db4o.io.RandomAccessFileAdapter());
+			int count = adapterFactory.batch.WriteVersions(FILE);
+			CheckFiles("R", adapterFactory.batch.NumSyncs());
+			CheckFiles("W", count);
+			j4o.lang.JavaSystem._out.Println("Total versions: " + count);
 		}
 
-		private void checkFiles(string infix, int count)
+		private void CheckFiles(string infix, int count)
 		{
 			for (int i = 1; i <= count; i++)
 			{
 				string fileName = FILE + infix + i;
-				com.db4o.ObjectContainer oc = com.db4o.Db4o.openFile(fileName);
-				if (!stateBeforeCommit(oc))
+				com.db4o.ObjectContainer oc = com.db4o.Db4o.OpenFile(fileName);
+				if (!StateBeforeCommit(oc))
 				{
 
-					if (!stateAfterCommit(oc))
+					if (!StateAfterCommit(oc))
 					{
-						Tester.error();
+						Tester.Error();
 					}
 				}
-				oc.close();
+				oc.Close();
 			}
 		}
 
-		private bool stateBeforeCommit(com.db4o.ObjectContainer oc)
+		private bool StateBeforeCommit(com.db4o.ObjectContainer oc)
 		{
-			return expect(oc, new string[] { "one", "two", "three" });
+			return Expect(oc, new string[] { "one", "two", "three" });
 		}
 
-		private bool stateAfterCommit(com.db4o.ObjectContainer oc)
+		private bool StateAfterCommit(com.db4o.ObjectContainer oc)
 		{
-			return expect(oc, new string[] { "one", "two", "four", "five", "six", "seven", "eight"
+			return Expect(oc, new string[] { "one", "two", "four", "five", "six", "seven", "eight"
 				, "nine" });
 		}
 
-		private bool expect(com.db4o.ObjectContainer oc, string[] names)
+		private bool Expect(com.db4o.ObjectContainer oc, string[] names)
 		{
-			com.db4o.ObjectSet objectSet = oc.query(j4o.lang.Class.getClassForType(typeof(com.db4o.test.acid.CrashSimulatingTest
+			com.db4o.ObjectSet objectSet = oc.Query(j4o.lang.Class.GetClassForType(typeof(com.db4o.test.acid.CrashSimulatingTest
 				)));
-			if (objectSet.size() != names.Length)
+			if (objectSet.Size() != names.Length)
 			{
 				return false;
 			}
-			while (objectSet.hasNext())
+			while (objectSet.HasNext())
 			{
 				com.db4o.test.acid.CrashSimulatingTest cst = (com.db4o.test.acid.CrashSimulatingTest
-					)objectSet.next();
+					)objectSet.Next();
 				bool found = false;
 				for (int i = 0; i < names.Length; i++)
 				{
@@ -121,14 +121,14 @@ namespace com.db4o.test.acid
 			return true;
 		}
 
-		private void createFile()
+		private void CreateFile()
 		{
-			com.db4o.ObjectContainer oc = com.db4o.Db4o.openFile(FILE);
+			com.db4o.ObjectContainer oc = com.db4o.Db4o.OpenFile(FILE);
 			for (int i = 0; i < 10; i++)
 			{
 				SimplestPossible sp=new SimplestPossible();
 				sp.name="delme";
-				oc.set(sp);
+				oc.Set(sp);
 			}
 			com.db4o.test.acid.CrashSimulatingTest one = new com.db4o.test.acid.CrashSimulatingTest
 				(null, "one");
@@ -136,17 +136,17 @@ namespace com.db4o.test.acid
 				(one, "two");
 			com.db4o.test.acid.CrashSimulatingTest three = new com.db4o.test.acid.CrashSimulatingTest
 				(one, "three");
-			oc.set(one);
-			oc.set(two);
-			oc.set(three);
-			oc.commit();
-			com.db4o.ObjectSet objectSet = oc.query(j4o.lang.Class.getClassForType(typeof(com.db4o.test.SimplestPossible
+			oc.Set(one);
+			oc.Set(two);
+			oc.Set(three);
+			oc.Commit();
+			com.db4o.ObjectSet objectSet = oc.Query(j4o.lang.Class.GetClassForType(typeof(com.db4o.test.SimplestPossible
 				)));
-			while (objectSet.hasNext())
+			while (objectSet.HasNext())
 			{
-				oc.delete(objectSet.next());
+				oc.Delete(objectSet.Next());
 			}
-			oc.close();
+			oc.Close();
 			File.Delete(FILE + "0");
 			File.Copy(FILE,FILE + "0");
 		}

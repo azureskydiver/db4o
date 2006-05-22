@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 using com.db4o;
@@ -23,36 +23,36 @@ namespace com.db4o.test
             _name = name;
         }
     
-        public void store(){
+        public void Store(){
             File.Delete(SECOND_FILE);
-            Tester.store(new BasicClusterTest("inOne"));
-            Tester.store(new BasicClusterTest("inBoth"));
-            ObjectContainer second = Db4o.openFile(SECOND_FILE);
-            second.set(new BasicClusterTest("inBoth"));
-            second.set(new BasicClusterTest("inTwo"));
-            second.close();
+            Tester.Store(new BasicClusterTest("inOne"));
+            Tester.Store(new BasicClusterTest("inBoth"));
+            ObjectContainer second = Db4o.OpenFile(SECOND_FILE);
+            second.Set(new BasicClusterTest("inBoth"));
+            second.Set(new BasicClusterTest("inTwo"));
+            second.Close();
         }
     
-        public void test(){
-            ObjectContainer second = Db4o.openFile(SECOND_FILE);
+        public void Test(){
+            ObjectContainer second = Db4o.OpenFile(SECOND_FILE);
             Cluster cluster = new Cluster(new ObjectContainer[]{
-                Tester.objectContainer(),
+                Tester.ObjectContainer(),
                 second
             });
-            tQuery(cluster, "inOne", 1);
-            tQuery(cluster, "inTwo", 1);
-            tQuery(cluster, "inBoth", 2);
-            second.close();
+            TQuery(cluster, "inOne", 1);
+            TQuery(cluster, "inTwo", 1);
+            TQuery(cluster, "inBoth", 2);
+            second.Close();
         }
     
-        private void tQuery(Cluster cluster, String name, int expected){
-            Query q = cluster.query();
-            q.constrain(this.GetType());
-            q.descend("_name").constrain(name);
-            System.Collections.IList list = q.execute();
-            Tester.ensure(list.Count == expected);
+        private void TQuery(Cluster cluster, String name, int expected){
+            Query q = cluster.Query();
+            q.Constrain(this.GetType());
+            q.Descend("_name").Constrain(name);
+            System.Collections.IList list = q.Execute();
+            Tester.Ensure(list.Count == expected);
             foreach( BasicClusterTest bct in list){
-                Tester.ensure(bct._name.Equals(name));
+                Tester.Ensure(bct._name.Equals(name));
             }
 
         }

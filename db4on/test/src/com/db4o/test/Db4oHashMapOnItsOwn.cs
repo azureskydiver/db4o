@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -18,17 +18,17 @@ namespace com.db4o.test {
 
       internal Object obj;
       
-      public void storeOne() {
-         ExtObjectContainer oc1 = Tester.objectContainer();
-         IDictionary map1 = oc1.collections().newHashMap(10);
+      public void StoreOne() {
+         ExtObjectContainer oc1 = Tester.ObjectContainer();
+         IDictionary map1 = oc1.Collections().NewHashMap(10);
          map1["one"] = "one";
-         oc1.set(map1);
+         oc1.Set(map1);
          obj = map1;
       }
       
-      public void testOne() {
+      public void TestOne() {
          IDictionary map1 = (IDictionary)obj;
-         Tester.ensure(map1["one"].Equals("one"));
+         Tester.Ensure(map1["one"].Equals("one"));
       }
    }
 }

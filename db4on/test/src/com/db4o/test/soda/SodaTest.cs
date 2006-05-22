@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.foundation;
@@ -113,75 +113,75 @@ namespace com.db4o.test.soda
       
 		public static void Main(String[] args) 
 		{
-			println("Starting S.O.D.A. test");
+			Println("Starting S.O.D.A. test");
 			testCases = 0;
-			time = j4o.lang.JavaSystem.currentTimeMillis();
+			time = j4o.lang.JavaSystem.CurrentTimeMillis();
 			SodaTest st1 = new SodaTest();
-			st1.run(CLASSES, ENGINES, quiet);
-			st1.completed();
+			st1.Run(CLASSES, ENGINES, quiet);
+			st1.Completed();
 		}
       
-		protected void completed() 
+		protected void Completed() 
 		{
-			time = j4o.lang.JavaSystem.currentTimeMillis() - time;
-			println(name() + " completed. " + time + " ms");
-			println("Tester cases: " + testCases);
-			println("");
-			println("");
-			println("");
+			time = j4o.lang.JavaSystem.CurrentTimeMillis() - time;
+			Println(Name() + " completed. " + time + " ms");
+			Println("Tester cases: " + testCases);
+			Println("");
+			Println("");
+			Println("");
 		}
 
-		public static int failedClassesSize()
+		public static int FailedClassesSize()
 		{
-			return failedTestClasses.size();
+			return failedTestClasses.Size();
 		}
       
-		protected virtual String name() 
+		protected virtual String Name() 
 		{
 			return "S.O.D.A. functionality test";
 		}
       
-		public void run(STClass[] classes, STEngine[] engines, bool quiet)
+		public void Run(STClass[] classes, STEngine[] engines, bool quiet)
 		{
 			failedTestClasses = new Collection4();
-			setSodaTestOn(classes);
+			SetSodaTestOn(classes);
 			for (int i1 = 0; i1 < engines.Length; i1++) 
 			{
 				engine = engines[i1];
-				engine.reset();
-				engine.open();
-				store(classes);
-				engine.commit();
-				engine.close();
-				engine.open();
-				test(classes);
-				engine.close();
-				engine.reset();
+				engine.Reset();
+				engine.Open();
+				Store(classes);
+				engine.Commit();
+				engine.Close();
+				engine.Open();
+				Test(classes);
+				engine.Close();
+				engine.Reset();
 			}
-			if (failedTestClasses.size() > 0) 
+			if (failedTestClasses.Size() > 0) 
 			{
-				j4o.lang.JavaSystem.err.println("\nFailed test classes:\n");
-				Iterator4 i1 = failedTestClasses.iterator();
-				while (i1.hasNext()) 
+				j4o.lang.JavaSystem.err.Println("\nFailed test classes:\n");
+				Iterator4 i1 = failedTestClasses.Iterator();
+				while (i1.HasNext()) 
 				{
-					j4o.lang.JavaSystem.err.println(j4o.lang.Class.getClassForObject(i1.next()).getName());
+					j4o.lang.JavaSystem.err.Println(j4o.lang.Class.GetClassForObject(i1.Next()).GetName());
 				}
-				j4o.lang.JavaSystem.err.println("\n");
+				j4o.lang.JavaSystem.err.Println("\n");
 			}
 		}
       
-		protected void store(STClass[] classes) 
+		protected void Store(STClass[] classes) 
 		{
 			for (int i1 = 0; i1 < classes.Length; i1++) 
 			{
-				if (jdkOK(classes[i1])) 
+				if (JdkOK(classes[i1])) 
 				{
-					Object[] objects1 = classes[i1].store();
+					Object[] objects1 = classes[i1].Store();
 					if (objects1 != null) 
 					{
 						for (int j1 = 0; j1 < objects1.Length; j1++) 
 						{
-							engine.store(objects1[j1]);
+							engine.Store(objects1[j1]);
 						}
 					}
 				}
@@ -191,76 +191,76 @@ namespace com.db4o.test.soda
 		/**
 		 * dynamic execution of all public methods that begin with "test" in all CLASSES 
 		 */
-		protected void test(STClass[] classes) 
+		protected void Test(STClass[] classes) 
 		{
 			for (int i1 = 0; i1 < classes.Length; i1++) 
 			{
-				if (jdkOK(classes[i1])) 
+				if (JdkOK(classes[i1])) 
 				{
-					println("  S.O.D.A. testing " + classes[i1].GetType().FullName);
+					Println("  S.O.D.A. testing " + classes[i1].GetType().FullName);
 					currentTestClass = classes[i1];
-					Method[] methods1 = j4o.lang.Class.getClassForObject(classes[i1]).getDeclaredMethods();
+					Method[] methods1 = j4o.lang.Class.GetClassForObject(classes[i1]).GetDeclaredMethods();
 					for (int j1 = 0; j1 < methods1.Length; j1++) 
 					{
-						Tester.runIfTestMethod(methods1[j1], currentTestClass);
+						Tester.RunIfTestMethod(methods1[j1], currentTestClass);
 					}
 				}
 			}
 		}
       
-		protected static bool jdkOK(Object obj) 
+		protected static bool JdkOK(Object obj) 
 		{
 			return true;
 		}
       
-		public Query query() 
+		public Query Query() 
 		{
-			return engine.query();
+			return engine.Query();
 		}
       
-		public void expectOne(Query query, Object obj) 
+		public void ExpectOne(Query query, Object obj) 
 		{
-			expect(query, new Object[]{
+			Expect(query, new Object[]{
 										  obj         });
 		}
       
-		public void expectNone(Query query) 
+		public void ExpectNone(Query query) 
 		{
-			expect(query, null);
+			Expect(query, null);
 		}
       
-		public void expect(Query query, Object[] results) 
+		public void Expect(Query query, Object[] results) 
 		{
-			expect(query, results, false);
+			Expect(query, results, false);
 		}
       
-		public void expectOrdered(Query query, Object[] results) 
+		public void ExpectOrdered(Query query, Object[] results) 
 		{
-			expect(query, results, true);
+			Expect(query, results, true);
 		}
       
-		private void expect(Query query, Object[] results, bool ordered) 
+		private void Expect(Query query, Object[] results, bool ordered) 
 		{
 			testCases++;
-			ObjectSet set1 = query.execute();
+			ObjectSet set1 = query.Execute();
 			if (results == null || results.Length == 0) 
 			{
-				if (set1.size() > 0) 
+				if (set1.Size() > 0) 
 				{
-					error("No content expected.");
+					Error("No content expected.");
 				}
 				return;
 			}
 			int j1 = 0;
-			if (set1.size() == results.Length) 
+			if (set1.Size() == results.Length) 
 			{
-				while (set1.hasNext()) 
+				while (set1.HasNext()) 
 				{
-					Object obj1 = set1.next();
+					Object obj1 = set1.Next();
 					bool found1 = false;
 					if (ordered) 
 					{
-						if (comparer.isEqual(results[j1], obj1)) 
+						if (comparer.IsEqual(results[j1], obj1)) 
 						{
 							results[j1] = null;
 							found1 = true;
@@ -273,7 +273,7 @@ namespace com.db4o.test.soda
 						{
 							if (results[i1] != null) 
 							{
-								if (comparer.isEqual(results[i1], obj1)) 
+								if (comparer.IsEqual(results[i1], obj1)) 
 								{
 									results[i1] = null;
 									found1 = true;
@@ -284,75 +284,75 @@ namespace com.db4o.test.soda
 					}
 					if (!found1) 
 					{
-						error("Object not expected: " + obj1);
+						Error("Object not expected: " + obj1);
 					}
 				}
 				for (int i1 = 0; i1 < results.Length; i1++) 
 				{
 					if (results[i1] != null) 
 					{
-						error("Expected object not returned: " + results[i1]);
+						Error("Expected object not returned: " + results[i1]);
 					}
 				}
 			} 
 			else 
 			{
-				error("Unexpected size returned.\nExpected: " + results.Length + " Returned: " + set1.size());
+				Error("Unexpected size returned.\nExpected: " + results.Length + " Returned: " + set1.Size());
 			}
 		}
       
-		public void error(String msg) 
+		public void Error(String msg) 
 		{
-			if (!failedTestClasses.contains(currentTestClass)) 
+			if (!failedTestClasses.Contains(currentTestClass)) 
 			{
-				failedTestClasses.add(currentTestClass);
+				failedTestClasses.Add(currentTestClass);
 			}
 			if (!QUIET) 
 			{
-				println(msg + Tester.stackTrace());
+				Println(msg + Tester.StackTrace());
 			}
 		}
       
-		public static void log(Query query) 
+		public static void Log(Query query) 
 		{
-			ObjectSet set1 = query.execute();
-			while (set1.hasNext()) 
+			ObjectSet set1 = query.Execute();
+			while (set1.HasNext()) 
 			{
-				STLogger.log(set1.next());
+				STLogger.Log(set1.Next());
 			}
 		}
 
-		public static void println(String str)
+		public static void Println(String str)
 		{
 			Console.WriteLine(str);
 		}
 
-		public static int testCaseCount()
+		public static int TestCaseCount()
 		{
 			return testCases;
 		}
       
-		protected void setSodaTestOn(STClass[] classes) 
+		protected void SetSodaTestOn(STClass[] classes) 
 		{
 			for (int i1 = 0; i1 < classes.Length; i1++) 
 			{
 				try 
 				{ 
-					Field field1 = j4o.lang.Class.getClassForObject(classes[i1]).getDeclaredField("st");
+					Field field1 = j4o.lang.Class.GetClassForObject(classes[i1]).GetDeclaredField("st");
 					try 
 					{ 
-						Platform4.setAccessible(field1);
+						Platform4.SetAccessible(field1);
 					}  
 					catch (Exception) 
 					{ 
 					}
-					field1.set(classes[i1], this);
+					field1.Set(classes[i1], this);
                       
 				}  
 				catch (Exception) 
 				{ 
-					j4o.lang.JavaSystem.err.println("Add the following line to Class " + j4o.lang.Class.getClassForObject(classes[i1]).getName());
-					j4o.lang.JavaSystem.err.println("public static transient SodaTest st;");
+					j4o.lang.JavaSystem.err.Println("Add the following line to Class " + j4o.lang.Class.GetClassForObject(classes[i1]).GetName());
+					j4o.lang.JavaSystem.err.Println("public static transient SodaTest st;");
 				}
 			}
 		}

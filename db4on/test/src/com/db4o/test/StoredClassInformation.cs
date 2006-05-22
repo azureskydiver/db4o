@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -12,26 +12,26 @@ namespace com.db4o.test {
       static internal int COUNT = 10;
       public String name;
       
-      public void test() {
-         Tester.deleteAllInstances(this);
+      public void Test() {
+         Tester.DeleteAllInstances(this);
          name = "hi";
-         Tester.store(this);
+         Tester.Store(this);
          for (int i1 = 0; i1 < COUNT; i1++) {
-            Tester.store(new StoredClassInformation());
+            Tester.Store(new StoredClassInformation());
          }
-         StoredClass[] storedClasses1 = Tester.objectContainer().ext().storedClasses();
-         StoredClass myClass1 = Tester.objectContainer().ext().storedClass(this);
+         StoredClass[] storedClasses1 = Tester.ObjectContainer().Ext().StoredClasses();
+         StoredClass myClass1 = Tester.ObjectContainer().Ext().StoredClass(this);
          bool found1 = false;
          for (int i1 = 0; i1 < storedClasses1.Length; i1++) {
-            if (storedClasses1[i1].getName().Equals(myClass1.getName())) {
+            if (storedClasses1[i1].GetName().Equals(myClass1.GetName())) {
                found1 = true;
                break;
             }
          }
-         Tester.ensure(found1);
-         long id1 = Tester.objectContainer().getID(this);
-         long[] ids1 = myClass1.getIDs();
-         Tester.ensure(ids1.Length == COUNT + 1);
+         Tester.Ensure(found1);
+         long id1 = Tester.ObjectContainer().GetID(this);
+         long[] ids1 = myClass1.GetIDs();
+         Tester.Ensure(ids1.Length == COUNT + 1);
          found1 = false;
          for (int i1 = 0; i1 < ids1.Length; i1++) {
             if (ids1[i1] == id1) {
@@ -39,7 +39,7 @@ namespace com.db4o.test {
                break;
             }
          }
-         Tester.ensure(found1);
+         Tester.Ensure(found1);
       }
    }
 }

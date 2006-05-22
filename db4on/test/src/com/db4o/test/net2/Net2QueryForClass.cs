@@ -1,4 +1,4 @@
-namespace com.db4o.test.net2
+﻿namespace com.db4o.test.net2
 {
 #if NET_2_0 || CF_2_0
     using System;
@@ -22,17 +22,17 @@ namespace com.db4o.test.net2
             _name = name;
         }
 
-        public void storeOne()
+        public void StoreOne()
         {
             _name = "one";
         }
 
-        public void test(){
-            ObjectContainer oc = Tester.objectContainer();
-            IList <Net2QueryForClass> list = oc.query<Net2QueryForClass>(typeof(Net2QueryForClass));
+        public void Test(){
+            ObjectContainer oc = Tester.ObjectContainer();
+            IList <Net2QueryForClass> list = oc.Query<Net2QueryForClass>(typeof(Net2QueryForClass));
             foreach (Net2QueryForClass res in list)
             {
-                Tester.ensure(res._name.Equals("one"));
+                Tester.Ensure(res._name.Equals("one"));
             }
     }
 

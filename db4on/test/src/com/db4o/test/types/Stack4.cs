@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.foundation;
@@ -12,18 +12,18 @@ namespace com.db4o.test.types {
       internal Collection4 i_compare;
       internal Collection4 i_with;
       
-      internal bool push(Object a_compare) {
+      internal bool Push(Object a_compare) {
          if (i_compare == null) {
             i_compare = new Collection4();
          } else {
-            Iterator4 i = i_compare.iterator();
-            while (i.hasNext()) {
-               if (i.next() == a_compare) {
+            Iterator4 i = i_compare.Iterator();
+            while (i.HasNext()) {
+               if (i.Next() == a_compare) {
                   return false;
                }
             }
          }
-         i_compare.add(a_compare);
+         i_compare.Add(a_compare);
          return true;
       }
    }

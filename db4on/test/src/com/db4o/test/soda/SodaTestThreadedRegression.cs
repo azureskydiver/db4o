@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -12,88 +12,88 @@ namespace com.db4o.test.soda {
 
     public class SodaTestThreadedRegression : SodaTest, Runnable {
         private static Object Lock = new Object();
-        private static int RUNS = Platform4.isCompact() ? 10 : 100;
+        private static int RUNS = Platform4.IsCompact() ? 10 : 100;
         private STClass[] classes;
         private static volatile int runningThreads;
       
         public SodaTestThreadedRegression(STClass[] classes) : base() {
             this.classes = classes;
-            setSodaTestOn(classes);
+            SetSodaTestOn(classes);
         }
       
         public static void Main(String[] args) {
             testCases = 0;
-            cascadeOnDelete(new STArrayListT());
-            time = j4o.lang.JavaSystem.currentTimeMillis();
+            CascadeOnDelete(new STArrayListT());
+            time = j4o.lang.JavaSystem.CurrentTimeMillis();
             engine = new STDb4o();
-            engine.reset();
-            engine.open();
+            engine.Reset();
+            engine.Open();
 			try {
-				startThread(new STClass[]{new STString()});
-				startThread(new STClass[]{new STInteger()});
-				startThread(new STClass[]{new STByte()});
-				startThread(new STClass[]{new STShort()});
-				startThread(new STClass[]{new STBooleanWU()});
-				startThread(new STClass[]{new STArrayListT()});
+				StartThread(new STClass[]{new STString()});
+				StartThread(new STClass[]{new STInteger()});
+				StartThread(new STClass[]{new STByte()});
+				StartThread(new STClass[]{new STShort()});
+				StartThread(new STClass[]{new STBooleanWU()});
+				StartThread(new STClass[]{new STArrayListT()});
 				do {
 					try {
-						Thread.sleep(300);
+						Thread.Sleep(300);
 					}  catch (Exception e) {
 					}
 				}while (runningThreads > 0);
         	} finally {
-				engine.close();
+				engine.Close();
 			}
 		}
       
-        private static void startThread(STClass[] classes) {
+        private static void StartThread(STClass[] classes) {
             for (int i1 = 0; i1 < classes.Length; i1++) {
-                if (!jdkOK(classes[i1])) {
-                    JavaSystem._out.println("Tester case can\'t run on this JDK: " + j4o.lang.Class.getClassForObject(classes[i1]).getName());
+                if (!JdkOK(classes[i1])) {
+                    JavaSystem._out.Println("Tester case can\'t run on this JDK: " + j4o.lang.Class.GetClassForObject(classes[i1]).GetName());
                     return;
                 }
             }
-            new Thread(new SodaTestThreadedRegression(classes)).start();
+            new Thread(new SodaTestThreadedRegression(classes)).Start();
         }
       
-        protected override String name() {
+        protected override String Name() {
             return "S.O.D.A. threaded test";
         }
       
-        public void run() {
+        public void Run() {
             String name1;
             lock (Lock) {
                 runningThreads++;
                 name1 = "R " + runningThreads + " ";
             }
-            Thread.currentThread().setName(name1);
+            Thread.CurrentThread().SetName(name1);
             for (int i1 = 0; i1 < RUNS; i1++) {
                 if (!QUIET) {
-                    JavaSystem._out.println(name1 + i1);
+                    JavaSystem._out.Println(name1 + i1);
                 }
-                store(classes);
-                engine.commit();
-                test(classes);
+                Store(classes);
+                engine.Commit();
+                Test(classes);
                 for (int j1 = 0; j1 < classes.Length; j1++) {
-                    Query q1 = engine.query();
-                    q1.constrain(j4o.lang.Class.getClassForObject(classes[j1]));
-                    ObjectSet os = q1.execute();
-                    while (os.hasNext()) {
-                        engine.delete(os.next());
+                    Query q1 = engine.Query();
+                    q1.Constrain(j4o.lang.Class.GetClassForObject(classes[j1]));
+                    ObjectSet os = q1.Execute();
+                    while (os.HasNext()) {
+                        engine.Delete(os.Next());
                     }
                 }
             }
             lock (Lock) {
                 runningThreads--;
                 if (runningThreads < 1) {
-                    engine.close();
-                    completed();
+                    engine.Close();
+                    Completed();
                 }
             }
         }
       
-        public static void cascadeOnDelete(Object obj) {
-            Db4o.configure().objectClass(j4o.lang.Class.getClassForObject(obj).getName()).cascadeOnDelete(true);
+        public static void CascadeOnDelete(Object obj) {
+            Db4o.Configure().ObjectClass(j4o.lang.Class.GetClassForObject(obj).GetName()).CascadeOnDelete(true);
         }
     }
 }

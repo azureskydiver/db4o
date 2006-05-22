@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -12,18 +12,18 @@ namespace com.db4o.test {
       public ExtendsHashTable() : base() {
       }
       
-      public void store() {
-         Tester.deleteAllInstances(this);
+      public void Store() {
+         Tester.DeleteAllInstances(this);
          Add(System.Convert.ToInt32(1), "one");
          Add(System.Convert.ToInt32(2), "two");
          Add(System.Convert.ToInt32(3), "three");
-         Tester.store(this);
+         Tester.Store(this);
       }
       
-      public void test() {
-         ExtendsHashTable ehm1 = (ExtendsHashTable)Tester.getOne(this);
-         Tester.ensure(ehm1[System.Convert.ToInt32(1)].Equals("one"));
-         Tester.ensure(ehm1[System.Convert.ToInt32(3)].Equals("three"));
+      public void Test() {
+         ExtendsHashTable ehm1 = (ExtendsHashTable)Tester.GetOne(this);
+         Tester.Ensure(ehm1[System.Convert.ToInt32(1)].Equals("one"));
+         Tester.Ensure(ehm1[System.Convert.ToInt32(3)].Equals("three"));
       }
    }
 }

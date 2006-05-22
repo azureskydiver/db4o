@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -15,7 +15,7 @@ namespace com.db4o.test.types {
       public Object o4;
       public Object o5;
       
-      public override void set(int ver) {
+      public override void Set(int ver) {
          if (ver == 1) {
             o1 = new Boolean[]{System.Convert.ToBoolean(true), System.Convert.ToBoolean(false)};
             o2 = null;

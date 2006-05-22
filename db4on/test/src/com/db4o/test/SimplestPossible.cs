@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -15,12 +15,12 @@ namespace com.db4o.test {
 
       public String name;
       
-      public void storeOne() {
+      public void StoreOne() {
          name = "sp";
       }
       
-      public void testOne() {
-         Tester.ensure(name.Equals("sp"));
+      public void TestOne() {
+         Tester.Ensure(name.Equals("sp"));
       }
    }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using com.db4o;
@@ -43,15 +43,15 @@ namespace com.db4o.test.nativequeries
 		{
 		}
 
-		public void store()
+		public void Store()
 		{            
-			Tester.store(new Author(1, "Kurt Vonnegut"));
-			Tester.store(new Author(2, "Kilgore Trout"));
-			Tester.store(new InnerAuthor(3, "Joao Saramago"));
-			Tester.store(new InnerAuthor(4, "Douglas Adams"));
+			Tester.Store(new Author(1, "Kurt Vonnegut"));
+			Tester.Store(new Author(2, "Kilgore Trout"));
+			Tester.Store(new InnerAuthor(3, "Joao Saramago"));
+			Tester.Store(new InnerAuthor(4, "Douglas Adams"));
 		}
 
-		public void testPredicateAccessingTopLevelType()
+		public void TestPredicateAccessingTopLevelType()
 		{
 			string predicateCode = @"
 using com.db4o.query;
@@ -68,7 +68,7 @@ public class AuthorNamePredicate : Predicate
 			AssertPredicate(2, predicateCode, "AuthorNamePredicate");
 		}
 
-		public void testPredicateAccessingNestedType()
+		public void TestPredicateAccessingNestedType()
 		{
 			string predicateCode = @"
 using com.db4o.query;
@@ -88,21 +88,21 @@ public class InnerAuthorNamePredicate : Predicate
 		private void AssertPredicate(int expectedId, string predicateCode, string predicateTypeName)
 		{
             // use a prefix to avoid conflicts between SOLO and C/S tests run
-            string assemblyNamePrefix = Tester.isClientServer() ? "CS" : "";
+            string assemblyNamePrefix = Tester.IsClientServer() ? "CS" : "";
 			Assembly assembly = EmitAssemblyAndLoad(assemblyNamePrefix + predicateTypeName + ".dll", predicateCode);
 	
 			Predicate predicate = (Predicate)Activator.CreateInstance(assembly.GetType(predicateTypeName));
 	
-			ExtObjectContainer container = Tester.objectContainer();
-            container.configure().optimizeNativeQueries(true);
+			ExtObjectContainer container = Tester.ObjectContainer();
+            container.Configure().OptimizeNativeQueries(true);
 
 			NativeQueryHandler handler = GetNativeQueryHandler(container);
             handler.QueryExecution += new QueryExecutionHandler(OnQueryExecution);
 			try
 			{
-				ObjectSet os = container.query(predicate);
-				Tester.ensureEquals(1, os.size());
-				Tester.ensureEquals(expectedId, ((Author)os.next()).Id);
+				ObjectSet os = container.Query(predicate);
+				Tester.EnsureEquals(1, os.Size());
+				Tester.EnsureEquals(expectedId, ((Author)os.Next()).Id);
 			}
 			finally
 			{
@@ -112,7 +112,7 @@ public class InnerAuthorNamePredicate : Predicate
 		
 		private static NativeQueryHandler GetNativeQueryHandler(ObjectContainer container)
 		{
-			return ((YapStream)container).getNativeQueryHandler();
+			return ((YapStream)container).GetNativeQueryHandler();
 		}
 
 		private static Assembly EmitAssemblyAndLoad(string assemblyName, string code)
@@ -124,7 +124,7 @@ public class InnerAuthorNamePredicate : Predicate
 
 		private void OnQueryExecution(object sender, QueryExecutionEventArgs args)
 		{
-			Tester.ensureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
+			Tester.EnsureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
 		}
 	}
 }

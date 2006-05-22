@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -18,7 +18,7 @@ namespace com.db4o.test.soda.classes.wrapper.untyped {
          i_float = System.Convert.ToSingle(a_float);
       }
       
-      public Object[] store() {
+      public Object[] Store() {
          return new Object[]{
             new STFloatWU(Single.MinValue),
 new STFloatWU((float)1.23E-5),
@@ -26,28 +26,28 @@ new STFloatWU((float)1.345),
 new STFloatWU(Single.MaxValue)         };
       }
       
-      public void testEquals() {
-         Query q1 = st.query();
-         q1.constrain(store()[0]);
-         st.expectOne(q1, store()[0]);
+      public void TestEquals() {
+         Query q1 = st.Query();
+         q1.Constrain(Store()[0]);
+         st.ExpectOne(q1, Store()[0]);
       }
       
-      public void testGreater() {
-         Query q1 = st.query();
-         q1.constrain(new STFloatWU((float)0.1));
-         q1.descend("i_float").constraints().greater();
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestGreater() {
+         Query q1 = st.Query();
+         q1.Constrain(new STFloatWU((float)0.1));
+         q1.Descend("i_float").Constraints().Greater();
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[2],
 r1[3]         });
       }
       
-      public void testSmaller() {
-         Query q1 = st.query();
-         q1.constrain(new STFloatWU((float)1.5));
-         q1.descend("i_float").constraints().smaller();
-         Object[] r1 = store();
-         st.expect(q1, new Object[]{
+      public void TestSmaller() {
+         Query q1 = st.Query();
+         q1.Constrain(new STFloatWU((float)1.5));
+         q1.Descend("i_float").Constraints().Smaller();
+         Object[] r1 = Store();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[1],
 r1[2]         });

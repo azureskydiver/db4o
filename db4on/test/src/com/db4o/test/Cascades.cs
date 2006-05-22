@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -23,19 +23,19 @@ namespace com.db4o.test {
       static internal String FILE = "cascades.yap";
       
       public static void Main(String[] args) {
-         Db4o.configure().activationDepth(1);
-         set();
-         Db4o.configure().objectClass("com.db4o.test.Cascades").objectField("cascades").cascadeOnDelete(true);
-         Db4o.configure().objectClass("com.db4o.test.Cascades").objectField("arrCascades").cascadeOnDelete(true);
-         Db4o.configure().objectClass("com.db4o.test.Cascades").objectField("osp").cascadeOnDelete(true);
-         Db4o.configure().objectClass("com.db4o.test.Cascades").objectField("arrOsp").cascadeOnDelete(true);
-         updateComplex();
-         getAll();
+         Db4o.Configure().ActivationDepth(1);
+         Set();
+         Db4o.Configure().ObjectClass("com.db4o.test.Cascades").ObjectField("cascades").CascadeOnDelete(true);
+         Db4o.Configure().ObjectClass("com.db4o.test.Cascades").ObjectField("arrCascades").CascadeOnDelete(true);
+         Db4o.Configure().ObjectClass("com.db4o.test.Cascades").ObjectField("osp").CascadeOnDelete(true);
+         Db4o.Configure().ObjectClass("com.db4o.test.Cascades").ObjectField("arrOsp").CascadeOnDelete(true);
+         UpdateComplex();
+         GetAll();
       }
       
-      static internal void set() {
-         new File(FILE).delete();
-         ObjectContainer con = Db4o.openFile(FILE);
+      static internal void Set() {
+         new File(FILE).Delete();
+         ObjectContainer con = Db4o.OpenFile(FILE);
          Cascades cc1 = new Cascades();
          cc1.name = "Level1";
          cc1.cascades = new Cascades();
@@ -43,89 +43,89 @@ namespace com.db4o.test {
          cc1.cascades.cascades = new Cascades();
          cc1.cascades.cascades.name = "Level3";
          cc1.osp = new ObjectSimplePublic();
-         cc1.osp.set(1);
+         cc1.osp.Set(1);
          cc1.cascades.osp = new ObjectSimplePublic();
-         cc1.cascades.osp.set(1);
+         cc1.cascades.osp.Set(1);
          cc1.arrOsp = new ObjectSimplePublic[]{
             new ObjectSimplePublic()         };
-         cc1.arrOsp[0].set(1);
+         cc1.arrOsp[0].Set(1);
          cc1.arrCascades = new Cascades[]{
             new Cascades()         };
          cc1.arrCascades[0].name = "Array Level2";
          cc1.arrCascades[0].osp = new ObjectSimplePublic();
-         cc1.arrCascades[0].osp.set(1);
+         cc1.arrCascades[0].osp.Set(1);
          cc1.arrCascades[0].cascades = new Cascades();
          cc1.arrCascades[0].cascades.name = "Array Level3";
-         con.set(cc1);
-         con.close();
+         con.Set(cc1);
+         con.Close();
       }
       
-      static internal void get() {
-         ObjectContainer con = Db4o.openFile(FILE);
+      static internal void Get() {
+         ObjectContainer con = Db4o.OpenFile(FILE);
          Cascades cc1 = new Cascades();
          cc1.cascades = new Cascades();
          cc1.cascades.cascades = new Cascades();
-         ObjectSet set1 = con.get(cc1);
-         while (set1.hasNext()) {
-            Logger.log(con, set1.next());
+         ObjectSet set1 = con.Get(cc1);
+         while (set1.HasNext()) {
+            Logger.Log(con, set1.Next());
          }
-         con.close();
+         con.Close();
       }
       
-      static internal void getAll() {
-         ObjectContainer con = Db4o.openFile(FILE);
+      static internal void GetAll() {
+         ObjectContainer con = Db4o.OpenFile(FILE);
          Cascades cc1 = new Cascades();
          cc1.cascades = new Cascades();
          cc1.cascades.cascades = new Cascades();
-         ObjectSet set1 = con.get(null);
-         while (set1.hasNext()) {
-            Object obj1 = set1.next();
-            con.activate(obj1, Int32.MaxValue);
-            Logger.log(con, obj1);
+         ObjectSet set1 = con.Get(null);
+         while (set1.HasNext()) {
+            Object obj1 = set1.Next();
+            con.Activate(obj1, Int32.MaxValue);
+            Logger.Log(con, obj1);
          }
-         con.close();
+         con.Close();
       }
       
-      static internal void updateSimple() {
-         ObjectContainer con = Db4o.openFile(FILE);
+      static internal void UpdateSimple() {
+         ObjectContainer con = Db4o.OpenFile(FILE);
          Cascades cc1 = new Cascades();
          cc1.cascades = new Cascades();
          cc1.cascades.cascades = new Cascades();
-         ObjectSet set1 = con.get(cc1);
-         Cascades toUpdate1 = (Cascades)set1.next();
-         con.activate(toUpdate1, Int32.MaxValue);
+         ObjectSet set1 = con.Get(cc1);
+         Cascades toUpdate1 = (Cascades)set1.Next();
+         con.Activate(toUpdate1, Int32.MaxValue);
          toUpdate1.cascades.name = "Level2 Update";
          toUpdate1.cascades.cascades.name = "Level3 Update";
-         con.set(toUpdate1);
-         con.close();
+         con.Set(toUpdate1);
+         con.Close();
       }
       
-      static internal void updateComplex() {
-         ObjectContainer con = Db4o.openFile(FILE);
+      static internal void UpdateComplex() {
+         ObjectContainer con = Db4o.OpenFile(FILE);
          Cascades cc1 = new Cascades();
          cc1.cascades = new Cascades();
          cc1.cascades.cascades = new Cascades();
-         ObjectSet set1 = con.get(cc1);
-         Cascades toUpdate1 = (Cascades)set1.next();
-         con.activate(toUpdate1, Int32.MaxValue);
+         ObjectSet set1 = con.Get(cc1);
+         Cascades toUpdate1 = (Cascades)set1.Next();
+         con.Activate(toUpdate1, Int32.MaxValue);
          toUpdate1.cascades = null;
          toUpdate1.arrCascades = new Cascades[]{
             new Cascades()         };
          toUpdate1.arrCascades[0].name = "Level2 Arr New";
-         con.set(toUpdate1);
-         con.close();
+         con.Set(toUpdate1);
+         con.Close();
       }
       
-      static internal void delete() {
-         ObjectContainer con = Db4o.openFile(FILE);
+      static internal void Delete() {
+         ObjectContainer con = Db4o.OpenFile(FILE);
          Cascades cc1 = new Cascades();
          cc1.cascades = new Cascades();
          cc1.cascades.cascades = new Cascades();
-         ObjectSet set1 = con.get(cc1);
-         Cascades toDelete1 = (Cascades)set1.next();
-         con.activate(toDelete1, Int32.MaxValue);
-         con.delete(toDelete1);
-         con.close();
+         ObjectSet set1 = con.Get(cc1);
+         Cascades toDelete1 = (Cascades)set1.Next();
+         con.Activate(toDelete1, Int32.MaxValue);
+         con.Delete(toDelete1);
+         con.Close();
       }
    }
 }

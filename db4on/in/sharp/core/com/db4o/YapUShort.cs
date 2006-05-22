@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -10,24 +10,24 @@ namespace com.db4o
         public YapUShort(com.db4o.YapStream stream) : base(stream) {
         }
 
-        public override int compare(Object o1, Object o2){
+        public override int Compare(Object o1, Object o2){
             return ((ushort)o2 > (ushort)o1) ? 1 : -1;
         }
 
-        public override Object defaultValue(){
+        public override Object DefaultValue(){
             return (ushort)0;
         }
       
-        public override Object read(byte[] bytes, int offset){
+        public override Object Read(byte[] bytes, int offset){
             offset += 1;
             return (ushort) (bytes[offset] & 255 | (bytes[--offset] & 255) << 8);
         }
       
-        public override int typeID(){
+        public override int TypeID(){
             return 24;
         }
       
-        public override void write(Object obj, byte[] bytes, int offset){
+        public override void Write(Object obj, byte[] bytes, int offset){
             ushort us = (ushort)obj;
             offset += 2;
             bytes[--offset] = (byte)us;

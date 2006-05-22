@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -22,11 +22,11 @@ namespace com.db4o.test.soda.classes.simple {
         /**
          * needed for STInterface test 
          */
-        public Object returnSomething() {
+        public Object ReturnSomething() {
             return str;
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STString(null),
                                    new STString("aaa"),
@@ -34,124 +34,124 @@ namespace com.db4o.test.soda.classes.simple {
                                    new STString("dod")         };
         }
       
-        public void testEquals() {
-            Query q1 = st.query();
-            q1.constrain(store()[2]);
-            st.expectOne(q1, store()[2]);
+        public void TestEquals() {
+            Query q1 = st.Query();
+            q1.Constrain(Store()[2]);
+            st.ExpectOne(q1, Store()[2]);
         }
       
-        public void testNotEquals() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(store()[2]);
-            q1.descend("str").constraints().not();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestNotEquals() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(Store()[2]);
+            q1.Descend("str").Constraints().Not();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[1],
                                           r1[3]         });
         }
       
-        public void testDescendantEquals() {
-            Query q1 = st.query();
-            q1.constrain(new STString());
-            q1.descend("str").constrain("bbb");
-            st.expectOne(q1, new STString("bbb"));
+        public void TestDescendantEquals() {
+            Query q1 = st.Query();
+            q1.Constrain(new STString());
+            q1.Descend("str").Constrain("bbb");
+            st.ExpectOne(q1, new STString("bbb"));
         }
       
-        public void testContains() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString("od"));
-            q1.descend("str").constraints().contains();
-            st.expectOne(q1, new STString("dod"));
+        public void TestContains() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString("od"));
+            q1.Descend("str").Constraints().Contains();
+            st.ExpectOne(q1, new STString("dod"));
         }
       
-        public void testNotContains() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString("od"));
-            q1.descend("str").constraints().contains().not();
-            st.expect(q1, new Object[]{
+        public void TestNotContains() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString("od"));
+            q1.Descend("str").Constraints().Contains().Not();
+            st.Expect(q1, new Object[]{
                                           new STString(null),
                                           new STString("aaa"),
                                           new STString("bbb")         });
         }
       
-        public void testLike() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString("do"));
-            q1.descend("str").constraints().like();
-            st.expectOne(q1, new STString("dod"));
-            q1 = st.query();
-            c1 = q1.constrain(new STString("od"));
-            q1.descend("str").constraints().like();
-            st.expectOne(q1, new STString("dod"));
+        public void TestLike() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString("do"));
+            q1.Descend("str").Constraints().Like();
+            st.ExpectOne(q1, new STString("dod"));
+            q1 = st.Query();
+            c1 = q1.Constrain(new STString("od"));
+            q1.Descend("str").Constraints().Like();
+            st.ExpectOne(q1, new STString("dod"));
         }
       
-        public void testNotLike() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString("aaa"));
-            q1.descend("str").constraints().like().not();
-            st.expect(q1, new Object[]{
+        public void TestNotLike() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString("aaa"));
+            q1.Descend("str").Constraints().Like().Not();
+            st.Expect(q1, new Object[]{
                                           new STString(null),
                                           new STString("bbb"),
                                           new STString("dod")         });
-            q1 = st.query();
-            c1 = q1.constrain(new STString("xxx"));
-            q1.descend("str").constraints().like();
-            st.expectNone(q1);
+            q1 = st.Query();
+            c1 = q1.Constrain(new STString("xxx"));
+            q1.Descend("str").Constraints().Like();
+            st.ExpectNone(q1);
         }
       
-        public void testIdentity() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString("aaa"));
-            ObjectSet set1 = q1.execute();
-            STString identityConstraint1 = (STString)set1.next();
+        public void TestIdentity() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString("aaa"));
+            ObjectSet set1 = q1.Execute();
+            STString identityConstraint1 = (STString)set1.Next();
             identityConstraint1.str = "hihs";
-            q1 = st.query();
-            q1.constrain(identityConstraint1).identity();
+            q1 = st.Query();
+            q1.Constrain(identityConstraint1).Identity();
             identityConstraint1.str = "aaa";
-            st.expectOne(q1, new STString("aaa"));
+            st.ExpectOne(q1, new STString("aaa"));
         }
       
-        public void testNotIdentity() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString("aaa"));
-            ObjectSet set1 = q1.execute();
-            STString identityConstraint1 = (STString)set1.next();
+        public void TestNotIdentity() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString("aaa"));
+            ObjectSet set1 = q1.Execute();
+            STString identityConstraint1 = (STString)set1.Next();
             identityConstraint1.str = null;
-            q1 = st.query();
-            q1.constrain(identityConstraint1).identity().not();
+            q1 = st.Query();
+            q1.Constrain(identityConstraint1).Identity().Not();
             identityConstraint1.str = "aaa";
-            st.expect(q1, new Object[]{
+            st.Expect(q1, new Object[]{
                                           new STString(null),
                                           new STString("bbb"),
                                           new STString("dod")         });
         }
       
-        public void testNull() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString(null));
-            q1.descend("str").constrain(null);
-            st.expectOne(q1, new STString(null));
+        public void TestNull() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString(null));
+            q1.Descend("str").Constrain(null);
+            st.ExpectOne(q1, new STString(null));
         }
       
-        public void testNotNull() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STString(null));
-            q1.descend("str").constrain(null).not();
-            st.expect(q1, new Object[]{
+        public void TestNotNull() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STString(null));
+            q1.Descend("str").Constrain(null).Not();
+            st.Expect(q1, new Object[]{
                                           new STString("aaa"),
                                           new STString("bbb"),
                                           new STString("dod")         });
         }
       
-        public void testConstraints() {
-            Query q1 = st.query();
-            q1.constrain(new STString("aaa"));
-            q1.constrain(new STString("bbb"));
-            Constraints cs1 = q1.constraints();
-            Constraint[] csa1 = cs1.toArray();
+        public void TestConstraints() {
+            Query q1 = st.Query();
+            q1.Constrain(new STString("aaa"));
+            q1.Constrain(new STString("bbb"));
+            Constraints cs1 = q1.Constraints();
+            Constraint[] csa1 = cs1.ToArray();
             if (csa1.Length != 2) {
-                st.error("Constraints not returned");
+                st.Error("Constraints not returned");
             }
         }
       

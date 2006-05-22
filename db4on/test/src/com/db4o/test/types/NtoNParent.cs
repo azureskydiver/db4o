@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,7 +10,7 @@ namespace com.db4o.test.types {
       }
       public NtoNChild[] children;
       
-      public override void set(int ver) {
+      public override void Set(int ver) {
          children = new NtoNChild[3];
          for (int i = 0; i < 3; i++) {
             children[i] = new NtoNChild();

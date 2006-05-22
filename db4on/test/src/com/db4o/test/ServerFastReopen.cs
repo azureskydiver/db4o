@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -10,22 +10,22 @@ namespace com.db4o.test
 	public class ServerFastReopen
 	{
 
-        public void test(){
-            openCloseServer();
-            openCloseServer();
-            openCloseServer();
-            openCloseServer();
-            openCloseServer();
+        public void Test(){
+            OpenCloseServer();
+            OpenCloseServer();
+            OpenCloseServer();
+            OpenCloseServer();
+            OpenCloseServer();
         }
 
-        private void openCloseServer(){
-            ObjectServer os = Db4o.openServer("ServerFastReopen.yap",5001);
-            os.grantAccess("db4o", "db4o");
-            ObjectContainer con = Db4o.openClient("localhost",5001, "db4o", "db4o");
-            con.set(this);
-            con.commit();
-            con.close();
-            os.close();
+        private void OpenCloseServer(){
+            ObjectServer os = Db4o.OpenServer("ServerFastReopen.yap",5001);
+            os.GrantAccess("db4o", "db4o");
+            ObjectContainer con = Db4o.OpenClient("localhost",5001, "db4o", "db4o");
+            con.Set(this);
+            con.Commit();
+            con.Close();
+            os.Close();
         }
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -14,20 +14,20 @@ namespace com.db4o.test {
          this.foo = foo;
       }
       
-      public void store() {
-         Tester.deleteAllInstances(this);
-         Tester.store(new SetDeactivated("hi"));
-         Tester.commit();
+      public void Store() {
+         Tester.DeleteAllInstances(this);
+         Tester.Store(new SetDeactivated("hi"));
+         Tester.Commit();
       }
       
-      public void test() {
-         SetDeactivated sd1 = (SetDeactivated)Tester.getOne(this);
-         Tester.objectContainer().deactivate(sd1, 1);
-         Tester.store(sd1);
-         Tester.objectContainer().purge(sd1);
-         sd1 = (SetDeactivated)Tester.getOne(this);
-         Tester.objectContainer().activate(sd1, 1);
-         Tester.ensure(sd1.foo.Equals("hi"));
+      public void Test() {
+         SetDeactivated sd1 = (SetDeactivated)Tester.GetOne(this);
+         Tester.ObjectContainer().Deactivate(sd1, 1);
+         Tester.Store(sd1);
+         Tester.ObjectContainer().Purge(sd1);
+         sd1 = (SetDeactivated)Tester.GetOne(this);
+         Tester.ObjectContainer().Activate(sd1, 1);
+         Tester.Ensure(sd1.foo.Equals("hi"));
       }
    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.IO;
@@ -29,38 +29,38 @@ namespace j4o.io
 			}
 		}
 
-		public virtual bool delete()
+		public virtual bool Delete()
 		{
-			if (exists())
+			if (Exists())
 			{
 				System.IO.File.Delete(_path);
-				return !exists();
+				return !Exists();
 			}
 			return false;
 		}
 
-		public bool exists()
+		public bool Exists()
 		{
 			return System.IO.File.Exists(_path) || Directory.Exists(_path);
 		}
 
-		public string getAbsolutePath()
+		public string GetAbsolutePath()
 		{
 			return _path;
 		}
 
-		public string getName()
+		public string GetName()
 		{
 			int index = _path.LastIndexOf(separator);
 			return _path.Substring(index + 1);
 		}
 
-		public string getPath()
+		public string GetPath()
 		{
 			return _path;
 		}
 
-		public bool isDirectory()
+		public bool IsDirectory()
 		{
 #if CF_1_0 || CF_2_0
 			return System.IO.Directory.Exists(_path);
@@ -69,43 +69,43 @@ namespace j4o.io
 #endif
 		}
 
-		public long length()
+		public long Length()
 		{
 			return new FileInfo(_path).Length;
 		}
 
-		public string[] list()
+		public string[] List()
 		{
 			return Directory.GetFiles(_path);
 		}
 
-		public bool mkdir()
+		public bool Mkdir()
 		{
-			if (exists())
+			if (Exists())
 			{
 				return false;
 			}
 			Directory.CreateDirectory(_path);
-			return exists();
+			return Exists();
 		}
 
-		public bool mkdirs()
+		public bool Mkdirs()
 		{
-			if (exists())
+			if (Exists())
 			{
 				return false;
 			}
 			int pos = _path.LastIndexOf(separator);
 			if (pos > 0)
 			{
-				new File(_path.Substring(0, pos)).mkdirs();
+				new File(_path.Substring(0, pos)).Mkdirs();
 			}
-			return mkdir();
+			return Mkdir();
 		}
 
-		public void renameTo(File file)
+		public void RenameTo(File file)
 		{
-			new FileInfo(_path).MoveTo(file.getPath());
+			new FileInfo(_path).MoveTo(file.GetPath());
 		}
 	}
 }

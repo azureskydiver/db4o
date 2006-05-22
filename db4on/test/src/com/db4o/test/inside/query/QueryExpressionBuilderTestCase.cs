@@ -1,21 +1,20 @@
+﻿using Db4o.Tools.NativeQueries;
 using System;
-using com.db4o.inside.query;
-using com.db4o.nativequery.expr.cmp.field;
+using System.Reflection;
 using com.db4o.test.nativequeries;
-using Db4o.Tools.NativeQueries;
-namespace com.db4o.test.inside.query
-{
-	using System;
 
-	using com.db4o.nativequery.expr;
-	using com.db4o.nativequery.expr.cmp;
-	
+using com.db4o.nativequery.expr;
+using com.db4o.nativequery.expr.cmp;
+using com.db4o.nativequery.expr.cmp.field;
+
+namespace com.db4o.test.inside.query
+{	
 	public class QueryExpressionBuilderTestCase
 	{
 		public void TestNameEqualsTo()
 		{
 			Expression expression = ExpressionFromPredicate(typeof(NameEqualsTo));
-			Tester.ensureEquals(
+			Tester.EnsureEquals(
 				new ComparisonExpression(
 				new FieldValue(CandidateFieldRoot.INSTANCE, "name"),
 				new FieldValue(PredicateFieldRoot.INSTANCE, "_name"),
@@ -42,7 +41,46 @@ namespace com.db4o.test.inside.query
 				new ConstValue(null),
 				ComparisonOperator.EQUALS)));
 
-			Tester.ensureEquals(expected, expression);
+			Tester.EnsureEquals(expected, expression);
+		}
+		
+		enum MessagePriority
+		{
+			None,
+			Low,
+			Normal,
+			High
+		}
+		
+		class Message
+		{
+			private MessagePriority _priority;
+
+			public MessagePriority Priority
+			{
+				get { return _priority;  }
+				set { _priority = value;  }
+			}
+		}
+		
+		private bool MatchEnumConstrain(Message message)
+		{
+			return message.Priority == MessagePriority.High;
+		}
+		
+		public void TestQueryWithEnumConstrain()
+		{
+			Expression expression = ExpressionFromMethod("MatchEnumConstrain");
+			Expression expected = new ComparisonExpression(
+				new FieldValue(CandidateFieldRoot.INSTANCE, "_priority"),
+				new ConstValue(MessagePriority.High),
+				ComparisonOperator.EQUALS);
+			Tester.EnsureEquals(expression, expected);
+		}
+
+		private Expression ExpressionFromMethod(string methodName)
+		{
+			return new QueryExpressionBuilder().FromMethod(GetType().GetMethod(methodName, BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static));
 		}
 
 		private Expression ExpressionFromPredicate(Type type)

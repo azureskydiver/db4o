@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -16,29 +16,29 @@ namespace com.db4o.test {
             this.name = name;
         }
 
-        public void store() {
-            Tester.store(new SelectDistinct("a"));
-            Tester.store(new SelectDistinct("a"));
-            Tester.store(new SelectDistinct("a"));
-            Tester.store(new SelectDistinct("b"));
-            Tester.store(new SelectDistinct("b"));
-            Tester.store(new SelectDistinct("c"));
-            Tester.store(new SelectDistinct("c"));
-            Tester.store(new SelectDistinct("d"));
-            Tester.store(new SelectDistinct("e"));
+        public void Store() {
+            Tester.Store(new SelectDistinct("a"));
+            Tester.Store(new SelectDistinct("a"));
+            Tester.Store(new SelectDistinct("a"));
+            Tester.Store(new SelectDistinct("b"));
+            Tester.Store(new SelectDistinct("b"));
+            Tester.Store(new SelectDistinct("c"));
+            Tester.Store(new SelectDistinct("c"));
+            Tester.Store(new SelectDistinct("d"));
+            Tester.Store(new SelectDistinct("e"));
         }
 
-        public void test() {
+        public void Test() {
             
             String[] expected = new String[]{"a", "b", "c", "d", "e"};
             
-            Query q = Tester.query();
-            q.constrain(typeof(SelectDistinct));
-            q.constrain(new DistinctEvaluation());
+            Query q = Tester.Query();
+            q.Constrain(typeof(SelectDistinct));
+            q.Constrain(new DistinctEvaluation());
             
-            ObjectSet objectSet = q.execute();
-            while(objectSet.hasNext()) {
-                SelectDistinct sd = (SelectDistinct)objectSet.next();
+            ObjectSet objectSet = q.Execute();
+            while(objectSet.HasNext()) {
+                SelectDistinct sd = (SelectDistinct)objectSet.Next();
                 bool found = false;
                 for(int i = 0; i < expected.Length; i++) {
                     if(sd.name.Equals(expected[i])) {
@@ -47,11 +47,11 @@ namespace com.db4o.test {
                         break;
                     }
                 }
-                Tester.ensure(found);
+                Tester.Ensure(found);
             }
 
             for(int i = 0; i < expected.Length; i++) {
-                Tester.ensure(expected[i] == null);
+                Tester.Ensure(expected[i] == null);
             }
         }
 
@@ -59,10 +59,10 @@ namespace com.db4o.test {
 
             private Hashtable ht = new Hashtable();
 
-            public void evaluate(Candidate candidate){
-                SelectDistinct sd = (SelectDistinct)candidate.getObject();
+            public void Evaluate(Candidate candidate){
+                SelectDistinct sd = (SelectDistinct)candidate.GetObject();
                 bool isDistinct = ht[sd.name] == null;
-                candidate.include(isDistinct);
+                candidate.Include(isDistinct);
                 if(isDistinct){
                     ht[sd.name] = new Object();
                 }

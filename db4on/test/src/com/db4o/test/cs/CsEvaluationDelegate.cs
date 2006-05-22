@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.query;
@@ -13,40 +13,40 @@ namespace com.db4o.test.cs
         internal CsEvaluationDelegate child;
         internal String name;
       
-        public void store() {
-            Tester.deleteAllInstances(this);
+        public void Store() {
+            Tester.DeleteAllInstances(this);
             name = "one";
-            Tester.store(this);
+            Tester.Store(this);
             CsEvaluationDelegate se1 = new CsEvaluationDelegate();
             se1.child = new CsEvaluationDelegate();
             se1.child.name = "three";
             se1.name = "two";
-            Tester.store(se1);
+            Tester.Store(se1);
         }
       
-        public void testStaticMethodDelegate() {
-            runEvaluationDelegateTest(new EvaluationDelegate(_evaluate));
+        public void TestStaticMethodDelegate() {
+            RunEvaluationDelegateTest(new EvaluationDelegate(_evaluate));
         }
         
-        public void testInstanceMethodDelegate() {
-            runEvaluationDelegateTest(new EvaluationDelegate(new NameCondition("three")._evaluate));
+        public void TestInstanceMethodDelegate() {
+            RunEvaluationDelegateTest(new EvaluationDelegate(new NameCondition("three")._evaluate));
         }
         
-        void runEvaluationDelegateTest(EvaluationDelegate evaluation) {
-	        Query q1 = Tester.query();
+        void RunEvaluationDelegateTest(EvaluationDelegate evaluation) {
+	        Query q1 = Tester.Query();
             Query cq1 = q1;
-            q1.constrain(j4o.lang.Class.getClassForObject(this));
-            cq1 = cq1.descend("child");
-            cq1.constrain(evaluation);
-            ObjectSet os = q1.execute();
-            Tester.ensure(os.size() == 1);
-            CsEvaluationDelegate se = (CsEvaluationDelegate)os.next();
-            Tester.ensure(se.name.Equals("two"));
+            q1.Constrain(j4o.lang.Class.GetClassForObject(this));
+            cq1 = cq1.Descend("child");
+            cq1.Constrain(evaluation);
+            ObjectSet os = q1.Execute();
+            Tester.Ensure(os.Size() == 1);
+            CsEvaluationDelegate se = (CsEvaluationDelegate)os.Next();
+            Tester.Ensure(se.name.Equals("two"));
         }
 
         public static void _evaluate(Candidate candidate) {
-            CsEvaluationDelegate obj = ((CsEvaluationDelegate)candidate.getObject());
-			candidate.include(obj.name.Equals("three"));
+            CsEvaluationDelegate obj = ((CsEvaluationDelegate)candidate.GetObject());
+			candidate.Include(obj.name.Equals("three"));
         }
         
         class NameCondition {
@@ -57,8 +57,8 @@ namespace com.db4o.test.cs
         	}
         	
         	public void _evaluate(Candidate candidate) {
-        		CsEvaluationDelegate obj = ((CsEvaluationDelegate)candidate.getObject());
-				candidate.include(obj.name.Equals(_name));
+        		CsEvaluationDelegate obj = ((CsEvaluationDelegate)candidate.GetObject());
+				candidate.Include(obj.name.Equals(_name));
         	}
         }
     }

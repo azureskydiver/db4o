@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using com.db4o;
 using com.db4o.f1;
@@ -12,123 +12,123 @@ namespace com.db4o.f1.chapter2
 		{
 			File.Delete(Util.YapFileName);
             
-			ObjectContainer db = Db4o.openFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
 			try
 			{
-				storeFirstCar(db);
-				storeSecondCar(db);
-				retrieveAllCarsQBE(db);
-				retrieveAllPilotsQBE(db);
-				retrieveCarByPilotQBE(db);
-				retrieveCarByPilotNameQuery(db);
-				retrieveCarByPilotProtoQuery(db);
-				retrievePilotByCarModelQuery(db);
-				updateCar(db);
-				updatePilotSingleSession(db);
-				updatePilotSeparateSessionsPart1(db);
-				db.close();
-				db=Db4o.openFile(Util.YapFileName);
-				updatePilotSeparateSessionsPart2(db);
-				db.close();
-				updatePilotSeparateSessionsImprovedPart1(db);
-				db=Db4o.openFile(Util.YapFileName);
-				updatePilotSeparateSessionsImprovedPart2(db);
-				db.close();
-				db=Db4o.openFile(Util.YapFileName);
-				updatePilotSeparateSessionsImprovedPart3(db);
-				deleteFlat(db);
-				db.close();
-				deleteDeepPart1(db);
-				db=Db4o.openFile(Util.YapFileName);
-				deleteDeepPart2(db);
-				deleteDeepRevisited(db);
+				StoreFirstCar(db);
+				StoreSecondCar(db);
+				RetrieveAllCarsQBE(db);
+				RetrieveAllPilotsQBE(db);
+				RetrieveCarByPilotQBE(db);
+				RetrieveCarByPilotNameQuery(db);
+				RetrieveCarByPilotProtoQuery(db);
+				RetrievePilotByCarModelQuery(db);
+				UpdateCar(db);
+				UpdatePilotSingleSession(db);
+				UpdatePilotSeparateSessionsPart1(db);
+				db.Close();
+				db=Db4o.OpenFile(Util.YapFileName);
+				UpdatePilotSeparateSessionsPart2(db);
+				db.Close();
+				UpdatePilotSeparateSessionsImprovedPart1(db);
+				db=Db4o.OpenFile(Util.YapFileName);
+				UpdatePilotSeparateSessionsImprovedPart2(db);
+				db.Close();
+				db=Db4o.OpenFile(Util.YapFileName);
+				UpdatePilotSeparateSessionsImprovedPart3(db);
+				DeleteFlat(db);
+				db.Close();
+				DeleteDeepPart1(db);
+				db=Db4o.OpenFile(Util.YapFileName);
+				DeleteDeepPart2(db);
+				DeleteDeepRevisited(db);
 			}
 			finally
 			{
-				db.close();
+				db.Close();
 			}
 		}
         
-		public static void storeFirstCar(ObjectContainer db)
+		public static void StoreFirstCar(ObjectContainer db)
 		{
 			Car car1 = new Car("Ferrari");
 			Pilot pilot1 = new Pilot("Michael Schumacher", 100);
 			car1.Pilot = pilot1;
-			db.set(car1);
+			db.Set(car1);
 		}
         
-		public static void storeSecondCar(ObjectContainer db)
+		public static void StoreSecondCar(ObjectContainer db)
 		{
 			Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
-			db.set(pilot2);
+			db.Set(pilot2);
 			Car car2 = new Car("BMW");
 			car2.Pilot = pilot2;
-			db.set(car2);
+			db.Set(car2);
 		}
 
-		public static void retrieveAllCarsQBE(ObjectContainer db)
+		public static void RetrieveAllCarsQBE(ObjectContainer db)
 		{
 			Car proto = new Car(null);
-			ObjectSet result = db.get(proto);
-			listResult(result);
+			ObjectSet result = db.Get(proto);
+			ListResult(result);
 		}
         
-		public static void retrieveAllPilotsQBE(ObjectContainer db)
+		public static void RetrieveAllPilotsQBE(ObjectContainer db)
 		{
 			Pilot proto = new Pilot(null, 0);
-			ObjectSet result = db.get(proto);
-			listResult(result);
+			ObjectSet result = db.Get(proto);
+			ListResult(result);
 		}
         
-		public static void retrieveCarByPilotQBE(ObjectContainer db)
+		public static void RetrieveCarByPilotQBE(ObjectContainer db)
 		{
 			Pilot pilotproto = new Pilot("Rubens Barrichello",0);
 			Car carproto = new Car(null);
 			carproto.Pilot = pilotproto;
-			ObjectSet result = db.get(carproto);
-			listResult(result);
+			ObjectSet result = db.Get(carproto);
+			ListResult(result);
 		}
         
-		public static void retrieveCarByPilotNameQuery(ObjectContainer db)
+		public static void RetrieveCarByPilotNameQuery(ObjectContainer db)
 		{
-			Query query = db.query();
-			query.constrain(typeof(Car));
-			query.descend("_pilot").descend("_name")
-				.constrain("Rubens Barrichello");
-			ObjectSet result = query.execute();
-			listResult(result);
+			Query query = db.Query();
+			query.Constrain(typeof(Car));
+			query.Descend("_pilot").Descend("_name")
+				.Constrain("Rubens Barrichello");
+			ObjectSet result = query.Execute();
+			ListResult(result);
 		}
         
-		public static void retrieveCarByPilotProtoQuery(ObjectContainer db)
+		public static void RetrieveCarByPilotProtoQuery(ObjectContainer db)
 		{
-			Query query = db.query();
-			query.constrain(typeof(Car));
+			Query query = db.Query();
+			query.Constrain(typeof(Car));
 			Pilot proto = new Pilot("Rubens Barrichello", 0);
-			query.descend("_pilot").constrain(proto);
-			ObjectSet result = query.execute();
-			listResult(result);
+			query.Descend("_pilot").Constrain(proto);
+			ObjectSet result = query.Execute();
+			ListResult(result);
 		}
         
-		public static void retrievePilotByCarModelQuery(ObjectContainer db) 
+		public static void RetrievePilotByCarModelQuery(ObjectContainer db) 
 		{
-			Query carQuery = db.query();
-			carQuery.constrain(typeof(Car));
-			carQuery.descend("_model").constrain("Ferrari");
-			Query pilotQuery = carQuery.descend("_pilot");
-			ObjectSet result = pilotQuery.execute();
-			listResult(result);
+			Query carQuery = db.Query();
+			carQuery.Constrain(typeof(Car));
+			carQuery.Descend("_model").Constrain("Ferrari");
+			Query pilotQuery = carQuery.Descend("_pilot");
+			ObjectSet result = pilotQuery.Execute();
+			ListResult(result);
 		}
         
-		public static void retrieveAllPilots(ObjectContainer db) 
+		public static void RetrieveAllPilots(ObjectContainer db) 
 		{
-			ObjectSet results = db.get(typeof(Pilot));
-			listResult(results);
+			ObjectSet results = db.Get(typeof(Pilot));
+			ListResult(results);
 		}
 
-		public static void retrieveAllCars(ObjectContainer db) 
+		public static void RetrieveAllCars(ObjectContainer db) 
 		{
-			ObjectSet results = db.get(typeof(Car));
-			listResult(results);
+			ObjectSet results = db.Get(typeof(Car));
+			ListResult(results);
 		}
     
 		public class RetrieveCarsByPilotNamePredicate : Predicate
@@ -146,104 +146,104 @@ namespace com.db4o.f1.chapter2
 			}
 		}
     
-		public static void retrieveCarsByPilotNameNative(ObjectContainer db) 
+		public static void RetrieveCarsByPilotNameNative(ObjectContainer db) 
 		{
 			string pilotName = "Rubens Barrichello";
-			ObjectSet results = db.query(new RetrieveCarsByPilotNamePredicate(pilotName));
-			listResult(results);
+			ObjectSet results = db.Query(new RetrieveCarsByPilotNamePredicate(pilotName));
+			ListResult(results);
 		}
   		
-		public static void updateCar(ObjectContainer db)
+		public static void UpdateCar(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("Ferrari"));
-			Car found = (Car)result.next();
+			ObjectSet result = db.Get(new Car("Ferrari"));
+			Car found = (Car)result.Next();
 			found.Pilot = new Pilot("Somebody else", 0);
-			db.set(found);
-			result = db.get(new Car("Ferrari"));
-			listResult(result);
+			db.Set(found);
+			result = db.Get(new Car("Ferrari"));
+			ListResult(result);
 		}
         
-		public static void updatePilotSingleSession(ObjectContainer db)
+		public static void UpdatePilotSingleSession(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("Ferrari"));
-			Car found = (Car)result.next();
+			ObjectSet result = db.Get(new Car("Ferrari"));
+			Car found = (Car)result.Next();
 			found.Pilot.AddPoints(1);
-			db.set(found);
-			result = db.get(new Car("Ferrari"));
-			listResult(result);
+			db.Set(found);
+			result = db.Get(new Car("Ferrari"));
+			ListResult(result);
 		}
         
-		public static void updatePilotSeparateSessionsPart1(ObjectContainer db)
+		public static void UpdatePilotSeparateSessionsPart1(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("Ferrari"));
-			Car found = (Car)result.next();
+			ObjectSet result = db.Get(new Car("Ferrari"));
+			Car found = (Car)result.Next();
 			found.Pilot.AddPoints(1);
-			db.set(found);
+			db.Set(found);
 		}
         
-		public static void updatePilotSeparateSessionsPart2(ObjectContainer db)
+		public static void UpdatePilotSeparateSessionsPart2(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("Ferrari"));
-			listResult(result);
+			ObjectSet result = db.Get(new Car("Ferrari"));
+			ListResult(result);
 		}
         
-		public static void updatePilotSeparateSessionsImprovedPart1(ObjectContainer db)
+		public static void UpdatePilotSeparateSessionsImprovedPart1(ObjectContainer db)
 		{
-			Db4o.configure().objectClass(typeof(Car))
-				.cascadeOnUpdate(true);        
+			Db4o.Configure().ObjectClass(typeof(Car))
+				.CascadeOnUpdate(true);        
 		}
         
-		public static void updatePilotSeparateSessionsImprovedPart2(ObjectContainer db)
+		public static void UpdatePilotSeparateSessionsImprovedPart2(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("Ferrari"));
-			Car found = (Car)result.next();
+			ObjectSet result = db.Get(new Car("Ferrari"));
+			Car found = (Car)result.Next();
 			found.Pilot.AddPoints(1);
-			db.set(found);
+			db.Set(found);
 		}
         
-		public static void updatePilotSeparateSessionsImprovedPart3(ObjectContainer db)
+		public static void UpdatePilotSeparateSessionsImprovedPart3(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("Ferrari"));
-			listResult(result);
+			ObjectSet result = db.Get(new Car("Ferrari"));
+			ListResult(result);
 		}
         
-		public static void deleteFlat(ObjectContainer db)
+		public static void DeleteFlat(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("Ferrari"));
-			Car found = (Car)result.next();
-			db.delete(found);
-			result = db.get(new Car(null));
-			listResult(result);
+			ObjectSet result = db.Get(new Car("Ferrari"));
+			Car found = (Car)result.Next();
+			db.Delete(found);
+			result = db.Get(new Car(null));
+			ListResult(result);
 		}
         
-		public static void deleteDeepPart1(ObjectContainer db)
+		public static void DeleteDeepPart1(ObjectContainer db)
 		{
-			Db4o.configure().objectClass(typeof(Car))
-				.cascadeOnDelete(true);
+			Db4o.Configure().ObjectClass(typeof(Car))
+				.CascadeOnDelete(true);
 		}
         
-		public static void deleteDeepPart2(ObjectContainer db)
+		public static void DeleteDeepPart2(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Car("BMW"));
-			Car found = (Car)result.next();
-			db.delete(found);
-			result = db.get(new Car(null));
-			listResult(result);
+			ObjectSet result = db.Get(new Car("BMW"));
+			Car found = (Car)result.Next();
+			db.Delete(found);
+			result = db.Get(new Car(null));
+			ListResult(result);
 		}
         
-		public static void deleteDeepRevisited(ObjectContainer db)
+		public static void DeleteDeepRevisited(ObjectContainer db)
 		{
-			ObjectSet result = db.get(new Pilot("Michael Schumacher", 0));
-			Pilot pilot = (Pilot)result.next();
+			ObjectSet result = db.Get(new Pilot("Michael Schumacher", 0));
+			Pilot pilot = (Pilot)result.Next();
 			Car car1 = new Car("Ferrari");
 			Car car2 = new Car("BMW");
 			car1.Pilot = pilot;
 			car2.Pilot = pilot;
-			db.set(car1);
-			db.set(car2);
-			db.delete(car2);
-			result = db.get(new Car(null));
-			listResult(result);
+			db.Set(car1);
+			db.Set(car2);
+			db.Delete(car2);
+			result = db.Get(new Car(null));
+			ListResult(result);
 		}
 	}    
 }

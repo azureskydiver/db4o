@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -9,27 +9,27 @@ namespace com.db4o.test {
 
     public class DerivedFromArrayList : ArrayList {
         
-        public void storeOne(){
+        public void StoreOne(){
             Add("One");
             Add("Two");
         }
 
-        public void test(){
-            Query q = Tester.query();
-            q.constrain(typeof(DerivedFromArrayList));
-            ObjectSet objectSet = q.execute();
-            while(objectSet.hasNext()){
-                DerivedFromArrayList dal = (DerivedFromArrayList)objectSet.next();
+        public void Test(){
+            Query q = Tester.Query();
+            q.Constrain(typeof(DerivedFromArrayList));
+            ObjectSet objectSet = q.Execute();
+            while(objectSet.HasNext()){
+                DerivedFromArrayList dal = (DerivedFromArrayList)objectSet.Next();
                 dal.Add("Three");
-                Tester.store(dal);
+                Tester.Store(dal);
             }
-            Tester.reOpen();
-            q = Tester.query();
-            q.constrain(typeof(DerivedFromArrayList));
-            objectSet = q.execute();
-            while(objectSet.hasNext()){
-                DerivedFromArrayList dal = (DerivedFromArrayList)objectSet.next();
-                Tester.ensure(dal.Count > 2);
+            Tester.ReOpen();
+            q = Tester.Query();
+            q.Constrain(typeof(DerivedFromArrayList));
+            objectSet = q.Execute();
+            while(objectSet.HasNext()){
+                DerivedFromArrayList dal = (DerivedFromArrayList)objectSet.Next();
+                Tester.Ensure(dal.Count > 2);
             }
         }
     }

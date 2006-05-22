@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -6,7 +6,7 @@ using com.db4o;
 namespace com.db4o.test.types {
 
    /**
-    * note the special configuration for this class in Regression.openContainer()
+    * note the special configuration for this class in Regression.OpenContainer()
     */
    public class DeepUpdate: RTestable {
       public ObjectSimplePublic d1;
@@ -16,8 +16,8 @@ namespace com.db4o.test.types {
       public DeepUpdate() : base() {
       }
       
-      public void compare(ObjectContainer con, Object obj, int ver) {
-         TestUtil.compare(con, set(newInstance(), ver), obj, "", null);
+      public void Compare(ObjectContainer con, Object obj, int ver) {
+         TestUtil.Compare(con, Set(NewInstance(), ver), obj, "", null);
       }
       
       public override bool Equals(Object obj) {
@@ -48,16 +48,16 @@ namespace com.db4o.test.types {
          return false;
       }
       
-      public Object newInstance() {
+      public Object NewInstance() {
          return new DeepUpdate();
       }
       
-      public Object set(Object obj, int ver) {
-         ((DeepUpdate)obj).set(ver);
+      public Object Set(Object obj, int ver) {
+         ((DeepUpdate)obj).Set(ver);
          return obj;
       }
       
-      public void set(int ver) {
+      public void Set(int ver) {
          d1 = new ObjectSimplePublic();
          d2 = new DeepHelper();
          d3 = new DeepHelper[2];
@@ -68,16 +68,16 @@ namespace com.db4o.test.types {
          } else {
             d1.name = "TwoTWOTwoTWOTwoTWOTwoTWOTwoTWO";
          }
-         d2.set(ver);
-         d3[0].set(ver);
-         d3[1].set(ver);
+         d2.Set(ver);
+         d3[0].Set(ver);
+         d3[1].Set(ver);
       }
       
-      public bool jdk2() {
+      public bool Jdk2() {
          return false;
       }
       
-      public bool ver3() {
+      public bool Ver3() {
          return false;
       }
    }

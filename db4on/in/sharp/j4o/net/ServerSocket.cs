@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using NativeSocket=System.Net.Sockets.Socket;
@@ -18,12 +18,12 @@ namespace j4o.net
 			Initialize(socket);
 		}
 
-		public Socket accept()
+		public Socket Accept()
 		{
 			return new Socket(_delegate.Accept());
 		}
 
-		public int getLocalPort()
+		public int GetLocalPort()
 		{
 			return ((IPEndPoint)_delegate.LocalEndPoint).Port;
 		}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,17 +10,17 @@ namespace com.db4o.test {
       public Isolation() : base() {
       }
       
-      public void store() {
-         Tester.deleteAllInstances(this);
+      public void Store() {
+         Tester.DeleteAllInstances(this);
       }
       
-      public void test() {
-         if (Tester.isClientServer()) {
-            ObjectContainer oc1 = Tester.currentServer().ext().objectContainer();
-            oc1.set(new Isolation());
-            Tester.ensure(Tester.occurrences(this) == 0);
-            oc1.commit();
-            Tester.ensure(Tester.occurrences(this) == 1);
+      public void Test() {
+         if (Tester.IsClientServer()) {
+            ObjectContainer oc1 = Tester.CurrentServer().Ext().ObjectContainer();
+            oc1.Set(new Isolation());
+            Tester.Ensure(Tester.Occurrences(this) == 0);
+            oc1.Commit();
+            Tester.Ensure(Tester.Occurrences(this) == 1);
          }
       }
    }

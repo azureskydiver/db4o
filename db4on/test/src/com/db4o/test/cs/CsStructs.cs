@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.ext;
@@ -19,7 +19,7 @@ namespace com.db4o.test.cs
 		{
 		}
 
-		public void storeOne()
+		public void StoreOne()
 		{
 			simpleStruct.foo = 100;
 			simpleStruct.bar = "hi";
@@ -37,25 +37,25 @@ namespace com.db4o.test.cs
 			guid = new Guid(GUID);
 		}
 
-		public void test()
+		public void Test()
 		{
-			ExtObjectContainer oc = Tester.objectContainer();
-			Query q = Tester.query();
-			q.constrain(this.GetType());
-			Query qd = q.descend("simpleStruct");
-			qd = qd.descend("foo");
-			qd.constrain(100);
+			ExtObjectContainer oc = Tester.ObjectContainer();
+			Query q = Tester.Query();
+			q.Constrain(this.GetType());
+			Query qd = q.Descend("simpleStruct");
+			qd = qd.Descend("foo");
+			qd.Constrain(100);
 
-			ObjectSet objectSet = q.execute();
+			ObjectSet objectSet = q.Execute();
 
-			Tester.ensure(objectSet.size() == 1);
-			CsStructs csStructs = (CsStructs)objectSet.next();
+			Tester.Ensure(objectSet.Size() == 1);
+			CsStructs csStructs = (CsStructs)objectSet.Next();
 
-			Tester.ensure(csStructs.guid.ToString().Equals(GUID));
-			Tester.ensure(csStructs.simpleStruct.foo == 100);
-			Tester.ensure(csStructs.simpleStruct.bar.Equals("hi"));
-			Tester.ensure(csStructs.recursiveStruct.child.simpleStruct.foo == 22);
-			Tester.ensure(csStructs.recursiveStruct.child.simpleStruct.bar.Equals("jo"));
+			Tester.Ensure(csStructs.guid.ToString().Equals(GUID));
+			Tester.Ensure(csStructs.simpleStruct.foo == 100);
+			Tester.Ensure(csStructs.simpleStruct.bar.Equals("hi"));
+			Tester.Ensure(csStructs.recursiveStruct.child.simpleStruct.foo == 22);
+			Tester.Ensure(csStructs.recursiveStruct.child.simpleStruct.bar.Equals("jo"));
 		}
 
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -16,7 +16,7 @@ namespace com.db4o.test
 		int bar;
 		Atom[] atoms;
     
-		public void storeOne()
+		public void StoreOne()
 		{
 			foo = "foo";
 			bar = 10;
@@ -25,48 +25,48 @@ namespace com.db4o.test
 			atoms[1] = new Atom("two");
 		}
     
-		public void testOne()
+		public void TestOne()
 		{
-			ExtObjectContainer oc = Tester.objectContainer();
-			StoredClass sc = oc.storedClass(this);
-			StoredField[] sf = sc.getStoredFields();
+			ExtObjectContainer oc = Tester.ObjectContainer();
+			StoredClass sc = oc.StoredClass(this);
+			StoredField[] sf = sc.GetStoredFields();
 			bool[] cases = new bool[3];
 			for (int i = 0; i < sf.Length; i++) 
 			{
 				StoredField f = sf[i];
-				if(f.getName().Equals("foo"))
+				if(f.GetName().Equals("foo"))
 				{
-					Tester.ensure(f.get(this).Equals("foo"));
-					ensureFieldType(f, typeof(string));
+					Tester.Ensure(f.Get(this).Equals("foo"));
+					EnsureFieldType(f, typeof(string));
 					cases[0] = true;
 				}
-				if(f.getName().Equals("bar"))
+				if(f.GetName().Equals("bar"))
 				{
-					Tester.ensure(f.get(this).Equals(10));
-					ensureFieldType(f, typeof(int));
+					Tester.Ensure(f.Get(this).Equals(10));
+					EnsureFieldType(f, typeof(int));
 					cases[1] = true;
 				}
-				if(f.getName().Equals("atoms"))
+				if(f.GetName().Equals("atoms"))
 				{
-					ensureFieldType(f, typeof(Atom));
-					Tester.ensure(f.isArray());
-					Atom[] at = (Atom[])f.get(this);
-					Tester.ensure(at[0].name.Equals("one"));
-					Tester.ensure(at[1].name.Equals("two"));
+					EnsureFieldType(f, typeof(Atom));
+					Tester.Ensure(f.IsArray());
+					Atom[] at = (Atom[])f.Get(this);
+					Tester.Ensure(at[0].name.Equals("one"));
+					Tester.Ensure(at[1].name.Equals("two"));
 					cases[2] = true;
 				}
 			}
 			for (int i = 0; i < cases.Length; i++) 
 			{
-				Tester.ensure(cases[i]);
+				Tester.Ensure(cases[i]);
 			}
 		}
 
-		private static void ensureFieldType(StoredField f, Type expectedType)
+		private static void EnsureFieldType(StoredField f, Type expectedType)
 		{
-			ReflectClass fieldClass = f.getStoredType();
-			ReflectClass expectedClass = fieldClass.reflector().forClass(Class.getClassForType(expectedType));
-			Tester.ensureEquals(expectedClass, fieldClass);
+			ReflectClass fieldClass = f.GetStoredType();
+			ReflectClass expectedClass = fieldClass.Reflector().ForClass(Class.GetClassForType(expectedType));
+			Tester.EnsureEquals(expectedClass, fieldClass);
 		}
 	}
 }

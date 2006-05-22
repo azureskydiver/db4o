@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,8 +10,8 @@ namespace com.db4o.test.types {
       }
       public Object[] ooo;
       
-      public override void set(int ver) {
-         Object[] classes = allClassesButThis();
+      public override void Set(int ver) {
+         Object[] classes = AllClassesButThis();
          ooo = new Object[classes.Length];
          for (int i = 0; i < classes.Length; i++) {
             try {
@@ -26,8 +26,8 @@ namespace com.db4o.test.types {
          }
       }
       
-      internal Object[] allClassesButThis() {
-         Object[] all = Regression.allClasses();
+      internal Object[] AllClassesButThis() {
+         Object[] all = Regression.AllClasses();
          Object[] classes = new Object[all.Length - 1];
 		 System.Array.Copy(all, 0, classes, 0, all.Length - 1);
          return classes;

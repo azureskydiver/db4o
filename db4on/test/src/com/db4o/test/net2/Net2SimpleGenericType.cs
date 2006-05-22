@@ -1,4 +1,4 @@
-namespace com.db4o.test.net2
+﻿namespace com.db4o.test.net2
 {
 #if NET_2_0 || CF_2_0
     using System;
@@ -19,37 +19,37 @@ namespace com.db4o.test.net2
 
 	class Net2SimpleGenericType
 	{
-		public void storeOne()
+		public void StoreOne()
 		{
-			Tester.store(new SimpleGenericType<string>("Will it work?"));
-			Tester.store(new SimpleGenericType<int>(42));
+			Tester.Store(new SimpleGenericType<string>("Will it work?"));
+			Tester.Store(new SimpleGenericType<int>(42));
 		}
 
-		public void test()
+		public void Test()
 		{
-			tstGenericType("Will it work?");
-			tstGenericType(42);
+			TstGenericType("Will it work?");
+			TstGenericType(42);
 		}
 
-		private void tstGenericType<T>(T expectedValue)
+		private void TstGenericType<T>(T expectedValue)
 		{
-			Query query = Tester.query();
-			query.constrain(typeof(SimpleGenericType<T>));
+			Query query = Tester.Query();
+			query.Constrain(typeof(SimpleGenericType<T>));
 
-			ensureGenericItem<T>(expectedValue, query.execute());
+			EnsureGenericItem<T>(expectedValue, query.Execute());
 
-			query = Tester.query();
-			query.constrain(typeof(SimpleGenericType<T>));
-			query.descend("value").constrain(expectedValue);
-			ensureGenericItem<T>(expectedValue, query.execute());
+			query = Tester.Query();
+			query.Constrain(typeof(SimpleGenericType<T>));
+			query.Descend("value").Constrain(expectedValue);
+			EnsureGenericItem<T>(expectedValue, query.Execute());
 		}
 
-		private static void ensureGenericItem<T>(T expectedValue, ObjectSet os)
+		private static void EnsureGenericItem<T>(T expectedValue, ObjectSet os)
 		{
-			Tester.ensureEquals(1, os.size());
+			Tester.EnsureEquals(1, os.Size());
 
-			SimpleGenericType<T> item = (SimpleGenericType<T>)os.next();
-			Tester.ensureEquals(expectedValue, item.value);
+			SimpleGenericType<T> item = (SimpleGenericType<T>)os.Next();
+			Tester.EnsureEquals(expectedValue, item.value);
 		}
 	}
 #endif

@@ -1,4 +1,4 @@
-namespace com.db4o.test.acid
+﻿namespace com.db4o.test.acid
 {
 	public class CrashSimulatingWrite
 	{
@@ -15,10 +15,10 @@ namespace com.db4o.test.acid
 			this.length = length;
 		}
 
-		public virtual void write(j4o.io.RandomAccessFile raf)
+		public virtual void Write(j4o.io.RandomAccessFile raf)
 		{
-			raf.seek(offset);
-			raf.write(data, 0, length);
+			raf.Seek(offset);
+			raf.Write(data, 0, length);
 		}
 	}
 }

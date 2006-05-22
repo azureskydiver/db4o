@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -42,71 +42,71 @@ namespace com.db4o.test.j4otest
         {
         }
     	
-    	public void testFunnyName()
+    	public void TestFunnyName()
     	{
-    		ensureRoundtrip(typeof(__Funny123Name_));
+    		EnsureRoundtrip(typeof(__Funny123Name_));
     	}
     	
-        public void testSimpleName()
+        public void TestSimpleName()
         {
 			try
 			{
 				TypeReference stringName = TypeReference.FromString("System.String");
-				Tester.ensureEquals("System.String", stringName.SimpleName);
-				Tester.ensure(stringName.AssemblyName == null);
-                Tester.ensureEquals(typeof(string), stringName.Resolve());
+				Tester.EnsureEquals("System.String", stringName.SimpleName);
+				Tester.Ensure(stringName.AssemblyName == null);
+                Tester.EnsureEquals(typeof(string), stringName.Resolve());
 			}
 			catch (Exception e)
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
         }
 
-		public void testVoidPointer()
+		public void TestVoidPointer()
         {
 			TypeReference voidPointer = TypeReference.FromString("System.Void*");
-			Tester.ensureEquals("System.Void", voidPointer.SimpleName);
-			Tester.ensure(voidPointer is PointerTypeReference);
-			Tester.ensureEquals(Type.GetType("System.Void*", true), voidPointer.Resolve());
+			Tester.EnsureEquals("System.Void", voidPointer.SimpleName);
+			Tester.Ensure(voidPointer is PointerTypeReference);
+			Tester.EnsureEquals(Type.GetType("System.Void*", true), voidPointer.Resolve());
         }
 
-        public void testNestedType()
+        public void TestNestedType()
         {
 			try
 			{
 				TypeReference typeName = TypeReference.FromType(typeof(NestedType));
-				Tester.ensureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
-				Tester.ensureEquals(typeof(NestedType), typeName.Resolve());
+				Tester.EnsureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
+				Tester.EnsureEquals(typeof(NestedType), typeName.Resolve());
 			}
 			catch (Exception e)
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
 
         }
 
-		public void testWrongVersion()
+		public void TestWrongVersion()
 		{
 			try
 			{
 				TypeReference stringName = TypeReference.FromString("System.String, mscorlib, Version=1.14.27.0");
-				Tester.ensureEquals(typeof(string), stringName.Resolve());
+				Tester.EnsureEquals(typeof(string), stringName.Resolve());
 			}
 			catch (Exception e)
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
 		}
 
-		public void testAssemblyNameWithSpaces()
+		public void TestAssemblyNameWithSpaces()
 		{
 			TypeReference typeReference =
 				TypeReference.FromString("Foo, Business Objects, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-			Tester.ensureEquals("Foo", typeReference.SimpleName);
-			Tester.ensureEquals("Business Objects", typeReference.AssemblyName.Name);
+			Tester.EnsureEquals("Foo", typeReference.SimpleName);
+			Tester.EnsureEquals("Business Objects", typeReference.AssemblyName.Name);
 		}
 
-        public void testAssemblyQualifiedName()
+        public void TestAssemblyQualifiedName()
         {
 			try
 			{
@@ -114,18 +114,18 @@ namespace com.db4o.test.j4otest
 				TypeReference typeReference =
 					TypeReference.FromString(
 						"System.String, " + assemblyNameString);
-				Tester.ensureEquals("System.String", typeReference.SimpleName);
+				Tester.EnsureEquals("System.String", typeReference.SimpleName);
 				
 				AssemblyName assemblyName = new AssemblyName();
 				assemblyName.Name = "mscorlib";
 				assemblyName.Version = new Version(2, 0, 0, 0);
 				assemblyName.CultureInfo = CultureInfo.InvariantCulture;
 				assemblyName.SetPublicKeyToken(ParsePublicKeyToken("969db8053d3322ac"));
-				Tester.ensureEquals(assemblyName.FullName, typeReference.AssemblyName.FullName, "string.Assembly.FullName");
+				Tester.EnsureEquals(assemblyName.FullName, typeReference.AssemblyName.FullName, "string.Assembly.FullName");
 			}
 			catch (Exception e)
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
 
         }
@@ -141,30 +141,30 @@ namespace com.db4o.test.j4otest
 			return bytes;
 		}
 
-        public void testSimpleArray()
+        public void TestSimpleArray()
         {
-            ensureRoundtrip(typeof(byte[]));
+            EnsureRoundtrip(typeof(byte[]));
         }
 
-        private static void ensureRoundtrip(Type type)
+        private static void EnsureRoundtrip(Type type)
         {
             try
             {
                 TypeReference typeName = TypeReference.FromType(type);
-				Tester.ensureEquals(type, typeName.Resolve(), type.FullName);
+				Tester.EnsureEquals(type, typeName.Resolve(), type.FullName);
             }
             catch (Exception e)
             {
-                Tester.error(e);
+                Tester.Error(e);
             }
         }
 
-		public void testJaggedArray()
+		public void TestJaggedArray()
 		{
-            ensureRoundtrip(typeof(byte[][]));
+            EnsureRoundtrip(typeof(byte[][]));
             
 #if !MONO
-            ensureRoundtrip(typeof(byte[][][,]));
+            EnsureRoundtrip(typeof(byte[][][,]));
 #endif
 		}
 
@@ -173,55 +173,55 @@ namespace com.db4o.test.j4otest
         {
         }
 
-        public void testDeepGenericTypeName()
+        public void TestDeepGenericTypeName()
         {
-            ensureRoundtrip(typeof(Dictionary<string, List<string>>));
-            ensureRoundtrip(typeof(Dictionary<string, List<List<string>>>));
+            EnsureRoundtrip(typeof(Dictionary<string, List<string>>));
+            EnsureRoundtrip(typeof(Dictionary<string, List<List<string>>>));
 
-            ensureRoundtrip(typeof(Dictionary<string, List<List<NestedType>>>));
-            ensureRoundtrip(typeof(NestedGeneric<string, List<string>[]>));
-            ensureRoundtrip(typeof(NestedGeneric<string, List<string>>[]));
+            EnsureRoundtrip(typeof(Dictionary<string, List<List<NestedType>>>));
+            EnsureRoundtrip(typeof(NestedGeneric<string, List<string>[]>));
+            EnsureRoundtrip(typeof(NestedGeneric<string, List<string>>[]));
 
-            ensureRoundtrip(typeof(GenericType<string, List<string>>.NestedInGeneric));
+            EnsureRoundtrip(typeof(GenericType<string, List<string>>.NestedInGeneric));
         }
 
-        public void testGenericArrays()
+        public void TestGenericArrays()
         {
-            ensureRoundtrip(typeof(SimpleGenericType<string>));
-			ensureRoundtrip(typeof(SimpleGenericType<int>[]));
-            ensureRoundtrip(typeof(SimpleGenericType<int>[,]));
-            ensureRoundtrip(typeof(SimpleGenericType<int>[][]));
-            ensureRoundtrip(typeof(SimpleGenericType<int>[][,,]));
+            EnsureRoundtrip(typeof(SimpleGenericType<string>));
+			EnsureRoundtrip(typeof(SimpleGenericType<int>[]));
+            EnsureRoundtrip(typeof(SimpleGenericType<int>[,]));
+            EnsureRoundtrip(typeof(SimpleGenericType<int>[][]));
+            EnsureRoundtrip(typeof(SimpleGenericType<int>[][,,]));
         }
 
-        public void testGenericOfArrays()
+        public void TestGenericOfArrays()
         {
-            ensureRoundtrip(typeof(SimpleGenericType<string[]>));
-            ensureRoundtrip(typeof(SimpleGenericType<string[]>[]));
-            ensureRoundtrip(typeof(SimpleGenericType<string[,]>[][]));
-            ensureRoundtrip(typeof(SimpleGenericType<string[][]>[]));
-            ensureRoundtrip(typeof(SimpleGenericType<string[][]>[][]));
-            ensureRoundtrip(typeof(SimpleGenericType<SimpleGenericType<string[][]>[][,]>[][]));
+            EnsureRoundtrip(typeof(SimpleGenericType<string[]>));
+            EnsureRoundtrip(typeof(SimpleGenericType<string[]>[]));
+            EnsureRoundtrip(typeof(SimpleGenericType<string[,]>[][]));
+            EnsureRoundtrip(typeof(SimpleGenericType<string[][]>[]));
+            EnsureRoundtrip(typeof(SimpleGenericType<string[][]>[][]));
+            EnsureRoundtrip(typeof(SimpleGenericType<SimpleGenericType<string[][]>[][,]>[][]));
         }
 
-        public void testUnversionedGenericName()
+        public void TestUnversionedGenericName()
         {
 			try
 			{
 				string simpleAssemblyName = GetExecutingAssemblySimpleName();
 				Type t = typeof(GenericType<int, GenericType<int, string>>);
 				TypeReference tn = TypeReference.FromString(t.AssemblyQualifiedName);
-				Tester.ensureEquals(
+				Tester.EnsureEquals(
 					"com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib], [com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib], [System.String, mscorlib]], " + simpleAssemblyName +"]], " + simpleAssemblyName,
 					tn.GetUnversionedName());
 			}
 			catch (Exception e)
 			{
-				Tester.error(e);
+				Tester.Error(e);
 			}
         }
 
-        public void testGenericName()
+        public void TestGenericName()
         {
             GenericType<int, string> o = new GenericType<int, string>(3, "42");
             Type t = Type.GetType(o.GetType().FullName);
@@ -250,7 +250,7 @@ namespace com.db4o.test.j4otest
             }
             catch (Exception e)
             {
-                Tester.error(e);
+                Tester.Error(e);
             }
         }
 
@@ -262,7 +262,7 @@ namespace com.db4o.test.j4otest
 
         static void AssertEquals(object expected, object actual)
         {
-			Tester.ensureEquals(expected, actual);
+			Tester.EnsureEquals(expected, actual);
         }
     }
 }

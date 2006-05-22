@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -14,20 +14,20 @@ namespace com.db4o.test {
       private Object lastMessage;
       internal String messageString;
       
-      public void test() {
-         if (Tester.isClientServer()) {
-            Tester.server().ext().configure().setMessageRecipient(this);
-            MessageSender sender1 = Tester.objectContainer().configure().getMessageSender();
+      public void Test() {
+         if (Tester.IsClientServer()) {
+            Tester.Server().Ext().Configure().SetMessageRecipient(this);
+            MessageSender sender1 = Tester.ObjectContainer().Configure().GetMessageSender();
             this.messageString = MSG;
-            sender1.send(this);
-            Thread.sleep(100);
-            Tester.ensure(lastMessage is Messaging);
+            sender1.Send(this);
+            Thread.Sleep(100);
+            Tester.Ensure(lastMessage is Messaging);
             Messaging received1 = (Messaging)lastMessage;
-            Tester.ensure(received1.messageString.Equals(MSG));
+            Tester.Ensure(received1.messageString.Equals(MSG));
          }
       }
       
-      public void processMessage(ObjectContainer con, Object message) {
+      public void ProcessMessage(ObjectContainer con, Object message) {
          lastMessage = message;
       }
    }

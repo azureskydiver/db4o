@@ -1,4 +1,4 @@
-namespace com.db4o.test
+﻿namespace com.db4o.test
 {
 	using System;
 	using com.db4o;
@@ -58,81 +58,81 @@ namespace com.db4o.test
 	
 		const int ARRAY_LENGTH = 1024*512;
 	
-		public void store()
+		public void Store()
 		{
-			configure();
+			Configure();
 			for (int i=0; i<INSTANCES; ++i)
 			{
-				Tester.store(new ByteArrayHolder(createByteArray()));
-				Tester.store(new SerializableByteArrayHolder(createByteArray()));
+				Tester.Store(new ByteArrayHolder(CreateByteArray()));
+				Tester.Store(new SerializableByteArrayHolder(CreateByteArray()));
 			}
 		}
 
-		public void configure()
+		public void Configure()
 		{
-			com.db4o.Db4o.configure().objectClass(typeof(SerializableByteArrayHolder)).translate(new TSerializable());
+			com.db4o.Db4o.Configure().ObjectClass(typeof(SerializableByteArrayHolder)).Translate(new TSerializable());
 		}
 
-		public void testEmptyFunction()
+		public void TestEmptyFunction()
 		{
-			time("empty loop", new Function(Empty));
+			Time("empty loop", new Function(Empty));
 		}
 
 		void Empty()
 		{
 		}
 
-		public void testSerializableByteArrayHolder()
+		public void TestSerializableByteArrayHolder()
 		{
-			time("TSerializable", new Function(QuerySerializableByteArrayHolder));
+			Time("TSerializable", new Function(QuerySerializableByteArrayHolder));
 		}
 
 		private void QuerySerializableByteArrayHolder()
 		{
-			executeQuery(typeof(SerializableByteArrayHolder));
+			ExecuteQuery(typeof(SerializableByteArrayHolder));
 		}
 		
-		public void testByteArrayHolder()
+		public void TestByteArrayHolder()
 		{
-			time("raw byte array", new Function(QueryByteArrayHolder));
+			Time("raw byte array", new Function(QueryByteArrayHolder));
 		}
 
 		private void QueryByteArrayHolder()
 		{
-			executeQuery(typeof(ByteArrayHolder));
+			ExecuteQuery(typeof(ByteArrayHolder));
 		}
 
-		void executeQuery(Type type)
+		void ExecuteQuery(Type type)
 		{
-			Query query = Tester.query();
-			query.constrain(type);
+			Query query = Tester.Query();
+			query.Constrain(type);
 			
-			ObjectSet os = query.execute();
-			Tester.ensure(INSTANCES == os.size());
+			ObjectSet os = query.Execute();
+			Tester.Ensure(INSTANCES == os.Size());
 			
-			while (os.hasNext())
+			while (os.HasNext())
 			{
-				Tester.ensure(ARRAY_LENGTH == ((IByteArrayHolder)os.next()).Bytes.Length);
+				Tester.Ensure(ARRAY_LENGTH == ((IByteArrayHolder)os.Next()).Bytes.Length);
 			}
 		}
 
 		delegate void Function();
 
 		// HACK: parameter changed to _f for pascalcase conversion purposes
-		void time(string label, Function _f)
+		void Time(string label, Function _f)
 		{
 			DateTime start = DateTime.Now;
 			for (int i=0; i<ITERATIONS; ++i)
 			{
-				Tester.close();
-				Tester.open();
+				Tester.Close();
+				Tester.Open();
 				_f();
 			}
 			DateTime end = DateTime.Now;
 			System.Console.WriteLine(label + ": {0} iterations took {1}ms", ITERATIONS, (end-start).TotalMilliseconds);
 		}
 		
-		byte[] createByteArray()
+		byte[] CreateByteArray()
 		{
 			byte[] bytes = new byte[ARRAY_LENGTH];
 			for (int i=0; i<bytes.Length; ++i)

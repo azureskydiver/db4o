@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -16,24 +16,24 @@ namespace com.db4o.test {
       public PsfvHelper two;
       public PsfvHelper three;
       
-      public void configure() {
-         Db4o.configure().objectClass(this).persistStaticFieldValues();
+      public void Configure() {
+         Db4o.Configure().ObjectClass(this).PersistStaticFieldValues();
       }
       
-      public void store() {
-         Tester.deleteAllInstances(this);
+      public void Store() {
+         Tester.DeleteAllInstances(this);
          PersistStaticFieldValues psfv1 = new PersistStaticFieldValues();
          psfv1.one = ONE;
          psfv1.two = TWO;
          psfv1.three = THREE;
-         Tester.store(psfv1);
+         Tester.Store(psfv1);
       }
       
-      public void test() {
-         PersistStaticFieldValues psfv1 = (PersistStaticFieldValues)Tester.getOne(this);
-         Tester.ensure(psfv1.one == ONE);
-         Tester.ensure(psfv1.two == TWO);
-         Tester.ensure(psfv1.three == THREE);
+      public void Test() {
+         PersistStaticFieldValues psfv1 = (PersistStaticFieldValues)Tester.GetOne(this);
+         Tester.Ensure(psfv1.one == ONE);
+         Tester.Ensure(psfv1.two == TWO);
+         Tester.Ensure(psfv1.three == THREE);
       }
       
       public class PsfvHelper {

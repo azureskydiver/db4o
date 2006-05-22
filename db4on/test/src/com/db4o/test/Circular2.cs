@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -11,18 +11,18 @@ namespace com.db4o.test
 	{
         Hashtable ht;
     
-        public void storeOne(){
-            Tester.objectContainer().configure().updateDepth(int.MaxValue);
+        public void StoreOne(){
+            Tester.ObjectContainer().Configure().UpdateDepth(int.MaxValue);
             ht = new Hashtable();
             C2C c2c = new C2C();
             c2c.parent = this;
             ht["test"] = c2c;
         }
     
-        public void testOne(){
+        public void TestOne(){
             C2C c2c = (C2C)ht["test"];
-            Tester.ensure(c2c.parent == this);
-            Tester.objectContainer().configure().updateDepth(5);
+            Tester.Ensure(c2c.parent == this);
+            Tester.ObjectContainer().Configure().UpdateDepth(5);
         }
     
     }

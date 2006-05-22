@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -11,40 +11,40 @@ namespace com.db4o.test {
       }
       internal String myString;
       
-      public void test() {
-         ObjectContainer con = Tester.objectContainer();
-         Tester.deleteAllInstances(this);
+      public void Test() {
+         ObjectContainer con = Tester.ObjectContainer();
+         Tester.DeleteAllInstances(this);
          IsStored isStored1 = new IsStored();
          isStored1.myString = "isStored";
-         con.set(isStored1);
-         Tester.ensure(con.ext().isStored(isStored1));
-         Tester.ensure(Tester.occurrences(this) == 1);
-         con.delete(isStored1);
-         Tester.ensure(!con.ext().isStored(isStored1));
-         Tester.ensure(Tester.occurrences(this) == 0);
-         con.commit();
-         if (con.ext().isStored(isStored1)) {
+         con.Set(isStored1);
+         Tester.Ensure(con.Ext().IsStored(isStored1));
+         Tester.Ensure(Tester.Occurrences(this) == 1);
+         con.Delete(isStored1);
+         Tester.Ensure(!con.Ext().IsStored(isStored1));
+         Tester.Ensure(Tester.Occurrences(this) == 0);
+         con.Commit();
+         if (con.Ext().IsStored(isStored1)) {
             if (!Tester.clientServer) {
-               Tester.error();
+               Tester.Error();
             }
          }
-         Tester.ensure(Tester.occurrences(this) == 0);
-         con.set(isStored1);
-         Tester.ensure(con.ext().isStored(isStored1));
-         Tester.ensure(Tester.occurrences(this) == 1);
-         con.commit();
-         Tester.ensure(con.ext().isStored(isStored1));
-         Tester.ensure(Tester.occurrences(this) == 1);
-         con.delete(isStored1);
-         Tester.ensure(!con.ext().isStored(isStored1));
-         Tester.ensure(Tester.occurrences(this) == 0);
-         con.commit();
-         if (con.ext().isStored(isStored1)) {
+         Tester.Ensure(Tester.Occurrences(this) == 0);
+         con.Set(isStored1);
+         Tester.Ensure(con.Ext().IsStored(isStored1));
+         Tester.Ensure(Tester.Occurrences(this) == 1);
+         con.Commit();
+         Tester.Ensure(con.Ext().IsStored(isStored1));
+         Tester.Ensure(Tester.Occurrences(this) == 1);
+         con.Delete(isStored1);
+         Tester.Ensure(!con.Ext().IsStored(isStored1));
+         Tester.Ensure(Tester.Occurrences(this) == 0);
+         con.Commit();
+         if (con.Ext().IsStored(isStored1)) {
             if (!Tester.clientServer) {
-               Tester.error();
+               Tester.Error();
             }
          }
-         Tester.ensure(Tester.occurrences(this) == 0);
+         Tester.Ensure(Tester.Occurrences(this) == 0);
       }
    }
 }

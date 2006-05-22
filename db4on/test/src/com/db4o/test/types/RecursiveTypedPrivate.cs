@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -11,19 +11,19 @@ namespace com.db4o.test.types {
       private RecursiveTypedPrivate recurse;
       private String depth;
       
-      public override void set(int ver) {
-         set(ver, 10);
+      public override void Set(int ver) {
+         Set(ver, 10);
       }
       
-      public void set(int ver, int a_depth) {
+      public void Set(int ver, int a_depth) {
          depth = "s" + ver + ":" + a_depth;
          if (a_depth > 0) {
             recurse = new RecursiveTypedPrivate();
-            recurse.set(ver, a_depth - 1);
+            recurse.Set(ver, a_depth - 1);
          }
       }
       
-      public override bool jdk2() {
+      public override bool Jdk2() {
          return true;
       }
    }

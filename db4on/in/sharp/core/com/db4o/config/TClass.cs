@@ -4,30 +4,37 @@ using System;
 using j4o.lang;
 using com.db4o;
 
-namespace com.db4o.config {
-
+namespace com.db4o.config
+{
 	/// <exclude />
-    public class TClass : ObjectConstructor {
-		
-		static readonly Class _stringClass = Class.getClassForType(typeof(String));
-      
-        public void onActivate(ObjectContainer objectContainer, object obj, object members) {
-        }
-      
-        public Object onInstantiate(ObjectContainer objectContainer, object obj) {
-            try { 
-                return Class.forName((String)obj);
-            }  catch (Exception exception) { 
-                return null;
-            }
-        }
-      
-        public Object onStore(ObjectContainer objectContainer, object obj) {
-            return ((Class)obj).getName();
-        }
-      
-        public Class storedClass() {
-            return _stringClass;
-        }
-    }
+	public class TClass : ObjectConstructor
+	{
+		static readonly Class _stringClass = Class.GetClassForType(typeof(String));
+
+		public void OnActivate(ObjectContainer objectContainer, object obj, object members)
+		{
+		}
+
+		public Object OnInstantiate(ObjectContainer objectContainer, object obj)
+		{
+			try
+			{
+				return Class.ForName((String)obj);
+			}
+			catch (Exception exception)
+			{
+				return null;
+			}
+		}
+
+		public Object OnStore(ObjectContainer objectContainer, object obj)
+		{
+			return ((Class)obj).GetName();
+		}
+
+		public Class StoredClass()
+		{
+			return _stringClass;
+		}
+	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -10,7 +10,7 @@ namespace com.db4o.config {
 	/// <exclude />
     public class TDictionary : ObjectTranslator {
 
-        public void onActivate(ObjectContainer objectContainer, object obj, object members){
+        public void OnActivate(ObjectContainer objectContainer, object obj, object members){
             IDictionary dict = (IDictionary)obj;
             dict.Clear();
             if(members != null){
@@ -23,7 +23,7 @@ namespace com.db4o.config {
             }
         }
 
-        public Object onStore(ObjectContainer objectContainer, object obj){
+        public Object OnStore(ObjectContainer objectContainer, object obj){
             IDictionary dict = (IDictionary)obj;
             Entry[] entries = new Entry[dict.Count];
             IDictionaryEnumerator e = dict.GetEnumerator();
@@ -37,8 +37,8 @@ namespace com.db4o.config {
             return entries;
         }
 
-        public Class storedClass(){
-            return Class.getClassForType(typeof(Entry[]));
+        public Class StoredClass(){
+            return Class.GetClassForType(typeof(Entry[]));
         }
     }
 }

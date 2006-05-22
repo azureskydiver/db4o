@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -11,28 +11,28 @@ namespace com.db4o.test {
         int cnt;
         IList list;
     
-        public void configure(){
-            Db4o.configure().objectClass(this).objectField("cnt").indexed(true);
+        public void Configure(){
+            Db4o.Configure().ObjectClass(this).ObjectField("cnt").Indexed(true);
         }
     
-        public void store(){
+        public void Store(){
             OrClassConstraintInList occ = new OrClassConstraintInList();
-            occ.list = Tester.objectContainer().collections().newLinkedList();
+            occ.list = Tester.ObjectContainer().Collections().NewLinkedList();
             occ.list.Add(new Atom());
-            Tester.store(occ);
+            Tester.Store(occ);
             occ = new OrClassConstraintInList();
-            occ.list = Tester.objectContainer().collections().newLinkedList();
+            occ.list = Tester.ObjectContainer().Collections().NewLinkedList();
             occ.cnt = 1;
-            Tester.store(occ);
+            Tester.Store(occ);
         }
     
-        public void test(){
-            Query q = Tester.query();
-            q.constrain(typeof(OrClassConstraintInList));
-            Constraint c1 = q.descend("list").constrain(typeof(Atom));
-            Constraint c2 = q.descend("cnt").constrain(1);
-            c1.or(c2);
-            Tester.ensure(q.execute().size() == 2);
+        public void Test(){
+            Query q = Tester.Query();
+            q.Constrain(typeof(OrClassConstraintInList));
+            Constraint c1 = q.Descend("list").Constrain(typeof(Atom));
+            Constraint c2 = q.Descend("cnt").Constrain(1);
+            c1.Or(c2);
+            Tester.Ensure(q.Execute().Size() == 2);
         }
     }
 }

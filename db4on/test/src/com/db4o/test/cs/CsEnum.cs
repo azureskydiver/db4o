@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -46,74 +46,74 @@ namespace com.db4o.test.cs
 			}
 		}
 
-		public void store()
+		public void Store()
 		{
-			Tester.deleteAllInstances(this);
-			Tester.store(new CsEnum(CsEnumState.Open));
-			Tester.store(new CsEnum(CsEnumState.Closed));
-			Tester.store(new CsEnum(CsEnumState.Running));
+			Tester.DeleteAllInstances(this);
+			Tester.Store(new CsEnum(CsEnumState.Open));
+			Tester.Store(new CsEnum(CsEnumState.Closed));
+			Tester.Store(new CsEnum(CsEnumState.Running));
 		}
 
-		public void testValueConstrain()
+		public void TestValueConstrain()
 		{
-			Query q = Tester.query();
-			q.constrain(typeof(CsEnum));
-			ObjectSet os = q.execute();
-			Tester.ensure(os.size() == 3);
+			Query q = Tester.Query();
+			q.Constrain(typeof(CsEnum));
+			ObjectSet os = q.Execute();
+			Tester.Ensure(os.Size() == 3);
 
-			tstQueryByEnum(CsEnumState.Open);
-			tstQueryByEnum(CsEnumState.Closed);
+			TstQueryByEnum(CsEnumState.Open);
+			TstQueryByEnum(CsEnumState.Closed);
 		}
 
-		public void testOrConstrain()
+		public void TestOrConstrain()
 		{
-			Query q = Tester.query();
-			q.constrain(typeof(CsEnum));
-			q.descend("_state").constrain(CsEnumState.Open).or(
-				q.descend("_state").constrain(CsEnumState.Running));
+			Query q = Tester.Query();
+			q.Constrain(typeof(CsEnum));
+			q.Descend("_state").Constrain(CsEnumState.Open).Or(
+				q.Descend("_state").Constrain(CsEnumState.Running));
 			
-			ensureObjectSet(q.execute(), CsEnumState.Open, CsEnumState.Running);
+			EnsureObjectSet(q.Execute(), CsEnumState.Open, CsEnumState.Running);
 		}
 
-		public void testQBE()
+		public void TestQBE()
 		{
-			tstQBE(3, CsEnumState.None); // None is the zero/uninitialized value
-			tstQBE(1, CsEnumState.Closed);
-			tstQBE(1, CsEnumState.Open);
-			tstQBE(1, CsEnumState.Running);
+			TstQBE(3, CsEnumState.None); // None is the zero/uninitialized value
+			TstQBE(1, CsEnumState.Closed);
+			TstQBE(1, CsEnumState.Open);
+			TstQBE(1, CsEnumState.Running);
 		}
 
-		private void tstQBE(int expectedCount, CsEnumState value)
+		private void TstQBE(int expectedCount, CsEnumState value)
 		{
-			ObjectSet os = Tester.objectContainer().get(new CsEnum(value));
-			Tester.ensureEquals(expectedCount, os.size());
+			ObjectSet os = Tester.ObjectContainer().Get(new CsEnum(value));
+			Tester.EnsureEquals(expectedCount, os.Size());
 		}
 
-		private void ensureObjectSet(ObjectSet os, params CsEnumState[] expected)
+		private void EnsureObjectSet(ObjectSet os, params CsEnumState[] expected)
 		{
-			Tester.ensureEquals(expected.Length, os.size());
+			Tester.EnsureEquals(expected.Length, os.Size());
 			ArrayList l = new ArrayList();
-			while (os.hasNext())
+			while (os.HasNext())
 			{
-				l.Add(((CsEnum)os.next()).State);
+				l.Add(((CsEnum)os.Next()).State);
 			}
 			
 			foreach (CsEnumState e in expected)
 			{	
-				Tester.ensure(l.Contains(e));
+				Tester.Ensure(l.Contains(e));
 				l.Remove(e);
 			}
 		}
 
-		void tstQueryByEnum(CsEnumState template)
+		void TstQueryByEnum(CsEnumState template)
 		{
-			Query q = Tester.query();
-			q.constrain(typeof(CsEnum));
-			q.descend("_state").constrain(template);
+			Query q = Tester.Query();
+			q.Constrain(typeof(CsEnum));
+			q.Descend("_state").Constrain(template);
 
-			ObjectSet os = q.execute();
-			Tester.ensure(1 == os.size());
-			Tester.ensure(template == ((CsEnum)os.next()).State);
+			ObjectSet os = q.Execute();
+			Tester.Ensure(1 == os.Size());
+			Tester.Ensure(template == ((CsEnum)os.Next()).State);
 		}
 	}
 }

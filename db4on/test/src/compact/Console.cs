@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Drawing;
@@ -104,7 +104,7 @@ namespace com.db4o {
 						System.Console.WriteLine(line);
 					}
 				} else {
-					staticThis.printLines();
+					staticThis.PrintLines();
 				}
             }
         }
@@ -113,7 +113,7 @@ namespace com.db4o {
             WriteLine("");
         }
 
-        private void printLines(){
+        private void PrintLines(){
             Graphics g = this.CreateGraphics();
             Font font = new Font("Verdana", 8, FontStyle.Regular);
             Brush brush = new SolidBrush(Color.Black);

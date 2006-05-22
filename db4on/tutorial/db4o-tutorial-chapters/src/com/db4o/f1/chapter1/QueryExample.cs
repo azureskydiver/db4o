@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using com.db4o;
 using com.db4o.query;
 using com.db4o.f1;
@@ -9,141 +9,141 @@ namespace com.db4o.f1.chapter1
     {
         public static void Main(string[] args)
         {
-            ObjectContainer db = Db4o.openFile(Util.YapFileName);
+            ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
             try
             {
-                storeFirstPilot(db);
-                storeSecondPilot(db);
-                retrieveAllPilots(db);
-                retrievePilotByName(db);
-                retrievePilotByExactPoints(db);
-                retrieveByNegation(db);
-                retrieveByConjunction(db);
-                retrieveByDisjunction(db);
-                retrieveByComparison(db);
-                retrieveByDefaultFieldValue(db);
-                retrieveSorted(db); 
-                clearDatabase(db);
+                StoreFirstPilot(db);
+                StoreSecondPilot(db);
+                RetrieveAllPilots(db);
+                RetrievePilotByName(db);
+                RetrievePilotByExactPoints(db);
+                RetrieveByNegation(db);
+                RetrieveByConjunction(db);
+                RetrieveByDisjunction(db);
+                RetrieveByComparison(db);
+                RetrieveByDefaultFieldValue(db);
+                RetrieveSorted(db); 
+                ClearDatabase(db);
             }
             finally
             {
-                db.close();
+                db.Close();
             }
         }
     
-        public static void storeFirstPilot(ObjectContainer db)
+        public static void StoreFirstPilot(ObjectContainer db)
         {
             Pilot pilot1 = new Pilot("Michael Schumacher", 100);
-            db.set(pilot1);
+            db.Set(pilot1);
             Console.WriteLine("Stored {0}", pilot1);
         }
     
-        public static void storeSecondPilot(ObjectContainer db)
+        public static void StoreSecondPilot(ObjectContainer db)
         {
             Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
-            db.set(pilot2);
+            db.Set(pilot2);
             Console.WriteLine("Stored {0}", pilot2);
         }
     
-        public static void retrieveAllPilots(ObjectContainer db)
+        public static void RetrieveAllPilots(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            ObjectSet result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            ObjectSet result = query.Execute();
+            ListResult(result);
         }
     
-        public static void retrievePilotByName(ObjectContainer db)
+        public static void RetrievePilotByName(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            query.descend("_name").constrain("Michael Schumacher");
-            ObjectSet result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            query.Descend("_name").Constrain("Michael Schumacher");
+            ObjectSet result = query.Execute();
+            ListResult(result);
         }
         
-        public static void retrievePilotByExactPoints(ObjectContainer db)
+        public static void RetrievePilotByExactPoints(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            query.descend("_points").constrain(100);
-            ObjectSet result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            query.Descend("_points").Constrain(100);
+            ObjectSet result = query.Execute();
+            ListResult(result);
         }
     
-        public static void retrieveByNegation(ObjectContainer db)
+        public static void RetrieveByNegation(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            query.descend("_name").constrain("Michael Schumacher").not();
-            ObjectSet result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            query.Descend("_name").Constrain("Michael Schumacher").Not();
+            ObjectSet result = query.Execute();
+            ListResult(result);
         }
     
-        public static void retrieveByConjunction(ObjectContainer db)
+        public static void RetrieveByConjunction(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            Constraint constr = query.descend("_name")
-                    .constrain("Michael Schumacher");
-            query.descend("_points")
-                    .constrain(99).and(constr);
-            ObjectSet result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            Constraint constr = query.Descend("_name")
+                    .Constrain("Michael Schumacher");
+            query.Descend("_points")
+                    .Constrain(99).And(constr);
+            ObjectSet result = query.Execute();
+            ListResult(result);
         }
     
-        public static void retrieveByDisjunction(ObjectContainer db)
+        public static void RetrieveByDisjunction(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            Constraint constr = query.descend("_name")
-                    .constrain("Michael Schumacher");
-            query.descend("_points")
-                    .constrain(99).or(constr);
-            ObjectSet result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            Constraint constr = query.Descend("_name")
+                    .Constrain("Michael Schumacher");
+            query.Descend("_points")
+                    .Constrain(99).Or(constr);
+            ObjectSet result = query.Execute();
+            ListResult(result);
         }
     
-        public static void retrieveByComparison(ObjectContainer db)
+        public static void RetrieveByComparison(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            query.descend("_points")
-                    .constrain(99).greater();
-            ObjectSet result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            query.Descend("_points")
+                    .Constrain(99).Greater();
+            ObjectSet result = query.Execute();
+            ListResult(result);
         }
     
-        public static void retrieveByDefaultFieldValue(ObjectContainer db)
+        public static void RetrieveByDefaultFieldValue(ObjectContainer db)
         {
             Pilot somebody = new Pilot("Somebody else", 0);
-            db.set(somebody);
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            query.descend("_points").constrain(0);
-            ObjectSet result = query.execute();
-            listResult(result);
-            db.delete(somebody);
+            db.Set(somebody);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            query.Descend("_points").Constrain(0);
+            ObjectSet result = query.Execute();
+            ListResult(result);
+            db.Delete(somebody);
         }
         
-        public static void retrieveSorted(ObjectContainer db)
+        public static void RetrieveSorted(ObjectContainer db)
         {
-            Query query = db.query();
-            query.constrain(typeof(Pilot));
-            query.descend("_name").orderAscending();
-            ObjectSet result = query.execute();
-            listResult(result);
-            query.descend("_name").orderDescending();
-            result = query.execute();
-            listResult(result);
+            Query query = db.Query();
+            query.Constrain(typeof(Pilot));
+            query.Descend("_name").OrderAscending();
+            ObjectSet result = query.Execute();
+            ListResult(result);
+            query.Descend("_name").OrderDescending();
+            result = query.Execute();
+            ListResult(result);
         }
     
-        public static void clearDatabase(ObjectContainer db)
+        public static void ClearDatabase(ObjectContainer db)
         {
-            ObjectSet result = db.get(typeof(Pilot));
+            ObjectSet result = db.Get(typeof(Pilot));
             foreach (object item in result)
             {
-                db.delete(item);
+                db.Delete(item);
             }
         }
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -19,7 +19,7 @@ namespace com.db4o.test.soda.classes.wrapper.untyped {
             i_char = System.Convert.ToChar(a_char);
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STCharWU((char)0),
                                    new STCharWU((char)1),
@@ -27,77 +27,77 @@ namespace com.db4o.test.soda.classes.wrapper.untyped {
                                    new STCharWU((char)909)         };
         }
       
-        public void testEquals() {
-            Query q1 = st.query();
-            q1.constrain(new STCharWU((char)0));
-            q1.descend(DESCENDANT).constrain(System.Convert.ToChar((char)0));
-            st.expectOne(q1, store()[0]);
+        public void TestEquals() {
+            Query q1 = st.Query();
+            q1.Constrain(new STCharWU((char)0));
+            q1.Descend(DESCENDANT).Constrain(System.Convert.ToChar((char)0));
+            st.ExpectOne(q1, Store()[0]);
         }
       
-        public void testNotEquals() {
-            Query q1 = st.query();
-            Object[] r1 = store();
-            Constraint c1 = q1.constrain(r1[0]);
-            q1.descend(DESCENDANT).constraints().not();
-            st.expect(q1, new Object[]{
+        public void TestNotEquals() {
+            Query q1 = st.Query();
+            Object[] r1 = Store();
+            Constraint c1 = q1.Constrain(r1[0]);
+            q1.Descend(DESCENDANT).Constraints().Not();
+            st.Expect(q1, new Object[]{
                                           r1[1],
                                           r1[2],
                                           r1[3]         });
         }
       
-        public void testGreater() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STCharWU((char)9));
-            q1.descend(DESCENDANT).constraints().greater();
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestGreater() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STCharWU((char)9));
+            q1.Descend(DESCENDANT).Constraints().Greater();
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[2],
                                           r1[3]         });
         }
       
-        public void testSmaller() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STCharWU((char)1));
-            q1.descend(DESCENDANT).constraints().smaller();
-            st.expectOne(q1, store()[0]);
+        public void TestSmaller() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STCharWU((char)1));
+            q1.Descend(DESCENDANT).Constraints().Smaller();
+            st.ExpectOne(q1, Store()[0]);
         }
       
-        public void testIdentity() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STCharWU((char)1));
-            ObjectSet set1 = q1.execute();
-            STCharWU identityConstraint1 = (STCharWU)set1.next();
+        public void TestIdentity() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STCharWU((char)1));
+            ObjectSet set1 = q1.Execute();
+            STCharWU identityConstraint1 = (STCharWU)set1.Next();
             identityConstraint1.i_char = System.Convert.ToChar((char)9999);
-            q1 = st.query();
-            q1.constrain(identityConstraint1).identity();
+            q1 = st.Query();
+            q1.Constrain(identityConstraint1).Identity();
             identityConstraint1.i_char = System.Convert.ToChar((char)1);
-            st.expectOne(q1, store()[1]);
+            st.ExpectOne(q1, Store()[1]);
         }
       
-        public void testNotIdentity() {
-            Query q1 = st.query();
-            Constraint c1 = q1.constrain(new STCharWU((char)1));
-            ObjectSet set1 = q1.execute();
-            STCharWU identityConstraint1 = (STCharWU)set1.next();
+        public void TestNotIdentity() {
+            Query q1 = st.Query();
+            Constraint c1 = q1.Constrain(new STCharWU((char)1));
+            ObjectSet set1 = q1.Execute();
+            STCharWU identityConstraint1 = (STCharWU)set1.Next();
             identityConstraint1.i_char = System.Convert.ToChar((char)9080);
-            q1 = st.query();
-            q1.constrain(identityConstraint1).identity().not();
+            q1 = st.Query();
+            q1.Constrain(identityConstraint1).Identity().Not();
             identityConstraint1.i_char = System.Convert.ToChar((char)1);
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[2],
                                           r1[3]         });
         }
       
-        public void testConstraints() {
-            Query q1 = st.query();
-            q1.constrain(new STCharWU((char)1));
-            q1.constrain(new STCharWU((char)0));
-            Constraints cs1 = q1.constraints();
-            Constraint[] csa1 = cs1.toArray();
+        public void TestConstraints() {
+            Query q1 = st.Query();
+            q1.Constrain(new STCharWU((char)1));
+            q1.Constrain(new STCharWU((char)0));
+            Constraints cs1 = q1.Constraints();
+            Constraint[] csa1 = cs1.ToArray();
             if (csa1.Length != 2) {
-                st.error("Constraints not returned");
+                st.Error("Constraints not returned");
             }
         }
       

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -18,7 +18,7 @@ namespace com.db4o.test.soda.classes.simple {
             i_boolean = a_boolean;
         }
       
-        public Object[] store() {
+        public Object[] Store() {
             return new Object[]{
                                    new STBoolean(false),
                                    new STBoolean(true),
@@ -26,19 +26,19 @@ namespace com.db4o.test.soda.classes.simple {
                                    new STBoolean(false)         };
         }
       
-        public void testEqualsTrue() {
-            Query q1 = st.query();
-            q1.constrain(new STBoolean(true));
-            Object[] r1 = store();
-            st.expectOne(q1, new STBoolean(true));
+        public void TestEqualsTrue() {
+            Query q1 = st.Query();
+            q1.Constrain(new STBoolean(true));
+            Object[] r1 = Store();
+            st.ExpectOne(q1, new STBoolean(true));
         }
       
-        public void testEqualsFalse() {
-            Query q1 = st.query();
-            q1.constrain(new STBoolean(false));
-            q1.descend("i_boolean").constrain(System.Convert.ToBoolean(false));
-            Object[] r1 = store();
-            st.expect(q1, new Object[]{
+        public void TestEqualsFalse() {
+            Query q1 = st.Query();
+            q1.Constrain(new STBoolean(false));
+            q1.Descend("i_boolean").Constrain(System.Convert.ToBoolean(false));
+            Object[] r1 = Store();
+            st.Expect(q1, new Object[]{
                                           r1[0],
                                           r1[2],
                                           r1[3]         });

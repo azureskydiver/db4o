@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Text;
@@ -59,7 +59,7 @@ namespace com.db4o.test
 #if NET_2_0
 			return GetCSharpCompilerInfo().CreateProvider();
 #else
-			return (CodeDomProvider)j4o.lang.Class.forName("Microsoft.CSharp.CSharpCodeProvider, System").newInstance();
+			return (CodeDomProvider)j4o.lang.Class.ForName("Microsoft.CSharp.CSharpCodeProvider, System").NewInstance();
 #endif
 		}
 

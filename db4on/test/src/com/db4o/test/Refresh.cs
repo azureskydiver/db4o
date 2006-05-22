@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o.ext;
@@ -23,83 +23,83 @@ namespace com.db4o.test {
             this.child = child;
         }
 
-        public void store() {
+        public void Store() {
             Refresh r3 = new Refresh("o3", null);
             Refresh r2 = new Refresh("o2", r3);
             Refresh r1 = new Refresh("o1", r2);
-            Tester.store(r1);
+            Tester.Store(r1);
         }
 
-        public void test() {
-            ExtObjectContainer oc1 = Tester.objectContainer();
-            Refresh r11 = getRoot(oc1);
+        public void Test() {
+            ExtObjectContainer oc1 = Tester.ObjectContainer();
+            Refresh r11 = GetRoot(oc1);
             r11.name = "cc";
-            oc1.refresh(r11, 0);
-            Tester.ensure(r11.name.Equals("cc"));
-            oc1.refresh(r11, 1);
-            Tester.ensure(r11.name.Equals("o1"));
+            oc1.Refresh(r11, 0);
+            Tester.Ensure(r11.name.Equals("cc"));
+            oc1.Refresh(r11, 1);
+            Tester.Ensure(r11.name.Equals("o1"));
             r11.child.name = "cc";
-            oc1.refresh(r11, 1);
-            Tester.ensure(r11.child.name.Equals("cc"));
-            oc1.refresh(r11, 2);
-            Tester.ensure(r11.child.name.Equals("o2"));
+            oc1.Refresh(r11, 1);
+            Tester.Ensure(r11.child.name.Equals("cc"));
+            oc1.Refresh(r11, 2);
+            Tester.Ensure(r11.child.name.Equals("o2"));
 
-            if (Tester.isClientServer()) {
+            if (Tester.IsClientServer()) {
                 ExtObjectContainer oc2 = null;
                 try {
-                    oc2 = Db4o.openClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, AllTests.DB4O_USER,
-                        AllTests.DB4O_PASSWORD).ext();
+                    oc2 = Db4o.OpenClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, AllTests.DB4O_USER,
+                        AllTests.DB4O_PASSWORD).Ext();
                 } catch (Exception e) {
                     Console.WriteLine(e);
                     return;
                 }
 
-                Refresh r12 = getRoot(oc2);
+                Refresh r12 = GetRoot(oc2);
                 Refresh r32 = r12.child.child;
 
                 r11.child.name = "n2";
                 r11.child.child.name = "n3";
                 r11.child.child.child = new Refresh("n4", null);
-                oc1.set(r11.child.child);
-                oc1.set(r11.child);
-                oc1.set(r11);
+                oc1.Set(r11.child.child);
+                oc1.Set(r11.child);
+                oc1.Set(r11);
 
-                oc2.refresh(r12, int.MaxValue);
-                Tester.ensure(r12.child.name.Equals("o2"));
+                oc2.Refresh(r12, int.MaxValue);
+                Tester.Ensure(r12.child.name.Equals("o2"));
 
-                Tester.commitSync(oc1, oc2);
+                Tester.CommitSync(oc1, oc2);
 
-                oc2.refresh(r12, int.MaxValue);
-                Tester.ensure(r12.child.name.Equals("n2"));
-                Tester.ensure(r12.child.child.name.Equals("n3"));
-                Tester.ensure(r12.child.child.child.name.Equals("n4"));
+                oc2.Refresh(r12, int.MaxValue);
+                Tester.Ensure(r12.child.name.Equals("n2"));
+                Tester.Ensure(r12.child.child.name.Equals("n3"));
+                Tester.Ensure(r12.child.child.child.name.Equals("n4"));
 
                 r11.child.child.child = null;
-                oc1.set(r11.child.child);
-                Tester.commitSync(oc1, oc2);
+                oc1.Set(r11.child.child);
+                Tester.CommitSync(oc1, oc2);
 
-                oc2.refresh(r12, int.MaxValue);
-                Tester.ensure(r12.child.child.child == null);
+                oc2.Refresh(r12, int.MaxValue);
+                Tester.Ensure(r12.child.child.child == null);
 
                 r11.child.child = new Refresh("nn2", null);
-                oc1.set(r11.child);
-                Tester.commitSync(oc1, oc2);
+                oc1.Set(r11.child);
+                Tester.CommitSync(oc1, oc2);
 
-                oc2.refresh(r12, int.MaxValue);
-                Tester.ensure(r12.child.child != r32);
-                Tester.ensure(r12.child.child.name.Equals("nn2"));
+                oc2.Refresh(r12, int.MaxValue);
+                Tester.Ensure(r12.child.child != r32);
+                Tester.Ensure(r12.child.child.name.Equals("nn2"));
 
-                oc2.close();
+                oc2.Close();
             }
 
         }
 
-        private Refresh getRoot(ObjectContainer oc) {
-            Query q = oc.query();
-            q.constrain(typeof(Refresh));
-            q.descend("name").constrain("o1");
-            ObjectSet objectSet = q.execute();
-            return (Refresh) objectSet.next();
+        private Refresh GetRoot(ObjectContainer oc) {
+            Query q = oc.Query();
+            q.Constrain(typeof(Refresh));
+            q.Descend("name").Constrain("o1");
+            ObjectSet objectSet = q.Execute();
+            return (Refresh) objectSet.Next();
         }
     }
 }

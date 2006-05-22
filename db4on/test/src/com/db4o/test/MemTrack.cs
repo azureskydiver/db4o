@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Text;
@@ -13,7 +13,7 @@ namespace com.db4o.test {
       public MemTrack() : base() {
       }
 
-       public void configure(){
+       public void Configure(){
            if(bigString == null){
                StringBuilder sb = new StringBuilder();
                for(int i = 0; i < 10000; i ++){
@@ -23,9 +23,9 @@ namespace com.db4o.test {
            }
        }
 
-      public void test() {
-         Tester.deleteAllInstances(new Atom());
-         Tester.store(new Atom(bigString + counter++));
+      public void Test() {
+         Tester.DeleteAllInstances(new Atom());
+         Tester.Store(new Atom(bigString + counter++));
       }
    }
 }

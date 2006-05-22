@@ -1,4 +1,4 @@
-/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
+﻿/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
 
 using System;
 using System.IO;
@@ -136,7 +136,7 @@ namespace com.db4o.test
 				tests.Add(typeof(PersistStaticFieldValues));
 
 				// disabled because it fails due to fix
-				// See comments in YapClass.deleteEmbedded1() in the Java sources
+				// See comments in YapClass.DeleteEmbedded1() in the Java sources
 
 				// tests.Add(typeof(PrimitiveArrayFileSize));
 
@@ -197,7 +197,7 @@ namespace com.db4o.test
 		internal bool CLIENT_SERVER = true;
 
 		/**
-		 * use ObjectServer#openClient() instead of Db4o.openClient()
+		 * use ObjectServer#OpenClient() instead of Db4o.OpenClient()
 		 */
 		public static bool EMBEDDED_CLIENT = false;
 	  

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -17,75 +17,75 @@ namespace com.db4o.test
 		}
 		public ArrayList vec;
       
-		public void configure() 
+		public void Configure() 
 		{
-			Db4o.configure().objectClass(j4o.lang.Class.getClassForObject(this).getName()).cascadeOnUpdate(true);
+			Db4o.Configure().ObjectClass(j4o.lang.Class.GetClassForObject(this).GetName()).CascadeOnUpdate(true);
 		}
       
-		public void store() 
+		public void Store() 
 		{
-			Tester.deleteAllInstances(new Atom());
-			Tester.deleteAllInstances(this);
+			Tester.DeleteAllInstances(new Atom());
+			Tester.DeleteAllInstances(this);
 			CascadeToExistingArrayListMember cev1 = new CascadeToExistingArrayListMember();
 			cev1.vec = new ArrayList();
 			Atom atom1 = new Atom("one");
-			Tester.store(atom1);
+			Tester.Store(atom1);
 			cev1.vec.Add(atom1);
-			Tester.store(cev1);
+			Tester.Store(cev1);
 		}
       
-		public void test() 
+		public void Test() 
 		{
-			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE1());
-			Tester.reOpen();
-			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE2());
-			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE3());
-			Tester.reOpen();
-			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE4());
+			Tester.ForEach(new CascadeToExistingArrayListMember(), new MyVisitorE1());
+			Tester.ReOpen();
+			Tester.ForEach(new CascadeToExistingArrayListMember(), new MyVisitorE2());
+			Tester.ForEach(new CascadeToExistingArrayListMember(), new MyVisitorE3());
+			Tester.ReOpen();
+			Tester.ForEach(new CascadeToExistingArrayListMember(), new MyVisitorE4());
 		}
 	}
 
 	public class MyVisitorE1:Visitor4
 	{
-		public void visit(Object obj) 
+		public void Visit(Object obj) 
 		{
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
 			atom1.name = "two";
-			Tester.store(cev1);
+			Tester.Store(cev1);
 			atom1.name = "three";
-			Tester.store(cev1);
+			Tester.Store(cev1);
 		}
 	}
 	public class MyVisitorE2:Visitor4
 	{
-		public void visit(Object obj) 
+		public void Visit(Object obj) 
 		{
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
-			Tester.ensure(atom1.name.Equals("three"));
-			Tester.ensureOccurrences(atom1, 1);
+			Tester.Ensure(atom1.name.Equals("three"));
+			Tester.EnsureOccurrences(atom1, 1);
 		}
 	}
 	public class MyVisitorE3:Visitor4
 	{
-		public void visit(Object obj) 
+		public void Visit(Object obj) 
 		{
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
 			atom1.name = "four";
-			Tester.store(cev1);
+			Tester.Store(cev1);
 		}
 	}
 
 	public class MyVisitorE4:Visitor4
 	{
-		public void visit(Object obj) 
+		public void Visit(Object obj) 
 		{
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
-			Tester.ensure(atom1.name.Equals("four"));
-			Tester.ensureOccurrences(atom1, 1);
+			Tester.Ensure(atom1.name.Equals("four"));
+			Tester.EnsureOccurrences(atom1, 1);
 		}
 	}
 

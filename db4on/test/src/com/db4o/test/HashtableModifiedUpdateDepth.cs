@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -10,28 +10,28 @@ namespace com.db4o.test
 	{
         Hashtable ht;
 
-        public void configure() 
+        public void Configure() 
         {
-            Db4o.configure().updateDepth(int.MaxValue);
+            Db4o.Configure().UpdateDepth(int.MaxValue);
         }
 
-        public void storeOne() 
+        public void StoreOne() 
         {
             ht = new Hashtable();
             ht["hi"] = "five";
         }
 
-        public void testOne() 
+        public void TestOne() 
         {
-            Tester.ensure(ht["hi"].Equals("five"));
+            Tester.Ensure(ht["hi"].Equals("five"));
             ht["hi"] = "six";
-            Tester.store(this);
-            Tester.reOpen();
-            Query q = Tester.query();
-            q.constrain(this.GetType());
+            Tester.Store(this);
+            Tester.ReOpen();
+            Query q = Tester.Query();
+            q.Constrain(this.GetType());
             HashtableModifiedUpdateDepth hmud = 
-                (HashtableModifiedUpdateDepth) q.execute().next();
-            Tester.ensure(hmud.ht["hi"].Equals("six"));
+                (HashtableModifiedUpdateDepth) q.Execute().Next();
+            Tester.Ensure(hmud.ht["hi"].Equals("six"));
         }
 
 	}

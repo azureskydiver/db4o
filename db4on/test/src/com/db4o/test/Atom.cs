@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -23,7 +23,7 @@ namespace com.db4o.test {
          this.name = name;
       }
       
-      public int compareTo(Object obj) {
+      public int CompareTo(Object obj) {
          return 0;
       }
       

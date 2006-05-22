@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -27,223 +27,223 @@ namespace com.db4o.test {
         internal Db4oLinkedListUntypedHelper i_helper;
         internal IList i_subList;
       
-        public void storeOne() {
-            i_list = Tester.objectContainer().collections().newLinkedList();
-            setDefaultValues();
-            i_helper = helper(10);
+        public void StoreOne() {
+            i_list = Tester.ObjectContainer().Collections().NewLinkedList();
+            SetDefaultValues();
+            i_helper = Helper(10);
         }
       
-        private static Db4oLinkedListUntypedHelper helper(int a_depth) {
+        private static Db4oLinkedListUntypedHelper Helper(int a_depth) {
             if (a_depth > 0) {
                 Db4oLinkedListUntypedHelper helper1 = new Db4oLinkedListUntypedHelper();
-                helper1.i_childList = Tester.objectContainer().collections().newLinkedList();
+                helper1.i_childList = Tester.ObjectContainer().Collections().NewLinkedList();
                 helper1.i_childList.Add("hi");
-                helper1.i_child = helper(a_depth - 1);
+                helper1.i_child = Helper(a_depth - 1);
                 return helper1;
             }
             return null;
         }
       
-        private void setDefaultValues() {
+        private void SetDefaultValues() {
             ((IList)i_list).Add(new Atom("wow"));
             ((IList)i_list).Add(new Atom("cool"));
             ((IList)i_list).Add(new Atom("great"));
         }
       
-        public void testOne() {
-            checkHelper(i_helper);
-            runElementTest(true);
+        public void TestOne() {
+            CheckHelper(i_helper);
+            RunElementTest(true);
             bool defrag1 = true;
             if (!Tester.clientServer && defrag1) {
-                long id1 = Tester.objectContainer().getID(this);
-                Tester.close();
-                new Defragment().run(AllTests.FILE_SOLO, true);
-                Tester.open();
-                restoreMembers();
-                checkHelper(i_helper);
-                runElementTest(false);
+                long id1 = Tester.ObjectContainer().GetID(this);
+                Tester.Close();
+                new Defragment().Run(AllTests.FILE_SOLO, true);
+                Tester.Open();
+                RestoreMembers();
+                CheckHelper(i_helper);
+                RunElementTest(false);
             }
         }
       
-        private void runElementTest(bool onOriginal) {
+        private void RunElementTest(bool onOriginal) {
             IList otherList1 = new ArrayList();
             IEnumerator i1 = ((IList)i_list).GetEnumerator();
             i1.MoveNext();
             Atom atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("wow"));
+            Tester.Ensure(atom1.name.Equals("wow"));
             otherList1.Add(atom1);
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("cool"));
+            Tester.Ensure(atom1.name.Equals("cool"));
             otherList1.Add(atom1);
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("great"));
+            Tester.Ensure(atom1.name.Equals("great"));
             otherList1.Add(atom1);
-            Tester.ensure(((IList)i_list).Count == 3);
-            Tester.objectContainer().deactivate(((IList)i_list), Int32.MaxValue);
-            Tester.ensure(((Atom)((IList)i_list)[((IList)i_list).Count - 1]).name.Equals("great"));
-            Tester.objectContainer().deactivate(((IList)i_list), Int32.MaxValue);
+            Tester.Ensure(((IList)i_list).Count == 3);
+            Tester.ObjectContainer().Deactivate(((IList)i_list), Int32.MaxValue);
+            Tester.Ensure(((Atom)((IList)i_list)[((IList)i_list).Count - 1]).name.Equals("great"));
+            Tester.ObjectContainer().Deactivate(((IList)i_list), Int32.MaxValue);
             if (onOriginal) {
-                Query q1 = Tester.query();
+                Query q1 = Tester.Query();
 
                 Db4oLinkedListUntyped template1 = new Db4oLinkedListUntyped();
-                template1.i_list = Tester.objectContainer().collections().newLinkedList();
+                template1.i_list = Tester.ObjectContainer().Collections().NewLinkedList();
                 ((IList)template1.i_list).Add(new Atom("cool"));
-                q1.constrain(template1);
+                q1.Constrain(template1);
 
-                ObjectSet qResult1 = q1.execute();
-                Tester.ensure(qResult1.size() == 1);
-                Tester.ensure(qResult1.next() == this);
+                ObjectSet qResult1 = q1.Execute();
+                Tester.Ensure(qResult1.Size() == 1);
+                Tester.Ensure(qResult1.Next() == this);
             }
             otherList1.Clear();
             Object[] arr1 = new Object[((IList)i_list).Count];
             ((IList)i_list).CopyTo(arr1, 0);
-            Tester.ensure(arr1.Length == 3);
+            Tester.Ensure(arr1.Length == 3);
             atom1 = (Atom)arr1[0];
-            Tester.ensure(atom1.name.Equals("wow"));
+            Tester.Ensure(atom1.name.Equals("wow"));
             atom1 = (Atom)arr1[1];
-            Tester.ensure(atom1.name.Equals("cool"));
+            Tester.Ensure(atom1.name.Equals("cool"));
             atom1 = (Atom)arr1[2];
-            Tester.ensure(atom1.name.Equals("great"));
+            Tester.Ensure(atom1.name.Equals("great"));
             i1 = ((IList)i_list).GetEnumerator();
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("wow"));
+            Tester.Ensure(atom1.name.Equals("wow"));
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("cool"));
+            Tester.Ensure(atom1.name.Equals("cool"));
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("great"));
-            Tester.ensure(((IList)i_list).Count == 3);
-            Tester.ensure(i1.MoveNext() == false );
-            Tester.objectContainer().deactivate(i_list, Int32.MaxValue);
-            Tester.objectContainer().deactivate(i_list, Int32.MaxValue);
+            Tester.Ensure(atom1.name.Equals("great"));
+            Tester.Ensure(((IList)i_list).Count == 3);
+            Tester.Ensure(i1.MoveNext() == false );
+            Tester.ObjectContainer().Deactivate(i_list, Int32.MaxValue);
+            Tester.ObjectContainer().Deactivate(i_list, Int32.MaxValue);
             ((IList)i_list).Add(new Atom("yup"));
-            Tester.ensure(((IList)i_list).Count == 4);
+            Tester.Ensure(((IList)i_list).Count == 4);
             i1 = ((IList)i_list).GetEnumerator();
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("wow"));
+            Tester.Ensure(atom1.name.Equals("wow"));
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("cool"));
+            Tester.Ensure(atom1.name.Equals("cool"));
             i1.MoveNext();
             Atom toRemove1 = (Atom)i1.Current;
-            Tester.ensure(toRemove1.name.Equals("great"));
+            Tester.Ensure(toRemove1.name.Equals("great"));
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("yup"));
-            Tester.ensure(!i1.MoveNext());
+            Tester.Ensure(atom1.name.Equals("yup"));
+            Tester.Ensure(!i1.MoveNext());
             ((IList)i_list).Remove(toRemove1);
-            Tester.objectContainer().deactivate(i_list, Int32.MaxValue);
+            Tester.ObjectContainer().Deactivate(i_list, Int32.MaxValue);
             i1 = ((IList)i_list).GetEnumerator();
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("wow"));
+            Tester.Ensure(atom1.name.Equals("wow"));
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("cool"));
+            Tester.Ensure(atom1.name.Equals("cool"));
             otherList1.Add(atom1);
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("yup"));
+            Tester.Ensure(atom1.name.Equals("yup"));
             otherList1.Add(atom1);
-            Tester.ensure(((IList)i_list).Count == 3);
+            Tester.Ensure(((IList)i_list).Count == 3);
             IEnumerator e = otherList1.GetEnumerator();
             while(e.MoveNext()){
                 ((IList)i_list).Remove(e.Current);
             }
-            Tester.ensure(((IList)i_list).Count == 1);
+            Tester.Ensure(((IList)i_list).Count == 1);
             i1 = ((IList)i_list).GetEnumerator();
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("wow"));
-            Tester.ensure(!i1.MoveNext());
+            Tester.Ensure(atom1.name.Equals("wow"));
+            Tester.Ensure(!i1.MoveNext());
             e = otherList1.GetEnumerator();
             while(e.MoveNext()){
                 ((IList)i_list).Add(e.Current);
             }
-            Tester.ensure(((IList)i_list).Count == 3);
+            Tester.Ensure(((IList)i_list).Count == 3);
             i1 = ((IList)i_list).GetEnumerator();
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("wow"));
+            Tester.Ensure(atom1.name.Equals("wow"));
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("cool"));
+            Tester.Ensure(atom1.name.Equals("cool"));
             i1.MoveNext();
             atom1 = (Atom)i1.Current;
-            Tester.ensure(atom1.name.Equals("yup"));
-            Tester.ensure(!i1.MoveNext());
+            Tester.Ensure(atom1.name.Equals("yup"));
+            Tester.Ensure(!i1.MoveNext());
             Atom[] atarr1 = new Atom[((IList)i_list).Count];
             ((IList)i_list).CopyTo(atarr1, 0);
-            Tester.ensure(atarr1[0].name.Equals("wow"));
-            Tester.ensure(atarr1[1].name.Equals("cool"));
-            Tester.ensure(atarr1[2].name.Equals("yup"));
+            Tester.Ensure(atarr1[0].name.Equals("wow"));
+            Tester.Ensure(atarr1[1].name.Equals("cool"));
+            Tester.Ensure(atarr1[2].name.Equals("yup"));
             ((IList)i_list).Clear();
             ((IList)i_list).Add(new Atom("wow"));
-            Tester.ensure(((IList)i_list).Count == 1);
-            long start1 = j4o.lang.JavaSystem.currentTimeMillis();
+            Tester.Ensure(((IList)i_list).Count == 1);
+            long start1 = j4o.lang.JavaSystem.CurrentTimeMillis();
             for (int j1 = 0; j1 < COUNT; j1++) {
                 ((IList)i_list).Add("more and more " + j1);
             }
-            long stop1 = j4o.lang.JavaSystem.currentTimeMillis();
-            Tester.ensure(((IList)i_list).Count == COUNT + 1);
-            lookupLast();
-            Tester.objectContainer().deactivate(i_list, Int32.MaxValue);
-            lookupLast();
-            Tester.reOpen();
-            restoreMembers();
-            lookupLast();
+            long stop1 = j4o.lang.JavaSystem.CurrentTimeMillis();
+            Tester.Ensure(((IList)i_list).Count == COUNT + 1);
+            LookupLast();
+            Tester.ObjectContainer().Deactivate(i_list, Int32.MaxValue);
+            LookupLast();
+            Tester.ReOpen();
+            RestoreMembers();
+            LookupLast();
             String str1 = (String)((IList)i_list)[10];
             ((IList)i_list)[10] = new Atom("yo");
-            Tester.ensure(str1.Equals("more and more 9"));
+            Tester.Ensure(str1.Equals("more and more 9"));
             atom1 = (Atom)((IList)i_list)[10];
             ((IList)i_list).RemoveAt(10);
-            Tester.ensure(atom1.name.Equals("yo"));
+            Tester.Ensure(atom1.name.Equals("yo"));
             ((IList)i_list).Insert(5, new Atom("sure"));
-            Tester.ensure(((IList)i_list).Count == COUNT + 1);
+            Tester.Ensure(((IList)i_list).Count == COUNT + 1);
             atom1 = (Atom)((IList)i_list)[5];
             ((IList)i_list).RemoveAt(5);
-            Tester.ensure(atom1.name.Equals("sure"));
+            Tester.Ensure(atom1.name.Equals("sure"));
             ((IList)i_list).Insert(0, new Atom("sure"));
-            Tester.ensure(((Atom)((IList)i_list)[0]).name.Equals("sure"));
-            Tester.ensure(((IList)i_list).Count == COUNT + 1);
+            Tester.Ensure(((Atom)((IList)i_list)[0]).name.Equals("sure"));
+            Tester.Ensure(((IList)i_list).Count == COUNT + 1);
             ((IList)i_list).Insert(((IList)i_list).Count, new Atom("sure"));
-            Tester.ensure(((IList)i_list).Count == COUNT + 2);
-            Tester.ensure(((Atom)((IList)i_list)[((IList)i_list).Count - 1]).name.Equals("sure"));
+            Tester.Ensure(((IList)i_list).Count == COUNT + 2);
+            Tester.Ensure(((Atom)((IList)i_list)[((IList)i_list).Count - 1]).name.Equals("sure"));
             atom1 = (Atom)((IList)i_list)[0];
             ((IList)i_list)[0] = "huh";
-            Tester.ensure(atom1.name.Equals("sure"));
-            Tester.ensure(((IList)i_list).Count == COUNT + 2);
+            Tester.Ensure(atom1.name.Equals("sure"));
+            Tester.Ensure(((IList)i_list).Count == COUNT + 2);
             ((IList)i_list).Clear();
-            Tester.ensure(((IList)i_list).Count == 0);
-            setDefaultValues();
+            Tester.Ensure(((IList)i_list).Count == 0);
+            SetDefaultValues();
         }
       
-        private void restoreMembers() {
-            Query q1 = Tester.query();
-            q1.constrain(j4o.lang.Class.getClassForObject(this));
-            ObjectSet objectSet1 = q1.execute();
-            Db4oLinkedListUntyped dll1 = (Db4oLinkedListUntyped)objectSet1.next();
+        private void RestoreMembers() {
+            Query q1 = Tester.Query();
+            q1.Constrain(j4o.lang.Class.GetClassForObject(this));
+            ObjectSet objectSet1 = q1.Execute();
+            Db4oLinkedListUntyped dll1 = (Db4oLinkedListUntyped)objectSet1.Next();
             i_list = dll1.i_list;
             i_helper = dll1.i_helper;
         }
       
-        private void lookupLast() {
-            long start1 = j4o.lang.JavaSystem.currentTimeMillis();
+        private void LookupLast() {
+            long start1 = j4o.lang.JavaSystem.CurrentTimeMillis();
             String str1 = (String)((IList)i_list)[COUNT];
-            long stop1 = j4o.lang.JavaSystem.currentTimeMillis();
-            Tester.ensure(str1.Equals("more and more " + (COUNT - 1)));
+            long stop1 = j4o.lang.JavaSystem.CurrentTimeMillis();
+            Tester.Ensure(str1.Equals("more and more " + (COUNT - 1)));
         }
       
-        internal void checkHelper(Db4oLinkedListUntypedHelper helper) {
-            ExtObjectContainer con1 = Tester.objectContainer();
-            if (con1.isActive(helper)) {
-                Tester.ensure(helper.i_childList[0].Equals("hi"));
-                checkHelper(helper.i_child);
+        internal void CheckHelper(Db4oLinkedListUntypedHelper helper) {
+            ExtObjectContainer con1 = Tester.ObjectContainer();
+            if (con1.IsActive(helper)) {
+                Tester.Ensure(helper.i_childList[0].Equals("hi"));
+                CheckHelper(helper.i_child);
             }
         }
     }

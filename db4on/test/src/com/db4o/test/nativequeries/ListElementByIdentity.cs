@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using com.db4o;
 using com.db4o.ext;
@@ -12,38 +12,38 @@ namespace com.db4o.test.nativequeries
 
         IList<LebiElement> _list;
         
-        public void store()
+        public void Store()
         {
-            store("1");
-            store("2");
-            store("3");
-            store("4");
+            Store("1");
+            Store("2");
+            Store("3");
+            Store("4");
         }
 
-        public void test()
+        public void Test()
         {
-            ExtObjectContainer oc = Tester.objectContainer();
+            ExtObjectContainer oc = Tester.ObjectContainer();
 
-            LebiElement elem = (LebiElement)oc.get(new LebiElement("23"))[0];
+            LebiElement elem = (LebiElement)oc.Get(new LebiElement("23"))[0];
 
-            IList <ListElementByIdentity> res = oc.query<ListElementByIdentity>(delegate(ListElementByIdentity lebi)
+            IList <ListElementByIdentity> res = oc.Query<ListElementByIdentity>(delegate(ListElementByIdentity lebi)
             {
                 return lebi._list.Contains(elem);
             });
 
-            Tester.ensure(res.Count == 1);
-            Tester.ensure(res[0]._list[3]._name.Equals("23"));
+            Tester.Ensure(res.Count == 1);
+            Tester.Ensure(res[0]._list[3]._name.Equals("23"));
 
         }
 
-        private void store(string prefix)
+        private void Store(string prefix)
         {
             ListElementByIdentity lebi = new ListElementByIdentity();
-            lebi.createListElements(prefix);
-            Tester.store(lebi);
+            lebi.CreateListElements(prefix);
+            Tester.Store(lebi);
         }
 
-        private void createListElements(string prefix)
+        private void CreateListElements(string prefix)
         {
             _list = new List<LebiElement>();
             _list.Add(new LebiElement(prefix + "0"));

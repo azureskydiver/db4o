@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using com.db4o;
 using com.db4o.f1;
 
@@ -9,183 +9,183 @@ namespace com.db4o.f1.chapter5
         public static void Main(string[] args)
         {
             File.Delete(Util.YapFileName);
-            accessLocalServer();
+            AccessLocalServer();
             File.Delete(Util.YapFileName);
-            ObjectContainer db = Db4o.openFile(Util.YapFileName);
+            ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
             try
             {
-                setFirstCar(db);
-                setSecondCar(db);
+                SetFirstCar(db);
+                SetSecondCar(db);
             }
             finally
             {
-                db.close();
+                db.Close();
             }
             
-            configureDb4o();
-            ObjectServer server = Db4o.openServer(Util.YapFileName, 0);
+            ConfigureDb4o();
+            ObjectServer server = Db4o.OpenServer(Util.YapFileName, 0);
             try
             {
-                queryLocalServer(server);
-                demonstrateLocalReadCommitted(server);
-                demonstrateLocalRollback(server);
+                QueryLocalServer(server);
+                DemonstrateLocalReadCommitted(server);
+                DemonstrateLocalRollback(server);
             }
             finally
             {
-                server.close();
+                server.Close();
             }
             
-            accessRemoteServer();
-            server = Db4o.openServer(Util.YapFileName, ServerPort);
-            server.grantAccess(ServerUser, ServerPassword);
+            AccessRemoteServer();
+            server = Db4o.OpenServer(Util.YapFileName, ServerPort);
+            server.GrantAccess(ServerUser, ServerPassword);
             try
             {
-                queryRemoteServer(ServerPort, ServerUser, ServerPassword);
-                demonstrateRemoteReadCommitted(ServerPort, ServerUser, ServerPassword);
-                demonstrateRemoteRollback(ServerPort, ServerUser, ServerPassword);
+                QueryRemoteServer(ServerPort, ServerUser, ServerPassword);
+                DemonstrateRemoteReadCommitted(ServerPort, ServerUser, ServerPassword);
+                DemonstrateRemoteRollback(ServerPort, ServerUser, ServerPassword);
             }
             finally
             {
-                server.close();
+                server.Close();
             }
         }
             
-        public static void setFirstCar(ObjectContainer db)
+        public static void SetFirstCar(ObjectContainer db)
         {
             Pilot pilot = new Pilot("Rubens Barrichello", 99);
             Car car = new Car("BMW");
             car.Pilot = pilot;
-            db.set(car);
+            db.Set(car);
         }
     
-        public static void setSecondCar(ObjectContainer db)
+        public static void SetSecondCar(ObjectContainer db)
         {
             Pilot pilot = new Pilot("Michael Schumacher", 100);
             Car car = new Car("Ferrari");
             car.Pilot = pilot;
-            db.set(car);
+            db.Set(car);
         }
     
-        public static void accessLocalServer()
+        public static void AccessLocalServer()
         {
-            ObjectServer server = Db4o.openServer(Util.YapFileName, 0);
+            ObjectServer server = Db4o.OpenServer(Util.YapFileName, 0);
             try
             {
-                ObjectContainer client = server.openClient();
+                ObjectContainer client = server.OpenClient();
                 // Do something with this client, or open more clients
-                client.close();
+                client.Close();
             }
             finally
             {
-                server.close();
+                server.Close();
             }
         }
     
-        public static void queryLocalServer(ObjectServer server)
+        public static void QueryLocalServer(ObjectServer server)
         {
-            ObjectContainer client = server.openClient();
-            listResult(client.get(new Car(null)));
-            client.close();
+            ObjectContainer client = server.OpenClient();
+            ListResult(client.Get(new Car(null)));
+            client.Close();
         }
         
-        public static void configureDb4o()
+        public static void ConfigureDb4o()
         {
-        	Db4o.configure().objectClass(typeof(Car)).updateDepth(3);
+        	Db4o.Configure().ObjectClass(typeof(Car)).UpdateDepth(3);
         }
     
-        public static void demonstrateLocalReadCommitted(ObjectServer server)
+        public static void DemonstrateLocalReadCommitted(ObjectServer server)
         {
-            ObjectContainer client1 =server.openClient();
-            ObjectContainer client2 =server.openClient();
+            ObjectContainer client1 =server.OpenClient();
+            ObjectContainer client2 =server.OpenClient();
             Pilot pilot = new Pilot("David Coulthard", 98);
-            ObjectSet result = client1.get(new Car("BMW"));
-            Car car = (Car)result.next();
+            ObjectSet result = client1.Get(new Car("BMW"));
+            Car car = (Car)result.Next();
             car.Pilot = pilot;
-            client1.set(car);
-            listResult(client1.get(new Car(null)));
-            listResult(client2.get(new Car(null)));
-            client1.commit();
-            listResult(client1.get(typeof(Car)));			
-            listRefreshedResult(client2, client2.get(typeof(Car)), 2);
-            client1.close();
-            client2.close();
+            client1.Set(car);
+            ListResult(client1.Get(new Car(null)));
+            ListResult(client2.Get(new Car(null)));
+            client1.Commit();
+            ListResult(client1.Get(typeof(Car)));			
+            ListRefreshedResult(client2, client2.Get(typeof(Car)), 2);
+            client1.Close();
+            client2.Close();
         }
     
-        public static void demonstrateLocalRollback(ObjectServer server)
+        public static void DemonstrateLocalRollback(ObjectServer server)
         {
-            ObjectContainer client1 = server.openClient();
-            ObjectContainer client2 = server.openClient();
-            ObjectSet result = client1.get(new Car("BMW"));
-            Car car = (Car)result.next();
+            ObjectContainer client1 = server.OpenClient();
+            ObjectContainer client2 = server.OpenClient();
+            ObjectSet result = client1.Get(new Car("BMW"));
+            Car car = (Car)result.Next();
             car.Pilot = new Pilot("Someone else", 0);
-            client1.set(car);
-            listResult(client1.get(new Car(null)));
-            listResult(client2.get(new Car(null)));
-            client1.rollback();
-            client1.ext().refresh(car, 2);
-            listResult(client1.get(new Car(null)));
-            listResult(client2.get(new Car(null)));
-            client1.close();
-            client2.close();
+            client1.Set(car);
+            ListResult(client1.Get(new Car(null)));
+            ListResult(client2.Get(new Car(null)));
+            client1.Rollback();
+            client1.Ext().Refresh(car, 2);
+            ListResult(client1.Get(new Car(null)));
+            ListResult(client2.Get(new Car(null)));
+            client1.Close();
+            client2.Close();
         }
     
-        public static void accessRemoteServer()
+        public static void AccessRemoteServer()
         {
-            ObjectServer server = Db4o.openServer(Util.YapFileName, ServerPort);
-            server.grantAccess(ServerUser, ServerPassword);
+            ObjectServer server = Db4o.OpenServer(Util.YapFileName, ServerPort);
+            server.GrantAccess(ServerUser, ServerPassword);
             try
             {
-                ObjectContainer client = Db4o.openClient("localhost", ServerPort, ServerUser, ServerPassword);
+                ObjectContainer client = Db4o.OpenClient("localhost", ServerPort, ServerUser, ServerPassword);
                 // Do something with this client, or open more clients
-                client.close();
+                client.Close();
             }
             finally
             {
-                server.close();
+                server.Close();
             }
         }
     
-        public static void queryRemoteServer(int port, string user, string password)
+        public static void QueryRemoteServer(int port, string user, string password)
         {
-            ObjectContainer client = Db4o.openClient("localhost", port, user, password);
-            listResult(client.get(new Car(null)));
-            client.close();
+            ObjectContainer client = Db4o.OpenClient("localhost", port, user, password);
+            ListResult(client.Get(new Car(null)));
+            client.Close();
         }
     
-        public static void demonstrateRemoteReadCommitted(int port, string user, string password)
+        public static void DemonstrateRemoteReadCommitted(int port, string user, string password)
         {
-            ObjectContainer client1 = Db4o.openClient("localhost", port, user, password);
-            ObjectContainer client2 = Db4o.openClient("localhost", port, user, password);
+            ObjectContainer client1 = Db4o.OpenClient("localhost", port, user, password);
+            ObjectContainer client2 = Db4o.OpenClient("localhost", port, user, password);
             Pilot pilot = new Pilot("Jenson Button", 97);
-            ObjectSet result = client1.get(new Car(null));
-            Car car = (Car)result.next();
+            ObjectSet result = client1.Get(new Car(null));
+            Car car = (Car)result.Next();
             car.Pilot = pilot;
-            client1.set(car);
-            listResult(client1.get(new Car(null)));
-            listResult(client2.get(new Car(null)));
-            client1.commit();
-            listResult(client1.get(new Car(null)));
-            listResult(client2.get(new Car(null)));
-            client1.close();
-            client2.close();
+            client1.Set(car);
+            ListResult(client1.Get(new Car(null)));
+            ListResult(client2.Get(new Car(null)));
+            client1.Commit();
+            ListResult(client1.Get(new Car(null)));
+            ListResult(client2.Get(new Car(null)));
+            client1.Close();
+            client2.Close();
         }
     
-        public static void demonstrateRemoteRollback(int port, string user, string password)
+        public static void DemonstrateRemoteRollback(int port, string user, string password)
         {
-            ObjectContainer client1 = Db4o.openClient("localhost", port, user, password);
-            ObjectContainer client2 = Db4o.openClient("localhost", port, user, password);
-            ObjectSet result = client1.get(new Car(null));
-            Car car = (Car)result.next();
+            ObjectContainer client1 = Db4o.OpenClient("localhost", port, user, password);
+            ObjectContainer client2 = Db4o.OpenClient("localhost", port, user, password);
+            ObjectSet result = client1.Get(new Car(null));
+            Car car = (Car)result.Next();
             car.Pilot = new Pilot("Someone else", 0);
-            client1.set(car);
-            listResult(client1.get(new Car(null)));
-            listResult(client2.get(new Car(null)));
-            client1.rollback();
-            client1.ext().refresh(car,2);
-            listResult(client1.get(new Car(null)));
-            listResult(client2.get(new Car(null)));
-            client1.close();
-            client2.close();
+            client1.Set(car);
+            ListResult(client1.Get(new Car(null)));
+            ListResult(client2.Get(new Car(null)));
+            client1.Rollback();
+            client1.Ext().Refresh(car,2);
+            ListResult(client1.Get(new Car(null)));
+            ListResult(client2.Get(new Car(null)));
+            client1.Close();
+            client2.Close();
         }
     }
 }

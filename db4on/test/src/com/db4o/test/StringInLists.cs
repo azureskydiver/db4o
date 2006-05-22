@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -24,65 +24,65 @@ namespace com.db4o.test
         public IDictionary  hashMap;
         public IDictionary db4oHashMap;
 
-        public void storeOne() 
+        public void StoreOne() 
         {
 
-            ExtObjectContainer oc = Tester.objectContainer();
-            Db4oCollections col = oc.collections();
+            ExtObjectContainer oc = Tester.ObjectContainer();
+            Db4oCollections col = oc.Collections();
 
             arrayList = new ArrayList();
-            fillList(arrayList);
+            FillList(arrayList);
 
 //            stringCollection = new StringCollection();
-//            fillList(stringCollection);
+//            FillList(stringCollection);
         
-            db4oLinkedList = col.newLinkedList();
-            fillList(db4oLinkedList);
+            db4oLinkedList = col.NewLinkedList();
+            FillList(db4oLinkedList);
         
             hashMap = new Hashtable();
-            fillMap(hashMap);
+            FillMap(hashMap);
         
-            db4oHashMap = col.newHashMap(1);
-            fillMap(db4oHashMap);
+            db4oHashMap = col.NewHashMap(1);
+            FillMap(db4oHashMap);
         }
 
-        public void testOne() 
+        public void TestOne() 
         {
-            checkList(arrayList);
-//            checkList(stringCollection);
-            checkList(db4oLinkedList);
-            checkMap(hashMap);
-            checkMap(db4oHashMap);
+            CheckList(arrayList);
+//            CheckList(stringCollection);
+            CheckList(db4oLinkedList);
+            CheckMap(hashMap);
+            CheckMap(db4oHashMap);
         }
 
-        private void fillList(IList list) 
+        private void FillList(IList list) 
         {
             list.Add("One");
             list.Add("Two");
             list.Add("Three");
         }
 
-        private void fillMap(IDictionary map) 
+        private void FillMap(IDictionary map) 
         {
             map["One"] = "One";
             map["Two"] = "Two";
             map["Three"] = "Three";
         }
 
-        private void checkList(IList list) 
+        private void CheckList(IList list) 
         {
-            Tester.ensure(list.Count == 3);
-            Tester.ensure(list[0].Equals("One"));
-            Tester.ensure(list[1].Equals("Two"));
-            Tester.ensure(list[2].Equals("Three"));
+            Tester.Ensure(list.Count == 3);
+            Tester.Ensure(list[0].Equals("One"));
+            Tester.Ensure(list[1].Equals("Two"));
+            Tester.Ensure(list[2].Equals("Three"));
         }
     
-        private void checkMap(IDictionary map)
+        private void CheckMap(IDictionary map)
         {
-            Tester.ensure(map.Count == 3);
-            Tester.ensure(map["One"].Equals("One"));
-            Tester.ensure(map["Two"].Equals("Two"));
-            Tester.ensure(map["Three"].Equals("Three"));
+            Tester.Ensure(map.Count == 3);
+            Tester.Ensure(map["One"].Equals("One"));
+            Tester.Ensure(map["Two"].Equals("Two"));
+            Tester.Ensure(map["Three"].Equals("Three"));
         }
     }
 }

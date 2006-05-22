@@ -1,4 +1,4 @@
-using com.db4o.query;
+﻿using com.db4o.query;
 
 namespace com.db4o.f1.chapter1
 {
@@ -11,7 +11,7 @@ namespace com.db4o.f1.chapter1
     		_points=points;
     	}
     
-    	public bool match(Pilot pilot)
+    	public bool Match(Pilot pilot)
     	{
         	foreach (int points in _points)
         	{

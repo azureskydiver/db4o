@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace com.db4o.reflect.net
 {
@@ -13,15 +13,15 @@ namespace com.db4o.reflect.net
             _type = type;
 		}
 
-        public virtual com.db4o.reflect.ReflectClass[] getParameterTypes() {
+        public virtual com.db4o.reflect.ReflectClass[] GetParameterTypes() {
             return null;
         }
 
-        public virtual void setAccessible() {
+        public virtual void SetAccessible() {
             // do nothing
         }
 
-        public virtual object newInstance(object[] parameters) {
+        public virtual object NewInstance(object[] parameters) {
             return System.Runtime.Serialization.FormatterServices.GetUninitializedObject(_type);
         }
 	}

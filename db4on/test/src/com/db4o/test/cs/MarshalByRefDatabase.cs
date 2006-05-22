@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using com.db4o;
 
@@ -16,12 +16,12 @@ namespace com.db4o.test.cs
         {
             if (clientServer)
             {
-                _server = Db4o.openServer(fname, 0);
-                _container = _server.openClient();
+                _server = Db4o.OpenServer(fname, 0);
+                _container = _server.OpenClient();
             }
             else
             {
-                _container = Db4o.openFile(fname);
+                _container = Db4o.OpenFile(fname);
             }
         }
 
@@ -29,12 +29,12 @@ namespace com.db4o.test.cs
         {
             if (null != _container)
             {
-                _container.close();
+                _container.Close();
                 _container = null;
             }
             if (null != _server)
             {
-                _server.close();
+                _server.Close();
                 _server = null;
             }
             // MAGIC: give some time for the db4o background threads to exit

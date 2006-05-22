@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -15,8 +15,8 @@ namespace com.db4o.test.types {
          name = a_name;
       }
       
-      public void compare(ObjectContainer con, Object obj, int ver) {
-         TestUtil.compare(con, set(newInstance(), ver), obj, "", null);
+      public void Compare(ObjectContainer con, Object obj, int ver) {
+         TestUtil.Compare(con, Set(NewInstance(), ver), obj, "", null);
       }
       
       public override bool Equals(Object obj) {
@@ -30,16 +30,16 @@ namespace com.db4o.test.types {
          return false;
       }
       
-      public Object newInstance() {
+      public Object NewInstance() {
          return new ObjectSimplePublic();
       }
       
-      public Object set(Object obj, int ver) {
-         ((ObjectSimplePublic)obj).set(ver);
+      public Object Set(Object obj, int ver) {
+         ((ObjectSimplePublic)obj).Set(ver);
          return obj;
       }
       
-      public void set(int ver) {
+      public void Set(int ver) {
          if (ver == 1) {
             name = "OneONEOneONEOneONEOneONEOneONEOneONE";
          } else {
@@ -47,11 +47,11 @@ namespace com.db4o.test.types {
          }
       }
       
-      public bool jdk2() {
+      public bool Jdk2() {
          return false;
       }
       
-      public bool ver3() {
+      public bool Ver3() {
          return false;
       }
    }

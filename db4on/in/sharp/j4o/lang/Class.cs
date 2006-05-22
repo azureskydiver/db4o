@@ -1,4 +1,4 @@
-/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -36,7 +36,7 @@ namespace j4o.lang
 			return clazz != null && clazz._type == _type;
 		}
 
-		public static Class forName(String name)
+		public static Class ForName(String name)
 		{
 			if (null == name)
 			{
@@ -54,7 +54,7 @@ namespace j4o.lang
 				try
 				{
 					Type t = TypeReference.FromString(name).Resolve();
-					returnValue = getClassForType(t);
+					returnValue = GetClassForType(t);
 					_typeNameToClassMap[name] = returnValue;
 				}
 				catch (Exception ex)
@@ -65,12 +65,12 @@ namespace j4o.lang
 			}
 		}
 
-		public static Class getClassForObject(object obj)
+		public static Class GetClassForObject(object obj)
 		{
-			return getClassForType(obj.GetType());
+			return GetClassForType(obj.GetType());
 		}
 
-		public static Class getClassForType(Type forType)
+		public static Class GetClassForType(Type forType)
 		{
 			if (forType == null)
 			{
@@ -89,12 +89,12 @@ namespace j4o.lang
 			}
 		}
 
-		public Class getComponentType()
+		public Class GetComponentType()
 		{
-			return getClassForType(_type.GetElementType());
+			return GetClassForType(_type.GetElementType());
 		}
 
-		public Constructor[] getDeclaredConstructors()
+		public Constructor[] GetDeclaredConstructors()
 		{
 			ConstructorInfo[] constructorInfos = _type.GetConstructors(AllDeclaredMembers);
 			Constructor[] constructors = new Constructor[constructorInfos.Length];
@@ -105,28 +105,28 @@ namespace j4o.lang
 			return constructors;
 		}
 
-		public Field getDeclaredField(String name)
+		public Field GetDeclaredField(String name)
 		{
-			return getField(_type.GetField(name, AllDeclaredMembers | BindingFlags.Static));
+			return GetField(_type.GetField(name, AllDeclaredMembers | BindingFlags.Static));
 		}
 
-		public Field[] getDeclaredFields()
+		public Field[] GetDeclaredFields()
 		{
 			FieldInfo[] fieldInfos = _type.GetFields(AllDeclaredMembers | BindingFlags.Static);
 			Field[] fields = new Field[fieldInfos.Length];
 			for (int i = 0; i < fieldInfos.Length; i++)
 			{
-				fields[i] = getField(fieldInfos[i]);
+				fields[i] = GetField(fieldInfos[i]);
 			}
 			return fields;
 		}
 
-		public Method getDeclaredMethod(String name, Class[] parameterTypes)
+		public Method GetDeclaredMethod(String name, Class[] parameterTypes)
 		{
-			return getMethod(_type.GetMethod(name, AllDeclaredMembers, null, getTypes(parameterTypes), null));
+			return GetMethod(_type.GetMethod(name, AllDeclaredMembers, null, GetTypes(parameterTypes), null));
 		}
 
-		public Method[] getDeclaredMethods()
+		public Method[] GetDeclaredMethods()
 		{
 			MethodInfo[] methodInfos = _type.GetMethods(AllDeclaredMembers);
 			Method[] methods = new Method[methodInfos.Length];
@@ -137,7 +137,7 @@ namespace j4o.lang
 			return methods;
 		}
 
-		private Field getField(FieldInfo fieldInfo)
+		private Field GetField(FieldInfo fieldInfo)
 		{
 			if (fieldInfo == null)
 			{
@@ -146,28 +146,28 @@ namespace j4o.lang
 			return new Field(fieldInfo, _type.GetEvent(fieldInfo.Name, AllDeclaredMembers));
 		}
 
-		public Field getField(String name)
+		public Field GetField(String name)
 		{
-			return getField(_type.GetField(name));
+			return GetField(_type.GetField(name));
 		}
 
-		public Method getMethod(String name, Class[] parameterTypes)
+		public Method GetMethod(String name, Class[] parameterTypes)
 		{
-			return getMethod(_type.GetMethod(name, getTypes(parameterTypes)));
+			return GetMethod(_type.GetMethod(name, GetTypes(parameterTypes)));
 		}
 
-		public Method[] getMethods()
+		public Method[] GetMethods()
 		{
 			MethodInfo[] methods = _type.GetMethods();
 			Method[] result = new Method[methods.Length];
 			for (int i = 0; i < methods.Length; ++i)
 			{
-				result[i] = getMethod(methods[i]);
+				result[i] = GetMethod(methods[i]);
 			}
 			return result;
 		}
 
-		private Method getMethod(MethodInfo methodInfo)
+		private Method GetMethod(MethodInfo methodInfo)
 		{
 			if (methodInfo == null)
 			{
@@ -176,7 +176,7 @@ namespace j4o.lang
 			return new Method(methodInfo);
 		}
 
-		public int getModifiers()
+		public int GetModifiers()
 		{
 			int modifiers = 0;
 			if (_type.IsAbstract)
@@ -198,7 +198,7 @@ namespace j4o.lang
 			return modifiers;
 		}
 
-		public String getName()
+		public String GetName()
 		{
 			if (_name == null)
 			{
@@ -207,17 +207,17 @@ namespace j4o.lang
 			return _name;
 		}
 
-		public Type getNetType()
+		public Type GetNetType()
 		{
 			return _type;
 		}
 
-		public Class getSuperclass()
+		public Class GetSuperclass()
 		{
-			return getClassForType(_type.BaseType);
+			return GetClassForType(_type.BaseType);
 		}
 
-		public static Type[] getTypes(Class[] classes)
+		public static Type[] GetTypes(Class[] classes)
 		{
 			if (classes == null)
 			{
@@ -226,22 +226,22 @@ namespace j4o.lang
 			Type[] types = new Type[classes.Length];
 			for (int i = 0; i < types.Length; i++)
 			{
-				types[i] = classes[i].getNetType();
+				types[i] = classes[i].GetNetType();
 			}
 			return types;
 		}
 
-		public bool isArray()
+		public bool IsArray()
 		{
 			return _type.IsArray;
 		}
 
-		public bool isAssignableFrom(Class clazz)
+		public bool IsAssignableFrom(Class clazz)
 		{
 			return _type.IsAssignableFrom(clazz._type);
 		}
 
-		public bool isInstance(object obj)
+		public bool IsInstance(object obj)
 		{
 			if (obj == null)
 			{
@@ -254,17 +254,17 @@ namespace j4o.lang
 			return obj.GetType() == _type;
 		}
 
-		public bool isInterface()
+		public bool IsInterface()
 		{
 			return _type.IsInterface;
 		}
 
-		public bool isPrimitive()
+		public bool IsPrimitive()
 		{
 			return _primitive;
 		}
 
-		public Object newInstance()
+		public Object NewInstance()
 		{
 			return Activator.CreateInstance(_type);
 		}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -10,7 +10,7 @@ namespace com.db4o.config {
 	/// <exclude />
     public class TStack : ObjectTranslator {
 
-        public void onActivate(ObjectContainer objectContainer, object obj, object members){
+        public void OnActivate(ObjectContainer objectContainer, object obj, object members){
             Stack stack = (Stack)obj;
             if(members != null){
                 object[] elements = (object[]) members;
@@ -20,7 +20,7 @@ namespace com.db4o.config {
             }
         }
 
-        public Object onStore(ObjectContainer objectContainer, object obj){
+        public Object OnStore(ObjectContainer objectContainer, object obj){
             Stack stack = (Stack)obj;
             int count = stack.Count;
             object[] elements = new object[count];
@@ -33,8 +33,8 @@ namespace com.db4o.config {
             return elements;
         }
 
-        public Class storedClass(){
-            return Class.getClassForType(typeof(object[]));
+        public Class StoredClass(){
+            return Class.GetClassForType(typeof(object[]));
         }
     }
 }

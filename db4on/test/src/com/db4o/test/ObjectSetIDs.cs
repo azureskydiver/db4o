@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -13,27 +13,27 @@ namespace com.db4o.test {
       }
       static internal int COUNT = 11;
       
-      public void store() {
-         Tester.deleteAllInstances(this);
+      public void Store() {
+         Tester.DeleteAllInstances(this);
          for (int i1 = 0; i1 < COUNT; i1++) {
-            Tester.store(new ObjectSetIDs());
+            Tester.Store(new ObjectSetIDs());
          }
       }
       
-      public void test() {
-         ExtObjectContainer con1 = Tester.objectContainer();
-         Query q1 = Tester.query();
-         q1.constrain(j4o.lang.Class.getClassForObject(this));
-         ObjectSet res1 = q1.execute();
-         long[] ids11 = new long[res1.size()];
+      public void Test() {
+         ExtObjectContainer con1 = Tester.ObjectContainer();
+         Query q1 = Tester.Query();
+         q1.Constrain(j4o.lang.Class.GetClassForObject(this));
+         ObjectSet res1 = q1.Execute();
+         long[] ids11 = new long[res1.Size()];
          int i1 = 0;
-         while (res1.hasNext()) {
-            ids11[i1++] = con1.getID(res1.next());
+         while (res1.HasNext()) {
+            ids11[i1++] = con1.GetID(res1.Next());
          }
-         res1.reset();
-         long[] ids21 = res1.ext().getIDs();
-         Tester.ensure(ids11.Length == COUNT);
-         Tester.ensure(ids21.Length == COUNT);
+         res1.Reset();
+         long[] ids21 = res1.Ext().GetIDs();
+         Tester.Ensure(ids11.Length == COUNT);
+         Tester.Ensure(ids21.Length == COUNT);
          for (int j1 = 0; j1 < ids11.Length; j1++) {
             bool found1 = false;
             for (int k1 = 0; k1 < ids21.Length; k1++) {
@@ -42,7 +42,7 @@ namespace com.db4o.test {
                   break;
                }
             }
-            Tester.ensure(found1);
+            Tester.Ensure(found1);
          }
       }
    }

@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Globalization
 Imports com.db4o
 
@@ -23,7 +23,7 @@ Namespace com.db4o.f1.chapter6
 			' system resources can be pretty nasty
 			' uncomment the following line to see
 			' how nasty it can be
-			'tryStoreAndRetrieve();
+			'TryStoreAndRetrieve();
 		End Sub
 
 		Public Shared Sub StoreWithTranslator()

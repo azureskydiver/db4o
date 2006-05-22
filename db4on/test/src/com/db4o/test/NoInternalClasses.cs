@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,12 +10,12 @@ namespace com.db4o.test {
       public NoInternalClasses() : base() {
       }
       
-      public void store() {
-         Tester.store(new StaticClass());
+      public void Store() {
+         Tester.Store(new StaticClass());
       }
       
-      public void test() {
-         Tester.ensureOccurrences(new StaticClass(), 0);
+      public void Test() {
+         Tester.EnsureOccurrences(new StaticClass(), 0);
       }
    }
 }

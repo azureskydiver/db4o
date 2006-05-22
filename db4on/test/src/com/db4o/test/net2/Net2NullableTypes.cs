@@ -1,4 +1,4 @@
-namespace com.db4o.test.net2
+﻿namespace com.db4o.test.net2
 {
 #if NET_2_0 || CF_2_0
     using System;
@@ -26,74 +26,74 @@ namespace com.db4o.test.net2
 
 	class Net2NullableTypes
 	{
-		public void store()
+		public void Store()
 		{
-			Tester.store(new NullableContainer(42));
-			Tester.store(new NullableContainer(new DateTime(1983, 3, 7)));
+			Tester.Store(new NullableContainer(42));
+			Tester.Store(new NullableContainer(new DateTime(1983, 3, 7)));
 		}
 
-		public void testGlobalQuery()
+		public void TestGlobalQuery()
 		{
-			Query query = Tester.query();
-			query.constrain(typeof(NullableContainer));
+			Query query = Tester.Query();
+			query.Constrain(typeof(NullableContainer));
 
-			ObjectSet os = query.execute();
-			Tester.ensureEquals(2, os.size());
+			ObjectSet os = query.Execute();
+			Tester.EnsureEquals(2, os.Size());
 
 			bool foundInt = false;
 			bool foundDate = false;
-			while (os.hasNext())
+			while (os.HasNext())
 			{
-				NullableContainer item = (NullableContainer)os.next();
+				NullableContainer item = (NullableContainer)os.Next();
 				if (item.intValue.HasValue)
 				{
-					Tester.ensureEquals(42, item.intValue.Value);
-					Tester.ensure(!item.dateValue.HasValue);
+					Tester.EnsureEquals(42, item.intValue.Value);
+					Tester.Ensure(!item.dateValue.HasValue);
 					foundInt = true;
 				}
 				else
 				{
-					Tester.ensureEquals(new DateTime(1983, 3, 7), item.dateValue.Value);
-					Tester.ensure(!item.intValue.HasValue);
+					Tester.EnsureEquals(new DateTime(1983, 3, 7), item.dateValue.Value);
+					Tester.Ensure(!item.intValue.HasValue);
 					foundDate = true;
 				}
 			}
 
-			Tester.ensure(foundInt);
-			Tester.ensure(foundDate);
+			Tester.Ensure(foundInt);
+			Tester.Ensure(foundDate);
 		}
 
-		public void testDateQuery()
+		public void TestDateQuery()
 		{
 			DateTime value = new DateTime(1983, 3, 7);
-			ObjectSet os = Tester.objectContainer().get(new NullableContainer(value));
-			Tester.ensureEquals(1, os.size());
+			ObjectSet os = Tester.ObjectContainer().Get(new NullableContainer(value));
+			Tester.EnsureEquals(1, os.Size());
 
-			NullableContainer found = (NullableContainer)os.next();
-			Tester.ensureEquals(value, found.dateValue.Value);
-			Tester.ensure(!found.intValue.HasValue);
+			NullableContainer found = (NullableContainer)os.Next();
+			Tester.EnsureEquals(value, found.dateValue.Value);
+			Tester.Ensure(!found.intValue.HasValue);
 		}
 
-		public void testIntQuery()
+		public void TestIntQuery()
 		{	
-			ObjectSet os = Tester.objectContainer().get(new NullableContainer(42));
-		    checkIntValueQueryResult(os);
+			ObjectSet os = Tester.ObjectContainer().Get(new NullableContainer(42));
+		    CheckIntValueQueryResult(os);
 		}
 
-        public void testSodaQuery()
+        public void TestSodaQuery()
         {
-            Query q = Tester.objectContainer().query();
-            q.constrain(typeof(NullableContainer));
-            q.descend("intValue").constrain(42);
-            checkIntValueQueryResult(q.execute());
+            Query q = Tester.ObjectContainer().Query();
+            q.Constrain(typeof(NullableContainer));
+            q.Descend("intValue").Constrain(42);
+            CheckIntValueQueryResult(q.Execute());
         }
 
-	    private static void checkIntValueQueryResult(ObjectSet os)
+	    private static void CheckIntValueQueryResult(ObjectSet os)
 	    {
-	        Tester.ensureEquals(1, os.size());
-	        NullableContainer found = (NullableContainer)os.next();
-	        Tester.ensureEquals(42, found.intValue.Value);
-	        Tester.ensure(!found.dateValue.HasValue);
+	        Tester.EnsureEquals(1, os.Size());
+	        NullableContainer found = (NullableContainer)os.Next();
+	        Tester.EnsureEquals(42, found.intValue.Value);
+	        Tester.Ensure(!found.dateValue.HasValue);
 	    }
 
 	}

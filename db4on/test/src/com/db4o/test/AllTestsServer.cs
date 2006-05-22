@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -16,19 +16,19 @@ namespace com.db4o.test {
       }
       
       public static void Main(String[] args) {
-         new AllTestsServer().run();
+         new AllTestsServer().Run();
       }
       
-      public override void run() {
-         Db4o.configure().messageLevel(-1);
-         logConfiguration();
+      public override void Run() {
+         Db4o.Configure().MessageLevel(-1);
+         LogConfiguration();
          Console.WriteLine("Waiting for tests to be run from different machine.");
          Console.WriteLine("\n\nThe server will need to be closed with CTRL + C.\n\n");
-         Tester.delete();
-         configure();
+         Tester.Delete();
+         Configure();
          Tester.runServer = true;
          Tester.clientServer = true;
-         Tester.open();
+         Tester.Open();
       }
    }
 }

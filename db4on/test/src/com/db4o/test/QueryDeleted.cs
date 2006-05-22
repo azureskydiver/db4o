@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -20,32 +20,32 @@ namespace com.db4o.test {
             this.name = name;
         }
       
-        public void store() {
-            Tester.deleteAllInstances(this);
-            Tester.store(new QueryDeleted("one"));
-            Tester.store(new QueryDeleted("two"));
+        public void Store() {
+            Tester.DeleteAllInstances(this);
+            Tester.Store(new QueryDeleted("one"));
+            Tester.Store(new QueryDeleted("two"));
         }
       
-        public void test(){
-            Query q = Tester.query();
-            q.constrain(typeof(QueryDeleted));
-            q.descend("name").constrain("one");
-            QueryDeleted qd = (QueryDeleted)q.execute().next();
-            Tester.delete(qd);
-            checkCount(1);
-            Tester.rollBack();
-            checkCount(2);
-            Tester.delete(qd);
-            checkCount(1);
-            Tester.commit();
-            checkCount(1);
+        public void Test(){
+            Query q = Tester.Query();
+            q.Constrain(typeof(QueryDeleted));
+            q.Descend("name").Constrain("one");
+            QueryDeleted qd = (QueryDeleted)q.Execute().Next();
+            Tester.Delete(qd);
+            CheckCount(1);
+            Tester.RollBack();
+            CheckCount(2);
+            Tester.Delete(qd);
+            CheckCount(1);
+            Tester.Commit();
+            CheckCount(1);
         }
 	
-        private void checkCount(int count){
-            Query q = Tester.query();
-            q.constrain(typeof(QueryDeleted));
-            ObjectSet res = q.execute();
-            Tester.ensure(res.size() == count);
+        private void CheckCount(int count){
+            Query q = Tester.Query();
+            q.Constrain(typeof(QueryDeleted));
+            ObjectSet res = q.Execute();
+            Tester.Ensure(res.Size() == count);
         }
     }
 }

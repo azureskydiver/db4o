@@ -1,4 +1,4 @@
-namespace com.db4o.test.net2
+﻿namespace com.db4o.test.net2
 {
 #if NET_2_0 || CF_2_0
 	using System;
@@ -32,7 +32,7 @@ namespace com.db4o.test.net2
 
 	class Net2GenericContainers
 	{
-		public void store()
+		public void Store()
 		{
 			Project p1 = new Project("db4o");
 			p1.tasks.Add(new Task("dotnet 2 generics"));
@@ -41,99 +41,99 @@ namespace com.db4o.test.net2
 			Project p2 = new Project("enlightenment");
 			p2.tasks.Add(new Task("meditate"));
 
-			Tester.store(p1);
-			Tester.store(p2);
+			Tester.Store(p1);
+			Tester.Store(p2);
 
             Dictionary<string, List<Task>> dict = new Dictionary<string, List<Task>>();
             dict.Add(p1.name, p1.tasks);
             dict.Add(p2.name, p2.tasks);
 
-            Tester.store(dict);
+            Tester.Store(dict);
 			
-			Tester.reOpenAll();
+			Tester.ReOpenAll();
 		}
 		
-		public void testDescendOnList()
+		public void TestDescendOnList()
 		{
-			ensureProjectByTaskName("enlightenment", "meditate");
-			ensureProjectByTaskName("db4o", "clean mono build");
+			EnsureProjectByTaskName("enlightenment", "meditate");
+			EnsureProjectByTaskName("db4o", "clean mono build");
 		}
 
-		private static void ensureProjectByTaskName(string expectedProjectName, string taskName)
+		private static void EnsureProjectByTaskName(string expectedProjectName, string taskName)
 		{
-			Query q = Tester.query();
-			q.constrain(typeof (Project));
-			q.descend("tasks").descend("name").constrain(taskName);
-			ObjectSet result = q.execute();
-			Tester.ensureEquals(1, result.Count, "testDescendOnList.Count");
-			Tester.ensureEquals(expectedProjectName, ((Project) result[0]).name, "testDescendOnList.name");
+			Query q = Tester.Query();
+			q.Constrain(typeof (Project));
+			q.Descend("tasks").Descend("name").Constrain(taskName);
+			ObjectSet result = q.Execute();
+			Tester.EnsureEquals(1, result.Count, "testDescendOnList.Count");
+			Tester.EnsureEquals(expectedProjectName, ((Project) result[0]).name, "testDescendOnList.name");
 		}
 
 
-		public void testDict()
+		public void TestDict()
         {
-            Query query = Tester.query();
-            query.constrain(typeof(Dictionary<string, List<Task>>));
+            Query query = Tester.Query();
+            query.Constrain(typeof(Dictionary<string, List<Task>>));
 
-            ObjectSet os = query.execute();
-            Tester.ensureEquals(1, os.size());
+            ObjectSet os = query.Execute();
+            Tester.EnsureEquals(1, os.Size());
 
-            Dictionary<string, List<Task>> dict = (Dictionary<string, List<Task>>)os.next();
-            Tester.ensure(dict != null);
+            Dictionary<string, List<Task>> dict = (Dictionary<string, List<Task>>)os.Next();
+            Tester.Ensure(dict != null);
 
-            Tester.ensureEquals(2, dict.Count);
-            Tester.ensure(dict.ContainsKey("enlightenment"));
-            Tester.ensure(dict.ContainsKey("db4o"));
+            Tester.EnsureEquals(2, dict.Count);
+            Tester.Ensure(dict.ContainsKey("enlightenment"));
+            Tester.Ensure(dict.ContainsKey("db4o"));
         }
 
-		public void testProjects()
+		public void TestProjects()
 		{
-			Query query = Tester.query();
-			query.constrain(typeof(Project));
-			query.descend("name").orderAscending();
+			Query query = Tester.Query();
+			query.Constrain(typeof(Project));
+			query.Descend("name").OrderAscending();
 
-			ObjectSet os = query.execute();
-			Tester.ensureEquals(2, os.size());
+			ObjectSet os = query.Execute();
+			Tester.EnsureEquals(2, os.Size());
 
-			Project p = (Project)os.next();
-			Tester.ensureEquals("db4o", p.name);
-			Tester.ensure(p.tasks != null);
-			Tester.ensureEquals(2, p.tasks.Count);
-			Tester.ensureEquals("dotnet 2 generics", p.tasks[0].name);
-			Tester.ensureEquals("clean mono build", p.tasks[1].name);
+			Project p = (Project)os.Next();
+			Tester.EnsureEquals("db4o", p.name);
+			Tester.Ensure(p.tasks != null);
+			Tester.EnsureEquals(2, p.tasks.Count);
+			Tester.EnsureEquals("dotnet 2 generics", p.tasks[0].name);
+			Tester.EnsureEquals("clean mono build", p.tasks[1].name);
 
-			p = (Project)os.next();
-			Tester.ensureEquals("enlightenment", p.name);
-			Tester.ensure(p.tasks != null);
-			Tester.ensureEquals(1, p.tasks.Count);
-			Tester.ensureEquals("meditate", p.tasks[0].name);
+			p = (Project)os.Next();
+			Tester.EnsureEquals("enlightenment", p.name);
+			Tester.Ensure(p.tasks != null);
+			Tester.EnsureEquals(1, p.tasks.Count);
+			Tester.EnsureEquals("meditate", p.tasks[0].name);
 		}
 
-		public void testTasks()
+		public void TestTasks()
 		{
-			Query query = Tester.query();
-			query.constrain(typeof(Task));
-			query.descend("name").orderAscending();
+			Query query = Tester.Query();
+			query.Constrain(typeof(Task));
+			query.Descend("name").OrderAscending();
 
-			ObjectSet os = query.execute();
-			Tester.ensureEquals(3, os.size());
+			ObjectSet os = query.Execute();
+			Tester.EnsureEquals(3, os.Size());
 			foreach (string expected in new string[] { "clean mono build", "dotnet 2 generics", "meditate" })
 			{
-				Tester.ensureEquals(expected, ((Task)os.next()).name);
+				Tester.EnsureEquals(expected, ((Task)os.Next()).name);
 			}
 		}
 
-		public void testTaskLists()
+		public void TestTaskLists()
 		{
-			Query query = Tester.query();
-			query.constrain(typeof(List<Task>));
+			Query query = Tester.Query();
+			query.Constrain(typeof(List<Task>));
 
-			Tester.ensureEquals(2, query.execute().size());
+			Tester.EnsureEquals(2, query.Execute().Size());
 
-			query = Tester.query();
-			query.constrain(typeof(List<Project>));
+			query = Tester.Query();
+			query.Constrain(typeof(List<Project>));
 
-			Tester.ensureEquals(0, query.execute().size());
+			Tester.EnsureEquals(0, query.Execute().Size());
 		}
 	}
 #endif

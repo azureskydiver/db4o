@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -6,7 +6,7 @@ namespace j4o.lang {
 
 #if CF_1_0
     /// <summary>
-    /// holds a pair of short and long assembly name to help Type.forName()<br />
+    /// holds a pair of short and long assembly name to help Type.ForName()<br />
     /// Instances of this class are stored to the db4o database files.
     /// </summary>
     /// 

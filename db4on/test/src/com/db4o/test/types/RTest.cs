@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -10,10 +10,10 @@ namespace com.db4o.test.types {
       public RTest() : base() {
       }
       
-      public Object newInstance() {
+      public Object NewInstance() {
          try {
             {
-               return j4o.lang.Class.getClassForObject(this).newInstance();
+               return j4o.lang.Class.GetClassForObject(this).NewInstance();
             }
          }  catch (Exception e) {
             {
@@ -22,22 +22,22 @@ namespace com.db4o.test.types {
          }
       }
       
-      public Object set(Object obj, int ver) {
-         ((RTest)obj).set(ver);
+      public Object Set(Object obj, int ver) {
+         ((RTest)obj).Set(ver);
          return obj;
       }
       
-      public abstract void set(int ver);
+      public abstract void Set(int ver);
       
-      public void compare(ObjectContainer con, Object obj, int ver) {
-         TestUtil.compare(con, set(newInstance(), ver), obj, "", null);
+      public void Compare(ObjectContainer con, Object obj, int ver) {
+         TestUtil.Compare(con, Set(NewInstance(), ver), obj, "", null);
       }
       
-      public virtual bool jdk2() {
+      public virtual bool Jdk2() {
          return false;
       }
       
-      public bool ver3() {
+      public bool Ver3() {
          return false;
       }
    }

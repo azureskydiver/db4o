@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace com.db4o.test.cs
 {
@@ -10,16 +10,16 @@ namespace com.db4o.test.cs
 		int _placeHolder;
 		string _field;
 
-		public void storeOne() 
+		public void StoreOne() 
 		{
 			_field = "foo";
 			_placeHolder = 42;
 		}
 
-		public void testOne()
+		public void TestOne()
 		{
-			Tester.ensureEquals("foo", _field);
-			Tester.ensureEquals(42, _placeHolder);
+			Tester.EnsureEquals("foo", _field);
+			Tester.EnsureEquals(42, _placeHolder);
 		}
 	}
 }

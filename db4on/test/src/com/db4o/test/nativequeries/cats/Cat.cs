@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace com.db4o.test.nativequeries.cats
 {
@@ -15,19 +15,19 @@ namespace com.db4o.test.nativequeries.cats
     
         public Cat _mother;
     
-        public String getFirstName(){
+        public String GetFirstName(){
             return _firstName;
         }
     
-        public int getAge(){
+        public int GetAge(){
             return _age;
         }
     
-        public String getFullName(){
+        public String GetFullName(){
             return _firstName + " " + _lastName;
         }
 
-		public Cat getFather() 
+		public Cat GetFather() 
 		{
 			return _father;
 		}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -19,73 +19,73 @@ namespace com.db4o.test.soda.utils {
       private static String sp = " ";
       private static bool silent = false;
       
-      public static void log(Object a_object) {
+      public static void Log(Object a_object) {
          if (a_object == null) {
-            log("[NULL]");
+            Log("[NULL]");
          } else {
-            log(j4o.lang.Class.getClassForObject(a_object).getName());
-            log(a_object, 0, new ArrayList());
+            Log(j4o.lang.Class.GetClassForObject(a_object).GetName());
+            Log(a_object, 0, new ArrayList());
          }
       }
       
-      public static void setOut(PrintStream ps) {
+      public static void SetOut(PrintStream ps) {
          _out = ps;
       }
       
-      public static void setMaximumDepth(int depth) {
+      public static void SetMaximumDepth(int depth) {
          maximumDepth = depth;
       }
       
-      public static void setSilent(bool flag) {
+      public static void SetSilent(bool flag) {
          silent = flag;
       }
       
-      private static void log(Object a_object, int a_depth, ArrayList a_list) {
+      private static void Log(Object a_object, int a_depth, ArrayList a_list) {
          if (a_object is SodaTest) {
             return;
          }
          if (a_list.Contains(a_object) || a_depth > maximumDepth) {
             return;
          }
-         Class clazz1 = j4o.lang.Class.getClassForObject(a_object);
+         Class clazz1 = j4o.lang.Class.GetClassForObject(a_object);
          for (int i1 = 0; i1 < ignore.Length; i1++) {
-            if (clazz1.isAssignableFrom(ignore[i1])) {
+            if (clazz1.IsAssignableFrom(ignore[i1])) {
                return;
             }
          }
          a_list.Add(a_object);
-         Class[] classes1 = getClassHierarchy(a_object);
+         Class[] classes1 = GetClassHierarchy(a_object);
          String spaces1 = "";
          for (int i1 = classes1.Length - 1; i1 >= 0; i1--) {
             spaces1 = spaces1 + sp;
             String className1 = spaces1;
-            int pos1 = classes1[i1].getName().LastIndexOf(".");
+            int pos1 = classes1[i1].GetName().LastIndexOf(".");
             if (pos1 > 0) {
-               className1 += classes1[i1].getName().Substring(pos1);
+               className1 += classes1[i1].GetName().Substring(pos1);
             } else {
-               className1 += classes1[i1].getName();
+               className1 += classes1[i1].GetName();
             }
-            if (classes1[i1] == Class.getClassForType(typeof(j4o.util.Date))) {
+            if (classes1[i1] == Class.GetClassForType(typeof(j4o.util.Date))) {
                String fieldName1 = className1 + ".getTime";
-               Object obj1 = System.Convert.ToInt64(((j4o.util.Date)a_object).getTime());
-               log(obj1, Class.getClassForType(typeof(Int64)), fieldName1, a_depth + 1, -1, a_list);
+               Object obj1 = System.Convert.ToInt64(((j4o.util.Date)a_object).GetTime());
+               Log(obj1, Class.GetClassForType(typeof(Int64)), fieldName1, a_depth + 1, -1, a_list);
             } else {
-               Field[] fields1 = classes1[i1].getDeclaredFields();
+               Field[] fields1 = classes1[i1].GetDeclaredFields();
                for (int j1 = 0; j1 < fields1.Length; j1++) {
-                  String fieldName1 = className1 + "." + fields1[j1].getName();
+                  String fieldName1 = className1 + "." + fields1[j1].GetName();
                   try {
                      {
-                        Object obj1 = fields1[j1].get(a_object);
-                        if (j4o.lang.Class.getClassForObject(obj1).isArray()) {
-                           obj1 = normalizeNArray(obj1);
-                           int len1 = j4o.lang.reflect.JavaArray.getLength(obj1);
+                        Object obj1 = fields1[j1].Get(a_object);
+                        if (j4o.lang.Class.GetClassForObject(obj1).IsArray()) {
+                           obj1 = NormalizeNArray(obj1);
+                           int len1 = j4o.lang.reflect.JavaArray.GetLength(obj1);
                            for (int k1 = 0; k1 < len1; k1++) {
-                              Object element1 = j4o.lang.reflect.JavaArray.get(obj1, k1);
-                              Class arrClass1 = element1 == null ? null : j4o.lang.Class.getClassForObject(element1);
-                              log(element1, arrClass1, fieldName1, a_depth + 1, k1, a_list);
+                              Object element1 = j4o.lang.reflect.JavaArray.Get(obj1, k1);
+                              Class arrClass1 = element1 == null ? null : j4o.lang.Class.GetClassForObject(element1);
+                              Log(element1, arrClass1, fieldName1, a_depth + 1, k1, a_list);
                            }
                         } else {
-                           log(obj1, fields1[j1].getType(), fieldName1, a_depth + 1, -1, a_list);
+                           Log(obj1, fields1[j1].GetType(), fieldName1, a_depth + 1, -1, a_list);
                         }
                      }
                   }  catch (Exception e) {
@@ -97,46 +97,46 @@ namespace com.db4o.test.soda.utils {
          }
       }
       
-      private static void log(Object a_object, Class a_Class, String a_fieldName, int a_depth, int a_arrayElement, ArrayList a_list) {
+      private static void Log(Object a_object, Class a_Class, String a_fieldName, int a_depth, int a_arrayElement, ArrayList a_list) {
          if (a_depth > maximumDepth) {
             return;
          }
          String fieldName1 = a_arrayElement > -1 ? a_fieldName + sp + sp + a_arrayElement : a_fieldName;
          if (a_object != null) {
-            log(a_depth, fieldName1, "");
-            Class clazz1 = j4o.lang.Class.getClassForObject(a_object);
-            if (Platform4.isSimple(clazz1)) {
-               log(a_depth + 1, j4o.lang.Class.getClassForObject(a_object).getName(), a_object.ToString());
+            Log(a_depth, fieldName1, "");
+            Class clazz1 = j4o.lang.Class.GetClassForObject(a_object);
+            if (Platform4.IsSimple(clazz1)) {
+               Log(a_depth + 1, j4o.lang.Class.GetClassForObject(a_object).GetName(), a_object.ToString());
             } else {
-               log(a_object, a_depth, a_list);
+               Log(a_object, a_depth, a_list);
             }
          } else {
-            log(a_depth, fieldName1, "[NULL]");
+            Log(a_depth, fieldName1, "[NULL]");
          }
       }
       
-      private static void log(String a_msg) {
+      private static void Log(String a_msg) {
          if (!silent) {
-            _out.println(a_msg + cr);
+            _out.Println(a_msg + cr);
          }
       }
       
-      private static void log(int indent, String a_property, String a_value) {
+      private static void Log(int indent, String a_property, String a_value) {
          for (int i1 = 0; i1 < indent; i1++) {
             a_property = sp + sp + a_property;
          }
-         log(a_property, a_value);
+         Log(a_property, a_value);
       }
       
-      private static void log(String a_property, String a_value) {
+      private static void Log(String a_property, String a_value) {
          if (a_value == null) a_value = "[NULL]";
-         log(a_property + ": " + a_value);
+         Log(a_property + ": " + a_value);
       }
       
-      private static void log(Exception e, Object obj, String msg) {
+      private static void Log(Exception e, Object obj, String msg) {
          String l_msg1;
          if (e != null) {
-            l_msg1 = "!!! " + j4o.lang.Class.getClassForObject(e).getName();
+            l_msg1 = "!!! " + j4o.lang.Class.GetClassForObject(e).GetName();
             String l_exMsg1 = e.Message;
             if (l_exMsg1 != null) {
                l_msg1 += sp + l_exMsg1;
@@ -145,71 +145,71 @@ namespace com.db4o.test.soda.utils {
             l_msg1 = "!!!Exception log";
          }
          if (obj != null) {
-            l_msg1 += " in " + j4o.lang.Class.getClassForObject(obj).getName();
+            l_msg1 += " in " + j4o.lang.Class.GetClassForObject(obj).GetName();
          }
          if (msg != null) {
             l_msg1 += sp + msg;
          }
-         log(l_msg1);
+         Log(l_msg1);
       }
       
-      private static Class[] getClassHierarchy(Object a_object) {
+      private static Class[] GetClassHierarchy(Object a_object) {
          Class[] classes1 = new Class[]{
-            j4o.lang.Class.getClassForObject(a_object)         };
-         return getClassHierarchy(classes1);
+            j4o.lang.Class.GetClassForObject(a_object)         };
+         return GetClassHierarchy(classes1);
       }
       
-      private static Class[] getClassHierarchy(Class[] a_classes) {
-         Class clazz1 = a_classes[a_classes.Length - 1].getSuperclass();
-         if (clazz1.Equals(Class.getClassForType(typeof(Object)))) {
+      private static Class[] GetClassHierarchy(Class[] a_classes) {
+         Class clazz1 = a_classes[a_classes.Length - 1].GetSuperclass();
+         if (clazz1.Equals(Class.GetClassForType(typeof(Object)))) {
             return a_classes;
          }
          Class[] classes1 = new Class[a_classes.Length + 1];
 		 System.Array.Copy(a_classes, 0, classes1, 0, a_classes.Length);
          classes1[a_classes.Length] = clazz1;
-         return getClassHierarchy(classes1);
+         return GetClassHierarchy(classes1);
       }
       
-      static internal Object normalizeNArray(Object a_object) {
-         if (j4o.lang.reflect.JavaArray.getLength(a_object) > 0) {
-            Object first1 = j4o.lang.reflect.JavaArray.get(a_object, 0);
-            if (first1 != null && j4o.lang.Class.getClassForObject(first1).isArray()) {
-               int[] dim1 = arrayDimensions(a_object);
-               Object all1 = (Object)new Object[arrayElementCount(dim1)];
-               normalizeNArray1(a_object, all1, 0, dim1, 0);
+      static internal Object NormalizeNArray(Object a_object) {
+         if (j4o.lang.reflect.JavaArray.GetLength(a_object) > 0) {
+            Object first1 = j4o.lang.reflect.JavaArray.Get(a_object, 0);
+            if (first1 != null && j4o.lang.Class.GetClassForObject(first1).IsArray()) {
+               int[] dim1 = ArrayDimensions(a_object);
+               Object all1 = (Object)new Object[ArrayElementCount(dim1)];
+               NormalizeNArray1(a_object, all1, 0, dim1, 0);
                return all1;
             }
          }
          return a_object;
       }
       
-      static internal int normalizeNArray1(Object a_object, Object a_all, int a_next, int[] a_dim, int a_index) {
+      static internal int NormalizeNArray1(Object a_object, Object a_all, int a_next, int[] a_dim, int a_index) {
          if (a_index == a_dim.Length - 1) {
             for (int i1 = 0; i1 < a_dim[a_index]; i1++) {
-               j4o.lang.reflect.JavaArray.set(a_all, a_next++, j4o.lang.reflect.JavaArray.get(a_object, i1));
+               j4o.lang.reflect.JavaArray.Set(a_all, a_next++, j4o.lang.reflect.JavaArray.Get(a_object, i1));
             }
          } else {
             for (int i1 = 0; i1 < a_dim[a_index]; i1++) {
-               a_next = normalizeNArray1(j4o.lang.reflect.JavaArray.get(a_object, i1), a_all, a_next, a_dim, a_index + 1);
+               a_next = NormalizeNArray1(j4o.lang.reflect.JavaArray.Get(a_object, i1), a_all, a_next, a_dim, a_index + 1);
             }
          }
          return a_next;
       }
       
-      static internal int[] arrayDimensions(Object a_object) {
+      static internal int[] ArrayDimensions(Object a_object) {
          int count1 = 0;
-         for (Class clazz1 = j4o.lang.Class.getClassForObject(a_object); clazz1.isArray(); clazz1 = clazz1.getComponentType()) {
+         for (Class clazz1 = j4o.lang.Class.GetClassForObject(a_object); clazz1.IsArray(); clazz1 = clazz1.GetComponentType()) {
             count1++;
          }
          int[] dim1 = new int[count1];
          for (int i1 = 0; i1 < count1; i1++) {
-            dim1[i1] = j4o.lang.reflect.JavaArray.getLength(a_object);
-            a_object = j4o.lang.reflect.JavaArray.get(a_object, 0);
+            dim1[i1] = j4o.lang.reflect.JavaArray.GetLength(a_object);
+            a_object = j4o.lang.reflect.JavaArray.Get(a_object, 0);
          }
          return dim1;
       }
       
-      static internal int arrayElementCount(int[] a_dim) {
+      static internal int ArrayElementCount(int[] a_dim) {
          int elements1 = a_dim[0];
          for (int i1 = 1; i1 < a_dim.Length; i1++) {
             elements1 *= a_dim[i1];
@@ -217,6 +217,6 @@ namespace com.db4o.test.soda.utils {
          return elements1;
       }
       private static Class[] ignore = {
-         Class.getClassForType(typeof(Class))      };
+         Class.GetClassForType(typeof(Class))      };
    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -18,7 +18,7 @@ namespace com.db4o.test.soda.arrays.untyped {
          this.arr = arr;
       }
       
-      public Object[] store() {
+      public Object[] Store() {
          STArrMixedN[] arr1 = new STArrMixedN[5];
          arr1[0] = new STArrMixedN();
          object[,,] content1 = new object[1,1,2];
@@ -42,88 +42,88 @@ namespace com.db4o.test.soda.arrays.untyped {
          return ret1;
       }
       
-      public void testDefaultContainsString() {
-         Query q1 = st.query();
-         Object[] r1 = store();
+      public void TestDefaultContainsString() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
          Object[,,] content1 = new Object[1,1,1];
          content1[0,0,0] = "bar";
-         q1.constrain(new STArrMixedN(content1));
-         st.expect(q1, new Object[]{
+         q1.Constrain(new STArrMixedN(content1));
+         st.Expect(q1, new Object[]{
             r1[3],
 r1[4]         });
       }
       
-      public void testDefaultContainsInteger() {
-         Query q1 = st.query();
-         Object[] r1 = store();
+      public void TestDefaultContainsInteger() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
          object[,,] content1 = new object[1,1,1];
          content1[0,0,0] = System.Convert.ToInt32(12);
-         q1.constrain(new STArrMixedN(content1));
-         st.expect(q1, new Object[]{
+         q1.Constrain(new STArrMixedN(content1));
+         st.Expect(q1, new Object[]{
             r1[4]         });
       }
       
-      public void testDefaultContainsBoolean() {
-         Query q1 = st.query();
-         Object[] r1 = store();
+      public void TestDefaultContainsBoolean() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
          Object[,,] content1 = new Object[1,1,1];
          content1[0,0,0] = System.Convert.ToBoolean(false);
-         q1.constrain(new STArrMixedN(content1));
-         st.expect(q1, new Object[]{
+         q1.Constrain(new STArrMixedN(content1));
+         st.Expect(q1, new Object[]{
             r1[3]         });
       }
       
-      public void testDefaultContainsTwo() {
-         Query q1 = st.query();
-         Object[] r1 = store();
+      public void TestDefaultContainsTwo() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
          object[,,] content1 = new object[2,1,1];
          content1[0,0,0] = "bar";
          content1[1,0,0] = System.Convert.ToInt32(12);
-         q1.constrain(new STArrMixedN(content1));
-         st.expect(q1, new Object[]{
+         q1.Constrain(new STArrMixedN(content1));
+         st.Expect(q1, new Object[]{
             r1[4]         });
       }
       
-      public void testDescendOne() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrMixedN)));
-         q1.descend("arr").constrain("bar");
-         st.expect(q1, new Object[]{
+      public void TestDescendOne() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrMixedN)));
+         q1.Descend("arr").Constrain("bar");
+         st.Expect(q1, new Object[]{
             r1[3],
 r1[4]         });
       }
       
-      public void testDescendTwo() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrMixedN)));
-         Query qElements1 = q1.descend("arr");
-         qElements1.constrain("foo");
-         qElements1.constrain("bar");
-         st.expect(q1, new Object[]{
+      public void TestDescendTwo() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrMixedN)));
+         Query qElements1 = q1.Descend("arr");
+         qElements1.Constrain("foo");
+         qElements1.Constrain("bar");
+         st.Expect(q1, new Object[]{
             r1[3]         });
       }
       
-      public void testDescendOneNot() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrMixedN)));
-         q1.descend("arr").constrain("bar").not();
-         st.expect(q1, new Object[]{
+      public void TestDescendOneNot() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrMixedN)));
+         q1.Descend("arr").Constrain("bar").Not();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[1],
 r1[2]         });
       }
       
-      public void testDescendTwoNot() {
-         Query q1 = st.query();
-         Object[] r1 = store();
-         q1.constrain(Class.getClassForType(typeof(STArrMixedN)));
-         Query qElements1 = q1.descend("arr");
-         qElements1.constrain("foo").not();
-         qElements1.constrain("bar").not();
-         st.expect(q1, new Object[]{
+      public void TestDescendTwoNot() {
+         Query q1 = st.Query();
+         Object[] r1 = Store();
+         q1.Constrain(Class.GetClassForType(typeof(STArrMixedN)));
+         Query qElements1 = q1.Descend("arr");
+         qElements1.Constrain("foo").Not();
+         qElements1.Constrain("bar").Not();
+         st.Expect(q1, new Object[]{
             r1[0],
 r1[1],
 r1[2]         });

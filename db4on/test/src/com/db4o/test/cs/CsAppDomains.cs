@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -31,9 +31,9 @@ namespace com.db4o.test.cs
         {
             ArrayList names = new ArrayList();
             ObjectSet os = InternalQueryTasks();
-            while (os.hasNext())
+            while (os.HasNext())
             {
-                names.Add(((ADTask)os.next()).Name);
+                names.Add(((ADTask)os.Next()).Name);
             }
             return (string[])names.ToArray(typeof(string));
         }
@@ -42,19 +42,19 @@ namespace com.db4o.test.cs
         {
             ArrayList tasks = new ArrayList();
             ObjectSet os = InternalQueryTasks();
-            while (os.hasNext())
+            while (os.HasNext())
             {
-                tasks.Add(os.next());
+                tasks.Add(os.Next());
             }
             return (ADTask[])tasks.ToArray(typeof(ADTask));
         }
 
         private ObjectSet InternalQueryTasks()
         {
-            Query query = _container.query();
-            query.constrain(typeof(ADTask));
-            query.descend("_name").orderAscending();
-            return query.execute();
+            Query query = _container.Query();
+            query.Constrain(typeof(ADTask));
+            query.Descend("_name").OrderAscending();
+            return query.Execute();
         }
     }
 	
@@ -66,48 +66,48 @@ namespace com.db4o.test.cs
 		// keep task objects alive to check for any identity problems
 		ArrayList _tasks = new ArrayList();
 
-		public void store()
+		public void Store()
 		{
 			ADTask task = null;
-			Tester.store(task = new ADTask("task 1"));
+			Tester.Store(task = new ADTask("task 1"));
 			_tasks.Add(task);
 
-			Tester.store(task = new ADTask("task 2"));
+			Tester.Store(task = new ADTask("task 2"));
 			_tasks.Add(task);
 		}
 		
-		public void testRemoteDomain()
+		public void TestRemoteDomain()
 		{
-			Tester.closeAll();
+			Tester.CloseAll();
 
 			AppDomain domain = AppDomain.CreateDomain("db4o-remote-domain");
 			try
 			{
 				using (TaskDatabase db = (TaskDatabase)domain.CreateInstanceAndUnwrap(typeof(TaskDatabase).Assembly.GetName().ToString(), typeof(TaskDatabase).FullName))
 				{
-					db.Open(currentFileName(), Tester.isClientServer());
+					db.Open(CurrentFileName(), Tester.IsClientServer());
 				
 					string[] taskNames = db.QueryTaskNames();
-					Tester.ensureEquals(2, taskNames.Length);
-					Tester.ensureEquals("task 1", taskNames[0]);
-					Tester.ensureEquals("task 2", taskNames[1]);
+					Tester.EnsureEquals(2, taskNames.Length);
+					Tester.EnsureEquals("task 1", taskNames[0]);
+					Tester.EnsureEquals("task 2", taskNames[1]);
 
 					ADTask[] tasks = db.QueryTasks();
-					Tester.ensureEquals(2, tasks.Length);
-					Tester.ensureEquals("task 1", tasks[0].Name);
-					Tester.ensureEquals("task 2", tasks[1].Name);
+					Tester.EnsureEquals(2, tasks.Length);
+					Tester.EnsureEquals("task 1", tasks[0].Name);
+					Tester.EnsureEquals("task 2", tasks[1].Name);
 				}
 			}
 			finally
 			{
 				AppDomain.Unload(domain);
-				Tester.reOpenAll(); // leave the Tester object as we found it
+				Tester.ReOpenAll(); // leave the Tester object as we found it
 			}
 		}
 
-		public string currentFileName()
+		public string CurrentFileName()
 		{
-			return Path.GetFullPath(Tester.isClientServer() ? Tester.FILE_SERVER : Tester.FILE_SOLO);
+			return Path.GetFullPath(Tester.IsClientServer() ? Tester.FILE_SERVER : Tester.FILE_SOLO);
 		}
 	}
 }

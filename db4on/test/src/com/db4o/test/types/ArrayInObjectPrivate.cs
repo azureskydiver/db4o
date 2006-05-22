@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -26,7 +26,7 @@ namespace com.db4o.test.types {
       private Object oString;
       private Object nString;
       
-      public override void set(int ver) {
+      public override void Set(int ver) {
          if (ver == 1) {
             oBoolean = new bool[]{true, false};
             nBoolean = null;
@@ -62,7 +62,7 @@ namespace com.db4o.test.types {
          }
       }
       
-      public override bool jdk2() {
+      public override bool Jdk2() {
          return false;
       }
    }
