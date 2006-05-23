@@ -452,6 +452,7 @@
 	</target>
 	
 	<target name="do-compiletoolsmono">
+		<echo message="${src.dir}" />
 		<csc srcdir="${src.dir}"
 			targettype="library"
 			destfile="${file.dll.tools.mono}"
@@ -459,6 +460,10 @@
 			definitions="MONO">
 			
 			<exclude name="compact*/**" />
+			<exclude name="**/templates/**" />
+			<exclude name="**/Cecil.FlowAnalysis.Tests/**" />
+			<exclude name="**/Cecil.FlowAnalysis/AssemblyInfo.cs" />
+			<exclude name="**/Mono.Cecil/AssemblyInfo.cs" />
 
 			<reference dir="${dir.dist.dll.mono}">
 				<include name="${file.name.dll}" />
@@ -477,6 +482,8 @@
 			definitions="MONO">
 			
 			<exclude name="compact*/**" />
+			<exclude name="**/ListElementByIdentity.cs" />
+			<exclude name="**/TestCatSpeed.cs" />
 			
 			<reference dir="${dir.dist.dll.mono}">
 				<include name="${file.name.dll}" />
