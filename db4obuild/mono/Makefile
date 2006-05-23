@@ -7,7 +7,7 @@ DIR_BIN=$(DIR_HOME)/bin
 DIR_SRC=$(DIR_HOME)/src
 DIR_DOC=$(DIR_HOME)/doc
 DIR_SRC_CORE=$(DIR_SRC)/core/src
-DIR_SRC_TOOLS=$(DIR_SRC)/tools/src
+DIR_SRC_TOOLS=$(DIR_SRC)/tools
 DIR_SRC_TEST=$(DIR_SRC)/test/src
 ifdef RPM_BUILD_ROOT
 	DIR_INSTALL_BIN=$(RPM_BUILD_ROOT)/usr/lib/db4o
@@ -23,9 +23,6 @@ endif
 MAIN_TEST=com.db4o.test.AllTests
 
 DLL_CORE_DIST=$(DIR_HOME)/dll/db4o.dll
-DIR_LEGACY_DIST=$(DIR_HOME)/legacy
-DIR_LEGACY_BIN=$(DIR_BIN)/legacy
-DIR_INSTALL_LEGACY=$(DIR_INSTALL_BIN)/legacy
 DLL_CORE=$(DIR_BIN)/db4o.dll
 DLL_TOOLS=$(DIR_BIN)/db4o-mono-tools.dll
 DEBUGGER_FILES=$(DIR_BIN)/*.mdb
@@ -41,16 +38,13 @@ runtest: buildtest
 	$(MONO) ./$(EXE_TEST_PATH)
 
 buildtest: buildtools
-	find $(DIR_SRC_TEST) -name "*.cs"|grep -v "/compact/"|grep -v "/compact-2005/"|grep -v "/net2/"|xargs $(MCS) $(MCS_OPTS) -target:exe -r:$(DLL_CORE) -r:$(DLL_TOOLS) -main:$(MAIN_TEST) -out:$(EXE_TEST_PATH)
+	find $(DIR_SRC_TEST) -name "*.cs"|grep -v "/compact[^/]*/"|grep -v "/net2/"|grep -v "/ListElementByIdentity.cs"|grep -v "/TestCatSpeed.cs"|xargs $(MCS) $(MCS_OPTS) -target:exe -r:$(DLL_CORE) -r:$(DLL_TOOLS) -main:$(MAIN_TEST) -out:$(EXE_TEST_PATH)
 
 buildtools: buildcore
-	find $(DIR_SRC_TOOLS) -name "*.cs"|xargs $(MCS) $(MCS_OPTS) -target:library -r:$(DLL_CORE) -out:$(DLL_TOOLS)
+	find $(DIR_SRC_TOOLS) -name "*.cs"|grep -v "/templates/"|grep -v "/Cecil.FlowAnalysis.Tests/"|grep -v "/AssemblyInfo.cs"|xargs $(MCS) $(MCS_OPTS) -target:library -r:$(DLL_CORE) -out:$(DLL_TOOLS)
 
 buildcore: init
-	mkdir -p $(DIR_LEGACY_BIN)
-	cp $(DIR_LEGACY_DIST)/*.dll $(DIR_LEGACY_BIN)
-	cp $(DIR_LEGACY_DIST)/*.exe $(DIR_LEGACY_BIN)
-	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact/"|grep -v -E "src/compact-2005/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
+	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact[^/]*/"|grep -v "/templates/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
 
 init:
 ifndef RPM_BUILD_ROOT
@@ -66,8 +60,6 @@ install:
 	cp $(DLL_CORE) $(DIR_INSTALL_BIN)
 	cp $(DLL_TOOLS) $(DIR_INSTALL_BIN)
 	cp $(EXE_TEST_PATH) $(DIR_INSTALL_BIN)
-	mkdir -p $(DIR_INSTALL_LEGACY)
-	cp $(DIR_LEGACY_BIN)/* $(DIR_INSTALL_LEGACY) 
 ifndef RPM_DOC_DIR
 	mkdir -p $(DIR_INSTALL_DOC)
 	cp -R $(DIR_DOC)/* $(DIR_INSTALL_DOC)
