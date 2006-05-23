@@ -1,13 +1,11 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.   http://www.db4o.com */
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using com.db4o;
-using com.db4o.inside.query;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace CFNativeQueriesEnabler
+namespace Db4oShell
 {
 	class QueryInvocationProcessor
 	{
@@ -39,15 +37,19 @@ namespace CFNativeQueriesEnabler
 			CilWorker worker = parent.Body.CilWorker;
 			if (IsCachedStaticFieldPattern(queryInvocation))
 			{
+//				Console.WriteLine("static field pattern found in {0}", parent.Name);
 				ProcessCachedStaticFieldPattern(worker, queryInvocation);
 			}
 			else if (IsPredicateCreationPattern(queryInvocation))
 			{
+//				Console.WriteLine("simple pattern found in {0}", parent.Name);
 				ProcessPredicateCreationPattern(worker, queryInvocation);
 			}
 			else
 			{
-				throw new ArgumentException("Unknown query invocation pattern!");
+				throw new ArgumentException(
+					string.Format("Unknown query invocation pattern on method: {0}!", 
+						parent));
 			}
 
 			// Console.WriteLine(CecilFormatter.FormatMethodBody(parent));
@@ -130,7 +132,18 @@ namespace CFNativeQueriesEnabler
 
 		private MethodReference GetMethodReferenceFromStaticFieldPattern(Instruction instr)
 		{
-			return (MethodReference)GetNthPrevious(instr, 5).Operand;
+			return (MethodReference)GetFirstPrevious(instr, OpCodes.Ldftn).Operand;
+		}
+
+		private Instruction GetFirstPrevious(Instruction instr, OpCode opcode)
+		{
+			Instruction previous = instr;
+			while (previous != null)
+			{
+				if (previous.OpCode == opcode) return previous;
+				previous = previous.Previous;
+			}
+			throw new ArgumentException("No previous " + opcode + " instruction found");
 		}
 
 		private Instruction GetNthPrevious(Instruction instr, int n)
@@ -142,13 +155,24 @@ namespace CFNativeQueriesEnabler
 			}
 			return previous;
 		}
+		
+		public ILPattern CreateStaticFieldPattern()
+		{
+			// ldsfld (br_s)? stsfld newobj ldftn ldnull (brtrue_s | brtrue) ldsfld
+			return ILPattern.Sequence(
+				ILPattern.Instruction(OpCodes.Ldsfld),
+				ILPattern.OptionalInstruction(OpCodes.Br_S),
+				ILPattern.Instruction(OpCodes.Stsfld),
+				ILPattern.Instruction(OpCodes.Newobj),
+				ILPattern.Instruction(OpCodes.Ldftn),
+				ILPattern.Instruction(OpCodes.Ldnull),
+				ILPattern.AlternativeInstruction(OpCodes.Brtrue, OpCodes.Brtrue_S),
+				ILPattern.Instruction(OpCodes.Ldsfld));
+		}
 
 		private bool IsCachedStaticFieldPattern(Instruction instr)
 		{
-			return
-				ComparePrevious(instr, OpCodes.Ldsfld, OpCodes.Br_S, OpCodes.Stsfld, OpCodes.Newobj, OpCodes.Ldftn,
-								OpCodes.Ldnull, OpCodes.Brtrue_S, OpCodes.Ldsfld);
-
+			return CreateStaticFieldPattern().BackwardsMatch(instr);
 		}
 
 		private bool ComparePrevious(IInstruction instr, params OpCode[] opcodes)

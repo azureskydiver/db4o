@@ -1,11 +1,10 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.   http://www.db4o.com */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace CFNativeQueriesEnabler
+namespace Db4oShell
 {
 	public class Program
 	{
@@ -17,7 +16,7 @@ namespace CFNativeQueriesEnabler
 		{
 			if (args.Length < 1)
 			{
-				Console.WriteLine("Usage:\n\tCFNativeQueriesEnabler <assembly location>");
+				Console.WriteLine("Usage:\n\tDb4oShell <assembly location>");
 				return -1;
 			}
 			try
@@ -118,14 +117,6 @@ namespace CFNativeQueriesEnabler
 						yield return methodef;
 					}
 				}
-			}
-		}
-
-		static string AssemblyPath
-		{
-			get
-			{
-				return Path.GetDirectoryName(typeof(Program).Module.FullyQualifiedName);
 			}
 		}
 	}
