@@ -37,9 +37,9 @@
 				<include name="Db4oShell.exe" />
 			</reference>
 			
-			<resource embed="true"
+			<resource embed="true"				
 				file="Db4oShell.Tests/Resources/Subject.cs"
-				id="Db4oShell.Tests.Resources.Subject.cs" />
+				name="Db4oShell.Tests.Resources.Subject.cs" />
 		</csc>
 		
 		<exec executable="${output.dir}/Db4oShell.Tests.exe"
