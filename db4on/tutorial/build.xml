@@ -10,7 +10,6 @@
 
 	<property name="dir.out" location="${dir.j.tutorial.out.net}" />	
 	
-	<property name="db4o.dll" location="${file.dll.net}" />	
 	<property name="exe.name" value="db4o-tutorial.exe" />
 	
 	<target name="update-doc" depends="build">
@@ -73,7 +72,11 @@
 	<target name="init">
 		<mkdir dir="${dir.n.tutorial.bin}" />
 		<mkdir dir="${dir.n.tutorial.bin}/bin" />
-		<copy todir="${dir.n.tutorial.bin}/bin" file="${db4o.dll}" />
+		<copy todir="${dir.n.tutorial.bin}/bin">
+			<fileset dir="${dir.dist.dll.net}">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
 		<copy todir="${dir.n.tutorial.bin}/bin">
 			<fileset dir="lib">
 				<include name="*.dll" />
