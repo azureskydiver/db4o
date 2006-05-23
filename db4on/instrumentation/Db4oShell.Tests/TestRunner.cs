@@ -3,7 +3,7 @@
 using System;
 using System.Reflection;
 
-namespace CFNativeQueriesEnabler.Tests
+namespace Db4oShell.Tests
 {
 	delegate void Test();
 

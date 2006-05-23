@@ -2,7 +2,7 @@
 
 using System;
 
-namespace CFNativeQueriesEnabler.Tests.Subject
+namespace Db4oShell.Tests
 {
 	class Assert
 	{
@@ -12,6 +12,11 @@ namespace CFNativeQueriesEnabler.Tests.Subject
 			{
 				throw new ApplicationException(string.Format("'{0}' != '{1}'", expected, actual));
 			}
+		}
+		
+		public static void IsTrue(bool condition)
+		{
+			if (!condition) throw new ApplicationException();
 		}
 	}
 }

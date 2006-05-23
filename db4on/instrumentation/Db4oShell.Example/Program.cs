@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using com.db4o;
 
-namespace CFNativeQueriesEnabler.Example
+namespace Db4oShell.Example
 {
 	class Item
 	{

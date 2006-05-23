@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFNativeQueriesEnabler.Tests", "CFNativeQueriesEnabler.Tests.csproj", "{69859DB2-4DE3-4DE4-A0BB-13861418378F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oShell.Tests", "Db4oShell.Tests.csproj", "{69859DB2-4DE3-4DE4-A0BB-13861418378F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFNativeQueriesEnabler", "..\CFNativeQueriesEnabler\CFNativeQueriesEnabler.csproj", "{6F3BE659-0653-4982-94D6-F1D9D8887E09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oShell", "..\Db4oShell\Db4oShell.csproj", "{6F3BE659-0653-4982-94D6-F1D9D8887E09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFNativeQueriesEnabler.Tests.Subject", "..\CFNativeQueriesEnabler.Tests.Subject\CFNativeQueriesEnabler.Tests.Subject.csproj", "{E7749C92-4A39-4CDA-A998-F5F09CCB3D79}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oShell.Tests.Subject", "..\Db4oShell.Tests.Subject\Db4oShell.Tests.Subject.csproj", "{E7749C92-4A39-4CDA-A998-F5F09CCB3D79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
