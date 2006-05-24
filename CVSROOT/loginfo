@@ -25,4 +25,4 @@
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 #CVSROOT /data/cvs/CVSROOT/syncmail --cvsroot=/data/cvs %{sVv} sangamon@netcologne.de
-DEFAULT /data/cvs/CVSROOT/syncmail --cvsroot=/data/cvs "%{sVv}" patrick@db4o.com carl@db4o.com rodrigobamboo@gmail.com jb@db4o.com
+DEFAULT /data/cvs/CVSROOT/syncmail -u --cvsroot=/data/cvs "%{sVv}" patrick@db4o.com carl@db4o.com rodrigobamboo@gmail.com jb@db4o.com
