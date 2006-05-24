@@ -511,6 +511,7 @@
 			definitions="MONO">
 			<include name="**/*.cs" />
 			<exclude name="compact*/**" />
+			<exclude name="**/external/**" />
 		</csc>
 		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 	</target>
@@ -1043,7 +1044,7 @@
 				<include name="**/**" />
 			</fileset>
 		</copy>
-		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
+		<filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
 			<sources dir="${dir.dist.mono.build.src}">
 				<include name="**/*.cs" />
 				<exclude name="**/external/**" />
