@@ -44,7 +44,7 @@ buildtools: buildcore
 	find $(DIR_SRC_TOOLS) -name "*.cs"|grep -v "/templates/"|grep -v "/Cecil.FlowAnalysis.Tests/"|grep -v "/AssemblyInfo.cs"|xargs $(MCS) $(MCS_OPTS) -target:library -r:$(DLL_CORE) -out:$(DLL_TOOLS)
 
 buildcore: init
-	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact[^/]*/"|grep -v "/templates/"|grep -v "/external/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
+	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact[^/]*/"|grep -v "/templates/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
 
 init:
 ifndef RPM_BUILD_ROOT
