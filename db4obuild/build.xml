@@ -511,7 +511,6 @@
 			definitions="MONO">
 			<include name="**/*.cs" />
 			<exclude name="compact*/**" />
-			<exclude name="**/external/**" />
 		</csc>
 		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 	</target>
@@ -1047,7 +1046,6 @@
 		<filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
 			<sources dir="${dir.dist.mono.build.src}">
 				<include name="**/*.cs" />
-				<exclude name="**/external/**" />
 			</sources>
 		</filehead>
 		<copy todir="${dir.dist.mono.build}">
@@ -1269,31 +1267,6 @@
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
 		
-	</target>
-	
-	<target name="cecil-update" description="updates db4o local copy of the Mono.Cecil library">
-		<property name="dir.cecil" location="/projects/cecil" />
-		
-		<copy todir="${dir.n.in}/external/Mono.Cecil">			
-			<fileset dir="${dir.cecil}/lib">
-				<include name="Mono.Cecil/**/*.cs" />
-				<include name="Mono.Cecil.Binary/**/*.cs" />
-				<include name="Mono.Cecil.Cil/**/*.cs" />
-				<include name="Mono.Cecil.Metadata/**/*.cs" />
-				<include name="Mono.Cecil.Signatures/**/*.cs" />
-				<include name="Mono.Cecil.Xml/**/*.cs" />
-				<include name="AUTHORS" />
-				<include name="cecil.build" />
-				<include name="ChangeLog" />
-				<include name="configure" />
-				<include name="Makefile" />
-				<include name="Mono.Cecil.dll.sources" />
-				<include name="mono-cecil.pc.in" />
-				<include name="NEWS" />
-				<include name="README" />
-				<include name="TODO" />
-			</fileset>
-		</copy>
 	</target>
 	
 	<target name="doctor" depends="init, compilecorejava, compilejtutorial" description="Run all doctor tasks">
