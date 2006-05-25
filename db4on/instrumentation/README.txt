@@ -1,7 +1,10 @@
-CFNativeQueriesEnabler
-======================
+Db4oAdmin
+=========
 
-CompactFramework NQ enabler tool.
+Db4o command line utility.
+
+Enabling delegate based native queries for the Compact Framework
+================================================================
 
 Background Information
 ----------------------
@@ -28,21 +31,7 @@ by:
 inserting the appropriate stack adjustments instructions whenever
 possible.
 
-CFNativeQueries.Enabler.Tests
+Db4oAdmin.Tests
 =============================
 
-This is the test driver.
-
-It works by invoking the instrumentation tool
-on the CFNativeQueriesEnabler.Tests.Subject.exe assembly and then loading and
-executing the instrumented assembly checking if NativeQueryHandler.ExecuteMeta
-is being called as expected.
-
-CFNativeQueries.Enabler.Tests.Subject
-=====================================
-
-Test cases for the instrumentation tool.
-
-This application should not be executed directly. If you want to run the
-test cases, run the driver application (CFNativeQueries.Enabler.Tests.exe).
-
+Unit tests.

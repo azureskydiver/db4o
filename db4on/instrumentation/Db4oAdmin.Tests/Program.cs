@@ -9,7 +9,7 @@ using System.Reflection;
 using com.db4o;
 using com.db4o.inside.query;
 
-namespace Db4oShell.Tests
+namespace Db4oAdmin.Tests
 {
 	class Program
 	{
@@ -62,14 +62,14 @@ namespace Db4oShell.Tests
 
 		private void InstrumentAssembly(string path)
 		{
-			new Db4oShell.Program(path).Run();
+			new Db4oAdmin.Program(path).Run();
 		}
 
 		private string EmitAssemblyFromResource(string assemblyName)
 		{
 			CopyFileToFolder(typeof(ObjectContainer).Module.FullyQualifiedName, Path.GetTempPath());
 			string assemblyPath = Path.Combine(Path.GetTempPath(), assemblyName);
-			CompilationServices.EmitAssembly(assemblyPath, GetResourceAsString("Db4oShell.Tests.Resources.Subject.cs"));
+			CompilationServices.EmitAssembly(assemblyPath, GetResourceAsString("Db4oAdmin.Tests.Resources.Subject.cs"));
 			return assemblyPath;
 		}
 

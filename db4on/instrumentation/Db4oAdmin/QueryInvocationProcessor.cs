@@ -5,7 +5,7 @@ using com.db4o;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Db4oShell
+namespace Db4oAdmin
 {
 	class QueryInvocationProcessor
 	{

@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using com.db4o;
 
-namespace Db4oShell.Tests
+namespace Db4oAdmin.Tests
 {
 	/// <summary>
 	/// Compilation helper.

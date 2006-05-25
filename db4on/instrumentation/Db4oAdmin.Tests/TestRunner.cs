@@ -3,7 +3,7 @@
 using System;
 using System.Reflection;
 
-namespace Db4oShell.Tests
+namespace Db4oAdmin.Tests
 {
 	delegate void Test();
 

@@ -8,10 +8,10 @@
 	<property name="output.dir" location="bin" />	
 
 	<target name="build" depends="init">
-		<csc outputfile="${output.dir}/Db4oShell.exe"
+		<csc outputfile="${output.dir}/Db4oAdmin.exe"
 			targettype="exe"
 			debug="true">
-			<src dir="Db4oShell">
+			<src dir="Db4oAdmin">
 				<include name="**/*.cs" />
 			</src>
 			<reference dir="${output.dir}">
@@ -22,10 +22,10 @@
 	
 	<target name="test" depends="rebuild">
 		
-		<csc outputfile="${output.dir}/Db4oShell.Tests.exe"
+		<csc outputfile="${output.dir}/Db4oAdmin.Tests.exe"
 			targettype="exe"
 			debug="true">
-			<src dir="Db4oShell.Tests">
+			<src dir="Db4oAdmin.Tests">
 				<include name="**/*.cs" />
 				
 				<!-- embedded resource -->
@@ -34,15 +34,15 @@
 			</src>
 			<reference dir="${output.dir}">
 				<include name="*.dll" />
-				<include name="Db4oShell.exe" />
+				<include name="Db4oAdmin.exe" />
 			</reference>
 			
 			<resource embed="true"				
-				file="Db4oShell.Tests/Resources/Subject.cs"
-				name="Db4oShell.Tests.Resources.Subject.cs" />
+				file="Db4oAdmin.Tests/Resources/Subject.cs"
+				name="Db4oAdmin.Tests.Resources.Subject.cs" />
 		</csc>
 		
-		<exec executable="${output.dir}/Db4oShell.Tests.exe"
+		<exec executable="${output.dir}/Db4oAdmin.Tests.exe"
 			failonerror="true"
 			dir="${output.dir}">
 		</exec>
