@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oShell", "Db4oShell.csproj", "{6F3BE659-0653-4982-94D6-F1D9D8887E09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oAdmin", "Db4oAdmin.csproj", "{6F3BE659-0653-4982-94D6-F1D9D8887E09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oShell.Tests", "..\Db4oShell.Tests\Db4oShell.Tests.csproj", "{69859DB2-4DE3-4DE4-A0BB-13861418378F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oAdmin.Tests", "..\Db4oAdmin.Tests\Db4oAdmin.Tests.csproj", "{69859DB2-4DE3-4DE4-A0BB-13861418378F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oShell.Example", "..\Db4oShell.Example\Db4oShell.Example.csproj", "{50E50003-64D7-4EF5-A6DF-E7D8FCABCBA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oAdmin.Example", "..\Db4oAdmin.Example\Db4oAdmin.Example.csproj", "{50E50003-64D7-4EF5-A6DF-E7D8FCABCBA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net2", "..\..\core\db4o-net2.csproj", "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
 EndProject

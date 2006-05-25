@@ -1,7 +1,7 @@
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 
-namespace Db4oShell.Tests
+namespace Db4oAdmin.Tests
 {
 	class ILPatternTestCase
 	{

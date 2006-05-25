@@ -1,6 +1,6 @@
 using Mono.Cecil.Cil;
 
-namespace Db4oShell
+namespace Db4oAdmin
 {
 	public abstract class ILPattern
 	{

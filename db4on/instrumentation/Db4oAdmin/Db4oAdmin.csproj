@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{69859DB2-4DE3-4DE4-A0BB-13861418378F}</ProjectGuid>
+    <ProjectGuid>{6F3BE659-0653-4982-94D6-F1D9D8887E09}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Db4oShell.Tests</RootNamespace>
-    <AssemblyName>Db4oShell.Tests</AssemblyName>
+    <RootNamespace>Db4oAdmin</RootNamespace>
+    <AssemblyName>Db4oAdmin</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,13 +33,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assert.cs" />
-    <Compile Include="CompilationServices.cs" />
-    <Compile Include="ILPatternTestCase.cs" />
+    <Compile Include="ILPattern.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Resources\Subject.cs" />
-    <Compile Include="TestRunner.cs" />
+    <Compile Include="QueryInvocationProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\db4o-net2.csproj">
@@ -49,10 +46,6 @@
     <ProjectReference Include="..\..\tools\db4o-net2-tools.csproj">
       <Project>{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}</Project>
       <Name>db4o-net2-tools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Db4oShell\Db4oShell.csproj">
-      <Project>{6F3BE659-0653-4982-94D6-F1D9D8887E09}</Project>
-      <Name>Db4oShell</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

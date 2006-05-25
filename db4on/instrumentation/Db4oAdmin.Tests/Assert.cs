@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Db4oShell.Tests
+namespace Db4oAdmin.Tests
 {
 	class Assert
 	{
