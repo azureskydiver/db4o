@@ -114,7 +114,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             ReflectField[] fields = classReflector().getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
                 if (storeField(fields[i])) {
-                    wrapper = a_stream.i_handlers.handlerForClass(a_stream, fields[i].getType());
+                    wrapper = a_stream.i_handlers.handlerForClass(a_stream, fields[i].getFieldType());
                     if (wrapper == null) {
                         continue;
                     }
@@ -962,7 +962,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return i_stream;
     }
 
-    public int getType() {
+    public int getTypeID() {
         return YapConst.TYPE_CLASS;
     }
 

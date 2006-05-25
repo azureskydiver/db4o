@@ -13,7 +13,7 @@ public interface ReflectField {
 	
 	public String getName();
 	
-	public ReflectClass getType();
+	public ReflectClass getFieldType();
 	
 	public boolean isPublic();
 	

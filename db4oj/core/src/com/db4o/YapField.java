@@ -76,7 +76,7 @@ public class YapField implements StoredField {
         if(a_field instanceof GenericField){
             isPrimitive  = ((GenericField)a_field).isPrimitive();
         }
-        configure( a_field.getType(), isPrimitive);
+        configure( a_field.getFieldType(), isPrimitive);
         checkDb4oType();
         i_state = AVAILABLE;
     }
@@ -242,8 +242,8 @@ public class YapField implements StoredField {
 
     private void checkDb4oType() {
         if (i_javaField != null) {
-            if (getStream().i_handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getType())) {
-                i_db4oType = YapHandlers.getDb4oType(i_javaField.getType());
+            if (getStream().i_handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getFieldType())) {
+                i_db4oType = YapHandlers.getDb4oType(i_javaField.getFieldType());
             }
         }
     }
@@ -617,7 +617,7 @@ public class YapField implements StoredField {
             i_javaField.setAccessible();
             stream.showInternalClasses(true);
             TypeHandler4 handler = stream.i_handlers.handlerForClass(stream,
-                i_javaField.getType());
+                i_javaField.getFieldType());
             stream.showInternalClasses(false);
             return handler;
         } catch (Exception e) {

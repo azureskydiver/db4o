@@ -176,7 +176,7 @@ namespace Db4o.Tools {
                                     Log(a_container, element1, arrClass1, fieldName1, a_depth + 1, k1, a_list);
                                 }
                             } else {
-                                Log(a_container, obj1, fields1[j1].GetType(), fieldName1, a_depth + 1, -1, a_list);
+                                Log(a_container, obj1, fields1[j1].GetFieldType(), fieldName1, a_depth + 1, -1, a_list);
                             }
                      
                         }  catch (Exception e) { 

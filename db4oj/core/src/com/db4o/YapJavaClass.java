@@ -58,7 +58,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return (this == a_dataType);
     }
     
-    public int getType() {
+    public int getTypeID() {
         return YapConst.TYPE_SIMPLE;
     }
 

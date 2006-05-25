@@ -104,7 +104,7 @@ namespace com.db4o.test {
                            if (l_len1 != j4o.lang.reflect.JavaArray.GetLength(l_With1)) {
                               Regression.AddError("arraylen!=:" + path1);
                            } else {
-                              bool l_persistentArray1 = HasPublicConstructor(l_Fields1[i1].GetType().GetComponentType());
+                              bool l_persistentArray1 = HasPublicConstructor(l_Fields1[i1].GetFieldType().GetComponentType());
                               for (int j1 = 0; j1 < l_len1; j1++) {
                                  Object l_ElementCompare1 = j4o.lang.reflect.JavaArray.Get(l_Compare1, j1);
                                  Object l_ElementWith1 = j4o.lang.reflect.JavaArray.Get(l_With1, j1);
@@ -129,7 +129,7 @@ namespace com.db4o.test {
                               }
                            }
                         }
-                     } else if (HasPublicConstructor(l_Fields1[i1].GetType())) Compare(a_con, l_Compare1, l_With1, path1, a_list); else if (!l_Compare1.Equals(l_With1)) Regression.AddError("!=:" + path1);
+                     } else if (HasPublicConstructor(l_Fields1[i1].GetFieldType())) Compare(a_con, l_Compare1, l_With1, path1, a_list); else if (!l_Compare1.Equals(l_With1)) Regression.AddError("!=:" + path1);
                   }
                }  catch (Exception e) {
                   {

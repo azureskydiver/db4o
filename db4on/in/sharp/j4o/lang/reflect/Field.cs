@@ -98,7 +98,7 @@ namespace j4o.lang.reflect
             return _fieldInfo.Name;
         }
 
-        public Class GetType()
+        public Class GetFieldType()
         {
             if (_fieldClass == null)
             {

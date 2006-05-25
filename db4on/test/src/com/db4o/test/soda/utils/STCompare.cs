@@ -135,7 +135,7 @@ namespace com.db4o.test.soda.utils {
                                               }
                                           }
                                       }
-                                  } else if (HasPublicConstructor(fields1[i1].GetType())) {
+                                  } else if (HasPublicConstructor(fields1[i1].GetFieldType())) {
                                       if (!IsEqual(compare1, with1, path1, a_list)) {
                                           return false;
                                       }

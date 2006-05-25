@@ -19,9 +19,9 @@
 			return field.GetName();
 		}
 
-		public virtual com.db4o.reflect.ReflectClass GetType()
+		public virtual com.db4o.reflect.ReflectClass GetFieldType()
 		{
-			return reflector.ForClass(field.GetType());
+			return reflector.ForClass(field.GetFieldType());
 		}
 
 		public virtual bool IsPublic()

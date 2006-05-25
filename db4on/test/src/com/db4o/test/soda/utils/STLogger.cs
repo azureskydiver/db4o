@@ -85,7 +85,7 @@ namespace com.db4o.test.soda.utils {
                               Log(element1, arrClass1, fieldName1, a_depth + 1, k1, a_list);
                            }
                         } else {
-                           Log(obj1, fields1[j1].GetType(), fieldName1, a_depth + 1, -1, a_list);
+                           Log(obj1, fields1[j1].GetFieldType(), fieldName1, a_depth + 1, -1, a_list);
                         }
                      }
                   }  catch (Exception e) {
