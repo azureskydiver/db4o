@@ -4,6 +4,12 @@
 	<property file="machine.properties" />
 	<property file="ant.properties" />
 	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${dir.build.lib}/antcontrib/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+	
 	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
@@ -98,5 +104,15 @@
 		<copy todir="${plugin.dir}" file="${javatocsharp.core.dir}/plugin.xml" />
 
 	</target>
+	
+	<if>
+		<equals arg1="${compiledll.debug}" arg2="true" />
+		<then>
+			<property name="compiledll.debug.symbol" value="+" />
+		</then>
+		<else>
+			<property name="compiledll.debug.symbol" value="-" />
+		</else>
+	</if>
 
 </project>

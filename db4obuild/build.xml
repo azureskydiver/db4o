@@ -346,6 +346,8 @@
 		</csc>
 	</target>
 	
+
+	
 	<target name="compilecoredll-compact">
 		<delete dir="${dir.dist.net.compile}" />
 		<copy todir="${dir.dist.net.compile}">
@@ -359,6 +361,7 @@
 		<mkdir dir="${dir.dist.dll.compact}" />
 		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
 			<arg value="/optimize" />
+			<arg value="/debug${compiledll.debug.symbol}" />
 			<arg value="/define:${csharp.defines.cf}" />
 			<arg value="/out:${file.dll.compact}" />
 			<arg value="/doc:${file.xml.compact}" />
@@ -376,7 +379,7 @@
 		<csc srcdir="${dir.dist.net.compile}"
 			targettype="library"
 			destfile="${file.dll.tools.net}"
-			debug="true"
+			debug="${compiledll.debug}"
 			definitions="NET">
 			
 			<reference dir="${dir.dist.dll.net}">
@@ -388,6 +391,7 @@
 	<target name="compiletools-compact" depends="copy-tools-sources">
 		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
 			<arg value="/optimize" />
+			<arg value="/debug${compiledll.debug.symbol}" />
 			<arg value="/define:${csharp.defines.cf}" />
 			<arg value="/out:${file.dll.tools.compact}" />
 			<arg value="/target:library" />
