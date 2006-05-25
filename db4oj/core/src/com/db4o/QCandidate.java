@@ -274,7 +274,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				// in the higher level simple evaluation. Evaluate these
 				// immediately.
 
-				if (handler.getType() == YapConst.TYPE_SIMPLE) {
+				if (handler.getTypeID() == YapConst.TYPE_SIMPLE) {
 					a_candidates.i_currentConstraint.visit(this);
 					return true;
 				}
@@ -298,7 +298,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (_yapField != null) {
 				TypeHandler4 handler = _yapField.getHandler();
 				if (handler != null
-						&& (handler.getType() == YapConst.TYPE_CLASS)) {
+						&& (handler.getTypeID() == YapConst.TYPE_CLASS)) {
 					YapClass yc = (YapClass) handler;
 					if (yc instanceof YapClassAny) {
 						yc = candidate.readYapClass();

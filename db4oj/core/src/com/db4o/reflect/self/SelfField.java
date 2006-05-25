@@ -32,7 +32,7 @@ public class SelfField implements ReflectField {
 		return _name;
 	}
 
-	public ReflectClass getType() {
+	public ReflectClass getFieldType() {
 		return _type;
 	}
 

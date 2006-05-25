@@ -164,7 +164,7 @@ public final class YapString extends YapIndependantType {
         }
     }
 
-    public int getType() {
+    public int getTypeID() {
         return YapConst.TYPE_SIMPLE;
     }
 

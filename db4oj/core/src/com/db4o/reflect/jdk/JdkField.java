@@ -24,7 +24,7 @@ public class JdkField implements ReflectField {
         return field.getName();
     }
 
-    public ReflectClass getType() {
+    public ReflectClass getFieldType() {
         return reflector.forClass(field.getType());
     }
 

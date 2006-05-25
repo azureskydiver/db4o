@@ -132,8 +132,8 @@ public class YapArray extends YapIndependantType {
         return i_handler.getID();
     }
 
-    public int getType() {
-        return i_handler.getType();
+    public int getTypeID() {
+        return i_handler.getTypeID();
     }
 
     public YapClass getYapClass(YapStream a_stream) {

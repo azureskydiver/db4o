@@ -294,7 +294,7 @@ namespace com.db4o.test.cs {
             Class clazz = Class.GetClassForObject(this);
             Field[] fields = clazz.GetDeclaredFields();
             for(int i = 0; i < fields.Length; i ++){
-                clazz = fields[i].GetType();
+                clazz = fields[i].GetFieldType();
                 String name = clazz.GetName();
                 if(! (name.IndexOf("System.Char") >= 0)){
                     Console.WriteLine(name);

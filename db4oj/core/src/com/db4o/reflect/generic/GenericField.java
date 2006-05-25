@@ -44,7 +44,7 @@ public class GenericField implements ReflectField, DeepClone{
         return _name;
     }
 
-    public ReflectClass getType() {
+    public ReflectClass getFieldType() {
         if(_array){
             return _type.arrayClass();
         }

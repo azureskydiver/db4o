@@ -511,6 +511,7 @@
 			definitions="MONO">
 			<include name="**/*.cs" />
 			<exclude name="compact*/**" />
+			<exclude name="**/templates/**" />
 		</csc>
 		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 	</target>

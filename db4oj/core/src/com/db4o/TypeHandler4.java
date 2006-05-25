@@ -54,7 +54,7 @@ public interface TypeHandler4 extends Indexable4
     // FIXME: SM MarshallerFamily does not need to be passed. All can use Mf#current()
     Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes);
 	
-	public int getType ();
+	public int getTypeID ();
 	
 	YapClass getYapClass(YapStream a_stream);
     

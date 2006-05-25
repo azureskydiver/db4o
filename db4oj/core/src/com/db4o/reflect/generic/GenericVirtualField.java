@@ -22,7 +22,7 @@ public class GenericVirtualField extends GenericField{
         return null;
     }
 
-    public ReflectClass getType() {
+    public ReflectClass getFieldType() {
         return null;
     }
 
