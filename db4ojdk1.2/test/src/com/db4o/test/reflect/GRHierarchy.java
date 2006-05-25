@@ -84,7 +84,7 @@ public class GRHierarchy {
 		com.db4o.test.Test.ensureEquals(1,subfields.length);
 		com.db4o.test.Test.ensureEquals("a",subfields[0].getName());
 		ReflectClass fieldtype=reflector.forName(A.class.getName());
-		com.db4o.test.Test.ensureEquals(fieldtype,subfields[0].getType());
+		com.db4o.test.Test.ensureEquals(fieldtype,subfields[0].getFieldType());
 		Object subfieldvalue=subfields[0].get(obj);
 		com.db4o.test.Test.ensure(subfieldvalue instanceof GenericObject);		
 		ReflectClass concretetype=reflector.forObject(subfieldvalue);
@@ -95,7 +95,7 @@ public class GRHierarchy {
 		com.db4o.test.Test.ensureEquals(1,superfields.length);
 		com.db4o.test.Test.ensureEquals("name",superfields[0].getName());
 		fieldtype=reflector.forName(String.class.getName());
-		com.db4o.test.Test.ensureEquals(fieldtype,superfields[0].getType());
+		com.db4o.test.Test.ensureEquals(fieldtype,superfields[0].getFieldType());
 		Object superfieldvalue=superfields[0].get(obj);
 		com.db4o.test.Test.ensureEquals("test",superfieldvalue);		
 		

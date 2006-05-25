@@ -92,7 +92,7 @@ public class Reflection extends Test {
 		_assert(fieldReflector.isPublic(), "IField.isPublic()");
 		_assert(!fieldReflector.isStatic(), "IField.isStatic()");
 		_assert(!fieldReflector.isTransient(), "IField.isTransient()");
-		_assert(fieldReflector.getType().equals(claxx), "IField.getType()");
+		_assert(fieldReflector.getFieldType().equals(claxx), "IField.getType()");
 	}
 
 	public void testIArray() {
