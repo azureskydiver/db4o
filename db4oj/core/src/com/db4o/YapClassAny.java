@@ -31,29 +31,14 @@ final class YapClassAny extends YapClass {
 		Object a_object,
 		int a_depth,
 		boolean a_activate) {
-		YapClass yc = a_trans.i_stream.getYapClass(a_trans.reflector().forObject(a_object), false);
+		YapClass yc = forObject(a_trans, a_object, false);
 		if (yc != null) {
 			yc.cascadeActivation(a_trans, a_object, a_depth, a_activate);
 		}
 	}
-
-	public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
-		int objectID = a_bytes.readInt();
-		if (objectID > 0) {
-			YapWriter reader =
-				a_bytes.getStream().readWriterByID(a_bytes.getTransaction(), objectID);
-			if (reader != null) {
-				reader.setCascadeDeletes(a_bytes.cascadeDeletes());
-                ObjectHeader oh = new ObjectHeader(reader);
-				if(oh._yapClass != null){
-                    
-                    // FIXME: SM remove
-                    mf = MarshallerFamily.forVersion(0);
-                    
-				    oh._yapClass.deleteEmbedded1(mf, reader, objectID);
-				}
-			}
-		}
+    
+	public void deleteEmbedded(MarshallerFamily mf, YapWriter reader) {
+        mf._untyped.deleteEmbedded(reader);
 	}
 	
 	public int getID() {
@@ -83,44 +68,54 @@ final class YapClassAny extends YapClass {
 	boolean isStrongTyped(){
 		return false;
 	}
+    
+    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
+        YapClass yc = forObject(trans, obj, true);
+        if( yc == null){
+            return 0;
+        }
+        int payLoadLength = yc.lengthInPayload(trans, obj, topLevel);
+        if(topLevel && payLoadLength == 0){
+            
+            // FIXME: SM revisit. More comments in ArrayMarshaller1#calculateLength()
+            
+            payLoadLength = yc.lengthInPayload(trans, obj, false);
+        }
+        return YapConst.YAPINT_LENGTH  //  type information int
+            + payLoadLength; 
+    }
+    
+    public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
+        if(mf._untyped.useNormalClassRead()){
+            return super.read(mf, a_bytes, redirect);
+        }
+        return mf._untyped.read(a_bytes);
+    }
 
-	public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
-
-		int id = 0;
-
-		int offset = a_bytes[0]._offset;
-		try {
-			id = a_bytes[0].readInt();
-		} catch (Exception e) {
-		}
-		a_bytes[0]._offset = offset;
-
-		if (id != 0) {
-			YapWriter reader =
-				a_trans.i_stream.readWriterByID(a_trans, id);
-			if (reader != null) {
-                ObjectHeader oh = new ObjectHeader(reader);
-				try {
-					if (oh._yapClass != null) {
-						a_bytes[0] = reader;
-						return oh._yapClass.readArrayWrapper1(a_bytes);
-					}
-				} catch (Exception e) {
-                    
-                    if(Debug.atHome){
-                        e.printStackTrace();
-                    }
-                    
-					// TODO: Check Exception Types
-					// Errors typically occur, if classes don't match
-				}
-			}
-		}
-		return null;
+	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
+        return mf._untyped.readArrayHandler(a_trans, a_bytes);
 	}
+    
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, YapReader reader, boolean toArray) throws CorruptionException{
+        if(mf._untyped.useNormalClassRead()){
+            return super.readQuery(trans, mf, withRedirection, reader, toArray);
+        }
+        return mf._untyped.readQuery(trans, reader, toArray);
+    }
+    
+    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+        if(mf._untyped.useNormalClassRead()){
+            return super.readSubCandidate(mf, reader, candidates, withIndirection);
+        }
+        return mf._untyped.readSubCandidate(reader, candidates, withIndirection);
+    } 
 	
     public boolean supportsIndex() {
         return false;
+    }
+    
+    public Object writeNew(MarshallerFamily mf, Object obj, YapWriter writer, boolean redirect) {
+        return mf._untyped.writeNew(obj, writer);
     }
 
 

@@ -60,15 +60,19 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		// dummy constructor to get "this" out of declaration for C#
 	}
 
-	QCandidate(QCandidates candidates, Object obj, int id, boolean include) {
+	public QCandidate(QCandidates candidates, Object obj, int id, boolean include) {
 		super(id);
 		if (DTrace.enabled) {
 			DTrace.CREATE_CANDIDATE.log(id);
 		}
-		_candidates = candidates;
+        _candidates = candidates;
 		_order = this;
 		_member = obj;
 		_include = include;
+        
+        if(id == 0){
+            _key = candidates.generateCandidateId();
+        }
 	}
 
 	public Object shallowClone() {
@@ -126,10 +130,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 				final YapReader[] arrayBytes = { _bytes };
                 
-				final TypeHandler4 arrayWrapper = handler.readArrayWrapper(
-						getTransaction(), arrayBytes);
+				final TypeHandler4 arrayHandler = handler.readArrayHandler(
+						getTransaction(), _marshallerFamily, arrayBytes);
 
-				if (arrayWrapper != null) {
+				if (arrayHandler != null) {
 
 					final int offset = arrayBytes[0]._offset;
 					boolean outerRes = true;
@@ -154,8 +158,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							candidates.addConstraint(qcon);
 
 							qcon.setCandidates(candidates);
-							arrayWrapper.readCandidates(arrayBytes[0],
-									candidates);
+							arrayHandler.readCandidates(_marshallerFamily,arrayBytes[0], candidates);
 							arrayBytes[0]._offset = offset;
 
 							final boolean isNot = qcon.isNot();
@@ -286,6 +289,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         }
 
 		if (candidate == null) {
+            _yapClass.findOffset(_bytes, _yapField);
 			candidate = readSubCandidate(a_candidates);
 			if (candidate == null) {
 				return false;
@@ -303,6 +307,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 					if (yc instanceof YapClassAny) {
 						yc = candidate.readYapClass();
 					}
+                    if(yc == null){
+                        return false;
+                    }
 					if (!yc.canHold(a_candidates.i_yapClass.classReflector())) {
 						return false;
 					}
@@ -494,23 +501,21 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 
 	private QCandidate readSubCandidate(QCandidates candidateCollection) {
-		int id = 0;
 		read();
 		if (_bytes != null) {
+            
+            QCandidate subCandidate = null;
 			final int offset = _bytes._offset;
-
 			try {
-				id = _bytes.readInt();
+                subCandidate =  _yapField.i_handler.readSubCandidate(_marshallerFamily, _bytes, candidateCollection, false);
 			} catch (Exception e) {
 				return null;
 			}
 			_bytes._offset = offset;
 
-			if (id != 0) {
-				QCandidate candidate = new QCandidate(candidateCollection,
-						null, id, true);
-				candidate._root = getRoot();
-				return candidate;
+			if (subCandidate != null) {
+				subCandidate._root = getRoot();
+				return subCandidate;
 			}
 		}
 		return null;

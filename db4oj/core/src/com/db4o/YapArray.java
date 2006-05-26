@@ -68,6 +68,9 @@ public class YapArray extends YapIndependantType {
     	return i_handler.classReflector();
     }
 
+    // FIXME: This is a rare SODA case that is apparently untested
+    //        since it doesn't fail, although the code has not yet
+    //        been ported to new ArrayMarshaller format.
     TreeInt collectIDs(TreeInt tree, YapWriter a_bytes){
         Transaction trans = a_bytes.getTransaction();
         YapReader bytes = a_bytes.readEmbeddedObject(trans);
@@ -88,11 +91,25 @@ public class YapArray extends YapIndependantType {
         mf._array.deleteEmbedded(this, a_bytes);
     }
 
+    
+    // FIXME: This code has not been called in any test case when the 
+    //        new ArrayMarshaller was written.
+    //        Apparently it only frees slots.
+    //        For now the code simply returns without freeing.
     public final void deletePrimitiveEmbedded(
+        
         YapWriter a_bytes,
         YapClassPrimitive a_classPrimitive) {
+        
         int address = a_bytes.readInt();
         int length = a_bytes.readInt();
+        
+
+        if(true){
+            return;
+        }
+        
+        
         if (address > 0) {
             Transaction trans = a_bytes.getTransaction();
             YapWriter bytes =
@@ -104,9 +121,11 @@ public class YapArray extends YapIndependantType {
                 for (int i = elementCount(trans, bytes); i > 0; i--) {
                     int id = bytes.readInt();
                     Slot slot = trans.getSlotInformation(id);
+                    
 					a_classPrimitive.free(trans, id, slot._address,slot._length);
                 }
             }
+            
             trans.slotFreeOnCommit(address, address, length);
         }
     }
@@ -152,8 +171,8 @@ public class YapArray extends YapIndependantType {
         return i_handler.isSecondClass();
     }
     
-    public int marshalledLength(Object obj) {
-        return MarshallerFamily.current()._array.marshalledLength(this, obj);
+    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
+        return MarshallerFamily.current()._array.lengthInPayload(trans, this, obj, false);
     }
 
     public int objectLength(Object a_object) {
@@ -166,7 +185,7 @@ public class YapArray extends YapIndependantType {
 	    prepareComparison(obj);
 	}
 
-    public final Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
+    public final Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
         return mf._array.read(this, a_bytes);
     }
     
@@ -175,7 +194,7 @@ public class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
         return mf._array.readQuery(this, a_trans, a_reader);
 	}
 	
@@ -189,7 +208,7 @@ public class YapArray extends YapIndependantType {
         Object ret = readCreate(a_trans, a_reader, elements);
 		if(ret != null){
 			for (int i = 0; i < elements[0]; i++) {
-                _reflectArray.set(ret, i, i_handler.readQuery(a_trans, mf, a_reader, true));
+                _reflectArray.set(ret, i, i_handler.readQuery(a_trans, mf, true, a_reader, true));
 			}
 		}
         if (Deploy.debug) {
@@ -212,7 +231,7 @@ public class YapArray extends YapIndependantType {
                 return ret;
             }
 			for (int i = 0; i < elements[0]; i++) {
-				_reflectArray.set(ret, i, i_handler.read(mf, reader));
+				_reflectArray.set(ret, i, i_handler.read(mf, reader, true));
 			}	
 		}
         
@@ -236,21 +255,40 @@ public class YapArray extends YapIndependantType {
 		return null;
 	}
 
-    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
         return this;
     }
 
-    public void readCandidates(YapReader a_bytes, QCandidates a_candidates) {
-		YapReader bytes = a_bytes.readEmbeddedObject(a_candidates.i_trans);
-		if (bytes != null) {
-		    if(Deploy.debug){
-		        bytes.readBegin(identifier());
-		    }
-            int count = elementCount(a_candidates.i_trans, bytes);
-            for (int i = 0; i < count; i++) {
-                a_candidates.addByIdentity(new QCandidate(a_candidates, null, bytes.readInt(), true));
+    public void readCandidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
+        mf._array.readCandidates(this, reader, candidates);
+    }
+    
+    public void read1Candidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
+        if(Deploy.debug){
+            reader.readBegin(identifier());
+        }
+        
+        int[] elements = new int[1];
+        Object ret = readCreate(candidates.i_trans, reader, elements);
+        if(ret != null){
+            for (int i = 0; i < elements[0]; i++) {
+                QCandidate qc = i_handler.readSubCandidate(mf, reader, candidates, true);
+                if(qc != null){
+                    candidates.addByIdentity(qc);
+                }
             }
         }
+    }
+    
+    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+        reader.incrementOffset(linkLength());
+        
+        return null;
+        
+        // TODO: Here we should theoretically read through the array and collect candidates.
+        // The respective construct is wild: "Contains query through an array in an array."
+        // Ignore for now.
+        
     }
     
     final int readElementsAndClass(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz){
@@ -258,8 +296,8 @@ public class YapArray extends YapIndependantType {
         clazz[0] = i_handler.classReflector();
         if (elements < 0) {
             
-            // TODO: This one is a terrible low-frequency blunder !!!
-            // If YapClass-ID == 99999 then we will get ignore.
+            // TODO: Here is a low-frequency mistake, extremely unlikely.
+            // If YapClass-ID == 99999 by accident then we will get ignore.
             
             if(elements != YapConst.IGNORE_ID){
                 boolean primitive = false;
@@ -345,7 +383,7 @@ public class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-    public final Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
+    public final Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
         return mf._array.writeNew(this, a_object, a_bytes);
     }
 
@@ -362,7 +400,7 @@ public class YapArray extends YapIndependantType {
         
         if(! i_handler.writeArray(obj, writer)){
             for (int i = 0; i < elements; i++) {
-                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), writer);
+                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), writer, true);
             }
         }
         
@@ -423,4 +461,5 @@ public class YapArray extends YapIndependantType {
     public boolean supportsIndex() {
         return false;
     }
+
 }

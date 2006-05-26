@@ -78,8 +78,11 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return YapConst.YES;
     }
     
-    public int marshalledLength(Object obj) {
-        return 0;
+    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
+        if(topLevel){
+            return 0;
+        }
+        return linkLength();
     }
 
     public void prepareComparison(Transaction a_trans, Object obj) {
@@ -94,25 +97,36 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return false;
     }
 
-    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
         // virtual and do nothing
         return null;
     }
 
-    public Object readQuery(Transaction trans, MarshallerFamily mf, YapReader reader, boolean toArray)
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, YapReader reader, boolean toArray)
         throws CorruptionException {
         return read1(reader);
     }
 
-    public Object read(MarshallerFamily mf, YapWriter writer) throws CorruptionException {
+    public Object read(MarshallerFamily mf, YapWriter writer, boolean redirect) throws CorruptionException {
         return read1(writer);
     }
 
     abstract Object read1(YapReader reader) throws CorruptionException;
 
-    public void readCandidates(YapReader a_bytes, QCandidates a_candidates) {
+    public void readCandidates(MarshallerFamily mf, YapReader a_bytes, QCandidates a_candidates) {
         // do nothing
     }
+    
+    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+        try {
+            Object obj = readQuery(candidates.i_trans, mf, withIndirection, reader, true);
+            if(obj != null){
+                return new QCandidate(candidates, obj, 0, true);
+            }
+        } catch (CorruptionException e) {
+        }
+        return null;
+    } 
 
     public Object readIndexEntry(YapReader a_reader) {
         try {
@@ -123,7 +137,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
     }
     
     public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
-        return read(mf, a_writer);
+        return read(mf, a_writer, true);
     }
     
     public ReflectClass classReflector(){
@@ -164,7 +178,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         write(a_object, a_writer);
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
         if (a_object == null) {
             a_object = primitiveNull();
         }

@@ -48,7 +48,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
     }
 	
     public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
-        return read(mf, a_writer);
+        return read(mf, a_writer, true);
     }
 	
     public boolean writeArray(Object array, YapWriter reader) {

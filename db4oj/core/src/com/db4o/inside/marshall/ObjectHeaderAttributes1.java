@@ -52,7 +52,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
                     _nullBitMap.setTrue(fieldIndex);
                 }else{
                     _baseLength += yf.linkLength();
-                    _payLoadLength += yf.marshalledLength(child);
+                    _payLoadLength += yf.lengthInPayload(trans, child);
                 }
                 fieldIndex ++;
             }

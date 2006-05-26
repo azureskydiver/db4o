@@ -9,6 +9,8 @@ public abstract class PrimitiveMarshaller {
     
     public MarshallerFamily _family;
     
+    public abstract boolean useNormalClassRead();
+    
     public abstract int marshall(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, YapWriter parentWriter);
     
     protected int objectLength(TypeHandler4 handler, Object obj){

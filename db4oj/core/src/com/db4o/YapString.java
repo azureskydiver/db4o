@@ -89,22 +89,39 @@ public final class YapString extends YapIndependantType {
         return YapConst.YES;
     }
     
-    public int marshalledLength(Object obj){
-        return MarshallerFamily.current()._string.marshalledLength(_stream, obj);
+    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel){
+        return MarshallerFamily.current()._string.lengthInPayload(_stream, obj);
     }
 
-    public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
-        return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes);
+    public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException {
+        return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }
     
-    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
         // virtual and do nothing
         return null;
     }
 
-    public void readCandidates(YapReader a_bytes, QCandidates a_candidates) {
+    public void readCandidates(MarshallerFamily mf, YapReader a_bytes, QCandidates a_candidates) {
         // do nothing
     }
+    
+    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+        try {
+            Object obj = null;
+            if(withIndirection){
+                obj = readQuery(candidates.i_trans, mf, withIndirection, reader, true);
+            }else{
+                obj = mf._string.read(_stream, reader);
+            }
+            if(obj != null){
+                return new QCandidate(candidates, obj, 0, true);
+            }
+        } catch (CorruptionException e) {
+        }
+        return null;
+    } 
+
 
     /**
      * This readIndexEntry method reads from the parent slot.
@@ -122,7 +139,10 @@ public final class YapString extends YapIndependantType {
         return new int[] {a_reader.readInt(), a_reader.readInt()};
     }
     
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+        if(! withRedirection){
+            return mf._string.read(a_trans.i_stream, a_reader);
+        }
 	    YapReader reader = mf._string.readSlotFromParentSlot(a_trans.i_stream, a_reader);
 	    if(a_toArray) {
 	        if(reader != null) {
@@ -151,8 +171,8 @@ public final class YapString extends YapIndependantType {
         }
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
-        return mf._string.marshall(a_object, a_bytes);
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
+        return mf._string.marshall(a_object, a_bytes, withIndirection);
     }
 
     final void writeShort(String a_string, YapReader a_bytes) {

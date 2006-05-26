@@ -10,15 +10,15 @@ public abstract class StringMarshaller {
     
     public abstract boolean inlinedStrings();
     
+    public abstract int lengthInPayload(YapStream stream, Object obj);
+    
     protected final int linkLength(){
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
     }
     
-    public abstract Object marshall(Object a_object, YapWriter a_bytes);
+    public abstract Object marshall(Object a_object, YapWriter a_bytes, boolean redirect);
     
-    public abstract int marshalledLength(YapStream stream, Object obj);
-    
-    private final String read(YapStream stream, YapReader reader) throws CorruptionException {
+    public final String read(YapStream stream, YapReader reader) throws CorruptionException {
         if (reader == null) {
             return null;
         }
@@ -43,7 +43,10 @@ public abstract class StringMarshaller {
         return "";
     }
     
-    public String readFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
+    public String readFromParentSlot(YapStream stream, YapReader reader, boolean redirect) throws CorruptionException {
+        if(! redirect){
+            return read(stream, reader);
+        }
         return read(stream, readSlotFromParentSlot(stream, reader));
     }
     

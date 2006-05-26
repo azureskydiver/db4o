@@ -33,7 +33,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         trans.slotFreeOnCommit(address, address, length);
     }
     
-    public int marshalledLength(YapArray handler, Object obj){
+    public int lengthInPayload(Transaction trans, YapArray handler, Object obj, boolean topLevel){
         return 0;
     }
     
@@ -60,6 +60,21 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         }
         return arrayHandler.read1(_family, bytes);
     }
+    
+    public void readCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates) {
+        YapReader bytes = reader.readEmbeddedObject(candidates.i_trans);
+        if (bytes == null) {
+            return;
+        }
+        if(Deploy.debug){
+            bytes.readBegin(arrayHandler.identifier());
+        }
+        int count = arrayHandler.elementCount(candidates.i_trans, bytes);
+        for (int i = 0; i < count; i++) {
+            candidates.addByIdentity(new QCandidate(candidates, null, bytes.readInt(), true));
+        }
+    }
+
     
     public final Object readQuery(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException{
         YapReader bytes = reader.readEmbeddedObject(trans);

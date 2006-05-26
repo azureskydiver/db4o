@@ -37,22 +37,35 @@ public interface TypeHandler4 extends Indexable4
     
     int isSecondClass();
     
-    int marshalledLength(Object obj);
+    /**
+     * The length calculation is different, depending from where we 
+     * calculate. If we are still in the link area at the beginning of
+     * the slot, no data needs to be written to the payload area for
+     * primitive types, since they fully fit into the link area. If
+     * we are already writing something like an array (or deeper) to
+     * the payload area when we come here, a primitive does require
+     * space in the payload area.
+     * Differentiation is expressed with the 'topLevel' parameter.
+     * If 'topLevel==true' we are asking for a size calculation for
+     * the link area. If 'topLevel==false' we are asking for a size
+     * calculation for the payload area at the end of the slot.
+     */
+    int lengthInPayload(Transaction trans, Object obj, boolean topLevel);
 	
 	void prepareComparison(Transaction a_trans, Object obj);
 	
 	ReflectClass primitiveClassReflector();
 	
-	Object read(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
+	Object read(MarshallerFamily mf, YapWriter writer, boolean redirect) throws CorruptionException;
     
 	Object readIndexEntry(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
 	
-	Object readQuery(Transaction trans, MarshallerFamily mf, YapReader reader, boolean toArray) throws CorruptionException;
+	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, YapReader reader, boolean toArray) throws CorruptionException;
 	
 	boolean supportsIndex();
 	
     // FIXME: SM MarshallerFamily does not need to be passed. All can use Mf#current()
-    Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes);
+    Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection);
 	
 	public int getTypeID ();
 	
@@ -63,14 +76,17 @@ public interface TypeHandler4 extends Indexable4
      */
     boolean readArray(Object array, YapWriter reader);
 	
-	void readCandidates(YapReader a_bytes, QCandidates a_candidates);
+	void readCandidates(MarshallerFamily mf, YapReader reader, QCandidates candidates);
 	
-	TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes);
+	TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes);
 	
     /**
      * performance optimized write (only used for byte[] so far) 
      */
     boolean writeArray(Object array, YapWriter reader);
+
+    QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection);
+
     
 
 	

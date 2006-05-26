@@ -578,13 +578,13 @@ public class YapField implements StoredField {
     // similar to #linklength(), actually marshaller specific, 
     // written here for now, since YapField knows better what
     // to do, when i_handler is null.
-    public final int marshalledLength( Object obj){
+    public final int lengthInPayload(Transaction trans, Object obj){
         alive();
         if (i_handler == null) {
             // must be a YapClass
             return YapConst.YAPID_LENGTH;
         }
-        return i_handler.marshalledLength(obj);
+        return i_handler.lengthInPayload(trans, obj, true);
     }
     
 
@@ -651,10 +651,10 @@ public class YapField implements StoredField {
             if (updateDepth < min) {
                 writer.setUpdateDepth(min);
             }
-            indexEntry = i_handler.writeNew(mf, obj, writer);
+            indexEntry = i_handler.writeNew(mf, obj, writer, true);
             writer.setUpdateDepth(updateDepth);
         } else {
-            indexEntry = i_handler.writeNew(mf, obj, writer);
+            indexEntry = i_handler.writeNew(mf, obj, writer, true);
         }
         
         addIndexEntry(writer, indexEntry);
@@ -685,12 +685,12 @@ public class YapField implements StoredField {
         if (!alive()) {
             return null;
         }
-        return i_handler.read(mf, a_bytes);
+        return i_handler.read(mf, a_bytes, true);
     }
 
     Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader)
         throws CorruptionException {
-        return i_handler.readQuery(a_trans, mf, a_reader, false);
+        return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }
 
     YapField readThis(YapStream a_stream, YapReader a_reader) {

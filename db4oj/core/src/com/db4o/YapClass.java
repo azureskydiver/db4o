@@ -541,7 +541,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    void deleteEmbedded1(MarshallerFamily mf, YapWriter a_bytes, int a_id) {
+    public void deleteEmbedded1(MarshallerFamily mf, YapWriter a_bytes, int a_id) {
         if (a_bytes.cascadeDeletes() > 0) {
         	
         	YapStream stream = a_bytes.getStream();
@@ -647,6 +647,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (i_ancestor != null) {
             i_ancestor.forEachYapField(visitor);
         }
+    }
+    
+    public static YapClass forObject(Transaction trans, Object obj, boolean allowCreation){
+        return trans.i_stream.getYapClass(trans.reflector().forObject(obj), allowCreation);
     }
     
     private boolean generateUUIDs() {
@@ -1266,8 +1270,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return Platform4.isValueType(classReflector());
     }
     
-    public int marshalledLength(Object obj) {
-        return 0;
+    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
+        if(topLevel){
+            return 0;
+        }
+        return linkLength();
     }
 
     private String nameToWrite(){
@@ -1352,7 +1359,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
     }
 
-    public Object read(MarshallerFamily mf, YapWriter a_bytes) {
+    public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
         try {
             int id = a_bytes.readInt();
             int depth = a_bytes.getInstantiationDepth() - 1;
@@ -1417,7 +1424,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return null;
     }
     
-    public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) {
+    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
         try {
             return a_trans.i_stream.getByID2(a_trans, a_reader.readInt());
         } catch (Exception e) {
@@ -1428,14 +1435,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return null;
     }
 
-    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
         if (isArray()) {
             return this;
         }
         return null;
     }
 
-    public TypeHandler4 readArrayWrapper1(YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler1(YapReader[] a_bytes) {
         if(DTrace.enabled){
             if(a_bytes[0] instanceof YapWriter){
                 DTrace.READ_ARRAY_WRAPPER.log(((YapWriter)a_bytes[0]).getID());
@@ -1448,13 +1455,21 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             }
             incrementFieldsOffset1(a_bytes[0]);
             if (i_ancestor != null) {
-                return i_ancestor.readArrayWrapper1(a_bytes);
+                return i_ancestor.readArrayHandler1(a_bytes);
             }
         }
         return null;
     }
+    
+    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+        int id = reader.readInt();
+        if(id == 0){
+            return null;
+        }
+        return new QCandidate(candidates, null, id, true);
+    } 
 
-    public void readCandidates(final YapReader a_bytes, final QCandidates a_candidates) {
+    public void readCandidates(MarshallerFamily mf, final YapReader a_bytes, final QCandidates a_candidates) {
         int id = 0;
 
         int offset = a_bytes._offset;
@@ -1469,19 +1484,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             Object obj = trans.i_stream.getByID1(trans, id);
             if (obj != null) {
 
-                // QCandidate objects need IDs to be unique in the
-                // candidate tree. Our ArrayList objects here don't
-                // have IDs, so we fake them by using negative
-                // numbers.
-                final int[] idgen = { -2 };
                 a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
-                        int elemid = (int)trans.i_stream.getID(elem);
-                        if (elemid == 0) {
-                            elemid = idgen[0]--;
-                        }
-                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, elemid, true));
+                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, (int)trans.i_stream.getID(elem), true));
                     }
                 });
             }
@@ -1952,7 +1958,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
         if (a_object == null) {
             a_bytes.writeInt(0);
             return new Integer(0);
@@ -2060,7 +2066,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             str+= i_ancestor.toString(mf, writer, yapObject, depth, maxDepth);
         }
         return str;
+
     }
+
 
 
 
