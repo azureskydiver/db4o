@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("CFNativeQueriesEnabler")]
+[assembly: AssemblyTitle("Db4oAdmin")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("db4objects, Inc.")]
-[assembly: AssemblyProduct("CFNativeQueriesEnabler")]
+[assembly: AssemblyProduct("db4o - database for objects")]
 [assembly: AssemblyCopyright("Copyright © db4objects, Inc. 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
