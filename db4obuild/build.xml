@@ -1110,33 +1110,29 @@
 		
 		<copy todir="${dir.dist.net.instrumentation}/src/instrumentation">				
 			<fileset dir="${dir.n.instrumentation}">
-				<include name="CFNativeQueriesEnabler/**/*.cs" />
-				<include name="CFNativeQueriesEnabler/**/*.csproj" />
-				<include name="CFNativeQueriesEnabler/**/*.sln" />
+				<include name="Db4oAdmin/**/*.cs" />
+				<include name="Db4oAdmin/**/*.csproj" />
+				<include name="Db4oAdmin/**/*.sln" />
 				
-				<include name="CFNativeQueriesEnabler.Tests/**/*.cs" />
-				<include name="CFNativeQueriesEnabler.Tests/**/*.csproj" />
-				<include name="CFNativeQueriesEnabler.Tests/**/*.sln" />
+				<include name="Db4oAdmin.Tests/**/*.cs" />
+				<include name="Db4oAdmin.Tests/**/*.csproj" />
+				<include name="Db4oAdmin.Tests/**/*.sln" />
 				
-				<include name="CFNativeQueriesEnabler.Tests.Subject/**/*.cs" />
-				<include name="CFNativeQueriesEnabler.Tests.Subject/**/*.csproj" />
-				<include name="CFNativeQueriesEnabler.Tests.Subject/**/*.sln" />
-				
-				<include name="CFNativeQueriesEnabler.Example/**/*.cs" />
-				<include name="CFNativeQueriesEnabler.Example/**/*.csproj" />
-				<include name="CFNativeQueriesEnabler.Example/**/*.sln" />
+				<include name="Db4oAdmin.Example/**/*.cs" />
+				<include name="Db4oAdmin.Example/**/*.csproj" />
+				<include name="Db4oAdmin.Example/**/*.sln" />
 			</fileset>
 		</copy>
 		
 		<updateAssemblyHintPath to="../../../dll/net/${file.name.dll}">
-			<projectFiles dir="${dir.dist.net.instrumentation}/src/instrumentation">
+			<projectFiles dir="${dir.dist.net.instrumentation}">
 				<include name="**/*.csproj" />
 				<exclude name="**/*.Example.csproj" />
 			</projectFiles>
 		</updateAssemblyHintPath>
 		
 		<updateAssemblyHintPath to="../../../dll/compact/${file.name.dll}">
-			<projectFiles dir="${dir.dist.net.instrumentation}/src/instrumentation">
+			<projectFiles dir="${dir.dist.net.instrumentation}">
 				<include name="**/*.Example.csproj" />
 			</projectFiles>
 		</updateAssemblyHintPath>
