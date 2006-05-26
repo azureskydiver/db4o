@@ -6,7 +6,9 @@ import com.db4o.foundation.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
-
+/**
+ * @exclude
+ */
 public class YapClassPrimitive extends YapClass{
     
     public final TypeHandler4 i_handler;
