@@ -5,15 +5,15 @@ using com.db4o.config;
 
 namespace com.db4o.test.aliases
 {
-	public class Person1 
+	public class Person1
 	{
 		private String _name;
 
-		public Person1(String name) 
+		public Person1(String name)
 		{
 			_name = name;
 		}
-	
+
 		public String Name
 		{
 			get { return _name; }
@@ -24,11 +24,11 @@ namespace com.db4o.test.aliases
 	{
 		private String _name;
 
-		public Person2(String name) 
+		public Person2(String name)
 		{
 			_name = name;
 		}
-	
+
 		public String Name
 		{
 			get { return _name; }
@@ -46,13 +46,13 @@ namespace com.db4o.test.aliases
 	/// </summary>
 	public class ClassAliasesTestCase
 	{
-		public void TestTypeAlias() 
+		public void TestTypeAlias()
 		{
 			ObjectContainer container = Tester.ObjectContainer();
 
 			container.Set(new Person1("Homer Simpson"));
 			container.Set(new Person1("John Cleese"));
-		
+
 			container = Tester.ReOpen();
 			container.Ext().Configure().AddAlias(
 				// Person1 instances should be read as Person2 objects
@@ -62,22 +62,22 @@ namespace com.db4o.test.aliases
 			AssertData(container);
 		}
 
-		private void AssertData(ObjectContainer container) 
+		private void AssertData(ObjectContainer container)
 		{
 			ObjectSet os = container.Get(typeof(Person2));
 			Tester.EnsureEquals(2, os.Size());
 			EnsureContains(os, new Person2("Homer Simpson"));
 			EnsureContains(os, new Person2("John Cleese"));
 		}
-	
+
 		public void TestAccessingJavaFromDotnet()
 		{
-			if (!File.Exists(Db4ojarPath()))
+			if (null == db4obuild())
 			{
-				Console.WriteLine("{0} not found, skipping java compatibility test.", Db4ojarPath());
+				Console.WriteLine("'db4obuild' directory not found, skipping java compatibility test.");
 				return;
 			}
-			
+
 			GenerateJavaData();
 			using (ObjectContainer container = OpenJavaDataFile())
 			{
@@ -88,22 +88,22 @@ namespace com.db4o.test.aliases
 				AssertData(container);
 			}
 		}
-		
-		private ObjectContainer OpenJavaDataFile() 
+
+		private ObjectContainer OpenJavaDataFile()
 		{
 			return Db4o.OpenFile(GetJavaDataFile());
 		}
-		
-		private String GetJavaDataFile() 
+
+		private String GetJavaDataFile()
 		{
 			return BuildTempPath("java.yap");
 		}
-		
-		private String BuildTempPath(String fname) 
+
+		private String BuildTempPath(String fname)
 		{
 			return Path.Combine(Path.GetTempPath(), fname);
 		}
-		
+
 		private void GenerateJavaData()
 		{
 			File.Delete(GetJavaDataFile());
@@ -111,7 +111,7 @@ namespace com.db4o.test.aliases
 			string stdout = Exec("java", "-cp ." + Path.PathSeparator + Db4ojarPath(), "com.db4o.test.aliases.Program", Quote(GetJavaDataFile()));
 			Console.WriteLine(stdout);
 		}
-		
+
 		private void GenerateClassFile()
 		{
 			String code = @"
@@ -136,35 +136,35 @@ public class Program {
 		System.out.println(""success"");
 	}
 }";
-		
+
 			string srcFile = BuildTempPath("com/db4o/test/aliases/Program.java");
 			WriteFile(srcFile, code);
 			string stdout = Exec(JavacPath(), "-classpath " + Db4ojarPath(), Quote(srcFile));
 			Console.WriteLine(stdout);
 		}
-	    
-	    static string Quote(string s)
-	    {
-            return "\"" + s + "\"";
-	    }
+
+		static string Quote(string s)
+		{
+			return "\"" + s + "\"";
+		}
 
 		private string JavacPath()
 		{
-            string path = ReadProperty(MachinePropertiesPath(), "file.compiler.jdk1.3");
-            Tester.Ensure(File.Exists(path));
+			string path = ReadProperty(MachinePropertiesPath(), "file.compiler.jdk1.3");
+			Tester.Ensure(File.Exists(path));
 			return path;
 		}
 
 		private string ReadProperty(string fname, string property)
-		{	
-			using (StreamReader reader=File.OpenText(fname))
+		{
+			using (StreamReader reader = File.OpenText(fname))
 			{
 				string line = null;
 				while (null != (line = reader.ReadLine()))
 				{
 					if (line.StartsWith(property))
 					{
-						return line.Substring(property.Length+1);
+						return line.Substring(property.Length + 1);
 					}
 				}
 			}
@@ -197,13 +197,18 @@ public class Program {
 
 		private String Db4ojarPath()
 		{
-            string db4oVersion = string.Format("{0}.{1}", Db4oVersion.MAJOR, Db4oVersion.MINOR);
+			string db4oVersion = string.Format("{0}.{1}", Db4oVersion.MAJOR, Db4oVersion.MINOR);
 			return WorkspacePath("db4obuild/dist/java/lib/db4o-" + db4oVersion + "-java1.2.jar");
 		}
 
 		private string WorkspacePath(string fname)
 		{
-			return Path.Combine(FindParentDirectory("db4obuild"), fname);
+			return Path.Combine(db4obuild(), fname);
+		}
+
+		private string db4obuild()
+		{
+			return FindParentDirectory("db4obuild");
 		}
 
 		private string FindParentDirectory(string path)
@@ -214,9 +219,9 @@ public class Program {
 				if (Directory.Exists(Path.Combine(parent, path))) return parent;
 				string oldParent = parent;
 				parent = Path.GetDirectoryName(parent);
-				if (parent == oldParent) break;
+				if (parent == oldParent || parent == null) break;
 			}
-			throw new ArgumentException("Could not find path '" + path + "'");
+			return null;
 		}
 
 		private void WriteFile(String fname, String contents)
@@ -228,16 +233,16 @@ public class Program {
 			}
 		}
 
-		private void EnsureContains(ObjectSet actual, Object expected) 
+		private void EnsureContains(ObjectSet actual, Object expected)
 		{
 			actual.Reset();
-			while (actual.HasNext()) 
+			while (actual.HasNext())
 			{
 				Object next = actual.Next();
 				if (object.Equals(next, expected)) return;
 			}
 			Tester.Ensure(false);
 		}
-	
+
 	}
 }
