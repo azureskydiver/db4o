@@ -15,7 +15,7 @@ import com.db4o.inside.ix.*;
 public final class QCandidates implements Visitor4 {
 
     // Transaction necessary as reference to stream
-    final Transaction i_trans;
+    public final Transaction i_trans;
 
     // root of the QCandidate tree
     private Tree i_root;
@@ -37,6 +37,8 @@ public final class QCandidates implements Visitor4 {
 
     // 
     private int i_orderID;
+    
+    private IDGenerator _idGenerator;
 
     QCandidates(Transaction a_trans, YapClass a_yapClass, QField a_field) {
     	i_trans = a_trans;
@@ -61,7 +63,7 @@ public final class QCandidates implements Visitor4 {
     	}
     }
 
-    QCandidate addByIdentity(QCandidate candidate) {
+    public QCandidate addByIdentity(QCandidate candidate) {
         i_root = Tree.add(i_root, candidate);
         if(candidate._size == 0){
         	
@@ -232,6 +234,13 @@ public final class QCandidates implements Visitor4 {
         }
 
         return i_root != null;
+    }
+    
+    int generateCandidateId(){
+        if(_idGenerator == null){
+            _idGenerator = new IDGenerator();
+        }
+        return - _idGenerator.next();
     }
     
     public Iterator4 iterateConstraints(){

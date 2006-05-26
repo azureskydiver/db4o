@@ -58,7 +58,7 @@ public final class YapArrayN extends YapArray {
 		if(ret[0] != null){
 	        Object[] objects = new Object[elementCount(dim)];
 	        for (int i = 0; i < objects.length; i++) {
-	            objects[i] = i_handler.read(mf, reader);
+	            objects[i] = i_handler.read(mf, reader, true);
 	        }
             _reflectArray.shape(objects, 0, ret[0], dim, 0);
 		}
@@ -70,6 +70,27 @@ public final class YapArrayN extends YapArray {
         return ret[0];
     }
     
+    public final void read1Candidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
+        if(Deploy.debug){
+            reader.readBegin(identifier());
+        }
+        
+        Object[] ret = new Object[1];
+        int[] dim = read1Create(candidates.i_trans, reader, ret);
+        if(ret[0] != null){
+            int count = elementCount(dim);
+            for (int i = 0; i < count; i++) {
+                QCandidate qc = i_handler.readSubCandidate(mf, reader, candidates, true);
+                if(qc != null){
+                    candidates.addByIdentity(qc);
+                }
+            }
+        }
+        
+        if (Deploy.debug) {
+            reader.readEnd();
+        }
+    }
     
 	public final Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_bytes) throws CorruptionException {
         
@@ -82,7 +103,7 @@ public final class YapArrayN extends YapArray {
         if(ret[0] != null){
 			Object[] objects = new Object[elementCount(dim)];
 			for (int i = 0; i < objects.length; i++) {
-				objects[i] = i_handler.readQuery(a_trans, mf, a_bytes, true);
+				objects[i] = i_handler.readQuery(a_trans, mf, true, a_bytes, true);
 			}
             _reflectArray.shape(objects, 0, ret[0], dim, 0);
         }
@@ -132,7 +153,7 @@ public final class YapArrayN extends YapArray {
         MarshallerFamily mf = MarshallerFamily.current();
         
         for (int i = 0; i < objects.length; i++) {
-            i_handler.writeNew(mf, element(objects, i), writer);
+            i_handler.writeNew(mf, element(objects, i), writer, true);
         }
         
         if (Deploy.debug) {

@@ -7,6 +7,10 @@ import com.db4o.*;
 
 public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
     
+    public boolean useNormalClassRead(){
+        return true;
+    }
+    
     public int marshall(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, YapWriter parentWriter){
         
         int id = 0;
@@ -31,7 +35,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             }
             writer.writeInt(yapClassPrimitive.getID());
             
-            handler.writeNew(_family, obj, writer);
+            handler.writeNew(_family, obj, writer, true);
             
             writer.writeEnd();
             trans.i_stream.writeNew(yapClassPrimitive, writer);

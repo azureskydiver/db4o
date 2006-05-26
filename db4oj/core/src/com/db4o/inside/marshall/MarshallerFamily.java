@@ -17,18 +17,22 @@ public class MarshallerFamily {
 
     public final StringMarshaller          _string;
     
+    public final UntypedMarshaller         _untyped;
+    
 
     private final static MarshallerFamily[] allVersions     = new MarshallerFamily[] {
         new MarshallerFamily(
             new ArrayMarshaller0(),
             new ObjectMarshaller0(), 
             new PrimitiveMarshaller0(),
-            new StringMarshaller0()),
+            new StringMarshaller0(),
+            new UntypedMarshaller0()),
         new MarshallerFamily(
             new ArrayMarshaller1(),
             new ObjectMarshaller1(), 
             new PrimitiveMarshaller1(),
-            new StringMarshaller1())                        };
+            new StringMarshaller1(),
+            new UntypedMarshaller1())};
 
     private static final int                CURRENT_VERSION = LEGACY ? 0 : allVersions.length - 1;
 
@@ -36,7 +40,8 @@ public class MarshallerFamily {
             ArrayMarshaller arrayMarshaller,
             ObjectMarshaller objectMarshaller,
             PrimitiveMarshaller primitiveMarshaller, 
-            StringMarshaller stringMarshaller) {
+            StringMarshaller stringMarshaller,
+            UntypedMarshaller untypedMarshaller) {
         _array = arrayMarshaller;
         _array._family = this;
         _object = objectMarshaller;
@@ -44,6 +49,8 @@ public class MarshallerFamily {
         _primitive = primitiveMarshaller;
         _primitive._family = this;
         _string = stringMarshaller;
+        _untyped = untypedMarshaller;
+        _untyped._family = this;
     }
 
     public static MarshallerFamily forVersion(int n) {

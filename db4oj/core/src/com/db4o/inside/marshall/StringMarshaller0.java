@@ -11,7 +11,11 @@ public class StringMarshaller0 extends StringMarshaller{
         return false;
     }
     
-    public Object marshall(Object a_object, YapWriter a_bytes) {
+    public int lengthInPayload(YapStream stream, Object obj) {
+        return 0;
+    }
+    
+    public Object marshall(Object a_object, YapWriter a_bytes, boolean redirect) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
             return null;
@@ -31,10 +35,6 @@ public class StringMarshaller0 extends StringMarshaller{
         a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
         a_bytes.writeInt(length);
         return bytes;
-    }
-    
-    public int marshalledLength(YapStream stream, Object obj) {
-        return 0;
     }
     
     public YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException{

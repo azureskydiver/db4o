@@ -7,7 +7,7 @@ import com.db4o.*;
 
 class ArrayMarshaller1 extends ArrayMarshaller{
     
-    private int calculateLength(YapArray arrayHandler, Object obj){
+    private int calculateLength(Transaction trans, YapArray arrayHandler, Object obj){
         
         TypeHandler4 typeHandler = arrayHandler.i_handler;
         
@@ -17,7 +17,22 @@ class ArrayMarshaller1 extends ArrayMarshaller{
             Object[] all = arrayHandler.allElements(obj);
             for (int i = 0; i < all.length; i++) {
                 Object object = all[i];
-                length += typeHandler.marshalledLength(object);
+                
+                // FIXME: Actually we need the length for the links of the object
+                // and the length in the payload here, so really the following
+                // should be used:
+                
+                // length += typeHandler.linkLength();
+                
+
+                // ...but that looks like problems for 'ANY' types where
+                // length in payload should get the 'false' parameter for
+                // 'topLevel'
+                
+                // For now this is handled in YapClassAny by reacting to 
+                // the return value from lengthInPayLoad
+                
+                length += typeHandler.lengthInPayload(trans, object, true);
             }
         }
         
@@ -67,23 +82,30 @@ class ArrayMarshaller1 extends ArrayMarshaller{
              + YapConst.OBJECT_LENGTH;
     }
     
-    public int marshalledLength(YapArray arrayHandler, Object obj){
+    public int lengthInPayload(Transaction trans, YapArray arrayHandler, Object obj, boolean topLevel){
         
         TypeHandler4 typeHandler = arrayHandler.i_handler;
         
         if(typeHandler.isSecondClass() == YapConst.NO){
+            
+            if(! topLevel){
+                return arrayHandler.linkLength();  
+            }
+
             return 0;
         }
         
         if(typeHandler.isSecondClass() == YapConst.UNKNOWN){
             
-            // TODO: implement any arrays
+            if(! topLevel){
+                return arrayHandler.linkLength();  
+            }
             
             return 0;
         }
         
         if(typeHandler.isSecondClass() == YapConst.YES){
-            return calculateLength(arrayHandler, obj);
+            return calculateLength(trans, arrayHandler, obj);
         }
         
         return 0;
@@ -98,14 +120,36 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public Object readEmbedded(YapArray arrayHandler, YapWriter reader) throws CorruptionException{
+    public void readCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates) {
+        TypeHandler4 typeHandler = arrayHandler.i_handler;
+        if(typeHandler.isSecondClass() == YapConst.YES){
+            readEmbeddedCandidates(arrayHandler, reader, candidates);
+        }else{
+            readLinkedCandidates(arrayHandler, reader, candidates);
+        }
+    }
+    
+    public void readEmbeddedCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates){
+        reader._offset = reader.readInt();
+        arrayHandler.read1Candidates(_family, reader, candidates);
+    }
+    
+    public void readLinkedCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates){
+        YapReader subReader = reader.readEmbeddedObject(candidates.i_trans);
+        if (subReader == null) {
+            return;
+        }
+        arrayHandler.read1Candidates(_family, subReader, candidates);
+    }
+    
+    private Object readEmbedded(YapArray arrayHandler, YapWriter reader) throws CorruptionException{
         int linkOffSet = reader.preparePayloadRead();
         Object array = arrayHandler.read1(_family, reader);
         reader._offset = linkOffSet;
         return array;
     }
     
-    public Object readLinked(YapArray arrayHandler, YapWriter reader) throws CorruptionException{
+    private Object readLinked(YapArray arrayHandler, YapWriter reader) throws CorruptionException{
         YapWriter bytes = reader.readEmbeddedObject();
         if (bytes == null) {
             return null;
@@ -167,11 +211,13 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         writer._offset = linkOffset;
     }
     
-    private void writeNewLinked(YapArray arrayHandler, Object a_object, YapWriter writer) {
-        int length = arrayHandler.objectLength(a_object);
-        YapWriter subWriter = new YapWriter(writer.getTransaction(), length);
+    private void writeNewLinked(YapArray arrayHandler, Object obj, YapWriter writer) {
+        Transaction trans = writer.getTransaction();
+        int length = calculateLength(trans, arrayHandler, obj);
+        YapWriter subWriter = new YapWriter(trans, length);
+        subWriter._payloadOffset = arrayHandler.objectLength(obj);
         subWriter.setUpdateDepth(writer.getUpdateDepth());
-        arrayHandler.writeNew1(a_object, subWriter, length);
+        arrayHandler.writeNew1(obj, subWriter, length);
         subWriter.setID(writer._offset);
         writer.getStream().writeEmbedded(writer, subWriter);
         writer.incrementOffset(YapConst.YAPID_LENGTH);
