@@ -81,6 +81,7 @@ public class AllTestsConfAll extends TestSuite{
 			Messaging.class,
             MultiDelete.class,
             MultiLevelIndex.class,
+            NestedArrays.class,
             NeverAnObjectStored.class,
 			NoInstanceStored.class,
 	        NoInternalClasses.class,
