@@ -17,26 +17,22 @@ class ArrayMarshaller1 extends ArrayMarshaller{
             Object[] all = arrayHandler.allElements(obj);
             for (int i = 0; i < all.length; i++) {
                 Object object = all[i];
-                
-                // FIXME: Actually we need the length for the links of the object
-                // and the length in the payload here, so really the following
-                // should be used:
-                
-                // length += typeHandler.linkLength();
-                
-
-                // ...but that looks like problems for 'ANY' types where
-                // length in payload should get the 'false' parameter for
-                // 'topLevel'
-                
-                // For now this is handled in YapClassAny by reacting to 
-                // the return value from lengthInPayLoad
-                
+                length += typeHandler.linkLength();
                 length += typeHandler.lengthInPayload(trans, object, true);
             }
         }
         
         return length;
+    }
+    
+    private boolean canBeEmbedded(YapArray arrayHandler){
+        
+        TypeHandler4 typeHandler = arrayHandler.i_handler;
+        
+        return true;
+        
+        
+        // return typeHandler.isSecondClass() == YapConst.YES  || typeHandler.isSecondClass() == YapConst.UNKNOWN;
     }
     
     public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {
@@ -47,6 +43,8 @@ class ArrayMarshaller1 extends ArrayMarshaller{
             return;
         }
         
+        int linkOffSet = reader._offset; 
+        
         YapStream stream = reader.getStream();
         Transaction trans = reader.getTransaction();
         TypeHandler4 typeHandler = arrayHandler.i_handler;
@@ -54,8 +52,11 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         YapWriter subReader = null;
         
         if (reader.cascadeDeletes() > 0 && typeHandler instanceof YapClass) {
-            if(typeHandler.isSecondClass() == YapConst.YES){
+            
+            if(canBeEmbedded(arrayHandler)){
                 subReader = reader;
+                subReader._offset = address;
+                
             }else{
                 subReader = stream.readObjectWriterByAddress(trans,address,length);
             }
@@ -71,8 +72,13 @@ class ArrayMarshaller1 extends ArrayMarshaller{
             }
         }
         
-        if(typeHandler.isSecondClass() != YapConst.YES){
+        if(! canBeEmbedded(arrayHandler)){
             trans.slotFreeOnCommit(address, address, length);
+        }
+        
+        if(linkOffSet > 0){
+            reader._offset = linkOffSet;
+            
         }
     }
     
@@ -83,37 +89,15 @@ class ArrayMarshaller1 extends ArrayMarshaller{
     }
     
     public int lengthInPayload(Transaction trans, YapArray arrayHandler, Object obj, boolean topLevel){
-        
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
-        
-        if(typeHandler.isSecondClass() == YapConst.NO){
-            
-            if(! topLevel){
-                return arrayHandler.linkLength();  
-            }
-
-            return 0;
+        int len = topLevel ? 0 : arrayHandler.linkLength();
+        if(canBeEmbedded(arrayHandler)){
+            len += calculateLength(trans, arrayHandler, obj);
         }
-        
-        if(typeHandler.isSecondClass() == YapConst.UNKNOWN){
-            
-            if(! topLevel){
-                return arrayHandler.linkLength();  
-            }
-            
-            return 0;
-        }
-        
-        if(typeHandler.isSecondClass() == YapConst.YES){
-            return calculateLength(trans, arrayHandler, obj);
-        }
-        
-        return 0;
+        return len;
     }
     
     public Object read(YapArray arrayHandler,  YapWriter reader) throws CorruptionException{
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
-        if(typeHandler.isSecondClass() == YapConst.YES){
+        if(canBeEmbedded(arrayHandler)){
             return readEmbedded(arrayHandler, reader);
         }else{
             return readLinked(arrayHandler, reader);
@@ -121,8 +105,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
     }
     
     public void readCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates) {
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
-        if(typeHandler.isSecondClass() == YapConst.YES){
+        if(canBeEmbedded(arrayHandler)){
             readEmbeddedCandidates(arrayHandler, reader, candidates);
         }else{
             readLinkedCandidates(arrayHandler, reader, candidates);
@@ -158,8 +141,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
     }
     
     public final Object readQuery(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException{
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
-        if(typeHandler.isSecondClass() == YapConst.YES){
+        if(canBeEmbedded(arrayHandler)){
             return readQueryEmbedded(arrayHandler, trans, reader);
         }else{
             return readQueryLinked(arrayHandler, trans, reader);
@@ -185,8 +167,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
             a_bytes.writeEmbeddedNull();
             return null;
         }
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
-        if(typeHandler.isSecondClass() == YapConst.YES){
+        if(canBeEmbedded(arrayHandler)){
             writeNewEmbedded(arrayHandler, a_object, a_bytes);
         }else{
             writeNewLinked(arrayHandler, a_object, a_bytes);
@@ -195,19 +176,9 @@ class ArrayMarshaller1 extends ArrayMarshaller{
     }
     
     private void writeNewEmbedded(YapArray arrayHandler, Object obj, YapWriter writer) {
-        
         int length = arrayHandler.objectLength(obj);
-        
-        // TODO: could be writer.reserveAndPointToPayLoadSlot(length);
-        
-        writer.writeInt(writer._payloadOffset);
-        writer.writeInt(length);
-        int linkOffset = writer._offset;
-        writer._offset = writer._payloadOffset;
-        writer._payloadOffset += length;
-        
+        int linkOffset = writer.reserveAndPointToPayLoadSlot(length);
         arrayHandler.writeNew1(obj, writer, length);
-        
         writer._offset = linkOffset;
     }
     

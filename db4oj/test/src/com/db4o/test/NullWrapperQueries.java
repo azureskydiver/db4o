@@ -5,6 +5,7 @@ package com.db4o.test;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.inside.marshall.*;
 import com.db4o.query.*;
 
 
@@ -53,6 +54,9 @@ public class NullWrapperQueries {
     }
     
     public void test(){
+        if(MarshallerFamily.LEGACY){
+            return;
+        }
         for (int i = 1; i < 11; i++) {
             Query q = Test.query();
             q.constrain(NullWrapperQueries.class);

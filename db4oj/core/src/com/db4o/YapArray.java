@@ -172,7 +172,7 @@ public class YapArray extends YapIndependantType {
     }
     
     public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
-        return MarshallerFamily.current()._array.lengthInPayload(trans, this, obj, false);
+        return MarshallerFamily.current()._array.lengthInPayload(trans, this, obj, topLevel);
     }
 
     public int objectLength(Object a_object) {

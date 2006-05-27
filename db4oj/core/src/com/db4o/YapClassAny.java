@@ -74,13 +74,7 @@ final class YapClassAny extends YapClass {
         if( yc == null){
             return 0;
         }
-        int payLoadLength = yc.lengthInPayload(trans, obj, topLevel);
-        if(topLevel && payLoadLength == 0){
-            
-            // FIXME: SM revisit. More comments in ArrayMarshaller1#calculateLength()
-            
-            payLoadLength = yc.lengthInPayload(trans, obj, false);
-        }
+        int payLoadLength = yc.lengthInPayload(trans, obj, false);
         return YapConst.YAPINT_LENGTH  //  type information int
             + payLoadLength; 
     }
