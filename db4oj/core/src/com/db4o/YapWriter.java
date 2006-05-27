@@ -351,6 +351,18 @@ public final class YapWriter extends YapReader {
         _payloadOffset += getStream().alignToBlockSize(payLoad._buffer.length);
     }
     
+    public int reserveAndPointToPayLoadSlot(int length){
+        if(_payloadOffset <= _offset + (YapConst.YAPINT_LENGTH * 2)){
+            _payloadOffset = _offset + (YapConst.YAPINT_LENGTH * 2);
+        }
+        writeInt(_payloadOffset);
+        writeInt(length);
+        int linkOffset = _offset;
+        _offset = _payloadOffset;
+        _payloadOffset += length;
+        return linkOffset;
+    }
+    
     public YapWriter readPayloadWriter(int offset, int length){
         YapWriter payLoad = new YapWriter(i_trans, 0, length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
