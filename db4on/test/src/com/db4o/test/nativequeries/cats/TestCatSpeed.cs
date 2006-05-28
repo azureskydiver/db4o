@@ -190,8 +190,7 @@
 
 			public bool Match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
-				return cat.GetAge() < 100 || (cat.GetAge() > 200 && cat.GetAge() < 300) || cat.getAge
-					() < 400 && cat.GetFirstName()=="SpeedyClone150";
+				return cat.GetAge() < 100 || (cat.GetAge() > 200 && cat.GetAge() < 300) || cat.GetAge() < 400 && cat.GetFirstName()=="SpeedyClone150";
 			}
 
 			public override void Constrain(com.db4o.query.Query q)
@@ -232,8 +231,7 @@
 		public static void Main(string[] args)
 		{
 			com.db4o.Db4o.Configure().Freespace().UseRamSystem();
-			com.db4o.config.ObjectClass objectClass = com.db4o.Db4o.Configure().ObjectClass(j4o.lang.Class.getClassForType
-				(typeof(com.db4o.test.nativequeries.cats.Cat)));
+			com.db4o.config.ObjectClass objectClass = com.db4o.Db4o.Configure().ObjectClass(typeof(com.db4o.test.nativequeries.cats.Cat));
 			objectClass.ObjectField("_firstName").Indexed(true);
 			objectClass.ObjectField("_lastName").Indexed(true);
 			objectClass.ObjectField("_age").Indexed(true);
@@ -283,8 +281,7 @@
                     timeSoda += TestCatSpeed.TimeSoda(PREDICATES[predIdx], warmup);
                 }
 			}
-            println
-			("PREDICATE #" + (predIdx + 1) + ": " + (timeUnopt
+            Println("PREDICATE #" + (predIdx + 1) + ": " + (timeUnopt
 				 / NUMRUNS) + " / " + (timeOpt / NUMRUNS) + " / " + (timeSoda / NUMRUNS));
 		}
 
