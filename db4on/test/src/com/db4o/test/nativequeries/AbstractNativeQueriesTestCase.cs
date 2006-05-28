@@ -3,7 +3,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 
-using Db4o.Tools.NativeQueries;
+using Db4oTools.NativeQueries;
 
 using com.db4o.inside.query;
 using com.db4o.nativequery.expr;

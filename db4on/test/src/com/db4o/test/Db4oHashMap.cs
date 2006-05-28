@@ -3,7 +3,7 @@
 using System;
 using System.Collections;
 
-using Db4o.Tools;
+using Db4oTools;
 
 using com.db4o;
 using com.db4o.ext;

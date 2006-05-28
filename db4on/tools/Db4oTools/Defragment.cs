@@ -1,6 +1,6 @@
 ﻿/* Copyright (C) 2004-2006   db4objects Inc.   http://www.db4o.com */
 
-namespace Db4o.Tools
+namespace Db4oTools
 {
 
 	using System;

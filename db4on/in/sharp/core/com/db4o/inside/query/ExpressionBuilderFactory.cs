@@ -11,7 +11,7 @@ namespace com.db4o.inside.query
 	{
 		public static ExpressionBuilder CreateExpressionBuilder()
 		{
-			Type type = Type.GetType("Db4o.Tools.NativeQueries.QueryExpressionBuilder, Db4o.Tools", true);
+			Type type = Type.GetType("Db4oTools.NativeQueries.QueryExpressionBuilder, Db4oTools", true);
 			return (ExpressionBuilder)Activator.CreateInstance(type);
 		}
 	}
