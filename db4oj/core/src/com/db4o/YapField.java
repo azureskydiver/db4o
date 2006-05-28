@@ -575,16 +575,17 @@ public class YapField implements StoredField {
         return i_handler.linkLength();
     }
     
-    // similar to #linklength(), actually marshaller specific, 
-    // written here for now, since YapField knows better what
-    // to do, when i_handler is null.
-    public final int lengthInPayload(Transaction trans, Object obj){
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, Object obj){
         alive();
         if (i_handler == null) {
+            
             // must be a YapClass
-            return YapConst.YAPID_LENGTH;
+            
+            header.addBaseLength(YapConst.YAPID_LENGTH);
+            return ;
         }
-        return i_handler.lengthInPayload(trans, obj, true);
+        
+        i_handler.calculateLengths(trans, header, true, obj, true);
     }
     
 
@@ -651,12 +652,11 @@ public class YapField implements StoredField {
             if (updateDepth < min) {
                 writer.setUpdateDepth(min);
             }
-            indexEntry = i_handler.writeNew(mf, obj, writer, true);
+            indexEntry = i_handler.writeNew(mf, obj, true, writer, true);
             writer.setUpdateDepth(updateDepth);
         } else {
-            indexEntry = i_handler.writeNew(mf, obj, writer, true);
+            indexEntry = i_handler.writeNew(mf, obj, true, writer, true);
         }
-        
         addIndexEntry(writer, indexEntry);
     }
 

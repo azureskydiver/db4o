@@ -32,6 +32,14 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         _nullBitMap = reader.readBitMap(_fieldCount);
     }
     
+    public void addBaseLength(int length){
+        _baseLength += length;
+    }
+    
+    public void addPayLoadLength(int length){
+        _payLoadLength += length;
+    }
+    
     private void calculateLengths(YapObject yo) {
         _baseLength = headerLength() + nullBitMapLength();
         _payLoadLength = 0;
@@ -51,8 +59,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
                 if( child == null && yf.canUseNullBitmap()){
                     _nullBitMap.setTrue(fieldIndex);
                 }else{
-                    _baseLength += yf.linkLength();
-                    _payLoadLength += yf.lengthInPayload(trans, child);
+                    yf.calculateLengths(trans, this, child);
                 }
                 fieldIndex ++;
             }
@@ -79,6 +86,10 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
 
     public int objectLength(){
         return _baseLength + _payLoadLength;
+    }
+    
+    public void prepareIndexedPayLoadEntry(Transaction trans){
+        _payLoadLength =  trans.i_stream.alignToBlockSize(_payLoadLength);
     }
     
     public void write(YapWriter writer){

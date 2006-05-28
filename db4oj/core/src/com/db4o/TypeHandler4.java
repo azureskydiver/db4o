@@ -50,7 +50,7 @@ public interface TypeHandler4 extends Indexable4
      * the link area. If 'topLevel==false' we are asking for a size
      * calculation for the payload area at the end of the slot.
      */
-    int lengthInPayload(Transaction trans, Object obj, boolean topLevel);
+    void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
 	
 	void prepareComparison(Transaction a_trans, Object obj);
 	
@@ -64,8 +64,7 @@ public interface TypeHandler4 extends Indexable4
 	
 	boolean supportsIndex();
 	
-    // FIXME: SM MarshallerFamily does not need to be passed. All can use Mf#current()
-    Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection);
+    Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection);
 	
 	public int getTypeID ();
 	

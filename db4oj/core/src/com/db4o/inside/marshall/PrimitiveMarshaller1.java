@@ -11,10 +11,10 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
         return false;
     }
     
-    public int marshall(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, YapWriter writer){
+    public int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, YapWriter writer, boolean withIndirection){
         if(obj != null){
             TypeHandler4 handler = yapClassPrimitive.i_handler;
-            handler.writeNew(_family, obj, writer, false);
+            handler.writeNew(_family, obj, topLevel, writer, withIndirection);
         }
         return 0;
     }

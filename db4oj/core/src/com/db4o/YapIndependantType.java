@@ -36,6 +36,12 @@ public abstract class YapIndependantType implements TypeHandler4 {
     }
     
     public final int linkLength(){
+        
+        // TODO:  Now that array and string are embedded into their parent
+        //        object from marshaller family 1 on, the length part is no
+        //        longer needed. To stay compatible with marshaller family 0
+        //        it was considered a bad idea to change this value.
+        
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
     }
     

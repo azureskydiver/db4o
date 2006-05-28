@@ -13,7 +13,7 @@ public abstract class UntypedMarshaller {
     
     public abstract void deleteEmbedded(YapWriter reader);
     
-    public abstract Object writeNew(Object obj, YapWriter writer);
+    public abstract Object writeNew(Object obj, boolean topLevel, YapWriter writer);
 
     public abstract Object read(YapWriter reader) throws CorruptionException;
     

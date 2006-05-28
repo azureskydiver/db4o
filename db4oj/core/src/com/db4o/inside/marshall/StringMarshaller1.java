@@ -11,14 +11,25 @@ public class StringMarshaller1 extends StringMarshaller{
         return true;
     }
     
-    public int lengthInPayload(YapStream stream, Object obj) {
-        if(obj == null){
-            return 0;
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
+
+        if(topLevel){
+            header.prepareIndexedPayLoadEntry(trans);
+            header.addBaseLength(linkLength());
+        }else{
+            if(withIndirection){
+                header.addPayLoadLength(linkLength());
+            }
         }
-        return stream.alignToBlockSize( stream.stringIO().length((String)obj) );
+        
+        if(obj == null){
+            return;
+        }
+        
+        header.addPayLoadLength(trans.i_stream.stringIO().length((String)obj));
     }
     
-    public Object marshall(Object obj, YapWriter writer, boolean redirect) {
+    public Object writeNew(Object obj, boolean topLevel, YapWriter writer, boolean redirect) {
         
         YapStream stream = writer.getStream();
         String str = (String) obj;
@@ -43,7 +54,7 @@ public class StringMarshaller1 extends StringMarshaller{
         YapWriter bytes = new YapWriter(writer.getTransaction(), length);
         writeShort(stream, str, bytes);
         
-        writer.writePayload(bytes);
+        writer.writePayload(bytes, topLevel);
         return bytes;
     }
     

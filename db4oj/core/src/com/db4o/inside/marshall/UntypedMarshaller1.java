@@ -121,7 +121,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
     }
 
     
-    public Object writeNew(Object obj, YapWriter writer) {
+    public Object writeNew(Object obj, boolean topLevel, YapWriter writer) {
         if (obj == null) {
             writer.writeInt(0);
             return new Integer(0);
@@ -139,12 +139,18 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         int linkOffset = writer._offset;
         writer._offset = writer._payloadOffset;
         
-        writer.writeInt(yc.getID());
-
-        yc.writeNew(_family, obj, writer, false);
         
-        writer._payloadOffset = writer._offset;
-        writer._offset = linkOffset;
+        writer.writeInt(yc.getID());
+        
+        yc.writeNew(_family, obj, false, writer, false);
+        
+        if(writer._payloadOffset < writer._offset){
+            writer._payloadOffset = writer._offset;
+        }
+        
+        if(topLevel){
+            writer._offset = linkOffset;
+        }
         
         return obj;
     }

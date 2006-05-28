@@ -45,7 +45,12 @@ public final class YapArrayN extends YapArray {
             + (YapConst.YAPINT_LENGTH * (2 + dim.length))
             + (elementCount(dim) * i_handler.linkLength());
     }
-
+    
+    public int ownLength(Object obj){
+        int[] dim = _reflectArray.dimensions(obj);
+        return YapConst.OBJECT_LENGTH
+            + (YapConst.YAPINT_LENGTH * (2 + dim.length));
+    }
 
     public final Object read1(MarshallerFamily mf, YapWriter reader) throws CorruptionException {
         
@@ -153,7 +158,7 @@ public final class YapArrayN extends YapArray {
         MarshallerFamily mf = MarshallerFamily.current();
         
         for (int i = 0; i < objects.length; i++) {
-            i_handler.writeNew(mf, element(objects, i), writer, true);
+            i_handler.writeNew(mf, element(objects, i), true, writer, true);
         }
         
         if (Deploy.debug) {

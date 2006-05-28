@@ -7,7 +7,7 @@ package com.db4o.inside.marshall;
  */
 public class MarshallerFamily {
 
-    public static final boolean            LEGACY           = true;
+    public static final boolean            LEGACY           = false;
     
     public final ArrayMarshaller           _array;
     

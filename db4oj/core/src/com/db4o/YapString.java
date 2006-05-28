@@ -89,8 +89,8 @@ public final class YapString extends YapIndependantType {
         return YapConst.YES;
     }
     
-    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel){
-        return MarshallerFamily.current()._string.lengthInPayload(_stream, obj);
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection){
+        MarshallerFamily.current()._string.calculateLengths(trans, header, topLevel, obj, withIndirection);
     }
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException {
@@ -171,8 +171,8 @@ public final class YapString extends YapIndependantType {
         }
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
-        return mf._string.marshall(a_object, a_bytes, withIndirection);
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
+        return mf._string.writeNew(a_object, topLevel, a_bytes, withIndirection);
     }
 
     final void writeShort(String a_string, YapReader a_bytes) {

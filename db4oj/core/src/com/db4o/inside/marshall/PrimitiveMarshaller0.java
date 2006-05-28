@@ -11,7 +11,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         return true;
     }
     
-    public int marshall(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, YapWriter parentWriter){
+    public int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, YapWriter parentWriter, boolean withIndirection){
         
         int id = 0;
         
@@ -35,7 +35,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             }
             writer.writeInt(yapClassPrimitive.getID());
             
-            handler.writeNew(_family, obj, writer, true);
+            handler.writeNew(_family, obj, false, writer, true);
             
             writer.writeEnd();
             trans.i_stream.writeNew(yapClassPrimitive, writer);

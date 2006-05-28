@@ -69,14 +69,18 @@ final class YapClassAny extends YapClass {
 		return false;
 	}
     
-    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
+        if(topLevel){
+            header.addBaseLength(YapConst.YAPINT_LENGTH); 
+        }else{
+            header.addPayLoadLength(YapConst.YAPINT_LENGTH);  // single relink
+        }
         YapClass yc = forObject(trans, obj, true);
         if( yc == null){
-            return 0;
+            return;
         }
-        int payLoadLength = yc.lengthInPayload(trans, obj, false);
-        return YapConst.YAPINT_LENGTH  //  type information int
-            + payLoadLength; 
+        header.addPayLoadLength(YapConst.YAPINT_LENGTH); //  type information int
+        yc.calculateLengths(trans, header, false, obj, false);
     }
     
     public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
@@ -108,8 +112,8 @@ final class YapClassAny extends YapClass {
         return false;
     }
     
-    public Object writeNew(MarshallerFamily mf, Object obj, YapWriter writer, boolean redirect) {
-        return mf._untyped.writeNew(obj, writer);
+    public Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, YapWriter writer, boolean withIndirection) {
+        return mf._untyped.writeNew(obj, topLevel, writer);
     }
 
 
