@@ -7,6 +7,11 @@ import com.db4o.*;
 
 class ArrayMarshaller0  extends ArrayMarshaller{
     
+    public TreeInt collectIDs(YapArray arrayHandler, TreeInt tree, YapWriter reader){
+        Transaction trans = reader.getTransaction();
+        return arrayHandler.collectIDs1(trans, tree, reader.readEmbeddedObject(trans));
+    }
+    
     public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {
         int address = reader.readInt();
         int length = reader.readInt();

@@ -13,6 +13,8 @@ public abstract class ArrayMarshaller {
     
     public abstract void deleteEmbedded(YapArray arrayHandler, YapWriter reader);
     
+    public abstract TreeInt collectIDs(YapArray arrayHandler, TreeInt tree, YapWriter a_bytes);
+    
     public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, YapArray handler, Object obj, boolean topLevel);
     
     public abstract Object read(YapArray arrayHandler,  YapWriter reader) throws CorruptionException;

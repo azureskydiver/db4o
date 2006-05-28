@@ -26,7 +26,11 @@ class ArrayMarshaller1 extends ArrayMarshaller{
                 typeHandler.calculateLengths(trans, header, false, all[i], true);
             }
         }
-        
+    }
+    
+    public TreeInt collectIDs(YapArray arrayHandler, TreeInt tree, YapWriter reader){
+        reader._offset = reader.readInt();
+        return arrayHandler.collectIDs1(reader.getTransaction(), tree, reader);
     }
     
     public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {

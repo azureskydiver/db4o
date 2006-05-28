@@ -281,12 +281,12 @@ public class YapField implements StoredField {
         }
     }
 
-    TreeInt collectIDs(TreeInt tree, YapWriter a_bytes) {
+    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, YapWriter a_bytes) {
         if (alive()) {
             if (i_handler instanceof YapClass) {
                 tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
             } else if (i_handler instanceof YapArray) {
-                tree = ((YapArray) i_handler).collectIDs(tree, a_bytes);
+                tree = ((YapArray) i_handler).collectIDs(mf, tree, a_bytes);
             }
         }
         return tree;
@@ -505,7 +505,7 @@ public class YapField implements StoredField {
         return i_index != null;
     }
 
-    void incrementOffset(YapReader a_bytes) {
+    public final void incrementOffset(YapReader a_bytes) {
         a_bytes.incrementOffset(linkLength());
     }
 
