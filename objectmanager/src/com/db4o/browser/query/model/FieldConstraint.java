@@ -19,11 +19,11 @@ public class FieldConstraint {
         this.field = field;
         this.model = model;
         this.relation = RelationalOperator.EQUALS;
-        final ReflectClass fieldType = field.getType();
+        final ReflectClass fieldType = field.getFieldType();
     }
     
     public void expand() {
-        expand(model, field.getType());
+        expand(model, field.getFieldType());
     }
 
     private void expand(QueryBuilderModel model, final ReflectClass fieldType) {
@@ -31,7 +31,7 @@ public class FieldConstraint {
     }
 
     public void apply(Query query) {
-        if (field.getType().isSecondClass()) {
+        if (field.getFieldType().isSecondClass()) {
             Constraint constraint=query.descend(field.getName()).constrain(value);
             relation.apply(constraint);
         } else {

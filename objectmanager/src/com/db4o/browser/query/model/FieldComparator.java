@@ -16,8 +16,8 @@ public class FieldComparator implements Comparator {
         if(fieldNameComp!=0) {
             return fieldNameComp;
         }
-        ReflectClass firstType=firstField.getType();
-        ReflectClass secondType=secondField.getType();
+        ReflectClass firstType=firstField.getFieldType();
+        ReflectClass secondType=secondField.getFieldType();
         int typeNameComp=firstType.getName().compareTo(secondType.getName());
         if(typeNameComp!=0) {
             return typeNameComp;

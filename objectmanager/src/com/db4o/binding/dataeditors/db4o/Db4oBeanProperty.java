@@ -69,7 +69,7 @@ public class Db4oBeanProperty implements InvocationHandler {
                 }
             }
             field.setAccessible();
-            propertyType = field.getType();
+            propertyType = field.getFieldType();
         }
         
         setter = receiverClass.getMethod(
