@@ -1,4 +1,4 @@
-﻿using Db4o.Tools.NativeQueries;
+﻿using Db4oTools.NativeQueries;
 using System;
 using System.Reflection;
 using com.db4o.test.nativequeries;
