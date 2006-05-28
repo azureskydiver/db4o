@@ -207,10 +207,6 @@ public class YapReader {
     
     public final void writeInt(int a_int) {
         
-        
-		// FIXME: variable ii declared outside the loop to circumvent mono bug
-		// int ii = YapConst.WRITE_LOOP;
-        
         if (Deploy.debug) {
             YInt.writeInt(a_int, this);
         } else {

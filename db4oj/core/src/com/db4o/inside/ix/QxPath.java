@@ -113,8 +113,11 @@ class QxPath extends TreeInt {
 	}
 
 	void load() {
-		loadFromIndexTraversers(); // FIXME: Why do load from old IndexTraversers here?
-		loadFromNixPaths();
+        if (Debug.useNIxPaths) {
+            loadFromNixPaths();
+        }else{
+            loadFromIndexTraversers(); 
+        }
 		if (_parent == null) {
 			return;
 		}
