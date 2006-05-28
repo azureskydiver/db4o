@@ -11,11 +11,11 @@ public class StringMarshaller0 extends StringMarshaller{
         return false;
     }
     
-    public int lengthInPayload(YapStream stream, Object obj) {
-        return 0;
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
+        // do nothing
     }
     
-    public Object marshall(Object a_object, YapWriter a_bytes, boolean redirect) {
+    public Object writeNew(Object a_object, boolean topLevel, YapWriter a_bytes, boolean redirect) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
             return null;

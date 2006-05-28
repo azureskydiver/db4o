@@ -11,7 +11,7 @@ public abstract class PrimitiveMarshaller {
     
     public abstract boolean useNormalClassRead();
     
-    public abstract int marshall(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, YapWriter parentWriter);
+    public abstract int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, YapWriter parentWriter, boolean withIndirection);
     
     protected int objectLength(TypeHandler4 handler, Object obj){
         return handler.linkLength() + YapConst.OBJECT_LENGTH + YapConst.YAPID_LENGTH;

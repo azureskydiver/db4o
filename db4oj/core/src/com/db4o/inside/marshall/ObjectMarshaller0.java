@@ -113,7 +113,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         Object obj = yo.getObject();
         
         if(yc.isPrimitive()){
-            ((YapClassPrimitive)yc).marshallNew(yo, writer, obj);
+            ((YapClassPrimitive)yc).i_handler.writeNew(MarshallerFamily.current(), obj, false, writer, true);
+            if (Deploy.debug) {
+                writer.writeEnd();
+                writer.debugCheckBytes();
+            }
         }else{
             writer.writeInt(yc.getID());
             yc.checkUpdateDepth(writer);

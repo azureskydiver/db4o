@@ -2,11 +2,19 @@
 
 package com.db4o.inside.marshall;
 
+import com.db4o.*;
+
 
 /**
  * @exclude
  */
 public abstract class ObjectHeaderAttributes {
+    
+    public abstract void addBaseLength(int length);
+    
+    public abstract void addPayLoadLength(int length);
+    
+    public abstract void prepareIndexedPayLoadEntry(Transaction trans);
     
 
 }

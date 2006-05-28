@@ -328,7 +328,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		if (i_yapClass.isPrimitive()){
             YapClassPrimitive ycp = (YapClassPrimitive)i_yapClass;
             TypeHandler4 handler = ycp.i_handler;
-            int id = MarshallerFamily.current()._primitive.marshall(a_trans, ycp, a_object, null);
+            int id = MarshallerFamily.current()._primitive.writeNew(a_trans, ycp, a_object, true, null, true);
             setID(id);
 			return false;
 		}

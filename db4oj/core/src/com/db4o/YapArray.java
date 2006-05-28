@@ -171,14 +171,16 @@ public class YapArray extends YapIndependantType {
         return i_handler.isSecondClass();
     }
     
-    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
-        return MarshallerFamily.current()._array.lengthInPayload(trans, this, obj, topLevel);
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
+        MarshallerFamily.current()._array.calculateLengths(trans, header, this, obj, topLevel);
     }
 
-    public int objectLength(Object a_object) {
-        return YapConst.OBJECT_LENGTH
-            + YapConst.YAPINT_LENGTH * 2
-            + (_reflectArray.getLength(a_object) * i_handler.linkLength());
+    public int objectLength(Object obj) {
+        return ownLength(obj) + (_reflectArray.getLength(obj) * i_handler.linkLength());
+    }
+    
+    public int ownLength(Object obj){
+        return YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH * 2;
     }
     
 	public void prepareComparison(Transaction a_trans, Object obj) {
@@ -383,8 +385,8 @@ public class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-    public final Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
-        return mf._array.writeNew(this, a_object, a_bytes);
+    public final Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
+        return mf._array.writeNew(this, a_object, topLevel, a_bytes);
     }
 
     public void writeNew1(Object obj, YapWriter writer, int length) {
@@ -400,7 +402,7 @@ public class YapArray extends YapIndependantType {
         
         if(! i_handler.writeArray(obj, writer)){
             for (int i = 0; i < elements; i++) {
-                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), writer, true);
+                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), true, writer, true);
             }
         }
         

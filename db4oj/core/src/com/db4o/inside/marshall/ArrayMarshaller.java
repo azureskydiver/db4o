@@ -13,7 +13,7 @@ public abstract class ArrayMarshaller {
     
     public abstract void deleteEmbedded(YapArray arrayHandler, YapWriter reader);
     
-    public abstract int lengthInPayload(Transaction trans, YapArray handler, Object obj, boolean topLevel);
+    public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, YapArray handler, Object obj, boolean topLevel);
     
     public abstract Object read(YapArray arrayHandler,  YapWriter reader) throws CorruptionException;
     
@@ -21,6 +21,6 @@ public abstract class ArrayMarshaller {
     
     public abstract Object readQuery(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException;
     
-    public abstract Object writeNew(YapArray arrayHandler, Object obj, YapWriter writer);
+    public abstract Object writeNew(YapArray arrayHandler, Object obj, boolean topLevel, YapWriter writer);
 
 }

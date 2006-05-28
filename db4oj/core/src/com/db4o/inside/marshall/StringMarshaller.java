@@ -10,13 +10,13 @@ public abstract class StringMarshaller {
     
     public abstract boolean inlinedStrings();
     
-    public abstract int lengthInPayload(YapStream stream, Object obj);
+    public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
     
     protected final int linkLength(){
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
     }
     
-    public abstract Object marshall(Object a_object, YapWriter a_bytes, boolean redirect);
+    public abstract Object writeNew(Object a_object, boolean topLevel, YapWriter a_bytes, boolean redirect);
     
     public final String read(YapStream stream, YapReader reader) throws CorruptionException {
         if (reader == null) {

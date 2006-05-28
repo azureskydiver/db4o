@@ -174,22 +174,10 @@ public class YapClassPrimitive extends YapClass{
 		return false;
 	}
     
-    public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
-        i_handler.writeNew(MarshallerFamily.current(), a_object, a_bytes, true);
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
+        i_handler.calculateLengths(trans, header, topLevel, obj, withIndirection);
     }
     
-    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
-        return i_handler.lengthInPayload(trans, obj, topLevel);
-    }
-    
-    public void marshallNew(YapObject a_yapObject, YapWriter writer, Object a_object) {
-        i_handler.writeNew(MarshallerFamily.current(), a_object, writer, true);
-        if (Deploy.debug) {
-            writer.writeEnd();
-            writer.debugCheckBytes();
-        }
-    }
-
     public YapComparable prepareComparison(Object a_constraint) {
         i_handler.prepareComparison(a_constraint);
         return i_handler;
@@ -237,8 +225,8 @@ public class YapClassPrimitive extends YapClass{
         return false;
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
-        mf._primitive.marshall(a_bytes.getTransaction(), this, a_object, a_bytes);
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
+        mf._primitive.writeNew(a_bytes.getTransaction(), this, a_object, topLevel, a_bytes, withIndirection);
         return a_object;
     }
     

@@ -78,11 +78,12 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return YapConst.YES;
     }
     
-    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
         if(topLevel){
-            return 0;
+            header.addBaseLength(linkLength());
+        }else{
+            header.addPayLoadLength(linkLength());
         }
-        return linkLength();
     }
 
     public void prepareComparison(Transaction a_trans, Object obj) {
@@ -178,7 +179,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         write(a_object, a_writer);
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
         if (a_object == null) {
             a_object = primitiveNull();
         }

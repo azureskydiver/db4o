@@ -16,6 +16,7 @@ import com.db4o.foundation.network.*;
  * @exclude
  */
 public final class YapWriter extends YapReader {
+    
 
     private int i_address;
     private int _addressOffset;
@@ -36,6 +37,7 @@ public final class YapWriter extends YapReader {
     private int i_updateDepth = 1;
     
     public int _payloadOffset;
+    
 
     public YapWriter(Transaction a_trans, int a_initialBufferSize) {
         i_trans = a_trans;
@@ -343,20 +345,34 @@ public final class YapWriter extends YapReader {
         i_trans.i_stream.i_handlers.decrypt(this);
     }
     
-    public void writePayload(YapWriter payLoad){
-        writeInt(_payloadOffset);
-        writeInt(payLoad.getLength());
+    public void writePayload(YapWriter payLoad, boolean topLevel){
+        checkMinimumPayLoadOffsetAndWritePointerAndLength(payLoad.getLength(), topLevel);
         System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);
         transferPayLoadAddress(payLoad, _payloadOffset);
-        _payloadOffset += getStream().alignToBlockSize(payLoad._buffer.length);
+        _payloadOffset += payLoad._buffer.length;
     }
     
-    public int reserveAndPointToPayLoadSlot(int length){
+    private void checkMinimumPayLoadOffsetAndWritePointerAndLength(int length, boolean alignToBlockSize){
         if(_payloadOffset <= _offset + (YapConst.YAPINT_LENGTH * 2)){
             _payloadOffset = _offset + (YapConst.YAPINT_LENGTH * 2);
         }
+        if(alignToBlockSize){
+            _payloadOffset = getStream().alignToBlockSize(_payloadOffset);
+        }
         writeInt(_payloadOffset);
+        
+        // TODO: This length is here for historical reasons. 
+        //       It's actually never really needed during reading.
+        //       It's only necessary because array and string used
+        //       to consist of a double pointer in marshaller family 0
+        //       and it was not considered a good idea to change
+        //       their linkLength() values for compatibility reasons
+        //       with marshaller family 0.
         writeInt(length);
+    }
+    
+    public int reserveAndPointToPayLoadSlot(int length){
+        checkMinimumPayLoadOffsetAndWritePointerAndLength(length, false);
         int linkOffset = _offset;
         _offset = _payloadOffset;
         _payloadOffset += length;
@@ -371,22 +387,11 @@ public final class YapWriter extends YapReader {
     }
 
     private void transferPayLoadAddress(YapWriter toWriter, int offset) {
-        YapStream stream = getStream();
-        
-        int blockedOffset = offset / stream.blockSize();
-        
-        // FIXME: SM Check block conditions 
-        if( (offset % stream.blockSize()) != 0 ){
-            throw new RuntimeException("SM check here");
-        }
-        
+        int blockedOffset = offset / getStream().blockSize();
         toWriter.i_address = i_address + blockedOffset;
         toWriter.i_id = toWriter.i_address;
         toWriter._addressOffset = _addressOffset;
-        
     }
-
-
 
     // turning writing around since our Collection world is the wrong
     // way around

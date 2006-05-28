@@ -7,32 +7,26 @@ import com.db4o.*;
 
 class ArrayMarshaller1 extends ArrayMarshaller{
     
-    private int calculateLength(Transaction trans, YapArray arrayHandler, Object obj){
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, YapArray arrayHandler, Object obj, boolean topLevel){
         
         TypeHandler4 typeHandler = arrayHandler.i_handler;
         
-        int length = arrayHandler.objectLength(obj);
-        
-        if(! typeHandler.hasFixedLength()){
+        if(topLevel){
+            header.addBaseLength(arrayHandler.linkLength());
+        } else{
+            header.addPayLoadLength(arrayHandler.linkLength());
+        }
+
+        if(typeHandler.hasFixedLength()){
+            header.addPayLoadLength(arrayHandler.objectLength(obj));
+        }else{
+            header.addPayLoadLength(arrayHandler.ownLength(obj));
             Object[] all = arrayHandler.allElements(obj);
             for (int i = 0; i < all.length; i++) {
-                Object object = all[i];
-                length += typeHandler.linkLength();
-                length += typeHandler.lengthInPayload(trans, object, true);
+                typeHandler.calculateLengths(trans, header, false, all[i], true);
             }
         }
         
-        return length;
-    }
-    
-    private boolean canBeEmbedded(YapArray arrayHandler){
-        
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
-        
-        return true;
-        
-        
-        // return typeHandler.isSecondClass() == YapConst.YES  || typeHandler.isSecondClass() == YapConst.UNKNOWN;
     }
     
     public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {
@@ -52,14 +46,8 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         YapWriter subReader = null;
         
         if (reader.cascadeDeletes() > 0 && typeHandler instanceof YapClass) {
-            
-            if(canBeEmbedded(arrayHandler)){
-                subReader = reader;
-                subReader._offset = address;
-                
-            }else{
-                subReader = stream.readObjectWriterByAddress(trans,address,length);
-            }
+            subReader = reader;
+            subReader._offset = address;
         }
                 
         if (subReader != null) {
@@ -72,127 +60,40 @@ class ArrayMarshaller1 extends ArrayMarshaller{
             }
         }
         
-        if(! canBeEmbedded(arrayHandler)){
-            trans.slotFreeOnCommit(address, address, length);
-        }
-        
         if(linkOffSet > 0){
             reader._offset = linkOffSet;
-            
         }
-    }
-    
-    
-    private int headerLength(){
-        return YapConst.YAPINT_LENGTH * 2  // type info, count 
-             + YapConst.OBJECT_LENGTH;
-    }
-    
-    public int lengthInPayload(Transaction trans, YapArray arrayHandler, Object obj, boolean topLevel){
-        int len = topLevel ? 0 : arrayHandler.linkLength();
-        if(canBeEmbedded(arrayHandler)){
-            len += calculateLength(trans, arrayHandler, obj);
-        }
-        return len;
     }
     
     public Object read(YapArray arrayHandler,  YapWriter reader) throws CorruptionException{
-        if(canBeEmbedded(arrayHandler)){
-            return readEmbedded(arrayHandler, reader);
-        }else{
-            return readLinked(arrayHandler, reader);
-        }
-    }
-    
-    public void readCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates) {
-        if(canBeEmbedded(arrayHandler)){
-            readEmbeddedCandidates(arrayHandler, reader, candidates);
-        }else{
-            readLinkedCandidates(arrayHandler, reader, candidates);
-        }
-    }
-    
-    public void readEmbeddedCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates){
-        reader._offset = reader.readInt();
-        arrayHandler.read1Candidates(_family, reader, candidates);
-    }
-    
-    public void readLinkedCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates){
-        YapReader subReader = reader.readEmbeddedObject(candidates.i_trans);
-        if (subReader == null) {
-            return;
-        }
-        arrayHandler.read1Candidates(_family, subReader, candidates);
-    }
-    
-    private Object readEmbedded(YapArray arrayHandler, YapWriter reader) throws CorruptionException{
         int linkOffSet = reader.preparePayloadRead();
         Object array = arrayHandler.read1(_family, reader);
         reader._offset = linkOffSet;
         return array;
     }
     
-    private Object readLinked(YapArray arrayHandler, YapWriter reader) throws CorruptionException{
-        YapWriter bytes = reader.readEmbeddedObject();
-        if (bytes == null) {
-            return null;
-        }
-        return arrayHandler.read1(_family, bytes);
+    public void readCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates) {
+        reader._offset = reader.readInt();
+        arrayHandler.read1Candidates(_family, reader, candidates);
     }
     
     public final Object readQuery(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException{
-        if(canBeEmbedded(arrayHandler)){
-            return readQueryEmbedded(arrayHandler, trans, reader);
-        }else{
-            return readQueryLinked(arrayHandler, trans, reader);
-        }
-    }
-    
-    public final Object readQueryLinked(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException{
-        YapReader bytes = reader.readEmbeddedObject(trans);
-        if (bytes == null) {
-            return null;
-        }
-        Object array = arrayHandler.read1Query(trans,_family, bytes);
-        return array;
-    }
-    
-    public final Object readQueryEmbedded(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException{
         reader._offset = reader.readInt();
         return arrayHandler.read1Query(trans,_family, reader);
     }
     
-    public Object writeNew(YapArray arrayHandler, Object a_object, YapWriter a_bytes) {
-        if (a_object == null) {
-            a_bytes.writeEmbeddedNull();
+    public Object writeNew(YapArray arrayHandler, Object obj, boolean topLevel, YapWriter writer) {
+        if (obj == null) {
+            writer.writeEmbeddedNull();
             return null;
         }
-        if(canBeEmbedded(arrayHandler)){
-            writeNewEmbedded(arrayHandler, a_object, a_bytes);
-        }else{
-            writeNewLinked(arrayHandler, a_object, a_bytes);
-        }
-        return a_object;
-    }
-    
-    private void writeNewEmbedded(YapArray arrayHandler, Object obj, YapWriter writer) {
         int length = arrayHandler.objectLength(obj);
         int linkOffset = writer.reserveAndPointToPayLoadSlot(length);
         arrayHandler.writeNew1(obj, writer, length);
-        writer._offset = linkOffset;
-    }
-    
-    private void writeNewLinked(YapArray arrayHandler, Object obj, YapWriter writer) {
-        Transaction trans = writer.getTransaction();
-        int length = calculateLength(trans, arrayHandler, obj);
-        YapWriter subWriter = new YapWriter(trans, length);
-        subWriter._payloadOffset = arrayHandler.objectLength(obj);
-        subWriter.setUpdateDepth(writer.getUpdateDepth());
-        arrayHandler.writeNew1(obj, subWriter, length);
-        subWriter.setID(writer._offset);
-        writer.getStream().writeEmbedded(writer, subWriter);
-        writer.incrementOffset(YapConst.YAPID_LENGTH);
-        writer.writeInt(length);
+        if(topLevel){
+            writer._offset = linkOffset;
+        }
+        return obj;
     }
     
 

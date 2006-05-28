@@ -33,11 +33,11 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         trans.slotFreeOnCommit(address, address, length);
     }
     
-    public int lengthInPayload(Transaction trans, YapArray handler, Object obj, boolean topLevel){
-        return 0;
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, YapArray handler, Object obj, boolean topLevel){
+        // do nothing
     }
     
-    public Object writeNew(YapArray arrayHandler, Object a_object, YapWriter a_bytes) {
+    public Object writeNew(YapArray arrayHandler, Object a_object, boolean topLevel, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
             return null;

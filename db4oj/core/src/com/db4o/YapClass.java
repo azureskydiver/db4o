@@ -1270,11 +1270,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return Platform4.isValueType(classReflector());
     }
     
-    public int lengthInPayload(Transaction trans, Object obj, boolean topLevel) {
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
         if(topLevel){
-            return 0;
+            header.addBaseLength(linkLength());
+        }else{
+            header.addPayLoadLength(linkLength());
         }
-        return linkLength();
     }
 
     private String nameToWrite(){
@@ -1958,7 +1959,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, YapWriter a_bytes, boolean withIndirection) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
         if (a_object == null) {
             a_bytes.writeInt(0);
             return new Integer(0);
