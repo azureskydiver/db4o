@@ -68,16 +68,15 @@ public class YapArray extends YapIndependantType {
     	return i_handler.classReflector();
     }
 
-    // FIXME: This is a rare SODA case that is apparently untested
-    //        since it doesn't fail, although the code has not yet
-    //        been ported to new ArrayMarshaller format.
-    TreeInt collectIDs(TreeInt tree, YapWriter a_bytes){
-        Transaction trans = a_bytes.getTransaction();
-        YapReader bytes = a_bytes.readEmbeddedObject(trans);
-        if (bytes != null) {
-            int count = elementCount(trans, bytes);
+    final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, YapWriter reader){
+        return mf._array.collectIDs(this, tree, reader);
+    }
+    
+    public final TreeInt collectIDs1(Transaction trans, TreeInt tree, YapReader reader){
+        if (reader != null) {
+            int count = elementCount(trans, reader);
             for (int i = 0; i < count; i++) {
-                tree = (TreeInt)Tree.add(tree, new TreeInt(bytes.readInt()));
+                tree = (TreeInt)Tree.add(tree, new TreeInt(reader.readInt()));
             }
         }
         return tree;

@@ -14,6 +14,12 @@ public abstract class ObjectMarshaller {
             YapWriter writer, 
             boolean isNew) ;
     
+    public abstract TreeInt collectFieldIDs(
+        TreeInt tree, 
+        YapClass yc, 
+        ObjectHeaderAttributes attributes, 
+        YapWriter reader, String name);
+    
     protected YapWriter createWriterForNew(
             Transaction trans, 
             YapObject yo, 

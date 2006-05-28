@@ -29,6 +29,30 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         }
     }
     
+    public TreeInt collectFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes attributes, YapWriter reader, String name) {
+        return collectDeclaredFieldIDs(tree, yc, (ObjectHeaderAttributes1) attributes, reader, name, 0);
+    }
+    
+    public TreeInt collectDeclaredFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes1 attributes, YapWriter reader, String name, int fieldIndex) {
+        int length = yc.readFieldCount(reader);
+        for (int i = 0; i < length; i++) {
+            if(! attributes.isNull(fieldIndex)){
+                if (name.equals(yc.i_fields[i].getName())) {
+                    tree = yc.i_fields[i].collectIDs(_family, tree, reader);
+                } else {
+                    yc.i_fields[i].incrementOffset(reader);
+                }
+            }
+            fieldIndex ++;
+        }
+        if (yc.i_ancestor != null) {
+            return collectDeclaredFieldIDs(tree, yc.i_ancestor, attributes, reader, name, fieldIndex);
+        }
+        return tree;
+    }
+    
+
+    
     public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate){
         deleteDeclaredMembers(yc, (ObjectHeaderAttributes1) attributes, a_bytes, a_type, 0, isUpdate);
     }

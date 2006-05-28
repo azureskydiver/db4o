@@ -394,19 +394,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
     
-    TreeInt collectFieldIDs(TreeInt tree, YapWriter a_bytes, String name) {
-        int length = readFieldCount(a_bytes);
-        for (int i = 0; i < length; i++) {
-            if (name.equals(i_fields[i].getName())) {
-                tree = i_fields[i].collectIDs(tree, a_bytes);
-            } else {
-                i_fields[i].incrementOffset(a_bytes);
-            }
-        }
-        if (i_ancestor != null) {
-            return i_ancestor.collectFieldIDs(tree, a_bytes, name);
-        }
-        return tree;
+    final TreeInt collectFieldIDs(MarshallerFamily mf, ObjectHeaderAttributes attributes, TreeInt tree, YapWriter a_bytes, String name) {
+        return mf._object.collectFieldIDs(tree, this, attributes, a_bytes, name);
     }
 
     final boolean configInstantiates(){

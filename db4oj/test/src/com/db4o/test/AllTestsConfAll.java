@@ -36,6 +36,7 @@ public class AllTestsConfAll extends TestSuite{
 	    	Backup.class,
             BasicClusterTest.class,
 	    	BindFileSize.class,
+            Book.class,
             CallbackCanDelete.class,
 	    	Callbacks.class,
 	    	CascadedDeleteUpdate.class,
