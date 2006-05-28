@@ -103,15 +103,15 @@ public class QueryBuilderPaneController {
             String curFieldName = field.field.getName();
             EditorRow priorRow = (EditorRow) priorRows.get(curFieldName);
             if (priorRow != null) {
-                curFieldName = "(" + field.field.getType() + ") " + curFieldName;
-                String oldFieldName = "(" + priorRow.field.getType().getName() + ") " + priorRow.field.getName();
+                curFieldName = "(" + field.field.getFieldType() + ") " + curFieldName;
+                String oldFieldName = "(" + priorRow.field.getFieldType().getName() + ") " + priorRow.field.getName();
                 priorRow.rowEditor.setFieldName(oldFieldName);
             }
             
             /*
              * Now build the actual field editor row
              */
-            final ReflectClass fieldType = field.field.getType();
+            final ReflectClass fieldType = field.field.getFieldType();
             IConstraintRow newRow = null;
             
             if (fieldType.isSecondClass()) {

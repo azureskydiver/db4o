@@ -69,7 +69,7 @@ class InstanceNode implements IModelNode {
 			for (int i = 0; i < fields.length; i++) {
 				if (!fields[i].isTransient()) {
                     Object field = FieldNode.field(fields[i], _instance);
-                    IModelNode newNode = FieldNodeFactory.construct(fields[i].getName(), fields[i].getType(), field, _database);
+                    IModelNode newNode = FieldNodeFactory.construct(fields[i].getName(), fields[i].getFieldType(), field, _database);
                     
                     IModelNode alreadyIn = (IModelNode) children.get(newNode.getName());
                     if (alreadyIn != null) {

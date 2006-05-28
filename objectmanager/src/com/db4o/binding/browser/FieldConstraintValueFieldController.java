@@ -51,9 +51,9 @@ public class FieldConstraintValueFieldController implements IFieldViewer {
         this.ui = ui;
         this.constraint = constraint;
         this.database = database;
-        converter2String = ConverterRegistry.get(constraint.field.getType().getName(), c(String.class).getName());
-        converter2Value = ConverterRegistry.get(c(String.class).getName(), constraint.field.getType().getName());
-        validator = ValidatorRegistry.get(constraint.field.getType().getName());
+        converter2String = ConverterRegistry.get(constraint.field.getFieldType().getName(), c(String.class).getName());
+        converter2Value = ConverterRegistry.get(c(String.class).getName(), constraint.field.getFieldType().getName());
+        validator = ValidatorRegistry.get(constraint.field.getFieldType().getName());
         input = constraint.value;
         initControl();
         ui.addVerifyListener(verifyListener);

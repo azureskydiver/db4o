@@ -28,7 +28,7 @@ public class QueryPrototypeInstance {
         while (curClazz != null) {
             ReflectField[] curFields = curClazz.getDeclaredFields();
             for (int i = 0; i < curFields.length; i++) {
-                ReflectClass fieldClass = curFields[i].getType();
+                ReflectClass fieldClass = curFields[i].getFieldType();
                 
                 if (curFields[i].isTransient() || fieldClass.isCollection() || fieldClass.isArray()) {
                     continue;
