@@ -81,7 +81,7 @@ public class SelfReflectTest extends TestCase {
 	public void testSelfField() {
 		SelfClass selfClass = selfclass();
 		ReflectField field = selfClass.getDeclaredField("_age");
-		assertEquals(Integer.class.getName(), field.getType().getName());
+		assertEquals(Integer.class.getName(), field.getFieldType().getName());
 		assertEquals("_age", field.getName());
 
 		assertTrue(selfClass.getDeclaredField("_age").isPublic());
