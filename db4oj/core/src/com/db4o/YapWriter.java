@@ -345,6 +345,9 @@ public final class YapWriter extends YapReader {
         i_trans.i_stream.i_handlers.decrypt(this);
     }
     
+    /* Only used for Strings, topLevel therefore means aligning blocksize, so
+     * index will be possible.
+     */
     public void writePayload(YapWriter payLoad, boolean topLevel){
         checkMinimumPayLoadOffsetAndWritePointerAndLength(payLoad.getLength(), topLevel);
         System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);

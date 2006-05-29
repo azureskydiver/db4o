@@ -43,24 +43,17 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         
         int linkOffSet = reader._offset; 
         
-        YapStream stream = reader.getStream();
         Transaction trans = reader.getTransaction();
         TypeHandler4 typeHandler = arrayHandler.i_handler;
         
-        YapWriter subReader = null;
-        
         if (reader.cascadeDeletes() > 0 && typeHandler instanceof YapClass) {
-            subReader = reader;
-            subReader._offset = address;
-        }
-                
-        if (subReader != null) {
+            reader._offset = address;
             if (Deploy.debug) {
-                subReader.readBegin(arrayHandler.identifier());
+                reader.readBegin(arrayHandler.identifier());
             }
-            subReader.setCascadeDeletes(reader.cascadeDeletes());
-            for (int i = arrayHandler.elementCount(trans, subReader); i > 0; i--) {
-                arrayHandler.i_handler.deleteEmbedded(_family, subReader);
+            reader.setCascadeDeletes(reader.cascadeDeletes());
+            for (int i = arrayHandler.elementCount(trans, reader); i > 0; i--) {
+                arrayHandler.i_handler.deleteEmbedded(_family, reader);
             }
         }
         
