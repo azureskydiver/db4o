@@ -13,13 +13,13 @@ public class StorePrimitiveDirectly {
         
         boolean exceptionOccurred = false;
         
-        oc.configure().exceptionsOnNotStorable(true);
+        oc.configure().exceptionsOnNotStorable(false);
 
         try{
             oc.set(new Integer(1));
         }catch(ObjectNotStorableException onse){
             
-            // happens now in test compbination but shouldn't
+           // happens now in test compbination but shouldn't
             
             exceptionOccurred = true;
             
