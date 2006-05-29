@@ -6,7 +6,6 @@ package com.db4o.binding.dataeditors.db4o;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.eclipse.core.commands.operations.*;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.fieldviewer.FieldViewerFactory;
@@ -19,8 +18,6 @@ import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 import sun.reflect.generics.reflectiveObjects.*;
 
 import com.db4o.ObjectContainer;
-import com.db4o.browser.model.*;
-import com.sun.corba.se.impl.transport.*;
 
 /**
  * Db4oObject.
