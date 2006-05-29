@@ -57,10 +57,18 @@ namespace Mono.Cecil.Cil {
 		{
 			if (meth.Body == null)
 				return RVA.Zero;
-
-			RVA ret = m_reflectWriter.MetadataWriter.GetDataCursor ();
-			meth.Body.Accept (this);
-			return ret;
+			try
+			{
+				RVA ret = m_reflectWriter.MetadataWriter.GetDataCursor();
+				meth.Body.Accept(this);
+				return ret;
+			}
+			catch (Exception x)
+			{
+				System.Console.WriteLine(meth);
+				throw;
+			}
+//			return ret;
 		}
 
 		public override void VisitMethodBody (MethodBody body)
