@@ -259,7 +259,7 @@
 		/// and dialects that db4o supports:<br /><br />
 		/// <code>
 		/// <b>// C# .NET 2.0</b><br />
-		/// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (Delegate(Cat cat) {<br />
+		/// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br />
 		/// &#160;&#160;&#160;return cat.Name == "Occam";<br />
 		/// });<br />
 		/// <br />
@@ -463,7 +463,7 @@
         /// and dialects that db4o supports:<br /><br />
         /// <code>
         /// <b>// C# .NET 2.0</b><br />
-        /// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (Delegate(Cat cat) {<br />
+        /// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br />
         /// &#160;&#160;&#160;return cat.Name == "Occam";<br />
         /// });<br />
         /// <br />
