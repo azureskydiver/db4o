@@ -168,7 +168,7 @@
 			</fileset>
 		</delete>
 		<antcall target="copyjava1.2" />
-		<javac srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.java1.2}" debug="off" target="1.2" source="1.2" />
+		<javac srcdir="${dir.dist.java.temp.src.core}" fork="true" destdir="${dir.dist.classes.java1.2}" debug="off" target="1.2" source="1.2" />
 
 		<mkdir dir="${dir.dist.classes.java5}" />
 		<delete>
@@ -177,7 +177,7 @@
 			</fileset>
 		</delete>
 		<antcall target="copyjava5" />
-		<javac srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.java5}" debug="off" target="1.5" source="1.5" />
+		<javac srcdir="${dir.dist.java.temp.src.core}" fork="true" destdir="${dir.dist.classes.java5}" debug="off" target="1.5" source="1.5" />
 
 		<jar destfile="${file.java1.1.jar}">
 			<fileset dir="${dir.dist.classes.java1.1}" />
@@ -195,7 +195,7 @@
 				<include name="**/*"/>
 			</fileset>
 		</delete>
-		<javac srcdir="${dir.j.nqopt.src}" destdir="${dir.dist.classes.nqopt}" debug="off" target="1.2" source="1.2">
+		<javac srcdir="${dir.j.nqopt.src}" fork="true" destdir="${dir.dist.classes.nqopt}" debug="off" target="1.2" source="1.2">
 			<exclude name="**/j2me/**"/>
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
