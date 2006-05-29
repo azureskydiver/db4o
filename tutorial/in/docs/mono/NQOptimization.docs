@@ -34,7 +34,7 @@ Note that the current implementation doesn't support polymorphism yet.
 
 Due to some platform limitations, CompactFramework 2.0 users using the ._
 more convenient delegate based Native Query syntax that want their queries ._
-to be optimized are required to run the CFNativeQueriesEnabler.exe ._
+to be optimized are required to run the Db4oAdmin.exe ._
 instrumentation utility on their assemblies ._
 prior to deploying them. 
 
@@ -52,11 +52,11 @@ by following the simple steps below:
 - Select .b 'Properties' ..
 - In the Properties Page select the .b 'Build Events' .. tab
 - In the .b 'Post-build event command line' .. text box insert the following text ._
-.b "<path-to-your-db4o-installation>/bin/CFNativeQueriesEnabler.exe $(TargetPath)" .. ._
+.b "<path-to-your-db4o-installation>/bin/Db4oAdmin.exe $(TargetPath)" .. ._
 without the quotes and replacing <path-to-your-db4o-installation> to the correct ._
 value for your system.
 
-A complete example can be found in the /src/instrumentation/CFNativeQueryEnabler.Example ._
+A complete example can be found in the /src/instrumentation/Db4oAdmin.Example ._
 directory of this distribution.
   
 .1 Monitoring optimization ..
