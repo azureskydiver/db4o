@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
+import com.db4o.inside.marshall.*;
 import com.db4o.inside.query.*;
 import com.db4o.inside.replication.*;
 import com.db4o.query.*;
@@ -1558,100 +1559,137 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
         i_stillToSet = postponedStillToSet;
     }
+    
+    private void notStorable(ReflectClass claxx, Object obj){
+        if(! i_config.exceptionsOnNotStorable()){
+            return;
+        }
+        
+        // FIXME:   Exceptions configuration setting cant be modified
+        //          from running ObjectContainer. 
+        //          Right now all tests fail, if we don't jump out here.
+        
+        //          The StorePrimitiveDirectly test case documents the err.
+        
+        if(true){
+            return;
+        }
+        
+        if(claxx != null){
+            throw new ObjectNotStorableException(claxx);
+        }
+        
+        throw new ObjectNotStorableException(obj.toString());
+    }
+    
 
     public final int set3(Transaction a_trans, Object a_object, int a_updateDepth, boolean a_checkJustSet) {
-        if (a_object != null & !(a_object instanceof TransientClass)) {
+        if (a_object == null || (a_object instanceof TransientClass)) {
+            return 0;
+        }
         	
-            if (a_object instanceof Db4oTypeImpl) {
-                ((Db4oTypeImpl) a_object).storedTo(a_trans);
+        if (a_object instanceof Db4oTypeImpl) {
+            ((Db4oTypeImpl) a_object).storedTo(a_trans);
+        }
+        
+        YapClass yc = null;
+        YapObject yapObject = i_hcTree.hc_find(a_object);
+        if (yapObject == null) {
+        	
+            ReflectClass claxx = reflector().forObject(a_object);
+            
+            if(claxx == null){
+                notStorable(claxx, a_object);
+                return 0;
             }
-            YapClass yc = null;
-            YapObject yapObject = i_hcTree.hc_find(a_object);
-            if (yapObject == null) {
-            	
-                ReflectClass claxx = reflector().forObject(a_object);
-                
-                yc = getActiveYapClass(claxx);
-                
-                if (yc == null) {
-                    yc = getYapClass(claxx, true);
-                    if (yc == null) {
-                        return 0;
-                    }
-
-                    // The following may return a yapObject if the object is held
-                    // in a static variable somewhere ( often: Enums) that gets
-                    // stored or associated on initialization of the YapClass.
-                    
-                    yapObject = i_hcTree.hc_find(a_object);
-                    
-                }
-                
-            } else {
-                yc = yapObject.getYapClass();
-            }
-            boolean dontDelete = true;
-            if (yapObject == null) {
-                if (!yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW)) {
+            
+            yc = getActiveYapClass(claxx);
+            
+            if (yc == null) {
+                yc = getYapClass(claxx, true);
+                if ( yc == null){
+                    notStorable(claxx, a_object);
                     return 0;
                 }
-                yapObject = new YapObject(0);
-                if(yapObject.store(a_trans, yc, a_object, a_updateDepth)){
-    				idTreeAdd(yapObject);
-    				hcTreeAdd(yapObject);
-    				if(a_object instanceof Db4oTypeImpl){
-    				    ((Db4oTypeImpl)a_object).setTrans(a_trans);
-    				}
-    				if (i_config.messageLevel() > YapConst.STATE) {
-    					message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
-    				}
-                    
-                    if(a_checkJustSet && canUpdate()){
-                        if(! yapObject.getYapClass().isPrimitive()){
-                            rememberJustSet(yapObject.getID());
-                            a_checkJustSet = false;
-                        }
-                    }
-                    
-    				stillToSet(a_trans, yapObject, a_updateDepth);
-                }
-
-            } else {
-                if (canUpdate()) {
-                    int oid = yapObject.getID();
-                    if(a_checkJustSet){
-                        if(oid > 0 && (TreeInt.find(i_justSet, oid) != null)){
-                            return oid;
-                        }
-                    }
-                    boolean doUpdate = (a_updateDepth == YapConst.UNSPECIFIED) || (a_updateDepth > 0);
-                    if (doUpdate) {
-                        dontDelete = false;
-                        a_trans.dontDelete(yapObject.getYapClass().getID(), oid);
-                        if(a_checkJustSet){
-                            a_checkJustSet = false;
-                            rememberJustSet(oid);
-                        }
-                        yapObject.writeUpdate(a_trans, a_updateDepth);
-                    }
-                }
-            }
-            checkNeededUpdates();
-            int id = yapObject.getID();
-            if(a_checkJustSet && canUpdate()){
-                if(! yapObject.getYapClass().isPrimitive()){
-                    rememberJustSet(id);
-                }
-            }
-            if(dontDelete){
                 
-                // TODO: do we want primitive types added here?
+                // The following may return a yapObject if the object is held
+                // in a static variable somewhere ( often: Enums) that gets
+                // stored or associated on initialization of the YapClass.
                 
-                a_trans.dontDelete(yapObject.getYapClass().getID(), id);
+                yapObject = i_hcTree.hc_find(a_object);
+                
             }
-            return id;
+            
+        } else {
+            yc = yapObject.getYapClass();
         }
-        return 0;
+        
+        if (yc.getID() == YapHandlers.ANY_ID  || 
+            yc.isPrimitive() && ! MarshallerFamily.LEGACY) {
+            notStorable(yc.classReflector(), a_object);
+            return 0;
+        }
+        
+        boolean dontDelete = true;
+        if (yapObject == null) {
+            if (!yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW)) {
+                return 0;
+            }
+            yapObject = new YapObject(0);
+            if(yapObject.store(a_trans, yc, a_object, a_updateDepth)){
+				idTreeAdd(yapObject);
+				hcTreeAdd(yapObject);
+				if(a_object instanceof Db4oTypeImpl){
+				    ((Db4oTypeImpl)a_object).setTrans(a_trans);
+				}
+				if (i_config.messageLevel() > YapConst.STATE) {
+					message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
+				}
+                
+                if(a_checkJustSet && canUpdate()){
+                    if(! yapObject.getYapClass().isPrimitive()){
+                        rememberJustSet(yapObject.getID());
+                        a_checkJustSet = false;
+                    }
+                }
+                
+				stillToSet(a_trans, yapObject, a_updateDepth);
+            }
+
+        } else {
+            if (canUpdate()) {
+                int oid = yapObject.getID();
+                if(a_checkJustSet){
+                    if(oid > 0 && (TreeInt.find(i_justSet, oid) != null)){
+                        return oid;
+                    }
+                }
+                boolean doUpdate = (a_updateDepth == YapConst.UNSPECIFIED) || (a_updateDepth > 0);
+                if (doUpdate) {
+                    dontDelete = false;
+                    a_trans.dontDelete(yapObject.getYapClass().getID(), oid);
+                    if(a_checkJustSet){
+                        a_checkJustSet = false;
+                        rememberJustSet(oid);
+                    }
+                    yapObject.writeUpdate(a_trans, a_updateDepth);
+                }
+            }
+        }
+        checkNeededUpdates();
+        int id = yapObject.getID();
+        if(a_checkJustSet && canUpdate()){
+            if(! yapObject.getYapClass().isPrimitive()){
+                rememberJustSet(id);
+            }
+        }
+        if(dontDelete){
+            
+            // TODO: do we want primitive types added here?
+            
+            a_trans.dontDelete(yapObject.getYapClass().getID(), id);
+        }
+        return id;
     }
 
     abstract void setDirty(UseSystemTransaction a_object);

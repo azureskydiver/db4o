@@ -3,11 +3,18 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 
 public class NoInternalClasses {
 	
 	public void store(){
-		Test.store(new StaticClass());
+        try{
+            Test.store(new StaticClass());
+        }catch(ObjectNotStorableException onse){
+            
+            // a possible exception
+            
+        }
 	}
 	
 	public void test(){
