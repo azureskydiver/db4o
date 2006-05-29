@@ -222,6 +222,9 @@
 			<fileset dir="${dir.dist.classes.objectmanager}">
 				<include name="**/*" />
 			</fileset>
+			<fileset dir="${dir.objectmanager.lib}">
+				<include name="db4o-*.jar" />
+			</fileset>
 		</delete>
 		<copy file="${file.java1.2.jar}" todir="${dir.objectmanager.lib}" />
 		<depend srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" closure="yes" />

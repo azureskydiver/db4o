@@ -8,7 +8,6 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.internal.layout.*;
 import org.eclipse.ve.sweet.*;
 import org.eclipse.ve.sweet.controllers.*;
 import org.eclipse.ve.sweet.objectviewer.*;
