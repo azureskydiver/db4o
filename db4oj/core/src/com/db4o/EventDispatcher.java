@@ -4,8 +4,8 @@ package com.db4o;
 
 import com.db4o.reflect.*;
 
-public final class EventDispatcher
-{
+/** @exclude */
+public final class EventDispatcher {
 	private static final String[] events = {
 		"objectCanDelete",
 		"objectOnDelete", 
