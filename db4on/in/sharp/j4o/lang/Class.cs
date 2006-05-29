@@ -75,7 +75,15 @@ namespace j4o.lang
 			if (forType == null)
 			{
 				return null;
-			}
+            }
+
+#if NET_2_0 || CF_2_0
+            Type underlyingType = Nullable.GetUnderlyingType(forType);
+            if (underlyingType != null)
+            {
+                forType = underlyingType;
+            }
+#endif
 			
 			lock (_typeToClassMap.SyncRoot)
 			{
