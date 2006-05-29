@@ -306,32 +306,19 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 		i_yapClass = a_yapClass;
 
-		if (i_yapClass.getID() == YapHandlers.ANY_ID) {
-			// Storing naked objects does not make sense
-			// TODO: why?
-			throw new ObjectNotStorableException(i_yapClass.classReflector());
-		}
-		    
-		
 
-		// We may still consider to have Arrays as full objects.
-		// It would need special handling, to remove them from
-		// hc_tree in the transaction, so currently it's ugly.
-		
-		// Removing SecondClass objects from the reference tree
-		// causes problems in C/S cascaded delete.
-        
-        
 
-		// FIXME: SM In the final version of the new marshaller 
-		//        primitives should never show up here.
-		if (i_yapClass.isPrimitive()){
-            YapClassPrimitive ycp = (YapClassPrimitive)i_yapClass;
-            TypeHandler4 handler = ycp.i_handler;
-            int id = MarshallerFamily.current()._primitive.writeNew(a_trans, ycp, a_object, true, null, true);
-            setID(id);
-			return false;
-		}
+		// FIXME: The following is code to keep the old MarshallerFamily  
+		//        running. It can be safely removed when we drop.
+        if(MarshallerFamily.LEGACY){
+    		if (i_yapClass.isPrimitive()){
+                YapClassPrimitive ycp = (YapClassPrimitive)i_yapClass;
+                TypeHandler4 handler = ycp.i_handler;
+                int id = MarshallerFamily.current()._primitive.writeNew(a_trans, ycp, a_object, true, null, true);
+                setID(id);
+    			return false;
+    		}
+        }
 
         setID(stream.newUserObject());
 

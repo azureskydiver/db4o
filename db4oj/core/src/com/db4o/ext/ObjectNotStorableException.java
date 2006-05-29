@@ -16,4 +16,8 @@ public class ObjectNotStorableException extends RuntimeException{
 	public ObjectNotStorableException(ReflectClass a_class){
 	    super(Messages.get(a_class.isPrimitive() ? 59: 45, a_class.getName()));
 	}
+    
+    public ObjectNotStorableException(String message){
+        super(message);
+    }
 }
