@@ -5,8 +5,10 @@ package com.db4o;
 import com.db4o.foundation.KeySpec;
 import com.db4o.foundation.KeySpecHashtable4;
 
-public abstract class Config4Abstract
-{
+/**
+ * @exclude
+ */
+public abstract class Config4Abstract {
 	protected KeySpecHashtable4 _config;
 
 	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(YapConst.DEFAULT);

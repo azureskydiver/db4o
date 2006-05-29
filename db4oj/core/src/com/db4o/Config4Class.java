@@ -6,6 +6,9 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
+/**
+ * @exclude
+ */
 public class Config4Class extends Config4Abstract implements ObjectClass,
     DeepClone {
     

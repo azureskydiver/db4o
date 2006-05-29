@@ -4,6 +4,8 @@ package com.db4o;
 
 /** 
  * marker interface for special db4o datatypes
+ * 
+ * @exclude
  */
 public interface Db4oTypeImpl extends TransactionAware {
 	
