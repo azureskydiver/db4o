@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -15,7 +15,7 @@ namespace j4o.lang {
         public RuntimeException(Exception cause) : base(cause.Message, cause) {
         }
 
-        public virtual Exception fillInStackTrace() {
+        public virtual Exception FillInStackTrace() {
             return this;
         }
     }

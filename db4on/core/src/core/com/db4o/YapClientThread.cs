@@ -23,7 +23,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual bool isClosed()
+		internal virtual bool IsClosed()
 		{
 			lock (this)
 			{
@@ -31,7 +31,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void close()
+		internal virtual void Close()
 		{
 			lock (this)
 			{
@@ -40,7 +40,7 @@ namespace com.db4o
 			}
 		}
 
-		public override void run()
+		public override void Run()
 		{
 			while (i_socket != null)
 			{
@@ -53,12 +53,12 @@ namespace com.db4o
 					com.db4o.Msg message;
 					try
 					{
-						message = com.db4o.Msg.readMessage(i_stream.getTransaction(), i_socket);
+						message = com.db4o.Msg.ReadMessage(i_stream.GetTransaction(), i_socket);
 					}
 					catch (System.Exception exc)
 					{
-						messageQueueLock.run(new _AnonymousInnerClass46(this));
-						close();
+						messageQueueLock.Run(new _AnonymousInnerClass46(this));
+						Close();
 						return;
 					}
 					if (i_stream == null)
@@ -67,13 +67,13 @@ namespace com.db4o
 					}
 					if (com.db4o.Msg.PING.Equals(message))
 					{
-						i_stream.writeMsg(com.db4o.Msg.OK);
+						i_stream.WriteMsg(com.db4o.Msg.OK);
 					}
 					else
 					{
 						if (com.db4o.Msg.CLOSE.Equals(message))
 						{
-							i_stream.logMsg(35, i_stream.ToString());
+							i_stream.LogMsg(35, i_stream.ToString());
 							if (i_stream == null)
 							{
 								return;
@@ -83,13 +83,13 @@ namespace com.db4o
 						}
 						else
 						{
-							messageQueueLock.run(new _AnonymousInnerClass82(this, message));
+							messageQueueLock.Run(new _AnonymousInnerClass82(this, message));
 						}
 					}
 				}
 				catch (System.Exception exc)
 				{
-					close();
+					Close();
 					return;
 				}
 			}
@@ -102,11 +102,11 @@ namespace com.db4o
 				this._enclosing = _enclosing;
 			}
 
-			public object run()
+			public object Run()
 			{
-				this._enclosing.messageQueue.add(com.db4o.Msg.ERROR);
-				this._enclosing.close();
-				this._enclosing.messageQueueLock.awake();
+				this._enclosing.messageQueue.Add(com.db4o.Msg.ERROR);
+				this._enclosing.Close();
+				this._enclosing.messageQueueLock.Awake();
 				return null;
 			}
 
@@ -121,10 +121,10 @@ namespace com.db4o
 				this.message = message;
 			}
 
-			public object run()
+			public object Run()
 			{
-				this._enclosing.messageQueue.add(message);
-				this._enclosing.messageQueueLock.awake();
+				this._enclosing.messageQueue.Add(message);
+				this._enclosing.messageQueueLock.Awake();
 				return null;
 			}
 

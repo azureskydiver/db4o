@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Text;
@@ -17,17 +17,17 @@ namespace j4o.lang {
         	stringBuilder = new StringBuilder(str);
         }
 
-        public StringBuffer append(char c) {
+        public StringBuffer Append(char c) {
             stringBuilder.Append(c);
             return this;
         }
 
-        public StringBuffer append(String str) {
+        public StringBuffer Append(String str) {
             stringBuilder.Append(str);
             return this;
         }
 
-        public StringBuffer append(Object obj) {
+        public StringBuffer Append(Object obj) {
             stringBuilder.Append(obj);
             return this;
         }

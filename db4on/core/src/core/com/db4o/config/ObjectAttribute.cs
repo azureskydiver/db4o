@@ -8,6 +8,6 @@ namespace com.db4o.config
 		/// <remarks>generic method to return an attribute of a parent object.</remarks>
 		/// <param name="parent">the parent object</param>
 		/// <returns>Object - the attribute</returns>
-		object attribute(object parent);
+		object Attribute(object parent);
 	}
 }

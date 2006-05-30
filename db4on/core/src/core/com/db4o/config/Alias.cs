@@ -64,6 +64,6 @@ namespace com.db4o.config
 	{
 		/// <summary>return the translated name or null if not handled.</summary>
 		/// <remarks>return the translated name or null if not handled.</remarks>
-		string resolve(string runtimeType);
+		string Resolve(string runtimeType);
 	}
 }

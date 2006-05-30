@@ -22,29 +22,29 @@ namespace com.db4o.inside.cluster
 			int size = 0;
 			for (int i = 0; i < queries.Length; i++)
 			{
-				_objectSets[i] = queries[i].execute();
-				_sizes[i] = _objectSets[i].size();
+				_objectSets[i] = queries[i].Execute();
+				_sizes[i] = _objectSets[i].Size();
 				size += _sizes[i];
 			}
 			_size = size;
 		}
 
-		public virtual bool hasNext()
+		public virtual bool HasNext()
 		{
 			lock (_cluster)
 			{
-				return hasNextNoSync();
+				return HasNextNoSync();
 			}
 		}
 
-		private com.db4o.ObjectSet current()
+		private com.db4o.ObjectSet Current()
 		{
 			return _objectSets[_current];
 		}
 
-		private bool hasNextNoSync()
+		private bool HasNextNoSync()
 		{
-			if (current().hasNext())
+			if (Current().HasNext())
 			{
 				return true;
 			}
@@ -53,43 +53,43 @@ namespace com.db4o.inside.cluster
 				return false;
 			}
 			_current++;
-			return hasNextNoSync();
+			return HasNextNoSync();
 		}
 
-		public virtual object next()
+		public virtual object Next()
 		{
 			lock (_cluster)
 			{
-				if (hasNextNoSync())
+				if (HasNextNoSync())
 				{
-					return current().next();
+					return Current().Next();
 				}
 				return null;
 			}
 		}
 
-		public virtual void reset()
+		public virtual void Reset()
 		{
 			lock (_cluster)
 			{
 				for (int i = 0; i < _objectSets.Length; i++)
 				{
-					_objectSets[i].reset();
+					_objectSets[i].Reset();
 				}
 				_current = 0;
 			}
 		}
 
-		public virtual int size()
+		public virtual int Size()
 		{
 			return _size;
 		}
 
-		public virtual object get(int index)
+		public virtual object Get(int index)
 		{
 			lock (_cluster)
 			{
-				if (index < 0 || index >= size())
+				if (index < 0 || index >= Size())
 				{
 					throw new System.IndexOutOfRangeException();
 				}
@@ -99,36 +99,36 @@ namespace com.db4o.inside.cluster
 					index -= _sizes[i];
 					i++;
 				}
-				return ((com.db4o.inside.query.ObjectSetFacade)_objectSets[i])._delegate.get(index
+				return ((com.db4o.inside.query.ObjectSetFacade)_objectSets[i])._delegate.Get(index
 					);
 			}
 		}
 
-		public virtual long[] getIDs()
+		public virtual long[] GetIDs()
 		{
-			com.db4o.inside.Exceptions4.notSupported();
+			com.db4o.inside.Exceptions4.NotSupported();
 			return null;
 		}
 
-		public virtual object streamLock()
+		public virtual object StreamLock()
 		{
 			return _cluster;
 		}
 
-		public virtual com.db4o.ObjectContainer objectContainer()
+		public virtual com.db4o.ObjectContainer ObjectContainer()
 		{
 			return _cluster._objectContainers[_current];
 		}
 
-		public virtual int indexOf(int id)
+		public virtual int IndexOf(int id)
 		{
-			com.db4o.inside.Exceptions4.notSupported();
+			com.db4o.inside.Exceptions4.NotSupported();
 			return 0;
 		}
 
-		public virtual void sort(com.db4o.query.QueryComparator cmp)
+		public virtual void Sort(com.db4o.query.QueryComparator cmp)
 		{
-			com.db4o.inside.Exceptions4.notSupported();
+			com.db4o.inside.Exceptions4.NotSupported();
 		}
 	}
 }

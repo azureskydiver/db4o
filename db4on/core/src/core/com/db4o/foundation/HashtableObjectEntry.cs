@@ -16,32 +16,35 @@ namespace com.db4o.foundation
 			i_objectKey = a_key;
 		}
 
-		private HashtableObjectEntry() : base()
+		protected HashtableObjectEntry() : base()
 		{
 		}
 
-		public override void acceptKeyVisitor(com.db4o.foundation.Visitor4 visitor)
+		public override void AcceptKeyVisitor(com.db4o.foundation.Visitor4 visitor)
 		{
-			visitor.visit(i_objectKey);
+			visitor.Visit(i_objectKey);
 		}
 
-		public override object deepClone(object obj)
+		public override object DeepClone(object obj)
 		{
-			com.db4o.foundation.HashtableObjectEntry ret = new com.db4o.foundation.HashtableObjectEntry
-				();
-			deepCloneInternal(ret, obj);
-			ret.i_objectKey = i_objectKey;
-			return ret;
+			return DeepCloneInternal(new com.db4o.foundation.HashtableObjectEntry(), obj);
 		}
 
-		public virtual bool hasKey(object key)
+		protected override com.db4o.foundation.HashtableIntEntry DeepCloneInternal(com.db4o.foundation.HashtableIntEntry
+			 entry, object obj)
+		{
+			((com.db4o.foundation.HashtableObjectEntry)entry).i_objectKey = i_objectKey;
+			return base.DeepCloneInternal(entry, obj);
+		}
+
+		public virtual bool HasKey(object key)
 		{
 			return i_objectKey.Equals(key);
 		}
 
-		public override bool sameKeyAs(com.db4o.foundation.HashtableIntEntry other)
+		public override bool SameKeyAs(com.db4o.foundation.HashtableIntEntry other)
 		{
-			return other is com.db4o.foundation.HashtableObjectEntry ? hasKey(((com.db4o.foundation.HashtableObjectEntry
+			return other is com.db4o.foundation.HashtableObjectEntry ? HasKey(((com.db4o.foundation.HashtableObjectEntry
 				)other).i_objectKey) : false;
 		}
 	}

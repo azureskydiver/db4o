@@ -2,20 +2,20 @@ namespace com.db4o
 {
 	internal sealed class MSetSemaphore : com.db4o.MsgD
 	{
-		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal sealed override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
-			int timeout = readInt();
-			string name = readString();
-			com.db4o.YapFile stream = (com.db4o.YapFile)getStream();
-			bool res = stream.setSemaphore(getTransaction(), name, timeout);
+			int timeout = ReadInt();
+			string name = ReadString();
+			com.db4o.YapFile stream = (com.db4o.YapFile)GetStream();
+			bool res = stream.SetSemaphore(GetTransaction(), name, timeout);
 			if (res)
 			{
-				com.db4o.Msg.SUCCESS.write(stream, sock);
+				com.db4o.Msg.SUCCESS.Write(stream, sock);
 			}
 			else
 			{
-				com.db4o.Msg.FAILED.write(stream, sock);
+				com.db4o.Msg.FAILED.Write(stream, sock);
 			}
 			return true;
 		}

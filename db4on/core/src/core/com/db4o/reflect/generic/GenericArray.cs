@@ -13,7 +13,7 @@ namespace com.db4o.reflect.generic
 			_data = new object[size];
 		}
 
-		internal virtual int getLength()
+		internal virtual int GetLength()
 		{
 			return _data.Length;
 		}

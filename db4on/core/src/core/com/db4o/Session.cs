@@ -14,7 +14,7 @@ namespace com.db4o
 		}
 
 		/// <summary>returns true, if session is to be closed completely</summary>
-		internal bool closeInstance()
+		internal bool CloseInstance()
 		{
 			i_openCount--;
 			return i_openCount < 0;
@@ -25,14 +25,14 @@ namespace com.db4o
 			return i_fileName.Equals(((com.db4o.Session)a_object).i_fileName);
 		}
 
-		internal string fileName()
+		internal string FileName()
 		{
 			return i_fileName;
 		}
 
-		internal com.db4o.YapStream subSequentOpen()
+		internal com.db4o.YapStream SubSequentOpen()
 		{
-			if (i_stream.isClosed())
+			if (i_stream.IsClosed())
 			{
 				return null;
 			}

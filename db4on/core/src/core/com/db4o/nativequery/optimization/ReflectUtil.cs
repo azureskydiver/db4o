@@ -2,7 +2,7 @@ namespace com.db4o.nativequery.optimization
 {
 	public class ReflectUtil
 	{
-		public static j4o.lang.reflect.Method methodFor(j4o.lang.Class clazz, string methodName
+		public static j4o.lang.reflect.Method MethodFor(j4o.lang.Class clazz, string methodName
 			, j4o.lang.Class[] paramTypes)
 		{
 			j4o.lang.Class curclazz = clazz;
@@ -10,34 +10,34 @@ namespace com.db4o.nativequery.optimization
 			{
 				try
 				{
-					j4o.lang.reflect.Method method = curclazz.getDeclaredMethod(methodName, paramTypes
+					j4o.lang.reflect.Method method = curclazz.GetDeclaredMethod(methodName, paramTypes
 						);
-					com.db4o.Platform4.setAccessible(method);
+					com.db4o.Platform4.SetAccessible(method);
 					return method;
 				}
 				catch (System.Exception e)
 				{
 				}
-				curclazz = curclazz.getSuperclass();
+				curclazz = curclazz.GetSuperclass();
 			}
 			return null;
 		}
 
-		public static j4o.lang.reflect.Field fieldFor(j4o.lang.Class clazz, string name)
+		public static j4o.lang.reflect.Field FieldFor(j4o.lang.Class clazz, string name)
 		{
 			j4o.lang.Class curclazz = clazz;
 			while (curclazz != null)
 			{
 				try
 				{
-					j4o.lang.reflect.Field field = curclazz.getDeclaredField(name);
-					com.db4o.Platform4.setAccessible(field);
+					j4o.lang.reflect.Field field = curclazz.GetDeclaredField(name);
+					com.db4o.Platform4.SetAccessible(field);
 					return field;
 				}
 				catch (System.Exception e)
 				{
 				}
-				curclazz = curclazz.getSuperclass();
+				curclazz = curclazz.GetSuperclass();
 			}
 			return null;
 		}

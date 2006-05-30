@@ -6,10 +6,10 @@ namespace com.db4o.config
 	/// All methods should be called before opening database files.
 	/// If db4o is instructed to exchange the system
 	/// (
-	/// <see cref="com.db4o.config.FreespaceConfiguration.useIndexSystem">com.db4o.config.FreespaceConfiguration.useIndexSystem
+	/// <see cref="com.db4o.config.FreespaceConfiguration.UseIndexSystem">com.db4o.config.FreespaceConfiguration.UseIndexSystem
 	/// 	</see>
 	/// ,
-	/// <see cref="com.db4o.config.FreespaceConfiguration.useRamSystem">com.db4o.config.FreespaceConfiguration.useRamSystem
+	/// <see cref="com.db4o.config.FreespaceConfiguration.UseRamSystem">com.db4o.config.FreespaceConfiguration.UseRamSystem
 	/// 	</see>
 	/// )
 	/// this will happen on opening the database file.<br /><br />
@@ -37,7 +37,7 @@ namespace com.db4o.config
 		/// <code>0</code> all space is reused
 		/// </remarks>
 		/// <param name="byteCount">Slots with this size or smaller will be lost.</param>
-		void discardSmallerThan(int byteCount);
+		void DiscardSmallerThan(int byteCount);
 
 		/// <summary>configures db4o to use an index-based freespace system.</summary>
 		/// <remarks>
@@ -49,7 +49,7 @@ namespace com.db4o.config
 		/// - slower than the RAM-based system, since freespace information
 		/// is written during every commit<br />
 		/// </remarks>
-		void useIndexSystem();
+		void UseIndexSystem();
 
 		/// <summary>configures db4o to use a RAM-based freespace system.</summary>
 		/// <remarks>
@@ -60,6 +60,6 @@ namespace com.db4o.config
 		/// - upon abnormal system termination all freespace is lost<br />
 		/// - memory consumption<br />
 		/// </remarks>
-		void useRamSystem();
+		void UseRamSystem();
 	}
 }

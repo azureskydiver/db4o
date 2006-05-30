@@ -4,7 +4,7 @@ namespace com.db4o
 	{
 		private int id = 0;
 
-		internal virtual int next()
+		internal virtual int Next()
 		{
 			id++;
 			if (id > 0)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using j4o.lang;
@@ -9,24 +9,24 @@ namespace com.db4o.config {
 	/// <exclude />
     public class TType : ObjectConstructor {
 		
-		static readonly Class _stringClass = Class.getClassForType(typeof(String));
+		static readonly Class _stringClass = Class.GetClassForType(typeof(String));
       
-        public void onActivate(ObjectContainer objectContainer, object obj, object members) {
+        public void OnActivate(ObjectContainer objectContainer, object obj, object members) {
         }
       
-        public Object onInstantiate(ObjectContainer objectContainer, object obj) {
+        public Object OnInstantiate(ObjectContainer objectContainer, object obj) {
             try { 
-                return Class.forName((String)obj).getNetType();
+                return Class.ForName((String)obj).GetNetType();
             }  catch (Exception exception) { 
                 return null;
             }
         }
       
-        public Object onStore(ObjectContainer objectContainer, object obj) {
-            return Class.getClassForType((System.Type)obj).getName(); 
+        public Object OnStore(ObjectContainer objectContainer, object obj) {
+            return Class.GetClassForType((System.Type)obj).GetName(); 
         }
       
-        public Class storedClass() {
+        public Class StoredClass() {
             return _stringClass;
         }
     }

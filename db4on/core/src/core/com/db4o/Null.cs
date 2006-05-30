@@ -6,13 +6,13 @@ namespace com.db4o
 		public static readonly com.db4o.inside.ix.Indexable4 INSTANCE = new com.db4o.Null
 			();
 
-		public virtual object comparableObject(com.db4o.Transaction trans, object indexEntry
+		public virtual object ComparableObject(com.db4o.Transaction trans, object indexEntry
 			)
 		{
 			return null;
 		}
 
-		public virtual int compareTo(object a_obj)
+		public virtual int CompareTo(object a_obj)
 		{
 			if (a_obj == null)
 			{
@@ -21,7 +21,7 @@ namespace com.db4o
 			return -1;
 		}
 
-		public virtual object current()
+		public virtual object Current()
 		{
 			return null;
 		}
@@ -31,37 +31,37 @@ namespace com.db4o
 			return obj == null;
 		}
 
-		public virtual bool isEqual(object obj)
+		public virtual bool IsEqual(object obj)
 		{
 			return obj == null;
 		}
 
-		public virtual bool isGreater(object obj)
+		public virtual bool IsGreater(object obj)
 		{
 			return false;
 		}
 
-		public virtual bool isSmaller(object obj)
+		public virtual bool IsSmaller(object obj)
 		{
 			return false;
 		}
 
-		public virtual int linkLength()
+		public virtual int LinkLength()
 		{
 			return 0;
 		}
 
-		public virtual com.db4o.YapComparable prepareComparison(object obj)
+		public virtual com.db4o.YapComparable PrepareComparison(object obj)
 		{
 			return this;
 		}
 
-		public virtual object readIndexEntry(com.db4o.YapReader a_reader)
+		public virtual object ReadIndexEntry(com.db4o.YapReader a_reader)
 		{
 			return null;
 		}
 
-		public virtual void writeIndexEntry(com.db4o.YapReader a_writer, object a_object)
+		public virtual void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object)
 		{
 		}
 	}

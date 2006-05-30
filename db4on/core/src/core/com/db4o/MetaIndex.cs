@@ -21,30 +21,30 @@ namespace com.db4o
 
 		public int patchLength;
 
-		public virtual void read(com.db4o.YapReader reader)
+		public virtual void Read(com.db4o.YapReader reader)
 		{
-			indexAddress = reader.readInt();
-			indexEntries = reader.readInt();
-			indexLength = reader.readInt();
-			patchAddress = reader.readInt();
-			patchEntries = reader.readInt();
-			patchLength = reader.readInt();
+			indexAddress = reader.ReadInt();
+			indexEntries = reader.ReadInt();
+			indexLength = reader.ReadInt();
+			patchAddress = reader.ReadInt();
+			patchEntries = reader.ReadInt();
+			patchLength = reader.ReadInt();
 		}
 
-		public virtual void write(com.db4o.YapWriter writer)
+		public virtual void Write(com.db4o.YapWriter writer)
 		{
-			writer.writeInt(indexAddress);
-			writer.writeInt(indexEntries);
-			writer.writeInt(indexLength);
-			writer.writeInt(patchAddress);
-			writer.writeInt(patchEntries);
-			writer.writeInt(patchLength);
+			writer.WriteInt(indexAddress);
+			writer.WriteInt(indexEntries);
+			writer.WriteInt(indexLength);
+			writer.WriteInt(patchAddress);
+			writer.WriteInt(patchEntries);
+			writer.WriteInt(patchLength);
 		}
 
-		public virtual void free(com.db4o.YapFile file)
+		public virtual void Free(com.db4o.YapFile file)
 		{
-			file.free(indexAddress, indexLength);
-			file.free(patchAddress, patchLength);
+			file.Free(indexAddress, indexLength);
+			file.Free(patchAddress, patchLength);
 			indexAddress = 0;
 			indexLength = 0;
 			patchAddress = 0;

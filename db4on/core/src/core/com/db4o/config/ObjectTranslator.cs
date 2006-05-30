@@ -21,25 +21,25 @@ namespace com.db4o.config
 		/// <param name="applicationObject">the Object to be translated</param>
 		/// <returns>
 		/// return the object to store.<br />It needs to be of the class
-		/// <see cref="com.db4o.config.ObjectTranslator.storedClass">storedClass()</see>
+		/// <see cref="com.db4o.config.ObjectTranslator.StoredClass">storedClass()</see>
 		/// .
 		/// </returns>
-		object onStore(com.db4o.ObjectContainer container, object applicationObject);
+		object OnStore(com.db4o.ObjectContainer container, object applicationObject);
 
 		/// <summary>db4o calls this method during activation.</summary>
 		/// <remarks>db4o calls this method during activation.</remarks>
 		/// <param name="container">the ObjectContainer used</param>
 		/// <param name="applicationObject">the object to set the members on</param>
 		/// <param name="storedObject">the object that was stored</param>
-		void onActivate(com.db4o.ObjectContainer container, object applicationObject, object
+		void OnActivate(com.db4o.ObjectContainer container, object applicationObject, object
 			 storedObject);
 
 		/// <summary>return the Class you are converting to.</summary>
 		/// <remarks>return the Class you are converting to.</remarks>
 		/// <returns>
 		/// the Class of the object you are returning with the method
-		/// <see cref="com.db4o.config.ObjectTranslator.onStore">onStore()</see>
+		/// <see cref="com.db4o.config.ObjectTranslator.OnStore">onStore()</see>
 		/// </returns>
-		j4o.lang.Class storedClass();
+		j4o.lang.Class StoredClass();
 	}
 }

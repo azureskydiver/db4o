@@ -8,14 +8,14 @@ namespace com.db4o.inside.freespace
 
 		private bool _visited;
 
-		public virtual void visit(int key, int value)
+		public virtual void Visit(int key, int value)
 		{
 			_key = key;
 			_value = value;
 			_visited = true;
 		}
 
-		public virtual bool visited()
+		public virtual bool Visited()
 		{
 			return _visited;
 		}

@@ -2,10 +2,10 @@ namespace com.db4o
 {
 	internal interface Orderable
 	{
-		int compareTo(object obj);
+		int CompareTo(object obj);
 
-		void hintOrder(int a_order, bool a_major);
+		void HintOrder(int a_order, bool a_major);
 
-		bool hasDuplicates();
+		bool HasDuplicates();
 	}
 }

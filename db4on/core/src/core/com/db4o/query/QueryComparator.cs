@@ -17,6 +17,6 @@ namespace com.db4o.query
 		/// the first argument is smaller, equal or greater than
 		/// the second.
 		/// </remarks>
-		int compare(object first, object second);
+		int Compare(object first, object second);
 	}
 }

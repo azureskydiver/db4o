@@ -6,7 +6,7 @@ namespace com.db4o.replication
 	/// 	</see>
 	/// upon
 	/// replication conflicts. Conflicts occur whenever
-	/// <see cref="com.db4o.replication.ReplicationProcess.replicate">com.db4o.replication.ReplicationProcess.replicate
+	/// <see cref="com.db4o.replication.ReplicationProcess.Replicate">com.db4o.replication.ReplicationProcess.Replicate
 	/// 	</see>
 	/// is called with an object that
 	/// was modified in both ObjectContainers since the last replication run between
@@ -32,15 +32,15 @@ namespace com.db4o.replication
 		/// the object (a or b) that should prevail in the conflict or null,
 		/// if no action is to be taken. If this would violate the direction
 		/// set with
-		/// <see cref="com.db4o.replication.ReplicationProcess.setDirection">com.db4o.replication.ReplicationProcess.setDirection
+		/// <see cref="com.db4o.replication.ReplicationProcess.SetDirection">com.db4o.replication.ReplicationProcess.SetDirection
 		/// 	</see>
 		/// no action will be taken.
 		/// </returns>
-		/// <seealso cref="com.db4o.replication.ReplicationProcess.peerA">com.db4o.replication.ReplicationProcess.peerA
+		/// <seealso cref="com.db4o.replication.ReplicationProcess.PeerA">com.db4o.replication.ReplicationProcess.PeerA
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.replication.ReplicationProcess.peerB">com.db4o.replication.ReplicationProcess.peerB
+		/// <seealso cref="com.db4o.replication.ReplicationProcess.PeerB">com.db4o.replication.ReplicationProcess.PeerB
 		/// 	</seealso>
-		object resolveConflict(com.db4o.replication.ReplicationProcess replicationProcess
+		object ResolveConflict(com.db4o.replication.ReplicationProcess replicationProcess
 			, object a, object b);
 	}
 }

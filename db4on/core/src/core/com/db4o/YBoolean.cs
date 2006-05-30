@@ -16,34 +16,34 @@ namespace com.db4o
 		{
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 4;
 		}
 
-		public override object defaultValue()
+		public override object DefaultValue()
 		{
 			return i_primitive;
 		}
 
-		public override int linkLength()
+		public override int LinkLength()
 		{
 			return LENGTH;
 		}
 
-		protected override j4o.lang.Class primitiveJavaClass()
+		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.getClassForType(typeof(bool));
+			return j4o.lang.Class.GetClassForType(typeof(bool));
 		}
 
-		internal override object primitiveNull()
+		internal override object PrimitiveNull()
 		{
 			return i_primitive;
 		}
 
-		internal override object read1(com.db4o.YapReader a_bytes)
+		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			byte ret = a_bytes.readByte();
+			byte ret = a_bytes.ReadByte();
 			if (ret == TRUE)
 			{
 				return true;
@@ -55,65 +55,58 @@ namespace com.db4o
 			return null;
 		}
 
-		public override void write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
 			byte set;
-			if (a_object == null)
+			if (((bool)a_object))
 			{
-				set = NULL;
+				set = TRUE;
 			}
 			else
 			{
-				if (((bool)a_object))
-				{
-					set = TRUE;
-				}
-				else
-				{
-					set = FALSE;
-				}
+				set = FALSE;
 			}
-			a_bytes.append(set);
+			a_bytes.Append(set);
 		}
 
 		private bool i_compareTo;
 
-		private bool val(object obj)
+		private bool Val(object obj)
 		{
 			return ((bool)obj);
 		}
 
-		internal override void prepareComparison1(object obj)
+		internal override void PrepareComparison1(object obj)
 		{
-			i_compareTo = val(obj);
+			i_compareTo = Val(obj);
 		}
 
-		public override object current1()
+		public override object Current1()
 		{
 			return i_compareTo;
 		}
 
-		internal override bool isEqual1(object obj)
+		internal override bool IsEqual1(object obj)
 		{
-			return obj is bool && val(obj) == i_compareTo;
+			return obj is bool && Val(obj) == i_compareTo;
 		}
 
-		internal override bool isGreater1(object obj)
+		internal override bool IsGreater1(object obj)
 		{
 			if (i_compareTo)
 			{
 				return false;
 			}
-			return obj is bool && val(obj);
+			return obj is bool && Val(obj);
 		}
 
-		internal override bool isSmaller1(object obj)
+		internal override bool IsSmaller1(object obj)
 		{
 			if (!i_compareTo)
 			{
 				return false;
 			}
-			return obj is bool && !val(obj);
+			return obj is bool && !Val(obj);
 		}
 	}
 }

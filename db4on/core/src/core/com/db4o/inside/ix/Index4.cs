@@ -25,10 +25,10 @@ namespace com.db4o.inside.ix
 			_globalIndexTransaction = new com.db4o.inside.ix.IndexTransaction(systemTrans, this
 				);
 			_nullHandling = nullHandling;
-			createGlobalFileRange();
+			CreateGlobalFileRange();
 		}
 
-		public virtual com.db4o.inside.ix.IndexTransaction dirtyIndexTransaction(com.db4o.Transaction
+		public virtual com.db4o.inside.ix.IndexTransaction DirtyIndexTransaction(com.db4o.Transaction
 			 a_trans)
 		{
 			com.db4o.inside.ix.IndexTransaction ift = new com.db4o.inside.ix.IndexTransaction
@@ -40,32 +40,32 @@ namespace com.db4o.inside.ix
 			else
 			{
 				com.db4o.inside.ix.IndexTransaction iftExisting = (com.db4o.inside.ix.IndexTransaction
-					)_indexTransactions.get(ift);
+					)_indexTransactions.Get(ift);
 				if (iftExisting != null)
 				{
 					return iftExisting;
 				}
 			}
-			a_trans.addDirtyFieldIndex(ift);
-			ift.setRoot(com.db4o.Tree.deepClone(_globalIndexTransaction.getRoot(), ift));
+			a_trans.AddDirtyFieldIndex(ift);
+			ift.SetRoot(com.db4o.Tree.DeepClone(_globalIndexTransaction.GetRoot(), ift));
 			ift.i_version = ++_version;
-			_indexTransactions.add(ift);
+			_indexTransactions.Add(ift);
 			return ift;
 		}
 
-		public virtual com.db4o.inside.ix.IndexTransaction globalIndexTransaction()
+		public virtual com.db4o.inside.ix.IndexTransaction GlobalIndexTransaction()
 		{
 			return _globalIndexTransaction;
 		}
 
-		public virtual com.db4o.inside.ix.IndexTransaction indexTransactionFor(com.db4o.Transaction
+		public virtual com.db4o.inside.ix.IndexTransaction IndexTransactionFor(com.db4o.Transaction
 			 a_trans)
 		{
 			if (_indexTransactions != null)
 			{
 				com.db4o.inside.ix.IndexTransaction ift = new com.db4o.inside.ix.IndexTransaction
 					(a_trans, this);
-				ift = (com.db4o.inside.ix.IndexTransaction)_indexTransactions.get(ift);
+				ift = (com.db4o.inside.ix.IndexTransaction)_indexTransactions.Get(ift);
 				if (ift != null)
 				{
 					return ift;
@@ -74,18 +74,18 @@ namespace com.db4o.inside.ix
 			return _globalIndexTransaction;
 		}
 
-		private int[] freeForMetaIndex()
+		private int[] FreeForMetaIndex()
 		{
 			return new int[] { _metaIndex.indexAddress, _metaIndex.indexLength, _metaIndex.patchAddress
 				, _metaIndex.patchLength };
 		}
 
-		private void doFree(int[] addressLength)
+		private void DoFree(int[] addressLength)
 		{
-			com.db4o.YapFile yf = file();
+			com.db4o.YapFile yf = File();
 			for (int i = 0; i < addressLength.Length; i += 2)
 			{
-				yf.free(addressLength[i], addressLength[i + 1]);
+				yf.Free(addressLength[i], addressLength[i + 1]);
 			}
 		}
 
@@ -99,41 +99,41 @@ namespace com.db4o.inside.ix
 		/// so we have to do this all sequentially in the right way, working
 		/// with with both indexes at the same time.
 		/// </remarks>
-		public virtual void commitFreeSpace(com.db4o.inside.ix.Index4 other)
+		public virtual void CommitFreeSpace(com.db4o.inside.ix.Index4 other)
 		{
-			int entries = countEntries();
-			int length = (entries + 4) * lengthPerEntry();
-			int mySlot = getSlot(length);
-			int otherSlot = getSlot(length);
-			doFree(freeForMetaIndex());
-			doFree(other.freeForMetaIndex());
-			entries = writeToNewSlot(mySlot, length);
-			metaIndexSetMembers(entries, length, mySlot);
-			createGlobalFileRange();
-			int otherEntries = other.writeToNewSlot(otherSlot, length);
-			other.metaIndexSetMembers(entries, length, otherSlot);
-			other.createGlobalFileRange();
+			int entries = CountEntries();
+			int length = (entries + 4) * LengthPerEntry();
+			int mySlot = GetSlot(length);
+			int otherSlot = GetSlot(length);
+			DoFree(FreeForMetaIndex());
+			DoFree(other.FreeForMetaIndex());
+			entries = WriteToNewSlot(mySlot, length);
+			MetaIndexSetMembers(entries, length, mySlot);
+			CreateGlobalFileRange();
+			int otherEntries = other.WriteToNewSlot(otherSlot, length);
+			other.MetaIndexSetMembers(entries, length, otherSlot);
+			other.CreateGlobalFileRange();
 		}
 
-		private int lengthPerEntry()
+		private int LengthPerEntry()
 		{
-			return _handler.linkLength() + com.db4o.YapConst.YAPINT_LENGTH;
+			return _handler.LinkLength() + com.db4o.YapConst.YAPINT_LENGTH;
 		}
 
-		private void free()
+		private void Free()
 		{
-			file().free(_metaIndex.indexAddress, _metaIndex.indexLength);
-			file().free(_metaIndex.patchAddress, _metaIndex.indexLength);
+			File().Free(_metaIndex.indexAddress, _metaIndex.indexLength);
+			File().Free(_metaIndex.patchAddress, _metaIndex.indexLength);
 		}
 
-		private void metaIndexStore(int entries, int length, int address)
+		private void MetaIndexStore(int entries, int length, int address)
 		{
-			com.db4o.Transaction transact = trans();
-			metaIndexSetMembers(entries, length, address);
-			transact.i_stream.setInternal(transact, _metaIndex, 1, false);
+			com.db4o.Transaction transact = Trans();
+			MetaIndexSetMembers(entries, length, address);
+			transact.i_stream.SetInternal(transact, _metaIndex, 1, false);
 		}
 
-		private void metaIndexSetMembers(int entries, int length, int address)
+		private void MetaIndexSetMembers(int entries, int length, int address)
 		{
 			_metaIndex.indexEntries = entries;
 			_metaIndex.indexLength = length;
@@ -143,15 +143,15 @@ namespace com.db4o.inside.ix
 			_metaIndex.patchLength = 0;
 		}
 
-		private int writeToNewSlot(int slot, int length)
+		private int WriteToNewSlot(int slot, int length)
 		{
-			com.db4o.Tree root = getRoot();
-			com.db4o.YapWriter writer = new com.db4o.YapWriter(trans(), slot, lengthPerEntry(
+			com.db4o.Tree root = GetRoot();
+			com.db4o.YapWriter writer = new com.db4o.YapWriter(Trans(), slot, LengthPerEntry(
 				));
 			int[] entries = new int[] { 0 };
 			if (root != null)
 			{
-				root.traverse(new _AnonymousInnerClass175(this, entries, writer));
+				root.Traverse(new _AnonymousInnerClass175(this, entries, writer));
 			}
 			return entries[0];
 		}
@@ -166,9 +166,9 @@ namespace com.db4o.inside.ix
 				this.writer = writer;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				entries[0] += ((com.db4o.inside.ix.IxTree)a_object).write(this._enclosing._handler
+				entries[0] += ((com.db4o.inside.ix.IxTree)a_object).Write(this._enclosing._handler
 					, writer);
 			}
 
@@ -179,45 +179,45 @@ namespace com.db4o.inside.ix
 			private readonly com.db4o.YapWriter writer;
 		}
 
-		internal virtual void commit(com.db4o.inside.ix.IndexTransaction ixTrans)
+		internal virtual void Commit(com.db4o.inside.ix.IndexTransaction ixTrans)
 		{
-			_indexTransactions.remove(ixTrans);
-			_globalIndexTransaction.merge(ixTrans);
+			_indexTransactions.Remove(ixTrans);
+			_globalIndexTransaction.Merge(ixTrans);
 			bool createNewFileRange = true;
 			if (createNewFileRange)
 			{
-				int entries = countEntries();
-				int length = countEntries() * lengthPerEntry();
-				int slot = getSlot(length);
-				int[] free = freeForMetaIndex();
-				metaIndexStore(entries, length, slot);
-				writeToNewSlot(slot, length);
-				com.db4o.inside.ix.IxFileRange newFileRange = createGlobalFileRange();
+				int entries = CountEntries();
+				int length = CountEntries() * LengthPerEntry();
+				int slot = GetSlot(length);
+				int[] free = FreeForMetaIndex();
+				MetaIndexStore(entries, length, slot);
+				WriteToNewSlot(slot, length);
+				com.db4o.inside.ix.IxFileRange newFileRange = CreateGlobalFileRange();
 				if (_indexTransactions != null)
 				{
-					com.db4o.foundation.Iterator4 i = _indexTransactions.iterator();
-					while (i.hasNext())
+					com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
+					while (i.HasNext())
 					{
-						com.db4o.inside.ix.IndexTransaction ft = (com.db4o.inside.ix.IndexTransaction)i.next
+						com.db4o.inside.ix.IndexTransaction ft = (com.db4o.inside.ix.IndexTransaction)i.Next
 							();
 						com.db4o.Tree clonedTree = newFileRange;
 						if (clonedTree != null)
 						{
-							clonedTree = clonedTree.deepClone(ft);
+							clonedTree = clonedTree.DeepClone(ft);
 						}
 						com.db4o.Tree[] tree = { clonedTree };
-						ft.getRoot().traverseFromLeaves((new _AnonymousInnerClass223(this, ft, tree)));
-						ft.setRoot(tree[0]);
+						ft.GetRoot().TraverseFromLeaves((new _AnonymousInnerClass223(this, ft, tree)));
+						ft.SetRoot(tree[0]);
 					}
 				}
-				doFree(free);
+				DoFree(free);
 			}
 			else
 			{
-				com.db4o.foundation.Iterator4 i = _indexTransactions.iterator();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
+				while (i.HasNext())
 				{
-					((com.db4o.inside.ix.IndexTransaction)i.next()).merge(ixTrans);
+					((com.db4o.inside.ix.IndexTransaction)i.Next()).Merge(ixTrans);
 				}
 			}
 		}
@@ -232,15 +232,15 @@ namespace com.db4o.inside.ix
 				this.tree = tree;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)a_object;
 				if (ixTree._version == ft.i_version)
 				{
 					if (!(ixTree is com.db4o.inside.ix.IxFileRange))
 					{
-						ixTree.beginMerge();
-						tree[0] = com.db4o.Tree.add(tree[0], ixTree);
+						ixTree.BeginMerge();
+						tree[0] = com.db4o.Tree.Add(tree[0], ixTree);
 					}
 				}
 			}
@@ -252,7 +252,7 @@ namespace com.db4o.inside.ix
 			private readonly com.db4o.Tree[] tree;
 		}
 
-		private com.db4o.inside.ix.IxFileRange createGlobalFileRange()
+		private com.db4o.inside.ix.IxFileRange CreateGlobalFileRange()
 		{
 			com.db4o.inside.ix.IxFileRange fr = null;
 			if (_metaIndex.indexEntries > 0)
@@ -260,16 +260,16 @@ namespace com.db4o.inside.ix
 				fr = new com.db4o.inside.ix.IxFileRange(_globalIndexTransaction, _metaIndex.indexAddress
 					, 0, _metaIndex.indexEntries);
 			}
-			_globalIndexTransaction.setRoot(fr);
+			_globalIndexTransaction.SetRoot(fr);
 			return fr;
 		}
 
-		internal virtual void rollback(com.db4o.inside.ix.IndexTransaction a_ft)
+		internal virtual void Rollback(com.db4o.inside.ix.IndexTransaction a_ft)
 		{
-			_indexTransactions.remove(a_ft);
+			_indexTransactions.Remove(a_ft);
 		}
 
-		internal virtual com.db4o.inside.ix.IxFileRangeReader fileRangeReader()
+		internal virtual com.db4o.inside.ix.IxFileRangeReader FileRangeReader()
 		{
 			if (_fileRangeReader == null)
 			{
@@ -282,52 +282,52 @@ namespace com.db4o.inside.ix
 		{
 			return base.ToString();
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
-			sb.append("IxField  " + j4o.lang.JavaSystem.identityHashCode(this));
+			sb.Append("IxField  " + j4o.lang.JavaSystem.IdentityHashCode(this));
 			if (_globalIndexTransaction != null)
 			{
-				sb.append("\n  Global \n   ");
-				sb.append(_globalIndexTransaction.ToString());
+				sb.Append("\n  Global \n   ");
+				sb.Append(_globalIndexTransaction.ToString());
 			}
 			else
 			{
-				sb.append("\n  no global index \n   ");
+				sb.Append("\n  no global index \n   ");
 			}
 			if (_indexTransactions != null)
 			{
-				com.db4o.foundation.Iterator4 i = _indexTransactions.iterator();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
+				while (i.HasNext())
 				{
-					sb.append("\n");
-					sb.append(i.next().ToString());
+					sb.Append("\n");
+					sb.Append(i.Next().ToString());
 				}
 			}
 			return sb.ToString();
 		}
 
-		private com.db4o.Transaction trans()
+		private com.db4o.Transaction Trans()
 		{
 			return _globalIndexTransaction.i_trans;
 		}
 
-		private com.db4o.YapFile file()
+		private com.db4o.YapFile File()
 		{
-			return trans().i_file;
+			return Trans().i_file;
 		}
 
-		private int getSlot(int length)
+		private int GetSlot(int length)
 		{
-			return file().getSlot(length);
+			return File().GetSlot(length);
 		}
 
-		private com.db4o.Tree getRoot()
+		private com.db4o.Tree GetRoot()
 		{
-			return _globalIndexTransaction.getRoot();
+			return _globalIndexTransaction.GetRoot();
 		}
 
-		private int countEntries()
+		private int CountEntries()
 		{
-			com.db4o.Tree root = getRoot();
-			return root == null ? 0 : root.size();
+			com.db4o.Tree root = GetRoot();
+			return root == null ? 0 : root.Size();
 		}
 	}
 }

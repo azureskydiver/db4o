@@ -3,6 +3,6 @@ namespace com.db4o.foundation
 	/// <exclude></exclude>
 	public interface ShallowClone
 	{
-		object shallowClone();
+		object ShallowClone();
 	}
 }

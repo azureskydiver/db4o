@@ -2,22 +2,22 @@ namespace com.db4o.foundation.network
 {
 	public interface YapSocket
 	{
-		void close();
+		void Close();
 
-		void flush();
+		void Flush();
 
-		int read();
+		int Read();
 
-		int read(byte[] a_bytes, int a_offset, int a_length);
+		int Read(byte[] a_bytes, int a_offset, int a_length);
 
-		void setSoTimeout(int timeout);
+		void SetSoTimeout(int timeout);
 
-		void write(byte[] bytes);
+		void Write(byte[] bytes);
 
-		void write(byte[] bytes, int off, int len);
+		void Write(byte[] bytes, int off, int len);
 
-		void write(int i);
+		void Write(int i);
 
-		com.db4o.foundation.network.YapSocket openParalellSocket();
+		com.db4o.foundation.network.YapSocket OpenParalellSocket();
 	}
 }

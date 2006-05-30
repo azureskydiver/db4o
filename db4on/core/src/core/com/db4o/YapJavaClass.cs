@@ -16,112 +16,137 @@ namespace com.db4o
 
 		private bool i_compareToIsNull;
 
-		public virtual void appendEmbedded3(com.db4o.YapWriter a_bytes)
+		public virtual void AppendEmbedded3(com.db4o.YapWriter a_bytes)
 		{
-			a_bytes.incrementOffset(linkLength());
+			a_bytes.IncrementOffset(LinkLength());
 		}
 
-		public virtual bool canHold(com.db4o.reflect.ReflectClass claxx)
+		public virtual bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
-			return claxx.Equals(classReflector());
+			return claxx.Equals(ClassReflector());
 		}
 
-		public virtual void cascadeActivation(com.db4o.Transaction a_trans, object a_object
+		public virtual void CascadeActivation(com.db4o.Transaction a_trans, object a_object
 			, int a_depth, bool a_activate)
 		{
 		}
 
-		public virtual object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		public virtual object Coerce(com.db4o.reflect.ReflectClass claxx, object obj)
 		{
-			return canHold(claxx) ? obj : com.db4o.foundation.No4.INSTANCE;
+			return CanHold(claxx) ? obj : com.db4o.foundation.No4.INSTANCE;
 		}
 
-		public virtual void copyValue(object a_from, object a_to)
-		{
-		}
-
-		public abstract object defaultValue();
-
-		public virtual void deleteEmbedded(com.db4o.YapWriter a_bytes)
-		{
-			a_bytes.incrementOffset(linkLength());
-		}
-
-		public virtual bool equals(com.db4o.TypeHandler4 a_dataType)
-		{
-			return (this == a_dataType);
-		}
-
-		public virtual int getType()
-		{
-			return com.db4o.YapConst.TYPE_SIMPLE;
-		}
-
-		public virtual com.db4o.YapClass getYapClass(com.db4o.YapStream a_stream)
-		{
-			return a_stream.i_handlers.i_yapClasses[getID() - 1];
-		}
-
-		public virtual object indexEntry(object a_object)
-		{
-			return a_object;
-		}
-
-		public virtual bool indexNullHandling()
-		{
-			return false;
-		}
-
-		public virtual object comparableObject(com.db4o.Transaction a_trans, object a_object
+		public virtual object ComparableObject(com.db4o.Transaction a_trans, object a_object
 			)
 		{
 			return a_object;
 		}
 
-		public virtual void prepareLastIoComparison(com.db4o.Transaction a_trans, object 
-			obj)
+		public virtual void CopyValue(object a_from, object a_to)
 		{
-			prepareComparison(obj);
 		}
 
-		protected abstract j4o.lang.Class primitiveJavaClass();
+		public abstract object DefaultValue();
 
-		internal abstract object primitiveNull();
+		public virtual void DeleteEmbedded(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapWriter a_bytes)
+		{
+			a_bytes.IncrementOffset(LinkLength());
+		}
 
-		public virtual bool readArray(object array, com.db4o.YapWriter reader)
+		public virtual bool Equals(com.db4o.TypeHandler4 a_dataType)
+		{
+			return (this == a_dataType);
+		}
+
+		public virtual int GetTypeID()
+		{
+			return com.db4o.YapConst.TYPE_SIMPLE;
+		}
+
+		public virtual com.db4o.YapClass GetYapClass(com.db4o.YapStream a_stream)
+		{
+			return a_stream.i_handlers.i_yapClasses[GetID() - 1];
+		}
+
+		public virtual bool HasFixedLength()
+		{
+			return true;
+		}
+
+		public virtual bool IndexNullHandling()
 		{
 			return false;
 		}
 
-		public virtual com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
-			, com.db4o.YapReader[] a_bytes)
+		public virtual int IsSecondClass()
+		{
+			return com.db4o.YapConst.YES;
+		}
+
+		public virtual void CalculateLengths(com.db4o.Transaction trans, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 header, bool topLevel, object obj, bool withIndirection)
+		{
+			if (topLevel)
+			{
+				header.AddBaseLength(LinkLength());
+			}
+			else
+			{
+				header.AddPayLoadLength(LinkLength());
+			}
+		}
+
+		public virtual void PrepareComparison(com.db4o.Transaction a_trans, object obj)
+		{
+			PrepareComparison(obj);
+		}
+
+		protected abstract j4o.lang.Class PrimitiveJavaClass();
+
+		internal abstract object PrimitiveNull();
+
+		public virtual bool ReadArray(object array, com.db4o.YapWriter reader)
+		{
+			return false;
+		}
+
+		public virtual com.db4o.TypeHandler4 ReadArrayHandler(com.db4o.Transaction a_trans
+			, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader[] a_bytes)
 		{
 			return null;
 		}
 
-		public virtual object readQuery(com.db4o.Transaction trans, com.db4o.YapReader reader
-			, bool toArray)
+		public virtual object ReadQuery(com.db4o.Transaction trans, com.db4o.inside.marshall.MarshallerFamily
+			 mf, bool withRedirection, com.db4o.YapReader reader, bool toArray)
 		{
-			return read1(reader);
+			return Read1(reader);
 		}
 
-		public virtual object read(com.db4o.YapWriter writer)
+		public virtual object Read(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
+			 writer, bool redirect)
 		{
-			return read1(writer);
+			return Read1(writer);
 		}
 
-		internal abstract object read1(com.db4o.YapReader reader);
+		internal abstract object Read1(com.db4o.YapReader reader);
 
-		public virtual void readCandidates(com.db4o.YapReader a_bytes, com.db4o.QCandidates
-			 a_candidates)
+		public virtual void ReadCandidates(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapReader a_bytes, com.db4o.QCandidates a_candidates)
 		{
 		}
 
-		public virtual object readIndexEntry(com.db4o.YapReader a_reader)
+		public virtual com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily
+			 mf, com.db4o.YapReader reader, com.db4o.QCandidates candidates, bool withIndirection
+			)
 		{
 			try
 			{
-				return read1(a_reader);
+				object obj = ReadQuery(candidates.i_trans, mf, withIndirection, reader, true);
+				if (obj != null)
+				{
+					return new com.db4o.QCandidate(candidates, obj, 0, true);
+				}
 			}
 			catch (com.db4o.CorruptionException e)
 			{
@@ -129,61 +154,79 @@ namespace com.db4o
 			return null;
 		}
 
-		public virtual object readIndexValueOrID(com.db4o.YapWriter a_writer)
+		public virtual object ReadIndexEntry(com.db4o.YapReader a_reader)
 		{
-			return read(a_writer);
+			try
+			{
+				return Read1(a_reader);
+			}
+			catch (com.db4o.CorruptionException e)
+			{
+			}
+			return null;
 		}
 
-		public virtual com.db4o.reflect.ReflectClass classReflector()
+		public virtual object ReadIndexEntry(com.db4o.inside.marshall.MarshallerFamily mf
+			, com.db4o.YapWriter a_writer)
+		{
+			return Read(mf, a_writer, true);
+		}
+
+		public virtual com.db4o.reflect.ReflectClass ClassReflector()
 		{
 			if (_classReflector != null)
 			{
 				return _classReflector;
 			}
-			_classReflector = _stream.reflector().forClass(j4o.lang.Class.getClassForObject(defaultValue
+			_classReflector = _stream.Reflector().ForClass(j4o.lang.Class.GetClassForObject(DefaultValue
 				()));
-			j4o.lang.Class clazz = primitiveJavaClass();
+			j4o.lang.Class clazz = PrimitiveJavaClass();
 			if (clazz != null)
 			{
-				_primitiveClassReflector = _stream.reflector().forClass(clazz);
+				_primitiveClassReflector = _stream.Reflector().ForClass(clazz);
 			}
 			return _classReflector;
 		}
 
 		/// <summary>classReflector() has to be called first, before this returns a value</summary>
-		public virtual com.db4o.reflect.ReflectClass primitiveClassReflector()
+		public virtual com.db4o.reflect.ReflectClass PrimitiveClassReflector()
 		{
 			return _primitiveClassReflector;
 		}
 
-		public virtual bool supportsIndex()
+		public virtual bool SupportsIndex()
 		{
 			return true;
 		}
 
-		public abstract void write(object a_object, com.db4o.YapReader a_bytes);
+		public abstract void Write(object a_object, com.db4o.YapReader a_bytes);
 
-		public virtual bool writeArray(object array, com.db4o.YapWriter reader)
+		public virtual bool WriteArray(object array, com.db4o.YapWriter reader)
 		{
 			return false;
 		}
 
-		public virtual void writeIndexEntry(com.db4o.YapReader a_writer, object a_object)
-		{
-			write(a_object, a_writer);
-		}
-
-		public virtual int writeNew(object a_object, com.db4o.YapWriter a_bytes)
+		public virtual void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object)
 		{
 			if (a_object == null)
 			{
-				a_object = primitiveNull();
+				a_object = PrimitiveNull();
 			}
-			write(a_object, a_bytes);
-			return -1;
+			Write(a_object, a_writer);
 		}
 
-		public virtual com.db4o.YapComparable prepareComparison(object obj)
+		public virtual object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
+			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection)
+		{
+			if (a_object == null)
+			{
+				a_object = PrimitiveNull();
+			}
+			Write(a_object, a_bytes);
+			return a_object;
+		}
+
+		public virtual com.db4o.YapComparable PrepareComparison(object obj)
 		{
 			if (obj == null)
 			{
@@ -191,24 +234,24 @@ namespace com.db4o
 				return com.db4o.Null.INSTANCE;
 			}
 			i_compareToIsNull = false;
-			prepareComparison1(obj);
+			PrepareComparison1(obj);
 			return this;
 		}
 
-		public virtual object current()
+		public virtual object Current()
 		{
 			if (i_compareToIsNull)
 			{
 				return null;
 			}
-			return current1();
+			return Current1();
 		}
 
-		internal abstract void prepareComparison1(object obj);
+		internal abstract void PrepareComparison1(object obj);
 
-		public abstract object current1();
+		public abstract object Current1();
 
-		public virtual int compareTo(object obj)
+		public virtual int CompareTo(object obj)
 		{
 			if (i_compareToIsNull)
 			{
@@ -222,52 +265,52 @@ namespace com.db4o
 			{
 				return -1;
 			}
-			if (isEqual1(obj))
+			if (IsEqual1(obj))
 			{
 				return 0;
 			}
-			if (isGreater1(obj))
+			if (IsGreater1(obj))
 			{
 				return 1;
 			}
 			return -1;
 		}
 
-		public virtual bool isEqual(object obj)
+		public virtual bool IsEqual(object obj)
 		{
 			if (i_compareToIsNull)
 			{
 				return obj == null;
 			}
-			return isEqual1(obj);
+			return IsEqual1(obj);
 		}
 
-		internal abstract bool isEqual1(object obj);
+		internal abstract bool IsEqual1(object obj);
 
-		public virtual bool isGreater(object obj)
+		public virtual bool IsGreater(object obj)
 		{
 			if (i_compareToIsNull)
 			{
 				return obj != null;
 			}
-			return isGreater1(obj);
+			return IsGreater1(obj);
 		}
 
-		internal abstract bool isGreater1(object obj);
+		internal abstract bool IsGreater1(object obj);
 
-		public virtual bool isSmaller(object obj)
+		public virtual bool IsSmaller(object obj)
 		{
 			if (i_compareToIsNull)
 			{
 				return false;
 			}
-			return isSmaller1(obj);
+			return IsSmaller1(obj);
 		}
 
-		internal abstract bool isSmaller1(object obj);
+		internal abstract bool IsSmaller1(object obj);
 
-		public abstract int linkLength();
+		public abstract int LinkLength();
 
-		public abstract int getID();
+		public abstract int GetID();
 	}
 }

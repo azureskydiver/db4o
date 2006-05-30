@@ -16,50 +16,50 @@ namespace com.db4o
 		{
 		}
 
-		internal override void initialize0b()
+		internal override void Initialize0b()
 		{
 		}
 
-		internal override void initialize1()
+		internal override void Initialize1()
 		{
 			i_handlers = i_parent.i_handlers;
 			i_classCollection = i_parent.i_classCollection;
 			i_config = i_parent.i_config;
 			i_references = new com.db4o.YapReferences(this);
-			initialize2();
+			Initialize2();
 		}
 
-		internal override void initialize2NObjectCarrier()
+		internal override void Initialize2NObjectCarrier()
 		{
 		}
 
-		internal override void initializeEssentialClasses()
+		internal override void InitializeEssentialClasses()
 		{
 		}
 
-		internal override void initialize4NObjectCarrier()
+		internal override void Initialize4NObjectCarrier()
 		{
 		}
 
-		internal override void initNewClassCollection()
+		internal override void InitNewClassCollection()
 		{
 		}
 
-		internal override bool canUpdate()
+		internal override bool CanUpdate()
 		{
 			return false;
 		}
 
-		internal override void configureNewFile()
+		internal override void ConfigureNewFile()
 		{
 			i_writeAt = HEADER_LENGTH;
 		}
 
-		public override bool close()
+		public override bool Close()
 		{
 			lock (i_lock)
 			{
-				bool ret = close1();
+				bool ret = Close1();
 				if (ret)
 				{
 					i_config = null;
@@ -68,24 +68,24 @@ namespace com.db4o
 			}
 		}
 
-		internal override void createTransaction()
+		internal override void CreateTransaction()
 		{
 			i_trans = new com.db4o.TransactionObjectCarrier(this, null);
 			i_systemTrans = i_trans;
 		}
 
-		internal override long currentVersion()
+		internal override long CurrentVersion()
 		{
 			return 0;
 		}
 
-		public override com.db4o.types.Db4oType db4oTypeStored(com.db4o.Transaction a_trans
+		public override com.db4o.types.Db4oType Db4oTypeStored(com.db4o.Transaction a_trans
 			, object a_object)
 		{
 			return null;
 		}
 
-		public override bool dispatchsEvents()
+		public override bool DispatchsEvents()
 		{
 			return false;
 		}
@@ -94,61 +94,61 @@ namespace com.db4o
 		{
 		}
 
-		public sealed override void free(int a_address, int a_length)
+		public sealed override void Free(int a_address, int a_length)
 		{
 		}
 
-		public override int getSlot(int a_length)
+		public override int GetSlot(int a_length)
 		{
 			int address = i_writeAt;
 			i_writeAt += a_length;
 			return address;
 		}
 
-		public override com.db4o.ext.Db4oDatabase identity()
+		public override com.db4o.ext.Db4oDatabase Identity()
 		{
-			return i_parent.identity();
+			return i_parent.Identity();
 		}
 
-		internal override bool maintainsIndices()
-		{
-			return false;
-		}
-
-		internal override void message(string msg)
-		{
-		}
-
-		internal override bool needsLockFileThread()
+		internal override bool MaintainsIndices()
 		{
 			return false;
 		}
 
-		public override void raiseVersion(long a_minimumVersion)
+		internal override void Message(string msg)
 		{
 		}
 
-		internal override void readThis()
-		{
-		}
-
-		internal override bool stateMessages()
+		internal override bool NeedsLockFileThread()
 		{
 			return false;
 		}
 
-		internal override void write(bool shuttingDown)
-		{
-			checkNeededUpdates();
-			writeDirty();
-			getTransaction().commit();
-		}
-
-		internal sealed override void writeHeader(bool shuttingDown)
+		public override void RaiseVersion(long a_minimumVersion)
 		{
 		}
 
-		internal override void writeBootRecord()
+		internal override void ReadThis()
+		{
+		}
+
+		internal override bool StateMessages()
+		{
+			return false;
+		}
+
+		internal override void Write(bool shuttingDown)
+		{
+			CheckNeededUpdates();
+			WriteDirty();
+			GetTransaction().Commit();
+		}
+
+		internal sealed override void WriteHeader(bool shuttingDown)
+		{
+		}
+
+		internal override void WriteBootRecord()
 		{
 		}
 	}

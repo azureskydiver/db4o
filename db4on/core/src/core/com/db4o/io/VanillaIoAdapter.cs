@@ -14,47 +14,47 @@ namespace com.db4o.io
 		protected VanillaIoAdapter(com.db4o.io.IoAdapter delegateAdapter, string path, bool
 			 lockFile, long initialLength)
 		{
-			_delegate = delegateAdapter.open(path, lockFile, initialLength);
+			_delegate = delegateAdapter.Open(path, lockFile, initialLength);
 		}
 
-		public override void close()
+		public override void Close()
 		{
-			_delegate.close();
+			_delegate.Close();
 		}
 
-		public override void delete(string path)
+		public override void Delete(string path)
 		{
-			_delegate.delete(path);
+			_delegate.Delete(path);
 		}
 
-		public override bool exists(string path)
+		public override bool Exists(string path)
 		{
-			return _delegate.exists(path);
+			return _delegate.Exists(path);
 		}
 
-		public override long getLength()
+		public override long GetLength()
 		{
-			return _delegate.getLength();
+			return _delegate.GetLength();
 		}
 
-		public override int read(byte[] bytes, int length)
+		public override int Read(byte[] bytes, int length)
 		{
-			return _delegate.read(bytes, length);
+			return _delegate.Read(bytes, length);
 		}
 
-		public override void seek(long pos)
+		public override void Seek(long pos)
 		{
-			_delegate.seek(pos);
+			_delegate.Seek(pos);
 		}
 
-		public override void sync()
+		public override void Sync()
 		{
-			_delegate.sync();
+			_delegate.Sync();
 		}
 
-		public override void write(byte[] buffer, int length)
+		public override void Write(byte[] buffer, int length)
 		{
-			_delegate.write(buffer, length);
+			_delegate.Write(buffer, length);
 		}
 	}
 }

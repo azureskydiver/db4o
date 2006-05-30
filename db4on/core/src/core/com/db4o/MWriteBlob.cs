@@ -2,55 +2,55 @@ namespace com.db4o
 {
 	internal class MWriteBlob : com.db4o.MsgBlob
 	{
-		internal override void processClient(com.db4o.foundation.network.YapSocket sock)
+		internal override void ProcessClient(com.db4o.foundation.network.YapSocket sock)
 		{
-			com.db4o.Msg message = com.db4o.Msg.readMessage(getTransaction(), sock);
+			com.db4o.Msg message = com.db4o.Msg.ReadMessage(GetTransaction(), sock);
 			if (message.Equals(com.db4o.Msg.OK))
 			{
 				try
 				{
 					_currentByte = 0;
-					_length = this._blob.getLength();
-					_blob.getStatusFrom(this);
-					_blob.setStatus(com.db4o.ext.Status.PROCESSING);
-					j4o.io.FileInputStream inBlob = this._blob.getClientInputStream();
-					copy(inBlob, sock, true);
-					sock.flush();
-					com.db4o.YapStream stream = getStream();
-					message = com.db4o.Msg.readMessage(getTransaction(), sock);
+					_length = this._blob.GetLength();
+					_blob.GetStatusFrom(this);
+					_blob.SetStatus(com.db4o.ext.Status.PROCESSING);
+					j4o.io.FileInputStream inBlob = this._blob.GetClientInputStream();
+					Copy(inBlob, sock, true);
+					sock.Flush();
+					com.db4o.YapStream stream = GetStream();
+					message = com.db4o.Msg.ReadMessage(GetTransaction(), sock);
 					if (message.Equals(com.db4o.Msg.OK))
 					{
-						stream.deactivate(_blob, int.MaxValue);
-						stream.activate(_blob, int.MaxValue);
-						this._blob.setStatus(com.db4o.ext.Status.COMPLETED);
+						stream.Deactivate(_blob, int.MaxValue);
+						stream.Activate(_blob, int.MaxValue);
+						this._blob.SetStatus(com.db4o.ext.Status.COMPLETED);
 					}
 					else
 					{
-						this._blob.setStatus(com.db4o.ext.Status.ERROR);
+						this._blob.SetStatus(com.db4o.ext.Status.ERROR);
 					}
 				}
 				catch (System.Exception e)
 				{
-					j4o.lang.JavaSystem.printStackTrace(e);
+					j4o.lang.JavaSystem.PrintStackTrace(e);
 				}
 			}
 		}
 
-		internal override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
 			try
 			{
-				com.db4o.YapStream stream = getStream();
-				com.db4o.BlobImpl blobImpl = this.serverGetBlobImpl();
+				com.db4o.YapStream stream = GetStream();
+				com.db4o.BlobImpl blobImpl = this.ServerGetBlobImpl();
 				if (blobImpl != null)
 				{
-					blobImpl.setTrans(getTransaction());
-					j4o.io.File file = blobImpl.serverFile(null, true);
-					com.db4o.Msg.OK.write(stream, sock);
+					blobImpl.SetTrans(GetTransaction());
+					j4o.io.File file = blobImpl.ServerFile(null, true);
+					com.db4o.Msg.OK.Write(stream, sock);
 					j4o.io.FileOutputStream fout = new j4o.io.FileOutputStream(file);
-					copy(sock, fout, blobImpl.getLength(), false);
-					com.db4o.Msg.OK.write(stream, sock);
+					Copy(sock, fout, blobImpl.GetLength(), false);
+					com.db4o.Msg.OK.Write(stream, sock);
 				}
 			}
 			catch (System.Exception e)

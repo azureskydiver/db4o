@@ -18,24 +18,24 @@ namespace com.db4o.inside.ix
 	{
 		internal com.db4o.Tree _paths;
 
-		internal virtual void add(com.db4o.inside.ix.NIxPath path)
+		internal virtual void Add(com.db4o.inside.ix.NIxPath path)
 		{
 			path._size = 1;
 			path._preceding = null;
 			path._subsequent = null;
-			_paths = com.db4o.Tree.add(_paths, path);
+			_paths = com.db4o.Tree.Add(_paths, path);
 		}
 
-		internal virtual void removeRedundancies()
+		internal virtual void RemoveRedundancies()
 		{
 			com.db4o.foundation.Collection4 add = new com.db4o.foundation.Collection4();
 			bool[] stop = new bool[] { false };
-			_paths.traverse(new _AnonymousInnerClass41(this, stop, add));
+			_paths.Traverse(new _AnonymousInnerClass41(this, stop, add));
 			_paths = null;
-			com.db4o.foundation.Iterator4 i = add.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = add.Iterator();
+			while (i.HasNext())
 			{
-				this.add((com.db4o.inside.ix.NIxPath)i.next());
+				this.Add((com.db4o.inside.ix.NIxPath)i.Next());
 			}
 		}
 
@@ -49,16 +49,16 @@ namespace com.db4o.inside.ix
 				this.add = add;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				if (!stop[0])
 				{
 					com.db4o.inside.ix.NIxPath path = (com.db4o.inside.ix.NIxPath)a_object;
 					if (!path._takePreceding)
 					{
-						add.clear();
+						add.Clear();
 					}
-					add.add(path);
+					add.Add(path);
 					if (!path._takeSubsequent)
 					{
 						stop[0] = true;
@@ -73,18 +73,18 @@ namespace com.db4o.inside.ix
 			private readonly com.db4o.foundation.Collection4 add;
 		}
 
-		internal virtual int count()
+		internal virtual int Count()
 		{
 			com.db4o.inside.ix.NIxPath[] last = new com.db4o.inside.ix.NIxPath[] { null };
 			int[] sum = new int[] { 0 };
-			_paths.traverse(new _AnonymousInnerClass66(this, last, sum));
+			_paths.Traverse(new _AnonymousInnerClass66(this, last, sum));
 			if (last[0]._takeMatches)
 			{
-				sum[0] += countAllMatching(last[0]._head);
+				sum[0] += CountAllMatching(last[0]._head);
 			}
 			if (last[0]._takeSubsequent)
 			{
-				sum[0] += countAllSubsequent(last[0]._head);
+				sum[0] += CountAllSubsequent(last[0]._head);
 			}
 			return sum[0];
 		}
@@ -99,14 +99,14 @@ namespace com.db4o.inside.ix
 				this.sum = sum;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.inside.ix.NIxPath current = (com.db4o.inside.ix.NIxPath)a_object;
 				if (last[0] == null)
 				{
 					if (current._takePreceding)
 					{
-						sum[0] += this._enclosing.countAllPreceding(current._head);
+						sum[0] += this._enclosing.CountAllPreceding(current._head);
 					}
 				}
 				else
@@ -114,14 +114,14 @@ namespace com.db4o.inside.ix
 					if ((last[0]._takeSubsequent || last[0]._takeMatches) && (current._takePreceding 
 						|| current._takeMatches))
 					{
-						sum[0] += this._enclosing.countSpan(current, last[0], current._head, last[0]._head
+						sum[0] += this._enclosing.CountSpan(current, last[0], current._head, last[0]._head
 							, current._head._next, last[0]._head._next, 0);
 					}
 					else
 					{
 						if (last[0]._takeMatches)
 						{
-							sum[0] += this._enclosing.countAllMatching(last[0]._head);
+							sum[0] += this._enclosing.CountAllMatching(last[0]._head);
 						}
 					}
 				}
@@ -135,55 +135,55 @@ namespace com.db4o.inside.ix
 			private readonly int[] sum;
 		}
 
-		private int countAllPreceding(com.db4o.inside.ix.NIxPathNode head)
+		private int CountAllPreceding(com.db4o.inside.ix.NIxPathNode head)
 		{
 			int count = 0;
 			while (head != null)
 			{
-				count += head.countPreceding();
+				count += head.CountPreceding();
 				head = head._next;
 			}
 			return count;
 		}
 
-		private int countAllMatching(com.db4o.inside.ix.NIxPathNode head)
+		private int CountAllMatching(com.db4o.inside.ix.NIxPathNode head)
 		{
 			int count = 0;
 			while (head != null)
 			{
-				count += head.countMatching();
+				count += head.CountMatching();
 				head = head._next;
 			}
 			return count;
 		}
 
-		private int countAllSubsequent(com.db4o.inside.ix.NIxPathNode head)
+		private int CountAllSubsequent(com.db4o.inside.ix.NIxPathNode head)
 		{
 			int count = 0;
 			while (head != null)
 			{
-				count += head.countSubsequent();
+				count += head.CountSubsequent();
 				head = head._next;
 			}
 			return count;
 		}
 
 		/// <summary>see documentation to this class for behaviour *</summary>
-		private int countSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
+		private int CountSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
 			 smallPath, com.db4o.inside.ix.NIxPathNode a_previousGreat, com.db4o.inside.ix.NIxPathNode
 			 a_previousSmall, com.db4o.inside.ix.NIxPathNode a_great, com.db4o.inside.ix.NIxPathNode
 			 a_small, int sum)
 		{
-			sum += a_previousGreat.countSpan(greatPath, smallPath, a_previousSmall);
-			if (a_great != null && a_great.carriesTheSame(a_small))
+			sum += a_previousGreat.CountSpan(greatPath, smallPath, a_previousSmall);
+			if (a_great != null && a_great.CarriesTheSame(a_small))
 			{
-				return countSpan(greatPath, smallPath, a_great, a_small, a_great._next, a_small._next
+				return CountSpan(greatPath, smallPath, a_great, a_small, a_great._next, a_small._next
 					, sum);
 			}
-			return sum + countGreater(a_small, 0) + countSmaller(a_great, 0);
+			return sum + CountGreater(a_small, 0) + CountSmaller(a_great, 0);
 		}
 
-		private int countSmaller(com.db4o.inside.ix.NIxPathNode a_path, int a_sum)
+		private int CountSmaller(com.db4o.inside.ix.NIxPathNode a_path, int a_sum)
 		{
 			if (a_path == null)
 			{
@@ -191,20 +191,20 @@ namespace com.db4o.inside.ix
 			}
 			if (a_path._next == null)
 			{
-				return a_sum + countPreceding(a_path);
+				return a_sum + CountPreceding(a_path);
 			}
 			if (a_path._next._tree == a_path._tree._subsequent)
 			{
-				a_sum += countPreceding(a_path);
+				a_sum += CountPreceding(a_path);
 			}
 			else
 			{
-				a_sum += a_path.countMatching();
+				a_sum += a_path.CountMatching();
 			}
-			return countSmaller(a_path._next, a_sum);
+			return CountSmaller(a_path._next, a_sum);
 		}
 
-		private int countGreater(com.db4o.inside.ix.NIxPathNode a_path, int a_sum)
+		private int CountGreater(com.db4o.inside.ix.NIxPathNode a_path, int a_sum)
 		{
 			if (a_path == null)
 			{
@@ -212,42 +212,42 @@ namespace com.db4o.inside.ix
 			}
 			if (a_path._next == null)
 			{
-				return a_sum + countSubsequent(a_path);
+				return a_sum + CountSubsequent(a_path);
 			}
 			if (a_path._next._tree == a_path._tree._preceding)
 			{
-				a_sum += countSubsequent(a_path);
+				a_sum += CountSubsequent(a_path);
 			}
 			else
 			{
-				a_sum += a_path.countMatching();
+				a_sum += a_path.CountMatching();
 			}
-			return countGreater(a_path._next, a_sum);
+			return CountGreater(a_path._next, a_sum);
 		}
 
-		private int countPreceding(com.db4o.inside.ix.NIxPathNode a_path)
+		private int CountPreceding(com.db4o.inside.ix.NIxPathNode a_path)
 		{
-			return com.db4o.Tree.size(a_path._tree._preceding) + a_path.countMatching();
+			return com.db4o.Tree.Size(a_path._tree._preceding) + a_path.CountMatching();
 		}
 
-		private int countSubsequent(com.db4o.inside.ix.NIxPathNode a_path)
+		private int CountSubsequent(com.db4o.inside.ix.NIxPathNode a_path)
 		{
-			return com.db4o.Tree.size(a_path._tree._subsequent) + a_path.countMatching();
+			return com.db4o.Tree.Size(a_path._tree._subsequent) + a_path.CountMatching();
 		}
 
-		internal virtual void traverse(com.db4o.foundation.Visitor4 visitor)
+		internal virtual void Traverse(com.db4o.foundation.Visitor4 visitor)
 		{
 			com.db4o.inside.ix.NIxPath[] last = new com.db4o.inside.ix.NIxPath[] { null };
 			com.db4o.foundation.Visitor4Dispatch dispatcher = new com.db4o.foundation.Visitor4Dispatch
 				(visitor);
-			_paths.traverse(new _AnonymousInnerClass173(this, last, dispatcher));
+			_paths.Traverse(new _AnonymousInnerClass173(this, last, dispatcher));
 			if (last[0]._takeMatches)
 			{
-				traverseAllMatching(last[0]._head, dispatcher);
+				TraverseAllMatching(last[0]._head, dispatcher);
 			}
 			if (last[0]._takeSubsequent)
 			{
-				traverseAllSubsequent(last[0]._head, dispatcher);
+				TraverseAllSubsequent(last[0]._head, dispatcher);
 			}
 		}
 
@@ -261,14 +261,14 @@ namespace com.db4o.inside.ix
 				this.dispatcher = dispatcher;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.inside.ix.NIxPath current = (com.db4o.inside.ix.NIxPath)a_object;
 				if (last[0] == null)
 				{
 					if (current._takePreceding)
 					{
-						this._enclosing.traverseAllPreceding(current._head, dispatcher);
+						this._enclosing.TraverseAllPreceding(current._head, dispatcher);
 					}
 				}
 				else
@@ -276,14 +276,14 @@ namespace com.db4o.inside.ix
 					if ((last[0]._takeSubsequent || last[0]._takeMatches) && (current._takePreceding 
 						|| current._takeMatches))
 					{
-						this._enclosing.traverseSpan(current, last[0], current._head, last[0]._head, current
+						this._enclosing.TraverseSpan(current, last[0], current._head, last[0]._head, current
 							._head._next, last[0]._head._next, dispatcher);
 					}
 					else
 					{
 						if (last[0]._takeMatches)
 						{
-							this._enclosing.traverseAllMatching(last[0]._head, dispatcher);
+							this._enclosing.TraverseAllMatching(last[0]._head, dispatcher);
 						}
 					}
 				}
@@ -297,54 +297,54 @@ namespace com.db4o.inside.ix
 			private readonly com.db4o.foundation.Visitor4Dispatch dispatcher;
 		}
 
-		private void traverseAllPreceding(com.db4o.inside.ix.NIxPathNode head, com.db4o.foundation.Visitor4Dispatch
+		private void TraverseAllPreceding(com.db4o.inside.ix.NIxPathNode head, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
 			while (head != null)
 			{
-				head.traversePreceding(dispatcher);
+				head.TraversePreceding(dispatcher);
 				head = head._next;
 			}
 		}
 
-		private void traverseAllMatching(com.db4o.inside.ix.NIxPathNode head, com.db4o.foundation.Visitor4Dispatch
+		private void TraverseAllMatching(com.db4o.inside.ix.NIxPathNode head, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
 			while (head != null)
 			{
-				head.traverseMatching(dispatcher);
+				head.TraverseMatching(dispatcher);
 				head = head._next;
 			}
 		}
 
-		private void traverseAllSubsequent(com.db4o.inside.ix.NIxPathNode head, com.db4o.foundation.Visitor4Dispatch
+		private void TraverseAllSubsequent(com.db4o.inside.ix.NIxPathNode head, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
 			while (head != null)
 			{
-				head.traverseSubsequent(dispatcher);
+				head.TraverseSubsequent(dispatcher);
 				head = head._next;
 			}
 		}
 
 		/// <summary>see documentation to this class for behaviour *</summary>
-		private void traverseSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
+		private void TraverseSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
 			 smallPath, com.db4o.inside.ix.NIxPathNode a_previousGreat, com.db4o.inside.ix.NIxPathNode
 			 a_previousSmall, com.db4o.inside.ix.NIxPathNode a_great, com.db4o.inside.ix.NIxPathNode
 			 a_small, com.db4o.foundation.Visitor4Dispatch dispatcher)
 		{
-			a_previousGreat.traverseSpan(greatPath, smallPath, a_previousSmall, dispatcher);
-			if (a_great != null && a_great.carriesTheSame(a_small))
+			a_previousGreat.TraverseSpan(greatPath, smallPath, a_previousSmall, dispatcher);
+			if (a_great != null && a_great.CarriesTheSame(a_small))
 			{
-				traverseSpan(greatPath, smallPath, a_great, a_small, a_great._next, a_small._next
+				TraverseSpan(greatPath, smallPath, a_great, a_small, a_great._next, a_small._next
 					, dispatcher);
 				return;
 			}
-			traverseGreater(a_small, dispatcher);
-			traverseSmaller(a_great, dispatcher);
+			TraverseGreater(a_small, dispatcher);
+			TraverseSmaller(a_great, dispatcher);
 		}
 
-		private void traverseSmaller(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
+		private void TraverseSmaller(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
 			if (a_path == null)
@@ -353,21 +353,21 @@ namespace com.db4o.inside.ix
 			}
 			if (a_path._next == null)
 			{
-				traversePreceding(a_path, dispatcher);
+				TraversePreceding(a_path, dispatcher);
 				return;
 			}
 			if (a_path._next._tree == a_path._tree._subsequent)
 			{
-				traversePreceding(a_path, dispatcher);
+				TraversePreceding(a_path, dispatcher);
 			}
 			else
 			{
-				a_path.traverseMatching(dispatcher);
+				a_path.TraverseMatching(dispatcher);
 			}
-			traverseSmaller(a_path._next, dispatcher);
+			TraverseSmaller(a_path._next, dispatcher);
 		}
 
-		private void traverseGreater(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
+		private void TraverseGreater(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
 			if (a_path == null)
@@ -376,32 +376,32 @@ namespace com.db4o.inside.ix
 			}
 			if (a_path._next == null)
 			{
-				traverseSubsequent(a_path, dispatcher);
+				TraverseSubsequent(a_path, dispatcher);
 				return;
 			}
 			if (a_path._next._tree == a_path._tree._preceding)
 			{
-				traverseSubsequent(a_path, dispatcher);
+				TraverseSubsequent(a_path, dispatcher);
 			}
 			else
 			{
-				a_path.traverseMatching(dispatcher);
+				a_path.TraverseMatching(dispatcher);
 			}
-			traverseGreater(a_path._next, dispatcher);
+			TraverseGreater(a_path._next, dispatcher);
 		}
 
-		private void traversePreceding(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
+		private void TraversePreceding(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
-			a_path.traverseMatching(dispatcher);
-			com.db4o.Tree.traverse(a_path._tree._preceding, dispatcher);
+			a_path.TraverseMatching(dispatcher);
+			com.db4o.Tree.Traverse(a_path._tree._preceding, dispatcher);
 		}
 
-		private void traverseSubsequent(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
+		private void TraverseSubsequent(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
-			a_path.traverseMatching(dispatcher);
-			com.db4o.Tree.traverse(a_path._tree._subsequent, dispatcher);
+			a_path.TraverseMatching(dispatcher);
+			com.db4o.Tree.Traverse(a_path._tree._subsequent, dispatcher);
 		}
 	}
 }

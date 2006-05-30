@@ -15,13 +15,13 @@ namespace com.db4o
 			this.i_memoryFile = memoryFile;
 			try
 			{
-				open();
+				Open();
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(22, e);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(22, e);
 			}
-			initialize3();
+			Initialize3();
 		}
 
 		internal YapMemoryFile(com.db4o.ext.MemoryFile memoryFile) : this(null, memoryFile
@@ -29,141 +29,140 @@ namespace com.db4o
 		{
 		}
 
-		public override void backup(string path)
+		public override void Backup(string path)
 		{
-			com.db4o.inside.Exceptions4.throwRuntimeException(60);
+			com.db4o.inside.Exceptions4.ThrowRuntimeException(60);
 		}
 
-		internal virtual void checkDemoHop()
+		internal virtual void CheckDemoHop()
 		{
 		}
 
-		internal override bool close2()
+		internal override bool Close2()
 		{
 			i_entryCounter++;
 			try
 			{
-				write(true);
+				Write(true);
 			}
 			catch (System.Exception t)
 			{
-				fatalException(t);
+				FatalException(t);
 			}
-			base.close2();
+			base.Close2();
 			i_entryCounter--;
 			if (i_closed == false)
 			{
 				byte[] temp = new byte[i_length];
-				j4o.lang.JavaSystem.arraycopy(i_memoryFile.getBytes(), 0, temp, 0, i_length);
-				i_memoryFile.setBytes(temp);
+				System.Array.Copy(i_memoryFile.GetBytes(), 0, temp, 0, i_length);
+				i_memoryFile.SetBytes(temp);
 			}
 			i_closed = true;
 			return true;
 		}
 
-		public override void copy(int oldAddress, int oldAddressOffset, int newAddress, int
+		public override void Copy(int oldAddress, int oldAddressOffset, int newAddress, int
 			 newAddressOffset, int length)
 		{
-			byte[] bytes = memoryFileBytes(newAddress + newAddressOffset + length);
-			j4o.lang.JavaSystem.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, newAddress
-				 + newAddressOffset, length);
+			byte[] bytes = MemoryFileBytes(newAddress + newAddressOffset + length);
+			System.Array.Copy(bytes, oldAddress + oldAddressOffset, bytes, newAddress + newAddressOffset
+				, length);
 		}
 
-		internal override void emergencyClose()
+		internal override void EmergencyClose()
 		{
-			base.emergencyClose();
+			base.EmergencyClose();
 			i_closed = true;
 		}
 
-		internal override long fileLength()
+		internal override long FileLength()
 		{
 			return i_length;
 		}
 
-		internal override string fileName()
+		internal override string FileName()
 		{
 			return "Memory File";
 		}
 
-		internal override bool hasShutDownHook()
+		internal override bool HasShutDownHook()
 		{
 			return false;
 		}
 
-		internal override bool needsLockFileThread()
+		internal override bool NeedsLockFileThread()
 		{
 			return false;
 		}
 
-		private void open()
+		private void Open()
 		{
-			byte[] bytes = i_memoryFile.getBytes();
+			byte[] bytes = i_memoryFile.GetBytes();
 			if (bytes == null || bytes.Length == 0)
 			{
-				i_memoryFile.setBytes(new byte[i_memoryFile.getInitialSize()]);
-				configureNewFile();
-				write(false);
-				writeHeader(false);
+				i_memoryFile.SetBytes(new byte[i_memoryFile.GetInitialSize()]);
+				ConfigureNewFile();
+				Write(false);
+				WriteHeader(false);
 			}
 			else
 			{
 				i_length = bytes.Length;
-				readThis();
+				ReadThis();
 			}
 		}
 
-		internal override void readBytes(byte[] a_bytes, int a_address, int a_length)
+		internal override void ReadBytes(byte[] a_bytes, int a_address, int a_length)
 		{
 			try
 			{
-				j4o.lang.JavaSystem.arraycopy(i_memoryFile.getBytes(), a_address, a_bytes, 0, a_length
-					);
+				System.Array.Copy(i_memoryFile.GetBytes(), a_address, a_bytes, 0, a_length);
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(13, e);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(13, e);
 			}
 		}
 
-		internal override void readBytes(byte[] bytes, int address, int addressOffset, int
+		internal override void ReadBytes(byte[] bytes, int address, int addressOffset, int
 			 length)
 		{
-			readBytes(bytes, address + addressOffset, length);
+			ReadBytes(bytes, address + addressOffset, length);
 		}
 
-		public override void syncFiles()
+		public override void SyncFiles()
 		{
 		}
 
-		internal override bool writeAccessTime()
+		internal override bool WriteAccessTime()
 		{
 			return true;
 		}
 
-		internal override void writeBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
+		internal override void WriteBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
 			)
 		{
 			int fullAddress = address + addressOffset;
-			int length = a_bytes.getLength();
-			j4o.lang.JavaSystem.arraycopy(a_bytes._buffer, 0, memoryFileBytes(fullAddress + length
-				), fullAddress, length);
+			int length = a_bytes.GetLength();
+			System.Array.Copy(a_bytes._buffer, 0, MemoryFileBytes(fullAddress + length), fullAddress
+				, length);
 		}
 
-		private byte[] memoryFileBytes(int a_lastByte)
+		private byte[] MemoryFileBytes(int a_lastByte)
 		{
-			byte[] bytes = i_memoryFile.getBytes();
+			byte[] bytes = i_memoryFile.GetBytes();
 			if (a_lastByte > i_length)
 			{
 				if (a_lastByte > bytes.Length)
 				{
 					int increase = a_lastByte - bytes.Length;
-					if (increase < i_memoryFile.getIncrementSizeBy())
+					if (increase < i_memoryFile.GetIncrementSizeBy())
 					{
-						increase = i_memoryFile.getIncrementSizeBy();
+						increase = i_memoryFile.GetIncrementSizeBy();
 					}
 					byte[] temp = new byte[bytes.Length + increase];
-					j4o.lang.JavaSystem.arraycopy(bytes, 0, temp, 0, bytes.Length);
-					i_memoryFile.setBytes(temp);
+					System.Array.Copy(bytes, 0, temp, 0, bytes.Length);
+					i_memoryFile.SetBytes(temp);
 					bytes = temp;
 				}
 				i_length = a_lastByte;
@@ -171,7 +170,7 @@ namespace com.db4o
 			return bytes;
 		}
 
-		public override void writeXBytes(int a_address, int a_length)
+		public override void WriteXBytes(int a_address, int a_length)
 		{
 		}
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System.Collections;
 
@@ -7,8 +7,8 @@ namespace j4o.util {
 		public Random() {
 		}
 		
-		public long nextLong() {
-			return j4o.lang.JavaSystem.currentTimeMillis();
+		public long NextLong() {
+			return j4o.lang.JavaSystem.CurrentTimeMillis();
 		}
 	}
 }

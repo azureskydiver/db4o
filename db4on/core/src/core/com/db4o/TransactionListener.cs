@@ -7,8 +7,8 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public interface TransactionListener
 	{
-		void preCommit();
+		void PreCommit();
 
-		void postRollback();
+		void PostRollback();
 	}
 }

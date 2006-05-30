@@ -14,7 +14,7 @@ namespace com.db4o.nativequery.expr
 			return "!(" + _expr + ")";
 		}
 
-		public virtual com.db4o.nativequery.expr.Expression expr()
+		public virtual com.db4o.nativequery.expr.Expression Expr()
 		{
 			return _expr;
 		}
@@ -25,7 +25,7 @@ namespace com.db4o.nativequery.expr
 			{
 				return true;
 			}
-			if (other == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (other == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(other))
 			{
 				return false;
@@ -40,9 +40,9 @@ namespace com.db4o.nativequery.expr
 			return -_expr.GetHashCode();
 		}
 
-		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
+		public virtual void Accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace com.db4o.query
 	/// objects with single calls.
 	/// <br /><br />
 	/// See also
-	/// <see cref="com.db4o.query.Query.constraints">com.db4o.query.Query.constraints</see>
+	/// <see cref="com.db4o.query.Query.Constraints">com.db4o.query.Query.Constraints</see>
 	/// .
 	/// </summary>
 	public interface Constraints : com.db4o.query.Constraint
@@ -27,6 +27,6 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// objects.
 		/// </returns>
-		com.db4o.query.Constraint[] toArray();
+		com.db4o.query.Constraint[] ToArray();
 	}
 }

@@ -9,7 +9,7 @@ namespace com.db4o.nativequery.expr.cmp.field
 			this._className = className;
 		}
 
-		public virtual string className()
+		public virtual string ClassName()
 		{
 			return _className;
 		}
@@ -20,7 +20,7 @@ namespace com.db4o.nativequery.expr.cmp.field
 			{
 				return true;
 			}
-			if (obj == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (obj == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(obj))
 			{
 				return false;
@@ -40,10 +40,10 @@ namespace com.db4o.nativequery.expr.cmp.field
 			return _className;
 		}
 
-		public override void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
+		public override void Accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 	}
 }

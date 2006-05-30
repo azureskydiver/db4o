@@ -7,98 +7,98 @@ namespace com.db4o
 
 		protected int i_state = 2;
 
-		internal bool beginProcessing()
+		internal bool BeginProcessing()
 		{
-			if (bitIsTrue(com.db4o.YapConst.PROCESSING))
+			if (BitIsTrue(com.db4o.YapConst.PROCESSING))
 			{
 				return false;
 			}
-			bitTrue(com.db4o.YapConst.PROCESSING);
+			BitTrue(com.db4o.YapConst.PROCESSING);
 			return true;
 		}
 
-		internal void bitFalse(int bitPos)
+		internal void BitFalse(int bitPos)
 		{
 			i_state &= ~(1 << bitPos);
 		}
 
-		internal bool bitIsFalse(int bitPos)
+		internal bool BitIsFalse(int bitPos)
 		{
 			return (i_state | (1 << bitPos)) != i_state;
 		}
 
-		internal bool bitIsTrue(int bitPos)
+		internal bool BitIsTrue(int bitPos)
 		{
 			return (i_state | (1 << bitPos)) == i_state;
 		}
 
-		internal void bitTrue(int bitPos)
+		internal void BitTrue(int bitPos)
 		{
 			i_state |= (1 << bitPos);
 		}
 
-		internal virtual void cacheDirty(com.db4o.foundation.Collection4 col)
+		internal virtual void CacheDirty(com.db4o.foundation.Collection4 col)
 		{
-			if (!bitIsTrue(com.db4o.YapConst.CACHED_DIRTY))
+			if (!BitIsTrue(com.db4o.YapConst.CACHED_DIRTY))
 			{
-				bitTrue(com.db4o.YapConst.CACHED_DIRTY);
-				col.add(this);
+				BitTrue(com.db4o.YapConst.CACHED_DIRTY);
+				col.Add(this);
 			}
 		}
 
-		internal virtual void endProcessing()
+		public virtual void EndProcessing()
 		{
-			bitFalse(com.db4o.YapConst.PROCESSING);
+			BitFalse(com.db4o.YapConst.PROCESSING);
 		}
 
-		public virtual int getID()
+		public virtual int GetID()
 		{
 			return i_id;
 		}
 
-		public abstract byte getIdentifier();
+		public abstract byte GetIdentifier();
 
-		public bool isActive()
+		public bool IsActive()
 		{
-			return bitIsTrue(com.db4o.YapConst.ACTIVE);
+			return BitIsTrue(com.db4o.YapConst.ACTIVE);
 		}
 
-		public virtual bool isDirty()
+		public virtual bool IsDirty()
 		{
-			return bitIsTrue(com.db4o.YapConst.ACTIVE) && (!bitIsTrue(com.db4o.YapConst.CLEAN
+			return BitIsTrue(com.db4o.YapConst.ACTIVE) && (!BitIsTrue(com.db4o.YapConst.CLEAN
 				));
 		}
 
-		public virtual bool isNew()
+		public virtual bool IsNew()
 		{
 			return i_id == 0;
 		}
 
-		public virtual int linkLength()
+		public virtual int LinkLength()
 		{
 			return com.db4o.YapConst.YAPID_LENGTH;
 		}
 
-		internal void notCachedDirty()
+		internal void NotCachedDirty()
 		{
-			bitFalse(com.db4o.YapConst.CACHED_DIRTY);
+			BitFalse(com.db4o.YapConst.CACHED_DIRTY);
 		}
 
-		public abstract int ownLength();
+		public abstract int OwnLength();
 
-		public virtual void read(com.db4o.Transaction a_trans)
+		public virtual void Read(com.db4o.Transaction a_trans)
 		{
 			try
 			{
-				if (beginProcessing())
+				if (BeginProcessing())
 				{
-					com.db4o.YapReader reader = a_trans.i_stream.readReaderByID(a_trans, getID());
+					com.db4o.YapReader reader = a_trans.i_stream.ReadReaderByID(a_trans, GetID());
 					if (reader != null)
 					{
-						readThis(a_trans, reader);
-						setStateOnRead(reader);
+						ReadThis(a_trans, reader);
+						SetStateOnRead(reader);
 					}
-					endProcessing();
+					EndProcessing();
 				}
 			}
 			catch (com.db4o.LongJumpOutException ljoe)
@@ -110,90 +110,90 @@ namespace com.db4o
 			}
 		}
 
-		public abstract void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader a_reader
+		public abstract void ReadThis(com.db4o.Transaction a_trans, com.db4o.YapReader a_reader
 			);
 
-		public virtual void setID(int a_id)
+		public virtual void SetID(int a_id)
 		{
 			i_id = a_id;
 		}
 
-		public void setStateClean()
+		public void SetStateClean()
 		{
-			bitTrue(com.db4o.YapConst.ACTIVE);
-			bitTrue(com.db4o.YapConst.CLEAN);
+			BitTrue(com.db4o.YapConst.ACTIVE);
+			BitTrue(com.db4o.YapConst.CLEAN);
 		}
 
-		public void setStateDeactivated()
+		public void SetStateDeactivated()
 		{
-			bitFalse(com.db4o.YapConst.ACTIVE);
+			BitFalse(com.db4o.YapConst.ACTIVE);
 		}
 
-		public virtual void setStateDirty()
+		public virtual void SetStateDirty()
 		{
-			bitTrue(com.db4o.YapConst.ACTIVE);
-			bitFalse(com.db4o.YapConst.CLEAN);
+			BitTrue(com.db4o.YapConst.ACTIVE);
+			BitFalse(com.db4o.YapConst.CLEAN);
 		}
 
-		internal virtual void setStateOnRead(com.db4o.YapReader reader)
+		internal virtual void SetStateOnRead(com.db4o.YapReader reader)
 		{
-			if (bitIsTrue(com.db4o.YapConst.CACHED_DIRTY))
+			if (BitIsTrue(com.db4o.YapConst.CACHED_DIRTY))
 			{
-				setStateDirty();
+				SetStateDirty();
 			}
 			else
 			{
-				setStateClean();
+				SetStateClean();
 			}
 		}
 
-		public void write(com.db4o.Transaction a_trans)
+		public void Write(com.db4o.Transaction a_trans)
 		{
-			if (!writeObjectBegin())
+			if (!WriteObjectBegin())
 			{
 				return;
 			}
 			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
 			int address = 0;
-			int length = ownLength();
+			int length = OwnLength();
 			com.db4o.YapReader writer = new com.db4o.YapReader(length);
-			if (isNew())
+			if (IsNew())
 			{
-				com.db4o.inside.slots.Pointer4 ptr = stream.newSlot(a_trans, length);
-				setID(ptr._id);
+				com.db4o.inside.slots.Pointer4 ptr = stream.NewSlot(a_trans, length);
+				SetID(ptr._id);
 				address = ptr._address;
 			}
 			else
 			{
-				address = stream.getSlot(length);
-				a_trans.slotFreeOnRollbackCommitSetPointer(i_id, address, length);
+				address = stream.GetSlot(length);
+				a_trans.SlotFreeOnRollbackCommitSetPointer(i_id, address, length);
 			}
-			writeThis(a_trans, writer);
-			((com.db4o.YapFile)stream).writeObject(this, writer, address);
-			if (isActive())
+			WriteThis(a_trans, writer);
+			((com.db4o.YapFile)stream).WriteObject(this, writer, address);
+			if (IsActive())
 			{
-				setStateClean();
+				SetStateClean();
 			}
-			endProcessing();
+			EndProcessing();
 		}
 
-		internal virtual bool writeObjectBegin()
+		public virtual bool WriteObjectBegin()
 		{
-			if (isDirty())
+			if (IsDirty())
 			{
-				return beginProcessing();
+				return BeginProcessing();
 			}
 			return false;
 		}
 
-		internal virtual void writeOwnID(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+		internal virtual void WriteOwnID(com.db4o.Transaction trans, com.db4o.YapReader a_writer
 			)
 		{
-			write(trans);
-			a_writer.writeInt(getID());
+			Write(trans);
+			a_writer.WriteInt(GetID());
 		}
 
-		public abstract void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+		public abstract void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
 			);
 	}
 }

@@ -30,10 +30,10 @@ namespace com.db4o.config
 		}
 
 		/// <summary>resolving is done through simple pattern matching</summary>
-		public virtual string resolve(string runtimeType)
+		public virtual string Resolve(string runtimeType)
 		{
-			string match = _runtimePattern.matches(runtimeType);
-			return match != null ? _storedPattern.inject(match) : null;
+			string match = _runtimePattern.Matches(runtimeType);
+			return match != null ? _storedPattern.Inject(match) : null;
 		}
 
 		internal class WildcardPattern
@@ -44,39 +44,38 @@ namespace com.db4o.config
 
 			public WildcardPattern(string pattern)
 			{
-				string[] parts = split(pattern);
+				string[] parts = Split(pattern);
 				_head = parts[0];
 				_tail = parts[1];
 			}
 
-			public virtual string inject(string s)
+			public virtual string Inject(string s)
 			{
 				return _head + s + _tail;
 			}
 
-			public virtual string matches(string s)
+			public virtual string Matches(string s)
 			{
 				if (!s.StartsWith(_head) || !s.EndsWith(_tail))
 				{
 					return null;
 				}
-				return j4o.lang.JavaSystem.substring(s, j4o.lang.JavaSystem.getLengthOf(_head), j4o.lang.JavaSystem.getLengthOf
-					(s) - j4o.lang.JavaSystem.getLengthOf(_tail));
+				return j4o.lang.JavaSystem.Substring(s, _head.Length, s.Length - _tail.Length);
 			}
 
-			private void invalidPattern()
+			private void InvalidPattern()
 			{
 				throw new System.ArgumentException("only one '*' character");
 			}
 
-			internal virtual string[] split(string pattern)
+			internal virtual string[] Split(string pattern)
 			{
 				int index = pattern.IndexOf('*');
 				if (-1 == index || index != pattern.LastIndexOf('*'))
 				{
-					invalidPattern();
+					InvalidPattern();
 				}
-				return new string[] { j4o.lang.JavaSystem.substring(pattern, 0, index), j4o.lang.JavaSystem.substring
+				return new string[] { j4o.lang.JavaSystem.Substring(pattern, 0, index), j4o.lang.JavaSystem.Substring
 					(pattern, index + 1) };
 			}
 		}

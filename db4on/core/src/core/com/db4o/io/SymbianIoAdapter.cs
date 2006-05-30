@@ -28,24 +28,24 @@ namespace com.db4o.io
 		{
 			_path = path;
 			_pos = 0;
-			setLength();
+			SetLength();
 		}
 
-		private void setLength()
+		private void SetLength()
 		{
-			_length = retrieveLength();
+			_length = RetrieveLength();
 		}
 
-		private long retrieveLength()
+		private long RetrieveLength()
 		{
 			j4o.io.RandomAccessFile file = new j4o.io.RandomAccessFile(_path, "r");
 			try
 			{
-				return file.length();
+				return file.Length();
 			}
 			finally
 			{
-				file.close();
+				file.Close();
 			}
 		}
 
@@ -53,56 +53,56 @@ namespace com.db4o.io
 		{
 		}
 
-		public override com.db4o.io.IoAdapter open(string path, bool lockFile, long initialLength
+		public override com.db4o.io.IoAdapter Open(string path, bool lockFile, long initialLength
 			)
 		{
 			return new com.db4o.io.SymbianIoAdapter(path, lockFile, initialLength);
 		}
 
-		public override long getLength()
+		public override long GetLength()
 		{
-			setLength();
+			SetLength();
 			return _length;
 		}
 
-		public override int read(byte[] bytes, int length)
+		public override int Read(byte[] bytes, int length)
 		{
-			int ret = base.read(bytes, length);
+			int ret = base.Read(bytes, length);
 			_pos += ret;
 			return ret;
 		}
 
-		public override void write(byte[] buffer, int length)
+		public override void Write(byte[] buffer, int length)
 		{
-			base.write(buffer, length);
+			base.Write(buffer, length);
 			_pos += length;
 			if (_pos > _length)
 			{
-				setLength();
+				SetLength();
 			}
 		}
 
-		public override void seek(long pos)
+		public override void Seek(long pos)
 		{
 			if (pos > _length)
 			{
-				setLength();
+				SetLength();
 			}
 			if (pos > _length)
 			{
 				int len = (int)(pos - _length);
-				base.seek(_length);
+				base.Seek(_length);
 				_pos = _length;
 				if (len < 500)
 				{
-					write(_seekBytes, len);
+					Write(_seekBytes, len);
 				}
 				else
 				{
-					write(new byte[len]);
+					Write(new byte[len]);
 				}
 			}
-			base.seek(pos);
+			base.Seek(pos);
 			_pos = pos;
 		}
 	}

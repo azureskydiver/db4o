@@ -13,12 +13,12 @@ namespace com.db4o.foundation
 			_next = first;
 		}
 
-		public virtual bool hasNext()
+		public virtual bool HasNext()
 		{
 			return _next != null;
 		}
 
-		public virtual object next()
+		public virtual object Next()
 		{
 			object obj = _next._element;
 			_next = _next._next;

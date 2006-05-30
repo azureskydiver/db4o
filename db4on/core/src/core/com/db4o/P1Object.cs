@@ -20,116 +20,116 @@ namespace com.db4o
 			i_trans = a_trans;
 		}
 
-		public virtual void activate(object a_obj, int a_depth)
+		public virtual void Activate(object a_obj, int a_depth)
 		{
 			if (i_trans != null)
 			{
 				if (a_depth < 0)
 				{
-					i_trans.i_stream.activate1(i_trans, a_obj);
+					i_trans.i_stream.Activate1(i_trans, a_obj);
 				}
 				else
 				{
-					i_trans.i_stream.activate1(i_trans, a_obj, a_depth);
+					i_trans.i_stream.Activate1(i_trans, a_obj, a_depth);
 				}
 			}
 		}
 
-		public virtual int activationDepth()
+		public virtual int ActivationDepth()
 		{
 			return 1;
 		}
 
-		public virtual int adjustReadDepth(int a_depth)
+		public virtual int AdjustReadDepth(int a_depth)
 		{
 			return a_depth;
 		}
 
-		public virtual bool canBind()
+		public virtual bool CanBind()
 		{
 			return false;
 		}
 
-		internal virtual void checkActive()
+		internal virtual void CheckActive()
 		{
 			if (i_trans != null)
 			{
 				if (i_yapObject == null)
 				{
-					i_yapObject = i_trans.i_stream.getYapObject(this);
+					i_yapObject = i_trans.i_stream.GetYapObject(this);
 					if (i_yapObject == null)
 					{
-						i_trans.i_stream.set(this);
-						i_yapObject = i_trans.i_stream.getYapObject(this);
+						i_trans.i_stream.Set(this);
+						i_yapObject = i_trans.i_stream.GetYapObject(this);
 					}
 				}
-				if (validYapObject())
+				if (ValidYapObject())
 				{
-					i_yapObject.activate(i_trans, this, activationDepth(), false);
+					i_yapObject.Activate(i_trans, this, ActivationDepth(), false);
 				}
 			}
 		}
 
-		public virtual object createDefault(com.db4o.Transaction a_trans)
+		public virtual object CreateDefault(com.db4o.Transaction a_trans)
 		{
-			throw com.db4o.YapConst.virtualException();
+			throw com.db4o.inside.Exceptions4.VirtualException();
 		}
 
-		internal virtual void deactivate()
+		internal virtual void Deactivate()
 		{
-			if (validYapObject())
+			if (ValidYapObject())
 			{
-				i_yapObject.deactivate(i_trans, activationDepth());
+				i_yapObject.Deactivate(i_trans, ActivationDepth());
 			}
 		}
 
-		internal virtual void delete()
+		internal virtual void Delete()
 		{
 			if (i_trans != null)
 			{
 				if (i_yapObject == null)
 				{
-					i_yapObject = i_trans.i_stream.getYapObject(this);
+					i_yapObject = i_trans.i_stream.GetYapObject(this);
 				}
-				if (validYapObject())
+				if (ValidYapObject())
 				{
-					i_trans.i_stream.delete3(i_trans, i_yapObject, this, 0, false);
+					i_trans.i_stream.Delete3(i_trans, i_yapObject, this, 0, false);
 				}
 			}
 		}
 
-		protected virtual void delete(object a_obj)
+		protected virtual void Delete(object a_obj)
 		{
 			if (i_trans != null)
 			{
-				i_trans.i_stream.delete(a_obj);
+				i_trans.i_stream.Delete(a_obj);
 			}
 		}
 
-		protected virtual long getIDOf(object a_obj)
+		protected virtual long GetIDOf(object a_obj)
 		{
 			if (i_trans == null)
 			{
 				return 0;
 			}
-			return i_trans.i_stream.getID(a_obj);
+			return i_trans.i_stream.GetID(a_obj);
 		}
 
-		protected virtual com.db4o.Transaction getTrans()
+		protected virtual com.db4o.Transaction GetTrans()
 		{
 			return i_trans;
 		}
 
-		public virtual bool hasClassIndex()
+		public virtual bool HasClassIndex()
 		{
 			return false;
 		}
 
-		public virtual void preDeactivate()
+		public virtual void PreDeactivate()
 		{
 		}
 
-		protected virtual object replicate(com.db4o.Transaction fromTrans, com.db4o.Transaction
+		protected virtual object Replicate(com.db4o.Transaction fromTrans, com.db4o.Transaction
 			 toTrans)
 		{
 			com.db4o.YapStream fromStream = fromTrans.i_stream;
@@ -137,124 +137,124 @@ namespace com.db4o
 			com.db4o.inside.replication.MigrationConnection mgc = fromStream.i_handlers.i_migration;
 			lock (fromStream.Lock())
 			{
-				int id = toStream.oldReplicationHandles(this);
+				int id = toStream.OldReplicationHandles(this);
 				if (id == -1)
 				{
 					return this;
 				}
 				if (id > 0)
 				{
-					return toStream.getByID(id);
+					return toStream.GetByID(id);
 				}
 				if (mgc != null)
 				{
-					object otherObj = mgc.identityFor(this);
+					object otherObj = mgc.IdentityFor(this);
 					if (otherObj != null)
 					{
 						return otherObj;
 					}
 				}
-				com.db4o.P1Object replica = (com.db4o.P1Object)createDefault(toTrans);
+				com.db4o.P1Object replica = (com.db4o.P1Object)CreateDefault(toTrans);
 				if (mgc != null)
 				{
-					mgc.mapReference(replica, i_yapObject);
-					mgc.mapIdentity(this, replica);
+					mgc.MapReference(replica, i_yapObject);
+					mgc.MapIdentity(this, replica);
 				}
-				replica.store(0);
+				replica.Store(0);
 				return replica;
 			}
 		}
 
-		public virtual void replicateFrom(object obj)
+		public virtual void ReplicateFrom(object obj)
 		{
 		}
 
-		public virtual void setTrans(com.db4o.Transaction a_trans)
+		public virtual void SetTrans(com.db4o.Transaction a_trans)
 		{
 			i_trans = a_trans;
 		}
 
-		public virtual void setYapObject(com.db4o.YapObject a_yapObject)
+		public virtual void SetYapObject(com.db4o.YapObject a_yapObject)
 		{
 			i_yapObject = a_yapObject;
 		}
 
-		protected virtual void store(object a_obj)
+		protected virtual void Store(object a_obj)
 		{
 			if (i_trans != null)
 			{
-				i_trans.i_stream.setInternal(i_trans, a_obj, true);
+				i_trans.i_stream.SetInternal(i_trans, a_obj, true);
 			}
 		}
 
-		public virtual object storedTo(com.db4o.Transaction a_trans)
+		public virtual object StoredTo(com.db4o.Transaction a_trans)
 		{
 			i_trans = a_trans;
 			return this;
 		}
 
-		internal virtual object streamLock()
+		internal virtual object StreamLock()
 		{
 			if (i_trans != null)
 			{
-				i_trans.i_stream.checkClosed();
+				i_trans.i_stream.CheckClosed();
 				return i_trans.i_stream.Lock();
 			}
 			return this;
 		}
 
-		public virtual void store(int a_depth)
+		public virtual void Store(int a_depth)
 		{
 			if (i_trans != null)
 			{
 				if (i_yapObject == null)
 				{
-					i_yapObject = i_trans.i_stream.getYapObject(this);
+					i_yapObject = i_trans.i_stream.GetYapObject(this);
 					if (i_yapObject == null)
 					{
-						i_trans.i_stream.setInternal(i_trans, this, true);
-						i_yapObject = i_trans.i_stream.getYapObject(this);
+						i_trans.i_stream.SetInternal(i_trans, this, true);
+						i_yapObject = i_trans.i_stream.GetYapObject(this);
 						return;
 					}
 				}
-				update(a_depth);
+				Update(a_depth);
 			}
 		}
 
-		internal virtual void update()
+		internal virtual void Update()
 		{
-			update(activationDepth());
+			Update(ActivationDepth());
 		}
 
-		internal virtual void update(int depth)
+		internal virtual void Update(int depth)
 		{
-			if (validYapObject())
+			if (ValidYapObject())
 			{
-				i_trans.i_stream.beginEndSet(i_trans);
-				i_yapObject.writeUpdate(i_trans, depth);
-				i_trans.i_stream.checkStillToSet();
-				i_trans.i_stream.beginEndSet(i_trans);
+				i_trans.i_stream.BeginEndSet(i_trans);
+				i_yapObject.WriteUpdate(i_trans, depth);
+				i_trans.i_stream.CheckStillToSet();
+				i_trans.i_stream.BeginEndSet(i_trans);
 			}
 		}
 
-		internal virtual void updateInternal()
+		internal virtual void UpdateInternal()
 		{
-			updateInternal(activationDepth());
+			UpdateInternal(ActivationDepth());
 		}
 
-		internal virtual void updateInternal(int depth)
+		internal virtual void UpdateInternal(int depth)
 		{
-			if (validYapObject())
+			if (ValidYapObject())
 			{
-				i_yapObject.writeUpdate(i_trans, depth);
-				i_trans.i_stream.rememberJustSet(i_yapObject.getID());
-				i_trans.i_stream.checkStillToSet();
+				i_yapObject.WriteUpdate(i_trans, depth);
+				i_trans.i_stream.RememberJustSet(i_yapObject.GetID());
+				i_trans.i_stream.CheckStillToSet();
 			}
 		}
 
-		private bool validYapObject()
+		private bool ValidYapObject()
 		{
-			return (i_trans != null) && (i_yapObject != null) && (i_yapObject.getID() > 0);
+			return (i_trans != null) && (i_yapObject != null) && (i_yapObject.GetID() > 0);
 		}
 	}
 }

@@ -3,24 +3,24 @@ namespace com.db4o.inside.query
 	/// <exclude></exclude>
 	public interface QueryResult
 	{
-		object get(int index);
+		object Get(int index);
 
-		long[] getIDs();
+		long[] GetIDs();
 
-		bool hasNext();
+		bool HasNext();
 
-		object next();
+		object Next();
 
-		void reset();
+		void Reset();
 
-		int size();
+		int Size();
 
-		object streamLock();
+		object StreamLock();
 
-		com.db4o.ObjectContainer objectContainer();
+		com.db4o.ObjectContainer ObjectContainer();
 
-		int indexOf(int id);
+		int IndexOf(int id);
 
-		void sort(com.db4o.query.QueryComparator cmp);
+		void Sort(com.db4o.query.QueryComparator cmp);
 	}
 }

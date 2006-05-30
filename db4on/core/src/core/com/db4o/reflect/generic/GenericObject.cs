@@ -12,23 +12,23 @@ namespace com.db4o.reflect.generic
 			_class = clazz;
 		}
 
-		private void ensureValuesInitialized()
+		private void EnsureValuesInitialized()
 		{
 			if (_values == null)
 			{
-				_values = new object[_class.getFieldCount()];
+				_values = new object[_class.GetFieldCount()];
 			}
 		}
 
-		public virtual void set(int index, object value)
+		public virtual void Set(int index, object value)
 		{
-			ensureValuesInitialized();
+			EnsureValuesInitialized();
 			_values[index] = value;
 		}
 
-		public virtual object get(int index)
+		public virtual object Get(int index)
 		{
-			ensureValuesInitialized();
+			EnsureValuesInitialized();
 			return _values[index];
 		}
 
@@ -38,7 +38,7 @@ namespace com.db4o.reflect.generic
 			{
 				return base.ToString();
 			}
-			return _class.toString(this);
+			return _class.ToString(this);
 		}
 	}
 }

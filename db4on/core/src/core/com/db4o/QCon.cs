@@ -37,67 +37,67 @@ namespace com.db4o
 
 		internal QCon(com.db4o.Transaction a_trans)
 		{
-			i_id = idGenerator.next();
+			i_id = idGenerator.Next();
 			i_trans = a_trans;
 		}
 
-		internal virtual com.db4o.QCon addConstraint(com.db4o.QCon a_child)
+		internal virtual com.db4o.QCon AddConstraint(com.db4o.QCon a_child)
 		{
 			_children = new com.db4o.foundation.List4(_children, a_child);
 			return a_child;
 		}
 
-		internal virtual void addJoin(com.db4o.QConJoin a_join)
+		internal virtual void AddJoin(com.db4o.QConJoin a_join)
 		{
 			if (i_joins == null)
 			{
 				i_joins = new com.db4o.foundation.Collection4();
 			}
-			i_joins.add(a_join);
+			i_joins.Add(a_join);
 		}
 
-		internal virtual com.db4o.QCon addSharedConstraint(com.db4o.QField a_field, object
+		internal virtual com.db4o.QCon AddSharedConstraint(com.db4o.QField a_field, object
 			 a_object)
 		{
 			com.db4o.QConObject newConstraint = new com.db4o.QConObject(i_trans, this, a_field
 				, a_object);
-			addConstraint(newConstraint);
+			AddConstraint(newConstraint);
 			return newConstraint;
 		}
 
-		public virtual com.db4o.query.Constraint and(com.db4o.query.Constraint andWith)
+		public virtual com.db4o.query.Constraint And(com.db4o.query.Constraint andWith)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				return join(andWith, true);
+				return Join(andWith, true);
 			}
 		}
 
-		internal virtual void applyOrdering()
+		internal virtual void ApplyOrdering()
 		{
 			if (i_orderID != 0)
 			{
-				com.db4o.QCon root = getRoot();
-				root.i_candidates.applyOrdering(i_candidates.i_ordered, i_orderID);
+				com.db4o.QCon root = GetRoot();
+				root.i_candidates.ApplyOrdering(i_candidates.i_ordered, i_orderID);
 			}
 		}
 
-		internal virtual bool attach(com.db4o.QQuery query, string a_field)
+		internal virtual bool Attach(com.db4o.QQuery query, string a_field)
 		{
 			com.db4o.QCon qcon = this;
-			com.db4o.YapClass yc = getYapClass();
+			com.db4o.YapClass yc = GetYapClass();
 			bool[] foundField = { false };
-			forEachChildField(a_field, new _AnonymousInnerClass102(this, foundField, query));
+			ForEachChildField(a_field, new _AnonymousInnerClass103(this, foundField, query));
 			if (foundField[0])
 			{
 				return true;
 			}
 			com.db4o.QField qf = null;
-			if (yc == null || yc.holdsAnyClass())
+			if (yc == null || yc.HoldsAnyClass())
 			{
 				int[] count = { 0 };
 				com.db4o.YapField[] yfs = { null };
-				i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new _AnonymousInnerClass120
+				i_trans.i_stream.i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass121
 					(this, yfs, count));
 				if (count[0] == 0)
 				{
@@ -105,7 +105,7 @@ namespace com.db4o
 				}
 				if (count[0] == 1)
 				{
-					qf = yfs[0].qField(i_trans);
+					qf = yfs[0].QField(i_trans);
 				}
 				else
 				{
@@ -116,10 +116,10 @@ namespace com.db4o
 			{
 				if (yc != null)
 				{
-					com.db4o.YapField yf = yc.getYapField(a_field);
+					com.db4o.YapField yf = yc.GetYapField(a_field);
 					if (yf != null)
 					{
-						qf = yf.qField(i_trans);
+						qf = yf.QField(i_trans);
 					}
 				}
 				if (qf == null)
@@ -128,14 +128,14 @@ namespace com.db4o
 				}
 			}
 			com.db4o.QConPath qcp = new com.db4o.QConPath(i_trans, qcon, qf);
-			query.addConstraint(qcp);
-			qcon.addConstraint(qcp);
+			query.AddConstraint(qcp);
+			qcon.AddConstraint(qcp);
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass102 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass103 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass102(QCon _enclosing, bool[] foundField, com.db4o.QQuery
+			public _AnonymousInnerClass103(QCon _enclosing, bool[] foundField, com.db4o.QQuery
 				 query)
 			{
 				this._enclosing = _enclosing;
@@ -143,10 +143,10 @@ namespace com.db4o
 				this.query = query;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
 				foundField[0] = true;
-				query.addConstraint((com.db4o.QCon)obj);
+				query.AddConstraint((com.db4o.QCon)obj);
 			}
 
 			private readonly QCon _enclosing;
@@ -156,9 +156,9 @@ namespace com.db4o
 			private readonly com.db4o.QQuery query;
 		}
 
-		private sealed class _AnonymousInnerClass120 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass121 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass120(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
+			public _AnonymousInnerClass121(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
 				)
 			{
 				this._enclosing = _enclosing;
@@ -166,7 +166,7 @@ namespace com.db4o
 				this.count = count;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
 				yfs[0] = (com.db4o.YapField)((object[])obj)[1];
 				count[0]++;
@@ -179,143 +179,143 @@ namespace com.db4o
 			private readonly int[] count;
 		}
 
-		public virtual bool canBeIndexLeaf()
+		public virtual bool CanBeIndexLeaf()
 		{
 			return false;
 		}
 
-		public virtual bool canLoadByIndex()
+		public virtual bool CanLoadByIndex()
 		{
 			return false;
 		}
 
-		internal virtual void checkLastJoinRemoved()
+		internal virtual void CheckLastJoinRemoved()
 		{
-			if (i_joins.size() == 0)
+			if (i_joins.Size() == 0)
 			{
 				i_joins = null;
 			}
 		}
 
-		internal virtual void collect(com.db4o.QCandidates a_candidates)
+		internal virtual void Collect(com.db4o.QCandidates a_candidates)
 		{
 		}
 
-		public virtual com.db4o.query.Constraint contains()
+		public virtual com.db4o.query.Constraint Contains()
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		internal virtual void createCandidates(com.db4o.foundation.Collection4 a_candidateCollection
+		internal virtual void CreateCandidates(com.db4o.foundation.Collection4 a_candidateCollection
 			)
 		{
-			com.db4o.foundation.Iterator4 j = a_candidateCollection.iterator();
-			while (j.hasNext())
+			com.db4o.foundation.Iterator4 j = a_candidateCollection.Iterator();
+			while (j.HasNext())
 			{
-				com.db4o.QCandidates candidates = (com.db4o.QCandidates)j.next();
-				if (candidates.tryAddConstraint(this))
+				com.db4o.QCandidates candidates = (com.db4o.QCandidates)j.Next();
+				if (candidates.TryAddConstraint(this))
 				{
 					i_candidates = candidates;
 					return;
 				}
 			}
-			i_candidates = new com.db4o.QCandidates(i_trans, getYapClass(), getField());
-			i_candidates.addConstraint(this);
-			a_candidateCollection.add(i_candidates);
+			i_candidates = new com.db4o.QCandidates(i_trans, GetYapClass(), GetField());
+			i_candidates.AddConstraint(this);
+			a_candidateCollection.Add(i_candidates);
 		}
 
-		internal virtual void doNotInclude(com.db4o.QCandidate a_root)
+		internal virtual void DoNotInclude(com.db4o.QCandidate a_root)
 		{
 			if (i_parent != null)
 			{
-				i_parent.visit1(a_root, this, false);
+				i_parent.Visit1(a_root, this, false);
 			}
 			else
 			{
-				a_root.doNotInclude();
+				a_root.DoNotInclude();
 			}
 		}
 
-		public virtual com.db4o.query.Constraint equal()
+		public virtual com.db4o.query.Constraint Equal()
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		internal virtual bool evaluate(com.db4o.QCandidate a_candidate)
+		internal virtual bool Evaluate(com.db4o.QCandidate a_candidate)
 		{
-			throw com.db4o.YapConst.virtualException();
+			throw com.db4o.inside.Exceptions4.VirtualException();
 		}
 
-		internal virtual void evaluateChildren()
+		internal virtual void EvaluateChildren()
 		{
-			com.db4o.foundation.Iterator4 i = i_childrenCandidates.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = i_childrenCandidates.Iterator();
+			while (i.HasNext())
 			{
-				((com.db4o.QCandidates)i.next()).evaluate();
+				((com.db4o.QCandidates)i.Next()).Evaluate();
 			}
 		}
 
-		internal virtual void evaluateCollectChildren()
+		internal virtual void EvaluateCollectChildren()
 		{
-			com.db4o.foundation.Iterator4 i = i_childrenCandidates.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = i_childrenCandidates.Iterator();
+			while (i.HasNext())
 			{
-				((com.db4o.QCandidates)i.next()).collect(i_candidates);
+				((com.db4o.QCandidates)i.Next()).Collect(i_candidates);
 			}
 		}
 
-		internal virtual void evaluateCreateChildrenCandidates()
+		internal virtual void EvaluateCreateChildrenCandidates()
 		{
 			i_childrenCandidates = new com.db4o.foundation.Collection4();
-			com.db4o.foundation.Iterator4 i = iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateChildren();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).createCandidates(i_childrenCandidates);
+				((com.db4o.QCon)i.Next()).CreateCandidates(i_childrenCandidates);
 			}
 		}
 
-		internal virtual void evaluateEvaluations()
+		internal virtual void EvaluateEvaluations()
 		{
-			com.db4o.foundation.Iterator4 i = iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateChildren();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).evaluateEvaluationsExec(i_candidates, true);
+				((com.db4o.QCon)i.Next()).EvaluateEvaluationsExec(i_candidates, true);
 			}
 		}
 
-		internal virtual void evaluateEvaluationsExec(com.db4o.QCandidates a_candidates, 
+		internal virtual void EvaluateEvaluationsExec(com.db4o.QCandidates a_candidates, 
 			bool rereadObject)
 		{
 		}
 
-		internal virtual void evaluateSelf()
+		internal virtual void EvaluateSelf()
 		{
-			i_candidates.filter(this);
+			i_candidates.Filter(this);
 		}
 
-		internal virtual void evaluateSimpleChildren()
+		internal virtual void EvaluateSimpleChildren()
 		{
 			if (_children == null)
 			{
 				return;
 			}
-			com.db4o.foundation.Iterator4 i = iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateChildren();
+			while (i.HasNext())
 			{
-				com.db4o.QCon qcon = (com.db4o.QCon)i.next();
-				i_candidates.setCurrentConstraint(qcon);
-				qcon.setCandidates(i_candidates);
-				qcon.evaluateSimpleExec(i_candidates);
-				qcon.applyOrdering();
+				com.db4o.QCon qcon = (com.db4o.QCon)i.Next();
+				i_candidates.SetCurrentConstraint(qcon);
+				qcon.SetCandidates(i_candidates);
+				qcon.EvaluateSimpleExec(i_candidates);
+				qcon.ApplyOrdering();
 			}
-			i_candidates.setCurrentConstraint(null);
+			i_candidates.SetCurrentConstraint(null);
 		}
 
-		internal virtual void evaluateSimpleExec(com.db4o.QCandidates a_candidates)
+		internal virtual void EvaluateSimpleExec(com.db4o.QCandidates a_candidates)
 		{
 		}
 
-		internal virtual void exchangeConstraint(com.db4o.QCon a_exchange, com.db4o.QCon 
+		internal virtual void ExchangeConstraint(com.db4o.QCon a_exchange, com.db4o.QCon 
 			a_with)
 		{
 			com.db4o.foundation.List4 previous = null;
@@ -339,112 +339,112 @@ namespace com.db4o
 			_children = new com.db4o.foundation.List4(_children, a_with);
 		}
 
-		internal virtual void forEachChildField(string name, com.db4o.foundation.Visitor4
+		internal virtual void ForEachChildField(string name, com.db4o.foundation.Visitor4
 			 visitor)
 		{
-			com.db4o.foundation.Iterator4 i = iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateChildren();
+			while (i.HasNext())
 			{
-				object obj = i.next();
+				object obj = i.Next();
 				if (obj is com.db4o.QConObject)
 				{
 					if (((com.db4o.QConObject)obj).i_field.i_name.Equals(name))
 					{
-						visitor.visit(obj);
+						visitor.Visit(obj);
 					}
 				}
 			}
 		}
 
-		internal virtual com.db4o.QField getField()
+		internal virtual com.db4o.QField GetField()
 		{
 			return null;
 		}
 
-		public virtual object getObject()
+		public virtual object GetObject()
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		internal virtual com.db4o.QCon getRoot()
+		internal virtual com.db4o.QCon GetRoot()
 		{
 			if (i_parent != null)
 			{
-				return i_parent.getRoot();
+				return i_parent.GetRoot();
 			}
 			return this;
 		}
 
-		internal virtual com.db4o.QCon getTopLevelJoin()
+		internal virtual com.db4o.QCon GetTopLevelJoin()
 		{
-			if (!hasJoins())
+			if (!HasJoins())
 			{
 				return this;
 			}
-			com.db4o.foundation.Iterator4 i = iterateJoins();
-			if (i_joins.size() == 1)
+			com.db4o.foundation.Iterator4 i = IterateJoins();
+			if (i_joins.Size() == 1)
 			{
-				return ((com.db4o.QCon)i.next()).getTopLevelJoin();
+				return ((com.db4o.QCon)i.Next()).GetTopLevelJoin();
 			}
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
-			while (i.hasNext())
+			while (i.HasNext())
 			{
-				col.ensure(((com.db4o.QCon)i.next()).getTopLevelJoin());
+				col.Ensure(((com.db4o.QCon)i.Next()).GetTopLevelJoin());
 			}
-			i = col.iterator();
-			com.db4o.QCon qcon = (com.db4o.QCon)i.next();
-			if (col.size() == 1)
+			i = col.Iterator();
+			com.db4o.QCon qcon = (com.db4o.QCon)i.Next();
+			if (col.Size() == 1)
 			{
 				return qcon;
 			}
-			while (i.hasNext())
+			while (i.HasNext())
 			{
-				qcon = (com.db4o.QCon)qcon.and((com.db4o.query.Constraint)i.next());
+				qcon = (com.db4o.QCon)qcon.And((com.db4o.query.Constraint)i.Next());
 			}
 			return qcon;
 		}
 
-		internal virtual com.db4o.YapClass getYapClass()
+		internal virtual com.db4o.YapClass GetYapClass()
 		{
 			return null;
 		}
 
-		public virtual com.db4o.query.Constraint greater()
+		public virtual com.db4o.query.Constraint Greater()
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		public virtual bool hasChildren()
+		public virtual bool HasChildren()
 		{
 			return _children != null;
 		}
 
-		public virtual bool hasOrJoins()
+		public virtual bool HasOrJoins()
 		{
 			com.db4o.foundation.Collection4 lookedAt = new com.db4o.foundation.Collection4();
-			return hasOrJoins(lookedAt);
+			return HasOrJoins(lookedAt);
 		}
 
-		internal virtual bool hasOrJoins(com.db4o.foundation.Collection4 lookedAt)
+		internal virtual bool HasOrJoins(com.db4o.foundation.Collection4 lookedAt)
 		{
-			if (lookedAt.containsByIdentity(this))
+			if (lookedAt.ContainsByIdentity(this))
 			{
 				return false;
 			}
-			lookedAt.add(this);
+			lookedAt.Add(this);
 			if (i_joins == null)
 			{
 				return false;
 			}
-			com.db4o.foundation.Iterator4 i = iterateJoins();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateJoins();
+			while (i.HasNext())
 			{
-				com.db4o.QConJoin join = (com.db4o.QConJoin)i.next();
+				com.db4o.QConJoin join = (com.db4o.QConJoin)i.Next();
 				if (!join.i_and)
 				{
 					return true;
 				}
-				if (join.hasOrJoins(lookedAt))
+				if (join.HasOrJoins(lookedAt))
 				{
 					return true;
 				}
@@ -452,59 +452,59 @@ namespace com.db4o
 			return false;
 		}
 
-		public virtual bool hasJoins()
+		public virtual bool HasJoins()
 		{
 			if (i_joins == null)
 			{
 				return false;
 			}
-			return i_joins.size() > 0;
+			return i_joins.Size() > 0;
 		}
 
-		internal virtual bool hasObjectInParentPath(object obj)
+		internal virtual bool HasObjectInParentPath(object obj)
 		{
 			if (i_parent != null)
 			{
-				return i_parent.hasObjectInParentPath(obj);
+				return i_parent.HasObjectInParentPath(obj);
 			}
 			return false;
 		}
 
-		public virtual com.db4o.query.Constraint identity()
+		public virtual com.db4o.query.Constraint Identity()
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		public virtual int identityID()
+		public virtual int IdentityID()
 		{
 			return 0;
 		}
 
-		public virtual com.db4o.inside.ix.IxTree indexRoot()
+		public virtual com.db4o.inside.ix.IxTree IndexRoot()
 		{
-			throw com.db4o.YapConst.virtualException();
+			throw com.db4o.inside.Exceptions4.VirtualException();
 		}
 
-		internal virtual bool isNot()
+		internal virtual bool IsNot()
 		{
 			return i_evaluator is com.db4o.QENot;
 		}
 
-		internal virtual bool isNullConstraint()
+		internal virtual bool IsNullConstraint()
 		{
 			return false;
 		}
 
-		internal virtual com.db4o.foundation.Iterator4 iterateJoins()
+		internal virtual com.db4o.foundation.Iterator4 IterateJoins()
 		{
 			if (i_joins == null)
 			{
 				return com.db4o.foundation.Iterator4Impl.EMPTY;
 			}
-			return i_joins.iterator();
+			return i_joins.Iterator();
 		}
 
-		public virtual com.db4o.foundation.Iterator4 iterateChildren()
+		public virtual com.db4o.foundation.Iterator4 IterateChildren()
 		{
 			if (_children == null)
 			{
@@ -513,7 +513,7 @@ namespace com.db4o
 			return new com.db4o.foundation.Iterator4Impl(_children);
 		}
 
-		internal virtual com.db4o.query.Constraint join(com.db4o.query.Constraint a_with, 
+		internal virtual com.db4o.query.Constraint Join(com.db4o.query.Constraint a_with, 
 			bool a_and)
 		{
 			if (!(a_with is com.db4o.QCon))
@@ -524,85 +524,85 @@ namespace com.db4o
 			{
 				return this;
 			}
-			return join1((com.db4o.QCon)a_with, a_and);
+			return Join1((com.db4o.QCon)a_with, a_and);
 		}
 
-		internal virtual com.db4o.query.Constraint join1(com.db4o.QCon a_with, bool a_and
+		internal virtual com.db4o.query.Constraint Join1(com.db4o.QCon a_with, bool a_and
 			)
 		{
 			if (a_with is com.db4o.QConstraints)
 			{
 				int j = 0;
 				com.db4o.foundation.Collection4 joinHooks = new com.db4o.foundation.Collection4();
-				com.db4o.query.Constraint[] constraints = ((com.db4o.QConstraints)a_with).toArray
+				com.db4o.query.Constraint[] constraints = ((com.db4o.QConstraints)a_with).ToArray
 					();
 				for (j = 0; j < constraints.Length; j++)
 				{
-					joinHooks.ensure(((com.db4o.QCon)constraints[j]).joinHook());
+					joinHooks.Ensure(((com.db4o.QCon)constraints[j]).JoinHook());
 				}
-				com.db4o.query.Constraint[] joins = new com.db4o.query.Constraint[joinHooks.size(
+				com.db4o.query.Constraint[] joins = new com.db4o.query.Constraint[joinHooks.Size(
 					)];
 				j = 0;
-				com.db4o.foundation.Iterator4 i = joinHooks.iterator();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = joinHooks.Iterator();
+				while (i.HasNext())
 				{
-					joins[j++] = join((com.db4o.query.Constraint)i.next(), a_and);
+					joins[j++] = Join((com.db4o.query.Constraint)i.Next(), a_and);
 				}
 				return new com.db4o.QConstraints(i_trans, joins);
 			}
-			com.db4o.QCon myHook = joinHook();
-			com.db4o.QCon otherHook = a_with.joinHook();
+			com.db4o.QCon myHook = JoinHook();
+			com.db4o.QCon otherHook = a_with.JoinHook();
 			if (myHook == otherHook)
 			{
 				return myHook;
 			}
 			com.db4o.QConJoin cj = new com.db4o.QConJoin(i_trans, myHook, otherHook, a_and);
-			myHook.addJoin(cj);
-			otherHook.addJoin(cj);
+			myHook.AddJoin(cj);
+			otherHook.AddJoin(cj);
 			return cj;
 		}
 
-		internal virtual com.db4o.QCon joinHook()
+		internal virtual com.db4o.QCon JoinHook()
 		{
-			return getTopLevelJoin();
+			return GetTopLevelJoin();
 		}
 
-		public virtual com.db4o.query.Constraint like()
+		public virtual com.db4o.query.Constraint Like()
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		public virtual com.db4o.query.Constraint startsWith(bool caseSensitive)
+		public virtual com.db4o.query.Constraint StartsWith(bool caseSensitive)
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		public virtual com.db4o.query.Constraint endsWith(bool caseSensitive)
+		public virtual com.db4o.query.Constraint EndsWith(bool caseSensitive)
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		internal virtual void log(string indent)
+		internal virtual void Log(string indent)
 		{
 		}
 
-		internal virtual string logObject()
+		internal virtual string LogObject()
 		{
 			return "";
 		}
 
-		internal virtual void marshall()
+		internal virtual void Marshall()
 		{
-			com.db4o.foundation.Iterator4 i = iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateChildren();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).marshall();
+				((com.db4o.QCon)i.Next()).Marshall();
 			}
 		}
 
-		public virtual com.db4o.query.Constraint not()
+		public virtual com.db4o.query.Constraint Not()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				if (!(i_evaluator is com.db4o.QENot))
 				{
@@ -612,195 +612,195 @@ namespace com.db4o
 			}
 		}
 
-		private j4o.lang.RuntimeException notSupported()
+		private j4o.lang.RuntimeException NotSupported()
 		{
 			return new j4o.lang.RuntimeException("Not supported.");
 		}
 
-		public virtual bool onSameFieldAs(com.db4o.QCon other)
+		public virtual bool OnSameFieldAs(com.db4o.QCon other)
 		{
 			return false;
 		}
 
-		public virtual com.db4o.query.Constraint or(com.db4o.query.Constraint orWith)
+		public virtual com.db4o.query.Constraint Or(com.db4o.query.Constraint orWith)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				return join(orWith, false);
+				return Join(orWith, false);
 			}
 		}
 
-		internal virtual bool remove()
+		internal virtual bool Remove()
 		{
 			if (!i_removed)
 			{
 				i_removed = true;
-				removeChildrenJoins();
+				RemoveChildrenJoins();
 				return true;
 			}
 			return false;
 		}
 
-		internal virtual void removeChildrenJoins()
+		internal virtual void RemoveChildrenJoins()
 		{
-			if (!hasJoins())
+			if (!HasJoins())
 			{
 				return;
 			}
-			com.db4o.foundation.Iterator4 i = iterateJoins();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateJoins();
+			while (i.HasNext())
 			{
-				com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.next();
-				if (qcj.removeForParent(this))
+				com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.Next();
+				if (qcj.RemoveForParent(this))
 				{
-					i_joins.remove(qcj);
+					i_joins.Remove(qcj);
 				}
 			}
-			checkLastJoinRemoved();
+			CheckLastJoinRemoved();
 		}
 
-		internal virtual void removeJoin(com.db4o.QConJoin a_join)
+		internal virtual void RemoveJoin(com.db4o.QConJoin a_join)
 		{
-			i_joins.remove(a_join);
-			checkLastJoinRemoved();
+			i_joins.Remove(a_join);
+			CheckLastJoinRemoved();
 		}
 
-		internal virtual void removeNot()
+		internal virtual void RemoveNot()
 		{
-			if (isNot())
+			if (IsNot())
 			{
 				i_evaluator = ((com.db4o.QENot)i_evaluator).i_evaluator;
 			}
 		}
 
-		public virtual void setCandidates(com.db4o.QCandidates a_candidates)
+		public virtual void SetCandidates(com.db4o.QCandidates a_candidates)
 		{
 			i_candidates = a_candidates;
 		}
 
-		internal virtual void setOrdering(int a_ordering)
+		internal virtual void SetOrdering(int a_ordering)
 		{
 			i_orderID = a_ordering;
 		}
 
-		internal virtual void setParent(com.db4o.QCon a_newParent)
+		internal virtual void SetParent(com.db4o.QCon a_newParent)
 		{
 			i_parent = a_newParent;
 		}
 
-		internal virtual com.db4o.QCon shareParent(object a_object, bool[] removeExisting
+		internal virtual com.db4o.QCon ShareParent(object a_object, bool[] removeExisting
 			)
 		{
 			return null;
 		}
 
-		internal virtual com.db4o.QConClass shareParentForClass(com.db4o.reflect.ReflectClass
+		internal virtual com.db4o.QConClass ShareParentForClass(com.db4o.reflect.ReflectClass
 			 a_class, bool[] removeExisting)
 		{
 			return null;
 		}
 
-		public virtual com.db4o.query.Constraint smaller()
+		public virtual com.db4o.query.Constraint Smaller()
 		{
-			throw notSupported();
+			throw NotSupported();
 		}
 
-		protected virtual object streamLock()
+		protected virtual object StreamLock()
 		{
 			return i_trans.i_stream.i_lock;
 		}
 
-		internal virtual bool supportsOrdering()
+		internal virtual bool SupportsOrdering()
 		{
 			return false;
 		}
 
-		internal virtual void unmarshall(com.db4o.Transaction a_trans)
+		internal virtual void Unmarshall(com.db4o.Transaction a_trans)
 		{
 			if (i_trans != null)
 			{
 				return;
 			}
 			i_trans = a_trans;
-			unmarshallParent(a_trans);
-			unmarshallJoins(a_trans);
-			unmarshallChildren(a_trans);
+			UnmarshallParent(a_trans);
+			UnmarshallJoins(a_trans);
+			UnmarshallChildren(a_trans);
 		}
 
-		private void unmarshallParent(com.db4o.Transaction a_trans)
+		private void UnmarshallParent(com.db4o.Transaction a_trans)
 		{
 			if (i_parent != null)
 			{
-				i_parent.unmarshall(a_trans);
+				i_parent.Unmarshall(a_trans);
 			}
 		}
 
-		private void unmarshallChildren(com.db4o.Transaction a_trans)
+		private void UnmarshallChildren(com.db4o.Transaction a_trans)
 		{
-			com.db4o.foundation.Iterator4 i = iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateChildren();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).unmarshall(a_trans);
+				((com.db4o.QCon)i.Next()).Unmarshall(a_trans);
 			}
 		}
 
-		private void unmarshallJoins(com.db4o.Transaction a_trans)
+		private void UnmarshallJoins(com.db4o.Transaction a_trans)
 		{
-			if (hasJoins())
+			if (HasJoins())
 			{
-				com.db4o.foundation.Iterator4 i = iterateJoins();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = IterateJoins();
+				while (i.HasNext())
 				{
-					((com.db4o.QCon)i.next()).unmarshall(a_trans);
+					((com.db4o.QCon)i.Next()).Unmarshall(a_trans);
 				}
 			}
 		}
 
-		public virtual void visit(object obj)
+		public virtual void Visit(object obj)
 		{
 			com.db4o.QCandidate qc = (com.db4o.QCandidate)obj;
-			visit1(qc.getRoot(), this, evaluate(qc));
+			Visit1(qc.GetRoot(), this, Evaluate(qc));
 		}
 
-		internal virtual void visit(com.db4o.QCandidate a_root, bool res)
+		internal virtual void Visit(com.db4o.QCandidate a_root, bool res)
 		{
-			visit1(a_root, this, i_evaluator.not(res));
+			Visit1(a_root, this, i_evaluator.Not(res));
 		}
 
-		internal virtual void visit1(com.db4o.QCandidate a_root, com.db4o.QCon a_reason, 
+		internal virtual void Visit1(com.db4o.QCandidate a_root, com.db4o.QCon a_reason, 
 			bool res)
 		{
-			if (hasJoins())
+			if (HasJoins())
 			{
-				com.db4o.foundation.Iterator4 i = iterateJoins();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = IterateJoins();
+				while (i.HasNext())
 				{
-					a_root.evaluate(new com.db4o.QPending((com.db4o.QConJoin)i.next(), this, res));
+					a_root.Evaluate(new com.db4o.QPending((com.db4o.QConJoin)i.Next(), this, res));
 				}
 			}
 			else
 			{
 				if (!res)
 				{
-					doNotInclude(a_root);
+					DoNotInclude(a_root);
 				}
 			}
 		}
 
-		internal void visitOnNull(com.db4o.QCandidate a_root)
+		internal void VisitOnNull(com.db4o.QCandidate a_root)
 		{
-			com.db4o.foundation.Iterator4 i = iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateChildren();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).visitOnNull(a_root);
+				((com.db4o.QCon)i.Next()).VisitOnNull(a_root);
 			}
-			if (visitSelfOnNull())
+			if (VisitSelfOnNull())
 			{
-				visit(a_root, isNullConstraint());
+				Visit(a_root, IsNullConstraint());
 			}
 		}
 
-		internal virtual bool visitSelfOnNull()
+		internal virtual bool VisitSelfOnNull()
 		{
 			return true;
 		}

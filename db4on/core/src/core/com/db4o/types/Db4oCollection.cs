@@ -11,7 +11,7 @@ namespace com.db4o.types
 		/// configured for the ObjectContainer or for individual objects.
 		/// </remarks>
 		/// <param name="depth">the desired depth</param>
-		void activationDepth(int depth);
+		void ActivationDepth(int depth);
 
 		/// <summary>
 		/// configures objects are to be deleted from the database file if they are
@@ -23,6 +23,6 @@ namespace com.db4o.types
 		/// <br /><br />Default value: <code>false</code>
 		/// </remarks>
 		/// <param name="flag">the desired setting</param>
-		void deleteRemoved(bool flag);
+		void DeleteRemoved(bool flag);
 	}
 }

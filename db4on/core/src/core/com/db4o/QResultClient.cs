@@ -21,29 +21,29 @@ namespace com.db4o
 		{
 		}
 
-		public override bool hasNext()
+		public override bool HasNext()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				if (i_remainingObjects > 0)
 				{
 					return true;
 				}
-				return base.hasNext();
+				return base.HasNext();
 			}
 		}
 
-		public override object next()
+		public override object Next()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				com.db4o.YapClient stream = (com.db4o.YapClient)i_trans.i_stream;
-				stream.checkClosed();
+				stream.CheckClosed();
 				if (i_remainingObjects < 1)
 				{
-					if (base.hasNext())
+					if (base.HasNext())
 					{
-						i_remainingObjects = (stream).prefetchObjects(this, i_prefetched, i_prefetchCount
+						i_remainingObjects = (stream).PrefetchObjects(this, i_prefetched, i_prefetchCount
 							);
 						i_prefetchRight = i_remainingObjects;
 					}
@@ -55,19 +55,19 @@ namespace com.db4o
 				}
 				if (i_prefetched[i_prefetchRight - i_remainingObjects - 1] == null)
 				{
-					return next();
+					return Next();
 				}
-				return activate(i_prefetched[i_prefetchRight - i_remainingObjects - 1]);
+				return Activate(i_prefetched[i_prefetchRight - i_remainingObjects - 1]);
 			}
 		}
 
-		public override void reset()
+		public override void Reset()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				i_remainingObjects = 0;
 				i_prefetchRight = 0;
-				base.reset();
+				base.Reset();
 			}
 		}
 	}

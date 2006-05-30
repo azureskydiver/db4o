@@ -6,7 +6,7 @@ namespace com.db4o
 
 		private int i_minor;
 
-		public virtual int compareTo(object obj)
+		public virtual int CompareTo(object obj)
 		{
 			if (obj is com.db4o.Order)
 			{
@@ -21,7 +21,7 @@ namespace com.db4o
 			return 1;
 		}
 
-		public virtual void hintOrder(int a_order, bool a_major)
+		public virtual void HintOrder(int a_order, bool a_major)
 		{
 			if (a_major)
 			{
@@ -33,7 +33,7 @@ namespace com.db4o
 			}
 		}
 
-		public virtual bool hasDuplicates()
+		public virtual bool HasDuplicates()
 		{
 			return true;
 		}

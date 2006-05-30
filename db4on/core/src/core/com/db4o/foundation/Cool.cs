@@ -7,11 +7,11 @@ namespace com.db4o.foundation
 	/// <exclude></exclude>
 	public class Cool
 	{
-		public static void sleepIgnoringInterruption(long millis)
+		public static void SleepIgnoringInterruption(long millis)
 		{
 			try
 			{
-				j4o.lang.Thread.sleep(millis);
+				j4o.lang.Thread.Sleep(millis);
 			}
 			catch (System.Exception ignored)
 			{

@@ -10,6 +10,6 @@ namespace com.db4o.config
 	{
 		/// <summary>return the Object to be compared during query evaluation.</summary>
 		/// <remarks>return the Object to be compared during query evaluation.</remarks>
-		object compare();
+		object Compare();
 	}
 }

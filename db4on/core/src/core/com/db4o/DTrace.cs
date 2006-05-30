@@ -5,17 +5,17 @@ namespace com.db4o
 	{
 		public const bool enabled = false;
 
-		private static void breakPoint()
+		private static void BreakPoint()
 		{
 			int placeBreakPointHere = 1;
 		}
 
-		private static object init()
+		private static object Init()
 		{
 			return null;
 		}
 
-		private static void trackEventsWithoutRange()
+		private static void TrackEventsWithoutRange()
 		{
 			_trackEventsWithoutRange = true;
 		}
@@ -132,67 +132,67 @@ namespace com.db4o
 
 		public static com.db4o.DTrace WRITE_UPDATE_DELETE_MEMBERS;
 
-		private static readonly object forInit = init();
+		private static readonly object forInit = Init();
 
 		private static com.db4o.DTrace all;
 
 		private static int current;
 
-		public virtual void log()
+		public virtual void Log()
 		{
 		}
 
-		public virtual void log(long p)
+		public virtual void Log(long p)
 		{
 		}
 
-		public virtual void logInfo(string info)
+		public virtual void LogInfo(string info)
 		{
 		}
 
-		public virtual void log(long p, string info)
+		public virtual void Log(long p, string info)
 		{
 		}
 
-		public virtual void logLength(long start, long length)
+		public virtual void LogLength(long start, long length)
 		{
 		}
 
-		public virtual void logEnd(long start, long end)
+		public virtual void LogEnd(long start, long end)
 		{
 		}
 
-		public virtual void logEnd(long start, long end, string info)
+		public virtual void LogEnd(long start, long end, string info)
 		{
 		}
 
-		public static void addRange(long pos)
+		public static void AddRange(long pos)
 		{
 		}
 
-		public static void addRangeWithLength(long start, long length)
+		public static void AddRangeWithLength(long start, long length)
 		{
 		}
 
-		public static void addRangeWithEnd(long start, long end)
+		public static void AddRangeWithEnd(long start, long end)
 		{
 		}
 
-		private static void breakOnEvent(long eventNr)
+		private static void BreakOnEvent(long eventNr)
 		{
 		}
 
-		private string formatInt(long i, int len)
-		{
-			return null;
-		}
-
-		private string formatInt(long i)
+		private string FormatInt(long i, int len)
 		{
 			return null;
 		}
 
-		private static void turnAllOffExceptFor(com.db4o.DTrace[] these)
+		private string FormatInt(long i)
+		{
+			return null;
+		}
+
+		private static void TurnAllOffExceptFor(com.db4o.DTrace[] these)
 		{
 		}
 	}

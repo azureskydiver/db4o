@@ -5,40 +5,40 @@ namespace com.db4o
 	{
 		internal static object random;
 
-		internal static bool createDb4oList(object a_stream)
+		internal static bool CreateDb4oList(object a_stream)
 		{
-			((com.db4o.YapStream)a_stream).checkClosed();
-			return !((com.db4o.YapStream)a_stream).isInstantiating();
+			((com.db4o.YapStream)a_stream).CheckClosed();
+			return !((com.db4o.YapStream)a_stream).IsInstantiating();
 		}
 
-		public static byte[] generateSignature()
+		public static byte[] GenerateSignature()
 		{
 			com.db4o.YapWriter writer = new com.db4o.YapWriter(null, 300);
-			com.db4o.YLong.writeLong(j4o.lang.JavaSystem.currentTimeMillis(), writer);
-			com.db4o.YLong.writeLong(randomLong(), writer);
-			com.db4o.YLong.writeLong(randomLong() + 1, writer);
-			return writer.getWrittenBytes();
+			com.db4o.YLong.WriteLong(j4o.lang.JavaSystem.CurrentTimeMillis(), writer);
+			com.db4o.YLong.WriteLong(RandomLong(), writer);
+			com.db4o.YLong.WriteLong(RandomLong() + 1, writer);
+			return writer.GetWrittenBytes();
 		}
 
-		internal static void logErr(com.db4o.config.Configuration config, int code, string
+		internal static void LogErr(com.db4o.config.Configuration config, int code, string
 			 msg, System.Exception t)
 		{
-			com.db4o.Messages.logErr(config, code, msg, t);
+			com.db4o.Messages.LogErr(config, code, msg, t);
 		}
 
-		internal static void purgeUnsychronized(object a_stream, object a_object)
+		internal static void PurgeUnsychronized(object a_stream, object a_object)
 		{
-			((com.db4o.YapStream)a_stream).purge1(a_object);
+			((com.db4o.YapStream)a_stream).Purge1(a_object);
 		}
 
-		public static long randomLong()
+		public static long RandomLong()
 		{
-			return j4o.lang.JavaSystem.currentTimeMillis();
+			return j4o.lang.JavaSystem.CurrentTimeMillis();
 		}
 
-		internal static void shutDownHookCallback(object a_stream)
+		internal static void ShutDownHookCallback(object a_stream)
 		{
-			((com.db4o.YapStream)a_stream).failedToShutDown();
+			((com.db4o.YapStream)a_stream).FailedToShutDown();
 		}
 	}
 }

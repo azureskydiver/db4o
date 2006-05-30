@@ -10,43 +10,42 @@ namespace com.db4o
 		{
 		}
 
-		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		public override object Coerce(com.db4o.reflect.ReflectClass claxx, object obj)
 		{
-			return com.db4o.foundation.Coercion4.toShort(obj);
+			return com.db4o.foundation.Coercion4.ToShort(obj);
 		}
 
-		public override object defaultValue()
+		public override object DefaultValue()
 		{
 			return i_primitive;
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 8;
 		}
 
-		public override int linkLength()
+		public override int LinkLength()
 		{
 			return LENGTH;
 		}
 
-		protected override j4o.lang.Class primitiveJavaClass()
+		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.getClassForType(typeof(short));
+			return j4o.lang.Class.GetClassForType(typeof(short));
 		}
 
-		internal override object primitiveNull()
+		internal override object PrimitiveNull()
 		{
 			return i_primitive;
 		}
 
-		internal override object read1(com.db4o.YapReader a_bytes)
+		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			short ret = readShort(a_bytes);
-			return ret;
+			return ReadShort(a_bytes);
 		}
 
-		internal static short readShort(com.db4o.YapReader a_bytes)
+		internal static short ReadShort(com.db4o.YapReader a_bytes)
 		{
 			int ret = 0;
 			for (int i = 0; i < com.db4o.YapConst.SHORT_BYTES; i++)
@@ -56,19 +55,12 @@ namespace com.db4o
 			return (short)ret;
 		}
 
-		public override void write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
-			if (!com.db4o.Deploy.csharp && a_object == null)
-			{
-				writeShort(short.MaxValue, a_bytes);
-			}
-			else
-			{
-				writeShort(((short)a_object), a_bytes);
-			}
+			WriteShort(((short)a_object), a_bytes);
 		}
 
-		internal static void writeShort(int a_short, com.db4o.YapReader a_bytes)
+		internal static void WriteShort(int a_short, com.db4o.YapReader a_bytes)
 		{
 			for (int i = 0; i < com.db4o.YapConst.SHORT_BYTES; i++)
 			{
@@ -79,34 +71,34 @@ namespace com.db4o
 
 		private short i_compareTo;
 
-		private short val(object obj)
+		private short Val(object obj)
 		{
 			return ((short)obj);
 		}
 
-		internal override void prepareComparison1(object obj)
+		internal override void PrepareComparison1(object obj)
 		{
-			i_compareTo = val(obj);
+			i_compareTo = Val(obj);
 		}
 
-		public override object current1()
+		public override object Current1()
 		{
 			return i_compareTo;
 		}
 
-		internal override bool isEqual1(object obj)
+		internal override bool IsEqual1(object obj)
 		{
-			return obj is short && val(obj) == i_compareTo;
+			return obj is short && Val(obj) == i_compareTo;
 		}
 
-		internal override bool isGreater1(object obj)
+		internal override bool IsGreater1(object obj)
 		{
-			return obj is short && val(obj) > i_compareTo;
+			return obj is short && Val(obj) > i_compareTo;
 		}
 
-		internal override bool isSmaller1(object obj)
+		internal override bool IsSmaller1(object obj)
 		{
-			return obj is short && val(obj) < i_compareTo;
+			return obj is short && Val(obj) < i_compareTo;
 		}
 	}
 }

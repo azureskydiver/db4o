@@ -32,7 +32,7 @@ namespace com.db4o.nativequery.expr.cmp
 			_op = op;
 		}
 
-		public int id()
+		public int Id()
 		{
 			return _id;
 		}

@@ -2,12 +2,12 @@ namespace com.db4o
 {
 	internal class MTaBeginEndSet : com.db4o.Msg
 	{
-		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal sealed override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 _in)
 		{
-			lock (getStream().i_lock)
+			lock (GetStream().i_lock)
 			{
-				getTransaction().beginEndSet();
+				GetTransaction().BeginEndSet();
 				return true;
 			}
 		}

@@ -63,37 +63,37 @@ namespace com.db4o.io.crypt
 		}
 
 		/// <summary>implement to close the adapter</summary>
-		public override void close()
+		public override void Close()
 		{
-			_adapter.close();
+			_adapter.Close();
 		}
 
-		public override void delete(string path)
+		public override void Delete(string path)
 		{
-			_adapter.delete(path);
+			_adapter.Delete(path);
 		}
 
-		public override bool exists(string path)
+		public override bool Exists(string path)
 		{
-			return _adapter.exists(path);
+			return _adapter.Exists(path);
 		}
 
 		/// <summary>implement to return the absolute length of the file</summary>
-		public override long getLength()
+		public override long GetLength()
 		{
-			return _adapter.getLength();
+			return _adapter.GetLength();
 		}
 
 		/// <summary>implement to open the file</summary>
-		public override com.db4o.io.IoAdapter open(string path, bool lockFile, long initialLength
+		public override com.db4o.io.IoAdapter Open(string path, bool lockFile, long initialLength
 			)
 		{
-			return new com.db4o.io.crypt.XTeaEncryptionFileAdapter(_adapter.open(path, lockFile
+			return new com.db4o.io.crypt.XTeaEncryptionFileAdapter(_adapter.Open(path, lockFile
 				, initialLength), new com.db4o.io.crypt.XTEA(_key, _iterat));
 		}
 
 		/// <summary>implement to read and decrypt a buffer</summary>
-		public override int read(byte[] bytes, int length)
+		public override int Read(byte[] bytes, int length)
 		{
 			long origPos = _pos;
 			int fullLength = length;
@@ -105,30 +105,30 @@ namespace com.db4o.io.crypt
 			byte[] pb = new byte[fullLength];
 			if (prePad != 0)
 			{
-				seek(_pos - prePad);
+				Seek(_pos - prePad);
 			}
-			int readResult = _adapter.read(pb);
-			_xtea.decrypt(pb);
-			j4o.lang.JavaSystem.arraycopy(pb, prePad, bytes, 0, length);
-			seek(origPos + length);
+			int readResult = _adapter.Read(pb);
+			_xtea.Decrypt(pb);
+			System.Array.Copy(pb, prePad, bytes, 0, length);
+			Seek(origPos + length);
 			return readResult;
 		}
 
 		/// <summary>implement to set the read/write pointer in the file</summary>
-		public override void seek(long pos)
+		public override void Seek(long pos)
 		{
 			_pos = pos;
-			_adapter.seek(pos);
+			_adapter.Seek(pos);
 		}
 
 		/// <summary>implement to flush the file contents to storage</summary>
-		public override void sync()
+		public override void Sync()
 		{
-			_adapter.sync();
+			_adapter.Sync();
 		}
 
 		/// <summary>implement to write and encrypt a buffer</summary>
-		public override void write(byte[] buffer, int length)
+		public override void Write(byte[] buffer, int length)
 		{
 			long origPos = _pos;
 			int fullLength = length;
@@ -140,28 +140,28 @@ namespace com.db4o.io.crypt
 			byte[] pb = new byte[fullLength];
 			if (prePad != 0)
 			{
-				seek(origPos - prePad);
+				Seek(origPos - prePad);
 			}
-			if (blockSize() % 8 != 0 || prePad != 0)
+			if (BlockSize() % 8 != 0 || prePad != 0)
 			{
-				read(pb);
-				seek(origPos - prePad);
+				Read(pb);
+				Seek(origPos - prePad);
 			}
-			j4o.lang.JavaSystem.arraycopy(buffer, 0, pb, prePad, length);
+			System.Array.Copy(buffer, 0, pb, prePad, length);
 			if (prePad == 0)
 			{
 			}
-			_xtea.encrypt(pb);
-			_adapter.write(pb, pb.Length);
-			seek(origPos + length);
+			_xtea.Encrypt(pb);
+			_adapter.Write(pb, pb.Length);
+			Seek(origPos + length);
 		}
 
-		private void log(string msg, byte[] buf)
+		private void Log(string msg, byte[] buf)
 		{
-			j4o.lang.JavaSystem._out.println("\n " + msg);
+			j4o.lang.JavaSystem._out.Println("\n " + msg);
 			for (int idx = 0; idx < buf.Length; idx++)
 			{
-				j4o.lang.JavaSystem._out.print(buf[idx] + " ");
+				j4o.lang.JavaSystem._out.Print(buf[idx] + " ");
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 using System;
 using com.db4o.ext;
 
@@ -19,56 +19,56 @@ namespace com.db4o.inside.query
 
 		#region ObjectSet Members
 		
-		public Object get(int index) {
-            return _delegate.get(index);
+		public Object Get(int index) {
+            return _delegate.Get(index);
         }
 
-		public void sort(com.db4o.query.QueryComparator cmp)
+		public void Sort(com.db4o.query.QueryComparator cmp)
 		{
 			throw new NotImplementedException();
 		}
 
-		public long[] getIDs() 
+		public long[] GetIDs() 
 		{
-			return _delegate.getIDs();
+			return _delegate.GetIDs();
 		}
 
-		public ExtObjectSet ext() 
+		public ExtObjectSet Ext() 
 		{
 			return this;
 		}
 
-		public bool hasNext() 
+		public bool HasNext() 
 		{
-			return _delegate.hasNext();
+			return _delegate.HasNext();
 		}
 
-		public Object next() 
+		public Object Next() 
 		{
-			return _delegate.next();
+			return _delegate.Next();
 		}
 
-		public void reset() 
+		public void Reset() 
 		{
-			_delegate.reset();
+			_delegate.Reset();
 		}
 
-		public int size() 
+		public int Size() 
 		{
-			return _delegate.size();
+			return _delegate.Size();
 		}
     
-		private Object streamLock()
+		private Object StreamLock()
 		{
-			return _delegate.streamLock();
+			return _delegate.StreamLock();
 		}
     
-		private ObjectContainer objectContainer()
+		private ObjectContainer ObjectContainer()
 		{
-			return _delegate.objectContainer();
+			return _delegate.ObjectContainer();
 		}
 
-		public QueryResult delegate_()
+		public QueryResult Delegate_()
 		{
 			return _delegate;
 		}
@@ -88,7 +88,7 @@ namespace com.db4o.inside.query
 		{
 			get
 			{
-				return _delegate.get(reverseIndex(index));
+				return _delegate.Get(ReverseIndex(index));
 			}
 			set
 			{
@@ -123,14 +123,14 @@ namespace com.db4o.inside.query
 
 		public int IndexOf(object value)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-                int id = (int)objectContainer().ext().getID(value);
+                int id = (int)ObjectContainer().Ext().GetID(value);
 				if(id <= 0)
 				{
 					return -1;
 				}
-				return reverseIndex(_delegate.indexOf(id));
+				return ReverseIndex(_delegate.IndexOf(id));
 			}
 		}
 
@@ -162,19 +162,19 @@ namespace com.db4o.inside.query
 		{
 			get
 			{
-				return size();
+				return Size();
 			}
 		}
 
         public void CopyTo(Array array, int index)
         {
-            lock (streamLock())
+            lock (StreamLock())
             {
                 int i = 0;
-                int s = _delegate.size();
+                int s = _delegate.Size();
                 while (i < s)
                 {
-                    array.SetValue(_delegate.get(reverseIndex(i)), index + i);
+                    array.SetValue(_delegate.Get(ReverseIndex(i)), index + i);
                     i++;
                 }
             }
@@ -184,7 +184,7 @@ namespace com.db4o.inside.query
 		{
 			get
 			{
-				return streamLock();
+				return StreamLock();
 			}
 		}
 
@@ -211,13 +211,13 @@ namespace com.db4o.inside.query
 			{
 				get
 				{
-					return _result.get(_next-1);
+					return _result.Get(_next-1);
 				}
 			}
 
 			public bool MoveNext()
 			{
-				if (_next < _result.size())
+				if (_next < _result.Size())
 				{
 					++_next;
 					return true;
@@ -232,9 +232,9 @@ namespace com.db4o.inside.query
 		}
 		#endregion
 		
-		private int reverseIndex(int idx) 
+		private int ReverseIndex(int idx) 
 		{
-        	return size()-idx-1;
+        	return Size()-idx-1;
     	}
 	}
 }

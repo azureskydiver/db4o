@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -15,35 +15,35 @@ namespace j4o.lang.reflect {
         public const int INTERFACE = 0x00000200;
         public const int ABSTRACT = 0x00000400;
 
-        public static bool isAbstract(int mod) {
+        public static bool IsAbstract(int mod) {
             return (mod & ABSTRACT) != 0;
         }
 
-        public static bool isFinal(int mod) {
+        public static bool IsFinal(int mod) {
             return (mod & FINAL) != 0;
         }
 
-        public static bool isInterface(int mod) {
+        public static bool IsInterface(int mod) {
             return (mod & INTERFACE) != 0;
         }
 
-        public static bool isPrivate(int mod) {
+        public static bool IsPrivate(int mod) {
             return (mod & PRIVATE) != 0;
         }
 
-        public static bool isProtected(int mod) {
+        public static bool IsProtected(int mod) {
             return (mod & PROTECTED) != 0;
         }
 
-        public static bool isPublic(int mod) {
+        public static bool IsPublic(int mod) {
             return (mod & PUBLIC) != 0;
         }
 
-        public static bool isStatic(int mod) {
+        public static bool IsStatic(int mod) {
             return (mod & STATIC) != 0;
         }
 
-        public static bool isTransient(int mod) {
+        public static bool IsTransient(int mod) {
             return (mod & TRANSIENT) != 0;
         }
     }

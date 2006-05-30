@@ -11,91 +11,102 @@ namespace com.db4o
 			i_handler = new com.db4o.YLong(stream);
 		}
 
-		internal override void addFieldIndex(com.db4o.YapWriter a_writer, bool a_new)
+		public override void AddFieldIndex(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapWriter writer, bool isnew)
 		{
-			int offset = a_writer._offset;
-			int id = a_writer.readInt();
-			long uuid = com.db4o.YLong.readLong(a_writer);
-			a_writer._offset = offset;
-			com.db4o.YapFile yf = (com.db4o.YapFile)a_writer.getStream();
+			int offset = writer._offset;
+			int id = writer.ReadInt();
+			long uuid = com.db4o.YLong.ReadLong(writer);
+			writer._offset = offset;
+			com.db4o.YapFile yf = (com.db4o.YapFile)writer.GetStream();
 			if (id == 0)
 			{
-				a_writer.writeInt(yf.identity().getID(a_writer.getTransaction()));
+				writer.WriteInt(yf.Identity().GetID(writer.GetTransaction()));
 			}
 			else
 			{
-				a_writer.incrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+				writer.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
 			}
 			if (uuid == 0)
 			{
-				uuid = yf.bootRecord().newUUID();
+				uuid = yf.BootRecord().NewUUID();
 			}
-			com.db4o.YLong.writeLong(uuid, a_writer);
-			if (a_new)
+			com.db4o.YLong.WriteLong(uuid, writer);
+			if (isnew)
 			{
-				addIndexEntry(a_writer, uuid);
+				AddIndexEntry(writer, uuid);
 			}
 		}
 
-		internal override void delete(com.db4o.YapWriter a_bytes, bool isUpdate)
+		public override void Delete(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
+			 a_bytes, bool isUpdate)
 		{
 			if (isUpdate)
 			{
-				a_bytes.incrementOffset(linkLength());
+				a_bytes.IncrementOffset(LinkLength());
 				return;
 			}
-			a_bytes.incrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
-			long longPart = com.db4o.YLong.readLong(a_bytes);
+			a_bytes.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+			long longPart = com.db4o.YLong.ReadLong(a_bytes);
 			if (longPart > 0)
 			{
-				com.db4o.YapStream stream = a_bytes.getStream();
-				if (stream.maintainsIndices())
+				com.db4o.YapStream stream = a_bytes.GetStream();
+				if (stream.MaintainsIndices())
 				{
-					removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), longPart);
+					RemoveIndexEntry(a_bytes.GetTransaction(), a_bytes.GetID(), longPart);
 				}
 			}
 		}
 
-		internal override com.db4o.inside.ix.Index4 getIndex(com.db4o.Transaction a_trans
+		internal override com.db4o.inside.ix.Index4 GetIndex(com.db4o.Transaction a_trans
 			)
 		{
+			if (i_index != null)
+			{
+				return i_index;
+			}
 			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
 			if (i_index == null)
 			{
-				i_index = new com.db4o.inside.ix.Index4(stream.getSystemTransaction(), getHandler
-					(), stream.bootRecord().getUUIDMetaIndex(), false);
+				i_index = new com.db4o.inside.ix.Index4(stream.GetSystemTransaction(), GetHandler
+					(), stream.BootRecord().GetUUIDMetaIndex(), false);
 			}
 			return i_index;
 		}
 
-		internal override void instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
+		internal override bool HasIndex()
+		{
+			return true;
+		}
+
+		internal override void Instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
 			 a_yapObject, com.db4o.YapReader a_bytes)
 		{
-			int dbID = a_bytes.readInt();
+			int dbID = a_bytes.ReadInt();
 			com.db4o.YapStream stream = a_trans.i_stream;
-			stream.showInternalClasses(true);
-			com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)stream.getByID2(a_trans
+			stream.ShowInternalClasses(true);
+			com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)stream.GetByID2(a_trans
 				, dbID);
 			if (db != null && db.i_signature == null)
 			{
-				stream.activate2(a_trans, db, 2);
+				stream.Activate2(a_trans, db, 2);
 			}
 			a_yapObject.i_virtualAttributes.i_database = db;
-			a_yapObject.i_virtualAttributes.i_uuid = com.db4o.YLong.readLong(a_bytes);
-			stream.showInternalClasses(false);
+			a_yapObject.i_virtualAttributes.i_uuid = com.db4o.YLong.ReadLong(a_bytes);
+			stream.ShowInternalClasses(false);
 		}
 
-		public override int linkLength()
+		public override int LinkLength()
 		{
 			return LINK_LENGTH;
 		}
 
-		internal override void marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
+		internal override void Marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
 			 a_bytes, bool a_migrating, bool a_new)
 		{
-			com.db4o.YapStream stream = a_bytes.getStream();
-			com.db4o.Transaction trans = a_bytes.getTransaction();
-			bool indexEntry = a_new && stream.maintainsIndices();
+			com.db4o.YapStream stream = a_bytes.GetStream();
+			com.db4o.Transaction trans = a_bytes.GetTransaction();
+			bool indexEntry = a_new && stream.MaintainsIndices();
 			int dbID = 0;
 			com.db4o.VirtualAttributes attr = a_yapObject.i_virtualAttributes;
 			bool linkToDatabase = !a_migrating;
@@ -105,7 +116,7 @@ namespace com.db4o
 			}
 			if (linkToDatabase)
 			{
-				com.db4o.ext.Db4oDatabase db = stream.identity();
+				com.db4o.ext.Db4oDatabase db = stream.Identity();
 				if (db == null)
 				{
 					attr = null;
@@ -117,10 +128,10 @@ namespace com.db4o
 						attr.i_database = db;
 						if (stream is com.db4o.YapFile)
 						{
-							com.db4o.PBootRecord br = stream.bootRecord();
+							com.db4o.PBootRecord br = stream.BootRecord();
 							if (br != null)
 							{
-								attr.i_uuid = br.newUUID();
+								attr.i_uuid = br.NewUUID();
 								indexEntry = true;
 							}
 						}
@@ -128,7 +139,7 @@ namespace com.db4o
 					db = attr.i_database;
 					if (db != null)
 					{
-						dbID = db.getID(trans);
+						dbID = db.GetID(trans);
 					}
 				}
 			}
@@ -136,28 +147,28 @@ namespace com.db4o
 			{
 				if (attr != null)
 				{
-					dbID = attr.i_database.getID(trans);
+					dbID = attr.i_database.GetID(trans);
 				}
 			}
-			a_bytes.writeInt(dbID);
+			a_bytes.WriteInt(dbID);
 			if (attr != null)
 			{
-				com.db4o.YLong.writeLong(attr.i_uuid, a_bytes);
+				com.db4o.YLong.WriteLong(attr.i_uuid, a_bytes);
 				if (indexEntry)
 				{
-					addIndexEntry(a_bytes, attr.i_uuid);
+					AddIndexEntry(a_bytes, attr.i_uuid);
 				}
 			}
 			else
 			{
-				com.db4o.YLong.writeLong(0, a_bytes);
+				com.db4o.YLong.WriteLong(0, a_bytes);
 			}
 		}
 
-		internal override void marshallIgnore(com.db4o.YapWriter writer)
+		internal override void MarshallIgnore(com.db4o.YapWriter writer)
 		{
-			writer.writeInt(0);
-			com.db4o.YLong.writeLong(0, writer);
+			writer.WriteInt(0);
+			com.db4o.YLong.WriteLong(0, writer);
 		}
 	}
 }

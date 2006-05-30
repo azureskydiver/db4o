@@ -14,7 +14,7 @@ namespace com.db4o.inside.cluster
 			_queries = queries;
 		}
 
-		public virtual com.db4o.query.Constraint constrain(object constraint)
+		public virtual com.db4o.query.Constraint Constrain(object constraint)
 		{
 			lock (_cluster)
 			{
@@ -22,13 +22,13 @@ namespace com.db4o.inside.cluster
 					Length];
 				for (int i = 0; i < constraints.Length; i++)
 				{
-					constraints[i] = _queries[i].constrain(constraint);
+					constraints[i] = _queries[i].Constrain(constraint);
 				}
 				return new com.db4o.inside.cluster.ClusterConstraint(_cluster, constraints);
 			}
 		}
 
-		public virtual com.db4o.query.Constraints constraints()
+		public virtual com.db4o.query.Constraints Constraints()
 		{
 			lock (_cluster)
 			{
@@ -36,26 +36,26 @@ namespace com.db4o.inside.cluster
 					Length];
 				for (int i = 0; i < constraints.Length; i++)
 				{
-					constraints[i] = _queries[i].constraints();
+					constraints[i] = _queries[i].Constraints();
 				}
 				return new com.db4o.inside.cluster.ClusterConstraints(_cluster, constraints);
 			}
 		}
 
-		public virtual com.db4o.query.Query descend(string fieldName)
+		public virtual com.db4o.query.Query Descend(string fieldName)
 		{
 			lock (_cluster)
 			{
 				com.db4o.query.Query[] queries = new com.db4o.query.Query[_queries.Length];
 				for (int i = 0; i < queries.Length; i++)
 				{
-					queries[i] = _queries[i].descend(fieldName);
+					queries[i] = _queries[i].Descend(fieldName);
 				}
 				return new com.db4o.inside.cluster.ClusterQuery(_cluster, queries);
 			}
 		}
 
-		public virtual com.db4o.ObjectSet execute()
+		public virtual com.db4o.ObjectSet Execute()
 		{
 			lock (_cluster)
 			{
@@ -64,22 +64,22 @@ namespace com.db4o.inside.cluster
 			}
 		}
 
-		public virtual com.db4o.query.Query orderAscending()
+		public virtual com.db4o.query.Query OrderAscending()
 		{
-			com.db4o.inside.Exceptions4.notSupported();
+			com.db4o.inside.Exceptions4.NotSupported();
 			return this;
 		}
 
-		public virtual com.db4o.query.Query orderDescending()
+		public virtual com.db4o.query.Query OrderDescending()
 		{
-			com.db4o.inside.Exceptions4.notSupported();
+			com.db4o.inside.Exceptions4.NotSupported();
 			return this;
 		}
 
-		public virtual com.db4o.query.Query sortBy(com.db4o.query.QueryComparator comparator
+		public virtual com.db4o.query.Query SortBy(com.db4o.query.QueryComparator comparator
 			)
 		{
-			com.db4o.inside.Exceptions4.notSupported();
+			com.db4o.inside.Exceptions4.NotSupported();
 			return this;
 		}
 	}

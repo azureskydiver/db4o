@@ -8,10 +8,10 @@ namespace com.db4o.reflect
 	/// <seealso cref="com.db4o.reflect.Reflector">com.db4o.reflect.Reflector</seealso>
 	public interface ReflectConstructor
 	{
-		void setAccessible();
+		void SetAccessible();
 
-		com.db4o.reflect.ReflectClass[] getParameterTypes();
+		com.db4o.reflect.ReflectClass[] GetParameterTypes();
 
-		object newInstance(object[] parameters);
+		object NewInstance(object[] parameters);
 	}
 }

@@ -16,24 +16,24 @@ namespace com.db4o.inside.query
 			this._optimized = optimized;
 		}
 
-		public virtual string message()
+		public virtual string Message()
 		{
 			return _message;
 		}
 
-		public virtual object optimized()
+		public virtual object Optimized()
 		{
 			return _optimized;
 		}
 
-		public virtual com.db4o.query.Predicate predicate()
+		public virtual com.db4o.query.Predicate Predicate()
 		{
 			return _predicate;
 		}
 
 		public override string ToString()
 		{
-			return message() + "/" + optimized();
+			return Message() + "/" + Optimized();
 		}
 	}
 }

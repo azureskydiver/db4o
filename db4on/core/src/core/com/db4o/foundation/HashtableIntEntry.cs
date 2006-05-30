@@ -18,29 +18,29 @@ namespace com.db4o.foundation
 		{
 		}
 
-		public virtual void acceptKeyVisitor(com.db4o.foundation.Visitor4 visitor)
+		public virtual void AcceptKeyVisitor(com.db4o.foundation.Visitor4 visitor)
 		{
-			visitor.visit(i_key);
+			visitor.Visit(i_key);
 		}
 
-		public virtual object deepClone(object obj)
+		public virtual object DeepClone(object obj)
 		{
-			return deepCloneInternal(new com.db4o.foundation.HashtableIntEntry(), obj);
+			return DeepCloneInternal(new com.db4o.foundation.HashtableIntEntry(), obj);
 		}
 
-		public virtual bool sameKeyAs(com.db4o.foundation.HashtableIntEntry other)
+		public virtual bool SameKeyAs(com.db4o.foundation.HashtableIntEntry other)
 		{
 			return i_key == other.i_key;
 		}
 
-		protected virtual com.db4o.foundation.HashtableIntEntry deepCloneInternal(com.db4o.foundation.HashtableIntEntry
+		protected virtual com.db4o.foundation.HashtableIntEntry DeepCloneInternal(com.db4o.foundation.HashtableIntEntry
 			 entry, object obj)
 		{
 			entry.i_key = i_key;
 			entry.i_next = i_next;
 			if (i_object is com.db4o.foundation.DeepClone)
 			{
-				entry.i_object = ((com.db4o.foundation.DeepClone)i_object).deepClone(obj);
+				entry.i_object = ((com.db4o.foundation.DeepClone)i_object).DeepClone(obj);
 			}
 			else
 			{
@@ -48,7 +48,7 @@ namespace com.db4o.foundation
 			}
 			if (i_next != null)
 			{
-				entry.i_next = (com.db4o.foundation.HashtableIntEntry)i_next.deepClone(obj);
+				entry.i_next = (com.db4o.foundation.HashtableIntEntry)i_next.DeepClone(obj);
 			}
 			return entry;
 		}

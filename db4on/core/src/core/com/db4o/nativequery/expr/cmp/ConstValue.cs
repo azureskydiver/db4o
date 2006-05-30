@@ -9,7 +9,7 @@ namespace com.db4o.nativequery.expr.cmp
 			this._value = value;
 		}
 
-		public virtual object value()
+		public virtual object Value()
 		{
 			return _value;
 		}
@@ -25,7 +25,7 @@ namespace com.db4o.nativequery.expr.cmp
 			{
 				return true;
 			}
-			if (other == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (other == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(other))
 			{
 				return false;
@@ -47,10 +47,10 @@ namespace com.db4o.nativequery.expr.cmp
 			return _value.GetHashCode();
 		}
 
-		public virtual void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
+		public virtual void Accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 	}
 }

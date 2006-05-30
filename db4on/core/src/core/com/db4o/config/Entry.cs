@@ -7,7 +7,7 @@ namespace com.db4o.config
 
 		public object value;
 
-		public virtual object compare()
+		public virtual object Compare()
 		{
 			return key;
 		}

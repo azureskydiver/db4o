@@ -17,23 +17,23 @@ namespace com.db4o.nativequery.expr.cmp
 			_args = args;
 		}
 
-		public override void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
+		public override void Accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 
-		public virtual string methodName()
+		public virtual string MethodName()
 		{
 			return _methodName;
 		}
 
-		public virtual j4o.lang.Class[] paramTypes()
+		public virtual j4o.lang.Class[] ParamTypes()
 		{
 			return _paramTypes;
 		}
 
-		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperand[] args()
+		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperand[] Args()
 		{
 			return _args;
 		}
@@ -46,8 +46,8 @@ namespace com.db4o.nativequery.expr.cmp
 			}
 			com.db4o.nativequery.expr.cmp.MethodCallValue casted = (com.db4o.nativequery.expr.cmp.MethodCallValue
 				)obj;
-			return _methodName.Equals(casted._methodName) && arrayCmp(_paramTypes, casted._paramTypes
-				) && arrayCmp(_args, casted._args);
+			return _methodName.Equals(casted._methodName) && ArrayCmp(_paramTypes, casted._paramTypes
+				) && ArrayCmp(_args, casted._args);
 		}
 
 		public override int GetHashCode()
@@ -74,7 +74,7 @@ namespace com.db4o.nativequery.expr.cmp
 			return str;
 		}
 
-		private bool arrayCmp(object[] a, object[] b)
+		private bool ArrayCmp(object[] a, object[] b)
 		{
 			if (a.Length != b.Length)
 			{

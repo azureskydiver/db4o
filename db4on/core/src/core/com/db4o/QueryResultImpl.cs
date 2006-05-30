@@ -21,148 +21,148 @@ namespace com.db4o
 			i_trans = trans;
 		}
 
-		internal object activate(object obj)
+		internal object Activate(object obj)
 		{
 			com.db4o.YapStream stream = i_trans.i_stream;
-			stream.beginEndActivation();
-			stream.activate2(i_trans, obj, stream.i_config.activationDepth());
-			stream.beginEndActivation();
+			stream.BeginEndActivation();
+			stream.Activate2(i_trans, obj, stream.i_config.ActivationDepth());
+			stream.BeginEndActivation();
 			return obj;
 		}
 
-		public virtual object get(int index)
+		public virtual object Get(int index)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				if (index < 0 || index >= size())
+				if (index < 0 || index >= Size())
 				{
 					throw new System.IndexOutOfRangeException();
 				}
 				int id = i_content[index];
 				com.db4o.YapStream stream = i_trans.i_stream;
-				object obj = stream.getByID(id);
+				object obj = stream.GetByID(id);
 				if (obj == null)
 				{
 					return null;
 				}
-				return activate(obj);
+				return Activate(obj);
 			}
 		}
 
-		internal void checkDuplicates()
+		internal void CheckDuplicates()
 		{
 			i_checkDuplicates = true;
 		}
 
-		public virtual long[] getIDs()
+		public virtual long[] GetIDs()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				return asLong();
+				return AsLong();
 			}
 		}
 
-		public override bool hasNext()
+		public override bool HasNext()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				return base.hasNext();
+				return base.HasNext();
 			}
 		}
 
-		public virtual object next()
+		public virtual object Next()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				com.db4o.YapStream stream = i_trans.i_stream;
-				stream.checkClosed();
-				if (base.hasNext())
+				stream.CheckClosed();
+				if (base.HasNext())
 				{
-					object ret = stream.getByID2(i_trans, nextInt());
+					object ret = stream.GetByID2(i_trans, NextInt());
 					if (ret == null)
 					{
-						return next();
+						return Next();
 					}
-					return activate(ret);
+					return Activate(ret);
 				}
 				return null;
 			}
 		}
 
-		public override void reset()
+		public override void Reset()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				base.reset();
+				base.Reset();
 			}
 		}
 
-		public virtual void visit(object a_tree)
+		public virtual void Visit(object a_tree)
 		{
 			com.db4o.QCandidate candidate = (com.db4o.QCandidate)a_tree;
-			if (candidate.include())
+			if (candidate.Include())
 			{
-				addKeyCheckDuplicates(candidate._key);
+				AddKeyCheckDuplicates(candidate._key);
 			}
 		}
 
-		internal virtual void addKeyCheckDuplicates(int a_key)
+		internal virtual void AddKeyCheckDuplicates(int a_key)
 		{
 			if (i_checkDuplicates)
 			{
 				com.db4o.TreeInt newNode = new com.db4o.TreeInt(a_key);
-				i_candidates = com.db4o.Tree.add(i_candidates, newNode);
+				i_candidates = com.db4o.Tree.Add(i_candidates, newNode);
 				if (newNode._size == 0)
 				{
 					return;
 				}
 			}
-			add(a_key);
+			Add(a_key);
 		}
 
-		public virtual object streamLock()
+		public virtual object StreamLock()
 		{
 			return i_trans.i_stream.i_lock;
 		}
 
-		public virtual com.db4o.ObjectContainer objectContainer()
+		public virtual com.db4o.ObjectContainer ObjectContainer()
 		{
 			return i_trans.i_stream;
 		}
 
-		public virtual void sort(com.db4o.query.QueryComparator cmp)
+		public virtual void Sort(com.db4o.query.QueryComparator cmp)
 		{
-			sort(cmp, 0, size() - 1);
-			reset();
+			Sort(cmp, 0, Size() - 1);
+			Reset();
 		}
 
-		private void sort(com.db4o.query.QueryComparator cmp, int from, int to)
+		private void Sort(com.db4o.query.QueryComparator cmp, int from, int to)
 		{
 			if (to - from < 1)
 			{
 				return;
 			}
-			object pivot = get(to);
+			object pivot = Get(to);
 			int left = from;
 			int right = to;
 			while (left < right)
 			{
-				while (left < right && cmp.compare(pivot, get(left)) < 0)
+				while (left < right && cmp.Compare(pivot, Get(left)) < 0)
 				{
 					left++;
 				}
-				while (left < right && cmp.compare(pivot, get(right)) >= 0)
+				while (left < right && cmp.Compare(pivot, Get(right)) >= 0)
 				{
 					right--;
 				}
-				swap(left, right);
+				Swap(left, right);
 			}
-			swap(to, right);
-			sort(cmp, from, right - 1);
-			sort(cmp, right + 1, to);
+			Swap(to, right);
+			Sort(cmp, from, right - 1);
+			Sort(cmp, right + 1, to);
 		}
 
-		private void swap(int left, int right)
+		private void Swap(int left, int right)
 		{
 			if (left != right)
 			{

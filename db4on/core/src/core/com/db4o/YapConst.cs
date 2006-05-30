@@ -3,7 +3,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public sealed class YapConst
 	{
-		internal static readonly object initMe = init();
+		internal static readonly object initMe = Init();
 
 		internal const byte YAPFILEVERSION = 4;
 
@@ -21,7 +21,7 @@ namespace com.db4o
 
 		internal const byte YAPFIELD = (byte)'F';
 
-		internal const byte YAPOBJECT = (byte)'O';
+		public const byte YAPOBJECT = (byte)'O';
 
 		internal const byte YAPARRAY = (byte)'N';
 
@@ -29,7 +29,7 @@ namespace com.db4o
 
 		internal const byte YAPINDEX = (byte)'X';
 
-		internal const byte YAPSTRING = (byte)'S';
+		public const byte YAPSTRING = (byte)'S';
 
 		internal const byte YAPLONG = (byte)'l';
 
@@ -58,12 +58,12 @@ namespace com.db4o
 		internal const int IDENTIFIER_LENGTH = (com.db4o.Deploy.debug && com.db4o.Deploy.
 			identifiers) ? 1 : 0;
 
-		internal const int BRACKETS_BYTES = (com.db4o.Deploy.debug && com.db4o.Deploy.brackets
+		public const int BRACKETS_BYTES = (com.db4o.Deploy.debug && com.db4o.Deploy.brackets
 			) ? 1 : 0;
 
 		internal const int BRACKETS_LENGTH = BRACKETS_BYTES * 2;
 
-		internal const int LEADING_LENGTH = IDENTIFIER_LENGTH + BRACKETS_BYTES;
+		public const int LEADING_LENGTH = IDENTIFIER_LENGTH + BRACKETS_BYTES;
 
 		internal const int ADDED_LENGTH = IDENTIFIER_LENGTH + BRACKETS_LENGTH;
 
@@ -129,18 +129,19 @@ namespace com.db4o
 
 		internal const int LOCK_TIME_INTERVAL = 1000;
 
-		internal const int SERVER_SOCKET_TIMEOUT = com.db4o.Debug.longTimeOuts ? 1000000 : 
-			5000;
+		internal static readonly int SERVER_SOCKET_TIMEOUT = com.db4o.Debug.longTimeOuts ? 
+			1000000 : 5000;
 
 		internal const int CLIENT_SOCKET_TIMEOUT = 300000;
 
-		internal const int CONNECTION_TIMEOUT = com.db4o.Debug.longTimeOuts ? 1000000 : 180000;
+		internal static readonly int CONNECTION_TIMEOUT = com.db4o.Debug.longTimeOuts ? 1000000
+			 : 180000;
 
 		internal const int PREFETCH_ID_COUNT = 10;
 
 		internal const int PREFETCH_OBJECT_COUNT = 10;
 
-		internal const int MAXIMUM_BLOCK_SIZE = 70000000;
+		public const int MAXIMUM_BLOCK_SIZE = 70000000;
 
 		internal const int MAXIMUM_ARRAY_ENTRIES = 7000000;
 
@@ -198,11 +199,13 @@ namespace com.db4o
 
 		internal const int UNCHECKED = 0;
 
-		internal const int NO = -1;
+		public const int NO = -1;
 
-		internal const int YES = 1;
+		public const int YES = 1;
 
-		internal const int DEFAULT = 0;
+		public const int DEFAULT = 0;
+
+		public const int UNKNOWN = 0;
 
 		public const int OLD = -1;
 
@@ -211,42 +214,37 @@ namespace com.db4o
 		internal static readonly com.db4o.YapStringIOUnicode stringIO = new com.db4o.YapStringIOUnicode
 			();
 
-		public static j4o.lang.RuntimeException virtualException()
+		private static object Init()
 		{
-			return new j4o.lang.RuntimeException();
-		}
-
-		private static object init()
-		{
-			CLASS_OBJECT = j4o.lang.Class.getClassForObject(new object());
-			CLASS_COMPARE = db4oClass("config.Compare");
-			CLASS_DB4OTYPE = db4oClass("types.Db4oType");
-			CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl");
-			CLASS_INTERNAL = db4oClass("Internal4");
-			CLASS_UNVERSIONED = db4oClass("types.Unversioned");
-			CLASS_METACLASS = j4o.lang.Class.getClassForObject(new com.db4o.MetaClass());
-			CLASS_METAFIELD = j4o.lang.Class.getClassForObject(new com.db4o.MetaField());
-			CLASS_METAINDEX = j4o.lang.Class.getClassForObject(new com.db4o.MetaIndex());
-			CLASS_OBJECTCONTAINER = db4oClass("ObjectContainer");
-			CLASS_PBOOTRECORD = j4o.lang.Class.getClassForObject(new com.db4o.PBootRecord());
-			CLASS_REPLICATIONRECORD = j4o.lang.Class.getClassForObject(new com.db4o.ReplicationRecord
+			CLASS_OBJECT = j4o.lang.Class.GetClassForObject(new object());
+			CLASS_COMPARE = Db4oClass("config.Compare");
+			CLASS_DB4OTYPE = Db4oClass("types.Db4oType");
+			CLASS_DB4OTYPEIMPL = Db4oClass("Db4oTypeImpl");
+			CLASS_INTERNAL = Db4oClass("Internal4");
+			CLASS_UNVERSIONED = Db4oClass("types.Unversioned");
+			CLASS_METACLASS = j4o.lang.Class.GetClassForObject(new com.db4o.MetaClass());
+			CLASS_METAFIELD = j4o.lang.Class.GetClassForObject(new com.db4o.MetaField());
+			CLASS_METAINDEX = j4o.lang.Class.GetClassForObject(new com.db4o.MetaIndex());
+			CLASS_OBJECTCONTAINER = Db4oClass("ObjectContainer");
+			CLASS_PBOOTRECORD = j4o.lang.Class.GetClassForObject(new com.db4o.PBootRecord());
+			CLASS_REPLICATIONRECORD = j4o.lang.Class.GetClassForObject(new com.db4o.ReplicationRecord
 				());
-			CLASS_STATICFIELD = j4o.lang.Class.getClassForObject(new com.db4o.StaticField());
-			CLASS_STATICCLASS = j4o.lang.Class.getClassForObject(new com.db4o.StaticClass());
-			CLASS_TRANSIENTCLASS = db4oClass("types.TransientClass");
+			CLASS_STATICFIELD = j4o.lang.Class.GetClassForObject(new com.db4o.StaticField());
+			CLASS_STATICCLASS = j4o.lang.Class.GetClassForObject(new com.db4o.StaticClass());
+			CLASS_TRANSIENTCLASS = Db4oClass("types.TransientClass");
 			return null;
 		}
 
-		private static j4o.lang.Class db4oClass(string name)
+		private static j4o.lang.Class Db4oClass(string name)
 		{
-			return classForName("com.db4o." + name);
+			return ClassForName("com.db4o." + name);
 		}
 
-		private static j4o.lang.Class classForName(string name)
+		private static j4o.lang.Class ClassForName(string name)
 		{
 			try
 			{
-				return j4o.lang.Class.forName(name);
+				return j4o.lang.Class.ForName(name);
 			}
 			catch (System.Exception e)
 			{

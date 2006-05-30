@@ -13,44 +13,44 @@ namespace com.db4o
 		internal YapReferences(com.db4o.YapStream a_stream)
 		{
 			_stream = a_stream;
-			_weak = (!(a_stream is com.db4o.YapObjectCarrier) && com.db4o.Platform4.hasWeakReferences
-				() && a_stream.i_config.weakReferences());
-			_queue = _weak ? com.db4o.Platform4.createReferenceQueue() : null;
+			_weak = (!(a_stream is com.db4o.YapObjectCarrier) && com.db4o.Platform4.HasWeakReferences
+				() && a_stream.i_config.WeakReferences());
+			_queue = _weak ? com.db4o.Platform4.CreateReferenceQueue() : null;
 		}
 
-		internal virtual object createYapRef(com.db4o.YapObject a_yo, object obj)
+		internal virtual object CreateYapRef(com.db4o.YapObject a_yo, object obj)
 		{
 			if (!_weak)
 			{
 				return obj;
 			}
-			return com.db4o.Platform4.createYapRef(_queue, a_yo, obj);
+			return com.db4o.Platform4.CreateYapRef(_queue, a_yo, obj);
 		}
 
-		internal virtual void pollReferenceQueue()
+		internal virtual void PollReferenceQueue()
 		{
 			if (_weak)
 			{
-				com.db4o.Platform4.pollReferenceQueue(_stream, _queue);
+				com.db4o.Platform4.PollReferenceQueue(_stream, _queue);
 			}
 		}
 
-		public virtual void run()
+		public virtual void Run()
 		{
-			pollReferenceQueue();
+			PollReferenceQueue();
 		}
 
-		internal virtual void startTimer()
+		internal virtual void StartTimer()
 		{
 			if (!_weak)
 			{
 				return;
 			}
-			if (!_stream.i_config.weakReferences())
+			if (!_stream.i_config.WeakReferences())
 			{
 				return;
 			}
-			if (_stream.i_config.weakReferenceCollectionInterval() <= 0)
+			if (_stream.i_config.WeakReferenceCollectionInterval() <= 0)
 			{
 				return;
 			}
@@ -58,17 +58,17 @@ namespace com.db4o
 			{
 				return;
 			}
-			_timer = new com.db4o.foundation.SimpleTimer(this, _stream.i_config.weakReferenceCollectionInterval
+			_timer = new com.db4o.foundation.SimpleTimer(this, _stream.i_config.WeakReferenceCollectionInterval
 				(), "db4o WeakReference collector");
 		}
 
-		internal virtual void stopTimer()
+		internal virtual void StopTimer()
 		{
 			if (_timer == null)
 			{
 				return;
 			}
-			_timer.stop();
+			_timer.Stop();
 			_timer = null;
 		}
 	}

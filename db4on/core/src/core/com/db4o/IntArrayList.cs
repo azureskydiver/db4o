@@ -20,18 +20,18 @@ namespace com.db4o
 			i_content = new int[initialSize];
 		}
 
-		public virtual void add(int a_value)
+		public virtual void Add(int a_value)
 		{
 			if (i_count >= i_content.Length)
 			{
 				int[] temp = new int[i_content.Length + INC];
-				j4o.lang.JavaSystem.arraycopy(i_content, 0, temp, 0, i_content.Length);
+				System.Array.Copy(i_content, 0, temp, 0, i_content.Length);
 				i_content = temp;
 			}
 			i_content[i_count++] = a_value;
 		}
 
-		public virtual int indexOf(int a_value)
+		public virtual int IndexOf(int a_value)
 		{
 			for (int i = 0; i < i_count; i++)
 			{
@@ -43,27 +43,27 @@ namespace com.db4o
 			return -1;
 		}
 
-		public virtual int size()
+		public virtual int Size()
 		{
 			return i_count;
 		}
 
-		public virtual void reset()
+		public virtual void Reset()
 		{
 			i_current = i_count - 1;
 		}
 
-		public virtual bool hasNext()
+		public virtual bool HasNext()
 		{
 			return i_current >= 0;
 		}
 
-		public virtual int nextInt()
+		public virtual int NextInt()
 		{
 			return i_content[i_current--];
 		}
 
-		public virtual long[] asLong()
+		public virtual long[] AsLong()
 		{
 			long[] longs = new long[i_count];
 			for (int i = 0; i < i_count; i++)

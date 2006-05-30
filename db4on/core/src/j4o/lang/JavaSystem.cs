@@ -1,4 +1,4 @@
-/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
+﻿/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
 
 using System;
 using System.Threading;
@@ -12,81 +12,54 @@ namespace j4o.lang
 		public static PrintStream _out = new ConsoleWriter();
 		public static PrintStream err = new ConsoleWriter();
 
-		public static void arraycopy(object source, int sourceIndex, object destination,
-			int destinationIndex, int length) 
+		public static long CurrentTimeMillis() 
 		{
-			Array.Copy((Array)source, sourceIndex, (Array)destination, destinationIndex, length);
+			return j4o.util.Date.ToJavaMilliseconds(DateTime.Now.ToUniversalTime());
 		}
 
-		public static object clone(object obj) 
-		{
-			MethodInfo method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
-			return method.Invoke(obj, null);
-		}
-
-		public static long currentTimeMillis() 
-		{
-			return j4o.util.Date.toJavaMilliseconds(DateTime.Now.ToUniversalTime());
-		}
-
-		public static int floatToIntBits(float value) 
+		public static int FloatToIntBits(float value) 
 		{
 			return BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
 		}
 
-		public static void gc() 
+		public static void Gc() 
 		{
 			System.GC.Collect();
 		}
 		
-		public static bool equalsIgnoreCase(string lhs, string rhs) 
+		public static bool EqualsIgnoreCase(string lhs, string rhs) 
 		{
 			return 0 == string.Compare(lhs, rhs, true);
 		}
 
-		public static string substring(String s, int startIndex)
+		public static string Substring(String s, int startIndex)
 		{
 			return s.Substring(startIndex);
 		}
 
-		public static string substring(String s, int startIndex, int endIndex)
+		public static string Substring(String s, int startIndex, int endIndex)
 		{
 			return s.Substring(startIndex, endIndex-startIndex);
 		}
 
-		public static char getCharAt(string str, int index) 
+		public static char GetCharAt(string str, int index) 
 		{
 			return str[index];
 		}
 
-		public static void getCharsForString(string str, int start, int end, char[] destination, int destinationStart) 
+		public static void GetCharsForString(string str, int start, int end, char[] destination, int destinationStart) 
 		{
 			str.CopyTo(start, destination, 0, end-start);
 		}
 		
-		public static string getStringValueOf(object value) 
+		public static string GetStringValueOf(object value) 
 		{
 			return null == value
 				? "null"
 				: value.ToString();
 		}
 
-		public static int getLengthOf(String str) 
-		{
-			return str.Length;
-		}
-
-		public static long getLengthOf(RandomAccessFile raf) 
-		{
-			return raf.length();
-		}
-
-		public static long getLengthOf(File file) 
-		{
-			return file.length();
-		}
-
-		public static String getProperty(String key) 
+		public static String GetProperty(String key) 
 		{
 #if CF_1_0 || CF_2_0
 			return key.Equals("line.separator") ? "\n" : null;
@@ -97,63 +70,63 @@ namespace j4o.lang
 #endif
 		}
 
-		public static object getReferenceTarget(WeakReference reference) 
+		public static object GetReferenceTarget(WeakReference reference) 
 		{
 			return reference.Target;
 		}
 
-		public static long getTimeForDate(DateTime dateTime) 
+		public static long GetTimeForDate(DateTime dateTime) 
 		{
-			return j4o.util.Date.toJavaMilliseconds(dateTime);
+			return j4o.util.Date.ToJavaMilliseconds(dateTime);
 		}
 
-		public static int identityHashCode(object obj) 
+		public static int IdentityHashCode(object obj) 
 		{
-			return IdentityHashCodeProvider.identityHashCode(obj);
+			return IdentityHashCodeProvider.IdentityHashCode(obj);
 		}
 
-		public static float intBitsToFloat(int value) 
+		public static float IntBitsToFloat(int value) 
 		{
 			return BitConverter.ToSingle(BitConverter.GetBytes(value), 0);
 		}
 
-		public static void wait(object obj, long timeout) 
+		public static void Wait(object obj, long timeout) 
 		{
 #if !CF_1_0 && !CF_2_0
 			Monitor.Wait(obj, (int) timeout);
 #endif
 		}
 
-		public static void notify(object obj) 
+		public static void Notify(object obj) 
 		{
 #if !CF_1_0 && !CF_2_0
 			Monitor.Pulse(obj);
 #endif
 		}
 
-		public static void notifyAll(object obj) 
+		public static void NotifyAll(object obj) 
 		{
 #if !CF_1_0 && !CF_2_0
 			Monitor.PulseAll(obj);
 #endif
 		}
 
-		public static void printStackTrace(Exception exception) 
+		public static void PrintStackTrace(Exception exception) 
 		{
-			err.println(exception);
+			err.Println(exception);
 		}
 
-		public static void printStackTrace(Exception exception, PrintStream printStream) 
+		public static void PrintStackTrace(Exception exception, PrintStream printStream) 
 		{
-			printStream.println(exception);
+			printStream.Println(exception);
 		}
 
-		public static void runFinalization() 
+		public static void RunFinalization() 
 		{
 			System.GC.WaitForPendingFinalizers();
 		}
 
-		public static void runFinalizersOnExit(bool flag) 
+		public static void RunFinalizersOnExit(bool flag) 
 		{
 			// do nothing
 		}

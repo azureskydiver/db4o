@@ -49,7 +49,10 @@ namespace com.db4o
 		private const int FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + com.db4o.YapConst
 			.YAPINT_LENGTH;
 
-		private const int LENGTH = MINIMUM_LENGTH + (com.db4o.YapConst.YAPINT_LENGTH * 5)
+		private const int CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + com.db4o.YapConst
+			.YAPINT_LENGTH;
+
+		private const int LENGTH = MINIMUM_LENGTH + (com.db4o.YapConst.YAPINT_LENGTH * 6)
 			 + ENCRYPTION_PASSWORD_LENGTH + 1;
 
 		private readonly long _opentime;
@@ -60,310 +63,326 @@ namespace com.db4o
 
 		internal int _freespaceAddress;
 
+		private int _converterVersion;
+
 		internal YapConfigBlock(com.db4o.YapFile stream)
 		{
 			_stream = stream;
-			_encoding = stream.i_config.encoding();
-			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.checkType(stream.i_config
-				.freespaceSystem());
-			_opentime = processID();
-			if (lockFile())
+			_encoding = stream.i_config.Encoding();
+			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.CheckType(stream.i_config
+				.FreespaceSystem());
+			_opentime = ProcessID();
+			if (LockFile())
 			{
-				writeHeaderLock();
+				WriteHeaderLock();
 			}
 		}
 
-		internal com.db4o.Transaction getTransactionToCommit()
+		internal com.db4o.Transaction GetTransactionToCommit()
 		{
 			return _transactionToCommit;
 		}
 
-		private void ensureFreespaceSlot()
+		private void EnsureFreespaceSlot()
 		{
 			if (_freespaceAddress == 0)
 			{
-				newFreespaceSlot(_freespaceSystem);
+				NewFreespaceSlot(_freespaceSystem);
 			}
 		}
 
-		public int newFreespaceSlot(byte freespaceSystem)
+		public int NewFreespaceSlot(byte freespaceSystem)
 		{
-			_freespaceAddress = com.db4o.inside.freespace.FreespaceManager.initSlot(_stream);
+			_freespaceAddress = com.db4o.inside.freespace.FreespaceManager.InitSlot(_stream);
 			_freespaceSystem = freespaceSystem;
 			return _freespaceAddress;
 		}
 
-		internal void go()
+		internal void Go()
 		{
-			_stream.createStringIO(_encoding);
-			if (lockFile())
+			_stream.CreateStringIO(_encoding);
+			if (LockFile())
 			{
 				try
 				{
-					writeAccessTime();
+					WriteAccessTime();
 				}
 				catch (System.Exception e)
 				{
 				}
-				syncFiles();
-				openTimeOverWritten();
-				new j4o.lang.Thread(this).start();
+				SyncFiles();
+				OpenTimeOverWritten();
+				new j4o.lang.Thread(this).Start();
 			}
 		}
 
-		private com.db4o.YapWriter headerLockIO()
+		private com.db4o.YapWriter HeaderLockIO()
 		{
-			com.db4o.YapWriter writer = _stream.getWriter(_stream.getTransaction(), 0, com.db4o.YapConst
+			com.db4o.YapWriter writer = _stream.GetWriter(_stream.GetTransaction(), 0, com.db4o.YapConst
 				.YAPINT_LENGTH);
-			writer.moveForward(2 + com.db4o.YapConst.YAPINT_LENGTH);
+			writer.MoveForward(2 + com.db4o.YapConst.YAPINT_LENGTH);
 			return writer;
 		}
 
-		private void headerLockOverwritten()
+		private void HeaderLockOverwritten()
 		{
-			if (lockFile())
+			if (LockFile())
 			{
-				com.db4o.YapWriter bytes = headerLockIO();
-				bytes.read();
-				if (com.db4o.YInt.readInt(bytes) != ((int)_opentime))
+				com.db4o.YapWriter bytes = HeaderLockIO();
+				bytes.Read();
+				if (com.db4o.YInt.ReadInt(bytes) != ((int)_opentime))
 				{
 					throw new com.db4o.ext.DatabaseFileLockedException();
 				}
-				writeHeaderLock();
+				WriteHeaderLock();
 			}
 		}
 
-		private bool lockFile()
+		private bool LockFile()
 		{
-			return _stream.needsLockFileThread();
+			return _stream.NeedsLockFileThread();
 		}
 
-		private com.db4o.YapWriter openTimeIO()
+		private com.db4o.YapWriter OpenTimeIO()
 		{
-			com.db4o.YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, 
+			com.db4o.YapWriter writer = _stream.GetWriter(_stream.GetTransaction(), _address, 
 				com.db4o.YapConst.YAPLONG_LENGTH);
-			writer.moveForward(OPEN_TIME_OFFSET);
+			writer.MoveForward(OPEN_TIME_OFFSET);
 			return writer;
 		}
 
-		private void openTimeOverWritten()
+		private void OpenTimeOverWritten()
 		{
-			if (lockFile())
+			if (LockFile())
 			{
-				com.db4o.YapWriter bytes = openTimeIO();
-				bytes.read();
-				if (com.db4o.YLong.readLong(bytes) != _opentime)
+				com.db4o.YapWriter bytes = OpenTimeIO();
+				bytes.Read();
+				if (com.db4o.YLong.ReadLong(bytes) != _opentime)
 				{
-					com.db4o.inside.Exceptions4.throwRuntimeException(22);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(22);
 				}
-				writeOpenTime();
+				WriteOpenTime();
 			}
 		}
 
-		private byte[] passwordToken()
+		private byte[] PasswordToken()
 		{
 			byte[] pwdtoken = new byte[ENCRYPTION_PASSWORD_LENGTH];
-			string fullpwd = _stream.i_config.password();
-			if (_stream.i_config.encrypt() && fullpwd != null)
+			string fullpwd = _stream.i_config.Password();
+			if (_stream.i_config.Encrypt() && fullpwd != null)
 			{
 				try
 				{
-					byte[] pwdbytes = new com.db4o.YapStringIO().write(fullpwd);
+					byte[] pwdbytes = new com.db4o.YapStringIO().Write(fullpwd);
 					com.db4o.YapWriter encwriter = new com.db4o.YapWriter(_stream.i_trans, pwdbytes.Length
 						 + ENCRYPTION_PASSWORD_LENGTH);
-					encwriter.append(pwdbytes);
-					encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
-					_stream.i_handlers.decrypt(encwriter);
-					j4o.lang.JavaSystem.arraycopy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH
-						);
+					encwriter.Append(pwdbytes);
+					encwriter.Append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
+					_stream.i_handlers.Decrypt(encwriter);
+					System.Array.Copy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH);
 				}
 				catch (System.Exception exc)
 				{
-					j4o.lang.JavaSystem.printStackTrace(exc);
+					j4o.lang.JavaSystem.PrintStackTrace(exc);
 				}
 			}
 			return pwdtoken;
 		}
 
-		internal static long processID()
+		internal static long ProcessID()
 		{
-			long id = j4o.lang.JavaSystem.currentTimeMillis();
+			long id = j4o.lang.JavaSystem.CurrentTimeMillis();
 			return id;
 		}
 
-		internal void read(int address)
+		internal void Read(int address)
 		{
 			_address = address;
-			writeOpenTime();
-			com.db4o.YapWriter reader = _stream.getWriter(_stream.getSystemTransaction(), _address
+			WriteOpenTime();
+			com.db4o.YapWriter reader = _stream.GetWriter(_stream.GetSystemTransaction(), _address
 				, LENGTH);
 			try
 			{
-				_stream.readBytes(reader._buffer, _address, LENGTH);
+				_stream.ReadBytes(reader._buffer, _address, LENGTH);
 			}
 			catch (System.Exception e)
 			{
 			}
-			int oldLength = reader.readInt();
+			int oldLength = reader.ReadInt();
 			if (oldLength > LENGTH || oldLength < MINIMUM_LENGTH)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(17);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(17);
 			}
 			if (oldLength != LENGTH)
 			{
-				if (!_stream.i_config.isReadOnly() && !_stream.i_config.allowVersionUpdates())
+				if (!_stream.i_config.IsReadOnly() && !_stream.i_config.AllowVersionUpdates())
 				{
-					if (_stream.i_config.automaticShutDown())
+					if (_stream.i_config.AutomaticShutDown())
 					{
-						com.db4o.Platform4.removeShutDownHook(_stream, _stream.i_lock);
+						com.db4o.Platform4.RemoveShutDownHook(_stream, _stream.i_lock);
 					}
-					com.db4o.inside.Exceptions4.throwRuntimeException(65);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(65);
 				}
 			}
-			long lastOpenTime = com.db4o.YLong.readLong(reader);
-			long lastAccessTime = com.db4o.YLong.readLong(reader);
-			_encoding = reader.readByte();
+			long lastOpenTime = com.db4o.YLong.ReadLong(reader);
+			long lastAccessTime = com.db4o.YLong.ReadLong(reader);
+			_encoding = reader.ReadByte();
 			if (oldLength > TRANSACTION_OFFSET)
 			{
-				int transactionID1 = com.db4o.YInt.readInt(reader);
-				int transactionID2 = com.db4o.YInt.readInt(reader);
+				int transactionID1 = com.db4o.YInt.ReadInt(reader);
+				int transactionID2 = com.db4o.YInt.ReadInt(reader);
 				if ((transactionID1 > 0) && (transactionID1 == transactionID2))
 				{
 					_transactionToCommit = new com.db4o.Transaction(_stream, null);
-					_transactionToCommit.setAddress(transactionID1);
+					_transactionToCommit.SetAddress(transactionID1);
 				}
 			}
 			if (oldLength > BOOTRECORD_OFFSET)
 			{
-				_bootRecordID = com.db4o.YInt.readInt(reader);
+				_bootRecordID = com.db4o.YInt.ReadInt(reader);
 			}
 			if (oldLength > INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET)
 			{
-				com.db4o.YInt.readInt(reader);
+				com.db4o.YInt.ReadInt(reader);
 			}
 			if (oldLength > PASSWORD_OFFSET)
 			{
-				byte[] encpassword = reader.readBytes(ENCRYPTION_PASSWORD_LENGTH);
-				byte[] storedpwd = passwordToken();
+				byte[] encpassword = reader.ReadBytes(ENCRYPTION_PASSWORD_LENGTH);
+				byte[] storedpwd = PasswordToken();
 				for (int idx = 0; idx < storedpwd.Length; idx++)
 				{
 					if (storedpwd[idx] != encpassword[idx])
 					{
-						_stream.fatalException(54);
+						_stream.FatalException(54);
 					}
 				}
 			}
 			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.FM_LEGACY_RAM;
 			if (oldLength > FREESPACE_SYSTEM_OFFSET)
 			{
-				_freespaceSystem = reader.readByte();
+				_freespaceSystem = reader.ReadByte();
 			}
 			if (oldLength > FREESPACE_ADDRESS_OFFSET)
 			{
-				_freespaceAddress = reader.readInt();
+				_freespaceAddress = reader.ReadInt();
 			}
-			ensureFreespaceSlot();
-			if (lockFile() && (lastAccessTime != 0))
+			if (oldLength > CONVERTER_VERSION_OFFSET)
 			{
-				_stream.logMsg(28, null);
+				_converterVersion = reader.ReadInt();
+			}
+			EnsureFreespaceSlot();
+			if (LockFile() && (lastAccessTime != 0))
+			{
+				_stream.LogMsg(28, null);
 				long waitTime = com.db4o.YapConst.LOCK_TIME_INTERVAL * 10;
-				long currentTime = j4o.lang.JavaSystem.currentTimeMillis();
-				while (j4o.lang.JavaSystem.currentTimeMillis() < currentTime + waitTime)
+				long currentTime = j4o.lang.JavaSystem.CurrentTimeMillis();
+				while (j4o.lang.JavaSystem.CurrentTimeMillis() < currentTime + waitTime)
 				{
-					com.db4o.foundation.Cool.sleepIgnoringInterruption(waitTime);
+					com.db4o.foundation.Cool.SleepIgnoringInterruption(waitTime);
 				}
-				reader = _stream.getWriter(_stream.getSystemTransaction(), _address, com.db4o.YapConst
+				reader = _stream.GetWriter(_stream.GetSystemTransaction(), _address, com.db4o.YapConst
 					.YAPLONG_LENGTH * 2);
-				reader.moveForward(OPEN_TIME_OFFSET);
-				reader.read();
-				long currentOpenTime = com.db4o.YLong.readLong(reader);
-				long currentAccessTime = com.db4o.YLong.readLong(reader);
+				reader.MoveForward(OPEN_TIME_OFFSET);
+				reader.Read();
+				long currentOpenTime = com.db4o.YLong.ReadLong(reader);
+				long currentAccessTime = com.db4o.YLong.ReadLong(reader);
 				if ((currentAccessTime > lastAccessTime))
 				{
 					throw new com.db4o.ext.DatabaseFileLockedException();
 				}
 			}
-			if (lockFile())
+			if (LockFile())
 			{
-				com.db4o.foundation.Cool.sleepIgnoringInterruption(100);
-				syncFiles();
-				openTimeOverWritten();
+				com.db4o.foundation.Cool.SleepIgnoringInterruption(100);
+				SyncFiles();
+				OpenTimeOverWritten();
 			}
 			if (oldLength < LENGTH)
 			{
-				write();
+				Write();
 			}
-			go();
+			Go();
 		}
 
-		public void run()
+		public void Run()
 		{
 		}
 
-		internal void syncFiles()
+		public void ConverterVersion(int ver)
 		{
-			_stream.syncFiles();
+			_converterVersion = ver;
 		}
 
-		internal void write()
+		public int ConverterVersion()
 		{
-			headerLockOverwritten();
-			_address = _stream.getSlot(LENGTH);
-			com.db4o.YapWriter writer = _stream.getWriter(_stream.i_trans, _address, LENGTH);
-			com.db4o.YInt.writeInt(LENGTH, writer);
-			com.db4o.YLong.writeLong(_opentime, writer);
-			com.db4o.YLong.writeLong(_opentime, writer);
-			writer.append(_encoding);
-			com.db4o.YInt.writeInt(0, writer);
-			com.db4o.YInt.writeInt(0, writer);
-			com.db4o.YInt.writeInt(_bootRecordID, writer);
-			com.db4o.YInt.writeInt(0, writer);
-			writer.append(passwordToken());
-			writer.append(_freespaceSystem);
-			ensureFreespaceSlot();
-			com.db4o.YInt.writeInt(_freespaceAddress, writer);
-			writer.write();
-			writePointer();
+			return _converterVersion;
 		}
 
-		internal bool writeAccessTime()
+		internal void SyncFiles()
 		{
-			return _stream.writeAccessTime();
+			_stream.SyncFiles();
 		}
 
-		private void writeOpenTime()
+		public void Write()
 		{
-			if (lockFile())
+			HeaderLockOverwritten();
+			_address = _stream.GetSlot(LENGTH);
+			com.db4o.YapWriter writer = _stream.GetWriter(_stream.i_trans, _address, LENGTH);
+			com.db4o.YInt.WriteInt(LENGTH, writer);
+			com.db4o.YLong.WriteLong(_opentime, writer);
+			com.db4o.YLong.WriteLong(_opentime, writer);
+			writer.Append(_encoding);
+			com.db4o.YInt.WriteInt(0, writer);
+			com.db4o.YInt.WriteInt(0, writer);
+			com.db4o.YInt.WriteInt(_bootRecordID, writer);
+			com.db4o.YInt.WriteInt(0, writer);
+			writer.Append(PasswordToken());
+			writer.Append(_freespaceSystem);
+			EnsureFreespaceSlot();
+			com.db4o.YInt.WriteInt(_freespaceAddress, writer);
+			com.db4o.YInt.WriteInt(_converterVersion, writer);
+			writer.Write();
+			WritePointer();
+		}
+
+		internal bool WriteAccessTime()
+		{
+			return _stream.WriteAccessTime();
+		}
+
+		private void WriteOpenTime()
+		{
+			if (LockFile())
 			{
-				com.db4o.YapWriter writer = openTimeIO();
-				com.db4o.YLong.writeLong(_opentime, writer);
-				writer.write();
+				com.db4o.YapWriter writer = OpenTimeIO();
+				com.db4o.YLong.WriteLong(_opentime, writer);
+				writer.Write();
 			}
 		}
 
-		private void writeHeaderLock()
+		private void WriteHeaderLock()
 		{
-			if (lockFile())
+			if (LockFile())
 			{
-				com.db4o.YapWriter writer = headerLockIO();
-				com.db4o.YInt.writeInt(((int)_opentime), writer);
-				writer.write();
+				com.db4o.YapWriter writer = HeaderLockIO();
+				com.db4o.YInt.WriteInt(((int)_opentime), writer);
+				writer.Write();
 			}
 		}
 
-		private void writePointer()
+		private void WritePointer()
 		{
-			headerLockOverwritten();
-			com.db4o.YapWriter writer = _stream.getWriter(_stream.i_trans, 0, com.db4o.YapConst
+			HeaderLockOverwritten();
+			com.db4o.YapWriter writer = _stream.GetWriter(_stream.i_trans, 0, com.db4o.YapConst
 				.YAPID_LENGTH);
-			writer.moveForward(2);
-			com.db4o.YInt.writeInt(_address, writer);
+			writer.MoveForward(2);
+			com.db4o.YInt.WriteInt(_address, writer);
 			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
-				writer.setID(com.db4o.YapConst.IGNORE_ID);
+				writer.SetID(com.db4o.YapConst.IGNORE_ID);
 			}
-			writer.write();
-			writeHeaderLock();
+			writer.Write();
+			WriteHeaderLock();
 		}
 	}
 }

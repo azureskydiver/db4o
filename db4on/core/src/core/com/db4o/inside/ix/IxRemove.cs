@@ -9,7 +9,7 @@ namespace com.db4o.inside.ix
 			_size = 0;
 		}
 
-		public override int ownSize()
+		public override int OwnSize()
 		{
 			return 0;
 		}
@@ -17,40 +17,40 @@ namespace com.db4o.inside.ix
 		public override string ToString()
 		{
 			return base.ToString();
-			string str = "IxRemove " + _parentID + "\n " + handler().comparableObject(trans()
+			string str = "IxRemove " + _parentID + "\n " + Handler().ComparableObject(Trans()
 				, _value);
 			return str;
 		}
 
-		public override void freespaceVisit(com.db4o.inside.freespace.FreespaceVisitor visitor
+		public override void FreespaceVisit(com.db4o.inside.freespace.FreespaceVisitor visitor
 			, int index)
 		{
 		}
 
-		public override void visit(object obj)
+		public override void Visit(object obj)
 		{
 		}
 
-		public override void visit(com.db4o.foundation.Visitor4 visitor, int[] lowerAndUpperMatch
+		public override void Visit(com.db4o.foundation.Visitor4 visitor, int[] lowerAndUpperMatch
 			)
 		{
 		}
 
-		public override int write(com.db4o.inside.ix.Indexable4 a_handler, com.db4o.YapWriter
+		public override int Write(com.db4o.inside.ix.Indexable4 a_handler, com.db4o.YapWriter
 			 a_writer)
 		{
 			return 0;
 		}
 
-		public override void visitAll(com.db4o.foundation.IntObjectVisitor visitor)
+		public override void VisitAll(com.db4o.foundation.IntObjectVisitor visitor)
 		{
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.inside.ix.IxRemove remove = new com.db4o.inside.ix.IxRemove(_fieldTransaction
 				, _parentID, _value);
-			base.shallowCloneInternal(remove);
+			base.ShallowCloneInternal(remove);
 			return remove;
 		}
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Reflection;
@@ -19,30 +19,30 @@ namespace j4o.lang.reflect
 			get { return _methodInfo; }
 		}
 
-        public Object invoke(Object obj, Object[] args)
+        public Object Invoke(Object obj, Object[] args)
 		{
             return _methodInfo.Invoke(obj, args);
         }
 
-        public String getName()
+        public String GetName()
 		{
             return _methodInfo.Name;
         }
 
-		public j4o.lang.Class[] getParameterTypes() 
+		public j4o.lang.Class[] GetParameterTypes() 
 		{
 			ParameterInfo[] parameters = _methodInfo.GetParameters();
 			j4o.lang.Class[] types = new j4o.lang.Class[parameters.Length];
 			for (int i=0; i<parameters.Length; ++i)
 			{
-				types[i] = j4o.lang.Class.getClassForType(parameters[i].ParameterType);
+				types[i] = j4o.lang.Class.GetClassForType(parameters[i].ParameterType);
 			}
 			return types;
 		}
 
-		public j4o.lang.Class getReturnType() 
+		public j4o.lang.Class GetReturnType() 
 		{
-			return j4o.lang.Class.getClassForType(_methodInfo.ReturnType);
+			return j4o.lang.Class.GetClassForType(_methodInfo.ReturnType);
 		}
     }
 }

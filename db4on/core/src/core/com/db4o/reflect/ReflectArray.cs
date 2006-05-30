@@ -8,27 +8,27 @@ namespace com.db4o.reflect
 	/// <seealso cref="com.db4o.reflect.Reflector">com.db4o.reflect.Reflector</seealso>
 	public interface ReflectArray
 	{
-		int[] dimensions(object arr);
+		int[] Dimensions(object arr);
 
-		int flatten(object a_shaped, int[] a_dimensions, int a_currentDimension, object[]
+		int Flatten(object a_shaped, int[] a_dimensions, int a_currentDimension, object[]
 			 a_flat, int a_flatElement);
 
-		object get(object onArray, int index);
+		object Get(object onArray, int index);
 
-		com.db4o.reflect.ReflectClass getComponentType(com.db4o.reflect.ReflectClass a_class
+		com.db4o.reflect.ReflectClass GetComponentType(com.db4o.reflect.ReflectClass a_class
 			);
 
-		int getLength(object array);
+		int GetLength(object array);
 
-		bool isNDimensional(com.db4o.reflect.ReflectClass a_class);
+		bool IsNDimensional(com.db4o.reflect.ReflectClass a_class);
 
-		object newInstance(com.db4o.reflect.ReflectClass componentType, int length);
+		object NewInstance(com.db4o.reflect.ReflectClass componentType, int length);
 
-		object newInstance(com.db4o.reflect.ReflectClass componentType, int[] dimensions);
+		object NewInstance(com.db4o.reflect.ReflectClass componentType, int[] dimensions);
 
-		void set(object onArray, int index, object element);
+		void Set(object onArray, int index, object element);
 
-		int shape(object[] a_flat, int a_flatElement, object a_shaped, int[] a_dimensions
+		int Shape(object[] a_flat, int a_flatElement, object a_shaped, int[] a_dimensions
 			, int a_currentDimension);
 	}
 }

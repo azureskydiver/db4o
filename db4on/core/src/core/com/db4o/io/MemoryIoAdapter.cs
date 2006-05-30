@@ -13,13 +13,13 @@ namespace com.db4o.io
 	/// the _memoryFiles Hashtable in the adapter. After working with an
 	/// in-memory ObjectContainer/ObjectServer the <code>byte[]</code> content
 	/// is available in the MemoryIoAdapter by using
-	/// <see cref="com.db4o.io.MemoryIoAdapter.get">com.db4o.io.MemoryIoAdapter.get</see>
+	/// <see cref="com.db4o.io.MemoryIoAdapter.Get">com.db4o.io.MemoryIoAdapter.Get</see>
 	/// . To add old existing database
 	/// <code>byte[]</code> content to a MemoryIoAdapter use
-	/// <see cref="com.db4o.io.MemoryIoAdapter.put">com.db4o.io.MemoryIoAdapter.put</see>
+	/// <see cref="com.db4o.io.MemoryIoAdapter.Put">com.db4o.io.MemoryIoAdapter.Put</see>
 	/// . To reduce memory consumption of memory
 	/// file names that will no longer be used call
-	/// <see cref="com.db4o.io.MemoryIoAdapter.put">com.db4o.io.MemoryIoAdapter.put</see>
+	/// <see cref="com.db4o.io.MemoryIoAdapter.Put">com.db4o.io.MemoryIoAdapter.Put</see>
 	/// and pass an empty byte array.
 	/// </remarks>
 	public class MemoryIoAdapter : com.db4o.io.IoAdapter
@@ -63,22 +63,22 @@ namespace com.db4o.io
 		/// </remarks>
 		/// <param name="name">the name to be use for #openFile() or #openServer() calls</param>
 		/// <param name="bytes">the database content</param>
-		public virtual void put(string name, byte[] bytes)
+		public virtual void Put(string name, byte[] bytes)
 		{
 			if (bytes == null)
 			{
 				bytes = new byte[0];
 			}
-			_memoryFiles.put(name, new com.db4o.io.MemoryIoAdapter(this, name, bytes));
+			_memoryFiles.Put(name, new com.db4o.io.MemoryIoAdapter(this, name, bytes));
 		}
 
 		/// <summary>returns the content bytes for a database with the given name.</summary>
 		/// <remarks>returns the content bytes for a database with the given name.</remarks>
 		/// <param name="name">the name to be use for #openFile() or #openServer() calls</param>
 		/// <returns>the content bytes</returns>
-		public virtual byte[] get(string name)
+		public virtual byte[] Get(string name)
 		{
-			com.db4o.io.MemoryIoAdapter mia = (com.db4o.io.MemoryIoAdapter)_memoryFiles.get(name
+			com.db4o.io.MemoryIoAdapter mia = (com.db4o.io.MemoryIoAdapter)_memoryFiles.Get(name
 				);
 			if (mia == null)
 			{
@@ -99,7 +99,7 @@ namespace com.db4o.io
 		/// default setting is 10,000.
 		/// </remarks>
 		/// <param name="length">the length in bytes</param>
-		public virtual void growBy(int length)
+		public virtual void GrowBy(int length)
 		{
 			if (length < 1)
 			{
@@ -110,20 +110,20 @@ namespace com.db4o.io
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override void close()
+		public override void Close()
 		{
 		}
 
-		public override void delete(string path)
+		public override void Delete(string path)
 		{
-			_memoryFiles.remove(path);
+			_memoryFiles.Remove(path);
 		}
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override bool exists(string path)
+		public override bool Exists(string path)
 		{
-			com.db4o.io.MemoryIoAdapter mia = (com.db4o.io.MemoryIoAdapter)_memoryFiles.get(path
+			com.db4o.io.MemoryIoAdapter mia = (com.db4o.io.MemoryIoAdapter)_memoryFiles.Get(path
 				);
 			if (mia == null)
 			{
@@ -134,51 +134,51 @@ namespace com.db4o.io
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override long getLength()
+		public override long GetLength()
 		{
 			return _length;
 		}
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override com.db4o.io.IoAdapter open(string path, bool lockFile, long initialLength
+		public override com.db4o.io.IoAdapter Open(string path, bool lockFile, long initialLength
 			)
 		{
-			com.db4o.io.MemoryIoAdapter mia = (com.db4o.io.MemoryIoAdapter)_memoryFiles.get(path
+			com.db4o.io.MemoryIoAdapter mia = (com.db4o.io.MemoryIoAdapter)_memoryFiles.Get(path
 				);
 			if (mia == null)
 			{
 				mia = new com.db4o.io.MemoryIoAdapter(this, path, (int)initialLength);
-				_memoryFiles.put(path, mia);
+				_memoryFiles.Put(path, mia);
 			}
 			return mia;
 		}
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override int read(byte[] bytes, int length)
+		public override int Read(byte[] bytes, int length)
 		{
-			j4o.lang.JavaSystem.arraycopy(_bytes, _seekPos, bytes, 0, length);
+			System.Array.Copy(_bytes, _seekPos, bytes, 0, length);
 			_seekPos += length;
 			return length;
 		}
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override void seek(long pos)
+		public override void Seek(long pos)
 		{
 			_seekPos = (int)pos;
 		}
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override void sync()
+		public override void Sync()
 		{
 		}
 
 		/// <summary>for internal processing only.</summary>
 		/// <remarks>for internal processing only.</remarks>
-		public override void write(byte[] buffer, int length)
+		public override void Write(byte[] buffer, int length)
 		{
 			if (_seekPos + length > _bytes.Length)
 			{
@@ -188,10 +188,10 @@ namespace com.db4o.io
 					growBy = _seekPos + length;
 				}
 				byte[] temp = new byte[_bytes.Length + growBy];
-				j4o.lang.JavaSystem.arraycopy(_bytes, 0, temp, 0, _length);
+				System.Array.Copy(_bytes, 0, temp, 0, _length);
 				_bytes = temp;
 			}
-			j4o.lang.JavaSystem.arraycopy(buffer, 0, _bytes, _seekPos, length);
+			System.Array.Copy(buffer, 0, _bytes, _seekPos, length);
 			_seekPos += length;
 			if (_seekPos > _length)
 			{

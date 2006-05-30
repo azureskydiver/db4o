@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal sealed class EventDispatcher
+	/// <exclude></exclude>
+	public sealed class EventDispatcher
 	{
 		private static readonly string[] events = { "objectCanDelete", "objectOnDelete", 
 			"objectOnActivate", "objectOnDeactivate", "objectOnNew", "objectOnUpdate", "objectCanActivate"
@@ -18,7 +19,7 @@ namespace com.db4o
 
 		internal const int NEW = 4;
 
-		internal const int UPDATE = 5;
+		public const int UPDATE = 5;
 
 		internal const int CAN_ACTIVATE = 6;
 
@@ -37,14 +38,14 @@ namespace com.db4o
 			this.methods = methods;
 		}
 
-		internal bool dispatch(com.db4o.YapStream stream, object obj, int eventID)
+		internal bool Dispatch(com.db4o.YapStream stream, object obj, int eventID)
 		{
 			if (methods[eventID] != null)
 			{
 				object[] parameters = new object[] { stream };
 				try
 				{
-					object res = methods[eventID].invoke(obj, parameters);
+					object res = methods[eventID].Invoke(obj, parameters);
 					if (res != null && res is bool)
 					{
 						return ((bool)res);
@@ -57,7 +58,7 @@ namespace com.db4o
 			return true;
 		}
 
-		internal static com.db4o.EventDispatcher forClass(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
+		internal static com.db4o.EventDispatcher ForClass(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
 			 classReflector)
 		{
 			if (a_stream == null || classReflector == null)
@@ -66,13 +67,13 @@ namespace com.db4o
 			}
 			com.db4o.EventDispatcher dispatcher = null;
 			int count = 0;
-			if (a_stream.i_config.callbacks())
+			if (a_stream.i_config.Callbacks())
 			{
 				count = COUNT;
 			}
 			else
 			{
-				if (a_stream.i_config.isServer())
+				if (a_stream.i_config.IsServer())
 				{
 					count = SERVER_COUNT;
 				}
@@ -87,11 +88,11 @@ namespace com.db4o
 				{
 					try
 					{
-						com.db4o.reflect.ReflectMethod method = classReflector.getMethod(events[i], parameterClasses
+						com.db4o.reflect.ReflectMethod method = classReflector.GetMethod(events[i], parameterClasses
 							);
 						if (null == method)
 						{
-							method = classReflector.getMethod(toPascalCase(events[i]), parameterClasses);
+							method = classReflector.GetMethod(ToPascalCase(events[i]), parameterClasses);
 						}
 						methods[i] = method;
 						if (dispatcher == null)
@@ -107,9 +108,9 @@ namespace com.db4o
 			return dispatcher;
 		}
 
-		private static string toPascalCase(string name)
+		private static string ToPascalCase(string name)
 		{
-			return j4o.lang.JavaSystem.substring(name, 0, 1).ToUpper() + j4o.lang.JavaSystem.substring
+			return j4o.lang.JavaSystem.Substring(name, 0, 1).ToUpper() + j4o.lang.JavaSystem.Substring
 				(name, 1);
 		}
 	}

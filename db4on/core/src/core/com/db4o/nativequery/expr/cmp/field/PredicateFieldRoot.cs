@@ -14,10 +14,10 @@ namespace com.db4o.nativequery.expr.cmp.field
 			return "PREDICATE";
 		}
 
-		public override void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
+		public override void Accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 	}
 }

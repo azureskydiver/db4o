@@ -21,7 +21,7 @@ namespace com.db4o
 		{
 			if (claxx != null)
 			{
-				i_yapClass = a_trans.i_stream.getYapClass(claxx, true);
+				i_yapClass = a_trans.i_stream.GetYapClass(claxx, true);
 				if (claxx.Equals(a_trans.i_stream.i_handlers.ICLASS_OBJECT))
 				{
 					i_yapClass = (com.db4o.YapClass)((com.db4o.YapClassPrimitive)i_yapClass).i_handler;
@@ -30,69 +30,69 @@ namespace com.db4o
 			_claxx = claxx;
 		}
 
-		public override bool canBeIndexLeaf()
+		public override bool CanBeIndexLeaf()
 		{
 			return false;
 		}
 
-		internal override bool evaluate(com.db4o.QCandidate a_candidate)
+		internal override bool Evaluate(com.db4o.QCandidate a_candidate)
 		{
 			bool res = true;
-			com.db4o.reflect.ReflectClass claxx = a_candidate.classReflector();
+			com.db4o.reflect.ReflectClass claxx = a_candidate.ClassReflector();
 			if (claxx == null)
 			{
 				res = false;
 			}
 			else
 			{
-				res = i_equal ? _claxx.Equals(claxx) : _claxx.isAssignableFrom(claxx);
+				res = i_equal ? _claxx.Equals(claxx) : _claxx.IsAssignableFrom(claxx);
 			}
-			return i_evaluator.not(res);
+			return i_evaluator.Not(res);
 		}
 
-		internal override void evaluateSelf()
+		internal override void EvaluateSelf()
 		{
-			if (i_evaluator.isDefault())
+			if (i_evaluator.IsDefault())
 			{
-				if (i_orderID == 0 && !hasJoins())
+				if (i_orderID == 0 && !HasJoins())
 				{
 					if (i_yapClass != null && i_candidates.i_yapClass != null)
 					{
-						if (i_yapClass.getHigherHierarchy(i_candidates.i_yapClass) == i_yapClass)
+						if (i_yapClass.GetHigherHierarchy(i_candidates.i_yapClass) == i_yapClass)
 						{
 							return;
 						}
 					}
 				}
 			}
-			i_candidates.filter(this);
+			i_candidates.Filter(this);
 		}
 
-		public override com.db4o.query.Constraint equal()
+		public override com.db4o.query.Constraint Equal()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				i_equal = true;
 				return this;
 			}
 		}
 
-		internal override bool isNullConstraint()
+		internal override bool IsNullConstraint()
 		{
 			return false;
 		}
 
-		internal override string logObject()
+		internal override string LogObject()
 		{
 			return "";
 		}
 
-		internal override void marshall()
+		internal override void Marshall()
 		{
-			base.marshall();
+			base.Marshall();
 			if (_claxx != null)
 			{
-				_className = _claxx.getName();
+				_className = _claxx.GetName();
 			}
 		}
 
@@ -107,14 +107,14 @@ namespace com.db4o
 			return str + base.ToString();
 		}
 
-		internal override void unmarshall(com.db4o.Transaction a_trans)
+		internal override void Unmarshall(com.db4o.Transaction a_trans)
 		{
 			if (i_trans == null)
 			{
-				base.unmarshall(a_trans);
+				base.Unmarshall(a_trans);
 				if (_className != null)
 				{
-					_claxx = a_trans.reflector().forName(_className);
+					_claxx = a_trans.Reflector().ForName(_className);
 				}
 			}
 		}

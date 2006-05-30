@@ -9,94 +9,86 @@ namespace com.db4o
 		{
 		}
 
-		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		public override object Coerce(com.db4o.reflect.ReflectClass claxx, object obj)
 		{
-			return com.db4o.foundation.Coercion4.toInt(obj);
+			return com.db4o.foundation.Coercion4.ToInt(obj);
 		}
 
-		public override object defaultValue()
+		public override object DefaultValue()
 		{
 			return i_primitive;
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 1;
 		}
 
-		protected override j4o.lang.Class primitiveJavaClass()
+		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.getClassForType(typeof(int));
+			return j4o.lang.Class.GetClassForType(typeof(int));
 		}
 
-		public override int linkLength()
+		public override int LinkLength()
 		{
 			return com.db4o.YapConst.YAPINT_LENGTH;
 		}
 
-		internal override object primitiveNull()
+		internal override object PrimitiveNull()
 		{
 			return i_primitive;
 		}
 
-		internal override object read1(com.db4o.YapReader a_bytes)
+		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			int ret = readInt(a_bytes);
-			return ret;
+			return ReadInt(a_bytes);
 		}
 
-		internal static int readInt(com.db4o.YapReader a_bytes)
+		internal static int ReadInt(com.db4o.YapReader a_bytes)
 		{
-			return a_bytes.readInt();
+			return a_bytes.ReadInt();
 		}
 
-		public override void write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
-			if (!com.db4o.Deploy.csharp && a_object == null)
-			{
-				writeInt(int.MaxValue, a_bytes);
-			}
-			else
-			{
-				writeInt(((int)a_object), a_bytes);
-			}
+			WriteInt(((int)a_object), a_bytes);
 		}
 
-		internal static void writeInt(int a_int, com.db4o.YapReader a_bytes)
+		internal static void WriteInt(int a_int, com.db4o.YapReader a_bytes)
 		{
-			a_bytes.writeInt(a_int);
+			a_bytes.WriteInt(a_int);
 		}
 
 		private int i_compareTo;
 
-		private int val(object obj)
+		private int Val(object obj)
 		{
 			return ((int)obj);
 		}
 
-		internal override void prepareComparison1(object obj)
+		internal override void PrepareComparison1(object obj)
 		{
-			i_compareTo = val(obj);
+			i_compareTo = Val(obj);
 		}
 
-		public override object current1()
+		public override object Current1()
 		{
 			return i_compareTo;
 		}
 
-		internal override bool isEqual1(object obj)
+		internal override bool IsEqual1(object obj)
 		{
-			return obj is int && val(obj) == i_compareTo;
+			return obj is int && Val(obj) == i_compareTo;
 		}
 
-		internal override bool isGreater1(object obj)
+		internal override bool IsGreater1(object obj)
 		{
-			return obj is int && val(obj) > i_compareTo;
+			return obj is int && Val(obj) > i_compareTo;
 		}
 
-		internal override bool isSmaller1(object obj)
+		internal override bool IsSmaller1(object obj)
 		{
-			return obj is int && val(obj) < i_compareTo;
+			return obj is int && Val(obj) < i_compareTo;
 		}
 	}
 }

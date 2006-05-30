@@ -1,4 +1,4 @@
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using NativeSocket=System.Net.Sockets.Socket;
 
 namespace j4o.net
@@ -12,7 +12,7 @@ namespace j4o.net
 			_delegate = socket;
 		}
 
-		public void setSoTimeout(int timeout)
+		public void SetSoTimeout(int timeout)
 		{
             // Socket timeouts have turned out to be a bad option on all supported
             // .NET platforms. If timeouts are turned on, the waiting message loop
@@ -25,7 +25,7 @@ namespace j4o.net
 //			_delegate.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, timeout);
 		}
 
-		public void close()
+		public void Close()
 		{
 			_delegate.Close();
 		}

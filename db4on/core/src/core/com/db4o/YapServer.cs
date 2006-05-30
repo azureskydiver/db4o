@@ -16,36 +16,36 @@ namespace com.db4o
 
 		internal YapServer(com.db4o.YapFile a_yapFile, int a_port)
 		{
-			a_yapFile.setServer(true);
+			a_yapFile.SetServer(true);
 			i_name = "db4o ServerSocket  FILE: " + a_yapFile.ToString() + "  PORT:" + a_port;
 			i_yapFile = a_yapFile;
-			com.db4o.Config4Impl config = (com.db4o.Config4Impl)i_yapFile.configure();
-			config.callbacks(false);
-			config.isServer(true);
-			a_yapFile.getYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS, true);
-			config.exceptionalClasses().forEachValue(new _AnonymousInnerClass33(this, a_yapFile
+			com.db4o.Config4Impl config = (com.db4o.Config4Impl)i_yapFile.Configure();
+			config.Callbacks(false);
+			config.IsServer(true);
+			a_yapFile.GetYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS, true);
+			config.ExceptionalClasses().ForEachValue(new _AnonymousInnerClass33(this, a_yapFile
 				));
-			if (config.messageLevel() == 0)
+			if (config.MessageLevel() == 0)
 			{
-				config.messageLevel(1);
+				config.MessageLevel(1);
 			}
 			if (a_port > 0)
 			{
 				try
 				{
 					i_serverSocket = new com.db4o.foundation.network.YapServerSocket(a_port);
-					i_serverSocket.setSoTimeout(config.timeoutServerSocket());
+					i_serverSocket.SetSoTimeout(config.TimeoutServerSocket());
 				}
 				catch (System.IO.IOException e)
 				{
-					com.db4o.inside.Exceptions4.throwRuntimeException(30, "" + a_port);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(30, "" + a_port);
 				}
-				new j4o.lang.Thread(this).start();
+				new j4o.lang.Thread(this).Start();
 				lock (this)
 				{
 					try
 					{
-						j4o.lang.JavaSystem.wait(this, 1000);
+						j4o.lang.JavaSystem.Wait(this, 1000);
 					}
 					catch (System.Exception e)
 					{
@@ -62,10 +62,10 @@ namespace com.db4o
 				this.a_yapFile = a_yapFile;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				a_yapFile.getYapClass(a_yapFile.reflector().forName(((com.db4o.Config4Class)a_object
-					).getName()), true);
+				a_yapFile.GetYapClass(a_yapFile.Reflector().ForName(((com.db4o.Config4Class)a_object
+					).GetName()), true);
 			}
 
 			private readonly YapServer _enclosing;
@@ -73,43 +73,43 @@ namespace com.db4o
 			private readonly com.db4o.YapFile a_yapFile;
 		}
 
-		public virtual void backup(string path)
+		public virtual void Backup(string path)
 		{
-			i_yapFile.backup(path);
+			i_yapFile.Backup(path);
 		}
 
-		internal void checkClosed()
+		internal void CheckClosed()
 		{
 			if (i_yapFile == null)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(20, i_name);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(20, i_name);
 			}
-			i_yapFile.checkClosed();
+			i_yapFile.CheckClosed();
 		}
 
-		public virtual bool close()
+		public virtual bool Close()
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				com.db4o.foundation.Cool.sleepIgnoringInterruption(100);
+				com.db4o.foundation.Cool.SleepIgnoringInterruption(100);
 				try
 				{
 					if (i_serverSocket != null)
 					{
-						i_serverSocket.close();
+						i_serverSocket.Close();
 					}
 				}
 				catch (System.Exception e)
 				{
 				}
 				i_serverSocket = null;
-				bool isClosed = i_yapFile == null ? true : i_yapFile.close();
+				bool isClosed = i_yapFile == null ? true : i_yapFile.Close();
 				lock (i_threads)
 				{
-					com.db4o.foundation.Iterator4 i = i_threads.iterator();
-					while (i.hasNext())
+					com.db4o.foundation.Iterator4 i = i_threads.Iterator();
+					while (i.HasNext())
 					{
-						((com.db4o.YapServerThread)i.next()).close();
+						((com.db4o.YapServerThread)i.Next()).Close();
 					}
 				}
 				i_yapFile = null;
@@ -117,24 +117,24 @@ namespace com.db4o
 			}
 		}
 
-		public virtual com.db4o.config.Configuration configure()
+		public virtual com.db4o.config.Configuration Configure()
 		{
-			return i_yapFile.configure();
+			return i_yapFile.Configure();
 		}
 
-		public virtual com.db4o.ext.ExtObjectServer ext()
+		public virtual com.db4o.ext.ExtObjectServer Ext()
 		{
 			return this;
 		}
 
-		internal virtual com.db4o.YapServerThread findThread(int a_threadID)
+		internal virtual com.db4o.YapServerThread FindThread(int a_threadID)
 		{
 			lock (i_threads)
 			{
-				com.db4o.foundation.Iterator4 i = i_threads.iterator();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = i_threads.Iterator();
+				while (i.HasNext())
 				{
-					com.db4o.YapServerThread serverThread = (com.db4o.YapServerThread)i.next();
+					com.db4o.YapServerThread serverThread = (com.db4o.YapServerThread)i.Next();
 					if (serverThread.i_threadID == a_threadID)
 					{
 						return serverThread;
@@ -144,52 +144,52 @@ namespace com.db4o
 			return null;
 		}
 
-		public virtual void grantAccess(string userName, string password)
+		public virtual void GrantAccess(string userName, string password)
 		{
 			lock (i_yapFile.i_lock)
 			{
-				checkClosed();
+				CheckClosed();
 				com.db4o.User user = new com.db4o.User();
 				user.name = userName;
-				i_yapFile.showInternalClasses(true);
-				com.db4o.User existing = (com.db4o.User)i_yapFile.get(user).next();
+				i_yapFile.ShowInternalClasses(true);
+				com.db4o.User existing = (com.db4o.User)i_yapFile.Get(user).Next();
 				if (existing != null)
 				{
 					existing.password = password;
-					i_yapFile.set(existing);
+					i_yapFile.Set(existing);
 				}
 				else
 				{
 					user.password = password;
-					i_yapFile.set(user);
+					i_yapFile.Set(user);
 				}
-				i_yapFile.commit();
-				i_yapFile.showInternalClasses(false);
+				i_yapFile.Commit();
+				i_yapFile.ShowInternalClasses(false);
 			}
 		}
 
-		public virtual com.db4o.ObjectContainer objectContainer()
+		public virtual com.db4o.ObjectContainer ObjectContainer()
 		{
 			return i_yapFile;
 		}
 
-		public virtual com.db4o.ObjectContainer openClient()
+		public virtual com.db4o.ObjectContainer OpenClient()
 		{
 			try
 			{
-				return new com.db4o.YapClient(openClientSocket(), com.db4o.YapConst.EMBEDDED_CLIENT_USER
+				return new com.db4o.YapClient(OpenClientSocket(), com.db4o.YapConst.EMBEDDED_CLIENT_USER
 					 + (i_threadIDGen - 1), "", false);
 			}
 			catch (System.IO.IOException e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
+				j4o.lang.JavaSystem.PrintStackTrace(e);
 			}
 			return null;
 		}
 
-		public virtual com.db4o.foundation.network.YapSocketFake openClientSocket()
+		public virtual com.db4o.foundation.network.YapSocketFake OpenClientSocket()
 		{
-			int timeout = ((com.db4o.Config4Impl)configure()).timeoutClientSocket();
+			int timeout = ((com.db4o.Config4Impl)Configure()).TimeoutClientSocket();
 			com.db4o.foundation.network.YapSocketFake clientFake = new com.db4o.foundation.network.YapSocketFake
 				(this, timeout);
 			com.db4o.foundation.network.YapSocketFake serverFake = new com.db4o.foundation.network.YapSocketFake
@@ -200,63 +200,63 @@ namespace com.db4o
 					, i_threadIDGen++, true);
 				lock (i_threads)
 				{
-					i_threads.add(thread);
+					i_threads.Add(thread);
 				}
-				thread.start();
+				thread.Start();
 				return clientFake;
 			}
 			catch (System.Exception e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
+				j4o.lang.JavaSystem.PrintStackTrace(e);
 			}
 			return null;
 		}
 
-		internal virtual void removeThread(com.db4o.YapServerThread aThread)
+		internal virtual void RemoveThread(com.db4o.YapServerThread aThread)
 		{
 			lock (i_threads)
 			{
-				i_threads.remove(aThread);
+				i_threads.Remove(aThread);
 			}
 		}
 
-		public virtual void revokeAccess(string userName)
+		public virtual void RevokeAccess(string userName)
 		{
 			lock (i_yapFile.i_lock)
 			{
-				i_yapFile.showInternalClasses(true);
-				checkClosed();
+				i_yapFile.ShowInternalClasses(true);
+				CheckClosed();
 				com.db4o.User user = new com.db4o.User();
 				user.name = userName;
-				com.db4o.ObjectSet set = i_yapFile.get(user);
-				while (set.hasNext())
+				com.db4o.ObjectSet set = i_yapFile.Get(user);
+				while (set.HasNext())
 				{
-					i_yapFile.delete(set.next());
+					i_yapFile.Delete(set.Next());
 				}
-				i_yapFile.commit();
-				i_yapFile.showInternalClasses(false);
+				i_yapFile.Commit();
+				i_yapFile.ShowInternalClasses(false);
 			}
 		}
 
-		public virtual void run()
+		public virtual void Run()
 		{
-			j4o.lang.Thread.currentThread().setName(i_name);
-			i_yapFile.logMsg(31, "" + i_serverSocket.getLocalPort());
+			j4o.lang.Thread.CurrentThread().SetName(i_name);
+			i_yapFile.LogMsg(31, "" + i_serverSocket.GetLocalPort());
 			lock (this)
 			{
-				j4o.lang.JavaSystem.notify(this);
+				j4o.lang.JavaSystem.Notify(this);
 			}
 			while (i_serverSocket != null)
 			{
 				try
 				{
 					com.db4o.YapServerThread thread = new com.db4o.YapServerThread(this, i_yapFile, i_serverSocket
-						.accept(), i_threadIDGen++, false);
+						.Accept(), i_threadIDGen++, false);
 					lock (i_threads)
 					{
-						i_threads.add(thread);
+						i_threads.Add(thread);
 					}
-					thread.start();
+					thread.Start();
 				}
 				catch (System.Exception e)
 				{

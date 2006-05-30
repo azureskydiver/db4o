@@ -8,7 +8,7 @@ namespace com.db4o.inside.cluster
 		{
 		}
 
-		public virtual com.db4o.query.Constraint[] toArray()
+		public virtual com.db4o.query.Constraint[] ToArray()
 		{
 			lock (_cluster)
 			{
@@ -19,11 +19,11 @@ namespace com.db4o.inside.cluster
 						)_constraints[i];
 					for (int j = 0; j < c._constraints.Length; j++)
 					{
-						all.add(c._constraints[j]);
+						all.Add(c._constraints[j]);
 					}
 				}
-				com.db4o.query.Constraint[] res = new com.db4o.query.Constraint[all.size()];
-				all.toArray(res);
+				com.db4o.query.Constraint[] res = new com.db4o.query.Constraint[all.Size()];
+				all.ToArray(res);
 				return res;
 			}
 		}

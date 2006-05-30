@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 
 namespace com.db4o.foundation
 {
 	public class Coercion4
 	{
-		public static object toSByte(object obj)
+		public static object ToSByte(object obj)
 		{
 			if (obj is byte) return obj;
 
@@ -13,7 +13,7 @@ namespace com.db4o.foundation
 			return com.db4o.foundation.No4.INSTANCE;
 		}
 
-		public static object toShort(object obj)
+		public static object ToShort(object obj)
 		{
 			if (obj is short) return obj;
 
@@ -22,7 +22,7 @@ namespace com.db4o.foundation
 			return com.db4o.foundation.No4.INSTANCE;
 		}
 
-		public static object toInt(object obj)
+		public static object ToInt(object obj)
 		{
 			if (obj is int) return obj;
 
@@ -31,7 +31,7 @@ namespace com.db4o.foundation
 			return com.db4o.foundation.No4.INSTANCE;
 		}
 
-		public static object toLong(object obj)
+		public static object ToLong(object obj)
 		{
 			if (obj is long) return obj;
 
@@ -40,7 +40,7 @@ namespace com.db4o.foundation
 			return com.db4o.foundation.No4.INSTANCE;
 		}
 
-		public static object toFloat(object obj)
+		public static object ToFloat(object obj)
 		{
 			if (obj is float) return obj;
 
@@ -49,7 +49,7 @@ namespace com.db4o.foundation
 			return com.db4o.foundation.No4.INSTANCE;
 		}
 
-		public static object toDouble(object obj)
+		public static object ToDouble(object obj)
 		{
 			if (obj is double) return obj;
 

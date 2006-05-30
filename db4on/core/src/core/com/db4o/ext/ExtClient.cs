@@ -5,7 +5,7 @@ namespace com.db4o.ext
 	/// <see cref="com.db4o.ext.ExtObjectContainer">ExtObjectContainer</see>
 	/// interface.
 	/// <br /><br />Both
-	/// <see cref="com.db4o.Db4o.openClient">Db4o.openClient()</see>
+	/// <see cref="com.db4o.Db4o.OpenClient">Db4o.openClient()</see>
 	/// methods always
 	/// return an <code>ExtClient</code> object so a cast is possible.<br /><br />
 	/// The ObjectContainer functionality is split into multiple interfaces to allow newcomers to
@@ -41,7 +41,7 @@ namespace com.db4o.ext
 		/// are discarded during the switching process.<br /><br />
 		/// </remarks>
 		/// <param name="fileName">the fully qualified path of the requested database file.</param>
-		void switchToFile(string fileName);
+		void SwitchToFile(string fileName);
 
 		/// <summary>
 		/// requests switching back to the main database file after a previous call
@@ -54,8 +54,8 @@ namespace com.db4o.ext
 		/// All persistent references to objects that are currently in memory
 		/// are discarded during the switching process.<br /><br />
 		/// </remarks>
-		void switchToMainFile();
+		void SwitchToMainFile();
 
-		bool isAlive();
+		bool IsAlive();
 	}
 }

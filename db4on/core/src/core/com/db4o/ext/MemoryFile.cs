@@ -10,7 +10,7 @@ namespace com.db4o.ext
 	/// or JVM failures.
 	/// <br /><br />
 	/// </remarks>
-	/// <seealso cref="com.db4o.ext.ExtDb4o.openMemoryFile">com.db4o.ext.ExtDb4o.openMemoryFile
+	/// <seealso cref="com.db4o.ext.ExtDb4o.OpenMemoryFile">com.db4o.ext.ExtDb4o.OpenMemoryFile
 	/// 	</seealso>
 	public class MemoryFile
 	{
@@ -41,7 +41,7 @@ namespace com.db4o.ext
 		/// after it is closed.<br /><br />
 		/// </remarks>
 		/// <returns>bytes the raw byte data.</returns>
-		public virtual byte[] getBytes()
+		public virtual byte[] GetBytes()
 		{
 			if (i_bytes == null)
 			{
@@ -59,7 +59,7 @@ namespace com.db4o.ext
 		/// the current size.
 		/// </remarks>
 		/// <returns>size in bytes</returns>
-		public virtual int getIncrementSizeBy()
+		public virtual int GetIncrementSizeBy()
 		{
 			return i_incrementSizeBy;
 		}
@@ -67,7 +67,7 @@ namespace com.db4o.ext
 		/// <summary>returns the initial size of the MemoryFile.</summary>
 		/// <remarks>returns the initial size of the MemoryFile.</remarks>
 		/// <returns>size in bytes</returns>
-		public virtual int getInitialSize()
+		public virtual int GetInitialSize()
 		{
 			return i_initialSize;
 		}
@@ -79,7 +79,7 @@ namespace com.db4o.ext
 		/// Memory File session may produce unpreditable results.
 		/// </remarks>
 		/// <param name="bytes">the raw byte data.</param>
-		public virtual void setBytes(byte[] bytes)
+		public virtual void SetBytes(byte[] bytes)
 		{
 			i_bytes = bytes;
 		}
@@ -92,7 +92,7 @@ namespace com.db4o.ext
 		/// configures the size the MemoryFile is to be enlarged by, if it grows
 		/// beyond the current size.
 		/// <br /><br />Call this method before passing the MemoryFile to
-		/// <see cref="com.db4o.ext.ExtDb4o.openMemoryFile">ExtDb4o#openMemoryFile(MemoryFile)
+		/// <see cref="com.db4o.ext.ExtDb4o.OpenMemoryFile">ExtDb4o#openMemoryFile(MemoryFile)
 		/// 	</see>
 		/// .
 		/// <br /><br />
@@ -101,7 +101,7 @@ namespace com.db4o.ext
 		/// test the speed of your application with real data.<br /><br />
 		/// </remarks>
 		/// <param name="byteCount">the desired size in bytes</param>
-		public virtual void setIncrementSizeBy(int byteCount)
+		public virtual void SetIncrementSizeBy(int byteCount)
 		{
 			i_incrementSizeBy = byteCount;
 		}
@@ -110,7 +110,7 @@ namespace com.db4o.ext
 		/// <remarks>
 		/// configures the initial size of the MemoryFile.
 		/// <br /><br />Call this method before passing the MemoryFile to
-		/// <see cref="com.db4o.ext.ExtDb4o.openMemoryFile">ExtDb4o#openMemoryFile(MemoryFile)
+		/// <see cref="com.db4o.ext.ExtDb4o.OpenMemoryFile">ExtDb4o#openMemoryFile(MemoryFile)
 		/// 	</see>
 		/// .
 		/// <br /><br />
@@ -120,7 +120,7 @@ namespace com.db4o.ext
 		/// real data.<br /><br />
 		/// </remarks>
 		/// <param name="byteCount">the desired size in bytes</param>
-		public virtual void setInitialSize(int byteCount)
+		public virtual void SetInitialSize(int byteCount)
 		{
 			i_initialSize = byteCount;
 		}

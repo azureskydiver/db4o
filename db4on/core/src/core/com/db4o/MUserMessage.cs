@@ -2,14 +2,14 @@ namespace com.db4o
 {
 	internal sealed class MUserMessage : com.db4o.MsgObject
 	{
-		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal sealed override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
-			com.db4o.YapStream stream = getStream();
-			if (stream.i_config.messageRecipient() != null)
+			com.db4o.YapStream stream = GetStream();
+			if (stream.i_config.MessageRecipient() != null)
 			{
-				this.unmarshall();
-				stream.i_config.messageRecipient().processMessage(stream, stream.unmarshall(_payLoad
+				this.Unmarshall();
+				stream.i_config.MessageRecipient().ProcessMessage(stream, stream.Unmarshall(_payLoad
 					));
 			}
 			return true;

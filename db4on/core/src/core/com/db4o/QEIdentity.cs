@@ -5,17 +5,17 @@ namespace com.db4o
 	{
 		public int i_objectID;
 
-		internal override bool identity()
+		internal override bool Identity()
 		{
 			return true;
 		}
 
-		internal override bool evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
+		internal override bool Evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
 			 a_candidate, object a_value)
 		{
 			if (i_objectID == 0)
 			{
-				i_objectID = a_constraint.getObjectID();
+				i_objectID = a_constraint.GetObjectID();
 			}
 			return a_candidate._key == i_objectID;
 		}

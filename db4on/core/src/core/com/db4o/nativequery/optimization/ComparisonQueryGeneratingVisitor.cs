@@ -6,34 +6,34 @@ namespace com.db4o.nativequery.optimization
 
 		private object _value = null;
 
-		public object value()
+		public object Value()
 		{
 			return _value;
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.ConstValue operand)
+		public void Visit(com.db4o.nativequery.expr.cmp.ConstValue operand)
 		{
-			_value = operand.value();
+			_value = operand.Value();
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.FieldValue operand)
+		public void Visit(com.db4o.nativequery.expr.cmp.FieldValue operand)
 		{
-			operand.parent().accept(this);
-			j4o.lang.Class clazz = ((operand.parent() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
-				) ? (j4o.lang.Class)_value : j4o.lang.Class.getClassForObject(_value));
+			operand.Parent().Accept(this);
+			j4o.lang.Class clazz = ((operand.Parent() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
+				) ? (j4o.lang.Class)_value : j4o.lang.Class.GetClassForObject(_value));
 			try
 			{
-				j4o.lang.reflect.Field field = com.db4o.nativequery.optimization.ReflectUtil.fieldFor
-					(clazz, operand.fieldName());
-				_value = field.get(_value);
+				j4o.lang.reflect.Field field = com.db4o.nativequery.optimization.ReflectUtil.FieldFor
+					(clazz, operand.FieldName());
+				_value = field.Get(_value);
 			}
 			catch (System.Exception exc)
 			{
-				j4o.lang.JavaSystem.printStackTrace(exc);
+				j4o.lang.JavaSystem.PrintStackTrace(exc);
 			}
 		}
 
-		internal object add(object a, object b)
+		internal object Add(object a, object b)
 		{
 			if (a is double || b is double)
 			{
@@ -50,7 +50,7 @@ namespace com.db4o.nativequery.optimization
 			return ((int)a) + ((int)b);
 		}
 
-		internal object subtract(object a, object b)
+		internal object Subtract(object a, object b)
 		{
 			if (a is double || b is double)
 			{
@@ -67,7 +67,7 @@ namespace com.db4o.nativequery.optimization
 			return ((int)a) - ((int)b);
 		}
 
-		internal object multiply(object a, object b)
+		internal object Multiply(object a, object b)
 		{
 			if (a is double || b is double)
 			{
@@ -84,7 +84,7 @@ namespace com.db4o.nativequery.optimization
 			return ((int)a) * ((int)b);
 		}
 
-		internal object divide(object a, object b)
+		internal object Divide(object a, object b)
 		{
 			if (a is double || b is double)
 			{
@@ -101,95 +101,95 @@ namespace com.db4o.nativequery.optimization
 			return ((int)a) / ((int)b);
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.ArithmeticExpression operand)
+		public void Visit(com.db4o.nativequery.expr.cmp.ArithmeticExpression operand)
 		{
-			operand.left().accept(this);
+			operand.Left().Accept(this);
 			object left = _value;
-			operand.right().accept(this);
+			operand.Right().Accept(this);
 			object right = _value;
-			switch (operand.op().id())
+			switch (operand.Op().Id())
 			{
 				case com.db4o.nativequery.expr.cmp.ArithmeticOperator.ADD_ID:
 				{
-					_value = add(left, right);
+					_value = Add(left, right);
 					break;
 				}
 
 				case com.db4o.nativequery.expr.cmp.ArithmeticOperator.SUBTRACT_ID:
 				{
-					_value = subtract(left, right);
+					_value = Subtract(left, right);
 					break;
 				}
 
 				case com.db4o.nativequery.expr.cmp.ArithmeticOperator.MULTIPLY_ID:
 				{
-					_value = multiply(left, right);
+					_value = Multiply(left, right);
 					break;
 				}
 
 				case com.db4o.nativequery.expr.cmp.ArithmeticOperator.DIVIDE_ID:
 				{
-					_value = divide(left, right);
+					_value = Divide(left, right);
 					break;
 				}
 			}
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot root)
+		public void Visit(com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot root)
 		{
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot root)
+		public void Visit(com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot root)
 		{
 			_value = _predicate;
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.field.StaticFieldRoot root)
+		public void Visit(com.db4o.nativequery.expr.cmp.field.StaticFieldRoot root)
 		{
 			try
 			{
-				_value = j4o.lang.Class.forName(root.className());
+				_value = j4o.lang.Class.ForName(root.ClassName());
 			}
 			catch (j4o.lang.ClassNotFoundException e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
+				j4o.lang.JavaSystem.PrintStackTrace(e);
 			}
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.ArrayAccessValue operand)
+		public void Visit(com.db4o.nativequery.expr.cmp.ArrayAccessValue operand)
 		{
-			operand.parent().accept(this);
+			operand.Parent().Accept(this);
 			object parent = _value;
-			operand.index().accept(this);
+			operand.Index().Accept(this);
 			int index = (int)_value;
-			_value = j4o.lang.reflect.JavaArray.get(parent, index);
+			_value = j4o.lang.reflect.JavaArray.Get(parent, index);
 		}
 
-		public void visit(com.db4o.nativequery.expr.cmp.MethodCallValue operand)
+		public void Visit(com.db4o.nativequery.expr.cmp.MethodCallValue operand)
 		{
-			operand.parent().accept(this);
+			operand.Parent().Accept(this);
 			object receiver = _value;
-			object[] _params = new object[operand.args().Length];
-			for (int paramIdx = 0; paramIdx < operand.args().Length; paramIdx++)
+			object[] _params = new object[operand.Args().Length];
+			for (int paramIdx = 0; paramIdx < operand.Args().Length; paramIdx++)
 			{
-				operand.args()[paramIdx].accept(this);
+				operand.Args()[paramIdx].Accept(this);
 				_params[paramIdx] = _value;
 			}
-			j4o.lang.Class clazz = j4o.lang.Class.getClassForObject(receiver);
-			if (operand.parent().root() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
+			j4o.lang.Class clazz = j4o.lang.Class.GetClassForObject(receiver);
+			if (operand.Parent().Root() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
 				)
 			{
 				clazz = (j4o.lang.Class)receiver;
 			}
-			j4o.lang.reflect.Method method = com.db4o.nativequery.optimization.ReflectUtil.methodFor
-				(clazz, operand.methodName(), operand.paramTypes());
+			j4o.lang.reflect.Method method = com.db4o.nativequery.optimization.ReflectUtil.MethodFor
+				(clazz, operand.MethodName(), operand.ParamTypes());
 			try
 			{
-				_value = method.invoke(receiver, _params);
+				_value = method.Invoke(receiver, _params);
 			}
 			catch (System.Exception exc)
 			{
-				j4o.lang.JavaSystem.printStackTrace(exc);
+				j4o.lang.JavaSystem.PrintStackTrace(exc);
 				_value = null;
 			}
 		}

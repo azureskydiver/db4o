@@ -10,12 +10,12 @@ namespace com.db4o.messaging
 	/// use the messaging feature. It is also used to stop the server
 	/// in ../com/db4o/samples/clientserver/StopServer.java<br /><br />
 	/// <b>See Also:</b><br />
-	/// <see cref="com.db4o.config.Configuration.setMessageRecipient">Configuration.setMessageRecipient(MessageRecipient)
+	/// <see cref="com.db4o.config.Configuration.SetMessageRecipient">Configuration.setMessageRecipient(MessageRecipient)
 	/// 	</see>
 	/// , <br />
 	/// <see cref="com.db4o.messaging.MessageSender">com.db4o.messaging.MessageSender</see>
 	/// ,<br />
-	/// <see cref="com.db4o.config.Configuration.getMessageSender">com.db4o.config.Configuration.getMessageSender
+	/// <see cref="com.db4o.config.Configuration.GetMessageSender">com.db4o.config.Configuration.GetMessageSender
 	/// 	</see>
 	/// ,<br />
 	/// </remarks>
@@ -25,6 +25,6 @@ namespace com.db4o.messaging
 		/// <remarks>the method called upon the arrival of messages.</remarks>
 		/// <param name="con">the ObjectContainer the message was sent to.</param>
 		/// <param name="message">the message received.</param>
-		void processMessage(com.db4o.ObjectContainer con, object message);
+		void ProcessMessage(com.db4o.ObjectContainer con, object message);
 	}
 }

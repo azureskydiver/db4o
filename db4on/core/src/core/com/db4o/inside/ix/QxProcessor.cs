@@ -9,7 +9,7 @@ namespace com.db4o.inside.ix
 
 		private int _limit;
 
-		internal virtual void addPath(com.db4o.inside.ix.QxPath newPath)
+		internal virtual void AddPath(com.db4o.inside.ix.QxPath newPath)
 		{
 			if (_paths == null)
 			{
@@ -17,13 +17,13 @@ namespace com.db4o.inside.ix
 				return;
 			}
 			com.db4o.inside.ix.QxPath[] same = new com.db4o.inside.ix.QxPath[] { null };
-			_paths.traverse(new _AnonymousInnerClass32(this, newPath, same));
+			_paths.Traverse(new _AnonymousInnerClass32(this, newPath, same));
 			if (same[0] != null)
 			{
-				_paths = _paths.removeNode(same[0]);
-				newPath.mergeForSameField(same[0]);
+				_paths = _paths.RemoveNode(same[0]);
+				newPath.MergeForSameField(same[0]);
 			}
-			_paths = com.db4o.Tree.add(_paths, newPath);
+			_paths = com.db4o.Tree.Add(_paths, newPath);
 		}
 
 		private sealed class _AnonymousInnerClass32 : com.db4o.foundation.Visitor4
@@ -36,12 +36,12 @@ namespace com.db4o.inside.ix
 				this.same = same;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.inside.ix.QxPath path = (com.db4o.inside.ix.QxPath)a_object;
 				if (path._parent == newPath._parent)
 				{
-					if (path.onSameFieldAs(newPath))
+					if (path.OnSameFieldAs(newPath))
 					{
 						same[0] = path;
 					}
@@ -55,53 +55,53 @@ namespace com.db4o.inside.ix
 			private readonly com.db4o.inside.ix.QxPath[] same;
 		}
 
-		private void buildPaths(com.db4o.QCandidates candidates)
+		private void BuildPaths(com.db4o.QCandidates candidates)
 		{
-			com.db4o.foundation.Iterator4 i = candidates.iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = candidates.IterateConstraints();
+			while (i.HasNext())
 			{
-				com.db4o.QCon qCon = (com.db4o.QCon)i.next();
-				qCon.setCandidates(candidates);
-				if (!qCon.hasOrJoins())
+				com.db4o.QCon qCon = (com.db4o.QCon)i.Next();
+				qCon.SetCandidates(candidates);
+				if (!qCon.HasOrJoins())
 				{
-					new com.db4o.inside.ix.QxPath(this, null, qCon, 0).buildPaths();
+					new com.db4o.inside.ix.QxPath(this, null, qCon, 0).BuildPaths();
 				}
 			}
 		}
 
-		public virtual bool run(com.db4o.QCandidates candidates, int limit)
+		public virtual bool Run(com.db4o.QCandidates candidates, int limit)
 		{
 			_limit = limit;
-			buildPaths(candidates);
+			BuildPaths(candidates);
 			if (_paths == null)
 			{
 				return false;
 			}
-			return chooseBestPath();
+			return ChooseBestPath();
 		}
 
-		private bool chooseBestPath()
+		private bool ChooseBestPath()
 		{
 			while (_paths != null)
 			{
-				com.db4o.inside.ix.QxPath path = (com.db4o.inside.ix.QxPath)_paths.first();
-				_paths = _paths.removeFirst();
-				if (path.isTopLevelComplete())
+				com.db4o.inside.ix.QxPath path = (com.db4o.inside.ix.QxPath)_paths.First();
+				_paths = _paths.RemoveFirst();
+				if (path.IsTopLevelComplete())
 				{
 					_best = path;
 					return true;
 				}
-				path.load();
+				path.Load();
 			}
 			return false;
 		}
 
-		public virtual com.db4o.Tree toQCandidates(com.db4o.QCandidates candidates)
+		public virtual com.db4o.Tree ToQCandidates(com.db4o.QCandidates candidates)
 		{
-			return _best.toQCandidates(candidates);
+			return _best.ToQCandidates(candidates);
 		}
 
-		internal virtual bool exceedsLimit(int count, int depth)
+		internal virtual bool ExceedsLimit(int count, int depth)
 		{
 			int limit = _limit;
 			for (int i = 0; i < depth; i++)

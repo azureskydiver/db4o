@@ -8,20 +8,20 @@ namespace com.db4o.query
 	/// classes, one class or an attribute of a class.<br /><br />The graph
 	/// is automatically extended with attributes of added constraints
 	/// (see
-	/// <see cref="com.db4o.query.Query.constrain">com.db4o.query.Query.constrain</see>
+	/// <see cref="com.db4o.query.Query.Constrain">com.db4o.query.Query.Constrain</see>
 	/// ) and upon calls to
-	/// <see cref="com.db4o.query.Query.descend">com.db4o.query.Query.descend</see>
+	/// <see cref="com.db4o.query.Query.Descend">com.db4o.query.Query.Descend</see>
 	/// that request nodes that do not yet exist.
 	/// <br /><br />
 	/// References to joined nodes in the query graph can be obtained
 	/// by "walking" along the nodes of the graph with the method
-	/// <see cref="com.db4o.query.Query.descend">com.db4o.query.Query.descend</see>
+	/// <see cref="com.db4o.query.Query.Descend">com.db4o.query.Query.Descend</see>
 	/// .
 	/// <br /><br />
-	/// <see cref="com.db4o.query.Query.execute">com.db4o.query.Query.execute</see>
+	/// <see cref="com.db4o.query.Query.Execute">com.db4o.query.Query.Execute</see>
 	/// evaluates the entire graph against all persistent objects.
 	/// <br /><br />
-	/// <see cref="com.db4o.query.Query.execute">com.db4o.query.Query.execute</see>
+	/// <see cref="com.db4o.query.Query.Execute">com.db4o.query.Query.Execute</see>
 	/// can be called from any
 	/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
 	/// node
@@ -68,7 +68,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Evaluation">com.db4o.query.Evaluation</see>
 		/// interface.
 		/// </returns>
-		com.db4o.query.Constraint constrain(object constraint);
+		com.db4o.query.Constraint Constrain(object constraint);
 
 		/// <summary>
 		/// returns a
@@ -80,7 +80,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraints">com.db4o.query.Constraints</see>
 		/// on this query node.
 		/// </returns>
-		com.db4o.query.Constraints constraints();
+		com.db4o.query.Constraints Constraints();
 
 		/// <summary>returns a reference to a descendant node in the query graph.</summary>
 		/// <remarks>
@@ -98,7 +98,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
 		/// node
 		/// </returns>
-		com.db4o.query.Query descend(string fieldName);
+		com.db4o.query.Query Descend(string fieldName);
 
 		/// <summary>
 		/// executes the
@@ -112,7 +112,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
 		/// .
 		/// </returns>
-		com.db4o.ObjectSet execute();
+		com.db4o.ObjectSet Execute();
 
 		/// <summary>
 		/// adds an ascending ordering criteria to this node of
@@ -128,7 +128,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
 		/// object to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Query orderAscending();
+		com.db4o.query.Query OrderAscending();
 
 		/// <summary>
 		/// adds a descending order criteria to this node of
@@ -144,7 +144,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
 		/// object to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Query orderDescending();
+		com.db4o.query.Query OrderDescending();
 
 		/// <summary>Sort the resulting ObjectSet by the given comparator.</summary>
 		/// <remarks>Sort the resulting ObjectSet by the given comparator.</remarks>
@@ -154,6 +154,6 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
 		/// object to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Query sortBy(com.db4o.query.QueryComparator comparator);
+		com.db4o.query.Query SortBy(com.db4o.query.QueryComparator comparator);
 	}
 }

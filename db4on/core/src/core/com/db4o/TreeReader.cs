@@ -27,12 +27,12 @@ namespace com.db4o
 			i_orderOnRead = a_orderOnRead;
 		}
 
-		public com.db4o.Tree read()
+		public com.db4o.Tree Read()
 		{
-			return read(i_bytes.readInt());
+			return Read(i_bytes.ReadInt());
 		}
 
-		public com.db4o.Tree read(int a_size)
+		public com.db4o.Tree Read(int a_size)
 		{
 			i_size = a_size;
 			if (i_size > 0)
@@ -42,7 +42,7 @@ namespace com.db4o
 					com.db4o.Tree tree = null;
 					for (int i = 0; i < i_size; i++)
 					{
-						tree = com.db4o.Tree.add(tree, (com.db4o.Tree)i_template.read(i_bytes));
+						tree = com.db4o.Tree.Add(tree, (com.db4o.Tree)i_template.Read(i_bytes));
 					}
 					return tree;
 				}
@@ -52,43 +52,43 @@ namespace com.db4o
 					{
 						i_levels++;
 					}
-					return linkUp(null, i_levels);
+					return LinkUp(null, i_levels);
 				}
 			}
 			return null;
 		}
 
-		private com.db4o.Tree linkUp(com.db4o.Tree a_preceding, int a_level)
+		private com.db4o.Tree LinkUp(com.db4o.Tree a_preceding, int a_level)
 		{
-			com.db4o.Tree node = (com.db4o.Tree)i_template.read(i_bytes);
+			com.db4o.Tree node = (com.db4o.Tree)i_template.Read(i_bytes);
 			i_current++;
 			node._preceding = a_preceding;
-			node._subsequent = linkDown(a_level + 1);
-			node.calculateSize();
+			node._subsequent = LinkDown(a_level + 1);
+			node.CalculateSize();
 			if (i_current < i_size)
 			{
-				return linkUp(node, a_level - 1);
+				return LinkUp(node, a_level - 1);
 			}
 			return node;
 		}
 
-		private com.db4o.Tree linkDown(int a_level)
+		private com.db4o.Tree LinkDown(int a_level)
 		{
 			if (i_current < i_size)
 			{
 				i_current++;
 				if (a_level < i_levels)
 				{
-					com.db4o.Tree preceding = linkDown(a_level + 1);
-					com.db4o.Tree node = (com.db4o.Tree)i_template.read(i_bytes);
+					com.db4o.Tree preceding = LinkDown(a_level + 1);
+					com.db4o.Tree node = (com.db4o.Tree)i_template.Read(i_bytes);
 					node._preceding = preceding;
-					node._subsequent = linkDown(a_level + 1);
-					node.calculateSize();
+					node._subsequent = LinkDown(a_level + 1);
+					node.CalculateSize();
 					return node;
 				}
 				else
 				{
-					return (com.db4o.Tree)i_template.read(i_bytes);
+					return (com.db4o.Tree)i_template.Read(i_bytes);
 				}
 			}
 			return null;

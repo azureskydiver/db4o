@@ -21,33 +21,33 @@ namespace com.db4o.inside.ix
 			_size = a_entries;
 		}
 
-		public override com.db4o.Tree add(com.db4o.Tree a_new)
+		public override com.db4o.Tree Add(com.db4o.Tree a_new)
 		{
-			return reader().add(this, a_new);
+			return Reader().Add(this, a_new);
 		}
 
-		public override int compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.Tree a_to)
 		{
 			_lowerAndUpperMatches = new int[2];
-			return reader().compare(this, _lowerAndUpperMatches);
+			return Reader().Compare(this, _lowerAndUpperMatches);
 		}
 
-		internal override int[] lowerAndUpperMatch()
+		internal override int[] LowerAndUpperMatch()
 		{
 			return _lowerAndUpperMatches;
 		}
 
-		private com.db4o.inside.ix.IxFileRangeReader reader()
+		private com.db4o.inside.ix.IxFileRangeReader Reader()
 		{
-			return _fieldTransaction.i_index.fileRangeReader();
+			return _fieldTransaction.i_index.FileRangeReader();
 		}
 
-		public virtual void incrementAddress(int length)
+		public virtual void IncrementAddress(int length)
 		{
 			_addressOffset += length;
 		}
 
-		public override int ownSize()
+		public override int OwnSize()
 		{
 			return _entries;
 		}
@@ -55,29 +55,27 @@ namespace com.db4o.inside.ix
 		public override string ToString()
 		{
 			return base.ToString();
-			com.db4o.YapFile yf = stream();
-			com.db4o.Transaction transaction = trans();
-			com.db4o.YapReader fileReader = new com.db4o.YapReader(slotLength());
+			com.db4o.YapReader fileReader = new com.db4o.YapReader(SlotLength());
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
-			sb.append("IxFileRange");
-			visitAll(new _AnonymousInnerClass61(this, sb));
+			sb.Append("IxFileRange");
+			VisitAll(new _AnonymousInnerClass59(this, sb));
 			return sb.ToString();
 		}
 
-		private sealed class _AnonymousInnerClass61 : com.db4o.foundation.IntObjectVisitor
+		private sealed class _AnonymousInnerClass59 : com.db4o.foundation.IntObjectVisitor
 		{
-			public _AnonymousInnerClass61(IxFileRange _enclosing, j4o.lang.StringBuffer sb)
+			public _AnonymousInnerClass59(IxFileRange _enclosing, j4o.lang.StringBuffer sb)
 			{
 				this._enclosing = _enclosing;
 				this.sb = sb;
 			}
 
-			public void visit(int anInt, object anObject)
+			public void Visit(int anInt, object anObject)
 			{
-				sb.append("\n  ");
-				sb.append("Parent: " + anInt);
-				sb.append("\n ");
-				sb.append(anObject);
+				sb.Append("\n  ");
+				sb.Append("Parent: " + anInt);
+				sb.Append("\n ");
+				sb.Append(anObject);
 			}
 
 			private readonly IxFileRange _enclosing;
@@ -85,15 +83,15 @@ namespace com.db4o.inside.ix
 			private readonly j4o.lang.StringBuffer sb;
 		}
 
-		public override void visit(object obj)
+		public override void Visit(object obj)
 		{
-			visit((com.db4o.foundation.Visitor4)obj, null);
+			Visit((com.db4o.foundation.Visitor4)obj, null);
 		}
 
-		public override void visit(com.db4o.foundation.Visitor4 visitor, int[] lowerUpper
+		public override void Visit(com.db4o.foundation.Visitor4 visitor, int[] lowerUpper
 			)
 		{
-			com.db4o.inside.ix.IxFileRangeReader frr = reader();
+			com.db4o.inside.ix.IxFileRangeReader frr = Reader();
 			if (lowerUpper == null)
 			{
 				lowerUpper = new int[] { 0, _entries - 1 };
@@ -102,88 +100,87 @@ namespace com.db4o.inside.ix
 			if (count > 0)
 			{
 				com.db4o.YapReader fileReader = new com.db4o.YapReader(count * frr._slotLength);
-				fileReader.read(stream(), _address, _addressOffset + (lowerUpper[0] * frr._slotLength
+				fileReader.Read(Stream(), _address, _addressOffset + (lowerUpper[0] * frr._slotLength
 					));
 				for (int i = lowerUpper[0]; i <= lowerUpper[1]; i++)
 				{
-					fileReader.incrementOffset(frr._linkLegth);
-					visitor.visit(fileReader.readInt());
+					fileReader.IncrementOffset(frr._linkLegth);
+					visitor.Visit(fileReader.ReadInt());
 				}
 			}
 		}
 
-		public override int write(com.db4o.inside.ix.Indexable4 a_handler, com.db4o.YapWriter
+		public override int Write(com.db4o.inside.ix.Indexable4 a_handler, com.db4o.YapWriter
 			 a_writer)
 		{
-			com.db4o.YapFile yf = (com.db4o.YapFile)a_writer.getStream();
-			int length = _entries * slotLength();
-			yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset()
+			com.db4o.YapFile yf = (com.db4o.YapFile)a_writer.GetStream();
+			int length = _entries * SlotLength();
+			yf.Copy(_address, _addressOffset, a_writer.GetAddress(), a_writer.AddressOffset()
 				, length);
-			a_writer.moveForward(length);
+			a_writer.MoveForward(length);
 			return _entries;
 		}
 
-		public override void visitAll(com.db4o.foundation.IntObjectVisitor visitor)
+		public override void VisitAll(com.db4o.foundation.IntObjectVisitor visitor)
 		{
-			com.db4o.YapFile yf = stream();
-			com.db4o.Transaction transaction = trans();
-			com.db4o.YapReader fileReader = new com.db4o.YapReader(slotLength());
+			com.db4o.YapFile yf = Stream();
+			com.db4o.Transaction transaction = Trans();
+			com.db4o.YapReader fileReader = new com.db4o.YapReader(SlotLength());
 			for (int i = 0; i < _entries; i++)
 			{
-				int address = _address + (i * slotLength());
-				fileReader.read(yf, address, _addressOffset);
+				int address = _address + (i * SlotLength());
+				fileReader.Read(yf, address, _addressOffset);
 				fileReader._offset = 0;
-				object obj = handler().comparableObject(transaction, handler().readIndexEntry(fileReader
+				object obj = Handler().ComparableObject(transaction, Handler().ReadIndexEntry(fileReader
 					));
-				visitor.visit(fileReader.readInt(), obj);
+				visitor.Visit(fileReader.ReadInt(), obj);
 			}
 		}
 
-		public override void visitFirst(com.db4o.inside.freespace.FreespaceVisitor visitor
+		public override void VisitFirst(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
 			if (_preceding != null)
 			{
-				((com.db4o.inside.ix.IxTree)_preceding).visitFirst(visitor);
-				if (visitor.visited())
+				((com.db4o.inside.ix.IxTree)_preceding).VisitFirst(visitor);
+				if (visitor.Visited())
 				{
 					return;
 				}
 			}
-			freespaceVisit(visitor, 0);
+			FreespaceVisit(visitor, 0);
 		}
 
-		public override void visitLast(com.db4o.inside.freespace.FreespaceVisitor visitor
+		public override void VisitLast(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
 			if (_subsequent != null)
 			{
-				((com.db4o.inside.ix.IxTree)_subsequent).visitLast(visitor);
-				if (visitor.visited())
+				((com.db4o.inside.ix.IxTree)_subsequent).VisitLast(visitor);
+				if (visitor.Visited())
 				{
 					return;
 				}
 			}
-			int lastIndex = _entries - 1;
-			freespaceVisit(visitor, _entries - 1);
+			FreespaceVisit(visitor, _entries - 1);
 		}
 
-		public override void freespaceVisit(com.db4o.inside.freespace.FreespaceVisitor visitor
+		public override void FreespaceVisit(com.db4o.inside.freespace.FreespaceVisitor visitor
 			, int index)
 		{
-			com.db4o.inside.ix.IxFileRangeReader frr = reader();
+			com.db4o.inside.ix.IxFileRangeReader frr = Reader();
 			com.db4o.YapReader fileReader = new com.db4o.YapReader(frr._slotLength);
-			fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
-			int val = fileReader.readInt();
-			int parentID = fileReader.readInt();
-			visitor.visit(parentID, val);
+			fileReader.Read(Stream(), _address, _addressOffset + (index * frr._slotLength));
+			int val = fileReader.ReadInt();
+			int parentID = fileReader.ReadInt();
+			visitor.Visit(parentID, val);
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.inside.ix.IxFileRange range = new com.db4o.inside.ix.IxFileRange(_fieldTransaction
 				, _address, _addressOffset, _entries);
-			base.shallowCloneInternal(range);
+			base.ShallowCloneInternal(range);
 			if (_lowerAndUpperMatches != null)
 			{
 				range._lowerAndUpperMatches = new int[] { _lowerAndUpperMatches[0], _lowerAndUpperMatches

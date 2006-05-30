@@ -7,38 +7,38 @@ namespace com.db4o.reflect.generic
 		{
 		}
 
-		public override object deepClone(object obj)
+		public override object DeepClone(object obj)
 		{
 			com.db4o.reflect.Reflector reflector = (com.db4o.reflect.Reflector)obj;
-			return new com.db4o.reflect.generic.GenericVirtualField(getName());
+			return new com.db4o.reflect.generic.GenericVirtualField(GetName());
 		}
 
-		public override object get(object onObject)
+		public override object Get(object onObject)
 		{
 			return null;
 		}
 
-		public override com.db4o.reflect.ReflectClass getType()
+		public override com.db4o.reflect.ReflectClass GetFieldType()
 		{
 			return null;
 		}
 
-		public override bool isPublic()
+		public override bool IsPublic()
 		{
 			return false;
 		}
 
-		public override bool isStatic()
+		public override bool IsStatic()
 		{
 			return true;
 		}
 
-		public override bool isTransient()
+		public override bool IsTransient()
 		{
 			return true;
 		}
 
-		public override void set(object onObject, object value)
+		public override void Set(object onObject, object value)
 		{
 		}
 	}

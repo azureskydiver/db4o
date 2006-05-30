@@ -12,49 +12,49 @@ namespace com.db4o.inside.freespace
 
 		internal FreespaceIx(com.db4o.YapFile file, com.db4o.MetaIndex metaIndex)
 		{
-			_index = new com.db4o.inside.ix.Index4(file.getSystemTransaction(), new com.db4o.YInt
+			_index = new com.db4o.inside.ix.Index4(file.GetSystemTransaction(), new com.db4o.YInt
 				(file), metaIndex, false);
-			_indexTrans = _index.globalIndexTransaction();
+			_indexTrans = _index.GlobalIndexTransaction();
 		}
 
-		internal abstract void add(int address, int length);
+		internal abstract void Add(int address, int length);
 
-		internal abstract int address();
+		internal abstract int Address();
 
-		public virtual void debug()
+		public virtual void Debug()
 		{
 		}
 
-		internal virtual void find(int val)
+		internal virtual void Find(int val)
 		{
 			_traverser = new com.db4o.inside.ix.IxTraverser();
-			_traverser.findBoundsExactMatch(val, (com.db4o.inside.ix.IxTree)_indexTrans.getRoot
+			_traverser.FindBoundsExactMatch(val, (com.db4o.inside.ix.IxTree)_indexTrans.GetRoot
 				());
 		}
 
-		internal abstract int length();
+		internal abstract int Length();
 
-		internal virtual bool match()
+		internal virtual bool Match()
 		{
 			_visitor = new com.db4o.inside.freespace.FreespaceVisitor();
-			_traverser.visitMatch(_visitor);
-			return _visitor.visited();
+			_traverser.VisitMatch(_visitor);
+			return _visitor.Visited();
 		}
 
-		internal virtual bool preceding()
+		internal virtual bool Preceding()
 		{
 			_visitor = new com.db4o.inside.freespace.FreespaceVisitor();
-			_traverser.visitPreceding(_visitor);
-			return _visitor.visited();
+			_traverser.VisitPreceding(_visitor);
+			return _visitor.Visited();
 		}
 
-		internal abstract void remove(int address, int length);
+		internal abstract void Remove(int address, int length);
 
-		internal virtual bool subsequent()
+		internal virtual bool Subsequent()
 		{
 			_visitor = new com.db4o.inside.freespace.FreespaceVisitor();
-			_traverser.visitSubsequent(_visitor);
-			return _visitor.visited();
+			_traverser.VisitSubsequent(_visitor);
+			return _visitor.Visited();
 		}
 	}
 }

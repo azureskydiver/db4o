@@ -16,143 +16,143 @@ namespace com.db4o
 			i_constraints = constraints;
 		}
 
-		internal override com.db4o.query.Constraint join(com.db4o.query.Constraint a_with
+		internal override com.db4o.query.Constraint Join(com.db4o.query.Constraint a_with
 			, bool a_and)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				if (!(a_with is com.db4o.QCon))
 				{
 					return null;
 				}
-				return ((com.db4o.QCon)a_with).join1(this, a_and);
+				return ((com.db4o.QCon)a_with).Join1(this, a_and);
 			}
 		}
 
-		public virtual com.db4o.query.Constraint[] toArray()
+		public virtual com.db4o.query.Constraint[] ToArray()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				return i_constraints;
 			}
 		}
 
-		public override com.db4o.query.Constraint contains()
+		public override com.db4o.query.Constraint Contains()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].contains();
+					i_constraints[i].Contains();
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint equal()
+		public override com.db4o.query.Constraint Equal()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].equal();
+					i_constraints[i].Equal();
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint greater()
+		public override com.db4o.query.Constraint Greater()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].greater();
+					i_constraints[i].Greater();
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint identity()
+		public override com.db4o.query.Constraint Identity()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].identity();
+					i_constraints[i].Identity();
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint not()
+		public override com.db4o.query.Constraint Not()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].not();
+					i_constraints[i].Not();
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint like()
+		public override com.db4o.query.Constraint Like()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].like();
+					i_constraints[i].Like();
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint startsWith(bool caseSensitive)
+		public override com.db4o.query.Constraint StartsWith(bool caseSensitive)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].startsWith(caseSensitive);
+					i_constraints[i].StartsWith(caseSensitive);
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint endsWith(bool caseSensitive)
+		public override com.db4o.query.Constraint EndsWith(bool caseSensitive)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].endsWith(caseSensitive);
+					i_constraints[i].EndsWith(caseSensitive);
 				}
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint smaller()
+		public override com.db4o.query.Constraint Smaller()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					i_constraints[i].smaller();
+					i_constraints[i].Smaller();
 				}
 				return this;
 			}
 		}
 
-		public override object getObject()
+		public override object GetObject()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				object[] objects = new object[i_constraints.Length];
 				for (int i = 0; i < i_constraints.Length; i++)
 				{
-					objects[i] = i_constraints[i].getObject();
+					objects[i] = i_constraints[i].GetObject();
 				}
 				return objects;
 			}

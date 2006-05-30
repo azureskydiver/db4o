@@ -16,17 +16,17 @@ namespace com.db4o.nativequery.expr.cmp
 			_swapped = swapped;
 		}
 
-		public virtual com.db4o.nativequery.expr.cmp.FieldValue left()
+		public virtual com.db4o.nativequery.expr.cmp.FieldValue Left()
 		{
 			return _left;
 		}
 
-		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperand right()
+		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperand Right()
 		{
 			return _right;
 		}
 
-		public virtual bool swapped()
+		public virtual bool Swapped()
 		{
 			return _swapped;
 		}

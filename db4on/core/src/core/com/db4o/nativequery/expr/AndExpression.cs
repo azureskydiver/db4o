@@ -13,12 +13,12 @@ namespace com.db4o.nativequery.expr
 			this._right = right;
 		}
 
-		public virtual com.db4o.nativequery.expr.Expression left()
+		public virtual com.db4o.nativequery.expr.Expression Left()
 		{
 			return _left;
 		}
 
-		public virtual com.db4o.nativequery.expr.Expression right()
+		public virtual com.db4o.nativequery.expr.Expression Right()
 		{
 			return _right;
 		}
@@ -34,7 +34,7 @@ namespace com.db4o.nativequery.expr
 			{
 				return true;
 			}
-			if (other == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (other == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(other))
 			{
 				return false;
@@ -50,9 +50,9 @@ namespace com.db4o.nativequery.expr
 			return _left.GetHashCode() + _right.GetHashCode();
 		}
 
-		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
+		public virtual void Accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 	}
 }

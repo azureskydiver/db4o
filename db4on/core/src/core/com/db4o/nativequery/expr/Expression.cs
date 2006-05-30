@@ -7,6 +7,6 @@ namespace com.db4o.nativequery.expr
 		/// must implement the visitor interface required
 		/// by the concrete Expression implementation.
 		/// </param>
-		void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor);
+		void Accept(com.db4o.nativequery.expr.ExpressionVisitor visitor);
 	}
 }

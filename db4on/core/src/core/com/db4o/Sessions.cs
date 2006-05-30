@@ -2,31 +2,31 @@ namespace com.db4o
 {
 	internal class Sessions : com.db4o.foundation.Collection4
 	{
-		internal virtual void forEach(com.db4o.foundation.Visitor4 visitor)
+		internal virtual void ForEach(com.db4o.foundation.Visitor4 visitor)
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				com.db4o.foundation.Iterator4 i = iterator();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = Iterator();
+				while (i.HasNext())
 				{
-					visitor.visit(i.next());
+					visitor.Visit(i.Next());
 				}
 			}
 		}
 
-		internal virtual com.db4o.ObjectContainer open(string databaseFileName)
+		internal virtual com.db4o.ObjectContainer Open(string databaseFileName)
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
 				com.db4o.ObjectContainer oc = null;
 				com.db4o.Session newSession = new com.db4o.Session(databaseFileName);
-				com.db4o.Session oldSession = (com.db4o.Session)get(newSession);
+				com.db4o.Session oldSession = (com.db4o.Session)Get(newSession);
 				if (oldSession != null)
 				{
-					oc = oldSession.subSequentOpen();
+					oc = oldSession.SubSequentOpen();
 					if (oc == null)
 					{
-						remove(oldSession);
+						Remove(oldSession);
 					}
 					return oc;
 				}
@@ -48,29 +48,29 @@ namespace com.db4o
 				}
 				catch (com.db4o.UserException eu)
 				{
-					com.db4o.inside.Exceptions4.throwRuntimeException(eu.errCode, eu.errMsg);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(eu.errCode, eu.errMsg);
 				}
 				catch (System.Exception t)
 				{
-					com.db4o.Messages.logErr(com.db4o.Db4o.i_config, 4, databaseFileName, t);
+					com.db4o.Messages.LogErr(com.db4o.Db4o.i_config, 4, databaseFileName, t);
 					return null;
 				}
 				if (oc != null)
 				{
 					newSession.i_stream = (com.db4o.YapStream)oc;
-					add(newSession);
-					com.db4o.Platform4.postOpen(oc);
-					com.db4o.Messages.logMsg(com.db4o.Db4o.i_config, 5, databaseFileName);
+					Add(newSession);
+					com.db4o.Platform4.PostOpen(oc);
+					com.db4o.Messages.LogMsg(com.db4o.Db4o.i_config, 5, databaseFileName);
 				}
 				return oc;
 			}
 		}
 
-		public override object remove(object obj)
+		public override object Remove(object obj)
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				return base.remove(obj);
+				return base.Remove(obj);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Threading;
@@ -15,36 +15,36 @@ namespace com.db4o.foundation
         AutoResetEvent waitEvent = new AutoResetEvent(false);
         AutoResetEvent closureEvent = new AutoResetEvent(false);
 
-        public Object run(Closure4 closure4)
+        public Object Run(Closure4 closure4)
         {
-            enterClosure();
+            EnterClosure();
             Object ret;
             try
             {
-                ret = closure4.run();
+                ret = closure4.Run();
             }
             catch (Exception e)
             {
-                awakeClosure();
+                AwakeClosure();
                 throw;
             }
-            awakeClosure();
+            AwakeClosure();
             return ret;
         }
 
-        public void snooze(long l)
+        public void Snooze(long l)
         {
-            awakeClosure();
-            waitWait();
-            enterClosure();
+            AwakeClosure();
+            WaitWait();
+            EnterClosure();
         }
 
-        public void awake()
+        public void Awake()
         {
-            awakeWait();
+            AwakeWait();
         }
 
-        private void awakeWait()
+        private void AwakeWait()
         {
             lock (this)
             {
@@ -58,11 +58,11 @@ namespace com.db4o.foundation
             }
         }
 
-        private void awakeClosure()
+        private void AwakeClosure()
         {
             lock (this)
             {
-                removeLock();
+                RemoveLock();
                 closureReleased = Thread.CurrentThread;
                 closureEvent.Set();
                 Thread.Sleep(0);
@@ -73,30 +73,30 @@ namespace com.db4o.foundation
             }
         }
 
-        private void waitWait()
+        private void WaitWait()
         {
             waitEvent.WaitOne();
             waitReleased = Thread.CurrentThread;
         }
 
-        private void waitClosure()
+        private void WaitClosure()
         {
             closureEvent.WaitOne();
             closureReleased = Thread.CurrentThread;
         }
 
-        private void enterClosure()
+        private void EnterClosure()
         {
             while (lockedByThread != Thread.CurrentThread)
             {
-                while (!setLock())
+                while (!SetLock())
                 {
-                    waitClosure();
+                    WaitClosure();
                 }
             }
         }
 
-        private bool setLock()
+        private bool SetLock()
         {
             lock (this)
             {
@@ -109,7 +109,7 @@ namespace com.db4o.foundation
             }
         }
 
-        private void removeLock()
+        private void RemoveLock()
         {
             lock (this)
             {

@@ -9,7 +9,7 @@ namespace com.db4o
 
 		public long i_uuid;
 
-		public virtual object shallowClone()
+		public virtual object ShallowClone()
 		{
 			com.db4o.VirtualAttributes va = new com.db4o.VirtualAttributes();
 			va.i_database = i_database;
@@ -18,7 +18,7 @@ namespace com.db4o
 			return va;
 		}
 
-		internal virtual bool suppliesUUID()
+		internal virtual bool SuppliesUUID()
 		{
 			return i_database != null && i_uuid != 0;
 		}

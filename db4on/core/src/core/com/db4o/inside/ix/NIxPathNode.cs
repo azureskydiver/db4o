@@ -17,14 +17,14 @@ namespace com.db4o.inside.ix
 		/// returns positive if this is greater than a_to
 		/// returns negative if this is smaller than a_to
 		/// </summary>
-		internal virtual int compare(com.db4o.inside.ix.NIxPathNode other, int myType, int
+		internal virtual int Compare(com.db4o.inside.ix.NIxPathNode other, int myType, int
 			 otherType)
 		{
 			if (_next == null)
 			{
 				if (other._next != null)
 				{
-					return other.ascending() ? -1 : 1;
+					return other.Ascending() ? -1 : 1;
 				}
 				if (_lowerAndUpperMatch == null)
 				{
@@ -52,12 +52,12 @@ namespace com.db4o.inside.ix
 			}
 			if (other._next == null)
 			{
-				return ascending() ? 1 : -1;
+				return Ascending() ? 1 : -1;
 			}
 			com.db4o.inside.ix.IxTree otherNext = other._next._tree;
 			if (otherNext == _next._tree)
 			{
-				return _next.compare(other._next, myType, otherType);
+				return _next.Compare(other._next, myType, otherType);
 			}
 			if (_tree._subsequent == otherNext)
 			{
@@ -66,12 +66,12 @@ namespace com.db4o.inside.ix
 			return 1;
 		}
 
-		internal virtual bool ascending()
+		internal virtual bool Ascending()
 		{
 			return _tree._subsequent == _next._tree;
 		}
 
-		internal virtual bool carriesTheSame(com.db4o.inside.ix.NIxPathNode node)
+		internal virtual bool CarriesTheSame(com.db4o.inside.ix.NIxPathNode node)
 		{
 			if (node == null)
 			{
@@ -80,14 +80,14 @@ namespace com.db4o.inside.ix
 			return _tree == node._tree;
 		}
 
-		internal virtual int countPreceding()
+		internal virtual int CountPreceding()
 		{
 			int preceding = 0;
 			if (_tree._preceding != null)
 			{
 				if (_next == null || _next._tree != _tree._preceding)
 				{
-					preceding += _tree._preceding.size();
+					preceding += _tree._preceding.Size();
 				}
 			}
 			if (_lowerAndUpperMatch != null)
@@ -104,7 +104,7 @@ namespace com.db4o.inside.ix
 			return preceding;
 		}
 
-		internal virtual int countMatching()
+		internal virtual int CountMatching()
 		{
 			if (_comparisonResult == 0)
 			{
@@ -121,14 +121,14 @@ namespace com.db4o.inside.ix
 			return 0;
 		}
 
-		internal virtual int countSubsequent()
+		internal virtual int CountSubsequent()
 		{
 			int subsequent = 0;
 			if (_tree._subsequent != null)
 			{
 				if (_next == null || _next._tree != _tree._subsequent)
 				{
-					subsequent += _tree._subsequent.size();
+					subsequent += _tree._subsequent.Size();
 				}
 			}
 			if (_lowerAndUpperMatch != null)
@@ -146,7 +146,7 @@ namespace com.db4o.inside.ix
 			return subsequent;
 		}
 
-		internal virtual int countSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
+		internal virtual int CountSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
 			 smallPath, com.db4o.inside.ix.NIxPathNode small)
 		{
 			if (_comparisonResult != 0)
@@ -186,61 +186,61 @@ namespace com.db4o.inside.ix
 			return upper - lower + 1;
 		}
 
-		internal virtual void traversePreceding(com.db4o.foundation.Visitor4Dispatch dispatcher
+		internal virtual void TraversePreceding(com.db4o.foundation.Visitor4Dispatch dispatcher
 			)
 		{
 			if (_tree._preceding != null)
 			{
 				if (_next == null || _next._tree != _tree._preceding)
 				{
-					_tree._preceding.traverse(dispatcher);
+					_tree._preceding.Traverse(dispatcher);
 				}
 			}
 			if (_lowerAndUpperMatch != null)
 			{
 				int[] lowerAndUpperMatch = new int[] { 0, _lowerAndUpperMatch[0] - 1 };
-				_tree.visit(dispatcher._target, lowerAndUpperMatch);
+				_tree.Visit(dispatcher._target, lowerAndUpperMatch);
 				return;
 			}
 			if (_comparisonResult < 0 && !(_tree is com.db4o.inside.ix.IxRemove))
 			{
-				_tree.visit(dispatcher._target);
+				_tree.Visit(dispatcher._target);
 			}
 		}
 
-		internal virtual void traverseMatching(com.db4o.foundation.Visitor4Dispatch dispatcher
+		internal virtual void TraverseMatching(com.db4o.foundation.Visitor4Dispatch dispatcher
 			)
 		{
 			if (_comparisonResult == 0)
 			{
-				_tree.visit(dispatcher._target, _lowerAndUpperMatch);
+				_tree.Visit(dispatcher._target, _lowerAndUpperMatch);
 			}
 		}
 
-		internal virtual void traverseSubsequent(com.db4o.foundation.Visitor4Dispatch dispatcher
+		internal virtual void TraverseSubsequent(com.db4o.foundation.Visitor4Dispatch dispatcher
 			)
 		{
 			if (_tree._subsequent != null)
 			{
 				if (_next == null || _next._tree != _tree._subsequent)
 				{
-					_tree._subsequent.traverse(dispatcher);
+					_tree._subsequent.Traverse(dispatcher);
 				}
 			}
 			if (_lowerAndUpperMatch != null)
 			{
 				int[] lowerAndUpperMatch = new int[] { _lowerAndUpperMatch[1] + 1, ((com.db4o.inside.ix.IxFileRange
 					)_tree)._entries - 1 };
-				_tree.visit(dispatcher._target, lowerAndUpperMatch);
+				_tree.Visit(dispatcher._target, lowerAndUpperMatch);
 				return;
 			}
 			if (_comparisonResult > 0)
 			{
-				_tree.visit(dispatcher._target);
+				_tree.Visit(dispatcher._target);
 			}
 		}
 
-		internal virtual void traverseSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
+		internal virtual void TraverseSpan(com.db4o.inside.ix.NIxPath greatPath, com.db4o.inside.ix.NIxPath
 			 smallPath, com.db4o.inside.ix.NIxPathNode small, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
@@ -252,7 +252,7 @@ namespace com.db4o.inside.ix
 			{
 				if (greatPath._takeMatches || smallPath._takeMatches)
 				{
-					_tree.visit(dispatcher._target);
+					_tree.Visit(dispatcher._target);
 					return;
 				}
 			}
@@ -260,7 +260,7 @@ namespace com.db4o.inside.ix
 			{
 				if (greatPath._takeMatches || smallPath._takeMatches)
 				{
-					_tree.visit(dispatcher._target, _lowerAndUpperMatch);
+					_tree.Visit(dispatcher._target, _lowerAndUpperMatch);
 				}
 				return;
 			}
@@ -274,7 +274,7 @@ namespace com.db4o.inside.ix
 			{
 				lower = small._lowerAndUpperMatch[1] + 1;
 			}
-			_tree.visit(dispatcher._target, new int[] { lower, upper });
+			_tree.Visit(dispatcher._target, new int[] { lower, upper });
 		}
 
 		public override string ToString()

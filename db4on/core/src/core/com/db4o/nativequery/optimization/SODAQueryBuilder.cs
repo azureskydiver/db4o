@@ -16,81 +16,81 @@ namespace com.db4o.nativequery.optimization
 				_predicate = predicate;
 			}
 
-			public virtual void visit(com.db4o.nativequery.expr.AndExpression expression)
+			public virtual void Visit(com.db4o.nativequery.expr.AndExpression expression)
 			{
-				expression.left().accept(this);
+				expression.Left().Accept(this);
 				com.db4o.query.Constraint left = _constraint;
-				expression.right().accept(this);
-				left.and(_constraint);
+				expression.Right().Accept(this);
+				left.And(_constraint);
 				_constraint = left;
 			}
 
-			public virtual void visit(com.db4o.nativequery.expr.BoolConstExpression expression
+			public virtual void Visit(com.db4o.nativequery.expr.BoolConstExpression expression
 				)
 			{
 			}
 
-			public virtual void visit(com.db4o.nativequery.expr.OrExpression expression)
+			public virtual void Visit(com.db4o.nativequery.expr.OrExpression expression)
 			{
-				expression.left().accept(this);
+				expression.Left().Accept(this);
 				com.db4o.query.Constraint left = _constraint;
-				expression.right().accept(this);
-				left.or(_constraint);
+				expression.Right().Accept(this);
+				left.Or(_constraint);
 				_constraint = left;
 			}
 
-			public virtual void visit(com.db4o.nativequery.expr.ComparisonExpression expression
+			public virtual void Visit(com.db4o.nativequery.expr.ComparisonExpression expression
 				)
 			{
 				com.db4o.query.Query subQuery = _query;
-				com.db4o.foundation.Iterator4 fieldNameIterator = fieldNames(expression.left());
-				while (fieldNameIterator.hasNext())
+				com.db4o.foundation.Iterator4 fieldNameIterator = FieldNames(expression.Left());
+				while (fieldNameIterator.HasNext())
 				{
-					subQuery = subQuery.descend((string)fieldNameIterator.next());
+					subQuery = subQuery.Descend((string)fieldNameIterator.Next());
 				}
 				com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor visitor = new 
 					com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor(_predicate);
-				expression.right().accept(visitor);
-				_constraint = subQuery.constrain(visitor.value());
-				if (!expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.EQUALS
+				expression.Right().Accept(visitor);
+				_constraint = subQuery.Constrain(visitor.Value());
+				if (!expression.Op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.EQUALS
 					))
 				{
-					if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.GREATER
+					if (expression.Op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.GREATER
 						))
 					{
-						_constraint.greater();
+						_constraint.Greater();
 					}
 					else
 					{
-						if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.SMALLER
+						if (expression.Op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.SMALLER
 							))
 						{
-							_constraint.smaller();
+							_constraint.Smaller();
 						}
 						else
 						{
-							if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.CONTAINS
+							if (expression.Op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.CONTAINS
 								))
 							{
-								_constraint.contains();
+								_constraint.Contains();
 							}
 							else
 							{
-								if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.STARTSWITH
+								if (expression.Op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.STARTSWITH
 									))
 								{
-									_constraint.startsWith(true);
+									_constraint.StartsWith(true);
 								}
 								else
 								{
-									if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.ENDSWITH
+									if (expression.Op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.ENDSWITH
 										))
 									{
-										_constraint.endsWith(true);
+										_constraint.EndsWith(true);
 									}
 									else
 									{
-										throw new j4o.lang.RuntimeException("Can't handle constraint: " + expression.op()
+										throw new j4o.lang.RuntimeException("Can't handle constraint: " + expression.Op()
 											);
 									}
 								}
@@ -100,13 +100,13 @@ namespace com.db4o.nativequery.optimization
 				}
 			}
 
-			public virtual void visit(com.db4o.nativequery.expr.NotExpression expression)
+			public virtual void Visit(com.db4o.nativequery.expr.NotExpression expression)
 			{
-				expression.expr().accept(this);
-				_constraint.not();
+				expression.Expr().Accept(this);
+				_constraint.Not();
 			}
 
-			private com.db4o.foundation.Iterator4 fieldNames(com.db4o.nativequery.expr.cmp.FieldValue
+			private com.db4o.foundation.Iterator4 FieldNames(com.db4o.nativequery.expr.cmp.FieldValue
 				 fieldValue)
 			{
 				com.db4o.foundation.Collection4 coll = new com.db4o.foundation.Collection4();
@@ -115,17 +115,17 @@ namespace com.db4o.nativequery.optimization
 				{
 					com.db4o.nativequery.expr.cmp.FieldValue curField = (com.db4o.nativequery.expr.cmp.FieldValue
 						)curOp;
-					coll.add(curField.fieldName());
-					curOp = curField.parent();
+					coll.Add(curField.FieldName());
+					curOp = curField.Parent();
 				}
-				return coll.iterator();
+				return coll.Iterator();
 			}
 		}
 
-		public virtual void optimizeQuery(com.db4o.nativequery.expr.Expression expr, com.db4o.query.Query
+		public virtual void OptimizeQuery(com.db4o.nativequery.expr.Expression expr, com.db4o.query.Query
 			 query, object predicate)
 		{
-			expr.accept(new com.db4o.nativequery.optimization.SODAQueryBuilder.SODAQueryVisitor
+			expr.Accept(new com.db4o.nativequery.optimization.SODAQueryBuilder.SODAQueryVisitor
 				(query, predicate));
 		}
 	}

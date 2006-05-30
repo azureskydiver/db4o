@@ -19,146 +19,146 @@ namespace com.db4o.inside.slots
 		{
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.inside.slots.SlotChange sc = new com.db4o.inside.slots.SlotChange(0);
 			sc._action = _action;
 			sc._newSlot = _newSlot;
 			sc._shared = _shared;
-			return base.shallowCloneInternal(sc);
+			return base.ShallowCloneInternal(sc);
 		}
 
-		private void doFreeOnCommit()
+		private void DoFreeOnCommit()
 		{
-			setBit(FREE_ON_COMMIT_BIT);
+			SetBit(FREE_ON_COMMIT_BIT);
 		}
 
-		private void doFreeOnRollback()
+		private void DoFreeOnRollback()
 		{
-			setBit(FREE_ON_ROLLBACK_BIT);
+			SetBit(FREE_ON_ROLLBACK_BIT);
 		}
 
-		private void doSetPointer()
+		private void DoSetPointer()
 		{
-			setBit(SET_POINTER_BIT);
+			SetBit(SET_POINTER_BIT);
 		}
 
-		public virtual void freeDuringCommit(com.db4o.YapFile file)
+		public virtual void FreeDuringCommit(com.db4o.YapFile file)
 		{
-			if (isFreeOnCommit())
+			if (IsFreeOnCommit())
 			{
-				file.freeDuringCommit(_shared, _newSlot);
+				file.FreeDuringCommit(_shared, _newSlot);
 			}
 		}
 
-		public virtual void freeOnCommit(com.db4o.YapFile file, com.db4o.inside.slots.Slot
+		public virtual void FreeOnCommit(com.db4o.YapFile file, com.db4o.inside.slots.Slot
 			 slot)
 		{
 			if (_shared != null)
 			{
-				file.free(slot);
+				file.Free(slot);
 				return;
 			}
-			doFreeOnCommit();
-			com.db4o.inside.slots.ReferencedSlot refSlot = file.produceFreeOnCommitEntry(_key
+			DoFreeOnCommit();
+			com.db4o.inside.slots.ReferencedSlot refSlot = file.ProduceFreeOnCommitEntry(_key
 				);
-			if (refSlot.addReferenceIsFirst())
+			if (refSlot.AddReferenceIsFirst())
 			{
-				refSlot.pointTo(slot);
+				refSlot.PointTo(slot);
 			}
 			_shared = refSlot;
 		}
 
-		public virtual void freeOnRollback(int address, int length)
+		public virtual void FreeOnRollback(int address, int length)
 		{
-			doFreeOnRollback();
+			DoFreeOnRollback();
 			_newSlot = new com.db4o.inside.slots.Slot(address, length);
 		}
 
-		public virtual void freeOnRollbackSetPointer(int address, int length)
+		public virtual void FreeOnRollbackSetPointer(int address, int length)
 		{
-			doSetPointer();
-			freeOnRollback(address, length);
+			DoSetPointer();
+			FreeOnRollback(address, length);
 		}
 
-		private bool isBitSet(int bitPos)
+		private bool IsBitSet(int bitPos)
 		{
 			return (_action | (1 << bitPos)) == _action;
 		}
 
-		public virtual bool isDeleted()
+		public virtual bool IsDeleted()
 		{
-			return isSetPointer() && (_newSlot._address == 0);
+			return IsSetPointer() && (_newSlot._address == 0);
 		}
 
-		private bool isFreeOnCommit()
+		private bool IsFreeOnCommit()
 		{
-			return isBitSet(FREE_ON_COMMIT_BIT);
+			return IsBitSet(FREE_ON_COMMIT_BIT);
 		}
 
-		private bool isFreeOnRollback()
+		private bool IsFreeOnRollback()
 		{
-			return isBitSet(FREE_ON_ROLLBACK_BIT);
+			return IsBitSet(FREE_ON_ROLLBACK_BIT);
 		}
 
-		public bool isSetPointer()
+		public bool IsSetPointer()
 		{
-			return isBitSet(SET_POINTER_BIT);
+			return IsBitSet(SET_POINTER_BIT);
 		}
 
-		public virtual com.db4o.inside.slots.Slot newSlot()
+		public virtual com.db4o.inside.slots.Slot NewSlot()
 		{
 			return _newSlot;
 		}
 
-		public override object read(com.db4o.YapReader reader)
+		public override object Read(com.db4o.YapReader reader)
 		{
 			com.db4o.inside.slots.SlotChange change = new com.db4o.inside.slots.SlotChange(reader
-				.readInt());
-			change._newSlot = new com.db4o.inside.slots.Slot(reader.readInt(), reader.readInt
+				.ReadInt());
+			change._newSlot = new com.db4o.inside.slots.Slot(reader.ReadInt(), reader.ReadInt
 				());
-			change.doSetPointer();
+			change.DoSetPointer();
 			return change;
 		}
 
-		public virtual void rollback(com.db4o.YapFile yapFile)
+		public virtual void Rollback(com.db4o.YapFile yapFile)
 		{
 			if (_shared != null)
 			{
-				yapFile.reduceFreeOnCommitReferences(_shared);
+				yapFile.ReduceFreeOnCommitReferences(_shared);
 			}
-			if (isFreeOnRollback())
+			if (IsFreeOnRollback())
 			{
-				yapFile.free(_newSlot);
+				yapFile.Free(_newSlot);
 			}
 		}
 
-		private void setBit(int bitPos)
+		private void SetBit(int bitPos)
 		{
 			_action |= (1 << bitPos);
 		}
 
-		public virtual void setPointer(int address, int length)
+		public virtual void SetPointer(int address, int length)
 		{
-			doSetPointer();
+			DoSetPointer();
 			_newSlot = new com.db4o.inside.slots.Slot(address, length);
 		}
 
-		public override void write(com.db4o.YapReader writer)
+		public override void Write(com.db4o.YapReader writer)
 		{
-			if (isSetPointer())
+			if (IsSetPointer())
 			{
-				writer.writeInt(_key);
-				writer.writeInt(_newSlot._address);
-				writer.writeInt(_newSlot._length);
+				writer.WriteInt(_key);
+				writer.WriteInt(_newSlot._address);
+				writer.WriteInt(_newSlot._length);
 			}
 		}
 
-		public virtual void writePointer(com.db4o.Transaction trans)
+		public virtual void WritePointer(com.db4o.Transaction trans)
 		{
-			if (isSetPointer())
+			if (IsSetPointer())
 			{
-				trans.writePointer(_key, _newSlot._address, _newSlot._length);
+				trans.WritePointer(_key, _newSlot._address, _newSlot._length);
 			}
 		}
 	}

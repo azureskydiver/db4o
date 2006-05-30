@@ -2,16 +2,16 @@ namespace com.db4o
 {
 	internal class MTaDontDelete : com.db4o.MsgD
 	{
-		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal sealed override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 _in)
 		{
-			int classID = _payLoad.readInt();
-			int id = _payLoad.readInt();
-			com.db4o.Transaction trans = getTransaction();
+			int classID = _payLoad.ReadInt();
+			int id = _payLoad.ReadInt();
+			com.db4o.Transaction trans = GetTransaction();
 			com.db4o.YapStream stream = trans.i_stream;
 			lock (stream.i_lock)
 			{
-				trans.dontDelete(classID, id);
+				trans.DontDelete(classID, id);
 				return true;
 			}
 		}

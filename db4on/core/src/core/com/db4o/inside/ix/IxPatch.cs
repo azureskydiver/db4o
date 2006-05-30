@@ -16,9 +16,9 @@ namespace com.db4o.inside.ix
 			_value = a_value;
 		}
 
-		public override com.db4o.Tree add(com.db4o.Tree a_new)
+		public override com.db4o.Tree Add(com.db4o.Tree a_new)
 		{
-			int cmp = compare(a_new);
+			int cmp = Compare(a_new);
 			if (cmp == 0)
 			{
 				com.db4o.inside.ix.IxPatch patch = (com.db4o.inside.ix.IxPatch)a_new;
@@ -29,40 +29,40 @@ namespace com.db4o.inside.ix
 					if (queue == null)
 					{
 						queue = new com.db4o.foundation.Queue4();
-						queue.add(this);
+						queue.Add(this);
 					}
-					queue.add(patch);
+					queue.Add(patch);
 					patch._queue = queue;
 					patch._subsequent = _subsequent;
 					patch._preceding = _preceding;
-					patch.calculateSize();
+					patch.CalculateSize();
 					return patch;
 				}
 			}
-			return add(a_new, cmp);
+			return Add(a_new, cmp);
 		}
 
-		public override int compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.Tree a_to)
 		{
 			com.db4o.inside.ix.Indexable4 handler = _fieldTransaction.i_index._handler;
-			return handler.compareTo(handler.comparableObject(trans(), _value));
+			return handler.CompareTo(handler.ComparableObject(Trans(), _value));
 		}
 
-		public virtual bool hasQueue()
+		public virtual bool HasQueue()
 		{
 			return _queue != null;
 		}
 
-		public virtual com.db4o.foundation.Queue4 detachQueue()
+		public virtual com.db4o.foundation.Queue4 DetachQueue()
 		{
 			com.db4o.foundation.Queue4 queue = _queue;
 			this._queue = null;
 			return queue;
 		}
 
-		protected override com.db4o.Tree shallowCloneInternal(com.db4o.Tree tree)
+		protected override com.db4o.Tree ShallowCloneInternal(com.db4o.Tree tree)
 		{
-			com.db4o.inside.ix.IxPatch patch = (com.db4o.inside.ix.IxPatch)base.shallowCloneInternal
+			com.db4o.inside.ix.IxPatch patch = (com.db4o.inside.ix.IxPatch)base.ShallowCloneInternal
 				(tree);
 			patch._parentID = _parentID;
 			patch._value = _value;

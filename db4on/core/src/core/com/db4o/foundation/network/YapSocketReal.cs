@@ -19,64 +19,64 @@ namespace com.db4o.foundation.network
 		public YapSocketReal(j4o.net.Socket socket)
 		{
 			_socket = socket;
-			_out = _socket.getOutputStream();
-			_in = _socket.getInputStream();
+			_out = _socket.GetOutputStream();
+			_in = _socket.GetInputStream();
 		}
 
-		public virtual void close()
+		public virtual void Close()
 		{
-			_socket.close();
+			_socket.Close();
 		}
 
-		public virtual void flush()
+		public virtual void Flush()
 		{
-			_out.flush();
+			_out.Flush();
 		}
 
-		public virtual int read()
+		public virtual int Read()
 		{
-			return _in.read();
+			return _in.Read();
 		}
 
-		public virtual int read(byte[] a_bytes, int a_offset, int a_length)
+		public virtual int Read(byte[] a_bytes, int a_offset, int a_length)
 		{
-			return _in.read(a_bytes, a_offset, a_length);
+			return _in.Read(a_bytes, a_offset, a_length);
 		}
 
-		public virtual void setSoTimeout(int timeout)
+		public virtual void SetSoTimeout(int timeout)
 		{
 			try
 			{
-				_socket.setSoTimeout(timeout);
+				_socket.SetSoTimeout(timeout);
 			}
 			catch (System.Net.Sockets.SocketException e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
+				j4o.lang.JavaSystem.PrintStackTrace(e);
 			}
 		}
 
-		public virtual void write(byte[] bytes)
+		public virtual void Write(byte[] bytes)
 		{
-			_out.write(bytes);
+			_out.Write(bytes);
 		}
 
-		public virtual void write(byte[] bytes, int off, int len)
+		public virtual void Write(byte[] bytes, int off, int len)
 		{
-			_out.write(bytes, off, len);
+			_out.Write(bytes, off, len);
 		}
 
-		public virtual void write(int i)
+		public virtual void Write(int i)
 		{
-			_out.write(i);
+			_out.Write(i);
 		}
 
-		public virtual com.db4o.foundation.network.YapSocket openParalellSocket()
+		public virtual com.db4o.foundation.network.YapSocket OpenParalellSocket()
 		{
 			if (_hostName == null)
 			{
 				throw new System.IO.IOException("Cannot open parallel socket - invalid state.");
 			}
-			return new com.db4o.foundation.network.YapSocketReal(_hostName, _socket.getPort()
+			return new com.db4o.foundation.network.YapSocketReal(_hostName, _socket.GetPort()
 				);
 		}
 	}

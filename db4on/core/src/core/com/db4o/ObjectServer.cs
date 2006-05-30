@@ -4,20 +4,20 @@ namespace com.db4o
 	/// <remarks>
 	/// the db4o server interface.
 	/// <br /><br />- db4o servers can be opened with
-	/// <see cref="com.db4o.Db4o.openServer">com.db4o.Db4o.openServer</see>
+	/// <see cref="com.db4o.Db4o.OpenServer">com.db4o.Db4o.OpenServer</see>
 	/// .<br />
 	/// - Direct in-memory connections to servers can be made with
-	/// <see cref="com.db4o.ObjectServer.openClient">com.db4o.ObjectServer.openClient</see>
+	/// <see cref="com.db4o.ObjectServer.OpenClient">com.db4o.ObjectServer.OpenClient</see>
 	/// <br />
 	/// - TCP connections are available through
-	/// <see cref="com.db4o.Db4o.openClient">com.db4o.Db4o.openClient</see>
+	/// <see cref="com.db4o.Db4o.OpenClient">com.db4o.Db4o.OpenClient</see>
 	/// .
 	/// <br /><br />Before connecting clients over TCP, you have to
-	/// <see cref="com.db4o.ObjectServer.grantAccess">com.db4o.ObjectServer.grantAccess</see>
+	/// <see cref="com.db4o.ObjectServer.GrantAccess">com.db4o.ObjectServer.GrantAccess</see>
 	/// to the username and password combination
 	/// that you want to use.
 	/// </remarks>
-	/// <seealso cref="com.db4o.Db4o.openServer">Db4o.openServer</seealso>
+	/// <seealso cref="com.db4o.Db4o.OpenServer">Db4o.openServer</seealso>
 	/// <seealso cref="com.db4o.ext.ExtObjectServer">ExtObjectServer for extended functionality
 	/// 	</seealso>
 	public interface ObjectServer
@@ -31,7 +31,7 @@ namespace com.db4o
 		/// true - denotes that the last instance connected to the
 		/// used database file was closed.
 		/// </returns>
-		bool close();
+		bool Close();
 
 		/// <summary>returns an ObjectServer with extended functionality.</summary>
 		/// <remarks>
@@ -41,7 +41,7 @@ namespace com.db4o
 		/// <br /><br />The functionality is split to two interfaces to allow newcomers to
 		/// focus on the essential methods.
 		/// </remarks>
-		com.db4o.ext.ExtObjectServer ext();
+		com.db4o.ext.ExtObjectServer Ext();
 
 		/// <summary>grants client access to the specified user with the specified password.</summary>
 		/// <remarks>
@@ -51,7 +51,7 @@ namespace com.db4o
 		/// </remarks>
 		/// <param name="userName">the name of the user</param>
 		/// <param name="password">the password to be used</param>
-		void grantAccess(string userName, string password);
+		void GrantAccess(string userName, string password);
 
 		/// <summary>opens a client against this server.</summary>
 		/// <remarks>
@@ -60,10 +60,10 @@ namespace com.db4o
 		/// as the server. Since an embedded client can use direct communication, without
 		/// an in-between socket connection, performance will be better than a client
 		/// opened with
-		/// <see cref="com.db4o.Db4o.openClient">com.db4o.Db4o.openClient</see>
+		/// <see cref="com.db4o.Db4o.OpenClient">com.db4o.Db4o.OpenClient</see>
 		/// <br /><br />Every client has it's own transaction and uses it's own cache
 		/// for it's own version of all peristent objects.
 		/// </remarks>
-		com.db4o.ObjectContainer openClient();
+		com.db4o.ObjectContainer OpenClient();
 	}
 }

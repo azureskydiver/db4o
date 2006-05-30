@@ -7,7 +7,7 @@ namespace com.db4o.ext
 	/// <br /><br />Every db4o
 	/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
 	/// always is an <code>ExtObjectContainer</code> so a cast is possible.<br /><br />
-	/// <see cref="com.db4o.ObjectContainer.ext">com.db4o.ObjectContainer.ext</see>
+	/// <see cref="com.db4o.ObjectContainer.Ext">com.db4o.ObjectContainer.Ext</see>
 	/// is a convenient method to perform the cast.<br /><br />
 	/// The ObjectContainer functionality is split to two interfaces to allow newcomers to
 	/// focus on the essential methods.
@@ -24,7 +24,7 @@ namespace com.db4o.ext
 		/// If a file already exists at the specified path, it will be overwritten.<br /><br />
 		/// </remarks>
 		/// <param name="path">a fully qualified path</param>
-		void backup(string path);
+		void Backup(string path);
 
 		/// <summary>binds an object to an internal object ID.</summary>
 		/// <remarks>
@@ -34,20 +34,20 @@ namespace com.db4o.ext
 		/// reference with the object parameter. The method may be used to replace
 		/// objects or to reassociate an object with it's stored instance
 		/// after closing and opening a database file. A subsequent call to
-		/// <see cref="com.db4o.ObjectContainer.set">set(Object)</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">set(Object)</see>
 		/// is
 		/// necessary to update the stored object.<br /><br />
 		/// <b>Requirements:</b><br />- The ID needs to be a valid internal object ID,
 		/// previously retrieved with
-		/// <see cref="com.db4o.ext.ExtObjectContainer.getID">getID(Object)</see>
+		/// <see cref="com.db4o.ext.ExtObjectContainer.GetID">getID(Object)</see>
 		/// .<br />
 		/// - The object parameter needs to be of the same class as the stored object.<br /><br />
 		/// </remarks>
-		/// <seealso cref="com.db4o.ext.ExtObjectContainer.getID">com.db4o.ext.ExtObjectContainer.getID
+		/// <seealso cref="com.db4o.ext.ExtObjectContainer.GetID">com.db4o.ext.ExtObjectContainer.GetID
 		/// 	</seealso>
 		/// <param name="obj">the object that is to be bound</param>
 		/// <param name="id">the internal id the object is to be bound to</param>
-		void bind(object obj, long id);
+		void Bind(object obj, long id);
 
 		/// <summary>
 		/// returns the
@@ -64,7 +64,7 @@ namespace com.db4o.ext
 		/// <see cref="com.db4o.ObjectContainer">com.db4o.ObjectContainer</see>
 		/// .
 		/// </returns>
-		com.db4o.types.Db4oCollections collections();
+		com.db4o.types.Db4oCollections Collections();
 
 		/// <summary>returns the Configuration context for this ObjectContainer.</summary>
 		/// <remarks>
@@ -86,15 +86,15 @@ namespace com.db4o.ext
 		/// the Configuration
 		/// context for this ObjectContainer
 		/// </returns>
-		/// <seealso cref="com.db4o.Db4o.configure">com.db4o.Db4o.configure</seealso>
-		com.db4o.config.Configuration configure();
+		/// <seealso cref="com.db4o.Db4o.Configure">com.db4o.Db4o.Configure</seealso>
+		com.db4o.config.Configuration Configure();
 
 		/// <summary>returns the stored object for an internal ID.</summary>
 		/// <remarks>
 		/// returns the stored object for an internal ID.
 		/// <br /><br />This is the fastest method for direct access to objects. Internal
 		/// IDs can be obtained with
-		/// <see cref="com.db4o.ext.ExtObjectContainer.getID">getID(Object)</see>
+		/// <see cref="com.db4o.ext.ExtObjectContainer.GetID">getID(Object)</see>
 		/// .
 		/// Objects will not be activated by this method. They will be returned in the
 		/// activation state they are currently in, in the local cache.<br /><br />
@@ -104,8 +104,8 @@ namespace com.db4o.ext
 		/// the object associated with the passed ID or <code>null</code>,
 		/// if no object is associated with this ID in this <code>ObjectContainer</code>.
 		/// </returns>
-		/// <seealso cref="com.db4o.config.Configuration.activationDepth">Why activation?</seealso>
-		object getByID(long ID);
+		/// <seealso cref="com.db4o.config.Configuration.ActivationDepth">Why activation?</seealso>
+		object GetByID(long ID);
 
 		/// <summary>
 		/// returns a stored object for a
@@ -117,18 +117,18 @@ namespace com.db4o.ext
 		/// <see cref="com.db4o.ext.Db4oUUID">com.db4o.ext.Db4oUUID</see>
 		/// for an
 		/// object use
-		/// <see cref="com.db4o.ext.ExtObjectContainer.getObjectInfo">com.db4o.ext.ExtObjectContainer.getObjectInfo
+		/// <see cref="com.db4o.ext.ExtObjectContainer.GetObjectInfo">com.db4o.ext.ExtObjectContainer.GetObjectInfo
 		/// 	</see>
 		/// and
-		/// <see cref="com.db4o.ext.ObjectInfo.getUUID">com.db4o.ext.ObjectInfo.getUUID</see>
+		/// <see cref="com.db4o.ext.ObjectInfo.GetUUID">com.db4o.ext.ObjectInfo.GetUUID</see>
 		/// .<br /><br />
 		/// Objects will not be activated by this method. They will be returned in the
 		/// activation state they are currently in, in the local cache.<br /><br />
 		/// </summary>
 		/// <param name="uuid">the UUID</param>
 		/// <returns>the object for the UUID</returns>
-		/// <seealso cref="com.db4o.config.Configuration.activationDepth">Why activation?</seealso>
-		object getByUUID(com.db4o.ext.Db4oUUID uuid);
+		/// <seealso cref="com.db4o.config.Configuration.ActivationDepth">Why activation?</seealso>
+		object GetByUUID(com.db4o.ext.Db4oUUID uuid);
 
 		/// <summary>returns the internal unique object ID.</summary>
 		/// <remarks>
@@ -137,15 +137,15 @@ namespace com.db4o.ext
 		/// guaranteed to be unique within one <code>ObjectContainer</code>.
 		/// An object carries the same ID in every db4o session. Internal IDs can
 		/// be used to look up objects with the very fast
-		/// <see cref="com.db4o.ext.ExtObjectContainer.getByID">getByID</see>
+		/// <see cref="com.db4o.ext.ExtObjectContainer.GetByID">getByID</see>
 		/// method.<br /><br />
 		/// Internal IDs will change when a database is defragmented. Use
-		/// <see cref="com.db4o.ext.ExtObjectContainer.getObjectInfo">com.db4o.ext.ExtObjectContainer.getObjectInfo
+		/// <see cref="com.db4o.ext.ExtObjectContainer.GetObjectInfo">com.db4o.ext.ExtObjectContainer.GetObjectInfo
 		/// 	</see>
 		/// ,
-		/// <see cref="com.db4o.ext.ObjectInfo.getUUID">com.db4o.ext.ObjectInfo.getUUID</see>
+		/// <see cref="com.db4o.ext.ObjectInfo.GetUUID">com.db4o.ext.ObjectInfo.GetUUID</see>
 		/// and
-		/// <see cref="com.db4o.ext.ExtObjectContainer.getByUUID">com.db4o.ext.ExtObjectContainer.getByUUID
+		/// <see cref="com.db4o.ext.ExtObjectContainer.GetByUUID">com.db4o.ext.ExtObjectContainer.GetByUUID
 		/// 	</see>
 		/// for long-term external references to
 		/// objects.<br /><br />
@@ -155,7 +155,7 @@ namespace com.db4o.ext
 		/// the associated internal ID or <code>0</code>, if the passed
 		/// object is not stored in this <code>ObjectContainer</code>.
 		/// </returns>
-		long getID(object obj);
+		long GetID(object obj);
 
 		/// <summary>
 		/// returns the
@@ -170,12 +170,12 @@ namespace com.db4o.ext
 		/// <see cref="com.db4o.ext.ObjectInfo">com.db4o.ext.ObjectInfo</see>
 		/// 
 		/// </returns>
-		com.db4o.ext.ObjectInfo getObjectInfo(object obj);
+		com.db4o.ext.ObjectInfo GetObjectInfo(object obj);
 
 		/// <summary>returns the Db4oDatabase identity object for this ObjectContainer.</summary>
 		/// <remarks>returns the Db4oDatabase identity object for this ObjectContainer.</remarks>
 		/// <returns>the Db4oDatabase identity object for this ObjectContainer.</returns>
-		com.db4o.ext.Db4oDatabase identity();
+		com.db4o.ext.Db4oDatabase Identity();
 
 		/// <summary>tests if an object is activated.</summary>
 		/// <remarks>
@@ -185,7 +185,7 @@ namespace com.db4o.ext
 		/// </remarks>
 		/// <param name="obj">to be tested<br /><br /></param>
 		/// <returns><code>true</code> if the passed object is active.</returns>
-		bool isActive(object obj);
+		bool IsActive(object obj);
 
 		/// <summary>tests if an object with this ID is currently cached.</summary>
 		/// <remarks>
@@ -193,7 +193,7 @@ namespace com.db4o.ext
 		/// <br /><br />
 		/// </remarks>
 		/// <param name="ID">the internal ID</param>
-		bool isCached(long ID);
+		bool IsCached(long ID);
 
 		/// <summary>tests if this <code>ObjectContainer</code> is closed.</summary>
 		/// <remarks>
@@ -201,7 +201,7 @@ namespace com.db4o.ext
 		/// <br /><br />
 		/// </remarks>
 		/// <returns><code>true</code> if this <code>ObjectContainer</code> is closed.</returns>
-		bool isClosed();
+		bool IsClosed();
 
 		/// <summary>tests if an object is stored in this <code>ObjectContainer</code>.</summary>
 		/// <remarks>
@@ -210,7 +210,7 @@ namespace com.db4o.ext
 		/// </remarks>
 		/// <param name="obj">to be tested<br /><br /></param>
 		/// <returns><code>true</code> if the passed object is stored.</returns>
-		bool isStored(object obj);
+		bool IsStored(object obj);
 
 		/// <summary>
 		/// returns all class representations that are known to this
@@ -224,7 +224,7 @@ namespace com.db4o.ext
 		/// all class representations that are known to this
 		/// ObjectContainer because they have been used or stored.
 		/// </returns>
-		com.db4o.reflect.ReflectClass[] knownClasses();
+		com.db4o.reflect.ReflectClass[] KnownClasses();
 
 		/// <summary>returns the main synchronisation lock.</summary>
 		/// <remarks>
@@ -254,7 +254,7 @@ namespace com.db4o.ext
 		/// objects are to be migrated
 		/// from or <code>null</code> to denote that migration is completed.
 		/// </param>
-		void migrateFrom(com.db4o.ObjectContainer objectContainer);
+		void MigrateFrom(com.db4o.ObjectContainer objectContainer);
 
 		/// <summary>
 		/// returns a transient copy of a persistent object with all members set
@@ -268,7 +268,7 @@ namespace com.db4o.ext
 		/// With the <code>committed</code> parameter it is possible to specify,
 		/// whether the desired object should contain the committed values or the
 		/// values that were set by the running transaction with
-		/// <see cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</see>
 		/// .
 		/// <br /><br />A possible usecase for this feature:<br />
 		/// An application might want to check all changes applied to an object
@@ -278,7 +278,7 @@ namespace com.db4o.ext
 		/// <param name="depth">the member depth to which the object is to be instantiated</param>
 		/// <param name="committed">whether committed or set values are to be returned</param>
 		/// <returns>the object</returns>
-		object peekPersisted(object _object, int depth, bool committed);
+		object PeekPersisted(object _object, int depth, bool committed);
 
 		/// <summary>unloads all clean indices from memory and frees unused objects.</summary>
 		/// <remarks>
@@ -288,7 +288,7 @@ namespace com.db4o.ext
 		/// on performance since indices will have to be reread before further
 		/// inserts, updates or queries can take place.
 		/// </remarks>
-		void purge();
+		void Purge();
 
 		/// <summary>unloads a specific object from the db4o reference mechanism.</summary>
 		/// <remarks>
@@ -306,12 +306,12 @@ namespace com.db4o.ext
 		/// reretrieved with queries.<br /><br />
 		/// </remarks>
 		/// <param name="obj">the object to be removed from the reference mechanism.</param>
-		void purge(object obj);
+		void Purge(object obj);
 
 		/// <summary>Return the reflector currently being used by db4objects.</summary>
 		/// <remarks>Return the reflector currently being used by db4objects.</remarks>
 		/// <returns>the current Reflector.</returns>
-		com.db4o.reflect.generic.GenericReflector reflector();
+		com.db4o.reflect.generic.GenericReflector Reflector();
 
 		/// <summary>refreshs all members on a stored object to the specified depth.</summary>
 		/// <remarks>
@@ -323,15 +323,15 @@ namespace com.db4o.ext
 		/// <param name="obj">the object to be refreshed.</param>
 		/// <param name="depth">
 		/// the member
-		/// <see cref="com.db4o.config.Configuration.activationDepth">depth</see>
+		/// <see cref="com.db4o.config.Configuration.ActivationDepth">depth</see>
 		/// to which refresh is to cascade.
 		/// </param>
-		void refresh(object obj, int depth);
+		void Refresh(object obj, int depth);
 
 		/// <summary>releases a semaphore, if the calling transaction is the owner.</summary>
 		/// <remarks>releases a semaphore, if the calling transaction is the owner.</remarks>
 		/// <param name="name">the name of the semaphore to be released.</param>
-		void releaseSemaphore(string name);
+		void ReleaseSemaphore(string name);
 
 		/// <summary>
 		/// prepares for replication with another
@@ -360,12 +360,12 @@ namespace com.db4o.ext
 		/// the conflict handler for this ReplicationProcess.
 		/// Conflicts occur
 		/// whenever
-		/// <see cref="com.db4o.replication.ReplicationProcess.replicate">com.db4o.replication.ReplicationProcess.replicate
+		/// <see cref="com.db4o.replication.ReplicationProcess.Replicate">com.db4o.replication.ReplicationProcess.Replicate
 		/// 	</see>
 		/// is called with an
 		/// object that was modified in both ObjectContainers since the last
 		/// replication run between the two. Upon a conflict the
-		/// <see cref="com.db4o.replication.ReplicationConflictHandler.resolveConflict">com.db4o.replication.ReplicationConflictHandler.resolveConflict
+		/// <see cref="com.db4o.replication.ReplicationConflictHandler.ResolveConflict">com.db4o.replication.ReplicationConflictHandler.ResolveConflict
 		/// 	</see>
 		/// method will be called in the conflict handler.
 		/// </param>
@@ -375,21 +375,21 @@ namespace com.db4o.ext
 		/// 	</see>
 		/// interface for this replication process.
 		/// </returns>
-		com.db4o.replication.ReplicationProcess replicationBegin(com.db4o.ObjectContainer
+		com.db4o.replication.ReplicationProcess ReplicationBegin(com.db4o.ObjectContainer
 			 peerB, com.db4o.replication.ReplicationConflictHandler conflictHandler);
 
 		/// <summary>deep update interface to store or update objects.</summary>
 		/// <remarks>
 		/// deep update interface to store or update objects.
 		/// <br /><br />In addition to the normal storage interface,
-		/// <see cref="com.db4o.ObjectContainer.set">ObjectContainer#set(Object)</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">ObjectContainer#set(Object)</see>
 		/// ,
 		/// this method allows a manual specification of the depth, the passed object is to be updated.<br /><br />
 		/// </remarks>
 		/// <param name="obj">the object to be stored or updated.</param>
 		/// <param name="depth">the depth to which the object is to be updated</param>
-		/// <seealso cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</seealso>
-		void set(object obj, int depth);
+		/// <seealso cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</seealso>
+		void Set(object obj, int depth);
 
 		/// <summary>attempts to set a semaphore.</summary>
 		/// <remarks>
@@ -412,10 +412,10 @@ namespace com.db4o.ext
 		/// Semaphores are released by the first occurence of one of the
 		/// following:<br />
 		/// - the transaction releases the semaphore with
-		/// <see cref="com.db4o.ext.ExtObjectContainer.releaseSemaphore">com.db4o.ext.ExtObjectContainer.releaseSemaphore
+		/// <see cref="com.db4o.ext.ExtObjectContainer.ReleaseSemaphore">com.db4o.ext.ExtObjectContainer.ReleaseSemaphore
 		/// 	</see>
 		/// <br /> - the transaction is closed with
-		/// <see cref="com.db4o.ObjectContainer.close">com.db4o.ObjectContainer.close</see>
+		/// <see cref="com.db4o.ObjectContainer.Close">com.db4o.ObjectContainer.Close</see>
 		/// <br /> - C/S only: the corresponding
 		/// <see cref="com.db4o.ObjectServer">com.db4o.ObjectServer</see>
 		/// is
@@ -423,14 +423,14 @@ namespace com.db4o.ext
 		/// <see cref="com.db4o.ObjectContainer">com.db4o.ObjectContainer</see>
 		/// looses the connection and is timed
 		/// out.<br /><br /> Semaphores are set immediately. They are independant of calling
-		/// <see cref="com.db4o.ObjectContainer.commit">com.db4o.ObjectContainer.commit</see>
+		/// <see cref="com.db4o.ObjectContainer.Commit">com.db4o.ObjectContainer.Commit</see>
 		/// or
-		/// <see cref="com.db4o.ObjectContainer.rollback">com.db4o.ObjectContainer.rollback</see>
+		/// <see cref="com.db4o.ObjectContainer.Rollback">com.db4o.ObjectContainer.Rollback</see>
 		/// .<br /><br /> <b>Possible usecases
 		/// for semaphores:</b><br /> - prevent other clients from inserting a singleton at the same time.
 		/// A suggested name for the semaphore:  "SINGLETON_" + Object#getClass().getName().<br />  - lock
 		/// objects. A suggested name:   "LOCK_" +
-		/// <see cref="com.db4o.ext.ExtObjectContainer.getID">getID(Object)</see>
+		/// <see cref="com.db4o.ext.ExtObjectContainer.GetID">getID(Object)</see>
 		/// <br /> -
 		/// generate a unique client ID. A suggested name:  "CLIENT_" +
 		/// System.currentTimeMillis().<br /><br />
@@ -448,7 +448,7 @@ namespace com.db4o.ext
 		/// <br /><code>false</code>, if the semaphore is owned by another
 		/// transaction.
 		/// </returns>
-		bool setSemaphore(string name, int waitForAvailability);
+		bool SetSemaphore(string name, int waitForAvailability);
 
 		/// <summary>
 		/// returns a
@@ -467,14 +467,14 @@ namespace com.db4o.ext
 		/// <see cref="com.db4o.ext.StoredClass">com.db4o.ext.StoredClass</see>
 		/// meta information object.
 		/// </returns>
-		com.db4o.ext.StoredClass storedClass(object clazz);
+		com.db4o.ext.StoredClass StoredClass(object clazz);
 
 		/// <summary>
 		/// returns an array of all
 		/// <see cref="com.db4o.ext.StoredClass">com.db4o.ext.StoredClass</see>
 		/// meta information objects.
 		/// </summary>
-		com.db4o.ext.StoredClass[] storedClasses();
+		com.db4o.ext.StoredClass[] StoredClasses();
 
 		/// <summary>returns the current transaction serial number.</summary>
 		/// <remarks>
@@ -483,6 +483,6 @@ namespace com.db4o.ext
 		/// and for replication purposes.
 		/// </remarks>
 		/// <returns>the current transaction serial number.</returns>
-		long version();
+		long Version();
 	}
 }

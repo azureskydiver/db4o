@@ -10,7 +10,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public sealed class QCandidates : com.db4o.foundation.Visitor4
 	{
-		internal readonly com.db4o.Transaction i_trans;
+		public readonly com.db4o.Transaction i_trans;
 
 		private com.db4o.Tree i_root;
 
@@ -26,25 +26,27 @@ namespace com.db4o
 
 		private int i_orderID;
 
+		private com.db4o.IDGenerator _idGenerator;
+
 		internal QCandidates(com.db4o.Transaction a_trans, com.db4o.YapClass a_yapClass, 
 			com.db4o.QField a_field)
 		{
 			i_trans = a_trans;
 			i_yapClass = a_yapClass;
 			i_field = a_field;
-			if (a_field == null || a_field.i_yapField == null || !(a_field.i_yapField.getHandler
+			if (a_field == null || a_field.i_yapField == null || !(a_field.i_yapField.GetHandler
 				() is com.db4o.YapClass))
 			{
 				return;
 			}
-			com.db4o.YapClass yc = (com.db4o.YapClass)a_field.i_yapField.getHandler();
+			com.db4o.YapClass yc = (com.db4o.YapClass)a_field.i_yapField.GetHandler();
 			if (i_yapClass == null)
 			{
 				i_yapClass = yc;
 			}
 			else
 			{
-				yc = i_yapClass.getHigherOrCommonHierarchy(yc);
+				yc = i_yapClass.GetHigherOrCommonHierarchy(yc);
 				if (yc != null)
 				{
 					i_yapClass = yc;
@@ -52,27 +54,27 @@ namespace com.db4o
 			}
 		}
 
-		internal com.db4o.QCandidate addByIdentity(com.db4o.QCandidate candidate)
+		public com.db4o.QCandidate AddByIdentity(com.db4o.QCandidate candidate)
 		{
-			i_root = com.db4o.Tree.add(i_root, candidate);
+			i_root = com.db4o.Tree.Add(i_root, candidate);
 			if (candidate._size == 0)
 			{
-				return candidate.getRoot();
+				return candidate.GetRoot();
 			}
 			return candidate;
 		}
 
-		internal void addConstraint(com.db4o.QCon a_constraint)
+		internal void AddConstraint(com.db4o.QCon a_constraint)
 		{
 			i_constraints = new com.db4o.foundation.List4(i_constraints, a_constraint);
 		}
 
-		internal void addOrder(com.db4o.QOrder a_order)
+		internal void AddOrder(com.db4o.QOrder a_order)
 		{
-			i_ordered = com.db4o.Tree.add(i_ordered, a_order);
+			i_ordered = com.db4o.Tree.Add(i_ordered, a_order);
 		}
 
-		internal void applyOrdering(com.db4o.Tree a_ordered, int a_orderID)
+		internal void ApplyOrdering(com.db4o.Tree a_ordered, int a_orderID)
 		{
 			if (a_ordered == null || i_root == null)
 			{
@@ -88,27 +90,27 @@ namespace com.db4o
 				i_orderID = a_orderID;
 			}
 			int[] placement = { 0 };
-			i_root.traverse(new _AnonymousInnerClass104(this, major, placement));
+			i_root.Traverse(new _AnonymousInnerClass106(this, major, placement));
 			placement[0] = 1;
-			a_ordered.traverse(new _AnonymousInnerClass113(this, placement, major));
+			a_ordered.Traverse(new _AnonymousInnerClass115(this, placement, major));
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
-			i_root.traverse(new _AnonymousInnerClass124(this, col));
+			i_root.Traverse(new _AnonymousInnerClass126(this, col));
 			com.db4o.Tree[] newTree = { null };
-			com.db4o.foundation.Iterator4 i = col.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = col.Iterator();
+			while (i.HasNext())
 			{
-				com.db4o.QCandidate candidate = (com.db4o.QCandidate)i.next();
+				com.db4o.QCandidate candidate = (com.db4o.QCandidate)i.Next();
 				candidate._preceding = null;
 				candidate._subsequent = null;
 				candidate._size = 1;
-				newTree[0] = com.db4o.Tree.add(newTree[0], candidate);
+				newTree[0] = com.db4o.Tree.Add(newTree[0], candidate);
 			}
 			i_root = newTree[0];
 		}
 
-		private sealed class _AnonymousInnerClass104 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass106 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass104(QCandidates _enclosing, bool major, int[] placement
+			public _AnonymousInnerClass106(QCandidates _enclosing, bool major, int[] placement
 				)
 			{
 				this._enclosing = _enclosing;
@@ -116,10 +118,10 @@ namespace com.db4o
 				this.placement = placement;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				((com.db4o.QCandidate)a_object).hintOrder(0, major);
-				((com.db4o.QCandidate)a_object).hintOrder(placement[0]++, !major);
+				((com.db4o.QCandidate)a_object).HintOrder(0, major);
+				((com.db4o.QCandidate)a_object).HintOrder(placement[0]++, !major);
 			}
 
 			private readonly QCandidates _enclosing;
@@ -129,9 +131,9 @@ namespace com.db4o
 			private readonly int[] placement;
 		}
 
-		private sealed class _AnonymousInnerClass113 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass115 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass113(QCandidates _enclosing, int[] placement, bool major
+			public _AnonymousInnerClass115(QCandidates _enclosing, int[] placement, bool major
 				)
 			{
 				this._enclosing = _enclosing;
@@ -139,11 +141,11 @@ namespace com.db4o
 				this.major = major;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.QOrder qo = (com.db4o.QOrder)a_object;
-				com.db4o.QCandidate candidate = qo._candidate.getRoot();
-				candidate.hintOrder(placement[0]++, major);
+				com.db4o.QCandidate candidate = qo._candidate.GetRoot();
+				candidate.HintOrder(placement[0]++, major);
 			}
 
 			private readonly QCandidates _enclosing;
@@ -153,19 +155,19 @@ namespace com.db4o
 			private readonly bool major;
 		}
 
-		private sealed class _AnonymousInnerClass124 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass126 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass124(QCandidates _enclosing, com.db4o.foundation.Collection4
+			public _AnonymousInnerClass126(QCandidates _enclosing, com.db4o.foundation.Collection4
 				 col)
 			{
 				this._enclosing = _enclosing;
 				this.col = col;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.QCandidate candidate = (com.db4o.QCandidate)a_object;
-				col.add(candidate);
+				col.Add(candidate);
 			}
 
 			private readonly QCandidates _enclosing;
@@ -173,92 +175,92 @@ namespace com.db4o
 			private readonly com.db4o.foundation.Collection4 col;
 		}
 
-		internal void collect(com.db4o.QCandidates a_candidates)
+		internal void Collect(com.db4o.QCandidates a_candidates)
 		{
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				com.db4o.QCon qCon = (com.db4o.QCon)i.next();
-				setCurrentConstraint(qCon);
-				qCon.collect(a_candidates);
+				com.db4o.QCon qCon = (com.db4o.QCon)i.Next();
+				SetCurrentConstraint(qCon);
+				qCon.Collect(a_candidates);
 			}
-			setCurrentConstraint(null);
+			SetCurrentConstraint(null);
 		}
 
-		internal void execute()
+		internal void Execute()
 		{
-			int limit = i_yapClass.indexEntryCount(i_trans);
+			int limit = i_yapClass.IndexEntryCount(i_trans);
 			bool fromClassIndex = true;
 			if (i_constraints != null)
 			{
 				com.db4o.inside.ix.QxProcessor processor = new com.db4o.inside.ix.QxProcessor();
-				if (processor.run(this, limit))
+				if (processor.Run(this, limit))
 				{
-					i_root = processor.toQCandidates(this);
+					i_root = processor.ToQCandidates(this);
 					fromClassIndex = false;
 				}
 			}
 			if (fromClassIndex)
 			{
-				loadFromClassIndex();
+				LoadFromClassIndex();
 			}
-			evaluate();
+			Evaluate();
 		}
 
-		internal void evaluate()
+		internal void Evaluate()
 		{
 			if (i_constraints == null)
 			{
 				return;
 			}
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).evaluateSelf();
+				((com.db4o.QCon)i.Next()).EvaluateSelf();
 			}
-			i = iterateConstraints();
-			while (i.hasNext())
+			i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).evaluateSimpleChildren();
+				((com.db4o.QCon)i.Next()).EvaluateSimpleChildren();
 			}
-			i = iterateConstraints();
-			while (i.hasNext())
+			i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).evaluateEvaluations();
+				((com.db4o.QCon)i.Next()).EvaluateEvaluations();
 			}
-			i = iterateConstraints();
-			while (i.hasNext())
+			i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).evaluateCreateChildrenCandidates();
+				((com.db4o.QCon)i.Next()).EvaluateCreateChildrenCandidates();
 			}
-			i = iterateConstraints();
-			while (i.hasNext())
+			i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).evaluateCollectChildren();
+				((com.db4o.QCon)i.Next()).EvaluateCollectChildren();
 			}
-			i = iterateConstraints();
-			while (i.hasNext())
+			i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).evaluateChildren();
+				((com.db4o.QCon)i.Next()).EvaluateChildren();
 			}
 		}
 
-		internal bool isEmpty()
+		internal bool IsEmpty()
 		{
 			bool[] ret = new bool[] { true };
-			traverse(new _AnonymousInnerClass214(this, ret));
+			Traverse(new _AnonymousInnerClass216(this, ret));
 			return ret[0];
 		}
 
-		private sealed class _AnonymousInnerClass214 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass216 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass214(QCandidates _enclosing, bool[] ret)
+			public _AnonymousInnerClass216(QCandidates _enclosing, bool[] ret)
 			{
 				this._enclosing = _enclosing;
 				this.ret = ret;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
 				if (((com.db4o.QCandidate)obj)._include)
 				{
@@ -271,24 +273,24 @@ namespace com.db4o
 			private readonly bool[] ret;
 		}
 
-		internal bool filter(com.db4o.foundation.Visitor4 a_host)
+		internal bool Filter(com.db4o.foundation.Visitor4 a_host)
 		{
 			if (i_root != null)
 			{
-				i_root.traverse(a_host);
-				i_root = i_root.filter(new _AnonymousInnerClass227(this));
+				i_root.Traverse(a_host);
+				i_root = i_root.Filter(new _AnonymousInnerClass229(this));
 			}
 			return i_root != null;
 		}
 
-		private sealed class _AnonymousInnerClass227 : com.db4o.VisitorBoolean
+		private sealed class _AnonymousInnerClass229 : com.db4o.VisitorBoolean
 		{
-			public _AnonymousInnerClass227(QCandidates _enclosing)
+			public _AnonymousInnerClass229(QCandidates _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public bool isVisit(object a_candidate)
+			public bool IsVisit(object a_candidate)
 			{
 				return ((com.db4o.QCandidate)a_candidate)._include;
 			}
@@ -296,7 +298,16 @@ namespace com.db4o
 			private readonly QCandidates _enclosing;
 		}
 
-		public com.db4o.foundation.Iterator4 iterateConstraints()
+		internal int GenerateCandidateId()
+		{
+			if (_idGenerator == null)
+			{
+				_idGenerator = new com.db4o.IDGenerator();
+			}
+			return -_idGenerator.Next();
+		}
+
+		public com.db4o.foundation.Iterator4 IterateConstraints()
 		{
 			if (i_constraints == null)
 			{
@@ -305,89 +316,34 @@ namespace com.db4o
 			return new com.db4o.foundation.Iterator4Impl(i_constraints);
 		}
 
-		internal void loadFromClassIndex()
+		internal void LoadFromClassIndex()
 		{
-			if (!isEmpty())
+			if (!IsEmpty())
 			{
 				return;
 			}
-			com.db4o.QCandidates finalThis = this;
-			if (i_yapClass.getIndex() != null)
-			{
-				com.db4o.Tree[] newRoot = { com.db4o.TreeInt.toQCandidate(i_yapClass.getIndexRoot
-					(), this) };
-				i_trans.traverseAddedClassIDs(i_yapClass.getID(), new _AnonymousInnerClass254(this
-					, newRoot, finalThis));
-				i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new _AnonymousInnerClass265(this
-					, newRoot, finalThis));
-				i_root = newRoot[0];
-			}
+			i_root = com.db4o.TreeInt.ToQCandidate((com.db4o.TreeInt)i_yapClass.GetIndex(i_trans
+				), this);
 		}
 
-		private sealed class _AnonymousInnerClass254 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass254(QCandidates _enclosing, com.db4o.Tree[] newRoot, com.db4o.QCandidates
-				 finalThis)
-			{
-				this._enclosing = _enclosing;
-				this.newRoot = newRoot;
-				this.finalThis = finalThis;
-			}
-
-			public void visit(object obj)
-			{
-				newRoot[0] = com.db4o.Tree.add(newRoot[0], new com.db4o.QCandidate(finalThis, null
-					, ((com.db4o.TreeInt)obj)._key, true));
-			}
-
-			private readonly QCandidates _enclosing;
-
-			private readonly com.db4o.Tree[] newRoot;
-
-			private readonly com.db4o.QCandidates finalThis;
-		}
-
-		private sealed class _AnonymousInnerClass265 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass265(QCandidates _enclosing, com.db4o.Tree[] newRoot, com.db4o.QCandidates
-				 finalThis)
-			{
-				this._enclosing = _enclosing;
-				this.newRoot = newRoot;
-				this.finalThis = finalThis;
-			}
-
-			public void visit(object obj)
-			{
-				newRoot[0] = com.db4o.Tree.removeLike(newRoot[0], new com.db4o.QCandidate(finalThis
-					, null, ((com.db4o.TreeInt)obj)._key, true));
-			}
-
-			private readonly QCandidates _enclosing;
-
-			private readonly com.db4o.Tree[] newRoot;
-
-			private readonly com.db4o.QCandidates finalThis;
-		}
-
-		internal void setCurrentConstraint(com.db4o.QCon a_constraint)
+		internal void SetCurrentConstraint(com.db4o.QCon a_constraint)
 		{
 			i_currentConstraint = a_constraint;
 		}
 
-		internal void traverse(com.db4o.foundation.Visitor4 a_visitor)
+		internal void Traverse(com.db4o.foundation.Visitor4 a_visitor)
 		{
 			if (i_root != null)
 			{
-				i_root.traverse(a_visitor);
+				i_root.Traverse(a_visitor);
 			}
 		}
 
-		internal bool tryAddConstraint(com.db4o.QCon a_constraint)
+		internal bool TryAddConstraint(com.db4o.QCon a_constraint)
 		{
 			if (i_field != null)
 			{
-				com.db4o.QField qf = a_constraint.getField();
+				com.db4o.QField qf = a_constraint.GetField();
 				if (qf != null)
 				{
 					if (i_field.i_name != qf.i_name)
@@ -396,36 +352,36 @@ namespace com.db4o
 					}
 				}
 			}
-			if (i_yapClass == null || a_constraint.isNullConstraint())
+			if (i_yapClass == null || a_constraint.IsNullConstraint())
 			{
-				addConstraint(a_constraint);
+				AddConstraint(a_constraint);
 				return true;
 			}
-			com.db4o.YapClass yc = a_constraint.getYapClass();
+			com.db4o.YapClass yc = a_constraint.GetYapClass();
 			if (yc != null)
 			{
-				yc = i_yapClass.getHigherOrCommonHierarchy(yc);
+				yc = i_yapClass.GetHigherOrCommonHierarchy(yc);
 				if (yc != null)
 				{
 					i_yapClass = yc;
-					addConstraint(a_constraint);
+					AddConstraint(a_constraint);
 					return true;
 				}
 			}
 			return false;
 		}
 
-		public void visit(object a_tree)
+		public void Visit(object a_tree)
 		{
 			com.db4o.QCandidate parent = (com.db4o.QCandidate)a_tree;
-			if (parent.createChild(this))
+			if (parent.CreateChild(this))
 			{
 				return;
 			}
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).visitOnNull(parent.getRoot());
+				((com.db4o.QCon)i.Next()).VisitOnNull(parent.GetRoot());
 			}
 		}
 	}

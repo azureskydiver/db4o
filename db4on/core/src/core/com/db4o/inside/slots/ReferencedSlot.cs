@@ -11,39 +11,39 @@ namespace com.db4o.inside.slots
 		{
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.inside.slots.ReferencedSlot rs = new com.db4o.inside.slots.ReferencedSlot
 				(_key);
 			rs._slot = _slot;
 			rs._references = _references;
-			return base.shallowCloneInternal(rs);
+			return base.ShallowCloneInternal(rs);
 		}
 
-		public virtual void pointTo(com.db4o.inside.slots.Slot slot)
+		public virtual void PointTo(com.db4o.inside.slots.Slot slot)
 		{
 			_slot = slot;
 		}
 
-		public virtual com.db4o.Tree free(com.db4o.YapFile file, com.db4o.Tree treeRoot, 
+		public virtual com.db4o.Tree Free(com.db4o.YapFile file, com.db4o.Tree treeRoot, 
 			com.db4o.inside.slots.Slot slot)
 		{
-			file.free(_slot._address, _slot._length);
-			if (removeReferenceIsLast())
+			file.Free(_slot._address, _slot._length);
+			if (RemoveReferenceIsLast())
 			{
-				return treeRoot.removeNode(this);
+				return treeRoot.RemoveNode(this);
 			}
-			pointTo(slot);
+			PointTo(slot);
 			return treeRoot;
 		}
 
-		public virtual bool addReferenceIsFirst()
+		public virtual bool AddReferenceIsFirst()
 		{
 			_references++;
 			return (_references == 1);
 		}
 
-		public virtual bool removeReferenceIsLast()
+		public virtual bool RemoveReferenceIsLast()
 		{
 			_references--;
 			return _references < 1;

@@ -23,7 +23,7 @@ namespace com.db4o.types
 		/// <see cref="com.db4o.types.Db4oList">com.db4o.types.Db4oList</see>
 		/// </returns>
 		/// <seealso cref="com.db4o.types.Db4oList">com.db4o.types.Db4oList</seealso>
-		com.db4o.types.Db4oList newLinkedList();
+		com.db4o.types.Db4oList NewLinkedList();
 
 		/// <summary>creates a new database-aware HashMap.</summary>
 		/// <remarks>
@@ -50,7 +50,7 @@ namespace com.db4o.types
 		/// <see cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</see>
 		/// </returns>
 		/// <seealso cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</seealso>
-		com.db4o.types.Db4oMap newHashMap(int initialSize);
+		com.db4o.types.Db4oMap NewHashMap(int initialSize);
 
 		/// <summary>creates a new database-aware IdentityHashMap.</summary>
 		/// <remarks>
@@ -77,6 +77,6 @@ namespace com.db4o.types
 		/// <see cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</see>
 		/// </returns>
 		/// <seealso cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</seealso>
-		com.db4o.types.Db4oMap newIdentityHashMap(int initialSize);
+		com.db4o.types.Db4oMap NewIdentityHashMap(int initialSize);
 	}
 }

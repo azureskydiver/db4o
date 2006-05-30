@@ -6,6 +6,6 @@ namespace com.db4o.ext
 	{
 		/// <summary>the callback method</summary>
 		/// <param name="obj">the object passed to the callback method</param>
-		void callback(object obj);
+		void Callback(object obj);
 	}
 }

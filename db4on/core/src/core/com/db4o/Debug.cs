@@ -3,9 +3,9 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class Debug : com.db4o.foundation.Debug4
 	{
-		public const bool useOldClassIndex = true;
+		public const bool useOldClassIndex = com.db4o.inside.marshall.MarshallerFamily.LEGACY;
 
-		public const bool useBTrees = false;
+		public const bool useBTrees = !com.db4o.inside.marshall.MarshallerFamily.LEGACY;
 
 		public const bool useNIxPaths = true;
 
@@ -29,8 +29,6 @@ namespace com.db4o
 
 		public const bool weakReferences = true;
 
-		public const bool arrayTypes = true;
-
 		public const bool verbose = false;
 
 		public const bool fakeServer = false;
@@ -41,7 +39,7 @@ namespace com.db4o
 
 		internal const bool lockFile = true;
 
-		internal const bool longTimeOuts = false;
+		public static bool longTimeOuts = false;
 
 		internal static com.db4o.YapFile serverStream;
 
@@ -51,7 +49,7 @@ namespace com.db4o
 
 		internal static com.db4o.foundation.Lock4 clientMessageQueueLock;
 
-		public static void expect(bool cond)
+		public static void Expect(bool cond)
 		{
 			if (!cond)
 			{
@@ -59,11 +57,11 @@ namespace com.db4o
 			}
 		}
 
-		public static void ensureLock(object obj)
+		public static void EnsureLock(object obj)
 		{
 		}
 
-		public static bool exceedsMaximumBlockSize(int a_length)
+		public static bool ExceedsMaximumBlockSize(int a_length)
 		{
 			if (a_length > com.db4o.YapConst.MAXIMUM_BLOCK_SIZE)
 			{
@@ -72,7 +70,7 @@ namespace com.db4o
 			return false;
 		}
 
-		public static bool exceedsMaximumArrayEntries(int a_entries, bool a_primitive)
+		public static bool ExceedsMaximumArrayEntries(int a_entries, bool a_primitive)
 		{
 			if (a_entries > (a_primitive ? com.db4o.YapConst.MAXIMUM_ARRAY_ENTRIES_PRIMITIVE : 
 				com.db4o.YapConst.MAXIMUM_ARRAY_ENTRIES))

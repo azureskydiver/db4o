@@ -27,7 +27,7 @@ namespace com.db4o
 			this.name = name;
 		}
 
-		internal virtual com.db4o.MetaField ensureField(com.db4o.Transaction trans, string
+		internal virtual com.db4o.MetaField EnsureField(com.db4o.Transaction trans, string
 			 a_name)
 		{
 			if (fields != null)
@@ -40,7 +40,7 @@ namespace com.db4o
 					}
 				}
 				com.db4o.MetaField[] temp = new com.db4o.MetaField[fields.Length + 1];
-				j4o.lang.JavaSystem.arraycopy(fields, 0, temp, 0, fields.Length);
+				System.Array.Copy(fields, 0, temp, 0, fields.Length);
 				fields = temp;
 			}
 			else
@@ -49,9 +49,9 @@ namespace com.db4o
 			}
 			com.db4o.MetaField newMetaField = new com.db4o.MetaField(a_name);
 			fields[fields.Length - 1] = newMetaField;
-			trans.i_stream.setInternal(trans, newMetaField, com.db4o.YapConst.UNSPECIFIED, false
+			trans.i_stream.SetInternal(trans, newMetaField, com.db4o.YapConst.UNSPECIFIED, false
 				);
-			trans.i_stream.setInternal(trans, this, com.db4o.YapConst.UNSPECIFIED, false);
+			trans.i_stream.SetInternal(trans, this, com.db4o.YapConst.UNSPECIFIED, false);
 			return newMetaField;
 		}
 	}

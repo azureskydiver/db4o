@@ -23,34 +23,34 @@ namespace com.db4o
 				i_session = a_session;
 				try
 				{
-					open();
+					Open();
 				}
 				catch (com.db4o.ext.DatabaseFileLockedException e)
 				{
-					stopSession();
+					StopSession();
 					throw e;
 				}
-				initialize3();
+				Initialize3();
 			}
 		}
 
-		public override void backup(string path)
+		public override void Backup(string path)
 		{
 			lock (i_lock)
 			{
-				checkClosed();
+				CheckClosed();
 				if (i_backupFile != null)
 				{
-					com.db4o.inside.Exceptions4.throwRuntimeException(61);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(61);
 				}
 				try
 				{
-					i_backupFile = i_config.ioAdapter().open(path, true, i_file.getLength());
+					i_backupFile = i_config.IoAdapter().Open(path, true, i_file.GetLength());
 				}
 				catch (System.Exception e)
 				{
 					i_backupFile = null;
-					com.db4o.inside.Exceptions4.throwRuntimeException(12, path);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(12, path);
 				}
 			}
 			long pos = 0;
@@ -60,77 +60,77 @@ namespace com.db4o
 			{
 				lock (i_lock)
 				{
-					i_file.seek(pos);
-					int read = i_file.read(buffer);
-					i_backupFile.seek(pos);
-					i_backupFile.write(buffer, read);
+					i_file.Seek(pos);
+					int read = i_file.Read(buffer);
+					i_backupFile.Seek(pos);
+					i_backupFile.Write(buffer, read);
 					pos += read;
 				}
 			}
-			while (pos < i_file.getLength());
+			while (pos < i_file.GetLength());
 			lock (i_lock)
 			{
-				i_backupFile.close();
+				i_backupFile.Close();
 				i_backupFile = null;
 			}
 		}
 
-		internal override void blockSize(int blockSize)
+		internal override void BlockSize(int blockSize)
 		{
-			i_file.blockSize(blockSize);
+			i_file.BlockSize(blockSize);
 			if (i_timerFile != null)
 			{
-				i_timerFile.blockSize(blockSize);
+				i_timerFile.BlockSize(blockSize);
 			}
 		}
 
-		public override byte blockSize()
+		public override byte BlockSize()
 		{
-			return (byte)i_file.blockSize();
+			return (byte)i_file.BlockSize();
 		}
 
-		internal override bool close2()
+		internal override bool Close2()
 		{
 			bool stopSession = true;
 			lock (com.db4o.Db4o.Lock)
 			{
-				stopSession = i_session.closeInstance();
+				stopSession = i_session.CloseInstance();
 				if (stopSession)
 				{
-					freePrefetchedPointers();
+					FreePrefetchedPointers();
 					i_entryCounter++;
 					try
 					{
-						write(true);
+						Write(true);
 					}
 					catch (System.Exception t)
 					{
-						fatalException(t);
+						FatalException(t);
 					}
-					base.close2();
+					base.Close2();
 					i_entryCounter--;
-					com.db4o.Db4o.sessionStopped(i_session);
+					com.db4o.Db4o.SessionStopped(i_session);
 					lock (i_fileLock)
 					{
 						try
 						{
-							i_file.close();
+							i_file.Close();
 							i_file = null;
-							if (needsLockFileThread() && com.db4o.Debug.lockFile)
+							if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
 							{
 								com.db4o.YapWriter lockBytes = new com.db4o.YapWriter(i_systemTrans, com.db4o.YapConst
 									.YAPLONG_LENGTH);
-								com.db4o.YLong.writeLong(0, lockBytes);
-								i_timerFile.blockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
+								com.db4o.YLong.WriteLong(0, lockBytes);
+								i_timerFile.BlockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
 									);
-								i_timerFile.write(lockBytes._buffer);
-								i_timerFile.close();
+								i_timerFile.Write(lockBytes._buffer);
+								i_timerFile.Close();
 							}
 						}
 						catch (System.Exception e)
 						{
 							i_file = null;
-							com.db4o.inside.Exceptions4.throwRuntimeException(11, e);
+							com.db4o.inside.Exceptions4.ThrowRuntimeException(11, e);
 						}
 						i_file = null;
 					}
@@ -139,53 +139,53 @@ namespace com.db4o
 			return stopSession;
 		}
 
-		internal override void commit1()
+		internal override void Commit1()
 		{
-			ensureLastSlotWritten();
-			base.commit1();
+			EnsureLastSlotWritten();
+			base.Commit1();
 		}
 
-		public override void copy(int oldAddress, int oldAddressOffset, int newAddress, int
+		public override void Copy(int oldAddress, int oldAddressOffset, int newAddress, int
 			 newAddressOffset, int length)
 		{
 			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
-				checkXBytes(newAddress, newAddressOffset, length);
+				CheckXBytes(newAddress, newAddressOffset, length);
 			}
 			try
 			{
 				if (i_backupFile == null)
 				{
-					i_file.blockCopy(oldAddress, oldAddressOffset, newAddress, newAddressOffset, length
+					i_file.BlockCopy(oldAddress, oldAddressOffset, newAddress, newAddressOffset, length
 						);
 					return;
 				}
 				byte[] copyBytes = new byte[length];
-				i_file.blockSeek(oldAddress, oldAddressOffset);
-				i_file.read(copyBytes);
-				i_file.blockSeek(newAddress, newAddressOffset);
-				i_file.write(copyBytes);
+				i_file.BlockSeek(oldAddress, oldAddressOffset);
+				i_file.Read(copyBytes);
+				i_file.BlockSeek(newAddress, newAddressOffset);
+				i_file.Write(copyBytes);
 				if (i_backupFile != null)
 				{
-					i_backupFile.blockSeek(newAddress, newAddressOffset);
-					i_backupFile.write(copyBytes);
+					i_backupFile.BlockSeek(newAddress, newAddressOffset);
+					i_backupFile.Write(copyBytes);
 				}
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(16, e);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(16, e);
 			}
 		}
 
-		private void checkXBytes(int a_newAddress, int newAddressOffset, int a_length)
+		private void CheckXBytes(int a_newAddress, int newAddressOffset, int a_length)
 		{
 			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
 				try
 				{
 					byte[] checkXBytes = new byte[a_length];
-					i_file.blockSeek(a_newAddress, newAddressOffset);
-					i_file.read(checkXBytes);
+					i_file.BlockSeek(a_newAddress, newAddressOffset);
+					i_file.Read(checkXBytes);
 					for (int i = 0; i < checkXBytes.Length; i++)
 					{
 						if (checkXBytes[i] != com.db4o.YapConst.XBYTE)
@@ -197,24 +197,24 @@ namespace com.db4o
 				}
 				catch (System.Exception e)
 				{
-					j4o.lang.JavaSystem.printStackTrace(e);
+					j4o.lang.JavaSystem.PrintStackTrace(e);
 				}
 			}
 		}
 
-		internal override void emergencyClose()
+		internal override void EmergencyClose()
 		{
-			base.emergencyClose();
+			base.EmergencyClose();
 			try
 			{
-				i_file.close();
+				i_file.Close();
 			}
 			catch (System.Exception e)
 			{
 			}
 			try
 			{
-				com.db4o.Db4o.sessionStopped(i_session);
+				com.db4o.Db4o.SessionStopped(i_session);
 			}
 			catch (System.Exception e)
 			{
@@ -222,11 +222,11 @@ namespace com.db4o
 			i_file = null;
 		}
 
-		internal override long fileLength()
+		internal override long FileLength()
 		{
 			try
 			{
-				return i_file.getLength();
+				return i_file.GetLength();
 			}
 			catch (System.Exception e)
 			{
@@ -234,32 +234,32 @@ namespace com.db4o
 			}
 		}
 
-		internal override string fileName()
+		internal override string FileName()
 		{
-			return i_session.fileName();
+			return i_session.FileName();
 		}
 
-		private void open()
+		private void Open()
 		{
 			bool isNew = false;
-			com.db4o.io.IoAdapter ioAdapter = i_config.ioAdapter();
+			com.db4o.io.IoAdapter ioAdapter = i_config.IoAdapter();
 			try
 			{
-				if (j4o.lang.JavaSystem.getLengthOf(fileName()) > 0)
+				if (FileName().Length > 0)
 				{
-					if (!ioAdapter.exists(fileName()))
+					if (!ioAdapter.Exists(FileName()))
 					{
 						isNew = true;
-						logMsg(14, fileName());
+						LogMsg(14, FileName());
 					}
 					try
 					{
-						bool lockFile = com.db4o.Debug.lockFile && i_config.lockFile() && (!i_config.isReadOnly
+						bool lockFile = com.db4o.Debug.lockFile && i_config.LockFile() && (!i_config.IsReadOnly
 							());
-						i_file = ioAdapter.open(fileName(), lockFile, 0);
-						if (needsLockFileThread() && com.db4o.Debug.lockFile)
+						i_file = ioAdapter.Open(FileName(), lockFile, 0);
+						if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
 						{
-							i_timerFile = ioAdapter.open(fileName(), false, 0);
+							i_timerFile = ioAdapter.Open(FileName(), false, 0);
 						}
 					}
 					catch (com.db4o.ext.DatabaseFileLockedException de)
@@ -268,50 +268,50 @@ namespace com.db4o
 					}
 					catch (System.Exception e)
 					{
-						com.db4o.inside.Exceptions4.throwRuntimeException(12, fileName(), e);
+						com.db4o.inside.Exceptions4.ThrowRuntimeException(12, FileName(), e);
 					}
 					if (isNew)
 					{
-						configureNewFile();
-						if (i_config.reservedStorageSpace() > 0)
+						ConfigureNewFile();
+						if (i_config.ReservedStorageSpace() > 0)
 						{
-							reserve(i_config.reservedStorageSpace());
+							Reserve(i_config.ReservedStorageSpace());
 						}
-						write(false);
-						writeHeader(false);
+						Write(false);
+						WriteHeader(false);
 					}
 					else
 					{
-						readThis();
+						ReadThis();
 					}
 				}
 				else
 				{
-					com.db4o.inside.Exceptions4.throwRuntimeException(21);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(21);
 				}
 			}
 			catch (System.Exception exc)
 			{
 				if (i_references != null)
 				{
-					i_references.stopTimer();
+					i_references.StopTimer();
 				}
 				throw exc;
 			}
 		}
 
-		internal override void readBytes(byte[] bytes, int address, int length)
+		internal override void ReadBytes(byte[] bytes, int address, int length)
 		{
-			readBytes(bytes, address, 0, length);
+			ReadBytes(bytes, address, 0, length);
 		}
 
-		internal override void readBytes(byte[] bytes, int address, int addressOffset, int
+		internal override void ReadBytes(byte[] bytes, int address, int addressOffset, int
 			 length)
 		{
 			try
 			{
-				i_file.blockSeek(address, addressOffset);
-				i_file.read(bytes, length);
+				i_file.BlockSeek(address, addressOffset);
+				i_file.Read(bytes, length);
 			}
 			catch (System.IO.IOException ioex)
 			{
@@ -319,24 +319,24 @@ namespace com.db4o
 			}
 		}
 
-		internal override void reserve(int byteCount)
+		internal override void Reserve(int byteCount)
 		{
 			lock (i_lock)
 			{
-				int address = getSlot(byteCount);
-				writeBytes(new com.db4o.YapReader(byteCount), address, 0);
-				free(address, byteCount);
+				int address = GetSlot(byteCount);
+				WriteBytes(new com.db4o.YapReader(byteCount), address, 0);
+				Free(address, byteCount);
 			}
 		}
 
-		public override void syncFiles()
+		public override void SyncFiles()
 		{
 			try
 			{
-				i_file.sync();
-				if (needsLockFileThread() && com.db4o.Debug.lockFile)
+				i_file.Sync();
+				if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
 				{
-					i_timerFile.sync();
+					i_timerFile.Sync();
 				}
 			}
 			catch (System.Exception e)
@@ -344,9 +344,9 @@ namespace com.db4o
 			}
 		}
 
-		internal override bool writeAccessTime()
+		internal override bool WriteAccessTime()
 		{
-			if (!needsLockFileThread())
+			if (!NeedsLockFileThread())
 			{
 				return true;
 			}
@@ -356,19 +356,19 @@ namespace com.db4o
 				{
 					return false;
 				}
-				long lockTime = j4o.lang.JavaSystem.currentTimeMillis();
-				com.db4o.YLong.writeLong(lockTime, i_timerBytes);
-				i_timerFile.blockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
+				long lockTime = j4o.lang.JavaSystem.CurrentTimeMillis();
+				com.db4o.YLong.WriteLong(lockTime, i_timerBytes);
+				i_timerFile.BlockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
 					);
-				i_timerFile.write(i_timerBytes);
+				i_timerFile.Write(i_timerBytes);
 			}
 			return true;
 		}
 
-		internal override void writeBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
+		internal override void WriteBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
 			)
 		{
-			if (i_config.isReadOnly())
+			if (i_config.IsReadOnly())
 			{
 				return;
 			}
@@ -384,31 +384,31 @@ namespace com.db4o
 					if (a_bytes is com.db4o.YapWriter)
 					{
 						com.db4o.YapWriter writer = (com.db4o.YapWriter)a_bytes;
-						if (writer.getID() == com.db4o.YapConst.IGNORE_ID)
+						if (writer.GetID() == com.db4o.YapConst.IGNORE_ID)
 						{
 							doCheck = false;
 						}
 					}
 					if (doCheck)
 					{
-						checkXBytes(address, addressOffset, a_bytes.getLength());
+						CheckXBytes(address, addressOffset, a_bytes.GetLength());
 					}
 				}
-				i_file.blockSeek(address, addressOffset);
-				i_file.write(a_bytes._buffer, a_bytes.getLength());
+				i_file.BlockSeek(address, addressOffset);
+				i_file.Write(a_bytes._buffer, a_bytes.GetLength());
 				if (i_backupFile != null)
 				{
-					i_backupFile.blockSeek(address, addressOffset);
-					i_backupFile.write(a_bytes._buffer, a_bytes.getLength());
+					i_backupFile.BlockSeek(address, addressOffset);
+					i_backupFile.Write(a_bytes._buffer, a_bytes.GetLength());
 				}
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(16, e);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(16, e);
 			}
 		}
 
-		public override void writeXBytes(int a_address, int a_length)
+		public override void WriteXBytes(int a_address, int a_length)
 		{
 		}
 	}
