@@ -9,8 +9,6 @@ Enabling delegate based native queries for the Compact Framework
 Background Information
 ----------------------
 
-Can you see I changed this file?
-
 The CompactFramework API is missing two important properties in the
 System.Delegate type: Target and Method.
 
