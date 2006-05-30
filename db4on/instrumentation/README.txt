@@ -34,3 +34,5 @@ Db4oAdmin.Tests
 =============================
 
 Unit tests.
+
+That's the way aha aha I like it.
