@@ -411,11 +411,11 @@
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
-		<!-- <antcall target="compiletools-net" /> -->
+
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
-		<!-- <antcall target="compiletools-compact" /> -->
+
 	</target>
 	
 	<target name="copy-tools-sources">
