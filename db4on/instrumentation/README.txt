@@ -16,7 +16,6 @@ Without these two properties is not possible to discover which method and
 object are behind a delegate reference making it impossible for db4o
 to do any query analysis at runtime.
 
-
 The Solution
 ------------
 
