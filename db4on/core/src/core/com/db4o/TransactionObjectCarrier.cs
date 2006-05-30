@@ -8,41 +8,41 @@ namespace com.db4o
 		{
 		}
 
-		internal override void commit()
+		internal override void Commit()
 		{
 		}
 
-		internal override void slotFreeOnCommit(int a_id, int a_address, int a_length)
+		public override void SlotFreeOnCommit(int a_id, int a_address, int a_length)
 		{
 		}
 
-		internal override void slotFreeOnRollback(int a_id, int a_address, int a_length)
+		internal override void SlotFreeOnRollback(int a_id, int a_address, int a_length)
 		{
 		}
 
-		internal override void slotFreeOnRollbackSetPointer(int a_id, int a_address, int 
+		internal override void SlotFreeOnRollbackSetPointer(int a_id, int a_address, int 
 			a_length)
 		{
-			setPointer(a_id, a_address, a_length);
+			SetPointer(a_id, a_address, a_length);
 		}
 
-		internal override void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress
+		internal override void SlotFreeOnRollbackCommitSetPointer(int a_id, int newAddress
 			, int newLength)
 		{
-			setPointer(a_id, newAddress, newLength);
+			SetPointer(a_id, newAddress, newLength);
 		}
 
-		internal override void slotFreePointerOnCommit(int a_id, int a_address, int a_length
+		internal override void SlotFreePointerOnCommit(int a_id, int a_address, int a_length
 			)
 		{
 		}
 
-		internal override void setPointer(int a_id, int a_address, int a_length)
+		public override void SetPointer(int a_id, int a_address, int a_length)
 		{
-			writePointer(a_id, a_address, a_length);
+			WritePointer(a_id, a_address, a_length);
 		}
 
-		internal override bool supportsVirtualFields()
+		internal override bool SupportsVirtualFields()
 		{
 			return false;
 		}

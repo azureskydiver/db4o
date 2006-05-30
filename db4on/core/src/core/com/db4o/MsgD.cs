@@ -13,168 +13,168 @@ namespace com.db4o
 		{
 		}
 
-		internal override void fakePayLoad(com.db4o.Transaction a_trans)
+		internal override void FakePayLoad(com.db4o.Transaction a_trans)
 		{
 		}
 
-		internal override com.db4o.YapWriter getByteLoad()
-		{
-			return _payLoad;
-		}
-
-		internal sealed override com.db4o.YapWriter getPayLoad()
+		internal override com.db4o.YapWriter GetByteLoad()
 		{
 			return _payLoad;
 		}
 
-		internal com.db4o.MsgD getWriterForLength(com.db4o.Transaction a_trans, int length
+		internal sealed override com.db4o.YapWriter GetPayLoad()
+		{
+			return _payLoad;
+		}
+
+		internal com.db4o.MsgD GetWriterForLength(com.db4o.Transaction a_trans, int length
 			)
 		{
-			com.db4o.MsgD message = (com.db4o.MsgD)clone(a_trans);
+			com.db4o.MsgD message = (com.db4o.MsgD)Clone(a_trans);
 			message._payLoad = new com.db4o.YapWriter(a_trans, length + com.db4o.YapConst.MESSAGE_LENGTH
 				);
-			message.writeInt(_msgID);
-			message.writeInt(length);
+			message.WriteInt(_msgID);
+			message.WriteInt(length);
 			if (a_trans.i_parentTransaction == null)
 			{
-				message._payLoad.append(com.db4o.YapConst.SYSTEM_TRANS);
+				message._payLoad.Append(com.db4o.YapConst.SYSTEM_TRANS);
 			}
 			else
 			{
-				message._payLoad.append(com.db4o.YapConst.USER_TRANS);
+				message._payLoad.Append(com.db4o.YapConst.USER_TRANS);
 			}
 			return message;
 		}
 
-		internal com.db4o.MsgD getWriter(com.db4o.Transaction a_trans)
+		internal com.db4o.MsgD GetWriter(com.db4o.Transaction a_trans)
 		{
-			return getWriterForLength(a_trans, 0);
+			return GetWriterForLength(a_trans, 0);
 		}
 
-		internal com.db4o.MsgD getWriterForInts(com.db4o.Transaction a_trans, int[] ints)
+		internal com.db4o.MsgD GetWriterForInts(com.db4o.Transaction a_trans, int[] ints)
 		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
 				 * ints.Length);
 			for (int i = 0; i < ints.Length; i++)
 			{
-				message.writeInt(ints[i]);
+				message.WriteInt(ints[i]);
 			}
 			return message;
 		}
 
-		internal com.db4o.MsgD getWriterForIntArray(com.db4o.Transaction a_trans, int[] ints
+		internal com.db4o.MsgD GetWriterForIntArray(com.db4o.Transaction a_trans, int[] ints
 			, int length)
 		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
 				 * (length + 1));
-			message.writeInt(length);
+			message.WriteInt(length);
 			for (int i = 0; i < length; i++)
 			{
-				message.writeInt(ints[i]);
+				message.WriteInt(ints[i]);
 			}
 			return message;
 		}
 
-		internal com.db4o.MsgD getWriterForInt(com.db4o.Transaction a_trans, int id)
+		internal com.db4o.MsgD GetWriterForInt(com.db4o.Transaction a_trans, int id)
 		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
 				);
-			message.writeInt(id);
+			message.WriteInt(id);
 			return message;
 		}
 
-		internal com.db4o.MsgD getWriterForIntString(com.db4o.Transaction a_trans, int anInt
+		internal com.db4o.MsgD GetWriterForIntString(com.db4o.Transaction a_trans, int anInt
 			, string str)
 		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.stringIO.length
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.stringIO.Length
 				(str) + com.db4o.YapConst.YAPINT_LENGTH * 2);
-			message.writeInt(anInt);
-			message.writeString(str);
+			message.WriteInt(anInt);
+			message.WriteString(str);
 			return message;
 		}
 
-		internal com.db4o.MsgD getWriterForLong(com.db4o.Transaction a_trans, long a_long
+		internal com.db4o.MsgD GetWriterForLong(com.db4o.Transaction a_trans, long a_long
 			)
 		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.YAPLONG_LENGTH
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPLONG_LENGTH
 				);
-			message.writeLong(a_long);
+			message.WriteLong(a_long);
 			return message;
 		}
 
-		internal com.db4o.MsgD getWriterForString(com.db4o.Transaction a_trans, string str
+		internal com.db4o.MsgD GetWriterForString(com.db4o.Transaction a_trans, string str
 			)
 		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.stringIO.length
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.stringIO.Length
 				(str) + com.db4o.YapConst.YAPINT_LENGTH);
-			message.writeString(str);
+			message.WriteString(str);
 			return message;
 		}
 
-		internal virtual com.db4o.MsgD getWriter(com.db4o.YapWriter bytes)
+		internal virtual com.db4o.MsgD GetWriter(com.db4o.YapWriter bytes)
 		{
-			com.db4o.MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength
+			com.db4o.MsgD message = GetWriterForLength(bytes.GetTransaction(), bytes.GetLength
 				());
-			message._payLoad.append(bytes._buffer);
+			message._payLoad.Append(bytes._buffer);
 			return message;
 		}
 
-		internal virtual byte[] readBytes()
+		internal virtual byte[] ReadBytes()
 		{
-			return _payLoad.readBytes(readInt());
+			return _payLoad.ReadBytes(ReadInt());
 		}
 
-		internal int readInt()
+		internal int ReadInt()
 		{
-			return _payLoad.readInt();
+			return _payLoad.ReadInt();
 		}
 
-		internal long readLong()
+		internal long ReadLong()
 		{
-			return com.db4o.YLong.readLong(_payLoad);
+			return com.db4o.YLong.ReadLong(_payLoad);
 		}
 
-		internal sealed override com.db4o.Msg readPayLoad(com.db4o.Transaction a_trans, com.db4o.foundation.network.YapSocket
+		internal sealed override com.db4o.Msg ReadPayLoad(com.db4o.Transaction a_trans, com.db4o.foundation.network.YapSocket
 			 sock, com.db4o.YapWriter reader)
 		{
-			int length = reader.readInt();
-			if ((reader.readByte() == com.db4o.YapConst.SYSTEM_TRANS) && (a_trans.i_parentTransaction
+			int length = reader.ReadInt();
+			if ((reader.ReadByte() == com.db4o.YapConst.SYSTEM_TRANS) && (a_trans.i_parentTransaction
 				 != null))
 			{
 				a_trans = a_trans.i_parentTransaction;
 			}
-			com.db4o.MsgD command = (com.db4o.MsgD)clone(a_trans);
+			com.db4o.MsgD command = (com.db4o.MsgD)Clone(a_trans);
 			command._payLoad = new com.db4o.YapWriter(a_trans, length);
-			command._payLoad.read(sock);
+			command._payLoad.Read(sock);
 			return command;
 		}
 
-		internal string readString()
+		internal string ReadString()
 		{
-			int length = readInt();
-			return com.db4o.YapConst.stringIO.read(_payLoad, length);
+			int length = ReadInt();
+			return com.db4o.YapConst.stringIO.Read(_payLoad, length);
 		}
 
-		internal void writeBytes(byte[] aBytes)
+		internal void WriteBytes(byte[] aBytes)
 		{
-			writeInt(aBytes.Length);
-			_payLoad.append(aBytes);
+			WriteInt(aBytes.Length);
+			_payLoad.Append(aBytes);
 		}
 
-		internal void writeInt(int aInt)
+		internal void WriteInt(int aInt)
 		{
-			_payLoad.writeInt(aInt);
+			_payLoad.WriteInt(aInt);
 		}
 
-		internal void writeLong(long aLong)
+		internal void WriteLong(long aLong)
 		{
-			com.db4o.YLong.writeLong(aLong, _payLoad);
+			com.db4o.YLong.WriteLong(aLong, _payLoad);
 		}
 
-		internal void writeString(string aStr)
+		internal void WriteString(string aStr)
 		{
-			_payLoad.writeInt(j4o.lang.JavaSystem.getLengthOf(aStr));
-			com.db4o.YapConst.stringIO.write(_payLoad, aStr);
+			_payLoad.WriteInt(aStr.Length);
+			com.db4o.YapConst.stringIO.Write(_payLoad, aStr);
 		}
 	}
 }

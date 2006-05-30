@@ -5,7 +5,7 @@ namespace com.db4o.foundation
 	{
 		private long _next;
 
-		public static long idToMilliseconds(long id)
+		public static long IdToMilliseconds(long id)
 		{
 			return id >> 15;
 		}
@@ -19,9 +19,9 @@ namespace com.db4o.foundation
 			_next = minimumNext;
 		}
 
-		public virtual long generate()
+		public virtual long Generate()
 		{
-			long t = j4o.lang.JavaSystem.currentTimeMillis();
+			long t = j4o.lang.JavaSystem.CurrentTimeMillis();
 			t = t << 15;
 			if (t <= _next)
 			{
@@ -34,12 +34,12 @@ namespace com.db4o.foundation
 			return _next;
 		}
 
-		public virtual long minimumNext()
+		public virtual long MinimumNext()
 		{
 			return _next;
 		}
 
-		public virtual void setMinimumNext(long newMinimum)
+		public virtual void SetMinimumNext(long newMinimum)
 		{
 			_next = newMinimum;
 		}

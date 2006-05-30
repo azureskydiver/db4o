@@ -22,72 +22,72 @@ namespace com.db4o
 			_classColl = classColl;
 		}
 
-		internal virtual void process(com.db4o.YapClass newYapClass)
+		internal virtual void Process(com.db4o.YapClass newYapClass)
 		{
-			if (_pending.contains(newYapClass))
+			if (_pending.Contains(newYapClass))
 			{
 				return;
 			}
-			com.db4o.YapClass ancestor = newYapClass.getAncestor();
+			com.db4o.YapClass ancestor = newYapClass.GetAncestor();
 			if (ancestor != null)
 			{
-				process(ancestor);
+				Process(ancestor);
 			}
-			_pending.add(newYapClass);
-			_members.add(newYapClass);
+			_pending.Add(newYapClass);
+			_members.Add(newYapClass);
 			if (_running)
 			{
 				return;
 			}
 			_running = true;
-			checkInits();
+			CheckInits();
 			_pending = new com.db4o.foundation.Collection4();
 			_running = false;
 		}
 
-		private void checkMembers()
+		private void CheckMembers()
 		{
-			while (_members.hasNext())
+			while (_members.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)_members.next();
-				yc.addMembers(_classColl.i_stream);
-				_statics.add(yc);
+				com.db4o.YapClass yc = (com.db4o.YapClass)_members.Next();
+				yc.AddMembers(_classColl.i_stream);
+				_statics.Add(yc);
 			}
 		}
 
-		private void checkStatics()
+		private void CheckStatics()
 		{
-			checkMembers();
-			while (_statics.hasNext())
+			CheckMembers();
+			while (_statics.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)_statics.next();
-				yc.storeStaticFieldValues(_classColl.i_systemTrans, true);
-				_writes.add(yc);
-				checkMembers();
+				com.db4o.YapClass yc = (com.db4o.YapClass)_statics.Next();
+				yc.StoreStaticFieldValues(_classColl.i_systemTrans, true);
+				_writes.Add(yc);
+				CheckMembers();
 			}
 		}
 
-		private void checkWrites()
+		private void CheckWrites()
 		{
-			checkStatics();
-			while (_writes.hasNext())
+			CheckStatics();
+			while (_writes.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)_writes.next();
-				yc.setStateDirty();
-				yc.write(_classColl.i_systemTrans);
-				_inits.add(yc);
-				checkStatics();
+				com.db4o.YapClass yc = (com.db4o.YapClass)_writes.Next();
+				yc.SetStateDirty();
+				yc.Write(_classColl.i_systemTrans);
+				_inits.Add(yc);
+				CheckStatics();
 			}
 		}
 
-		private void checkInits()
+		private void CheckInits()
 		{
-			checkWrites();
-			while (_inits.hasNext())
+			CheckWrites();
+			while (_inits.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)_inits.next();
-				yc.initConfigOnUp(_classColl.i_systemTrans);
-				checkWrites();
+				com.db4o.YapClass yc = (com.db4o.YapClass)_inits.Next();
+				yc.InitConfigOnUp(_classColl.i_systemTrans);
+				CheckWrites();
 			}
 		}
 	}

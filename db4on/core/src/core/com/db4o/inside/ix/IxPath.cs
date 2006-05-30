@@ -31,7 +31,7 @@ namespace com.db4o.inside.ix
 			i_lowerAndUpperMatch = lowerAndUpperMatch;
 		}
 
-		public virtual com.db4o.inside.ix.NIxPathNode convert()
+		public virtual com.db4o.inside.ix.NIxPathNode Convert()
 		{
 			com.db4o.inside.ix.NIxPathNode res = new com.db4o.inside.ix.NIxPathNode();
 			res._comparisonResult = i_comparisonResult;
@@ -39,21 +39,21 @@ namespace com.db4o.inside.ix
 			res._tree = i_tree;
 			if (i_next != null)
 			{
-				res._next = i_next.convert();
+				res._next = i_next.Convert();
 			}
 			return res;
 		}
 
-		internal virtual void add(com.db4o.foundation.Visitor4 visitor)
+		internal virtual void Add(com.db4o.foundation.Visitor4 visitor)
 		{
 			if (i_comparisonResult == 0 && i_traverser.i_take[com.db4o.inside.ix.IxTraverser.
 				EQUAL])
 			{
-				i_tree.visit(visitor, i_lowerAndUpperMatch);
+				i_tree.Visit(visitor, i_lowerAndUpperMatch);
 			}
 		}
 
-		internal virtual void addPrecedingToCandidatesTree(com.db4o.foundation.Visitor4 visitor
+		internal virtual void AddPrecedingToCandidatesTree(com.db4o.foundation.Visitor4 visitor
 			)
 		{
 			_visitor = visitor;
@@ -61,24 +61,24 @@ namespace com.db4o.inside.ix
 			{
 				if (i_next == null || i_next.i_tree != i_tree._preceding)
 				{
-					i_tree._preceding.traverse(this);
+					i_tree._preceding.Traverse(this);
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
 			{
 				int[] lowerAndUpperMatch = new int[] { i_upperNull, i_lowerAndUpperMatch[0] - 1 };
-				i_tree.visit(visitor, lowerAndUpperMatch);
+				i_tree.Visit(visitor, lowerAndUpperMatch);
 			}
 			else
 			{
 				if (i_comparisonResult < 0)
 				{
-					visit(i_tree);
+					Visit(i_tree);
 				}
 			}
 		}
 
-		internal virtual void addSubsequentToCandidatesTree(com.db4o.foundation.Visitor4 
+		internal virtual void AddSubsequentToCandidatesTree(com.db4o.foundation.Visitor4 
 			visitor)
 		{
 			_visitor = visitor;
@@ -86,25 +86,25 @@ namespace com.db4o.inside.ix
 			{
 				if (i_next == null || i_next.i_tree != i_tree._subsequent)
 				{
-					i_tree._subsequent.traverse(this);
+					i_tree._subsequent.Traverse(this);
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
 			{
 				int[] lowerAndUpperMatch = new int[] { i_lowerAndUpperMatch[1] + 1, ((com.db4o.inside.ix.IxFileRange
 					)i_tree)._entries - 1 };
-				i_tree.visit(visitor, lowerAndUpperMatch);
+				i_tree.Visit(visitor, lowerAndUpperMatch);
 			}
 			else
 			{
 				if (i_comparisonResult > 0)
 				{
-					visit(i_tree);
+					Visit(i_tree);
 				}
 			}
 		}
 
-		internal virtual com.db4o.inside.ix.IxPath append(com.db4o.inside.ix.IxPath a_head
+		internal virtual com.db4o.inside.ix.IxPath Append(com.db4o.inside.ix.IxPath a_head
 			, com.db4o.inside.ix.IxPath a_tail)
 		{
 			if (a_head == null)
@@ -115,7 +115,7 @@ namespace com.db4o.inside.ix
 			return a_tail;
 		}
 
-		internal virtual com.db4o.inside.ix.IxPath append(com.db4o.inside.ix.IxTree a_tree
+		internal virtual com.db4o.inside.ix.IxPath Append(com.db4o.inside.ix.IxTree a_tree
 			, int a_comparisonResult, int[] lowerAndUpperMatch)
 		{
 			i_next = new com.db4o.inside.ix.IxPath(i_traverser, null, a_tree, a_comparisonResult
@@ -124,23 +124,23 @@ namespace com.db4o.inside.ix
 			return i_next;
 		}
 
-		internal virtual bool carriesTheSame(com.db4o.inside.ix.IxPath a_path)
+		internal virtual bool CarriesTheSame(com.db4o.inside.ix.IxPath a_path)
 		{
 			return i_tree == a_path.i_tree;
 		}
 
-		private void checkUpperNull()
+		private void CheckUpperNull()
 		{
 			if (i_upperNull == -1)
 			{
 				i_upperNull = 0;
-				i_traverser.i_handler.prepareComparison(null);
-				int res = i_tree.compare(null);
+				i_traverser.i_handler.PrepareComparison(null);
+				int res = i_tree.Compare(null);
 				if (res != 0)
 				{
 					return;
 				}
-				int[] nullMatches = i_tree.lowerAndUpperMatch();
+				int[] nullMatches = i_tree.LowerAndUpperMatch();
 				if (nullMatches[0] == 0)
 				{
 					i_upperNull = nullMatches[1] + 1;
@@ -152,14 +152,14 @@ namespace com.db4o.inside.ix
 			}
 		}
 
-		public virtual void visitMatch(com.db4o.inside.freespace.FreespaceVisitor visitor
+		public virtual void VisitMatch(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
 			if (i_next != null)
 			{
-				i_next.visitMatch(visitor);
+				i_next.VisitMatch(visitor);
 			}
-			if (visitor.visited())
+			if (visitor.Visited())
 			{
 				return;
 			}
@@ -169,7 +169,7 @@ namespace com.db4o.inside.ix
 			}
 			if (i_lowerAndUpperMatch == null)
 			{
-				i_tree.freespaceVisit(visitor, 0);
+				i_tree.FreespaceVisit(visitor, 0);
 				return;
 			}
 			if (i_lowerAndUpperMatch[1] < i_lowerAndUpperMatch[0])
@@ -179,17 +179,17 @@ namespace com.db4o.inside.ix
 			int ix = i_lowerAndUpperMatch[0];
 			if (ix >= 0)
 			{
-				i_tree.freespaceVisit(visitor, ix);
+				i_tree.FreespaceVisit(visitor, ix);
 			}
 		}
 
-		public virtual void visitPreceding(com.db4o.inside.freespace.FreespaceVisitor visitor
+		public virtual void VisitPreceding(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
 			if (i_next != null)
 			{
-				i_next.visitPreceding(visitor);
-				if (visitor.visited())
+				i_next.VisitPreceding(visitor);
+				if (visitor.Visited())
 				{
 					return;
 				}
@@ -199,17 +199,17 @@ namespace com.db4o.inside.ix
 				int ix = i_lowerAndUpperMatch[0] - 1;
 				if (ix >= 0)
 				{
-					i_tree.freespaceVisit(visitor, ix);
+					i_tree.FreespaceVisit(visitor, ix);
 				}
 			}
 			else
 			{
 				if (i_comparisonResult < 0)
 				{
-					i_tree.freespaceVisit(visitor, 0);
+					i_tree.FreespaceVisit(visitor, 0);
 				}
 			}
-			if (visitor.visited())
+			if (visitor.Visited())
 			{
 				return;
 			}
@@ -217,18 +217,18 @@ namespace com.db4o.inside.ix
 			{
 				if (i_next == null || i_next.i_tree != i_tree._preceding)
 				{
-					((com.db4o.inside.ix.IxTree)i_tree._preceding).visitLast(visitor);
+					((com.db4o.inside.ix.IxTree)i_tree._preceding).VisitLast(visitor);
 				}
 			}
 		}
 
-		public virtual void visitSubsequent(com.db4o.inside.freespace.FreespaceVisitor visitor
+		public virtual void VisitSubsequent(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
 			if (i_next != null)
 			{
-				i_next.visitSubsequent(visitor);
-				if (visitor.visited())
+				i_next.VisitSubsequent(visitor);
+				if (visitor.Visited())
 				{
 					return;
 				}
@@ -238,17 +238,17 @@ namespace com.db4o.inside.ix
 				int ix = i_lowerAndUpperMatch[1] + 1;
 				if (ix < ((com.db4o.inside.ix.IxFileRange)i_tree)._entries)
 				{
-					i_tree.freespaceVisit(visitor, ix);
+					i_tree.FreespaceVisit(visitor, ix);
 				}
 			}
 			else
 			{
 				if (i_comparisonResult > 0)
 				{
-					i_tree.freespaceVisit(visitor, 0);
+					i_tree.FreespaceVisit(visitor, 0);
 				}
 			}
-			if (visitor.visited())
+			if (visitor.Visited())
 			{
 				return;
 			}
@@ -256,12 +256,12 @@ namespace com.db4o.inside.ix
 			{
 				if (i_next == null || i_next.i_tree != i_tree._subsequent)
 				{
-					((com.db4o.inside.ix.IxTree)i_tree._subsequent).visitFirst(visitor);
+					((com.db4o.inside.ix.IxTree)i_tree._subsequent).VisitFirst(visitor);
 				}
 			}
 		}
 
-		internal virtual int countMatching()
+		internal virtual int CountMatching()
 		{
 			if (i_comparisonResult == 0)
 			{
@@ -278,14 +278,14 @@ namespace com.db4o.inside.ix
 			return 0;
 		}
 
-		internal virtual int countPreceding(bool a_takenulls)
+		internal virtual int CountPreceding(bool a_takenulls)
 		{
 			int preceding = 0;
 			if (i_tree._preceding != null)
 			{
 				if (i_next == null || i_next.i_tree != i_tree._preceding)
 				{
-					preceding += i_tree._preceding.size();
+					preceding += i_tree._preceding.Size();
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
@@ -296,7 +296,7 @@ namespace com.db4o.inside.ix
 				}
 				else
 				{
-					checkUpperNull();
+					CheckUpperNull();
 				}
 				preceding += i_lowerAndUpperMatch[0] - i_upperNull;
 			}
@@ -310,14 +310,14 @@ namespace com.db4o.inside.ix
 			return preceding;
 		}
 
-		internal virtual int countSubsequent()
+		internal virtual int CountSubsequent()
 		{
 			int subsequent = 0;
 			if (i_tree._subsequent != null)
 			{
 				if (i_next == null || i_next.i_tree != i_tree._subsequent)
 				{
-					subsequent += i_tree._subsequent.size();
+					subsequent += i_tree._subsequent.Size();
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
@@ -335,7 +335,7 @@ namespace com.db4o.inside.ix
 			return subsequent;
 		}
 
-		public virtual object shallowClone()
+		public virtual object ShallowClone()
 		{
 			int[] lowerAndUpperMatch = null;
 			if (i_lowerAndUpperMatch != null)
@@ -356,9 +356,9 @@ namespace com.db4o.inside.ix
 			return i_tree.ToString();
 		}
 
-		public virtual void visit(object a_object)
+		public virtual void Visit(object a_object)
 		{
-			((com.db4o.foundation.Visitor4)a_object).visit(_visitor);
+			((com.db4o.foundation.Visitor4)a_object).Visit(_visitor);
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace com.db4o.ext
 		/// Db4oDatabase object it was created on.
 		/// </remarks>
 		/// <returns>the long part of this UUID.</returns>
-		public virtual long getLongPart()
+		public virtual long GetLongPart()
 		{
 			return longPart;
 		}
@@ -44,7 +44,7 @@ namespace com.db4o.ext
 		/// signature of the origin ObjectContainer.
 		/// </remarks>
 		/// <returns>the signature of the Db4oDatabase for this UUID.</returns>
-		public virtual byte[] getSignaturePart()
+		public virtual byte[] GetSignaturePart()
 		{
 			return signaturePart;
 		}
@@ -55,7 +55,7 @@ namespace com.db4o.ext
 			{
 				return true;
 			}
-			if (o == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (o == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(o))
 			{
 				return false;
@@ -85,7 +85,7 @@ namespace com.db4o.ext
 
 		public override int GetHashCode()
 		{
-			return (int)(longPart ^ (unchecked((int)(unchecked((uint)(longPart)) >> 32))));
+			return (int)(longPart ^ ((longPart) >> (32 & 0x1f)));
 		}
 
 		public override string ToString()

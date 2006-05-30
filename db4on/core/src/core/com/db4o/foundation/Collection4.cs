@@ -14,13 +14,13 @@ namespace com.db4o.foundation
 		/// <summary>Adds an element to the beginning of this collection.</summary>
 		/// <remarks>Adds an element to the beginning of this collection.</remarks>
 		/// <param name="element"></param>
-		public void add(object element)
+		public void Add(object element)
 		{
 			_first = new com.db4o.foundation.List4(_first, element);
 			_size++;
 		}
 
-		public void addAll(object[] elements)
+		public void AddAll(object[] elements)
 		{
 			if (elements != null)
 			{
@@ -28,37 +28,37 @@ namespace com.db4o.foundation
 				{
 					if (elements[i] != null)
 					{
-						add(elements[i]);
+						Add(elements[i]);
 					}
 				}
 			}
 		}
 
-		public void addAll(com.db4o.foundation.Collection4 other)
+		public void AddAll(com.db4o.foundation.Collection4 other)
 		{
 			if (other != null)
 			{
-				addAll(other.iterator());
+				AddAll(other.Iterator());
 			}
 		}
 
-		public void addAll(com.db4o.foundation.Iterator4 iterator)
+		public void AddAll(com.db4o.foundation.Iterator4 iterator)
 		{
-			while (iterator.hasNext())
+			while (iterator.HasNext())
 			{
-				add(iterator.next());
+				Add(iterator.Next());
 			}
 		}
 
-		public void clear()
+		public void Clear()
 		{
 			_first = null;
 			_size = 0;
 		}
 
-		public bool contains(object element)
+		public bool Contains(object element)
 		{
-			return get(element) != null;
+			return Get(element) != null;
 		}
 
 		/// <summary>tests if the object is in the Collection.</summary>
@@ -66,7 +66,7 @@ namespace com.db4o.foundation
 		/// tests if the object is in the Collection.
 		/// == comparison.
 		/// </remarks>
-		public bool containsByIdentity(object element)
+		public bool ContainsByIdentity(object element)
 		{
 			com.db4o.foundation.List4 current = _first;
 			while (current != null)
@@ -84,12 +84,12 @@ namespace com.db4o.foundation
 		/// returns the first object found in the Collections
 		/// that equals() the passed object
 		/// </summary>
-		public object get(object element)
+		public object Get(object element)
 		{
-			com.db4o.foundation.Iterator4 i = iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = Iterator();
+			while (i.HasNext())
 			{
-				object current = i.next();
+				object current = i.Next();
 				if (current.Equals(element))
 				{
 					return current;
@@ -98,21 +98,21 @@ namespace com.db4o.foundation
 			return null;
 		}
 
-		public virtual object deepClone(object newParent)
+		public virtual object DeepClone(object newParent)
 		{
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
 			object element = null;
-			com.db4o.foundation.Iterator4 i = this.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = this.Iterator();
+			while (i.HasNext())
 			{
-				element = i.next();
+				element = i.Next();
 				if (element is com.db4o.foundation.DeepClone)
 				{
-					col.add(((com.db4o.foundation.DeepClone)element).deepClone(newParent));
+					col.Add(((com.db4o.foundation.DeepClone)element).DeepClone(newParent));
 				}
 				else
 				{
-					col.add(element);
+					col.Add(element);
 				}
 			}
 			return col;
@@ -123,14 +123,14 @@ namespace com.db4o.foundation
 		/// makes sure the passed object is in the Collection.
 		/// equals() comparison.
 		/// </remarks>
-		public object ensure(object a_obj)
+		public object Ensure(object a_obj)
 		{
-			object obj = get(a_obj);
+			object obj = Get(a_obj);
 			if (obj != null)
 			{
 				return obj;
 			}
-			add(a_obj);
+			Add(a_obj);
 			return a_obj;
 		}
 
@@ -145,7 +145,7 @@ namespace com.db4o.foundation
 		/// to be the fastest.
 		/// </remarks>
 		/// <returns></returns>
-		public com.db4o.foundation.Iterator4 iterator()
+		public com.db4o.foundation.Iterator4 Iterator()
 		{
 			return _first == null ? com.db4o.foundation.Iterator4Impl.EMPTY : new com.db4o.foundation.Iterator4Impl
 				(_first);
@@ -160,9 +160,9 @@ namespace com.db4o.foundation
 		/// order (the insertion order).
 		/// </remarks>
 		/// <returns></returns>
-		public virtual com.db4o.foundation.Iterator4 strictIterator()
+		public virtual com.db4o.foundation.Iterator4 StrictIterator()
 		{
-			return new com.db4o.foundation.ArrayIterator4(toArray());
+			return new com.db4o.foundation.ArrayIterator4(ToArray());
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace com.db4o.foundation
 		/// equals() comparison
 		/// returns the removed object or null, if none found
 		/// </summary>
-		public virtual object remove(object a_object)
+		public virtual object Remove(object a_object)
 		{
 			com.db4o.foundation.List4 previous = null;
 			com.db4o.foundation.List4 current = _first;
@@ -195,7 +195,7 @@ namespace com.db4o.foundation
 			return null;
 		}
 
-		public int size()
+		public int Size()
 		{
 			return _size;
 		}
@@ -206,20 +206,20 @@ namespace com.db4o.foundation
 		/// In contrast to the JDK behaviour, the passed array has
 		/// to be initialized to the right length.
 		/// </remarks>
-		public void toArray(object[] a_array)
+		public void ToArray(object[] a_array)
 		{
 			int j = _size;
-			com.db4o.foundation.Iterator4 i = iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = Iterator();
+			while (i.HasNext())
 			{
-				a_array[--j] = i.next();
+				a_array[--j] = i.Next();
 			}
 		}
 
-		public object[] toArray()
+		public object[] ToArray()
 		{
 			object[] array = new object[_size];
-			toArray(array);
+			ToArray(array);
 			return array;
 		}
 
@@ -231,15 +231,15 @@ namespace com.db4o.foundation
 				return "[]";
 			}
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
-			sb.append("[");
-			com.db4o.foundation.Iterator4 i = iterator();
-			sb.append(i.next());
-			while (i.hasNext())
+			sb.Append("[");
+			com.db4o.foundation.Iterator4 i = Iterator();
+			sb.Append(i.Next());
+			while (i.HasNext())
 			{
-				sb.append(", ");
-				sb.append(i.next());
+				sb.Append(", ");
+				sb.Append(i.Next());
 			}
-			sb.append("]");
+			sb.Append("]");
 			return sb.ToString();
 		}
 	}

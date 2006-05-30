@@ -1,4 +1,4 @@
-namespace com.db4o
+﻿namespace com.db4o
 {
 	/// <summary>the interface to a db4o database, stand-alone or client/server.</summary>
 	/// <remarks>
@@ -47,10 +47,10 @@ namespace com.db4o
 		/// but deactivated, their fields will be null.
 		/// The activation depth of individual classes can be overruled
 		/// with the methods
-		/// <see cref="com.db4o.config.ObjectClass.maximumActivationDepth">maximumActivationDepth()
+		/// <see cref="com.db4o.config.ObjectClass.maximumActivationDepth">MaximumActivationDepth()
 		/// 	</see>
 		/// and
-		/// <see cref="com.db4o.config.ObjectClass.minimumActivationDepth">minimumActivationDepth()
+		/// <see cref="com.db4o.config.ObjectClass.minimumActivationDepth">MinimumActivationDepth()
 		/// 	</see>
 		/// in the
 		/// <see cref="com.db4o.config.ObjectClass">ObjectClass interface</see>
@@ -67,23 +67,23 @@ namespace com.db4o
 		/// <see cref="com.db4o.config.Configuration.activationDepth">depth</see>
 		/// to which activate is to cascade.
 		/// </param>
-		void activate(object obj, int depth);
+		void Activate(object obj, int depth);
 
 		/// <summary>closes this ObjectContainer.</summary>
 		/// <remarks>
 		/// closes this ObjectContainer.
-		/// <br /><br />A call to close() automatically performs a
-		/// <see cref="com.db4o.ObjectContainer.commit">commit()</see>
+		/// <br /><br />A call to Close() automatically performs a
+		/// <see cref="com.db4o.ObjectContainer.commit">Commit()</see>
 		/// .
-		/// <br /><br />Note that every session opened with Db4o.openFile() requires one
-		/// close()call, even if the same filename was used multiple times.<br /><br />
-		/// Use <code>while(!close()){}</code> to kill all sessions using this container.<br /><br />
+		/// <br /><br />Note that every session opened with Db4o.OpenFile() requires one
+		/// Close()call, even if the same filename was used multiple times.<br /><br />
+		/// Use <code>while(!Close()){}</code> to kill all sessions using this container.<br /><br />
 		/// </remarks>
 		/// <returns>
 		/// success - true denotes that the last used instance of this container
 		/// and the database file were closed.
 		/// </returns>
-		bool close();
+		bool Close();
 
 		/// <summary>commits the running transaction.</summary>
 		/// <remarks>
@@ -91,7 +91,7 @@ namespace com.db4o
 		/// <br /><br />Transactions are back-to-back. A call to commit will starts
 		/// a new transaction immedidately.
 		/// </remarks>
-		void commit();
+		void Commit();
 
 		/// <summary>deactivates a stored object by setting all members to <code>NULL</code>.
 		/// 	</summary>
@@ -102,7 +102,7 @@ namespace com.db4o
 		/// Calls to this method save memory.
 		/// The method has no effect, if the passed object is not stored in the
 		/// <code>ObjectContainer</code>.<br /><br />
-		/// <code>deactivate()</code> triggers the callback method
+		/// <code>Deactivate()</code> triggers the callback method
 		/// <see cref="com.db4o.ext.ObjectCallbacks.objectOnDeactivate">objectOnDeactivate</see>
 		/// .
 		/// <br /><br />
@@ -119,7 +119,7 @@ namespace com.db4o
 		/// 
 		/// to which deactivate is to cascade.
 		/// </param>
-		void deactivate(object obj, int depth);
+		void Deactivate(object obj, int depth);
 
 		/// <summary>deletes a stored object permanently.</summary>
 		/// <remarks>
@@ -136,9 +136,9 @@ namespace com.db4o
 		/// <br /><br />The method has no effect, if
 		/// the passed object is not stored in the <code>ObjectContainer</code>.
 		/// <br /><br />A subsequent call to
-		/// <code>set()</code> with the same object newly stores the object
+		/// <code>Set()</code> with the same object newly stores the object
 		/// to the <code>ObjectContainer</code>.<br /><br />
-		/// <code>delete()</code> triggers the callback method
+		/// <code>Delete()</code> triggers the callback method
 		/// <see cref="com.db4o.ext.ObjectCallbacks.objectOnDelete">objectOnDelete</see>
 		/// which can be also used for cascaded deletes.<br /><br />
 		/// </remarks>
@@ -151,7 +151,7 @@ namespace com.db4o
 		/// the object to be deleted from the
 		/// <code>ObjectContainer</code>.<br />
 		/// </param>
-		void delete(object obj);
+		void Delete(object obj);
 
 		/// <summary>returns an ObjectContainer with extended functionality.</summary>
 		/// <remarks>
@@ -163,24 +163,24 @@ namespace com.db4o
 		/// to allow newcomers to focus on the essential methods.<br /><br />
 		/// </remarks>
 		/// <returns>this, casted to ExtObjectContainer</returns>
-		com.db4o.ext.ExtObjectContainer ext();
+		com.db4o.ext.ExtObjectContainer Ext();
 
 		/// <summary>Query-By-Example interface to retrieve objects.</summary>
 		/// <remarks>
 		/// Query-By-Example interface to retrieve objects.
-		/// <br /><br /><code>get()</code> creates an
+		/// <br /><br /><code>Get()</code> creates an
 		/// <see cref="com.db4o.ObjectSet">ObjectSet</see>
 		/// containing
 		/// all objects in the <code>ObjectContainer</code> that match the passed
 		/// template object.<br /><br />
-		/// Calling <code>get(NULL)</code> returns all objects stored in the
+		/// Calling <code>Get(NULL)</code> returns all objects stored in the
 		/// <code>ObjectContainer</code>.<br /><br /><br />
 		/// <b>Query Evaluation</b>
 		/// <br />All non-null members of the template object are compared against
 		/// all stored objects of the same class.
 		/// Primitive type members are ignored if they are 0 or false respectively.
 		/// <br /><br />Arrays and all supported <code>Collection</code> classes are
-		/// evaluated for containment. Differences in <code>length/size()</code> are
+		/// evaluated for containment. Differences in <code>length/Size()</code> are
 		/// ignored.
 		/// <br /><br />Consult the documentation of the Configuration package to
 		/// configure class-specific behaviour.<br /><br /><br />
@@ -199,7 +199,7 @@ namespace com.db4o
 		/// db4o keeps track of all instantiatied objects. Queries will return
 		/// references to these objects instead of instantiating them a second time.
 		/// <br /><br />
-		/// Objects newly activated by <code>get()</code> can respond to the callback
+		/// Objects newly activated by <code>Get()</code> can respond to the callback
 		/// method
 		/// <see cref="com.db4o.ext.ObjectCallbacks.objectOnActivate">objectOnActivate</see>
 		/// .
@@ -214,7 +214,7 @@ namespace com.db4o
 		/// </returns>
 		/// <seealso cref="com.db4o.config.Configuration.activationDepth">Why activation?</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		com.db4o.ObjectSet get(object template);
+		com.db4o.ObjectSet Get(object template);
 
 		/// <summary>
 		/// creates a new SODA
@@ -222,7 +222,7 @@ namespace com.db4o
 		/// .
 		/// <br /><br />
 		/// Use
-		/// <see cref="com.db4o.ObjectContainer.get">get(Object template)</see>
+		/// <see cref="com.db4o.ObjectContainer.get">Get(Object template)</see>
 		/// for simple Query-By-Example.<br /><br />
 		/// <see cref="com.db4o.ObjectContainer.query">Native queries</see>
 		/// are the recommended main db4o query
@@ -230,7 +230,7 @@ namespace com.db4o
 		/// <br /><br />
 		/// </summary>
 		/// <returns>a new Query object</returns>
-		com.db4o.query.Query query();
+		com.db4o.query.Query Query();
 
 		/// <summary>queries for all instances of a class.</summary>
 		/// <remarks>queries for all instances of a class.</remarks>
@@ -240,7 +240,7 @@ namespace com.db4o
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 		/// returned by the query.
 		/// </returns>
-		com.db4o.ObjectSet query(j4o.lang.Class clazz);
+		com.db4o.ObjectSet Query(j4o.lang.Class clazz);
 
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
@@ -265,27 +265,27 @@ namespace com.db4o
 		/// <br />
 		/// <br />
 		/// <b>// Java JDK 5</b><br />
-		/// List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {<br />
-		/// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
-		/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+		/// List &lt;Cat&gt; cats = db.Query(new Predicate&lt;Cat&gt;() {<br />
+		/// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+		/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.GetName().Equals("Occam");<br />
 		/// &#160;&#160;&#160;}<br />
 		/// });<br />
 		/// <br />
 		/// <br />
 		/// <b>// Java JDK 1.2 to 1.4</b><br />
-		/// List cats = db.query(new Predicate() {<br />
-		/// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
-		/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+		/// List cats = db.Query(new Predicate() {<br />
+		/// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+		/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.GetName().Equals("Occam");<br />
 		/// &#160;&#160;&#160;}<br />
 		/// });<br />
 		/// <br />
 		/// <br />
 		/// <b>// Java JDK 1.1</b><br />
-		/// ObjectSet cats = db.query(new CatOccam());<br />
+		/// ObjectSet cats = db.Query(new CatOccam());<br />
 		/// <br />
 		/// public static class CatOccam extends Predicate {<br />
-		/// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
-		/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+		/// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+		/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.GetName().Equals("Occam");<br />
 		/// &#160;&#160;&#160;}<br />
 		/// });<br />
 		/// <br />
@@ -305,9 +305,9 @@ namespace com.db4o
 		/// - use the delegate notation for .NET 2.0.<br />
 		/// - extend the Predicate class for all other language dialects<br /><br />
 		/// A class that extends Predicate is required to
-		/// implement the #match() / #Match() method, following the native query
+		/// implement the #Match() / #Match() method, following the native query
 		/// conventions:<br />
-		/// - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br />
+		/// - The name of the method is "#Match()" (Java) / "#Match()" (.NET).<br />
 		/// - The method must be public public.<br />
 		/// - The method returns a boolean.<br />
 		/// - The method takes one parameter.<br />
@@ -327,12 +327,12 @@ namespace com.db4o
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 		/// returned by the query.
 		/// </returns>
-		com.db4o.ObjectSet query(com.db4o.query.Predicate predicate);
+		com.db4o.ObjectSet Query(com.db4o.query.Predicate predicate);
 
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
 		/// Native Query Interface. Queries as with
-		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// <see cref="M:com.db4o.ObjectContainer.Query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.Query(Predicate)</see>
 		/// ,
 		/// but will sort the resulting
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
@@ -355,13 +355,13 @@ namespace com.db4o
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 		/// returned by the query.
 		/// </returns>
-		com.db4o.ObjectSet query(com.db4o.query.Predicate predicate, com.db4o.query.QueryComparator
+		com.db4o.ObjectSet Query(com.db4o.query.Predicate predicate, com.db4o.query.QueryComparator
 			 comparator);
 
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
 		/// Native Query Interface. Queries as with
-		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// <see cref="M:com.db4o.ObjectContainer.Query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.Query(Predicate)</see>
 		/// ,
 		/// but will sort the resulting
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
@@ -384,7 +384,7 @@ namespace com.db4o
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 		/// returned by the query.
 		/// </returns>
-        com.db4o.ObjectSet query(com.db4o.query.Predicate predicate, System.Collections.IComparer comparer);
+		com.db4o.ObjectSet Query(com.db4o.query.Predicate predicate, System.Collections.IComparer comparer);
 
 		/// <summary>rolls back the running transaction.</summary>
 		/// <remarks>
@@ -397,13 +397,13 @@ namespace com.db4o
 		/// 	</see>
 		/// .
 		/// </remarks>
-		void rollback();
+		void Rollback();
 
 		/// <summary>newly stores objects or updates stored objects.</summary>
 		/// <remarks>
 		/// newly stores objects or updates stored objects.
 		/// <br /><br />An object not yet stored in the <code>ObjectContainer</code> will be
-		/// stored when it is passed to <code>set()</code>. An object already stored
+		/// stored when it is passed to <code>Set()</code>. An object already stored
 		/// in the <code>ObjectContainer</code> will be updated.
 		/// <br /><br /><b>Updates</b><br />
 		/// - will affect all simple type object members.<br />
@@ -412,7 +412,7 @@ namespace com.db4o
 		/// new members, as long as further new members are found.<br />
 		/// - object members that are already stored will <b>not</b> be updated
 		/// themselves.<br />Every object member needs to be updated individually with a
-		/// call to <code>set()</code> unless a deep
+		/// call to <code>Set()</code> unless a deep
 		/// <see cref="com.db4o.config.Configuration.updateDepth">global</see>
 		/// or
 		/// <see cref="com.db4o.config.ObjectClass.updateDepth">class-specific</see>
@@ -432,7 +432,7 @@ namespace com.db4o
 		/// might also be used for cascaded updates.<br /><br />
 		/// </remarks>
 		/// <param name="obj">the object to be stored or updated.</param>
-		/// <seealso cref="com.db4o.ext.ExtObjectContainer.set">ExtObjectContainer#set(object, depth)
+		/// <seealso cref="com.db4o.ext.ExtObjectContainer.set">ExtObjectContainer#Set(object, depth)
 		/// 	</seealso>
 		/// <seealso cref="com.db4o.config.Configuration.updateDepth">com.db4o.config.Configuration.updateDepth
 		/// 	</seealso>
@@ -443,7 +443,7 @@ namespace com.db4o
 		/// <seealso cref="com.db4o.config.ObjectField.cascadeOnUpdate">com.db4o.config.ObjectField.cascadeOnUpdate
 		/// 	</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		void set(object obj);
+		void Set(object obj);
 		
 #if NET_2_0 || CF_2_0
         /// <summary>.NET 2.0 Native Query interface.</summary>
@@ -469,27 +469,27 @@ namespace com.db4o
         /// <br />
         /// <br />
         /// <b>// Java JDK 5</b><br />
-        /// List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {<br />
-        /// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
-        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+        /// List &lt;Cat&gt; cats = db.Query(new Predicate&lt;Cat&gt;() {<br />
+        /// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.GetName().Equals("Occam");<br />
         /// &#160;&#160;&#160;}<br />
         /// });<br />
         /// <br />
         /// <br />
         /// <b>// Java JDK 1.2 to 1.4</b><br />
-        /// List cats = db.query(new Predicate() {<br />
-        /// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
-        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+        /// List cats = db.Query(new Predicate() {<br />
+        /// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.GetName().Equals("Occam");<br />
         /// &#160;&#160;&#160;}<br />
         /// });<br />
         /// <br />
         /// <br />
         /// <b>// Java JDK 1.1</b><br />
-        /// ObjectSet cats = db.query(new CatOccam());<br />
+        /// ObjectSet cats = db.Query(new CatOccam());<br />
         /// <br />
         /// public static class CatOccam extends Predicate {<br />
-        /// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
-        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+        /// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.GetName().Equals("Occam");<br />
         /// &#160;&#160;&#160;}<br />
         /// });<br />
         /// <br />
@@ -509,9 +509,9 @@ namespace com.db4o
         /// - use the delegate notation for .NET 2.0.<br />
         /// - extend the Predicate class for all other language dialects<br /><br />
         /// A class that extends Predicate is required to
-        /// implement the #match() / #Match() method, following the native query
+        /// implement the #Match() / #Match() method, following the native query
         /// conventions:<br />
-        /// - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br />
+        /// - The name of the method is "#Match()" (Java) / "#Match()" (.NET).<br />
         /// - The method must be public public.<br />
         /// - The method returns a boolean.<br />
         /// - The method takes one parameter.<br />
@@ -530,12 +530,12 @@ namespace com.db4o
         /// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
         /// returned by the query.
         /// </returns>
-        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match);
+        System.Collections.Generic.IList<Extent> Query<Extent>(System.Predicate<Extent> match);
         
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
 		/// Native Query Interface. Queries as with
-		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// <see cref="M:com.db4o.ObjectContainer.Query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.Query(Predicate)</see>
 		/// ,
 		/// but will sort the resulting
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
@@ -558,12 +558,12 @@ namespace com.db4o
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 		/// returned by the query.
 		/// </returns>
-        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Collections.Generic.IComparer<Extent> comparer);
+		System.Collections.Generic.IList<Extent> Query<Extent>(System.Predicate<Extent> match, System.Collections.Generic.IComparer<Extent> comparer);
 
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
 		/// Native Query Interface. Queries as with
-		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// <see cref="M:com.db4o.ObjectContainer.Query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.Query(Predicate)</see>
 		/// ,
 		/// but will sort the resulting
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
@@ -586,25 +586,24 @@ namespace com.db4o
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 		/// returned by the query.
 		/// </returns>
-        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Comparison<Extent> comparison);
-        
+		System.Collections.Generic.IList<Extent> Query<Extent>(System.Predicate<Extent> match, System.Comparison<Extent> comparison);
 
-        /// <summary>
-        /// queries for all instances of the type extent, returning
+		/// <summary>
+		/// queries for all instances of the type extent, returning
 		/// a IList of ElementType which must be assignable from
 		/// extent.
-        /// </summary>
-        System.Collections.Generic.IList<ElementType> query<ElementType>(System.Type extent);
+		/// </summary>
+		System.Collections.Generic.IList<ElementType> Query<ElementType>(System.Type extent);
 		
 		/// <summary>
-        /// queries for all instances of the type extent.
-        /// </summary>
-        System.Collections.Generic.IList<Extent> query<Extent>();
+		/// queries for all instances of the type extent.
+		/// </summary>
+		System.Collections.Generic.IList<Extent> Query<Extent>();
 
 		/// <summary>
-        /// queries for all instances of the type extent sorting with the specified comparer.
-        /// </summary>
-        System.Collections.Generic.IList<Extent> query<Extent>(System.Collections.Generic.IComparer<Extent> comparer);
+		/// queries for all instances of the type extent sorting with the specified comparer.
+		/// </summary>
+		System.Collections.Generic.IList<Extent> Query<Extent>(System.Collections.Generic.IComparer<Extent> comparer);
 #endif
 	}
 }

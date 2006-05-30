@@ -30,60 +30,60 @@ namespace com.db4o.foundation.network
 			_uploadBuffer = affiliate._downloadBuffer;
 		}
 
-		public virtual void close()
+		public virtual void Close()
 		{
 			if (_affiliate != null)
 			{
 				com.db4o.foundation.network.YapSocketFake temp = _affiliate;
 				_affiliate = null;
-				temp.close();
+				temp.Close();
 			}
 			_affiliate = null;
 		}
 
-		public virtual void flush()
+		public virtual void Flush()
 		{
 		}
 
-		public virtual bool isClosed()
+		public virtual bool IsClosed()
 		{
 			return _affiliate == null;
 		}
 
-		public virtual int read()
+		public virtual int Read()
 		{
-			return _downloadBuffer.read();
+			return _downloadBuffer.Read();
 		}
 
-		public virtual int read(byte[] a_bytes, int a_offset, int a_length)
+		public virtual int Read(byte[] a_bytes, int a_offset, int a_length)
 		{
-			return _downloadBuffer.read(a_bytes, a_offset, a_length);
+			return _downloadBuffer.Read(a_bytes, a_offset, a_length);
 		}
 
-		public virtual void setSoTimeout(int a_timeout)
+		public virtual void SetSoTimeout(int a_timeout)
 		{
-			_uploadBuffer.setTimeout(a_timeout);
-			_downloadBuffer.setTimeout(a_timeout);
+			_uploadBuffer.SetTimeout(a_timeout);
+			_downloadBuffer.SetTimeout(a_timeout);
 		}
 
-		public virtual void write(byte[] bytes)
+		public virtual void Write(byte[] bytes)
 		{
-			_uploadBuffer.write(bytes);
+			_uploadBuffer.Write(bytes);
 		}
 
-		public virtual void write(byte[] bytes, int off, int len)
+		public virtual void Write(byte[] bytes, int off, int len)
 		{
-			_uploadBuffer.write(bytes, off, len);
+			_uploadBuffer.Write(bytes, off, len);
 		}
 
-		public virtual void write(int i)
+		public virtual void Write(int i)
 		{
-			_uploadBuffer.write(i);
+			_uploadBuffer.Write(i);
 		}
 
-		public virtual com.db4o.foundation.network.YapSocket openParalellSocket()
+		public virtual com.db4o.foundation.network.YapSocket OpenParalellSocket()
 		{
-			return _server.openClientSocket();
+			return _server.OpenClientSocket();
 		}
 	}
 }

@@ -12,12 +12,12 @@ namespace com.db4o
 		{
 		}
 
-		internal override void createCandidates(com.db4o.foundation.Collection4 a_candidateCollection
+		internal override void CreateCandidates(com.db4o.foundation.Collection4 a_candidateCollection
 			)
 		{
 		}
 
-		internal override bool evaluate(com.db4o.QCandidate a_candidate)
+		internal override bool Evaluate(com.db4o.QCandidate a_candidate)
 		{
 			return false;
 		}

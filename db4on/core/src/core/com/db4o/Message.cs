@@ -6,15 +6,15 @@ namespace com.db4o
 
 		internal Message(com.db4o.YapStream a_stream, string msg)
 		{
-			stream = a_stream.i_config.outStream();
-			print(msg, true);
+			stream = a_stream.i_config.OutStream();
+			Print(msg, true);
 		}
 
 		internal Message(string a_StringParam, int a_intParam, j4o.io.PrintStream a_stream
 			, bool header)
 		{
 			stream = a_stream;
-			print(com.db4o.Messages.get(a_intParam, a_StringParam), header);
+			Print(com.db4o.Messages.Get(a_intParam, a_StringParam), header);
 		}
 
 		internal Message(string a_StringParam, int a_intParam, j4o.io.PrintStream a_stream
@@ -22,16 +22,16 @@ namespace com.db4o
 		{
 		}
 
-		private void print(string msg, bool header)
+		private void Print(string msg, bool header)
 		{
 			if (stream != null)
 			{
 				if (header)
 				{
-					stream.println("[" + com.db4o.Db4o.version() + "   " + com.db4o.YDate.now() + "] "
+					stream.Println("[" + com.db4o.Db4o.Version() + "   " + com.db4o.YDate.Now() + "] "
 						);
 				}
-				stream.println(" " + msg);
+				stream.Println(" " + msg);
 			}
 		}
 	}

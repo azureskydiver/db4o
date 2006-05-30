@@ -3,12 +3,12 @@ namespace com.db4o.inside.ix
 	/// <exclude></exclude>
 	public interface Indexable4 : com.db4o.YapComparable
 	{
-		object comparableObject(com.db4o.Transaction trans, object indexEntry);
+		object ComparableObject(com.db4o.Transaction trans, object indexEntry);
 
-		int linkLength();
+		int LinkLength();
 
-		object readIndexEntry(com.db4o.YapReader a_reader);
+		object ReadIndexEntry(com.db4o.YapReader a_reader);
 
-		void writeIndexEntry(com.db4o.YapReader a_writer, object a_object);
+		void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object);
 	}
 }

@@ -23,21 +23,21 @@ namespace com.db4o
 			_result = a_firstResult ? TRUE : FALSE;
 		}
 
-		public override int compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.Tree a_to)
 		{
 			return _constraint.i_id - ((com.db4o.QPending)a_to)._constraint.i_id;
 		}
 
-		internal virtual void changeConstraint()
+		internal virtual void ChangeConstraint()
 		{
-			_constraint = _join.getOtherConstraint(_constraint);
+			_constraint = _join.GetOtherConstraint(_constraint);
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.QPending pending = new com.db4o.QPending(_join, _constraint, false);
 			pending._result = _result;
-			base.shallowCloneInternal(pending);
+			base.ShallowCloneInternal(pending);
 			return pending;
 		}
 	}

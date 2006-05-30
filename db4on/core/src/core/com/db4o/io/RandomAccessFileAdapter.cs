@@ -15,67 +15,67 @@ namespace com.db4o.io
 			_delegate = new j4o.io.RandomAccessFile(path, "rw");
 			if (initialLength > 0)
 			{
-				_delegate.seek(initialLength - 1);
-				_delegate.write(new byte[] { 0 });
+				_delegate.Seek(initialLength - 1);
+				_delegate.Write(new byte[] { 0 });
 			}
 			if (lockFile)
 			{
-				com.db4o.Platform4.lockFile(_delegate);
+				com.db4o.Platform4.LockFile(_delegate);
 			}
 		}
 
-		public override void close()
+		public override void Close()
 		{
 			try
 			{
-				com.db4o.Platform4.unlockFile(_delegate);
+				com.db4o.Platform4.UnlockFile(_delegate);
 			}
 			catch (System.Exception e)
 			{
 			}
-			_delegate.close();
+			_delegate.Close();
 		}
 
-		public override void delete(string path)
+		public override void Delete(string path)
 		{
-			new j4o.io.File(path).delete();
+			new j4o.io.File(path).Delete();
 		}
 
-		public override bool exists(string path)
+		public override bool Exists(string path)
 		{
 			j4o.io.File existingFile = new j4o.io.File(path);
-			return existingFile.exists() && existingFile.length() > 0;
+			return existingFile.Exists() && existingFile.Length() > 0;
 		}
 
-		public override long getLength()
+		public override long GetLength()
 		{
-			return _delegate.length();
+			return _delegate.Length();
 		}
 
-		public override com.db4o.io.IoAdapter open(string path, bool lockFile, long initialLength
+		public override com.db4o.io.IoAdapter Open(string path, bool lockFile, long initialLength
 			)
 		{
 			return new com.db4o.io.RandomAccessFileAdapter(path, lockFile, initialLength);
 		}
 
-		public override int read(byte[] bytes, int length)
+		public override int Read(byte[] bytes, int length)
 		{
-			return _delegate.read(bytes, 0, length);
+			return _delegate.Read(bytes, 0, length);
 		}
 
-		public override void seek(long pos)
+		public override void Seek(long pos)
 		{
-			_delegate.seek(pos);
+			_delegate.Seek(pos);
 		}
 
-		public override void sync()
+		public override void Sync()
 		{
-			_delegate.getFD().sync();
+			_delegate.GetFD().Sync();
 		}
 
-		public override void write(byte[] buffer, int length)
+		public override void Write(byte[] buffer, int length)
 		{
-			_delegate.write(buffer, 0, length);
+			_delegate.Write(buffer, 0, length);
 		}
 	}
 }

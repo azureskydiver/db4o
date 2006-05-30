@@ -1,138 +1,152 @@
 namespace com.db4o
 {
-	internal class YapClassPrimitive : com.db4o.YapClass
+	/// <exclude></exclude>
+	public class YapClassPrimitive : com.db4o.YapClass
 	{
-		internal readonly com.db4o.TypeHandler4 i_handler;
+		public readonly com.db4o.TypeHandler4 i_handler;
 
 		internal YapClassPrimitive(com.db4o.YapStream a_stream, com.db4o.TypeHandler4 a_handler
-			) : base(a_stream, a_handler.classReflector())
+			) : base(a_stream, a_handler.ClassReflector())
 		{
 			i_fields = com.db4o.YapField.EMPTY_ARRAY;
 			i_handler = a_handler;
-			i_objectLength = memberLength();
 		}
 
-		internal override void activateFields(com.db4o.Transaction a_trans, object a_object
+		internal override void ActivateFields(com.db4o.Transaction a_trans, object a_object
 			, int a_depth)
 		{
 		}
 
-		internal sealed override void addToIndex(com.db4o.YapFile a_stream, com.db4o.Transaction
+		internal sealed override void AddToIndex(com.db4o.YapFile a_stream, com.db4o.Transaction
 			 a_trans, int a_id)
 		{
 		}
 
-		internal override bool allowsQueries()
+		internal override bool AllowsQueries()
 		{
 			return false;
 		}
 
-		public override void appendEmbedded1(com.db4o.YapWriter a_bytes)
+		public override void AppendEmbedded1(com.db4o.YapWriter a_bytes)
 		{
 		}
 
-		internal override void cacheDirty(com.db4o.foundation.Collection4 col)
+		internal override void CacheDirty(com.db4o.foundation.Collection4 col)
 		{
 		}
 
-		public override bool canHold(com.db4o.reflect.ReflectClass claxx)
+		public override bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
-			return i_handler.canHold(claxx);
+			return i_handler.CanHold(claxx);
 		}
 
-		public override com.db4o.reflect.ReflectClass classReflector()
+		public override com.db4o.reflect.ReflectClass ClassReflector()
 		{
-			return i_handler.classReflector();
+			return i_handler.ClassReflector();
 		}
 
-		internal override void deleteEmbedded1(com.db4o.YapWriter a_bytes, int a_id)
+		public override void DeleteEmbedded(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapWriter a_bytes)
+		{
+			if (mf._primitive.UseNormalClassRead())
+			{
+				base.DeleteEmbedded(mf, a_bytes);
+				return;
+			}
+		}
+
+		public override void DeleteEmbedded1(com.db4o.inside.marshall.MarshallerFamily mf
+			, com.db4o.YapWriter a_bytes, int a_id)
 		{
 			if (i_handler is com.db4o.YapArray)
 			{
 				com.db4o.YapArray ya = (com.db4o.YapArray)i_handler;
 				if (ya.i_isPrimitive)
 				{
-					ya.deletePrimitiveEmbedded(a_bytes, this);
-					a_bytes.slotDelete();
+					ya.DeletePrimitiveEmbedded(a_bytes, this);
+					a_bytes.SlotDelete();
 					return;
 				}
 			}
 			if (i_handler is com.db4o.YapClassAny)
 			{
-				a_bytes.incrementOffset(i_handler.linkLength());
+				a_bytes.IncrementOffset(i_handler.LinkLength());
 			}
 			else
 			{
-				i_handler.deleteEmbedded(a_bytes);
+				i_handler.DeleteEmbedded(mf, a_bytes);
 			}
-			free(a_bytes, a_id);
+			Free(a_bytes, a_id);
 		}
 
-		internal override void deleteMembers(com.db4o.YapWriter a_bytes, int a_type, bool
-			 isUpdate)
+		internal override void DeleteMembers(com.db4o.inside.marshall.MarshallerFamily mf
+			, com.db4o.inside.marshall.ObjectHeaderAttributes attributes, com.db4o.YapWriter
+			 a_bytes, int a_type, bool isUpdate)
 		{
 			if (a_type == com.db4o.YapConst.TYPE_ARRAY)
 			{
-				new com.db4o.YapArray(a_bytes.getStream(), this, true).deletePrimitiveEmbedded(a_bytes
+				new com.db4o.YapArray(a_bytes.GetStream(), this, true).DeletePrimitiveEmbedded(a_bytes
 					, this);
 			}
 			else
 			{
 				if (a_type == com.db4o.YapConst.TYPE_NARRAY)
 				{
-					new com.db4o.YapArrayN(a_bytes.getStream(), this, true).deletePrimitiveEmbedded(a_bytes
+					new com.db4o.YapArrayN(a_bytes.GetStream(), this, true).DeletePrimitiveEmbedded(a_bytes
 						, this);
 				}
 			}
 		}
 
-		internal void free(com.db4o.Transaction a_trans, int a_id, int a_address, int a_length
+		internal void Free(com.db4o.Transaction a_trans, int a_id, int a_address, int a_length
 			)
 		{
-			a_trans.slotFreePointerOnCommit(a_id, a_address, a_length);
+			a_trans.SlotFreePointerOnCommit(a_id, a_address, a_length);
 		}
 
-		internal void free(com.db4o.YapWriter a_bytes, int a_id)
+		internal void Free(com.db4o.YapWriter a_bytes, int a_id)
 		{
-			a_bytes.getTransaction().slotFreePointerOnCommit(a_id, a_bytes.getAddress(), a_bytes
-				.getLength());
+			a_bytes.GetTransaction().SlotFreePointerOnCommit(a_id, a_bytes.GetAddress(), a_bytes
+				.GetLength());
 		}
 
-		internal sealed override com.db4o.ClassIndex getIndex()
+		internal sealed override com.db4o.ClassIndex GetIndex()
 		{
 			return null;
 		}
 
-		internal override bool hasIndex()
+		internal override bool HasIndex()
 		{
 			return false;
 		}
 
-		internal override object instantiate(com.db4o.YapObject a_yapObject, object a_object
-			, com.db4o.YapWriter a_bytes, bool a_addToIDTree)
+		internal override object Instantiate(com.db4o.YapObject a_yapObject, object a_object
+			, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 attributes, com.db4o.YapWriter a_bytes, bool a_addToIDTree)
 		{
 			if (a_object == null)
 			{
 				try
 				{
-					a_object = i_handler.read(a_bytes);
+					a_object = i_handler.Read(mf, a_bytes, true);
 				}
 				catch (com.db4o.CorruptionException ce)
 				{
 					return null;
 				}
-				a_yapObject.setObjectWeak(a_bytes.getStream(), a_object);
+				a_yapObject.SetObjectWeak(a_bytes.GetStream(), a_object);
 			}
-			a_yapObject.setStateClean();
+			a_yapObject.SetStateClean();
 			return a_object;
 		}
 
-		internal override object instantiateTransient(com.db4o.YapObject a_yapObject, object
-			 a_object, com.db4o.YapWriter a_bytes)
+		internal override object InstantiateTransient(com.db4o.YapObject a_yapObject, object
+			 a_object, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 attributes, com.db4o.YapWriter a_bytes)
 		{
 			try
 			{
-				return i_handler.read(a_bytes);
+				return i_handler.Read(mf, a_bytes, true);
 			}
 			catch (com.db4o.CorruptionException ce)
 			{
@@ -140,13 +154,14 @@ namespace com.db4o
 			}
 		}
 
-		internal override void instantiateFields(com.db4o.YapObject a_yapObject, object a_onObject
-			, com.db4o.YapWriter a_bytes)
+		internal override void InstantiateFields(com.db4o.YapObject a_yapObject, object a_onObject
+			, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 attributes, com.db4o.YapWriter a_bytes)
 		{
 			object obj = null;
 			try
 			{
-				obj = i_handler.read(a_bytes);
+				obj = i_handler.Read(mf, a_bytes, true);
 			}
 			catch (com.db4o.CorruptionException ce)
 			{
@@ -154,77 +169,110 @@ namespace com.db4o
 			}
 			if (obj != null)
 			{
-				i_handler.copyValue(obj, a_onObject);
+				i_handler.CopyValue(obj, a_onObject);
 			}
 		}
 
-		public override bool isArray()
+		public override bool IsArray()
 		{
 			return i_id == com.db4o.YapHandlers.ANY_ARRAY_ID || i_id == com.db4o.YapHandlers.
 				ANY_ARRAY_N_ID;
 		}
 
-		internal override bool isPrimitive()
+		public override bool IsPrimitive()
 		{
 			return true;
 		}
 
-		internal override bool isStrongTyped()
+		public override int IsSecondClass()
+		{
+			return com.db4o.YapConst.UNKNOWN;
+		}
+
+		internal override bool IsStrongTyped()
 		{
 			return false;
 		}
 
-		internal override void marshall(com.db4o.YapObject a_yapObject, object a_object, 
-			com.db4o.YapWriter a_bytes, bool a_new)
+		public override void CalculateLengths(com.db4o.Transaction trans, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 header, bool topLevel, object obj, bool withIndirection)
 		{
-			i_handler.writeNew(a_object, a_bytes);
+			i_handler.CalculateLengths(trans, header, topLevel, obj, withIndirection);
 		}
 
-		internal override void marshallNew(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
-			 a_bytes, object a_object)
+		public override com.db4o.YapComparable PrepareComparison(object a_constraint)
 		{
-			i_handler.writeNew(a_object, a_bytes);
-		}
-
-		internal override int memberLength()
-		{
-			return i_handler.linkLength() + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst
-				.YAPID_LENGTH;
-		}
-
-		public override com.db4o.YapComparable prepareComparison(object a_constraint)
-		{
-			i_handler.prepareComparison(a_constraint);
+			i_handler.PrepareComparison(a_constraint);
 			return i_handler;
 		}
 
-		public sealed override com.db4o.reflect.ReflectClass primitiveClassReflector()
+		public sealed override com.db4o.reflect.ReflectClass PrimitiveClassReflector()
 		{
-			return i_handler.primitiveClassReflector();
+			return i_handler.PrimitiveClassReflector();
 		}
 
-		public override com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
-			, com.db4o.YapReader[] a_bytes)
+		public override object Read(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
+			 a_bytes, bool redirect)
 		{
-			if (isArray())
+			if (mf._primitive.UseNormalClassRead())
+			{
+				return base.Read(mf, a_bytes, redirect);
+			}
+			return i_handler.Read(mf, a_bytes, false);
+		}
+
+		public override com.db4o.TypeHandler4 ReadArrayHandler(com.db4o.Transaction a_trans
+			, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader[] a_bytes)
+		{
+			if (IsArray())
 			{
 				return i_handler;
 			}
 			return null;
 		}
 
-		internal override void removeFromIndex(com.db4o.Transaction ta, int id)
+		public override object ReadQuery(com.db4o.Transaction trans, com.db4o.inside.marshall.MarshallerFamily
+			 mf, bool withRedirection, com.db4o.YapReader reader, bool toArray)
+		{
+			if (mf._primitive.UseNormalClassRead())
+			{
+				return base.ReadQuery(trans, mf, withRedirection, reader, toArray);
+			}
+			return i_handler.ReadQuery(trans, mf, withRedirection, reader, toArray);
+		}
+
+		public override com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily
+			 mf, com.db4o.YapReader reader, com.db4o.QCandidates candidates, bool withIndirection
+			)
+		{
+			return i_handler.ReadSubCandidate(mf, reader, candidates, withIndirection);
+		}
+
+		internal override void RemoveFromIndex(com.db4o.Transaction ta, int id)
 		{
 		}
 
-		public override bool supportsIndex()
+		public override bool SupportsIndex()
 		{
 			return true;
 		}
 
-		internal sealed override bool writeObjectBegin()
+		public sealed override bool WriteObjectBegin()
 		{
 			return false;
+		}
+
+		public override object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
+			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection)
+		{
+			mf._primitive.WriteNew(a_bytes.GetTransaction(), this, a_object, topLevel, a_bytes
+				, withIndirection);
+			return a_object;
+		}
+
+		public override string ToString()
+		{
+			return "Wraps " + i_handler.ToString() + " in YapClassPrimitive";
 		}
 	}
 }

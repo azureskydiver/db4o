@@ -6,7 +6,7 @@ namespace com.db4o.query
 	/// callbacks.
 	/// <br /><br />
 	/// During
-	/// <see cref="com.db4o.query.Query.execute">query execution</see>
+	/// <see cref="com.db4o.query.Query.Execute">query execution</see>
 	/// all registered
 	/// <see cref="com.db4o.query.Evaluation">com.db4o.query.Evaluation</see>
 	/// callback
@@ -32,7 +32,7 @@ namespace com.db4o.query
 		/// .
 		/// </summary>
 		/// <returns>Object the persistent object.</returns>
-		object getObject();
+		object GetObject();
 
 		/// <summary>
 		/// specify whether the Candidate is to be included in the
@@ -42,7 +42,7 @@ namespace com.db4o.query
 		/// This method may be called multiple times. The last call prevails.
 		/// </summary>
 		/// <param name="flag">inclusion.</param>
-		void include(bool flag);
+		void Include(bool flag);
 
 		/// <summary>
 		/// returns the
@@ -53,6 +53,6 @@ namespace com.db4o.query
 		/// the
 		/// <see cref="com.db4o.ObjectContainer">com.db4o.ObjectContainer</see>
 		/// </returns>
-		com.db4o.ObjectContainer objectContainer();
+		com.db4o.ObjectContainer ObjectContainer();
 	}
 }

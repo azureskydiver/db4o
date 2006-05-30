@@ -14,9 +14,9 @@ namespace com.db4o.inside.query
 			_predicate = predicate;
 		}
 
-		public virtual void evaluate(com.db4o.query.Candidate candidate)
+		public virtual void Evaluate(com.db4o.query.Candidate candidate)
 		{
-			candidate.include(_predicate.appliesTo(candidate.getObject()));
+			candidate.Include(_predicate.AppliesTo(candidate.GetObject()));
 		}
 	}
 }

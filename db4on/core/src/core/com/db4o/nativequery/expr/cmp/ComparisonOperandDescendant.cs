@@ -10,14 +10,14 @@ namespace com.db4o.nativequery.expr.cmp
 			this._parent = _parent;
 		}
 
-		public com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor parent()
+		public com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor Parent()
 		{
 			return _parent;
 		}
 
-		public com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor root()
+		public com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor Root()
 		{
-			return _parent.root();
+			return _parent.Root();
 		}
 
 		public override bool Equals(object obj)
@@ -26,7 +26,7 @@ namespace com.db4o.nativequery.expr.cmp
 			{
 				return true;
 			}
-			if (obj == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (obj == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(obj))
 			{
 				return false;
@@ -46,7 +46,7 @@ namespace com.db4o.nativequery.expr.cmp
 			return _parent.ToString();
 		}
 
-		public abstract void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
+		public abstract void Accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 arg1);
 	}
 }

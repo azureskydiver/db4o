@@ -26,25 +26,25 @@ namespace com.db4o.inside.ix
 		internal IxFileRangeReader(com.db4o.inside.ix.Indexable4 handler)
 		{
 			_handler = handler;
-			_linkLegth = handler.linkLength();
+			_linkLegth = handler.LinkLength();
 			_slotLength = _linkLegth + com.db4o.YapConst.YAPINT_LENGTH;
 			_reader = new com.db4o.YapReader(_slotLength);
 		}
 
-		internal virtual com.db4o.Tree add(com.db4o.inside.ix.IxFileRange fileRange, com.db4o.Tree
+		internal virtual com.db4o.Tree Add(com.db4o.inside.ix.IxFileRange fileRange, com.db4o.Tree
 			 newTree)
 		{
-			setFileRange(fileRange);
-			com.db4o.YapFile yf = fileRange.stream();
-			com.db4o.Transaction trans = fileRange.trans();
+			SetFileRange(fileRange);
+			com.db4o.YapFile yf = fileRange.Stream();
+			com.db4o.Transaction trans = fileRange.Trans();
 			while (true)
 			{
-				_reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+				_reader.Read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
 				_reader._offset = 0;
-				int cmp = compare(trans);
+				int cmp = Compare(trans);
 				if (cmp == 0)
 				{
-					int parentID = _reader.readInt();
+					int parentID = _reader.ReadInt();
 					cmp = parentID - ((com.db4o.inside.ix.IxPatch)newTree)._parentID;
 				}
 				if (cmp > 0)
@@ -69,17 +69,16 @@ namespace com.db4o.inside.ix
 					{
 						if (newTree is com.db4o.inside.ix.IxRemove)
 						{
-							com.db4o.inside.ix.IxRemove ir = (com.db4o.inside.ix.IxRemove)newTree;
 							if (_cursor == 0)
 							{
 								newTree._preceding = fileRange._preceding;
 								if (fileRange._entries == 1)
 								{
 									newTree._subsequent = fileRange._subsequent;
-									return newTree.balanceCheckNulls();
+									return newTree.BalanceCheckNulls();
 								}
 								fileRange._entries--;
-								fileRange.incrementAddress(_slotLength);
+								fileRange.IncrementAddress(_slotLength);
 								fileRange._preceding = null;
 								newTree._subsequent = fileRange;
 							}
@@ -94,47 +93,47 @@ namespace com.db4o.inside.ix
 								}
 								else
 								{
-									return insert(fileRange, newTree, _cursor, 0);
+									return Insert(fileRange, newTree, _cursor, 0);
 								}
 							}
-							fileRange.calculateSize();
-							return newTree.balanceCheckNulls();
+							fileRange.CalculateSize();
+							return newTree.BalanceCheckNulls();
 						}
 						else
 						{
 							if (_cursor == 0)
 							{
 								newTree._subsequent = fileRange;
-								return newTree.rotateLeft();
+								return newTree.RotateLeft();
 							}
 							else
 							{
 								if (_cursor == fileRange._entries)
 								{
 									newTree._preceding = fileRange;
-									return newTree.rotateRight();
+									return newTree.RotateRight();
 								}
 							}
-							return insert(fileRange, newTree, _cursor, cmp);
+							return Insert(fileRange, newTree, _cursor, cmp);
 						}
 					}
 				}
-				if (!adjustCursor())
+				if (!AdjustCursor())
 				{
 					if (_cursor == 0 && cmp > 0)
 					{
-						return fileRange.add(newTree, 1);
+						return fileRange.Add(newTree, 1);
 					}
 					if (_cursor == fileRange._entries - 1 && cmp < 0)
 					{
-						return fileRange.add(newTree, -1);
+						return fileRange.Add(newTree, -1);
 					}
-					return insert(fileRange, newTree, _cursor, cmp);
+					return Insert(fileRange, newTree, _cursor, cmp);
 				}
 			}
 		}
 
-		private bool adjustCursor()
+		private bool AdjustCursor()
 		{
 			if (_upper < _lower)
 			{
@@ -150,18 +149,18 @@ namespace com.db4o.inside.ix
 			return _cursor != oldCursor;
 		}
 
-		internal virtual int compare(com.db4o.inside.ix.IxFileRange fileRange, int[] matches
+		internal virtual int Compare(com.db4o.inside.ix.IxFileRange fileRange, int[] matches
 			)
 		{
-			setFileRange(fileRange);
-			com.db4o.YapFile yf = fileRange.stream();
-			com.db4o.Transaction trans = fileRange.trans();
+			SetFileRange(fileRange);
+			com.db4o.YapFile yf = fileRange.Stream();
+			com.db4o.Transaction trans = fileRange.Trans();
 			int res = 0;
 			while (true)
 			{
-				_reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+				_reader.Read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
 				_reader._offset = 0;
-				int cmp = compare(trans);
+				int cmp = Compare(trans);
 				if (cmp > 0)
 				{
 					_upper = _cursor - 1;
@@ -177,7 +176,7 @@ namespace com.db4o.inside.ix
 						break;
 					}
 				}
-				if (!adjustCursor())
+				if (!AdjustCursor())
 				{
 					if (_cursor <= 0)
 					{
@@ -207,12 +206,12 @@ namespace com.db4o.inside.ix
 			}
 			int tempCursor = _cursor;
 			_upper = _cursor;
-			adjustCursor();
+			AdjustCursor();
 			while (true)
 			{
-				_reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+				_reader.Read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
 				_reader._offset = 0;
-				int cmp = compare(trans);
+				int cmp = Compare(trans);
 				if (cmp == 0)
 				{
 					_upper = _cursor;
@@ -226,7 +225,7 @@ namespace com.db4o.inside.ix
 						break;
 					}
 				}
-				if (!adjustCursor())
+				if (!AdjustCursor())
 				{
 					matches[0] = _upper;
 					break;
@@ -238,12 +237,12 @@ namespace com.db4o.inside.ix
 			{
 				_lower = _upper;
 			}
-			adjustCursor();
+			AdjustCursor();
 			while (true)
 			{
-				_reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+				_reader.Read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
 				_reader._offset = 0;
-				int cmp = compare(trans);
+				int cmp = Compare(trans);
 				if (cmp == 0)
 				{
 					_lower = _cursor;
@@ -257,7 +256,7 @@ namespace com.db4o.inside.ix
 						break;
 					}
 				}
-				if (!adjustCursor())
+				if (!AdjustCursor())
 				{
 					matches[1] = _lower;
 					break;
@@ -266,13 +265,13 @@ namespace com.db4o.inside.ix
 			return res;
 		}
 
-		private int compare(com.db4o.Transaction trans)
+		private int Compare(com.db4o.Transaction trans)
 		{
-			return _handler.compareTo(_handler.comparableObject(trans, _handler.readIndexEntry
+			return _handler.CompareTo(_handler.ComparableObject(trans, _handler.ReadIndexEntry
 				(_reader)));
 		}
 
-		private com.db4o.Tree insert(com.db4o.inside.ix.IxFileRange fileRange, com.db4o.Tree
+		private com.db4o.Tree Insert(com.db4o.inside.ix.IxFileRange fileRange, com.db4o.Tree
 			 a_new, int a_cursor, int a_cmp)
 		{
 			int incStartNewAt = a_cmp <= 0 ? 1 : 0;
@@ -284,18 +283,18 @@ namespace com.db4o.inside.ix
 				);
 			ifr._subsequent = fileRange._subsequent;
 			fileRange._subsequent = null;
-			a_new._preceding = fileRange.balanceCheckNulls();
-			a_new._subsequent = ifr.balanceCheckNulls();
-			return a_new.balance();
+			a_new._preceding = fileRange.BalanceCheckNulls();
+			a_new._subsequent = ifr.BalanceCheckNulls();
+			return a_new.Balance();
 		}
 
-		private void setFileRange(com.db4o.inside.ix.IxFileRange a_fr)
+		private void SetFileRange(com.db4o.inside.ix.IxFileRange a_fr)
 		{
 			_lower = 0;
 			_upper = a_fr._entries - 1;
 			_baseAddress = a_fr._address;
 			_baseAddressOffset = a_fr._addressOffset;
-			adjustCursor();
+			AdjustCursor();
 		}
 	}
 }

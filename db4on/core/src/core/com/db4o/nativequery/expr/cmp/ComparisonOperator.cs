@@ -48,7 +48,7 @@ namespace com.db4o.nativequery.expr.cmp
 			_symmetric = symmetric;
 		}
 
-		public int id()
+		public int Id()
 		{
 			return _id;
 		}
@@ -58,7 +58,7 @@ namespace com.db4o.nativequery.expr.cmp
 			return _op;
 		}
 
-		public bool isSymmetric()
+		public bool IsSymmetric()
 		{
 			return _symmetric;
 		}

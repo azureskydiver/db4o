@@ -10,76 +10,67 @@ namespace com.db4o
 		{
 		}
 
-		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		public override object Coerce(com.db4o.reflect.ReflectClass claxx, object obj)
 		{
-			return com.db4o.foundation.Coercion4.toSByte(obj);
+			return com.db4o.foundation.Coercion4.ToSByte(obj);
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 6;
 		}
 
-		public override object defaultValue()
+		public override object DefaultValue()
 		{
 			return i_primitive;
 		}
 
-		internal bool isNoConstraint(object obj, bool isPrimitive)
+		internal bool IsNoConstraint(object obj, bool isPrimitive)
 		{
-			return obj.Equals(primitiveNull());
+			return obj.Equals(PrimitiveNull());
 		}
 
-		public override int linkLength()
+		public override int LinkLength()
 		{
 			return LENGTH;
 		}
 
-		protected override j4o.lang.Class primitiveJavaClass()
+		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.getClassForType(typeof(byte));
+			return j4o.lang.Class.GetClassForType(typeof(byte));
 		}
 
-		internal override object primitiveNull()
+		internal override object PrimitiveNull()
 		{
 			return i_primitive;
 		}
 
-		internal override object read1(com.db4o.YapReader a_bytes)
+		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			byte ret = a_bytes.readByte();
+			byte ret = a_bytes.ReadByte();
 			return ret;
 		}
 
-		public override void write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
-			byte set;
-			if (a_object == null)
-			{
-				set = (byte)0;
-			}
-			else
-			{
-				set = ((byte)a_object);
-			}
-			a_bytes.append(set);
+			a_bytes.Append(((byte)a_object));
 		}
 
-		public override bool readArray(object array, com.db4o.YapWriter reader)
+		public override bool ReadArray(object array, com.db4o.YapWriter reader)
 		{
 			if (array is byte[])
 			{
-				reader.readBytes((byte[])array);
+				reader.ReadBytes((byte[])array);
 				return true;
 			}
 			return false;
 		}
 
-		public override bool writeArray(object array, com.db4o.YapWriter writer)
+		public override bool WriteArray(object array, com.db4o.YapWriter writer)
 		{
 			if (array is byte[])
 			{
-				writer.append((byte[])array);
+				writer.Append((byte[])array);
 				return true;
 			}
 			return false;
@@ -87,34 +78,34 @@ namespace com.db4o
 
 		private byte i_compareTo;
 
-		private byte val(object obj)
+		private byte Val(object obj)
 		{
 			return ((byte)obj);
 		}
 
-		internal override void prepareComparison1(object obj)
+		internal override void PrepareComparison1(object obj)
 		{
-			i_compareTo = val(obj);
+			i_compareTo = Val(obj);
 		}
 
-		public override object current1()
+		public override object Current1()
 		{
 			return i_compareTo;
 		}
 
-		internal override bool isEqual1(object obj)
+		internal override bool IsEqual1(object obj)
 		{
-			return obj is byte && val(obj) == i_compareTo;
+			return obj is byte && Val(obj) == i_compareTo;
 		}
 
-		internal override bool isGreater1(object obj)
+		internal override bool IsGreater1(object obj)
 		{
-			return obj is byte && val(obj) > i_compareTo;
+			return obj is byte && Val(obj) > i_compareTo;
 		}
 
-		internal override bool isSmaller1(object obj)
+		internal override bool IsSmaller1(object obj)
 		{
-			return obj is byte && val(obj) < i_compareTo;
+			return obj is byte && Val(obj) < i_compareTo;
 		}
 	}
 }

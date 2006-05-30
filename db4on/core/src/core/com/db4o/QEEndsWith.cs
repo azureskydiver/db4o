@@ -7,10 +7,9 @@ namespace com.db4o
 		{
 		}
 
-		protected override bool compareStrings(string candidate, string constraint)
+		protected override bool CompareStrings(string candidate, string constraint)
 		{
-			return candidate.LastIndexOf(constraint) == j4o.lang.JavaSystem.getLengthOf(candidate
-				) - j4o.lang.JavaSystem.getLengthOf(constraint);
+			return candidate.LastIndexOf(constraint) == candidate.Length - constraint.Length;
 		}
 	}
 }

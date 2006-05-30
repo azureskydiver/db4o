@@ -9,38 +9,38 @@ namespace com.db4o
 	{
 		internal static readonly com.db4o.QE DEFAULT = new com.db4o.QE();
 
-		internal virtual com.db4o.QE add(com.db4o.QE evaluator)
+		internal virtual com.db4o.QE Add(com.db4o.QE evaluator)
 		{
 			return evaluator;
 		}
 
-		internal virtual bool identity()
+		internal virtual bool Identity()
 		{
 			return false;
 		}
 
-		internal virtual bool isDefault()
+		internal virtual bool IsDefault()
 		{
 			return true;
 		}
 
-		internal virtual bool evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
+		internal virtual bool Evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
 			 a_candidate, object a_value)
 		{
 			if (a_value == null)
 			{
-				return a_constraint.getComparator(a_candidate) is com.db4o.Null;
+				return a_constraint.GetComparator(a_candidate) is com.db4o.Null;
 			}
-			return a_constraint.getComparator(a_candidate).isEqual(a_value);
+			return a_constraint.GetComparator(a_candidate).IsEqual(a_value);
 		}
 
 		public override bool Equals(object obj)
 		{
-			return j4o.lang.Class.getClassForObject(obj) == j4o.lang.Class.getClassForObject(
+			return j4o.lang.Class.GetClassForObject(obj) == j4o.lang.Class.GetClassForObject(
 				this);
 		}
 
-		internal virtual bool not(bool res)
+		internal virtual bool Not(bool res)
 		{
 			return res;
 		}
@@ -55,12 +55,12 @@ namespace com.db4o
 		/// [3] - nulls
 		/// </remarks>
 		/// <param name="bits"></param>
-		public virtual void indexBitMap(bool[] bits)
+		public virtual void IndexBitMap(bool[] bits)
 		{
 			bits[com.db4o.inside.ix.IxTraverser.EQUAL] = true;
 		}
 
-		public virtual bool supportsIndex()
+		public virtual bool SupportsIndex()
 		{
 			return true;
 		}

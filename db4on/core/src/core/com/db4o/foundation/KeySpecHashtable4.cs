@@ -11,55 +11,63 @@ namespace com.db4o.foundation
 		{
 		}
 
-		public virtual void put(com.db4o.foundation.KeySpec spec, byte value)
+		public virtual void Put(com.db4o.foundation.KeySpec spec, byte value)
 		{
-			base.put(spec, value);
+			base.Put(spec, value);
 		}
 
-		public virtual void put(com.db4o.foundation.KeySpec spec, bool value)
+		public virtual void Put(com.db4o.foundation.KeySpec spec, bool value)
 		{
-			base.put(spec, value);
+			base.Put(spec, value);
 		}
 
-		public virtual void put(com.db4o.foundation.KeySpec spec, int value)
+		public virtual void Put(com.db4o.foundation.KeySpec spec, int value)
 		{
-			base.put(spec, value);
+			base.Put(spec, value);
 		}
 
-		public virtual void put(com.db4o.foundation.KeySpec spec, object value)
+		public virtual void Put(com.db4o.foundation.KeySpec spec, object value)
 		{
-			base.put(spec, value);
+			base.Put(spec, value);
 		}
 
-		public virtual byte getAsByte(com.db4o.foundation.KeySpec spec)
+		public virtual byte GetAsByte(com.db4o.foundation.KeySpec spec)
 		{
-			return ((byte)get(spec));
+			return ((byte)Get(spec));
 		}
 
-		public virtual bool getAsBoolean(com.db4o.foundation.KeySpec spec)
+		public virtual bool GetAsBoolean(com.db4o.foundation.KeySpec spec)
 		{
-			return ((bool)get(spec));
+			return ((bool)Get(spec));
 		}
 
-		public virtual int getAsInt(com.db4o.foundation.KeySpec spec)
+		public virtual int GetAsInt(com.db4o.foundation.KeySpec spec)
 		{
-			return ((int)get(spec));
+			return ((int)Get(spec));
 		}
 
-		public virtual string getAsString(com.db4o.foundation.KeySpec spec)
+		public virtual string GetAsString(com.db4o.foundation.KeySpec spec)
 		{
-			return (string)get(spec);
+			return (string)Get(spec);
 		}
 
-		public virtual object get(com.db4o.foundation.KeySpec spec)
+		public virtual object Get(com.db4o.foundation.KeySpec spec)
 		{
-			object value = base.get(spec);
-			return (value == null ? spec.defaultValue() : value);
+			object value = base.Get(spec);
+			if (value == null)
+			{
+				value = spec.DefaultValue();
+				if (value != null)
+				{
+					base.Put(spec, value);
+				}
+			}
+			return value;
 		}
 
-		public override object deepClone(object obj)
+		public override object DeepClone(object obj)
 		{
-			return deepCloneInternal(new com.db4o.foundation.KeySpecHashtable4(), obj);
+			return DeepCloneInternal(new com.db4o.foundation.KeySpecHashtable4(), obj);
 		}
 	}
 }

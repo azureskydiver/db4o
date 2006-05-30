@@ -29,6 +29,8 @@ namespace com.db4o
 
 		internal com.db4o.YapField _yapField;
 
+		internal com.db4o.inside.marshall.MarshallerFamily _marshallerFamily;
+
 		private QCandidate(com.db4o.QCandidates qcandidates) : base(0)
 		{
 			_candidates = qcandidates;
@@ -38,19 +40,23 @@ namespace com.db4o
 		{
 		}
 
-		internal QCandidate(com.db4o.QCandidates candidates, object obj, int id, bool include
+		public QCandidate(com.db4o.QCandidates candidates, object obj, int id, bool include
 			) : base(id)
 		{
 			_candidates = candidates;
 			_order = this;
 			_member = obj;
 			_include = include;
+			if (id == 0)
+			{
+				_key = candidates.GenerateCandidateId();
+			}
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.QCandidate qcan = new com.db4o.QCandidate(_candidates);
-			qcan._bytes = _bytes;
+			qcan.SetBytes(_bytes);
 			qcan._dependants = _dependants;
 			qcan._include = _include;
 			qcan._member = _member;
@@ -59,37 +65,37 @@ namespace com.db4o
 			qcan._root = _root;
 			qcan._yapClass = _yapClass;
 			qcan._yapField = _yapField;
-			return base.shallowCloneInternal(qcan);
+			return base.ShallowCloneInternal(qcan);
 		}
 
-		internal virtual void addDependant(com.db4o.QCandidate a_candidate)
+		internal virtual void AddDependant(com.db4o.QCandidate a_candidate)
 		{
 			_dependants = new com.db4o.foundation.List4(_dependants, a_candidate);
 		}
 
-		private void checkInstanceOfCompare()
+		private void CheckInstanceOfCompare()
 		{
 			if (_member is com.db4o.config.Compare)
 			{
-				_member = ((com.db4o.config.Compare)_member).compare();
-				com.db4o.YapFile stream = getStream();
-				_yapClass = stream.getYapClass(stream.reflector().forObject(_member), false);
-				_key = (int)stream.getID(_member);
-				_bytes = stream.readReaderByID(getTransaction(), _key);
+				_member = ((com.db4o.config.Compare)_member).Compare();
+				com.db4o.YapFile stream = GetStream();
+				_yapClass = stream.GetYapClass(stream.Reflector().ForObject(_member), false);
+				_key = (int)stream.GetID(_member);
+				SetBytes(stream.ReadReaderByID(GetTransaction(), _key));
 			}
 		}
 
-		public override int compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.Tree a_to)
 		{
-			return _order.compareTo(((com.db4o.QCandidate)a_to)._order);
+			return _order.CompareTo(((com.db4o.QCandidate)a_to)._order);
 		}
 
-		public virtual int compareTo(object a_object)
+		public virtual int CompareTo(object a_object)
 		{
 			return _key - ((com.db4o.TreeInt)a_object)._key;
 		}
 
-		internal virtual bool createChild(com.db4o.QCandidates a_candidates)
+		internal virtual bool CreateChild(com.db4o.QCandidates a_candidates)
 		{
 			if (!_include)
 			{
@@ -98,99 +104,108 @@ namespace com.db4o
 			com.db4o.QCandidate candidate = null;
 			if (_yapField != null)
 			{
-				com.db4o.TypeHandler4 handler = _yapField.getHandler();
+				com.db4o.TypeHandler4 handler = _yapField.GetHandler();
 				if (handler != null)
 				{
 					com.db4o.YapReader[] arrayBytes = { _bytes };
-					com.db4o.TypeHandler4 arrayWrapper = handler.readArrayWrapper(getTransaction(), arrayBytes
-						);
-					if (arrayWrapper != null)
+					com.db4o.TypeHandler4 arrayHandler = handler.ReadArrayHandler(GetTransaction(), _marshallerFamily
+						, arrayBytes);
+					if (arrayHandler != null)
 					{
 						int offset = arrayBytes[0]._offset;
 						bool outerRes = true;
-						com.db4o.foundation.Iterator4 i = a_candidates.iterateConstraints();
-						while (i.hasNext())
+						com.db4o.foundation.Iterator4 i = a_candidates.IterateConstraints();
+						while (i.HasNext())
 						{
-							com.db4o.QCon qcon = (com.db4o.QCon)i.next();
-							com.db4o.QField qf = qcon.getField();
-							if (qf == null || qf.i_name.Equals(_yapField.getName()))
+							com.db4o.QCon qcon = (com.db4o.QCon)i.Next();
+							com.db4o.QField qf = qcon.GetField();
+							if (qf == null || qf.i_name.Equals(_yapField.GetName()))
 							{
 								com.db4o.QCon tempParent = qcon.i_parent;
-								qcon.setParent(null);
+								qcon.SetParent(null);
 								com.db4o.QCandidates candidates = new com.db4o.QCandidates(a_candidates.i_trans, 
 									null, qf);
-								candidates.addConstraint(qcon);
-								qcon.setCandidates(candidates);
-								arrayWrapper.readCandidates(arrayBytes[0], candidates);
+								candidates.AddConstraint(qcon);
+								qcon.SetCandidates(candidates);
+								arrayHandler.ReadCandidates(_marshallerFamily, arrayBytes[0], candidates);
 								arrayBytes[0]._offset = offset;
-								bool isNot = qcon.isNot();
+								bool isNot = qcon.IsNot();
 								if (isNot)
 								{
-									qcon.removeNot();
+									qcon.RemoveNot();
 								}
-								candidates.evaluate();
+								candidates.Evaluate();
 								com.db4o.Tree[] pending = new com.db4o.Tree[1];
 								bool[] innerRes = { isNot };
-								candidates.traverse(new _AnonymousInnerClass166(this, innerRes, isNot, pending));
+								candidates.Traverse(new _AnonymousInnerClass173(this, innerRes, isNot, pending));
 								if (isNot)
 								{
-									qcon.not();
+									qcon.Not();
 								}
 								if (pending[0] != null)
 								{
-									pending[0].traverse(new _AnonymousInnerClass235(this));
+									pending[0].Traverse(new _AnonymousInnerClass242(this));
 								}
 								if (!innerRes[0])
 								{
-									qcon.visit(getRoot(), qcon.i_evaluator.not(false));
+									qcon.Visit(GetRoot(), qcon.i_evaluator.Not(false));
 									outerRes = false;
 								}
-								qcon.setParent(tempParent);
+								qcon.SetParent(tempParent);
 							}
 						}
 						return outerRes;
 					}
-					if (handler.getType() == com.db4o.YapConst.TYPE_SIMPLE)
+					if (handler.GetTypeID() == com.db4o.YapConst.TYPE_SIMPLE)
 					{
-						a_candidates.i_currentConstraint.visit(this);
+						a_candidates.i_currentConstraint.Visit(this);
 						return true;
 					}
 				}
 			}
+			if (_yapField == null || _yapField is com.db4o.YapFieldNull)
+			{
+				return false;
+			}
 			if (candidate == null)
 			{
-				candidate = readSubCandidate(a_candidates);
+				_yapClass.FindOffset(_bytes, _yapField);
+				candidate = ReadSubCandidate(a_candidates);
 				if (candidate == null)
 				{
 					return false;
 				}
 			}
-			if (a_candidates.i_yapClass != null && a_candidates.i_yapClass.isStrongTyped())
+			if (a_candidates.i_yapClass != null && a_candidates.i_yapClass.IsStrongTyped())
 			{
 				if (_yapField != null)
 				{
-					com.db4o.TypeHandler4 handler = _yapField.getHandler();
-					if (handler != null && (handler.getType() == com.db4o.YapConst.TYPE_CLASS))
+					com.db4o.TypeHandler4 handler = _yapField.GetHandler();
+					if (handler != null && (handler.GetTypeID() == com.db4o.YapConst.TYPE_CLASS))
 					{
 						com.db4o.YapClass yc = (com.db4o.YapClass)handler;
 						if (yc is com.db4o.YapClassAny)
 						{
-							yc = candidate.readYapClass();
+							yc = candidate.ReadYapClass();
 						}
-						if (!yc.canHold(a_candidates.i_yapClass.classReflector()))
+						if (yc == null)
+						{
+							return false;
+						}
+						if (!yc.CanHold(a_candidates.i_yapClass.ClassReflector()))
 						{
 							return false;
 						}
 					}
 				}
 			}
-			addDependant(a_candidates.addByIdentity(candidate));
+			AddDependant(a_candidates.AddByIdentity(candidate));
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass166 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass173 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass166(QCandidate _enclosing, bool[] innerRes, bool isNot
+			public _AnonymousInnerClass173(QCandidate _enclosing, bool[] innerRes, bool isNot
 				, com.db4o.Tree[] pending)
 			{
 				this._enclosing = _enclosing;
@@ -199,33 +214,33 @@ namespace com.db4o
 				this.pending = pending;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
 				com.db4o.QCandidate cand = (com.db4o.QCandidate)obj;
-				if (cand.include())
+				if (cand.Include())
 				{
 					innerRes[0] = !isNot;
 				}
 				if (cand._pendingJoins != null)
 				{
-					cand._pendingJoins.traverse(new _AnonymousInnerClass179(this, pending));
+					cand._pendingJoins.Traverse(new _AnonymousInnerClass186(this, pending));
 				}
 			}
 
-			private sealed class _AnonymousInnerClass179 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass186 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass179(_AnonymousInnerClass166 _enclosing, com.db4o.Tree[]
+				public _AnonymousInnerClass186(_AnonymousInnerClass173 _enclosing, com.db4o.Tree[]
 					 pending)
 				{
 					this._enclosing = _enclosing;
 					this.pending = pending;
 				}
 
-				public void visit(object a_object)
+				public void Visit(object a_object)
 				{
 					com.db4o.QPending newPending = (com.db4o.QPending)a_object;
-					newPending.changeConstraint();
-					com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.Tree.find(pending[0], 
+					newPending.ChangeConstraint();
+					com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.Tree.Find(pending[0], 
 						newPending);
 					if (oldPending != null)
 					{
@@ -236,11 +251,11 @@ namespace com.db4o
 					}
 					else
 					{
-						pending[0] = com.db4o.Tree.add(pending[0], newPending);
+						pending[0] = com.db4o.Tree.Add(pending[0], newPending);
 					}
 				}
 
-				private readonly _AnonymousInnerClass166 _enclosing;
+				private readonly _AnonymousInnerClass173 _enclosing;
 
 				private readonly com.db4o.Tree[] pending;
 			}
@@ -254,22 +269,22 @@ namespace com.db4o
 			private readonly com.db4o.Tree[] pending;
 		}
 
-		private sealed class _AnonymousInnerClass235 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass242 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass235(QCandidate _enclosing)
+			public _AnonymousInnerClass242(QCandidate _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				this._enclosing.getRoot().evaluate((com.db4o.QPending)a_object);
+				this._enclosing.GetRoot().Evaluate((com.db4o.QPending)a_object);
 			}
 
 			private readonly QCandidate _enclosing;
 		}
 
-		internal virtual void doNotInclude()
+		internal virtual void DoNotInclude()
 		{
 			_include = false;
 			if (_dependants != null)
@@ -277,105 +292,105 @@ namespace com.db4o
 				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(_dependants
 					);
 				_dependants = null;
-				while (i.hasNext())
+				while (i.HasNext())
 				{
-					((com.db4o.QCandidate)i.next()).doNotInclude();
+					((com.db4o.QCandidate)i.Next()).DoNotInclude();
 				}
 			}
 		}
 
-		public override bool duplicates()
+		public override bool Duplicates()
 		{
-			return _order.hasDuplicates();
+			return _order.HasDuplicates();
 		}
 
-		internal virtual bool evaluate(com.db4o.QConObject a_constraint, com.db4o.QE a_evaluator
+		internal virtual bool Evaluate(com.db4o.QConObject a_constraint, com.db4o.QE a_evaluator
 			)
 		{
-			if (a_evaluator.identity())
+			if (a_evaluator.Identity())
 			{
-				return a_evaluator.evaluate(a_constraint, this, null);
+				return a_evaluator.Evaluate(a_constraint, this, null);
 			}
 			if (_member == null)
 			{
-				_member = value();
+				_member = Value();
 			}
-			return a_evaluator.evaluate(a_constraint, this, a_constraint.translate(_member));
+			return a_evaluator.Evaluate(a_constraint, this, a_constraint.Translate(_member));
 		}
 
-		internal virtual bool evaluate(com.db4o.QPending a_pending)
+		internal virtual bool Evaluate(com.db4o.QPending a_pending)
 		{
-			com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.Tree.find(_pendingJoins
+			com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.Tree.Find(_pendingJoins
 				, a_pending);
 			if (oldPending == null)
 			{
-				a_pending.changeConstraint();
-				_pendingJoins = com.db4o.Tree.add(_pendingJoins, a_pending);
+				a_pending.ChangeConstraint();
+				_pendingJoins = com.db4o.Tree.Add(_pendingJoins, a_pending);
 				return true;
 			}
 			else
 			{
-				_pendingJoins = _pendingJoins.removeNode(oldPending);
-				oldPending._join.evaluatePending(this, oldPending, a_pending, a_pending._result);
+				_pendingJoins = _pendingJoins.RemoveNode(oldPending);
+				oldPending._join.EvaluatePending(this, oldPending, a_pending, a_pending._result);
 				return false;
 			}
 		}
 
-		internal virtual com.db4o.reflect.ReflectClass classReflector()
+		internal virtual com.db4o.reflect.ReflectClass ClassReflector()
 		{
-			readYapClass();
+			ReadYapClass();
 			if (_yapClass == null)
 			{
 				return null;
 			}
-			return _yapClass.classReflector();
+			return _yapClass.ClassReflector();
 		}
 
-		public virtual com.db4o.ObjectContainer objectContainer()
+		public virtual com.db4o.ObjectContainer ObjectContainer()
 		{
-			return getStream();
+			return GetStream();
 		}
 
-		public virtual object getObject()
+		public virtual object GetObject()
 		{
-			object obj = value(true);
+			object obj = Value(true);
 			if (obj is com.db4o.YapReader)
 			{
 				com.db4o.YapReader reader = (com.db4o.YapReader)obj;
 				int offset = reader._offset;
-				obj = reader.toString(getTransaction());
+				obj = _marshallerFamily._string.ReadFromOwnSlot(GetStream(), reader);
 				reader._offset = offset;
 			}
 			return obj;
 		}
 
-		internal virtual com.db4o.QCandidate getRoot()
+		internal virtual com.db4o.QCandidate GetRoot()
 		{
 			return _root == null ? this : _root;
 		}
 
-		private com.db4o.YapFile getStream()
+		private com.db4o.YapFile GetStream()
 		{
-			return getTransaction().i_file;
+			return GetTransaction().i_file;
 		}
 
-		private com.db4o.Transaction getTransaction()
+		private com.db4o.Transaction GetTransaction()
 		{
 			return _candidates.i_trans;
 		}
 
-		public virtual bool hasDuplicates()
+		public virtual bool HasDuplicates()
 		{
 			return _root != null;
 		}
 
-		public virtual void hintOrder(int a_order, bool a_major)
+		public virtual void HintOrder(int a_order, bool a_major)
 		{
 			_order = new com.db4o.Order();
-			_order.hintOrder(a_order, a_major);
+			_order.HintOrder(a_order, a_major);
 		}
 
-		public virtual bool include()
+		public virtual bool Include()
 		{
 			return _include;
 		}
@@ -385,50 +400,50 @@ namespace com.db4o
 		/// For external interface use only. Call doNotInclude() internally so
 		/// dependancies can be checked.
 		/// </remarks>
-		public virtual void include(bool flag)
+		public virtual void Include(bool flag)
 		{
 			_include = flag;
 		}
 
-		internal override void isDuplicateOf(com.db4o.Tree a_tree)
+		internal override void IsDuplicateOf(com.db4o.Tree a_tree)
 		{
 			_size = 0;
 			_root = (com.db4o.QCandidate)a_tree;
 		}
 
-		private com.db4o.reflect.ReflectClass memberClass()
+		private com.db4o.reflect.ReflectClass MemberClass()
 		{
-			return getTransaction().reflector().forObject(_member);
+			return GetTransaction().Reflector().ForObject(_member);
 		}
 
-		internal virtual com.db4o.YapComparable prepareComparison(com.db4o.YapStream a_stream
+		internal virtual com.db4o.YapComparable PrepareComparison(com.db4o.YapStream a_stream
 			, object a_constraint)
 		{
 			if (_yapField != null)
 			{
-				return _yapField.prepareComparison(a_constraint);
+				return _yapField.PrepareComparison(a_constraint);
 			}
 			if (_yapClass == null)
 			{
 				com.db4o.YapClass yc = null;
 				if (_bytes != null)
 				{
-					yc = a_stream.getYapClass(a_stream.reflector().forObject(a_constraint), true);
+					yc = a_stream.GetYapClass(a_stream.Reflector().ForObject(a_constraint), true);
 				}
 				else
 				{
 					if (_member != null)
 					{
-						yc = a_stream.getYapClass(a_stream.reflector().forObject(_member), false);
+						yc = a_stream.GetYapClass(a_stream.Reflector().ForObject(_member), false);
 					}
 				}
 				if (yc != null)
 				{
-					if (_member != null && j4o.lang.Class.getClassForObject(_member).isArray())
+					if (_member != null && j4o.lang.Class.GetClassForObject(_member).IsArray())
 					{
-						com.db4o.TypeHandler4 ydt = (com.db4o.TypeHandler4)yc.prepareComparison(a_constraint
+						com.db4o.TypeHandler4 ydt = (com.db4o.TypeHandler4)yc.PrepareComparison(a_constraint
 							);
-						if (a_stream.reflector().array().isNDimensional(memberClass()))
+						if (a_stream.Reflector().Array().IsNDimensional(MemberClass()))
 						{
 							com.db4o.YapArrayN yan = new com.db4o.YapArrayN(a_stream, ydt, false);
 							return yan;
@@ -441,18 +456,18 @@ namespace com.db4o
 					}
 					else
 					{
-						return yc.prepareComparison(a_constraint);
+						return yc.PrepareComparison(a_constraint);
 					}
 				}
 				return null;
 			}
 			else
 			{
-				return _yapClass.prepareComparison(a_constraint);
+				return _yapClass.PrepareComparison(a_constraint);
 			}
 		}
 
-		private void read()
+		private void Read()
 		{
 			if (_include)
 			{
@@ -460,7 +475,7 @@ namespace com.db4o
 				{
 					if (_key > 0)
 					{
-						_bytes = getStream().readReaderByID(getTransaction(), _key);
+						SetBytes(GetStream().ReadReaderByID(GetTransaction(), _key));
 						if (_bytes == null)
 						{
 							_include = false;
@@ -474,65 +489,66 @@ namespace com.db4o
 			}
 		}
 
-		private com.db4o.QCandidate readSubCandidate(com.db4o.QCandidates candidateCollection
+		private com.db4o.QCandidate ReadSubCandidate(com.db4o.QCandidates candidateCollection
 			)
 		{
-			int id = 0;
-			read();
+			Read();
 			if (_bytes != null)
 			{
+				com.db4o.QCandidate subCandidate = null;
 				int offset = _bytes._offset;
 				try
 				{
-					id = _bytes.readInt();
+					subCandidate = _yapField.i_handler.ReadSubCandidate(_marshallerFamily, _bytes, candidateCollection
+						, false);
 				}
 				catch (System.Exception e)
 				{
 					return null;
 				}
 				_bytes._offset = offset;
-				if (id != 0)
+				if (subCandidate != null)
 				{
-					com.db4o.QCandidate candidate = new com.db4o.QCandidate(candidateCollection, null
-						, id, true);
-					candidate._root = getRoot();
-					return candidate;
+					subCandidate._root = GetRoot();
+					return subCandidate;
 				}
 			}
 			return null;
 		}
 
-		private void readThis(bool a_activate)
+		private void ReadThis(bool a_activate)
 		{
-			read();
-			com.db4o.Transaction trans = getTransaction();
+			Read();
+			com.db4o.Transaction trans = GetTransaction();
 			if (trans != null)
 			{
-				_member = trans.i_stream.getByID1(trans, _key);
+				_member = trans.i_stream.GetByID1(trans, _key);
 				if (_member != null && (a_activate || _member is com.db4o.config.Compare))
 				{
-					trans.i_stream.activate1(trans, _member);
-					checkInstanceOfCompare();
+					trans.i_stream.Activate1(trans, _member);
+					CheckInstanceOfCompare();
 				}
 			}
 		}
 
-		internal virtual com.db4o.YapClass readYapClass()
+		internal virtual com.db4o.YapClass ReadYapClass()
 		{
 			if (_yapClass == null)
 			{
-				read();
+				Read();
 				if (_bytes != null)
 				{
 					_bytes._offset = 0;
-					com.db4o.YapStream stream = getStream();
-					_yapClass = stream.getYapClass(_bytes.readInt());
+					com.db4o.YapStream stream = GetStream();
+					com.db4o.inside.marshall.ObjectHeader objectHeader = new com.db4o.inside.marshall.ObjectHeader
+						(stream, _bytes);
+					_yapClass = objectHeader._yapClass;
 					if (_yapClass != null)
 					{
-						if (stream.i_handlers.ICLASS_COMPARE.isAssignableFrom(_yapClass.classReflector())
+						if (stream.i_handlers.ICLASS_COMPARE.IsAssignableFrom(_yapClass.ClassReflector())
 							)
 						{
-							readThis(false);
+							ReadThis(false);
 						}
 					}
 				}
@@ -546,11 +562,11 @@ namespace com.db4o
 			string str = "QCandidate ";
 			if (_yapClass != null)
 			{
-				str += "\n   YapClass " + _yapClass.getName();
+				str += "\n   YapClass " + _yapClass.GetName();
 			}
 			if (_yapField != null)
 			{
-				str += "\n   YapField " + _yapField.getName();
+				str += "\n   YapField " + _yapField.GetName();
 			}
 			if (_member != null)
 			{
@@ -568,75 +584,75 @@ namespace com.db4o
 			return str;
 		}
 
-		internal virtual void useField(com.db4o.QField a_field)
+		internal virtual void UseField(com.db4o.QField a_field)
 		{
-			read();
+			Read();
 			if (_bytes == null)
 			{
 				_yapField = null;
+				return;
 			}
-			else
+			ReadYapClass();
+			_member = null;
+			if (a_field == null)
 			{
-				readYapClass();
-				_member = null;
-				if (a_field == null)
+				_yapField = null;
+				return;
+			}
+			if (_yapClass == null)
+			{
+				_yapField = null;
+				return;
+			}
+			_yapField = a_field.GetYapField(_yapClass);
+			_marshallerFamily = _yapClass.FindOffset(_bytes, _yapField);
+			if (_yapField == null || _marshallerFamily == null)
+			{
+				if (_yapClass.HoldsAnyClass())
 				{
 					_yapField = null;
 				}
 				else
 				{
-					if (_yapClass == null)
-					{
-						_yapField = null;
-					}
-					else
-					{
-						_yapField = a_field.getYapField(_yapClass);
-						if (_yapField == null | !_yapClass.findOffset(_bytes, _yapField))
-						{
-							if (_yapClass.holdsAnyClass())
-							{
-								_yapField = null;
-							}
-							else
-							{
-								_yapField = new com.db4o.YapFieldNull();
-							}
-						}
-					}
+					_yapField = new com.db4o.YapFieldNull();
 				}
 			}
 		}
 
-		internal virtual object value()
+		internal virtual object Value()
 		{
-			return value(false);
+			return Value(false);
 		}
 
-		internal virtual object value(bool a_activate)
+		internal virtual object Value(bool a_activate)
 		{
 			if (_member == null)
 			{
 				if (_yapField == null)
 				{
-					readThis(a_activate);
+					ReadThis(a_activate);
 				}
 				else
 				{
 					int offset = _bytes._offset;
 					try
 					{
-						_member = _yapField.readQuery(getTransaction(), _bytes);
+						_member = _yapField.ReadQuery(GetTransaction(), _marshallerFamily, _bytes);
 					}
 					catch (com.db4o.CorruptionException ce)
 					{
 						_member = null;
 					}
 					_bytes._offset = offset;
-					checkInstanceOfCompare();
+					CheckInstanceOfCompare();
 				}
 			}
 			return _member;
+		}
+
+		internal virtual void SetBytes(com.db4o.YapReader bytes)
+		{
+			_bytes = bytes;
 		}
 	}
 }

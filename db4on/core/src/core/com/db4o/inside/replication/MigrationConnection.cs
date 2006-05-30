@@ -19,37 +19,37 @@ namespace com.db4o.inside.replication
 			_peerB = peerB;
 		}
 
-		public virtual void mapReference(object obj, com.db4o.YapObject _ref)
+		public virtual void MapReference(object obj, com.db4o.YapObject _ref)
 		{
-			_referenceMap.put(j4o.lang.JavaSystem.identityHashCode(obj), _ref);
+			_referenceMap.Put(j4o.lang.JavaSystem.IdentityHashCode(obj), _ref);
 		}
 
-		public virtual void mapIdentity(object obj, object otherObj)
+		public virtual void MapIdentity(object obj, object otherObj)
 		{
-			_identityMap.put(j4o.lang.JavaSystem.identityHashCode(obj), otherObj);
+			_identityMap.Put(j4o.lang.JavaSystem.IdentityHashCode(obj), otherObj);
 		}
 
-		public virtual com.db4o.YapObject referenceFor(object obj)
+		public virtual com.db4o.YapObject ReferenceFor(object obj)
 		{
-			int hcode = j4o.lang.JavaSystem.identityHashCode(obj);
-			com.db4o.YapObject _ref = (com.db4o.YapObject)_referenceMap.get(hcode);
-			_referenceMap.remove(hcode);
+			int hcode = j4o.lang.JavaSystem.IdentityHashCode(obj);
+			com.db4o.YapObject _ref = (com.db4o.YapObject)_referenceMap.Get(hcode);
+			_referenceMap.Remove(hcode);
 			return _ref;
 		}
 
-		public virtual object identityFor(object obj)
+		public virtual object IdentityFor(object obj)
 		{
-			int hcode = j4o.lang.JavaSystem.identityHashCode(obj);
-			return _identityMap.get(hcode);
+			int hcode = j4o.lang.JavaSystem.IdentityHashCode(obj);
+			return _identityMap.Get(hcode);
 		}
 
-		public virtual void terminate()
+		public virtual void Terminate()
 		{
-			_peerA.migrateFrom(null);
-			_peerB.migrateFrom(null);
+			_peerA.MigrateFrom(null);
+			_peerB.MigrateFrom(null);
 		}
 
-		public virtual com.db4o.YapStream peer(com.db4o.YapStream stream)
+		public virtual com.db4o.YapStream Peer(com.db4o.YapStream stream)
 		{
 			if (_peerA == stream)
 			{

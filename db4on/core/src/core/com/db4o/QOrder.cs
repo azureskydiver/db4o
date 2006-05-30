@@ -14,23 +14,23 @@ namespace com.db4o
 			_candidate = a_candidate;
 		}
 
-		public override int compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.Tree a_to)
 		{
-			if (_constraint.i_comparator.isSmaller(_candidate.value()))
+			if (_constraint.i_comparator.IsSmaller(_candidate.Value()))
 			{
 				return _constraint.i_orderID;
 			}
-			if (_constraint.i_comparator.isEqual(_candidate.value()))
+			if (_constraint.i_comparator.IsEqual(_candidate.Value()))
 			{
 				return 0;
 			}
 			return -_constraint.i_orderID;
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.QOrder order = new com.db4o.QOrder(_constraint, _candidate);
-			base.shallowCloneInternal(order);
+			base.ShallowCloneInternal(order);
 			return order;
 		}
 	}

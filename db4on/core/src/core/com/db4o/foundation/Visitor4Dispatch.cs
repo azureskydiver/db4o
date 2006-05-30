@@ -10,9 +10,9 @@ namespace com.db4o.foundation
 			_target = visitor;
 		}
 
-		public virtual void visit(object a_object)
+		public virtual void Visit(object a_object)
 		{
-			((com.db4o.foundation.Visitor4)a_object).visit(_target);
+			((com.db4o.foundation.Visitor4)a_object).Visit(_target);
 		}
 	}
 }

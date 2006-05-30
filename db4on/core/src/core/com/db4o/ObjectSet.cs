@@ -28,7 +28,7 @@ namespace com.db4o
 		/// <br /><br />The ObjectSet functionality is split to two interfaces
 		/// to allow newcomers to focus on the essential methods.
 		/// </remarks>
-		com.db4o.ext.ExtObjectSet ext();
+		com.db4o.ext.ExtObjectSet Ext();
 
 		/// <summary>returns <code>true</code> if the <code>ObjectSet</code> has more elements.
 		/// 	</summary>
@@ -38,7 +38,7 @@ namespace com.db4o
 		/// boolean - <code>true</code> if the <code>ObjectSet</code> has more
 		/// elements.
 		/// </returns>
-		bool hasNext();
+		bool HasNext();
 
 		/// <summary>returns the next object in the <code>ObjectSet</code>.</summary>
 		/// <remarks>
@@ -46,24 +46,24 @@ namespace com.db4o
 		/// <br /><br />
 		/// Before returning the Object, next() triggers automatic activation of the
 		/// Object with the respective
-		/// <see cref="com.db4o.config.Configuration.activationDepth">global</see>
+		/// <see cref="com.db4o.config.Configuration.ActivationDepth">global</see>
 		/// or
-		/// <see cref="com.db4o.config.ObjectClass.maximumActivationDepth">class specific</see>
+		/// <see cref="com.db4o.config.ObjectClass.MaximumActivationDepth">class specific</see>
 		/// setting.<br /><br />
 		/// </remarks>
 		/// <returns>the next object in the <code>ObjectSet</code>.</returns>
-		object next();
+		object Next();
 
 		/// <summary>resets the <code>ObjectSet</code> cursor before the first element.</summary>
 		/// <remarks>
 		/// resets the <code>ObjectSet</code> cursor before the first element.
 		/// <br /><br />A subsequent call to <code>next()</code> will return the first element.
 		/// </remarks>
-		void reset();
+		void Reset();
 
 		/// <summary>returns the number of elements in the <code>ObjectSet</code>.</summary>
 		/// <remarks>returns the number of elements in the <code>ObjectSet</code>.</remarks>
 		/// <returns>the number of elements in the <code>ObjectSet</code>.</returns>
-		int size();
+		int Size();
 	}
 }

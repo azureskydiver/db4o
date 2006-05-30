@@ -25,67 +25,67 @@ namespace com.db4o.reflect.generic
 			_nDimensionalArray = nDimensionalArray;
 		}
 
-		public virtual object deepClone(object obj)
+		public virtual object DeepClone(object obj)
 		{
 			com.db4o.reflect.Reflector reflector = (com.db4o.reflect.Reflector)obj;
 			com.db4o.reflect.ReflectClass newReflectClass = null;
 			if (_type != null)
 			{
-				newReflectClass = reflector.forName(_type.getName());
+				newReflectClass = reflector.ForName(_type.GetName());
 			}
 			return new com.db4o.reflect.generic.GenericField(_name, newReflectClass, _primitive
 				, _array, _nDimensionalArray);
 		}
 
-		public virtual object get(object onObject)
+		public virtual object Get(object onObject)
 		{
-			return ((com.db4o.reflect.generic.GenericObject)onObject).get(_index);
+			return ((com.db4o.reflect.generic.GenericObject)onObject).Get(_index);
 		}
 
-		public virtual string getName()
+		public virtual string GetName()
 		{
 			return _name;
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getType()
+		public virtual com.db4o.reflect.ReflectClass GetFieldType()
 		{
 			if (_array)
 			{
-				return _type.arrayClass();
+				return _type.ArrayClass();
 			}
 			return _type;
 		}
 
-		public virtual bool isPublic()
+		public virtual bool IsPublic()
 		{
 			return true;
 		}
 
-		public virtual bool isPrimitive()
+		public virtual bool IsPrimitive()
 		{
 			return _primitive;
 		}
 
-		public virtual bool isStatic()
+		public virtual bool IsStatic()
 		{
 			return false;
 		}
 
-		public virtual bool isTransient()
+		public virtual bool IsTransient()
 		{
 			return false;
 		}
 
-		public virtual void set(object onObject, object value)
+		public virtual void Set(object onObject, object value)
 		{
-			((com.db4o.reflect.generic.GenericObject)onObject).set(_index, value);
+			((com.db4o.reflect.generic.GenericObject)onObject).Set(_index, value);
 		}
 
-		public virtual void setAccessible()
+		public virtual void SetAccessible()
 		{
 		}
 
-		internal virtual void setIndex(int index)
+		internal virtual void SetIndex(int index)
 		{
 			_index = index;
 		}

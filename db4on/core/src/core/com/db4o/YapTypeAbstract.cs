@@ -11,29 +11,29 @@ namespace com.db4o
 
 		private object i_compareTo;
 
-		public abstract int compare(object compare, object with);
+		public abstract int Compare(object compare, object with);
 
-		public virtual string dotNetClassName()
+		public virtual string DotNetClassName()
 		{
-			string className = j4o.lang.Class.getClassForObject(this).getName();
+			string className = j4o.lang.Class.GetClassForObject(this).GetName();
 			int pos = className.IndexOf(".Net");
 			if (pos >= 0)
 			{
-				return "System." + j4o.lang.JavaSystem.substring(className, pos + 4) + ", mscorlib";
+				return "System." + j4o.lang.JavaSystem.Substring(className, pos + 4) + ", mscorlib";
 			}
-			return j4o.lang.Class.getClassForObject(defaultValue()).getName();
+			return j4o.lang.Class.GetClassForObject(DefaultValue()).GetName();
 		}
 
-		public abstract bool isEqual(object compare, object with);
+		public abstract bool IsEqual(object compare, object with);
 
-		internal virtual void initialize()
+		internal virtual void Initialize()
 		{
 			byte[] bytes = new byte[65];
 			for (int i = 0; i < bytes.Length; i++)
 			{
 				bytes[i] = 55;
 			}
-			write(primitiveNull(), bytes, 0);
+			Write(PrimitiveNull(), bytes, 0);
 			for (int i = 0; i < bytes.Length; i++)
 			{
 				if (bytes[i] == 55)
@@ -44,84 +44,84 @@ namespace com.db4o
 			}
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
-			return typeID();
+			return TypeID();
 		}
 
-		public virtual string getName()
+		public virtual string GetName()
 		{
-			return dotNetClassName();
+			return DotNetClassName();
 		}
 
-		public override int linkLength()
+		public override int LinkLength()
 		{
 			return i_linkLength;
 		}
 
-		protected override j4o.lang.Class primitiveJavaClass()
+		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
 			return null;
 		}
 
-		internal override object primitiveNull()
+		internal override object PrimitiveNull()
 		{
-			return defaultValue();
+			return DefaultValue();
 		}
 
-		public abstract object read(byte[] bytes, int offset);
+		public abstract object Read(byte[] bytes, int offset);
 
-		internal override object read1(com.db4o.YapReader a_bytes)
+		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
 			int offset = a_bytes._offset;
-			object ret = read(a_bytes._buffer, a_bytes._offset);
-			a_bytes._offset = offset + linkLength();
+			object ret = Read(a_bytes._buffer, a_bytes._offset);
+			a_bytes._offset = offset + LinkLength();
 			return ret;
 		}
 
-		public abstract int typeID();
+		public abstract int TypeID();
 
-		public abstract void write(object obj, byte[] bytes, int offset);
+		public abstract void Write(object obj, byte[] bytes, int offset);
 
-		public override void write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
 			int offset = a_bytes._offset;
 			if (a_object != null)
 			{
-				write(a_object, a_bytes._buffer, a_bytes._offset);
+				Write(a_object, a_bytes._buffer, a_bytes._offset);
 			}
-			a_bytes._offset = offset + linkLength();
+			a_bytes._offset = offset + LinkLength();
 		}
 
-		internal override void prepareComparison1(object obj)
+		internal override void PrepareComparison1(object obj)
 		{
 			i_compareTo = obj;
 		}
 
-		public override object current1()
+		public override object Current1()
 		{
 			return i_compareTo;
 		}
 
-		internal override bool isEqual1(object obj)
+		internal override bool IsEqual1(object obj)
 		{
-			return isEqual(i_compareTo, obj);
+			return IsEqual(i_compareTo, obj);
 		}
 
-		internal override bool isGreater1(object obj)
+		internal override bool IsGreater1(object obj)
 		{
-			if (classReflector().isInstance(obj) && !isEqual(i_compareTo, obj))
+			if (ClassReflector().IsInstance(obj) && !IsEqual(i_compareTo, obj))
 			{
-				return compare(i_compareTo, obj) > 0;
+				return Compare(i_compareTo, obj) > 0;
 			}
 			return false;
 		}
 
-		internal override bool isSmaller1(object obj)
+		internal override bool IsSmaller1(object obj)
 		{
-			if (classReflector().isInstance(obj) && !isEqual(i_compareTo, obj))
+			if (ClassReflector().IsInstance(obj) && !IsEqual(i_compareTo, obj))
 			{
-				return compare(i_compareTo, obj) < 0;
+				return Compare(i_compareTo, obj) < 0;
 			}
 			return false;
 		}

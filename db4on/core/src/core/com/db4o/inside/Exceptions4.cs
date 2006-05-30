@@ -3,39 +3,54 @@ namespace com.db4o.inside
 	/// <exclude></exclude>
 	public class Exceptions4
 	{
-		public static void throwRuntimeException(int code)
+		public static void ThrowRuntimeException(int code)
 		{
-			throwRuntimeException(code, null, null);
+			ThrowRuntimeException(code, null, null);
 		}
 
-		public static void throwRuntimeException(int code, System.Exception cause)
+		public static void ThrowRuntimeException(int code, System.Exception cause)
 		{
-			throwRuntimeException(code, null, cause);
+			ThrowRuntimeException(code, null, cause);
 		}
 
-		public static void throwRuntimeException(int code, string msg)
+		public static void ThrowRuntimeException(int code, string msg)
 		{
-			throwRuntimeException(code, msg, null);
+			ThrowRuntimeException(code, msg, null);
 		}
 
-		public static void throwRuntimeException(int code, string msg, System.Exception cause
+		public static void ThrowRuntimeException(int code, string msg, System.Exception cause
 			)
 		{
-			com.db4o.Messages.logErr(com.db4o.Db4o.configure(), code, msg, cause);
-			throw new com.db4o.ext.Db4oException(com.db4o.Messages.get(code, msg));
+			com.db4o.Messages.LogErr(com.db4o.Db4o.Configure(), code, msg, cause);
+			throw new com.db4o.ext.Db4oException(com.db4o.Messages.Get(code, msg));
 		}
 
-		public static void notSupported()
+		public static void NotSupported()
 		{
-			throwRuntimeException(53);
+			ThrowRuntimeException(53);
 		}
 
-		public static void catchAll(System.Exception exc)
+		public static void CatchAll(System.Exception exc)
 		{
 			if (exc is com.db4o.ext.Db4oException)
 			{
 				throw (com.db4o.ext.Db4oException)exc;
 			}
+		}
+
+		public static j4o.lang.RuntimeException ShouldNeverBeCalled()
+		{
+			throw new j4o.lang.RuntimeException();
+		}
+
+		public static j4o.lang.RuntimeException ShouldNeverHappen()
+		{
+			throw new j4o.lang.RuntimeException();
+		}
+
+		public static j4o.lang.RuntimeException VirtualException()
+		{
+			throw new j4o.lang.RuntimeException();
 		}
 	}
 }

@@ -2,21 +2,30 @@ namespace com.db4o.foundation
 {
 	internal class HashtableByteArrayEntry : com.db4o.foundation.HashtableObjectEntry
 	{
-		public HashtableByteArrayEntry(byte[] bytes, object value) : base(hash(bytes), bytes
+		public HashtableByteArrayEntry(byte[] bytes, object value) : base(Hash(bytes), bytes
 			, value)
 		{
 		}
 
-		public override bool hasKey(object key)
+		private HashtableByteArrayEntry() : base()
+		{
+		}
+
+		public override object DeepClone(object obj)
+		{
+			return DeepCloneInternal(new com.db4o.foundation.HashtableByteArrayEntry(), obj);
+		}
+
+		public override bool HasKey(object key)
 		{
 			if (key is byte[])
 			{
-				return areEqual((byte[])i_objectKey, (byte[])key);
+				return AreEqual((byte[])i_objectKey, (byte[])key);
 			}
 			return false;
 		}
 
-		internal static int hash(byte[] bytes)
+		internal static int Hash(byte[] bytes)
 		{
 			int ret = 0;
 			for (int i = 0; i < bytes.Length; i++)
@@ -26,7 +35,7 @@ namespace com.db4o.foundation
 			return ret;
 		}
 
-		internal static bool areEqual(byte[] lhs, byte[] rhs)
+		internal static bool AreEqual(byte[] lhs, byte[] rhs)
 		{
 			if (rhs.Length != lhs.Length)
 			{

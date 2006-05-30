@@ -9,18 +9,18 @@ namespace com.db4o
 
 		private static string[] i_messages;
 
-		public static string get(int a_code)
+		public static string Get(int a_code)
 		{
-			return get(a_code, null);
+			return Get(a_code, null);
 		}
 
-		public static string get(int a_code, string param)
+		public static string Get(int a_code, string param)
 		{
 			if (a_code < 0)
 			{
 				return param;
 			}
-			load();
+			Load();
 			if (i_messages == null || a_code > i_messages.Length - 1)
 			{
 				return "msg[" + a_code + "]";
@@ -31,14 +31,14 @@ namespace com.db4o
 				int pos = msg.IndexOf("%", 0);
 				if (pos > -1)
 				{
-					msg = j4o.lang.JavaSystem.substring(msg, 0, pos) + "'" + param + "'" + j4o.lang.JavaSystem.substring
+					msg = j4o.lang.JavaSystem.Substring(msg, 0, pos) + "'" + param + "'" + j4o.lang.JavaSystem.Substring
 						(msg, pos + 1);
 				}
 			}
 			return msg;
 		}
 
-		private static void load()
+		private static void Load()
 		{
 			if (i_messages == null)
 			{
@@ -74,34 +74,34 @@ namespace com.db4o
 			}
 		}
 
-		public static void logErr(com.db4o.config.Configuration config, int code, string 
+		public static void LogErr(com.db4o.config.Configuration config, int code, string 
 			msg, System.Exception t)
 		{
 			if (config == null)
 			{
-				config = com.db4o.Db4o.configure();
+				config = com.db4o.Db4o.Configure();
 			}
-			j4o.io.PrintStream ps = ((com.db4o.Config4Impl)config).errStream();
+			j4o.io.PrintStream ps = ((com.db4o.Config4Impl)config).ErrStream();
 			new com.db4o.Message(msg, code, ps);
 			if (t != null)
 			{
 				new com.db4o.Message(null, 25, ps);
-				j4o.lang.JavaSystem.printStackTrace(t, ps);
+				j4o.lang.JavaSystem.PrintStackTrace(t, ps);
 				new com.db4o.Message(null, 26, ps, false);
 			}
 		}
 
-		public static void logMsg(com.db4o.config.Configuration config, int code, string 
+		public static void LogMsg(com.db4o.config.Configuration config, int code, string 
 			msg)
 		{
 			com.db4o.Config4Impl c4i = (com.db4o.Config4Impl)config;
 			if (c4i == null)
 			{
-				c4i = (com.db4o.Config4Impl)com.db4o.Db4o.configure();
+				c4i = (com.db4o.Config4Impl)com.db4o.Db4o.Configure();
 			}
-			if (c4i.messageLevel() > com.db4o.YapConst.NONE)
+			if (c4i.MessageLevel() > com.db4o.YapConst.NONE)
 			{
-				new com.db4o.Message(msg, code, c4i.outStream());
+				new com.db4o.Message(msg, code, c4i.OutStream());
 			}
 		}
 	}

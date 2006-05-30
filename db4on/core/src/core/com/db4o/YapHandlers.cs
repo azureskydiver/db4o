@@ -86,34 +86,34 @@ namespace com.db4o
 			_masterStream = a_stream;
 			a_stream.i_handlers = this;
 			_reflector = reflector;
-			initClassReflectors(reflector);
+			InitClassReflectors(reflector);
 			i_indexes = new com.db4o.YapIndexes(a_stream);
 			i_virtualFields[0] = i_indexes.i_fieldVersion;
 			i_virtualFields[1] = i_indexes.i_fieldUUID;
-			i_stringHandler = new com.db4o.YapString(a_stream, com.db4o.YapStringIO.forEncoding
+			i_stringHandler = new com.db4o.YapString(a_stream, com.db4o.YapStringIO.ForEncoding
 				(stringEncoding));
 			i_handlers = new com.db4o.TypeHandler4[] { new com.db4o.YInt(a_stream), new com.db4o.YLong
 				(a_stream), new com.db4o.YFloat(a_stream), new com.db4o.YBoolean(a_stream), new 
 				com.db4o.YDouble(a_stream), new com.db4o.YByte(a_stream), new com.db4o.YChar(a_stream
 				), new com.db4o.YShort(a_stream), i_stringHandler, new com.db4o.YDate(a_stream), 
 				new com.db4o.YapClassAny(a_stream) };
-			i_platformTypes = com.db4o.Platform4.types(a_stream);
+			i_platformTypes = com.db4o.Platform4.Types(a_stream);
 			if (i_platformTypes.Length > 0)
 			{
 				for (int i = 0; i < i_platformTypes.Length; i++)
 				{
-					i_platformTypes[i].initialize();
-					if (i_platformTypes[i].getID() > i_maxTypeID)
+					i_platformTypes[i].Initialize();
+					if (i_platformTypes[i].GetID() > i_maxTypeID)
 					{
-						i_maxTypeID = i_platformTypes[i].getID();
+						i_maxTypeID = i_platformTypes[i].GetID();
 					}
 				}
 				com.db4o.TypeHandler4[] temp = i_handlers;
 				i_handlers = new com.db4o.TypeHandler4[i_maxTypeID];
-				j4o.lang.JavaSystem.arraycopy(temp, 0, i_handlers, 0, temp.Length);
+				System.Array.Copy(temp, 0, i_handlers, 0, temp.Length);
 				for (int i = 0; i < i_platformTypes.Length; i++)
 				{
-					int idx = i_platformTypes[i].getID() - 1;
+					int idx = i_platformTypes[i].GetID() - 1;
 					i_handlers[idx] = i_platformTypes[i];
 				}
 			}
@@ -123,20 +123,20 @@ namespace com.db4o
 				int id = i + 1;
 				i_yapClasses[i] = new com.db4o.YapClassPrimitive(a_stream, i_handlers[i]);
 				i_yapClasses[i].i_id = id;
-				i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
+				i_classByClass.Put(i_handlers[i].ClassReflector(), i_yapClasses[i]);
 				if (i < ANY_INDEX)
 				{
-					reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName(), null
+					reflector.RegisterPrimitiveClass(id, i_handlers[i].ClassReflector().GetName(), null
 						);
 				}
 			}
 			for (int i = 0; i < i_platformTypes.Length; i++)
 			{
-				int id = i_platformTypes[i].getID();
+				int id = i_platformTypes[i].GetID();
 				int idx = id - 1;
 				com.db4o.reflect.generic.GenericConverter converter = (i_platformTypes[i] is com.db4o.reflect.generic.GenericConverter
 					) ? (com.db4o.reflect.generic.GenericConverter)i_platformTypes[i] : null;
-				reflector.registerPrimitiveClass(id, i_platformTypes[i].getName(), converter);
+				reflector.RegisterPrimitiveClass(id, i_platformTypes[i].GetName(), converter);
 				i_handlers[idx] = i_platformTypes[i];
 				i_yapClasses[idx] = new com.db4o.YapClassPrimitive(a_stream, i_platformTypes[i]);
 				i_yapClasses[idx].i_id = id;
@@ -144,7 +144,7 @@ namespace com.db4o
 				{
 					i_maxTypeID = idx;
 				}
-				i_classByClass.put(i_platformTypes[i].classReflector(), i_yapClasses[idx]);
+				i_classByClass.Put(i_platformTypes[i].ClassReflector(), i_yapClasses[idx]);
 			}
 			i_anyArray = new com.db4o.YapClassPrimitive(a_stream, new com.db4o.YapArray(_masterStream
 				, i_handlers[ANY_INDEX], false));
@@ -156,13 +156,13 @@ namespace com.db4o
 			i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
 		}
 
-		internal int arrayType(object a_object)
+		internal int ArrayType(object a_object)
 		{
-			com.db4o.reflect.ReflectClass claxx = _masterStream.reflector().forObject(a_object
+			com.db4o.reflect.ReflectClass claxx = _masterStream.Reflector().ForObject(a_object
 				);
-			if (claxx.isArray())
+			if (claxx.IsArray())
 			{
-				if (_masterStream.reflector().array().isNDimensional(claxx))
+				if (_masterStream.Reflector().Array().IsNDimensional(claxx))
 				{
 					return com.db4o.YapConst.TYPE_NARRAY;
 				}
@@ -174,46 +174,46 @@ namespace com.db4o
 			return 0;
 		}
 
-		internal bool createConstructor(com.db4o.reflect.ReflectClass claxx, bool skipConstructor
+		internal bool CreateConstructor(com.db4o.reflect.ReflectClass claxx, bool skipConstructor
 			)
 		{
 			if (claxx == null)
 			{
 				return false;
 			}
-			if (claxx.isAbstract() || claxx.isInterface())
+			if (claxx.IsAbstract() || claxx.IsInterface())
 			{
 				return true;
 			}
-			if (!com.db4o.Platform4.callConstructor())
+			if (!com.db4o.Platform4.CallConstructor())
 			{
-				if (claxx.skipConstructor(skipConstructor))
+				if (claxx.SkipConstructor(skipConstructor))
 				{
 					return true;
 				}
 			}
-			if (!_masterStream.i_config.testConstructors())
+			if (!_masterStream.i_config.TestConstructors())
 			{
 				return true;
 			}
-			if (claxx.newInstance() != null)
+			if (claxx.NewInstance() != null)
 			{
 				return true;
 			}
-			if (_masterStream.reflector().constructorCallsSupported())
+			if (_masterStream.Reflector().ConstructorCallsSupported())
 			{
 				try
 				{
-					com.db4o.reflect.ReflectConstructor[] constructors = claxx.getDeclaredConstructors
+					com.db4o.reflect.ReflectConstructor[] constructors = claxx.GetDeclaredConstructors
 						();
 					com.db4o.Tree sortedConstructors = null;
 					for (int i = 0; i < constructors.Length; i++)
 					{
 						try
 						{
-							constructors[i].setAccessible();
-							int parameterCount = constructors[i].getParameterTypes().Length;
-							sortedConstructors = com.db4o.Tree.add(sortedConstructors, new com.db4o.TreeIntObject
+							constructors[i].SetAccessible();
+							int parameterCount = constructors[i].GetParameterTypes().Length;
+							sortedConstructors = com.db4o.Tree.Add(sortedConstructors, new com.db4o.TreeIntObject
 								(i + constructors.Length * parameterCount, constructors[i]));
 						}
 						catch (System.Exception t)
@@ -223,7 +223,7 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.traverse(new _AnonymousInnerClass224(this, foundConstructor, claxx
+						sortedConstructors.Traverse(new _AnonymousInnerClass224(this, foundConstructor, claxx
 							));
 					}
 					if (foundConstructor[0])
@@ -248,7 +248,7 @@ namespace com.db4o
 				this.claxx = claxx;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				if (!foundConstructor[0])
 				{
@@ -256,24 +256,24 @@ namespace com.db4o
 						)((com.db4o.TreeIntObject)a_object)._object;
 					try
 					{
-						com.db4o.reflect.ReflectClass[] pTypes = constructor.getParameterTypes();
+						com.db4o.reflect.ReflectClass[] pTypes = constructor.GetParameterTypes();
 						object[] parms = new object[pTypes.Length];
 						for (int j = 0; j < parms.Length; j++)
 						{
 							for (int k = 0; k < com.db4o.YapHandlers.PRIMITIVECOUNT; k++)
 							{
-								if (pTypes[j].Equals(this._enclosing.i_handlers[k].primitiveClassReflector()))
+								if (pTypes[j].Equals(this._enclosing.i_handlers[k].PrimitiveClassReflector()))
 								{
-									parms[j] = ((com.db4o.YapJavaClass)this._enclosing.i_handlers[k]).primitiveNull();
+									parms[j] = ((com.db4o.YapJavaClass)this._enclosing.i_handlers[k]).PrimitiveNull();
 									break;
 								}
 							}
 						}
-						object res = constructor.newInstance(parms);
+						object res = constructor.NewInstance(parms);
 						if (res != null)
 						{
 							foundConstructor[0] = true;
-							claxx.useConstructor(constructor, parms);
+							claxx.UseConstructor(constructor, parms);
 						}
 					}
 					catch (System.Exception t)
@@ -289,13 +289,13 @@ namespace com.db4o
 			private readonly com.db4o.reflect.ReflectClass claxx;
 		}
 
-		internal void decrypt(com.db4o.YapReader reader)
+		internal void Decrypt(com.db4o.YapReader reader)
 		{
 			if (i_encrypt)
 			{
 				int encryptorOffSet = i_lastEncryptorByte;
 				byte[] bytes = reader._buffer;
-				for (int i = reader.getLength() - 1; i >= 0; i--)
+				for (int i = reader.GetLength() - 1; i >= 0; i--)
 				{
 					bytes[i] += i_encryptor[encryptorOffSet];
 					if (encryptorOffSet == 0)
@@ -310,13 +310,13 @@ namespace com.db4o
 			}
 		}
 
-		internal void encrypt(com.db4o.YapReader reader)
+		internal void Encrypt(com.db4o.YapReader reader)
 		{
 			if (i_encrypt)
 			{
 				byte[] bytes = reader._buffer;
 				int encryptorOffSet = i_lastEncryptorByte;
-				for (int i = reader.getLength() - 1; i >= 0; i--)
+				for (int i = reader.GetLength() - 1; i >= 0; i--)
 				{
 					bytes[i] -= i_encryptor[encryptorOffSet];
 					if (encryptorOffSet == 0)
@@ -331,12 +331,12 @@ namespace com.db4o
 			}
 		}
 
-		internal com.db4o.TypeHandler4 getHandler(int a_index)
+		internal com.db4o.TypeHandler4 GetHandler(int a_index)
 		{
 			return i_handlers[a_index - 1];
 		}
 
-		internal com.db4o.TypeHandler4 handlerForClass(com.db4o.reflect.ReflectClass a_class
+		internal com.db4o.TypeHandler4 HandlerForClass(com.db4o.reflect.ReflectClass a_class
 			, com.db4o.reflect.ReflectClass[] a_Supported)
 		{
 			for (int i = 0; i < a_Supported.Length; i++)
@@ -357,58 +357,58 @@ namespace com.db4o
 		/// Can't return ANY class for interfaces, since that would kill the
 		/// translators built into the architecture.
 		/// </remarks>
-		internal com.db4o.TypeHandler4 handlerForClass(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
+		internal com.db4o.TypeHandler4 HandlerForClass(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
 			 a_class)
 		{
 			if (a_class == null)
 			{
 				return null;
 			}
-			if (a_class.isArray())
+			if (a_class.IsArray())
 			{
-				return handlerForClass(a_stream, a_class.getComponentType());
+				return HandlerForClass(a_stream, a_class.GetComponentType());
 			}
-			com.db4o.YapClass yc = getYapClassStatic(a_class);
+			com.db4o.YapClass yc = GetYapClassStatic(a_class);
 			if (yc != null)
 			{
 				return ((com.db4o.YapClassPrimitive)yc).i_handler;
 			}
-			return a_stream.getYapClass(a_class, true);
+			return a_stream.GetYapClass(a_class, true);
 		}
 
-		private void initClassReflectors(com.db4o.reflect.generic.GenericReflector reflector
+		private void InitClassReflectors(com.db4o.reflect.generic.GenericReflector reflector
 			)
 		{
-			ICLASS_COMPARE = reflector.forClass(com.db4o.YapConst.CLASS_COMPARE);
-			ICLASS_DB4OTYPE = reflector.forClass(com.db4o.YapConst.CLASS_DB4OTYPE);
-			ICLASS_DB4OTYPEIMPL = reflector.forClass(com.db4o.YapConst.CLASS_DB4OTYPEIMPL);
-			ICLASS_INTERNAL = reflector.forClass(com.db4o.YapConst.CLASS_INTERNAL);
-			ICLASS_UNVERSIONED = reflector.forClass(com.db4o.YapConst.CLASS_UNVERSIONED);
-			ICLASS_OBJECT = reflector.forClass(com.db4o.YapConst.CLASS_OBJECT);
-			ICLASS_OBJECTCONTAINER = reflector.forClass(com.db4o.YapConst.CLASS_OBJECTCONTAINER
+			ICLASS_COMPARE = reflector.ForClass(com.db4o.YapConst.CLASS_COMPARE);
+			ICLASS_DB4OTYPE = reflector.ForClass(com.db4o.YapConst.CLASS_DB4OTYPE);
+			ICLASS_DB4OTYPEIMPL = reflector.ForClass(com.db4o.YapConst.CLASS_DB4OTYPEIMPL);
+			ICLASS_INTERNAL = reflector.ForClass(com.db4o.YapConst.CLASS_INTERNAL);
+			ICLASS_UNVERSIONED = reflector.ForClass(com.db4o.YapConst.CLASS_UNVERSIONED);
+			ICLASS_OBJECT = reflector.ForClass(com.db4o.YapConst.CLASS_OBJECT);
+			ICLASS_OBJECTCONTAINER = reflector.ForClass(com.db4o.YapConst.CLASS_OBJECTCONTAINER
 				);
-			ICLASS_PBOOTRECORD = reflector.forClass(com.db4o.YapConst.CLASS_PBOOTRECORD);
-			ICLASS_STATICCLASS = reflector.forClass(com.db4o.YapConst.CLASS_STATICCLASS);
-			ICLASS_STRING = reflector.forClass(j4o.lang.Class.getClassForType(typeof(string))
+			ICLASS_PBOOTRECORD = reflector.ForClass(com.db4o.YapConst.CLASS_PBOOTRECORD);
+			ICLASS_STATICCLASS = reflector.ForClass(com.db4o.YapConst.CLASS_STATICCLASS);
+			ICLASS_STRING = reflector.ForClass(j4o.lang.Class.GetClassForType(typeof(string))
 				);
-			ICLASS_TRANSIENTCLASS = reflector.forClass(com.db4o.YapConst.CLASS_TRANSIENTCLASS
+			ICLASS_TRANSIENTCLASS = reflector.ForClass(com.db4o.YapConst.CLASS_TRANSIENTCLASS
 				);
-			com.db4o.Platform4.registerCollections(reflector);
+			com.db4o.Platform4.RegisterCollections(reflector);
 		}
 
-		internal void initEncryption(com.db4o.Config4Impl a_config)
+		internal void InitEncryption(com.db4o.Config4Impl a_config)
 		{
-			if (a_config.encrypt() && a_config.password() != null && j4o.lang.JavaSystem.getLengthOf
-				(a_config.password()) > 0)
+			if (a_config.Encrypt() && a_config.Password() != null && a_config.Password().Length
+				 > 0)
 			{
 				i_encrypt = true;
-				i_encryptor = new byte[j4o.lang.JavaSystem.getLengthOf(a_config.password())];
+				i_encryptor = new byte[a_config.Password().Length];
 				for (int i = 0; i < i_encryptor.Length; i++)
 				{
-					i_encryptor[i] = (byte)(j4o.lang.JavaSystem.getCharAt(a_config.password(), i) & unchecked(
+					i_encryptor[i] = (byte)(j4o.lang.JavaSystem.GetCharAt(a_config.Password(), i) & unchecked(
 						(int)(0xff)));
 				}
-				i_lastEncryptorByte = j4o.lang.JavaSystem.getLengthOf(a_config.password()) - 1;
+				i_lastEncryptorByte = a_config.Password().Length - 1;
 			}
 			else
 			{
@@ -418,12 +418,12 @@ namespace com.db4o
 			}
 		}
 
-		internal static com.db4o.Db4oTypeImpl getDb4oType(com.db4o.reflect.ReflectClass clazz
+		internal static com.db4o.Db4oTypeImpl GetDb4oType(com.db4o.reflect.ReflectClass clazz
 			)
 		{
 			for (int i = 0; i < i_db4oTypes.Length; i++)
 			{
-				if (clazz.isInstance(i_db4oTypes[i]))
+				if (clazz.IsInstance(i_db4oTypes[i]))
 				{
 					return i_db4oTypes[i];
 				}
@@ -431,7 +431,7 @@ namespace com.db4o
 			return null;
 		}
 
-		public com.db4o.YapClass getYapClassStatic(int a_id)
+		public com.db4o.YapClass GetYapClassStatic(int a_id)
 		{
 			if (a_id > 0 && a_id <= i_maxTypeID)
 			{
@@ -440,40 +440,40 @@ namespace com.db4o
 			return null;
 		}
 
-		internal com.db4o.YapClass getYapClassStatic(com.db4o.reflect.ReflectClass a_class
+		internal com.db4o.YapClass GetYapClassStatic(com.db4o.reflect.ReflectClass a_class
 			)
 		{
 			if (a_class == null)
 			{
 				return null;
 			}
-			if (a_class.isArray())
+			if (a_class.IsArray())
 			{
-				if (_masterStream.reflector().array().isNDimensional(a_class))
+				if (_masterStream.Reflector().Array().IsNDimensional(a_class))
 				{
 					return i_anyArrayN;
 				}
 				return i_anyArray;
 			}
-			return (com.db4o.YapClass)i_classByClass.get(a_class);
+			return (com.db4o.YapClass)i_classByClass.Get(a_class);
 		}
 
-		public bool isSecondClass(object a_object)
+		public bool IsSecondClass(object a_object)
 		{
 			if (a_object != null)
 			{
-				com.db4o.reflect.ReflectClass claxx = _masterStream.reflector().forObject(a_object
+				com.db4o.reflect.ReflectClass claxx = _masterStream.Reflector().ForObject(a_object
 					);
-				if (i_classByClass.get(claxx) != null)
+				if (i_classByClass.Get(claxx) != null)
 				{
 					return true;
 				}
-				return com.db4o.Platform4.isValueType(claxx);
+				return com.db4o.Platform4.IsValueType(claxx);
 			}
 			return false;
 		}
 
-		internal int maxTypeID()
+		internal int MaxTypeID()
 		{
 			return i_maxTypeID;
 		}

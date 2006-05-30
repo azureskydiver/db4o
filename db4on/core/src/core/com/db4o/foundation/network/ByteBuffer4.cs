@@ -30,12 +30,12 @@ namespace com.db4o.foundation.network
 			i_timeout = timeout;
 		}
 
-		private int available()
+		private int Available()
 		{
 			return i_writeOffset - i_readOffset;
 		}
 
-		private void checkDiscardCache()
+		private void CheckDiscardCache()
 		{
 			if (i_readOffset == i_writeOffset && i_cache.Length > DISCARD_BUFFER_SIZE)
 			{
@@ -45,12 +45,12 @@ namespace com.db4o.foundation.network
 			}
 		}
 
-		internal virtual void close()
+		internal virtual void Close()
 		{
 			i_closed = true;
 		}
 
-		private void makefit(int length)
+		private void Makefit(int length)
 		{
 			if (i_cache == null)
 			{
@@ -63,8 +63,7 @@ namespace com.db4o.foundation.network
 					if (i_writeOffset + length - i_readOffset <= i_cache.Length)
 					{
 						byte[] temp = new byte[i_cache.Length];
-						j4o.lang.JavaSystem.arraycopy(i_cache, i_readOffset, temp, 0, i_cache.Length - i_readOffset
-							);
+						System.Array.Copy(i_cache, i_readOffset, temp, 0, i_cache.Length - i_readOffset);
 						i_cache = temp;
 						i_writeOffset -= i_readOffset;
 						i_readOffset = 0;
@@ -72,18 +71,18 @@ namespace com.db4o.foundation.network
 					else
 					{
 						byte[] temp = new byte[i_writeOffset + length];
-						j4o.lang.JavaSystem.arraycopy(i_cache, 0, temp, 0, i_cache.Length);
+						System.Array.Copy(i_cache, 0, temp, 0, i_cache.Length);
 						i_cache = temp;
 					}
 				}
 			}
 		}
 
-		public virtual int read()
+		public virtual int Read()
 		{
 			try
 			{
-				int ret = (int)i_lock.run(new _AnonymousInnerClass70(this));
+				int ret = (int)i_lock.Run(new _AnonymousInnerClass70(this));
 				return ret;
 			}
 			catch (System.IO.IOException iex)
@@ -103,22 +102,22 @@ namespace com.db4o.foundation.network
 				this._enclosing = _enclosing;
 			}
 
-			public object run()
+			public object Run()
 			{
-				this._enclosing.waitForAvailable();
+				this._enclosing.WaitForAvailable();
 				int retVal = this._enclosing.i_cache[this._enclosing.i_readOffset++];
-				this._enclosing.checkDiscardCache();
+				this._enclosing.CheckDiscardCache();
 				return retVal;
 			}
 
 			private readonly ByteBuffer4 _enclosing;
 		}
 
-		public virtual int read(byte[] a_bytes, int a_offset, int a_length)
+		public virtual int Read(byte[] a_bytes, int a_offset, int a_length)
 		{
 			try
 			{
-				int ret = (int)i_lock.run(new _AnonymousInnerClass90(this, a_length, a_bytes, a_offset
+				int ret = (int)i_lock.Run(new _AnonymousInnerClass90(this, a_length, a_bytes, a_offset
 					));
 				return ret;
 			}
@@ -143,19 +142,19 @@ namespace com.db4o.foundation.network
 				this.a_offset = a_offset;
 			}
 
-			public object run()
+			public object Run()
 			{
-				this._enclosing.waitForAvailable();
-				int avail = this._enclosing.available();
+				this._enclosing.WaitForAvailable();
+				int avail = this._enclosing.Available();
 				int length = a_length;
 				if (avail < a_length)
 				{
 					length = avail;
 				}
-				j4o.lang.JavaSystem.arraycopy(this._enclosing.i_cache, this._enclosing.i_readOffset
-					, a_bytes, a_offset, length);
+				System.Array.Copy(this._enclosing.i_cache, this._enclosing.i_readOffset, a_bytes, 
+					a_offset, length);
 				this._enclosing.i_readOffset += length;
-				this._enclosing.checkDiscardCache();
+				this._enclosing.CheckDiscardCache();
 				return avail;
 			}
 
@@ -168,40 +167,40 @@ namespace com.db4o.foundation.network
 			private readonly int a_offset;
 		}
 
-		public virtual void setTimeout(int timeout)
+		public virtual void SetTimeout(int timeout)
 		{
 			i_timeout = timeout;
 		}
 
-		private void waitForAvailable()
+		private void WaitForAvailable()
 		{
-			while (available() == 0)
+			while (Available() == 0)
 			{
 				try
 				{
-					i_lock.snooze(i_timeout);
+					i_lock.Snooze(i_timeout);
 				}
 				catch (System.Exception e)
 				{
-					throw new System.IO.IOException(com.db4o.Messages.get(55));
+					throw new System.IO.IOException(com.db4o.Messages.Get(55));
 				}
 			}
 			if (i_closed)
 			{
-				throw new System.IO.IOException(com.db4o.Messages.get(35));
+				throw new System.IO.IOException(com.db4o.Messages.Get(35));
 			}
 		}
 
-		public virtual void write(byte[] bytes)
+		public virtual void Write(byte[] bytes)
 		{
-			write(bytes, 0, bytes.Length);
+			Write(bytes, 0, bytes.Length);
 		}
 
-		public virtual void write(byte[] bytes, int off, int len)
+		public virtual void Write(byte[] bytes, int off, int len)
 		{
 			try
 			{
-				i_lock.run(new _AnonymousInnerClass138(this, len, bytes, off));
+				i_lock.Run(new _AnonymousInnerClass138(this, len, bytes, off));
 			}
 			catch (System.Exception e)
 			{
@@ -219,13 +218,13 @@ namespace com.db4o.foundation.network
 				this.off = off;
 			}
 
-			public object run()
+			public object Run()
 			{
-				this._enclosing.makefit(len);
-				j4o.lang.JavaSystem.arraycopy(bytes, off, this._enclosing.i_cache, this._enclosing
-					.i_writeOffset, len);
+				this._enclosing.Makefit(len);
+				System.Array.Copy(bytes, off, this._enclosing.i_cache, this._enclosing.i_writeOffset
+					, len);
 				this._enclosing.i_writeOffset += len;
-				this._enclosing.i_lock.awake();
+				this._enclosing.i_lock.Awake();
 				return null;
 			}
 
@@ -238,11 +237,11 @@ namespace com.db4o.foundation.network
 			private readonly int off;
 		}
 
-		public virtual void write(int i)
+		public virtual void Write(int i)
 		{
 			try
 			{
-				i_lock.run(new _AnonymousInnerClass156(this, i));
+				i_lock.Run(new _AnonymousInnerClass156(this, i));
 			}
 			catch (System.Exception e)
 			{
@@ -257,11 +256,11 @@ namespace com.db4o.foundation.network
 				this.i = i;
 			}
 
-			public object run()
+			public object Run()
 			{
-				this._enclosing.makefit(1);
+				this._enclosing.Makefit(1);
 				this._enclosing.i_cache[this._enclosing.i_writeOffset++] = (byte)i;
-				this._enclosing.i_lock.awake();
+				this._enclosing.i_lock.Awake();
 				return null;
 			}
 

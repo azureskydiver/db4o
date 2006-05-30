@@ -25,7 +25,7 @@ namespace com.db4o.foundation
 			_defaultValue = defaultValue;
 		}
 
-		public virtual object defaultValue()
+		public virtual object DefaultValue()
 		{
 			return _defaultValue;
 		}

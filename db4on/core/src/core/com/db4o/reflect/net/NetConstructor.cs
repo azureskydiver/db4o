@@ -1,4 +1,4 @@
-namespace com.db4o.reflect.net
+﻿namespace com.db4o.reflect.net
 {
 
 	/// <remarks>Reflection implementation for Constructor to map to JDK reflection.</remarks>
@@ -15,22 +15,22 @@ namespace com.db4o.reflect.net
 			this.constructor = constructor;
 		}
 
-		public virtual com.db4o.reflect.ReflectClass[] getParameterTypes()
+		public virtual com.db4o.reflect.ReflectClass[] GetParameterTypes()
 		{
-			return com.db4o.reflect.net.NetReflector.toMeta(reflector, constructor.getParameterTypes
+			return com.db4o.reflect.net.NetReflector.ToMeta(reflector, constructor.GetParameterTypes
 				());
 		}
 
-		public virtual void setAccessible()
+		public virtual void SetAccessible()
 		{
-			com.db4o.Platform4.setAccessible(constructor);
+			com.db4o.Platform4.SetAccessible(constructor);
 		}
 
-		public virtual object newInstance(object[] parameters)
+		public virtual object NewInstance(object[] parameters)
 		{
 			try
 			{
-				object obj = constructor.newInstance(parameters);
+				object obj = constructor.NewInstance(parameters);
 				return obj;
 			}
 			catch (System.Exception e)

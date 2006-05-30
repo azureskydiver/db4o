@@ -6,23 +6,23 @@ namespace com.db4o.ext
 	{
 		/// <summary>returns the name of this stored class.</summary>
 		/// <remarks>returns the name of this stored class.</remarks>
-		string getName();
+		string GetName();
 
 		/// <summary>returns an array of IDs of all stored object instances of this stored class.
 		/// 	</summary>
 		/// <remarks>returns an array of IDs of all stored object instances of this stored class.
 		/// 	</remarks>
-		long[] getIDs();
+		long[] GetIDs();
 
 		/// <summary>returns the StoredClass for the parent of the class, this StoredClass represents.
 		/// 	</summary>
 		/// <remarks>returns the StoredClass for the parent of the class, this StoredClass represents.
 		/// 	</remarks>
-		com.db4o.ext.StoredClass getParentStoredClass();
+		com.db4o.ext.StoredClass GetParentStoredClass();
 
 		/// <summary>returns all stored fields of this stored class.</summary>
 		/// <remarks>returns all stored fields of this stored class.</remarks>
-		com.db4o.ext.StoredField[] getStoredFields();
+		com.db4o.ext.StoredField[] GetStoredFields();
 
 		/// <summary>renames this stored class.</summary>
 		/// <remarks>
@@ -32,7 +32,7 @@ namespace com.db4o.ext
 		/// <br /><br />.NET: As the name you should provide [Classname, Assemblyname]<br /><br />
 		/// </remarks>
 		/// <param name="name">the new name</param>
-		void rename(string name);
+		void Rename(string name);
 
 		/// <summary>returns an existing stored field of this stored class.</summary>
 		/// <remarks>returns an existing stored field of this stored class.</remarks>
@@ -49,6 +49,6 @@ namespace com.db4o.ext
 		/// the
 		/// <see cref="com.db4o.ext.StoredField">com.db4o.ext.StoredField</see>
 		/// </returns>
-		com.db4o.ext.StoredField storedField(string name, object type);
+		com.db4o.ext.StoredField StoredField(string name, object type);
 	}
 }

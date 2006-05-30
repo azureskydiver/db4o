@@ -29,22 +29,22 @@ namespace com.db4o
 			i_index = a_index;
 			if (i_yapField != null)
 			{
-				if (!i_yapField.alive())
+				if (!i_yapField.Alive())
 				{
 					i_yapField = null;
 				}
 			}
 		}
 
-		internal virtual bool canHold(com.db4o.reflect.ReflectClass claxx)
+		internal virtual bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
-			return i_yapField == null || i_yapField.canHold(claxx);
+			return i_yapField == null || i_yapField.CanHold(claxx);
 		}
 
-		internal virtual object coerce(object a_object)
+		internal virtual object Coerce(object a_object)
 		{
 			com.db4o.reflect.ReflectClass claxx = null;
-			com.db4o.reflect.Reflector reflector = i_trans.reflector();
+			com.db4o.reflect.Reflector reflector = i_trans.Reflector();
 			if (a_object != null)
 			{
 				if (a_object is com.db4o.reflect.ReflectClass)
@@ -53,7 +53,7 @@ namespace com.db4o
 				}
 				else
 				{
-					claxx = reflector.forObject(a_object);
+					claxx = reflector.ForObject(a_object);
 				}
 			}
 			else
@@ -64,81 +64,81 @@ namespace com.db4o
 			{
 				return a_object;
 			}
-			return i_yapField.coerce(claxx, a_object);
+			return i_yapField.Coerce(claxx, a_object);
 		}
 
-		internal virtual com.db4o.YapClass getYapClass()
+		internal virtual com.db4o.YapClass GetYapClass()
 		{
 			if (i_yapField != null)
 			{
-				return i_yapField.getFieldYapClass(i_trans.i_stream);
+				return i_yapField.GetFieldYapClass(i_trans.i_stream);
 			}
 			return null;
 		}
 
-		internal virtual com.db4o.YapField getYapField(com.db4o.YapClass yc)
+		internal virtual com.db4o.YapField GetYapField(com.db4o.YapClass yc)
 		{
 			if (i_yapField != null)
 			{
 				return i_yapField;
 			}
-			com.db4o.YapField yf = yc.getYapField(i_name);
+			com.db4o.YapField yf = yc.GetYapField(i_name);
 			if (yf != null)
 			{
-				yf.alive();
+				yf.Alive();
 			}
 			return yf;
 		}
 
-		internal virtual bool isArray()
+		internal virtual bool IsArray()
 		{
-			return i_yapField != null && i_yapField.getHandler() is com.db4o.YapArray;
+			return i_yapField != null && i_yapField.GetHandler() is com.db4o.YapArray;
 		}
 
-		internal virtual bool isClass()
+		internal virtual bool IsClass()
 		{
-			return i_yapField == null || i_yapField.getHandler().getType() == com.db4o.YapConst
+			return i_yapField == null || i_yapField.GetHandler().GetTypeID() == com.db4o.YapConst
 				.TYPE_CLASS;
 		}
 
-		internal virtual bool isSimple()
+		internal virtual bool IsSimple()
 		{
-			return i_yapField != null && i_yapField.getHandler().getType() == com.db4o.YapConst
+			return i_yapField != null && i_yapField.GetHandler().GetTypeID() == com.db4o.YapConst
 				.TYPE_SIMPLE;
 		}
 
-		internal virtual com.db4o.YapComparable prepareComparison(object obj)
+		internal virtual com.db4o.YapComparable PrepareComparison(object obj)
 		{
 			if (i_yapField != null)
 			{
-				return i_yapField.prepareComparison(obj);
+				return i_yapField.PrepareComparison(obj);
 			}
 			if (obj == null)
 			{
 				return com.db4o.Null.INSTANCE;
 			}
-			com.db4o.YapClass yc = i_trans.i_stream.getYapClass(i_trans.reflector().forObject
+			com.db4o.YapClass yc = i_trans.i_stream.GetYapClass(i_trans.Reflector().ForObject
 				(obj), true);
-			com.db4o.YapField yf = yc.getYapField(i_name);
+			com.db4o.YapField yf = yc.GetYapField(i_name);
 			if (yf != null)
 			{
-				return yf.prepareComparison(obj);
+				return yf.PrepareComparison(obj);
 			}
 			return null;
 		}
 
-		internal virtual void unmarshall(com.db4o.Transaction a_trans)
+		internal virtual void Unmarshall(com.db4o.Transaction a_trans)
 		{
 			if (i_yapClassID != 0)
 			{
-				com.db4o.YapClass yc = a_trans.i_stream.getYapClass(i_yapClassID);
+				com.db4o.YapClass yc = a_trans.i_stream.GetYapClass(i_yapClassID);
 				i_yapField = yc.i_fields[i_index];
 			}
 		}
 
-		public virtual void visit(object obj)
+		public virtual void Visit(object obj)
 		{
-			((com.db4o.QCandidate)obj).useField(this);
+			((com.db4o.QCandidate)obj).UseField(this);
 		}
 	}
 }

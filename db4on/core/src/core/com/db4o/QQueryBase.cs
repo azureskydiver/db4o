@@ -31,39 +31,39 @@ namespace com.db4o
 
 		protected QQueryBase()
 		{
-			_this = cast(this);
+			_this = Cast(this);
 		}
 
 		protected QQueryBase(com.db4o.Transaction a_trans, com.db4o.QQuery a_parent, string
 			 a_field)
 		{
-			_this = cast(this);
+			_this = Cast(this);
 			i_trans = a_trans;
 			i_parent = a_parent;
 			i_field = a_field;
 		}
 
-		internal virtual void addConstraint(com.db4o.QCon a_constraint)
+		internal virtual void AddConstraint(com.db4o.QCon a_constraint)
 		{
-			i_constraints.add(a_constraint);
+			i_constraints.Add(a_constraint);
 		}
 
-		private void addConstraint(com.db4o.foundation.Collection4 col, object obj)
+		private void AddConstraint(com.db4o.foundation.Collection4 col, object obj)
 		{
 			bool found = false;
-			com.db4o.foundation.Iterator4 j = iterateConstraints();
-			while (j.hasNext())
+			com.db4o.foundation.Iterator4 j = IterateConstraints();
+			while (j.HasNext())
 			{
-				com.db4o.QCon existingConstraint = (com.db4o.QCon)j.next();
+				com.db4o.QCon existingConstraint = (com.db4o.QCon)j.Next();
 				bool[] removeExisting = { false };
-				com.db4o.QCon newConstraint = existingConstraint.shareParent(obj, removeExisting);
+				com.db4o.QCon newConstraint = existingConstraint.ShareParent(obj, removeExisting);
 				if (newConstraint != null)
 				{
-					addConstraint(newConstraint);
-					col.add(newConstraint);
+					AddConstraint(newConstraint);
+					col.Add(newConstraint);
 					if (removeExisting[0])
 					{
-						removeConstraint(existingConstraint);
+						RemoveConstraint(existingConstraint);
 					}
 					found = true;
 				}
@@ -72,8 +72,8 @@ namespace com.db4o
 			{
 				com.db4o.QConObject newConstraint = new com.db4o.QConObject(i_trans, null, null, 
 					obj);
-				addConstraint(newConstraint);
-				col.add(newConstraint);
+				AddConstraint(newConstraint);
+				col.Add(newConstraint);
 			}
 		}
 
@@ -82,13 +82,13 @@ namespace com.db4o
 		/// Search for slot that corresponds to class. <br />If not found add it.
 		/// <br />Constrain it. <br />
 		/// </remarks>
-		public virtual com.db4o.query.Constraint constrain(object example)
+		public virtual com.db4o.query.Constraint Constrain(object example)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				com.db4o.reflect.ReflectClass claxx = null;
-				example = com.db4o.Platform4.getClassForType(example);
-				com.db4o.reflect.Reflector reflector = i_trans.reflector();
+				example = com.db4o.Platform4.GetClassForType(example);
+				com.db4o.reflect.Reflector reflector = i_trans.Reflector();
 				if (example is com.db4o.reflect.ReflectClass)
 				{
 					claxx = (com.db4o.reflect.ReflectClass)example;
@@ -97,7 +97,7 @@ namespace com.db4o
 				{
 					if (example is j4o.lang.Class)
 					{
-						claxx = reflector.forClass((j4o.lang.Class)example);
+						claxx = reflector.ForClass((j4o.lang.Class)example);
 					}
 				}
 				if (claxx != null)
@@ -107,113 +107,113 @@ namespace com.db4o
 						return null;
 					}
 					com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
-					if (claxx.isInterface())
+					if (claxx.IsInterface())
 					{
-						com.db4o.foundation.Collection4 classes = i_trans.i_stream.i_classCollection.forInterface
+						com.db4o.foundation.Collection4 classes = i_trans.i_stream.i_classCollection.ForInterface
 							(claxx);
-						if (classes.size() == 0)
+						if (classes.Size() == 0)
 						{
 							com.db4o.QConClass qcc = new com.db4o.QConClass(i_trans, null, null, claxx);
-							addConstraint(qcc);
+							AddConstraint(qcc);
 							return qcc;
 						}
-						com.db4o.foundation.Iterator4 i = classes.iterator();
+						com.db4o.foundation.Iterator4 i = classes.Iterator();
 						com.db4o.query.Constraint constr = null;
-						while (i.hasNext())
+						while (i.HasNext())
 						{
-							com.db4o.YapClass yapClass = (com.db4o.YapClass)i.next();
-							com.db4o.reflect.ReflectClass yapClassClaxx = yapClass.classReflector();
+							com.db4o.YapClass yapClass = (com.db4o.YapClass)i.Next();
+							com.db4o.reflect.ReflectClass yapClassClaxx = yapClass.ClassReflector();
 							if (yapClassClaxx != null)
 							{
-								if (!yapClassClaxx.isInterface())
+								if (!yapClassClaxx.IsInterface())
 								{
 									if (constr == null)
 									{
-										constr = constrain(yapClassClaxx);
+										constr = Constrain(yapClassClaxx);
 									}
 									else
 									{
-										constr = constr.or(constrain(yapClass.classReflector()));
+										constr = constr.Or(Constrain(yapClass.ClassReflector()));
 									}
 								}
 							}
 						}
 						return constr;
 					}
-					com.db4o.foundation.Iterator4 constraintsIterator = iterateConstraints();
-					while (constraintsIterator.hasNext())
+					com.db4o.foundation.Iterator4 constraintsIterator = IterateConstraints();
+					while (constraintsIterator.HasNext())
 					{
-						com.db4o.QCon existingConstraint = (com.db4o.QConObject)constraintsIterator.next(
+						com.db4o.QCon existingConstraint = (com.db4o.QConObject)constraintsIterator.Next(
 							);
 						bool[] removeExisting = { false };
-						com.db4o.QCon newConstraint = existingConstraint.shareParentForClass(claxx, removeExisting
+						com.db4o.QCon newConstraint = existingConstraint.ShareParentForClass(claxx, removeExisting
 							);
 						if (newConstraint != null)
 						{
-							addConstraint(newConstraint);
-							col.add(newConstraint);
+							AddConstraint(newConstraint);
+							col.Add(newConstraint);
 							if (removeExisting[0])
 							{
-								removeConstraint(existingConstraint);
+								RemoveConstraint(existingConstraint);
 							}
 						}
 					}
-					if (col.size() == 0)
+					if (col.Size() == 0)
 					{
 						com.db4o.QConClass qcc = new com.db4o.QConClass(i_trans, null, null, claxx);
-						addConstraint(qcc);
+						AddConstraint(qcc);
 						return qcc;
 					}
-					if (col.size() == 1)
+					if (col.Size() == 1)
 					{
-						return (com.db4o.query.Constraint)col.iterator().next();
+						return (com.db4o.query.Constraint)col.Iterator().Next();
 					}
-					com.db4o.query.Constraint[] constraintArray = new com.db4o.query.Constraint[col.size
+					com.db4o.query.Constraint[] constraintArray = new com.db4o.query.Constraint[col.Size
 						()];
-					col.toArray(constraintArray);
+					col.ToArray(constraintArray);
 					return new com.db4o.QConstraints(i_trans, constraintArray);
 				}
-				com.db4o.QConEvaluation eval = com.db4o.Platform4.evaluationCreate(i_trans, example
+				com.db4o.QConEvaluation eval = com.db4o.Platform4.EvaluationCreate(i_trans, example
 					);
 				if (eval != null)
 				{
-					com.db4o.foundation.Iterator4 i = iterateConstraints();
-					while (i.hasNext())
+					com.db4o.foundation.Iterator4 i = IterateConstraints();
+					while (i.HasNext())
 					{
-						((com.db4o.QCon)i.next()).addConstraint(eval);
+						((com.db4o.QCon)i.Next()).AddConstraint(eval);
 					}
 					return null;
 				}
 				com.db4o.foundation.Collection4 constraints = new com.db4o.foundation.Collection4
 					();
-				addConstraint(constraints, example);
-				return toConstraint(constraints);
+				AddConstraint(constraints, example);
+				return ToConstraint(constraints);
 			}
 		}
 
-		public virtual com.db4o.query.Constraints constraints()
+		public virtual com.db4o.query.Constraints Constraints()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				com.db4o.query.Constraint[] constraints = new com.db4o.query.Constraint[i_constraints
-					.size()];
-				i_constraints.toArray(constraints);
+					.Size()];
+				i_constraints.ToArray(constraints);
 				return new com.db4o.QConstraints(i_trans, constraints);
 			}
 		}
 
-		public virtual com.db4o.query.Query descend(string a_field)
+		public virtual com.db4o.query.Query Descend(string a_field)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				com.db4o.QQuery query = new com.db4o.QQuery(i_trans, _this, a_field);
 				int[] run = { 1 };
-				if (!descend1(query, a_field, run))
+				if (!Descend1(query, a_field, run))
 				{
 					if (run[0] == 1)
 					{
 						run[0] = 2;
-						if (!descend1(query, a_field, run))
+						if (!Descend1(query, a_field, run))
 						{
 							return null;
 						}
@@ -223,20 +223,20 @@ namespace com.db4o
 			}
 		}
 
-		private bool descend1(com.db4o.QQuery query, string a_field, int[] run)
+		private bool Descend1(com.db4o.QQuery query, string a_field, int[] run)
 		{
 			bool[] foundClass = { false };
-			if (run[0] == 2 || i_constraints.size() == 0)
+			if (run[0] == 2 || i_constraints.Size() == 0)
 			{
 				run[0] = 0;
 				bool[] anyClassCollected = { false };
-				i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new _AnonymousInnerClass212
+				i_trans.i_stream.i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass214
 					(this, anyClassCollected));
 			}
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				if (((com.db4o.QCon)i.next()).attach(query, a_field))
+				if (((com.db4o.QCon)i.Next()).Attach(query, a_field))
 				{
 					foundClass[0] = true;
 				}
@@ -244,20 +244,20 @@ namespace com.db4o
 			return foundClass[0];
 		}
 
-		private sealed class _AnonymousInnerClass212 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass214 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass212(QQueryBase _enclosing, bool[] anyClassCollected)
+			public _AnonymousInnerClass214(QQueryBase _enclosing, bool[] anyClassCollected)
 			{
 				this._enclosing = _enclosing;
 				this.anyClassCollected = anyClassCollected;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
 				object[] pair = ((object[])obj);
 				com.db4o.YapClass parentYc = (com.db4o.YapClass)pair[0];
 				com.db4o.YapField yf = (com.db4o.YapField)pair[1];
-				com.db4o.YapClass childYc = yf.getFieldYapClass(this._enclosing.i_trans.i_stream);
+				com.db4o.YapClass childYc = yf.GetFieldYapClass(this._enclosing.i_trans.i_stream);
 				bool take = true;
 				if (childYc is com.db4o.YapClassAny)
 				{
@@ -273,8 +273,8 @@ namespace com.db4o
 				if (take)
 				{
 					com.db4o.QConClass qcc = new com.db4o.QConClass(this._enclosing.i_trans, null, yf
-						.qField(this._enclosing.i_trans), parentYc.classReflector());
-					this._enclosing.addConstraint(qcc);
+						.QField(this._enclosing.i_trans), parentYc.ClassReflector());
+					this._enclosing.AddConstraint(qcc);
 				}
 			}
 
@@ -283,43 +283,43 @@ namespace com.db4o
 			private readonly bool[] anyClassCollected;
 		}
 
-		public virtual com.db4o.ObjectSet execute()
+		public virtual com.db4o.ObjectSet Execute()
 		{
-			return new com.db4o.inside.query.ObjectSetFacade(getQueryResult());
+			return new com.db4o.inside.query.ObjectSetFacade(GetQueryResult());
 		}
 
-		public virtual com.db4o.inside.query.QueryResult getQueryResult()
+		public virtual com.db4o.inside.query.QueryResult GetQueryResult()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				com.db4o.YapStream stream = i_trans.i_stream;
-				if (i_constraints.size() == 0)
+				if (i_constraints.Size() == 0)
 				{
-					com.db4o.QueryResultImpl res = stream.createQResult(i_trans);
-					stream.getAll(i_trans, res);
+					com.db4o.QueryResultImpl res = stream.CreateQResult(i_trans);
+					stream.GetAll(i_trans, res);
 					return res;
 				}
-				com.db4o.inside.query.QueryResult result = classOnlyQuery();
+				com.db4o.inside.query.QueryResult result = ClassOnlyQuery();
 				if (result != null)
 				{
-					result.reset();
+					result.Reset();
 					return result;
 				}
 				com.db4o.QueryResultImpl qResult = new com.db4o.QueryResultImpl(i_trans);
-				execute1(qResult);
+				Execute1(qResult);
 				return qResult;
 			}
 		}
 
-		private com.db4o.inside.query.QueryResult classOnlyQuery()
+		private com.db4o.inside.query.QueryResult ClassOnlyQuery()
 		{
-			if (i_constraints.size() != 1 || _comparator != null)
+			if (i_constraints.Size() != 1 || _comparator != null)
 			{
 				return null;
 			}
-			com.db4o.query.Constraint constr = (com.db4o.query.Constraint)iterateConstraints(
-				).next();
-			if (j4o.lang.Class.getClassForObject(constr) != j4o.lang.Class.getClassForType(typeof(
+			com.db4o.query.Constraint constr = (com.db4o.query.Constraint)IterateConstraints(
+				).Next();
+			if (j4o.lang.Class.GetClassForObject(constr) != j4o.lang.Class.GetClassForType(typeof(
 				com.db4o.QConClass)))
 			{
 				return null;
@@ -330,51 +330,50 @@ namespace com.db4o
 			{
 				return null;
 			}
-			if (clazzconstr.hasChildren() || clazz.isArray())
+			if (clazzconstr.HasChildren() || clazz.IsArray())
 			{
 				return null;
 			}
-			com.db4o.ClassIndex classIndex = clazz.getIndex();
-			if (classIndex == null)
+			if (clazz.Index() == null)
 			{
 				return null;
 			}
-			if (i_trans.i_stream.isClient())
+			if (i_trans.i_stream.IsClient())
 			{
-				long[] ids = classIndex.getInternalIDs(i_trans, clazz.getID());
+				long[] ids = clazz.GetIDs(i_trans);
 				com.db4o.QResultClient resClient = new com.db4o.QResultClient(i_trans, ids.Length
 					);
 				for (int i = 0; i < ids.Length; i++)
 				{
-					resClient.add((int)ids[i]);
+					resClient.Add((int)ids[i]);
 				}
-				sort(resClient);
+				Sort(resClient);
 				return resClient;
 			}
-			com.db4o.Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
+			com.db4o.Tree tree = clazz.GetIndex(i_trans);
 			if (tree == null)
 			{
 				return new com.db4o.QueryResultImpl(i_trans);
 			}
-			com.db4o.QueryResultImpl resLocal = new com.db4o.QueryResultImpl(i_trans, tree.size
+			com.db4o.QueryResultImpl resLocal = new com.db4o.QueryResultImpl(i_trans, tree.Size
 				());
-			tree.traverse(new _AnonymousInnerClass323(this, resLocal));
-			sort(resLocal);
+			tree.Traverse(new _AnonymousInnerClass332(this, resLocal));
+			Sort(resLocal);
 			return resLocal;
 		}
 
-		private sealed class _AnonymousInnerClass323 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass332 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass323(QQueryBase _enclosing, com.db4o.QueryResultImpl resLocal
+			public _AnonymousInnerClass332(QQueryBase _enclosing, com.db4o.QueryResultImpl resLocal
 				)
 			{
 				this._enclosing = _enclosing;
 				this.resLocal = resLocal;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				resLocal.add(((com.db4o.TreeInt)a_object)._key);
+				resLocal.Add(((com.db4o.TreeInt)a_object)._key);
 			}
 
 			private readonly QQueryBase _enclosing;
@@ -382,47 +381,48 @@ namespace com.db4o
 			private readonly com.db4o.QueryResultImpl resLocal;
 		}
 
-		internal virtual void execute1(com.db4o.QueryResultImpl result)
+		internal virtual void Execute1(com.db4o.QueryResultImpl result)
 		{
-			if (i_trans.i_stream.isClient())
+			if (i_trans.i_stream.IsClient())
 			{
-				marshall();
-				((com.db4o.YapClient)i_trans.i_stream).queryExecute(_this, result);
+				Marshall();
+				((com.db4o.YapClient)i_trans.i_stream).QueryExecute(_this, result);
 			}
 			else
 			{
-				executeLocal(result);
+				ExecuteLocal(result);
 			}
 		}
 
-		internal virtual void executeLocal(com.db4o.QueryResultImpl result)
+		internal virtual void ExecuteLocal(com.db4o.QueryResultImpl result)
 		{
+			com.db4o.YapStream stream = i_trans.i_stream;
 			bool checkDuplicates = false;
 			bool topLevel = true;
 			com.db4o.foundation.List4 candidateCollection = null;
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				com.db4o.QCon qcon = (com.db4o.QCon)i.next();
+				com.db4o.QCon qcon = (com.db4o.QCon)i.Next();
 				com.db4o.QCon old = qcon;
 				bool found = false;
-				qcon = qcon.getRoot();
+				qcon = qcon.GetRoot();
 				if (qcon != old)
 				{
 					checkDuplicates = true;
 					topLevel = false;
 				}
-				com.db4o.YapClass yc = qcon.getYapClass();
+				com.db4o.YapClass yc = qcon.GetYapClass();
 				if (yc != null)
 				{
 					if (candidateCollection != null)
 					{
 						com.db4o.foundation.Iterator4 j = new com.db4o.foundation.Iterator4Impl(candidateCollection
 							);
-						while (j.hasNext())
+						while (j.HasNext())
 						{
-							com.db4o.QCandidates candidates = (com.db4o.QCandidates)j.next();
-							if (candidates.tryAddConstraint(qcon))
+							com.db4o.QCandidates candidates = (com.db4o.QCandidates)j.Next();
+							if (candidates.TryAddConstraint(qcon))
 							{
 								found = true;
 								break;
@@ -431,9 +431,9 @@ namespace com.db4o
 					}
 					if (!found)
 					{
-						com.db4o.QCandidates candidates = new com.db4o.QCandidates(i_trans, qcon.getYapClass
+						com.db4o.QCandidates candidates = new com.db4o.QCandidates(i_trans, qcon.GetYapClass
 							(), null);
-						candidates.addConstraint(qcon);
+						candidates.AddConstraint(qcon);
 						candidateCollection = new com.db4o.foundation.List4(candidateCollection, candidates
 							);
 					}
@@ -442,9 +442,9 @@ namespace com.db4o
 			if (candidateCollection != null)
 			{
 				i = new com.db4o.foundation.Iterator4Impl(candidateCollection);
-				while (i.hasNext())
+				while (i.HasNext())
 				{
-					((com.db4o.QCandidates)i.next()).execute();
+					((com.db4o.QCandidates)i.Next()).Execute();
 				}
 				if (candidateCollection._next != null)
 				{
@@ -452,15 +452,15 @@ namespace com.db4o
 				}
 				if (checkDuplicates)
 				{
-					result.checkDuplicates();
+					result.CheckDuplicates();
 				}
 				i = new com.db4o.foundation.Iterator4Impl(candidateCollection);
-				while (i.hasNext())
+				while (i.HasNext())
 				{
-					com.db4o.QCandidates candidates = (com.db4o.QCandidates)i.next();
+					com.db4o.QCandidates candidates = (com.db4o.QCandidates)i.Next();
 					if (topLevel)
 					{
-						candidates.traverse(result);
+						candidates.Traverse(result);
 					}
 					else
 					{
@@ -468,97 +468,102 @@ namespace com.db4o
 						com.db4o.foundation.Collection4 fieldPath = new com.db4o.foundation.Collection4();
 						while (q.i_parent != null)
 						{
-							fieldPath.add(q.i_field);
+							fieldPath.Add(q.i_field);
 							q = q.i_parent;
 						}
-						candidates.traverse(new _AnonymousInnerClass411(this, fieldPath, result));
+						candidates.Traverse(new _AnonymousInnerClass421(this, fieldPath, stream, result));
 					}
 				}
 			}
-			sort(result);
-			result.reset();
+			Sort(result);
+			result.Reset();
 		}
 
-		private sealed class _AnonymousInnerClass411 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass421 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass411(QQueryBase _enclosing, com.db4o.foundation.Collection4
-				 fieldPath, com.db4o.QueryResultImpl result)
+			public _AnonymousInnerClass421(QQueryBase _enclosing, com.db4o.foundation.Collection4
+				 fieldPath, com.db4o.YapStream stream, com.db4o.QueryResultImpl result)
 			{
 				this._enclosing = _enclosing;
 				this.fieldPath = fieldPath;
+				this.stream = stream;
 				this.result = result;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.QCandidate candidate = (com.db4o.QCandidate)a_object;
-				if (candidate.include())
+				if (candidate.Include())
 				{
 					com.db4o.TreeInt ids = new com.db4o.TreeInt(candidate._key);
 					com.db4o.TreeInt[] idsNew = new com.db4o.TreeInt[1];
-					com.db4o.foundation.Iterator4 itPath = fieldPath.iterator();
-					while (itPath.hasNext())
+					com.db4o.foundation.Iterator4 itPath = fieldPath.Iterator();
+					while (itPath.HasNext())
 					{
 						idsNew[0] = null;
-						string fieldName = (string)(itPath.next());
+						string fieldName = (string)(itPath.Next());
 						if (ids != null)
 						{
-							ids.traverse(new _AnonymousInnerClass422(this, idsNew, fieldName));
+							ids.Traverse(new _AnonymousInnerClass432(this, stream, idsNew, fieldName));
 						}
 						ids = idsNew[0];
 					}
 					if (ids != null)
 					{
-						ids.traverse(new _AnonymousInnerClass446(this, result));
+						ids.Traverse(new _AnonymousInnerClass452(this, result));
 					}
 				}
 			}
 
-			private sealed class _AnonymousInnerClass422 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass432 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass422(_AnonymousInnerClass411 _enclosing, com.db4o.TreeInt[]
-					 idsNew, string fieldName)
+				public _AnonymousInnerClass432(_AnonymousInnerClass421 _enclosing, com.db4o.YapStream
+					 stream, com.db4o.TreeInt[] idsNew, string fieldName)
 				{
 					this._enclosing = _enclosing;
+					this.stream = stream;
 					this.idsNew = idsNew;
 					this.fieldName = fieldName;
 				}
 
-				public void visit(object treeInt)
+				public void Visit(object treeInt)
 				{
 					int id = ((com.db4o.TreeInt)treeInt)._key;
-					com.db4o.YapWriter reader = this._enclosing._enclosing.i_trans.i_stream.readWriterByID
-						(this._enclosing._enclosing.i_trans, id);
+					com.db4o.YapWriter reader = stream.ReadWriterByID(this._enclosing._enclosing.i_trans
+						, id);
 					if (reader != null)
 					{
-						com.db4o.YapClass yc = this._enclosing._enclosing.i_trans.i_stream.getYapClass(reader
-							.readInt());
-						idsNew[0] = yc.collectFieldIDs(idsNew[0], reader, fieldName);
+						com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
+							(stream, reader);
+						idsNew[0] = oh._yapClass.CollectFieldIDs(oh._marshallerFamily, oh._headerAttributes
+							, idsNew[0], reader, fieldName);
 					}
 				}
 
-				private readonly _AnonymousInnerClass411 _enclosing;
+				private readonly _AnonymousInnerClass421 _enclosing;
+
+				private readonly com.db4o.YapStream stream;
 
 				private readonly com.db4o.TreeInt[] idsNew;
 
 				private readonly string fieldName;
 			}
 
-			private sealed class _AnonymousInnerClass446 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass452 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass446(_AnonymousInnerClass411 _enclosing, com.db4o.QueryResultImpl
+				public _AnonymousInnerClass452(_AnonymousInnerClass421 _enclosing, com.db4o.QueryResultImpl
 					 result)
 				{
 					this._enclosing = _enclosing;
 					this.result = result;
 				}
 
-				public void visit(object treeInt)
+				public void Visit(object treeInt)
 				{
-					result.addKeyCheckDuplicates(((com.db4o.TreeInt)treeInt)._key);
+					result.AddKeyCheckDuplicates(((com.db4o.TreeInt)treeInt)._key);
 				}
 
-				private readonly _AnonymousInnerClass411 _enclosing;
+				private readonly _AnonymousInnerClass421 _enclosing;
 
 				private readonly com.db4o.QueryResultImpl result;
 			}
@@ -567,112 +572,114 @@ namespace com.db4o
 
 			private readonly com.db4o.foundation.Collection4 fieldPath;
 
+			private readonly com.db4o.YapStream stream;
+
 			private readonly com.db4o.QueryResultImpl result;
 		}
 
-		internal virtual com.db4o.Transaction getTransaction()
+		internal virtual com.db4o.Transaction GetTransaction()
 		{
 			return i_trans;
 		}
 
-		internal virtual com.db4o.foundation.Iterator4 iterateConstraints()
+		internal virtual com.db4o.foundation.Iterator4 IterateConstraints()
 		{
-			return i_constraints.iterator();
+			return i_constraints.Iterator();
 		}
 
-		public virtual com.db4o.query.Query orderAscending()
+		public virtual com.db4o.query.Query OrderAscending()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				setOrdering(i_orderingGenerator.next());
+				SetOrdering(i_orderingGenerator.Next());
 				return _this;
 			}
 		}
 
-		public virtual com.db4o.query.Query orderDescending()
+		public virtual com.db4o.query.Query OrderDescending()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				setOrdering(-i_orderingGenerator.next());
+				SetOrdering(-i_orderingGenerator.Next());
 				return _this;
 			}
 		}
 
-		private void setOrdering(int ordering)
+		private void SetOrdering(int ordering)
 		{
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).setOrdering(ordering);
+				((com.db4o.QCon)i.Next()).SetOrdering(ordering);
 			}
 		}
 
-		internal virtual void marshall()
+		internal virtual void Marshall()
 		{
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).getRoot().marshall();
+				((com.db4o.QCon)i.Next()).GetRoot().Marshall();
 			}
 		}
 
-		internal virtual void removeConstraint(com.db4o.QCon a_constraint)
+		internal virtual void RemoveConstraint(com.db4o.QCon a_constraint)
 		{
-			i_constraints.remove(a_constraint);
+			i_constraints.Remove(a_constraint);
 		}
 
-		internal virtual void unmarshall(com.db4o.Transaction a_trans)
+		internal virtual void Unmarshall(com.db4o.Transaction a_trans)
 		{
 			i_trans = a_trans;
-			com.db4o.foundation.Iterator4 i = iterateConstraints();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = IterateConstraints();
+			while (i.HasNext())
 			{
-				((com.db4o.QCon)i.next()).unmarshall(a_trans);
+				((com.db4o.QCon)i.Next()).Unmarshall(a_trans);
 			}
 		}
 
-		internal virtual com.db4o.query.Constraint toConstraint(com.db4o.foundation.Collection4
+		internal virtual com.db4o.query.Constraint ToConstraint(com.db4o.foundation.Collection4
 			 constraints)
 		{
-			com.db4o.foundation.Iterator4 i = constraints.iterator();
-			if (constraints.size() == 1)
+			com.db4o.foundation.Iterator4 i = constraints.Iterator();
+			if (constraints.Size() == 1)
 			{
-				return (com.db4o.query.Constraint)i.next();
+				return (com.db4o.query.Constraint)i.Next();
 			}
 			else
 			{
-				if (constraints.size() > 0)
+				if (constraints.Size() > 0)
 				{
 					com.db4o.query.Constraint[] constraintArray = new com.db4o.query.Constraint[constraints
-						.size()];
-					constraints.toArray(constraintArray);
+						.Size()];
+					constraints.ToArray(constraintArray);
 					return new com.db4o.QConstraints(i_trans, constraintArray);
 				}
 			}
 			return null;
 		}
 
-		protected virtual object streamLock()
+		protected virtual object StreamLock()
 		{
 			return i_trans.i_stream.i_lock;
 		}
 
-		public virtual com.db4o.query.Query sortBy(com.db4o.query.QueryComparator comparator
+		public virtual com.db4o.query.Query SortBy(com.db4o.query.QueryComparator comparator
 			)
 		{
 			_comparator = comparator;
 			return _this;
 		}
 
-		private void sort(com.db4o.QueryResultImpl result)
+		private void Sort(com.db4o.QueryResultImpl result)
 		{
 			if (_comparator != null)
 			{
-				result.sort(_comparator);
+				result.Sort(_comparator);
 			}
 		}
 
-		private static com.db4o.QQuery cast(com.db4o.QQueryBase obj)
+		private static com.db4o.QQuery Cast(com.db4o.QQueryBase obj)
 		{
 			return (com.db4o.QQuery)obj;
 		}

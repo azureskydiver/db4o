@@ -1,22 +1,23 @@
 namespace com.db4o
 {
 	/// <summary>marker interface for special db4o datatypes</summary>
-	internal interface Db4oTypeImpl : com.db4o.TransactionAware
+	/// <exclude></exclude>
+	public interface Db4oTypeImpl : com.db4o.TransactionAware
 	{
-		int adjustReadDepth(int a_depth);
+		int AdjustReadDepth(int a_depth);
 
-		bool canBind();
+		bool CanBind();
 
-		object createDefault(com.db4o.Transaction a_trans);
+		object CreateDefault(com.db4o.Transaction a_trans);
 
-		bool hasClassIndex();
+		bool HasClassIndex();
 
-		void replicateFrom(object obj);
+		void ReplicateFrom(object obj);
 
-		void setYapObject(com.db4o.YapObject a_yapObject);
+		void SetYapObject(com.db4o.YapObject a_yapObject);
 
-		object storedTo(com.db4o.Transaction a_trans);
+		object StoredTo(com.db4o.Transaction a_trans);
 
-		void preDeactivate();
+		void PreDeactivate();
 	}
 }

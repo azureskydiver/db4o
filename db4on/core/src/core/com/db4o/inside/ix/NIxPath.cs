@@ -23,10 +23,10 @@ namespace com.db4o.inside.ix
 			_type = pathType;
 		}
 
-		public override int compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.Tree a_to)
 		{
 			com.db4o.inside.ix.NIxPath other = (com.db4o.inside.ix.NIxPath)a_to;
-			return _head.compare(other._head, _type, other._type);
+			return _head.Compare(other._head, _type, other._type);
 		}
 
 		public override string ToString()
@@ -45,11 +45,11 @@ namespace com.db4o.inside.ix
 			return str;
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.inside.ix.NIxPath path = new com.db4o.inside.ix.NIxPath(_head, _takePreceding
 				, _takeMatches, _takeSubsequent, _type);
-			base.shallowCloneInternal(path);
+			base.ShallowCloneInternal(path);
 			return path;
 		}
 	}

@@ -10,7 +10,7 @@ namespace com.db4o.nativequery.expr.cmp
 			_fieldName = name;
 		}
 
-		public virtual string fieldName()
+		public virtual string FieldName()
 		{
 			return _fieldName;
 		}
@@ -36,10 +36,10 @@ namespace com.db4o.nativequery.expr.cmp
 			return base.ToString() + "." + _fieldName;
 		}
 
-		public override void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
+		public override void Accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 	}
 }

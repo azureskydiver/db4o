@@ -12,6 +12,6 @@ namespace com.db4o.foundation
 		/// The parameter allows passing one new object so parent
 		/// references can be corrected on children.
 		/// </remarks>
-		object deepClone(object context);
+		object DeepClone(object context);
 	}
 }

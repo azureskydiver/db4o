@@ -36,11 +36,11 @@ namespace com.db4o.io.crypt
 		private int[] _key;
 
 		public XTEA(string key, com.db4o.io.crypt.XTEA.IterationSpec iterationSpec) : this
-			(new com.db4o.io.crypt.KeyGenerator().core(key), iterationSpec)
+			(new com.db4o.io.crypt.KeyGenerator().Core(key), iterationSpec)
 		{
 		}
 
-		public XTEA(string key) : this(new com.db4o.io.crypt.KeyGenerator().core(key), ITERATIONS32
+		public XTEA(string key) : this(new com.db4o.io.crypt.KeyGenerator().Core(key), ITERATIONS32
 			)
 		{
 		}
@@ -63,7 +63,7 @@ namespace com.db4o.io.crypt
 		/// <param name="bytes">Incoming byte array of length eight to be converted<br /></param>
 		/// <param name="offset">Offset from which to start converting bytes<br /></param>
 		/// <param name="res">Int array of length two which contains converted array bytes.</param>
-		private void byte2int(byte[] bytes, int offset, int[] res)
+		private void Byte2int(byte[] bytes, int offset, int[] res)
 		{
 			res[0] = (int)((((int)bytes[offset] & unchecked((int)(0xff))) << 24) | (((int)bytes
 				[offset + 1] & unchecked((int)(0xff))) << 16) | (((int)bytes[offset + 2] & unchecked(
@@ -85,21 +85,15 @@ namespace com.db4o.io.crypt
 		/// byte array of length eight which contains converted integer
 		/// array i.
 		/// </param>
-		private void int2byte(int[] i, int offset, byte[] res)
+		private void Int2byte(int[] i, int offset, byte[] res)
 		{
-			res[offset] = (byte)(unchecked((int)(unchecked((uint)((i[0] & unchecked((int)(0xff000000
-				))))) >> 24)));
-			res[offset + 1] = (byte)(unchecked((int)(unchecked((uint)((i[0] & unchecked((int)
-				(0x00ff0000))))) >> 16)));
-			res[offset + 2] = (byte)(unchecked((int)(unchecked((uint)((i[0] & unchecked((int)
-				(0x0000ff00))))) >> 8)));
+			res[offset] = (byte)(((i[0] & unchecked((int)(0xff000000)))) >> (24 & 0x1f));
+			res[offset + 1] = (byte)(((i[0] & unchecked((int)(0x00ff0000)))) >> (16 & 0x1f));
+			res[offset + 2] = (byte)(((i[0] & unchecked((int)(0x0000ff00)))) >> (8 & 0x1f));
 			res[offset + 3] = (byte)(i[0] & unchecked((int)(0x000000ff)));
-			res[offset + 4] = (byte)(unchecked((int)(unchecked((uint)((i[1] & unchecked((int)
-				(0xff000000))))) >> 24)));
-			res[offset + 5] = (byte)(unchecked((int)(unchecked((uint)((i[1] & unchecked((int)
-				(0x00ff0000))))) >> 16)));
-			res[offset + 6] = (byte)(unchecked((int)(unchecked((uint)((i[1] & unchecked((int)
-				(0x0000ff00))))) >> 8)));
+			res[offset + 4] = (byte)(((i[1] & unchecked((int)(0xff000000)))) >> (24 & 0x1f));
+			res[offset + 5] = (byte)(((i[1] & unchecked((int)(0x00ff0000)))) >> (16 & 0x1f));
+			res[offset + 6] = (byte)(((i[1] & unchecked((int)(0x0000ff00)))) >> (8 & 0x1f));
 			res[offset + 7] = (byte)(i[1] & unchecked((int)(0x000000ff)));
 		}
 
@@ -109,7 +103,7 @@ namespace com.db4o.io.crypt
 		/// int array to be encipher according to the XTEA encryption
 		/// algorithm<br />
 		/// </param>
-		private void encipher(int[] block)
+		private void Encipher(int[] block)
 		{
 			int n = _iterationSpec._iterations;
 			int delta_sum = 0;
@@ -128,7 +122,7 @@ namespace com.db4o.io.crypt
 		/// int array to be decipher according to the XTEA encryption
 		/// algorithm<br />
 		/// </param>
-		private void decipher(int[] e_block)
+		private void Decipher(int[] e_block)
 		{
 			int delta_sum = _iterationSpec._deltaSumInitial;
 			int n = _iterationSpec._iterations;
@@ -144,27 +138,27 @@ namespace com.db4o.io.crypt
 
 		/// <summary>encrypts incoming byte array according XTEA</summary>
 		/// <param name="buffer">incoming byte array to be encrypted</param>
-		public virtual void encrypt(byte[] buffer)
+		public virtual void Encrypt(byte[] buffer)
 		{
 			int[] asInt = new int[2];
 			for (int i = 0; i < buffer.Length; i += 8)
 			{
-				byte2int(buffer, i, asInt);
-				encipher(asInt);
-				int2byte(asInt, i, buffer);
+				Byte2int(buffer, i, asInt);
+				Encipher(asInt);
+				Int2byte(asInt, i, buffer);
 			}
 		}
 
 		/// <summary>decrypts incoming byte array according XTEA</summary>
 		/// <param name="buffer">incoming byte array to be decrypted</param>
-		public virtual void decrypt(byte[] buffer)
+		public virtual void Decrypt(byte[] buffer)
 		{
 			int[] asInt = new int[2];
 			for (int i = 0; i < buffer.Length; i += 8)
 			{
-				byte2int(buffer, i, asInt);
-				decipher(asInt);
-				int2byte(asInt, i, buffer);
+				Byte2int(buffer, i, asInt);
+				Decipher(asInt);
+				Int2byte(asInt, i, buffer);
 			}
 		}
 	}

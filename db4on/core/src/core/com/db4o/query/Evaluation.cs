@@ -10,7 +10,7 @@ namespace com.db4o.query
 	/// <code>Evaluation</code>, construct an object that implements the
 	/// <code>Evaluation</code> interface and register it by passing it
 	/// to
-	/// <see cref="com.db4o.query.Query.constrain">com.db4o.query.Query.constrain</see>
+	/// <see cref="com.db4o.query.Query.Constrain">com.db4o.query.Query.Constrain</see>
 	/// .
 	/// <br /><br />
 	/// Evaluations are called as the last step during query execution,
@@ -31,10 +31,10 @@ namespace com.db4o.query
 	{
 		/// <summary>
 		/// callback method during
-		/// <see cref="com.db4o.query.Query.execute">query execution</see>
+		/// <see cref="com.db4o.query.Query.Execute">query execution</see>
 		/// .
 		/// </summary>
 		/// <param name="candidate">reference to the candidate persistent object.</param>
-		void evaluate(com.db4o.query.Candidate candidate);
+		void Evaluate(com.db4o.query.Candidate candidate);
 	}
 }

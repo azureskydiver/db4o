@@ -32,14 +32,14 @@ namespace com.db4o
 			{
 				throw new System.ArgumentNullException();
 			}
-			lock (peerA.ext().Lock())
+			lock (peerA.Ext().Lock())
 			{
-				lock (peerB.ext().Lock())
+				lock (peerB.Ext().Lock())
 				{
 					_peerA = peerA;
-					_transA = peerA.checkTransaction(null);
+					_transA = peerA.CheckTransaction(null);
 					_peerB = (com.db4o.YapStream)peerB;
-					_transB = _peerB.checkTransaction(null);
+					_transB = _peerB.CheckTransaction(null);
 					com.db4o.inside.replication.MigrationConnection mgc = new com.db4o.inside.replication.MigrationConnection
 						(_peerA, _peerB);
 					_peerA.i_handlers.i_migration = mgc;
@@ -49,67 +49,67 @@ namespace com.db4o
 					_peerB.i_handlers.i_replication = this;
 					_peerB._replicationCallState = com.db4o.YapConst.OLD;
 					_conflictHandler = conflictHandler;
-					_record = com.db4o.ReplicationRecord.beginReplication(_transA, _transB);
+					_record = com.db4o.ReplicationRecord.BeginReplication(_transA, _transB);
 				}
 			}
 		}
 
-		private int bindAndSet(com.db4o.Transaction trans, com.db4o.YapStream peer, com.db4o.YapObject
+		private int BindAndSet(com.db4o.Transaction trans, com.db4o.YapStream peer, com.db4o.YapObject
 			 _ref, object sourceObject)
 		{
 			if (sourceObject is com.db4o.Db4oTypeImpl)
 			{
 				com.db4o.Db4oTypeImpl db4oType = (com.db4o.Db4oTypeImpl)sourceObject;
-				if (!db4oType.canBind())
+				if (!db4oType.CanBind())
 				{
-					com.db4o.Db4oTypeImpl targetObject = (com.db4o.Db4oTypeImpl)_ref.getObject();
-					targetObject.replicateFrom(sourceObject);
-					return _ref.getID();
+					com.db4o.Db4oTypeImpl targetObject = (com.db4o.Db4oTypeImpl)_ref.GetObject();
+					targetObject.ReplicateFrom(sourceObject);
+					return _ref.GetID();
 				}
 			}
-			peer.bind2(_ref, sourceObject);
-			return peer.setAfterReplication(trans, sourceObject, 1, true);
+			peer.Bind2(_ref, sourceObject);
+			return peer.SetAfterReplication(trans, sourceObject, 1, true);
 		}
 
-		public virtual void checkConflict(object obj)
+		public virtual void CheckConflict(object obj)
 		{
 			int temp = _direction;
 			_direction = CHECK_CONFLICT;
-			replicate(obj);
+			Replicate(obj);
 			_direction = temp;
 		}
 
-		public virtual void commit()
+		public virtual void Commit()
 		{
 			lock (_peerA.Lock())
 			{
 				lock (_peerB.Lock())
 				{
-					_peerA.commit();
-					_peerB.commit();
-					endReplication();
-					long versionA = _peerA.currentVersion() - 1;
-					long versionB = _peerB.currentVersion() - 1;
+					_peerA.Commit();
+					_peerB.Commit();
+					EndReplication();
+					long versionA = _peerA.CurrentVersion() - 1;
+					long versionB = _peerB.CurrentVersion() - 1;
 					_record._version = versionB;
 					if (versionA > versionB)
 					{
 						_record._version = versionA;
-						_peerB.raiseVersion(_record._version + 1);
+						_peerB.RaiseVersion(_record._version + 1);
 					}
 					else
 					{
 						if (versionB > versionA)
 						{
-							_peerA.raiseVersion(_record._version + 1);
+							_peerA.RaiseVersion(_record._version + 1);
 						}
 					}
-					_record.store(_peerA);
-					_record.store(_peerB);
+					_record.Store(_peerA);
+					_record.Store(_peerB);
 				}
 			}
 		}
 
-		private void endReplication()
+		private void EndReplication()
 		{
 			_peerA._replicationCallState = com.db4o.YapConst.NONE;
 			_peerA.i_handlers.i_migration = null;
@@ -119,13 +119,13 @@ namespace com.db4o
 			_peerB.i_handlers.i_replication = null;
 		}
 
-		private int idInCaller(com.db4o.YapStream caller, com.db4o.YapObject referenceA, 
+		private int IdInCaller(com.db4o.YapStream caller, com.db4o.YapObject referenceA, 
 			com.db4o.YapObject referenceB)
 		{
-			return (caller == _peerA) ? referenceA.getID() : referenceB.getID();
+			return (caller == _peerA) ? referenceA.GetID() : referenceB.GetID();
 		}
 
-		private int ignoreOrCheckConflict()
+		private int IgnoreOrCheckConflict()
 		{
 			if (_direction == CHECK_CONFLICT)
 			{
@@ -134,7 +134,7 @@ namespace com.db4o
 			return IGNORE;
 		}
 
-		private bool isInConflict(long versionA, long versionB)
+		private bool IsInConflict(long versionA, long versionB)
 		{
 			if (versionA > _record._version && versionB > _record._version)
 			{
@@ -151,42 +151,42 @@ namespace com.db4o
 			return false;
 		}
 
-		private long lastSynchronization()
+		private long LastSynchronization()
 		{
 			return _record._version;
 		}
 
-		public virtual com.db4o.ObjectContainer peerA()
+		public virtual com.db4o.ObjectContainer PeerA()
 		{
 			return _peerA;
 		}
 
-		public virtual com.db4o.ObjectContainer peerB()
+		public virtual com.db4o.ObjectContainer PeerB()
 		{
 			return _peerB;
 		}
 
-		public virtual void replicate(object obj)
+		public virtual void Replicate(object obj)
 		{
 			com.db4o.YapStream stream = _peerB;
-			if (_peerB.isStored(obj))
+			if (_peerB.IsStored(obj))
 			{
-				if (!_peerA.isStored(obj))
+				if (!_peerA.IsStored(obj))
 				{
 					stream = _peerA;
 				}
 			}
-			stream.set(obj);
+			stream.Set(obj);
 		}
 
-		public virtual void rollback()
+		public virtual void Rollback()
 		{
-			_peerA.rollback();
-			_peerB.rollback();
-			endReplication();
+			_peerA.Rollback();
+			_peerB.Rollback();
+			EndReplication();
 		}
 
-		public virtual void setDirection(com.db4o.ObjectContainer replicateFrom, com.db4o.ObjectContainer
+		public virtual void SetDirection(com.db4o.ObjectContainer replicateFrom, com.db4o.ObjectContainer
 			 replicateTo)
 		{
 			if (replicateFrom == _peerA && replicateTo == _peerB)
@@ -199,7 +199,7 @@ namespace com.db4o
 			}
 		}
 
-		private void shareBinding(com.db4o.YapObject sourceReference, com.db4o.YapObject 
+		private void ShareBinding(com.db4o.YapObject sourceReference, com.db4o.YapObject 
 			referenceA, object objectA, com.db4o.YapObject referenceB, object objectB)
 		{
 			if (sourceReference == null)
@@ -208,22 +208,22 @@ namespace com.db4o
 			}
 			if (objectA is com.db4o.Db4oTypeImpl)
 			{
-				if (!((com.db4o.Db4oTypeImpl)objectA).canBind())
+				if (!((com.db4o.Db4oTypeImpl)objectA).CanBind())
 				{
 					return;
 				}
 			}
 			if (sourceReference == referenceA)
 			{
-				_peerB.bind2(referenceB, objectA);
+				_peerB.Bind2(referenceB, objectA);
 			}
 			else
 			{
-				_peerA.bind2(referenceA, objectB);
+				_peerA.Bind2(referenceA, objectB);
 			}
 		}
 
-		private int toA()
+		private int ToA()
 		{
 			if (_direction == CHECK_CONFLICT)
 			{
@@ -236,7 +236,7 @@ namespace com.db4o
 			return IGNORE;
 		}
 
-		private int toB()
+		private int ToB()
 		{
 			if (_direction == CHECK_CONFLICT)
 			{
@@ -255,7 +255,7 @@ namespace com.db4o
 		/// if #set() should stop processing because of a direction
 		/// setting.
 		/// </returns>
-		internal virtual int tryToHandle(com.db4o.YapStream caller, object obj)
+		internal virtual int TryToHandle(com.db4o.YapStream caller, object obj)
 		{
 			int notProcessed = 0;
 			com.db4o.YapStream other = null;
@@ -280,8 +280,8 @@ namespace com.db4o
 			{
 				object objectA = obj;
 				object objectB = obj;
-				com.db4o.YapObject referenceA = _peerA.getYapObject(obj);
-				com.db4o.YapObject referenceB = _peerB.getYapObject(obj);
+				com.db4o.YapObject referenceA = _peerA.GetYapObject(obj);
+				com.db4o.YapObject referenceB = _peerB.GetYapObject(obj);
 				com.db4o.VirtualAttributes attA = null;
 				com.db4o.VirtualAttributes attB = null;
 				if (referenceA == null)
@@ -291,12 +291,12 @@ namespace com.db4o
 						return notProcessed;
 					}
 					sourceReference = referenceB;
-					attB = referenceB.virtualAttributes(_transB);
+					attB = referenceB.VirtualAttributes(_transB);
 					if (attB == null)
 					{
 						return notProcessed;
 					}
-					object[] arr = _transA.objectAndYapObjectBySignature(attB.i_uuid, attB.i_database
+					object[] arr = _transA.ObjectAndYapObjectBySignature(attB.i_uuid, attB.i_database
 						.i_signature);
 					if (arr[0] == null)
 					{
@@ -304,11 +304,11 @@ namespace com.db4o
 					}
 					referenceA = (com.db4o.YapObject)arr[1];
 					objectA = arr[0];
-					attA = referenceA.virtualAttributes(_transA);
+					attA = referenceA.VirtualAttributes(_transA);
 				}
 				else
 				{
-					attA = referenceA.virtualAttributes(_transA);
+					attA = referenceA.VirtualAttributes(_transA);
 					if (attA == null)
 					{
 						return notProcessed;
@@ -316,7 +316,7 @@ namespace com.db4o
 					if (referenceB == null)
 					{
 						sourceReference = referenceA;
-						object[] arr = _transB.objectAndYapObjectBySignature(attA.i_uuid, attA.i_database
+						object[] arr = _transB.ObjectAndYapObjectBySignature(attA.i_uuid, attA.i_database
 							.i_signature);
 						if (arr[0] == null)
 						{
@@ -329,7 +329,7 @@ namespace com.db4o
 					{
 						sourceReference = null;
 					}
-					attB = referenceB.virtualAttributes(_transB);
+					attB = referenceB.VirtualAttributes(_transB);
 				}
 				if (attA == null || attB == null)
 				{
@@ -345,29 +345,29 @@ namespace com.db4o
 					{
 						return -1;
 					}
-					return idInCaller(caller, referenceA, referenceB);
+					return IdInCaller(caller, referenceA, referenceB);
 				}
-				_peerA.refresh(objectA, 1);
-				_peerB.refresh(objectB, 1);
+				_peerA.Refresh(objectA, 1);
+				_peerB.Refresh(objectB, 1);
 				if (attA.i_version <= _record._version && attB.i_version <= _record._version)
 				{
 					if (_direction != CHECK_CONFLICT)
 					{
-						shareBinding(sourceReference, referenceA, objectA, referenceB, objectB);
+						ShareBinding(sourceReference, referenceA, objectA, referenceB, objectB);
 					}
-					return idInCaller(caller, referenceA, referenceB);
+					return IdInCaller(caller, referenceA, referenceB);
 				}
-				int direction = ignoreOrCheckConflict();
-				if (isInConflict(attA.i_version, attB.i_version))
+				int direction = IgnoreOrCheckConflict();
+				if (IsInConflict(attA.i_version, attB.i_version))
 				{
-					object prevailing = _conflictHandler.resolveConflict(this, objectA, objectB);
+					object prevailing = _conflictHandler.ResolveConflict(this, objectA, objectB);
 					if (prevailing == objectA)
 					{
-						direction = (_direction == TO_A) ? IGNORE : toB();
+						direction = (_direction == TO_A) ? IGNORE : ToB();
 					}
 					if (prevailing == objectB)
 					{
-						direction = (_direction == TO_B) ? IGNORE : toA();
+						direction = (_direction == TO_B) ? IGNORE : ToA();
 					}
 					if (direction == IGNORE)
 					{
@@ -376,15 +376,15 @@ namespace com.db4o
 				}
 				else
 				{
-					direction = attB.i_version > _record._version ? toA() : toB();
+					direction = attB.i_version > _record._version ? ToA() : ToB();
 				}
 				if (direction == TO_A)
 				{
-					if (!referenceB.isActive())
+					if (!referenceB.IsActive())
 					{
-						referenceB.activate(_transB, objectB, 1, false);
+						referenceB.Activate(_transB, objectB, 1, false);
 					}
-					int idA = bindAndSet(_transA, _peerA, referenceA, objectB);
+					int idA = BindAndSet(_transA, _peerA, referenceA, objectB);
 					if (caller == _peerA)
 					{
 						return idA;
@@ -392,24 +392,24 @@ namespace com.db4o
 				}
 				if (direction == TO_B)
 				{
-					if (!referenceA.isActive())
+					if (!referenceA.IsActive())
 					{
-						referenceA.activate(_transA, objectA, 1, false);
+						referenceA.Activate(_transA, objectA, 1, false);
 					}
-					int idB = bindAndSet(_transB, _peerB, referenceB, objectA);
+					int idB = BindAndSet(_transB, _peerB, referenceB, objectA);
 					if (caller == _peerB)
 					{
 						return idB;
 					}
 				}
-				return idInCaller(caller, referenceA, referenceB);
+				return IdInCaller(caller, referenceA, referenceB);
 			}
 		}
 
-		public virtual void whereModified(com.db4o.query.Query query)
+		public virtual void WhereModified(com.db4o.query.Query query)
 		{
-			query.descend(com.db4o.ext.VirtualField.VERSION).constrain(lastSynchronization())
-				.greater();
+			query.Descend(com.db4o.ext.VirtualField.VERSION).Constrain(LastSynchronization())
+				.Greater();
 		}
 	}
 }

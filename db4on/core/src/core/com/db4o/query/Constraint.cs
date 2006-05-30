@@ -2,17 +2,17 @@ namespace com.db4o.query
 {
 	/// <summary>
 	/// constraint to limit the objects returned upon
-	/// <see cref="com.db4o.query.Query.execute">query execution</see>
+	/// <see cref="com.db4o.query.Query.Execute">query execution</see>
 	/// .
 	/// <br /><br />
 	/// Constraints are constructed by calling
-	/// <see cref="com.db4o.query.Query.constrain">Query.constrain()</see>
+	/// <see cref="com.db4o.query.Query.Constrain">Query.constrain()</see>
 	/// .
 	/// <br /><br />
 	/// Constraints can be joined with the methods
-	/// <see cref="com.db4o.query.Constraint.and">com.db4o.query.Constraint.and</see>
+	/// <see cref="com.db4o.query.Constraint.And">com.db4o.query.Constraint.And</see>
 	/// and
-	/// <see cref="com.db4o.query.Constraint.or">com.db4o.query.Constraint.or</see>
+	/// <see cref="com.db4o.query.Constraint.Or">com.db4o.query.Constraint.Or</see>
 	/// .
 	/// <br /><br />
 	/// The methods to modify the constraint evaluation algorithm may
@@ -37,11 +37,11 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// , that can be used for further calls
 		/// to
-		/// <see cref="com.db4o.query.Constraint.and">and()</see>
+		/// <see cref="com.db4o.query.Constraint.And">and()</see>
 		/// and
-		/// <see cref="com.db4o.query.Constraint.or">or()</see>
+		/// <see cref="com.db4o.query.Constraint.Or">or()</see>
 		/// </returns>
-		com.db4o.query.Constraint and(com.db4o.query.Constraint with);
+		com.db4o.query.Constraint And(com.db4o.query.Constraint with);
 
 		/// <summary>links two Constraints for OR evaluation.</summary>
 		/// <remarks>links two Constraints for OR evaluation.</remarks>
@@ -54,11 +54,11 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// , that can be used for further calls
 		/// to
-		/// <see cref="com.db4o.query.Constraint.and">and()</see>
+		/// <see cref="com.db4o.query.Constraint.And">and()</see>
 		/// and
-		/// <see cref="com.db4o.query.Constraint.or">or()</see>
+		/// <see cref="com.db4o.query.Constraint.Or">or()</see>
 		/// </returns>
-		com.db4o.query.Constraint or(com.db4o.query.Constraint with);
+		com.db4o.query.Constraint Or(com.db4o.query.Constraint with);
 
 		/// <summary>sets the evaluation mode to <code>==</code>.</summary>
 		/// <remarks>sets the evaluation mode to <code>==</code>.</remarks>
@@ -67,7 +67,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint equal();
+		com.db4o.query.Constraint Equal();
 
 		/// <summary>sets the evaluation mode to <code>&gt;</code>.</summary>
 		/// <remarks>sets the evaluation mode to <code>&gt;</code>.</remarks>
@@ -76,7 +76,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint greater();
+		com.db4o.query.Constraint Greater();
 
 		/// <summary>sets the evaluation mode to <code>&lt;</code>.</summary>
 		/// <remarks>sets the evaluation mode to <code>&lt;</code>.</remarks>
@@ -85,7 +85,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint smaller();
+		com.db4o.query.Constraint Smaller();
 
 		/// <summary>sets the evaluation mode to identity comparison.</summary>
 		/// <remarks>sets the evaluation mode to identity comparison.</remarks>
@@ -94,7 +94,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint identity();
+		com.db4o.query.Constraint Identity();
 
 		/// <summary>sets the evaluation mode to "like" comparison.</summary>
 		/// <remarks>
@@ -106,7 +106,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint like();
+		com.db4o.query.Constraint Like();
 
 		/// <summary>sets the evaluation mode to containment comparison.</summary>
 		/// <remarks>sets the evaluation mode to containment comparison.</remarks>
@@ -115,7 +115,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint contains();
+		com.db4o.query.Constraint Contains();
 
 		/// <summary>sets the evaluation mode to string startsWith comparison.</summary>
 		/// <remarks>sets the evaluation mode to string startsWith comparison.</remarks>
@@ -126,7 +126,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint startsWith(bool caseSensitive);
+		com.db4o.query.Constraint StartsWith(bool caseSensitive);
 
 		/// <summary>sets the evaluation mode to string endsWith comparison.</summary>
 		/// <remarks>sets the evaluation mode to string endsWith comparison.</remarks>
@@ -137,7 +137,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint endsWith(bool caseSensitive);
+		com.db4o.query.Constraint EndsWith(bool caseSensitive);
 
 		/// <summary>turns on not() comparison.</summary>
 		/// <remarks>turns on not() comparison.</remarks>
@@ -146,7 +146,7 @@ namespace com.db4o.query
 		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
 		/// to allow the chaining of method calls.
 		/// </returns>
-		com.db4o.query.Constraint not();
+		com.db4o.query.Constraint Not();
 
 		/// <summary>
 		/// returns the Object the query graph was constrained with to
@@ -155,6 +155,6 @@ namespace com.db4o.query
 		/// .
 		/// </summary>
 		/// <returns>Object the constraining object.</returns>
-		object getObject();
+		object GetObject();
 	}
 }

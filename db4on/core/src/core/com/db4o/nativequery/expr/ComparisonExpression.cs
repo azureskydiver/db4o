@@ -20,17 +20,17 @@ namespace com.db4o.nativequery.expr
 			this._op = op;
 		}
 
-		public virtual com.db4o.nativequery.expr.cmp.FieldValue left()
+		public virtual com.db4o.nativequery.expr.cmp.FieldValue Left()
 		{
 			return _left;
 		}
 
-		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperand right()
+		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperand Right()
 		{
 			return _right;
 		}
 
-		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperator op()
+		public virtual com.db4o.nativequery.expr.cmp.ComparisonOperator Op()
 		{
 			return _op;
 		}
@@ -46,7 +46,7 @@ namespace com.db4o.nativequery.expr
 			{
 				return true;
 			}
-			if (other == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (other == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(other))
 			{
 				return false;
@@ -62,9 +62,9 @@ namespace com.db4o.nativequery.expr
 			return (_left.GetHashCode() * 29 + _right.GetHashCode()) * 29 + _op.GetHashCode();
 		}
 
-		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
+		public virtual void Accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 	}
 }

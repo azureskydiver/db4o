@@ -33,7 +33,7 @@ namespace com.db4o.types
 		/// stored.
 		/// </remarks>
 		/// <returns>String the name of the file.</returns>
-		string getFileName();
+		string GetFileName();
 
 		/// <summary>returns the status after the last read- or write-operation.</summary>
 		/// <remarks>
@@ -51,7 +51,7 @@ namespace com.db4o.types
 		/// </remarks>
 		/// <returns>status - the current status</returns>
 		/// <seealso cref="com.db4o.ext.Status">STATUS constants</seealso>
-		double getStatus();
+		double GetStatus();
 
 		/// <summary>reads a file into the db4o system and stores it as a blob.</summary>
 		/// <remarks>
@@ -63,7 +63,7 @@ namespace com.db4o.types
 		/// </remarks>
 		/// <param name="file">the file the blob is to be read from.</param>
 		/// <exception cref="System.IO.IOException">in case of errors</exception>
-		void readFrom(j4o.io.File file);
+		void ReadFrom(j4o.io.File file);
 
 		/// <summary>reads a file into the db4o system and stores it as a blob.</summary>
 		/// <remarks>
@@ -74,7 +74,7 @@ namespace com.db4o.types
 		/// </remarks>
 		/// <param name="file">the file the blob is to be read from.</param>
 		/// <exception cref="System.IO.IOException">in case of errors</exception>
-		void readLocal(j4o.io.File file);
+		void ReadLocal(j4o.io.File file);
 
 		/// <summary>writes stored blob data to a file.</summary>
 		/// <remarks>
@@ -88,7 +88,7 @@ namespace com.db4o.types
 		/// data was stored
 		/// </exception>
 		/// <param name="file">the file the blob is to be written to.</param>
-		void writeLocal(j4o.io.File file);
+		void WriteLocal(j4o.io.File file);
 
 		/// <summary>writes stored blob data to a file.</summary>
 		/// <remarks>
@@ -103,6 +103,6 @@ namespace com.db4o.types
 		/// data was stored
 		/// </exception>
 		/// <param name="file">the file the blob is to be written to.</param>
-		void writeTo(j4o.io.File file);
+		void WriteTo(j4o.io.File file);
 	}
 }

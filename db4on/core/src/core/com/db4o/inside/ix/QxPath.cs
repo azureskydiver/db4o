@@ -1,6 +1,16 @@
 namespace com.db4o.inside.ix
 {
-	/// <summary>Query Index Path</summary>
+	/// <summary>
+	/// Query Index Path
+	/// Stuff to know:
+	/// Derived from TreeInt to be able to sort.
+	/// </summary>
+	/// <remarks>
+	/// Query Index Path
+	/// Stuff to know:
+	/// Derived from TreeInt to be able to sort.
+	/// _key in TreeInt == count found
+	/// </remarks>
 	internal class QxPath : com.db4o.TreeInt
 	{
 		private readonly com.db4o.inside.ix.QxProcessor _processor;
@@ -28,7 +38,7 @@ namespace com.db4o.inside.ix
 			_depth = depth;
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.inside.ix.QxPath qpath = new com.db4o.inside.ix.QxPath(_processor, _parent
 				, _constraint, _depth);
@@ -36,26 +46,26 @@ namespace com.db4o.inside.ix
 			qpath._ixPaths = _ixPaths;
 			qpath._nCandidates = _nCandidates;
 			qpath._candidates = _candidates;
-			return base.shallowCloneInternal(qpath);
+			return base.ShallowCloneInternal(qpath);
 		}
 
-		internal virtual void buildPaths()
+		internal virtual void BuildPaths()
 		{
-			int id = _constraint.identityID();
+			int id = _constraint.IdentityID();
 			if (id > 0)
 			{
-				processChildCandidates(new com.db4o.TreeInt(id));
+				ProcessChildCandidates(new com.db4o.TreeInt(id));
 				return;
 			}
 			bool isLeaf = true;
-			com.db4o.foundation.Iterator4 i = _constraint.iterateChildren();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = _constraint.IterateChildren();
+			while (i.HasNext())
 			{
 				isLeaf = false;
-				com.db4o.QCon childConstraint = (com.db4o.QCon)i.next();
-				if (childConstraint.canLoadByIndex())
+				com.db4o.QCon childConstraint = (com.db4o.QCon)i.Next();
+				if (childConstraint.CanLoadByIndex())
 				{
-					new com.db4o.inside.ix.QxPath(_processor, this, childConstraint, _depth + 1).buildPaths
+					new com.db4o.inside.ix.QxPath(_processor, this, childConstraint, _depth + 1).BuildPaths
 						();
 				}
 			}
@@ -63,51 +73,50 @@ namespace com.db4o.inside.ix
 			{
 				return;
 			}
-			if (!_constraint.canLoadByIndex())
+			if (!_constraint.CanLoadByIndex())
 			{
 				return;
 			}
-			if (!_constraint.canBeIndexLeaf())
+			if (!_constraint.CanBeIndexLeaf())
 			{
 				return;
 			}
 			_indexTraversers = new com.db4o.inside.ix.IxTraverser[] { new com.db4o.inside.ix.IxTraverser
 				() };
-			_key = ((com.db4o.QConObject)_constraint).findBoundsQuery(_indexTraversers[0]);
+			_key = ((com.db4o.QConObject)_constraint).FindBoundsQuery(_indexTraversers[0]);
 			if (_key < 0)
 			{
 				return;
 			}
 			if (_key > 0)
 			{
-				_ixPaths = new com.db4o.inside.ix.NIxPaths[] { _indexTraversers[0].convert() };
-				expectNixCount(_ixPaths[0], _key);
+				_ixPaths = new com.db4o.inside.ix.NIxPaths[] { _indexTraversers[0].Convert() };
+				ExpectNixCount(_ixPaths[0], _key);
 			}
-			_processor.addPath(this);
+			_processor.AddPath(this);
 		}
 
-		private void expectNixCount(com.db4o.inside.ix.NIxPaths ixPaths, int count)
+		private void ExpectNixCount(com.db4o.inside.ix.NIxPaths ixPaths, int count)
 		{
 		}
 
-		internal virtual void load()
+		internal virtual void Load()
 		{
-			loadFromIndexTraversers();
-			loadFromNixPaths();
+			LoadFromNixPaths();
 			if (_parent == null)
 			{
 				return;
 			}
-			if (_processor.exceedsLimit(com.db4o.Tree.size(_nCandidates), _depth))
+			if (_processor.ExceedsLimit(com.db4o.Tree.Size(_nCandidates), _depth))
 			{
 				return;
 			}
 			com.db4o.inside.ix.QxPath parentPath = new com.db4o.inside.ix.QxPath(_processor, 
 				_parent._parent, _parent._constraint, _depth - 1);
-			parentPath.processChildCandidates(_nCandidates);
+			parentPath.ProcessChildCandidates(_nCandidates);
 		}
 
-		private void loadFromIndexTraversers()
+		private void LoadFromIndexTraversers()
 		{
 			if (_indexTraversers == null)
 			{
@@ -115,18 +124,18 @@ namespace com.db4o.inside.ix
 			}
 			for (int i = 0; i < _indexTraversers.Length; i++)
 			{
-				_indexTraversers[i].visitAll(new _AnonymousInnerClass140(this));
+				_indexTraversers[i].VisitAll(new _AnonymousInnerClass148(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass140 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass148 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass140(QxPath _enclosing)
+			public _AnonymousInnerClass148(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				int id = ((int)a_object);
 				if (this._enclosing._candidates == null)
@@ -135,7 +144,7 @@ namespace com.db4o.inside.ix
 				}
 				else
 				{
-					this._enclosing._candidates = this._enclosing._candidates.add(new com.db4o.TreeInt
+					this._enclosing._candidates = this._enclosing._candidates.Add(new com.db4o.TreeInt
 						(id));
 				}
 			}
@@ -143,7 +152,7 @@ namespace com.db4o.inside.ix
 			private readonly QxPath _enclosing;
 		}
 
-		private void loadFromNixPaths()
+		private void LoadFromNixPaths()
 		{
 			if (_ixPaths == null)
 			{
@@ -153,20 +162,20 @@ namespace com.db4o.inside.ix
 			{
 				if (_ixPaths[i] != null)
 				{
-					_ixPaths[i].traverse(new _AnonymousInnerClass162(this));
+					_ixPaths[i].Traverse(new _AnonymousInnerClass170(this));
 				}
 			}
-			compareLoadedNixPaths();
+			CompareLoadedNixPaths();
 		}
 
-		private sealed class _AnonymousInnerClass162 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass170 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass162(QxPath _enclosing)
+			public _AnonymousInnerClass170(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				int id = ((int)a_object);
 				if (this._enclosing._nCandidates == null)
@@ -175,7 +184,7 @@ namespace com.db4o.inside.ix
 				}
 				else
 				{
-					this._enclosing._nCandidates = this._enclosing._nCandidates.add(new com.db4o.TreeInt
+					this._enclosing._nCandidates = this._enclosing._nCandidates.Add(new com.db4o.TreeInt
 						(id));
 				}
 			}
@@ -183,78 +192,78 @@ namespace com.db4o.inside.ix
 			private readonly QxPath _enclosing;
 		}
 
-		private void compareLoadedNixPaths()
+		private void CompareLoadedNixPaths()
 		{
 			return;
-			if (com.db4o.Tree.size(_candidates) != com.db4o.Tree.size(_nCandidates))
+			if (com.db4o.Tree.Size(_candidates) != com.db4o.Tree.Size(_nCandidates))
 			{
-				j4o.lang.JavaSystem.err.println("Different index tree size");
-				j4o.lang.JavaSystem.err.println("" + com.db4o.Tree.size(_candidates) + ", " + com.db4o.Tree
-					.size(_nCandidates));
+				j4o.lang.JavaSystem.err.Println("Different index tree size");
+				j4o.lang.JavaSystem.err.Println("" + com.db4o.Tree.Size(_candidates) + ", " + com.db4o.Tree
+					.Size(_nCandidates));
 				return;
 			}
-			com.db4o.Tree.traverse(_nCandidates, new _AnonymousInnerClass191(this));
+			com.db4o.Tree.Traverse(_nCandidates, new _AnonymousInnerClass199(this));
 		}
 
-		private sealed class _AnonymousInnerClass191 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass199 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass191(QxPath _enclosing)
+			public _AnonymousInnerClass199(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				if (this._enclosing._candidates.find((com.db4o.Tree)a_object) == null)
+				if (this._enclosing._candidates.Find((com.db4o.Tree)a_object) == null)
 				{
-					j4o.lang.JavaSystem.err.println("Element not in old tree");
-					j4o.lang.JavaSystem.err.println(a_object);
+					j4o.lang.JavaSystem.err.Println("Element not in old tree");
+					j4o.lang.JavaSystem.err.Println(a_object);
 				}
 			}
 
 			private readonly QxPath _enclosing;
 		}
 
-		internal virtual void processChildCandidates(com.db4o.Tree candidates)
+		internal virtual void ProcessChildCandidates(com.db4o.Tree candidates)
 		{
 			if (candidates == null)
 			{
-				_processor.addPath(this);
+				_processor.AddPath(this);
 				return;
 			}
 			if (_parent == null)
 			{
 				_candidates = candidates;
 				_nCandidates = candidates;
-				_processor.addPath(this);
+				_processor.AddPath(this);
 				return;
 			}
-			_indexTraversers = new com.db4o.inside.ix.IxTraverser[candidates.size()];
-			_ixPaths = new com.db4o.inside.ix.NIxPaths[candidates.size()];
+			_indexTraversers = new com.db4o.inside.ix.IxTraverser[candidates.Size()];
+			_ixPaths = new com.db4o.inside.ix.NIxPaths[candidates.Size()];
 			int[] ix = new int[] { 0 };
 			bool[] err = new bool[] { false };
-			candidates.traverse(new _AnonymousInnerClass224(this, ix, err));
+			candidates.Traverse(new _AnonymousInnerClass232(this, ix, err));
 			if (err[0])
 			{
 				return;
 			}
-			_processor.addPath(this);
+			_processor.AddPath(this);
 		}
 
-		private sealed class _AnonymousInnerClass224 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass232 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass224(QxPath _enclosing, int[] ix, bool[] err)
+			public _AnonymousInnerClass232(QxPath _enclosing, int[] ix, bool[] err)
 			{
 				this._enclosing = _enclosing;
 				this.ix = ix;
 				this.err = err;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				int idx = ix[0]++;
 				this._enclosing._indexTraversers[idx] = new com.db4o.inside.ix.IxTraverser();
-				int count = this._enclosing._indexTraversers[idx].findBoundsQuery(this._enclosing
+				int count = this._enclosing._indexTraversers[idx].FindBoundsQuery(this._enclosing
 					._constraint, ((com.db4o.TreeInt)a_object)._key);
 				if (count >= 0)
 				{
@@ -266,8 +275,8 @@ namespace com.db4o.inside.ix
 				}
 				if (count > 0)
 				{
-					this._enclosing._ixPaths[idx] = this._enclosing._indexTraversers[idx].convert();
-					this._enclosing.expectNixCount(this._enclosing._ixPaths[idx], count);
+					this._enclosing._ixPaths[idx] = this._enclosing._indexTraversers[idx].Convert();
+					this._enclosing.ExpectNixCount(this._enclosing._ixPaths[idx], count);
 				}
 			}
 
@@ -278,7 +287,7 @@ namespace com.db4o.inside.ix
 			private readonly bool[] err;
 		}
 
-		public virtual bool isTopLevelComplete()
+		public virtual bool IsTopLevelComplete()
 		{
 			if (_parent == null)
 			{
@@ -287,45 +296,45 @@ namespace com.db4o.inside.ix
 			return false;
 		}
 
-		internal virtual bool onSameFieldAs(com.db4o.inside.ix.QxPath other)
+		internal virtual bool OnSameFieldAs(com.db4o.inside.ix.QxPath other)
 		{
-			return _constraint.onSameFieldAs(other._constraint);
+			return _constraint.OnSameFieldAs(other._constraint);
 		}
 
-		internal virtual com.db4o.Tree toQCandidates(com.db4o.QCandidates candidates)
+		internal virtual com.db4o.Tree ToQCandidates(com.db4o.QCandidates candidates)
 		{
-			return com.db4o.TreeInt.toQCandidate((com.db4o.TreeInt)_nCandidates, candidates);
-			return com.db4o.TreeInt.toQCandidate((com.db4o.TreeInt)_candidates, candidates);
+			return com.db4o.TreeInt.ToQCandidate((com.db4o.TreeInt)_nCandidates, candidates);
+			return com.db4o.TreeInt.ToQCandidate((com.db4o.TreeInt)_candidates, candidates);
 		}
 
-		internal virtual void mergeForSameField(com.db4o.inside.ix.QxPath other)
+		internal virtual void MergeForSameField(com.db4o.inside.ix.QxPath other)
 		{
 			if (other._ixPaths == null)
 			{
 				return;
 			}
-			int oldCount = _ixPaths[0].count();
+			int oldCount = _ixPaths[0].Count();
 			for (int i = 0; i < other._ixPaths.Length; i++)
 			{
 				if (other._ixPaths[i] != null)
 				{
-					other._ixPaths[i]._paths.traverse(new _AnonymousInnerClass287(this));
+					other._ixPaths[i]._paths.Traverse(new _AnonymousInnerClass295(this));
 				}
 			}
-			int newCount = _ixPaths[0].count();
+			int newCount = _ixPaths[0].Count();
 			_key += newCount - oldCount;
 		}
 
-		private sealed class _AnonymousInnerClass287 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass295 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass287(QxPath _enclosing)
+			public _AnonymousInnerClass295(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				this._enclosing._ixPaths[0].add((com.db4o.inside.ix.NIxPath)a_object);
+				this._enclosing._ixPaths[0].Add((com.db4o.inside.ix.NIxPath)a_object);
 			}
 
 			private readonly QxPath _enclosing;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -22,7 +22,7 @@ namespace com.db4o {
         internal P2ListElementIterator(P2LinkedList p2linkedlist, P1ListElement p1listelement) : base() {
             i_list = p2linkedlist;
             i_next = p1listelement;
-            checkNextActive();
+            CheckNextActive();
         }
 
         public Object Current {
@@ -30,24 +30,24 @@ namespace com.db4o {
                 if(i_next == null || ! i_firstMoved){
                     throw new InvalidOperationException("Enumerator is positioned before first or after last.");
                 }
-                lock (i_next.streamLock()) {
-                    return i_next.activatedObject(i_list.elementActivationDepth());
+                lock (i_next.StreamLock()) {
+                    return i_next.ActivatedObject(i_list.ElementActivationDepth());
                 }
             }
         }
 
         public bool MoveNext(){
             if (i_next != null) {
-                lock (i_next.streamLock()) {
+                lock (i_next.StreamLock()) {
                     if(! i_firstMoved){
                         i_firstMoved = true;
                         return i_next != null;
                     }
                     i_preprevious = i_previous;
                     i_previous = i_next;
-                    Object obj1 = i_next.activatedObject(i_list.elementActivationDepth());
+                    Object obj1 = i_next.ActivatedObject(i_list.ElementActivationDepth());
                     i_next = i_next.i_next;
-                    checkNextActive();
+                    CheckNextActive();
                     return i_next != null;
                 }
             }
@@ -59,39 +59,39 @@ namespace com.db4o {
             i_previous = null;
             i_firstMoved = false;
             i_next = i_list.i_first;
-            checkNextActive();
+            CheckNextActive();
         }
       
-        protected void checkNextActive() {
-            if (i_next != null) i_next.checkActive();
+        protected void CheckNextActive() {
+            if (i_next != null) i_next.CheckActive();
         }
       
-        public bool hasNext(){
+        public bool HasNext(){
             return i_next != null;
         }
 
-        internal P1ListElement move(int i) {
+        internal P1ListElement Move(int i) {
             if (i < 0){
                 return null;
             }
             for (int i_0_1 = 0; i_0_1 < i; i_0_1++) {
-                if (hasNext()){
-                    nextElement();
+                if (HasNext()){
+                    NextElement();
                 } else{
                     return null;
                 }
             }
-            if (hasNext()){
-                return nextElement();
+            if (HasNext()){
+                return NextElement();
             }
             return null;
         }
 
-        internal P1ListElement nextElement() {
+        internal P1ListElement NextElement() {
             i_preprevious = i_previous;
             i_previous = i_next;
             i_next = i_next.i_next;
-            checkNextActive();
+            CheckNextActive();
             return i_previous;
         }
       

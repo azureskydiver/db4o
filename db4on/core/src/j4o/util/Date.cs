@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 
@@ -6,7 +6,7 @@ namespace j4o.util {
 
     public class Date {
 
-		public static long toJavaMilliseconds(DateTime dateTimeNet)
+		public static long ToJavaMilliseconds(DateTime dateTimeNet)
 		{
 			return dateTimeNet.Ticks / RATIO - DIFFERENCE_IN_TICKS;
 		}
@@ -24,22 +24,22 @@ namespace j4o.util {
         }
 
         public Date(DateTime dateTimeNet) {
-            javaMilliSeconds = toJavaMilliseconds(dateTimeNet);
+            javaMilliSeconds = ToJavaMilliseconds(dateTimeNet);
         }
 
-    	public long getJavaMilliseconds() {
+    	public long GetJavaMilliseconds() {
             return javaMilliSeconds;
         }
 
-        public long getTicks() {
+        public long GetTicks() {
             return (javaMilliSeconds + DIFFERENCE_IN_TICKS) * RATIO;
         }
 
-        public long getTime() {
-            return getJavaMilliseconds();
+        public long GetTime() {
+            return GetJavaMilliseconds();
         }
 
-        public void setTime(long javaMilliSeconds) {
+        public void SetTime(long javaMilliSeconds) {
             this.javaMilliSeconds = javaMilliSeconds;
         }
     }

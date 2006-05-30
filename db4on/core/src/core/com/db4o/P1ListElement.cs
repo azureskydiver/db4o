@@ -20,7 +20,7 @@ namespace com.db4o
 			i_object = a_object;
 		}
 
-		public override int adjustReadDepth(int a_depth)
+		public override int AdjustReadDepth(int a_depth)
 		{
 			if (a_depth >= 1)
 			{
@@ -29,27 +29,27 @@ namespace com.db4o
 			return 0;
 		}
 
-		internal virtual object activatedObject(int a_depth)
+		internal virtual object ActivatedObject(int a_depth)
 		{
-			checkActive();
-			activate(i_object, a_depth);
+			CheckActive();
+			Activate(i_object, a_depth);
 			return i_object;
 		}
 
-		public override object createDefault(com.db4o.Transaction a_trans)
+		public override object CreateDefault(com.db4o.Transaction a_trans)
 		{
 			com.db4o.P1ListElement elem4 = new com.db4o.P1ListElement();
-			elem4.setTrans(a_trans);
+			elem4.SetTrans(a_trans);
 			return elem4;
 		}
 
-		internal virtual void delete(bool a_deleteRemoved)
+		internal virtual void Delete(bool a_deleteRemoved)
 		{
 			if (a_deleteRemoved)
 			{
-				delete(i_object);
+				Delete(i_object);
 			}
-			delete();
+			Delete();
 		}
 	}
 }

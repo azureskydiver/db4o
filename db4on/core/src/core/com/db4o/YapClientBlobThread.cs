@@ -11,18 +11,18 @@ namespace com.db4o
 		internal YapClientBlobThread(com.db4o.YapClient aStream)
 		{
 			stream = aStream;
-			setPriority(MIN_PRIORITY);
+			SetPriority(MIN_PRIORITY);
 		}
 
-		internal virtual void add(com.db4o.MsgBlob msg)
+		internal virtual void Add(com.db4o.MsgBlob msg)
 		{
 			lock (queue)
 			{
-				queue.add(msg);
+				queue.Add(msg);
 			}
 		}
 
-		internal virtual bool isTerminated()
+		internal virtual bool IsTerminated()
 		{
 			lock (this)
 			{
@@ -30,33 +30,33 @@ namespace com.db4o
 			}
 		}
 
-		public override void run()
+		public override void Run()
 		{
 			try
 			{
-				com.db4o.foundation.network.YapSocket socket = stream.createParalellSocket();
+				com.db4o.foundation.network.YapSocket socket = stream.CreateParalellSocket();
 				com.db4o.MsgBlob msg = null;
 				lock (queue)
 				{
-					msg = (com.db4o.MsgBlob)queue.next();
+					msg = (com.db4o.MsgBlob)queue.Next();
 				}
 				while (msg != null)
 				{
-					msg.write(stream, socket);
-					msg.processClient(socket);
+					msg.Write(stream, socket);
+					msg.ProcessClient(socket);
 					lock (stream.blobLock)
 					{
 						lock (queue)
 						{
-							msg = (com.db4o.MsgBlob)queue.next();
+							msg = (com.db4o.MsgBlob)queue.Next();
 						}
 						if (msg == null)
 						{
 							terminated = true;
-							com.db4o.Msg.CLOSE.write(stream, socket);
+							com.db4o.Msg.CLOSE.Write(stream, socket);
 							try
 							{
-								socket.close();
+								socket.Close();
 							}
 							catch (System.Exception e)
 							{
@@ -67,7 +67,7 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
+				j4o.lang.JavaSystem.PrintStackTrace(e);
 			}
 		}
 	}

@@ -21,36 +21,36 @@ namespace com.db4o
 			i_key = a_key;
 		}
 
-		public override int adjustReadDepth(int a_depth)
+		public override int AdjustReadDepth(int a_depth)
 		{
 			return 1;
 		}
 
-		internal virtual object activatedKey(int a_depth)
+		internal virtual object ActivatedKey(int a_depth)
 		{
-			checkActive();
+			CheckActive();
 			if (a_depth < 0)
 			{
-				com.db4o.Transaction trans = getTrans();
+				com.db4o.Transaction trans = GetTrans();
 				if (trans != null)
 				{
-					if (trans.i_stream.i_config.activationDepth() < 1)
+					if (trans.i_stream.i_config.ActivationDepth() < 1)
 					{
 						a_depth = 1;
 					}
 				}
 			}
-			activate(i_key, a_depth);
+			Activate(i_key, a_depth);
 			return i_key;
 		}
 
-		internal override void delete(bool a_deleteRemoved)
+		internal override void Delete(bool a_deleteRemoved)
 		{
 			if (a_deleteRemoved)
 			{
-				delete(i_key);
+				Delete(i_key);
 			}
-			base.delete(a_deleteRemoved);
+			base.Delete(a_deleteRemoved);
 		}
 	}
 }

@@ -32,12 +32,12 @@ namespace com.db4o
 		{
 		}
 
-		public override int activationDepth()
+		public override int ActivationDepth()
 		{
 			return int.MaxValue;
 		}
 
-		private void createVersionTimeGenerator()
+		private void CreateVersionTimeGenerator()
 		{
 			if (_versionTimeGenerator == null)
 			{
@@ -46,88 +46,88 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void init(com.db4o.Config4Impl a_config)
+		internal virtual void Init(com.db4o.Config4Impl a_config)
 		{
-			i_db = com.db4o.ext.Db4oDatabase.generate();
+			i_db = com.db4o.ext.Db4oDatabase.Generate();
 			i_uuidMetaIndex = new com.db4o.MetaIndex();
-			initConfig(a_config);
+			InitConfig(a_config);
 			i_dirty = true;
 		}
 
-		internal virtual bool initConfig(com.db4o.Config4Impl a_config)
+		internal virtual bool InitConfig(com.db4o.Config4Impl a_config)
 		{
 			bool modified = false;
-			if (i_generateVersionNumbers != a_config.generateVersionNumbers())
+			if (i_generateVersionNumbers != a_config.GenerateVersionNumbers())
 			{
-				i_generateVersionNumbers = a_config.generateVersionNumbers();
+				i_generateVersionNumbers = a_config.GenerateVersionNumbers();
 				modified = true;
 			}
-			if (i_generateUUIDs != a_config.generateUUIDs())
+			if (i_generateUUIDs != a_config.GenerateUUIDs())
 			{
-				i_generateUUIDs = a_config.generateUUIDs();
+				i_generateUUIDs = a_config.GenerateUUIDs();
 				modified = true;
 			}
 			return modified;
 		}
 
-		internal virtual com.db4o.MetaIndex getUUIDMetaIndex()
+		internal virtual com.db4o.MetaIndex GetUUIDMetaIndex()
 		{
 			if (i_uuidMetaIndex == null)
 			{
 				i_uuidMetaIndex = new com.db4o.MetaIndex();
-				com.db4o.Transaction systemTrans = i_stream.getSystemTransaction();
-				i_stream.showInternalClasses(true);
-				i_stream.setInternal(systemTrans, this, false);
-				i_stream.showInternalClasses(false);
-				systemTrans.commit();
+				com.db4o.Transaction systemTrans = i_stream.GetSystemTransaction();
+				i_stream.ShowInternalClasses(true);
+				i_stream.SetInternal(systemTrans, this, false);
+				i_stream.ShowInternalClasses(false);
+				systemTrans.Commit();
 			}
 			return i_uuidMetaIndex;
 		}
 
-		internal virtual long newUUID()
+		internal virtual long NewUUID()
 		{
-			return nextVersion();
+			return NextVersion();
 		}
 
-		public virtual void raiseVersion(long a_minimumVersion)
+		public virtual void RaiseVersion(long a_minimumVersion)
 		{
 			if (i_versionGenerator < a_minimumVersion)
 			{
-				createVersionTimeGenerator();
-				_versionTimeGenerator.setMinimumNext(a_minimumVersion);
+				CreateVersionTimeGenerator();
+				_versionTimeGenerator.SetMinimumNext(a_minimumVersion);
 				i_versionGenerator = a_minimumVersion;
-				setDirty();
-				store(1);
+				SetDirty();
+				Store(1);
 			}
 		}
 
-		public virtual void setDirty()
+		public virtual void SetDirty()
 		{
 			i_dirty = true;
 		}
 
-		public override void store(int a_depth)
+		public override void Store(int a_depth)
 		{
 			if (i_dirty)
 			{
-				createVersionTimeGenerator();
-				i_versionGenerator = _versionTimeGenerator.generate();
-				i_stream.showInternalClasses(true);
-				base.store(a_depth);
-				i_stream.showInternalClasses(false);
+				CreateVersionTimeGenerator();
+				i_versionGenerator = _versionTimeGenerator.Generate();
+				i_stream.ShowInternalClasses(true);
+				base.Store(a_depth);
+				i_stream.ShowInternalClasses(false);
 			}
 			i_dirty = false;
 		}
 
-		internal virtual long nextVersion()
+		internal virtual long NextVersion()
 		{
 			i_dirty = true;
-			createVersionTimeGenerator();
-			i_versionGenerator = _versionTimeGenerator.generate();
+			CreateVersionTimeGenerator();
+			i_versionGenerator = _versionTimeGenerator.Generate();
 			return i_versionGenerator;
 		}
 
-		internal virtual long currentVersion()
+		internal virtual long CurrentVersion()
 		{
 			return i_versionGenerator;
 		}

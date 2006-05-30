@@ -2,7 +2,7 @@ namespace com.db4o.replication
 {
 	/// <summary>db4o replication interface.</summary>
 	/// <remarks>db4o replication interface.</remarks>
-	/// <seealso cref="com.db4o.ext.ExtObjectContainer.replicationBegin">com.db4o.ext.ExtObjectContainer.replicationBegin
+	/// <seealso cref="com.db4o.ext.ExtObjectContainer.ReplicationBegin">com.db4o.ext.ExtObjectContainer.ReplicationBegin
 	/// 	</seealso>
 	public interface ReplicationProcess
 	{
@@ -17,7 +17,7 @@ namespace com.db4o.replication
 		/// were replicated.
 		/// </remarks>
 		/// <param name="obj">- the object to check for a conflict.</param>
-		void checkConflict(object obj);
+		void CheckConflict(object obj);
 
 		/// <summary>commits the replication task to both involved ObjectContainers.</summary>
 		/// <remarks>
@@ -32,19 +32,19 @@ namespace com.db4o.replication
 		/// synchronized version number is stored to both ObjectContainers
 		/// to allow future incremental replication.
 		/// </remarks>
-		void commit();
+		void Commit();
 
 		/// <summary>returns the "peerA" ObjectContainer involved in this ReplicationProcess.
 		/// 	</summary>
 		/// <remarks>returns the "peerA" ObjectContainer involved in this ReplicationProcess.
 		/// 	</remarks>
-		com.db4o.ObjectContainer peerA();
+		com.db4o.ObjectContainer PeerA();
 
 		/// <summary>returns the "peerB" ObjectContainer involved in this ReplicationProcess.
 		/// 	</summary>
 		/// <remarks>returns the "peerB" ObjectContainer involved in this ReplicationProcess.
 		/// 	</remarks>
-		com.db4o.ObjectContainer peerB();
+		com.db4o.ObjectContainer PeerB();
 
 		/// <summary>replicates an object.</summary>
 		/// <remarks>
@@ -55,15 +55,15 @@ namespace com.db4o.replication
 		/// ObjectContainers were replicated
 		/// </remarks>
 		/// <param name="obj"></param>
-		void replicate(object obj);
+		void Replicate(object obj);
 
 		/// <summary>ends a replication task without committing any changes.</summary>
 		/// <remarks>ends a replication task without committing any changes.</remarks>
-		void rollback();
+		void Rollback();
 
 		/// <summary>
 		/// modifies the replication policy, what to do on a call to
-		/// <see cref="com.db4o.replication.ReplicationProcess.replicate">com.db4o.replication.ReplicationProcess.replicate
+		/// <see cref="com.db4o.replication.ReplicationProcess.Replicate">com.db4o.replication.ReplicationProcess.Replicate
 		/// 	</see>
 		/// .
 		/// <br /><br />If no direction is set, the replication process will be bidirectional by
@@ -71,7 +71,7 @@ namespace com.db4o.replication
 		/// </summary>
 		/// <param name="relicateFrom">the ObjectContainer to replicate from</param>
 		/// <param name="replicateTo">the ObjectContainer to replicate to</param>
-		void setDirection(com.db4o.ObjectContainer relicateFrom, com.db4o.ObjectContainer
+		void SetDirection(com.db4o.ObjectContainer relicateFrom, com.db4o.ObjectContainer
 			 replicateTo);
 
 		/// <summary>
@@ -85,6 +85,6 @@ namespace com.db4o.replication
 		/// ObjectContainers involved in this replication process.
 		/// </remarks>
 		/// <param name="query">the Query to be constrained</param>
-		void whereModified(com.db4o.query.Query query);
+		void WhereModified(com.db4o.query.Query query);
 	}
 }

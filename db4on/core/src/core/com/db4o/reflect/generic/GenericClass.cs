@@ -42,7 +42,7 @@ namespace com.db4o.reflect.generic
 			_hashCode = _name.GetHashCode();
 		}
 
-		public virtual com.db4o.reflect.generic.GenericClass arrayClass()
+		public virtual com.db4o.reflect.generic.GenericClass ArrayClass()
 		{
 			if (_array != null)
 			{
@@ -54,15 +54,15 @@ namespace com.db4o.reflect.generic
 			return _array;
 		}
 
-		public virtual object deepClone(object obj)
+		public virtual object DeepClone(object obj)
 		{
 			com.db4o.reflect.generic.GenericReflector reflector = (com.db4o.reflect.generic.GenericReflector
 				)obj;
 			com.db4o.reflect.generic.GenericClass superClass = null;
 			if (_superclass != null)
 			{
-				_superclass = (com.db4o.reflect.generic.GenericClass)reflector.forName(_superclass
-					.getName());
+				_superclass = (com.db4o.reflect.generic.GenericClass)reflector.ForName(_superclass
+					.GetName());
 			}
 			com.db4o.reflect.generic.GenericClass ret = new com.db4o.reflect.generic.GenericClass
 				(reflector, _delegate, _name, superClass);
@@ -71,10 +71,10 @@ namespace com.db4o.reflect.generic
 				[_fields.Length];
 			for (int i = 0; i < fields.Length; i++)
 			{
-				fields[i] = (com.db4o.reflect.generic.GenericField)_fields[i].deepClone(reflector
+				fields[i] = (com.db4o.reflect.generic.GenericField)_fields[i].DeepClone(reflector
 					);
 			}
-			ret.initFields(fields);
+			ret.InitFields(fields);
 			return ret;
 		}
 
@@ -101,33 +101,33 @@ namespace com.db4o.reflect.generic
 			return _name.Equals(otherGC._name);
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getComponentType()
+		public virtual com.db4o.reflect.ReflectClass GetComponentType()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.getComponentType();
+				return _delegate.GetComponentType();
 			}
 			return null;
 		}
 
-		public virtual com.db4o.reflect.ReflectConstructor[] getDeclaredConstructors()
+		public virtual com.db4o.reflect.ReflectConstructor[] GetDeclaredConstructors()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.getDeclaredConstructors();
+				return _delegate.GetDeclaredConstructors();
 			}
 			return null;
 		}
 
-		public virtual com.db4o.reflect.ReflectField getDeclaredField(string name)
+		public virtual com.db4o.reflect.ReflectField GetDeclaredField(string name)
 		{
 			if (_delegate != null)
 			{
-				return _delegate.getDeclaredField(name);
+				return _delegate.GetDeclaredField(name);
 			}
 			for (int i = 0; i < _fields.Length; i++)
 			{
-				if (_fields[i].getName().Equals(name))
+				if (_fields[i].GetName().Equals(name))
 				{
 					return _fields[i];
 				}
@@ -135,16 +135,16 @@ namespace com.db4o.reflect.generic
 			return null;
 		}
 
-		public virtual com.db4o.reflect.ReflectField[] getDeclaredFields()
+		public virtual com.db4o.reflect.ReflectField[] GetDeclaredFields()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.getDeclaredFields();
+				return _delegate.GetDeclaredFields();
 			}
 			return _fields;
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getDelegate()
+		public virtual com.db4o.reflect.ReflectClass GetDelegate()
 		{
 			if (_delegate != null)
 			{
@@ -153,7 +153,7 @@ namespace com.db4o.reflect.generic
 			return this;
 		}
 
-		internal virtual int getFieldCount()
+		internal virtual int GetFieldCount()
 		{
 			if (_fieldCount != -1)
 			{
@@ -162,32 +162,32 @@ namespace com.db4o.reflect.generic
 			_fieldCount = 0;
 			if (_superclass != null)
 			{
-				_fieldCount = _superclass.getFieldCount();
+				_fieldCount = _superclass.GetFieldCount();
 			}
 			if (_declaredFieldCount == -1)
 			{
-				_declaredFieldCount = getDeclaredFields().Length;
+				_declaredFieldCount = GetDeclaredFields().Length;
 			}
 			_fieldCount += _declaredFieldCount;
 			return _fieldCount;
 		}
 
-		public virtual com.db4o.reflect.ReflectMethod getMethod(string methodName, com.db4o.reflect.ReflectClass[]
+		public virtual com.db4o.reflect.ReflectMethod GetMethod(string methodName, com.db4o.reflect.ReflectClass[]
 			 paramClasses)
 		{
 			if (_delegate != null)
 			{
-				return _delegate.getMethod(methodName, paramClasses);
+				return _delegate.GetMethod(methodName, paramClasses);
 			}
 			return null;
 		}
 
-		public virtual string getName()
+		public virtual string GetName()
 		{
 			return _name;
 		}
 
-		public virtual com.db4o.reflect.ReflectClass getSuperclass()
+		public virtual com.db4o.reflect.ReflectClass GetSuperclass()
 		{
 			if (_superclass != null)
 			{
@@ -197,10 +197,10 @@ namespace com.db4o.reflect.generic
 			{
 				return null;
 			}
-			com.db4o.reflect.ReflectClass delegateSuperclass = _delegate.getSuperclass();
+			com.db4o.reflect.ReflectClass delegateSuperclass = _delegate.GetSuperclass();
 			if (delegateSuperclass != null)
 			{
-				_superclass = _reflector.ensureDelegate(delegateSuperclass);
+				_superclass = _reflector.EnsureDelegate(delegateSuperclass);
 			}
 			return _superclass;
 		}
@@ -210,39 +210,39 @@ namespace com.db4o.reflect.generic
 			return _hashCode;
 		}
 
-		public virtual void initFields(com.db4o.reflect.generic.GenericField[] fields)
+		public virtual void InitFields(com.db4o.reflect.generic.GenericField[] fields)
 		{
 			int startIndex = 0;
 			if (_superclass != null)
 			{
-				startIndex = _superclass.getFieldCount();
+				startIndex = _superclass.GetFieldCount();
 			}
 			_fields = fields;
 			for (int i = 0; i < _fields.Length; i++)
 			{
-				_fields[i].setIndex(startIndex + i);
+				_fields[i].SetIndex(startIndex + i);
 			}
 		}
 
-		public virtual bool isAbstract()
+		public virtual bool IsAbstract()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.isAbstract();
+				return _delegate.IsAbstract();
 			}
 			return false;
 		}
 
-		public virtual bool isArray()
+		public virtual bool IsArray()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.isArray();
+				return _delegate.IsArray();
 			}
 			return false;
 		}
 
-		public virtual bool isAssignableFrom(com.db4o.reflect.ReflectClass subclassCandidate
+		public virtual bool IsAssignableFrom(com.db4o.reflect.ReflectClass subclassCandidate
 			)
 		{
 			if (subclassCandidate == null)
@@ -257,19 +257,19 @@ namespace com.db4o.reflect.generic
 			{
 				if (subclassCandidate is com.db4o.reflect.generic.GenericClass)
 				{
-					subclassCandidate = ((com.db4o.reflect.generic.GenericClass)subclassCandidate).getDelegate
+					subclassCandidate = ((com.db4o.reflect.generic.GenericClass)subclassCandidate).GetDelegate
 						();
 				}
-				return _delegate.isAssignableFrom(subclassCandidate);
+				return _delegate.IsAssignableFrom(subclassCandidate);
 			}
 			if (!(subclassCandidate is com.db4o.reflect.generic.GenericClass))
 			{
 				return false;
 			}
-			return isAssignableFrom(subclassCandidate.getSuperclass());
+			return IsAssignableFrom(subclassCandidate.GetSuperclass());
 		}
 
-		public virtual bool isCollection()
+		public virtual bool IsCollection()
 		{
 			if (_isCollection == 1)
 			{
@@ -279,95 +279,95 @@ namespace com.db4o.reflect.generic
 			{
 				return false;
 			}
-			_isCollection = _reflector.isCollection(this) ? 1 : -1;
-			return isCollection();
+			_isCollection = _reflector.IsCollection(this) ? 1 : -1;
+			return IsCollection();
 		}
 
-		public virtual bool isInstance(object candidate)
+		public virtual bool IsInstance(object candidate)
 		{
 			if (_delegate != null)
 			{
-				return _delegate.isInstance(candidate);
+				return _delegate.IsInstance(candidate);
 			}
 			if (!(candidate is com.db4o.reflect.generic.GenericObject))
 			{
 				return false;
 			}
-			return isAssignableFrom(((com.db4o.reflect.generic.GenericObject)candidate)._class
+			return IsAssignableFrom(((com.db4o.reflect.generic.GenericObject)candidate)._class
 				);
 		}
 
-		public virtual bool isInterface()
+		public virtual bool IsInterface()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.isInterface();
+				return _delegate.IsInterface();
 			}
 			return false;
 		}
 
-		public virtual bool isPrimitive()
+		public virtual bool IsPrimitive()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.isPrimitive();
+				return _delegate.IsPrimitive();
 			}
 			return _isPrimitive;
 		}
 
-		public virtual bool isSecondClass()
+		public virtual bool IsSecondClass()
 		{
-			if (isPrimitive())
+			if (IsPrimitive())
 			{
 				return true;
 			}
 			return _isSecondClass;
 		}
 
-		public virtual object newInstance()
+		public virtual object NewInstance()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.newInstance();
+				return _delegate.NewInstance();
 			}
 			return new com.db4o.reflect.generic.GenericObject(this);
 		}
 
-		public virtual com.db4o.reflect.Reflector reflector()
+		public virtual com.db4o.reflect.Reflector Reflector()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.reflector();
+				return _delegate.Reflector();
 			}
 			return _reflector;
 		}
 
-		internal virtual void setConverter(com.db4o.reflect.generic.GenericConverter converter
+		internal virtual void SetConverter(com.db4o.reflect.generic.GenericConverter converter
 			)
 		{
 			_converter = converter;
 		}
 
-		internal virtual void setDeclaredFieldCount(int count)
+		internal virtual void SetDeclaredFieldCount(int count)
 		{
 			_declaredFieldCount = count;
 		}
 
-		internal virtual void setPrimitive()
+		internal virtual void SetPrimitive()
 		{
 			_isPrimitive = true;
 		}
 
-		internal virtual void setSecondClass()
+		internal virtual void SetSecondClass()
 		{
 			_isSecondClass = true;
 		}
 
-		public virtual bool skipConstructor(bool flag)
+		public virtual bool SkipConstructor(bool flag)
 		{
 			if (_delegate != null)
 			{
-				return _delegate.skipConstructor(flag);
+				return _delegate.SkipConstructor(flag);
 			}
 			return false;
 		}
@@ -377,31 +377,31 @@ namespace com.db4o.reflect.generic
 			return "GenericClass " + _name;
 		}
 
-		public virtual string toString(com.db4o.reflect.generic.GenericObject obj)
+		public virtual string ToString(com.db4o.reflect.generic.GenericObject obj)
 		{
 			if (_converter == null)
 			{
-				return "(G) " + getName();
+				return "(G) " + GetName();
 			}
-			return _converter.toString(obj);
+			return _converter.ToString(obj);
 		}
 
-		public virtual void useConstructor(com.db4o.reflect.ReflectConstructor constructor
+		public virtual void UseConstructor(com.db4o.reflect.ReflectConstructor constructor
 			, object[] _params)
 		{
 			if (_delegate != null)
 			{
-				_delegate.useConstructor(constructor, _params);
+				_delegate.UseConstructor(constructor, _params);
 			}
 		}
 
-		public virtual object[] toArray(object obj)
+		public virtual object[] ToArray(object obj)
 		{
-			if (!isCollection())
+			if (!IsCollection())
 			{
 				return new object[] { obj };
 			}
-			return com.db4o.Platform4.collectionToArray(_reflector.getStream(), obj);
+			return com.db4o.Platform4.CollectionToArray(_reflector.GetStream(), obj);
 		}
 	}
 }

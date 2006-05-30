@@ -50,6 +50,8 @@ namespace com.db4o
 
 		public static readonly com.db4o.MsgD LOGIN = new com.db4o.MsgD("LOGIN");
 
+		public static readonly com.db4o.MsgD LOGIN_OK = new com.db4o.MsgD("LOGIN_OK");
+
 		public static readonly com.db4o.Msg NULL = new com.db4o.Msg("NULL");
 
 		public static readonly com.db4o.MsgD OBJECT_BY_UUID = new com.db4o.MObjectByUuid(
@@ -130,12 +132,12 @@ namespace com.db4o
 			_name = aName;
 		}
 
-		internal com.db4o.Msg clone(com.db4o.Transaction a_trans)
+		internal com.db4o.Msg Clone(com.db4o.Transaction a_trans)
 		{
 			com.db4o.Msg msg = null;
 			try
 			{
-				msg = (com.db4o.Msg)j4o.lang.JavaSystem.clone(this);
+				msg = (com.db4o.Msg)MemberwiseClone();
 				msg._trans = a_trans;
 			}
 			catch (j4o.lang.CloneNotSupportedException e)
@@ -150,7 +152,7 @@ namespace com.db4o
 			{
 				return true;
 			}
-			if (obj == null || j4o.lang.Class.getClassForObject(obj) != j4o.lang.Class.getClassForObject
+			if (obj == null || j4o.lang.Class.GetClassForObject(obj) != j4o.lang.Class.GetClassForObject
 				(this))
 			{
 				return false;
@@ -158,7 +160,7 @@ namespace com.db4o
 			return _msgID == ((com.db4o.Msg)obj)._msgID;
 		}
 
-		internal virtual void fakePayLoad(com.db4o.Transaction a_trans)
+		internal virtual void FakePayLoad(com.db4o.Transaction a_trans)
 		{
 			_trans = a_trans;
 		}
@@ -167,81 +169,81 @@ namespace com.db4o
 		/// dummy method to allow clean override handling
 		/// without casting
 		/// </summary>
-		internal virtual com.db4o.YapWriter getByteLoad()
+		internal virtual com.db4o.YapWriter GetByteLoad()
 		{
 			return null;
 		}
 
-		internal string getName()
+		internal string GetName()
 		{
 			if (_name == null)
 			{
-				return j4o.lang.Class.getClassForObject(this).getName();
+				return j4o.lang.Class.GetClassForObject(this).GetName();
 			}
 			return _name;
 		}
 
-		internal virtual com.db4o.Transaction getTransaction()
+		internal virtual com.db4o.Transaction GetTransaction()
 		{
 			return _trans;
 		}
 
-		internal virtual com.db4o.YapStream getStream()
+		internal virtual com.db4o.YapStream GetStream()
 		{
-			return getTransaction().i_stream;
+			return GetTransaction().i_stream;
 		}
 
 		/// <summary>server side execution</summary>
-		internal virtual bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal virtual bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 socket)
 		{
 			return false;
 		}
 
-		internal static com.db4o.Msg readMessage(com.db4o.Transaction a_trans, com.db4o.foundation.network.YapSocket
+		internal static com.db4o.Msg ReadMessage(com.db4o.Transaction a_trans, com.db4o.foundation.network.YapSocket
 			 sock)
 		{
 			com.db4o.YapWriter reader = new com.db4o.YapWriter(a_trans, com.db4o.YapConst.MESSAGE_LENGTH
 				);
-			if (!reader.read(sock))
+			if (!reader.Read(sock))
 			{
 				return null;
 			}
-			com.db4o.Msg message = _messages[reader.readInt()].readPayLoad(a_trans, sock, reader
+			com.db4o.Msg message = _messages[reader.ReadInt()].ReadPayLoad(a_trans, sock, reader
 				);
 			return message;
 		}
 
-		internal virtual com.db4o.Msg readPayLoad(com.db4o.Transaction a_trans, com.db4o.foundation.network.YapSocket
+		internal virtual com.db4o.Msg ReadPayLoad(com.db4o.Transaction a_trans, com.db4o.foundation.network.YapSocket
 			 sock, com.db4o.YapWriter reader)
 		{
-			if (reader.readByte() == com.db4o.YapConst.SYSTEM_TRANS && a_trans.i_parentTransaction
+			if (reader.ReadByte() == com.db4o.YapConst.SYSTEM_TRANS && a_trans.i_parentTransaction
 				 != null)
 			{
 				a_trans = a_trans.i_parentTransaction;
 			}
-			return clone(a_trans);
+			return Clone(a_trans);
 		}
 
-		internal void setTransaction(com.db4o.Transaction aTrans)
+		internal void SetTransaction(com.db4o.Transaction aTrans)
 		{
 			_trans = aTrans;
 		}
 
 		public sealed override string ToString()
 		{
-			return getName();
+			return GetName();
 		}
 
-		internal void write(com.db4o.YapStream stream, com.db4o.foundation.network.YapSocket
+		internal void Write(com.db4o.YapStream stream, com.db4o.foundation.network.YapSocket
 			 sock)
 		{
 			lock (sock)
 			{
 				try
 				{
-					sock.write(getPayLoad()._buffer);
-					sock.flush();
+					sock.Write(GetPayLoad()._buffer);
+					sock.Flush();
 				}
 				catch (System.Exception e)
 				{
@@ -249,23 +251,23 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.YapWriter getPayLoad()
+		internal virtual com.db4o.YapWriter GetPayLoad()
 		{
-			com.db4o.YapWriter writer = new com.db4o.YapWriter(getTransaction(), com.db4o.YapConst
+			com.db4o.YapWriter writer = new com.db4o.YapWriter(GetTransaction(), com.db4o.YapConst
 				.MESSAGE_LENGTH);
-			writer.writeInt(_msgID);
+			writer.WriteInt(_msgID);
 			return writer;
 		}
 
-		internal void writeQueryResult(com.db4o.Transaction a_trans, com.db4o.QueryResultImpl
+		internal void WriteQueryResult(com.db4o.Transaction a_trans, com.db4o.QueryResultImpl
 			 qr, com.db4o.foundation.network.YapSocket sock)
 		{
-			int size = qr.size();
-			com.db4o.MsgD message = ID_LIST.getWriterForLength(a_trans, com.db4o.YapConst.YAPID_LENGTH
+			int size = qr.Size();
+			com.db4o.MsgD message = ID_LIST.GetWriterForLength(a_trans, com.db4o.YapConst.YAPID_LENGTH
 				 * (size + 1));
-			com.db4o.YapWriter writer = message.getPayLoad();
-			writer.writeQueryResult(qr);
-			message.write(a_trans.i_stream, sock);
+			com.db4o.YapWriter writer = message.GetPayLoad();
+			writer.WriteQueryResult(qr);
+			message.Write(a_trans.i_stream, sock);
 		}
 	}
 }

@@ -36,7 +36,7 @@ namespace com.db4o.cluster
 		/// this Cluster.
 		/// </remarks>
 		/// <returns>the Query</returns>
-		public virtual com.db4o.query.Query query()
+		public virtual com.db4o.query.Query Query()
 		{
 			lock (this)
 			{
@@ -44,7 +44,7 @@ namespace com.db4o.cluster
 					];
 				for (int i = 0; i < _objectContainers.Length; i++)
 				{
-					queries[i] = _objectContainers[i].query();
+					queries[i] = _objectContainers[i].Query();
 				}
 				return new com.db4o.inside.cluster.ClusterQuery(this, queries);
 			}
@@ -57,13 +57,13 @@ namespace com.db4o.cluster
 		/// </summary>
 		/// <param name="obj">the object</param>
 		/// <returns>the ObjectContainer</returns>
-		public virtual com.db4o.ObjectContainer objectContainerFor(object obj)
+		public virtual com.db4o.ObjectContainer ObjectContainerFor(object obj)
 		{
 			lock (this)
 			{
 				for (int i = 0; i < _objectContainers.Length; i++)
 				{
-					if (_objectContainers[i].ext().isStored(obj))
+					if (_objectContainers[i].Ext().IsStored(obj))
 					{
 						return _objectContainers[i];
 					}

@@ -33,7 +33,7 @@ namespace com.db4o.config
 		/// FormatterServices.GetUninitializedObject() on
 		/// the .NET framework (not available on CompactFramework).<br /><br />
 		/// This setting may also be set globally for all classes in
-		/// <see cref="com.db4o.config.Configuration.callConstructors">com.db4o.config.Configuration.callConstructors
+		/// <see cref="com.db4o.config.Configuration.CallConstructors">com.db4o.config.Configuration.CallConstructors
 		/// 	</see>
 		/// .<br /><br />
 		/// </remarks>
@@ -41,9 +41,9 @@ namespace com.db4o.config
 		/// - specify true, to request calling constructors, specify
 		/// false to request <b>not</b> calling constructors.
 		/// </param>
-		/// <seealso cref="com.db4o.config.Configuration.callConstructors">com.db4o.config.Configuration.callConstructors
+		/// <seealso cref="com.db4o.config.Configuration.CallConstructors">com.db4o.config.Configuration.CallConstructors
 		/// 	</seealso>
-		void callConstructor(bool flag);
+		void CallConstructor(bool flag);
 
 		/// <summary>sets cascaded activation behaviour.</summary>
 		/// <remarks>
@@ -55,13 +55,13 @@ namespace com.db4o.config
 		/// The default setting is <b>false</b>.<br /><br />
 		/// </remarks>
 		/// <param name="flag">whether activation is to be cascaded to member objects.</param>
-		/// <seealso cref="com.db4o.config.ObjectField.cascadeOnActivate">com.db4o.config.ObjectField.cascadeOnActivate
+		/// <seealso cref="com.db4o.config.ObjectField.CascadeOnActivate">com.db4o.config.ObjectField.CascadeOnActivate
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.ObjectContainer.activate">com.db4o.ObjectContainer.activate
+		/// <seealso cref="com.db4o.ObjectContainer.Activate">com.db4o.ObjectContainer.Activate
 		/// 	</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		/// <seealso cref="com.db4o.config.Configuration.activationDepth">Why activation?</seealso>
-		void cascadeOnActivate(bool flag);
+		/// <seealso cref="com.db4o.config.Configuration.ActivationDepth">Why activation?</seealso>
+		void CascadeOnActivate(bool flag);
 
 		/// <summary>sets cascaded delete behaviour.</summary>
 		/// <remarks>
@@ -70,13 +70,13 @@ namespace com.db4o.config
 		/// Setting cascadeOnDelete to true will result in the deletion of
 		/// all member objects of instances of this class, if they are
 		/// passed to
-		/// <see cref="com.db4o.ObjectContainer.delete">com.db4o.ObjectContainer.delete</see>
+		/// <see cref="com.db4o.ObjectContainer.Delete">com.db4o.ObjectContainer.Delete</see>
 		/// .
 		/// <br /><br />
 		/// <b>Caution !</b><br />
 		/// This setting will also trigger deletion of old member objects, on
 		/// calls to
-		/// <see cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</see>
 		/// .<br /><br />
 		/// An example of the behaviour:<br />
 		/// <code>
@@ -94,11 +94,11 @@ namespace com.db4o.config
 		/// The default setting is <b>false</b>.<br /><br />
 		/// </remarks>
 		/// <param name="flag">whether deletes are to be cascaded to member objects.</param>
-		/// <seealso cref="com.db4o.config.ObjectField.cascadeOnDelete">com.db4o.config.ObjectField.cascadeOnDelete
+		/// <seealso cref="com.db4o.config.ObjectField.CascadeOnDelete">com.db4o.config.ObjectField.CascadeOnDelete
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.ObjectContainer.delete">com.db4o.ObjectContainer.delete</seealso>
+		/// <seealso cref="com.db4o.ObjectContainer.Delete">com.db4o.ObjectContainer.Delete</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		void cascadeOnDelete(bool flag);
+		void CascadeOnDelete(bool flag);
 
 		/// <summary>sets cascaded update behaviour.</summary>
 		/// <remarks>
@@ -107,16 +107,16 @@ namespace com.db4o.config
 		/// Setting cascadeOnUpdate to true will result in the update
 		/// of all member objects if a stored instance of this class is passed
 		/// to
-		/// <see cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</see>
 		/// .<br /><br />
 		/// The default setting is <b>false</b>.<br /><br />
 		/// </remarks>
 		/// <param name="flag">whether updates are to be cascaded to member objects.</param>
-		/// <seealso cref="com.db4o.config.ObjectField.cascadeOnUpdate">com.db4o.config.ObjectField.cascadeOnUpdate
+		/// <seealso cref="com.db4o.config.ObjectField.CascadeOnUpdate">com.db4o.config.ObjectField.CascadeOnUpdate
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</seealso>
+		/// <seealso cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		void cascadeOnUpdate(bool flag);
+		void CascadeOnUpdate(bool flag);
 
 		/// <summary>registers an attribute provider for special query behavior.</summary>
 		/// <remarks>
@@ -129,7 +129,7 @@ namespace com.db4o.config
 		/// com.db4o.samples.translators.Default.java#defaultConfiguration().<br /><br />
 		/// </remarks>
 		/// <param name="attributeProvider">the attribute provider to be used</param>
-		void compare(com.db4o.config.ObjectAttribute attributeProvider);
+		void Compare(com.db4o.config.ObjectAttribute attributeProvider);
 
 		/// <summary>
 		/// Must be called before databases are created or opened
@@ -142,43 +142,43 @@ namespace com.db4o.config
 		/// for objects of this class, which is required for using replication.
 		/// </remarks>
 		/// <param name="setting"></param>
-		void enableReplication(bool setting);
+		void EnableReplication(bool setting);
 
 		/// <summary>generate UUIDs for stored objects of this class.</summary>
 		/// <remarks>generate UUIDs for stored objects of this class.</remarks>
 		/// <param name="setting"></param>
-		void generateUUIDs(bool setting);
+		void GenerateUUIDs(bool setting);
 
 		/// <summary>generate version numbers for stored objects of this class.</summary>
 		/// <remarks>generate version numbers for stored objects of this class.</remarks>
 		/// <param name="setting"></param>
-		void generateVersionNumbers(bool setting);
+		void GenerateVersionNumbers(bool setting);
 
 		/// <summary>sets the maximum activation depth to the desired value.</summary>
 		/// <remarks>
 		/// sets the maximum activation depth to the desired value.
 		/// <br /><br />A class specific setting overrides the
-		/// <see cref="com.db4o.config.Configuration.activationDepth">global setting</see>
+		/// <see cref="com.db4o.config.Configuration.ActivationDepth">global setting</see>
 		/// <br /><br />
 		/// </remarks>
 		/// <param name="depth">the desired maximum activation depth</param>
-		/// <seealso cref="com.db4o.config.Configuration.activationDepth">Why activation?</seealso>
-		/// <seealso cref="com.db4o.config.ObjectClass.cascadeOnActivate">com.db4o.config.ObjectClass.cascadeOnActivate
+		/// <seealso cref="com.db4o.config.Configuration.ActivationDepth">Why activation?</seealso>
+		/// <seealso cref="com.db4o.config.ObjectClass.CascadeOnActivate">com.db4o.config.ObjectClass.CascadeOnActivate
 		/// 	</seealso>
-		void maximumActivationDepth(int depth);
+		void MaximumActivationDepth(int depth);
 
 		/// <summary>sets the minimum activation depth to the desired value.</summary>
 		/// <remarks>
 		/// sets the minimum activation depth to the desired value.
 		/// <br /><br />A class specific setting overrides the
-		/// <see cref="com.db4o.config.Configuration.activationDepth">global setting</see>
+		/// <see cref="com.db4o.config.Configuration.ActivationDepth">global setting</see>
 		/// <br /><br />
 		/// </remarks>
 		/// <param name="depth">the desired minimum activation depth</param>
-		/// <seealso cref="com.db4o.config.Configuration.activationDepth">Why activation?</seealso>
-		/// <seealso cref="com.db4o.config.ObjectClass.cascadeOnActivate">com.db4o.config.ObjectClass.cascadeOnActivate
+		/// <seealso cref="com.db4o.config.Configuration.ActivationDepth">Why activation?</seealso>
+		/// <seealso cref="com.db4o.config.ObjectClass.CascadeOnActivate">com.db4o.config.ObjectClass.CascadeOnActivate
 		/// 	</seealso>
-		void minimumActivationDepth(int depth);
+		void MinimumActivationDepth(int depth);
 
 		/// <summary>
 		/// returns an
@@ -193,7 +193,7 @@ namespace com.db4o.config
 		/// <see cref="com.db4o.config.ObjectField">ObjectField</see>
 		/// object for configuration.
 		/// </returns>
-		com.db4o.config.ObjectField objectField(string fieldName);
+		com.db4o.config.ObjectField ObjectField(string fieldName);
 
 		/// <summary>turns on storing static field values for this class.</summary>
 		/// <remarks>
@@ -208,7 +208,7 @@ namespace com.db4o.config
 		/// <br /><br />This option will slow down the process of opening database
 		/// files and the stored objects will occupy space in the database file.
 		/// </remarks>
-		void persistStaticFieldValues();
+		void PersistStaticFieldValues();
 
 		/// <summary>creates a temporary mapping of a persistent class to a different class.</summary>
 		/// <remarks>
@@ -225,7 +225,7 @@ namespace com.db4o.config
 		/// information for clazz.
 		/// </remarks>
 		/// <param name="clazz">class name, Class object, or example object.<br /><br /></param>
-		void readAs(object clazz);
+		void ReadAs(object clazz);
 
 		/// <summary>renames a stored class.</summary>
 		/// <remarks>
@@ -234,7 +234,7 @@ namespace com.db4o.config
 		/// <br /><br /><b>Examples: ../com/db4o/samples/rename.</b><br /><br />
 		/// </remarks>
 		/// <param name="newName">the new fully qualified classname.</param>
-		void rename(string newName);
+		void Rename(string newName);
 
 		/// <summary>allows to specify if transient fields are to be stored.</summary>
 		/// <remarks>
@@ -242,7 +242,7 @@ namespace com.db4o.config
 		/// <br />The default for every class is <code>false</code>.<br /><br />
 		/// </remarks>
 		/// <param name="flag">whether or not transient fields are to be stored.</param>
-		void storeTransientFields(bool flag);
+		void StoreTransientFields(bool flag);
 
 		/// <summary>registers a translator for this class.</summary>
 		/// <remarks>
@@ -262,26 +262,26 @@ namespace com.db4o.config
 		/// 	</seealso>
 		/// <seealso cref="com.db4o.config.ObjectConstructor">com.db4o.config.ObjectConstructor
 		/// 	</seealso>
-		void translate(com.db4o.config.ObjectTranslator translator);
+		void Translate(com.db4o.config.ObjectTranslator translator);
 
 		/// <summary>specifies the updateDepth for this class.</summary>
 		/// <remarks>
 		/// specifies the updateDepth for this class.
 		/// <br /><br />see the documentation of
-		/// <see cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</see>
 		/// for further details.<br /><br />
 		/// The default setting is 0: Only the object passed to
-		/// <see cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</see>
 		/// will be updated.<br /><br />
 		/// </remarks>
 		/// <param name="depth">the depth of the desired update for this class.</param>
-		/// <seealso cref="com.db4o.config.Configuration.updateDepth">com.db4o.config.Configuration.updateDepth
+		/// <seealso cref="com.db4o.config.Configuration.UpdateDepth">com.db4o.config.Configuration.UpdateDepth
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.config.ObjectClass.cascadeOnUpdate">com.db4o.config.ObjectClass.cascadeOnUpdate
+		/// <seealso cref="com.db4o.config.ObjectClass.CascadeOnUpdate">com.db4o.config.ObjectClass.CascadeOnUpdate
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.config.ObjectField.cascadeOnUpdate">com.db4o.config.ObjectField.cascadeOnUpdate
+		/// <seealso cref="com.db4o.config.ObjectField.CascadeOnUpdate">com.db4o.config.ObjectField.CascadeOnUpdate
 		/// 	</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		void updateDepth(int depth);
+		void UpdateDepth(int depth);
 	}
 }

@@ -7,7 +7,7 @@ namespace com.db4o.ext
 	/// <br /><br />Every db4o
 	/// <see cref="com.db4o.ObjectSet">ObjectSet</see>
 	/// always is an ExtObjectSet so a cast is possible.<br /><br />
-	/// <see cref="com.db4o.ObjectSet.ext">com.db4o.ObjectSet.ext</see>
+	/// <see cref="com.db4o.ObjectSet.Ext">com.db4o.ObjectSet.Ext</see>
 	/// is a convenient method to perform the cast.<br /><br />
 	/// The ObjectSet functionality is split to two interfaces to allow newcomers to
 	/// focus on the essential methods.
@@ -20,11 +20,11 @@ namespace com.db4o.ext
 		/// returns an array of internal IDs that correspond to the contained objects.
 		/// <br /><br />
 		/// </remarks>
-		/// <seealso cref="com.db4o.ext.ExtObjectContainer.getID">com.db4o.ext.ExtObjectContainer.getID
+		/// <seealso cref="com.db4o.ext.ExtObjectContainer.GetID">com.db4o.ext.ExtObjectContainer.GetID
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.ext.ExtObjectContainer.getByID">com.db4o.ext.ExtObjectContainer.getByID
+		/// <seealso cref="com.db4o.ext.ExtObjectContainer.GetByID">com.db4o.ext.ExtObjectContainer.GetByID
 		/// 	</seealso>
-		long[] getIDs();
+		long[] GetIDs();
 
 		/// <summary>returns the item at position [index] in this ObjectSet.</summary>
 		/// <remarks>
@@ -34,6 +34,6 @@ namespace com.db4o.ext
 		/// </remarks>
 		/// <param name="index">the index position in this ObjectSet.</param>
 		/// <returns>the activated object.</returns>
-		object get(int index);
+		object Get(int index);
 	}
 }

@@ -8,12 +8,16 @@ namespace com.db4o.ext
 	/// this Exception is thrown, if objects can not be stored and if
 	/// db4o is configured to throw Exceptions on storage failures.
 	/// </remarks>
-	/// <seealso cref="com.db4o.config.Configuration.exceptionsOnNotStorable">com.db4o.config.Configuration.exceptionsOnNotStorable
+	/// <seealso cref="com.db4o.config.Configuration.ExceptionsOnNotStorable">com.db4o.config.Configuration.ExceptionsOnNotStorable
 	/// 	</seealso>
 	public class ObjectNotStorableException : j4o.lang.RuntimeException
 	{
 		public ObjectNotStorableException(com.db4o.reflect.ReflectClass a_class) : base(com.db4o.Messages
-			.get(a_class.isPrimitive() ? 59 : 45, a_class.getName()))
+			.Get(a_class.IsPrimitive() ? 59 : 45, a_class.GetName()))
+		{
+		}
+
+		public ObjectNotStorableException(string message) : base(message)
 		{
 		}
 	}

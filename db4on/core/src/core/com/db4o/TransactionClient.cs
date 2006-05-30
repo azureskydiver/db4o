@@ -12,15 +12,15 @@ namespace com.db4o
 			i_client = a_stream;
 		}
 
-		internal override void beginEndSet()
+		internal override void BeginEndSet()
 		{
 			if (i_delete != null)
 			{
-				i_delete.traverse(new _AnonymousInnerClass20(this));
+				i_delete.Traverse(new _AnonymousInnerClass20(this));
 			}
 			i_delete = null;
 			i_writtenUpdateDeletedMembers = null;
-			i_client.writeMsg(com.db4o.Msg.TA_BEGIN_END_SET);
+			i_client.WriteMsg(com.db4o.Msg.TA_BEGIN_END_SET);
 		}
 
 		private sealed class _AnonymousInnerClass20 : com.db4o.foundation.Visitor4
@@ -30,12 +30,12 @@ namespace com.db4o
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.DeleteInfo info = (com.db4o.DeleteInfo)a_object;
 				if (info._delete && info._reference != null)
 				{
-					this._enclosing.i_yapObjectsToGc = com.db4o.Tree.add(this._enclosing.i_yapObjectsToGc
+					this._enclosing.i_yapObjectsToGc = com.db4o.Tree.Add(this._enclosing.i_yapObjectsToGc
 						, new com.db4o.TreeIntObject(info._key, info._reference));
 				}
 			}
@@ -43,15 +43,15 @@ namespace com.db4o
 			private readonly TransactionClient _enclosing;
 		}
 
-		internal override void commit()
+		internal override void Commit()
 		{
-			commitTransactionListeners();
+			CommitTransactionListeners();
 			if (i_yapObjectsToGc != null)
 			{
-				i_yapObjectsToGc.traverse(new _AnonymousInnerClass37(this));
+				i_yapObjectsToGc.Traverse(new _AnonymousInnerClass37(this));
 			}
 			i_yapObjectsToGc = null;
-			i_client.writeMsg(com.db4o.Msg.COMMIT);
+			i_client.WriteMsg(com.db4o.Msg.COMMIT);
 		}
 
 		private sealed class _AnonymousInnerClass37 : com.db4o.foundation.Visitor4
@@ -61,66 +61,66 @@ namespace com.db4o
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.YapObject yo = (com.db4o.YapObject)((com.db4o.TreeIntObject)a_object)._object;
-				this._enclosing.i_stream.yapObjectGCd(yo);
+				this._enclosing.i_stream.YapObjectGCd(yo);
 			}
 
 			private readonly TransactionClient _enclosing;
 		}
 
-		internal override void delete(com.db4o.YapObject a_yo, int a_cascade)
+		internal override void Delete(com.db4o.YapObject a_yo, int a_cascade)
 		{
-			base.delete(a_yo, a_cascade);
-			i_client.writeMsg(com.db4o.Msg.TA_DELETE.getWriterForInts(this, new int[] { a_yo.
-				getID(), a_cascade }));
+			base.Delete(a_yo, a_cascade);
+			i_client.WriteMsg(com.db4o.Msg.TA_DELETE.GetWriterForInts(this, new int[] { a_yo.
+				GetID(), a_cascade }));
 		}
 
-		internal override void dontDelete(int classID, int a_id)
+		internal override void DontDelete(int classID, int a_id)
 		{
-			base.dontDelete(classID, a_id);
-			i_client.writeMsg(com.db4o.Msg.TA_DONT_DELETE.getWriterForInts(this, new int[] { 
+			base.DontDelete(classID, a_id);
+			i_client.WriteMsg(com.db4o.Msg.TA_DONT_DELETE.GetWriterForInts(this, new int[] { 
 				classID, a_id }));
 		}
 
-		internal override bool isDeleted(int a_id)
+		internal override bool IsDeleted(int a_id)
 		{
-			i_client.writeMsg(com.db4o.Msg.TA_IS_DELETED.getWriterForInt(this, a_id));
-			int res = i_client.expectedByteResponse(com.db4o.Msg.TA_IS_DELETED).readInt();
+			i_client.WriteMsg(com.db4o.Msg.TA_IS_DELETED.GetWriterForInt(this, a_id));
+			int res = i_client.ExpectedByteResponse(com.db4o.Msg.TA_IS_DELETED).ReadInt();
 			return res == 1;
 		}
 
-		internal override object[] objectAndYapObjectBySignature(long a_uuid, byte[] a_signature
+		internal override object[] ObjectAndYapObjectBySignature(long a_uuid, byte[] a_signature
 			)
 		{
 			int messageLength = com.db4o.YapConst.YAPLONG_LENGTH + com.db4o.YapConst.YAPINT_LENGTH
 				 + a_signature.Length;
-			com.db4o.MsgD message = com.db4o.Msg.OBJECT_BY_UUID.getWriterForLength(this, messageLength
+			com.db4o.MsgD message = com.db4o.Msg.OBJECT_BY_UUID.GetWriterForLength(this, messageLength
 				);
-			message.writeLong(a_uuid);
-			message.writeBytes(a_signature);
-			i_client.writeMsg(message);
-			message = (com.db4o.MsgD)i_client.expectedResponse(com.db4o.Msg.OBJECT_BY_UUID);
-			int id = message.readInt();
+			message.WriteLong(a_uuid);
+			message.WriteBytes(a_signature);
+			i_client.WriteMsg(message);
+			message = (com.db4o.MsgD)i_client.ExpectedResponse(com.db4o.Msg.OBJECT_BY_UUID);
+			int id = message.ReadInt();
 			if (id > 0)
 			{
-				return i_stream.getObjectAndYapObjectByID(this, id);
+				return i_stream.GetObjectAndYapObjectByID(this, id);
 			}
 			return new object[2];
 		}
 
-		public override void rollback()
+		public override void Rollback()
 		{
 			i_yapObjectsToGc = null;
-			rollBackTransactionListeners();
+			RollBackTransactionListeners();
 		}
 
-		internal override void writeUpdateDeleteMembers(int a_id, com.db4o.YapClass a_yc, 
+		internal override void WriteUpdateDeleteMembers(int a_id, com.db4o.YapClass a_yc, 
 			int a_type, int a_cascade)
 		{
-			i_client.writeMsg(com.db4o.Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this, 
-				new int[] { a_id, a_yc.getID(), a_type, a_cascade }));
+			i_client.WriteMsg(com.db4o.Msg.WRITE_UPDATE_DELETE_MEMBERS.GetWriterForInts(this, 
+				new int[] { a_id, a_yc.GetID(), a_type, a_cascade }));
 		}
 	}
 }

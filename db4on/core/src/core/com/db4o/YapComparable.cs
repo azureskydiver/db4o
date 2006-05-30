@@ -3,16 +3,16 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public interface YapComparable
 	{
-		com.db4o.YapComparable prepareComparison(object obj);
+		com.db4o.YapComparable PrepareComparison(object obj);
 
-		int compareTo(object obj);
+		int CompareTo(object obj);
 
-		bool isEqual(object obj);
+		bool IsEqual(object obj);
 
-		bool isGreater(object obj);
+		bool IsGreater(object obj);
 
-		bool isSmaller(object obj);
+		bool IsSmaller(object obj);
 
-		object current();
+		object Current();
 	}
 }

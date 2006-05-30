@@ -8,42 +8,42 @@ namespace com.db4o.reflect
 	/// <seealso cref="com.db4o.reflect.Reflector">com.db4o.reflect.Reflector</seealso>
 	public interface ReflectClass
 	{
-		com.db4o.reflect.ReflectClass getComponentType();
+		com.db4o.reflect.ReflectClass GetComponentType();
 
-		com.db4o.reflect.ReflectConstructor[] getDeclaredConstructors();
+		com.db4o.reflect.ReflectConstructor[] GetDeclaredConstructors();
 
-		com.db4o.reflect.ReflectField[] getDeclaredFields();
+		com.db4o.reflect.ReflectField[] GetDeclaredFields();
 
-		com.db4o.reflect.ReflectField getDeclaredField(string name);
+		com.db4o.reflect.ReflectField GetDeclaredField(string name);
 
-		com.db4o.reflect.ReflectClass getDelegate();
+		com.db4o.reflect.ReflectClass GetDelegate();
 
-		com.db4o.reflect.ReflectMethod getMethod(string methodName, com.db4o.reflect.ReflectClass[]
+		com.db4o.reflect.ReflectMethod GetMethod(string methodName, com.db4o.reflect.ReflectClass[]
 			 paramClasses);
 
-		string getName();
+		string GetName();
 
-		com.db4o.reflect.ReflectClass getSuperclass();
+		com.db4o.reflect.ReflectClass GetSuperclass();
 
-		bool isAbstract();
+		bool IsAbstract();
 
-		bool isArray();
+		bool IsArray();
 
-		bool isAssignableFrom(com.db4o.reflect.ReflectClass type);
+		bool IsAssignableFrom(com.db4o.reflect.ReflectClass type);
 
-		bool isCollection();
+		bool IsCollection();
 
-		bool isInstance(object obj);
+		bool IsInstance(object obj);
 
-		bool isInterface();
+		bool IsInterface();
 
-		bool isPrimitive();
+		bool IsPrimitive();
 
-		bool isSecondClass();
+		bool IsSecondClass();
 
-		object newInstance();
+		object NewInstance();
 
-		com.db4o.reflect.Reflector reflector();
+		com.db4o.reflect.Reflector Reflector();
 
 		/// <summary>
 		/// instructs to install or uninstall a special constructor for the
@@ -55,11 +55,11 @@ namespace com.db4o.reflect
 		/// such a constructor is to be removed if present
 		/// </param>
 		/// <returns>true if the special constructor is in place after the call</returns>
-		bool skipConstructor(bool flag);
+		bool SkipConstructor(bool flag);
 
-		void useConstructor(com.db4o.reflect.ReflectConstructor constructor, object[] _params
+		void UseConstructor(com.db4o.reflect.ReflectConstructor constructor, object[] _params
 			);
 
-		object[] toArray(object obj);
+		object[] ToArray(object obj);
 	}
 }

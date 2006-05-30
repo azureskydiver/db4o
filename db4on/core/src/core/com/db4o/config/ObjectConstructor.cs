@@ -28,10 +28,10 @@ namespace com.db4o.config
 		/// <param name="container">the ObjectContainer used</param>
 		/// <param name="storedObject">
 		/// the object stored with
-		/// <see cref="com.db4o.config.ObjectTranslator.onStore">ObjectTranslator.onStore</see>
+		/// <see cref="com.db4o.config.ObjectTranslator.OnStore">ObjectTranslator.onStore</see>
 		/// .
 		/// </param>
 		/// <returns>the instantiated object.</returns>
-		object onInstantiate(com.db4o.ObjectContainer container, object storedObject);
+		object OnInstantiate(com.db4o.ObjectContainer container, object storedObject);
 	}
 }

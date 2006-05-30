@@ -9,32 +9,32 @@ namespace com.db4o.foundation.network
 			_serverSocket = new j4o.net.ServerSocket(port);
 		}
 
-		public virtual void setSoTimeout(int timeout)
+		public virtual void SetSoTimeout(int timeout)
 		{
 			try
 			{
-				_serverSocket.setSoTimeout(timeout);
+				_serverSocket.SetSoTimeout(timeout);
 			}
 			catch (System.Net.Sockets.SocketException e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
+				j4o.lang.JavaSystem.PrintStackTrace(e);
 			}
 		}
 
-		public virtual int getLocalPort()
+		public virtual int GetLocalPort()
 		{
-			return _serverSocket.getLocalPort();
+			return _serverSocket.GetLocalPort();
 		}
 
-		public virtual com.db4o.foundation.network.YapSocket accept()
+		public virtual com.db4o.foundation.network.YapSocket Accept()
 		{
-			j4o.net.Socket sock = _serverSocket.accept();
+			j4o.net.Socket sock = _serverSocket.Accept();
 			return new com.db4o.foundation.network.YapSocketReal(sock);
 		}
 
-		public virtual void close()
+		public virtual void Close()
 		{
-			_serverSocket.close();
+			_serverSocket.Close();
 		}
 	}
 }

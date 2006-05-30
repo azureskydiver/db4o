@@ -12,11 +12,11 @@ namespace com.db4o.ext
 		/// <br /><br />It is recommended to use this method for refactoring purposes, if fields
 		/// are removed and the field values need to be copied to other fields.
 		/// </remarks>
-		object get(object onObject);
+		object Get(object onObject);
 
 		/// <summary>returns the name of the field.</summary>
 		/// <remarks>returns the name of the field.</remarks>
-		string getName();
+		string GetName();
 
 		/// <summary>returns the Class (Java) / Type (.NET) of the field.</summary>
 		/// <remarks>
@@ -24,11 +24,11 @@ namespace com.db4o.ext
 		/// <br /><br />For array fields this method will return the type of the array.
 		/// Use {link #isArray()} to detect arrays.
 		/// </remarks>
-		com.db4o.reflect.ReflectClass getStoredType();
+		com.db4o.reflect.ReflectClass GetStoredType();
 
 		/// <summary>returns true if the field is an array.</summary>
 		/// <remarks>returns true if the field is an array.</remarks>
-		bool isArray();
+		bool IsArray();
 
 		/// <summary>modifies the name of this stored field.</summary>
 		/// <remarks>
@@ -37,6 +37,6 @@ namespace com.db4o.ext
 		/// to be closed and reopened to allow internal caches to be refreshed.<br /><br />
 		/// </remarks>
 		/// <param name="name">the new name</param>
-		void rename(string name);
+		void Rename(string name);
 	}
 }

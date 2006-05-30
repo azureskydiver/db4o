@@ -14,24 +14,24 @@ namespace com.db4o.foundation
 			_runnable = runnable;
 			_interval = interval;
 			j4o.lang.Thread thread = new j4o.lang.Thread(this);
-			thread.setDaemon(true);
-			thread.setName(name);
-			thread.start();
+			thread.SetDaemon(true);
+			thread.SetName(name);
+			thread.Start();
 		}
 
-		public virtual void stop()
+		public virtual void Stop()
 		{
 			stopped = true;
 		}
 
-		public virtual void run()
+		public virtual void Run()
 		{
 			while (!stopped)
 			{
-				com.db4o.foundation.Cool.sleepIgnoringInterruption(_interval);
+				com.db4o.foundation.Cool.SleepIgnoringInterruption(_interval);
 				if (!stopped)
 				{
-					_runnable.run();
+					_runnable.Run();
 				}
 			}
 		}

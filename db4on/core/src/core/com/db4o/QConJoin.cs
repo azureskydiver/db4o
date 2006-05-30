@@ -22,16 +22,16 @@ namespace com.db4o
 			i_and = a_and;
 		}
 
-		internal override void doNotInclude(com.db4o.QCandidate a_root)
+		internal override void DoNotInclude(com.db4o.QCandidate a_root)
 		{
-			i_constraint1.doNotInclude(a_root);
-			i_constraint2.doNotInclude(a_root);
+			i_constraint1.DoNotInclude(a_root);
+			i_constraint2.DoNotInclude(a_root);
 		}
 
-		internal override void exchangeConstraint(com.db4o.QCon a_exchange, com.db4o.QCon
+		internal override void ExchangeConstraint(com.db4o.QCon a_exchange, com.db4o.QCon
 			 a_with)
 		{
-			base.exchangeConstraint(a_exchange, a_with);
+			base.ExchangeConstraint(a_exchange, a_with);
 			if (a_exchange == i_constraint1)
 			{
 				i_constraint1 = a_with;
@@ -42,31 +42,31 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void evaluatePending(com.db4o.QCandidate a_root, com.db4o.QPending
+		internal virtual void EvaluatePending(com.db4o.QCandidate a_root, com.db4o.QPending
 			 a_pending, com.db4o.QPending a_secondPending, int a_secondResult)
 		{
-			bool res = i_evaluator.not(i_and ? ((a_pending._result + a_secondResult) > 0) : (
+			bool res = i_evaluator.Not(i_and ? ((a_pending._result + a_secondResult) > 0) : (
 				a_pending._result + a_secondResult) > -4);
-			if (hasJoins())
+			if (HasJoins())
 			{
-				com.db4o.foundation.Iterator4 i = iterateJoins();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = IterateJoins();
+				while (i.HasNext())
 				{
-					com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.next();
-					a_root.evaluate(new com.db4o.QPending(qcj, this, res));
+					com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.Next();
+					a_root.Evaluate(new com.db4o.QPending(qcj, this, res));
 				}
 			}
 			else
 			{
 				if (!res)
 				{
-					i_constraint1.doNotInclude(a_root);
-					i_constraint2.doNotInclude(a_root);
+					i_constraint1.DoNotInclude(a_root);
+					i_constraint2.DoNotInclude(a_root);
 				}
 			}
 		}
 
-		internal virtual com.db4o.QCon getOtherConstraint(com.db4o.QCon a_constraint)
+		internal virtual com.db4o.QCon GetOtherConstraint(com.db4o.QCon a_constraint)
 		{
 			if (a_constraint == i_constraint1)
 			{
@@ -82,18 +82,18 @@ namespace com.db4o
 			return null;
 		}
 
-		internal override string logObject()
+		internal override string LogObject()
 		{
 			return "";
 		}
 
-		internal virtual bool removeForParent(com.db4o.QCon a_constraint)
+		internal virtual bool RemoveForParent(com.db4o.QCon a_constraint)
 		{
 			if (i_and)
 			{
-				com.db4o.QCon other = getOtherConstraint(a_constraint);
-				other.removeJoin(this);
-				other.remove();
+				com.db4o.QCon other = GetOtherConstraint(a_constraint);
+				other.RemoveJoin(this);
+				other.Remove();
 				return true;
 			}
 			return false;

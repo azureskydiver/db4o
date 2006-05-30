@@ -9,118 +9,138 @@ namespace com.db4o
 		{
 		}
 
-		public override bool canHold(com.db4o.reflect.ReflectClass claxx)
+		public override bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
 			return true;
 		}
 
-		public static void appendEmbedded(com.db4o.YapWriter a_bytes)
+		public static void AppendEmbedded(com.db4o.YapWriter a_bytes)
 		{
-			com.db4o.YapClass yc = readYapClass(a_bytes);
-			if (yc != null)
+			com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
+				(a_bytes);
+			if (oh._yapClass != null)
 			{
-				yc.appendEmbedded1(a_bytes);
+				oh._yapClass.AppendEmbedded1(a_bytes);
 			}
 		}
 
-		public override void cascadeActivation(com.db4o.Transaction a_trans, object a_object
+		public override void CascadeActivation(com.db4o.Transaction a_trans, object a_object
 			, int a_depth, bool a_activate)
 		{
-			com.db4o.YapClass yc = a_trans.i_stream.getYapClass(a_trans.reflector().forObject
-				(a_object), false);
+			com.db4o.YapClass yc = ForObject(a_trans, a_object, false);
 			if (yc != null)
 			{
-				yc.cascadeActivation(a_trans, a_object, a_depth, a_activate);
+				yc.CascadeActivation(a_trans, a_object, a_depth, a_activate);
 			}
 		}
 
-		public override void deleteEmbedded(com.db4o.YapWriter a_bytes)
+		public override void DeleteEmbedded(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapWriter reader)
 		{
-			int objectID = a_bytes.readInt();
-			if (objectID > 0)
-			{
-				com.db4o.YapWriter reader = a_bytes.getStream().readWriterByID(a_bytes.getTransaction
-					(), objectID);
-				if (reader != null)
-				{
-					reader.setCascadeDeletes(a_bytes.cascadeDeletes());
-					com.db4o.YapClass yapClass = readYapClass(reader);
-					if (yapClass != null)
-					{
-						yapClass.deleteEmbedded1(reader, objectID);
-					}
-				}
-			}
+			mf._untyped.DeleteEmbedded(reader);
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 11;
 		}
 
-		public override bool hasField(com.db4o.YapStream a_stream, string a_path)
+		public override bool HasField(com.db4o.YapStream a_stream, string a_path)
 		{
-			return a_stream.i_classCollection.fieldExists(a_path);
+			return a_stream.i_classCollection.FieldExists(a_path);
 		}
 
-		internal override bool hasIndex()
+		internal override bool HasIndex()
 		{
 			return false;
 		}
 
-		public override bool holdsAnyClass()
+		public override bool HasFixedLength()
+		{
+			return false;
+		}
+
+		public override bool HoldsAnyClass()
 		{
 			return true;
 		}
 
-		internal override bool isStrongTyped()
+		public override int IsSecondClass()
+		{
+			return com.db4o.YapConst.UNKNOWN;
+		}
+
+		internal override bool IsStrongTyped()
 		{
 			return false;
 		}
 
-		public override com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
-			, com.db4o.YapReader[] a_bytes)
+		public override void CalculateLengths(com.db4o.Transaction trans, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 header, bool topLevel, object obj, bool withIndirection)
 		{
-			int id = 0;
-			int offset = a_bytes[0]._offset;
-			try
+			if (topLevel)
 			{
-				id = a_bytes[0].readInt();
+				header.AddBaseLength(com.db4o.YapConst.YAPINT_LENGTH);
 			}
-			catch (System.Exception e)
+			else
 			{
+				header.AddPayLoadLength(com.db4o.YapConst.YAPINT_LENGTH);
 			}
-			a_bytes[0]._offset = offset;
-			if (id != 0)
+			com.db4o.YapClass yc = ForObject(trans, obj, true);
+			if (yc == null)
 			{
-				com.db4o.YapWriter reader = a_trans.i_stream.readWriterByID(a_trans, id);
-				if (reader != null)
-				{
-					com.db4o.YapClass yc = readYapClass(reader);
-					try
-					{
-						if (yc != null)
-						{
-							a_bytes[0] = reader;
-							return yc.readArrayWrapper1(a_bytes);
-						}
-					}
-					catch (System.Exception e)
-					{
-					}
-				}
+				return;
 			}
-			return null;
+			header.AddPayLoadLength(com.db4o.YapConst.YAPINT_LENGTH);
+			yc.CalculateLengths(trans, header, false, obj, false);
 		}
 
-		internal static com.db4o.YapClass readYapClass(com.db4o.YapWriter a_reader)
+		public override object Read(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
+			 a_bytes, bool redirect)
 		{
-			return a_reader.getStream().getYapClass(a_reader.readInt());
+			if (mf._untyped.UseNormalClassRead())
+			{
+				return base.Read(mf, a_bytes, redirect);
+			}
+			return mf._untyped.Read(a_bytes);
 		}
 
-		public override bool supportsIndex()
+		public override com.db4o.TypeHandler4 ReadArrayHandler(com.db4o.Transaction a_trans
+			, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader[] a_bytes)
+		{
+			return mf._untyped.ReadArrayHandler(a_trans, a_bytes);
+		}
+
+		public override object ReadQuery(com.db4o.Transaction trans, com.db4o.inside.marshall.MarshallerFamily
+			 mf, bool withRedirection, com.db4o.YapReader reader, bool toArray)
+		{
+			if (mf._untyped.UseNormalClassRead())
+			{
+				return base.ReadQuery(trans, mf, withRedirection, reader, toArray);
+			}
+			return mf._untyped.ReadQuery(trans, reader, toArray);
+		}
+
+		public override com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily
+			 mf, com.db4o.YapReader reader, com.db4o.QCandidates candidates, bool withIndirection
+			)
+		{
+			if (mf._untyped.UseNormalClassRead())
+			{
+				return base.ReadSubCandidate(mf, reader, candidates, withIndirection);
+			}
+			return mf._untyped.ReadSubCandidate(reader, candidates, withIndirection);
+		}
+
+		public override bool SupportsIndex()
 		{
 			return false;
+		}
+
+		public override object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
+			 obj, bool topLevel, com.db4o.YapWriter writer, bool withIndirection)
+		{
+			return mf._untyped.WriteNew(obj, topLevel, writer);
 		}
 	}
 }

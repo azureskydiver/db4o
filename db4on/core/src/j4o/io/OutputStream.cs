@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.IO;
@@ -10,19 +10,19 @@ namespace j4o.io {
 		public OutputStream(Stream stream) : base(stream) {
 		}
 
-		public void write(int b) {
+		public void Write(int b) {
 			_stream.WriteByte((byte) b);
 		}
 
-		public void write(byte[] bytes) {
+		public void Write(byte[] bytes) {
 			_stream.Write(bytes, 0, bytes.Length);
 		}
 
-        public void write(byte[] bytes, int offset, int length) {
+        public void Write(byte[] bytes, int offset, int length) {
             _stream.Write(bytes, offset, length);
         }
 
-		public void flush() {
+		public void Flush() {
 			_stream.Flush();
 		}
 	}

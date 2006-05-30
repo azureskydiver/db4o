@@ -8,20 +8,20 @@ namespace com.db4o.reflect
 	/// <seealso cref="com.db4o.reflect.Reflector">com.db4o.reflect.Reflector</seealso>
 	public interface ReflectField
 	{
-		object get(object onObject);
+		object Get(object onObject);
 
-		string getName();
+		string GetName();
 
-		com.db4o.reflect.ReflectClass getType();
+		com.db4o.reflect.ReflectClass GetFieldType();
 
-		bool isPublic();
+		bool IsPublic();
 
-		bool isStatic();
+		bool IsStatic();
 
-		bool isTransient();
+		bool IsTransient();
 
-		void set(object onObject, object value);
+		void Set(object onObject, object value);
 
-		void setAccessible();
+		void SetAccessible();
 	}
 }

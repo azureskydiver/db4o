@@ -16,46 +16,46 @@ namespace com.db4o.inside.freespace
 		{
 		}
 
-		private void add(int address, int length)
+		private void Add(int address, int length)
 		{
-			_addressIx.add(address, length);
-			_lengthIx.add(address, length);
+			_addressIx.Add(address, length);
+			_lengthIx.Add(address, length);
 		}
 
-		public override void beginCommit()
+		public override void BeginCommit()
 		{
-			if (!started())
+			if (!Started())
 			{
 				return;
 			}
-			slotEntryToZeroes(_file, _slotAddress);
+			SlotEntryToZeroes(_file, _slotAddress);
 		}
 
-		public override void debug()
+		public override void Debug()
 		{
 		}
 
-		public override void endCommit()
+		public override void EndCommit()
 		{
-			if (!started())
+			if (!Started())
 			{
 				return;
 			}
-			_addressIx._index.commitFreeSpace(_lengthIx._index);
-			com.db4o.YapWriter writer = new com.db4o.YapWriter(_file.i_systemTrans, _slotAddress
-				, slotLength());
-			_addressIx._index._metaIndex.write(writer);
-			_lengthIx._index._metaIndex.write(writer);
-			if (_file.i_config.flushFileBuffers())
+			_addressIx._index.CommitFreeSpace(_lengthIx._index);
+			com.db4o.YapWriter writer = new com.db4o.YapWriter(_file.GetSystemTransaction(), 
+				_slotAddress, SlotLength());
+			_addressIx._index._metaIndex.Write(writer);
+			_lengthIx._index._metaIndex.Write(writer);
+			if (_file.i_config.FlushFileBuffers())
 			{
-				_file.syncFiles();
+				_file.SyncFiles();
 			}
-			writer.writeEncrypt();
+			writer.WriteEncrypt();
 		}
 
-		public override void free(int address, int length)
+		public override void Free(int address, int length)
 		{
-			if (!started())
+			if (!Started())
 			{
 				return;
 			}
@@ -63,91 +63,91 @@ namespace com.db4o.inside.freespace
 			{
 				return;
 			}
-			if (length <= discardLimit())
+			if (length <= DiscardLimit())
 			{
 				return;
 			}
-			length = _file.blocksFor(length);
+			length = _file.BlocksFor(length);
 			int freedAddress = address;
 			int freedLength = length;
-			_addressIx.find(address);
-			if (_addressIx.preceding())
+			_addressIx.Find(address);
+			if (_addressIx.Preceding())
 			{
-				if (_addressIx.address() + _addressIx.length() == address)
+				if (_addressIx.Address() + _addressIx.Length() == address)
 				{
-					remove(_addressIx.address(), _addressIx.length());
-					address = _addressIx.address();
-					length += _addressIx.length();
-					_addressIx.find(freedAddress);
+					Remove(_addressIx.Address(), _addressIx.Length());
+					address = _addressIx.Address();
+					length += _addressIx.Length();
+					_addressIx.Find(freedAddress);
 				}
 			}
-			if (_addressIx.subsequent())
+			if (_addressIx.Subsequent())
 			{
-				if (freedAddress + freedLength == _addressIx.address())
+				if (freedAddress + freedLength == _addressIx.Address())
 				{
-					remove(_addressIx.address(), _addressIx.length());
-					length += _addressIx.length();
+					Remove(_addressIx.Address(), _addressIx.Length());
+					length += _addressIx.Length();
 				}
 			}
-			add(address, length);
+			Add(address, length);
 		}
 
-		public override void freeSelf()
+		public override void FreeSelf()
 		{
-			if (!started())
+			if (!Started())
 			{
 				return;
 			}
-			_addressIx._index._metaIndex.free(_file);
-			_lengthIx._index._metaIndex.free(_file);
+			_addressIx._index._metaIndex.Free(_file);
+			_lengthIx._index._metaIndex.Free(_file);
 		}
 
-		public override int getSlot(int length)
+		public override int GetSlot(int length)
 		{
-			if (!started())
+			if (!Started())
 			{
 				return 0;
 			}
-			int address = getSlot1(length);
+			int address = GetSlot1(length);
 			if (address != 0)
 			{
 			}
 			return address;
 		}
 
-		private int getSlot1(int length)
+		private int GetSlot1(int length)
 		{
-			if (!started())
+			if (!Started())
 			{
 				return 0;
 			}
-			length = _file.blocksFor(length);
-			_lengthIx.find(length);
-			if (_lengthIx.match())
+			length = _file.BlocksFor(length);
+			_lengthIx.Find(length);
+			if (_lengthIx.Match())
 			{
-				remove(_lengthIx.address(), _lengthIx.length());
-				return _lengthIx.address();
+				Remove(_lengthIx.Address(), _lengthIx.Length());
+				return _lengthIx.Address();
 			}
-			if (_lengthIx.subsequent())
+			if (_lengthIx.Subsequent())
 			{
-				int lengthRemainder = _lengthIx.length() - length;
-				int addressRemainder = _lengthIx.address() + length;
-				remove(_lengthIx.address(), _lengthIx.length());
-				add(addressRemainder, lengthRemainder);
-				return _lengthIx.address();
+				int lengthRemainder = _lengthIx.Length() - length;
+				int addressRemainder = _lengthIx.Address() + length;
+				Remove(_lengthIx.Address(), _lengthIx.Length());
+				Add(addressRemainder, lengthRemainder);
+				return _lengthIx.Address();
 			}
 			return 0;
 		}
 
-		public override void migrate(com.db4o.inside.freespace.FreespaceManager newFM)
+		public override void Migrate(com.db4o.inside.freespace.FreespaceManager newFM)
 		{
-			if (!started())
+			if (!Started())
 			{
 				return;
 			}
 			com.db4o.foundation.IntObjectVisitor addToNewFM = new _AnonymousInnerClass181(this
 				, newFM);
-			com.db4o.Tree.traverse(_addressIx._indexTrans.getRoot(), new _AnonymousInnerClass186
+			com.db4o.Tree.Traverse(_addressIx._indexTrans.GetRoot(), new _AnonymousInnerClass186
 				(this, addToNewFM));
 		}
 
@@ -160,9 +160,9 @@ namespace com.db4o.inside.freespace
 				this.newFM = newFM;
 			}
 
-			public void visit(int length, object address)
+			public void Visit(int length, object address)
 			{
-				newFM.free(((int)address), length);
+				newFM.Free(((int)address), length);
 			}
 
 			private readonly FreespaceManagerIx _enclosing;
@@ -179,10 +179,10 @@ namespace com.db4o.inside.freespace
 				this.addToNewFM = addToNewFM;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)a_object;
-				ixTree.visitAll(addToNewFM);
+				ixTree.VisitAll(addToNewFM);
 			}
 
 			private readonly FreespaceManagerIx _enclosing;
@@ -190,50 +190,50 @@ namespace com.db4o.inside.freespace
 			private readonly com.db4o.foundation.IntObjectVisitor addToNewFM;
 		}
 
-		public override void read(int freespaceID)
+		public override void Read(int freespaceID)
 		{
 		}
 
-		private void remove(int address, int length)
+		private void Remove(int address, int length)
 		{
-			_addressIx.remove(address, length);
-			_lengthIx.remove(address, length);
+			_addressIx.Remove(address, length);
+			_lengthIx.Remove(address, length);
 		}
 
-		public override void start(int slotAddress)
+		public override void Start(int slotAddress)
 		{
-			if (started())
+			if (Started())
 			{
 				return;
 			}
 			_slotAddress = slotAddress;
 			com.db4o.MetaIndex miAddress = new com.db4o.MetaIndex();
 			com.db4o.MetaIndex miLength = new com.db4o.MetaIndex();
-			com.db4o.YapReader reader = new com.db4o.YapReader(slotLength());
-			reader.read(_file, slotAddress, 0);
-			miAddress.read(reader);
-			miLength.read(reader);
+			com.db4o.YapReader reader = new com.db4o.YapReader(SlotLength());
+			reader.Read(_file, slotAddress, 0);
+			miAddress.Read(reader);
+			miLength.Read(reader);
 			_addressIx = new com.db4o.inside.freespace.FreespaceIxAddress(_file, miAddress);
 			_lengthIx = new com.db4o.inside.freespace.FreespaceIxLength(_file, miLength);
 			_started = true;
 		}
 
-		private bool started()
+		private bool Started()
 		{
 			return _started;
 		}
 
-		public override byte systemType()
+		public override byte SystemType()
 		{
 			return FM_IX;
 		}
 
-		public override int write(bool shuttingDown)
+		public override int Write(bool shuttingDown)
 		{
 			return 0;
 		}
 
-		private void writeXBytes(int address, int length)
+		private void WriteXBytes(int address, int length)
 		{
 		}
 	}

@@ -11,7 +11,7 @@ namespace com.db4o.inside.btree
 
 		public int _cmp;
 
-		private int _for;
+		private int _target;
 
 		private const int ANY = 0;
 
@@ -21,17 +21,17 @@ namespace com.db4o.inside.btree
 
 		public Searcher(int count)
 		{
-			start(count);
+			Start(count);
 		}
 
-		public virtual void start(int count)
+		public virtual void Start(int count)
 		{
 			_lower = 0;
 			_upper = count - 1;
 			_cursor = -1;
 		}
 
-		public virtual bool incomplete()
+		public virtual bool Incomplete()
 		{
 			if (_upper < _lower)
 			{
@@ -46,7 +46,7 @@ namespace com.db4o.inside.btree
 			return _cursor != oldCursor;
 		}
 
-		internal virtual void resultIs(int cmp)
+		internal virtual void ResultIs(int cmp)
 		{
 			_cmp = cmp;
 			if (cmp > 0)
@@ -67,13 +67,13 @@ namespace com.db4o.inside.btree
 				}
 				return;
 			}
-			if (_for == ANY)
+			if (_target == ANY)
 			{
 				_lower = _cursor;
 				_upper = _cursor;
 				return;
 			}
-			if (_for == HIGHEST)
+			if (_target == HIGHEST)
 			{
 				_lower = _cursor;
 				return;
@@ -81,14 +81,14 @@ namespace com.db4o.inside.btree
 			_upper = _cursor;
 		}
 
-		internal virtual void highest()
+		internal virtual void Highest()
 		{
-			_for = HIGHEST;
+			_target = HIGHEST;
 		}
 
-		internal virtual void lowest()
+		internal virtual void Lowest()
 		{
-			_for = LOWEST;
+			_target = LOWEST;
 		}
 	}
 }

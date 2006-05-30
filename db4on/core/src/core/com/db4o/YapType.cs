@@ -2,16 +2,16 @@ namespace com.db4o
 {
 	internal interface YapType
 	{
-		object defaultValue();
+		object DefaultValue();
 
-		int typeID();
+		int TypeID();
 
-		void write(object obj, byte[] bytes, int offset);
+		void Write(object obj, byte[] bytes, int offset);
 
-		object read(byte[] bytes, int offset);
+		object Read(byte[] bytes, int offset);
 
-		int compare(object compare, object with);
+		int Compare(object compare, object with);
 
-		bool isEqual(object compare, object with);
+		bool IsEqual(object compare, object with);
 	}
 }

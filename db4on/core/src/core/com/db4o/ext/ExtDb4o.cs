@@ -27,10 +27,10 @@ namespace com.db4o.ext
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
 		/// </returns>
 		/// <seealso cref="com.db4o.ext.MemoryFile">com.db4o.ext.MemoryFile</seealso>
-		public static com.db4o.ObjectContainer openMemoryFile(com.db4o.ext.MemoryFile memoryFile
+		public static com.db4o.ObjectContainer OpenMemoryFile(com.db4o.ext.MemoryFile memoryFile
 			)
 		{
-			return openMemoryFile1(memoryFile);
+			return OpenMemoryFile1(memoryFile);
 		}
 	}
 }

@@ -14,48 +14,48 @@ namespace com.db4o
 			i_evaluator = a_evaluator;
 		}
 
-		internal override com.db4o.QE add(com.db4o.QE evaluator)
+		internal override com.db4o.QE Add(com.db4o.QE evaluator)
 		{
 			if (!(evaluator is com.db4o.QENot))
 			{
-				i_evaluator = i_evaluator.add(evaluator);
+				i_evaluator = i_evaluator.Add(evaluator);
 			}
 			return this;
 		}
 
-		internal override bool identity()
+		internal override bool Identity()
 		{
-			return i_evaluator.identity();
+			return i_evaluator.Identity();
 		}
 
-		internal override bool isDefault()
+		internal override bool IsDefault()
 		{
 			return false;
 		}
 
-		internal override bool evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
+		internal override bool Evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
 			 a_candidate, object a_value)
 		{
-			return !i_evaluator.evaluate(a_constraint, a_candidate, a_value);
+			return !i_evaluator.Evaluate(a_constraint, a_candidate, a_value);
 		}
 
-		internal override bool not(bool res)
+		internal override bool Not(bool res)
 		{
 			return !res;
 		}
 
-		public override void indexBitMap(bool[] bits)
+		public override void IndexBitMap(bool[] bits)
 		{
-			i_evaluator.indexBitMap(bits);
+			i_evaluator.IndexBitMap(bits);
 			for (int i = 0; i < 4; i++)
 			{
 				bits[i] = !bits[i];
 			}
 		}
 
-		public override bool supportsIndex()
+		public override bool SupportsIndex()
 		{
-			return i_evaluator.supportsIndex();
+			return i_evaluator.SupportsIndex();
 		}
 	}
 }

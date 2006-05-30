@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal abstract class Config4Abstract
+	/// <exclude></exclude>
+	public abstract class Config4Abstract
 	{
 		protected com.db4o.foundation.KeySpecHashtable4 _config;
 
@@ -22,65 +23,65 @@ namespace com.db4o
 
 		protected Config4Abstract(com.db4o.foundation.KeySpecHashtable4 config)
 		{
-			_config = (com.db4o.foundation.KeySpecHashtable4)config.deepClone(this);
+			_config = (com.db4o.foundation.KeySpecHashtable4)config.DeepClone(this);
 		}
 
-		public virtual void cascadeOnActivate(bool flag)
+		public virtual void CascadeOnActivate(bool flag)
 		{
-			putThreeValued(CASCADE_ON_ACTIVATE, flag);
+			PutThreeValued(CASCADE_ON_ACTIVATE, flag);
 		}
 
-		public virtual void cascadeOnDelete(bool flag)
+		public virtual void CascadeOnDelete(bool flag)
 		{
-			putThreeValued(CASCADE_ON_DELETE, flag);
+			PutThreeValued(CASCADE_ON_DELETE, flag);
 		}
 
-		public virtual void cascadeOnUpdate(bool flag)
+		public virtual void CascadeOnUpdate(bool flag)
 		{
-			putThreeValued(CASCADE_ON_UPDATE, flag);
+			PutThreeValued(CASCADE_ON_UPDATE, flag);
 		}
 
-		protected virtual void putThreeValued(com.db4o.foundation.KeySpec spec, bool flag
+		protected virtual void PutThreeValued(com.db4o.foundation.KeySpec spec, bool flag
 			)
 		{
-			_config.put(spec, flag ? com.db4o.YapConst.YES : com.db4o.YapConst.NO);
+			_config.Put(spec, flag ? com.db4o.YapConst.YES : com.db4o.YapConst.NO);
 		}
 
-		public virtual int cascadeOnActivate()
+		public virtual int CascadeOnActivate()
 		{
-			return cascade(CASCADE_ON_ACTIVATE);
+			return Cascade(CASCADE_ON_ACTIVATE);
 		}
 
-		public virtual int cascadeOnDelete()
+		public virtual int CascadeOnDelete()
 		{
-			return cascade(CASCADE_ON_DELETE);
+			return Cascade(CASCADE_ON_DELETE);
 		}
 
-		public virtual int cascadeOnUpdate()
+		public virtual int CascadeOnUpdate()
 		{
-			return cascade(CASCADE_ON_UPDATE);
+			return Cascade(CASCADE_ON_UPDATE);
 		}
 
-		private int cascade(com.db4o.foundation.KeySpec spec)
+		private int Cascade(com.db4o.foundation.KeySpec spec)
 		{
-			return _config.getAsInt(spec);
+			return _config.GetAsInt(spec);
 		}
 
-		internal abstract string className();
+		internal abstract string ClassName();
 
 		public override bool Equals(object obj)
 		{
-			return getName().Equals(((com.db4o.Config4Abstract)obj).getName());
+			return GetName().Equals(((com.db4o.Config4Abstract)obj).GetName());
 		}
 
-		public virtual string getName()
+		public virtual string GetName()
 		{
-			return _config.getAsString(NAME);
+			return _config.GetAsString(NAME);
 		}
 
-		protected virtual void setName(string name)
+		protected virtual void SetName(string name)
 		{
-			_config.put(NAME, name);
+			_config.Put(NAME, name);
 		}
 	}
 }

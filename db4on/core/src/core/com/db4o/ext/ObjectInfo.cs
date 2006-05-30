@@ -20,18 +20,18 @@ namespace com.db4o.ext
 		/// the referenced object or null, if the object has
 		/// been garbage collected.
 		/// </returns>
-		object getObject();
+		object GetObject();
 
 		/// <summary>returns a UUID representation of the referenced object.</summary>
 		/// <remarks>
 		/// returns a UUID representation of the referenced object.
 		/// UUID generation has to be turned on, in order to be able
 		/// to use this feature:
-		/// <see cref="com.db4o.config.Configuration.generateUUIDs">com.db4o.config.Configuration.generateUUIDs
+		/// <see cref="com.db4o.config.Configuration.GenerateUUIDs">com.db4o.config.Configuration.GenerateUUIDs
 		/// 	</see>
 		/// </remarks>
 		/// <returns>the UUID of the referenced object.</returns>
-		com.db4o.ext.Db4oUUID getUUID();
+		com.db4o.ext.Db4oUUID GetUUID();
 
 		/// <summary>
 		/// returns the transaction serial number ("version") the
@@ -42,10 +42,10 @@ namespace com.db4o.ext
 		/// referenced object was stored with last.
 		/// Version number generation has to be turned on, in order to
 		/// be able to use this feature:
-		/// <see cref="com.db4o.config.Configuration.generateVersionNumbers">com.db4o.config.Configuration.generateVersionNumbers
+		/// <see cref="com.db4o.config.Configuration.GenerateVersionNumbers">com.db4o.config.Configuration.GenerateVersionNumbers
 		/// 	</see>
 		/// </remarks>
 		/// <returns>the version number.</returns>
-		long getVersion();
+		long GetVersion();
 	}
 }

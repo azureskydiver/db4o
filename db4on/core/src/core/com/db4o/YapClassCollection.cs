@@ -33,40 +33,40 @@ namespace com.db4o
 			_classInits = new com.db4o.PendingClassInits(this);
 		}
 
-		internal void addYapClass(com.db4o.YapClass yapClass)
+		internal void AddYapClass(com.db4o.YapClass yapClass)
 		{
-			i_stream.setDirty(this);
-			i_classes.add(yapClass);
-			if (yapClass.stateUnread())
+			i_stream.SetDirty(this);
+			i_classes.Add(yapClass);
+			if (yapClass.StateUnread())
 			{
-				i_yapClassByBytes.put(yapClass.i_nameBytes, yapClass);
+				i_yapClassByBytes.Put(yapClass.i_nameBytes, yapClass);
 			}
 			else
 			{
-				i_yapClassByClass.put(yapClass.classReflector(), yapClass);
+				i_yapClassByClass.Put(yapClass.ClassReflector(), yapClass);
 			}
-			if (yapClass.getID() == 0)
+			if (yapClass.GetID() == 0)
 			{
-				yapClass.write(i_systemTrans);
+				yapClass.Write(i_systemTrans);
 			}
-			i_yapClassByID.put(yapClass.getID(), yapClass);
+			i_yapClassByID.Put(yapClass.GetID(), yapClass);
 		}
 
-		private byte[] asBytes(string str)
+		private byte[] AsBytes(string str)
 		{
-			return i_stream.stringIO().write(str);
+			return i_stream.StringIO().Write(str);
 		}
 
-		internal void attachQueryNode(string fieldName, com.db4o.foundation.Visitor4 a_visitor
+		internal void AttachQueryNode(string fieldName, com.db4o.foundation.Visitor4 a_visitor
 			)
 		{
-			com.db4o.YapClassCollectionIterator i = iterator();
-			while (i.hasNext())
+			com.db4o.YapClassCollectionIterator i = Iterator();
+			while (i.HasNext())
 			{
-				com.db4o.YapClass yc = i.readNextClass();
-				if (!yc.isInternal())
+				com.db4o.YapClass yc = i.ReadNextClass();
+				if (!yc.IsInternal())
 				{
-					yc.forEachYapField(new _AnonymousInnerClass62(this, fieldName, a_visitor, yc));
+					yc.ForEachYapField(new _AnonymousInnerClass62(this, fieldName, a_visitor, yc));
 				}
 			}
 		}
@@ -82,12 +82,12 @@ namespace com.db4o
 				this.yc = yc;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
 				com.db4o.YapField yf = (com.db4o.YapField)obj;
-				if (yf.canAddToQuery(fieldName))
+				if (yf.CanAddToQuery(fieldName))
 				{
-					a_visitor.visit(new object[] { yc, yf });
+					a_visitor.Visit(new object[] { yc, yf });
 				}
 			}
 
@@ -100,37 +100,37 @@ namespace com.db4o
 			private readonly com.db4o.YapClass yc;
 		}
 
-		internal void checkChanges()
+		internal void CheckChanges()
 		{
-			com.db4o.foundation.Iterator4 i = i_classes.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = i_classes.Iterator();
+			while (i.HasNext())
 			{
-				((com.db4o.YapClass)i.next()).checkChanges();
+				((com.db4o.YapClass)i.Next()).CheckChanges();
 			}
 		}
 
-		internal bool createYapClass(com.db4o.YapClass a_yapClass, com.db4o.reflect.ReflectClass
+		internal bool CreateYapClass(com.db4o.YapClass a_yapClass, com.db4o.reflect.ReflectClass
 			 a_class)
 		{
 			i_yapClassCreationDepth++;
-			com.db4o.reflect.ReflectClass superClass = a_class.getSuperclass();
+			com.db4o.reflect.ReflectClass superClass = a_class.GetSuperclass();
 			com.db4o.YapClass superYapClass = null;
 			if (superClass != null && !superClass.Equals(i_stream.i_handlers.ICLASS_OBJECT))
 			{
-				superYapClass = getYapClass(superClass, true);
+				superYapClass = GetYapClass(superClass, true);
 			}
-			bool ret = i_stream.createYapClass(a_yapClass, a_class, superYapClass);
+			bool ret = i_stream.CreateYapClass(a_yapClass, a_class, superYapClass);
 			i_yapClassCreationDepth--;
-			initYapClassesOnUp();
+			InitYapClassesOnUp();
 			return ret;
 		}
 
-		internal bool fieldExists(string a_field)
+		internal bool FieldExists(string a_field)
 		{
-			com.db4o.YapClassCollectionIterator i = iterator();
-			while (i.hasNext())
+			com.db4o.YapClassCollectionIterator i = Iterator();
+			while (i.HasNext())
 			{
-				if (i.readNextClass().getYapField(a_field) != null)
+				if (i.ReadNextClass().GetYapField(a_field) != null)
 				{
 					return true;
 				}
@@ -138,36 +138,36 @@ namespace com.db4o
 			return false;
 		}
 
-		internal com.db4o.foundation.Collection4 forInterface(com.db4o.reflect.ReflectClass
+		internal com.db4o.foundation.Collection4 ForInterface(com.db4o.reflect.ReflectClass
 			 claxx)
 		{
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
-			com.db4o.YapClassCollectionIterator i = iterator();
-			while (i.hasNext())
+			com.db4o.YapClassCollectionIterator i = Iterator();
+			while (i.HasNext())
 			{
-				com.db4o.YapClass yc = i.readNextClass();
-				com.db4o.reflect.ReflectClass candidate = yc.classReflector();
-				if (!candidate.isInterface())
+				com.db4o.YapClass yc = i.ReadNextClass();
+				com.db4o.reflect.ReflectClass candidate = yc.ClassReflector();
+				if (!candidate.IsInterface())
 				{
-					if (claxx.isAssignableFrom(candidate))
+					if (claxx.IsAssignableFrom(candidate))
 					{
-						col.add(yc);
-						com.db4o.foundation.Iterator4 j = col.iterator();
-						while (j.hasNext())
+						col.Add(yc);
+						com.db4o.foundation.Iterator4 j = col.Iterator();
+						while (j.HasNext())
 						{
-							com.db4o.YapClass existing = (com.db4o.YapClass)j.next();
+							com.db4o.YapClass existing = (com.db4o.YapClass)j.Next();
 							if (existing != yc)
 							{
-								com.db4o.YapClass higher = yc.getHigherHierarchy(existing);
+								com.db4o.YapClass higher = yc.GetHigherHierarchy(existing);
 								if (higher != null)
 								{
 									if (higher == yc)
 									{
-										col.remove(existing);
+										col.Remove(existing);
 									}
 									else
 									{
-										col.remove(yc);
+										col.Remove(yc);
 									}
 								}
 							}
@@ -178,88 +178,88 @@ namespace com.db4o
 			return col;
 		}
 
-		public override byte getIdentifier()
+		public override byte GetIdentifier()
 		{
 			return com.db4o.YapConst.YAPCLASSCOLLECTION;
 		}
 
-		internal com.db4o.YapClass getActiveYapClass(com.db4o.reflect.ReflectClass a_class
+		internal com.db4o.YapClass GetActiveYapClass(com.db4o.reflect.ReflectClass a_class
 			)
 		{
-			return (com.db4o.YapClass)i_yapClassByClass.get(a_class);
+			return (com.db4o.YapClass)i_yapClassByClass.Get(a_class);
 		}
 
-		internal com.db4o.YapClass getYapClass(com.db4o.reflect.ReflectClass a_class, bool
+		internal com.db4o.YapClass GetYapClass(com.db4o.reflect.ReflectClass a_class, bool
 			 a_create)
 		{
-			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByClass.get(a_class);
+			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByClass.Get(a_class);
 			if (yapClass == null)
 			{
-				yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(getNameBytes(a_class.getName
+				yapClass = (com.db4o.YapClass)i_yapClassByBytes.Remove(GetNameBytes(a_class.GetName
 					()));
-				readYapClass(yapClass, a_class);
+				ReadYapClass(yapClass, a_class);
 			}
 			if (yapClass != null || (!a_create))
 			{
 				return yapClass;
 			}
-			yapClass = (com.db4o.YapClass)i_creating.get(a_class);
+			yapClass = (com.db4o.YapClass)i_creating.Get(a_class);
 			if (yapClass != null)
 			{
 				return yapClass;
 			}
 			yapClass = new com.db4o.YapClass(i_stream, a_class);
-			i_creating.put(a_class, yapClass);
-			if (!createYapClass(yapClass, a_class))
+			i_creating.Put(a_class, yapClass);
+			if (!CreateYapClass(yapClass, a_class))
 			{
-				i_creating.remove(a_class);
+				i_creating.Remove(a_class);
 				return null;
 			}
 			bool addMembers = false;
-			if (i_yapClassByClass.get(a_class) == null)
+			if (i_yapClassByClass.Get(a_class) == null)
 			{
-				addYapClass(yapClass);
+				AddYapClass(yapClass);
 				addMembers = true;
 			}
-			int id = yapClass.getID();
+			int id = yapClass.GetID();
 			if (id == 0)
 			{
-				yapClass.write(i_stream.getSystemTransaction());
-				id = yapClass.getID();
+				yapClass.Write(i_stream.GetSystemTransaction());
+				id = yapClass.GetID();
 			}
-			if (i_yapClassByID.get(id) == null)
+			if (i_yapClassByID.Get(id) == null)
 			{
-				i_yapClassByID.put(id, yapClass);
+				i_yapClassByID.Put(id, yapClass);
 				addMembers = true;
 			}
 			if (addMembers || yapClass.i_fields == null)
 			{
-				_classInits.process(yapClass);
+				_classInits.Process(yapClass);
 			}
-			i_creating.remove(a_class);
-			i_stream.setDirty(this);
+			i_creating.Remove(a_class);
+			i_stream.SetDirty(this);
 			return yapClass;
 		}
 
-		internal com.db4o.YapClass getYapClass(int a_id)
+		internal com.db4o.YapClass GetYapClass(int a_id)
 		{
-			return readYapClass((com.db4o.YapClass)i_yapClassByID.get(a_id), null);
+			return ReadYapClass((com.db4o.YapClass)i_yapClassByID.Get(a_id), null);
 		}
 
-		public com.db4o.YapClass getYapClass(string a_name)
+		public com.db4o.YapClass GetYapClass(string a_name)
 		{
-			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(getNameBytes
+			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByBytes.Remove(GetNameBytes
 				(a_name));
-			readYapClass(yapClass, null);
+			ReadYapClass(yapClass, null);
 			if (yapClass == null)
 			{
-				com.db4o.YapClassCollectionIterator i = iterator();
-				while (i.hasNext())
+				com.db4o.YapClassCollectionIterator i = Iterator();
+				while (i.HasNext())
 				{
-					yapClass = (com.db4o.YapClass)i.next();
-					if (a_name.Equals(yapClass.getName()))
+					yapClass = (com.db4o.YapClass)i.Next();
+					if (a_name.Equals(yapClass.GetName()))
 					{
-						readYapClass(yapClass, null);
+						ReadYapClass(yapClass, null);
 						return yapClass;
 					}
 				}
@@ -268,42 +268,42 @@ namespace com.db4o
 			return yapClass;
 		}
 
-		public int getYapClassID(string name)
+		public int GetYapClassID(string name)
 		{
-			com.db4o.YapClass yc = (com.db4o.YapClass)i_yapClassByBytes.get(getNameBytes(name
+			com.db4o.YapClass yc = (com.db4o.YapClass)i_yapClassByBytes.Get(GetNameBytes(name
 				));
 			if (yc != null)
 			{
-				return yc.getID();
+				return yc.GetID();
 			}
 			return 0;
 		}
 
-		private byte[] getNameBytes(string name)
+		private byte[] GetNameBytes(string name)
 		{
-			return asBytes(resolveAlias(name));
+			return AsBytes(ResolveAlias(name));
 		}
 
-		private string resolveAlias(string name)
+		private string ResolveAlias(string name)
 		{
-			return i_stream.i_config.resolveAlias(name);
+			return i_stream.i_config.ResolveAlias(name);
 		}
 
-		internal void initOnUp(com.db4o.Transaction systemTrans)
+		internal void InitOnUp(com.db4o.Transaction systemTrans)
 		{
 			i_yapClassCreationDepth++;
-			systemTrans.i_stream.showInternalClasses(true);
-			com.db4o.foundation.Iterator4 i = i_classes.iterator();
-			while (i.hasNext())
+			systemTrans.i_stream.ShowInternalClasses(true);
+			com.db4o.foundation.Iterator4 i = i_classes.Iterator();
+			while (i.HasNext())
 			{
-				((com.db4o.YapClass)i.next()).initOnUp(systemTrans);
+				((com.db4o.YapClass)i.Next()).InitOnUp(systemTrans);
 			}
-			systemTrans.i_stream.showInternalClasses(false);
+			systemTrans.i_stream.ShowInternalClasses(false);
 			i_yapClassCreationDepth--;
-			initYapClassesOnUp();
+			InitYapClassesOnUp();
 		}
 
-		internal void initTables(int a_size)
+		internal void InitTables(int a_size)
 		{
 			i_classes = new com.db4o.foundation.Collection4();
 			i_yapClassByBytes = new com.db4o.foundation.Hashtable4(a_size);
@@ -316,55 +316,55 @@ namespace com.db4o
 			i_creating = new com.db4o.foundation.Hashtable4(1);
 		}
 
-		private void initYapClassesOnUp()
+		private void InitYapClassesOnUp()
 		{
 			if (i_yapClassCreationDepth == 0)
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)i_initYapClassesOnUp.next();
+				com.db4o.YapClass yc = (com.db4o.YapClass)i_initYapClassesOnUp.Next();
 				while (yc != null)
 				{
-					yc.initOnUp(i_systemTrans);
-					yc = (com.db4o.YapClass)i_initYapClassesOnUp.next();
+					yc.InitOnUp(i_systemTrans);
+					yc = (com.db4o.YapClass)i_initYapClassesOnUp.Next();
 				}
 			}
 		}
 
-		internal com.db4o.YapClassCollectionIterator iterator()
+		internal com.db4o.YapClassCollectionIterator Iterator()
 		{
 			return new com.db4o.YapClassCollectionIterator(this, i_classes._first);
 		}
 
-		public override int ownLength()
+		public override int OwnLength()
 		{
 			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.YAPINT_LENGTH + (i_classes
-				.size() * com.db4o.YapConst.YAPID_LENGTH);
+				.Size() * com.db4o.YapConst.YAPID_LENGTH);
 		}
 
-		internal void purge()
+		internal void Purge()
 		{
-			com.db4o.foundation.Iterator4 i = i_classes.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = i_classes.Iterator();
+			while (i.HasNext())
 			{
-				((com.db4o.YapClass)i.next()).purge();
+				((com.db4o.YapClass)i.Next()).Purge();
 			}
 		}
 
-		public sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
+		public sealed override void ReadThis(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader)
 		{
-			int classCount = a_reader.readInt();
-			initTables(classCount);
+			int classCount = a_reader.ReadInt();
+			InitTables(classCount);
 			for (int i = classCount; i > 0; i--)
 			{
 				com.db4o.YapClass yapClass = new com.db4o.YapClass(i_stream, null);
-				int id = a_reader.readInt();
-				yapClass.setID(id);
-				i_classes.add(yapClass);
-				i_yapClassByID.put(id, yapClass);
-				i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);
+				int id = a_reader.ReadInt();
+				yapClass.SetID(id);
+				i_classes.Add(yapClass);
+				i_yapClassByID.Put(id, yapClass);
+				i_yapClassByBytes.Put(yapClass.ReadName(a_trans), yapClass);
 			}
-			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config.readAs();
-			readAs.forEachKey(new _AnonymousInnerClass305(this, readAs));
+			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config.ReadAs();
+			readAs.ForEachKey(new _AnonymousInnerClass305(this, readAs));
 		}
 
 		private sealed class _AnonymousInnerClass305 : com.db4o.foundation.Visitor4
@@ -376,26 +376,22 @@ namespace com.db4o
 				this.readAs = readAs;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				string dbName = (string)a_object;
-				byte[] dbbytes = this._enclosing.getNameBytes(dbName);
-				string useName = (string)readAs.get(dbName);
-				byte[] useBytes = this._enclosing.getNameBytes(useName);
-				if (this._enclosing.i_yapClassByBytes.get(useBytes) == null)
+				byte[] dbbytes = this._enclosing.GetNameBytes(dbName);
+				string useName = (string)readAs.Get(dbName);
+				byte[] useBytes = this._enclosing.GetNameBytes(useName);
+				if (this._enclosing.i_yapClassByBytes.Get(useBytes) == null)
 				{
-					com.db4o.YapClass yc = (com.db4o.YapClass)this._enclosing.i_yapClassByBytes.get(dbbytes
+					com.db4o.YapClass yc = (com.db4o.YapClass)this._enclosing.i_yapClassByBytes.Get(dbbytes
 						);
 					if (yc != null)
 					{
 						yc.i_nameBytes = useBytes;
-						yc.setConfig(this._enclosing.i_stream.i_config.configClass(dbName));
-						this._enclosing.i_yapClassByBytes.put(dbbytes, null);
-						this._enclosing.i_yapClassByBytes.put(useBytes, yc);
-					}
-					else
-					{
-						int xxx = 1;
+						yc.SetConfig(this._enclosing.i_stream.i_config.ConfigClass(dbName));
+						this._enclosing.i_yapClassByBytes.Put(dbbytes, null);
+						this._enclosing.i_yapClassByBytes.Put(useBytes, yc);
 					}
 				}
 			}
@@ -405,107 +401,107 @@ namespace com.db4o
 			private readonly com.db4o.foundation.Hashtable4 readAs;
 		}
 
-		internal com.db4o.YapClass readYapClass(com.db4o.YapClass yapClass, com.db4o.reflect.ReflectClass
+		internal com.db4o.YapClass ReadYapClass(com.db4o.YapClass yapClass, com.db4o.reflect.ReflectClass
 			 a_class)
 		{
-			if (yapClass != null && !yapClass.stateUnread())
+			if (yapClass != null && !yapClass.StateUnread())
 			{
 				return yapClass;
 			}
 			i_yapClassCreationDepth++;
-			if (yapClass != null && yapClass.stateUnread())
+			if (yapClass != null && yapClass.StateUnread())
 			{
-				yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
-				com.db4o.reflect.ReflectClass claxx = yapClass.classReflector();
+				yapClass.CreateConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
+				com.db4o.reflect.ReflectClass claxx = yapClass.ClassReflector();
 				if (claxx != null)
 				{
-					i_yapClassByClass.put(claxx, yapClass);
-					yapClass.readThis();
-					yapClass.checkChanges();
-					i_initYapClassesOnUp.add(yapClass);
+					i_yapClassByClass.Put(claxx, yapClass);
+					yapClass.ReadThis();
+					yapClass.CheckChanges();
+					i_initYapClassesOnUp.Add(yapClass);
 				}
 			}
 			i_yapClassCreationDepth--;
-			initYapClassesOnUp();
+			InitYapClassesOnUp();
 			return yapClass;
 		}
 
-		internal void refreshClasses()
+		internal void RefreshClasses()
 		{
 			com.db4o.YapClassCollection rereader = new com.db4o.YapClassCollection(i_systemTrans
 				);
 			rereader.i_id = i_id;
-			rereader.read(i_stream.getSystemTransaction());
-			com.db4o.foundation.Iterator4 i = rereader.i_classes.iterator();
-			while (i.hasNext())
+			rereader.Read(i_stream.GetSystemTransaction());
+			com.db4o.foundation.Iterator4 i = rereader.i_classes.Iterator();
+			while (i.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)i.next();
-				if (i_yapClassByID.get(yc.getID()) == null)
+				com.db4o.YapClass yc = (com.db4o.YapClass)i.Next();
+				if (i_yapClassByID.Get(yc.GetID()) == null)
 				{
-					i_classes.add(yc);
-					i_yapClassByID.put(yc.getID(), yc);
-					if (yc.stateUnread())
+					i_classes.Add(yc);
+					i_yapClassByID.Put(yc.GetID(), yc);
+					if (yc.StateUnread())
 					{
-						i_yapClassByBytes.put(yc.readName(i_systemTrans), yc);
+						i_yapClassByBytes.Put(yc.ReadName(i_systemTrans), yc);
 					}
 					else
 					{
-						i_yapClassByClass.put(yc.classReflector(), yc);
+						i_yapClassByClass.Put(yc.ClassReflector(), yc);
 					}
 				}
 			}
-			i = i_classes.iterator();
-			while (i.hasNext())
+			i = i_classes.Iterator();
+			while (i.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)i.next();
-				yc.refresh();
+				com.db4o.YapClass yc = (com.db4o.YapClass)i.Next();
+				yc.Refresh();
 			}
 		}
 
-		internal void reReadYapClass(com.db4o.YapClass yapClass)
+		internal void ReReadYapClass(com.db4o.YapClass yapClass)
 		{
 			if (yapClass != null)
 			{
-				reReadYapClass(yapClass.i_ancestor);
-				yapClass.readName(i_systemTrans);
-				yapClass.forceRead();
-				yapClass.setStateClean();
-				yapClass.bitFalse(com.db4o.YapConst.CHECKED_CHANGES);
-				yapClass.bitFalse(com.db4o.YapConst.READING);
-				yapClass.bitFalse(com.db4o.YapConst.CONTINUE);
-				yapClass.bitFalse(com.db4o.YapConst.DEAD);
-				yapClass.checkChanges();
+				ReReadYapClass(yapClass.i_ancestor);
+				yapClass.ReadName(i_systemTrans);
+				yapClass.ForceRead();
+				yapClass.SetStateClean();
+				yapClass.BitFalse(com.db4o.YapConst.CHECKED_CHANGES);
+				yapClass.BitFalse(com.db4o.YapConst.READING);
+				yapClass.BitFalse(com.db4o.YapConst.CONTINUE);
+				yapClass.BitFalse(com.db4o.YapConst.DEAD);
+				yapClass.CheckChanges();
 			}
 		}
 
-		public com.db4o.ext.StoredClass[] storedClasses()
+		public com.db4o.ext.StoredClass[] StoredClasses()
 		{
 			com.db4o.foundation.Collection4 classes = new com.db4o.foundation.Collection4();
-			com.db4o.foundation.Iterator4 i = i_classes.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = i_classes.Iterator();
+			while (i.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)i.next();
-				readYapClass(yc, null);
-				if (yc.classReflector() == null)
+				com.db4o.YapClass yc = (com.db4o.YapClass)i.Next();
+				ReadYapClass(yc, null);
+				if (yc.ClassReflector() == null)
 				{
-					yc.forceRead();
+					yc.ForceRead();
 				}
-				classes.add(yc);
+				classes.Add(yc);
 			}
-			com.db4o.ext.StoredClass[] sclasses = new com.db4o.ext.StoredClass[classes.size()
+			com.db4o.ext.StoredClass[] sclasses = new com.db4o.ext.StoredClass[classes.Size()
 				];
-			classes.toArray(sclasses);
+			classes.ToArray(sclasses);
 			return sclasses;
 		}
 
-		public override void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+		public override void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
 			)
 		{
-			a_writer.writeInt(i_classes.size());
-			com.db4o.foundation.Iterator4 i = i_classes.iterator();
-			while (i.hasNext())
+			a_writer.WriteInt(i_classes.Size());
+			com.db4o.foundation.Iterator4 i = i_classes.Iterator();
+			while (i.HasNext())
 			{
-				a_writer.writeIDOf(trans, i.next());
+				a_writer.WriteIDOf(trans, i.Next());
 			}
 		}
 
@@ -513,11 +509,11 @@ namespace com.db4o
 		{
 			return base.ToString();
 			string str = "";
-			com.db4o.foundation.Iterator4 i = i_classes.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = i_classes.Iterator();
+			while (i.HasNext())
 			{
-				com.db4o.YapClass yc = (com.db4o.YapClass)i.next();
-				str += yc.getID() + " " + yc + "\r\n";
+				com.db4o.YapClass yc = (com.db4o.YapClass)i.Next();
+				str += yc.GetID() + " " + yc + "\r\n";
 			}
 			return str;
 		}

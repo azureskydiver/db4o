@@ -81,7 +81,7 @@ namespace com.db4o.query
 		/// <remarks>public for implementation reasons, please ignore.</remarks>
 		public static readonly string PREDICATEMETHOD_NAME = "match";
 
-		internal static readonly j4o.lang.Class OBJECT_CLASS = j4o.lang.Class.getClassForType
+		internal static readonly j4o.lang.Class OBJECT_CLASS = j4o.lang.Class.GetClassForType
 			(typeof(object));
 
 		private j4o.lang.Class _extentType;
@@ -98,21 +98,21 @@ namespace com.db4o.query
 			_extentType = extentType;
 		}
 
-		internal virtual j4o.lang.reflect.Method getFilterMethod()
+		internal virtual j4o.lang.reflect.Method GetFilterMethod()
 		{
 			if (cachedFilterMethod != null)
 			{
 				return cachedFilterMethod;
 			}
-			j4o.lang.reflect.Method[] methods = j4o.lang.Class.getClassForObject(this).getMethods
+			j4o.lang.reflect.Method[] methods = j4o.lang.Class.GetClassForObject(this).GetMethods
 				();
 			j4o.lang.reflect.Method untypedMethod = null;
 			for (int methodIdx = 0; methodIdx < methods.Length; methodIdx++)
 			{
 				j4o.lang.reflect.Method method = methods[methodIdx];
-				if (isFilterMethod(method))
+				if (IsFilterMethod(method))
 				{
-					if (!OBJECT_CLASS.Equals(method.getParameterTypes()[0]))
+					if (!OBJECT_CLASS.Equals(method.GetParameterTypes()[0]))
 					{
 						cachedFilterMethod = method;
 						return method;
@@ -131,33 +131,33 @@ namespace com.db4o.query
 			throw new System.ArgumentException("Invalid predicate.");
 		}
 
-		private bool isFilterMethod(j4o.lang.reflect.Method method)
+		private bool IsFilterMethod(j4o.lang.reflect.Method method)
 		{
-			if (method.getParameterTypes().Length != 1)
+			if (method.GetParameterTypes().Length != 1)
 			{
 				return false;
 			}
-			return j4o.lang.JavaSystem.equalsIgnoreCase(method.getName(), PREDICATEMETHOD_NAME
+			return j4o.lang.JavaSystem.EqualsIgnoreCase(method.GetName(), PREDICATEMETHOD_NAME
 				);
 		}
 
 		/// <summary>public for implementation reasons, please ignore.</summary>
 		/// <remarks>public for implementation reasons, please ignore.</remarks>
-		public virtual j4o.lang.Class extentType()
+		public virtual j4o.lang.Class ExtentType()
 		{
-			return (_extentType != null ? _extentType : getFilterMethod().getParameterTypes()
+			return (_extentType != null ? _extentType : GetFilterMethod().GetParameterTypes()
 				[0]);
 		}
 
 		/// <summary>public for implementation reasons, please ignore.</summary>
 		/// <remarks>public for implementation reasons, please ignore.</remarks>
-		public virtual bool appliesTo(object candidate)
+		public virtual bool AppliesTo(object candidate)
 		{
 			try
 			{
-				j4o.lang.reflect.Method filterMethod = getFilterMethod();
-				com.db4o.Platform4.setAccessible(filterMethod);
-				object ret = filterMethod.invoke(this, new object[] { candidate });
+				j4o.lang.reflect.Method filterMethod = GetFilterMethod();
+				com.db4o.Platform4.SetAccessible(filterMethod);
+				object ret = filterMethod.Invoke(this, new object[] { candidate });
 				return ((bool)ret);
 			}
 			catch (System.Exception e)

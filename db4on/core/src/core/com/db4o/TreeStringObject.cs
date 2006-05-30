@@ -10,10 +10,10 @@ namespace com.db4o
 			this._object = a_object;
 		}
 
-		public override object shallowClone()
+		public override object ShallowClone()
 		{
 			com.db4o.TreeStringObject tso = new com.db4o.TreeStringObject(_key, _object);
-			return shallowCloneInternal(tso);
+			return ShallowCloneInternal(tso);
 		}
 	}
 }

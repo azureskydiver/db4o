@@ -34,24 +34,24 @@ namespace com.db4o
 		[com.db4o.Transient]
 		private com.db4o.Transaction i_trans;
 
-		public virtual int adjustReadDepth(int a_depth)
+		public virtual int AdjustReadDepth(int a_depth)
 		{
 			return 1;
 		}
 
-		public virtual bool canBind()
+		public virtual bool CanBind()
 		{
 			return true;
 		}
 
-		private string checkExt(j4o.io.File file)
+		private string CheckExt(j4o.io.File file)
 		{
-			string name = file.getName();
+			string name = file.GetName();
 			int pos = name.LastIndexOf(".");
 			if (pos > 0)
 			{
-				i_ext = j4o.lang.JavaSystem.substring(name, pos);
-				return j4o.lang.JavaSystem.substring(name, 0, pos);
+				i_ext = j4o.lang.JavaSystem.Substring(name, pos);
+				return j4o.lang.JavaSystem.Substring(name, 0, pos);
 			}
 			else
 			{
@@ -60,31 +60,31 @@ namespace com.db4o
 			}
 		}
 
-		private void copy(j4o.io.File from, j4o.io.File to)
+		private void Copy(j4o.io.File from, j4o.io.File to)
 		{
-			to.delete();
+			to.Delete();
 			j4o.io.BufferedInputStream _in = new j4o.io.BufferedInputStream(new j4o.io.FileInputStream
 				(from));
 			j4o.io.BufferedOutputStream _out = new j4o.io.BufferedOutputStream(new j4o.io.FileOutputStream
 				(to));
 			byte[] buffer = new byte[COPYBUFFER_LENGTH];
 			int bytesread = -1;
-			while ((bytesread = _in.read(buffer)) >= 0)
+			while ((bytesread = _in.Read(buffer)) >= 0)
 			{
-				_out.write(buffer, 0, bytesread);
+				_out.Write(buffer, 0, bytesread);
 			}
-			_out.flush();
-			_out.close();
-			_in.close();
+			_out.Flush();
+			_out.Close();
+			_in.Close();
 		}
 
-		public virtual object createDefault(com.db4o.Transaction a_trans)
+		public virtual object CreateDefault(com.db4o.Transaction a_trans)
 		{
 			com.db4o.BlobImpl bi = null;
 			try
 			{
-				bi = (com.db4o.BlobImpl)j4o.lang.JavaSystem.clone(this);
-				bi.setTrans(a_trans);
+				bi = (com.db4o.BlobImpl)this.MemberwiseClone();
+				bi.SetTrans(a_trans);
 			}
 			catch (j4o.lang.CloneNotSupportedException e)
 			{
@@ -93,31 +93,31 @@ namespace com.db4o
 			return bi;
 		}
 
-		internal virtual j4o.io.FileInputStream getClientInputStream()
+		internal virtual j4o.io.FileInputStream GetClientInputStream()
 		{
 			return new j4o.io.FileInputStream(i_file);
 		}
 
-		internal virtual j4o.io.FileOutputStream getClientOutputStream()
+		internal virtual j4o.io.FileOutputStream GetClientOutputStream()
 		{
 			return new j4o.io.FileOutputStream(i_file);
 		}
 
-		public virtual string getFileName()
+		public virtual string GetFileName()
 		{
 			return fileName;
 		}
 
-		internal virtual int getLength()
+		internal virtual int GetLength()
 		{
 			return i_length;
 		}
 
-		public virtual double getStatus()
+		public virtual double GetStatus()
 		{
 			if (i_status == com.db4o.ext.Status.PROCESSING && i_getStatusFrom != null)
 			{
-				return i_getStatusFrom.getStatus();
+				return i_getStatusFrom.GetStatus();
 			}
 			if (i_status == com.db4o.ext.Status.UNUSED)
 			{
@@ -129,81 +129,81 @@ namespace com.db4o
 			return i_status;
 		}
 
-		internal virtual void getStatusFrom(com.db4o.MsgBlob from)
+		internal virtual void GetStatusFrom(com.db4o.MsgBlob from)
 		{
 			i_getStatusFrom = from;
 		}
 
-		public virtual bool hasClassIndex()
+		public virtual bool HasClassIndex()
 		{
 			return false;
 		}
 
-		public virtual void readFrom(j4o.io.File file)
+		public virtual void ReadFrom(j4o.io.File file)
 		{
-			if (!file.exists())
+			if (!file.Exists())
 			{
-				throw new System.IO.IOException(com.db4o.Messages.get(41, file.getAbsolutePath())
+				throw new System.IO.IOException(com.db4o.Messages.Get(41, file.GetAbsolutePath())
 					);
 			}
-			i_length = (int)file.length();
-			checkExt(file);
-			if (i_stream.isClient())
+			i_length = (int)file.Length();
+			CheckExt(file);
+			if (i_stream.IsClient())
 			{
 				i_file = file;
 				com.db4o.MsgBlob msg = null;
 				lock (i_stream.Lock())
 				{
-					i_stream.set(this);
-					int id = (int)i_stream.getID(this);
-					msg = (com.db4o.MsgBlob)com.db4o.Msg.WRITE_BLOB.getWriterForInt(i_trans, id);
+					i_stream.Set(this);
+					int id = (int)i_stream.GetID(this);
+					msg = (com.db4o.MsgBlob)com.db4o.Msg.WRITE_BLOB.GetWriterForInt(i_trans, id);
 					msg._blob = this;
 					i_status = com.db4o.ext.Status.QUEUED;
 				}
-				((com.db4o.YapClient)i_stream).processBlobMessage(msg);
+				((com.db4o.YapClient)i_stream).ProcessBlobMessage(msg);
 			}
 			else
 			{
-				readLocal(file);
+				ReadLocal(file);
 			}
 		}
 
-		public virtual void readLocal(j4o.io.File file)
+		public virtual void ReadLocal(j4o.io.File file)
 		{
 			bool copied = false;
 			if (fileName == null)
 			{
-				j4o.io.File newFile = new j4o.io.File(serverPath(), file.getName());
-				if (!newFile.exists())
+				j4o.io.File newFile = new j4o.io.File(ServerPath(), file.GetName());
+				if (!newFile.Exists())
 				{
-					copy(file, newFile);
+					Copy(file, newFile);
 					copied = true;
-					fileName = newFile.getName();
+					fileName = newFile.GetName();
 				}
 			}
 			if (!copied)
 			{
-				copy(file, serverFile(checkExt(file), true));
+				Copy(file, ServerFile(CheckExt(file), true));
 			}
 			lock (i_stream.i_lock)
 			{
-				i_stream.setInternal(i_trans, this, false);
+				i_stream.SetInternal(i_trans, this, false);
 			}
 			i_status = com.db4o.ext.Status.COMPLETED;
 		}
 
-		public virtual void preDeactivate()
+		public virtual void PreDeactivate()
 		{
 		}
 
-		internal virtual j4o.io.File serverFile(string promptName, bool writeToServer)
+		internal virtual j4o.io.File ServerFile(string promptName, bool writeToServer)
 		{
 			lock (i_stream.i_lock)
 			{
-				i_stream.activate1(i_trans, this, 2);
+				i_stream.Activate1(i_trans, this, 2);
 			}
-			string path = serverPath();
-			i_stream.i_config.ensureDirExists(path);
+			string path = ServerPath();
+			i_stream.i_config.EnsureDirExists(path);
 			if (writeToServer)
 			{
 				if (fileName == null)
@@ -214,23 +214,23 @@ namespace com.db4o
 					}
 					else
 					{
-						fileName = "b_" + j4o.lang.JavaSystem.currentTimeMillis();
+						fileName = "b_" + j4o.lang.JavaSystem.CurrentTimeMillis();
 					}
 					string tryPath = fileName + i_ext;
 					int i = 0;
-					while (new j4o.io.File(path, tryPath).exists())
+					while (new j4o.io.File(path, tryPath).Exists())
 					{
 						tryPath = fileName + "_" + i++ + i_ext;
 						if (i == 99)
 						{
 							i_status = com.db4o.ext.Status.ERROR;
-							throw new System.IO.IOException(com.db4o.Messages.get(40));
+							throw new System.IO.IOException(com.db4o.Messages.Get(40));
 						}
 					}
 					fileName = tryPath;
 					lock (i_stream.i_lock)
 					{
-						i_stream.setInternal(i_trans, this, false);
+						i_stream.SetInternal(i_trans, this, false);
 					}
 				}
 			}
@@ -238,79 +238,79 @@ namespace com.db4o
 			{
 				if (fileName == null)
 				{
-					throw new System.IO.IOException(com.db4o.Messages.get(38));
+					throw new System.IO.IOException(com.db4o.Messages.Get(38));
 				}
 			}
 			string lastTryPath = path + j4o.io.File.separator + fileName;
 			if (!writeToServer)
 			{
-				if (!(new j4o.io.File(lastTryPath).exists()))
+				if (!(new j4o.io.File(lastTryPath).Exists()))
 				{
-					throw new System.IO.IOException(com.db4o.Messages.get(39));
+					throw new System.IO.IOException(com.db4o.Messages.Get(39));
 				}
 			}
 			return new j4o.io.File(lastTryPath);
 		}
 
-		private string serverPath()
+		private string ServerPath()
 		{
-			string path = i_stream.i_config.blobPath();
+			string path = i_stream.i_config.BlobPath();
 			if (path == null)
 			{
 				path = "blobs";
 			}
-			i_stream.i_config.ensureDirExists(path);
+			i_stream.i_config.EnsureDirExists(path);
 			return path;
 		}
 
-		internal virtual void setStatus(double status)
+		internal virtual void SetStatus(double status)
 		{
 			i_status = status;
 		}
 
-		public virtual void setTrans(com.db4o.Transaction a_trans)
+		public virtual void SetTrans(com.db4o.Transaction a_trans)
 		{
 			i_trans = a_trans;
 			i_stream = a_trans.i_stream;
 		}
 
-		public virtual void writeLocal(j4o.io.File file)
+		public virtual void WriteLocal(j4o.io.File file)
 		{
-			copy(serverFile(null, false), file);
+			Copy(ServerFile(null, false), file);
 			i_status = com.db4o.ext.Status.COMPLETED;
 		}
 
-		public virtual void writeTo(j4o.io.File file)
+		public virtual void WriteTo(j4o.io.File file)
 		{
-			if (getStatus() == com.db4o.ext.Status.UNUSED)
+			if (GetStatus() == com.db4o.ext.Status.UNUSED)
 			{
-				throw new System.IO.IOException(com.db4o.Messages.get(43));
+				throw new System.IO.IOException(com.db4o.Messages.Get(43));
 			}
-			if (i_stream.isClient())
+			if (i_stream.IsClient())
 			{
 				i_file = file;
-				com.db4o.MsgBlob msg = (com.db4o.MsgBlob)com.db4o.Msg.READ_BLOB.getWriterForInt(i_trans
-					, (int)i_stream.getID(this));
+				com.db4o.MsgBlob msg = (com.db4o.MsgBlob)com.db4o.Msg.READ_BLOB.GetWriterForInt(i_trans
+					, (int)i_stream.GetID(this));
 				msg._blob = this;
 				i_status = com.db4o.ext.Status.QUEUED;
-				((com.db4o.YapClient)i_stream).processBlobMessage(msg);
+				((com.db4o.YapClient)i_stream).ProcessBlobMessage(msg);
 			}
 			else
 			{
-				writeLocal(file);
+				WriteLocal(file);
 			}
 		}
 
-		public virtual void replicateFrom(object obj)
+		public virtual void ReplicateFrom(object obj)
 		{
 		}
 
-		public virtual object storedTo(com.db4o.Transaction a_trans)
+		public virtual object StoredTo(com.db4o.Transaction a_trans)
 		{
 			return this;
 		}
 
-		public virtual void setYapObject(com.db4o.YapObject a_yapObject)
+		public virtual void SetYapObject(com.db4o.YapObject a_yapObject)
 		{
 		}
 	}

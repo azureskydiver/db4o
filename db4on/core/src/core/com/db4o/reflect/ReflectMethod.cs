@@ -8,8 +8,8 @@ namespace com.db4o.reflect
 	/// <seealso cref="com.db4o.reflect.Reflector">com.db4o.reflect.Reflector</seealso>
 	public interface ReflectMethod
 	{
-		object invoke(object onObject, object[] parameters);
+		object Invoke(object onObject, object[] parameters);
 
-		com.db4o.reflect.ReflectClass getReturnType();
+		com.db4o.reflect.ReflectClass GetReturnType();
 	}
 }

@@ -8,79 +8,71 @@ namespace com.db4o
 		{
 		}
 
-		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		public override object Coerce(com.db4o.reflect.ReflectClass claxx, object obj)
 		{
-			return com.db4o.foundation.Coercion4.toDouble(obj);
+			return com.db4o.foundation.Coercion4.ToDouble(obj);
 		}
 
-		public override object defaultValue()
+		public override object DefaultValue()
 		{
 			return i_primitive;
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 5;
 		}
 
-		protected override j4o.lang.Class primitiveJavaClass()
+		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.getClassForType(typeof(double));
+			return j4o.lang.Class.GetClassForType(typeof(double));
 		}
 
-		internal override object primitiveNull()
+		internal override object PrimitiveNull()
 		{
 			return i_primitive;
 		}
 
-		internal override object read1(com.db4o.YapReader a_bytes)
+		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			long ret = readLong(a_bytes);
-			return com.db4o.Platform4.longToDouble(ret);
+			return com.db4o.Platform4.LongToDouble(ReadLong(a_bytes));
 		}
 
-		public override void write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
-			if (!com.db4o.Deploy.csharp && a_object == null)
-			{
-				writeLong(long.MaxValue, a_bytes);
-			}
-			else
-			{
-				writeLong(com.db4o.Platform4.doubleToLong(((double)a_object)), a_bytes);
-			}
+			WriteLong(com.db4o.Platform4.DoubleToLong(((double)a_object)), a_bytes);
 		}
 
 		private double i_compareToDouble;
 
-		private double dval(object obj)
+		private double Dval(object obj)
 		{
 			return ((double)obj);
 		}
 
-		internal override void prepareComparison1(object obj)
+		internal override void PrepareComparison1(object obj)
 		{
-			i_compareToDouble = dval(obj);
+			i_compareToDouble = Dval(obj);
 		}
 
-		public override object current1()
+		public override object Current1()
 		{
 			return System.Convert.ToDouble(i_compareTo);
 		}
 
-		internal override bool isEqual1(object obj)
+		internal override bool IsEqual1(object obj)
 		{
-			return obj is double && dval(obj) == i_compareToDouble;
+			return obj is double && Dval(obj) == i_compareToDouble;
 		}
 
-		internal override bool isGreater1(object obj)
+		internal override bool IsGreater1(object obj)
 		{
-			return obj is double && dval(obj) > i_compareToDouble;
+			return obj is double && Dval(obj) > i_compareToDouble;
 		}
 
-		internal override bool isSmaller1(object obj)
+		internal override bool IsSmaller1(object obj)
 		{
-			return obj is double && dval(obj) < i_compareToDouble;
+			return obj is double && Dval(obj) < i_compareToDouble;
 		}
 	}
 }

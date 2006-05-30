@@ -6,7 +6,7 @@ namespace com.db4o.foundation
 		{
 		}
 
-		public sealed override bool hasNext()
+		public sealed override bool HasNext()
 		{
 			return false;
 		}

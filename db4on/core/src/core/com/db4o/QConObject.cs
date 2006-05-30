@@ -42,14 +42,14 @@ namespace com.db4o
 			i_parent = a_parent;
 			if (a_object is com.db4o.config.Compare)
 			{
-				a_object = ((com.db4o.config.Compare)a_object).compare();
+				a_object = ((com.db4o.config.Compare)a_object).Compare();
 			}
 			i_object = a_object;
 			i_field = a_field;
-			associateYapClass(a_trans, a_object);
+			AssociateYapClass(a_trans, a_object);
 		}
 
-		private void associateYapClass(com.db4o.Transaction a_trans, object a_object)
+		private void AssociateYapClass(com.db4o.Transaction a_trans, object a_object)
 		{
 			if (a_object == null)
 			{
@@ -59,30 +59,30 @@ namespace com.db4o
 			}
 			else
 			{
-				i_yapClass = a_trans.i_stream.getYapClass(a_trans.reflector().forObject(a_object)
+				i_yapClass = a_trans.i_stream.GetYapClass(a_trans.Reflector().ForObject(a_object)
 					, true);
 				if (i_yapClass != null)
 				{
-					i_object = i_yapClass.getComparableObject(a_object);
+					i_object = i_yapClass.GetComparableObject(a_object);
 					if (a_object != i_object)
 					{
-						i_attributeProvider = i_yapClass.i_config.queryAttributeProvider();
-						i_yapClass = a_trans.i_stream.getYapClass(a_trans.reflector().forObject(i_object)
+						i_attributeProvider = i_yapClass.i_config.QueryAttributeProvider();
+						i_yapClass = a_trans.i_stream.GetYapClass(a_trans.Reflector().ForObject(i_object)
 							, true);
 					}
 					if (i_yapClass != null)
 					{
-						i_yapClass.collectConstraints(a_trans, this, i_object, new _AnonymousInnerClass88
+						i_yapClass.CollectConstraints(a_trans, this, i_object, new _AnonymousInnerClass88
 							(this));
 					}
 					else
 					{
-						associateYapClass(a_trans, null);
+						AssociateYapClass(a_trans, null);
 					}
 				}
 				else
 				{
-					associateYapClass(a_trans, null);
+					AssociateYapClass(a_trans, null);
 				}
 			}
 		}
@@ -94,20 +94,20 @@ namespace com.db4o
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
-				this._enclosing.addConstraint((com.db4o.QCon)obj);
+				this._enclosing.AddConstraint((com.db4o.QCon)obj);
 			}
 
 			private readonly QConObject _enclosing;
 		}
 
-		public override bool canBeIndexLeaf()
+		public override bool CanBeIndexLeaf()
 		{
-			return i_yapClass != null && i_yapClass.isPrimitive();
+			return i_yapClass != null && i_yapClass.IsPrimitive();
 		}
 
-		public override bool canLoadByIndex()
+		public override bool CanLoadByIndex()
 		{
 			if (i_field == null)
 			{
@@ -117,32 +117,32 @@ namespace com.db4o
 			{
 				return false;
 			}
-			if (!i_field.i_yapField.hasIndex())
+			if (!i_field.i_yapField.HasIndex())
 			{
 				return false;
 			}
-			if (hasOrJoins())
+			if (HasOrJoins())
 			{
 				return false;
 			}
-			return i_field.i_yapField.canLoadByIndex(this, i_evaluator);
+			return i_field.i_yapField.CanLoadByIndex(this, i_evaluator);
 		}
 
-		internal override void createCandidates(com.db4o.foundation.Collection4 a_candidateCollection
+		internal override void CreateCandidates(com.db4o.foundation.Collection4 a_candidateCollection
 			)
 		{
-			if (i_loadedFromIndex && !hasChildren())
+			if (i_loadedFromIndex && !HasChildren())
 			{
 				return;
 			}
-			base.createCandidates(a_candidateCollection);
+			base.CreateCandidates(a_candidateCollection);
 		}
 
-		internal override bool evaluate(com.db4o.QCandidate a_candidate)
+		internal override bool Evaluate(com.db4o.QCandidate a_candidate)
 		{
 			try
 			{
-				return a_candidate.evaluate(this, i_evaluator);
+				return a_candidate.Evaluate(this, i_evaluator);
 			}
 			catch (System.Exception e)
 			{
@@ -150,16 +150,16 @@ namespace com.db4o
 			}
 		}
 
-		internal override void evaluateEvaluationsExec(com.db4o.QCandidates a_candidates, 
+		internal override void EvaluateEvaluationsExec(com.db4o.QCandidates a_candidates, 
 			bool rereadObject)
 		{
-			if (i_field.isSimple())
+			if (i_field.IsSimple())
 			{
 				bool hasEvaluation = false;
-				com.db4o.foundation.Iterator4 i = iterateChildren();
-				while (i.hasNext())
+				com.db4o.foundation.Iterator4 i = IterateChildren();
+				while (i.HasNext())
 				{
-					if (i.next() is com.db4o.QConEvaluation)
+					if (i.Next() is com.db4o.QConEvaluation)
 					{
 						hasEvaluation = true;
 						break;
@@ -167,92 +167,92 @@ namespace com.db4o
 				}
 				if (hasEvaluation)
 				{
-					a_candidates.traverse(i_field);
-					com.db4o.foundation.Iterator4 j = iterateChildren();
-					while (j.hasNext())
+					a_candidates.Traverse(i_field);
+					com.db4o.foundation.Iterator4 j = IterateChildren();
+					while (j.HasNext())
 					{
-						((com.db4o.QCon)j.next()).evaluateEvaluationsExec(a_candidates, false);
+						((com.db4o.QCon)j.Next()).EvaluateEvaluationsExec(a_candidates, false);
 					}
 				}
 			}
 		}
 
-		internal override void evaluateSelf()
+		internal override void EvaluateSelf()
 		{
 			if (i_yapClass != null)
 			{
 				if (!(i_yapClass is com.db4o.YapClassPrimitive))
 				{
-					if (!i_evaluator.identity())
+					if (!i_evaluator.Identity())
 					{
 						if (i_yapClass == i_candidates.i_yapClass)
 						{
-							if (i_evaluator.isDefault() && (!hasJoins()))
+							if (i_evaluator.IsDefault() && (!HasJoins()))
 							{
 								return;
 							}
 						}
 						i_selfComparison = true;
 					}
-					i_comparator = i_yapClass.prepareComparison(i_object);
+					i_comparator = i_yapClass.PrepareComparison(i_object);
 				}
 			}
-			base.evaluateSelf();
+			base.EvaluateSelf();
 			i_selfComparison = false;
 		}
 
-		internal override void collect(com.db4o.QCandidates a_candidates)
+		internal override void Collect(com.db4o.QCandidates a_candidates)
 		{
-			if (i_field.isClass())
+			if (i_field.IsClass())
 			{
-				a_candidates.traverse(i_field);
-				a_candidates.filter(i_candidates);
+				a_candidates.Traverse(i_field);
+				a_candidates.Filter(i_candidates);
 			}
 		}
 
-		internal override void evaluateSimpleExec(com.db4o.QCandidates a_candidates)
+		internal override void EvaluateSimpleExec(com.db4o.QCandidates a_candidates)
 		{
 			if (i_orderID != 0 || !i_loadedFromIndex)
 			{
-				if (i_field.isSimple() || isNullConstraint())
+				if (i_field.IsSimple() || IsNullConstraint())
 				{
-					a_candidates.traverse(i_field);
-					prepareComparison(i_field);
-					a_candidates.filter(this);
+					a_candidates.Traverse(i_field);
+					PrepareComparison(i_field);
+					a_candidates.Filter(this);
 				}
 			}
 		}
 
-		public virtual int findBoundsQuery(com.db4o.inside.ix.IxTraverser traverser)
+		public virtual int FindBoundsQuery(com.db4o.inside.ix.IxTraverser traverser)
 		{
-			return traverser.findBoundsQuery(this, i_object);
+			return traverser.FindBoundsQuery(this, i_object);
 		}
 
-		internal virtual com.db4o.YapComparable getComparator(com.db4o.QCandidate a_candidate
+		internal virtual com.db4o.YapComparable GetComparator(com.db4o.QCandidate a_candidate
 			)
 		{
 			if (i_comparator == null)
 			{
-				return a_candidate.prepareComparison(i_trans.i_stream, i_object);
+				return a_candidate.PrepareComparison(i_trans.i_stream, i_object);
 			}
 			return i_comparator;
 		}
 
-		internal override com.db4o.YapClass getYapClass()
+		internal override com.db4o.YapClass GetYapClass()
 		{
 			return i_yapClass;
 		}
 
-		internal override com.db4o.QField getField()
+		internal override com.db4o.QField GetField()
 		{
 			return i_field;
 		}
 
-		internal virtual int getObjectID()
+		internal virtual int GetObjectID()
 		{
 			if (i_objectID == 0)
 			{
-				i_objectID = i_trans.i_stream.getID1(i_trans, i_object);
+				i_objectID = i_trans.i_stream.GetID1(i_trans, i_object);
 				if (i_objectID == 0)
 				{
 					i_objectID = -1;
@@ -261,20 +261,20 @@ namespace com.db4o
 			return i_objectID;
 		}
 
-		internal override bool hasObjectInParentPath(object obj)
+		internal override bool HasObjectInParentPath(object obj)
 		{
 			if (obj == i_object)
 			{
 				return true;
 			}
-			return base.hasObjectInParentPath(obj);
+			return base.HasObjectInParentPath(obj);
 		}
 
-		public override int identityID()
+		public override int IdentityID()
 		{
-			if (i_evaluator.identity())
+			if (i_evaluator.Identity())
 			{
-				int id = getObjectID();
+				int id = GetObjectID();
 				if (id != 0)
 				{
 					if (!(i_evaluator is com.db4o.QENot))
@@ -286,36 +286,36 @@ namespace com.db4o
 			return 0;
 		}
 
-		public override com.db4o.inside.ix.IxTree indexRoot()
+		public override com.db4o.inside.ix.IxTree IndexRoot()
 		{
-			return (com.db4o.inside.ix.IxTree)i_field.i_yapField.getIndexRoot(i_trans);
+			return (com.db4o.inside.ix.IxTree)i_field.i_yapField.GetIndexRoot(i_trans);
 		}
 
-		internal override bool isNullConstraint()
+		internal override bool IsNullConstraint()
 		{
 			return i_object == null;
 		}
 
-		internal override void log(string indent)
+		internal override void Log(string indent)
 		{
 		}
 
-		internal override string logObject()
+		internal override string LogObject()
 		{
 			return "";
 		}
 
-		internal override void marshall()
+		internal override void Marshall()
 		{
-			base.marshall();
-			getObjectID();
+			base.Marshall();
+			GetObjectID();
 			if (i_yapClass != null)
 			{
-				i_yapClassID = i_yapClass.getID();
+				i_yapClassID = i_yapClass.GetID();
 			}
 		}
 
-		public override bool onSameFieldAs(com.db4o.QCon other)
+		public override bool OnSameFieldAs(com.db4o.QCon other)
 		{
 			if (!(other is com.db4o.QConObject))
 			{
@@ -324,86 +324,86 @@ namespace com.db4o
 			return i_field == ((com.db4o.QConObject)other).i_field;
 		}
 
-		internal virtual void prepareComparison(com.db4o.QField a_field)
+		internal virtual void PrepareComparison(com.db4o.QField a_field)
 		{
-			if (isNullConstraint() & !a_field.isArray())
+			if (IsNullConstraint() & !a_field.IsArray())
 			{
 				i_comparator = com.db4o.Null.INSTANCE;
 			}
 			else
 			{
-				i_comparator = a_field.prepareComparison(i_object);
+				i_comparator = a_field.PrepareComparison(i_object);
 			}
 		}
 
-		internal override void removeChildrenJoins()
+		internal override void RemoveChildrenJoins()
 		{
-			base.removeChildrenJoins();
+			base.RemoveChildrenJoins();
 			_children = null;
 		}
 
-		internal override com.db4o.QCon shareParent(object a_object, bool[] removeExisting
+		internal override com.db4o.QCon ShareParent(object a_object, bool[] removeExisting
 			)
 		{
 			if (i_parent == null)
 			{
 				return null;
 			}
-			object obj = i_field.coerce(a_object);
+			object obj = i_field.Coerce(a_object);
 			if (obj == com.db4o.foundation.No4.INSTANCE)
 			{
 				return null;
 			}
-			return i_parent.addSharedConstraint(i_field, obj);
+			return i_parent.AddSharedConstraint(i_field, obj);
 		}
 
-		internal override com.db4o.QConClass shareParentForClass(com.db4o.reflect.ReflectClass
+		internal override com.db4o.QConClass ShareParentForClass(com.db4o.reflect.ReflectClass
 			 a_class, bool[] removeExisting)
 		{
 			if (i_parent == null)
 			{
 				return null;
 			}
-			if (!i_field.canHold(a_class))
+			if (!i_field.CanHold(a_class))
 			{
 				return null;
 			}
 			com.db4o.QConClass newConstraint = new com.db4o.QConClass(i_trans, i_parent, i_field
 				, a_class);
-			i_parent.addConstraint(newConstraint);
+			i_parent.AddConstraint(newConstraint);
 			return newConstraint;
 		}
 
-		internal object translate(object candidate)
+		internal object Translate(object candidate)
 		{
 			if (i_attributeProvider != null)
 			{
-				i_candidates.i_trans.i_stream.activate1(i_candidates.i_trans, candidate);
-				return i_attributeProvider.attribute(candidate);
+				i_candidates.i_trans.i_stream.Activate1(i_candidates.i_trans, candidate);
+				return i_attributeProvider.Attribute(candidate);
 			}
 			return candidate;
 		}
 
-		internal override void unmarshall(com.db4o.Transaction a_trans)
+		internal override void Unmarshall(com.db4o.Transaction a_trans)
 		{
 			if (i_trans == null)
 			{
-				base.unmarshall(a_trans);
+				base.Unmarshall(a_trans);
 				if (i_object == null)
 				{
 					i_comparator = com.db4o.Null.INSTANCE;
 				}
 				if (i_yapClassID != 0)
 				{
-					i_yapClass = a_trans.i_stream.getYapClass(i_yapClassID);
+					i_yapClass = a_trans.i_stream.GetYapClass(i_yapClassID);
 				}
 				if (i_field != null)
 				{
-					i_field.unmarshall(a_trans);
+					i_field.Unmarshall(a_trans);
 				}
 				if (i_objectID != 0)
 				{
-					object obj = a_trans.i_stream.getByID(i_objectID);
+					object obj = a_trans.i_stream.GetByID(i_objectID);
 					if (obj != null)
 					{
 						i_object = obj;
@@ -412,121 +412,121 @@ namespace com.db4o
 			}
 		}
 
-		public override void visit(object obj)
+		public override void Visit(object obj)
 		{
 			com.db4o.QCandidate qc = (com.db4o.QCandidate)obj;
 			bool res = true;
 			bool processed = false;
 			if (i_selfComparison)
 			{
-				com.db4o.YapClass yc = qc.readYapClass();
+				com.db4o.YapClass yc = qc.ReadYapClass();
 				if (yc != null)
 				{
-					res = i_evaluator.not(i_yapClass.getHigherHierarchy(yc) == i_yapClass);
+					res = i_evaluator.Not(i_yapClass.GetHigherHierarchy(yc) == i_yapClass);
 					processed = true;
 				}
 			}
 			if (!processed)
 			{
-				res = evaluate(qc);
+				res = Evaluate(qc);
 			}
 			if (i_orderID != 0 && res)
 			{
-				object cmp = qc.value();
+				object cmp = qc.Value();
 				if (cmp != null && i_field != null)
 				{
 					com.db4o.YapComparable comparatorBackup = i_comparator;
-					i_comparator = i_field.prepareComparison(qc.value());
-					i_candidates.addOrder(new com.db4o.QOrder(this, qc));
-					i_comparator = comparatorBackup.prepareComparison(i_object);
+					i_comparator = i_field.PrepareComparison(qc.Value());
+					i_candidates.AddOrder(new com.db4o.QOrder(this, qc));
+					i_comparator = comparatorBackup.PrepareComparison(i_object);
 				}
 			}
-			visit1(qc.getRoot(), this, res);
+			Visit1(qc.GetRoot(), this, res);
 		}
 
-		public override com.db4o.query.Constraint contains()
+		public override com.db4o.query.Constraint Contains()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QEContains(true));
+				i_evaluator = i_evaluator.Add(new com.db4o.QEContains(true));
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint equal()
+		public override com.db4o.query.Constraint Equal()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QEEqual());
+				i_evaluator = i_evaluator.Add(new com.db4o.QEEqual());
 				return this;
 			}
 		}
 
-		public override object getObject()
+		public override object GetObject()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
 				return i_object;
 			}
 		}
 
-		public override com.db4o.query.Constraint greater()
+		public override com.db4o.query.Constraint Greater()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QEGreater());
+				i_evaluator = i_evaluator.Add(new com.db4o.QEGreater());
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint identity()
+		public override com.db4o.query.Constraint Identity()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				int id = getObjectID();
+				int id = GetObjectID();
 				if (!(id > 0))
 				{
 					i_objectID = 0;
-					com.db4o.inside.Exceptions4.throwRuntimeException(51);
+					com.db4o.inside.Exceptions4.ThrowRuntimeException(51);
 				}
-				removeChildrenJoins();
-				i_evaluator = i_evaluator.add(new com.db4o.QEIdentity());
+				RemoveChildrenJoins();
+				i_evaluator = i_evaluator.Add(new com.db4o.QEIdentity());
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint like()
+		public override com.db4o.query.Constraint Like()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QEContains(false));
+				i_evaluator = i_evaluator.Add(new com.db4o.QEContains(false));
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint smaller()
+		public override com.db4o.query.Constraint Smaller()
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QESmaller());
+				i_evaluator = i_evaluator.Add(new com.db4o.QESmaller());
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint startsWith(bool caseSensitive)
+		public override com.db4o.query.Constraint StartsWith(bool caseSensitive)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QEStartsWith(caseSensitive));
+				i_evaluator = i_evaluator.Add(new com.db4o.QEStartsWith(caseSensitive));
 				return this;
 			}
 		}
 
-		public override com.db4o.query.Constraint endsWith(bool caseSensitive)
+		public override com.db4o.query.Constraint EndsWith(bool caseSensitive)
 		{
-			lock (streamLock())
+			lock (StreamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QEEndsWith(caseSensitive));
+				i_evaluator = i_evaluator.Add(new com.db4o.QEEndsWith(caseSensitive));
 				return this;
 			}
 		}

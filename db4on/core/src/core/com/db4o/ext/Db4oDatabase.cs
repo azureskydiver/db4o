@@ -46,11 +46,11 @@ namespace com.db4o.ext
 
 		/// <summary>generates a new Db4oDatabase object with a unique signature.</summary>
 		/// <remarks>generates a new Db4oDatabase object with a unique signature.</remarks>
-		public static com.db4o.ext.Db4oDatabase generate()
+		public static com.db4o.ext.Db4oDatabase Generate()
 		{
 			com.db4o.ext.Db4oDatabase db = new com.db4o.ext.Db4oDatabase();
-			db.i_signature = com.db4o.Unobfuscated.generateSignature();
-			db.i_uuid = j4o.lang.JavaSystem.currentTimeMillis();
+			db.i_signature = com.db4o.Unobfuscated.GenerateSignature();
+			db.i_uuid = j4o.lang.JavaSystem.CurrentTimeMillis();
 			return db;
 		}
 
@@ -62,7 +62,7 @@ namespace com.db4o.ext
 			{
 				return true;
 			}
-			if (obj == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+			if (obj == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
 				(obj))
 			{
 				return false;
@@ -89,24 +89,24 @@ namespace com.db4o.ext
 		/// <summary>gets the db4o ID, and may cache it for performance reasons.</summary>
 		/// <remarks>gets the db4o ID, and may cache it for performance reasons.</remarks>
 		/// <returns>the db4o ID for the ObjectContainer</returns>
-		public virtual int getID(com.db4o.Transaction trans)
+		public virtual int GetID(com.db4o.Transaction trans)
 		{
 			com.db4o.YapStream stream = trans.i_stream;
 			if (stream != i_stream)
 			{
 				i_stream = stream;
-				i_id = bind(trans);
+				i_id = Bind(trans);
 			}
 			return i_id;
 		}
 
-		public virtual long getCreationTime()
+		public virtual long GetCreationTime()
 		{
 			return i_uuid;
 		}
 
 		/// <summary>returns the unique signature</summary>
-		public virtual byte[] getSignature()
+		public virtual byte[] GetSignature()
 		{
 			return i_signature;
 		}
@@ -116,7 +116,7 @@ namespace com.db4o.ext
 			return "db " + i_signature;
 		}
 
-		public virtual bool isOlderThan(com.db4o.ext.Db4oDatabase peer)
+		public virtual bool IsOlderThan(com.db4o.ext.Db4oDatabase peer)
 		{
 			if (peer == this)
 			{
@@ -142,64 +142,64 @@ namespace com.db4o.ext
 
 		/// <summary>make sure this Db4oDatabase is stored.</summary>
 		/// <remarks>make sure this Db4oDatabase is stored. Return the ID.</remarks>
-		public virtual int bind(com.db4o.Transaction trans)
+		public virtual int Bind(com.db4o.Transaction trans)
 		{
 			com.db4o.YapStream stream = trans.i_stream;
-			com.db4o.ext.Db4oDatabase stored = (com.db4o.ext.Db4oDatabase)stream.db4oTypeStored
+			com.db4o.ext.Db4oDatabase stored = (com.db4o.ext.Db4oDatabase)stream.Db4oTypeStored
 				(trans, this);
 			if (stored == null)
 			{
-				stream.showInternalClasses(true);
-				stream.set3(trans, this, 2, false);
-				int newID = stream.getID1(trans, this);
-				stream.showInternalClasses(false);
+				stream.ShowInternalClasses(true);
+				stream.Set3(trans, this, 2, false);
+				int newID = stream.GetID1(trans, this);
+				stream.ShowInternalClasses(false);
 				return newID;
 			}
 			if (stored == this)
 			{
-				return stream.getID1(trans, this);
+				return stream.GetID1(trans, this);
 			}
 			if (i_uuid == 0)
 			{
 				i_uuid = stored.i_uuid;
 			}
-			stream.showInternalClasses(true);
-			int id = stream.getID1(trans, stored);
-			stream.bind(this, id);
-			stream.showInternalClasses(false);
+			stream.ShowInternalClasses(true);
+			int id = stream.GetID1(trans, stored);
+			stream.Bind(this, id);
+			stream.ShowInternalClasses(false);
 			return id;
 		}
 
 		/// <summary>find a Db4oDatabase with the same signature as this one</summary>
-		public virtual com.db4o.ext.Db4oDatabase query(com.db4o.Transaction trans)
+		public virtual com.db4o.ext.Db4oDatabase Query(com.db4o.Transaction trans)
 		{
 			if (i_uuid > 0)
 			{
-				com.db4o.ext.Db4oDatabase res = query(trans, true);
+				com.db4o.ext.Db4oDatabase res = Query(trans, true);
 				if (res != null)
 				{
 					return res;
 				}
 			}
-			return query(trans, false);
+			return Query(trans, false);
 		}
 
-		private com.db4o.ext.Db4oDatabase query(com.db4o.Transaction trans, bool constrainByUUID
+		private com.db4o.ext.Db4oDatabase Query(com.db4o.Transaction trans, bool constrainByUUID
 			)
 		{
 			com.db4o.YapStream stream = trans.i_stream;
-			com.db4o.query.Query q = stream.querySharpenBug(trans);
-			q.constrain(j4o.lang.Class.getClassForObject(this));
+			com.db4o.query.Query q = stream.QuerySharpenBug(trans);
+			q.Constrain(j4o.lang.Class.GetClassForObject(this));
 			if (constrainByUUID)
 			{
-				q.descend(CREATIONTIME_FIELD).constrain(i_uuid);
+				q.Descend(CREATIONTIME_FIELD).Constrain(i_uuid);
 			}
-			com.db4o.ObjectSet objectSet = q.execute();
-			while (objectSet.hasNext())
+			com.db4o.ObjectSet objectSet = q.Execute();
+			while (objectSet.HasNext())
 			{
-				com.db4o.ext.Db4oDatabase storedDatabase = (com.db4o.ext.Db4oDatabase)objectSet.next
+				com.db4o.ext.Db4oDatabase storedDatabase = (com.db4o.ext.Db4oDatabase)objectSet.Next
 					();
-				stream.activate1(null, storedDatabase, 4);
+				stream.Activate1(null, storedDatabase, 4);
 				if (storedDatabase.Equals(this))
 				{
 					return storedDatabase;

@@ -23,6 +23,12 @@ namespace com.db4o
 		private static readonly com.db4o.foundation.KeySpec BLOBPATH = new com.db4o.foundation.KeySpec
 			(null);
 
+		private static readonly com.db4o.foundation.KeySpec BTREE_NODE_SIZE = new com.db4o.foundation.KeySpec
+			(100);
+
+		private static readonly com.db4o.foundation.KeySpec BTREE_CACHE_HEIGHT = new com.db4o.foundation.KeySpec
+			(1);
+
 		private static readonly com.db4o.foundation.KeySpec CALLBACKS = new com.db4o.foundation.KeySpec
 			(true);
 
@@ -142,216 +148,226 @@ namespace com.db4o
 
 		private com.db4o.YapStream i_stream;
 
-		internal int activationDepth()
+		internal int ActivationDepth()
 		{
-			return _config.getAsInt(ACTIVATION_DEPTH);
+			return _config.GetAsInt(ACTIVATION_DEPTH);
 		}
 
-		public void activationDepth(int depth)
+		public void ActivationDepth(int depth)
 		{
-			_config.put(ACTIVATION_DEPTH, depth);
+			_config.Put(ACTIVATION_DEPTH, depth);
 		}
 
-		public void allowVersionUpdates(bool flag)
+		public void AllowVersionUpdates(bool flag)
 		{
-			_config.put(ALLOW_VERSION_UPDATES, flag);
+			_config.Put(ALLOW_VERSION_UPDATES, flag);
 		}
 
-		public void automaticShutDown(bool flag)
+		public void AutomaticShutDown(bool flag)
 		{
-			_config.put(AUTOMATIC_SHUTDOWN, flag);
+			_config.Put(AUTOMATIC_SHUTDOWN, flag);
 		}
 
-		public void blockSize(int bytes)
+		public void BlockSize(int bytes)
 		{
 			if (bytes < 1 || bytes > 127)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(1);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(1);
 			}
 			if (i_stream != null)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(46);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(46);
 			}
-			_config.put(BLOCKSIZE, (byte)bytes);
+			_config.Put(BLOCKSIZE, (byte)bytes);
 		}
 
-		public void callbacks(bool turnOn)
+		public void BTreeNodeSize(int size)
 		{
-			_config.put(CALLBACKS, turnOn);
+			_config.Put(BTREE_NODE_SIZE, size);
 		}
 
-		public void callConstructors(bool flag)
+		public void BTreeCacheHeight(int height)
 		{
-			_config.put(CALL_CONSTRUCTORS, (flag ? com.db4o.YapConst.YES : com.db4o.YapConst.
+			_config.Put(BTREE_CACHE_HEIGHT, height);
+		}
+
+		public void Callbacks(bool turnOn)
+		{
+			_config.Put(CALLBACKS, turnOn);
+		}
+
+		public void CallConstructors(bool flag)
+		{
+			_config.Put(CALL_CONSTRUCTORS, (flag ? com.db4o.YapConst.YES : com.db4o.YapConst.
 				NO));
 		}
 
-		public void classActivationDepthConfigurable(bool turnOn)
+		public void ClassActivationDepthConfigurable(bool turnOn)
 		{
-			_config.put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE, turnOn);
+			_config.Put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE, turnOn);
 		}
 
-		internal com.db4o.Config4Class configClass(string className)
+		internal com.db4o.Config4Class ConfigClass(string className)
 		{
-			com.db4o.Config4Class config = (com.db4o.Config4Class)exceptionalClasses().get(className
+			com.db4o.Config4Class config = (com.db4o.Config4Class)ExceptionalClasses().Get(className
 				);
 			return config;
 		}
 
-		public object deepClone(object param)
+		public object DeepClone(object param)
 		{
 			com.db4o.Config4Impl ret = new com.db4o.Config4Impl();
-			ret._config = (com.db4o.foundation.KeySpecHashtable4)_config.deepClone(this);
+			ret._config = (com.db4o.foundation.KeySpecHashtable4)_config.DeepClone(this);
 			ret.i_stream = (com.db4o.YapStream)param;
 			return ret;
 		}
 
-		public void detectSchemaChanges(bool flag)
+		public void DetectSchemaChanges(bool flag)
 		{
-			_config.put(DETECT_SCHEMA_CHANGES, flag);
+			_config.Put(DETECT_SCHEMA_CHANGES, flag);
 		}
 
-		public void disableCommitRecovery()
+		public void DisableCommitRecovery()
 		{
-			_config.put(DISABLE_COMMIT_RECOVERY, true);
+			_config.Put(DISABLE_COMMIT_RECOVERY, true);
 		}
 
-		public void discardFreeSpace(int bytes)
+		public void DiscardFreeSpace(int bytes)
 		{
-			_config.put(DISCARD_FREESPACE, bytes);
+			_config.Put(DISCARD_FREESPACE, bytes);
 		}
 
-		public void discardSmallerThan(int byteCount)
+		public void DiscardSmallerThan(int byteCount)
 		{
-			discardFreeSpace(byteCount);
+			DiscardFreeSpace(byteCount);
 		}
 
-		public void encrypt(bool flag)
+		public void Encrypt(bool flag)
 		{
-			globalSettingOnly();
-			_config.put(ENCRYPT, flag);
+			GlobalSettingOnly();
+			_config.Put(ENCRYPT, flag);
 		}
 
-		internal void ensureDirExists(string path)
+		internal void EnsureDirExists(string path)
 		{
 			j4o.io.File file = new j4o.io.File(path);
-			if (!file.exists())
+			if (!file.Exists())
 			{
-				file.mkdirs();
+				file.Mkdirs();
 			}
-			if (file.exists() && file.isDirectory())
+			if (file.Exists() && file.IsDirectory())
 			{
 			}
 			else
 			{
-				throw new System.IO.IOException(com.db4o.Messages.get(37, path));
+				throw new System.IO.IOException(com.db4o.Messages.Get(37, path));
 			}
 		}
 
-		internal j4o.io.PrintStream errStream()
+		internal j4o.io.PrintStream ErrStream()
 		{
-			j4o.io.PrintStream outStream = outStreamOrNull();
+			j4o.io.PrintStream outStream = OutStreamOrNull();
 			return outStream == null ? j4o.lang.JavaSystem.err : outStream;
 		}
 
-		public void exceptionsOnNotStorable(bool flag)
+		public void ExceptionsOnNotStorable(bool flag)
 		{
-			_config.put(EXCEPTIONS_ON_NOT_STORABLE, flag);
+			_config.Put(EXCEPTIONS_ON_NOT_STORABLE, flag);
 		}
 
-		public void flushFileBuffers(bool flag)
+		public void FlushFileBuffers(bool flag)
 		{
-			_config.put(FLUSH_FILE_BUFFERS, flag);
+			_config.Put(FLUSH_FILE_BUFFERS, flag);
 		}
 
-		public com.db4o.config.FreespaceConfiguration freespace()
+		public com.db4o.config.FreespaceConfiguration Freespace()
 		{
 			return this;
 		}
 
-		public void generateUUIDs(int setting)
+		public void GenerateUUIDs(int setting)
 		{
-			_config.put(GENERATE_UUIDS, setting);
-			storeStreamBootRecord();
+			_config.Put(GENERATE_UUIDS, setting);
+			StoreStreamBootRecord();
 		}
 
-		private void storeStreamBootRecord()
+		private void StoreStreamBootRecord()
 		{
 			if (i_stream == null)
 			{
 				return;
 			}
-			com.db4o.PBootRecord bootRecord = i_stream.bootRecord();
+			com.db4o.PBootRecord bootRecord = i_stream.BootRecord();
 			if (bootRecord != null)
 			{
-				bootRecord.initConfig(this);
-				com.db4o.Transaction trans = i_stream.getSystemTransaction();
-				i_stream.setInternal(trans, bootRecord, false);
-				trans.commit();
+				bootRecord.InitConfig(this);
+				com.db4o.Transaction trans = i_stream.GetSystemTransaction();
+				i_stream.SetInternal(trans, bootRecord, false);
+				trans.Commit();
 			}
 		}
 
-		public void generateVersionNumbers(int setting)
+		public void GenerateVersionNumbers(int setting)
 		{
-			_config.put(GENERATE_VERSION_NUMBERS, setting);
-			storeStreamBootRecord();
+			_config.Put(GENERATE_VERSION_NUMBERS, setting);
+			StoreStreamBootRecord();
 		}
 
-		public com.db4o.messaging.MessageSender getMessageSender()
+		public com.db4o.messaging.MessageSender GetMessageSender()
 		{
 			return this;
 		}
 
-		private void globalSettingOnly()
+		private void GlobalSettingOnly()
 		{
 			if (i_stream != null)
 			{
-				j4o.lang.JavaSystem.printStackTrace(new System.Exception());
-				com.db4o.inside.Exceptions4.throwRuntimeException(46);
+				j4o.lang.JavaSystem.PrintStackTrace(new System.Exception());
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(46);
 			}
 		}
 
-		public void internStrings(bool doIntern)
+		public void InternStrings(bool doIntern)
 		{
-			_config.put(INTERN_STRINGS, doIntern);
+			_config.Put(INTERN_STRINGS, doIntern);
 		}
 
-		public void io(com.db4o.io.IoAdapter adapter)
+		public void Io(com.db4o.io.IoAdapter adapter)
 		{
-			globalSettingOnly();
-			_config.put(IOADAPTER, adapter);
+			GlobalSettingOnly();
+			_config.Put(IOADAPTER, adapter);
 		}
 
-		public void lockDatabaseFile(bool flag)
+		public void LockDatabaseFile(bool flag)
 		{
-			_config.put(LOCK_FILE, flag);
+			_config.Put(LOCK_FILE, flag);
 		}
 
-		public void markTransient(string marker)
+		public void MarkTransient(string marker)
 		{
-			com.db4o.Platform4.markTransient(marker);
+			com.db4o.Platform4.MarkTransient(marker);
 		}
 
-		public void messageLevel(int level)
+		public void MessageLevel(int level)
 		{
-			_config.put(MESSAGE_LEVEL, level);
-			if (outStream() == null)
+			_config.Put(MESSAGE_LEVEL, level);
+			if (OutStream() == null)
 			{
-				setOut(j4o.lang.JavaSystem._out);
+				SetOut(j4o.lang.JavaSystem._out);
 			}
 		}
 
-		public void optimizeNativeQueries(bool optimizeNQ)
+		public void OptimizeNativeQueries(bool optimizeNQ)
 		{
-			_config.put(OPTIMIZE_NQ, optimizeNQ);
+			_config.Put(OPTIMIZE_NQ, optimizeNQ);
 		}
 
-		public bool optimizeNativeQueries()
+		public bool OptimizeNativeQueries()
 		{
-			return _config.getAsBoolean(OPTIMIZE_NQ);
+			return _config.GetAsBoolean(OPTIMIZE_NQ);
 		}
 
-		public com.db4o.config.ObjectClass objectClass(object clazz)
+		public com.db4o.config.ObjectClass ObjectClass(object clazz)
 		{
 			string className = null;
 			if (clazz is string)
@@ -360,291 +376,291 @@ namespace com.db4o
 			}
 			else
 			{
-				com.db4o.reflect.ReflectClass claxx = reflectorFor(clazz);
+				com.db4o.reflect.ReflectClass claxx = ReflectorFor(clazz);
 				if (claxx == null)
 				{
 					return null;
 				}
-				className = claxx.getName();
+				className = claxx.GetName();
 			}
-			com.db4o.foundation.Hashtable4 xClasses = exceptionalClasses();
-			com.db4o.Config4Class c4c = (com.db4o.Config4Class)xClasses.get(className);
+			com.db4o.foundation.Hashtable4 xClasses = ExceptionalClasses();
+			com.db4o.Config4Class c4c = (com.db4o.Config4Class)xClasses.Get(className);
 			if (c4c == null)
 			{
 				c4c = new com.db4o.Config4Class(this, className);
-				xClasses.put(className, c4c);
+				xClasses.Put(className, c4c);
 			}
 			return c4c;
 		}
 
-		private j4o.io.PrintStream outStreamOrNull()
+		private j4o.io.PrintStream OutStreamOrNull()
 		{
-			return (j4o.io.PrintStream)_config.get(OUTSTREAM);
+			return (j4o.io.PrintStream)_config.Get(OUTSTREAM);
 		}
 
-		internal j4o.io.PrintStream outStream()
+		internal j4o.io.PrintStream OutStream()
 		{
-			j4o.io.PrintStream outStream = outStreamOrNull();
+			j4o.io.PrintStream outStream = OutStreamOrNull();
 			return outStream == null ? j4o.lang.JavaSystem._out : outStream;
 		}
 
-		public void password(string pw)
+		public void Password(string pw)
 		{
-			globalSettingOnly();
-			_config.put(PASSWORD, pw);
+			GlobalSettingOnly();
+			_config.Put(PASSWORD, pw);
 		}
 
-		public void readOnly(bool flag)
+		public void ReadOnly(bool flag)
 		{
-			globalSettingOnly();
-			_config.put(READ_ONLY, flag);
+			GlobalSettingOnly();
+			_config.Put(READ_ONLY, flag);
 		}
 
-		internal com.db4o.reflect.generic.GenericReflector reflector()
+		internal com.db4o.reflect.generic.GenericReflector Reflector()
 		{
 			com.db4o.reflect.generic.GenericReflector reflector = (com.db4o.reflect.generic.GenericReflector
-				)_config.get(REFLECTOR);
+				)_config.Get(REFLECTOR);
 			if (reflector == null)
 			{
 				com.db4o.reflect.Reflector configuredReflector = (com.db4o.reflect.Reflector)_config
-					.get(CONFIGURED_REFLECTOR);
+					.Get(CONFIGURED_REFLECTOR);
 				if (configuredReflector == null)
 				{
-					configuredReflector = com.db4o.Platform4.createReflector(classLoader());
-					_config.put(CONFIGURED_REFLECTOR, configuredReflector);
+					configuredReflector = com.db4o.Platform4.CreateReflector(ClassLoader());
+					_config.Put(CONFIGURED_REFLECTOR, configuredReflector);
 				}
 				reflector = new com.db4o.reflect.generic.GenericReflector(null, configuredReflector
 					);
-				_config.put(REFLECTOR, reflector);
-				configuredReflector.setParent(reflector);
+				_config.Put(REFLECTOR, reflector);
+				configuredReflector.SetParent(reflector);
 			}
-			if (!reflector.hasTransaction() && i_stream != null)
+			if (!reflector.HasTransaction() && i_stream != null)
 			{
-				reflector.setTransaction(i_stream.i_systemTrans);
+				reflector.SetTransaction(i_stream.i_systemTrans);
 			}
 			return reflector;
 		}
 
-		public void reflectWith(com.db4o.reflect.Reflector reflect)
+		public void ReflectWith(com.db4o.reflect.Reflector reflect)
 		{
 			if (i_stream != null)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(46);
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(46);
 			}
 			if (reflect == null)
 			{
 				throw new System.ArgumentNullException();
 			}
-			_config.put(CONFIGURED_REFLECTOR, reflect);
-			_config.put(REFLECTOR, null);
+			_config.Put(CONFIGURED_REFLECTOR, reflect);
+			_config.Put(REFLECTOR, null);
 		}
 
-		public void refreshClasses()
+		public void RefreshClasses()
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass400(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass412(this));
 			}
 			else
 			{
-				i_stream.refreshClasses();
+				i_stream.RefreshClasses();
 			}
 		}
 
-		private sealed class _AnonymousInnerClass400 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass412 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass400(Config4Impl _enclosing)
+			public _AnonymousInnerClass412(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
 				com.db4o.YapStream ys = ((com.db4o.Session)obj).i_stream;
-				if (!ys.isClosed())
+				if (!ys.IsClosed())
 				{
-					ys.refreshClasses();
+					ys.RefreshClasses();
 				}
 			}
 
 			private readonly Config4Impl _enclosing;
 		}
 
-		internal void rename(com.db4o.Rename a_rename)
+		internal void Rename(com.db4o.Rename a_rename)
 		{
-			com.db4o.foundation.Collection4 renameCollection = rename();
+			com.db4o.foundation.Collection4 renameCollection = Rename();
 			if (renameCollection == null)
 			{
 				renameCollection = new com.db4o.foundation.Collection4();
-				_config.put(RENAME, renameCollection);
+				_config.Put(RENAME, renameCollection);
 			}
-			renameCollection.add(a_rename);
+			renameCollection.Add(a_rename);
 		}
 
-		public void reserveStorageSpace(long byteCount)
+		public void ReserveStorageSpace(long byteCount)
 		{
 			int reservedStorageSpace = (int)byteCount;
 			if (reservedStorageSpace < 0)
 			{
 				reservedStorageSpace = 0;
 			}
-			_config.put(RESERVED_STORAGE_SPACE, reservedStorageSpace);
+			_config.Put(RESERVED_STORAGE_SPACE, reservedStorageSpace);
 			if (i_stream != null)
 			{
-				i_stream.reserve(reservedStorageSpace);
+				i_stream.Reserve(reservedStorageSpace);
 			}
 		}
 
 		/// <summary>The ConfigImpl also is our messageSender</summary>
-		public void send(object obj)
+		public void Send(object obj)
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass439(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass451(this));
 			}
 			else
 			{
-				i_stream.send(obj);
+				i_stream.Send(obj);
 			}
 		}
 
-		private sealed class _AnonymousInnerClass439 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass451 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass439(Config4Impl _enclosing)
+			public _AnonymousInnerClass451(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void visit(object session)
+			public void Visit(object session)
 			{
 				com.db4o.YapStream ys = ((com.db4o.Session)session).i_stream;
-				if (!ys.isClosed())
+				if (!ys.IsClosed())
 				{
-					ys.send(session);
+					ys.Send(session);
 				}
 			}
 
 			private readonly Config4Impl _enclosing;
 		}
 
-		public void setBlobPath(string path)
+		public void SetBlobPath(string path)
 		{
-			ensureDirExists(path);
-			_config.put(BLOBPATH, path);
+			EnsureDirExists(path);
+			_config.Put(BLOBPATH, path);
 		}
 
-		public void setClassLoader(object classLoader)
+		public void SetClassLoader(object classLoader)
 		{
-			reflectWith(com.db4o.Platform4.createReflector(classLoader));
+			ReflectWith(com.db4o.Platform4.CreateReflector(classLoader));
 		}
 
-		public void setMessageRecipient(com.db4o.messaging.MessageRecipient messageRecipient
+		public void SetMessageRecipient(com.db4o.messaging.MessageRecipient messageRecipient
 			)
 		{
-			_config.put(MESSAGE_RECIPIENT, messageRecipient);
+			_config.Put(MESSAGE_RECIPIENT, messageRecipient);
 		}
 
-		public void setOut(j4o.io.PrintStream outStream)
+		public void SetOut(j4o.io.PrintStream outStream)
 		{
-			_config.put(OUTSTREAM, outStream);
+			_config.Put(OUTSTREAM, outStream);
 			if (i_stream != null)
 			{
-				i_stream.logMsg(19, com.db4o.Db4o.version());
+				i_stream.LogMsg(19, com.db4o.Db4o.Version());
 			}
 			else
 			{
-				com.db4o.Messages.logMsg(com.db4o.Db4o.i_config, 19, com.db4o.Db4o.version());
+				com.db4o.Messages.LogMsg(com.db4o.Db4o.i_config, 19, com.db4o.Db4o.Version());
 			}
 		}
 
-		public void singleThreadedClient(bool flag)
+		public void SingleThreadedClient(bool flag)
 		{
-			_config.put(SINGLE_THREADED_CLIENT, flag);
+			_config.Put(SINGLE_THREADED_CLIENT, flag);
 		}
 
-		public void testConstructors(bool flag)
+		public void TestConstructors(bool flag)
 		{
-			_config.put(TEST_CONSTRUCTORS, flag);
+			_config.Put(TEST_CONSTRUCTORS, flag);
 		}
 
-		public void timeoutClientSocket(int milliseconds)
+		public void TimeoutClientSocket(int milliseconds)
 		{
-			_config.put(TIMEOUT_CLIENT_SOCKET, milliseconds);
+			_config.Put(TIMEOUT_CLIENT_SOCKET, milliseconds);
 		}
 
-		public void timeoutPingClients(int milliseconds)
+		public void TimeoutPingClients(int milliseconds)
 		{
-			_config.put(TIMEOUT_PING_CLIENTS, milliseconds);
+			_config.Put(TIMEOUT_PING_CLIENTS, milliseconds);
 		}
 
-		public void timeoutServerSocket(int milliseconds)
+		public void TimeoutServerSocket(int milliseconds)
 		{
-			_config.put(TIMEOUT_SERVER_SOCKET, milliseconds);
+			_config.Put(TIMEOUT_SERVER_SOCKET, milliseconds);
 		}
 
-		public void unicode(bool unicodeOn)
+		public void Unicode(bool unicodeOn)
 		{
-			_config.put(ENCODING, (unicodeOn ? com.db4o.YapConst.UNICODE : com.db4o.YapConst.
+			_config.Put(ENCODING, (unicodeOn ? com.db4o.YapConst.UNICODE : com.db4o.YapConst.
 				ISO8859));
 		}
 
-		public void updateDepth(int depth)
+		public void UpdateDepth(int depth)
 		{
-			_config.put(UPDATE_DEPTH, depth);
+			_config.Put(UPDATE_DEPTH, depth);
 		}
 
-		public void useRamSystem()
+		public void UseRamSystem()
 		{
-			_config.put(FREESPACE_SYSTEM, com.db4o.inside.freespace.FreespaceManager.FM_RAM);
+			_config.Put(FREESPACE_SYSTEM, com.db4o.inside.freespace.FreespaceManager.FM_RAM);
 		}
 
-		public void useIndexSystem()
+		public void UseIndexSystem()
 		{
-			_config.put(FREESPACE_SYSTEM, com.db4o.inside.freespace.FreespaceManager.FM_IX);
+			_config.Put(FREESPACE_SYSTEM, com.db4o.inside.freespace.FreespaceManager.FM_IX);
 		}
 
-		public void weakReferenceCollectionInterval(int milliseconds)
+		public void WeakReferenceCollectionInterval(int milliseconds)
 		{
-			_config.put(WEAK_REFERENCE_COLLECTION_INTERVAL, milliseconds);
+			_config.Put(WEAK_REFERENCE_COLLECTION_INTERVAL, milliseconds);
 		}
 
-		public void weakReferences(bool flag)
+		public void WeakReferences(bool flag)
 		{
-			_config.put(WEAK_REFERENCES, flag);
+			_config.Put(WEAK_REFERENCES, flag);
 		}
 
-		private com.db4o.foundation.Collection4 aliases()
+		private com.db4o.foundation.Collection4 Aliases()
 		{
 			com.db4o.foundation.Collection4 aliasesCollection = (com.db4o.foundation.Collection4
-				)_config.get(ALIASES);
+				)_config.Get(ALIASES);
 			if (null == aliasesCollection)
 			{
 				aliasesCollection = new com.db4o.foundation.Collection4();
-				_config.put(ALIASES, aliasesCollection);
+				_config.Put(ALIASES, aliasesCollection);
 			}
 			return aliasesCollection;
 		}
 
-		public void addAlias(com.db4o.config.Alias alias)
+		public void AddAlias(com.db4o.config.Alias alias)
 		{
 			if (null == alias)
 			{
 				throw new System.ArgumentException("alias");
 			}
-			aliases().add(alias);
+			Aliases().Add(alias);
 		}
 
-		public string resolveAlias(string runtimeType)
+		public string ResolveAlias(string runtimeType)
 		{
-			com.db4o.foundation.Collection4 configuredAliases = aliases();
+			com.db4o.foundation.Collection4 configuredAliases = Aliases();
 			if (null == configuredAliases)
 			{
 				return runtimeType;
 			}
-			com.db4o.foundation.Iterator4 i = configuredAliases.iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = configuredAliases.Iterator();
+			while (i.HasNext())
 			{
-				string resolved = ((com.db4o.config.Alias)i.next()).resolve(runtimeType);
+				string resolved = ((com.db4o.config.Alias)i.Next()).Resolve(runtimeType);
 				if (null != resolved)
 				{
 					return resolved;
@@ -653,222 +669,232 @@ namespace com.db4o
 			return runtimeType;
 		}
 
-		internal com.db4o.reflect.ReflectClass reflectorFor(object clazz)
+		internal com.db4o.reflect.ReflectClass ReflectorFor(object clazz)
 		{
-			clazz = com.db4o.Platform4.getClassForType(clazz);
+			clazz = com.db4o.Platform4.GetClassForType(clazz);
 			if (clazz is com.db4o.reflect.ReflectClass)
 			{
 				return (com.db4o.reflect.ReflectClass)clazz;
 			}
 			if (clazz is j4o.lang.Class)
 			{
-				return reflector().forClass((j4o.lang.Class)clazz);
+				return Reflector().ForClass((j4o.lang.Class)clazz);
 			}
 			if (clazz is string)
 			{
-				return reflector().forName((string)clazz);
+				return Reflector().ForName((string)clazz);
 			}
-			return reflector().forObject(clazz);
+			return Reflector().ForObject(clazz);
 		}
 
-		public bool allowVersionUpdates()
+		public bool AllowVersionUpdates()
 		{
-			return _config.getAsBoolean(ALLOW_VERSION_UPDATES);
+			return _config.GetAsBoolean(ALLOW_VERSION_UPDATES);
 		}
 
-		internal bool automaticShutDown()
+		internal bool AutomaticShutDown()
 		{
-			return _config.getAsBoolean(AUTOMATIC_SHUTDOWN);
+			return _config.GetAsBoolean(AUTOMATIC_SHUTDOWN);
 		}
 
-		internal byte blockSize()
+		internal byte BlockSize()
 		{
-			return _config.getAsByte(BLOCKSIZE);
+			return _config.GetAsByte(BLOCKSIZE);
 		}
 
-		internal string blobPath()
+		internal int BTreeNodeSize()
 		{
-			return _config.getAsString(BLOBPATH);
+			return _config.GetAsInt(BTREE_NODE_SIZE);
 		}
 
-		internal bool callbacks()
+		internal int BTreeCacheHeight()
 		{
-			return _config.getAsBoolean(CALLBACKS);
+			return _config.GetAsInt(BTREE_CACHE_HEIGHT);
 		}
 
-		internal int callConstructors()
+		internal string BlobPath()
 		{
-			return _config.getAsInt(CALL_CONSTRUCTORS);
+			return _config.GetAsString(BLOBPATH);
 		}
 
-		internal bool classActivationDepthConfigurable()
+		internal bool Callbacks()
 		{
-			return _config.getAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE);
+			return _config.GetAsBoolean(CALLBACKS);
 		}
 
-		internal object classLoader()
+		internal int CallConstructors()
 		{
-			return _config.get(CLASSLOADER);
+			return _config.GetAsInt(CALL_CONSTRUCTORS);
 		}
 
-		internal bool detectSchemaChanges()
+		internal bool ClassActivationDepthConfigurable()
 		{
-			return _config.getAsBoolean(DETECT_SCHEMA_CHANGES);
+			return _config.GetAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE);
 		}
 
-		internal bool commitRecoveryDisabled()
+		internal object ClassLoader()
 		{
-			return _config.getAsBoolean(DISABLE_COMMIT_RECOVERY);
+			return _config.Get(CLASSLOADER);
 		}
 
-		public int discardFreeSpace()
+		internal bool DetectSchemaChanges()
 		{
-			return _config.getAsInt(DISCARD_FREESPACE);
+			return _config.GetAsBoolean(DETECT_SCHEMA_CHANGES);
 		}
 
-		internal byte encoding()
+		internal bool CommitRecoveryDisabled()
 		{
-			return _config.getAsByte(ENCODING);
+			return _config.GetAsBoolean(DISABLE_COMMIT_RECOVERY);
 		}
 
-		internal bool encrypt()
+		public int DiscardFreeSpace()
 		{
-			return _config.getAsBoolean(ENCRYPT);
+			return _config.GetAsInt(DISCARD_FREESPACE);
 		}
 
-		internal com.db4o.foundation.Hashtable4 exceptionalClasses()
+		internal byte Encoding()
 		{
-			return (com.db4o.foundation.Hashtable4)_config.get(EXCEPTIONAL_CLASSES);
+			return _config.GetAsByte(ENCODING);
 		}
 
-		internal bool exceptionsOnNotStorable()
+		internal bool Encrypt()
 		{
-			return _config.getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
+			return _config.GetAsBoolean(ENCRYPT);
 		}
 
-		public bool flushFileBuffers()
+		internal com.db4o.foundation.Hashtable4 ExceptionalClasses()
 		{
-			return _config.getAsBoolean(FLUSH_FILE_BUFFERS);
+			return (com.db4o.foundation.Hashtable4)_config.Get(EXCEPTIONAL_CLASSES);
 		}
 
-		internal byte freespaceSystem()
+		internal bool ExceptionsOnNotStorable()
 		{
-			return _config.getAsByte(FREESPACE_SYSTEM);
+			return _config.GetAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
 		}
 
-		internal int generateUUIDs()
+		public bool FlushFileBuffers()
 		{
-			return _config.getAsInt(GENERATE_UUIDS);
+			return _config.GetAsBoolean(FLUSH_FILE_BUFFERS);
 		}
 
-		internal int generateVersionNumbers()
+		internal byte FreespaceSystem()
 		{
-			return _config.getAsInt(GENERATE_VERSION_NUMBERS);
+			return _config.GetAsByte(FREESPACE_SYSTEM);
 		}
 
-		internal bool internStrings()
+		internal int GenerateUUIDs()
 		{
-			return _config.getAsBoolean(INTERN_STRINGS);
+			return _config.GetAsInt(GENERATE_UUIDS);
 		}
 
-		internal void isServer(bool flag)
+		internal int GenerateVersionNumbers()
 		{
-			_config.put(IS_SERVER, flag);
+			return _config.GetAsInt(GENERATE_VERSION_NUMBERS);
 		}
 
-		internal bool isServer()
+		public bool InternStrings()
 		{
-			return _config.getAsBoolean(IS_SERVER);
+			return _config.GetAsBoolean(INTERN_STRINGS);
 		}
 
-		internal bool lockFile()
+		internal void IsServer(bool flag)
 		{
-			return _config.getAsBoolean(LOCK_FILE);
+			_config.Put(IS_SERVER, flag);
 		}
 
-		internal int messageLevel()
+		internal bool IsServer()
 		{
-			return _config.getAsInt(MESSAGE_LEVEL);
+			return _config.GetAsBoolean(IS_SERVER);
 		}
 
-		internal com.db4o.messaging.MessageRecipient messageRecipient()
+		internal bool LockFile()
 		{
-			return (com.db4o.messaging.MessageRecipient)_config.get(MESSAGE_RECIPIENT);
+			return _config.GetAsBoolean(LOCK_FILE);
 		}
 
-		internal bool optimizeNQ()
+		internal int MessageLevel()
 		{
-			return _config.getAsBoolean(OPTIMIZE_NQ);
+			return _config.GetAsInt(MESSAGE_LEVEL);
 		}
 
-		internal string password()
+		internal com.db4o.messaging.MessageRecipient MessageRecipient()
 		{
-			return _config.getAsString(PASSWORD);
+			return (com.db4o.messaging.MessageRecipient)_config.Get(MESSAGE_RECIPIENT);
 		}
 
-		internal com.db4o.foundation.Hashtable4 readAs()
+		internal bool OptimizeNQ()
 		{
-			return (com.db4o.foundation.Hashtable4)_config.get(READ_AS);
+			return _config.GetAsBoolean(OPTIMIZE_NQ);
 		}
 
-		internal bool isReadOnly()
+		internal string Password()
 		{
-			return _config.getAsBoolean(READ_ONLY);
+			return _config.GetAsString(PASSWORD);
 		}
 
-		internal com.db4o.foundation.Collection4 rename()
+		internal com.db4o.foundation.Hashtable4 ReadAs()
 		{
-			return (com.db4o.foundation.Collection4)_config.get(RENAME);
+			return (com.db4o.foundation.Hashtable4)_config.Get(READ_AS);
 		}
 
-		internal int reservedStorageSpace()
+		internal bool IsReadOnly()
 		{
-			return _config.getAsInt(RESERVED_STORAGE_SPACE);
+			return _config.GetAsBoolean(READ_ONLY);
 		}
 
-		internal bool singleThreadedClient()
+		internal com.db4o.foundation.Collection4 Rename()
 		{
-			return _config.getAsBoolean(SINGLE_THREADED_CLIENT);
+			return (com.db4o.foundation.Collection4)_config.Get(RENAME);
 		}
 
-		internal bool testConstructors()
+		internal int ReservedStorageSpace()
 		{
-			return _config.getAsBoolean(TEST_CONSTRUCTORS);
+			return _config.GetAsInt(RESERVED_STORAGE_SPACE);
 		}
 
-		internal int timeoutClientSocket()
+		internal bool SingleThreadedClient()
 		{
-			return _config.getAsInt(TIMEOUT_CLIENT_SOCKET);
+			return _config.GetAsBoolean(SINGLE_THREADED_CLIENT);
 		}
 
-		internal int timeoutPingClients()
+		internal bool TestConstructors()
 		{
-			return _config.getAsInt(TIMEOUT_PING_CLIENTS);
+			return _config.GetAsBoolean(TEST_CONSTRUCTORS);
 		}
 
-		internal int timeoutServerSocket()
+		internal int TimeoutClientSocket()
 		{
-			return _config.getAsInt(TIMEOUT_SERVER_SOCKET);
+			return _config.GetAsInt(TIMEOUT_CLIENT_SOCKET);
 		}
 
-		internal int updateDepth()
+		internal int TimeoutPingClients()
 		{
-			return _config.getAsInt(UPDATE_DEPTH);
+			return _config.GetAsInt(TIMEOUT_PING_CLIENTS);
 		}
 
-		internal int weakReferenceCollectionInterval()
+		internal int TimeoutServerSocket()
 		{
-			return _config.getAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL);
+			return _config.GetAsInt(TIMEOUT_SERVER_SOCKET);
 		}
 
-		internal bool weakReferences()
+		internal int UpdateDepth()
 		{
-			return _config.getAsBoolean(WEAK_REFERENCES);
+			return _config.GetAsInt(UPDATE_DEPTH);
 		}
 
-		internal com.db4o.io.IoAdapter ioAdapter()
+		internal int WeakReferenceCollectionInterval()
 		{
-			return (com.db4o.io.IoAdapter)_config.get(IOADAPTER);
+			return _config.GetAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL);
+		}
+
+		internal bool WeakReferences()
+		{
+			return _config.GetAsBoolean(WEAK_REFERENCES);
+		}
+
+		internal com.db4o.io.IoAdapter IoAdapter()
+		{
+			return (com.db4o.io.IoAdapter)_config.Get(IOADAPTER);
 		}
 	}
 }

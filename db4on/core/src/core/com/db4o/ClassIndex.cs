@@ -13,44 +13,44 @@ namespace com.db4o
 			_yapClass = yapClass;
 		}
 
-		internal virtual void add(int a_id)
+		internal virtual void Add(int a_id)
 		{
-			i_root = com.db4o.Tree.add(i_root, new com.db4o.TreeInt(a_id));
+			i_root = com.db4o.Tree.Add(i_root, new com.db4o.TreeInt(a_id));
 		}
 
-		public int byteCount()
+		public int ByteCount()
 		{
-			return com.db4o.YapConst.YAPINT_LENGTH * (com.db4o.Tree.size(i_root) + 1);
+			return com.db4o.YapConst.YAPINT_LENGTH * (com.db4o.Tree.Size(i_root) + 1);
 		}
 
-		public void clear()
+		public void Clear()
 		{
 			i_root = null;
 		}
 
-		internal com.db4o.Tree cloneForYapClass(com.db4o.Transaction a_trans, int a_yapClassID
+		internal com.db4o.Tree CloneForYapClass(com.db4o.Transaction a_trans, int a_yapClassID
 			)
 		{
-			com.db4o.Tree[] tree = new com.db4o.Tree[] { com.db4o.Tree.deepClone(i_root, null
+			com.db4o.Tree[] tree = new com.db4o.Tree[] { com.db4o.Tree.DeepClone(i_root, null
 				) };
-			a_trans.traverseAddedClassIDs(a_yapClassID, new _AnonymousInnerClass39(this, tree
+			a_trans.TraverseAddedClassIDs(a_yapClassID, new _AnonymousInnerClass40(this, tree
 				));
-			a_trans.traverseRemovedClassIDs(a_yapClassID, new _AnonymousInnerClass44(this, tree
+			a_trans.TraverseRemovedClassIDs(a_yapClassID, new _AnonymousInnerClass45(this, tree
 				));
 			return tree[0];
 		}
 
-		private sealed class _AnonymousInnerClass39 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass40 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass39(ClassIndex _enclosing, com.db4o.Tree[] tree)
+			public _AnonymousInnerClass40(ClassIndex _enclosing, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
-				tree[0] = com.db4o.Tree.add(tree[0], new com.db4o.TreeInt(((com.db4o.TreeInt)obj)
+				tree[0] = com.db4o.Tree.Add(tree[0], new com.db4o.TreeInt(((com.db4o.TreeInt)obj)
 					._key));
 			}
 
@@ -59,17 +59,17 @@ namespace com.db4o
 			private readonly com.db4o.Tree[] tree;
 		}
 
-		private sealed class _AnonymousInnerClass44 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass45 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass44(ClassIndex _enclosing, com.db4o.Tree[] tree)
+			public _AnonymousInnerClass45(ClassIndex _enclosing, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
 			}
 
-			public void visit(object obj)
+			public void Visit(object obj)
 			{
-				tree[0] = com.db4o.Tree.removeLike(tree[0], (com.db4o.TreeInt)obj);
+				tree[0] = com.db4o.Tree.RemoveLike(tree[0], (com.db4o.TreeInt)obj);
 			}
 
 			private readonly ClassIndex _enclosing;
@@ -77,118 +77,83 @@ namespace com.db4o
 			private readonly com.db4o.Tree[] tree;
 		}
 
-		internal virtual void ensureActive()
+		internal virtual void EnsureActive()
 		{
-			if (!isActive())
+			if (!IsActive())
 			{
-				setStateDirty();
-				read(getStream().getSystemTransaction());
+				SetStateDirty();
+				Read(GetStream().GetSystemTransaction());
 			}
 		}
 
-		internal virtual int entryCount(com.db4o.Transaction ta)
+		internal virtual int EntryCount(com.db4o.Transaction ta)
 		{
-			if (isActive())
+			if (IsActive())
 			{
-				return com.db4o.Tree.size(i_root);
+				return com.db4o.Tree.Size(i_root);
 			}
-			com.db4o.inside.slots.Slot slot = ta.getSlotInformation(i_id);
+			com.db4o.inside.slots.Slot slot = ta.GetSlotInformation(i_id);
 			int length = com.db4o.YapConst.YAPINT_LENGTH;
 			com.db4o.YapReader reader = new com.db4o.YapReader(length);
-			reader.readEncrypt(ta.i_stream, slot._address);
+			reader.ReadEncrypt(ta.i_stream, slot._address);
 			if (reader == null)
 			{
 				return 0;
 			}
-			return reader.readInt();
+			return reader.ReadInt();
 		}
 
-		public sealed override byte getIdentifier()
+		public sealed override byte GetIdentifier()
 		{
 			return com.db4o.YapConst.YAPINDEX;
 		}
 
-		internal virtual long[] getInternalIDs(com.db4o.Transaction a_trans, int a_yapClassID
-			)
+		internal virtual com.db4o.TreeInt GetRoot()
 		{
-			com.db4o.Tree tree = cloneForYapClass(a_trans, a_yapClassID);
-			if (tree == null)
-			{
-				return new long[0];
-			}
-			long[] ids = new long[tree.size()];
-			int[] i = new int[] { 0 };
-			tree.traverse(new _AnonymousInnerClass91(this, ids, i));
-			return ids;
-		}
-
-		private sealed class _AnonymousInnerClass91 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass91(ClassIndex _enclosing, long[] ids, int[] i)
-			{
-				this._enclosing = _enclosing;
-				this.ids = ids;
-				this.i = i;
-			}
-
-			public void visit(object obj)
-			{
-				ids[i[0]++] = ((com.db4o.TreeInt)obj)._key;
-			}
-
-			private readonly ClassIndex _enclosing;
-
-			private readonly long[] ids;
-
-			private readonly int[] i;
-		}
-
-		internal virtual com.db4o.TreeInt getRoot()
-		{
-			ensureActive();
+			EnsureActive();
 			return (com.db4o.TreeInt)i_root;
 		}
 
-		internal virtual com.db4o.YapStream getStream()
+		internal virtual com.db4o.YapStream GetStream()
 		{
-			return _yapClass.getStream();
+			return _yapClass.GetStream();
 		}
 
-		public sealed override int ownLength()
+		public sealed override int OwnLength()
 		{
-			return com.db4o.YapConst.OBJECT_LENGTH + byteCount();
+			return com.db4o.YapConst.OBJECT_LENGTH + ByteCount();
 		}
 
-		public object read(com.db4o.YapReader a_reader)
+		public object Read(com.db4o.YapReader a_reader)
 		{
-			throw com.db4o.YapConst.virtualException();
+			throw com.db4o.inside.Exceptions4.VirtualException();
 		}
 
-		public sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
+		public sealed override void ReadThis(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader)
 		{
-			i_root = new com.db4o.TreeReader(a_reader, new com.db4o.TreeInt(0)).read();
+			i_root = new com.db4o.TreeReader(a_reader, new com.db4o.TreeInt(0)).Read();
 		}
 
-		internal virtual void remove(int a_id)
+		internal virtual void Remove(int a_id)
 		{
-			i_root = com.db4o.Tree.removeLike(i_root, new com.db4o.TreeInt(a_id));
+			i_root = com.db4o.Tree.RemoveLike(i_root, new com.db4o.TreeInt(a_id));
 		}
 
-		internal virtual void setDirty(com.db4o.YapStream a_stream)
+		internal virtual void SetDirty(com.db4o.YapStream a_stream)
 		{
-			a_stream.setDirty(this);
+			a_stream.SetDirty(this);
 		}
 
-		public virtual void write(com.db4o.YapReader a_writer)
+		public virtual void Write(com.db4o.YapReader a_writer)
 		{
-			writeThis(null, a_writer);
+			WriteThis(null, a_writer);
 		}
 
-		public sealed override void writeThis(com.db4o.Transaction trans, com.db4o.YapReader
+		public sealed override void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader
 			 a_writer)
 		{
-			com.db4o.Tree.write(a_writer, i_root);
+			com.db4o.Tree.Write(a_writer, i_root);
 		}
 
 		public override string ToString()

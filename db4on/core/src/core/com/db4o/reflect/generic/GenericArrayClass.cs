@@ -9,23 +9,23 @@ namespace com.db4o.reflect.generic
 		{
 		}
 
-		public override com.db4o.reflect.ReflectClass getComponentType()
+		public override com.db4o.reflect.ReflectClass GetComponentType()
 		{
-			return getDelegate();
+			return GetDelegate();
 		}
 
-		public override bool isArray()
+		public override bool IsArray()
 		{
 			return true;
 		}
 
-		public override bool isInstance(object candidate)
+		public override bool IsInstance(object candidate)
 		{
 			if (!(candidate is com.db4o.reflect.generic.GenericArray))
 			{
 				return false;
 			}
-			return isAssignableFrom(((com.db4o.reflect.generic.GenericObject)candidate)._class
+			return IsAssignableFrom(((com.db4o.reflect.generic.GenericObject)candidate)._class
 				);
 		}
 

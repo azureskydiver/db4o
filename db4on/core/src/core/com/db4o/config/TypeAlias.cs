@@ -29,7 +29,7 @@ namespace com.db4o.config
 
 		/// <summary>checking if both names are equal.</summary>
 		/// <remarks>checking if both names are equal.</remarks>
-		public virtual string resolve(string runtimeType)
+		public virtual string Resolve(string runtimeType)
 		{
 			return _runtimeType.Equals(runtimeType) ? _storedType : null;
 		}

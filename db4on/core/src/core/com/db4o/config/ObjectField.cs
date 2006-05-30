@@ -29,13 +29,13 @@ namespace com.db4o.config
 		/// The default setting is <b>false</b>.<br /><br />
 		/// </remarks>
 		/// <param name="flag">whether activation is to be cascaded to the member object.</param>
-		/// <seealso cref="com.db4o.config.Configuration.activationDepth">Why activation?</seealso>
-		/// <seealso cref="com.db4o.config.ObjectClass.cascadeOnActivate">com.db4o.config.ObjectClass.cascadeOnActivate
+		/// <seealso cref="com.db4o.config.Configuration.ActivationDepth">Why activation?</seealso>
+		/// <seealso cref="com.db4o.config.ObjectClass.CascadeOnActivate">com.db4o.config.ObjectClass.CascadeOnActivate
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.ObjectContainer.activate">com.db4o.ObjectContainer.activate
+		/// <seealso cref="com.db4o.ObjectContainer.Activate">com.db4o.ObjectContainer.Activate
 		/// 	</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		void cascadeOnActivate(bool flag);
+		void CascadeOnActivate(bool flag);
 
 		/// <summary>sets cascaded delete behaviour.</summary>
 		/// <remarks>
@@ -44,26 +44,26 @@ namespace com.db4o.config
 		/// Setting cascadeOnDelete to true will result in the deletion of
 		/// the object attribute stored in this field on the parent object
 		/// if the parent object is passed to
-		/// <see cref="com.db4o.ObjectContainer.delete">ObjectContainer#delete()</see>
+		/// <see cref="com.db4o.ObjectContainer.Delete">ObjectContainer#delete()</see>
 		/// .
 		/// <br /><br />
 		/// <b>Caution !</b><br />
 		/// This setting will also trigger deletion of the old member object, on
 		/// calls to
-		/// <see cref="com.db4o.ObjectContainer.set">ObjectContainer#set()</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">ObjectContainer#set()</see>
 		/// .
 		/// An example of the behaviour can be found in
-		/// <see cref="com.db4o.config.ObjectClass.cascadeOnDelete">ObjectClass#cascadeOnDelete()
+		/// <see cref="com.db4o.config.ObjectClass.CascadeOnDelete">ObjectClass#cascadeOnDelete()
 		/// 	</see>
 		/// <br /><br />
 		/// The default setting is <b>false</b>.<br /><br />
 		/// </remarks>
 		/// <param name="flag">whether deletes are to be cascaded to the member object.</param>
-		/// <seealso cref="com.db4o.config.ObjectClass.cascadeOnDelete">com.db4o.config.ObjectClass.cascadeOnDelete
+		/// <seealso cref="com.db4o.config.ObjectClass.CascadeOnDelete">com.db4o.config.ObjectClass.CascadeOnDelete
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.ObjectContainer.delete">com.db4o.ObjectContainer.delete</seealso>
+		/// <seealso cref="com.db4o.ObjectContainer.Delete">com.db4o.ObjectContainer.Delete</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		void cascadeOnDelete(bool flag);
+		void CascadeOnDelete(bool flag);
 
 		/// <summary>sets cascaded update behaviour.</summary>
 		/// <remarks>
@@ -72,19 +72,19 @@ namespace com.db4o.config
 		/// Setting cascadeOnUpdate to true will result in the update
 		/// of the object attribute stored in this field if the parent object
 		/// is passed to
-		/// <see cref="com.db4o.ObjectContainer.set">ObjectContainer#set()</see>
+		/// <see cref="com.db4o.ObjectContainer.Set">ObjectContainer#set()</see>
 		/// .
 		/// <br /><br />
 		/// The default setting is <b>false</b>.<br /><br />
 		/// </remarks>
 		/// <param name="flag">whether updates are to be cascaded to the member object.</param>
-		/// <seealso cref="com.db4o.ObjectContainer.set">com.db4o.ObjectContainer.set</seealso>
-		/// <seealso cref="com.db4o.config.ObjectClass.cascadeOnUpdate">com.db4o.config.ObjectClass.cascadeOnUpdate
+		/// <seealso cref="com.db4o.ObjectContainer.Set">com.db4o.ObjectContainer.Set</seealso>
+		/// <seealso cref="com.db4o.config.ObjectClass.CascadeOnUpdate">com.db4o.config.ObjectClass.CascadeOnUpdate
 		/// 	</seealso>
-		/// <seealso cref="com.db4o.config.ObjectClass.updateDepth">com.db4o.config.ObjectClass.updateDepth
+		/// <seealso cref="com.db4o.config.ObjectClass.UpdateDepth">com.db4o.config.ObjectClass.UpdateDepth
 		/// 	</seealso>
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
-		void cascadeOnUpdate(bool flag);
+		void CascadeOnUpdate(bool flag);
 
 		/// <summary>turns indexing on or off.</summary>
 		/// <remarks>
@@ -104,7 +104,7 @@ namespace com.db4o.config
 		/// specify <code>true</code> or <code>false</code> to turn indexing on for
 		/// this field
 		/// </param>
-		void indexed(bool flag);
+		void Indexed(bool flag);
 
 		/// <summary>renames a field of a stored class.</summary>
 		/// <remarks>
@@ -113,7 +113,7 @@ namespace com.db4o.config
 		/// <br /><br /><b>Examples: ../com/db4o/samples/rename.</b><br /><br />
 		/// </remarks>
 		/// <param name="newName">the new fieldname.</param>
-		void rename(string newName);
+		void Rename(string newName);
 
 		/// <summary>toggles query evaluation.</summary>
 		/// <remarks>
@@ -123,6 +123,6 @@ namespace com.db4o.config
 		/// </remarks>
 		/// <param name="flag">specify <code>false</code> to ignore this field during query evaluation.
 		/// 	</param>
-		void queryEvaluation(bool flag);
+		void QueryEvaluation(bool flag);
 	}
 }

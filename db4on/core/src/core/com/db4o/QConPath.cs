@@ -22,85 +22,85 @@ namespace com.db4o
 		{
 			if (a_field != null)
 			{
-				i_yapClass = a_field.getYapClass();
+				i_yapClass = a_field.GetYapClass();
 			}
 		}
 
-		internal override bool evaluate(com.db4o.QCandidate a_candidate)
+		internal override bool Evaluate(com.db4o.QCandidate a_candidate)
 		{
-			if (a_candidate.classReflector() == null)
+			if (a_candidate.ClassReflector() == null)
 			{
-				visitOnNull(a_candidate.getRoot());
+				VisitOnNull(a_candidate.GetRoot());
 			}
 			return true;
 		}
 
-		internal override void evaluateSelf()
+		internal override void EvaluateSelf()
 		{
 		}
 
-		internal override bool isNullConstraint()
+		internal override bool IsNullConstraint()
 		{
-			return !hasChildren();
+			return !HasChildren();
 		}
 
-		internal override com.db4o.QConClass shareParentForClass(com.db4o.reflect.ReflectClass
+		internal override com.db4o.QConClass ShareParentForClass(com.db4o.reflect.ReflectClass
 			 a_class, bool[] removeExisting)
 		{
 			if (i_parent == null)
 			{
 				return null;
 			}
-			if (!i_field.canHold(a_class))
+			if (!i_field.CanHold(a_class))
 			{
 				return null;
 			}
 			com.db4o.QConClass newConstraint = new com.db4o.QConClass(i_trans, i_parent, i_field
 				, a_class);
-			morph(removeExisting, newConstraint, a_class);
+			Morph(removeExisting, newConstraint, a_class);
 			return newConstraint;
 		}
 
-		internal override com.db4o.QCon shareParent(object a_object, bool[] removeExisting
+		internal override com.db4o.QCon ShareParent(object a_object, bool[] removeExisting
 			)
 		{
 			if (i_parent == null)
 			{
 				return null;
 			}
-			object obj = i_field.coerce(a_object);
+			object obj = i_field.Coerce(a_object);
 			if (obj == com.db4o.foundation.No4.INSTANCE)
 			{
 				com.db4o.QConObject falseConstraint = new com.db4o.QConFalse(i_trans, i_parent, i_field
 					);
-				morph(removeExisting, falseConstraint, reflectClassForObject(obj));
+				Morph(removeExisting, falseConstraint, ReflectClassForObject(obj));
 				return falseConstraint;
 			}
 			com.db4o.QConObject newConstraint = new com.db4o.QConObject(i_trans, i_parent, i_field
 				, obj);
-			morph(removeExisting, newConstraint, reflectClassForObject(obj));
+			Morph(removeExisting, newConstraint, ReflectClassForObject(obj));
 			return newConstraint;
 		}
 
-		private com.db4o.reflect.ReflectClass reflectClassForObject(object obj)
+		private com.db4o.reflect.ReflectClass ReflectClassForObject(object obj)
 		{
-			return i_trans.reflector().forObject(obj);
+			return i_trans.Reflector().ForObject(obj);
 		}
 
-		private void morph(bool[] removeExisting, com.db4o.QConObject newConstraint, com.db4o.reflect.ReflectClass
+		private void Morph(bool[] removeExisting, com.db4o.QConObject newConstraint, com.db4o.reflect.ReflectClass
 			 claxx)
 		{
 			bool mayMorph = true;
 			if (claxx != null)
 			{
-				com.db4o.YapClass yc = i_trans.i_stream.getYapClass(claxx, true);
+				com.db4o.YapClass yc = i_trans.i_stream.GetYapClass(claxx, true);
 				if (yc != null)
 				{
-					com.db4o.foundation.Iterator4 i = iterateChildren();
-					while (i.hasNext())
+					com.db4o.foundation.Iterator4 i = IterateChildren();
+					while (i.HasNext())
 					{
-						com.db4o.QField qf = ((com.db4o.QCon)i.next()).getField();
-						if (!yc.hasField(i_trans.i_stream, qf.i_name))
+						com.db4o.QField qf = ((com.db4o.QCon)i.Next()).GetField();
+						if (!yc.HasField(i_trans.i_stream, qf.i_name))
 						{
 							mayMorph = false;
 							break;
@@ -110,31 +110,31 @@ namespace com.db4o
 			}
 			if (mayMorph)
 			{
-				com.db4o.foundation.Iterator4 j = iterateChildren();
-				while (j.hasNext())
+				com.db4o.foundation.Iterator4 j = IterateChildren();
+				while (j.HasNext())
 				{
-					newConstraint.addConstraint((com.db4o.QCon)j.next());
+					newConstraint.AddConstraint((com.db4o.QCon)j.Next());
 				}
-				if (hasJoins())
+				if (HasJoins())
 				{
-					com.db4o.foundation.Iterator4 k = iterateJoins();
-					while (k.hasNext())
+					com.db4o.foundation.Iterator4 k = IterateJoins();
+					while (k.HasNext())
 					{
-						com.db4o.QConJoin qcj = (com.db4o.QConJoin)k.next();
-						qcj.exchangeConstraint(this, newConstraint);
-						newConstraint.addJoin(qcj);
+						com.db4o.QConJoin qcj = (com.db4o.QConJoin)k.Next();
+						qcj.ExchangeConstraint(this, newConstraint);
+						newConstraint.AddJoin(qcj);
 					}
 				}
-				i_parent.exchangeConstraint(this, newConstraint);
+				i_parent.ExchangeConstraint(this, newConstraint);
 				removeExisting[0] = true;
 			}
 			else
 			{
-				i_parent.addConstraint(newConstraint);
+				i_parent.AddConstraint(newConstraint);
 			}
 		}
 
-		internal sealed override bool visitSelfOnNull()
+		internal sealed override bool VisitSelfOnNull()
 		{
 			return false;
 		}

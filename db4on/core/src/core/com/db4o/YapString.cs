@@ -15,197 +15,229 @@ namespace com.db4o
 			i_stringIo = stringIO;
 		}
 
-		public override void appendEmbedded3(com.db4o.YapWriter a_bytes)
+		public override void AppendEmbedded3(com.db4o.YapWriter a_bytes)
 		{
-			com.db4o.YapWriter bytes = a_bytes.readEmbeddedObject();
+			com.db4o.YapWriter bytes = a_bytes.ReadEmbeddedObject();
 			if (bytes != null)
 			{
-				a_bytes.addEmbedded(bytes);
+				a_bytes.AddEmbedded(bytes);
 			}
 		}
 
-		public override bool canHold(com.db4o.reflect.ReflectClass claxx)
+		public override bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
-			return claxx.Equals(classReflector());
+			return claxx.Equals(ClassReflector());
 		}
 
-		public override void cascadeActivation(com.db4o.Transaction a_trans, object a_object
+		public override void CascadeActivation(com.db4o.Transaction a_trans, object a_object
 			, int a_depth, bool a_activate)
 		{
 		}
 
-		public override com.db4o.reflect.ReflectClass classReflector()
+		public override com.db4o.reflect.ReflectClass ClassReflector()
 		{
 			return _stream.i_handlers.ICLASS_STRING;
 		}
 
-		public override object comparableObject(com.db4o.Transaction a_trans, object a_object
+		public override object ComparableObject(com.db4o.Transaction a_trans, object a_object
 			)
 		{
-			if (a_object != null)
+			if (a_object == null)
 			{
-				int[] slot = (int[])a_object;
-				return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
+				return null;
 			}
-			return null;
+			if (a_object is com.db4o.YapReader)
+			{
+				return a_object;
+			}
+			int[] slot = (int[])a_object;
+			return a_trans.i_stream.ReadObjectReaderByAddress(slot[0], slot[1]);
 		}
 
-		public override bool equals(com.db4o.TypeHandler4 a_dataType)
+		public override void DeleteEmbedded(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapWriter a_bytes)
+		{
+			int address = a_bytes.ReadInt();
+			int length = a_bytes.ReadInt();
+			if (address > 0 && !mf._string.InlinedStrings())
+			{
+				a_bytes.GetTransaction().SlotFreeOnCommit(address, address, length);
+			}
+		}
+
+		public override bool Equals(com.db4o.TypeHandler4 a_dataType)
 		{
 			return (this == a_dataType);
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 9;
 		}
 
-		internal byte getIdentifier()
+		internal byte GetIdentifier()
 		{
 			return com.db4o.YapConst.YAPSTRING;
 		}
 
-		public override com.db4o.YapClass getYapClass(com.db4o.YapStream a_stream)
+		public override com.db4o.YapClass GetYapClass(com.db4o.YapStream a_stream)
 		{
-			return a_stream.i_handlers.i_yapClasses[getID() - 1];
+			return a_stream.i_handlers.i_yapClasses[GetID() - 1];
 		}
 
-		public override bool indexNullHandling()
+		public override bool IndexNullHandling()
 		{
 			return true;
 		}
 
-		public override object read(com.db4o.YapWriter a_bytes)
+		public override int IsSecondClass()
 		{
-			i_lastIo = a_bytes.readEmbeddedObject();
-			return read1(i_lastIo);
+			return com.db4o.YapConst.YES;
 		}
 
-		internal object read1(com.db4o.YapReader bytes)
+		public override void CalculateLengths(com.db4o.Transaction trans, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 header, bool topLevel, object obj, bool withIndirection)
 		{
-			if (bytes == null)
-			{
-				return null;
-			}
-			string ret = readShort(bytes);
-			return ret;
+			com.db4o.inside.marshall.MarshallerFamily.Current()._string.CalculateLengths(trans
+				, header, topLevel, obj, withIndirection);
 		}
 
-		public override com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
-			, com.db4o.YapReader[] a_bytes)
+		public override object Read(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
+			 a_bytes, bool redirect)
+		{
+			return mf._string.ReadFromParentSlot(a_bytes.GetStream(), a_bytes, redirect);
+		}
+
+		public override com.db4o.TypeHandler4 ReadArrayHandler(com.db4o.Transaction a_trans
+			, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader[] a_bytes)
 		{
 			return null;
 		}
 
-		public override void readCandidates(com.db4o.YapReader a_bytes, com.db4o.QCandidates
-			 a_candidates)
+		public override void ReadCandidates(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapReader a_bytes, com.db4o.QCandidates a_candidates)
 		{
 		}
 
-		public override object readIndexEntry(com.db4o.YapReader a_reader)
+		public override com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily
+			 mf, com.db4o.YapReader reader, com.db4o.QCandidates candidates, bool withIndirection
+			)
 		{
-			return new int[] { a_reader.readInt(), a_reader.readInt() };
+			try
+			{
+				object obj = null;
+				if (withIndirection)
+				{
+					obj = ReadQuery(candidates.i_trans, mf, withIndirection, reader, true);
+				}
+				else
+				{
+					obj = mf._string.Read(_stream, reader);
+				}
+				if (obj != null)
+				{
+					return new com.db4o.QCandidate(candidates, obj, 0, true);
+				}
+			}
+			catch (com.db4o.CorruptionException e)
+			{
+			}
+			return null;
 		}
 
-		public override object readQuery(com.db4o.Transaction a_trans, com.db4o.YapReader
-			 a_reader, bool a_toArray)
+		/// <summary>This readIndexEntry method reads from the parent slot.</summary>
+		/// <remarks>
+		/// This readIndexEntry method reads from the parent slot.
+		/// TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.
+		/// </remarks>
+		public override object ReadIndexEntry(com.db4o.inside.marshall.MarshallerFamily mf
+			, com.db4o.YapWriter a_writer)
 		{
-			com.db4o.YapReader reader = a_reader.readEmbeddedObject(a_trans);
+			return mf._string.ReadIndexEntry(a_writer);
+		}
+
+		/// <summary>This readIndexEntry method reads from the actual index in the file.</summary>
+		/// <remarks>
+		/// This readIndexEntry method reads from the actual index in the file.
+		/// TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.
+		/// </remarks>
+		public override object ReadIndexEntry(com.db4o.YapReader a_reader)
+		{
+			return new int[] { a_reader.ReadInt(), a_reader.ReadInt() };
+		}
+
+		public override object ReadQuery(com.db4o.Transaction a_trans, com.db4o.inside.marshall.MarshallerFamily
+			 mf, bool withRedirection, com.db4o.YapReader a_reader, bool a_toArray)
+		{
+			if (!withRedirection)
+			{
+				return mf._string.Read(a_trans.i_stream, a_reader);
+			}
+			com.db4o.YapReader reader = mf._string.ReadSlotFromParentSlot(a_trans.i_stream, a_reader
+				);
 			if (a_toArray)
 			{
 				if (reader != null)
 				{
-					return reader.toString(a_trans);
+					return mf._string.ReadFromOwnSlot(a_trans.i_stream, reader);
 				}
 			}
 			return reader;
 		}
 
-		internal string readShort(com.db4o.YapReader a_bytes)
-		{
-			int length = a_bytes.readInt();
-			if (length > com.db4o.YapConst.MAXIMUM_BLOCK_SIZE)
-			{
-				throw new com.db4o.CorruptionException();
-			}
-			if (length > 0)
-			{
-				string str = i_stringIo.read(a_bytes, length);
-				return str;
-			}
-			return "";
-		}
-
-		internal void setStringIo(com.db4o.YapStringIO a_io)
+		internal void SetStringIo(com.db4o.YapStringIO a_io)
 		{
 			i_stringIo = a_io;
 		}
 
-		public override bool supportsIndex()
+		public override bool SupportsIndex()
 		{
 			return true;
 		}
 
-		public override void writeIndexEntry(com.db4o.YapReader a_writer, object a_object
+		public override void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object
 			)
 		{
 			if (a_object == null)
 			{
-				a_writer.writeInt(0);
-				a_writer.writeInt(0);
+				a_writer.WriteInt(0);
+				a_writer.WriteInt(0);
 			}
 			else
 			{
-				int[] slot = (int[])a_object;
-				a_writer.writeInt(slot[0]);
-				a_writer.writeInt(slot[1]);
+				com.db4o.YapWriter writer = (com.db4o.YapWriter)a_object;
+				a_writer.WriteInt(writer.GetAddress());
+				a_writer.WriteInt(writer.GetLength());
 			}
 		}
 
-		public override int writeNew(object a_object, com.db4o.YapWriter a_bytes)
+		public override object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
+			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection)
 		{
-			if (a_object == null)
-			{
-				a_bytes.writeEmbeddedNull();
-			}
-			else
-			{
-				string str = (string)a_object;
-				int length = i_stringIo.length(str);
-				com.db4o.YapWriter bytes = new com.db4o.YapWriter(a_bytes.getTransaction(), length
-					);
-				bytes.writeInt(j4o.lang.JavaSystem.getLengthOf(str));
-				i_stringIo.write(bytes, str);
-				bytes.setID(a_bytes._offset);
-				i_lastIo = bytes;
-				a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-				a_bytes.incrementOffset(com.db4o.YapConst.YAPID_LENGTH);
-				a_bytes.writeInt(length);
-			}
-			return -1;
+			return mf._string.WriteNew(a_object, topLevel, a_bytes, withIndirection);
 		}
 
-		internal void writeShort(string a_string, com.db4o.YapReader a_bytes)
+		internal void WriteShort(string a_string, com.db4o.YapReader a_bytes)
 		{
 			if (a_string == null)
 			{
-				a_bytes.writeInt(0);
+				a_bytes.WriteInt(0);
 			}
 			else
 			{
-				a_bytes.writeInt(j4o.lang.JavaSystem.getLengthOf(a_string));
-				i_stringIo.write(a_bytes, a_string);
+				a_bytes.WriteInt(a_string.Length);
+				i_stringIo.Write(a_bytes, a_string);
 			}
 		}
 
-		public override int getType()
+		public override int GetTypeID()
 		{
 			return com.db4o.YapConst.TYPE_SIMPLE;
 		}
 
 		private com.db4o.YapReader i_compareTo;
 
-		private com.db4o.YapReader val(object obj)
+		private com.db4o.YapReader Val(object obj)
 		{
 			if (obj is com.db4o.YapReader)
 			{
@@ -213,44 +245,33 @@ namespace com.db4o
 			}
 			if (obj is string)
 			{
-				string str = (string)obj;
-				com.db4o.YapReader reader = new com.db4o.YapReader(i_stringIo.length(str));
-				writeShort(str, reader);
-				return reader;
+				return com.db4o.inside.marshall.StringMarshaller.WriteShort(_stream, (string)obj);
 			}
 			return null;
 		}
 
-		public override void prepareLastIoComparison(com.db4o.Transaction a_trans, object
-			 obj)
+		public override void PrepareComparison(com.db4o.Transaction a_trans, object obj)
 		{
-			if (obj == null)
-			{
-				i_compareTo = null;
-			}
-			else
-			{
-				i_compareTo = i_lastIo;
-			}
+			i_compareTo = (com.db4o.YapReader)obj;
 		}
 
-		public override com.db4o.YapComparable prepareComparison(object obj)
+		public override com.db4o.YapComparable PrepareComparison(object obj)
 		{
 			if (obj == null)
 			{
 				i_compareTo = null;
 				return com.db4o.Null.INSTANCE;
 			}
-			i_compareTo = val(obj);
+			i_compareTo = Val(obj);
 			return this;
 		}
 
-		public override object current()
+		public override object Current()
 		{
 			return i_compareTo;
 		}
 
-		public override int compareTo(object obj)
+		public override int CompareTo(object obj)
 		{
 			if (i_compareTo == null)
 			{
@@ -260,34 +281,34 @@ namespace com.db4o
 				}
 				return 1;
 			}
-			return compare(i_compareTo, val(obj));
+			return Compare(i_compareTo, Val(obj));
 		}
 
-		public override bool isEqual(object obj)
+		public override bool IsEqual(object obj)
 		{
 			if (i_compareTo == null)
 			{
 				return obj == null;
 			}
-			return i_compareTo.containsTheSame(val(obj));
+			return i_compareTo.ContainsTheSame(Val(obj));
 		}
 
-		public override bool isGreater(object obj)
+		public override bool IsGreater(object obj)
 		{
 			if (i_compareTo == null)
 			{
 				return obj != null;
 			}
-			return compare(i_compareTo, val(obj)) > 0;
+			return Compare(i_compareTo, Val(obj)) > 0;
 		}
 
-		public override bool isSmaller(object obj)
+		public override bool IsSmaller(object obj)
 		{
 			if (i_compareTo == null)
 			{
 				return false;
 			}
-			return compare(i_compareTo, val(obj)) < 0;
+			return Compare(i_compareTo, Val(obj)) < 0;
 		}
 
 		/// <summary>
@@ -298,7 +319,7 @@ namespace com.db4o
 		/// returns: -x for left is greater and +x for right is greater
 		/// TODO: You will need collators here for different languages.
 		/// </remarks>
-		internal int compare(com.db4o.YapReader a_compare, com.db4o.YapReader a_with)
+		internal int Compare(com.db4o.YapReader a_compare, com.db4o.YapReader a_with)
 		{
 			if (a_compare == null)
 			{
@@ -312,10 +333,10 @@ namespace com.db4o
 			{
 				return -1;
 			}
-			return compare(a_compare._buffer, a_with._buffer);
+			return Compare(a_compare._buffer, a_with._buffer);
 		}
 
-		internal static int compare(byte[] compare, byte[] with)
+		internal static int Compare(byte[] compare, byte[] with)
 		{
 			int min = compare.Length < with.Length ? compare.Length : with.Length;
 			int start = com.db4o.YapConst.YAPINT_LENGTH;

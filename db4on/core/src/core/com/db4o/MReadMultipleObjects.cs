@@ -2,22 +2,22 @@ namespace com.db4o
 {
 	internal sealed class MReadMultipleObjects : com.db4o.MsgD
 	{
-		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal sealed override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
-			int size = readInt();
+			int size = ReadInt();
 			com.db4o.MsgD[] ret = new com.db4o.MsgD[size];
 			int length = (1 + size) * com.db4o.YapConst.YAPINT_LENGTH;
-			com.db4o.YapStream stream = getStream();
+			com.db4o.YapStream stream = GetStream();
 			com.db4o.YapWriter bytes = null;
 			lock (stream.i_lock)
 			{
 				for (int i = 0; i < size; i++)
 				{
-					int id = this._payLoad.readInt();
+					int id = this._payLoad.ReadInt();
 					try
 					{
-						bytes = stream.readWriterByID(getTransaction(), id);
+						bytes = stream.ReadWriterByID(GetTransaction(), id);
 					}
 					catch (System.Exception e)
 					{
@@ -27,32 +27,32 @@ namespace com.db4o
 					{
 						try
 						{
-							com.db4o.YapClassAny.appendEmbedded(bytes);
+							com.db4o.YapClassAny.AppendEmbedded(bytes);
 						}
 						catch (System.Exception e)
 						{
 						}
-						ret[i] = com.db4o.Msg.OBJECT_TO_CLIENT.getWriter(bytes);
-						length += ret[i]._payLoad.getLength();
+						ret[i] = com.db4o.Msg.OBJECT_TO_CLIENT.GetWriter(bytes);
+						length += ret[i]._payLoad.GetLength();
 					}
 				}
 			}
-			com.db4o.MsgD multibytes = com.db4o.Msg.READ_MULTIPLE_OBJECTS.getWriterForLength(
-				getTransaction(), length);
-			multibytes.writeInt(size);
+			com.db4o.MsgD multibytes = com.db4o.Msg.READ_MULTIPLE_OBJECTS.GetWriterForLength(
+				GetTransaction(), length);
+			multibytes.WriteInt(size);
 			for (int i = 0; i < size; i++)
 			{
 				if (ret[i] == null)
 				{
-					multibytes.writeInt(0);
+					multibytes.WriteInt(0);
 				}
 				else
 				{
-					multibytes.writeInt(ret[i]._payLoad.getLength());
-					multibytes._payLoad.append(ret[i]._payLoad._buffer);
+					multibytes.WriteInt(ret[i]._payLoad.GetLength());
+					multibytes._payLoad.Append(ret[i]._payLoad._buffer);
 				}
 			}
-			multibytes.write(stream, sock);
+			multibytes.Write(stream, sock);
 			return true;
 		}
 	}

@@ -18,117 +18,113 @@ namespace com.db4o
 			_stream = stream;
 		}
 
-		internal com.db4o.YapWriter i_lastIo;
-
-		public virtual object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		public virtual object Coerce(com.db4o.reflect.ReflectClass claxx, object obj)
 		{
-			return canHold(claxx) ? obj : com.db4o.foundation.No4.INSTANCE;
+			return CanHold(claxx) ? obj : com.db4o.foundation.No4.INSTANCE;
 		}
 
-		public void copyValue(object a_from, object a_to)
+		public void CopyValue(object a_from, object a_to)
 		{
 		}
 
-		/// <summary>overriden in YapArray</summary>
-		public virtual void deleteEmbedded(com.db4o.YapWriter a_bytes)
+		public abstract void DeleteEmbedded(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.YapWriter a_bytes);
+
+		public virtual bool HasFixedLength()
 		{
-			int address = a_bytes.readInt();
-			int length = a_bytes.readInt();
-			if (address > 0)
-			{
-				a_bytes.getTransaction().slotFreeOnCommit(address, address, length);
-			}
+			return false;
 		}
 
-		public virtual object indexEntry(object a_object)
-		{
-			if (a_object == null)
-			{
-				return null;
-			}
-			return new int[] { i_lastIo.getAddress(), i_lastIo.getLength() };
-		}
-
-		public int linkLength()
+		public int LinkLength()
 		{
 			return com.db4o.YapConst.YAPINT_LENGTH + com.db4o.YapConst.YAPID_LENGTH;
 		}
 
-		public com.db4o.reflect.ReflectClass primitiveClassReflector()
+		public com.db4o.reflect.ReflectClass PrimitiveClassReflector()
 		{
 			return null;
 		}
 
-		public virtual bool readArray(object array, com.db4o.YapWriter reader)
+		public virtual bool ReadArray(object array, com.db4o.YapWriter reader)
 		{
 			return false;
 		}
 
-		public virtual object readIndexValueOrID(com.db4o.YapWriter a_writer)
+		public virtual object ReadIndexEntry(com.db4o.inside.marshall.MarshallerFamily mf
+			, com.db4o.YapWriter a_writer)
 		{
-			return read(a_writer);
+			return Read(mf, a_writer, true);
 		}
 
-		public virtual bool writeArray(object array, com.db4o.YapWriter reader)
+		public virtual bool WriteArray(object array, com.db4o.YapWriter reader)
 		{
 			return false;
 		}
 
-		public abstract bool isGreater(object obj);
+		public abstract bool IsGreater(object obj);
 
-		public abstract com.db4o.YapComparable prepareComparison(object obj);
+		public abstract com.db4o.YapComparable PrepareComparison(object obj);
 
-		public abstract int compareTo(object obj);
+		public abstract int CompareTo(object obj);
 
-		public abstract bool isEqual(object obj);
+		public abstract bool IsEqual(object obj);
 
-		public abstract bool isSmaller(object obj);
+		public abstract bool IsSmaller(object obj);
 
-		public abstract object comparableObject(com.db4o.Transaction trans, object indexEntry
+		public abstract object ComparableObject(com.db4o.Transaction trans, object indexEntry
 			);
 
-		public abstract object readIndexEntry(com.db4o.YapReader a_reader);
+		public abstract object ReadIndexEntry(com.db4o.YapReader a_reader);
 
-		public abstract void writeIndexEntry(com.db4o.YapReader a_writer, object a_object
+		public abstract void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object
 			);
 
-		public abstract object current();
+		public abstract object Current();
 
-		public abstract void appendEmbedded3(com.db4o.YapWriter arg1);
+		public abstract void AppendEmbedded3(com.db4o.YapWriter arg1);
 
-		public abstract bool canHold(com.db4o.reflect.ReflectClass arg1);
+		public abstract bool CanHold(com.db4o.reflect.ReflectClass arg1);
 
-		public abstract void cascadeActivation(com.db4o.Transaction arg1, object arg2, int
+		public abstract void CascadeActivation(com.db4o.Transaction arg1, object arg2, int
 			 arg3, bool arg4);
 
-		public abstract com.db4o.reflect.ReflectClass classReflector();
+		public abstract com.db4o.reflect.ReflectClass ClassReflector();
 
-		public abstract int getID();
+		public abstract int GetID();
 
-		public abstract bool equals(com.db4o.TypeHandler4 arg1);
+		public abstract bool Equals(com.db4o.TypeHandler4 arg1);
 
-		public abstract bool indexNullHandling();
+		public abstract bool IndexNullHandling();
 
-		public abstract void prepareLastIoComparison(com.db4o.Transaction arg1, object arg2
-			);
+		public abstract int IsSecondClass();
 
-		public abstract object read(com.db4o.YapWriter arg1);
+		public abstract void CalculateLengths(com.db4o.Transaction arg1, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 arg2, bool arg3, object arg4, bool arg5);
 
-		public abstract object readQuery(com.db4o.Transaction arg1, com.db4o.YapReader arg2
-			, bool arg3);
+		public abstract void PrepareComparison(com.db4o.Transaction arg1, object arg2);
 
-		public abstract bool supportsIndex();
+		public abstract object Read(com.db4o.inside.marshall.MarshallerFamily arg1, com.db4o.YapWriter
+			 arg2, bool arg3);
 
-		public abstract int writeNew(object arg1, com.db4o.YapWriter arg2);
+		public abstract object ReadQuery(com.db4o.Transaction arg1, com.db4o.inside.marshall.MarshallerFamily
+			 arg2, bool arg3, com.db4o.YapReader arg4, bool arg5);
 
-		public abstract int getType();
+		public abstract bool SupportsIndex();
 
-		public abstract com.db4o.YapClass getYapClass(com.db4o.YapStream arg1);
+		public abstract object WriteNew(com.db4o.inside.marshall.MarshallerFamily arg1, object
+			 arg2, bool arg3, com.db4o.YapWriter arg4, bool arg5);
 
-		public abstract void readCandidates(com.db4o.YapReader arg1, com.db4o.QCandidates
-			 arg2);
+		public abstract int GetTypeID();
 
-		public abstract com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction arg1, 
-			com.db4o.YapReader[] arg2);
+		public abstract com.db4o.YapClass GetYapClass(com.db4o.YapStream arg1);
+
+		public abstract void ReadCandidates(com.db4o.inside.marshall.MarshallerFamily arg1
+			, com.db4o.YapReader arg2, com.db4o.QCandidates arg3);
+
+		public abstract com.db4o.TypeHandler4 ReadArrayHandler(com.db4o.Transaction arg1, 
+			com.db4o.inside.marshall.MarshallerFamily arg2, com.db4o.YapReader[] arg3);
+
+		public abstract com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily
+			 arg1, com.db4o.YapReader arg2, com.db4o.QCandidates arg3, bool arg4);
 	}
 }

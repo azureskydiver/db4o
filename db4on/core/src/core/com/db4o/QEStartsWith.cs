@@ -7,7 +7,7 @@ namespace com.db4o
 		{
 		}
 
-		protected override bool compareStrings(string candidate, string constraint)
+		protected override bool CompareStrings(string candidate, string constraint)
 		{
 			return candidate.IndexOf(constraint) == 0;
 		}

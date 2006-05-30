@@ -8,79 +8,71 @@ namespace com.db4o
 		{
 		}
 
-		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		public override object Coerce(com.db4o.reflect.ReflectClass claxx, object obj)
 		{
-			return com.db4o.foundation.Coercion4.toFloat(obj);
+			return com.db4o.foundation.Coercion4.ToFloat(obj);
 		}
 
-		public override object defaultValue()
+		public override object DefaultValue()
 		{
 			return i_primitive;
 		}
 
-		public override int getID()
+		public override int GetID()
 		{
 			return 3;
 		}
 
-		protected override j4o.lang.Class primitiveJavaClass()
+		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.getClassForType(typeof(float));
+			return j4o.lang.Class.GetClassForType(typeof(float));
 		}
 
-		internal override object primitiveNull()
+		internal override object PrimitiveNull()
 		{
 			return i_primitive;
 		}
 
-		internal override object read1(com.db4o.YapReader a_bytes)
+		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			int ret = readInt(a_bytes);
-			return j4o.lang.JavaSystem.intBitsToFloat(ret);
+			return j4o.lang.JavaSystem.IntBitsToFloat(ReadInt(a_bytes));
 		}
 
-		public override void write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
-			if (!com.db4o.Deploy.csharp && a_object == null)
-			{
-				writeInt(int.MaxValue, a_bytes);
-			}
-			else
-			{
-				writeInt(j4o.lang.JavaSystem.floatToIntBits(((float)a_object)), a_bytes);
-			}
+			WriteInt(j4o.lang.JavaSystem.FloatToIntBits(((float)a_object)), a_bytes);
 		}
 
 		private float i_compareTo;
 
-		private float valu(object obj)
+		private float Valu(object obj)
 		{
 			return ((float)obj);
 		}
 
-		internal override void prepareComparison1(object obj)
+		internal override void PrepareComparison1(object obj)
 		{
-			i_compareTo = valu(obj);
+			i_compareTo = Valu(obj);
 		}
 
-		public override object current1()
+		public override object Current1()
 		{
 			return i_compareTo;
 		}
 
-		internal override bool isEqual1(object obj)
+		internal override bool IsEqual1(object obj)
 		{
-			return obj is float && valu(obj) == i_compareTo;
+			return obj is float && Valu(obj) == i_compareTo;
 		}
 
-		internal override bool isGreater1(object obj)
+		internal override bool IsGreater1(object obj)
 		{
-			return obj is float && valu(obj) > i_compareTo;
+			return obj is float && Valu(obj) > i_compareTo;
 		}
 
-		internal override bool isSmaller1(object obj)
+		internal override bool IsSmaller1(object obj)
 		{
-			return obj is float && valu(obj) < i_compareTo;
+			return obj is float && Valu(obj) < i_compareTo;
 		}
 	}
 }

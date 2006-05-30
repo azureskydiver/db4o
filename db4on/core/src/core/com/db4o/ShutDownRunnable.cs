@@ -4,13 +4,13 @@ namespace com.db4o
 	{
 		public volatile bool dontRemove = false;
 
-		public virtual void run()
+		public virtual void Run()
 		{
 			dontRemove = true;
-			com.db4o.foundation.Iterator4 i = iterator();
-			while (i.hasNext())
+			com.db4o.foundation.Iterator4 i = Iterator();
+			while (i.HasNext())
 			{
-				((com.db4o.YapStream)i.next()).failedToShutDown();
+				((com.db4o.YapStream)i.Next()).FailedToShutDown();
 			}
 		}
 	}

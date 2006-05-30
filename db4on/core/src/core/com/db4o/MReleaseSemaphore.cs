@@ -2,11 +2,11 @@ namespace com.db4o
 {
 	internal sealed class MReleaseSemaphore : com.db4o.MsgD
 	{
-		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
+		internal sealed override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
-			string name = readString();
-			((com.db4o.YapFile)getStream()).releaseSemaphore(getTransaction(), name);
+			string name = ReadString();
+			((com.db4o.YapFile)GetStream()).ReleaseSemaphore(GetTransaction(), name);
 			return true;
 		}
 	}

@@ -7,26 +7,26 @@ namespace com.db4o.inside.freespace
 		{
 		}
 
-		internal override void add(int address, int length)
+		internal override void Add(int address, int length)
 		{
-			_index._handler.prepareComparison(address);
-			_indexTrans.add(length, address);
+			_index._handler.PrepareComparison(address);
+			_indexTrans.Add(length, address);
 		}
 
-		internal override int address()
+		internal override int Address()
 		{
 			return _visitor._value;
 		}
 
-		internal override int length()
+		internal override int Length()
 		{
 			return _visitor._key;
 		}
 
-		internal override void remove(int address, int length)
+		internal override void Remove(int address, int length)
 		{
-			_index._handler.prepareComparison(address);
-			_indexTrans.remove(length, address);
+			_index._handler.PrepareComparison(address);
+			_indexTrans.Remove(length, address);
 		}
 	}
 }

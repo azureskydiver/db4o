@@ -3,25 +3,25 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public sealed class YapStringIOUnicode : com.db4o.YapStringIO
 	{
-		internal override int bytesPerChar()
+		internal override int BytesPerChar()
 		{
 			return 2;
 		}
 
-		internal override byte encodingByte()
+		internal override byte EncodingByte()
 		{
 			return com.db4o.YapConst.UNICODE;
 		}
 
-		internal override int length(string a_string)
+		public override int Length(string a_string)
 		{
-			return (j4o.lang.JavaSystem.getLengthOf(a_string) * 2) + com.db4o.YapConst.OBJECT_LENGTH
-				 + com.db4o.YapConst.YAPINT_LENGTH;
+			return (a_string.Length * 2) + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst
+				.YAPINT_LENGTH;
 		}
 
-		public override string read(com.db4o.YapReader bytes, int a_length)
+		public override string Read(com.db4o.YapReader bytes, int a_length)
 		{
-			checkBufferLength(a_length);
+			CheckBufferLength(a_length);
 			for (int ii = 0; ii < a_length; ii++)
 			{
 				chars[ii] = (char)((bytes._buffer[bytes._offset++] & unchecked((int)(0xff))) | ((
@@ -30,10 +30,10 @@ namespace com.db4o
 			return new string(chars, 0, a_length);
 		}
 
-		internal override string read(byte[] a_bytes)
+		internal override string Read(byte[] a_bytes)
 		{
 			int len = a_bytes.Length / 2;
-			checkBufferLength(len);
+			CheckBufferLength(len);
 			int j = 0;
 			for (int ii = 0; ii < len; ii++)
 			{
@@ -43,14 +43,14 @@ namespace com.db4o
 			return new string(chars, 0, len);
 		}
 
-		internal override int shortLength(string a_string)
+		internal override int ShortLength(string a_string)
 		{
-			return (j4o.lang.JavaSystem.getLengthOf(a_string) * 2) + com.db4o.YapConst.YAPINT_LENGTH;
+			return (a_string.Length * 2) + com.db4o.YapConst.YAPINT_LENGTH;
 		}
 
-		internal override void write(com.db4o.YapReader bytes, string _string)
+		public override void Write(com.db4o.YapReader bytes, string _string)
 		{
-			int len = writetoBuffer(_string);
+			int len = WritetoBuffer(_string);
 			for (int i = 0; i < len; i++)
 			{
 				bytes._buffer[bytes._offset++] = (byte)(chars[i] & unchecked((int)(0xff)));
@@ -58,9 +58,9 @@ namespace com.db4o
 			}
 		}
 
-		internal override byte[] write(string _string)
+		internal override byte[] Write(string _string)
 		{
-			int len = writetoBuffer(_string);
+			int len = WritetoBuffer(_string);
 			byte[] bytes = new byte[len * 2];
 			int j = 0;
 			for (int i = 0; i < len; i++)

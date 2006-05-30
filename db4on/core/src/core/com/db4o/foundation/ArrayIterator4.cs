@@ -12,12 +12,12 @@ namespace com.db4o.foundation
 			_next = 0;
 		}
 
-		public virtual bool hasNext()
+		public virtual bool HasNext()
 		{
 			return _next < _elements.Length;
 		}
 
-		public virtual object next()
+		public virtual object Next()
 		{
 			return _elements[_next++];
 		}

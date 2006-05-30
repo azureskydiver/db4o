@@ -11,7 +11,7 @@ namespace com.db4o.foundation
 
 		private com.db4o.foundation.List4 _last;
 
-		public void add(object obj)
+		public void Add(object obj)
 		{
 			com.db4o.foundation.List4 ce = new com.db4o.foundation.List4(null, obj);
 			if (_first == null)
@@ -25,7 +25,7 @@ namespace com.db4o.foundation
 			_first = ce;
 		}
 
-		public object next()
+		public object Next()
 		{
 			if (_last == null)
 			{
@@ -40,7 +40,7 @@ namespace com.db4o.foundation
 			return ret;
 		}
 
-		public bool hasNext()
+		public bool HasNext()
 		{
 			return _last != null;
 		}

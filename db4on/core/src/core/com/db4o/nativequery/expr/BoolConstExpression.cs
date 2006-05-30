@@ -15,27 +15,27 @@ namespace com.db4o.nativequery.expr
 			this._value = value;
 		}
 
-		public virtual bool value()
+		public virtual bool Value()
 		{
 			return _value;
 		}
 
 		public override string ToString()
 		{
-			return j4o.lang.JavaSystem.getStringValueOf(_value);
+			return j4o.lang.JavaSystem.GetStringValueOf(_value);
 		}
 
-		public static com.db4o.nativequery.expr.BoolConstExpression expr(bool value)
+		public static com.db4o.nativequery.expr.BoolConstExpression Expr(bool value)
 		{
 			return (value ? TRUE : FALSE);
 		}
 
-		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
+		public virtual void Accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			visitor.visit(this);
+			visitor.Visit(this);
 		}
 
-		public virtual com.db4o.nativequery.expr.Expression negate()
+		public virtual com.db4o.nativequery.expr.Expression Negate()
 		{
 			return (_value ? FALSE : TRUE);
 		}

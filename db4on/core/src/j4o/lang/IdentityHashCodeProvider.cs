@@ -1,4 +1,4 @@
-/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
+﻿/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.Reflection;
@@ -8,20 +8,20 @@ namespace j4o.lang
 	public class IdentityHashCodeProvider
 	{
 #if NET_2_0 || MONO
-		public static int identityHashCode(object obj)
+		public static int IdentityHashCode(object obj)
 		{
 			return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
 		}
 #else
-		public static int identityHashCode(object obj)
+		public static int IdentityHashCode(object obj)
 		{
 			if (obj == null) return 0;
 			return (int) _hashMethod.Invoke(null, new object[] { obj });
 		}
 
-		private static MethodInfo _hashMethod = getIdentityHashCodeMethod();
+		private static MethodInfo _hashMethod = GetIdentityHashCodeMethod();
 
-		private static MethodInfo getIdentityHashCodeMethod()
+		private static MethodInfo GetIdentityHashCodeMethod()
 		{
 			Assembly assembly = typeof(object).Assembly;
 

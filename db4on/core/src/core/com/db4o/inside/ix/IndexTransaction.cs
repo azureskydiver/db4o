@@ -25,42 +25,42 @@ namespace com.db4o.inside.ix
 			return i_trans == ((com.db4o.inside.ix.IndexTransaction)obj).i_trans;
 		}
 
-		public virtual void add(int id, object value)
+		public virtual void Add(int id, object value)
 		{
-			patch(new com.db4o.inside.ix.IxAdd(this, id, value));
+			Patch(new com.db4o.inside.ix.IxAdd(this, id, value));
 		}
 
-		public virtual void remove(int id, object value)
+		public virtual void Remove(int id, object value)
 		{
-			patch(new com.db4o.inside.ix.IxRemove(this, id, value));
+			Patch(new com.db4o.inside.ix.IxRemove(this, id, value));
 		}
 
-		private void patch(com.db4o.inside.ix.IxPatch patch)
+		private void Patch(com.db4o.inside.ix.IxPatch patch)
 		{
-			i_root = com.db4o.Tree.add(i_root, patch);
+			i_root = com.db4o.Tree.Add(i_root, patch);
 		}
 
-		public virtual com.db4o.Tree getRoot()
+		public virtual com.db4o.Tree GetRoot()
 		{
 			return i_root;
 		}
 
-		public virtual void commit()
+		public virtual void Commit()
 		{
-			i_index.commit(this);
+			i_index.Commit(this);
 		}
 
-		public virtual void rollback()
+		public virtual void Rollback()
 		{
-			i_index.rollback(this);
+			i_index.Rollback(this);
 		}
 
-		internal virtual void merge(com.db4o.inside.ix.IndexTransaction a_ft)
+		internal virtual void Merge(com.db4o.inside.ix.IndexTransaction a_ft)
 		{
-			com.db4o.Tree otherRoot = a_ft.getRoot();
+			com.db4o.Tree otherRoot = a_ft.GetRoot();
 			if (otherRoot != null)
 			{
-				otherRoot.traverseFromLeaves(this);
+				otherRoot.TraverseFromLeaves(this);
 			}
 		}
 
@@ -68,33 +68,33 @@ namespace com.db4o.inside.ix
 		/// Visitor functionality for merge:<br />
 		/// Add
 		/// </summary>
-		public virtual void visit(object obj)
+		public virtual void Visit(object obj)
 		{
 			if (obj is com.db4o.inside.ix.IxPatch)
 			{
 				com.db4o.inside.ix.IxPatch tree = (com.db4o.inside.ix.IxPatch)obj;
-				if (tree.hasQueue())
+				if (tree.HasQueue())
 				{
-					com.db4o.foundation.Queue4 queue = tree.detachQueue();
-					while ((tree = (com.db4o.inside.ix.IxPatch)queue.next()) != null)
+					com.db4o.foundation.Queue4 queue = tree.DetachQueue();
+					while ((tree = (com.db4o.inside.ix.IxPatch)queue.Next()) != null)
 					{
-						tree.detachQueue();
-						addPatchToRoot(tree);
+						tree.DetachQueue();
+						AddPatchToRoot(tree);
 					}
 				}
 				else
 				{
-					addPatchToRoot(tree);
+					AddPatchToRoot(tree);
 				}
 			}
 		}
 
-		private void addPatchToRoot(com.db4o.inside.ix.IxPatch tree)
+		private void AddPatchToRoot(com.db4o.inside.ix.IxPatch tree)
 		{
 			if (tree._version != i_version)
 			{
-				tree.beginMerge();
-				tree.handler().prepareComparison(tree.handler().comparableObject(i_trans, tree._value
+				tree.BeginMerge();
+				tree.Handler().PrepareComparison(tree.Handler().ComparableObject(i_trans, tree._value
 					));
 				if (i_root == null)
 				{
@@ -102,19 +102,19 @@ namespace com.db4o.inside.ix
 				}
 				else
 				{
-					i_root = i_root.add(tree);
+					i_root = i_root.Add(tree);
 				}
 			}
 		}
 
-		internal virtual int countLeaves()
+		internal virtual int CountLeaves()
 		{
 			if (i_root == null)
 			{
 				return 0;
 			}
 			int[] leaves = { 0 };
-			i_root.traverse(new _AnonymousInnerClass102(this, leaves));
+			i_root.Traverse(new _AnonymousInnerClass102(this, leaves));
 			return leaves[0];
 		}
 
@@ -126,7 +126,7 @@ namespace com.db4o.inside.ix
 				this.leaves = leaves;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
 				leaves[0]++;
 			}
@@ -136,7 +136,7 @@ namespace com.db4o.inside.ix
 			private readonly int[] leaves;
 		}
 
-		public virtual void setRoot(com.db4o.Tree a_tree)
+		public virtual void SetRoot(com.db4o.Tree a_tree)
 		{
 			i_root = a_tree;
 		}
@@ -145,15 +145,15 @@ namespace com.db4o.inside.ix
 		{
 			return base.ToString();
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
-			sb.append("IxFieldTransaction ");
-			sb.append(j4o.lang.JavaSystem.identityHashCode(this));
+			sb.Append("IxFieldTransaction ");
+			sb.Append(j4o.lang.JavaSystem.IdentityHashCode(this));
 			if (i_root == null)
 			{
-				sb.append("\n    Empty");
+				sb.Append("\n    Empty");
 			}
 			else
 			{
-				i_root.traverse(new _AnonymousInnerClass124(this, sb));
+				i_root.Traverse(new _AnonymousInnerClass124(this, sb));
 			}
 			return sb.ToString();
 		}
@@ -167,10 +167,10 @@ namespace com.db4o.inside.ix
 				this.sb = sb;
 			}
 
-			public void visit(object a_object)
+			public void Visit(object a_object)
 			{
-				sb.append("\n");
-				sb.append(a_object.ToString());
+				sb.Append("\n");
+				sb.Append(a_object.ToString());
 			}
 
 			private readonly IndexTransaction _enclosing;

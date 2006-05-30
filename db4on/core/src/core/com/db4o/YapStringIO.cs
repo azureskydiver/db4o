@@ -5,17 +5,17 @@ namespace com.db4o
 	{
 		protected char[] chars = new char[0];
 
-		internal virtual int bytesPerChar()
+		internal virtual int BytesPerChar()
 		{
 			return 1;
 		}
 
-		internal virtual byte encodingByte()
+		internal virtual byte EncodingByte()
 		{
 			return com.db4o.YapConst.ISO8859;
 		}
 
-		internal static com.db4o.YapStringIO forEncoding(byte encodingByte)
+		internal static com.db4o.YapStringIO ForEncoding(byte encodingByte)
 		{
 			switch (encodingByte)
 			{
@@ -32,13 +32,12 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual int length(string a_string)
+		public virtual int Length(string a_string)
 		{
-			return j4o.lang.JavaSystem.getLengthOf(a_string) + com.db4o.YapConst.OBJECT_LENGTH
-				 + com.db4o.YapConst.YAPINT_LENGTH;
+			return a_string.Length + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.YAPINT_LENGTH;
 		}
 
-		protected virtual void checkBufferLength(int a_length)
+		protected virtual void CheckBufferLength(int a_length)
 		{
 			if (a_length > chars.Length)
 			{
@@ -46,9 +45,9 @@ namespace com.db4o
 			}
 		}
 
-		public virtual string read(com.db4o.YapReader bytes, int a_length)
+		public virtual string Read(com.db4o.YapReader bytes, int a_length)
 		{
-			checkBufferLength(a_length);
+			CheckBufferLength(a_length);
 			for (int ii = 0; ii < a_length; ii++)
 			{
 				chars[ii] = (char)(bytes._buffer[bytes._offset++] & unchecked((int)(0xff)));
@@ -56,9 +55,9 @@ namespace com.db4o
 			return new string(chars, 0, a_length);
 		}
 
-		internal virtual string read(byte[] a_bytes)
+		internal virtual string Read(byte[] a_bytes)
 		{
-			checkBufferLength(a_bytes.Length);
+			CheckBufferLength(a_bytes.Length);
 			for (int i = 0; i < a_bytes.Length; i++)
 			{
 				chars[i] = (char)(a_bytes[i] & unchecked((int)(0xff)));
@@ -66,31 +65,31 @@ namespace com.db4o
 			return new string(chars, 0, a_bytes.Length);
 		}
 
-		internal virtual int shortLength(string a_string)
+		internal virtual int ShortLength(string a_string)
 		{
-			return j4o.lang.JavaSystem.getLengthOf(a_string) + com.db4o.YapConst.YAPINT_LENGTH;
+			return a_string.Length + com.db4o.YapConst.YAPINT_LENGTH;
 		}
 
-		protected virtual int writetoBuffer(string str)
+		protected virtual int WritetoBuffer(string str)
 		{
-			int len = j4o.lang.JavaSystem.getLengthOf(str);
-			checkBufferLength(len);
-			j4o.lang.JavaSystem.getCharsForString(str, 0, len, chars, 0);
+			int len = str.Length;
+			CheckBufferLength(len);
+			j4o.lang.JavaSystem.GetCharsForString(str, 0, len, chars, 0);
 			return len;
 		}
 
-		internal virtual void write(com.db4o.YapReader bytes, string _string)
+		public virtual void Write(com.db4o.YapReader bytes, string _string)
 		{
-			int len = writetoBuffer(_string);
+			int len = WritetoBuffer(_string);
 			for (int i = 0; i < len; i++)
 			{
 				bytes._buffer[bytes._offset++] = (byte)(chars[i] & unchecked((int)(0xff)));
 			}
 		}
 
-		internal virtual byte[] write(string _string)
+		internal virtual byte[] Write(string _string)
 		{
-			int len = writetoBuffer(_string);
+			int len = WritetoBuffer(_string);
 			byte[] bytes = new byte[len];
 			for (int i = 0; i < len; i++)
 			{
