@@ -349,8 +349,6 @@
 		</csc>
 	</target>
 	
-
-	
 	<target name="compilecoredll-compact">
 		<delete dir="${dir.dist.net.compile}" />
 		<copy todir="${dir.dist.net.compile}">
