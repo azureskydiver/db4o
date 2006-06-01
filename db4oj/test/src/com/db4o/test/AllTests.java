@@ -33,6 +33,10 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     		AllTests.run(solo, cs, testCasesFromArgs(args,1));
     		return;
     	}
+    	if(args!=null&&args.length==1&&args[0].equals("*")) {
+            new AllTests(new String[]{}).runWithException();
+            return;
+    	}
         new AllTests(args).run();
     }
     
@@ -72,10 +76,31 @@ public class AllTests extends AllTestsConfAll implements Runnable {
         Test.currentRunner = this;
     }
 
-
     public void run() {
+		printOutResult(runResult());
+    }
 
-        logConfiguration();
+    public void runWithException() {
+		TestResult result = runResult();
+		printOutResult(result);
+		if(result.numFailures()>0) {
+			throw new RuntimeException("db4o regression test failure: "+result);
+		}
+    }
+    
+	private void printOutResult(TestResult result) {
+		System.out.println("\n\nAllTests completed.\nAssertions: "
+		    + result.numAssertions() + "\nTime: " + result.timeTaken() + "ms");
+		if (result.numFailures() == 0) {
+		    System.out.println("No errors detected.\n");
+		} else {
+		    System.out
+		        .println("" + result.numFailures() + " ERRORS DETECTED !!!.\n");
+		}
+	}
+
+	public TestResult runResult() {
+		logConfiguration();
 
         Test.beginTesting();
 
@@ -103,16 +128,9 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             Test.end();
         }
         time = System.currentTimeMillis() - time;
-        System.out.println("\n\nAllTests completed.\nAssertions: "
-            + Test.assertionCount + "\nTime: " + time + "ms");
-        if (Test.errorCount == 0) {
-            System.out.println("No errors detected.\n");
-        } else {
-            System.out
-                .println("" + Test.errorCount + " ERRORS DETECTED !!!.\n");
-        }
-
-    }
+        TestResult result=new TestResult(Test.assertionCount,Test.errorCount,time);
+		return result;
+	}
 
     protected void configure() {
         for (int i = 0; i < _testCases.length; i++) {
@@ -145,6 +163,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
                         try {
                             method.invoke(toTest, (Object[])null);
                         } catch (Exception e) {
+                        	Test.errorCount++;
                             e.printStackTrace();
                         }
                     }
