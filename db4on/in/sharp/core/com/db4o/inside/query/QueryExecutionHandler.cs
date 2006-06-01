@@ -3,7 +3,8 @@ namespace com.db4o.inside.query
 	public enum QueryExecutionKind
 	{
 		Unoptimized,
-		DynamicallyOptimized
+		DynamicallyOptimized,
+		PreOptimized
 	}
 
 	public class QueryExecutionEventArgs : System.EventArgs
