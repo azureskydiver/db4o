@@ -1,11 +1,12 @@
+using Db4oAdmin.Tests.Framework;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 
 namespace Db4oAdmin.Tests
 {
-	class ILPatternTestCase
+	class ILPatternTestCase : TestCase
 	{
-		public static void TestSequenceBackwardsMatch()
+		public void TestSequenceBackwardsMatch()
 		{
 			ILPattern sequence = ILPattern.Sequence(OpCodes.Stsfld, OpCodes.Ldsfld);
 
@@ -16,7 +17,7 @@ namespace Db4oAdmin.Tests
 			Assert.IsTrue(!sequence.BackwardsMatch(lastInstruction));
 		}
 		
-		public static void TestComplexSequenceBackwardsMatch()
+		public void TestComplexSequenceBackwardsMatch()
 		{
 			ILPattern sequence = ILPattern.Sequence(
 				ILPattern.OptionalInstruction(OpCodes.Ret),

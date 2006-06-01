@@ -2,9 +2,9 @@
 
 using System;
 
-namespace Db4oAdmin.Tests
+namespace Db4oAdmin.Tests.Framework
 {
-	class Assert
+	public class Assert
 	{
 		public static void AreEqual(object expected, object actual)
 		{
