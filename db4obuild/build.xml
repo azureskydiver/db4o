@@ -349,6 +349,8 @@
 		</csc>
 	</target>
 	
+
+	
 	<target name="compilecoredll-compact">
 		<delete dir="${dir.dist.net.compile}" />
 		<copy todir="${dir.dist.net.compile}">
@@ -411,11 +413,11 @@
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
-
+		<!-- <antcall target="compiletools-net" /> -->
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
-
+		<!-- <antcall target="compiletools-compact" /> -->
 	</target>
 	
 	<target name="copy-tools-sources">
@@ -699,12 +701,14 @@
 	</target>
 
 	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
-		<java classname="com.db4o.test.AllTests" failonerror="true">
+		<java classname="com.db4o.test.AllTestsJdk5" failonerror="true" >
 			<classpath>
+				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
+			<arg value="*" />
 		</java>
 	</target>
 
