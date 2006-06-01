@@ -32,11 +32,11 @@ namespace Db4oTools.NativeQueries
 				return e;
 
 			string location = GetAssemblyLocation(method);
-			IAssemblyDefinition assembly = GetAssembly(location);
-			ITypeDefinition type = FindTypeDefinition(assembly.MainModule, method.DeclaringType);
+			AssemblyDefinition assembly = GetAssembly(location);
+			TypeDefinition type = FindTypeDefinition(assembly.MainModule, method.DeclaringType);
 			if (null == type)
 				UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
-			IMethodDefinition methodDef = type.Methods.GetMethod(method.Name, GetParameterTypes(method));
+			MethodDefinition methodDef = type.Methods.GetMethod(method.Name, GetParameterTypes(method));
 			if (null == methodDef)
 				UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
 
@@ -45,9 +45,9 @@ namespace Db4oTools.NativeQueries
 			return e;
 		}
 
-		private static IAssemblyDefinition GetAssembly(string location)
+		private static AssemblyDefinition GetAssembly(string location)
 		{
-			IAssemblyDefinition assembly = (IAssemblyDefinition)_assemblyCachingStrategy.Get(location);
+			AssemblyDefinition assembly = (AssemblyDefinition)_assemblyCachingStrategy.Get(location);
 			if (null == assembly)
 			{
 				assembly = AssemblyFactory.GetAssembly(location);
@@ -67,7 +67,7 @@ namespace Db4oTools.NativeQueries
 			return types;
 		}
 
-		private static ITypeDefinition FindTypeDefinition(IModuleDefinition module, Type type)
+		private static TypeDefinition FindTypeDefinition(ModuleDefinition module, Type type)
 		{
 			return IsNested(type)
 				? FindNestedTypeDefinition(module, type)
@@ -79,9 +79,9 @@ namespace Db4oTools.NativeQueries
 			return type.IsNestedPublic || type.IsNestedPrivate || type.IsNestedAssembly;
 		}
 
-		private static ITypeDefinition FindNestedTypeDefinition(IModuleDefinition module, Type type)
+		private static TypeDefinition FindNestedTypeDefinition(ModuleDefinition module, Type type)
 		{
-			foreach (ITypeDefinition td in FindTypeDefinition(module, type.DeclaringType).NestedTypes)
+			foreach (TypeDefinition td in FindTypeDefinition(module, type.DeclaringType).NestedTypes)
 			{
 				if (td.Name == type.Name)
 					return td;
@@ -89,7 +89,7 @@ namespace Db4oTools.NativeQueries
 			return null;
 		}
 
-		private static ITypeDefinition FindTypeDefinition(IModuleDefinition module, string fullName)
+		private static TypeDefinition FindTypeDefinition(ModuleDefinition module, string fullName)
 		{
 			return module.Types[fullName];
 		}
@@ -99,7 +99,7 @@ namespace Db4oTools.NativeQueries
 			return method.DeclaringType.Module.FullyQualifiedName;
 		}
 
-		private static Expression FromMethodDefinition(IMethodDefinition method)
+		public static Expression FromMethodDefinition(MethodDefinition method)
 		{
 			if (method == null)
 				throw new ArgumentNullException("method");
@@ -223,9 +223,9 @@ namespace Db4oTools.NativeQueries
 				_assemblies.Add(assembly.Name.FullName, assembly);
 			}
 
-			private IAssemblyDefinition LookupAssembly(string fullName)
+			private AssemblyDefinition LookupAssembly(string fullName)
 			{
-				return (IAssemblyDefinition)_assemblies[fullName];
+				return (AssemblyDefinition)_assemblies[fullName];
 			}
 
 			public Expression Expression
@@ -536,7 +536,7 @@ namespace Db4oTools.NativeQueries
 			{
 				AssemblyNameReference scope = (AssemblyNameReference)type.Scope;
 				string assemblyName = scope.FullName;
-				IAssemblyDefinition definition = LookupAssembly(assemblyName);
+				AssemblyDefinition definition = LookupAssembly(assemblyName);
 				if (null == definition)
 				{
 					Assembly assembly = Assembly.Load(assemblyName);
