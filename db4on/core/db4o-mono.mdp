@@ -2,7 +2,7 @@
 <Project ctype="DotNetProject" fileversion="2.0" language="C#" name="db4o-mono">
   <Configurations active="Debug">
     <Configuration ctype="DotNetProjectConfiguration" name="Debug">
-      <Output assembly="db4o" directory="./bin/Debug"/>
+      <Output assembly="Db4o" directory="./bin/Debug"/>
       <Build debugmode="True" target="Library"/>
       <Execution consolepause="False" runtime="MsNet" runwithwarnings="True"/>
       <CodeGeneration compiler="Csc" ctype="CSharpCompilerParameters" generateoverflowchecks="True" generatexmldocumentation="False" optimize="True" unsafecodeallowed="False" warninglevel="4"/>
