@@ -523,6 +523,64 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     abstract boolean delete5(Transaction ta, YapObject yapObject, int a_cascade, boolean userCall);
+    
+    public Object descend(Object obj, String[] path){
+        synchronized (i_lock) {
+            return descend1(checkTransaction(null), obj, path);
+        }
+    }
+    
+    private Object descend1(Transaction trans, Object obj, String[] path){
+        YapObject yo = getYapObject(obj);
+        if(yo == null){
+            return null;
+        }
+        
+        Object child = null;
+        
+        final String fieldName = path[0];
+        if(fieldName == null){
+            return null;
+        }
+        YapClass yc = yo.getYapClass();
+        final YapField[] field = new YapField[]{null};
+        yc.forEachYapField(new Visitor4() {
+            public void visit(Object obj) {
+                YapField yf = (YapField)obj;
+                if(yf.canAddToQuery(fieldName)){
+                    field[0] = yf;
+                }
+            }
+        });
+        if(field[0] == null){
+            return null;
+        }
+        if(yo.isActive()){
+            child = field[0].get(obj);
+        }else{
+            YapReader reader = readReaderByID(trans, yo.getID());
+            if(reader == null){
+                return null;
+            }
+            MarshallerFamily mf = yc.findOffset(reader, field[0]);
+            if(mf == null){
+                return null;
+            }
+            try {
+                child = field[0].readQuery(trans, mf, reader);
+            } catch (CorruptionException e) {
+            }
+        }
+        if(path.length == 1){
+            return child;
+        }
+        if(child == null){
+            return null;
+        }
+        String[] subPath = new String[path.length - 1];
+        System.arraycopy(path, 1, subPath, 0, path.length - 1);
+        return descend1(trans, child, subPath);
+    }
 
     boolean detectSchemaChanges() {
         // overriden in YapClient

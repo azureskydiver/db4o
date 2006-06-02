@@ -78,6 +78,19 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @see Db4o#configure
      */
     public Configuration configure();
+    
+    
+    /**
+     * returns a member at the specific path without activating intermediate objects.
+     * <br><br>
+     * This method allows navigating from a persistent object to it's members in a
+     * performant way without activating or instantiating intermediate objects. 
+     * @param obj the parent object that is to be used as the starting point. 
+     * @param path an array of field names to navigate by
+     * @return the object at the specified path or null if no object is found
+     */
+    public Object descend(Object obj, String[] path);
+
 
     /**
      * returns the stored object for an internal ID.
