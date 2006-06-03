@@ -2,11 +2,13 @@
 <project name="Win32IoAdapter" default="build">
 	
 	<property name="project.dir" location="../../../../../../.." />
+	<property name="db4oj.bin.dir" location="${project.dir}/../db4oj/bin" />
 	<property name="output.dir" location="${project.dir}/bin" />
-	<property name="src.dir" location="${project.dir}/tools/src" />
+	<property name="src.dir" location="${project.dir}/plugins/src" />
 	
 	<path id="project.classpath">
 		<pathelement location="${output.dir}" />
+		<pathelement location="${db4oj.bin.dir}" />
 	</path>
 	
 	<target name="run" depends="build">

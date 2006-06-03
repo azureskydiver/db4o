@@ -7,6 +7,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef com_db4o_util_io_win32_Win32IoAdapter_COPY_SIZE
+#define com_db4o_util_io_win32_Win32IoAdapter_COPY_SIZE 4096L
 /*
  * Class:     com_db4o_util_io_win32_Win32IoAdapter
  * Method:    openFile
