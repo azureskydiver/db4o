@@ -33,7 +33,7 @@ JNIEXPORT jlong JNICALL Java_com_db4o_util_io_win32_Win32IoAdapter_openFile
 {	
 	DWORD shareMode = locking ? 0 : FILE_SHARE_READ;
 	const jchar* path = env->GetStringChars(fname, NULL);
-	HANDLE handle = ::CreateFile(path, GENERIC_READ|GENERIC_WRITE, shareMode, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL|FILE_FLAG_RANDOM_ACCESS, NULL);
+	HANDLE handle = ::CreateFile(reinterpret_cast<LPCWSTR>(path), GENERIC_READ|GENERIC_WRITE, shareMode, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL|FILE_FLAG_RANDOM_ACCESS, NULL);
 	env->ReleaseStringChars(fname, path);
 	return FromHandle(handle);
 }
