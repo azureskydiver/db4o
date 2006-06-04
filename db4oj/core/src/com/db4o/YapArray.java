@@ -74,6 +74,9 @@ public class YapArray extends YapIndependantType {
     
     public final TreeInt collectIDs1(Transaction trans, TreeInt tree, YapReader reader){
         if (reader != null) {
+            if (Deploy.debug) {
+                reader.readBegin(identifier());
+            }
             int count = elementCount(trans, reader);
             for (int i = 0; i < count; i++) {
                 tree = (TreeInt)Tree.add(tree, new TreeInt(reader.readInt()));
