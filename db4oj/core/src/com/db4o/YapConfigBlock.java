@@ -259,12 +259,24 @@ public final class YapConfigBlock implements Runnable
 		
 		if(oldLength > PASSWORD_OFFSET) {
 			byte[] encpassword=reader.readBytes(ENCRYPTION_PASSWORD_LENGTH);
-			byte[] storedpwd=passwordToken();
-			for (int idx = 0; idx < storedpwd.length; idx++) {
-				if(storedpwd[idx]!=encpassword[idx]) {
-					_stream.fatalException(54);
-				}
-			}
+            boolean nonZeroByte = false;
+            for (int i = 0; i < encpassword.length; i++) {
+                if(encpassword[i] != 0){
+                    nonZeroByte = true;
+                    break;
+                }
+            }
+            if(! nonZeroByte){
+                // no password in the databasefile, work without encryption
+                _stream.i_handlers.oldEncryptionOff();
+            }else{
+    			byte[] storedpwd=passwordToken();
+    			for (int idx = 0; idx < storedpwd.length; idx++) {
+    				if(storedpwd[idx]!=encpassword[idx]) {
+    					_stream.fatalException(54);
+    				}
+    			}
+            }
 		}
         
         _freespaceSystem = FreespaceManager.FM_LEGACY_RAM;

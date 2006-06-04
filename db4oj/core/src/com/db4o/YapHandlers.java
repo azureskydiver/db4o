@@ -296,6 +296,13 @@ public final class YapHandlers {
         }
     }
     
+    public void oldEncryptionOff() {
+        i_encrypt = false;
+        i_encryptor = null;
+        i_lastEncryptorByte = 0;
+        _masterStream.i_config.oldEncryptionOff();
+    }
+    
     final TypeHandler4 getHandler(int a_index) {
         return i_handlers[a_index - 1];
     }
@@ -354,11 +361,10 @@ public final class YapHandlers {
                 i_encryptor[i] = (byte) (a_config.password().charAt(i) & 0xff);
             }
             i_lastEncryptorByte = a_config.password().length() - 1;
-        } else {
-            i_encrypt = false;
-            i_encryptor = null;
-            i_lastEncryptorByte = 0;
+            return;
         }
+        
+        oldEncryptionOff();
     }
     
     static Db4oTypeImpl getDb4oType(ReflectClass clazz) {

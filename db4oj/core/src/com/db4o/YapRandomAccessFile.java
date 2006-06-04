@@ -227,6 +227,7 @@ public class YapRandomAccessFile extends YapFile {
                 if(! ioAdapter.exists(fileName())){
                     isNew = true;
                     logMsg(14, fileName());
+                    i_handlers.oldEncryptionOff();
                 }
                 
                 try {
