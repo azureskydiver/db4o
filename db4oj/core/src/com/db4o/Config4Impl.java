@@ -239,6 +239,10 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
         globalSettingOnly();
         _config.put(ENCRYPT,flag);
     }
+    
+    void oldEncryptionOff() {
+        _config.put(ENCRYPT,false);
+    }
 
     void ensureDirExists(String path) throws IOException {
         File file = new File(path);

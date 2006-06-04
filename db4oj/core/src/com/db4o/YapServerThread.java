@@ -191,7 +191,9 @@ final class YapServerThread extends Thread {
                     if (found.password.equals(password)) {
                         i_clientName = userName;
                         i_mainStream.logMsg(32, i_clientName);
-                        Msg.LOGIN_OK.getWriterForInt(getTransaction(), i_mainStream.blockSize()).write(i_mainStream, i_socket);
+                        int blockSize = i_mainStream.blockSize();
+                        int encrypt = i_mainStream.i_handlers.i_encrypt ? 1 : 0;
+                        Msg.LOGIN_OK.getWriterForInts(getTransaction(), new int[] {blockSize, encrypt}).write(i_mainStream, i_socket);
                         i_loggedin= true;
                         setName("db4o server socket for client " + i_clientName);
                     } else {

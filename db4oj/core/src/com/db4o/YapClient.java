@@ -428,7 +428,13 @@ public class YapClient extends YapStream implements ExtClient {
 			if (!Msg.LOGIN_OK.equals(msg)) {
 				throw new IOException(Messages.get(42));
 			}
-            _blockSize = (byte)msg.getPayLoad().readInt();
+            YapWriter payLoad = msg.getPayLoad();
+            _blockSize = (byte)payLoad.readInt();
+            int doEncrypt = payLoad.readInt();
+            if(doEncrypt == 0){
+                i_handlers.oldEncryptionOff();
+            }
+            
 		}
 	}
 
