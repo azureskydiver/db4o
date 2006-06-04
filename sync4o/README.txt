@@ -8,6 +8,7 @@ Licensing
 Sync4o is released under the GNU Public License (GPL) Version 2. Please see the 
 file sync4o.license.txt for details.
 
+
 Building
 --------
 To build the connector, please use the Apache Ant script (build.xml) provided. 
@@ -17,7 +18,7 @@ server module (sync4o-3.0.1.s4j) and a .zip file sync4o-client-3.0.1.zip)
 containing the .jar files necessary to build a Funambol client program that 
 uses sync4o.
 
-The generated files will be found in the /dist/ folder.
+The generated files will be found in the /sync4o/dist/ folder.
 
 
 Installing
@@ -25,14 +26,34 @@ Installing
 Please refer to the Funambol documentation for details on installing a Funambol 
 server module.
 
+
 The Funambol server we have been using required the following:
 
-(1) Installation of sync4o-3.0.1.s4j into /FunambolServer/ds-server/modules
+(1) Copy sync4o-3.0.1.s4j from 
+/sync4o/dist/
+to 
+/FunambolServer/ds-server/modules
 
-(2) Calling /FunambolServer/ds-server/bin/install-modules.cmd to install the 
-modules.
+
+(2) Edit the file
+/FunambolServer/ds-server/modules/install.properties
+
+Add 'sync4o-3.0.1/lib/sync4o-3.0.1.jar' to the comma-separated list of the property 
+'modules-to-install' at the end of the file.
 
 
+(3) From the 
+/FunambolServer/ds-server/ directory 
+call
+/FunambolServer/ds-server/bin/install-modules.cmd 
+to reinstall the modules.
+
+On a windows machine with the default installation issuing the following two
+commands will work:
+> cd C:\Program Files\Funambol\ds-server
+> "c:\Program Files\Funambol\ds-server\bin\install-modules" tomcat50
+
+(4) Start the Funambol server. Launch the Funambol administration tool and log in.
 
 
 
