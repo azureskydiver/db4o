@@ -2028,6 +2028,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(a_obj instanceof Integer){
             return ((Integer)a_obj).intValue() - i_lastID;
         }
+        if( (a_obj == null) && (i_compareTo == null)){
+            return 0;
+        }
         return -1;
     }
     
