@@ -480,6 +480,9 @@ public interface Configuration {
      * is used to seed the encryption mechanism, which makes it impossible
      * to read the database file without knowing the password.<br><br>
      * @param pass the password to be used.
+     * @deprecated Please use:
+     * Db4o.configure().io(new XTeaEncryptionFileAdapter(password)) or any of the
+     * other XTeaEncryptionFileAdapter constructors.
      */
     public void password(String pass);
 
