@@ -610,8 +610,11 @@ public class YapField implements StoredField {
     private TypeHandler4 loadJavaField1() {
         try {
             YapStream stream = i_yapClass.getStream();
-            i_javaField = i_yapClass.classReflector().getDeclaredField(
-                i_name);
+            ReflectClass claxx = i_yapClass.classReflector();
+            if(claxx == null){
+                return null;
+            }
+            i_javaField = claxx.getDeclaredField(i_name);
             if (i_javaField == null) {
                 return null;
             }
