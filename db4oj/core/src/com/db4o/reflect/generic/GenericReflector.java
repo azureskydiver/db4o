@@ -295,7 +295,7 @@ public class GenericReflector implements Reflector, DeepClone {
         }
 		int namelength= classreader.readInt();
 		String classname= _stream.stringIO().read(classreader,namelength);
-		
+        classname = _stream.i_config.resolveAlias(classname);
 		ret = (GenericClass)_classByName.get(classname);
 		if(ret != null){
 			_classByID.put(id, ret);
