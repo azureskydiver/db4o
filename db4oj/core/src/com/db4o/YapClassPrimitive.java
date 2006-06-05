@@ -34,10 +34,6 @@ public class YapClassPrimitive extends YapClass{
         return false;
     }
 
-    public void appendEmbedded1(YapWriter a_bytes) {
-        // do nothing
-    }
-
     void cacheDirty(Collection4 col) {
         // do nothing
     }
@@ -225,8 +221,8 @@ public class YapClassPrimitive extends YapClass{
         return false;
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
-        mf._primitive.writeNew(a_bytes.getTransaction(), this, a_object, topLevel, a_bytes, withIndirection);
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+        mf._primitive.writeNew(a_bytes.getTransaction(), this, a_object, topLevel, a_bytes, withIndirection, restoreLinkOffset);
         return a_object;
     }
     

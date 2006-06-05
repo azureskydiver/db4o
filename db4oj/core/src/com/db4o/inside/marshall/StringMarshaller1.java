@@ -12,10 +12,10 @@ public class StringMarshaller1 extends StringMarshaller{
     }
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-
+        
         if(topLevel){
-            header.prepareIndexedPayLoadEntry(trans);
             header.addBaseLength(linkLength());
+            header.prepareIndexedPayLoadEntry(trans);
         }else{
             if(withIndirection){
                 header.addPayLoadLength(linkLength());

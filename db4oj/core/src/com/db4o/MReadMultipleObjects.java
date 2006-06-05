@@ -25,13 +25,6 @@ final class MReadMultipleObjects extends MsgD {
 					bytes = null;
 				}
 				if(bytes != null){
-					try{
-						YapClassAny.appendEmbedded(bytes);
-					}catch(Exception e){
-						if(Debug.atHome){
-							e.printStackTrace();
-						}
-					}
 					ret[i] = Msg.OBJECT_TO_CLIENT.getWriter(bytes);
 					length += ret[i]._payLoad.getLength();
 				}

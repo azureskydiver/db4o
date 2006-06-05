@@ -158,7 +158,7 @@ public final class YapArrayN extends YapArray {
         MarshallerFamily mf = MarshallerFamily.current();
         
         for (int i = 0; i < objects.length; i++) {
-            i_handler.writeNew(mf, element(objects, i), true, writer, true);
+            i_handler.writeNew(mf, element(objects, i), false, writer, true, true);
         }
         
         if (Deploy.debug) {

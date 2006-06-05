@@ -19,13 +19,6 @@ final class YapClassAny extends YapClass {
 		return true;
 	}
 
-	public static void appendEmbedded(YapWriter a_bytes) {
-        ObjectHeader oh = new ObjectHeader(a_bytes);
-		if (oh._yapClass != null) {
-            oh._yapClass.appendEmbedded1(a_bytes);
-		}
-	}
-
 	public void cascadeActivation(
 		Transaction a_trans,
 		Object a_object,
@@ -112,8 +105,8 @@ final class YapClassAny extends YapClass {
         return false;
     }
     
-    public Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, YapWriter writer, boolean withIndirection) {
-        return mf._untyped.writeNew(obj, topLevel, writer);
+    public Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, YapWriter writer, boolean withIndirection, boolean restoreLinkeOffset) {
+        return mf._untyped.writeNew(obj, restoreLinkeOffset, writer);
     }
 
 

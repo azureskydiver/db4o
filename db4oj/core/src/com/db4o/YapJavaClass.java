@@ -23,10 +23,6 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     private boolean i_compareToIsNull;
 
-    public void appendEmbedded3(YapWriter a_bytes) {
-        a_bytes.incrementOffset(linkLength());
-    }
-
     public boolean canHold(ReflectClass claxx) {
         return claxx.equals(classReflector());
     }
@@ -179,7 +175,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         write(a_object, a_writer);
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
         if (a_object == null) {
             a_object = primitiveNull();
         }

@@ -181,14 +181,6 @@ public class YapField implements StoredField {
 
     }
 
-    public void appendEmbedded2(YapWriter a_bytes) {
-        if (alive()) {
-            i_handler.appendEmbedded3(a_bytes);
-        } else {
-            a_bytes.incrementOffset(linkLength());
-        }
-    }
-    
     boolean canAddToQuery(String fieldName){
         if(! alive()){
             return false;
@@ -655,10 +647,10 @@ public class YapField implements StoredField {
             if (updateDepth < min) {
                 writer.setUpdateDepth(min);
             }
-            indexEntry = i_handler.writeNew(mf, obj, true, writer, true);
+            indexEntry = i_handler.writeNew(mf, obj, true, writer, true, true);
             writer.setUpdateDepth(updateDepth);
         } else {
-            indexEntry = i_handler.writeNew(mf, obj, true, writer, true);
+            indexEntry = i_handler.writeNew(mf, obj, true, writer, true, true);
         }
         addIndexEntry(writer, indexEntry);
     }

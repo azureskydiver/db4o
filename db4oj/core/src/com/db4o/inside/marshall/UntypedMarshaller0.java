@@ -78,7 +78,7 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
         return null;
     }
 
-    public Object writeNew(Object a_object, boolean topLevel, YapWriter a_bytes) {
+    public Object writeNew(Object a_object, boolean restoreLinkOffset, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeInt(0);
             return new Integer(0);

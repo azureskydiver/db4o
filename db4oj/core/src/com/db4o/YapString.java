@@ -21,13 +21,6 @@ public final class YapString extends YapIndependantType {
         i_stringIo = stringIO;
     }
     
-    public void appendEmbedded3(YapWriter a_bytes) {
-        YapWriter bytes = a_bytes.readEmbeddedObject();
-        if (bytes != null) {
-            a_bytes.addEmbedded(bytes);
-        }
-    }
-
     public boolean canHold(ReflectClass claxx) {
         return claxx.equals(classReflector());
     }
@@ -171,7 +164,7 @@ public final class YapString extends YapIndependantType {
         }
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
         return mf._string.writeNew(a_object, topLevel, a_bytes, withIndirection);
     }
 
