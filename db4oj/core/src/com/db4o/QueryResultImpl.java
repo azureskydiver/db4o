@@ -33,6 +33,15 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 		return obj;
 	}
     
+    private final Object activatedObject(int id){
+        YapStream stream = i_trans.i_stream;
+        Object ret = stream.getActivatedObjectFromCache(i_trans, id);
+        if(ret != null){
+            return ret;
+        }
+        return stream.readActivatedObjectNotInCache(i_trans, id);
+    }
+    
     /* (non-Javadoc)
      * @see com.db4o.QueryResult#get(int)
      */
@@ -41,13 +50,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
             if (index < 0 || index >= size()) {
                 throw new IndexOutOfBoundsException();
             }
-            int id = i_content[index];
-            YapStream stream = i_trans.i_stream;
-            Object obj = stream.getByID(id);
-            if(obj == null){
-                return null;
-            }
-            return activate(obj);
+            return activatedObject(i_content[index]);
         }
     }
 
@@ -81,11 +84,11 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 			YapStream stream = i_trans.i_stream;
 			stream.checkClosed();
 			if (super.hasNext()) {
-				Object ret = stream.getByID2(i_trans, nextInt());
-				if (ret == null) {
-					return next();
-				}
-				return activate(ret);
+                Object obj = activatedObject(nextInt());
+                if(obj != null){
+                    return obj;
+                }
+                return next();
 			}
 			return null;
 		}
