@@ -2,7 +2,9 @@
 
 package com.db4o;
 
+import com.db4o.config.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.*;
 
 
 class JDK_5 extends JDK_1_4 {
@@ -28,4 +30,9 @@ class JDK_5 extends JDK_1_4 {
         return enumClass.isAssignableFrom(claxx);
     }
 
+    
+    public ObjectClass extendConfiguration(ReflectClass clazz,Configuration config,ObjectClass classConfig) {
+    	Class javaClazz=JdkReflector.toNative(clazz);
+    	return null;
+    }
 }
