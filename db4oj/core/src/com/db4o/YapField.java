@@ -328,40 +328,42 @@ public class YapField implements StoredField {
     }
 
     public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
-        if (alive()) {
-            if (i_index != null) {
-                int offset = a_bytes._offset;
-                Object obj = null;
-                try {
-                    obj = i_handler.readIndexEntry(mf, a_bytes);
-                } catch (CorruptionException e) {
-                    if(Debug.atHome){
-                        e.printStackTrace();
-                    }
+        if (! alive()) {
+            incrementOffset(a_bytes);
+            return;
+        }
+        if (i_index != null) {
+            int offset = a_bytes._offset;
+            Object obj = null;
+            try {
+                obj = i_handler.readIndexEntry(mf, a_bytes);
+            } catch (CorruptionException e) {
+                if(Debug.atHome){
+                    e.printStackTrace();
                 }
-                removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
-                a_bytes._offset = offset;
             }
-            
-            boolean dotnetValueType = false;
-            if(Deploy.csharp){
-                dotnetValueType = Platform4.isValueType(i_handler.classReflector());    
-            }
-            
-            if ((i_config != null && i_config.cascadeOnDelete() == YapConst.YES)
-                || dotnetValueType) {
-                int preserveCascade = a_bytes.cascadeDeletes();
-                a_bytes.setCascadeDeletes(1);
-                i_handler.deleteEmbedded(mf, a_bytes);
-                a_bytes.setCascadeDeletes(preserveCascade);
-            }else if(i_config != null && i_config.cascadeOnDelete() == YapConst.NO){
-                int preserveCascade = a_bytes.cascadeDeletes();
-                a_bytes.setCascadeDeletes(0);
-                i_handler.deleteEmbedded(mf, a_bytes);
-                a_bytes.setCascadeDeletes(preserveCascade);
-            } else {
-                i_handler.deleteEmbedded(mf, a_bytes);
-            }
+            removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
+            a_bytes._offset = offset;
+        }
+        
+        boolean dotnetValueType = false;
+        if(Deploy.csharp){
+            dotnetValueType = Platform4.isValueType(i_handler.classReflector());    
+        }
+        
+        if ((i_config != null && i_config.cascadeOnDelete() == YapConst.YES)
+            || dotnetValueType) {
+            int preserveCascade = a_bytes.cascadeDeletes();
+            a_bytes.setCascadeDeletes(1);
+            i_handler.deleteEmbedded(mf, a_bytes);
+            a_bytes.setCascadeDeletes(preserveCascade);
+        }else if(i_config != null && i_config.cascadeOnDelete() == YapConst.NO){
+            int preserveCascade = a_bytes.cascadeDeletes();
+            a_bytes.setCascadeDeletes(0);
+            i_handler.deleteEmbedded(mf, a_bytes);
+            a_bytes.setCascadeDeletes(preserveCascade);
+        } else {
+            i_handler.deleteEmbedded(mf, a_bytes);
         }
     }
 
@@ -534,6 +536,7 @@ public class YapField implements StoredField {
         throws CorruptionException {
         
         if (! alive()) {
+            incrementOffset(a_bytes);
             return;
         }
             
@@ -678,6 +681,7 @@ public class YapField implements StoredField {
 
     Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
         if (!alive()) {
+            incrementOffset(a_bytes);
             return null;
         }
         return i_handler.read(mf, a_bytes, true);
@@ -828,7 +832,7 @@ public class YapField implements StoredField {
     public String toString(MarshallerFamily mf, YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
         String str = "\n Field " + i_name;
         if (! alive()) {
-            writer.incrementOffset(linkLength());
+            incrementOffset(writer);
         }else{
             Object obj = null;
             try{
