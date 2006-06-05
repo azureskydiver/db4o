@@ -702,7 +702,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             return null;
         }
     }
-
+    
     final Object getByID2(Transaction ta, int a_id) {
         if (a_id > 0) {
             YapObject yo = getYapObject(a_id);
@@ -726,6 +726,48 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
         }
         return null;
+    }
+    
+    final Object getActivatedObjectFromCache(Transaction ta, int id){
+        Object obj = getObjectFromCache(ta, id);
+        if(obj == null){
+            return null;
+        }
+        beginEndActivation();
+        activate2(ta, obj, i_config.activationDepth());
+        beginEndActivation();
+        return obj;
+    }
+    
+    final Object getObjectFromCache(Transaction ta, int id){
+        if (id <= 0) {
+            return null;
+        }
+        YapObject yo = getYapObject(id);
+        if(yo == null){
+            return null;
+        }
+        Object obj = yo.getObject();
+        if(obj == null){
+            yapObjectGCd(yo);
+            return null;
+        }
+        return obj;
+    }
+    
+    final Object readActivatedObjectNotInCache(Transaction ta, int id){
+        Object obj = null;
+        beginEndActivation();
+        try {
+            obj = new YapObject(id).read(ta, null, null, i_config.activationDepth(),YapConst.ADD_TO_ID_TREE, true);
+        } catch (Throwable t) {
+            if (Debug.atHome) {
+                t.printStackTrace();
+            }
+        }
+        activate3CheckStill(ta);
+        beginEndActivation();
+        return obj;
     }
     
     public final Object getByUUID(Db4oUUID uuid){
