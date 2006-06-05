@@ -12,8 +12,6 @@ import com.db4o.reflect.*;
 public interface TypeHandler4 extends Indexable4
 {
 	
-	void appendEmbedded3(YapWriter a_bytes);
-		
 	boolean canHold(ReflectClass claxx);
 	
 	void cascadeActivation(Transaction a_trans, Object a_object, int a_depth, boolean a_activate);
@@ -64,7 +62,7 @@ public interface TypeHandler4 extends Indexable4
 	
 	boolean supportsIndex();
 	
-    Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection);
+    Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset);
 	
 	public int getTypeID ();
 	

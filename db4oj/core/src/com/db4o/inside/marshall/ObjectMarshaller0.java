@@ -128,7 +128,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         Object obj = yo.getObject();
         
         if(yc.isPrimitive()){
-            ((YapClassPrimitive)yc).i_handler.writeNew(MarshallerFamily.current(), obj, false, writer, true);
+            ((YapClassPrimitive)yc).i_handler.writeNew(MarshallerFamily.current(), obj, false, writer, true, false);
             if (Deploy.debug) {
                 writer.writeEnd();
                 writer.debugCheckBytes();

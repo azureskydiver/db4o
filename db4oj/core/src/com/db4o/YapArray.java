@@ -33,10 +33,6 @@ public class YapArray extends YapIndependantType {
         return all;
     }
 
-    public void appendEmbedded3(YapWriter a_bytes) {
-        a_bytes.incrementOffset(linkLength());
-    }
-
     public boolean canHold(ReflectClass claxx) {
         return i_handler.canHold(claxx);
     }
@@ -387,8 +383,8 @@ public class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-    public final Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
-        return mf._array.writeNew(this, a_object, topLevel, a_bytes);
+    public final Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+        return mf._array.writeNew(this, a_object, restoreLinkOffset, a_bytes);
     }
 
     public void writeNew1(Object obj, YapWriter writer, int length) {
@@ -404,7 +400,7 @@ public class YapArray extends YapIndependantType {
         
         if(! i_handler.writeArray(obj, writer)){
             for (int i = 0; i < elements; i++) {
-                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), true, writer, true);
+                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), false, writer, true, true);
             }
         }
         

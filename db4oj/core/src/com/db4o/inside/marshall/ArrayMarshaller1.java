@@ -79,7 +79,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         return arrayHandler.read1Query(trans,_family, reader);
     }
     
-    public Object writeNew(YapArray arrayHandler, Object obj, boolean topLevel, YapWriter writer) {
+    public Object writeNew(YapArray arrayHandler, Object obj, boolean restoreLinkOffset, YapWriter writer) {
         if (obj == null) {
             writer.writeEmbeddedNull();
             return null;
@@ -87,7 +87,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         int length = arrayHandler.objectLength(obj);
         int linkOffset = writer.reserveAndPointToPayLoadSlot(length);
         arrayHandler.writeNew1(obj, writer, length);
-        if(topLevel){
+        if(restoreLinkOffset){
             writer._offset = linkOffset;
         }
         return obj;

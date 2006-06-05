@@ -256,20 +256,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return hasIndex();
     }
 
-    public void appendEmbedded1(YapWriter a_bytes) {
-        int length = readFieldCount(a_bytes);
-        for (int i = 0; i < length; i++) {
-            i_fields[i].appendEmbedded2(a_bytes);
-        }
-        if (i_ancestor != null) {
-            i_ancestor.appendEmbedded1(a_bytes);
-        }
-    }
-
-    public void appendEmbedded3(YapWriter a_bytes) {
-        a_bytes.incrementOffset(linkLength());
-    }
-
     public boolean canHold(ReflectClass claxx) {
         if (claxx == null) {
             return true;
@@ -1948,7 +1934,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         if (a_object == null) {
             a_bytes.writeInt(0);
             return new Integer(0);
