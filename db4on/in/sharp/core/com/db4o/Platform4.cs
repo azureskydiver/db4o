@@ -155,6 +155,11 @@ namespace com.db4o
 			}
 		}
 
+	    internal static Config4Class ExtendConfiguration(ReflectClass clazz,Configuration config,Config4Class classConfig)
+		{
+			return classConfig;
+		}
+
 		internal static Collection4 FlattenCollection(YapStream stream, Object obj)
 		{
 			Collection4 collection41 = new Collection4();
