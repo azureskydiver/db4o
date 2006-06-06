@@ -149,6 +149,31 @@ public final class Platform4 {
         return col;
     }
 
+    /**
+     * Should create additional configuration, for example through reflection
+     * on annotations.
+     * 
+     * - If a valid configuration is passed as classConfig, any additional
+     *   configuration, if available, should be applied to this object, and
+     *   this object should be returned.
+     * - If classConfig is null and there is no additional configuration,
+     *   null should be returned.
+     * - If classConfig is null and there is additional configuration, this code
+     *   should create and register a new configuration via config.objectClass(),
+     *   apply additional configuration there and return this new instance.
+     * 
+     * The reason for this dispatch is to avoid creation of a configuration
+     * for a class that doesn't need configuration at all.
+     * 
+     * @param clazz The class to be searched for additional configuration information
+     * @param config The global database configuration
+     * @param classConfig A class configuration, if one already exists
+     * @return classConfig, if not null, a newly created ObjectClass otherwise.
+     */
+    public static Config4Class extendConfiguration(ReflectClass clazz,Configuration config,Config4Class classConfig) {
+    	return jdk().extendConfiguration(clazz, config, classConfig);
+    }
+    
     static final void flattenCollection1(YapStream stream, Object obj, Collection4 col) {
         if (obj == null) {
             col.add(null);

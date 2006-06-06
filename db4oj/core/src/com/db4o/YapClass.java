@@ -1033,9 +1033,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     void initConfigOnUp(Transaction systemTrans) {
-        ObjectClass extendedConfig=Platform4.jdk().extendConfiguration(_reflector, i_stream.configure(), i_config);
+        Config4Class extendedConfig=Platform4.extendConfiguration(_reflector, i_stream.configure(), i_config);
     	if(extendedConfig!=null) {
-    		i_config=(Config4Class)extendedConfig; // TODO: can we get rid of this cast?
+    		i_config=extendedConfig;
     	}
         if (i_config == null) {
             return;
