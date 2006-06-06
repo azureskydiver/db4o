@@ -176,6 +176,14 @@ namespace Mono.Cecil {
 					m_attributes &= ~MethodAttributes.RTSpecialName;
 			}
 		}
+		
+		public bool IsInternalCall {
+			get { return MethodImplAttributes.InternalCall == (m_implAttrs & MethodImplAttributes.InternalCall); }
+		}
+
+		public bool IsRuntime {
+			get { return MethodImplAttributes.Runtime == (m_implAttrs & MethodImplAttributes.Runtime); }
+		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & MethodAttributes.SpecialName) != 0; }
@@ -232,6 +240,7 @@ namespace Mono.Cecil {
 		{
 			m_attributes = attrs;
 
+			this.HasThis = !this.IsStatic;
 			if (!IsStatic)
 				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
 		}
@@ -242,16 +251,12 @@ namespace Mono.Cecil {
 			this.ReturnType.ReturnType = returnType;
 		}
 
-		public MethodBody CreateBody ()
-		{
-			return m_body = new MethodBody (this);
-		}
-
 		internal void LoadBody ()
 		{
-			if (m_module != null && m_body == null && m_rva != RVA.Zero) {
+			if (m_body == null) {
 				m_body = new MethodBody (this);
-				m_module.Controller.Reader.Code.VisitMethodBody (m_body);
+				if (m_module != null && m_rva != RVA.Zero && (m_attributes & MethodAttributes.PInvokeImpl) == 0)
+					m_module.Controller.Reader.Code.VisitMethodBody (m_body);
 			}
 		}
 

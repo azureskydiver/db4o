@@ -1,3 +1,53 @@
+2006-05-29  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethodDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs:
+		Remove the useless CreateBody method.
+
+2006-05-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil.Metadata/MetadataToken.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Play better with mixed mode assemblies.
+
+	* Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Read/Write this awful load of crap that is sharepoint.
+
+2006-05-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CilWorker.cs:
+		Fix #78479. Patch by David Emsellem.
+
+2006-05-20  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageReader.cs
+	  CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/Binary/ImageReader.cs
+	  Mono.Cecil/Binary/Image.cs
+	  Mono.Cecil/Binary/ImageWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs:
+		Optimize assembly writing.
+		Add methods to read assemblies from byte arrays.
+
+	* Mono.Cecil/StructureWriter.cs:
+		Throw an exception when the target is an exe
+		and no entry point have been setted.
+	* Mono.Cecil/AssemblyFactory.cs:
+		Add helpers method to defines assemblies.
+	* Mono.Cecil/MethodDefinition.cs:
+		Set the hasThis flag to the correct value.
+	* Mono.Cecil.Cil/CodeReader.cs:
+		Remove old comment.
+	* Mono.Xml/SmallXmlParser.cs:
+		Make private.
+
 2006-05-18  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/MetadataTableReader.cs

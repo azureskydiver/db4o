@@ -539,8 +539,14 @@ namespace Mono.Cecil.Signatures {
 			int start, length = Utilities.ReadCompressedInteger (m_blobData, pos, out start);
 			byte [] data = new byte [length];
 			Buffer.BlockCopy (m_blobData, start, data, 0, length);
-			return ReadCustomAttrib (new BinaryReader (
-				new MemoryStream (data)), data, ctor);
+			try {
+				return ReadCustomAttrib (new BinaryReader (
+					new MemoryStream (data)), data, ctor);
+			} catch {
+				CustomAttrib ca = new CustomAttrib (ctor);
+				ca.Read = false;
+				return ca;
+			}
 		}
 
 		CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, MethodReference ctor)
@@ -562,6 +568,9 @@ namespace Mono.Cecil.Signatures {
 			for (int i = 0; i < ca.FixedArgs.Length && read; i++)
 				ca.FixedArgs [i] = ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType,
 					ctor.Parameters [i].ParameterType, ref read);
+
+			if (br.BaseStream.Position == br.BaseStream.Length)
+				read = false;
 
 			if (!read) {
 				ca.Read = read;

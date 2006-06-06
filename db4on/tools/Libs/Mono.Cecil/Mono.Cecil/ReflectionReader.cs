@@ -433,21 +433,24 @@ namespace Mono.Cecil {
 			TypeRefRow type = typesRef [i];
 			IMetadataScope scope = null;
 			TypeReference parent = null;
-			switch (type.ResolutionScope.TokenType) {
-			case TokenType.AssemblyRef :
-				scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
-				break;
-			case TokenType.ModuleRef :
-				scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
-				break;
-			case TokenType.Module :
-				scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
-				break;
-			case TokenType.TypeRef :
-				AddTypeRef (typesRef, (int) type.ResolutionScope.RID - 1);
-				parent = GetTypeRefAt (type.ResolutionScope.RID);
-				scope = parent.Scope;
-				break;
+
+			if (type.ResolutionScope != MetadataToken.Zero) {
+				switch (type.ResolutionScope.TokenType) {
+				case TokenType.AssemblyRef:
+					scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
+					break;
+				case TokenType.ModuleRef:
+					scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
+					break;
+				case TokenType.Module:
+					scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
+					break;
+				case TokenType.TypeRef:
+					AddTypeRef (typesRef, (int) type.ResolutionScope.RID - 1);
+					parent = GetTypeRefAt (type.ResolutionScope.RID);
+					scope = parent.Scope;
+					break;
+				}
 			}
 
 			TypeReference t = new TypeReference (
@@ -1031,9 +1034,9 @@ namespace Mono.Cecil {
 		protected void SetInitialValue (FieldDefinition field)
 		{
 			if (field.RVA != RVA.Zero && field.FieldType is TypeDefinition) {
-				BinaryReader br = this.Module.ImageReader.MetadataReader.GetDataReader (field.RVA);
-				field.InitialValue = br.ReadBytes (
-					(int) (field.FieldType as TypeDefinition).ClassSize);
+				BinaryReader br = m_reader.MetadataReader.GetDataReader (field.RVA);
+				int size = (int) (field.FieldType as TypeDefinition).ClassSize;
+				field.InitialValue = br == null ? new byte [size] : br.ReadBytes (size);
 			} else
 				field.InitialValue = new byte [0];
 		}

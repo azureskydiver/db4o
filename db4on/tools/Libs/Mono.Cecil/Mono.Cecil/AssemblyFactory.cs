@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using System;
 	using System.IO;
-	using System.Reflection;
+	using SR = System.Reflection;
 
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
@@ -41,10 +41,9 @@ namespace Mono.Cecil {
 		{
 		}
 
-		public static AssemblyDefinition GetAssembly (string file)
+		static AssemblyDefinition GetAssembly (ImageReader irv, bool manifestOnly)
 		{
-			ImageReader brv = ImageReader.Read (file);
-			StructureReader srv = new StructureReader (brv);
+			StructureReader srv = new StructureReader (irv, manifestOnly);
 			AssemblyDefinition asm = new AssemblyDefinition (
 				new AssemblyNameDefinition (), srv);
 
@@ -52,15 +51,63 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
+		static AssemblyDefinition GetAssembly (ImageReader reader)
+		{
+			return GetAssembly (reader, false);
+		}
+
+		static AssemblyDefinition GetAssemblyManifest (ImageReader reader)
+		{
+			return GetAssembly (reader, true);
+		}
+
+		public static AssemblyDefinition GetAssembly (string file)
+		{
+			return GetAssembly (ImageReader.Read (file));
+		}
+
+		public static AssemblyDefinition GetAssembly (byte [] assembly)
+		{
+			return GetAssembly (ImageReader.Read (assembly));
+		}
+
+		public static AssemblyDefinition GetAssembly (Stream stream)
+		{
+			return GetAssembly (ImageReader.Read (stream));
+		}
+
 		public static AssemblyDefinition GetAssemblyManifest (string file)
 		{
-			ImageReader brv = ImageReader.Read (file);
-			StructureReader srv = new StructureReader (brv, true);
-			AssemblyDefinition asm = new AssemblyDefinition (
-				new AssemblyNameDefinition (), srv);
+			return GetAssemblyManifest (ImageReader.Read (file));
+		}
 
-			asm.Accept (srv);
-			return asm;
+		public static AssemblyDefinition GetAssemblyManifest (byte [] assembly)
+		{
+			return GetAssemblyManifest (ImageReader.Read (assembly));
+		}
+
+		public static AssemblyDefinition GetAssemblyManifest (Stream stream)
+		{
+			return GetAssemblyManifest (ImageReader.Read (stream));
+		}
+
+		static TargetRuntime CurrentRuntime ()
+		{
+			Version corlib = typeof (object).Assembly.GetName ().Version;
+			if (corlib.Major == 1)
+				return corlib.Minor == 0 ? TargetRuntime.NET_1_0 : TargetRuntime.NET_1_1;
+			else // if (corlib.Major == 2)
+				return TargetRuntime.NET_2_0;
+		}
+
+		public static AssemblyDefinition DefineAssembly (string name, AssemblyKind kind)
+		{
+			return DefineAssembly (name, name, CurrentRuntime (), kind);
+		}
+
+		public static AssemblyDefinition DefineAssembly (string name, TargetRuntime rt, AssemblyKind kind)
+		{
+			return DefineAssembly (name, name, rt, kind);
 		}
 
 		public static AssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt, AssemblyKind kind)
@@ -75,7 +122,7 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
-		static void WriteAssembly (AssemblyDefinition asm, MemoryBinaryWriter bw)
+		static void WriteAssembly (AssemblyDefinition asm, BinaryWriter bw)
 		{
 			asm.Accept (new StructureWriter (asm, bw));
 		}
@@ -83,21 +130,31 @@ namespace Mono.Cecil {
 		public static void SaveAssembly (AssemblyDefinition asm, string file)
 		{
 			using (FileStream fs = new FileStream (
-					file, FileMode.Create, FileAccess.Write, FileShare.None)) {
-				BinaryWriter bw = new BinaryWriter (fs);
-				try {
+				file, FileMode.Create, FileAccess.Write, FileShare.None)) {
 
-					MemoryBinaryWriter writer = new MemoryBinaryWriter ();
-					WriteAssembly (asm, writer);
-					writer.MemoryStream.WriteTo (bw.BaseStream);
-				} finally {
-					bw.Close();
-				}
+				SaveAssembly (asm, fs);
+			}
+		}
+
+		public static void SaveAssembly (AssemblyDefinition asm, out byte [] assembly)
+		{
+			MemoryBinaryWriter bw = new MemoryBinaryWriter ();
+			SaveAssembly (asm, bw.BaseStream);
+			assembly = bw.ToArray ();
+		}
+
+		public static void SaveAssembly (AssemblyDefinition asm, Stream stream)
+		{
+			BinaryWriter bw = new BinaryWriter (stream);
+			try {
+				WriteAssembly (asm, bw);
+			} finally {
+				bw.Close ();
 			}
 		}
 
 #if !CF_1_0 && !CF_2_0
-		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
+		public static SR.Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
 		{
 			using (MemoryBinaryWriter writer = new MemoryBinaryWriter ()) {
 
@@ -106,7 +163,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm)
+		public static SR.Assembly CreateReflectionAssembly (AssemblyDefinition asm)
 		{
 			return CreateReflectionAssembly (asm, AppDomain.CurrentDomain);
 		}

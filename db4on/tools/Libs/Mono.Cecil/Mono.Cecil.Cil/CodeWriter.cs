@@ -57,8 +57,9 @@ namespace Mono.Cecil.Cil {
 		{
 			if (meth.Body == null)
 				return RVA.Zero;
-			RVA ret = m_reflectWriter.MetadataWriter.GetDataCursor();
-			meth.Body.Accept(this);
+
+			RVA ret = m_reflectWriter.MetadataWriter.GetDataCursor ();
+			meth.Body.Accept (this);
 			return ret;
 		}
 
@@ -361,14 +362,11 @@ namespace Mono.Cecil.Cil {
 				m_binaryWriter.Write (((int) TokenType.Signature | body.LocalVarToken));
 
 				WriteExceptionHandlerCollection (body.ExceptionHandlers);
-
-				m_binaryWriter.Write (m_codeWriter);
-			} else {
+			} else 
 				m_binaryWriter.Write ((byte) ((byte) MethodHeader.TinyFormat |
 					m_codeWriter.BaseStream.Length << 2));
-				m_binaryWriter.Write (m_codeWriter);
-			}
 
+			m_binaryWriter.Write (m_codeWriter);
 			m_binaryWriter.QuadAlign ();
 
 			m_reflectWriter.MetadataWriter.AddData (

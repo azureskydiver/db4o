@@ -52,14 +52,14 @@ namespace Mono.Cecil {
 		bool IsStatic { get; set; }
 		bool IsVirtual { get; set; }
 		bool IsConstructor { get; }
+		bool IsInternalCall { get; }
+		bool IsRuntime { get; }
 
 		OverrideCollection Overrides { get; }
 		MethodBody Body { get; }
 		PInvokeInfo PInvokeInfo { get; }
 
 		ParameterDefinition This { get; }
-
-		MethodBody CreateBody ();
 
 		MethodDefinition Clone ();
 	}
