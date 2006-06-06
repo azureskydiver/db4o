@@ -383,6 +383,7 @@
 			targettype="library"
 			destfile="${file.dll.tools.net}"
 			debug="${compiledll.debug}"
+			executable="${csc.executable}"
 			definitions="NET">
 			
 			<reference dir="${dir.dist.dll.net}">
