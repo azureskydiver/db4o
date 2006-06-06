@@ -29,6 +29,7 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.IO;
 
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
@@ -40,7 +41,7 @@ namespace Mono.Cecil {
 		MetadataRowWriter m_rowWriter;
 
 		AssemblyDefinition m_asm;
-		MemoryBinaryWriter m_binaryWriter;
+		BinaryWriter m_binaryWriter;
 
 		public AssemblyDefinition Assembly {
 			get { return m_asm; }
@@ -63,10 +64,24 @@ namespace Mono.Cecil {
 			mod.Image = ni;
 		}
 
-		public StructureWriter (AssemblyDefinition asm, MemoryBinaryWriter writer)
+		public StructureWriter (AssemblyDefinition asm, BinaryWriter writer)
 		{
 			m_asm = asm;
 			m_binaryWriter = writer;
+		}
+
+		public BinaryWriter GetWriter ()
+		{
+			return m_binaryWriter;
+		}
+
+		public override void VisitAssemblyDefinition (AssemblyDefinition asm)
+		{
+			if (asm.Kind != AssemblyKind.Dll && asm.EntryPoint == null)
+				throw new ReflectionException ("Assembly does not have an entry point defined");
+
+			if ((asm.MainModule.Image.CLIHeader.Flags & RuntimeImage.ILOnly) == 0)
+				throw new NotImplementedException ("Can not write a mixed mode assembly");
 
 			foreach (ModuleDefinition module in asm.Modules)
 				if (module.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
@@ -78,11 +93,6 @@ namespace Mono.Cecil {
 			m_mdWriter = rw.MetadataWriter;
 			m_tableWriter = rw.MetadataTableWriter;
 			m_rowWriter = rw.MetadataRowWriter;
-		}
-
-		public MemoryBinaryWriter GetWriter ()
-		{
-			return m_binaryWriter;
 		}
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)
