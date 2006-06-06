@@ -44,7 +44,11 @@ public class JDK {
     	throw new Db4oException(Messages.NOT_IMPLEMENTED);
     }
 
-	void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
+    public Config4Class extendConfiguration(ReflectClass clazz,Configuration config,Config4Class classConfig) {
+    	return classConfig;
+    }
+
+    void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
         if(! Deploy.csharp){
             Enumeration e = null;
             if (a_object instanceof Hashtable) {
@@ -140,24 +144,6 @@ public class JDK {
     }
     
     public Reflector createReflector(Object classLoader) {
-    	return null;
-    }
-    
-    /**
-     * Should create additional configuration, for example through reflection
-     * on annotations. If additional configuration is found, it should be applied
-     * to the provided classConfig, unless this is null. If it is null, a new
-     * configuration should be created via config.objectClass().
-     * 
-     * The reason for this dispatch is to avoid creation of a configuration
-     * for a class that doesn't have need configuration at all.
-     * 
-     * @param clazz The class to be searched for additional configuration information
-     * @param config The global database configuration
-     * @param classConfig A class configuration, if one already exists
-     * @return classConfig, if not null, a newly created ObjectClass otherwise.
-     */
-    public ObjectClass extendConfiguration(ReflectClass clazz,Configuration config,ObjectClass classConfig) {
     	return null;
     }
 }

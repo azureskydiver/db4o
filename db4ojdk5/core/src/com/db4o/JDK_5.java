@@ -13,6 +13,11 @@ class JDK_5 extends JDK_1_4 {
     
     private static ReflectClass enumClass;
     
+    public Config4Class extendConfiguration(ReflectClass clazz,Configuration config,Config4Class classConfig) {
+    	Class javaClazz=JdkReflector.toNative(clazz);
+    	return null;
+    }
+
     boolean isEnum(Reflector reflector, ReflectClass claxx) {
         
         if(claxx == null){
@@ -28,11 +33,5 @@ class JDK_5 extends JDK_1_4 {
         }
         
         return enumClass.isAssignableFrom(claxx);
-    }
-
-    
-    public ObjectClass extendConfiguration(ReflectClass clazz,Configuration config,ObjectClass classConfig) {
-    	Class javaClazz=JdkReflector.toNative(clazz);
-    	return null;
     }
 }
