@@ -36,6 +36,7 @@
     <Compile Include="AbstractNQInstrumentation.cs" />
     <Compile Include="CFNQEnabler.cs" />
     <Compile Include="ILPattern.cs" />
+    <Compile Include="InstrumentationContext.cs" />
     <Compile Include="NQOptimization.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -357,8 +357,7 @@ namespace Db4oTools.NativeQueries
 			private bool IsCandidateFieldValue(object o)
 			{
 				FieldValue value = o as FieldValue;
-				if (value == null)
-					return false;
+				if (value == null) return false;
 				return value.Root() is CandidateFieldRoot;
 			}
 
@@ -571,7 +570,7 @@ namespace Db4oTools.NativeQueries
 				{
 					case CodeElementType.ArgumentReferenceExpression:
 						//IArgumentReferenceExpression arg = (IArgumentReferenceExpression)target;
-						Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name));
+						Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name, node));
 						break;
 
 					case CodeElementType.ThisReferenceExpression:
@@ -580,23 +579,23 @@ namespace Db4oTools.NativeQueries
 							if (_current != null)
 							{
 								FieldValue current = PopFieldValue(node);
-								Push(new FieldValue(current, node.Field.Name));
+								Push(new FieldValue(current, node.Field.Name, node));
 							}
 							else
 							{
-								Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name));
+								Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name, node));
 							}
 						}
 						else
 						{
-							Push(new FieldValue(PredicateFieldRoot.INSTANCE, node.Field.Name));
+							Push(new FieldValue(PredicateFieldRoot.INSTANCE, node.Field.Name, node));
 						}
 						break;
 
 					case CodeElementType.MethodInvocationExpression:
 					case CodeElementType.FieldReferenceExpression:
 						FieldValue value = ToFieldValue(target);
-						Push(new FieldValue(value, node.Field.Name));
+						Push(new FieldValue(value, node.Field.Name, node));
 						break;
 
 					default:

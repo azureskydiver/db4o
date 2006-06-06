@@ -9,7 +9,7 @@ namespace Db4oAdmin
 {
 	class QueryInvocationProcessor
 	{
-		private AssemblyDefinition _assembly;
+		private InstrumentationContext _context;
 
 		private TypeReference _System_Predicate;
 		private TypeReference _System_Object;
@@ -19,15 +19,15 @@ namespace Db4oAdmin
 		private MethodReference _NativeQueryHandler_ExecuteInstrumentedDelegateQuery;
 		private MethodReference _NativeQueryHandler_ExecuteInstrumentedStaticDelegateQuery;
 
-		public QueryInvocationProcessor(AssemblyDefinition assembly)
+		public QueryInvocationProcessor(InstrumentationContext context)
 		{
-			_assembly = assembly;
-			_YapStream = Import(typeof(YapStream));
-			_System_Predicate = Import(typeof(System.Predicate<object>).GetGenericTypeDefinition());
-			_System_Object = Import(typeof(object));
-			_System_Void = Import(typeof(void));
-			_NativeQueryHandler_ExecuteInstrumentedDelegateQuery = Import(typeof(com.db4o.inside.query.NativeQueryHandler).GetMethod("ExecuteInstrumentedDelegateQuery", BindingFlags.Public | BindingFlags.Static));
-			_NativeQueryHandler_ExecuteInstrumentedStaticDelegateQuery = Import(typeof(com.db4o.inside.query.NativeQueryHandler).GetMethod("ExecuteInstrumentedStaticDelegateQuery", BindingFlags.Public | BindingFlags.Static));
+			_context = context;
+			_YapStream = context.Import(typeof(YapStream));
+			_System_Predicate = context.Import(typeof(System.Predicate<>));
+			_System_Object = context.Import(typeof(object));
+			_System_Void = context.Import(typeof(void));
+			_NativeQueryHandler_ExecuteInstrumentedDelegateQuery = context.Import(typeof(com.db4o.inside.query.NativeQueryHandler).GetMethod("ExecuteInstrumentedDelegateQuery", BindingFlags.Public | BindingFlags.Static));
+			_NativeQueryHandler_ExecuteInstrumentedStaticDelegateQuery = context.Import(typeof(com.db4o.inside.query.NativeQueryHandler).GetMethod("ExecuteInstrumentedStaticDelegateQuery", BindingFlags.Public | BindingFlags.Static));
 		}
 
 		public void Process(MethodDefinition parent, Instruction queryInvocation)
@@ -118,16 +118,6 @@ namespace Db4oAdmin
 		{
 			GenericInstanceMethod method = (GenericInstanceMethod)queryInvocation.Operand;
 			return method.GenericArguments[0];
-		}
-
-		private TypeReference Import(Type type)
-		{
-			return _assembly.MainModule.Import(type);
-		}
-
-		private MethodReference Import(MethodBase method)
-		{
-			return _assembly.MainModule.Import(method);
 		}
 
 		private MethodReference GetMethodReferenceFromStaticFieldPattern(Instruction instr)

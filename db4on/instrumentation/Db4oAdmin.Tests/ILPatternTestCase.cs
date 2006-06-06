@@ -42,7 +42,6 @@ namespace Db4oAdmin.Tests
 		static MethodDefinition CreateTestMethod(CilWorkerAction action)
 		{
 			MethodDefinition test = new MethodDefinition("Test", MethodAttributes.Public, null);
-			test.CreateBody();
 			action(test.Body.CilWorker);
 			return test;
 		}

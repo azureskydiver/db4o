@@ -7,13 +7,11 @@ namespace Db4oAdmin
 {
 	public abstract class AbstractNQInstrumentation
 	{
-		protected AssemblyDefinition _assembly;
-		protected string _assemblyLocation;
+		protected InstrumentationContext _context;
 		
 		protected AbstractNQInstrumentation(string location)
 		{
-			_assemblyLocation = location;
-			_assembly = AssemblyFactory.GetAssembly(location);
+			_context = new InstrumentationContext(location);
 		}
 
 		protected abstract void ProcessQueryInvocation(MethodDefinition parent, Instruction queryInvocation);
@@ -26,7 +24,7 @@ namespace Db4oAdmin
 
 		private void SaveAssembly()
 		{
-			AssemblyFactory.SaveAssembly(_assembly, _assemblyLocation);
+			_context.SaveAssembly();
 		}
 
 		private void InstrumentMethod(MethodDefinition method)
@@ -75,7 +73,7 @@ namespace Db4oAdmin
 
 		private void ProcessAssembly()
 		{
-			foreach (ModuleDefinition module in _assembly.Modules)
+			foreach (ModuleDefinition module in _context.Assembly.Modules)
 			{
 				ProcessModule(module);
 			}

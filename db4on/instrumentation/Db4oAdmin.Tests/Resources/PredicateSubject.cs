@@ -53,6 +53,7 @@ public class PredicateSubject
 	
 	public static void TestByName(ObjectContainer container)
 	{
+		Setup(container);
 		ObjectSet result = container.Query(new PersonByName("jbe"));
 		Assert.AreEqual(1, result.Count);
 		Assert.AreEqual("jbe", ((Person)result[0]).Name);
