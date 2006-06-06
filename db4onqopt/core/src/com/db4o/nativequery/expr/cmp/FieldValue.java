@@ -1,15 +1,22 @@
 package com.db4o.nativequery.expr.cmp;
 
-import com.db4o.nativequery.expr.cmp.field.*;
 
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 
 public class FieldValue extends ComparisonOperandDescendant {
+	
 	private String _fieldName;
 	
-	public FieldValue(ComparisonOperandAnchor root,String name) {
+	private Object _tag;
+	
+	public FieldValue(ComparisonOperandAnchor root, String name) {
+		this(root, name, null);
+	}
+	
+	public FieldValue(ComparisonOperandAnchor root, String name, Object tag) {
 		super(root);
 		_fieldName=name;
+		_tag=tag;
 	}
 
 	public String fieldName() {
@@ -34,5 +41,19 @@ public class FieldValue extends ComparisonOperandDescendant {
 	
 	public void accept(ComparisonOperandVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	/**
+	 * Code analysis specific information.
+	 * 
+	 * This is used in the .net side to preserve Mono.Cecil references
+	 * for instance.
+	 */
+	public Object tag() {
+		return _tag;
+	}
+	
+	public void tag(Object value) {
+		_tag = value;
 	}
 }

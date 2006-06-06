@@ -16,8 +16,8 @@ namespace Db4oAdmin.Tests
 		{
 			string _assemblyPath = EmitAssemblyFromResource();
 			InstrumentAssembly(_assemblyPath);
-			RunSubjectAssemblyTests(_assemblyPath);
 			VerifyAssembly(_assemblyPath);
+			RunSubjectAssemblyTests(_assemblyPath);
 		}
 
 		public override void SetUp()

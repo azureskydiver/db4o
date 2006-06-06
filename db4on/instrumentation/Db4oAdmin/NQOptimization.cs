@@ -36,12 +36,12 @@ namespace Db4oAdmin
 			TypeReference extent = match.Parameters[0].ParameterType;
 			EmitPrologue(optimizeQuery, extent);
 
-			e.Accept(new SodaEmitterVisitor(optimizeQuery));
+			e.Accept(new SodaEmitterVisitor(_context, optimizeQuery));
 
 			EmitEpilogue(optimizeQuery);
 
 			type.Methods.Add(optimizeQuery);
-			type.Interfaces.Add(Import(typeof(Db4oEnhancedFilter)));
+			type.Interfaces.Add(_context.Import(typeof(Db4oEnhancedFilter)));
 		}
 
 		private static void EmitEpilogue(MethodDefinition method)
@@ -56,18 +56,9 @@ namespace Db4oAdmin
 			// query.Constrain(extent);
 			worker.Emit(OpCodes.Ldarg_1);
 			worker.Emit(OpCodes.Ldtoken, extent);
-			worker.Emit(OpCodes.Call, Import(typeof(Type).GetMethod("GetTypeFromHandle")));
-			worker.Emit(OpCodes.Callvirt, Import(typeof(Query).GetMethod("Constrain")));
-		}
-
-		private MethodReference Import(MethodBase method)
-		{
-			return _assembly.MainModule.Import(method);
-		}
-
-		private TypeReference Import(Type type)
-		{
-			return _assembly.MainModule.Import(type);
+			worker.Emit(OpCodes.Call, _context.Import(typeof(Type).GetMethod("GetTypeFromHandle")));
+			worker.Emit(OpCodes.Callvirt, _context.Import(typeof(Query).GetMethod("Constrain")));
+			worker.Emit(OpCodes.Pop);
 		}
 
 		private MethodDefinition CreateOptimizeQueryMethod()
@@ -77,12 +68,8 @@ namespace Db4oAdmin
 			// Db4oAdmin running under .net 2.0
 			MethodDefinition method = new MethodDefinition("OptimizeQuery",
 			                                               MethodAttributes.Virtual|MethodAttributes.Public,
-			                                               Import(typeof(void)));
-			
-			method.Parameters.Add(new ParameterDefinition(Import(typeof(Query))));
-			
-			// TODO: update CECIL and remove this call!
-			method.CreateBody();
+														   _context.Import(typeof(void)));
+			method.Parameters.Add(new ParameterDefinition(_context.Import(typeof(Query))));
 			
 			return method;
 		}

@@ -13,7 +13,7 @@ namespace Db4oAdmin
 
 		override protected void ProcessQueryInvocation(MethodDefinition parent, Instruction queryInvocation)
 		{
-			if (null == _processor) _processor = new QueryInvocationProcessor(_assembly);
+			if (null == _processor) _processor = new QueryInvocationProcessor(_context);
 			_processor.Process(parent, queryInvocation);
 		}
 	}

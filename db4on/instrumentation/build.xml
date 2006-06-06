@@ -38,8 +38,13 @@
 			</reference>
 			
 			<resource embed="true"				
-				file="Db4oAdmin.Tests/Resources/Subject.cs"
-				name="Db4oAdmin.Tests.Resources.Subject.cs" />
+				file="Db4oAdmin.Tests/Resources/CFNQSubject.cs"
+				name="Db4oAdmin.Tests.Resources.CFNQSubject.cs" />
+			
+			<resource embed="true"				
+				file="Db4oAdmin.Tests/Resources/PredicateSubject.cs"
+				name="Db4oAdmin.Tests.Resources.PredicateSubject.cs" />
+
 		</csc>
 		
 		<exec executable="${output.dir}/Db4oAdmin.Tests.exe"

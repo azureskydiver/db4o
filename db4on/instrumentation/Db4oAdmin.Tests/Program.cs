@@ -1,14 +1,12 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.   http://www.db4o.com */
 
 using System;
-using System.Diagnostics;
 using Db4oAdmin.Tests.Framework;
 
 namespace Db4oAdmin.Tests
 {
 	class Program
-	{
-		
+	{	
 		public const string DatabaseFile = "subject.yap";
 
 		public static int Main(string[] args)
@@ -20,7 +18,7 @@ namespace Db4oAdmin.Tests
 			catch (Exception x)
 			{
 				Console.WriteLine(x);
-				return -1;
+				return 255;
 			}
 		}
 
