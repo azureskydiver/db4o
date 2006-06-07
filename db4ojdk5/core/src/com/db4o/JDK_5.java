@@ -13,8 +13,8 @@ class JDK_5 extends JDK_1_4 {
 
 	private static ReflectClass enumClass;
 
-	public ObjectClass extendConfiguration(ReflectClass clazz,
-			Configuration config, ObjectClass classConfig) {
+	public Config4Class extendConfiguration(ReflectClass clazz,
+			Configuration config, Config4Class classConfig) {
 		Class javaClazz = JdkReflector.toNative(clazz);
 
 		return new Annotate(javaClazz, config, classConfig)
