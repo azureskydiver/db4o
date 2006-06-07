@@ -3,6 +3,7 @@ package com.db4o.config.annotations;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import com.db4o.Config4Class;
 import com.db4o.config.Configuration;
 import com.db4o.config.ObjectClass;
 
@@ -11,13 +12,13 @@ import com.db4o.config.ObjectClass;
  * 
  */
 public class Annotate {
-	ObjectClass classConfig;
+	Config4Class classConfig;
 
 	Class clazz;
 
 	Configuration config;
 
-	public Annotate( Class clazz, Configuration config,ObjectClass classConfig) {
+	public Annotate( Class clazz, Configuration config,Config4Class classConfig) {
 		this.classConfig = classConfig;
 		this.clazz = clazz;
 		this.config = config;
@@ -28,7 +29,7 @@ public class Annotate {
 	 * @param 
 	 * @return 
 	 */
-	public ObjectClass reflectAnnotations(Class clazz) {
+	public Config4Class reflectAnnotations(Class clazz) {
 		try {
 			reflectClass(clazz);
 			reflectFields(clazz);
@@ -41,7 +42,7 @@ public class Annotate {
 
 	private ObjectClass forceConfig() {
 		if (classConfig == null) {
-			classConfig = config.objectClass(clazz.getName());
+			classConfig = (Config4Class) config.objectClass(clazz.getName());
 		}
 		return classConfig;
 	}
