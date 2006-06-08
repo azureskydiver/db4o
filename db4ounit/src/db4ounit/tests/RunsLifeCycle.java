@@ -2,21 +2,16 @@ package db4ounit.tests;
 
 import db4ounit.*;
 
-public class RunsLifeCycle extends TestCase {
+public class RunsLifeCycle extends TestLifeCycle {
 
-	private Exception _exc;
 	private boolean _setupCalled=false;
 	private boolean _tearDownCalled=false;
 	
-	public RunsLifeCycle(Exception exc) {
-		_exc=exc;
-	}
-	
-	protected void setUp() {
+	public void setUp() {
 		_setupCalled=true;
 	}
 	
-	protected void tearDown() {
+	public void tearDown() {
 		_tearDownCalled=true;
 	}
 	
@@ -28,9 +23,9 @@ public class RunsLifeCycle extends TestCase {
 		return _tearDownCalled;
 	}
 
-	protected void run() throws Exception {
+	public void testMethod() throws Exception {
 		Assert.isTrue(_setupCalled);
 		Assert.isTrue(!_tearDownCalled);
-		throw _exc;
+		throw FrameworkTestCase.EXCEPTION;
 	}
 }

@@ -2,7 +2,7 @@ package db4ounit;
 
 public interface Test {
 	
-	String getName();
+	String getLabel();
 	
 	void run(TestResult result);
 }

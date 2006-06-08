@@ -7,11 +7,11 @@ import com.db4o.foundation.*;
 public class TestResult extends Printable {
 	private TestFailureCollection _failures = new TestFailureCollection();
 	
-	public void fail(Test test, Exception failure) {
+	public void testFailed(Test test, Throwable failure) {
 		_failures.add(new TestFailure(test, failure));
 	}
 	
-	public boolean ok() {
+	public boolean green() {
 		return _failures.size() == 0;
 	}
 
@@ -20,15 +20,19 @@ public class TestResult extends Printable {
 	}
 	
 	public void print(PrintWriter writer) {		
-		if (ok()) {
+		if (green()) {
 			writer.write("GREEN");
 			return;
 		}
-		writer.println("RED (" + _failures.size() +")");
+		writer.println("RED (" + _failures.size() +")");				
+		int index = 1;
 		Iterator4 iter = _failures.iterator();
 		while (iter.hasNext()) {
+			writer.print(index);
+			writer.print(") ");
 			((Printable)iter.next()).print(writer);
 			writer.println();
+			++index;
 		}
 	}
 

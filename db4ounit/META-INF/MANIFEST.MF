@@ -28,7 +28,4 @@ Export-Package: com.db4o,
  com.db4o.reflect.jdk,
  com.db4o.reflect.self,
  com.db4o.replication,
- com.db4o.test.unit,
- com.db4o.test.unit.db4o,
- com.db4o.test.unit.db4o.fixtures,
  com.db4o.types
