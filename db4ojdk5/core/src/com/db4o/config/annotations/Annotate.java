@@ -17,6 +17,10 @@ public class Annotate {
 	Class clazz;
 
 	Configuration config;
+	
+
+	public Annotate() {
+	}
 
 	public Annotate( Class clazz, Configuration config,Config4Class classConfig) {
 		this.classConfig = classConfig;
@@ -26,8 +30,8 @@ public class Annotate {
 
 	/**
 	 * the start methode to reflect user class and fields <br> in order to set appropriate configurations
-	 * @param 
-	 * @return 
+	 * @param clazz Java class to reflect
+	 * @return classConfig configurations of class
 	 */
 	public Config4Class reflectAnnotations(Class clazz) {
 		try {
