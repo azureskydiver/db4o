@@ -1,32 +1,35 @@
 package com.db4o.test.unit;
 
+import java.io.PrintWriter;
+
 import com.db4o.foundation.*;
 
-public class TestResult {
-	private Collection4 _failures=new Collection4();
+public class TestResult extends Printable {
+	private TestFailureCollection _failures = new TestFailureCollection();
 	
-	public void fail(Exception exc) {
-		_failures.add(exc);
+	public void fail(Test test, Exception failure) {
+		_failures.add(new TestFailure(test, failure));
 	}
 	
 	public boolean ok() {
-		return _failures.size()==0;
+		return _failures.size() == 0;
 	}
 
-	public Collection4 failures() {
+	public TestFailureCollection failures() {
 		return _failures;
 	}
 	
-	public String toString() {
-		if(ok()) {
-			return "GREEN";
+	public void print(PrintWriter writer) {		
+		if (ok()) {
+			writer.write("GREEN");
+			return;
 		}
-		String ret="RED ("+_failures.size()+")\n";
-		Iterator4 iter=_failures.strictIterator();
-		while(iter.hasNext()) {
-			ret+=(iter.next()+"\n");
+		writer.println("RED (" + _failures.size() +")");
+		Iterator4 iter = _failures.iterator();
+		while (iter.hasNext()) {
+			((Printable)iter.next()).print(writer);
+			writer.println();
 		}
-		return ret;
 	}
 
 	public int assertions() {
