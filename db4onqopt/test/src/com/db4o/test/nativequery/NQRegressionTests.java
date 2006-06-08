@@ -4,6 +4,7 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.inside.query.*;
+import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
@@ -11,7 +12,7 @@ import com.db4o.test.*;
 
 
 public class NQRegressionTests {
-	private final static boolean RUN_LOADTIME=true;
+	private final static boolean RUN_LOADTIME=false;
 	
 	private static final String CSTR = "Cc";
 	private static final String BSTR = "Ba";
@@ -40,12 +41,14 @@ public class NQRegressionTests {
 	}
 	
 	private static class Data extends Base {
+		boolean bool;
 		float value;
 		String name;
 		Data prev;
 		
-		public Data(int id, float value, String name,Data prev) {
+		public Data(int id, boolean bool,float value, String name,Data prev) {
 			super(id);
+			this.bool=bool;
 			this.value=value;
 			this.name = name;
 			this.prev=prev;
@@ -69,10 +72,10 @@ public class NQRegressionTests {
 	}
 
 	public void store() {
-		Data a=new Data(1,1.1f,ASTR,null);
-		Data b=new Data(2,1.1f,BSTR,a);
-		Data c=new Data(3,2.2f,CSTR,b);
-		Data cc=new Data(3,3.3f,CSTR,null);
+		Data a=new Data(1,false,1.1f,ASTR,null);
+		Data b=new Data(2,false,1.1f,BSTR,a);
+		Data c=new Data(3,true,2.2f,CSTR,b);
+		Data cc=new Data(3,false,3.3f,CSTR,null);
 		Test.store(a);
 		Test.store(b);
 		Test.store(c);
@@ -127,6 +130,18 @@ public class NQRegressionTests {
 //			}
 //		},
 		// primitive equals
+		new ExpectingPredicate("bool") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.bool;
+			}
+		},
+		new ExpectingPredicate("!bool") {
+			public int expected() { return 3;}
+			public boolean match(Data candidate) {
+				return !candidate.bool;
+			}
+		},
 		new ExpectingPredicate("id==1") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
@@ -542,7 +557,6 @@ public class NQRegressionTests {
 					case 1:
 						expMsg=NativeQueryHandler.DYNOPTIMIZED;
 						Test.ensure(info.optimized() instanceof Expression);
-						//System.out.println(info.optimized());
 						break;
 					case 2:
 						expMsg=NativeQueryHandler.PREOPTIMIZED;
@@ -557,7 +571,9 @@ public class NQRegressionTests {
 		db.ext().configure().optimizeNativeQueries(false);
 		ObjectSet raw=db.query(filter);
 		db.ext().configure().optimizeNativeQueries(true);
-		System.err.println("PREDICATE: "+filter);
+		if(NQDebug.LOG) {
+			System.err.println("PREDICATE: "+filter);
+		}
 		ObjectSet optimized=db.query(filter);
 		if(!raw.equals(optimized)) {
 			System.out.println("RAW");

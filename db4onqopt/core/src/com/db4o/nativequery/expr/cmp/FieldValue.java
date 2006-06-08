@@ -1,8 +1,6 @@
 package com.db4o.nativequery.expr.cmp;
 
 
-// FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
-
 public class FieldValue extends ComparisonOperandDescendant {
 	
 	private String _fieldName;
@@ -28,11 +26,25 @@ public class FieldValue extends ComparisonOperandDescendant {
 			return false;
 		}
 		FieldValue casted = (FieldValue) other;
+		if(_tag==null) {
+			if(casted._tag!=null) {
+				return false;
+			}
+		}
+		else {
+			if(!_tag.equals(casted._tag)) {
+				return false;
+			}
+		}
 		return _fieldName.equals(casted._fieldName);
 	}
 	
 	public int hashCode() {
-		return super.hashCode()*29+_fieldName.hashCode();
+		int hash=super.hashCode()*29+_fieldName.hashCode();
+		if(_tag!=null) {
+			hash*=29+_tag.hashCode();
+		}
+		return hash;
 	}
 	
 	public String toString() {
