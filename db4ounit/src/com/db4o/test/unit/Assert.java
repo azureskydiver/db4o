@@ -1,6 +1,6 @@
 package com.db4o.test.unit;
 
-public class Assert {
+public final class Assert {
 	public static void fail() {
 		fail("Assertion failed");
 	}

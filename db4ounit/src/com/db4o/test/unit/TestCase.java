@@ -2,19 +2,23 @@ package com.db4o.test.unit;
 
 public abstract class TestCase implements Test {
 	
+	public String getName() {
+		return getClass().getName();
+	}
+	
 	public void run(TestResult result) {
 		try {
 			setUp();
 			run();
 		}
 		catch(Exception exc) {
-			result.fail(exc);
+			result.fail(this, exc);
 		}
 		finally {
 			try {
 				tearDown();
 			} catch (Exception exc) {
-				result.fail(exc);
+				result.fail(this, exc);
 			}
 		}
 	}

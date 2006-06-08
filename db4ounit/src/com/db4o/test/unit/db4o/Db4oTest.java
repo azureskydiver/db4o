@@ -1,8 +1,7 @@
 package com.db4o.test.unit.db4o;
 
-import com.db4o.test.unit.*;
 
-public abstract class Db4oTest extends Assert {
+public abstract class Db4oTest {
 	private Db4oFixture _fixture;
 	
 	public Db4oTest() {

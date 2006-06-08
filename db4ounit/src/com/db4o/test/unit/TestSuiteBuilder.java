@@ -11,7 +11,7 @@ public class TestSuiteBuilder {
 			}
 			configure(testCases[i]);
 		}
-		return new TestSuite(testCases);
+		return new TestSuite(clazz.getName(), testCases);
 	}
 	
 	public TestCase createTest(Object clazz, String methodName) {
