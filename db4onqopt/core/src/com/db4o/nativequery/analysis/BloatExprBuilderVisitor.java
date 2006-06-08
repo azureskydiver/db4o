@@ -6,6 +6,7 @@ import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.tree.*;
 
+import com.db4o.nativequery.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.build.*;
@@ -13,6 +14,7 @@ import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.field.*;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
+
 	// TODO discuss: drop or make configurable
 	private final static int MAX_DEPTH=10;
 	
@@ -142,8 +144,15 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Object retval=purgeReturnValue();
 		boolean cmpNull=false;
 		if(retval instanceof FieldValue) {
-			retval=new ComparisonExpression((FieldValue)retval,new ConstValue(null),ComparisonOperator.EQUALS);
-			cmpNull=true;
+			Expression forced=identityOrBoolComparisonOrNull(retval,false);
+			if(forced!=null) {
+				expression(forced);
+				return;
+			}
+			else {
+				retval=new ComparisonExpression((FieldValue)retval,new ConstValue(null),ComparisonOperator.EQUALS);
+				cmpNull=true;
+			}
 		}
 		if(retval instanceof Expression) {
 			Expression expr=(Expression)retval;
@@ -269,13 +278,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 			if(rcvRetval==null||rcvRetval.root()!=CandidateFieldRoot.INSTANCE) {
 				if(rcvRetval==null) {
-					rcvRetval=new StaticFieldRoot(expr.method().declaringClass().className().replace('/', '.'));
+					rcvRetval=new StaticFieldRoot(normalizedClassName(expr.method().declaringClass()));
 				}
 				params.remove(0);
 				Type[] paramTypes=expr.method().nameAndType().type().paramTypes();
 				Class[] javaParamTypes=new Class[paramTypes.length];
 				for (int paramIdx = 0; paramIdx < paramTypes.length; paramIdx++) {
-					String className = paramTypes[paramIdx].className().replace('/', '.');
+					String className = normalizedClassName(paramTypes[paramIdx]);
 					javaParamTypes[paramIdx]=(PRIMITIVE_CLASSES.containsKey(className) ? (Class)PRIMITIVE_CLASSES.get(className) : Class.forName(className));
 				}
 				retval(new MethodCallValue(rcvRetval,expr.method().name(),javaParamTypes,(ComparisonOperand[])params.toArray(new ComparisonOperand[params.size()])));
@@ -285,6 +294,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			FlowGraph flowGraph=bloatUtil.flowGraph(methodRef.declaringClass().className(),methodRef.name());
 			if(flowGraph==null) {
 				return;
+			}
+			if(NQDebug.LOG) {
+				System.out.println("METHOD:"+flowGraph.method().nameAndType());
+				flowGraph.visit(new PrintVisitor());
 			}
 			flowGraph.visit(this);
 			Object methodRetval=purgeReturnValue();
@@ -316,7 +329,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 	
 	private boolean isPrimitive(Type type) {
-		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,type.className().replace('/', '.'))>=0;
+		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,normalizedClassName(type))>=0;
 	}
 
 	private void processEqualsCall(CallMethodExpr expr,ComparisonOperator op) {
@@ -357,14 +370,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Object fieldObj=purgeReturnValue();
 		String fieldName=expr.field().name();
 		if(fieldObj instanceof ComparisonOperandAnchor) {
-			retval(new FieldValue((ComparisonOperandAnchor)fieldObj,fieldName));
+			retval(new FieldValue((ComparisonOperandAnchor)fieldObj,fieldName,normalizedClassName(expr.field().type())));
 			return;
 		}
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {
 		MemberRef field = expr.field();
-		retval(new FieldValue(new StaticFieldRoot(field.declaringClass().className().replace('/','.')),field.name()));
+		retval(new FieldValue(new StaticFieldRoot(normalizedClassName(field.declaringClass())),field.name(),normalizedClassName(field.type())));
 	}
 	
 	public void visitConstantExpr(ConstantExpr expr) {
@@ -393,6 +406,34 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 	}
 
+	public void visitFlowGraph(FlowGraph graph) {
+		super.visitFlowGraph(graph);
+		if(expr==null) {
+			Expression forced=identityOrBoolComparisonOrNull(retval,true);
+			if(forced!=null) {
+				expression(forced);
+			}
+		}
+	}
+
+	private Expression identityOrBoolComparisonOrNull(Object val,boolean cmp) {
+		if(val instanceof Expression) {
+			return (Expression)val;
+		}
+		if(!(val instanceof FieldValue)) {
+			return null;
+		}
+		FieldValue fieldVal=(FieldValue)val;
+		if(fieldVal.root()!=CandidateFieldRoot.INSTANCE||isBooleanField(fieldVal)) {
+			return null;
+		}
+		return new ComparisonExpression(fieldVal,new ConstValue(Boolean.valueOf(cmp)),ComparisonOperator.EQUALS);
+	}
+
+	private boolean isBooleanField(FieldValue fieldVal) {
+		return !"Z".equals(fieldVal.tag());
+	}
+	
 	public void visitArithExpr(ArithExpr expr) {
 		expr.left().visit(this);
 		Object leftObj=purgeReturnValue();
@@ -406,6 +447,16 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		ComparisonOperand right=(ComparisonOperand)rightObj;
+		boolean swapped=false;
+		if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
+			FieldValue rightField=(FieldValue)right;
+			if(rightField.root()==CandidateFieldRoot.INSTANCE) {
+				ComparisonOperand swap=left;
+				left=right;
+				right=swap;
+				swapped=true;
+			}
+		}
 		switch(expr.operation()) {
 			case ArithExpr.ADD:
 			case ArithExpr.SUB:
@@ -416,22 +467,17 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			case ArithExpr.CMP:
 			case ArithExpr.CMPG:
 			case ArithExpr.CMPL:
-				boolean swapped=false;
-				if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
-					FieldValue rightField=(FieldValue)right;
-					if(rightField.root()==CandidateFieldRoot.INSTANCE) {
-						ComparisonOperand swap=left;
-						left=right;
-						right=swap;
-						swapped=true;
-					}
-				}
 				if(left instanceof FieldValue) {
 					retval(new ThreeWayComparison((FieldValue)left,right,swapped));
 				}
 				break;
+			case ArithExpr.XOR:
+				if(left instanceof FieldValue) {
+					retval(BUILDER.not(new ComparisonExpression((FieldValue)left,right,ComparisonOperator.EQUALS)));
+				}
+				break;
 			default:
-				return;
+				break;
 		}
 	}
 
@@ -498,5 +544,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 		}
 		return null;
-	}	
+	}
+	
+	private String normalizedClassName(Type type) {
+		return type.className().replace('/','.');
+	}
 }
