@@ -1,4 +1,4 @@
-package com.db4o.test.unit;
+package db4ounit;
 
 import java.lang.reflect.*;
 

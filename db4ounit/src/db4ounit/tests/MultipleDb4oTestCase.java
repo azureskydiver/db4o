@@ -1,7 +1,7 @@
-package com.db4o.test.unit.test;
+package db4ounit.tests;
 
-import com.db4o.test.unit.Assert;
-import com.db4o.test.unit.db4o.*;
+import db4ounit.Assert;
+import db4ounit.db4o.Db4oTestCase;
 
 public class MultipleDb4oTestCase extends Db4oTestCase {
 	public void testFirst() {

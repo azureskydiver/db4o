@@ -1,9 +1,18 @@
-package com.db4o.test.unit.test;
+package db4ounit.tests;
 
-import com.db4o.foundation.*;
-import com.db4o.test.unit.*;
-import com.db4o.test.unit.db4o.*;
-import com.db4o.test.unit.db4o.fixtures.*;
+import com.db4o.foundation.Iterator4;
+
+import db4ounit.Assert;
+import db4ounit.Test;
+import db4ounit.TestCase;
+import db4ounit.TestFailure;
+import db4ounit.TestResult;
+import db4ounit.TestSuite;
+import db4ounit.TestSuiteBuilder;
+import db4ounit.db4o.Db4oFixture;
+import db4ounit.db4o.Db4oTestCase;
+import db4ounit.db4o.fixtures.Db4oInMemory;
+import db4ounit.db4o.fixtures.Db4oSolo;
 
 public class RegressionTest extends TestCase {
 

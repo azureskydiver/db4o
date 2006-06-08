@@ -1,6 +1,6 @@
-package com.db4o.test.unit.test;
+package db4ounit.tests;
 
-import com.db4o.test.unit.*;
+import db4ounit.*;
 
 public class RunsWithPluggableSelector extends BaseTestCase {
 	public final static String TESTPASS="testPass";
