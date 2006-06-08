@@ -9,29 +9,29 @@ public class Assert {
 		throw new AssertionException(msg);
 	}
 	
-	public static void assertTrue(boolean exp) {
-		assertTrue(exp,"FAILURE");
+	public static void isTrue(boolean exp) {
+		isTrue(exp,"FAILURE");
 	}
 
-	public static void assertTrue(boolean exp,String msg) {
+	public static void isTrue(boolean exp,String msg) {
 		if(!exp) {
 			fail(msg);
 		}
 	}
 	
-	public static void assertEquals(boolean exp,boolean actual) {
+	public static void areEqual(boolean exp,boolean actual) {
 		if(exp!=actual) {
 			fail("Expected "+exp+" but was "+actual);
 		}
 	}
 
-	public static void assertEquals(int exp,int actual) {
+	public static void areEqual(int exp,int actual) {
 		if(exp!=actual) {
 			fail("Expected "+exp+" but was "+actual);
 		}
 	}
 
-	public static void assertEquals(Object exp,Object actual) {
+	public static void areEqual(Object exp,Object actual) {
 		if(!exp.equals(actual)) {
 			fail("Expected "+exp+" but was "+actual);
 		}

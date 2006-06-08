@@ -1,5 +1,6 @@
 package com.db4o.test.unit.test;
 
+import com.db4o.test.unit.Assert;
 import com.db4o.test.unit.db4o.*;
 
 public class SimpleDb4oTestCase extends Db4oTestCase {
@@ -8,20 +9,20 @@ public class SimpleDb4oTestCase extends Db4oTestCase {
 	private boolean[] _everythingCalled=new boolean[3];
 	
 	protected void configure() {
-		assertTrue(everythingCalledBefore(0));
+		Assert.isTrue(everythingCalledBefore(0));
 		_everythingCalled[0]=true;
 	}
 	
 	protected void store() {
-		assertTrue(everythingCalledBefore(1));
+		Assert.isTrue(everythingCalledBefore(1));
 		_everythingCalled[1]=true;
 		fixture().db().set(new Data());
 	}
 	
 	public void testResultSize() {
-		assertTrue(everythingCalledBefore(2));
+		Assert.isTrue(everythingCalledBefore(2));
 		_everythingCalled[2]=true;
-		assertEquals(1,fixture().db().query(Data.class).size());
+		Assert.areEqual(1,fixture().db().query(Data.class).size());
 	}
 	
 	public boolean everythingCalled() {
