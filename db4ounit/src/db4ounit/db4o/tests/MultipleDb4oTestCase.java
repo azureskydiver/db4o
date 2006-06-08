@@ -1,4 +1,4 @@
-package db4ounit.tests;
+package db4ounit.db4o.tests;
 
 import db4ounit.Assert;
 import db4ounit.db4o.Db4oTestCase;

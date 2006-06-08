@@ -1,15 +1,23 @@
+/**
+ * 
+ */
 package db4ounit.tests;
 
-import db4ounit.*;
+import db4ounit.Test;
+import db4ounit.TestResult;
 
-public class RunsRed extends TestCase {
+class RunsRed implements Test {
 	private RuntimeException _exception;
 	
 	public RunsRed(RuntimeException exception) {
 		_exception=exception;
 	}
-	
-	protected void run() {
-		throw _exception;
+
+	public String getLabel() {
+		return "RunsRed";
+	}
+
+	public void run(TestResult result) {
+		result.testFailed(this, _exception);
 	}
 }

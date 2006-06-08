@@ -1,25 +1,25 @@
 package db4ounit.db4o;
 
-import db4ounit.*;
+import db4ounit.TestLifeCycle;
 
-public class Db4oTestCase extends BaseTestCase {
+public class Db4oTestCase extends TestLifeCycle {
 	private Db4oFixture _fixture;
 	
 	public void fixture(Db4oFixture fixture) {
-		_fixture=fixture;
+		_fixture = fixture;
 	}
 
-	protected Db4oFixture fixture() {
+	public Db4oFixture fixture() {
 		return _fixture;
 	}
 	
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		configure();
 		_fixture.open();
 		store();
 	}
 	
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		_fixture.close();
 	}
 
