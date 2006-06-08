@@ -1,6 +1,6 @@
-package com.db4o.test.unit.db4o;
+package db4ounit.db4o;
 
-import com.db4o.test.unit.*;
+import db4ounit.*;
 
 public class Db4oTestCase extends BaseTestCase {
 	private Db4oFixture _fixture;

@@ -1,10 +1,12 @@
-package com.db4o.test.unit.db4o.fixtures;
+package db4ounit.db4o.fixtures;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.test.unit.db4o.*;
+import com.db4o.Db4o;
+import com.db4o.ext.ExtObjectContainer;
+
+import db4ounit.db4o.Db4oFixture;
 
 public class Db4oSolo implements Db4oFixture {
 	private File _file;

@@ -1,6 +1,6 @@
-package com.db4o.test.unit.test;
+package db4ounit.tests;
 
-import com.db4o.test.unit.*;
+import db4ounit.*;
 
 public class RunsAssertions extends TestCase {
 	protected void run() throws Exception {

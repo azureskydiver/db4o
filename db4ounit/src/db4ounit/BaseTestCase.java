@@ -1,4 +1,4 @@
-package com.db4o.test.unit;
+package db4ounit;
 
 
 // TODO: refactor from inheritance to delegation: operate on arbitrary object?

@@ -1,4 +1,4 @@
-package com.db4o.test.unit.db4o;
+package db4ounit.db4o;
 
 
 public abstract class Db4oTest {

@@ -1,4 +1,4 @@
-package com.db4o.test.unit;
+package db4ounit;
 
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
