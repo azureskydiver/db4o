@@ -11,10 +11,10 @@ public class RunsWithPluggableSelector extends BaseTestCase {
 	}
 
 	public void testPass() {
-		assertTrue(true);
+		Assert.isTrue(true);
 	}
 	
 	public void testFail() throws Exception {
-		fail();
+		Assert.fail();
 	}
 }

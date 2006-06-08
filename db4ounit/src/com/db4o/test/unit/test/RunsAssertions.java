@@ -4,26 +4,26 @@ import com.db4o.test.unit.*;
 
 public class RunsAssertions extends TestCase {
 	protected void run() throws Exception {
-		assertEquals(true, true);
-		assertEquals(42,42);
-		assertEquals(new Integer(42),new Integer(42));
+		Assert.areEqual(true, true);
+		Assert.areEqual(42,42);
+		Assert.areEqual(new Integer(42),new Integer(42));
 		try {
-			assertEquals(true,false);
-			fail();
+			Assert.areEqual(true,false);
+			Assert.fail();
 		}
 		catch(AssertionException exc) {
 			// OK
 		}
 		try {
-			assertEquals(42,43);
-			fail();
+			Assert.areEqual(42,43);
+			Assert.fail();
 		}
 		catch(AssertionException exc) {
 			// OK
 		}
 		try {
-			assertEquals(new Object(),new Object());
-			fail();
+			Assert.areEqual(new Object(),new Object());
+			Assert.fail();
 		}
 		catch(AssertionException exc) {
 			// OK

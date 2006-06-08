@@ -1,6 +1,6 @@
 package com.db4o.test.unit;
 
-public abstract class TestCase extends Assert implements Test {
+public abstract class TestCase implements Test {
 	
 	public void run(TestResult result) {
 		try {

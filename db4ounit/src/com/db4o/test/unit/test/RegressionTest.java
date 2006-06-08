@@ -45,7 +45,7 @@ public class RegressionTest extends TestCase {
 
 		RunsLifeCycle runsLifeCycle = new RunsLifeCycle(EXC);
 		assertTest(runsLifeCycle,1);
-		assertTrue(runsLifeCycle.tearDownCalled());
+		Assert.isTrue(runsLifeCycle.tearDownCalled());
 
 		assertSimpleDb4o(new Db4oInMemory());
 		assertSimpleDb4o(new Db4oSolo());
@@ -58,7 +58,7 @@ public class RegressionTest extends TestCase {
 		simpleDb4o.name("testResultSize");
 		simpleDb4o.fixture(fixture);
 		assertTest(simpleDb4o,0);
-		assertTrue(simpleDb4o.everythingCalled());
+		Assert.isTrue(simpleDb4o.everythingCalled());
 	}
 	
 	private void assertTest(Test test,int expFailures) {
@@ -69,10 +69,10 @@ public class RegressionTest extends TestCase {
 		TestResult result=new TestResult();
 		test.run(result);
 		//assertTrue(result.ok()==(expFailures==0));
-		assertTrue(result.failures().size()==expFailures,"Expected "+expFailures+", but were "+result.failures().size());
+		Assert.isTrue(result.failures().size()==expFailures,"Expected "+expFailures+", but were "+result.failures().size());
 		if(checkExc) {
 			for(Iterator4 iter=result.failures().iterator();iter.hasNext();) {
-				assertTrue(EXC.equals(iter.next()));
+				Assert.isTrue(EXC.equals(iter.next()));
 			}
 		}
 	}

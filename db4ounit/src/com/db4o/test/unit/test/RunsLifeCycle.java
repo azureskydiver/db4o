@@ -29,8 +29,8 @@ public class RunsLifeCycle extends TestCase {
 	}
 
 	protected void run() throws Exception {
-		assertTrue(_setupCalled);
-		assertTrue(!_tearDownCalled);
+		Assert.isTrue(_setupCalled);
+		Assert.isTrue(!_tearDownCalled);
 		throw _exc;
 	}
 }
