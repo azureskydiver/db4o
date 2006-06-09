@@ -16,6 +16,6 @@ public class TestFailureCollection {
 	}
 	
 	public void add(TestFailure failure) {
-		_failures.add(failure);
+		_failures.addElement(failure);
 	}
 }

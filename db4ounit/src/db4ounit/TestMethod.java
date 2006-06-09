@@ -31,11 +31,11 @@ public class TestMethod implements Test {
 			setUp();
 			_method.invoke(_subject, new Object[0]);
 		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
+			throw new TestException(e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+			throw new TestException(e);
 		} catch (InvocationTargetException e) {
-			result.testFailed(this, e.getCause());
+			result.testFailed(this, e.getTargetException());
 		} finally {
 			tearDown();
 		}
