@@ -20,11 +20,11 @@ public class TestFailure extends Printable {
 		return _failure;
 	}
 	
-	public void print(PrintWriter printWriter) {
-		printWriter.print(_test.getLabel());
-		printWriter.print(": ");
+	public void print(PrintWriter writer) {
+		writer.print(_test.getLabel());
+		writer.print(": ");
 		// TODO: don't print the first stack trace elements
 		// which reference db4ounit.Assert methods
-		_failure.printStackTrace(printWriter);
+		_failure.printStackTrace(writer);
 	}
 }

@@ -2,8 +2,7 @@ package db4ounit;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import com.db4o.foundation.Collection4;
+import java.util.Vector;
 
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
@@ -43,7 +42,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 			return new TestSuite(clazz.getName(), new Test[] { (Test)instance });
 		}
 		
-		Collection4 tests = new Collection4();
+		Vector tests = new Vector();
 		Method[] methods = clazz.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
