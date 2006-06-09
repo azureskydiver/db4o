@@ -56,6 +56,13 @@ commands will work:
 (4) Start the Funambol server. Launch the Funambol administration tool and log in.
 
 
+Testing
+-------
+
+If you would like to see Sync4o in action , then you can follow the steps listed
+in "Cookbook.txt" to try out the Sync4o client and server modules and get a feel
+for the configuration and operation of Sync4o within the Funambol framework.
+
 
 Version Requirements
 --------------------

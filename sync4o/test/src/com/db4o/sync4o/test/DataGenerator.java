@@ -82,12 +82,13 @@ public class DataGenerator{
       Customer c = (Customer) l.get(i);
       long version = db.ext().getObjectInfo(c).getVersion();
       Date lastModified = new Date(version >> 15);
-      System.out.println(c + " version number: " + version + " lastMod: " + lastModified);
+      System.out.println(c + " lastMod: " + lastModified);
       
     }
     
     System.out.println(l.size() + " records");
     
+    db.close();
   }
   
   static private void create(int startId, int count, String filename){

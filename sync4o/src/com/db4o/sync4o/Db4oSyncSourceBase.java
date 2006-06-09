@@ -290,7 +290,7 @@ public class Db4oSyncSourceBase implements Serializable{
     File dir = dbFile.getParentFile();
     if (dir == null){
       
-      throw new Sync4jException("Must supply a complete path for Db4o database filename.");
+      dir = new File(".");
     
     }
     
