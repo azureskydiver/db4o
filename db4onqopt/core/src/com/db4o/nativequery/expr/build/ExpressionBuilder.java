@@ -1,14 +1,11 @@
 package com.db4o.nativequery.expr.build;
 
-import com.db4o.nativequery.expr.AndExpression;
-import com.db4o.nativequery.expr.BoolConstExpression;
-import com.db4o.nativequery.expr.Expression;
-import com.db4o.nativequery.expr.NotExpression;
-import com.db4o.nativequery.expr.OrExpression;
+import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.expr.cmp.*;
 
 public class ExpressionBuilder {
 	/**
-	 * Optimizations: !(Bool)->(!Bool), !!X->X
+	 * Optimizations: !(Bool)->(!Bool), !!X->X, !(X==Bool)->(X==!Bool)
 	 */
 	public Expression not(Expression expr) {
 		if(expr.equals(BoolConstExpression.TRUE)) {
@@ -19,6 +16,16 @@ public class ExpressionBuilder {
 		}
 		if(expr instanceof NotExpression) {
 			return ((NotExpression)expr).expr();
+		}
+		if(expr instanceof ComparisonExpression) {
+			ComparisonExpression cmpExpr=(ComparisonExpression)expr;
+			if(cmpExpr.right() instanceof ConstValue) {
+				ConstValue rightConst=(ConstValue)cmpExpr.right();
+				if(rightConst.value() instanceof Boolean) {
+					Boolean boolVal=(Boolean)rightConst.value();
+					return new ComparisonExpression(cmpExpr.left(),new ConstValue(Boolean.valueOf(!boolVal.booleanValue())),cmpExpr.op());
+				}
+			}
 		}
 		return new NotExpression(expr);
 	}

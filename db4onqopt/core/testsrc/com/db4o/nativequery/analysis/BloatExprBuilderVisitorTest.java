@@ -656,7 +656,18 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	// conjunctions
+
+// FIXME
+	boolean sampleBoolBoolAnd(Data data) {
+		return !data.getBool()&&data.getBool();
+	}
 	
+	public void testBoolBoolAnd() throws Exception {
+		AndExpression expr = (AndExpression) expression("sampleBoolBoolAnd");
+		assertComparison(expr.left(),new String[]{BOOLEAN_FIELDNAME},Boolean.FALSE,ComparisonOperator.EQUALS,false);
+		assertComparison(expr.right(),new String[]{BOOLEAN_FIELDNAME},Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	}
+
 	boolean sampleIntIntAnd(Data data) {
 		return (data.id>42)&&(data.id<100);
 	}

@@ -144,10 +144,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Object retval=purgeReturnValue();
 		boolean cmpNull=false;
 		if(retval instanceof FieldValue) {
-			Expression forced=identityOrBoolComparisonOrNull(retval,false);
+			Expression forced=identityOrBoolComparisonOrNull(retval,true);
 			if(forced!=null) {
-				expression(forced);
-				return;
+				retval=forced;
 			}
 			else {
 				retval=new ComparisonExpression((FieldValue)retval,new ConstValue(null),ComparisonOperator.EQUALS);
