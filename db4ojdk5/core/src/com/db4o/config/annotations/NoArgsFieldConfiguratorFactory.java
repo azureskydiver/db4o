@@ -1,0 +1,26 @@
+package com.db4o.config.annotations;
+
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+
+public class NoArgsFieldConfiguratorFactory implements Db4oConfiguratorFactory {
+	private Constructor _constructor;
+
+	public NoArgsFieldConfiguratorFactory(Class configuratorClass) throws NoSuchMethodException {
+		_constructor=configuratorClass.getConstructor(new Class[]{String.class,String.class});
+	}
+
+	public Db4oConfigurator configuratorFor(AnnotatedElement element, Annotation annotation) {
+		try {
+			if(!(element instanceof Field)) {
+				return null;
+			}
+			Field field=(Field)element;
+			String className=field.getDeclaringClass().getName();
+			String fieldName=field.getName();
+			return (Db4oConfigurator)_constructor.newInstance(new Object[]{className,fieldName});
+		} catch (Exception exc) {
+			return null;
+		}
+	}
+}

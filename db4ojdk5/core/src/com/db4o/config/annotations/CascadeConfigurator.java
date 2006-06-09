@@ -21,7 +21,6 @@ public class CascadeConfigurator extends Db4oConfigurator {
 		for (CascadeType t : cascadeTypes) {
 			configureCascade(objectConfig, t);
 		}
-
 	}
 	
 	private void configureCascade(Config4Abstract objectConfig, CascadeType t) {

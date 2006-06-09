@@ -20,15 +20,15 @@ public class Annotate {
 
 	Configuration config;
 	
-	public Annotate( Class clazz, Configuration config,Config4Class classConfig) {
+	public Annotate( Class clazz, Configuration config,Config4Class classConfig) throws Exception {
 		this.classConfig = classConfig;
 		this.clazz = clazz;
 		this.config = config;
 		
 		configurators=new HashMap<Class<? extends Annotation>, Db4oConfiguratorFactory>();
 		configurators.put(Cascade.class, new CascadeConfiguratorFactory());
-		configurators.put(Index.class, new IndexedConfiguratorFactory());
-		configurators.put(CallConstructor.class, new CallConstructorConfiguratorFactory());
+		configurators.put(Index.class, new NoArgsFieldConfiguratorFactory(IndexedConfigurator.class));
+		configurators.put(CallConstructor.class, new NoArgsClassConfiguratorFactory(CallConstructorConfigurator.class));
 	}
 
 	/**
