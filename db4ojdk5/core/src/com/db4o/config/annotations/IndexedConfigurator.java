@@ -1,18 +1,15 @@
 package com.db4o.config.annotations;
 
-public class IndexedConfigurator extends Db4oConfigurator {
+import com.db4o.config.*;
 
-	private String _className;
-	private String _fieldName;
+public class IndexedConfigurator extends FieldConfigurator {
 
 	public IndexedConfigurator(String className, String fieldName) {
-		_className=className;
-		_fieldName=fieldName;
+		super(className,fieldName);
 	}
 
 	@Override
-	protected void configure() {
-		objectClass(_className).objectField(_fieldName).indexed(true);
+	protected void configure(ObjectField objectField) {
+		objectField.indexed(true);
 	}
-
 }

@@ -1,15 +1,14 @@
 package com.db4o.config.annotations;
 
-public class CallConstructorConfigurator extends Db4oConfigurator {
+import com.db4o.config.*;
 
-	private String _className;
-
+public class CallConstructorConfigurator extends ClassConfigurator {
 	public CallConstructorConfigurator(String className) {
-		_className=className;
+		super(className);
 	}
 
 	@Override
-	protected void configure() {
-		objectClass(_className).callConstructor(true);
+	protected void configure(ObjectClass objectClass) {
+		objectClass.callConstructor(true);
 	}
 }
