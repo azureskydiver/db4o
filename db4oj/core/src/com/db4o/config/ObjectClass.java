@@ -15,8 +15,9 @@ package  com.db4o.config;
  * oc.minimumActivationDepth(3);<br>
  * </code>
  */
-public interface ObjectClass extends ObjectConfig {
+public interface ObjectClass {
     
+	
     /**
      * advises db4o to try instantiating objects of this class with/without
      * calling constructors.
@@ -35,8 +36,72 @@ public interface ObjectClass extends ObjectConfig {
 	 * @see Configuration#callConstructors
      */
     public void callConstructor(boolean flag);
+	
+	
+	/**
+	 * sets cascaded activation behaviour.
+	 * <br><br>
+	 * Setting cascadeOnActivate to true will result in the activation
+	 * of all member objects if an instance of this class is activated.
+	 * <br><br>
+	 * The default setting is <b>false</b>.<br><br>
+	 * @param flag whether activation is to be cascaded to member objects.
+	 * @see ObjectField#cascadeOnActivate
+	 * @see com.db4o.ObjectContainer#activate
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
+	 * @see Configuration#activationDepth Why activation?
+	 */
+	public void cascadeOnActivate(boolean flag);
 
-    
+
+	/**
+	 * sets cascaded delete behaviour.
+	 * <br><br>
+	 * Setting cascadeOnDelete to true will result in the deletion of
+	 * all member objects of instances of this class, if they are 
+	 * passed to
+     * {@link com.db4o.ObjectContainer#delete(Object)}. 
+	 * <br><br>
+	 * <b>Caution !</b><br>
+	 * This setting will also trigger deletion of old member objects, on
+	 * calls to {@link com.db4o.ObjectContainer#set(Object)}.<br><br>
+	 * An example of the behaviour:<br>
+	 * <code>
+	 * ObjectContainer con;<br>
+	 * Bar bar1 = new Bar();<br>
+	 * Bar bar2 = new Bar();<br>
+	 * foo.bar = bar1;<br>
+	 * con.set(foo);  // bar1 is stored as a member of foo<br>
+	 * foo.bar = bar2;<br>
+	 * con.set(foo);  // bar2 is stored as a member of foo
+	 * </code><br>The last statement will <b>also</b> delete bar1 from the
+	 * ObjectContainer, no matter how many other stored objects hold references
+	 * to bar1.
+	 * <br><br>
+	 * The default setting is <b>false</b>.<br><br>
+	 * @param flag whether deletes are to be cascaded to member objects.
+	 * @see ObjectField#cascadeOnDelete
+	 * @see com.db4o.ObjectContainer#delete
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
+	 */
+	public void cascadeOnDelete(boolean flag);
+	
+	
+	/**
+	 * sets cascaded update behaviour.
+	 * <br><br>
+	 * Setting cascadeOnUpdate to true will result in the update
+	 * of all member objects if a stored instance of this class is passed
+	 * to {@link com.db4o.ObjectContainer#set(Object)}.<br><br>
+	 * The default setting is <b>false</b>.<br><br>
+	 * @param flag whether updates are to be cascaded to member objects.
+	 * @see ObjectField#cascadeOnUpdate
+	 * @see com.db4o.ObjectContainer#set
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
+	 */
+	public void cascadeOnUpdate(boolean flag);
+	
+	
 	/**
 	 * registers an attribute provider for special query behavior.
 	 * <br><br>The query processor will compare the object returned by the
