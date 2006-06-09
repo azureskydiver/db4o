@@ -30,6 +30,23 @@
 				<arg value="-cp" />
 				<arg path="${file.java1.2.jar}" />				
 				<arg value="-pascalcase" />
+				<arg value="-nativeTypeSystem" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="db4ounit" />
+				<arg value="Db4oUnit" />
+				
+				<arg value="-typeMapping" />
+				<arg value="java.io.Writer" />
+				<arg value="System.IO.TextWriter" />
+				
+				<arg value="-typeMapping" />
+				<arg value="java.io.StringWriter" />
+				<arg value="System.IO.StringWriter" />
+				
+				<arg value="-typeMapping" />
+				<arg value="java.lang.RuntimeException" />
+				<arg value="System.Exception" />
 			</args>
 		</sharpen>
 	</target>
@@ -37,6 +54,7 @@
 	<target name="update-csharp-projects" depends="sharpen">
 		<delete dir="${db4ounit.net.src.dir}">
 			<include name="**/*.cs" />
+			<exclude name="**/.svn/**" />
 		</delete>
 		<mkdir dir="${db4ounit.net.src.dir}" />
 		<copy todir="${db4ounit.net.src.dir}">
@@ -45,17 +63,15 @@
 			</fileset>
 		</copy>
 
-		<!--
 		<copy todir="${db4ounit.net.src.dir}" overwrite="true">
 			<fileset dir="${db4ounit.net.in.dir}">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-		-->
 		
 		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}.csproj">
 			<sources dir="${db4ounit.net.dir}">
-				<include name="**/*.cs" />
+				<include name="src/**/*.cs" />
 			</sources>
 		</updatecsharpproject>
 	</target>
