@@ -1,6 +1,7 @@
 package db4ounit;
 
-import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 public class TestFailure extends Printable {
 	
@@ -20,11 +21,11 @@ public class TestFailure extends Printable {
 		return _failure;
 	}
 	
-	public void print(PrintWriter writer) {
-		writer.print(_test.getLabel());
-		writer.print(": ");
+	public void print(Writer writer) throws IOException {
+		writer.write(_test.getLabel());
+		writer.write(": ");
 		// TODO: don't print the first stack trace elements
 		// which reference db4ounit.Assert methods
-		_failure.printStackTrace(writer);
+		TestPlatform.printStackTrace(writer, _failure);
 	}
 }

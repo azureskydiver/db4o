@@ -30,12 +30,10 @@ public class TestMethod implements Test {
 		try {
 			setUp();
 			_method.invoke(_subject, new Object[0]);
-		} catch (IllegalArgumentException e) {
-			throw new TestException(e);
-		} catch (IllegalAccessException e) {
-			throw new TestException(e);
 		} catch (InvocationTargetException e) {
 			result.testFailed(this, e.getTargetException());
+		} catch (Exception e) {
+			throw new TestException(e);
 		} finally {
 			tearDown();
 		}

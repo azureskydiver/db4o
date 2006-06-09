@@ -1,6 +1,6 @@
 package db4ounit;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 
 public class TestRunner {
 	
@@ -27,8 +27,11 @@ public class TestRunner {
 	}
 
 	private void report(TestResult result) {
-		PrintWriter writer = new PrintWriter(System.out);
-		result.print(writer);
-		writer.flush();
+		try {
+			java.io.Writer stdout = TestPlatform.getStdOut();
+			result.print(stdout);
+			stdout.flush();
+		} catch (IOException e) {
+		}
 	}
 }
