@@ -1,6 +1,7 @@
 package db4ounit;
 
-import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Enumeration;
 
 public class TestResult extends Printable {
@@ -18,19 +19,19 @@ public class TestResult extends Printable {
 		return _failures;
 	}
 	
-	public void print(PrintWriter writer) {		
+	public void print(Writer writer) throws IOException {		
 		if (green()) {
 			writer.write("GREEN");
 			return;
 		}
-		writer.println("RED (" + _failures.size() +")");				
+		writer.write("RED (" + _failures.size() +")\n");				
 		int index = 1;
 		Enumeration iter = _failures.iterator();
 		while (iter.hasMoreElements()) {
-			writer.print(index);
-			writer.print(") ");
+			writer.write(index);
+			writer.write(") ");
 			((Printable)iter.nextElement()).print(writer);
-			writer.println();
+			writer.write("\n");
 			++index;
 		}
 	}

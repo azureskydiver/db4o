@@ -4,14 +4,13 @@ public class TestException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private final Exception _cause;
+	private final Exception _reason;
 
-	public TestException(Exception cause) {
-		_cause = cause;
+	public TestException(Exception reason) {
+		_reason = reason;
 	}
 	
-	public Exception getCause() {
-		return _cause;
+	public final Exception getReason() {
+		return _reason;
 	}
-
 }

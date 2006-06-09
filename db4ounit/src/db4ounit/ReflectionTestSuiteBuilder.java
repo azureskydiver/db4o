@@ -1,7 +1,6 @@
 package db4ounit;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Vector;
 
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
@@ -46,7 +45,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		Method[] methods = clazz.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (!isTestMethod(method)) continue;			
+			if (!TestPlatform.isTestMethod(method)) continue;			
 			tests.addElement(createTest(instance, method));
 		}		
 		return new TestSuite(clazz.getName(), toArray(tests));
@@ -61,18 +60,9 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	protected Object newInstance(Class clazz) {		
 		try {
 			return clazz.newInstance();
-		} catch (InstantiationException e) {
-			throw new TestException(e);
-		} catch (IllegalAccessException e) {
+		} catch (Exception e) {
 			throw new TestException(e);
 		}
-	}
-	
-	protected boolean isTestMethod(Method method) {
-		return method.getName().startsWith("test")			
-			&& Modifier.isPublic(method.getModifiers())
-			&& !Modifier.isStatic(method.getModifiers())
-			&& method.getParameterTypes().length == 0;
 	}
 	
 	protected Test createTest(Object instance, Method method) {
