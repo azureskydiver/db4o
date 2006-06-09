@@ -5,7 +5,7 @@ import db4ounit.db4o.Db4oFixture;
 import db4ounit.db4o.Db4oTestCase;
 
 public class SimpleDb4oTestCase extends Db4oTestCase {
-	private static class Data {}
+	public static class Data {}
 	
 	private boolean[] _everythingCalled=new boolean[3];
 	private Db4oFixture _expectedFixture;
