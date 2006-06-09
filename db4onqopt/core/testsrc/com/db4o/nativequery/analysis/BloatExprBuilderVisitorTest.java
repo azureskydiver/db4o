@@ -657,7 +657,6 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	// conjunctions
 
-// FIXME
 	boolean sampleBoolBoolAnd(Data data) {
 		return !data.getBool()&&data.getBool();
 	}
