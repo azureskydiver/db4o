@@ -8,6 +8,7 @@ public class CountAnnotatedSheep {
 	
 	public void configure() {
 		Db4o.configure().activationDepth(0);
+		Db4o.configure().updateDepth(0);
 	}
 	
 	public void store() {
@@ -25,29 +26,45 @@ public class CountAnnotatedSheep {
 	
 	public void testRead() {
 		Test.objectContainer().purge();
-		Query sheepQuery=Test.query();
-		sheepQuery.constrain(Sheep.class);
-		sheepQuery.descend("name").constrain(String.valueOf(NUMSHEEP));
-		ObjectSet<Sheep> sheep=sheepQuery.execute();
-		Test.ensureEquals(1,sheep.size());
-		Sheep curSheep=sheep.next();
+		Sheep curSheep = (Sheep) fetch(Sheep.class,String.valueOf(NUMSHEEP));
 		int sheepCount=1;
 		while(curSheep.parent!=null) {
+			Test.ensure(curSheep.constructorCalled());
 			curSheep=curSheep.parent;
 			sheepCount++;
 		}
 		Test.ensureEquals(NUMSHEEP,sheepCount);
 
-		Query noSheepQuery=Test.query();
-		noSheepQuery.constrain(SheepNotAnnotated.class);
-		noSheepQuery.descend("name").constrain(String.valueOf(NUMSHEEP));
-		ObjectSet<SheepNotAnnotated> noSheep=noSheepQuery.execute();
-		Test.ensureEquals(1,noSheep.size());
-		SheepNotAnnotated curNoSheep=noSheep.next();
+		SheepNotAnnotated curNoSheep = (SheepNotAnnotated) fetch(SheepNotAnnotated.class,String.valueOf(NUMSHEEP));
+		Test.ensure(!curNoSheep.constructorCalled());
 		Test.ensure(curNoSheep.parent==null);
 	}
-	
-	public static void main(String[] args) {
-		Test.runSolo(CountAnnotatedSheep.class);
+
+	public void testUpdate() {
+		Test.objectContainer().purge();
+		Sheep curSheep = (Sheep) fetch(Sheep.class,String.valueOf(NUMSHEEP));
+		String oldName=curSheep.getName();
+		curSheep.setName(oldName+"X");
+		Test.store(curSheep);
+		SheepNotAnnotated curNoSheep = (SheepNotAnnotated) fetch(SheepNotAnnotated.class,String.valueOf(NUMSHEEP));
+		Test.objectContainer().ext().activate(curNoSheep,1);
+		String oldNoName=curNoSheep.getName();
+		curNoSheep.setName(oldNoName+"X");
+		Test.store(curNoSheep);
+		Test.commit();
+		Test.reOpen();
+		fetch(Sheep.class,oldName+"X");
+		// FIXME: problem with configuration or rather with global update depth of 0?
+		// fetch(SheepNotAnnotated.class,oldNoName);
 	}
+
+	private Object fetch(Class clazz,String name) {
+		Query noSheepQuery=Test.query();
+		noSheepQuery.constrain(clazz);
+		noSheepQuery.descend("name").constrain(name);
+		ObjectSet noSheep=noSheepQuery.execute();
+		Test.ensureEquals(1,noSheep.size());
+		return noSheep.next();
+	}
+
 }

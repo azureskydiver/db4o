@@ -4,11 +4,13 @@ package com.db4o.test;
 public class SheepNotAnnotated {
 	
 	private String name;
+	private boolean constructorCalled=false;
 	
 	SheepNotAnnotated parent;
 	public SheepNotAnnotated(String name, SheepNotAnnotated parent) {
 		this.name = name;
 		this.parent = parent;
+		constructorCalled=true;
 	}
 @Override
 public String toString() {
@@ -20,4 +22,8 @@ public String getName() {
 public void setName(String name) {
 	this.name = name;
 }
+
+	public boolean constructorCalled() {
+		return constructorCalled;
+	}
 }
