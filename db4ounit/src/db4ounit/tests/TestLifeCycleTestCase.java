@@ -7,7 +7,7 @@ import db4ounit.TestSuite;
 
 public class TestLifeCycleTestCase {
 	public void testLifeCycle() {
-		TestSuite suite = new ReflectionTestSuiteBuilder().fromClass(RunsLifeCycle.class);
+		TestSuite suite = new ReflectionTestSuiteBuilder(RunsLifeCycle.class).build();
 		FrameworkTestCase.runTestAndExpect(suite, 1);
 		Assert.isTrue(getTestSubject(suite).tearDownCalled());
 	}

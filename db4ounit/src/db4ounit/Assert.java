@@ -1,8 +1,20 @@
 package db4ounit;
 
+
 public final class Assert {
+	
+	public static void expect(Class exception, CodeBlock block) {
+		try {
+			block.run();
+		} catch (Exception e) {
+			if (exception.isInstance(e)) return;
+			fail("Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'");
+		}
+		fail("Exception '" + exception.getName() + "' expected");
+	}
+	
 	public static void fail() {
-		fail("Assertion failed");
+		fail("FAILURE");
 	}
 
 	public static void fail(String msg) {
@@ -19,17 +31,33 @@ public final class Assert {
 	}
 	
 	public static void areEqual(boolean expected, boolean actual) {
-		if(expected == actual) return;
-		fail("Expected '"+ expected + "' but was '"+ actual + "'");
+		if (expected == actual) return;
+		fail(failureMessage(new Boolean(expected), new Boolean(actual)));
 	}
 
 	public static void areEqual(int expected, int actual) {
 		if (expected == actual) return;
-		fail("Expected '"+ expected + "' but was '" + actual + "'");
+		fail(failureMessage(new Integer(expected), new Integer(actual)));
 	}
 
-	public static void areEqual(Object expected, Object actual) {
-		if(expected.equals(actual)) return;
-		fail("Expected '"+ expected + "' but was '" + actual + "'");
+	public static void areEqual(Object expected, Object actual) {		
+		if (equals(expected, actual)) return;
+		fail(failureMessage(expected, actual));
+	}
+
+	public static void areSame(Object expected, Object actual) {
+		if (expected == actual) return;
+		fail(failureMessage(expected, actual));
+	}
+	
+	private static String failureMessage(Object expected, Object actual) {
+		return "Expected '"+ expected + "' but was '" + actual + "'";
+	}
+	
+	private static boolean equals(Object expected, Object actual) {
+		return expected == actual
+			|| (expected != null
+				&& actual != null
+				&& expected.equals(actual));
 	}
 }

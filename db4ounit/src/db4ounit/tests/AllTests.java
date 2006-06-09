@@ -8,12 +8,12 @@ import db4ounit.TestSuiteBuilder;
 public class AllTests implements TestSuiteBuilder {
 	
 	public TestSuite build() {
-		return new ReflectionTestSuiteBuilder().fromClasses(new Class[] {
+		return new ReflectionTestSuiteBuilder(new Class[] {
 			FrameworkTestCase.class,
 			AssertTestCase.class,
 			TestLifeCycleTestCase.class,
 			db4ounit.db4o.tests.AllTests.class,			
-		});
+		}).build();
 	}
 		
 	public static void main(String[] args) {

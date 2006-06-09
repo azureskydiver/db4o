@@ -9,8 +9,9 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
 	private Db4oFixture _fixture;
 	
-	public Db4oTestSuiteBuilder(Db4oFixture fixture) {
-		if (null == fixture) throw new IllegalArgumentException("fixture");
+	public Db4oTestSuiteBuilder(Db4oFixture fixture, Class clazz) {		
+		super(clazz);
+		if (null == fixture) throw new IllegalArgumentException("fixture");		
 		 _fixture = fixture;
 	}
 

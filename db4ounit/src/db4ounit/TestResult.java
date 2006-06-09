@@ -1,8 +1,7 @@
 package db4ounit;
 
 import java.io.PrintWriter;
-
-import com.db4o.foundation.*;
+import java.util.Enumeration;
 
 public class TestResult extends Printable {
 	private TestFailureCollection _failures = new TestFailureCollection();
@@ -26,11 +25,11 @@ public class TestResult extends Printable {
 		}
 		writer.println("RED (" + _failures.size() +")");				
 		int index = 1;
-		Iterator4 iter = _failures.iterator();
-		while (iter.hasNext()) {
+		Enumeration iter = _failures.iterator();
+		while (iter.hasMoreElements()) {
 			writer.print(index);
 			writer.print(") ");
-			((Printable)iter.next()).print(writer);
+			((Printable)iter.nextElement()).print(writer);
 			writer.println();
 			++index;
 		}
