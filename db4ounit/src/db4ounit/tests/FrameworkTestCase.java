@@ -1,6 +1,6 @@
 package db4ounit.tests;
 
-import com.db4o.foundation.Iterator4;
+import java.util.Enumeration;
 
 import db4ounit.Assert;
 import db4ounit.Test;
@@ -41,8 +41,8 @@ public class FrameworkTestCase {
 		test.run(result);
 		Assert.areEqual(expFailures, result.failures().size());
 		if (checkException) {
-			for(Iterator4 iter=result.failures().iterator(); iter.hasNext();) {
-				TestFailure failure = (TestFailure) iter.next();
+			for(Enumeration iter=result.failures().iterator(); iter.hasMoreElements();) {
+				TestFailure failure = (TestFailure) iter.nextElement();
 				Assert.isTrue(EXCEPTION.equals(failure.getFailure()));
 			}
 		}

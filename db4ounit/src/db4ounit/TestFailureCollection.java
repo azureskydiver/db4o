@@ -1,14 +1,14 @@
 package db4ounit;
 
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
+import java.util.Enumeration;
+import java.util.Vector;
 
 public class TestFailureCollection {
 	
-	Collection4 _failures = new Collection4();
+	Vector _failures = new Vector();
 	
-	public Iterator4 iterator() {
-		return _failures.strictIterator();
+	public Enumeration iterator() {
+		return _failures.elements();
 	}
 	
 	public int size() {

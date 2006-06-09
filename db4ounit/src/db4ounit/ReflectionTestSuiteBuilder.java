@@ -5,17 +5,35 @@ import java.lang.reflect.Modifier;
 
 import com.db4o.foundation.Collection4;
 
-public class ReflectionTestSuiteBuilder {
+public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
-	public TestSuite fromClasses(Class[] classes) {		
+	private Class[] _classes;
+
+	public ReflectionTestSuiteBuilder(Class clazz) {
+		if (null == clazz) throw new IllegalArgumentException("clazz");
+		_classes = new Class[] { clazz };
+	}
+	
+	public ReflectionTestSuiteBuilder(Class[] classes) {
+		if (null == classes) throw new IllegalArgumentException("classes");
+		_classes = classes;
+	}
+	
+	public TestSuite build() {
+		return (1 == _classes.length)
+			? fromClass(_classes[0])
+			: fromClasses(_classes);
+	}
+	
+	protected TestSuite fromClasses(Class[] classes) {		
 		TestSuite[] suites = new TestSuite[classes.length];
 		for (int i = 0; i < classes.length; i++) {
 			suites[i] = fromClass(classes[i]);
 		}
-		return new TestSuite(null, suites);
+		return new TestSuite(suites);
 	}
 	
-	public TestSuite fromClass(Class clazz) {
+	protected TestSuite fromClass(Class clazz) {
 		
 		Object instance = newInstance(clazz);
 		if (instance instanceof TestSuiteBuilder) {
@@ -54,5 +72,5 @@ public class ReflectionTestSuiteBuilder {
 	
 	protected Test createTest(Object instance, Method method) {
 		return new TestMethod(instance, method);
-	}
+	}	
 }

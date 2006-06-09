@@ -11,9 +11,13 @@ public class TestRunner {
 		_suite = suite;
 	}
 	
-	public TestRunner(Class suite) {
-		if (null == suite) throw new IllegalArgumentException("suite");
-		_suite = new ReflectionTestSuiteBuilder().fromClass(suite);
+	public TestRunner(TestSuiteBuilder builder) {
+		if (null == builder) throw new IllegalArgumentException("suite");
+		_suite = builder.build();
+	}
+	
+	public TestRunner(Class clazz) {
+		this(new ReflectionTestSuiteBuilder(clazz));
 	}
 
 	public void run() {
