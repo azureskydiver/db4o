@@ -1,5 +1,6 @@
 package com.db4o.config.annotations;
 
+import com.db4o.*;
 import com.db4o.config.*;
 
 public class CascadeConfigurator extends Db4oConfigurator {
@@ -16,14 +17,14 @@ public class CascadeConfigurator extends Db4oConfigurator {
 
 	protected void configure() {
 		ObjectClass objectClass=objectClass(className);
-		ObjectConfig objectConfig=(fieldName==null ? objectClass : objectClass.objectField(fieldName));
+		Config4Abstract objectConfig=(fieldName==null ? (Config4Abstract)objectClass : (Config4Abstract)objectClass.objectField(fieldName));
 		for (CascadeType t : cascadeTypes) {
 			configureCascade(objectConfig, t);
 		}
 
 	}
 	
-	private void configureCascade(ObjectConfig objectConfig, CascadeType t) {
+	private void configureCascade(Config4Abstract objectConfig, CascadeType t) {
 		switch (t) {
 		case UPDATE:
 			objectConfig.cascadeOnUpdate(true);
