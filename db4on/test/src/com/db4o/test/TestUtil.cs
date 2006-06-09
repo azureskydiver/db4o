@@ -153,7 +153,7 @@ namespace com.db4o.test {
       
       static internal int NormalizeNArray1(Object a_object, Object a_all, int a_next, int[] a_dim, int a_index) {
          if (a_index == a_dim.Length - 1) {
-            for (int i1 = 0; i1 < a_dim[a_index]; i1++) j4o.lang.reflect.JavaArray.Set(a_all, a_next++, j4o.lang.reflect.JavaArray.Get(a_object, i1));
+			 for (int i1 = 0; i1 < a_dim[a_index]; i1++) ((Array)a_all).SetValue(j4o.lang.reflect.JavaArray.Get(a_object, i1), a_next++);
          } else {
             for (int i1 = 0; i1 < a_dim[a_index]; i1++) a_next = NormalizeNArray1(j4o.lang.reflect.JavaArray.Get(a_object, i1), a_all, a_next, a_dim, a_index + 1);
          }
