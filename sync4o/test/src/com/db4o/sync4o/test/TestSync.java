@@ -31,15 +31,21 @@ public class TestSync{
 
   public static void main(String[] args){
   
-    // For JDK 1.1.8 compatibility we cannot use System.setPropery()...
-    //System.setProperty(SimpleDeviceManager.PROP_DM_DIR_BASE, "config");
-    Properties props = System.getProperties();
-    props.put(SimpleDeviceManager.PROP_DM_DIR_BASE, "test/config");
-    System.setProperties(props);
   
     try{
-    
+
+      // For JDK 1.1.8 compatibility we cannot use System.setPropery()...
+      Properties props = System.getProperties();
+      
+      // This sets the root of our config tree to be ./config
+      props.put(SimpleDeviceManager.PROP_DM_DIR_BASE, "config");
+      
+      System.setProperties(props);
+      
+      // the "." argument specifies the current working directory
+      // as the root for sync operations
       SyncManager syncManager = SyncManager.getSyncManager(".");
+      
       syncManager.sync();
     
     }
