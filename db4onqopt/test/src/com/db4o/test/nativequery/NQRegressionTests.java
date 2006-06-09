@@ -61,6 +61,10 @@ public class NQRegressionTests {
 		public String getName() {
 			return name;
 		}
+		
+		public boolean getBool() {
+			return bool;
+		}
 
 		public Data getPrev() {
 			return prev;
@@ -374,6 +378,12 @@ public class NQRegressionTests {
 			}
 		},
 		// conjunction
+		new ExpectingPredicate("bool&&!getBool()") {
+			public int expected() { return 0;}
+			public boolean match(Data candidate) {
+				return candidate.bool&&!candidate.getBool();
+			}
+		},
 		new ExpectingPredicate("id>1&&getName().eq(CSTR)") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
@@ -393,6 +403,12 @@ public class NQRegressionTests {
 			}
 		},
 		// disjunction
+		new ExpectingPredicate("bool||getId()==1") {
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return candidate.bool||candidate.getId()==1;
+			}
+		},
 		new ExpectingPredicate("id==1||getName().eq(CSTR)") {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
