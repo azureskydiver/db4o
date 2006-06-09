@@ -1,6 +1,3 @@
-/**
- * 
- */
 package db4ounit.tests;
 
 import db4ounit.Test;
