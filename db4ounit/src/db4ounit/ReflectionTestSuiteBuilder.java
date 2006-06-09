@@ -47,18 +47,24 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
 			if (!isTestMethod(method)) continue;			
-			tests.add(createTest(instance, method));
+			tests.addElement(createTest(instance, method));
 		}		
-		return new TestSuite(clazz.getName(), (Test[])tests.toArray(new Test[tests.size()]));
+		return new TestSuite(clazz.getName(), toArray(tests));
+	}
+
+	private Test[] toArray(Vector tests) {
+		Test[] array = new Test[tests.size()];
+		tests.copyInto(array);
+		return array;
 	}
 
 	protected Object newInstance(Class clazz) {		
 		try {
 			return clazz.newInstance();
 		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
+			throw new TestException(e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+			throw new TestException(e);
 		}
 	}
 	
