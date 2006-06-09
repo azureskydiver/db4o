@@ -75,6 +75,8 @@
 	<target name="init">
 		<mkdir dir="${db4ounit.net.dir}" />
 		<mkdir dir="${db4ounit.net.bin.dir}" />
+		<!--
 		<copy file="${file.dll.net}" todir="${db4ounit.net.bin.dir}" />
+		-->
 	</target>
 </project>
