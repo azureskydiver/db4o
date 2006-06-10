@@ -1,7 +1,10 @@
-package com.db4o.config.annotations;
+package com.db4o.config.annotations.reflect;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
+
+import com.db4o.config.annotations.Cascade;
+import com.db4o.config.annotations.CascadeType;
 
 public class CascadeConfiguratorFactory implements Db4oConfiguratorFactory {
 
