@@ -132,12 +132,6 @@ final class YapServerThread extends Thread {
                 if(! messageProcessor()){
                     break;
                 }
-            } catch (IOException e) {
-            	if (Deploy.debug) {
-                    e.printStackTrace();
-                }
-            	break;
-            	
             } catch (Exception e) {
                 if (i_mainStream == null || i_mainStream.isClosed()) {
                     break;
