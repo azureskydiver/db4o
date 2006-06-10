@@ -3,7 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
-import com.db4o.config.annotations.Annotate;
+import com.db4o.config.annotations.reflect.Annotate;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
