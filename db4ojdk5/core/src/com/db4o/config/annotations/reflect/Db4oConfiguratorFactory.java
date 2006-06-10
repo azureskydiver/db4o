@@ -1,4 +1,4 @@
-package com.db4o.config.annotations;
+package com.db4o.config.annotations.reflect;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;

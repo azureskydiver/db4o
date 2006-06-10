@@ -1,24 +1,25 @@
-package com.db4o.config.annotations;
+package com.db4o.config.annotations.reflect;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.config.annotations.CascadeType;
 
 public class CascadeConfigurator extends Db4oConfigurator {
-	String className;
-	String fieldName;
-	CascadeType[] cascadeTypes;
+	String _className;
+	String _fieldName;
+	CascadeType[] _cascadeTypes;
 
 
 	public CascadeConfigurator(String className, String fieldName, CascadeType[] cascadeTypes) {
-		this.className = className;
-		this.fieldName = fieldName;
-		this.cascadeTypes = cascadeTypes;
+		this._className = className;
+		this._fieldName = fieldName;
+		this._cascadeTypes = cascadeTypes;
 	}
 
 	protected void configure() {
-		ObjectClass objectClass=objectClass(className);
-		Config4Abstract objectConfig=(fieldName==null ? (Config4Abstract)objectClass : (Config4Abstract)objectClass.objectField(fieldName));
-		for (CascadeType t : cascadeTypes) {
+		ObjectClass objectClass=objectClass(_className);
+		Config4Abstract objectConfig=(_fieldName==null ? (Config4Abstract)objectClass : (Config4Abstract)objectClass.objectField(_fieldName));
+		for (CascadeType t : _cascadeTypes) {
 			configureCascade(objectConfig, t);
 		}
 	}
