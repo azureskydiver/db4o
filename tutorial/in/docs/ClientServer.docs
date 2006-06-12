@@ -59,6 +59,29 @@ Everything else is absolutely identical to the local server examples above.
 
 .s com.db4o.f1.chapter5.ClientServerExample#demonstrateRemoteRollback ..
 
+.? java
+.1 Native Queries in Client/Server mode ..1
+
+A quite subtle problem may occur if you're using Native Queries as anonymous (or just non-static) inner ._
+classes in Client/Server mode. Anonymous/non-static inner class instances carry a synthetic field ._
+referencing their outer class instance - this is just Java's way of implementing inner class access ._
+to fields or final method locals of the outer class without introducing any notion of inner classes ._
+at all at the bytecode level. If such a non-static inner class predicate cannot be converted to ._
+S.O.D.A. form on the client, it will be wrapped into an evaluation and passed to the server, ._
+introducing the same problem already mentioned in the  .l Evaluations evaluation chapter ..l : ._
+db4o will try to transfer the evaluation, using the standard platform serialization mechanism. ._
+If this fails, it will just try to pass it to the server via db4o marshalling. However, this ._
+may fail, too, for example if the outer class references any local db4o objects like ._
+ObjectContainer, etc., resulting in an ObjectNotStorableException.
+
+So to be on the safe side with NQs in C/S mode, you should declare Predicates as top-level ._
+or static inner classes only. Alternatively, you could either make sure that the outer ._
+classes containing Predicate definitions could principally be persisted to db4o, too, ._
+and don't add significant overhead to the predicate (the appropriate value for 'significant'
+being your choice) or ensure during development that all predicates used actually can ._
+be optimized to S.O.D.A. form.
+..?
+
 .1 Out-of-band signalling ..
 
 Sometimes a client needs to send a special message to a server in order ._

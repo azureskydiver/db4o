@@ -73,12 +73,15 @@ Another restriction is that, while 'normal' queries can bypass encapsulation and
 access candidates' private members directly, evaluations are bound to use their ._
 external API, just as in the language itself.
 
+.? java
 
-One last hint for Javaists: Evaluations are expected to be serializable for client/server ._
+One last hint: Evaluations are expected to be serializable for client/server ._
 operation. So be careful when implementing them as (anonymous) inner classes ._
 and keep in mind that those will carry an implicit reference to their surrounding ._
 class and everything that belongs to it. Best practice is to always implement ._
 evaluations as normal top level or static inner classes.
+
+..?
 
 .1 Conclusion ..
 
