@@ -23,7 +23,8 @@ public class ExpressionBuilder {
 				ConstValue rightConst=(ConstValue)cmpExpr.right();
 				if(rightConst.value() instanceof Boolean) {
 					Boolean boolVal=(Boolean)rightConst.value();
-					return new ComparisonExpression(cmpExpr.left(),new ConstValue(Boolean.valueOf(!boolVal.booleanValue())),cmpExpr.op());
+					// new Boolean() instead of Boolean.valueOf() for .NET conversion
+					return new ComparisonExpression(cmpExpr.left(),new ConstValue(new Boolean(!boolVal.booleanValue())),cmpExpr.op());
 				}
 			}
 		}

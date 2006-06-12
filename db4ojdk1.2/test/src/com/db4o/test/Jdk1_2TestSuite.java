@@ -36,6 +36,7 @@ public class Jdk1_2TestSuite extends TestSuite{
             RefreshList.class,
             SelectDistinct.class,
             SodaEvaluation.class,
+            SortedSameOrder.class,
             StoreBigDecimal.class,
             StringCaseInsensitive.class,
             StringInLists.class,

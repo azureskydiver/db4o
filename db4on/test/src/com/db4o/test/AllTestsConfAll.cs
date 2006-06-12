@@ -158,6 +158,7 @@ namespace com.db4o.test
 				tests.Add(typeof(SodaEvaluation));
 				tests.Add(typeof(SodaNoDuplicates));
 				tests.Add(typeof(SodaNumberCoercion));
+				tests.Add(typeof(SortedSameOrder));
 				tests.Add(typeof(StoredClassInformation));
 				tests.Add(typeof(StoredFieldValue));
 #if !MONO
