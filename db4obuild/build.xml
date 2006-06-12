@@ -228,7 +228,7 @@
 		</delete>
 		<copy file="${file.java1.2.jar}" todir="${dir.objectmanager.lib}" />
 		<depend srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" closure="yes" />
-		<javac srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" debug="off" target="1.3" source="1.3">
+		<javac srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" fork="true" debug="off" target="1.3" source="1.3">
 				<include name="**/*.java" />
 				<exclude name="**/*test/*" />
 				<exclude name="**/*Test.java" />
@@ -322,7 +322,7 @@
 	<target name="compilebuild" depends="init" description="Compile Db4o build sources">
 		<mkdir dir="${dir.build.bin}" />
 		<depend srcdir="${dir.build.src}" destdir="${dir.build.bin}" closure="yes" />
-		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" debug="off" target="1.3" source="1.3">
+		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" debug="off" fork="true" target="1.3" source="1.3">
 			<classpath path="${path.classpath.full}" />
 		</javac>
 		<copy todir="${dir.build.bin}">
@@ -562,7 +562,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<javac destdir="${dir.dist.classes.test}" debug="on" target="1.5" source="1.5">
+		<javac destdir="${dir.dist.classes.test}" fork="true" debug="on" target="1.5" source="1.5">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 			</classpath>
@@ -574,8 +574,8 @@
 	<target name="compilejtutorial" depends="compilecorejava" description="Compile Db4o Java tutorial sources">
 		<mkdir dir="${dir.dist.classes.tutorial}" />
 		<antcall target="copyjava1.2" />
-		<javac srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.tutorial}" target="1.3" source="1.3" />
-		<javac srcdir="${dir.j.tutorial.src}" destdir="${dir.dist.classes.tutorial}" classpath="${dir.dist.classes.tutorial}" target="1.3" source="1.3" debug="on" />
+		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.tutorial}" target="1.3" source="1.3" />
+		<javac fork="true" srcdir="${dir.j.tutorial.src}" destdir="${dir.dist.classes.tutorial}" classpath="${dir.dist.classes.tutorial}" target="1.3" source="1.3" debug="on" />
 	</target>
 	
 	<target name="compilentutorial" depends="compiledllnet">
@@ -702,7 +702,7 @@
 	</target>
 
 	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
-		<java classname="com.db4o.test.AllTestsJdk5" failonerror="true" >
+		<java fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" >
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />

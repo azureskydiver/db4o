@@ -9,6 +9,7 @@
 		<delete dir="${dir.doctor.bin}" includes="**/*" failonerror="false"/>
 		<delete dir="${dir.build.bin}" includes="**/*" failonerror="false"/>
 		<javac srcdir="${dir.doctor.src}"
+				fork="true"
 				destdir="${dir.doctor.bin}"
 				debug="off"
 				target="1.3"
