@@ -20,7 +20,7 @@ namespace com.db4o.inside.query
 		#region ObjectSet Members
 		
 		public Object Get(int index) {
-            return _delegate.Get(index);
+            return _delegate.Get(ReverseIndex(index));
         }
 
 		public void Sort(com.db4o.query.QueryComparator cmp)
@@ -211,7 +211,7 @@ namespace com.db4o.inside.query
 			{
 				get
 				{
-					return _result.Get(_next-1);
+					return _result.Get(ReverseEnumIndex(_next-1));
 				}
 			}
 
@@ -224,6 +224,12 @@ namespace com.db4o.inside.query
 				}
 				return false;
 			}
+			
+			// FIXME: don't know the best way to get rid of this duplication in C#
+			private int ReverseEnumIndex(int idx) 
+			{
+	        	return _result.Size()-idx-1;
+	    	}
 		}
 
 		public System.Collections.IEnumerator GetEnumerator()

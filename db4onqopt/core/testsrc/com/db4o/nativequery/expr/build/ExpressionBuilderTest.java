@@ -1,6 +1,8 @@
 package com.db4o.nativequery.expr.build;
 
 import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 import junit.framework.*;
 
@@ -31,6 +33,8 @@ public class ExpressionBuilderTest extends TestCase {
 		assertSame(BoolConstExpression.TRUE,builder.not(builder.not(BoolConstExpression.TRUE)));
 		assertSame(BoolConstExpression.FALSE,builder.not(builder.not(BoolConstExpression.FALSE)));
 		assertEquals(new NotExpression(expr),builder.not(expr));
+		assertEquals(new ComparisonExpression(new FieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS),
+					builder.not(new ComparisonExpression(new FieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.FALSE),ComparisonOperator.EQUALS)));
 	}
 	
 	public void testAnd() {
