@@ -66,6 +66,10 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return true;
     }
     
+    public Object indexEntryToObject(Transaction trans, Object indexEntry){
+        return indexEntry;
+    }
+    
     public boolean indexNullHandling() {
         return false;
     }

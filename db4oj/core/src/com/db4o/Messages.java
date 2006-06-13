@@ -13,6 +13,8 @@ public final class Messages
 {
     public final static int FATAL_MSG_ID=44;
     public final static int NOT_IMPLEMENTED=49;
+    public final static int ONLY_FOR_INDEXED_FIELDS=66;
+    public final static int CLIENT_SERVER_UNSUPPORTED=67;
 	
     private static String[] i_messages;
 	
@@ -112,10 +114,10 @@ public final class Messages
                         "Only use persisted first class objects as keys for IdentityHashMap.",
                         "This functionality is only available from version 5.0 onwards.",
                         "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}",
-                        "Old database file format detected. To allow automatic updates call Db4o.configure().allowVersionUpdates(true)." // 65
-                        
-						
-									};
+                        "Old database file format detected. To allow automatic updates call Db4o.configure().allowVersionUpdates(true).", // 65
+                        "This functionality is only available for indexed fields.", // 66
+                        "This functionality is not supported for db4o clients in Client/Server mode." // 67
+		                };
 		        }else{
 		            i_messages = new String[0];
 		        }

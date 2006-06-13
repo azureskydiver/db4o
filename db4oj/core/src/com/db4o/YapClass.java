@@ -866,6 +866,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         return 0;
     }
+    
+    public Object indexEntryToObject(Transaction trans, Object indexEntry){
+        if(indexEntry == null){
+            return null;
+        }
+        int id = ((Integer)indexEntry).intValue();
+        return getStream().getByID2(trans, id);
+    }
 
     final Tree getIndex(Transaction a_trans) {
         

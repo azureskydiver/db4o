@@ -49,6 +49,8 @@ public interface TypeHandler4 extends Indexable4
      * calculation for the payload area at the end of the slot.
      */
     void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
+    
+    Object indexEntryToObject(Transaction trans, Object indexEntry);
 	
 	void prepareComparison(Transaction a_trans, Object obj);
 	

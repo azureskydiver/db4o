@@ -73,6 +73,15 @@ public final class YapString extends YapIndependantType {
     public YapClass getYapClass(YapStream a_stream) {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
+    
+    public Object indexEntryToObject(Transaction trans, Object indexEntry){
+        try {
+            return MarshallerFamily.current()._string.readShort(_stream, (YapReader)indexEntry);
+        } catch (CorruptionException e) {
+            
+        }
+        return null;
+    }
 
     public boolean indexNullHandling() {
         return true;

@@ -765,6 +765,39 @@ public class YapField implements StoredField {
     boolean supportsIndex() {
         return alive() && i_handler.supportsIndex();
     }
+    
+    public void traverseValues(final Visitor4 userVisitor) {
+        
+        if(! alive()){
+            return;
+        }
+        
+        if(! hasIndex()){
+            Exceptions4.throwRuntimeException(Messages.ONLY_FOR_INDEXED_FIELDS);
+        }
+        
+        YapStream stream = i_yapClass.getStream();
+        
+        if(stream.isClient()){
+            Exceptions4.throwRuntimeException(Messages.CLIENT_SERVER_UNSUPPORTED);
+        }
+        
+        synchronized(stream.lock()){
+            final Transaction trans = stream.getTransaction();
+            Tree tree = getIndex(trans).indexTransactionFor(trans).getRoot();
+            Tree.traverse(tree, new Visitor4() {
+                public void visit(Object obj) {
+                    IxTree ixTree = (IxTree)obj;
+                    ixTree.visitAll(new IntObjectVisitor() {
+                        public void visit(int anInt, Object anObject) {
+                            userVisitor.visit(i_handler.indexEntryToObject(trans, anObject));
+                        }
+                    });
+                }
+            });
+        }
+    }
+
 
     private final TypeHandler4 wrapHandlerToArrays(YapStream a_stream, TypeHandler4 a_handler) {
         if (i_isNArray) {
@@ -848,5 +881,8 @@ public class YapField implements StoredField {
         }
         return str;
     }
+    
+
+
 
 }
