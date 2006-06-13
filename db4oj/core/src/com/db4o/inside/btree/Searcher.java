@@ -78,7 +78,7 @@ public class Searcher {
             return;
         }
 
-        // _for must be LOWEST here
+        // _target must be LOWEST here
         _upper = _cursor;
         
     }
