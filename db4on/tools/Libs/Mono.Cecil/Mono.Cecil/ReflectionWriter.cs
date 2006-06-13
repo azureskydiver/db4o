@@ -880,10 +880,18 @@ namespace Mono.Cecil {
 				m_constWriter.Write ((ushort) Convert.ToChar (value));
 				break;
 			case ElementType.I1 :
+#if CF_1_0
+				m_constWriter.Write ((sbyte) value);
+#else
 				m_constWriter.Write (Convert.ToSByte (value));
+#endif
 				break;
 			case ElementType.I2 :
+#if CF_1_0
+				m_constWriter.Write ((short) value);
+#else
 				m_constWriter.Write (Convert.ToInt16 (value));
+#endif
 				break;
 			case ElementType.I4 :
 				m_constWriter.Write (Convert.ToInt32 (value));
@@ -892,7 +900,11 @@ namespace Mono.Cecil {
 				m_constWriter.Write (Convert.ToInt64 (value));
 				break;
 			case ElementType.U1 :
+#if CF_1_0
+				m_constWriter.Write ((byte) value);
+#else
 				m_constWriter.Write (Convert.ToByte (value));
+#endif
 				break;
 			case ElementType.U2 :
 				m_constWriter.Write (Convert.ToUInt16 (value));
