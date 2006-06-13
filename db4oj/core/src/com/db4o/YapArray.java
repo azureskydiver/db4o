@@ -161,6 +161,10 @@ public class YapArray extends YapIndependantType {
         return YapConst.YAPARRAY;
     }
     
+    public Object indexEntryToObject(Transaction trans, Object indexEntry){
+        return null; // not supported
+    }
+    
     public boolean indexNullHandling() {
         return i_handler.indexNullHandling();
     }

@@ -2,6 +2,7 @@
 
 package com.db4o.ext;
 
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -46,6 +47,21 @@ public interface StoredField {
 	 * @param name the new name
 	 */
 	public void rename(String name);
+    
+    
+    /**
+     * specialized highspeed API to collect all values of a field for all instances
+     * of a class, if the field is indexed. 
+     * <br><br>The field values will be taken directly from the index without the
+     * detour through class indexes or object instantiation.
+     * <br><br>
+     * If this method is used to get the values of a first class object index,
+     * deactivated objects will be passed to the visitor. 
+     * 
+     * @param visitor the visitor to be called with each index value.
+     */
+    public void traverseValues(Visitor4 visitor);
+    
 	
 
 //  will need for replication. Requested for 3.0 
