@@ -465,7 +465,8 @@
 			targettype="library"
 			destfile="${file.dll.tools.mono}"
 			debug="true"
-			definitions="MONO">
+			executable="${mono.executable}"
+			definitions="${mono.definitions}">
 			
 			<exclude name="compact*/**" />
 			<exclude name="**/templates/**" />
@@ -485,9 +486,10 @@
 			targettype="exe"
 			destfile="${file.exe.tests.mono}"
 			debug="true"
+			executable="${mono.executable}"
 			mainclass="com.db4o.test.AllTests"
 			extraoptions="-r:System.Drawing"
-			definitions="MONO">
+			definitions="${mono.definitions}">
 			
 			<exclude name="compact*/**" />
 			<exclude name="**/ListElementByIdentity.cs" />
@@ -514,12 +516,12 @@
 			destfile="${file.dll.mono}"
 			docfile="${file.xml.mono}"
 			debug="${compiledll.debug}"
+			executable="${mono.executable}"
 			warnlevel="0"
 			optimize="true"
-			definitions="MONO">
+			definitions="${mono.definitions}">
 			<include name="**/*.cs" />
 			<exclude name="compact*/**" />
-			<exclude name="**/templates/**" />
 		</csc>
 		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 	</target>
@@ -594,7 +596,7 @@
 	
 	<target name="ndocmono" depends="preparendoc" description="Builds public .net docs for the mono platform">
 		<exec executable="mono" failonerror="true">
-			<arg file="${ndoc.home}/bin/mono/1.0/NDocConsole.exe" />
+			<arg file="${ndoc.home}/bin/${mono.ndoc.executable}" />
 			<arg value="${file.dll.mono}" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-documenter=MSDN" />
@@ -966,14 +968,12 @@
 		</ant>
 	</target>
 	
-	<target name="zipmono-pascalcase" depends="init"  description="Zip Mono PascalCase distribution">
-			
+	<target name="do-zipmono-pascalcase">
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		
 		<antcall target="sharpen">
 		</antcall>
 			
-		<echo message="MONO PASCALCASE" />
 		<echo message="MONO PASCALCASE: core" />
 		<antcall target="do-compiledllmono">
 			<param name="src.dir" location="${dir.n.core.src}" />
@@ -994,6 +994,24 @@
 		</antcall>
 		
 		<antcall target="prepare-mono-distro">
+		</antcall>
+	</target>
+	
+	<target name="zipmono-pascalcase" depends="init"  description="Zip Mono PascalCase distribution">
+		<echo message="MONO PASCALCASE" />
+		<antcall target="do-zipmono-pascalcase">
+			<param name="mono.definitions" value="MONO" />
+			<param name="mono.executable" value="mcs" />
+			<param name="mono.ndoc.executable" value="mono/1.0/NDocConsole.exe" />
+		</antcall>
+	</target>
+
+	<target name="zipmono2-pascalcase" depends="init"  description="Zip Mono with generics PascalCase distribution">
+		<echo message="MONO with Generics PASCALCASE" />
+		<antcall target="do-zipmono-pascalcase">
+			<param name="mono.definitions" value="MONO;NET_2_0" />
+			<param name="mono.executable" value="gmcs" />
+			<param name="mono.ndoc.executable" value="net/2.0/NDocConsole.exe" />
 		</antcall>
 	</target>
 	
@@ -1287,6 +1305,8 @@
 	<target name="buildnet2" depends="zipnet2" description="Full PascalCase NET 2.0 build" />
 	
 	<target name="buildmono" depends="zipmono-pascalcase" description="Full Mono build (now PascalCase)" />
+	
+	<target name="buildmono2" depends="zipmono2-pascalcase" description="Full Mono build with generics (now PascalCase)" />
 
 	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	

@@ -22,11 +22,11 @@ endif
 
 MAIN_TEST=com.db4o.test.AllTests
 
-DLL_CORE_DIST=$(DIR_HOME)/dll/db4o.dll
-DLL_CORE=$(DIR_BIN)/db4o.dll
-DLL_TOOLS=$(DIR_BIN)/db4o-mono-tools.dll
+DLL_CORE_DIST=$(DIR_HOME)/dll/Db4o.dll
+DLL_CORE=$(DIR_BIN)/Db4o.dll
+DLL_TOOLS=$(DIR_BIN)/Db4oTools.dll
 DEBUGGER_FILES=$(DIR_BIN)/*.mdb
-EXE_TEST_FILE=db4o-mono-test.exe
+EXE_TEST_FILE=Db4oMonoTest.exe
 EXE_TEST_PATH=$(DIR_BIN)/$(EXE_TEST_FILE)
 
 MCS_OPTS=-warn:0 -debug+ -define:MONO
