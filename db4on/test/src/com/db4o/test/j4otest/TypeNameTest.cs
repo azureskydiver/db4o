@@ -191,17 +191,23 @@ namespace com.db4o.test.j4otest
 			EnsureRoundtrip(typeof(SimpleGenericType<int>[]));
             EnsureRoundtrip(typeof(SimpleGenericType<int>[,]));
             EnsureRoundtrip(typeof(SimpleGenericType<int>[][]));
+#if !MONO
             EnsureRoundtrip(typeof(SimpleGenericType<int>[][,,]));
+#endif
         }
 
         public void TestGenericOfArrays()
         {
             EnsureRoundtrip(typeof(SimpleGenericType<string[]>));
             EnsureRoundtrip(typeof(SimpleGenericType<string[]>[]));
+#if !MONO
             EnsureRoundtrip(typeof(SimpleGenericType<string[,]>[][]));
+#endif
             EnsureRoundtrip(typeof(SimpleGenericType<string[][]>[]));
             EnsureRoundtrip(typeof(SimpleGenericType<string[][]>[][]));
+#if !MONO
             EnsureRoundtrip(typeof(SimpleGenericType<SimpleGenericType<string[][]>[][,]>[][]));
+#endif
         }
 
         public void TestUnversionedGenericName()

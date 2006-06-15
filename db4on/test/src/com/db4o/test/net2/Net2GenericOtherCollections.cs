@@ -36,7 +36,7 @@
     {
         LinkedList <CItem> linkedList;
         Queue<CItem> queue;
-#if !CF_2_0
+#if !CF_2_0 && !MONO
         SortedDictionary<CItem,string> sortedDictionary;
 #endif
         SortedList<CItem,string> sortedList;
@@ -55,7 +55,7 @@
             {
                 queue.Enqueue(new CItem("q" + i));
             }
-#if !CF_2_0
+#if !CF_2_0 && !MONO
             sortedDictionary = new SortedDictionary<CItem, string>();
             for (int i = 0; i < 10; i++)
             {
@@ -87,7 +87,7 @@
             {
                 Tester.Ensure(queue.Dequeue().Equals(new CItem("q" + i)));
             }
-#if !CF_2_0
+#if !CF_2_0 && !MONO
             // Sorted dictionary needs explicit activation since it uses a TreeSet underneath.
             oc.Activate(sortedDictionary, int.MaxValue);
             for (int i = 0; i < 10; i++)
@@ -118,7 +118,7 @@
 
             queue.Enqueue(new CItem("update"));
             oc.Set(queue);
-#if !CF_2_0
+#if !CF_2_0 && !MONO
             sortedDictionary.Add(new CItem("update"), "update");
             oc.Set(sortedDictionary);
 #endif
