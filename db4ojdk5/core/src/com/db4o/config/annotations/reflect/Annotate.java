@@ -22,6 +22,7 @@ import com.db4o.config.annotations.UpdateDepth;
  * sets db4o configurations accordingly annotations
  * 
  */
+
 public class Annotate {
 	Map<Class<? extends Annotation>, Db4oConfiguratorFactory> _configurators;
 
@@ -42,32 +43,31 @@ public class Annotate {
 
 	private void initMap() throws NoSuchMethodException {
 		_configurators = new HashMap<Class<? extends Annotation>, Db4oConfiguratorFactory>();
-		_configurators.put(Cascade.class, new CascadeConfiguratorFactory());
-		_configurators.put(UpdateDepth.class, new UpdateDepthFactory());
-		_configurators.put(MaximumActivationDepth.class,
-				new MaximumActivationDepthFactory());
-		_configurators.put(MinimumActivationDepth.class,
-				new MinimumActivationDepthFactory());
-		_configurators.put(Index.class, new NoArgsFieldConfiguratorFactory(
-				IndexedConfigurator.class));
-		_configurators.put(CallConstructor.class,
-				new NoArgsClassConfiguratorFactory(
-						CallConstructorConfigurator.class));
-		_configurators.put(QueryEvaluationOff.class,
-				new NoArgsFieldConfiguratorFactory(
-						QueryEvaluationOffConfigurator.class));
-		_configurators.put(GenerateUUIDs.class,
-				new NoArgsClassConfiguratorFactory(
-						GenerateUUIDsConfigurator.class));
-		_configurators.put(GenerateVersionNumbers.class,
-				new NoArgsClassConfiguratorFactory(
-						GenerateVersionNumbersConfigurator.class));
-		_configurators.put(StoreTransientFields.class,
-				new NoArgsClassConfiguratorFactory(
-						StoreTransientFieldsConfigurator.class));
-		_configurators.put(PersistStaticFieldValues.class,
-				new NoArgsClassConfiguratorFactory(
-						PersistStaticFieldValuesConfigurator.class));
+//		_configurators.put(Cascade.class, new CascadeConfiguratorFactory());
+//		_configurators.put(UpdateDepth.class, new UpdateDepthFactory());
+//		_configurators.put(MaximumActivationDepth.class,
+//				new MaximumActivationDepthFactory());
+//		_configurators.put(MinimumActivationDepth.class,
+//				new MinimumActivationDepthFactory());
+		_configurators.put(Index.class, new IndexedFactory());
+//		_configurators.put(CallConstructor.class,
+//				new NoArgsClassConfiguratorFactory(
+//						CallConstructorConfigurator.class));
+//		_configurators.put(QueryEvaluationOff.class,
+//				new NoArgsFieldConfiguratorFactory(
+//						QueryEvaluationOffConfigurator.class));
+//		_configurators.put(GenerateUUIDs.class,
+//				new NoArgsClassConfiguratorFactory(
+//						GenerateUUIDsConfigurator.class));
+//		_configurators.put(GenerateVersionNumbers.class,
+//				new NoArgsClassConfiguratorFactory(
+//						GenerateVersionNumbersConfigurator.class));
+//		_configurators.put(StoreTransientFields.class,
+//				new NoArgsClassConfiguratorFactory(
+//						StoreTransientFieldsConfigurator.class));
+//		_configurators.put(PersistStaticFieldValues.class,
+//				new NoArgsClassConfiguratorFactory(
+//						PersistStaticFieldValuesConfigurator.class));
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Annotate {
 	 */
 	public Config4Class reflectAnnotations(Class clazz) {
 		try {
-			reflectClass(clazz);
+//			reflectClass(clazz);
 			reflectFields(clazz);
 
 		} catch (SecurityException e) {
@@ -89,14 +89,17 @@ public class Annotate {
 		return _classConfig;
 	}
 
-	public void reflectClass(Class clazz) {
+	/**
+	 * reserved for the next release with the full annotation support
+	 */
+	private void reflectClass(Class clazz) {
 		Annotation[] annotations = clazz.getAnnotations();
 		for (Annotation a : annotations) {
 			applyAnnotation(clazz, a);
 		}
 	}
 
-	public void reflectFields(Class clazz) {
+	private void reflectFields(Class clazz) {
 
 		Field[] declaredFields;
 		try {
