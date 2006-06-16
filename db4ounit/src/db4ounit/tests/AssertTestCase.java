@@ -38,6 +38,7 @@ public class AssertTestCase {
 				Assert.areSame(new Object(), new Object());
 			}
 		});
+		Assert.areSame(this, this);
 	}
 	
 	private void expectFailure(CodeBlock block) {
