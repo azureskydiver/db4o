@@ -27,15 +27,20 @@ public class TestMethod implements Test {
 	}
 
 	public void run(TestResult result) {
+		result.testStarted(this);
 		try {
 			setUp();
 			_method.invoke(_subject, new Object[0]);
 		} catch (InvocationTargetException e) {
 			result.testFailed(this, e.getTargetException());
 		} catch (Exception e) {
-			throw new TestException(e);
+			result.testFailed(this, e);
 		} finally {
-			tearDown();
+			try {
+				tearDown();
+			} catch (TestException e) {
+				result.testFailed(this, e);
+			}
 		}
 	}
 
