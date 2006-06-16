@@ -2,11 +2,10 @@ package com.db4o.test;
 
 import com.db4o.config.annotations.*;
 
-@Cascade({CascadeType.ACTIVATE})
-@CallConstructor
+
 public class Sheep {
 
-	@Index @Cascade({CascadeType.UPDATE})
+	@Index 
 	private String name;
 	private boolean constructorCalled=false;
 
