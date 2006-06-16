@@ -7,6 +7,12 @@ import java.util.Enumeration;
 public class TestResult extends Printable {
 	private TestFailureCollection _failures = new TestFailureCollection();
 	
+	private int _testCount = 0;
+	
+	public void testStarted(Test test) {
+		++_testCount;
+	}
+	
 	public void testFailed(Test test, Throwable failure) {
 		_failures.add(new TestFailure(test, failure));
 	}
@@ -21,14 +27,14 @@ public class TestResult extends Printable {
 	
 	public void print(Writer writer) throws IOException {		
 		if (green()) {
-			writer.write("GREEN");
+			writer.write("GREEN (" + _testCount + " tests)");
 			return;
 		}
-		writer.write("RED (" + _failures.size() +")\n");				
+		writer.write("RED (" + _failures.size() +" out of " + _testCount + " tests failed)\n");				
 		int index = 1;
 		Enumeration iter = _failures.iterator();
 		while (iter.hasMoreElements()) {
-			writer.write(index);
+			writer.write(String.valueOf(index));
 			writer.write(") ");
 			((Printable)iter.nextElement()).print(writer);
 			writer.write("\n");
