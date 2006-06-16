@@ -1,6 +1,5 @@
 package db4ounit;
 
-
 public final class Assert {
 	
 	public static void expect(Class exception, CodeBlock block) {
