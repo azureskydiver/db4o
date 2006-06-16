@@ -12,7 +12,6 @@ namespace Db4oAdmin
 {
 	class SodaEmitterVisitor : ExpressionVisitor, ComparisonOperandVisitor
 	{
-		private MethodDefinition _method;
 		private CilWorker _worker;
 		private InstrumentationContext _context;
 		private MethodReference _Query_Descend;
@@ -21,7 +20,6 @@ namespace Db4oAdmin
 		public SodaEmitterVisitor(InstrumentationContext context, MethodDefinition method)
 		{
 			_context = context;
-			_method = method;
 			_worker = method.Body.CilWorker;
 
 			_Query_Descend = ImportQueryMethod("Descend", typeof(string));
@@ -52,6 +50,7 @@ namespace Db4oAdmin
 		{
 			expression.Left().Accept(this);
 			expression.Right().Accept(this);
+			
 			_worker.Emit(OpCodes.Callvirt, _Query_Constrain);
 			_worker.Emit(OpCodes.Pop);
 		}
@@ -82,12 +81,22 @@ namespace Db4oAdmin
 			}
 			else if (operand.Parent() is PredicateFieldRoot)
 			{
-				FieldReference field = (FieldReference)((IFieldReferenceExpression) operand.Tag()).Field;
+				FieldReference field = GetFieldReference(operand);
 				
 				// this.<operand.FieldName()>
 				_worker.Emit(OpCodes.Ldarg_0);
 				_worker.Emit(OpCodes.Ldfld, field);
+				
+				if (field.FieldType.IsValueType)
+				{
+					_worker.Emit(OpCodes.Box, field.FieldType);
+				}
 			}
+		}
+
+		private static FieldReference GetFieldReference(FieldValue operand)
+		{
+			return (FieldReference)((IFieldReferenceExpression) operand.Tag()).Field;
 		}
 
 		public void Visit(CandidateFieldRoot root)

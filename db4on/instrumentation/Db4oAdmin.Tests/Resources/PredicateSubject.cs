@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Text;
 using Db4oAdmin.Tests.Framework;
 using com.db4o;
@@ -43,6 +43,21 @@ public class PersonByName : com.db4o.query.Predicate
 	}
 }
 
+public class PersonByAge : com.db4o.query.Predicate
+{
+	int _age;
+
+	public PersonByAge(int age)
+	{
+		_age = age;
+	}
+
+	public bool Match(Person item)
+	{
+		return item.Age == _age;
+	}
+}
+
 public class PredicateSubject
 {
 	public static void Setup(ObjectContainer container)
@@ -54,9 +69,23 @@ public class PredicateSubject
 	public static void TestByName(ObjectContainer container)
 	{
 		Setup(container);
-		ObjectSet result = container.Query(new PersonByName("jbe"));
+		AssertResult(
+				container.Query(new PersonByName("jbe")),
+				"jbe");
+	}
+
+	public static void TestByAge(ObjectContainer container)
+	{
+		Setup(container);
+		AssertResult(
+				container.Query(new PersonByAge(30)),
+				"rbo");
+	}
+
+	static void AssertResult(IList result, string expected)
+	{
 		Assert.AreEqual(1, result.Count);
-		Assert.AreEqual("jbe", ((Person)result[0]).Name);
+		Assert.AreEqual(expected, ((Person)result[0]).Name);
 	}
 }
 
