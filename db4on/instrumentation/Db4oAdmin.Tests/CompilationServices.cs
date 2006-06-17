@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Text;
 using com.db4o;
+using Db4oUnit;
 
 namespace Db4oAdmin.Tests
 {
@@ -48,8 +49,9 @@ namespace Db4oAdmin.Tests
 				CompilerParameters parameters = CreateDefaultCompilerParameters();
 				parameters.IncludeDebugInformation = false;
 				parameters.OutputAssembly = assemblyFName;
-				parameters.ReferencedAssemblies.Add(typeof (ObjectContainer).Module.FullyQualifiedName);
+				parameters.ReferencedAssemblies.Add(typeof(ObjectContainer).Module.FullyQualifiedName);
 				parameters.ReferencedAssemblies.Add(typeof(CompilationServices).Module.FullyQualifiedName);
+                parameters.ReferencedAssemblies.Add(typeof(Assert).Module.FullyQualifiedName);
 				
 				CompilerResults results = provider.CompileAssemblyFromSource(parameters, sources);
 				if (results.Errors.Count > 0)

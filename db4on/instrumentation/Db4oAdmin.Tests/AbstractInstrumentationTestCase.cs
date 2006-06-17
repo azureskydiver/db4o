@@ -4,11 +4,11 @@ using System.IO;
 using System.Reflection;
 using com.db4o;
 using com.db4o.inside.query;
-using Db4oAdmin.Tests.Framework;
+using Db4oUnit;
 
 namespace Db4oAdmin.Tests
 {
-	public abstract class AbstractInstrumentationTestCase : TestCase
+	public abstract class AbstractInstrumentationTestCase : TestLifeCycle
 	{
 		public const string DatabaseFile = "subject.yap";
 
@@ -115,6 +115,7 @@ namespace Db4oAdmin.Tests
 		{
 			string assemblyName = ResourceName + ".dll";
 			CopyParentAssemblyToTemp(typeof(ObjectContainer));
+            CopyParentAssemblyToTemp(typeof(Assert));
 			CopyParentAssemblyToTemp(GetType());
 			string path = Path.Combine(Path.GetTempPath(), assemblyName);
 			CompilationServices.EmitAssembly(path,

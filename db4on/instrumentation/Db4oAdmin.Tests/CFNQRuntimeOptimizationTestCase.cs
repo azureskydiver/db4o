@@ -1,7 +1,6 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.   http://www.db4o.com */
 using System.Reflection;
 using com.db4o.inside.query;
-using Db4oAdmin.Tests.Framework;
 
 namespace Db4oAdmin.Tests
 {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using com.db4o.inside.query;
-using Db4oAdmin.Tests.Framework;
+using Db4oUnit;
 
 namespace Db4oAdmin.Tests
 {

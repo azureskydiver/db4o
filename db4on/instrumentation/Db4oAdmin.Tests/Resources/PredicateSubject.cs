@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Text;
-using Db4oAdmin.Tests.Framework;
+using Db4oUnit;
 using com.db4o;
 
 public class Person
