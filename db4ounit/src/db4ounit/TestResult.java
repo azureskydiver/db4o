@@ -27,13 +27,14 @@ public class TestResult extends Printable {
 	
 	public void print(Writer writer) throws IOException {		
 		if (green()) {
-			writer.write("GREEN (" + _testCount + " tests)");
+			writer.write("GREEN (" + _testCount + " tests)\n");
 			return;
 		}
 		writer.write("RED (" + _failures.size() +" out of " + _testCount + " tests failed)\n");				
 		int index = 1;
 		Enumeration iter = _failures.iterator();
 		while (iter.hasMoreElements()) {
+			writer.write("\n");
 			writer.write(String.valueOf(index));
 			writer.write(") ");
 			((Printable)iter.nextElement()).print(writer);
