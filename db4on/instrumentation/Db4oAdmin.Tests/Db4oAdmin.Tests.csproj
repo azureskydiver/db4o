@@ -28,17 +28,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Db4oUnit, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\test\lib\Db4oUnit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractInstrumentationTestCase.cs" />
-    <Compile Include="Framework\Assert.cs" />
     <Compile Include="CompilationServices.cs" />
     <Compile Include="ILPatternTestCase.cs" />
-    <Compile Include="Framework\ITest.cs" />
-    <Compile Include="Framework\ITestSuiteBuilder.cs" />
     <Compile Include="PredicateBuildTimeOptimizationTestCase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -46,8 +47,6 @@
     <EmbeddedResource Include="Resources\CFNQSubject.cs" />
     <EmbeddedResource Include="Resources\PredicateSubject.cs" />
     <Compile Include="ShellUtilities.cs" />
-    <Compile Include="Framework\TestCase.cs" />
-    <Compile Include="Framework\TestRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\db4o-net2.csproj">

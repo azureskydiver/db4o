@@ -48,6 +48,10 @@
 			targettype="library"
 			srcdir="${db4ounit.net.src.dir}">
 		</csc>
+		
+		<mkdir dir="${dir.n.test}/lib" />
+		<copy todir="${dir.n.test}/lib" file="${assembly}">
+		</copy>
 	</target>
 	
 	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">

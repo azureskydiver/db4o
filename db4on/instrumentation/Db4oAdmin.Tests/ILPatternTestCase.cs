@@ -1,10 +1,10 @@
-using Db4oAdmin.Tests.Framework;
+using Db4oUnit;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 
 namespace Db4oAdmin.Tests
 {
-	class ILPatternTestCase : TestCase
+	public class ILPatternTestCase
 	{
 		public void TestSequenceBackwardsMatch()
 		{

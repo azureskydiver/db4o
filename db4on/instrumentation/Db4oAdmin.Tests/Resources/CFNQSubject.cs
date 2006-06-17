@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using com.db4o;
-using Db4oAdmin.Tests.Framework;
+using Db4oUnit;
 
 public class Item
 {
