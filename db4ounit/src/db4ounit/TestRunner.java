@@ -20,10 +20,11 @@ public class TestRunner {
 		this(new ReflectionTestSuiteBuilder(clazz));
 	}
 
-	public void run() {
+	public int run() {
 		TestResult result = new TestResult();
 		_suite.run(result);
 		report(result);
+		return result.failures().size();
 	}
 
 	private void report(TestResult result) {
