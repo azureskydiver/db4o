@@ -6,26 +6,4 @@ Bundle-Version: 1.0.0
 Bundle-ClassPath: db4ounit.jar,
  lib/db4o-5.0-java1.2.jar
 Bundle-Localization: plugin
-Export-Package: com.db4o,
- com.db4o.cluster,
- com.db4o.config,
- com.db4o.ext,
- com.db4o.foundation,
- com.db4o.foundation.network,
- com.db4o.handlers,
- com.db4o.inside,
- com.db4o.inside.cluster,
- com.db4o.inside.freespace,
- com.db4o.inside.ix,
- com.db4o.inside.query,
- com.db4o.inside.slots,
- com.db4o.io,
- com.db4o.io.crypt,
- com.db4o.messaging,
- com.db4o.query,
- com.db4o.reflect,
- com.db4o.reflect.generic,
- com.db4o.reflect.jdk,
- com.db4o.reflect.self,
- com.db4o.replication,
- com.db4o.types
+Export-Package: db4ounit
