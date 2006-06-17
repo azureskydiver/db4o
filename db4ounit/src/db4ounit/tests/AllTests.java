@@ -11,8 +11,7 @@ public class AllTests implements TestSuiteBuilder {
 		return new ReflectionTestSuiteBuilder(new Class[] {
 			FrameworkTestCase.class,
 			AssertTestCase.class,
-			TestLifeCycleTestCase.class,
-			db4ounit.db4o.tests.AllTests.class,			
+			TestLifeCycleTestCase.class,			
 		}).build();
 	}
 		

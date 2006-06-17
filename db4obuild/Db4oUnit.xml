@@ -5,30 +5,54 @@
 	<property name="projectName" value="Db4oUnit" />
 	<property name="db4ounit.dir" location="${dir.workspace}/db4ounit" />
 	<property name="db4ounit.src.dir" location="${db4ounit.dir}/src" />
+	<property name="db4ounit.bin.dir" location="${db4ounit.dir}/bin" />
+	<property name="db4ounit.jar.dir" location="${dir.j}/lib" />
+	<property name="db4ounit.jar" location="${db4ounit.jar.dir}/db4ounit.jar" />
 	<property name="db4ounit.net.dir" location="${db4ounit.dir}/${projectName}" />
 	<property name="db4ounit.net.bin.dir" location="${db4ounit.net.dir}/bin" />	
 	<property name="db4ounit.net.src.dir" location="${db4ounit.net.dir}/src" />
 	<property name="db4ounit.net.in.dir" location="${db4ounit.net.dir}/in" />
 	<property name="conversion.workspace.dir" location="${dir.dist}/${projectName}/workspace" />
 	
-	<target name="build" depends="update-csharp-projects">
+	<target name="build" depends="buildjava, buildnet">
+	</target>
+	
+	<target name="buildjava" depends="init">
+		<delete>
+			<fileset dir="${db4ounit.bin.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+		<javac compiler="classic"
+			fork="yes"
+			executable="${file.compiler.jdk1.3}"
+			srcdir="${db4ounit.src.dir}"
+			destdir="${db4ounit.bin.dir}"
+			debug="off">
+			<compilerarg line="${file.compiler.jdk1.3.args}"/>
+		</javac>
+		
+		<jar destfile="${db4ounit.jar}">
+			<fileset dir="${db4ounit.bin.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</jar>
+		
+	</target>
+		
+	<target name="buildnet" depends="update-csharp-projects">
 		
 		<property name="assembly" location="${db4ounit.net.bin.dir}/${projectName}.dll" />
 		
 		<csc outputfile="${assembly}"
 			targettype="library"
 			srcdir="${db4ounit.net.src.dir}">
-			<reference dir="${db4ounit.net.bin.dir}">
-				<include name="${file.name.dll}" />
-			</reference>
 		</csc>
 	</target>
 	
 	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
 		<sharpen resource="db4ounit/src" workspace="${conversion.workspace.dir}">
 			<args>
-				<arg value="-cp" />
-				<arg path="${file.java1.2.jar}" />				
 				<arg value="-pascalcase" />
 				<arg value="-nativeTypeSystem" />
 				
@@ -91,8 +115,6 @@
 	<target name="init">
 		<mkdir dir="${db4ounit.net.dir}" />
 		<mkdir dir="${db4ounit.net.bin.dir}" />
-		<!--
-		<copy file="${file.dll.net}" todir="${db4ounit.net.bin.dir}" />
-		-->
+		<mkdir dir="${db4ounit.jar.dir}" />
 	</target>
 </project>

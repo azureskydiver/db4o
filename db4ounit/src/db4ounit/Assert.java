@@ -40,7 +40,7 @@ public final class Assert {
 	}
 
 	public static void areEqual(Object expected, Object actual) {		
-		if (equals(expected, actual)) return;
+		if (objectsAreEqual(expected, actual)) return;
 		fail(failureMessage(expected, actual));
 	}
 
@@ -53,7 +53,7 @@ public final class Assert {
 		return "Expected '"+ expected + "' but was '" + actual + "'";
 	}
 	
-	private static boolean equals(Object expected, Object actual) {
+	private static boolean objectsAreEqual(Object expected, Object actual) {
 		return expected == actual
 			|| (expected != null
 				&& actual != null
