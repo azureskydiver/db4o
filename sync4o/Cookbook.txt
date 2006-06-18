@@ -82,13 +82,13 @@ and run the rundbtool script , passing it arguments that tell it to create a
 db4o database containing a single Customer record with the id 1.
 On a Windows system, this command looks like:
 
-> rundbtool c 1 1 server.db
+> rundbtool -create 1 1 server.db
 
 This should create a file named 'server.db' in the /sync4o/dist/cookbook directory.
 
 To inspect the contents of the command, issue the command:
 
->  rundbtool l server.db
+>  rundbtool -list server.db
 
 and you should see output like the following, showing the single record
 contained in the database:
@@ -98,12 +98,13 @@ contained in the database:
 > 1 records
 
 (d) Create a new SyncSource.
-Navigate the tree for the server running on 'localhost' to the 'Modules'
-node. From there navigate down to the 'sync4o' node, which contains another
-'sync4o' node and finally a 'Db4oSyncSource' node. Right-click on this
-'Db4o SyncSource' node and select the 'Add SyncSource' context menu item,
-this will display the UI for configuring a new instance of the Sync4o server
-SyncSource in the Funambol Server.
+Within the Funambal Admin Tool, navigate the management tree for the server
+running on 'localhost' to the 'Modules' node. From there navigate down to the
+'sync4o' node, which contains another 'sync4o' node and finally a
+'Db4oSyncSource' node. Right-click on this 'Db4o SyncSource' node and select
+the 'Add SyncSource' context menu item, this will display the UI for
+configuring a new instance of the Sync4o server SyncSource in the Funambol
+Server.
 
 (e) Enter the parameters for the SyncSource. In this example we will
 use the following:
@@ -182,8 +183,8 @@ id 1).
 To verify that the client and server have synchronized successfully, use the
 rundbtool script to view the contents of each database, using commands like:
 
-> rundbtool l client.db
-> rundbtool l server.db
+> rundbtool -list client.db
+> rundbtool -list server.db
 
 The output should be nearly identical (the timestamps for the two records will
 be different).
@@ -193,12 +194,12 @@ be different).
 From the command prompt, use the rundbtool script to modify the customer record
 that has now been synchronized to the client database:
 
-> rundbtool u 1 1 Changed client.db
+> rundbtool -update 1 1 Changed client.db
 
 This will update the name of the customer record in the client database. You
 can verify the change using:
 
-> rundbtool l client.db
+> rundbtool -list client.db
 
 Now run the sample client again to synchronize client and server:
 
@@ -207,8 +208,8 @@ Now run the sample client again to synchronize client and server:
 This time, the server will be updated with the changes made on the client.
 Again, verify the changes:
 
-> rundbtool l client.db
-> rundbtool l server.db
+> rundbtool -list client.db
+> rundbtool -list server.db
 
 
 You have now synchronized both from server to client and from client to server
