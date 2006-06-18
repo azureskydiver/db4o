@@ -42,30 +42,23 @@ public class DataGenerator{
       System.exit(-1);
     }
     
-    char action = Character.toLowerCase(args[0].charAt(0));
-    switch (action){
-
-      case 'c':
+    String action = args[0].toLowerCase().trim();
+    if (action.equals("-create")){
         create(Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[3]);
-        break;
-        
-      case 'd':
+    }
+    else if (action.equals("-delete")){
         delete(Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[3]);
-        break;
-        
-      case 'u':
+    }
+    else if (action.equals("-update")){
         update(Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[4], args[3]);
-        break;
-        
-      case 'l':
+    }        
+    else if (action.equals("-list")){
         list(args[1]);
-        break;
-        
-      default:
+    }
+    else{
         System.out.println("Usage error: please refer to source for correct usage.");
+        System.out.println("Arg was" + args[0]);
         System.exit(-1);
-        break;
-        
     }
     
     System.exit(0);
