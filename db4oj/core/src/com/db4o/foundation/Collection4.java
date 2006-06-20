@@ -174,7 +174,7 @@ public class Collection4 implements DeepClone, Unversioned {
      * In contrast to the JDK behaviour, the passed array has
      * to be initialized to the right length. 
      */
-    public final void toArray(Object[] a_array) {
+    public final Object[] toArray(Object[] a_array) {
         int j = _size;
         Iterator4 i = iterator();
 
@@ -182,6 +182,7 @@ public class Collection4 implements DeepClone, Unversioned {
         while (i.hasNext()) {
             a_array[--j] = i.next();
         }
+        return a_array;
     }
     
     public final Object[] toArray() {
