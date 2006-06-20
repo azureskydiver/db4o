@@ -47,7 +47,8 @@ namespace Db4oAdmin.Tests
 			using (CodeDomProvider provider = GetCSharpCodeDomProvider())
 			{
 				CompilerParameters parameters = CreateDefaultCompilerParameters();
-				parameters.IncludeDebugInformation = false;
+				// TODO: run test cases in both modes (optimized and debug)
+				parameters.IncludeDebugInformation = true;
 				parameters.OutputAssembly = assemblyFName;
 				parameters.ReferencedAssemblies.Add(typeof(ObjectContainer).Module.FullyQualifiedName);
 				parameters.ReferencedAssemblies.Add(typeof(CompilationServices).Module.FullyQualifiedName);
