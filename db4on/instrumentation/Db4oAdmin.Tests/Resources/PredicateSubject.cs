@@ -8,6 +8,7 @@ public class Person
 {
 	private int _age;
 	private string _name;
+	private Person _spouse;
 
 	public int Age
 	{
@@ -21,6 +22,16 @@ public class Person
 		set { _name = value; }
 	}
 	
+	public Person Spouse
+	{
+		get { return _spouse; }
+		set
+		{	
+			if (value == this) throw new ArgumentException("Spouse");			
+			_spouse = value;
+		}
+	}
+	
 	public Person (int age, string name)
 	{
 		_age = age;
@@ -28,7 +39,7 @@ public class Person
 	}
 }
 
-public class PersonByName : com.db4o.query.Predicate
+class PersonByName : com.db4o.query.Predicate
 {
 	string _name;
 
@@ -43,7 +54,7 @@ public class PersonByName : com.db4o.query.Predicate
 	}
 }
 
-public class PersonByAge : com.db4o.query.Predicate
+class PersonByAge : com.db4o.query.Predicate
 {
 	int _age;
 
@@ -58,12 +69,30 @@ public class PersonByAge : com.db4o.query.Predicate
 	}
 }
 
+class PersonBySpouseName : com.db4o.query.Predicate
+{
+	string _name;
+	
+	public PersonBySpouseName(string name)
+	{
+		_name = name;
+	}
+	
+	public bool Match(Person candidate)
+	{
+		return candidate.Spouse.Name == _name;
+	}
+}
+
 public class PredicateSubject
 {
 	public static void Setup(ObjectContainer container)
 	{
 		container.Set(new Person(23, "jbe"));
-		container.Set(new Person(30, "rbo"));
+		
+		Person rbo = new Person(30, "rbo");
+		rbo.Spouse = new Person(29, "ma");
+		container.Set(rbo);
 	}
 	
 	public static void TestByName(ObjectContainer container)
@@ -79,6 +108,14 @@ public class PredicateSubject
 		Setup(container);
 		AssertResult(
 				container.Query(new PersonByAge(30)),
+				"rbo");
+	}
+	
+	public static void TestBySpouseName(ObjectContainer container)
+	{
+		Setup(container);
+		AssertResult(
+				container.Query(new PersonBySpouseName("ma")),
 				"rbo");
 	}
 

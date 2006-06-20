@@ -24,6 +24,7 @@ namespace Db4oAdmin.Tests
 			Process p = StartProcess(fname, args);
 			ProcessOutput output = new ProcessOutput();
 			output.StdOut = p.StandardOutput.ReadToEnd();
+            output.StdOut += p.StandardError.ReadToEnd();
 			p.WaitForExit();
 			output.ExitCode = p.ExitCode;
 			return output;

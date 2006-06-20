@@ -71,22 +71,20 @@ namespace Db4oAdmin
 		}
 
 		public void Visit(FieldValue operand)
-		{
-			if (operand.Parent() is CandidateFieldRoot)
+		{   
+		    operand.Parent().Accept(this);
+		    
+            ComparisonOperandAnchor root = operand.Root();
+		    if (root is CandidateFieldRoot)
 			{
 				// query.Descend(operand.FieldName());
-				_worker.Emit(OpCodes.Ldarg_1);
-				_worker.Emit(OpCodes.Ldstr, operand.FieldName());
-				_worker.Emit(OpCodes.Callvirt, _Query_Descend);
+			    _worker.Emit(OpCodes.Ldstr, operand.FieldName());
+			    _worker.Emit(OpCodes.Callvirt, _Query_Descend);
 			}
-			else if (operand.Parent() is PredicateFieldRoot)
+			else if (root is PredicateFieldRoot)
 			{
 				FieldReference field = GetFieldReference(operand);
-				
-				// this.<operand.FieldName()>
-				_worker.Emit(OpCodes.Ldarg_0);
 				_worker.Emit(OpCodes.Ldfld, field);
-				
 				if (field.FieldType.IsValueType)
 				{
 					_worker.Emit(OpCodes.Box, field.FieldType);
@@ -101,12 +99,13 @@ namespace Db4oAdmin
 
 		public void Visit(CandidateFieldRoot root)
 		{
-			throw new NotImplementedException();
+            _worker.Emit(OpCodes.Ldarg_1);
+//            throw new NotImplementedException();
 		}
 
 		public void Visit(PredicateFieldRoot root)
 		{
-			throw new NotImplementedException();
+            _worker.Emit(OpCodes.Ldarg_0);
 		}
 
 		public void Visit(StaticFieldRoot root)

@@ -60,6 +60,7 @@
 				<include name="*.dll" />
 			</fileset>
 		</copy>
+		<copy todir="${output.dir}" file="../test/lib/Db4oUnit.dll" />
 	</target>
 	
 	<target name="clean">
