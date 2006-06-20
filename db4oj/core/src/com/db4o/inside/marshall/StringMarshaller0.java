@@ -5,7 +5,7 @@ package com.db4o.inside.marshall;
 import com.db4o.*;
 
 
-public class StringMarshaller0 extends StringMarshaller{
+public class StringMarshaller0 extends StringMarshaller {
     
     public boolean inlinedStrings(){
         return false;
@@ -44,8 +44,4 @@ public class StringMarshaller0 extends StringMarshaller{
     public YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
         return reader.readEmbeddedObject(stream.getTransaction());
     }
-
-
-
-
 }
