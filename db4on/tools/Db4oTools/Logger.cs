@@ -37,7 +37,7 @@ namespace Db4oTools {
                     try { 
                         ObjectContainer c1 = Db4o.OpenFile(args[0]);
                         if (c1 == null) {
-                            throw new RuntimeException();
+                            throw new ApplicationException();
                         }
                         con1 = c1.Ext();
                   
