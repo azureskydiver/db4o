@@ -16,6 +16,9 @@ namespace Db4oAdmin
 		private InstrumentationContext _context;
 		private MethodReference _Query_Descend;
 		private MethodReference _Query_Constrain;
+		private int _depth = 0;
+		private MethodReference _Constraint_Or;
+		private MethodReference _Constraint_And;
 
 		public SodaEmitterVisitor(InstrumentationContext context, MethodDefinition method)
 		{
@@ -24,6 +27,8 @@ namespace Db4oAdmin
 
 			_Query_Descend = ImportQueryMethod("Descend", typeof(string));
 			_Query_Constrain = ImportQueryMethod("Constrain", typeof(object));
+			_Constraint_Or = _context.Import(typeof(Constraint).GetMethod("Or"));
+			_Constraint_And = _context.Import(typeof(Constraint).GetMethod("And"));
 		}
 
 		private MethodReference ImportQueryMethod(string methodName, params Type[] signature)
@@ -33,12 +38,21 @@ namespace Db4oAdmin
 
 		public void Visit(AndExpression expression)
 		{
-			throw new NotImplementedException();
+			EmitBinaryExpression(expression, _Constraint_And);
 		}
 
 		public void Visit(OrExpression expression)
 		{
-			throw new NotImplementedException();
+			EmitBinaryExpression(expression, _Constraint_Or);
+		}
+
+		private void EmitBinaryExpression(BinaryExpression expression, MethodReference op)
+		{
+			EnterExpression();
+			expression.Left().Accept(this);
+			expression.Right().Accept(this);
+			_worker.Emit(OpCodes.Callvirt, op);
+			LeaveExpression();
 		}
 
 		public void Visit(NotExpression expression)
@@ -48,11 +62,22 @@ namespace Db4oAdmin
 
 		public void Visit(ComparisonExpression expression)
 		{
+			EnterExpression();
 			expression.Left().Accept(this);
 			expression.Right().Accept(this);
-			
 			_worker.Emit(OpCodes.Callvirt, _Query_Constrain);
-			_worker.Emit(OpCodes.Pop);
+			LeaveExpression();
+		}
+
+		private void EnterExpression()
+		{
+			_depth++;
+		}
+
+		private void LeaveExpression()
+		{
+			_depth--;
+			if (0 == _depth) _worker.Emit(OpCodes.Pop);
 		}
 
 		public void Visit(BoolConstExpression expression)
@@ -99,8 +124,8 @@ namespace Db4oAdmin
 
 		public void Visit(CandidateFieldRoot root)
 		{
+			// being visited as part of a FieldValue
             _worker.Emit(OpCodes.Ldarg_1);
-//            throw new NotImplementedException();
 		}
 
 		public void Visit(PredicateFieldRoot root)

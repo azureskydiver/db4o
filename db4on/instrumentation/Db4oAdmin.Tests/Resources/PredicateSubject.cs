@@ -84,15 +84,105 @@ class PersonBySpouseName : com.db4o.query.Predicate
 	}
 }
 
+class PersonByAgeOrSpouseName : com.db4o.query.Predicate
+{
+	string _name;
+
+	int _age;
+
+	public PersonByAgeOrSpouseName(int age, string name)
+	{
+		_age = age;
+		_name = name;
+	}
+
+	public bool Match(Person candidate)
+	{
+		return candidate.Age == _age
+			|| candidate.Spouse.Name == _name;
+	}
+}
+
+class PersonByAgeAndName : com.db4o.query.Predicate
+{
+	string _name;
+
+	int _age;
+
+	public PersonByAgeAndName(int age, string name)
+	{
+		_age = age;
+		_name = name;
+	}
+
+	public bool Match(Person candidate)
+	{
+		return candidate.Age == _age
+			&& candidate.Name == _name;
+	}
+}
+
+class PersonByAgeOrNames : com.db4o.query.Predicate
+{
+	string _name1;
+
+	string _name2;
+
+	int _age;
+
+	public PersonByAgeOrNames(int age, string name1, string name2)
+	{
+		_name1 = name1;
+		_name2 = name2;
+		_age = age;
+	}
+
+	public bool Match(Person candidate)
+	{
+		return candidate.Age == _age
+			&& (candidate.Name == _name1 || candidate.Name == _name2);
+	}
+}
+
 public class PredicateSubject
 {
 	public static void Setup(ObjectContainer container)
 	{
 		container.Set(new Person(23, "jbe"));
+		container.Set(new Person(23, "Ronaldinho"));
 		
 		Person rbo = new Person(30, "rbo");
 		rbo.Spouse = new Person(29, "ma");
 		container.Set(rbo);
+	}
+
+	public static void TestByAgeOrNames(ObjectContainer container)
+	{
+		Setup(container);
+		AssertResult(
+			container.Query(new PersonByAgeOrNames(23, "jbe", "Ronaldinho")),
+			"jbe", "Ronaldinho");
+		AssertResult(
+			container.Query(new PersonByAgeOrNames(23, "jbe", "rbo")),
+			"jbe");
+		AssertResult(
+			container.Query(new PersonByAgeOrNames(30, "jbe", "Ronaldinho")));
+	}
+
+	public static void TestByAgeAndName(ObjectContainer container)
+	{
+		Setup(container);
+		AssertResult(
+			container.Query(new PersonByAgeAndName(23, "jbe")),
+			"jbe");
+	}
+
+	public static void TestByAgeOrSpouseName(ObjectContainer container)
+	{
+		Setup(container);
+		AssertResult(
+			container.Query(new PersonByAgeOrSpouseName(23, "ma")),
+			"jbe", "rbo", "Ronaldinho");
 	}
 	
 	public static void TestByName(ObjectContainer container)
@@ -109,6 +199,9 @@ public class PredicateSubject
 		AssertResult(
 				container.Query(new PersonByAge(30)),
 				"rbo");
+		AssertResult(
+				container.Query(new PersonByAge(23)),
+				"jbe", "Ronaldinho");
 	}
 	
 	public static void TestBySpouseName(ObjectContainer container)
@@ -119,10 +212,22 @@ public class PredicateSubject
 				"rbo");
 	}
 
-	static void AssertResult(IList result, string expected)
+	static void AssertResult(IList result, params string[] expected)
 	{
-		Assert.AreEqual(1, result.Count);
-		Assert.AreEqual(expected, ((Person)result[0]).Name);
+		Assert.AreEqual(expected.Length, result.Count);
+		foreach (string name in expected)
+		{
+			AssertContains(result, name);
+		}	
+	}
+
+	static void AssertContains(IList result, string expected)
+	{
+		foreach (Person p in result)
+		{
+			if (p.Name == expected) return;
+		}
+		Assert.Fail("Expected '" + expected + "'.");
 	}
 }
 
