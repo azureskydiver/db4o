@@ -5,7 +5,7 @@ namespace Db4oUnit
 		public static void PrintStackTrace(System.IO.TextWriter writer, System.Exception 
 			t)
 		{
-			writer.Write(t.StackTrace);
+			writer.Write(t);
 		}
 
 		public static System.IO.TextWriter GetStdOut()
