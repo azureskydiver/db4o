@@ -98,7 +98,7 @@ namespace Db4oAdmin.Tests
 			string stdout = output.StdOut;
 			if (stdout.Contains("1.1.4322.573")) return; // ignore older peverify version errors
 			if (output.ExitCode == 0 && !stdout.ToUpper().Contains("WARNING")) return;
-			throw new ApplicationException(stdout);
+			Assert.Fail(stdout);
 		}
 
 		private ObjectContainer OpenDatabase()
