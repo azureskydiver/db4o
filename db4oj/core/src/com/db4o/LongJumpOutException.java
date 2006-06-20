@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-class LongJumpOutException extends RuntimeException
-{
+class LongJumpOutException extends RuntimeException {
 	public Throwable fillInStackTrace() { return null;}
 }
