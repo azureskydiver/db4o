@@ -567,6 +567,7 @@
 		<javac destdir="${dir.dist.classes.test}" fork="true" debug="on" target="1.5" source="1.5">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
+				<pathelement location="${db4ounit.jar}"/>
 			</classpath>
 			<src path="${dir.dist.java.temp.src.test}"/>
 			<src path="${dir.j.tools.src}" />
