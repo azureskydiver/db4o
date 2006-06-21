@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Reflection;
 using com.db4o.inside.query;
 using com.db4o.nativequery.expr;
 using com.db4o.query;

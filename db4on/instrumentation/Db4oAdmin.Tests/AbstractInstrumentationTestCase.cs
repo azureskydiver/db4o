@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using com.db4o;
@@ -8,25 +7,78 @@ using Db4oUnit;
 
 namespace Db4oAdmin.Tests
 {
+	public class InstrumentedTestCase : TestLifeCycle
+	{
+		protected ObjectContainer _container;
+		
+		public ObjectContainer Container
+		{
+			set { _container = value; }
+			get { return _container; }
+		}
+		
+		public virtual void SetUp()
+		{	
+		}
+		
+		public virtual void TearDown()
+		{	
+		}
+	}
+	
 	public abstract class AbstractInstrumentationTestCase : TestSuiteBuilder
 	{
 		public const string DatabaseFile = "subject.yap";
 		
-		class InstrumentationTestMethod : TestMethod
+		class InstrumentedTestMethod : TestMethod
 		{
 			private AbstractInstrumentationTestCase _testCase;
 
-			public InstrumentationTestMethod(AbstractInstrumentationTestCase testCase, object subject, MethodInfo method) : base(subject, method)
+			public InstrumentedTestMethod(AbstractInstrumentationTestCase testCase, object subject, MethodInfo method) : base(subject, method)
 			{
 				_testCase = testCase;
 			}
 
-			protected override void Invoke()
+			override protected void SetUp()
 			{
-				using (ObjectContainer container = _testCase.OpenDatabase())
+				SetUpAssemblyResolver();
+				SetUpContainer();
+				base.SetUp();
+			}
+			
+			override protected void TearDown()
+			{
+				try
 				{
-					GetMethod().Invoke(GetSubject(), new object[] { container });
+					base.TearDown();
 				}
+				finally
+				{
+					TearDownContainer();
+					TearDownAssemblyResolver();
+				}
+			}
+
+			private void SetUpAssemblyResolver()
+			{
+				AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+			}
+
+			private void TearDownAssemblyResolver()
+			{
+				AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+			}
+
+			private void SetUpContainer()
+			{
+				((InstrumentedTestCase)GetSubject()).Container = _testCase.OpenDatabase();
+			}
+
+			private void TearDownContainer()
+			{
+				InstrumentedTestCase testCase = (InstrumentedTestCase) GetSubject();
+				testCase.Container.Close();
+				testCase.Container = null;
 			}
 
 			private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -36,18 +88,6 @@ namespace Db4oAdmin.Tests
 					if (assembly.GetName().Name == args.Name) return assembly;
 				}
 				return null;
-			}
-
-			override protected void SetUp()
-			{
-				base.SetUp();
-				AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-			}
-
-			override protected void TearDown()
-			{
-				AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-				base.TearDown();
 			}
 		}
 		
@@ -60,15 +100,10 @@ namespace Db4oAdmin.Tests
 			{
 				_testCase = testCase;
 			}
-			
-			protected override bool IsTestMethod(MethodInfo method)
-			{
-				return method.Name.StartsWith("Test") && method.IsPublic;
-			}
 
 			protected override Test CreateTest(object instance, MethodInfo method)
 			{
-				return new InstrumentationTestMethod(_testCase, instance, method);
+				return new InstrumentedTestMethod(_testCase, instance, method);
 			}
 		}
 
