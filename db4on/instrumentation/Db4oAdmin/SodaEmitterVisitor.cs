@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using Cecil.FlowAnalysis.CodeStructure;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.expr.cmp;
@@ -11,7 +10,6 @@ using Mono.Cecil.Cil;
 namespace Db4oAdmin
 {
 	// const values
-	// string methods (startswith, endswith)
 	// enums
 	// value type candidates
 	// code compiled in release mode
@@ -171,7 +169,7 @@ namespace Db4oAdmin
 				default:
 					throw new NotImplementedException(code.ToString());
 			}
-			_worker.Emit(OpCodes.Box, _context.Import(type));
+			if (type.IsValueType) _worker.Emit(OpCodes.Box, _context.Import(type));
 		}
 
 		public void Visit(FieldValue operand)

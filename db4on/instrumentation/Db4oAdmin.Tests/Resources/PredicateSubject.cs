@@ -4,11 +4,28 @@ using System.Text;
 using Db4oUnit;
 using com.db4o;
 
+public enum Conditioning
+{
+	Unknown,
+	Athlete,
+	Excelent,
+	Normal,
+	Overweight,
+	Fat
+}
+
 public class Person
 {
 	private int _age;
 	private string _name;
 	private Person _spouse;
+	private Conditioning _conditioning;
+
+	public Conditioning Conditioning
+	{
+		get { return _conditioning; }
+		set { _conditioning = value; }
+	}
 
 	public int Age
 	{
@@ -32,10 +49,11 @@ public class Person
 		}
 	}
 	
-	public Person (int age, string name)
+	public Person (int age, string name, Conditioning conditioning)
 	{
 		_age = age;
 		_name = name;
+		_conditioning = conditioning;
 	}
 }
 
@@ -186,99 +204,84 @@ class ByNameStartAndEnd : com.db4o.query.Predicate
 	}
 }
 
-public class PredicateSubject
+class OverweightPeople : com.db4o.query.Predicate
 {
-	public void Setup(ObjectContainer container)
+	public bool Match(Person candidate)
 	{
-		container.Set(new Person(23, "jbe"));
-		container.Set(new Person(23, "Ronaldinho"));
+		return candidate.Conditioning == Conditioning.Overweight
+			|| candidate.Conditioning == Conditioning.Fat;
+	}
+}
+
+public class PredicateSubject : Db4oAdmin.Tests.InstrumentedTestCase
+{
+	override public void SetUp()
+	{
+		_container.Set(new Person(23, "jbe", Conditioning.Normal));
+		_container.Set(new Person(23, "Ronaldinho", Conditioning.Fat));
 		
-		Person rbo = new Person(30, "rbo");
-		rbo.Spouse = new Person(29, "ma");
-		container.Set(rbo);
+		Person rbo = new Person(30, "rbo", Conditioning.Overweight);
+		rbo.Spouse = new Person(29, "ma", Conditioning.Normal);
+		_container.Set(rbo);
 	}
 
-	public void TestByNameStartAndEnd(ObjectContainer container)
+	public void TestByConstEnum()
 	{
-		Setup(container);
-		AssertResult(
-			container.Query(new ByNameStartAndEnd("r", "o")),
-			"rbo", "Ronaldinho");		
+		AssertResult(new OverweightPeople(), "Ronaldinho", "rbo");
 	}
 
-	public void TestByConstValue(ObjectContainer container)
+	public void TestByNameStartAndEnd()
 	{
-		Setup(container);
-		AssertResult(
-			container.Query(new TrustworthyPeople()),
-			"jbe", "Ronaldinho", "ma");
+		AssertResult(new ByNameStartAndEnd("r", "o"), "rbo", "Ronaldinho");		
 	}
 
-	public void TestByAgeRange(ObjectContainer container)
+	public void TestByConstValue()
 	{
-		Setup(container);
-		AssertResult(
-			container.Query(new PersonByAgeRange(23, 29)),
-			"jbe", "Ronaldinho", "ma");
-		AssertResult(
-			container.Query(new PersonByAgeRange(28, 30)),
-			"rbo", "ma");
+		AssertResult(new TrustworthyPeople(), "jbe", "Ronaldinho", "ma");
 	}
 
-	public void TestByAgeOrNames(ObjectContainer container)
+	public void TestByAgeRange()
 	{
-		Setup(container);
-		AssertResult(
-			container.Query(new PersonByAgeOrNames(23, "jbe", "Ronaldinho")),
-			"jbe", "Ronaldinho");
-		AssertResult(
-			container.Query(new PersonByAgeOrNames(23, "jbe", "rbo")),
-			"jbe");
-		AssertResult(
-			container.Query(new PersonByAgeOrNames(30, "jbe", "Ronaldinho")));
+		AssertResult(new PersonByAgeRange(23, 29), "jbe", "Ronaldinho", "ma");
+		AssertResult(new PersonByAgeRange(28, 30), "rbo", "ma");
 	}
 
-	public void TestByAgeAndName(ObjectContainer container)
+	public void TestByAgeOrNames()
 	{
-		Setup(container);
-		AssertResult(
-			container.Query(new PersonByAgeAndName(23, "jbe")),
-			"jbe");
+		AssertResult(new PersonByAgeOrNames(23, "jbe", "Ronaldinho"), "jbe", "Ronaldinho");
+		AssertResult(new PersonByAgeOrNames(23, "jbe", "rbo"), "jbe");
+		AssertResult(new PersonByAgeOrNames(30, "jbe", "Ronaldinho"));
 	}
 
-	public void TestByAgeOrSpouseName(ObjectContainer container)
+	public void TestByAgeAndName()
 	{
-		Setup(container);
-		AssertResult(
-			container.Query(new PersonByAgeOrSpouseName(23, "ma")),
-			"jbe", "rbo", "Ronaldinho");
+		AssertResult(new PersonByAgeAndName(23, "jbe"), "jbe");
+	}
+
+	public void TestByAgeOrSpouseName()
+	{
+		AssertResult(new PersonByAgeOrSpouseName(23, "ma"), "jbe", "rbo", "Ronaldinho");
 	}
 	
-	public void TestByName(ObjectContainer container)
+	public void TestByName()
 	{
-		Setup(container);
-		AssertResult(
-				container.Query(new PersonByName("jbe")),
-				"jbe");
+		AssertResult(new PersonByName("jbe"), "jbe");
 	}
 
-	public void TestByAge(ObjectContainer container)
+	public void TestByAge()
 	{
-		Setup(container);
-		AssertResult(
-				container.Query(new PersonByAge(30)),
-				"rbo");
-		AssertResult(
-				container.Query(new PersonByAge(23)),
-				"jbe", "Ronaldinho");
+		AssertResult(new PersonByAge(30), "rbo");
+		AssertResult(new PersonByAge(23), "jbe", "Ronaldinho");
 	}
 	
-	public void TestBySpouseName(ObjectContainer container)
+	public void TestBySpouseName()
 	{
-		Setup(container);
-		AssertResult(
-				container.Query(new PersonBySpouseName("ma")),
-				"rbo");
+		AssertResult(new PersonBySpouseName("ma"), "rbo");
+	}
+
+	void AssertResult(com.db4o.query.Predicate predicate, params string[] expected)
+	{
+		AssertResult(_container.Query(predicate), expected);
 	}
 
 	void AssertResult(IList result, params string[] expected)

@@ -23,66 +23,60 @@ public class Item
 
 // TODO: query invocation with comparator
 // TODO: query invocation with comparison
-public class CFNQSubject
+public class CFNQSubject : Db4oAdmin.Tests.InstrumentedTestCase
 {
-	public void SetUp(ObjectContainer container)
+	override public void SetUp()
 	{	
-		container.Set(new Item("foo"));
-		container.Set(new Item("bar"));
+		_container.Set(new Item("foo"));
+		_container.Set(new Item("bar"));
 	}
 
-	public void TestInlineStaticDelegate(ObjectContainer container)
-	{
-		SetUp(container);
-		IList<Item> items = container.Query<Item>(delegate(Item candidate)
+	public void TestInlineStaticDelegate()
+	{	
+		IList<Item> items = _container.Query<Item>(delegate(Item candidate)
 		{
 			return candidate.Name == "foo";
 		});
 		CheckResult(items);
 	}
 
-	public void TestInlineClosureDelegate(ObjectContainer container)
-	{
-		SetUp(container);
+	public void TestInlineClosureDelegate()
+	{	
 		string name = "foo";
-		IList<Item> items = container.Query<Item>(delegate(Item candidate)
+		IList<Item> items = _container.Query<Item>(delegate(Item candidate)
 		{
 			return candidate.Name == name;
 		});
 		CheckResult(items);
 	}
 
-	public void TestStaticMemberDelegate(ObjectContainer container)
-	{
-		SetUp(container);
-		IList<Item> items = container.Query<Item>(CFNQSubject.MatchFoo);
+	public void TestStaticMemberDelegate()
+	{	
+		IList<Item> items = _container.Query<Item>(CFNQSubject.MatchFoo);
 		CheckResult(items);
 	}
 
-	public void TestMultipleQueryInvocations(ObjectContainer container)
-	{
-		SetUp(container);
-		CheckResult(container.Query<Item>(CFNQSubject.MatchFoo));
-		CheckResult(container.Query<Item>(CFNQSubject.MatchFoo));
-		CheckResult(container.Query<Item>(CFNQSubject.MatchFoo));
+	public void TestMultipleQueryInvocations()
+	{	
+		CheckResult(_container.Query<Item>(CFNQSubject.MatchFoo));
+		CheckResult(_container.Query<Item>(CFNQSubject.MatchFoo));
+		CheckResult(_container.Query<Item>(CFNQSubject.MatchFoo));
 	}
 
 	delegate ObjectContainer ObjectContainerAccessor();
 
-	public void TestInlineStaticDelegateInsideExpression(ObjectContainer container)
+	public void TestInlineStaticDelegateInsideExpression()
 	{
-		SetUp(container);
-		ObjectContainerAccessor getter = delegate { return container; };
+		ObjectContainerAccessor getter = delegate { return _container; };
 		CheckResult(getter().Query<Item>(delegate(Item candidate)
 		{
 			return candidate.Name == "foo";
 		}));
 	}
 
-	public void TestInstanceMemberDelegate(ObjectContainer container)
+	public void TestInstanceMemberDelegate()
 	{
-		SetUp(container);
-		IList<Item> items = container.Query<Item>(new QueryItemByName("foo").Match);
+		IList<Item> items = _container.Query<Item>(new QueryItemByName("foo").Match);
 		CheckResult(items);
 	}
 
