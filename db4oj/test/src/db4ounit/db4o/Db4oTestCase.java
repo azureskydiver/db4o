@@ -2,7 +2,7 @@ package db4ounit.db4o;
 
 import db4ounit.TestLifeCycle;
 
-public class Db4oTestCase extends TestLifeCycle {
+public class Db4oTestCase implements TestLifeCycle {
 	private Db4oFixture _fixture;
 	
 	public void fixture(Db4oFixture fixture) {

@@ -15,3 +15,4 @@ public class NullTest implements Test {
 	public void run(TestResult result) {		
 	}
 }
+                                                                                            
