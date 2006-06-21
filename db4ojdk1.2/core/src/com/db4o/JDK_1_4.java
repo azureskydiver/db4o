@@ -28,7 +28,7 @@ class JDK_1_4 extends JDK_1_3 {
 		fileLocks.put(file, fl);
 	}
 	
-	synchronized void unlock(Object file) {
+	synchronized void unlockFile(Object file) {
 		if(fileLocks != null){
 			Object fl = fileLocks.get(file);
 			if(fl != null){
