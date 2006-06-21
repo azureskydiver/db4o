@@ -6,9 +6,9 @@ public class TestResult {
 	private int _numAssertions;
 
 	public TestResult(int numAssertions,int numFailures, long timeTaken) {
-		_numAssertions=numAssertions;
+		_numAssertions = numAssertions;
 		_numFailures = numFailures;
-		_timeTaken=timeTaken;
+		_timeTaken = timeTaken;
 	}
 
 	public int numFailures() {

@@ -2,7 +2,7 @@ package db4ounit.tests;
 
 import db4ounit.*;
 
-public class RunsLifeCycle extends TestLifeCycle {
+public class RunsLifeCycle implements TestLifeCycle {
 
 	private boolean _setupCalled=false;
 	private boolean _tearDownCalled=false;
