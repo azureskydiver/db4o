@@ -1,6 +1,7 @@
 package db4ounit;
 
 import java.io.IOException;
+import java.io.Writer;
 
 public class TestRunner {
 	
@@ -21,16 +22,28 @@ public class TestRunner {
 	}
 
 	public int run() {
+		TestSuite suite = buildTestSuite();
+		if (null == suite) return 1;
+		
 		TestResult result = new TestResult();
-		run(result);
+		suite.run(result);
 		report(result);
 		return result.failures().size();
 	}
+	
+	private TestSuite buildTestSuite() {
+		try {
+			return _suiteBuilder.build();
+		} catch (Exception x) {
+			report(x);
+		}
+		return null;
+	}
 
-	private void run(TestResult result) {
-		TestSuite suite = _suiteBuilder.build();
-		suite.run(result);
-	}	
+	private void report(Exception x) {
+		Writer stdout = TestPlatform.getStdOut();
+		TestPlatform.printStackTrace(stdout, x);
+	}
 
 	private void report(TestResult result) {
 		try {
