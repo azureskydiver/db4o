@@ -45,10 +45,14 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		Method[] methods = clazz.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (!TestPlatform.isTestMethod(method)) continue;			
+			if (!isTestMethod(method)) continue;			
 			tests.addElement(createTest(instance, method));
 		}		
 		return new TestSuite(clazz.getName(), toArray(tests));
+	}
+
+	protected boolean isTestMethod(Method method) {
+		return TestPlatform.isTestMethod(method);
 	}
 
 	private Test[] toArray(Vector tests) {
