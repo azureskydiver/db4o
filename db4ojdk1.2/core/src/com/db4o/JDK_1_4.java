@@ -16,7 +16,7 @@ class JDK_1_4 extends JDK_1_3 {
 	private Constructor objectConstructor;
 	private Method factoryMethod;
 	
-	synchronized void lock(Object file) {
+	synchronized void lockFile(Object file) {
 		Object channel = invoke(file, "getChannel", null, null);
 		Object fl = invoke(channel, "tryLock", null, null); 
 		if(fl == null){
