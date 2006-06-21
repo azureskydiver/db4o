@@ -30,7 +30,7 @@ public class TestMethod implements Test {
 		result.testStarted(this);
 		try {
 			setUp();
-			_method.invoke(_subject, new Object[0]);
+			invoke();
 		} catch (InvocationTargetException e) {
 			result.testFailed(this, e.getTargetException());
 		} catch (Exception e) {
@@ -44,7 +44,11 @@ public class TestMethod implements Test {
 		}
 	}
 
-	private void tearDown() {
+	protected void invoke() throws IllegalAccessException, InvocationTargetException {
+		_method.invoke(_subject, new Object[0]);
+	}
+
+	protected void tearDown() {
 		if (_subject instanceof TestLifeCycle) {
 			try {
 				((TestLifeCycle)_subject).tearDown();
@@ -54,7 +58,7 @@ public class TestMethod implements Test {
 		}
 	}
 
-	private void setUp() {
+	protected void setUp() {
 		if (_subject instanceof TestLifeCycle) {
 			try {
 				((TestLifeCycle)_subject).setUp();
