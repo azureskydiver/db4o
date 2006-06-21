@@ -21,6 +21,10 @@ public class TestMethod implements Test {
 	public Object getSubject() {
 		return _subject;
 	}
+	
+	public Method getMethod() {
+		return _method;
+	}
 
 	public String getLabel() {
 		return _subject.getClass().getName() + "." + _method.getName();
