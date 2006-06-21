@@ -11,8 +11,9 @@ using Mono.Cecil.Cil;
 namespace Db4oAdmin
 {
 	// const values
-	// string methods (sartswith, endswith)
+	// string methods (startswith, endswith)
 	// enums
+	// value type candidates
 	// code compiled in release mode
 	// queries with delegates instead com.db4o.query.Predicate subclasses
 	// arithmetic expressions
@@ -31,6 +32,8 @@ namespace Db4oAdmin
 		private MethodReference _Constraint_Not;
 		private MethodReference _Constraint_Greater;
 		private MethodReference _Constraint_Smaller;
+		private MethodReference _Constraint_EndsWith;
+		private MethodReference _Constraint_StartsWith;
 
 		public SodaEmitterVisitor(InstrumentationContext context, MethodDefinition method)
 		{
@@ -44,6 +47,8 @@ namespace Db4oAdmin
 			_Constraint_Not = ImportConstraintMethod("Not");
 			_Constraint_Greater = ImportConstraintMethod("Greater");
 			_Constraint_Smaller = ImportConstraintMethod("Smaller");
+			_Constraint_StartsWith = ImportConstraintMethod("StartsWith");
+			_Constraint_EndsWith = ImportConstraintMethod("EndsWith");
 		}
 
 		private MethodReference ImportConstraintMethod(string name)
@@ -76,7 +81,7 @@ namespace Db4oAdmin
 		}
 
 		public void Visit(NotExpression expression)
-		{
+		{	
 			EnterExpression();
 			expression.Expr().Accept(this);
 			_worker.Emit(OpCodes.Callvirt, _Constraint_Not);
@@ -98,7 +103,29 @@ namespace Db4oAdmin
 			{
 				_worker.Emit(OpCodes.Callvirt, _Constraint_Smaller);
 			}
+			else if (op == ComparisonOperator.STARTSWITH)
+			{
+				PushCaseSensitiveFlag();
+				_worker.Emit(OpCodes.Callvirt, _Constraint_StartsWith);
+			}
+			else if (op == ComparisonOperator.ENDSWITH)
+			{
+				PushCaseSensitiveFlag();
+				_worker.Emit(OpCodes.Callvirt, _Constraint_EndsWith);
+			}
 			LeaveExpression();
+		}
+
+		private void PushCaseSensitiveFlag()
+		{
+			if (_context.Configuration.CaseSensitive)
+			{
+				_worker.Emit(OpCodes.Ldc_I4_1);
+			}
+			else
+			{
+				_worker.Emit(OpCodes.Ldc_I4_0);
+			}
 		}
 
 		private void EnterExpression()
@@ -124,7 +151,27 @@ namespace Db4oAdmin
 
 		public void Visit(ConstValue operand)
 		{
-			throw new NotImplementedException();
+			object value = operand.Value();
+			Type type = value.GetType();
+			TypeCode code = Type.GetTypeCode(type);
+			switch (code)
+			{
+				case TypeCode.SByte:
+					_worker.Emit(OpCodes.Ldc_I4_S, (SByte)value);
+					break;
+				case TypeCode.Int32:
+					_worker.Emit(OpCodes.Ldc_I4, (Int32)value);
+					break;
+				case TypeCode.Int64:
+					_worker.Emit(OpCodes.Ldc_I8, (Int64)value);
+					break;
+				case TypeCode.String:
+					_worker.Emit(OpCodes.Ldstr, (String)value);
+					break;
+				default:
+					throw new NotImplementedException(code.ToString());
+			}
+			_worker.Emit(OpCodes.Box, _context.Import(type));
 		}
 
 		public void Visit(FieldValue operand)

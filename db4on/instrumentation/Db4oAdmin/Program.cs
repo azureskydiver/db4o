@@ -15,7 +15,8 @@ namespace Db4oAdmin
 			try
 			{
 				string assemblyLocation = args[0];
-				new CFNQEnabler(assemblyLocation).Run();
+				Configuration configuration = new Configuration();
+				new CFNQEnabler(assemblyLocation, configuration).Run();
 			}
 			catch (Exception x)
 			{

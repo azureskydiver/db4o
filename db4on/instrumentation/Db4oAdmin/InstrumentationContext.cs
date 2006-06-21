@@ -7,10 +7,17 @@ namespace Db4oAdmin
 	public class InstrumentationContext
 	{
 		protected AssemblyDefinition _assembly;
-		
-		public InstrumentationContext(string location)
+		private Configuration _configuration;
+
+		public InstrumentationContext(string location, Configuration configuration)
 		{
 			_assembly = AssemblyFactory.GetAssembly(location);
+			_configuration = configuration;
+		}
+		
+		public Configuration Configuration
+		{
+			get { return _configuration; }
 		}
 		
 		public AssemblyDefinition Assembly

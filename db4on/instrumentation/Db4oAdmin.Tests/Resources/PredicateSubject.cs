@@ -161,6 +161,31 @@ class PersonByAgeRange : com.db4o.query.Predicate
 	}
 }
 
+class TrustworthyPeople : com.db4o.query.Predicate
+{
+	public bool Match(Person candidate)
+	{
+		return candidate.Age < 29 || candidate.Name == "ma";
+	}
+}
+
+class ByNameStartAndEnd : com.db4o.query.Predicate
+{
+	string _begin;
+	string _end;
+
+	public ByNameStartAndEnd(string begin, string end)
+	{
+		_begin = begin;
+		_end = end;
+	}
+
+	public bool Match(Person candidate)
+	{
+		return candidate.Name.StartsWith(_begin) && candidate.Name.EndsWith(_end);
+	}
+}
+
 public class PredicateSubject
 {
 	public void Setup(ObjectContainer container)
@@ -171,6 +196,22 @@ public class PredicateSubject
 		Person rbo = new Person(30, "rbo");
 		rbo.Spouse = new Person(29, "ma");
 		container.Set(rbo);
+	}
+
+	public void TestByNameStartAndEnd(ObjectContainer container)
+	{
+		Setup(container);
+		AssertResult(
+			container.Query(new ByNameStartAndEnd("r", "o")),
+			"rbo", "Ronaldinho");		
+	}
+
+	public void TestByConstValue(ObjectContainer container)
+	{
+		Setup(container);
+		AssertResult(
+			container.Query(new TrustworthyPeople()),
+			"jbe", "Ronaldinho", "ma");
 	}
 
 	public void TestByAgeRange(ObjectContainer container)

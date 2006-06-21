@@ -15,7 +15,7 @@ namespace Db4oAdmin.Tests
 
 		protected override void InstrumentAssembly(string path)
 		{
-			new Db4oAdmin.NQOptimization(path).Run();
+			new Db4oAdmin.NQOptimization(path, new Configuration()).Run();
 		}
 
 		protected override void OnQueryExecution(object sender, QueryExecutionEventArgs args)

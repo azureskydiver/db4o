@@ -7,7 +7,7 @@ namespace Db4oAdmin
 	{
 		private QueryInvocationProcessor _processor;
 
-		public CFNQEnabler(string location) : base(location)
+		public CFNQEnabler(string location, Configuration configuration) : base(location, configuration)
 		{
 		}
 
