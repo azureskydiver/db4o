@@ -16,16 +16,8 @@ namespace Db4oAdmin.Tests
 	                typeof (PredicateBuildTimeOptimizationTestCase),
 	            };
 
-            try
-            {
-                ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(tests);
-                return new TestRunner(builder).Run();
-            }
-	        catch (Exception x)
-	        {
-	            Console.WriteLine(x);
-                return 255;
-	        }
+			ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(tests);
+	    	return new TestRunner(builder).Run();
 		}
 	}
 }

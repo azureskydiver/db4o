@@ -47,6 +47,7 @@
     <EmbeddedResource Include="Resources\CFNQSubject.cs" />
     <EmbeddedResource Include="Resources\PredicateSubject.cs" />
     <Compile Include="ShellUtilities.cs" />
+    <Compile Include="VerifyAssemblyTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\db4o-net2.csproj">

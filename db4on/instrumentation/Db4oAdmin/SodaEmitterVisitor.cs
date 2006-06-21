@@ -10,15 +10,27 @@ using Mono.Cecil.Cil;
 
 namespace Db4oAdmin
 {
+	// const values
+	// string methods (sartswith, endswith)
+	// enums
+	// code compiled in release mode
+	// queries with delegates instead com.db4o.query.Predicate subclasses
+	// arithmetic expressions
+	// static fields
+	// arrays
+	// method calls
 	class SodaEmitterVisitor : ExpressionVisitor, ComparisonOperandVisitor
 	{
 		private CilWorker _worker;
 		private InstrumentationContext _context;
 		private MethodReference _Query_Descend;
 		private MethodReference _Query_Constrain;
-		private int _depth = 0;
+		private int _depth;
 		private MethodReference _Constraint_Or;
 		private MethodReference _Constraint_And;
+		private MethodReference _Constraint_Not;
+		private MethodReference _Constraint_Greater;
+		private MethodReference _Constraint_Smaller;
 
 		public SodaEmitterVisitor(InstrumentationContext context, MethodDefinition method)
 		{
@@ -27,8 +39,16 @@ namespace Db4oAdmin
 
 			_Query_Descend = ImportQueryMethod("Descend", typeof(string));
 			_Query_Constrain = ImportQueryMethod("Constrain", typeof(object));
-			_Constraint_Or = _context.Import(typeof(Constraint).GetMethod("Or"));
-			_Constraint_And = _context.Import(typeof(Constraint).GetMethod("And"));
+			_Constraint_Or = ImportConstraintMethod("Or");
+			_Constraint_And = ImportConstraintMethod("And");
+			_Constraint_Not = ImportConstraintMethod("Not");
+			_Constraint_Greater = ImportConstraintMethod("Greater");
+			_Constraint_Smaller = ImportConstraintMethod("Smaller");
+		}
+
+		private MethodReference ImportConstraintMethod(string name)
+		{
+			return _context.Import(typeof(Constraint).GetMethod(name));
 		}
 
 		private MethodReference ImportQueryMethod(string methodName, params Type[] signature)
@@ -57,7 +77,10 @@ namespace Db4oAdmin
 
 		public void Visit(NotExpression expression)
 		{
-			throw new NotImplementedException();
+			EnterExpression();
+			expression.Expr().Accept(this);
+			_worker.Emit(OpCodes.Callvirt, _Constraint_Not);
+			LeaveExpression();
 		}
 
 		public void Visit(ComparisonExpression expression)
@@ -66,6 +89,15 @@ namespace Db4oAdmin
 			expression.Left().Accept(this);
 			expression.Right().Accept(this);
 			_worker.Emit(OpCodes.Callvirt, _Query_Constrain);
+			ComparisonOperator op = expression.Op();
+			if (op == ComparisonOperator.GREATER)
+			{
+				_worker.Emit(OpCodes.Callvirt, _Constraint_Greater);
+			}
+			else if (op == ComparisonOperator.SMALLER)
+			{
+				_worker.Emit(OpCodes.Callvirt, _Constraint_Smaller);
+			}
 			LeaveExpression();
 		}
 

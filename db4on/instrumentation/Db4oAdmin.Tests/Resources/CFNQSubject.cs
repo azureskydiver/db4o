@@ -25,13 +25,13 @@ public class Item
 // TODO: query invocation with comparison
 public class CFNQSubject
 {
-	public static void SetUp(ObjectContainer container)
+	public void SetUp(ObjectContainer container)
 	{	
 		container.Set(new Item("foo"));
 		container.Set(new Item("bar"));
 	}
 
-	public static void TestInlineStaticDelegate(ObjectContainer container)
+	public void TestInlineStaticDelegate(ObjectContainer container)
 	{
 		SetUp(container);
 		IList<Item> items = container.Query<Item>(delegate(Item candidate)
@@ -41,7 +41,7 @@ public class CFNQSubject
 		CheckResult(items);
 	}
 
-	public static void TestInlineClosureDelegate(ObjectContainer container)
+	public void TestInlineClosureDelegate(ObjectContainer container)
 	{
 		SetUp(container);
 		string name = "foo";
@@ -52,14 +52,14 @@ public class CFNQSubject
 		CheckResult(items);
 	}
 
-	public static void TestStaticMemberDelegate(ObjectContainer container)
+	public void TestStaticMemberDelegate(ObjectContainer container)
 	{
 		SetUp(container);
 		IList<Item> items = container.Query<Item>(CFNQSubject.MatchFoo);
 		CheckResult(items);
 	}
 
-	public static void TestMultipleQueryInvocations(ObjectContainer container)
+	public void TestMultipleQueryInvocations(ObjectContainer container)
 	{
 		SetUp(container);
 		CheckResult(container.Query<Item>(CFNQSubject.MatchFoo));
@@ -69,7 +69,7 @@ public class CFNQSubject
 
 	delegate ObjectContainer ObjectContainerAccessor();
 
-	public static void TestInlineStaticDelegateInsideExpression(ObjectContainer container)
+	public void TestInlineStaticDelegateInsideExpression(ObjectContainer container)
 	{
 		SetUp(container);
 		ObjectContainerAccessor getter = delegate { return container; };
@@ -79,14 +79,14 @@ public class CFNQSubject
 		}));
 	}
 
-	public static void TestInstanceMemberDelegate(ObjectContainer container)
+	public void TestInstanceMemberDelegate(ObjectContainer container)
 	{
 		SetUp(container);
 		IList<Item> items = container.Query<Item>(new QueryItemByName("foo").Match);
 		CheckResult(items);
 	}
 
-	private static void CheckResult(IList<Item> items)
+	private void CheckResult(IList<Item> items)
 	{
 		Assert.AreEqual(1, items.Count);
 		Assert.AreEqual("foo", items[0].Name);

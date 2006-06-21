@@ -8,28 +8,80 @@ using Db4oUnit;
 
 namespace Db4oAdmin.Tests
 {
-	public abstract class AbstractInstrumentationTestCase : TestLifeCycle
+	public abstract class AbstractInstrumentationTestCase : TestSuiteBuilder
 	{
 		public const string DatabaseFile = "subject.yap";
-
-		public void TestInstrumentation()
+		
+		class InstrumentationTestMethod : TestMethod
 		{
-			string _assemblyPath = EmitAssemblyFromResource();
-			InstrumentAssembly(_assemblyPath);
-			VerifyAssembly(_assemblyPath);
-			RunSubjectAssemblyTests(_assemblyPath);
+			private AbstractInstrumentationTestCase _testCase;
+
+			public InstrumentationTestMethod(AbstractInstrumentationTestCase testCase, object subject, MethodInfo method) : base(subject, method)
+			{
+				_testCase = testCase;
+			}
+
+			protected override void Invoke()
+			{
+				using (ObjectContainer container = _testCase.OpenDatabase())
+				{
+					GetMethod().Invoke(GetSubject(), new object[] { container });
+				}
+			}
+
+			private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+			{
+				foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+				{
+					if (assembly.GetName().Name == args.Name) return assembly;
+				}
+				return null;
+			}
+
+			override protected void SetUp()
+			{
+				base.SetUp();
+				AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+			}
+
+			override protected void TearDown()
+			{
+				AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+				base.TearDown();
+			}
+		}
+		
+		class InstrumentationTestSuiteBuilder : ReflectionTestSuiteBuilder
+		{
+			private AbstractInstrumentationTestCase _testCase;
+
+			public InstrumentationTestSuiteBuilder(AbstractInstrumentationTestCase testCase, Type clazz)
+				: base(clazz)
+			{
+				_testCase = testCase;
+			}
+			
+			protected override bool IsTestMethod(MethodInfo method)
+			{
+				return method.Name.StartsWith("Test") && method.IsPublic;
+			}
+
+			protected override Test CreateTest(object instance, MethodInfo method)
+			{
+				return new InstrumentationTestMethod(_testCase, instance, method);
+			}
 		}
 
-		public override void SetUp()
+		public TestSuite Build()
 		{
-			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+			string assemblyPath = EmitAssemblyFromResource();
+			InstrumentAssembly(assemblyPath);
+			
+			Type type = GetTestCaseType(assemblyPath);
+			TestSuite suite = new InstrumentationTestSuiteBuilder(this, type).Build();
+			return new TestSuite(GetType().FullName, new Test[] { suite, new VerifyAssemblyTest(assemblyPath)});
 		}
-
-		public override void TearDown()
-		{
-			AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(CurrentDomain_AssemblyResolve);	
-		}
-
+		
 		protected abstract string ResourceName { get; }
 		
 		protected abstract void InstrumentAssembly(string path);
@@ -41,15 +93,6 @@ namespace Db4oAdmin.Tests
 			throw new ApplicationException(args.Reason.Message, args.Reason);
 		}
 
-		private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-		{
-			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-			{
-				if (assembly.GetName().Name == args.Name) return assembly;
-			}
-			return null;
-		}
-
 		private static string GetResourceAsString(string resourceName)
 		{
 			using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
@@ -57,48 +100,11 @@ namespace Db4oAdmin.Tests
 				return new StreamReader(stream).ReadToEnd();
 			}
 		}
-
-		protected void RunSubjectAssemblyTests(string assemblyName)
+		
+		private Type GetTestCaseType(string assemblyName)
 		{
 			Assembly assembly = Assembly.LoadFrom(assemblyName);
-			Type subject = assembly.GetType(ResourceName, true);
-			RunTestMethodsWithContainer(subject);
-		}
-
-		private void RunTestMethodsWithContainer(Type subject)
-		{
-			foreach (MethodInfo method in EnumerateTestMethods(subject))
-			{
-				RunTestMethodWithContainer(method);
-			}
-		}
-
-		private void RunTestMethodWithContainer(MethodInfo method)
-		{
-			using (ObjectContainer container = OpenDatabase())
-			{
-				method.Invoke(null, new object[] { container });
-			}
-		}
-
-		private IEnumerable<MethodInfo> EnumerateTestMethods(Type subject)
-		{
-			foreach (MethodInfo method in subject.GetMethods())
-			{
-				if (method.Name.StartsWith("Test"))
-				{
-					yield return method;
-				}
-			}
-		}
-
-		protected static void VerifyAssembly(string assemblyPath)
-		{
-			ShellUtilities.ProcessOutput output = ShellUtilities.shell("peverify.exe", assemblyPath);
-			string stdout = output.StdOut;
-			if (stdout.Contains("1.1.4322.573")) return; // ignore older peverify version errors
-			if (output.ExitCode == 0 && !stdout.ToUpper().Contains("WARNING")) return;
-			Assert.Fail(stdout);
+			return assembly.GetType(ResourceName, true);
 		}
 
 		private ObjectContainer OpenDatabase()
