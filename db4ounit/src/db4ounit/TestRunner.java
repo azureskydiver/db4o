@@ -4,16 +4,16 @@ import java.io.IOException;
 
 public class TestRunner {
 	
-	TestSuite _suite;
+	TestSuiteBuilder _suiteBuilder;
 	
 	public TestRunner(TestSuite suite) {
 		if (null == suite) throw new IllegalArgumentException("suite");
-		_suite = suite;
+		_suiteBuilder = new NullTestSuiteBuilder(suite);
 	}
 	
 	public TestRunner(TestSuiteBuilder builder) {
 		if (null == builder) throw new IllegalArgumentException("suite");
-		_suite = builder.build();
+		_suiteBuilder = builder;
 	}
 	
 	public TestRunner(Class clazz) {
@@ -22,10 +22,15 @@ public class TestRunner {
 
 	public int run() {
 		TestResult result = new TestResult();
-		_suite.run(result);
+		run(result);
 		report(result);
 		return result.failures().size();
 	}
+
+	private void run(TestResult result) {
+		TestSuite suite = _suiteBuilder.build();
+		suite.run(result);
+	}	
 
 	private void report(TestResult result) {
 		try {
