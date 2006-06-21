@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="AbstractNQInstrumentation.cs" />
     <Compile Include="CFNQEnabler.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="ILPattern.cs" />
     <Compile Include="InstrumentationContext.cs" />
     <Compile Include="NQOptimization.cs" />

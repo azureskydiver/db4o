@@ -18,7 +18,7 @@ namespace Db4oAdmin.Tests
 		
 		override protected void InstrumentAssembly(string path)
 		{
-			new Db4oAdmin.CFNQEnabler(path).Run();
+			new Db4oAdmin.CFNQEnabler(path, new Configuration()).Run();
 		}
 
 		override protected void OnQueryExecution(object sender, QueryExecutionEventArgs args)

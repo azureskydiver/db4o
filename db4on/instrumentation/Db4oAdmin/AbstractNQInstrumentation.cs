@@ -9,9 +9,9 @@ namespace Db4oAdmin
 	{
 		protected InstrumentationContext _context;
 		
-		protected AbstractNQInstrumentation(string location)
+		protected AbstractNQInstrumentation(string location, Configuration configuration)
 		{
-			_context = new InstrumentationContext(location);
+			_context = new InstrumentationContext(location, configuration);
 		}
 
 		protected abstract void ProcessQueryInvocation(MethodDefinition parent, Instruction queryInvocation);

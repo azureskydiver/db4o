@@ -13,7 +13,7 @@ namespace Db4oAdmin
 {
 	public class NQOptimization : AbstractNQInstrumentation
 	{
-		public NQOptimization(string location) : base(location)
+		public NQOptimization(string location, Configuration configuration) : base(location, configuration)
 		{
 		}
 
