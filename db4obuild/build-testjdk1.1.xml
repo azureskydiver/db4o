@@ -39,7 +39,7 @@
 		<exec executable="${exec.java}">
 			<arg line="-version" />		
 		</exec>
-		<java fork="yes" jvm="${exec.java}" classname="com.db4o.test.AllTests">
+		<java fork="yes" jvm="${exec.java}" classname="com.db4o.test.AllTests" timeout="1800000">
 			<classpath>
 				<pathelement location="${dir.base}/lib/${db4o.name}-java1.1.jar" />
 				<pathelement location="${dir.build}" />

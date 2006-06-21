@@ -705,7 +705,7 @@
 	</target>
 
 	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
-		<java fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" >
+		<java fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />

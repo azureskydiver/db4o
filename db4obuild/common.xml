@@ -54,7 +54,7 @@
 		<element name="args" optional="yes" />
 		
 		<sequential>
-			<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
+			<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true" timeout="1800000">
 				<classpath>
 					<pathelement location="${eclipse.home}/startup.jar" />
 				</classpath>
