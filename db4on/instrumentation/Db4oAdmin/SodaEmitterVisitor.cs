@@ -10,7 +10,6 @@ using Mono.Cecil.Cil;
 namespace Db4oAdmin
 {
 	// const values
-	// enums
 	// value type candidates
 	// code compiled in release mode
 	// queries with delegates instead com.db4o.query.Predicate subclasses
@@ -91,6 +90,9 @@ namespace Db4oAdmin
 			EnterExpression();
 			expression.Left().Accept(this);
 			expression.Right().Accept(this);
+
+			EmitBoxIfNeeded(expression.Left());
+
 			_worker.Emit(OpCodes.Callvirt, _Query_Constrain);
 			ComparisonOperator op = expression.Op();
 			if (op == ComparisonOperator.GREATER)
@@ -112,6 +114,14 @@ namespace Db4oAdmin
 				_worker.Emit(OpCodes.Callvirt, _Constraint_EndsWith);
 			}
 			LeaveExpression();
+		}
+
+		private void EmitBoxIfNeeded(FieldValue left)
+		{
+			FieldReference field = GetFieldReference(left);
+			if (!field.FieldType.IsValueType) return;
+				
+			_worker.Emit(OpCodes.Box, field.FieldType);
 		}
 
 		private void PushCaseSensitiveFlag()
@@ -169,7 +179,6 @@ namespace Db4oAdmin
 				default:
 					throw new NotImplementedException(code.ToString());
 			}
-			if (type.IsValueType) _worker.Emit(OpCodes.Box, _context.Import(type));
 		}
 
 		public void Visit(FieldValue operand)
@@ -187,10 +196,6 @@ namespace Db4oAdmin
 			{
 				FieldReference field = GetFieldReference(operand);
 				_worker.Emit(OpCodes.Ldfld, field);
-				if (field.FieldType.IsValueType)
-				{
-					_worker.Emit(OpCodes.Box, field.FieldType);
-				}
 			}
 		}
 
