@@ -149,7 +149,7 @@ public class JdkClass implements ReflectClass{
                         useConstructor(new JdkConstructor(_reflector, constructor), null);
                         return true;
                     }
-                }catch(Exception e){
+                }catch(Throwable t){
                     
                 }
             }
