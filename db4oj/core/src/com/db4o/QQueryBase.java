@@ -275,7 +275,7 @@ public abstract class QQueryBase implements Unversioned {
                 result.reset();
 				return result;
 			}
-	        QueryResultImpl qResult = new QueryResultImpl(i_trans);
+	        QueryResultImpl qResult = i_trans.i_stream.createQResult(i_trans);
 	        execute1(qResult);
 	        return qResult;
         }
@@ -299,6 +299,16 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
         
+        if (i_trans.i_stream.isClient()) {
+            long[] ids = clazz.getIDs(i_trans); 
+            QResultClient resClient = new QResultClient(i_trans, ids.length);
+            for (int i = 0; i < ids.length; i++) {
+                resClient.add((int)ids[i]);
+            }
+            sort(resClient);
+            return resClient;
+        }
+        
         if(Debug.useBTrees){
             if(clazz.index() == null){
                 return null;
@@ -310,16 +320,6 @@ public abstract class QQueryBase implements Unversioned {
     			return null;
     		}
         }
-					
-		if (i_trans.i_stream.isClient()) {
-			long[] ids = clazz.getIDs(i_trans); 
-			QResultClient resClient = new QResultClient(i_trans, ids.length);
-			for (int i = 0; i < ids.length; i++) {
-				resClient.add((int)ids[i]);
-			}
-			sort(resClient);
-			return resClient;
-		}
 		
 		Tree tree = clazz.getIndex(i_trans);
 		
