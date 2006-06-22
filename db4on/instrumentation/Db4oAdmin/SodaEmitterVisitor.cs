@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Cecil.FlowAnalysis.CodeStructure;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.expr.cmp;
@@ -31,6 +32,7 @@ namespace Db4oAdmin
 		private MethodReference _Constraint_Smaller;
 		private MethodReference _Constraint_EndsWith;
 		private MethodReference _Constraint_StartsWith;
+		private MethodReference _Constraint_Contains;
 
 		public SodaEmitterVisitor(InstrumentationContext context, MethodDefinition method)
 		{
@@ -39,23 +41,35 @@ namespace Db4oAdmin
 
 			_Query_Descend = ImportQueryMethod("Descend", typeof(string));
 			_Query_Constrain = ImportQueryMethod("Constrain", typeof(object));
-			_Constraint_Or = ImportConstraintMethod("Or");
-			_Constraint_And = ImportConstraintMethod("And");
+			_Constraint_Or = ImportConstraintMethod("Or", typeof(Constraint));
+			_Constraint_And = ImportConstraintMethod("And", typeof(Constraint));
 			_Constraint_Not = ImportConstraintMethod("Not");
 			_Constraint_Greater = ImportConstraintMethod("Greater");
 			_Constraint_Smaller = ImportConstraintMethod("Smaller");
-			_Constraint_StartsWith = ImportConstraintMethod("StartsWith");
-			_Constraint_EndsWith = ImportConstraintMethod("EndsWith");
+			_Constraint_StartsWith = ImportConstraintMethod("StartsWith", typeof(bool));
+			_Constraint_EndsWith = ImportConstraintMethod("EndsWith", typeof(bool));
+			_Constraint_Contains = ImportConstraintMethod("Contains");
 		}
 
-		private MethodReference ImportConstraintMethod(string name)
+		private MethodReference ImportConstraintMethod(string methodName, params Type[] signature)
 		{
-			return _context.Import(typeof(Constraint).GetMethod(name));
+			return ImportMethod(typeof(Constraint), methodName, signature);
 		}
 
 		private MethodReference ImportQueryMethod(string methodName, params Type[] signature)
 		{
-			return _context.Import(typeof(Query).GetMethod(methodName, signature));
+			return ImportMethod(typeof(Query), methodName, signature);
+		}
+
+		private MethodReference ImportMethod(Type type, string methodName, Type[] signature)
+		{
+			MethodInfo method = type.GetMethod(methodName, signature);
+			if (null == method)
+			{
+				throw new ArgumentException(
+					string.Format("Method '{2}.{0}({1})' not found.", methodName, ToCommaSeparatedList(signature), type));
+			}
+			return _context.Import(method);
 		}
 
 		public void Visit(AndExpression expression)
@@ -88,32 +102,43 @@ namespace Db4oAdmin
 		public void Visit(ComparisonExpression expression)
 		{
 			EnterExpression();
+			
 			expression.Left().Accept(this);
 			expression.Right().Accept(this);
-
+			
 			EmitBoxIfNeeded(expression.Left());
-
-			_worker.Emit(OpCodes.Callvirt, _Query_Constrain);
-			ComparisonOperator op = expression.Op();
-			if (op == ComparisonOperator.GREATER)
-			{
-				_worker.Emit(OpCodes.Callvirt, _Constraint_Greater);
-			}
-			else if (op == ComparisonOperator.SMALLER)
-			{
-				_worker.Emit(OpCodes.Callvirt, _Constraint_Smaller);
-			}
-			else if (op == ComparisonOperator.STARTSWITH)
-			{
-				PushCaseSensitiveFlag();
-				_worker.Emit(OpCodes.Callvirt, _Constraint_StartsWith);
-			}
-			else if (op == ComparisonOperator.ENDSWITH)
-			{
-				PushCaseSensitiveFlag();
-				_worker.Emit(OpCodes.Callvirt, _Constraint_EndsWith);
-			}
+			EmitConstraint(expression.Op());
+			
 			LeaveExpression();
+		}
+
+		private void EmitConstraint(ComparisonOperator op)
+		{
+			_worker.Emit(OpCodes.Callvirt, _Query_Constrain);
+			switch (op.Id())
+			{
+				case ComparisonOperator.GREATER_ID:
+					_worker.Emit(OpCodes.Callvirt, _Constraint_Greater);
+					break;
+				case ComparisonOperator.SMALLER_ID:
+					_worker.Emit(OpCodes.Callvirt, _Constraint_Smaller);
+					break;
+				case ComparisonOperator.STARTSWITH_ID:
+					PushCaseSensitiveFlag();
+					_worker.Emit(OpCodes.Callvirt, _Constraint_StartsWith);
+					break;
+				case ComparisonOperator.ENDSWITH_ID:
+					PushCaseSensitiveFlag();
+					_worker.Emit(OpCodes.Callvirt, _Constraint_EndsWith);
+					break;
+				case ComparisonOperator.CONTAINS_ID:
+					_worker.Emit(OpCodes.Callvirt, _Constraint_Contains);
+					break;
+				case ComparisonOperator.EQUALS_ID:
+					break;
+				default:
+					throw new NotImplementedException(op.ToString());
+			}
 		}
 
 		private void EmitBoxIfNeeded(FieldValue left)
@@ -228,6 +253,13 @@ namespace Db4oAdmin
 		public void Visit(MethodCallValue value)
 		{
 			throw new NotImplementedException();
+		}
+
+		private string ToCommaSeparatedList(Type[] signature)
+		{
+			string[] values = new string[signature.Length];
+			for (int i = 0; i < values.Length; ++i) values[i] = signature[i].ToString();
+			return string.Join(", ", values);
 		}
 	}
 }

@@ -204,6 +204,21 @@ class ByNameStartAndEnd : com.db4o.query.Predicate
 	}
 }
 
+class ByNameSubstring : com.db4o.query.Predicate
+{
+	string _substring;
+
+	public ByNameSubstring(string substring)
+	{
+		_substring = substring;
+	}
+
+	public bool Match(Person candidate)
+	{
+		return candidate.Name.Contains(_substring);
+	}
+}
+
 class OverweightPeople : com.db4o.query.Predicate
 {
 	public bool Match(Person candidate)
@@ -228,6 +243,12 @@ public class PredicateSubject : Db4oAdmin.Tests.InstrumentedTestCase
 	public void TestByConstEnum()
 	{
 		AssertResult(new OverweightPeople(), "Ronaldinho", "rbo");
+	}
+
+	public void TestByNameSubstring()
+	{
+		AssertResult(new ByNameSubstring("di"), "Ronaldinho");
+		AssertResult(new ByNameSubstring("o"), "Ronaldinho", "rbo");
 	}
 
 	public void TestByNameStartAndEnd()
