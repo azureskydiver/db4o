@@ -87,7 +87,7 @@ public class QxProcessor {
     
     boolean exceedsLimit(int count, int depth){
         int limit = _limit;
-        for (int i = 0; i < depth; i++) {
+        for (int i = 1; i < depth; i++) {
             limit = limit / 10;
         }
         return count > limit;
