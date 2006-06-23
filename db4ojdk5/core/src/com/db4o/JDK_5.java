@@ -20,7 +20,7 @@ class JDK_5 extends JDK_1_4 {
 
 		try {
 			Annotate annotate=new Annotate(javaClazz, config, classConfig);
-			return annotate.reflectAnnotations(javaClazz);
+			return annotate.reflectAnnotations();
 		} catch (Exception exc) {
 			throw new Db4oException(exc);
 		}

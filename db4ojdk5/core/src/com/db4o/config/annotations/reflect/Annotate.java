@@ -49,7 +49,7 @@ public class Annotate {
 //				new MaximumActivationDepthFactory());
 //		_configurators.put(MinimumActivationDepth.class,
 //				new MinimumActivationDepthFactory());
-		_configurators.put(Indexed.class, new IndexedFactory());
+		_configurators.put(Indexed.class, new NoArgsFieldConfiguratorFactory(IndexedConfigurator.class));
 //		_configurators.put(CallConstructor.class,
 //				new NoArgsClassConfiguratorFactory(
 //						CallConstructorConfigurator.class));
@@ -78,10 +78,10 @@ public class Annotate {
 	 *            Java class to reflect
 	 * @return classConfig configurations of class
 	 */
-	public Config4Class reflectAnnotations(Class clazz) {
+	public Config4Class reflectAnnotations() {
 		try {
-//			reflectClass(clazz);
-			reflectFields(clazz);
+//			reflectClass(_clazz);
+			reflectFields(_clazz);
 
 		} catch (SecurityException e) {
 			e.printStackTrace();
