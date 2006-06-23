@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 
 /**
  * turns indexing on <br> <br>
- * Example:<br> the annotation {@code  @Index }is used without parameter   <br><br> 
- * {@code   public class Foo  <br> @Index <br> private String bar; ...}
+ * Example:<br> the annotation {@code  @Indexed }is used without parameter   <br><br> 
+ * {@code   public class Foo  <br> @Indexed <br> private String bar; ...}
  *
  */
 @Documented
