@@ -6,13 +6,13 @@ import java.lang.reflect.Field;
 
 import com.db4o.config.annotations.Cascade;
 import com.db4o.config.annotations.CascadeType;
-import com.db4o.config.annotations.Index;
+import com.db4o.config.annotations.Indexed;
 
 public class IndexedFactory implements Db4oConfiguratorFactory {
 
 	public Db4oConfigurator configuratorFor(AnnotatedElement element,
 			Annotation annotation) {
-		if (!annotation.annotationType().equals(Index.class)) {
+		if (!annotation.annotationType().equals(Indexed.class)) {
 			return null;
 		}
 		String fieldName=null;

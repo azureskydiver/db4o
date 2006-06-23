@@ -5,7 +5,7 @@ import com.db4o.config.annotations.*;
 
 public class Sheep {
 
-	@Index 
+	@Indexed 
 	private String name;
 	private boolean constructorCalled=false;
 

@@ -10,7 +10,7 @@ import com.db4o.config.annotations.CallConstructor;
 import com.db4o.config.annotations.Cascade;
 import com.db4o.config.annotations.GenerateUUIDs;
 import com.db4o.config.annotations.GenerateVersionNumbers;
-import com.db4o.config.annotations.Index;
+import com.db4o.config.annotations.Indexed;
 import com.db4o.config.annotations.MaximumActivationDepth;
 import com.db4o.config.annotations.MinimumActivationDepth;
 import com.db4o.config.annotations.PersistStaticFieldValues;
@@ -49,7 +49,7 @@ public class Annotate {
 //				new MaximumActivationDepthFactory());
 //		_configurators.put(MinimumActivationDepth.class,
 //				new MinimumActivationDepthFactory());
-		_configurators.put(Index.class, new IndexedFactory());
+		_configurators.put(Indexed.class, new IndexedFactory());
 //		_configurators.put(CallConstructor.class,
 //				new NoArgsClassConfiguratorFactory(
 //						CallConstructorConfigurator.class));
