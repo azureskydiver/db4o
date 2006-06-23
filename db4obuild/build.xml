@@ -505,7 +505,7 @@
 	<target name="runtestsmono" depends="compiletestsmono">
 		<exec executable="mono" dir="${dir.dist.dll.mono}" failifexecutionfails="true" failonerror="true">
 			<arg value="--debug" />
-			<arg file="${dir.dist.dll.mono}/db4o-mono-test.exe" />
+			<arg file="${dir.dist.dll.mono}/${file.name.exe.tests.mono}" />
 		</exec>
 	</target>
 	
