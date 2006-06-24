@@ -172,6 +172,14 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	// int
 	
+	boolean sampleFieldIntZeroEqualsComp(Data data) {
+		return data.id==0;
+	}
+
+	public void testFieldIntZeroEqualsComp() throws Exception {
+		assertComparison("sampleFieldIntZeroEqualsComp",INT_FIELDNAME,new Integer(0),ComparisonOperator.EQUALS,false);
+	}
+
 	boolean sampleFieldIntEqualsComp(Data data) {
 		return data.id==INT_CMPVAL;
 	}
@@ -206,6 +214,22 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	// float
 	
+	boolean sampleFieldFloatZeroEqualsComp(Data data) {
+		return data.value==0.0f;
+	}
+
+	public void testFieldFloatZeroEqualsComp() throws Exception {
+		assertComparison("sampleFieldFloatZeroEqualsComp",FLOAT_FIELDNAME,new Float(0.0f),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleFieldFloatZeroIntEqualsComp(Data data) {
+		return data.value==0;
+	}
+
+	public void testFieldFloatZeroIntEqualsComp() throws Exception {
+		assertComparison("sampleFieldFloatZeroIntEqualsComp",FLOAT_FIELDNAME,new Float(0.0f),ComparisonOperator.EQUALS,false);
+	}
+
 	boolean sampleFieldFloatEqualsComp(Data data) {
 		return data.value==FLOAT_CMPVAL;
 	}
