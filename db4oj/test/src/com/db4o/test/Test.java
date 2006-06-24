@@ -156,31 +156,42 @@ public class Test extends AllTests {
         }
     }
 
-    public static boolean ensure(boolean condition) {
+    public static boolean ensure(boolean condition,String msg) {
         assertionCount++;
         if (!condition) {
-            error();
+            error(msg);
             return false;
         }
         return true;
     }
 
+    public static boolean ensure(boolean condition) {
+    	return ensure(condition,null);
+    }
+
     public static boolean ensureEquals(Object exp,Object actual) {
+    	return ensureEquals(exp,actual,null);
+    }
+
+    public static boolean ensureEquals(Object exp,Object actual,String msg) {
         assertionCount++;
         if (!exp.equals(actual)) {
-            error("Expected "+exp+" but was "+actual);
+            String errMsg = "Expected "+exp+" but was "+actual;
+            if(msg!=null) {
+            	errMsg=msg+"\n"+errMsg;
+            }
+			error(errMsg);
             return false;
         }
         return true;
     }
 
     public static boolean ensureEquals(int exp,int actual) {
-        assertionCount++;
-        if (exp!=actual) {
-            error("Expected "+exp+" but was "+actual);
-            return false;
-        }
-        return true;
+    	return ensureEquals(exp,actual,null);
+    }
+
+    public static boolean ensureEquals(int exp,int actual,String msg) {
+    	return ensureEquals(new Integer(exp),new Integer(actual),msg);
     }
 
     public static void ensureOccurrences(Object obj, int count) {
