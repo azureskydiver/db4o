@@ -45,13 +45,15 @@ public class NQRegressionTests {
 		float value;
 		String name;
 		Data prev;
+		int id2;
 		
-		public Data(int id, boolean bool,float value, String name,Data prev) {
+		public Data(int id, boolean bool,float value, String name,Data prev, int id2) {
 			super(id);
 			this.bool=bool;
 			this.value=value;
 			this.name = name;
 			this.prev=prev;
+			this.id2=id2;
 		}
 
 		public float getValue() {
@@ -76,10 +78,10 @@ public class NQRegressionTests {
 	}
 
 	public void store() {
-		Data a=new Data(1,false,1.1f,ASTR,null);
-		Data b=new Data(2,false,1.1f,BSTR,a);
-		Data c=new Data(3,true,2.2f,CSTR,b);
-		Data cc=new Data(3,false,3.3f,CSTR,null);
+		Data a=new Data(1,false,1.1f,ASTR,null, 0);
+		Data b=new Data(2,false,1.1f,BSTR,a, Integer.MIN_VALUE);
+		Data c=new Data(3,true,2.2f,CSTR,b, Integer.MIN_VALUE);
+		Data cc=new Data(3,false,3.3f,CSTR,null, Integer.MIN_VALUE);
 		Test.store(a);
 		Test.store(b);
 		Test.store(c);
@@ -144,6 +146,12 @@ public class NQRegressionTests {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return !candidate.bool;
+			}
+		},
+		new ExpectingPredicate("id2==0") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.id2==0;
 			}
 		},
 		new ExpectingPredicate("id==1") {
@@ -555,42 +563,43 @@ public class NQRegressionTests {
 		}
 	}
 	
-	private void assertNQResult(final ExpectingPredicate filter) {
+	private void assertNQResult(final ExpectingPredicate predicate) {
+		final String predicateId = "PREDICATE: "+predicate;
 		ObjectContainer db=Test.objectContainer();
 		Db4oQueryExecutionListener listener = new Db4oQueryExecutionListener() {
 			private int run=0;
 			
 			public void notifyQueryExecuted(NQOptimizationInfo info) {
 				if(run<2) {
-					Test.ensureEquals(info.predicate(),filter);
+					Test.ensureEquals(info.predicate(),predicate,predicateId);
 				}
 				String expMsg=null;
 				switch(run) {
 					case 0:
 						expMsg=NativeQueryHandler.UNOPTIMIZED;
-						Test.ensure(info.optimized()==null);
+						Test.ensure(info.optimized()==null,predicateId);
 						break;
 					case 1:
 						expMsg=NativeQueryHandler.DYNOPTIMIZED;
-						Test.ensure(info.optimized() instanceof Expression);
+						Test.ensure(info.optimized() instanceof Expression,predicateId);
 						break;
 					case 2:
 						expMsg=NativeQueryHandler.PREOPTIMIZED;
-						Test.ensure(info.optimized()==null);
+						Test.ensure(info.optimized()==null,predicateId);
 						break;
 				}
-				Test.ensureEquals(expMsg,info.message());
+				Test.ensureEquals(expMsg,info.message(),predicateId);
 				run++;
 			}
 		};
 		((YapStream)db).getNativeQueryHandler().addListener(listener);
 		db.ext().configure().optimizeNativeQueries(false);
-		ObjectSet raw=db.query(filter);
+		ObjectSet raw=db.query(predicate);
 		db.ext().configure().optimizeNativeQueries(true);
 		if(NQDebug.LOG) {
-			System.err.println("PREDICATE: "+filter);
+			System.err.println("PREDICATE: "+predicate);
 		}
-		ObjectSet optimized=db.query(filter);
+		ObjectSet optimized=db.query(predicate);
 		if(!raw.equals(optimized)) {
 			System.out.println("RAW");
 			raw.reset();
@@ -603,14 +612,14 @@ public class NQRegressionTests {
 				System.out.println(optimized.next());
 			}
 		}
-		Test.ensure(raw.equals(optimized));
-		Test.ensureEquals(filter.expected(),raw.size());
+		Test.ensure(raw.equals(optimized),predicateId);
+		Test.ensureEquals(predicate.expected(),raw.size(),predicateId);
 
 		if(RUN_LOADTIME) {
 			db.ext().configure().optimizeNativeQueries(false);
 			try {
 				Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
-				Class filterClass=loader.loadClass(filter.getClass().getName());
+				Class filterClass=loader.loadClass(predicate.getClass().getName());
 				Constructor constr=null;
 				Object[] args=null;
 				try {
@@ -622,16 +631,17 @@ public class NQRegressionTests {
 					args=new Object[]{filterClass.getName(),Data.class};
 				}
 				constr.setAccessible(true);
-				Predicate predicate=(Predicate)constr.newInstance(args);
-				ObjectSet preoptimized=db.query(predicate);
-				Test.ensureEquals(filter.expected(),preoptimized.size());
-				Test.ensure(raw.equals(preoptimized));
-				Test.ensure(optimized.equals(preoptimized));
-			} catch (Throwable exc) {
+				Predicate clPredicate=(Predicate)constr.newInstance(args);
+				ObjectSet preoptimized=db.query(clPredicate);
+				Test.ensureEquals(predicate.expected(),preoptimized.size(),predicateId);
+				Test.ensure(raw.equals(preoptimized),predicateId);
+				Test.ensure(optimized.equals(preoptimized),predicateId);
+			} 
+			catch (Throwable exc) {
 				exc.printStackTrace();
 			}
 		}
-		
 		((YapStream)db).getNativeQueryHandler().clearListeners();
+		db.ext().configure().optimizeNativeQueries(true);
 	}
 }
