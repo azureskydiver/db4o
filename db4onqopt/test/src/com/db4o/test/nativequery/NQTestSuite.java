@@ -10,6 +10,7 @@ public class NQTestSuite extends TestSuite{
     public Class[] tests() {
         return new Class[] {
             NQRegressionTests.class,
+            NQIntIsZero.class,
             TestCatConsistency.class
         };
     }
