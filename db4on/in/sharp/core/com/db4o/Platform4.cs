@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using com.db4o.config;
+using com.db4o.config.attributes;
 using com.db4o.ext;
 using com.db4o.foundation;
 using com.db4o.inside.query;
@@ -155,9 +156,11 @@ namespace com.db4o
 			}
 		}
 
-	    internal static Config4Class ExtendConfiguration(ReflectClass clazz,Configuration config,Config4Class classConfig)
+	    internal static Config4Class ExtendConfiguration(ReflectClass clazz, Configuration config, Config4Class classConfig)
 		{
-			return classConfig;
+			ConfigurationIntrospector a = new ConfigurationIntrospector(GetNetType(clazz), classConfig, config);
+	    	a.Apply();
+			return a.ClassConfiguration;
 		}
 
 		internal static Collection4 FlattenCollection(YapStream stream, Object obj)
