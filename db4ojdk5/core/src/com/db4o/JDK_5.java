@@ -3,7 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
-import com.db4o.config.annotations.reflect.Annotate;
+import com.db4o.config.annotations.reflect.ConfigurationIntrospector;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
@@ -19,8 +19,8 @@ class JDK_5 extends JDK_1_4 {
 		Class javaClazz = JdkReflector.toNative(clazz);
 
 		try {
-			Annotate annotate=new Annotate(javaClazz, config, classConfig);
-			return annotate.reflectAnnotations();
+			ConfigurationIntrospector instrospetor = new ConfigurationIntrospector(javaClazz, config, classConfig);
+			return instrospetor.apply();
 		} catch (Exception exc) {
 			throw new Db4oException(exc);
 		}

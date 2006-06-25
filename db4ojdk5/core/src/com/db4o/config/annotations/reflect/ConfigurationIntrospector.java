@@ -23,7 +23,8 @@ import com.db4o.config.annotations.UpdateDepth;
  * 
  */
 
-public class Annotate {
+public class ConfigurationIntrospector {
+	
 	Map<Class<? extends Annotation>, Db4oConfiguratorFactory> _configurators;
 
 	Config4Class _classConfig;
@@ -32,7 +33,7 @@ public class Annotate {
 
 	Configuration _config;
 
-	public Annotate(Class clazz, Configuration config, Config4Class classConfig)
+	public ConfigurationIntrospector(Class clazz, Configuration config, Config4Class classConfig)
 			throws Exception {
 		this._classConfig = classConfig;
 		this._clazz = clazz;
@@ -78,10 +79,10 @@ public class Annotate {
 	 *            Java class to reflect
 	 * @return classConfig configurations of class
 	 */
-	public Config4Class reflectAnnotations() {
+	public Config4Class apply() {
 		try {
-//			reflectClass(_clazz);
-			reflectFields(_clazz);
+//			reflectClass();
+			reflectFields();
 
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -92,18 +93,18 @@ public class Annotate {
 	/**
 	 * reserved for the next release with the full annotation support
 	 */
-	private void reflectClass(Class clazz) {
-		Annotation[] annotations = clazz.getAnnotations();
+	private void reflectClass() {
+		Annotation[] annotations = _clazz.getAnnotations();
 		for (Annotation a : annotations) {
-			applyAnnotation(clazz, a);
+			applyAnnotation(_clazz, a);
 		}
 	}
 
-	private void reflectFields(Class clazz) {
+	private void reflectFields() {
 
 		Field[] declaredFields;
 		try {
-			declaredFields = clazz.getDeclaredFields();
+			declaredFields = _clazz.getDeclaredFields();
 			for (Field f : declaredFields) {
 				for (Annotation a : f.getAnnotations()) {
 					applyAnnotation(f, a);
@@ -112,7 +113,6 @@ public class Annotate {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void applyAnnotation(AnnotatedElement element, Annotation a) {
