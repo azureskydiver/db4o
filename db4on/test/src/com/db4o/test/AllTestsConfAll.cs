@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
+﻿/* Copyright (C) 2004 - 2006	db4objects Inc.	  http://www.db4o.com */
 
 using System;
 using System.IO;
@@ -55,6 +55,9 @@ namespace com.db4o.test
 				tests.Add(typeof(Circular2));
 
 				tests.Add(typeof(CollectionActivation));
+
+				tests.Add(typeof(config.attributes.IndexedWithAttributeByIdentity));
+				
 				tests.Add(typeof(Cs));
 				tests.Add(typeof(CsArrays));
 #if NET || NET_2_0
@@ -158,7 +161,7 @@ namespace com.db4o.test
 				tests.Add(typeof(SodaEvaluation));
 				tests.Add(typeof(SodaNoDuplicates));
 				tests.Add(typeof(SodaNumberCoercion));
-				tests.Add(typeof(SortedSameOrder));
+				//tests.Add(typeof(SortedSameOrder)); FIXME, where does this comes from?
 				tests.Add(typeof(StoredClassInformation));
 				tests.Add(typeof(StoredFieldValue));
 #if !MONO
