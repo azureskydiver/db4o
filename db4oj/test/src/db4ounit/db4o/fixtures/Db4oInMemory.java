@@ -7,6 +7,7 @@ import com.db4o.ext.MemoryFile;
 import db4ounit.db4o.Db4oFixture;
 
 public class Db4oInMemory implements Db4oFixture {
+    
 	private ExtObjectContainer _db;
 	
 	public void open() {
@@ -17,7 +18,12 @@ public class Db4oInMemory implements Db4oFixture {
 		_db.close();
 	}
 
+    public void clean() {
+        // do nothing
+    }
+    
 	public ExtObjectContainer db() {
 		return _db;
 	}
+
 }
