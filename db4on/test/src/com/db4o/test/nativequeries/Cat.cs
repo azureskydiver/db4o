@@ -34,7 +34,7 @@ namespace com.db4o.test.nativequeries
 
 			public int Compare(object x, object y)
 			{
-				return ((Cat)y).name.CompareTo(((Cat)x).name);
+				return ((Cat)x).name.CompareTo(((Cat)y).name);
 			}
 		}
 
