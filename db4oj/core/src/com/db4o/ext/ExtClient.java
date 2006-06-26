@@ -51,6 +51,10 @@ public interface ExtClient extends ExtObjectContainer{
 	 */
 	public void switchToMainFile();
 	
+    /**
+     * checks if the client is currently connected to a server.
+     * @return true if the client is alive.
+     */
 	public boolean isAlive();
 }
 
