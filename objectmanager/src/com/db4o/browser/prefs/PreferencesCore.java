@@ -86,7 +86,9 @@ public class PreferencesCore {
 		prefsCore.minimumActivationDepth(Integer.MAX_VALUE);
 		prefsCore.updateDepth(Integer.MAX_VALUE);
 
+		Db4o.configure().allowVersionUpdates(true);
 		db = Db4o.openFile(preferencesFile);
+		Db4o.configure().allowVersionUpdates(false);
 		Query query = db.query();
 		query.constrain(PreferencesCore.class);
 		ObjectSet result = query.execute();
