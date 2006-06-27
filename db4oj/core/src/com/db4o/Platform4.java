@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import java.net.*;
 import java.util.Date;
 
 import com.db4o.config.*;
@@ -362,6 +363,10 @@ public final class Platform4 {
         return jdk().isCollectionTranslator(a_config); 
     }
     
+    public static boolean isConnected(Socket socket) {
+        return jdk().isConnected(socket);
+    }   
+    
     public static final boolean isValueType(ReflectClass claxx){
     	return false;
     }
@@ -632,5 +637,6 @@ public final class Platform4 {
 
 	public static boolean isTransient(ReflectClass a_class) {
 		return false;
-	}	
+	}
+
 }

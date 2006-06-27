@@ -5,6 +5,8 @@ package com.db4o.foundation.network;
 import java.io.*;
 import java.net.*;
 
+import com.db4o.*;
+
 public class YapSocketReal implements YapSocket {
 
     private Socket _socket;
@@ -24,13 +26,15 @@ public class YapSocketReal implements YapSocket {
     }
 
     public void close() throws IOException {
-        //    	i_socket.getInputStream().close();
-        //    	i_socket.getOutputStream().close();
         _socket.close();
     }
 
     public void flush() throws IOException {
         _out.flush();
+    }
+    
+    public boolean isConnected() {
+        return Platform4.isConnected(_socket);
     }
     
     public int read() throws IOException {
