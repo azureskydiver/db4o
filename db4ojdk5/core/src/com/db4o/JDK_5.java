@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import java.net.*;
+
 import com.db4o.config.*;
 import com.db4o.config.annotations.reflect.ConfigurationIntrospector;
 import com.db4o.ext.*;
@@ -25,6 +27,16 @@ class JDK_5 extends JDK_1_4 {
 			throw new Db4oException(exc);
 		}
 	}
+    
+    public boolean isConnected(Socket socket){
+        if(socket == null){
+            return false;
+        }
+        if(! socket.isConnected() ){
+            return false;
+        }
+        return ! socket.isClosed();
+    }
 
 	boolean isEnum(Reflector reflector, ReflectClass claxx) {
 
