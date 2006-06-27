@@ -7,6 +7,8 @@ public interface YapSocket {
 	public abstract void close() throws IOException;
 
 	public abstract void flush() throws IOException;
+    
+    public abstract boolean isConnected();
 
 	public abstract int read() throws IOException;
 

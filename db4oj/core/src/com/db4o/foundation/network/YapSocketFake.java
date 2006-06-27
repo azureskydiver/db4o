@@ -42,8 +42,8 @@ public class YapSocketFake implements YapSocket {
         // do nothing
     }
 
-    public boolean isClosed() {
-        return _affiliate == null;
+    public boolean isConnected() {
+        return _affiliate != null;
     }
 
     public int read() throws IOException {

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import java.lang.reflect.*;
+import java.net.*;
 import java.util.*;
 
 import com.db4o.config.*;
@@ -87,6 +88,10 @@ public class JDK {
         }
         return false;
     }
+    
+   public boolean isConnected(Socket socket){
+       return socket != null;
+   }
 
 	public int ver(){
 	    return 1;

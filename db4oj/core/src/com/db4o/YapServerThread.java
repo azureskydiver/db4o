@@ -136,9 +136,13 @@ final class YapServerThread extends Thread {
                 if (i_mainStream == null || i_mainStream.isClosed()) {
                     break;
                 }
+                if(! i_socket.isConnected()){
+                    break;
+                }
                 if (Deploy.debug) {
                     e.printStackTrace();
                 }
+                i_nullMessages++;
             }
             
             // TODO: Optimize - this doesn't need to be in the loop of executing statements
