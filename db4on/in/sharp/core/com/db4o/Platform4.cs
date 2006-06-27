@@ -391,6 +391,13 @@ namespace com.db4o
 			return false;
 		}
 
+        public static bool IsConnected(j4o.net.Socket socket){
+            if(socket == null){
+                return false;
+            }
+            return socket.IsConnected();
+        }
+
 		public static bool IsSimple(Class a_class)
 		{
 			for (int i1 = 0; i1 < SIMPLE_CLASSES.Length; i1++)
