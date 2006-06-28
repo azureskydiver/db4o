@@ -69,6 +69,7 @@
 		<exec executable="rpmbuild">
 			<arg line="-ta --buildroot=${dir.mono.rpmbuild}/tmp --target=noarch ${dir.mono.rpmbuild}/SOURCES/${db4o.name.full}.tar.gz" />
 		</exec>		
+		<!--
 		<input message="Please enter pass phrase for ${gpg.user}" addproperty="gpg.pass" />
 		<exec executable="rpm" inputstring="${gpg.pass}">
 			<arg line="--addsign ${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-${db4o.version.build.plain}.noarch.rpm" />
@@ -76,6 +77,7 @@
 		<exec executable="rpm" inputstring="${gpg.pass}">
 			<arg line="--addsign ${dir.mono.rpmbuild}/SRPMS/${db4o.name.short}-${db4o.version.build.plain}.src.rpm" />
 		</exec>		
+		-->
 		<delete dir="${dir.build.transfer.mono}/dist" />
 		<mkdir dir="${dir.build.transfer.mono}/dist" />
 		<copy file="${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-${db4o.version.build.plain}.noarch.rpm" tofile="${dir.build.transfer.mono}/dist/${db4o.name.full}.noarch.rpm" />
