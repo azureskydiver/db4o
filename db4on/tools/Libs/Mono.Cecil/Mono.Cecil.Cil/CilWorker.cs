@@ -29,10 +29,7 @@
 namespace Mono.Cecil.Cil {
 
 	using System;
-	using System.Collections;
 	using SR = System.Reflection;
-
-	using Mono.Cecil;
 
 	public sealed class CilWorker : ICilWorker {
 
@@ -42,7 +39,7 @@ namespace Mono.Cecil.Cil {
 		internal CilWorker (MethodBody body)
 		{
 			m_mbody = body;
-			m_instrs = m_mbody.Instructions as InstructionCollection;
+			m_instrs = m_mbody.Instructions;
 		}
 
 		public MethodBody GetBody ()
@@ -95,8 +92,8 @@ namespace Mono.Cecil.Cil {
 
 		public Instruction Create (OpCode opcode, sbyte b)
 		{
-			if (opcode.OperandType != OperandType.ShortInlineI ||
-				opcode == OpCodes.Ldc_I4_S)
+			if (opcode.OperandType != OperandType.ShortInlineI &&
+				opcode != OpCodes.Ldc_I4_S)
 				throw new ArgumentException ("opcode");
 
 			return FinalCreate (opcode, b);
@@ -104,8 +101,8 @@ namespace Mono.Cecil.Cil {
 
 		public Instruction Create (OpCode opcode, byte b)
 		{
-			if (opcode.OperandType != OperandType.ShortInlineI &&
-				opcode != OpCodes.Ldc_I4_S)
+			if (opcode.OperandType != OperandType.ShortInlineI ||
+				opcode == OpCodes.Ldc_I4_S)
 				throw new ArgumentException ("opcode");
 
 			return FinalCreate (opcode, b);
