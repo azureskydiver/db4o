@@ -12,7 +12,7 @@
 	dir.compactframework=<path to the 2.0 version of the compact framework, leave empty if not available>
 	eclipse.home=<eclipse home dir>
 	csc.executable.path.net2=<path to csc.exe for .NET 2.0>
-
+	file.compiler.jdk1.3.args.optional=<any optional parameters for javac, e.g. '-source 1.3' if a JDK >= 5 is used>
 
 	An example:
 	dir.workspace=C:/_db4o/production
@@ -45,6 +45,7 @@
 		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}" />
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}"/>
 		<versioninfo path="${dir.n.core.src}/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
+		<property name="file.compiler.jdk1.3.args.optional" value="" />
 	</target>
 
 	<target name="clean" description="Delete all generated files">
@@ -156,7 +157,7 @@
 			executable="${file.compiler.jdk1.3}"
 			srcdir="${dir.dist.java.temp.src.core}"
 			destdir="${dir.dist.classes.java1.1}" debug="off">
-			<compilerarg line="${file.compiler.jdk1.3.args}"/>
+			<compilerarg line="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}"/>
 		</javac>
 
 		<mkdir dir="${dir.dist.classes.java1.2}" />
