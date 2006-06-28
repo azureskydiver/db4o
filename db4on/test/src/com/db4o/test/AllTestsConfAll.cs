@@ -60,9 +60,11 @@ namespace com.db4o.test
 				
 				tests.Add(typeof(Cs));
 				tests.Add(typeof(CsArrays));
+#if !MONO
 #if NET || NET_2_0
 				tests.Add(typeof(CsAppDomains));
 				tests.Add(typeof(CsAssemblyVersionChange));
+#endif
 #endif
 				tests.Add(typeof(CsCascadeDeleteToStructs));
 				tests.Add(typeof(CsCollections));
@@ -125,7 +127,9 @@ namespace com.db4o.test
 				tests.Add(typeof(net2.Net2GenericContainers));
 				tests.Add(typeof(net2.Net2GenericDictionary));
 				tests.Add(typeof(net2.Net2GenericList));
+	#if !MONO
 				tests.Add(typeof(net2.Net2GenericOtherCollections));
+	#endif
 				tests.Add(typeof(net2.Net2NullableTypes));
 				tests.Add(typeof(net2.Net2QueryForClass));
 				tests.Add(typeof(net2.Net2SimpleGenericType));
