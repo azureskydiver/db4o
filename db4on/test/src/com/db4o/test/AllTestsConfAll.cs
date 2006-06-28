@@ -26,7 +26,7 @@ namespace com.db4o.test
 			{
 				ArrayList tests = new ArrayList();
 
-#if NET || NET_2_0 || MONO
+#if (NET || NET_2_0) && !MONO
 				tests.Add(typeof(aliases.ClassAliasesTestCase));
 #endif
 
@@ -117,7 +117,7 @@ namespace com.db4o.test
 				tests.Add(typeof(nativequeries.Cat));
 				tests.Add(typeof(nativequeries.NativeQueriesTestCase));
 				tests.Add(typeof(nativequeries.cats.TestCatConsistency));
-#if !CF_1_0 && !CF_2_0
+#if !CF_1_0 && !CF_2_0 && !MONO
 				tests.Add(typeof(nativequeries.MultipleAssemblySupportTestCase));
 #endif
 				tests.Add(typeof(nativequeries.OptimizationFailuresTestCase));
