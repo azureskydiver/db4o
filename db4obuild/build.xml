@@ -502,7 +502,7 @@
 	</target>
 
 	<target name="runtestsmono" depends="compiletestsmono">
-		<exec executable="mono" dir="${dir.dist.dll.mono}" failifexecutionfails="true" failonerror="true">
+		<exec executable="mono" dir="${dir.dist.dll.mono}" failifexecutionfails="true" failonerror="true" timeout="300000">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.mono}/${file.name.exe.tests.mono}" />
 		</exec>
