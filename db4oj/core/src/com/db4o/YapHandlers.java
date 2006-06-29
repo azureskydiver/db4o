@@ -58,7 +58,7 @@ public final class YapHandlers {
     
     Db4oReplicationReferenceProvider _replicationReferenceProvider;
     
-    DiagnosticProcessor              _diagnosticListener;
+    DiagnosticProcessor              _diagnosticProcessor;
     
     
     boolean                 i_encrypt;
@@ -85,7 +85,7 @@ public final class YapHandlers {
     	a_stream.i_handlers = this;
         
         _reflector = reflector;
-        _diagnosticListener = (DiagnosticProcessor) a_stream.i_config.diagnostic();
+        _diagnosticProcessor = a_stream.i_config.diagnosticProcessor();
     	
     	initClassReflectors(reflector);
         

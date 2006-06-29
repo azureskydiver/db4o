@@ -290,12 +290,12 @@ public final class QCandidates implements Visitor4 {
             i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
         }
         
-        if(i_trans.i_stream.i_handlers._diagnosticListener.enabled()){
+        if(i_trans.i_stream.i_handlers._diagnosticProcessor.enabled()){
             
             String name = i_yapClass.getName();
             if (name.indexOf("com.db4o.") != 0){
     
-                i_trans.i_stream.i_handlers._diagnosticListener.onDiagnostic(
+                i_trans.i_stream.i_handlers._diagnosticProcessor.onDiagnostic(
                     new DiagnosticMessage( name 
                         + " : Query candidate set could not be loaded from a field index.\n"
                         + "  Consider indexing the fields that you want to query for using: \n"

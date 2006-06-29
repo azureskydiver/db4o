@@ -153,11 +153,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                     i_fields = new YapField[0];
                 }
             }
-            if(i_stream.i_handlers._diagnosticListener.enabled()){
+            if(i_stream.i_handlers._diagnosticProcessor.enabled()){
                 if(i_fields != null && i_fields.length == 0){
                     String name = getName();
                     if (name.indexOf("com.db4o.") != 0){
-                        i_stream.i_handlers._diagnosticListener.onDiagnostic(
+                        i_stream.i_handlers._diagnosticProcessor.onDiagnostic(
                             new DiagnosticMessage(name 
                                 + " : This class does not contain any persistent fields.\n"
                                 + "  Every class in the class hierarchy requires some overhead for the maintenance of a class index." 
