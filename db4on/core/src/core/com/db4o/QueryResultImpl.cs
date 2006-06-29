@@ -30,6 +30,17 @@ namespace com.db4o
 			return obj;
 		}
 
+		private object ActivatedObject(int id)
+		{
+			com.db4o.YapStream stream = i_trans.i_stream;
+			object ret = stream.GetActivatedObjectFromCache(i_trans, id);
+			if (ret != null)
+			{
+				return ret;
+			}
+			return stream.ReadActivatedObjectNotInCache(i_trans, id);
+		}
+
 		public virtual object Get(int index)
 		{
 			lock (StreamLock())
@@ -38,14 +49,7 @@ namespace com.db4o
 				{
 					throw new System.IndexOutOfRangeException();
 				}
-				int id = i_content[index];
-				com.db4o.YapStream stream = i_trans.i_stream;
-				object obj = stream.GetByID(id);
-				if (obj == null)
-				{
-					return null;
-				}
-				return Activate(obj);
+				return ActivatedObject(i_content[index]);
 			}
 		}
 
@@ -78,12 +82,12 @@ namespace com.db4o
 				stream.CheckClosed();
 				if (base.HasNext())
 				{
-					object ret = stream.GetByID2(i_trans, NextInt());
-					if (ret == null)
+					object obj = ActivatedObject(NextInt());
+					if (obj != null)
 					{
-						return Next();
+						return obj;
 					}
-					return Activate(ret);
+					return Next();
 				}
 				return null;
 			}

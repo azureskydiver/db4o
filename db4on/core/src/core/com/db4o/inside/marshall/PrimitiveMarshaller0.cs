@@ -9,7 +9,7 @@ namespace com.db4o.inside.marshall
 
 		public override int WriteNew(com.db4o.Transaction trans, com.db4o.YapClassPrimitive
 			 yapClassPrimitive, object obj, bool topLevel, com.db4o.YapWriter parentWriter, 
-			bool withIndirection)
+			bool withIndirection, bool restoreLinkOffset)
 		{
 			int id = 0;
 			if (obj != null)
@@ -27,7 +27,7 @@ namespace com.db4o.inside.marshall
 				com.db4o.YapWriter writer = new com.db4o.YapWriter(trans, length);
 				writer.UseSlot(id, address, length);
 				writer.WriteInt(yapClassPrimitive.GetID());
-				handler.WriteNew(_family, obj, false, writer, true);
+				handler.WriteNew(_family, obj, false, writer, true, false);
 				writer.WriteEnd();
 				trans.i_stream.WriteNew(yapClassPrimitive, writer);
 			}

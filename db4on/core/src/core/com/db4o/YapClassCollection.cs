@@ -363,13 +363,18 @@ namespace com.db4o
 				i_yapClassByID.Put(id, yapClass);
 				i_yapClassByBytes.Put(yapClass.ReadName(a_trans), yapClass);
 			}
-			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config.ReadAs();
-			readAs.ForEachKey(new _AnonymousInnerClass305(this, readAs));
+			ApplyReadAs();
 		}
 
-		private sealed class _AnonymousInnerClass305 : com.db4o.foundation.Visitor4
+		private void ApplyReadAs()
 		{
-			public _AnonymousInnerClass305(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
+			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config.ReadAs();
+			readAs.ForEachKey(new _AnonymousInnerClass309(this, readAs));
+		}
+
+		private sealed class _AnonymousInnerClass309 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass309(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
 				 readAs)
 			{
 				this._enclosing = _enclosing;
@@ -488,6 +493,7 @@ namespace com.db4o
 				}
 				classes.Add(yc);
 			}
+			ApplyReadAs();
 			com.db4o.ext.StoredClass[] sclasses = new com.db4o.ext.StoredClass[classes.Size()
 				];
 			classes.ToArray(sclasses);

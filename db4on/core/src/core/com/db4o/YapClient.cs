@@ -475,7 +475,13 @@ namespace com.db4o
 				{
 					throw new System.IO.IOException(com.db4o.Messages.Get(42));
 				}
-				_blockSize = (byte)msg.GetPayLoad().ReadInt();
+				com.db4o.YapWriter payLoad = msg.GetPayLoad();
+				_blockSize = (byte)payLoad.ReadInt();
+				int doEncrypt = payLoad.ReadInt();
+				if (doEncrypt == 0)
+				{
+					i_handlers.OldEncryptionOff();
+				}
 			}
 		}
 

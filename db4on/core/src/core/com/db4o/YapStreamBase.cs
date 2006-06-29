@@ -535,6 +535,97 @@ namespace com.db4o
 		internal abstract bool Delete5(com.db4o.Transaction ta, com.db4o.YapObject yapObject
 			, int a_cascade, bool userCall);
 
+		public virtual object Descend(object obj, string[] path)
+		{
+			lock (i_lock)
+			{
+				return Descend1(CheckTransaction(null), obj, path);
+			}
+		}
+
+		private object Descend1(com.db4o.Transaction trans, object obj, string[] path)
+		{
+			com.db4o.YapObject yo = GetYapObject(obj);
+			if (yo == null)
+			{
+				return null;
+			}
+			object child = null;
+			string fieldName = path[0];
+			if (fieldName == null)
+			{
+				return null;
+			}
+			com.db4o.YapClass yc = yo.GetYapClass();
+			com.db4o.YapField[] field = new com.db4o.YapField[] { null };
+			yc.ForEachYapField(new _AnonymousInnerClass547(this, fieldName, field));
+			if (field[0] == null)
+			{
+				return null;
+			}
+			if (yo.IsActive())
+			{
+				child = field[0].Get(obj);
+			}
+			else
+			{
+				com.db4o.YapReader reader = ReadReaderByID(trans, yo.GetID());
+				if (reader == null)
+				{
+					return null;
+				}
+				com.db4o.inside.marshall.MarshallerFamily mf = yc.FindOffset(reader, field[0]);
+				if (mf == null)
+				{
+					return null;
+				}
+				try
+				{
+					child = field[0].ReadQuery(trans, mf, reader);
+				}
+				catch (com.db4o.CorruptionException e)
+				{
+				}
+			}
+			if (path.Length == 1)
+			{
+				return child;
+			}
+			if (child == null)
+			{
+				return null;
+			}
+			string[] subPath = new string[path.Length - 1];
+			System.Array.Copy(path, 1, subPath, 0, path.Length - 1);
+			return Descend1(trans, child, subPath);
+		}
+
+		private sealed class _AnonymousInnerClass547 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass547(YapStreamBase _enclosing, string fieldName, com.db4o.YapField[]
+				 field)
+			{
+				this._enclosing = _enclosing;
+				this.fieldName = fieldName;
+				this.field = field;
+			}
+
+			public void Visit(object obj)
+			{
+				com.db4o.YapField yf = (com.db4o.YapField)obj;
+				if (yf.CanAddToQuery(fieldName))
+				{
+					field[0] = yf;
+				}
+			}
+
+			private readonly YapStreamBase _enclosing;
+
+			private readonly string fieldName;
+
+			private readonly com.db4o.YapField[] field;
+		}
+
 		internal virtual bool DetectSchemaChanges()
 		{
 			return i_config.DetectSchemaChanges();
@@ -714,6 +805,56 @@ namespace com.db4o
 				}
 			}
 			return null;
+		}
+
+		internal object GetActivatedObjectFromCache(com.db4o.Transaction ta, int id)
+		{
+			object obj = GetObjectFromCache(ta, id);
+			if (obj == null)
+			{
+				return null;
+			}
+			BeginEndActivation();
+			Activate2(ta, obj, i_config.ActivationDepth());
+			BeginEndActivation();
+			return obj;
+		}
+
+		internal object GetObjectFromCache(com.db4o.Transaction ta, int id)
+		{
+			if (id <= 0)
+			{
+				return null;
+			}
+			com.db4o.YapObject yo = GetYapObject(id);
+			if (yo == null)
+			{
+				return null;
+			}
+			object obj = yo.GetObject();
+			if (obj == null)
+			{
+				YapObjectGCd(yo);
+				return null;
+			}
+			return obj;
+		}
+
+		internal object ReadActivatedObjectNotInCache(com.db4o.Transaction ta, int id)
+		{
+			object obj = null;
+			BeginEndActivation();
+			try
+			{
+				obj = new com.db4o.YapObject(id).Read(ta, null, null, i_config.ActivationDepth(), 
+					com.db4o.YapConst.ADD_TO_ID_TREE, true);
+			}
+			catch (System.Exception t)
+			{
+			}
+			Activate3CheckStill(ta);
+			BeginEndActivation();
+			return obj;
 		}
 
 		public object GetByUUID(com.db4o.ext.Db4oUUID uuid)

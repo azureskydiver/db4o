@@ -305,7 +305,7 @@ namespace com.db4o
 					result.Reset();
 					return result;
 				}
-				com.db4o.QueryResultImpl qResult = new com.db4o.QueryResultImpl(i_trans);
+				com.db4o.QueryResultImpl qResult = i_trans.i_stream.CreateQResult(i_trans);
 				Execute1(qResult);
 				return qResult;
 			}
@@ -334,10 +334,6 @@ namespace com.db4o
 			{
 				return null;
 			}
-			if (clazz.Index() == null)
-			{
-				return null;
-			}
 			if (i_trans.i_stream.IsClient())
 			{
 				long[] ids = clazz.GetIDs(i_trans);
@@ -349,6 +345,10 @@ namespace com.db4o
 				}
 				Sort(resClient);
 				return resClient;
+			}
+			if (clazz.Index() == null)
+			{
+				return null;
 			}
 			com.db4o.Tree tree = clazz.GetIndex(i_trans);
 			if (tree == null)

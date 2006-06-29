@@ -45,9 +45,9 @@ namespace com.db4o.foundation.network
 		{
 		}
 
-		public virtual bool IsClosed()
+		public virtual bool IsConnected()
 		{
-			return _affiliate == null;
+			return _affiliate != null;
 		}
 
 		public virtual int Read()

@@ -165,7 +165,7 @@ namespace com.db4o.inside.marshall
 			if (yc.IsPrimitive())
 			{
 				((com.db4o.YapClassPrimitive)yc).i_handler.WriteNew(com.db4o.inside.marshall.MarshallerFamily
-					.Current(), obj, false, writer, true);
+					.Current(), obj, false, writer, true, false);
 			}
 			else
 			{

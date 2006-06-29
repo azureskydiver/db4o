@@ -173,18 +173,6 @@ namespace com.db4o
 			return i_state == AVAILABLE;
 		}
 
-		public virtual void AppendEmbedded2(com.db4o.YapWriter a_bytes)
-		{
-			if (Alive())
-			{
-				i_handler.AppendEmbedded3(a_bytes);
-			}
-			else
-			{
-				a_bytes.IncrementOffset(LinkLength());
-			}
-		}
-
 		internal virtual bool CanAddToQuery(string fieldName)
 		{
 			if (!Alive())
@@ -376,45 +364,47 @@ namespace com.db4o
 		public virtual void Delete(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
 			 a_bytes, bool isUpdate)
 		{
-			if (Alive())
+			if (!Alive())
 			{
-				if (i_index != null)
+				IncrementOffset(a_bytes);
+				return;
+			}
+			if (i_index != null)
+			{
+				int offset = a_bytes._offset;
+				object obj = null;
+				try
 				{
-					int offset = a_bytes._offset;
-					object obj = null;
-					try
-					{
-						obj = i_handler.ReadIndexEntry(mf, a_bytes);
-					}
-					catch (com.db4o.CorruptionException e)
-					{
-					}
-					RemoveIndexEntry(a_bytes.GetTransaction(), a_bytes.GetID(), obj);
-					a_bytes._offset = offset;
+					obj = i_handler.ReadIndexEntry(mf, a_bytes);
 				}
-				bool dotnetValueType = false;
-				dotnetValueType = com.db4o.Platform4.IsValueType(i_handler.ClassReflector());
-				if ((i_config != null && i_config.CascadeOnDelete() == com.db4o.YapConst.YES) || 
-					dotnetValueType)
+				catch (com.db4o.CorruptionException e)
+				{
+				}
+				RemoveIndexEntry(a_bytes.GetTransaction(), a_bytes.GetID(), obj);
+				a_bytes._offset = offset;
+			}
+			bool dotnetValueType = false;
+			dotnetValueType = com.db4o.Platform4.IsValueType(i_handler.ClassReflector());
+			if ((i_config != null && i_config.CascadeOnDelete() == com.db4o.YapConst.YES) || 
+				dotnetValueType)
+			{
+				int preserveCascade = a_bytes.CascadeDeletes();
+				a_bytes.SetCascadeDeletes(1);
+				i_handler.DeleteEmbedded(mf, a_bytes);
+				a_bytes.SetCascadeDeletes(preserveCascade);
+			}
+			else
+			{
+				if (i_config != null && i_config.CascadeOnDelete() == com.db4o.YapConst.NO)
 				{
 					int preserveCascade = a_bytes.CascadeDeletes();
-					a_bytes.SetCascadeDeletes(1);
+					a_bytes.SetCascadeDeletes(0);
 					i_handler.DeleteEmbedded(mf, a_bytes);
 					a_bytes.SetCascadeDeletes(preserveCascade);
 				}
 				else
 				{
-					if (i_config != null && i_config.CascadeOnDelete() == com.db4o.YapConst.NO)
-					{
-						int preserveCascade = a_bytes.CascadeDeletes();
-						a_bytes.SetCascadeDeletes(0);
-						i_handler.DeleteEmbedded(mf, a_bytes);
-						a_bytes.SetCascadeDeletes(preserveCascade);
-					}
-					else
-					{
-						i_handler.DeleteEmbedded(mf, a_bytes);
-					}
+					i_handler.DeleteEmbedded(mf, a_bytes);
 				}
 			}
 		}
@@ -606,6 +596,7 @@ namespace com.db4o
 		{
 			if (!Alive())
 			{
+				IncrementOffset(a_bytes);
 				return;
 			}
 			object toSet = null;
@@ -688,7 +679,12 @@ namespace com.db4o
 			try
 			{
 				com.db4o.YapStream stream = i_yapClass.GetStream();
-				i_javaField = i_yapClass.ClassReflector().GetDeclaredField(i_name);
+				com.db4o.reflect.ReflectClass claxx = i_yapClass.ClassReflector();
+				if (claxx == null)
+				{
+					return null;
+				}
+				i_javaField = claxx.GetDeclaredField(i_name);
 				if (i_javaField == null)
 				{
 					return null;
@@ -725,12 +721,12 @@ namespace com.db4o
 				{
 					writer.SetUpdateDepth(min);
 				}
-				indexEntry = i_handler.WriteNew(mf, obj, true, writer, true);
+				indexEntry = i_handler.WriteNew(mf, obj, true, writer, true, true);
 				writer.SetUpdateDepth(updateDepth);
 			}
 			else
 			{
-				indexEntry = i_handler.WriteNew(mf, obj, true, writer, true);
+				indexEntry = i_handler.WriteNew(mf, obj, true, writer, true, true);
 			}
 			AddIndexEntry(writer, indexEntry);
 		}
@@ -765,6 +761,7 @@ namespace com.db4o
 		{
 			if (!Alive())
 			{
+				IncrementOffset(a_bytes);
 				return null;
 			}
 			return i_handler.Read(mf, a_bytes, true);
@@ -870,6 +867,78 @@ namespace com.db4o
 			return Alive() && i_handler.SupportsIndex();
 		}
 
+		public virtual void TraverseValues(com.db4o.foundation.Visitor4 userVisitor)
+		{
+			if (!Alive())
+			{
+				return;
+			}
+			if (!HasIndex())
+			{
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(com.db4o.Messages.ONLY_FOR_INDEXED_FIELDS
+					);
+			}
+			com.db4o.YapStream stream = i_yapClass.GetStream();
+			if (stream.IsClient())
+			{
+				com.db4o.inside.Exceptions4.ThrowRuntimeException(com.db4o.Messages.CLIENT_SERVER_UNSUPPORTED
+					);
+			}
+			lock (stream.Lock())
+			{
+				com.db4o.Transaction trans = stream.GetTransaction();
+				com.db4o.Tree tree = GetIndex(trans).IndexTransactionFor(trans).GetRoot();
+				com.db4o.Tree.Traverse(tree, new _AnonymousInnerClass788(this, userVisitor, trans
+					));
+			}
+		}
+
+		private sealed class _AnonymousInnerClass788 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass788(YapField _enclosing, com.db4o.foundation.Visitor4 
+				userVisitor, com.db4o.Transaction trans)
+			{
+				this._enclosing = _enclosing;
+				this.userVisitor = userVisitor;
+				this.trans = trans;
+			}
+
+			public void Visit(object obj)
+			{
+				com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)obj;
+				ixTree.VisitAll(new _AnonymousInnerClass791(this, userVisitor, trans));
+			}
+
+			private sealed class _AnonymousInnerClass791 : com.db4o.foundation.IntObjectVisitor
+			{
+				public _AnonymousInnerClass791(_AnonymousInnerClass788 _enclosing, com.db4o.foundation.Visitor4
+					 userVisitor, com.db4o.Transaction trans)
+				{
+					this._enclosing = _enclosing;
+					this.userVisitor = userVisitor;
+					this.trans = trans;
+				}
+
+				public void Visit(int anInt, object anObject)
+				{
+					userVisitor.Visit(this._enclosing._enclosing.i_handler.IndexEntryToObject(trans, 
+						anObject));
+				}
+
+				private readonly _AnonymousInnerClass788 _enclosing;
+
+				private readonly com.db4o.foundation.Visitor4 userVisitor;
+
+				private readonly com.db4o.Transaction trans;
+			}
+
+			private readonly YapField _enclosing;
+
+			private readonly com.db4o.foundation.Visitor4 userVisitor;
+
+			private readonly com.db4o.Transaction trans;
+		}
+
 		private com.db4o.TypeHandler4 WrapHandlerToArrays(com.db4o.YapStream a_stream, com.db4o.TypeHandler4
 			 a_handler)
 		{
@@ -937,7 +1006,7 @@ namespace com.db4o
 			string str = "\n Field " + i_name;
 			if (!Alive())
 			{
-				writer.IncrementOffset(LinkLength());
+				IncrementOffset(writer);
 			}
 			else
 			{

@@ -7,6 +7,10 @@ namespace com.db4o
 
 		public const int NOT_IMPLEMENTED = 49;
 
+		public const int ONLY_FOR_INDEXED_FIELDS = 66;
+
+		public const int CLIENT_SERVER_UNSUPPORTED = 67;
+
 		private static string[] i_messages;
 
 		public static string Get(int a_code)
@@ -70,6 +74,7 @@ namespace com.db4o
 					, "Only use persisted first class objects as keys for IdentityHashMap.", "This functionality is only available from version 5.0 onwards."
 					, "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}"
 					, "Old database file format detected. To allow automatic updates call Db4o.configure().allowVersionUpdates(true)."
+					, "This functionality is only available for indexed fields.", "This functionality is not supported for db4o clients in Client/Server mode."
 					 };
 			}
 		}

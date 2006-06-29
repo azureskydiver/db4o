@@ -81,7 +81,7 @@ namespace com.db4o.inside.marshall
 			return null;
 		}
 
-		public override object WriteNew(object a_object, bool topLevel, com.db4o.YapWriter
+		public override object WriteNew(object a_object, bool restoreLinkOffset, com.db4o.YapWriter
 			 a_bytes)
 		{
 			if (a_object == null)

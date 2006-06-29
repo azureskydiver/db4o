@@ -89,6 +89,19 @@ namespace com.db4o.ext
 		/// <seealso cref="com.db4o.Db4o.Configure">com.db4o.Db4o.Configure</seealso>
 		com.db4o.config.Configuration Configure();
 
+		/// <summary>returns a member at the specific path without activating intermediate objects.
+		/// 	</summary>
+		/// <remarks>
+		/// returns a member at the specific path without activating intermediate objects.
+		/// <br /><br />
+		/// This method allows navigating from a persistent object to it's members in a
+		/// performant way without activating or instantiating intermediate objects.
+		/// </remarks>
+		/// <param name="obj">the parent object that is to be used as the starting point.</param>
+		/// <param name="path">an array of field names to navigate by</param>
+		/// <returns>the object at the specified path or null if no object is found</returns>
+		object Descend(object obj, string[] path);
+
 		/// <summary>returns the stored object for an internal ID.</summary>
 		/// <remarks>
 		/// returns the stored object for an internal ID.

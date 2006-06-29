@@ -357,6 +357,7 @@ namespace com.db4o.reflect.generic
 			}
 			classreader.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
 			int ancestorid = classreader.ReadInt();
+			int indexID = classreader.ReadInt();
 			int fieldCount = classreader.ReadInt();
 			com.db4o.reflect.ReflectClass nativeClass = _delegate.ForName(classname);
 			ret = new com.db4o.reflect.generic.GenericClass(this, nativeClass, classname, EnsureClassAvailability

@@ -14,16 +14,6 @@ namespace com.db4o
 			return true;
 		}
 
-		public static void AppendEmbedded(com.db4o.YapWriter a_bytes)
-		{
-			com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
-				(a_bytes);
-			if (oh._yapClass != null)
-			{
-				oh._yapClass.AppendEmbedded1(a_bytes);
-			}
-		}
-
 		public override void CascadeActivation(com.db4o.Transaction a_trans, object a_object
 			, int a_depth, bool a_activate)
 		{
@@ -138,9 +128,10 @@ namespace com.db4o
 		}
 
 		public override object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
-			 obj, bool topLevel, com.db4o.YapWriter writer, bool withIndirection)
+			 obj, bool topLevel, com.db4o.YapWriter writer, bool withIndirection, bool restoreLinkeOffset
+			)
 		{
-			return mf._untyped.WriteNew(obj, topLevel, writer);
+			return mf._untyped.WriteNew(obj, restoreLinkeOffset, writer);
 		}
 	}
 }

@@ -20,7 +20,6 @@ namespace j4o.net
 
             // All test cases work fine without socket timeouts on the server.
 
-
 //			_delegate.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, timeout);
 //			_delegate.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, timeout);
 		}
@@ -29,5 +28,11 @@ namespace j4o.net
 		{
 			_delegate.Close();
 		}
+
+        public bool IsConnected() 
+        {
+            return _delegate.Connected;
+        }
+
 	}
 }

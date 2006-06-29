@@ -248,12 +248,28 @@ namespace com.db4o
 			if (oldLength > PASSWORD_OFFSET)
 			{
 				byte[] encpassword = reader.ReadBytes(ENCRYPTION_PASSWORD_LENGTH);
-				byte[] storedpwd = PasswordToken();
-				for (int idx = 0; idx < storedpwd.Length; idx++)
+				bool nonZeroByte = false;
+				for (int i = 0; i < encpassword.Length; i++)
 				{
-					if (storedpwd[idx] != encpassword[idx])
+					if (encpassword[i] != 0)
 					{
-						_stream.FatalException(54);
+						nonZeroByte = true;
+						break;
+					}
+				}
+				if (!nonZeroByte)
+				{
+					_stream.i_handlers.OldEncryptionOff();
+				}
+				else
+				{
+					byte[] storedpwd = PasswordToken();
+					for (int idx = 0; idx < storedpwd.Length; idx++)
+					{
+						if (storedpwd[idx] != encpassword[idx])
+						{
+							_stream.FatalException(54);
+						}
 					}
 				}
 			}

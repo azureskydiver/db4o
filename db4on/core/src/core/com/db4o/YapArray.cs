@@ -30,11 +30,6 @@ namespace com.db4o
 			return all;
 		}
 
-		public override void AppendEmbedded3(com.db4o.YapWriter a_bytes)
-		{
-			a_bytes.IncrementOffset(LinkLength());
-		}
-
 		public override bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
 			return i_handler.CanHold(claxx);
@@ -170,6 +165,12 @@ namespace com.db4o
 		public virtual byte Identifier()
 		{
 			return com.db4o.YapConst.YAPARRAY;
+		}
+
+		public override object IndexEntryToObject(com.db4o.Transaction trans, object indexEntry
+			)
+		{
+			return null;
 		}
 
 		public override bool IndexNullHandling()
@@ -406,9 +407,9 @@ namespace com.db4o
 
 		public sealed override object WriteNew(com.db4o.inside.marshall.MarshallerFamily 
 			mf, object a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection
-			)
+			, bool restoreLinkOffset)
 		{
-			return mf._array.WriteNew(this, a_object, topLevel, a_bytes);
+			return mf._array.WriteNew(this, a_object, restoreLinkOffset, a_bytes);
 		}
 
 		public virtual void WriteNew1(object obj, com.db4o.YapWriter writer, int length)
@@ -421,7 +422,7 @@ namespace com.db4o
 				for (int i = 0; i < elements; i++)
 				{
 					i_handler.WriteNew(com.db4o.inside.marshall.MarshallerFamily.Current(), _reflectArray
-						.Get(obj, i), true, writer, true);
+						.Get(obj, i), false, writer, true, true);
 				}
 			}
 		}

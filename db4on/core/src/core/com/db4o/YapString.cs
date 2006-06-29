@@ -15,15 +15,6 @@ namespace com.db4o
 			i_stringIo = stringIO;
 		}
 
-		public override void AppendEmbedded3(com.db4o.YapWriter a_bytes)
-		{
-			com.db4o.YapWriter bytes = a_bytes.ReadEmbeddedObject();
-			if (bytes != null)
-			{
-				a_bytes.AddEmbedded(bytes);
-			}
-		}
-
 		public override bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
 			return claxx.Equals(ClassReflector());
@@ -83,6 +74,20 @@ namespace com.db4o
 		public override com.db4o.YapClass GetYapClass(com.db4o.YapStream a_stream)
 		{
 			return a_stream.i_handlers.i_yapClasses[GetID() - 1];
+		}
+
+		public override object IndexEntryToObject(com.db4o.Transaction trans, object indexEntry
+			)
+		{
+			try
+			{
+				return com.db4o.inside.marshall.StringMarshaller.ReadShort(_stream, (com.db4o.YapReader
+					)indexEntry);
+			}
+			catch (com.db4o.CorruptionException e)
+			{
+			}
+			return null;
 		}
 
 		public override bool IndexNullHandling()
@@ -212,7 +217,8 @@ namespace com.db4o
 		}
 
 		public override object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
-			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection)
+			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection, bool
+			 restoreLinkeOffset)
 		{
 			return mf._string.WriteNew(a_object, topLevel, a_bytes, withIndirection);
 		}

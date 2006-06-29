@@ -2,7 +2,7 @@ namespace com.db4o.nativequery.expr.build
 {
 	public class ExpressionBuilder
 	{
-		/// <summary>Optimizations: !(Bool)->(!Bool), !!X->X</summary>
+		/// <summary>Optimizations: !(Bool)->(!Bool), !!X->X, !(X==Bool)->(X==!Bool)</summary>
 		public virtual com.db4o.nativequery.expr.Expression Not(com.db4o.nativequery.expr.Expression
 			 expr)
 		{
@@ -17,6 +17,22 @@ namespace com.db4o.nativequery.expr.build
 			if (expr is com.db4o.nativequery.expr.NotExpression)
 			{
 				return ((com.db4o.nativequery.expr.NotExpression)expr).Expr();
+			}
+			if (expr is com.db4o.nativequery.expr.ComparisonExpression)
+			{
+				com.db4o.nativequery.expr.ComparisonExpression cmpExpr = (com.db4o.nativequery.expr.ComparisonExpression
+					)expr;
+				if (cmpExpr.Right() is com.db4o.nativequery.expr.cmp.ConstValue)
+				{
+					com.db4o.nativequery.expr.cmp.ConstValue rightConst = (com.db4o.nativequery.expr.cmp.ConstValue
+						)cmpExpr.Right();
+					if (rightConst.Value() is bool)
+					{
+						bool boolVal = (bool)rightConst.Value();
+						return new com.db4o.nativequery.expr.ComparisonExpression(cmpExpr.Left(), new com.db4o.nativequery.expr.cmp.ConstValue
+							(!boolVal), cmpExpr.Op());
+					}
+				}
 			}
 			return new com.db4o.nativequery.expr.NotExpression(expr);
 		}

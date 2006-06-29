@@ -248,6 +248,11 @@ namespace com.db4o
 			_config.Put(ENCRYPT, flag);
 		}
 
+		internal void OldEncryptionOff()
+		{
+			_config.Put(ENCRYPT, false);
+		}
+
 		internal void EnsureDirExists(string path)
 		{
 			j4o.io.File file = new j4o.io.File(path);
@@ -459,7 +464,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass412(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass416(this));
 			}
 			else
 			{
@@ -467,9 +472,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass412 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass416 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass412(Config4Impl _enclosing)
+			public _AnonymousInnerClass416(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -516,7 +521,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass451(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass455(this));
 			}
 			else
 			{
@@ -524,9 +529,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass451 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass455 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass451(Config4Impl _enclosing)
+			public _AnonymousInnerClass455(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

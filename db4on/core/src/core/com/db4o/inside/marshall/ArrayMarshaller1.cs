@@ -87,7 +87,7 @@ namespace com.db4o.inside.marshall
 		}
 
 		public override object WriteNew(com.db4o.YapArray arrayHandler, object obj, bool 
-			topLevel, com.db4o.YapWriter writer)
+			restoreLinkOffset, com.db4o.YapWriter writer)
 		{
 			if (obj == null)
 			{
@@ -97,7 +97,7 @@ namespace com.db4o.inside.marshall
 			int length = arrayHandler.ObjectLength(obj);
 			int linkOffset = writer.ReserveAndPointToPayLoadSlot(length);
 			arrayHandler.WriteNew1(obj, writer, length);
-			if (topLevel)
+			if (restoreLinkOffset)
 			{
 				writer._offset = linkOffset;
 			}

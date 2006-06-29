@@ -7,8 +7,8 @@ namespace com.db4o.inside.marshall
 
 		public abstract void DeleteEmbedded(com.db4o.YapWriter reader);
 
-		public abstract object WriteNew(object obj, bool topLevel, com.db4o.YapWriter writer
-			);
+		public abstract object WriteNew(object obj, bool restoreLinkOffset, com.db4o.YapWriter
+			 writer);
 
 		public abstract object Read(com.db4o.YapWriter reader);
 

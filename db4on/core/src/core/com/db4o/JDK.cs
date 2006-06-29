@@ -40,6 +40,12 @@ namespace com.db4o
 			throw new com.db4o.ext.Db4oException(com.db4o.Messages.NOT_IMPLEMENTED);
 		}
 
+		public virtual com.db4o.Config4Class ExtendConfiguration(com.db4o.reflect.ReflectClass
+			 clazz, com.db4o.config.Configuration config, com.db4o.Config4Class classConfig)
+		{
+			return classConfig;
+		}
+
 		internal virtual void ForEachCollectionElement(object a_object, com.db4o.foundation.Visitor4
 			 a_visitor)
 		{
@@ -63,6 +69,11 @@ namespace com.db4o
 		internal virtual bool IsCollectionTranslator(com.db4o.Config4Class a_config)
 		{
 			return false;
+		}
+
+		public virtual bool IsConnected(j4o.net.Socket socket)
+		{
+			return socket != null;
 		}
 
 		public virtual int Ver()

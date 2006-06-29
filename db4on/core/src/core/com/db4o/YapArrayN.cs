@@ -152,7 +152,7 @@ namespace com.db4o
 				.Current();
 			for (int i = 0; i < objects.Length; i++)
 			{
-				i_handler.WriteNew(mf, Element(objects, i), true, writer, true);
+				i_handler.WriteNew(mf, Element(objects, i), false, writer, true, true);
 			}
 		}
 
