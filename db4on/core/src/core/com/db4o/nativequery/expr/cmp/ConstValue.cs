@@ -14,6 +14,11 @@ namespace com.db4o.nativequery.expr.cmp
 			return _value;
 		}
 
+		public virtual void Value(object value)
+		{
+			_value = value;
+		}
+
 		public override string ToString()
 		{
 			return (_value == null ? "[null]" : _value.ToString());
