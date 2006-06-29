@@ -90,11 +90,11 @@ namespace com.db4o
 				i_orderID = a_orderID;
 			}
 			int[] placement = { 0 };
-			i_root.Traverse(new _AnonymousInnerClass106(this, major, placement));
+			i_root.Traverse(new _AnonymousInnerClass107(this, major, placement));
 			placement[0] = 1;
-			a_ordered.Traverse(new _AnonymousInnerClass115(this, placement, major));
+			a_ordered.Traverse(new _AnonymousInnerClass116(this, placement, major));
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
-			i_root.Traverse(new _AnonymousInnerClass126(this, col));
+			i_root.Traverse(new _AnonymousInnerClass127(this, col));
 			com.db4o.Tree[] newTree = { null };
 			com.db4o.foundation.Iterator4 i = col.Iterator();
 			while (i.HasNext())
@@ -108,9 +108,9 @@ namespace com.db4o
 			i_root = newTree[0];
 		}
 
-		private sealed class _AnonymousInnerClass106 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass107 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass106(QCandidates _enclosing, bool major, int[] placement
+			public _AnonymousInnerClass107(QCandidates _enclosing, bool major, int[] placement
 				)
 			{
 				this._enclosing = _enclosing;
@@ -131,9 +131,9 @@ namespace com.db4o
 			private readonly int[] placement;
 		}
 
-		private sealed class _AnonymousInnerClass115 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass116 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass115(QCandidates _enclosing, int[] placement, bool major
+			public _AnonymousInnerClass116(QCandidates _enclosing, int[] placement, bool major
 				)
 			{
 				this._enclosing = _enclosing;
@@ -155,9 +155,9 @@ namespace com.db4o
 			private readonly bool major;
 		}
 
-		private sealed class _AnonymousInnerClass126 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass127 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass126(QCandidates _enclosing, com.db4o.foundation.Collection4
+			public _AnonymousInnerClass127(QCandidates _enclosing, com.db4o.foundation.Collection4
 				 col)
 			{
 				this._enclosing = _enclosing;
@@ -248,13 +248,13 @@ namespace com.db4o
 		internal bool IsEmpty()
 		{
 			bool[] ret = new bool[] { true };
-			Traverse(new _AnonymousInnerClass216(this, ret));
+			Traverse(new _AnonymousInnerClass217(this, ret));
 			return ret[0];
 		}
 
-		private sealed class _AnonymousInnerClass216 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass217 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass216(QCandidates _enclosing, bool[] ret)
+			public _AnonymousInnerClass217(QCandidates _enclosing, bool[] ret)
 			{
 				this._enclosing = _enclosing;
 				this.ret = ret;
@@ -278,14 +278,14 @@ namespace com.db4o
 			if (i_root != null)
 			{
 				i_root.Traverse(a_host);
-				i_root = i_root.Filter(new _AnonymousInnerClass229(this));
+				i_root = i_root.Filter(new _AnonymousInnerClass230(this));
 			}
 			return i_root != null;
 		}
 
-		private sealed class _AnonymousInnerClass229 : com.db4o.VisitorBoolean
+		private sealed class _AnonymousInnerClass230 : com.db4o.VisitorBoolean
 		{
-			public _AnonymousInnerClass229(QCandidates _enclosing)
+			public _AnonymousInnerClass230(QCandidates _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -324,6 +324,17 @@ namespace com.db4o
 			}
 			i_root = com.db4o.TreeInt.ToQCandidate((com.db4o.TreeInt)i_yapClass.GetIndex(i_trans
 				), this);
+			if (i_trans.i_stream.i_handlers._diagnosticProcessor.Enabled())
+			{
+				string name = i_yapClass.GetName();
+				if (name.IndexOf("com.db4o.") != 0)
+				{
+					i_trans.i_stream.i_handlers._diagnosticProcessor.OnDiagnostic(new com.db4o.inside.diagnostic.DiagnosticMessage
+						(name + " : Query candidate set could not be loaded from a field index.\n" + "  Consider indexing the fields that you want to query for using: \n"
+						 + "  Db4o.configure().objectClass([class]).objectField([fieldName]).indexed(true);"
+						));
+				}
+			}
 		}
 
 		internal void SetCurrentConstraint(com.db4o.QCon a_constraint)

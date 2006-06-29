@@ -44,6 +44,9 @@ namespace com.db4o
 		private static readonly com.db4o.foundation.KeySpec DETECT_SCHEMA_CHANGES = new com.db4o.foundation.KeySpec
 			(true);
 
+		private static readonly com.db4o.foundation.KeySpec DIAGNOSTIC = new com.db4o.foundation.KeySpec
+			(new com.db4o.inside.diagnostic.DiagnosticProcessor());
+
 		private static readonly com.db4o.foundation.KeySpec DISABLE_COMMIT_RECOVERY = new 
 			com.db4o.foundation.KeySpec(false);
 
@@ -464,7 +467,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass416(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass420(this));
 			}
 			else
 			{
@@ -472,9 +475,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass416 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass420 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass416(Config4Impl _enclosing)
+			public _AnonymousInnerClass420(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -521,7 +524,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass455(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass459(this));
 			}
 			else
 			{
@@ -529,9 +532,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass455 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass459 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass455(Config4Impl _enclosing)
+			public _AnonymousInnerClass459(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -611,6 +614,17 @@ namespace com.db4o
 
 		public void UpdateDepth(int depth)
 		{
+			if (depth > 1)
+			{
+				com.db4o.inside.diagnostic.DiagnosticProcessor dp = DiagnosticProcessor();
+				if (dp.Enabled())
+				{
+					string msg = "Db4o.configure().updateDepth(" + depth + ")\n" + "  Increasing the global updateDepth to a value greater than 1 is only recommended for"
+						 + " testing, not for production use. If individual deep updates are needed, consider using"
+						 + " ExtObjectContainer#set(object, depth) and make sure to profile the performance of each call.";
+					dp.OnDiagnostic(new com.db4o.inside.diagnostic.DiagnosticMessage(msg));
+				}
+			}
 			_config.Put(UPDATE_DEPTH, depth);
 		}
 
@@ -750,6 +764,16 @@ namespace com.db4o
 		internal bool CommitRecoveryDisabled()
 		{
 			return _config.GetAsBoolean(DISABLE_COMMIT_RECOVERY);
+		}
+
+		public com.db4o.diagnostic.DiagnosticConfiguration Diagnostic()
+		{
+			return (com.db4o.diagnostic.DiagnosticConfiguration)_config.Get(DIAGNOSTIC);
+		}
+
+		public com.db4o.inside.diagnostic.DiagnosticProcessor DiagnosticProcessor()
+		{
+			return (com.db4o.inside.diagnostic.DiagnosticProcessor)_config.Get(DIAGNOSTIC);
 		}
 
 		public int DiscardFreeSpace()

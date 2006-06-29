@@ -230,7 +230,7 @@ namespace com.db4o
 			{
 				run[0] = 0;
 				bool[] anyClassCollected = { false };
-				i_trans.i_stream.i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass214
+				i_trans.i_stream.i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass213
 					(this, anyClassCollected));
 			}
 			com.db4o.foundation.Iterator4 i = IterateConstraints();
@@ -244,9 +244,9 @@ namespace com.db4o
 			return foundClass[0];
 		}
 
-		private sealed class _AnonymousInnerClass214 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass213 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass214(QQueryBase _enclosing, bool[] anyClassCollected)
+			public _AnonymousInnerClass213(QQueryBase _enclosing, bool[] anyClassCollected)
 			{
 				this._enclosing = _enclosing;
 				this.anyClassCollected = anyClassCollected;
@@ -357,14 +357,14 @@ namespace com.db4o
 			}
 			com.db4o.QueryResultImpl resLocal = new com.db4o.QueryResultImpl(i_trans, tree.Size
 				());
-			tree.Traverse(new _AnonymousInnerClass332(this, resLocal));
+			tree.Traverse(new _AnonymousInnerClass331(this, resLocal));
 			Sort(resLocal);
 			return resLocal;
 		}
 
-		private sealed class _AnonymousInnerClass332 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass331 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass332(QQueryBase _enclosing, com.db4o.QueryResultImpl resLocal
+			public _AnonymousInnerClass331(QQueryBase _enclosing, com.db4o.QueryResultImpl resLocal
 				)
 			{
 				this._enclosing = _enclosing;
@@ -471,7 +471,7 @@ namespace com.db4o
 							fieldPath.Add(q.i_field);
 							q = q.i_parent;
 						}
-						candidates.Traverse(new _AnonymousInnerClass421(this, fieldPath, stream, result));
+						candidates.Traverse(new _AnonymousInnerClass420(this, fieldPath, stream, result));
 					}
 				}
 			}
@@ -479,9 +479,9 @@ namespace com.db4o
 			result.Reset();
 		}
 
-		private sealed class _AnonymousInnerClass421 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass420 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass421(QQueryBase _enclosing, com.db4o.foundation.Collection4
+			public _AnonymousInnerClass420(QQueryBase _enclosing, com.db4o.foundation.Collection4
 				 fieldPath, com.db4o.YapStream stream, com.db4o.QueryResultImpl result)
 			{
 				this._enclosing = _enclosing;
@@ -504,20 +504,20 @@ namespace com.db4o
 						string fieldName = (string)(itPath.Next());
 						if (ids != null)
 						{
-							ids.Traverse(new _AnonymousInnerClass432(this, stream, idsNew, fieldName));
+							ids.Traverse(new _AnonymousInnerClass431(this, stream, idsNew, fieldName));
 						}
 						ids = idsNew[0];
 					}
 					if (ids != null)
 					{
-						ids.Traverse(new _AnonymousInnerClass452(this, result));
+						ids.Traverse(new _AnonymousInnerClass451(this, result));
 					}
 				}
 			}
 
-			private sealed class _AnonymousInnerClass432 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass431 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass432(_AnonymousInnerClass421 _enclosing, com.db4o.YapStream
+				public _AnonymousInnerClass431(_AnonymousInnerClass420 _enclosing, com.db4o.YapStream
 					 stream, com.db4o.TreeInt[] idsNew, string fieldName)
 				{
 					this._enclosing = _enclosing;
@@ -540,7 +540,7 @@ namespace com.db4o
 					}
 				}
 
-				private readonly _AnonymousInnerClass421 _enclosing;
+				private readonly _AnonymousInnerClass420 _enclosing;
 
 				private readonly com.db4o.YapStream stream;
 
@@ -549,9 +549,9 @@ namespace com.db4o
 				private readonly string fieldName;
 			}
 
-			private sealed class _AnonymousInnerClass452 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass451 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass452(_AnonymousInnerClass421 _enclosing, com.db4o.QueryResultImpl
+				public _AnonymousInnerClass451(_AnonymousInnerClass420 _enclosing, com.db4o.QueryResultImpl
 					 result)
 				{
 					this._enclosing = _enclosing;
@@ -563,7 +563,7 @@ namespace com.db4o
 					result.AddKeyCheckDuplicates(((com.db4o.TreeInt)treeInt)._key);
 				}
 
-				private readonly _AnonymousInnerClass421 _enclosing;
+				private readonly _AnonymousInnerClass420 _enclosing;
 
 				private readonly com.db4o.QueryResultImpl result;
 			}

@@ -50,6 +50,8 @@ namespace com.db4o
 
 		internal com.db4o.inside.replication.Db4oReplicationReferenceProvider _replicationReferenceProvider;
 
+		internal com.db4o.inside.diagnostic.DiagnosticProcessor _diagnosticProcessor;
+
 		internal bool i_encrypt;
 
 		internal byte[] i_encryptor;
@@ -86,6 +88,7 @@ namespace com.db4o
 			_masterStream = a_stream;
 			a_stream.i_handlers = this;
 			_reflector = reflector;
+			_diagnosticProcessor = a_stream.i_config.DiagnosticProcessor();
 			InitClassReflectors(reflector);
 			i_indexes = new com.db4o.YapIndexes(a_stream);
 			i_virtualFields[0] = i_indexes.i_fieldVersion;
@@ -223,7 +226,7 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.Traverse(new _AnonymousInnerClass224(this, foundConstructor, claxx
+						sortedConstructors.Traverse(new _AnonymousInnerClass231(this, foundConstructor, claxx
 							));
 					}
 					if (foundConstructor[0])
@@ -238,9 +241,9 @@ namespace com.db4o
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass224 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass231 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass224(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass231(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
 				 claxx)
 			{
 				this._enclosing = _enclosing;
