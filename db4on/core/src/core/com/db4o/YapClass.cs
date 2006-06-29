@@ -164,6 +164,19 @@ namespace com.db4o
 						i_fields = new com.db4o.YapField[0];
 					}
 				}
+				if (i_stream.i_handlers._diagnosticProcessor.Enabled())
+				{
+					if (i_fields != null && i_fields.Length == 0)
+					{
+						string name = GetName();
+						if (name.IndexOf("com.db4o.") != 0)
+						{
+							i_stream.i_handlers._diagnosticProcessor.OnDiagnostic(new com.db4o.inside.diagnostic.DiagnosticMessage
+								(name + " : This class does not contain any persistent fields.\n" + "  Every class in the class hierarchy requires some overhead for the maintenance of a class index."
+								 + " Consider removing this class from the hierarchy, if it is not needed."));
+						}
+					}
+				}
 			}
 			else
 			{
@@ -447,13 +460,13 @@ namespace com.db4o
 			if (HasIndex() && !i_stream.IsClient())
 			{
 				_index = ((com.db4o.YapFile)i_stream).CreateBTreeClassIndex(this, btreeID);
-				_index.SetRemoveListener(new _AnonymousInnerClass408(this));
+				_index.SetRemoveListener(new _AnonymousInnerClass423(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass408 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass423 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass408(YapClass _enclosing)
+			public _AnonymousInnerClass423(YapClass _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -871,14 +884,14 @@ namespace com.db4o
 			}
 			ids = new long[_index.Size(trans)];
 			int[] count = new int[] { 0 };
-			_index.TraverseKeys(trans, new _AnonymousInnerClass774(this, ids, count));
+			_index.TraverseKeys(trans, new _AnonymousInnerClass789(this, ids, count));
 			return ids;
 			return new long[0];
 		}
 
-		private sealed class _AnonymousInnerClass774 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass789 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass774(YapClass _enclosing, long[] ids, int[] count)
+			public _AnonymousInnerClass789(YapClass _enclosing, long[] ids, int[] count)
 			{
 				this._enclosing = _enclosing;
 				this.ids = ids;
@@ -1014,15 +1027,15 @@ namespace com.db4o
 			}
 			com.db4o.TreeInt zero = new com.db4o.TreeInt(0);
 			com.db4o.Tree[] tree = new com.db4o.Tree[] { zero };
-			_index.TraverseKeys(a_trans, new _AnonymousInnerClass891(this, tree));
+			_index.TraverseKeys(a_trans, new _AnonymousInnerClass906(this, tree));
 			tree[0] = tree[0].RemoveNode(zero);
 			return tree[0];
 			return null;
 		}
 
-		private sealed class _AnonymousInnerClass891 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass906 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass891(YapClass _enclosing, com.db4o.Tree[] tree)
+			public _AnonymousInnerClass906(YapClass _enclosing, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
@@ -1106,13 +1119,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField GetYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			ForEachYapField(new _AnonymousInnerClass962(this, name, yf));
+			ForEachYapField(new _AnonymousInnerClass977(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass962 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass977 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass962(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass977(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1695,15 +1708,15 @@ namespace com.db4o
 				if (obj != null)
 				{
 					a_candidates.i_trans.i_stream.Activate1(trans, obj, 2);
-					com.db4o.Platform4.ForEachCollectionElement(obj, new _AnonymousInnerClass1476(this
+					com.db4o.Platform4.ForEachCollectionElement(obj, new _AnonymousInnerClass1491(this
 						, a_candidates, trans));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1476 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1491 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1476(YapClass _enclosing, com.db4o.QCandidates a_candidates
+			public _AnonymousInnerClass1491(YapClass _enclosing, com.db4o.QCandidates a_candidates
 				, com.db4o.Transaction trans)
 			{
 				this._enclosing = _enclosing;

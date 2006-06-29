@@ -272,6 +272,11 @@ namespace com.db4o.config
 		/// <param name="flag">the desired setting</param>
 		void DetectSchemaChanges(bool flag);
 
+		/// <summary>returns the configuration interface for diagnostics.</summary>
+		/// <remarks>returns the configuration interface for diagnostics.</remarks>
+		/// <returns>the configuration interface for diagnostics.</returns>
+		com.db4o.diagnostic.DiagnosticConfiguration Diagnostic();
+
 		/// <summary>turns commit recovery off.</summary>
 		/// <remarks>
 		/// turns commit recovery off.
