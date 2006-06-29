@@ -515,7 +515,7 @@
 			destfile="${file.dll.mono}"
 			docfile="${file.xml.mono}"
 			debug="${compiledll.debug}"
-			executable="${csc.executable}"
+			executable="${mono.executable}"
 			warnlevel="0"
 			optimize="true"
 			definitions="${mono.definitions}">
