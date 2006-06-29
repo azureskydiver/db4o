@@ -6,6 +6,8 @@ namespace com.db4o.foundation.network
 
 		void Flush();
 
+		bool IsConnected();
+
 		int Read();
 
 		int Read(byte[] a_bytes, int a_offset, int a_length);

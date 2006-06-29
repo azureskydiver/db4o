@@ -3,8 +3,6 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public interface TypeHandler4 : com.db4o.inside.ix.Indexable4
 	{
-		void AppendEmbedded3(com.db4o.YapWriter a_bytes);
-
 		bool CanHold(com.db4o.reflect.ReflectClass claxx);
 
 		void CascadeActivation(com.db4o.Transaction a_trans, object a_object, int a_depth
@@ -49,6 +47,8 @@ namespace com.db4o
 		void CalculateLengths(com.db4o.Transaction trans, com.db4o.inside.marshall.ObjectHeaderAttributes
 			 header, bool topLevel, object obj, bool withIndirection);
 
+		object IndexEntryToObject(com.db4o.Transaction trans, object indexEntry);
+
 		void PrepareComparison(com.db4o.Transaction a_trans, object obj);
 
 		com.db4o.reflect.ReflectClass PrimitiveClassReflector();
@@ -65,7 +65,8 @@ namespace com.db4o
 		bool SupportsIndex();
 
 		object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object a_object, bool
-			 topLevel, com.db4o.YapWriter a_bytes, bool withIndirection);
+			 topLevel, com.db4o.YapWriter a_bytes, bool withIndirection, bool restoreLinkOffset
+			);
 
 		int GetTypeID();
 

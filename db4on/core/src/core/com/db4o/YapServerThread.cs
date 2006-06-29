@@ -139,16 +139,17 @@ namespace com.db4o
 						break;
 					}
 				}
-				catch (System.IO.IOException e)
-				{
-					break;
-				}
 				catch (System.Exception e)
 				{
 					if (i_mainStream == null || i_mainStream.IsClosed())
 					{
 						break;
 					}
+					if (!i_socket.IsConnected())
+					{
+						break;
+					}
+					i_nullMessages++;
 				}
 				if (i_nullMessages > 20 || PingClientTimeoutReached())
 				{
@@ -202,8 +203,10 @@ namespace com.db4o
 						{
 							i_clientName = userName;
 							i_mainStream.LogMsg(32, i_clientName);
-							com.db4o.Msg.LOGIN_OK.GetWriterForInt(GetTransaction(), i_mainStream.BlockSize())
-								.Write(i_mainStream, i_socket);
+							int blockSize = i_mainStream.BlockSize();
+							int encrypt = i_mainStream.i_handlers.i_encrypt ? 1 : 0;
+							com.db4o.Msg.LOGIN_OK.GetWriterForInts(GetTransaction(), new int[] { blockSize, encrypt
+								 }).Write(i_mainStream, i_socket);
 							i_loggedin = true;
 							SetName("db4o server socket for client " + i_clientName);
 						}

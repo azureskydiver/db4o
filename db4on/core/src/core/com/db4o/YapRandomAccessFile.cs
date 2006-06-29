@@ -251,6 +251,7 @@ namespace com.db4o
 					{
 						isNew = true;
 						LogMsg(14, FileName());
+						i_handlers.OldEncryptionOff();
 					}
 					try
 					{

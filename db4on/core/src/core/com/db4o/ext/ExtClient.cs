@@ -56,6 +56,9 @@ namespace com.db4o.ext
 		/// </remarks>
 		void SwitchToMainFile();
 
+		/// <summary>checks if the client is currently connected to a server.</summary>
+		/// <remarks>checks if the client is currently connected to a server.</remarks>
+		/// <returns>true if the client is alive.</returns>
 		bool IsAlive();
 	}
 }

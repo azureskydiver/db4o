@@ -25,13 +25,6 @@ namespace com.db4o
 					}
 					if (bytes != null)
 					{
-						try
-						{
-							com.db4o.YapClassAny.AppendEmbedded(bytes);
-						}
-						catch (System.Exception e)
-						{
-						}
 						ret[i] = com.db4o.Msg.OBJECT_TO_CLIENT.GetWriter(bytes);
 						length += ret[i]._payLoad.GetLength();
 					}

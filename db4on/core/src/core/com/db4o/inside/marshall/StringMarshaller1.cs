@@ -12,8 +12,8 @@ namespace com.db4o.inside.marshall
 		{
 			if (topLevel)
 			{
-				header.PrepareIndexedPayLoadEntry(trans);
 				header.AddBaseLength(LinkLength());
+				header.PrepareIndexedPayLoadEntry(trans);
 			}
 			else
 			{

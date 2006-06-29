@@ -155,6 +155,14 @@ namespace com.db4o.inside.query
 		private Query ConfigureQuery(com.db4o.query.Predicate predicate)
 		{
 			Query q = _container.Query();
+			Db4oEnhancedFilter filter = predicate as Db4oEnhancedFilter;
+			if (null != filter)
+			{
+				filter.OptimizeQuery(q);
+				OnQueryExecution(predicate, QueryExecutionKind.PreOptimized);
+				return q;
+			}
+			
 			q.Constrain(predicate.ExtentType());
 
 			try

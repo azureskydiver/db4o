@@ -331,6 +331,14 @@ namespace com.db4o
 			}
 		}
 
+		public void OldEncryptionOff()
+		{
+			i_encrypt = false;
+			i_encryptor = null;
+			i_lastEncryptorByte = 0;
+			_masterStream.i_config.OldEncryptionOff();
+		}
+
 		internal com.db4o.TypeHandler4 GetHandler(int a_index)
 		{
 			return i_handlers[a_index - 1];
@@ -409,13 +417,9 @@ namespace com.db4o
 						(int)(0xff)));
 				}
 				i_lastEncryptorByte = a_config.Password().Length - 1;
+				return;
 			}
-			else
-			{
-				i_encrypt = false;
-				i_encryptor = null;
-				i_lastEncryptorByte = 0;
-			}
+			OldEncryptionOff();
 		}
 
 		internal static com.db4o.Db4oTypeImpl GetDb4oType(com.db4o.reflect.ReflectClass clazz

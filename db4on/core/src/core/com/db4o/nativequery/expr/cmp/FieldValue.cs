@@ -4,10 +4,18 @@ namespace com.db4o.nativequery.expr.cmp
 	{
 		private string _fieldName;
 
+		private object _tag;
+
 		public FieldValue(com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor root, string
-			 name) : base(root)
+			 name) : this(root, name, null)
+		{
+		}
+
+		public FieldValue(com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor root, string
+			 name, object tag) : base(root)
 		{
 			_fieldName = name;
+			_tag = tag;
 		}
 
 		public virtual string FieldName()
@@ -23,12 +31,31 @@ namespace com.db4o.nativequery.expr.cmp
 			}
 			com.db4o.nativequery.expr.cmp.FieldValue casted = (com.db4o.nativequery.expr.cmp.FieldValue
 				)other;
+			if (_tag == null)
+			{
+				if (casted._tag != null)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if (!_tag.Equals(casted._tag))
+				{
+					return false;
+				}
+			}
 			return _fieldName.Equals(casted._fieldName);
 		}
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode() * 29 + _fieldName.GetHashCode();
+			int hash = base.GetHashCode() * 29 + _fieldName.GetHashCode();
+			if (_tag != null)
+			{
+				hash *= 29 + _tag.GetHashCode();
+			}
+			return hash;
 		}
 
 		public override string ToString()
@@ -40,6 +67,22 @@ namespace com.db4o.nativequery.expr.cmp
 			 visitor)
 		{
 			visitor.Visit(this);
+		}
+
+		/// <summary>Code analysis specific information.</summary>
+		/// <remarks>
+		/// Code analysis specific information.
+		/// This is used in the .net side to preserve Mono.Cecil references
+		/// for instance.
+		/// </remarks>
+		public virtual object Tag()
+		{
+			return _tag;
+		}
+
+		public virtual void Tag(object value)
+		{
+			_tag = value;
 		}
 	}
 }

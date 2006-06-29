@@ -38,5 +38,21 @@ namespace com.db4o.ext
 		/// </remarks>
 		/// <param name="name">the new name</param>
 		void Rename(string name);
+
+		/// <summary>
+		/// specialized highspeed API to collect all values of a field for all instances
+		/// of a class, if the field is indexed.
+		/// </summary>
+		/// <remarks>
+		/// specialized highspeed API to collect all values of a field for all instances
+		/// of a class, if the field is indexed.
+		/// <br /><br />The field values will be taken directly from the index without the
+		/// detour through class indexes or object instantiation.
+		/// <br /><br />
+		/// If this method is used to get the values of a first class object index,
+		/// deactivated objects will be passed to the visitor.
+		/// </remarks>
+		/// <param name="visitor">the visitor to be called with each index value.</param>
+		void TraverseValues(com.db4o.foundation.Visitor4 visitor);
 	}
 }

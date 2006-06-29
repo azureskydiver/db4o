@@ -8,7 +8,7 @@ namespace com.db4o.inside.marshall
 
 		public abstract int WriteNew(com.db4o.Transaction trans, com.db4o.YapClassPrimitive
 			 yapClassPrimitive, object obj, bool topLevel, com.db4o.YapWriter parentWriter, 
-			bool withIndirection);
+			bool withIndirection, bool restoreLinkOffset);
 
 		protected virtual int ObjectLength(com.db4o.TypeHandler4 handler, object obj)
 		{

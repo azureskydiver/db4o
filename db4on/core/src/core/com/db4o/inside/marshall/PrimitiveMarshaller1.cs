@@ -9,12 +9,13 @@ namespace com.db4o.inside.marshall
 
 		public override int WriteNew(com.db4o.Transaction trans, com.db4o.YapClassPrimitive
 			 yapClassPrimitive, object obj, bool topLevel, com.db4o.YapWriter writer, bool withIndirection
-			)
+			, bool restoreLinkOffset)
 		{
 			if (obj != null)
 			{
 				com.db4o.TypeHandler4 handler = yapClassPrimitive.i_handler;
-				handler.WriteNew(_family, obj, topLevel, writer, withIndirection);
+				handler.WriteNew(_family, obj, topLevel, writer, withIndirection, restoreLinkOffset
+					);
 			}
 			return 0;
 		}

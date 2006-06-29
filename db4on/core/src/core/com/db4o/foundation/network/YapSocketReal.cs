@@ -33,6 +33,11 @@ namespace com.db4o.foundation.network
 			_out.Flush();
 		}
 
+		public virtual bool IsConnected()
+		{
+			return com.db4o.Platform4.IsConnected(_socket);
+		}
+
 		public virtual int Read()
 		{
 			return _in.Read();

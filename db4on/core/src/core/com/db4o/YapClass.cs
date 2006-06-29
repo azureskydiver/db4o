@@ -254,24 +254,6 @@ namespace com.db4o
 			return HasIndex();
 		}
 
-		public virtual void AppendEmbedded1(com.db4o.YapWriter a_bytes)
-		{
-			int length = ReadFieldCount(a_bytes);
-			for (int i = 0; i < length; i++)
-			{
-				i_fields[i].AppendEmbedded2(a_bytes);
-			}
-			if (i_ancestor != null)
-			{
-				i_ancestor.AppendEmbedded1(a_bytes);
-			}
-		}
-
-		public virtual void AppendEmbedded3(com.db4o.YapWriter a_bytes)
-		{
-			a_bytes.IncrementOffset(LinkLength());
-		}
-
 		public virtual bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
 			if (claxx == null)
@@ -465,13 +447,13 @@ namespace com.db4o
 			if (HasIndex() && !i_stream.IsClient())
 			{
 				_index = ((com.db4o.YapFile)i_stream).CreateBTreeClassIndex(this, btreeID);
-				_index.SetRemoveListener(new _AnonymousInnerClass422(this));
+				_index.SetRemoveListener(new _AnonymousInnerClass408(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass422 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass408 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass422(YapClass _enclosing)
+			public _AnonymousInnerClass408(YapClass _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -889,14 +871,14 @@ namespace com.db4o
 			}
 			ids = new long[_index.Size(trans)];
 			int[] count = new int[] { 0 };
-			_index.TraverseKeys(trans, new _AnonymousInnerClass788(this, ids, count));
+			_index.TraverseKeys(trans, new _AnonymousInnerClass774(this, ids, count));
 			return ids;
 			return new long[0];
 		}
 
-		private sealed class _AnonymousInnerClass788 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass774 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass788(YapClass _enclosing, long[] ids, int[] count)
+			public _AnonymousInnerClass774(YapClass _enclosing, long[] ids, int[] count)
 			{
 				this._enclosing = _enclosing;
 				this.ids = ids;
@@ -1013,6 +995,17 @@ namespace com.db4o
 			return 0;
 		}
 
+		public virtual object IndexEntryToObject(com.db4o.Transaction trans, object indexEntry
+			)
+		{
+			if (indexEntry == null)
+			{
+				return null;
+			}
+			int id = ((int)indexEntry);
+			return GetStream().GetByID2(trans, id);
+		}
+
 		internal com.db4o.Tree GetIndex(com.db4o.Transaction a_trans)
 		{
 			if (!HasIndex())
@@ -1021,15 +1014,15 @@ namespace com.db4o
 			}
 			com.db4o.TreeInt zero = new com.db4o.TreeInt(0);
 			com.db4o.Tree[] tree = new com.db4o.Tree[] { zero };
-			_index.TraverseKeys(a_trans, new _AnonymousInnerClass897(this, tree));
+			_index.TraverseKeys(a_trans, new _AnonymousInnerClass891(this, tree));
 			tree[0] = tree[0].RemoveNode(zero);
 			return tree[0];
 			return null;
 		}
 
-		private sealed class _AnonymousInnerClass897 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass891 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass897(YapClass _enclosing, com.db4o.Tree[] tree)
+			public _AnonymousInnerClass891(YapClass _enclosing, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
@@ -1113,13 +1106,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField GetYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			ForEachYapField(new _AnonymousInnerClass968(this, name, yf));
+			ForEachYapField(new _AnonymousInnerClass962(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass968 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass962 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass968(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass962(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1210,6 +1203,12 @@ namespace com.db4o
 
 		internal virtual void InitConfigOnUp(com.db4o.Transaction systemTrans)
 		{
+			com.db4o.Config4Class extendedConfig = com.db4o.Platform4.ExtendConfiguration(_reflector
+				, i_stream.Configure(), i_config);
+			if (extendedConfig != null)
+			{
+				i_config = extendedConfig;
+			}
 			if (i_config == null)
 			{
 				return;
@@ -1696,15 +1695,15 @@ namespace com.db4o
 				if (obj != null)
 				{
 					a_candidates.i_trans.i_stream.Activate1(trans, obj, 2);
-					com.db4o.Platform4.ForEachCollectionElement(obj, new _AnonymousInnerClass1478(this
+					com.db4o.Platform4.ForEachCollectionElement(obj, new _AnonymousInnerClass1476(this
 						, a_candidates, trans));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1478 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1476 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1478(YapClass _enclosing, com.db4o.QCandidates a_candidates
+			public _AnonymousInnerClass1476(YapClass _enclosing, com.db4o.QCandidates a_candidates
 				, com.db4o.Transaction trans)
 			{
 				this._enclosing = _enclosing;
@@ -2214,7 +2213,8 @@ namespace com.db4o
 		}
 
 		public virtual object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
-			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection)
+			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection, bool
+			 restoreLinkOffset)
 		{
 			if (a_object == null)
 			{
@@ -2299,6 +2299,10 @@ namespace com.db4o
 			if (a_obj is int)
 			{
 				return ((int)a_obj) - i_lastID;
+			}
+			if ((a_obj == null) && (i_compareTo == null))
+			{
+				return 0;
 			}
 			return -1;
 		}

@@ -107,8 +107,8 @@ namespace com.db4o.inside.marshall
 			return ret;
 		}
 
-		public override object WriteNew(object obj, bool topLevel, com.db4o.YapWriter writer
-			)
+		public override object WriteNew(object obj, bool restoreLinkOffset, com.db4o.YapWriter
+			 writer)
 		{
 			if (obj == null)
 			{
@@ -126,12 +126,12 @@ namespace com.db4o.inside.marshall
 			int linkOffset = writer._offset;
 			writer._offset = writer._payloadOffset;
 			writer.WriteInt(yc.GetID());
-			yc.WriteNew(_family, obj, false, writer, false);
+			yc.WriteNew(_family, obj, false, writer, false, false);
 			if (writer._payloadOffset < writer._offset)
 			{
 				writer._payloadOffset = writer._offset;
 			}
-			if (topLevel)
+			if (restoreLinkOffset)
 			{
 				writer._offset = linkOffset;
 			}

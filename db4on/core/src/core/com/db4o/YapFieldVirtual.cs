@@ -9,11 +9,6 @@ namespace com.db4o
 		public abstract override void AddFieldIndex(com.db4o.inside.marshall.MarshallerFamily
 			 mf, com.db4o.YapWriter a_writer, bool a_new);
 
-		public override void AppendEmbedded2(com.db4o.YapWriter a_bytes)
-		{
-			a_bytes.IncrementOffset(LinkLength());
-		}
-
 		public override bool Alive()
 		{
 			return true;

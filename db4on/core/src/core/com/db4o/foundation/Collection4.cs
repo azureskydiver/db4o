@@ -206,7 +206,7 @@ namespace com.db4o.foundation
 		/// In contrast to the JDK behaviour, the passed array has
 		/// to be initialized to the right length.
 		/// </remarks>
-		public void ToArray(object[] a_array)
+		public object[] ToArray(object[] a_array)
 		{
 			int j = _size;
 			com.db4o.foundation.Iterator4 i = Iterator();
@@ -214,6 +214,7 @@ namespace com.db4o.foundation
 			{
 				a_array[--j] = i.Next();
 			}
+			return a_array;
 		}
 
 		public object[] ToArray()

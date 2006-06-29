@@ -81,8 +81,6 @@ namespace com.db4o
 
 		public abstract object Current();
 
-		public abstract void AppendEmbedded3(com.db4o.YapWriter arg1);
-
 		public abstract bool CanHold(com.db4o.reflect.ReflectClass arg1);
 
 		public abstract void CascadeActivation(com.db4o.Transaction arg1, object arg2, int
@@ -101,6 +99,8 @@ namespace com.db4o
 		public abstract void CalculateLengths(com.db4o.Transaction arg1, com.db4o.inside.marshall.ObjectHeaderAttributes
 			 arg2, bool arg3, object arg4, bool arg5);
 
+		public abstract object IndexEntryToObject(com.db4o.Transaction arg1, object arg2);
+
 		public abstract void PrepareComparison(com.db4o.Transaction arg1, object arg2);
 
 		public abstract object Read(com.db4o.inside.marshall.MarshallerFamily arg1, com.db4o.YapWriter
@@ -112,7 +112,7 @@ namespace com.db4o
 		public abstract bool SupportsIndex();
 
 		public abstract object WriteNew(com.db4o.inside.marshall.MarshallerFamily arg1, object
-			 arg2, bool arg3, com.db4o.YapWriter arg4, bool arg5);
+			 arg2, bool arg3, com.db4o.YapWriter arg4, bool arg5, bool arg6);
 
 		public abstract int GetTypeID();
 

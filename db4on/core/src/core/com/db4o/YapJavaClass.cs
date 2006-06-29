@@ -16,11 +16,6 @@ namespace com.db4o
 
 		private bool i_compareToIsNull;
 
-		public virtual void AppendEmbedded3(com.db4o.YapWriter a_bytes)
-		{
-			a_bytes.IncrementOffset(LinkLength());
-		}
-
 		public virtual bool CanHold(com.db4o.reflect.ReflectClass claxx)
 		{
 			return claxx.Equals(ClassReflector());
@@ -72,6 +67,12 @@ namespace com.db4o
 		public virtual bool HasFixedLength()
 		{
 			return true;
+		}
+
+		public virtual object IndexEntryToObject(com.db4o.Transaction trans, object indexEntry
+			)
+		{
+			return indexEntry;
 		}
 
 		public virtual bool IndexNullHandling()
@@ -216,7 +217,8 @@ namespace com.db4o
 		}
 
 		public virtual object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
-			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection)
+			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection, bool
+			 restoreLinkeOffset)
 		{
 			if (a_object == null)
 			{

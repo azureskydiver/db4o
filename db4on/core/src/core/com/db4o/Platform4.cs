@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using com.db4o.config;
+using com.db4o.config.attributes;
 using com.db4o.ext;
 using com.db4o.foundation;
 using com.db4o.inside.query;
@@ -153,6 +154,13 @@ namespace com.db4o
 					_ed(a_candidate);
 				}
 			}
+		}
+
+	    internal static Config4Class ExtendConfiguration(ReflectClass clazz, Configuration config, Config4Class classConfig)
+		{
+			ConfigurationIntrospector a = new ConfigurationIntrospector(GetNetType(clazz), classConfig, config);
+	    	a.Apply();
+			return a.ClassConfiguration;
 		}
 
 		internal static Collection4 FlattenCollection(YapStream stream, Object obj)
@@ -382,6 +390,13 @@ namespace com.db4o
 			}
 			return false;
 		}
+
+        public static bool IsConnected(j4o.net.Socket socket){
+            if(socket == null){
+                return false;
+            }
+            return socket.IsConnected();
+        }
 
 		public static bool IsSimple(Class a_class)
 		{

@@ -27,10 +27,6 @@ namespace com.db4o
 			return false;
 		}
 
-		public override void AppendEmbedded1(com.db4o.YapWriter a_bytes)
-		{
-		}
-
 		internal override void CacheDirty(com.db4o.foundation.Collection4 col)
 		{
 		}
@@ -263,10 +259,11 @@ namespace com.db4o
 		}
 
 		public override object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
-			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection)
+			 a_object, bool topLevel, com.db4o.YapWriter a_bytes, bool withIndirection, bool
+			 restoreLinkOffset)
 		{
 			mf._primitive.WriteNew(a_bytes.GetTransaction(), this, a_object, topLevel, a_bytes
-				, withIndirection);
+				, withIndirection, restoreLinkOffset);
 			return a_object;
 		}
 
