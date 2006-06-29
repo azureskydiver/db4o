@@ -78,74 +78,12 @@ namespace com.db4o.test.inside.query
 			Tester.EnsureEquals(expected, NullifyTags(expression));
 		}
 		
-		class TagNullifier : ExpressionVisitor, ComparisonOperandVisitor
+		class TagNullifier : TraversingExpressionVisitor 
 		{
-			public void Visit(AndExpression expression)
+			override public void Visit(FieldValue operand)
 			{
-				VisitBinaryExpression(expression);
-			}
-
-			public void Visit(OrExpression expression)
-			{
-				VisitBinaryExpression(expression);
-			}
-			
-			void VisitBinaryExpression(BinaryExpression e)
-			{
-				e.Left().Accept(this);
-				e.Right().Accept(this);
-			}
-
-			public void Visit(NotExpression expression)
-			{
-				expression.Expr().Accept(this);
-			}
-
-			public void Visit(ComparisonExpression expression)
-			{
-				expression.Left().Accept(this);
-				expression.Right().Accept(this);
-			}
-
-			public void Visit(BoolConstExpression expression)
-			{	
-			}
-
-			public void Visit(ArithmeticExpression operand)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void Visit(ConstValue operand)
-			{
-			}
-
-			public void Visit(FieldValue operand)
-			{
-				operand.Parent().Accept(this);
+				base.Visit(operand);
 				operand.Tag(null);
-			}
-
-			public void Visit(CandidateFieldRoot root)
-			{	
-			}
-
-			public void Visit(PredicateFieldRoot root)
-			{
-			}
-
-			public void Visit(StaticFieldRoot root)
-			{
-			}
-
-			public void Visit(ArrayAccessValue operand)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void Visit(MethodCallValue value)
-			{
-				throw new NotImplementedException();
 			}
 		}
 
