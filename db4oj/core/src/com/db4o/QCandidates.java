@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.ix.*;
 
 /**
@@ -287,6 +288,19 @@ public final class QCandidates implements Visitor4 {
         
         if(Debug.useBTrees){
             i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
+        }
+        
+        if(i_trans.i_stream.i_handlers._diagnosticListener.enabled()){
+            
+            String name = i_yapClass.getName();
+            if (name.indexOf("com.db4o.") != 0){
+    
+                i_trans.i_stream.i_handlers._diagnosticListener.onDiagnostic(
+                    new DiagnosticMessage( name 
+                        + " : Query candidate set could not be loaded from a field index.\n"
+                        + "  Consider indexing the fields that you want to query for using: \n"
+                        + "  Db4o.configure().objectClass([class]).objectField([fieldName]).indexed(true);" ));
+            }
         }
         
     }
