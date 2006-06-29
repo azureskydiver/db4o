@@ -1,6 +1,17 @@
 package com.db4o.nativequery.expr;
 
-public class TraversingExpressionVisitor implements ExpressionVisitor {
+import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
+import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
+import com.db4o.nativequery.expr.cmp.ComparisonOperand;
+import com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor;
+import com.db4o.nativequery.expr.cmp.ConstValue;
+import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.MethodCallValue;
+import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+
+public class TraversingExpressionVisitor implements ExpressionVisitor, ComparisonOperandVisitor  {
 	public void visit(AndExpression expression) {
 		expression.left().accept(this);
 		expression.right().accept(this);
@@ -15,9 +26,49 @@ public class TraversingExpressionVisitor implements ExpressionVisitor {
 	}
 
 	public void visit(ComparisonExpression expression) {
+		expression.left().accept(this);
+		expression.right().accept(this);
 	}
 
 	public void visit(NotExpression expression) {
 		expression.expr().accept(this);
+	}
+	
+	public void visit(ArithmeticExpression operand) {
+		operand.left().accept(this);
+		operand.right().accept(this);
+	}
+
+	public void visit(ConstValue operand) {
+	}
+
+	public void visit(FieldValue operand) {
+		operand.parent().accept(this);
+	}
+
+	public void visit(CandidateFieldRoot root) {
+	}
+
+	public void visit(PredicateFieldRoot root) {
+	}
+
+	public void visit(StaticFieldRoot root) {
+	}
+
+	public void visit(ArrayAccessValue operand) {
+		operand.parent().accept(this);
+		operand.index().accept(this);
+	}
+
+	public void visit(MethodCallValue value) {
+		value.parent().accept(this);
+		visitArgs(value);
+	}
+
+	protected void visitArgs(MethodCallValue value) {
+		ComparisonOperand[] args = value.args();
+		for (int i=0; i<args.length; ++i) {
+			args[i].accept(this);
+		}
 	}
 }
