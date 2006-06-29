@@ -20,7 +20,7 @@ namespace com.db4o.inside.query
 		#region ObjectSet Members
 		
 		public Object Get(int index) {
-            return _delegate.Get(ReverseIndex(index));
+            return _delegate.Get(ReverseIndex(_delegate, index));
         }
 
 		public void Sort(com.db4o.query.QueryComparator cmp)
@@ -88,7 +88,7 @@ namespace com.db4o.inside.query
 		{
 			get
 			{
-				return _delegate.Get(ReverseIndex(index));
+				return _delegate.Get(ReverseIndex(_delegate, index));
 			}
 			set
 			{
@@ -130,7 +130,7 @@ namespace com.db4o.inside.query
 				{
 					return -1;
 				}
-				return ReverseIndex(_delegate.IndexOf(id));
+				return ReverseIndex(_delegate, _delegate.IndexOf(id));
 			}
 		}
 
@@ -174,7 +174,7 @@ namespace com.db4o.inside.query
                 int s = _delegate.Size();
                 while (i < s)
                 {
-                    array.SetValue(_delegate.Get(ReverseIndex(i)), index + i);
+                    array.SetValue(_delegate.Get(ReverseIndex(_delegate, i)), index + i);
                     i++;
                 }
             }
@@ -211,7 +211,7 @@ namespace com.db4o.inside.query
 			{
 				get
 				{
-					return _result.Get(ReverseEnumIndex(_next-1));
+					return _result.Get(ReverseIndex(_result, _next-1));
 				}
 			}
 
@@ -224,12 +224,6 @@ namespace com.db4o.inside.query
 				}
 				return false;
 			}
-			
-			// FIXME: don't know the best way to get rid of this duplication in C#
-			private int ReverseEnumIndex(int idx) 
-			{
-	        	return _result.Size()-idx-1;
-	    	}
 		}
 
 		public System.Collections.IEnumerator GetEnumerator()
@@ -238,9 +232,9 @@ namespace com.db4o.inside.query
 		}
 		#endregion
 		
-		private int ReverseIndex(int idx) 
+		private static int ReverseIndex(QueryResult result, int idx) 
 		{
-        	return Size()-idx-1;
+        	return result.Size()-idx-1;
     	}
 	}
 }
