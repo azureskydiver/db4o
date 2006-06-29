@@ -12,6 +12,10 @@ public class ConstValue implements ComparisonOperand {
 		return _value;
 	}
 	
+	public void value(Object value) {
+		_value = value;
+	}
+	
 	public String toString() {
 		return (_value==null ? "[null]" : _value.toString());
 	}
