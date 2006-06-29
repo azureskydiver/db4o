@@ -1,5 +1,7 @@
 ﻿/* Copyright (C) 2004-2006   db4objects Inc.   http://www.db4o.com */
 
+using Cecil.FlowAnalysis.Impl.CodeStructure;
+
 namespace Db4oTools.NativeQueries
 {
 	using System;
@@ -25,24 +27,26 @@ namespace Db4oTools.NativeQueries
 	{
 		public override Expression FromMethod(System.Reflection.MethodBase method)
 		{
-			if (method == null)
-				throw new ArgumentNullException("method");
+			if (method == null) throw new ArgumentNullException("method");
 			Expression e = (Expression)_expressionCachingStrategy.Get(method);
-			if (e != null)
-				return e;
+			if (e != null) return e;
 
 			string location = GetAssemblyLocation(method);
 			AssemblyDefinition assembly = GetAssembly(location);
 			TypeDefinition type = FindTypeDefinition(assembly.MainModule, method.DeclaringType);
-			if (null == type)
-				UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
+			if (null == type) UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
 			MethodDefinition methodDef = type.Methods.GetMethod(method.Name, GetParameterTypes(method));
-			if (null == methodDef)
-				UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
+			if (null == methodDef) UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
 
-			e = FromMethodDefinition(methodDef);
+			e = AdjustBoxedValueTypes(FromMethodDefinition(methodDef));
 			_expressionCachingStrategy.Add(method, e);
 			return e;
+		}
+
+		private Expression AdjustBoxedValueTypes(Expression expression)
+		{
+			expression.Accept(new BoxedValueTypeProcessor());
+			return expression;
 		}
 
 		private static AssemblyDefinition GetAssembly(string location)
@@ -342,11 +346,8 @@ namespace Db4oTools.NativeQueries
 
 				AssertType(left, typeof(FieldValue), lhs);
 				AssertType(right, typeof(ComparisonOperand), rhs);
-				Push(
-					new ComparisonExpression(
-						(FieldValue)left,
-						(ComparisonOperand)right,
-						op));
+
+				Push(new ComparisonExpression((FieldValue)left, (ComparisonOperand)right, op));
 
 				if (areOperandsSwapped && !op.IsSymmetric())
 				{
@@ -681,6 +682,50 @@ namespace Db4oTools.NativeQueries
 			{
 				System.Diagnostics.Debug.Assert(condition, message);
 			}
+		}
+	}
+
+	internal class BoxedValueTypeProcessor : TraversingExpressionVisitor
+	{
+		override public void Visit(ComparisonExpression expression)
+		{
+			TypeReference fieldType = GetFieldType(expression.Left());
+			if (!fieldType.IsValueType) return;
+			
+			ConstValue constValue = expression.Right() as ConstValue;
+			if (constValue == null) return;
+
+			AdjustConstValue(fieldType, constValue);
+		}
+
+		private static TypeReference GetFieldType(FieldValue field)
+		{
+			return ((FieldReferenceExpression) field.Tag()).Field.FieldType;
+		}
+
+		private void AdjustConstValue(TypeReference typeRef, ConstValue constValue)
+		{
+			object value = constValue.Value();
+			if (!value.GetType().IsValueType) return;
+			
+			System.Type type = ResolveTypeReference(typeRef);
+			if (!type.IsEnum || value.GetType() == type) return;
+
+			constValue.Value(Enum.ToObject(type, value));
+		}
+
+		private static Type ResolveTypeReference(TypeReference typeRef)
+		{
+			Assembly assembly = LoadAssembly(typeRef.Scope);
+			return assembly.GetType(typeRef.FullName.Replace('/', '+'), true);
+		}
+
+		private static Assembly LoadAssembly(IMetadataScope scope)
+		{
+			IAssemblyNameReference nameRef = scope as IAssemblyNameReference;
+			if (null != nameRef) return Assembly.Load(nameRef.FullName);
+			IModuleDefinition moduleDef = scope as IModuleDefinition;
+			return LoadAssembly(moduleDef.Assembly.Name);
 		}
 	}
 }
