@@ -4,6 +4,7 @@ package com.db4o.config;
 
 import java.io.*;
 
+import com.db4o.diagnostic.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
@@ -236,6 +237,12 @@ public interface Configuration {
      * @param flag the desired setting
      */
     public void detectSchemaChanges(boolean flag);
+    
+    /**
+     * returns the configuration interface for diagnostics.
+     * @return the configuration interface for diagnostics.
+     */
+    public DiagnosticConfiguration diagnostic();
     
     /**
      * turns commit recovery off.

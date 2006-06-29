@@ -2,7 +2,9 @@
 
 package com.db4o;
 
+import com.db4o.diagnostic.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.replication.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -56,6 +58,9 @@ public final class YapHandlers {
     
     Db4oReplicationReferenceProvider _replicationReferenceProvider;
     
+    DiagnosticProcessor              _diagnosticListener;
+    
+    
     boolean                 i_encrypt;
     byte[]                  i_encryptor;
     int                     i_lastEncryptorByte;
@@ -78,7 +83,9 @@ public final class YapHandlers {
     	
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
+        
         _reflector = reflector;
+        _diagnosticListener = (DiagnosticProcessor) a_stream.i_config.diagnostic();
     	
     	initClassReflectors(reflector);
         

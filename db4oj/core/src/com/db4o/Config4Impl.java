@@ -5,8 +5,10 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.config.*;
+import com.db4o.diagnostic.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.freespace.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
@@ -49,7 +51,9 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
 	private final static KeySpec DETECT_SCHEMA_CHANGES=new KeySpec(true);
     
-	private final static KeySpec DISABLE_COMMIT_RECOVERY=new KeySpec(false);
+    private final static KeySpec DIAGNOSTIC=new KeySpec(new DiagnosticProcessor());
+    
+    private final static KeySpec DISABLE_COMMIT_RECOVERY=new KeySpec(false);
     
 	private final static KeySpec DISCARD_FREESPACE=new KeySpec(0);
     
@@ -628,6 +632,10 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 	boolean commitRecoveryDisabled() {
 		return _config.getAsBoolean(DISABLE_COMMIT_RECOVERY);
 	}
+
+    public DiagnosticConfiguration diagnostic() {
+        return (DiagnosticConfiguration)_config.get(DIAGNOSTIC);
+    }
 
 	public int discardFreeSpace() {
 		return _config.getAsInt(DISCARD_FREESPACE);

@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.convert.conversions.*;
+import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -152,6 +153,19 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                     i_fields = new YapField[0];
                 }
             }
+            if(i_stream.i_handlers._diagnosticListener.enabled()){
+                if(i_fields != null && i_fields.length == 0){
+                    String name = getName();
+                    if (name.indexOf("com.db4o.") != 0){
+                        i_stream.i_handlers._diagnosticListener.onDiagnostic(
+                            new DiagnosticMessage(getName() + " : This class does not contain any persistent fields.\n"
+                                + "  Every class in the class hierarchy requires some overhead for the maintenance of a class index." 
+                                + " Consider removing this class from the hierarchy, if it is not needed.")
+                        );
+                    }
+                }
+            }
+            
         } else {
             if (i_fields == null) {
                 i_fields = new YapField[0];
