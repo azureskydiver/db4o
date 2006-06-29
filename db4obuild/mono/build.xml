@@ -72,10 +72,10 @@
 		<!--
 		<input message="Please enter pass phrase for ${gpg.user}" addproperty="gpg.pass" />
 		<exec executable="rpm" inputstring="${gpg.pass}">
-			<arg line="--addsign ${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-${db4o.version.build.plain}.noarch.rpm" />
+			<arg line="-/-addsign ${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-${db4o.version.build.plain}.noarch.rpm" />
 		</exec>		
 		<exec executable="rpm" inputstring="${gpg.pass}">
-			<arg line="--addsign ${dir.mono.rpmbuild}/SRPMS/${db4o.name.short}-${db4o.version.build.plain}.src.rpm" />
+			<arg line="-/-addsign ${dir.mono.rpmbuild}/SRPMS/${db4o.name.short}-${db4o.version.build.plain}.src.rpm" />
 		</exec>		
 		-->
 		<delete dir="${dir.build.transfer.mono}/dist" />
