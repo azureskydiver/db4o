@@ -19,7 +19,7 @@ namespace com.db4o.test.inside.query
 				new FieldValue(CandidateFieldRoot.INSTANCE, "name"),
 				new FieldValue(PredicateFieldRoot.INSTANCE, "_name"),
 				ComparisonOperator.EQUALS),
-				expression);
+				NullifyTags(expression));
 		}
 	
 		public void TestHasPreviousWithPrevious()
@@ -41,7 +41,7 @@ namespace com.db4o.test.inside.query
 				new ConstValue(null),
 				ComparisonOperator.EQUALS)));
 
-			Tester.EnsureEquals(expected, expression);
+			Tester.EnsureEquals(expected, NullifyTags(expression));
 		}
 		
 		enum MessagePriority
@@ -75,7 +75,89 @@ namespace com.db4o.test.inside.query
 				new FieldValue(CandidateFieldRoot.INSTANCE, "_priority"),
 				new ConstValue(MessagePriority.High),
 				ComparisonOperator.EQUALS);
-			Tester.EnsureEquals(expression, expected);
+			Tester.EnsureEquals(expected, NullifyTags(expression));
+		}
+		
+		class TagNullifier : ExpressionVisitor, ComparisonOperandVisitor
+		{
+			public void Visit(AndExpression expression)
+			{
+				VisitBinaryExpression(expression);
+			}
+
+			public void Visit(OrExpression expression)
+			{
+				VisitBinaryExpression(expression);
+			}
+			
+			void VisitBinaryExpression(BinaryExpression e)
+			{
+				e.Left().Accept(this);
+				e.Right().Accept(this);
+			}
+
+			public void Visit(NotExpression expression)
+			{
+				expression.Expr().Accept(this);
+			}
+
+			public void Visit(ComparisonExpression expression)
+			{
+				expression.Left().Accept(this);
+				expression.Right().Accept(this);
+			}
+
+			public void Visit(BoolConstExpression expression)
+			{	
+			}
+
+			public void Visit(ArithmeticExpression operand)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void Visit(ConstValue operand)
+			{
+			}
+
+			public void Visit(FieldValue operand)
+			{
+				operand.Parent().Accept(this);
+				operand.Tag(null);
+			}
+
+			public void Visit(CandidateFieldRoot root)
+			{	
+			}
+
+			public void Visit(PredicateFieldRoot root)
+			{
+			}
+
+			public void Visit(StaticFieldRoot root)
+			{
+			}
+
+			public void Visit(ArrayAccessValue operand)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void Visit(MethodCallValue value)
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		/// <summary>
+		/// Set FieldValue.Tag to null so that Equals ignores it.
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		private Expression NullifyTags(Expression expression)
+		{
+			expression.Accept(new TagNullifier());
+			return expression;
 		}
 
 		private Expression ExpressionFromMethod(string methodName)
