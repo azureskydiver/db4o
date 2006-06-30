@@ -10,7 +10,8 @@
 	<target name="build" depends="init">
 		<csc outputfile="${output.dir}/Db4oAdmin.exe"
 			targettype="exe"
-			debug="true">
+			debug="true"
+			executable="${csc.executable}">
 			<src dir="Db4oAdmin">
 				<include name="**/*.cs" />
 			</src>
@@ -24,7 +25,8 @@
 		
 		<csc outputfile="${output.dir}/Db4oAdmin.Tests.exe"
 			targettype="exe"
-			debug="true">
+			debug="true"
+			executable="${csc.executable}">
 			<src dir="Db4oAdmin.Tests">
 				<include name="**/*.cs" />
 				
