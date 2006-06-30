@@ -153,19 +153,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                     i_fields = new YapField[0];
                 }
             }
-            if(i_stream.i_handlers._diagnosticProcessor.enabled()){
-                if(i_fields != null && i_fields.length == 0){
-                    String name = getName();
-                    if (name.indexOf("com.db4o.") != 0){
-                        i_stream.i_handlers._diagnosticProcessor.onDiagnostic(
-                            new DiagnosticMessage(name 
-                                + " : This class does not contain any persistent fields.\n"
-                                + "  Every class in the class hierarchy requires some overhead for the maintenance of a class index." 
-                                + " Consider removing this class from the hierarchy, if it is not needed.")
-                        );
-                    }
-                }
-            }
+            emitFieldsDiagnostic();
             
         } else {
             if (i_fields == null) {
@@ -174,6 +162,21 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         setStateOK();
     }
+
+	private void emitFieldsDiagnostic() {
+		DiagnosticProcessor diagnosticProcessor = i_stream.i_handlers._diagnosticProcessor;
+		if (diagnosticProcessor.enabled() && !hasFields() && !isDb4oClass()) {			
+	        diagnosticProcessor.onDiagnostic(
+	            new DiagnosticMessage(getName() 
+	                + " : This class does not contain any persistent fields.\n"
+	                + "  Every class in the class hierarchy requires some overhead for the maintenance of a class index." 
+	                + " Consider removing this class from the hierarchy, if it is not needed."));
+		}
+	}
+
+	boolean isDb4oClass() {
+		return getName().indexOf("com.db4o.") == 0;
+	}
     
     private boolean addTranslatorFields(YapStream a_stream) {
         

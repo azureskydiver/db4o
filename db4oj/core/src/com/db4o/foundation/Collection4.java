@@ -18,6 +18,13 @@ public class Collection4 implements DeepClone, Unversioned {
 
     /** number of elements collected */
     public int _size;
+    
+    public Collection4() {
+    }
+    
+    public Collection4(Collection4 other) {
+    	addAll(other);
+    }
 
     /**
      * Adds an element to the beginning of this collection.
