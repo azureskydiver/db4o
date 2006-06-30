@@ -1,4 +1,6 @@
-namespace com.db4o.diagnostic {
+namespace com.db4o.diagnostic
+{
+#if !CF_1_0 && !CF_2_0
     /// <summary>prints Diagnostic messsages to the Console.</summary>
     /// <remarks>
     /// prints Diagnostic messsages to System.Diagnostics.Trace.
@@ -10,11 +12,14 @@ namespace com.db4o.diagnostic {
     /// </remarks>
     /// <seealso cref="com.db4o.diagnostic.DiagnosticConfiguration">com.db4o.diagnostic.DiagnosticConfiguration
     /// 	</seealso>
-    public class DiagnosticToTrace : com.db4o.diagnostic.DiagnosticListener {
+    public class DiagnosticToTrace : com.db4o.diagnostic.DiagnosticListener
+    {
         /// <summary>redirects Diagnostic messages to System.Diagnostics.Trace</summary>
         /// <remarks>redirects Diagnostic messages to the Console.</remarks>
-        public virtual void OnDiagnostic(com.db4o.diagnostic.Diagnostic d) {
-            System.Diagnostics.Trace.WriteLine(d.ToString());
+        public virtual void OnDiagnostic(com.db4o.diagnostic.Diagnostic d)
+        {
+        	System.Diagnostics.Trace.WriteLine(d.ToString());
         }
     }
+#endif
 }
