@@ -290,20 +290,20 @@ public final class QCandidates implements Visitor4 {
             i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
         }
         
-        if(i_trans.i_stream.i_handlers._diagnosticProcessor.enabled()){
-            
-            String name = i_yapClass.getName();
-            if (name.indexOf("com.db4o.") != 0){
-    
-                i_trans.i_stream.i_handlers._diagnosticProcessor.onDiagnostic(
-                    new DiagnosticMessage( name 
-                        + " : Query candidate set could not be loaded from a field index.\n"
-                        + "  Consider indexing the fields that you want to query for using: \n"
-                        + "  Db4o.configure().objectClass([class]).objectField([fieldName]).indexed(true);" ));
-            }
-        }
+        emitIndexDiagnostic();
         
     }
+
+	private void emitIndexDiagnostic() {
+		DiagnosticProcessor diagnosticProcessor = i_trans.i_stream.i_handlers._diagnosticProcessor;
+		if (diagnosticProcessor.enabled() && !i_yapClass.isDb4oClass()) {
+	        diagnosticProcessor.onDiagnostic(
+	            new DiagnosticMessage( i_yapClass.getName() 
+	                + " : Query candidate set could not be loaded from a field index.\n"
+	                + "  Consider indexing the fields that you want to query for using: \n"
+	                + "  Db4o.configure().objectClass([class]).objectField([fieldName]).indexed(true);" ));
+		}
+	}
 
     void setCurrentConstraint(QCon a_constraint) {
         i_currentConstraint = a_constraint;
