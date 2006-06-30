@@ -1120,6 +1120,7 @@
 		<property name="dir.n.instrumentation" location="../db4on/instrumentation" />
 		
 		<ant antfile="${dir.n.instrumentation}/build.xml"
+			dir="${dir.n.instrumentation}"
 			target="test"
 			inheritall="false">
 			<property name="csc.executable" value="${csc.executable}"></property>
