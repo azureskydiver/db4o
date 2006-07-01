@@ -50,7 +50,7 @@ namespace com.db4o
 
 		internal com.db4o.inside.replication.Db4oReplicationReferenceProvider _replicationReferenceProvider;
 
-		internal com.db4o.inside.diagnostic.DiagnosticProcessor _diagnosticProcessor;
+		public readonly com.db4o.inside.diagnostic.DiagnosticProcessor _diagnosticProcessor;
 
 		internal bool i_encrypt;
 

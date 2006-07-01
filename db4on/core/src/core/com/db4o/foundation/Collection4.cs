@@ -11,6 +11,15 @@ namespace com.db4o.foundation
 		/// <summary>number of elements collected</summary>
 		public int _size;
 
+		public Collection4()
+		{
+		}
+
+		public Collection4(com.db4o.foundation.Collection4 other)
+		{
+			AddAll(other);
+		}
+
 		/// <summary>Adds an element to the beginning of this collection.</summary>
 		/// <remarks>Adds an element to the beginning of this collection.</remarks>
 		/// <param name="element"></param>

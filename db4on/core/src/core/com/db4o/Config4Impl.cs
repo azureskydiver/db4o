@@ -614,16 +614,10 @@ namespace com.db4o
 
 		public void UpdateDepth(int depth)
 		{
-			if (depth > 1)
+			com.db4o.inside.diagnostic.DiagnosticProcessor dp = DiagnosticProcessor();
+			if (dp.Enabled())
 			{
-				com.db4o.inside.diagnostic.DiagnosticProcessor dp = DiagnosticProcessor();
-				if (dp.Enabled())
-				{
-					string msg = "Db4o.configure().updateDepth(" + depth + ")\n" + "  Increasing the global updateDepth to a value greater than 1 is only recommended for"
-						 + " testing, not for production use. If individual deep updates are needed, consider using"
-						 + " ExtObjectContainer#set(object, depth) and make sure to profile the performance of each call.";
-					dp.OnDiagnostic(new com.db4o.inside.diagnostic.DiagnosticMessage(msg));
-				}
+				dp.CheckUpdateDepth(depth);
 			}
 			_config.Put(UPDATE_DEPTH, depth);
 		}
