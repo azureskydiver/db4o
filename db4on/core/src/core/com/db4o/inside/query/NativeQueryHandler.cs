@@ -3,6 +3,7 @@ using System;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
 using com.db4o.query;
+using com.db4o.inside.diagnostic;
 
 namespace com.db4o.inside.query
 {
@@ -178,6 +179,14 @@ namespace com.db4o.inside.query
 			{
 				OnQueryOptimizationFailure(e);
 			}
+            if (OptimizeNativeQueries()) 
+            {
+                DiagnosticProcessor dp = ((YapStream)_container).i_handlers._diagnosticProcessor;
+                if(dp.Enabled()){
+                    dp.NativeQueryUnoptimized(predicate);
+                }
+
+            }
 			q.Constrain(new com.db4o.inside.query.PredicateEvaluation(predicate));
 			OnQueryExecution(predicate, QueryExecutionKind.Unoptimized);
 			return q;

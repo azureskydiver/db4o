@@ -324,16 +324,10 @@ namespace com.db4o
 			}
 			i_root = com.db4o.TreeInt.ToQCandidate((com.db4o.TreeInt)i_yapClass.GetIndex(i_trans
 				), this);
-			if (i_trans.i_stream.i_handlers._diagnosticProcessor.Enabled())
+			com.db4o.inside.diagnostic.DiagnosticProcessor dp = i_trans.i_stream.i_handlers._diagnosticProcessor;
+			if (dp.Enabled())
 			{
-				string name = i_yapClass.GetName();
-				if (name.IndexOf("com.db4o.") != 0)
-				{
-					i_trans.i_stream.i_handlers._diagnosticProcessor.OnDiagnostic(new com.db4o.inside.diagnostic.DiagnosticMessage
-						(name + " : Query candidate set could not be loaded from a field index.\n" + "  Consider indexing the fields that you want to query for using: \n"
-						 + "  Db4o.configure().objectClass([class]).objectField([fieldName]).indexed(true);"
-						));
-				}
+				dp.LoadedFromClassIndex(i_yapClass);
 			}
 		}
 
