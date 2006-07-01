@@ -35,7 +35,7 @@ Note that the current implementation doesn't support polymorphism yet.
 Due to some platform limitations, CompactFramework 2.0 users using the ._
 more convenient delegate based Native Query syntax that want their queries ._
 to be optimized are required to run the Db4oAdmin.exe ._
-instrumentation utility on their assemblies ._
+command line utility on their assemblies ._
 prior to deploying them. 
 
 The utility which can be found in the /bin folder of this distribution is required ._
@@ -52,12 +52,26 @@ by following the simple steps below:
 - Select .b 'Properties' ..
 - In the Properties Page select the .b 'Build Events' .. tab
 - In the .b 'Post-build event command line' .. text box insert the following text ._
-.b "<path-to-your-db4o-installation>/bin/Db4oAdmin.exe $(TargetPath)" .. ._
+.b "<path-to-your-db4o-installation>/bin/Db4oAdmin.exe -cf2-delegates $(TargetPath)" .. ._
 without the quotes and replacing <path-to-your-db4o-installation> to the correct ._
 value for your system.
 
 A complete example can be found in the /src/instrumentation/Db4oAdmin.Example ._
 directory of this distribution.
+
+.1 Build Time Optimization for Native Queries
+
+Db4oAdmin.exe can also be used to pre optimize the Native Queries in a ._
+given assembly. This makes it possible to deploy an application without ._
+Db4oTools.dll (the assembly where the Native Query runtime optimizer ._
+lives) while also possibly reducing Native Query execution time by ._
+dropping runtime analysis completely.
+
+Execute the Db4oAdmin.exe command line utility without any arguments and check ._
+out the help information.
+
+IMPORTANT: the tool is still in constant development and it currently ._
+does not support pre optimization of Native Queries expressed as delegates.
   
 .1 Monitoring optimization ..
 
