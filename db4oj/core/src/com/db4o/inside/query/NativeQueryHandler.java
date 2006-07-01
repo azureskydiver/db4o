@@ -2,6 +2,7 @@ package com.db4o.inside.query;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.diagnostic.*;
 import com.db4o.query.*;
 
 public class NativeQueryHandler {
@@ -45,7 +46,7 @@ public class NativeQueryHandler {
 			return q;
 		}
 		try {
-			if (_container.ext().configure().optimizeNativeQueries() && _enhancer!=null) {
+			if (shouldOptimize()) {
 				Object optimized=_enhancer.optimize(q,predicate);
 				notifyListeners(predicate,NativeQueryHandler.DYNOPTIMIZED,optimized);
 				return q;
@@ -55,8 +56,18 @@ public class NativeQueryHandler {
 		}
 		q.constrain(new PredicateEvaluation(predicate));
 		notifyListeners(predicate,NativeQueryHandler.UNOPTIMIZED,null);
+        if(shouldOptimize()){
+            DiagnosticProcessor dp = ((YapStream)_container).i_handlers._diagnosticProcessor;
+            if(dp.enabled()){
+                dp.nativeQueryUnoptimized(predicate);
+            }
+        }
 		return q;
 	}
+
+    private boolean shouldOptimize() {
+        return _container.ext().configure().optimizeNativeQueries() && _enhancer!=null;
+    }
 
 	private void notifyListeners(Predicate predicate, String msg,Object optimized) {
 		NQOptimizationInfo info=new NQOptimizationInfo(predicate,msg,optimized);
