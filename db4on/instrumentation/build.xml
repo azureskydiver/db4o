@@ -4,6 +4,7 @@
 	<property name="dir.build" location="../../db4obuild" />
 	<property file="${dir.build}/machine.properties" />
 	<property file="${dir.build}/ant.properties" />
+	<property name="csc.executable" value="csc"></property>
 	
 	<property name="output.dir" location="bin" />	
 
