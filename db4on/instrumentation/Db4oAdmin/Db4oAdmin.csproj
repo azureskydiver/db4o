@@ -33,13 +33,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractNQInstrumentation.cs" />
+    <Compile Include="AbstractAssemblyInstrumentation.cs" />
     <Compile Include="CFNQEnabler.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="IAssemblyInstrumentation.cs" />
     <Compile Include="ILPattern.cs" />
     <Compile Include="InstrumentationContext.cs" />
-    <Compile Include="NQOptimization.cs" />
+    <Compile Include="InstrumentationPipeline.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions.Useful\CommonCompilerOptions.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions\ArgumentProcessorAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions\KillOptionAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions\OptionAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions\OptionDetails.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions\OptionList.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions\Options.cs" />
+    <Compile Include="Mono.GetOptions\Mono.GetOptions\OptionsParsingMode.cs" />
+    <Compile Include="Mono.GetOptions\Mono\AboutAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono\AdditionalInfoAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono\AuthorAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono\IsPartOfPackageAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono\ReportBugsToAttribute.cs" />
+    <Compile Include="Mono.GetOptions\Mono\UsageComplementAttribute.cs" />
+    <Compile Include="PredicateOptimizer.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgramOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryInvocationProcessor.cs" />
     <Compile Include="SodaEmitterVisitor.cs" />

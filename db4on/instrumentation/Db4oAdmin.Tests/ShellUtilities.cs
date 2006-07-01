@@ -1,12 +1,9 @@
-using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Db4oAdmin.Tests
 {
-	class ShellUtilities
+	public class ShellUtilities
 	{
 		public static void CopyFileToFolder(string fname, string path)
 		{

@@ -6,18 +6,18 @@ using Db4oUnit;
 namespace Db4oAdmin.Tests
 {
 	class Program
-	{	
-	    public static int Main(string[] args)
+	{
+		public static int Main(string[] args)
 		{
-	        Type[] tests = new Type[]
-	            {
-	                typeof (ILPatternTestCase),
-	                typeof (CFNQRuntimeOptimizationTestCase),
-	                typeof (PredicateBuildTimeOptimizationTestCase),
-	            };
+			Type[] tests = new Type[]
+				{
+					typeof(ILPatternTestCase),
+					typeof(CFNQRuntimeOptimizationTestCase),
+					typeof(PredicateBuildTimeOptimizationTestCase),
+				};
 
 			ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(tests);
-	    	return new TestRunner(builder).Run();
+			return new TestRunner(builder).Run();
 		}
 	}
 }
