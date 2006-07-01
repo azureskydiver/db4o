@@ -1,5 +1,6 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.   http://www.db4o.com */
 using System;
+using Mono.GetOptions;
 
 namespace Db4oAdmin
 {
@@ -7,16 +8,41 @@ namespace Db4oAdmin
 	{
 		static int Main(string[] args)
 		{
-			if (args.Length < 1)
+			ProgramOptions options = new ProgramOptions(args);
+			if (!options.IsValid)
 			{
-				Console.WriteLine("Usage:\nDb4oAdmin <assembly location>");
+				options.DoHelp();
 				return -1;
 			}
+
+			return DoRun(options);
+		}
+
+		public static int Run(ProgramOptions options)
+		{
+			if (options == null) throw new ArgumentNullException("options");
+			if (!options.IsValid) throw new ArgumentException("options");
+
+			return DoRun(options);
+		}
+
+		private static int DoRun(ProgramOptions options)
+		{
 			try
 			{
-				string assemblyLocation = args[0];
-				Configuration configuration = new Configuration();
-				new CFNQEnabler(assemblyLocation, configuration).Run();
+				Configuration configuration = new Configuration(options.Assembly);
+				configuration.CaseSensitive = options.CaseSensitive;
+					
+				InstrumentationPipeline pipeline = new InstrumentationPipeline(configuration);
+				if (options.EnableCF2DelegateQueries)
+				{
+					pipeline.Add(new CFNQEnabler());
+				}
+				if (options.OptimizePredicates)
+				{
+					pipeline.Add(new PredicateOptimizer());
+				}
+				pipeline.Run();
 			}
 			catch (Exception x)
 			{

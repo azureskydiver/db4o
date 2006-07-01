@@ -10,12 +10,8 @@ using MethodAttributes=Mono.Cecil.MethodAttributes;
 
 namespace Db4oAdmin
 {
-	public class NQOptimization : AbstractNQInstrumentation
+	public class PredicateOptimizer : AbstractAssemblyInstrumentation
 	{
-		public NQOptimization(string location, Configuration configuration) : base(location, configuration)
-		{
-		}
-
 		protected override void ProcessType(TypeDefinition type)
 		{
 			if (IsPredicateClass(type))
@@ -88,11 +84,6 @@ namespace Db4oAdmin
 			if (null == baseType) return false;
 			if ("com.db4o.query.Predicate" == baseType.FullName) return true;
 			return IsPredicateClass(baseType);
-		}
-
-		protected override void ProcessQueryInvocation(MethodDefinition parent, Instruction queryInvocation)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

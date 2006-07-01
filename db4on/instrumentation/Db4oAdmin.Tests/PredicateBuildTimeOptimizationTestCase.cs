@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using com.db4o.inside.query;
 using Db4oUnit;
 
@@ -13,9 +10,9 @@ namespace Db4oAdmin.Tests
 			get { return "PredicateSubject"; }
 		}
 
-		protected override void InstrumentAssembly(string path)
+		protected override string CommandLine
 		{
-			new Db4oAdmin.NQOptimization(path, new Configuration()).Run();
+			get { return "-optimize-predicates"; }
 		}
 
 		protected override void OnQueryExecution(object sender, QueryExecutionEventArgs args)
