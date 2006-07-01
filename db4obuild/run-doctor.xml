@@ -38,7 +38,7 @@
 		<jar destfile="${file.doctor.applets.jar}">
 			<fileset dir="${dir.dist.doctor}" includes="**/com/yetac/doctor/applet/*.class" />
 		</jar>
-		<signjar jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<signjar verbose="true" jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<jar destfile="${file.tutorial.jar}">
 			<fileset dir="${dir.dist.classes.tutorial}" includes="com/db4o/f1/**/*.class" />
 		</jar>
