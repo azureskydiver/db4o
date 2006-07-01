@@ -70,6 +70,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)/../Db4oAdmin/bin/Debug/Db4oAdmin.exe $(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)/../Db4oAdmin/bin/Debug/Db4oAdmin.exe -cf2-delegates $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
 </Project>
