@@ -519,22 +519,12 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     }
 
     public void updateDepth(int depth) {
-        emitUpdateDepthDiagnostic(depth);
+        DiagnosticProcessor dp = diagnosticProcessor();
+        if (dp.enabled()) {
+            dp.checkUpdateDepth(depth);
+        }
     	_config.put(UPDATE_DEPTH,depth);
     }
-
-	private void emitUpdateDepthDiagnostic(int depth) {
-		if (depth > 1) {
-            DiagnosticProcessor dp = diagnosticProcessor();
-            if (dp.enabled()) {
-                String msg = "Db4o.configure().updateDepth(" + depth + ")\n"
-                + "  Increasing the global updateDepth to a value greater than 1 is only recommended for"
-                + " testing, not for production use. If individual deep updates are needed, consider using"
-                + " ExtObjectContainer#set(object, depth) and make sure to profile the performance of each call.";
-                dp.onDiagnostic(new DiagnosticMessage(msg));
-            }
-        }
-	}
 
     public void useRamSystem() {
         _config.put(FREESPACE_SYSTEM,FreespaceManager.FM_RAM);

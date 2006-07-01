@@ -58,7 +58,7 @@ public final class YapHandlers {
     
     Db4oReplicationReferenceProvider _replicationReferenceProvider;
     
-    DiagnosticProcessor              _diagnosticProcessor;
+    public final DiagnosticProcessor      _diagnosticProcessor;
     
     
     boolean                 i_encrypt;
