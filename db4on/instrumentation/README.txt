@@ -3,6 +3,8 @@ Db4oAdmin
 
 Db4o command line utility.
 
+Execute Db4oAdmin.exe without any arguments to see the help information.
+
 Enabling delegate based native queries for the Compact Framework
 ================================================================
 
