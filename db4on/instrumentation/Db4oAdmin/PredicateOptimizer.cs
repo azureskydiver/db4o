@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Cecil.FlowAnalysis.CecilUtilities;
 using com.db4o.inside.query;
 using com.db4o.nativequery.expr;
 using com.db4o.query;
@@ -12,6 +13,21 @@ namespace Db4oAdmin
 {
 	public class PredicateOptimizer : AbstractAssemblyInstrumentation
 	{
+		int _predicateCount;
+
+		protected override void BeforeAssemblyProcessing()
+		{
+			_predicateCount = 0;
+		}
+		
+		protected override void  AfterAssemblyProcessing()
+		{
+			string format = _predicateCount == 1
+			                	? "{0} predicate class processed."
+			                	: "{0} predicate classes processed.";
+			TraceInfo(format, _predicateCount);
+		}
+		
 		protected override void ProcessType(TypeDefinition type)
 		{
 			if (IsPredicateClass(type))
@@ -23,6 +39,8 @@ namespace Db4oAdmin
 
 		private void InstrumentPredicateClass(TypeDefinition type)
 		{
+			++_predicateCount;
+			
 			MethodDefinition match = GetMatchMethod(type);
 			Expression e = GetExpression(match);
 			if (null == e) return;
@@ -32,6 +50,8 @@ namespace Db4oAdmin
 
 		private void OptimizePredicate(TypeDefinition type, MethodDefinition match, Expression e)
 		{
+			TraceInfo("Optimizing '{0}' ({1})", type, e);
+			
 			MethodDefinition optimizeQuery = CreateOptimizeQueryMethod();
 
 			TypeReference extent = match.Parameters[0].ParameterType;
@@ -43,9 +63,19 @@ namespace Db4oAdmin
 
 			type.Methods.Add(optimizeQuery);
 			type.Interfaces.Add(_context.Import(typeof(Db4oEnhancedFilter)));
+
+			DumpMethodBody(optimizeQuery);
 		}
 
-		private static Expression GetExpression(MethodDefinition match)
+		private void DumpMethodBody(MethodDefinition m)
+		{
+			if (_context.TraceSwitch.TraceVerbose)
+			{
+				TraceVerbose(CecilFormatter.FormatMethodBody(m));
+			}
+		}
+
+		private Expression GetExpression(MethodDefinition match)
 		{
 			try
 			{
@@ -53,7 +83,7 @@ namespace Db4oAdmin
 			}
 			catch (UnsupportedPredicateException x)
 			{	
-				Console.Error.WriteLine("WARNING: Predicate '{0}' could not be optimized. {1}", match.DeclaringType, x.Message);
+				TraceWarning("WARNING: Predicate '{0}' could not be optimized. {1}", match.DeclaringType, x.Message);
 			}
 			return null;
 		}

@@ -29,7 +29,9 @@ namespace Db4oAdmin
 		{
 			foreach (IAssemblyInstrumentation instrumentation in _instrumentations)
 			{
+				_context.TraceVerbose("Entering '{0}' instrumentation", instrumentation);
 				instrumentation.Run(_context);
+				_context.TraceVerbose("Leaving '{0}' instrumentation", instrumentation);
 			}
 		}
 

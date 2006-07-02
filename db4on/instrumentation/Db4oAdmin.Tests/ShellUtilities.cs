@@ -14,6 +14,12 @@ namespace Db4oAdmin.Tests
 		{
 			public int ExitCode;
 			public string StdOut;
+			public string StdErr;
+			
+			public override string ToString()
+			{
+				return StdOut + StdErr;
+			}
 		}
 
 		public static ProcessOutput shell(string fname, params string[] args)
@@ -21,7 +27,7 @@ namespace Db4oAdmin.Tests
 			Process p = StartProcess(fname, args);
 			ProcessOutput output = new ProcessOutput();
 			output.StdOut = p.StandardOutput.ReadToEnd();
-            output.StdOut += p.StandardError.ReadToEnd();
+            output.StdErr = p.StandardError.ReadToEnd();
 			p.WaitForExit();
 			output.ExitCode = p.ExitCode;
 			return output;

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using Mono.Cecil;
 
@@ -6,7 +7,7 @@ namespace Db4oAdmin
 {
 	public class InstrumentationContext
 	{
-		protected AssemblyDefinition _assembly;
+		private AssemblyDefinition _assembly;
 		private Configuration _configuration;
 
 		public InstrumentationContext(Configuration configuration)
@@ -18,6 +19,11 @@ namespace Db4oAdmin
 		public Configuration Configuration
 		{
 			get { return _configuration; }
+		}
+		
+		public TraceSwitch TraceSwitch
+		{
+			get { return _configuration.TraceSwitch;  }
 		}
 		
 		public AssemblyDefinition Assembly
@@ -43,6 +49,30 @@ namespace Db4oAdmin
 		public void SaveAssembly()
 		{
 			AssemblyFactory.SaveAssembly(_assembly, AssemblyLocation);
+		}
+		
+		public void TraceWarning(string message, params object[] args)
+		{
+			if (TraceSwitch.TraceWarning)
+			{
+				Trace.WriteLine(string.Format(message, args));
+			}
+		}
+
+		public void TraceInfo(string message, params object[] args)
+		{
+			if (TraceSwitch.TraceInfo)
+			{
+				Trace.WriteLine(string.Format(message, args));
+			}
+		}
+
+		public void TraceVerbose(string format, params object[] args)
+		{
+			if (TraceSwitch.TraceVerbose)
+			{
+				Trace.WriteLine(string.Format(format, args));
+			}
 		}
 	}
 }

@@ -1,13 +1,13 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.   http://www.db4o.com */
 using System;
-using Mono.GetOptions;
+using System.Diagnostics;
 
 namespace Db4oAdmin
 {
 	public class Program
 	{
 		static int Main(string[] args)
-		{
+		{	
 			ProgramOptions options = new ProgramOptions(args);
 			if (!options.IsValid)
 			{
@@ -15,25 +15,15 @@ namespace Db4oAdmin
 				return -1;
 			}
 
-			return DoRun(options);
+			return Run(options);
 		}
 
-		public static int Run(ProgramOptions options)
+		private static int Run(ProgramOptions options)
 		{
-			if (options == null) throw new ArgumentNullException("options");
-			if (!options.IsValid) throw new ArgumentException("options");
-
-			return DoRun(options);
-		}
-
-		private static int DoRun(ProgramOptions options)
-		{
+			Trace.Listeners.Add(new TextWriterTraceListener(Console.Error));
 			try
 			{
-				Configuration configuration = new Configuration(options.Assembly);
-				configuration.CaseSensitive = options.CaseSensitive;
-					
-				InstrumentationPipeline pipeline = new InstrumentationPipeline(configuration);
+				InstrumentationPipeline pipeline = new InstrumentationPipeline(GetConfiguration(options));
 				if (options.OptimizePredicates)
 				{
 					pipeline.Add(new PredicateOptimizer());
@@ -46,10 +36,33 @@ namespace Db4oAdmin
 			}
 			catch (Exception x)
 			{
-				Console.WriteLine(x);
+				ReportError(options, x);
 				return -2;
 			}
 			return 0;
+		}
+
+		private static void ReportError(ProgramOptions options, Exception x)
+		{
+			if (options.Verbose)
+			{
+				Console.WriteLine(x);
+			}
+			else
+			{
+				Console.WriteLine(x.Message);
+			}
+		}
+
+		private static Configuration GetConfiguration(ProgramOptions options)
+		{
+			Configuration configuration = new Configuration(options.Assembly);
+			configuration.CaseSensitive = options.CaseSensitive;
+			if (options.Verbose)
+			{
+				configuration.TraceSwitch.Level = options.PrettyVerbose ? TraceLevel.Verbose : TraceLevel.Info;
+			}
+			return configuration;
 		}
 	}
 }

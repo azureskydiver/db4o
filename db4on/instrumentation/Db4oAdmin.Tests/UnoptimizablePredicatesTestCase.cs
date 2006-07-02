@@ -25,7 +25,8 @@ namespace Db4oAdmin.Tests
 			base.CheckInstrumentationOutput(output);
 			Assert.AreEqual(
 				"WARNING: Predicate 'ByUpperNameUnoptimizable' could not be optimized. Unsupported expression: candidate.get_Name().ToUpper",
-				output.StdOut.Trim());
+				output.StdErr.Trim());
+			Assert.AreEqual("", output.StdOut);
 		}
 
 		protected override void OnQueryExecution(object sender, QueryExecutionEventArgs args)

@@ -15,7 +15,7 @@ namespace Db4oAdmin.Tests
 
 		protected virtual void CheckInstrumentationOutput(ShellUtilities.ProcessOutput output)
 		{
-			if (output.ExitCode != 0) Assert.Fail(output.StdOut);
+			if (output.ExitCode != 0) Assert.Fail(output.ToString());
 		}
 
 		private static string InstrumentationUtilityPath
