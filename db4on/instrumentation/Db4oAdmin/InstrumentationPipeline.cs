@@ -21,11 +21,6 @@ namespace Db4oAdmin
 
 		public void Run()
 		{
-			RunInstrumentations();
-		}
-
-		private void RunInstrumentations()
-		{
 			foreach (IAssemblyInstrumentation instrumentation in _instrumentations)
 			{
 				_context.TraceVerbose("Entering '{0}' instrumentation", instrumentation);
