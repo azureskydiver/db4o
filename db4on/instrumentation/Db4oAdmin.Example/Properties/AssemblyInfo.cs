@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CFNativeQueriesEnabler.Example")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Flying Circuits")]
-[assembly: AssemblyProduct("CFNativeQueriesEnabler.Example")]
-[assembly: AssemblyCopyright("Copyright © Flying Circuits 2006")]
+[assembly: AssemblyCompany("db4objects Inc., San Mateo, CA, USA")]
+[assembly: AssemblyProduct("db4o - database for objects")]
+[assembly: AssemblyCopyright("db4o 2005")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("5.4.012")]
 

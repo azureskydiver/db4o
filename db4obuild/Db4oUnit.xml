@@ -43,6 +43,8 @@
 		
 		<property name="assembly" location="${db4ounit.net.bin.dir}/${projectName}.dll" />
 		
+		<updateAssemblyInfoFiles srcdir="${db4ounit.net.src.dir}" />
+		
 		<csc outputfile="${assembly}"
 			targettype="library"
 			srcdir="${db4ounit.net.src.dir}">
