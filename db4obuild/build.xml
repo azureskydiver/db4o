@@ -907,6 +907,7 @@
 			<fileset dir="${dir.test}">
 				<include name="**/*.cs" />
 				<include name="**/*.resx" />
+				<include name="lib/Db4oUnit.dll" />
 				<include name="*.*" />
 				<exclude name=".*" />
 			</fileset>
@@ -1136,6 +1137,7 @@
 			<fileset dir="${dir.n.instrumentation}">
 				<include name="bin/*.dll" />
 				<include name="bin/*.exe" />
+				<exclude name="bin/Db4oUnit.dll" />
 			</fileset>
 		</copy>
 		
