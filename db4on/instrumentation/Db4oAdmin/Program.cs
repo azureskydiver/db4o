@@ -34,13 +34,13 @@ namespace Db4oAdmin
 				configuration.CaseSensitive = options.CaseSensitive;
 					
 				InstrumentationPipeline pipeline = new InstrumentationPipeline(configuration);
-				if (options.EnableCF2DelegateQueries)
-				{
-					pipeline.Add(new CFNQEnabler());
-				}
 				if (options.OptimizePredicates)
 				{
 					pipeline.Add(new PredicateOptimizer());
+				}
+				if (options.EnableCF2DelegateQueries)
+				{
+					pipeline.Add(new CFNQEnabler());
 				}
 				pipeline.Run();
 			}

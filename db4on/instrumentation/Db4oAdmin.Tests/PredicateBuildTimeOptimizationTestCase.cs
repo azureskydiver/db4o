@@ -3,7 +3,7 @@ using Db4oUnit;
 
 namespace Db4oAdmin.Tests
 {
-	public class PredicateBuildTimeOptimizationTestCase : AbstractInstrumentationTestCase
+	public class PredicateBuildTimeOptimizationTestCase : AbstractCommandLineInstrumentationTestCase
 	{
 		protected override string ResourceName
 		{

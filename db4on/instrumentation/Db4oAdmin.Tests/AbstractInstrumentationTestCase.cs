@@ -119,30 +119,7 @@ namespace Db4oAdmin.Tests
 		
 		protected abstract string ResourceName { get; }
 
-		protected abstract string CommandLine { get; }
-		
-		protected void InstrumentAssembly(string path)
-		{
-			ShellUtilities.ProcessOutput output = ShellUtilities.shell(InstrumentationUtilityPath, Append(CommandLine.Split(' '), path));
-			CheckInstrumentationOutput(output);
-		}
-
-		protected virtual void CheckInstrumentationOutput(ShellUtilities.ProcessOutput output)
-		{
-			if (output.ExitCode != 0) Assert.Fail(output.StdOut);
-		}
-
-		private string[] Append(string[] line, string path)
-		{
-			Array.Resize(ref line, line.Length+1);
-			line[line.Length - 1] = path;
-			return line;
-		}
-
-		private static string InstrumentationUtilityPath
-		{
-			get { return typeof(InstrumentationPipeline).Module.FullyQualifiedName; }
-		}
+		protected abstract void InstrumentAssembly(string location);
 
 		protected abstract void OnQueryExecution(object sender, QueryExecutionEventArgs args);
 

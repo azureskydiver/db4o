@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractCommandLineInstrumentationTestCase.cs" />
     <Compile Include="AbstractInstrumentationTestCase.cs" />
     <Compile Include="CompilationServices.cs" />
     <Compile Include="ILPatternTestCase.cs" />
@@ -46,7 +47,9 @@
     <Compile Include="CFNQRuntimeOptimizationTestCase.cs" />
     <EmbeddedResource Include="Resources\CFNQSubject.cs" />
     <EmbeddedResource Include="Resources\PredicateSubject.cs" />
+    <EmbeddedResource Include="Resources\UnoptimizablePredicateSubject.cs" />
     <Compile Include="ShellUtilities.cs" />
+    <Compile Include="UnoptimizablePredicatesTestCase.cs" />
     <Compile Include="VerifyAssemblyTest.cs" />
   </ItemGroup>
   <ItemGroup>
