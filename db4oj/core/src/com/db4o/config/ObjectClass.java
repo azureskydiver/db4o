@@ -183,7 +183,18 @@ public interface ObjectClass {
      * to the database file. By turning the setting on for a specific class
      * with this switch, all <b>non-simple-typed</b> static field values of this
      * class are stored the first time an object of the class is stored, and
-     * restored, every time a database file is opened afterwards.
+     * restored, every time a database file is opened afterwards, <b>after 
+     * class meta information is loaded for this class</b> (which can happen
+     * by querying for a class or by loading an instance of a class).<br><br>
+     * To update a static field value, once it is stored, you have to the following
+     * in this order:<br>
+     * (1) open the database file you are working agains<br>
+     * (2) make sure the class metadata is loaded<br>
+     * <code>objectContainer.query().constrain(Foo.class); // Java</code><br>
+     * <code>objectContainer.Query().Constrain(typeof(Foo)); // C#</code><br>
+     * (3) change the static member<br>
+     * (4) store the static member explicitely<br>
+     * <code>objectContainer.set(Foo.staticMember); // C#</code>
      * <br><br>The setting will be ignored for simple types.
      * <br><br>Use this setting for constant static object members.
      * <br><br>This option will slow down the process of opening database
