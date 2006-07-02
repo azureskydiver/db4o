@@ -32,27 +32,21 @@ namespace Db4oAdmin
 
 		public void Process(MethodDefinition parent, Instruction queryInvocation)
 		{
-			//Console.WriteLine(CecilFormatter.FormatMethodBody(parent));
-
 			CilWorker worker = parent.Body.CilWorker;
 			if (IsCachedStaticFieldPattern(queryInvocation))
-			{
-//				Console.WriteLine("static field pattern found in {0}", parent.Name);
+			{	
+				_context.TraceVerbose("static delegate field pattern found in {0}", parent.Name);
 				ProcessCachedStaticFieldPattern(worker, queryInvocation);
 			}
 			else if (IsPredicateCreationPattern(queryInvocation))
 			{
-//				Console.WriteLine("simple pattern found in {0}", parent.Name);
+				_context.TraceVerbose("simple delegate pattern found in {0}", parent.Name);
 				ProcessPredicateCreationPattern(worker, queryInvocation);
 			}
 			else
 			{
-				throw new ArgumentException(
-					string.Format("Unknown query invocation pattern on method: {0}!", 
-						parent));
+				_context.TraceWarning("Unknown query invocation pattern on method: {0}!", parent);
 			}
-
-			// Console.WriteLine(CecilFormatter.FormatMethodBody(parent));
 		}
 
 		private void ProcessPredicateCreationPattern(CilWorker worker, Instruction queryInvocation)

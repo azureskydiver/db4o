@@ -4,6 +4,8 @@ namespace Db4oAdmin
 {
 	public class ProgramOptions : Options
 	{
+		private bool _prettyVerbose;
+		
 		[Option("optimize predicate subclasses", "optimize-predicates")]
 		public bool OptimizePredicates;
 		
@@ -12,7 +14,25 @@ namespace Db4oAdmin
 
 		[Option("Case sensitive queries", "case-sensitive")]
 		public bool CaseSensitive;
-		
+
+		[Option("Verbose operation mode", 'v', "verbose")]
+		public bool Verbose;
+
+		[Option("Pretty verbose operation mode", "vv")]
+		public bool PrettyVerbose
+		{
+			get
+			{
+				return _prettyVerbose;
+			}
+			
+			set
+			{
+				_prettyVerbose = value;
+				Verbose = value;
+			}
+		}
+
 		public string Assembly
 		{
 			get
