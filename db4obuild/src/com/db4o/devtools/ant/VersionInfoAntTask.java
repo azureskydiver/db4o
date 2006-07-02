@@ -5,7 +5,7 @@ import java.io.*;
 import org.apache.tools.ant.*;
 
 public class VersionInfoAntTask extends Task {
-    
+	
     private int major;
 	private int minor;
     
@@ -93,9 +93,9 @@ public class VersionInfoAntTask extends Task {
 		        pr.println("[assembly: AssemblyTitle(\"db4o - database for objects\")]");
 		        pr.println("[assembly: AssemblyDescription(\"db4o " + version + " " +  distributionNames[distribution] + "\")]");
 		        pr.println("[assembly: AssemblyConfiguration(\"" + distributionNames[distribution] + "\")]");
-		        pr.println("[assembly: AssemblyCompany(\"db4objects Inc., San Mateo, CA, USA\")]");
-		        pr.println("[assembly: AssemblyProduct(\"db4o - database for objects\")]");
-		        pr.println("[assembly: AssemblyCopyright(\"db4o 2005\")]");
+		        pr.println("[assembly: AssemblyCompany(\""+ AssemblyInfo.COMPANY + "\")]");
+		        pr.println("[assembly: AssemblyProduct(\"" + AssemblyInfo.PRODUCT + "\")]");
+		        pr.println("[assembly: AssemblyCopyright(\"" + AssemblyInfo.COPYRIGHT + "\")]");
 		        pr.println("[assembly: AssemblyTrademark(\"\")]");
 		        pr.println("[assembly: AssemblyCulture(\"\")]	");
 		        pr.println("[assembly: AssemblyVersion(\"" + version +  "\")]");

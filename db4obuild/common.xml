@@ -31,6 +31,14 @@
 		</classpath>
 	</taskdef>
 	
+	<taskdef name="updateAssemblyInfo" classname="com.db4o.devtools.ant.UpdateAssemblyInfoTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
+	
 	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask" classpath="${dir.build.lib}/exttools.jar">
 		<classpath>
 			<pathelement location="${dir.build.lib}/exttools.jar" />
@@ -70,6 +78,18 @@
 			</java>
 		</sequential>
 	</macrodef>
+	
+	<macrodef name="updateAssemblyInfoFiles">
+		<attribute name="srcdir" />
+		<sequential>
+			<updateAssemblyInfo version="${db4o.version.full}">
+				<fileset dir="@{srcdir}">
+					<include name="**/AssemblyInfo.cs" />
+				</fileset>
+			</updateAssemblyInfo>
+		</sequential>
+	</macrodef>
+
 	
 	<target name="install-javatocsharp-plugin">
 			

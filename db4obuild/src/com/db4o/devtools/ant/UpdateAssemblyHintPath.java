@@ -1,17 +1,10 @@
 package com.db4o.devtools.ant;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
-public class UpdateAssemblyHintPath extends Task {
-
-	private List<FileSet> _projectFiles = new ArrayList<FileSet>();
+public class UpdateAssemblyHintPath extends AbstractMultiFileSetTask {
 
 	private String _to;
 
@@ -19,9 +12,7 @@ public class UpdateAssemblyHintPath extends Task {
 	}
 
 	public FileSet createProjectFiles() {
-		FileSet set = new FileSet();
-		_projectFiles.add(set);
-		return set;
+		return newFileSet();
 	}
 
 	public void setTo(String to) {
@@ -29,17 +20,8 @@ public class UpdateAssemblyHintPath extends Task {
 	}
 
 	@Override
-	public void execute() throws BuildException {
-		try {
-			for (FileSet fs : _projectFiles) {
-				DirectoryScanner scanner = fs.getDirectoryScanner(this.getProject());
-				for (String fname : scanner.getIncludedFiles()) {
-					updateProjectFile(new File(scanner.getBasedir(), fname));
-				}
-			}
-		} catch (Exception x) {
-			throw new BuildException(x, getLocation());
-		}
+	protected void workOn(File file) throws Exception {
+		updateProjectFile(file);
 	}
 
 	private void updateProjectFile(File file) throws Exception {
