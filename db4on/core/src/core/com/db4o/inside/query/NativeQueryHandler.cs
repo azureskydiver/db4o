@@ -182,9 +182,7 @@ namespace com.db4o.inside.query
             if (OptimizeNativeQueries()) 
             {
                 DiagnosticProcessor dp = ((YapStream)_container).i_handlers._diagnosticProcessor;
-                if(dp.Enabled()){
-                    dp.NativeQueryUnoptimized(predicate);
-                }
+                if (dp.Enabled()) dp.NativeQueryUnoptimized(predicate);
 
             }
 			q.Constrain(new com.db4o.inside.query.PredicateEvaluation(predicate));

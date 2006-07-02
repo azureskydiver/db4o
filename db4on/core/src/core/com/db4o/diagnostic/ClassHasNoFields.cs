@@ -1,0 +1,30 @@
+namespace com.db4o.diagnostic
+{
+	/// <summary>Diagnostic, if class has no fields.</summary>
+	/// <remarks>Diagnostic, if class has no fields.</remarks>
+	public class ClassHasNoFields : com.db4o.diagnostic.DiagnosticBase
+	{
+		private readonly string _className;
+
+		public ClassHasNoFields(string className)
+		{
+			_className = className;
+		}
+
+		public override object Reason()
+		{
+			return _className;
+		}
+
+		public override string Problem()
+		{
+			return "Class does not contain any persistent fields";
+		}
+
+		public override string Solution()
+		{
+			return "Every class in the hierarchy requires overhead for the maintenance of a class index."
+				 + " Consider removing this class from the hierarchy, if it is not needed.";
+		}
+	}
+}
