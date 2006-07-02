@@ -101,11 +101,12 @@ public class TestCatConsistency {
         }, new String[]{"Trulla"});
         
 
-        // will be run unoptimized (non-getter method call: startsWith)        
+        // will be run optimized        
         expect(new Predicate(){
             public boolean match(Cat cat){
                 return cat._firstName.startsWith("A");
             }
+            
         }, new String[]{"Achat", "Acrobat"});
         
     }
