@@ -32,6 +32,10 @@ namespace Db4oAdmin
 				{
 					pipeline.Add(new CFNQEnabler());
 				}
+				if (!options.Fake)
+				{
+					pipeline.Add(new SaveAssemblyInstrumentation());
+				}
 				pipeline.Run();
 			}
 			catch (Exception x)
