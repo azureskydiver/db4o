@@ -17,7 +17,9 @@ public class ConstValue implements ComparisonOperand {
 	}
 	
 	public String toString() {
-		return (_value==null ? "[null]" : _value.toString());
+		if (_value == null) return "null";
+		if (_value instanceof String) return "\"" + _value + "\"";
+		return _value.toString();
 	}
 	
 	public boolean equals(Object other) {
