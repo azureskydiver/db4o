@@ -384,12 +384,12 @@ namespace com.db4o.config
 		/// In order for the above to be 100% failsafe, the order of writes to the
 		/// storage medium has to be obeyed. On operating systems that use in-memory
 		/// file caching, the OS cache may revert the order of writes to optimize
-		/// file performance. db4o can enforce the correct order by flushing file
+		/// file performance.<br /><br />
+		/// db4o enforces the correct write order by flushing file
 		/// buffers after every single one of the above steps during transaction
-		/// commit. Flush calls have a strong impact on performance. This is why
-		/// the default setting for this configuration switch is false. On operating
-		/// systems that cache file access, this configuration has to be set to true
-		/// to ensure ACID transactions for hardware-, power- or operating system failures.
+		/// commit. Flush calls have a strong impact on performance. It is possible to
+		/// tune an application by turning flushing off, at the risc of less security
+		/// for hardware-, power- or operating system failures.
 		/// </remarks>
 		/// <param name="flag">true for flushing file buffers</param>
 		void FlushFileBuffers(bool flag);
