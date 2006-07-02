@@ -22,7 +22,6 @@ namespace Db4oAdmin
 		public void Run()
 		{
 			RunInstrumentations();
-			SaveAssembly();
 		}
 
 		private void RunInstrumentations()
@@ -33,11 +32,6 @@ namespace Db4oAdmin
 				instrumentation.Run(_context);
 				_context.TraceVerbose("Leaving '{0}' instrumentation", instrumentation);
 			}
-		}
-
-		private void SaveAssembly()
-		{
-			_context.SaveAssembly();
 		}
 	}
 }

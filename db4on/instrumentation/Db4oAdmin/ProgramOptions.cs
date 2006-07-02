@@ -6,10 +6,10 @@ namespace Db4oAdmin
 	{
 		private bool _prettyVerbose;
 		
-		[Option("optimize predicate subclasses", "optimize-predicates")]
+		[Option("Optimize predicate subclasses", "optimize-predicates")]
 		public bool OptimizePredicates;
 		
-		[Option("enable delegate style queries for CompactFramework 2", "cf2-delegates")]
+		[Option("Enable delegate style queries for CompactFramework 2", "cf2-delegates")]
 		public bool EnableCF2DelegateQueries;
 
 		[Option("Case sensitive queries", "case-sensitive")]
@@ -32,6 +32,9 @@ namespace Db4oAdmin
 				Verbose = value;
 			}
 		}
+
+		[Option("Fake operation mode, assembly won't be written", "fake")]
+		public bool Fake;
 
 		public string Assembly
 		{
