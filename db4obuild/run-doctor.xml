@@ -14,6 +14,7 @@
 	<property environment="env" />
 	<property file="machine.properties" />
 	<property file="ant.properties" />
+	<property name="file.keystore" value="${user.home}/.keystore" />
 	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
@@ -38,11 +39,11 @@
 		<jar destfile="${file.doctor.applets.jar}">
 			<fileset dir="${dir.dist.doctor}" includes="**/com/yetac/doctor/applet/*.class" />
 		</jar>
-		<signjar verbose="true" jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<signjar keystore="${file.keystore}" jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<jar destfile="${file.tutorial.jar}">
 			<fileset dir="${dir.dist.classes.tutorial}" includes="com/db4o/f1/**/*.class" />
 		</jar>
-		<signjar jar="${file.tutorial.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<signjar keystore="${file.keystore}" jar="${file.tutorial.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<doctor name="doctor" workspace="${dir.workspace}" pdfbasefont="${font.pdf.base}" />
 		<doctor name="dev" workspace="${dir.workspace}" outputfile="dev" pdfbasefont="${font.pdf.base}" />
 		<doctor 
@@ -72,7 +73,7 @@
 				<include name="${filename.java1.2.jar}" />
 			</fileset>
 		</copy>
-		<signjar jar="${dir.j.tutorial.out.java}/docs/${filename.java1.2.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<signjar keystore="${file.keystore}" jar="${dir.j.tutorial.out.java}/docs/${filename.java1.2.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<doctor 
 			name="f1" 
 			home="${dir.j.tutorial}" 
