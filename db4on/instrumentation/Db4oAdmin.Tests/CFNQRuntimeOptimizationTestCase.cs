@@ -4,7 +4,7 @@ namespace Db4oAdmin.Tests
 	using System;
 	using com.db4o.inside.query;
 
-	public class CFNQRuntimeOptimizationTestCase : AbstractInstrumentationTestCase
+	public class CFNQRuntimeOptimizationTestCase : AbstractCommandLineInstrumentationTestCase
 	{
 		protected override string ResourceName
 		{

@@ -46,6 +46,11 @@
 			<resource embed="true"				
 				file="${dir.n.instrumentation}/Db4oAdmin.Tests/Resources/PredicateSubject.cs"
 				name="Db4oAdmin.Tests.Resources.PredicateSubject.cs" />
+			
+			<resource embed="true"				
+				file="${dir.n.instrumentation}/Db4oAdmin.Tests/Resources/UnoptimizablePredicateSubject.cs"
+				name="Db4oAdmin.Tests.Resources.UnoptimizablePredicateSubject.cs" />
+
 
 		</csc>
 		

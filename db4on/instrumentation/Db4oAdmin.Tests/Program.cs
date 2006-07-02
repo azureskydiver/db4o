@@ -14,6 +14,7 @@ namespace Db4oAdmin.Tests
 					typeof(ILPatternTestCase),
 					typeof(CFNQRuntimeOptimizationTestCase),
 					typeof(PredicateBuildTimeOptimizationTestCase),
+					typeof(UnoptimizablePredicatesTestCase),
 				};
 
 			ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(tests);

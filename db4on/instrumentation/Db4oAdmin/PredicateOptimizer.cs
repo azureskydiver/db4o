@@ -24,8 +24,14 @@ namespace Db4oAdmin
 		private void InstrumentPredicateClass(TypeDefinition type)
 		{
 			MethodDefinition match = GetMatchMethod(type);
-			Expression e = QueryExpressionBuilder.FromMethodDefinition(match);
+			Expression e = GetExpression(match);
+			if (null == e) return;
 
+			OptimizePredicate(type, match, e);
+		}
+
+		private void OptimizePredicate(TypeDefinition type, MethodDefinition match, Expression e)
+		{
 			MethodDefinition optimizeQuery = CreateOptimizeQueryMethod();
 
 			TypeReference extent = match.Parameters[0].ParameterType;
@@ -37,6 +43,19 @@ namespace Db4oAdmin
 
 			type.Methods.Add(optimizeQuery);
 			type.Interfaces.Add(_context.Import(typeof(Db4oEnhancedFilter)));
+		}
+
+		private static Expression GetExpression(MethodDefinition match)
+		{
+			try
+			{
+				return QueryExpressionBuilder.FromMethodDefinition(match);
+			}
+			catch (UnsupportedPredicateException x)
+			{	
+				Console.Error.WriteLine("WARNING: Predicate '{0}' could not be optimized. {1}", match.DeclaringType, x.Message);
+			}
+			return null;
 		}
 
 		private static void EmitEpilogue(MethodDefinition method)
