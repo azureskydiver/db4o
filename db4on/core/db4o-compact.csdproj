@@ -2,7 +2,7 @@
 <VisualStudioProject>
     <ECSHARP ProductVersion="7.10.3077" ProjectGuid="{B653ADB1-F959-49E0-81CF-AD37D69CB011}" ProjectType="Local" SchemaVersion="1.0">
         <Build>
-            <Settings ApplicationIcon="" AssemblyKeyContainerName="" AssemblyName="Db4o" AssemblyOriginatorKeyFile="" DelaySign="false" OutputFileFolder="\Program Files\db4o-4.0-compact1" OutputType="Library" RootNamespace="com.db4o" StartupObject="">
+            <Settings ApplicationIcon="" AssemblyKeyContainerName="" AssemblyName="db4o" AssemblyOriginatorKeyFile="" DelaySign="false" OutputFileFolder="\Program Files\db4o-4.0-compact1" OutputType="Library" RootNamespace="com.db4o" StartupObject="">
                 <Platform Name="Pocket PC"/>
                 <Config AllowUnsafeBlocks="false" BaseAddress="0" CheckForOverflowUnderflow="false" ConfigurationOverrideFile="" DebugSymbols="true" DefineConstants="DEBUG;TRACE;CF_1_0" DocumentationFile="" FileAlignment="4096" IncrementalBuild="false" Name="Debug|Pocket PC" Optimize="false" OutputPath="bin\Debug\" RegisterForComInterop="false" RemoveIntegerChecks="false" TreatWarningsAsErrors="false" WarningLevel="0"/>
                 <Config AllowUnsafeBlocks="false" BaseAddress="0" CheckForOverflowUnderflow="false" ConfigurationOverrideFile="" DebugSymbols="false" DefineConstants="TRACE;CF_1_0" DocumentationFile="" FileAlignment="4096" IncrementalBuild="false" Name="Release|Pocket PC" Optimize="true" OutputPath="bin\Release\" RegisterForComInterop="false" RemoveIntegerChecks="false" TreatWarningsAsErrors="false" WarningLevel="4"/>
