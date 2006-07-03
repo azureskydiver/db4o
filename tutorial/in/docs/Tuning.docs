@@ -297,7 +297,7 @@ following order.
 
 The Configuration.FlushFileBuffers(true) setting ensures that ._
 after each stage of commit process all the buffered data ._
-is written to database file. The write process is comparatively slow ._
+is written to the database file. The write process is comparatively slow ._
 and can have a strong impact on performance. 
 
 Setting FlushFileBuffers(false) reduces the time spent on transaction ._
