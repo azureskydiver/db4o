@@ -1,5 +1,6 @@
 ﻿namespace com.db4o.test
 {
+#if !CF_1_0 && !CF_2_0
 	using System;
 	using com.db4o;
 	using com.db4o.config;
@@ -142,4 +143,5 @@
 			return bytes;
 		}
 	}
+#endif
 }

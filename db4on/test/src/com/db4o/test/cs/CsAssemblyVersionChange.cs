@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace com.db4o.test.cs
 {
+#if !CF_1_0 && !CF_2_0
 	/// <summary>
 	/// This test emits an assembly with a version in one app domain
 	/// and then unloads it.
@@ -221,4 +222,5 @@ public class Tester
 			}
 		}
 	}
+#endif
 }

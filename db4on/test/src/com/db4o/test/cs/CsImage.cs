@@ -6,6 +6,7 @@ using com.db4o.config;
 
 namespace com.db4o.test.cs
 {
+#if !CF_1_0 && !CF_2_0
 	/// <summary>
 	/// Summary description for CsImage.
 	/// </summary>
@@ -33,4 +34,5 @@ namespace com.db4o.test.cs
         }
 
 	}
+#endif
 }

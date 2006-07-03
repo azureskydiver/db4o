@@ -1301,6 +1301,34 @@
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
 		
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact-2005/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test-2005.csproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-net2-test.csproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact*/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-net-test.csproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact*/**" />
+			</sources>
+		</updatecsharpproject>
+		
 	</target>
 	
 	<target name="doctor" depends="init, compilecorejava, compilejtutorial" description="Run all doctor tasks">

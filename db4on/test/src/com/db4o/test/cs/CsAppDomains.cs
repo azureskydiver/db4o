@@ -7,6 +7,7 @@ using com.db4o.query;
 
 namespace com.db4o.test.cs
 {
+#if !CF_1_0 && !CF_2_0
 	public class ADTask : MarshalByRefObject
 	{
 		private String _name;
@@ -110,4 +111,5 @@ namespace com.db4o.test.cs
 			return Path.GetFullPath(Tester.IsClientServer() ? Tester.FILE_SERVER : Tester.FILE_SOLO);
 		}
 	}
+#endif
 }
