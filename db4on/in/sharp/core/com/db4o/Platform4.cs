@@ -158,7 +158,12 @@ namespace com.db4o
 
 	    internal static Config4Class ExtendConfiguration(ReflectClass clazz, Configuration config, Config4Class classConfig)
 		{
-			ConfigurationIntrospector a = new ConfigurationIntrospector(GetNetType(clazz), classConfig, config);
+            Type t = GetNetType(clazz);
+            if (t == null)
+            {
+                return classConfig;
+            }
+			ConfigurationIntrospector a = new ConfigurationIntrospector(t, classConfig, config);
 	    	a.Apply();
 			return a.ClassConfiguration;
 		}
