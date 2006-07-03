@@ -278,8 +278,13 @@ Objectcontainers.
 
 .1 FlushFileBuffers(false) ..
 .c Db4o.Configure().FlushFileBuffers(false);
+.i Advantage ..
+Setting FlushFileBuffers to false can considerably improve the ._
+performance saving time on physical disk access.
+
+.i Effect ..
 FlushFileBuffers setting is provided to ensure correct transaction flow ._
-in cases of hardware-, power- or operating system failures.
+in cases of hardware, power or operating system failures.
 ACID transaction is ensured when disc writes are fulfilled in the ._
 following order.
 
@@ -291,27 +296,33 @@ following order.
 .g trnflow.jpg ..
 
 The Configuration.FlushFileBuffers(true) setting ensures that ._
-after each stage of transaction commit process all the buffered data ._
+after each stage of commit process all the buffered data ._
 is written to database file. The write process is comparatively slow ._
 and can have a strong impact on performance. 
 
-.i Advantage ..
-Setting FlushFileBuffers to false can considerably improve the ._
-performance saving time on physical disk access.
-.c Db4o.Configure().FlushFileBuffers(false);
-This is the default setting in configuration.
-
-.i Effect ..
-Setting FlushFileBuffers(false) reduces time spent on transaction ._
+Setting FlushFileBuffers(false) reduces the time spent on transaction ._
 commit. From the other side this setting can be potentially dangerous ._
-on systems using in-memory file caching. Cached file changes can be ._
-postponed and reorganized by OS for increased performance. That means ._
-that system crash during transaction may leave database in ._
-undetermined state.
+on systems using in-memory file caching. The buffer cache is usually ._
+used to improve writing performance. Instead of carrying out all writes ._
+immediately, the kernel stores data temporally in the buffer cache, ._
+waiting to see if it is possible to group several writes together. ._
+Cached file changes can also be reversed. For example, if the same place ._
+in a file was changed several times it is enough to write only the final ._
+change. 
+
+In case of transaction commit such cache management means that transaction ._
+data may be lost. Lets consider the case when crash occurs on stage 2-4 and ._
+list of "pointers to be modified" is still in cache (completely or partly). ._
+After the database file is reopened the commit will be restarted using the list ._
+of pointers that is supposed to be written to disc. But in fact we do not know, ._
+whether the list was written to disc completely or part of it was still in ._
+cache and lost during restart, - so the database can be corrupted. 
+
 
 .i Alternate Strategies ..
 On operating systems that cache file access, this configuration has to ._
 be set to true to ensure each step of transaction being written in ._
 order.
+
 .c Db4o.Configure().FlushFileBsuffers(true);
 Otherwise file caching can be switched off in OS settings.
