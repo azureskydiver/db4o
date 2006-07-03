@@ -36,15 +36,16 @@ namespace com.db4o.test {
          Tester.EnsureOccurrences(typeof(ArrayElem), 0);
       }
       
-      public class ArrayElem {
-         internal String name;
-         
-         public ArrayElem() : base() {
-         }
-         
-         public ArrayElem(String name) : base() {
-            this.name = name;
-         }
-      }
-   }
+    }
+
+    public class ArrayElem {
+        internal String name;
+        
+        public ArrayElem() : base() {
+        }
+        
+        public ArrayElem(String name) : base() {
+        this.name = name;
+        }
+    }
 }
