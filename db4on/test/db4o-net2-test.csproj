@@ -167,6 +167,7 @@
     <Compile Include="src\com\db4o\test\HoldsAnArrayList.cs" />
     <Compile Include="src\com\db4o\test\IndexedByIdentity.cs" />
     <Compile Include="src\com\db4o\test\inside\query\QueryExpressionBuilderTestCase.cs" />
+    <Compile Include="src\com\db4o\test\IOServices.cs" />
     <Compile Include="src\com\db4o\test\Isolation.cs" />
     <Compile Include="src\com\db4o\test\IsStored.cs" />
     <Compile Include="src\com\db4o\test\j4otest\TypeNameTest.cs" />
@@ -385,6 +386,7 @@
     <Compile Include="src\com\db4o\test\acid\CrashSimulatingIoAdapter.cs" />
     <Compile Include="src\com\db4o\test\acid\CrashSimulatingTest.cs" />
     <Compile Include="src\com\db4o\test\acid\CrashSimulatingWrite.cs" />
+    <Compile Include="src\com\db4o\test\WorkspaceServices.cs" />
     <Compile Include="src\com\db4o\test\XTEAEncryption.cs" />
   </ItemGroup>
   <ItemGroup>

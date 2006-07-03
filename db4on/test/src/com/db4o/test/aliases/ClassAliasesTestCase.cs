@@ -72,7 +72,7 @@ namespace com.db4o.test.aliases
 
 		public void TestAccessingJavaFromDotnet()
 		{
-			if (null == db4obuild())
+			if (null == WorkspaceServices.WorkspaceRoot)
 			{
 				Console.WriteLine("'db4obuild' directory not found, skipping java compatibility test.");
 				return;
@@ -96,19 +96,14 @@ namespace com.db4o.test.aliases
 
 		private String GetJavaDataFile()
 		{
-			return BuildTempPath("java.yap");
-		}
-
-		private String BuildTempPath(String fname)
-		{
-			return Path.Combine(Path.GetTempPath(), fname);
+			return IOServices.BuildTempPath("java.yap");
 		}
 
 		private void GenerateJavaData()
 		{
 			File.Delete(GetJavaDataFile());
 			GenerateClassFile();
-			string stdout = Exec("java", "-cp ." + Path.PathSeparator + Db4ojarPath(), "com.db4o.test.aliases.Program", Quote(GetJavaDataFile()));
+			string stdout = IOServices.Exec("java", "-cp ." + Path.PathSeparator + WorkspaceServices.Db4ojarPath(), "com.db4o.test.aliases.Program", Quote(GetJavaDataFile()));
 			Console.WriteLine(stdout);
 		}
 
@@ -137,100 +132,15 @@ public class Program {
 	}
 }";
 
-			string srcFile = BuildTempPath("com/db4o/test/aliases/Program.java");
-			WriteFile(srcFile, code);
-			string stdout = Exec(JavacPath(), "-classpath " + Db4ojarPath(), Quote(srcFile));
+			string srcFile = IOServices.BuildTempPath("com/db4o/test/aliases/Program.java");
+			IOServices.WriteFile(srcFile, code);
+			string stdout = IOServices.Exec(WorkspaceServices.JavacPath(), "-classpath " + WorkspaceServices.Db4ojarPath(), Quote(srcFile));
 			Console.WriteLine(stdout);
 		}
 
 		static string Quote(string s)
 		{
 			return "\"" + s + "\"";
-		}
-
-		private string JavacPath()
-		{
-			string path = ReadProperty(MachinePropertiesPath(), "file.compiler.jdk1.3");
-			Tester.Ensure(File.Exists(path));
-			return path;
-		}
-
-		private string ReadProperty(string fname, string property)
-		{
-			using (StreamReader reader = File.OpenText(fname))
-			{
-				string line = null;
-				while (null != (line = reader.ReadLine()))
-				{
-					if (line.StartsWith(property))
-					{
-						return line.Substring(property.Length + 1);
-					}
-				}
-			}
-			throw new ArgumentException("property '" + property + "' not found in '" + fname + "'");
-		}
-
-		private string MachinePropertiesPath()
-		{
-			string path = WorkspacePath("db4obuild/machine.properties");
-			Tester.Ensure(path, File.Exists(path));
-			return path;
-		}
-
-		private String Exec(String program, params String[] arguments)
-		{
-			ProcessStartInfo psi = new ProcessStartInfo(program);
-			psi.UseShellExecute = false;
-			psi.Arguments = string.Join(" ", arguments);
-			psi.RedirectStandardOutput = true;
-			psi.RedirectStandardError = true;
-			psi.WorkingDirectory = Path.GetTempPath();
-			psi.CreateNoWindow = true;
-
-			Process p = Process.Start(psi);
-			string stdout = p.StandardOutput.ReadToEnd();
-			string stderr = p.StandardError.ReadToEnd();
-			p.WaitForExit();
-			return stdout + stderr;
-		}
-
-		private String Db4ojarPath()
-		{
-			string db4oVersion = string.Format("{0}.{1}", Db4oVersion.MAJOR, Db4oVersion.MINOR);
-			return WorkspacePath("db4obuild/dist/java/lib/db4o-" + db4oVersion + "-java1.2.jar");
-		}
-
-		private string WorkspacePath(string fname)
-		{
-			return Path.Combine(db4obuild(), fname);
-		}
-
-		private string db4obuild()
-		{
-			return FindParentDirectory("db4obuild");
-		}
-
-		private string FindParentDirectory(string path)
-		{
-			string parent = Path.GetFullPath("..");
-			while (true)
-			{
-				if (Directory.Exists(Path.Combine(parent, path))) return parent;
-				string oldParent = parent;
-				parent = Path.GetDirectoryName(parent);
-				if (parent == oldParent || parent == null) break;
-			}
-			return null;
-		}
-
-		private void WriteFile(String fname, String contents)
-		{
-			Directory.CreateDirectory(Path.GetDirectoryName(fname));
-			using (StreamWriter writer = new StreamWriter(fname))
-			{
-				writer.Write(contents);
-			}
 		}
 
 		private void EnsureContains(ObjectSet actual, Object expected)
