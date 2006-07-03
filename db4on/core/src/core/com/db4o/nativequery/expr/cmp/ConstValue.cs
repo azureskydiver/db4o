@@ -21,7 +21,15 @@ namespace com.db4o.nativequery.expr.cmp
 
 		public override string ToString()
 		{
-			return (_value == null ? "[null]" : _value.ToString());
+			if (_value == null)
+			{
+				return "null";
+			}
+			if (_value is string)
+			{
+				return "\"" + _value + "\"";
+			}
+			return _value.ToString();
 		}
 
 		public override bool Equals(object other)
