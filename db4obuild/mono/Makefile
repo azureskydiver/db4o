@@ -22,8 +22,8 @@ endif
 
 MAIN_TEST=com.db4o.test.AllTests
 
-DLL_CORE_DIST=$(DIR_HOME)/dll/Db4o.dll
-DLL_CORE=$(DIR_BIN)/Db4o.dll
+DLL_CORE_DIST=$(DIR_HOME)/dll/db4o.dll
+DLL_CORE=$(DIR_BIN)/db4o.dll
 DLL_TOOLS=$(DIR_BIN)/Db4oTools.dll
 DEBUGGER_FILES=$(DIR_BIN)/*.mdb
 EXE_TEST_FILE=Db4oMonoTest.exe
