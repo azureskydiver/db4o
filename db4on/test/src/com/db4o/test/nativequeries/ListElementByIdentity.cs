@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using com.db4o;
-using com.db4o.ext;
-
-namespace com.db4o.test.nativequeries
+﻿namespace com.db4o.test.nativequeries
 {
 #if NET_2_0
-
+	using System;
+	using System.Collections.Generic;
+	using com.db4o;
+	using com.db4o.ext;
     public class ListElementByIdentity
     {
 

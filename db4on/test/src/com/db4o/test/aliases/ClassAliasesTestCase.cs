@@ -38,7 +38,17 @@ namespace com.db4o.test.aliases
 		{
 			Person2 other = obj as Person2;
 			if (null == other) return false;
-			return object.Equals(_name, other._name);
+			return CFHelper.AreEqual(_name, other._name);
+		}
+	}
+	
+	class CFHelper
+	{
+		public static bool AreEqual(object l, object r)
+		{
+			if (l == r) return true;
+			if (l == null || r == null) return false;
+			return l.Equals(r);
 		}
 	}
 
@@ -151,7 +161,7 @@ public class Program {
 			while (actual.HasNext())
 			{
 				Object next = actual.Next();
-				if (object.Equals(next, expected)) return;
+				if (CFHelper.AreEqual(next, expected)) return;
 			}
 			Tester.Ensure(false);
 		}
