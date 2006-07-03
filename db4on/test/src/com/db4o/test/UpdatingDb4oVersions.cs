@@ -7,13 +7,11 @@ using com.db4o.query;
 
 namespace com.db4o.test
 {
-
     public class UpdatingDb4oVersions
 	{
+    	static string PATH = FindDb4oVersionsPath();
 
-        static string PATH = "../../../test/db4oVersions/";
-
-        static string[] VERSIONS = {
+    	static string[] VERSIONS = {
             "db4o_3.0.3", 
             "db4o_4.0.005",
             "db4o_4.0.009",
@@ -35,8 +33,8 @@ namespace com.db4o.test
             if(Tester.IsClientServer()){
                 return;
             }
-            string file = PATH + FileName();
-            Directory.CreateDirectory(PATH);
+            string file = Db4oVersionPath(FileName());
+			Directory.CreateDirectory(PATH);
             File.Delete(file);
             ExtObjectContainer objectContainer = Db4o.OpenFile(file).Ext();
             UpdatingDb4oVersions udv = new UpdatingDb4oVersions();
@@ -65,9 +63,9 @@ namespace com.db4o.test
                 return;
             }
             for(int i = 0; i < VERSIONS.Length; i ++){
-                string oldFile = PATH + VERSIONS[i];
+            	string oldFile = Db4oVersionPath(VERSIONS[i]);
                 if(File.Exists(oldFile)){
-                    String testFile = PATH + VERSIONS[i] + ".yap";
+                    String testFile = Db4oVersionPath(VERSIONS[i] + ".yap");
                     File.Delete(testFile);
                     File.Copy(oldFile, testFile, true);
                     ExtObjectContainer objectContainer = Db4o.OpenFile(testFile).Ext();
@@ -111,8 +109,26 @@ namespace com.db4o.test
             }
         }
 
-        private static string FileName(){
+    	private static string Db4oVersionPath(string fname)
+    	{
+    		return Path.Combine(PATH, fname);
+    	}
+
+    	private static string FileName()
+    	{
             return Db4o.Version().Replace(" ", "_") + ".yap";
         }
+
+		private static string FindDb4oVersionsPath()
+		{
+			string path = WorkspaceServices.WorkspacePath("db4on/test/db4oVersions/");
+			if (null == path)
+			{
+				// assuming test is running inside Visual Studio
+				// from an unpackaged distro
+				return "../../../test/db4oVersions";
+			}
+			return path;
+		}
 	}
 }

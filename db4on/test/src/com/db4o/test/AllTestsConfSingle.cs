@@ -28,6 +28,7 @@ namespace com.db4o.test
 
 				tests.Add(typeof(inside.query.QueryExpressionBuilderTestCase));
 				tests.Add(typeof(com.db4o.test.nativequeries.Cat));
+				tests.Add(typeof(UpdatingDb4oVersions));
 //                
 //#if NET_2_0 || CF_2_0
 //                tests.Add(typeof(net2.Net2GenericList));
