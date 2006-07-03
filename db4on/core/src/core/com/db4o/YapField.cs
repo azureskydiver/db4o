@@ -159,15 +159,16 @@ namespace com.db4o
 					}
 				}
 				LoadJavaField();
-				if (i_handler != null)
+				if (i_handler == null || i_javaField == null)
+				{
+					i_state = UNAVAILABLE;
+					i_javaField = null;
+				}
+				else
 				{
 					i_handler = WrapHandlerToArrays(GetStream(), i_handler);
 					i_state = AVAILABLE;
 					CheckDb4oType();
-				}
-				else
-				{
-					i_state = UNAVAILABLE;
 				}
 			}
 			return i_state == AVAILABLE;
