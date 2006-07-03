@@ -159,12 +159,14 @@ public class YapField implements StoredField {
             }
 
             loadJavaField();
-
-            if (i_handler != null) {
+            
+            if(i_handler == null || i_javaField == null){
+                i_state = UNAVAILABLE;
+                i_javaField = null;
+            }else{
 
                 // TODO: This part is not quite correct.
-                // We are using the old array information read from file to
-                // wrap.
+                // We are using the old array information read from file to wrap.
 
                 // If a schema evolution changes an array to a different variable,
                 // we are in trouble here.
@@ -173,8 +175,6 @@ public class YapField implements StoredField {
 
                 i_state = AVAILABLE;
                 checkDb4oType();
-            } else {
-                i_state = UNAVAILABLE;
             }
         }
         return i_state == AVAILABLE;
