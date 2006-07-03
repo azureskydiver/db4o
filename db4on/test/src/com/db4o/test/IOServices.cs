@@ -8,6 +8,7 @@ namespace com.db4o.test
 	{
 		public static string FindParentDirectory(string path)
 		{
+#if !CF_1_0 && !CF_2_0
 			string parent = Path.GetFullPath("..");
 			while (true)
 			{
@@ -16,6 +17,7 @@ namespace com.db4o.test
 				parent = Path.GetDirectoryName(parent);
 				if (parent == oldParent || parent == null) break;
 			}
+#endif
 			return null;
 		}
 
