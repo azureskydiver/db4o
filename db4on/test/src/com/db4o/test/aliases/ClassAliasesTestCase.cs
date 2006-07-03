@@ -70,6 +70,7 @@ namespace com.db4o.test.aliases
 			EnsureContains(os, new Person2("John Cleese"));
 		}
 
+#if !CF_1_0 && !CF_2_0
 		public void TestAccessingJavaFromDotnet()
 		{
 			if (null == WorkspaceServices.WorkspaceRoot)
@@ -142,6 +143,7 @@ public class Program {
 		{
 			return "\"" + s + "\"";
 		}
+#endif
 
 		private void EnsureContains(ObjectSet actual, Object expected)
 		{

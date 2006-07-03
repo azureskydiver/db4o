@@ -27,7 +27,8 @@ namespace com.db4o.test
 				writer.Write(contents);
 			}
 		}
-
+		
+#if !CF_1_0 && !CF_2_0
 		public static String Exec(String program, params String[] arguments)
 		{
 			ProcessStartInfo psi = new ProcessStartInfo(program);
@@ -44,6 +45,7 @@ namespace com.db4o.test
 			p.WaitForExit();
 			return stdout + stderr;
 		}
+#endif
 
 		public static String BuildTempPath(String fname)
 		{

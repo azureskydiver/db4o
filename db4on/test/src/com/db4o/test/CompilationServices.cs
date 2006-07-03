@@ -1,10 +1,11 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.IO;
-using System.Text;
-
-namespace com.db4o.test
+﻿namespace com.db4o.test
 {
+#if !CF_1_0 && !CF_2_0
+	using System;
+	using System.CodeDom.Compiler;
+	using System.IO;
+	using System.Text;
+
 	/// <summary>
 	/// Compilation helper.
 	/// </summary>
@@ -106,4 +107,5 @@ namespace com.db4o.test
 		{
 		}
 	}
+#endif
 }

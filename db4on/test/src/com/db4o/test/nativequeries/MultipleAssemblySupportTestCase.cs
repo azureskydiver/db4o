@@ -8,6 +8,7 @@ using com.db4o.ext;
 
 namespace com.db4o.test.nativequeries
 {
+#if !CF_1_0 && !CF_2_0
 	public class Author
 	{
 		private int _id;
@@ -127,4 +128,5 @@ public class InnerAuthorNamePredicate : Predicate
 			Tester.EnsureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
 		}
 	}
+#endif
 }
