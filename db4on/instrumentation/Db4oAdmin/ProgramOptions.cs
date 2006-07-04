@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Mono.GetOptions;
 
 namespace Db4oAdmin
@@ -36,6 +37,15 @@ namespace Db4oAdmin
 		[Option("Fake operation mode, assembly won't be written", "fake")]
 		public bool Fake;
 
+		public List<string> CustomInstrumentations = new List<string>();
+		
+		[Option("Custom instrumentation type", "instrumentation", MaxOccurs=-1)]
+		public WhatToDoNext CustomInstrumentation(string instrumentation)
+		{	
+			CustomInstrumentations.Add(instrumentation);
+			return WhatToDoNext.GoAhead;
+		}
+
 		public string Assembly
 		{
 			get
@@ -51,17 +61,19 @@ namespace Db4oAdmin
 			{
 				return Assembly != null
 				       && (OptimizePredicates
-				           || EnableCF2DelegateQueries);
+				           || EnableCF2DelegateQueries
+				           || CustomInstrumentations.Count > 0);
 			}
 		}
 		
-		public ProgramOptions(string[] args)
+		public ProgramOptions(string[] args) : this()
 		{
 			ProcessArgs(args);
 		}
 		
 		public ProgramOptions()
 		{	
+			this.DontSplitOnCommas = true;
 		}
 	}
 }

@@ -179,10 +179,22 @@ namespace Mono.Cecil {
 		
 		public bool IsInternalCall {
 			get { return MethodImplAttributes.InternalCall == (m_implAttrs & MethodImplAttributes.InternalCall); }
+			set {
+				if (value)
+					m_implAttrs |= MethodImplAttributes.InternalCall;
+				else
+					m_implAttrs &= ~MethodImplAttributes.InternalCall;
+			}
 		}
 
 		public bool IsRuntime {
 			get { return MethodImplAttributes.Runtime == (m_implAttrs & MethodImplAttributes.Runtime); }
+			set {
+				if (value)
+					m_implAttrs |= MethodImplAttributes.Runtime;
+				else
+					m_implAttrs &= ~MethodImplAttributes.Runtime;
+			}
 		}
 
 		public bool IsSpecialName {
@@ -223,6 +235,17 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public bool HasBody {
+			get {
+				return (m_attributes & MethodAttributes.Abstract) == 0 &&
+					(m_attributes & MethodAttributes.PInvokeImpl) == 0 &&
+					(m_implAttrs & MethodImplAttributes.InternalCall) == 0 &&
+					(m_implAttrs & MethodImplAttributes.Native) == 0 &&
+					(m_implAttrs & MethodImplAttributes.Unmanaged) == 0 &&
+					(m_implAttrs & MethodImplAttributes.Runtime) == 0;
+			}
+		}
+
 		public MethodDefinition (string name, RVA rva,
 			MethodAttributes attrs, MethodImplAttributes implAttrs,
 			bool hasThis, bool explicitThis, MethodCallingConvention callConv) :
@@ -253,9 +276,9 @@ namespace Mono.Cecil {
 
 		internal void LoadBody ()
 		{
-			if (m_body == null) {
+			if (m_body == null && this.HasBody) {
 				m_body = new MethodBody (this);
-				if (m_module != null && m_rva != RVA.Zero && (m_attributes & MethodAttributes.PInvokeImpl) == 0)
+				if (m_module != null && m_rva != RVA.Zero)
 					m_module.Controller.Reader.Code.VisitMethodBody (m_body);
 			}
 		}

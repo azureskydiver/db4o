@@ -51,6 +51,20 @@ namespace Db4oAdmin
 
 		protected virtual void ProcessType(TypeDefinition type)
 		{
+			ProcessMethods(type.Methods);
+			ProcessMethods(type.Constructors);
+		}
+		
+		protected virtual void ProcessMethod(MethodDefinition method)
+		{	
+		}
+
+		private void ProcessMethods(System.Collections.IEnumerable methods)
+		{
+			foreach (MethodDefinition methodef in methods)
+			{
+				ProcessMethod(methodef);
+			}
 		}
 		
 		protected void TraceWarning(string format, params object[] args)
@@ -66,6 +80,16 @@ namespace Db4oAdmin
 		protected void TraceInfo(string format, params object[] args)
 		{
 			_context.TraceInfo(format, args);
+		}
+
+		public TypeReference Import(System.Type type)
+		{
+			return _context.Import(type);
+		}
+
+		public MethodReference Import(System.Reflection.MethodBase method)
+		{
+			return _context.Import(method);
 		}
 	}
 }

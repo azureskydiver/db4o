@@ -52,8 +52,9 @@ namespace Mono.Cecil {
 		bool IsStatic { get; set; }
 		bool IsVirtual { get; set; }
 		bool IsConstructor { get; }
-		bool IsInternalCall { get; }
-		bool IsRuntime { get; }
+		bool HasBody { get; }
+		bool IsRuntime { get; set; }
+		bool IsInternalCall { get; set; }
 
 		OverrideCollection Overrides { get; }
 		MethodBody Body { get; }

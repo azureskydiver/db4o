@@ -113,7 +113,9 @@ namespace Db4oAdmin.Tests
 			InstrumentAssembly(assemblyPath);
 			
 			Type type = GetTestCaseType(assemblyPath);
-			TestSuite suite = new InstrumentationTestSuiteBuilder(this, type).Build();
+			TestSuite suite = type.IsSubclassOf(typeof(InstrumentedTestCase))
+			                  	? new InstrumentationTestSuiteBuilder(this, type).Build()
+			                  	: new ReflectionTestSuiteBuilder(type).Build();
 			return new TestSuite(GetType().FullName, new Test[] { suite, new VerifyAssemblyTest(assemblyPath)});
 		}
 		
@@ -121,7 +123,10 @@ namespace Db4oAdmin.Tests
 
 		protected abstract void InstrumentAssembly(string location);
 
-		protected abstract void OnQueryExecution(object sender, QueryExecutionEventArgs args);
+		protected virtual void OnQueryExecution(object sender, QueryExecutionEventArgs args)
+		{
+			throw new NotImplementedException();
+		}
 
 		protected virtual void OnQueryOptimizationFailure(object sender, com.db4o.inside.query.QueryOptimizationFailureEventArgs args)
 		{

@@ -1,3 +1,45 @@
+2006-07-03	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+	  	CompactFramework compatibility.
+		
+2006-07-02	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+	  	Proper FileNotFoundException construction.
+		
+	* Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/IMethod.cs:
+		Helper properties IsInternalCall and IsRuntime.
+		
+2006-06-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CilWorker.cs:
+		Fix ldc.i4.s emitting.
+
+2006-06-13  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix for compiling on CF 1.
+	* Mono.Cecil/StructureReader.cs:
+		Fix for a "bug" when csc 7.1 emits an assembly
+		with an assembly row, but no blob heap.
+		Plus style fix.
+
+2006-06-08  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Add a public HasBody property.
+
+2006-06-07  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Read and write method bodies only when allowed.
+
 2006-05-29  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IMethodDefinition.cs
