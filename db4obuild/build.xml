@@ -965,7 +965,7 @@
 			</fileset>
 		</copy>
 		
-		<zip destfile="${file.dist.net}">
+		<zip destfile="${dir.dist}/${db4o.file}${installer.package.suffix}.zip">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
 		</zip>
 		
