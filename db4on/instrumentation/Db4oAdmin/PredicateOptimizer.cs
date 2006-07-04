@@ -80,9 +80,10 @@ namespace Db4oAdmin
 			{
 				return QueryExpressionBuilder.FromMethodDefinition(match);
 			}
-			catch (UnsupportedPredicateException x)
+			catch (Exception x)
 			{	
 				TraceWarning("WARNING: Predicate '{0}' could not be optimized. {1}", match.DeclaringType, x.Message);
+                TraceVerbose("{0}", x);
 			}
 			return null;
 		}
