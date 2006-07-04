@@ -9,21 +9,7 @@ namespace Db4oAdmin
 	{
 		private QueryInvocationProcessor _processor;
 
-		override protected void ProcessType(TypeDefinition type)
-		{
-			InstrumentMethods(type.Methods);
-			InstrumentMethods(type.Constructors);
-		}
-
-		private void InstrumentMethods(IEnumerable methods)
-		{
-			foreach (MethodDefinition methodef in methods)
-			{
-				InstrumentMethod(methodef);
-			}
-		}
-
-		private void InstrumentMethod(MethodDefinition method)
+		override protected void ProcessMethod(MethodDefinition method)
 		{
 			if (null == method.Body) return;
 

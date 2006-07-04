@@ -40,6 +40,7 @@
     <Compile Include="AbstractCommandLineInstrumentationTestCase.cs" />
     <Compile Include="AbstractInstrumentationTestCase.cs" />
     <Compile Include="CompilationServices.cs" />
+    <Compile Include="CustomInstrumentationTestCase.cs" />
     <Compile Include="ILPatternTestCase.cs" />
     <Compile Include="PredicateBuildTimeOptimizationTestCase.cs" />
     <Compile Include="Program.cs" />
@@ -48,6 +49,7 @@
     <EmbeddedResource Include="Resources\CFNQSubject.cs" />
     <EmbeddedResource Include="Resources\PredicateSubject.cs" />
     <EmbeddedResource Include="Resources\UnoptimizablePredicateSubject.cs" />
+    <EmbeddedResource Include="Resources\CustomInstrumentationSubject.cs" />
     <Compile Include="ShellUtilities.cs" />
     <Compile Include="UnoptimizablePredicatesTestCase.cs" />
     <Compile Include="VerifyAssemblyTest.cs" />

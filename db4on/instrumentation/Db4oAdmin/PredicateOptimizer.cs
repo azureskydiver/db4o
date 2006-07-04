@@ -34,7 +34,6 @@ namespace Db4oAdmin
 			{
 				InstrumentPredicateClass(type);
 			}
-			base.ProcessType(type);
 		}
 
 		private void InstrumentPredicateClass(TypeDefinition type)
@@ -62,7 +61,7 @@ namespace Db4oAdmin
 			EmitEpilogue(optimizeQuery);
 
 			type.Methods.Add(optimizeQuery);
-			type.Interfaces.Add(_context.Import(typeof(Db4oEnhancedFilter)));
+			type.Interfaces.Add(Import(typeof(Db4oEnhancedFilter)));
 
 			DumpMethodBody(optimizeQuery);
 		}
@@ -100,8 +99,8 @@ namespace Db4oAdmin
 			// query.Constrain(extent);
 			worker.Emit(OpCodes.Ldarg_1);
 			worker.Emit(OpCodes.Ldtoken, extent);
-			worker.Emit(OpCodes.Call, _context.Import(typeof(Type).GetMethod("GetTypeFromHandle")));
-			worker.Emit(OpCodes.Callvirt, _context.Import(typeof(Query).GetMethod("Constrain")));
+			worker.Emit(OpCodes.Call, Import(typeof(Type).GetMethod("GetTypeFromHandle")));
+			worker.Emit(OpCodes.Callvirt, Import(typeof(Query).GetMethod("Constrain")));
 			worker.Emit(OpCodes.Pop);
 		}
 
@@ -112,8 +111,8 @@ namespace Db4oAdmin
 			// Db4oAdmin running under .net 2.0
 			MethodDefinition method = new MethodDefinition("OptimizeQuery",
 			                                               MethodAttributes.Virtual|MethodAttributes.Public,
-														   _context.Import(typeof(void)));
-			method.Parameters.Add(new ParameterDefinition(_context.Import(typeof(Query))));
+														   Import(typeof(void)));
+			method.Parameters.Add(new ParameterDefinition(Import(typeof(Query))));
 			
 			return method;
 		}
