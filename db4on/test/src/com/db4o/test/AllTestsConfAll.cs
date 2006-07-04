@@ -178,7 +178,9 @@ namespace com.db4o.test
 				tests.Add(typeof(TypedArrayInObject));
 				tests.Add(typeof(TypedDerivedArray));
 				tests.Add(typeof(UnknownClass));
+#if !CF_1_0 && !CF_2_0
 				tests.Add(typeof(UpdatingDb4oVersions));
+#endif
 				
 				return (Type[])tests.ToArray(typeof(Type));
 			}
