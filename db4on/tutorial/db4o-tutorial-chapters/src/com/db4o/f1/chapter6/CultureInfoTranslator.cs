@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using com.db4o;
 using com.db4o.config;
 

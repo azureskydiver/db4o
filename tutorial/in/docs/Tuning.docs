@@ -10,9 +10,72 @@ because it provides a side glance at db4o features with ._
 db4o works.
 
 .1 Enable Field Indexes ..
-The fastest way to improve the performance of your queries is ._
-to enable indexing on some of your class's key fields. Indexing ._
-is discussed .l Indexes elsewhere .. in this tutorial.
+For class Car with field "pilot":
+
+.c Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(true); ..
+
+.i Advantage ..
+The fastest way to improve the performance of your queries is to ._
+enable indexing on some of your class's key fields. You can read ._
+how to do it in  .l Indexes chapter of this tutorial.
+
+Further step of index tuning is to optimize indexes for ._
+Class.Field1.Field2 access. What will give us the best performance:
+-	index on Field1;
+-	index on Field2;
+-	index on both fields?
+To find the answer let's consider classes Car and Pilot from the previous ._
+chapters. In order to see indexing influence we will put 10000 new cars in ._
+our storage:
+
+
+.s com.db4o.f1.chapter21.IndexedExample#fillUpDB -out ..
+.c   private static void AddCar(ObjectContainer db, int points)
+   {
+	  Car car = new Car("BMW");
+      car.setPilot(new Pilot("Tester", points));
+      db.set(car);
+   } ..
+    
+Now we have lots of similar cars differing only in the amount of ._
+pilots' points - that will be our constraint for the query.
+
+.s com.db4o.f1.chapter21.IndexedExample#noIndex ..
+
+You can check execution time on your workstation using interactive ._
+version of this tutorial.
+
+Let's create index for pilots and their points and test the same query ._
+again:
+
+.s com.db4o.f1.chapter21.IndexedExample#fullIndex ..
+
+That result is considerably better and proves the power of indexing.
+
+But do we really need 2 indexes? Will single pilot or points ._
+index suffice? Let's test this as well:
+
+.s com.db4o.f1.chapter21.IndexedExample#pilotIndex ..
+
+.s com.db4o.f1.chapter21.IndexedExample#pointsIndex ..
+
+
+Single index does not increase query performance on second level fields.
+
+To maximize retrieval performance on encapsulated fields of different ._
+levels of enclosure  .c Class.Field1.Field2.Field3(.FieldN) .. 
+indexes for each field level should be created:
+.c Class.Field1.Indexed(true)
+Field1Class.Field2.Indexed(true)
+Field2Class.Field3.Indexed(true)
+. . .
+Field(N-1)Class.FieldN.Indexed(true) ..
+
+.i Alternate Strategies ..
+Field indexes dramatically improve query performance but they may ._
+considerably reduce storage and update performance. The best way ._
+to decide where to put the indexes is to test them on completed application ._
+with typical typical data load.
 
 .1 Discarding Free Space ..
 .c Db4o.configure().discardFreeSpace(byteCount); ..
