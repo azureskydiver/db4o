@@ -97,7 +97,7 @@ public class Db4o {
  	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
  	 * internal mechanism to lock the database file for other processes. 
      * <br><br>
-     * @param databaseFileName the full path to the database file
+     * @param databaseFileName an absolute or relative path to the database file
 	 * @return an open {@link ObjectContainer ObjectContainer}
      * @see Configuration#readOnly
      * @see Configuration#encrypt
@@ -147,7 +147,7 @@ public class Db4o {
      * If the server does not need to listen on a port because it will only be used
      * in embedded mode with {@link ObjectServer#openClient}, specify '0' as the
      * port number.
-     * @param databaseFileName the full path to the database file
+     * @param databaseFileName an absolute or relative path to the database file
      * @param port the port to be used, or 0, if the server should not open a port,
      * because it will only be used with {@link ObjectServer#openClient()}
 	 * @return an {@link ObjectServer ObjectServer} listening
