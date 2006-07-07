@@ -11,7 +11,7 @@
 	font.pdf.base=<true type font>
 	dir.compactframework=<path to the 2.0 version of the compact framework, leave empty if not available>
 	eclipse.home=<eclipse home dir>
-	csc.executable.path.net2=<path to csc.exe for .NET 2.0>
+	csc.executable.path.net2=<path to csc.exe for .NET 2.0 if different than default>
 	file.compiler.jdk1.3.args.optional=<OPTIONAL: any parameters for javac, e.g. '-source 1.3' if a JDK >= 5 is used>
 	file.keystore=<OPTIONAL: keystore location for signjar tasks. if not present, ${user.home}/.keystore is assumed>	
 
