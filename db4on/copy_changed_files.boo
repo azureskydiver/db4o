@@ -37,7 +37,7 @@ directories = (
 for srcDir, targetDir in directories:
 	for change in EnumerateChanges(srcDir, targetDir, /\.svn/):
 		answer = prompt("do you want the file '${change}' to be copied to '${srcDir}'? (y/n) ")
-		continue unless answer.StartsWith("y")
+		continue if not answer.StartsWith("y")
 		File.Copy(
 			Path.Combine(targetDir, change),
 			Path.Combine(srcDir, change),
