@@ -139,6 +139,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\f1\chapter21\Car.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\f1\chapter21\IndexedExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\f1\chapter21\Pilot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\f1\chapter3\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
