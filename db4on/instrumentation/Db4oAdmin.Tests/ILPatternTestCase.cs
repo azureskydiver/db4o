@@ -20,9 +20,9 @@ namespace Db4oAdmin.Tests
 		public void TestComplexSequenceBackwardsMatch()
 		{
 			ILPattern sequence = ILPattern.Sequence(
-				ILPattern.OptionalInstruction(OpCodes.Ret),
+				ILPattern.Optional(OpCodes.Ret),
 				ILPattern.Instruction(OpCodes.Stsfld),
-				ILPattern.AlternativeInstruction(OpCodes.Ldfld, OpCodes.Ldsfld));
+				ILPattern.Alternation(OpCodes.Ldfld, OpCodes.Ldsfld));
 
 			Instruction lastInstruction = CreateTestMethodAndReturnLastInstruction(TestSequence1);
 			Assert.IsTrue(sequence.BackwardsMatch(lastInstruction));
