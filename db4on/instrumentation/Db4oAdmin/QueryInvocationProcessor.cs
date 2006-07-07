@@ -19,6 +19,10 @@ namespace Db4oAdmin
 		private MethodReference _NativeQueryHandler_ExecuteInstrumentedDelegateQuery;
 		private MethodReference _NativeQueryHandler_ExecuteInstrumentedStaticDelegateQuery;
 
+		private ILPattern _staticFieldPattern = CreateStaticFieldPattern();
+
+		private ILPattern _predicateCreationPattern = ILPattern.Sequence(OpCodes.Newobj, OpCodes.Ldftn);
+
 		public QueryInvocationProcessor(InstrumentationContext context)
 		{
 			_context = context;
@@ -98,7 +102,7 @@ namespace Db4oAdmin
 
 		private bool IsPredicateCreationPattern(Instruction queryInvocation)
 		{
-			return ComparePrevious(queryInvocation, OpCodes.Newobj, OpCodes.Ldftn);
+			return _predicateCreationPattern.BackwardsMatch(queryInvocation);
 		}
 
 		private MethodReference InstantiateGenericMethod(MethodReference methodReference, TypeReference extent)
@@ -140,36 +144,23 @@ namespace Db4oAdmin
 			return previous;
 		}
 		
-		public ILPattern CreateStaticFieldPattern()
+		private static ILPattern CreateStaticFieldPattern()
 		{
 			// ldsfld (br_s)? stsfld newobj ldftn ldnull (brtrue_s | brtrue) ldsfld
 			return ILPattern.Sequence(
 				ILPattern.Instruction(OpCodes.Ldsfld),
-				ILPattern.OptionalInstruction(OpCodes.Br_S),
+				ILPattern.Optional(OpCodes.Br_S),
 				ILPattern.Instruction(OpCodes.Stsfld),
 				ILPattern.Instruction(OpCodes.Newobj),
 				ILPattern.Instruction(OpCodes.Ldftn),
 				ILPattern.Instruction(OpCodes.Ldnull),
-				ILPattern.AlternativeInstruction(OpCodes.Brtrue, OpCodes.Brtrue_S),
+				ILPattern.Alternation(OpCodes.Brtrue, OpCodes.Brtrue_S),
 				ILPattern.Instruction(OpCodes.Ldsfld));
 		}
 
 		private bool IsCachedStaticFieldPattern(Instruction instr)
 		{
-			return CreateStaticFieldPattern().BackwardsMatch(instr);
-		}
-
-		private bool ComparePrevious(IInstruction instr, params OpCode[] opcodes)
-		{
-			IInstruction previous = instr.Previous;
-			foreach (OpCode opcode in opcodes)
-			{
-				if (previous == null) return false;
-				if (previous.OpCode.Value != opcode.Value) return false;
-
-				previous = previous.Previous;
-			}
-			return true;
+			return _staticFieldPattern.BackwardsMatch(instr);
 		}
 	}
 }

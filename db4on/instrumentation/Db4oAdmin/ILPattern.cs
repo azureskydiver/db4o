@@ -47,14 +47,14 @@ namespace Db4oAdmin
 
 		public static ILPattern Instruction(OpCode code)
 		{
-			return new SingleInstructionPattern(code);
+			return new InstructionPattern(code);
 		}
 
-		private class SingleInstructionPattern : ILPattern
+		private class InstructionPattern : ILPattern
 		{
 			private OpCode _code;
 
-			public SingleInstructionPattern(OpCode code)
+			public InstructionPattern(OpCode code)
 			{
 				_code = code;
 			}
@@ -71,7 +71,7 @@ namespace Db4oAdmin
 			}
 		}
 
-		public static ILPattern OptionalInstruction(OpCode code)
+		public static ILPattern Optional(OpCode code)
 		{
 			return new OptionalPattern(Instruction(code));
 		}
@@ -91,17 +91,17 @@ namespace Db4oAdmin
 			}
 		}
 
-		public static ILPattern AlternativeInstruction(OpCode a, OpCode b)
+		public static ILPattern Alternation(OpCode a, OpCode b)
 		{
-			return new AlternativeInstructionPattern(Instruction(a), Instruction(b));
+			return new AlternationPattern(Instruction(a), Instruction(b));
 		}
 
-		private class AlternativeInstructionPattern : ILPattern
+		private class AlternationPattern : ILPattern
 		{
 			private ILPattern _a;
 			private ILPattern _b;
 
-			public AlternativeInstructionPattern(ILPattern a, ILPattern b)
+			public AlternationPattern(ILPattern a, ILPattern b)
 			{
 				_a = a;
 				_b = b;
