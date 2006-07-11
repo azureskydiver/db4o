@@ -33,7 +33,8 @@ the following constructs well:
 
 This list will constantly grow with the latest versions of db4o.
 
-Note that the current implementation doesn't support polymorphism yet.
+Note that the current implementation doesn't support polymorphism and multiline ._
+methods yet.
 
 db4o for Java supplies three different possibilities to run ._
 optimized native queries, optimization at
