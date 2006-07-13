@@ -7,9 +7,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * switches calling constructors on <br> <br>
+ * specifies the updateDepth for this class.
+ * <br>
+ * <br>
+ * The default setting is 0: Only the object passed to
+ * ObjectContainer.set(Object) will be updated.
  */
 @Documented
-@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CallConstructor {}
+@Target( { ElementType.TYPE })
+public @interface UpdatedDepth {
+	int value() default 0;
+}

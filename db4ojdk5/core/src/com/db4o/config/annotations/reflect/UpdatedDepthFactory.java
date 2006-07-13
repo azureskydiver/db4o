@@ -3,14 +3,14 @@ package com.db4o.config.annotations.reflect;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-import com.db4o.config.annotations.UpdateDepth;
+import com.db4o.config.annotations.UpdatedDepth;
 
-public class UpdateDepthFactory implements Db4oConfiguratorFactory {
+public class UpdatedDepthFactory implements Db4oConfiguratorFactory {
 
 	public Db4oConfigurator configuratorFor(AnnotatedElement element,
 			Annotation annotation) {
 		
-		if (!annotation.annotationType().equals(UpdateDepth.class)) {
+		if (!annotation.annotationType().equals(UpdatedDepth.class)) {
 			return null;
 		}
 		String className=null;
@@ -19,8 +19,8 @@ public class UpdateDepthFactory implements Db4oConfiguratorFactory {
 			className=((Class)element).getName();
 		}
 		
-		int updateDepth= ((UpdateDepth) annotation).value();
-		return new UpdateDepthConfigurator(className, updateDepth);
+		int updateDepth= ((UpdatedDepth) annotation).value();
+		return new UpdatedDepthConfigurator(className, updateDepth);
 	}
 
 }

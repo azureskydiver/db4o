@@ -7,10 +7,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * generate version numbers for stored objects of this class. 
+ * switches calling constructors on <br> <br>
  */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GenerateVersionNumbers {}
-
+public @interface CalledConstructor {
+	boolean value() default true;
+}

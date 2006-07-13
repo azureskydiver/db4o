@@ -7,9 +7,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * allows to specify if transient fields are to be stored. 
+ * allows to specify if transient fields are to be stored.
  */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StoreTransientFields {}
+public @interface StoredTransientFields {
+	boolean value() default true;
+}
