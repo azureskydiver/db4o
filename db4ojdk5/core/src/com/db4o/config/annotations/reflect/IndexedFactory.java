@@ -4,8 +4,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 
-import com.db4o.config.annotations.Cascade;
-import com.db4o.config.annotations.CascadeType;
 import com.db4o.config.annotations.Indexed;
 
 public class IndexedFactory implements Db4oConfiguratorFactory {

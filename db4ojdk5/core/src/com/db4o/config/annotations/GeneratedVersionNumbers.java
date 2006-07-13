@@ -7,15 +7,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * specifies the updateDepth for this class.
- * <br>
- * <br>
- * The default setting is 0: Only the object passed to
- * ObjectContainer.set(Object) will be updated.
+ * generate version numbers for stored objects of this class.
  */
 @Documented
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.TYPE })
-public @interface UpdateDepth {
-	int value() default 0;
+public @interface GeneratedVersionNumbers {
+	boolean value() default true;
 }

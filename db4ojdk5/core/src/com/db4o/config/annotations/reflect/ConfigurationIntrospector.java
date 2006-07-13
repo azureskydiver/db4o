@@ -1,22 +1,20 @@
 package com.db4o.config.annotations.reflect;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.config.annotations.CallConstructor;
-import com.db4o.config.annotations.Cascade;
-import com.db4o.config.annotations.GenerateUUIDs;
-import com.db4o.config.annotations.GenerateVersionNumbers;
+import com.db4o.Config4Class;
+import com.db4o.config.Configuration;
+import com.db4o.config.annotations.CalledConstructor;
+import com.db4o.config.annotations.GeneratedUUIDs;
+import com.db4o.config.annotations.GeneratedVersionNumbers;
 import com.db4o.config.annotations.Indexed;
-import com.db4o.config.annotations.MaximumActivationDepth;
-import com.db4o.config.annotations.MinimumActivationDepth;
-import com.db4o.config.annotations.PersistStaticFieldValues;
-import com.db4o.config.annotations.QueryEvaluationOff;
-import com.db4o.config.annotations.StoreTransientFields;
-import com.db4o.config.annotations.UpdateDepth;
+import com.db4o.config.annotations.PersistedStaticFieldValues;
+import com.db4o.config.annotations.StoredTransientFields;
+import com.db4o.config.annotations.UpdatedDepth;
 
 /**
  * sets db4o configurations accordingly annotations
@@ -24,7 +22,7 @@ import com.db4o.config.annotations.UpdateDepth;
  */
 
 public class ConfigurationIntrospector {
-	
+
 	Map<Class<? extends Annotation>, Db4oConfiguratorFactory> _configurators;
 
 	Config4Class _classConfig;
@@ -33,8 +31,8 @@ public class ConfigurationIntrospector {
 
 	Configuration _config;
 
-	public ConfigurationIntrospector(Class clazz, Configuration config, Config4Class classConfig)
-			throws Exception {
+	public ConfigurationIntrospector(Class clazz, Configuration config,
+			Config4Class classConfig) throws Exception {
 		this._classConfig = classConfig;
 		this._clazz = clazz;
 		this._config = config;
@@ -44,31 +42,18 @@ public class ConfigurationIntrospector {
 
 	private void initMap() throws NoSuchMethodException {
 		_configurators = new HashMap<Class<? extends Annotation>, Db4oConfiguratorFactory>();
-//		_configurators.put(Cascade.class, new CascadeConfiguratorFactory());
-//		_configurators.put(UpdateDepth.class, new UpdateDepthFactory());
-//		_configurators.put(MaximumActivationDepth.class,
-//				new MaximumActivationDepthFactory());
-//		_configurators.put(MinimumActivationDepth.class,
-//				new MinimumActivationDepthFactory());
-		_configurators.put(Indexed.class, new NoArgsFieldConfiguratorFactory(IndexedConfigurator.class));
-//		_configurators.put(CallConstructor.class,
-//				new NoArgsClassConfiguratorFactory(
-//						CallConstructorConfigurator.class));
-//		_configurators.put(QueryEvaluationOff.class,
-//				new NoArgsFieldConfiguratorFactory(
-//						QueryEvaluationOffConfigurator.class));
-//		_configurators.put(GenerateUUIDs.class,
-//				new NoArgsClassConfiguratorFactory(
-//						GenerateUUIDsConfigurator.class));
-//		_configurators.put(GenerateVersionNumbers.class,
-//				new NoArgsClassConfiguratorFactory(
-//						GenerateVersionNumbersConfigurator.class));
-//		_configurators.put(StoreTransientFields.class,
-//				new NoArgsClassConfiguratorFactory(
-//						StoreTransientFieldsConfigurator.class));
-//		_configurators.put(PersistStaticFieldValues.class,
-//				new NoArgsClassConfiguratorFactory(
-//						PersistStaticFieldValuesConfigurator.class));
+		_configurators.put(UpdatedDepth.class, new UpdatedDepthFactory());
+		_configurators.put(Indexed.class, new NoArgsFieldConfiguratorFactory(
+				IndexedConfigurator.class));
+		_configurators.put(CalledConstructor.class, new CalledConstructorFactory());
+		_configurators.put(GeneratedUUIDs.class,
+				new GeneratedUUIDsFactory());
+		_configurators.put(GeneratedVersionNumbers.class,
+				new GeneratedVersionNumbersFactory());
+		_configurators.put(StoredTransientFields.class,
+				new StoredTransientFieldsFactory());
+		_configurators.put(PersistedStaticFieldValues.class,
+				new PersistedStaticFieldValuesFactory());
 	}
 
 	/**
@@ -81,7 +66,7 @@ public class ConfigurationIntrospector {
 	 */
 	public Config4Class apply() {
 		try {
-//			reflectClass();
+			reflectClass();
 			reflectFields();
 
 		} catch (SecurityException e) {
@@ -90,9 +75,6 @@ public class ConfigurationIntrospector {
 		return _classConfig;
 	}
 
-	/**
-	 * reserved for the next release with the full annotation support
-	 */
 	private void reflectClass() {
 		Annotation[] annotations = _clazz.getAnnotations();
 		for (Annotation a : annotations) {
