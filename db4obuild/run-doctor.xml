@@ -10,22 +10,10 @@
     started. That way it seems easier for Ant to find the necessary 
     jars and the target can run successfully after clean. 
 -->
+
+	<import file="common.xml" />
 	
-	<property environment="env" />
-	<property file="machine.properties" />
-	<property file="ant.properties" />
 	<property name="file.keystore" value="${user.home}/.keystore" />
-	
-	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
-		<classpath>
-			<pathelement location="${dir.j.jdk1.2}/bin" />
-			<pathelement location="${dir.j}/bin" />
-			<pathelement location="${dir.doctor.bin}" />
-			<pathelement location="${dir.doctor.lib}/iText.jar" />
-			<pathelement location="${dir.dist.classes.tutorial}" />
-			<path path="${path.classpath.full}" />
-		</classpath>
-	</taskdef>
 	
 	<target name="init" description="Basic initialization">
 		<tstamp />

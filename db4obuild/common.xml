@@ -4,6 +4,17 @@
 	<property file="machine.properties" />
 	<property file="ant.properties" />
 	
+	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
+		<classpath>
+			<pathelement location="${dir.j.jdk1.2}/bin" />
+			<pathelement location="${dir.j}/bin" />
+			<pathelement location="${dir.doctor.bin}" />
+			<pathelement location="${dir.doctor.lib}/iText.jar" />
+			<pathelement location="${dir.dist.classes.tutorial}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
 			<pathelement location="${dir.build.lib}/antcontrib/ant-contrib.jar" />

@@ -1,0 +1,31 @@
+<project name="General documentation" default="build">
+	<import file="common.xml" />
+	
+	<property name="dir.documentation" location="${dir.workspace}/documentation" />
+	
+	<target name="build">
+		<doctor 
+			name="f1" 
+			home="${dir.documentation}" 
+			interactive="false" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.documentation}/src" 
+			sourceextension="java" 
+			outputfile="documentation" 
+			outputpath="${dir.documentation}/out" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="true" />
+			<variable name="net" boolean="false" />
+			<variable name="mono" boolean="false" />
+			
+			<!--
+			<ignoreinputfolder name="net" />
+			<ignoreinputfolder name="mono" />
+			-->
+		</doctor>	
+	</target>
+	
+</project>
