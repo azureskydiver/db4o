@@ -28,19 +28,36 @@ namespace Db4oTools.NativeQueries
 		public override Expression FromMethod(System.Reflection.MethodBase method)
 		{
 			if (method == null) throw new ArgumentNullException("method");
-			Expression e = (Expression)_expressionCachingStrategy.Get(method);
+			
+			Expression e = GetCachedExpression(method);
 			if (e != null) return e;
 
+			MethodDefinition methodDef = GetMethodDefinition(method);
+			e = AdjustBoxedValueTypes(FromMethodDefinition(methodDef));
+			CacheExpression(method, e);
+			
+			return e;
+		}
+
+		private static void CacheExpression(MethodBase method, Expression e)
+		{
+			_expressionCachingStrategy.Add(method, e);
+		}
+
+		private static Expression GetCachedExpression(MethodBase method)
+		{
+			return (Expression)_expressionCachingStrategy.Get(method);
+		}
+
+		private static MethodDefinition GetMethodDefinition(MethodBase method)
+		{
 			string location = GetAssemblyLocation(method);
 			AssemblyDefinition assembly = GetAssembly(location);
 			TypeDefinition type = FindTypeDefinition(assembly.MainModule, method.DeclaringType);
 			if (null == type) UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
 			MethodDefinition methodDef = type.Methods.GetMethod(method.Name, GetParameterTypes(method));
 			if (null == methodDef) UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
-
-			e = AdjustBoxedValueTypes(FromMethodDefinition(methodDef));
-			_expressionCachingStrategy.Add(method, e);
-			return e;
+			return methodDef;
 		}
 
 		private Expression AdjustBoxedValueTypes(Expression expression)
@@ -87,8 +104,7 @@ namespace Db4oTools.NativeQueries
 		{
 			foreach (TypeDefinition td in FindTypeDefinition(module, type.DeclaringType).NestedTypes)
 			{
-				if (td.Name == type.Name)
-					return td;
+				if (td.Name == type.Name) return td;
 			}
 			return null;
 		}
@@ -105,6 +121,18 @@ namespace Db4oTools.NativeQueries
 
 		public static Expression FromMethodDefinition(MethodDefinition method)
 		{
+			ValidatePredicateMethodDefinition(method);
+
+			IExpression expression = GetQueryExpression(method);
+			if (null == expression) UnsupportedPredicate("No expression found.");
+			
+			Visitor visitor = new Visitor(method);
+			expression.Accept(visitor);
+			return visitor.Expression;
+		}
+
+		private static void ValidatePredicateMethodDefinition(MethodDefinition method)
+		{
 			if (method == null)
 				throw new ArgumentNullException("method");
 			if (1 != method.Parameters.Count)
@@ -113,14 +141,6 @@ namespace Db4oTools.NativeQueries
 				UnsupportedPredicate("A predicate can not contain exception handlers.");
 			if (method.DeclaringType.Module.Import(typeof(bool)) != method.ReturnType.ReturnType)
 				UnsupportedPredicate("A predicate must have a boolean return type.");
-
-			IExpression expression = GetQueryExpression(method);
-			if (null == expression)
-				UnsupportedPredicate("No expression found.");
-
-			Visitor visitor = new Visitor(method);
-			expression.Accept(visitor);
-			return visitor.Expression;
 		}
 
 		private static IExpression GetQueryExpression(IMethodDefinition method)
