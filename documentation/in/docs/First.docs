@@ -1,0 +1,9 @@
+.n
+.a First ..
+.0 First Steps ..
+
+Let's get started as simple as possible. We are going to demonstrate how to store, ._
+retrieve, update and delete instances ._
+of a single class that only contains primitive and String members. In our example ._
+this will be a Formula One (F1) pilot whose attributes are his name and the F1 points ._
+he has already gained this season.
