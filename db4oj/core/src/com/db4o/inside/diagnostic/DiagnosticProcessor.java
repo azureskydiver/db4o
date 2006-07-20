@@ -20,8 +20,9 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public DiagnosticProcessor() {
     }
     
-    private DiagnosticProcessor(Collection4 listeners) {
+    private DiagnosticProcessor(Collection4 listeners, boolean queryStatistics) {
     	_listeners = listeners;
+    	_queryStatistics = queryStatistics;
     }
 
     public void addListener(DiagnosticListener listener) {
@@ -57,10 +58,14 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     }
 
     public Object deepClone(Object context) {
-        return _listeners != null
-        	? new DiagnosticProcessor(new Collection4(_listeners))
-        	: new DiagnosticProcessor();
+        return new DiagnosticProcessor(cloneListeners(), _queryStatistics);
     }
+
+	private Collection4 cloneListeners() {
+		return _listeners != null
+			? new Collection4(_listeners)
+			: null;
+	}
 
     public boolean enabled(){
         return _listeners != null;

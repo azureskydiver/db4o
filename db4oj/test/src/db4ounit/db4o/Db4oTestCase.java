@@ -33,7 +33,7 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 
 	protected void configure() {}
 	
-	public void store() {}
+	protected void store() {}
 
 	protected ExtObjectContainer db() {
 		return fixture().db();
