@@ -1,6 +1,9 @@
 package com.db4o.test.soda;
 
 
+import com.db4o.Db4o;
+import com.db4o.query.Candidate;
+import com.db4o.query.Evaluation;
 import com.db4o.query.Query;
 import com.db4o.query.QueryStatistics;
 
@@ -10,8 +13,10 @@ import db4ounit.db4o.Db4oTestCase;
 import db4ounit.db4o.Db4oTestSuiteBuilder;
 import db4ounit.db4o.fixtures.Db4oSolo;
 
-public class QueryStatisticsTestFixture extends Db4oTestCase {
+public class QueryStatisticsTestCase extends Db4oTestCase {
 	
+	private static final int ITEM_COUNT = 10000;
+
 	public static class Item {
 
 		public int id;
@@ -21,8 +26,12 @@ public class QueryStatisticsTestFixture extends Db4oTestCase {
 		}
 	}
 	
-	public void store() {
-		for (int i=0; i<1000; ++i) {
+	protected void configure() {
+		Db4o.configure().diagnostic().queryStatistics(true);
+	}
+	
+	protected void store() {
+		for (int i=0; i<ITEM_COUNT; ++i) {
 			db().set(new Item(i));
 		}
 	}
@@ -31,10 +40,28 @@ public class QueryStatisticsTestFixture extends Db4oTestCase {
 		db().configure().diagnostic().queryStatistics(false);		
 		Assert.isNull(db().query().statistics());
 	}
+	
+	public void testNoActivationCount() {
+		Query query = db().query();
+		query.constrain(Item.class);
+		
+		Assert.areEqual(0, query.statistics().activationCount());
+		query.execute();
+		Assert.areEqual(0, query.statistics().activationCount());
+	}
+	
+	public void testEvaluationActivationCount() {
+		Query query = db().query();
+		query.constrain(Item.class);		
+		query.constrain(new Evaluation() {
+			public void evaluate(Candidate candidate) {
+				candidate.include(true);
+			}
+		});
+		Assert.areEqual(ITEM_COUNT, query.statistics().activationCount());
+	}
 
 	public void testExecutionTime() {
-		
-		db().configure().diagnostic().queryStatistics(true);
 		
 		Query q = db().query();
 		
@@ -59,6 +86,6 @@ public class QueryStatisticsTestFixture extends Db4oTestCase {
 		new TestRunner(
 				new Db4oTestSuiteBuilder(
 						new Db4oSolo(),
-						QueryStatisticsTestFixture.class)).run();
+						QueryStatisticsTestCase.class)).run();
 	}
 }

@@ -7,6 +7,8 @@ public class QueryStatisticsImpl implements QueryStatistics {
 	
 	private final StopWatch _timer = new StopWatch();
 	
+	private int _activationCount;
+	
 	public QueryStatisticsImpl() {
 	}
 
@@ -20,5 +22,9 @@ public class QueryStatisticsImpl implements QueryStatistics {
 
 	public void stopTimer() {
 		_timer.stop(); 
+	}
+
+	public int activationCount() {
+		return _activationCount;
 	}
 }
