@@ -7,6 +7,7 @@ import com.db4o.f1.chapter4.*;
 import com.db4o.f1.chapter5.*;
 
 import com.db4o.f1.chapter21.*;
+import com.tutorial.f1.chapter31.*;
 
 
 public class Main {
@@ -24,6 +25,8 @@ public class Main {
         IndexedExample.fullIndex();
         IndexedExample.pilotIndex();
         IndexedExample.pointsIndex();
-        
+        DiagnosticExample.testEmpty();
+        DiagnosticExample.testArbitrary();
+        DiagnosticExample.testIndexDiagnostics();
     }
 }
