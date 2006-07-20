@@ -22,4 +22,7 @@ public interface DiagnosticConfiguration {
      */
     public void removeAllListeners();
 
+	public void queryStatistics(boolean enabled);
+
+	public boolean queryStatistics();
 }

@@ -34,9 +34,12 @@ public abstract class QQueryBase implements Unversioned {
     
     private final QQuery _this;
     
+    private final QueryStatisticsImpl _statistics;
+    
     protected QQueryBase() {
         // C/S only
     	_this = cast(this);
+    	_statistics = null;
     }
 
     protected QQueryBase(Transaction a_trans, QQuery a_parent, String a_field) {
@@ -44,6 +47,9 @@ public abstract class QQueryBase implements Unversioned {
         i_trans = a_trans;
         i_parent = a_parent;
         i_field = a_field;
+        _statistics = a_trans.i_file.configure().diagnostic().queryStatistics()
+        	? new QueryStatisticsImpl()
+        	: null;
     }
 
     void addConstraint(QCon a_constraint) {
@@ -255,7 +261,14 @@ public abstract class QQueryBase implements Unversioned {
     }
 
     public ObjectSet execute() {
-        return new ObjectSetFacade(getQueryResult());
+    	if (_statistics != null) {
+    		_statistics.startTimer();
+    	}
+        QueryResult qresult = getQueryResult();
+        if (_statistics != null) {
+    		_statistics.stopTimer();
+    	}
+		return new ObjectSetFacade(qresult);
     }
     
     public QueryResult getQueryResult() {
@@ -542,5 +555,9 @@ public abstract class QQueryBase implements Unversioned {
     // cheat emulating '(QQuery)this'
 	private static QQuery cast(QQueryBase obj) {
 		return (QQuery)obj;
+	}
+	
+	public QueryStatistics statistics() {
+		return _statistics;
 	}
 }
