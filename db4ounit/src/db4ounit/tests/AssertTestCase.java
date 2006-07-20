@@ -3,8 +3,9 @@ package db4ounit.tests;
 import db4ounit.Assert;
 import db4ounit.AssertionException;
 import db4ounit.CodeBlock;
+import db4ounit.TestCase;
 
-public class AssertTestCase {
+public class AssertTestCase implements TestCase {
 	public void testAreEqual() {
 		Assert.areEqual(true, true);
 		Assert.areEqual(42, 42);

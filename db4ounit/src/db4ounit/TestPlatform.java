@@ -7,7 +7,9 @@ import java.lang.reflect.Modifier;
 
 public class TestPlatform {
 	public static void printStackTrace(Writer writer, Throwable t) {
-		t.printStackTrace(new java.io.PrintWriter(writer));
+		java.io.PrintWriter printWriter = new java.io.PrintWriter(writer);
+		t.printStackTrace(printWriter);
+		printWriter.flush();
 	}
 
 	public static Writer getStdOut() {

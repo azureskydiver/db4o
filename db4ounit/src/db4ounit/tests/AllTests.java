@@ -11,7 +11,8 @@ public class AllTests implements TestSuiteBuilder {
 		return new ReflectionTestSuiteBuilder(new Class[] {
 			FrameworkTestCase.class,
 			AssertTestCase.class,
-			TestLifeCycleTestCase.class,			
+			TestLifeCycleTestCase.class,
+			ReflectionTestSuiteBuilderTestCase.class,
 		}).build();
 	}
 		

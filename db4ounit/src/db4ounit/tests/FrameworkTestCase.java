@@ -5,10 +5,11 @@ import java.util.Enumeration;
 import db4ounit.Assert;
 import db4ounit.Test;
 import db4ounit.TestFailure;
+import db4ounit.TestCase;
 import db4ounit.TestResult;
 import db4ounit.TestSuite;
 
-public class FrameworkTestCase {
+public class FrameworkTestCase implements TestCase {
 	public final static RuntimeException EXCEPTION = new RuntimeException();
 	
 	public void testRunsGreen() {

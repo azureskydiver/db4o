@@ -29,6 +29,18 @@ public final class Assert {
 		fail(msg);
 	}
 	
+	public static void isNull(Object reference) {
+		if (reference != null) {
+			fail("FAILURE");
+		}
+	}
+	
+	public static void isNotNull(Object reference) {
+		if (reference == null) {
+			fail("FAILURE");
+		}
+	}
+	
 	public static void areEqual(boolean expected, boolean actual) {
 		if (expected == actual) return;
 		fail(failureMessage(new Boolean(expected), new Boolean(actual)));
@@ -37,6 +49,11 @@ public final class Assert {
 	public static void areEqual(int expected, int actual) {
 		if (expected == actual) return;
 		fail(failureMessage(new Integer(expected), new Integer(actual)));
+	}
+	
+	public static void areEqual(long expected, long actual) {
+		if (expected == actual) return;
+		fail(failureMessage(new Long(expected), new Long(actual)));
 	}
 
 	public static void areEqual(Object expected, Object actual) {		
