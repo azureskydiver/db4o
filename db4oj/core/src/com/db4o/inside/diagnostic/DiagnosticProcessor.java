@@ -14,6 +14,9 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     
     private Collection4 _listeners;
     
+    // TODO: shouldn't we be using the same strategy as Config4Impl? 
+    private boolean _queryStatistics;
+    
     public DiagnosticProcessor() {
     }
     
@@ -95,5 +98,12 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public void removeAllListeners() {
         _listeners = null;
     }
-    
+
+	public void queryStatistics(boolean enabled) {
+		_queryStatistics = enabled;
+	}
+	
+	public boolean queryStatistics() {
+		return _queryStatistics;
+	}
 }
