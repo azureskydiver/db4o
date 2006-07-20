@@ -2,7 +2,6 @@
 """
 Detects all changed files in the 'core/src' directory tree that should be
 copied back to the 'in' directory tree and copies them upon confirmation.
-
 """
 import System.IO
 import Useful.IO from Boo.Lang.Useful
