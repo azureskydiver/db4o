@@ -31,24 +31,29 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		return new TestSuite(suites);
 	}
 	
-	protected TestSuite fromClass(Class clazz) {
-		
+	protected TestSuite fromClass(Class clazz) {		
 		Object instance = newInstance(clazz);
+		return fromInstance(instance);
+	}
+
+	private TestSuite fromInstance(Object instance) {
 		if (instance instanceof TestSuiteBuilder) {
 			return ((TestSuiteBuilder)instance).build();
 		}
 		if (instance instanceof Test) {
-			return new TestSuite(clazz.getName(), new Test[] { (Test)instance });
+			return new TestSuite(instance.getClass().getName(), new Test[] { (Test)instance });
 		}
-		
+		if (!(instance instanceof TestCase)) {
+			throw new IllegalArgumentException("" + instance.getClass() + " is not marked as " + TestCase.class);
+		}
 		Vector tests = new Vector();
-		Method[] methods = clazz.getMethods();
+		Method[] methods = instance.getClass().getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
 			if (!isTestMethod(method)) continue;			
 			tests.addElement(createTest(instance, method));
 		}		
-		return new TestSuite(clazz.getName(), toArray(tests));
+		return new TestSuite(instance.getClass().getName(), toArray(tests));
 	}
 
 	protected boolean isTestMethod(Method method) {
