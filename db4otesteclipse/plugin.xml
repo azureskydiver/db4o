@@ -8,19 +8,19 @@
             id="db4otesteclipse.runtestmenu.type"
             objectClass="org.eclipse.jdt.core.IType">
          <action
-               class="db4otesteclipse.RunTestSoloAction"
+               class="db4otesteclipse.regression.RunTestSoloAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.type.action.solo"
                label="Run db4o solo test"
                menubarPath="db4otesteclipse.menu.type/db4otesteclipse.menu.type.addition"/>
          <action
-               class="db4otesteclipse.RunTestCSAction"
+               class="db4otesteclipse.regression.RunTestCSAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.type.action.cs"
                label="Run db4o C/S test"
                menubarPath="db4otesteclipse.menu.type/db4otesteclipse.menu.type.addition"/>
          <action
-               class="db4otesteclipse.RunTestFullAction"
+               class="db4otesteclipse.regression.RunTestFullAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.type.action.full"
                label="Run db4o full test"
@@ -36,19 +36,19 @@
             id="db4otesteclipse.runtestmenu.cu"
             objectClass="org.eclipse.jdt.core.ICompilationUnit">
          <action
-               class="db4otesteclipse.RunTestSoloAction"
+               class="db4otesteclipse.regression.RunTestSoloAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.cu.action.solo"
                label="Run db4o solo test"
                menubarPath="db4otesteclipse.menu.cu/db4otesteclipse.menu.cu.additions"/>
          <action
-               class="db4otesteclipse.RunTestCSAction"
+               class="db4otesteclipse.regression.RunTestCSAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.cu.action.cs"
                label="Run db4o C/S test"
                menubarPath="db4otesteclipse.menu.cu/db4otesteclipse.menu.cu.additions"/>
          <action
-               class="db4otesteclipse.RunTestFullAction"
+               class="db4otesteclipse.regression.RunTestFullAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.cu.action.full"
                label="Run db4o full test"
@@ -64,22 +64,70 @@
             id="db4otesteclipse.runtestmenu.pf"
             objectClass="org.eclipse.jdt.core.IPackageFragment">
          <action
-               class="db4otesteclipse.RunTestSoloAction"
+               class="db4otesteclipse.regression.RunTestSoloAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.pf.action.solo"
                label="Run db4o solo tests"
                menubarPath="db4otesteclipse.menu.pf/db4otesteclipse.menu.pf.addition"/>
          <action
-               class="db4otesteclipse.RunTestCSAction"
+               class="db4otesteclipse.regression.RunTestCSAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.pf.action.cs"
                label="Run db4o C/S tests"
                menubarPath="db4otesteclipse.menu.pf/db4otesteclipse.menu.pf.addition"/>
          <action
-               class="db4otesteclipse.RunTestFullAction"
+               class="db4otesteclipse.regression.RunTestFullAction"
                icon="d.gif"
                id="db4otesteclipse.runtestmenu.pf.action.full"
                label="Run db4o full tests"
+               menubarPath="db4otesteclipse.menu.pf/db4otesteclipse.menu.pf.addition"/>
+         <menu
+               id="db4otesteclipse.menu.pf"
+               label="Run db4o tests...">
+            <separator name="db4otesteclipse.menu.pf.addition"/>
+         </menu>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="db4otesteclipse.runtestmenu.unit.type"
+            objectClass="org.eclipse.jdt.core.IType">
+         <action
+               class="db4otesteclipse.unit.RunUnitTestAction"
+               icon="d.gif"
+               id="db4otesteclipse.runtestmenu.unit.type.action"
+               label="Run db4o unit test"
+               menubarPath="db4otesteclipse.menu.type/db4otesteclipse.menu.type.addition"/>
+         <menu
+               id="db4otesteclipse.menu.type"
+               label="Run db4o test...">
+            <separator name="db4otesteclipse.menu.type.addition"/>
+         </menu>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="db4otesteclipse.runtestmenu.unit.cu"
+            objectClass="org.eclipse.jdt.core.ICompilationUnit">
+         <action
+               class="db4otesteclipse.unit.RunUnitTestAction"
+               icon="d.gif"
+               id="db4otesteclipse.runtestmenu.unit.cu.action"
+               label="Run db4o unit test"
+               menubarPath="db4otesteclipse.menu.cu/db4otesteclipse.menu.cu.additions"/>
+         <menu
+               id="db4otesteclipse.menu.cu"
+               label="Run db4o test...">
+            <separator name="db4otesteclipse.menu.cu.additions"/>
+         </menu>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="db4otesteclipse.runtestmenu.unit.pf"
+            objectClass="org.eclipse.jdt.core.IPackageFragment">
+         <action
+               class="db4otesteclipse.unit.RunUnitTestAction"
+               icon="d.gif"
+               id="db4otesteclipse.runtestmenu.unit.pf.action"
+               label="Run db4o unit tests"
                menubarPath="db4otesteclipse.menu.pf/db4otesteclipse.menu.pf.addition"/>
          <menu
                id="db4otesteclipse.menu.pf"
@@ -91,7 +139,7 @@
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="db4otesteclipse.Db4oRegressionTestLaunchConfiguration"
+            delegate="db4otesteclipse.Db4oTestLaunchConfiguration"
             id="db4otesteclipse.launchconfig.type"
             modes="run,debug"
             name="db4o Regression Test"

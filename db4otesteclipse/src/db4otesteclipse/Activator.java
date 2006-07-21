@@ -50,4 +50,8 @@ public class Activator extends Plugin {
 	public static void log(IStatus status) {
 		getDefault().getLog().log(status);
 	}
+
+	public static void log(String msg) {
+		log(new Status(Status.INFO,Activator.PLUGIN_ID,0,msg,null));
+	}
 }
