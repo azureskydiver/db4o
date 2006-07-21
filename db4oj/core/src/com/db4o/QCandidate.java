@@ -624,6 +624,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (_yapField == null) {
 				readThis(a_activate);
 			} else {
+				// FIXME: Should _bytes ever be null here?
 				int offset = _bytes._offset;
 				try {
 					_member = _yapField.readQuery(getTransaction(),_marshallerFamily, _bytes);

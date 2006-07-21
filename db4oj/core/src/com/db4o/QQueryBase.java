@@ -47,7 +47,8 @@ public abstract class QQueryBase implements Unversioned {
         i_trans = a_trans;
         i_parent = a_parent;
         i_field = a_field;
-        _statistics = a_trans.i_file.configure().diagnostic().queryStatistics()
+        // TODO: Use null object pattern instead?
+        _statistics = a_trans.i_stream.configure().diagnostic().queryStatistics()
         	? new QueryStatisticsImpl()
         	: null;
     }

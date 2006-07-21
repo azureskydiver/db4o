@@ -81,4 +81,10 @@ public class ClusterQuery implements Query{
 		Exceptions4.notSupported();
 		return this;
 	}
+
+	public QueryStatistics statistics() {
+		// FIXME
+		Exceptions4.notSupported();
+		return null;
+	}
 }
