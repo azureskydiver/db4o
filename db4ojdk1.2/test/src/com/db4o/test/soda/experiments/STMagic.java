@@ -116,6 +116,7 @@ public class STMagic implements STClass1, STInterface {
 		q.constrain(new Evaluation() {
 			public void evaluate(Candidate candidate) {
 				STInterface sti = (STInterface) candidate.getObject();
+				// FIXME: NPE expected?
 				candidate.include(sti.returnSomething().equals("aaa"));
 			}
 		});

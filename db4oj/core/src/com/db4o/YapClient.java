@@ -326,7 +326,8 @@ public class YapClient extends YapStream implements ExtClient {
 				}
 
 				private void throwOnClosed() {
-					if (_readerThread.isClosed()) {
+					// FIXME: Should _readerThread ever be null here?
+					if (_readerThread==null||_readerThread.isClosed()) {
 						_doFinalize=false;
 						Exceptions4.throwRuntimeException(20, name());
 					}

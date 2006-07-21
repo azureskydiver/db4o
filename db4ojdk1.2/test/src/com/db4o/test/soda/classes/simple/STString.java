@@ -181,6 +181,7 @@ public class STString implements STClass1, STInterface {
 		q.constrain(new Evaluation() {
 			public void evaluate(Candidate candidate) {
 				STString sts = (STString) candidate.getObject();
+				// FIXME: NPE expected here?
 				candidate.include(sts.str.indexOf("od") == 1);
 			}
 		});
@@ -193,6 +194,7 @@ public class STString implements STClass1, STInterface {
         q.constrain(new Evaluation() {
             public void evaluate(Candidate candidate) {
                 STString sts = (STString) candidate.getObject();
+                // FIXME: NPE expected?
                 candidate.include(sts.str.toLowerCase().indexOf("od") >= 0);
             }
         });
