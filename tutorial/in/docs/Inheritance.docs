@@ -60,8 +60,11 @@ delete all stored objects to prepare for the next chapter.
 .1 Conclusion ..
 
 Now we have covered all basic OO features and the way they are handled by ._
-db4o. We will complete the first part of our db4o walkthrough in the ._
-.l Deep next chapter  ..l  by looking at deep object graphs, including recursive structures.
+db4o. To learn about complex recursive structures and deep objects graphs,._ 
+please, look at  .b Deep objects' graphs ..  chapter in  .b Db4o Programmer's Reference .. .
+
+
+
 
 .1 Full source ..
 

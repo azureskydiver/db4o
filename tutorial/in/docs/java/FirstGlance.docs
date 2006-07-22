@@ -5,17 +5,17 @@ let's get you familiar with some basics.
 .1 The db4o engine... ..
 The db4o object database engine consists of one single jar file. ._
 This is all that you need to program against. The versions ._
-supplied with the distribution can be found in /db4o-5.0/lib/.	
+supplied with the distribution can be found in /db4o-5.5/lib/.	
 
-.b db4o-5.0-java1.1.jar ..
+.b db4o-5.5-java1.1.jar ..
 will run with most Java JDKs that supply JDK 1.1.x functionality ._
 such as reflection and Exception handling. That includes many ._
 IBM J9 configurations, Symbian and Savaje.
 
-.b db4o-5.0-java1.2.jar ..
+.b db4o-5.5-java1.2.jar ..
 is built for all Java JDKs between 1.2 and 1.4.
 
-.b db4o-5.0-java5.jar ..
+.b db4o-5.5-java5.jar ..
 is built for Java JDK 5.
 
 .1 Installation ..
