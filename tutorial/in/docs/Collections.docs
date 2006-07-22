@@ -55,6 +55,7 @@ This doesn't work with arrays, though.
 
 .s com.db4o.f1.chapter3.CollectionsExample#retrieveArrays ..
 
+
 .2 Native Queries ..
 
 If we want to use Native Queries to find SensorReadouts with matching ._

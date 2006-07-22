@@ -89,8 +89,8 @@ All these techniques can be combined arbitrarily, of course. Please try ._
 it out. There still may be cases left where the predefined query API ._
 constraints may not be sufficient - don't worry, you can always let ._
 db4o run any arbitrary code that you provide in an Evaluation. ._
-Evaluations will be discussed ._
-in a  .l Evaluations later chapter .. .
+Evaluations are discussed ._
+in a  .b Evaluations .. chapter of .b Db40 Programmer's Reference .. .
 
 To prepare for the next chapter, let's clear the database.
 

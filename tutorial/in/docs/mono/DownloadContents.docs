@@ -1,17 +1,17 @@
 .0 Download Contents ..
 
 The db4o Mono distribution is available from the  .l http://www.db4o.com/community/ontheroad/downloadcenter/ db4o download center ..  in 3 versions: ._
- .i db4o-5.0-mono.tar.gz ..  (binary and source tarball),  .i db4o-5.0-mono.noarch.rpm ..  (binary RPRM),   .i db4o-5.0-mono.src.rpm ..  (source RPM). The noarch RPM ._
+ .i db4o-5.5-mono.tar.gz ..  (binary and source tarball),  .i db4o-5.5-mono.noarch.rpm ..  (binary RPRM),   .i db4o-5.5-mono.src.rpm ..  (source RPM). The noarch RPM ._
  can be built from the source RPM. After installing/unzipping ._
 you will find the following directory structure on your machine:
 
-.b db4o-5.0-mono.noarch.rpm ..
+.b db4o-5.5-mono.noarch.rpm ..
 
 .g mono-rpm-dir.gif ..
 
 
 .n
-.b db4o-5.0-mono.tar.gz ..
+.b db4o-5.5-mono.tar.gz ..
 
 .g mono-tarball-dir.gif ..
 
@@ -29,3 +29,8 @@ search capabilities.
 The API documentation for db4o is supplied as a set of HTML pages. While ._
 you read through this tutorial, it may be helpful to look into the API ._
 documentation occasionaly.
+
+.a Db4o Programmer's Reference ..
+.b /usr/share/doc/package/db4o/reference/reference.pdf ..
+Reference documentation with lots of examples will help you to reveal ._
+the power of db4o.

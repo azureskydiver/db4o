@@ -38,6 +38,7 @@ supports:
     return pilot.Points == 100;
 }); ..c 
 
+.n
 .b Java JDK 5 ..
 .c List <Pilot> pilots = db.query(new Predicate<Pilot>() {
     public boolean match(Pilot pilot) {
@@ -171,7 +172,7 @@ be an ongoing process in a close dialog with the db4o community. ._
 Feel free to contribute your results and your needs by providing ._
 feedback to our  .l http://forums.db4o.com/ db4o forums .. .
 .? java The current state of the query optimization process is detailed ._
-in the chapter on  .l NQOptimization Native Query Optimization ..l. ..?
+in .b Native Query Optimization .. chapter of .b Db4o Programmer's Reference ..?
 
 With the current implementation, all above examples will run ._
 optimized, except for the "Arbitrary Code" example - we are working on it.
