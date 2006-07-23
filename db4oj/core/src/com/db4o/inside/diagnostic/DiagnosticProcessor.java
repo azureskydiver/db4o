@@ -86,6 +86,10 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         onDiagnostic(new LoadedFromClassIndex(yc.getName()));
     }
 
+    public void descendIntoTranslator(YapClass parent,String fieldName) {
+        onDiagnostic(new DescendIntoTranslator(parent.getName(),fieldName));
+    }
+    
     public void nativeQueryUnoptimized(Predicate predicate) {
         onDiagnostic(new NativeQueryNotOptimized(predicate));
     }

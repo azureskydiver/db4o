@@ -136,7 +136,9 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		}
     		
     	} else {
-    		
+			if(yc.configInstantiates()) {
+				i_trans.i_stream.i_handlers._diagnosticProcessor.descendIntoTranslator(yc, a_field);
+			}
     		if (yc != null) {
     			YapField yf = yc.getYapField(a_field);
     			if (yf != null) {
