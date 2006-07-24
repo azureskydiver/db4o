@@ -118,12 +118,6 @@ public interface Query {
      */
     public Query sortBy(Comparator comparator);
 
-    /**
-     * Query statistics can be enabled through {@link com.db4o.diagnostic.DiagnosticConfiguration#queryStatistics}.
-     * @return
-     */
-	public QueryStatistics statistics();
-
 //    /**
 //     * defines a Query node to be represented as a column in the array
 //     * returned in every element of the ObjectSet upon query execution. 

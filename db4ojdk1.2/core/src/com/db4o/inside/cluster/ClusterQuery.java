@@ -2,12 +2,12 @@
 
 package com.db4o.inside.cluster;
 
-import java.util.*;
+import java.util.Comparator;
 
-import com.db4o.*;
-import com.db4o.cluster.*;
-import com.db4o.inside.*;
-import com.db4o.inside.query.*;
+import com.db4o.ObjectSet;
+import com.db4o.cluster.Cluster;
+import com.db4o.inside.Exceptions4;
+import com.db4o.inside.query.ObjectSetFacade;
 import com.db4o.query.*;
 
 /**
@@ -80,11 +80,5 @@ public class ClusterQuery implements Query{
 		// FIXME
 		Exceptions4.notSupported();
 		return this;
-	}
-
-	public QueryStatistics statistics() {
-		// FIXME
-		Exceptions4.notSupported();
-		return null;
 	}
 }
