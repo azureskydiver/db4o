@@ -7,10 +7,10 @@ import com.db4o.*;
 public class CallbackHelper {
 
 		public String name;
-		public Callbacks parent;
+		public CallbacksTestCase parent;
 		
 		public void objectOnActivate(ObjectContainer container){
-		    Callbacks.called[Callbacks.ACTIVATE] = true;
+		    CallbacksTestCase.called[CallbacksTestCase.ACTIVATE] = true;
 			container.activate(parent, 3);
 		}
 		

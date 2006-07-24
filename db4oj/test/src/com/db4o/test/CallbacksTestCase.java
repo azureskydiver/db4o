@@ -5,7 +5,7 @@ package com.db4o.test;
 import com.db4o.*;
 import com.db4o.foundation.*;
 
-public class Callbacks 
+public class CallbacksTestCase 
 {
     static boolean returnValue = true;
     static final Object lock = new Object();
