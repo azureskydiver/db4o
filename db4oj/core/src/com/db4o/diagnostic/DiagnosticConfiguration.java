@@ -21,8 +21,4 @@ public interface DiagnosticConfiguration {
      * removes all DiagnosticListeners.
      */
     public void removeAllListeners();
-
-	public void queryStatistics(boolean enabled);
-
-	public boolean queryStatistics();
 }

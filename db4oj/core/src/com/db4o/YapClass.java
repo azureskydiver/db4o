@@ -153,6 +153,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                     i_fields = new YapField[0];
                 }
             }
+            
             DiagnosticProcessor dp = i_stream.i_handlers._diagnosticProcessor;
             if(dp.enabled()){
                 dp.checkClassHasFields(this);

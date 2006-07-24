@@ -2,7 +2,9 @@
 
 package com.db4o;
 
+import com.db4o.events.EventRegistry;
 import com.db4o.foundation.*;
+import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
@@ -34,12 +36,9 @@ public abstract class QQueryBase implements Unversioned {
     
     private final QQuery _this;
     
-    private final QueryStatisticsImpl _statistics;
-    
     protected QQueryBase() {
         // C/S only
     	_this = cast(this);
-    	_statistics = null;
     }
 
     protected QQueryBase(Transaction a_trans, QQuery a_parent, String a_field) {
@@ -47,10 +46,6 @@ public abstract class QQueryBase implements Unversioned {
         i_trans = a_trans;
         i_parent = a_parent;
         i_field = a_field;
-        // TODO: Use null object pattern instead?
-        _statistics = a_trans.i_stream.configure().diagnostic().queryStatistics()
-        	? new QueryStatisticsImpl()
-        	: null;
     }
 
     void addConstraint(QCon a_constraint) {
@@ -101,13 +96,13 @@ public abstract class QQueryBase implements Unversioned {
              
             if (claxx != null) {
                 
-                if(claxx.equals(i_trans.i_stream.i_handlers.ICLASS_OBJECT)){
+                if(claxx.equals(stream().i_handlers.ICLASS_OBJECT)){
                     return null;
                 }
                 
                 Collection4 col = new Collection4();
                 if (claxx.isInterface()) {
-                    Collection4 classes = i_trans.i_stream.i_classCollection.forInterface(claxx);
+                    Collection4 classes = stream().i_classCollection.forInterface(claxx);
                     if (classes.size() == 0) {
                         QConClass qcc = new QConClass(i_trans, null, null, claxx);
                         addConstraint(qcc);
@@ -217,14 +212,14 @@ public abstract class QQueryBase implements Unversioned {
 
             final boolean[] anyClassCollected = { false };
 
-            i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new Visitor4() {
+            stream().i_classCollection.attachQueryNode(a_field, new Visitor4() {
 
                 public void visit(Object obj) {
 
                     Object[] pair = ((Object[]) obj);
                     YapClass parentYc = (YapClass)pair[0];
                     YapField yf = (YapField)pair[1];
-                    YapClass childYc = yf.getFieldYapClass(i_trans.i_stream);
+                    YapClass childYc = yf.getFieldYapClass(stream());
 
                     boolean take = true;
 
@@ -262,20 +257,21 @@ public abstract class QQueryBase implements Unversioned {
     }
 
     public ObjectSet execute() {
-    	if (_statistics != null) {
-    		_statistics.startTimer();
-    	}
-        QueryResult qresult = getQueryResult();
-        if (_statistics != null) {
-    		_statistics.stopTimer();
-    	}
+    	
+    		Callbacks eventRegistry = stream().callbacks();
+    		eventRegistry.onQueryStarted(cast(this));
+    		
+    	    QueryResult qresult = getQueryResult();
+    	    
+    	    eventRegistry.onQueryFinished(cast(this));
+    	    
 		return new ObjectSetFacade(qresult);
     }
     
     public QueryResult getQueryResult() {
     	synchronized (streamLock()) {
             
-            YapStream stream = i_trans.i_stream;
+            YapStream stream = stream();
             
             if(i_constraints.size() == 0){
                 QueryResultImpl res = stream.createQResult(i_trans);
@@ -288,11 +284,15 @@ public abstract class QQueryBase implements Unversioned {
                 result.reset();
 				return result;
 			}
-	        QueryResultImpl qResult = i_trans.i_stream.createQResult(i_trans);
+	        QueryResultImpl qResult = stream().createQResult(i_trans);
 	        execute1(qResult);
 	        return qResult;
         }
     }
+
+	private YapStream stream() {
+		return i_trans.i_stream;
+	}
 
 	private QueryResult classOnlyQuery() {
         
@@ -312,7 +312,7 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
         
-        if (i_trans.i_stream.isClient()) {
+        if (stream().isClient()) {
             long[] ids = clazz.getIDs(i_trans); 
             QResultClient resClient = new QResultClient(i_trans, ids.length);
             for (int i = 0; i < ids.length; i++) {
@@ -353,16 +353,16 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
     void execute1(final QueryResultImpl result) {
-        if (i_trans.i_stream.isClient()) {
+        if (stream().isClient()) {
             marshall();
-            ((YapClient)i_trans.i_stream).queryExecute(_this, result);
+            ((YapClient)stream()).queryExecute(_this, result);
         } else {
             executeLocal(result);
         }
     }
 
     void executeLocal(final QueryResultImpl result) {
-        final YapStream stream = i_trans.i_stream;
+        final YapStream stream = stream();
         boolean checkDuplicates = false;
         boolean topLevel = true;
         List4 candidateCollection = null;
@@ -539,7 +539,7 @@ public abstract class QQueryBase implements Unversioned {
     }
 
     protected Object streamLock() {
-        return i_trans.i_stream.i_lock;
+        return stream().i_lock;
     }
 
 	public Query sortBy(QueryComparator comparator) {
@@ -556,9 +556,5 @@ public abstract class QQueryBase implements Unversioned {
     // cheat emulating '(QQuery)this'
 	private static QQuery cast(QQueryBase obj) {
 		return (QQuery)obj;
-	}
-	
-	public QueryStatistics statistics() {
-		return _statistics;
 	}
 }

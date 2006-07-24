@@ -9,20 +9,18 @@ import com.db4o.query.*;
 
 /**
  * @exclude
+ * 
+ * FIXME: remove me from the core and make me a façade over Events
  */
 public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     
     private Collection4 _listeners;
     
-    // TODO: shouldn't we be using the same strategy as Config4Impl? 
-    private boolean _queryStatistics;
-    
     public DiagnosticProcessor() {
     }
     
-    private DiagnosticProcessor(Collection4 listeners, boolean queryStatistics) {
+    private DiagnosticProcessor(Collection4 listeners) {
     	_listeners = listeners;
-    	_queryStatistics = queryStatistics;
     }
 
     public void addListener(DiagnosticListener listener) {
@@ -58,7 +56,7 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     }
 
     public Object deepClone(Object context) {
-        return new DiagnosticProcessor(cloneListeners(), _queryStatistics);
+        return new DiagnosticProcessor(cloneListeners());
     }
 
 	private Collection4 cloneListeners() {
@@ -107,12 +105,4 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public void removeAllListeners() {
         _listeners = null;
     }
-
-	public void queryStatistics(boolean enabled) {
-		_queryStatistics = enabled;
-	}
-	
-	public boolean queryStatistics() {
-		return _queryStatistics;
-	}
 }
