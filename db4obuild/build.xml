@@ -38,8 +38,6 @@
 		<mkdir dir="${dir.dist.doc.api}" />
 		<mkdir dir="${dir.dist.java.build.tutorial}" />
 		<mkdir dir="${dir.dist.java.build.tutorial.src}" />
-		<mkdir dir="${dir.dist.java.build.reference}" />
-		<mkdir dir="${dir.dist.java.build.reference.src}" />
 		<mkdir dir="${dir.dist.dll.net}" />
 		<mkdir dir="${dir.dist.dll.compact}" />
 		<mkdir dir="${dir.dist.dll.mono}" />
@@ -71,12 +69,6 @@
 			<fileset dir="${dir.j.reference.out.java}">
 				<include name="**/*" />
 			</fileset>
-			<fileset dir="${dir.j.reference.out.net}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.j.reference.out.mono}">
-				<include name="**/*" />
-			</fileset>
 			<fileset dir="${dir.n.core.src}">
 				<include name="**/*.cs" />
 			</fileset>
@@ -85,7 +77,6 @@
 			</fileset>
 		</delete>
 		<ant dir="${dir.n.tutorial}" target="clean"/>
-		<ant dir="${dir.n.reference}" target="clean"/>
 	</target>
 	
 	<target name="filehead" depends="init" description="Add copyright header to all input sources">
@@ -840,14 +831,6 @@
 				<include name="src/**/*.java" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.dist.java.build.reference}">
-			<fileset dir="${dir.j.reference.out.java}">
-				<include name="**/**" />
-			</fileset>
-			<fileset dir="${dir.j.reference}">
-				<include name="src/**/*.java" />
-			</fileset>
-		</copy>
 
 		<copy todir="${dir.dist.java.build}">
 			<fileset dir="${dir.dist}" includes="doc/**" />
@@ -914,7 +897,6 @@
 			<param name="dir.tools" value="${dir.n.tools}" />
 			<param name="dir.test" value="${dir.n.test}" />
 			<param name="dir.tutorial" value="${dir.n.tutorial}" />
-			<param name="dir.reference" value="${dir.n.reference}" />
 		</antcall>
 	</target>
 		
@@ -971,30 +953,6 @@
 			</fileset>
 		</copy>	
 
-		<copy todir="${dir.dist.net.build.reference}">
-			<fileset dir="${dir.j.reference.out.net}">
-				<include name="**/**" />
-			</fileset>
-			<fileset dir="${dir.reference}">
-				<include name="**/*.cs" />
-				<include name="vb/**/*.vb" />
-				<include name="vb/**/*.vbproj" />
-				<include name="vb/**/*.sln" />
-				<exclude name="db4o-reference/**/*.*" />
-			</fileset>
-			<fileset dir="${dir.n.reference.bin}">
-				<include name="**/*.dll" />
-				<include name="**/*.exe" />
-				<include name="**/*.config" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${dir.dist.net.build.reference}/vb">
-			<fileset dir="${dir.j.reference.out.vb}">
-				<include name="**/**" />
-			</fileset>
-		</copy>	
-	
 		<copy todir="${dir.dist.net.build}">
 			<fileset dir="${dir.dist}" includes="dll/**/**" />
 			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
@@ -1140,25 +1098,6 @@
 			</fileset>
 		</copy>
 
-		<mkdir dir="${dir.dist.mono.build.reference}" />
-		<copy todir="${dir.dist.mono.build.reference}">
-			<fileset dir="${dir.n.reference}">
-				<include name="**/*.cs" />
-				<exclude name="db4o-reference/**/*.*" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.dist.mono.build.reference}">
-			<fileset dir="${dir.j.reference.out.mono}">
-				<include name="**/**" />
-			</fileset>
-		</copy>
-		<mkdir dir="${dir.dist.mono.build.reference}/vb" />
-		<copy todir="${dir.dist.mono.build.reference}/vb">
-			<fileset dir="${dir.j.reference.out.vb}">
-				<include name="**/**" />
-			</fileset>
-		</copy>
-
 		<filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
 			<sources dir="${dir.dist.mono.build.src}">
 				<include name="**/*.cs" />
@@ -1267,11 +1206,6 @@
 		<ant dir="${dir.n.tutorial}">
 			<property name="dir.db4obuild" location="." />
 		</ant>
-
-		<ant dir="${dir.n.reference}">
-			<property name="dir.db4obuild" location="." />
-		</ant>
-
 		
 	</target>
 	
@@ -1443,9 +1377,6 @@
 				<include name="*.pdf" />
 			</fileset>
 
-			<fileset dir="${dir.dist.java.build.reference}">
-				<include name="*.pdf" />
-			</fileset>
 		</copy>
 		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o.zip" />
 		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.5.B.zip" />
