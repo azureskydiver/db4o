@@ -1,0 +1,8 @@
+.n
+.a CSPart ..
+.0 Client/Server
+
+.e ClientServer ..
+.e SwitchingCS .. 
+.e Semaphores ..
+.e Messaging ..

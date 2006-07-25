@@ -1,0 +1,7 @@
+.n
+.a SwitchingCS ..
+.1 Switching database files in C/S mode  ..
+
+- cast client ObjectContainer to ExtClient 
+- ExtClient#switchToFile(String filename) 
+- ExtClient#switchToMainFile() // back to the original file 
