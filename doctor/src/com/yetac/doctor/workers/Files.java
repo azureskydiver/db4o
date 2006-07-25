@@ -120,6 +120,7 @@ public class Files extends Configuration {
         System.out.println("target: "+targetdir.getAbsolutePath());
         targetdir.mkdirs();
         File[] files=srcdir.listFiles();
+        if (files == null) return;
         for (int idx=0;idx<files.length;idx++) {
             if(files[idx].isFile()) {
                 copyFile(files[idx].getAbsolutePath(),new File(targetdir,files[idx].getName()).getAbsolutePath());
