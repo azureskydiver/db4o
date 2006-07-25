@@ -32,6 +32,10 @@
 			<fileset dir="${dir.dist.classes.tutorial}" includes="com/db4o/f1/**/*.class" />
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.tutorial.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<jar destfile="${file.reference.jar}">
+			<fileset dir="${dir.dist.classes.reference}" includes="com/db4odoc/f1/**/*.class" />
+		</jar>
+		<signjar keystore="${file.keystore}" jar="${file.reference.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<doctor name="doctor" workspace="${dir.workspace}" pdfbasefont="${font.pdf.base}" />
 		<doctor name="dev" workspace="${dir.workspace}" outputfile="dev" pdfbasefont="${font.pdf.base}" />
 		<doctor 
@@ -121,6 +125,35 @@
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="mono" />
 		</doctor>
+
+		<doctor 
+			name="reference" 
+			home="${dir.j.reference}" 
+			interactive="true" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.j.reference.src}/" 
+			sourceextension="java" 
+			outputfile="${db4o.file}reference" 
+			outputpath="${dir.j.reference.out.java}" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.reference.jar}" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="true" />
+			<variable name="net" boolean="false" />
+			<variable name="mono" boolean="false" />
+			<ignoreinputfolder name="net" />
+			<ignoreinputfolder name="mono" />
+		</doctor>
+		<copy todir="${dir.j.reference.out.java}/docs" overwrite="true">
+			<fileset dir="${dir.dist.doctor}">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${dir.dist.jars}">
+				<include name="${filename.java1.2.jar}" />
+			</fileset>
+		</copy>
+		<signjar keystore="${file.keystore}" jar="${dir.j.reference.out.java}/docs/${filename.java1.2.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 	</target>
 
 	<target name="testdoctor">
