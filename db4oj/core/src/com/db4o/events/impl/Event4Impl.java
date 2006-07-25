@@ -31,7 +31,7 @@ public class Event4Impl implements Event4 {
 		}
 	}
 	
-	public void trigger(Object args) {
+	public void trigger(EventArgs args) {
 		if (null == _listeners) {
 			return;
 		}

@@ -7,15 +7,23 @@ import com.db4o.query.Query;
 public class EventRegistryImpl implements Callbacks, EventRegistry {
 	
 	private final Event4Impl _queryStarted = new Event4Impl();
-	private final Event4Impl _queryFinished = new Event4Impl();	
+	private final Event4Impl _queryFinished = new Event4Impl();
+	
+	private final Event4Impl _objectCanNew = new Event4Impl();
 
 	// Callbacks implementation
 	public void onQueryFinished(Query query) {
-		_queryFinished.trigger(query);
+		_queryFinished.trigger(new QueryEventArgsImpl(query));
 	}
 
 	public void onQueryStarted(Query query) {
-		_queryStarted.trigger(query);
+		_queryStarted.trigger(new QueryEventArgsImpl(query));
+	}
+	
+	public boolean objectCanNew(Object obj) {
+		CancellableObjectEventArgsImpl args = new CancellableObjectEventArgsImpl(obj);
+		_objectCanNew.trigger(args);
+		return !args.isCancelled();
 	}
 
 	// EventRegistry implementation
@@ -25,5 +33,9 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 
 	public Event4 queryStarted() {
 		return _queryStarted;
+	}
+	
+	public Event4 objectCanNew() {
+		return _objectCanNew;
 	}
 }
