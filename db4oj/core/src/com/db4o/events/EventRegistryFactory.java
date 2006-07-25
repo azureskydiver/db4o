@@ -26,6 +26,6 @@ public class EventRegistryFactory {
 		
 		// TODO: create a MulticastEventRegistry and register both
 		// the current one and the new one
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException("container callbacks already in use");
 	}
 }
