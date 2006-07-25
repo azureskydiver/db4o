@@ -39,7 +39,7 @@
 			<arg file="bin/installer.wxs" />
 		</exec>		
 		
-		<csc targettype="exe" destfile="bin/WixBuilder.exe">
+		<csc targettype="exe" destfile="bin/WixBuilder.exe" executable="${csc.executable}">
 			<src dir="src/installer">
 				<include name="WixBuilder.cs" />
 			</src>
