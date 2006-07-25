@@ -21,7 +21,10 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 		}
 	}
 
-	static class QueryListener implements EventListener4 {
+	/**
+	 * Keeps track of query statistics.
+	 */
+	static class QueryTracker implements EventListener4 {
 		
 		StopWatch _watch = new StopWatch();
 		EventRegistry _registry = null;
@@ -34,7 +37,7 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 			}
 		}
 		
-		public long elapsed() {
+		public long executionTime() {
 			return _watch.elapsed();
 		}
 
@@ -55,7 +58,7 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 
 	public void testExecutionTime() {
 		
-		QueryListener listener = new QueryListener();		
+		QueryTracker listener = new QueryTracker();		
 		listener.connect(db());
 		
 		Query q = db().query();		
@@ -64,8 +67,8 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 		long started = System.currentTimeMillis();		
 		q.execute();		
 		long elapsed = System.currentTimeMillis() - started;
-		Assert.isTrue(listener.elapsed() > 0);
-		Assert.isTrue(listener.elapsed() <= elapsed);
+		Assert.isTrue(listener.executionTime() > 0);
+		Assert.isTrue(listener.executionTime() <= elapsed);
 	}
 
 	public static void main(String[] args) {
