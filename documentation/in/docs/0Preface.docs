@@ -1,0 +1,15 @@
+.1 Preface
+
+db4o (database for objects) is a high-performance, embeddedable ._
+open source object database. Db4o supports Java and .NET platforms, ._
+thus giving you a wide selection of implementation choices.
+
+This reference is for anyone who is using or is going to use ._
+db4o and wants to have handy and thorough information on most ._
+common db4o programming questions.
+
+If you are a beginner with db4o we recommend you to start with ._
+the Tutorial. This reference uses an approach, which assumes that ._
+the reader has a basic understanding of db4o programming. Each ._
+chapter starts with brief introduction followed by detailed ._
+reference information including lots of meaningful examples.

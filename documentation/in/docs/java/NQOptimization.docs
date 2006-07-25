@@ -1,0 +1,175 @@
+.n
+.a NQOptimization ..
+.1 Native Query Optimization ..
+
+Native Queries will run out of the box in any environment. ._
+If an optimizer is present in the CLASSPATH and if optimisation ._
+is turned on, Native Queries will be converted to SODA queries ._
+where this is possible, allowing db4o to use indexes and ._
+optimized internal comparison algorithms.
+
+If no ._
+optimizer is found in the CLASSPATH or if optimization is turned ._
+off, Native Quer may be executed by instantiating all objects, ._
+using  .l Evaluations SODA Evaluations .. . Naturally performance ._
+will not be as good in this case.
+
+The Native Query optimizer is still under development to eventually ._
+"understand" all Java constructs. Current optimization supports ._
+the following constructs well:
+
+- compile-time constants
+- simple member access
+- primitive comparisons
+- #equals() on primitive wrappers and Strings
+- #contains()/#startsWith()/#endsWith() for Strings
+- arithmetic expressions
+- boolean expressions
+- static field access
+- array access for static/predicate fields
+- arbitrary method calls on static/predicate fields (without candidate based params)
+- candidate methods composed of the above
+- chained combinations of the above
+
+This list will constantly grow with the latest versions of db4o.
+
+Note that the current implementation doesn't support polymorphism and multiline ._
+methods yet.
+
+db4o for Java supplies three different possibilities to run ._
+optimized native queries, optimization at
+(1) query execution time
+(2) deployment time
+(3) class loading time
+
+The three options are described in the following:
+
+.2 Optimization at query execution time ..
+
+.b Note: This will not work with JDK1.1. ..
+
+To enable code analysis and optimization of native query expressions ._
+at query query execution time, you just have to add db4o-5.x-nqopt.jar ._
+and bloat-1.x.jar to your CLASSPATH. Optimization can be turned on and off ._
+with the following configuration setting:
+
+.c Db4o.configure().optimizeNativeQueries(boolean optimizeNQ); ..c
+
+
+.2 Instrumenting class files ..
+
+.b Note: Instrumented optimized classes will work with JDK1.1, but the ._
+optimization process itself requires at least JDK 1.2. ..
+
+File instrumentation can be done either programmatically or during an ._
+Ant build.
+
+.3 Programmatic Instrumentation ..
+
+To instrument all predicate classes in directory 'orig' whose package ._
+name starts with 'my.package' and store the modified files below ._
+directory 'instrumented', ensure that db4o-5.0-nqopt.jar and bloat-1.0.jar ._
+are in your CLASSPATH and use code like the following:
+
+.c new com.db4o.nativequery.main.Db4oFileEnhancer().enhance(
+    "orig",             // source directory
+    "instrumented",     // target directory
+    new String[]{       // class path
+      "lib/my_application.jar",
+      "lib/db4o-5.0-java1.x.jar"
+    },
+    "my.package"        // optional package prefix
+  ); ..c
+  
+
+.3 Ant Instrumentation ..
+  
+An equivalent Ant target might look like this:
+
+.c <taskdef name="db4ooptimize" 
+         classname="com.db4o.nativequery.main.Db4oFileEnhancerAntTask">
+  <classpath>
+    <path path="lib/db4o-5.0-java1.x.jar" />
+    <path path="lib/db4o-5.0-nqopt.jar" />
+    <path path="lib/bloat-1.0.jar" />
+    <path path="lib/db4o-5.0-java1.x.jar" />
+  </classpath>
+</taskdef>
+
+<target name="optimize">
+  <db4ooptimize 
+      srcdir="orig" 
+      targetdir="instrumented" 
+      packagefilter="my.package">
+    <classpath>
+      <path location="lib/my_application.jar" />
+      <path path="lib/db4o-5.0-java1.x.jar" />
+    </classpath>
+  </db4oenhance>
+</target> ..c
+
+All non-Predicate classes will just be copied to the target directory ._
+without modification.
+
+.2 Instrumenting classes at load time ..
+
+.b Note: This will not work with JDK1.1. ..
+
+If classes of an existing application are to be instrumented when they ._
+are loaded, a special ClassLoader needs to be used to run your application, ._
+com.db4o.nativequery.main.Db4oEnhancingClassLoader. Again ._
+db4o-5.0-nqopt.jar and bloat-1.0.jar need to be in the CLASSPATH. 
+
+All the native query code of your application would need to run in this ._
+ClassLoader. If we assume that you have a static starting method "goNative" ._
+in a class named "my.StarterClass", here is how you could run this method ._
+within the special native query ClassLoader:
+
+.c ClassLoader loader=
+  new com.db4o.nativequery.main.Db4oEnhancingClassLoader();
+Class clazz=loader.loadClass("my.StarterClass");
+Method method=clazz.getMethod("goNative",new Class[]{});
+method.invoke(null,new Object[]{}); ..c
+
+To start a full application in optimized mode, you can use the ._
+Db4oRunner utility class. If you would normally start your application ._
+like this:
+
+.c $> java my.StarterClass some arguments ..c
+
+...start Db4oRunner with the fully qualified name of your main class ._
+as the first argument and the actual arguments appended:
+
+.c $> java com.db4o.nativequery.main.Db4oRunner my.StarterClass some arguments ..c
+
+Further options:
+
+- Setting the system class loader
+  (-Djava.system.class.loader=com.db4o.nativequery.main.Db4oEnhancingClassLoader)
+- Configuring Tomcat to use the optimizing class loader
+  (Tomcat server.xml <Loader/> section)
+  
+.2 Monitoring optimization ..
+
+This feature still is quite basic but it will soon be improved. ._
+Currently you can only attach a listener to the ObjectContainer:
+
+.c ((YapStream)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+  public void notifyQueryExecuted(NQOptimizationInfo info) {
+    System.err.println(info);
+  }
+}); ..c
+
+The listener will be notified on each native query call and will be ._
+passed the Predicate object processed, the optimized expression tree (if
+successful) and the success status of the optimization run:
+
+YapStream.UNOPTIMIZED ("UNOPTIMIZED")
+  if the predicate could not be optimized and is run in unoptimized mode
+
+YapStream.PREOPTIMIZED ("PREOPTIMIZED")
+  if the predicate already was optimized (due to class file or load time
+  instrumentation)
+
+YapStream.DYNOPTIMIZED ("DYNOPTIMIZED")
+  if the predicate was optimized at query execution time
