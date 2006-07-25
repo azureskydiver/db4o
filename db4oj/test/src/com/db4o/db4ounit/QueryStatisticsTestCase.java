@@ -1,10 +1,7 @@
 package com.db4o.db4ounit;
 
 import com.db4o.ObjectContainer;
-import com.db4o.events.Event4;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
+import com.db4o.events.*;
 import com.db4o.foundation.StopWatch;
 import com.db4o.query.Query;
 
@@ -18,15 +15,6 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 	
 	private static final int ITEM_COUNT = 10000;
 
-	public static class Item {
-
-		public int id;
-
-		public Item(int id) {
-			this.id = id;
-		}
-	}
-
 	protected void store() {
 		for (int i=0; i<ITEM_COUNT; ++i) {
 			db().set(new Item(i));
@@ -38,7 +26,7 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 		StopWatch _watch = new StopWatch();
 		EventRegistry _registry = null;
 
-		public void onEvent(Event4 e, Object args) {
+		public void onEvent(Event4 e, EventArgs args) {
 			if (e == _registry.queryStarted()) {
 				_watch.start();
 			} else if (e == _registry.queryFinished()) {

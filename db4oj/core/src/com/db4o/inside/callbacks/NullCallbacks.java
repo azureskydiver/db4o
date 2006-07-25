@@ -10,4 +10,8 @@ public class NullCallbacks implements Callbacks {
 	public void onQueryStarted(Query query) {
 	}
 
+	public boolean objectCanNew(Object obj) {
+		return true;
+	}
+
 }

@@ -7,5 +7,7 @@ public interface Callbacks {
 	void onQueryStarted(Query query);
 	
 	void onQueryFinished(Query query);
+
+	boolean objectCanNew(Object obj);
 	
 }

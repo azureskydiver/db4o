@@ -1754,7 +1754,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         
         boolean dontDelete = true;
         if (yapObject == null) {
-            if (!yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW)) {
+            if (!objectCanNew(yc, a_object)) {
                 return 0;
             }
             yapObject = new YapObject(0);
@@ -1813,6 +1813,11 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
         return id;
     }
+
+	private boolean objectCanNew(YapClass yc, Object a_object) {
+		return callbacks().objectCanNew(a_object)
+			&& yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW);
+	}
 
     abstract void setDirty(UseSystemTransaction a_object);
 
