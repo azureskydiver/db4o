@@ -11,10 +11,11 @@
 			<pathelement location="${dir.doctor.bin}" />
 			<pathelement location="${dir.doctor.lib}/iText.jar" />
 			<pathelement location="${dir.dist.classes.tutorial}" />
+			<pathelement location="${dir.dist.classes.reference}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>
-	
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
 			<pathelement location="${dir.build.lib}/antcontrib/ant-contrib.jar" />
