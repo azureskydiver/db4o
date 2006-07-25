@@ -22,6 +22,7 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
 				new Class[] {
 					EventRegistryTestCase.class,
 					QueryStatisticsTestCase.class,
+					GlobalLifecycleEventsTestCase.class,
 					}).build();
 	}
 }

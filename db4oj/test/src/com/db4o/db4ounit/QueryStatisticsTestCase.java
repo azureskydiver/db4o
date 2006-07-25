@@ -1,9 +1,10 @@
 package com.db4o.db4ounit;
 
-
 import com.db4o.ObjectContainer;
-import com.db4o.events.*;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.events.Event4;
+import com.db4o.events.EventListener4;
+import com.db4o.events.EventRegistry;
+import com.db4o.events.EventRegistryFactory;
 import com.db4o.foundation.StopWatch;
 import com.db4o.query.Query;
 
