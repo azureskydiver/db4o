@@ -31,7 +31,7 @@ state of our database to the last commit point.
 
 .1 Refresh live objects ..
 
-There's one problem, though: we can roll back our database, but this ._
+There's one problem, though: We can roll back our database, but this ._
 cannot automagically trigger a rollback for our live objects.
 
 .s com.db4o.f1.chapter5.TransactionExample#carSnapshotRollback ..
@@ -41,18 +41,21 @@ may have participated in a rollback transaction.
 
 .s com.db4o.f1.chapter5.TransactionExample#carSnapshotRollbackRefresh ..
 
+What is this ExtObjectContainer construct good for? Well, it provides some functionality ._
+that is in itself stable, but the API may still be subject to change. As soon ._
+as we are confident that no more changes will occur,  .i ext ..  functionality ._
+will be transferred to the common ObjectContainer API. We will cover ._
+extended functionality in more detail in a later chapter.
+
 Finally, we clean up again.
 
 .s com.db4o.f1.Util#deleteAll -out ..
 
 .1 Conclusion ..
 
-We have seen how transactions work for a single client. The case of multiple ._
-clients is explained in  .b Db4o Programmer's Reference .. . 
-
-
-
-
+We have seen how transactions work for a single client. In the ._
+.l ClientServer next chapter ..l  we will see how the transaction concept extends to multiple ._
+clients, whether they are located within the same VM or on a remote machine.
 
 .1 Full source ..
 

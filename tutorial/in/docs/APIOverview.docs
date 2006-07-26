@@ -50,12 +50,11 @@ Every com.db4o.ObjectContainer object is also an com.db4o.ext.ExtObjectContainer
 You can cast it to ExtObjectContainer or you can use the .ext() method to get to ._
 the advanced features.
 
-
 .b com.db4o.config ..
 
 The com.db4o.config  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  ._
 contains types and classes necessary to configure db4o. The objects and interfaces ._
-within are discussed in the  .b Configuration ..  section of  .b Db4o Programmer's Reference .. .
+within are discussed in the  .l Configuration Configuration ..  section.
 
 .b com.db4o.query ..
 
