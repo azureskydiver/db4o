@@ -1,13 +1,11 @@
 .0 Download Contents ..
 
-The db4o Java distribution comes as one zip file, db4o-5.5-java.zip. ._
+The db4o Java distribution comes as one zip file, db4o-5.0-java.zip. ._
 When you unzip this file, you get the following directory structure:
 
 .g directoryjava.gif ..
 
-
-
-.b db4o-5.5/doc/tutorial/index.html .. 
+.b db4o-5.0/doc/tutorial/index.html .. 
 This is the interactive HTML tutorial. Examples can be run "live" ._
 against a db4o database from within the browser. ._
 In order to use the interactive functionality ._
@@ -15,17 +13,12 @@ a Java JRE 1.3 or above needs to be installed and integrated ._
 into the browser. Java security settings have to allow applets to be ._
 run.
 
-.b db4o-5.5/doc/tutorial/db4o-5.5-tutorial.pdf .. 
+.b db4o-5.0/doc/tutorial/db4o-5.0-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
 search capabilities.
 
 .a APIDocumentation ..
-.b db4o-5.5/doc/api/index.html ..
+.b db4o-5.0/doc/api/index.html ..
 The API documentation for db4o is supplied as JavaDocs HTML files. While ._
 you read through this tutorial it may be helpful to look into the API ._
 documentation occasionaly.
-
-.a Db4o Programmer's Reference ..
-.b db4o-5.5/doc/reference/reference.pdf ..
-Reference documentation with lots of examples will help you to reveal ._
-the power of db4o.

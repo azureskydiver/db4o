@@ -6,6 +6,9 @@ import com.db4o.f1.chapter3.*;
 import com.db4o.f1.chapter4.*;
 import com.db4o.f1.chapter5.*;
 
+import com.db4o.f1.chapter21.*;
+import com.tutorial.f1.chapter31.*;
+
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -16,5 +19,14 @@ public class Main {
         InheritanceExample.main(args);
         DeepExample.main(args);
         TransactionExample.main(args);
+        ClientServerExample.main(args);
+        IndexedExample.fillUpDB();
+        IndexedExample.noIndex();
+        IndexedExample.fullIndex();
+        IndexedExample.pilotIndex();
+        IndexedExample.pointsIndex();
+        DiagnosticExample.testEmpty();
+        DiagnosticExample.testArbitrary();
+        DiagnosticExample.testIndexDiagnostics();
     }
 }

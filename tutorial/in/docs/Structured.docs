@@ -151,7 +151,6 @@ We'll cover update depth as well as other issues with complex object graphs ._
 and the respective db4o configuration options in more detail in a later ._
 chapter.
 
-
 .1 Deleting structured objects ..
 
 As we have already seen, we call delete() on objects to get rid of them.
