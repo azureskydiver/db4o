@@ -8,7 +8,7 @@ import db4otesteclipse.*;
 
 public class UnitTestTypeSpec implements TestTypeSpec {
 	private static final String TESTLAUNCHER_NAME = "db4ounit.UnitTestMain";
-	private static final String TESTINTERFACE_NAME = "TestCase";
+	private static final String TESTINTERFACE_NAME = "db4ounit.TestCase";
 	
 	public boolean acceptTestType(IType type) throws JavaModelException {
 		if (!type.exists() || Flags.isAbstract(type.getFlags())) {
@@ -16,10 +16,14 @@ public class UnitTestTypeSpec implements TestTypeSpec {
 					+ type.getFullyQualifiedName());
 			return false;
 		}
-		// TODO/FIXME: Must be searched recursively? Needs to check fully qualified name.
-		String[] interfaceNames=type.getSuperInterfaceNames();
-		for (int idx = 0; idx < interfaceNames.length; idx++) {
-			if(interfaceNames[idx].endsWith(TESTINTERFACE_NAME)) {
+		return implementsTest(type);
+	}
+
+	private boolean implementsTest(IType type) throws JavaModelException {
+		ITypeHierarchy hierarchy=type.newSupertypeHierarchy(null);
+		IType[] interfaces=hierarchy.getAllInterfaces();
+		for (int idx = 0; idx < interfaces.length; idx++) {
+			if(interfaces[idx].getFullyQualifiedName().equals(TESTINTERFACE_NAME)) {
 				return true;
 			}
 		}
