@@ -22,5 +22,19 @@ public interface EventRegistry {
 	 * @return
 	 */
 	public Event4 objectCanNew();
+
+	/**
+	 * Receives {@link CancellableObjectEventArgs}.
+	 * 
+	 * @return
+	 */
+	public Event4 objectCanActivate();
+
+	/**
+	 * Receives {@link ObjectEventArgs}.
+	 * 
+	 * @return
+	 */
+	public Event4 objectOnActivate();
 }
 

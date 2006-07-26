@@ -10,6 +10,9 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	private final Event4Impl _queryFinished = new Event4Impl();
 	
 	private final Event4Impl _objectCanNew = new Event4Impl();
+	private final Event4Impl _objectCanActivate = new Event4Impl();
+	
+	private final Event4Impl _objectOnActivate = new Event4Impl();
 
 	// Callbacks implementation
 	public void onQueryFinished(Query query) {
@@ -20,10 +23,22 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 		_queryStarted.trigger(new QueryEventArgsImpl(query));
 	}
 	
-	public boolean objectCanNew(Object obj) {
-		CancellableObjectEventArgsImpl args = new CancellableObjectEventArgsImpl(obj);
-		_objectCanNew.trigger(args);
+	public boolean objectCanNew(Object subject) {
+		return triggerCancellableEvent(_objectCanNew, subject);
+	}
+
+	private boolean triggerCancellableEvent(Event4Impl event, Object subject) {
+		CancellableObjectEventArgsImpl args = new CancellableObjectEventArgsImpl(subject);
+		event.trigger(args);
 		return !args.isCancelled();
+	}
+	
+	public boolean objectCanActivate(Object subject) {
+		return triggerCancellableEvent(_objectCanActivate, subject);
+	}
+	
+	public void objectOnActivate(Object obj) {
+		_objectOnActivate.trigger(new ObjectEventArgsImpl(obj));
 	}
 
 	// EventRegistry implementation
@@ -37,5 +52,13 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	
 	public Event4 objectCanNew() {
 		return _objectCanNew;
+	}
+	
+	public Event4 objectCanActivate() {
+		return _objectCanActivate;
+	}
+
+	public Event4 objectOnActivate() {
+		return _objectOnActivate;
 	}
 }
