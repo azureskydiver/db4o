@@ -63,7 +63,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
-        if(dispatchEvent(a_trans.i_stream, a_object, EventDispatcher.CAN_ACTIVATE)){
+        if(objectCanActivate(a_trans.i_stream, a_object)){
             activateFields1(a_trans, a_object, a_depth);
         }
     }
@@ -1155,10 +1155,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         
         if (doFields) {
-            if(dispatchEvent(stream, a_object, EventDispatcher.CAN_ACTIVATE)){
+            if(objectCanActivate(stream, a_object)){
 	            a_yapObject.setStateClean();
 	            instantiateFields(a_yapObject, a_object, mf, attributes, a_bytes);
-	            dispatchEvent(stream, a_object, EventDispatcher.ACTIVATE);
+	            objectOnActivate(stream, a_object);
             }else{
                 if (create) {
                     a_yapObject.setStateDeactivated();
@@ -1175,6 +1175,16 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return a_object;
     }
+
+	private void objectOnActivate(YapStream stream, Object obj) {
+		stream.callbacks().objectOnActivate(obj);
+		dispatchEvent(stream, obj, EventDispatcher.ACTIVATE);
+	}
+
+	private boolean objectCanActivate(YapStream stream, Object obj) {
+		return stream.callbacks().objectCanActivate(obj)
+			&& dispatchEvent(stream, obj, EventDispatcher.CAN_ACTIVATE);
+	}
 
     Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes) {
 
