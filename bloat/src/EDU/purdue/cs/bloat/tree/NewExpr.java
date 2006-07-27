@@ -25,54 +25,51 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * NewExpr represents the <tt>new</tt> opcode that creates a new 
- * object of a specified type.
+ * NewExpr represents the <tt>new</tt> opcode that creates a new object of a
+ * specified type.
  */
 public class NewExpr extends Expr {
-  // new
-  Type objectType;
-  
-  /**
-   * Constructor.
-   *
-   * @param objectType
-   *        The type of the object to create.
-   * @param type
-   *        The type of this expression.
-   */
-  public NewExpr(Type objectType, Type type) {
-    super(type);
-    this.objectType = objectType;
-  }
-  
-  /**
-   * Returns the <tt>Type</tt> of the object being created.
-   */
-  public Type objectType() {
-    return objectType;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor) {
-  }
-  
-  public void visit(TreeVisitor visitor) {
-    visitor.visitNewExpr(this);
-  }
-  
-  public int exprHashCode() {
-    return 16 + objectType.hashCode();
-  }
-  
-  public boolean equalsExpr(Expr other) {
-    return false;
-  }
-  
-  public Object clone() {
-    return copyInto(new NewExpr(objectType, type));
-  }
+	// new
+	Type objectType;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param objectType
+	 *            The type of the object to create.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public NewExpr(final Type objectType, final Type type) {
+		super(type);
+		this.objectType = objectType;
+	}
+
+	/**
+	 * Returns the <tt>Type</tt> of the object being created.
+	 */
+	public Type objectType() {
+		return objectType;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitNewExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 16 + objectType.hashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return false;
+	}
+
+	public Object clone() {
+		return copyInto(new NewExpr(objectType, type));
+	}
 }

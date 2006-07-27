@@ -24,37 +24,27 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
-/** 
- * <tt>ReturnStmt</tt> represents the <tt>return</tt> opcode which
- * returns void from a method.  
+/**
+ * <tt>ReturnStmt</tt> represents the <tt>return</tt> opcode which returns
+ * void from a method.
  */
-public class ReturnStmt extends JumpStmt
-{
-  // return
-  
-  /**
-   * Constructor.
-   */
-  public ReturnStmt()
-  {
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitReturnStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ReturnStmt());
-  }
-} 
+public class ReturnStmt extends JumpStmt {
+	// return
+
+	/**
+	 * Constructor.
+	 */
+	public ReturnStmt() {
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitReturnStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new ReturnStmt());
+	}
+}

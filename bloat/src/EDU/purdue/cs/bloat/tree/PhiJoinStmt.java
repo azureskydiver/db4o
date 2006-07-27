@@ -24,144 +24,133 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
 import java.util.*;
 
+import EDU.purdue.cs.bloat.cfg.*;
+
 /**
- * <tt>PhiJoinStmt</tt> represents a phi-function inserted into a
- * control flow graph during conversion of variables to static
- * single-assignment form.  A <tt>PhiJoinStmt</tt> at a point of
- * control flow convergence.
- *
+ * <tt>PhiJoinStmt</tt> represents a phi-function inserted into a control flow
+ * graph during conversion of variables to static single-assignment form. A
+ * <tt>PhiJoinStmt</tt> at a point of control flow convergence.
+ * 
  * @see EDU.purdue.cs.bloat.ssa.SSAConstructionInfo SSAConstructionInfo
  */
-public class PhiJoinStmt extends PhiStmt
-{
-  Map operands;        // Operands to a PhiStmt (mapping between a Block 
-                       // and a VarExpr occurring at that block)
-  Block block;         // Basic block containing this PhiJoinStmt
+public class PhiJoinStmt extends PhiStmt {
+	Map operands; // Operands to a PhiStmt (mapping between a Block
 
-  /**
-   * Constructor.
-   *
-   * @param target
-   *        The target of this PhiStmt.
-   * @param block
-   *        The basic Block in which this PhiJoinStmt resides. 
-   */  
-  public PhiJoinStmt(VarExpr target, Block block)
-  {
-    super(target);
-    
-    this.block = block;
-    this.operands = new HashMap();
-    
-    Iterator preds = block.graph().preds(block).iterator();
-    
-    while (preds.hasNext()) {
-      Block pred = (Block) preds.next();
-      VarExpr operand = (VarExpr) target.clone();
-      operands.put(pred, operand);
-      operand.setParent(this);
-      operand.setDef(null);
-    }
-  }
-  
-  /**
-   * Set the operand to this PhiJoinStmt for a given Block to a given 
-   * expression.
-   *
-   * @param block
-   *        
-   * @param expr
-   *
-   */
-  public void setOperandAt(Block block, Expr expr)
-  {
-    Expr operand = (Expr) operands.get(block);
-    
-    if (operand != null) {
-      operand.cleanup();
-    }
-    
-    if (expr != null) {
-      operands.put(block, expr);
-      expr.setParent(this);
-    }
-    else {
-      operands.remove(block);
-    }
-  }
+	// and a VarExpr occurring at that block)
+	Block block; // Basic block containing this PhiJoinStmt
 
-  /**
-   * Returns the occurrence of the variable with which this PhiJoinStmt
-   * is concerned (usually represented by a VarExpr) at a given block.
-   *
-   * @param block
-   *        The block at which an occurrence of the variable occurs.
-   *
-   * @see VarExpr
-   */  
-  public Expr operandAt(Block block)
-  {
-    return (Expr) operands.get(block);
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param target
+	 *            The target of this PhiStmt.
+	 * @param block
+	 *            The basic Block in which this PhiJoinStmt resides.
+	 */
+	public PhiJoinStmt(final VarExpr target, final Block block) {
+		super(target);
 
-  /**
-   * Returns the number of operands that this PhiJoinStmt has.
-   */  
-  public int numOperands()
-  {
-    return block.graph().preds(block).size();
-  }
+		this.block = block;
+		this.operands = new HashMap();
 
-  /**
-   * Returns the predacessor nodes (in the CFG not dominator graph) of 
-   * the block in which this PhiJoinStmt occurs.
-   */  
-  public Collection preds()
-  {
-    return block.graph().preds(block);
-  }
-  
-  /**
-   * Returns the operands of this PhiJoinStmt.  They are usually of type
-   * VarExpr.
-   *
-   * @see VarExpr
-   */
-  public Collection operands()
-  {
-    if (operands != null) {
-      operands.keySet().retainAll(preds());
-      return operands.values();
-    }
-    
-    return new ArrayList();
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      target.visit(visitor);
-    }
-    
-    Iterator e = operands().iterator();
-    
-    while (e.hasNext()) {
-      Expr operand = (Expr) e.next();
-      operand.visit(visitor);
-    }
-    
-    if (! visitor.reverse()) {
-      target.visit(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitPhiJoinStmt(this);
-  }
+		final Iterator preds = block.graph().preds(block).iterator();
+
+		while (preds.hasNext()) {
+			final Block pred = (Block) preds.next();
+			final VarExpr operand = (VarExpr) target.clone();
+			operands.put(pred, operand);
+			operand.setParent(this);
+			operand.setDef(null);
+		}
+	}
+
+	/**
+	 * Set the operand to this PhiJoinStmt for a given Block to a given
+	 * expression.
+	 * 
+	 * @param block
+	 * 
+	 * @param expr
+	 * 
+	 */
+	public void setOperandAt(final Block block, final Expr expr) {
+		final Expr operand = (Expr) operands.get(block);
+
+		if (operand != null) {
+			operand.cleanup();
+		}
+
+		if (expr != null) {
+			operands.put(block, expr);
+			expr.setParent(this);
+		} else {
+			operands.remove(block);
+		}
+	}
+
+	/**
+	 * Returns the occurrence of the variable with which this PhiJoinStmt is
+	 * concerned (usually represented by a VarExpr) at a given block.
+	 * 
+	 * @param block
+	 *            The block at which an occurrence of the variable occurs.
+	 * 
+	 * @see VarExpr
+	 */
+	public Expr operandAt(final Block block) {
+		return (Expr) operands.get(block);
+	}
+
+	/**
+	 * Returns the number of operands that this PhiJoinStmt has.
+	 */
+	public int numOperands() {
+		return block.graph().preds(block).size();
+	}
+
+	/**
+	 * Returns the predacessor nodes (in the CFG not dominator graph) of the
+	 * block in which this PhiJoinStmt occurs.
+	 */
+	public Collection preds() {
+		return block.graph().preds(block);
+	}
+
+	/**
+	 * Returns the operands of this PhiJoinStmt. They are usually of type
+	 * VarExpr.
+	 * 
+	 * @see VarExpr
+	 */
+	public Collection operands() {
+		if (operands != null) {
+			operands.keySet().retainAll(preds());
+			return operands.values();
+		}
+
+		return new ArrayList();
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			target.visit(visitor);
+		}
+
+		final Iterator e = operands().iterator();
+
+		while (e.hasNext()) {
+			final Expr operand = (Expr) e.next();
+			operand.visit(visitor);
+		}
+
+		if (!visitor.reverse()) {
+			target.visit(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitPhiJoinStmt(this);
+	}
 }

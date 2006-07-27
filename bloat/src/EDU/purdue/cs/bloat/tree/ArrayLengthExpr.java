@@ -25,67 +25,54 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * <tt>ArrayLengthExpr</tt> represents the <i>arraylength</i> opcode
- * which gets length of an array.
+ * <tt>ArrayLengthExpr</tt> represents the <i>arraylength</i> opcode which
+ * gets length of an array.
  */
-public class ArrayLengthExpr extends Expr
-{
-  Expr array;
+public class ArrayLengthExpr extends Expr {
+	Expr array;
 
-  /**
-   * Constructor.
-   *
-   * @param array
-   *        Array whose length is sought.
-   * @param type
-   *        The type of this expression.
-   */  
-  public ArrayLengthExpr(Expr array, Type type)
-  {
-    super(type);
-    this.array = array;
-    array.setParent(this);
-  }
-  
-  public Expr array()
-  {
-    return array;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      array.visit(visitor);
-    }
-    else {
-      array.visit(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitArrayLengthExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 3 + array.exprHashCode() ^ type.simple().hashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other != null &&
-      other instanceof ArrayLengthExpr &&
-      ((ArrayLengthExpr) other).array.equalsExpr(array);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ArrayLengthExpr((Expr) array.clone(), type));
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param array
+	 *            Array whose length is sought.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public ArrayLengthExpr(final Expr array, final Type type) {
+		super(type);
+		this.array = array;
+		array.setParent(this);
+	}
+
+	public Expr array() {
+		return array;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			array.visit(visitor);
+		} else {
+			array.visit(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitArrayLengthExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 3 + array.exprHashCode() ^ type.simple().hashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other != null) && (other instanceof ArrayLengthExpr)
+				&& ((ArrayLengthExpr) other).array.equalsExpr(array);
+	}
+
+	public Object clone() {
+		return copyInto(new ArrayLengthExpr((Expr) array.clone(), type));
+	}
 }

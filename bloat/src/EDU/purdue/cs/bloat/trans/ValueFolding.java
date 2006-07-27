@@ -24,268 +24,271 @@
 
 package EDU.purdue.cs.bloat.trans;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.tree.*;
-import EDU.purdue.cs.bloat.ssa.*;
-import EDU.purdue.cs.bloat.util.*;
 import java.io.*;
 import java.util.*;
 
-/** 
- * <tt>ValueFolding</tt> uses a <tt>ValueFolder</tt> to determine
- * which nodes in an expression tree can be removed or replaced by
- * common expression elimination and constant propagation.
- *
+import EDU.purdue.cs.bloat.cfg.*;
+import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.ssa.*;
+import EDU.purdue.cs.bloat.tree.*;
+
+/**
+ * <tt>ValueFolding</tt> uses a <tt>ValueFolder</tt> to determine which
+ * nodes in an expression tree can be removed or replaced by common expression
+ * elimination and constant propagation.
+ * 
  * @see ValueFolder
  */
 public class ValueFolding {
-  public static boolean DEBUG = false;
+	public static boolean DEBUG = false;
 
-  SideEffectChecker sideEffects;
-  ValueFolder folder;
-  boolean changed;
+	SideEffectChecker sideEffects;
 
-  public static boolean DUMP = false;
-  public static boolean SAVEDUMP = false;
-  PrintWriter vn;
-  PrintWriter dump;
+	ValueFolder folder;
 
-  /**
-   * Performs value folding (common expression elimination and constant
-   * folding) on a control flow graph.
-   */
-  int next = 1;
-  public void transform(FlowGraph cfg) {
+	boolean changed;
 
-    File dir = new File("ValueFoldingOutdir");
-    File cfgFile = null;
-    File dotFile = null;
-    File vnFile = null;
-    File dumpFile = null;
+	public static boolean DUMP = false;
 
-    if(DUMP) {
-//        System.out.println("    Dumping Value Folding in directory: " +
-//  			 dir);
+	public static boolean SAVEDUMP = false;
 
-//        try {
-//  	cfgFile = new File(dir, "cfg.txt");
-	  
-//  	cfg.print(new PrintWriter(new FileWriter(cfgFile), true));
+	PrintWriter vn;
 
-//  	dotFile = new File(dir, "cfg.dot");
-//  	cfg.printGraph(new PrintWriter(new FileWriter(dotFile),
-//  				       true));
+	PrintWriter dump;
 
-//  	vnFile = new File(dir, "value.numbers");
-//  	vn = new PrintWriter(new FileWriter(vnFile), true);
+	/**
+	 * Performs value folding (common expression elimination and constant
+	 * folding) on a control flow graph.
+	 */
+	int next = 1;
 
-//  	dumpFile = new File(dir, "vn.dump");
-//  	dump = new PrintWriter(new FileWriter(dumpFile), true);
+	public void transform(final FlowGraph cfg) {
 
-//        } catch (IOException ex) {
+		final File dir = new File("ValueFoldingOutdir");
+		if (ValueFolding.DUMP) {
+			// System.out.println(" Dumping Value Folding in directory: " +
+			// dir);
 
-//        }
+			// try {
+			// cfgFile = new File(dir, "cfg.txt");
 
-      vn = new PrintWriter(System.out, true);
-      dump = new PrintWriter(System.out, true);
-    }
+			// cfg.print(new PrintWriter(new FileWriter(cfgFile), true));
 
-    EditorContext context = cfg.method().declaringClass().context();
+			// dotFile = new File(dir, "cfg.dot");
+			// cfg.printGraph(new PrintWriter(new FileWriter(dotFile),
+			// true));
 
-    sideEffects = new SideEffectChecker(context);
+			// vnFile = new File(dir, "value.numbers");
+			// vn = new PrintWriter(new FileWriter(vnFile), true);
 
-    folder = new ValueFolder(true, context);
+			// dumpFile = new File(dir, "vn.dump");
+			// dump = new PrintWriter(new FileWriter(dumpFile), true);
 
-    SSAGraph ssaGraph = new SSAGraph(cfg);
+			// } catch (IOException ex) {
 
-    ssaGraph.visitComponents(new ComponentVisitor() {
-      public void visitComponent(List scc) {
-	// Maps Nodes in the SCC to their folded value
-	HashMap map = new HashMap(scc.size()*2+1);
+			// }
 
-	boolean changed = true;
+			vn = new PrintWriter(System.out, true);
+			dump = new PrintWriter(System.out, true);
+		}
 
-	while (changed) {
-	  changed = false;
+		final EditorContext context = cfg.method().declaringClass().context();
 
-	  Iterator iter = scc.iterator();
+		sideEffects = new SideEffectChecker(context);
 
-	  int x = 0;
-	  while (iter.hasNext()) {
-	    Node node = (Node) iter.next();
+		folder = new ValueFolder(true, context);
 
-	    if(DUMP) {
-	      x++;
-	      dump.println("Folding SCC Node " + node + " (" + x + 
-			   " of " + scc.size() + ")");
-	    }
+		final SSAGraph ssaGraph = new SSAGraph(cfg);
 
-	    if (fold(map, node)) {
-	      changed = true;
-	    }
-	  }
+		ssaGraph.visitComponents(new ComponentVisitor() {
+			public void visitComponent(final List scc) {
+				// Maps Nodes in the SCC to their folded value
+				final HashMap map = new HashMap(scc.size() * 2 + 1);
 
-	  if(DUMP)
-	    dump.println("");
+				boolean changed = true;
 
-	  if (scc.size() == 1) {
-	    break;
-	  }
-	}
-      }
-    });
+				while (changed) {
+					changed = false;
 
-    cfg.removeUnreachable();
+					final Iterator iter = scc.iterator();
 
-    folder = null;
-    sideEffects = null;
+					int x = 0;
+					while (iter.hasNext()) {
+						final Node node = (Node) iter.next();
 
+						if (ValueFolding.DUMP) {
+							x++;
+							dump.println("Folding SCC Node " + node + " (" + x
+									+ " of " + scc.size() + ")");
+						}
 
-    // Okay, we've successfully value folded, remove debugging files
-    if(DUMP && !SAVEDUMP) {
-//        cfgFile.delete();
-//        dotFile.delete();
-//        dumpFile.delete();
-//        vnFile.delete();
-//        dir.delete();
-    }
-  }
+						if (fold(map, node)) {
+							changed = true;
+						}
+					}
 
-  /**
-   * Builds a mapping between the nodes in a CFG's SCCs and the expressions
-   * they are equivalent to.
-   *
-   * @param map
-   *        A mapping between the SCCs of the CFG's SSA Graph
-   *        (definitions) and the expressions they are folded to
-   * @param sscNode
-   *        A Node in the SCC of the SSA Graph
-   *
-   * @return True, if the value in the mapping was changed.
-   */
-  boolean fold(Map map, Node sccNode) {
-    Node node = (Node) map.get(sccNode);
+					if (ValueFolding.DUMP) {
+						dump.println("");
+					}
 
-    if(DUMP)
-      dump.println("  SCC Node " + sccNode + " is mapped to node " +  
-		   node);
+					if (scc.size() == 1) {
+						break;
+					}
+				}
+			}
+		});
 
-    // The SCC node has not been folded yet, fold it to itself
-    if (node == null) {
-      node = sccNode;
-    }
+		cfg.removeUnreachable();
 
-    if (! node.hasParent()) {
-      return false;
-    }
+		folder = null;
+		sideEffects = null;
 
-    if (DEBUG) {
-      System.out.println("folding --- " + node + " in " + node.parent());
-    }
-
-    if (DUMP) {
-      dump.println("  Folding " + node + " (" + "VN=" +
-		   node.valueNumber() + ") in " + node.parent());
-    }
-
-    int v = node.valueNumber();
-
-    if (v == -1) {
-      // Node has not been assigned a value number, can't do anything
-      return false;
-    }
-
-    folder.values.ensureSize(v+1);
-    ConstantExpr oldValue = (ConstantExpr) folder.values.get(v);
-    ConstantExpr value = null;
-
-    if(DUMP)
-      dump.println("    Node " + node + " is mapped to constant " + 
-		   oldValue);
-
-    if (node instanceof ConstantExpr) {
-      // If the node that we're dealing with is already a
-      // ConstantExpr, change it to the mapped value if it is
-      // different.
-      value = (ConstantExpr) node;
-
-      if (oldValue == null || ! oldValue.equalsExpr(value)) {
-	// The node was not previously mapped to a constant, or it was
-	// mapped to a different constant.  Update the mapping to
-	// relfect the new constant.
-	if (DEBUG) {
-	  System.out.println("changed " + oldValue + " to " + value);
+		// Okay, we've successfully value folded, remove debugging files
+		if (ValueFolding.DUMP && !ValueFolding.SAVEDUMP) {
+			// cfgFile.delete();
+			// dotFile.delete();
+			// dumpFile.delete();
+			// vnFile.delete();
+			// dir.delete();
+		}
 	}
 
-	if (DUMP) {
-	  dump.println("      Changed " + oldValue + " to " + value);
+	/**
+	 * Builds a mapping between the nodes in a CFG's SCCs and the expressions
+	 * they are equivalent to.
+	 * 
+	 * @param map
+	 *            A mapping between the SCCs of the CFG's SSA Graph
+	 *            (definitions) and the expressions they are folded to
+	 * @param sccNode
+	 *            A Node in the SCC of the SSA Graph
+	 * 
+	 * @return True, if the value in the mapping was changed.
+	 */
+	boolean fold(final Map map, final Node sccNode) {
+		Node node = (Node) map.get(sccNode);
+
+		if (ValueFolding.DUMP) {
+			dump
+					.println("  SCC Node " + sccNode + " is mapped to node "
+							+ node);
+		}
+
+		// The SCC node has not been folded yet, fold it to itself
+		if (node == null) {
+			node = sccNode;
+		}
+
+		if (!node.hasParent()) {
+			return false;
+		}
+
+		if (ValueFolding.DEBUG) {
+			System.out.println("folding --- " + node + " in " + node.parent());
+		}
+
+		if (ValueFolding.DUMP) {
+			dump.println("  Folding " + node + " (" + "VN="
+					+ node.valueNumber() + ") in " + node.parent());
+		}
+
+		final int v = node.valueNumber();
+
+		if (v == -1) {
+			// Node has not been assigned a value number, can't do anything
+			return false;
+		}
+
+		folder.values.ensureSize(v + 1);
+		final ConstantExpr oldValue = (ConstantExpr) folder.values.get(v);
+		ConstantExpr value = null;
+
+		if (ValueFolding.DUMP) {
+			dump.println("    Node " + node + " is mapped to constant "
+					+ oldValue);
+		}
+
+		if (node instanceof ConstantExpr) {
+			// If the node that we're dealing with is already a
+			// ConstantExpr, change it to the mapped value if it is
+			// different.
+			value = (ConstantExpr) node;
+
+			if ((oldValue == null) || !oldValue.equalsExpr(value)) {
+				// The node was not previously mapped to a constant, or it was
+				// mapped to a different constant. Update the mapping to
+				// relfect the new constant.
+				if (ValueFolding.DEBUG) {
+					System.out.println("changed " + oldValue + " to " + value);
+				}
+
+				if (ValueFolding.DUMP) {
+					dump.println("      Changed " + oldValue + " to " + value);
+				}
+
+				folder.values.set(v, value);
+				return true;
+			}
+
+			// Mapping was already correct, don't do anything.
+			return false;
+		}
+
+		if ((node instanceof Expr) && (oldValue != null)) {
+			// The node is a non-constant Expr that was mapped to a constant
+
+			if (node.parent() instanceof PhiCatchStmt) {
+				// Don't fold values inside PhiCatchStmts
+				return false;
+			}
+
+			sideEffects.reset();
+			node.visit(sideEffects);
+
+			if (!sideEffects.hasSideEffects()) {
+				// If the expression does not have side effects, then make a
+				// clone of the value to which it was mapped and map the clone
+				// to the original sccNode (which may or may not be node).
+				// Technically, the mapping did not change.
+
+				value = (ConstantExpr) oldValue.clone();
+				node.replaceWith(value);
+				map.put(sccNode, value);
+				return false;
+			}
+		}
+
+		if (value == null) {
+			// The node is mapped to nothing, Use the ValueFolder to
+			// determine a expression that node can be folded to.
+
+			folder.node = null;
+			node.visit(folder);
+
+			if (ValueFolding.DEBUG) {
+				System.out.println("folded " + node + " to " + folder.node);
+			}
+
+			if (ValueFolding.DUMP) {
+				dump.println("    Using ValueFolder to determine new value");
+				dump.println("      Folded " + node + " to " + folder.node);
+			}
+
+			if (folder.node != null) {
+				// Assert.isTrue(folder.node.hasParent(),
+				// "No parent for " + folder.node);
+				map.put(sccNode, folder.node);
+			}
+
+			if (folder.node instanceof ConstantExpr) {
+				// If the node was folded into a ConstantExpr, then fold it in
+				// the ValueFolder.
+				value = (ConstantExpr) folder.node;
+				folder.values.set(v, value);
+				return true;
+			}
+		}
+
+		return false;
 	}
-
-	folder.values.set(v, value);
-	return true;
-      }
-
-      // Mapping was already correct, don't do anything.
-      return false;
-    }
-
-    if (node instanceof Expr && oldValue != null) {
-      // The node is a non-constant Expr that was mapped to a constant
-
-      if (node.parent() instanceof PhiCatchStmt) {
-	// Don't fold values inside PhiCatchStmts
-	return false;
-      }
-
-      sideEffects.reset();
-      node.visit(sideEffects);
-
-      if (! sideEffects.hasSideEffects()) {
-	// If the expression does not have side effects, then make a
-	// clone of the value to which it was mapped and map the clone
-	// to the original sccNode (which may or may not be node).
-	// Technically, the mapping did not change.
-
-	value = (ConstantExpr) oldValue.clone();
-	node.replaceWith(value);
-	map.put(sccNode, value);
-	return false;
-      }
-    }
-
-    if (value == null) {
-      // The node is mapped to nothing, Use the ValueFolder to
-      // determine a expression that node can be folded to.
-
-      folder.node = null;
-      node.visit(folder);
-
-      if (DEBUG) {
-	System.out.println("folded " + node + " to " + folder.node);
-      }
-
-      if (DUMP) {
-	dump.println("    Using ValueFolder to determine new value");
-	dump.println("      Folded " + node + " to " + folder.node);
-      }
-
-      if (folder.node != null) {
-//  	Assert.isTrue(folder.node.hasParent(),
-//  		      "No parent for " + folder.node);
-	map.put(sccNode, folder.node);
-      }
-
-      if (folder.node instanceof ConstantExpr) {
-	// If the node was folded into a ConstantExpr, then fold it in
-	// the ValueFolder.
-	value = (ConstantExpr) folder.node;
-	folder.values.set(v, value);
-	return true;
-      }
-    }
-
-    return false;
-  }
 }
-

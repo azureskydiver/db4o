@@ -24,14 +24,16 @@
 
 package EDU.purdue.cs.bloat.editor;
 
-/** 
- * <tt>EditorVisitor</tt> "visits" the "nodes" in a class.  Imagine
- * that a class is rooted by a <tt>ClassEditor</tt> that has
- * <tt>FieldEditor</tt> and <tt>MethodEditor</tt> children.  
+/**
+ * <tt>EditorVisitor</tt> "visits" the "nodes" in a class. Imagine that a
+ * class is rooted by a <tt>ClassEditor</tt> that has <tt>FieldEditor</tt>
+ * and <tt>MethodEditor</tt> children.
  */
 
 public interface EditorVisitor {
-  public void visitClassEditor(ClassEditor editor);
-  public void visitMethodEditor(MethodEditor editor);
-  public void visitFieldEditor(FieldEditor editor);
+	public void visitClassEditor(ClassEditor editor);
+
+	public void visitMethodEditor(MethodEditor editor);
+
+	public void visitFieldEditor(FieldEditor editor);
 }

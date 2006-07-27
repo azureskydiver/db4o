@@ -23,51 +23,40 @@
  */
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
  * ThrowStmt represents the <tt>athrow</tt> opcode which throws an exception
  * or error.
  */
-public class ThrowStmt extends JumpStmt
-{
-  // athrow
-  
-  Expr expr;
-  
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        The exception to be thrown.
-   */
-  public ThrowStmt(Expr expr)
-  {
-    this.expr = expr;
-    
-    expr.setParent(this);
-  }
-  
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    expr.visit(visitor);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitThrowStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ThrowStmt((Expr) expr.clone()));
-  }
+public class ThrowStmt extends JumpStmt {
+	// athrow
+
+	Expr expr;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            The exception to be thrown.
+	 */
+	public ThrowStmt(final Expr expr) {
+		this.expr = expr;
+
+		expr.setParent(this);
+	}
+
+	public Expr expr() {
+		return expr;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		expr.visit(visitor);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitThrowStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new ThrowStmt((Expr) expr.clone()));
+	}
 }

@@ -28,106 +28,104 @@ import java.io.*;
 import java.util.*;
 
 /**
- * This class is used to gather statistics about inlining.  Examples
- * of such statistics are the number of call sites virtual methods
- * resolve to and the number of live classes and methods.
+ * This class is used to gather statistics about inlining. Examples of such
+ * statistics are the number of call sites virtual methods resolve to and the
+ * number of live classes and methods.
  */
 public class InlineStats {
-  private String configName;   // Name of configuration
-  private Map morphicity;      // Maps morphic number to count
-  private int nLiveClasses;    // Number of live classes
-  private int nLiveMethods;    // Number of live methods
-  private int nNoPreexist;     // Number of non-preexistent calls
-  private int nInlined;        // Number of methods inlined
+	private String configName; // Name of configuration
 
-  /**
-   * Constructor.
-   *
-   * @param configName
-   *        A string describing the configuration being run
-   */
-  public InlineStats() {
-    this.configName = "Inlining stats";
-    this.morphicity = new TreeMap();
-    this.nLiveClasses = 0;
-    this.nLiveMethods = 0;
-    this.nNoPreexist = 0;
-    this.nInlined = 0;
-  }
+	private Map morphicity; // Maps morphic number to count
 
-  /**
-   * Sets the configuration name for this <tt>InlineStats</tt>.
-   */
-  public void setConfigName(String configName) {
-    this.configName = configName;
-  }
+	private int nLiveClasses; // Number of live classes
 
-  /**
-   * Maintains a count of the number of methods call sites resolve to.
-   * May give an idea as to how "dynamic" a program is.
-   */
-  public void noteMorphicity(int morphicity) {
-    Integer r = new Integer(morphicity);
-    Integer count = (Integer) this.morphicity.get(r);
-    if(count == null) {
-      this.morphicity.put(r, new Integer(1));
+	private int nLiveMethods; // Number of live methods
 
-    } else {
-      this.morphicity.put(r, new Integer(count.intValue() + 1));
-    }
-  }
+	private int nNoPreexist; // Number of non-preexistent calls
 
-  /**
-   * Notes that a call site's receiver is not preexistent.
-   */
-  public void noteNoPreexist() {
-    nNoPreexist++;
-  }
+	private int nInlined; // Number of methods inlined
 
-  /**
-   * Notes that a method was inlined
-   */
-  public void noteInlined() {
-    this.nInlined++;
-  }
+	public InlineStats() {
+		this.configName = "Inlining stats";
+		this.morphicity = new TreeMap();
+		this.nLiveClasses = 0;
+		this.nLiveMethods = 0;
+		this.nNoPreexist = 0;
+		this.nInlined = 0;
+	}
 
-  /**
-   * Notes the number of live methods.
-   */
-  public void noteLiveMethods(int nLiveMethods) {
-    this.nLiveMethods = nLiveMethods;
-  }
+	/**
+	 * Sets the configuration name for this <tt>InlineStats</tt>.
+	 */
+	public void setConfigName(final String configName) {
+		this.configName = configName;
+	}
 
-  /**
-   * Notes the number of live classes.
-   */
-  public void noteLiveClasses(int nLiveClasses) {
-    this.nLiveClasses = nLiveClasses;
-  }
+	/**
+	 * Maintains a count of the number of methods call sites resolve to. May
+	 * give an idea as to how "dynamic" a program is.
+	 */
+	public void noteMorphicity(final int morphicity) {
+		final Integer r = new Integer(morphicity);
+		final Integer count = (Integer) this.morphicity.get(r);
+		if (count == null) {
+			this.morphicity.put(r, new Integer(1));
 
-  /**
-   * Print a summary of the statistics to a <tt>PrintWriter</tt>.
-   */
-  public void printSummary(PrintWriter pw) {
-    pw.println("Statistics for " + this.configName + " (" + 
-	       new Date() + ")");
-    pw.println("  Number of live classes: " + this.nLiveClasses);
-    pw.println("  Number of live methods: " + this.nLiveMethods);
-    pw.println("  Call site morphism:");
+		} else {
+			this.morphicity.put(r, new Integer(count.intValue() + 1));
+		}
+	}
 
-    Iterator morphs = this.morphicity.keySet().iterator();
-    int total = 0;
-    while(morphs.hasNext()) {
-      Integer morph = (Integer) morphs.next();
-      Integer count = (Integer) this.morphicity.get(morph);
-      total += count.intValue();
-      pw.println("    " + morph + "\t" + count);
-    }
-    pw.println("  Total number of call sites: " + total);
-    pw.println("  Number of non-preexistent call sites: " +
-	       nNoPreexist);
-    pw.println("  Number of inlined methods: " + nInlined);
-    
-  }
+	/**
+	 * Notes that a call site's receiver is not preexistent.
+	 */
+	public void noteNoPreexist() {
+		nNoPreexist++;
+	}
+
+	/**
+	 * Notes that a method was inlined
+	 */
+	public void noteInlined() {
+		this.nInlined++;
+	}
+
+	/**
+	 * Notes the number of live methods.
+	 */
+	public void noteLiveMethods(final int nLiveMethods) {
+		this.nLiveMethods = nLiveMethods;
+	}
+
+	/**
+	 * Notes the number of live classes.
+	 */
+	public void noteLiveClasses(final int nLiveClasses) {
+		this.nLiveClasses = nLiveClasses;
+	}
+
+	/**
+	 * Print a summary of the statistics to a <tt>PrintWriter</tt>.
+	 */
+	public void printSummary(final PrintWriter pw) {
+		pw.println("Statistics for " + this.configName + " (" + new Date()
+				+ ")");
+		pw.println("  Number of live classes: " + this.nLiveClasses);
+		pw.println("  Number of live methods: " + this.nLiveMethods);
+		pw.println("  Call site morphism:");
+
+		final Iterator morphs = this.morphicity.keySet().iterator();
+		int total = 0;
+		while (morphs.hasNext()) {
+			final Integer morph = (Integer) morphs.next();
+			final Integer count = (Integer) this.morphicity.get(morph);
+			total += count.intValue();
+			pw.println("    " + morph + "\t" + count);
+		}
+		pw.println("  Total number of call sites: " + total);
+		pw.println("  Number of non-preexistent call sites: " + nNoPreexist);
+		pw.println("  Number of inlined methods: " + nInlined);
+
+	}
 
 }

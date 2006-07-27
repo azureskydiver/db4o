@@ -24,55 +24,55 @@
 package EDU.purdue.cs.bloat.util;
 
 /**
- * Mechanism for making assertions about things in BLOAT.  If an
- * assertion fails, an <tt>IllegalArgumentException</tt> is thrown.
+ * Mechanism for making assertions about things in BLOAT. If an assertion fails,
+ * an <tt>IllegalArgumentException</tt> is thrown.
  */
 public abstract class Assert {
-    public static void isTrue(boolean test, String msg) {
-	if (!test) {
-	    throw new IllegalArgumentException("Assert.isTrue: " + msg);
+	public static void isTrue(boolean test, final String msg) {
+		if (!test) {
+			throw new IllegalArgumentException("Assert.isTrue: " + msg);
+		}
 	}
-    }
 
-    public static void isFalse(boolean test, String msg) {
-	if (test) {
-	    throw new IllegalArgumentException("Assert.isFalse: " + msg);
+	public static void isFalse(final boolean test, final String msg) {
+		if (test) {
+			throw new IllegalArgumentException("Assert.isFalse: " + msg);
+		}
 	}
-    }
 
-    public static void isNotNull(Object test, String msg) {
-	if (test == null) {
-	    throw new IllegalArgumentException("Assert.isNotNull: " + msg);
+	public static void isNotNull(final Object test, final String msg) {
+		if (test == null) {
+			throw new IllegalArgumentException("Assert.isNotNull: " + msg);
+		}
 	}
-    }
 
-    public static void isNull(Object test, String msg) {
-	if (test != null) {
-	    throw new IllegalArgumentException("Assert.isNull: " + msg);
+	public static void isNull(final Object test, final String msg) {
+		if (test != null) {
+			throw new IllegalArgumentException("Assert.isNull: " + msg);
+		}
 	}
-    }
 
-    public static void isTrue(boolean test) {
-	if (!test) {
-	    throw new IllegalArgumentException("Assert.isTrue failed");
+	public static void isTrue(boolean test) {
+		if (!test) {
+			throw new IllegalArgumentException("Assert.isTrue failed");
+		}
 	}
-    }
 
-    public static void isFalse(boolean test) {
-	if (test) {
-	    throw new IllegalArgumentException("Assert.isFalse failed");
+	public static void isFalse(final boolean test) {
+		if (test) {
+			throw new IllegalArgumentException("Assert.isFalse failed");
+		}
 	}
-    }
 
-    public static void isNotNull(Object test) {
-	if (test == null) {
-	    throw new IllegalArgumentException("Assert.isNotNull failed");
+	public static void isNotNull(final Object test) {
+		if (test == null) {
+			throw new IllegalArgumentException("Assert.isNotNull failed");
+		}
 	}
-    }
 
-    public static void isNull(Object test) {
-	if (test != null) {
-	    throw new IllegalArgumentException("Assert.isNull failed");
+	public static void isNull(final Object test) {
+		if (test != null) {
+			throw new IllegalArgumentException("Assert.isNull failed");
+		}
 	}
-    }
 }

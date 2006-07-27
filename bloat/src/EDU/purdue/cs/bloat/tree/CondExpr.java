@@ -25,26 +25,21 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * CondExpr is a superclass for conditional expressions.  That is, an
- * expression that yields a true or false value.
- *
+ * CondExpr is a superclass for conditional expressions. That is, an expression
+ * that yields a true or false value.
+ * 
  * @see InstanceOfExpr
  */
-public abstract class CondExpr extends Expr
-{
-  /**
-   * Constructor.
-   *
-   * @param type
-   *        The Type of this expression.
-   */
-  public CondExpr(Type type)
-  {
-    super(type);
-  }
+public abstract class CondExpr extends Expr {
+	/**
+	 * Constructor.
+	 * 
+	 * @param type
+	 *            The Type of this expression.
+	 */
+	public CondExpr(final Type type) {
+		super(type);
+	}
 }

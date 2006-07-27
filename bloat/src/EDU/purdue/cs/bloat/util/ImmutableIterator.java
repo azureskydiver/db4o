@@ -30,27 +30,22 @@ import java.util.*;
  * ImmutableIterator is simply an iterator whose contents can not be changed.
  * That is, the remove() method has no effect.
  */
-public class ImmutableIterator implements Iterator
-{
-    Iterator iter;
+public class ImmutableIterator implements Iterator {
+	Iterator iter;
 
-    public ImmutableIterator(Collection c)
-    {
-	iter = new ArrayList(c).iterator();
-    }
+	public ImmutableIterator(final Collection c) {
+		iter = new ArrayList(c).iterator();
+	}
 
-    public Object next()
-    {
-	return iter.next();
-    } 
+	public Object next() {
+		return iter.next();
+	}
 
-    public boolean hasNext()
-    {
-	return iter.hasNext();
-    } 
+	public boolean hasNext() {
+		return iter.hasNext();
+	}
 
-    public void remove()
-    {
-	throw new UnsupportedOperationException();
-    }
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
 }

@@ -25,17 +25,12 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * An expression that accesses a memory location.
  */
-public abstract class MemExpr extends DefExpr
-{
-  public MemExpr(Type type)
-  {
-    super(type);
-  }
+public abstract class MemExpr extends DefExpr {
+	public MemExpr(final Type type) {
+		super(type);
+	}
 }

@@ -24,62 +24,53 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
-/** 
- * MonitorStmt represents the <tt>monitorenter</tt> and
- * <tt>monitorexit</tt> opcodes, which gain and release ownership of
- * the monitor associated with a given object.  
+/**
+ * MonitorStmt represents the <tt>monitorenter</tt> and <tt>monitorexit</tt>
+ * opcodes, which gain and release ownership of the monitor associated with a
+ * given object.
  */
-public class MonitorStmt extends Stmt
-{
-  public static final int ENTER = 0;
-  public static final int EXIT = 1;
-  int kind;
-  Expr object;
-  
-  /**
-   * Constructor.
-   *
-   * @param kind
-   *        The kind of monitor statement: ENTER or EXIT.
-   * @param object
-   *        The expression (object) whose monitor is being entered or 
-   *        exited.
-   */
-  public MonitorStmt(int kind, Expr object)
-  {
-    this.kind = kind;
-    this.object = object;
-    
-    object.setParent(this);
-  }
-  
-  public Expr object()
-  {
-    return object;
-  }
-  
-  public int kind()
-  {
-    return kind;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    object.visit(visitor);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitMonitorStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new MonitorStmt(kind, (Expr) object.clone()));
-  }
+public class MonitorStmt extends Stmt {
+	public static final int ENTER = 0;
+
+	public static final int EXIT = 1;
+
+	int kind;
+
+	Expr object;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param kind
+	 *            The kind of monitor statement: ENTER or EXIT.
+	 * @param object
+	 *            The expression (object) whose monitor is being entered or
+	 *            exited.
+	 */
+	public MonitorStmt(final int kind, final Expr object) {
+		this.kind = kind;
+		this.object = object;
+
+		object.setParent(this);
+	}
+
+	public Expr object() {
+		return object;
+	}
+
+	public int kind() {
+		return kind;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		object.visit(visitor);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitMonitorStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new MonitorStmt(kind, (Expr) object.clone()));
+	}
 }

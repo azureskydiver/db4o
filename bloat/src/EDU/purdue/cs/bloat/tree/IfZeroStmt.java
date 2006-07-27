@@ -24,64 +24,53 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
-/** 
- * IfZeroStmt evaluates an expression and executes one of its two
- * branches depending on whether or not the expression evaluated to
- * zero.  
+/**
+ * IfZeroStmt evaluates an expression and executes one of its two branches
+ * depending on whether or not the expression evaluated to zero.
  */
-public class IfZeroStmt extends IfStmt
-{
-  Expr expr;        // Expression to evaluate
+public class IfZeroStmt extends IfStmt {
+	Expr expr; // Expression to evaluate
 
-  /**
-   * Constructor.
-   *
-   * @param comparison
-   *        Comparison operator.
-   * @param expr
-   *        An expression to be evaluated.
-   * @param trueTarget
-   *        Basic Block that is executed if the expression evaluates 
-   *        to zero.
-   * @param flaseTarget
-   *        Basic Block that is executed if the expression evaluates 
-   *        to non-zero.
-   */  
-  public IfZeroStmt(int comparison, Expr expr,
-		    Block trueTarget, Block falseTarget)
-  {
-    super(comparison, trueTarget, falseTarget);
-    this.expr = expr;
-    expr.setParent(this);
-  }
-  
-  /**
-   * @return The expression that is evaluated.
-   */
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    expr.visit(visitor);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitIfZeroStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new IfZeroStmt(comparison,
-				   (Expr) expr.clone(), trueTarget, 
-				   falseTarget));
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param comparison
+	 *            Comparison operator.
+	 * @param expr
+	 *            An expression to be evaluated.
+	 * @param trueTarget
+	 *            Basic Block that is executed if the expression evaluates to
+	 *            zero.
+	 * @param falseTarget
+	 *            Basic Block that is executed if the expression evaluates to
+	 *            non-zero.
+	 */
+	public IfZeroStmt(final int comparison, final Expr expr,
+			final Block trueTarget, final Block falseTarget) {
+		super(comparison, trueTarget, falseTarget);
+		this.expr = expr;
+		expr.setParent(this);
+	}
+
+	/**
+	 * @return The expression that is evaluated.
+	 */
+	public Expr expr() {
+		return expr;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		expr.visit(visitor);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitIfZeroStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new IfZeroStmt(comparison, (Expr) expr.clone(),
+				trueTarget, falseTarget));
+	}
 }

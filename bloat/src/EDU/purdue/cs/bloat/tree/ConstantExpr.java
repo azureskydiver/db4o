@@ -25,92 +25,81 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * ConstantExpr represents a constant expression.  It is used when opcodes
- * <i>ldc</i>, <i>iinc</i>, and <i>getstatic</i> are visited.  It value
- * must be an Integer, Long, Float, Double, or String.
+ * ConstantExpr represents a constant expression. It is used when opcodes <i>ldc</i>,
+ * <i>iinc</i>, and <i>getstatic</i> are visited. It value must be an Integer,
+ * Long, Float, Double, or String.
  */
-public class ConstantExpr extends Expr implements LeafExpr
-{
-  // ldc
-  
-  Object value;        // The operand to the ldc instruction
-  
-  /**
-   * Constructor.
-   *
-   * @param value
-   *        The operand of the ldc instruction
-   * @param type
-   *        The Type of the operand
-   */
-  public ConstantExpr(Object value, Type type)
-  {
-    super(type);
-    this.value = value;
-  }
-  
-  /**
-   * @return The operand of the ldc instruction
-   */
-  public Object value()
-  {
-    return value;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitConstantExpr(this);
-  }
-  
-  /**
-   * @return A hash code for this expression.
-   */
-  public int exprHashCode()
-  {
-    if (value != null) {
-      return 10 + value.hashCode();
-    }
-    
-    return 10;
-  }
-  
-  /**
-   * Compare this ConstantExpr to another Expr.
-   *
-   * @param other
-   *        An Expr to compare this to.
-   *
-   * @return True, if this and other are the same (that is, have the same
-   *         contents).
-   */
-  public boolean equalsExpr(Expr other)
-  {
-    if (! (other instanceof ConstantExpr)) {
-      return false;
-    }
-    
-    if (value == null) {
-      return ((ConstantExpr) other).value == null;
-    }
-    
-    if (((ConstantExpr) other).value == null) {
-      return false;
-    }
-    
-    return ((ConstantExpr) other).value.equals(value);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ConstantExpr(value, type));
-  }
+public class ConstantExpr extends Expr implements LeafExpr {
+	// ldc
+
+	Object value; // The operand to the ldc instruction
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param value
+	 *            The operand of the ldc instruction
+	 * @param type
+	 *            The Type of the operand
+	 */
+	public ConstantExpr(final Object value, final Type type) {
+		super(type);
+		this.value = value;
+	}
+
+	/**
+	 * @return The operand of the ldc instruction
+	 */
+	public Object value() {
+		return value;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitConstantExpr(this);
+	}
+
+	/**
+	 * @return A hash code for this expression.
+	 */
+	public int exprHashCode() {
+		if (value != null) {
+			return 10 + value.hashCode();
+		}
+
+		return 10;
+	}
+
+	/**
+	 * Compare this ConstantExpr to another Expr.
+	 * 
+	 * @param other
+	 *            An Expr to compare this to.
+	 * 
+	 * @return True, if this and other are the same (that is, have the same
+	 *         contents).
+	 */
+	public boolean equalsExpr(final Expr other) {
+		if (!(other instanceof ConstantExpr)) {
+			return false;
+		}
+
+		if (value == null) {
+			return ((ConstantExpr) other).value == null;
+		}
+
+		if (((ConstantExpr) other).value == null) {
+			return false;
+		}
+
+		return ((ConstantExpr) other).value.equals(value);
+	}
+
+	public Object clone() {
+		return copyInto(new ConstantExpr(value, type));
+	}
 }

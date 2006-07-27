@@ -24,99 +24,87 @@
 
 package EDU.purdue.cs.bloat.editor;
 
-import EDU.purdue.cs.bloat.reflect.*;
-
 /**
- * TryCatch holds the labels for the start and end of a protected block
- * and the beginning of a catch block and the type of the exception to 
- * catch.
- *
- * @author Nate Nystrom
- *         (<a href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
+ * TryCatch holds the labels for the start and end of a protected block and the
+ * beginning of a catch block and the type of the exception to catch.
+ * 
+ * @author Nate Nystrom (<a
+ *         href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
  */
 public class TryCatch {
-    private Label start;
-    private Label end;
-    private Label handler;
-    private Type type;
+	private Label start;
 
-    /**
-     * Constructor.
-     *
-     * @param start
-     *        The start label of the protected block.
-     * @param end
-     *        The label of the instruction after the end of the 
-     *        protected block.
-     * @param handler
-     *        The start label of the exception handler.
-     * @param type
-     *        The type of exception to catch.
-     */
-    public TryCatch(Label start, Label end, Label handler, Type type) {
-	this.start = start;
-	this.end = end;
-	this.handler = handler;
-	this.type = type;
-    }
+	private Label end;
 
-    /**
-     * Get the start label of the protected block.
-     *
-     * @return
-     *        The start label.
-     */
-    public Label start()
-    {
-	return start;
-    }
+	private Label handler;
 
-    /**
-     * Get the end label of the protected block.
-     *
-     * @return
-     *        The end label.
-     */
-    public Label end()
-    {
-	return end;
-    }
+	private Type type;
 
-    /**
-     * Get the start label of the catch block.
-     *
-     * @return
-     *        The handler label.
-     */
-    public Label handler()
-    {
-	return handler;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param start
+	 *            The start label of the protected block.
+	 * @param end
+	 *            The label of the instruction after the end of the protected
+	 *            block.
+	 * @param handler
+	 *            The start label of the exception handler.
+	 * @param type
+	 *            The type of exception to catch.
+	 */
+	public TryCatch(final Label start, final Label end, final Label handler,
+			final Type type) {
+		this.start = start;
+		this.end = end;
+		this.handler = handler;
+		this.type = type;
+	}
 
-    /**
-     * Set the start label of the catch block.
-     *
-     * @return
-     *        The handler label.
-     */
-    public void setHandler(Label handler)
-    {
-	this.handler = handler;
-    }
+	/**
+	 * Get the start label of the protected block.
+	 * 
+	 * @return The start label.
+	 */
+	public Label start() {
+		return start;
+	}
 
-    /**
-     * Get the type of the exception to catch.
-     *
-     * @return
-     *        The type of the exception to catch.
-     */
-    public Type type()
-    {
-	return type;
-    }
+	/**
+	 * Get the end label of the protected block.
+	 * 
+	 * @return The end label.
+	 */
+	public Label end() {
+		return end;
+	}
 
-    public String toString()
-    {
-	return "try " + start + ".." + end + " catch (" + type + ") " + handler;
-    }
+	/**
+	 * Get the start label of the catch block.
+	 * 
+	 * @return The handler label.
+	 */
+	public Label handler() {
+		return handler;
+	}
+
+	/**
+	 * Set the start label of the catch block.
+	 */
+	public void setHandler(final Label handler) {
+		this.handler = handler;
+	}
+
+	/**
+	 * Get the type of the exception to catch.
+	 * 
+	 * @return The type of the exception to catch.
+	 */
+	public Type type() {
+		return type;
+	}
+
+	public String toString() {
+		return "try " + start + ".." + end + " catch (" + type + ") " + handler;
+	}
 }

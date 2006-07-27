@@ -23,89 +23,79 @@
  */
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * SwitchStmt represents a switch statement.
  */
-public class SwitchStmt extends JumpStmt
-{
-  Expr index;
-  Block defaultTarget;
-  Block[] targets;
-  int[] values;
+public class SwitchStmt extends JumpStmt {
+	Expr index;
 
-  /**
-   * Constructor.
-   *
-   * @param index
-   *        The expression on which the switch is made.
-   * @param defaultTarget
-   *        The code to be executed if index is not contained in values.
-   * @param targets
-   *        The code to be executed for each value in values.
-   * @param values
-   *        The interesting values that index can have.  That is, the values
-   *        of index in which a non-default target is executed.
-   */  
-  public SwitchStmt(Expr index, Block defaultTarget,
-		    Block[] targets, int[] values)
-  {
-    this.index = index;
-    this.defaultTarget = defaultTarget;
-    this.targets = targets;
-    this.values = values;
-    
-    index.setParent(this);
-  }
-  
-  public Expr index()
-  {
-    return index;
-  }
-  
-  public void setDefaultTarget(Block block)
-  {
-    this.defaultTarget = block;
-  }
-  
-  public Block defaultTarget()
-  {
-    return defaultTarget;
-  }
-  
-  public Block[] targets()
-  {
-    return targets;
-  }
-  
-  public int[] values()
-  {
-    return values;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    index.visit(visitor);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitSwitchStmt(this);
-  }
-  
-  public Object clone()
-  {
-    Block[] t = new Block[targets.length];
-    System.arraycopy(targets, 0, t, 0, targets.length);
-    
-    int[] v = new int[values.length];
-    System.arraycopy(values, 0, v, 0, values.length);
-    
-    return copyInto(new SwitchStmt((Expr) index.clone(),
-				   defaultTarget, t, v));
-  }
+	Block defaultTarget;
+
+	Block[] targets;
+
+	int[] values;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param index
+	 *            The expression on which the switch is made.
+	 * @param defaultTarget
+	 *            The code to be executed if index is not contained in values.
+	 * @param targets
+	 *            The code to be executed for each value in values.
+	 * @param values
+	 *            The interesting values that index can have. That is, the
+	 *            values of index in which a non-default target is executed.
+	 */
+	public SwitchStmt(final Expr index, final Block defaultTarget,
+			final Block[] targets, final int[] values) {
+		this.index = index;
+		this.defaultTarget = defaultTarget;
+		this.targets = targets;
+		this.values = values;
+
+		index.setParent(this);
+	}
+
+	public Expr index() {
+		return index;
+	}
+
+	public void setDefaultTarget(final Block block) {
+		this.defaultTarget = block;
+	}
+
+	public Block defaultTarget() {
+		return defaultTarget;
+	}
+
+	public Block[] targets() {
+		return targets;
+	}
+
+	public int[] values() {
+		return values;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		index.visit(visitor);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitSwitchStmt(this);
+	}
+
+	public Object clone() {
+		final Block[] t = new Block[targets.length];
+		System.arraycopy(targets, 0, t, 0, targets.length);
+
+		final int[] v = new int[values.length];
+		System.arraycopy(values, 0, v, 0, values.length);
+
+		return copyInto(new SwitchStmt((Expr) index.clone(), defaultTarget, t,
+				v));
+	}
 }

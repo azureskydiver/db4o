@@ -24,19 +24,13 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
- * An expression that can appear as a leaf node in a Tree.  Essentially, 
- * LeafExpr can not have child expressions.
- *
+ * An expression that can appear as a leaf node in a Tree. Essentially, LeafExpr
+ * can not have child expressions.
+ * 
  * @see ConstantExpr
  * @see LocalExpr
- *
+ * 
  */
-public interface LeafExpr
-{
+public interface LeafExpr {
 }

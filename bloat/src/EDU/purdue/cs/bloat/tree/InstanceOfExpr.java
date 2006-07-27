@@ -25,81 +25,67 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * InstanceOfExpr represnts the <i>instanceof</i> opcode which determine 
- * if an object is of a given type.
+ * InstanceOfExpr represnts the <i>instanceof</i> opcode which determine if an
+ * object is of a given type.
  */
-public class InstanceOfExpr extends CondExpr
-{
-  // instanceof
-  
-  Expr expr;            // Expression (object) whose type we verify
-  Type checkType;       // Type to verify against
-  
-  /**
-   * Constructor.
-   * 
-   * @param expr
-   *        Expression (object) whose type is to be verified.
-   * @param checkType
-   *        Type to verify against (That is, is expr of type checkType?)
-   * @param type
-   *        Type of this expression.
-   */
-  public InstanceOfExpr(Expr expr, Type checkType, Type type)
-  {
-    super(type);
-    this.expr = expr;
-    this.checkType = checkType;
-    
-    expr.setParent(this);
-  }
-  
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public Type checkType()
-  {
-    return checkType;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      expr.visit(visitor);
-    }
-    else {
-      expr.visit(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitInstanceOfExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 12 + expr.exprHashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other != null &&
-      other instanceof InstanceOfExpr &&
-      ((InstanceOfExpr) other).checkType.equals(checkType) &&
-      ((InstanceOfExpr) other).expr.equalsExpr(expr);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new InstanceOfExpr((Expr) expr.clone(),
-				       checkType, type));
-  }
+public class InstanceOfExpr extends CondExpr {
+	// instanceof
+
+	Expr expr; // Expression (object) whose type we verify
+
+	Type checkType; // Type to verify against
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            Expression (object) whose type is to be verified.
+	 * @param checkType
+	 *            Type to verify against (That is, is expr of type checkType?)
+	 * @param type
+	 *            Type of this expression.
+	 */
+	public InstanceOfExpr(final Expr expr, final Type checkType, final Type type) {
+		super(type);
+		this.expr = expr;
+		this.checkType = checkType;
+
+		expr.setParent(this);
+	}
+
+	public Expr expr() {
+		return expr;
+	}
+
+	public Type checkType() {
+		return checkType;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			expr.visit(visitor);
+		} else {
+			expr.visit(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitInstanceOfExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 12 + expr.exprHashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other != null) && (other instanceof InstanceOfExpr)
+				&& ((InstanceOfExpr) other).checkType.equals(checkType)
+				&& ((InstanceOfExpr) other).expr.equalsExpr(expr);
+	}
+
+	public Object clone() {
+		return copyInto(new InstanceOfExpr((Expr) expr.clone(), checkType, type));
+	}
 }

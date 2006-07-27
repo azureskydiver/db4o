@@ -25,55 +25,50 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * VarExpr represents an expression that accesses a local variable or a
- * variable on the stack.
- *
+ * VarExpr represents an expression that accesses a local variable or a variable
+ * on the stack.
+ * 
  * @see StackExpr
  * @see LocalExpr
- *
+ * 
  * @see DefExpr
  */
-public abstract class VarExpr extends MemExpr
-{
-  int index;
+public abstract class VarExpr extends MemExpr {
+	int index;
 
-  /**
-   * Constructor.
-   *
-   * @param index
-   *        Index giving location of expression.  For instance, the
-   *        number local variable represented or the position of the
-   *        stack variable represented.
-   * @param type
-   *        Type (descriptor) of this expression.
-   */  
-  public VarExpr(int index, Type type) {
-    super(type);
-    this.index = index;
-  }
-  
-  public void setIndex(int index) {
-    this.index = index;
-  }
-  
-  public int index() {
-    return index;
-  }
-  
-  /**
-   * Returns the expression that defines this expression.
-   */
-  public DefExpr def()
-  {
-    if (isDef()) {
-      return this;
-    }
-    
-    return super.def();
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param index
+	 *            Index giving location of expression. For instance, the number
+	 *            local variable represented or the position of the stack
+	 *            variable represented.
+	 * @param type
+	 *            Type (descriptor) of this expression.
+	 */
+	public VarExpr(final int index, final Type type) {
+		super(type);
+		this.index = index;
+	}
+
+	public void setIndex(final int index) {
+		this.index = index;
+	}
+
+	public int index() {
+		return index;
+	}
+
+	/**
+	 * Returns the expression that defines this expression.
+	 */
+	public DefExpr def() {
+		if (isDef()) {
+			return this;
+		}
+
+		return super.def();
+	}
 }

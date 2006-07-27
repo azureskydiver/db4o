@@ -25,53 +25,42 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * StackExpr represents an expression that is stored on the stack.
  */
-public class StackExpr extends VarExpr
-{
-  /**
-   * Constructor.
-   *
-   * @param index
-   *        Location (offset) in stack of the information to which the
-   *        expression refers.  Index 0 represents the bottom of the 
-   *        stack.
-   * @param type
-   *        The type of this expression.
-   */
-  public StackExpr(int index, Type type)
-  {
-    super(index, type);
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitStackExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 20 + index + type.simple().hashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other instanceof StackExpr &&
-      ((StackExpr) other).type.simple().equals(type.simple()) &&
-      ((StackExpr) other).index == index;
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new StackExpr(index, type));
-  }
+public class StackExpr extends VarExpr {
+	/**
+	 * Constructor.
+	 * 
+	 * @param index
+	 *            Location (offset) in stack of the information to which the
+	 *            expression refers. Index 0 represents the bottom of the stack.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public StackExpr(final int index, final Type type) {
+		super(index, type);
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitStackExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 20 + index + type.simple().hashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other instanceof StackExpr)
+				&& ((StackExpr) other).type.simple().equals(type.simple())
+				&& (((StackExpr) other).index == index);
+	}
+
+	public Object clone() {
+		return copyInto(new StackExpr(index, type));
+	}
 }

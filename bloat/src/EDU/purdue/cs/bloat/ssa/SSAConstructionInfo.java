@@ -24,253 +24,252 @@
 
 package EDU.purdue.cs.bloat.ssa;
 
-import EDU.purdue.cs.bloat.editor.*;
+import java.util.*;
+
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.tree.*;
 import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
-/**  
- * <tt>SSAConstructionInfo</tt> contains information needed to
- * convert a CFG into SSA form.  Each variable (VarExpr) has an
- * SSAConstructionInfo associated with it.  Each
- * <tt>SSAConstructionInfo</tt> keeps track of information such as the
- * <tt>PhiStmt</tt>s that define copies of the variable, the
- * <tt>Block</tt>s in which the variable is defined, and the
- * occurrences (uses) of the variable in both phi and non-phi
- * statements.  Note that no <tt>PhiStmt</tt> is really inserted into
- * a basic block.  We just keep track of the mapping.  It should also
- * be noted that once a phi statement for a given variable is
- * "inserted" into a block, no other phi statement for that variable
- * is inserted.  Thus, the order of insertion determines the
- * precedence of the phi statements: <tt>PhiReturnStmt</tt> &gt;
- * <tt>PhiCatchStmt</tt> &gt; <tt>PhiJoinStmt</tt>.
- *
+/**
+ * <tt>SSAConstructionInfo</tt> contains information needed to convert a CFG
+ * into SSA form. Each variable (VarExpr) has an SSAConstructionInfo associated
+ * with it. Each <tt>SSAConstructionInfo</tt> keeps track of information such
+ * as the <tt>PhiStmt</tt>s that define copies of the variable, the
+ * <tt>Block</tt>s in which the variable is defined, and the occurrences
+ * (uses) of the variable in both phi and non-phi statements. Note that no
+ * <tt>PhiStmt</tt> is really inserted into a basic block. We just keep track
+ * of the mapping. It should also be noted that once a phi statement for a given
+ * variable is "inserted" into a block, no other phi statement for that variable
+ * is inserted. Thus, the order of insertion determines the precedence of the
+ * phi statements: <tt>PhiReturnStmt</tt> &gt; <tt>PhiCatchStmt</tt> &gt;
+ * <tt>PhiJoinStmt</tt>.
+ * 
  * <p>
- *
- * Additionally, <tt>SSAConstruction</tt> has methods to insert
- * various flavors of <tt>PhiStmt</tt>s whose targets are the variable
- * associated with the <tt>SSAConstruction</tt> into <tt>Block</tt>s.
- *
+ * 
+ * Additionally, <tt>SSAConstruction</tt> has methods to insert various
+ * flavors of <tt>PhiStmt</tt>s whose targets are the variable associated
+ * with the <tt>SSAConstruction</tt> into <tt>Block</tt>s.
+ * 
  * @see SSA
  * @see PhiStmt
  * @see PhiCatchStmt
  * @see PhiJoinStmt
- * @see PhiReturnStmt 
+ * @see PhiReturnStmt
  */
 public class SSAConstructionInfo {
-  FlowGraph cfg;           // The cfg we're converting into SSA form
-  VarExpr prototype;       // The variable we're converting into SSA form
-  LinkedList[] reals;      // The real (non-phi) occurrences associated 
-                           // with a given node (block)
-  LinkedList allReals;     // All the real occurrences of the variable
-  PhiStmt[] phis;          // Phi statement associated with a given block
-  Set defBlocks;           // Blocks in which variable is defined
+	FlowGraph cfg; // The cfg we're converting into SSA form
 
-  /**
-   * Constructor.
-   *
-   * @param cfg
-   *        The control flow graph that is being converted to SSA form.
-   * @param expr
-   *        A variable in the CFG on which SSA analysis is being done.
-   */
-  public SSAConstructionInfo(FlowGraph cfg, VarExpr expr) {
-    this.cfg = cfg;
+	VarExpr prototype; // The variable we're converting into SSA form
 
-    prototype = (VarExpr) expr.clone();
-    prototype.setDef(null);
+	LinkedList[] reals; // The real (non-phi) occurrences associated
 
-    reals = new LinkedList[cfg.size()];
-    allReals = new LinkedList();
+	// with a given node (block)
+	LinkedList allReals; // All the real occurrences of the variable
 
-    defBlocks = new HashSet();
+	PhiStmt[] phis; // Phi statement associated with a given block
 
-    phis = new PhiStmt[cfg.size()];
-  }
+	Set defBlocks; // Blocks in which variable is defined
 
-  /** 
-   * Returns the program variable associated with this
-   * <tt>SSAConstructionInfo</tt>.
-   */
-  public VarExpr prototype() {
-    return prototype;
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param cfg
+	 *            The control flow graph that is being converted to SSA form.
+	 * @param expr
+	 *            A variable in the CFG on which SSA analysis is being done.
+	 */
+	public SSAConstructionInfo(final FlowGraph cfg, final VarExpr expr) {
+		this.cfg = cfg;
 
-  /** 
-   * Makes note of a <tt>Block</tt> in which the variable is defined
-   * by a <tt>PhiStmt</tt>.  
-   */
-  public void addDefBlock(Block block) {
-    defBlocks.add(block);
-  }
+		prototype = (VarExpr) expr.clone();
+		prototype.setDef(null);
 
-  /** 
-   * Returns the phi statement for the variable represented by this
-   * SSAConstructionInfo at a given block in the CFG.  
-   */
-  public PhiStmt phiAtBlock(Block block) {
-    return phis[cfg.preOrderIndex(block)];
-  }
+		reals = new LinkedList[cfg.size()];
+		allReals = new LinkedList();
 
-  /**
-   * Removes the phi statement for this variable at a given block.
-   */
-  public void removePhiAtBlock(Block block) {
-    PhiStmt phi = phis[cfg.preOrderIndex(block)];
+		defBlocks = new HashSet();
 
-    if (phi != null) {
-      if (SSA.DEBUG) {
-	System.out.println("  removing " + phi + " at " + block);
-      }
+		phis = new PhiStmt[cfg.size()];
+	}
 
-      phi.cleanup();
-      phis[cfg.preOrderIndex(block)] = null;
-    }
-  }
+	/**
+	 * Returns the program variable associated with this
+	 * <tt>SSAConstructionInfo</tt>.
+	 */
+	public VarExpr prototype() {
+		return prototype;
+	}
 
-  /**
-   * Adds a <tt>PhiJoinStmt</tt> for the variable represented by this
-   * <tt>SSAConstructionInfo</tt> to a given <tt>Block</tt>.  
-   */
-  public void addPhi(Block block) {
-    if (phis[cfg.preOrderIndex(block)] != null) {
-      return;
-    }
+	/**
+	 * Makes note of a <tt>Block</tt> in which the variable is defined by a
+	 * <tt>PhiStmt</tt>.
+	 */
+	public void addDefBlock(final Block block) {
+		defBlocks.add(block);
+	}
 
-    VarExpr target = (VarExpr) prototype.clone();
+	/**
+	 * Returns the phi statement for the variable represented by this
+	 * SSAConstructionInfo at a given block in the CFG.
+	 */
+	public PhiStmt phiAtBlock(final Block block) {
+		return phis[cfg.preOrderIndex(block)];
+	}
 
-    PhiJoinStmt phi = new PhiJoinStmt(target, block);
-    phis[cfg.preOrderIndex(block)] = phi;
+	/**
+	 * Removes the phi statement for this variable at a given block.
+	 */
+	public void removePhiAtBlock(final Block block) {
+		final PhiStmt phi = phis[cfg.preOrderIndex(block)];
 
-    if (SSA.DEBUG) {
-      System.out.println("  place " + phi + " in " + block);
-    }
-  }
+		if (phi != null) {
+			if (SSA.DEBUG) {
+				System.out.println("  removing " + phi + " at " + block);
+			}
 
-  /** 
-   * Adds a <tt>PhiReturnStmt</tt> to all of the <tt>Block</tt>s that
-   * are executed upon returning from a given <tt>Subroutine</tt>.
-   *
-   * @see PhiReturnStmt
-   * @see Subroutine#paths 
-   */
-  public void addRetPhis(Subroutine sub) {
-    Iterator paths = sub.paths().iterator();
+			phi.cleanup();
+			phis[cfg.preOrderIndex(block)] = null;
+		}
+	}
 
-    while (paths.hasNext()) {
-      Block[] path = (Block[]) paths.next();
-      addRetPhi(sub, path[1]);
-    }
-  }
+	/**
+	 * Adds a <tt>PhiJoinStmt</tt> for the variable represented by this
+	 * <tt>SSAConstructionInfo</tt> to a given <tt>Block</tt>.
+	 */
+	public void addPhi(final Block block) {
+		if (phis[cfg.preOrderIndex(block)] != null) {
+			return;
+		}
 
-  /** 
-   * Inserts a <tt>PhiCatchStmt</tt> (whose target is the variable
-   * represented by this <tt>SSAConstructionInfo</tt>) into a given
-   * <tt>Block</tt>.
-   *
-   * @see PhiCatchStmt 
-   */
-  public void addCatchPhi(Block block) {
-    if (phis[cfg.preOrderIndex(block)] != null) {
-      return;
-    }
+		final VarExpr target = (VarExpr) prototype.clone();
 
-    if (prototype instanceof LocalExpr) {
-      LocalExpr target = (LocalExpr) prototype.clone();
+		final PhiJoinStmt phi = new PhiJoinStmt(target, block);
+		phis[cfg.preOrderIndex(block)] = phi;
 
-      PhiCatchStmt phi = new PhiCatchStmt(target);
-      phis[cfg.preOrderIndex(block)] = phi;
+		if (SSA.DEBUG) {
+			System.out.println("  place " + phi + " in " + block);
+		}
+	}
 
-      if (SSA.DEBUG) {
-	System.out.println("  place " + phi + " in " + block);
-      }
-    }
-  }
+	/**
+	 * Adds a <tt>PhiReturnStmt</tt> to all of the <tt>Block</tt>s that are
+	 * executed upon returning from a given <tt>Subroutine</tt>.
+	 * 
+	 * @see PhiReturnStmt
+	 * @see Subroutine#paths
+	 */
+	public void addRetPhis(final Subroutine sub) {
+		final Iterator paths = sub.paths().iterator();
 
-  /** 
-   * Adds a <tt>PhiReturnStmt</tt> associated with a given
-   * <tt>Subroutine</tt>.  The <tt>PhiReturnStmt</tt> is placed in a
-   * given block.
-   *
-   * @see PhiReturnStmt 
-   */
-  private void addRetPhi(Subroutine sub, Block block) {
-    if (phis[cfg.preOrderIndex(block)] != null) {
-      return;
-    }
+		while (paths.hasNext()) {
+			final Block[] path = (Block[]) paths.next();
+			addRetPhi(sub, path[1]);
+		}
+	}
 
-    VarExpr target = (VarExpr) prototype.clone();
+	/**
+	 * Inserts a <tt>PhiCatchStmt</tt> (whose target is the variable
+	 * represented by this <tt>SSAConstructionInfo</tt>) into a given
+	 * <tt>Block</tt>.
+	 * 
+	 * @see PhiCatchStmt
+	 */
+	public void addCatchPhi(final Block block) {
+		if (phis[cfg.preOrderIndex(block)] != null) {
+			return;
+		}
 
-    PhiReturnStmt phi = new PhiReturnStmt(target, sub);
-    phis[cfg.preOrderIndex(block)] = phi;
+		if (prototype instanceof LocalExpr) {
+			final LocalExpr target = (LocalExpr) prototype.clone();
 
-    if (SSA.DEBUG) {
-      System.out.println("  place " + phi + " in " + block);
-    }
-  }
+			final PhiCatchStmt phi = new PhiCatchStmt(target);
+			phis[cfg.preOrderIndex(block)] = phi;
 
-  /** 
-   * Notes a real occurrence (that is, a use that is not an operand
-   * to a phi statement) of the variable represented by this
-   * <tt>SSAConstructionInfo</tt>.
-   *
-   * @see PhiStmt 
-   */
-  public void addReal(VarExpr real) {
-    if (real.stmt() instanceof PhiStmt) {
-      return;
-    }
+			if (SSA.DEBUG) {
+				System.out.println("  place " + phi + " in " + block);
+			}
+		}
+	}
 
-    Block block = real.block();
+	/**
+	 * Adds a <tt>PhiReturnStmt</tt> associated with a given
+	 * <tt>Subroutine</tt>. The <tt>PhiReturnStmt</tt> is placed in a given
+	 * block.
+	 * 
+	 * @see PhiReturnStmt
+	 */
+	private void addRetPhi(final Subroutine sub, final Block block) {
+		if (phis[cfg.preOrderIndex(block)] != null) {
+			return;
+		}
 
-    if (real.isDef()) {
-      defBlocks.add(block);
-    }
+		final VarExpr target = (VarExpr) prototype.clone();
 
-    Assert.isTrue(block != null, real + " not in a " + block);
+		final PhiReturnStmt phi = new PhiReturnStmt(target, sub);
+		phis[cfg.preOrderIndex(block)] = phi;
 
-    LinkedList l = reals[cfg.preOrderIndex(block)];
+		if (SSA.DEBUG) {
+			System.out.println("  place " + phi + " in " + block);
+		}
+	}
 
-    if (l == null) {
-      l = new LinkedList();
-      reals[cfg.preOrderIndex(block)] = l;
-    }
+	/**
+	 * Notes a real occurrence (that is, a use that is not an operand to a phi
+	 * statement) of the variable represented by this
+	 * <tt>SSAConstructionInfo</tt>.
+	 * 
+	 * @see PhiStmt
+	 */
+	public void addReal(final VarExpr real) {
+		if (real.stmt() instanceof PhiStmt) {
+			return;
+		}
 
-    l.add(real);
-    allReals.add(real);
-  }
+		final Block block = real.block();
 
-  /**
-   * Returns all of the real occurrences of this variable.
-   */
-  public Collection reals()
-  {
-    return allReals;
-  }
+		if (real.isDef()) {
+			defBlocks.add(block);
+		}
 
-  /** 
-   * Returns all of the real occurrences of this variable in a given
-   * block.  
-   */
-  public Collection realsAtBlock(Block block)
-  {
-    LinkedList l = reals[cfg.preOrderIndex(block)];
+		Assert.isTrue(block != null, real + " not in a " + block);
 
-    if (l == null) {
-      l = new LinkedList();
-      reals[cfg.preOrderIndex(block)] = l;
-    }
+		LinkedList l = reals[cfg.preOrderIndex(block)];
 
-    return l;
-  }
+		if (l == null) {
+			l = new LinkedList();
+			reals[cfg.preOrderIndex(block)] = l;
+		}
 
-  /**
-   * Returns the Blocks containing a definition of the variable represented
-   * by this SSAConstruction info.
-   */
-  public Collection defBlocks()
-  {
-    return defBlocks;
-  } 
+		l.add(real);
+		allReals.add(real);
+	}
+
+	/**
+	 * Returns all of the real occurrences of this variable.
+	 */
+	public Collection reals() {
+		return allReals;
+	}
+
+	/**
+	 * Returns all of the real occurrences of this variable in a given block.
+	 */
+	public Collection realsAtBlock(final Block block) {
+		LinkedList l = reals[cfg.preOrderIndex(block)];
+
+		if (l == null) {
+			l = new LinkedList();
+			reals[cfg.preOrderIndex(block)] = l;
+		}
+
+		return l;
+	}
+
+	/**
+	 * Returns the Blocks containing a definition of the variable represented by
+	 * this SSAConstruction info.
+	 */
+	public Collection defBlocks() {
+		return defBlocks;
+	}
 }

@@ -24,271 +24,250 @@
 
 package EDU.purdue.cs.bloat.trans;
 
-import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.tree.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
-/** 
- * <tt>SideEffectChecker</tt> traverses a tree and determines is a
- * node has any side effects such as changing the stack, calling a
- * function, or performing a residency check.  The side effects are
- * represented by an integer whose bits represent a certain kind of
- * side effect.
- *
+/**
+ * <tt>SideEffectChecker</tt> traverses a tree and determines is a node has
+ * any side effects such as changing the stack, calling a function, or
+ * performing a residency check. The side effects are represented by an integer
+ * whose bits represent a certain kind of side effect.
+ * 
  * <p>
- *
- * <Tt>SideEffectChecker</tt> is a <tt>TreeVisitor</tt>.  The way it
- * works is that after a <tt>SideEffectChecker</tt> is reset, an
- * expression tree <tt>Node</tt> is visited to determine whether or
- * not it has side effects.  Neat.  
+ * 
+ * <Tt>SideEffectChecker</tt> is a <tt>TreeVisitor</tt>. The way it works
+ * is that after a <tt>SideEffectChecker</tt> is reset, an expression tree
+ * <tt>Node</tt> is visited to determine whether or not it has side effects.
+ * Neat.
  */
 public class SideEffectChecker extends TreeVisitor {
-  private int sideEffects = 0;
+	private int sideEffects = 0;
 
-  public static final int STACK = (1<<0);
-  public static final int THROW = (1<<1);
-  public static final int CALL  = (1<<2);
-  public static final int SYNC  = (1<<3);
-  public static final int ALLOC = (1<<4);  // Allocates memory
-  public static final int RC    = (1<<5);
-  public static final int UC    = (1<<6);
-  public static final int STORE = (1<<7);
-  public static final int ALIAS = (1<<8);
-  public static final int VOLATILE = (1<<9);
+	public static final int STACK = (1 << 0);
 
-  private EditorContext context;
+	public static final int THROW = (1 << 1);
 
-  /** 
-   * Constructor.  The <tt>Context</tt> is needed to determine whether
-   * or not a field is VOLATILE, etc.
-   */
-  public SideEffectChecker(EditorContext context) {
-    this.context = context;
-  }
+	public static final int CALL = (1 << 2);
 
-  public int sideEffects() {
-    return sideEffects;
-  }
+	public static final int SYNC = (1 << 3);
 
-  public boolean hasSideEffects()
-  {
-    return sideEffects != 0;
-  }
+	public static final int ALLOC = (1 << 4); // Allocates memory
 
-  public void reset()
-  {
-    sideEffects = 0;
-  }
+	public static final int RC = (1 << 5);
 
-  public void visitStoreExpr(StoreExpr expr)
-  {
-    sideEffects |= STORE;
-    expr.visitChildren(this);
-  }
+	public static final int UC = (1 << 6);
 
-  public void visitLocalExpr(LocalExpr expr)
-  {
-    if (expr.isDef()) {
-      sideEffects |= STORE;
-    }
-    expr.visitChildren(this);
-  }
+	public static final int STORE = (1 << 7);
 
-  public void visitZeroCheckExpr(ZeroCheckExpr expr)
-  {
-    sideEffects |= THROW;
-    expr.visitChildren(this);
-  }
+	public static final int ALIAS = (1 << 8);
 
-  public void visitRCExpr(RCExpr expr)
-  {
-    sideEffects |= RC;
-    expr.visitChildren(this);
-  }
+	public static final int VOLATILE = (1 << 9);
 
-  public void visitUCExpr(UCExpr expr)
-  {
-    sideEffects |= UC;
-    expr.visitChildren(this);
-  }
+	private EditorContext context;
 
-  public void visitNewMultiArrayExpr(NewMultiArrayExpr expr)
-  {
-    // Memory allocation
-    // NegativeArraySizeException
-    sideEffects |= THROW | ALLOC;
-    expr.visitChildren(this);
-  }
+	/**
+	 * Constructor. The <tt>Context</tt> is needed to determine whether or not
+	 * a field is VOLATILE, etc.
+	 */
+	public SideEffectChecker(final EditorContext context) {
+		this.context = context;
+	}
 
-  public void visitNewArrayExpr(NewArrayExpr expr)
-  {
-    // Memory allocation
-    // NegativeArraySizeException
-    sideEffects |= THROW | ALLOC;
-    expr.visitChildren(this);
-  }
+	public int sideEffects() {
+		return sideEffects;
+	}
 
-  public void visitCatchExpr(CatchExpr expr)
-  {
-    // Stack change
-    sideEffects |= STACK;
-    expr.visitChildren(this);
-  }
+	public boolean hasSideEffects() {
+		return sideEffects != 0;
+	}
 
-  public void visitNewExpr(NewExpr expr)
-  {
-    // Memory allocation
-    sideEffects |= ALLOC;
-    expr.visitChildren(this);
-  }
+	public void reset() {
+		sideEffects = 0;
+	}
 
-  public void visitStackExpr(StackExpr expr)
-  {
-    // Stack change
-    sideEffects |= STACK;
+	public void visitStoreExpr(final StoreExpr expr) {
+		sideEffects |= SideEffectChecker.STORE;
+		expr.visitChildren(this);
+	}
 
-    if (expr.isDef()) {
-      sideEffects |= STORE;
-    }
+	public void visitLocalExpr(final LocalExpr expr) {
+		if (expr.isDef()) {
+			sideEffects |= SideEffectChecker.STORE;
+		}
+		expr.visitChildren(this);
+	}
 
-    expr.visitChildren(this);
-  }
+	public void visitZeroCheckExpr(final ZeroCheckExpr expr) {
+		sideEffects |= SideEffectChecker.THROW;
+		expr.visitChildren(this);
+	}
 
-  public void visitCastExpr(CastExpr expr)
-  {
-    // ClassCastException
-    if (expr.castType().isReference()) {
-      sideEffects |= THROW;
-    }
-    expr.visitChildren(this);
-  }
+	public void visitRCExpr(final RCExpr expr) {
+		sideEffects |= SideEffectChecker.RC;
+		expr.visitChildren(this);
+	}
 
-  public void visitArithExpr(ArithExpr expr)
-  {
-    // DivideByZeroException -- handled by ZeroCheckExpr
-    /*
-      if (expr.operation() == ArithExpr.DIV ||
-      expr.operation() == ArithExpr.REM) {
+	public void visitUCExpr(final UCExpr expr) {
+		sideEffects |= SideEffectChecker.UC;
+		expr.visitChildren(this);
+	}
 
-      if (expr.type().isIntegral() || expr.type().equals(Type.LONG)) {
-      sideEffects |= THROW;
-      }
-      }
-      */
+	public void visitNewMultiArrayExpr(final NewMultiArrayExpr expr) {
+		// Memory allocation
+		// NegativeArraySizeException
+		sideEffects |= SideEffectChecker.THROW | SideEffectChecker.ALLOC;
+		expr.visitChildren(this);
+	}
 
-    expr.visitChildren(this);
-  }
+	public void visitNewArrayExpr(final NewArrayExpr expr) {
+		// Memory allocation
+		// NegativeArraySizeException
+		sideEffects |= SideEffectChecker.THROW | SideEffectChecker.ALLOC;
+		expr.visitChildren(this);
+	}
 
-  public void visitArrayLengthExpr(ArrayLengthExpr expr)
-  {
-    // NullPointerException
-    sideEffects |= THROW;
-    expr.visitChildren(this);
-  }
+	public void visitCatchExpr(final CatchExpr expr) {
+		// Stack change
+		sideEffects |= SideEffectChecker.STACK;
+		expr.visitChildren(this);
+	}
 
-  public void visitArrayRefExpr(ArrayRefExpr expr)
-  {
-    // NullPointerException, ArrayIndexOutOfBoundsException,
-    // ArrayStoreException
-    sideEffects |= THROW;
+	public void visitNewExpr(final NewExpr expr) {
+		// Memory allocation
+		sideEffects |= SideEffectChecker.ALLOC;
+		expr.visitChildren(this);
+	}
 
-    if (expr.isDef()) {
-      sideEffects |= STORE;
-    }
+	public void visitStackExpr(final StackExpr expr) {
+		// Stack change
+		sideEffects |= SideEffectChecker.STACK;
 
-    sideEffects |= ALIAS;
+		if (expr.isDef()) {
+			sideEffects |= SideEffectChecker.STORE;
+		}
 
-    expr.visitChildren(this);
-  }
+		expr.visitChildren(this);
+	}
 
-  public void visitFieldExpr(FieldExpr expr)
-  {
-    // NullPointerException -- handled by ZeroCheckExpr
-    /*
-      sideEffects |= THROW;
-      */
+	public void visitCastExpr(final CastExpr expr) {
+		// ClassCastException
+		if (expr.castType().isReference()) {
+			sideEffects |= SideEffectChecker.THROW;
+		}
+		expr.visitChildren(this);
+	}
 
-    if (expr.isDef()) {
-      sideEffects |= STORE;
-    }
+	public void visitArithExpr(final ArithExpr expr) {
+		// DivideByZeroException -- handled by ZeroCheckExpr
+		/*
+		 * if (expr.operation() == ArithExpr.DIV || expr.operation() ==
+		 * ArithExpr.REM) {
+		 * 
+		 * if (expr.type().isIntegral() || expr.type().equals(Type.LONG)) {
+		 * sideEffects |= THROW; } }
+		 */
 
-    MemberRef field = expr.field();
+		expr.visitChildren(this);
+	}
 
-    try {
-      FieldEditor e = context.editField(field);
+	public void visitArrayLengthExpr(final ArrayLengthExpr expr) {
+		// NullPointerException
+		sideEffects |= SideEffectChecker.THROW;
+		expr.visitChildren(this);
+	}
 
-      if (! e.isFinal()) {
-	sideEffects |= ALIAS;
-      }
+	public void visitArrayRefExpr(final ArrayRefExpr expr) {
+		// NullPointerException, ArrayIndexOutOfBoundsException,
+		// ArrayStoreException
+		sideEffects |= SideEffectChecker.THROW;
 
-      if (e.isVolatile()) {
-	sideEffects |= VOLATILE;
-      }
+		if (expr.isDef()) {
+			sideEffects |= SideEffectChecker.STORE;
+		}
 
-      context.release(e.fieldInfo());
-    }
-    catch (NoSuchFieldException e) {
-      // A field wasn't found.  Silently assume it's not final and
-      // is volatile.
-      sideEffects |= ALIAS;
-      sideEffects |= VOLATILE;
-    }
+		sideEffects |= SideEffectChecker.ALIAS;
 
-    expr.visitChildren(this);
-  }
+		expr.visitChildren(this);
+	}
 
-  public void visitStaticFieldExpr(StaticFieldExpr expr)
-  {
-    if (expr.isDef()) {
-      sideEffects |= STORE;
-    }
+	public void visitFieldExpr(final FieldExpr expr) {
+		// NullPointerException -- handled by ZeroCheckExpr
+		/*
+		 * sideEffects |= THROW;
+		 */
 
-    MemberRef field = expr.field();
+		if (expr.isDef()) {
+			sideEffects |= SideEffectChecker.STORE;
+		}
 
-    try {
-      FieldEditor e = context.editField(field);
+		final MemberRef field = expr.field();
 
-      if (e.isVolatile()) {
-	sideEffects |= VOLATILE;
-      }
+		try {
+			final FieldEditor e = context.editField(field);
 
-      context.release(e.fieldInfo());
-    }
-    catch (NoSuchFieldException e) {
-      // A field wasn't found.  Silently assume it's volatile.
-      sideEffects |= VOLATILE;
-    }
+			if (!e.isFinal()) {
+				sideEffects |= SideEffectChecker.ALIAS;
+			}
 
-    expr.visitChildren(this);
-  }
+			if (e.isVolatile()) {
+				sideEffects |= SideEffectChecker.VOLATILE;
+			}
 
-  public void visitCallStaticExpr(CallStaticExpr expr)
-  {
-    // Call
-    sideEffects |= THROW | CALL;
-    expr.visitChildren(this);
-  }
+			context.release(e.fieldInfo());
+		} catch (final NoSuchFieldException e) {
+			// A field wasn't found. Silently assume it's not final and
+			// is volatile.
+			sideEffects |= SideEffectChecker.ALIAS;
+			sideEffects |= SideEffectChecker.VOLATILE;
+		}
 
-  public void visitCallMethodExpr(CallMethodExpr expr)
-  {
-    // Call
-    sideEffects |= THROW | CALL;
-    expr.visitChildren(this);
-  }
+		expr.visitChildren(this);
+	}
 
-  public void visitMonitorStmt(MonitorStmt stmt)
-  {
-    // Synchronization
-    sideEffects |= THROW | SYNC;
-    stmt.visitChildren(this);
-  }
+	public void visitStaticFieldExpr(final StaticFieldExpr expr) {
+		if (expr.isDef()) {
+			sideEffects |= SideEffectChecker.STORE;
+		}
 
-  public void visitStackManipStmt(StackManipStmt stmt)
-  {
-    // Stack change
-    sideEffects |= STACK;
-    stmt.visitChildren(this);
-  }
+		final MemberRef field = expr.field();
+
+		try {
+			final FieldEditor e = context.editField(field);
+
+			if (e.isVolatile()) {
+				sideEffects |= SideEffectChecker.VOLATILE;
+			}
+
+			context.release(e.fieldInfo());
+		} catch (final NoSuchFieldException e) {
+			// A field wasn't found. Silently assume it's volatile.
+			sideEffects |= SideEffectChecker.VOLATILE;
+		}
+
+		expr.visitChildren(this);
+	}
+
+	public void visitCallStaticExpr(final CallStaticExpr expr) {
+		// Call
+		sideEffects |= SideEffectChecker.THROW | SideEffectChecker.CALL;
+		expr.visitChildren(this);
+	}
+
+	public void visitCallMethodExpr(final CallMethodExpr expr) {
+		// Call
+		sideEffects |= SideEffectChecker.THROW | SideEffectChecker.CALL;
+		expr.visitChildren(this);
+	}
+
+	public void visitMonitorStmt(final MonitorStmt stmt) {
+		// Synchronization
+		sideEffects |= SideEffectChecker.THROW | SideEffectChecker.SYNC;
+		stmt.visitChildren(this);
+	}
+
+	public void visitStackManipStmt(final StackManipStmt stmt) {
+		// Stack change
+		sideEffects |= SideEffectChecker.STACK;
+		stmt.visitChildren(this);
+	}
 }

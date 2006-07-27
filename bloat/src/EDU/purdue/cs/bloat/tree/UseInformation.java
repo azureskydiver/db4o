@@ -26,27 +26,33 @@ package EDU.purdue.cs.bloat.tree;
 
 /**
  * UseInformation stores information about a use of a local variable.
+ * 
  * @author Thomas VanDrunen
  */
 public class UseInformation {
 
-    int type;
-    int type0s;
-    int type1s;
-    int type0_x1s;
-    int type0_x2s;
-    int type1_x1s;
-    int type1_x2s;
+	int type;
 
+	int type0s;
 
-    public UseInformation() { 
-	
-	type = 2;  // assume type > 1 unless discovered otherwise
-	type0s = 0;
-	type1s = 0; 
-	type0_x1s = 0;
-	type0_x2s = 0;
-	type1_x1s = 0;
-	type1_x2s = 0;
-    }
+	int type1s;
+
+	int type0_x1s;
+
+	int type0_x2s;
+
+	int type1_x1s;
+
+	int type1_x2s;
+
+	public UseInformation() {
+
+		type = 2; // assume type > 1 unless discovered otherwise
+		type0s = 0;
+		type1s = 0;
+		type0_x1s = 0;
+		type0_x2s = 0;
+		type1_x1s = 0;
+		type1_x2s = 0;
+	}
 }

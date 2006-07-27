@@ -24,72 +24,70 @@
 
 package EDU.purdue.cs.bloat.file;
 
-import EDU.purdue.cs.bloat.reflect.*;
-import java.util.*;
 import java.io.*;
 
 /**
- * Attribute is an abstract class for an attribute defined for a method,
- * field, or class.  An attribute consists of its name (represented as an
- * index into the constant pool) and its length.  Attribute is extended
- * to represent a constant value, code, exceptions, etc.
- *
+ * Attribute is an abstract class for an attribute defined for a method, field,
+ * or class. An attribute consists of its name (represented as an index into the
+ * constant pool) and its length. Attribute is extended to represent a constant
+ * value, code, exceptions, etc.
+ * 
  * @see Code
  * @see ConstantValue
  * @see Exceptions
- *
- * @author Nate Nystrom
- *         (<a href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
+ * 
+ * @author Nate Nystrom (<a
+ *         href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
  */
 public abstract class Attribute {
-  protected int nameIndex;
-  protected int length;
+	protected int nameIndex;
 
-  /**
-   * Constructor.
-   *
-   * @param nameIndex
-   *        The index into the constant pool of the name of the attribute.
-   * @param length
-   *        The length of the attribute, excluding the header.
-   */
-  public Attribute(int nameIndex, int length) {
-    this.nameIndex = nameIndex;
-    this.length = length;
-  }
+	protected int length;
 
-  /**
-   * Write the attribute to a data stream.
-   *
-   * @param out
-   *        The data stream of the class file.
-   */
-  public abstract void writeData(DataOutputStream out) throws IOException;
+	/**
+	 * Constructor.
+	 * 
+	 * @param nameIndex
+	 *            The index into the constant pool of the name of the attribute.
+	 * @param length
+	 *            The length of the attribute, excluding the header.
+	 */
+	public Attribute(final int nameIndex, final int length) {
+		this.nameIndex = nameIndex;
+		this.length = length;
+	}
 
-  /**
-   * Returns a string representation of the attribute.
-   */
-  public String toString() {
-    return "(attribute " + nameIndex + " " + length + ")";
-  }
+	/**
+	 * Write the attribute to a data stream.
+	 * 
+	 * @param out
+	 *            The data stream of the class file.
+	 */
+	public abstract void writeData(DataOutputStream out) throws IOException;
 
-  /**
-   * Returns the index into the constant pool of the name of the attribute.
-   */
-  public int nameIndex() {
-    return nameIndex;
-  }
+	/**
+	 * Returns a string representation of the attribute.
+	 */
+	public String toString() {
+		return "(attribute " + nameIndex + " " + length + ")";
+	}
 
-  /**
-   * Returns the length of the attribute, excluding the header.
-   */
-  public int length() {
-    return length;
-  }
+	/**
+	 * Returns the index into the constant pool of the name of the attribute.
+	 */
+	public int nameIndex() {
+		return nameIndex;
+	}
 
-  public Object clone() {
-    throw new UnsupportedOperationException("Cannot clone Attribute! "
-					    + " (subclass: " +
-					    this.getClass() + ")");
-  }
+	/**
+	 * Returns the length of the attribute, excluding the header.
+	 */
+	public int length() {
+		return length;
+	}
+
+	public Object clone() {
+		throw new UnsupportedOperationException("Cannot clone Attribute! "
+				+ " (subclass: " + this.getClass() + ")");
+	}
 }

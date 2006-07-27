@@ -25,92 +25,77 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * CastExpr represents an expression that casts an object to a given 
- * type.
+ * CastExpr represents an expression that casts an object to a given type.
  */
-public class CastExpr extends Expr
-{
-  Expr expr;        // An expression (object) to cast
-  Type castType;    // The Type to cast expr to
-  
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        Expression (object) to be cast.
-   * @param type
-   *        The type to which to cast expr and as well as the type
-   *        of this expression.
-   */
-  public CastExpr(Expr expr, Type type)
-  {
-    this(expr, type, type);
-  }
-  
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        Expression (object) to be cast.
-   * @param castType
-   *        The type to which to cast expr.
-   * @param type
-   *        The type of this expression.
-   */
-  public CastExpr(Expr expr, Type castType, Type type)
-  {
-    super(type);
-    this.expr = expr;
-    this.castType = castType;
-    
-    expr.setParent(this);
-  }
-  
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public Type castType()
-  {
-    return castType;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      expr.visit(visitor);
-    }
-    else {
-      expr.visit(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitCastExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 7 + expr.exprHashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other != null &&
-      other instanceof CastExpr &&
-      ((CastExpr) other).castType.equals(castType) &&
-      ((CastExpr) other).expr.equalsExpr(expr);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new CastExpr((Expr) expr.clone(), castType, type));
-  }
+public class CastExpr extends Expr {
+	Expr expr; // An expression (object) to cast
+
+	Type castType; // The Type to cast expr to
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            Expression (object) to be cast.
+	 * @param type
+	 *            The type to which to cast expr and as well as the type of this
+	 *            expression.
+	 */
+	public CastExpr(final Expr expr, final Type type) {
+		this(expr, type, type);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            Expression (object) to be cast.
+	 * @param castType
+	 *            The type to which to cast expr.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public CastExpr(final Expr expr, final Type castType, final Type type) {
+		super(type);
+		this.expr = expr;
+		this.castType = castType;
+
+		expr.setParent(this);
+	}
+
+	public Expr expr() {
+		return expr;
+	}
+
+	public Type castType() {
+		return castType;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			expr.visit(visitor);
+		} else {
+			expr.visit(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitCastExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 7 + expr.exprHashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other != null) && (other instanceof CastExpr)
+				&& ((CastExpr) other).castType.equals(castType)
+				&& ((CastExpr) other).expr.equalsExpr(expr);
+	}
+
+	public Object clone() {
+		return copyInto(new CastExpr((Expr) expr.clone(), castType, type));
+	}
 }

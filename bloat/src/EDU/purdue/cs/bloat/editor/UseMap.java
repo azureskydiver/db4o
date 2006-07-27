@@ -26,37 +26,34 @@
 
 package EDU.purdue.cs.bloat.editor;
 
-import EDU.purdue.cs.bloat.tree.*;
 import java.util.*;
+
+import EDU.purdue.cs.bloat.tree.*;
 
 public class UseMap {
 
-    public Hashtable map;
+	public Hashtable map;
 
-    public UseMap() {
-	map = new Hashtable();
-    }
+	public UseMap() {
+		map = new Hashtable();
+	}
 
+	public void add(final LocalExpr use, final Instruction inst) {
 
-    public void  add(LocalExpr use, Instruction inst) {
+		final Node def = use.def();
+		if (def != null) {
+			map.put(inst, def);
+		}
+	}
 
-	Node def = use.def();
-	if (def != null)
-	    map.put(inst, def);
-    }
+	public boolean hasDef(final Instruction inst) {
 
-    public boolean hasDef(Instruction inst) {
-	
-	return map.containsKey(inst);
-    }
+		return map.containsKey(inst);
+	}
 
-    public boolean hasSameDef(Instruction a, Instruction b) {
-	return map.containsKey(a) && map.containsKey(b)
-	    && (map.get(a) == map.get(b));
-    }
+	public boolean hasSameDef(final Instruction a, final Instruction b) {
+		return map.containsKey(a) && map.containsKey(b)
+				&& (map.get(a) == map.get(b));
+	}
 
 }
-
-
-
-

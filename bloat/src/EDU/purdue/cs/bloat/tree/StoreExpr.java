@@ -25,101 +25,88 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * StoreExpr represents a store of an expression into a memory location.
- *
+ * 
  * @see MemExpr
  */
-public class StoreExpr extends Expr implements Assign
-{
-  MemExpr target;
-  Expr expr;
+public class StoreExpr extends Expr implements Assign {
+	MemExpr target;
 
-  /**
-   * Constructor.
-   *
-   * @param target
-   *        The memory location (or local variable, etc.) into which expr
-   *        is stored.
-   * @param expr
-   *        An expression whose value is to be stored.
-   * @param type
-   *        The type of this expression.
-   */  
-  public StoreExpr(MemExpr target, Expr expr, Type type) {
-    super(type);
-    
-    this.target = target;
-    this.expr = expr;
-    
-    target.setParent(this);
-    expr.setParent(this);
-  }
+	Expr expr;
 
-  /**
-   * Returns the <tt>MemExpr</tt> into which the expression is stored.
-   */
-  public DefExpr[] defs()
-  {
-    return new DefExpr[] { target };
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param target
+	 *            The memory location (or local variable, etc.) into which expr
+	 *            is stored.
+	 * @param expr
+	 *            An expression whose value is to be stored.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public StoreExpr(final MemExpr target, final Expr expr, final Type type) {
+		super(type);
 
-  /**
-   * Returns the memory location (or local variable) into which the 
-   * expression is stored.
-   */
-  public MemExpr target()
-  {
-    return target;
-  }
-  
-  /**
-   * Returns the expression being stored.
-   */
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      target.visitOnly(visitor);
-      expr.visit(visitor);
-      target.visitChildren(visitor);
-    }
-    else {
-      target.visitChildren(visitor);
-      expr.visit(visitor);
-      target.visitOnly(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitStoreExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 22 + target.exprHashCode() ^ expr.exprHashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other instanceof StoreExpr &&
-      ((StoreExpr) other).target.equalsExpr(target) &&
-      ((StoreExpr) other).expr.equalsExpr(expr);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new StoreExpr((MemExpr) target.clone(),
-				  (Expr) expr.clone(), type));
-  }
+		this.target = target;
+		this.expr = expr;
+
+		target.setParent(this);
+		expr.setParent(this);
+	}
+
+	/**
+	 * Returns the <tt>MemExpr</tt> into which the expression is stored.
+	 */
+	public DefExpr[] defs() {
+		return new DefExpr[] { target };
+	}
+
+	/**
+	 * Returns the memory location (or local variable) into which the expression
+	 * is stored.
+	 */
+	public MemExpr target() {
+		return target;
+	}
+
+	/**
+	 * Returns the expression being stored.
+	 */
+	public Expr expr() {
+		return expr;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			target.visitOnly(visitor);
+			expr.visit(visitor);
+			target.visitChildren(visitor);
+		} else {
+			target.visitChildren(visitor);
+			expr.visit(visitor);
+			target.visitOnly(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitStoreExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 22 + target.exprHashCode() ^ expr.exprHashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other instanceof StoreExpr)
+				&& ((StoreExpr) other).target.equalsExpr(target)
+				&& ((StoreExpr) other).expr.equalsExpr(expr);
+	}
+
+	public Object clone() {
+		return copyInto(new StoreExpr((MemExpr) target.clone(), (Expr) expr
+				.clone(), type));
+	}
 }
-

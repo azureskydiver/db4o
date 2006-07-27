@@ -24,68 +24,57 @@
 
 package EDU.purdue.cs.bloat.editor;
 
-import EDU.purdue.cs.bloat.reflect.*;
-import java.util.*;
-
 /**
  * <tt>MultiArrayOperand</tt> encapsulates the operands to the
- * <tt>multianewarray</tt> instruction.  Each <tt>MultiArrayOperand</tt>
+ * <tt>multianewarray</tt> instruction. Each <tt>MultiArrayOperand</tt>
  * contains the type descriptor of the new multidimensional array the
- * instruction creates, as well as the number of dimensions in the 
- * array.
- *
- * @author Nate Nystrom
- *         (<a href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
+ * instruction creates, as well as the number of dimensions in the array.
+ * 
+ * @author Nate Nystrom (<a
+ *         href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
  */
-public class MultiArrayOperand
-{
-    private Type type; 
-    private int dim;
+public class MultiArrayOperand {
+	private Type type;
 
-    /**
-     * Constructor.
-     *
-     * @param type
-     *        The element type of the array.
-     * @param dim
-     *        The number of dimensions of the array. 
-     */
-    public MultiArrayOperand(Type type, int dim)
-    {
-	this.type = type;
-	this.dim = dim;
-    }
+	private int dim;
 
-    /**
-     * Get the element type of the array.
-     *
-     * @return
-     *        The element type of the array.
-     */
-    public Type type()
-    {
-	return type;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param type
+	 *            The element type of the array.
+	 * @param dim
+	 *            The number of dimensions of the array.
+	 */
+	public MultiArrayOperand(final Type type, final int dim) {
+		this.type = type;
+		this.dim = dim;
+	}
 
-    /**
-     * Get the number of dimensions of the array.
-     *
-     * @return
-     *        The number of dimensions of the array. 
-     */
-    public int dimensions()
-    {
-	return dim;
-    }
+	/**
+	 * Get the element type of the array.
+	 * 
+	 * @return The element type of the array.
+	 */
+	public Type type() {
+		return type;
+	}
 
-    /**
-     * Convert the operand to a string.
-     *
-     * @return
-     *        A string representation of the operand.
-     */
-    public String toString()
-    {
-	return type + " x " + dim;
-    }
+	/**
+	 * Get the number of dimensions of the array.
+	 * 
+	 * @return The number of dimensions of the array.
+	 */
+	public int dimensions() {
+		return dim;
+	}
+
+	/**
+	 * Convert the operand to a string.
+	 * 
+	 * @return A string representation of the operand.
+	 */
+	public String toString() {
+		return type + " x " + dim;
+	}
 }

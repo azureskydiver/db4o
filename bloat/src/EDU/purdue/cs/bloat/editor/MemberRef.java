@@ -24,117 +24,98 @@
 
 package EDU.purdue.cs.bloat.editor;
 
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
- * MemberRef represents a method or field (as a <tt>NameAndType</tt>) 
- * and the class (as a <tt>Type</tt>) in which it is declared.
- *
- * @author Nate Nystrom
- *         (<a href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
+ * MemberRef represents a method or field (as a <tt>NameAndType</tt>) and the
+ * class (as a <tt>Type</tt>) in which it is declared.
+ * 
+ * @author Nate Nystrom (<a
+ *         href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
  */
-public class MemberRef
-{
-    private Type declaringClass;
-    private NameAndType nameAndType;
+public class MemberRef {
+	private Type declaringClass;
 
-    /**
-     * Constructor.
-     *
-     * @param declaringClass
-     *        The type of the class which declared the member.
-     * @param nameAndType
-     *        The name and type of the member.
-     */
-    public MemberRef(Type declaringClass, NameAndType nameAndType)
-    {
-	this.declaringClass = declaringClass;
-	this.nameAndType = nameAndType;
-    }
+	private NameAndType nameAndType;
 
-    /**
-     * Get the type of the class which declared the member.
-     *
-     * @return
-     *        The type of the class which declared the member.
-     */
-    public Type declaringClass()
-    {
-	return declaringClass;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param declaringClass
+	 *            The type of the class which declared the member.
+	 * @param nameAndType
+	 *            The name and type of the member.
+	 */
+	public MemberRef(final Type declaringClass, final NameAndType nameAndType) {
+		this.declaringClass = declaringClass;
+		this.nameAndType = nameAndType;
+	}
 
-    /**
-     * Get the name of the member.
-     *
-     * @return
-     *        The name of the member.
-     */
-    public String name()
-    {
-	return nameAndType.name();
-    }
+	/**
+	 * Get the type of the class which declared the member.
+	 * 
+	 * @return The type of the class which declared the member.
+	 */
+	public Type declaringClass() {
+		return declaringClass;
+	}
 
-    /**
-     * Get the type of the member.
-     *
-     * @return
-     *        The type of the member.
-     */
-    public Type type()
-    {
-	return nameAndType.type();
-    }
+	/**
+	 * Get the name of the member.
+	 * 
+	 * @return The name of the member.
+	 */
+	public String name() {
+		return nameAndType.name();
+	}
 
-    /**
-     * Get the name and type of the member.
-     *
-     * @return
-     *        The name and type of the member.
-     */
-    public NameAndType nameAndType()
-    {
-	return nameAndType;
-    }
+	/**
+	 * Get the type of the member.
+	 * 
+	 * @return The type of the member.
+	 */
+	public Type type() {
+		return nameAndType.type();
+	}
 
-    /**
-     * Convert the reference to a string.
-     *
-     * @return
-     *        A string representation of the reference.
-     */
-    public String toString()
-    {
-      // Take advantage of PRINT_TRUNCATED in Type
-      String className = declaringClass.toString();
-      return "<" + (type().isMethod() ? "Method" : "Field") +
-	" " + className +
-	"." + name() + " " + type() + ">";
-    }
+	/**
+	 * Get the name and type of the member.
+	 * 
+	 * @return The name and type of the member.
+	 */
+	public NameAndType nameAndType() {
+		return nameAndType;
+	}
 
-    /**
-     * Check if an object is equal to this reference.
-     *
-     * @param obj
-     *        The object to compare against.
-     * @return
-     *        true if equal, false if not.
-     */
-    public boolean equals(Object obj)
-    {
-        return obj instanceof MemberRef &&
-               ((MemberRef) obj).declaringClass.equals(declaringClass) &&
-               ((MemberRef) obj).nameAndType.equals(nameAndType);
-    }
+	/**
+	 * Convert the reference to a string.
+	 * 
+	 * @return A string representation of the reference.
+	 */
+	public String toString() {
+		// Take advantage of PRINT_TRUNCATED in Type
+		final String className = declaringClass.toString();
+		return "<" + (type().isMethod() ? "Method" : "Field") + " " + className
+				+ "." + name() + " " + type() + ">";
+	}
 
-    /**
-     * Hash the member reference.
-     *
-     * @return
-     *        The hash code.
-     */
-    public int hashCode()
-    {
-        return declaringClass.hashCode() ^ nameAndType.hashCode();
-    }
+	/**
+	 * Check if an object is equal to this reference.
+	 * 
+	 * @param obj
+	 *            The object to compare against.
+	 * @return true if equal, false if not.
+	 */
+	public boolean equals(final Object obj) {
+		return (obj instanceof MemberRef)
+				&& ((MemberRef) obj).declaringClass.equals(declaringClass)
+				&& ((MemberRef) obj).nameAndType.equals(nameAndType);
+	}
+
+	/**
+	 * Hash the member reference.
+	 * 
+	 * @return The hash code.
+	 */
+	public int hashCode() {
+		return declaringClass.hashCode() ^ nameAndType.hashCode();
+	}
 }

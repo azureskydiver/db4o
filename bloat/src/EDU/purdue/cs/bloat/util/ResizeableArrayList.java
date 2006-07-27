@@ -27,43 +27,39 @@ package EDU.purdue.cs.bloat.util;
 import java.util.*;
 
 /**
- * ResizableArrayList is the same as ArrayList except that ensureSize
- * not only increases the size of the array (super.ensureCapacity), 
- * but it also fills the empty space with null.  This way, the size
- * method will return the length of the array and not just the number
- * of elements in it.  I guess.
+ * ResizableArrayList is the same as ArrayList except that ensureSize not only
+ * increases the size of the array (super.ensureCapacity), but it also fills the
+ * empty space with null. This way, the size method will return the length of
+ * the array and not just the number of elements in it. I guess.
  */
-public class ResizeableArrayList extends ArrayList
-    implements List, Cloneable, java.io.Serializable
-{
-  /**
-   * This constructor is no longer supported in JDK1.2
-    public ResizeableArrayList(int initialCapacity, int capacityIncrement)
-    {
-    super(initialCapacity, capacityIncrement);
-    }
-    */
-  public ResizeableArrayList(int initialCapacity) {
-    super(initialCapacity);
-  }
+public class ResizeableArrayList extends ArrayList implements List, Cloneable,
+		java.io.Serializable {
+	/**
+	 * This constructor is no longer supported in JDK1.2 public
+	 * ResizeableArrayList(int initialCapacity, int capacityIncrement) {
+	 * super(initialCapacity, capacityIncrement); }
+	 */
+	public ResizeableArrayList(final int initialCapacity) {
+		super(initialCapacity);
+	}
 
-  public ResizeableArrayList() {
-    super();
-  }
+	public ResizeableArrayList() {
+		super();
+	}
 
-  public ResizeableArrayList(Collection c) {
-    super(c);
-  }
+	public ResizeableArrayList(final Collection c) {
+		super(c);
+	}
 
-  public void ensureSize(int size) {
-    ensureCapacity(size);
+	public void ensureSize(final int size) {
+		ensureCapacity(size);
 
-    while (size() < size) {
-      add(null);
-    }
-  }
+		while (size() < size) {
+			add(null);
+		}
+	}
 
-  public Object clone() {
-    return (ResizeableArrayList) super.clone();
-  }
+	public Object clone() {
+		return super.clone();
+	}
 }

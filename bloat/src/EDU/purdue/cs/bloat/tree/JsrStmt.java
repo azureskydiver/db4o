@@ -24,67 +24,56 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
-/** 
- * JsrStmt represents a <i>jsr</i> instruction that jumps to a
- * subroutine.  Recall that a subroutine is used to implement the
- * finally cause in exception handlers.  The <i>ret</i> instruction is
- * used to return from a subroutine.
- *
+/**
+ * JsrStmt represents a <i>jsr</i> instruction that jumps to a subroutine.
+ * Recall that a subroutine is used to implement the finally cause in exception
+ * handlers. The <i>ret</i> instruction is used to return from a subroutine.
+ * 
  * @see RetStmt
- * @see Subroutine */
-public class JsrStmt extends JumpStmt
-{
-  Subroutine sub;        // Subroutine to which to jump
-  Block follow;          // Basic Block to execute upon returning 
-                         // from the subroutine
-  
-  /**
-   *  Constructor.
-   *
-   * @param sub
-   *        Subroutine that this statement jumps to.
-   * @param follow
-   *        Basic Block following the jump statement.
-   */
-  public JsrStmt(Subroutine sub, Block follow)
-  {
-    this.sub = sub;
-    this.follow = follow;
-  }
-  
-  public void setFollow(Block follow)
-  {
-    this.follow = follow;
-  }
-  
-  public Block follow()
-  {
-    return follow;
-  }
-  
-  public Subroutine sub()
-  {
-    return sub;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitJsrStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new JsrStmt(sub, follow));
-  }
+ * @see Subroutine
+ */
+public class JsrStmt extends JumpStmt {
+	Subroutine sub; // Subroutine to which to jump
+
+	Block follow; // Basic Block to execute upon returning
+
+	// from the subroutine
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param sub
+	 *            Subroutine that this statement jumps to.
+	 * @param follow
+	 *            Basic Block following the jump statement.
+	 */
+	public JsrStmt(final Subroutine sub, final Block follow) {
+		this.sub = sub;
+		this.follow = follow;
+	}
+
+	public void setFollow(final Block follow) {
+		this.follow = follow;
+	}
+
+	public Block follow() {
+		return follow;
+	}
+
+	public Subroutine sub() {
+		return sub;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitJsrStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new JsrStmt(sub, follow));
+	}
 }
-
-

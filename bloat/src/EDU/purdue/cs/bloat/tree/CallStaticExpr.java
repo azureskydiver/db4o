@@ -25,72 +25,68 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * CallStaticExpr represents the <tt>invokestatic</tt> opcode which invokes 
- * a class (static) method.  Static methods can always be inlined.
- *
+ * CallStaticExpr represents the <tt>invokestatic</tt> opcode which invokes a
+ * class (static) method. Static methods can always be inlined.
+ * 
  * @see CallMethodExpr
  */
 public class CallStaticExpr extends CallExpr {
-  // invokestatic
+	// invokestatic
 
-  /**
-   * Constructor.
-   *
-   * @param params
-   *        Parameters to the method.
-   * @param method
-   *        The (class) method to be invoked.
-   * @param type
-   *        The type of this expression.
-   */  
-  public CallStaticExpr(Expr[] params, MemberRef method,
-			Type type) {
-    super(params, method, type);
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor) {
-    if (visitor.reverse()) {
-      for (int i = params.length-1; i >= 0; i--) {
-	params[i].visit(visitor);
-      }
-    }
-    else {
-      for (int i = 0; i < params.length; i++) {
-	params[i].visit(visitor);
-      }
-    }
-  }
-  
-  public void visit(TreeVisitor visitor) {
-    visitor.visitCallStaticExpr(this);
-  }
-  
-  public int exprHashCode() {
-    int v = 6;
-    
-    for (int i = 0; i < params.length; i++) {
-      v ^= params[i].exprHashCode();
-    }
-    
-    return v;
-  }
-  
-  public boolean equalsExpr(Expr other) {
-    return false;
-  }
-  
-  public Object clone() {
-    Expr[] p = new Expr[params.length];
-    
-    for (int i = 0; i < params.length; i++) {
-      p[i] = (Expr) params[i].clone();
-    }
-    
-    return copyInto(new CallStaticExpr(p, method, type));
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param params
+	 *            Parameters to the method.
+	 * @param method
+	 *            The (class) method to be invoked.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public CallStaticExpr(final Expr[] params, final MemberRef method,
+			final Type type) {
+		super(params, method, type);
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			for (int i = params.length - 1; i >= 0; i--) {
+				params[i].visit(visitor);
+			}
+		} else {
+			for (int i = 0; i < params.length; i++) {
+				params[i].visit(visitor);
+			}
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitCallStaticExpr(this);
+	}
+
+	public int exprHashCode() {
+		int v = 6;
+
+		for (int i = 0; i < params.length; i++) {
+			v ^= params[i].exprHashCode();
+		}
+
+		return v;
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return false;
+	}
+
+	public Object clone() {
+		final Expr[] p = new Expr[params.length];
+
+		for (int i = 0; i < params.length; i++) {
+			p[i] = (Expr) params[i].clone();
+		}
+
+		return copyInto(new CallStaticExpr(p, method, type));
+	}
 }

@@ -25,66 +25,55 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * CheckExpr is a superclass for classes representing a check on an expression.
- * For instance, a CheckExpr is inserted into the tree before the divisor of
- * a divide operation.  The CheckExpr checks to make sure that the divisor is
- * not zero.
- *
+ * For instance, a CheckExpr is inserted into the tree before the divisor of a
+ * divide operation. The CheckExpr checks to make sure that the divisor is not
+ * zero.
+ * 
  * @see RCExpr
  * @see UCExpr
  * @see ZeroCheckExpr
  */
-public abstract class CheckExpr extends Expr
-{
-  Expr expr;
-  
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        An expression that is to be checked.
-   * @param type
-   *        The type of this expression.
-   */
-  public CheckExpr(Expr expr, Type type)
-  {
-    super(type);
-    this.expr = expr;
-    expr.setParent(this);
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      expr.visit(visitor);	
-    }
-    else {
-      expr.visit(visitor);	
-    }
-  }
+public abstract class CheckExpr extends Expr {
+	Expr expr;
 
-  /**
-   * Returns the expression being checked.
-   */
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public int exprHashCode()
-  {
-    return 9 + expr.exprHashCode() ^ type.simple().hashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other != null &&
-      other instanceof CheckExpr &&
-      ((CheckExpr) other).expr.equalsExpr(expr);
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            An expression that is to be checked.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public CheckExpr(final Expr expr, final Type type) {
+		super(type);
+		this.expr = expr;
+		expr.setParent(this);
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			expr.visit(visitor);
+		} else {
+			expr.visit(visitor);
+		}
+	}
+
+	/**
+	 * Returns the expression being checked.
+	 */
+	public Expr expr() {
+		return expr;
+	}
+
+	public int exprHashCode() {
+		return 9 + expr.exprHashCode() ^ type.simple().hashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other != null) && (other instanceof CheckExpr)
+				&& ((CheckExpr) other).expr.equalsExpr(expr);
+	}
 }

@@ -26,17 +26,16 @@ package EDU.purdue.cs.bloat.tree;
 
 /**
  * Classes that implement Assign involve an assignment (definition).
- *
+ * 
  * @see InitStmt
  * @see PhiStmt
  * @see StackManipStmt
  * @see StoreExpr
  */
-public interface Assign
-{
-  /**
-   * Returns the expressions that may be modified (defined) by this 
-   * expression or statement.
-   */
-  public abstract DefExpr[] defs();
+public interface Assign {
+	/**
+	 * Returns the expressions that may be modified (defined) by this expression
+	 * or statement.
+	 */
+	public abstract DefExpr[] defs();
 }
