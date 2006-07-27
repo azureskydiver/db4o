@@ -1,3 +1,5 @@
+/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.inside.callbacks;
 
 import com.db4o.query.Query;
@@ -26,6 +28,10 @@ public class NullCallbacks implements Callbacks {
 		return true;
 	}
 	
+	public boolean objectCanDeactivate(Object obj) {
+		return true;
+	}
+	
 	public void objectOnNew(Object obj) {
 	}
 	
@@ -36,5 +42,8 @@ public class NullCallbacks implements Callbacks {
 	}
 
 	public void objectOnDelete(Object obj) {
+	}
+
+	public void objectOnDeactivate(Object obj) {	
 	}
 }

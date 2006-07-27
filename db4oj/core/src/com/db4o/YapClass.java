@@ -486,11 +486,21 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     public void deactivate(Transaction a_trans, Object a_object, int a_depth) {
-        if(dispatchEvent(a_trans.i_stream, a_object, EventDispatcher.CAN_DEACTIVATE)){
+        if(objectCanDeactivate(a_trans.i_stream, a_object)){
             deactivate1(a_trans, a_object, a_depth);
-            dispatchEvent(a_trans.i_stream, a_object, EventDispatcher.DEACTIVATE);
+            objectOnDeactivate(a_trans.i_stream, a_object);
         }
     }
+
+	private void objectOnDeactivate(YapStream stream, Object obj) {
+		stream.callbacks().objectOnDeactivate(obj);
+		dispatchEvent(stream, obj, EventDispatcher.DEACTIVATE);
+	}
+
+	private boolean objectCanDeactivate(YapStream stream, Object obj) {
+		return stream.callbacks().objectCanDeactivate(obj) &&
+			dispatchEvent(stream, obj, EventDispatcher.CAN_DEACTIVATE);
+	}
 
     void deactivate1(Transaction a_trans, Object a_object, int a_depth) {
         
