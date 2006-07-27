@@ -35,7 +35,6 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 	}
 
 	private void assertActivationEvent(Event4 event) throws Exception {
-		
 		event.addListener(_recorder);
 		
 		Item item = (Item)db().get(Item.class).next();
@@ -45,7 +44,6 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 
 	private void storeAndReopen() throws Exception {
 		db().set(new Item(1));
-		
 		reopen();
 	}
 	
@@ -60,8 +58,8 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 	}
 	
 	public void testCancellableObjectCanNew() {	
-
 		listenToObjectCanNew();
+		
 		_recorder.cancel(true);
 		
 		Item item = new Item(1);

@@ -8,10 +8,9 @@ public interface Callbacks {
 	
 	void onQueryFinished(Query query);
 
-	boolean objectCanNew(Object subject);
+	boolean objectCanNew(Object obj);
 
-	boolean objectCanActivate(Object subject);
+	boolean objectCanActivate(Object obj);
 
 	void objectOnActivate(Object obj);
-	
 }
