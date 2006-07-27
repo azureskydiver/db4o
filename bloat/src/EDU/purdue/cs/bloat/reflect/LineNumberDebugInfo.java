@@ -24,73 +24,62 @@
 
 package EDU.purdue.cs.bloat.reflect;
 
-import java.util.*;
-import java.io.*;
-
 /**
- * LineNumberDebugInfo is used to map a range of instructions to a
- * line number in the original Java source file.  An instance of
- * <tt>file.LineNumberTable</tt> contains an array of these 
- * guys.
- *
+ * LineNumberDebugInfo is used to map a range of instructions to a line number
+ * in the original Java source file. An instance of
+ * <tt>file.LineNumberTable</tt> contains an array of these guys.
+ * 
  * @see EDU.purdue.cs.bloat.file.LineNumberTable
- *
- * @author Nate Nystrom
- *         (<a href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
+ * 
+ * @author Nate Nystrom (<a
+ *         href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
  */
-public class LineNumberDebugInfo
-{
-  private int startPC;
-  private int lineNumber;
+public class LineNumberDebugInfo {
+	private int startPC;
 
-  /**
-   * Constructor.
-   *
-   * @param startPC
-   *        The start PC of the instructions for this line number.
-   * @param lineNumber
-   *        The line number for this group of instructions.
-   */
-  public LineNumberDebugInfo(int startPC, int lineNumber)
-  {
-    this.startPC = startPC;
-    this.lineNumber = lineNumber;
-  }
+	private int lineNumber;
 
-  /**
-   * Get the start PC of the instructions for this line number.
-   *
-   * @return
-   *        The start PC.
-   */
-  public int startPC()
-  {
-    return startPC;
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param startPC
+	 *            The start PC of the instructions for this line number.
+	 * @param lineNumber
+	 *            The line number for this group of instructions.
+	 */
+	public LineNumberDebugInfo(final int startPC, final int lineNumber) {
+		this.startPC = startPC;
+		this.lineNumber = lineNumber;
+	}
 
-  /**
-   * Get the line number for this group of instructions.
-   *
-   * @return
-   *        The line number.
-   */
-  public int lineNumber()
-  {
-    return lineNumber;
-  }
+	/**
+	 * Get the start PC of the instructions for this line number.
+	 * 
+	 * @return The start PC.
+	 */
+	public int startPC() {
+		return startPC;
+	}
 
-  /**
-   * Convert the attribute to a string.
-   *
-   * @return
-   *        A string representation of the attribute.
-   */
-  public String toString()
-  {
-    return "(line #" + lineNumber + " pc=" + startPC + ")";
-  }
+	/**
+	 * Get the line number for this group of instructions.
+	 * 
+	 * @return The line number.
+	 */
+	public int lineNumber() {
+		return lineNumber;
+	}
 
-  public Object clone() {
-    return(new LineNumberDebugInfo(this.startPC, this.lineNumber));
-  }
+	/**
+	 * Convert the attribute to a string.
+	 * 
+	 * @return A string representation of the attribute.
+	 */
+	public String toString() {
+		return "(line #" + lineNumber + " pc=" + startPC + ")";
+	}
+
+	public Object clone() {
+		return (new LineNumberDebugInfo(this.startPC, this.lineNumber));
+	}
 }

@@ -24,65 +24,56 @@
 
 package EDU.purdue.cs.bloat.editor;
 
-import java.util.*;
-
 /**
- * IncOperand encapsulates the operands to the iinc instruction.  It is
- * necessary because the <tt>iinc</tt> has two operands: a local 
- * variable and an integer by which to increment the local variable.
- *
- * @author Nate Nystrom
- *         (<a href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
+ * IncOperand encapsulates the operands to the iinc instruction. It is necessary
+ * because the <tt>iinc</tt> has two operands: a local variable and an integer
+ * by which to increment the local variable.
+ * 
+ * @author Nate Nystrom (<a
+ *         href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
  */
-public class IncOperand
-{
-    private LocalVariable var; 
-    private int incr;
+public class IncOperand {
+	private LocalVariable var;
 
-    /**
-     * Constructor.
-     *
-     * @param var
-     *        The local variable to increment.
-     * @param incr
-     *        The amount to increment by.
-     */
-    public IncOperand(LocalVariable var, int incr)
-    {
-	this.var = var;
-	this.incr = incr;
-    }
+	private int incr;
 
-    /**
-     * Get the local variable to increment.
-     *
-     * @return
-     *        The local variable to increment.
-     */
-    public LocalVariable var()
-    {
-	return var;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param var
+	 *            The local variable to increment.
+	 * @param incr
+	 *            The amount to increment by.
+	 */
+	public IncOperand(final LocalVariable var, final int incr) {
+		this.var = var;
+		this.incr = incr;
+	}
 
-    /**
-     * Get the amount to increment by.
-     *
-     * @return
-     *        The amount to increment by.
-     */
-    public int incr()
-    {
-	return incr;
-    }
+	/**
+	 * Get the local variable to increment.
+	 * 
+	 * @return The local variable to increment.
+	 */
+	public LocalVariable var() {
+		return var;
+	}
 
-    /**
-     * Convert the operand to a string.
-     *
-     * @return
-     *        A string representation of the operand.
-     */
-    public String toString()
-    {
-	return "" + var + " by " + incr;
-    }
+	/**
+	 * Get the amount to increment by.
+	 * 
+	 * @return The amount to increment by.
+	 */
+	public int incr() {
+		return incr;
+	}
+
+	/**
+	 * Convert the operand to a string.
+	 * 
+	 * @return A string representation of the operand.
+	 */
+	public String toString() {
+		return "" + var + " by " + incr;
+	}
 }

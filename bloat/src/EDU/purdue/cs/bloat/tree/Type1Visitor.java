@@ -31,157 +31,139 @@ import java.util.*;
  */
 public class Type1Visitor extends AscendVisitor {
 
-    Node turningPoint;     /* where we were when we started descending
-			      the tree instead of ascending */
-    boolean found;            /* have we found an earlier occurence */
-    
+	Node turningPoint; /*
+						 * where we were when we started descending the tree
+						 * instead of ascending
+						 */
 
+	boolean found; /* have we found an earlier occurence */
 
-    public Type1Visitor(Hashtable defInfoMap, Hashtable useInfoMap) {
-	super(defInfoMap, useInfoMap);
-    }
+	public Type1Visitor(final Hashtable defInfoMap, final Hashtable useInfoMap) {
+		super(defInfoMap, useInfoMap);
+	}
 
+	public void search(final LocalExpr start) {
 
-    public void search(LocalExpr start) {
+		this.start = start;
+		previous = this.start;
+		found = false;
+		start.parent().visit(this);
+		if (!found) {
 
-	this.start = start;
-	previous = this.start;
-	found = false;
-	start.parent().visit(this);
-	if (!found) {
+			if (turningPoint != null) {
+				(new Type1UpVisitor(defInfoMap, useInfoMap)).search(
+						turningPoint, start);
+			} else { // search failed (one place I saw this was in
+				// a ZeroCheckExpression)
 
-           if (turningPoint != null) {
-	    (new Type1UpVisitor(defInfoMap,useInfoMap))
-		.search(turningPoint, start);
-	   }
-	   else {  // search failed (one place I saw this was in 
-	       // a ZeroCheckExpression)
+				((DefInformation) defInfoMap.get(start.def())).type1s += 3;
+			}
 
-	    ((DefInformation) defInfoMap.get(start.def())).type1s += 3;
-	   }       
+		}
 
 	}
 
-    }
+	public void check(final Node node) {
 
-    
-    public void check(Node node) {
+		if ((node instanceof Expr) && ((Expr) node).type().isWide()) {
+			turningPoint = null;
+			return; // give up. We cannot swap around a wide value.
+		}
 
-	if (node instanceof Expr
-	    && ((Expr) node).type().isWide()) {
-	    turningPoint = null;
-	    return;  // give up. We cannot swap around a wide value.
+		turningPoint = node;
+
+		if (node instanceof StoreExpr) {
+			check(((StoreExpr) node).expr()); // to search down the expression
+			// being stored
+		} else if (!(node instanceof LocalExpr) && (node instanceof Expr)) {
+			found = (new Type1DownVisitor(useInfoMap, defInfoMap)).search(node,
+					start);
+		}
+
 	}
-
-        turningPoint = node;  
-
-	if (node instanceof StoreExpr)  // if it's a StoreExpr, we need
-	    check(((StoreExpr) node).expr()); // to search down the expression
-                                            	// being stored
-
-	//if it's a LocalExpr or Stmt, Type0Visitor would have inspected it.
-	// otherwise...
-	else if (!(node instanceof LocalExpr) && node instanceof Expr) 
-
-	    found =
-		(new Type1DownVisitor(useInfoMap, defInfoMap)).search(node,
-								      start);
-
-    }
 }
-
-
 
 class Type1UpVisitor extends AscendVisitor {
 
+	Node turningPoint;
 
-    Node turningPoint;
-    boolean found;
+	boolean found;
 
-    Type1UpVisitor(Hashtable defInfoMap, Hashtable useInfoMap) {
-	super(defInfoMap, useInfoMap);
-    }
-
-    public void search(Node turningPoint, LocalExpr start) {
-
-	found = false;
-	this.start = start;
-	previous = turningPoint;
-	this.turningPoint = turningPoint;
-	if (turningPoint.parent() != null 
-	    && !(turningPoint.parent() instanceof Tree)) // we can't
-                        	    // go more than one statement earlier
-                      	        // because we don't know if the intermediate
-	                         // statment leaves anything on the stack.
-	    turningPoint.parent().visit(this);
-
-        if (!found) {
-	    // if we've found nothing by now, we won't find anything.
-	    // setting the type1s of the definition to something 3 or
-	    // greater insures the variable will be stored
-	    ((DefInformation) defInfoMap.get(start.def())).type1s += 3;
+	Type1UpVisitor(final Hashtable defInfoMap, final Hashtable useInfoMap) {
+		super(defInfoMap, useInfoMap);
 	}
 
-    }
+	public void search(final Node turningPoint, final LocalExpr start) {
 
-    public void check(Node node) {
+		found = false;
+		this.start = start;
+		previous = turningPoint;
+		this.turningPoint = turningPoint;
+		if ((turningPoint.parent() != null)
+				&& !(turningPoint.parent() instanceof Tree)) {
+			// go more than one statement earlier
+			// because we don't know if the intermediate
+			// statment leaves anything on the stack.
+			turningPoint.parent().visit(this);
+		}
 
-	if (node instanceof ExprStmt)      // if it's an ExprStmt, the expr
-	    check(((ExprStmt) node).expr());  // might be something we want
+		if (!found) {
+			// if we've found nothing by now, we won't find anything.
+			// setting the type1s of the definition to something 3 or
+			// greater insures the variable will be stored
+			((DefInformation) defInfoMap.get(start.def())).type1s += 3;
+		}
 
-	else if (node instanceof StoreExpr)   // if it's a StoreExpr, we need
-	    check(((StoreExpr) node).target()); // to see if the target matches
-
-	//if it's a LocalExpr...
-	else if (node instanceof LocalExpr   
-		 && ((LocalExpr) node).index() == start.index() //compare index
-		 && ((LocalExpr) node).def() == start.def()) {  // and def
-		//we've found a match
-		//update information
-		((UseInformation) useInfoMap.get(start)).type = 1;
-		((UseInformation) useInfoMap.get(node)).type1s++;
-		((DefInformation) defInfoMap.get(start.def())).type1s++;
-		found = true;
-		return; 
 	}
-	
 
-    }	    
+	public void check(final Node node) {
 
+		if (node instanceof ExprStmt) {
+			check(((ExprStmt) node).expr()); // might be something we want
+		} else if (node instanceof StoreExpr) {
+			check(((StoreExpr) node).target()); // to see if the target matches
+		} else if ((node instanceof LocalExpr)
+				&& ((((LocalExpr) node).index() == start.index() // compare
+																	// index))
+				&& (((LocalExpr) node).def() == start.def())))) { // and def
+			// we've found a match
+			// update information
+			((UseInformation) useInfoMap.get(start)).type = 1;
+			((UseInformation) useInfoMap.get(node)).type1s++;
+			((DefInformation) defInfoMap.get(start.def())).type1s++;
+			found = true;
+			return;
+		}
 
-	
+	}
+
 }
-	
- 
 
 class Type1DownVisitor extends DescendVisitor {
 
-    public Type1DownVisitor(Hashtable useInfoMap, Hashtable defInfoMap) {
-	super(useInfoMap, defInfoMap);
-    }
-    
-    public void visitLocalExpr(LocalExpr expr)  {  
-	
-	if (expr.index() == start.index()
-	    && expr.def() == start.def()) {
-	    //we've found a match
-	    //update information
-	    ((UseInformation) useInfoMap.get(start)).type = 1;
-	    UseInformation ui = (UseInformation) useInfoMap.get(expr);
-	    ui.type1s++;
-	    if (exchangeFactor == 1) {
-		ui.type1_x1s++;
-	    }
-	    if (exchangeFactor == 2)
-		ui.type1_x2s++;
-//System.err.println(expr.toString());
-	    ((DefInformation) defInfoMap.get(expr.def())).type1s++;
-	    found = true;
+	public Type1DownVisitor(final Hashtable useInfoMap,
+			final Hashtable defInfoMap) {
+		super(useInfoMap, defInfoMap);
 	}
-    }
+
+	public void visitLocalExpr(final LocalExpr expr) {
+
+		if ((expr.index() == start.index()) && (expr.def() == start.def())) {
+			// we've found a match
+			// update information
+			((UseInformation) useInfoMap.get(start)).type = 1;
+			final UseInformation ui = (UseInformation) useInfoMap.get(expr);
+			ui.type1s++;
+			if (exchangeFactor == 1) {
+				ui.type1_x1s++;
+			}
+			if (exchangeFactor == 2) {
+				ui.type1_x2s++;
+			}
+			// System.err.println(expr.toString());
+			((DefInformation) defInfoMap.get(expr.def())).type1s++;
+			found = true;
+		}
+	}
 
 }
-    
-   
-
-

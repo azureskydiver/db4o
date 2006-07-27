@@ -26,426 +26,419 @@
 
 package EDU.purdue.cs.bloat.context;
 
-import EDU.purdue.cs.bloat.util.*;
-import EDU.purdue.cs.bloat.reflect.*;
-import EDU.purdue.cs.bloat.file.*;
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.ssa.*;
-import EDU.purdue.cs.bloat.inline.*;
-
-import java.io.*;
 import java.util.*;
 
+import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.reflect.*;
+
 /**
- * Maintains all BLOAT data structures as if they were meant to reside
- * in a persistent store.  As a result, it keeps every piece of BLOAT
- * data around because it might be needed in the future.  No fancing
- * cache maintainence is performed.  Because we are going for maximum
- * information we take the closure of classes when working with the
- * class hierarchy.  
+ * Maintains all BLOAT data structures as if they were meant to reside in a
+ * persistent store. As a result, it keeps every piece of BLOAT data around
+ * because it might be needed in the future. No fancing cache maintainence is
+ * performed. Because we are going for maximum information we take the closure
+ * of classes when working with the class hierarchy.
  */
 public class PersistentBloatContext extends BloatContext {
 
-  protected final ClassHierarchy hierarchy;
+	protected final ClassHierarchy hierarchy;
 
-  protected Map classInfos;    // Maps Strings to ClassInfos
-  protected Map methodInfos;   // Maps MemberRefs to MethodInfos
-  protected Map fieldInfos;    // Maps MemberRefs to FieldInfos
+	protected Map classInfos; // Maps Strings to ClassInfos
 
-  protected Map classEditors;  // Maps ClassInfos to ClassEditors
-  protected Map methodEditors; // Maps MethodInfos to MethodEditors
-  protected Map fieldEditors;  // Maps MethodInfos to FieldEditors
+	protected Map methodInfos; // Maps MemberRefs to MethodInfos
 
-  public static boolean DB_COMMIT = false;
+	protected Map fieldInfos; // Maps MemberRefs to FieldInfos
 
-  protected static void comm(String s) {
-    if(DB_COMMIT || DEBUG) {
-      System.out.println(s);
-    }
-  }
+	protected Map classEditors; // Maps ClassInfos to ClassEditors
 
-  /**
-   * Constructor.  Each <tt>BloatContext</tt> stems from a
-   * <tt>ClassInfoLoader</tt>.  Using the loader it can create an
-   * <tt>Editor</tt> and such. Initially, no classes are loaded.
-   */
-  public PersistentBloatContext(ClassInfoLoader loader) {
-   this(loader, true);
-  }
+	protected Map methodEditors; // Maps MethodInfos to MethodEditors
 
-  /**
-   * Constructor.  It is the responsibility of the subclasses to add
-   * classes to the hierarchy by calling <tt>addClasses</tt>.
-   *
-   * @param loader
-   *        Used to load classes
-   * @param closure
-   *        Do we look for the maximum number of classes?
-   */
-  protected PersistentBloatContext(ClassInfoLoader loader, 
-				   boolean closure) {
-    super(loader);
-    db("Creating a new BloatContext");
+	protected Map fieldEditors; // Maps MethodInfos to FieldEditors
 
-    // Create a bunch of the mappings we maintain.  Make sure to do
-    // this before anything else!
-    classInfos = new HashMap();
-    methodInfos = new HashMap();
-    fieldInfos = new HashMap();
+	public static boolean DB_COMMIT = false;
 
-    classEditors = new HashMap();
-    methodEditors = new HashMap();
-    fieldEditors = new HashMap();
-
-    // Have to create an empty class hierarchy then add the classes.
-    // There is a strange circular dependence between the hierarchy
-    // and the context.
-    this.hierarchy = new ClassHierarchy(this, new ArrayList(),
-					closure);
-
-  }
-
-  /**
-   * Adds a bunch of (names of) classes to the hierarchy.
-   */
-  protected void addClasses(Collection classes) {
-    Iterator iter = classes.iterator();
-    while(iter.hasNext()) {
-      String className = (String) iter.next();
-      this.hierarchy.addClassNamed(className);
-    }
-  }
-
-  public ClassInfo loadClass(String className) 
-    throws ClassNotFoundException {
-    // Lots of interesting stuff to do here.  For the moment, just
-    // load the class from the ClassInfoLoader and add it to the
-    // hierarchy.
-
-    className = className.replace('.', '/').intern();
-
-    // Check the cache of ClassInfos
-    ClassInfo info = (ClassInfo) classInfos.get(className);
-
-    if(info == null) {
-      db("BloatContext: Loading class " + className);
-      info = loader.loadClass(className);
-      hierarchy.addClassNamed(className);
-      db("loadClass: " + className + " -> " + info);
-      classInfos.put(className, info);
-    }
-
-    return(info);
-  }
-
-  public ClassInfo newClassInfo(int modifiers, int classIndex, 
-                                int superClassIndex, 
-                                int[] interfaceIndexes, 
-                                List constants) {
-
-    return this.loader.newClass(modifiers, classIndex, superClassIndex,
-                                interfaceIndexes, constants);
-  }
-
-  public ClassHierarchy getHierarchy() {
-    return(this.hierarchy);
-  }
-
-  public ClassEditor newClass(int modifiers, String className, 
-                              Type superType, Type[] interfaces) {
-
-    ClassEditor ce = 
-      new ClassEditor(this, modifiers, className, superType,
-                      interfaces);
-    ClassInfo info = ce.classInfo();
-
-    className = ce.name().intern();
-
-    db("editClass(ClassInfo): " + className + " -> " + info);
-
-    classInfos.put(className, info);
-    classEditors.put(info, ce);
-
-    return ce;
-  }
-
-
-  public ClassEditor editClass(String className)
-    throws ClassNotFoundException, ClassFormatException 
-  {
-    // Only make the name -> classInfo mapping if we edit the class,
-    // this way the mapping will be deleted when the ClassEditor is
-    // released.
-
-    className = className.intern();
-
-    ClassInfo info = (ClassInfo) classInfos.get(className);
-
-    if(info == null) {
-      info = loadClass(className);
-      //      db("editClass(String): " + className + " -> " + info);
-      //      classInfos.put(className, info);
-    }
-
-    return(editClass(info));
-  }
-
-  public ClassEditor editClass(Type classType) 
-    throws ClassNotFoundException, ClassFormatException
-  {
-    return(editClass(classType.className()));
-  }
-
-  public ClassEditor editClass(ClassInfo info) {
-    // Check the cache
-    ClassEditor ce = (ClassEditor) classEditors.get(info);
-
-    if(ce == null) {
-      ce = new ClassEditor(this, info);
-      classEditors.put(info, ce);
-
-      if(!classInfos.containsValue(info)) {
-	String className = ce.name().intern();
-	db("editClass(ClassInfo): " + className + " -> " + info);
-	classInfos.put(className, info);
-      }
-    }
-
-    
-
-    return(ce);
-  }
-
-  public MethodEditor editMethod(MemberRef method) 
-    throws NoSuchMethodException {
-
-    // Check the MethodInfo cache
-    MethodInfo info = (MethodInfo) methodInfos.get(method);
-
-    if(info == null) {
-      // Groan, we have to do this the HARD way.
-      db("Creating a new MethodEditor for " + method);
-      NameAndType nat = method.nameAndType();
-      String name = nat.name();
-      Type type = nat.type();
-
-      try {
-	ClassEditor ce = editClass(method.declaringClass());
-	MethodInfo[] methods = ce.methods();
-
-	for(int i = 0; i < methods.length; i++) {
-	  MethodEditor me = editMethod(methods[i]);
-
-	  if(me.name().equals(name) && me.type().equals(type)) {
-	    // The call to editMethod should have already handled the
-	    // methodEditors mapping, but we still need to do
-	    // methodInfos.
-	    methodInfos.put(method, methods[i]);
-	    release(ce.classInfo());
-	    return(me);
-	  }
-
-	  release(methods[i]);
+	protected static void comm(final String s) {
+		if (PersistentBloatContext.DB_COMMIT || BloatContext.DEBUG) {
+			System.out.println(s);
+		}
 	}
 
-      } catch(ClassNotFoundException ex1) {
-      } catch(ClassFormatException ex2) {
-      }
-
-      throw new NoSuchMethodException(method.toString());
-    }
-
-    return(editMethod(info));
-  }
-
-  public MethodEditor editMethod(MethodInfo info) {
-    // Check methodEditors cache
-    MethodEditor me = (MethodEditor) methodEditors.get(info);
-
-    if(me == null) {
-      me = new MethodEditor(editClass(info.declaringClass()), info);
-      methodEditors.put(info, me);
-      db("Creating a new MethodEditor for " + me.memberRef());
-    }
-
-    return(me);
-  }
-
-  public FieldEditor editField(MemberRef field) 
-    throws NoSuchFieldException {
-
-    // Just like we had to do with methods
-    FieldInfo info = (FieldInfo) fieldInfos.get(field);
-
-    if(info == null) {
-      NameAndType nat = field.nameAndType();
-      String name = nat.name();
-      Type type = nat.type();
-
-      try {
-	ClassEditor ce = editClass(field.declaringClass());
-	FieldInfo[] fields = ce.fields();
-
-	for(int i = 0; i < fields.length; i++) {
-	  FieldEditor fe = editField(fields[i]);
-
-	  if(fe.name().equals(name) && fe.type().equals(type)) {
-	    fieldInfos.put(field, fields[i]);
-	    release(ce.classInfo());
-	    return(fe);
-	  }
-
-	  release(fields[i]);
+	/**
+	 * Constructor. Each <tt>BloatContext</tt> stems from a
+	 * <tt>ClassInfoLoader</tt>. Using the loader it can create an
+	 * <tt>Editor</tt> and such. Initially, no classes are loaded.
+	 */
+	public PersistentBloatContext(final ClassInfoLoader loader) {
+		this(loader, true);
 	}
-      } catch(ClassNotFoundException ex1) {
-      } catch(ClassFormatException ex2) {
-      }
 
-      throw new NoSuchFieldException(field.toString());
-    }
+	/**
+	 * Constructor. It is the responsibility of the subclasses to add classes to
+	 * the hierarchy by calling <tt>addClasses</tt>.
+	 * 
+	 * @param loader
+	 *            Used to load classes
+	 * @param closure
+	 *            Do we look for the maximum number of classes?
+	 */
+	protected PersistentBloatContext(final ClassInfoLoader loader,
+			final boolean closure) {
+		super(loader);
+		BloatContext.db("Creating a new BloatContext");
 
-    return(editField(info));
-  }
+		// Create a bunch of the mappings we maintain. Make sure to do
+		// this before anything else!
+		classInfos = new HashMap();
+		methodInfos = new HashMap();
+		fieldInfos = new HashMap();
 
-  public FieldEditor editField(FieldInfo info) {
-    // Check the cache
-    FieldEditor fe = (FieldEditor) fieldEditors.get(info);
+		classEditors = new HashMap();
+		methodEditors = new HashMap();
+		fieldEditors = new HashMap();
 
-    if(fe == null) {
-      fe = new FieldEditor(editClass(info.declaringClass()), info);
-      fieldEditors.put(info, fe);
-      db("Creating a new FieldEditor for " + fe.nameAndType());
-    }
+		// Have to create an empty class hierarchy then add the classes.
+		// There is a strange circular dependence between the hierarchy
+		// and the context.
+		this.hierarchy = new ClassHierarchy(this, new ArrayList(), closure);
 
-    return(fe);
-  }
+	}
 
-  public void release(ClassInfo info) {
-    // Since we keep around all data, do nothing
-  }
+	/**
+	 * Adds a bunch of (names of) classes to the hierarchy.
+	 */
+	protected void addClasses(final Collection classes) {
+		final Iterator iter = classes.iterator();
+		while (iter.hasNext()) {
+			final String className = (String) iter.next();
+			this.hierarchy.addClassNamed(className);
+		}
+	}
 
-  public void release(ClassEditor ce) {
-    // Since we keep around all data, do nothing
-  }
+	public ClassInfo loadClass(String className) throws ClassNotFoundException {
+		// Lots of interesting stuff to do here. For the moment, just
+		// load the class from the ClassInfoLoader and add it to the
+		// hierarchy.
 
-  public void release(MethodInfo info) {
-    // Since we keep around all data, do nothing
-  }
+		className = className.replace('.', '/').intern();
 
-  public void release(FieldInfo info) {
-    // Since we keep around all data, do nothing
-  }
+		// Check the cache of ClassInfos
+		ClassInfo info = (ClassInfo) classInfos.get(className);
 
-  /**
-   * Classes that are ignored are not committed.
-   *
-   * @see ignoreClass
-   */
-  public void commit(ClassInfo info) {
-    Type type = Type.getType("L" + info.name() + ";");
-    if(ignoreClass(type)) {
-      return;
-    }
+		if (info == null) {
+			BloatContext.db("BloatContext: Loading class " + className);
+			info = loader.loadClass(className);
+			hierarchy.addClassNamed(className);
+			BloatContext.db("loadClass: " + className + " -> " + info);
+			classInfos.put(className, info);
+		}
 
-    ClassEditor ce = editClass(info);
+		return (info);
+	}
 
-    // Commit all of the class's methods and fields
-    MethodInfo[] methods = ce.methods();
-    for(int i = 0; i < methods.length; i++) {
-      commit(methods[i]);
-    }
+	public ClassInfo newClassInfo(final int modifiers, final int classIndex,
+			final int superClassIndex, final int[] interfaceIndexes,
+			final List constants) {
 
-    FieldInfo[] fields = ce.fields();
-    for(int i = 0; i < fields.length; i++) {
-      commit(fields[i]);
-    }
+		return this.loader.newClass(modifiers, classIndex, superClassIndex,
+				interfaceIndexes, constants);
+	}
 
-    ce.commit();
+	public ClassHierarchy getHierarchy() {
+		return (this.hierarchy);
+	}
 
-    ce.setDirty(false);
-    release(info);
-  }
+	public ClassEditor newClass(final int modifiers, String className,
+			final Type superType, final Type[] interfaces) {
 
-  public void commit(MethodInfo info) {
-    MethodEditor me = editMethod(info);
-    me.commit();
+		final ClassEditor ce = new ClassEditor(this, modifiers, className,
+				superType, interfaces);
+		final ClassInfo info = ce.classInfo();
 
-    // We make the method's class dirty so it, too, will be committed
-    me.declaringClass().setDirty(true);
-    me.setDirty(false);
-    release(info);
-  }
+		className = ce.name().intern();
 
-  public void commit(FieldInfo info) {
-    FieldEditor fe = editField(info);
-    fe.commit();
+		BloatContext.db("editClass(ClassInfo): " + className + " -> " + info);
 
-    // We make the method's class dirty so it, too, will be committed
-    fe.declaringClass().setDirty(true);
-    fe.setDirty(false);
-    release(info);
-  }
+		classInfos.put(className, info);
+		classEditors.put(info, ce);
 
-  public void commit() {
-    Object[] array = fieldEditors.values().toArray();
-    for(int i = 0; i < array.length; i++) {
-      FieldEditor fe = (FieldEditor) array[i];
-      if(!ignoreField(fe.memberRef())) {
-	commit(fe.fieldInfo());
-      }
-    }
+		return ce;
+	}
 
-    array = methodEditors.values().toArray();
-    for(int i = 0; i < array.length; i++) {
-      MethodEditor me = (MethodEditor) array[i];
-      if(!ignoreMethod(me.memberRef())) {
-	commit(me.methodInfo());
-      }
-    }
+	public ClassEditor editClass(String className)
+			throws ClassNotFoundException, ClassFormatException {
+		// Only make the name -> classInfo mapping if we edit the class,
+		// this way the mapping will be deleted when the ClassEditor is
+		// released.
 
-    array = classEditors.values().toArray();
-    for(int i = 0; i < array.length; i++) {
-      ClassEditor ce = (ClassEditor) array[i];
-      if(!ignoreClass(ce.type())) {
-	commit(ce.classInfo());
-      }
-    }
-  }
+		className = className.intern();
 
-  public void commitDirty() {
-    comm("Committing dirty data");
+		ClassInfo info = (ClassInfo) classInfos.get(className);
 
-    // Commit all dirty fields
-    Object[] array = this.fieldEditors.values().toArray();
-    for(int i = 0; i < array.length; i++) {
-      FieldEditor fe = (FieldEditor) array[i];
-      if(fe.isDirty() && !ignoreField(fe.memberRef())) {
-        comm("  Committing field: " + fe.declaringClass().name() +
-	     "." + fe.name());
-        commit(fe.fieldInfo());
-      }
-    }
+		if (info == null) {
+			info = loadClass(className);
+			// db("editClass(String): " + className + " -> " + info);
+			// classInfos.put(className, info);
+		}
 
-    // Commit all dirty methods
-    array = this.methodEditors.values().toArray();
-    for(int i = 0; i < array.length; i++) {
-      MethodEditor me = (MethodEditor) array[i];
-      if(me.isDirty() && !ignoreMethod(me.memberRef())) {
-        comm("  Committing method: " + me.declaringClass().name() +
-           "." + me.name() + me.type());
-        commit(me.methodInfo());
-      }
-    }
+		return (editClass(info));
+	}
 
-    // Commit all dirty classes
-    array = this.classEditors.values().toArray();
-    for(int i = 0; i < array.length; i++) {
-      ClassEditor ce = (ClassEditor) array[i];
-      if(ce.isDirty() && !ignoreClass(ce.type())) {
-        comm("  Committing class: " + ce.name());
-        commit(ce.classInfo());
-      }
-    }
-  }
+	public ClassEditor editClass(final Type classType)
+			throws ClassNotFoundException, ClassFormatException {
+		return (editClass(classType.className()));
+	}
+
+	public ClassEditor editClass(final ClassInfo info) {
+		// Check the cache
+		ClassEditor ce = (ClassEditor) classEditors.get(info);
+
+		if (ce == null) {
+			ce = new ClassEditor(this, info);
+			classEditors.put(info, ce);
+
+			if (!classInfos.containsValue(info)) {
+				final String className = ce.name().intern();
+				BloatContext.db("editClass(ClassInfo): " + className + " -> "
+						+ info);
+				classInfos.put(className, info);
+			}
+		}
+
+		return (ce);
+	}
+
+	public MethodEditor editMethod(final MemberRef method)
+			throws NoSuchMethodException {
+
+		// Check the MethodInfo cache
+		final MethodInfo info = (MethodInfo) methodInfos.get(method);
+
+		if (info == null) {
+			// Groan, we have to do this the HARD way.
+			BloatContext.db("Creating a new MethodEditor for " + method);
+			final NameAndType nat = method.nameAndType();
+			final String name = nat.name();
+			final Type type = nat.type();
+
+			try {
+				final ClassEditor ce = editClass(method.declaringClass());
+				final MethodInfo[] methods = ce.methods();
+
+				for (int i = 0; i < methods.length; i++) {
+					final MethodEditor me = editMethod(methods[i]);
+
+					if (me.name().equals(name) && me.type().equals(type)) {
+						// The call to editMethod should have already handled
+						// the
+						// methodEditors mapping, but we still need to do
+						// methodInfos.
+						methodInfos.put(method, methods[i]);
+						release(ce.classInfo());
+						return (me);
+					}
+
+					release(methods[i]);
+				}
+
+			} catch (final ClassNotFoundException ex1) {
+			} catch (final ClassFormatException ex2) {
+			}
+
+			throw new NoSuchMethodException(method.toString());
+		}
+
+		return (editMethod(info));
+	}
+
+	public MethodEditor editMethod(final MethodInfo info) {
+		// Check methodEditors cache
+		MethodEditor me = (MethodEditor) methodEditors.get(info);
+
+		if (me == null) {
+			me = new MethodEditor(editClass(info.declaringClass()), info);
+			methodEditors.put(info, me);
+			BloatContext
+					.db("Creating a new MethodEditor for " + me.memberRef());
+		}
+
+		return (me);
+	}
+
+	public FieldEditor editField(final MemberRef field)
+			throws NoSuchFieldException {
+
+		// Just like we had to do with methods
+		final FieldInfo info = (FieldInfo) fieldInfos.get(field);
+
+		if (info == null) {
+			final NameAndType nat = field.nameAndType();
+			final String name = nat.name();
+			final Type type = nat.type();
+
+			try {
+				final ClassEditor ce = editClass(field.declaringClass());
+				final FieldInfo[] fields = ce.fields();
+
+				for (int i = 0; i < fields.length; i++) {
+					final FieldEditor fe = editField(fields[i]);
+
+					if (fe.name().equals(name) && fe.type().equals(type)) {
+						fieldInfos.put(field, fields[i]);
+						release(ce.classInfo());
+						return (fe);
+					}
+
+					release(fields[i]);
+				}
+			} catch (final ClassNotFoundException ex1) {
+			} catch (final ClassFormatException ex2) {
+			}
+
+			throw new NoSuchFieldException(field.toString());
+		}
+
+		return (editField(info));
+	}
+
+	public FieldEditor editField(final FieldInfo info) {
+		// Check the cache
+		FieldEditor fe = (FieldEditor) fieldEditors.get(info);
+
+		if (fe == null) {
+			fe = new FieldEditor(editClass(info.declaringClass()), info);
+			fieldEditors.put(info, fe);
+			BloatContext.db("Creating a new FieldEditor for "
+					+ fe.nameAndType());
+		}
+
+		return (fe);
+	}
+
+	public void release(final ClassInfo info) {
+		// Since we keep around all data, do nothing
+	}
+
+	public void release(final ClassEditor ce) {
+		// Since we keep around all data, do nothing
+	}
+
+	public void release(final MethodInfo info) {
+		// Since we keep around all data, do nothing
+	}
+
+	public void release(final FieldInfo info) {
+		// Since we keep around all data, do nothing
+	}
+
+	/**
+	 * Classes that are ignored are not committed.
+	 * 
+	 * @see #ignoreClass(Type)
+	 */
+	public void commit(final ClassInfo info) {
+		final Type type = Type.getType("L" + info.name() + ";");
+		if (ignoreClass(type)) {
+			return;
+		}
+
+		final ClassEditor ce = editClass(info);
+
+		// Commit all of the class's methods and fields
+		final MethodInfo[] methods = ce.methods();
+		for (int i = 0; i < methods.length; i++) {
+			commit(methods[i]);
+		}
+
+		final FieldInfo[] fields = ce.fields();
+		for (int i = 0; i < fields.length; i++) {
+			commit(fields[i]);
+		}
+
+		ce.commit();
+
+		ce.setDirty(false);
+		release(info);
+	}
+
+	public void commit(final MethodInfo info) {
+		final MethodEditor me = editMethod(info);
+		me.commit();
+
+		// We make the method's class dirty so it, too, will be committed
+		me.declaringClass().setDirty(true);
+		me.setDirty(false);
+		release(info);
+	}
+
+	public void commit(final FieldInfo info) {
+		final FieldEditor fe = editField(info);
+		fe.commit();
+
+		// We make the method's class dirty so it, too, will be committed
+		fe.declaringClass().setDirty(true);
+		fe.setDirty(false);
+		release(info);
+	}
+
+	public void commit() {
+		Object[] array = fieldEditors.values().toArray();
+		for (int i = 0; i < array.length; i++) {
+			final FieldEditor fe = (FieldEditor) array[i];
+			if (!ignoreField(fe.memberRef())) {
+				commit(fe.fieldInfo());
+			}
+		}
+
+		array = methodEditors.values().toArray();
+		for (int i = 0; i < array.length; i++) {
+			final MethodEditor me = (MethodEditor) array[i];
+			if (!ignoreMethod(me.memberRef())) {
+				commit(me.methodInfo());
+			}
+		}
+
+		array = classEditors.values().toArray();
+		for (int i = 0; i < array.length; i++) {
+			final ClassEditor ce = (ClassEditor) array[i];
+			if (!ignoreClass(ce.type())) {
+				commit(ce.classInfo());
+			}
+		}
+	}
+
+	public void commitDirty() {
+		PersistentBloatContext.comm("Committing dirty data");
+
+		// Commit all dirty fields
+		Object[] array = this.fieldEditors.values().toArray();
+		for (int i = 0; i < array.length; i++) {
+			final FieldEditor fe = (FieldEditor) array[i];
+			if (fe.isDirty() && !ignoreField(fe.memberRef())) {
+				PersistentBloatContext.comm("  Committing field: "
+						+ fe.declaringClass().name() + "." + fe.name());
+				commit(fe.fieldInfo());
+			}
+		}
+
+		// Commit all dirty methods
+		array = this.methodEditors.values().toArray();
+		for (int i = 0; i < array.length; i++) {
+			final MethodEditor me = (MethodEditor) array[i];
+			if (me.isDirty() && !ignoreMethod(me.memberRef())) {
+				PersistentBloatContext.comm("  Committing method: "
+						+ me.declaringClass().name() + "." + me.name()
+						+ me.type());
+				commit(me.methodInfo());
+			}
+		}
+
+		// Commit all dirty classes
+		array = this.classEditors.values().toArray();
+		for (int i = 0; i < array.length; i++) {
+			final ClassEditor ce = (ClassEditor) array[i];
+			if (ce.isDirty() && !ignoreClass(ce.type())) {
+				PersistentBloatContext.comm("  Committing class: " + ce.name());
+				commit(ce.classInfo());
+			}
+		}
+	}
 }

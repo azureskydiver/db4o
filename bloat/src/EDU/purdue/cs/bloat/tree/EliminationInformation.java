@@ -25,32 +25,27 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.io.*;
 import java.util.*;
-
 
 public class EliminationInformation {
 
-  public Vector Occurences;
-  public int type1s;
+	public Vector Occurences;
 
-  public int uniqueNumber;
-  static int nextUN = 0;
+	public int type1s;
 
-  public EliminationInformation() {
-    uniqueNumber = nextUN;
-    nextUN++;
-    Occurences = new Vector();
-    type1s = 0;
-  }
+	public int uniqueNumber;
 
-  public String toString() { return uniqueNumber + "+" + type1s + 
-			       Occurences.toString();}
+	static int nextUN = 0;
+
+	public EliminationInformation() {
+		uniqueNumber = EliminationInformation.nextUN;
+		EliminationInformation.nextUN++;
+		Occurences = new Vector();
+		type1s = 0;
+	}
+
+	public String toString() {
+		return uniqueNumber + "+" + type1s + Occurences.toString();
+	}
 
 }
-
-
-

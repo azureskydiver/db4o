@@ -24,76 +24,64 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
+import EDU.purdue.cs.bloat.editor.*;
 
 /**
- * CatchExpr represents an expression that catches an exception.  A 
- * CatchExpr is used when evaluating a method's try-catch blocks when a
- * control flow graph is constructed.
- *
+ * CatchExpr represents an expression that catches an exception. A CatchExpr is
+ * used when evaluating a method's try-catch blocks when a control flow graph is
+ * constructed.
+ * 
  * @see TryCatch
- * @see FlowGraph#FlowGraph
+ * @see FlowGraph#FlowGraph(MethodEditor)
  * @see MethodEditor
  */
-public class CatchExpr extends Expr
-{
-  Type catchType;
-  
-  /**
-   * Constructor.
-   *
-   * @param catchType
-   *        The type of the exception that is being caught.
-   * @param type
-   *        The type of this expression.
-   */
-  public CatchExpr(Type catchType, Type type)
-  {
-    super(type);
-    this.catchType = catchType;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitCatchExpr(this);
-  }
-  
-  
-  public Type catchType()
-  {
-    return catchType;
-  }
-  
-  public int exprHashCode()
-  {
-    return 8 + type.simple().hashCode() ^ catchType.hashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    if (other instanceof CatchExpr) {
-      CatchExpr c = (CatchExpr) other;
-      
-      if (catchType != null) {
-	return catchType.equals(c.catchType);
-      }
-      else {
-	return c.catchType == null;
-      }
-    }
-    
-    return false;
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new CatchExpr(catchType, type));
-  }
+public class CatchExpr extends Expr {
+	Type catchType;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param catchType
+	 *            The type of the exception that is being caught.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public CatchExpr(final Type catchType, final Type type) {
+		super(type);
+		this.catchType = catchType;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitCatchExpr(this);
+	}
+
+	public Type catchType() {
+		return catchType;
+	}
+
+	public int exprHashCode() {
+		return 8 + type.simple().hashCode() ^ catchType.hashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		if (other instanceof CatchExpr) {
+			final CatchExpr c = (CatchExpr) other;
+
+			if (catchType != null) {
+				return catchType.equals(c.catchType);
+			} else {
+				return c.catchType == null;
+			}
+		}
+
+		return false;
+	}
+
+	public Object clone() {
+		return copyInto(new CatchExpr(catchType, type));
+	}
 }

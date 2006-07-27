@@ -25,21 +25,17 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * MemRefExpr represents an expression that references a memory location as
  * opposed to a local variable or a variable on the stack.
- *
+ * 
  * @see ArrayRefExpr
  * @see FieldExpr
  * @see StackExpr
  */
-public abstract class MemRefExpr extends MemExpr
-{
-  public MemRefExpr(Type type) {
-    super(type);
-  }
+public abstract class MemRefExpr extends MemExpr {
+	public MemRefExpr(final Type type) {
+		super(type);
+	}
 }

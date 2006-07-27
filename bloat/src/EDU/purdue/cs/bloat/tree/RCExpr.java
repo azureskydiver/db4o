@@ -25,40 +25,32 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * RCExpr represents a residency check.
  */
-public class RCExpr extends CheckExpr
-{
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        The expression whose residency is to be checked.
-   * @param type
-   *        The type of this expression.
-   */
-  public RCExpr(Expr expr, Type type)
-  {
-    super(expr, type);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitRCExpr(this);
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other instanceof RCExpr && super.equalsExpr(other);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new RCExpr((Expr) expr.clone(), type));
-  }
+public class RCExpr extends CheckExpr {
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            The expression whose residency is to be checked.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public RCExpr(final Expr expr, final Type type) {
+		super(expr, type);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitRCExpr(this);
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other instanceof RCExpr) && super.equalsExpr(other);
+	}
+
+	public Object clone() {
+		return copyInto(new RCExpr((Expr) expr.clone(), type));
+	}
 }

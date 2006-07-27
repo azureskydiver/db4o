@@ -25,62 +25,50 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * StaticFieldExpr represents the <tt>getstatic</tt> opcode which gets a 
+ * StaticFieldExpr represents the <tt>getstatic</tt> opcode which gets a
  * static (class) field from a class.
  */
-public class StaticFieldExpr extends MemRefExpr
-{
-  // getstatic
-  
-  MemberRef field;
+public class StaticFieldExpr extends MemRefExpr {
+	// getstatic
 
-  /**
-   * Constructor.
-   *
-   * @param field
-   *        The field to access.
-   * @param type
-   *        The type of this expression.
-   */
-  public StaticFieldExpr(MemberRef field, Type type)
-  {
-    super(type);
-    this.field = field;
-  }
-  
-  public MemberRef field()
-  {
-    return field;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitStaticFieldExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 21 + field.hashCode() ^ type.simple().hashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other != null &&
-      other instanceof StaticFieldExpr &&
-      ((StaticFieldExpr) other).field.equals(field);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new StaticFieldExpr(field, type));
-  }
+	MemberRef field;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param field
+	 *            The field to access.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public StaticFieldExpr(final MemberRef field, final Type type) {
+		super(type);
+		this.field = field;
+	}
+
+	public MemberRef field() {
+		return field;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitStaticFieldExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 21 + field.hashCode() ^ type.simple().hashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other != null) && (other instanceof StaticFieldExpr)
+				&& ((StaticFieldExpr) other).field.equals(field);
+	}
+
+	public Object clone() {
+		return copyInto(new StaticFieldExpr(field, type));
+	}
 }

@@ -24,67 +24,64 @@
 
 package EDU.purdue.cs.bloat.editor;
 
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
  * Methods and fields are described by their name and type descriptor.
  * NameAndType represents exactly that.
- *
- * @author Nate Nystrom
- *         (<a href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
+ * 
+ * @author Nate Nystrom (<a
+ *         href="mailto:nystrom@cs.purdue.edu">nystrom@cs.purdue.edu</a>)
  */
 public class NameAndType {
-  private String name;
-  private Type type;
+	private String name;
 
-  /**
-   * Constructor.
-   */
-  public NameAndType(String name, Type type) {
-    this.name = name;
-    this.type = type;
-  }
+	private Type type;
 
-  /**
-   * Returns the name.
-   */
-  public String name() {
-    return name;
-  }
+	/**
+	 * Constructor.
+	 */
+	public NameAndType(final String name, final Type type) {
+		this.name = name;
+		this.type = type;
+	}
 
-  /**
-   * Returns the type.
-   */
-  public Type type() {
-    return type;
-  }
+	/**
+	 * Returns the name.
+	 */
+	public String name() {
+		return name;
+	}
 
-  /**
-   * Returns a string representation of the name and type.
-   */
-  public String toString() {
-    return "<NameandType " + name + " " + type + ">";
-  }
+	/**
+	 * Returns the type.
+	 */
+	public Type type() {
+		return type;
+	}
 
-  /**
-   * Check if an object is equal to this name and type.
-   *
-   * @param obj
-   *        The object to compare against.
-   * @return
-   *        <tt>true</tt> if equal
-   */
-  public boolean equals(Object obj) {
-    return obj instanceof NameAndType &&
-      ((NameAndType) obj).name.equals(name) &&
-      ((NameAndType) obj).type.equals(type);
-  }
+	/**
+	 * Returns a string representation of the name and type.
+	 */
+	public String toString() {
+		return "<NameandType " + name + " " + type + ">";
+	}
 
-  /**
-   * Returns a hash of the name and type.
-   */
-  public int hashCode() {
-    return name.hashCode() ^ type.hashCode();
-  }
+	/**
+	 * Check if an object is equal to this name and type.
+	 * 
+	 * @param obj
+	 *            The object to compare against.
+	 * @return <tt>true</tt> if equal
+	 */
+	public boolean equals(final Object obj) {
+		return (obj instanceof NameAndType)
+				&& ((NameAndType) obj).name.equals(name)
+				&& ((NameAndType) obj).type.equals(type);
+	}
+
+	/**
+	 * Returns a hash of the name and type.
+	 */
+	public int hashCode() {
+		return name.hashCode() ^ type.hashCode();
+	}
 }

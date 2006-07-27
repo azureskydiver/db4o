@@ -25,69 +25,53 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * NegExpr represents the arithmetic negation of an expression.
  */
-public class NegExpr extends Expr
-{
-  Expr expr;
+public class NegExpr extends Expr {
+	Expr expr;
 
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        The expression to be negated.
-   * @param type
-   *        The type of this expression.
-   */  
-  public NegExpr(Expr expr, Type type)
-  {
-    super(type);
-    this.expr = expr;
-    expr.setParent(this);
-  }
-  
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      expr.visit(visitor);
-    }
-    else {
-      expr.visit(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitNegExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 14 + expr.exprHashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other != null &&
-      other instanceof NegExpr &&
-      ((NegExpr) other).expr.equalsExpr(expr);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new NegExpr((Expr) expr.clone(), type));
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            The expression to be negated.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public NegExpr(final Expr expr, final Type type) {
+		super(type);
+		this.expr = expr;
+		expr.setParent(this);
+	}
+
+	public Expr expr() {
+		return expr;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			expr.visit(visitor);
+		} else {
+			expr.visit(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitNegExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 14 + expr.exprHashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other != null) && (other instanceof NegExpr)
+				&& ((NegExpr) other).expr.equalsExpr(expr);
+	}
+
+	public Object clone() {
+		return copyInto(new NegExpr((Expr) expr.clone(), type));
+	}
 }
-
-
-

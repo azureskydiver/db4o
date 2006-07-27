@@ -24,77 +24,65 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
  * SRStmt represents the swizzle of a range of elements in an array.
  */
-public class SRStmt extends Stmt 
-{
-  Expr array; 
-  Expr start; // starting value of range
-  Expr end;  // terminating value of range
+public class SRStmt extends Stmt {
+	Expr array;
 
-  /**
-   * Constructor.
-   *
-   * @param a
-   *        The array to swizzle.
-   * @param s
-   *        The starting value of the swizzle range.
-   * @param t
-   *        The terminating value of the swizzle range.
-   */  
-  public SRStmt(Expr a, Expr s, Expr t)
-  {
-    this.array = a;
-    this.start = s;
-    this.end = t;
-    array.setParent(this);
-    start.setParent(this);
-    end.setParent(this);
-  }
-  
-  public Expr array()
-  {
-    return array;
-  }
-  
-  public Expr start()
-  {
-    return start;
-  }
-  
-  public Expr end()
-  {
-    return end;
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitSRStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new SRStmt((Expr)array.clone(), (Expr) start.clone(), 
-			       (Expr)end.clone()));
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      end.visit(visitor);
-      start.visit(visitor);
-      array.visit(visitor);
-    }
-    else {
-      array.visit(visitor);
-      start.visit(visitor);
-      end.visit(visitor);
-    }
-  }
+	Expr start; // starting value of range
+
+	Expr end; // terminating value of range
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param a
+	 *            The array to swizzle.
+	 * @param s
+	 *            The starting value of the swizzle range.
+	 * @param t
+	 *            The terminating value of the swizzle range.
+	 */
+	public SRStmt(final Expr a, final Expr s, final Expr t) {
+		this.array = a;
+		this.start = s;
+		this.end = t;
+		array.setParent(this);
+		start.setParent(this);
+		end.setParent(this);
+	}
+
+	public Expr array() {
+		return array;
+	}
+
+	public Expr start() {
+		return start;
+	}
+
+	public Expr end() {
+		return end;
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitSRStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new SRStmt((Expr) array.clone(), (Expr) start.clone(),
+				(Expr) end.clone()));
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			end.visit(visitor);
+			start.visit(visitor);
+			array.visit(visitor);
+		} else {
+			array.visit(visitor);
+			start.visit(visitor);
+			end.visit(visitor);
+		}
+	}
 }

@@ -25,20 +25,21 @@
 package EDU.purdue.cs.bloat.tree;
 
 /**
- * DefInformation contains information about the definition of a
- * local variable
+ * DefInformation contains information about the definition of a local variable
+ * 
  * @author Thomas VanDrunen
  */
 public class DefInformation {
 
-    int type1s;
-    int uses;
-    int usesFound;
+	int type1s;
 
-    public DefInformation(int uses) { 
-	type1s = 0; 
-	this.uses = uses;
-	usesFound = 0;
-    }
+	int uses;
+
+	int usesFound;
+
+	public DefInformation(final int uses) {
+		type1s = 0;
+		this.uses = uses;
+		usesFound = 0;
+	}
 }
-

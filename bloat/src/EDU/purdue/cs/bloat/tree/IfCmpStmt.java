@@ -24,75 +24,64 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * IfCmpStmt consists of a comparison expression (a left-hand expression, a
  * comparison operator, and a right-hand expression) that is to be evaluated.
  */
-public class IfCmpStmt extends IfStmt
-{
-  Expr left;
-  Expr right;
+public class IfCmpStmt extends IfStmt {
+	Expr left;
 
-  /**
-   * Constructor.
-   *
-   * @param comparison
-   *        Comparison operator for this if statement.
-   * @param left
-   *        Expression on the left side of the comparison.
-   * @param right
-   *        Expression on the right side of the comparison.
-   * @param trueTarget
-   *        Block executed if comparison evaluates to true.
-   * @param falseTarget
-   *        Block executed if comparison evaluates to false.
-   */  
-  public IfCmpStmt(int comparison, Expr left, Expr right,
-		   Block trueTarget, Block falseTarget)
-  {
-    super(comparison, trueTarget, falseTarget);
-    this.left = left;
-    this.right = right;
-    left.setParent(this);
-    right.setParent(this);
-  }
-  
-  public Expr left()
-  {
-    return left;
-  }
-  
-  public Expr right()
-  {
-    return right;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      right.visit(visitor);
-      left.visit(visitor);
-    }
-    else {
-      left.visit(visitor);
-      right.visit(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitIfCmpStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new IfCmpStmt(comparison,
-				  (Expr) left.clone(), (Expr) right.clone(),
-				  trueTarget, falseTarget));
-  }
+	Expr right;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param comparison
+	 *            Comparison operator for this if statement.
+	 * @param left
+	 *            Expression on the left side of the comparison.
+	 * @param right
+	 *            Expression on the right side of the comparison.
+	 * @param trueTarget
+	 *            Block executed if comparison evaluates to true.
+	 * @param falseTarget
+	 *            Block executed if comparison evaluates to false.
+	 */
+	public IfCmpStmt(final int comparison, final Expr left, final Expr right,
+			final Block trueTarget, final Block falseTarget) {
+		super(comparison, trueTarget, falseTarget);
+		this.left = left;
+		this.right = right;
+		left.setParent(this);
+		right.setParent(this);
+	}
+
+	public Expr left() {
+		return left;
+	}
+
+	public Expr right() {
+		return right;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			right.visit(visitor);
+			left.visit(visitor);
+		} else {
+			left.visit(visitor);
+			right.visit(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitIfCmpStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new IfCmpStmt(comparison, (Expr) left.clone(),
+				(Expr) right.clone(), trueTarget, falseTarget));
+	}
 }

@@ -25,78 +25,65 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * NewArrayExpr represents the <tt>newarray</tt> opcode which creates a 
- * new array of a specified length and element type.
+ * NewArrayExpr represents the <tt>newarray</tt> opcode which creates a new
+ * array of a specified length and element type.
  */
-public class NewArrayExpr extends Expr
-{
-  // newarray
-  
-  Expr size;
-  Type elementType;
+public class NewArrayExpr extends Expr {
+	// newarray
 
-  /**
-   * Constructor.
-   *
-   * @param size
-   *        Expression representing the size of the array.
-   * @param elementType
-   *        The type of the elements in the array.
-   * @param type
-   *        The type of this expression.
-   */  
-  public NewArrayExpr(Expr size, Type elementType, Type type)
-  {
-    super(type);
-    this.size = size;
-    this.elementType = elementType;
-    
-    size.setParent(this);
-  }
-  
-  public Expr size()
-  {
-    return size;
-  }
-  
-  public Type elementType()
-  {
-    return elementType;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    if (visitor.reverse()) {
-      size.visit(visitor);
-    }
-    else {
-      size.visit(visitor);
-    }
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitNewArrayExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 15 + size.exprHashCode();
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return false;
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new NewArrayExpr((Expr) size.clone(),
-				     elementType, type));
-  }
+	Expr size;
+
+	Type elementType;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param size
+	 *            Expression representing the size of the array.
+	 * @param elementType
+	 *            The type of the elements in the array.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public NewArrayExpr(final Expr size, final Type elementType, final Type type) {
+		super(type);
+		this.size = size;
+		this.elementType = elementType;
+
+		size.setParent(this);
+	}
+
+	public Expr size() {
+		return size;
+	}
+
+	public Type elementType() {
+		return elementType;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		if (visitor.reverse()) {
+			size.visit(visitor);
+		} else {
+			size.visit(visitor);
+		}
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitNewArrayExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 15 + size.exprHashCode();
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return false;
+	}
+
+	public Object clone() {
+		return copyInto(new NewArrayExpr((Expr) size.clone(), elementType, type));
+	}
 }

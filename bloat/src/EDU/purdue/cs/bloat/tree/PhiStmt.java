@@ -24,54 +24,45 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
 import java.util.*;
 
 /**
- * A PhiStmt is inserted into a CFG in Single Static Assignment for.  It is
- * used to "merge" uses of the same variable in different basic blocks.
- *
+ * A PhiStmt is inserted into a CFG in Single Static Assignment for. It is used
+ * to "merge" uses of the same variable in different basic blocks.
+ * 
  * @see PhiJoinStmt
  * @see PhiCatchStmt
  */
-public abstract class PhiStmt extends Stmt implements Assign
-{
-  VarExpr target;        // The variable into which the Phi statement assigns
-  
-  /**
-   * Constructor.
-   *
-   * @param target
-   *        A stack expression or local variable that is the target of 
-   *        this phi-statement.
-   */
-  public PhiStmt(VarExpr target)
-  {
-    this.target = target;
-    target.setParent(this);
-  }
-  
-  public VarExpr target()
-  {
-    return target;
-  }
+public abstract class PhiStmt extends Stmt implements Assign {
+	VarExpr target; // The variable into which the Phi statement assigns
 
-  /**
-   * Return the expressions (variables) defined by this PhiStmt.  In this
-   * case, only the target is defined.
-   */  
-  public DefExpr[] defs()
-  {
-    return new DefExpr[] { target };
-  }
-  
-  public abstract Collection operands();
-  
-  public Object clone()
-  {
-    throw new RuntimeException();
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param target
+	 *            A stack expression or local variable that is the target of
+	 *            this phi-statement.
+	 */
+	public PhiStmt(final VarExpr target) {
+		this.target = target;
+		target.setParent(this);
+	}
+
+	public VarExpr target() {
+		return target;
+	}
+
+	/**
+	 * Return the expressions (variables) defined by this PhiStmt. In this case,
+	 * only the target is defined.
+	 */
+	public DefExpr[] defs() {
+		return new DefExpr[] { target };
+	}
+
+	public abstract Collection operands();
+
+	public Object clone() {
+		throw new RuntimeException();
+	}
 }
-

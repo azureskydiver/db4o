@@ -24,49 +24,38 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
  * ExprStmt is a statement consisting of an expression.
- *
+ * 
  * @see Expr
  */
-public class ExprStmt extends Stmt
-{
-  Expr expr;          // Expression contained in this statement
-  
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        The expression contained in this statement.
-   */
-  public ExprStmt(Expr expr)
-  {
-    this.expr = expr;
-    expr.setParent(this);
-  }
-  
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    expr.visit(visitor);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitExprStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ExprStmt((Expr) expr.clone()));
-  }
+public class ExprStmt extends Stmt {
+	Expr expr; // Expression contained in this statement
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            The expression contained in this statement.
+	 */
+	public ExprStmt(final Expr expr) {
+		this.expr = expr;
+		expr.setParent(this);
+	}
+
+	public Expr expr() {
+		return expr;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		expr.visit(visitor);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitExprStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new ExprStmt((Expr) expr.clone()));
+	}
 }

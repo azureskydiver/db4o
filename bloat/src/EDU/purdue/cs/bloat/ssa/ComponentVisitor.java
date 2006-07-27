@@ -24,19 +24,14 @@
 
 package EDU.purdue.cs.bloat.ssa;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.tree.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.io.*;
 import java.util.*;
 
-/** 
- * ComponentVisitor is used to visit the strongly connected
- * components (SSC) of a control flow graph.
- *
+/**
+ * ComponentVisitor is used to visit the strongly connected components (SSC) of
+ * a control flow graph.
+ * 
  * @see SSAGraph
  */
 public abstract class ComponentVisitor {
-    public abstract void visitComponent(List component);
+	public abstract void visitComponent(List component);
 }

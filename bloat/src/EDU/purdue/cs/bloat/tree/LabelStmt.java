@@ -25,47 +25,38 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * LabelStmt is a placeholder in a Tree for a Label (the target of a jump).
- *
+ * 
  * @see Label
  * @see Tree#addLabel
  */
-public class LabelStmt extends Stmt
-{
-  Label label;
+public class LabelStmt extends Stmt {
+	Label label;
 
-  /**
-   * Constructor.
-   *
-   * @param label
-   *        The label that comprises this statement.
-   */  
-  public LabelStmt(Label label)
-  {
-    this.label = label;
-  }
-  
-  public Label label()
-  {
-    return label;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitLabelStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new LabelStmt(label));
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param label
+	 *            The label that comprises this statement.
+	 */
+	public LabelStmt(final Label label) {
+		this.label = label;
+	}
+
+	public Label label() {
+		return label;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitLabelStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new LabelStmt(label));
+	}
 }

@@ -26,65 +26,60 @@
 
 package EDU.purdue.cs.bloat.cfg;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.util.*;
 import java.util.*;
 
+import EDU.purdue.cs.bloat.editor.*;
+
 /**
- * <tt>Handler</tt> represents a try-catch block.  It containes a set of
+ * <tt>Handler</tt> represents a try-catch block. It containes a set of
  * protected <tt>Block</tt>s (the "try" blocks), a catch <tt>Block</tt>,
  * and the <tt>Type</tt> of exception that is caught by the catch block.
- *
+ * 
  * @see Block
  * @see EDU.purdue.cs.bloat.reflect.Catch
  * @see EDU.purdue.cs.bloat.editor.TryCatch
  */
-public class Handler
-{
-  Set protectedBlocks;
-  Block catchBlock;
-  Type type;
+public class Handler {
+	Set protectedBlocks;
 
-  /**
-   * Constructor.
-   *
-   * @param catchBlock
-   *        The block of code that handles an exception
-   * @param type
-   *        The type of exception that is thrown
-   */
-  public Handler(Block catchBlock, Type type)
-  {
-    this.protectedBlocks = new HashSet();
-    this.catchBlock = catchBlock;
-    this.type = type;
-  }
+	Block catchBlock;
 
-  /**
-   * Returns a <tt>Collection</tt> of the "try" blocks.
-   */
-  public Collection protectedBlocks()
-  {
-    return protectedBlocks;
-  }
+	Type type;
 
-  public void setCatchBlock(Block block)
-  {
-    catchBlock = block;
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param catchBlock
+	 *            The block of code that handles an exception
+	 * @param type
+	 *            The type of exception that is thrown
+	 */
+	public Handler(final Block catchBlock, final Type type) {
+		this.protectedBlocks = new HashSet();
+		this.catchBlock = catchBlock;
+		this.type = type;
+	}
 
-  public Block catchBlock()
-  {
-    return catchBlock;
-  }
+	/**
+	 * Returns a <tt>Collection</tt> of the "try" blocks.
+	 */
+	public Collection protectedBlocks() {
+		return protectedBlocks;
+	}
 
-  public Type catchType()
-  {
-    return type;
-  }
+	public void setCatchBlock(final Block block) {
+		catchBlock = block;
+	}
 
-  public String toString()
-  {
-    return "try -> catch (" + type + ") " + catchBlock;
-  }
+	public Block catchBlock() {
+		return catchBlock;
+	}
+
+	public Type catchType() {
+		return type;
+	}
+
+	public String toString() {
+		return "try -> catch (" + type + ") " + catchBlock;
+	}
 }

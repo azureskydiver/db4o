@@ -24,53 +24,44 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
+import EDU.purdue.cs.bloat.editor.*;
 
-/** 
- * RetStmt represents the <i>ret</i> opcode which returns from a
- * subroutine.  Recall that when a subroutine returns, the <i>ret</i>
- * opcode's argument specifies a local variable that stores the return
- * address of 
+/**
+ * RetStmt represents the <i>ret</i> opcode which returns from a subroutine.
+ * Recall that when a subroutine returns, the <i>ret</i> opcode's argument
+ * specifies a local variable that stores the return address of
  */
-public class RetStmt extends JumpStmt
-{
-  // ret
-  
-  Subroutine sub;       // Subroutine from which to return.
+public class RetStmt extends JumpStmt {
+	// ret
 
-  /**
-   * Constructor.
-   *
-   * @param sub
-   *        The subroutine in which the return statement resides.  That is,
-   *        from where the program control is returning.
-   *
-   * @see Tree#addInstruction(Instruction, Subroutine)
-   */  
-  public RetStmt(Subroutine sub)
-  {
-    this.sub = sub;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitRetStmt(this);
-  }
-  
-  public Subroutine sub()
-  {
-    return sub;
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new RetStmt(sub));
-  }
+	Subroutine sub; // Subroutine from which to return.
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param sub
+	 *            The subroutine in which the return statement resides. That is,
+	 *            from where the program control is returning.
+	 * 
+	 * @see Tree#addInstruction(Instruction, Subroutine)
+	 */
+	public RetStmt(final Subroutine sub) {
+		this.sub = sub;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitRetStmt(this);
+	}
+
+	public Subroutine sub() {
+		return sub;
+	}
+
+	public Object clone() {
+		return copyInto(new RetStmt(sub));
+	}
 }

@@ -30,24 +30,18 @@ import java.util.*;
  * IdentityComparator compares two objects using the result of
  * System.identityHashCode.
  */
-public class IdentityComparator implements Comparator
-{
-    public int compare(Object o1, Object o2)
-    {
-	int n1 = System.identityHashCode(o1);
-	int n2 = System.identityHashCode(o2);
+public class IdentityComparator implements Comparator {
+	public int compare(final Object o1, final Object o2) {
+		final int n1 = System.identityHashCode(o1);
+		final int n2 = System.identityHashCode(o2);
 
-	return n1 - n2;
-/*
-	if (n1 > n2) {
-	    return 1;
+		return n1 - n2;
+		/*
+		 * if (n1 > n2) { return 1; }
+		 * 
+		 * if (n1 < n2) { return -1; }
+		 * 
+		 * return 0;
+		 */
 	}
-
-	if (n1 < n2) {
-	    return -1;
-	}
-
-	return 0;
-*/
-    }
 }

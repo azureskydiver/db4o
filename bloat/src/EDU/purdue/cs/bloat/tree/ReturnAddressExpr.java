@@ -25,48 +25,38 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * ReturnAddressExpr represents a return address used with the 
- * <i>ret</i> opcode.
+ * ReturnAddressExpr represents a return address used with the <i>ret</i>
+ * opcode.
  */
-public class ReturnAddressExpr extends Expr
-{
-  /**
-   * Constructor.
-   *
-   * @param type
-   *        The type of this expression (Type.ADDRESS).
-   */
-  public ReturnAddressExpr(Type type)
-  {
-    super(type);
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitReturnAddressExpr(this);
-  }
-  
-  public int exprHashCode()
-  {
-    return 18;
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return false;
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ReturnAddressExpr(type));
-  }
+public class ReturnAddressExpr extends Expr {
+	/**
+	 * Constructor.
+	 * 
+	 * @param type
+	 *            The type of this expression (Type.ADDRESS).
+	 */
+	public ReturnAddressExpr(final Type type) {
+		super(type);
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitReturnAddressExpr(this);
+	}
+
+	public int exprHashCode() {
+		return 18;
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return false;
+	}
+
+	public Object clone() {
+		return copyInto(new ReturnAddressExpr(type));
+	}
 }

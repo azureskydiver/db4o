@@ -25,39 +25,30 @@
 package EDU.purdue.cs.bloat.tree;
 
 import java.util.*;
+
 import EDU.purdue.cs.bloat.cfg.*;
 
 /**
- * LEGatherer visits a basic block and returns all the LocalExprs in 
- * a vector
+ * LEGatherer visits a basic block and returns all the LocalExprs in a vector
+ * 
  * @author Thomas VanDrunen
  */
 
-
 public class LEGatherer extends TreeVisitor {
 
-    Vector LEs;
+	Vector LEs;
 
-    Vector getLEs(Block b) {
+	Vector getLEs(final Block b) {
 
-	LEs = new Vector();
+		LEs = new Vector();
 
-	visitBlock(b);
+		visitBlock(b);
 
-	return LEs;
-    }
+		return LEs;
+	}
 
-
-    public void visitLocalExpr(LocalExpr expr) {
-	LEs.addElement(expr);
-    }
+	public void visitLocalExpr(final LocalExpr expr) {
+		LEs.addElement(expr);
+	}
 
 }
-
-
-
-
-
-
-
-

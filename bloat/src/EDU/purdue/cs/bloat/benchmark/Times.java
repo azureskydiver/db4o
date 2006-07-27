@@ -27,56 +27,56 @@
 package EDU.purdue.cs.bloat.benchmark;
 
 /**
- * This class allows Java to access the information obtained by the
- * UNIX system call <tt>times</tt>.
+ * This class allows Java to access the information obtained by the UNIX system
+ * call <tt>times</tt>.
  */
 public class Times {
-  static {
-    // Load native code from libbenchmark.so
-    System.loadLibrary("times");
-  }
+	static {
+		// Load native code from libbenchmark.so
+		System.loadLibrary("times");
+	}
 
-  static float userTime;
-  static float systemTime;
+	static float userTime;
 
-  /**
-   * Takes a "snapshot" of the system.  Reads various items from the
-   * result of <tt>times</tt>.
-   *
-   * @return <tt>true</tt> if everything is successful
-   */
-  public static native boolean snapshot();
+	static float systemTime;
 
-  /**
-   * Returns the user time used by this process in seconds.
-   */
-  public static float userTime() {
-    return(userTime);
-  }
+	/**
+	 * Takes a "snapshot" of the system. Reads various items from the result of
+	 * <tt>times</tt>.
+	 * 
+	 * @return <tt>true</tt> if everything is successful
+	 */
+	public static native boolean snapshot();
 
-  /**
-   * Returns the system time used by this process in seconds.
-   */
-  public static float systemTime() {
-    return(systemTime);
-  }
+	/**
+	 * Returns the user time used by this process in seconds.
+	 */
+	public static float userTime() {
+		return (Times.userTime);
+	}
 
-  /**
-   * Test program.
-   */
-  public static void main(String[] args) throws Exception {
-    System.out.println("Starting Test");
-    
-    if(Times.snapshot() == false) {
-      System.err.println("Error during snapshot");
-      System.exit(1);
-    }
+	/**
+	 * Returns the system time used by this process in seconds.
+	 */
+	public static float systemTime() {
+		return (Times.systemTime);
+	}
 
-    System.out.println("System time: " + Times.systemTime());
-    System.out.println("User time: " + Times.userTime());
-    
-    System.out.println("Ending Test");
-  }
+	/**
+	 * Test program.
+	 */
+	public static void main(final String[] args) throws Exception {
+		System.out.println("Starting Test");
 
+		if (Times.snapshot() == false) {
+			System.err.println("Error during snapshot");
+			System.exit(1);
+		}
+
+		System.out.println("System time: " + Times.systemTime());
+		System.out.println("User time: " + Times.userTime());
+
+		System.out.println("Ending Test");
+	}
 
 }

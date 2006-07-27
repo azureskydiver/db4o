@@ -24,25 +24,18 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
  * Stmt is a super class used to represent statements in a Java bytecode
- * program.  As opposed to expressions, statements cannot be nested.
- *
+ * program. As opposed to expressions, statements cannot be nested.
+ * 
  * @see JumpStmt
  * @see ExprStmt
  * @see PhiStmt
- *
+ * 
  */
-public abstract class Stmt extends Node
-{
-    public void cleanupOnly()
-    {
-    }
+public abstract class Stmt extends Node {
+	public void cleanupOnly() {
+	}
 
-    public abstract Object clone(); 
+	public abstract Object clone();
 }

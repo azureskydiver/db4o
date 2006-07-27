@@ -24,51 +24,40 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
-
 /**
  * ReturnExprStmt represents the <tt>areturn</tt> opcode which returns a
  * reference from a method.
  */
-public class ReturnExprStmt extends JumpStmt
-{
-  // areturn
-  
-  Expr expr;
-  
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        The expression (reference) returned by this return statement.
-   */
-  public ReturnExprStmt(Expr expr)
-  {
-    this.expr = expr;
-    
-    expr.setParent(this);
-  }
-  
-  public Expr expr()
-  {
-    return expr;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-    expr.visit(visitor);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitReturnExprStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ReturnExprStmt((Expr) expr.clone()));
-  }
+public class ReturnExprStmt extends JumpStmt {
+	// areturn
+
+	Expr expr;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            The expression (reference) returned by this return statement.
+	 */
+	public ReturnExprStmt(final Expr expr) {
+		this.expr = expr;
+
+		expr.setParent(this);
+	}
+
+	public Expr expr() {
+		return expr;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+		expr.visit(visitor);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitReturnExprStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new ReturnExprStmt((Expr) expr.clone()));
+	}
 }

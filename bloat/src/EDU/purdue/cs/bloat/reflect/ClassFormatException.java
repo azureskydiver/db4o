@@ -24,10 +24,8 @@
 
 package EDU.purdue.cs.bloat.reflect;
 
-public class ClassFormatException extends RuntimeException
-{
-    public ClassFormatException(String msg)
-    {
-	super(msg);
-    }
+public class ClassFormatException extends RuntimeException {
+	public ClassFormatException(final String msg) {
+		super(msg);
+	}
 }

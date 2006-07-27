@@ -24,50 +24,40 @@
 
 package EDU.purdue.cs.bloat.tree;
 
-import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
  * Represents an unconditional branch to a basic block.
  */
-public class GotoStmt extends JumpStmt
-{
-  Block target;       // The basic Block that is the target of this goto
+public class GotoStmt extends JumpStmt {
+	Block target; // The basic Block that is the target of this goto
 
-  /**
-   * Constructor.
-   *
-   * @param target
-   *        The basic Block that is the target of this goto statement.
-   */  
-  public GotoStmt(Block target)
-  {
-    this.target = target;
-  }
-  
-  public void setTarget(Block target)
-  {
-    this.target = target;
-  }
-  
-  public Block target()
-  {
-    return target;
-  }
-  
-  public void visitForceChildren(TreeVisitor visitor)
-  {
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitGotoStmt(this);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new GotoStmt(target));
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param target
+	 *            The basic Block that is the target of this goto statement.
+	 */
+	public GotoStmt(final Block target) {
+		this.target = target;
+	}
+
+	public void setTarget(final Block target) {
+		this.target = target;
+	}
+
+	public Block target() {
+		return target;
+	}
+
+	public void visitForceChildren(final TreeVisitor visitor) {
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitGotoStmt(this);
+	}
+
+	public Object clone() {
+		return copyInto(new GotoStmt(target));
+	}
 }

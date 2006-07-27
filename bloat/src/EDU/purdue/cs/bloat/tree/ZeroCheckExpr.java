@@ -25,44 +25,36 @@
 package EDU.purdue.cs.bloat.tree;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.util.*;
-import java.util.*;
 
 /**
- * ZeroCheckExpr represents a check for a zero value.  For instance, when
- * a division operation is performed. a ZeroCheckExpr is inserted to ensure
- * that the divisor is not zero.  It is used when division is performed 
- * (<i>idiv</i>, <i>ldiv</i>) a remainder is taken (<i>irem</i>, <i>lrem</i>),
- * or a field is accessed (<i>getfield</i>, <i>putfield</i).
+ * ZeroCheckExpr represents a check for a zero value. For instance, when a
+ * division operation is performed. a ZeroCheckExpr is inserted to ensure that
+ * the divisor is not zero. It is used when division is performed (<i>idiv</i>,
+ * <i>ldiv</i>) a remainder is taken (<i>irem</i>, <i>lrem</i>), or a field
+ * is accessed (<i>getfield</i>, <i>putfield</i).
  */
-public class ZeroCheckExpr extends CheckExpr
-{
-  /**
-   * Constructor.
-   *
-   * @param expr
-   *        The expression to check for a zero value.
-   * @param type
-   *        The type of this expression.
-   */
-  public ZeroCheckExpr(Expr expr, Type type)
-  {
-    super(expr, type);
-  }
-  
-  public void visit(TreeVisitor visitor)
-  {
-    visitor.visitZeroCheckExpr(this);
-  }
-  
-  public boolean equalsExpr(Expr other)
-  {
-    return other instanceof ZeroCheckExpr && super.equalsExpr(other);
-  }
-  
-  public Object clone()
-  {
-    return copyInto(new ZeroCheckExpr((Expr) expr.clone(), type));
-  }
+public class ZeroCheckExpr extends CheckExpr {
+	/**
+	 * Constructor.
+	 * 
+	 * @param expr
+	 *            The expression to check for a zero value.
+	 * @param type
+	 *            The type of this expression.
+	 */
+	public ZeroCheckExpr(final Expr expr, final Type type) {
+		super(expr, type);
+	}
+
+	public void visit(final TreeVisitor visitor) {
+		visitor.visitZeroCheckExpr(this);
+	}
+
+	public boolean equalsExpr(final Expr other) {
+		return (other instanceof ZeroCheckExpr) && super.equalsExpr(other);
+	}
+
+	public Object clone() {
+		return copyInto(new ZeroCheckExpr((Expr) expr.clone(), type));
+	}
 }
