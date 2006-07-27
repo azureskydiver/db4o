@@ -3,6 +3,7 @@
 package com.db4o.test.replication;
 
 import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Hashtable4;
@@ -16,6 +17,7 @@ import com.db4o.replication.ReplicationEvent;
 import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.replication.db4o.Db4oReplicationProvider;
 
 class Set4 {
 	public static final Set4 EMPTY_SET = new Set4(0);
@@ -66,6 +68,22 @@ class Set4 {
 			}
 		});
 		return elements.iterator();
+	}
+	
+	public String toString() {
+		StringBuffer buf=new StringBuffer("[");
+		boolean first=true;
+		for(Iterator4 iter=iterator();iter.hasNext();) {
+			if(!first) {
+				buf.append(',');
+			}
+			else {
+				first=false;
+			}
+			buf.append(iter.next().toString());
+		}
+		buf.append(']');
+		return buf.toString();
 	}
 }
 
@@ -140,9 +158,9 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		_testCombination = 0;
 
 		tstWithDeletedObjectsIn(_NONE);
-		tstWithDeletedObjectsIn(_setA);
-		tstWithDeletedObjectsIn(_setB);
-		tstWithDeletedObjectsIn(_setBoth);
+//		tstWithDeletedObjectsIn(_setA);
+//		tstWithDeletedObjectsIn(_setB);
+//		tstWithDeletedObjectsIn(_setBoth);
 
 		if (_intermittentErrors.length() > 0) {
 			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
@@ -160,6 +178,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		if (obj == null) return;
 		obj.setName(newName);
 		container.update(obj);
+		out("CHANGED: "+container+": "+name+" => "+newName+" - "+obj);
 	}
 
 	private void checkEmpty(TestableReplicationProviderInside provider) {
@@ -167,10 +186,14 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			throw new RuntimeException(provider.getName() + " is not empty");
 	}
 
+	private int checkNameCount=0;
+	
 	private void checkName(TestableReplicationProviderInside container, String name, boolean isExpected) {
 		out("");
 		out(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
 		Replicated obj = find(container, name);
+		out(String.valueOf(checkNameCount));
+		checkNameCount++;
 		if (isExpected) {
 			ensure(obj != null);
 		} else {
@@ -212,9 +235,15 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private void doIt() {
 		initState();
-		//reopenContainers();
 
+		printProvidersContent("before changes");
+		
 		performChanges();
+
+		printProvidersContent("after changes");
+
+		printProviderContent(_providerA);
+		printProviderContent(_providerB);
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent e) {
@@ -236,15 +265,32 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			if (_direction.contains(A))	replication.setDirection(_providerB, _providerA);
 			if (_direction.contains(B))	replication.setDirection(_providerA, _providerB);
 		}
-
+		out("DIRECTION: "+_direction);
 		boolean successful = tryToReplicate(replication);
 
 		replication.commit();
 
+		printProvidersContent("after replication");
+		
 		if (successful)
 			checkNames();
 
 		clean();
+	}
+
+	private void printProvidersContent(String msg) {
+		System.out.println("*** "+msg);
+		printProviderContent(_providerA);
+		printProviderContent(_providerB);
+	}
+	
+	private void printProviderContent(TestableReplicationProviderInside provider) {
+		ObjectContainer db=((Db4oReplicationProvider)provider).objectContainer();
+		ObjectSet result=db.query(Replicated.class);
+		System.out.println("PROVIDER: "+provider);
+		while(result.hasNext()) {
+			System.out.println(result.next());
+		}
 	}
 
 	private boolean tryToReplicate(final ReplicationSession replication) {
@@ -286,7 +332,44 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		//System.out.println("container = " + container);
 		//System.out.println("name = " + name);
 
-		ObjectSet storedObjects = container.getStoredObjects(Replicated.class);
+		// XXX
+		ObjectSet storedObjects = 
+			//container.objectsChangedSinceLastReplication(); 
+			container.getStoredObjects(Replicated.class);
+
+		int resultCount = 0;
+		Replicated result = null;
+		while (storedObjects.hasNext()) {
+			Replicated replicated = (Replicated) storedObjects.next();
+//			System.out.println("replicated = " + replicated);
+			if (replicated == null)
+				throw new RuntimeException();
+			if (name.equals(replicated.getName())) {
+				result = replicated;
+				resultCount++;
+			}
+		}
+
+		if (resultCount > 1)
+			fail("At most one object with name " + name + " was expected.");
+		return result;
+
+//		Query q = container.query();
+//		q.constrain(Replicated.class);
+//		q.descend("_name").constrain(name);
+//		ObjectSet set = q.execute();
+//		if (set.size() > 1) fail("At most one object with name " + name + " was expected.");
+//		return (Replicated) set.next();
+	}
+
+	private Replicated findReplicatedX(TestableReplicationProviderInside container, String name) {
+		//System.out.println("container = " + container);
+		//System.out.println("name = " + name);
+
+		// XXX
+		ObjectSet storedObjects = 
+			container.objectsChangedSinceLastReplication(); 
+			//container.getStoredObjects(Replicated.class);
 
 		int resultCount = 0;
 		Replicated result = null;
@@ -345,7 +428,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		if (isDeletionExpected(inspectedContainer)) return false;
 		if (isDeletionExpected(changedContainer)) return false;
 
-		if (inspectedContainer == changedContainer)
+		if (inspectedContainer.equals(changedContainer))
 			return !didReceiveRemoteState(inspectedContainer);
 
 		return didReceiveRemoteState(inspectedContainer);
@@ -508,28 +591,30 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private static void out(String string) {
-//		System.out.println(string);
+		System.out.println(string);
 	}
 
 	public void test() {
 		super.test();
 	}
 
+	// XXX
+	
 	private void tstDirection(Set4 direction) {
 		_direction = direction;
 
 		tstQueryingFrom(_setA);
-		tstQueryingFrom(_setB);
-		tstQueryingFrom(_setBoth);
+//		tstQueryingFrom(_setB);
+//		tstQueryingFrom(_setBoth);
 	}
 
 	private void tstQueryingFrom(Set4 containersToQueryFrom) {
 		_containersToQueryFrom = containersToQueryFrom;
 
 		tstWithNewObjectsIn(_NONE);
-		tstWithNewObjectsIn(_setA);
-		tstWithNewObjectsIn(_setB);
-		tstWithNewObjectsIn(_setBoth);
+//		tstWithNewObjectsIn(_setA);
+//		tstWithNewObjectsIn(_setB);
+//		tstWithNewObjectsIn(_setBoth);
 	}
 
 	private void tstWithChangedObjectsIn(Set4 containers) {
@@ -538,15 +623,15 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstWithContainerStateToPrevail(_NONE);
 		tstWithContainerStateToPrevail(_setA);
 		tstWithContainerStateToPrevail(_setB);
-		tstWithContainerStateToPrevail(null);
+//		tstWithContainerStateToPrevail(null);
 	}
 
 	private void tstWithDeletedObjectsIn(Set4 containers) {
 		_containersWithDeletedObjects = containers;
 
 		tstDirection(_setA);
-		tstDirection(_setB);
-		tstDirection(_setBoth);
+//		tstDirection(_setB);
+//		tstDirection(_setBoth);
 	}
 
 	private void tstWithNewObjectsIn(Set4 containersWithNewObjects) {
@@ -554,8 +639,8 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		tstWithChangedObjectsIn(_NONE);
 		tstWithChangedObjectsIn(_setA);
-		tstWithChangedObjectsIn(_setB);
-		tstWithChangedObjectsIn(_setBoth);
+//		tstWithChangedObjectsIn(_setB);
+//		tstWithChangedObjectsIn(_setBoth);
 	}
 
 	private void tstWithContainerStateToPrevail(Set4 containers) {
