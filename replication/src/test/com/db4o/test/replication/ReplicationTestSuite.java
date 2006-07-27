@@ -19,24 +19,24 @@ public class ReplicationTestSuite extends TestSuite {
 	private Class[] all() {
 		return new Class[]{
 				//Simple
-				Simplest.class,
-				ReplicationEventTest.class,
-				ReplicationConfiguratorTest.class,
-				ReplicationProviderTest.class,
-				ReplicationAfterDeletionTest.class,
-				SimpleArrayTest.class,
-				SimpleParentChild.class,
+//				Simplest.class,
+//				ReplicationEventTest.class,
+//				ReplicationConfiguratorTest.class,
+//				ReplicationProviderTest.class,
+//				ReplicationAfterDeletionTest.class,
+//				SimpleArrayTest.class,
+//				SimpleParentChild.class,
 
 				//Collection
-				ListTest.class,
-				//Db4oListTest.class,
-				MapTest.class,
-				SingleTypeCollectionReplicationTest.class,
-				ArrayReplicationTest.class,
-				MixedTypesCollectionReplicationTest.class,
+//				ListTest.class,
+//				Db4oListTest.class,
+//				MapTest.class,
+//				SingleTypeCollectionReplicationTest.class,
+//				ArrayReplicationTest.class,
+//				MixedTypesCollectionReplicationTest.class,
 				
 				//Complex
-				R0to4Runner.class,
+//				R0to4Runner.class,
 				ReplicationFeaturesMain.class,
 
 				//General

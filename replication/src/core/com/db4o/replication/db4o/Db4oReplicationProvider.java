@@ -63,6 +63,10 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		_signatureMap = new Db4oSignatureMap(_stream);
 	}
 
+	public ObjectContainer objectContainer() {
+		return _stream;
+	}
+	
 	public ReadonlyReplicationProviderSignature getSignature() {
 		if (_mySignature == null) {
 			_mySignature = new Db4oReplicationProviderSignature(_stream.identity());

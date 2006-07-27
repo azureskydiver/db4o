@@ -14,7 +14,7 @@ public class Replicated {
 	}
 
 	public String toString() {
-		return getName() + ", hashcode = " + hashCode();
+		return getName() + ", hashcode = " + hashCode()+", identity = "+System.identityHashCode(this);
 	}
 
 	public String getName() {
