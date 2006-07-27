@@ -13,4 +13,6 @@ public interface Callbacks {
 	boolean objectCanActivate(Object obj);
 
 	void objectOnActivate(Object obj);
+
+	void objectOnNew(Object obj);
 }

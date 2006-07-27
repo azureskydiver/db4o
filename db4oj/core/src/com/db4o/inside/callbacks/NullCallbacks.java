@@ -20,4 +20,7 @@ public class NullCallbacks implements Callbacks {
 
 	public void objectOnActivate(Object obj) {
 	}
+
+	public void objectOnNew(Object obj) {
+	}
 }

@@ -36,5 +36,12 @@ public interface EventRegistry {
 	 * @return
 	 */
 	public Event4 objectOnActivate();
+
+	/**
+	 * Receives {@link ObjectEventArgs}.
+	 * 
+	 * @return
+	 */
+	public Event4 objectOnNew();
 }
 

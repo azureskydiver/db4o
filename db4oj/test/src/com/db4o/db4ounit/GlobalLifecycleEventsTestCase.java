@@ -14,19 +14,27 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 		_recorder = new EventRecorder();
 	}
 
-	private void listenToObjectCanNew() {
-		eventRegistry().objectCanNew().addListener(_recorder);
+	private void listenToEvent(Event4 event) {
+		event.addListener(_recorder);
 	}
 
-	public void testObjectCanNew() {
-		listenToObjectCanNew();
+	private void assertNewEvent(Event4 event) {
+		listenToEvent(event);
 		
 		Item item = new Item(1);
 		db().set(item);
 		
-		assertSingleObjectEventArgs(eventRegistry().objectCanNew(), item);
+		assertSingleObjectEventArgs(event, item);
 		
 		Assert.areSame(item, db().get(Item.class).next());
+	}
+	
+	public void testObjectCanNew() {
+		assertNewEvent(eventRegistry().objectCanNew());
+	}
+	
+	public void testObjectOnNew() {
+		assertNewEvent(eventRegistry().objectOnNew());
 	}
 	
 	public void testObjectCanActivate() throws Exception {
@@ -35,7 +43,7 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 	}
 
 	private void assertActivationEvent(Event4 event) throws Exception {
-		event.addListener(_recorder);
+		listenToEvent(event);
 		
 		Item item = (Item)db().get(Item.class).next();
 		
@@ -58,7 +66,7 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 	}
 	
 	public void testCancellableObjectCanNew() {	
-		listenToObjectCanNew();
+		listenToEvent(eventRegistry().objectCanNew());
 		
 		_recorder.cancel(true);
 		

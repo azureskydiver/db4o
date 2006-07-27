@@ -98,7 +98,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			stream.writeNew(i_yapClass, writer);
 
             Object obj = getObject();
-			i_yapClass.dispatchEvent(stream, obj, EventDispatcher.NEW);
+			objectOnNew(stream, obj);
 			
             if(! i_yapClass.isPrimitive()){
                 i_object = stream.i_references.createYapRef(this, obj);
@@ -108,6 +108,11 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			endProcessing();
 		}
 		return true;
+	}
+
+	private void objectOnNew(YapStream stream, Object obj) {
+		stream.callbacks().objectOnNew(obj);
+		i_yapClass.dispatchEvent(stream, obj, EventDispatcher.NEW);
 	}
 
 	void deactivate(Transaction a_trans, int a_depth) {
