@@ -375,8 +375,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		    
 		    Object obj = getObject();
 		    
-		    if(i_yapClass.dispatchEvent(a_trans.i_stream, obj, EventDispatcher.CAN_UPDATE)){
-
+		    if(objectCanUpdate(a_trans.i_stream, obj)){
 				
 				if ((!isActive()) || obj == null) {
 					endProcessing();
@@ -409,6 +408,11 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		        endProcessing();
 		    }
 		}
+	}
+
+	private boolean objectCanUpdate(YapStream stream, Object obj) {
+		return stream.callbacks().objectCanUpdate(obj) && 
+			i_yapClass.dispatchEvent(stream, obj, EventDispatcher.CAN_UPDATE);
 	}
 
 	/***** HCTREE *****/

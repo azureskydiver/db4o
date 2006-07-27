@@ -29,6 +29,20 @@ public interface EventRegistry {
 	 * @return
 	 */
 	public Event4 objectCanActivate();
+	
+	/**
+	 * Receives {@link CancellableObjectEventArgs}
+	 * 
+	 * @return
+	 */
+	public Event4 objectCanUpdate();
+	
+	/**
+	 * Receives {@link CancellableObjectEventArgs}
+	 * 
+	 * @return
+	 */
+	public Event4 objectCanDelete();
 
 	/**
 	 * Receives {@link ObjectEventArgs}.
@@ -43,5 +57,18 @@ public interface EventRegistry {
 	 * @return
 	 */
 	public Event4 objectOnNew();
-}
 
+	/**
+	 * Receives {@link ObjectEventArgs}
+	 * 
+	 * @return
+	 */
+	public Event4 objectOnUpdate();
+
+	/**
+	 * Receives {@link ObjectEventArgs}
+	 * 
+	 * @return
+	 */
+	public Event4 objectOnDelete();
+}

@@ -17,12 +17,22 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 	private void listenToEvent(Event4 event) {
 		event.addListener(_recorder);
 	}
+	
+	private Item storeItem() {
+		Item item = new Item(1);
+		db().set(item);
+		return item;
+	}
+
+	private void storeAndReopen() throws Exception {
+		storeItem();
+		reopen();
+	}
 
 	private void assertNewEvent(Event4 event) {
 		listenToEvent(event);
 		
-		Item item = new Item(1);
-		db().set(item);
+		Item item = storeItem();
 		
 		assertSingleObjectEventArgs(event, item);
 		
@@ -49,11 +59,6 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 		
 		assertSingleObjectEventArgs(event, item);
 	}
-
-	private void storeAndReopen() throws Exception {
-		db().set(new Item(1));
-		reopen();
-	}
 	
 	public void testObjectOnActivate() throws Exception {
 		storeAndReopen();
@@ -70,12 +75,81 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 		
 		_recorder.cancel(true);
 		
-		Item item = new Item(1);
-		db().set(item);
+		Item item = storeItem();
 		
 		assertSingleObjectEventArgs(eventRegistry().objectCanNew(), item);
 		
 		Assert.areEqual(0, db().get(Item.class).size());
+	}
+	
+	private void assertUpdateEvent(Event4 event) {
+		listenToEvent(event);
+		
+		Item item = storeItem();
+		
+		item.id = 42;
+		db().set(item);
+		
+		assertSingleObjectEventArgs(event, item);
+		
+		Assert.areSame(item, db().get(Item.class).next());
+	}
+	
+	public void testObjectCanUpdate() {
+		assertUpdateEvent(eventRegistry().objectCanUpdate());
+	}
+	
+	public void testObjectOnUpdate() {
+		assertUpdateEvent(eventRegistry().objectOnUpdate());
+	}
+	
+	public void testCancellableObjectCanUpdate() throws Exception {
+		listenToEvent(eventRegistry().objectCanUpdate());
+		
+		_recorder.cancel(true);
+		
+		Item item = storeItem();
+		item.id = 42;
+		db().set(item);
+		
+		assertSingleObjectEventArgs(eventRegistry().objectCanUpdate(), item);
+		
+		reopen();
+		
+		item = (Item)db().get(Item.class).next();
+		Assert.areEqual(1, item.id);
+	}
+
+	private void assertDeleteEvent(Event4 event) {
+		listenToEvent(event);
+		
+		Item item = storeItem();
+		db().delete(item);
+		
+		assertSingleObjectEventArgs(event, item);
+		
+		Assert.areEqual(0, db().get(Item.class).size());
+	}
+	
+	public void testObjectCanDelete() {
+		assertDeleteEvent(eventRegistry().objectCanDelete());
+	}
+	
+	public void testObjectOnDelete() {
+		assertDeleteEvent(eventRegistry().objectOnDelete());
+	}
+	
+	public void testCancellableObjectCanDelete() {
+		listenToEvent(eventRegistry().objectCanDelete());
+		
+		_recorder.cancel(true);
+		
+		Item item = storeItem();
+		db().delete(item);
+		
+		assertSingleObjectEventArgs(eventRegistry().objectCanDelete(), item);
+		
+		Assert.areSame(item, db().get(Item.class).next());
 	}
 	
 	private void assertSingleObjectEventArgs(Event4 expectedEvent, Item expectedItem) {

@@ -11,9 +11,13 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	
 	private final Event4Impl _objectCanNew = new Event4Impl();
 	private final Event4Impl _objectCanActivate = new Event4Impl();
+	private final Event4Impl _objectCanUpdate = new Event4Impl();
+	private final Event4Impl _objectCanDelete = new Event4Impl();
 	
-	private final Event4Impl _objectOnActivate = new Event4Impl();
 	private final Event4Impl _objectOnNew = new Event4Impl();
+	private final Event4Impl _objectOnActivate = new Event4Impl();
+	private final Event4Impl _objectOnUpdate = new Event4Impl();
+	private final Event4Impl _objectOnDelete = new Event4Impl();
 
 	// Callbacks implementation
 	public void onQueryFinished(Query query) {
@@ -24,26 +28,46 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 		_queryStarted.trigger(new QueryEventArgsImpl(query));
 	}
 	
-	public boolean objectCanNew(Object obj) {
-		return triggerCancellableEvent(_objectCanNew, obj);
-	}
-
 	private boolean triggerCancellableEvent(Event4Impl event, Object obj) {
 		CancellableObjectEventArgsImpl args = new CancellableObjectEventArgsImpl(obj);
 		event.trigger(args);
 		return !args.isCancelled();
 	}
 	
+	private void triggerObjectEvent(Event4Impl event, Object obj) {
+		event.trigger(new ObjectEventArgsImpl(obj));
+	}
+	
+	public boolean objectCanNew(Object obj) {
+		return triggerCancellableEvent(_objectCanNew, obj);
+	}
+	
 	public boolean objectCanActivate(Object obj) {
 		return triggerCancellableEvent(_objectCanActivate, obj);
 	}
 	
+	public boolean objectCanUpdate(Object obj) {
+		return triggerCancellableEvent(_objectCanUpdate, obj);
+	}
+	
+	public boolean objectCanDelete(Object obj) {
+		return triggerCancellableEvent(_objectCanDelete, obj);
+	}
+	
 	public void objectOnActivate(Object obj) {
-		_objectOnActivate.trigger(new ObjectEventArgsImpl(obj));
+		triggerObjectEvent(_objectOnActivate, obj);
 	}
 	
 	public void objectOnNew(Object obj) {
-		_objectOnNew.trigger(new ObjectEventArgsImpl(obj));
+		triggerObjectEvent(_objectOnNew, obj);
+	}
+	
+	public void objectOnUpdate(Object obj) {
+		triggerObjectEvent(_objectOnUpdate, obj);
+	}
+	
+	public void objectOnDelete(Object obj) {
+		triggerObjectEvent(_objectOnDelete, obj);		
 	}
 
 	// EventRegistry implementation
@@ -62,12 +86,28 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	public Event4 objectCanActivate() {
 		return _objectCanActivate;
 	}
-
+	
+	public Event4 objectCanUpdate() {
+		return _objectCanUpdate;
+	}
+	
+	public Event4 objectCanDelete() {
+		return _objectCanDelete;
+	}
+	
+	public Event4 objectOnNew() {
+		return _objectOnNew;
+	}
+	
 	public Event4 objectOnActivate() {
 		return _objectOnActivate;
 	}
+	
+	public Event4 objectOnUpdate() {
+		return _objectOnUpdate;
+	}
 
-	public Event4 objectOnNew() {
-		return _objectOnNew;
+	public Event4 objectOnDelete() {
+		return _objectOnDelete;
 	}
 }
