@@ -1,5 +1,11 @@
+/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+
 package com.db4o.diagnostic;
 
+/**
+ * Query tries to descend into a field of a class that is configured to be translated
+ * (and thus cannot be descended into).
+ */
 public class DescendIntoTranslator extends DiagnosticBase {
 	private String className;
 	private String fieldName;
