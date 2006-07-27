@@ -23,18 +23,18 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 		_queryStarted.trigger(new QueryEventArgsImpl(query));
 	}
 	
-	public boolean objectCanNew(Object subject) {
-		return triggerCancellableEvent(_objectCanNew, subject);
+	public boolean objectCanNew(Object obj) {
+		return triggerCancellableEvent(_objectCanNew, obj);
 	}
 
-	private boolean triggerCancellableEvent(Event4Impl event, Object subject) {
-		CancellableObjectEventArgsImpl args = new CancellableObjectEventArgsImpl(subject);
+	private boolean triggerCancellableEvent(Event4Impl event, Object obj) {
+		CancellableObjectEventArgsImpl args = new CancellableObjectEventArgsImpl(obj);
 		event.trigger(args);
 		return !args.isCancelled();
 	}
 	
-	public boolean objectCanActivate(Object subject) {
-		return triggerCancellableEvent(_objectCanActivate, subject);
+	public boolean objectCanActivate(Object obj) {
+		return triggerCancellableEvent(_objectCanActivate, obj);
 	}
 	
 	public void objectOnActivate(Object obj) {

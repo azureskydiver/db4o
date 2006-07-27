@@ -14,7 +14,7 @@ public class NullCallbacks implements Callbacks {
 		return true;
 	}
 
-	public boolean objectCanActivate(Object subject) {
+	public boolean objectCanActivate(Object obj) {
 		return true;
 	}
 
