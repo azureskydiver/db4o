@@ -521,7 +521,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 
                 yo.endProcessing();
                 
-                if (! yc.dispatchEvent(_this, obj, EventDispatcher.CAN_DELETE)) {
+                if (!objectCanDelete(yc, obj)) {
                     return;
                 }
                 
@@ -533,7 +533,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 
                 
                 if(delete5(ta, yo, a_cascade, userCall)){
-                	yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
+                	objectOnDelete(yc, obj);
                     if (i_config.messageLevel() > YapConst.STATE) {
                         message("" + yo.getID() + " delete " + yo.getYapClass().getName());
                     }
@@ -543,7 +543,17 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
         }
     }
-
+    
+	private boolean objectCanDelete(YapClass yc, Object obj) {
+		return _this.callbacks().objectCanDelete(obj) &&
+			yc.dispatchEvent(_this, obj, EventDispatcher.CAN_DELETE);
+	}
+	
+	private void objectOnDelete(YapClass yc, Object obj) {
+		_this.callbacks().objectOnDelete(obj);
+		yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
+	}
+	
     abstract boolean delete5(Transaction ta, YapObject yapObject, int a_cascade, boolean userCall);
     
     public Object descend(Object obj, String[] path){

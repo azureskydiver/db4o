@@ -17,10 +17,24 @@ public class NullCallbacks implements Callbacks {
 	public boolean objectCanActivate(Object obj) {
 		return true;
 	}
-
+	
+	public boolean objectCanUpdate(Object obj) {
+		return true;
+	}
+	
+	public boolean objectCanDelete(Object obj) {
+		return true;
+	}
+	
+	public void objectOnNew(Object obj) {
+	}
+	
 	public void objectOnActivate(Object obj) {
 	}
 
-	public void objectOnNew(Object obj) {
+	public void objectOnUpdate(Object obj) {
+	}
+
+	public void objectOnDelete(Object obj) {
 	}
 }

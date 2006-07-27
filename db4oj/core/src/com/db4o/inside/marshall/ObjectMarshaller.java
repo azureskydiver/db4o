@@ -95,9 +95,13 @@ public abstract class ObjectMarshaller {
             yo.setStateClean();
         }
         yo.endProcessing();
-        yc.dispatchEvent(stream, obj, EventDispatcher.UPDATE);
-        
+        objectOnUpdate(yc, stream, obj);
     }
+
+	private void objectOnUpdate(YapClass yc, YapStream stream, Object obj) {
+		stream.callbacks().objectOnUpdate(obj);
+		yc.dispatchEvent(stream, obj, EventDispatcher.UPDATE);
+	}
     
     public abstract Object readIndexEntry(
             YapClass yc, 
