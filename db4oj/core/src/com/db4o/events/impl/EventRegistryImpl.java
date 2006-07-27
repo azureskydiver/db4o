@@ -1,9 +1,14 @@
+/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.events.impl;
 
 import com.db4o.events.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.query.Query;
 
+/**
+ * @exclude
+ */
 public class EventRegistryImpl implements Callbacks, EventRegistry {
 	
 	private final Event4Impl _queryStarted = new Event4Impl();
@@ -13,11 +18,13 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	private final Event4Impl _objectCanActivate = new Event4Impl();
 	private final Event4Impl _objectCanUpdate = new Event4Impl();
 	private final Event4Impl _objectCanDelete = new Event4Impl();
+	private final Event4Impl _objectCanDeactivate = new Event4Impl();
 	
 	private final Event4Impl _objectOnNew = new Event4Impl();
 	private final Event4Impl _objectOnActivate = new Event4Impl();
 	private final Event4Impl _objectOnUpdate = new Event4Impl();
 	private final Event4Impl _objectOnDelete = new Event4Impl();
+	private final Event4Impl _objectOnDeactivate = new Event4Impl();
 
 	// Callbacks implementation
 	public void onQueryFinished(Query query) {
@@ -54,6 +61,10 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 		return triggerCancellableEvent(_objectCanDelete, obj);
 	}
 	
+	public boolean objectCanDeactivate(Object obj) {
+		return triggerCancellableEvent(_objectCanDeactivate, obj);
+	}
+	
 	public void objectOnActivate(Object obj) {
 		triggerObjectEvent(_objectOnActivate, obj);
 	}
@@ -68,6 +79,10 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	
 	public void objectOnDelete(Object obj) {
 		triggerObjectEvent(_objectOnDelete, obj);		
+	}	
+
+	public void objectOnDeactivate(Object obj) {
+		triggerObjectEvent(_objectOnDeactivate, obj);
 	}
 
 	// EventRegistry implementation
@@ -95,6 +110,10 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 		return _objectCanDelete;
 	}
 	
+	public Event4 objectCanDeactivate() {
+		return _objectCanDeactivate;
+	}
+	
 	public Event4 objectOnNew() {
 		return _objectOnNew;
 	}
@@ -109,5 +128,9 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 
 	public Event4 objectOnDelete() {
 		return _objectOnDelete;
+	}
+
+	public Event4 objectOnDeactivate() {
+		return _objectOnDeactivate;
 	}
 }

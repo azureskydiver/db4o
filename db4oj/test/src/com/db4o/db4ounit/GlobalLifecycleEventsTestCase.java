@@ -1,3 +1,5 @@
+/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.db4ounit;
 
 import com.db4o.events.*;
@@ -150,6 +152,38 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 		assertSingleObjectEventArgs(eventRegistry().objectCanDelete(), item);
 		
 		Assert.areSame(item, db().get(Item.class).next());
+	}
+
+	private void assertDeactivateEvent(Event4 event) throws Exception {
+		listenToEvent(event);
+		
+		Item item = storeItem();
+		db().deactivate(item, 1);
+		
+		assertSingleObjectEventArgs(event, item);
+		
+		Assert.areEqual(0, item.id);
+	}
+	
+	public void testObjectCanDeactivate() throws Exception {
+		assertDeactivateEvent(eventRegistry().objectCanDeactivate());
+	}
+	
+	public void testObjectOnDeactivate() throws Exception {
+		assertDeactivateEvent(eventRegistry().objectOnDeactivate());
+	}
+	
+	public void testCancellableObjectCanDeactivate() {
+		listenToEvent(eventRegistry().objectCanDeactivate());
+		
+		_recorder.cancel(true);
+		
+		Item item = storeItem();
+		db().deactivate(item, 1);
+		
+		assertSingleObjectEventArgs(eventRegistry().objectCanDeactivate(), item);
+		
+		Assert.areEqual(1, item.id);
 	}
 	
 	private void assertSingleObjectEventArgs(Event4 expectedEvent, Item expectedItem) {

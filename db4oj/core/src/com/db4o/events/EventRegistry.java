@@ -1,3 +1,5 @@
+/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.events;
 
 public interface EventRegistry {
@@ -43,6 +45,13 @@ public interface EventRegistry {
 	 * @return
 	 */
 	public Event4 objectCanDelete();
+	
+	/**
+	 * Receives {@link CancellableObjectEventArgs}
+	 * 
+	 * @return
+	 */
+	public Event4 objectCanDeactivate();
 
 	/**
 	 * Receives {@link ObjectEventArgs}.
@@ -71,4 +80,11 @@ public interface EventRegistry {
 	 * @return
 	 */
 	public Event4 objectOnDelete();
+
+	/**
+	 * Receives {@link ObjectEventArgs}
+	 * 
+	 * @return
+	 */
+	public Event4 objectOnDeactivate();
 }

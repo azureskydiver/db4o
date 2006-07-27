@@ -1,8 +1,13 @@
+/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.events.impl;
 
 import com.db4o.events.*;
 import com.db4o.foundation.*;
 
+/**
+ * @exclude
+ */
 public class Event4Impl implements Event4 {
 
 	private Collection4 _listeners;
