@@ -14,7 +14,7 @@ import com.db4o.foundation.*;
  */
 public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
-    transient YapFile         i_stream;
+    public transient YapFile         i_stream;
 
     public Db4oDatabase       i_db;
 
@@ -51,7 +51,7 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         i_dirty = true;
     }
 
-    boolean initConfig(Config4Impl a_config) {
+    public boolean initConfig(Config4Impl a_config) {
 
         boolean modified = false;
 

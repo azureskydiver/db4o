@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.diagnostic.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.replication.*;

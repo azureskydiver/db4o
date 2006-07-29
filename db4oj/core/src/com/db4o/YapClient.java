@@ -8,7 +8,6 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.inside.Exceptions4;
-import com.db4o.inside.btree.*;
 import com.db4o.reflect.ReflectClass;
 
 /**

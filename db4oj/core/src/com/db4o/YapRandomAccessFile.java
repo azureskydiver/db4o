@@ -74,7 +74,7 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    void blockSize(int blockSize) {
+    public void blockSize(int blockSize) {
         i_file.blockSize(blockSize);
         if (i_timerFile != null) {
             i_timerFile.blockSize(blockSize);
@@ -112,8 +112,7 @@ public class YapRandomAccessFile extends YapFile {
                             YapWriter lockBytes = new YapWriter(i_systemTrans,
                                 YapConst.YAPLONG_LENGTH);
                             YLong.writeLong(0, lockBytes);
-                            i_timerFile.blockSeek(_configBlock._address,
-                                YapConfigBlock.ACCESS_TIME_OFFSET);
+                            _fileHeader.seekForTimeLock(i_timerFile);
                             i_timerFile.write(lockBytes._buffer);
                             i_timerFile.close();
                         }
@@ -326,16 +325,19 @@ public class YapRandomAccessFile extends YapFile {
             if (i_file == null) {
                 return false;
             }
+            
+            
+            // FIXME: All logic to lock file should be fully in FileHeader class
 
             long lockTime = System.currentTimeMillis();
             if (Deploy.debug) {
                 YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.YAPLONG_LENGTH);
                 YLong.writeLong(lockTime, lockBytes);
-                i_timerFile.blockSeek(_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                _fileHeader.seekForTimeLock(i_timerFile);
                 i_timerFile.write(lockBytes._buffer);
             } else {
                 YLong.writeLong(lockTime, i_timerBytes);
-                i_timerFile.blockSeek(_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                _fileHeader.seekForTimeLock(i_timerFile);
                 i_timerFile.write(i_timerBytes);
             }
         }

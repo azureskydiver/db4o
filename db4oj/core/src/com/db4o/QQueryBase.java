@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.events.EventRegistry;
 import com.db4o.foundation.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.*;
