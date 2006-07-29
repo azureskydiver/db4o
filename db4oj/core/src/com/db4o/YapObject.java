@@ -411,8 +411,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	}
 
 	private boolean objectCanUpdate(YapStream stream, Object obj) {
-		return stream.callbacks().objectCanUpdate(obj) && 
-			i_yapClass.dispatchEvent(stream, obj, EventDispatcher.CAN_UPDATE);
+		return stream.callbacks().objectCanUpdate(obj)
+			&& i_yapClass.dispatchEvent(stream, obj, EventDispatcher.CAN_UPDATE);
 	}
 
 	/***** HCTREE *****/

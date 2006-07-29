@@ -16,17 +16,17 @@ public class EventRegistryFactory {
 		}
 		
 		YapStream stream = ((YapStream)container);
-		Callbacks eventRegistry = stream.callbacks();
-		if (eventRegistry instanceof EventRegistry) {
-			return (EventRegistry)eventRegistry;
+		Callbacks callbacks = stream.callbacks();
+		if (callbacks instanceof EventRegistry) {
+			return (EventRegistry)callbacks;
 		}		
-		if (eventRegistry instanceof NullCallbacks) {
+		if (callbacks instanceof NullCallbacks) {
 			EventRegistryImpl impl = new EventRegistryImpl();
 			stream.callbacks(impl);
 			return impl;
 		}
 		
-		// TODO: create a MulticastEventRegistry and register both
+		// TODO: create a MulticastingCallbacks and register both
 		// the current one and the new one
 		throw new IllegalArgumentException("container callbacks already in use");
 	}
