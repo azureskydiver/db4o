@@ -23,68 +23,68 @@ public interface EventRegistry {
 	 * 
 	 * @return
 	 */
-	public Event4 objectCanNew();
+	public Event4 creating();
 
 	/**
 	 * Receives {@link CancellableObjectEventArgs}.
 	 * 
 	 * @return
 	 */
-	public Event4 objectCanActivate();
+	public Event4 activating();
 	
 	/**
 	 * Receives {@link CancellableObjectEventArgs}
 	 * 
 	 * @return
 	 */
-	public Event4 objectCanUpdate();
+	public Event4 updating();
 	
 	/**
 	 * Receives {@link CancellableObjectEventArgs}
 	 * 
 	 * @return
 	 */
-	public Event4 objectCanDelete();
+	public Event4 deleting();
 	
 	/**
 	 * Receives {@link CancellableObjectEventArgs}
 	 * 
 	 * @return
 	 */
-	public Event4 objectCanDeactivate();
+	public Event4 deactivating();
 
 	/**
 	 * Receives {@link ObjectEventArgs}.
 	 * 
 	 * @return
 	 */
-	public Event4 objectOnActivate();
+	public Event4 activated();
 
 	/**
 	 * Receives {@link ObjectEventArgs}.
 	 * 
 	 * @return
 	 */
-	public Event4 objectOnNew();
+	public Event4 created();
 
 	/**
 	 * Receives {@link ObjectEventArgs}
 	 * 
 	 * @return
 	 */
-	public Event4 objectOnUpdate();
+	public Event4 updated();
 
 	/**
 	 * Receives {@link ObjectEventArgs}
 	 * 
 	 * @return
 	 */
-	public Event4 objectOnDelete();
+	public Event4 deleted();
 
 	/**
 	 * Receives {@link ObjectEventArgs}
 	 * 
 	 * @return
 	 */
-	public Event4 objectOnDeactivate();
+	public Event4 deactivated();
 }
