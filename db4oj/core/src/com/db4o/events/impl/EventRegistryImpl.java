@@ -94,43 +94,43 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 		return _queryStarted;
 	}
 	
-	public Event4 objectCanNew() {
+	public Event4 creating() {
 		return _objectCanNew;
 	}
 	
-	public Event4 objectCanActivate() {
+	public Event4 activating() {
 		return _objectCanActivate;
 	}
 	
-	public Event4 objectCanUpdate() {
+	public Event4 updating() {
 		return _objectCanUpdate;
 	}
 	
-	public Event4 objectCanDelete() {
+	public Event4 deleting() {
 		return _objectCanDelete;
 	}
 	
-	public Event4 objectCanDeactivate() {
+	public Event4 deactivating() {
 		return _objectCanDeactivate;
 	}
 	
-	public Event4 objectOnNew() {
+	public Event4 created() {
 		return _objectOnNew;
 	}
 	
-	public Event4 objectOnActivate() {
+	public Event4 activated() {
 		return _objectOnActivate;
 	}
 	
-	public Event4 objectOnUpdate() {
+	public Event4 updated() {
 		return _objectOnUpdate;
 	}
 
-	public Event4 objectOnDelete() {
+	public Event4 deleted() {
 		return _objectOnDelete;
 	}
 
-	public Event4 objectOnDeactivate() {
+	public Event4 deactivated() {
 		return _objectOnDeactivate;
 	}
 }
