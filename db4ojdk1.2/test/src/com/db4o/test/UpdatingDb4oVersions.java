@@ -27,7 +27,8 @@ public class UpdatingDb4oVersions {
         "db4o_5.2.001", 
         "db4o_5.2.003",
         "db4o_5.3.001", 
-        "db4o_5.4.004"};
+        "db4o_5.4.004",
+        "db4o_5.5.2"};
 
     List list;
     Map map;
