@@ -53,7 +53,7 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         return 2;
     }
     
-    void checkActive() {
+    public void checkActive() {
         super.checkActive();
         if (i_table == null) {
             i_table = new P1HashElement[i_tableSize];
