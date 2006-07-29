@@ -4,6 +4,7 @@ package com.db4o.inside.convert;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.header.*;
 import com.db4o.inside.*;
 import com.db4o.inside.convert.conversions.*;
 import com.db4o.inside.marshall.*;
@@ -17,12 +18,12 @@ public class Converter {
     
     private Hashtable4 _conversions;
     
-    public static final boolean convert(YapFile file, YapConfigBlock config){
-        if(config.converterVersion() >= VERSION){
+    public static final boolean convert(YapFile file, FileHeader0 fileHeader){
+        if(fileHeader.converterVersion() >= VERSION){
             return false;
         }
         Converter converter = new Converter();
-        converter.run(file, config);
+        converter.run(file, fileHeader);
         return true;
     }
     
@@ -41,8 +42,8 @@ public class Converter {
         _conversions.put(idx, conversion);
     }
     
-    private void run(YapFile file, YapConfigBlock config){
-        int start = config.converterVersion();
+    private void run(YapFile file, FileHeader0 fileHeader){
+        int start = fileHeader.converterVersion();
         for (int i = start; i <= VERSION; i++) {
             Conversion conversion = (Conversion)_conversions.get(i);
             if(conversion != null){
@@ -50,8 +51,8 @@ public class Converter {
                 conversion.run();
             }
         }
-        config.converterVersion(VERSION);
-        config.write();
+        fileHeader.converterVersion(VERSION);
+        fileHeader.writeVariablePart();
     }
 
 }

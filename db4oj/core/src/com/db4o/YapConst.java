@@ -10,10 +10,10 @@ public final class YapConst
 {
     static final Object initMe = init();
 
-	static final byte   YAPFILEVERSION		= 4;
+	public static final byte   YAPFILEVERSION		= 4;
 
-	static final byte	YAPBEGIN			= (byte)'{';
-	static final byte	YAPFILE				= (byte)'Y';
+	public static final byte	YAPBEGIN			= (byte)'{';
+	public static final byte	YAPFILE				= (byte)'Y';
 	static final byte	YAPID				= (byte)'#';
 	static final byte	YAPPOINTER			= (byte)'>';
 	public static final byte	YAPCLASSCOLLECTION	= (byte)'A';

@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.header.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.convert.*;
@@ -18,7 +19,7 @@ import com.db4o.reflect.*;
  */
 public abstract class YapFile extends YapStream {
 
-    protected YapConfigBlock    _configBlock;
+    protected FileHeader0       _fileHeader;
     
     private PBootRecord         _bootRecord;
 
@@ -44,7 +45,7 @@ public abstract class YapFile extends YapStream {
         super(a_parent);
     }
     
-    void blockSize(int blockSize){
+    public void blockSize(int blockSize){
         // do nothing, overwridden in YapRandomAccessFile 
     }
     
@@ -79,14 +80,13 @@ public abstract class YapFile extends YapStream {
         
         blockSize(i_config.blockSize());
         i_writeAt = blocksFor(HEADER_LENGTH);
-        _configBlock = new YapConfigBlock(this);
-        _configBlock.converterVersion(Converter.VERSION);
-        _configBlock.write();
-        _configBlock.go();
+        
+        _fileHeader = FileHeader0.forNewFile(this);
+        
         initNewClassCollection();
         initializeEssentialClasses();
         initBootRecord();
-        _freespaceManager.start(_configBlock._freespaceAddress);
+        _freespaceManager.start(_fileHeader.freespaceAddress());
         
         if(Debug.freespace  && Debug.freespaceChecker){
             _fmChecker.start(0);
@@ -362,8 +362,7 @@ public abstract class YapFile extends YapStream {
         _bootRecord.i_stream = this;
         _bootRecord.init(i_config);
         setInternal(i_systemTrans, _bootRecord, false);
-        _configBlock._bootRecordID = getID1(i_systemTrans, _bootRecord);
-        _configBlock.write();
+        _fileHeader.setBootRecordID(getID1(i_systemTrans, _bootRecord));
         showInternalClasses(false);
     }
 
@@ -477,70 +476,41 @@ public abstract class YapFile extends YapStream {
     }
 
     void readThis() {
-        YapWriter myreader = getWriter(i_systemTrans, 0, HEADER_LENGTH);
-        myreader.read();
-
-        byte firstFileByte = myreader.readByte();
-        byte blockLen = 1;
-
-        if (firstFileByte != YapConst.YAPBEGIN) {
-            
-            if(firstFileByte != YapConst.YAPFILEVERSION){
-                Exceptions4.throwRuntimeException(17);
-            }
-            
-            blockLen = myreader.readByte();
-            
-        }else{
-	        if (myreader.readByte() != YapConst.YAPFILE) {
-	            Exceptions4.throwRuntimeException(17);
-	        }
-        }
         
-        blockSize(blockLen);
+        YapReader reader = new YapReader(YapStreamBase.HEADER_LENGTH); 
+        reader.read(this, 0, 0);
         
-// Test code to force a big database file        
+        _fileHeader = new FileHeader0();
+        _fileHeader.read0(reader);
         
-//        long len = fileLength();
-//        long min = Integer.MAX_VALUE;
-//        min *= (long)2;
-//        if(len < min){
-//            len = min;
-//        }
-//        i_writeAt = blocksFor(len);
+        blockSize(_fileHeader.blockSize());
         
         i_writeAt = blocksFor(fileLength());
-
-        _configBlock = new YapConfigBlock(this);
         
-        _configBlock.read(myreader.readInt());
-
-        // configuration lock time skipped
-        myreader.incrementOffset(YapConst.YAPID_LENGTH);
-
-        i_classCollection.setID(myreader.readInt());
+        _fileHeader.readConfigBlock(this, reader);
+        
+        i_classCollection.setID(_fileHeader.classCollectionID());
         i_classCollection.read(i_systemTrans);
-
-        int freespaceID = myreader.readInt();
         
-        _freespaceManager = FreespaceManager.createNew(this, _configBlock._freespaceSystem);
-        _freespaceManager.read(freespaceID);
+        _freespaceManager = FreespaceManager.createNew(this, _fileHeader.freespaceSystem());
+        _freespaceManager.read(_fileHeader.freeSpaceID());
         
         if(Debug.freespace){
             _fmChecker = new FreespaceManagerRam(this);
-            _fmChecker.read(freespaceID);
+            _fmChecker.read(_fileHeader.freeSpaceID());
         }
         
-        _freespaceManager.start(_configBlock._freespaceAddress);
+        _freespaceManager.start(_fileHeader.freespaceAddress());
         
         if(Debug.freespace){
             _fmChecker.start(0);
         }
         
-        if(i_config.freespaceSystem() != 0  || _configBlock._freespaceSystem == FreespaceManager.FM_LEGACY_RAM){
+        if(i_config.freespaceSystem() != 0  || _fileHeader.freespaceSystem() == FreespaceManager.FM_LEGACY_RAM){
             if(_freespaceManager.systemType() != i_config.freespaceSystem()){
                 FreespaceManager newFM = FreespaceManager.createNew(this, i_config.freespaceSystem());
-                int fmSlot = _configBlock.newFreespaceSlot(i_config.freespaceSystem());
+                int fmSlot = _fileHeader.newFreespaceSlot(i_config.freespaceSystem());
+                
                 newFM.start(fmSlot);
                 _freespaceManager.migrate(newFM);
                 FreespaceManager oldFM = _freespaceManager;
@@ -548,15 +518,17 @@ public abstract class YapFile extends YapStream {
                 oldFM.freeSelf();
                 _freespaceManager.beginCommit();
                 _freespaceManager.endCommit();
-                _configBlock.write();
+                
+                _fileHeader.writeVariablePart();
             }
         }
         
+        _fileHeader.readBootRecord(this);
+        
         showInternalClasses(true);
-        Object bootRecord = null;
-        if (_configBlock._bootRecordID > 0) {
-            bootRecord = getByID1(i_systemTrans, _configBlock._bootRecordID);
-        }
+        
+        Object bootRecord = _fileHeader.bootRecord();
+        
         if (bootRecord instanceof PBootRecord) {
             _bootRecord = (PBootRecord) bootRecord;
             _bootRecord.checkActive();
@@ -572,15 +544,19 @@ public abstract class YapFile extends YapStream {
         
         showInternalClasses(false);
         writeHeader(false);
-        Transaction trans = _configBlock.getTransactionToCommit();
+        
+        Transaction trans = _fileHeader.interruptedTransaction();
+        
         if (trans != null) {
             if (!i_config.commitRecoveryDisabled()) {
                 trans.writeOld();
             }
         }
-        if(Converter.convert(this, _configBlock)){
+        
+        if(Converter.convert(this, _fileHeader)){
             getTransaction().commit();
         }
+        
     }
 
     public void releaseSemaphore(String name) {
@@ -740,17 +716,11 @@ public abstract class YapFile extends YapStream {
             freespaceID = _fmChecker.write(shuttingDown);
         }
         
+        // FIXME: blocksize should be already valid in FileHeader
         YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
-        writer.append(YapConst.YAPFILEVERSION);
-        writer.append(blockSize());
-        writer.writeInt(_configBlock._address);
-        writer.writeInt(0);
-        writer.writeInt(i_classCollection.getID());
-        writer.writeInt(freespaceID);
-        if (Debug.xbytes && Deploy.overwrite) {
-            writer.setID(YapConst.IGNORE_ID);
-        }
-        writer.write();
+        
+        _fileHeader.writeFixedPart(writer, blockSize(), i_classCollection.getID(), freespaceID);
+        
         if(shuttingDown){
             ensureLastSlotWritten();
         }
@@ -794,16 +764,8 @@ public abstract class YapFile extends YapStream {
         }
     }
 
-    final void writeTransactionPointer(int a_address) {
-        YapWriter bytes = new YapWriter(i_systemTrans,
-            _configBlock._address, YapConst.YAPINT_LENGTH * 2);
-        bytes.moveForward(YapConfigBlock.TRANSACTION_OFFSET);
-        bytes.writeInt(a_address);
-        bytes.writeInt(a_address);
-        if (Debug.xbytes && Deploy.overwrite) {
-            bytes.setID(YapConst.IGNORE_ID);
-        }
-        bytes.write();
+    final void writeTransactionPointer(int address) {
+        _fileHeader.writeTransactionPointer(getSystemTransaction(), address);
     }
     
     public final void getSlotForUpdate(YapWriter forWriter){

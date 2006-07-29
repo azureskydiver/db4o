@@ -306,7 +306,7 @@ public final class YapWriter extends YapReader {
         useSlot(a_adress, a_length);
     }
 
-    void write() {
+    public void write() {
         if (Debug.xbytes) {
             debugCheckBytes();
         }

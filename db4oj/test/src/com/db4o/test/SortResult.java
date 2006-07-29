@@ -3,8 +3,6 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.query.*;
 
 public class SortResult {
 	private final static int[] ORIG={2,4,1,3};

@@ -726,7 +726,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
     }
 
-    final Object getByID1(Transaction ta, long id) {
+    public final Object getByID1(Transaction ta, long id) {
         ta = checkTransaction(ta);
         try {
             return getByID2(ta, (int) id);

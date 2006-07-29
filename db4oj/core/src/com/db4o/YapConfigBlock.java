@@ -35,9 +35,9 @@ public final class YapConfigBlock implements Runnable
     
     private final Object		_timeWriterLock = new Object();
 	private final YapFile		_stream;
-	int							_address;
+	public int							_address;
 	private Transaction			_transactionToCommit;
-	int                 		_bootRecordID;
+	public int                 		_bootRecordID;
 	
 	private static final int	POINTER_ADDRESS = 2;
 	private static final int	MINIMUM_LENGTH = 
@@ -46,9 +46,9 @@ public final class YapConfigBlock implements Runnable
 		+ 1;  						// Unicode byte
 	
 	static final int			OPEN_TIME_OFFSET		= YapConst.YAPINT_LENGTH;
-	static final int            ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.YAPLONG_LENGTH;
+	public static final int            ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.YAPLONG_LENGTH;
 		
-	static final int			TRANSACTION_OFFSET = MINIMUM_LENGTH;
+	public static final int			TRANSACTION_OFFSET = MINIMUM_LENGTH;
 	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.YAPINT_LENGTH * 2;  
 	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + YapConst.YAPINT_LENGTH;
 	private static final int	ENCRYPTION_PASSWORD_LENGTH = 5;
@@ -67,11 +67,11 @@ public final class YapConfigBlock implements Runnable
 		
 	private final long			_opentime; // written as pure long 8 bytes
 	byte						_encoding;
-    byte                        _freespaceSystem;
-    int                         _freespaceAddress;
+    public byte                        _freespaceSystem;
+    public int                         _freespaceAddress;
     private int                 _converterVersion;
 	
-	YapConfigBlock(YapFile stream){
+	public YapConfigBlock(YapFile stream){
 		_stream = stream;
         _encoding = stream.i_config.encoding();
         _freespaceSystem = FreespaceManager.checkType(stream.i_config.freespaceSystem());
@@ -81,7 +81,7 @@ public final class YapConfigBlock implements Runnable
 		}
 	}
 	
-	Transaction getTransactionToCommit(){
+	public Transaction getTransactionToCommit(){
 		return _transactionToCommit;
 	}
     
@@ -97,7 +97,7 @@ public final class YapConfigBlock implements Runnable
         return _freespaceAddress;
     }
 	
-	void go(){
+	public void go(){
 		_stream.createStringIO(_encoding);
 		if(lockFile()){
 			try{
@@ -211,7 +211,7 @@ public final class YapConfigBlock implements Runnable
 		return id;
 	}
 
-	void read(int address) {
+	public void read(int address) {
         _address = address;
 		writeOpenTime();
 		YapWriter reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
