@@ -498,8 +498,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	}
 
 	private boolean objectCanDeactivate(YapStream stream, Object obj) {
-		return stream.callbacks().objectCanDeactivate(obj) &&
-			dispatchEvent(stream, obj, EventDispatcher.CAN_DEACTIVATE);
+		return stream.callbacks().objectCanDeactivate(obj)
+			&& dispatchEvent(stream, obj, EventDispatcher.CAN_DEACTIVATE);
 	}
 
     void deactivate1(Transaction a_trans, Object a_object, int a_depth) {
@@ -589,10 +589,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public final boolean dispatchEvent(YapStream stream, Object obj, int message) {
-        if (_eventDispatcher != null) {
-            if(stream.dispatchsEvents()){
-                return _eventDispatcher.dispatch(stream, obj, message);
-            }
+        if (_eventDispatcher != null && stream.dispatchsEvents()) {
+        	return _eventDispatcher.dispatch(stream, obj, message);
         }
         return true;
     }

@@ -545,8 +545,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
 	private boolean objectCanDelete(YapClass yc, Object obj) {
-		return _this.callbacks().objectCanDelete(obj) &&
-			yc.dispatchEvent(_this, obj, EventDispatcher.CAN_DELETE);
+		return _this.callbacks().objectCanDelete(obj)
+			&& yc.dispatchEvent(_this, obj, EventDispatcher.CAN_DELETE);
 	}
 	
 	private void objectOnDelete(YapClass yc, Object obj) {
