@@ -27,7 +27,8 @@
 			executable="${file.compiler.jdk1.3}"
 			srcdir="${db4ounit.src.dir}"
 			destdir="${db4ounit.bin.dir}"
-			debug="off">
+			debug="off"
+			encoding="UTF-8">
 			<compilerarg line="${file.compiler.jdk1.3.args}"/>
 		</javac>
 		

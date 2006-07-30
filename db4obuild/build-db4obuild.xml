@@ -5,7 +5,7 @@
 	<target name="compiledb4obuild" depends="" description="Compile db4obuild">
 		<delete dir="${dir.build.bin}" includes="**/*"/>
 		<mkdir dir="${dir.build.bin}" />
-		<javac fork="true" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.5" target="1.5">
+		<javac fork="true" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.5" target="1.5" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.build.bin}"/>
 				<fileset dir="${dir.build.lib}">

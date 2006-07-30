@@ -10,7 +10,7 @@ import com.db4o.query.*;
 /**
  * @exclude
  * 
- * FIXME: remove me from the core and make me a façade over Events
+ * FIXME: remove me from the core and make me a facade over Events
  */
 public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     

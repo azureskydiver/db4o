@@ -171,7 +171,7 @@
 			</fileset>
 		</delete>
 		<antcall target="copyjava1.2" />
-		<javac srcdir="${dir.dist.java.temp.src.core}" fork="true" destdir="${dir.dist.classes.java1.2}" debug="off" target="1.2" source="1.2" />
+		<javac srcdir="${dir.dist.java.temp.src.core}" fork="true" destdir="${dir.dist.classes.java1.2}" debug="off" target="1.2" source="1.2" encoding="UTF-8" />
 
 		<mkdir dir="${dir.dist.classes.java5}" />
 		<delete>
@@ -180,7 +180,7 @@
 			</fileset>
 		</delete>
 		<antcall target="copyjava5" />
-		<javac srcdir="${dir.dist.java.temp.src.core}" fork="true" destdir="${dir.dist.classes.java5}" debug="off" target="1.5" source="1.5" />
+		<javac srcdir="${dir.dist.java.temp.src.core}" fork="true" destdir="${dir.dist.classes.java5}" debug="off" target="1.5" source="1.5" encoding="UTF-8" />
 
 		<jar destfile="${file.java1.1.jar}">
 			<fileset dir="${dir.dist.classes.java1.1}" />
@@ -198,7 +198,7 @@
 				<include name="**/*"/>
 			</fileset>
 		</delete>
-		<javac srcdir="${dir.j.nqopt.src}" fork="true" destdir="${dir.dist.classes.nqopt}" debug="off" target="1.2" source="1.2">
+		<javac srcdir="${dir.j.nqopt.src}" fork="true" destdir="${dir.dist.classes.nqopt}" debug="off" target="1.2" source="1.2" encoding="UTF-8">
 			<exclude name="**/j2me/**"/>
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
@@ -231,7 +231,7 @@
 		</delete>
 		<copy file="${file.java1.2.jar}" todir="${dir.objectmanager.lib}" />
 		<depend srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" closure="yes" />
-		<javac srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" fork="true" debug="off" target="1.3" source="1.3">
+		<javac srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" fork="true" debug="off" target="1.3" source="1.3" encoding="UTF-8">
 				<include name="**/*.java" />
 				<exclude name="**/*test/*" />
 				<exclude name="**/*Test.java" />
@@ -325,7 +325,7 @@
 	<target name="compilebuild" depends="init" description="Compile Db4o build sources">
 		<mkdir dir="${dir.build.bin}" />
 		<depend srcdir="${dir.build.src}" destdir="${dir.build.bin}" closure="yes" />
-		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" debug="off" fork="true" target="1.3" source="1.3">
+		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" debug="off" fork="true" target="1.3" source="1.3" encoding="UTF-8">
 			<classpath path="${path.classpath.full}" />
 		</javac>
 		<copy todir="${dir.build.bin}">
@@ -573,7 +573,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<javac destdir="${dir.dist.classes.test}" fork="true" debug="on" target="1.5" source="1.5">
+		<javac destdir="${dir.dist.classes.test}" fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<pathelement location="${db4ounit.jar}"/>
@@ -586,8 +586,8 @@
 	<target name="compilejtutorial" depends="compilecorejava" description="Compile Db4o Java tutorial sources">
 		<mkdir dir="${dir.dist.classes.tutorial}" />
 		<antcall target="copyjava1.2" />
-		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.tutorial}" target="1.3" source="1.3" />
-		<javac fork="true" srcdir="${dir.j.tutorial.src}" destdir="${dir.dist.classes.tutorial}" classpath="${dir.dist.classes.tutorial}" target="1.3" source="1.3" debug="on" />
+		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.tutorial}" target="1.3" source="1.3" encoding="UTF-8" />
+		<javac fork="true" srcdir="${dir.j.tutorial.src}" destdir="${dir.dist.classes.tutorial}" classpath="${dir.dist.classes.tutorial}" target="1.3" source="1.3" debug="on" encoding="UTF-8" />
 	</target>
 	
 	<target name="compilentutorial" depends="compiledllnet">
@@ -599,8 +599,8 @@
 	<target name="compilejreference" depends="compilecorejava" description="Compile Db4o Java reference sources">
 		<mkdir dir="${dir.dist.classes.reference}" />
 		<antcall target="copyjava1.2" />
-		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.reference}" target="1.3" source="1.3" />
-		<javac fork="true" srcdir="${dir.j.reference.src}" destdir="${dir.dist.classes.reference}" classpath="${dir.dist.classes.reference}" target="1.3" source="1.3" debug="on" />
+		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.reference}" target="1.3" source="1.3" encoding="UTF-8" />
+		<javac fork="true" srcdir="${dir.j.reference.src}" destdir="${dir.dist.classes.reference}" classpath="${dir.dist.classes.reference}" target="1.3" source="1.3" debug="on" encoding="UTF-8" />
 	</target>
 
 	<target name="compilenreference" depends="compiledllnet">

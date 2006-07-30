@@ -23,7 +23,7 @@
 
 	<target name="compile" depends="unzip">
 		<mkdir dir="${dir.build}" />
-		<javac compiler="classic" fork="yes" executable="${exec.javac}" destdir="${dir.build}" sourcepath="" debug="off">
+		<javac compiler="classic" fork="yes" executable="${exec.javac}" destdir="${dir.build}" sourcepath="" debug="off" encoding="UTF-8">
 			<src>
 				<pathelement location="${dir.src}/db4oj/test/src" />
 				<pathelement location="${dir.src}/tools/src" />
