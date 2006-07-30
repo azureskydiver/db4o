@@ -21,7 +21,7 @@
 	</target>
 	
 	<target name="runalldoctortasks" depends="init" description="Run all doctor tasks">
-		<javac srcdir="${dir.doctor.src}" destdir="${dir.dist.doctor}" target="1.3" source="1.3" fork="true">			
+		<javac srcdir="${dir.doctor.src}" destdir="${dir.dist.doctor}" target="1.3" source="1.3" fork="true" encoding="UTF-8">			
 			<include name="**/com/yetac/doctor/applet/*.java"/>
 		</javac>
 		<jar destfile="${file.doctor.applets.jar}">

@@ -110,7 +110,7 @@
 		<mkdir dir="${javatocsharp.core.dir}/bin" />
 		
 		<echo>${eclipse.home}/plugins</echo>
-		<javac fork="true" debug="true" source="1.5" destdir="${javatocsharp.core.dir}/bin" srcdir="${javatocsharp.core.dir}/src">
+		<javac fork="true" debug="true" source="1.5" destdir="${javatocsharp.core.dir}/bin" srcdir="${javatocsharp.core.dir}/src" encoding="UTF-8">
 			<classpath>
 				<fileset dir="${eclipse.home}/plugins">
 					<include name="org.eclipse.osgi_*/osgi.jar" />
