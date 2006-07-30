@@ -50,7 +50,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual void CheckActive()
+		public virtual void CheckActive()
 		{
 			if (i_trans != null)
 			{
