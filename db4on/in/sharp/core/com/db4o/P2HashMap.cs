@@ -226,7 +226,7 @@ namespace com.db4o
 			return 2;
 		}
 
-		internal override void CheckActive()
+		public override void CheckActive()
 		{
 			base.CheckActive();
 			if (i_table == null)
