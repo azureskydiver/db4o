@@ -68,7 +68,7 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 				++_activationCount;
 			};
 		};
-
+		
 		public long executionTime() {
 			return _watch.elapsed();
 		}
@@ -106,7 +106,6 @@ public class QueryStatisticsTestCase extends Db4oTestCase {
 		Assert.areEqual(1, _tracker.activationCount());
 		result.next();
 		Assert.areEqual(2, _tracker.activationCount());
-		
 	}
 
 	public void testExecutionTime() {
