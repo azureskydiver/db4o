@@ -28,7 +28,10 @@ public class FileHeader0 {
     
     PBootRecord _bootRecord;
 
-    public void read0(YapReader reader) {
+    public void read0(YapFile file) {
+        
+        YapReader reader = new YapReader(YapStreamBase.HEADER_LENGTH); 
+        reader.read(file, 0, 0);
         
         byte firstFileByte = reader.readByte();
         
@@ -42,15 +45,10 @@ public class FileHeader0 {
                 Exceptions4.throwRuntimeException(17);
             }
         }
-    }
-
-    public byte blockSize() {
-        return blockSize;
-    }
-
-    public void readConfigBlock(YapFile yapFile, YapReader reader) {
         
-        _configBlock = new YapConfigBlock(yapFile);
+        file.blockSize(blockSize, file.fileLength());
+        
+        _configBlock = new YapConfigBlock(file);
         
         _configBlock.read(reader.readInt());
 
@@ -60,21 +58,27 @@ public class FileHeader0 {
         _classCollectionID = reader.readInt();
         
         _freeSpaceID = reader.readInt();
-        
+
     }
+
+    public byte blockSize() {
+        return blockSize;
+    }
+
     
     public void readBootRecord(YapFile yapFile){
-        
-        Object bootRecord = null;
-        if (_configBlock._bootRecordID > 0) {
-            yapFile.showInternalClasses(true);
-            bootRecord = yapFile.getByID1(yapFile.getSystemTransaction(), _configBlock._bootRecordID);
-            yapFile.showInternalClasses(false);
+        if (_configBlock._bootRecordID <= 0) {
+            return;
         }
-        if (bootRecord instanceof PBootRecord) {
-            _bootRecord = (PBootRecord) bootRecord;
+        yapFile.showInternalClasses(true);
+        Object bootRecord = yapFile.getByID1(yapFile.getSystemTransaction(), _configBlock._bootRecordID);
+        yapFile.showInternalClasses(false);
+        if (! (bootRecord instanceof PBootRecord)) {
+            return;
         }
-        
+        _bootRecord = (PBootRecord) bootRecord;
+        yapFile.activate(bootRecord, Integer.MAX_VALUE);
+        yapFile.setNextTimeStampId(_bootRecord.i_versionGenerator);
     }
 
     public int classCollectionID() {
@@ -104,11 +108,6 @@ public class FileHeader0 {
 
     public int freespaceAddress() {
         return _configBlock._freespaceAddress;
-    }
-
-    public void setBootRecordID(int id) {
-        _configBlock._bootRecordID = id;
-        _configBlock.write();
     }
 
     public int newFreespaceSlot(byte freeSpaceSystem) {
@@ -170,5 +169,14 @@ public class FileHeader0 {
         writer.write();
     }
 
+    public void storeTimeStampId(long val) {
+        _bootRecord.storeTimeStampId(val);
+    }
+
+    public void setBootRecord(PBootRecord bootRecord, int id) {
+        _bootRecord = bootRecord;
+        _configBlock._bootRecordID = id;
+        _configBlock.write();
+    }
 
 }

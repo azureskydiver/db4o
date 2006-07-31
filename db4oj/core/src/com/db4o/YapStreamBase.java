@@ -142,10 +142,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     YapReferences           i_references;
 
 	private NativeQueryHandler _nativeQueryHandler;
-
+    
 	private final YapStream _this;
 
 	private Callbacks _callbacks = new com.db4o.inside.callbacks.NullCallbacks();
+    
+    protected final PersistentTimeStampIdGenerator _timeStampIdGenerator = new PersistentTimeStampIdGenerator();
 	
     protected YapStreamBase(YapStream a_parent) {
     	_this = cast(this);
@@ -1268,6 +1270,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     final void needsUpdate(YapClass a_yapClass) {
         i_needsUpdate = new List4(i_needsUpdate, a_yapClass);
+    }
+    
+    public long generateTimeStampId() {
+        return _timeStampIdGenerator.next();
     }
 
     public abstract int newUserObject();

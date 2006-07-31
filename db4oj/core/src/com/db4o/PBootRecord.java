@@ -85,28 +85,12 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         return i_uuidMetaIndex;
     }
 
-    long newUUID() {
-        return nextVersion();
-    }
-
-    public void raiseVersion(long a_minimumVersion) {
-        if (i_versionGenerator < a_minimumVersion) {
-            createVersionTimeGenerator();
-            _versionTimeGenerator.setMinimumNext(a_minimumVersion);
-            i_versionGenerator = a_minimumVersion;
-            setDirty();
-            store(1);
-        }
-    }
-
     public void setDirty(){
         i_dirty = true;
     }
 
     public void store(int a_depth) {
         if (i_dirty) {
-            createVersionTimeGenerator();
-            i_versionGenerator = _versionTimeGenerator.generate();
             i_stream.showInternalClasses(true);
             super.store(a_depth);
             i_stream.showInternalClasses(false);
@@ -114,15 +98,10 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         i_dirty = false;
     }
 
-    long nextVersion() {
-        i_dirty = true;
-        createVersionTimeGenerator();
-        i_versionGenerator = _versionTimeGenerator.generate();
-        return i_versionGenerator;
-    }
-
-    long currentVersion(){
-        return i_versionGenerator;
+    public void storeTimeStampId(long val) {
+        i_versionGenerator = val;
+        setDirty();
+        store(2);
     }
 
 }

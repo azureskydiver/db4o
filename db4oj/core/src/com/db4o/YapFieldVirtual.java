@@ -98,10 +98,12 @@ abstract class YapFieldVirtual extends YapField {
         YapHandlers handlers = stream.i_handlers;
         boolean migrating = false;
         
-        // old replication code 
         
         if (stream._replicationCallState != YapConst.NONE) {
             if (stream._replicationCallState == YapConst.OLD) {
+                
+                // old replication code 
+
                 migrating = true;
                 if (a_yapObject.i_virtualAttributes == null) {
                     Object obj = a_yapObject.getObject();
@@ -125,6 +127,9 @@ abstract class YapFieldVirtual extends YapField {
                     }
                 }
             }else {
+                
+                // new dRS replication
+                
                 Db4oReplicationReferenceProvider provider = handlers._replicationReferenceProvider;
                 Object parentObject = a_yapObject.getObject();
                 Db4oReplicationReference ref = provider.referenceFor(parentObject); 

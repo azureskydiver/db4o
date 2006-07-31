@@ -35,7 +35,7 @@ class YapFieldUUID extends YapFieldVirtual {
         }
         
         if(uuid == 0){
-            uuid = yf.bootRecord().newUUID();
+            uuid = yf.generateTimeStampId();
         }
         YLong.writeLong(uuid, writer);
         
@@ -110,12 +110,11 @@ class YapFieldUUID extends YapFieldVirtual {
             }else{
     	        if (attr.i_database == null) {
     	            attr.i_database = db;
+                    
+                    // TODO: Should be check for ! client instead of instanceof
     	            if (stream instanceof YapFile){
-                        PBootRecord br = stream.bootRecord();
-                        if(br != null){
-        					attr.i_uuid = br.newUUID();
-        	                indexEntry = true;
-                        }
+    					attr.i_uuid = stream.generateTimeStampId();
+    	                indexEntry = true;
     	            }
     	        }
     	        db = attr.i_database;
