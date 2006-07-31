@@ -10,8 +10,9 @@ import org.eclipse.ve.sweet.controllers.*;
 import org.eclipse.ve.sweet.objectviewer.*;
 
 import com.db4o.browser.gui.controllers.*;
-import com.db4o.browser.model.*;
-import com.db4o.browser.model.nodes.*;
+import com.db4o.objectmanager.model.nodes.*;
+import com.db4o.objectmanager.model.IGraphIterator;
+import com.db4o.objectmanager.model.GraphPosition;
 
 /**
  * TreeController.
@@ -82,7 +83,7 @@ public class TreeController implements IBrowserController {
 	};
 	
 	/* (non-Javadoc)
-	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator, com.db4o.browser.model.GraphPosition)
+	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInpucom.db4o.objectmanager.model.IGraphIteratororcom.db4o.objectmanager.model.GraphPositionon)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
 		IGraphIterator oldInput = (IGraphIterator) viewer.getInput();

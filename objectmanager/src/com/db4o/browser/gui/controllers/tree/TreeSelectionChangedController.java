@@ -8,8 +8,9 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.browser.gui.controllers.*;
-import com.db4o.browser.model.*;
-import com.db4o.browser.model.nodes.field.*;
+import com.db4o.objectmanager.model.nodes.field.*;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIterator;
 import com.swtworkbench.community.xswt.metalogger.*;
 
 /**
@@ -28,7 +29,13 @@ public class TreeSelectionChangedController implements
     private Button deleteButton;
 
     public TreeSelectionChangedController(Button deleteButton,final BrowserTabController tabCtrl) {
-    	this.deleteButton=deleteButton;
+        if(deleteButton == null) {
+            throw new IllegalArgumentException("Button cannot be null");
+        }
+        if(tabCtrl == null){
+            throw new IllegalArgumentException("TabController cannot be null");
+        }
+        this.deleteButton=deleteButton;
 
         deleteButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {

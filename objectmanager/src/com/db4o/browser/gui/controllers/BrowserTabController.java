@@ -17,8 +17,11 @@ import org.eclipse.ve.sweet.metalogger.*;
 import com.db4o.browser.gui.controllers.tree.*;
 import com.db4o.browser.gui.dialogs.*;
 import com.db4o.browser.gui.views.*;
-import com.db4o.browser.model.*;
-import com.db4o.browser.model.nodes.*;
+import com.db4o.objectmanager.model.nodes.*;
+import com.db4o.objectmanager.model.IGraphIterator;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.BrowserCore;
+import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.db4o.browser.prefs.PreferencesCore;
 import com.db4o.browser.prefs.RecentlyOpenedPreferences;
 import com.db4o.reflect.*;
@@ -184,7 +187,7 @@ public class BrowserTabController implements IBrowserController {
     
 
     /* (non-Javadoc)
-	 * @see com.db4o.browser.gui.controllers.IBrowserController#open(com.db4o.browser.model.IGraphIterator)
+	 * @see com.db4o.browser.gui.controllers.IBrowserController#ocom.db4o.objectmanager.model.IGraphIteratorator)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
         this.input = input;

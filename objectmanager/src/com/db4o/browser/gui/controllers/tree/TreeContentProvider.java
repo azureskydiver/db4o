@@ -6,10 +6,9 @@ package com.db4o.browser.gui.controllers.tree;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.nodes.IModelNode;
-import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIterator;
+import com.db4o.objectmanager.model.nodes.IModelNode;
 
 /**
  * TreeContentProvider.  The content provider for the object browser tree view.

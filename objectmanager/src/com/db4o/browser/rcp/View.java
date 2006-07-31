@@ -5,7 +5,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.part.ViewPart;
 
 import com.db4o.browser.gui.standalone.StandaloneBrowser;
-import com.db4o.browser.model.BrowserCore;
+import com.db4o.objectmanager.model.BrowserCore;
 
 public class View extends ViewPart {
 	public static final String ID = "com.db4o.browser.rcp.view";

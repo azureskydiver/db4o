@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIterator;
 
 public class SearchController implements IBrowserController {
 

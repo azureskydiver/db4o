@@ -7,9 +7,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import com.db4o.browser.gui.views.ISelectionSource;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.IGraphIteratorSelectionListener;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIterator;
+import com.db4o.objectmanager.model.IGraphIteratorSelectionListener;
 
 /**
  * NavigationController.   Manages the forward and back buttons in the UI.
@@ -67,7 +67,7 @@ public class NavigationController implements IBrowserController {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator, com.db4o.browser.model.GraphPosition)
+	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.objectmanager.model.IGraphIterator, com.db4o.objectmanager.model.GraphPosition)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
 		if (model != null) {

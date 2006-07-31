@@ -10,10 +10,10 @@ import org.eclipse.ve.sweet.CannotSaveException;
 import com.db4o.ObjectSet;
 import com.db4o.browser.gui.controllers.BrowserTabController;
 import com.db4o.browser.gui.controllers.QueryController;
-import com.db4o.browser.model.BrowserCore;
-import com.db4o.browser.model.IDatabase;
-import com.db4o.browser.model.ObjectSetGraphIterator;
-import com.db4o.browser.query.model.QueryBuilderModel;
+import com.db4o.objectmanager.model.BrowserCore;
+import com.db4o.objectmanager.model.IDatabase;
+import com.db4o.objectmanager.model.ObjectSetGraphIterator;
+import com.db4o.objectmanager.model.query.QueryBuilderModel;
 import com.db4o.browser.query.view.QueryBrowserPane;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
@@ -32,7 +32,7 @@ public class QueryTabController extends BrowserTabController {
     private BrowserTabController databaseBrowserController;
     private IDatabase database; 
     
-    private QueryBuilderModel queryModel;
+    private com.db4o.objectmanager.model.query.QueryBuilderModel queryModel;
     private QueryBuilderPaneController queryController;
     
     public QueryTabController(QueryController queryController, CTabFolder folder, QueryBrowserPane ui, ReflectClass clazz) {

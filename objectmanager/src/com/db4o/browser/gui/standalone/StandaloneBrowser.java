@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ve.sweet.hinthandler.*;
 
 import com.db4o.*;
+import com.db4o.objectmanager.model.*;
 import com.db4o.browser.gui.controllers.*;
 import com.db4o.browser.gui.dialogs.*;
 import com.db4o.browser.gui.views.*;
-import com.db4o.browser.model.*;
 import com.db4o.browser.prefs.*;
 import com.swtworkbench.community.xswt.*;
 import com.swtworkbench.community.xswt.metalogger.*;

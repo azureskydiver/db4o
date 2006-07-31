@@ -9,8 +9,7 @@ import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
-import com.db4o.browser.query.model.FieldConstraint;
-import com.db4o.browser.query.model.RelationalOperator;
+import com.db4o.objectmanager.model.query.FieldConstraint;
 
 /**
  * FieldConstraintRelationalOperatorFieldController.
@@ -29,8 +28,8 @@ public class FieldConstraintRelationalOperatorFieldController implements IFieldV
         this.ui = ui;
         this.constraint = constraint;
         
-        for (int i = 0; i < RelationalOperator.OPERATORS.length; i++) {
-            ui.add(RelationalOperator.OPERATORS[i].name());
+        for (int i = 0; i < com.db4o.objectmanager.model.query.RelationalOperator.OPERATORS.length; i++) {
+            ui.add(com.db4o.objectmanager.model.query.RelationalOperator.OPERATORS[i].name());
         }
         ui.select(0);
     }
@@ -53,7 +52,7 @@ public class FieldConstraintRelationalOperatorFieldController implements IFieldV
     }
 
     public void save() throws CannotSaveException {
-        constraint.relation = RelationalOperator.OPERATORS[ui.getSelectionIndex()];
+        constraint.relation = com.db4o.objectmanager.model.query.RelationalOperator.OPERATORS[ui.getSelectionIndex()];
     }
 
     public String validate() {

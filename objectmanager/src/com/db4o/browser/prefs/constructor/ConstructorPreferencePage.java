@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
-import com.db4o.browser.model.BrowserCore;
+import com.db4o.objectmanager.model.BrowserCore;
 import com.db4o.browser.prefs.PreferencesCore;
 import com.swtworkbench.community.xswt.XSWT;
 import com.swtworkbench.community.xswt.metalogger.Logger;
