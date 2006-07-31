@@ -76,7 +76,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 		i_systemTrans = i_trans;
 	}
 	
-	long currentVersion(){
+	public long currentVersion(){
 	    return 0;
 	}
     
@@ -130,6 +130,10 @@ public class YapObjectCarrier extends YapMemoryFile {
 	boolean stateMessages(){
 		return false; // overridden to do nothing in YapObjectCarrier
 	}
+    
+    protected void storeTimeStampId() {
+        // do nothing
+    }
 	
 	void write(boolean shuttingDown) {
 		checkNeededUpdates();

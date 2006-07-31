@@ -99,17 +99,13 @@ public class ReplicationImpl implements ReplicationProcess {
         
                 endReplication();
         
-        		long versionA = _peerA.currentVersion() - 1;
-        		long versionB = _peerB.currentVersion() - 1;
+        		long versionA = _peerA.currentVersion();
+        		long versionB = _peerB.currentVersion();
         
-        		_record._version = versionB;
-        
-        		if (versionA > versionB) {
-        			_record._version = versionA;
-        			_peerB.raiseVersion(_record._version + 1);
-        		} else if (versionB > versionA) {
-        			_peerA.raiseVersion(_record._version + 1);
-        		}
+        		_record._version = (versionA > versionB) ? versionA :versionB;
+                
+                _peerA.raiseVersion(_record._version + 1);
+                _peerB.raiseVersion(_record._version + 1);
         
         		_record.store(_peerA);
         		_record.store(_peerB);

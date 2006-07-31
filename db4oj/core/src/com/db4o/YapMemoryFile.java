@@ -71,7 +71,7 @@ public class YapMemoryFile extends YapFile {
         i_closed = true;
     }
 
-    long fileLength() {
+    public long fileLength() {
         return i_length;
     }
 

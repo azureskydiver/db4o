@@ -20,6 +20,7 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
                 fixture(),
                 new Class[] {
                     OldHeaderTest.class,
+                    SimpleTimeStampIdTestCase.class
                     }).build();
     }
 }

@@ -17,7 +17,7 @@ class YapFieldVersion extends YapFieldVirtual {
     }
     
     public void addFieldIndex(MarshallerFamily mf, YapWriter writer, boolean isnew) {
-        YLong.writeLong(writer.getStream().bootRecord().nextVersion(), writer);
+        YLong.writeLong(writer.getStream().generateTimeStampId(), writer);
     }
     
     public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
@@ -30,15 +30,8 @@ class YapFieldVersion extends YapFieldVirtual {
 
     void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
         YapStream stream = a_bytes.getStream().i_parent;
-        PBootRecord br = stream.bootRecord();
         if (!a_migrating) {
-            if (br != null) {
-                a_yapObject.i_virtualAttributes.i_version = br.nextVersion();
-            }
-        }else{
-            if(br != null){
-                br.setDirty();
-            }
+            a_yapObject.i_virtualAttributes.i_version = stream.generateTimeStampId();
         }
         if(a_yapObject.i_virtualAttributes == null){
             YLong.writeLong(0, a_bytes);

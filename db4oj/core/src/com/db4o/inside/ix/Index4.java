@@ -65,25 +65,6 @@ public class Index4 {
         return _globalIndexTransaction;
     }
     
-// Debug index tree depth    
-    
-//    void debug(IxFieldTransaction a_ft){
-//        System.out.println("+++  IxField commit debug begin");
-//        Tree t1 = i_globalIndex.getRoot();
-//        if (t1 != null){
-//            System.out.println("i_globalIndex");
-//            t1.debugDepth();
-//        }
-//        if(a_ft != null){
-//            Tree t2 = a_ft.getRoot();
-//            if (t2 != null){
-//                System.out.println("a_ft");
-//                t2.debugDepth();
-//            }
-//        }
-//        System.out.println("---  IxField commit debug complete");
-//    }
-    
     private int[] freeForMetaIndex(){
         return new int[] {
             _metaIndex.indexAddress,

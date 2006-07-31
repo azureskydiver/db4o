@@ -45,8 +45,8 @@ public abstract class YapFile extends YapStream {
         super(a_parent);
     }
     
-    public void blockSize(int blockSize){
-        // do nothing, overwridden in YapRandomAccessFile 
+    public void blockSize(int blockSize, long fileLength){
+        i_writeAt = blocksFor(fileLength);
     }
     
     public PBootRecord bootRecord(){
@@ -78,8 +78,7 @@ public abstract class YapFile extends YapStream {
             _fmChecker = new FreespaceManagerRam(this);
         }
         
-        blockSize(i_config.blockSize());
-        i_writeAt = blocksFor(HEADER_LENGTH);
+        blockSize(i_config.blockSize(), HEADER_LENGTH);
         
         _fileHeader = FileHeader0.forNewFile(this);
         
@@ -94,8 +93,10 @@ public abstract class YapFile extends YapStream {
         
     }
     
-    long currentVersion() {
-        return _bootRecord.currentVersion();
+    public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
+    
+    public long currentVersion() {
+        return _timeStampIdGenerator.lastTimeStampId();
     }
 
     void initNewClassCollection() {
@@ -149,7 +150,7 @@ public abstract class YapFile extends YapStream {
         return false;
     }
 
-    abstract long fileLength();
+    public abstract long fileLength();
 
     abstract String fileName();
     
@@ -362,7 +363,7 @@ public abstract class YapFile extends YapStream {
         _bootRecord.i_stream = this;
         _bootRecord.init(i_config);
         setInternal(i_systemTrans, _bootRecord, false);
-        _fileHeader.setBootRecordID(getID1(i_systemTrans, _bootRecord));
+        _fileHeader.setBootRecord(_bootRecord, getID1(i_systemTrans, _bootRecord));
         showInternalClasses(false);
     }
 
@@ -412,7 +413,9 @@ public abstract class YapFile extends YapStream {
     }
 
     public void raiseVersion(long a_minimumVersion) {
-        _bootRecord.raiseVersion(a_minimumVersion);
+        synchronized (lock()) {
+            _timeStampIdGenerator.setMinimumNext(a_minimumVersion);
+        }
     }
 
     public YapWriter readWriterByID(Transaction a_ta, int a_id) {
@@ -474,20 +477,14 @@ public abstract class YapFile extends YapStream {
         return null;        
         
     }
+    
+    
 
     void readThis() {
         
-        YapReader reader = new YapReader(YapStreamBase.HEADER_LENGTH); 
-        reader.read(this, 0, 0);
-        
         _fileHeader = new FileHeader0();
-        _fileHeader.read0(reader);
+        _fileHeader.read0(this);
         
-        blockSize(_fileHeader.blockSize());
-        
-        i_writeAt = blocksFor(fileLength());
-        
-        _fileHeader.readConfigBlock(this, reader);
         
         i_classCollection.setID(_fileHeader.classCollectionID());
         i_classCollection.read(i_systemTrans);
@@ -654,7 +651,12 @@ public abstract class YapFile extends YapStream {
         i_isServer = flag;
     }
 
-    public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
+    protected void storeTimeStampId() {
+        if(_timeStampIdGenerator.isDirty()){
+            _fileHeader.storeTimeStampId(_timeStampIdGenerator.lastTimeStampId());
+            _timeStampIdGenerator.setClean();
+        }
+    }
 
     public abstract void syncFiles();
 
@@ -689,7 +691,16 @@ public abstract class YapFile extends YapStream {
             dirty.notCachedDirty();
         }
         i_dirty.clear();
+        
         writeBootRecord();
+        
+        storeTimeStampId();
+
+        
+        // TODO: This is where the dynamic header information
+        //       should be stored
+        
+        
     }
     
     public final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
@@ -783,5 +794,10 @@ public abstract class YapFile extends YapStream {
         }
         i_handlers.encrypt(a_bytes);
         a_bytes.write();
+    }
+
+    public void setNextTimeStampId(long val) {
+        _timeStampIdGenerator.setMinimumNext(val);
+        _timeStampIdGenerator.setClean();
     }
 }

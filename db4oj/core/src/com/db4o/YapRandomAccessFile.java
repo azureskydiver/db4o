@@ -74,11 +74,12 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    public void blockSize(int blockSize) {
+    public void blockSize(int blockSize, long fileLength) {
         i_file.blockSize(blockSize);
         if (i_timerFile != null) {
             i_timerFile.blockSize(blockSize);
         }
+        super.blockSize(blockSize, fileLength);
     }
 
     public byte blockSize() {
@@ -196,7 +197,7 @@ public class YapRandomAccessFile extends YapFile {
         i_file = null;
     }
 
-    long fileLength() {
+    public long fileLength() {
         try {
             return i_file.getLength();
         } catch (Exception e) {
