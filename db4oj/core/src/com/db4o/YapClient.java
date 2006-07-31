@@ -241,7 +241,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return true;
 	}
 
-	long currentVersion() {
+	public long currentVersion() {
 		writeMsg(Msg.CURRENT_VERSION);
 		return ((MsgD) expectedResponse(Msg.ID_LIST)).readLong();
 	}
