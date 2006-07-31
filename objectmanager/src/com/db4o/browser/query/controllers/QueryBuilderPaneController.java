@@ -20,9 +20,6 @@ import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 
 import com.db4o.binding.browser.FieldConstraintRelationalOperatorFieldController;
 import com.db4o.binding.browser.FieldConstraintValueFieldController;
-import com.db4o.browser.query.model.FieldConstraint;
-import com.db4o.browser.query.model.QueryBuilderModel;
-import com.db4o.browser.query.model.QueryPrototypeInstance;
 import com.db4o.browser.query.view.IConstraintRow;
 import com.db4o.browser.query.view.PrototypeInstanceEditor;
 import com.db4o.browser.query.view.QueryBrowserPane;
@@ -31,18 +28,18 @@ import com.db4o.reflect.ReflectField;
 
 public class QueryBuilderPaneController {
 
-    private QueryBuilderModel queryModel;
+    private com.db4o.objectmanager.model.query.QueryBuilderModel queryModel;
     private QueryBrowserPane queryView;
     
     private int numEditors = 0;
     
     private static final int SPACING=8;
 
-    public QueryBuilderPaneController(QueryBuilderModel queryModel, QueryBrowserPane queryView) {
+    public QueryBuilderPaneController(com.db4o.objectmanager.model.query.QueryBuilderModel queryModel, QueryBrowserPane queryView) {
         this.queryModel = queryModel;
         this.queryView = queryView;
         
-        QueryPrototypeInstance root = queryModel.getRootInstance();
+        com.db4o.objectmanager.model.query.QueryPrototypeInstance root = queryModel.getRootInstance();
         buildEditor(root, null);
         layout(queryView);
     }
@@ -62,7 +59,7 @@ public class QueryBuilderPaneController {
     
     private LinkedList controllers = new LinkedList();
     
-    private void buildEditor(QueryPrototypeInstance root, String fieldName) {
+    private void buildEditor(com.db4o.objectmanager.model.query.QueryPrototypeInstance root, String fieldName) {
         class EditorRow {
             public ReflectField field;
             public IConstraintRow rowEditor;
@@ -94,7 +91,7 @@ public class QueryBuilderPaneController {
         ReflectField[] fields = root.getFields();
         
         for (int i = 0; i < fields.length; i++) {
-            FieldConstraint field = root.getConstraint(fields[i]);
+            com.db4o.objectmanager.model.query.FieldConstraint field = root.getConstraint(fields[i]);
             
             /*
              * If we've seen this field name before, it's a refactored field;
@@ -144,11 +141,11 @@ public class QueryBuilderPaneController {
     
     private class ExpandEditor implements SelectionListener {
 
-        private FieldConstraint field;
+        private com.db4o.objectmanager.model.query.FieldConstraint field;
         private PrototypeInstanceEditor editor;
         private IConstraintRow row;
 
-        public ExpandEditor(FieldConstraint field, PrototypeInstanceEditor editor, IConstraintRow row) {
+        public ExpandEditor(com.db4o.objectmanager.model.query.FieldConstraint field, PrototypeInstanceEditor editor, IConstraintRow row) {
             this.field = field;
             this.editor = editor;
             this.row = row;

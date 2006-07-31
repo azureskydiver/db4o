@@ -6,8 +6,8 @@ package com.db4o.browser.gui.controllers.tree;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import com.db4o.browser.gui.standalone.StandaloneBrowser;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.nodes.IModelNode;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**

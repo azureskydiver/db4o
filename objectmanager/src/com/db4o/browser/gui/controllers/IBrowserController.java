@@ -3,8 +3,8 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIterator;
 
 /**
  * IBrowserController.  An interface for all controller objects in the 

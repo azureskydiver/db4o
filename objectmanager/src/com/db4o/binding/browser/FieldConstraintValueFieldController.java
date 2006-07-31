@@ -22,8 +22,8 @@ import org.eclipse.ve.sweet.validator.ValidatorRegistry;
 
 import com.db4o.browser.gui.standalone.StandaloneBrowser;
 import com.db4o.browser.gui.standalone.StatusBar;
-import com.db4o.browser.model.IDatabase;
-import com.db4o.browser.query.model.FieldConstraint;
+import com.db4o.objectmanager.model.IDatabase;
+import com.db4o.objectmanager.model.query.FieldConstraint;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 
@@ -45,7 +45,7 @@ public class FieldConstraintValueFieldController implements IFieldViewer {
     private IValidator validator;
     private DelegatingHintHandler hintHandler = new DelegatingHintHandler();
 
-    public FieldConstraintValueFieldController(Text ui, FieldConstraint constraint, IDatabase database) {
+    public FieldConstraintValueFieldController(Text ui, com.db4o.objectmanager.model.query.FieldConstraint constraint, IDatabase database) {
         this.database = database;
         this.reflector = database.reflector();
         this.ui = ui;

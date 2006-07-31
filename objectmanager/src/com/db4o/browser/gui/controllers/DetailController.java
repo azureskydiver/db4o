@@ -13,8 +13,9 @@ import org.eclipse.ve.sweet.controllers.*;
 import org.eclipse.ve.sweet.objectviewer.*;
 
 import com.db4o.browser.gui.views.*;
-import com.db4o.browser.model.*;
-import com.db4o.browser.model.nodes.*;
+import com.db4o.objectmanager.model.nodes.*;
+import com.db4o.objectmanager.model.*;
+import com.db4o.binding.dataeditors.db4o.Db4oObjectEditorFactory;
 import com.swtworkbench.community.xswt.metalogger.*;
 
 /**
@@ -105,7 +106,7 @@ public class DetailController implements IBrowserController {
 	};
 
 	/* (non-Javadoc)
-	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator)
+	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInputcom.db4o.objectmanager.model.IGraphIteratorr)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
         disposeChildren(parentComposite);
@@ -152,7 +153,8 @@ public class DetailController implements IBrowserController {
 
         // Create an ObjectViewer on the parent if it can be edited
         if (parent.getEditValue() != null) {
-            objectViewer = parent.getDatabase().construct(parent.getEditValue());
+            IDatabase db = parent.getDatabase();
+            objectViewer = construct(db, parent.getEditValue());
             this.parent.getEditStateController().addObjectViewer(objectViewer);
             objectViewer.addObjectListener(RefreshService.getDefault());
         }
@@ -206,7 +208,28 @@ public class DetailController implements IBrowserController {
         parentComposite.layout(true);
     }
 
-	private void discardObjectViewer() {
+
+    private IObjectViewer construct(IDatabase db, Object editValue) {
+        IObjectViewer editor = getEditorFactory(db).construct();
+        editor.setInput(editValue);
+        return editor;
+    }
+    IObjectViewerFactory editorFactory;
+    private IObjectViewerFactory getEditorFactory(IDatabase db) {
+        // this cast isn't very good, but just doing it for refactoring to start on OM2 since Db4oDatabase is the only implementation of IDatabase right now
+        Db4oDatabase db4oDatabase = (Db4oDatabase) db;
+        if(editorFactory == null){
+            editorFactory = new Db4oObjectEditorFactory(db4oDatabase.getObjectContainer());
+        }
+        if(editorFactory instanceof Db4oObjectEditorFactory){
+            // just going to set it here each time to make sure it's fresh
+            Db4oObjectEditorFactory editorFactory2 = (Db4oObjectEditorFactory) editorFactory;
+            editorFactory2.setDatabase(db4oDatabase.getObjectContainer());
+        }
+        return editorFactory;
+    }
+
+    private void discardObjectViewer() {
 		if (objectViewer != null) {
         	objectViewer.removeObjectListener(RefreshService.getDefault());
 	        this.parent.getEditStateController().removeObjectViewer(objectViewer);

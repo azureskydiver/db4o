@@ -20,4 +20,7 @@ public class Db4oObjectEditorFactory implements IObjectViewerFactory {
         return new Db4oObject(database,this);
     }
 
+    public void setDatabase(ObjectContainer database) {
+        this.database = database;
+    }
 }

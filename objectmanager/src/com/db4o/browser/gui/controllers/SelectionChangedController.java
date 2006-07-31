@@ -7,9 +7,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import com.db4o.browser.gui.controllers.tree.TreeSelectionChangedController;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.IGraphIteratorSelectionListener;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIterator;
+import com.db4o.objectmanager.model.IGraphIteratorSelectionListener;
 
 /**
  * SelectionChangedController.  This controller is responsible for notifying anyone who needs to know
@@ -24,7 +24,7 @@ public class SelectionChangedController implements IGraphIteratorSelectionListen
 
 
     /* (non-Javadoc)
-     * @see com.db4o.browser.model.IGraphIteratorSelectionListener#canSelectionChange()
+     * @seecom.db4o.objectmanager.model.IGraphIteratorSelectionListenerr#canSelectionChange()
      */
     public boolean canSelectionChange() {
         if (!treeSelectionChangedController.canSelectionChange()) {
@@ -34,7 +34,7 @@ public class SelectionChangedController implements IGraphIteratorSelectionListen
     }
 
 	/* (non-Javadoc)
-	 * @see com.db4o.browser.model.IGraphIterator.IListener#selectionChanged()
+	 * @seecom.db4o.objectmanager.model.IGraphIteratorr.IListener#selectionChanged()
 	 */
 	public void selectionChanged() {
 		IGraphIterator model = (IGraphIterator) treeViewer.getInput();

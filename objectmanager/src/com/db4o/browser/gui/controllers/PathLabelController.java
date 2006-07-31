@@ -4,9 +4,9 @@
 package com.db4o.browser.gui.controllers;
 
 import com.db4o.browser.gui.views.ITextProperty;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.IGraphIteratorSelectionListener;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIteratorSelectionListener;
+import com.db4o.objectmanager.model.IGraphIterator;
 
 /**
  * PathLabelController.  A controller that keeps the path label current in
@@ -31,7 +31,7 @@ public class PathLabelController implements IBrowserController {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator, com.db4o.browser.model.GraphPosition)
+	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInputcom.db4o.objectmanager.model.IGraphIteratorr,com.db4o.objectmanager.model.GraphPositionn)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
 		if (model != null) {

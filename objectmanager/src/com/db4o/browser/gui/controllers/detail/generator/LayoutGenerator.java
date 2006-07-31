@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 import org.apache.oro.text.perl.Perl5Util;
 
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.objectmanager.model.GraphPosition;
+import com.db4o.objectmanager.model.IGraphIterator;
+import com.db4o.objectmanager.model.nodes.IModelNode;
 
 /**
  * LayoutGenerator.
