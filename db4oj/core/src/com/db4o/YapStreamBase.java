@@ -401,7 +401,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_trans = new Transaction(_this, i_systemTrans);
     }
 
-    abstract long currentVersion();
+    public abstract long currentVersion();
     
     boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
         return a_yapClass.init(_this, a_superYapClass, a_class, false);
