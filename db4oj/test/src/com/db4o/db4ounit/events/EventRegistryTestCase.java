@@ -1,6 +1,6 @@
 /* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.db4ounit;
+package com.db4o.db4ounit.events;
 
 import com.db4o.events.*;
 import com.db4o.query.Query;

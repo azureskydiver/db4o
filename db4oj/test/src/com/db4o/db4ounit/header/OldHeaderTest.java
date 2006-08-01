@@ -2,27 +2,20 @@
 
 package com.db4o.db4ounit.header;
 
-import com.db4o.*;
-import com.db4o.test.lib.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.test.lib.File4;
 
-import db4ounit.*;
-import db4ounit.db4o.*;
+import db4ounit.Assert;
+import db4ounit.TestCase;
 
-
-public class OldHeaderTest extends Db4oTestCase{
+public class OldHeaderTest implements TestCase {
     
     private static final String ORIGINAL_FILE = "test/db4oVersions/db4o_5.5.2";
     
-    private static final String DB_FILE = "test/db4oVersions/db4o_5.5.2.yap";
+    private static final String DB_FILE = "test/db4oVersions/db4o_5.5.2.yap";    
     
-    
-    public void setUp() throws Exception {
-        super.setUp();
-        
-    }
-    
-    public void test(){
-        
+    public void test() {
         
         new File4(ORIGINAL_FILE).copy(DB_FILE);
         
@@ -32,7 +25,5 @@ public class OldHeaderTest extends Db4oTestCase{
         
         oc.close();
     }
-    
-    
 
 }

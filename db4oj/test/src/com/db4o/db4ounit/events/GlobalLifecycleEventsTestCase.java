@@ -1,13 +1,25 @@
 /* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.db4ounit;
+package com.db4o.db4ounit.events;
 
-import com.db4o.events.*;
+import com.db4o.events.Event4;
+import com.db4o.events.EventRegistry;
+import com.db4o.events.EventRegistryFactory;
+import com.db4o.events.ObjectEventArgs;
 
 import db4ounit.Assert;
 import db4ounit.db4o.Db4oTestCase;
 
 public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
+	
+	public static final class Item {
+
+		public int id;
+
+		public Item(int id) {
+			this.id = id;
+		}
+	}
 	
 	private EventRecorder _recorder;
 	
