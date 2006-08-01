@@ -2,7 +2,6 @@ package db4ounit;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Enumeration;
 
 public class TestResult extends Printable {
 	private TestFailureCollection _failures = new TestFailureCollection();
@@ -31,16 +30,7 @@ public class TestResult extends Printable {
 			return;
 		}
 		writer.write("RED (" + _failures.size() +" out of " + _testCount + " tests failed)\n");				
-		int index = 1;
-		Enumeration iter = _failures.iterator();
-		while (iter.hasMoreElements()) {
-			writer.write("\n");
-			writer.write(String.valueOf(index));
-			writer.write(") ");
-			((Printable)iter.nextElement()).print(writer);
-			writer.write("\n");
-			++index;
-		}
+		_failures.print(writer);
 	}
 
 	public int assertions() {
