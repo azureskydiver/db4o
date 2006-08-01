@@ -1,9 +1,8 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.db4ounit.foundation;
+package com.db4o.db4ounit.tools;
 
 import db4ounit.Assert;
-
 
 public class MemoryStatsTestCase implements db4ounit.TestCase {
 	
@@ -26,7 +25,7 @@ public class MemoryStatsTestCase implements db4ounit.TestCase {
 	}
 
 	private long usedMemory() {
-		return com.db4o.foundation.MemoryStats.usedMemory();
+		return com.db4o.tools.MemoryStats.usedMemory();
 	}
 
 }

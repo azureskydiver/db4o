@@ -23,6 +23,7 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
 				fixture(),
 				new Class[] {
 					QueryStatsTestCase.class,
+					MemoryStatsTestCase.class,
 					}).build();
 	}
 }
