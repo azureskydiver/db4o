@@ -3,7 +3,6 @@
 package com.db4o.db4ounit.tools;
 
 import com.db4o.ObjectSet;
-import com.db4o.db4ounit.events.EventRecorder;
 import com.db4o.query.Query;
 import com.db4o.tools.QueryStats;
 
