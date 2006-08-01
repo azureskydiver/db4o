@@ -18,6 +18,11 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 	public Db4oFixture fixture() {
 		return _fixture;
 	}
+    
+    protected void reopen() throws Exception{
+        fixture().close();
+        fixture().open();
+    }
 	
 	public void setUp() throws Exception {
         _fixture.clean();

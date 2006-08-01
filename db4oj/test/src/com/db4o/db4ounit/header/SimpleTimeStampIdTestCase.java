@@ -44,8 +44,7 @@ public class SimpleTimeStampIdTestCase extends Db4oTestCase{
         
         Assert.isTrue(((YapFile)db()).currentVersion() >= version);
         
-        fixture().close();
-        fixture().open();
+        reopen();
         
         STSItem item2 = new STSItem("two");
         db().set(item2);

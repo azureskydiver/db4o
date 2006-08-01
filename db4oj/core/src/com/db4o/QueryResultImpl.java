@@ -28,7 +28,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	final Object activate(Object obj){
 		YapStream stream = i_trans.i_stream;
 		stream.beginEndActivation();
-		stream.activate2(i_trans, obj, stream.i_config.activationDepth());
+		stream.activate2(i_trans, obj, stream.configImpl().activationDepth());
 		stream.beginEndActivation();
 		return obj;
 	}

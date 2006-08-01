@@ -73,7 +73,6 @@ public final class YapHandlers {
     ReflectClass ICLASS_UNVERSIONED;
     ReflectClass ICLASS_OBJECT;
     ReflectClass ICLASS_OBJECTCONTAINER;
-    ReflectClass ICLASS_PBOOTRECORD;
 	ReflectClass ICLASS_STATICCLASS;
 	ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
@@ -84,7 +83,7 @@ public final class YapHandlers {
     	a_stream.i_handlers = this;
         
         _reflector = reflector;
-        _diagnosticProcessor = a_stream.i_config.diagnosticProcessor();
+        _diagnosticProcessor = a_stream.configImpl().diagnosticProcessor();
     	
     	initClassReflectors(reflector);
         
@@ -196,7 +195,7 @@ public final class YapHandlers {
             }
         }
         
-        if (! _masterStream.i_config.testConstructors()) {
+        if (! _masterStream.configImpl().testConstructors()) {
             return true;
         }
         
@@ -306,7 +305,7 @@ public final class YapHandlers {
         i_encrypt = false;
         i_encryptor = null;
         i_lastEncryptorByte = 0;
-        _masterStream.i_config.oldEncryptionOff();
+        _masterStream.configImpl().oldEncryptionOff();
     }
     
     final TypeHandler4 getHandler(int a_index) {
@@ -349,7 +348,6 @@ public final class YapHandlers {
 		ICLASS_OBJECT = reflector.forClass(YapConst.CLASS_OBJECT);
 		ICLASS_OBJECTCONTAINER = reflector
 				.forClass(YapConst.CLASS_OBJECTCONTAINER);
-		ICLASS_PBOOTRECORD = reflector.forClass(YapConst.CLASS_PBOOTRECORD);
 		ICLASS_STATICCLASS = reflector.forClass(YapConst.CLASS_STATICCLASS);
 		ICLASS_STRING = reflector.forClass(String.class);
 		ICLASS_TRANSIENTCLASS = reflector

@@ -55,7 +55,7 @@ public class YapClient extends YapStream implements ExtClient {
 	public YapClient(String fakeServerFile) {
 		this();
 		synchronized (lock()) {
-			_singleThreaded = i_config.singleThreadedClient();
+			_singleThreaded = configImpl().singleThreadedClient();
 			if (Debug.fakeServer) {
 				Debug.serverStream = (YapFile) Db4o.openFile(fakeServerFile);
 				Debug.clientStream = this;
@@ -75,7 +75,7 @@ public class YapClient extends YapStream implements ExtClient {
 			throws IOException {
 		this();
 		synchronized (lock()) {
-			_singleThreaded = i_config.singleThreadedClient();
+			_singleThreaded = configImpl().singleThreadedClient();
 
 			// TODO: Experiment with packetsize and noDelay
 			// socket.setSendBufferSize(100);
@@ -126,11 +126,6 @@ public class YapClient extends YapStream implements ExtClient {
     public byte blockSize() {
         return _blockSize;
     }
-
-	public PBootRecord bootRecord() {
-		// not available on clients
-		return null;
-	}
 
 	boolean close2() {
 		if (null != _readerThread && _readerThread.isClosed()) {
@@ -216,7 +211,7 @@ public class YapClient extends YapStream implements ExtClient {
 			return false;
 		}
 		if (resp.equals(Msg.FAILED)) {
-			if (i_config.exceptionsOnNotStorable()) {
+			if (configImpl().exceptionsOnNotStorable()) {
 				throw new ObjectNotStorableException(a_class);
 			}
 			return false;
@@ -319,7 +314,7 @@ public class YapClient extends YapStream implements ExtClient {
 					}
 
 					throwOnClosed();
-					messageQueueLock.snooze(i_config.timeoutClientSocket());
+					messageQueueLock.snooze(configImpl().timeoutClientSocket());
 					throwOnClosed();
 					return retrieveMessage();
 				}

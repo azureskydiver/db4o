@@ -3,7 +3,6 @@
 package com.db4o;
 
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 
 /**
  * database boot record. Responsible for ID generation, version generation and
@@ -28,8 +27,6 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     public MetaIndex          i_uuidMetaIndex;
 
-    private transient TimeStampIdGenerator _versionTimeGenerator;
-
 
     public PBootRecord(){
     }
@@ -38,37 +35,12 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         return Integer.MAX_VALUE;
     }
 
-    private void createVersionTimeGenerator(){
-        if(_versionTimeGenerator == null){
-            _versionTimeGenerator = new TimeStampIdGenerator(i_versionGenerator);
-        }
-    }
-
-    void init(Config4Impl a_config) {
-        i_db = Db4oDatabase.generate();
+    public void init(Config4Impl a_config) {
         i_uuidMetaIndex = new MetaIndex();
-        initConfig(a_config);
         i_dirty = true;
     }
 
-    public boolean initConfig(Config4Impl a_config) {
-
-        boolean modified = false;
-
-        if(i_generateVersionNumbers != a_config.generateVersionNumbers()){
-            i_generateVersionNumbers = a_config.generateVersionNumbers();
-            modified = true;
-        }
-
-        if(i_generateUUIDs != a_config.generateUUIDs()){
-            i_generateUUIDs = a_config.generateUUIDs();
-            modified = true;
-        }
-
-        return modified;
-    }
-
-    MetaIndex getUUIDMetaIndex(){
+    public MetaIndex getUUIDMetaIndex(){
 
         // TODO: This is legacy code for old database files.
         // Newer versions create i_uuidMetaIndex when PBootRecord
@@ -96,12 +68,6 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
             i_stream.showInternalClasses(false);
         }
         i_dirty = false;
-    }
-
-    public void storeTimeStampId(long val) {
-        i_versionGenerator = val;
-        setDirty();
-        store(2);
     }
 
 }

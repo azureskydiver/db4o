@@ -19,12 +19,8 @@ public class ChangeIdentity {
         
         Db4oDatabase db = oc.identity();
         byte[] oldSignature = db.getSignature();
-        
-        YapFile yf = (YapFile)oc;
-        PBootRecord bootRecord = yf.bootRecord();
-        bootRecord.i_db = Db4oDatabase.generate();
-        bootRecord.setDirty();
-        bootRecord.store(1);
+
+        ((YapFile)oc).generateNewIdentity();
         
         Test.reOpen();
         

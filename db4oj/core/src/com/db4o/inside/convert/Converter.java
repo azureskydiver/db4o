@@ -52,7 +52,7 @@ public class Converter {
             }
         }
         fileHeader.converterVersion(VERSION);
-        fileHeader.writeVariablePart();
+        fileHeader.writeVariablePart1();
     }
 
 }
