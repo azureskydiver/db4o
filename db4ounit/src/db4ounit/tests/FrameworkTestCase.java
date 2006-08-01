@@ -40,7 +40,9 @@ public class FrameworkTestCase implements TestCase {
 	public static void runTestAndExpect(Test test,int expFailures, boolean checkException) {
 		TestResult result = new TestResult();
 		test.run(result);
-		Assert.areEqual(expFailures, result.failures().size());
+		if (expFailures != result.failures().size()) {
+			Assert.fail(result.failures().toString());
+		}
 		if (checkException) {
 			for(Enumeration iter=result.failures().iterator(); iter.hasMoreElements();) {
 				TestFailure failure = (TestFailure) iter.nextElement();
