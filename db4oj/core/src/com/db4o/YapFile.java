@@ -770,4 +770,11 @@ public abstract class YapFile extends YapStream {
         _timeStampIdGenerator.setClean();
     }
 
+    public MetaIndex getUUIDMetaIndex() {
+        if(_fileHeader == null){
+            return null;
+        }
+        return _fileHeader.getUUIDMetaIndex();
+    }
+
 }
