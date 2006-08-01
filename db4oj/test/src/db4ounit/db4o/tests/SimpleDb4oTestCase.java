@@ -26,8 +26,8 @@ public class SimpleDb4oTestCase extends Db4oTestCase {
 	
 	public void testResultSize() {
 		Assert.isTrue(everythingCalledBefore(2));
-		_everythingCalled[2]=true;
-		Assert.areEqual(1,fixture().db().query(Data.class).size());
+		_everythingCalled[2] = true;
+		Assert.areEqual(1, fixture().db().get(Data.class).size());
 	}
 	
 	public boolean everythingCalled() {
