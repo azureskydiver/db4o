@@ -15,7 +15,7 @@ public class ObjectEventArgsImpl implements ObjectEventArgs {
 		_obj = obj;
 	}
 
-	public Object subject() {
+	public Object object() {
 		return _obj;
 	}
 }

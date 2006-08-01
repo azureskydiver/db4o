@@ -31,11 +31,11 @@ public class EventRegistryTestCase extends Db4oTestCase {
 		Assert.areEqual(2, recorder.size());
 		EventRecord e1 = recorder.get(0);
 		Assert.areSame(registry.queryStarted(), e1.e);
-		Assert.areSame(q, ((QueryEventArgs)e1.args).subject());
+		Assert.areSame(q, ((QueryEventArgs)e1.args).query());
 
 		EventRecord e2 = recorder.get(1);
 		Assert.areSame(registry.queryFinished(), e2.e);
-		Assert.areSame(q, ((QueryEventArgs)e2.args).subject());
+		Assert.areSame(q, ((QueryEventArgs)e2.args).query());
 
 		recorder.clear();
 
