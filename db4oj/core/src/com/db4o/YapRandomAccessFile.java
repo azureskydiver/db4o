@@ -50,7 +50,7 @@ public class YapRandomAccessFile extends YapFile {
                 Exceptions4.throwRuntimeException(61);
             }
             try {
-                i_backupFile = i_config.ioAdapter().open(path, true, i_file.getLength());
+                i_backupFile = configImpl().ioAdapter().open(path, true, i_file.getLength());
             } catch (Exception e) {
                 i_backupFile = null;
                 Exceptions4.throwRuntimeException(12, path);
@@ -211,7 +211,7 @@ public class YapRandomAccessFile extends YapFile {
 
     private void open() throws Exception {
         boolean isNew = false;
-        IoAdapter ioAdapter = i_config.ioAdapter();
+        IoAdapter ioAdapter = configImpl().ioAdapter();
         if (Deploy.debug) {
             if (Deploy.deleteFile) {
                 System.out.println("Debug option set to DELETE file.");
@@ -231,8 +231,8 @@ public class YapRandomAccessFile extends YapFile {
                 }
                 
                 try {
-                    boolean lockFile = Debug.lockFile && i_config.lockFile()
-                        && (!i_config.isReadOnly());
+                    boolean lockFile = Debug.lockFile && configImpl().lockFile()
+                        && (!configImpl().isReadOnly());
                     i_file = ioAdapter.open(fileName(), lockFile, 0);
                     if (needsLockFileThread() && Debug.lockFile) {
                         i_timerFile = ioAdapter.open(fileName(), false, 0);
@@ -244,8 +244,8 @@ public class YapRandomAccessFile extends YapFile {
                 }
                 if (isNew) {
                     configureNewFile();
-                    if (i_config.reservedStorageSpace() > 0) {
-                        reserve(i_config.reservedStorageSpace());
+                    if (configImpl().reservedStorageSpace() > 0) {
+                        reserve(configImpl().reservedStorageSpace());
                     }
                     write(false);
                     writeHeader(false);
@@ -327,6 +327,9 @@ public class YapRandomAccessFile extends YapFile {
                 return false;
             }
             
+            if(_fileHeader == null){
+                return false;
+            }
             
             // FIXME: All logic to lock file should be fully in FileHeader class
 
@@ -346,7 +349,7 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     void writeBytes(YapReader a_bytes, int address, int addressOffset) {
-        if (i_config.isReadOnly()) {
+        if (configImpl().isReadOnly()) {
             return;
         }
         if (Deploy.debug && !Deploy.flush) {
@@ -388,7 +391,7 @@ public class YapRandomAccessFile extends YapFile {
     public void writeXBytes(int a_address, int a_length) {
         if (Debug.xbytes) {
             if (Deploy.flush) {
-                if (!i_config.isReadOnly()) {
+                if (!configImpl().isReadOnly()) {
                     if(a_address > 0 && a_length > 0){
                         try {
                             if(DTrace.enabled){

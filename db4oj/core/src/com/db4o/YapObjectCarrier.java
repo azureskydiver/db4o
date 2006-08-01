@@ -28,7 +28,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 	void initialize1(){
 	    i_handlers = i_parent.i_handlers;
 		i_classCollection = i_parent.i_classCollection;
-		i_config = i_parent.i_config;
+		i_config = i_parent.configImpl();
 		i_references = new YapReferences(this);
 		initialize2();
 	}
@@ -131,10 +131,6 @@ public class YapObjectCarrier extends YapMemoryFile {
 		return false; // overridden to do nothing in YapObjectCarrier
 	}
     
-    protected void storeTimeStampId() {
-        // do nothing
-    }
-	
 	void write(boolean shuttingDown) {
 		checkNeededUpdates();
 		writeDirty();
@@ -144,9 +140,10 @@ public class YapObjectCarrier extends YapMemoryFile {
 	final void writeHeader(boolean shuttingDown) {
 	    // do nothing
 	}
-	
-    void writeBootRecord() {
-        // do nothing
+    
+    protected void writeVariableHeader(){
+        
     }
+
 
 }

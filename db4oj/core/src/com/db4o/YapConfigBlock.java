@@ -73,8 +73,8 @@ public final class YapConfigBlock implements Runnable
 	
 	public YapConfigBlock(YapFile stream){
 		_stream = stream;
-        _encoding = stream.i_config.encoding();
-        _freespaceSystem = FreespaceManager.checkType(stream.i_config.freespaceSystem());
+        _encoding = stream.configImpl().encoding();
+        _freespaceSystem = FreespaceManager.checkType(stream.configImpl().freespaceSystem());
 		_opentime = processID();
 		if(lockFile()){
 			writeHeaderLock();
@@ -129,7 +129,12 @@ public final class YapConfigBlock implements Runnable
 			// the original file format only leaves us room
 			// for an int.
 			// TODO: Fix in file format rewrite
-			if(YInt.readInt(bytes) != ((int)_opentime) ){
+            
+            int newOpenTime = YInt.readInt(bytes);
+            
+            // System.out.println("Read by " + System.identityHashCode(this) + " " + newOpenTime);
+            
+			if(newOpenTime != ((int)_opentime) ){
 				throw new DatabaseFileLockedException();
 			}
 			writeHeaderLock();
@@ -165,8 +170,8 @@ public final class YapConfigBlock implements Runnable
     
     private byte[] passwordToken() {
         byte[] pwdtoken=new byte[ENCRYPTION_PASSWORD_LENGTH];
-        String fullpwd=_stream.i_config.password();
-        if(_stream.i_config.encrypt() && fullpwd!=null) {
+        String fullpwd=_stream.configImpl().password();
+        if(_stream.configImpl().encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new YapStringIO().write(fullpwd);
                 YapWriter encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
@@ -227,8 +232,8 @@ public final class YapConfigBlock implements Runnable
         if(oldLength != LENGTH){
         	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in
         	// a readonly decorator, issue a  notification and continue?
-            if(! _stream.i_config.isReadOnly()  && ! _stream.i_config.allowVersionUpdates()){
-            	if(_stream.i_config.automaticShutDown()) {
+            if(! _stream.configImpl().isReadOnly()  && ! _stream.configImpl().allowVersionUpdates()){
+            	if(_stream.configImpl().automaticShutDown()) {
             		Platform4.removeShutDownHook(_stream, _stream.i_lock);
             	}
                 Exceptions4.throwRuntimeException(65);
@@ -395,6 +400,11 @@ public final class YapConfigBlock implements Runnable
 		if(lockFile()){
 			YapWriter writer = headerLockIO();
 			YInt.writeInt(((int)_opentime), writer);
+            
+            int intOpenTime = (int)_opentime;
+            
+            // System.out.println("Written by " + System.identityHashCode(this) + " " + intOpenTime);
+            
 			writer.write();
 		}
 	}

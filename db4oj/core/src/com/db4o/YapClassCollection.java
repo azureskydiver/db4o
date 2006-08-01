@@ -233,7 +233,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
 	}
 
 	private String resolveAlias(String name) {
-		return i_stream.i_config.resolveAlias(name);
+		return i_stream.configImpl().resolveAlias(name);
 	}
 
     void initOnUp(Transaction systemTrans) {
@@ -305,7 +305,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
     
     private void applyReadAs(){
-        final Hashtable4 readAs = i_stream.i_config.readAs(); 
+        final Hashtable4 readAs = i_stream.configImpl().readAs(); 
         readAs.forEachKey(new Visitor4() {
             public void visit(Object a_object) {
                 String dbName = (String)a_object;
@@ -316,7 +316,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
                     YapClass yc = (YapClass)i_yapClassByBytes.get(dbbytes);
                     if(yc != null){
                         yc.i_nameBytes = useBytes;
-                        yc.setConfig(i_stream.i_config.configClass(dbName));
+                        yc.setConfig(i_stream.configImpl().configClass(dbName));
                         i_yapClassByBytes.put(dbbytes, null);
                         i_yapClassByBytes.put(useBytes, yc);
                     }

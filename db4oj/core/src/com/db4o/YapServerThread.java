@@ -223,7 +223,7 @@ final class YapServerThread extends Thread {
         }
         
         if (Msg.IDENTITY.equals(message)) {
-            respondInt((int)getStream().getID(getStream().bootRecord().i_db));
+            respondInt((int)getStream().getID(getStream().identity()));
             return true;
         }
         
@@ -278,7 +278,7 @@ final class YapServerThread extends Thread {
                 i_substituteStream = (YapFile) Db4o.openFile(fileName);
                 i_substituteTrans =
                     new Transaction(i_substituteStream, i_substituteStream.getSystemTransaction());
-                i_substituteStream.i_config.setMessageRecipient(i_mainStream.i_config.messageRecipient());
+                i_substituteStream.configImpl().setMessageRecipient(i_mainStream.configImpl().messageRecipient());
                 Msg.OK.write(getStream(), i_socket);
             } catch (Exception e) {
                 if (Debug.atHome) {

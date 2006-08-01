@@ -94,7 +94,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	                        stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);
 	                        yapField.initIndex(systemTrans, metaField.index);
 	                        indexInitCalled = true;
-	        				if (stream.i_config.messageLevel() > YapConst.NONE) {
+	        				if (stream.configImpl().messageLevel() > YapConst.NONE) {
 	        					stream.message("creating index " + yapField.toString());
 	        				}
 	        				YapClass yapClassField = yapField.getParentYapClass();
@@ -122,7 +122,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	                }
 	                if (indexedFlag == YapConst.NO) {
 	                    if (metaField.index != null) {
-	        				if (stream.i_config.messageLevel() > YapConst.NONE) {
+	        				if (stream.configImpl().messageLevel() > YapConst.NONE) {
 	        					stream.message("dropping index " + yapField.toString());
 	        				}
 	                        MetaIndex mi = metaField.index;

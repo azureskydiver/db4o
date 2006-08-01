@@ -18,11 +18,11 @@ import com.db4o.reflect.*;
  * @exclude
  */
 public abstract class YapFile extends YapStream {
+    
+    private Db4oDatabase _identity;
 
     protected FileHeader0       _fileHeader;
     
-    private PBootRecord         _bootRecord;
-
     private Collection4         i_dirty;
     
     private FreespaceManager _freespaceManager;
@@ -49,10 +49,6 @@ public abstract class YapFile extends YapStream {
         i_writeAt = blocksFor(fileLength);
     }
     
-    public PBootRecord bootRecord(){
-        return _bootRecord;
-    }
-    
     boolean close2() {
         boolean ret = super.close2();
         i_dirty = null;
@@ -72,19 +68,21 @@ public abstract class YapFile extends YapStream {
 
     void configureNewFile() {
         
-        _freespaceManager = FreespaceManager.createNew(this, i_config.freespaceSystem());
+        _freespaceManager = FreespaceManager.createNew(this, configImpl().freespaceSystem());
         
         if(Debug.freespaceChecker){
             _fmChecker = new FreespaceManagerRam(this);
         }
         
-        blockSize(i_config.blockSize(), HEADER_LENGTH);
-        
-        _fileHeader = FileHeader0.forNewFile(this);
+        blockSize(configImpl().blockSize(), HEADER_LENGTH);
         
         initNewClassCollection();
         initializeEssentialClasses();
-        initBootRecord();
+        
+        generateNewIdentity();
+        
+        _fileHeader = FileHeader0.forNewFile(this);
+
         _freespaceManager.start(_fileHeader.freespaceAddress());
         
         if(Debug.freespace  && Debug.freespaceChecker){
@@ -110,8 +108,8 @@ public abstract class YapFile extends YapStream {
     
     final BTree createBTreeClassIndex(YapClass a_yapClass, int id){
         return new BTree(
-            i_config.bTreeNodeSize(), 
-            i_config.bTreeCacheHeight(),  
+            configImpl().bTreeNodeSize(), 
+            configImpl().bTreeCacheHeight(),  
             i_trans, 
             id, 
             new YInt(this), null);
@@ -199,7 +197,10 @@ public abstract class YapFile extends YapStream {
         }
         _freespaceManager.endCommit();
     }
-
+    
+    public void generateNewIdentity(){
+        setIdentity(Db4oDatabase.generate());
+    }
 
     void getAll(Transaction ta, final QueryResultImpl a_res) {
 
@@ -346,10 +347,11 @@ public abstract class YapFile extends YapStream {
     }
 
     public Db4oDatabase identity() {
-        if(_bootRecord == null){
-            return null;  // early access for internal stuff, no identity needed
-        }
-        return _bootRecord.i_db;
+        return _identity;
+    }
+    
+    public void setIdentity(Db4oDatabase identity){
+        _identity = identity;
     }
 
     void initialize2() {
@@ -357,16 +359,6 @@ public abstract class YapFile extends YapStream {
         super.initialize2();
     }
     
-    private void initBootRecord() {
-        showInternalClasses(true);
-        _bootRecord = new PBootRecord();
-        _bootRecord.i_stream = this;
-        _bootRecord.init(i_config);
-        setInternal(i_systemTrans, _bootRecord, false);
-        _fileHeader.setBootRecord(_bootRecord, getID1(i_systemTrans, _bootRecord));
-        showInternalClasses(false);
-    }
-
     boolean isServer() {
         return i_isServer;
     }
@@ -503,10 +495,10 @@ public abstract class YapFile extends YapStream {
             _fmChecker.start(0);
         }
         
-        if(i_config.freespaceSystem() != 0  || _fileHeader.freespaceSystem() == FreespaceManager.FM_LEGACY_RAM){
-            if(_freespaceManager.systemType() != i_config.freespaceSystem()){
-                FreespaceManager newFM = FreespaceManager.createNew(this, i_config.freespaceSystem());
-                int fmSlot = _fileHeader.newFreespaceSlot(i_config.freespaceSystem());
+        if(configImpl().freespaceSystem() != 0  || _fileHeader.freespaceSystem() == FreespaceManager.FM_LEGACY_RAM){
+            if(_freespaceManager.systemType() != configImpl().freespaceSystem()){
+                FreespaceManager newFM = FreespaceManager.createNew(this, configImpl().freespaceSystem());
+                int fmSlot = _fileHeader.newFreespaceSlot(configImpl().freespaceSystem());
                 
                 newFM.start(fmSlot);
                 _freespaceManager.migrate(newFM);
@@ -516,36 +508,18 @@ public abstract class YapFile extends YapStream {
                 _freespaceManager.beginCommit();
                 _freespaceManager.endCommit();
                 
-                _fileHeader.writeVariablePart();
+                _fileHeader.writeVariablePart1();
             }
         }
         
         _fileHeader.readBootRecord(this);
         
-        showInternalClasses(true);
-        
-        Object bootRecord = _fileHeader.bootRecord();
-        
-        if (bootRecord instanceof PBootRecord) {
-            _bootRecord = (PBootRecord) bootRecord;
-            _bootRecord.checkActive();
-            _bootRecord.i_stream = this;
-            if (_bootRecord.initConfig(i_config)) {
-                i_classCollection.reReadYapClass(getYapClass(
-                    i_handlers.ICLASS_PBOOTRECORD, false));
-                setInternal(i_systemTrans, _bootRecord, false);
-            }
-        } else {
-            initBootRecord();
-        }
-        
-        showInternalClasses(false);
         writeHeader(false);
         
         Transaction trans = _fileHeader.interruptedTransaction();
         
         if (trans != null) {
-            if (!i_config.commitRecoveryDisabled()) {
+            if (!configImpl().commitRecoveryDisabled()) {
                 trans.writeOld();
             }
         }
@@ -651,13 +625,6 @@ public abstract class YapFile extends YapStream {
         i_isServer = flag;
     }
 
-    protected void storeTimeStampId() {
-        if(_timeStampIdGenerator.isDirty()){
-            _fileHeader.storeTimeStampId(_timeStampIdGenerator.lastTimeStampId());
-            _timeStampIdGenerator.setClean();
-        }
-    }
-
     public abstract void syncFiles();
 
     public String toString() {
@@ -692,16 +659,22 @@ public abstract class YapFile extends YapStream {
         }
         i_dirty.clear();
         
-        writeBootRecord();
-        
-        storeTimeStampId();
-
-        
-        // TODO: This is where the dynamic header information
-        //       should be stored
-        
-        
+        writeVariableHeader();
     }
+    
+    protected void writeVariableHeader(){
+        
+        // TODO: Optimize to store only the dirty information
+        // use: _timeStampIdGenerator.isDirty() 
+        //
+        
+        _fileHeader.setLastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
+        _fileHeader.setIdentity(identity());
+        _fileHeader.writeVariablePart2();
+        
+        _timeStampIdGenerator.setClean();
+    }
+    
     
     public final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
         int length = a_child.getLength();
@@ -754,10 +727,6 @@ public abstract class YapFile extends YapStream {
         writeBytes(a_writer, address, 0);
     }
 
-    void writeBootRecord() {
-        _bootRecord.store(1);
-    }
-
     // This is a reroute of writeBytes to write the free blocks
     // unchecked.
 
@@ -800,4 +769,5 @@ public abstract class YapFile extends YapStream {
         _timeStampIdGenerator.setMinimumNext(val);
         _timeStampIdGenerator.setClean();
     }
+
 }

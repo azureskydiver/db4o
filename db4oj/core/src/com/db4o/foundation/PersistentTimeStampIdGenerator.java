@@ -1,8 +1,6 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o;
-
-import com.db4o.foundation.*;
+package com.db4o.foundation;
 
 
 public class PersistentTimeStampIdGenerator {
@@ -11,7 +9,7 @@ public class PersistentTimeStampIdGenerator {
     
     private final TimeStampIdGenerator _generator = new TimeStampIdGenerator();
     
-    long next() {
+    public long next() {
         _dirty = true;
         return _generator.generate();
     }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry path="core/src" kind="src"/>
-	<classpathentry path="tools/src" kind="src"/>
-	<classpathentry path="test/src" kind="src"/>
-	<classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con"/>
-	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/1.3" kind="con"/>
-	<classpathentry path="lib/db4ounit.jar" kind="lib"/>
-	<classpathentry path="bin" kind="output"/>
+	<classpathentry kind="src" path="core/src"/>
+	<classpathentry kind="src" path="tools/src"/>
+	<classpathentry kind="src" path="test/src"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/1.3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
+	<classpathentry kind="lib" path="lib/db4ounit.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -60,7 +60,7 @@ public abstract class StringMarshaller {
         if (length > 0) {
             String str = stream.stringIO().read(a_bytes, length);
             if(! Deploy.csharp){
-                if(stream.i_config.internStrings()){
+                if(stream.configImpl().internStrings()){
                     str = str.intern();
                 }
             }

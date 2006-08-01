@@ -122,7 +122,6 @@ public final class YapConst
 	static Class CLASS_METAINDEX;
     public static Class CLASS_OBJECT;
     static Class CLASS_OBJECTCONTAINER;
-    static Class CLASS_PBOOTRECORD;
     static Class CLASS_REPLICATIONRECORD; 
 	static Class CLASS_STATICFIELD;
 	static Class CLASS_STATICCLASS;
@@ -167,7 +166,6 @@ public final class YapConst
         CLASS_METAFIELD = new MetaField().getClass();
         CLASS_METAINDEX = new MetaIndex().getClass();
         CLASS_OBJECTCONTAINER = db4oClass("ObjectContainer");
-        CLASS_PBOOTRECORD = new PBootRecord().getClass();
         CLASS_REPLICATIONRECORD = new ReplicationRecord().getClass();
         CLASS_STATICFIELD = new StaticField().getClass();
         CLASS_STATICCLASS = new StaticClass().getClass();

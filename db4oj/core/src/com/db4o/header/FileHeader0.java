@@ -5,6 +5,7 @@ package com.db4o.header;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.inside.*;
 import com.db4o.inside.convert.*;
 import com.db4o.io.*;
@@ -73,12 +74,19 @@ public class FileHeader0 {
         yapFile.showInternalClasses(true);
         Object bootRecord = yapFile.getByID1(yapFile.getSystemTransaction(), _configBlock._bootRecordID);
         yapFile.showInternalClasses(false);
+        
         if (! (bootRecord instanceof PBootRecord)) {
+            initBootRecord(yapFile);
+            yapFile.generateNewIdentity();
             return;
         }
+        
         _bootRecord = (PBootRecord) bootRecord;
+        _bootRecord.i_stream = yapFile;
         yapFile.activate(bootRecord, Integer.MAX_VALUE);
         yapFile.setNextTimeStampId(_bootRecord.i_versionGenerator);
+        
+        yapFile.setIdentity(_bootRecord.i_db);
     }
 
     public int classCollectionID() {
@@ -104,6 +112,25 @@ public class FileHeader0 {
         _configBlock.converterVersion(Converter.VERSION);
         _configBlock.write();
         _configBlock.go();
+        
+        initBootRecord(yf);
+    }
+    
+    
+    private void initBootRecord(YapFile yf){
+        
+        yf.showInternalClasses(true);
+        
+        _bootRecord = new PBootRecord();
+        _bootRecord.i_stream = yf;
+        _bootRecord.init(yf.configImpl());
+        
+        yf.setInternal(yf.getSystemTransaction(), _bootRecord, false);
+        
+        _configBlock._bootRecordID = yf.getID1(yf.getSystemTransaction(), _bootRecord);
+        _configBlock.write();
+        
+        yf.showInternalClasses(false);
     }
 
     public int freespaceAddress() {
@@ -114,12 +141,13 @@ public class FileHeader0 {
         return _configBlock.newFreespaceSlot(freeSpaceSystem);
     }
 
-    public void writeVariablePart() {
+    public void writeVariablePart1() {
         _configBlock.write();
     }
-
-    public PBootRecord bootRecord() {
-        return _bootRecord;
+    
+    public void writeVariablePart2() {
+        _bootRecord.setDirty();
+        _bootRecord.store(2);
     }
 
     public Transaction interruptedTransaction() {
@@ -169,14 +197,16 @@ public class FileHeader0 {
         writer.write();
     }
 
-    public void storeTimeStampId(long val) {
-        _bootRecord.storeTimeStampId(val);
+    public MetaIndex getUUIDMetaIndex() {
+        return _bootRecord.getUUIDMetaIndex();
     }
 
-    public void setBootRecord(PBootRecord bootRecord, int id) {
-        _bootRecord = bootRecord;
-        _configBlock._bootRecordID = id;
-        _configBlock.write();
+    public void setLastTimeStampID(long val) {
+        _bootRecord.i_versionGenerator = val;
+    }
+
+    public void setIdentity(Db4oDatabase database) {
+        _bootRecord.i_db = database;
     }
 
 }

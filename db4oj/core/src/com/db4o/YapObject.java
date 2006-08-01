@@ -50,7 +50,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		if (a_depth > 0) {
 		    YapStream stream = ta.i_stream;
 		    if(a_refresh){
-				if (stream.i_config.messageLevel() > YapConst.ACTIVATION) {
+				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
 					stream.message("" + getID() + " refresh " + i_yapClass.getName());
 				}
 		    }else{
@@ -65,7 +65,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 						return;
 					}
 				}
-				if (stream.i_config.messageLevel() > YapConst.ACTIVATION) {
+				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
 					stream.message("" + getID() + " activate " + i_yapClass.getName());
 				}
 		    }
@@ -123,7 +123,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			        ((Db4oTypeImpl)obj).preDeactivate();
 			    }
 			    YapStream stream = a_trans.i_stream;
-				if (stream.i_config.messageLevel() > YapConst.ACTIVATION) {
+				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
 					stream.message("" + getID() + " deactivate " + i_yapClass.getName());
 				}
 
@@ -394,7 +394,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 					}
 				}
 				
-				if (a_trans.i_stream.i_config.messageLevel() > YapConst.STATE) {
+				if (a_trans.i_stream.configImpl().messageLevel() > YapConst.STATE) {
 				    a_trans.i_stream.message("" + getID() + " update " + i_yapClass.getName());
 				}
 	

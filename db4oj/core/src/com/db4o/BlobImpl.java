@@ -157,7 +157,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
             i_stream.activate1(i_trans, this, 2);
         }
         String path = serverPath();
-        i_stream.i_config.ensureDirExists(path);
+        i_stream.configImpl().ensureDirExists(path);
         if (writeToServer) {
             if (fileName == null) {
                 if (promptName != null) {
@@ -195,11 +195,11 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
     }
 
     private String serverPath() throws IOException {
-        String path = i_stream.i_config.blobPath();
+        String path = i_stream.configImpl().blobPath();
         if (path == null) {
             path = "blobs";
         }
-        i_stream.i_config.ensureDirExists(path);
+        i_stream.configImpl().ensureDirExists(path);
         return path;
     }
 

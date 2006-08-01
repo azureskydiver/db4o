@@ -180,11 +180,6 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 		event.addListener(_recorder);
 	}
 	
-	private void reopen() throws Exception {
-		fixture().close();
-		fixture().open();
-	}
-
 	private void storeAndReopen() throws Exception {
 		storeItem();
 		reopen();

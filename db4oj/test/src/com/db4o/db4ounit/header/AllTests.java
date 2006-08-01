@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.header;
 
+import com.db4o.*;
+
 import db4ounit.*;
 import db4ounit.db4o.*;
 import db4ounit.db4o.fixtures.*;
@@ -20,6 +22,8 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
                 fixture(),
                 new Class[] {
                     OldHeaderTest.class,
+                    ConfigurationSettingsTestCase.class,
+                    IdentityTestCase.class,
                     SimpleTimeStampIdTestCase.class
                     }).build();
     }

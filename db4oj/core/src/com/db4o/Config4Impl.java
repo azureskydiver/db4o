@@ -278,25 +278,10 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
     public void generateUUIDs(int setting) {
         _config.put(GENERATE_UUIDS,setting);
-        storeStreamBootRecord();
-    }
-    
-    private void storeStreamBootRecord() {
-        if(i_stream == null){
-            return;
-        }
-        PBootRecord bootRecord = i_stream.bootRecord();
-        if(bootRecord != null) {
-            bootRecord.initConfig(this);
-            Transaction trans = i_stream.getSystemTransaction();
-            i_stream.setInternal(trans, bootRecord, false);
-            trans.commit();
-        }
     }
 
     public void generateVersionNumbers(int setting) {
         _config.put(GENERATE_VERSION_NUMBERS,setting);
-        storeStreamBootRecord();
     }
 
     public MessageSender getMessageSender() {
@@ -673,11 +658,11 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsByte(FREESPACE_SYSTEM);
 	}
 
-	int generateUUIDs() {
+	public int generateUUIDs() {
 		return _config.getAsInt(GENERATE_UUIDS);
 	}
 
-	int generateVersionNumbers() {
+	public int generateVersionNumbers() {
 		return _config.getAsInt(GENERATE_VERSION_NUMBERS);
 	}
 

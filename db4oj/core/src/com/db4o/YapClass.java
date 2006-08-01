@@ -355,7 +355,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     int checkUpdateDepthUnspecified(YapStream a_stream) {
-        int depth = a_stream.i_config.updateDepth() + 1;
+        int depth = a_stream.configImpl().updateDepth() + 1;
         if (i_config != null && i_config.updateDepth() != 0) {
             depth = i_config.updateDepth() + 1;
         }
@@ -477,7 +477,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             a_stream.logMsg(7, a_name);
         }
         
-        if (a_stream.i_config.exceptionsOnNotStorable()) {
+        if (a_stream.configImpl().exceptionsOnNotStorable()) {
             throw new ObjectNotStorableException(a_class);
         }
 
@@ -648,7 +648,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return false;
         }
         int configValue = (i_config == null) ? 0 : i_config.generateUUIDs();
-        return generate1(i_stream.bootRecord().i_generateUUIDs, configValue); 
+        
+        return generate1(i_stream.config().generateUUIDs(), configValue); 
     }
 
     private boolean generateVersionNumbers() {
@@ -656,7 +657,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return false;
         }
         int configValue = (i_config == null) ? 0 : i_config.generateVersionNumbers();
-        return generate1(i_stream.bootRecord().i_generateVersionNumbers, configValue); 
+        return generate1(i_stream.config().generateVersionNumbers(), configValue); 
     }
     
     private boolean generateVirtual(){
@@ -669,7 +670,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if( ! (i_stream instanceof YapFile) ){
             return false;
         }
-        return i_stream.bootRecord() != null; 
+        return true; 
     }
     
     private boolean generate1(int bootRecordValue, int configValue) {
@@ -1031,7 +1032,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         i_ancestor = a_ancestor;
         
-        Config4Impl config = a_stream.i_config;
+        Config4Impl config = a_stream.configImpl();
         String className = claxx.getName();		
 		setConfig(config.configClass(className));
         
@@ -1118,7 +1119,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 try {
                     a_object = i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));
                 } catch (Exception e) {
-                    Messages.logErr(stream.i_config, 6, classReflector().getName(), e);
+                    Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
                     return null;
                 }
                 a_bytes._offset = bytesOffset;
@@ -1208,7 +1209,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             try {
                 a_object = i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));
             } catch (Exception e) {
-                Messages.logErr(stream.i_config, 6, classReflector().getName(), e);
+                Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
                 return null;
             }
             a_bytes._offset = bytesOffset;
@@ -1311,7 +1312,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(res != YapConst.DEFAULT){
             return res == YapConst.YES;
         }
-        return (i_stream.i_config.callConstructors() == YapConst.YES);
+        return (i_stream.configImpl().callConstructors() == YapConst.YES);
     }
     
     private final int callConstructorSpecialized(){
@@ -1626,7 +1627,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         } else {
             i_name = a_class.getName();
         }
-        setConfig(i_stream.i_config.configClass(i_name));
+        setConfig(i_stream.configImpl().configClass(i_name));
         if (a_class == null) {
             createConstructor(a_stream, i_name);
         } else {
@@ -1829,7 +1830,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     public StoredField storedField(String a_name, Object a_type) {
         synchronized(i_stream.i_lock){
             
-            YapClass yc = i_stream.getYapClass(i_stream.i_config.reflectorFor(a_type), false); 
+            YapClass yc = i_stream.getYapClass(i_stream.configImpl().reflectorFor(a_type), false); 
     		
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {

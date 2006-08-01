@@ -62,7 +62,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         if (Debug.xbytes) {
             writer.setID(YapConst.IGNORE_ID);  // no XBytes check
         }
-        if(_file.i_config.flushFileBuffers()){
+        if(_file.configImpl().flushFileBuffers()){
             _file.syncFiles();
         }
         writer.writeEncrypt();
