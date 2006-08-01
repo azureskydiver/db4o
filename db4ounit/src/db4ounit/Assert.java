@@ -51,6 +51,11 @@ public final class Assert {
 		fail(failureMessage(new Integer(expected), new Integer(actual)));
 	}
 	
+	public static void areEqual(int expected, int actual, String message) {
+		if (expected == actual) return;
+		fail(message);
+	}
+	
 	public static void areEqual(long expected, long actual) {
 		if (expected == actual) return;
 		fail(failureMessage(new Long(expected), new Long(actual)));
@@ -66,6 +71,11 @@ public final class Assert {
 		fail(failureMessage(expected, actual));
 	}
 	
+	public static void areNotSame(Object expected, Object actual) {
+		if (expected != actual) return;
+		fail("Expecting not '" + expected + "'.");
+	}
+	
 	private static String failureMessage(Object expected, Object actual) {
 		return "Expected '"+ expected + "' but was '" + actual + "'";
 	}
@@ -75,5 +85,5 @@ public final class Assert {
 			|| (expected != null
 				&& actual != null
 				&& expected.equals(actual));
-	}
+	}		
 }
