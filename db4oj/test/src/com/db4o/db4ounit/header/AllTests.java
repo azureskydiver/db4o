@@ -2,11 +2,12 @@
 
 package com.db4o.db4ounit.header;
 
-import com.db4o.*;
-
-import db4ounit.*;
-import db4ounit.db4o.*;
-import db4ounit.db4o.fixtures.*;
+import db4ounit.TestRunner;
+import db4ounit.TestSuite;
+import db4ounit.TestSuiteBuilder;
+import db4ounit.db4o.Db4oTestCase;
+import db4ounit.db4o.Db4oTestSuiteBuilder;
+import db4ounit.db4o.fixtures.Db4oSolo;
 
 public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
     

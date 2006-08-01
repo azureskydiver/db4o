@@ -1,6 +1,6 @@
-/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.db4ounit;
+package com.db4o.db4ounit.tools;
 
 import db4ounit.TestRunner;
 import db4ounit.TestSuite;
@@ -22,10 +22,7 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
 		return new Db4oTestSuiteBuilder(
 				fixture(),
 				new Class[] {
-					com.db4o.db4ounit.foundation.AllTests.class,
-					com.db4o.db4ounit.header.AllTests.class,
-					com.db4o.db4ounit.events.AllTests.class,
-					com.db4o.db4ounit.tools.AllTests.class,
+					QueryStatsTestCase.class,
 					}).build();
 	}
 }

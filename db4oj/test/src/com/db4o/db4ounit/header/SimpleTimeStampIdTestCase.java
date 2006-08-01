@@ -2,28 +2,25 @@
 
 package com.db4o.db4ounit.header;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.query.*;
+import com.db4o.Db4o;
+import com.db4o.YapFile;
+import com.db4o.config.ObjectClass;
 
-import db4ounit.*;
-import db4ounit.db4o.*;
-
+import db4ounit.Assert;
+import db4ounit.db4o.Db4oTestCase;
 
 public class SimpleTimeStampIdTestCase extends Db4oTestCase{
     
-    public static class STSItem{
-        
+    public static class STSItem {
+    	
         public String _name;
         
         public STSItem() {
-            
         }
 
         public STSItem(String name) {
             _name = name;
         }
-        
     }
     
     protected void configure() {
@@ -36,7 +33,7 @@ public class SimpleTimeStampIdTestCase extends Db4oTestCase{
         db().set(new STSItem("one"));
     }
     
-    public void test() throws Exception{
+    public void test() throws Exception {
         STSItem item =  (STSItem) db().get(STSItem.class).next();
         
         long version = db().getObjectInfo(item).getVersion();
@@ -53,9 +50,5 @@ public class SimpleTimeStampIdTestCase extends Db4oTestCase{
         
         Assert.isTrue(secondVersion > version);
         Assert.isTrue(((YapFile)db()).currentVersion() >= version);
-        
     }
-    
-    
-
 }

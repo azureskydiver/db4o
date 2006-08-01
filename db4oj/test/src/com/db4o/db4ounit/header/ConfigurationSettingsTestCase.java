@@ -7,11 +7,9 @@ import com.db4o.*;
 import db4ounit.*;
 import db4ounit.db4o.*;
 
-
 public class ConfigurationSettingsTestCase extends Db4oTestCase {
     
-    
-    public void testChangingUuidSettings() throws Exception{
+    public void testChangingUuidSettings() throws Exception {
         
         Db4o.configure().generateUUIDs(0);
         
@@ -29,11 +27,7 @@ public class ConfigurationSettingsTestCase extends Db4oTestCase {
         
     }
 
-
     private int generateUUIDs() {
         return ((YapFile)db()).config().generateUUIDs();
     }
-    
-    
-
 }
