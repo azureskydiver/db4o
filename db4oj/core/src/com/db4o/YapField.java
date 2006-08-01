@@ -98,8 +98,12 @@ public class YapField implements StoredField {
         if (! hasIndex()) {
             return;
         }
+        Index4 index = getIndex(a_trans);
+        if(index == null){
+            return;
+        }
         i_handler.prepareComparison(a_trans, indexEntry);
-        IndexTransaction ift = getIndex(a_trans).dirtyIndexTransaction(a_trans);
+        IndexTransaction ift = index.dirtyIndexTransaction(a_trans);
         ift.add(parentID, indexEntry);
     }
     

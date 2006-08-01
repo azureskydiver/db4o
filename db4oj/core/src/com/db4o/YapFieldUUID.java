@@ -65,8 +65,10 @@ class YapFieldUUID extends YapFieldVirtual {
         }
         YapFile stream = (YapFile)a_trans.i_stream;
         if(i_index == null){
-            
-            MetaIndex metaIndex = stream._fileHeader.getUUIDMetaIndex();
+            MetaIndex metaIndex = stream.getUUIDMetaIndex();
+            if(metaIndex == null){
+                return null;
+            }
             i_index = new Index4(stream.getSystemTransaction(), getHandler(), metaIndex, false);
         }
         return i_index;
