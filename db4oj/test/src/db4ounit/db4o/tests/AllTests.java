@@ -3,6 +3,7 @@
 package db4ounit.db4o.tests;
 
 import db4ounit.Assert;
+import db4ounit.TestCase;
 import db4ounit.TestMethod;
 import db4ounit.TestRunner;
 import db4ounit.TestSuite;
@@ -12,7 +13,7 @@ import db4ounit.db4o.fixtures.Db4oInMemory;
 import db4ounit.db4o.fixtures.Db4oSolo;
 import db4ounit.tests.FrameworkTestCase;
 
-public class AllTests {
+public class AllTests implements TestCase {
 	public static void main(String[] args) {
 		new TestRunner(AllTests.class).run();
 	}
