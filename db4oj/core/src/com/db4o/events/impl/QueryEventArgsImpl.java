@@ -10,13 +10,17 @@ import com.db4o.query.Query;
  */
 public class QueryEventArgsImpl implements QueryEventArgs {
 	
-	private Query _subject;
+	private Query _query;
 
 	public QueryEventArgsImpl(Query subject) {
-		_subject = subject;
+		_query = subject;
 	}
 
-	public Query subject() {
-		return _subject;
+	public Query query() {
+		return _query;
+	}
+	
+	public Object object() {
+		return _query;
 	}
 }

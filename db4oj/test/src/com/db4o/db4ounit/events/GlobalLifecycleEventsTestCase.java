@@ -169,7 +169,7 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 		Assert.areEqual(1, _recorder.size());
 		EventRecord record = _recorder.get(0);
 		Assert.areSame(expectedEvent, record.e);
-		Assert.areSame(expectedItem, ((ObjectEventArgs)record.args).subject());
+		Assert.areSame(expectedItem, ((ObjectEventArgs)record.args).object());
 	}
 	
 	private void assertUpdateEvent(Event4 event) {

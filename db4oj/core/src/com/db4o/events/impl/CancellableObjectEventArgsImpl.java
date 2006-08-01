@@ -13,7 +13,7 @@ public class CancellableObjectEventArgsImpl extends CancellableEventArgsImpl imp
 		_subject = subject;
 	}
 
-	public Object subject() {
+	public Object object() {
 		return _subject;
 	}
 }
