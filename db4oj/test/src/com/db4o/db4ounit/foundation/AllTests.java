@@ -12,7 +12,6 @@ public class AllTests implements TestSuiteBuilder {
 	
 	public TestSuite build() {
 		return new ReflectionTestSuiteBuilder(new Class[] {
-				MemoryStatsTestCase.class,
 		}).build();	
 	}
 	

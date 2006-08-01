@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.tools;
 
 import com.db4o.ObjectSet;
+import com.db4o.db4ounit.events.EventRecorder;
 import com.db4o.query.Query;
 import com.db4o.tools.QueryStats;
 
@@ -64,7 +65,7 @@ public class QueryStatsTestCase extends Db4oTestCase {
 		long elapsed = System.currentTimeMillis() - started;
 		Assert.isTrue(_stats.executionTime() > 0);
 		Assert.isTrue(_stats.executionTime() <= elapsed);
-	}
+	}	
 
 	public static void main(String[] args) {
 		new TestRunner(
