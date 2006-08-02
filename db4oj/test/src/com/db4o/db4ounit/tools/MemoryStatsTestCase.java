@@ -7,6 +7,8 @@ import db4ounit.Assert;
 public class MemoryStatsTestCase implements db4ounit.TestCase {
 	
 	public void testUsedMemory() {
+		System.gc();
+		System.gc();
 		long memory1 = usedMemory();
 		
 		byte[] buffer = new byte[1024*64];

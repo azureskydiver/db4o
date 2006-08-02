@@ -12,6 +12,9 @@ public class AllTests implements TestSuiteBuilder {
 	
 	public TestSuite build() {
 		return new ReflectionTestSuiteBuilder(new Class[] {
+			Collection4TestCase.class,
+			Hashtable4TestCase.class,
+			BitMap4TestCase.class,
 		}).build();	
 	}
 	

@@ -1,21 +1,20 @@
 /* Copyright (C) 2bitbit4 - 2bitbit6  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.foundation;
+package com.db4o.db4ounit.foundation;
 
 import com.db4o.foundation.*;
-import com.db4o.test.*;
 
+import db4ounit.Assert;
+import db4ounit.TestCase;
 
-public class BitMap4TestCase {
+public class BitMap4TestCase implements TestCase {
     
-    public void test(){
+    public void test() {
         
         byte[] buffer = new byte[100];
-
         
         for (int i = 0; i < 17; i++) {
-            BitMap4 map = new BitMap4(i);
-            
+            BitMap4 map = new BitMap4(i);            
             map.writeTo(buffer, 11);
             
             BitMap4 reReadMap = new BitMap4(buffer,11, i);
@@ -28,13 +27,13 @@ public class BitMap4TestCase {
         
     }
     
-    private void tBit(BitMap4 map, int bit){
+    private void tBit(BitMap4 map, int bit) {
         map.setTrue(bit);
-        Test.ensure(map.isTrue(bit));
+        Assert.isTrue(map.isTrue(bit));
         map.setFalse(bit);
-        Test.ensure(! map.isTrue(bit));
+        Assert.isFalse(map.isTrue(bit));
         map.setTrue(bit);
-        Test.ensure(map.isTrue(bit));
+        Assert.isTrue(map.isTrue(bit));
         
     }
 

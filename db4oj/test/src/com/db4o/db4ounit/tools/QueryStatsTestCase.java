@@ -17,7 +17,7 @@ public class QueryStatsTestCase extends Db4oTestCase {
 	public static class Item {
 	}
 	
-	private static final int ITEM_COUNT = 10000;
+	private static final int ITEM_COUNT = 1000;
 	private QueryStats _stats;
 
 	protected void store() {
