@@ -165,11 +165,7 @@ public class YapClient extends YapStream implements ExtClient {
 	final void commit1() {
 		i_trans.commit();
 	}
-
-	final ClassIndex createClassIndex(YapClass a_yapClass) {
-		return new ClassIndexClient(a_yapClass);
-	}
-
+	
 	YapSocket createParalellSocket() throws IOException {
 		Msg.GET_THREAD_ID.write(this, i_socket);
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
@@ -615,7 +611,7 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 	}
 
-	final void setDirty(UseSystemTransaction a_object) {
+	public final void setDirty(UseSystemTransaction a_object) {
 		// do nothing
 	}
 

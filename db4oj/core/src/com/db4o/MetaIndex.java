@@ -19,17 +19,21 @@ public class MetaIndex implements Internal4{
     public int indexEntries;
     public int indexLength;
     
-	public int patchAddress;
-	public int patchEntries;
-	public int patchLength;
+    // TODO: make sure this aren't really needed
+    // and remove them 
+	private final int patchAddress = 0;
+	private final int patchEntries = 0;
+	private final int patchLength = 0;
     
     public void read(YapReader reader){
         indexAddress = reader.readInt();
         indexEntries = reader.readInt();
         indexLength = reader.readInt();
-        patchAddress = reader.readInt();
-        patchEntries = reader.readInt();
-        patchLength = reader.readInt();
+        
+        // no longer used apparently
+        /*patchAddress = */reader.readInt();
+        /*patchEntries = */reader.readInt();
+        /*patchLength = */reader.readInt();
     }
     
     public void write(YapWriter writer){
@@ -42,11 +46,11 @@ public class MetaIndex implements Internal4{
     }
     
     public void free(YapFile file){
-        file.free(indexAddress, indexLength);
-        file.free(patchAddress, patchLength);
+        file.free(indexAddress, indexLength);        
         indexAddress = 0;
         indexLength = 0;
-        patchAddress = 0;
-        patchLength = 0;
+//        file.free(patchAddress, patchLength);
+//        patchAddress = 0;
+//        patchLength = 0;
     }
 }

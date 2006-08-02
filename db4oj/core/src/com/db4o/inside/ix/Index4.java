@@ -69,8 +69,8 @@ public class Index4 {
         return new int[] {
             _metaIndex.indexAddress,
             _metaIndex.indexLength,
-            _metaIndex.patchAddress,
-            _metaIndex.patchLength
+//            _metaIndex.patchAddress,
+//            _metaIndex.patchLength
         };
     }
     
@@ -128,11 +128,6 @@ public class Index4 {
         return _handler.linkLength() + YapConst.YAPINT_LENGTH;
     }
     
-    private void free(){
-        file().free(_metaIndex.indexAddress, _metaIndex.indexLength);
-        file().free(_metaIndex.patchAddress, _metaIndex.indexLength);
-    }
-    
     private void metaIndexStore(int entries, int length, int address){
         Transaction transact = trans();
         metaIndexSetMembers(entries, length, address);
@@ -143,9 +138,6 @@ public class Index4 {
         _metaIndex.indexEntries = entries;
         _metaIndex.indexLength = length;
         _metaIndex.indexAddress = address;
-        _metaIndex.patchEntries = 0;
-        _metaIndex.patchAddress = 0;
-        _metaIndex.patchLength = 0;
     }
     
     private int writeToNewSlot(int slot, int length ){

@@ -10,7 +10,7 @@ import com.db4o.inside.slots.*;
  */
 public abstract class YapMeta {
     
-    int i_id; // UID and address of pointer to the object in our file
+    protected int i_id; // UID and address of pointer to the object in our file
 
     protected int i_state = 2; // DIRTY and ACTIVE
 

@@ -1,7 +1,11 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside;
 
+import com.db4o.Transaction;
+import com.db4o.YapClass;
+import com.db4o.YapReader;
+import com.db4o.YapStream;
 import com.db4o.inside.*;
 
 /**
@@ -14,7 +18,7 @@ final class ClassIndexClient extends ClassIndex {
 		super(aYapClass);
 	}
 
-	void add(int a_id){
+	public void add(int a_id){
 		throw Exceptions4.virtualException();
 	}
     

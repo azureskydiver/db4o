@@ -2,17 +2,29 @@
 
 package com.db4o;
 
-import com.db4o.config.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.inside.*;
-import com.db4o.inside.btree.*;
-import com.db4o.inside.convert.conversions.*;
-import com.db4o.inside.diagnostic.*;
-import com.db4o.inside.marshall.*;
-import com.db4o.query.*;
-import com.db4o.reflect.*;
-import com.db4o.reflect.generic.*;
+import com.db4o.config.ObjectTranslator;
+import com.db4o.ext.ObjectNotStorableException;
+import com.db4o.ext.StoredClass;
+import com.db4o.ext.StoredField;
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.No4;
+import com.db4o.foundation.Visitor4;
+import com.db4o.inside.BTreeClassIndexStrategy;
+import com.db4o.inside.ClassIndex;
+import com.db4o.inside.ClassIndexStrategy;
+import com.db4o.inside.Exceptions4;
+import com.db4o.inside.OldClassIndexStrategy;
+import com.db4o.inside.btree.BTree;
+import com.db4o.inside.diagnostic.DiagnosticProcessor;
+import com.db4o.inside.marshall.MarshallerFamily;
+import com.db4o.inside.marshall.ObjectHeader;
+import com.db4o.inside.marshall.ObjectHeaderAttributes;
+import com.db4o.query.Query;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.generic.GenericReflector;
 
 /**
  * @exclude
@@ -26,10 +38,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     public YapField[] i_fields;
     
-    private ClassIndex i_index;
-    
-    private BTree _index;
-    
+    private final ClassIndexStrategy _index = createIndexStrategy();
     
     protected String i_name;
 
@@ -53,7 +62,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     	return _internal;
     }
 
-    // for indexing purposes.
+    private ClassIndexStrategy createIndexStrategy() {
+		if (Debug.useOldClassIndex) {
+			return new OldClassIndexStrategy(this);
+		}
+		return new BTreeClassIndexStrategy(this);
+	}
+
+	// for indexing purposes.
     // TODO: check race conditions, upon multiple calls against the same class
     int i_lastID;
     
@@ -250,12 +266,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             i_ancestor.addToIndex1(a_stream, a_trans, a_id);
         }
         if (hasIndex()) {
-            if(Debug.useOldClassIndex){
-                a_trans.addToClassIndex(getID(), a_id);
-            }
-            if(Debug.useBTrees){
-                _index.add(a_trans, new Integer(a_id));
-            }
+            _index.add(a_trans, a_id);
         }
     }
 
@@ -407,21 +418,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     public void copyValue(Object a_from, Object a_to) {
         // do nothing
-    }
-    
-    private void createBTreeIndex(int btreeID){
-        if(hasIndex()  && ! i_stream.isClient()){
-            _index = ((YapFile)i_stream).createBTreeClassIndex(this, btreeID);
-            _index.setRemoveListener(new Visitor4() {
-                public void visit(Object obj) {
-                    int id = ((Integer)obj).intValue();
-                    YapObject yo = i_stream.getYapObject(id);
-                    if (yo != null) {
-                        i_stream.yapObjectGCd(yo);
-                    }
-                }
-            });
-        }
     }
 
     private boolean createConstructor(YapStream a_stream, String a_name) {
@@ -769,37 +765,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return ids;
         }
         
-        if(Debug.useOldClassIndex){
-            Tree tree = getIndex().cloneForYapClass(trans, getID());
-            if(tree == null){
-                return new long[0];
-            }
-            ids = new long[tree.size()];
-            final int[] inc = new int[] { 0 };
-            tree.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    ids[inc[0]++] = ((TreeInt) obj)._key;
-                }
-            });
-            return ids;
-        }
-
-        if(Debug.useBTrees){
-            ids = new long[_index.size(trans)];
-            final int[] count = new int[]{0};
-            _index.traverseKeys(trans, new Visitor4() {
-                public void visit(Object obj) {
-                    int id = ((Integer)obj).intValue();
-                    if(id > 0){
-                        ids[count[0]] = id;
-                        count[0] ++;
-                    }
-                }
-            });
-            return ids;
-        }
-        
-        return new long[0];
+        return _index.getIds(trans);
     }
 
     boolean hasIndex() {
@@ -848,17 +814,18 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return false;
     }
     
+    // FIXME: remove instanceof
     BTree index(){
-        if(! stateOK()){
-            return null;
+        if(stateOK() && (_index instanceof BTreeClassIndexStrategy)){
+            return ((BTreeClassIndexStrategy)_index).getIndex();
         }
-        return _index;
+        return null;
     }
 
+    // FIXME: remove instanceof
     ClassIndex getIndex() {
-        if (stateOK() && i_index != null) {
-            i_index.ensureActive();
-            return i_index;
+        if (stateOK() && (_index instanceof OldClassIndexStrategy)) {
+            return ((OldClassIndexStrategy)_index).getIndex();
         }
         return null;
     }
@@ -867,20 +834,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(!stateOK()){
             return 0;
         }
-        
-        if(Debug.useBTrees){
-            if(_index != null){
-                return _index.size(ta);
-            }
-        }
-        
-        if(Debug.useOldClassIndex){
-            if (i_index != null) {
-                return i_index.entryCount(ta);
-            }
-        }
-        
-        return 0;
+        return _index.entryCount(ta);
     }
     
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
@@ -896,30 +850,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(!hasIndex()){
             return null;
         }
-        
-        if(Debug.useBTrees){
-            
-            // TODO: Index should work with BTrees only, no more conversion
-            // to TreeInt should be necessary.
-            
-            TreeInt zero = new TreeInt(0);
-            final Tree[] tree = new Tree[]{zero};
-            _index.traverseKeys(a_trans, new Visitor4() {
-                public void visit(Object obj) {
-                    tree[0] = tree[0].add(new TreeInt(((Integer)obj).intValue()));
-                }
-            });
-            tree[0] = tree[0].removeNode(zero);
-            return tree[0];
-        }
-        
-        if(Debug.useOldClassIndex){
-            ClassIndex ci = getIndex();
-            if (ci != null) {
-                return ci.cloneForYapClass(a_trans, getID());
-            }
-        }
-        return null;
+        return _index.getAll(a_trans);
     }
 
     final TreeInt getIndexRoot() {
@@ -961,7 +892,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    YapStream getStream() {
+    public YapStream getStream() {
         return i_stream;
     }
 
@@ -1042,12 +973,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         checkDb4oType();
         if (allowsQueries()) {
-            if(Debug.useOldClassIndex){
-                i_index = a_stream.createClassIndex(this);
-            }
-            if(Debug.useBTrees){
-                createBTreeIndex(0);
-            }
+            _index.initialize(a_stream);
         }
         i_name = className;
         i_ancestor = a_ancestor;
@@ -1291,8 +1217,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    private String nameToWrite(){
-        String name = i_name;
+    private String nameToWrite() {
         if(i_config != null && i_config.writeAs() != null){
             return i_config.writeAs();
         }
@@ -1336,15 +1261,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             i_stream.stringIO().shortLength(nameToWrite())
                 + YapConst.OBJECT_LENGTH
                 + (YapConst.YAPINT_LENGTH * 2)
-                + (YapConst.YAPID_LENGTH);
-        
-        if(Debug.useOldClassIndex){
-            len += YapConst.YAPID_LENGTH;
-        }
-        
-        if(Debug.useBTrees){
-            len += YapConst.YAPID_LENGTH;
-        }
+                + (YapConst.YAPID_LENGTH);       
+
+        len += _index.ownLength();
         
         if (i_fields != null) {
             for (int i = 0; i < i_fields.length; i++) {
@@ -1360,12 +1279,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	}
 
     void purge() {
-        if (i_index != null) {
-            if (!i_index.isDirty()) {
-                i_index.clear();
-                i_index.setStateDeactivated();
-            }
-        }
+        _index.purge();
         
         // TODO: may want to add manual purge to Btree
         //       indexes here
@@ -1663,30 +1577,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	        
 	        checkDb4oType();
             
-            if(Debug.useOldClassIndex){
-                int classIndexId = i_reader.readInt();
-                if (hasIndex()) {
-                    i_index = i_stream.createClassIndex(this);
-                    if (classIndexId > 0) {
-                        i_index.setID(classIndexId);
-                    }
-                    i_index.setStateDeactivated();
-                }
-            }
-            
-            if(Debug.useBTrees){
-                int indexId = i_reader.readInt();
-                if(! i_stream.isClient()  && hasIndex()  && _index == null){
-                    YapFile yf = (YapFile)i_stream;
-                    if(indexId < 0){
-                        createBTreeIndex(- indexId);
-                    }else{
-                        createBTreeIndex(0);
-                        new ClassIndexesToBTrees().convert(yf, indexId, _index);
-                        yf.setDirty(this);
-                    }
-                }
-            }
+            _index.read(i_reader, i_stream);
             
 	        i_fields = new YapField[i_reader.readInt()];
 	        for (int i = 0; i < i_fields.length; i++) {
@@ -1703,7 +1594,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	        i_reader = null;
 	        bitFalse(YapConst.READING);
         }
-    }
+    }	
 
     public boolean readArray(Object array, YapWriter reader) {
         return false;
@@ -1728,12 +1619,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     void removeFromIndex(Transaction ta, int id) {
         if (hasIndex()) {
-            if(Debug.useOldClassIndex){
-                ta.removeFromClassIndex(getID(), id);
-            }
-            if(Debug.useBTrees){
-                _index.remove(ta, new Integer(id));
-            }
+            _index.remove(ta, id);
         }
         if (i_ancestor != null) {
             i_ancestor.removeFromIndex(ta, id);
@@ -1994,18 +1880,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         a_writer.writeIDOf(trans, i_ancestor);
         
-        if(Debug.useOldClassIndex){
-            a_writer.writeIDOf(trans, i_index);
-        }
-        
-        if(Debug.useBTrees){
-            if(_index == null){
-                a_writer.writeInt(0);
-            }else{
-                _index.write(trans);
-                a_writer.writeInt(- _index.getID());
-            }
-        }
+        _index.writeId(a_writer, trans);
         
         if (i_fields == null) {
             a_writer.writeInt(0);

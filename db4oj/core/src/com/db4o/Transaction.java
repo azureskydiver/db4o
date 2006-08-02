@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.ClassIndex;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
@@ -56,7 +57,7 @@ public class Transaction {
         i_dirtyFieldIndexes = new List4(i_dirtyFieldIndexes, a_xft);
     }
 
-    void addToClassIndex(int a_yapClassID, int a_id) {
+    public void addToClassIndex(int a_yapClassID, int a_id) {
         if(Debug.checkSychronization){
             stream().i_lock.notify();
         }
@@ -586,7 +587,7 @@ public class Transaction {
     	return stream().reflector();
     }
 
-    void removeFromClassIndex(int a_yapClassID, int a_id) {
+    public void removeFromClassIndex(int a_yapClassID, int a_id) {
         if(Debug.checkSychronization){
             stream().i_lock.notify();
         }
@@ -783,7 +784,7 @@ public class Transaction {
         return stream().toString();
     }
     
-    void traverseAddedClassIDs(int a_yapClassID, Visitor4 visitor) {
+    public void traverseAddedClassIDs(int a_yapClassID, Visitor4 visitor) {
         if(Debug.checkSychronization){
             stream().i_lock.notify();
         }
@@ -803,7 +804,7 @@ public class Transaction {
         }
     }
 
-    void traverseRemovedClassIDs(int a_yapClassID, Visitor4 visitor) {
+    public void traverseRemovedClassIDs(int a_yapClassID, Visitor4 visitor) {
         if(Debug.checkSychronization){
             stream().i_lock.notify();
         }

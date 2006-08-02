@@ -12,15 +12,15 @@ public final class TreeReader
 	private int i_current = 0;
 	private int i_levels = 0;
 	private int i_size;
-	private boolean i_orderOnRead = false;
+	private boolean i_orderOnRead;
 	
-	TreeReader(YapReader a_bytes, Readable a_template){
-		i_template = a_template;
-		i_bytes = a_bytes;
+	public TreeReader(YapReader a_bytes, Readable a_template) {
+		this(a_bytes, a_template, false);
 	}
 	
-	public TreeReader(YapReader a_bytes, Readable a_template, boolean a_orderOnRead){
-		this(a_bytes, a_template);
+	public TreeReader(YapReader a_bytes, Readable a_template, boolean a_orderOnRead) {
+		i_template = a_template;
+		i_bytes = a_bytes;
 		i_orderOnRead = a_orderOnRead;
 	}
 	

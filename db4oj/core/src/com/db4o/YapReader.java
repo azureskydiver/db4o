@@ -110,7 +110,7 @@ public class YapReader {
 		return a_trans.stream().readObjectReaderByAddress(readInt(), readInt());
 	}
 	
-	void readEncrypt(YapStream a_stream, int a_address) {
+	public void readEncrypt(YapStream a_stream, int a_address) {
 		a_stream.readBytes(_buffer, a_address, getLength());
 		a_stream.i_handlers.decrypt(this);
 	}

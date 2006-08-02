@@ -1,7 +1,19 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside;
 
+import com.db4o.Deploy;
+import com.db4o.ReadWriteable;
+import com.db4o.Transaction;
+import com.db4o.Tree;
+import com.db4o.TreeInt;
+import com.db4o.TreeReader;
+import com.db4o.UseSystemTransaction;
+import com.db4o.YapClass;
+import com.db4o.YapConst;
+import com.db4o.YapMeta;
+import com.db4o.YapReader;
+import com.db4o.YapStream;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
@@ -9,7 +21,7 @@ import com.db4o.inside.slots.*;
 /**
  * representation to collect and hold all IDs of one class
  */
- class ClassIndex extends YapMeta implements ReadWriteable, UseSystemTransaction {
+ public class ClassIndex extends YapMeta implements ReadWriteable, UseSystemTransaction {
      
      
     private final YapClass _yapClass;
@@ -23,7 +35,7 @@ import com.db4o.inside.slots.*;
         _yapClass = yapClass;
     }
 	
-	void add(int a_id){
+	public void add(int a_id){
 		i_root = Tree.add(i_root, new TreeInt(a_id));
 	}
 
@@ -35,13 +47,15 @@ import com.db4o.inside.slots.*;
         i_root = null;
     }
 
-    final Tree cloneForYapClass(Transaction a_trans, int a_yapClassID) {
-    	final Tree[] tree = new Tree[]{Tree.deepClone(i_root, null)}; 
+    public final Tree cloneForYapClass(Transaction a_trans, int a_yapClassID) {
+    	final Tree[] tree = new Tree[]{Tree.deepClone(i_root, null)};
+    	// TODO: see if it's possible to get traverseAddedClassIDs not public again
         a_trans.traverseAddedClassIDs(a_yapClassID, new Visitor4() {
             public void visit(Object obj) {
 				tree[0] = Tree.add(tree[0], new TreeInt(((TreeInt) obj)._key));
             }
         });
+        // TODO: see if it's possible to get traverseRemovedClassIDs not public again
         a_trans.traverseRemovedClassIDs(a_yapClassID, new Visitor4() {
             public void visit(Object obj) {
 				tree[0] = Tree.removeLike(tree[0], (TreeInt) obj);
@@ -61,7 +75,7 @@ import com.db4o.inside.slots.*;
         if(isActive()){
             return Tree.size(i_root);
         }
-        Slot slot = ta.getSlotInformation(i_id);
+        Slot slot = ta.getSlotInformation(getID());
         int length = YapConst.YAPINT_LENGTH;
         if(Deploy.debug){
             length += YapConst.LEADING_LENGTH;
@@ -81,12 +95,14 @@ import com.db4o.inside.slots.*;
         return YapConst.YAPINDEX;
     }
     
-    TreeInt getRoot(){
+    public TreeInt getRoot(){
         ensureActive();
         return (TreeInt)i_root;
     }
     
     YapStream getStream(){
+    	// TODO: get rid of this call
+    	// and make YapClass.getStream package/private again
         return _yapClass.getStream();
     }
 
@@ -102,11 +118,12 @@ import com.db4o.inside.slots.*;
     	i_root = new TreeReader(a_reader, new TreeInt(0)).read();
     }
 
-	void remove(int a_id){
+	public void remove(int a_id){
 		i_root = Tree.removeLike(i_root, new TreeInt(a_id));
 	}
 
     void setDirty(YapStream a_stream) {
+    	// TODO: get rid of the setDirty call
         a_stream.setDirty(this);
     }
 

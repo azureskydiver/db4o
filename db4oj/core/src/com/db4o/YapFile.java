@@ -101,12 +101,8 @@ public abstract class YapFile extends YapStream {
         // overridden in YapObjectCarrier to do nothing
         i_classCollection.initTables(1);
     }
-
-    final ClassIndex createClassIndex(YapClass yapClass) {
-        return new ClassIndex(yapClass);
-    }
     
-    final BTree createBTreeClassIndex(YapClass a_yapClass, int id){
+    public final BTree createBTreeClassIndex(YapClass a_yapClass, int id){
         return new BTree(
             i_trans, 
             id,  
@@ -564,7 +560,7 @@ public abstract class YapFile extends YapStream {
         i_entryCounter--;
     }
 
-    final void setDirty(UseSystemTransaction a_object) {
+    public final void setDirty(UseSystemTransaction a_object) {
         ((YapMeta) a_object).setStateDirty();
         ((YapMeta) a_object).cacheDirty(i_dirty);
     }

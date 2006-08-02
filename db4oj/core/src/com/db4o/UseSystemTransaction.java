@@ -2,6 +2,9 @@
 
 package com.db4o;
 
-/** marker interface to distinguish, which transaction to use */
-interface UseSystemTransaction {
+//TODO: check the need for this interface
+/** marker interface to distinguish, which transaction to use
+ * @exclude
+ */
+public interface UseSystemTransaction {
 }
