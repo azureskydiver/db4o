@@ -3,6 +3,9 @@
 package com.db4o.db4ounit.tools;
 
 import com.db4o.ObjectSet;
+import com.db4o.events.Event4;
+import com.db4o.events.EventListener4;
+import com.db4o.events.EventRegistryFactory;
 import com.db4o.query.Query;
 import com.db4o.tools.QueryStats;
 
@@ -17,8 +20,18 @@ public class QueryStatsTestCase extends Db4oTestCase {
 	public static class Item {
 	}
 	
-	private static final int ITEM_COUNT = 1000;
+	private static final int ITEM_COUNT = 10;
 	private QueryStats _stats;
+	
+	final EventListener4 _sleepOnQueryStart = new EventListener4() {
+		public void onEvent(com.db4o.events.Event4 e, com.db4o.events.EventArgs args) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException x) {
+				x.printStackTrace();
+			}
+		}
+	};
 
 	protected void store() {
 		for (int i=0; i<ITEM_COUNT; ++i) {
@@ -28,11 +41,10 @@ public class QueryStatsTestCase extends Db4oTestCase {
 	
 	public void setUp() throws Exception {
 		super.setUp();
-		
 		_stats = new QueryStats();		
 		_stats.connect(db());
 	}
-	
+
 	public void tearDown() throws Exception {
 		
 		_stats.disconnect();
@@ -56,6 +68,8 @@ public class QueryStatsTestCase extends Db4oTestCase {
 
 	public void testExecutionTime() {
 		
+		sleepOnQueryStart();
+		
 		Query q = db().query();		
 		q.constrain(Item.class);		
 		
@@ -64,7 +78,15 @@ public class QueryStatsTestCase extends Db4oTestCase {
 		long elapsed = System.currentTimeMillis() - started;
 		Assert.isTrue(_stats.executionTime() > 0);
 		Assert.isTrue(_stats.executionTime() <= elapsed);
+	}
+
+	private void sleepOnQueryStart() {
+		queryStartedEvent().addListener(_sleepOnQueryStart);
 	}	
+	
+	private Event4 queryStartedEvent() {
+		return EventRegistryFactory.forObjectContainer(db()).queryStarted();
+	}
 
 	public static void main(String[] args) {
 		new TestRunner(
