@@ -561,12 +561,18 @@
 			<fileset dir="${dir.workspace}/db4ounit/src">
 				<include name="**/*.java" />
 			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
 			<fileset dir="${dir.j.test.src}">
 				<include name="**/*.java" />
 			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
 			<fileset dir="${dir.j.jdk1.2.test.src}">
 				<include name="**/*.java" />
 			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
 			<fileset dir="${dir.j.jdk5.test.src}">
 				<include name="**/*.java" />
 			</fileset>
