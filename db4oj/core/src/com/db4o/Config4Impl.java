@@ -586,11 +586,11 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsByte(BLOCKSIZE);
 	}
     
-    int bTreeNodeSize() {
+    public int bTreeNodeSize() {
         return _config.getAsInt(BTREE_NODE_SIZE);
     }
     
-    int bTreeCacheHeight(){
+    public int bTreeCacheHeight(){
         return _config.getAsInt(BTREE_CACHE_HEIGHT);
     }
     

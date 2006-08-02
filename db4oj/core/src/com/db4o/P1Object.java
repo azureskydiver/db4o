@@ -25,9 +25,9 @@ public class P1Object implements Db4oTypeImpl{
     public void activate (Object a_obj, int a_depth){
         if(i_trans != null){
             if(a_depth < 0){
-                i_trans.i_stream.activate1(i_trans, a_obj);
+                i_trans.stream().activate1(i_trans, a_obj);
             }else{
-                i_trans.i_stream.activate1(i_trans, a_obj, a_depth);
+                i_trans.stream().activate1(i_trans, a_obj, a_depth);
             }
         }
     }
@@ -47,10 +47,10 @@ public class P1Object implements Db4oTypeImpl{
     public void checkActive(){
         if(i_trans != null){
 		    if(i_yapObject == null){
-		        i_yapObject = i_trans.i_stream.getYapObject(this);
+		        i_yapObject = i_trans.stream().getYapObject(this);
 		        if(i_yapObject == null){
-		            i_trans.i_stream.set(this);
-		            i_yapObject = i_trans.i_stream.getYapObject(this);
+		            i_trans.stream().set(this);
+		            i_yapObject = i_trans.stream().getYapObject(this);
 		        }
 		    }
 		    if(validYapObject()){
@@ -72,17 +72,17 @@ public class P1Object implements Db4oTypeImpl{
     void delete(){
         if(i_trans != null){
 	        if(i_yapObject == null){
-	            i_yapObject = i_trans.i_stream.getYapObject(this);
+	            i_yapObject = i_trans.stream().getYapObject(this);
 	        }
 	        if(validYapObject()){
-	            i_trans.i_stream.delete3(i_trans,i_yapObject,this, 0, false);
+	            i_trans.stream().delete3(i_trans,i_yapObject,this, 0, false);
 	        }
         }
     }
     
     protected void delete(Object a_obj){
         if(i_trans != null){
-            i_trans.i_stream.delete(a_obj);
+            i_trans.stream().delete(a_obj);
         }
     }
     
@@ -90,7 +90,7 @@ public class P1Object implements Db4oTypeImpl{
         if(i_trans == null){
             return 0;
         }
-        return i_trans.i_stream.getID(a_obj);
+        return i_trans.stream().getID(a_obj);
     }
     
     protected Transaction getTrans(){
@@ -107,8 +107,8 @@ public class P1Object implements Db4oTypeImpl{
 	
     protected Object replicate(Transaction fromTrans, Transaction toTrans) {
         
-        YapStream fromStream = fromTrans.i_stream;
-        YapStream toStream = toTrans.i_stream;
+        YapStream fromStream = fromTrans.stream();
+        YapStream toStream = toTrans.stream();
         
         MigrationConnection mgc = fromStream.i_handlers.i_migration;
         
@@ -160,7 +160,7 @@ public class P1Object implements Db4oTypeImpl{
     
     protected void store(Object a_obj){
         if(i_trans != null){
-            i_trans.i_stream.setInternal(i_trans, a_obj, true);
+            i_trans.stream().setInternal(i_trans, a_obj, true);
         }
     }
     
@@ -171,8 +171,8 @@ public class P1Object implements Db4oTypeImpl{
     
     Object streamLock(){
         if(i_trans != null){
-	        i_trans.i_stream.checkClosed();
-	        return i_trans.i_stream.lock();
+	        i_trans.stream().checkClosed();
+	        return i_trans.stream().lock();
         }
         return this;
     }
@@ -180,10 +180,10 @@ public class P1Object implements Db4oTypeImpl{
     public void store(int a_depth){
         if(i_trans != null){
             if(i_yapObject == null){
-                i_yapObject = i_trans.i_stream.getYapObject(this);
+                i_yapObject = i_trans.stream().getYapObject(this);
                 if(i_yapObject == null){
-                    i_trans.i_stream.setInternal(i_trans, this, true);
-                    i_yapObject = i_trans.i_stream.getYapObject(this);
+                    i_trans.stream().setInternal(i_trans, this, true);
+                    i_yapObject = i_trans.stream().getYapObject(this);
                     return;
                 }
             }
@@ -197,10 +197,10 @@ public class P1Object implements Db4oTypeImpl{
     
     void update(int depth){
         if(validYapObject()){
-            i_trans.i_stream.beginEndSet(i_trans);
+            i_trans.stream().beginEndSet(i_trans);
             i_yapObject.writeUpdate(i_trans, depth);
-            i_trans.i_stream.checkStillToSet();
-            i_trans.i_stream.beginEndSet(i_trans);
+            i_trans.stream().checkStillToSet();
+            i_trans.stream().beginEndSet(i_trans);
         }
     }
     
@@ -211,8 +211,8 @@ public class P1Object implements Db4oTypeImpl{
     void updateInternal(int depth){
         if(validYapObject()){
             i_yapObject.writeUpdate(i_trans, depth);
-            i_trans.i_stream.rememberJustSet(i_yapObject.getID());
-            i_trans.i_stream.checkStillToSet();
+            i_trans.stream().rememberJustSet(i_yapObject.getID());
+            i_trans.stream().checkStillToSet();
         }
     }
     

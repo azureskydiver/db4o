@@ -107,7 +107,7 @@ public class YapReader {
 	}
     
 	public final YapReader readEmbeddedObject(Transaction a_trans) {
-		return a_trans.i_stream.readObjectReaderByAddress(readInt(), readInt());
+		return a_trans.stream().readObjectReaderByAddress(readInt(), readInt());
 	}
 	
 	void readEncrypt(YapStream a_stream, int a_address) {
@@ -257,7 +257,7 @@ public class YapReader {
     }
     
     void writeShortString(Transaction trans, String a_string) {
-        trans.i_stream.i_handlers.i_stringHandler.writeShort(a_string, this);
+        trans.stream().i_handlers.i_stringHandler.writeShort(a_string, this);
     }
     
 }

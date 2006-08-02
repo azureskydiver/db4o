@@ -40,7 +40,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	
 	void activate(Transaction ta, Object a_object, int a_depth, boolean a_refresh) {
 	    activate1(ta, a_object, a_depth, a_refresh);
-		ta.i_stream.activate3CheckStill(ta);
+		ta.stream().activate3CheckStill(ta);
 	}
 	
 	void activate1(Transaction ta, Object a_object, int a_depth, boolean a_refresh) {
@@ -48,7 +48,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	        a_depth = ((Db4oTypeImpl)a_object).adjustReadDepth(a_depth);
 	    }
 		if (a_depth > 0) {
-		    YapStream stream = ta.i_stream;
+		    YapStream stream = ta.stream();
 		    if(a_refresh){
 				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
 					stream.message("" + getID() + " refresh " + i_yapClass.getName());
@@ -94,7 +94,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
             
             YapWriter writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
 
-            YapStream stream = a_trans.i_stream;
+            YapStream stream = a_trans.stream();
 			stream.writeNew(i_yapClass, writer);
 
             Object obj = getObject();
@@ -122,7 +122,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			    if(obj instanceof Db4oTypeImpl){
 			        ((Db4oTypeImpl)obj).preDeactivate();
 			    }
-			    YapStream stream = a_trans.i_stream;
+			    YapStream stream = a_trans.stream();
 				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
 					stream.message("" + getID() + " deactivate " + i_yapClass.getName());
 				}
@@ -200,7 +200,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 		if (beginProcessing()) {
 		    
-		    YapStream stream = ta.i_stream;
+		    YapStream stream = ta.stream();
 
 			if (a_reader == null) {
 				a_reader = stream.readWriterByID(ta, getID());
@@ -307,7 +307,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		i_object = a_object;
 		writeObjectBegin();
 		
-		YapStream stream = a_trans.i_stream;
+		YapStream stream = a_trans.stream();
 
 		i_yapClass = a_yapClass;
 
@@ -375,7 +375,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		    
 		    Object obj = getObject();
 		    
-		    if(objectCanUpdate(a_trans.i_stream, obj)){
+		    if(objectCanUpdate(a_trans.stream(), obj)){
 				
 				if ((!isActive()) || obj == null) {
 					endProcessing();
@@ -394,13 +394,13 @@ public class YapObject extends YapMeta implements ObjectInfo{
 					}
 				}
 				
-				if (a_trans.i_stream.configImpl().messageLevel() > YapConst.STATE) {
-				    a_trans.i_stream.message("" + getID() + " update " + i_yapClass.getName());
+				if (a_trans.stream().configImpl().messageLevel() > YapConst.STATE) {
+				    a_trans.stream().message("" + getID() + " update " + i_yapClass.getName());
 				}
 	
 				setStateClean();
 	
-				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.i_stream.i_handlers.arrayType(obj), 0);
+				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.stream().i_handlers.arrayType(obj), 0);
                 
                 MarshallerFamily.current()._object.marshallUpdate(a_trans, a_updatedepth, this, obj);
 				

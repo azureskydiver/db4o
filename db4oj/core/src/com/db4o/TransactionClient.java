@@ -37,7 +37,7 @@ final class TransactionClient extends Transaction {
             i_yapObjectsToGc.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     YapObject yo = (YapObject)((TreeIntObject) a_object)._object;
-                    i_stream.yapObjectGCd(yo);
+                    stream().yapObjectGCd(yo);
                 }
             });
         }
@@ -77,7 +77,7 @@ final class TransactionClient extends Transaction {
         message = (MsgD)i_client.expectedResponse(Msg.OBJECT_BY_UUID);
         int id = message.readInt();
         if(id > 0){
-            return i_stream.getObjectAndYapObjectByID(this, id);
+            return stream().getObjectAndYapObjectByID(this, id);
         }
         return new Object[2];
     }

@@ -24,12 +24,12 @@ final class YapFieldTranslator extends YapField
 		if(a_depth > 0){
 			cascadeActivation(a_trans, a_onObject, a_depth, false);
 		}
-		setOn(a_trans.i_stream, a_onObject, null);
+		setOn(a_trans.stream(), a_onObject, null);
 	}
 
 	public Object getOn(Transaction a_trans, Object a_OnObject){
 		try{
-			return i_translator.onStore(a_trans.i_stream, a_OnObject);
+			return i_translator.onStore(a_trans.stream(), a_OnObject);
 		}catch(Throwable t){
 			return null;
 		}

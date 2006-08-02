@@ -67,7 +67,7 @@ import com.db4o.inside.slots.*;
             length += YapConst.LEADING_LENGTH;
         }
         YapReader reader = new YapReader(length);
-        reader.readEncrypt(ta.i_stream, slot._address);
+        reader.readEncrypt(ta.stream(), slot._address);
         if (reader == null) {
             return 0;
         }

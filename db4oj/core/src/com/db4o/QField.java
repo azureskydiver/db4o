@@ -61,7 +61,7 @@ public class QField implements Visitor4, Unversioned{
 	
 	YapClass getYapClass(){
 		if(i_yapField != null){
-			return i_yapField.getFieldYapClass(i_trans.i_stream);
+			return i_yapField.getFieldYapClass(i_trans.stream());
 		}
 		return null;
 	}
@@ -96,7 +96,7 @@ public class QField implements Visitor4, Unversioned{
 		if(obj == null){
 			return Null.INSTANCE;
 		}
-		YapClass yc = i_trans.i_stream.getYapClass(i_trans.reflector().forObject(obj), true);
+		YapClass yc = i_trans.stream().getYapClass(i_trans.reflector().forObject(obj), true);
 		YapField yf = yc.getYapField(i_name);
 		if(yf != null){
 			return yf.prepareComparison(obj);
@@ -106,7 +106,7 @@ public class QField implements Visitor4, Unversioned{
 	
 	void unmarshall(Transaction a_trans){
 		if(i_yapClassID != 0){
-			YapClass yc = a_trans.i_stream.getYapClass(i_yapClassID);
+			YapClass yc = a_trans.stream().getYapClass(i_yapClassID);
 			i_yapField = yc.i_fields[i_index];
 		}
 	}

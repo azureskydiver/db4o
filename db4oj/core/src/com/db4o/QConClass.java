@@ -25,8 +25,8 @@ public class QConClass extends QConObject{
 	QConClass(Transaction a_trans, QCon a_parent, QField a_field, ReflectClass claxx){
 		super(a_trans, a_parent, a_field, null);
 		if(claxx != null){
-			i_yapClass = a_trans.i_stream.getYapClass(claxx, true);
-			if(claxx.equals(a_trans.i_stream.i_handlers.ICLASS_OBJECT)){
+			i_yapClass = a_trans.stream().getYapClass(claxx, true);
+			if(claxx.equals(a_trans.stream().i_handlers.ICLASS_OBJECT)){
 				i_yapClass = (YapClass)((YapClassPrimitive)i_yapClass).i_handler;
 			}
 		}

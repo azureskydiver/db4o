@@ -15,7 +15,7 @@ public class BTreeIntIndex {
             return;
         }
         
-        BTree btree = new BTree(4, 0, trans(), 0, new YInt(stream()), null);
+        BTree btree = new BTree(trans(), 0, new YInt(stream()), null);
         
         for (int i = 0; i < 5; i++) {
             btree = cycle(btree);    
@@ -42,7 +42,7 @@ public class BTreeIntIndex {
         int id = btree.getID();
         Test.reOpen();
         
-        btree = new BTree(4, 0, trans(), id, new YInt(stream()), null);
+        btree = new BTree(trans(), id, new YInt(stream()), null);
         
         expect(btree, SORTED);
         

@@ -290,7 +290,7 @@ public abstract class QQueryBase implements Unversioned {
     }
 
 	private YapStream stream() {
-		return i_trans.i_stream;
+		return i_trans.stream();
 	}
 
 	private QueryResult classOnlyQuery() {

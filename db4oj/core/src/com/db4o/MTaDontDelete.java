@@ -13,7 +13,7 @@ class MTaDontDelete extends MsgD {
         int classID = _payLoad.readInt();
 	    int id = _payLoad.readInt();
 	    Transaction trans = getTransaction();
-	    YapStream stream = trans.i_stream;
+	    YapStream stream = trans.stream();
 	    synchronized (stream.i_lock) {
 	        trans.dontDelete(classID, id);
 	        return true;

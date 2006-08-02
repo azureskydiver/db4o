@@ -16,16 +16,10 @@ public class Searcher {
     
     public int _cmp;
     
-    private int _target;
+    private final SearchTarget _target;
     
-    private static final int ANY = 0;
-    
-    private static final int HIGHEST = 1;
-    
-    private static final int LOWEST = -1;
-    
-    
-    public Searcher(int count){
+    public Searcher(SearchTarget target, int count){
+        _target = target;
         start(count);
     }
     
@@ -67,28 +61,25 @@ public class Searcher {
             return;
         }
         
-        if(_target == ANY){
+        if(_target == SearchTarget.ANY){
             _lower = _cursor;
             _upper = _cursor;
             return;
         }
         
-        if(_target == HIGHEST){
+        if(_target == SearchTarget.HIGHEST){
             _lower = _cursor;
             return;
         }
-
-        // _target must be LOWEST here
-        _upper = _cursor;
+        
+        if(_target == SearchTarget.LOWEST){
+            _upper = _cursor;
+            return;
+        }
+        
+        throw new IllegalStateException("Unknown target");
         
     }
     
-    void highest(){
-        _target = HIGHEST;
-    }
-    
-    void lowest(){
-        _target = LOWEST;
-    }
 
 }

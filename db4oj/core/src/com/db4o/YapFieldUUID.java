@@ -59,19 +59,19 @@ class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
-    Index4 getIndex(Transaction a_trans){
-        if(i_index != null){
-            return i_index;
+    Index4 getOldIndex(Transaction a_trans){
+        if(_oldIndex != null){
+            return _oldIndex;
         }
-        YapFile stream = (YapFile)a_trans.i_stream;
-        if(i_index == null){
+        YapFile stream = (YapFile)a_trans.stream();
+        if(_oldIndex == null){
             MetaIndex metaIndex = stream.getUUIDMetaIndex();
             if(metaIndex == null){
                 return null;
             }
-            i_index = new Index4(stream.getSystemTransaction(), getHandler(), metaIndex, false);
+            _oldIndex = new Index4(stream.getSystemTransaction(), getHandler(), metaIndex, false);
         }
-        return i_index;
+        return _oldIndex;
     }
     
     boolean hasIndex() {
@@ -80,7 +80,7 @@ class YapFieldUUID extends YapFieldVirtual {
     
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
         int dbID = a_bytes.readInt();
-        YapStream stream = a_trans.i_stream;
+        YapStream stream = a_trans.stream();
         stream.showInternalClasses(true);
         Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
         if(db != null && db.i_signature == null){

@@ -89,7 +89,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
     
     public void prepareIndexedPayLoadEntry(Transaction trans){
-        _payLoadLength =  trans.i_stream.alignToBlockSize(_payLoadLength);
+        _payLoadLength =  trans.stream().alignToBlockSize(_payLoadLength);
     }
     
     public void write(YapWriter writer){

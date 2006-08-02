@@ -45,7 +45,7 @@ public final class YapString extends YapIndependantType {
             return a_object;    
         }
         int[] slot = (int[]) a_object;
-        return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
+        return a_trans.stream().readObjectReaderByAddress(slot[0], slot[1]);
     }
     
     public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes){
@@ -143,12 +143,12 @@ public final class YapString extends YapIndependantType {
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
         if(! withRedirection){
-            return mf._string.read(a_trans.i_stream, a_reader);
+            return mf._string.read(a_trans.stream(), a_reader);
         }
-	    YapReader reader = mf._string.readSlotFromParentSlot(a_trans.i_stream, a_reader);
+	    YapReader reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
 	    if(a_toArray) {
 	        if(reader != null) {
-                return mf._string.readFromOwnSlot(a_trans.i_stream, reader);
+                return mf._string.readFromOwnSlot(a_trans.stream(), reader);
 	        }
 	    }
 	    return reader;

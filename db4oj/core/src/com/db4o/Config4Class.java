@@ -164,7 +164,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         }
         _processing = true;
         if (Tuning.fieldIndices) {
-            YapStream stream = systemTrans.i_stream;
+            YapStream stream = systemTrans.stream();
             if (stream.maintainsIndices()) {
             	boolean maintainMetaClass=_config.getAsBoolean(MAINTAIN_METACLASS);
                 if(maintainMetaClass){

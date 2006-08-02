@@ -80,7 +80,7 @@ public abstract class YapMeta {
     public void read(Transaction a_trans) {
         try {
             if (beginProcessing()) {
-                YapReader reader = a_trans.i_stream.readReaderByID(a_trans, getID());
+                YapReader reader = a_trans.stream().readReaderByID(a_trans, getID());
                 if (reader != null) {
                     if (Deploy.debug) {
                         reader.readBegin(getIdentifier());
@@ -137,7 +137,7 @@ public abstract class YapMeta {
             return;
         }
             
-        YapFile stream = (YapFile)a_trans.i_stream;
+        YapFile stream = (YapFile)a_trans.stream();
         
         int address = 0;
         int length = ownLength();

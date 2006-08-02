@@ -59,9 +59,9 @@ abstract class YapFieldVirtual extends YapField {
         return a_stream.stringIO().shortLength(i_name);
     }
 
-    void initIndex(Transaction systemTrans, MetaIndex metaIndex) {
-        if (i_index == null) {
-            i_index = new Index4(systemTrans, getHandler(),metaIndex, false);
+    void initOldIndex(Transaction systemTrans, MetaIndex metaIndex) {
+        if (_oldIndex == null) {
+            _oldIndex = new Index4(systemTrans, getHandler(),metaIndex, false);
         }
     }
 
@@ -94,7 +94,7 @@ abstract class YapFieldVirtual extends YapField {
             return;
         }
         
-        YapStream stream = trans.i_stream;
+        YapStream stream = trans.stream();
         YapHandlers handlers = stream.i_handlers;
         boolean migrating = false;
         

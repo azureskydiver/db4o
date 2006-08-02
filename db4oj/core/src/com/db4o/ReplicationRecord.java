@@ -40,8 +40,8 @@ public class ReplicationRecord implements Internal4{
     
     public static ReplicationRecord beginReplication(Transaction transA, Transaction  transB){
         
-        YapStream peerA = transA.i_stream;
-        YapStream peerB = transB.i_stream;
+        YapStream peerA = transA.stream();
+        YapStream peerB = transB.stream();
         
         Db4oDatabase dbA = peerA.identity();
         Db4oDatabase dbB = peerB.identity();

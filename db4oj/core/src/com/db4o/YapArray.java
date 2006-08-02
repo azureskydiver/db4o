@@ -311,7 +311,7 @@ public class YapArray extends YapIndependantType {
                         elements -= YapConst.PRIMITIVE;
                     }
                 }
-                YapClass yc = a_trans.i_stream.getYapClass(- elements);
+                YapClass yc = a_trans.stream().getYapClass(- elements);
                 if (yc != null) {
                     if(primitive){
                     	clazz[0] = yc.primitiveClassReflector();

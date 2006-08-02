@@ -39,8 +39,8 @@ public class MetaClass implements Internal4{
 		}
 		MetaField newMetaField = new MetaField(a_name);
 		fields[fields.length - 1] = newMetaField;
-		trans.i_stream.setInternal(trans, newMetaField, YapConst.UNSPECIFIED, false);
-		trans.i_stream.setInternal(trans, this, YapConst.UNSPECIFIED, false);
+		trans.stream().setInternal(trans, newMetaField, YapConst.UNSPECIFIED, false);
+		trans.stream().setInternal(trans, this, YapConst.UNSPECIFIED, false);
 		return newMetaField;
 	}
 

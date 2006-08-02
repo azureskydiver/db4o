@@ -166,7 +166,7 @@ public final class YapWriter extends YapReader {
     }
 
     public YapStream getStream() {
-        return i_trans.i_stream;
+        return i_trans.stream();
     }
 
     public Transaction getTransaction() {
@@ -193,7 +193,7 @@ public final class YapWriter extends YapReader {
     }
 
     public void read() {
-        i_trans.i_stream.readBytes(_buffer, i_address,_addressOffset, i_length);
+        i_trans.stream().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
     final boolean read(YapSocket sock) throws IOException {
@@ -218,7 +218,7 @@ public final class YapWriter extends YapReader {
         if (tio != null) {
             bytes = (YapWriter) ((TreeIntObject)tio)._object; 
         }else{
-            bytes = i_trans.i_stream.readObjectWriterByAddress(i_trans, id, length);
+            bytes = i_trans.stream().readObjectWriterByAddress(i_trans, id, length);
             if (bytes != null) {
                 bytes.setID(id);
             }
@@ -318,7 +318,7 @@ public final class YapWriter extends YapReader {
         forEachEmbedded(new VisitorYapBytes() {
             public void visit(YapWriter a_bytes) {
                 a_bytes.writeEmbedded();
-                i_trans.i_stream.writeEmbedded(finalThis, a_bytes);
+                i_trans.stream().writeEmbedded(finalThis, a_bytes);
             }
         });
         
@@ -340,9 +340,9 @@ public final class YapWriter extends YapReader {
         if (Deploy.debug) {
             debugCheckBytes();
         }
-        i_trans.i_stream.i_handlers.encrypt(this);
+        i_trans.stream().i_handlers.encrypt(this);
         i_trans.i_file.writeBytes(this, i_address, _addressOffset);
-        i_trans.i_stream.i_handlers.decrypt(this);
+        i_trans.stream().i_handlers.decrypt(this);
     }
     
     /* Only used for Strings, topLevel therefore means aligning blocksize, so

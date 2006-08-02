@@ -158,6 +158,29 @@ public class BTreeNode extends YapMeta{
         return null;
     }
     
+    public BTreePointer findStart(Transaction trans, Object value) {
+        
+        YapReader reader = prepareRead(trans);
+        
+        Searcher s = search(trans, reader);
+        
+        if(_isLeaf){
+            
+        }else{
+            
+        }
+
+        return null;
+    }
+    
+    public BTreePointer findEnd(Transaction trans, Object value) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    
+    
+    
     private boolean canWrite(){
         return _keys != null;
     }
@@ -547,7 +570,7 @@ public class BTreeNode extends YapMeta{
             reader.readBegin(getIdentifier());
         }
         
-        readSlotHeader(reader);
+        readNodeHeader(reader);
         
         return reader;
     }
@@ -584,7 +607,7 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    private void readSlotHeader(YapReader reader){
+    private void readNodeHeader(YapReader reader){
         _count = reader.readInt();
         byte leafByte = reader.readByte();
         _isLeaf = (leafByte == 1);
@@ -594,7 +617,7 @@ public class BTreeNode extends YapMeta{
     }
     
     public void readThis(Transaction trans, YapReader reader) {
-        readSlotHeader(reader);
+        readNodeHeader(reader);
 
         prepareArrays();
 
@@ -695,7 +718,11 @@ public class BTreeNode extends YapMeta{
     }
     
     private Searcher search(Transaction trans, YapReader reader){
-        Searcher s = new Searcher(_count);
+        return search(trans, reader, SearchTarget.ANY);
+    }
+    
+    private Searcher search(Transaction trans, YapReader reader, SearchTarget target){
+        Searcher s = new Searcher(target, _count);
         while(s.incomplete()){
             compare(s, reader);
         }
@@ -973,6 +1000,8 @@ public class BTreeNode extends YapMeta{
         }
         return str;
     }
+
+
     
 
 }
