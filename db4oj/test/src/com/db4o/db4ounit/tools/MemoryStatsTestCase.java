@@ -11,7 +11,7 @@ public class MemoryStatsTestCase implements db4ounit.TestCase {
 		System.gc();
 		long memory1 = usedMemory();
 		
-		byte[] buffer = new byte[1024*64];
+		byte[] buffer = new byte[1024*1024];
 		Assert.isNotNull(buffer); // just to remove 'variable is not read' warning
 		
 		long memory2 = usedMemory();
