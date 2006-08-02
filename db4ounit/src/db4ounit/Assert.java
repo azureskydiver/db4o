@@ -85,5 +85,9 @@ public final class Assert {
 			|| (expected != null
 				&& actual != null
 				&& expected.equals(actual));
+	}
+
+	public static void isFalse(boolean condition) {
+		isTrue(!condition);
 	}		
 }
