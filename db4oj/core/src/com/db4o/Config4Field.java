@@ -135,12 +135,8 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	        					stream.message("dropping index " + yapField.toString());
 	        				}
 	                        MetaIndex mi = metaField.index;
-	                        if (mi.indexLength > 0) {
-	                            stream.free(mi.indexAddress, mi.indexLength);
-	                        }
-	                        if (mi.patchLength > 0) {
-	                            stream.free(mi.patchAddress, mi.patchLength);
-	                        }
+	                        mi.free(stream);
+	                        
 	                        stream.delete1(systemTrans, mi, false);
 	                        metaField.index = null;
 	                        stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);

@@ -148,7 +148,7 @@ public class AllTestsConfAll extends TestSuite{
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = true;
+    public boolean CLIENT_SERVER = false;
     
     /**
      * use ObjectServer#openClient() instead of Db4o.openClient()

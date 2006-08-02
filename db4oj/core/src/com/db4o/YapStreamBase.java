@@ -386,8 +386,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return configImpl();
     }
 
-    abstract ClassIndex createClassIndex(YapClass a_yapClass);
-
     abstract QueryResultImpl createQResult(Transaction a_ta);
 
     void createStringIO(byte encoding) {
@@ -963,7 +961,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return i_classCollection.getYapClass(a_id);
     }
 
-    final YapObject getYapObject(int a_id) {
+    public final YapObject getYapObject(int a_id) {
         if(DTrace.enabled){
             DTrace.GET_YAPOBJECT.log(a_id);
         }
@@ -1833,7 +1831,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 			&& yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW);
 	}
 
-    abstract void setDirty(UseSystemTransaction a_object);
+    public abstract void setDirty(UseSystemTransaction a_object);
 
     public abstract boolean setSemaphore(String name, int timeout);
 
@@ -2020,7 +2018,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
 
-    final void yapObjectGCd(YapObject yo) {
+    public final void yapObjectGCd(YapObject yo) {
         
         // TODO: rename to removeReference 
         

@@ -313,7 +313,7 @@ public abstract class Tree implements ShallowClone,Readable{
         return this;
     }
 	
-	static Tree removeLike(Tree from, Tree a_find){
+	public static Tree removeLike(Tree from, Tree a_find){
 		if(from == null){
 			return null;
 		}

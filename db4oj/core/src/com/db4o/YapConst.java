@@ -22,7 +22,7 @@ public final class YapConst
 	public static final byte	YAPOBJECT			= (byte)'O';
 	static final byte	YAPARRAY			= (byte)'N';
 	static final byte	YAPARRAYN			= (byte)'Z';
-	static final byte	YAPINDEX			= (byte)'X';
+	public static final byte	YAPINDEX			= (byte)'X';
 	public static final byte	YAPSTRING			= (byte)'S';
 	static final byte	YAPLONG				= (byte)'l';
 	static final byte	YAPINTEGER			= (byte)'i';
