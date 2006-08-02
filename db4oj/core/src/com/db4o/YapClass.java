@@ -38,7 +38,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     public YapField[] i_fields;
     
-    private final ClassIndexStrategy _index = createIndexStrategy();
+    private final ClassIndexStrategy _index;
     
     protected String i_name;
 
@@ -76,6 +76,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     YapClass(YapStream stream, ReflectClass reflector){
     	i_stream = stream;
         _reflector = reflector;
+        _index = createIndexStrategy();
     }
     
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
@@ -861,7 +862,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(ci == null){
             return null;
         }
-        return (TreeInt)ci.getRoot();
+        return ci.getRoot();
     }
     
     public ReflectClass classReflector(){

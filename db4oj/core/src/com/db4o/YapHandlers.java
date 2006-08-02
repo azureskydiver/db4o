@@ -126,7 +126,7 @@ public final class YapHandlers {
         for (int i = 0; i < CLASSCOUNT; i++) {
             int id = i + 1; // note that we avoid 0 here
             i_yapClasses[i] = new YapClassPrimitive(a_stream, i_handlers[i]);
-            i_yapClasses[i].i_id = id; 
+            i_yapClasses[i].setID(id); 
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if(i < ANY_INDEX){
             	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName(), null);
@@ -144,8 +144,8 @@ public final class YapHandlers {
             reflector.registerPrimitiveClass(id, i_platformTypes[i].getName(), converter);
             i_handlers[idx] = i_platformTypes[i];
             i_yapClasses[idx] = new YapClassPrimitive(a_stream, i_platformTypes[i]);
-            i_yapClasses[idx].i_id = id;
-            if (i_yapClasses[idx].i_id > i_maxTypeID) {
+            i_yapClasses[idx].setID(id);
+            if (id > i_maxTypeID) {
                 i_maxTypeID = idx;
             }
             i_classByClass.put(i_platformTypes[i].classReflector(), i_yapClasses[idx]);
@@ -158,12 +158,12 @@ public final class YapHandlers {
 
         i_anyArray = new YapClassPrimitive(a_stream, new YapArray(_masterStream,
             i_handlers[ANY_INDEX], false));
-        i_anyArray.i_id = ANY_ARRAY_ID;
+        i_anyArray.setID(ANY_ARRAY_ID);
         i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
         i_anyArrayN = new YapClassPrimitive(a_stream, new YapArrayN(_masterStream,
             i_handlers[ANY_INDEX], false));
-        i_anyArrayN.i_id = ANY_ARRAY_N_ID;
+        i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
     }
 
