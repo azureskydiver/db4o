@@ -2,17 +2,16 @@
 
 package com.db4o.test;
 
-import com.db4o.test.cluster.*;
-import com.db4o.test.conjunctions.*;
-import com.db4o.test.constraints.*;
-import com.db4o.test.foundation.FoundationTestSuite;
-import com.db4o.test.inside.btree.*;
-import com.db4o.test.interfaces.*;
-import com.db4o.test.java.*;
-import com.db4o.test.nativequery.*;
-import com.db4o.test.performance.*;
-import com.db4o.test.soda.*;
-import com.db4o.test.virtualfields.*;
+import com.db4o.test.cluster.BasicClusterTest;
+import com.db4o.test.conjunctions.ConjunctionsTestSuite;
+import com.db4o.test.constraints.ConstraintsTestSuite;
+import com.db4o.test.inside.btree.BTreeTestSuite;
+import com.db4o.test.interfaces.InterfacesTestSuite;
+import com.db4o.test.java.JavaTestSuite;
+import com.db4o.test.nativequery.NativeQueryTestSuite;
+import com.db4o.test.performance.IndexQueryingIsFast;
+import com.db4o.test.soda.SodaNumberCoercion;
+import com.db4o.test.virtualfields.VirtualFieldsTestSuite;
 
 public class AllTestsConfAll extends TestSuite{
 
@@ -23,7 +22,6 @@ public class AllTestsConfAll extends TestSuite{
         suites.add(new BTreeTestSuite());
         suites.add(new ConstraintsTestSuite());
         suites.add(new ConjunctionsTestSuite());
-        suites.add(new FoundationTestSuite());
         suites.add(new InterfacesTestSuite());
         suites.add(new JavaTestSuite());
         suites.add(new NativeQueryTestSuite());

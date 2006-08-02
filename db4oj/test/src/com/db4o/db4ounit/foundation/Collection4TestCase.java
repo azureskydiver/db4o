@@ -1,12 +1,15 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.foundation;
+package com.db4o.db4ounit.foundation;
 
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.test.Test;
 
-public class Collection4TestCase {
+import db4ounit.Assert;
+import db4ounit.TestCase;
+
+public class Collection4TestCase implements TestCase {
 	
 	public void testFastIterator() {
 		Collection4 c = new Collection4();
@@ -15,13 +18,13 @@ public class Collection4TestCase {
 		c.addAll(expected);
 		
 		Iterator4 iterator = c.iterator();
-		Test.ensure(null != iterator);
+		Assert.isNotNull(iterator);
 		
 		for (int i=expected.length-1; i>=0; --i) {
 			Test.ensure(iterator.hasNext());
 			Test.ensureEquals(expected[i], iterator.next());
 		}
-		Test.ensure(!iterator.hasNext());
+		Assert.isFalse(iterator.hasNext());
 	}
 	
 	public void testStrictIterator() {
@@ -31,20 +34,12 @@ public class Collection4TestCase {
 		c.addAll(expected);
 		
 		Iterator4 iterator = c.strictIterator();
-		Test.ensure(null != iterator);
+		Assert.isNotNull(iterator);
 		
 		for (int i=0; i<expected.length; ++i) {
-			Test.ensure(iterator.hasNext());
-			Test.ensureEquals(expected[i], iterator.next());
+			Assert.isTrue(iterator.hasNext());
+			Assert.areEqual(expected[i], iterator.next());
 		}
-		Test.ensure(!iterator.hasNext());
+		Assert.isFalse(iterator.hasNext());
 	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Test.run(Collection4TestCase.class);
-	}
-
 }
