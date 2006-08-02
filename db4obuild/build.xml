@@ -14,7 +14,9 @@
 	csc.executable.path.net2=<path to csc.exe for .NET 2.0 if different than default>
 	file.compiler.jdk1.3.args.optional=<OPTIONAL: any parameters for javac, e.g. '-source 1.3' if a JDK >= 5 is used>
 	file.keystore=<OPTIONAL: keystore location for signjar tasks. if not present, ${user.home}/.keystore is assumed>	
-
+	mono.mcs.executable=<OPTIONAL: path to mcs executable, overrides ant.properties entry>
+	mono.gmcs.executable=<OPTIONAL: path to gmcs executable, overrides ant.properties entry>
+	
 	An example:
 	dir.workspace=C:/_db4o/production
 	file.compiler.jdk1.3=C:/jdk1.3.1_12/bin/javac.exe
@@ -1026,7 +1028,7 @@
 	<target name="zipmono-pascalcase" depends="init"  description="Zip Mono PascalCase distribution">
 		<antcall target="do-zipmono-pascalcase">
 			<param name="mono.definitions" value="MONO" />
-			<param name="mono.executable" value="mcs" />
+			<param name="mono.executable" value="${mono.mcs.executable}" />
 			<param name="mono.ndoc.executable" value="mono/1.0/NDocConsole.exe" />
 		</antcall>
 	</target>
@@ -1034,7 +1036,7 @@
 	<target name="zipmono2-pascalcase" depends="init"  description="Zip Mono with generics PascalCase distribution">
 		<antcall target="do-zipmono-pascalcase">
 			<param name="mono.definitions" value="MONO;NET_2_0" />
-			<param name="mono.executable" value="gmcs" />
+			<param name="mono.executable" value="${mono.gmcs.executable}" />
 			<param name="mono.ndoc.executable" value="net/2.0/NDocConsole.exe" />
 		</antcall>
 	</target>
