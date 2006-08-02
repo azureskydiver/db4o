@@ -32,11 +32,13 @@
 			<compilerarg line="${file.compiler.jdk1.3.args}"/>
 		</javac>
 		
+		<!--
 		<jar destfile="${db4ounit.jar}">
 			<fileset dir="${db4ounit.bin.dir}">
 				<include name="**/*.class" />
 			</fileset>
 		</jar>
+		-->
 		
 	</target>
 		
