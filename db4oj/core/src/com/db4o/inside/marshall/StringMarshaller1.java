@@ -26,7 +26,7 @@ public class StringMarshaller1 extends StringMarshaller{
             return;
         }
         
-        header.addPayLoadLength(trans.i_stream.stringIO().length((String)obj));
+        header.addPayLoadLength(trans.stream().stringIO().length((String)obj));
     }
     
     public Object writeNew(Object obj, boolean topLevel, YapWriter writer, boolean redirect) {

@@ -31,7 +31,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
 
     YapClassCollection(Transaction a_trans) {
         i_systemTrans = a_trans;
-        i_stream = a_trans.i_stream;
+        i_stream = a_trans.stream();
         i_initYapClassesOnUp = new Queue4();
 		_classInits = new PendingClassInits(this);
     }
@@ -238,12 +238,12 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
 
     void initOnUp(Transaction systemTrans) {
         i_yapClassCreationDepth++;
-        systemTrans.i_stream.showInternalClasses(true);
+        systemTrans.stream().showInternalClasses(true);
         Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
             ((YapClass)i.next()).initOnUp(systemTrans);
         }
-        systemTrans.i_stream.showInternalClasses(false);
+        systemTrans.stream().showInternalClasses(false);
         i_yapClassCreationDepth--;
         initYapClassesOnUp();
     }

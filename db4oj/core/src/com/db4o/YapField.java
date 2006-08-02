@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
@@ -43,11 +44,13 @@ public class YapField implements StoredField {
 
     private static final int AVAILABLE   = 1;
 
-    protected Index4        i_index;
+    protected Index4        _oldIndex;
 
     private Config4Field     i_config;
 
     private Db4oTypeImpl     i_db4oType;
+    
+    private BTree _index;
 
     static final YapField[]  EMPTY_ARRAY = new YapField[0];
 
@@ -98,7 +101,8 @@ public class YapField implements StoredField {
         if (! hasIndex()) {
             return;
         }
-        Index4 index = getIndex(a_trans);
+        
+        Index4 index = getOldIndex(a_trans);
         if(index == null){
             return;
         }
@@ -125,7 +129,7 @@ public class YapField implements StoredField {
             return;
         }
         i_handler.prepareComparison(indexEntry);
-        IndexTransaction ift = getIndex(trans).dirtyIndexTransaction(trans);
+        IndexTransaction ift = getOldIndex(trans).dirtyIndexTransaction(trans);
         ift.remove(parentID, indexEntry);
     }
     
@@ -248,7 +252,7 @@ public class YapField implements StoredField {
         Object a_template, Visitor4 a_visitor) {
         Object obj = getOn(a_trans, a_template);
         if (obj != null) {
-            Collection4 objs = Platform4.flattenCollection(a_trans.i_stream, obj);
+            Collection4 objs = Platform4.flattenCollection(a_trans.stream(), obj);
             Iterator4 j = objs.iterator();
             while (j.hasNext()) {
                 obj = j.next();
@@ -336,7 +340,7 @@ public class YapField implements StoredField {
             incrementOffset(a_bytes);
             return;
         }
-        if (i_index != null) {
+        if (_oldIndex != null) {
             int offset = a_bytes._offset;
             Object obj = null;
             try {
@@ -426,12 +430,12 @@ public class YapField implements StoredField {
         return i_handler.getYapClass(a_stream);
     }
     
-    Index4 getIndex(Transaction a_trans){
-        return i_index;
+    Index4 getOldIndex(Transaction a_trans){
+        return _oldIndex;
     }
 
-    Tree getIndexRoot(Transaction a_trans) {
-        return getIndex(a_trans).indexTransactionFor(a_trans).getRoot();
+    Tree getOldIndexRoot(Transaction a_trans) {
+        return getOldIndex(a_trans).indexTransactionFor(a_trans).getRoot();
     }
 
     TypeHandler4 getHandler() {
@@ -500,7 +504,7 @@ public class YapField implements StoredField {
 
     boolean hasIndex() {
         // alive needs to be checked by all callers: Done
-        return i_index != null;
+        return _oldIndex != null;
     }
 
     public final void incrementOffset(YapReader a_bytes) {
@@ -530,9 +534,9 @@ public class YapField implements StoredField {
         }
     }
 
-    void initIndex(Transaction systemTrans, MetaIndex metaIndex) {
+    void initOldIndex(Transaction systemTrans, MetaIndex metaIndex) {
         if (supportsIndex()) {
-            i_index = new Index4(systemTrans, getHandler(), metaIndex, i_handler.indexNullHandling());
+            _oldIndex = new Index4(systemTrans, getHandler(), metaIndex, i_handler.indexNullHandling());
         }
     }
 
@@ -788,7 +792,7 @@ public class YapField implements StoredField {
         
         synchronized(stream.lock()){
             final Transaction trans = stream.getTransaction();
-            Tree tree = getIndex(trans).indexTransactionFor(trans).getRoot();
+            Tree tree = getOldIndex(trans).indexTransactionFor(trans).getRoot();
             Tree.traverse(tree, new Visitor4() {
                 public void visit(Object obj) {
                     IxTree ixTree = (IxTree)obj;
@@ -819,7 +823,7 @@ public class YapField implements StoredField {
         a_writer.writeShortString(trans, i_name);
         if (i_handler instanceof YapClass) {
             if (i_handler.getID() == 0) {
-                trans.i_stream.needsUpdate(a_onClass);
+                trans.stream().needsUpdate(a_onClass);
             }
         }
         int wrapperID = 0;
@@ -852,8 +856,8 @@ public class YapField implements StoredField {
             sb.append("YapField ");
             sb.append(i_name);
             sb.append("\n");
-            if (i_index != null) {
-                sb.append(i_index.toString());
+            if (_oldIndex != null) {
+                sb.append(_oldIndex.toString());
             }
 
         } else {
@@ -885,8 +889,16 @@ public class YapField implements StoredField {
         }
         return str;
     }
-    
 
+    public void initIndex(Transaction systemTrans) {
+        
+        _index = new BTree(systemTrans, 0, i_handler, new YInt(systemTrans.stream()));
+        
+    }
+    
+    public BTree getIndex(){
+        return _index;
+    }
 
 
 }

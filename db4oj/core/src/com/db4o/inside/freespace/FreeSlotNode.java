@@ -74,8 +74,8 @@ public final class FreeSlotNode extends TreeInt {
 			if (Deploy.debug) {
 				if (a_reader instanceof YapWriter) {
 					Transaction trans = ((YapWriter) a_reader).getTransaction();
-					if (trans.i_stream instanceof YapRandomAccessFile) {
-						YapWriter checker = trans.i_stream.getWriter(trans,
+					if (trans.stream() instanceof YapRandomAccessFile) {
+						YapWriter checker = trans.stream().getWriter(trans,
 								node._peer._key, node._key);
 						checker.read();
 						for (int i = 0; i < node._key; i++) {

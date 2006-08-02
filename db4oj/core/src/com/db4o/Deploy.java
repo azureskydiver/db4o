@@ -7,7 +7,11 @@ package  com.db4o;
  */
 public final class Deploy {
     
+    /**
+     * turning debug on makes the file format human readable 
+     */
     public static final boolean debug = false;
+    
     public static final boolean overwrite = true;
     public static final boolean brackets = true;
     public static final boolean identifiers = true;

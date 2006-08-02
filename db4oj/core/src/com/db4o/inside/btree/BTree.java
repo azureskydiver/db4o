@@ -39,10 +39,13 @@ public class BTree extends YapMeta{
     private final int _cacheHeight;
     
     
-    public BTree(int nodeSize, int cacheHeight, Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
-        _halfNodeSize = nodeSize / 2;
+    public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
+        
+        _nodeSize = trans.stream().configImpl().bTreeNodeSize();
+        _halfNodeSize = _nodeSize / 2;
         _nodeSize = _halfNodeSize * 2;
-        _cacheHeight = cacheHeight;
+        _cacheHeight = trans.stream().configImpl().bTreeCacheHeight();
+        
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         _sizesByTransaction = new Hashtable4(1);
@@ -56,6 +59,8 @@ public class BTree extends YapMeta{
             setID(id);
             setStateDeactivated();
         }
+        
+        
     }
     
     public void add(Transaction trans, Object value){
@@ -69,6 +74,13 @@ public class BTree extends YapMeta{
         }
         setStateDirty();
         sizeChanged(trans, 1);
+    }
+    
+    public BTreeRange find(Transaction trans, Object value) {
+        _keyHandler.prepareComparison(value);
+        BTreePointer start = _root.findStart(trans, value);
+        BTreePointer end = _root.findEnd(trans, value);
+        return new BTreeRange(start, end);
     }
     
     public void remove(Transaction trans, Object value){
@@ -264,6 +276,7 @@ public class BTree extends YapMeta{
         }
         _sizesByTransaction.put(trans, new Integer(((Integer) sizeDiff).intValue() + changeBy));
     }
+
 
 
 }

@@ -67,7 +67,7 @@ public class GenericReflector implements Reflector, DeepClone {
 	public void setTransaction(Transaction trans){
 		if(trans != null){
 			_trans = trans;
-			_stream = trans.i_stream;
+			_stream = trans.stream();
 		}
 	}
 

@@ -63,7 +63,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
-        if(objectCanActivate(a_trans.i_stream, a_object)){
+        if(objectCanActivate(a_trans.stream(), a_object)){
             activateFields1(a_trans, a_object, a_depth);
         }
     }
@@ -288,7 +288,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             }
         }
         if (a_depth > 0) {
-            YapStream stream = a_trans.i_stream;
+            YapStream stream = a_trans.stream();
             if (a_activate) {
                 if(isValueType()){
                     activateFields(a_trans, a_object, a_depth - 1);
@@ -486,9 +486,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     public void deactivate(Transaction a_trans, Object a_object, int a_depth) {
-        if(objectCanDeactivate(a_trans.i_stream, a_object)){
+        if(objectCanDeactivate(a_trans.stream(), a_object)){
             deactivate1(a_trans, a_object, a_depth);
-            objectOnDeactivate(a_trans.i_stream, a_object);
+            objectOnDeactivate(a_trans.stream(), a_object);
         }
     }
 
@@ -519,7 +519,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     private final void delete1(MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, Object a_object) {
         removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
-        deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object), false);
+        deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().stream().i_handlers.arrayType(a_object), false);
     }
 
     public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
@@ -640,7 +640,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     public static YapClass forObject(Transaction trans, Object obj, boolean allowCreation){
-        return trans.i_stream.getYapClass(trans.reflector().forObject(obj), allowCreation);
+        return trans.stream().getYapClass(trans.reflector().forObject(obj), allowCreation);
     }
     
     private boolean generateUUIDs() {
@@ -757,8 +757,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         final long[] ids;
         
-        if(trans.i_stream.isClient()){
-            YapClient stream = (YapClient)trans.i_stream;
+        if(trans.stream().isClient()){
+            YapClient stream = (YapClient)trans.stream();
             stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, getID()));
             YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
             int size = reader.readInt();
@@ -1067,7 +1067,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (! stateOK()) {
             return;
         }
-        YapStream stream = systemTrans.i_stream; 
+        YapStream stream = systemTrans.stream(); 
         stream.showInternalClasses(true);
         int[] metaClassID = new int[]{_metaClassID};
         if(i_config.initOnUp(systemTrans, metaClassID)){
@@ -1379,7 +1379,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             int depth = a_bytes.getInstantiationDepth() - 1;
 
             Transaction trans = a_bytes.getTransaction();
-            YapStream stream = trans.i_stream;
+            YapStream stream = trans.stream();
 
             if (a_bytes.getUpdateDepth() == YapConst.TRANSIENT) {
                 return stream.peekPersisted1(trans, id, depth);
@@ -1440,7 +1440,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
         try {
-            return a_trans.i_stream.getByID2(a_trans, a_reader.readInt());
+            return a_trans.stream().getByID2(a_trans, a_reader.readInt());
         } catch (Exception e) {
             if (Debug.atHome) {
                 e.printStackTrace();
@@ -1495,13 +1495,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
         if (id != 0) {
             final Transaction trans = a_candidates.i_trans;
-            Object obj = trans.i_stream.getByID1(trans, id);
+            Object obj = trans.stream().getByID1(trans, id);
             if (obj != null) {
 
-                a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
+                a_candidates.i_trans.stream().activate1(trans, obj, 2);
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
-                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, (int)trans.i_stream.getID(elem), true));
+                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, (int)trans.stream().getID(elem), true));
                     }
                 });
             }
@@ -1547,7 +1547,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     byte[] readName(Transaction a_trans) {
-        i_reader = a_trans.i_stream.readReaderByID(a_trans, getID());
+        i_reader = a_trans.stream().readReaderByID(a_trans, getID());
         if (i_reader != null) {
             return readName1(a_trans, i_reader);
         }
@@ -1563,7 +1563,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             
             int len = a_reader.readInt();
 
-            len = len * a_trans.i_stream.stringIO().bytesPerChar();
+            len = len * a_trans.stream().stringIO().bytesPerChar();
 
             i_nameBytes = new byte[len];
             System.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, len);
@@ -1593,7 +1593,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     void readVirtualAttributes(Transaction a_trans, YapObject a_yapObject) {
         int id = a_yapObject.getID();
-        YapStream stream = a_trans.i_stream;
+        YapStream stream = a_trans.stream();
         YapReader reader = stream.readReaderByID(a_trans, id);
         ObjectHeader oh = new ObjectHeader(stream, this, reader);
         oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
@@ -1856,7 +1856,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             || Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
             
             if (store) {
-                YapStream stream = trans.i_stream;
+                YapStream stream = trans.stream();
                 stream.showInternalClasses(true);
                 Query q = stream.querySharpenBug(trans);
                 q.constrain(YapConst.CLASS_STATICCLASS);

@@ -19,11 +19,11 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             
             TypeHandler4 handler = yapClassPrimitive.i_handler;
         
-            YapStream stream = trans.i_stream;
+            YapStream stream = trans.stream();
             id = stream.newUserObject();
             int address = -1;
             int length = objectLength(handler, obj);
-            if(! trans.i_stream.isClient()){
+            if(! stream.isClient()){
                 address = trans.i_file.getSlot(length); 
             }
             trans.setPointer(id, address, length);
@@ -38,7 +38,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             handler.writeNew(_family, obj, false, writer, true, false);
             
             writer.writeEnd();
-            trans.i_stream.writeNew(yapClassPrimitive, writer);
+            stream.writeNew(yapClassPrimitive, writer);
         }
         
         if(parentWriter != null){

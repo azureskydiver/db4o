@@ -290,7 +290,7 @@ public final class QCandidates implements Visitor4 {
             i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
         }
         
-        DiagnosticProcessor dp = i_trans.i_stream.i_handlers._diagnosticProcessor;
+        DiagnosticProcessor dp = i_trans.stream().i_handlers._diagnosticProcessor;
         if (dp.enabled()){
             dp.loadedFromClassIndex(i_yapClass);
         }

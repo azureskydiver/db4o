@@ -108,11 +108,10 @@ public abstract class YapFile extends YapStream {
     
     final BTree createBTreeClassIndex(YapClass a_yapClass, int id){
         return new BTree(
-            configImpl().bTreeNodeSize(), 
-            configImpl().bTreeCacheHeight(),  
             i_trans, 
-            id, 
-            new YInt(this), null);
+            id,  
+            new YInt(this), 
+            null);
     }
 
     final QueryResultImpl createQResult(Transaction a_ta) {

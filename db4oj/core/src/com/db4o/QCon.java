@@ -118,7 +118,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		final int[] count = { 0 };
     		final YapField[] yfs = { null };
     		
-    		i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new Visitor4() {
+    		i_trans.stream().i_classCollection.attachQueryNode(a_field, new Visitor4() {
     			public void visit(Object obj) {
     				yfs[0] = (YapField) ((Object[]) obj)[1];
     				count[0]++;
@@ -137,7 +137,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		
     	} else {
 			if(yc.configInstantiates()) {
-				i_trans.i_stream.i_handlers._diagnosticProcessor.descendIntoTranslator(yc, a_field);
+				i_trans.stream().i_handlers._diagnosticProcessor.descendIntoTranslator(yc, a_field);
 			}
     		if (yc != null) {
     			YapField yf = yc.getYapField(a_field);
@@ -625,7 +625,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     protected Object streamLock() {
-        return i_trans.i_stream.i_lock;
+        return i_trans.stream().i_lock;
     }
 
     boolean supportsOrdering() {

@@ -26,7 +26,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
     }
 
 	final Object activate(Object obj){
-		YapStream stream = i_trans.i_stream;
+		YapStream stream = i_trans.stream();
 		stream.beginEndActivation();
 		stream.activate2(i_trans, obj, stream.configImpl().activationDepth());
 		stream.beginEndActivation();
@@ -34,7 +34,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	}
     
     private final Object activatedObject(int id){
-        YapStream stream = i_trans.i_stream;
+        YapStream stream = i_trans.stream();
         Object ret = stream.getActivatedObjectFromCache(i_trans, id);
         if(ret != null){
             return ret;
@@ -81,7 +81,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
      */
 	public Object next() {
 		synchronized (streamLock()) {
-			YapStream stream = i_trans.i_stream;
+			YapStream stream = i_trans.stream();
 			stream.checkClosed();
 			if (super.hasNext()) {
                 Object obj = activatedObject(nextInt());
@@ -129,11 +129,11 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	}
 	
 	public Object streamLock(){
-		return i_trans.i_stream.i_lock;
+		return i_trans.stream().i_lock;
 	}
 
     public ObjectContainer objectContainer() {
-        return i_trans.i_stream;
+        return i_trans.stream();
     }
 
 	public void sort(QueryComparator cmp) {

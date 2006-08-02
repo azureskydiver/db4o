@@ -29,7 +29,7 @@ public abstract class ObjectMarshaller {
         int id = yo.getID();
         int address = -1;
         
-        if(! trans.i_stream.isClient()){
+        if(! trans.stream().isClient()){
             address = trans.i_file.getSlot(length); 
         }
         trans.setPointer(id, address, length);
@@ -89,7 +89,7 @@ public abstract class ObjectMarshaller {
         
         YapClass yc = yo.getYapClass();
         
-        YapStream stream = trans.i_stream;
+        YapStream stream = trans.stream();
         stream.writeUpdate(yc, writer);
         if (yo.isActive()) {
             yo.setStateClean();

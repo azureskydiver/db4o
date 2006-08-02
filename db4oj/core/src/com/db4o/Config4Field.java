@@ -71,7 +71,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 
     public void initOnUp(Transaction systemTrans, YapField yapField) {
         if (!_initialized) {
-            YapStream anyStream = systemTrans.i_stream;
+            YapStream anyStream = systemTrans.stream();
             if(Tuning.fieldIndices){
 	            if (anyStream.maintainsIndices()) {
 	                if(Debug.indexAllFields){
@@ -88,11 +88,20 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	                _config.put(METAFIELD, metaField);
 	                int indexedFlag=_config.getAsInt(INDEXED);
 	                if (indexedFlag == YapConst.YES) {
+                        
+                        if(Debug.bTreeFieldIndex){
+                            yapField.initIndex(systemTrans);
+                        }
+                        
 	                    if (metaField.index == null) {
 	                        metaField.index = new MetaIndex();
 	                        stream.setInternal(systemTrans, metaField.index, YapConst.UNSPECIFIED, false);
 	                        stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);
-	                        yapField.initIndex(systemTrans, metaField.index);
+                            
+                            if(Debug.oldFieldIndex){
+                                yapField.initOldIndex(systemTrans, metaField.index);
+                            }
+                            
 	                        indexInitCalled = true;
 	        				if (stream.configImpl().messageLevel() > YapConst.NONE) {
 	        					stream.message("creating index " + yapField.toString());
@@ -139,7 +148,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	                }
 	                if (metaField.index != null) {
 	                    if(! indexInitCalled){
-	                        yapField.initIndex(systemTrans, metaField.index);
+	                        yapField.initOldIndex(systemTrans, metaField.index);
 	                    }
 	                }
 	            }

@@ -52,7 +52,7 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
 
         if (id != 0) {
             YapWriter reader =
-                a_trans.i_stream.readWriterByID(a_trans, id);
+                a_trans.stream().readWriterByID(a_trans, id);
             if (reader != null) {
                 ObjectHeader oh = new ObjectHeader(reader);
                 try {

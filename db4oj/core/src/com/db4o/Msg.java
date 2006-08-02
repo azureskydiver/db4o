@@ -123,7 +123,7 @@ class Msg implements Cloneable {
 	}
 	
 	YapStream getStream(){
-	    return getTransaction().i_stream;
+	    return getTransaction().stream();
 	}
 
 	/**
@@ -141,7 +141,7 @@ class Msg implements Cloneable {
 		}
 		Msg message = _messages[reader.readInt()].readPayLoad(a_trans, sock, reader);
 		if (Debug.messages) {
-			System.out.println(message + " arrived at " + a_trans.i_stream);
+			System.out.println(message + " arrived at " + a_trans.stream());
 		}
 		return message;
 	}
@@ -222,6 +222,6 @@ class Msg implements Cloneable {
 		MsgD message = ID_LIST.getWriterForLength(a_trans, YapConst.YAPID_LENGTH * (size + 1));
 		YapWriter writer = message.getPayLoad();
 		writer.writeQueryResult(qr);
-		message.write(a_trans.i_stream, sock);
+		message.write(a_trans.stream(), sock);
 	}
 }

@@ -33,7 +33,7 @@ class QResultClient extends QueryResultImpl {
 
 	public Object next() {
 		synchronized (streamLock()) {
-			YapClient stream = (YapClient)i_trans.i_stream;
+			YapClient stream = (YapClient)i_trans.stream();
 			stream.checkClosed();
 			if (i_remainingObjects < 1) {
 				if (super.hasNext()) {
