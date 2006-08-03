@@ -34,7 +34,7 @@ final class ClassIndexClient extends ClassIndex {
 		// do nothing
 	}
 
-	protected final void writeOwnID(Transaction trans, YapReader a_writer) {
+	public final void writeOwnID(Transaction trans, YapReader a_writer) {
 		a_writer.writeInt(0);
 	}
 	
