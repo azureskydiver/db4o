@@ -7,7 +7,10 @@ import com.db4o.query.Query;
 import com.db4o.query.QueryComparator;
 
 import db4ounit.Assert;
+import db4ounit.TestRunner;
 import db4ounit.db4o.Db4oTestCase;
+import db4ounit.db4o.Db4oTestSuiteBuilder;
+import db4ounit.db4o.fixtures.Db4oSolo;
 
 public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 	
@@ -85,5 +88,12 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 		Query q = createItemQuery();
 		q.descend("id").constrain(id);
 		return (Item)q.execute().next();
+	}
+	
+	public static void main(String[] args) {
+		new TestRunner(
+				new Db4oTestSuiteBuilder(
+						new Db4oSolo(),
+						SelectiveCascadingDeleteTestCase.class)).run();
 	}
 }
