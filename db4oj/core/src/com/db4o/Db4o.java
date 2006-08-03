@@ -2,13 +2,13 @@
 
 package  com.db4o;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.config.*;
+import com.db4o.config.Configuration;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
-import com.db4o.reflect.*;
+import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.network.YapSocketReal;
+import com.db4o.reflect.Reflector;
 
 /**
  * factory class to start db4o database engines.
@@ -25,7 +25,6 @@ public class Db4o {
 	private static Sessions i_sessions = new Sessions();
 	static final Object lock = initialize();
 	static String licTo = "";
-	private static boolean expirationMessagePrinted;
 
 	private static final Object initialize(){
 		Platform4.getDefaultConfiguration(i_config);

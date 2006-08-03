@@ -2,16 +2,13 @@
 
 package com.db4o;
 
-import com.db4o.config.*;
+import com.db4o.config.ObjectField;
 import com.db4o.foundation.*;
-import com.db4o.inside.marshall.*;
-import com.db4o.reflect.*;
+import com.db4o.inside.marshall.ObjectHeader;
 
 class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     
     private final Config4Class _configClass;
-    
-	private final static KeySpec FIELD_REFLECTOR=new KeySpec(null);
     
 	private final static KeySpec QUERY_EVALUATION=new KeySpec(true);
     
@@ -41,19 +38,6 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 
     public Object deepClone(Object param) {
         return new Config4Field((Config4Class)param, _config);
-    }
-
-    private ReflectField fieldReflector() {
-    	ReflectField fieldReflector=(ReflectField)_config.get(FIELD_REFLECTOR);
-        if (fieldReflector == null) {
-            try {
-                fieldReflector = classConfig().classReflector().getDeclaredField(getName());
-                fieldReflector.setAccessible();
-                _config.put(FIELD_REFLECTOR, fieldReflector);
-            } catch (Exception e) {
-            }
-        }
-        return fieldReflector;
     }
 
     public void queryEvaluation(boolean flag) {
