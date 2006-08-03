@@ -204,53 +204,24 @@ public abstract class YapFile extends YapStream {
 
         YapClassCollectionIterator i = i_classCollection.iterator();
         while (i.hasNext()) {
-            YapClass yapClass = i.readNextClass();
-            if (yapClass.getName() != null) {
-                ReflectClass claxx = yapClass.classReflector();
-                if (claxx == null
-                    || !( i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
-                    
-                    if(Debug.useBTrees){
-                        BTree btree = yapClass.index();
-                        if(btree != null){
-                            btree.traverseKeys(ta, new Visitor4() {
-                                public void visit(Object obj) {
-                                    int id = ((Integer)obj).intValue();
-                                    TreeInt newNode = new TreeInt(id);
-                                    duplicates[0] = Tree
-                                        .add(duplicates[0], newNode);
-                                    if (newNode.size() != 0) {
-                                        a_res.add(id);
-                                    }
-                                }
-                            });
-                            
-                        }
-                    }
-                    
-                    if(Debug.useOldClassIndex && ! Debug.useBTrees){
-                    
-                        Tree tree = yapClass.getIndex(ta);
-                        if (tree != null) {
-                            tree.traverse(new Visitor4() {
-    
-                                public void visit(Object obj) {
-                                    int id = ((TreeInt) obj)._key;
-                                    TreeInt newNode = new TreeInt(id);
-                                    duplicates[0] = Tree
-                                        .add(duplicates[0], newNode);
-                                    if (newNode.size() != 0) {
-                                        a_res.add(id);
-                                    }
-                                }
-                            });
-                        }
-                    }
-                    
-                    
-                }
-            }
-        }
+			final YapClass yapClass = i.readNextClass();
+			if (yapClass.getName() != null) {
+				ReflectClass claxx = yapClass.classReflector();
+				if (claxx == null
+						|| !(i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
+					yapClass.index().traverseAll(ta, new Visitor4() {
+						public void visit(Object obj) {
+							int id = yapClass.index().idFromValue(obj);
+							TreeInt newNode = new TreeInt(id);
+							duplicates[0] = Tree.add(duplicates[0], newNode);
+							if (newNode.size() != 0) {
+								a_res.add(id);
+							}
+						}
+					});
+				}
+			}
+		}
         a_res.reset();
     }
 

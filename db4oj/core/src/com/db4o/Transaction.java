@@ -3,7 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.ClassIndex;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
@@ -825,7 +825,7 @@ public class Transaction {
                 public void visit(Object obj) {
                     TreeIntObject node = (TreeIntObject) obj;
                     YapClass yapClass = stream().i_classCollection.getYapClass(node._key);
-                    final ClassIndex classIndex = yapClass.getIndex();
+                    final ClassIndex classIndex = ((OldClassIndexStrategy)yapClass.index()).getIndex();
                     if (node._object != null) {
                         Visitor4 visitor = null;
                         if (a_add) {
