@@ -3,7 +3,6 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.btree.BTree;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.ObjectHeader;
 import com.db4o.inside.slots.Slot;
@@ -28,8 +27,6 @@ public class Transaction {
 
     private List4           i_dirtyFieldIndexes;
     
-    private Tree            _dirtyBTrees;
-
     public final YapFile           i_file;
 
     final Transaction       i_parentTransaction;
@@ -124,7 +121,6 @@ public class Transaction {
 
     private final void clearAll() {
         _slotChanges = null;
-        _dirtyBTrees = null;
         i_dirtyFieldIndexes = null;
         i_transactionListeners = null;
         disposeParticipants();
@@ -183,7 +179,7 @@ public class Transaction {
         
         commit4FieldIndexes();
         
-        commit5writeClassIndexChanges();
+        commit5Participants();
         
         stream().writeDirty();
         
@@ -228,32 +224,18 @@ public class Transaction {
         }
     }
     
-    private void commit5writeClassIndexChanges(){
-        
-        if(i_parentTransaction != null){
-            i_parentTransaction.commit5writeClassIndexChanges();
+    private void commit5Participants() {
+        if (i_parentTransaction != null) {
+            i_parentTransaction.commit5Participants();
         }
         
-        if(Debug.useOldClassIndex){
-            Iterator4 iterator = _participants.iterator();
-            while (iterator.hasNext()) {
-            	((TransactionParticipant)iterator.next()).commit(this);
-            }
-        }
-        
-        if(Debug.useBTrees){
-            if(_dirtyBTrees != null){
-                _dirtyBTrees.traverse(new Visitor4() {
-                    public void visit(Object obj) {
-                        BTree btree = (BTree) ((TreeIntObject)obj)._object;
-                        btree.commit(Transaction.this);
-                    }
-                });
-            }
-        }
+        Iterator4 iterator = _participants.iterator();
+		while (iterator.hasNext()) {
+			((TransactionParticipant)iterator.next()).commit(this);
+		}
     }
-    
-    private void commit6WriteChanges() {
+
+	private void commit6WriteChanges() {
         checkSynchronization();
             
         final int slotSetPointerCount = countSlotChanges();
@@ -345,12 +327,6 @@ public class Transaction {
         }
     }
     
-    public void dirtyBTree(BTree btree){
-        if(Debug.useBTrees){
-            _dirtyBTrees = Tree.add(_dirtyBTrees, new TreeIntObject(btree.getID(), btree));
-        }
-    }
-
     void dontDelete(int classID, int a_id) {
         checkSynchronization();
         if(DTrace.enabled){
@@ -513,37 +489,45 @@ public class Transaction {
             
             beginEndSet();
             
-            if(Debug.useBTrees){
-                if(_dirtyBTrees != null){
-                    _dirtyBTrees.traverse(new Visitor4() {
-                        public void visit(Object obj) {
-                            BTree btree = (BTree) ((TreeIntObject)obj)._object;
-                            btree.rollback(Transaction.this);
-                        }
-                    });
-                }
-            }
+            rollbackParticipants();
             
-            if (i_dirtyFieldIndexes != null) {
-                Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
-                while (i.hasNext()) {
-                    ((IndexTransaction) i.next()).rollback();
-                }
-            }
-            if(_slotChanges != null){
-                _slotChanges.traverse(new Visitor4() {
-                    public void visit(Object a_object) {
-                        ((SlotChange)a_object).rollback(i_file);
-                    }
-                });
-            }
+            rollbackFieldIndexes();
+            
+            rollbackSlotChanges();
             
             rollBackTransactionListeners();
+            
             clearAll();
         }
     }
+
+	private void rollbackSlotChanges() {
+		if(_slotChanges != null){
+		    _slotChanges.traverse(new Visitor4() {
+		        public void visit(Object a_object) {
+		            ((SlotChange)a_object).rollback(i_file);
+		        }
+		    });
+		}
+	}
+
+	private void rollbackFieldIndexes() {
+		if (i_dirtyFieldIndexes != null) {
+		    Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
+		    while (i.hasNext()) {
+		        ((IndexTransaction) i.next()).rollback();
+		    }
+		}
+	}
     
-    void rollBackTransactionListeners() {
+    private void rollbackParticipants() {
+    	Iterator4 iterator = _participants.iterator();
+		while (iterator.hasNext()) {
+			((TransactionParticipant)iterator.next()).rollback(this);
+		}
+	}
+
+	void rollBackTransactionListeners() {
         checkSynchronization();
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(i_transactionListeners);

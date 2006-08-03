@@ -9,7 +9,7 @@ import com.db4o.inside.ix.*;
 /**
  * @exclude
  */
-public class BTree extends YapMeta{
+public class BTree extends YapMeta implements TransactionParticipant {
     
     private static final byte BTREE_VERSION = (byte)1;
     
@@ -186,7 +186,7 @@ public class BTree extends YapMeta{
     
     private void ensureDirty(Transaction trans){
         ensureActive(trans);
-        trans.dirtyBTree(this);
+        trans.enlist(this);
         setStateDirty();
     }
     
@@ -276,6 +276,11 @@ public class BTree extends YapMeta{
         }
         _sizesByTransaction.put(trans, new Integer(((Integer) sizeDiff).intValue() + changeBy));
     }
+
+	public void dispose(Transaction transaction) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 

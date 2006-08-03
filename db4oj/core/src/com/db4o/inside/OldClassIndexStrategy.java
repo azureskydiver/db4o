@@ -211,4 +211,8 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 			_perTransaction.remove(transaction);
 		}
 	}
+
+	public void rollback(Transaction transaction) {
+		// nothing to do
+	}
 }
