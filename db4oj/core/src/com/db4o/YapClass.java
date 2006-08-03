@@ -802,7 +802,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return false;
     }
 
-    public ClassIndexStrategy index() {
+    ClassIndexStrategy index() {
     	return _index;
     }    
     

@@ -2,11 +2,7 @@
 
 package com.db4o.inside;
 
-import com.db4o.Transaction;
-import com.db4o.YapClass;
-import com.db4o.YapReader;
-import com.db4o.YapStream;
-import com.db4o.inside.*;
+import com.db4o.*;
 
 /**
  * client class index. Largly intended to do nothing or
@@ -38,7 +34,7 @@ final class ClassIndexClient extends ClassIndex {
 		// do nothing
 	}
 
-	final void writeOwnID(Transaction trans, YapReader a_writer) {
+	protected final void writeOwnID(Transaction trans, YapReader a_writer) {
 		a_writer.writeInt(0);
 	}
 	

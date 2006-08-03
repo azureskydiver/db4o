@@ -181,7 +181,7 @@ public abstract class YapMeta {
         return false;
     }
 
-    void writeOwnID(Transaction trans, YapReader a_writer) {
+    protected void writeOwnID(Transaction trans, YapReader a_writer) {
         write(trans);
         a_writer.writeInt(getID());
     }
