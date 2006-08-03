@@ -48,10 +48,12 @@ public class NQRegressionTests {
 		String name;
 		Data prev;
 		int id2;
+		Boolean boolWrap;
 		
 		public Data(int id, boolean bool,float value, String name,Data prev, int id2) {
 			super(id);
 			this.bool=bool;
+			this.boolWrap=Boolean.valueOf(bool);
 			this.value=value;
 			this.name = name;
 			this.prev=prev;
@@ -507,12 +509,6 @@ public class NQRegressionTests {
 				return ((Data)candidate).getId()==1;
 			}
 		},
-		new ExpectingPredicate("INTWRAPPER.eq(iwrap)") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return NQRegressionTests.INTWRAPPER.equals(candidate.idWrap);
-			}
-		},
 		// array access
 		new ExpectingPredicate("id==P.data[3]") {
 			private int[] data={0,1,2,3,4};
@@ -544,6 +540,25 @@ public class NQRegressionTests {
 			}
 			public boolean match(Data candidate) {
 				return candidate.id==sum(3,0);
+			}
+		},
+		// primitive wrappers
+		new ExpectingPredicate("boolWrapper") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.boolWrap.booleanValue();
+			}
+		},
+		new ExpectingPredicate("INTWRAPPER.eq(iwrap)") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return NQRegressionTests.INTWRAPPER.equals(candidate.idWrap);
+			}
+		},
+		new ExpectingPredicate("iwrap.value==1") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.idWrap.intValue()==1;
 			}
 		},
 		// Note: We never get to see a static field access here - non-static inner class
