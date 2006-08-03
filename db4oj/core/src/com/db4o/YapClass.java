@@ -814,17 +814,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return false;
     }
-    
-    // FIXME: remove instanceof
-    BTree index(){
-        if(stateOK() && (_index instanceof BTreeClassIndexStrategy)){
-            return ((BTreeClassIndexStrategy)_index).getIndex();
-        }
-        return null;
-    }
 
-    // FIXME: remove instanceof
-    ClassIndex getIndex() {
+    public ClassIndexStrategy index() {
+    	return _index;
+    }
+    
+    // FIXME: remove
+    private ClassIndex getIndex() {
         if (stateOK() && (_index instanceof OldClassIndexStrategy)) {
             return ((OldClassIndexStrategy)_index).getIndex();
         }
@@ -854,6 +850,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return _index.getAll(a_trans);
     }
 
+    // FIXME remove, replace with access index strategy
     final TreeInt getIndexRoot() {
         if (! hasIndex()) {
             return null;

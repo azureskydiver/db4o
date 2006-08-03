@@ -321,17 +321,9 @@ public abstract class QQueryBase implements Unversioned {
             return resClient;
         }
         
-        if(Debug.useBTrees){
-            if(clazz.index() == null){
-                return null;
-            }
-        }
-        
-        if(Debug.useOldClassIndex){
-    		if(clazz.getIndex() == null) {
-    			return null;
-    		}
-        }
+        if (!clazz.hasIndex()) {
+			return null;
+		}
 		
 		Tree tree = clazz.getIndex(i_trans);
 		

@@ -260,7 +260,7 @@ public final class QCandidates implements Visitor4 {
             
             final QCandidates finalThis = this;
         
-        	if (i_yapClass.getIndex() != null) {
+        	if (i_yapClass.hasIndex()) {
         		final Tree[] newRoot =
         		{
         				TreeInt.toQCandidate(i_yapClass.getIndexRoot(), this)
