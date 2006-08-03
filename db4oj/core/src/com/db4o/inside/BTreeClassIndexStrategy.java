@@ -2,14 +2,7 @@
 
 package com.db4o.inside;
 
-import com.db4o.Transaction;
-import com.db4o.Tree;
-import com.db4o.TreeInt;
-import com.db4o.YapClass;
-import com.db4o.YapFile;
-import com.db4o.YapObject;
-import com.db4o.YapReader;
-import com.db4o.YapStream;
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.convert.conversions.ClassIndexesToBTrees;
@@ -50,11 +43,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
             writer.writeInt(- _btreeIndex.getID());
         }
 	}
-
-	public void add(Transaction trans, int id) {
-		_btreeIndex.add(trans, new Integer(id));
-	}
-
+	
 	public Tree getAll(Transaction trans) {
 		 // TODO: Index should work with BTrees only, no more conversion
         // to TreeInt should be necessary.
@@ -74,10 +63,6 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		return getIdsFromBTreeIndex(trans);
 	}
 
-	public void remove(Transaction ta, int id) {
-		_btreeIndex.remove(ta, new Integer(id));
-	}
-		
 	public void traverseAll(Transaction ta,Visitor4 command) {
 		// better alternatives for this null check? (has been moved as is from YapFile)
 		if(_btreeIndex!=null) {
@@ -135,4 +120,14 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		}
 	}
 
+	protected void internalAdd(Transaction trans, int id) {
+		_btreeIndex.add(trans, new Integer(id));
+	}
+
+	protected void internalRemove(Transaction ta, int id) {
+		_btreeIndex.remove(ta, new Integer(id));
+	}
+
+	public void dontDelete(Transaction transaction, int id) {
+	}
 }

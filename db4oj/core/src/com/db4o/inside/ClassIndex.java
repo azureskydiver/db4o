@@ -2,21 +2,9 @@
 
 package com.db4o.inside;
 
-import com.db4o.Deploy;
-import com.db4o.ReadWriteable;
-import com.db4o.Transaction;
-import com.db4o.Tree;
-import com.db4o.TreeInt;
-import com.db4o.TreeReader;
-import com.db4o.UseSystemTransaction;
-import com.db4o.YapClass;
-import com.db4o.YapConst;
-import com.db4o.YapMeta;
-import com.db4o.YapReader;
-import com.db4o.YapStream;
-import com.db4o.foundation.*;
-import com.db4o.inside.*;
-import com.db4o.inside.slots.*;
+import com.db4o.*;
+import com.db4o.foundation.Debug4;
+import com.db4o.inside.slots.Slot;
 
 /**
  * representation to collect and hold all IDs of one class
@@ -46,33 +34,16 @@ import com.db4o.inside.slots.*;
     public final void clear() {
         i_root = null;
     }
-
-    public final Tree cloneForYapClass(Transaction a_trans, int a_yapClassID) {
-    	final Tree[] tree = new Tree[]{Tree.deepClone(i_root, null)};
-    	// TODO: see if it's possible to get traverseAddedClassIDs not public again
-        a_trans.traverseAddedClassIDs(a_yapClassID, new Visitor4() {
-            public void visit(Object obj) {
-				tree[0] = Tree.add(tree[0], new TreeInt(((TreeInt) obj)._key));
-            }
-        });
-        // TODO: see if it's possible to get traverseRemovedClassIDs not public again
-        a_trans.traverseRemovedClassIDs(a_yapClassID, new Visitor4() {
-            public void visit(Object obj) {
-				tree[0] = Tree.removeLike(tree[0], (TreeInt) obj);
-            }
-        });
-        return tree[0];
-    }
     
-    void ensureActive(){
+    void ensureActive(Transaction trans){
         if (!isActive()) {
             setStateDirty();
-            read(getStream().getSystemTransaction());
+            read(trans);
         }
     }
-    
+
     int entryCount(Transaction ta){
-        if(isActive()){
+        if(isActive() || isNew()){
             return Tree.size(i_root);
         }
         Slot slot = ta.getSlotInformation(getID());
@@ -95,17 +66,10 @@ import com.db4o.inside.slots.*;
         return YapConst.YAPINDEX;
     }
     
-    public TreeInt getRoot(){
-        ensureActive();
+    TreeInt getRoot(){
         return (TreeInt)i_root;
     }
     
-    YapStream getStream(){
-    	// TODO: get rid of this call
-    	// and make YapClass.getStream package/private again
-        return _yapClass.getStream();
-    }
-
     public final int ownLength() {
         return YapConst.OBJECT_LENGTH + byteCount();
     }

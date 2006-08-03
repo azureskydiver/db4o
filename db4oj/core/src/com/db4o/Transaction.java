@@ -3,12 +3,12 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
-import com.db4o.inside.btree.*;
+import com.db4o.inside.btree.BTree;
 import com.db4o.inside.ix.*;
-import com.db4o.inside.marshall.*;
-import com.db4o.inside.slots.*;
-import com.db4o.reflect.*;
+import com.db4o.inside.marshall.ObjectHeader;
+import com.db4o.inside.slots.Slot;
+import com.db4o.inside.slots.SlotChange;
+import com.db4o.reflect.Reflector;
 
 /**
  * @exclude
@@ -18,8 +18,6 @@ public class Transaction {
     private Tree            _slotChanges;
 
     private int             i_address;                                  // only used to pass address to Thread
-
-    private Tree            i_addToClassIndex;
     
     private final byte[]          _pointerBuffer = new byte[YapConst.POINTER_LENGTH];
 
@@ -36,15 +34,16 @@ public class Transaction {
 
     final Transaction       i_parentTransaction;
 
-    private final YapWriter i_pointerIo;
-
-    private Tree            i_removeFromClassIndex;
+    private final YapWriter i_pointerIo;    
 
     private final YapStream         i_stream;
     
     private List4           i_transactionListeners;
     
     protected Tree			i_writtenUpdateDeletedMembers;
+    
+    // TODO: join _dirtyBTree and _enlistedIndices
+    private final Collection4 _participants = new Collection4(); 
 
     Transaction(YapStream a_stream, Transaction a_parent) {
         i_stream = a_stream;
@@ -57,36 +56,11 @@ public class Transaction {
         i_dirtyFieldIndexes = new List4(i_dirtyFieldIndexes, a_xft);
     }
 
-    public void addToClassIndex(int a_yapClassID, int a_id) {
-        if(Debug.checkSychronization){
+	public final void checkSynchronization() {
+		if(Debug.checkSychronization){
             stream().i_lock.notify();
         }
-        if(DTrace.enabled){
-            DTrace.ADD_TO_CLASS_INDEX.log(a_id);
-        }
-        if (Deploy.debug) {
-            if (a_id == 0) {
-                throw new RuntimeException();
-            }
-        }
-        if(Debug.useOldClassIndex){
-            removeFromClassIndexTree(i_removeFromClassIndex, a_yapClassID, a_id);
-            i_addToClassIndex = addToClassIndexTree(i_addToClassIndex,
-                a_yapClassID, a_id);
-        }
-    }
-
-    private final Tree addToClassIndexTree(Tree a_tree, int a_yapClassID,
-        int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        TreeIntObject[] node = new TreeIntObject[] { new TreeIntObject(
-            a_yapClassID)};
-        a_tree = createClassIndexNode(a_tree, node);
-        node[0]._object = Tree.add((Tree) node[0]._object, new TreeInt(a_id));
-        return a_tree;
-    }
+	}
 
     public void addTransactionListener(TransactionListener a_listener) {
         i_transactionListeners = new List4(i_transactionListeners, a_listener);
@@ -107,9 +81,7 @@ public class Transaction {
     }
 
     void beginEndSet() {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if (i_delete != null) {
             final boolean[] foundOne = { false};
             final Transaction finalThis = this;
@@ -153,18 +125,23 @@ public class Transaction {
     private final void clearAll() {
         _slotChanges = null;
         _dirtyBTrees = null;
-        i_addToClassIndex = null;
-        i_removeFromClassIndex = null;
         i_dirtyFieldIndexes = null;
         i_transactionListeners = null;
+        disposeParticipants();
+        _participants.clear();
     }
+
+	private void disposeParticipants() {
+		Iterator4 iterator = _participants.iterator();
+        while (iterator.hasNext()) {
+        	((TransactionParticipant)iterator.next()).dispose(this);
+        }
+	}
 
     void close(boolean a_rollbackOnClose) {
         try {
             if (stream() != null) {
-                if(Debug.checkSychronization){
-                    stream().i_lock.notify();
-                }
+                checkSynchronization();
                 stream().releaseSemaphores(this);
             }
         } catch (Exception e) {
@@ -258,17 +235,9 @@ public class Transaction {
         }
         
         if(Debug.useOldClassIndex){
-            final Collection4 indicesToBeWritten = new Collection4();
-            traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
-            traverseYapClassEntries(i_removeFromClassIndex, false,
-                indicesToBeWritten);
-            if(indicesToBeWritten.size() > 0){
-                Iterator4 i = indicesToBeWritten.iterator();
-                while (i.hasNext()) {
-                    ClassIndex classIndex = (ClassIndex) i.next();
-                    classIndex.setStateDirty();
-                    classIndex.write(this);
-                }
+            Iterator4 iterator = _participants.iterator();
+            while (iterator.hasNext()) {
+            	((TransactionParticipant)iterator.next()).commit(this);
             }
         }
         
@@ -285,9 +254,7 @@ public class Transaction {
     }
     
     private void commit6WriteChanges() {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
             
         final int slotSetPointerCount = countSlotChanges();
         
@@ -325,9 +292,7 @@ public class Transaction {
     }
     
     void commitTransactionListeners() {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(i_transactionListeners);
             while (i.hasNext()) {
@@ -361,27 +326,8 @@ public class Transaction {
         return slotSetPointerCount[0];
     }
 
-    private final Tree createClassIndexNode(Tree a_tree, Tree[] a_node) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        if (a_tree != null) {
-            Tree existing = a_tree.find(a_node[0]);
-            if (existing != null) {
-                a_node[0] = existing;
-            } else {
-                a_tree = a_tree.add(a_node[0]);
-            }
-        } else {
-            a_tree = a_node[0];
-        }
-        return a_tree;
-    }
-
     void delete(YapObject a_yo, int a_cascade) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         int id = a_yo.getID();
         if(DTrace.enabled){
             DTrace.TRANS_DELETE.log(id);
@@ -406,9 +352,7 @@ public class Transaction {
     }
 
     void dontDelete(int classID, int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if(DTrace.enabled){
             DTrace.TRANS_DONT_DELETE.log(a_id);
         }
@@ -426,35 +370,20 @@ public class Transaction {
         if(yapClass == null){
             return;
         }
-        removeFromClassIndexTree(i_removeFromClassIndex, yapClass.getID(), objectID);
+        yapClass.index().dontDelete(this, objectID);
         dontDeleteAllAncestors(yapClass.i_ancestor, objectID);
     }
     
     void dontRemoveFromClassIndex(int a_yapClassID, int a_id) {
         // If objects are deleted and rewritten during a cascade
-        // on delete, we dont want them to be gone.
-        
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-
-        if (Deploy.debug) {
-            if (a_id == 0) {
-                throw new RuntimeException();
-            }
-        }
-        removeFromClassIndexTree(i_removeFromClassIndex, a_yapClassID, a_id);
-
+        // on delete, we dont want them to be gone.        
+        checkSynchronization();
         YapClass yapClass = stream().getYapClass(a_yapClassID);
-        if (TreeInt.find(yapClass.getIndexRoot(), a_id) == null) {
-            addToClassIndex(a_yapClassID, a_id);
-        }
+        yapClass.index().add(this, a_id);
     }
     
     private final SlotChange findSlotChange(int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         return (SlotChange)TreeInt.find(_slotChanges, a_id);
     }
 
@@ -468,9 +397,7 @@ public class Transaction {
     }
 
     private final void freeOnCommit() {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if(i_parentTransaction != null){
             i_parentTransaction.freeOnCommit();
         }
@@ -484,9 +411,7 @@ public class Transaction {
     }
 
     public Slot getSlotInformation(int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if (a_id == 0) {
             return null;
         }
@@ -523,9 +448,7 @@ public class Transaction {
     }
 
     boolean isDeleted(int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         SlotChange slot = findSlotChange(a_id);
         if (slot != null) {
             return slot.isDeleted();
@@ -537,9 +460,7 @@ public class Transaction {
     }
     
     Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         final Object[] ret = new Object[2];
         IxTree ixTree = (IxTree) stream().i_handlers.i_indexes.i_fieldUUID.getOldIndexRoot(this);
         IxTraverser ixTraverser = new IxTraverser();
@@ -587,38 +508,6 @@ public class Transaction {
     	return stream().reflector();
     }
 
-    public void removeFromClassIndex(int a_yapClassID, int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        if (Deploy.debug) {
-            if (a_id == 0) {
-                throw new RuntimeException();
-            }
-        }
-        if(DTrace.enabled){
-            DTrace.REMOVE_FROM_CLASS_INDEX.log(a_id);
-        }
-        removeFromClassIndexTree(i_addToClassIndex, a_yapClassID, a_id);
-        i_removeFromClassIndex = addToClassIndexTree(i_removeFromClassIndex,
-            a_yapClassID, a_id);
-    }
-    
-    private final void removeFromClassIndexTree(Tree a_tree, int a_yapClassID,
-        int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        if (a_tree != null) {
-            TreeIntObject node = (TreeIntObject) ((TreeInt) a_tree)
-                .find(a_yapClassID);
-            if (node != null) {
-                node._object = Tree.removeLike((Tree) node._object,
-                    new TreeInt(a_id));
-            }
-        }
-    }
-    
     public void rollback() {
         synchronized (stream().i_lock) {
             
@@ -655,9 +544,7 @@ public class Transaction {
     }
     
     void rollBackTransactionListeners() {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(i_transactionListeners);
             while (i.hasNext()) {
@@ -672,16 +559,12 @@ public class Transaction {
     }
 
     public void setPointer(int a_id, int a_address, int a_length) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         produceSlotChange(a_id).setPointer(a_address, a_length);
     }
 
     void slotDelete(int a_id, int a_address, int a_length) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if(DTrace.enabled){
             DTrace.FREE_ON_COMMIT.log(a_id);
             DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
@@ -695,9 +578,7 @@ public class Transaction {
     }
 
     public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if(DTrace.enabled){
             DTrace.FREE_ON_COMMIT.log(a_id);
             DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
@@ -709,9 +590,7 @@ public class Transaction {
     }
 
     void slotFreeOnRollback(int a_id, int a_address, int a_length) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if(DTrace.enabled){
             DTrace.FREE_ON_ROLLBACK.log(a_id);
             DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
@@ -723,9 +602,7 @@ public class Transaction {
         
         Slot slot = getSlotInformation(a_id);
         
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         
         if(DTrace.enabled){
             DTrace.FREE_ON_ROLLBACK.log(a_id);
@@ -740,9 +617,7 @@ public class Transaction {
     }
 
     void slotFreeOnRollbackSetPointer(int a_id, int a_address, int a_length) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if(DTrace.enabled){
             DTrace.FREE_ON_ROLLBACK.log(a_id);
             DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
@@ -751,9 +626,7 @@ public class Transaction {
     }
     
     public void slotFreePointerOnCommit(int a_id) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         Slot slot = getSlotInformation(a_id);
         if(slot == null){
             return;
@@ -762,9 +635,7 @@ public class Transaction {
     }
     
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         slotFreeOnCommit(a_address, a_address, a_length);
         slotFreeOnCommit(a_id, a_id, YapConst.POINTER_LENGTH);
     }
@@ -782,84 +653,7 @@ public class Transaction {
 
     public String toString() {
         return stream().toString();
-    }
-    
-    public void traverseAddedClassIDs(int a_yapClassID, Visitor4 visitor) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        traverseDeep(i_addToClassIndex, a_yapClassID, visitor);
-    }
-
-    void traverseDeep(Tree a_tree, int a_yapClassID, Visitor4 visitor) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        if (a_tree != null) {
-            TreeIntObject node = (TreeIntObject) ((TreeInt) a_tree)
-                .find(a_yapClassID);
-            if (node != null && node._object != null) {
-                ((Tree) node._object).traverse(visitor);
-            }
-        }
-    }
-
-    public void traverseRemovedClassIDs(int a_yapClassID, Visitor4 visitor) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        traverseDeep(i_removeFromClassIndex, a_yapClassID, visitor);
-    }
-
-    private void traverseYapClassEntries(final Tree a_tree,
-        final boolean a_add, final Collection4 a_indices) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
-        if(! Debug.useOldClassIndex){
-            return;
-        }
-        if (a_tree != null) {
-            a_tree.traverse(new Visitor4() {
-
-                public void visit(Object obj) {
-                    TreeIntObject node = (TreeIntObject) obj;
-                    YapClass yapClass = stream().i_classCollection.getYapClass(node._key);
-                    final ClassIndex classIndex = ((OldClassIndexStrategy)yapClass.index()).getIndex();
-                    if (node._object != null) {
-                        Visitor4 visitor = null;
-                        if (a_add) {
-                            visitor = new Visitor4() {
-                                public void visit(Object a_object) {
-                                    classIndex.add(((TreeInt) a_object)._key);
-                                }
-                            };
-                        } else {
-                            visitor = new Visitor4() {
-
-                                public void visit(Object a_object) {
-                                    int id = ((TreeInt) a_object)._key;
-                                    YapObject yo = stream().getYapObject(id);
-                                    if (yo != null) {
-                                        stream().yapObjectGCd(yo);
-                                    }
-                                    classIndex.remove(id);
-                                }
-
-                            };
-                        }
-                        ((Tree) node._object).traverse(visitor);
-                        if (!a_indices.containsByIdentity(classIndex)) {
-                            a_indices.add(classIndex);
-                        }
-
-                    }
-                }
-            });
-        }
-    }
-    
-    
+    }    
 
     void writeOld() {
         synchronized (stream().i_lock) {
@@ -889,9 +683,7 @@ public class Transaction {
             DTrace.WRITE_POINTER.log(a_id);
             DTrace.WRITE_POINTER.logLength(a_address, a_length);
         }
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         i_pointerIo.useSlot(a_id);
         if (Deploy.debug) {
             i_pointerIo.writeBegin(YapConst.YAPPOINTER);
@@ -910,9 +702,7 @@ public class Transaction {
     
     private boolean writeSlots() {
         
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         
         boolean ret = false;
         
@@ -935,9 +725,7 @@ public class Transaction {
     }
     
     void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
-        if(Debug.checkSychronization){
-            stream().i_lock.notify();
-        }
+        checkSynchronization();
         if(Tree.find(i_writtenUpdateDeletedMembers, new TreeInt(a_id)) != null){
             return;
         }
@@ -970,4 +758,14 @@ public class Transaction {
     public YapStream stream() {
         return i_stream;
     }
+
+	public void enlist(TransactionParticipant participant) {
+		if (null == participant) {
+			throw new IllegalArgumentException("strategy");
+		}
+		checkSynchronization();	
+		if (!_participants.containsByIdentity(participant)) {
+			_participants.add(participant);
+		}
+	}
 }

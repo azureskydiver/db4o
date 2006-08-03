@@ -2,20 +2,17 @@
 
 package com.db4o.inside;
 
-import com.db4o.Transaction;
-import com.db4o.Tree;
-import com.db4o.TreeInt;
-import com.db4o.YapClass;
-import com.db4o.YapReader;
-import com.db4o.YapStream;
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
  * @exclude
  */
-public class OldClassIndexStrategy extends AbstractClassIndexStrategy  {
+public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implements TransactionParticipant {
 	
 	private ClassIndex _index;
+	
+	private final Hashtable4 _perTransaction = new Hashtable4(1);
 	
 	public OldClassIndexStrategy(YapClass yapClass) {
 		super(yapClass);
@@ -30,16 +27,16 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  {
 		_index.setStateDeactivated();
 	}
 
-	public ClassIndex getIndex() {
+	private ClassIndex getActiveIndex(Transaction transaction) {
 		if (null != _index) {
-			_index.ensureActive();
+			_index.ensureActive(transaction);
 		}
         return _index;
 	}
 
-	public int entryCount(Transaction ta) {
+	public int entryCount(Transaction transaction) {
 		if (_index != null) {
-            return _index.entryCount(ta);
+            return _index.entryCount(transaction);
         }
 		return 0;
 	}
@@ -57,21 +54,95 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  {
         }
 	}
 
-	public void writeId(YapReader writer, Transaction trans) {
-		writer.writeIDOf(trans, _index);
+	public void writeId(YapReader writer, Transaction transaction) {
+		writer.writeIDOf(transaction, _index);
 	}
 
-	public void add(Transaction trans, int id) {
-		trans.addToClassIndex(yapClassID(), id);
+	private void flushContext(final Transaction transaction) {
+		TransactionState context = getState(transaction);
+		
+		final ClassIndex index = getActiveIndex(transaction);
+		context.traverseAdded(new Visitor4() {
+            public void visit(Object a_object) {
+                index.add(idFromValue(a_object));
+            }
+        });
+        
+        context.traverseRemoved(new Visitor4() {
+            public void visit(Object a_object) {
+                int id = idFromValue(a_object);
+                final YapStream stream = transaction.stream();
+				YapObject yo = stream.getYapObject(id);
+                if (yo != null) {
+                    stream.yapObjectGCd(yo);
+                }
+                index.remove(id);
+            }
+        });
 	}
 
-	public long[] getIds(Transaction trans) {
-		final long[] ids;
-		Tree tree = getAll(trans);
+	private void writeIndex(Transaction transaction) {
+		_index.setStateDirty();
+		_index.write(transaction);
+	}
+	
+	final static class TransactionState {
+		
+		private Tree i_addToClassIndex;
+	    
+	    private Tree i_removeFromClassIndex;
+		
+		public void add(int id) {
+			i_removeFromClassIndex = Tree.removeLike(i_removeFromClassIndex, new TreeInt(id));
+			i_addToClassIndex = Tree.add(i_addToClassIndex, new TreeInt(id));
+		}
+
+		public void remove(int id) {
+			i_addToClassIndex = Tree.removeLike(i_addToClassIndex, new TreeInt(id));
+			i_removeFromClassIndex = Tree.add(i_removeFromClassIndex, new TreeInt(id));
+		}
+		
+		public void dontDelete(int id) {
+			i_removeFromClassIndex = Tree.removeLike(i_removeFromClassIndex, new TreeInt(id));
+		}
+
+	    void traverse(Tree node, Visitor4 visitor) {
+	    	if (node != null) {
+	    		node.traverse(visitor);
+	    	}
+	    }
+	    
+		public void traverseAdded(Visitor4 visitor4) {
+			traverse(i_addToClassIndex, visitor4);
+		}
+
+		public void traverseRemoved(Visitor4 visitor4) {
+			traverse(i_removeFromClassIndex, visitor4);
+		}		
+	}
+
+	protected void internalAdd(Transaction transaction, int id) {
+		getState(transaction).add(id);					
+	}
+
+	private TransactionState getState(Transaction transaction) {
+		synchronized (_perTransaction) {
+			TransactionState context = (TransactionState)_perTransaction.get(transaction);
+			if (null == context) {
+				context = new TransactionState();
+				_perTransaction.put(transaction, context);
+				transaction.enlist(this);
+			}
+			return context;
+		}
+	}
+
+	public long[] getIds(Transaction transaction) {		
+		Tree tree = getAll(transaction);
 		if(tree == null){
 		    return new long[0];
 		}
-		ids = new long[tree.size()];
+		final long[] ids = new long[tree.size()];
 		final int[] inc = new int[] { 0 };
 		tree.traverse(new Visitor4() {
 		    public void visit(Object obj) {
@@ -81,21 +152,34 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  {
 		return ids;
 	}
 
-	public Tree getAll(Transaction trans) {
-		ClassIndex ci = getIndex();
+	public Tree getAll(Transaction transaction) {
+		ClassIndex ci = getActiveIndex(transaction);
         if (ci == null) {
         	return null;
         }
-        return ci.cloneForYapClass(trans, yapClassID());
+        
+        final Tree[] tree = new Tree[] { Tree.deepClone(ci.getRoot(), null) };		
+		TransactionState context = getState(transaction);
+		context.traverseAdded(new Visitor4() {
+		    public void visit(Object obj) {
+				tree[0] = Tree.add(tree[0], new TreeInt(idFromValue(obj)));
+		    }
+		});
+		context.traverseRemoved(new Visitor4() {
+		    public void visit(Object obj) {
+				tree[0] = Tree.removeLike(tree[0], (TreeInt) obj);
+		    }
+		});
+		return tree[0];
 	}
 
-	public void remove(Transaction ta, int id) {
-		ta.removeFromClassIndex(yapClassID(), id);
+	protected void internalRemove(Transaction transaction, int id) {
+		getState(transaction).remove(id);
 	}
 
-	public void traverseAll(Transaction ta, Visitor4 command) {
-		Tree tree = getAll(ta);
-		if(tree!=null) {
+	public void traverseAll(Transaction transaction, Visitor4 command) {
+		Tree tree = getAll(transaction);
+		if (tree != null) {
 			tree.traverse(command);
 		}
 	}
@@ -109,5 +193,22 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  {
 			return new ClassIndexClient(_yapClass);
 		}
 		return new ClassIndex(_yapClass);
+	}
+
+	public void dontDelete(Transaction transaction, int id) {
+		getState(transaction).dontDelete(id);
+	}
+
+	public void commit(Transaction trans) {		
+		if (null != _index) {
+			flushContext(trans);
+			writeIndex(trans);
+		}
+	}
+
+	public void dispose(Transaction transaction) {
+		synchronized (_perTransaction) {
+			_perTransaction.remove(transaction);
+		}
 	}
 }

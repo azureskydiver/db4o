@@ -2,8 +2,7 @@
 
 package com.db4o.inside;
 
-import com.db4o.YapClass;
-import com.db4o.YapConst;
+import com.db4o.*;
 
 /**
  * @exclude
@@ -24,4 +23,31 @@ public abstract class AbstractClassIndexStrategy implements ClassIndexStrategy {
 		return YapConst.YAPID_LENGTH;
 	}
 
+	protected abstract void internalAdd(Transaction trans, int id);
+
+	public final void add(Transaction trans, int id) {
+		if (DTrace.enabled) {
+	        DTrace.ADD_TO_CLASS_INDEX.log(id);
+	    }
+		checkId(id);
+		internalAdd(trans, id);
+	}	
+
+	protected abstract void internalRemove(Transaction ta, int id);
+
+	public final void remove(Transaction ta, int id) {
+	    if (DTrace.enabled){
+	        DTrace.REMOVE_FROM_CLASS_INDEX.log(id);
+	    }
+	    checkId(id);
+	    internalRemove(ta, id);
+	}
+	
+	private void checkId(int id) {
+		if (Deploy.debug) {
+            if (id == 0) {
+                throw new IllegalArgumentException("id can't be zero");
+            }
+        }
+	}
 }
