@@ -27,13 +27,18 @@
             dh2.gDict1 = dh1.gDict1;
             dh2.gDict2 = dh1.gDict2;
 
-            DHolder1 dh3 = new DHolder1();
-            dh3.CreateDicts();
-            dh3._name = "update";
+            DHolder1 dh1_2 = new DHolder1();
+            dh1_2.CreateDicts();
+            dh1_2._name = "update";
+        	
+        	DHolder3 dh3 = new DHolder3();
+			dh3._name = "identity";
+			dh3.CreateDicts();
 
             Tester.Store(dh1);
             Tester.Store(dh2);
-            Tester.Store(dh3);
+            Tester.Store(dh1_2);
+        	Tester.Store(dh3);
         }
 
 
@@ -45,6 +50,12 @@
             DHolder1 updateHolder = QueryForNamedHolder("update");
             updateHolder.UpdateDicts();
             updateHolder.StoreDicts(Tester.ObjectContainer());
+
+			Query q = Tester.Query();
+			q.Constrain(typeof(DHolder3));
+			q.Descend("_name").Constrain("identity");
+			DHolder3 identityHolder = (DHolder3) q.Execute().Next();
+			identityHolder.CheckDicts();
 
             Tester.ReOpen();
 
@@ -165,7 +176,46 @@
         public IDictionary<DItem1, string> gDict1;
         public IDictionary<DItem2, string> gDict2;
     }
+	
+	public class DHolder3
+	{
+		public string _name;
+		public IDictionary nDict;
+		public IDictionary<DItem3, string> gDict;
+		
+		public DItem3[] _items = new DItem3[] {new DItem3("foo"), new DItem3("bar"), new DItem3("baz")};
 
+		public void CreateDicts()
+		{
+			nDict = new Hashtable();
+			gDict = new Dictionary<DItem3, string>();
+
+			foreach (DItem3 item in _items)
+			{
+				nDict.Add(item, item.Name());
+				gDict.Add(item, item.Name());
+			}
+		}
+
+		public void CheckDicts()
+		{
+			foreach (object key in nDict.Keys)
+				Tester.Ensure(nDict[key] != null);
+			
+			foreach (DItem3 item in gDict.Keys)
+			{
+				try
+				{
+					Tester.Ensure(gDict[item] != null);
+				}
+				catch (KeyNotFoundException)
+				{
+					Tester.Ensure(false);
+					return;
+				}
+			}
+		}
+	}
 
     public class DItem1 : Named
     {
@@ -180,27 +230,27 @@
             _name = name;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
 
-            DItem1 other = obj as DItem1;
+			DItem1 other = obj as DItem1;
 
-            if (other == null)
-            {
-                return false;
-            }
+			if (other == null)
+			{
+				return false;
+			}
 
-            return _name.Equals(other._name);
-        }
+			return _name.Equals(other._name);
+		}
 
-        public override int GetHashCode()
-        {
-            return _name.GetHashCode();
-        }
+		public override int GetHashCode()
+		{
+			return _name.GetHashCode();
+		}
 
         public string Name()
         {
@@ -222,27 +272,27 @@
             _name = name;
         }
 
-        public override int GetHashCode()
-        {
-            return _name.GetHashCode();
-        }
+		public override int GetHashCode()
+		{
+			return _name.GetHashCode();
+		}
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
 
-            DItem2 other = obj as DItem2;
+			DItem2 other = obj as DItem2;
 
-            if (other == null)
-            {
-                return false;
-            }
+			if (other == null)
+			{
+				return false;
+			}
 
-            return _name.Equals(other._name);
-        }
+			return _name.Equals(other._name);
+		}
 
         public string Name()
         {
@@ -250,6 +300,43 @@
         }
 
     }
+	
+	public class DItem3 : Named
+	{
+		string _name;
+		
+		public DItem3(string name)
+		{
+			_name = name;
+		}
+		
+		public string Name()
+		{
+			return _name;
+		}
+
+		//public override bool Equals(object obj)
+		//{
+		//    if (obj == null)
+		//    {
+		//        return false;
+		//    }
+
+		//    DItem3 other = obj as DItem3;
+
+		//    if (other == null)
+		//    {
+		//        return false;
+		//    }
+
+		//    return _name.Equals(other._name);
+		//}
+
+		//public override int GetHashCode()
+		//{
+		//    return _name.GetHashCode();
+		//}
+	}
 
     public interface Named
     {
