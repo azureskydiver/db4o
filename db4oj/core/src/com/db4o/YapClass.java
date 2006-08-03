@@ -3,24 +3,11 @@
 package com.db4o;
 
 import com.db4o.config.ObjectTranslator;
-import com.db4o.ext.ObjectNotStorableException;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.No4;
-import com.db4o.foundation.Visitor4;
-import com.db4o.inside.BTreeClassIndexStrategy;
-import com.db4o.inside.ClassIndex;
-import com.db4o.inside.ClassIndexStrategy;
-import com.db4o.inside.Exceptions4;
-import com.db4o.inside.OldClassIndexStrategy;
-import com.db4o.inside.btree.BTree;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
-import com.db4o.inside.marshall.MarshallerFamily;
-import com.db4o.inside.marshall.ObjectHeader;
-import com.db4o.inside.marshall.ObjectHeaderAttributes;
+import com.db4o.inside.marshall.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -63,7 +50,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     private ClassIndexStrategy createIndexStrategy() {
-		if (Debug.useOldClassIndex) {
+    	if (Debug.useOldClassIndex) {
 			return new OldClassIndexStrategy(this);
 		}
 		return new BTreeClassIndexStrategy(this);
@@ -817,15 +804,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     public ClassIndexStrategy index() {
     	return _index;
-    }
-    
-    // FIXME: remove
-    private ClassIndex getIndex() {
-        if (stateOK() && (_index instanceof OldClassIndexStrategy)) {
-            return ((OldClassIndexStrategy)_index).getIndex();
-        }
-        return null;
-    }
+    }    
     
     int indexEntryCount(Transaction ta){
         if(!stateOK()){
@@ -850,18 +829,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return _index.getAll(a_trans);
     }
 
-    // FIXME remove, replace with access index strategy
-    final TreeInt getIndexRoot() {
-        if (! hasIndex()) {
-            return null;
-        }
-        ClassIndex ci = getIndex();
-        if(ci == null){
-            return null;
-        }
-        return ci.getRoot();
-    }
-    
     public ReflectClass classReflector(){
         return _reflector;
     }
@@ -890,7 +857,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    public YapStream getStream() {
+    YapStream getStream() {
         return i_stream;
     }
 

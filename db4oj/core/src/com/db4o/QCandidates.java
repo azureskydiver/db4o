@@ -3,8 +3,8 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.diagnostic.*;
-import com.db4o.inside.ix.*;
+import com.db4o.inside.diagnostic.DiagnosticProcessor;
+import com.db4o.inside.ix.QxProcessor;
 
 /**
  * Holds the tree of QCandidate objects and the list of QContraints during query evaluation.
@@ -256,39 +256,7 @@ public final class QCandidates implements Visitor4 {
     		return;
     	}
         
-        if(Debug.useOldClassIndex){
-            
-            final QCandidates finalThis = this;
-        
-        	if (i_yapClass.hasIndex()) {
-        		final Tree[] newRoot =
-        		{
-        				TreeInt.toQCandidate(i_yapClass.getIndexRoot(), this)
-        		};
-        		i_trans.traverseAddedClassIDs(i_yapClass.getID(), new Visitor4() {
-        			public void visit(Object obj) {
-        				newRoot[0] =
-        					Tree.add(
-        							newRoot[0],
-    								new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
-        			}
-        		});
-        		
-        		// QCandidate has it's own compare routine, so we can't 
-        		// use a TreeInt for the removeLike call
-        		i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new Visitor4() {
-        			public void visit(Object obj) {
-        				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
-        			}
-        		});
-        		
-        		i_root = newRoot[0];
-        	}
-        }
-        
-        if(Debug.useBTrees){
-            i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
-        }
+        i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
         
         DiagnosticProcessor dp = i_trans.stream().i_handlers._diagnosticProcessor;
         if (dp.enabled()){
@@ -297,7 +265,7 @@ public final class QCandidates implements Visitor4 {
         
     }
 
-    void setCurrentConstraint(QCon a_constraint) {
+	void setCurrentConstraint(QCon a_constraint) {
         i_currentConstraint = a_constraint;
     }
 
