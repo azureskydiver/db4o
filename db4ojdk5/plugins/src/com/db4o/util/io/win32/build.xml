@@ -13,11 +13,12 @@
 	
 	<target name="run" depends="build">
 		
+		<echo>${output.dir}</echo>
 		<java
 			classname="com.db4o.util.io.spikes.SimpleIoBenchmark"
 			classpathref="project.classpath"
 			fork="yes">
-		
+
 			<sysproperty key="java.library.path" path="${output.dir}" />
 			
 		</java>
