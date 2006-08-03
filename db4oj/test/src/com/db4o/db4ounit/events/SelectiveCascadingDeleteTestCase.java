@@ -1,12 +1,8 @@
 package com.db4o.db4ounit.events;
 
+import com.db4o.Db4o;
 import com.db4o.ObjectSet;
-import com.db4o.events.CancellableObjectEventArgs;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
+import com.db4o.events.*;
 import com.db4o.query.Query;
 import com.db4o.query.QueryComparator;
 
@@ -28,6 +24,10 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 		}
 	}
 	
+	protected void configure() {
+		enableCascadeOnDelete();
+	}
+	
 	protected void store() {
 		Item c = new Item("C", null);
 		Item b = new Item("B", c);
@@ -38,13 +38,13 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 	public void testPreventMiddleObjectDeletion() {
 		Assert.areEqual(3, queryItems().size());
 		
-		enableCascadeOnDelete();
-		
-		eventRegistry().deleting().addListener(new EventListener4() {
+		eventRegistry().deleted().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				CancellableObjectEventArgs a = (CancellableObjectEventArgs)args;
-				if (((Item)a.object()).id.equals("B")) {
-					a.cancel();
+				ObjectEventArgs a = (ObjectEventArgs)args;
+				Item item = ((Item)a.object());
+				if (item.id.equals("B")) {
+					item.child = null;
+					db().set(item);
 				}
 			}
 		});
@@ -54,9 +54,8 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 		db().delete(a);
 		
 		ObjectSet found = queryItems();
-		Assert.areEqual(2, found.size());
+		Assert.areEqual(1, found.size());
 		Assert.areEqual("B", ((Item)found.next()).id);
-		Assert.areEqual("C", ((Item)found.next()).id);
 	}
 
 	private ObjectSet queryItems() {
@@ -79,7 +78,7 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 	}
 
 	private void enableCascadeOnDelete() {
-		db().configure().objectClass(Item.class).cascadeOnDelete(true);
+		Db4o.configure().objectClass(Item.class).cascadeOnDelete(true);
 	}
 
 	private Item queryItem(final String id) {
