@@ -65,7 +65,7 @@ public final class YapConfigBlock implements Runnable
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
 		
-	private final long			_opentime; // written as pure long 8 bytes
+	public final long			_opentime; // written as pure long 8 bytes
 	byte						_encoding;
     public byte                        _freespaceSystem;
     public int                         _freespaceAddress;
