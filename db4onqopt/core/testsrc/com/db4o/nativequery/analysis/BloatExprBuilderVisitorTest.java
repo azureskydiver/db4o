@@ -37,6 +37,7 @@ class Data extends Base {
 	Data next;
 	int[] intArray;
 	Data[] objArray;
+	Boolean boolWrapper;
 	
 	public boolean getBool() {
 		return bool;
@@ -64,6 +65,7 @@ class Data extends Base {
 public class BloatExprBuilderVisitorTest extends TestCase {	
 	private static final String INT_WRAPPED_FIELDNAME = "idWrap";
 	private static final String BOOLEAN_FIELDNAME = "bool";
+	private static final String BOOLEAN_WRAPPED_FIELDNAME = "boolWrapper";
 	private static final String INT_FIELDNAME = "id";
 	private static final String FLOAT_FIELDNAME = "value";
 	private static final String DATA_FIELDNAME="next";
@@ -469,6 +471,14 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	// primitive wrapper equality
 
+	boolean sampleFieldBooleanWrapperEqualsComp(Data data) {
+		return data.boolWrapper.booleanValue();
+	}
+
+	public void testFieldBooleanWrapperEqualsComp() throws Exception {
+		assertComparison("sampleFieldBooleanWrapperEqualsComp",BOOLEAN_WRAPPED_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	}
+
 	boolean sampleFieldIntWrapperEqualsComp(Data data) {
 		return data.getIdWrapped().equals(intWrapperCmpVal);
 	}
@@ -483,6 +493,24 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testIntWrapperFieldEqualsComp() throws Exception {
 		assertComparison("sampleIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE,"intWrapperCmpVal","java.lang.Integer"),ComparisonOperator.EQUALS,false);
+	}	
+	
+	// descend into primitive wrapper
+
+	boolean sampleWrapperFieldValueIntSameComp(Data data) {
+		return data.getIdWrapped().intValue()==INT_CMPVAL;
+	}
+
+	public void testWrapperFieldValueIntSameComp() throws Exception {
+		assertComparison("sampleWrapperFieldValueIntSameComp",INT_WRAPPED_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,false);
+	}	
+
+	boolean sampleNotValueBoolWrapperFieldSameComp(Data data) {
+		return data.boolWrapper.booleanValue();
+	}
+
+	public void testNotValueBoolWrapperFieldSameComp() throws Exception {
+		assertComparison("sampleNotValueBoolWrapperFieldSameComp",BOOLEAN_WRAPPED_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
 	}	
 
 	//static member comparison

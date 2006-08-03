@@ -256,6 +256,16 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		super.visitExprStmt(stmt);
 	}
 
+	private boolean isPrimitiveWrapper(Type type) {
+		String typeName=normalizedClassName(type);
+		for (int idx = 0; idx < PRIMITIVE_WRAPPER_NAMES.length; idx++) {
+			if(typeName.equals(PRIMITIVE_WRAPPER_NAMES[idx])) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void visitCallExpr(CallExpr expr) {
 		boolean isStatic = (expr instanceof CallStaticExpr);
 		if (!isStatic && expr.method().name().equals("<init>")) {
@@ -269,22 +279,32 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 			return;
 		}
-		if (expr.method().name().equals("contains")
-				&& expr.method().declaringClass().equals(Type.STRING)) {
-			processEqualsCall((CallMethodExpr) expr,
-					ComparisonOperator.CONTAINS);
-			return;
+		if(expr.method().declaringClass().equals(Type.STRING)) {
+			if (expr.method().name().equals("contains")) {
+				processEqualsCall((CallMethodExpr) expr,
+						ComparisonOperator.CONTAINS);
+				return;
+			}
+			if (expr.method().name().equals("startsWith")) {
+				processEqualsCall((CallMethodExpr) expr,
+						ComparisonOperator.STARTSWITH);
+				return;
+			}
+			if (expr.method().name().equals("endsWith")) {
+				processEqualsCall((CallMethodExpr) expr,
+						ComparisonOperator.ENDSWITH);
+				return;
+			}
 		}
-		if (expr.method().name().equals("startsWith")
-				&& expr.method().declaringClass().equals(Type.STRING)) {
-			processEqualsCall((CallMethodExpr) expr,
-					ComparisonOperator.STARTSWITH);
-			return;
-		}
-		if (expr.method().name().equals("endsWith")
-				&& expr.method().declaringClass().equals(Type.STRING)) {
-			processEqualsCall((CallMethodExpr) expr,
-					ComparisonOperator.ENDSWITH);
+		if(isPrimitiveWrapper(expr.method().declaringClass())
+				&&expr.method().name().endsWith("Value")) {
+			((CallMethodExpr)expr).receiver().visit(this);
+			if(retval instanceof FieldValue) {
+				FieldValue fieldval=(FieldValue)retval;
+				if(isBooleanField(fieldval)) {
+					retval(new ComparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS));
+				}
+			}
 			return;
 		}
 		MemberRef methodRef = expr.method();
@@ -424,7 +444,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (fieldObj instanceof ComparisonOperandAnchor) {
 			retval(new FieldValue((ComparisonOperandAnchor) fieldObj,
 					fieldName, normalizedClassName(expr.field().type())));
-			return;
 		}
 	}
 
@@ -501,7 +520,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private boolean isBooleanField(FieldValue fieldVal) {
-		return isFieldType(fieldVal, "Z");
+		return isFieldType(fieldVal, "Z")||isFieldType(fieldVal, Boolean.class.getName());
 	}
 
 	private boolean isIntField(FieldValue fieldVal) {
@@ -526,8 +545,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		ComparisonOperand right = (ComparisonOperand) rightObj;
 		boolean swapped = false;
-		if ((left instanceof ComparisonOperand)
-				&& (right instanceof FieldValue)) {
+		if (right instanceof FieldValue) {
 			FieldValue rightField = (FieldValue) right;
 			if (rightField.root() == CandidateFieldRoot.INSTANCE) {
 				ComparisonOperand swap = left;
