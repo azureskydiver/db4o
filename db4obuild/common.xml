@@ -12,6 +12,8 @@
 			<pathelement location="${dir.doctor.lib}/iText.jar" />
 			<pathelement location="${dir.dist.classes.tutorial}" />
 			<pathelement location="${dir.dist.classes.reference}" />
+			<pathelement location="${dir.dist.classes.nqopt}" />
+			<pathelement location="${file.bloat.jar}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>

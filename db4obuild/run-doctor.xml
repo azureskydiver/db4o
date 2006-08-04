@@ -36,6 +36,12 @@
 			<fileset dir="${dir.dist.classes.reference}" includes="com/db4odoc/f1/**/*.class" />
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.reference.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<copy todir="${dir.dist.doctor}" overwrite="true">
+			<fileset file="${file.nqopt.jar}" />
+			<fileset file="${file.bloat.jar}" />
+		</copy>
+		<signjar keystore="${file.keystore}" jar="${dir.dist.doctor}/${filename.nqopt.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<signjar keystore="${file.keystore}" jar="${dir.dist.doctor}/${filename.bloat.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<doctor name="doctor" workspace="${dir.workspace}" pdfbasefont="${font.pdf.base}" />
 		<doctor name="dev" workspace="${dir.workspace}" outputfile="dev" pdfbasefont="${font.pdf.base}" />
 		<doctor 
@@ -136,7 +142,7 @@
 			outputfile="${db4o.file}reference" 
 			outputpath="${dir.j.reference.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.reference.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.reference.jar}, ${filename.nqopt.jar}, ${filename.bloat.jar}" 
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
