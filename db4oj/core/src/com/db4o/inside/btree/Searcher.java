@@ -8,78 +8,92 @@ package com.db4o.inside.btree;
  */
 public class Searcher {
     
-    public int _lower;
+    private int _lower;
     
-    public int _upper;
+    private int _upper;
     
-    public int _cursor;
+    private int _cursor;
     
-    public int _cmp;
+    private int _cmp;
     
     private final SearchTarget _target;
     
     public Searcher(SearchTarget target, int count){
         _target = target;
-        start(count);
-    }
-    
-    public void start(int count){
-        _lower = 0;
+        if(count == 0){
+            complete();
+            return;
+        }
         _upper = count - 1;
         _cursor = -1;
+        adjustCursor();
+    }
+    
+    private void adjustCursor(){
+        int oldCursor = _cursor;
+        if(_upper - _lower <= 1){
+            _cursor = _upper;
+        }else{
+            _cursor = _lower + ((_upper - _lower) / 2);
+        }
+        if(_cursor == oldCursor){
+            complete();
+        }
+    }
+    
+    public boolean beforeFirst() {
+        return _cmp > 0;
+    }
+
+    public boolean beyondLast(){
+        return _cmp < 0;
+    }
+    
+    private void complete(){
+        _upper = -2;
+    }
+    
+    public int cursor() {
+        return _cursor;
+    }
+
+    public boolean foundMatch(){
+        return _cmp == 0;
     }
     
     public boolean incomplete() {
-        if (_upper < _lower) {
-            return false;
-        }
-        int oldCursor = _cursor;
-        _cursor = _lower + ((_upper - _lower) / 2);
-        if (_cursor == oldCursor && _cursor == _lower && _lower < _upper) {
-            _cursor ++;
-        }
-        return _cursor != oldCursor;
+        return _upper >= _lower;
     }
     
-    void resultIs(int cmp){
-        
+    public void moveForward() {
+        _cursor++;
+    }
+
+    public void resultIs(int cmp){
         _cmp = cmp;
-        
         if(cmp > 0){
             _upper = _cursor - 1;
             if (_upper < _lower) {
                 _upper = _lower;
             }
-            return;
-        }
-        
-        if (cmp < 0) {
+        }else if (cmp < 0) {
             _lower = _cursor + 1;
             if (_lower > _upper) {
                 _lower = _upper;
             }
-            return;
+        }else{
+            if(_target == SearchTarget.ANY){
+                _lower = _cursor;
+                _upper = _cursor;
+            }else if(_target == SearchTarget.HIGHEST){
+                _lower = _cursor;
+            }else if(_target == SearchTarget.LOWEST){
+                _upper = _cursor;
+            }else{
+                throw new IllegalStateException("Unknown target");
+            }
         }
-        
-        if(_target == SearchTarget.ANY){
-            _lower = _cursor;
-            _upper = _cursor;
-            return;
-        }
-        
-        if(_target == SearchTarget.HIGHEST){
-            _lower = _cursor;
-            return;
-        }
-        
-        if(_target == SearchTarget.LOWEST){
-            _upper = _cursor;
-            return;
-        }
-        
-        throw new IllegalStateException("Unknown target");
-        
+        adjustCursor();
     }
-    
-
+ 
 }

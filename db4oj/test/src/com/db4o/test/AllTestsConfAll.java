@@ -5,7 +5,6 @@ package com.db4o.test;
 import com.db4o.test.cluster.BasicClusterTest;
 import com.db4o.test.conjunctions.ConjunctionsTestSuite;
 import com.db4o.test.constraints.ConstraintsTestSuite;
-import com.db4o.test.inside.btree.BTreeTestSuite;
 import com.db4o.test.interfaces.InterfacesTestSuite;
 import com.db4o.test.java.JavaTestSuite;
 import com.db4o.test.nativequery.NativeQueryTestSuite;
@@ -19,7 +18,6 @@ public class AllTestsConfAll extends TestSuite{
 	
     protected void addTestSuites(TestSuite suites) {
         suites.add(this);
-        suites.add(new BTreeTestSuite());
         suites.add(new ConstraintsTestSuite());
         suites.add(new ConjunctionsTestSuite());
         suites.add(new InterfacesTestSuite());
