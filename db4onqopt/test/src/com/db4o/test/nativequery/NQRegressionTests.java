@@ -561,6 +561,12 @@ public class NQRegressionTests {
 				return candidate.idWrap.intValue()==1;
 			}
 		},
+		new ExpectingPredicate("id==INTWRAPPER.intValue()") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.id==INTWRAPPER.intValue();
+			}
+		},
 		// Note: We never get to see a static field access here - non-static inner class
 		// stuff converts this to NQRegressionTests#access$0()
 		new ExpectingPredicate("PRIVATE_INTWRAPPER.eq(idWrap)") {

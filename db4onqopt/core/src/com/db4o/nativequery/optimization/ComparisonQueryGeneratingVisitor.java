@@ -139,7 +139,7 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 			params[paramIdx]=_value;
 		}
 		Class clazz=receiver.getClass();
-		if(operand.parent().root() instanceof StaticFieldRoot) {
+		if(operand.parent().root() instanceof StaticFieldRoot&&clazz.equals(Class.class)) {
 			clazz=(Class)receiver;
 		}
 		Method method=ReflectUtil.methodFor(clazz,operand.methodName(),operand.paramTypes());
