@@ -110,37 +110,32 @@ public class BTreeNode extends YapMeta{
             
             prepareWrite(trans);
 
+            if(s.foundMatch()){
+                // TODO: Anything special on exact match?    
+                // Possibly compare value part also?
+            }          
             
-            // TODO: Anything special on exact match?  Possibly compare value part also?
-            
-//            if(s._cmp == 0){
-//                
-//            }
-            
-            
-            // Leaf only: Check last comparison result and position
-            //            beyond last if added is greater.
-            if(s._cmp < 0){
-                s._cursor ++;
+            if(s.beyondLast()){
+                s.moveForward();
             }
             
-            insert(s._cursor);
-            _keys[s._cursor] = new BTreeAdd(trans, keyHandler().current());
+            insert(s.cursor());
+            _keys[s.cursor()] = new BTreeAdd(trans, keyHandler().current());
             if(handlesValues()){
-                _values[s._cursor] = valueHandler().current();
+                _values[s.cursor()] = valueHandler().current();
             }
             
         }else{
             
-            BTreeNode childNode = child(reader, s._cursor);
+            BTreeNode childNode = child(reader, s.cursor());
             BTreeNode childNodeOrSplit = childNode.add(trans);
             if(childNodeOrSplit == null){
                 return null;
             }
             prepareWrite(trans);
-            _keys[s._cursor] = childNode._keys[0];
+            _keys[s.cursor()] = childNode._keys[0];
             if(childNode != childNodeOrSplit){
-                int splitCursor = s._cursor + 1;
+                int splitCursor = s.cursor() + 1;
                 insert(splitCursor);
                 _keys[splitCursor] = childNodeOrSplit._keys[0];
                 _children[splitCursor] = childNodeOrSplit;
@@ -151,7 +146,7 @@ public class BTreeNode extends YapMeta{
             return split(trans);
         }
         
-        if(s._cursor == 0){
+        if(s.cursor() == 0){
             return this;  
         }
         
@@ -162,7 +157,7 @@ public class BTreeNode extends YapMeta{
         
         YapReader reader = prepareRead(trans);
         
-        Searcher s = search(trans, reader);
+        Searcher s = search(trans, reader, SearchTarget.LOWEST);
         
         if(_isLeaf){
             
@@ -410,9 +405,9 @@ public class BTreeNode extends YapMeta{
     private void compare(Searcher s, YapReader reader){
         Indexable4 handler = keyHandler();
         if(_keys != null){
-            s.resultIs(handler.compareTo(key(s._cursor)));
+            s.resultIs(handler.compareTo(key(s.cursor())));
         }else{
-            seekKey(reader, s._cursor);
+            seekKey(reader, s.cursor());
             s.resultIs(handler.compareTo(handler.readIndexEntry(reader)));
         }
     }
@@ -639,13 +634,13 @@ public class BTreeNode extends YapMeta{
         YapReader reader = prepareRead(trans);
         
         Searcher s = search(trans, reader);
-        if(s._cursor < 0){
+        if(s.cursor() < 0){
             return;
         }
         
         if(_isLeaf){
             
-            if(s._cmp != 0){
+            if(! s.foundMatch()){
                 return;
             }
             
@@ -653,21 +648,21 @@ public class BTreeNode extends YapMeta{
             
             BTreeRemove btr = new BTreeRemove(trans, keyHandler().current());
             
-            BTreePatch patch = keyPatch(s._cursor);
+            BTreePatch patch = keyPatch(s.cursor());
             if(patch != null){
-                _keys[s._cursor] = patch.append(btr);
+                _keys[s.cursor()] = patch.append(btr);
             }else{
-                _keys[s._cursor] = btr;    
+                _keys[s.cursor()] = btr;    
             }
             
-            if(s._cursor == 0){
+            if(s.cursor() == 0){
                 tellParentAboutChangedKey(trans);
             }
             
             return;
         }
             
-        child(reader, s._cursor).remove(trans);
+        child(reader, s.cursor()).remove(trans);
     }
     
     void rollback(Transaction trans){
@@ -725,19 +720,6 @@ public class BTreeNode extends YapMeta{
         Searcher s = new Searcher(target, _count);
         while(s.incomplete()){
             compare(s, reader);
-        }
-        if(s._cursor < 0){
-            s._cursor = 0;
-        }else{
-            if(! _isLeaf){
-            
-                // Check last comparison result and step back one if added
-                // is smaller than last comparison.
-                
-                if(s._cmp > 0 && s._cursor > 0){
-                    s._cursor --;
-                }
-            }
         }
         return s;
     }

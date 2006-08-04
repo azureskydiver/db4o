@@ -25,10 +25,11 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
 		return new Db4oTestSuiteBuilder(
 				fixture(),
 				new Class[] {
-					com.db4o.db4ounit.foundation.AllTests.class,
+                    com.db4o.db4ounit.fieldindex.AllTests.class,
+                    com.db4o.db4ounit.foundation.AllTests.class,
 					com.db4o.db4ounit.header.AllTests.class,
 					com.db4o.db4ounit.events.AllTests.class,
-					com.db4o.db4ounit.tools.AllTests.class,
+					com.db4o.db4ounit.tools.AllTests.class
 					}).build();
 	}
 }
