@@ -33,7 +33,12 @@ public class NativeQueryEnhancer {
 	}
 
 	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName) {
-		FlowGraph flowGraph=bloatUtil.flowGraph(classEditor,methodName);
+		FlowGraph flowGraph=null;
+		try {
+			flowGraph=bloatUtil.flowGraph(classEditor,methodName);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
 		if(flowGraph!=null) {
 			BloatExprBuilderVisitor builder = new BloatExprBuilderVisitor(bloatUtil);
 			if(NQDebug.LOG) {

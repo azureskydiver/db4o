@@ -26,7 +26,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 			//System.err.println((System.currentTimeMillis()-start)+" ms");
 			//System.err.println(expr);
 			if(expr==null) {
-				throw new RuntimeException();
+				throw new RuntimeException("Could not analyze "+filter);
 			}
 			//start=System.currentTimeMillis();
 			new SODAQueryBuilder().optimizeQuery(expr,query,filter);

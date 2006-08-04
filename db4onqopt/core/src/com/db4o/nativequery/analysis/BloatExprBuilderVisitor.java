@@ -257,7 +257,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private boolean isPrimitiveWrapper(Type type) {
-		String typeName=normalizedClassName(type);
+		String typeName=bloatUtil.normalizedClassName(type);
 		for (int idx = 0; idx < PRIMITIVE_WRAPPER_NAMES.length; idx++) {
 			if(typeName.equals(PRIMITIVE_WRAPPER_NAMES[idx])) {
 				return true;
@@ -336,7 +336,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			if (rcvRetval == null
 					|| rcvRetval.root() != CandidateFieldRoot.INSTANCE) {
 				if (rcvRetval == null) {
-					rcvRetval = new StaticFieldRoot(normalizedClassName(expr
+					rcvRetval = new StaticFieldRoot(bloatUtil.normalizedClassName(expr
 							.method().declaringClass()));
 				}
 				params.remove(0);
@@ -344,7 +344,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						.paramTypes();
 				Class[] javaParamTypes = new Class[paramTypes.length];
 				for (int paramIdx = 0; paramIdx < paramTypes.length; paramIdx++) {
-					String className = normalizedClassName(paramTypes[paramIdx]);
+					String className = bloatUtil.normalizedClassName(paramTypes[paramIdx]);
 					javaParamTypes[paramIdx] = (PRIMITIVE_CLASSES
 							.containsKey(className) ? (Class) PRIMITIVE_CLASSES
 							.get(className) : Class.forName(className));
@@ -396,7 +396,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private boolean isPrimitive(Type type) {
 		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
-				normalizedClassName(type)) >= 0;
+				bloatUtil.normalizedClassName(type)) >= 0;
 	}
 
 	private void processEqualsCall(CallMethodExpr expr, ComparisonOperator op) {
@@ -443,14 +443,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		String fieldName = expr.field().name();
 		if (fieldObj instanceof ComparisonOperandAnchor) {
 			retval(new FieldValue((ComparisonOperandAnchor) fieldObj,
-					fieldName, normalizedClassName(expr.field().type())));
+					fieldName, bloatUtil.normalizedClassName(expr.field().type())));
 		}
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {
 		MemberRef field = expr.field();
-		retval(new FieldValue(new StaticFieldRoot(normalizedClassName(field
-				.declaringClass())), field.name(), normalizedClassName(field
+		retval(new FieldValue(new StaticFieldRoot(bloatUtil.normalizedClassName(field
+				.declaringClass())), field.name(), bloatUtil.normalizedClassName(field
 				.type())));
 	}
 
@@ -644,9 +644,5 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 		}
 		return null;
-	}
-
-	private String normalizedClassName(Type type) {
-		return type.className().replace('/', '.');
 	}
 }
