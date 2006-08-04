@@ -744,6 +744,20 @@
 	</target>
 
 	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
+		<copy todir=".">
+			<fileset dir="${dir.j}">
+				<include name="test/db4oVersions/**/*" />
+			</fileset>
+		</copy>
+		<java fork="true" classname="com.db4o.db4ounit.AllTests" failonerror="true" timeout="180000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java5}" />
+				<dirset dir="${dir.dist.classes.java1.2}" />
+				<dirset dir="${dir.dist.classes.test}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="-e" />
+		</java>
 		<java fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
@@ -761,7 +775,6 @@
 				<path location="${file.bloat.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="*" />
 		</java>
 	</target>
 

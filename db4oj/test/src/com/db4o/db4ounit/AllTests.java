@@ -12,10 +12,13 @@ import db4ounit.db4o.fixtures.Db4oSolo;
 public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
 	
 	public static void main(String[] args) {
-		new TestRunner(
+		int ret=new TestRunner(
 				new Db4oTestSuiteBuilder(
 						new Db4oSolo(),
 						AllTests.class)).run();
+		if(ret!=0) {
+			throw new RuntimeException(ret+" tests failed");
+		}
 	}
 
 	public TestSuite build() {
