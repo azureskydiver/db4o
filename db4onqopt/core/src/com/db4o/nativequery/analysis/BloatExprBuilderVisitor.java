@@ -296,16 +296,23 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				return;
 			}
 		}
+		ComparisonOperandAnchor rcvRetval = null;
+		if (!isStatic) {
+			((CallMethodExpr) expr).receiver().visit(this);
+			rcvRetval = (ComparisonOperandAnchor) purgeReturnValue();
+		}
 		if(isPrimitiveWrapper(expr.method().declaringClass())
 				&&expr.method().name().endsWith("Value")) {
-			((CallMethodExpr)expr).receiver().visit(this);
-			if(retval instanceof FieldValue) {
-				FieldValue fieldval=(FieldValue)retval;
+			retval(rcvRetval);
+			if(rcvRetval instanceof FieldValue) {
+				FieldValue fieldval=(FieldValue)rcvRetval;
 				if(isBooleanField(fieldval)) {
 					retval(new ComparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS));
 				}
+				if(fieldval.root().equals(CandidateFieldRoot.INSTANCE)) {
+					return;
+				}
 			}
-			return;
 		}
 		MemberRef methodRef = expr.method();
 		if (methodStack.contains(methodRef) || methodStack.size() > MAX_DEPTH) {
@@ -313,11 +320,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		methodStack.addLast(methodRef);
 		try {
-			ComparisonOperandAnchor rcvRetval = null;
-			if (!isStatic) {
-				((CallMethodExpr) expr).receiver().visit(this);
-				rcvRetval = (ComparisonOperandAnchor) purgeReturnValue();
-			}
 			List params = new ArrayList(expr.params().length + 1);
 			params.add(rcvRetval);
 			for (int idx = 0; idx < expr.params().length; idx++) {

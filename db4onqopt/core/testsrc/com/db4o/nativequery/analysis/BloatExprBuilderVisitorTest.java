@@ -75,6 +75,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	private final static float FLOAT_CMPVAL=12.3f;
 	private final static String STRING_CMPVAL="Test";
 	private final static Integer INT_WRAPPER_CMPVAL=new Integer(INT_CMPVAL);
+	private final static Boolean BOOLEAN_WRAPPER_CMPVAL=Boolean.TRUE;
 	private final Integer intWrapperCmpVal=new Integer(INT_CMPVAL);
 	
 	private boolean boolMember=false;
@@ -511,6 +512,24 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testNotValueBoolWrapperFieldSameComp() throws Exception {
 		assertComparison("sampleNotValueBoolWrapperFieldSameComp",BOOLEAN_WRAPPED_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	}	
+
+	// primitive field against wrapper
+
+	boolean sampleFieldWrapperIntSameComp(Data data) {
+		return data.getId()==INT_WRAPPER_CMPVAL.intValue();
+	}
+
+	public void testFieldWrapperIntSameComp() throws Exception {
+		assertComparison("sampleFieldWrapperIntSameComp",INT_FIELDNAME,new MethodCallValue(new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorTest.class.getName()),"INT_WRAPPER_CMPVAL",Integer.class.getName()),"intValue",new Class[0],new ComparisonOperand[0]),ComparisonOperator.EQUALS,false);
+	}	
+
+	boolean sampleBoolWrapperFieldSameComp(Data data) {
+		return data.bool==BOOLEAN_WRAPPER_CMPVAL.booleanValue();
+	}
+
+	public void testBoolWrapperFieldSameComp() throws Exception {
+		assertComparison("sampleBoolWrapperFieldSameComp",BOOLEAN_FIELDNAME,new MethodCallValue(new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorTest.class.getName()),"BOOLEAN_WRAPPER_CMPVAL",Boolean.class.getName()),"booleanValue",new Class[0],new ComparisonOperand[0]),ComparisonOperator.EQUALS,false);
 	}	
 
 	//static member comparison
