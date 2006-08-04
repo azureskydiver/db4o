@@ -25,7 +25,7 @@ public class BloatUtil {
 	}
 
 	// FIXME handle overloaded
-	public FlowGraph flowGraph(ClassEditor classEdit, String methodName) {
+	public FlowGraph flowGraph(ClassEditor classEdit, String methodName) throws ClassNotFoundException {
 		MethodInfo[] methods = classEdit.methods();
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			MethodInfo methodInfo=methods[methodIdx];
@@ -35,10 +35,18 @@ public class BloatUtil {
 				return new FlowGraph(methodEdit);
 			}
 		}
+		Type superType = classEdit.superclass();
+		if(superType!=null) {
+			return flowGraph(normalizedClassName(superType),methodName);
+		}
 		return null;
 	}
 
 	public ClassEditor classEditor(String className) throws ClassNotFoundException {
 		return new ClassEditor(context, loader.loadClass(className));
+	}
+
+	public String normalizedClassName(Type type) {
+		return type.className().replace('/', '.');
 	}
 }

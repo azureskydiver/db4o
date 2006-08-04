@@ -556,6 +556,7 @@
 
 	<target name="compiletestsjava" depends="compilecorejava" description="Compile Db4o test sources">
 		<mkdir dir="${dir.dist.classes.test}" />
+		<mkdir dir="${dir.dist.classes.test.nq}" />
 		<delete dir="${dir.dist.classes.test}">
 			<include name="**/*" />
 		</delete>
@@ -582,10 +583,20 @@
 		<javac destdir="${dir.dist.classes.test}" fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
-				<pathelement location="${db4ounit.jar}"/>
 			</classpath>
 			<src path="${dir.dist.java.temp.src.test}"/>
 			<src path="${dir.j.tools.src}" />
+		</javac>
+		<javac destdir="${dir.dist.classes.test.nq}" fork="true" debug="on" target="1.4" source="1.4" encoding="UTF-8">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.2}" />
+				<dirset dir="${dir.dist.classes.nqopt}" />
+				<pathelement location="${file.bloat.jar}" />
+			</classpath>
+			<src path="${dir.j.test.src}"/>
+			<src path="${dir.j.tools.src}" />
+			<src path="${dir.workspace}/db4ounit/src" />
+			<src path="${dir.j.nqopt}/test/src" />
 		</javac>
 	</target>
 
@@ -738,6 +749,16 @@
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="*" />
+		</java>
+		<java fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="180000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.nqopt}" />
+				<dirset dir="${dir.dist.classes.java1.2}" />
+				<dirset dir="${dir.dist.classes.test.nq}" />
+				<path location="${file.bloat.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
 			<arg value="*" />
