@@ -763,9 +763,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if(obj == null){
             return null;
         }
-        beginEndActivation();
-        activate2(ta, obj, configImpl().activationDepth());
-        beginEndActivation();
+        activate1(ta, obj, configImpl().activationDepth());
         return obj;
     }
     
@@ -2028,6 +2026,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
         hcTreeRemove(yo);
         idTreeRemove(yo.getID());
+        if(i_justActivated!=null&&i_justActivated[0]!=null) {
+        	i_justActivated[0] = i_justActivated[0].removeLike(new TreeInt(yo.getID()));
+        }
 
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject

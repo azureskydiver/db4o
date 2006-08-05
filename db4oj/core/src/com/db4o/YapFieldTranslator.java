@@ -46,7 +46,7 @@ final class YapFieldTranslator extends YapField
 		// Classes like Hashtable need fully activated members
 		// to be able to calculate hashCode()
 		
-		a_bytes.getStream().activate2(a_bytes.getTransaction(), toSet, a_bytes.getInstantiationDepth());
+		a_bytes.getStream().activate1(a_bytes.getTransaction(), toSet, a_bytes.getInstantiationDepth());
 
 		setOn(a_bytes.getStream(), a_onObject, toSet);
 	}
