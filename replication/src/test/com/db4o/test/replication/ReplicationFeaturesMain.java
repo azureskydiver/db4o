@@ -242,9 +242,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		printProvidersContent("after changes");
 
-		printProviderContent(_providerA);
-		printProviderContent(_providerB);
-
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent e) {
 				if (_containerStateToPrevail == null) {
@@ -279,9 +276,9 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private void printProvidersContent(String msg) {
-		System.out.println("*** "+msg);
-		printProviderContent(_providerA);
-		printProviderContent(_providerB);
+//		System.out.println("*** "+msg);
+//		printProviderContent(_providerA);
+//		printProviderContent(_providerB);
 	}
 	
 	private void printProviderContent(TestableReplicationProviderInside provider) {
@@ -329,19 +326,13 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private Replicated find(TestableReplicationProviderInside container, String name) {
-		//System.out.println("container = " + container);
-		//System.out.println("name = " + name);
-
-		// XXX
 		ObjectSet storedObjects = 
-			//container.objectsChangedSinceLastReplication(); 
 			container.getStoredObjects(Replicated.class);
 
 		int resultCount = 0;
 		Replicated result = null;
 		while (storedObjects.hasNext()) {
 			Replicated replicated = (Replicated) storedObjects.next();
-//			System.out.println("replicated = " + replicated);
 			if (replicated == null)
 				throw new RuntimeException();
 			if (name.equals(replicated.getName())) {
@@ -353,47 +344,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		if (resultCount > 1)
 			fail("At most one object with name " + name + " was expected.");
 		return result;
-
-//		Query q = container.query();
-//		q.constrain(Replicated.class);
-//		q.descend("_name").constrain(name);
-//		ObjectSet set = q.execute();
-//		if (set.size() > 1) fail("At most one object with name " + name + " was expected.");
-//		return (Replicated) set.next();
-	}
-
-	private Replicated findReplicatedX(TestableReplicationProviderInside container, String name) {
-		//System.out.println("container = " + container);
-		//System.out.println("name = " + name);
-
-		// XXX
-		ObjectSet storedObjects = 
-			container.objectsChangedSinceLastReplication(); 
-			//container.getStoredObjects(Replicated.class);
-
-		int resultCount = 0;
-		Replicated result = null;
-		while (storedObjects.hasNext()) {
-			Replicated replicated = (Replicated) storedObjects.next();
-//			System.out.println("replicated = " + replicated);
-			if (replicated == null)
-				throw new RuntimeException();
-			if (name.equals(replicated.getName())) {
-				result = replicated;
-				resultCount++;
-			}
-		}
-
-		if (resultCount > 1)
-			fail("At most one object with name " + name + " was expected.");
-		return result;
-
-//		Query q = container.query();
-//		q.constrain(Replicated.class);
-//		q.descend("_name").constrain(name);
-//		ObjectSet set = q.execute();
-//		if (set.size() > 1) fail("At most one object with name " + name + " was expected.");
-//		return (Replicated) set.next();
 	}
 
 	private boolean hasChanges(String container) {
@@ -578,7 +528,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 				break;
 			} catch (RuntimeException rx) {
 				_errors++;
-//                if (_errors == 10) {
 				if (_errors == 1) {
 					sleep(100);
 					printCombination();
@@ -591,30 +540,28 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private static void out(String string) {
-		System.out.println(string);
+		//System.out.println(string);
 	}
 
 	public void test() {
 		super.test();
 	}
 
-	// XXX
-	
 	private void tstDirection(Set4 direction) {
 		_direction = direction;
 
 		tstQueryingFrom(_setA);
-//		tstQueryingFrom(_setB);
-//		tstQueryingFrom(_setBoth);
+		tstQueryingFrom(_setB);
+		tstQueryingFrom(_setBoth);
 	}
 
 	private void tstQueryingFrom(Set4 containersToQueryFrom) {
 		_containersToQueryFrom = containersToQueryFrom;
 
 		tstWithNewObjectsIn(_NONE);
-//		tstWithNewObjectsIn(_setA);
-//		tstWithNewObjectsIn(_setB);
-//		tstWithNewObjectsIn(_setBoth);
+		tstWithNewObjectsIn(_setA);
+		tstWithNewObjectsIn(_setB);
+		tstWithNewObjectsIn(_setBoth);
 	}
 
 	private void tstWithChangedObjectsIn(Set4 containers) {
@@ -623,15 +570,15 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstWithContainerStateToPrevail(_NONE);
 		tstWithContainerStateToPrevail(_setA);
 		tstWithContainerStateToPrevail(_setB);
-//		tstWithContainerStateToPrevail(null);
+		tstWithContainerStateToPrevail(null);
 	}
 
 	private void tstWithDeletedObjectsIn(Set4 containers) {
 		_containersWithDeletedObjects = containers;
 
 		tstDirection(_setA);
-//		tstDirection(_setB);
-//		tstDirection(_setBoth);
+		tstDirection(_setB);
+		tstDirection(_setBoth);
 	}
 
 	private void tstWithNewObjectsIn(Set4 containersWithNewObjects) {
@@ -639,8 +586,8 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		tstWithChangedObjectsIn(_NONE);
 		tstWithChangedObjectsIn(_setA);
-//		tstWithChangedObjectsIn(_setB);
-//		tstWithChangedObjectsIn(_setBoth);
+		tstWithChangedObjectsIn(_setB);
+		tstWithChangedObjectsIn(_setBoth);
 	}
 
 	private void tstWithContainerStateToPrevail(Set4 containers) {
