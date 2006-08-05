@@ -597,6 +597,7 @@
 			<src path="${dir.j.tools.src}" />
 			<src path="${dir.workspace}/db4ounit/src" />
 			<src path="${dir.j.nqopt}/test/src" />
+			<src path="${dir.j.nqopt}/core/testsrc" />
 		</javac>
 	</target>
 
@@ -754,6 +755,18 @@
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="-e" />
+		</java>
+		<java fork="true" classname="com.db4o.nativequery.AllUnitTestsNQ" failonerror="true" timeout="180000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java5}" />
+				<dirset dir="${dir.dist.classes.java1.2}" />
+				<dirset dir="${dir.dist.classes.test}" />
+				<dirset dir="${dir.dist.classes.nqopt}" />
+				<dirset dir="${dir.dist.classes.test.nq}" />
+				<path location="${file.bloat.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
 			<arg value="-e" />

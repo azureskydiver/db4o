@@ -2,12 +2,12 @@
 
 package com.db4o.nativequery.expr;
 
-import junit.framework.*;
-
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.field.*;
 
-public class ExpressionTest extends TestCase {
+import db4ounit.*;
+
+public class ExpressionUnitTest implements TestCase {
 	public void testEqualsHashCodeFieldValue() {
 		FieldValue fieldValue = new FieldValue(PredicateFieldRoot.INSTANCE,"a");
 		assertEqualsHashCode(fieldValue,new FieldValue(PredicateFieldRoot.INSTANCE,"a"));
@@ -53,16 +53,16 @@ public class ExpressionTest extends TestCase {
 	}
 
 	private void assertEqualsHashCode(Object obj,Object same) {
-		assertTrue(obj.equals(obj));
-		assertTrue(obj.equals(same));
-		assertTrue(same.equals(obj));
-		assertFalse(obj.equals(null));
-		assertFalse(obj.equals(new Object()));
-		assertEquals(obj.hashCode(),same.hashCode());
+		Assert.isTrue(obj.equals(obj));
+		Assert.isTrue(obj.equals(same));
+		Assert.isTrue(same.equals(obj));
+		Assert.isFalse(obj.equals(null));
+		Assert.isFalse(obj.equals(new Object()));
+		Assert.areEqual(obj.hashCode(),same.hashCode());
 	}
 
 	private void assertNotEquals(Object obj,Object other) {
-		assertFalse(obj.equals(other));
-		assertFalse(other.equals(obj));
+		Assert.isFalse(obj.equals(other));
+		Assert.isFalse(other.equals(obj));
 	}
 }
