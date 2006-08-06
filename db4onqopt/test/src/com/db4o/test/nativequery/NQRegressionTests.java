@@ -549,13 +549,13 @@ public class NQRegressionTests {
 				return candidate.boolWrap.booleanValue();
 			}
 		},
-		new ExpectingPredicate("INTWRAPPER.eq(iwrap)") {
+		new ExpectingPredicate("INTWRAPPER.eq(idwrap)") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return NQRegressionTests.INTWRAPPER.equals(candidate.idWrap);
 			}
 		},
-		new ExpectingPredicate("iwrap.value==1") {
+		new ExpectingPredicate("idwrap.value==1") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.idWrap.intValue()==1;
@@ -565,6 +565,12 @@ public class NQRegressionTests {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.id==INTWRAPPER.intValue();
+			}
+		},
+		new ExpectingPredicate("idwrap.compareTo(INTWRAPPER)<2") {
+			public int expected() { return 3;}
+			public boolean match(Data candidate) {
+				return candidate.idWrap.compareTo(INTWRAPPER)>0;
 			}
 		},
 		// Note: We never get to see a static field access here - non-static inner class

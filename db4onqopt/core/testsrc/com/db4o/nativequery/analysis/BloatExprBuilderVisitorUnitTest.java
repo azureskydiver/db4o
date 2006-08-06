@@ -89,10 +89,6 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 	private ClassFileLoader loader;
 	private BloatUtil bloatUtil;
 	
-	private int intMember() {
-		return intMember;
-	}
-	
 	private int intMemberPlusOne() {
 		return intMember+1;
 	}
@@ -531,6 +527,32 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 
 	public void testBoolWrapperFieldSameComp() throws Exception {
 		assertComparison("sampleBoolWrapperFieldSameComp",BOOLEAN_FIELDNAME,new MethodCallValue(new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorUnitTest.class.getName()),"BOOLEAN_WRAPPER_CMPVAL",Boolean.class.getName()),"booleanValue",new Class[0],new ComparisonOperand[0]),ComparisonOperator.EQUALS,false);
+	}	
+
+	// wrapper comparison
+
+	boolean sampleFieldWrapperIntCompToEquals(Data data) {
+		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)==0;
+	}
+
+	public void testFieldWrapperIntCompToEquals() throws Exception {
+		assertComparison("sampleFieldWrapperIntCompToEquals",INT_WRAPPED_FIELDNAME,new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorUnitTest.class.getName()),"INT_WRAPPER_CMPVAL",Integer.class.getName()),ComparisonOperator.EQUALS,false);
+	}	
+
+	boolean sampleFieldWrapperIntCompToNotEquals(Data data) {
+		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)!=0;
+	}
+
+	public void testFieldWrapperIntCompToNotEquals() throws Exception {
+		assertComparison("sampleFieldWrapperIntCompToNotEquals",INT_WRAPPED_FIELDNAME,new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorUnitTest.class.getName()),"INT_WRAPPER_CMPVAL",Integer.class.getName()),ComparisonOperator.EQUALS,true);
+	}	
+
+	boolean sampleFieldWrapperIntCompToGreater(Data data) {
+		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)>0;
+	}
+
+	public void testFieldWrapperIntCompToGreater() throws Exception {
+		assertComparison("sampleFieldWrapperIntCompToGreater",INT_WRAPPED_FIELDNAME,new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorUnitTest.class.getName()),"INT_WRAPPER_CMPVAL",Integer.class.getName()),ComparisonOperator.GREATER,false);
 	}	
 
 	//static member comparison
@@ -1075,7 +1097,7 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 			Assert.areEqual(value, ((ConstValue) right).value());
 			return;
 		}
-		Assert.areEqual(value,(ComparisonOperand)right);
+		Assert.areEqual(value,right);
 	}
 
 	private void assertInvalid(String methodName) throws ClassNotFoundException {
@@ -1102,5 +1124,14 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 	}
 
 	public void tearDown() throws Exception {
+	}
+	
+	public static void main(String[] args) throws Exception {
+		java.lang.reflect.Method method=BloatExprBuilderVisitorUnitTest.class.getMethod("testFieldWrapperIntCompToEquals",new Class[]{});
+		Test[] tests={
+				new TestMethod(new BloatExprBuilderVisitorUnitTest(),method)
+		};
+		TestSuite suite=new TestSuite(tests);
+		new TestRunner(suite).run();
 	}
 }
