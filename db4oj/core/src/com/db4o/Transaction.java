@@ -745,7 +745,7 @@ public class Transaction {
 
 	public void enlist(TransactionParticipant participant) {
 		if (null == participant) {
-			throw new IllegalArgumentException("strategy");
+			throw new ArgumentNullException("participant");
 		}
 		checkSynchronization();	
 		if (!_participants.containsByIdentity(participant)) {

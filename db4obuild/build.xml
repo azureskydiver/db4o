@@ -1265,6 +1265,7 @@
 				<exclude name="com/db4o/eclipse/**/*.*" />
 				<exclude name="com/db4o/reflect/jdk/**/*.*" />
 				<exclude name="com/db4o/foundation/Lock4.cs" />
+				<exclude name="com/db4o/foundation/ArgumentNullException.cs" />
 				<exclude name="com/db4o/JDK_*.cs" />
 				<exclude name="com/db4o/JDKReflect*.cs" />
 				<exclude name="com/db4o/CoercionReflect.cs" />
@@ -1294,6 +1295,10 @@
 		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
 			<args>
 				<arg value="-pascalcase" />
+				
+				<arg value="-typeMapping" />
+				<arg value="com.db4o.foundation.ArgumentNullException" />
+				<arg value="System.ArgumentNullException" />
 			</args>
 		</sharpen>
 		

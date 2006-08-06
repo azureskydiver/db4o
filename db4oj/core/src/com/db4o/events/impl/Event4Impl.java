@@ -13,20 +13,16 @@ public class Event4Impl implements Event4 {
 	private Collection4 _listeners;
 	
 	public void addListener(EventListener4 listener) {
-		if (null == listener) {
-			throw new IllegalArgumentException("listener can't be null");
-		}
+		validateListener(listener);
 		
 		if (null == _listeners) {
 			_listeners = new Collection4();
 		}
 		_listeners.add(listener);
-	}
+	}	
 
 	public void removeListener(EventListener4 listener) {
-		if (null == listener) {
-			throw new IllegalArgumentException("listener can't be null");
-		}
+		validateListener(listener);
 		
 		if (null != _listeners) {
 			_listeners.remove(listener);
@@ -46,5 +42,10 @@ public class Event4Impl implements Event4 {
 			((EventListener4)iterator.next()).onEvent(this, args);
 		}
 	}
-
+	
+	private void validateListener(EventListener4 listener) {
+		if (null == listener) {
+			throw new ArgumentNullException("listener");
+		}
+	}
 }
