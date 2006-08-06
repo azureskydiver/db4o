@@ -94,14 +94,10 @@ public class SearcherTestCase implements TestCase, TestLifeCycle{
     
     public void testEmptySet(){
         _searcher = new Searcher(SearchTarget.ANY, 0);
-        
         if(_searcher.incomplete()){
             Assert.fail();
         }
-        
         Assert.areEqual(0, _searcher.cursor());
-
-        
     }
 
 
