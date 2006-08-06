@@ -102,13 +102,23 @@ public class YapField implements StoredField {
             return;
         }
         
-        Index4 index = getOldIndex(a_trans);
-        if(index == null){
-            return;
+        if(Debug.oldFieldIndex){
+            Index4 index = getOldIndex(a_trans);
+            if(index == null){
+                return;
+            }
+            i_handler.prepareComparison(a_trans, indexEntry);
+            IndexTransaction ift = index.dirtyIndexTransaction(a_trans);
+            ift.add(parentID, indexEntry);
         }
-        i_handler.prepareComparison(a_trans, indexEntry);
-        IndexTransaction ift = index.dirtyIndexTransaction(a_trans);
-        ift.add(parentID, indexEntry);
+        
+        if(Debug.bTreeFieldIndex){
+            if(_index == null){
+                return;
+            }
+            _index.add(a_trans, indexEntry, new Integer(parentID));
+        }
+        
     }
     
     public boolean canUseNullBitmap(){
@@ -128,11 +138,24 @@ public class YapField implements StoredField {
         if (! hasIndex()) {
             return;
         }
-        i_handler.prepareComparison(indexEntry);
-        IndexTransaction ift = getOldIndex(trans).dirtyIndexTransaction(trans);
-        ift.remove(parentID, indexEntry);
+        if(Debug.oldFieldIndex){
+            Index4 index = getOldIndex(trans);
+            if(index == null){
+                return;
+            }
+            i_handler.prepareComparison(indexEntry);
+            IndexTransaction ift = index.dirtyIndexTransaction(trans);
+            ift.remove(parentID, indexEntry);
+        }
+        
+        if(Debug.bTreeFieldIndex){
+            if(_index == null){
+                return;
+            }
+            _index.remove(trans, indexEntry, new Integer(parentID));
+        }
+
     }
-    
 
     public boolean alive() {
         if (i_state == AVAILABLE) {
@@ -504,7 +527,13 @@ public class YapField implements StoredField {
 
     boolean hasIndex() {
         // alive needs to be checked by all callers: Done
-        return _oldIndex != null;
+        if(Debug.oldFieldIndex){
+            return _oldIndex != null;
+        }
+        if(Debug.bTreeFieldIndex){
+            return _index != null;
+        }
+        return false;
     }
 
     public final void incrementOffset(YapReader a_bytes) {
@@ -891,14 +920,11 @@ public class YapField implements StoredField {
     }
 
     public void initIndex(Transaction systemTrans) {
-        
         _index = new BTree(systemTrans, 0, i_handler, new YInt(systemTrans.stream()));
-        
     }
     
     public BTree getIndex(){
         return _index;
     }
-
 
 }

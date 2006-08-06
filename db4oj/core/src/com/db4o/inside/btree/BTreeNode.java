@@ -109,13 +109,8 @@ public class BTreeNode extends YapMeta{
         if(_isLeaf){
             
             prepareWrite(trans);
-
-            if(s.foundMatch()){
-                // TODO: Anything special on exact match?    
-                // Possibly compare value part also?
-            }          
             
-            if(s.beyondLast()){
+            if(s.count() > 0  && ! s.beforeFirst()){
                 s.moveForward();
             }
             
@@ -403,6 +398,9 @@ public class BTreeNode extends YapMeta{
     }
     
     private void compare(Searcher s, YapReader reader){
+        
+        // FIXME: If key part is equal, comparison should also take place against value part.
+        
         Indexable4 handler = keyHandler();
         if(_keys != null){
             s.resultIs(handler.compareTo(key(s.cursor())));

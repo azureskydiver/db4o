@@ -59,13 +59,16 @@ public class BTree extends YapMeta implements TransactionParticipant {
             setID(id);
             setStateDeactivated();
         }
-        
-        
     }
     
-    public void add(Transaction trans, Object value){
+    public void add(Transaction trans, Object key){
+        add(trans, key, null);
+    }
+    
+    public void add(Transaction trans, Object key, Object value){
+        _keyHandler.prepareComparison(key);
+        _valueHandler.prepareComparison(value);
         ensureDirty(trans);
-        _keyHandler.prepareComparison(value);
         BTreeNode rootOrSplit = _root.add(trans);
         if(rootOrSplit != null && rootOrSplit != _root){
             _root = new BTreeNode(trans, _root, rootOrSplit);
@@ -83,13 +86,17 @@ public class BTree extends YapMeta implements TransactionParticipant {
         return new BTreeRange(start, end);
     }
     
-    public void remove(Transaction trans, Object value){
+    public void remove(Transaction trans, Object key){
+        remove(trans, key, null);
+    }
+    
+    public void remove(Transaction trans, Object key, Object value){
         ensureDirty(trans);
-        _keyHandler.prepareComparison(value);
+        _keyHandler.prepareComparison(key);
+        _valueHandler.prepareComparison(value);
         _root.remove(trans);
         sizeChanged(trans, -1);
     }
-
     
     public void commit(final Transaction trans){
         
