@@ -2,6 +2,8 @@
 
 package com.db4o.config;
 
+import com.db4o.foundation.ArgumentNullException;
+
 /**
  * Wildcard Alias functionality to create aliases for packages, 
  * namespaces or multiple similar named classes. One single '*' 
@@ -22,7 +24,8 @@ public class WildcardAlias implements Alias {
 	 */
     public WildcardAlias(String storedPattern, String runtimePattern) {
         
-		if (null == storedPattern || null == runtimePattern) throw new IllegalArgumentException();
+		if (null == storedPattern) throw new ArgumentNullException("storedPattern");
+		if (null == runtimePattern) throw new ArgumentNullException("runtimePattern");
 		
 		_storedPattern = new WildcardPattern(storedPattern);
 		_runtimePattern = new WildcardPattern(runtimePattern);

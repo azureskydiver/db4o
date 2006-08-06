@@ -537,7 +537,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     }
     
     public void addAlias(Alias alias) {
-    	if (null == alias) throw new IllegalArgumentException("alias");
+    	if (null == alias) throw new com.db4o.foundation.ArgumentNullException("alias");
     	aliases().add(alias);
     }
     

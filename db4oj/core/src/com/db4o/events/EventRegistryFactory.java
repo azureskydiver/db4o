@@ -5,6 +5,7 @@ package com.db4o.events;
 import com.db4o.ObjectContainer;
 import com.db4o.YapStream;
 import com.db4o.events.impl.EventRegistryImpl;
+import com.db4o.foundation.ArgumentNullException;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.callbacks.NullCallbacks;
 
@@ -12,7 +13,7 @@ public class EventRegistryFactory {
 	
 	public static EventRegistry forObjectContainer(ObjectContainer container) {
 		if (null == container) {
-			throw new IllegalArgumentException("container can't be null");
+			throw new ArgumentNullException("container");
 		}
 		
 		YapStream stream = ((YapStream)container);
