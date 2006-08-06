@@ -555,6 +555,14 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 		assertComparison("sampleFieldWrapperIntCompToGreater",INT_WRAPPED_FIELDNAME,new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorUnitTest.class.getName()),"INT_WRAPPER_CMPVAL",Integer.class.getName()),ComparisonOperator.GREATER,false);
 	}	
 
+	boolean sampleFieldWrapperIntCompToLE(Data data) {
+		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)<=0;
+	}
+
+	public void testFieldWrapperIntCompToLE() throws Exception {
+		assertComparison("sampleFieldWrapperIntCompToLE",INT_WRAPPED_FIELDNAME,new FieldValue(new StaticFieldRoot(BloatExprBuilderVisitorUnitTest.class.getName()),"INT_WRAPPER_CMPVAL",Integer.class.getName()),ComparisonOperator.GREATER,true);
+	}	
+
 	//static member comparison
 
 	boolean sampleStaticFieldIntWrapperEqualsComp(Data data) {
@@ -1061,6 +1069,14 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 
 	public void testStringAppend() throws Exception {
 		assertInvalid("sampleStringAppend");
+	}
+
+	boolean sampleExternalWrapperComp(Data data) {
+		return INT_WRAPPER_CMPVAL.compareTo(INT_WRAPPER_CMPVAL)==0;
+	}
+
+	public void testExternalWrapperComp() throws Exception {
+		assertInvalid("sampleExternalWrapperComp");
 	}
 
 	// internal
