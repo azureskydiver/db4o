@@ -280,19 +280,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		if(expr.method().declaringClass().equals(Type.STRING)) {
-			if (expr.method().name().equals("contains")) {
-				processEqualsCall((CallMethodExpr) expr,
-						ComparisonOperator.CONTAINS);
-				return;
-			}
-			if (expr.method().name().equals("startsWith")) {
-				processEqualsCall((CallMethodExpr) expr,
-						ComparisonOperator.STARTSWITH);
-				return;
-			}
-			if (expr.method().name().equals("endsWith")) {
-				processEqualsCall((CallMethodExpr) expr,
-						ComparisonOperator.ENDSWITH);
+			if(applyStringHandling(expr)) {
 				return;
 			}
 		}
@@ -301,17 +289,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			((CallMethodExpr) expr).receiver().visit(this);
 			rcvRetval = (ComparisonOperandAnchor) purgeReturnValue();
 		}
-		if(isPrimitiveWrapper(expr.method().declaringClass())
-				&&expr.method().name().endsWith("Value")) {
-			retval(rcvRetval);
-			if(rcvRetval instanceof FieldValue) {
-				FieldValue fieldval=(FieldValue)rcvRetval;
-				if(isBooleanField(fieldval)) {
-					retval(new ComparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS));
-				}
-				if(fieldval.root().equals(CandidateFieldRoot.INSTANCE)) {
-					return;
-				}
+		if(isPrimitiveWrapper(expr.method().declaringClass())) {
+			if(applyPrimitiveWrapperHandling(expr,rcvRetval)) {
+				return;
 			}
 		}
 		MemberRef methodRef = expr.method();
@@ -380,6 +360,58 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						+ methodRef + " , pop=" + last);
 			}
 		}
+	}
+
+	private boolean applyPrimitiveWrapperHandling(CallExpr expr,ComparisonOperandAnchor rcvRetval) {
+		String methodName = expr.method().name();
+		if(methodName.endsWith("Value")) {
+			return handlePrimitiveWrapperValueCall(rcvRetval);
+		}
+		if(methodName.equals("compareTo")) {
+			return handlePrimitiveWrapperCompareToCall(expr, rcvRetval);
+		}
+		return false;
+	}
+
+	private boolean handlePrimitiveWrapperCompareToCall(CallExpr expr, ComparisonOperandAnchor rcvRetval) {
+		ComparisonOperand left=rcvRetval;
+		expr.params()[0].visit(this);
+		ComparisonOperand right=(ComparisonOperand) purgeReturnValue();
+		retval(new ThreeWayComparison((FieldValue)left,right,false));
+		return true;
+	}
+
+	private boolean handlePrimitiveWrapperValueCall(ComparisonOperandAnchor rcvRetval) {
+		retval(rcvRetval);
+		if(rcvRetval instanceof FieldValue) {
+			FieldValue fieldval=(FieldValue)rcvRetval;
+			if(isBooleanField(fieldval)) {
+				retval(new ComparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS));
+			}
+			if(fieldval.root().equals(CandidateFieldRoot.INSTANCE)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean applyStringHandling(CallExpr expr) {
+		if (expr.method().name().equals("contains")) {
+			processEqualsCall((CallMethodExpr) expr,
+					ComparisonOperator.CONTAINS);
+			return true;
+		}
+		if (expr.method().name().equals("startsWith")) {
+			processEqualsCall((CallMethodExpr) expr,
+					ComparisonOperator.STARTSWITH);
+			return true;
+		}
+		if (expr.method().name().equals("endsWith")) {
+			processEqualsCall((CallMethodExpr) expr,
+					ComparisonOperator.ENDSWITH);
+			return true;
+		}
+		return false;
 	}
 
 	private final static Map PRIMITIVE_CLASSES;
