@@ -10,6 +10,10 @@
 	<property name="drs.net.in.dir" location="${drs.net.dir}/in" />
 	<property name="conversion.workspace.dir" location="${dir.dist}/drs.net/workspace" />
 	
+	<condition property="mono" value="1">
+		<os family="unix" />
+	</condition>
+	
 	<target name="build" depends="update-csharp-projects">
 		
 		<property name="drs.dll" location="${drs.net.bin.dir}/drs.dll" />
@@ -106,10 +110,21 @@
 		</copy>
 	</target>
 	
-	<target name="init">
+	<target name="select-dotnet-assembly" unless="mono">
+		<property name="db4o.dll" value="${file.dll.net}" />
+	</target>
+			
+	<target name="select-mono-assembly" if="mono">	
+		<property name="db4o.dll" value="${file.dll.mono}" />
+	</target>
+	
+	<target name="select-db4o-assembly" depends="select-mono-assembly, select-dotnet-assembly">
+	</target>
+	
+	<target name="init" depends="select-db4o-assembly">
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
-		<copy file="${file.dll.net}" todir="${drs.net.bin.dir}" />
-		<copy file="${dir.n.test}/lib/db4ounit.dll" todir="${drs.net.bin.dir}" />
+		<copy file="${db4o.dll}" todir="${drs.net.bin.dir}" />
+		<copy file="${dir.n.test}/lib/Db4oUnit.dll" todir="${drs.net.bin.dir}" />
 	</target>
 </project>
