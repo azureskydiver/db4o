@@ -63,7 +63,7 @@
 		</copy>
 		
 		<updatecsharpproject projectfile="${drs.net.dir}/drs/drs.csproj">
-			<sources dir="${drs.net.dir}/core">
+			<sources dir="${drs.net.dir}/drs">
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
