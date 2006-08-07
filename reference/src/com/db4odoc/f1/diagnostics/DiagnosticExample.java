@@ -8,6 +8,7 @@ import com.db4o.ObjectSet;
 import com.db4o.query.Query;
 import com.db4o.diagnostic.*;
 import com.db4odoc.f1.Util;
+import com.db4odoc.f1.evaluation.*;
 
 
 public class DiagnosticExample extends Util {
@@ -70,5 +71,98 @@ public class DiagnosticExample extends Util {
             db.close();
         }
     }
-       
+     
+    public static void testTranslatorDiagnostics() {
+    	storeTranslatedCars();
+    	retrieveTranslatedCars();
+    	retrieveTranslatedCarsNQ();
+    	retrieveTranslatedCarsNQUnopt();
+    	retrieveTranslatedCarsSODAEv();
+    }
+    
+    public static void storeTranslatedCars() {
+    	Db4o.configure().exceptionsOnNotStorable(true);
+    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
+    	Db4o.configure().objectClass(Car.class).callConstructor(true);
+    	new File(Util.YAPFILENAME).delete();
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		try {
+			Car car1 = new Car("BMW");
+			System.out.println("ORIGINAL: " + car1);
+			db.set(car1);
+			Car car2 = new Car("Ferrari");
+			System.out.println("ORIGINAL: " + car2);
+			db.set(car2);
+		} catch (Exception exc) {
+			System.out.println(exc.toString());
+			return;
+		} finally {
+			db.close();
+		}
+	}
+
+    public static void retrieveTranslatedCars() {
+    	Db4o.configure().diagnostic().removeAllListeners();
+    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
+    	Db4o.configure().exceptionsOnNotStorable(true);
+    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
+    	Db4o.configure().objectClass(Car.class).callConstructor(true);
+    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		try {
+			ObjectSet  result = db.query(Car.class);
+			listResult(result);
+		} finally {
+			db.close();
+		}
+	}
+
+    public static void retrieveTranslatedCarsNQ() {
+    	Db4o.configure().diagnostic().removeAllListeners();
+    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
+    	Db4o.configure().exceptionsOnNotStorable(true);
+    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
+    	Db4o.configure().objectClass(Car.class).callConstructor(true);
+    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		try {
+			ObjectSet  result = db.query(new NewCarModel());
+			listResult(result);
+		} finally {
+			db.close();
+		}
+	}
+    
+    public static void retrieveTranslatedCarsNQUnopt() {
+    	Db4o.configure().optimizeNativeQueries(false);
+    	Db4o.configure().diagnostic().removeAllListeners();
+    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
+    	Db4o.configure().exceptionsOnNotStorable(true);
+    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
+    	Db4o.configure().objectClass(Car.class).callConstructor(true);
+    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		try {
+			ObjectSet  result = db.query(new NewCarModel());
+			listResult(result);
+		} finally {
+			Db4o.configure().optimizeNativeQueries(true);
+			db.close();
+		}
+	}
+
+    public static void retrieveTranslatedCarsSODAEv() {
+    	Db4o.configure().diagnostic().removeAllListeners();
+    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
+    	Db4o.configure().exceptionsOnNotStorable(true);
+    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
+    	Db4o.configure().objectClass(Car.class).callConstructor(true);
+    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		try {
+			Query query = db.query();
+			query.constrain(Car.class);
+			query.constrain(new CarEvaluation());
+			ObjectSet  result = query.execute();
+			listResult(result);
+		} finally {
+			db.close();
+		}
+	}
 }

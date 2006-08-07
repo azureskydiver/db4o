@@ -3,5 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -18,5 +18,6 @@ public class Main {
         DiagnosticExample.testEmpty();
         DiagnosticExample.testArbitrary();
         DiagnosticExample.testIndexDiagnostics();
+        DiagnosticExample.testTranslatorDiagnostics();
     }
 }
