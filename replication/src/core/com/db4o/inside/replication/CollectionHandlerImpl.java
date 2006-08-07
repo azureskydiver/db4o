@@ -48,8 +48,9 @@ public class CollectionHandlerImpl implements CollectionHandler {
 
 		Collection original = (Collection) originalCollection;
 
-		if (original instanceof List) return new ArrayList(original.size());
-		if (original instanceof Set) return new HashSet(original.size());
+		Collection clone = ReplicationPlatform.emptyCollectionClone(original);
+		if (null != clone) return clone;
+		
 		return _reflector.forClass(original.getClass()).newInstance();
 	}
 
@@ -70,7 +71,7 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		if (_mapHandler.canHandle(original))
 			_mapHandler.copyState(original, destination, counterpartFinder);
 		else
-			doCopyState(original, destination, counterpartFinder);
+			ReplicationPlatform.copyCollectionState(original, destination, counterpartFinder);
 	}
 
 	public Object cloneWithCounterparts(Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {
@@ -83,18 +84,5 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		copyState(original, result, counterpartFinder);
 
 		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void doCopyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
-		Collection originalCollection = (Collection) original;
-		Collection destinationCollection = (Collection) destination;
-		destinationCollection.clear();
-		Iterator it = originalCollection.iterator();
-		while (it.hasNext()) {
-			Object element = it.next();
-			Object counterpart = counterpartFinder.findCounterpart(element);
-			destinationCollection.add(counterpart);
-		}
 	}
 }

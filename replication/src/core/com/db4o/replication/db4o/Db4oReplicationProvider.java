@@ -298,7 +298,9 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	}
 
 	public ObjectSet getStoredObjects(Class type) {
-		return _stream.query(type);
+		Query query = _stream.query();
+		query.constrain(type);
+		return query.execute();
 	}
 
 	public void storeNew(Object o) {

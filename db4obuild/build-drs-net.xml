@@ -6,7 +6,7 @@
 	<property name="drs.src.dir" location="${drs.dir}/src" />
 	<property name="drs.net.dir" location="${drs.dir}/drs.net" />
 	<property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />	
-	<property name="drs.net.src.dir" location="${drs.net.dir}/core/src" />
+	<property name="drs.net.src.dir" location="${drs.net.dir}/drs/src" />
 	<property name="drs.net.in.dir" location="${drs.net.dir}/in" />
 	<property name="conversion.workspace.dir" location="${dir.dist}/drs.net/workspace" />
 	
@@ -33,11 +33,17 @@
 				<arg value="test" />
 				
 				<arg value="-pascalcase" />
+			
+				<arg value="-nativeTypeSystem" />
+				
+				<arg value="-methodMapping" />
+				<arg value="com.db4o.reflect.Reflector.forClass" />
+				<arg value="com.db4o.inside.replication.ReplicationPlatform.ForType" />
 			</args>
 		</sharpen>
 	</target>
-		
-	<target name="update-csharp-projects" depends="sharpen">
+	
+	<target name="update-drs-project" depends="sharpen">
 		<delete dir="${drs.net.src.dir}" />
 		<mkdir dir="${drs.net.src.dir}" />
 		<copy todir="${drs.net.src.dir}">
@@ -51,13 +57,30 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-
 		
-		<updatecsharpproject projectfile="${drs.net.dir}/core/drs.csproj">
+		<updatecsharpproject projectfile="${drs.net.dir}/drs/drs.csproj">
 			<sources dir="${drs.net.dir}/core">
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
+	</target>
+	
+	<target name="update-drs.tests-project" depends="sharpen">
+		<copy todir="${drs.net.src.dir}">
+			<fileset dir="${conversion.workspace.dir}/drscsharp/src">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+
+		<updatecsharpproject projectfile="${drs.net.dir}/drs.tests/drs.tests.csproj">
+			<sources dir="${drs.net.dir}/drs.tests">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+	</target>
+		
+	<target name="update-csharp-projects" depends="update-drs-project, update-drs.tests-project">				
+		
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
@@ -68,10 +91,14 @@
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
 				
+				<exclude name="test/**" />
+
+				<!--
 				<include name="test/**/ReplicationTestCase.java" />
 				<include name="test/**/ReplicationFeaturesMain.java" />
 				<include name="test/**/ProviderPair.java" />
 				<include name="test/**/Replicated.java" />
+				-->
 				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
@@ -83,5 +110,6 @@
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
 		<copy file="${file.dll.net}" todir="${drs.net.bin.dir}" />
+		<copy file="${dir.n.test}/lib/db4ounit.dll" todir="${drs.net.bin.dir}" />
 	</target>
 </project>
