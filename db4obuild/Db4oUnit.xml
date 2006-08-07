@@ -30,6 +30,7 @@
 			debug="off"
 			encoding="UTF-8">
 			<compilerarg line="${file.compiler.jdk1.3.args}"/>
+			<compilerarg line="${file.compiler.jdk1.3.args.optional}" />
 		</javac>
 		
 		<!--
