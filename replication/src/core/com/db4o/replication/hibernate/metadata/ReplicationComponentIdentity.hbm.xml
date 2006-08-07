@@ -27,17 +27,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="ReplicationComponentIdentity" name="com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity">
+	<class table="db4o_replication_component_identities" name="com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
-			<property name="uuidLongPart" column="uuidLongPart" not-null="true"/>
+			<property name="uuidLongPart" column="uuid_long_part" not-null="true"/>
 			<many-to-one name="provider" column="provider" not-null="true" cascade="none"/>
 		</natural-id>
 
-		<property name="referencingObjectUuidLongPart" column="referencingObjectUuidLongPart" not-null="true"/>
-		<many-to-one name="referencingObjectField" column="referencingObjectField" not-null="true" cascade="none"/>
+		<property name="referencingObjectUuidLongPart" column="referencing_object_uuid_long_part" not-null="true"/>
+		<many-to-one name="referencingObjectField" column="referencing_object_field" not-null="true" cascade="none"/>
 	</class>
 </hibernate-mapping>

@@ -27,7 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="ReplicationRecord" name="com.db4o.replication.hibernate.metadata.ReplicationRecord">
+	<class table="db4o_replication_records" name="com.db4o.replication.hibernate.metadata.ReplicationRecord">
 		<id column="id" type="long">
 			<generator class="foreign">
 				<param name="property">peerSignature</param>

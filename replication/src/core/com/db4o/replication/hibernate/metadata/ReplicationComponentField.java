@@ -1,11 +1,16 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class ReplicationComponentField {
-	public static final String TABLE_NAME = "ReplicationComponentField";
+	public static final String TABLE_NAME = "db4o_replication_component_fields";
+	
+	public static final String REF_OBJ_CLASS_NAME = "referencing_object_class_name";
+	
+	public static final String REF_OBJ_FIELD_NAME = "referencing_object_field_name";
 
 	private String referencingObjectClassName;
 
 	private String referencingObjectFieldName;
+	
 	public ReplicationComponentField() {
 	}
 

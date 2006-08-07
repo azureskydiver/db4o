@@ -34,8 +34,8 @@ import java.util.Set;
 
 public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implements ObjectLifeCycleEventsListener {
 	private final static String DELETE_SQL = "delete from " + ObjectReference.TABLE_NAME
-			+ " where longPart = ? "
-			+ " AND provider = ?";
+			+ " where " +Uuid.COL_LONG_PART +"= ? "
+			+ " AND " +Uuid.COL_PROVIDER+ " = ?";
 
 	private final Set<ObjectReference> _dirtyNewRefs = new HashSet();
 
@@ -124,7 +124,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		ObjectReference ref = new ObjectReference();
 
 		ref.setClassName(entity.getClass().getName());
-		ref.setObjectId(id);
+		ref.setHibernateId(id);
 
 		_dirtyNewRefs.add(ref);
 	}

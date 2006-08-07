@@ -168,10 +168,10 @@ public final class Util {
 		return (Long) id;
 	}
 
-	public static long getVersion(Connection con, String className, long id) {
-		String sql = "SELECT " + ObjectReference.VERSION + " FROM " + ObjectReference.TABLE_NAME
-				+ " WHERE " + ObjectReference.CLASS_NAME + " = ?"
-				+ " AND " + ObjectReference.OBJECT_ID + " = ?";
+	public static long getVersion1(Connection con, String className, long id) {
+		String sql = "SELECT " + ObjectReference.COL_VERSION + " FROM " + ObjectReference.TABLE_NAME
+				+ " WHERE " + ObjectReference.COL_CLASS_NAME + " = ?"
+				+ " AND " + ObjectReference.COL_HIBERNATE_ID + " = ?";
 
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -196,8 +196,8 @@ public final class Util {
 
 	static ObjectReference getObjectReferenceById(Session session, String className, long id) {
 		Criteria criteria = session.createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq(ObjectReference.OBJECT_ID, id));
-		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, className));
+		criteria.add(Restrictions.eq("hibernateId", id));
+		criteria.add(Restrictions.eq("className", className));
 		List list = criteria.list();
 
 		if (list.size() == 0)
@@ -219,9 +219,9 @@ public final class Util {
 	public static ObjectReference getByUUID(Session session, Uuid uuid) {
 		String alias = "objRef";
 		String uuidPath = alias + "." + ObjectReference.UUID + ".";
-		String queryString = "from " + ObjectReference.TABLE_NAME
-				+ " as " + alias + " where " + uuidPath + Uuid.LONG_PART + "=?"
-				+ " AND " + uuidPath + Uuid.PROVIDER + "." + ReplicationProviderSignature.BYTES + "=?";
+		String queryString = "from " + "ObjectReference"
+				+ " as " + alias + " where " + uuidPath + "longPart" + "=?"
+				+ " AND " + uuidPath + "provider" + "." + ReplicationProviderSignature.BYTES + "=?";
 		Query c = session.createQuery(queryString);
 		c.setLong(0, uuid.getLongPart());
 		c.setBinary(1, uuid.getProvider().getBytes());

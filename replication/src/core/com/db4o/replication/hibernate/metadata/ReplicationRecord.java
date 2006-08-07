@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class ReplicationRecord {
-	public static final String TABLE_NAME = "ReplicationRecord";
+	public static final String TABLE_NAME = "db4o_replication_records";
 
 	public static final String VERSION = "version";
 
