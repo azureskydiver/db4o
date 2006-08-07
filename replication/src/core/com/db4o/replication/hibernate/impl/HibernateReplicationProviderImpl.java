@@ -333,7 +333,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		if (ref == null) return;
 
-		Object loaded = getSession().get(ref.getClassName(), ref.getObjectId());
+		Object loaded = getSession().get(ref.getClassName(), ref.getHibernateId());
 		if (loaded == null) return;
 
 		getSession().delete(loaded);
@@ -540,7 +540,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	private Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		long lastReplicationVersion = getLastReplicationVersion();
-		criteria.add(Restrictions.gt(ObjectReference.VERSION, lastReplicationVersion));
+		criteria.add(Restrictions.gt("version", lastReplicationVersion));
 		Disjunction disjunction = Restrictions.disjunction();
 
 		List<String> names = new ArrayList<String>();
@@ -554,14 +554,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 
 		for (String s : names)
-			disjunction.add(Restrictions.eq(ObjectReference.CLASS_NAME, s));
+			disjunction.add(Restrictions.eq("className", s));
 
 		criteria.add(disjunction);
 
 		Set out = new HashSet();
 		for (Object o : criteria.list()) {
 			ObjectReference ref = (ObjectReference) o;
-			out.add(getSession().load(persistentClass.getRootClass().getClassName(), ref.getObjectId()));
+			out.add(getSession().load(persistentClass.getRootClass().getClassName(), ref.getHibernateId()));
 		}
 		return out;
 	}
@@ -691,7 +691,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (of == null)
 			return null;
 		else {
-			Object obj = getSession().load(of.getClassName(), of.getObjectId());
+			Object obj = getSession().load(of.getClassName(), of.getHibernateId());
 
 			return _objRefs.put(obj, uuid, of.getVersion());
 		}
@@ -742,7 +742,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 				if (exist == null) {
 					ObjectReference tmp = new ObjectReference();
 					tmp.setClassName(obj.getClass().getName());
-					tmp.setObjectId(Util.castAsLong(getSession().getIdentifier(obj)));
+					tmp.setHibernateId(Util.castAsLong(getSession().getIdentifier(obj)));
 					tmp.setUuid(uuid);
 					tmp.setVersion(ref.version());
 					try {
@@ -754,8 +754,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 					if (!exist.getClassName().equals(obj.getClass().getName()))
 						throw new RuntimeException("Same classname expected");
 
-					if (exist.getObjectId() != id) //deletion rollback case, id may change
-						exist.setObjectId(id);
+					if (exist.getHibernateId() != id) //deletion rollback case, id may change
+						exist.setHibernateId(id);
 
 					exist.setVersion(ref.version());
 					getSession().update(exist);

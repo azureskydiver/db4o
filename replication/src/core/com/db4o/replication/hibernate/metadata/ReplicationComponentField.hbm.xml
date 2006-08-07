@@ -27,14 +27,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="ReplicationComponentField" name="com.db4o.replication.hibernate.metadata.ReplicationComponentField">
+	<class table="db4o_replication_component_fields" name="com.db4o.replication.hibernate.metadata.ReplicationComponentField">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
-			<property name="referencingObjectClassName" column="referencingObjectClassName" not-null="true"/>
-			<property name="referencingObjectFieldName" column="referencingObjectFieldName" not-null="true"/>
+			<property name="referencingObjectClassName" column="referencing_object_class_name" not-null="true"/>
+			<property name="referencingObjectFieldName" column="referencing_object_field_name" not-null="true"/>
 		</natural-id>
 	</class>
 </hibernate-mapping>

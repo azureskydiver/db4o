@@ -4,24 +4,24 @@ import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 
 import java.util.Arrays;
 
+//TODO make abstract
 public class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
 	/**
 	 * Table for storing ReplicationProviderSignature byte[].
 	 */
-	public static final String TABLE_NAME = "ReplicationProviderSignature";
+	public static final String TABLE_NAME = "db4o_replication_provider_signatures";
 
 	/**
 	 * Column name of the ReplicationProviderSignature byte_array.
 	 */
 	public static final String BYTES = "bytes";
 
-	public static final String ID = "id";
-
 	private byte[] bytes;
 
 	private long id;
 
 	private long creationTime;
+	
 	public ReplicationProviderSignature() {
 	}
 

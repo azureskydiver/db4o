@@ -1,12 +1,14 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class Uuid {
-	public static final String LONG_PART = "longPart";
-	public static final String PROVIDER = "provider";
-
+	public static final String COL_LONG_PART = "long_part";
+	
+	public static final String COL_PROVIDER = "provider";
+	
 	private long longPart;
 
 	private ReplicationProviderSignature provider;
+	
 	public Uuid() {
 	}
 

@@ -27,20 +27,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="ObjectReference" name="com.db4o.replication.hibernate.metadata.ObjectReference">
+	<class table="db4o_object_references" name="com.db4o.replication.hibernate.metadata.ObjectReference">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
 			<component name="uuid">
-				<property name="longPart" column="longPart" not-null="true"/>
+				<property name="longPart" column="long_part" not-null="true"/>
 				<many-to-one name="provider" column="provider" cascade="none" not-null="true"/>
 			</component>
 		</natural-id>
 
-		<property name="className" column="className"/>
-		<property name="objectId" column="objectId"/>
+		<property name="className" column="class_name"/>
+		<property name="hibernateId" column="hibernate_id"/>
 
 		<property name="version" column="version"/>
 	</class>

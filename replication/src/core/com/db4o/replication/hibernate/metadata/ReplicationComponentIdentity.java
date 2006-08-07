@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class ReplicationComponentIdentity {
-	public static final String TABLE_NAME = "ReplicationComponentIdentity";
+	public static final String TABLE_NAME = "db4o_replication_component_identities";
 
 	private long uuidLongPart;
 
@@ -10,6 +10,7 @@ public class ReplicationComponentIdentity {
 	private ReplicationComponentField referencingObjectField;
 
 	private ReplicationProviderSignature provider;
+	
 	public ReplicationComponentIdentity() {
 	}
 
