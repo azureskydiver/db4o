@@ -2,28 +2,18 @@
 
 package com.db4o.db4ounit.tools;
 
-import db4ounit.TestRunner;
-import db4ounit.TestSuite;
-import db4ounit.TestSuiteBuilder;
-import db4ounit.db4o.Db4oTestCase;
-import db4ounit.db4o.Db4oTestSuiteBuilder;
-import db4ounit.db4o.fixtures.Db4oSolo;
+import db4ounit.db4o.Db4oTestSuite;
 
-public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
-	
+public class AllTests extends Db4oTestSuite {
+
 	public static void main(String[] args) {
-		new TestRunner(
-				new Db4oTestSuiteBuilder(
-						new Db4oSolo(),
-						AllTests.class)).run();
-	}
+		new AllTests().runSolo();
+    }
 
-	public TestSuite build() {
-		return new Db4oTestSuiteBuilder(
-				fixture(),
-				new Class[] {
-					QueryStatsTestCase.class,
-					MemoryStatsTestCase.class,
-					}).build();
+	protected Class[] testCases() {
+		return new Class[] {
+			QueryStatsTestCase.class,
+			MemoryStatsTestCase.class,
+		};
 	}
 }
