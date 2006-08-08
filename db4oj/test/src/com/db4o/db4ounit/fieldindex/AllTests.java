@@ -19,8 +19,8 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
         return new Db4oTestSuiteBuilder(
                 fixture(),
                 new Class[] {
-                    BTreeIntIndexTestCase.class,
-                    // FieldIndexTestCase.class,
+                    BTreeTestCase.class,
+//                    FieldIndexTestCase.class,
                     SearcherTestCase.class,
                     SearcherLowestHighestTestCase.class
                     }).build();
