@@ -9,23 +9,39 @@ import db4ounit.*;
 
 public class BTreeSearchTestCase extends BTreeTestCaseBase{
     
-    public void test(){
-        int[] values = new int[] { 1 , 3, 5, 5, 5, 7, 10, 11, 12, 12, 14};
-        cycleIntKeys(values);
+    public void test() throws Exception{
+        cycleIntKeys(new int[] { 3, 5, 5, 5, 7, 10, 11, 12, 12, 14});
+        cycleIntKeys(new int[] { 3, 5, 5, 5, 5, 7, 10, 11, 12, 12, 14});
+        cycleIntKeys(new int[] { 3, 5, 5, 5, 5, 5, 7, 10, 11, 12, 12, 14});
+        cycleIntKeys(new int[] { 3, 3, 5, 5, 5, 7, 10, 11, 12, 12, 14, 14});
+        cycleIntKeys(new int[] { 3, 3, 3, 5, 5, 5, 7, 10, 11, 12, 12, 14, 14, 14});
     }
     
-    private void cycleIntKeys(int[] values){
+    private void cycleIntKeys(int[] values) throws Exception{
         BTree btree = createIntKeyBTree(0);
         for (int i = 0; i < 5; i++) {
             btree = cycleIntKeys(btree, values);    
         }
     }
     
-    private BTree cycleIntKeys(BTree btree, int[] values){
+    private BTree cycleIntKeys(BTree btree, int[] values) throws Exception{
         for (int i = 0; i < values.length; i++) {
             btree.add(trans(), new Integer(values[i]));
         }
         traverseKeysForDistinctValues(btree, values);
+        
+        btree.commit(trans());
+        
+        int id = btree.getID();
+        
+        stream().commit();
+        
+        reopen();
+        
+        btree = createIntKeyBTree(id);
+        
+        traverseKeysForDistinctValues(btree, values);
+        
         return btree;
     }
     
