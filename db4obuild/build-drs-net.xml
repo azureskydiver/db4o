@@ -31,7 +31,10 @@
 		<sharpen resource="drs/core" workspace="${conversion.workspace.dir}">
 			<args>
 				<arg value="-cp" />
-				<arg path="${file.java5.jar}" />
+				<arg path="${dir.workspace}/db4oj/bin/" />
+				
+				<arg value="-cp" />
+				<arg path="${dir.workspace}/db4ounit/bin/" />
 				
 				<arg value="-srcfolder" />
 				<arg value="test" />
@@ -45,6 +48,24 @@
 				<arg value="com.db4o.inside.replication.ReplicationPlatform.ForType" />
 			</args>
 		</sharpen>
+	</target>
+	
+	<!--
+	<target name="test" depends="update-csharp-projects">
+	-->
+	<target name="test">
+		<csc srcdir="${drs.net.dir}/drs.tests"
+			targettype="exe"
+			destfile="${drs.net.bin.dir}/drs.tests.exe">
+			<reference dir="${drs.net.bin.dir}">
+				<include name="*.dll" />
+			</reference>
+		</csc>
+		
+		<exec executable="mono" dir="${drs.net.bin.dir}">
+			<arg value="--debug"/>
+			<arg file="${drs.net.bin.dir}/drs.tests.exe" />
+		</exec>
 	</target>
 	
 	<target name="update-drs-project" depends="sharpen">
@@ -70,8 +91,8 @@
 	</target>
 	
 	<target name="update-drs.tests-project" depends="sharpen">
-		<copy todir="${drs.net.src.dir}">
-			<fileset dir="${conversion.workspace.dir}/drscsharp/src">
+		<copy todir="${drs.net.src.dir}/drs.tests/src">
+			<fileset dir="${conversion.workspace.dir}/drscsharp/src/test">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
@@ -95,7 +116,8 @@
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
 				
-				<exclude name="test/**" />
+				<include name="test/**/other/AllTests.java" />
+				<include name="test/**/other/CollectionUuidTest.java" />
 
 				<!--
 				<include name="test/**/ReplicationTestCase.java" />
