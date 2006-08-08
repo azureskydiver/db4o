@@ -20,6 +20,7 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
                 fixture(),
                 new Class[] {
                     BTreeTestCase.class,
+                    BTreeSearchTestCase.class,
 //                    FieldIndexTestCase.class,
                     SearcherTestCase.class,
                     SearcherLowestHighestTestCase.class

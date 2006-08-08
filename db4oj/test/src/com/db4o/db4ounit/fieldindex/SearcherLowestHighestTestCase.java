@@ -79,7 +79,7 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
             Assert.areEqual(0, _searcher.cursor());
             Assert.isFalse(_searcher.foundMatch());
             Assert.isFalse(_searcher.beforeFirst());
-            Assert.isFalse(_searcher.beyondLast());
+            Assert.isFalse(_searcher.afterLast());
         }
     }
     
@@ -90,7 +90,7 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
             Assert.areEqual(0, _searcher.cursor());
             Assert.isTrue(_searcher.foundMatch());
             Assert.isFalse(_searcher.beforeFirst());
-            Assert.isFalse(_searcher.beyondLast());
+            Assert.isFalse(_searcher.afterLast());
         }
     }
     
@@ -101,7 +101,7 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
             Assert.areEqual(0, _searcher.cursor());
             Assert.isFalse(_searcher.foundMatch());
             Assert.isFalse(_searcher.beforeFirst());
-            Assert.isTrue(_searcher.beyondLast());
+            Assert.isTrue(_searcher.afterLast());
         }
     }
     
@@ -112,7 +112,7 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
             Assert.areEqual(0, _searcher.cursor());
             Assert.isFalse(_searcher.foundMatch());
             Assert.isFalse(_searcher.beforeFirst());
-            Assert.isTrue(_searcher.beyondLast());
+            Assert.isTrue(_searcher.afterLast());
         }
     }
     
@@ -122,18 +122,18 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
         Assert.areEqual(0, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
         
         search(values, SearchTarget.ANY);
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
         
         search(values, SearchTarget.HIGHEST);
         Assert.areEqual(1, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
     }
     
     public void testTwoValuesLowMatch(){
@@ -142,19 +142,19 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
         Assert.areEqual(0, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
 
         search(values, SearchTarget.ANY);
         Assert.areEqual(0, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
         
         search(values, SearchTarget.HIGHEST);
         Assert.areEqual(0, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
     }
     
     public void testTwoValuesHighMatch(){
@@ -163,19 +163,19 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
         Assert.areEqual(1, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
 
         search(values, SearchTarget.ANY);
         Assert.areEqual(1, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
         
         search(values, SearchTarget.HIGHEST);
         Assert.areEqual(1, _searcher.cursor());
         Assert.isTrue(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
     }
     
     public void testTwoValuesInBetween(){
@@ -184,19 +184,19 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
         Assert.areEqual(0, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
 
         search(values, SearchTarget.ANY);
         Assert.areEqual(0, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
         
         search(values, SearchTarget.HIGHEST);
         Assert.areEqual(0, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
     }
     
     public void testTwoValuesLower(){
@@ -205,19 +205,19 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
         Assert.areEqual(1, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isTrue(_searcher.beyondLast());
+        Assert.isTrue(_searcher.afterLast());
 
         search(values, SearchTarget.ANY);
         Assert.areEqual(1, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isTrue(_searcher.beyondLast());
+        Assert.isTrue(_searcher.afterLast());
         
         search(values, SearchTarget.HIGHEST);
         Assert.areEqual(1, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isFalse(_searcher.beforeFirst());
-        Assert.isTrue(_searcher.beyondLast());
+        Assert.isTrue(_searcher.afterLast());
     }
     
     public void testTwoValuesHigher(){
@@ -226,19 +226,19 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
         Assert.areEqual(0, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isTrue(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
 
         search(values, SearchTarget.ANY);
         Assert.areEqual(0, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isTrue(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
         
         search(values, SearchTarget.HIGHEST);
         Assert.areEqual(0, _searcher.cursor());
         Assert.isFalse(_searcher.foundMatch());
         Assert.isTrue(_searcher.beforeFirst());
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
     }
     
     

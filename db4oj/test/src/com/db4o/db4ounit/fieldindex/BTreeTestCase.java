@@ -7,10 +7,9 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 
 import db4ounit.*;
-import db4ounit.db4o.*;
 
 
-public class BTreeTestCase extends Db4oTestCase{
+public class BTreeTestCase extends BTreeTestCaseBase{
     
     public BTreeTestCase(){
         super();
@@ -32,17 +31,22 @@ public class BTreeTestCase extends Db4oTestCase{
     }
     
     public void testIntKeys() throws Exception{
-        BTree btree = new BTree(trans(), 0, new YInt(stream()), null);
+        BTree btree = createIntKeyBTree(0);
         for (int i = 0; i < 5; i++) {
             btree = cycleIntKeys(btree);    
         }
     }
-    
+
     public void testIntKeysIntValues() throws Exception{
-        BTree btree = new BTree(trans(), 0, new YInt(stream()), new YInt(stream()));
+        BTree btree = createIntKeyValueBTree(0);
         for (int i = 0; i < 5; i++) {
             btree = cycleIntKeysIntValues(btree);    
         }
+    }
+
+    public void testIntSearch(){
+        
+        
     }
     
     
@@ -66,7 +70,7 @@ public class BTreeTestCase extends Db4oTestCase{
         
         reopen();
         
-        btree = new BTree(trans(), id, new YInt(stream()), null);
+        btree = createIntKeyBTree(id);
         
         expectKeys(btree, _sortedKeys);
         
@@ -131,7 +135,7 @@ public class BTreeTestCase extends Db4oTestCase{
         
         reopen();
         
-        btree = new BTree(trans(), id, new YInt(stream()), new YInt(stream()));
+        btree = createIntKeyValueBTree(id);
         
         expectKeys(btree, _sortedKeys);
         expectValues(btree, _sortedValues);
@@ -221,19 +225,6 @@ public class BTreeTestCase extends Db4oTestCase{
         Assert.areEqual(values.length, cursor[0]);
     }
 
-    
-    private YapStream stream(){
-        return (YapStream) db();
-    }
-    
-    private Transaction trans(){
-        return stream().getTransaction();
-    }
-    
-    private Transaction systemTrans(){
-        return stream().getSystemTransaction();
-    }
-    
     
     int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
     
