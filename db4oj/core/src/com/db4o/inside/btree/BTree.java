@@ -96,10 +96,12 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
     
     public BTreeRange search(Transaction trans, Object key) {
-        return search(trans, key, null);
+        return search(trans, key, trans);
     }
     
     public BTreeRange search(Transaction trans, Object key, Object value) {
+        ensureActive(trans);
+
         _keyHandler.prepareComparison(key);
         _valueHandler.prepareComparison(value);
         
@@ -111,7 +113,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
         BTreeNodeSearchResult start = _root.searchLeaf(trans, SearchTarget.LOWEST);
         BTreeNodeSearchResult end = _root.searchLeaf(trans, SearchTarget.HIGHEST);
         
-        return start.createRangeTo(null, end);
+        return start.createRangeTo(trans, end);
     }
     
     public void commit(final Transaction trans){
