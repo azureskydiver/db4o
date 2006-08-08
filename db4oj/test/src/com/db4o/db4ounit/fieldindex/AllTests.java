@@ -2,28 +2,21 @@
 
 package com.db4o.db4ounit.fieldindex;
 
-import db4ounit.*;
-import db4ounit.db4o.*;
-import db4ounit.db4o.fixtures.*;
+import db4ounit.db4o.Db4oTestSuite;
 
-public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
-    
-    public static void main(String[] args) {
-        new TestRunner(
-                new Db4oTestSuiteBuilder(
-                        new Db4oSolo(),
-                        AllTests.class)).run();
+public class AllTests extends Db4oTestSuite {
+
+	public static void main(String[] args) {
+		new AllTests().runSolo();
     }
 
-    public TestSuite build() {
-        return new Db4oTestSuiteBuilder(
-                fixture(),
-                new Class[] {
-                    BTreeTestCase.class,
-                    BTreeSearchTestCase.class,
+	protected Class[] testCases() {
+		return new Class[] {
+            BTreeTestCase.class,
+            BTreeSearchTestCase.class,
 //                    FieldIndexTestCase.class,
-                    SearcherTestCase.class,
-                    SearcherLowestHighestTestCase.class
-                    }).build();
+            SearcherTestCase.class,
+            SearcherLowestHighestTestCase.class
+		};
     }
 }
