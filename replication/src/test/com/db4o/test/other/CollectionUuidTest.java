@@ -1,20 +1,25 @@
 package com.db4o.test.other;
 
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.test.Test;
-import com.db4o.test.replication.SPCChild;
-import com.db4o.YapClient;
-
 import java.util.ArrayList;
 
-public class CollectionUuidTest {
+import com.db4o.Db4o;
+import com.db4o.ext.ExtObjectContainer;
+
+import db4ounit.Assert;
+import db4ounit.db4o.Db4oTestCase;
+
+public class CollectionUuidTest extends Db4oTestCase {	
+	
+	protected void configure() {
+		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+	}
+	
 	public void test() {
-		ExtObjectContainer oc = Test.objectContainer();
+		ExtObjectContainer oc = db();
 
 		ArrayList list = new ArrayList();
 		oc.set(list);
 		oc.commit();
-		Test.ensure(oc.getObjectInfo(list).getUUID() != null);
+		Assert.isNotNull(oc.getObjectInfo(list).getUUID());
 	}
 }
