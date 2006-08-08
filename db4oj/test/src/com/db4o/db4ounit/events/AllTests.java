@@ -9,7 +9,6 @@ import db4ounit.db4o.Db4oTestCase;
 import db4ounit.db4o.Db4oTestSuiteBuilder;
 import db4ounit.db4o.fixtures.Db4oSolo;
 
-
 public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
 
 	public TestSuite build() {

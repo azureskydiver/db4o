@@ -2,7 +2,15 @@
 
 package com.db4o.events;
 
-public interface ObjectEventArgs extends EventArgs {
+public class ObjectEventArgs extends EventArgs {
 	
-	public Object object();
+	private Object _obj;
+
+	public ObjectEventArgs(Object obj) {
+		_obj = obj;
+	}
+
+	public Object object() {
+		return _obj;
+	}
 }

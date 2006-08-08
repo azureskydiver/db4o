@@ -2,7 +2,7 @@
 
 package com.db4o.events;
 
-public interface CancellableEventArgs extends EventArgs {
+public interface CancellableEventArgs  {
 	public boolean isCancelled();
 	public void cancel();
 }

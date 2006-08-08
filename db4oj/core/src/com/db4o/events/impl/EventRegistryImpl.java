@@ -1,48 +1,35 @@
-/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
-
 package com.db4o.events.impl;
 
-import com.db4o.events.*;
+import com.db4o.events.CancellableObjectEventArgs;
+import com.db4o.events.Event4;
+import com.db4o.events.EventRegistry;
+import com.db4o.events.ObjectEventArgs;
+import com.db4o.events.QueryEventArgs;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.query.Query;
 
-/**
- * @exclude
- */
-public class EventRegistryImpl implements Callbacks, EventRegistry {
+public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	
-	private final Event4Impl _queryStarted = new Event4Impl();
-	private final Event4Impl _queryFinished = new Event4Impl();
-	
-	private final Event4Impl _creating = new Event4Impl();
-	private final Event4Impl _activating = new Event4Impl();
-	private final Event4Impl _updating = new Event4Impl();
-	private final Event4Impl _deleting = new Event4Impl();
-	private final Event4Impl _deactivating = new Event4Impl();
-	
-	private final Event4Impl _created = new Event4Impl();
-	private final Event4Impl _activated = new Event4Impl();
-	private final Event4Impl _updated = new Event4Impl();
-	private final Event4Impl _deleted = new Event4Impl();
-	private final Event4Impl _deactivated = new Event4Impl();
+	protected final Event4Impl _queryStarted = new Event4Impl();
+	protected final Event4Impl _queryFinished = new Event4Impl();
+	protected final Event4Impl _creating = new Event4Impl();
+	protected final Event4Impl _activating = new Event4Impl();
+	protected final Event4Impl _updating = new Event4Impl();
+	protected final Event4Impl _deleting = new Event4Impl();
+	protected final Event4Impl _deactivating = new Event4Impl();
+	protected final Event4Impl _created = new Event4Impl();
+	protected final Event4Impl _activated = new Event4Impl();
+	protected final Event4Impl _updated = new Event4Impl();
+	protected final Event4Impl _deleted = new Event4Impl();
+	protected final Event4Impl _deactivated = new Event4Impl();
 
 	// Callbacks implementation
 	public void onQueryFinished(Query query) {
-		_queryFinished.trigger(new QueryEventArgsImpl(query));
+		triggerQueryEvent(_queryFinished, query);
 	}
 
 	public void onQueryStarted(Query query) {
-		_queryStarted.trigger(new QueryEventArgsImpl(query));
-	}
-	
-	private boolean triggerCancellableEvent(Event4Impl event, Object obj) {
-		CancellableObjectEventArgsImpl args = new CancellableObjectEventArgsImpl(obj);
-		event.trigger(args);
-		return !args.isCancelled();
-	}
-	
-	private void triggerObjectEvent(Event4Impl event, Object obj) {
-		event.trigger(new ObjectEventArgsImpl(obj));
+		triggerQueryEvent(_queryStarted, query);
 	}
 	
 	public boolean objectCanNew(Object obj) {
@@ -84,8 +71,21 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	public void objectOnDeactivate(Object obj) {
 		triggerObjectEvent(_deactivated, obj);
 	}
+	
+	private void triggerQueryEvent(Event4Impl e, Query query) {
+		e.trigger(new QueryEventArgs(query));
+	}
+	
+	private boolean triggerCancellableEvent(Event4Impl event, Object obj) {
+		CancellableObjectEventArgs args = new CancellableObjectEventArgs(obj);
+		event.trigger(args);
+		return !args.isCancelled();
+	}
+	
+	private void triggerObjectEvent(Event4Impl event, Object obj) {
+		event.trigger(new ObjectEventArgs(obj));
+	}
 
-	// EventRegistry implementation
 	public Event4 queryFinished() {
 		return _queryFinished;
 	}
@@ -93,35 +93,35 @@ public class EventRegistryImpl implements Callbacks, EventRegistry {
 	public Event4 queryStarted() {
 		return _queryStarted;
 	}
-	
+
 	public Event4 creating() {
 		return _creating;
 	}
-	
+
 	public Event4 activating() {
 		return _activating;
 	}
-	
+
 	public Event4 updating() {
 		return _updating;
 	}
-	
+
 	public Event4 deleting() {
 		return _deleting;
 	}
-	
+
 	public Event4 deactivating() {
 		return _deactivating;
 	}
-	
+
 	public Event4 created() {
 		return _created;
 	}
-	
+
 	public Event4 activated() {
 		return _activated;
 	}
-	
+
 	public Event4 updated() {
 		return _updated;
 	}
