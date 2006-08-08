@@ -148,27 +148,14 @@ public class BTreeNode extends YapMeta{
         return null;
     }
     
-    public BTreePointer findStart(Transaction trans, Object value) {
-        
+    public Searcher searchLeaf(Transaction trans, SearchTarget target) {
         YapReader reader = prepareRead(trans);
-        
-        Searcher s = search(trans, reader, SearchTarget.LOWEST);
-        
+        Searcher s = search(trans, reader, target);
         if(_isLeaf){
-            
-        }else{
-            
+            return s;
         }
-
-        return null;
+        return child(reader, s.cursor()).searchLeaf(trans, target);
     }
-    
-    public BTreePointer findEnd(Transaction trans, Object value) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
-    
     
     
     private boolean canWrite(){
@@ -353,6 +340,7 @@ public class BTreeNode extends YapMeta{
                 
                 if(_count == 0){
                     _isLeaf = true;
+                    prepareValues();
                 }
             }
         }
@@ -586,17 +574,21 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    void prepareArrays(){
+    private void prepareArrays(){
         if(_keys != null){
             return;
         }
         _keys = new Object[_btree._nodeSize];
         if(_isLeaf){
-            if(handlesValues()){
-                _values = new Object[_btree._nodeSize];
-            }
+            prepareValues();
         }else{
             _children = new Object[_btree._nodeSize];
+        }
+    }
+    
+    private void prepareValues(){
+        if(handlesValues()){
+            _values = new Object[_btree._nodeSize];
         }
     }
     

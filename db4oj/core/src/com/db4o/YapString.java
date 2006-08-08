@@ -138,7 +138,11 @@ public final class YapString extends YapIndependantType {
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      */
     public Object readIndexEntry(YapReader a_reader) {
-        return new int[] {a_reader.readInt(), a_reader.readInt()};
+        int[] pointer = new int[] {a_reader.readInt(), a_reader.readInt()};
+        if(pointer[0] == 0 && pointer[1] == 0){
+            return null;
+        }
+        return pointer; 
     }
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{

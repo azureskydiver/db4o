@@ -47,6 +47,8 @@ public class FieldIndexTestCase extends Db4oTestCase{
     
     public void testAccessingBTree() throws Exception{
         
+        store();
+        
         YapStream stream = (YapStream)db();
         ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
         YapClass yc = stream.getYapClass(claxx, false);
@@ -61,7 +63,7 @@ public class FieldIndexTestCase extends Db4oTestCase{
 
             final int ix = i;
 
-            BTreeRange range = bTree.find(trans, new Integer(IDS[i]));
+            BTreeRange range = bTree.search(trans, new Integer(IDS[i]));
             
             CountingVisitor visitor = new CountingVisitor(new Visitor4() {
                 

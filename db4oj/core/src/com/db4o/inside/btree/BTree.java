@@ -11,6 +11,9 @@ import com.db4o.inside.ix.*;
  */
 public class BTree extends YapMeta implements TransactionParticipant {
     
+    /** temporary variable for value and search coding */
+    private static final boolean DEBUG = false;
+    
     private static final byte BTREE_VERSION = (byte)1;
     
     final Indexable4 _keyHandler;
@@ -41,9 +44,10 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
         
-        _nodeSize = trans.stream().configImpl().bTreeNodeSize();
+        _nodeSize = DEBUG ? 7 : trans.stream().configImpl().bTreeNodeSize();
         _halfNodeSize = _nodeSize / 2;
         _nodeSize = _halfNodeSize * 2;
+        
         _cacheHeight = trans.stream().configImpl().bTreeCacheHeight();
         
         _keyHandler = keyHandler;
@@ -79,13 +83,6 @@ public class BTree extends YapMeta implements TransactionParticipant {
         sizeChanged(trans, 1);
     }
     
-    public BTreeRange find(Transaction trans, Object value) {
-        _keyHandler.prepareComparison(value);
-        BTreePointer start = _root.findStart(trans, value);
-        BTreePointer end = _root.findEnd(trans, value);
-        return new BTreeRange(start, end);
-    }
-    
     public void remove(Transaction trans, Object key){
         remove(trans, key, null);
     }
@@ -96,6 +93,20 @@ public class BTree extends YapMeta implements TransactionParticipant {
         _valueHandler.prepareComparison(value);
         _root.remove(trans);
         sizeChanged(trans, -1);
+    }
+    
+    public BTreeRange search(Transaction trans, Object key) {
+        return search(trans, key, null);
+    }
+    
+    public BTreeRange search(Transaction trans, Object key, Object value) {
+        _keyHandler.prepareComparison(key);
+        _valueHandler.prepareComparison(value);
+        Searcher start = _root.searchLeaf(trans, SearchTarget.LOWEST);
+        Searcher end = _root.searchLeaf(trans, SearchTarget.HIGHEST);
+        // return new BTreeRange(start, end);
+        
+        return null;
     }
     
     public void commit(final Transaction trans){
@@ -275,6 +286,14 @@ public class BTree extends YapMeta implements TransactionParticipant {
         _root.traverseKeys(trans, visitor);
     }
     
+    public void traverseValues(Transaction trans, Visitor4 visitor) {
+        ensureActive(trans);
+        if(_root == null){
+            return;
+        }
+        _root.traverseValues(trans, visitor);
+    }
+    
     private void sizeChanged(Transaction trans, int changeBy){
         Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff == null){
@@ -288,8 +307,6 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		// TODO Auto-generated method stub
 		
 	}
-
-
 
 }
 
