@@ -22,7 +22,6 @@ class OtherTestSuite extends TestSuite {
 	public Class[] tests() {
 		return new Class[]{
 				ObjectVersionTest.class,
-				CollectionUuidTest.class
 		};
 	}
 }
