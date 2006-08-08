@@ -2,6 +2,6 @@
 
 package com.db4o.events;
 
-public interface EventArgs {
-
+public class EventArgs {
+	public static final EventArgs EMPTY = new EventArgs();
 }

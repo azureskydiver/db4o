@@ -4,6 +4,12 @@ package com.db4o.events;
 
 import com.db4o.query.Query;
 
-public interface QueryEventArgs extends ObjectEventArgs {
-	Query query();
+public class QueryEventArgs extends ObjectEventArgs {
+	public QueryEventArgs(Query obj) {
+		super(obj);
+	}
+	
+	public Query query() {
+		return (Query)object();
+	}
 }
