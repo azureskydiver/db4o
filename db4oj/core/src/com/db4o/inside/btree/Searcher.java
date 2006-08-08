@@ -82,17 +82,17 @@ public class Searcher {
         }
     }
     
-    public boolean beforeFirst() {
-        return (_cursor == 0) && (_cmp > 0);
-    }
-
-    public boolean beyondLast(){
+    public boolean afterLast(){
         if(_count == 0){
-            return false;  // _cursor is 0: not beyond last
+            return false;  // _cursor is 0: not after last
         }
         return (_cursor == _count -1) && _cmp < 0;
     }
     
+    public boolean beforeFirst() {
+        return (_cursor == 0) && (_cmp > 0);
+    }
+
     private void complete(){
         _upper = -2;
     }

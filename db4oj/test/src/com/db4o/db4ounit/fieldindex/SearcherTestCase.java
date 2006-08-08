@@ -118,13 +118,13 @@ public class SearcherTestCase implements TestCase, TestLifeCycle{
     private void assertBeyond(int[] values) {
         int res = search(values, BEYOND);
         Assert.areEqual(values.length - 1, res);
-        Assert.isTrue(_searcher.beyondLast());
+        Assert.isTrue(_searcher.afterLast());
     }
 
     private void assertNotBeyond(int[] values) {
         int res = search(values, LAST);
         Assert.areEqual(values.length - 1, res);
-        Assert.isFalse(_searcher.beyondLast());
+        Assert.isFalse(_searcher.afterLast());
     }
     
     private void assertBefore(int[] values) {

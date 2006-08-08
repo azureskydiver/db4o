@@ -102,11 +102,16 @@ public class BTree extends YapMeta implements TransactionParticipant {
     public BTreeRange search(Transaction trans, Object key, Object value) {
         _keyHandler.prepareComparison(key);
         _valueHandler.prepareComparison(value);
-        Searcher start = _root.searchLeaf(trans, SearchTarget.LOWEST);
-        Searcher end = _root.searchLeaf(trans, SearchTarget.HIGHEST);
-        // return new BTreeRange(start, end);
         
-        return null;
+        // TODO: Optimize the following.
+        //       Part of the search operates against the same nodes.
+        //       As long as the bounds are on one node, the search
+        //       should walk the nodes in one go.
+        
+        BTreeNodeSearchResult start = _root.searchLeaf(trans, SearchTarget.LOWEST);
+        BTreeNodeSearchResult end = _root.searchLeaf(trans, SearchTarget.HIGHEST);
+        
+        return start.createRangeTo(null, end);
     }
     
     public void commit(final Transaction trans){

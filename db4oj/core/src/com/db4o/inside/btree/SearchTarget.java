@@ -2,6 +2,9 @@
 
 package com.db4o.inside.btree;
 
+/**
+ * @exclude
+ */
 public final class SearchTarget {
     
     public static final SearchTarget LOWEST = new SearchTarget(-1);

@@ -6,8 +6,13 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 
 
-public interface BTreeRange {
+/**
+ * @exclude
+ */
+public class EmptyBTreeRange implements BTreeRange{
     
-    public void traverseKeys(Visitor4 visitor);
+    public void traverseKeys(Visitor4 visitor){
+        // do nothing
+    }
 
 }

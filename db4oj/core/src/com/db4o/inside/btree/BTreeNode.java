@@ -148,11 +148,11 @@ public class BTreeNode extends YapMeta{
         return null;
     }
     
-    public Searcher searchLeaf(Transaction trans, SearchTarget target) {
+    public BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
         YapReader reader = prepareRead(trans);
         Searcher s = search(trans, reader, target);
         if(_isLeaf){
-            return s;
+            return new BTreeNodeSearchResult(s, this);
         }
         return child(reader, s.cursor()).searchLeaf(trans, target);
     }
@@ -398,6 +398,10 @@ public class BTreeNode extends YapMeta{
         }
     }
     
+    public int count() {
+        return _count;
+    }
+    
     private int entryLength(){
         int len = keyHandler().linkLength();
         if(_isLeaf){
@@ -466,7 +470,7 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    private Object key(int index){
+    Object key(int index){
         BTreePatch patch = keyPatch(index);
         if(patch == null){
             return _keys[index];
@@ -782,16 +786,31 @@ public class BTreeNode extends YapMeta{
     }
     
     private void pointNextTo(Transaction trans, int id){
-        if(_nextID > 0){
-            _btree.produceNode(_nextID).setPreviousID(trans, id);
+        if(_nextID != 0){
+            nextNode().setPreviousID(trans, id);
         }
     }
-    
+
     private void pointPreviousTo(Transaction trans, int id){
         if(_previousID != 0){
-            _btree.produceNode(_previousID).setNextID(trans, id);
+            previousNode().setNextID(trans, id);
         }
     }
+
+    public BTreeNode previousNode() {
+        if(_previousID == 0){
+            return null;
+        }
+        return _btree.produceNode(_previousID);
+    }
+    
+    public BTreeNode nextNode() {
+        if(_nextID == 0){
+            return null;
+        }
+        return _btree.produceNode(_nextID);
+    }
+
     
     void purge(){
         if(_dead){
@@ -972,8 +991,4 @@ public class BTreeNode extends YapMeta{
         }
         return str;
     }
-
-
-    
-
 }

@@ -3,12 +3,10 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
-import com.db4o.test.*;
 
 import db4ounit.*;
 import db4ounit.db4o.*;
@@ -75,7 +73,7 @@ public class FieldIndexTestCase extends Db4oTestCase{
             });
             
             
-            range.traverse(visitor);
+            range.traverseKeys(visitor);
             
             Assert.areEqual(1, visitor.count());
         }
