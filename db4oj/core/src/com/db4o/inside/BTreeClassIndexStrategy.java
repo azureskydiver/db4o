@@ -44,50 +44,11 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         }
 	}
 	
-	public Tree getAll(Transaction trans) {
-		 // TODO: Index should work with BTrees only, no more conversion
-        // to TreeInt should be necessary.
-        
-        TreeInt zero = new TreeInt(0);
-        final Tree[] tree = new Tree[]{zero};
-        _btreeIndex.traverseKeys(trans, new Visitor4() {
-            public void visit(Object obj) {
-                tree[0] = tree[0].add(new TreeInt(((Integer)obj).intValue()));
-            }
-        });
-        tree[0] = tree[0].removeNode(zero);
-        return tree[0];
-	}
-
-	public long[] getIds(Transaction trans) {
-		return getIdsFromBTreeIndex(trans);
-	}
-
 	public void traverseAll(Transaction ta,Visitor4 command) {
 		// better alternatives for this null check? (has been moved as is from YapFile)
 		if(_btreeIndex!=null) {
 			_btreeIndex.traverseKeys(ta,command);
 		}
-	}
-
-	public int idFromValue(Object value) {
-		return ((Integer)value).intValue();
-	}
-
-	private long[] getIdsFromBTreeIndex(Transaction trans) {
-		final long[] ids;
-		ids = new long[_btreeIndex.size(trans)];
-		final int[] count = new int[]{0};
-		_btreeIndex.traverseKeys(trans, new Visitor4() {
-		    public void visit(Object obj) {
-		        int id = ((Integer)obj).intValue();
-		        if(id > 0){
-		            ids[count[0]] = id;
-		            count[0] ++;
-		        }
-		    }
-		});
-		return ids;
 	}
 
 	private void createBTreeIndex(final YapStream stream, int btreeID){

@@ -16,7 +16,9 @@ public abstract class Db4oTestSuite extends Db4oTestCase implements TestSuiteBui
 
 	protected abstract Class[] testCases();
 	
-	public void runSolo() {
-		new TestRunner(new Db4oTestSuiteBuilder(new Db4oSolo(), testCases())).run();
+	public int runSolo() {
+		return new TestRunner(
+					new Db4oTestSuiteBuilder(
+							new Db4oSolo(), testCases())).run();
 	}
 }

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.ClassIndexStrategy;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.query.*;
@@ -325,22 +326,15 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
 		
-		Tree tree = clazz.getIndex(i_trans);
-		
-		if(tree == null) {
-			return new QueryResultImpl(i_trans);  // empty result
-		}
-        
-        final QueryResultImpl resLocal = new QueryResultImpl(i_trans, tree.size());
-        
-		tree.traverse(new Visitor4() {
+		final QueryResultImpl resLocal = new QueryResultImpl(i_trans);
+		final ClassIndexStrategy index = clazz.index();
+		index.traverseAll(i_trans, new Visitor4() {
 			public void visit(Object a_object) {
-				resLocal.add(((TreeInt)a_object)._key);
+				resLocal.add(((Integer)a_object).intValue());
 			}
 		});
 		sort(resLocal);
 		return resLocal;
-
 	}
 
     void execute1(final QueryResultImpl result) {

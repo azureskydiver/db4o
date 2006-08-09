@@ -2,34 +2,21 @@
 
 package com.db4o.db4ounit;
 
-import db4ounit.TestRunner;
-import db4ounit.TestSuite;
-import db4ounit.TestSuiteBuilder;
-import db4ounit.db4o.Db4oTestCase;
-import db4ounit.db4o.Db4oTestSuiteBuilder;
-import db4ounit.db4o.fixtures.Db4oSolo;
+import db4ounit.db4o.Db4oTestSuite;
 
-public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
+public class AllTests extends Db4oTestSuite {
 	
 	public static void main(String[] args) {
-		int ret=new TestRunner(
-				new Db4oTestSuiteBuilder(
-						new Db4oSolo(),
-						AllTests.class)).run();
-		if(ret!=0) {
-			throw new RuntimeException(ret+" tests failed");
-		}
+		System.exit(new AllTests().runSolo());
 	}
 
-	public TestSuite build() {
-		return new Db4oTestSuiteBuilder(
-				fixture(),
-				new Class[] {
-                    com.db4o.db4ounit.fieldindex.AllTests.class,
-                    com.db4o.db4ounit.foundation.AllTests.class,
-					com.db4o.db4ounit.header.AllTests.class,
-					com.db4o.db4ounit.events.AllTests.class,
-					com.db4o.db4ounit.tools.AllTests.class
-					}).build();
+	public Class[] testCases() {
+		return new Class[] {
+            com.db4o.db4ounit.fieldindex.AllTests.class,
+            com.db4o.db4ounit.foundation.AllTests.class,
+			com.db4o.db4ounit.header.AllTests.class,
+			com.db4o.db4ounit.events.AllTests.class,
+			com.db4o.db4ounit.tools.AllTests.class
+		};
 	}
 }

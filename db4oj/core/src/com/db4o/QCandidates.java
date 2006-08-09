@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.ClassIndexStrategy;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
 import com.db4o.inside.ix.QxProcessor;
 
@@ -250,13 +251,29 @@ public final class QCandidates implements Visitor4 {
         }
         return new Iterator4Impl(i_constraints);
     }
+    
+    final class TreeIntBuilder {
+    	public TreeInt tree;
+    	
+    	public void add(TreeInt node) {
+    		tree = (TreeInt)TreeInt.add(tree, node);
+    	}
+    }
 
     void loadFromClassIndex() {
     	if (!isEmpty()) {
     		return;
     	}
-        
-        i_root = TreeInt.toQCandidate((TreeInt)i_yapClass.getIndex(i_trans), this);
+    	
+    	final TreeIntBuilder result = new TreeIntBuilder();
+    	final ClassIndexStrategy index = i_yapClass.index();
+		index.traverseAll(i_trans, new Visitor4() {
+    		public void visit(Object obj) {
+    			result.add(new QCandidate(QCandidates.this, null, ((Integer)obj).intValue(), true));
+    		}
+    	});
+    
+		i_root = result.tree;
         
         DiagnosticProcessor dp = i_trans.stream().i_handlers._diagnosticProcessor;
         if (dp.enabled()){

@@ -17,9 +17,10 @@ public interface ClassIndexStrategy {
 	int entryCount(Transaction transaction);
 	int ownLength();
 	void purge();
-	long[] getIds(Transaction trans);
-	Tree getAll(Transaction trans);
-	void traverseAll(Transaction ta, Visitor4 command);
-	int idFromValue(Object value);
+	
+	/**
+	 * Traverses all index entries (java.lang.Integer references).
+	 */
+	void traverseAll(Transaction transaction, Visitor4 command);
 	void dontDelete(Transaction transaction, int id);
 }

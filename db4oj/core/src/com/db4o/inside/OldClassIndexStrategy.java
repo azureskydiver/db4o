@@ -135,24 +135,9 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 			}
 			return context;
 		}
-	}
+	}	
 
-	public long[] getIds(Transaction transaction) {		
-		Tree tree = getAll(transaction);
-		if(tree == null){
-		    return new long[0];
-		}
-		final long[] ids = new long[tree.size()];
-		final int[] inc = new int[] { 0 };
-		tree.traverse(new Visitor4() {
-		    public void visit(Object obj) {
-		        ids[inc[0]++] = idFromValue(obj);
-		    }
-		});
-		return ids;
-	}
-
-	public Tree getAll(Transaction transaction) {
+	private Tree getAll(Transaction transaction) {
 		ClassIndex ci = getActiveIndex(transaction);
         if (ci == null) {
         	return null;
@@ -177,14 +162,18 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		getState(transaction).remove(id);
 	}
 
-	public void traverseAll(Transaction transaction, Visitor4 command) {
+	public void traverseAll(Transaction transaction, final Visitor4 command) {
 		Tree tree = getAll(transaction);
 		if (tree != null) {
-			tree.traverse(command);
+			tree.traverse(new Visitor4() {
+				public void visit(Object obj) {
+					command.visit(new Integer(idFromValue(obj)));
+				}
+			});
 		}
 	}
 
-	public int idFromValue(Object value) {
+	private int idFromValue(Object value) {
 		return ((TreeInt) value)._key;
 	}
 
