@@ -695,6 +695,7 @@ public class BTreeNode extends YapMeta{
                 return;
             }
             removeFromLeaf(trans, index + 1);
+            return;
         }
         
         // nothing else worked so far, move on to the next node, try there
