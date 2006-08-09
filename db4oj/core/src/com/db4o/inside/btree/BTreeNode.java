@@ -148,7 +148,7 @@ public class BTreeNode extends YapMeta{
         return null;
     }
     
-    public BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
+    BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
         YapReader reader = prepareRead(trans);
         Searcher s = search(trans, reader, target);
         if(_isLeaf){
