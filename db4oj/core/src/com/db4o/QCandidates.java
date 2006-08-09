@@ -252,7 +252,7 @@ public final class QCandidates implements Visitor4 {
         return new Iterator4Impl(i_constraints);
     }
     
-    final class TreeIntBuilder {
+    final static class TreeIntBuilder {
     	public TreeInt tree;
     	
     	public void add(TreeInt node) {
