@@ -737,24 +737,42 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         if( ! hasIndex() ){
             return new long[0];
+        }        
+        if (trans.stream().isClient()) {        	
+            return getClientIDs(trans);
         }
         
-        final long[] ids;
-        
-        if(trans.stream().isClient()){
-            YapClient stream = (YapClient)trans.stream();
-            stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, getID()));
-            YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
-            int size = reader.readInt();
-            ids = new long[size];
-            for (int i = 0; i < size; i++) {
-                ids[i] = reader.readInt();
-            }
-            return ids;
-        }
-        
-        return _index.getIds(trans);
+        // FIXME: use a native long collection here
+        final Collection4 ids = new Collection4();
+        _index.traverseAll(trans, new Visitor4() {
+        	public void visit(Object obj) {
+        		ids.add(new Long(((Integer)obj).longValue()));
+        	}
+        });        
+        return toLongArray(ids);
     }
+
+	private long[] toLongArray(Collection4 ids) {
+		long[] array = new long[ids.size()];
+		int index = 0;
+		Iterator4 iter = ids.iterator();
+		while (iter.hasNext()) {
+			array[index++] = ((Long)iter.next()).longValue();
+		}
+		return array;
+	}
+
+	private long[] getClientIDs(Transaction trans) {
+		YapClient stream = (YapClient)trans.stream();
+		stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, getID()));
+		YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
+		int size = reader.readInt();
+		final long[] ids = new long[size];
+		for (int i = 0; i < size; i++) {
+		    ids[i] = reader.readInt();
+		}
+		return ids;
+	}
 
     boolean hasIndex() {
         return i_db4oType == null || i_db4oType.hasClassIndex();
@@ -819,15 +837,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         int id = ((Integer)indexEntry).intValue();
         return getStream().getByID2(trans, id);
-    }
-
-    final Tree getIndex(Transaction a_trans) {
-        
-        if(!hasIndex()){
-            return null;
-        }
-        return _index.getAll(a_trans);
-    }
+    }    
 
     public ReflectClass classReflector(){
         return _reflector;

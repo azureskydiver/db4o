@@ -212,7 +212,7 @@ public abstract class YapFile extends YapStream {
 					final ClassIndexStrategy index = yapClass.index();
 					index.traverseAll(ta, new Visitor4() {
 						public void visit(Object obj) {
-							int id = index.idFromValue(obj);
+							int id = ((Integer)obj).intValue();
 							TreeInt newNode = new TreeInt(id);
 							duplicates[0] = Tree.add(duplicates[0], newNode);
 							if (newNode.size() != 0) {
