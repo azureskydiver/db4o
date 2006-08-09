@@ -26,6 +26,9 @@ class BTreeNodeSearchResult {
     }
 
     private BTreePointer createPointer(){
+        if(_node == null){
+            return null;
+        }
         return new BTreePointer(_node, _cursor);
     }
     

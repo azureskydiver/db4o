@@ -286,6 +286,16 @@ public class BTreeNode extends YapMeta{
         
     }
     
+    public boolean equals(Object obj) {
+        
+        // For now: equivalence only
+        
+        // In the future there could maybe be multiple reading instances
+        // against a BTreeNode so the comparison would happen by ID 
+        
+        return this == obj;
+    }
+    
     private void free(Transaction trans){
         
         _dead = true;
@@ -386,17 +396,28 @@ public class BTreeNode extends YapMeta{
     }
     
     private void compare(Searcher s, YapReader reader){
+        if(canWrite()){
+            s.resultIs( compareInWriteMode(s.cursor()));
+        }else{
+            s.resultIs( compareInReadMode(reader, s.cursor()));
+        }
+    }
+    
+    private int compareInWriteMode(int index){
+        
+        // FIXME: If key part is equal, comparison should also take place against value part.
+
+        return keyHandler().compareTo(key(index));
+    }
+    
+    private int compareInReadMode(YapReader reader, int index){
         
         // FIXME: If key part is equal, comparison should also take place against value part.
         
-        Indexable4 handler = keyHandler();
-        if(_keys != null){
-            s.resultIs(handler.compareTo(key(s.cursor())));
-        }else{
-            seekKey(reader, s.cursor());
-            s.resultIs(handler.compareTo(handler.readIndexEntry(reader)));
-        }
+        seekKey(reader, index);
+        return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
     }
+    
     
     public int count() {
         return _count;
@@ -627,7 +648,7 @@ public class BTreeNode extends YapMeta{
     public void remove(Transaction trans){
         YapReader reader = prepareRead(trans);
         
-        Searcher s = search(trans, reader);
+        Searcher s = search(trans, reader, SearchTarget.LOWEST);
         if(s.cursor() < 0){
             return;
         }
@@ -639,25 +660,58 @@ public class BTreeNode extends YapMeta{
             }
             
             prepareWrite(trans);
-            
-            BTreeRemove btr = new BTreeRemove(trans, keyHandler().current());
-            
-            BTreePatch patch = keyPatch(s.cursor());
-            if(patch != null){
-                _keys[s.cursor()] = patch.append(btr);
-            }else{
-                _keys[s.cursor()] = btr;    
-            }
-            
-            if(s.cursor() == 0){
-                tellParentAboutChangedKey(trans);
-            }
-            
+            removeFromLeaf(trans, s.cursor());
             return;
         }
             
         child(reader, s.cursor()).remove(trans);
     }
+    
+    private void removeFromLeaf(Transaction trans, int index){
+        
+        BTreePatch patch = keyPatch(index);
+        
+        // no patch, no problem, can remove
+        if(patch == null){
+            _keys[index] = new BTreeRemove(trans, keyHandler().current());
+            if(index == 0){
+                tellParentAboutChangedKey(trans);
+            }
+            return;
+        }
+        
+        // there is a patch but not a removal patch for this transaction
+        if(! patch.isRemove(trans)){
+            _keys[index] = patch.append(new BTreeRemove(trans, keyHandler().current()));
+            if(index == 0){
+                tellParentAboutChangedKey(trans);
+            }
+            return;
+        }
+        
+        // now we try if removal is OK for the next element in this node
+        if(index < _count - 1){
+            if(compareInWriteMode(index + 1 ) != 0){
+                return;
+            }
+            removeFromLeaf(trans, index + 1);
+        }
+        
+        // nothing else worked so far, move on to the next node, try there
+        BTreeNode node = nextNode();
+        
+        if(node == null){
+            return;
+        }
+        
+        node.prepareWrite(trans);
+        if(node.compareInWriteMode(0) != 0){
+            return;
+        }
+        
+        node.removeFromLeaf(trans, 0);
+    }
+    
     
     void rollback(Transaction trans){
         
@@ -991,4 +1045,5 @@ public class BTreeNode extends YapMeta{
         }
         return str;
     }
+    
 }

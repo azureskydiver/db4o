@@ -57,6 +57,14 @@ public abstract class BTreePatch {
     
     protected abstract Object committed(BTree btree);
     
+    public boolean isRemove(Transaction trans) {
+        BTreePatch patch = forTransaction(trans);
+        if(patch == null){
+            return false;
+        }
+        return patch instanceof BTreeRemove;
+    }
+    
     public BTreePatch forTransaction(Transaction trans){
         if(_transaction == trans){
             return this;
@@ -108,6 +116,7 @@ public abstract class BTreePatch {
         }
         return _object.toString();
     }
+
     
 
 }

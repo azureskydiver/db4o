@@ -1,10 +1,12 @@
-/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.inside.btree;
 
 import com.db4o.foundation.*;
 
-
+/**
+ * @exclude
+ */
 public class BTreePointer{
     
     private final BTreeNode _node;
@@ -12,8 +14,15 @@ public class BTreePointer{
     private final int _index;
     
     public BTreePointer(BTreeNode node, int index) {
+        if(node == null){
+            throw new ArgumentNullException();
+        }
         _node = node;
         _index = index;
+    }
+    
+    public int index(){
+        return _index;
     }
     
     public BTreePointer next(){
@@ -31,8 +40,20 @@ public class BTreePointer{
         return _node;
     }
     
-    public int index(){
-        return _index;
+    public boolean equals(Object obj) {
+        if(this == obj){
+            return true;
+        }
+        if(! (obj instanceof BTreePointer)){
+            return false;
+        }
+        BTreePointer other = (BTreePointer) obj;
+        
+        if(_index != other._index){
+            return false;
+        }
+        
+        return _node.equals(other._node);
     }
     
 }

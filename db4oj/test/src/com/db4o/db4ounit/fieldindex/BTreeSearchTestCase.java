@@ -42,6 +42,12 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
         
         traverseKeysForDistinctValues(btree, values);
         
+        for (int i = 0; i < values.length; i++) {
+            btree.remove(trans(), new Integer(values[i]));
+        }
+        
+        btree.commit(trans());
+        
         return btree;
     }
     
@@ -52,7 +58,7 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
                 ExpectingVisitor expectingVisitor = createExpectingVisitor(values[i], occurences(values, values[i]));
                 BTreeRange range = btree.search(trans(), new Integer(values[i]));
                 range.traverseKeys(expectingVisitor);
-                Assert.isTrue(expectingVisitor.allFound());
+                Assert.isTrue(expectingVisitor.allAsExpected());
                 lastValue = values[i];
             }
         }
