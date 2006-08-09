@@ -730,36 +730,28 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public long[] getIDs(Transaction trans) {
-        
-        if (! stateOK()){
+    	
+        if (! stateOK()) {
             return new long[0];
-        }
-        
-        if( ! hasIndex() ){
+        }        
+        if (! hasIndex()) {
             return new long[0];
         }        
         if (trans.stream().isClient()) {        	
             return getClientIDs(trans);
         }
-        
-        // FIXME: use a native long collection here
-        final Collection4 ids = new Collection4();
-        _index.traverseAll(trans, new Visitor4() {
-        	public void visit(Object obj) {
-        		ids.add(new Long(((Integer)obj).longValue()));
-        	}
-        });        
-        return toLongArray(ids);
+
+        return getIndexIDs(trans);
     }
 
-	private long[] toLongArray(Collection4 ids) {
-		long[] array = new long[ids.size()];
-		int index = 0;
-		Iterator4 iter = ids.iterator();
-		while (iter.hasNext()) {
-			array[index++] = ((Long)iter.next()).longValue();
-		}
-		return array;
+	private long[] getIndexIDs(Transaction trans) {
+		final IntArrayList ids = new IntArrayList();
+        _index.traverseAll(trans, new Visitor4() {
+        	public void visit(Object obj) {
+        		ids.add(((Integer)obj).intValue());
+        	}
+        });        
+        return ids.asLong();
 	}
 
 	private long[] getClientIDs(Transaction trans) {
