@@ -5,7 +5,6 @@ package com.db4o.inside.btree;
 import com.db4o.*;
 import com.db4o.foundation.*;
 
-
 /**
  * @exclude
  */
@@ -15,7 +14,7 @@ public class BTreeRangeImpl implements BTreeRange {
     
     private final BTreePointer _start;
     
-    private final BTreePointer _end;
+    private final BTreePointer _end; 
 
     public BTreeRangeImpl(Transaction trans, BTreePointer start, BTreePointer end) {
         _trans = trans;
@@ -29,7 +28,7 @@ public class BTreeRangeImpl implements BTreeRange {
         
         BTreePointer cursor = _start;
         
-        while(cursor != null){
+        while(! reachedEnd(cursor)){
             
             BTreeNode node = cursor.node();
             
@@ -44,10 +43,17 @@ public class BTreeRangeImpl implements BTreeRange {
             visitor.visit(node.key(cursor.index()));
             
             cursor = cursor.next();
-            if(_end.equals(cursor)){
-                break;
-            }
         }
+    }
+    
+    private boolean reachedEnd(BTreePointer cursor){
+        if(cursor == null){
+            return true;
+        }
+        if(_end == null){
+            return false;
+        }
+        return _end.equals(cursor);
     }
 
 }

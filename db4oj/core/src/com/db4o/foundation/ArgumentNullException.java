@@ -6,6 +6,10 @@ package com.db4o.foundation;
  * @exclude
  */
 public final class ArgumentNullException extends IllegalArgumentException {
+    
+    public ArgumentNullException(){
+        super();
+    }
 
 	public ArgumentNullException(final String name) {
 		super(name);
