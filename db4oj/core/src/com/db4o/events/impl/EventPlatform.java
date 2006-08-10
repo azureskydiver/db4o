@@ -7,6 +7,9 @@ import com.db4o.events.ObjectEventArgs;
 import com.db4o.events.QueryEventArgs;
 import com.db4o.query.Query;
 
+/**
+ * Platform dependent code for dispatching events.
+ */
 class EventPlatform {
 
 	public static void triggerQueryEvent(Event4Impl e, Query q) {
