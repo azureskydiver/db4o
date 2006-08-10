@@ -1,10 +1,9 @@
+/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.events.impl;
 
-import com.db4o.events.CancellableObjectEventArgs;
 import com.db4o.events.Event4;
 import com.db4o.events.EventRegistry;
-import com.db4o.events.ObjectEventArgs;
-import com.db4o.events.QueryEventArgs;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.query.Query;
 
@@ -25,65 +24,51 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 
 	// Callbacks implementation
 	public void onQueryFinished(Query query) {
-		triggerQueryEvent(_queryFinished, query);
+		EventPlatform.triggerQueryEvent(_queryFinished, query);
 	}
 
 	public void onQueryStarted(Query query) {
-		triggerQueryEvent(_queryStarted, query);
+		EventPlatform.triggerQueryEvent(_queryStarted, query);
 	}
 	
 	public boolean objectCanNew(Object obj) {
-		return triggerCancellableEvent(_creating, obj);
+		return EventPlatform.triggerCancellableObjectEventArgs(_creating, obj);
 	}
 	
 	public boolean objectCanActivate(Object obj) {
-		return triggerCancellableEvent(_activating, obj);
+		return EventPlatform.triggerCancellableObjectEventArgs(_activating, obj);
 	}
 	
 	public boolean objectCanUpdate(Object obj) {
-		return triggerCancellableEvent(_updating, obj);
+		return EventPlatform.triggerCancellableObjectEventArgs(_updating, obj);
 	}
 	
 	public boolean objectCanDelete(Object obj) {
-		return triggerCancellableEvent(_deleting, obj);
+		return EventPlatform.triggerCancellableObjectEventArgs(_deleting, obj);
 	}
 	
 	public boolean objectCanDeactivate(Object obj) {
-		return triggerCancellableEvent(_deactivating, obj);
+		return EventPlatform.triggerCancellableObjectEventArgs(_deactivating, obj);
 	}
 	
 	public void objectOnActivate(Object obj) {
-		triggerObjectEvent(_activated, obj);
+		EventPlatform.triggerObjectEvent(_activated, obj);
 	}
 	
 	public void objectOnNew(Object obj) {
-		triggerObjectEvent(_created, obj);
+		EventPlatform.triggerObjectEvent(_created, obj);
 	}
 	
 	public void objectOnUpdate(Object obj) {
-		triggerObjectEvent(_updated, obj);
+		EventPlatform.triggerObjectEvent(_updated, obj);
 	}
 	
 	public void objectOnDelete(Object obj) {
-		triggerObjectEvent(_deleted, obj);		
+		EventPlatform.triggerObjectEvent(_deleted, obj);		
 	}	
 
 	public void objectOnDeactivate(Object obj) {
-		triggerObjectEvent(_deactivated, obj);
-	}
-	
-	private void triggerQueryEvent(Event4Impl e, Query query) {
-		e.trigger(new QueryEventArgs(query));
-	}
-	
-	private boolean triggerCancellableEvent(Event4Impl event, Object obj) {
-		CancellableObjectEventArgs args = new CancellableObjectEventArgs(obj);
-		event.trigger(args);
-		return !args.isCancelled();
-	}
-	
-	private void triggerObjectEvent(Event4Impl event, Object obj) {
-		event.trigger(new ObjectEventArgs(obj));
+		EventPlatform.triggerObjectEvent(_deactivated, obj);
 	}
 
 	public Event4 queryFinished() {

@@ -1279,7 +1279,9 @@
 				<exclude name="com/db4o/config/TTreeMap.cs" />
 				<exclude name="com/db4o/config/TTreeSet.cs" />
 				<exclude name="com/db4o/config/TVector.cs" />
-				
+				<exclude name="com/db4o/events/Event4.cs" />
+				<exclude name="com/db4o/events/EventListener4.cs" />
+				<exclude name="com/db4o/events/impl/Event4Impl.cs" />
 				<exclude name="com/db4o/reflect/self/*.*" />
 				
 			</fileset>
