@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<project name="db4o-tutorial" default="update-doc">
+	
+	<property name="dir.db4obuild" location="../../db4obuild" />
+
+	<property file="${dir.db4obuild}/machine.properties" />
+	<property file="${dir.db4obuild}/ant.properties" />		
+	
+	<property name="csc.executable" value="csc" />
+
+	<property name="dir.out" location="${dir.j.reference.out.net}" />	
+	
+	<property name="exe.name" value="db4o-reference.exe" />
+	
+	<target name="update-doc" depends="build">
+		<copy todir="${dir.out}">
+			<fileset dir="${dir.n.reference.bin}">
+				<include name="bin/*.dll" />
+				<include name="${exe.name}" />
+				<include name="${exe.name}.config" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="build" depends="init">
+		<csc targetType="library"
+			destFile="${dir.n.reference.bin}/bin/db4o-reference-chapters.dll"
+			srcdir="db4o-reference-chapters/src"
+			executable="${csc.executable}">
+			
+			<include name="**/*.cs" />
+			
+			<reference dir="${dir.n.reference.bin}/bin">			
+				<include name="${file.name.dll}" />
+			</reference>
+		</csc>
+		
+		<csc targetType="winexe"
+			destFile="${dir.n.reference.bin}/${exe.name}"
+			win32icon="db4o-reference/src/resources/db4o.ico"
+			srcdir="db4o-reference/src"
+			executable="${csc.executable}">
+			
+			<include name="**/*.cs" />
+			
+			<resource
+				file="db4o-reference/src/db4obrowser.WebBrowserViewControl.resources" embed="true" />
+				
+			<resource
+				file="db4o-reference/src/db4obrowser.ReferenceOutlineViewControl.resources" embed="true" />			
+			
+			<reference dir="${dir.n.reference.bin}/bin">
+				<include name="${file.name.dll}" />
+				<include name="db4o-reference-chapters.dll" />
+				<include name="WeifenLuo.WinFormsUI.dll" />
+				<include name="AxSHDocVw.dll" />
+				<include name="SHDocVw.dll" />
+				<include name="System.Windows.Forms.dll" />
+			</reference>			
+		</csc>
+		
+		<copy tofile="${dir.n.reference.bin}/${exe.name}.config" file="db4o-reference/src/app.config" />
+
+	</target>
+	
+		
+	<target name="run" depends="update-doc">
+		<exec dir="${dir.out}" executable="${dir.out}/${exe.name}">
+		</exec>
+	</target>
+
+	<target name="init">
+		<mkdir dir="${dir.n.reference.bin}" />
+		<mkdir dir="${dir.n.reference.bin}/bin" />
+		<copy todir="${dir.n.reference.bin}/bin">
+			<fileset dir="${dir.dist.dll.net}">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.n.reference.bin}/bin">
+			<fileset dir="lib">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${dir.n.reference.bin}" />
+	</target>
+</project>
