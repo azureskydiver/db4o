@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net", "..\core\db4o-net.csproj", "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-reference-chapters", "db4o-reference-chapters\db4o-reference-chapters.csproj", "{575B2796-1C95-4910-B698-D5E5B2906FCB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Debug.ActiveCfg = Debug|.NET
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Debug.Build.0 = Debug|.NET
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Release.ActiveCfg = Release|.NET
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Release.Build.0 = Release|.NET
+		{575B2796-1C95-4910-B698-D5E5B2906FCB}.Debug.ActiveCfg = Debug|.NET
+		{575B2796-1C95-4910-B698-D5E5B2906FCB}.Debug.Build.0 = Debug|.NET
+		{575B2796-1C95-4910-B698-D5E5B2906FCB}.Release.ActiveCfg = Release|.NET
+		{575B2796-1C95-4910-B698-D5E5B2906FCB}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
