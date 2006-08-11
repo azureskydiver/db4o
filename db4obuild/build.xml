@@ -242,8 +242,6 @@
 				<exclude name="**/BrowserPlugin.java" />
 				<exclude name="**/TestStarter.java" />
 				<exclude name="**/rcp/*" />
-				<!-- FIXME: temporary quickfix for JDK5 feature dependend code in svn -->
-				<exclude name="**/com/db4o/objectmanager/api/*" />
 			<classpath>
 				<fileset dir="${dir.objectmanager.lib}">
 					<include name="linux/*.jar" />
