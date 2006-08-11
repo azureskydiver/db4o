@@ -4,8 +4,8 @@ package db4ounit.db4o;
 
 import com.db4o.ext.ExtObjectContainer;
 
-import db4ounit.TestCase;
-import db4ounit.TestLifeCycle;
+import db4ounit.*;
+import db4ounit.db4o.fixtures.Db4oSolo;
 
 public class Db4oTestCase implements TestCase, TestLifeCycle {
     
@@ -44,5 +44,15 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 
 	protected ExtObjectContainer db() {
 		return fixture().db();
+	}
+	
+	protected Class[] testCases() {
+		return new Class[] { getClass() };
+	}
+	
+	public int runSolo() {
+		return new TestRunner(
+					new Db4oTestSuiteBuilder(
+							new Db4oSolo(), testCases())).run();
 	}
 }

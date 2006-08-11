@@ -16,7 +16,8 @@ public class AllTests extends Db4oTestSuite {
             BTreeSearchTestCase.class,
 //                    FieldIndexTestCase.class,
             SearcherTestCase.class,
-            SearcherLowestHighestTestCase.class
+            SearcherLowestHighestTestCase.class,
+            BTreeAddRemoveTestCase.class,
 		};
     }
 }

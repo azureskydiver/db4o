@@ -201,18 +201,6 @@ public class BTreeTestCase extends BTreeTestCaseBase{
         }
     }
     
-    private void expectKeys(BTree btree, final int[] keys){
-        final int[] cursor = new int[] {0};
-        btree.traverseKeys(trans(), new Visitor4() {
-            public void visit(Object obj) {
-                // System.out.println(obj);
-                Assert.areEqual(keys[cursor[0]], ((Integer)obj).intValue());
-                cursor[0] ++;
-            }
-        });
-        Assert.areEqual(keys.length, cursor[0]);
-    }
-    
     private void expectValues(BTree btree, final int[] values){
         final int[] cursor = new int[] {0};
         btree.traverseValues(trans(), new Visitor4() {
