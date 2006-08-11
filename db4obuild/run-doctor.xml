@@ -42,6 +42,7 @@
 		</copy>
 		<signjar keystore="${file.keystore}" jar="${dir.dist.doctor}/${filename.nqopt.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<signjar keystore="${file.keystore}" jar="${dir.dist.doctor}/${filename.bloat.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+
 		<doctor name="doctor" workspace="${dir.workspace}" pdfbasefont="${font.pdf.base}" />
 		<doctor name="dev" workspace="${dir.workspace}" outputfile="dev" pdfbasefont="${font.pdf.base}" />
 		<doctor 
@@ -160,6 +161,67 @@
 			</fileset>
 		</copy>
 		<signjar keystore="${file.keystore}" jar="${dir.j.reference.out.java}/docs/${filename.java1.2.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<doctor 
+					name="f1" 
+					home="${dir.j.reference}" 
+					interactive="false" 
+					workspace="${dir.workspace}" 
+					inputsource="${dir.n.reference.src}/" 
+					sourceextension="cs" 
+					outputfile="${db4o.file}reference" 
+					outputpath="${dir.j.reference.out.net}" 
+					pdfbasefont="${font.pdf.base}" 
+					archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.reference.jar}" 
+					outlineimage="db4objects1.jpg" 
+					linkhome="http://www.db4o.com">
+					<variable name="java" boolean="false" />
+					<variable name="net" boolean="true" />
+					<variable name="mono" boolean="false" />
+					<ignoreinputfolder name="java" />
+					<ignoreinputfolder name="mono" />
+				</doctor>
+		
+		<doctor 
+					name="f1" 
+					home="${dir.j.reference}" 
+					interactive="false" 
+					showcodeexecutionresults="true"
+					workspace="${dir.workspace}" 
+					inputsource="${dir.n.reference.src}/" 
+					sourceextension="cs" 
+					outputfile="${db4o.file}reference" 
+					outputpath="${dir.j.reference.out.mono}" 
+					pdfbasefont="${font.pdf.base}" 
+					archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.reference.jar}" 
+					outlineimage="db4objects1.jpg" 
+					linkhome="http://www.db4o.com">
+					<variable name="java" boolean="false" />
+					<variable name="net" boolean="false" />
+					<variable name="mono" boolean="true" />
+					<ignoreinputfolder name="java" />
+					<ignoreinputfolder name="net" />
+				</doctor>
+				<doctor 
+					name="f1" 
+					home="${dir.j.reference}" 
+					interactive="false" 
+					showcodeexecutionresults="true"
+					workspace="${dir.workspace}" 
+					inputsource="${dir.n.reference.src.vb}/" 
+					sourceextension="vb" 
+					outputfile="${db4o.file}reference" 
+					outputpath="${dir.j.reference.out.vb}" 
+					pdfbasefont="${font.pdf.base}" 
+					archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.reference.jar}" 
+					outlineimage="db4objects1.jpg" 
+					linkhome="http://www.db4o.com">
+					<variable name="java" boolean="false" />
+					<variable name="net" boolean="true" />
+					<variable name="mono" boolean="false" />
+					<ignoreinputfolder name="java" />
+					<ignoreinputfolder name="mono" />
+				</doctor>
+				
 	</target>
 
 	<target name="testdoctor">
