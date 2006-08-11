@@ -155,7 +155,7 @@ public class BTreeNode extends YapMeta{
             return child(reader, s.cursor()).searchLeaf(trans, target);
         }
             
-        if(! s.foundMatch() || target == SearchTarget.ANY){
+        if(! s.foundMatch() || target == SearchTarget.ANY || target == SearchTarget.HIGHEST){
             return new BTreeNodeSearchResult(s, this);
         }
         
@@ -163,44 +163,10 @@ public class BTreeNode extends YapMeta{
             return findLowestLeafMatch(trans, s.cursor());
         }
         
-        if(target == SearchTarget.HIGHEST){
-            return findHighestLeafMatch(trans, s.cursor());
-        }
-        
         throw new IllegalStateException();
         
     }
     
-    private BTreeNodeSearchResult findHighestLeafMatch(Transaction trans, int index) {
-        
-        // TODO: only working in write mode here, 
-        //       could maybe optimize later
-        
-        prepareWrite(trans);
-        
-        if(index < _count -1){
-            if(! compareInWriteModeEquals(index + 1)){
-                return createMatchingSearchResult(index);
-            }
-            return findHighestLeafMatch(trans, index + 1);
-        }
-        
-        BTreeNode node = nextNode();
-        if(node == null){
-            return createMatchingSearchResult(index);
-        }
-        
-        node.prepareWrite(trans);
-        
-        int newIndex = 0;
-        
-        if(! node.compareInWriteModeEquals(newIndex)){
-            return createMatchingSearchResult(index);
-        }
-        
-        return node.findHighestLeafMatch(trans, newIndex);
-    }
-
     private BTreeNodeSearchResult findLowestLeafMatch (Transaction trans, int index){
         
         // TODO: only working in write mode here, 
