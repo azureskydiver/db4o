@@ -1,6 +1,7 @@
 package com.db4odoc.f1.diagnostics;
 
 import com.db4o.query.Predicate;
+import com.db4odoc.f1.evaluations.Pilot;
 
 public class ArbitraryQuery extends Predicate{    
     private int[] points;

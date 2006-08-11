@@ -16,16 +16,16 @@ System.Globalization.CultureInfo is particularly interesting because it ._
 internally holds a native pointer to a system structure which in turn cannot ._
 be cleanly stored by db4o.
 
-.s com.db4odoc.f1.evaluation.LocalizedItemList ..
+.s com.db4odoc.f1.evaluations.LocalizedItemList ..
 
 We'll be using this code to store and retrieve and instance of this ._
 class with different configuration settings:
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#tryStoreAndRetrieve -run +{} ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#tryStoreAndRetrieve -run +{} ..
 
 .3 Using the constructor ..
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#tryStoreWithCallConstructors ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#tryStoreWithCallConstructors ..
 
 At storage time, db4o tests the only available constructor with null arguments and ._
 runs into a NullPointerException, so it refuses to accept our object.
@@ -35,7 +35,7 @@ otherwise db4o will silently fail when trying to reinstantiate the object.)
 
 .3 Bypassing the constructor ..
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#tryStoreWithoutCallConstructors -run ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#tryStoreWithoutCallConstructors -run ..
 
 This still does not work for our case because the native pointer will definetely ._
 be invalid. In fact this example crashes the Common Language Runtime.
@@ -99,11 +99,11 @@ since this is enough to recreate them later. Note that we don't ._
 have to do any work in onActivate(), since ._
 object reinstantiation is already fully completed in onInstantiate().
 
-.s com.db4odoc.f1.evaluation.CultureInfoTranslator ..
+.s com.db4odoc.f1.evaluations.CultureInfoTranslator ..
 
 Let's try it out:
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#storeWithTranslator ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#storeWithTranslator ..
 
 .2 Conclusion ..
 
@@ -116,4 +116,4 @@ take care of instantiating the application object itself.
 
 .2 Full source ..
 
-.s com.db4odoc.f1.evaluation.TranslatorExample ..
+.s com.db4odoc.f1.evaluations.TranslatorExample ..
