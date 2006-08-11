@@ -151,12 +151,94 @@ public class BTreeNode extends YapMeta{
     BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
         YapReader reader = prepareRead(trans);
         Searcher s = search(trans, reader, target);
-        if(_isLeaf){
+        if(! _isLeaf){
+            return child(reader, s.cursor()).searchLeaf(trans, target);
+        }
+            
+        if(! s.foundMatch() || target == SearchTarget.ANY){
             return new BTreeNodeSearchResult(s, this);
         }
-        return child(reader, s.cursor()).searchLeaf(trans, target);
+        
+        if(target == SearchTarget.LOWEST){
+            return findLowestLeafMatch(trans, s.cursor());
+        }
+        
+        if(target == SearchTarget.HIGHEST){
+            return findHighestLeafMatch(trans, s.cursor());
+        }
+        
+        throw new IllegalStateException();
+        
     }
     
+    private BTreeNodeSearchResult findHighestLeafMatch(Transaction trans, int index) {
+        
+        // TODO: only working in write mode here, 
+        //       could maybe optimize later
+        
+        prepareWrite(trans);
+        
+        if(index < _count -1){
+            if(! compareInWriteModeEquals(index + 1)){
+                return createMatchingSearchResult(index);
+            }
+            return findHighestLeafMatch(trans, index + 1);
+        }
+        
+        BTreeNode node = nextNode();
+        if(node == null){
+            return createMatchingSearchResult(index);
+        }
+        
+        node.prepareWrite(trans);
+        
+        int newIndex = 0;
+        
+        if(! node.compareInWriteModeEquals(newIndex)){
+            return createMatchingSearchResult(index);
+        }
+        
+        return node.findHighestLeafMatch(trans, newIndex);
+    }
+
+    private BTreeNodeSearchResult findLowestLeafMatch (Transaction trans, int index){
+        
+        // TODO: only working in write mode here, 
+        //       could maybe optimize later
+        
+        prepareWrite(trans);
+        
+        if(index > 0){
+            
+            if(! compareInWriteModeEquals(index - 1)){
+                return createMatchingSearchResult(index);
+            }
+            return findLowestLeafMatch(trans, index - 1);
+        }
+        
+        BTreeNode node = previousNode();
+        if(node == null){
+            return createMatchingSearchResult(index);
+        }
+        
+        int newIndex = node.count() - 1;
+        
+        node.prepareWrite(trans);
+        
+        if(! node.compareInWriteModeEquals(newIndex)){
+            return createMatchingSearchResult(index);
+        }
+        
+        return node.findLowestLeafMatch(trans, newIndex);
+    }
+
+    private boolean compareInWriteModeEquals(int index) {
+        return compareInWriteMode(index) == 0;
+    }
+
+    private BTreeNodeSearchResult createMatchingSearchResult(int index) {
+        return new BTreeNodeSearchResult(this, index, true, false);
+    }
     
     private boolean canWrite(){
         return _keys != null;

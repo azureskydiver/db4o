@@ -96,7 +96,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
     
     public BTreeRange search(Transaction trans, Object key) {
-        return search(trans, key, trans);
+        return search(trans, key, null);
     }
     
     public BTreeRange search(Transaction trans, Object key, Object value) {
