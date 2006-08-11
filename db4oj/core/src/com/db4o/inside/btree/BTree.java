@@ -12,7 +12,7 @@ import com.db4o.inside.ix.*;
 public class BTree extends YapMeta implements TransactionParticipant {
     
     /** temporary variable for value and search coding */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     private static final byte BTREE_VERSION = (byte)1;
     
