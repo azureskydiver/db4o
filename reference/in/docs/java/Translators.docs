@@ -11,24 +11,24 @@ of these approaches.
 
 Let's reuse our example from the previous chapter.
 
-.s com.db4odoc.f1.evaluation.NotStorable ..
+.s com.db4odoc.f1.evaluations.NotStorable ..
 
 We'll be using this code to store and retrieve and instance of this ._
 class with different configuration settings:
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#tryStoreAndRetrieve -run +{} ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#tryStoreAndRetrieve -run +{} ..
 
 .3 Using the constructor ..
 
 .3 Bypassing the constructor ..
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#tryStoreWithoutCallConstructors ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#tryStoreWithoutCallConstructors ..
 
 In this case our object seems to be nicely stored and retrieved, however, ._
 it has forgotten about its length, since db4o doesn't store transient ._
 members and the constructor code that sets it is not executed.
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#tryStoreWithCallConstructors ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#tryStoreWithCallConstructors ..
 
 At storage time, db4o tests the only available constructor with null arguments and ._
 runs into a NullPointerException, so it refuses to accept our object.
@@ -95,11 +95,11 @@ values into an Object array to be stored and retrieve it from there ._
 again. Note that we don't have to do any work in onActivate(), since ._
 object reinstantiation is already fully completed in onInstantiate().
 
-.s com.db4odoc.f1.evaluation.NotStorableTranslator ..
+.s com.db4odoc.f1.evaluations.NotStorableTranslator ..
 
 Let's try it out:
 
-.s com.db4odoc.f1.evaluation.TranslatorExample#storeWithTranslator ..
+.s com.db4odoc.f1.evaluations.TranslatorExample#storeWithTranslator ..
 
 .2 Conclusion ..
 
@@ -112,4 +112,4 @@ take care of instantiating the application object itself.
 
 .2 Full source ..
 
-.s com.db4odoc.f1.evaluation.TranslatorExample ..
+.s com.db4odoc.f1.evaluations.TranslatorExample ..

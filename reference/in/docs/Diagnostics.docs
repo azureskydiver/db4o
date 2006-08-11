@@ -175,7 +175,7 @@ In our example class Car is configured to be saved and retrieved with ._
 CarTranslator class. CarTranslator saves only car model information ._
 appending it with the production date. 
 
-.c package com.db4odoc.f1.evaluation;
+.c package com.db4odoc.f1.evaluations;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -231,7 +231,7 @@ only cars, produced in year 2002:
 
 .c package com.db4odoc.f1.diagnostics;
 
-import com.db4odoc.f1.evaluation.*;
+import com.db4odoc.f1.evaluations.*;
 import com.db4o.query.Predicate;
 
 public class NewCarModel  extends Predicate {
@@ -250,7 +250,7 @@ We will use simple evaluation to check our cars:
 .c package com.db4odoc.f1.diagnostics;
 
 import com.db4o.query.*;
-import com.db4odoc.f1.evaluation.*;
+import com.db4odoc.f1.evaluations.*;
 
 public class CarEvaluation implements Evaluation {
 	public void evaluate(Candidate candidate)

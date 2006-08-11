@@ -8,7 +8,7 @@ import com.db4o.ObjectSet;
 import com.db4o.query.Query;
 import com.db4o.diagnostic.*;
 import com.db4odoc.f1.Util;
-import com.db4odoc.f1.evaluation.*;
+import com.db4odoc.f1.evaluations.*;
 
 
 public class DiagnosticExample extends Util {
@@ -21,6 +21,7 @@ public class DiagnosticExample extends Util {
         }
         finally {
             db.close();
+            Db4o.configure().diagnostic().removeAllListeners();
         }
     }
     
@@ -40,6 +41,7 @@ public class DiagnosticExample extends Util {
         }
         finally {
             db.close();
+            Db4o.configure().diagnostic().removeAllListeners();
         }
     }
 	
@@ -49,7 +51,6 @@ public class DiagnosticExample extends Util {
     	listResult(result);
     }
     public static void testIndexDiagnostics() {
-    	Db4o.configure().diagnostic().removeAllListeners();
     	Db4o.configure().diagnostic().addListener(new IndexDiagListener());
     	Db4o.configure().updateDepth(3);
         new File(Util.YAPFILENAME).delete();
@@ -69,6 +70,7 @@ public class DiagnosticExample extends Util {
         }
         finally {
             db.close();
+            Db4o.configure().diagnostic().removeAllListeners();
         }
     }
      
@@ -102,7 +104,6 @@ public class DiagnosticExample extends Util {
 	}
 
     public static void retrieveTranslatedCars() {
-    	Db4o.configure().diagnostic().removeAllListeners();
     	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
     	Db4o.configure().exceptionsOnNotStorable(true);
     	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
@@ -113,11 +114,11 @@ public class DiagnosticExample extends Util {
 			listResult(result);
 		} finally {
 			db.close();
+			Db4o.configure().diagnostic().removeAllListeners();
 		}
 	}
 
     public static void retrieveTranslatedCarsNQ() {
-    	Db4o.configure().diagnostic().removeAllListeners();
     	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
     	Db4o.configure().exceptionsOnNotStorable(true);
     	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
@@ -128,12 +129,12 @@ public class DiagnosticExample extends Util {
 			listResult(result);
 		} finally {
 			db.close();
+			Db4o.configure().diagnostic().removeAllListeners();
 		}
 	}
     
     public static void retrieveTranslatedCarsNQUnopt() {
     	Db4o.configure().optimizeNativeQueries(false);
-    	Db4o.configure().diagnostic().removeAllListeners();
     	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
     	Db4o.configure().exceptionsOnNotStorable(true);
     	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
@@ -145,11 +146,11 @@ public class DiagnosticExample extends Util {
 		} finally {
 			Db4o.configure().optimizeNativeQueries(true);
 			db.close();
+			Db4o.configure().diagnostic().removeAllListeners();
 		}
 	}
 
     public static void retrieveTranslatedCarsSODAEv() {
-    	Db4o.configure().diagnostic().removeAllListeners();
     	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
     	Db4o.configure().exceptionsOnNotStorable(true);
     	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
@@ -163,6 +164,8 @@ public class DiagnosticExample extends Util {
 			listResult(result);
 		} finally {
 			db.close();
+			Db4o.configure().diagnostic().removeAllListeners();
+			Db4o.configure().objectClass(Car.class).translate(null);
 		}
 	}
 }
