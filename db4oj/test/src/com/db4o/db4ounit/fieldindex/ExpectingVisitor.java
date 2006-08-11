@@ -20,13 +20,17 @@ public class ExpectingVisitor implements Visitor4{
     public void visit(Object obj) {
         for (int i = 0; i < _expected.length; i++) {
             if(obj.equals(_expected[i])){
-                // System.out.println("Expected OK: " + obj.toString());
+                ods("Expected OK: " + obj.toString());
                 _expected[i] = FOUND;
                 return;
             }
         }
         _unexpected = true;
-        // System.out.println("Unexpected: " + obj.toString());
+        ods("Unexpected: " + obj.toString());
+    }
+    
+    private static void ods(String message) {
+    	System.out.println(message);
     }
     
     public boolean allAsExpected(){

@@ -17,10 +17,6 @@ public class BTreeAdd extends BTreePatch{
         return _object;
     }
     
-    protected Object committed(BTree btree){
-        return _object;
-    }
-    
     protected Object rolledBack(BTree btree){
         btree.notifyRemoveListener(_object);
         return No4.INSTANCE;
@@ -30,4 +26,28 @@ public class BTreeAdd extends BTreePatch{
         return "+B " + super.toString();
     }
 
+	protected Object commit(Transaction trans, BTree btree) {
+	    if(_transaction == trans){
+	    	return _object;
+	    }
+	    return this;
+	}
+
+	public BTreePatch forTransaction(Transaction trans) {
+	    if(_transaction == trans){
+	        return this;
+	    }
+	    return null;
+	}
+
+	public Object rollback(Transaction trans, BTree btree) {
+	    if(_transaction == trans){
+	        return rolledBack(btree);
+	    }
+	    return this;
+	}
+
+	public final boolean isAdd(Transaction trans) {
+		return _transaction == trans;
+	}
 }

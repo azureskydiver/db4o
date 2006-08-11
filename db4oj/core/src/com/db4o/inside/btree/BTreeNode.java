@@ -110,11 +110,16 @@ public class BTreeNode extends YapMeta{
             
             prepareWrite(trans);
             
+            if (wasRemoved(trans, s)) {
+            	cancelRemoval(trans, s.cursor());
+            	return null;
+            }
+            
             if(s.count() > 0  && ! s.beforeFirst()){
                 s.moveForward();
             }
             
-            insert(s.cursor());
+            prepareInsert(s.cursor());
             _keys[s.cursor()] = new BTreeAdd(trans, keyHandler().current());
             if(handlesValues()){
                 _values[s.cursor()] = valueHandler().current();
@@ -131,7 +136,7 @@ public class BTreeNode extends YapMeta{
             _keys[s.cursor()] = childNode._keys[0];
             if(childNode != childNodeOrSplit){
                 int splitCursor = s.cursor() + 1;
-                insert(splitCursor);
+                prepareInsert(splitCursor);
                 _keys[splitCursor] = childNodeOrSplit._keys[0];
                 _children[splitCursor] = childNodeOrSplit;
             }
@@ -147,6 +152,19 @@ public class BTreeNode extends YapMeta{
         
         return null;
     }
+
+	private void cancelRemoval(Transaction trans, int index) {
+		final BTreeRemove patch = (BTreeRemove)keyPatch(index);
+		_keys[index] = patch.removeFor(trans);
+	}
+
+	private boolean wasRemoved(Transaction trans, Searcher s) {
+		if (!s.foundMatch()) { 
+			return false;
+		}
+		final BTreePatch patch = keyPatch(s.cursor());            	
+    	return patch != null && patch.isRemove(trans);
+	}
     
     BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
         YapReader reader = prepareRead(trans);
@@ -411,9 +429,7 @@ public class BTreeNode extends YapMeta{
             if(childID(i) == id){
                 _keys[i] = child._keys[0];
                 _children[i] = child;
-                if(i == 0){
-                    tellParentAboutChangedKey(trans);
-                }
+                keyChanged(trans, i);
                 return;
             }
         }
@@ -505,11 +521,12 @@ public class BTreeNode extends YapMeta{
         return _btree._valueHandler != Null.INSTANCE; 
     }
     
-    private void insert(int pos){
-        if(pos < 0){
-            pos = 0;
+    private void prepareInsert(int pos){
+        if (pos < 0){
+        	// FIXME: remove this check
+            throw new IllegalArgumentException("pos");
         }
-        if(pos > _count -1){
+        if(pos > lastIndex()){
             _count ++;
             return;
         }
@@ -697,10 +714,6 @@ public class BTreeNode extends YapMeta{
         YapReader reader = prepareRead(trans);
         
         Searcher s = search(trans, reader, SearchTarget.LOWEST);
-        if(s.cursor() < 0){
-            return;
-        }
-        
         if(_isLeaf){
             
             if(! s.foundMatch()){
@@ -721,24 +734,19 @@ public class BTreeNode extends YapMeta{
         
         // no patch, no problem, can remove
         if(patch == null){
-            _keys[index] = new BTreeRemove(trans, keyHandler().current());
-            if(index == 0){
-                tellParentAboutChangedKey(trans);
-            }
+            _keys[index] = newRemovePatch(trans);
+            keyChanged(trans, index);
             return;
         }
         
-        // there is a patch but not a removal patch for this transaction
-        if(! patch.isRemove(trans)){
-            _keys[index] = patch.append(new BTreeRemove(trans, keyHandler().current()));
-            if(index == 0){
-                tellParentAboutChangedKey(trans);
-            }
+		// there is a patch but not a removal patch for this transaction
+        if(patch.isAdd(trans)){
+        	cancelAdding(trans, index);
             return;
         }
         
         // now we try if removal is OK for the next element in this node
-        if(index < _count - 1){
+        if(index != lastIndex()){
             if(compareInWriteMode(index + 1 ) != 0){
                 return;
             }
@@ -760,6 +768,26 @@ public class BTreeNode extends YapMeta{
         
         node.removeFromLeaf(trans, 0);
     }
+
+	private void cancelAdding(Transaction trans, int index) {
+		_btree.notifyRemoveListener(keyPatch(index).getObject(trans));
+		remove(index);
+		keyChanged(trans, index);
+	}
+
+	private int lastIndex() {
+		return _count - 1;
+	}
+
+	private BTreeRemove newRemovePatch(Transaction trans) {
+		return new BTreeRemove(trans, keyHandler().current());
+	}
+
+	private void keyChanged(Transaction trans, int index) {
+		if(index == 0){
+		    tellParentAboutChangedKey(trans);
+		}
+	}
     
     
     void rollback(Transaction trans){
