@@ -22,7 +22,7 @@ public interface DatabaseInspector {
      * @return a list of all the different class types stored
      * todo: Is MetaClass the correct thing to return here?  or maybe something new like a ClassMetaData
      */
-    List<MetaClass> getClassesStored();
+    List getClassesStored();
 
     /**
      *
@@ -89,13 +89,13 @@ public interface DatabaseInspector {
      *
      * @return a collection of IndexStats representing <b>all</b> indexes in the database
      */
-    List<IndexStats> getIndexStats();
+    List getIndexStats();
 
     /**
      *
      * @return a collection of <b>all</b> replication records for this database
      */
-    List<ReplicationRecord> getReplicationRecords();
+    List getReplicationRecords();
 
 
     
