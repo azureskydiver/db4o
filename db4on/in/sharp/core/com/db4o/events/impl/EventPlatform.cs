@@ -9,19 +9,19 @@ namespace com.db4o.events.impl
 	{
 		public static void TriggerQueryEvent(QueryEventHandler e, Query q)
 		{
-			e.Invoke(q, new QueryEventArgs(q));
+			e(q, new QueryEventArgs(q));
 		}
 
 		public static bool TriggerCancellableObjectEventArgs(CancellableObjectEventHandler e, object o)
 		{
 			CancellableObjectEventArgs coea = new CancellableObjectEventArgs(o);
-			e.Invoke(o, coea);
+			e(o, coea);
 			return !coea.IsCancelled();
 		}
 
 		public static void TriggerObjectEvent(ObjectEventHandler e, object o)
 		{
-			e.Invoke(o, new ObjectEventArgs(o));
+			e(o, new ObjectEventArgs(o));
 		}
 	}
 }
