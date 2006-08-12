@@ -120,7 +120,7 @@ public class BTreeNode extends YapMeta{
             }
             
             prepareInsert(s.cursor());
-            _keys[s.cursor()] = new BTreeAdd(trans, keyHandler().current());
+            _keys[s.cursor()] = newAddPatch(trans);
             if(handlesValues()){
                 _values[s.cursor()] = valueHandler().current();
             }
@@ -153,17 +153,24 @@ public class BTreeNode extends YapMeta{
         return null;
     }
 
+    private BTreeAdd newAddPatch(Transaction trans) {
+        _btree.sizeChanged(trans, 1);
+        return new BTreeAdd(trans, keyHandler().current());
+    }
+
 	private void cancelRemoval(Transaction trans, int index) {
 		final BTreeRemove patch = (BTreeRemove)keyPatch(index);
-		_keys[index] = patch.removeFor(trans);
+        BTreeRemove nextPatch = patch.removeFor(trans);
+        _keys[index] = nextPatch == null ? patch.getObject() : nextPatch;
+        _btree.sizeChanged(trans, 1);
 	}
 
 	private boolean wasRemoved(Transaction trans, Searcher s) {
 		if (!s.foundMatch()) { 
 			return false;
 		}
-		final BTreePatch patch = keyPatch(s.cursor());            	
-    	return patch != null && patch.isRemove(trans);
+        BTreePatch patch = keyPatch(trans, s.cursor());
+        return patch != null && patch.isRemove();
 	}
     
     BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
@@ -448,11 +455,8 @@ public class BTreeNode extends YapMeta{
         }
         
         for (int i = 0; i < _count; i++) {
-            BTreePatch patch = keyPatch(i);
-            if(patch != null){
-                if(patch.forTransaction(trans) != null){
-                    return true;
-                }
+            if(keyPatch(trans, i) != null){
+                return true;
             }
         }
         
@@ -505,7 +509,7 @@ public class BTreeNode extends YapMeta{
             if(patch == null){
                 return _keys[ix];
             }
-            Object obj = patch.getObject(trans);
+            Object obj = patch.key(trans);
             if(obj != No4.INSTANCE){
                 return obj;
             }
@@ -561,7 +565,7 @@ public class BTreeNode extends YapMeta{
         if(patch == null){
             return _keys[index];
         }
-        return patch._object;
+        return patch.getObject();
     }
     
     private Object key(Transaction trans, YapReader reader, int index){
@@ -572,17 +576,24 @@ public class BTreeNode extends YapMeta{
         return keyHandler().readIndexEntry(reader);
     }
     
-    private Object key(Transaction trans, int index){
+    Object key(Transaction trans, int index){
         BTreePatch patch = keyPatch(index);
         if(patch == null){
             return _keys[index];
         }
-        return patch.getObject(trans);
+        return patch.key(trans);
     }
     
     private BTreePatch keyPatch(int index){
         if( _keys[index] instanceof BTreePatch){
             return (BTreePatch)_keys[index];
+        }
+        return null;
+    }
+    
+    private BTreePatch keyPatch(Transaction trans, int index){
+        if( _keys[index] instanceof BTreePatch){
+            return ((BTreePatch)_keys[index]).forTransaction(trans);
         }
         return null;
     }
@@ -739,10 +750,19 @@ public class BTreeNode extends YapMeta{
             return;
         }
         
-		// there is a patch but not a removal patch for this transaction
-        if(patch.isAdd(trans)){
-        	cancelAdding(trans, index);
-            return;
+        BTreePatch transPatch = patch.forTransaction(trans);
+        if(transPatch != null){
+            if(transPatch.isAdd()){
+                cancelAdding(trans, index);
+                return;
+            }
+        }else{
+            // The patch is a removal for another transaction, 
+            // We need one for this transaction also.
+            if(patch.isRemove()){
+                ((BTreeRemove)patch).append(newRemovePatch(trans));
+                return;
+            }
         }
         
         // now we try if removal is OK for the next element in this node
@@ -770,9 +790,10 @@ public class BTreeNode extends YapMeta{
     }
 
 	private void cancelAdding(Transaction trans, int index) {
-		_btree.notifyRemoveListener(keyPatch(index).getObject(trans));
+		_btree.notifyRemoveListener(keyPatch(index).getObject());
 		remove(index);
 		keyChanged(trans, index);
+        _btree.sizeChanged(trans, -1);
 	}
 
 	private int lastIndex() {
@@ -780,6 +801,7 @@ public class BTreeNode extends YapMeta{
 	}
 
 	private BTreeRemove newRemovePatch(Transaction trans) {
+        _btree.sizeChanged(trans, -1);
 		return new BTreeRemove(trans, keyHandler().current());
 	}
 

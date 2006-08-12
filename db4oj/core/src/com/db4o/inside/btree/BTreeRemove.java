@@ -9,18 +9,14 @@ import com.db4o.foundation.*;
  */
 public class BTreeRemove extends BTreePatch {
 	
-	protected BTreeRemove _next;
+	private BTreeRemove _next;
 
     public BTreeRemove(Transaction transaction, Object obj) {
         super(transaction, obj);
     }
     
     protected Object committed(BTree btree){
-        btree.notifyRemoveListener(_object);
-        return No4.INSTANCE;
-    }
-    
-    protected Object getObject() {
+        btree.notifyRemoveListener(getObject());
         return No4.INSTANCE;
     }
     
@@ -28,7 +24,7 @@ public class BTreeRemove extends BTreePatch {
         return "-B " + super.toString();
     }
     
-    public BTreeRemove append(BTreeRemove patch){
+    public void append(BTreeRemove patch){
         if(_transaction == patch._transaction){
         	// don't allow two patches for the same transaction
             throw new IllegalArgumentException();
@@ -36,9 +32,8 @@ public class BTreeRemove extends BTreePatch {
         if(_next == null){
             _next = patch;
         }else{
-            _next = _next.append(patch);
+            _next.append(patch);
         }
-        return this;
     }
 
 	protected Object commit(Transaction trans, BTree btree) {
@@ -59,9 +54,13 @@ public class BTreeRemove extends BTreePatch {
 	    return this;
 	}
 	
-	protected boolean hasNext() {
+	private boolean hasNext() {
 		return _next != null;
 	}
+    
+    public boolean isRemove() {
+        return true;
+    }
 
 	public BTreePatch forTransaction(Transaction trans) {
 	    if(_transaction == trans){
@@ -78,7 +77,7 @@ public class BTreeRemove extends BTreePatch {
 	        if(hasNext()){
 	            return _next;
 	        }
-	        return _object;
+	        return getObject();
 	    }
 	    if(hasNext()){
 	        Object newNext = _next.rollback(trans, btree);
@@ -91,23 +90,14 @@ public class BTreeRemove extends BTreePatch {
 	    return this;
 	}
 
-	public Object removeFor(Transaction trans) {
+	public BTreeRemove removeFor(Transaction trans) {
 		if (_transaction == trans) {
-			if (_next == null) {
-				return _object;
-			}
 			return _next;
 		}
 		if (_next == null) {
 			return this;
 		}
-		final Object newNext = _next.removeFor(trans);
-		if (newNext instanceof BTreeRemove){
-			_next = (BTreeRemove) newNext;
-		}else{
-			_next = null;
-		}
-		return this;
+		return _next.removeFor(trans);
 	}
     
 }

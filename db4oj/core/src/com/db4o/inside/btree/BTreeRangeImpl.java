@@ -40,7 +40,11 @@ public class BTreeRangeImpl implements BTreeRange {
                 oldNode = node;
             }
             
-            visitor.visit(node.key(cursor.index()));
+            Object obj = node.key(_trans, cursor.index());
+            
+            if(obj != No4.INSTANCE){
+                visitor.visit(obj);
+            }
             
             cursor = cursor.next();
         }

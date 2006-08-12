@@ -79,8 +79,6 @@ public class BTree extends YapMeta implements TransactionParticipant {
             _root.write(trans.systemTransaction());
             addNode(_root);
         }
-        setStateDirty();
-        sizeChanged(trans, 1);
     }
     
     public void remove(Transaction trans, Object key){
@@ -92,7 +90,6 @@ public class BTree extends YapMeta implements TransactionParticipant {
         _keyHandler.prepareComparison(key);
         _valueHandler.prepareComparison(value);
         _root.remove(trans);
-        sizeChanged(trans, -1);
     }
     
     public BTreeRange search(Transaction trans, Object key) {
@@ -301,7 +298,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
         _root.traverseValues(trans, visitor);
     }
     
-    private void sizeChanged(Transaction trans, int changeBy){
+    public void sizeChanged(Transaction trans, int changeBy){
         Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff == null){
             _sizesByTransaction.put(trans, new Integer(changeBy));

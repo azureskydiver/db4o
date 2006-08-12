@@ -12,7 +12,6 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 	
 	public void setUp() throws Exception {
 		super.setUp();
-		
 		_tree = createIntKeyBTree(0);
 	}
 
