@@ -13,12 +13,8 @@ public class BTreeAdd extends BTreePatch{
         super(transaction, obj);
     }
 
-    protected Object getObject() {
-        return _object;
-    }
-    
     protected Object rolledBack(BTree btree){
-        btree.notifyRemoveListener(_object);
+        btree.notifyRemoveListener(getObject());
         return No4.INSTANCE;
     }
     
@@ -28,7 +24,7 @@ public class BTreeAdd extends BTreePatch{
 
 	protected Object commit(Transaction trans, BTree btree) {
 	    if(_transaction == trans){
-	    	return _object;
+	    	return getObject();
 	    }
 	    return this;
 	}
@@ -47,7 +43,8 @@ public class BTreeAdd extends BTreePatch{
 	    return this;
 	}
 
-	public final boolean isAdd(Transaction trans) {
-		return _transaction == trans;
-	}
+    public boolean isAdd() {
+        return true;
+    }
+
 }

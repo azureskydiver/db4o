@@ -9,7 +9,7 @@ public abstract class BTreePatch {
     
     protected final Transaction _transaction;
     
-    protected final Object _object;
+    private final Object _object;
 
     public BTreePatch(Transaction transaction, Object obj) {
         _transaction = transaction;
@@ -17,26 +17,16 @@ public abstract class BTreePatch {
     }    
     
     protected abstract Object commit(Transaction trans, BTree btree);
-    
-    public boolean isRemove(Transaction trans) {
-        BTreePatch patch = forTransaction(trans);
-        if(patch == null){
-            return false;
-        }
-        return patch instanceof BTreeRemove;
-    }    
-    
+
+    public boolean isRemove() {
+        return false;
+    }
+
     public abstract BTreePatch forTransaction(Transaction trans);
     
-    public Object getObject(Transaction trans){
-        BTreePatch patch = forTransaction(trans);
-        if(patch == null){
-            return No4.INSTANCE;
-        }
-        return patch.getObject();
+    public Object getObject() {
+        return _object;
     }
-    
-    protected abstract Object getObject();
     
     public abstract Object rollback(Transaction trans, BTree btree);
     
@@ -46,8 +36,22 @@ public abstract class BTreePatch {
         }
         return _object.toString();
     }
+    
+    public boolean isAdd() {
+        return false;
+    }
 
-	public boolean isAdd(Transaction trans) {
-		return false;
-	}
+    public Object key(Transaction trans){
+        BTreePatch patch = forTransaction(trans);
+        if(patch != null){
+            if(patch.isAdd()){
+                return patch.getObject();
+            }
+        }else{
+            if(isRemove()){
+                return getObject();
+            }
+        }
+        return No4.INSTANCE;
+    }
 }
