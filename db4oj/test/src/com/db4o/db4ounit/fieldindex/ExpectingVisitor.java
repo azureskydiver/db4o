@@ -7,11 +7,14 @@ import com.db4o.foundation.*;
 
 public class ExpectingVisitor implements Visitor4{
     
+    private static final boolean DEBUG = false;
+    
     private final Object[] _expected;
     
     private boolean _unexpected;
     
-    private static final Object FOUND = new Object(); 
+    private static final Object FOUND = new Object();
+
     
     public ExpectingVisitor(Object[] results){
         _expected = results;
@@ -30,7 +33,9 @@ public class ExpectingVisitor implements Visitor4{
     }
     
     private static void ods(String message) {
-    	System.out.println(message);
+        if(DEBUG){
+            System.out.println(message);
+        }
     }
     
     public boolean allAsExpected(){

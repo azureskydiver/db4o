@@ -76,12 +76,10 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 	}
 	
 	private void assertEmpty(Transaction transaction) {
-		final ExpectingVisitor visitor = new ExpectingVisitor(new Object[0]);
-		_tree.traverseKeys(transaction, visitor);
-		Assert.isTrue(visitor.allAsExpected());
+		assertEmpty(transaction, _tree);
 	}
 
-	private void add(Transaction transaction, Integer element) {
+    private void add(Transaction transaction, Integer element) {
 		_tree.add(transaction, element);
 	}
 

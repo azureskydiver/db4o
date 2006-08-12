@@ -12,20 +12,17 @@ class BTreeNodeSearchResult {
     
     private final boolean _foundMatch;
     
-    private final boolean _afterLast;
-    
     private BTreePointer _pointer;
 
-    BTreeNodeSearchResult(BTreeNode node, int cursor, boolean foundMatch, boolean afterLast) {
+    BTreeNodeSearchResult(BTreeNode node, int cursor, boolean foundMatch) {
         if(node != null){
             _pointer = new BTreePointer(node, cursor);
         }
         _foundMatch = foundMatch;
-        _afterLast = afterLast;
     }
 
     BTreeNodeSearchResult(Searcher searcher, BTreeNode node) {
-        this(node,searcher.cursor(),searcher.foundMatch(), searcher.afterLast());
+        this(node,searcher.cursor(),searcher.foundMatch());
     }
     
     public BTreeRange createRangeTo(Transaction trans, BTreeNodeSearchResult end) {

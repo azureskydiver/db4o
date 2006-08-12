@@ -44,4 +44,11 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	    Assert.areEqual(keys.length, cursor[0]);
 	}
 
+    protected void assertEmpty(Transaction transaction, BTree tree) {
+        final ExpectingVisitor visitor = new ExpectingVisitor(new Object[0]);
+        tree.traverseKeys(transaction, visitor);
+    	Assert.isTrue(visitor.allAsExpected());
+        Assert.areEqual(0, tree.size(transaction));
+    }
+
 }

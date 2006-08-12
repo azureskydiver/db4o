@@ -60,4 +60,8 @@ public class BTreeRangeImpl implements BTreeRange {
         return _end.equals(cursor);
     }
 
+    public BTreePointer first() {
+        return _start;
+    }
+
 }

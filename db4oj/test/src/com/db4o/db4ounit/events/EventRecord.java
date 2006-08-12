@@ -9,8 +9,8 @@ public class EventRecord {
 
 	public Object args;
 
-	public EventRecord(Event4 e, Object query) {
-		this.e = e;
-		this.args = query;
+	public EventRecord(Event4 e_, Object args_) {
+		e = e_;
+		args = args_;
 	}
 }

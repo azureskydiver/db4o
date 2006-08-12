@@ -103,14 +103,14 @@ public class SearcherTestCase implements TestCase, TestLifeCycle{
 
     private void assertMatch(int[] values) {
         for (int i = 0; i < MATCHES.length; i++) {
-            int res = search(values, MATCHES[i]);
+            search(values, MATCHES[i]);
             Assert.isTrue(_searcher.foundMatch());
         }
     }
 
     private void assertNoMatch(int[] values) {
         for (int i = 0; i < NON_MATCHES.length; i++) {
-            int res = search(values, NON_MATCHES[i]);
+            search(values, NON_MATCHES[i]);
             Assert.isFalse(_searcher.foundMatch());
         }
     }

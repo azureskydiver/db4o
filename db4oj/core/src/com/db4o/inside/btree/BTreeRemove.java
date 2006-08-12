@@ -21,7 +21,7 @@ public class BTreeRemove extends BTreePatch {
     }
     
     public String toString() {
-        return "-B " + super.toString();
+        return "(-) " + super.toString();
     }
     
     public void append(BTreeRemove patch){
