@@ -19,7 +19,7 @@ public class BTreeAdd extends BTreePatch{
     }
     
     public String toString() {
-        return "+B " + super.toString();
+        return "(+) " + super.toString();
     }
 
 	protected Object commit(Transaction trans, BTree btree) {

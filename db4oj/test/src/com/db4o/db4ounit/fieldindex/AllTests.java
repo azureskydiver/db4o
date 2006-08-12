@@ -12,12 +12,12 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-            BTreeTestCase.class,
-            BTreeSearchTestCase.class,
-//                    FieldIndexTestCase.class,
-            SearcherTestCase.class,
-            SearcherLowestHighestTestCase.class,
             BTreeAddRemoveTestCase.class,
+            BTreeSearchTestCase.class,
+            BTreeTestCase.class,
+//                    FieldIndexTestCase.class,
+            SearcherLowestHighestTestCase.class,
+            SearcherTestCase.class,
 		};
     }
 }

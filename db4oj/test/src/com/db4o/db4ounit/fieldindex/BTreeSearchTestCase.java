@@ -9,6 +9,10 @@ import db4ounit.*;
 
 public class BTreeSearchTestCase extends BTreeTestCaseBase{
     
+    public static void main(String[] arguments) {
+        new BTreeSearchTestCase().runSolo();
+    }
+    
     public void test() throws Exception{
         cycleIntKeys(new int[] { 3, 5, 5, 5, 7, 10, 11, 12, 12, 14});
         cycleIntKeys(new int[] { 3, 5, 5, 5, 5, 7, 10, 11, 12, 12, 14});
@@ -46,7 +50,11 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
             btree.remove(trans(), new Integer(values[i]));
         }
         
+        assertEmpty(trans(), btree);
+        
         btree.commit(trans());
+        
+        assertEmpty(trans(), btree);
         
         return btree;
     }
@@ -82,10 +90,6 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
         return new ExpectingVisitor(createExpectedValues(values));
     }
 
-    private ExpectingVisitor createExpectingVisitor(int[] values) {
-        return new ExpectingVisitor(createExpectedValues(values));
-    }
-    
     private Object[] createExpectedValues(int[] values) {
         Object[] ret = new Object[values.length];
         for (int i = 0; i < values.length; i++) {

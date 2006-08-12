@@ -21,9 +21,9 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 		public Item() {
 		}
 		
-		public Item(String id, Item child) {
-			this.id = id;
-			this.child = child;
+		public Item(String id_, Item child_) {
+			id = id_;
+			child = child_;
 		}
 	}
 	

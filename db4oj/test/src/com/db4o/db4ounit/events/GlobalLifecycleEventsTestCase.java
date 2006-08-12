@@ -16,8 +16,8 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 
 		public int id;
 
-		public Item(int id) {
-			this.id = id;
+		public Item(int id_) {
+			id = id_;
 		}
 	}
 	

@@ -104,7 +104,7 @@ public class BTreeNode extends YapMeta{
         
         YapReader reader = prepareRead(trans);
         
-        Searcher s = search(trans, reader);
+        Searcher s = search(reader);
         
         if(_isLeaf){
             
@@ -175,7 +175,7 @@ public class BTreeNode extends YapMeta{
     
     BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
         YapReader reader = prepareRead(trans);
-        Searcher s = search(trans, reader, target);
+        Searcher s = search(reader, target);
         if(! _isLeaf){
             return child(reader, s.cursor()).searchLeaf(trans, target);
         }
@@ -185,7 +185,11 @@ public class BTreeNode extends YapMeta{
         }
         
         if(target == SearchTarget.LOWEST){
-            return findLowestLeafMatch(trans, s.cursor());
+            BTreeNodeSearchResult res = findLowestLeafMatch(trans, s.cursor() - 1);
+            if(res != null){
+                return res;
+            }
+            return createMatchingSearchResult(s.cursor());
         }
         
         throw new IllegalStateException();
@@ -199,28 +203,32 @@ public class BTreeNode extends YapMeta{
         
         prepareWrite(trans);
         
-        if(index > 0){
-            
-            if(! compareInWriteModeEquals(index - 1)){
+        if(index >= 0){
+            if(! compareInWriteModeEquals(index)){
+                return null;
+            }
+            if(index > 0){
+                BTreeNodeSearchResult res = findLowestLeafMatch(trans, index - 1);
+                if(res != null){
+                    return res;
+                }
                 return createMatchingSearchResult(index);
             }
-            return findLowestLeafMatch(trans, index - 1);
         }
         
         BTreeNode node = previousNode();
-        if(node == null){
-            return createMatchingSearchResult(index);
+        if(node != null){
+            BTreeNodeSearchResult res = node.findLowestLeafMatch(trans, node.lastIndex());
+            if(res != null){
+                return res;
+            }
         }
         
-        int newIndex = node.count() - 1;
-        
-        node.prepareWrite(trans);
-        
-        if(! node.compareInWriteModeEquals(newIndex)){
-            return createMatchingSearchResult(index);
+        if(index < 0){
+            return null;
         }
         
-        return node.findLowestLeafMatch(trans, newIndex);
+        return  createMatchingSearchResult(index);
     }
 
     private boolean compareInWriteModeEquals(int index) {
@@ -228,7 +236,7 @@ public class BTreeNode extends YapMeta{
     }
 
     private BTreeNodeSearchResult createMatchingSearchResult(int index) {
-        return new BTreeNodeSearchResult(this, index, true, false);
+        return new BTreeNodeSearchResult(this, index, true);
     }
     
     private boolean canWrite(){
@@ -721,25 +729,12 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    public void remove(Transaction trans){
-        YapReader reader = prepareRead(trans);
-        
-        Searcher s = search(trans, reader, SearchTarget.LOWEST);
-        if(_isLeaf){
-            
-            if(! s.foundMatch()){
-                return;
-            }
-            
-            prepareWrite(trans);
-            removeFromLeaf(trans, s.cursor());
-            return;
+    public void remove(Transaction trans, int index){
+        if(!_isLeaf){
+            throw new IllegalStateException();
         }
             
-        child(reader, s.cursor()).remove(trans);
-    }
-    
-    private void removeFromLeaf(Transaction trans, int index){
+        prepareWrite(trans);
         
         BTreePatch patch = keyPatch(index);
         
@@ -770,7 +765,7 @@ public class BTreeNode extends YapMeta{
             if(compareInWriteMode(index + 1 ) != 0){
                 return;
             }
-            removeFromLeaf(trans, index + 1);
+            remove(trans, index + 1);
             return;
         }
         
@@ -786,7 +781,7 @@ public class BTreeNode extends YapMeta{
             return;
         }
         
-        node.removeFromLeaf(trans, 0);
+        node.remove(trans, 0);
     }
 
 	private void cancelAdding(Transaction trans, int index) {
@@ -859,11 +854,11 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    private Searcher search(Transaction trans, YapReader reader){
-        return search(trans, reader, SearchTarget.ANY);
+    private Searcher search(YapReader reader){
+        return search(reader, SearchTarget.ANY);
     }
     
-    private Searcher search(Transaction trans, YapReader reader, SearchTarget target){
+    private Searcher search(YapReader reader, SearchTarget target){
         Searcher s = new Searcher(target, _count);
         while(s.incomplete()){
             compare(s, reader);
