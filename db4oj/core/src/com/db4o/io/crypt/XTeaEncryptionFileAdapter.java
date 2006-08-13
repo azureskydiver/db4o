@@ -57,6 +57,8 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 
 	private XTEA.IterationSpec _iterat;
 
+    private static final boolean DEBUG = false;
+
 	/**
 	 * 
 	 * creates a new XTeaEncryptionFileAdapter instance using the given String as
@@ -175,13 +177,13 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 			seek(_pos - prePad);
 		}
 		int readResult = _adapter.read(pb);
-		if (Deploy.debug) {
+		if (DEBUG) {
 			log("3. before dencrypt/read->", pb);
 		}
 		_xtea.decrypt(pb);
 
 		System.arraycopy(pb, prePad, bytes, 0, length);
-		if (Deploy.debug) {
+		if (DEBUG) {
 			log("4. after dencrypt/read->", pb);
 		}
 		seek(origPos + length);
@@ -232,12 +234,12 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 			// pb[i] = (byte) (Math.random());
 			// }
 		}
-		if (Deploy.debug) {
+		if (DEBUG) {
 			log("1. before encrypt/write->", pb);
 		}
 
 		_xtea.encrypt(pb);
-		if (Deploy.debug) {
+		if (DEBUG) {
 			log("2. after encrypt/write->", pb);
 		}
 		_adapter.write(pb, pb.length);
