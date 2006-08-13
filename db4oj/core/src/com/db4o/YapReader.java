@@ -12,7 +12,7 @@ import com.db4o.foundation.*;
 public class YapReader {
 	
 	// for coding convenience, we allow objects to grab into the buffer
-	byte[] _buffer;
+	public byte[] _buffer;
 	public int _offset;
 
 	
@@ -126,15 +126,15 @@ public class YapReader {
     public final int readInt() {
         if (Deploy.debug) {
             return YInt.readInt(this);
-        } else {
+        }
             
-            // if (YapConst.INTEGER_BYTES == 4) {
+        // if (YapConst.INTEGER_BYTES == 4) {
                 
-                int o = (_offset += 4) - 1;
-                return (_buffer[o] & 255) | (_buffer[--o] & 255)
-                    << 8 | (_buffer[--o] & 255)
-                    << 16 | _buffer[--o]
-                    << 24;
+        int o = (_offset += 4) - 1;
+        return (_buffer[o] & 255) | (_buffer[--o] & 255)
+            << 8 | (_buffer[--o] & 255)
+            << 16 | _buffer[--o]
+            << 24;
                 
 //            } else {
 //            	int ret = 0;
@@ -144,8 +144,6 @@ public class YapReader {
 //                }
 //				return ret;
 //            }
-                
-        }
 		
     }
     
@@ -256,7 +254,7 @@ public class YapReader {
         writeInt(i.intValue());
     }
     
-    void writeShortString(Transaction trans, String a_string) {
+    public void writeShortString(Transaction trans, String a_string) {
         trans.stream().i_handlers.i_stringHandler.writeShort(a_string, this);
     }
     

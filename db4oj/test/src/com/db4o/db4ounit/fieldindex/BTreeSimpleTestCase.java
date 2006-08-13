@@ -9,9 +9,9 @@ import com.db4o.inside.btree.*;
 import db4ounit.*;
 
 
-public class BTreeTestCase extends BTreeTestCaseBase{
+public class BTreeSimpleTestCase extends BTreeTestCaseBase{
     
-    public BTreeTestCase(){
+    public BTreeSimpleTestCase(){
         super();
         
         _values = new int[_keys.length];
@@ -42,11 +42,6 @@ public class BTreeTestCase extends BTreeTestCaseBase{
         for (int i = 0; i < 5; i++) {
             btree = cycleIntKeysIntValues(btree);    
         }
-    }
-
-    public void testIntSearch(){
-        
-        
     }
     
     

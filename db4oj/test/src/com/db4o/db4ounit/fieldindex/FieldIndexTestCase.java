@@ -16,6 +16,9 @@ public class FieldIndexTestCase extends Db4oTestCase{
     
     private static final int[] IDS = new int[]{3,7,9,4};
 
+    public static void main(String[] arguments) {
+        new FieldIndexTestCase().runSolo();
+    }
     
     protected void configure() {
         Db4o.configure()
@@ -71,14 +74,9 @@ public class FieldIndexTestCase extends Db4oTestCase{
                     Assert.areEqual(expected, actual);
                 }
             });
-            
-            
             range.traverseKeys(visitor);
-            
             Assert.areEqual(1, visitor.count());
         }
-        
-        
     }
     
 }

@@ -7,7 +7,7 @@ package com.db4o;
  */
 public final class YapStringIOUnicode extends YapStringIO{
 	
-    int bytesPerChar(){
+    public int bytesPerChar(){
         return 2;
     }
     
@@ -54,7 +54,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 	    return new String(chars,0,len);
 	}
 	
-	int shortLength(String a_string){
+	public int shortLength(String a_string){
 		return (a_string.length() * 2)  + YapConst.YAPINT_LENGTH;
 	}
 	
