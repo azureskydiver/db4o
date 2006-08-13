@@ -9,7 +9,7 @@ public class YapStringIO {
     
     protected char[] chars = new char[0];
     
-    int bytesPerChar(){
+    public int bytesPerChar(){
         return 1;
     }
     
@@ -67,7 +67,7 @@ public class YapStringIO {
 	    return new String(chars,0,a_bytes.length);
 	}
 	
-	int shortLength(String a_string){
+	public int shortLength(String a_string){
 		return a_string.length() + YapConst.YAPINT_LENGTH;
 	}
 	

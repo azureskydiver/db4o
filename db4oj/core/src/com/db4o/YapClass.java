@@ -21,7 +21,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     public YapClass i_ancestor;
 
     Config4Class i_config;
-    int _metaClassID;
+    public int _metaClassID;
     
     public YapField[] i_fields;
     
@@ -38,7 +38,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     private ReflectClass _reflector;
     private boolean _isEnum;
-    boolean i_dontCallConstructors;
+    public boolean i_dontCallConstructors;
     
     private EventDispatcher _eventDispatcher;
     
@@ -319,7 +319,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
     
-    private void checkDb4oType() {
+    public void checkDb4oType() {
         ReflectClass claxx = classReflector();
         if (claxx == null){
             return;
@@ -420,7 +420,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return createConstructor(a_stream,claxx , a_name, true);
     }
 
-    private boolean createConstructor(YapStream a_stream, ReflectClass a_class, String a_name, boolean errMessages) {
+    public boolean createConstructor(YapStream a_stream, ReflectClass a_class, String a_name, boolean errMessages) {
         
         _reflector = a_class;
         
@@ -812,7 +812,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return false;
     }
 
-    ClassIndexStrategy index() {
+    public ClassIndexStrategy index() {
     	return _index;
     }    
     
@@ -1184,7 +1184,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    private String nameToWrite() {
+    public String nameToWrite() {
         if(i_config != null && i_config.writeAs() != null){
             return i_config.writeAs();
         }
@@ -1224,21 +1224,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public int ownLength() {
-        int len =
-            i_stream.stringIO().shortLength(nameToWrite())
-                + YapConst.OBJECT_LENGTH
-                + (YapConst.YAPINT_LENGTH * 2)
-                + (YapConst.YAPID_LENGTH);       
-
-        len += _index.ownLength();
-        
-        if (i_fields != null) {
-            for (int i = 0; i < i_fields.length; i++) {
-                len += i_fields[i].ownLength(i_stream);
-            }
-        }
-        
-        return len;
+        return MarshallerFamily.current()._class.marshalledLength(i_stream, this);
     }
     
 	public ReflectClass primitiveClassReflector(){
@@ -1250,8 +1236,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         // TODO: may want to add manual purge to Btree
         //       indexes here
-        
-        
     }
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
@@ -1292,27 +1276,26 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                         return yo.getObject();
                     }
                 }
-                    return new YapObject(id).read(
-                        trans,
-                        null,
-                        null,
-                        depth,
-                        YapConst.ADD_TO_ID_TREE, false);
                 
-            } else {
+                return new YapObject(id).read(
+                    trans,
+                    null,
+                    null,
+                    depth,
+                    YapConst.ADD_TO_ID_TREE, false);
+            } 
 
-                Object ret = stream.getByID2(trans, id);
+            Object ret = stream.getByID2(trans, id);
 
-                if (ret instanceof Db4oTypeImpl) {
-                    depth = ((Db4oTypeImpl)ret).adjustReadDepth(depth);
-                }
-
-                // this is OK for primitive YapAnys. They will not be added
-                // to the list, since they will not be found in the ID tree.
-                stream.stillToActivate(ret, depth);
-
-                return ret;
+            if (ret instanceof Db4oTypeImpl) {
+                depth = ((Db4oTypeImpl)ret).adjustReadDepth(depth);
             }
+
+            // this is OK for primitive YapAnys. They will not be added
+            // to the list, since they will not be found in the ID tree.
+            stream.stillToActivate(ret, depth);
+
+            return ret;
 
         } catch (Exception e) {
         }
@@ -1435,26 +1418,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return null;
     }
 
-    byte[] readName1(Transaction a_trans, YapReader a_reader) {
-        i_reader = a_reader;
+    byte[] readName1(Transaction trans, YapReader reader) {
+        i_reader = reader;
+        
         try {
-            if (Deploy.debug) {
-                a_reader.readBegin(getIdentifier());
-            }
-            
-            int len = a_reader.readInt();
-
-            len = len * a_trans.stream().stringIO().bytesPerChar();
-
-            i_nameBytes = new byte[len];
-            System.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, len);
-            
-            if(Deploy.csharp){
-                i_nameBytes  = Platform4.updateClassName(i_nameBytes);
-            }
-
-            a_reader.incrementOffset(len);
-            _metaClassID = a_reader.readInt();
+            i_nameBytes = MarshallerFamily.current()._class.readName(trans, this, reader);
 
             setStateUnread();
 
@@ -1531,36 +1499,21 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     void forceRead(){
-        if(i_reader != null && bitIsFalse(YapConst.READING)){
-	        bitTrue(YapConst.READING);
-	        i_ancestor = i_stream.getYapClass(i_reader.readInt());
-	        
-	        if(i_dontCallConstructors){
-		        // The logic further down checks the ancestor YapClass, whether
-	            // or not it is allowed, not to call constructors. The ancestor
-	            // YapClass may possibly have not been loaded yet.
-		        createConstructor(i_stream, classReflector(), i_name, true);
-	        }
-	        
-	        checkDb4oType();
-            
-            _index.read(i_reader, i_stream);
-            
-	        i_fields = new YapField[i_reader.readInt()];
-	        for (int i = 0; i < i_fields.length; i++) {
-	            i_fields[i] = new YapField(this);
-	            i_fields[i].setArrayPosition(i);
-	        }
-	        for (int i = 0; i < i_fields.length; i++) {
-	            i_fields[i] = i_fields[i].readThis(i_stream, i_reader);
-	        }
-	        for (int i = 0; i < i_fields.length; i++) {
-	            i_fields[i].loadHandler(i_stream);
-	        }
-	        i_nameBytes = null;
-	        i_reader = null;
-	        bitFalse(YapConst.READING);
+        if(i_reader == null || bitIsTrue(YapConst.READING)){
+            return;
         }
+        
+        bitTrue(YapConst.READING);
+        
+        MarshallerFamily.current()._class.read(i_stream, this, i_reader);
+        
+        for (int i = 0; i < i_fields.length; i++) {
+            i_fields[i].loadHandler(i_stream);
+        }
+        
+        i_nameBytes = null;
+        i_reader = null;
+        bitFalse(YapConst.READING);
     }	
 
     public boolean readArray(Object array, YapWriter reader) {
@@ -1840,24 +1793,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 		return new Integer(id);
     }
 
-    public final void writeThis(Transaction trans, YapReader a_writer) {
-        
-        a_writer.writeShortString(trans, nameToWrite());
-        a_writer.writeInt(_metaClassID);
-        
-        a_writer.writeIDOf(trans, i_ancestor);
-        
-        _index.writeId(a_writer, trans);
-        
-        if (i_fields == null) {
-            a_writer.writeInt(0);
-        } else {
-            a_writer.writeInt(i_fields.length);
-            for (int i = 0; i < i_fields.length; i++) {
-                i_fields[i].writeThis(trans, a_writer, this);
-            }
-        }
-        
+    public final void writeThis(Transaction trans, YapReader writer) {
+        MarshallerFamily.current()._class.write(trans, this, writer);
     }
 
     // Comparison_______________________

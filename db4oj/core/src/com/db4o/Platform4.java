@@ -622,7 +622,7 @@ public final class Platform4 {
         };
     }
     
-    static byte[] updateClassName(byte[] bytes) {
+    public static byte[] updateClassName(byte[] bytes) {
         // needed for .NET only: update assembly names if necessary
         return bytes;
     }

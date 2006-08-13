@@ -55,7 +55,7 @@ abstract class YapFieldVirtual extends YapField {
         return null;
     }
 
-    int ownLength(YapStream a_stream) {
+    public int ownLength(YapStream a_stream) {
         return a_stream.stringIO().shortLength(i_name);
     }
 
@@ -166,7 +166,7 @@ abstract class YapFieldVirtual extends YapField {
         instantiate1(a_trans, a_yapObject, a_reader);
     }
     
-    void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
+    public void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
         a_writer.writeShortString(trans,i_name);
     }
 }

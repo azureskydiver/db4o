@@ -40,10 +40,11 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         if (pos > 0) {
             i_ext = name.substring(pos);
             return name.substring(0, pos);
-        } else {
-            i_ext = "";
-            return name;
         }
+        
+        i_ext = "";
+        return name;
+        
     }
 
     private void copy(File from, File to) throws IOException {

@@ -54,7 +54,7 @@ public class YapField implements StoredField {
 
     static final YapField[]  EMPTY_ARRAY = new YapField[0];
 
-    YapField(YapClass a_yapClass) {
+    public YapField(YapClass a_yapClass) {
         i_yapClass = a_yapClass;
     }
 
@@ -695,7 +695,7 @@ public class YapField implements StoredField {
         addIndexEntry(writer, indexEntry);
     }
 
-    int ownLength(YapStream a_stream) {
+    public int ownLength(YapStream a_stream) {
         return a_stream.stringIO().shortLength(i_name) + 1
             + YapConst.YAPID_LENGTH;
     }
@@ -729,7 +729,7 @@ public class YapField implements StoredField {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }
 
-    YapField readThis(YapStream a_stream, YapReader a_reader) {
+    public YapField readThis(YapStream a_stream, YapReader a_reader) {
         try {
             i_name = StringMarshaller.readShort(a_stream, a_reader);
         } catch (CorruptionException ce) {
@@ -780,7 +780,7 @@ public class YapField implements StoredField {
         }
     }
 
-    void setArrayPosition(int a_index) {
+    public void setArrayPosition(int a_index) {
         i_arrayPosition = a_index;
     }
     
@@ -847,7 +847,7 @@ public class YapField implements StoredField {
         return a_handler;
     }
 
-    void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
+    public void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
         alive();
         a_writer.writeShortString(trans, i_name);
         if (i_handler instanceof YapClass) {

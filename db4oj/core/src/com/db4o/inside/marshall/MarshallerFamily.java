@@ -7,28 +7,36 @@ package com.db4o.inside.marshall;
  */
 public class MarshallerFamily {
 
-    public static final boolean            LEGACY           = false;
+    public static final boolean LEGACY = false;
     
-    public final ArrayMarshaller           _array;
+    public final ArrayMarshaller _array;
     
-    public final ObjectMarshaller           _object;
+    public final ClassMarshaller _class;
+    
+    public final FieldMarshaller _field;
+    
+    public final ObjectMarshaller _object;
 
-    public final PrimitiveMarshaller       _primitive;
+    public final PrimitiveMarshaller _primitive;
 
-    public final StringMarshaller          _string;
+    public final StringMarshaller _string;
     
-    public final UntypedMarshaller         _untyped;
+    public final UntypedMarshaller _untyped;
     
 
     private final static MarshallerFamily[] allVersions     = new MarshallerFamily[] {
         new MarshallerFamily(
             new ArrayMarshaller0(),
+            new ClassMarshaller(),
+            new FieldMarshaller(),
             new ObjectMarshaller0(), 
             new PrimitiveMarshaller0(),
             new StringMarshaller0(),
             new UntypedMarshaller0()),
         new MarshallerFamily(
             new ArrayMarshaller1(),
+            new ClassMarshaller(),
+            new FieldMarshaller(),
             new ObjectMarshaller1(), 
             new PrimitiveMarshaller1(),
             new StringMarshaller1(),
@@ -38,12 +46,16 @@ public class MarshallerFamily {
 
     private MarshallerFamily(
             ArrayMarshaller arrayMarshaller,
+            ClassMarshaller classMarshaller,
+            FieldMarshaller fieldMarshaller,
             ObjectMarshaller objectMarshaller,
             PrimitiveMarshaller primitiveMarshaller, 
             StringMarshaller stringMarshaller,
             UntypedMarshaller untypedMarshaller) {
         _array = arrayMarshaller;
         _array._family = this;
+        _class = classMarshaller;
+        _field = fieldMarshaller;
         _object = objectMarshaller;
         _object._family = this;
         _primitive = primitiveMarshaller;
