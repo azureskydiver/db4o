@@ -43,7 +43,6 @@ public class ReplicationTestSuite extends TestSuite {
 				CollectionHandlerImplTest.class,
 				ReplicationTraversalTest.class,
 				TablesCreatorTest.class,
-				GetByUUID.class,
 				DatabaseUnicityTest.class,
 		};
 	}

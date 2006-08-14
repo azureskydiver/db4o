@@ -11,6 +11,7 @@ public class AllTests extends Db4oTestCase implements TestSuiteBuilder {
 				fixture(),
 				new Class[] {
 					CollectionUuidTest.class,
+					GetByUUID.class
 				}).build();
 	}
 	

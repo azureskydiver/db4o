@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.db4o.Db4o;
 import com.db4o.ext.ExtObjectContainer;
-
 import db4ounit.Assert;
 import db4ounit.db4o.Db4oTestCase;
 

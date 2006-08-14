@@ -28,8 +28,8 @@ public class AllTestsReplication extends AllTests {
 	public void run() {
 		new File(AllTestsConfAll.FILE_SERVER).delete();
 
-		//Test.clientServer = false;
-		Test.clientServer = true;
+		//Test.clientServer = true;
+		Test.clientServer = false;
 		//Debug.longTimeOuts = true; //ReplicationFeaturesMain fails if set to false in C/S
 
 		Db4oReplicationTestUtil.configure();
@@ -43,9 +43,9 @@ public class AllTestsReplication extends AllTests {
 		// In C/S, you can't run all combinations together, it causes db4o connection to timeout.
 
 		db4o();
-		transients();
+//		transients();
 //		hsql();
-		db4otransient();
+//		db4otransient();
 //		hsqlDb4o();
 //		db4oHsql();
 
@@ -110,5 +110,6 @@ public class AllTestsReplication extends AllTests {
 	protected void addTestSuites(TestSuite suites) {
 		CLIENT_SERVER = false;
 		suites.add(new ReplicationTestSuite());
+		//suites.add(new com.db4o.test.other.AllTests() );
 	}
 }
