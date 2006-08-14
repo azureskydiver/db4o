@@ -7,6 +7,7 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.inside.replication.ReplicationProviderInside;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.replication.db4ounit.DrsFixture;
 
@@ -15,7 +16,7 @@ public class Db4oDrsFixture implements DrsFixture {
 
 	String _name;
 	ExtObjectContainer _db;
-	ReplicationProviderInside _provider;
+	TestableReplicationProviderInside _provider;
 	
 	public Db4oDrsFixture(String name) {
 		_name = name;
@@ -26,7 +27,7 @@ public class Db4oDrsFixture implements DrsFixture {
 		return "drs" + _name + ".yap";
 	}
 	
-	public ReplicationProviderInside provider() {
+	public TestableReplicationProviderInside provider() {
 		return _provider;
 	}
 
