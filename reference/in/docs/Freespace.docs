@@ -2,5 +2,122 @@
 .a Freespace ..
 .1 Freespace ..
 
-- the concept of freespace 
-- How to use the new index-based FreeSpacemanager 
+.2 Freespace concept ..
+
+Db4o Freespace manager is a special system that is responsible for allocating, discarding, ._
+merging of space for db4o usage and keeping database size at minimum.
+Db4o organizes its files into variable-sized slots with one degree of indirection (pointer slots). ._
+The physical address of a pointer slot corresponds to the internal ID of the respective object. ._
+On the lowest level the database file is seen as a uniform pool of bytes, from which slots of ._
+variable size can be allocated.
+
+Freespace manager keeps track of the portions of the database file that haven't been allocated ._
+for use and gets notified when slots are 'freed', i.e. returned back to the pool.  
+
+That is how it works:
+- All objects are written to the database file immediately, when they are stored or updated. 
+- Updated objects get a new or previously freed place in the database file. 
+- New or modified pointers to new or modified objects are stored in RAM. 
+- Old and deleted objects are marked as 'freespace'.
+
+When there is no free slot of the requested size, the file will grow. Adjacent free slots are merged on ._
+the fly, but to cluster free and used slots together it is necessary to explicitly invoke Defragment#run. ._
+So db4o file will never shrink, unless defragmented, but freed slots will be reused if possible. 
+In general case each persisted object occupies one slot. This slot contains metadata, ._
+values of direct primitive members and references to the slots of non-primitive members. What ._
+actually goes directly into a slot and what is external is not fixed and differs from version to version. ._
+However, there is one level of indirection: a reference to a non-primitive member will not refer to the ._
+member's slot directly, but rather to the 'pointer', which is an 8 byte slot containing the address in the ._
+file and the data length. The address of this pointer slot is the object's internal ID that is used for indexing, etc.
+
+For a simple example, assume we have
+.c class Car { String manufacturer; }
+class Driver { String name; Car car; }  ..
+and an object graph like this
+.c Driver: name='Barrichello', car={Car: manufacturer='BMW'} ..
+This will translate into four slots
+
+.i 1234: [4711, length(Driver)]
+4711: [Driver,'Barrichello',0815]
+0815: [4321, length(Car)]
+4321: [Car,'BMW'] ..
+
+with 1234 being the db4o ID of the driver and 0815 the ID of the car. Whenever the driver or the car object is ._
+updated, its actual slot may be stored somewhere else, but the pointer slot (the ID) will remain the ._
+same and keep track of the slot's address. (Please, note that this is a simplified example: actual ._
+implementation uses more slots and more sophisticated processing).
+
+.2 Two freespace systems ..
+
+db4o comes with two freespace systems, one holds all freespace information in RAM, the other uses the ._
+internal indexing architecture. You can configure db4o to use either of the two by calling ._
+.c Db4o.configure().freespace().UseRamSystem()  ..
+or
+.c Db4o.configure().freespace().UseIndexSystem() ..
+This call should be made before you open the database for the first time
+By default db4o uses  .b RAM freespace management system .. . The information about free slots is loaded into ._
+memory on opening a database file and discarded on closing it. This system is quite fast, but it has its downside:
+
+1)	Higher RAM usage during operation.
+2)	Loss of freespace upon abnormal termination. That is done for security reasons and freespace can be ._
+reclaimed using defragmentation.
+
+RAM-based freespace management is a good performance solution, but it can be insufficient for the systems ._
+with limited RAM resources and high probability of abnormal system termination (power failure on mobile devices).
+In order to meet the requirements of such environments new  .b index-based freespace management system .. ._
+was built. It solves the problems of RAM-based system:
+
+1)	RAM usage is kept at the minimum, as the system always operates from file.
+2)	No freespace is lost on abnormal system termination (database file won't grow unnecessarily).
+
+How it works?:
+-	The system uses existing index functionality to keep information about available freespace
+-	Index operates against the file, not against memory
+-	For every new write to the database file the system tries to find a freed slot, which is at least the size needed ._
+or greater, traversing freespace index
+-	When an object is updated or deleted, its 'old' slot is added to the freespace index
+-	This index system is transactional (no information is lost upon abnormal system termination)
+-	It stores diffs in a tree in RAM (index add/remove) together with nodes that represent parts or the whole index, as it exists in the file.
+
+Index-based freespace system can show poorer performance compared to RAM-based system, as file access ._
+for index traversal it comparatively slow. 
+However, index-based freespace system can be a reasonable solution for mobile devices, where file access ._
+is not much slower than RAM-access, and ACID transactions together with low memory consumption are ._
+most valuable factors.
+
+.2 Defragmentation role .. 
+
+So we have a reliable freespace manager, which will keep the database file size to the minimum. But do we ._
+still need to bother about defragmentation?
+
+Yes, we do for several reasons:
+
+- When the object is deleted, its space in the database is marked as 'freed'. But 8 bytes of its internal ID stay ._
+behind. Defragment cleans all this up by writing all objects to a completely new database file. The resulting ._
+file will be smaller and faster.
+- Within the database file quite a lot of space is used for transactional processing. Objects are always written ._
+to a new slot when they are modified, while their 'old' space is marked as free. Adjacent free slots will be ._
+merged on the fly, but free and used slots won't be clustered together unless defragmentation is run. 
+
+.2 How to use FreeSpacemanager ..
+There are several configuration options that can help you to tune up your freespacemanager to achieve the ._
+best performance and reliability of your system. All methods should be called before opening database files.
+
+Public interface FreespaceConfiguration provides methods to select freespace system  ._
+(  .i useIndexSystem() , useRamSystem() .. ) as described before. See API documentation for more information.
+
+Another FreespaceConfiguration method 
+.c void discardSmallerThan(int byteCount)  .. 
+configures the minimum size of free space slots in the database file that are to be reused. FreespaceManager ._
+keeps 2 lists of all 'freed' space that can be reused (sorted by address and by size). In some cases ._
+(numerous updates, deletes) these lists can grow large, causing extra RAM consumption and performance loss ._
+for maintenance. With this method you can specify an upper bound for the byte slot size to discard from ._
+Freespace manager list. It is not recommended to specify a value of byteCount > 100 as freespace re-usage ._
+will become less efficient and the database file will grow faster. However, if defragment can be run frequently, ._
+it will also reclaim lost space and decrease the database file to the minimum size. Therefore byteCount may be ._
+set to bigger value.
+By default byteCount = 0, which means that all 'freed' space is reused.
+
+Another configuration setting that can be used with frequently defragmented systems 
+.c Db4o.configure().automaticShutDown(false);  .. 
+Detailed description of this method can be found in  .l Tuning Tuning  ..  chapter of the Reference documentation.
