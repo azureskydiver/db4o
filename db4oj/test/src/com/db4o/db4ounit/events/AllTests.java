@@ -14,7 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			EventRegistryTestCase.class,
 			GlobalLifecycleEventsTestCase.class,
-			// FIXME SelectiveCascadingDeleteTestCase.class,
+			SelectiveCascadingDeleteTestCase.class,
 		};
 	}	
 }

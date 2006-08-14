@@ -38,14 +38,21 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 		db().set(a);
 	}
 	
-	public void testPreventMiddleObjectDeletion() {
+	public void testPreventMiddleObjectDeletion() throws Exception {
 		Assert.areEqual(3, queryItems().size());
 		
-		eventRegistry().deleted().addListener(new EventListener4() {
+		eventRegistry().deleting().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				ObjectEventArgs a = (ObjectEventArgs)args;
-				Item item = ((Item)a.object());
+				CancellableObjectEventArgs a = (CancellableObjectEventArgs)args;
+				Item item = ((Item)a.object());				
 				if (item.id.equals("B")) {
+					// cancel deletion of this item
+					a.cancel();
+					
+					// restart from the child
+					db().delete(item.child);
+					
+					// and disconnect it
 					item.child = null;
 					db().set(item);
 				}
@@ -56,9 +63,13 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 		Assert.isNotNull(a);		
 		db().delete(a);
 		
+		reopen();
+		
 		ObjectSet found = queryItems();
 		Assert.areEqual(1, found.size());
-		Assert.areEqual("B", ((Item)found.next()).id);
+		final Item remainingItem = ((Item)found.next());
+		Assert.areEqual("B", remainingItem.id);
+		Assert.isNull(remainingItem.child);
 	}
 
 	private ObjectSet queryItems() {
