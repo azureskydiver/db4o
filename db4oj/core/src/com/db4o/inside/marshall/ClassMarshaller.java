@@ -8,6 +8,8 @@ import com.db4o.*;
  * @exclude
  */
 public class ClassMarshaller {
+    
+    public MarshallerFamily _family;
 
     public void write(Transaction trans, YapClass clazz, YapReader writer) {
         
@@ -26,7 +28,7 @@ public class ClassMarshaller {
         } 
         writer.writeInt(fields.length);
         for (int i = 0; i < fields.length; i++) {
-            fields[i].writeThis(trans, writer, clazz);
+            _family._field.write(trans, clazz, fields[i], writer);
         }
         
     }
@@ -67,7 +69,7 @@ public class ClassMarshaller {
             clazz.i_fields[i].setArrayPosition(i);
         }
         for (int i = 0; i < clazz.i_fields.length; i++) {
-            clazz.i_fields[i] = clazz.i_fields[i].readThis(stream, reader);
+            clazz.i_fields[i] = _family._field.read(stream, clazz.i_fields[i], reader);
         }
         
     }
@@ -82,10 +84,9 @@ public class ClassMarshaller {
         
         if (clazz.i_fields != null) {
             for (int i = 0; i < clazz.i_fields.length; i++) {
-                len += clazz.i_fields[i].ownLength(stream);
+                len += _family._field.marshalledLength(stream, clazz.i_fields[i]);
             }
         }
-        
         return len;
     }
 

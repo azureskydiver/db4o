@@ -1418,7 +1418,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return null;
     }
 
-    byte[] readName1(Transaction trans, YapReader reader) {
+    final byte[] readName1(Transaction trans, YapReader reader) {
         i_reader = reader;
         
         try {
@@ -1498,7 +1498,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return false;
     }
     
-    void forceRead(){
+    final void forceRead(){
         if(i_reader == null || bitIsTrue(YapConst.READING)){
             return;
         }

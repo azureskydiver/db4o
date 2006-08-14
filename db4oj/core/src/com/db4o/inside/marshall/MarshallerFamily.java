@@ -55,6 +55,7 @@ public class MarshallerFamily {
         _array = arrayMarshaller;
         _array._family = this;
         _class = classMarshaller;
+        _class._family = this;
         _field = fieldMarshaller;
         _object = objectMarshaller;
         _object._family = this;
