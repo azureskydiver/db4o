@@ -23,7 +23,7 @@ public class AllReplicationTests extends DrsTestCase implements TestSuiteBuilder
 	public static void main(String[] args) {
 		new TestRunner(
 				new DrsTestSuiteBuilder(
-						new Db4oDrsFixture("A"), new Db4oDrsFixture("B"),
+						new Db4oDrsFixture("db4o-a"), new Db4oDrsFixture("db4o-b"),
 						AllReplicationTests.class)).run();
 	}
 }

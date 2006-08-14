@@ -79,6 +79,7 @@ public class Simplest extends ReplicationTestCase {
 
 	private void storeToProviderA() {
 		SPCChild child = new SPCChild("c1");
+		
 		_providerA.storeNew(child);
 		_providerA.commit();
 
