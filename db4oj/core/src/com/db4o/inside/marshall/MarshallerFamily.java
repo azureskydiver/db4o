@@ -6,8 +6,27 @@ package com.db4o.inside.marshall;
  * @exclude
  */
 public class MarshallerFamily {
+    
+    
+    public static class Version{
+        
+        public static final int LEGACY = 0;
+        
+        public static final int MARSHALLER = 1;
+        
+        public static final int BTREE_FIELD_INDEX = 2; 
+        
+    }
+    
+    public static int VERSION = Version.MARSHALLER;
 
-    public static final boolean LEGACY = false;
+    public static final boolean LEGACY = (VERSION == Version.LEGACY);
+    
+    public static final boolean OLD_CLASS_INDEX = LEGACY;
+    
+    public static final boolean BTREE_FIELD_INDEX = (VERSION == Version.BTREE_FIELD_INDEX);
+    
+    public static final boolean OLD_FIELD_INDEX = (VERSION < Version.BTREE_FIELD_INDEX);
     
     public final ArrayMarshaller _array;
     
@@ -22,9 +41,12 @@ public class MarshallerFamily {
     public final StringMarshaller _string;
     
     public final UntypedMarshaller _untyped;
-    
+
 
     private final static MarshallerFamily[] allVersions     = new MarshallerFamily[] {
+        
+        // LEGACY => before 5.4
+        
         new MarshallerFamily(
             new ArrayMarshaller0(),
             new ClassMarshaller(),
@@ -33,6 +55,9 @@ public class MarshallerFamily {
             new PrimitiveMarshaller0(),
             new StringMarshaller0(),
             new UntypedMarshaller0()),
+        
+        // 5.4 => 5.5
+            
         new MarshallerFamily(
             new ArrayMarshaller1(),
             new ClassMarshaller(),
@@ -40,9 +65,18 @@ public class MarshallerFamily {
             new ObjectMarshaller1(), 
             new PrimitiveMarshaller1(),
             new StringMarshaller1(),
-            new UntypedMarshaller1())};
-
-    private static final int                CURRENT_VERSION = LEGACY ? 0 : allVersions.length - 1;
+            new UntypedMarshaller1()),
+    
+        // BTREE_FIELD_INDEX release
+    
+    new MarshallerFamily(
+        new ArrayMarshaller1(),
+        new ClassMarshaller(),
+        new FieldMarshaller(),
+        new ObjectMarshaller1(), 
+        new PrimitiveMarshaller1(),
+        new StringMarshaller1(),
+        new UntypedMarshaller1())};
 
     private MarshallerFamily(
             ArrayMarshaller arrayMarshaller,
@@ -71,7 +105,7 @@ public class MarshallerFamily {
     }
 
     public static MarshallerFamily current() {
-        return forVersion(CURRENT_VERSION);
+        return forVersion(VERSION);
     }
 
 }

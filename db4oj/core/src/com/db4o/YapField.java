@@ -102,7 +102,7 @@ public class YapField implements StoredField {
             return;
         }
         
-        if(Debug.oldFieldIndex){
+        if(MarshallerFamily.OLD_FIELD_INDEX){
             Index4 index = getOldIndex(a_trans);
             if(index == null){
                 return;
@@ -112,7 +112,7 @@ public class YapField implements StoredField {
             ift.add(parentID, indexEntry);
         }
         
-        if(Debug.bTreeFieldIndex){
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
             if(_index == null){
                 return;
             }
@@ -138,7 +138,7 @@ public class YapField implements StoredField {
         if (! hasIndex()) {
             return;
         }
-        if(Debug.oldFieldIndex){
+        if(MarshallerFamily.OLD_FIELD_INDEX){
             Index4 index = getOldIndex(trans);
             if(index == null){
                 return;
@@ -148,7 +148,7 @@ public class YapField implements StoredField {
             ift.remove(parentID, indexEntry);
         }
         
-        if(Debug.bTreeFieldIndex){
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
             if(_index == null){
                 return;
             }
@@ -531,12 +531,12 @@ public class YapField implements StoredField {
     
     boolean hasIndex() {
         // alive needs to be checked by all callers: Done
-        if(Debug.oldFieldIndex){
+        if(MarshallerFamily.OLD_FIELD_INDEX){
             return _oldIndex != null;
         }
-        if(Debug.bTreeFieldIndex){
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
             return _index != null;
-        }
+        } 
         return false;
     }
 
