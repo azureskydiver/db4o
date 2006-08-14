@@ -117,7 +117,7 @@ public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
 		assertDeletionEvent(eventRegistry().deleted());
 	}
 	
-	public void testObjectOnNew() {
+	public void testCreated() {
 		assertCreationEvent(eventRegistry().created());
 	}
 	
