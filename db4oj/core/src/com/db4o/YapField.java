@@ -461,9 +461,13 @@ public class YapField implements StoredField {
         return getOldIndex(a_trans).indexTransactionFor(a_trans).getRoot();
     }
 
-    TypeHandler4 getHandler() {
+    public TypeHandler4 getHandler() {
         // alive needs to be checked by all callers: Done
         return i_handler;
+    }
+    
+    public int getHandlerID(){
+        return i_handlerID;
     }
 
     public Object getOn(Transaction a_trans, Object a_OnObject) {
@@ -504,7 +508,7 @@ public class YapField implements StoredField {
         return null;
     }
 
-    YapClass getParentYapClass() {
+    public YapClass getParentYapClass() {
         // alive needs to be checked by all callers: Done
         return i_yapClass;
     }
@@ -524,7 +528,7 @@ public class YapField implements StoredField {
         }
         return i_yapClass.getStream();
     }
-
+    
     boolean hasIndex() {
         // alive needs to be checked by all callers: Done
         if(Debug.oldFieldIndex){
@@ -540,7 +544,7 @@ public class YapField implements StoredField {
         a_bytes.incrementOffset(linkLength());
     }
 
-    void init(YapClass a_yapClass, String a_name, int syntheticforJad) {
+    public void init(YapClass a_yapClass, String a_name, int syntheticforJad) {
         i_yapClass = a_yapClass;
         i_name = a_name;
         if (a_yapClass.i_config != null) {
@@ -556,6 +560,14 @@ public class YapField implements StoredField {
             }
         }
     }
+    
+    public void init(int handlerID, boolean isPrimitive, boolean isArray, boolean isNArray) {
+        i_handlerID = handlerID;
+        i_isPrimitive = isPrimitive;
+        i_isArray = isArray;
+        i_isNArray = isNArray;
+    }
+
 
     void initConfigOnUp(Transaction trans) {
         if (i_config != null) {
@@ -695,11 +707,14 @@ public class YapField implements StoredField {
         addIndexEntry(writer, indexEntry);
     }
 
-    public int ownLength(YapStream a_stream) {
-        return a_stream.stringIO().shortLength(i_name) + 1
-            + YapConst.YAPID_LENGTH;
+    public boolean needsArrayAndPrimitiveInfo(){
+        return true;
     }
 
+    public boolean needsHandlerId(){
+        return true;
+    }
+    
     YapComparable prepareComparison(Object obj) {
         if (alive()) {
             i_handler.prepareComparison(obj);
@@ -707,7 +722,7 @@ public class YapField implements StoredField {
         }
         return null;
     }
-
+    
     QField qField(Transaction a_trans) {
         int yapClassID = 0;
         if(i_yapClass != null){
@@ -727,30 +742,6 @@ public class YapField implements StoredField {
     Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader)
         throws CorruptionException {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
-    }
-
-    public YapField readThis(YapStream a_stream, YapReader a_reader) {
-        try {
-            i_name = StringMarshaller.readShort(a_stream, a_reader);
-        } catch (CorruptionException ce) {
-            i_handler = null;
-            return this;
-        }
-        if (i_name.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
-            YapFieldVirtual[] virtuals = a_stream.i_handlers.i_virtualFields;
-            for (int i = 0; i < virtuals.length; i++) {
-                if (i_name.equals(virtuals[i].i_name)) {
-                    return virtuals[i];
-                }
-            }
-        }
-        init(i_yapClass, i_name, 0);
-        i_handlerID = a_reader.readInt();
-        YapBit yb = new YapBit(a_reader.readByte());
-        i_isPrimitive = yb.get();
-        i_isArray = yb.get();
-        i_isNArray = yb.get();
-        return this;
     }
     
     public void readVirtualAttribute(Transaction a_trans, YapReader a_reader, YapObject a_yapObject) {
@@ -847,38 +838,6 @@ public class YapField implements StoredField {
         return a_handler;
     }
 
-    public void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
-        alive();
-        a_writer.writeShortString(trans, i_name);
-        if (i_handler instanceof YapClass) {
-            if (i_handler.getID() == 0) {
-                trans.stream().needsUpdate(a_onClass);
-            }
-        }
-        int wrapperID = 0;
-        try {
-            // The wrapper can be null and it can fail to
-            // deliver the ID.
-
-            // In this case the field is dead.
-
-            wrapperID = i_handler.getID();
-        } catch (Exception e) {
-            if (Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        if (wrapperID == 0) {
-            wrapperID = i_handlerID;
-        }
-        a_writer.writeInt(wrapperID);
-        YapBit yb = new YapBit(0);
-        yb.set(i_handler instanceof YapArrayN); // keep the order
-        yb.set(i_handler instanceof YapArray);
-        yb.set(i_isPrimitive);
-        a_writer.append(yb.getByte());
-    }
-
     public String toString() {
         StringBuffer sb = new StringBuffer();
         if (Debug.prettyToStrings) {
@@ -926,5 +885,14 @@ public class YapField implements StoredField {
     public BTree getIndex(){
         return _index;
     }
+
+    public boolean isVirtual() {
+        return false;
+    }
+
+    public boolean isPrimitive() {
+        return i_isPrimitive;
+    }
+
 
 }

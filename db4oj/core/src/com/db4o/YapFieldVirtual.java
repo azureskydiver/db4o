@@ -8,9 +8,9 @@ import com.db4o.inside.marshall.*;
 import com.db4o.inside.replication.*;
 
 /**
- * 
+ * @exclude
  */
-abstract class YapFieldVirtual extends YapField {
+public abstract class YapFieldVirtual extends YapField {
 
     YapFieldVirtual() {
         super(null);
@@ -54,9 +54,13 @@ abstract class YapFieldVirtual extends YapField {
         // Virtual fields do it all in #marshall() so it's fine to return null here
         return null;
     }
+    
+    public boolean needsArrayAndPrimitiveInfo(){
+        return false;
+    }
 
-    public int ownLength(YapStream a_stream) {
-        return a_stream.stringIO().shortLength(i_name);
+    public boolean needsHandlerId(){
+        return false;
     }
 
     void initOldIndex(Transaction systemTrans, MetaIndex metaIndex) {
@@ -166,7 +170,8 @@ abstract class YapFieldVirtual extends YapField {
         instantiate1(a_trans, a_yapObject, a_reader);
     }
     
-    public void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
-        a_writer.writeShortString(trans,i_name);
+    public boolean isVirtual() {
+        return true;
     }
+
 }

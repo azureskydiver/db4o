@@ -1262,7 +1262,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
     }
 
-    final void needsUpdate(YapClass a_yapClass) {
+    public final void needsUpdate(YapClass a_yapClass) {
         i_needsUpdate = new List4(i_needsUpdate, a_yapClass);
     }
     

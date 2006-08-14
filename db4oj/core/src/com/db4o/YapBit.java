@@ -13,7 +13,7 @@ public final class YapBit{
 		i_value = a_value;
 	}
 	
-	void set(boolean a_bit){
+	public void set(boolean a_bit){
 		i_value = i_value * 2;
 		if(a_bit){
 			i_value ++;
@@ -26,7 +26,7 @@ public final class YapBit{
 		return (cmp != i_value);
 	}
 	
-	byte getByte(){
+	public byte getByte(){
 		return (byte)i_value;
 	}
 }
