@@ -4,7 +4,7 @@ package com.db4o;
 
 import com.db4o.config.ObjectField;
 import com.db4o.foundation.*;
-import com.db4o.inside.marshall.ObjectHeader;
+import com.db4o.inside.marshall.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     
@@ -73,7 +73,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	                int indexedFlag=_config.getAsInt(INDEXED);
 	                if (indexedFlag == YapConst.YES) {
                         
-                        if(Debug.bTreeFieldIndex){
+                        if(MarshallerFamily.BTREE_FIELD_INDEX){
                             yapField.initIndex(systemTrans);
                         }
                         
@@ -82,7 +82,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	                        stream.setInternal(systemTrans, metaField.index, YapConst.UNSPECIFIED, false);
 	                        stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);
                             
-                            if(Debug.oldFieldIndex){
+                            if(MarshallerFamily.OLD_FIELD_INDEX){
                                 yapField.initOldIndex(systemTrans, metaField.index);
                             }
                             

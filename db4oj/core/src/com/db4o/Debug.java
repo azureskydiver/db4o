@@ -10,12 +10,6 @@ import com.db4o.inside.marshall.*;
  */
 public abstract class Debug extends Debug4 {
     
-    public static final boolean bTreeFieldIndex = false;
-    
-    public static final boolean oldFieldIndex = true;    
-    
-    public static final boolean useOldClassIndex = MarshallerFamily.LEGACY;
-    
     public static final boolean useNIxPaths = true;
     
     public static final boolean ixTrees = false;
