@@ -561,7 +561,7 @@
 			<include name="**/*" />
 		</delete>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
-			<fileset dir="${dir.workspace}/db4ounit/src">
+			<fileset dir="${dir.db4ounit}/src">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
@@ -792,6 +792,13 @@
 	</target>
 
 	<target name="zipjavasrc" depends="javadoc,compilecorejava,compiletestsjava">
+		<copy todir="${dir.dist.java.src}/${name.project.db4ounit}">
+			<fileset dir="${dir.db4ounit}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**" />
+			</fileset>
+		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.j}">
 			<fileset dir="${dir.j}">
 				<include name=".project" />
