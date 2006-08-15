@@ -86,6 +86,18 @@ public class Transaction {
                 foundOne[0] = false;
                 Tree delete = i_delete;
                 i_delete = null;
+                
+                
+                delete.traverse(new Visitor4() {
+                    public void visit(Object a_object) {
+                        DeleteInfo info  = (DeleteInfo)a_object;
+                        if(! info._delete){
+                            i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
+                        }
+                    }
+                });
+
+                
                 delete.traverse(new Visitor4() {
                     public void visit(Object a_object) {
                         DeleteInfo info  = (DeleteInfo)a_object;
@@ -241,7 +253,7 @@ public class Transaction {
         final int slotSetPointerCount = countSlotChanges();
         
         if (slotSetPointerCount > 0) {
-            int length = (((slotSetPointerCount * 3) + 2) * YapConst.INT_LENGTH);
+            int length = (((slotSetPointerCount * 3) + 2) * YapConst.YAPINT_LENGTH);
             int address = i_file.getSlot(length);
             final YapWriter bytes = new YapWriter(this, address, length);
             bytes.writeInt(length);
@@ -647,7 +659,7 @@ public class Transaction {
             if (length > 0) {
                 YapWriter bytes = new YapWriter(this, i_address, length);
                 bytes.read();
-                bytes.incrementOffset(YapConst.INT_LENGTH);
+                bytes.incrementOffset(YapConst.YAPINT_LENGTH);
                 _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
                 if(writeSlots()){
                     flushFile();
