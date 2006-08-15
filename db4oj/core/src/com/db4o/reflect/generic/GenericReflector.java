@@ -302,7 +302,7 @@ public class GenericReflector implements Reflector, DeepClone {
 			return ret;
 		}
 		
-		classreader.incrementOffset(YapConst.YAPINT_LENGTH); // skip empty unused int slot
+		classreader.incrementOffset(YapConst.INT_LENGTH); // skip empty unused int slot
         
 		int ancestorid=classreader.readInt();
         int indexID=classreader.readInt();
@@ -343,7 +343,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		_classes.add(clazz);
 		
 		// skip empty unused int slot, ancestor, index
-		classreader.incrementOffset(YapConst.YAPINT_LENGTH * 3);
+		classreader.incrementOffset(YapConst.INT_LENGTH * 3);
 		
 		int numfields=classreader.readInt();
 		

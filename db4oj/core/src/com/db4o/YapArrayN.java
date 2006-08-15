@@ -42,14 +42,14 @@ public final class YapArrayN extends YapArray {
     public final int objectLength(Object a_object) {
         int[] dim = _reflectArray.dimensions(a_object);
         return YapConst.OBJECT_LENGTH
-            + (YapConst.YAPINT_LENGTH * (2 + dim.length))
+            + (YapConst.INT_LENGTH * (2 + dim.length))
             + (elementCount(dim) * i_handler.linkLength());
     }
     
     public int ownLength(Object obj){
         int[] dim = _reflectArray.dimensions(obj);
         return YapConst.OBJECT_LENGTH
-            + (YapConst.YAPINT_LENGTH * (2 + dim.length));
+            + (YapConst.INT_LENGTH * (2 + dim.length));
     }
 
     public final Object read1(MarshallerFamily mf, YapWriter reader) throws CorruptionException {

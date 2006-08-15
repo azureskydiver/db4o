@@ -281,7 +281,7 @@ public final class YapString extends YapIndependantType {
     
     static final int compare(byte[] compare, byte[] with){
         int min = compare.length < with.length ? compare.length : with.length;
-        int start = YapConst.YAPINT_LENGTH;
+        int start = YapConst.INT_LENGTH;
         if(Deploy.debug) {
             start += YapConst.LEADING_LENGTH;
             min -= YapConst.BRACKETS_BYTES;

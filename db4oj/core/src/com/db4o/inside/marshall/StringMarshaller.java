@@ -13,7 +13,7 @@ public abstract class StringMarshaller {
     public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
     
     protected final int linkLength(){
-        return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
+        return YapConst.INT_LENGTH + YapConst.ID_LENGTH;
     }
     
     public abstract Object writeNew(Object a_object, boolean topLevel, YapWriter a_bytes, boolean redirect);

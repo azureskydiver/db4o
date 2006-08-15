@@ -225,7 +225,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
     
     public int ownLength() {
-        return 1 + YapConst.OBJECT_LENGTH + (YapConst.YAPINT_LENGTH * 2) + YapConst.YAPID_LENGTH;
+        return 1 + YapConst.OBJECT_LENGTH + (YapConst.INT_LENGTH * 2) + YapConst.ID_LENGTH;
     }
     
     BTreeNode produceNode(int id){

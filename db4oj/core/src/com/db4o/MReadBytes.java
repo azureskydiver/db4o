@@ -7,15 +7,15 @@ import com.db4o.foundation.network.YapSocket;
 final class MReadBytes extends MsgD {
 	final YapWriter getByteLoad() {
 		int address = this._payLoad.readInt();
-		int length = this._payLoad.getLength() - (YapConst.YAPINT_LENGTH);
-		this._payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH);
+		int length = this._payLoad.getLength() - (YapConst.INT_LENGTH);
+		this._payLoad.removeFirstBytes(YapConst.INT_LENGTH);
 		this._payLoad.useSlot(address, length);
 		return this._payLoad;
 	}
 
 	final MsgD getWriter(YapWriter bytes) {
 		MsgD message =
-			this.getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.YAPINT_LENGTH);
+			this.getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.INT_LENGTH);
 		message._payLoad.writeInt(bytes.getAddress());
 		message._payLoad.append(bytes._buffer);
 		return message;

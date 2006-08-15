@@ -42,7 +42,7 @@ import com.db4o.types.TransientClass;
  */
 public abstract class YapStreamBase implements TransientClass, Internal4, YapStreamSpec {
 
-	    public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
+	    public static final int        HEADER_LENGTH         = 2 + (YapConst.INT_LENGTH * 4);
 
     // The header is:
 

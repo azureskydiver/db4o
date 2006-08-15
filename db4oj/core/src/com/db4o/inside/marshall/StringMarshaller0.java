@@ -32,7 +32,7 @@ public class StringMarshaller0 extends StringMarshaller {
         bytes.setID(a_bytes._offset);
         
         a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-        a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
+        a_bytes.incrementOffset(YapConst.ID_LENGTH);
         a_bytes.writeInt(length);
         return bytes;
     }

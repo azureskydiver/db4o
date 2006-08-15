@@ -62,9 +62,9 @@ public class TreeIntObject extends TreeInt {
 
 	public int ownLength() {
 		if (_object == null) {
-			return YapConst.YAPINT_LENGTH * 2;
+			return YapConst.INT_LENGTH * 2;
 		} else {
-			return YapConst.YAPINT_LENGTH + ((Readable) _object).byteCount();
+			return YapConst.INT_LENGTH + ((Readable) _object).byteCount();
 		}
 	}
 

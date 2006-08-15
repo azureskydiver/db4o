@@ -1007,7 +1007,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (create) {
             if (configInstantiates()) {
                 int bytesOffset = a_bytes._offset;
-                a_bytes.incrementOffset(YapConst.YAPINT_LENGTH);
+                a_bytes.incrementOffset(YapConst.INT_LENGTH);
                 // Field length is always 1
                 try {
                     a_object = i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));
@@ -1097,7 +1097,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
         if (configInstantiates()) {
             int bytesOffset = a_bytes._offset;
-            a_bytes.incrementOffset(YapConst.YAPINT_LENGTH);
+            a_bytes.incrementOffset(YapConst.INT_LENGTH);
             // Field length is always 1
             try {
                 a_object = i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));
@@ -1328,7 +1328,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         if (isArray()) {
             if (Platform4.isCollectionTranslator(this.i_config)) {
-                a_bytes[0].incrementOffset(YapConst.YAPINT_LENGTH);
+                a_bytes[0].incrementOffset(YapConst.INT_LENGTH);
                 return new YapArray(i_stream, null, false);
             }
             incrementFieldsOffset1(a_bytes[0]);

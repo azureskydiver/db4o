@@ -34,7 +34,7 @@ public class YInt extends YapJavaClass {
     }
 
     public int linkLength() {
-        return YapConst.YAPINT_LENGTH;
+        return YapConst.INT_LENGTH;
     }
 
     Object primitiveNull() {

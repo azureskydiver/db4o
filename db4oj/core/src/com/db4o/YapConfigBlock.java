@@ -41,27 +41,27 @@ public final class YapConfigBlock implements Runnable
 	
 	private static final int	POINTER_ADDRESS = 2;
 	private static final int	MINIMUM_LENGTH = 
-		YapConst.YAPINT_LENGTH    			// own length
-		+ (YapConst.YAPLONG_LENGTH * 2)	 	// candidate ID and last access time
+		YapConst.INT_LENGTH    			// own length
+		+ (YapConst.LONG_LENGTH * 2)	 	// candidate ID and last access time
 		+ 1;  						// Unicode byte
 	
-	static final int			OPEN_TIME_OFFSET		= YapConst.YAPINT_LENGTH;
-	public static final int            ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.YAPLONG_LENGTH;
+	static final int			OPEN_TIME_OFFSET		= YapConst.INT_LENGTH;
+	public static final int            ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.LONG_LENGTH;
 		
 	public static final int			TRANSACTION_OFFSET = MINIMUM_LENGTH;
-	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.YAPINT_LENGTH * 2;  
-	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + YapConst.YAPINT_LENGTH;
+	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.INT_LENGTH * 2;  
+	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + YapConst.INT_LENGTH;
 	private static final int	ENCRYPTION_PASSWORD_LENGTH = 5;
     private static final int    PASSWORD_OFFSET = INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET+ENCRYPTION_PASSWORD_LENGTH;
     private static final int    FREESPACE_SYSTEM_OFFSET = PASSWORD_OFFSET + 1; 
-    private static final int    FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + YapConst.YAPINT_LENGTH; 
-    private static final int    CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + YapConst.YAPINT_LENGTH;
+    private static final int    FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + YapConst.INT_LENGTH; 
+    private static final int    CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + YapConst.INT_LENGTH;
 	
 	
 	// complete possible data in config block
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
-		+ (YapConst.YAPINT_LENGTH * 6)		// (two transaction pointers, PDB ID, lost int, freespace address, converter_version
+		+ (YapConst.INT_LENGTH * 6)		// (two transaction pointers, PDB ID, lost int, freespace address, converter_version
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
 		
@@ -112,8 +112,8 @@ public final class YapConfigBlock implements Runnable
 	}
 	
 	private YapWriter headerLockIO(){
-	    YapWriter writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.YAPINT_LENGTH);
-	    writer.moveForward(2 + YapConst.YAPINT_LENGTH);
+	    YapWriter writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.INT_LENGTH);
+	    writer.moveForward(2 + YapConst.INT_LENGTH);
 	    if (Debug.xbytes) {
 	        writer.setID(YapConst.IGNORE_ID);
 	    }
@@ -149,7 +149,7 @@ public final class YapConfigBlock implements Runnable
 	}
     
     private YapWriter openTimeIO(){
-        YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, YapConst.YAPLONG_LENGTH);
+        YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, YapConst.LONG_LENGTH);
         writer.moveForward(OPEN_TIME_OFFSET);
         if (Debug.xbytes) {
             writer.setID(YapConst.IGNORE_ID);
@@ -310,7 +310,7 @@ public final class YapConfigBlock implements Runnable
 			while(System.currentTimeMillis() < currentTime + waitTime){
 				Cool.sleepIgnoringInterruption(waitTime);
 			}
-			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, YapConst.YAPLONG_LENGTH * 2);
+			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, YapConst.LONG_LENGTH * 2);
 			reader.moveForward(OPEN_TIME_OFFSET);
 			reader.read();
 			long currentOpenTime = YLong.readLong(reader);
@@ -411,7 +411,7 @@ public final class YapConfigBlock implements Runnable
 	
 	private void writePointer() {
 		headerLockOverwritten();
-		YapWriter writer = _stream.getWriter(_stream.i_trans, 0, YapConst.YAPID_LENGTH);
+		YapWriter writer = _stream.getWriter(_stream.i_trans, 0, YapConst.ID_LENGTH);
 		writer.moveForward(2);
 		YInt.writeInt(_address, writer);
 		if(Debug.xbytes && Deploy.overwrite){

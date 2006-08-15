@@ -42,7 +42,7 @@ public class YapStringIO {
 //	}
 	
 	public int length(String a_string){
-		return a_string.length() + YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH;
+		return a_string.length() + YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH;
 	}
 	
 	protected void checkBufferLength(int a_length){
@@ -68,7 +68,7 @@ public class YapStringIO {
 	}
 	
 	public int shortLength(String a_string){
-		return a_string.length() + YapConst.YAPINT_LENGTH;
+		return a_string.length() + YapConst.INT_LENGTH;
 	}
 	
 	protected int writetoBuffer(String str){

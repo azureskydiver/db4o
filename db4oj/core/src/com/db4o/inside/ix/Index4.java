@@ -125,7 +125,7 @@ public class Index4 {
     }
     
     private int lengthPerEntry(){
-        return _handler.linkLength() + YapConst.YAPINT_LENGTH;
+        return _handler.linkLength() + YapConst.INT_LENGTH;
     }
     
     private void metaIndexStore(int entries, int length, int address){

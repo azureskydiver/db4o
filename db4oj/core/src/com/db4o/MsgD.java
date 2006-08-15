@@ -23,7 +23,7 @@ class MsgD extends Msg{
 
 	void fakePayLoad(Transaction a_trans) {
 		if (Debug.fakeServer) {
-			_payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH * 2);
+			_payLoad.removeFirstBytes(YapConst.INT_LENGTH * 2);
 			_payLoad._offset = 0;
 			_payLoad.setTransaction(a_trans);
 		}
@@ -55,7 +55,7 @@ class MsgD extends Msg{
 	}
 
     final MsgD getWriterForInts(Transaction a_trans, int[] ints) {
-        MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH * ints.length);
+        MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH * ints.length);
         for (int i = 0; i < ints.length; i++) {
             message.writeInt(ints[i]);
         }
@@ -63,7 +63,7 @@ class MsgD extends Msg{
     }
 	
 	final MsgD getWriterForIntArray(Transaction a_trans, int[] ints, int length){
-		MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH * (length + 1));
+		MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH * (length + 1));
 		message.writeInt(length);
 		for (int i = 0; i < length; i++) {
 			message.writeInt(ints[i]);
@@ -72,27 +72,27 @@ class MsgD extends Msg{
 	}
 
 	final MsgD getWriterForInt(Transaction a_trans, int id) {
-		MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH);
+		MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH);
 		message.writeInt(id);
 		return message;
 	}
 	
 	final MsgD getWriterForIntString(Transaction a_trans,int anInt, String str) {
-		MsgD message = getWriterForLength(a_trans, YapConst.stringIO.length(str) + YapConst.YAPINT_LENGTH * 2);
+		MsgD message = getWriterForLength(a_trans, YapConst.stringIO.length(str) + YapConst.INT_LENGTH * 2);
 		message.writeInt(anInt);
 		message.writeString(str);
 		return message;
 	}
 	
 	final MsgD getWriterForLong(Transaction a_trans, long a_long){
-		MsgD message = getWriterForLength(a_trans, YapConst.YAPLONG_LENGTH);
+		MsgD message = getWriterForLength(a_trans, YapConst.LONG_LENGTH);
 		message.writeLong(a_long);
 		return message;
 	}
 	
 
 	final MsgD getWriterForString(Transaction a_trans, String str) {
-		MsgD message = getWriterForLength(a_trans, YapConst.stringIO.length(str) + YapConst.YAPINT_LENGTH);
+		MsgD message = getWriterForLength(a_trans, YapConst.stringIO.length(str) + YapConst.INT_LENGTH);
 		message.writeString(str);
 		return message;
 	}

@@ -253,7 +253,7 @@ public class Transaction {
         final int slotSetPointerCount = countSlotChanges();
         
         if (slotSetPointerCount > 0) {
-            int length = (((slotSetPointerCount * 3) + 2) * YapConst.YAPINT_LENGTH);
+            int length = (((slotSetPointerCount * 3) + 2) * YapConst.INT_LENGTH);
             int address = i_file.getSlot(length);
             final YapWriter bytes = new YapWriter(this, address, length);
             bytes.writeInt(length);
@@ -659,7 +659,7 @@ public class Transaction {
             if (length > 0) {
                 YapWriter bytes = new YapWriter(this, i_address, length);
                 bytes.read();
-                bytes.incrementOffset(YapConst.YAPINT_LENGTH);
+                bytes.incrementOffset(YapConst.INT_LENGTH);
                 _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
                 if(writeSlots()){
                     flushFile();

@@ -182,7 +182,7 @@ public class YapArray extends YapIndependantType {
     }
     
     public int ownLength(Object obj){
-        return YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH * 2;
+        return YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH * 2;
     }
     
 	public void prepareComparison(Transaction a_trans, Object obj) {

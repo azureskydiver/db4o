@@ -111,7 +111,7 @@ public class YapRandomAccessFile extends YapFile {
                         i_file = null;
                         if (needsLockFileThread() && Debug.lockFile) {
                             YapWriter lockBytes = new YapWriter(i_systemTrans,
-                                YapConst.YAPLONG_LENGTH);
+                                YapConst.LONG_LENGTH);
                             YLong.writeLong(0, lockBytes);
                             _fileHeader.seekForTimeLock(i_timerFile);
                             i_timerFile.write(lockBytes._buffer);
@@ -335,7 +335,7 @@ public class YapRandomAccessFile extends YapFile {
 
             long lockTime = System.currentTimeMillis();
             if (Deploy.debug) {
-                YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.YAPLONG_LENGTH);
+                YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.LONG_LENGTH);
                 YLong.writeLong(lockTime, lockBytes);
                 _fileHeader.seekForTimeLock(i_timerFile);
                 i_timerFile.write(lockBytes._buffer);

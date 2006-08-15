@@ -18,7 +18,7 @@ import com.db4o.inside.ix.*;
  */
 public class BTreeNode extends YapMeta{
     
-    private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (YapConst.YAPINT_LENGTH * 4) + 1; 
+    private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (YapConst.INT_LENGTH * 4) + 1; 
  
     private static final int SLOT_LEADING_LENGTH = YapConst.LEADING_LENGTH  + COUNT_LEAF_AND_3_LINK_LENGTH;
     
@@ -506,7 +506,7 @@ public class BTreeNode extends YapMeta{
                 len += valueHandler().linkLength();
             }
         }else{
-            len += YapConst.YAPID_LENGTH;
+            len += YapConst.ID_LENGTH;
         }
         return len;
     }

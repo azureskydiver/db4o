@@ -11,7 +11,7 @@ import com.db4o.inside.marshall.*;
  */
 class YapFieldUUID extends YapFieldVirtual {
     
-    private static final int LINK_LENGTH = YapConst.YAPLONG_LENGTH + YapConst.YAPID_LENGTH;
+    private static final int LINK_LENGTH = YapConst.LONG_LENGTH + YapConst.ID_LENGTH;
 
     YapFieldUUID(YapStream stream) {
         super();
@@ -31,7 +31,7 @@ class YapFieldUUID extends YapFieldVirtual {
         if(id == 0){
             writer.writeInt(yf.identity().getID(writer.getTransaction()));
         }else{
-            writer.incrementOffset(YapConst.YAPINT_LENGTH);
+            writer.incrementOffset(YapConst.INT_LENGTH);
         }
         
         if(uuid == 0){
@@ -49,7 +49,7 @@ class YapFieldUUID extends YapFieldVirtual {
             a_bytes.incrementOffset(linkLength());
             return;
         }
-        a_bytes.incrementOffset(YapConst.YAPINT_LENGTH);
+        a_bytes.incrementOffset(YapConst.INT_LENGTH);
         long longPart = YLong.readLong(a_bytes);
         if(longPart > 0){
             YapStream stream = a_bytes.getStream();

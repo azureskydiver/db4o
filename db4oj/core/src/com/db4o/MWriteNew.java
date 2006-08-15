@@ -8,7 +8,7 @@ final class MWriteNew extends MsgObject {
     final boolean processMessageAtServer(YapSocket sock) {
         int yapClassId = _payLoad.readInt();
         YapFile stream = (YapFile)getStream();
-        unmarshall(YapConst.YAPINT_LENGTH);
+        unmarshall(YapConst.INT_LENGTH);
         synchronized (stream.i_lock) {
             YapClass yc = yapClassId == 0 ? null : stream.getYapClass(yapClassId);
             _payLoad.writeEmbedded();

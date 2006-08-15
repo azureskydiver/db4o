@@ -356,8 +356,8 @@ public final class YapWriter extends YapReader {
     }
     
     private void checkMinimumPayLoadOffsetAndWritePointerAndLength(int length, boolean alignToBlockSize){
-        if(_payloadOffset <= _offset + (YapConst.YAPINT_LENGTH * 2)){
-            _payloadOffset = _offset + (YapConst.YAPINT_LENGTH * 2);
+        if(_payloadOffset <= _offset + (YapConst.INT_LENGTH * 2)){
+            _payloadOffset = _offset + (YapConst.INT_LENGTH * 2);
         }
         if(alignToBlockSize){
             _payloadOffset = getStream().alignToBlockSize(_payloadOffset);
@@ -402,8 +402,8 @@ public final class YapWriter extends YapReader {
     final void writeQueryResult(QueryResultImpl a_qr) {
         int size = a_qr.size();
         writeInt(size);
-        _offset += (size - 1) * YapConst.YAPID_LENGTH;
-        int dec = YapConst.YAPID_LENGTH * 2;
+        _offset += (size - 1) * YapConst.ID_LENGTH;
+        int dec = YapConst.ID_LENGTH * 2;
         for (int i = 0; i < size; i++) {
             writeInt(a_qr.nextInt());
             _offset -= dec;

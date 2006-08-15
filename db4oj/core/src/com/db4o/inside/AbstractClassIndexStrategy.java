@@ -20,7 +20,7 @@ public abstract class AbstractClassIndexStrategy implements ClassIndexStrategy {
 	}
 
 	public int ownLength() {
-		return YapConst.YAPID_LENGTH;
+		return YapConst.ID_LENGTH;
 	}
 
 	protected abstract void internalAdd(Transaction trans, int id);

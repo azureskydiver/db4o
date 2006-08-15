@@ -77,8 +77,8 @@ public class ClassMarshaller {
     public int marshalledLength(YapStream stream, YapClass clazz) {
         int len = stream.stringIO().shortLength(clazz.nameToWrite())
                 + YapConst.OBJECT_LENGTH
-                + (YapConst.YAPINT_LENGTH * 2)
-                + (YapConst.YAPID_LENGTH);       
+                + (YapConst.INT_LENGTH * 2)
+                + (YapConst.ID_LENGTH);       
 
         len += clazz.index().ownLength();
         

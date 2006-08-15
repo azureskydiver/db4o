@@ -14,7 +14,7 @@ public abstract class PrimitiveMarshaller {
     public abstract int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, YapWriter parentWriter, boolean withIndirection, boolean restoreLinkOffset);
     
     protected int objectLength(TypeHandler4 handler, Object obj){
-        return handler.linkLength() + YapConst.OBJECT_LENGTH + YapConst.YAPID_LENGTH;
+        return handler.linkLength() + YapConst.OBJECT_LENGTH + YapConst.ID_LENGTH;
     }
 
 }

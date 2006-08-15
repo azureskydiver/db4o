@@ -275,8 +275,8 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
 
     public int ownLength() {
         return YapConst.OBJECT_LENGTH
-            + YapConst.YAPINT_LENGTH
-            + (i_classes.size() * YapConst.YAPID_LENGTH);
+            + YapConst.INT_LENGTH
+            + (i_classes.size() * YapConst.ID_LENGTH);
     }
 
     void purge() {

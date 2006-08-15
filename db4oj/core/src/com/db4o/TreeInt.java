@@ -61,7 +61,7 @@ public class TreeInt extends Tree implements ReadWriteable {
 	}
 
 	public int ownLength() {
-		return YapConst.YAPINT_LENGTH;
+		return YapConst.INT_LENGTH;
 	}
 
 	boolean variableLength() {
