@@ -6,8 +6,9 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ObjectState;
 import com.db4o.replication.ReplicationEvent;
 import com.db4o.replication.ReplicationEventListener;
-import com.db4o.test.Test;
 import com.db4o.test.replication.db4ounit.DrsTestCase;
+
+import db4ounit.Assert;
 
 
 public class ReplicationEventTest extends DrsTestCase {
@@ -62,12 +63,12 @@ public class ReplicationEventTest extends DrsTestCase {
 			System.out.println("actual = " + parent.getName());
 		}
 
-		Test.ensure(parent.getName().equals(parentName));
-		Test.ensureEquals(childName, parent.getChild().getName());
+		Assert.areEqual(parent.getName(), parentName);
+		Assert.areEqual(childName, parent.getChild().getName());
 	}
 
 	private void ensureNotExist(TestableReplicationProviderInside provider, Class type) {
-		Test.ensure(! provider.getStoredObjects(type).hasNext());
+		Assert.isTrue(! provider.getStoredObjects(type).hasNext());
 	}
 
 	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {
@@ -115,6 +116,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNames(a().provider(), IN_A, IN_A);
 	}
 
+	/*
 	private void tstDeletionDefaultPrevail() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
@@ -211,7 +213,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNotExist(b().provider(), SPCParent.class);
 		ensureNotExist(b().provider(), SPCChild.class);
 	}
-
+*/
 	private void tstNewObject() {
 		storeParentAndChildToProviderA();
 
@@ -224,11 +226,11 @@ public class ReplicationEventTest extends DrsTestCase {
 				final ObjectState stateA = event.stateInProviderA();
 				final ObjectState stateB = event.stateInProviderB();
 
-				Test.ensure(stateA.isNew());
-				Test.ensure(!stateB.isNew());
+				Assert.isTrue(stateA.isNew());
+				Assert.isTrue(!stateB.isNew());
 
-				Test.ensure(stateA.getObject() != null);
-				Test.ensure(stateB.getObject() == null);
+				Assert.isNotNull(stateA.getObject());
+				Assert.isNull(stateB.getObject());
 
 				event.overrideWith(null);
 			}
@@ -236,7 +238,7 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider(), listener);
 
-		Test.ensure(invoked.getValue());
+		Assert.isTrue(invoked.getValue());
 
 		ensureNames(a().provider(), IN_A, IN_A);
 		ensureNotExist(b().provider(), SPCParent.class);
@@ -269,7 +271,7 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		ReplicationEventListener listener = new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent event) {
-				Test.ensure(event.isConflict());
+				Assert.isTrue(event.isConflict());
 
 				if (event.isConflict())
 					event.overrideWith(event.stateInProviderB());
@@ -289,7 +291,7 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		ReplicationEventListener listener = new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent event) {
-				Test.ensure(!event.isConflict());
+				Assert.isTrue(!event.isConflict());
 				event.overrideWith(event.stateInProviderB());
 			}
 		};
@@ -310,7 +312,7 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		ReplicationEventListener listener = new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent event) {
-				Test.ensure(event.isConflict());
+				Assert.isTrue(event.isConflict());
 
 				event.overrideWith(null);
 			}
