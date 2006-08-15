@@ -10,9 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * sets the maximum activation depth to the desired value.
- * 
- * 
- * 
+ * @exclude
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

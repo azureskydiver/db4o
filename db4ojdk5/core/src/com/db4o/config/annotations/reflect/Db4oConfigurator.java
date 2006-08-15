@@ -5,6 +5,9 @@ package com.db4o.config.annotations.reflect;
 import com.db4o.*;
 import com.db4o.config.*;
 
+/**
+ * @exclude
+ */
 public abstract class Db4oConfigurator {	
 	private Configuration _config;
 	private ObjectClass _objectClass;

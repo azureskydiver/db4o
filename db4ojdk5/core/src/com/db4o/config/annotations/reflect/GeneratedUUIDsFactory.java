@@ -2,6 +2,9 @@
 
 package com.db4o.config.annotations.reflect;
 
+/**
+ * @exclude
+ */
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 

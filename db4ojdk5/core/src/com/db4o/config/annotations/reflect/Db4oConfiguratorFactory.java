@@ -5,6 +5,9 @@ package com.db4o.config.annotations.reflect;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 
+/**
+ * @exclude
+ */
 public interface Db4oConfiguratorFactory {
 	Db4oConfigurator configuratorFor(AnnotatedElement element,Annotation annotation);
 }

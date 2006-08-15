@@ -4,6 +4,9 @@ package com.db4o.config.annotations.reflect;
 
 import com.db4o.config.ObjectField;
 
+/**
+ * @exclude
+ */
 public class IndexedConfigurator extends FieldConfigurator {
 
 	public IndexedConfigurator(String className, String fieldName) {

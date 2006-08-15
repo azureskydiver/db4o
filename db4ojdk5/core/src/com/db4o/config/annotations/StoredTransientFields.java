@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 
 /**
  * allows to specify if transient fields are to be stored.
+ * 
+ * @exclude
  */
 @Documented
 @Target(ElementType.TYPE)

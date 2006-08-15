@@ -7,6 +7,9 @@ import java.lang.reflect.AnnotatedElement;
 
 import com.db4o.config.annotations.StoredTransientFields;
 
+/**
+ * @exclude
+ */
 public class StoredTransientFieldsFactory implements Db4oConfiguratorFactory {
 
 	public Db4oConfigurator configuratorFor(AnnotatedElement element,

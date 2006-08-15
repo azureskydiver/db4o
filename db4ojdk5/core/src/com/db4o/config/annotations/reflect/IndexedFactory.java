@@ -8,6 +8,9 @@ import java.lang.reflect.Field;
 
 import com.db4o.config.annotations.Indexed;
 
+/**
+ * @exclude
+ */
 public class IndexedFactory implements Db4oConfiguratorFactory {
 
 	public Db4oConfigurator configuratorFor(AnnotatedElement element,
