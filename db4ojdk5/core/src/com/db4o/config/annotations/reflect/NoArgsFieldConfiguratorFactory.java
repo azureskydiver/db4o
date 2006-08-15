@@ -6,6 +6,9 @@ import java.lang.annotation.*;
 import java.lang.reflect.*;
 
 
+/**
+ * @exclude
+ */
 public class NoArgsFieldConfiguratorFactory implements Db4oConfiguratorFactory {
 	private Constructor _constructor;
 

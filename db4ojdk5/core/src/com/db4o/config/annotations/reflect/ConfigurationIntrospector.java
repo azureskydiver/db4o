@@ -21,8 +21,8 @@ import com.db4o.config.annotations.UpdatedDepth;
 /**
  * sets db4o configurations accordingly annotations
  * 
+ * @exclude
  */
-
 public class ConfigurationIntrospector {
 
 	Map<Class<? extends Annotation>, Db4oConfiguratorFactory> _configurators;

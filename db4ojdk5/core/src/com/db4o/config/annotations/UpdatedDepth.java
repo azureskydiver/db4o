@@ -14,6 +14,8 @@ import java.lang.annotation.Target;
  * <br>
  * The default setting is 0: Only the object passed to
  * ObjectContainer.set(Object) will be updated.
+ * 
+ * @exclude
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

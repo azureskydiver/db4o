@@ -4,6 +4,9 @@ package com.db4o.config.annotations.reflect;
 
 import com.db4o.config.ObjectField;
 
+/**
+ * @exclude
+ */
 public class QueryEvaluationOffConfigurator extends FieldConfigurator {
 
 	public QueryEvaluationOffConfigurator(String className, String fieldName) {

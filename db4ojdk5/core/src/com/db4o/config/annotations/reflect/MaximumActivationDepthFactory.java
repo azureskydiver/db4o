@@ -7,6 +7,9 @@ import java.lang.reflect.AnnotatedElement;
 
 import com.db4o.config.annotations.MaximumActivationDepth;
 
+/**
+ * @exclude
+ */
 public class MaximumActivationDepthFactory implements Db4oConfiguratorFactory {
 
 	public Db4oConfigurator configuratorFor(AnnotatedElement element,

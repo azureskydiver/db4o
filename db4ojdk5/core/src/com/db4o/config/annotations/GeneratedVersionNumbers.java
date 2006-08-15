@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * generate version numbers for stored objects of this class.
+ * @exclude
  */
 @Documented
 @Target(ElementType.TYPE)

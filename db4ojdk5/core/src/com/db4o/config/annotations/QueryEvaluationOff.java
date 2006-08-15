@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
  * turns query evaluation of specific fields off.
  * <br><br>
  * All fields are evaluated by default.
+ * 
+ * @exclude
  */
 @Documented
 @Target(ElementType.FIELD)

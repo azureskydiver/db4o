@@ -26,8 +26,7 @@ import java.lang.annotation.Target;
  * <br>
  * This option will slow down the process of opening database files and the
  * stored objects will occupy space in the database file.
- * 
- * 
+ * @exclude
  */
 @Documented
 @Target(ElementType.TYPE)

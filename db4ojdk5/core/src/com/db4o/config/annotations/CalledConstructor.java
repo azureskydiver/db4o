@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * switches calling constructors on <br> <br>
+ * @exclude
  */
 @Documented
 @Target(ElementType.TYPE)
