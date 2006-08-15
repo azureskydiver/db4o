@@ -7,6 +7,9 @@ import com.db4o.events.EventRegistry;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.query.Query;
 
+/**
+ * @exclude
+ */
 public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	
 	protected final Event4Impl _queryStarted = new Event4Impl();

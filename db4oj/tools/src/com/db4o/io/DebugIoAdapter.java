@@ -4,7 +4,9 @@ package com.db4o.io;
 
 import java.io.*;
 
-
+/**
+ * @exclude
+ */  
 public class DebugIoAdapter extends VanillaIoAdapter{
     
     public static int counter;

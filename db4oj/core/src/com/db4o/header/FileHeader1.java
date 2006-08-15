@@ -3,6 +3,9 @@
 package com.db4o.header;
 
 
+/**
+ * @exclude
+ */
 public class FileHeader1 {
 
 }

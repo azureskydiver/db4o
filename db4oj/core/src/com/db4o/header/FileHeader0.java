@@ -10,7 +10,9 @@ import com.db4o.inside.*;
 import com.db4o.inside.convert.*;
 import com.db4o.io.*;
 
-
+/**
+ * @exclude
+ */
 public class FileHeader0 {
     
     protected YapConfigBlock    _configBlock;
