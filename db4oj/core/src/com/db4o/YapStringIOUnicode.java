@@ -33,7 +33,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 //	}
 	
 	public int length(String a_string){
-		return (a_string.length() * 2) + YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH;
+		return (a_string.length() * 2) + YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH;
 	}
 	
 	public String read(YapReader bytes, int a_length){
@@ -55,7 +55,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 	}
 	
 	public int shortLength(String a_string){
-		return (a_string.length() * 2)  + YapConst.YAPINT_LENGTH;
+		return (a_string.length() * 2)  + YapConst.INT_LENGTH;
 	}
 	
 	public void write(YapReader bytes, String string){

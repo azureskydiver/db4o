@@ -9,7 +9,7 @@ final class MReadMultipleObjects extends MsgD {
 
 		int size = readInt();
 		MsgD[] ret = new MsgD[size];
-		int length = (1 + size) * YapConst.YAPINT_LENGTH;
+		int length = (1 + size) * YapConst.INT_LENGTH;
 		YapStream stream = getStream();
 
 		YapWriter bytes = null;		

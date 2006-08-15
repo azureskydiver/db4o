@@ -51,17 +51,17 @@ public final class YapConst
 
 	static final int	UNSPECIFIED			= Integer.MIN_VALUE + 100; // make sure we don't fall over the -1 cliff
 
-	public static final int	YAPINT_LENGTH	= INTEGER_BYTES + ADDED_LENGTH;
-	public static final int	YAPID_LENGTH		= YAPINT_LENGTH;
-	static final int	YAPLONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
+	public static final int	INT_LENGTH	= INTEGER_BYTES + ADDED_LENGTH;
+	public static final int	ID_LENGTH		= INT_LENGTH;
+	static final int	LONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
 	
 	static final int	WRITE_LOOP			= (INTEGER_BYTES - 1) * 8;
 	
 	public static final int	OBJECT_LENGTH		= ADDED_LENGTH;
 
-	public static final int	POINTER_LENGTH		= (YAPINT_LENGTH * 2) +  ADDED_LENGTH;
+	public static final int	POINTER_LENGTH		= (INT_LENGTH * 2) +  ADDED_LENGTH;
 	
-	static final int	MESSAGE_LENGTH 		= YAPINT_LENGTH * 2 + 1;
+	static final int	MESSAGE_LENGTH 		= INT_LENGTH * 2 + 1;
 	
 	static final byte   SYSTEM_TRANS        = (byte)'s';
 	static final byte   USER_TRANS          = (byte)'u';

@@ -68,7 +68,7 @@ public abstract class YapMeta {
     }
 
     public int linkLength() {
-        return YapConst.YAPID_LENGTH;
+        return YapConst.ID_LENGTH;
     }
 
     final void notCachedDirty() {

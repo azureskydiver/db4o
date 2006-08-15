@@ -64,15 +64,15 @@ final class YapClassAny extends YapClass {
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
         if(topLevel){
-            header.addBaseLength(YapConst.YAPINT_LENGTH); 
+            header.addBaseLength(YapConst.INT_LENGTH); 
         }else{
-            header.addPayLoadLength(YapConst.YAPINT_LENGTH);  // single relink
+            header.addPayLoadLength(YapConst.INT_LENGTH);  // single relink
         }
         YapClass yc = forObject(trans, obj, true);
         if( yc == null){
             return;
         }
-        header.addPayLoadLength(YapConst.YAPINT_LENGTH); //  type information int
+        header.addPayLoadLength(YapConst.INT_LENGTH); //  type information int
         yc.calculateLengths(trans, header, false, obj, false);
     }
     

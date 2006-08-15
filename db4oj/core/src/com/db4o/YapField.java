@@ -614,7 +614,7 @@ public class YapField implements StoredField {
         alive();
         if (i_handler == null) {
             // must be a YapClass
-            return YapConst.YAPID_LENGTH;
+            return YapConst.ID_LENGTH;
         }
         return i_handler.linkLength();
     }
@@ -625,7 +625,7 @@ public class YapField implements StoredField {
             
             // must be a YapClass
             
-            header.addBaseLength(YapConst.YAPID_LENGTH);
+            header.addBaseLength(YapConst.ID_LENGTH);
             return ;
         }
         
@@ -879,7 +879,14 @@ public class YapField implements StoredField {
     }
 
     public void initIndex(Transaction systemTrans) {
-        _index = new BTree(systemTrans, 0, i_handler, new YInt(systemTrans.stream()));
+        if(_index != null){
+            return;
+        }
+        initIndex(systemTrans, 0);
+    }
+
+    public void initIndex(Transaction systemTrans, final int id) {
+        _index = new BTree(systemTrans, id, i_handler, new YInt(systemTrans.stream()));
     }
     
     public BTree getIndex(){

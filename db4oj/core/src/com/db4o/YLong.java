@@ -32,7 +32,7 @@ class YLong extends YapJavaClass
 	}
 	
 	public int linkLength(){
-		return YapConst.YAPLONG_LENGTH;
+		return YapConst.LONG_LENGTH;
 	}
 	
 	Object primitiveNull(){

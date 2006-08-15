@@ -54,7 +54,7 @@ public class FileHeader0 {
         _configBlock.read(reader.readInt());
 
         // configuration lock time skipped
-        reader.incrementOffset(YapConst.YAPID_LENGTH);
+        reader.incrementOffset(YapConst.ID_LENGTH);
         
         _classCollectionID = reader.readInt();
         
@@ -168,7 +168,7 @@ public class FileHeader0 {
 
     public void writeTransactionPointer(Transaction trans, int address) {
         YapWriter bytes = new YapWriter(trans,
-            _configBlock._address, YapConst.YAPINT_LENGTH * 2);
+            _configBlock._address, YapConst.INT_LENGTH * 2);
         
         bytes.moveForward(YapConfigBlock.TRANSACTION_OFFSET);
         

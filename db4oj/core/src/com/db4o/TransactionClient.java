@@ -69,7 +69,7 @@ final class TransactionClient extends Transaction {
     }
     
     Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
-        int messageLength = YapConst.YAPLONG_LENGTH + YapConst.YAPINT_LENGTH + a_signature.length;
+        int messageLength = YapConst.LONG_LENGTH + YapConst.INT_LENGTH + a_signature.length;
         MsgD message = Msg.OBJECT_BY_UUID.getWriterForLength(this, messageLength);
         message.writeLong(a_uuid);
         message.writeBytes(a_signature);

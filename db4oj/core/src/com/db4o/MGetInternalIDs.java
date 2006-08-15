@@ -17,7 +17,7 @@ final class MGetInternalIDs extends MsgD {
 			}
 		}
 		int size = ids.length;
-		MsgD message = Msg.ID_LIST.getWriterForLength(getTransaction(), YapConst.YAPID_LENGTH * (size + 1));
+		MsgD message = Msg.ID_LIST.getWriterForLength(getTransaction(), YapConst.ID_LENGTH * (size + 1));
 		YapWriter writer = message.getPayLoad();
 		writer.writeInt(size);
 		for (int i = 0; i < size; i++) {

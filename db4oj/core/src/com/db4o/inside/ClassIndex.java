@@ -28,7 +28,7 @@ import com.db4o.inside.slots.Slot;
 	}
 
     public final int byteCount() {
-    	return YapConst.YAPINT_LENGTH * (Tree.size(i_root) + 1);
+    	return YapConst.INT_LENGTH * (Tree.size(i_root) + 1);
     }
 
     public final void clear() {
@@ -47,7 +47,7 @@ import com.db4o.inside.slots.Slot;
             return Tree.size(i_root);
         }
         Slot slot = ta.getSlotInformation(getID());
-        int length = YapConst.YAPINT_LENGTH;
+        int length = YapConst.INT_LENGTH;
         if(Deploy.debug){
             length += YapConst.LEADING_LENGTH;
         }

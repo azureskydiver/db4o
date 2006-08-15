@@ -29,7 +29,7 @@ class IxFileRangeReader {
     IxFileRangeReader(Indexable4 handler) {
         _handler = handler;
         _linkLegth = handler.linkLength();
-        _slotLength = _linkLegth + YapConst.YAPINT_LENGTH;
+        _slotLength = _linkLegth + YapConst.INT_LENGTH;
         _reader = new YapReader(_slotLength);
     }
 

@@ -42,7 +42,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
         //        longer needed. To stay compatible with marshaller family 0
         //        it was considered a bad idea to change this value.
         
-        return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
+        return YapConst.INT_LENGTH + YapConst.ID_LENGTH;
     }
     
 	public final ReflectClass primitiveClassReflector(){

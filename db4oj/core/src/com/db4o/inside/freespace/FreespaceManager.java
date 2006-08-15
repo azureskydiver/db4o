@@ -57,7 +57,7 @@ public abstract class FreespaceManager {
     
     
     final static int slotLength(){
-        return YapConst.YAPINT_LENGTH * INTS_IN_SLOT;
+        return YapConst.INT_LENGTH * INTS_IN_SLOT;
     }
     
     public abstract void beginCommit();

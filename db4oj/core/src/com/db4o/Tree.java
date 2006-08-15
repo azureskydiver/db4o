@@ -105,14 +105,14 @@ public abstract class Tree implements ShallowClone,Readable{
 	
 	public static int byteCount(Tree a_tree){
 		if(a_tree == null){
-			return YapConst.YAPINT_LENGTH;
+			return YapConst.INT_LENGTH;
 		}
 		return a_tree.byteCount();
 	}
 	
 	public final int byteCount(){
 		if(variableLength()){
-			final int[] length = new int[]{YapConst.YAPINT_LENGTH};
+			final int[] length = new int[]{YapConst.INT_LENGTH};
 			traverse(new Visitor4(){
 				public void visit(Object obj){
 					length[0] += ((Tree)obj).ownLength();
@@ -120,7 +120,7 @@ public abstract class Tree implements ShallowClone,Readable{
 			});
 			return length[0];
 		}else{
-			return YapConst.YAPINT_LENGTH + (size() * ownLength());
+			return YapConst.INT_LENGTH + (size() * ownLength());
 		}
 	}
 

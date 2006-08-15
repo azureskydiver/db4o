@@ -50,7 +50,7 @@ public class MarshallerFamily {
         new MarshallerFamily(
             new ArrayMarshaller0(),
             new ClassMarshaller(),
-            new FieldMarshaller(),
+            new FieldMarshaller0(),
             new ObjectMarshaller0(), 
             new PrimitiveMarshaller0(),
             new StringMarshaller0(),
@@ -61,7 +61,7 @@ public class MarshallerFamily {
         new MarshallerFamily(
             new ArrayMarshaller1(),
             new ClassMarshaller(),
-            new FieldMarshaller(),
+            new FieldMarshaller0(),
             new ObjectMarshaller1(), 
             new PrimitiveMarshaller1(),
             new StringMarshaller1(),
@@ -72,7 +72,7 @@ public class MarshallerFamily {
     new MarshallerFamily(
         new ArrayMarshaller1(),
         new ClassMarshaller(),
-        new FieldMarshaller(),
+        new FieldMarshaller1(),
         new ObjectMarshaller1(), 
         new PrimitiveMarshaller1(),
         new StringMarshaller1(),
