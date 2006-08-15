@@ -2,13 +2,17 @@
 
 package com.db4o.test.replication.db4ounit;
 
+import java.util.List;
+import java.util.Map;
+
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
+import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
-import com.db4o.test.Test;
-import com.db4o.test.replication.ArrayHolder;
+import com.db4o.test.other.SPCChild;
+import com.db4o.test.other.SPCParent;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
@@ -16,6 +20,14 @@ import db4ounit.TestLifeCycle;
 
 public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	
+	public static final Class[] mappings;
+	public static final Class[] extraMappingsForCleaning = new Class[]{Map.class, List.class};
+
+	static {
+		mappings = new Class[]{
+				SPCParent.class, SPCChild.class};
+		}
+
 	private DrsFixture _a;
 	private DrsFixture _b;
 	
@@ -31,7 +43,22 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		_a.clean();
 		_b.clean();
 	}
-	
+
+	protected void clean() {
+		for (int i = 0; i < mappings.length; i++) {
+			a().provider().deleteAllInstances(mappings[i]);
+			b().provider().deleteAllInstances(mappings[i]);
+		}
+
+		for (int i = 0; i < extraMappingsForCleaning.length; i++) {
+			a().provider().deleteAllInstances(extraMappingsForCleaning[i]);
+			b().provider().deleteAllInstances(extraMappingsForCleaning[i]);
+		}
+
+		a().provider().commit();
+		b().provider().commit();
+	}
+
 	protected void store() {}
 	
 	protected void configure() {
@@ -75,6 +102,52 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		return _b;
 	}
 
+	protected void ensureOneInstance(TestableReplicationProviderInside provider, Class clazz) {
+		ensureInstanceCount(provider, clazz, 1);
+	}
 
+	protected void ensureInstanceCount(TestableReplicationProviderInside provider, Class clazz, int count) {
+		ObjectSet objectSet = provider.getStoredObjects(clazz);
+		Assert.areEqual(count, objectSet.size());
+	}
+
+	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
+		ObjectSet objectSet = provider.getStoredObjects(clazz);
+
+		if (1 != objectSet.size())
+			throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + provider);
+
+		return objectSet.next();
+	}
+
+	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
+		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
+		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
+		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
+
+		if (!allObjects.hasNext())
+			throw new RuntimeException("Can't find any objects to replicate");
+
+		while (allObjects.hasNext()) {
+			Object changed = allObjects.next();
+			//System.out.println("changed = " + changed);
+			replication.replicate(changed);
+		}
+		replication.commit();
+	}
+	
+	protected void replicateAll(
+			TestableReplicationProviderInside from, TestableReplicationProviderInside to, ReplicationEventListener listener) {
+		ReplicationSession replication = Replication.begin(from, to, listener);
+
+		ObjectSet allObjects = from.objectsChangedSinceLastReplication();
+		while (allObjects.hasNext()) {
+			Object changed = allObjects.next();
+			//System.out.println("changed = " + changed);
+			replication.replicate(changed);
+		}
+
+		replication.commit();
+	}
 
 }
