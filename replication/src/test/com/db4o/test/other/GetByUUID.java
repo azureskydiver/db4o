@@ -6,13 +6,14 @@ import com.db4o.Db4o;
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.query.Query;
+import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
 import db4ounit.db4o.Db4oTestCase;
 
 import java.util.Hashtable;
 
-public class GetByUUID extends Db4oTestCase {
+public class GetByUUID extends DrsTestCase {
 
 	String name;
 
@@ -28,35 +29,35 @@ public class GetByUUID extends Db4oTestCase {
 	}
 
 	public void store() {
-		db().set(new GetByUUID("one"));
-		db().set(new GetByUUID("two"));
+		a().db().set(new GetByUUID("one"));
+		a().db().set(new GetByUUID("two"));
 	}
 
 	public void test() throws Exception {
 		Hashtable ht = new Hashtable();
 		//ExtObjectContainer oc = Test.objectContainer();
-		Query q = db().query();
+		Query q = a().db().query();
 		q.constrain(GetByUUID.class);
 		ObjectSet objectSet = q.execute();
 		while (objectSet.hasNext()) {
 			GetByUUID gbu = (GetByUUID) objectSet.next();
-			Db4oUUID uuid = db().getObjectInfo(gbu).getUUID();
-			GetByUUID gbu2 = (GetByUUID) db().getByUUID(uuid);
+			Db4oUUID uuid = a().db().getObjectInfo(gbu).getUUID();
+			GetByUUID gbu2 = (GetByUUID) a().db().getByUUID(uuid);
 			Assert.areEqual(gbu, gbu2);
 			ht.put(gbu.name, uuid);
 		}
 		reopen();
 		//oc = Test.objectContainer();
-		q = db().query();
+		q = a().db().query();
 		q.constrain(GetByUUID.class);
 		objectSet = q.execute();
 		while (objectSet.hasNext()) {
 			GetByUUID gbu = (GetByUUID) objectSet.next();
 			Db4oUUID uuid = (Db4oUUID) ht.get(gbu.name);
-			GetByUUID gbu2 = (GetByUUID) db().getByUUID(uuid);
+			GetByUUID gbu2 = (GetByUUID) a().db().getByUUID(uuid);
 			Assert.areEqual(gbu, gbu2);
 
-			db().delete(gbu);
+			a().db().delete(gbu);
 		}
 	}
 }

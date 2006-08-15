@@ -7,6 +7,8 @@ import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.test.Test;
+import com.db4o.test.replication.ArrayHolder;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
@@ -73,50 +75,6 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		return _b;
 	}
 
-	protected void ensureOneInstance(TestableReplicationProviderInside provider, Class clazz) {
-		ensureInstanceCount(provider, clazz, 1);
-	}
 
-	protected void ensureInstanceCount(TestableReplicationProviderInside provider, Class clazz, int count) {
-		ObjectSet objectSet = provider.getStoredObjects(clazz);
-		Assert.areEqual(count, objectSet.size());
-	}
-
-	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
-		ObjectSet objectSet = provider.getStoredObjects(clazz);
-
-		if (1 != objectSet.size())
-			throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + provider);
-
-		return objectSet.next();
-	}
-
-	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
-		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
-		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
-		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
-
-		if (!allObjects.hasNext())
-			throw new RuntimeException("Can't find any objects to replicate");
-
-		while (allObjects.hasNext()) {
-			Object changed = allObjects.next();
-			//System.out.println("changed = " + changed);
-			replication.replicate(changed);
-		}
-		replication.commit();
-	}
-
-	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
-		//System.out.println("ReplicationTestcase.replicateClass");
-		ReplicationSession replication = Replication.begin(providerA, providerB);
-		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
-		while (allObjects.hasNext()) {
-			final Object obj = allObjects.next();
-			//System.out.println("obj = " + obj);
-			replication.replicate(obj);
-		}
-		replication.commit();
-	}
 
 }
