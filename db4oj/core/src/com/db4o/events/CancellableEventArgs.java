@@ -3,6 +3,11 @@
 package com.db4o.events;
 
 public interface CancellableEventArgs  {
+	
+	/**
+	 *@property
+	 */
 	public boolean isCancelled();
+
 	public void cancel();
 }

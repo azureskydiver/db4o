@@ -16,7 +16,7 @@ namespace com.db4o.events.impl
 		{
 			CancellableObjectEventArgs coea = new CancellableObjectEventArgs(o);
 			e(o, coea);
-			return !coea.IsCancelled();
+			return !coea.IsCancelled;
 		}
 
 		public static void TriggerObjectEvent(ObjectEventHandler e, object o)
