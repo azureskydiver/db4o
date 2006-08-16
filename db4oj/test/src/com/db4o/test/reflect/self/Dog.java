@@ -12,7 +12,7 @@ import com.db4o.test.*;
 
 public class Dog extends Animal {
 
-	private transient static List dogs;
+	private transient static Vector dogs;
 	
     // must be public for the time being due to setAccessible() check in Platform4
     public int _age;
@@ -42,15 +42,15 @@ public class Dog extends Animal {
     }
     
     public void store(){
-    	dogs=new ArrayList();
-    	Dog laika = new Dog("Laika",7);
-    	Dog lassie = new Dog("Lassie",6);
-		dogs.add(laika);
-		dogs.add(lassie);
-    	dogs.add(new Dog("Sharik",100, new Dog[]{laika,lassie},new int[]{3,2,1}));
-    	for (Iterator iter = dogs.iterator(); iter.hasNext();) {
-    		Test.store(iter.next());
-		}
+        dogs=new Vector();
+        Dog laika = new Dog("Laika",7);
+        Dog lassie = new Dog("Lassie",6);
+        dogs.addElement(laika);
+        dogs.addElement(lassie);
+        dogs.addElement(new Dog("Sharik",100, new Dog[]{laika,lassie},new int[]{3,2,1}));
+        for (Enumeration e = dogs.elements(); e.hasMoreElements();) {
+            Test.store(e.nextElement());
+        }
     }
     
     public void test(){
