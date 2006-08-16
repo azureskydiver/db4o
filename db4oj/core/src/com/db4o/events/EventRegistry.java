@@ -2,6 +2,11 @@
 
 package com.db4o.events;
 
+/**
+ * Provides a way to register event handlers for specific {@link ObjectContainer} events.
+ * 
+ * @see EventRegistryFactory
+ */
 public interface EventRegistry {
 	
 	/**

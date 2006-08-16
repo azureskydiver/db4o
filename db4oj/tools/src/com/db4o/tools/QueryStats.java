@@ -38,21 +38,38 @@ public class QueryStats {
 		};
 	};
 	
+	/**
+	 * How long the last query took to execute.
+	 * 
+	 * @return time in miliseconds
+	 */
 	public long executionTime() {
 		return _watch.elapsed();
 	}
 	
+	/**
+	 * How many objects were activated so far.
+	 */
 	public int activationCount() {
 		return _activationCount;
 	}
 
+	/**
+	 * Starts gathering query statistics for the specified container.
+	 */
 	public void connect(ObjectContainer container) {
+		if (_registry != null) {
+			throw new IllegalArgumentException("Already connected to an ObjectContainer");
+		}
 		_registry = EventRegistryFactory.forObjectContainer(container);
 		_registry.queryStarted().addListener(_queryStarted);
 		_registry.queryFinished().addListener(_queryFinished);
 		_registry.activated().addListener(_activated);
 	}
 	
+	/**
+	 * Disconnects from the current container.
+	 */
 	public void disconnect() {
 		if (null != _registry) {
 			_registry.queryStarted().removeListener(_queryStarted);
