@@ -532,9 +532,9 @@ public abstract class YapFile extends YapStream {
         i_entryCounter--;
     }
 
-    public final void setDirty(UseSystemTransaction a_object) {
-        ((YapMeta) a_object).setStateDirty();
-        ((YapMeta) a_object).cacheDirty(i_dirty);
+    public final void setDirtyInSystemTransaction(YapMeta a_object) {
+        a_object.setStateDirty();
+        a_object.cacheDirty(i_dirty);
     }
 
     public boolean setSemaphore(String name, int timeout) {

@@ -76,7 +76,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		    }else{
 		        createBTreeIndex(stream, 0);
 		        new ClassIndexesToBTrees().convert(yf, indexId, _btreeIndex);
-		        yf.setDirty(_yapClass);
+		        yf.setDirtyInSystemTransaction(_yapClass);
 		    }
 		}
 	}

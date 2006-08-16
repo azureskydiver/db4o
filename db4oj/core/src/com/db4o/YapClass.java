@@ -16,7 +16,7 @@ import com.db4o.reflect.generic.GenericReflector;
 /**
  * @exclude
  */
-public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseSystemTransaction {
+public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
     public YapClass i_ancestor;
 
@@ -146,7 +146,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 }
             }
             if (dirty) {
-                i_stream.setDirty(this);
+                i_stream.setDirtyInSystemTransaction(this);
                 i_fields = new YapField[members.size()];
                 members.toArray(i_fields);
                 for (int i = 0; i < i_fields.length; i++) {
@@ -179,7 +179,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     	}
     	
     	if (isNewTranslator(ot)) {
-    		i_stream.setDirty(this);
+    		i_stream.setDirtyInSystemTransaction(this);
     	}
         
         int fieldCount = 1;
@@ -1506,10 +1506,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         bitTrue(YapConst.READING);
         
         MarshallerFamily.current()._class.read(i_stream, this, i_reader);
-        
-        for (int i = 0; i < i_fields.length; i++) {
-            i_fields[i].loadHandler(i_stream);
-        }
         
         i_nameBytes = null;
         i_reader = null;

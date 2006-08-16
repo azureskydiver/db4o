@@ -47,6 +47,8 @@ public class FieldMarshaller0 extends FieldMarshaller {
         boolean isNArray = yb.get();
         
         field.init(handlerID, isPrimitive, isArray, isNArray);
+        // FIXME: need a handler to initialize the BTree index
+        //field.loadHandler(stream);
         
         return field;
     }

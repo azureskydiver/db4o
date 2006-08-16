@@ -162,33 +162,31 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         if(_processing){
             return false;
         }
-        _processing = true;
-        if (Tuning.fieldIndices) {
-            YapStream stream = systemTrans.stream();
-            if (stream.maintainsIndices()) {
-            	boolean maintainMetaClass=_config.getAsBoolean(MAINTAIN_METACLASS);
-                if(maintainMetaClass){
-                    MetaClass metaClassRef=metaClass();
-                    if(metaClassID[0] > 0){
-                        metaClassRef = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
-                        _config.put(METACLASS, metaClassRef);
-                    }
-                    
-                    if(metaClassRef == null){
-                        metaClassRef = (MetaClass) stream.get1(systemTrans,new MetaClass(getName())).next();
-                        _config.put(METACLASS, metaClassRef);
-                        metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
-                    }
-                            
-                    if (metaClassRef == null) {
-                        metaClassRef = new MetaClass(getName());
-                        _config.put(METACLASS, metaClassRef);
-                        stream.setInternal(systemTrans, metaClassRef, Integer.MAX_VALUE, false);
-                        metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
-                    } else {
-                        stream.activate1(systemTrans, metaClassRef,
-                            Integer.MAX_VALUE);
-                    }
+        _processing = true;        
+        YapStream stream = systemTrans.stream();
+        if (stream.maintainsIndices()) {
+        	boolean maintainMetaClass=_config.getAsBoolean(MAINTAIN_METACLASS);
+            if(maintainMetaClass){
+                MetaClass metaClassRef=metaClass();
+                if(metaClassID[0] > 0){
+                    metaClassRef = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
+                    _config.put(METACLASS, metaClassRef);
+                }
+                
+                if(metaClassRef == null){
+                    metaClassRef = (MetaClass) stream.get1(systemTrans,new MetaClass(getName())).next();
+                    _config.put(METACLASS, metaClassRef);
+                    metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
+                }
+                        
+                if (metaClassRef == null) {
+                    metaClassRef = new MetaClass(getName());
+                    _config.put(METACLASS, metaClassRef);
+                    stream.setInternal(systemTrans, metaClassRef, Integer.MAX_VALUE, false);
+                    metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
+                } else {
+                    stream.activate1(systemTrans, metaClassRef,
+                        Integer.MAX_VALUE);
                 }
             }
         }

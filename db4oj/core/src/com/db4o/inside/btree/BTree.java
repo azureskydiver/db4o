@@ -5,6 +5,7 @@ package com.db4o.inside.btree;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
+import com.db4o.inside.marshall.MarshallerFamily;
 
 /**
  * @exclude
@@ -12,7 +13,7 @@ import com.db4o.inside.ix.*;
 public class BTree extends YapMeta implements TransactionParticipant {
     
     /** temporary variable for value and search coding */
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = MarshallerFamily.BTREE_FIELD_INDEX;
     
     private static final byte BTREE_VERSION = (byte)1;
     
@@ -43,6 +44,10 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     
     public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
+    	
+    	if (null == keyHandler) {
+    		throw new ArgumentNullException();
+    	}
         
         _nodeSize = DEBUG ? 7 : trans.stream().configImpl().bTreeNodeSize();
         _halfNodeSize = _nodeSize / 2;

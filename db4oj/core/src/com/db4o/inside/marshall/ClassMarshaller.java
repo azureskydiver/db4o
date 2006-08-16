@@ -63,16 +63,28 @@ public class ClassMarshaller {
         
         clazz.index().read(reader, stream);
         
-        clazz.i_fields = new YapField[reader.readInt()];
-        for (int i = 0; i < clazz.i_fields.length; i++) {
-            clazz.i_fields[i] = new YapField(clazz);
-            clazz.i_fields[i].setArrayPosition(i);
+        clazz.i_fields = createFields(clazz, reader.readInt());
+        readFields(stream, reader, clazz.i_fields);        
+    }
+
+	private YapField[] createFields(YapClass clazz, final int fieldCount) {
+		final YapField[] fields = new YapField[fieldCount];
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = new YapField(clazz);
+            fields[i].setArrayPosition(i);
         }
-        for (int i = 0; i < clazz.i_fields.length; i++) {
-            clazz.i_fields[i] = _family._field.read(stream, clazz.i_fields[i], reader);
+		return fields;
+	}
+
+	private void readFields(YapStream stream, YapReader reader, final YapField[] fields) {
+		for (int i = 0; i < fields.length; i++) {
+            fields[i] = _family._field.read(stream, fields[i], reader);
         }
         
-    }
+        for (int i = 0; i < fields.length; i++) {
+            fields[i].loadHandler(stream);
+        }
+	}
 
     public int marshalledLength(YapStream stream, YapClass clazz) {
         int len = stream.stringIO().shortLength(clazz.nameToWrite())

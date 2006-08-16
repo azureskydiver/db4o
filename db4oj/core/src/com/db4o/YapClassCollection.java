@@ -9,9 +9,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public final class YapClassCollection extends YapMeta implements UseSystemTransaction {
-
-    private YapClass i_addingMembersTo;
+public final class YapClassCollection extends YapMeta {
 
     private Collection4 i_classes;
     private Hashtable4 i_creating;
@@ -37,7 +35,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
 
     void addYapClass(YapClass yapClass) {
-        i_stream.setDirty(this);
+        i_stream.setDirtyInSystemTransaction(this);
         i_classes.add(yapClass);
         if(yapClass.stateUnread()){
             i_yapClassByBytes.put(yapClass.i_nameBytes, yapClass);
@@ -194,7 +192,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         
         i_creating.remove(a_class);
         
-        i_stream.setDirty(this);
+        i_stream.setDirtyInSystemTransaction(this);
         
         return yapClass;
     }    

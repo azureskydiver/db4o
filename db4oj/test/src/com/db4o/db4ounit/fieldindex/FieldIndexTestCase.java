@@ -48,8 +48,6 @@ public class FieldIndexTestCase extends Db4oTestCase{
     
     public void testAccessingBTree() throws Exception{
         
-        store();
-        
         YapStream stream = (YapStream)db();
         ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
         YapClass yc = stream.getYapClass(claxx, false);
