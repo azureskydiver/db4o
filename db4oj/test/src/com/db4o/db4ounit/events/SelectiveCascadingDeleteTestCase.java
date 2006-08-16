@@ -83,6 +83,7 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 			public int compare(Object first, Object second) {
 				return ((Item)first).id.compareTo(((Item)second).id);
 			}
+			private static final long serialVersionUID = 1L;
 		});
 		return q;
 	}
