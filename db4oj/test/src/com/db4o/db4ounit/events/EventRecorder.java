@@ -23,11 +23,11 @@ public class EventRecorder implements EventListener4 {
 	}
 
 	public EventRecord get(int index) {
-		return (EventRecord)_events.get(index);
+		return (EventRecord)_events.elementAt(index);
 	}
 
 	public void clear() {
-		_events.clear();
+        _events.removeAllElements();
 	}
 
 	public void cancel(boolean flag) {

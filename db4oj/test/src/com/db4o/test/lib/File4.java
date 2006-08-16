@@ -186,7 +186,7 @@ public class File4 extends java.io.File {
     	ZipEntry ze = zis.getNextEntry();
     	while(ze != null){
     		File file = new File(this.getParent(), ze.getName());
-    		file.getParentFile().mkdirs();
+            parentFile(file).mkdirs();
     		FileOutputStream fos = new FileOutputStream(file);
     		while((read = zis.read(bytes,0,BLOCK_LENGTH)) > 0){
     			fos.write(bytes,0, read);
@@ -197,4 +197,11 @@ public class File4 extends java.io.File {
     	}
     	zis.close();
     }
+    
+    private File parentFile(File forFile) {
+        String path = forFile.getParent();
+        if (path == null) return null;
+        return new File(path);
+     }
+
 }
