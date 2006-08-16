@@ -50,11 +50,11 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 					a.cancel();
 					
 					// restart from the child
-					db().delete(item.child);
+                    SelectiveCascadingDeleteTestCase.this.db().delete(item.child);
 					
 					// and disconnect it
 					item.child = null;
-					db().set(item);
+                    SelectiveCascadingDeleteTestCase.this.db().set(item);
 				}
 			}
 		});
