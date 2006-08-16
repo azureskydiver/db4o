@@ -3,8 +3,6 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
-import com.db4o.inside.btree.*;
-
 
 /**
  * @exclude

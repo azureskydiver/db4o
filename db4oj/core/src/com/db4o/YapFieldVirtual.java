@@ -79,7 +79,7 @@ public abstract class YapFieldVirtual extends YapField {
 
     abstract void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes);
     
-    void loadHandler(YapStream a_stream){
+    public void loadHandler(YapStream a_stream){
     	// do nothing
     }
 

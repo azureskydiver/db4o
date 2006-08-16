@@ -633,7 +633,7 @@ public class YapField implements StoredField {
     }
     
 
-    void loadHandler(YapStream a_stream) {
+    public void loadHandler(YapStream a_stream) {
         if (i_handlerID < 1) {
             i_handler = null;
         } else if (i_handlerID <= a_stream.i_handlers.maxTypeID()) {
@@ -878,14 +878,14 @@ public class YapField implements StoredField {
         return str;
     }
 
-    public void initIndex(Transaction systemTrans) {
-        if(_index != null){
-            return;
-        }
+    public void initIndex(Transaction systemTrans) {        
         initIndex(systemTrans, 0);
     }
 
     public void initIndex(Transaction systemTrans, final int id) {
+    	if(_index != null){
+    		throw new IllegalStateException();
+        }
         _index = new BTree(systemTrans, id, i_handler, new YInt(systemTrans.stream()));
     }
     

@@ -9,7 +9,7 @@ import com.db4o.inside.slots.Slot;
 /**
  * representation to collect and hold all IDs of one class
  */
- public class ClassIndex extends YapMeta implements ReadWriteable, UseSystemTransaction {
+ public class ClassIndex extends YapMeta implements ReadWriteable {
      
      
     private final YapClass _yapClass;
@@ -88,7 +88,7 @@ import com.db4o.inside.slots.Slot;
 
     void setDirty(YapStream a_stream) {
     	// TODO: get rid of the setDirty call
-        a_stream.setDirty(this);
+        a_stream.setDirtyInSystemTransaction(this);
     }
 
     public void write(YapReader a_writer) {

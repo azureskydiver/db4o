@@ -1511,7 +1511,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     }
                     if (renamed) {
                         renamedOne = true;
-                        setDirty(yapClass);
+                        setDirtyInSystemTransaction(yapClass);
 
                         logMsg(8, ren.rFrom + " to " + ren.rTo);
 
@@ -1829,7 +1829,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 			&& yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW);
 	}
 
-    public abstract void setDirty(UseSystemTransaction a_object);
+    public abstract void setDirtyInSystemTransaction(YapMeta a_object);
 
     public abstract boolean setSemaphore(String name, int timeout);
 

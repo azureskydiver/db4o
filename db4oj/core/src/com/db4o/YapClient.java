@@ -611,7 +611,7 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 	}
 
-	public final void setDirty(UseSystemTransaction a_object) {
+	public final void setDirtyInSystemTransaction(YapMeta a_object) {
 		// do nothing
 	}
 
