@@ -2,9 +2,7 @@
 
 package com.db4o.db4ounit.fieldindex;
 
-import com.db4o.inside.btree.*;
-
-import db4ounit.*;
+import com.db4o.inside.btree.BTree;
 
 
 public class BTreeSearchTestCase extends BTreeTestCaseBase{
@@ -32,7 +30,7 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
         for (int i = 0; i < values.length; i++) {
             btree.add(trans(), new Integer(values[i]));
         }
-        traverseKeysForDistinctValues(btree, values);
+        expectKeysSearch(btree, values);
         
         btree.commit(trans());
         
@@ -44,7 +42,7 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
         
         btree = createIntKeyBTree(id);
         
-        traverseKeysForDistinctValues(btree, values);
+        expectKeysSearch(btree, values);
         
         for (int i = 0; i < values.length; i++) {
             btree.remove(trans(), new Integer(values[i]));
@@ -57,45 +55,6 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
         assertEmpty(trans(), btree);
         
         return btree;
-    }
-    
-    private void traverseKeysForDistinctValues(BTree btree, int[] values){
-        int lastValue = Integer.MIN_VALUE;
-        for (int i = 0; i < values.length; i++) {
-            if(values[i] != lastValue){
-                ExpectingVisitor expectingVisitor = createExpectingVisitor(values[i], occurences(values, values[i]));
-                BTreeRange range = btree.search(trans(), new Integer(values[i]));
-                range.traverseKeys(expectingVisitor);
-                Assert.isTrue(expectingVisitor.allAsExpected());
-                lastValue = values[i];
-            }
-        }
-    }
-    
-    private int occurences(int[] values, int value){
-        int count = 0;
-        for (int i = 0; i < values.length; i++) {
-            if(values[i] == value){
-                count ++;
-            }
-        }
-        return count;
-    }
-
-    private ExpectingVisitor createExpectingVisitor(int value, int count) {
-        int[] values = new int[count];
-        for (int i = 0; i < values.length; i++) {
-            values[i] = value;
-        }
-        return new ExpectingVisitor(createExpectedValues(values));
-    }
-
-    private Object[] createExpectedValues(int[] values) {
-        Object[] ret = new Object[values.length];
-        for (int i = 0; i < values.length; i++) {
-            ret[i] = new Integer(values[i]);
-        }
-        return ret;
     }
 
 }

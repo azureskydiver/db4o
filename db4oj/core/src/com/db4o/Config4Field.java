@@ -88,16 +88,19 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 
 	private boolean useExistingIndex(Transaction systemTrans, YapField yapField) {
 		
+		if (MarshallerFamily.OLD_FIELD_INDEX) {
+			MetaField metaField = getMetaField(systemTrans);
+	        if (metaField.index == null) {
+	        	return false;
+	        }
+	        
+	        yapField.initOldIndex(systemTrans, metaField.index);
+		}
+		
 		if (MarshallerFamily.BTREE_FIELD_INDEX){
 			return yapField.getIndex() != null;
 		}
 		
-		MetaField metaField = getMetaField(systemTrans);
-        if (metaField.index == null) {
-        	return false;
-        }
-        
-        yapField.initOldIndex(systemTrans, metaField.index);
         return true;
 	}
 
@@ -106,23 +109,23 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 		if(MarshallerFamily.BTREE_FIELD_INDEX){
 		    yapField.initIndex(systemTrans);
 		    stream.setDirtyInSystemTransaction(yapField.getParentYapClass());
-		    return;
 		}
 
-		MetaField metaField = getMetaField(systemTrans);
-		if (metaField.index == null) {
-		    metaField.index = new MetaIndex();
-		    stream.setInternal(systemTrans, metaField.index, YapConst.UNSPECIFIED, false);
-		    stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);
-		    
-		    if(MarshallerFamily.OLD_FIELD_INDEX){
-		        yapField.initOldIndex(systemTrans, metaField.index);
-		    }
-		    
-			if (stream.configImpl().messageLevel() > YapConst.NONE) {
-				stream.message("creating index " + yapField.toString());
+		if(MarshallerFamily.OLD_FIELD_INDEX) {
+			MetaField metaField = getMetaField(systemTrans);
+			if (metaField.index == null) {
+			    metaField.index = new MetaIndex();
+			    stream.setInternal(systemTrans, metaField.index, YapConst.UNSPECIFIED, false);
+			    stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);
+			    
+			    
+			    yapField.initOldIndex(systemTrans, metaField.index);
+			    
+				if (stream.configImpl().messageLevel() > YapConst.NONE) {
+					stream.message("creating index " + yapField.toString());
+				}
+				reindex(systemTrans, yapField, stream);
 			}
-			reindex(systemTrans, yapField, stream);
 		}
 	}
 

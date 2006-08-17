@@ -12,7 +12,23 @@ import db4ounit.db4o.*;
 
 public class BTreeTestCaseBase extends Db4oTestCase{
 
-    protected YapStream stream() {
+    public static ExpectingVisitor createExpectingVisitor(int value, int count) {
+	    int[] values = new int[count];
+	    for (int i = 0; i < values.length; i++) {
+	        values[i] = value;
+	    }
+	    return new ExpectingVisitor(createExpectedValues(values));
+	}
+
+	public static Object[] createExpectedValues(int[] values) {
+	    Object[] ret = new Object[values.length];
+	    for (int i = 0; i < values.length; i++) {
+	        ret[i] = new Integer(values[i]);
+	    }
+	    return ret;
+	}
+
+	protected YapStream stream() {
         return (YapStream) db();
     }
 
@@ -31,6 +47,29 @@ public class BTreeTestCaseBase extends Db4oTestCase{
     protected BTree createIntKeyValueBTree(int id) {
         return new BTree(trans(), id, new YInt(stream()), new YInt(stream()));
     }
+    
+	private int occurences(int[] values, int value) {
+	    int count = 0;
+	    for (int i = 0; i < values.length; i++) {
+	        if(values[i] == value){
+	            count ++;
+	        }
+	    }
+	    return count;
+	}
+	
+	protected void expectKeysSearch(BTree btree, int[] values) {
+	    int lastValue = Integer.MIN_VALUE;
+	    for (int i = 0; i < values.length; i++) {
+	        if(values[i] != lastValue){
+	            ExpectingVisitor expectingVisitor = createExpectingVisitor(values[i], occurences(values, values[i]));
+	            BTreeRange range = btree.search(trans(), new Integer(values[i]));
+	            range.traverseKeys(expectingVisitor);
+	            expectingVisitor.allAsExpected();
+	            lastValue = values[i];
+	        }
+	    }
+	}
 
 	protected void expectKeys(BTree btree, final int[] keys) {
 	    final int[] cursor = new int[] {0};
@@ -47,8 +86,16 @@ public class BTreeTestCaseBase extends Db4oTestCase{
     protected void assertEmpty(Transaction transaction, BTree tree) {
         final ExpectingVisitor visitor = new ExpectingVisitor(new Object[0]);
         tree.traverseKeys(transaction, visitor);
-    	Assert.isTrue(visitor.allAsExpected());
+    	visitor.allAsExpected();
         Assert.areEqual(0, tree.size(transaction));
     }
+
+	protected void dumpKeys(BTree tree) {
+		tree.traverseKeys(trans(), new Visitor4() {
+			public void visit(Object obj) {
+				System.out.println(obj);
+			}
+		});
+	}
 
 }

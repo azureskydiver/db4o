@@ -102,6 +102,13 @@ public class YapField implements StoredField {
             return;
         }
         
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
+            if(_index == null){
+                return;
+            }
+            _index.add(a_trans, indexEntry, new Integer(parentID));
+        }
+        
         if(MarshallerFamily.OLD_FIELD_INDEX){
             Index4 index = getOldIndex(a_trans);
             if(index == null){
@@ -111,14 +118,6 @@ public class YapField implements StoredField {
             IndexTransaction ift = index.dirtyIndexTransaction(a_trans);
             ift.add(parentID, indexEntry);
         }
-        
-        if(MarshallerFamily.BTREE_FIELD_INDEX){
-            if(_index == null){
-                return;
-            }
-            _index.add(a_trans, indexEntry, new Integer(parentID));
-        }
-        
     }
     
     public boolean canUseNullBitmap(){
@@ -138,6 +137,14 @@ public class YapField implements StoredField {
         if (! hasIndex()) {
             return;
         }
+        
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
+            if(_index == null){
+                return;
+            }
+            _index.remove(trans, indexEntry, new Integer(parentID));
+        }
+        
         if(MarshallerFamily.OLD_FIELD_INDEX){
             Index4 index = getOldIndex(trans);
             if(index == null){
@@ -147,14 +154,6 @@ public class YapField implements StoredField {
             IndexTransaction ift = index.dirtyIndexTransaction(trans);
             ift.remove(parentID, indexEntry);
         }
-        
-        if(MarshallerFamily.BTREE_FIELD_INDEX){
-            if(_index == null){
-                return;
-            }
-            _index.remove(trans, indexEntry, new Integer(parentID));
-        }
-
     }
 
     public boolean alive() {
@@ -531,12 +530,12 @@ public class YapField implements StoredField {
     
     boolean hasIndex() {
         // alive needs to be checked by all callers: Done
-        if(MarshallerFamily.OLD_FIELD_INDEX){
-            return _oldIndex != null;
-        }
         if(MarshallerFamily.BTREE_FIELD_INDEX){
             return _index != null;
-        } 
+        }
+        if(MarshallerFamily.OLD_FIELD_INDEX){
+            return _oldIndex != null;
+        }        
         return false;
     }
 

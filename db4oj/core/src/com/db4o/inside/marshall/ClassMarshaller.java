@@ -80,10 +80,6 @@ public class ClassMarshaller {
 		for (int i = 0; i < fields.length; i++) {
             fields[i] = _family._field.read(stream, fields[i], reader);
         }
-        
-        for (int i = 0; i < fields.length; i++) {
-            fields[i].loadHandler(stream);
-        }
 	}
 
     public int marshalledLength(YapStream stream, YapClass clazz) {
