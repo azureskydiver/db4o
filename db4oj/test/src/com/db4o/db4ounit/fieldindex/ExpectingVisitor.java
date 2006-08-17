@@ -4,6 +4,8 @@ package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.foundation.*;
 
+import db4ounit.Assert;
+
 
 public class ExpectingVisitor implements Visitor4{
     
@@ -13,8 +15,11 @@ public class ExpectingVisitor implements Visitor4{
     
     private boolean _unexpected;
     
-    private static final Object FOUND = new Object();
-
+    private static final Object FOUND = new Object() {
+    	public String toString() {
+    		return "[FOUND]";
+    	}
+    };
     
     public ExpectingVisitor(Object[] results){
         _expected = results;
@@ -38,16 +43,11 @@ public class ExpectingVisitor implements Visitor4{
         }
     }
     
-    public boolean allAsExpected(){
-        if(_unexpected){
-            return false;
-        }
+    public void allAsExpected(){
+        Assert.isFalse(_unexpected);
         for (int i = 0; i < _expected.length; i++) {
-            if( _expected[i] != FOUND){
-                return false;
-            }
+            Assert.areSame(FOUND, _expected[i]);
         }
-        return true;
     }
     
 }
