@@ -6,15 +6,16 @@ import db4ounit.db4o.Db4oTestSuite;
 
 public class AllTests extends Db4oTestSuite {
 
-	public static void main(String[] args) {
-		new AllTests().runSolo();
+    public static void main(String[] args) {
+        new AllTests().runSolo();
     }
 
-	protected Class[] testCases() {
-		return new Class[] {
-			EventRegistryTestCase.class,
-			GlobalLifecycleEventsTestCase.class,
-			SelectiveCascadingDeleteTestCase.class,
-		};
-	}	
+    protected Class[] testCases() {
+        return new Class[]{
+                EventRegistryTestCase.class,
+                GlobalLifecycleEventsTestCase.class,
+                SelectiveCascadingDeleteTestCase.class,
+                SelectiveActivationTestCase.class
+        };
+    }
 }

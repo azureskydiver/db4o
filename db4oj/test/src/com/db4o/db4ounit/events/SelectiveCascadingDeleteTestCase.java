@@ -14,19 +14,6 @@ import db4ounit.db4o.fixtures.Db4oSolo;
 
 public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 	
-	public static class Item {
-		public String id;
-		public Item child;
-		
-		public Item() {
-		}
-		
-		public Item(String id_, Item child_) {
-			id = id_;
-			child = child_;
-		}
-	}
-	
 	protected void configure() {
 		enableCascadeOnDelete();
 	}
@@ -44,8 +31,8 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 		eventRegistry().deleting().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				CancellableObjectEventArgs a = (CancellableObjectEventArgs)args;
-				Item item = ((Item)a.object());				
-				if (item.id.equals("B")) {
+				Item item = ((Item)a.object());
+                if (item.id.equals("B")) {
 					// cancel deletion of this item
 					a.cancel();
 					
@@ -58,8 +45,8 @@ public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 				}
 			}
 		});
-		
-		Item a = queryItem("A");
+
+        Item a = queryItem("A");
 		Assert.isNotNull(a);		
 		db().delete(a);
 		
