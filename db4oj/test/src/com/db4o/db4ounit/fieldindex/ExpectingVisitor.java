@@ -43,7 +43,7 @@ public class ExpectingVisitor implements Visitor4{
         }
     }
     
-    public void allAsExpected(){
+    public void assertExpectations(){
         Assert.isFalse(_unexpected);
         for (int i = 0; i < _expected.length; i++) {
             Assert.areSame(FOUND, _expected[i]);

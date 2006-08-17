@@ -345,53 +345,37 @@ public abstract class QQueryBase implements Unversioned {
             executeLocal(result);
         }
     }
+    
+    public static class CreateCandidateCollectionResult {
+    	public final boolean checkDuplicates;
+        public final boolean topLevel;
+        public final List4 candidateCollection;
+        
+    	public CreateCandidateCollectionResult(List4 candidateCollection_, boolean checkDuplicates_, boolean topLevel_) {
+    		candidateCollection = candidateCollection_;
+    		topLevel = topLevel_;
+    		checkDuplicates = checkDuplicates_;
+		}
+    }
 
     void executeLocal(final QueryResultImpl result) {
-        final YapStream stream = stream();
-        boolean checkDuplicates = false;
-        boolean topLevel = true;
-        List4 candidateCollection = null;
-        Iterator4 i = iterateConstraints();
-        while (i.hasNext()) {
-            QCon qcon = (QCon)i.next();
-            QCon old = qcon;
-            boolean found = false;
-            qcon = qcon.getRoot();
-            if (qcon != old) {
-                checkDuplicates = true;
-                topLevel = false;
-            }
-            YapClass yc = qcon.getYapClass();
-            if (yc != null) {
-                if (candidateCollection != null) {
-                    Iterator4 j = new Iterator4Impl(candidateCollection);
-                    while (j.hasNext()) {
-                        QCandidates candidates = (QCandidates)j.next();
-                        if (candidates.tryAddConstraint(qcon)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                if (!found) {
-                    QCandidates candidates = new QCandidates(i_trans, qcon.getYapClass(), null);
-                    candidates.addConstraint(qcon);
-                    candidateCollection = new List4(candidateCollection, candidates);
-                }
-            }
-        }
-
+        
+		CreateCandidateCollectionResult r = createCandidateCollection();
+        
+        boolean checkDuplicates = r.checkDuplicates;
+        boolean topLevel = r.topLevel;
+        List4 candidateCollection = r.candidateCollection;
+        
         if (Deploy.debugQueries) {
-            i = iterateConstraints();
+        	Iterator4 i = iterateConstraints();
             while (i.hasNext()) {
                 ((QCon)i.next()).log("");
             }
-
         }
-
+        
         if (candidateCollection != null) {
 
-            i = new Iterator4Impl(candidateCollection);
+        	Iterator4 i = new Iterator4Impl(candidateCollection);
             while (i.hasNext()) {
                 ((QCandidates)i.next()).execute();
             }
@@ -404,6 +388,7 @@ public abstract class QQueryBase implements Unversioned {
                 result.checkDuplicates();
             }
 
+            final YapStream stream = stream();
             i = new Iterator4Impl(candidateCollection);
             while (i.hasNext()) {
                 QCandidates candidates = (QCandidates)i.next();
@@ -462,6 +447,45 @@ public abstract class QQueryBase implements Unversioned {
         sort(result);
         result.reset();
     }
+
+	public CreateCandidateCollectionResult createCandidateCollection() {
+		boolean checkDuplicates = false;
+        boolean topLevel = true;
+        List4 candidateCollection = null;
+        Iterator4 i = iterateConstraints();
+        while (i.hasNext()) {
+            QCon qcon = (QCon)i.next();
+            QCon old = qcon;            
+            qcon = qcon.getRoot();
+            if (qcon != old) {
+                checkDuplicates = true;
+                topLevel = false;
+            }
+            YapClass yc = qcon.getYapClass();
+            if (yc == null) {
+            	break;
+            }
+            candidateCollection = addConstraintToCandidateCollection(candidateCollection, qcon);
+        }
+		return new CreateCandidateCollectionResult(candidateCollection, checkDuplicates, topLevel);
+	}
+
+	private List4 addConstraintToCandidateCollection(List4 candidateCollection, QCon qcon) {
+		
+		if (candidateCollection != null) {
+		    Iterator4 j = new Iterator4Impl(candidateCollection);
+		    while (j.hasNext()) {
+		        QCandidates candidates = (QCandidates)j.next();
+		        if (candidates.tryAddConstraint(qcon)) {
+		            return candidateCollection;
+		        }
+		    }
+		}
+		
+		QCandidates candidates = new QCandidates(i_trans, qcon.getYapClass(), null);
+		candidates.addConstraint(qcon);
+		return new List4(candidateCollection, candidates);
+	}
 
     Transaction getTransaction() {
         return i_trans;
