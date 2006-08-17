@@ -4,13 +4,15 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 import com.db4o.inside.ClassIndexStrategy;
+import com.db4o.inside.FieldIndexProcessor;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
 import com.db4o.inside.ix.QxProcessor;
+import com.db4o.inside.marshall.MarshallerFamily;
 
 /**
- * Holds the tree of QCandidate objects and the list of QContraints during query evaluation.
+ * Holds the tree of {@link QCandidate} objects and the list of {@link QCon} during query evaluation.
  * The query work (adding and removing nodes) happens here.
- * Candidates during query evaluation. QCandidate objects are stored in i_root
+ * Candidates during query evaluation. {@link QCandidate} objects are stored in i_root
  * 
  * @exclude
  */
@@ -161,20 +163,38 @@ public final class QCandidates implements Visitor4 {
         if(DTrace.enabled){
             DTrace.QUERY_PROCESS.log();
         }
-        int limit = i_yapClass.indexEntryCount(i_trans);
-        boolean fromClassIndex = true;
-        if(i_constraints != null){
-            QxProcessor processor = new QxProcessor();
-            if(processor.run(this, limit)){
-                i_root = processor.toQCandidates(this);
-                fromClassIndex = false;
-            }
-        }
-        if(fromClassIndex){
+        boolean foundIndex = processFieldIndexes();
+        if(!foundIndex){
             loadFromClassIndex();
         }
         evaluate();
     }
+
+	public int classIndexEntryCount() {
+		return i_yapClass.indexEntryCount(i_trans);
+	}
+
+	private boolean processFieldIndexes() {
+		if(i_constraints == null){
+			return false;
+		}
+		if (MarshallerFamily.BTREE_FIELD_INDEX) {
+			FieldIndexProcessor processor = new FieldIndexProcessor(this);
+			Tree root = processor.run();
+			if (null != root) {
+				i_root = root;
+				return true;
+			}
+		}
+		if (MarshallerFamily.OLD_FIELD_INDEX) {
+			QxProcessor processor = new QxProcessor();
+			if(processor.run(this, classIndexEntryCount())){
+				i_root = processor.toQCandidates(this);
+				return true;
+			}
+		}
+		return false;
+	}
 
     void evaluate() {
     	

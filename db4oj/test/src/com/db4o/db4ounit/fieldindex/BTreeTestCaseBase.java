@@ -65,7 +65,7 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	            ExpectingVisitor expectingVisitor = createExpectingVisitor(values[i], occurences(values, values[i]));
 	            BTreeRange range = btree.search(trans(), new Integer(values[i]));
 	            range.traverseKeys(expectingVisitor);
-	            expectingVisitor.allAsExpected();
+	            expectingVisitor.assertExpectations();
 	            lastValue = values[i];
 	        }
 	    }
@@ -86,7 +86,7 @@ public class BTreeTestCaseBase extends Db4oTestCase{
     protected void assertEmpty(Transaction transaction, BTree tree) {
         final ExpectingVisitor visitor = new ExpectingVisitor(new Object[0]);
         tree.traverseKeys(transaction, visitor);
-    	visitor.allAsExpected();
+    	visitor.assertExpectations();
         Assert.areEqual(0, tree.size(transaction));
     }
 
@@ -96,6 +96,10 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 				System.out.println(obj);
 			}
 		});
+	}
+
+	protected ExpectingVisitor createExpectingVisitor(final int expectedID) {
+		return createExpectingVisitor(expectedID, 1);
 	}
 
 }
