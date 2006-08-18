@@ -14,10 +14,6 @@ public class EmptyBTreeRange implements BTreeRange{
 	
 	private EmptyBTreeRange() {
 	}
-    
-    public void traverseKeys(Visitor4 visitor){
-        // do nothing
-    }
 
     public BTreePointer first() {
         return null;
