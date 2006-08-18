@@ -166,15 +166,25 @@ public final class YapString extends YapIndependantType {
         return true;
     }
 
-    public void writeIndexEntry(YapReader a_writer, Object a_object) {
-        if(a_object == null){
-            a_writer.writeInt(0);
-            a_writer.writeInt(0);
-        }else{
-            YapWriter writer = (YapWriter)a_object;
-            a_writer.writeInt(writer.getAddress());
-            a_writer.writeInt(writer.getLength());
+    public void writeIndexEntry(YapReader writer, Object entry) {
+        if(entry == null){
+            writer.writeInt(0);
+            writer.writeInt(0);
+            return;
         }
+         if(entry instanceof YapWriter){
+             YapWriter entryAsWriter = (YapWriter)entry;
+             writer.writeInt(entryAsWriter.getAddress());
+             writer.writeInt(entryAsWriter.getLength());
+             return;
+         }
+         if(entry instanceof int[]){
+             int[] addressLength = (int[])entry;
+             writer.writeInt(addressLength[0]);
+             writer.writeInt(addressLength[0]);
+             return;
+         }
+         throw new IllegalArgumentException();
     }
     
     public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
