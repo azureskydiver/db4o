@@ -8,12 +8,12 @@ import com.db4o.*;
 /**
  * @exclude
  */
-public abstract class FieldMarshaller {
+public interface FieldMarshaller {
 
-    public abstract void write(Transaction trans, YapClass clazz, YapField field, YapReader writer);
+    void write(Transaction trans, YapClass clazz, YapField field, YapReader writer);
 
-    public abstract YapField read(YapStream stream, YapField field, YapReader reader);
+    YapField read(YapStream stream, YapField field, YapReader reader);
 
-    public abstract int marshalledLength(YapStream stream, YapField field);
+    int marshalledLength(YapStream stream, YapField field);
 
 }
