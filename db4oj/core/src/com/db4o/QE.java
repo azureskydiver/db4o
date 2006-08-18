@@ -2,18 +2,21 @@
 
 package com.db4o;
 
-import com.db4o.inside.ix.*;
-import com.db4o.types.*;
+import com.db4o.types.Unversioned;
 
 /**
  * Query Evaluator - Represents such things as &gt;, &gt;=, &lt;, &lt;=, EQUAL, LIKE, etc.
  * 
  * @exclude
  */
-public class QE implements Unversioned
-{
-    
+public class QE implements Unversioned {	
+	
 	static final QE DEFAULT = new QE();
+	
+	public static final int NULLS = 0;
+	public static final int SMALLER = 1;
+	public static final int EQUAL = 2;
+	public static final int GREATER = 3;
 	
 	QE add(QE evaluator){
 		return evaluator;
@@ -55,7 +58,7 @@ public class QE implements Unversioned
 	 * @param bits
 	 */
 	public void indexBitMap(boolean[] bits){
-	    bits[IxTraverser.EQUAL] = true;
+	    bits[QE.EQUAL] = true;
 	}
 	
 	public boolean supportsIndex(){

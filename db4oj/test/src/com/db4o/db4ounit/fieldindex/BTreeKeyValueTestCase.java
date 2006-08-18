@@ -27,7 +27,7 @@ public class BTreeKeyValueTestCase extends BTreeTestCaseBase {
             bTree.add(trans(), new Integer(keys[i]), new Integer(values[i]));
         }
         expectKeysSearch(bTree, keys);
-        ExpectingVisitor expectingVisitor = new ExpectingVisitor(createExpectedValues(expectedValues), true);
+        ExpectingVisitor expectingVisitor = new ExpectingVisitor(toObjectArray(expectedValues), true);
         bTree.traverseValues(trans(), expectingVisitor);
         expectingVisitor.assertExpectations();
     }

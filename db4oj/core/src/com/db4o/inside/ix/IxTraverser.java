@@ -33,11 +33,6 @@ public class IxTraverser{
     
     boolean[] i_take;
     
-    public static final int NULLS = 0;
-    public static final int SMALLER = 1;
-    public static final int EQUAL = 2;
-    public static final int GREATER = 3;
-    
     private void add(Visitor4 visitor, IxPath a_previousPath, IxPath a_great, IxPath a_small) {
         addPathTree(visitor, a_previousPath);
         if (a_great != null && a_small != null && a_great.carriesTheSame(a_small)) {
@@ -111,19 +106,19 @@ public class IxTraverser{
     
     public NIxPaths convert(){
         NIxPaths res = new NIxPaths();
-        if(i_take[NULLS] || i_take[SMALLER] || i_take[EQUAL]){
-            NIxPath smaller = createNIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER); 
+        if(i_take[QE.NULLS] || i_take[QE.SMALLER] || i_take[QE.EQUAL]){
+            NIxPath smaller = createNIxPath(i_smallHead.convert(), i_take[QE.SMALLER], i_take[QE.EQUAL], i_take[QE.GREATER], QE.SMALLER); 
             res.add(smaller);
         }
-        if(i_take[EQUAL] || i_take[GREATER]){
-            NIxPath greater = createNIxPath(i_greatHead.convert(), i_take[SMALLER],i_take[EQUAL], i_take[GREATER], GREATER);
+        if(i_take[QE.EQUAL] || i_take[QE.GREATER]){
+            NIxPath greater = createNIxPath(i_greatHead.convert(), i_take[QE.SMALLER],i_take[QE.EQUAL], i_take[QE.GREATER], QE.GREATER);
             res.add(greater);
         }
-        if(i_take[SMALLER] || i_take[NULLS]){
+        if(i_take[QE.SMALLER] || i_take[QE.NULLS]){
             if(i_smallHead != null){
                 if( i_smallHead.i_tree.index()._nullHandling){ 
                     IxPath nullPath = findNullPath();
-                    NIxPath np = createNIxPath(nullPath.convert(), i_take[NULLS], i_take[NULLS], i_take[SMALLER], NULLS);
+                    NIxPath np = createNIxPath(nullPath.convert(), i_take[QE.NULLS], i_take[QE.NULLS], i_take[QE.SMALLER], QE.NULLS);
                     res.add(np);
                 }
             }
@@ -284,17 +279,17 @@ public class IxTraverser{
 
             int span = 0;
 
-            if (i_take[EQUAL]) {
+            if (i_take[QE.EQUAL]) {
                 span += countSpan(i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
             }
-            if (i_take[SMALLER]) {
+            if (i_take[QE.SMALLER]) {
                 IxPath head = i_smallHead;
                 while (head != null) {
-                    span += head.countPreceding(i_take[NULLS]);
+                    span += head.countPreceding(i_take[QE.NULLS]);
                     head = head.i_next;
                 }
             }
-            if (i_take[GREATER]) {
+            if (i_take[QE.GREATER]) {
                 IxPath head = i_greatHead;
                 while (head != null) {
                     span += head.countSubsequent();
@@ -308,7 +303,7 @@ public class IxTraverser{
 
     public int findBoundsExactMatch(Object a_constraint, IxTree a_tree){
         i_take = new boolean[] { false, false, false, false};
-        i_take[EQUAL] = true;
+        i_take[QE.EQUAL] = true;
         return findBounds(a_constraint, a_tree);
     }
     
@@ -391,19 +386,19 @@ public class IxTraverser{
     }
     
     public void visitAll(Visitor4 visitor) {
-        if (i_take[EQUAL]) {
+        if (i_take[QE.EQUAL]) {
             if (i_greatHead != null) {
                 add(visitor, i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
             }
         }
-        if (i_take[SMALLER]) {
+        if (i_take[QE.SMALLER]) {
             IxPath head = i_smallHead;
             while (head != null) {
                 head.addPrecedingToCandidatesTree(visitor);
                 head = head.i_next;
             }
         }
-        if (i_take[GREATER]) {
+        if (i_take[QE.GREATER]) {
             IxPath head = i_greatHead;
             while (head != null) {
                 head.addSubsequentToCandidatesTree(visitor);

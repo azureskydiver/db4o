@@ -5,12 +5,12 @@ package com.db4o.db4ounit.fieldindex;
 
 public class FieldIndexItem {
     
-    public int id;
+    public int bar;
     
     public FieldIndexItem() {
     }
     
-    public FieldIndexItem(int id_) {
-        id = id_;
+    public FieldIndexItem(int bar_) {
+        bar = bar_;
     }
 }

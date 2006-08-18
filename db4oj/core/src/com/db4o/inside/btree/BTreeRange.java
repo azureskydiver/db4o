@@ -12,4 +12,8 @@ public interface BTreeRange {
 
 	public int size();
 
+	public BTreeRange greater();
+
+	public BTreeRange union(BTreeRange other);
+
 }

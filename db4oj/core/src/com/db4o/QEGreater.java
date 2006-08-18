@@ -17,6 +17,6 @@ public class QEGreater extends QEAbstract
 	}
 	
 	public void indexBitMap(boolean[] bits){
-	    bits[IxTraverser.GREATER] = true;
+	    bits[QE.GREATER] = true;
 	}
 }

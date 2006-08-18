@@ -17,12 +17,12 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     }
     
     public void testAllThere() throws Exception{
-        for (int i = 0; i < IDS.length; i++) {
-            Query q = createQuery(IDS[i]);
+        for (int i = 0; i < BARS.length; i++) {
+            Query q = createQuery(BARS[i]);
             ObjectSet objectSet = q.execute();
             Assert.areEqual(1, objectSet.size());
             FieldIndexItem fii = (FieldIndexItem) objectSet.next();
-            Assert.areEqual(IDS[i], fii.id);
+            Assert.areEqual(BARS[i], fii.bar);
         }
     }
 
@@ -31,11 +31,11 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         YapStream stream = (YapStream)db();
         ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
         YapClass yc = stream.getYapClass(claxx, false);
-        YapField yf = yc.getYapField("_id");
+        YapField yf = yc.getYapField("bar");
         BTree bTree = yf.getIndex();
         
         Assert.isNotNull(bTree);
-        expectKeysSearch(bTree, IDS);
+        expectKeysSearch(bTree, BARS);
     }
     
 }

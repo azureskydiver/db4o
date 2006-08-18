@@ -18,10 +18,14 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	    for (int i = 0; i < values.length; i++) {
 	        values[i] = value;
 	    }
-	    return new ExpectingVisitor(createExpectedValues(values));
+	    return new ExpectingVisitor(toObjectArray(values));
+	}
+    
+    public static ExpectingVisitor createExpectingVisitor(int[] keys) {
+    	return new ExpectingVisitor(toObjectArray(keys));
 	}
 
-	public static Object[] createExpectedValues(int[] values) {
+	public static Object[] toObjectArray(int[] values) {
 	    Object[] ret = new Object[values.length];
 	    for (int i = 0; i < values.length; i++) {
 	        ret[i] = new Integer(values[i]);
@@ -87,18 +91,10 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	}
 
 	protected void expectKeys(BTree btree, final int[] keys) {
-	    final int[] cursor = new int[] {0};
-	    btree.traverseKeys(trans(), new Visitor4() {
-	        public void visit(Object obj) {
-	            // System.out.println(obj);
-	            Assert.areEqual(keys[cursor[0]], ((Integer)obj).intValue());
-	            cursor[0] ++;
-	        }
-	    });
-	    Assert.areEqual(keys.length, cursor[0]);
+	    btree.traverseKeys(trans(), createExpectingVisitor(keys));
 	}
 
-    protected void assertEmpty(Transaction transaction, BTree tree) {
+	protected void assertEmpty(Transaction transaction, BTree tree) {
         final ExpectingVisitor visitor = new ExpectingVisitor(new Object[0]);
         tree.traverseKeys(transaction, visitor);
     	visitor.assertExpectations();
@@ -116,5 +112,4 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	protected ExpectingVisitor createExpectingVisitor(final int expectedID) {
 		return createExpectingVisitor(expectedID, 1);
 	}
-
 }

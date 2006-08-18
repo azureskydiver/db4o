@@ -10,6 +10,6 @@ import com.db4o.inside.ix.*;
 public class QEEqual extends QEAbstract
 {
     public void indexBitMap(boolean[] bits){
-        bits[IxTraverser.EQUAL] = true;
+        bits[QE.EQUAL] = true;
     }
 }

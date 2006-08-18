@@ -44,20 +44,29 @@ public class FieldIndexProcessor {
 	
 	class IndexedLeaf {		
 		private final QConObject _constraint;
-		private BTreeRange _range = EmptyBTreeRange.INSTANCE;
+		private BTreeRange _range;
 		
 		public IndexedLeaf(QConObject qcon) {
 			_constraint = qcon;
-			
-			prepare();
+			_range = search();
 		}
 
-		private void prepare() {
+		private BTreeRange search() {
 			YapField field = getYapField();
 			if (field == null) {
-				return;
+				return EmptyBTreeRange.INSTANCE;
 			}
-			_range = field.getIndex().search(transaction(), _constraint.getObject());
+			
+			final BTreeRange range = field.getIndex().search(transaction(), _constraint.getObject());
+			final QEBitmap bitmap = QEBitmap.forQE(_constraint.i_evaluator);
+			if (bitmap.takeGreater()) {
+				final BTreeRange greater = range.greater();
+				if (bitmap.takeEqual()) {
+					return range.union(greater);
+				}
+				return greater;
+			}
+			return range;
 		}
 
 		private YapField getYapField() {

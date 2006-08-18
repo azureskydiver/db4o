@@ -38,4 +38,12 @@ public class EmptyBTreeRange implements BTreeRange{
 			}
 		};
 	}
+
+	public BTreeRange greater() {
+		return this;
+	}
+	
+	public BTreeRange union(BTreeRange other) {
+		return other;
+	}
 }
