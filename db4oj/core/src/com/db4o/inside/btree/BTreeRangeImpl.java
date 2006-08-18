@@ -12,21 +12,14 @@ public class BTreeRangeImpl implements BTreeRange {
     
     private final Transaction _trans;
     
-    private final BTreePointer _start;
+    private final BTreePointer _first;
     
     private final BTreePointer _end; 
 
-    public BTreeRangeImpl(Transaction trans, BTreePointer start, BTreePointer end) {
+    public BTreeRangeImpl(Transaction trans, BTreePointer first, BTreePointer end) {
         _trans = trans;
-        _start = start;
+        _first = first;
         _end = end;
-    }
-    
-    public void traverseKeys(Visitor4 visitor) {
-    	KeyValueIterator iterator = iterator();
-    	while (iterator.moveNext()) {
-    		visitor.visit(iterator.key());
-    	}      
     }
 
 	public KeyValueIterator iterator() {
@@ -41,8 +34,8 @@ public class BTreeRangeImpl implements BTreeRange {
 		return _trans;
 	}
 
-	public BTreePointer start() {
-        return _start;
+	public BTreePointer first() {
+        return _first;
     }
 
 }

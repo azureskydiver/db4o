@@ -14,7 +14,7 @@ public class EmptyBTreeRange implements BTreeRange{
         // do nothing
     }
 
-    public BTreePointer start() {
+    public BTreePointer first() {
         return null;
     }
 

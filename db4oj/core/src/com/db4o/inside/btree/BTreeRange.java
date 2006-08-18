@@ -6,10 +6,7 @@ import com.db4o.foundation.*;
 
 
 public interface BTreeRange {
-    
-    public void traverseKeys(Visitor4 visitor);
-
-    public BTreePointer start();
+	public BTreePointer first();
     
     public KeyValueIterator iterator();
 
