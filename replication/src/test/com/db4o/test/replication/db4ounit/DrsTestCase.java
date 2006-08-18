@@ -11,8 +11,19 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.test.other.Car;
+import com.db4o.test.other.CollectionHolder;
+import com.db4o.test.other.ListContent;
+import com.db4o.test.other.ListHolder;
+import com.db4o.test.other.MapContent;
+import com.db4o.test.other.MapHolder;
+import com.db4o.test.other.Pilot;
+import com.db4o.test.other.R0;
+import com.db4o.test.other.Replicated;
 import com.db4o.test.other.SPCChild;
 import com.db4o.test.other.SPCParent;
+import com.db4o.test.other.SimpleArrayContent;
+import com.db4o.test.other.SimpleArrayHolder;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
@@ -24,9 +35,14 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	public static final Class[] extraMappingsForCleaning = new Class[]{Map.class, List.class};
 
 	static {
-		mappings = new Class[]{
-				SPCParent.class, SPCChild.class};
-		}
+		mappings = new Class[]{CollectionHolder.class, Replicated.class,
+				SPCParent.class, SPCChild.class,
+				ListHolder.class, ListContent.class,
+				MapHolder.class, MapContent.class,
+				SimpleArrayContent.class, SimpleArrayHolder.class,
+				R0.class, Pilot.class, Car.class};
+	}
+	
 
 	private DrsFixture _a;
 	private DrsFixture _b;
@@ -170,6 +186,14 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 			replication.replicate(obj);
 		}
 		replication.commit();
+	}
+
+	protected static void sleep(int millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }
