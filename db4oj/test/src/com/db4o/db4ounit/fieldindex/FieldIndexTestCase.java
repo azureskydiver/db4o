@@ -22,7 +22,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
             ObjectSet objectSet = q.execute();
             Assert.areEqual(1, objectSet.size());
             FieldIndexItem fii = (FieldIndexItem) objectSet.next();
-            Assert.areEqual(IDS[i], fii._id);
+            Assert.areEqual(IDS[i], fii.id);
         }
     }
 

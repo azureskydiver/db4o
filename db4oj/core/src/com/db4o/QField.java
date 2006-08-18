@@ -77,6 +77,10 @@ public class QField implements Visitor4, Unversioned{
 		return yf;
 	}
 	
+	public YapField getYapField() {
+		return i_yapField;
+	}
+	
 	boolean isArray(){
 		return i_yapField != null && i_yapField.getHandler() instanceof YapArray;
 	}

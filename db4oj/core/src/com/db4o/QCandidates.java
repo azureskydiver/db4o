@@ -180,9 +180,9 @@ public final class QCandidates implements Visitor4 {
 		}
 		if (MarshallerFamily.BTREE_FIELD_INDEX) {
 			FieldIndexProcessor processor = new FieldIndexProcessor(this);
-			Tree root = processor.run();
+			TreeInt root = processor.run();
 			if (null != root) {
-				i_root = root;
+				i_root = TreeInt.toQCandidate(root, this);
 				return true;
 			}
 		}

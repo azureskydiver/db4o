@@ -4,6 +4,7 @@ import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.FieldIndexProcessor;
+import com.db4o.query.Query;
 
 import db4ounit.Assert;
 
@@ -16,14 +17,13 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	
 	public void testProcessor() {
 		final int expectedID = IDS[0];
-		final QQuery query = (QQuery) createQuery(expectedID);
-		final QCandidates candidates = getQCandidates(query);
+		final QCandidates candidates = getQCandidates(createQuery(expectedID));
 		
 		final FieldIndexProcessor processor = new FieldIndexProcessor(candidates);
 		final Tree tree = processor.run();
 		Assert.isNotNull(tree);
 		
-		final ExpectingVisitor visitor = createExpectingVisitor(expectedID); 
+		final ExpectingVisitor visitor = createExpectingVisitor(objectContainerIdFromIdFieldValue(expectedID)); 
 		tree.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				visitor.visit(new Integer(((TreeInt)obj)._key));
@@ -32,8 +32,19 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		visitor.assertExpectations();
 	}
  
-	private QCandidates getQCandidates(final QQuery query) {
-		final CreateCandidateCollectionResult result = query.createCandidateCollection();
+	private int objectContainerIdFromIdFieldValue(int id) {
+		final ObjectSet set = db().get(FieldIndexItem.class);
+		for (int i=0; i<set.size(); ++i) {
+			FieldIndexItem item = (FieldIndexItem)set.ext().get(i);
+			if (item.id == id) {
+				return (int) set.ext().getIDs()[i];
+			}
+		}
+		throw new IllegalArgumentException();
+	}
+
+	private QCandidates getQCandidates(final Query query) {
+		final CreateCandidateCollectionResult result = ((QQuery)query).createCandidateCollection();
 		QCandidates candidates = (QCandidates)result.candidateCollection._element;
 		return candidates;
 	}
