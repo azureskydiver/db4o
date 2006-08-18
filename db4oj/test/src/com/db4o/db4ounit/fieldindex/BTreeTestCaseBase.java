@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
+import com.db4o.foundation.KeyValueIterator;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.btree.*;
 
@@ -26,6 +27,13 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	        ret[i] = new Integer(values[i]);
 	    }
 	    return ret;
+	}
+
+	protected static void traverseKeys(BTreeRange result, ExpectingVisitor expectingVisitor) {
+		final KeyValueIterator i = result.iterator();
+		while (i.moveNext()) {
+			expectingVisitor.visit(i.key());
+		} 
 	}
 
 	protected YapStream stream() {
@@ -64,7 +72,7 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	        if(values[i] != lastValue){
 	            ExpectingVisitor expectingVisitor = createExpectingVisitor(values[i], occurences(values, values[i]));
 	            BTreeRange range = btree.search(trans(), new Integer(values[i]));
-	            range.traverseKeys(expectingVisitor);
+	            traverseKeys(range, expectingVisitor);
 	            expectingVisitor.assertExpectations();
 	            lastValue = values[i];
 	        }

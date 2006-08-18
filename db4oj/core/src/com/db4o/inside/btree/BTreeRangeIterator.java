@@ -16,10 +16,11 @@ class BTreeRangeIterator implements KeyValueIterator {
 	
 	public BTreeRangeIterator(BTreeRangeImpl range) {
 		_range = range;
-		_cursor = range.start();
+		_cursor = range.first();
 	}
 
 	public boolean moveNext() {
+		
 		while(! reachedEnd(_cursor)){
             
             BTreeNode node = _cursor.node();
@@ -42,15 +43,23 @@ class BTreeRangeIterator implements KeyValueIterator {
             
             _cursor = _cursor.next();
         }
+		_current = null;
 		return false;
 	}
 	
 	public Object key() {
-		return _current.key(_range.transaction());
+		return current().key(_range.transaction());
 	}
 	
 	public Object value() {
-		return _current.value();
+		return current().value();
+	}
+	
+	private BTreePointer current() {
+		if (null == _current) {
+			throw new IllegalStateException();
+		}
+		return _current;
 	}
 	
 	private boolean reachedEnd(BTreePointer cursor){

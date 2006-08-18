@@ -112,7 +112,7 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		
 		final BTreeRange result = _tree.search(trans, element);
 		ExpectingVisitor expectingVisitor = new ExpectingVisitor(new Object[] { element });
-		result.traverseKeys(expectingVisitor);
+		traverseKeys(result, expectingVisitor);
 		expectingVisitor.assertExpectations();
 		
 		expectingVisitor = new ExpectingVisitor(new Object[] { element });
