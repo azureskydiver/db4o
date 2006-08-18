@@ -42,7 +42,7 @@ public class YapClient extends YapStream implements ExtClient {
 
 	private boolean _doFinalize=true;
     
-    private byte _blockSize = 1;
+    private int _blockSize = 1;
     
 
 	private YapClient() {
@@ -123,8 +123,12 @@ public class YapClient extends YapStream implements ExtClient {
 		Exceptions4.throwRuntimeException(60);
 	}
     
+    public void blockSize(int blockSize){
+        _blockSize = blockSize;
+    }
+    
     public byte blockSize() {
-        return _blockSize;
+        return (byte)_blockSize;
     }
 
 	boolean close2() {
