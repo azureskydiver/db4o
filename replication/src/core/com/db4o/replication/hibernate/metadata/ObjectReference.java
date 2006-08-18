@@ -11,7 +11,9 @@ public class ObjectReference {
 	public static class Fields {
 		public static final String UUID = "uuid";
 		public static final String VERSION = Table.VERSION;
+		public static final String HIBERNATE_ID = "hibernateId";
 		public static final String CLASS_NAME = "className";
+		
 	}
 	
 	private String className;

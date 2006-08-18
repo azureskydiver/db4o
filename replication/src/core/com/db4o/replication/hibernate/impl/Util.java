@@ -196,8 +196,8 @@ public final class Util {
 
 	static ObjectReference getObjectReferenceById(Session session, String className, long id) {
 		Criteria criteria = session.createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq("hibernateId", id));
-		criteria.add(Restrictions.eq("className", className));
+		criteria.add(Restrictions.eq(ObjectReference.Fields.HIBERNATE_ID, id));
+		criteria.add(Restrictions.eq(ObjectReference.Fields.CLASS_NAME, className));
 		List list = criteria.list();
 
 		if (list.size() == 0)
@@ -220,8 +220,8 @@ public final class Util {
 		String alias = "objRef";
 		String uuidPath = alias + "." + ObjectReference.Fields.UUID + ".";
 		String queryString = "from " + "ObjectReference"
-				+ " as " + alias + " where " + uuidPath + "longPart" + "=?"
-				+ " AND " + uuidPath + "provider" + "." + ReplicationProviderSignature.Fields.BYTES + "=?";
+				+ " as " + alias + " where " + uuidPath + Uuid.Fields.LONG_PART + "=?"
+				+ " AND " + uuidPath + Uuid.Fields.PROVIDER + "." + ReplicationProviderSignature.Fields.BYTES + "=?";
 		Query c = session.createQuery(queryString);
 		c.setLong(0, uuid.getLongPart());
 		c.setBinary(1, uuid.getProvider().getBytes());

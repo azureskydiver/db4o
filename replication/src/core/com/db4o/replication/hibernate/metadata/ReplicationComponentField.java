@@ -7,7 +7,6 @@ public class ReplicationComponentField {
 	
 	public static class Fields {
 		public static final String REF_OBJ_CLASS_NAME = "referencing_object_class_name";
-		
 		public static final String REF_OBJ_FIELD_NAME = "referencing_object_field_name";
 	}
 	

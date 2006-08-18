@@ -1,16 +1,21 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class Uuid {
-	public static final String COL_LONG_PART = "long_part";
+	public static class Table {
+		public static final String LONG_PART = "long_part";
+		public static final String PROVIDER = "provider";
+	}
 	
-	public static final String COL_PROVIDER = "provider";
+	public static class Fields {
+		public static final String LONG_PART = "longPart";
+		public static final String PROVIDER = Table.PROVIDER;	
+	}
 	
 	private long longPart;
 
 	private ReplicationProviderSignature provider;
 	
-	public Uuid() {
-	}
+	public Uuid() {}
 
 	public boolean equals(Object o) {
 		if (this == o) return true;

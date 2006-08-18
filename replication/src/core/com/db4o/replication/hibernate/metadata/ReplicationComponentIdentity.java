@@ -7,13 +7,9 @@ public class ReplicationComponentIdentity {
 	
 	public static class Fields {
 		public static final String UUID_LONG = "uuidLongPart";
-		
 		public static final String REF_OBJ_UUID_LONG = "referencingObjectUuidLongPart";
-		
 		public static final String REF_OBJ_FIELD = "referencingObjectField";
-		
 		public static final String PROVIDER = "provider";
-		
 	}
 
 	private long uuidLongPart;
@@ -24,8 +20,7 @@ public class ReplicationComponentIdentity {
 
 	private ReplicationProviderSignature provider;
 	
-	public ReplicationComponentIdentity() {
-	}
+	public ReplicationComponentIdentity() {}
 
 	public boolean equals(Object o) {
 		if (this == o) return true;
