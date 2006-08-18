@@ -20,6 +20,9 @@ public class AllReplicationTests extends DrsTestCase implements TestSuiteBuilder
 					ArrayReplicationTest.class,
 					ReplicationEventTest.class,
 					CollectionUuidTest.class,
+					ReplicationProviderTest.class,
+					ReplicationAfterDeletionTest.class,
+					SimpleArrayTest.class,
 					GetByUUID.class
 				}).build();
 	}

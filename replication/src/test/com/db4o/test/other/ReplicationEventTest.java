@@ -339,5 +339,4 @@ public class ReplicationEventTest extends DrsTestCase {
 			return value;
 		}
 	}
-
 }
