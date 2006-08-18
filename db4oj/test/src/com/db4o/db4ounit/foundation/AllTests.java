@@ -15,6 +15,7 @@ public class AllTests implements TestSuiteBuilder {
 			Collection4TestCase.class,
 			Hashtable4TestCase.class,
 			BitMap4TestCase.class,
+			YapReaderTestCase.class,
 		}).build();	
 	}
 	

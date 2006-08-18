@@ -20,15 +20,15 @@ public class ObjectHeader {
         if (Deploy.debug) {
             reader.readBegin(YapConst.YAPOBJECT);
         }
-        int id = reader.readInt();
+        int classID = reader.readInt();
         byte marshallerVersion = 0;
         
-        if(id == 0){
+        if(classID == 0){
             _yapClass = null;
-        }else if(id > 0){
-            _yapClass = stream.getYapClass(id);
+        }else if(classID > 0){
+            _yapClass = stream.getYapClass(classID);
         }else{
-            _yapClass = stream.getYapClass(- id);
+            _yapClass = stream.getYapClass(- classID);
             marshallerVersion = reader.readByte();
         }
         _marshallerFamily = MarshallerFamily.forVersion(marshallerVersion);

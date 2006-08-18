@@ -257,5 +257,9 @@ public class YapReader {
     public void writeShortString(Transaction trans, String a_string) {
         trans.stream().i_handlers.i_stringHandler.writeShort(a_string, this);
     }
+
+	public void copyTo(YapReader to, int fromOffset, int toOffset, int length) {
+		System.arraycopy(_buffer, fromOffset, to._buffer, toOffset, length);
+	}
     
 }

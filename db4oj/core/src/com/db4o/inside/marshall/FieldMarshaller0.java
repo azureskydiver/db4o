@@ -7,7 +7,7 @@ import com.db4o.*;
 /**
  * @exclude
  */
-public class FieldMarshaller0 extends FieldMarshaller {
+public class FieldMarshaller0 implements FieldMarshaller {
 
     public int marshalledLength(YapStream stream, YapField field) {
         int len = stream.stringIO().shortLength(field.getName());
