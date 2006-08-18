@@ -16,14 +16,33 @@ public class AllReplicationTests extends DrsTestCase implements TestSuiteBuilder
 	public TestSuite build() {
 		return new DrsTestSuiteBuilder(
 				a(), b(), new Class[] {
+					// Simple
 					TheSimplest.class,
-					ArrayReplicationTest.class,
 					ReplicationEventTest.class,
-					CollectionUuidTest.class,
 					ReplicationProviderTest.class,
 					ReplicationAfterDeletionTest.class,
 					SimpleArrayTest.class,
-					GetByUUID.class
+					SimpleParentChild.class,
+					GetByUUID.class,
+					
+					// Collection
+					ArrayReplicationTest.class,
+					CollectionUuidTest.class,
+					ListTest.class,
+					Db4oListTest.class,
+					MapTest.class,
+					SingleTypeCollectionReplicationTest.class,
+					MixedTypesCollectionReplicationTest.class,
+					
+					// Complex
+					R0to4Runner.class,
+					ReplicationFeaturesMain.class,
+					
+					// General
+					CollectionHandlerImplTest.class,
+					ReplicationTraversalTest.class,
+					DatabaseUnicityTest.class
+					
 				}).build();
 	}
 
