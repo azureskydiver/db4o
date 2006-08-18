@@ -3,6 +3,7 @@ package com.db4o.replication.hibernate.impl;
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
+import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.CallbackException;
 import org.hibernate.Criteria;
@@ -34,8 +35,8 @@ import java.util.Set;
 
 public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implements ObjectLifeCycleEventsListener {
 	private final static String DELETE_SQL = "delete from " + ObjectReference.Table.NAME
-			+ " where " +Uuid.COL_LONG_PART +"= ? "
-			+ " AND " +Uuid.COL_PROVIDER+ " = ?";
+			+ " where " +Uuid.Table.LONG_PART +"= ? "
+			+ " AND " +Uuid.Table.PROVIDER+ " = ?";
 
 	private final Set<ObjectReference> _dirtyNewRefs = new HashSet();
 
@@ -190,8 +191,8 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		if (uuid == null) return;
 
 		Criteria criteria = s.createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", uuid.getLongPart()));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
+		criteria.add(Restrictions.eq(ReplicationComponentIdentity.Fields.REF_OBJ_UUID_LONG, uuid.getLongPart()));
+		criteria.createCriteria(ReplicationComponentIdentity.Fields.PROVIDER).add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, uuid.getProvider().getBytes()));
 
 		final List exisitings = criteria.list();
 		for (Iterator iterator = exisitings.iterator(); iterator.hasNext();) {

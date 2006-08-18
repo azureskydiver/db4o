@@ -9,7 +9,6 @@ public abstract class ReplicationProviderSignature
 	
 	public static class Table {
 		public static final String NAME = "drs_replication_provider_signatures";
-		
 	}
 	
 	public static class Fields {
@@ -23,8 +22,7 @@ public abstract class ReplicationProviderSignature
 
 	private long creationTime;
 	
-	public ReplicationProviderSignature() {
-	}
+	public ReplicationProviderSignature() {}
 
 	public ReplicationProviderSignature(byte[] signature) {
 		this.bytes = signature;
