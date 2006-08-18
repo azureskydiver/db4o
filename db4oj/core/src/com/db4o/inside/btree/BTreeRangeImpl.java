@@ -21,6 +21,15 @@ public class BTreeRangeImpl implements BTreeRange {
         _first = first;
         _end = end;
     }
+    
+    public int size() {
+    	int size = 0;
+		final KeyValueIterator i = iterator();
+		while (i.moveNext()) {
+			++size;
+		}
+		return size;
+    }
 
 	public KeyValueIterator iterator() {
 		return new BTreeRangeIterator(this);

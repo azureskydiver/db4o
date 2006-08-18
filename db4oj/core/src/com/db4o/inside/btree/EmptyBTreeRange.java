@@ -18,6 +18,10 @@ public class EmptyBTreeRange implements BTreeRange{
     public BTreePointer first() {
         return null;
     }
+    
+    public int size() {
+    	return 0;
+    }
 
 	public KeyValueIterator iterator() {
 		return new KeyValueIterator() {
