@@ -150,4 +150,26 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		replication.commit();
 	}
 
+	protected void delete(Class[] classes) {
+		_a.clean();
+/*		for (int i = 0; i < classes.length; i++) {
+			_a.deleteAllInstances(classes[i]);
+			_b.deleteAllInstances(classes[i]);
+		}
+		_a.commit();
+		_b.commit(); */
+	}
+
+	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
+		//System.out.println("ReplicationTestcase.replicateClass");
+		ReplicationSession replication = Replication.begin(providerA, providerB);
+		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
+		while (allObjects.hasNext()) {
+			final Object obj = allObjects.next();
+			//System.out.println("obj = " + obj);
+			replication.replicate(obj);
+		}
+		replication.commit();
+	}
+
 }
