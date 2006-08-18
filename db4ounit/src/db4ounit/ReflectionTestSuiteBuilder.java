@@ -40,24 +40,32 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		if (instance instanceof TestSuiteBuilder) {
 			return ((TestSuiteBuilder)instance).build();
 		}
+		final Class clazz = instance.getClass();
+		
 		if (instance instanceof Test) {
-			return new TestSuite(instance.getClass().getName(), new Test[] { (Test)instance });
+			return new TestSuite(clazz.getName(), new Test[] { (Test)instance });
 		}
 		if (!(instance instanceof TestCase)) {
-			throw new IllegalArgumentException("" + instance.getClass() + " is not marked as " + TestCase.class);
+			throw new IllegalArgumentException("" + clazz + " is not marked as " + TestCase.class);
 		}
 		Vector tests = new Vector();
-		Method[] methods = instance.getClass().getMethods();
+		Method[] methods = clazz.getDeclaredMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
+			if (isMalformedTestMethod(method))
+				throw new RuntimeException("The method " + method.getName() +" of class " + clazz.getName() + " seems to be a malformed test method.");
 			if (!isTestMethod(method)) continue;			
 			tests.addElement(createTest(instance, method));
 		}		
-		return new TestSuite(instance.getClass().getName(), toArray(tests));
+		return new TestSuite(clazz.getName(), toArray(tests));
 	}
 
 	protected boolean isTestMethod(Method method) {
 		return TestPlatform.isTestMethod(method);
+	}
+	
+	protected boolean isMalformedTestMethod(Method method) {
+		return TestPlatform.isMalformedTestMethod(method);
 	}
 
 	private Test[] toArray(Vector tests) {
