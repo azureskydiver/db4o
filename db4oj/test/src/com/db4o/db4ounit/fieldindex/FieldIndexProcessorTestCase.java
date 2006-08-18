@@ -34,10 +34,10 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
  
 	private int objectContainerIdFromIdFieldValue(int id) {
 		final ObjectSet set = db().get(FieldIndexItem.class);
-		for (int i=0; i<set.size(); ++i) {
-			FieldIndexItem item = (FieldIndexItem)set.ext().get(i);
+		while (set.hasNext()) {
+			FieldIndexItem item = (FieldIndexItem)set.next();
 			if (item.id == id) {
-				return (int) set.ext().getIDs()[i];
+				return (int) db().getID(item);
 			}
 		}
 		throw new IllegalArgumentException();
