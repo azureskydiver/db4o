@@ -22,4 +22,17 @@ public class TestPlatform {
 			&& !Modifier.isStatic(method.getModifiers())
 			&& method.getParameterTypes().length == 0;
 	}
+	
+	public static boolean isMalformedTestMethod(Method method) {
+		final int modifiers = method.getModifiers();
+		
+		final boolean notPublic = !Modifier.isPublic(modifiers);
+		final boolean staticc = Modifier.isStatic(modifiers);
+		final boolean hasParams = method.getParameterTypes().length > 0;
+		
+		return method.getName().startsWith("test")			
+			&& (notPublic
+					|| staticc
+					|| hasParams);
+	}
 }
