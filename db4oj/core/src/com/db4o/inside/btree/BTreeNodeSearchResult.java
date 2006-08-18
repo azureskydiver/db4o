@@ -28,7 +28,7 @@ class BTreeNodeSearchResult {
     public BTreeRange createRangeTo(Transaction trans, BTreeNodeSearchResult end) {
         if(! _foundMatch){
             if(pointsToSameAs(end)){
-                return new EmptyBTreeRange();
+                return EmptyBTreeRange.INSTANCE;
             }
             moveForward();
         }

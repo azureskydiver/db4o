@@ -14,7 +14,7 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	protected void configure() {
 	    Db4o.configure()
 	    .objectClass(FieldIndexItem.class)
-	    .objectField("_id")
+	    .objectField("id")
 	    .indexed(true);
 	}
 
@@ -28,7 +28,7 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	protected Query createQuery(final int id) {
 		Query q = db().query();
 		q.constrain(FieldIndexItem.class);
-		q.descend("_id").constrain(new Integer(id));
+		q.descend("id").constrain(new Integer(id));
 		return q;
 	}
 

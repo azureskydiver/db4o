@@ -9,6 +9,11 @@ import com.db4o.foundation.*;
  * @exclude
  */
 public class EmptyBTreeRange implements BTreeRange{
+	
+	public static final BTreeRange INSTANCE = new EmptyBTreeRange();
+	
+	private EmptyBTreeRange() {
+	}
     
     public void traverseKeys(Visitor4 visitor){
         // do nothing

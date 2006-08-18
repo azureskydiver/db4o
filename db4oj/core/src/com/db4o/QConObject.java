@@ -208,11 +208,11 @@ public class QConObject extends QCon {
         return i_comparator;
     }
 
-    YapClass getYapClass() {
+    public YapClass getYapClass() {
         return i_yapClass;
     }
 
-    QField getField() {
+    public QField getField() {
         return i_field;
     }
 
