@@ -2,6 +2,7 @@
 
 package com.db4o.inside.btree;
 
+import com.db4o.Transaction;
 import com.db4o.foundation.*;
 
 /**
@@ -55,5 +56,13 @@ public class BTreePointer{
         
         return _node.equals(other._node);
     }
+
+	Object key(Transaction trans) {
+		return node().key(trans, index());
+	}
+	
+	Object value() {
+		return node().value(index());
+	}
     
 }

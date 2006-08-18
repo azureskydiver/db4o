@@ -14,8 +14,23 @@ public class EmptyBTreeRange implements BTreeRange{
         // do nothing
     }
 
-    public BTreePointer first() {
+    public BTreePointer start() {
         return null;
     }
 
+	public KeyValueIterator iterator() {
+		return new KeyValueIterator() {
+			public Object value() {
+				return null;
+			}
+		
+			public boolean moveNext() {
+				return false;
+			}
+		
+			public Object key() {
+				return null;
+			}
+		};
+	}
 }
