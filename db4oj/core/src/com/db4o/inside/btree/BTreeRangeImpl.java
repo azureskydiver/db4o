@@ -2,7 +2,7 @@
 
 package com.db4o.inside.btree;
 
-import com.db4o.*;
+import com.db4o.Transaction;
 import com.db4o.foundation.*;
 
 /**
@@ -21,46 +21,27 @@ public class BTreeRangeImpl implements BTreeRange {
         _start = start;
         _end = end;
     }
-
-    public void traverseKeys(Visitor4 visitor) {
-        
-        BTreeNode oldNode = null;
-        
-        BTreePointer cursor = _start;
-        
-        while(! reachedEnd(cursor)){
-            
-            BTreeNode node = cursor.node();
-            
-            if(node != oldNode){
-                node.prepareWrite(_trans);
-                
-                // Alternative: work in read mode, hold the reader here.
-                
-                oldNode = node;
-            }
-            
-            Object obj = node.key(_trans, cursor.index());
-            
-            if(obj != No4.INSTANCE){
-                visitor.visit(obj);
-            }
-            
-            cursor = cursor.next();
-        }
-    }
     
-    private boolean reachedEnd(BTreePointer cursor){
-        if(cursor == null){
-            return true;
-        }
-        if(_end == null){
-            return false;
-        }
-        return _end.equals(cursor);
+    public void traverseKeys(Visitor4 visitor) {
+    	KeyValueIterator iterator = iterator();
+    	while (iterator.moveNext()) {
+    		visitor.visit(iterator.key());
+    	}      
     }
 
-    public BTreePointer first() {
+	public KeyValueIterator iterator() {
+		return new BTreeRangeIterator(this);
+	}
+
+    public final BTreePointer end() {
+		return _end;
+	}
+
+	public Transaction transaction() {
+		return _trans;
+	}
+
+	public BTreePointer start() {
         return _start;
     }
 

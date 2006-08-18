@@ -9,6 +9,8 @@ public interface BTreeRange {
     
     public void traverseKeys(Visitor4 visitor);
 
-    public BTreePointer first();
+    public BTreePointer start();
+    
+    public KeyValueIterator iterator();
 
 }

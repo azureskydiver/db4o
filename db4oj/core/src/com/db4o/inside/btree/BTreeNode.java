@@ -1035,6 +1035,10 @@ public class BTreeNode extends YapMeta{
         }
     }
     
+    Object value(int index) {
+    	return _values[index];
+    }
+    
     private Object value(YapReader reader, int index){
         if( _values != null ){
             return _values[index];

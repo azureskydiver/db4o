@@ -92,7 +92,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     public void remove(Transaction trans, Object key, Object value){
         BTreeRange range = search(trans, key, value);
-        BTreePointer first = range.first();
+        BTreePointer first = range.start();
         if(first == null){
             return;
         }
