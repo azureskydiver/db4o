@@ -42,6 +42,9 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     private final int _cacheHeight;
     
+    public BTree(Transaction trans, int id, Indexable4 keyHandler){
+        this(trans, id, keyHandler, null);
+    }
     
     public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
     	
@@ -84,6 +87,10 @@ public class BTree extends YapMeta implements TransactionParticipant {
             _root.write(trans.systemTransaction());
             addNode(_root);
         }
+    }
+    
+    boolean compareValues(){
+        return _valueHandler != null && _valueHandler.current() != null; 
     }
     
     public void remove(Transaction trans, Object key){

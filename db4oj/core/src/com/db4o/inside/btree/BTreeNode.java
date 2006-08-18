@@ -480,20 +480,26 @@ public class BTreeNode extends YapMeta{
     }
     
     private int compareInWriteMode(int index){
-        
-        // FIXME: If key part is equal, comparison should also take place against value part.
-
-        return keyHandler().compareTo(key(index));
+        int res = keyHandler().compareTo(key(index));
+        if(useKeyComparisonResult(res)){
+            return res;
+        }
+        return valueHandler().compareTo(value(index));
     }
     
     private int compareInReadMode(YapReader reader, int index){
-        
-        // FIXME: If key part is equal, comparison should also take place against value part.
-        
         seekKey(reader, index);
-        return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
+        int res = keyHandler().compareTo(keyHandler().readIndexEntry(reader));
+        if(useKeyComparisonResult(res)){
+            return res;
+        }
+        seekValue(reader, index);
+        return valueHandler().compareTo(valueHandler().readIndexEntry(reader));
     }
     
+    private boolean useKeyComparisonResult(int res){
+        return res != 0 ||! _btree.compareValues();
+    }
     
     public int count() {
         return _count;

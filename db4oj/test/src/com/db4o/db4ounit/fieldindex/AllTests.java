@@ -13,6 +13,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
             BTreeAddRemoveTestCase.class,
+            BTreeKeyValueTestCase.class,
             BTreeSearchTestCase.class,
             BTreeSimpleTestCase.class,
             FieldIndexTestCase.class,

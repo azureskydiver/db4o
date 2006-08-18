@@ -60,9 +60,8 @@ public class YInt extends YapJavaClass {
             }
             a_bytes.readEnd();
 			return ret;
-        } else {
-        	return a_bytes.readInt();
         }
+        return a_bytes.readInt();
     }
 
     public void write(Object a_object, YapReader a_bytes) {

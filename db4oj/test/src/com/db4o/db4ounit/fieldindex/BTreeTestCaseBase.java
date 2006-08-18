@@ -35,6 +35,13 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 			expectingVisitor.visit(i.key());
 		} 
 	}
+    
+    protected static void traverseValues(BTreeRange result, ExpectingVisitor expectingVisitor) {
+        final KeyValueIterator i = result.iterator();
+        while (i.moveNext()) {
+            expectingVisitor.visit(i.key());
+        } 
+    }
 
 	protected YapStream stream() {
         return (YapStream) db();
@@ -49,7 +56,7 @@ public class BTreeTestCaseBase extends Db4oTestCase{
     }
 
     protected BTree createIntKeyBTree(int id) {
-        return new BTree(trans(), id, new YInt(stream()), null);
+        return new BTree(trans(), id, new YInt(stream()));
     }
 
     protected BTree createIntKeyValueBTree(int id) {
