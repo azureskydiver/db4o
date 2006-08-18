@@ -204,7 +204,9 @@ public final class QCandidates implements Visitor4 {
     	
     	Iterator4 i = iterateConstraints();
     	while(i.hasNext()){
-    		((QCon)i.next()).evaluateSelf();
+            QCon qCon = (QCon)i.next();
+            qCon.setCandidates(this);
+    		qCon.evaluateSelf();
     	}
     	
     	i = iterateConstraints();
