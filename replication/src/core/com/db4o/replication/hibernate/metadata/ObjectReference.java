@@ -1,12 +1,19 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class ObjectReference {
-	public static final String TABLE_NAME = "db4o_object_references";
-	public static final String COL_CLASS_NAME = "class_name";
-	public static final String COL_HIBERNATE_ID = "hibernate_id";
-	public static final String UUID = "uuid";
-	public static final String COL_VERSION = "version";
-
+	public static class Table {
+		public static final String NAME = "drs_object_references";
+		public static final String CLASS_NAME = "class_name";
+		public static final String HIBERNATE_ID = "hibernate_id";
+		public static final String VERSION = "version";
+	}
+	
+	public static class Fields {
+		public static final String UUID = "uuid";
+		public static final String VERSION = Table.VERSION;
+		public static final String CLASS_NAME = "className";
+	}
+	
 	private String className;
 
 	private long hibernateId;
@@ -14,6 +21,7 @@ public class ObjectReference {
 	private Uuid uuid;
 
 	private long version;
+	
 	public ObjectReference() {}
 
 	public String getClassName() {

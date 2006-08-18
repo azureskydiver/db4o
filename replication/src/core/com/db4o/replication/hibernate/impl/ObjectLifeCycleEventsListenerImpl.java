@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implements ObjectLifeCycleEventsListener {
-	private final static String DELETE_SQL = "delete from " + ObjectReference.TABLE_NAME
+	private final static String DELETE_SQL = "delete from " + ObjectReference.Table.NAME
 			+ " where " +Uuid.COL_LONG_PART +"= ? "
 			+ " AND " +Uuid.COL_PROVIDER+ " = ?";
 

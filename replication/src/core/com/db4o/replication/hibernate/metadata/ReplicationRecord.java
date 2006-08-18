@@ -1,9 +1,14 @@
 package com.db4o.replication.hibernate.metadata;
 
 public class ReplicationRecord {
-	public static final String TABLE_NAME = "db4o_replication_records";
-
-	public static final String VERSION = "version";
+	public static class Table {
+		public static final String NAME = "drs_replication_records";
+	}
+	
+	public static class Fields {
+		public static final String PEER_SIGNATURE = "peerSignature";
+		public static final String VERSION = "version";
+	}
 
 	private long version;
 

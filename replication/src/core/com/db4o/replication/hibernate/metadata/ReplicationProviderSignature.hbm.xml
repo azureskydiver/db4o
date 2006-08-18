@@ -27,7 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="db4o_replication_provider_signatures" name="com.db4o.replication.hibernate.metadata.ReplicationProviderSignature">
+	<class table="drs_replication_provider_signatures" name="com.db4o.replication.hibernate.metadata.ReplicationProviderSignature">
 		<id name="id" column="drs_provider_id" type="long">
 			<generator class="native"/>
 		</id>
