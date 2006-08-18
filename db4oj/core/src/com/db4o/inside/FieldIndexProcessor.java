@@ -42,11 +42,13 @@ public class FieldIndexProcessor {
 		return leaves.iterator();
 	}
 	
-	class IndexedLeaf {		
+	static class IndexedLeaf {		
 		private final QConObject _constraint;
 		private BTreeRange _range;
+		private final Transaction _transaction;
 		
-		public IndexedLeaf(QConObject qcon) {
+		public IndexedLeaf(Transaction transaction, QConObject qcon) {
+			_transaction = transaction;
 			_constraint = qcon;
 			_range = search();
 		}
@@ -57,7 +59,7 @@ public class FieldIndexProcessor {
 				return EmptyBTreeRange.INSTANCE;
 			}
 			
-			final BTreeRange range = field.getIndex().search(transaction(), _constraint.getObject());
+			final BTreeRange range = field.getIndex().search(_transaction, _constraint.getObject());
 			final QEBitmap bitmap = QEBitmap.forQE(_constraint.i_evaluator);
 			if (bitmap.takeGreater()) {
 				final BTreeRange greater = range.greater();
@@ -97,7 +99,7 @@ public class FieldIndexProcessor {
 			QCon qcon = (QCon)qcons.next();
 			if (isLeaf(qcon)) {
 				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {
-					leaves.add(new IndexedLeaf((QConObject) qcon));
+					leaves.add(new IndexedLeaf(transaction(), (QConObject) qcon));
 				}
 			} else {
 				collectIndexedLeaves(leaves, qcon.iterateChildren());
