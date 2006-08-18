@@ -65,12 +65,7 @@ public class FieldIndexProcessor {
 		}
 
 		public int resultSize() {
-			int size = 0;
-			final KeyValueIterator i = _range.iterator();
-			while (i.moveNext()) {
-				++size;
-			}
-			return size;
+			return _range.size();
 		}
 
 		public TreeInt toTreeInt() {

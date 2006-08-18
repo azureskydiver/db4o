@@ -10,4 +10,6 @@ public interface BTreeRange {
     
     public KeyValueIterator iterator();
 
+	public int size();
+
 }
