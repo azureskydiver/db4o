@@ -13,7 +13,11 @@ public class ExpectingVisitor implements Visitor4{
     
     private final Object[] _expected;
     
+    private final boolean _obeyOrder;
+    
     private boolean _unexpected;
+    
+    private int _cursor;
     
     private static final Object FOUND = new Object() {
     	public String toString() {
@@ -21,11 +25,41 @@ public class ExpectingVisitor implements Visitor4{
     	}
     };
     
-    public ExpectingVisitor(Object[] results){
+    public ExpectingVisitor(Object[] results, boolean obeyOrder){
         _expected = results;
+        _obeyOrder = obeyOrder;
+    }
+    
+    public ExpectingVisitor(Object[] results){
+        this(results, false);
+    }
+    
+    public ExpectingVisitor(Object singleObject){
+        this(new Object[] { singleObject });
     }
 
     public void visit(Object obj) {
+        if(_obeyOrder){
+            visitOrdered(obj);
+        }else{
+            visitUnOrdered(obj);
+        }
+    }
+    
+    private void visitOrdered(Object obj){
+        if(_cursor < _expected.length){
+            if(obj.equals(_expected[_cursor])){
+                ods("Expected OK: " + obj.toString());
+                _expected[_cursor] = FOUND;
+                _cursor ++;
+                return;
+            }
+        }
+        _unexpected = true;
+        ods("Unexpected: " + obj.toString());
+    }
+    
+    private void visitUnOrdered(Object obj){
         for (int i = 0; i < _expected.length; i++) {
             if(obj.equals(_expected[i])){
                 ods("Expected OK: " + obj.toString());
