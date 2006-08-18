@@ -47,4 +47,16 @@ public class BTreeRangeImpl implements BTreeRange {
         return _first;
     }
 
+	public BTreeRange greater() {
+		return new BTreeRangeImpl(_trans, _end, null);
+	}
+	
+	public BTreeRange union(BTreeRange other) {
+//		return new BTreeRangeImpl(
+//					trans(),
+//					min(_first, other._first),
+//					max(_end, other._end));
+		//return new BTreeRangeUnion(this, other);
+		return null;
+	}
 }

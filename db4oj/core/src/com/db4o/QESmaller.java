@@ -17,7 +17,7 @@ public class QESmaller extends QEAbstract
 	}
 	
 	public void indexBitMap(boolean[] bits){
-	    bits[IxTraverser.SMALLER] = true;
+	    bits[QE.SMALLER] = true;
 	}
 	
 }

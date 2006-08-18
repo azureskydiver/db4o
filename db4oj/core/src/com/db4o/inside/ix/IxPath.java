@@ -2,6 +2,7 @@
 
 package com.db4o.inside.ix;
 
+import com.db4o.QE;
 import com.db4o.foundation.*;
 import com.db4o.inside.freespace.*;
 
@@ -44,7 +45,7 @@ class IxPath implements ShallowClone,Visitor4 {
     }
 
     void add(Visitor4 visitor) {
-        if (i_comparisonResult == 0 && i_traverser.i_take[IxTraverser.EQUAL]) {
+        if (i_comparisonResult == 0 && i_traverser.i_take[QE.EQUAL]) {
             i_tree.visit(visitor, i_lowerAndUpperMatch);
         }
     }
