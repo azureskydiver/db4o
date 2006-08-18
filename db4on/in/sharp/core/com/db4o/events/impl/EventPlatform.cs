@@ -9,11 +9,13 @@ namespace com.db4o.events.impl
 	{
 		public static void TriggerQueryEvent(QueryEventHandler e, Query q)
 		{
+			if (null == e) return;
 			e(q, new QueryEventArgs(q));
 		}
 
 		public static bool TriggerCancellableObjectEventArgs(CancellableObjectEventHandler e, object o)
 		{
+			if (null == e) return;
 			CancellableObjectEventArgs coea = new CancellableObjectEventArgs(o);
 			e(o, coea);
 			return !coea.IsCancelled;
@@ -21,6 +23,7 @@ namespace com.db4o.events.impl
 
 		public static void TriggerObjectEvent(ObjectEventHandler e, object o)
 		{
+			if (null == e) return;
 			e(o, new ObjectEventArgs(o));
 		}
 	}
