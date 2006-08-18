@@ -365,12 +365,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			throw new RuntimeException("peerSigBytes must not equal to my own sig");
 
 		final List exisitingSigs = getSession().createCriteria(PeerSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, peerSigBytes)).list();
+				.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, peerSigBytes)).list();
 
 		if (exisitingSigs.size() == 1) {
 			_peerSignature = (PeerSignature) exisitingSigs.get(0);
-			_replicationRecord = (ReplicationRecord) getSession().createCriteria(ReplicationRecord.class)
-					.createCriteria("peerSignature").add(Restrictions.eq("id", _peerSignature.getId())).list().get(0);
+			_replicationRecord = (ReplicationRecord) getSession()
+				.createCriteria(ReplicationRecord.class)
+				.createCriteria(ReplicationRecord.Fields.PEER_SIGNATURE)
+				.add(Restrictions.eq(ReplicationProviderSignature.Fields.ID, _peerSignature.getId())).list().get(0);
 		} else if (exisitingSigs.size() == 0) {
 			_peerSignature = new PeerSignature(peerSigBytes);
 			getSession().save(_peerSignature);
@@ -540,7 +542,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	private Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		long lastReplicationVersion = getLastReplicationVersion();
-		criteria.add(Restrictions.gt("version", lastReplicationVersion));
+		criteria.add(Restrictions.gt(ObjectReference.Fields.VERSION, lastReplicationVersion));
 		Disjunction disjunction = Restrictions.disjunction();
 
 		List<String> names = new ArrayList<String>();
@@ -554,7 +556,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 
 		for (String s : names)
-			disjunction.add(Restrictions.eq("className", s));
+			disjunction.add(Restrictions.eq(ObjectReference.Fields.CLASS_NAME, s));
 
 		criteria.add(disjunction);
 
@@ -578,7 +580,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
 		final List exisitingSigs = getSession().createCriteria(ReplicationProviderSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, signaturePart))
+				.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, signaturePart))
 				.list();
 		if (exisitingSigs.size() == 1)
 			return (ReplicationProviderSignature) exisitingSigs.get(0);
@@ -607,9 +609,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private ReplicationReference produceCollectionReferenceByReferencingObjUuid(ReplicationReference refObjRef, String fieldName) {
 		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", refObjRef.uuid().getLongPart()));
-		criteria.createCriteria("referencingObjectField").add(Restrictions.eq("referencingObjectFieldName", fieldName));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", refObjRef.uuid().getSignaturePart()));
+		criteria.add(Restrictions.eq(ReplicationComponentIdentity.Fields.REF_OBJ_UUID_LONG, refObjRef.uuid().getLongPart()));
+		
+		criteria.createCriteria(ReplicationComponentIdentity.Fields.REF_OBJ_FIELD)
+			.add(Restrictions.eq(ReplicationComponentField.Fields.REF_OBJ_FIELD_NAME, fieldName));
+		
+		criteria.createCriteria(ReplicationComponentIdentity.Fields.PROVIDER)
+			.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, refObjRef.uuid().getSignaturePart()));
 
 		final List exisitings = criteria.list();
 		int count = exisitings.size();
@@ -636,8 +642,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
 		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("uuidLongPart", uuid.getLongPart()));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
+		
+		criteria.add(Restrictions.eq(ReplicationComponentIdentity.Fields.UUID_LONG, uuid.getLongPart()));
+		
+		criteria.createCriteria(ReplicationComponentIdentity.Fields.PROVIDER)
+			.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, uuid.getSignaturePart()));
 
 		final List exisitings = criteria.list();
 		int count = exisitings.size();
@@ -701,8 +710,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			String referencingObjectFieldName) {
 		getSession().flush();
 		Criteria criteria = getSession().createCriteria(ReplicationComponentField.class);
-		criteria.add(Restrictions.eq("referencingObjectClassName", referencingObjectClassName));
-		criteria.add(Restrictions.eq("referencingObjectFieldName", referencingObjectFieldName));
+		criteria.add(Restrictions.eq(ReplicationComponentField.Fields.REF_OBJ_CLASS_NAME, referencingObjectClassName));
+		criteria.add(Restrictions.eq(ReplicationComponentField.Fields.REF_OBJ_FIELD_NAME, referencingObjectFieldName));
 
 		final List exisitings = criteria.list();
 		int count = exisitings.size();

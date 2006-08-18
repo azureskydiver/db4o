@@ -169,9 +169,9 @@ public final class Util {
 	}
 
 	public static long getVersion1(Connection con, String className, long id) {
-		String sql = "SELECT " + ObjectReference.COL_VERSION + " FROM " + ObjectReference.TABLE_NAME
-				+ " WHERE " + ObjectReference.COL_CLASS_NAME + " = ?"
-				+ " AND " + ObjectReference.COL_HIBERNATE_ID + " = ?";
+		String sql = "SELECT " + ObjectReference.Table.VERSION + " FROM " + ObjectReference.Table.NAME
+				+ " WHERE " + ObjectReference.Table.CLASS_NAME + " = ?"
+				+ " AND " + ObjectReference.Table.HIBERNATE_ID + " = ?";
 
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -218,10 +218,10 @@ public final class Util {
 
 	public static ObjectReference getByUUID(Session session, Uuid uuid) {
 		String alias = "objRef";
-		String uuidPath = alias + "." + ObjectReference.UUID + ".";
+		String uuidPath = alias + "." + ObjectReference.Fields.UUID + ".";
 		String queryString = "from " + "ObjectReference"
 				+ " as " + alias + " where " + uuidPath + "longPart" + "=?"
-				+ " AND " + uuidPath + "provider" + "." + ReplicationProviderSignature.BYTES + "=?";
+				+ " AND " + uuidPath + "provider" + "." + ReplicationProviderSignature.Fields.BYTES + "=?";
 		Query c = session.createQuery(queryString);
 		c.setLong(0, uuid.getLongPart());
 		c.setBinary(1, uuid.getProvider().getBytes());
