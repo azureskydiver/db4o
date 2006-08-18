@@ -1,21 +1,13 @@
 package com.db4o.db4ounit.events;
 
-import db4ounit.Assert;
-import db4ounit.TestRunner;
-import db4ounit.db4o.Db4oTestSuiteBuilder;
-import db4ounit.db4o.Db4oTestCase;
-import db4ounit.db4o.fixtures.Db4oSolo;
+import com.db4o.*;
 import com.db4o.events.*;
-import com.db4o.ObjectSet;
-import com.db4o.Db4o;
 import com.db4o.query.Query;
-import com.db4o.query.QueryComparator;
 
-/**
- * User: treeder
- * Date: Aug 16, 2006
- * Time: 3:21:50 PM
- */
+import db4ounit.*;
+import db4ounit.db4o.*;
+import db4ounit.db4o.fixtures.Db4oSolo;
+
 public class SelectiveActivationTestCase extends Db4oTestCase {
     private boolean debug = false;
 
