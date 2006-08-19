@@ -24,7 +24,6 @@ public class Db4o {
 	static final Config4Impl i_config = new Config4Impl();
 	private static Sessions i_sessions = new Sessions();
 	static final Object lock = initialize();
-	static String licTo = "";
 
 	private static final Object initialize(){
 		Platform4.getDefaultConfiguration(i_config);
@@ -32,7 +31,7 @@ public class Db4o {
 	}
 
     /**
-	 * prints the version name of this version to <code>System.out</code>.
+	 * prints the version name of this db4o version to <code>System.out</code>.
      */
 	public static void main(String args[]){
 		System.out.println(version());
@@ -50,13 +49,6 @@ public class Db4o {
      */
 	public static Configuration configure(){
 		return i_config;
-	}
-	
-	/**
-	 * enters the licensing information into licensed versions.
-	 */
-	public static void licensedTo(String emailAddress){
-	    // functionality removed
 	}
 	
     /**
