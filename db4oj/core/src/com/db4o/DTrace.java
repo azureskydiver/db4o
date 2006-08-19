@@ -299,7 +299,7 @@ public class DTrace {
     
     public static void addRangeWithLength(long start, long length){
         if(enabled){
-            addRangeWithEnd(start, start + length - (long)1);
+            addRangeWithEnd(start, start + length - 1);
         }
     }
     

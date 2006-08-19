@@ -34,8 +34,8 @@ public final class EventDispatcher {
 	
 	private final ReflectMethod[] methods;
 	
-	private EventDispatcher(ReflectMethod[] methods){
-		this.methods = methods;
+	private EventDispatcher(ReflectMethod[] methods_){
+		methods = methods_;
 	}
 	
 	boolean dispatch(YapStream stream, Object obj, int eventID){

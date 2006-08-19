@@ -7,10 +7,10 @@ import com.db4o.config.*;
 class JavaOnly {
     
     public static void link(){
-        Object obj = new TClass();
-        obj = new TVector();
-        obj = new THashtable();
-        obj = new TNull();
+        new TClass();
+        new TVector();
+        new THashtable();
+        new TNull();
     }
     
     public static void runFinalizersOnExit(){
