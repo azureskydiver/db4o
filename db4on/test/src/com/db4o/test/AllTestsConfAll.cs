@@ -100,6 +100,10 @@ namespace com.db4o.test
 				tests.Add(typeof(ExtendsHashTable));
 				tests.Add(typeof(ExternalBlobs));
 				tests.Add(typeof(ExtMethods));
+
+				tests.Add(typeof(events.EventRegistryTestCase));
+				
+				
 				tests.Add(typeof(HashtableModifiedUpdateDepth));
 #if NET || NET_2_0 || MONO
 				tests.Add(typeof(HoldsAnArrayList));
