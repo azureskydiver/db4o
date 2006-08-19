@@ -15,9 +15,20 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		new FieldIndexProcessorTestCase().runSolo();
 	}
 	
+	public void store() {
+		store(new int[] { 3, 4, 7, 9 });
+	}
+	
 	public void testSingleIndexEquals() {
 		final int expectedBar = 3;
 		assertQueryMatch(new int[] { expectedBar }, createQuery(expectedBar));
+	}
+	
+	public void testSingleIndexSmaller() {
+		final Query query = createItemQuery();
+		query.descend("bar").constrain(new Integer(7)).smaller();
+		
+		assertQueryMatch(new int[] { 3, 4 }, query);
 	}
 	
 	public void testSingleIndexGreater() {
@@ -27,12 +38,12 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		assertQueryMatch(new int[] { 4, 7, 9 }, query);
 	}
 	
-//	public void testSingleIndexGreaterOrEqual() {
-//		final Query query = createItemQuery();
-//		query.descend("bar").constrain(new Integer(7)).greater().equal();
-//		
-//		assertQueryMatch(new int[] { 7, 9 }, query);
-//	}
+	public void testSingleIndexGreaterOrEqual() {
+		final Query query = createItemQuery();
+		query.descend("bar").constrain(new Integer(7)).greater().equal();
+		
+		assertQueryMatch(new int[] { 7, 9 }, query);
+	}
 
 	private void assertQueryMatch(final int[] expectedBars, final Query query) {
 		final QCandidates candidates = getQCandidates(query);

@@ -93,8 +93,10 @@ public class BTreeNode extends YapMeta{
         firstChild._parentID = getID();
         secondChild._parentID = getID();
     }
-
     
+    public BTree btree() {
+		return _btree;
+	}    
     
     /**
      * @return the split node if this node is split
@@ -517,18 +519,26 @@ public class BTreeNode extends YapMeta{
         return len;
     }
     
-    private Object firstKey(Transaction trans){
-        for (int ix = 0; ix < _count; ix++) {
+    private int firstKeyIndex(Transaction trans) {
+    	for (int ix = 0; ix < _count; ix++) {
             BTreePatch patch = keyPatch(ix);
             if(patch == null){
-                return _keys[ix];
+                return ix;
             }
             Object obj = patch.key(trans);
             if(obj != No4.INSTANCE){
-                return obj;
+                return ix;
             }
-        }
-        return No4.INSTANCE;
+    	}
+    	return -1;
+    }
+    
+    private Object firstKey(Transaction trans){
+    	final int index = firstKeyIndex(trans);
+    	if (-1 == index) {
+    		return No4.INSTANCE;
+    	}
+		return key(trans, index);
     }
     
     public byte getIdentifier() {
@@ -964,7 +974,14 @@ public class BTreeNode extends YapMeta{
         }
         return _btree.produceNode(_nextID);
     }
-
+    
+	BTreePointer firstPointer(Transaction trans) {
+		prepareRead(trans);
+		if (_isLeaf) {
+			return new BTreePointer(this, firstKeyIndex(trans));
+		}
+		return null;
+	}
     
     void purge(){
         if(_dead){
@@ -1149,5 +1166,4 @@ public class BTreeNode extends YapMeta{
         }
         return str;
     }
-    
 }

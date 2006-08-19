@@ -5,8 +5,6 @@ import com.db4o.query.Query;
 
 public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 
-	protected static final int[] BARS = new int[]{3,7,9,4};
-
 	public FieldIndexTestCaseBase() {
 		super();
 	}
@@ -17,10 +15,12 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	    .objectField("bar")
 	    .indexed(true);
 	}
-
-	public void store() {
-	    for (int i = 0; i < BARS.length; i++) {
-	        db().set(new FieldIndexItem(BARS[i]));
+	
+	public abstract void store();
+	
+	protected void store(final int[] bars) {
+		for (int i = 0; i < bars.length; i++) {
+	        db().set(new FieldIndexItem(bars[i]));
 	    }
 	    db().commit();
 	}

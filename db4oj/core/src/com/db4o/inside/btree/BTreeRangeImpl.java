@@ -59,4 +59,20 @@ public class BTreeRangeImpl implements BTreeRange {
 		//return new BTreeRangeUnion(this, other);
 		return null;
 	}
+
+	public BTreeRange extend() {
+		return new BTreeRangeImpl(_trans, _first, null);
+	}
+
+	public BTreeRange smaller() {
+		return new BTreeRangeImpl(_trans, firstBTreePointer(), _first);
+	}
+
+	private BTreePointer firstBTreePointer() {
+		return btree().firstPointer(_trans);
+	}
+
+	private BTree btree() {
+		return _first.node().btree();
+	}
 }

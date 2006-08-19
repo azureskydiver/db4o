@@ -11,10 +11,16 @@ import db4ounit.Assert;
 
 
 public class FieldIndexTestCase extends FieldIndexTestCaseBase {
+	
+	private static final int[] BARS = new int[]{3,7,9,4};
     
     public static void main(String[] arguments) {
         new FieldIndexTestCase().runSolo();
     }
+    
+	public void store() {
+		store(BARS);
+	}
     
     public void testAllThere() throws Exception{
         for (int i = 0; i < BARS.length; i++) {
