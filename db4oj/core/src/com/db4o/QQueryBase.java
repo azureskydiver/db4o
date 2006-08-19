@@ -473,18 +473,25 @@ public abstract class QQueryBase implements Unversioned {
 	private List4 addConstraintToCandidateCollection(List4 candidateCollection, QCon qcon) {
 		
 		if (candidateCollection != null) {
-		    Iterator4 j = new Iterator4Impl(candidateCollection);
-		    while (j.hasNext()) {
-		        QCandidates candidates = (QCandidates)j.next();
-		        if (candidates.tryAddConstraint(qcon)) {
-		            return candidateCollection;
-		        }
+		    if (tryToAddToExistingCandidate(candidateCollection, qcon)) {
+		    	return candidateCollection;
 		    }
 		}
 		
 		QCandidates candidates = new QCandidates(i_trans, qcon.getYapClass(), null);
 		candidates.addConstraint(qcon);
 		return new List4(candidateCollection, candidates);
+	}
+
+	private boolean tryToAddToExistingCandidate(List4 candidateCollection, QCon qcon) {
+		Iterator4 j = new Iterator4Impl(candidateCollection);
+		while (j.hasNext()) {
+		    QCandidates candidates = (QCandidates)j.next();
+		    if (candidates.tryAddConstraint(qcon)) {
+		        return true;
+		    }
+		}
+		return false;
 	}
 
     Transaction getTransaction() {
