@@ -8,6 +8,7 @@ using com.db4o.test.cs;
 using com.db4o.test.j4otest;
 using com.db4o.test.nativequeries;
 using com.db4o.test.soda;
+using com.db4o.test.events;
 
 namespace com.db4o.test
 {
@@ -28,18 +29,20 @@ namespace com.db4o.test
 
 				tests.Add(typeof(inside.query.QueryExpressionBuilderTestCase));
 				tests.Add(typeof(com.db4o.test.nativequeries.Cat));
-				tests.Add(typeof(UpdatingDb4oVersions));
+				tests.Add(typeof(EventRegistryTestCase));
+//				tests.Add(typeof(UpdatingDb4oVersions));
+				
 //                
 //#if NET_2_0 || CF_2_0
 //                tests.Add(typeof(net2.Net2GenericList));
 //#endif
 //			    
-//#if NET_2_0
+#if NET_2_0
 //                tests.Add(typeof(net2.Net2GenericOtherCollections));
 //				tests.Add(typeof(net2.Net2GenericContainers));
 //				tests.Add(typeof(net2.Net2GenericDictionary));
-//                tests.Add(typeof(net2.Net2NullableTypes));
-//#endif
+                tests.Add(typeof(net2.Net2NullableTypes));
+#endif
 //
 //                tests.Add(typeof(SimplestPossible));
 //			    
