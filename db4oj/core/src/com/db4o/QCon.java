@@ -311,7 +311,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     	}
     }
 
-    QField getField() {
+    public QField getField() {
         return null;
     }
 

@@ -42,10 +42,10 @@ public class FieldIndexProcessor {
 		return leaves.iterator();
 	}
 	
-	static class IndexedLeaf {		
+	static class IndexedLeaf {
+		private final Transaction _transaction;
 		private final QConObject _constraint;
 		private BTreeRange _range;
-		private final Transaction _transaction;
 		
 		public IndexedLeaf(Transaction transaction, QConObject qcon) {
 			_transaction = transaction;
@@ -54,12 +54,7 @@ public class FieldIndexProcessor {
 		}
 
 		private BTreeRange search() {
-			YapField field = getYapField();
-			if (field == null) {
-				return EmptyBTreeRange.INSTANCE;
-			}
-			
-			final BTreeRange range = field.getIndex().search(_transaction, _constraint.getObject());
+			final BTreeRange range = getIndex().search(_transaction, _constraint.getObject());
 			final QEBitmap bitmap = QEBitmap.forQE(_constraint.i_evaluator);
 			if (bitmap.takeGreater()) {
 				final BTreeRange greater = range.greater();
@@ -69,6 +64,10 @@ public class FieldIndexProcessor {
 				return greater;
 			}
 			return range;
+		}
+
+		private BTree getIndex() {
+			return getYapField().getIndex();
 		}
 
 		private YapField getYapField() {
