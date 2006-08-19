@@ -1585,15 +1585,23 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public void set(Object a_object) {
         set(a_object, YapConst.UNSPECIFIED);
     }
-
+    
+    public final void set(Transaction trans, Object a_object) {
+    	set(trans, a_object, YapConst.UNSPECIFIED);
+    }    
+    
     public final void set(Object a_object, int a_depth) {
-        synchronized (i_lock) {
-            checkClosed();
-            beginEndSet(i_trans);
-            setInternal(i_trans, a_object, a_depth, true);
-            beginEndSet(i_trans);
-        }
+        set(i_trans, a_object, a_depth);
     }
+
+	public void set(final Transaction trans, Object a_object, int a_depth) {
+		synchronized (i_lock) {
+            checkClosed();
+			beginEndSet(trans);
+            setInternal(trans, a_object, a_depth, true);
+            beginEndSet(trans);
+        }
+	}
     
     public final int setInternal(Transaction ta, Object a_object, boolean a_checkJustSet) {
        return setInternal(ta, a_object, YapConst.UNSPECIFIED, a_checkJustSet);

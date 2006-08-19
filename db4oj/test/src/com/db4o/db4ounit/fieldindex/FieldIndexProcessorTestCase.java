@@ -4,7 +4,9 @@ import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.FieldIndexProcessor;
+import com.db4o.inside.btree.BTree;
 import com.db4o.query.Query;
+import com.db4o.reflect.ReflectClass;
 
 import db4ounit.Assert;
 
@@ -24,18 +26,28 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		assertQueryMatch(new int[] { expectedBar }, createQuery(expectedBar));
 	}
 	
+	public void testMultiTransactionSmaller() {
+		fillSystemTransactionWith(0);
+		assertSmaller(new int[] { 3, 4 }, 7);
+	}
+
 	public void testSingleIndexSmaller() {
-		final Query query = createItemQuery();
-		query.descend("bar").constrain(new Integer(7)).smaller();
-		
-		assertQueryMatch(new int[] { 3, 4 }, query);
+		assertSmaller(new int[] { 3, 4 }, 7);
+	}
+
+	public void testSingleIndexGreater() {
+		assertGreater(new int[] { 4, 7, 9 }, 3);
 	}
 	
-	public void testSingleIndexGreater() {
+	public void testMultiTransactionGreater() {
+		fillSystemTransactionWith(10);
+		assertGreater(new int[] { 4, 7, 9 }, 3);
+	}
+
+	private void assertGreater(int[] expectedBars, int greaterThan) {
 		final Query query = createItemQuery();
-		query.descend("bar").constrain(new Integer(3)).greater();
-		
-		assertQueryMatch(new int[] { 4, 7, 9 }, query);
+		query.descend("bar").constrain(new Integer(greaterThan)).greater();		
+		assertQueryMatch(expectedBars, query);
 	}
 	
 	public void testSingleIndexGreaterOrEqual() {
@@ -85,5 +97,27 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		QCandidates candidates = (QCandidates)result.candidateCollection._element;
 		return candidates;
 	}
+	
+	private int btreeNodeSize() {		
+		YapStream stream = (YapStream)db();
+		final ReflectClass reflectClass = stream.reflector().forClass(FieldIndexItem.class);
+		final BTree btree = stream.getYapClass(reflectClass, false).getYapField("bar").getIndex();
+		return btree.nodeSize();
+	}
 
+	private void store(final Transaction trans, final FieldIndexItem item) {
+		((YapStream)db()).set(trans, item);
+	}
+	
+	private void fillSystemTransactionWith(final int bar) {
+		for (int i=0; i<btreeNodeSize()+1; ++i) {
+			store(systemTrans(), new FieldIndexItem(bar));
+		}
+	}
+	
+	private void assertSmaller(final int[] expectedBars, final int smallerThan) {
+		final Query query = createItemQuery();
+		query.descend("bar").constrain(new Integer(smallerThan)).smaller();
+		assertQueryMatch(expectedBars, query);
+	}
 }

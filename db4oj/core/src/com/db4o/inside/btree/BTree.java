@@ -36,7 +36,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     private Queue4 _processing;
     
-    int _nodeSize;
+    private int _nodeSize;
     
     int _halfNodeSize;
     
@@ -71,9 +71,13 @@ public class BTree extends YapMeta implements TransactionParticipant {
             setID(id);
             setStateDeactivated();
         }
-    }
+    } 
     
-    public void add(Transaction trans, Object key){
+    public int nodeSize() {
+		return _nodeSize;
+	}
+
+	public void add(Transaction trans, Object key){
         add(trans, key, null);
     }
     
@@ -278,14 +282,14 @@ public class BTree extends YapMeta implements TransactionParticipant {
         a_reader.incrementOffset(1);  // first byte is version, for possible future format changes
         _size = a_reader.readInt();
         _nodeSize = a_reader.readInt();
-        _halfNodeSize = _nodeSize / 2;
+        _halfNodeSize = nodeSize() / 2;
         _root = produceNode(a_reader.readInt());
     }
     
     public void writeThis(Transaction trans, YapReader a_writer) {
         a_writer.append(BTREE_VERSION);
         a_writer.writeInt(_size);
-        a_writer.writeInt(_nodeSize);
+        a_writer.writeInt(nodeSize());
         a_writer.writeIDOf(trans, _root);
     }
     

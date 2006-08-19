@@ -144,7 +144,7 @@ public class BTreeNode extends YapMeta{
             }
         }
         
-        if(_count >= _btree._nodeSize){
+        if(_count >= _btree.nodeSize()){
             return split(trans);
         }
         
@@ -318,8 +318,8 @@ public class BTreeNode extends YapMeta{
             
             boolean vals = handlesValues();
             
-            Object[] tempKeys = new Object[_btree._nodeSize];
-            Object[] tempValues = vals ? new Object[_btree._nodeSize] : null; 
+            Object[] tempKeys = new Object[_btree.nodeSize()];
+            Object[] tempValues = vals ? new Object[_btree.nodeSize()] : null; 
             
             int count = 0;
         
@@ -703,17 +703,17 @@ public class BTreeNode extends YapMeta{
         if(_keys != null){
             return;
         }
-        _keys = new Object[_btree._nodeSize];
+        _keys = new Object[_btree.nodeSize()];
         if(_isLeaf){
             prepareValues();
         }else{
-            _children = new Object[_btree._nodeSize];
+            _children = new Object[_btree.nodeSize()];
         }
     }
     
     private void prepareValues(){
         if(handlesValues()){
-            _values = new Object[_btree._nodeSize];
+            _values = new Object[_btree.nodeSize()];
         }
     }
     
@@ -835,8 +835,8 @@ public class BTreeNode extends YapMeta{
             
             boolean vals = handlesValues();
             
-            Object[] tempKeys = new Object[_btree._nodeSize];
-            Object[] tempValues = vals ? new Object[_btree._nodeSize] : null; 
+            Object[] tempKeys = new Object[_btree.nodeSize()];
+            Object[] tempValues = vals ? new Object[_btree.nodeSize()] : null; 
             
             int count = 0;
         
@@ -913,14 +913,14 @@ public class BTreeNode extends YapMeta{
             _keys[i] = null;
         }
         if(_values != null){
-            res._values = new Object[_btree._nodeSize];
+            res._values = new Object[_btree.nodeSize()];
             System.arraycopy(_values, _btree._halfNodeSize, res._values, 0, _btree._halfNodeSize);
             for (int i = _btree._halfNodeSize; i < _values.length; i++) {
                 _values[i] = null;
             }
         }
         if(_children != null){
-            res._children = new Object[_btree._nodeSize];
+            res._children = new Object[_btree.nodeSize()];
             System.arraycopy(_children, _btree._halfNodeSize, res._children, 0, _btree._halfNodeSize);
             for (int i = _btree._halfNodeSize; i < _children.length; i++) {
                 _children[i] = null;
