@@ -325,7 +325,14 @@ public class BTree extends YapMeta implements TransactionParticipant {
 
 	public void dispose(Transaction transaction) {
 		// TODO Auto-generated method stub
-		
+	}
+
+	public BTreePointer firstPointer(Transaction trans) {
+		ensureActive(trans);
+		if (null == _root) {
+			return null;
+		}
+		return _root.firstPointer(trans);
 	}
 
 }

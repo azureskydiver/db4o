@@ -25,4 +25,8 @@ class QEBitmap {
 	public boolean takeEqual() {
 		return _bitmap[QE.EQUAL];
 	}
+
+	public boolean takeSmaller() {
+		return _bitmap[QE.SMALLER];
+	}
 }

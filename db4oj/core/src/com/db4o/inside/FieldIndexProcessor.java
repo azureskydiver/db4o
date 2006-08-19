@@ -56,12 +56,14 @@ public class FieldIndexProcessor {
 		private BTreeRange search() {
 			final BTreeRange range = getIndex().search(_transaction, _constraint.getObject());
 			final QEBitmap bitmap = QEBitmap.forQE(_constraint.i_evaluator);
-			if (bitmap.takeGreater()) {
-				final BTreeRange greater = range.greater();
+			if (bitmap.takeGreater()) {				
 				if (bitmap.takeEqual()) {
-					return range.union(greater);
+					return range.extend();
 				}
-				return greater;
+				return range.greater();
+			}
+			if (bitmap.takeSmaller()) {
+				return range.smaller();
 			}
 			return range;
 		}
