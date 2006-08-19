@@ -1,8 +1,12 @@
 package com.db4odoc.f1;
 
-import com.db4odoc.f1.clientserver.*;
-import com.db4odoc.f1.diagnostics.*;
-import com.db4odoc.f1.indexes.*;
+import com.db4odoc.f1.blobs.BlobExample;
+import com.db4odoc.f1.clientserver.ClientServerExample;
+import com.db4odoc.f1.clientserver.DeepExample;
+import com.db4odoc.f1.clientserver.TransactionExample;
+import com.db4odoc.f1.diagnostics.DiagnosticExample;
+import com.db4odoc.f1.indexes.IndexedExample;
+
 
 
 public class Main {
@@ -19,5 +23,6 @@ public class Main {
         DiagnosticExample.testArbitrary();
         DiagnosticExample.testIndexDiagnostics();
         DiagnosticExample.testTranslatorDiagnostics();
+    	BlobExample.main(args);
     }
 }
