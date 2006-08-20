@@ -42,6 +42,9 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\com\db4odoc\f1\blobs\BlobExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\blobs\Car.vb" />
+    <Compile Include="src\com\db4odoc\f1\blobs\CarImage.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\ClientServerExample.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\DeepExample.vb" />
