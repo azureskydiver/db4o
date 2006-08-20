@@ -74,128 +74,27 @@ not defined, db4o will use the default folder "blobs" in user directory.
 
 We will use a modified Car class, which holds reference to the car photo:
 
-.c
-public class Car {
-    private String model;
-    private CarImage img;
-    
-   
-    public Car(String model) {
-        this.model=model;
-        img=new CarImage();
-        img.setFile(model+".jpg");
-    }
-  
-    public CarImage getImage() {
-        return img;
-    }
-    
-    public String toString() {
-        return model +"(" + img.getFile() + ")" ;
-    }
-} ..
+.s com.db4odoc.f1.blobs.Car ..
 
 CarImage is a wrapper to BLOB, representing the photo:
 
-.c import java.io.File;
-
-import com.db4o.ext.Status;
-import com.db4o.types.Blob;
-
-
-public class CarImage {
-	Blob blob;
-	private String fileName = null;
-	private String inFolder = "blobs\\in\\";	
-	private String outFolder = "blobs\\out\\";
-	
-	public CarImage() {
-		
-	}
-
-	public void setFile(String fileName){
-			this.fileName = fileName;
-	}
-	
-	public String getFile(){
-		return fileName;
-	}
-	
-	public boolean readFile() throws java.io.IOException {
-		blob.readFrom(new File(inFolder + fileName));
-		double status = blob.getStatus();
-		while(status !=  Status.COMPLETED){
-			try {
-				Thread.sleep(50);
-				status = blob.getStatus();
-			} catch (InterruptedException ex){
-				System.out.println(ex.getMessage());
-			}
-		}
-        return (status == Status.COMPLETED);
-	}
-	
-	public boolean writeFile() throws java.io.IOException {
-		blob.writeTo(new File(outFolder + fileName));
-		double status = blob.getStatus();
-		while(status != Status.COMPLETED){
-			try {
-				Thread.sleep(50);
-				status = blob.getStatus();
-			} catch (InterruptedException ex){
-				System.out.println(ex.getMessage());
-			}
-		}
-        return (status == Status.COMPLETED);
-	}
-} .. 
+.s com.db4odoc.f1.blobs.CarImage ..
 
 inFolder ( "blobs\in\") is used as a location of existing files,  which are to be stored into db4o, ._
 and outFolder ( "blobs\out\") will be the place for images, retrieved from the database.
 
 readFile method allows blob to be read from the specified location into db4o storage:
 
-.c blob.readFrom(new File(inFolder + fileName)); ..
+.c Blob#readFrom( File ); ..
 
-As reading is done in a dedicated thread, you can create a progress window, which will be updated in the loop:
-
-.c double status = blob.getStatus();
-while(status !=  Status.COMPLETED){
-try {
-		Thread.sleep(50);
-		status = blob.getStatus();
-		// update progress window
-	} catch (InterruptedException ex){
-		System.out.println(ex.getMessage());
-	}
-} ..
+As reading is done in a dedicated thread, you can use Blob#getStatus() in a loop to create a progress window.
 
 The same applies to the write operation, which copies BLOB, stored with db4o, to the specified filesystem location. 
 Let's store some cars together with their images in our database:
 
-.c  public static void storeCars() {
-	  new File(Util.YAPFILENAME).delete();
-	  ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
-	   try {
-		    Car car1=new Car("Ferrari");
-		    db.set(car1);
-		    storeImage(car1);
-		    Car car2=new Car("BMW");
-		    db.set(car2);
-		    storeImage(car2);
-	   }  finally {
-	      db.close();
-	    } 
- }
-  
-public static void storeImage(Car car) {
-	CarImage img = car.getImage();
-	try {
-		img.readFile();
-	} catch (java.io.IOException ex){
-		System.out.println(ex.getMessage());
-	}
- }  ..
+.s com.db4odoc.f1.blobs.BlobExample#storeCars -run ..
+.s com.db4odoc.f1.blobs.BlobExample#storeImage -run ..
+
 
 CarImage is stored in the database just like normal object, no BLOB data is transferred before explicit ._
 call (Blob#readFrom in CarImage#readFile method), which copies the images to  the storageFolder.
@@ -203,32 +102,12 @@ Please, note, that CarImage reference should be set to the database before uploa
 
 To get the images back to the filesystem we can run a usual query:
 
-public static void retrieveCars() {
-	ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
-	try {
-	Query query = db.query();
-		query.constrain(Car.class);
-		ObjectSet result = query.execute();
-		getImages(result);
-	}  finally {
-	    db.close();
-	} 
-}
+.s com.db4odoc.f1.blobs.BlobExample#retrieveCars -run ..
 
 and get BLOB data using retrieved Car references:
 
-private static  void getImages(ObjectSet result){
-	while(result.hasNext()) {
-		Car car = (Car)(result.next());
-	    System.out.println(car);
-	    CarImage img = car.getImage();
-	    try {
-	    	img.writeFile();
-	    } catch (java.io.IOException ex){
-	    	System.out.print(ex.getMessage());
-	    }
-	}
-}
+.s com.db4odoc.f1.blobs.BlobExample#getImages -run ..
+
 
 Retrieved images are placed in CarImage.outFolder ("blobs\out"). 
 So query interface operates on references - no BLOB data is loaded into memory until explicit call (Blob#writeTo). ._
