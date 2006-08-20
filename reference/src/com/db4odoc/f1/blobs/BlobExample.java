@@ -3,7 +3,6 @@
 package com.db4odoc.f1.blobs;
 
 import java.io.File;
-import java.net.URL;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;

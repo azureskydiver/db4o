@@ -29,7 +29,7 @@ public class CarImage {
 	public boolean readFile() throws java.io.IOException {
 		blob.readFrom(new File(inFolder + fileName));
 		double status = blob.getStatus();
-		while(status !=  Status.COMPLETED){
+		while(status >  Status.COMPLETED){
 			try {
 				Thread.sleep(50);
 				status = blob.getStatus();
@@ -43,7 +43,7 @@ public class CarImage {
 	public boolean writeFile() throws java.io.IOException {
 		blob.writeTo(new File(outFolder + fileName));
 		double status = blob.getStatus();
-		while(status != Status.COMPLETED){
+		while(status > Status.COMPLETED){
 			try {
 				Thread.sleep(50);
 				status = blob.getStatus();
