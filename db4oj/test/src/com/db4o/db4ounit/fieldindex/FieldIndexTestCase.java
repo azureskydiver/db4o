@@ -3,11 +3,9 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
-import com.db4o.inside.btree.BTree;
-import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 
 public class FieldIndexTestCase extends FieldIndexTestCaseBase {
@@ -30,18 +28,6 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
             FieldIndexItem fii = (FieldIndexItem) objectSet.next();
             Assert.areEqual(BARS[i], fii.bar);
         }
-    }
-
-	public void testAccessingBTree() throws Exception{
-    	
-        YapStream stream = (YapStream)db();
-        ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
-        YapClass yc = stream.getYapClass(claxx, false);
-        YapField yf = yc.getYapField("bar");
-        BTree bTree = yf.getIndex();
-        
-        Assert.isNotNull(bTree);
-        expectKeysSearch(bTree, BARS);
     }
     
 }
