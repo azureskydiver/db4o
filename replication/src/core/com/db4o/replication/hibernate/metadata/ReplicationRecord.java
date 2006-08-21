@@ -1,5 +1,15 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.replication.hibernate.metadata;
 
+/**
+ * Holds metadata of a persisted object.
+ * 
+ * @author Albert Kwan
+ *
+ * @version 1.1
+ * @since dRS 1.1
+ */
 public class ReplicationRecord {
 	public static class Table {
 		public static final String NAME = "drs_replication_records";

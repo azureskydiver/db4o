@@ -1,5 +1,15 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.replication.hibernate.metadata;
 
+/**
+ * Uniquely identifies a persisted object.
+ * 
+ * @author Albert Kwan
+ *
+ * @version 1.1
+ * @since dRS 1.1
+ */
 public class Uuid {
 	public static class Table {
 		public static final String LONG_PART = "long_part";
@@ -11,8 +21,14 @@ public class Uuid {
 		public static final String PROVIDER = Table.PROVIDER;	
 	}
 	
+	/**
+	 * An id that is unique across types within a provider.
+	 */
 	private long longPart;
 
+	/**
+	 * The provider that orginates this id.
+	 */
 	private ReplicationProviderSignature provider;
 	
 	public Uuid() {}
