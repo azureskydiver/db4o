@@ -74,7 +74,9 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 	public final void install(Session session, Configuration cfg) {
 		_threadSessionMap.put(Thread.currentThread(), session);
 
-		GeneratorMap.put(session, new TimeStampIdGenerator());
+		final long minNext = Util.getMaxReplicationRecordVersion(session);
+		
+		GeneratorMap.put(session, new TimeStampIdGenerator(minNext));
 	}
 
 	public final void onCollectionRemove(Object collection, Serializable key) throws CallbackException {

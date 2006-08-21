@@ -167,6 +167,22 @@ public final class Util {
 			throw new IllegalStateException("You must use 'long' as the type of the hibernate id");
 		return (Long) id;
 	}
+	
+	public static long getMaxReplicationRecordVersion(Session s) {
+		String hql = "SELECT max(r.version) FROM ReplicationRecord r";
+		
+		List results = s.createQuery(hql).list();
+		
+		if (results.size()!=1)
+			throw new RuntimeException("result size must be 1");
+		
+		final Object ver = results.iterator().next();
+		
+		if (ver==null)
+			return 0;
+		else
+			return ((Long)ver).longValue();
+	}
 
 	public static long getVersion1(Connection con, String className, long id) {
 		String sql = "SELECT " + ObjectReference.Table.VERSION + " FROM " + ObjectReference.Table.NAME
