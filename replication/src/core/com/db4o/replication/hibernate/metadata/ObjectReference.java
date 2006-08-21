@@ -1,5 +1,15 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.replication.hibernate.metadata;
 
+/**
+ * Holds metadata of a persisted object.
+ * 
+ * @author Albert Kwan
+ *
+ * @version 1.1
+ * @since dRS 1.1
+ */
 public class ObjectReference {
 	public static class Table {
 		public static final String NAME = "drs_object_references";
@@ -16,12 +26,28 @@ public class ObjectReference {
 		
 	}
 	
+	/**
+	 * Fully qualified class name of the referenced object.
+	 */
 	private String className;
 
+	/**
+	 * The identifier of the referenced object in Hibernate. 
+	 * 
+	 * @see org.hibernate.Session#getIdentifier(Object refObj)
+	 */
 	private long hibernateId;
 
+	/**
+	 * The UUID of the referenced object.
+	 * 
+	 * @see Uuid
+	 */
 	private Uuid uuid;
 
+	/**
+	 * The version number of the referenced object.
+	 */
 	private long version;
 	
 	public ObjectReference() {}

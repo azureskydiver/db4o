@@ -1,9 +1,21 @@
-package com.db4o.replication.hibernate.metadata;
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
+package com.db4o.replication.hibernate.metadata;
 
 import java.util.Arrays;
 
+import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
+
+/**
+ * Uniquely identifies a RDBMS.
+ * @author Albert Kwan
+ *
+ * @see PeerSignature
+ * @see MySignature
+ * 
+ * @version 1.1
+ * @since dRS 1.1
+ */
 public abstract class ReplicationProviderSignature 
 	implements ReadonlyReplicationProviderSignature {
 	
@@ -16,10 +28,21 @@ public abstract class ReplicationProviderSignature
 		public static final String BYTES = "bytes";
 	}
 
+	/**
+	 * unique identifier for this ReplicationProviderSignature.
+	 */
 	private byte[] bytes;
 
+	/**
+	 * 1 to 1 identifier of "bytes", for space usage optimization. 
+	 * Serves as the primary key in relational table.
+	 */
 	private long id;
 
+	/**
+	 * legacy field used by pre-dRS db4o replication code.
+	 * @deprecated
+	 */
 	private long creationTime;
 	
 	public ReplicationProviderSignature() {}

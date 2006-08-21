@@ -1,5 +1,20 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.replication.hibernate.metadata;
 
+/**
+ * Creates a relationship between a Collection and its owner.
+ * <p/> 
+ * ReplicationComponentField and ReplicationComponentIdentity 
+ * together allow HibernateReplicationProvider to assign UUIDs 
+ * to Collections and retrieve Collections using UUIDs.
+ * 
+ * @see ReplicationComponentIdentity
+ * @author Albert Kwan
+ *
+ * @version 1.1
+ * @since dRS 1.1
+ */
 public class ReplicationComponentField {
 	public static class Table {
 		public static final String NAME = "drs_replication_component_fields";
@@ -10,8 +25,14 @@ public class ReplicationComponentField {
 		public static final String REF_OBJ_FIELD_NAME = "referencing_object_field_name";
 	}
 	
+	/**
+	 * The class name of the owner of the Collection.
+	 */
 	private String referencingObjectClassName;
 
+	/**
+	 * The field name of the Collection inside its owner.
+	 */
 	private String referencingObjectFieldName;
 	
 	public ReplicationComponentField() {}

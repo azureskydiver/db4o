@@ -1,5 +1,21 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.replication.hibernate.metadata;
 
+/**
+ * Uniquely identifies a Collection using Uuid.
+ * 
+ * <p/>
+ * ReplicationComponentField and ReplicationComponentIdentity 
+ * together allow HibernateReplicationProvider to assign UUIDs 
+ * to Collections and retrieve Collections using UUIDs.
+ * 
+ * @see ReplicationComponentField
+ * @author Albert Kwan
+ *
+ * @version 1.1
+ * @since dRS 1.1
+ */
 public class ReplicationComponentIdentity {
 	public static class Table {
 		public static final String NAME = "drs_replication_component_identities";
@@ -12,12 +28,24 @@ public class ReplicationComponentIdentity {
 		public static final String PROVIDER = "provider";
 	}
 
+	/**
+	 * The long part of the UUID of a Collection.
+	 */
 	private long uuidLongPart;
-
+	
+	/**
+	 * The long part of the UUID of the owner of a Collection.
+	 */
 	private long referencingObjectUuidLongPart;
 
+	/**
+	 * The relationship between a Collection and its owner.
+	 */
 	private ReplicationComponentField referencingObjectField;
 
+	/**
+	 * The RDBMS which orginates this Collection.
+	 */
 	private ReplicationProviderSignature provider;
 	
 	public ReplicationComponentIdentity() {}
