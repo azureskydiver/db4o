@@ -57,9 +57,9 @@ public class PreferencesCore {
 	 * A preference object may have been changed; roll back the change to the
 	 * persistent state
 	 */
-	public static void rollback() {
+	/*public static void rollback() {
 		db.ext().refresh(prefs, Integer.MAX_VALUE);
-	}
+	}*/
 
 	/**
 	 * Close the preference store
@@ -130,28 +130,23 @@ public class PreferencesCore {
 	/**
 	 * Method registerPreferences. Registers a preference page and associated
 	 * model object.
-	 * 
-	 * @param id
+	 *
+	 * @param key
 	 *            The String ID used to reference this preference
-	 * @param name
-	 *            The preference page's descriptive name
-	 * @param image
-	 *            An image to refer to this preference page or null if none
-	 * @param preferencePageClass
-	 *            The class of the IPreferencePage
 	 * @param preference
 	 *            The preference Object used to store the preferences
 	 */
-	/*public void registerPreferences(String id, String name,
+	/*public void registerPreferences(String key, String name,
 			ImageDescriptor image, Class preferencePageClass, Object preference) {
-		PreferenceUI.registerPreferencePage(id, name, image,
+		PreferenceUI.registerPreferencePage(key, name, image,
 				preferencePageClass.getName());
-		setPreference(id, preference);
+		setPreference(key, preference);
 	}*/
 
-	public void setPreference(String id, Object preference) {
-		preferenceStore.put(id, preference);
-	}
+	public void setPreference(String key, Object preference) {
+		preferenceStore.put(key, preference);
+        commit();
+    }
 
 	/**
 	 * Method getPreference. Return the preference object associated with a

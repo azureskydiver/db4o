@@ -19,7 +19,7 @@ public interface DatabaseInspector {
 
     /**
      *
-     * @return a list of all the different class types stored. Will be &lt;StoredClass$gt;
+     * @return a list of all the different class types stored. Will be &lt;ReflectClass$gt;
      */
     List getClassesStored();
 

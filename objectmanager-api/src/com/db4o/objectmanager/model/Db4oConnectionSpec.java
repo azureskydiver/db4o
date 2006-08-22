@@ -31,8 +31,10 @@ public abstract class Db4oConnectionSpec {
     }
     
 	private boolean readOnly;
-	
-	protected Db4oConnectionSpec(boolean readOnly) {
+
+    public abstract String toString();
+
+    protected Db4oConnectionSpec(boolean readOnly) {
 		this.readOnly=readOnly;
 	}
 	
@@ -92,7 +94,7 @@ public abstract class Db4oConnectionSpec {
 		}
 	}
 	
-	public abstract String shortPath();
+	public abstract String getShortPath();
 	public abstract String getPath();
 	protected abstract ObjectContainer connectInternal();
 }
