@@ -88,7 +88,7 @@ public class ReplicationRecord implements Internal4{
     public static ReplicationRecord queryForReplicationRecord(YapStream stream, Db4oDatabase younger, Db4oDatabase older) {
         ReplicationRecord res = null;
         stream.showInternalClasses(true);
-        Query q = stream.querySharpenBug();
+        Query q = stream.query();
         q.constrain(YapConst.CLASS_REPLICATIONRECORD);
         q.descend("_youngerPeer").constrain(younger).identity();
         q.descend("_olderPeer").constrain(older).identity();

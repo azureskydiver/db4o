@@ -24,4 +24,15 @@ public class FieldIndexKey {
     public Object value(){
         return _value;
     }
+    
+    public String toString() {
+    	return "FieldIndexKey(" + _parentID + ", " + safeString(_value) + ")";
+    }
+
+	private String safeString(Object value) {
+		if (null == value) {
+			return "null";
+		}
+		return value.toString();
+	}
 }

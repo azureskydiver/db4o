@@ -3,6 +3,7 @@
 package com.db4o.inside.btree;
 
 import com.db4o.*;
+import com.db4o.foundation.ArgumentNullException;
 import com.db4o.inside.ix.*;
 
 
@@ -41,9 +42,6 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
     
     private FieldIndexKey cast(Object obj){
-        if(! (obj instanceof FieldIndexKey)){
-            throw new IllegalArgumentException();
-        }
         return (FieldIndexKey)obj;
     }
 
@@ -55,6 +53,9 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public int compareTo(Object obj) {
+    	if (null == obj) {
+    		throw new ArgumentNullException();
+    	}
         FieldIndexKey composite = cast(obj);
         int delegateResult = _delegate.compareTo(composite.value());  
         if(delegateResult != 0 ){

@@ -29,6 +29,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	
 	public void testMultiTransactionSmaller() {
 		fillSystemTransactionWith(0);
+		fillSystemTransactionWith(5);
         assertSmaller(new int[] { 3, 4 }, 7);
 	}
 
@@ -42,6 +43,11 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	
 	public void testMultiTransactionGreater() {
 		fillSystemTransactionWith(10);
+		fillSystemTransactionWith(5);		
+		assertGreater(new int[] { 4, 7, 9 }, 3);
+		
+		removeFromSystemTransaction(5);
+		removeFromSystemTransaction(10);
 		assertGreater(new int[] { 4, 7, 9 }, 3);
 	}
 
@@ -113,6 +119,16 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	private void fillSystemTransactionWith(final int bar) {
 		for (int i=0; i<btreeNodeSize()+1; ++i) {
 			store(systemTrans(), new FieldIndexItem(bar));
+		}
+	}
+	
+	private void removeFromSystemTransaction(final int bar) {
+		final ObjectSet found = createItemQuery(systemTrans()).execute();
+		while (found.hasNext()) {
+			FieldIndexItem item = (FieldIndexItem)found.next();
+			if (item.bar == bar) {
+				stream().delete(systemTrans(), item);
+			}
 		}
 	}
 	

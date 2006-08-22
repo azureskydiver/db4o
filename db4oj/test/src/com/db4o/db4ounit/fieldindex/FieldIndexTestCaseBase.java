@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.fieldindex;
 
-import com.db4o.Db4o;
+import com.db4o.*;
 import com.db4o.db4ounit.btree.*;
 import com.db4o.query.Query;
 
@@ -34,6 +34,12 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 
 	protected Query createItemQuery() {
 		Query q = db().query();
+		q.constrain(FieldIndexItem.class);
+		return q;
+	}
+
+	protected Query createItemQuery(Transaction trans) {
+		Query q = stream().query(trans);
 		q.constrain(FieldIndexItem.class);
 		return q;
 	}
