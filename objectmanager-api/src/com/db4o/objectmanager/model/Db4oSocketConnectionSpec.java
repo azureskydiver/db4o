@@ -37,7 +37,11 @@ public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 		}
 	}
 
-	public String shortPath() {
+    public String toString() {
+        return getPath();
+    }
+
+    public String getShortPath() {
 		return getPath();
 	}
 

@@ -20,7 +20,11 @@ public class Db4oFileConnectionSpec extends Db4oConnectionSpec {
 		return Db4o.openFile(filePath);
 	}
 
-	public String shortPath() {
+    public String toString() {
+        return filePath;
+    }
+
+    public String getShortPath() {
 		return new File(filePath).getName();
 	}
 }
