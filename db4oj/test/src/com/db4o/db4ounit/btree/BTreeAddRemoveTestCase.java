@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.fieldindex;
+package com.db4o.db4ounit.btree;
 
 import com.db4o.Transaction;
 import com.db4o.inside.btree.BTree;

@@ -121,6 +121,10 @@ public class Searcher {
         adjustBounds(cmp);
         adjustCursor();
     }
+
+    public boolean isGreater() {
+        return _cmp < 0;
+    }
     
  
 }

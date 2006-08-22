@@ -64,8 +64,12 @@ public class YInt extends YapJavaClass {
         return a_bytes.readInt();
     }
 
-    public void write(Object a_object, YapReader a_bytes) {
-        writeInt(((Integer) a_object).intValue(), a_bytes);
+    public void write(Object obj, YapReader writer) {
+        write(((Integer) obj).intValue(), writer);
+    }
+
+    public void write(int intValue, YapReader writer) {
+        writeInt(intValue, writer);
     }
 
     static final void writeInt(int a_int, YapReader a_bytes) {
@@ -94,13 +98,25 @@ public class YInt extends YapJavaClass {
     private int val(Object obj) {
         return ((Integer) obj).intValue();
     }
+    
+    public int compareTo(int other){
+        return other - i_compareTo;
+    }
 
+    public void prepareComparison(int i) {
+        i_compareTo = i;
+    }
+    
     void prepareComparison1(Object obj) {
-        i_compareTo = val(obj);
+        prepareComparison(val(obj));
     }
     
     public Object current1(){
-        return new Integer(i_compareTo);
+        return new Integer(currentInt());
+    }
+    
+    public int currentInt(){
+        return i_compareTo;
     }
 
     boolean isEqual1(Object obj) {

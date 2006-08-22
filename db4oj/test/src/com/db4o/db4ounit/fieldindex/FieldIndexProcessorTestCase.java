@@ -2,6 +2,7 @@ package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
+import com.db4o.db4ounit.btree.*;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.FieldIndexProcessor;
 import com.db4o.inside.btree.BTree;
@@ -28,7 +29,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	
 	public void testMultiTransactionSmaller() {
 		fillSystemTransactionWith(0);
-		assertSmaller(new int[] { 3, 4 }, 7);
+        assertSmaller(new int[] { 3, 4 }, 7);
 	}
 
 	public void testSingleIndexSmaller() {
