@@ -25,7 +25,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public int linkLength() {
-        return _delegate.linkLength() + YapConst.INT_LENGTH;;
+        return _delegate.linkLength() + YapConst.INT_LENGTH;
     }
 
     public Object readIndexEntry(YapReader a_reader) {
