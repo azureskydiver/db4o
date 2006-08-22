@@ -75,6 +75,10 @@
     <Compile Include="src\com\db4odoc\f1\indexes\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\indexes\IndexedExample.vb" />
     <Compile Include="src\com\db4odoc\f1\indexes\Pilot.vb" />
+    <Compile Include="src\com\db4odoc\f1\lists\CollectionExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\lists\CollectionFactory.vb" />
+    <Compile Include="src\com\db4odoc\f1\lists\Team.vb" />
+    <Compile Include="src\com\db4odoc\f1\lists\VerboseList.vb" />
     <Compile Include="src\com\db4odoc\f1\Util.vb" />
     <Compile Include="src\Program.vb" />
   </ItemGroup>

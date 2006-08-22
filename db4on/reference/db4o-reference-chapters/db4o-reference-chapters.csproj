@@ -80,9 +80,9 @@
                     HintPath = "..\..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "db4o-net"
-                    Project = "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Name = "db4o"
+                    AssemblyName = "db4o"
+                    HintPath = "..\..\core\obj\Debug\db4o.dll"
                 />
             </References>
         </Build>
@@ -255,6 +255,26 @@
                 />
                 <File
                     RelPath = "src\com\db4odoc\f1\indexes\Pilot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\lists\CollectionExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\lists\CollectionFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\lists\Team.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\lists\VerboseList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

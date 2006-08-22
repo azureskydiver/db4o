@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "D:\install\db4o-5.6\dll\net\" >
+            <Settings ReferencePath = "D:\svntest\db4on\core\obj\Debug\;D:\install\db4o-5.6\dll\net\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
