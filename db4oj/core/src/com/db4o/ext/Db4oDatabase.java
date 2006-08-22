@@ -202,7 +202,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
     
     private Db4oDatabase query(Transaction trans, boolean constrainByUUID){
         YapStream stream = trans.stream();
-        Query q = stream.querySharpenBug(trans);
+        Query q = stream.query(trans);
         q.constrain(getClass());
         if(constrainByUUID){
             q.descend(CREATIONTIME_FIELD).constrain(new Long(i_uuid));
