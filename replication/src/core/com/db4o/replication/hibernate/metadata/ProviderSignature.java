@@ -16,11 +16,11 @@ import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
  * @version 1.1
  * @since dRS 1.1
  */
-public abstract class ReplicationProviderSignature 
+public abstract class ProviderSignature 
 	implements ReadonlyReplicationProviderSignature {
 	
 	public static class Table {
-		public static final String NAME = "drs_replication_provider_signatures";
+		public static final String NAME = "drs_provider_signatures";
 	}
 	
 	public static class Fields {
@@ -29,7 +29,7 @@ public abstract class ReplicationProviderSignature
 	}
 
 	/**
-	 * unique identifier for this ReplicationProviderSignature.
+	 * unique identifier for this ProviderSignature.
 	 */
 	private byte[] bytes;
 
@@ -45,9 +45,9 @@ public abstract class ReplicationProviderSignature
 	 */
 	private long creationTime;
 	
-	public ReplicationProviderSignature() {}
+	public ProviderSignature() {}
 
-	public ReplicationProviderSignature(byte[] signature) {
+	public ProviderSignature(byte[] signature) {
 		this.bytes = signature;
 		this.creationTime = System.currentTimeMillis();
 	}
@@ -56,7 +56,7 @@ public abstract class ReplicationProviderSignature
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		final ReplicationProviderSignature that = (ReplicationProviderSignature) o;
+		final ProviderSignature that = (ProviderSignature) o;
 
 		if (creationTime != that.creationTime) return false;
 		if (id != that.id) return false;
@@ -97,7 +97,7 @@ public abstract class ReplicationProviderSignature
 	}
 
 	public String toString() {
-		return "ReplicationProviderSignature{" +
+		return "ProviderSignature{" +
 				"bytes=" + bytes +
 				", id=" + id +
 				", creationTime=" + creationTime +

@@ -13,10 +13,10 @@ import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
-import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
-import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
-import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
-import com.db4o.replication.hibernate.metadata.ReplicationRecord;
+import com.db4o.replication.hibernate.metadata.ComponentField;
+import com.db4o.replication.hibernate.metadata.ComponentIdentity;
+import com.db4o.replication.hibernate.metadata.ProviderSignature;
+import com.db4o.replication.hibernate.metadata.Record;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
@@ -72,9 +72,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	private FlushEventListener _flushEventListener = new MyFlushEventListener();
 
 	/**
-	 * The ReplicationRecord of {@link #_peerSignature}.
+	 * The Record of {@link #_peerSignature}.
 	 */
-	private ReplicationRecord _replicationRecord;
+	private Record _replicationRecord;
 
 	private final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
 
@@ -206,7 +206,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		return _generator.generate();
 	}
-
+	
 	public long getLastReplicationVersion() {
 		ensureReplicationActive();
 
@@ -365,25 +365,25 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			throw new RuntimeException("peerSigBytes must not equal to my own sig");
 
 		final List exisitingSigs = getSession().createCriteria(PeerSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, peerSigBytes)).list();
+				.add(Restrictions.eq(ProviderSignature.Fields.BYTES, peerSigBytes)).list();
 
 		if (exisitingSigs.size() == 1) {
 			_peerSignature = (PeerSignature) exisitingSigs.get(0);
-			_replicationRecord = (ReplicationRecord) getSession()
-				.createCriteria(ReplicationRecord.class)
-				.createCriteria(ReplicationRecord.Fields.PEER_SIGNATURE)
-				.add(Restrictions.eq(ReplicationProviderSignature.Fields.ID, _peerSignature.getId())).list().get(0);
+			_replicationRecord = (Record) getSession()
+				.createCriteria(Record.class)
+				.createCriteria(Record.Fields.PEER_SIGNATURE)
+				.add(Restrictions.eq(ProviderSignature.Fields.ID, _peerSignature.getId())).list().get(0);
 		} else if (exisitingSigs.size() == 0) {
 			_peerSignature = new PeerSignature(peerSigBytes);
 			getSession().save(_peerSignature);
 			getSession().flush();
 
-			_replicationRecord = new ReplicationRecord();
+			_replicationRecord = new Record();
 			_replicationRecord.setPeerSignature(_peerSignature);
 		} else
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
 
-		_generator.setMinimumNext(_replicationRecord.getVersion());
+		_generator.setMinimumNext(Util.getMaxReplicationRecordVersion(_session));
 
 		_inReplication = true;
 	}
@@ -503,8 +503,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			String fieldName, long uuidLong, long version) {
 		final byte[] signaturePart = referencingObjRef.uuid().getSignaturePart();
 
-		ReplicationComponentField rcf = produceReplicationComponentField(referencingObjRef.object().getClass().getName(), fieldName);
-		ReplicationComponentIdentity rci = new ReplicationComponentIdentity();
+		ComponentField rcf = produceReplicationComponentField(referencingObjRef.object().getClass().getName(), fieldName);
+		ComponentIdentity rci = new ComponentIdentity();
 
 		rci.setReferencingObjectField(rcf);
 		rci.setReferencingObjectUuidLongPart(referencingObjRef.uuid().getLongPart());
@@ -578,12 +578,12 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return field;
 	}
 
-	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
-		final List exisitingSigs = getSession().createCriteria(ReplicationProviderSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, signaturePart))
+	private ProviderSignature getProviderSignature(byte[] signaturePart) {
+		final List exisitingSigs = getSession().createCriteria(ProviderSignature.class)
+				.add(Restrictions.eq(ProviderSignature.Fields.BYTES, signaturePart))
 				.list();
 		if (exisitingSigs.size() == 1)
-			return (ReplicationProviderSignature) exisitingSigs.get(0);
+			return (ProviderSignature) exisitingSigs.get(0);
 		else if (exisitingSigs.size() == 0) return null;
 		else
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
@@ -608,14 +608,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	private ReplicationReference produceCollectionReferenceByReferencingObjUuid(ReplicationReference refObjRef, String fieldName) {
-		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq(ReplicationComponentIdentity.Fields.REF_OBJ_UUID_LONG, refObjRef.uuid().getLongPart()));
+		Criteria criteria = getSession().createCriteria(ComponentIdentity.class);
+		criteria.add(Restrictions.eq(ComponentIdentity.Fields.REF_OBJ_UUID_LONG, refObjRef.uuid().getLongPart()));
 		
-		criteria.createCriteria(ReplicationComponentIdentity.Fields.REF_OBJ_FIELD)
-			.add(Restrictions.eq(ReplicationComponentField.Fields.REF_OBJ_FIELD_NAME, fieldName));
+		criteria.createCriteria(ComponentIdentity.Fields.REF_OBJ_FIELD)
+			.add(Restrictions.eq(ComponentField.Fields.REF_OBJ_FIELD_NAME, fieldName));
 		
-		criteria.createCriteria(ReplicationComponentIdentity.Fields.PROVIDER)
-			.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, refObjRef.uuid().getSignaturePart()));
+		criteria.createCriteria(ComponentIdentity.Fields.PROVIDER)
+			.add(Restrictions.eq(ProviderSignature.Fields.BYTES, refObjRef.uuid().getSignaturePart()));
 
 		final List exisitings = criteria.list();
 		int count = exisitings.size();
@@ -626,7 +626,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		} else if (count > 1) {
 			throw new RuntimeException("Only one Record should exist for this peer");
 		} else {
-			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
+			ComponentIdentity rci = (ComponentIdentity) exisitings.get(0);
 
 			final Object fieldValue = getFieldValue(refObjRef.object(), rci.getReferencingObjectField().getReferencingObjectFieldName());
 
@@ -641,12 +641,12 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
-		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
+		Criteria criteria = getSession().createCriteria(ComponentIdentity.class);
 		
-		criteria.add(Restrictions.eq(ReplicationComponentIdentity.Fields.UUID_LONG, uuid.getLongPart()));
+		criteria.add(Restrictions.eq(ComponentIdentity.Fields.UUID_LONG, uuid.getLongPart()));
 		
-		criteria.createCriteria(ReplicationComponentIdentity.Fields.PROVIDER)
-			.add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, uuid.getSignaturePart()));
+		criteria.createCriteria(ComponentIdentity.Fields.PROVIDER)
+			.add(Restrictions.eq(ProviderSignature.Fields.BYTES, uuid.getSignaturePart()));
 
 		final List exisitings = criteria.list();
 		int count = exisitings.size();
@@ -657,13 +657,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		} else if (count > 1) {
 			throw new RuntimeException("Only one Record should exist for this peer");
 		} else {
-			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
+			ComponentIdentity rci = (ComponentIdentity) exisitings.get(0);
 
 
 			Db4oUUID refObjUuid = new Db4oUUID(rci.getReferencingObjectUuidLongPart(), rci.getProvider().getBytes());
 
 			final Class hint;
-			final ReplicationComponentField referencingObjectField = rci.getReferencingObjectField();
+			final ComponentField referencingObjectField = rci.getReferencingObjectField();
 			try {
 				hint = Class.forName(referencingObjectField.getReferencingObjectClassName());
 			} catch (ClassNotFoundException e) {
@@ -706,18 +706,18 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
-	private ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName,
+	private ComponentField produceReplicationComponentField(String referencingObjectClassName,
 			String referencingObjectFieldName) {
 		getSession().flush();
-		Criteria criteria = getSession().createCriteria(ReplicationComponentField.class);
-		criteria.add(Restrictions.eq(ReplicationComponentField.Fields.REF_OBJ_CLASS_NAME, referencingObjectClassName));
-		criteria.add(Restrictions.eq(ReplicationComponentField.Fields.REF_OBJ_FIELD_NAME, referencingObjectFieldName));
+		Criteria criteria = getSession().createCriteria(ComponentField.class);
+		criteria.add(Restrictions.eq(ComponentField.Fields.REF_OBJ_CLASS_NAME, referencingObjectClassName));
+		criteria.add(Restrictions.eq(ComponentField.Fields.REF_OBJ_FIELD_NAME, referencingObjectFieldName));
 
 		final List exisitings = criteria.list();
 		int count = exisitings.size();
 
 		if (count == 0) {
-			ReplicationComponentField out = new ReplicationComponentField();
+			ComponentField out = new ComponentField();
 			out.setReferencingObjectClassName(referencingObjectClassName);
 			out.setReferencingObjectFieldName(referencingObjectFieldName);
 			getSession().save(out);
@@ -727,7 +727,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		} else if (count > 1) {
 			throw new RuntimeException("Only one Record should exist for this peer");
 		} else {
-			return (ReplicationComponentField) exisitings.get(0);
+			return (ComponentField) exisitings.get(0);
 		}
 	}
 

@@ -27,14 +27,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="drs_replication_component_fields" name="com.db4o.replication.hibernate.metadata.ReplicationComponentField">
-		<id column="id" type="long">
-			<generator class="native"/>
+	<class table="drs_records" name="com.db4o.replication.hibernate.metadata.Record">
+		<id column="drs_provider_id" type="long">
+			<generator class="foreign">
+				<param name="property">peerSignature</param>
+			</generator>
 		</id>
-
-		<natural-id mutable="false">
-			<property name="referencingObjectClassName" column="referencing_object_class_name" not-null="true"/>
-			<property name="referencingObjectFieldName" column="referencing_object_field_name" not-null="true"/>
-		</natural-id>
+		<property name="version" column="version" not-null="true"/>
+		<one-to-one name="peerSignature" constrained="true"/>
 	</class>
 </hibernate-mapping>

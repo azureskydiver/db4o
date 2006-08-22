@@ -6,19 +6,19 @@ package com.db4o.replication.hibernate.metadata;
  * Uniquely identifies a Collection using Uuid.
  * 
  * <p/>
- * ReplicationComponentField and ReplicationComponentIdentity 
+ * ComponentField and ComponentIdentity 
  * together allow HibernateReplicationProvider to assign UUIDs 
  * to Collections and retrieve Collections using UUIDs.
  * 
- * @see ReplicationComponentField
+ * @see ComponentField
  * @author Albert Kwan
  *
  * @version 1.1
  * @since dRS 1.1
  */
-public class ReplicationComponentIdentity {
+public class ComponentIdentity {
 	public static class Table {
-		public static final String NAME = "drs_replication_component_identities";
+		public static final String NAME = "drs_component_identities";
 	}
 	
 	public static class Fields {
@@ -41,20 +41,20 @@ public class ReplicationComponentIdentity {
 	/**
 	 * The relationship between a Collection and its owner.
 	 */
-	private ReplicationComponentField referencingObjectField;
+	private ComponentField referencingObjectField;
 
 	/**
 	 * The RDBMS which orginates this Collection.
 	 */
-	private ReplicationProviderSignature provider;
+	private ProviderSignature provider;
 	
-	public ReplicationComponentIdentity() {}
+	public ComponentIdentity() {}
 
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		final ReplicationComponentIdentity that = (ReplicationComponentIdentity) o;
+		final ComponentIdentity that = (ComponentIdentity) o;
 
 		if (referencingObjectUuidLongPart != that.referencingObjectUuidLongPart) return false;
 		if (uuidLongPart != that.uuidLongPart) return false;
@@ -64,22 +64,22 @@ public class ReplicationComponentIdentity {
 		return true;
 	}
 
-	public ReplicationProviderSignature getProvider() {
+	public ProviderSignature getProvider() {
 		return provider;
 	}
 
-	public void setProvider(ReplicationProviderSignature provider) {
+	public void setProvider(ProviderSignature provider) {
 		if (provider == null)
 			throw new RuntimeException("provider cannot be null");
 
 		this.provider = provider;
 	}
 
-	public ReplicationComponentField getReferencingObjectField() {
+	public ComponentField getReferencingObjectField() {
 		return referencingObjectField;
 	}
 
-	public void setReferencingObjectField(ReplicationComponentField referencingObjectField) {
+	public void setReferencingObjectField(ComponentField referencingObjectField) {
 		if (referencingObjectField == null)
 			throw new RuntimeException("referencingObjectField cannot be null");
 
@@ -112,7 +112,7 @@ public class ReplicationComponentIdentity {
 	}
 
 	public String toString() {
-		return "ReplicationComponentIdentity{" +
+		return "ComponentIdentity{" +
 				"uuidLongPart=" + uuidLongPart +
 				", referencingObjectUuidLongPart=" + referencingObjectUuidLongPart +
 				", referencingObjectField=" + referencingObjectField +
