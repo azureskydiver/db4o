@@ -13,7 +13,7 @@ import com.db4o.Unobfuscated;
  * @version 1.1
  * @since dRS 1.1
  */
-public class MySignature extends ReplicationProviderSignature {
+public class MySignature extends ProviderSignature {
 	public static MySignature generateSignature() {
 		MySignature out = new MySignature();
 		out.setBytes(Unobfuscated.generateSignature());

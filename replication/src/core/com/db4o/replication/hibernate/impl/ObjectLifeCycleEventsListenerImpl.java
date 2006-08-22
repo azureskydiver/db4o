@@ -2,8 +2,8 @@ package com.db4o.replication.hibernate.impl;
 
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
-import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
-import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
+import com.db4o.replication.hibernate.metadata.ComponentIdentity;
+import com.db4o.replication.hibernate.metadata.ProviderSignature;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.CallbackException;
 import org.hibernate.Criteria;
@@ -192,9 +192,9 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 
 		if (uuid == null) return;
 
-		Criteria criteria = s.createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq(ReplicationComponentIdentity.Fields.REF_OBJ_UUID_LONG, uuid.getLongPart()));
-		criteria.createCriteria(ReplicationComponentIdentity.Fields.PROVIDER).add(Restrictions.eq(ReplicationProviderSignature.Fields.BYTES, uuid.getProvider().getBytes()));
+		Criteria criteria = s.createCriteria(ComponentIdentity.class);
+		criteria.add(Restrictions.eq(ComponentIdentity.Fields.REF_OBJ_UUID_LONG, uuid.getLongPart()));
+		criteria.createCriteria(ComponentIdentity.Fields.PROVIDER).add(Restrictions.eq(ProviderSignature.Fields.BYTES, uuid.getProvider().getBytes()));
 
 		final List exisitings = criteria.list();
 		for (Iterator iterator = exisitings.iterator(); iterator.hasNext();) {

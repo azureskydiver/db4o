@@ -5,24 +5,24 @@ package com.db4o.replication.hibernate.metadata;
 /**
  * Creates a relationship between a Collection and its owner.
  * <p/> 
- * ReplicationComponentField and ReplicationComponentIdentity 
+ * ComponentField and ComponentIdentity 
  * together allow HibernateReplicationProvider to assign UUIDs 
  * to Collections and retrieve Collections using UUIDs.
  * 
- * @see ReplicationComponentIdentity
+ * @see ComponentIdentity
  * @author Albert Kwan
  *
  * @version 1.1
  * @since dRS 1.1
  */
-public class ReplicationComponentField {
+public class ComponentField {
 	public static class Table {
-		public static final String NAME = "drs_replication_component_fields";
+		public static final String NAME = "drs_component_fields";
 	}
 	
 	public static class Fields {
-		public static final String REF_OBJ_CLASS_NAME = "referencing_object_class_name";
-		public static final String REF_OBJ_FIELD_NAME = "referencing_object_field_name";
+		public static final String REF_OBJ_CLASS_NAME = "referencingObjectClassName";
+		public static final String REF_OBJ_FIELD_NAME = "referencingObjectFieldName";
 	}
 	
 	/**
@@ -35,13 +35,13 @@ public class ReplicationComponentField {
 	 */
 	private String referencingObjectFieldName;
 	
-	public ReplicationComponentField() {}
+	public ComponentField() {}
 
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		final ReplicationComponentField that = (ReplicationComponentField) o;
+		final ComponentField that = (ComponentField) o;
 
 		if (!referencingObjectClassName.equals(that.referencingObjectClassName)) return false;
 		if (!referencingObjectFieldName.equals(that.referencingObjectFieldName)) return false;
@@ -73,7 +73,7 @@ public class ReplicationComponentField {
 	}
 
 	public String toString() {
-		return "ReplicationComponentField{" +
+		return "ComponentField{" +
 				"referencingObjectClassName='" + referencingObjectClassName + '\'' +
 				", referencingObjectFieldName='" + referencingObjectFieldName + '\'' +
 				'}';

@@ -3,10 +3,10 @@ package com.db4o.replication.hibernate.impl;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.replication.hibernate.metadata.MySignature;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
-import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
-import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
-import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
-import com.db4o.replication.hibernate.metadata.ReplicationRecord;
+import com.db4o.replication.hibernate.metadata.ComponentField;
+import com.db4o.replication.hibernate.metadata.ComponentIdentity;
+import com.db4o.replication.hibernate.metadata.ProviderSignature;
+import com.db4o.replication.hibernate.metadata.Record;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -28,8 +28,8 @@ import java.util.List;
 
 public final class Util {
 	public static final Class[] _metadataClasses = new Class[]{
-			ReplicationRecord.class, ReplicationProviderSignature.class,
-			ReplicationComponentField.class, ReplicationComponentIdentity.class,
+			Record.class, ProviderSignature.class,
+			ComponentField.class, ComponentIdentity.class,
 			ObjectReference.class};
 
 	public static boolean isAssignableFrom(Class claxx) {
@@ -169,7 +169,7 @@ public final class Util {
 	}
 	
 	public static long getMaxReplicationRecordVersion(Session s) {
-		String hql = "SELECT max(r.version) FROM ReplicationRecord r";
+		String hql = "SELECT max(r.version) FROM Record r";
 		
 		List results = s.createQuery(hql).list();
 		
@@ -237,7 +237,7 @@ public final class Util {
 		String uuidPath = alias + "." + ObjectReference.Fields.UUID + ".";
 		String queryString = "from " + "ObjectReference"
 				+ " as " + alias + " where " + uuidPath + Uuid.Fields.LONG_PART + "=?"
-				+ " AND " + uuidPath + Uuid.Fields.PROVIDER + "." + ReplicationProviderSignature.Fields.BYTES + "=?";
+				+ " AND " + uuidPath + Uuid.Fields.PROVIDER + "." + ProviderSignature.Fields.BYTES + "=?";
 		Query c = session.createQuery(queryString);
 		c.setLong(0, uuid.getLongPart());
 		c.setBinary(1, uuid.getProvider().getBytes());

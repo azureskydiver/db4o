@@ -28,14 +28,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
 	<class table="drs_object_references" name="com.db4o.replication.hibernate.metadata.ObjectReference">
-		<id column="id" type="long">
+		<id column="drs_object_id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
 			<component name="uuid">
 				<property name="longPart" column="long_part" not-null="true"/>
-				<many-to-one name="provider" column="provider" cascade="none" not-null="true"/>
+				<many-to-one name="provider" column="drs_provider_id" cascade="none" not-null="true"/>
 			</component>
 		</natural-id>
 

@@ -10,9 +10,9 @@ package com.db4o.replication.hibernate.metadata;
  * @version 1.1
  * @since dRS 1.1
  */
-public class ReplicationRecord {
+public class Record {
 	public static class Table {
-		public static final String NAME = "drs_replication_records";
+		public static final String NAME = "drs_records";
 	}
 	
 	public static class Fields {
@@ -24,7 +24,7 @@ public class ReplicationRecord {
 
 	private PeerSignature peerSignature;
 
-	public ReplicationRecord() {
+	public Record() {
 		version = 0;
 	}
 

@@ -13,12 +13,12 @@ package com.db4o.replication.hibernate.metadata;
 public class Uuid {
 	public static class Table {
 		public static final String LONG_PART = "long_part";
-		public static final String PROVIDER = "provider";
+		public static final String PROVIDER = "drs_provider_id";
 	}
 	
 	public static class Fields {
 		public static final String LONG_PART = "longPart";
-		public static final String PROVIDER = Table.PROVIDER;	
+		public static final String PROVIDER = "provider";	
 	}
 	
 	/**
@@ -29,7 +29,7 @@ public class Uuid {
 	/**
 	 * The provider that orginates this id.
 	 */
-	private ReplicationProviderSignature provider;
+	private ProviderSignature provider;
 	
 	public Uuid() {}
 
@@ -52,11 +52,11 @@ public class Uuid {
 		this.longPart = longPart;
 	}
 
-	public ReplicationProviderSignature getProvider() {
+	public ProviderSignature getProvider() {
 		return provider;
 	}
 
-	public void setProvider(ReplicationProviderSignature provider) {
+	public void setProvider(ProviderSignature provider) {
 		this.provider = provider;
 	}
 

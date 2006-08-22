@@ -10,6 +10,11 @@
 			       value="%d{HH:mm:ss} [%5.5t] %-5p [%-20.30c{1}] %x - %m\n"/>
 		</layout>
 	</appender>
+	
+	<appender name="toFile" class="org.apache.log4j.FileAppender">
+		<param name="File" value="drs.log"/>
+		<layout class="org.apache.log4j.SimpleLayout"/>
+	</appender>
 
 	<logger name="org.apache.log4j">
 		<level value="FATAL"/>
