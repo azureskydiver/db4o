@@ -102,3 +102,5 @@ graphs.
 .2 Full source ..
 
 .s com.db4odoc.f1.lists.CollectionExample ..
+.? net  .s com.db4odoc.f1.lists.VerboseList ..  ..?
+.? mono  .s com.db4odoc.f1.lists.VerboseList ..  ..?
