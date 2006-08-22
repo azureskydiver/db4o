@@ -456,13 +456,17 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     public void delete(Object a_object) {
+        delete(null, a_object);
+    }
+    
+    public void delete(Transaction trans, Object a_object) {
         synchronized (i_lock) {
-            Transaction ta = delete1(null, a_object, true);
+            Transaction ta = delete1(trans, a_object, true);
             ta.beginEndSet();
         }
     }
 
-    final Transaction delete1(Transaction ta, Object a_object, boolean userCall) {
+    public final Transaction delete1(Transaction ta, Object a_object, boolean userCall) {
         ta = checkTransaction(ta);
         if (a_object != null) {
             i_entryCounter++;
@@ -710,7 +714,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (template == null || template.getClass() == YapConst.CLASS_OBJECT) {
             getAll(ta, res);
         } else {
-            Query q = querySharpenBug(ta);
+            Query q = query(ta);
             q.constrain(template);
             ((QQuery) q).execute1(res);
         }
@@ -1366,32 +1370,22 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
 	public Query query() {
-        synchronized (i_lock) {
-            return query((Transaction)null);
-        }
+		synchronized (i_lock) {
+			return query((Transaction)null);
+    	}
     }
     
     public final ObjectSet query(Class clazz) {
         return get(clazz);
     }
 
-    final Query query(Transaction ta) {
-        i_entryCounter++;
+    public final Query query(Transaction ta) {
+    	i_entryCounter++;
         Query q = new QQuery(checkTransaction(ta), null, null);
         i_entryCounter--;
         return q;
     }
 
-    Query querySharpenBug() {
-        // A bug in the CSharp converter makes this redirection necessary.
-        return query();
-    }
-
-    public Query querySharpenBug(Transaction ta) {
-        // A bug in the CSharp converter makes this redirection necessary.
-        return query(ta);
-    }
-    
     public abstract void raiseVersion(long a_minimumVersion);
 
     abstract void readBytes(byte[] a_bytes, int a_address, int a_length);

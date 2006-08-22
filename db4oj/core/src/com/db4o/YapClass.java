@@ -1660,7 +1660,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             if (store) {
                 YapStream stream = trans.stream();
                 stream.showInternalClasses(true);
-                Query q = stream.querySharpenBug(trans);
+                Query q = stream.query(trans);
                 q.constrain(YapConst.CLASS_STATICCLASS);
                 q.descend("name").constrain(i_name);
                 StaticClass sc = new StaticClass();
