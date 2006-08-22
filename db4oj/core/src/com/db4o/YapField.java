@@ -84,20 +84,20 @@ public class YapField implements StoredField {
         i_state = AVAILABLE;
     }
 
-    public void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
+    public void addFieldIndex(MarshallerFamily mf, YapWriter writer, boolean a_new) {
         if (! hasIndex()) {
-            a_writer.incrementOffset(linkLength());
+            writer.incrementOffset(linkLength());
             return;
         }
         
-        addIndexEntry(a_writer, readIndexEntry(mf, a_writer));
+        addIndexEntry(writer, readIndexEntry(mf, writer));
     }
 
     protected void addIndexEntry(YapWriter a_bytes, Object indexEntry) {
         addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), indexEntry);
     }
 
-    public void addIndexEntry(Transaction a_trans, int parentID, Object indexEntry) {
+    public void addIndexEntry(Transaction trans, int parentID, Object indexEntry) {
         if (! hasIndex()) {
             return;
         }
@@ -106,16 +106,16 @@ public class YapField implements StoredField {
             if(_index == null){
                 return;
             }
-            _index.add(a_trans, indexEntry, new Integer(parentID));
+            _index.add(trans, new FieldIndexKey(parentID,  indexEntry));
         }
         
         if(MarshallerFamily.OLD_FIELD_INDEX){
-            Index4 index = getOldIndex(a_trans);
+            Index4 index = getOldIndex(trans);
             if(index == null){
                 return;
             }
-            i_handler.prepareComparison(a_trans, indexEntry);
-            IndexTransaction ift = index.dirtyIndexTransaction(a_trans);
+            i_handler.prepareComparison(trans, indexEntry);
+            IndexTransaction ift = index.dirtyIndexTransaction(trans);
             ift.add(parentID, indexEntry);
         }
     }
@@ -142,7 +142,7 @@ public class YapField implements StoredField {
             if(_index == null){
                 return;
             }
-            _index.remove(trans, indexEntry, new Integer(parentID));
+            _index.remove(trans, new FieldIndexKey(parentID,  indexEntry));
         }
         
         if(MarshallerFamily.OLD_FIELD_INDEX){
@@ -885,7 +885,7 @@ public class YapField implements StoredField {
     	if(_index != null){
     		throw new IllegalStateException();
         }
-        _index = new BTree(systemTrans, id, i_handler, new YInt(systemTrans.stream()));
+        _index = new BTree(systemTrans, id, new FieldIndexKeyHandler(systemTrans.stream(), i_handler));
     }
     
     public BTree getIndex(){

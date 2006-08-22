@@ -26,15 +26,24 @@ public class BTreePointer{
         return _index;
     }
     
-    public BTreePointer next(){
-        if(_index >= _node.count() - 1){
-            BTreeNode node = _node.nextNode();
-            if(node == null){
+    public BTreePointer next(Transaction trans){
+        int indexInMyNode = _index + 1;
+        while(indexInMyNode < _node.count()){
+            if(_node.indexIsValid(trans, indexInMyNode)){
+                return new BTreePointer(_node, indexInMyNode);
+            }
+            indexInMyNode ++;
+        }
+        int newIndex = -1;
+        BTreeNode nextNode = _node;
+        while(newIndex == -1){
+            nextNode = nextNode.nextNode();
+            if(nextNode == null){
                 return null;
             }
-            return new BTreePointer(node, 0);
+            newIndex = nextNode.firstKeyIndex(trans);
         }
-        return new BTreePointer(_node, _index + 1);
+        return new BTreePointer(nextNode, newIndex);
     }
     
     public BTreeNode node() {

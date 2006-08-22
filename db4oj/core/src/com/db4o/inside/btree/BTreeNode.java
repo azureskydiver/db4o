@@ -183,7 +183,7 @@ public class BTreeNode extends YapMeta{
         }
             
         if(! s.foundMatch() || target == SearchTarget.ANY || target == SearchTarget.HIGHEST){
-            return new BTreeNodeSearchResult(s, this);
+            return new BTreeNodeSearchResult(trans, s, this);
         }
         
         if(target == SearchTarget.LOWEST){
@@ -482,25 +482,12 @@ public class BTreeNode extends YapMeta{
     }
     
     private int compareInWriteMode(int index){
-        int res = keyHandler().compareTo(key(index));
-        if(useKeyComparisonResult(res)){
-            return res;
-        }
-        return valueHandler().compareTo(value(index));
+        return keyHandler().compareTo(key(index));
     }
     
     private int compareInReadMode(YapReader reader, int index){
         seekKey(reader, index);
-        int res = keyHandler().compareTo(keyHandler().readIndexEntry(reader));
-        if(useKeyComparisonResult(res)){
-            return res;
-        }
-        seekValue(reader, index);
-        return valueHandler().compareTo(valueHandler().readIndexEntry(reader));
-    }
-    
-    private boolean useKeyComparisonResult(int res){
-        return res != 0 ||! _btree.compareValues();
+        return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
     }
     
     public int count() {
@@ -519,18 +506,24 @@ public class BTreeNode extends YapMeta{
         return len;
     }
     
-    private int firstKeyIndex(Transaction trans) {
+    public int firstKeyIndex(Transaction trans) {
     	for (int ix = 0; ix < _count; ix++) {
-            BTreePatch patch = keyPatch(ix);
-            if(patch == null){
-                return ix;
-            }
-            Object obj = patch.key(trans);
-            if(obj != No4.INSTANCE){
+            if(indexIsValid(trans, ix)){
                 return ix;
             }
     	}
     	return -1;
+    }
+    
+    public boolean indexIsValid(Transaction trans, int index){
+        if(_keys == null){
+            return true;
+        }
+        BTreePatch patch = keyPatch(index);
+        if(patch == null){
+            return true;
+        }
+        return patch.key(trans) != No4.INSTANCE; 
     }
     
     private Object firstKey(Transaction trans){
@@ -976,10 +969,20 @@ public class BTreeNode extends YapMeta{
     }
     
 	BTreePointer firstPointer(Transaction trans) {
-		prepareRead(trans);
+        YapReader reader = prepareRead(trans);
 		if (_isLeaf) {
-			return new BTreePointer(this, firstKeyIndex(trans));
+            int index = firstKeyIndex(trans);
+            if(index == -1){
+                return null;
+            }
+			return new BTreePointer(this, index);
 		}
+        for (int i = 0; i < _count; i++) {
+            BTreePointer childFirstPointer = child(reader, i).firstPointer(trans);
+            if(childFirstPointer != null){
+                return childFirstPointer;
+            }
+        }
 		return null;
 	}
     

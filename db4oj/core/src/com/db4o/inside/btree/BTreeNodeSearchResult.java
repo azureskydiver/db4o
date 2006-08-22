@@ -8,38 +8,50 @@ import com.db4o.*;
 /**
  * @exclude
  */
-class BTreeNodeSearchResult {
+public class BTreeNodeSearchResult {
     
     private final boolean _foundMatch;
     
-    private BTreePointer _pointer;
-
-    BTreeNodeSearchResult(BTreeNode node, int cursor, boolean foundMatch) {
-        if(node != null){
-            _pointer = new BTreePointer(node, cursor);
-        }
+    private final BTreePointer _pointer;
+    
+    BTreeNodeSearchResult(BTreePointer pointer, boolean foundMatch) {
+        _pointer = pointer;
         _foundMatch = foundMatch;
     }
 
-    BTreeNodeSearchResult(Searcher searcher, BTreeNode node) {
-        this(node,searcher.cursor(),searcher.foundMatch());
+    BTreeNodeSearchResult(BTreeNode node, int cursor, boolean foundMatch) {
+        this(pointerOrNull(node, cursor), foundMatch);
+    }
+
+    BTreeNodeSearchResult(Transaction trans, Searcher searcher, BTreeNode node) {
+        this(
+            nextPointerIf(trans, pointerOrNull(node, searcher.cursor()), searcher.isGreater()),
+            searcher.foundMatch());
     }
     
-    public BTreeRange createRangeTo(Transaction trans, BTreeNodeSearchResult end) {
-        if(! _foundMatch){
-            if(pointsToSameAs(end)){
-                return EmptyBTreeRange.INSTANCE;
-            }
-            moveForward();
+    private static BTreePointer nextPointerIf(Transaction trans, BTreePointer pointer, boolean condition) {
+        if (null == pointer) {
+            return null;
         }
-        if(end._foundMatch){
-            end.moveForward();
+        if (condition) {
+            return pointer.next(trans);
         }
-        return new BTreeRangeImpl(trans, _pointer, end._pointer);
+        return pointer;
     }
     
-    private void moveForward() {
-        _pointer = _pointer.next();
+    private static BTreePointer pointerOrNull(BTreeNode node, int cursor) {
+        return node == null ? null : new BTreePointer(node, cursor);
+    }
+    
+    public BTreeRange createIncludingRange(Transaction trans, BTreeNodeSearchResult end) {
+        if(!_foundMatch && pointsToSameAs(end)){
+            return EmptyBTreeRange.INSTANCE;
+        }
+        BTreePointer endPointer = end._pointer;
+        if(endPointer != null && end._foundMatch){
+            endPointer = endPointer.next(trans);
+        }
+        return new BTreeRangeImpl(trans, _pointer, endPointer);
     }
     
     private boolean pointsToSameAs(BTreeNodeSearchResult other){

@@ -3,9 +3,13 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
-import com.db4o.query.*;
+import com.db4o.db4ounit.btree.*;
+import com.db4o.foundation.*;
+import com.db4o.inside.btree.*;
+import com.db4o.query.Query;
+import com.db4o.reflect.ReflectClass;
 
-import db4ounit.*;
+import db4ounit.Assert;
 
 
 public class FieldIndexTestCase extends FieldIndexTestCaseBase {
@@ -29,5 +33,50 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
             Assert.areEqual(BARS[i], fii.bar);
         }
     }
+
+	public void testAccessingBTree() throws Exception{
+    	
+        YapStream stream = (YapStream)db();
+        ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
+        YapClass yc = stream.getYapClass(claxx, false);
+        YapField yf = yc.getYapField("bar");
+        BTree bTree = yf.getIndex();
+        
+        Assert.isNotNull(bTree);
+        expectKeysSearch(bTree, BARS);
+    }
+    
+    protected void expectKeysSearch(BTree btree, int[] values) {
+        int lastValue = Integer.MIN_VALUE;
+        for (int i = 0; i < values.length; i++) {
+            if(values[i] != lastValue){
+                final ExpectingVisitor expectingVisitor = createExpectingVisitor(values[i], occurences(values, values[i]));
+                BTreeRange range = fieldIndexKeySearch(trans(), btree, new Integer(values[i]));
+                traverseKeys(range, new Visitor4() {
+                    public void visit(Object obj) {
+                        FieldIndexKey fik = (FieldIndexKey)obj;
+                        expectingVisitor.visit(fik.value());
+                    }
+                });
+                expectingVisitor.assertExpectations();
+                lastValue = values[i];
+            }
+        }
+    }
+    
+    private FieldIndexKey fieldIndexKey(int integerPart, Object composite){
+        return new FieldIndexKey(integerPart, composite);
+    }
+    
+    public BTreeRange fieldIndexKeySearch(Transaction trans, BTree btree, Object key) {
+        // SearchTarget should not make a difference, HIGHEST is faster
+        BTreeNodeSearchResult start = btree.searchLeaf(trans, fieldIndexKey(0, key), SearchTarget.LOWEST);
+        BTreeNodeSearchResult end = btree.searchLeaf(trans, fieldIndexKey(Integer.MAX_VALUE, key), SearchTarget.LOWEST);
+        return start.createIncludingRange(trans, end);
+    }
+    
+
+
+
     
 }

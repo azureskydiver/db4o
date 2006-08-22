@@ -92,17 +92,9 @@ public class BTree extends YapMeta implements TransactionParticipant {
             addNode(_root);
         }
     }
-    
-    boolean compareValues(){
-        return _valueHandler != null && _valueHandler.current() != null; 
-    }
-    
+
     public void remove(Transaction trans, Object key){
-        remove(trans, key, null);
-    }
-    
-    public void remove(Transaction trans, Object key, Object value){
-        BTreeRange range = search(trans, key, value);
+        BTreeRange range = search(trans, key);
         BTreePointer first = range.first();
         if(first == null){
             return;
@@ -113,24 +105,21 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
     
     public BTreeRange search(Transaction trans, Object key) {
-        return search(trans, key, null);
-    }
-    
-    public BTreeRange search(Transaction trans, Object key, Object value) {
-        ensureActive(trans);
-
-        _keyHandler.prepareComparison(key);
-        _valueHandler.prepareComparison(value);
         
         // TODO: Optimize the following.
         //       Part of the search operates against the same nodes.
         //       As long as the bounds are on one node, the search
         //       should walk the nodes in one go.
         
-        BTreeNodeSearchResult start = _root.searchLeaf(trans, SearchTarget.LOWEST);
-        BTreeNodeSearchResult end = _root.searchLeaf(trans, SearchTarget.HIGHEST);
-        
-        return start.createRangeTo(trans, end);
+        BTreeNodeSearchResult start = searchLeaf(trans, key, SearchTarget.LOWEST);
+        BTreeNodeSearchResult end = searchLeaf(trans, key, SearchTarget.HIGHEST);
+        return start.createIncludingRange(trans, end);
+    }
+    
+    public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
+        ensureActive(trans);
+        _keyHandler.prepareComparison(key);
+        return _root.searchLeaf(trans, target);
     }
     
     public void commit(final Transaction trans){

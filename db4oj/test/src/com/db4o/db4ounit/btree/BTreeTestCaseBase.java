@@ -1,6 +1,6 @@
 /* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.fieldindex;
+package com.db4o.db4ounit.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.KeyValueIterator;
@@ -33,7 +33,7 @@ public class BTreeTestCaseBase extends Db4oTestCase{
 	    return ret;
 	}
 
-	protected static void traverseKeys(BTreeRange result, ExpectingVisitor expectingVisitor) {
+	protected static void traverseKeys(BTreeRange result, Visitor4 expectingVisitor) {
 		final KeyValueIterator i = result.iterator();
 		while (i.moveNext()) {
 			expectingVisitor.visit(i.key());
@@ -67,7 +67,7 @@ public class BTreeTestCaseBase extends Db4oTestCase{
         return new BTree(trans(), id, new YInt(stream()), new YInt(stream()));
     }
     
-	private int occurences(int[] values, int value) {
+	protected int occurences(int[] values, int value) {
 	    int count = 0;
 	    for (int i = 0; i < values.length; i++) {
 	        if(values[i] == value){

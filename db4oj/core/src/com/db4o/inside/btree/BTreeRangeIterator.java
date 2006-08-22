@@ -3,6 +3,7 @@
  */
 package com.db4o.inside.btree;
 
+import com.db4o.*;
 import com.db4o.foundation.KeyValueIterator;
 import com.db4o.foundation.No4;
 
@@ -26,22 +27,22 @@ class BTreeRangeIterator implements KeyValueIterator {
             BTreeNode node = _cursor.node();
             
             if(node != _lastNode){
-                node.prepareWrite(_range.transaction());
+                node.prepareWrite(transaction());
                 
                 // Alternative: work in read mode, hold the reader here.
                 
                 _lastNode = node;
             }
             
-            Object obj = _cursor.key(_range.transaction());
+            Object obj = _cursor.key(transaction());
             
             if(obj != No4.INSTANCE){
                 _current = _cursor;
-                _cursor = _cursor.next();
+                _cursor = _cursor.next(transaction());
                 return true;
             }
             
-            _cursor = _cursor.next();
+            _cursor = _cursor.next(transaction());
         }
 		_current = null;
 		return false;
@@ -70,5 +71,9 @@ class BTreeRangeIterator implements KeyValueIterator {
             return false;
         }
         return _range.end().equals(cursor);
+    }
+    
+    private Transaction transaction(){
+        return _range.transaction();
     }
 }
