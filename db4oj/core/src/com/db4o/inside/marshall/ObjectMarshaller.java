@@ -8,6 +8,38 @@ public abstract class ObjectMarshaller {
     
     public MarshallerFamily _family;
     
+	protected abstract static class TraverseFieldCommand {
+		private boolean _cancelled=false;
+		
+		public int fieldCount(YapClass yapClass,YapReader reader) {
+			return (Debug.atHome ? yapClass.readFieldCountSodaAtHome(reader) : yapClass.readFieldCount(reader));
+		}
+
+		public boolean cancelled() {
+			return _cancelled;
+		}
+		
+		protected void cancel() {
+			_cancelled=true;
+		}
+
+		public abstract void processField(YapField field,boolean isNull, YapClass containingClass);
+	}
+
+    protected void traverseFields(YapClass yc,YapReader reader,ObjectHeaderAttributes attributes,TraverseFieldCommand command) {
+    	int fieldIndex=0;
+    	while(yc!=null&&!command.cancelled()) {
+        	int fieldCount=command.fieldCount(yc, reader);
+			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
+				command.processField(yc.i_fields[i],isNull(attributes,fieldIndex),yc);
+			    fieldIndex ++;
+			}
+			yc=yc.i_ancestor;
+    	}
+    }
+
+    protected abstract boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex);
+
     public abstract void addFieldIndices(
             YapClass yc, 
             ObjectHeaderAttributes attributes, 

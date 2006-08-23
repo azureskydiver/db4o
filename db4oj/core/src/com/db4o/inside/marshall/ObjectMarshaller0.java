@@ -9,70 +9,70 @@ import com.db4o.*;
  */
 class ObjectMarshaller0 extends ObjectMarshaller {
     
-    public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, YapWriter writer, boolean isNew) {
-        int fieldCount = writer.readInt();
-        for (int i = 0; i < fieldCount; i++) {
-            yc.i_fields[i].addFieldIndex(_family, writer, isNew);
-        }
-        if (yc.i_ancestor != null) {
-            addFieldIndices(yc.i_ancestor, attributes, writer, isNew);
-        }
+    public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final boolean isNew) {
+    	TraverseFieldCommand command=new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+	            field.addFieldIndex(_family, writer, isNew);
+			}
+    	};
+    	traverseFields(yc, writer, attributes, command);
     }
     
-    public TreeInt collectFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes attributes, YapWriter reader, String name) {
-        int length = yc.readFieldCount(reader);
-        for (int i = 0; i < length; i++) {
-            if (name.equals(yc.i_fields[i].getName())) {
-                tree = yc.i_fields[i].collectIDs(_family, tree, reader);
-            } else {
-                yc.i_fields[i].incrementOffset(reader);
-            }
-        }
-        if (yc.i_ancestor != null) {
-            return collectFieldIDs(tree, yc.i_ancestor, attributes, reader, name);
-        }
-        return tree;
+    public TreeInt collectFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final String name) {
+    	final TreeInt[] ret={tree};
+    	TraverseFieldCommand command=new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+	            if (name.equals(field.getName())) {
+	                ret[0] = field.collectIDs(_family, ret[0], writer);
+	            } else {
+	                field.incrementOffset(writer);
+	            }
+			}
+    	};
+    	traverseFields(yc, writer, attributes, command);
+        return ret[0];
     }
     
-    public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate){
-        int length = yc.readFieldCount(a_bytes);
-        for (int i = 0; i < length; i++) {
-            yc.i_fields[i].delete(_family, a_bytes, isUpdate);
-        }
-        if (yc.i_ancestor != null) {
-            deleteMembers(yc.i_ancestor, attributes, a_bytes, a_type, isUpdate);
-        }
+    public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, int type, final boolean isUpdate){
+    	TraverseFieldCommand command=new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+	            field.delete(_family, writer, isUpdate);
+			}
+    	};
+    	traverseFields(yc, writer, attributes, command);
     }
     
-    public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, YapReader a_bytes, YapField a_field) {
-        int length = Debug.atHome ? yc.readFieldCountSodaAtHome(a_bytes) : yc.readFieldCount(a_bytes);
-        for (int i = 0; i < length; i++) {
-            if (yc.i_fields[i] == a_field) {
-                return true;
-            }
-            a_bytes.incrementOffset(yc.i_fields[i].linkLength());
-        }
-        if (yc.i_ancestor == null) {
-            return false;
-        }
-        return findOffset(yc.i_ancestor, attributes, a_bytes, a_field);
+    public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, final YapReader writer, final YapField field) {
+    	final boolean[] ret={false};
+    	TraverseFieldCommand command=new TraverseFieldCommand() {
+    		public void processField(YapField curField, boolean isNull, YapClass containingClass) {
+	            if (curField == field) {
+	                ret[0]=true;
+	                cancel();
+	                return;
+	            }
+	            writer.incrementOffset(curField.linkLength());
+			}
+    	};
+    	traverseFields(yc, writer, attributes, command);
+    	return ret[0];
     }
     
     protected final int headerLength(){
         return YapConst.OBJECT_LENGTH + YapConst.ID_LENGTH;
     }
     
-    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
-        int length = yc.readFieldCount(a_bytes);
-        try {
-            for (int i = 0; i < length; i++) {
-                yc.i_fields[i].instantiate(_family, a_yapObject, a_onObject, a_bytes);
-            }
-            if (yc.i_ancestor != null) {
-                instantiateFields(yc.i_ancestor, attributes, a_yapObject, a_onObject, a_bytes);
-            }
-        } catch (CorruptionException ce) {
-        }
+    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final YapObject yapObject, final Object onObject, final YapWriter writer) {
+    	TraverseFieldCommand command=new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+                try {
+					field.instantiate(_family, yapObject, onObject, writer);
+				} catch (CorruptionException e) {
+					cancel();
+				}
+			}
+    	};
+    	traverseFields(yc, writer, attributes, command);
     }
     
     private int linkLength(YapClass yc, YapObject yo) {
@@ -100,19 +100,24 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
     }
     
-    private void marshallDeclaredFields(YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
-        Config4Class config = yapClass.configOrAncestorConfig();
-        a_bytes.writeInt(yapClass.i_fields.length);
-        for (int i = 0; i < yapClass.i_fields.length; i++) {
-            Object obj = yapClass.i_fields[i].getOrCreate(a_bytes.getTransaction(), a_object);
-            if (obj instanceof Db4oTypeImpl) {
-                obj = ((Db4oTypeImpl)obj).storedTo(a_bytes.getTransaction());
-            }
-            yapClass.i_fields[i].marshall(a_yapObject, obj, _family, a_bytes, config, a_new);
-        }
-        if (yapClass.i_ancestor != null) {
-            marshallDeclaredFields(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new);
-        }
+    private void marshallDeclaredFields(YapClass yapClass, final YapObject yapObject, final Object object, final YapWriter writer, final boolean isNew) {
+        final Config4Class config = yapClass.configOrAncestorConfig();
+        final Transaction trans=writer.getTransaction();
+    	TraverseFieldCommand command=new TraverseFieldCommand() {
+    		public int fieldCount(YapClass yapClass, YapReader reader) {
+    	        writer.writeInt(yapClass.i_fields.length);
+    	        return yapClass.i_fields.length;
+    		}
+    		
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+	            Object obj = field.getOrCreate(trans, object);
+	            if (obj instanceof Db4oTypeImpl) {
+	                obj = ((Db4oTypeImpl)obj).storedTo(trans);
+	            }
+	            field.marshall(yapObject, obj, _family, writer, config, isNew);
+			}
+    	};
+    	traverseFields(yapClass, writer, readHeaderAttributes(writer), command);
     }
     
     protected int marshalledLength(YapField yf, YapObject yo){
@@ -179,14 +184,16 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return yf.readIndexEntry(_family, reader);
     }
     
-    public void readVirtualAttributes(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes attributes, YapReader reader){
-        int length = yc.readFieldCount(reader);
-        for (int i = 0; i < length; i++) {
-            yc.i_fields[i].readVirtualAttribute(trans, reader, yo);
-        }
-        if (yc.i_ancestor != null) {
-            readVirtualAttributes(trans, yc.i_ancestor, yo, attributes, reader);
-        }
+    public void readVirtualAttributes(final Transaction trans,  YapClass yc, final YapObject yo, ObjectHeaderAttributes attributes, final YapReader reader){
+    	TraverseFieldCommand command=new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+	            field.readVirtualAttribute(trans, reader, yo);
+			}
+    	};
+    	traverseFields(yc, reader, attributes, command);
     }
 
+    protected boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex) {
+    	return false;
+    }
 }

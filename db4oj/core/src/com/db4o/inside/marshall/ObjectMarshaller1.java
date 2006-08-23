@@ -8,158 +8,150 @@ import com.db4o.*;
  * @exclude
  */
 public class ObjectMarshaller1 extends ObjectMarshaller{
-    
-    public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, YapWriter writer, boolean isNew) {
-        addDeclaredFieldIndices(yc, (ObjectHeaderAttributes1) attributes, writer, 0, isNew);
-    }
-    
-    private void addDeclaredFieldIndices(YapClass yc, ObjectHeaderAttributes1 attributes, YapWriter writer, int fieldIndex, boolean isNew) {
-        int fieldCount = writer.readInt();
-        for (int i = 0; i < fieldCount; i++) {
-            if(attributes.isNull(fieldIndex)){
-                yc.i_fields[i].addIndexEntry(writer.getTransaction(), writer.getID(), null);
-            }else{
-                yc.i_fields[i].addFieldIndex(_family, writer, isNew);
-            }
-            fieldIndex ++;
-        }
-        if (yc.i_ancestor != null) {
-            addDeclaredFieldIndices(yc.i_ancestor, attributes, writer, fieldIndex, isNew);
-        }
-    }
-    
-    public TreeInt collectFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes attributes, YapWriter reader, String name) {
-        return collectDeclaredFieldIDs(tree, yc, (ObjectHeaderAttributes1) attributes, reader, name, 0);
-    }
-    
-    public TreeInt collectDeclaredFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes1 attributes, YapWriter reader, String name, int fieldIndex) {
-        int length = yc.readFieldCount(reader);
-        for (int i = 0; i < length; i++) {
-            if(! attributes.isNull(fieldIndex)){
-                if (name.equals(yc.i_fields[i].getName())) {
-                    tree = yc.i_fields[i].collectIDs(_family, tree, reader);
-                } else {
-                    yc.i_fields[i].incrementOffset(reader);
-                }
-            }
-            fieldIndex ++;
-        }
-        if (yc.i_ancestor != null) {
-            return collectDeclaredFieldIDs(tree, yc.i_ancestor, attributes, reader, name, fieldIndex);
-        }
-        return tree;
-    }
-    
 
-    
-    public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate){
-        deleteDeclaredMembers(yc, (ObjectHeaderAttributes1) attributes, a_bytes, a_type, 0, isUpdate);
-    }
-    
-    public void deleteDeclaredMembers(YapClass yc, ObjectHeaderAttributes1 attributes, YapWriter a_bytes, int a_type, int fieldIndex, boolean isUpdate){
-        int length = yc.readFieldCount(a_bytes);
-        for (int i = 0; i < length; i++) {
-            if(attributes.isNull(fieldIndex)){
-                yc.i_fields[i].removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), null);
-            }else{
-                yc.i_fields[i].delete(_family, a_bytes, isUpdate);
-            }
-            fieldIndex ++;
-        }
-        if (yc.i_ancestor != null) {
-            deleteDeclaredMembers(yc.i_ancestor, attributes, a_bytes, a_type, fieldIndex, isUpdate);
-        }
-    }
-    
-    public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, YapReader a_bytes, YapField a_field) {
-        return findDeclaredOffset(yc, (ObjectHeaderAttributes1) attributes, a_bytes, a_field, 0);
-    }
-    
-    public boolean findDeclaredOffset(YapClass yc, ObjectHeaderAttributes1 attributes, YapReader a_bytes, YapField a_field, int fieldIndex) {
-        int fieldCount = Debug.atHome ? yc.readFieldCountSodaAtHome(a_bytes) : yc.readFieldCount(a_bytes);
-        for (int i = 0; i < fieldCount; i++) {
-            
-            if (yc.i_fields[i] == a_field) {
-                return ! attributes.isNull(fieldIndex); 
-            }
-            if(! attributes.isNull(fieldIndex)){
-                a_bytes.incrementOffset(yc.i_fields[i].linkLength());
-            }
-            
-            fieldIndex ++;
-        }
-        if (yc.i_ancestor == null) {
-            return false;
-        }
-        return findDeclaredOffset(yc.i_ancestor, attributes, a_bytes, a_field, fieldIndex);
-    }
-    
-    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
-        instantiateDeclaredFields(yc, (ObjectHeaderAttributes1) attributes, a_yapObject, a_onObject, a_bytes, 0);
-    }
-    
-    public void instantiateDeclaredFields(YapClass yc, ObjectHeaderAttributes1 attributes, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes, int fieldIndex) {
-        int fieldCount = yc.readFieldCount(a_bytes);
-        try {
-            for (int i = 0; i < fieldCount; i++) {
-                
-                if(attributes.isNull(fieldIndex)){
-                    yc.i_fields[i].set(a_onObject, null);
-                }else{
-                    yc.i_fields[i].instantiate(_family, a_yapObject, a_onObject, a_bytes);
-                }
-                
-                fieldIndex ++;
-            }
-            if (yc.i_ancestor != null) {
-                instantiateDeclaredFields(yc.i_ancestor, attributes, a_yapObject, a_onObject, a_bytes, fieldIndex);
-            }
-        } catch (CorruptionException ce) {
-        }
+	protected abstract static class TraverseFieldCommand {
+		private boolean _cancelled=false;
+		
+		public int fieldCount(YapClass yapClass,YapReader reader) {
+			return (Debug.atHome ? yapClass.readFieldCountSodaAtHome(reader) : yapClass.readFieldCount(reader));
+		}
+
+		public boolean cancelled() {
+			return _cancelled;
+		}
+		
+		protected void cancel() {
+			_cancelled=true;
+		}
+
+		public abstract void processField(YapField field,boolean isNull, YapClass containingClass);
+	}
+
+    protected void traverseFields(YapClass yc,YapReader reader,ObjectHeaderAttributes attributes,TraverseFieldCommand command) {
+    	int fieldIndex=0;
+    	while(yc!=null&&!command.cancelled()) {
+        	int fieldCount=command.fieldCount(yc, reader);
+			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
+				command.processField(yc.i_fields[i],isNull(attributes,fieldIndex),yc);
+			    fieldIndex ++;
+			}
+			yc=yc.i_ancestor;
+    	}
     }
 
+    public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final boolean isNew) {
+		TraverseFieldCommand command = new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+				if (isNull) {
+					field.addIndexEntry(writer.getTransaction(), writer.getID(), null);
+				} 
+				else {
+					field.addFieldIndex(_family, writer, isNew);
+				}
+			}
+		};
+		traverseFields(yc, writer, attributes, command);
+	}
     
-    private void marshall(YapObject yo, Object obj, ObjectHeaderAttributes1 attributes, YapWriter writer, int fieldIndex, boolean isNew) {
-        YapClass yc = yo.getYapClass();
-        writer.writeInt(- yc.getID());
-        attributes.write(writer);
-        yc.checkUpdateDepth(writer);
-        marshallDeclaredFields(yc, yo, obj, attributes, writer, fieldIndex, isNew);
-        if (Deploy.debug) {
-            writer.writeEnd();
-            writer.debugCheckBytes();
-        }
+    public TreeInt collectFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final String name) {
+        final TreeInt[] ret={tree};
+		TraverseFieldCommand command = new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+				if(isNull) {
+					return;
+				}
+		        if (name.equals(field.getName())) {
+		            ret[0] = field.collectIDs(_family, ret[0], writer);
+		        } 
+		        else {
+		        	field.incrementOffset(writer);
+		        }
+			}
+		};
+		traverseFields(yc, writer, attributes, command);
+		return ret[0];
     }
     
-    private void marshallDeclaredFields(YapClass yc, YapObject yo, Object obj, ObjectHeaderAttributes1 attributes, YapWriter writer, int fieldIndex, boolean isNew) {
-        Config4Class config = yc.configOrAncestorConfig();
-        Transaction trans = writer.getTransaction();
-        
-        int fieldCount = yc.i_fields.length;
-        writer.writeInt(fieldCount);
-        for (int i = 0; i < fieldCount; i++) {
-            
-            YapField yf = yc.i_fields[i];
-            
-            if(! attributes.isNull(fieldIndex)){
-                
-                Object child = yf.getOrCreate(trans, obj);
-                if (child instanceof Db4oTypeImpl) {
-                    child = ((Db4oTypeImpl)child).storedTo(trans);
-                }
-                yf.marshall(yo, child, _family, writer, config, isNew);
-            } else{
-                yf.addIndexEntry(trans, writer.getID(), null);
-            }
-                
-            fieldIndex ++;
-        }
-        
-        if (yc.i_ancestor != null) {
-            marshallDeclaredFields(yc.i_ancestor, yo, obj, attributes, writer,fieldIndex, isNew);
-        }
+    public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, int type, final boolean isUpdate){
+        TraverseFieldCommand command=new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+		        if(isNull){
+		            field.removeIndexEntry(writer.getTransaction(), writer.getID(), null);
+		        }else{
+		            field.delete(_family, writer, isUpdate);
+		        }
+			}
+		};
+		traverseFields(yc, writer, attributes, command);
+    }
+
+    public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, final YapReader reader, final YapField field) {
+        final boolean[] ret={false};
+		TraverseFieldCommand command=new TraverseFieldCommand() {
+			public void processField(YapField curField, boolean isNull, YapClass containingClass) {
+		        if (curField == field) {
+		        	ret[0]=!isNull;
+		        	cancel();
+		        	return;
+		        }
+		        if(!isNull){
+		            reader.incrementOffset(curField.linkLength());
+		        }
+			}
+		};
+		traverseFields(yc, reader, attributes, command);
+		return ret[0];
     }
     
+    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final YapObject yapObject, final Object onObject, final YapWriter writer) {
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+				if (isNull) {
+					field.set(onObject, null);
+					return;
+				} 
+				try {
+					field.instantiate(_family, yapObject,onObject, writer);
+				} catch (CorruptionException e) {
+					cancel();
+				}
+			}
+		};
+		traverseFields(yc, writer, attributes, command);
+    }
+    
+    private void marshall(final YapObject yo, final Object obj,ObjectHeaderAttributes1 attributes, final YapWriter writer, final boolean isNew) {
+		YapClass yc = yo.getYapClass();
+		writer.writeInt(-yc.getID());
+		attributes.write(writer);
+		yc.checkUpdateDepth(writer);
+		final Transaction trans = writer.getTransaction();
+
+		TraverseFieldCommand command = new TraverseFieldCommand() {
+			public int fieldCount(YapClass yapClass, YapReader reader) {
+				reader.writeInt(yapClass.i_fields.length);
+				return yapClass.i_fields.length;
+			}
+			
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+				if(isNull) {
+					field.addIndexEntry(trans, writer.getID(), null);
+					return;
+				}
+				Object child = field.getOrCreate(trans, obj);
+				if (child instanceof Db4oTypeImpl) {
+					child = ((Db4oTypeImpl) child).storedTo(trans);
+				}
+				field.marshall(yo, child, _family, writer, containingClass.configOrAncestorConfig(), isNew);
+			}
+		};
+		traverseFields(yc, writer, attributes, command);
+		if (Deploy.debug) {
+			writer.writeEnd();
+			writer.debugCheckBytes();
+		}
+	}
+
     public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
         ObjectHeaderAttributes1 attributes = new ObjectHeaderAttributes1(yo);
@@ -170,7 +162,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
             a_updateDepth, 
             attributes.objectLength());
         
-        marshall(yo, yo.getObject(), attributes, writer, 0, true);
+        marshall(yo, yo.getObject(), attributes, writer, true);
         
         return writer;
     }
@@ -197,7 +189,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
             trans.i_file.getSlotForUpdate(writer);
         }
         
-        marshall(yo, obj, attributes, writer,0, false);
+        marshall(yo, obj, attributes, writer, false);
         
         marshallUpdateWrite(trans, yo, obj, writer);
     }
@@ -218,21 +210,18 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         return yf.readIndexEntry(_family, reader);
     }
     
-    public void readVirtualAttributes(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes attributes, YapReader reader){
-        readVirtualAttributesDeclared(trans, yc, yo, (ObjectHeaderAttributes1) attributes, reader, 0);
-    }
+    public void readVirtualAttributes(final Transaction trans, YapClass yc, final YapObject yo, ObjectHeaderAttributes attributes, final YapReader reader) {
+		TraverseFieldCommand command = new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+				if (!isNull) {
+					field.readVirtualAttribute(trans, reader, yo);
+				}
+			}
+		};
+		traverseFields(yc, reader, attributes, command);
+	}
 
-    private void readVirtualAttributesDeclared(Transaction trans,  YapClass yc, YapObject yo, ObjectHeaderAttributes1 attributes, YapReader reader, int fieldIndex){
-        int fieldCount = yc.readFieldCount(reader);
-        for (int i = 0; i < fieldCount; i++) {
-            if(! attributes.isNull(fieldIndex)){
-                yc.i_fields[i].readVirtualAttribute(trans, reader, yo);
-            }
-            fieldIndex ++;
-        }
-        if (yc.i_ancestor != null) {
-            readVirtualAttributesDeclared(trans, yc.i_ancestor, yo, attributes, reader, fieldIndex);
-        }
+    protected boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex) {
+    	return ((ObjectHeaderAttributes1)attributes).isNull(fieldIndex);
     }
-
 }
