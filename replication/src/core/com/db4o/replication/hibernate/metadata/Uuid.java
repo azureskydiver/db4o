@@ -13,7 +13,7 @@ package com.db4o.replication.hibernate.metadata;
 public class Uuid {
 	public static class Table {
 		public static final String LONG_PART = "long_part";
-		public static final String PROVIDER = "drs_provider_id";
+		public static final String PROVIDER = "provider_id";
 	}
 	
 	public static class Fields {

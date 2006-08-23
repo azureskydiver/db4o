@@ -28,16 +28,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
 	<class table="drs_component_identities" name="com.db4o.replication.hibernate.metadata.ComponentIdentity">
-		<id column="drs_comp_identity_id" type="long">
+		<id column="comp_identity_id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
 			<property name="uuidLongPart" column="uuid_long_part" not-null="true"/>
-			<many-to-one name="provider" column="drs_provider_id" not-null="true" cascade="none"/>
+			<many-to-one name="provider" column="provider_id" not-null="true" cascade="none"/>
 		</natural-id>
 
 		<property name="referencingObjectUuidLongPart" column="ref_obj_uuid_long_part" not-null="true"/>
-		<many-to-one name="referencingObjectField" column="drs_comp_field_id" not-null="true" cascade="none"/>
+		<many-to-one name="referencingObjectField" column="comp_field_id" not-null="true" cascade="none"/>
 	</class>
 </hibernate-mapping>

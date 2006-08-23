@@ -28,11 +28,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
 	<class table="drs_provider_signatures" name="com.db4o.replication.hibernate.metadata.ProviderSignature">
-		<id name="id" column="drs_provider_id" type="long">
+		<id name="id" column="provider_id" type="long">
 			<generator class="native"/>
 		</id>
 
-		<discriminator/>
+		<discriminator column="class_name"/>
 
 		<!--Do not use <natural-id> for bytes, MySQL does not support it. -->
 		<property name="bytes" column="bytes" not-null="true"/>

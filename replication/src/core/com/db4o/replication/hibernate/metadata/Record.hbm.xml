@@ -28,7 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
 	<class table="drs_records" name="com.db4o.replication.hibernate.metadata.Record">
-		<id column="drs_provider_id" type="long">
+		<id column="provider_id" type="long">
 			<generator class="foreign">
 				<param name="property">peerSignature</param>
 			</generator>
