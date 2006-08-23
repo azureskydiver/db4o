@@ -9,36 +9,6 @@ import com.db4o.*;
  */
 public class ObjectMarshaller1 extends ObjectMarshaller{
 
-	protected abstract static class TraverseFieldCommand {
-		private boolean _cancelled=false;
-		
-		public int fieldCount(YapClass yapClass,YapReader reader) {
-			return (Debug.atHome ? yapClass.readFieldCountSodaAtHome(reader) : yapClass.readFieldCount(reader));
-		}
-
-		public boolean cancelled() {
-			return _cancelled;
-		}
-		
-		protected void cancel() {
-			_cancelled=true;
-		}
-
-		public abstract void processField(YapField field,boolean isNull, YapClass containingClass);
-	}
-
-    protected void traverseFields(YapClass yc,YapReader reader,ObjectHeaderAttributes attributes,TraverseFieldCommand command) {
-    	int fieldIndex=0;
-    	while(yc!=null&&!command.cancelled()) {
-        	int fieldCount=command.fieldCount(yc, reader);
-			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
-				command.processField(yc.i_fields[i],isNull(attributes,fieldIndex),yc);
-			    fieldIndex ++;
-			}
-			yc=yc.i_ancestor;
-    	}
-    }
-
     public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final boolean isNew) {
 		TraverseFieldCommand command = new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
