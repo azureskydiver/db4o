@@ -42,11 +42,11 @@ public class AllTestsReplication extends AllTests {
 		// In C/S, you can't run all combinations together, it causes db4o connection to timeout.
 
 		//db4o();
-		transients();
+		//transients();
 		//hsql();
 		//db4otransient();
 		//hsqlDb4o();
-		//db4oHsql();
+		db4oHsql();
 
 		//oracle();
 		//mysql();
