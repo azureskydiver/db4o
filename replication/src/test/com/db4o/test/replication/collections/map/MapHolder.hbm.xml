@@ -14,9 +14,9 @@
 
 		<property name="name"/>
 
-		<map name="map" table="MapContents">
+		<map name="map" table="MapContents" cascade="save-update">
 			<key column="MapHolderId"/>
-			<map-key type="string"/>
+			<index-many-to-many class="com.db4o.test.replication.collections.map.MapKey" column="keyId"/>
 			<one-to-many class="com.db4o.test.replication.collections.map.MapContent"/>
 		</map>
 	</class>

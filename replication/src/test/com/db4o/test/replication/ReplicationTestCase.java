@@ -15,6 +15,7 @@ import com.db4o.test.replication.collections.SimpleArrayContent;
 import com.db4o.test.replication.collections.SimpleArrayHolder;
 import com.db4o.test.replication.collections.map.MapContent;
 import com.db4o.test.replication.collections.map.MapHolder;
+import com.db4o.test.replication.collections.map.MapKey;
 import com.db4o.test.replication.provider.Car;
 import com.db4o.test.replication.provider.Pilot;
 import com.db4o.test.replication.r0tor4.R0;
@@ -38,7 +39,7 @@ public abstract class ReplicationTestCase {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
 				SPCParent.class, SPCChild.class,
 				ListHolder.class, ListContent.class,
-				MapHolder.class, MapContent.class,
+				MapHolder.class, MapKey.class,
 				SimpleArrayContent.class, SimpleArrayHolder.class,
 				R0.class, Pilot.class, Car.class};
 	}

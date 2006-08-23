@@ -5,6 +5,8 @@ import com.db4o.test.other.ObjectVersionTest;
 import com.db4o.test.replication.collections.Db4oListTest;
 import com.db4o.test.replication.collections.ListTest;
 import com.db4o.test.replication.collections.SimpleArrayTest;
+import com.db4o.test.replication.collections.map.Db4oIdentityMapTest;
+import com.db4o.test.replication.collections.map.Db4oMapTest;
 import com.db4o.test.replication.collections.map.MapTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
@@ -13,7 +15,7 @@ import com.db4o.test.replication.r0tor4.R0to4Runner;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return all();
+		return one();
 	}
 
 	private Class[] all() {
@@ -30,7 +32,11 @@ public class ReplicationTestSuite extends TestSuite {
 				//Collection
 				ListTest.class,
 				Db4oListTest.class,
+				
 				MapTest.class,
+				Db4oMapTest.class,
+				Db4oIdentityMapTest.class,
+				
 				SingleTypeCollectionReplicationTest.class,
 				ArrayReplicationTest.class,
 				MixedTypesCollectionReplicationTest.class,
@@ -49,7 +55,9 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] one() {
 		return new Class[]{
-				ObjectVersionTest.class,
+				MapTest.class,
+				Db4oMapTest.class,
+				Db4oIdentityMapTest.class,
 		};
 	}
 }
