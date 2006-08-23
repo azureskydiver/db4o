@@ -130,9 +130,21 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
     }
 
     public Set entrySet() {
-        throw new UnsupportedOperationException();
+        final HashSet out = new HashSet(size());
+        
+        Iterator itor = keySet().iterator();
+		
+		while (itor.hasNext()){
+			final Object key = itor.next();
+			final Object value = get(key);
+			final MapEntry entry = new MapEntry(key);
+			entry.setValue(value);
+			out.add(entry);
+		}
+		
+        return out;
     }
-
+    
     private boolean equals(P1HashElement phe, int hashCode, Object key) {
         return phe.i_hashCode == hashCode && phe.activatedKey(elementActivationDepth()).equals(key);
     }
@@ -403,4 +415,40 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         throw new UnsupportedOperationException();
     }
 
+    private class MapEntry implements Map.Entry {
+		private Object key;
+
+		private Object value;
+
+		public MapEntry(Object key) {
+			this.key = key;
+		}
+
+		public Object getKey() {
+			return key;
+		}
+
+		public Object getValue() {
+			return value;
+		}
+
+		public Object setValue(Object value) {
+			Object result = this.value;
+			this.value = value;
+			return result;
+		}
+
+		public boolean equals(Object obj) {
+			if (!(obj instanceof MapEntry))
+				return false;
+
+			MapEntry other = (MapEntry) obj;
+
+			return (key.equals(other.key)) && (value.equals(other.value));
+		}
+
+		public int hashCode() {
+			return key.hashCode() ^ value.hashCode();
+		}
+	}
 }
