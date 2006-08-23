@@ -7,11 +7,13 @@
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class name="com.db4o.test.replication.collections.map.MapContent">
+	<class name="com.db4o.test.replication.collections.map.MapKey">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
-		<discriminator/>
+		<discriminator column="clazz" />
 		<property name="name"/>
+		
+		<subclass name="com.db4o.test.replication.collections.map.MapContent"/>
 	</class>
 </hibernate-mapping>

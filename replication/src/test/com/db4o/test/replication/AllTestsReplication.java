@@ -2,8 +2,11 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.Debug;
-import com.db4o.foundation.Debug4;
+import java.io.File;
+
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
@@ -14,10 +17,6 @@ import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
-
-import java.io.File;
 
 public class AllTestsReplication extends AllTests {
 
@@ -28,8 +27,8 @@ public class AllTestsReplication extends AllTests {
 	public void run() {
 		new File(AllTestsConfAll.FILE_SERVER).delete();
 
-		//Test.clientServer = true;
-		Test.clientServer = false;
+		Test.clientServer = true;
+		//Test.clientServer = false;
 		//Debug.longTimeOuts = true; //ReplicationFeaturesMain fails if set to false in C/S
 
 		Db4oReplicationTestUtil.configure();
@@ -42,12 +41,12 @@ public class AllTestsReplication extends AllTests {
 		// In SOLO, you can run all combinations together
 		// In C/S, you can't run all combinations together, it causes db4o connection to timeout.
 
-		db4o();
-//		transients();
-//		hsql();
-//		db4otransient();
-//		hsqlDb4o();
-//		db4oHsql();
+		//db4o();
+		transients();
+		//hsql();
+		//db4otransient();
+		//hsqlDb4o();
+		//db4oHsql();
 
 		//oracle();
 		//mysql();
