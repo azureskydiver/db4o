@@ -11,7 +11,7 @@ class TransactionObjectCarrier extends Transaction{
 		super(a_stream, a_parent);
 	}
 	
-	void commit() {
+	public void commit() {
 		// do nothing
 	}
 	

@@ -45,8 +45,8 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		fillSystemTransactionWith(10);
 		fillSystemTransactionWith(5);		
 		assertGreater(new int[] { 4, 7, 9 }, 3);
-		
 		removeFromSystemTransaction(5);
+        assertGreater(new int[] { 4, 7, 9 }, 3);
 		removeFromSystemTransaction(10);
 		assertGreater(new int[] { 4, 7, 9 }, 3);
 	}
@@ -106,11 +106,14 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
 	
 	private int btreeNodeSize() {		
-		YapStream stream = (YapStream)db();
-		final ReflectClass reflectClass = stream.reflector().forClass(FieldIndexItem.class);
-		final BTree btree = stream.getYapClass(reflectClass, false).getYapField("bar").getIndex();
-		return btree.nodeSize();
+		return btree().nodeSize();
 	}
+    
+    private BTree btree(){
+        YapStream stream = (YapStream)db();
+        final ReflectClass reflectClass = stream.reflector().forClass(FieldIndexItem.class);
+        return stream.getYapClass(reflectClass, false).getYapField("bar").getIndex();
+    }
 
 	private void store(final Transaction trans, final FieldIndexItem item) {
 		((YapStream)db()).set(trans, item);

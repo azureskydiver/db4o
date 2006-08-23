@@ -168,7 +168,7 @@ public class Transaction {
         }
     }
 
-    void commit() {
+    public void commit() {
         synchronized (stream().i_lock) {
             i_file.freeSpaceBeginCommit();
             commitExceptForFreespace();

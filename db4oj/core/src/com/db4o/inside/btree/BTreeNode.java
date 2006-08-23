@@ -297,14 +297,18 @@ public class BTreeNode extends YapMeta{
     }
     
     void commit(Transaction trans){
+        commitOrRollback(trans, true);
+    }
+    
+    void commitOrRollback(Transaction trans, boolean isCommit){
         
         if(_dead){
             return;
         }
         
         _cached = false;
-
-        if(! canWrite()){
+        
+        if(! _isLeaf){
             return;
         }
         
@@ -314,60 +318,62 @@ public class BTreeNode extends YapMeta{
         
         Object keyZero = _keys[0];
         
-        if(_isLeaf){
-            
-            boolean vals = handlesValues();
-            
-            Object[] tempKeys = new Object[_btree.nodeSize()];
-            Object[] tempValues = vals ? new Object[_btree.nodeSize()] : null; 
-            
-            int count = 0;
+        boolean vals = handlesValues();
         
-            for (int i = 0; i < _count; i++) {
-                Object key = _keys[i];
-                BTreePatch patch = keyPatch(i);
-                if(patch != null){
-                    key = patch.commit(trans, _btree);
-                }
-                if(key != No4.INSTANCE){
-                    tempKeys[count] = key;
-                    if(vals){
-                        tempValues[count] = _values[i];
-                    }
-                    count ++;
-                }
+        Object[] tempKeys = new Object[_btree.nodeSize()];
+        Object[] tempValues = vals ? new Object[_btree.nodeSize()] : null; 
+        
+        int count = 0;
+    
+        for (int i = 0; i < _count; i++) {
+            Object key = _keys[i];
+            BTreePatch patch = keyPatch(i);
+            if(patch != null){
+                key = isCommit ? patch.commit(trans, _btree) : patch.rollback(trans, _btree); 
             }
-            
-            _keys = tempKeys;
-            _values = tempValues;
-            
-            _count = count;
-            
-            if(_count == 0){
-                if(_parentID != 0){
-                    free(trans);
-                    return;
+            if(key != No4.INSTANCE){
+                tempKeys[count] = key;
+                if(vals){
+                    tempValues[count] = _values[i];
                 }
+                count ++;
             }
-            
-            
-            // TODO: Merge nodes here on low _count value.
-            
-//        }else{
-//        
-//            for (int i = 0; i < _count; i++) {
-//                BTreePatch patch = keyPatch(i);
-//                if(patch != null){
-//                    _keys[i] = child(i).firstKey(trans);
-//                }
-//            }
         }
+        
+        _keys = tempKeys;
+        _values = tempValues;
+        
+        _count = count;
+        
+        if(freeIfEmpty(trans)){
+            return;
+        }
+        
+        // TODO: Merge nodes here on low _count value.
         
         if(_keys[0] != keyZero){
             tellParentAboutChangedKey(trans);
         }
         
     }
+    
+    private boolean freeIfEmpty(Transaction trans){
+        return freeIfEmpty(trans, _count);
+    }
+    
+    private boolean freeIfEmpty(Transaction trans, int count){
+        if(count > 0){
+            return false;
+        }
+        if(_parentID == 0){
+            return false;
+        }
+        free(trans);
+        return true;
+    }
+
+    
+    
     
     public boolean equals(Object obj) {
         
@@ -414,27 +420,19 @@ public class BTreeNode extends YapMeta{
         int id = child.getID();
         for (int i = 0; i < _count; i++) {
             if(childID(i) == id){
-                
-                if(_count == 1){
-                    if(_parentID != 0){
-                        free(trans);
-                        return;
-                    }
+                if(freeIfEmpty(trans, _count -1)){
+                    return;
                 }
                 remove(i);
-                
                 if(i <= 1){
-                    if(_parentID != 0){
-                        BTreeNode parent = _btree.produceNode(_parentID);
-                        parent.keyChanged(trans, this);
-                        return;
-                    }
+                    tellParentAboutChangedKey(trans);
                 }
-                
                 if(_count == 0){
+                    // root node empty case only, have to turn it into a leaf
                     _isLeaf = true;
                     prepareValues();
                 }
+                return;
             }
         }
     }
@@ -817,50 +815,7 @@ public class BTreeNode extends YapMeta{
     
     
     void rollback(Transaction trans){
-        
-        if(! canWrite()){
-            return;
-        }
-        
-        if(_isLeaf){
-            
-            Object keyZero = _keys[0];
-            
-            boolean vals = handlesValues();
-            
-            Object[] tempKeys = new Object[_btree.nodeSize()];
-            Object[] tempValues = vals ? new Object[_btree.nodeSize()] : null; 
-            
-            int count = 0;
-        
-            for (int i = 0; i < _count; i++) {
-                Object key = _keys[i];
-                BTreePatch patch = keyPatch(i);
-                if(patch != null){
-                    key = patch.rollback(trans, _btree);
-                }
-                if(key != No4.INSTANCE){
-                    tempKeys[count] = key;
-                    if(vals){
-                        tempValues[count] = _values[i];
-                    }
-                    count ++;
-                }
-            }
-            
-            _keys = tempKeys;
-            _values = tempValues;
-            
-            _count = count;
-            
-            
-            if(keyZero != _keys[0]){
-                tellParentAboutChangedKey(trans);
-            }
-            
-            
-            // TODO: Merge nodes here on low _count value.
-        }
+        commitOrRollback(trans, false);
     }
     
     private Searcher search(YapReader reader){

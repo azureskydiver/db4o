@@ -31,7 +31,7 @@ final class TransactionClient extends Transaction {
         i_client.writeMsg(Msg.TA_BEGIN_END_SET);
     }
 
-    void commit() {
+    public void commit() {
         commitTransactionListeners();
         if(i_yapObjectsToGc != null){
             i_yapObjectsToGc.traverse(new Visitor4() {
