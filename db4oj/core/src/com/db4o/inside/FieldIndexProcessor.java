@@ -10,24 +10,19 @@ public class FieldIndexProcessor {
 	public FieldIndexProcessor(QCandidates candidates) {
 		_candidates = candidates;
 	}
-
-	public TreeInt run() {
-		IndexedLeaf leaf = findBestIndex();
-		if (null == leaf) {
-			return null;
-		}
-		return leaf.toTreeInt();
-	}
-
-	private IndexedLeaf findBestIndex() {
+	
+	public FieldIndexProcessorResult run() {
 		final Iterator4 i = findIndexedLeaves();
+		if (!i.hasNext()) {
+			return FieldIndexProcessorResult.NO_INDEX_FOUND;
+		}
 		while (i.hasNext()) {
 			IndexedLeaf leaf = (IndexedLeaf)i.next();
 			if (leaf.resultSize() > 0) {
-				return leaf;
+				return new FieldIndexProcessorResult(leaf.toTreeInt());
 			}
 		}
-		return null;
+		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
 	}
 
 	private Transaction transaction() {

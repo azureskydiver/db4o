@@ -71,9 +71,11 @@ public class YapObjectCarrier extends YapMemoryFile {
         }
     }
 	
-	void createTransaction() {
-		i_trans = new TransactionObjectCarrier(this, null);
-		i_systemTrans = i_trans;
+	final protected Transaction newTransaction(Transaction parentTransaction) {
+		if (null != parentTransaction) {
+			return parentTransaction;
+		}
+		return new TransactionObjectCarrier(this, null);
 	}
 	
 	public long currentVersion(){

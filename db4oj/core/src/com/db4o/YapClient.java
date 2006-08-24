@@ -197,9 +197,8 @@ public class YapClient extends YapStream implements ExtClient {
 		return new QResultClient(a_ta);
 	}
 
-	final void createTransaction() {
-		i_systemTrans = new TransactionClient(this, null);
-		i_trans = new TransactionClient(this, i_systemTrans);
+	final protected Transaction newTransaction(Transaction parentTransaction) {
+		return new TransactionClient(this, parentTransaction);
 	}
 
 	boolean createYapClass(YapClass a_yapClass, ReflectClass a_class,
@@ -598,7 +597,7 @@ public class YapClient extends YapStream implements ExtClient {
 		remainingIDs = 0;
 		initialize0();
 		initialize1();
-		createTransaction();
+		initializeTransactions();
 		readThis();
 	}
 

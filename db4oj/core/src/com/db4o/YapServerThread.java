@@ -47,7 +47,7 @@ final class YapServerThread extends Thread {
         i_mainStream = aStream;
         i_threadID = aThreadID;
         setName("db4o message server " + aThreadID);
-        i_mainTrans = new Transaction(aStream, aStream.getSystemTransaction());
+        i_mainTrans = aStream.newTransaction();
         try {
             i_socket = aSocket;
             i_socket.setSoTimeout(((Config4Impl)aServer.configure()).timeoutServerSocket());
@@ -276,8 +276,7 @@ final class YapServerThread extends Thread {
             try {
                 closeSubstituteStream();
                 i_substituteStream = (YapFile) Db4o.openFile(fileName);
-                i_substituteTrans =
-                    new Transaction(i_substituteStream, i_substituteStream.getSystemTransaction());
+                i_substituteTrans = i_substituteStream.newTransaction();
                 i_substituteStream.configImpl().setMessageRecipient(i_mainStream.configImpl().messageRecipient());
                 Msg.OK.write(getStream(), i_socket);
             } catch (Exception e) {
