@@ -36,7 +36,7 @@ public class BTreeRemove extends BTreePatch {
         }
     }
 
-	protected Object commit(Transaction trans, BTree btree) {
+	public Object commit(Transaction trans, BTree btree) {
 	    if(_transaction == trans){
 	        if(hasNext()){
 	            return _next;

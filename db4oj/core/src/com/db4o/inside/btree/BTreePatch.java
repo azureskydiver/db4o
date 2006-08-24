@@ -16,7 +16,7 @@ public abstract class BTreePatch {
         _object = obj;
     }    
     
-    protected abstract Object commit(Transaction trans, BTree btree);
+    public abstract Object commit(Transaction trans, BTree btree);
 
     public boolean isRemove() {
         return false;
