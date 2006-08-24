@@ -494,7 +494,7 @@ public abstract class QQueryBase implements Unversioned {
 		return false;
 	}
 
-    Transaction getTransaction() {
+    public final Transaction getTransaction() {
         return i_trans;
     }
     

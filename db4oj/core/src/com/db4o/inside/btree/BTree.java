@@ -327,6 +327,12 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		}
 		return _root.firstPointer(trans);
 	}
+	
+	public BTree debugLoadFully(Transaction trans) {
+		ensureActive(trans);
+		_root.debugLoadFully(trans);
+		return this;
+	}
 
 }
 

@@ -1124,4 +1124,14 @@ public class BTreeNode extends YapMeta{
         }
         return str;
     }
+
+	public void debugLoadFully(Transaction trans) {
+		prepareWrite(trans);
+		if (_isLeaf) {
+			return;
+		}
+		for (int i=0; i<_count; ++i) {
+			((BTreeNode)_children[i]).debugLoadFully(trans);
+		}
+	}
 }

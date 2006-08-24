@@ -150,7 +150,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_parent = a_parent == null ? _this : a_parent;
         i_lock = a_parent == null ? new Object() : a_parent.i_lock;
         initialize0();
-        createTransaction();
+        initializeTransactions();
         initialize1();
     }
 
@@ -392,10 +392,18 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     	setStringIo(YapStringIO.forEncoding(encoding));
     }
 
-    void createTransaction() {
-        i_systemTrans = new Transaction(_this, null);
-        i_trans = new Transaction(_this, i_systemTrans);
+    final protected void initializeTransactions() {
+        i_systemTrans = newTransaction(null);
+        i_trans = newTransaction();
     }
+
+	protected Transaction newTransaction(Transaction parentTransaction) {
+		return new Transaction(_this, parentTransaction);
+	}
+	
+	public Transaction newTransaction() {
+		return newTransaction(i_systemTrans);
+	}
 
     public abstract long currentVersion();
     

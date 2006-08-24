@@ -3,8 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.ClassIndexStrategy;
-import com.db4o.inside.FieldIndexProcessor;
+import com.db4o.inside.*;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
 import com.db4o.inside.ix.QxProcessor;
 import com.db4o.inside.marshall.MarshallerFamily;
@@ -180,11 +179,15 @@ public final class QCandidates implements Visitor4 {
 		}
 		if (MarshallerFamily.BTREE_FIELD_INDEX) {
 			FieldIndexProcessor processor = new FieldIndexProcessor(this);
-			TreeInt root = processor.run();
-			if (null != root) {
-				i_root = TreeInt.toQCandidate(root, this);
+			final FieldIndexProcessorResult result = processor.run();
+			if (result == FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH) {
 				return true;
 			}
+			if (result == FieldIndexProcessorResult.NO_INDEX_FOUND) {
+				return false;
+			}
+			i_root = TreeInt.toQCandidate(result.found, this);
+			return true;
 		}
 		if (MarshallerFamily.OLD_FIELD_INDEX) {
 			QxProcessor processor = new QxProcessor();

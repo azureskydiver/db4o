@@ -4,7 +4,7 @@ import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
 import com.db4o.db4ounit.btree.*;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.FieldIndexProcessor;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
@@ -24,12 +24,45 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	
 	public void testSingleIndexEquals() {
 		final int expectedBar = 3;
-		assertQueryMatch(new int[] { expectedBar }, createQuery(expectedBar));
+		assertExpectedBars(new int[] { expectedBar }, createQuery(expectedBar));
+	}
+	
+	public void _testMultiTransactionSmallerWithCommit() {
+		final Transaction transaction = newTransaction();
+		fillTransactionWith(transaction, 0);
+		
+		int[] expectedZeros = newBTreeNodeSizedArray(0);
+		assertSmaller(transaction, expectedZeros, 3);
+		
+		transaction.commit();
+		
+		fillTransactionWith(transaction, 5);
+        assertSmaller(concat(expectedZeros, new int[] { 3, 4 }), 7);
+	}
+
+	public void testMultiTransactionWithRollback() {
+		final Transaction transaction = newTransaction();
+		fillTransactionWith(transaction, 0);
+		
+		int[] expectedZeros = newBTreeNodeSizedArray(0);
+		assertSmaller(transaction, expectedZeros, 3);
+		
+		transaction.rollback();
+		
+		assertSmaller(transaction, new int[0], 3);
+		
+		fillTransactionWith(transaction, 5);
+        assertSmaller(new int[] { 3, 4 }, 7);
 	}
 	
 	public void testMultiTransactionSmaller() {
-		fillSystemTransactionWith(0);
-		fillSystemTransactionWith(5);
+		final Transaction transaction = newTransaction();
+		fillTransactionWith(transaction, 0);
+		
+		int[] expected = newBTreeNodeSizedArray(0);
+		assertSmaller(transaction, expected, 3);
+		
+		fillTransactionWith(transaction, 5);
         assertSmaller(new int[] { 3, 4 }, 7);
 	}
 
@@ -42,37 +75,48 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
 	
 	public void testMultiTransactionGreater() {
-		fillSystemTransactionWith(10);
-		fillSystemTransactionWith(5);		
+		fillTransactionWith(systemTrans(), 10);
+		fillTransactionWith(systemTrans(), 5);		
 		assertGreater(new int[] { 4, 7, 9 }, 3);
-		removeFromSystemTransaction(5);
+		removeFromTransaction(systemTrans(), 5);
         assertGreater(new int[] { 4, 7, 9 }, 3);
-		removeFromSystemTransaction(10);
+		removeFromTransaction(systemTrans(), 10);
 		assertGreater(new int[] { 4, 7, 9 }, 3);
 	}
 
 	private void assertGreater(int[] expectedBars, int greaterThan) {
 		final Query query = createItemQuery();
 		query.descend("bar").constrain(new Integer(greaterThan)).greater();		
-		assertQueryMatch(expectedBars, query);
+		assertExpectedBars(expectedBars, query);
 	}
 	
 	public void testSingleIndexGreaterOrEqual() {
 		final Query query = createItemQuery();
 		query.descend("bar").constrain(new Integer(7)).greater().equal();
 		
-		assertQueryMatch(new int[] { 7, 9 }, query);
+		assertExpectedBars(new int[] { 7, 9 }, query);
 	}
 
-	private void assertQueryMatch(final int[] expectedBars, final Query query) {
+	private void assertExpectedBars(final int[] expectedBars, final Query query) {
+		
+		final int[] expectedIds = mapToObjectIds(transactionFromQuery(query), expectedBars);
+		
+		assertExpectedIDs(expectedIds, query);
+	}
+	
+	private void assertExpectedIDs(final int[] expectedIds, final Query query) {
 		final QCandidates candidates = getQCandidates(query);
 		
 		final FieldIndexProcessor processor = new FieldIndexProcessor(candidates);
-		final Tree tree = processor.run();
-		Assert.isNotNull(tree);
+		final FieldIndexProcessorResult result = processor.run();		
+		if (expectedIds.length == 0) {
+			Assert.areSame(FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH, result);
+			return;
+		}
+		Assert.isNotNull(result.found);
 		
-		final ExpectingVisitor visitor = createExpectingVisitor(mapToObjectIds(expectedBars)); 
-		tree.traverse(new Visitor4() {
+		final ExpectingVisitor visitor = createExpectingVisitor(expectedIds); 
+		result.found.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				visitor.visit(new Integer(((TreeInt)obj)._key));
 			}
@@ -80,23 +124,46 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		visitor.assertExpectations();
 	}
  
-	private int[] mapToObjectIds(int[] bars) {
+	private Transaction transactionFromQuery(Query query) {
+		return ((QQuery)query).getTransaction();
+	}
+
+	private int[] mapToObjectIds(Transaction trans, int[] bars) {
+		int[] lookingFor = clone(bars);
+		
 		int[] objectIds = new int[bars.length];
-		for (int i=0; i<objectIds.length; ++i) {
-			objectIds[i] = idFromBar(bars[i]);
+		final ObjectSet set = createItemQuery(trans).execute();
+		while (set.hasNext()) {
+			FieldIndexItem item = (FieldIndexItem)set.next();
+			for (int i = 0; i < lookingFor.length; i++) {
+				if(lookingFor[i] == item.bar){
+					lookingFor[i] = -1;
+					objectIds[i] = (int) db().getID(item);
+					break;
+				}
+			}
+		}		
+		
+		if (!all(lookingFor, -1)) {
+			throw new IllegalArgumentException();
 		}
+		
 		return objectIds;
 	}
 
-	private int idFromBar(int bar) {
-		final ObjectSet set = db().get(FieldIndexItem.class);
-		while (set.hasNext()) {
-			FieldIndexItem item = (FieldIndexItem)set.next();
-			if (item.bar == bar) {
-				return (int) db().getID(item);
+	private boolean all(int[] array, int value) {
+		for (int i=0; i<array.length; ++i) {
+			if (value != array[i]) {
+				return false;
 			}
 		}
-		throw new IllegalArgumentException();
+		return true;
+	}
+
+	private int[] clone(int[] bars) {
+		int[] array = new int[bars.length];
+		System.arraycopy(bars, 0, array, 0, bars.length);
+		return array;
 	}
 
 	private QCandidates getQCandidates(final Query query) {
@@ -110,34 +177,63 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
     
     private BTree btree(){
-        YapStream stream = (YapStream)db();
-        final ReflectClass reflectClass = stream.reflector().forClass(FieldIndexItem.class);
-        return stream.getYapClass(reflectClass, false).getYapField("bar").getIndex();
+        final ReflectClass reflectClass = stream().reflector().forClass(FieldIndexItem.class);
+        return stream().getYapClass(reflectClass, false).getYapField("bar").getIndex();
     }
 
 	private void store(final Transaction trans, final FieldIndexItem item) {
-		((YapStream)db()).set(trans, item);
+		stream().set(trans, item);
 	}
 	
-	private void fillSystemTransactionWith(final int bar) {
-		for (int i=0; i<btreeNodeSize()+1; ++i) {
-			store(systemTrans(), new FieldIndexItem(bar));
+	private void fillTransactionWith(Transaction trans, final int bar) {
+		for (int i=0; i<fillSize(); ++i) {
+			store(trans, new FieldIndexItem(bar));
 		}
 	}
+
+	private int fillSize() {
+		return btreeNodeSize()+1;
+	}
 	
-	private void removeFromSystemTransaction(final int bar) {
-		final ObjectSet found = createItemQuery(systemTrans()).execute();
+	private int[] newBTreeNodeSizedArray(int value) {
+		return fill(new int[fillSize()], value);
+	}
+
+	private int[] fill(int[] array, int value) {
+		for (int i=0; i<array.length; ++i) {
+			array[i] = value;
+		}
+		return array;
+	}
+	
+	private int[] concat(int[] a, int[] b) {
+		int[] array = new int[a.length + b.length];
+		System.arraycopy(a, 0, array, 0, a.length);
+		System.arraycopy(b, 0, array, a.length, b.length);
+		return array;
+	}
+	
+	private void removeFromTransaction(Transaction trans, final int bar) {
+		final ObjectSet found = createItemQuery(trans).execute();
 		while (found.hasNext()) {
 			FieldIndexItem item = (FieldIndexItem)found.next();
 			if (item.bar == bar) {
-				stream().delete(systemTrans(), item);
+				stream().delete(trans, item);
 			}
 		}
 	}
 	
 	private void assertSmaller(final int[] expectedBars, final int smallerThan) {
-		final Query query = createItemQuery();
+		assertSmaller(trans(), expectedBars, smallerThan);
+	}
+
+	private void assertSmaller(final Transaction transaction, final int[] expectedBars, final int smallerThan) {
+		final Query query = createItemQuery(transaction);
 		query.descend("bar").constrain(new Integer(smallerThan)).smaller();
-		assertQueryMatch(expectedBars, query);
+		assertExpectedBars(expectedBars, query);
+	}
+	
+	private Transaction newTransaction() {
+		return stream().newTransaction();
 	}
 }

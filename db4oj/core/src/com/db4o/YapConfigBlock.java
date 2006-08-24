@@ -247,7 +247,7 @@ public final class YapConfigBlock implements Runnable
 			int transactionID1 = YInt.readInt(reader);
 			int transactionID2 = YInt.readInt(reader);
 			if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
-				_transactionToCommit = new Transaction(_stream, null);
+				_transactionToCommit = _stream.newTransaction(null);
 				_transactionToCommit.setAddress(transactionID1);
 			}
 		}
