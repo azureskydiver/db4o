@@ -1,6 +1,6 @@
 package db4ounit;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Vector;
 
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
@@ -49,7 +49,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 			throw new IllegalArgumentException("" + clazz + " is not marked as " + TestCase.class);
 		}
 		Vector tests = new Vector();
-		Method[] methods = clazz.getDeclaredMethods();
+		Method[] methods = TestPlatform.getAllMethods(clazz);
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
 			if (isMalformedTestMethod(method))
@@ -59,16 +59,22 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		}		
 		return new TestSuite(clazz.getName(), toArray(tests));
 	}
-
-	protected boolean isTestMethod(Method method) {
-		return TestPlatform.isTestMethod(method);
-	}
 	
-	protected boolean isMalformedTestMethod(Method method) {
-		return TestPlatform.isMalformedTestMethod(method);
+	protected boolean isTestMethod(Method method) {
+		return method.getName().startsWith("test")			
+			&& TestPlatform.isPublic(method)
+			&& !TestPlatform.isStatic(method)
+			&& !TestPlatform.hasParameters(method);
 	}
 
-	private Test[] toArray(Vector tests) {
+	protected boolean isMalformedTestMethod(Method method) {
+		return method.getName().startsWith("test")			
+			&& ((!TestPlatform.isPublic(method))
+					|| TestPlatform.isStatic(method)
+					|| TestPlatform.hasParameters(method));
+	}
+
+	private static Test[] toArray(Vector tests) {
 		Test[] array = new Test[tests.size()];
 		tests.copyInto(array);
 		return array;

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Vector;
 
 public class TestPlatform {
 	public static void printStackTrace(Writer writer, Throwable t) {
@@ -16,23 +17,38 @@ public class TestPlatform {
 		return new PrintWriter(System.out);
 	}
 
-	public static boolean isTestMethod(Method method) {
-		return method.getName().startsWith("test")			
-			&& Modifier.isPublic(method.getModifiers())
-			&& !Modifier.isStatic(method.getModifiers())
-			&& method.getParameterTypes().length == 0;
+	public static Method[] getAllMethods(Class clazz) {
+		Vector methods = new Vector();
+		collectDeclaredMethods(methods, clazz);
+		return toArray(methods);
+	}	
+
+	public static boolean isStatic(Method method) {
+		return Modifier.isStatic(method.getModifiers());
+	}
+
+	public static boolean isPublic(Method method) {
+		return Modifier.isPublic(method.getModifiers());
+	}
+
+	public static boolean hasParameters(Method method) {
+		return method.getParameterTypes().length > 0;
 	}
 	
-	public static boolean isMalformedTestMethod(Method method) {
-		final int modifiers = method.getModifiers();
-		
-		final boolean notPublic = !Modifier.isPublic(modifiers);
-		final boolean staticc = Modifier.isStatic(modifiers);
-		final boolean hasParams = method.getParameterTypes().length > 0;
-		
-		return method.getName().startsWith("test")			
-			&& (notPublic
-					|| staticc
-					|| hasParams);
+	private static Method[] toArray(Vector methods) {
+		Method[] array = new Method[methods.size()];
+		methods.copyInto(array);
+		return array;
+	}
+
+	private static void collectDeclaredMethods(Vector methods, Class clazz) {
+		Method[] declaredMethods = clazz.getDeclaredMethods();
+		for (int i=0; i<declaredMethods.length; ++i) {
+			methods.addElement(declaredMethods[i]);
+		}
+		final Class superClass = clazz.getSuperclass();
+		if (superClass != Object.class) {
+			collectDeclaredMethods(methods, clazz.getSuperclass());
+		}
 	}
 }

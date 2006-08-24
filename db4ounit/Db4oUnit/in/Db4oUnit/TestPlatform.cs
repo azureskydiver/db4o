@@ -1,5 +1,7 @@
 namespace Db4oUnit
 {
+	using System.Reflection;
+
 	public class TestPlatform
 	{
 		public static void PrintStackTrace(System.IO.TextWriter writer, System.Exception 
@@ -13,12 +15,28 @@ namespace Db4oUnit
 			return System.Console.Out;
 		}
 
-		public static bool IsTestMethod(System.Reflection.MethodInfo method)
+		public static MethodInfo[] GetAllMethods(System.Type type)
 		{
-			return method.Name.StartsWith("Test")
-				&& method.IsPublic 
-				&& !method.IsStatic
-				&& method.GetParameters().Length == 0;
+			return type.GetMethods(
+					BindingFlags.Public
+					|BindingFlags.NonPublic
+					|BindingFlags.Instance
+					|BindingFlags.Static);
+		}	
+
+		public static bool IsStatic(MethodInfo method)
+		{
+			return method.IsStatic;
+		}
+
+		public static bool IsPublic(MethodInfo method)
+		{
+			return method.IsPublic;
+		}
+
+		public static bool HasParameters(MethodInfo method)
+		{
+			return method.GetParameters().Length > 0;
 		}
 	}
 }
