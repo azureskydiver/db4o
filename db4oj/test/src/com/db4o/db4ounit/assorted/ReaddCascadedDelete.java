@@ -5,7 +5,7 @@ package com.db4o.db4ounit.assorted;
 import com.db4o.*;
 
 import db4ounit.*;
-import db4ounit.db4o.*;
+import db4ounit.extensions.*;
 
 
 public class ReaddCascadedDelete extends Db4oTestCase {

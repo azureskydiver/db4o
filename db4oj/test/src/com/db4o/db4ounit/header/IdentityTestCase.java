@@ -7,7 +7,7 @@ import com.db4o.ext.Db4oDatabase;
 
 import db4ounit.Assert;
 import db4ounit.ArrayAssert;
-import db4ounit.db4o.Db4oTestCase;
+import db4ounit.extensions.Db4oTestCase;
 
 public class IdentityTestCase extends Db4oTestCase {
     

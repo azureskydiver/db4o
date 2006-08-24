@@ -1,4 +1,4 @@
-package db4ounit.db4o;
+package db4ounit.extensions;
 
 import db4ounit.TestSuite;
 import db4ounit.TestSuiteBuilder;

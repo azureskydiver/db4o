@@ -5,8 +5,8 @@ import com.db4o.events.*;
 import com.db4o.query.Query;
 
 import db4ounit.*;
-import db4ounit.db4o.*;
-import db4ounit.db4o.fixtures.Db4oSolo;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.Db4oSolo;
 
 public class SelectiveActivationTestCase extends Db4oTestCase {
     private boolean debug = false;

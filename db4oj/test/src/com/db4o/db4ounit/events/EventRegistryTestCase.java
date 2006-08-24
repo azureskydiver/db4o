@@ -6,7 +6,7 @@ import com.db4o.events.*;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
-import db4ounit.db4o.Db4oTestCase;
+import db4ounit.extensions.Db4oTestCase;
 
 public class EventRegistryTestCase extends Db4oTestCase {
 	

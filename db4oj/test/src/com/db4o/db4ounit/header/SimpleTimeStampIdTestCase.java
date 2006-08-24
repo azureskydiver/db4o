@@ -7,7 +7,7 @@ import com.db4o.YapFile;
 import com.db4o.config.ObjectClass;
 
 import db4ounit.Assert;
-import db4ounit.db4o.Db4oTestCase;
+import db4ounit.extensions.Db4oTestCase;
 
 public class SimpleTimeStampIdTestCase extends Db4oTestCase{
     

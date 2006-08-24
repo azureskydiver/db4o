@@ -1,16 +1,14 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package db4ounit.db4o.tests;
+package db4ounit.extensions.tests;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
 import db4ounit.TestMethod;
 import db4ounit.TestRunner;
 import db4ounit.TestSuite;
-import db4ounit.db4o.Db4oFixture;
-import db4ounit.db4o.Db4oTestSuiteBuilder;
-import db4ounit.db4o.fixtures.Db4oInMemory;
-import db4ounit.db4o.fixtures.Db4oSolo;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.tests.FrameworkTestCase;
 
 public class AllTests implements TestCase {

@@ -8,9 +8,8 @@ import com.db4o.query.QueryComparator;
 
 import db4ounit.Assert;
 import db4ounit.TestRunner;
-import db4ounit.db4o.Db4oTestCase;
-import db4ounit.db4o.Db4oTestSuiteBuilder;
-import db4ounit.db4o.fixtures.Db4oSolo;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.Db4oSolo;
 
 public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
 	

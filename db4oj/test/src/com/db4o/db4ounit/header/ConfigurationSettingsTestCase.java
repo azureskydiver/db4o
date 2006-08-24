@@ -5,7 +5,7 @@ package com.db4o.db4ounit.header;
 import com.db4o.*;
 
 import db4ounit.*;
-import db4ounit.db4o.*;
+import db4ounit.extensions.*;
 
 public class ConfigurationSettingsTestCase extends Db4oTestCase {
     
