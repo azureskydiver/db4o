@@ -1294,6 +1294,63 @@
 		</copy>
 	</target>	
 	
+	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin">		
+		
+		<property name="target.dir" value="${dir.sharpen}" />
+		
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<mkdir dir="${target.dir}/lib" />
+		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
+		<jar destfile="${dependencies.jar}">			
+			<fileset dir="${dir.workspace}/db4oj/bin/">								
+				<exclude name="db4ounit/**" />
+			</fileset>
+			<fileset dir="${dir.workspace}/db4ounit/bin/">
+			</fileset>
+		</jar>
+				
+		<copy todir="${target.dir}">
+			<fileset dir="..">
+				<include name="db4oj/test/src/db4ounit/**/*.java" />
+			</fileset>
+		</copy>
+		
+		<sharpen workspace="${target.dir}" resource="db4oj/test/src">
+			<args>
+				<arg value="-pascalcase" />
+				
+				<arg value="-nativeTypeSystem" />
+				
+				<arg value="-cp" />
+				<arg path="${dependencies.jar}" />
+				
+				<arg value="-typeMapping" />
+				<arg value="com.db4o.foundation.ArgumentNullException" />
+				<arg value="System.ArgumentNullException" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="^db4ounit.extensions.fixtures" />
+				<arg value="Db4oUnit.Extensions.Fixtures" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="^db4ounit.extensions" />
+				<arg value="Db4oUnit.Extensions" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="^db4ounit" />
+				<arg value="Db4oUnit" />
+			</args>
+		</sharpen>
+		
+		<copy todir="${dir.n}/Db4oUnit.Extensions/src">
+			<fileset dir="${target.dir}/db4ojcsharp/src">
+				<include name="Db4oUnit/**/*.cs" />
+			</fileset>
+		</copy>
+	</target>
+	
 	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin" unless="skip.conversion">
 
 		<property name="sharpen.src.dir" location="${dir.sharpen}" />
@@ -1385,6 +1442,8 @@
 		<updatecsharpproject projectfile="${dir.n.tools}/db4o-net-tools.csproj">
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
+		
+		<antcall target="sharpen-db4ounit-db4o" />
 		
 		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
 			<sources dir="${dir.n.test}">
