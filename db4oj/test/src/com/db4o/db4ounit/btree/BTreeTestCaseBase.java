@@ -8,7 +8,7 @@ import com.db4o.foundation.Visitor4;
 import com.db4o.inside.btree.*;
 
 import db4ounit.Assert;
-import db4ounit.db4o.*;
+import db4ounit.extensions.*;
 
 
 public class BTreeTestCaseBase extends Db4oTestCase{

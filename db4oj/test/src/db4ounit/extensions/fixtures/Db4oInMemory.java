@@ -1,12 +1,12 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package db4ounit.db4o.fixtures;
+package db4ounit.extensions.fixtures;
 
 import com.db4o.ext.ExtDb4o;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.ext.MemoryFile;
 
-import db4ounit.db4o.Db4oFixture;
+import db4ounit.extensions.Db4oFixture;
 
 public class Db4oInMemory implements Db4oFixture {
     

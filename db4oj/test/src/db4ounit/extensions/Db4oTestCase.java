@@ -1,11 +1,11 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package db4ounit.db4o;
+package db4ounit.extensions;
 
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.*;
-import db4ounit.db4o.fixtures.Db4oSolo;
+import db4ounit.extensions.fixtures.Db4oSolo;
 
 public class Db4oTestCase implements TestCase, TestLifeCycle {
     
