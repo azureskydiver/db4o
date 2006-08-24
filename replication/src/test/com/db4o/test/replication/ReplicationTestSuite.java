@@ -35,7 +35,7 @@ public class ReplicationTestSuite extends TestSuite {
 				
 //				MapTest.class,
 //				Db4oMapTest.class,
-//				Db4oIdentityMapTest.class,
+	//			Db4oIdentityMapTest.class,
 				
 				SingleTypeCollectionReplicationTest.class,
 				ArrayReplicationTest.class,

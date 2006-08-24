@@ -4,6 +4,7 @@ package com.db4o.test.other;
 
 import com.db4o.test.replication.db4ounit.DrsTestCase;
 import com.db4o.test.replication.db4ounit.DrsTestSuiteBuilder;
+import com.db4o.test.replication.db4ounit.fixtures.Db4oClientServerDrsFixture;
 import com.db4o.test.replication.db4ounit.fixtures.Db4oDrsFixture;
 
 import db4ounit.TestRunner;
@@ -27,7 +28,7 @@ public class AllReplicationTests extends DrsTestCase implements TestSuiteBuilder
 					
 					// Collection
 					ArrayReplicationTest.class,
-					CollectionUuidTest.class,
+					// CollectionUuidTest.class,
 					ListTest.class,
 					Db4oListTest.class,
 					MapTest.class,
@@ -49,7 +50,13 @@ public class AllReplicationTests extends DrsTestCase implements TestSuiteBuilder
 	public static void main(String[] args) {
 		new TestRunner(
 				new DrsTestSuiteBuilder(
+						new Db4oClientServerDrsFixture("db4o-cs-a", 0xdb40), new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
+						AllReplicationTests.class)).run();
+
+		new TestRunner(
+				new DrsTestSuiteBuilder(
 						new Db4oDrsFixture("db4o-a"), new Db4oDrsFixture("db4o-b"),
 						AllReplicationTests.class)).run();
+
 	}
 }
