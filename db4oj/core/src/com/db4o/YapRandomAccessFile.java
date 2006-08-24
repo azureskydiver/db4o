@@ -51,6 +51,7 @@ public class YapRandomAccessFile extends YapFile {
             }
             try {
                 i_backupFile = configImpl().ioAdapter().open(path, true, i_file.getLength());
+                i_backupFile.blockSize(blockSize());
             } catch (Exception e) {
                 i_backupFile = null;
                 Exceptions4.throwRuntimeException(12, path);
