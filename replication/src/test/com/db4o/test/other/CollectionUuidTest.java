@@ -7,7 +7,6 @@ import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
 
 public class CollectionUuidTest extends DrsTestCase {	
 	
