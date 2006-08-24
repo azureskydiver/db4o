@@ -435,8 +435,10 @@ public abstract class YapFile extends YapStream {
     
     
 
-    void readThis() {
-        
+    void readThis() {        
+
+    	setDefaultBlockSize();
+    	
         _fileHeader = new FileHeader0();
         _fileHeader.read0(this);
         
@@ -492,6 +494,10 @@ public abstract class YapFile extends YapStream {
         }
         
     }
+
+	private void setDefaultBlockSize() {
+		blockSize(1, HEADER_LENGTH);
+	}
 
     public void releaseSemaphore(String name) {
         releaseSemaphore(checkTransaction(null), name);
