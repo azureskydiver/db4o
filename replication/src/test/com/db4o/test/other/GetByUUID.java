@@ -2,16 +2,14 @@
 
 package com.db4o.test.other;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectSet;
+import java.util.Hashtable;
+
+import com.db4o.*;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.query.Query;
 import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
-import db4ounit.db4o.Db4oTestCase;
-
-import java.util.Hashtable;
 
 public class GetByUUID extends DrsTestCase {
 
@@ -24,11 +22,11 @@ public class GetByUUID extends DrsTestCase {
 		this.name = name;
 	}
 
-	public void configure() {
+	protected void configure() {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 	}
 
-	public void store() {
+	protected void store() {
 		a().db().set(new GetByUUID("one"));
 		a().db().set(new GetByUUID("two"));
 	}
