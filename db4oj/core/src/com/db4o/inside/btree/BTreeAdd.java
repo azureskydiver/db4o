@@ -22,7 +22,7 @@ public class BTreeAdd extends BTreePatch{
         return "(+) " + super.toString();
     }
 
-	protected Object commit(Transaction trans, BTree btree) {
+	public Object commit(Transaction trans, BTree btree) {
 	    if(_transaction == trans){
 	    	return getObject();
 	    }
