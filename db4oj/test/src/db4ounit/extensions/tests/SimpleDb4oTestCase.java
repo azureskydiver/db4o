@@ -17,7 +17,7 @@ public class SimpleDb4oTestCase extends Db4oTestCase {
 		_everythingCalled[0]=true;
 	}
 	
-	public void store() {
+	protected void store() {
 		Assert.isTrue(everythingCalledBefore(1));
 		_everythingCalled[1]=true;
 		fixture().db().set(new Data());
