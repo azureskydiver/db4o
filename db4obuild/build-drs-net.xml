@@ -27,14 +27,22 @@
 		</csc>
 	</target>
 	
+	<target name="create-jar-for-dependencies">
+		<mkdir dir="${conversion.workspace.dir}/lib" />
+		<property name="dependencies.jar" location="${conversion.workspace.dir}/lib/dependencies.jar" />
+		<jar destfile="${dependencies.jar}">			
+			<fileset dir="${dir.workspace}/db4oj/bin/">								
+			</fileset>
+			<fileset dir="${dir.workspace}/db4ounit/bin/">
+			</fileset>
+		</jar>
+	</target>
+	
 	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
 		<sharpen resource="drs/core" workspace="${conversion.workspace.dir}">
 			<args>
 				<arg value="-cp" />
-				<arg path="${dir.workspace}/db4oj/bin/" />
-				
-				<arg value="-cp" />
-				<arg path="${dir.workspace}/db4ounit/bin/" />
+				<arg value="${dependencies.jar}" />
 				
 				<arg value="-srcfolder" />
 				<arg value="test" />
@@ -46,17 +54,36 @@
 				<arg value="-methodMapping" />
 				<arg value="com.db4o.reflect.Reflector.forClass" />
 				<arg value="com.db4o.inside.replication.ReplicationPlatform.ForType" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="^db4ounit.extensions.fixtures" />
+				<arg value="Db4oUnit.Extensions.Fixtures" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="^db4ounit.extensions" />
+				<arg value="Db4oUnit.Extensions" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="^db4ounit" />
+				<arg value="Db4oUnit" />
 			</args>
 		</sharpen>
 	</target>
 	
-	<!--
 	<target name="test" depends="update-csharp-projects">
-	-->
-	<target name="test">
+		
+		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
+			targettype="library"
+			destfile="${drs.net.bin.dir}/Db4oUnit.Extensions.dll">
+			<reference dir="${drs.net.bin.dir}">
+				<include name="*.dll" />
+			</reference>
+		</csc>
+		
 		<csc srcdir="${drs.net.dir}/drs.tests"
 			targettype="exe"
-			destfile="${drs.net.bin.dir}/drs.tests.exe">
+			destfile="${drs.net.bin.dir}/drs.tests.exe"
+			mainclass="drs.tests.Program">
 			<reference dir="${drs.net.bin.dir}">
 				<include name="*.dll" />
 			</reference>
@@ -74,6 +101,7 @@
 		<copy todir="${drs.net.src.dir}">
 			<fileset dir="${conversion.workspace.dir}/drscsharp/src">
 				<include name="**/*.cs" />
+				<exclude name="**/test/**" />
 			</fileset>
 		</copy>
 
@@ -91,9 +119,9 @@
 	</target>
 	
 	<target name="update-drs.tests-project" depends="sharpen">
-		<copy todir="${drs.net.src.dir}/drs.tests/src">
-			<fileset dir="${conversion.workspace.dir}/drscsharp/src/test">
-				<include name="**/*.cs" />
+		<copy todir="${drs.net.dir}/drs.tests/src">
+			<fileset dir="${conversion.workspace.dir}/drscsharp/src">
+				<include name="**/test/**" />
 			</fileset>
 		</copy>
 
@@ -108,16 +136,21 @@
 		
 	</target>
 	
-	<target name="prepare-conversion-workspace" depends="init">
+	<target name="reset-workspace" depends="init">
 		<delete dir="${conversion.workspace.dir}" />
-		<mkdir dir="${conversion.workspace.dir}" />
-		
+		<mkdir dir="${conversion.workspace.dir}" />	
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="reset-workspace, create-jar-for-dependencies">
 		<copy todir="${conversion.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
 				
 				<include name="test/**/other/AllTests.java" />
 				<include name="test/**/other/CollectionUuidTest.java" />
+				<include name="test/**/other/GetByUUID.java" />
+				<include name="test/**/replication/db4ounit/**" />
+				
 
 				<!--
 				<include name="test/**/ReplicationTestCase.java" />
