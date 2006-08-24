@@ -20,6 +20,9 @@ public abstract class IoAdapter {
      * converts address and address offset to an absolute address 
      */
     protected final long regularAddress(int blockAddress, int blockAddressOffset){
+    	if (0 == _blockSize) {
+    		throw new IllegalStateException();
+    	}
         return (long)blockAddress * _blockSize + blockAddressOffset;
     }
     
@@ -49,6 +52,9 @@ public abstract class IoAdapter {
      * outside call to set the block size of this adapter 
 	 */
     public void blockSize(int blockSize) {
+    	if (blockSize < 1) {
+    		throw new IllegalArgumentException();
+    	}
 		_blockSize=blockSize;
 	}
 
