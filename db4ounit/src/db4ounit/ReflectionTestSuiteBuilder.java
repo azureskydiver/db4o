@@ -49,11 +49,9 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 			throw new IllegalArgumentException("" + clazz + " is not marked as " + TestCase.class);
 		}
 		Vector tests = new Vector();
-		Method[] methods = TestPlatform.getAllMethods(clazz);
+		Method[] methods = clazz.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (isMalformedTestMethod(method))
-				throw new RuntimeException("The method " + method.getName() +" of class " + clazz.getName() + " seems to be a malformed test method.");
 			if (!isTestMethod(method)) continue;			
 			tests.addElement(createTest(instance, method));
 		}		
@@ -66,14 +64,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 			&& !TestPlatform.isStatic(method)
 			&& !TestPlatform.hasParameters(method);
 	}
-
-	protected boolean isMalformedTestMethod(Method method) {
-		return method.getName().startsWith("test")			
-			&& ((!TestPlatform.isPublic(method))
-					|| TestPlatform.isStatic(method)
-					|| TestPlatform.hasParameters(method));
-	}
-
+	
 	private static Test[] toArray(Vector tests) {
 		Test[] array = new Test[tests.size()];
 		tests.copyInto(array);
