@@ -15,15 +15,6 @@ namespace Db4oUnit
 			return System.Console.Out;
 		}
 
-		public static MethodInfo[] GetAllMethods(System.Type type)
-		{
-			return type.GetMethods(
-					BindingFlags.Public
-					|BindingFlags.NonPublic
-					|BindingFlags.Instance
-					|BindingFlags.Static);
-		}	
-
 		public static bool IsStatic(MethodInfo method)
 		{
 			return method.IsStatic;

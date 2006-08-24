@@ -1,10 +1,7 @@
 package db4ounit;
 
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Vector;
+import java.io.*;
+import java.lang.reflect.*;
 
 public class TestPlatform {
 	public static void printStackTrace(Writer writer, Throwable t) {
@@ -17,12 +14,6 @@ public class TestPlatform {
 		return new PrintWriter(System.out);
 	}
 
-	public static Method[] getAllMethods(Class clazz) {
-		Vector methods = new Vector();
-		collectDeclaredMethods(methods, clazz);
-		return toArray(methods);
-	}	
-
 	public static boolean isStatic(Method method) {
 		return Modifier.isStatic(method.getModifiers());
 	}
@@ -33,22 +24,5 @@ public class TestPlatform {
 
 	public static boolean hasParameters(Method method) {
 		return method.getParameterTypes().length > 0;
-	}
-	
-	private static Method[] toArray(Vector methods) {
-		Method[] array = new Method[methods.size()];
-		methods.copyInto(array);
-		return array;
-	}
-
-	private static void collectDeclaredMethods(Vector methods, Class clazz) {
-		Method[] declaredMethods = clazz.getDeclaredMethods();
-		for (int i=0; i<declaredMethods.length; ++i) {
-			methods.addElement(declaredMethods[i]);
-		}
-		final Class superClass = clazz.getSuperclass();
-		if (superClass != Object.class) {
-			collectDeclaredMethods(methods, clazz.getSuperclass());
-		}
 	}
 }
