@@ -1876,4 +1876,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		System.out.println("Mapped field ref: "+oldID+" => "+newID+" ("+getName()+") ");
 		Debug.log("AFTER YAPCLASS MAP "+source._offset+"/"+target._offset);
 	}
+	
+	public static void defrag(YapStringIO sio, YapReader source, YapReader target, IDMapping mapping) {
+		MarshallerFamily mf = MarshallerFamily.current();
+		mf._class.defrag(sio, source, target, mapping);
+	}
 }

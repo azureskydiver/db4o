@@ -30,22 +30,26 @@ public class ClassMarshaller {
         for (int i = 0; i < fields.length; i++) {
             _family._field.write(trans, clazz, fields[i], writer);
         }
-        
     }
 
     public byte[] readName(Transaction trans, YapClass clazz, YapReader reader) {
+        byte[] name = readName(trans.stream().stringIO(), reader);
+        clazz._metaClassID = reader.readInt();
+        return name;
+    }
+    
+    private byte[] readName(YapStringIO sio, YapReader reader) {
         if (Deploy.debug) {
-            reader.readBegin(clazz.getIdentifier());
+            reader.readBegin(YapConst.YAPCLASS);
         }
         int len = reader.readInt();
-        len = len * trans.stream().stringIO().bytesPerChar();
+        len = len * sio.bytesPerChar();
         byte[] nameBytes = new byte[len];
         System.arraycopy(reader._buffer, reader._offset, nameBytes, 0, len);
         if(Deploy.csharp){
             nameBytes  = Platform4.updateClassName(nameBytes);
         }
         reader.incrementOffset(len);
-        clazz._metaClassID = reader.readInt();
         return nameBytes;
     }
 
@@ -98,4 +102,26 @@ public class ClassMarshaller {
         return len;
     }
 
+	public void defrag(YapStringIO sio, YapReader source, YapReader target, IDMapping mapping) {
+		readName(sio, source);
+		readName(sio, target);
+		
+		int metaClassOldID = source.readInt();
+		int metaClassNewId = 0;
+		target.writeInt(metaClassNewId);
+		Debug.log("AFTER METACLASS ID " + metaClassOldID + ">" + metaClassNewId + " " +source._offset+"/"+target._offset);
+		
+		int ancestorOldID = source.readInt();
+		if (ancestorOldID != 0) {
+			int ancestorNewId = mapping.mappedID(ancestorOldID);
+			target.writeInt(ancestorNewId);
+			Debug.log("AFTER ANCESTOR ID " + ancestorOldID + ">" + ancestorNewId + " " +source._offset+"/"+target._offset);
+		} else
+			target.incrementOffset(YapConst.INT_LENGTH);
+		
+		int indexOldID = source.readInt();
+		int indexNewID = 0;
+		target.writeInt(indexNewID);
+		Debug.log("AFTER INDEX ID " + indexOldID + ">" + indexNewID + " " +source._offset+"/"+target._offset);
+	}
 }
