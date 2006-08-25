@@ -1294,7 +1294,7 @@
 		</copy>
 	</target>	
 	
-	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin">		
+	<target name="sharpen-db4ounit-extensions" depends="compilecorejava,install-javatocsharp-plugin">		
 		
 		<property name="target.dir" value="${dir.sharpen}" />
 		
@@ -1304,10 +1304,10 @@
 		<mkdir dir="${target.dir}/lib" />
 		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
 		<jar destfile="${dependencies.jar}">			
-			<fileset dir="${dir.workspace}/db4oj/bin/">								
+			<fileset dir="${dir.dist.classes.java1.1}">								
 				<exclude name="db4ounit/**" />
 			</fileset>
-			<fileset dir="${dir.workspace}/db4ounit/bin/">
+			<fileset dir="${dir.dist.classes.test}">								
 			</fileset>
 		</jar>
 				

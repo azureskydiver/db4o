@@ -258,8 +258,10 @@ public abstract class YapJavaClass implements TypeHandler4 {
     public abstract int linkLength();
     
     public final void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+    	Debug.log("BEFORE JAVACLASS: "+source._offset+"/"+target._offset);
     	int linkLength = linkLength();
-		source._offset+=linkLength;
-    	target._offset+=linkLength;
+		source.incrementOffset(linkLength);
+    	target.incrementOffset(linkLength);
+    	Debug.log("AFTER JAVACLASS: "+source._offset+"/"+target._offset);
     }
 }
