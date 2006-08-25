@@ -256,4 +256,10 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract int linkLength();
+    
+    public final void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+    	int linkLength = linkLength();
+		source._offset+=linkLength;
+    	target._offset+=linkLength;
+    }
 }

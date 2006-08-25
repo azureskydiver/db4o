@@ -138,7 +138,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
                 writer.debugCheckBytes();
             }
         }else{
-            writer.writeInt(yc.getID());
+            writeObjectClassID(writer,yc.getID());
             yc.checkUpdateDepth(writer);
             marshall(yc, yo, obj, writer, true);
         }
@@ -196,4 +196,13 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     protected boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex) {
     	return false;
     }
+
+	public void defragFields(YapClass yapClass,ObjectHeader header, YapReader source, YapReader target, IDMapping mapping) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void writeObjectClassID(YapReader reader, int id) {
+		reader.writeInt(id);
+	}
 }

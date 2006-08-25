@@ -109,5 +109,10 @@ final class YapClassAny extends YapClass {
         return mf._untyped.writeNew(obj, restoreLinkeOffset, writer);
     }
 
-
+    // FIXME
+    public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+    	int linkLength=linkLength();
+    	source._offset+=linkLength;
+    	target._offset+=linkLength;
+    }
 }

@@ -119,7 +119,7 @@ public class YapMemoryFile extends YapFile {
         return true;
     }
 
-    void writeBytes(YapReader a_bytes, int address, int addressOffset) {
+    public void writeBytes(YapReader a_bytes, int address, int addressOffset) {
         int fullAddress = address + addressOffset;
         int length = a_bytes.getLength(); 
         System.arraycopy(a_bytes._buffer, 0, memoryFileBytes(fullAddress + length), fullAddress , length);

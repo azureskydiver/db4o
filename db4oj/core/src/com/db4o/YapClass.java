@@ -2,16 +2,15 @@
 
 package com.db4o;
 
-import com.db4o.config.ObjectTranslator;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
-import com.db4o.inside.diagnostic.DiagnosticProcessor;
+import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.marshall.*;
-import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.generic.GenericReflector;
+import com.db4o.query.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 /**
  * @exclude
@@ -986,7 +985,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         storeStaticFieldValues(systemTrans, false);
     }
 
-    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, boolean a_addToIDTree) {
+    public void defrag(YapReader source,YapReader target,IDMapping mapping) {
+    	ObjectHeader header=ObjectHeader.defrag(this,source, target, mapping);
+    	header._marshallerFamily._object.defragFields(this,header,source,target,mapping);
+    }	
+
+	Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, boolean a_addToIDTree) {
         
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1861,8 +1865,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
     }
 
-
-
-
-
+	public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+		int oldID=source.readInt();
+		int newID=mapping.mappedID(oldID);
+		target.writeInt(newID);
+		int restLength = (linkLength()-YapConst.INT_LENGTH);
+		source._offset+=restLength;
+		target._offset+=restLength;
+	}
 }
