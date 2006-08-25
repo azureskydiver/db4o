@@ -8,9 +8,9 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class ReaddCascadedDelete extends Db4oTestCase {
+public class ReAddCascadedDeleteTestCase extends Db4oTestCase {
     
-    public static class Item{
+    public static class Item {
         
         public String _name;
         
@@ -52,7 +52,9 @@ public class ReaddCascadedDelete extends Db4oTestCase {
     
     private Item query(String name){
         ObjectSet objectSet = db().get(new Item(name));
-        Assert.areEqual(1, objectSet.size());
+        if (!objectSet.hasNext()) {
+        	return null;
+        }
         return (Item) objectSet.next();
     }
     
