@@ -60,15 +60,24 @@ public class YapRandomAccessFile extends YapFile {
         long pos = 0;
         int bufferlength = 8192;
         byte[] buffer = new byte[bufferlength];
-        do {
+        while(true){
             synchronized (i_lock) {
                 i_file.seek(pos);
                 int read = i_file.read(buffer);
+                if(read <= 0 ){
+                    break;
+                }
                 i_backupFile.seek(pos);
                 i_backupFile.write(buffer, read);
                 pos += read;
             }
-        } while (pos < i_file.getLength());
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                
+            }
+        }
+
         synchronized (i_lock) {
             i_backupFile.close();
             i_backupFile = null;

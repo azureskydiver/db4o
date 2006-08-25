@@ -128,9 +128,10 @@ public class BackupStressTest implements Runnable{
             stdout("Backup OK");
         }
         System.out.println("BackupStressTest " + _backups + " files OK.");
-        for (int i = 1; i < _backups; i++) {
+        for (int i = 1; i <= _backups; i++) {
             new File(backupFile(i)).delete();
         }
+        new File(FILE).delete();
     }
 
 
