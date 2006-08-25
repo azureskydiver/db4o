@@ -48,6 +48,8 @@ public class ObjectHeader {
     	ObjectHeader header=new ObjectHeader(null,yapClass,source);
     	int newID = mapping.mappedID(yapClass.getID());
 		header._marshallerFamily._object.writeObjectClassID(target,newID);
+		target.incrementOffset(1);
+		// FIXME advance attributes
     	return header;
     }
     
