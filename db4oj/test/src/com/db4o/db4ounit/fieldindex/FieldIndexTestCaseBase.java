@@ -11,7 +11,7 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	}
 
 	protected void configure() {
-		index(FieldIndexItem.class, "bar");
+		index(FieldIndexItem.class, "foo");
 	}
 
 	protected void index(final Class clazz, final String fieldName) {
@@ -23,9 +23,9 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	
 	public abstract void store();
 	
-	protected void storeItems(final int[] bars) {
-		for (int i = 0; i < bars.length; i++) {
-			store(new FieldIndexItem(bars[i]));
+	protected void storeItems(final int[] foos) {
+		for (int i = 0; i < foos.length; i++) {
+			store(new FieldIndexItem(foos[i]));
 	    }
 	}
 
@@ -35,7 +35,7 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 
 	protected Query createQuery(final int id) {
 		Query q = createItemQuery();
-		q.descend("bar").constrain(new Integer(id));
+		q.descend("foo").constrain(new Integer(id));
 		return q;
 	}
 

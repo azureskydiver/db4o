@@ -3,14 +3,18 @@
 package com.db4o.db4ounit.fieldindex;
 
 
-public class FieldIndexItem {
+public class FieldIndexItem implements HasFoo {
     
-    public int bar;
+    public int foo;
     
     public FieldIndexItem() {
     }
     
-    public FieldIndexItem(int bar_) {
-        bar = bar_;
+    public FieldIndexItem(int foo_) {
+        foo = foo_;
+    }
+    
+    public int getFoo() {
+    	return foo;
     }
 }

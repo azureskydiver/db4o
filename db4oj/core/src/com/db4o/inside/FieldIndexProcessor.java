@@ -12,7 +12,7 @@ public class FieldIndexProcessor {
 	}
 	
 	public FieldIndexProcessorResult run() {
-		IndexedLeaf bestIndex = selectBestIndex();
+		IndexedNode bestIndex = selectBestIndex();
 		if (null == bestIndex) {
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
@@ -22,15 +22,15 @@ public class FieldIndexProcessor {
 		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
 	}
 	
-	public IndexedLeaf selectBestIndex() {		
+	public IndexedNode selectBestIndex() {		
 		final Iterator4 i = selectIndexes();
 		if (!i.hasNext()) {
 			return null;
 		}
 		
-		IndexedLeaf best = (IndexedLeaf)i.next();
+		IndexedNode best = (IndexedNode)i.next();
 		while (i.hasNext()) {
-			IndexedLeaf leaf = (IndexedLeaf)i.next();
+			IndexedNode leaf = (IndexedNode)i.next();
 			if (leaf.resultSize() < best.resultSize()) {
 				best = leaf;
 			}
@@ -53,7 +53,7 @@ public class FieldIndexProcessor {
 			QCon qcon = (QCon)qcons.next();
 			if (isLeaf(qcon)) {
 				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {
-					leaves.add(new IndexedLeaf(transaction(), (QConObject) qcon));
+					leaves.add(new IndexedNode(transaction(), (QConObject) qcon));
 				}
 			} else {
 				collectIndexedLeaves(leaves, qcon.iterateChildren());
@@ -64,8 +64,5 @@ public class FieldIndexProcessor {
 	private boolean isLeaf(QCon qcon) {
 		return !qcon.hasChildren();
 	}
-    
-    
-    
     
 }

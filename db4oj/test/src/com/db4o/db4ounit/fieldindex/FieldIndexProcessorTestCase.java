@@ -33,34 +33,60 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
 	
 	public void testIndexSelection() {		
-		Query query = createQuery(ComplexFieldIndexItem.class);		
+		Query query = createComplexItemQuery();		
 		query.descend("bar").constrain(new Integer(2));
 		query.descend("foo").constrain(new Integer(3));
 		
-		assertFooBarIndexOrder(query);
+		assertBestIndex("foo", query);
 		
-		query = createQuery(ComplexFieldIndexItem.class);
+		query = createComplexItemQuery();
 		query.descend("foo").constrain(new Integer(3));
 		query.descend("bar").constrain(new Integer(2));
 		
-		assertFooBarIndexOrder(query);
+		assertBestIndex("foo", query);
 	}
 
-	private void assertFooBarIndexOrder(final Query query) {
+	private Query createComplexItemQuery() {
+		return createQuery(ComplexFieldIndexItem.class);
+	}
+
+	private void assertBestIndex(String expectedFieldIndex, final Query query) {
+		IndexedNode node = selectBestIndex(query);
+		assertComplexItemIndex(expectedFieldIndex, node);
+	}
+
+	private void assertComplexItemIndex(String expectedFieldIndex, IndexedNode leaf) {
+		Assert.areSame(complexItemIndex(expectedFieldIndex), leaf.getIndex());
+	}
+
+	private IndexedNode selectBestIndex(final Query query) {
 		final FieldIndexProcessor processor = createProcessor(query);		
-		IndexedLeaf leaf = processor.selectBestIndex();
-		Assert.areSame(complexItemIndex("foo"), leaf.getIndex());
+		return processor.selectBestIndex();
 	}
 	
-//	public void testIndexDescending() {
-//		final Query query = createQuery(ComplexFieldIndexItem.class);
-//		query.descend("child").descend("foo").constrain(new Integer(4));	
+	public void testIndexDescending() {
+		final Query query = createComplexItemQuery();
+		query.descend("child").descend("foo").constrain(new Integer(3));
+		query.descend("bar").constrain(new Integer(2));
+		
+		final IndexedNode index = selectBestIndex(query);
+		assertComplexItemIndex("foo", index);
+		
+//		Assert.isFalse(index.isResolved());
 //		
-//	}
+//		IndexedNode result = index.resolve();
+//		assertComplexItemIndex("child", result);
+//		
+//		Assert.isTrue(result.isResolved());
+//		
+//		assertTreeInt(
+//				mapToObjectIds(createComplexItemQuery(), new int[] { 4 }),
+//				result.toTreeInt());
+	}
 
 	public void testSingleIndexEquals() {
 		final int expectedBar = 3;
-		assertExpectedBars(new int[] { expectedBar }, createQuery(expectedBar));
+		assertExpectedFoos(new int[] { expectedBar }, createQuery(expectedBar));
 	}
 	
 	public void testMultiTransactionSmallerWithCommit() {
@@ -122,21 +148,21 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 
 	private void assertGreater(int[] expectedBars, int greaterThan) {
 		final Query query = createItemQuery();
-		query.descend("bar").constrain(new Integer(greaterThan)).greater();		
-		assertExpectedBars(expectedBars, query);
+		query.descend("foo").constrain(new Integer(greaterThan)).greater();		
+		assertExpectedFoos(expectedBars, query);
 	}
 	
 	public void testSingleIndexGreaterOrEqual() {
 		final Query query = createItemQuery();
-		query.descend("bar").constrain(new Integer(7)).greater().equal();
+		query.descend("foo").constrain(new Integer(7)).greater().equal();
 		
-		assertExpectedBars(new int[] { 7, 9 }, query);
+		assertExpectedFoos(new int[] { 7, 9 }, query);
 	}
 
-	private void assertExpectedBars(final int[] expectedBars, final Query query) {
+	private void assertExpectedFoos(final int[] expectedFoos, final Query query) {
 		
-		final int[] expectedIds = mapToObjectIds(transactionFromQuery(query), expectedBars);
-		
+		final Transaction trans = transactionFromQuery(query);
+		final int[] expectedIds = mapToObjectIds(createItemQuery(trans), expectedFoos);
 		assertExpectedIDs(expectedIds, query);
 	}
 	
@@ -148,9 +174,13 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 			return;
 		}
 		Assert.isNotNull(result.found);
-		
-		final ExpectingVisitor visitor = createExpectingVisitor(expectedIds); 
-		result.found.traverse(new Visitor4() {
+				 
+		assertTreeInt(expectedIds, result.found);
+	}
+
+	private void assertTreeInt(final int[] expectedValues, final TreeInt treeInt) {
+		final ExpectingVisitor visitor = createExpectingVisitor(expectedValues);
+		treeInt.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				visitor.visit(new Integer(((TreeInt)obj)._key));
 			}
@@ -168,15 +198,15 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		return ((QQuery)query).getTransaction();
 	}
 
-	private int[] mapToObjectIds(Transaction trans, int[] bars) {
-		int[] lookingFor = clone(bars);
+	private int[] mapToObjectIds(Query itemQuery, int[] foos) {
+		int[] lookingFor = clone(foos);
 		
-		int[] objectIds = new int[bars.length];
-		final ObjectSet set = createItemQuery(trans).execute();
+		int[] objectIds = new int[foos.length];
+		final ObjectSet set = itemQuery.execute();
 		while (set.hasNext()) {
-			FieldIndexItem item = (FieldIndexItem)set.next();
+			HasFoo item = (HasFoo)set.next();
 			for (int i = 0; i < lookingFor.length; i++) {
-				if(lookingFor[i] == item.bar){
+				if(lookingFor[i] == item.getFoo()){
 					lookingFor[i] = -1;
 					objectIds[i] = (int) db().getID(item);
 					break;
@@ -217,7 +247,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
     
     private BTree btree(){
-        return fieldIndexBTree(FieldIndexItem.class, "bar");
+        return fieldIndexBTree(FieldIndexItem.class, "foo");
     }
 
 	private BTree fieldIndexBTree(Class clazz, String fieldName) {
@@ -257,24 +287,24 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		return array;
 	}
 	
-	private void removeFromTransaction(Transaction trans, final int bar) {
+	private void removeFromTransaction(Transaction trans, final int foo) {
 		final ObjectSet found = createItemQuery(trans).execute();
 		while (found.hasNext()) {
 			FieldIndexItem item = (FieldIndexItem)found.next();
-			if (item.bar == bar) {
+			if (item.foo == foo) {
 				stream().delete(trans, item);
 			}
 		}
 	}
 	
-	private void assertSmaller(final int[] expectedBars, final int smallerThan) {
-		assertSmaller(trans(), expectedBars, smallerThan);
+	private void assertSmaller(final int[] expectedFoos, final int smallerThan) {
+		assertSmaller(trans(), expectedFoos, smallerThan);
 	}
 
-	private void assertSmaller(final Transaction transaction, final int[] expectedBars, final int smallerThan) {
+	private void assertSmaller(final Transaction transaction, final int[] expectedFoos, final int smallerThan) {
 		final Query query = createItemQuery(transaction);
-		query.descend("bar").constrain(new Integer(smallerThan)).smaller();
-		assertExpectedBars(expectedBars, query);
+		query.descend("foo").constrain(new Integer(smallerThan)).smaller();
+		assertExpectedFoos(expectedFoos, query);
 	}
 	
 	private Transaction newTransaction() {
