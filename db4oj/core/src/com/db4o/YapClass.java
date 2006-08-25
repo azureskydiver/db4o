@@ -1391,7 +1391,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                 new Exception().printStackTrace();
             }
             return i_fields.length;
-        }
+        }		
         return count;
     }
 
@@ -1866,11 +1866,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
 	public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+		Debug.log("BEFORE YAPCLASS MAP "+source._offset+"/"+target._offset);
 		int oldID=source.readInt();
 		int newID=mapping.mappedID(oldID);
 		target.writeInt(newID);
 		int restLength = (linkLength()-YapConst.INT_LENGTH);
-		source._offset+=restLength;
-		target._offset+=restLength;
+		source.incrementOffset(restLength);
+		target.incrementOffset(restLength);
+		System.out.println("Mapped field ref: "+oldID+" => "+newID+" ("+getName()+") ");
+		Debug.log("AFTER YAPCLASS MAP "+source._offset+"/"+target._offset);
 	}
 }

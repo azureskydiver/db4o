@@ -111,8 +111,10 @@ final class YapClassAny extends YapClass {
 
     // FIXME
     public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+    	Debug.log("BEFORE ANY: "+source._offset+"/"+target._offset);
     	int linkLength=linkLength();
-    	source._offset+=linkLength;
-    	target._offset+=linkLength;
+    	source.incrementOffset(linkLength);
+    	target.incrementOffset(linkLength);
+    	Debug.log("AFTER ANY: "+source._offset+"/"+target._offset);
     }
 }

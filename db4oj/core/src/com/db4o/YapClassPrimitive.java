@@ -228,9 +228,13 @@ public class YapClassPrimitive extends YapClass{
     }
 
     public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+    	Debug.log("BEFORE PRIMITIVE "+source._offset+","+target._offset);
         if(mf._primitive.useNormalClassRead()){
             super.defrag(mf,source,target,mapping);
         }
-        i_handler.defrag(mf, source, target, mapping);
+        else {
+            i_handler.defrag(mf, source, target, mapping);
+        }
+    	Debug.log("AFTER PRIMITIVE "+source._offset+","+target._offset);
     }
 }

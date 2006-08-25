@@ -47,12 +47,14 @@ public class ObjectHeader {
     public static ObjectHeader defrag(YapClass yapClass,YapReader source,YapReader target,IDMapping mapping) {
     	ObjectHeader header=new ObjectHeader(null,yapClass,source);
     	int newID = mapping.mappedID(yapClass.getID());
-		header._marshallerFamily._object.writeObjectClassID(target,newID);
-		target.incrementOffset(1);
-		// FIXME advance attributes
+		header._marshallerFamily._object.writeObjectClassID(target,newID);		
+		header._marshallerFamily._object.skipMarshallerInfo(target);
+		// TODO defrag for attributes
+		readAttributes(header._marshallerFamily, target);
+		System.out.println("MAP CLASS REF "+yapClass.getID()+" -> "+newID+", "+source._offset+"/"+target._offset);
     	return header;
-    }
-    
+    }		
+    		
     public ObjectMarshaller objectMarshaller() {
         return _marshallerFamily._object;
     }
@@ -67,10 +69,10 @@ public class ObjectHeader {
 		return marshallerFamily;
 	}
     
-    private ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,YapReader reader) {
+    private static ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,YapReader reader) {
     	return marshallerFamily._object.readHeaderAttributes(reader);
     }
-    
+
     private boolean marshallerAware(int id) {
     	return id<0;
     }

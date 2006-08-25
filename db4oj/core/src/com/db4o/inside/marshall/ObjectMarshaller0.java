@@ -198,11 +198,12 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
 
 	public void defragFields(YapClass yapClass,ObjectHeader header, YapReader source, YapReader target, IDMapping mapping) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void writeObjectClassID(YapReader reader, int id) {
 		reader.writeInt(id);
+	}
+
+	public void skipMarshallerInfo(YapReader reader) {
 	}
 }
