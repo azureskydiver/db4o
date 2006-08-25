@@ -17,7 +17,7 @@ public class OldHeaderTest implements TestCase {
     
     public void test() {
         
-        new File4(ORIGINAL_FILE).copy(DB_FILE);
+    	File4.copy(ORIGINAL_FILE, DB_FILE);
         
         ObjectContainer oc = Db4o.openFile(DB_FILE);
         

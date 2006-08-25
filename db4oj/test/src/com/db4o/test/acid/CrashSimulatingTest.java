@@ -139,7 +139,7 @@ public class CrashSimulatingTest {
             oc.delete(objectSet.next());
         }
         oc.close();
-        new File4(FILE).copy(FILE + "0");
+        File4.copy(FILE, FILE + "0");
     }
     
     

@@ -35,7 +35,7 @@ public class CrashSimulatingBatch {
         
         String rightFileName = file + "R" ;
         
-        new File4(lastFileName).copy(rightFileName);
+        File4.copy(lastFileName, rightFileName);
                 
         Iterator4 syncIter = writes.strictIterator();
         while(syncIter.hasNext()){
@@ -66,14 +66,14 @@ public class CrashSimulatingBatch {
                 count ++;
                 CrashSimulatingWrite csw = (CrashSimulatingWrite)singleBackwardIter.next();
                 String currentFileName = file + "W" + count;
-                new File4(lastFileName).copy(currentFileName);
+                File4.copy(lastFileName, currentFileName);
                 
                 RandomAccessFile raf = new RandomAccessFile(currentFileName, "rw");
                 csw.write(raf);
                 raf.close();
                 lastFileName = currentFileName;
             }
-            new File4(rightFileName).copy(rightFileName+rcount);
+            File4.copy(rightFileName, rightFileName+rcount);
             lastFileName = rightFileName;
             
             

@@ -124,7 +124,7 @@ public class ClassAliasesTestCase {
 		writeFile(srcFile, code);
 		String exePath = buildTempPath("MyAssembly.exe");
 
-		new File4(db4odllPath()).copy(buildTempPath("db4o.dll"));
+		File4.copy(db4odllPath(), buildTempPath("db4o.dll"));
 		String cmdLine = csharpCompiler() + " /target:exe /r:" + db4odllPath() + " /out:" + exePath + " " + srcFile;
 		exec(cmdLine);
 		return exePath;
