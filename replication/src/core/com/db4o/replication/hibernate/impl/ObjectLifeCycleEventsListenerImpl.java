@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate.impl;
 
+import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ComponentIdentity;
@@ -33,20 +34,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implements ObjectLifeCycleEventsListener {
+public class ObjectLifeCycleEventsListenerImpl 
+	extends EmptyInterceptor 
+	implements ObjectLifeCycleEventsListener {
+	
 	private final static String DELETE_SQL = "delete from " + ObjectReference.Table.NAME
 			+ " where " +Uuid.Table.LONG_PART +"= ? "
 			+ " AND " +Uuid.Table.PROVIDER+ " = ?";
 
-	private final Set<ObjectReference> _dirtyNewRefs = new HashSet();
+	private final Set<ObjectReference> _dirtyNewRefs = new HashSet<ObjectReference>();
 
-	private final Set<HibernateObjectId> _dirtyUpdatedRefs = new HashSet();
+	private final Set<HibernateObjectId> _dirtyUpdatedRefs = new HashSet<HibernateObjectId>();
 
-	private final Set<ObjectReference> _deletedRefs = new HashSet();
+	private final Set<ObjectReference> _deletedRefs = new HashSet<ObjectReference>();
 
 	private Set<Configuration> _configs = new HashSet<Configuration>();
 
-	private Map<Thread, Session> _threadSessionMap = new HashMap();
+	private Map<Thread, Session> _threadSessionMap = new HashMap<Thread, Session>();
 
 	private boolean _alive = true;
 
@@ -116,12 +120,21 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		_deletedRefs.clear();
 	}
 
+	private ComponentIdentity findCollection(final Session s, ObjectIdField c) {
+		final Uuid uuidById = Util.getUuidById(s, c._className, c._hibernateId);
+		if (uuidById == null)
+			return null;
+		
+		Db4oUUID refObjUuid = Util.translate(uuidById);
+		return Util.findCollection(refObjUuid, c._fieldName, s);
+	}
+
 	public void onPostInsert(PostInsertEvent event) {
 		ensureAlive();
 
 		Object entity = event.getEntity();
 
-		if (Util.isInstanceOf(entity)) return;
+		if (Util.isInstanceOfInternalObject(entity)) return;
 		long id = Util.castAsLong(event.getId());
 
 		ObjectReference ref = new ObjectReference();
@@ -136,7 +149,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		ensureAlive();
 		Object object = event.getEntity();
 
-		if (Util.isInstanceOf(object)) return;
+		if (Util.isInstanceOfInternalObject(object)) return;
 
 		ObjectUpdated(object, Util.castAsLong(event.getId()));
 	}
@@ -163,8 +176,8 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		PersistentCollection persistentCollection = ((PersistentCollection) collection);
 		Object owner = persistentCollection.getOwner();
 
-		if (Util.isInstanceOf(owner)) return;
-
+		if (Util.isInstanceOfInternalObject(owner)) return;
+		
 		ObjectUpdated(owner, getId(owner));
 	}
 

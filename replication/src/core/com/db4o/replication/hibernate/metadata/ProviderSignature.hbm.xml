@@ -27,19 +27,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="drs_provider_signatures" name="com.db4o.replication.hibernate.metadata.ProviderSignature">
+	<class table="drs_provider_signatures" name="com.db4o.replication.hibernate.metadata.ProviderSignature" discriminator-value="f">
 		<id name="id" column="provider_id" type="long">
 			<generator class="native"/>
 		</id>
 
-		<discriminator column="class_name"/>
+		<discriminator column="is_my_sig" type="true_false"/>
 
 		<!--Do not use <natural-id> for bytes, MySQL does not support it. -->
 		<property name="bytes" column="bytes" not-null="true"/>
 
 		<property name="creationTime" column="creation_time"/>
 
-		<subclass name="com.db4o.replication.hibernate.metadata.MySignature"/>
-		<subclass name="com.db4o.replication.hibernate.metadata.PeerSignature"/>
+		<subclass name="com.db4o.replication.hibernate.metadata.MySignature" discriminator-value="t"/>
+		<subclass name="com.db4o.replication.hibernate.metadata.PeerSignature" discriminator-value="f"/>
 	</class>
 </hibernate-mapping>

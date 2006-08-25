@@ -8,6 +8,8 @@ import com.db4o.replication.hibernate.metadata.ComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ProviderSignature;
 import com.db4o.replication.hibernate.metadata.Record;
 import com.db4o.replication.hibernate.metadata.Uuid;
+import com.db4o.replication.hibernate.metadata.ComponentIdentity.Fields;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -32,13 +34,13 @@ public final class Util {
 			ComponentField.class, ComponentIdentity.class,
 			ObjectReference.class};
 
-	public static boolean isAssignableFrom(Class claxx) {
+	public static boolean isAssignableFromInternalObject(Class claxx) {
 		for (Class aClass : _metadataClasses)
 			if (aClass.isAssignableFrom(claxx)) return true;
 		return false;
 	}
 
-	public static Boolean isInstanceOf(Object entity) {
+	public static Boolean isInstanceOfInternalObject(Object entity) {
 		for (Class aClass : _metadataClasses)
 			if (aClass.isInstance(entity)) return true;
 		return false;
@@ -223,6 +225,15 @@ public final class Util {
 		else
 			throw new RuntimeException("Duplicated uuid");
 	}
+	
+	static Uuid getUuidById(Session session, String className, long id) {
+		final ObjectReference ref = getObjectReferenceById(session, className, id);
+		
+		if (ref == null)
+			return null;
+		else 
+			return ref.getUuid();
+	}
 
 	public static Uuid getUuid(Session session, Object obj) {
 		long id = Util.castAsLong(session.getIdentifier(obj));
@@ -293,5 +304,30 @@ public final class Util {
 
 	private static Object[] newArray(Object[] array, int length) {
 		return (Object[]) Array.newInstance(array.getClass().getComponentType(), length);
+	}
+
+	public static ComponentIdentity findCollection(Db4oUUID refObjUuid, String fieldName, Session session) {
+		Criteria criteria = session.createCriteria(ComponentIdentity.class);
+		criteria.add(Restrictions.eq(
+			ComponentIdentity.Fields.REF_OBJ_UUID_LONG, 
+				refObjUuid.getLongPart()));
+	
+		criteria.createCriteria(ComponentIdentity.Fields.REF_OBJ_FIELD)
+			.add(Restrictions.eq(
+				ComponentField.Fields.REF_OBJ_FIELD_NAME, fieldName));
+	
+		criteria.createCriteria(ComponentIdentity.Fields.PROVIDER)
+			.add(Restrictions.eq(ProviderSignature.Fields.BYTES, 
+					refObjUuid.getSignaturePart()));
+	
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+	
+		if (count == 0)
+			return null;
+		else if (count > 1)
+			throw new RuntimeException("Only one Record should exist for this peer");
+		else
+			return (ComponentIdentity) exisitings.get(0);
 	}
 }

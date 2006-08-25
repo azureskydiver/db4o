@@ -43,10 +43,10 @@ public class AllTestsReplication extends AllTests {
 
 		//db4o();
 		//transients();
-		//hsql();
+		hsql();
 		//db4otransient();
 		//hsqlDb4o();
-		db4oHsql();
+		//db4oHsql();
 
 		//oracle();
 		//mysql();
