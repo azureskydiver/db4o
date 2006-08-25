@@ -50,7 +50,7 @@ public class IndexedLeaf {
         return range;
     }
 
-    private BTree getIndex() {
+    public BTree getIndex() {
         return getYapField().getIndex();
     }
 

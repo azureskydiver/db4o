@@ -21,7 +21,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     }
     
 	public void store() {
-		store(BARS);
+		storeItems(BARS);
 	}
     
     public void testAllThere() throws Exception{

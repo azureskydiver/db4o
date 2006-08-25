@@ -11,19 +11,26 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	}
 
 	protected void configure() {
-	    Db4o.configure()
-	    .objectClass(FieldIndexItem.class)
-	    .objectField("bar")
+		index(FieldIndexItem.class, "bar");
+	}
+
+	protected void index(final Class clazz, final String fieldName) {
+		Db4o.configure()
+	    .objectClass(clazz)
+	    .objectField(fieldName)
 	    .indexed(true);
 	}
 	
 	public abstract void store();
 	
-	protected void store(final int[] bars) {
+	protected void storeItems(final int[] bars) {
 		for (int i = 0; i < bars.length; i++) {
-	        db().set(new FieldIndexItem(bars[i]));
+			store(new FieldIndexItem(bars[i]));
 	    }
-	    db().commit();
+	}
+
+	protected void store(Object item) {
+		db().set(item);
 	}
 
 	protected Query createQuery(final int id) {
@@ -33,8 +40,12 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	}
 
 	protected Query createItemQuery() {
+		return createQuery(FieldIndexItem.class);
+	}
+
+	protected Query createQuery(Class clazz) {
 		Query q = db().query();
-		q.constrain(FieldIndexItem.class);
+		q.constrain(clazz);
 		return q;
 	}
 

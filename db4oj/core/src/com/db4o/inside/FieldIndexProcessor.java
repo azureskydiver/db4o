@@ -12,26 +12,39 @@ public class FieldIndexProcessor {
 	}
 	
 	public FieldIndexProcessorResult run() {
-		final Iterator4 i = findIndexedLeaves();
-		if (!i.hasNext()) {
+		IndexedLeaf bestIndex = selectBestIndex();
+		if (null == bestIndex) {
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
-		while (i.hasNext()) {
-			IndexedLeaf leaf = (IndexedLeaf)i.next();
-			if (leaf.resultSize() > 0) {
-				return new FieldIndexProcessorResult(leaf.toTreeInt());
-			}
+		if (bestIndex.resultSize() > 0) {
+			return new FieldIndexProcessorResult(bestIndex.toTreeInt());
 		}
 		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
+	}
+	
+	public IndexedLeaf selectBestIndex() {		
+		final Iterator4 i = selectIndexes();
+		if (!i.hasNext()) {
+			return null;
+		}
+		
+		IndexedLeaf best = (IndexedLeaf)i.next();
+		while (i.hasNext()) {
+			IndexedLeaf leaf = (IndexedLeaf)i.next();
+			if (leaf.resultSize() < best.resultSize()) {
+				best = leaf;
+			}
+		}
+		return best;
 	}
 
 	private Transaction transaction() {
 		return _candidates.i_trans;
 	}
 
-	private Iterator4 findIndexedLeaves() {
+	private Iterator4 selectIndexes() {
 		final Collection4 leaves = new Collection4();
-		collectIndexedLeaves(leaves, _candidates.iterateConstraints());
+		collectIndexedLeaves(leaves, _candidates.iterateConstraints());		
 		return leaves.iterator();
 	}
 
