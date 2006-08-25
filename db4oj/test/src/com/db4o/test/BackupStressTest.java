@@ -12,6 +12,8 @@ public class BackupStressTest implements Runnable{
     
     private static boolean verbose = false;
     
+    private static boolean runOnOldJDK = false;
+    
     private static final String FILE = "backupstress.yap";
     
     private static final int ITERATIONS = 5;
@@ -34,6 +36,7 @@ public class BackupStressTest implements Runnable{
     public static void main(String[] args) throws Exception {
         
         verbose = true;
+        runOnOldJDK = true;
         
         BackupStressTest stressTest = new BackupStressTest();
         stressTest.configure();
@@ -45,12 +48,18 @@ public class BackupStressTest implements Runnable{
     }
 
     public void test() throws Exception {
+        if(Test.isClientServer()){
+            // running once in SOLO is enough
+            return;
+        }
         
         openDatabase();
-        if(usesLockFileThread()){
-            System.out.println("BackupStressTest is too slow for regression testing on Java JDKs < 1.4");
-            closeDatabase();
-            return;
+        if(! runOnOldJDK){
+            if(usesLockFileThread()){
+                System.out.println("BackupStressTest is too slow for regression testing on Java JDKs < 1.4");
+                closeDatabase();
+                return;
+            }
         }
         
         BackupStressIteration iteration = new BackupStressIteration();
