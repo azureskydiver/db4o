@@ -7,7 +7,7 @@
 	<property name="db4ounit.src.dir" location="${db4ounit.dir}/src" />
 	<property name="db4ounit.bin.dir" location="${db4ounit.dir}/bin" />
 	<property name="db4ounit.jar.dir" location="${dir.j}/lib" />
-	<property name="db4ounit.net.dir" location="${db4ounit.dir}/${projectName}" />
+	<property name="db4ounit.net.dir" location="${dir.n}/${projectName}" />
 	<property name="db4ounit.net.bin.dir" location="${db4ounit.net.dir}/bin" />	
 	<property name="db4ounit.net.src.dir" location="${db4ounit.net.dir}/src" />
 	<property name="db4ounit.net.in.dir" location="${db4ounit.net.dir}/in" />
