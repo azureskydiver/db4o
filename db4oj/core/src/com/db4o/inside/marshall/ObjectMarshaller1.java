@@ -92,7 +92,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     
     private void marshall(final YapObject yo, final Object obj,ObjectHeaderAttributes1 attributes, final YapWriter writer, final boolean isNew) {
 		YapClass yc = yo.getYapClass();
-		writer.writeInt(-yc.getID());
+		writeObjectClassID(writer,yc.getID());
 		attributes.write(writer);
 		yc.checkUpdateDepth(writer);
 		final Transaction trans = writer.getTransaction();
@@ -194,4 +194,20 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     protected boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex) {
     	return ((ObjectHeaderAttributes1)attributes).isNull(fieldIndex);
     }
+
+	public void defragFields(YapClass yc,ObjectHeader header, final YapReader source, final YapReader target, final IDMapping mapping) {
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+			public void processField(YapField field, boolean isNull, YapClass containingClass) {
+				if (isNull) {
+					return;
+				} 
+				field.getHandler().defrag(_family,source,target,mapping);
+			}
+		};
+		traverseFields(yc, source, header._headerAttributes, command);
+	}
+
+	public void writeObjectClassID(YapReader reader, int id) {
+		reader.writeInt(-id);
+	}
 }

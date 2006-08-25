@@ -349,7 +349,7 @@ public class YapRandomAccessFile extends YapFile {
         return true;
     }
 
-    void writeBytes(YapReader a_bytes, int address, int addressOffset) {
+    public void writeBytes(YapReader a_bytes, int address, int addressOffset) {
         if (configImpl().isReadOnly()) {
             return;
         }
