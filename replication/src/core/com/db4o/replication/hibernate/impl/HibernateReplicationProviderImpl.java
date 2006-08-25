@@ -250,7 +250,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			PersistentClass persistentClass = (PersistentClass) classMappings.next();
 			Class claxx = persistentClass.getMappedClass();
 
-			if (Util.isAssignableFrom(claxx))
+			if (Util.isAssignableFromInternalObject(claxx))
 				continue;
 
 			mappedClasses.add(persistentClass);
@@ -510,7 +510,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		rci.setReferencingObjectUuidLongPart(referencingObjRef.uuid().getLongPart());
 		rci.setProvider(getProviderSignature(signaturePart));
 		rci.setUuidLongPart(uuidLong);
-
+		rci.setVersion(version);
+		
 		Db4oUUID uuid = new Db4oUUID(uuidLong, signaturePart);
 
 		getSession().save(rci);
@@ -607,39 +608,22 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
-	private ReplicationReference produceCollectionReferenceByReferencingObjUuid(ReplicationReference refObjRef, String fieldName) {
-		Criteria criteria = getSession().createCriteria(ComponentIdentity.class);
-		criteria.add(Restrictions.eq(ComponentIdentity.Fields.REF_OBJ_UUID_LONG, refObjRef.uuid().getLongPart()));
-		
-		criteria.createCriteria(ComponentIdentity.Fields.REF_OBJ_FIELD)
-			.add(Restrictions.eq(ComponentField.Fields.REF_OBJ_FIELD_NAME, fieldName));
-		
-		criteria.createCriteria(ComponentIdentity.Fields.PROVIDER)
-			.add(Restrictions.eq(ProviderSignature.Fields.BYTES, refObjRef.uuid().getSignaturePart()));
+	private ReplicationReference produceCollectionReferenceByReferencingObjUuid(
+			ReplicationReference refObjRef, String fieldName) {
 
-		final List exisitings = criteria.list();
-		int count = exisitings.size();
+		ComponentIdentity col = Util.findCollection(refObjRef.uuid(), fieldName, getSession());
 
-		ReplicationReference out;
-		if (count == 0) {
-			out = null;
-		} else if (count > 1) {
-			throw new RuntimeException("Only one Record should exist for this peer");
-		} else {
-			ComponentIdentity rci = (ComponentIdentity) exisitings.get(0);
+		if (col == null) return null;
 
-			final Object fieldValue = getFieldValue(refObjRef.object(), rci.getReferencingObjectField().getReferencingObjectFieldName());
+		final Object fieldValue = getFieldValue(refObjRef.object(), col.getReferencingObjectField().getReferencingObjectFieldName());
 
-			final ReplicationReference cachedReference = _objRefs.get(fieldValue);
-			if (cachedReference != null) return cachedReference;
+		final ReplicationReference cachedReference = _objRefs.get(fieldValue);
+		if (cachedReference != null) return cachedReference;
 
-			Db4oUUID fieldUuid = new Db4oUUID(rci.getUuidLongPart(), rci.getProvider().getBytes());
-			out = _objRefs.put(fieldValue, fieldUuid, refObjRef.version());
-		}
-
-		return out;
+		Db4oUUID fieldUuid = new Db4oUUID(col.getUuidLongPart(), col.getProvider().getBytes());
+		return _objRefs.put(fieldValue, fieldUuid, col.getVersion());
 	}
-
+	
 	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
 		Criteria criteria = getSession().createCriteria(ComponentIdentity.class);
 		
@@ -678,7 +662,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			ReplicationReference existing = _objRefs.get(field);
 			if (existing != null) return existing;
 
-			out = _objRefs.put(field, uuid, refObjRef.version());
+			out = _objRefs.put(field, uuid, rci.getVersion());
 		}
 
 		return out;

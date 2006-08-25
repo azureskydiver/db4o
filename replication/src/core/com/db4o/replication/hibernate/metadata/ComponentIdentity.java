@@ -33,6 +33,8 @@ public class ComponentIdentity {
 	 */
 	private long uuidLongPart;
 	
+	private long version;
+	
 	/**
 	 * The long part of the UUID of the owner of a Collection.
 	 */
@@ -100,6 +102,14 @@ public class ComponentIdentity {
 
 	public void setUuidLongPart(long uuidLongPart) {
 		this.uuidLongPart = uuidLongPart;
+	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
 	}
 
 	public int hashCode() {
