@@ -12,6 +12,7 @@ public class AllTests extends Db4oTestSuite {
 
 	public Class[] testCases() {
 		return new Class[] {
+			com.db4o.db4ounit.assorted.AllTests.class,
             com.db4o.db4ounit.btree.AllTests.class,
             com.db4o.db4ounit.events.AllTests.class,
             com.db4o.db4ounit.fieldindex.AllTests.class,
