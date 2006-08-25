@@ -1,7 +1,5 @@
 package com.db4o.replication.hibernate.impl;
 
-import com.db4o.replication.hibernate.metadata.ComponentIdentity;
-
 final class ObjectIdField extends HibernateObjectId{
 	public final String _fieldName;
 	

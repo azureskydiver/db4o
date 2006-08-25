@@ -45,6 +45,8 @@ public class ObjectLifeCycleEventsListenerImpl
 	private final Set<ObjectReference> _dirtyNewRefs = new HashSet<ObjectReference>();
 
 	private final Set<HibernateObjectId> _dirtyUpdatedRefs = new HashSet<HibernateObjectId>();
+	
+	private final Set<ObjectIdField> _updatedCollections = new HashSet<ObjectIdField>();
 
 	private final Set<ObjectReference> _deletedRefs = new HashSet<ObjectReference>();
 
@@ -106,8 +108,6 @@ public class ObjectLifeCycleEventsListenerImpl
 			getSession().save(ref);
 		}
 
-		_dirtyNewRefs.clear();
-
 		for (HibernateObjectId hid : _dirtyUpdatedRefs) {
 			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid._className, hid._hibernateId);
 			if (ref != null && !_dirtyNewRefs.contains(ref) && !_deletedRefs.contains(ref)) {
@@ -115,18 +115,32 @@ public class ObjectLifeCycleEventsListenerImpl
 				getSession().update(ref);
 			}
 		}
+		
+		for (ObjectIdField f : _updatedCollections) {
+			ObjectReference ref = Util.getObjectReferenceById(getSession(), f._className, f._hibernateId);
+			
+			if (ref != null && !_dirtyNewRefs.contains(ref) && !_deletedRefs.contains(ref)) {
+				Uuid ownerUuid = Util.getUuidById(getSession(), f._className, f._hibernateId);
+				final ComponentIdentity col = Util.findCollection(Util.translate(ownerUuid), f._fieldName, s);
+//				
+				//System.out.println("col = " + col); 
+				
+				//col is null when a col is inserted after a replication session
+				if (col == null) 
+					continue;
+				
+				col.setVersion(generator.generate());
+				s.update(col);
+			} else {
+				//Intended to do nothing here
+				//System.out.println("owner deleted");
+			}
+		}
 
+		_dirtyNewRefs.clear();
 		_dirtyUpdatedRefs.clear();
 		_deletedRefs.clear();
-	}
-
-	private ComponentIdentity findCollection(final Session s, ObjectIdField c) {
-		final Uuid uuidById = Util.getUuidById(s, c._className, c._hibernateId);
-		if (uuidById == null)
-			return null;
-		
-		Db4oUUID refObjUuid = Util.translate(uuidById);
-		return Util.findCollection(refObjUuid, c._fieldName, s);
+		_updatedCollections.clear();
 	}
 
 	public void onPostInsert(PostInsertEvent event) {
@@ -178,9 +192,17 @@ public class ObjectLifeCycleEventsListenerImpl
 
 		if (Util.isInstanceOfInternalObject(owner)) return;
 		
-		ObjectUpdated(owner, getId(owner));
+		final long ownerId = getId(owner);
+		ObjectUpdated(owner, ownerId);
+		
+		final String role = persistentCollection.getRole();
+		String fieldName = role.substring(role.lastIndexOf(".")+1);
+		
+		ObjectIdField tmp = new ObjectIdField(ownerId, owner.getClass().getName(), fieldName);
+		
+		_updatedCollections.add(tmp);
 	}
-
+	
 	private void deleteObjectRef(ObjectReference ref) {
 		Session s = getSession();
 
