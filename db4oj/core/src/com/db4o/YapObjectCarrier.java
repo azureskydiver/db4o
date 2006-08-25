@@ -71,7 +71,7 @@ public class YapObjectCarrier extends YapMemoryFile {
         }
     }
 	
-	final protected Transaction newTransaction(Transaction parentTransaction) {
+	final public Transaction newTransaction(Transaction parentTransaction) {
 		if (null != parentTransaction) {
 			return parentTransaction;
 		}
