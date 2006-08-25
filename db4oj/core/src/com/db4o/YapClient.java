@@ -197,7 +197,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return new QResultClient(a_ta);
 	}
 
-	final protected Transaction newTransaction(Transaction parentTransaction) {
+	final public Transaction newTransaction(Transaction parentTransaction) {
 		return new TransactionClient(this, parentTransaction);
 	}
 
