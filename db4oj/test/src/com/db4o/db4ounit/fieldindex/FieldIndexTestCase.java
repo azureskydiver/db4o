@@ -14,23 +14,23 @@ import db4ounit.Assert;
 
 public class FieldIndexTestCase extends FieldIndexTestCaseBase {
 	
-	private static final int[] BARS = new int[]{3,7,9,4};
+	private static final int[] FOOS = new int[]{3,7,9,4};
     
     public static void main(String[] arguments) {
         new FieldIndexTestCase().runSolo();
     }
     
 	public void store() {
-		storeItems(BARS);
+		storeItems(FOOS);
 	}
     
     public void testAllThere() throws Exception{
-        for (int i = 0; i < BARS.length; i++) {
-            Query q = createQuery(BARS[i]);
+        for (int i = 0; i < FOOS.length; i++) {
+            Query q = createQuery(FOOS[i]);
             ObjectSet objectSet = q.execute();
             Assert.areEqual(1, objectSet.size());
             FieldIndexItem fii = (FieldIndexItem) objectSet.next();
-            Assert.areEqual(BARS[i], fii.bar);
+            Assert.areEqual(FOOS[i], fii.foo);
         }
     }
 
@@ -39,11 +39,11 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         YapStream stream = (YapStream)db();
         ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
         YapClass yc = stream.getYapClass(claxx, false);
-        YapField yf = yc.getYapField("bar");
+        YapField yf = yc.getYapField("foo");
         BTree bTree = yf.getIndex();
         
         Assert.isNotNull(bTree);
-        expectKeysSearch(bTree, BARS);
+        expectKeysSearch(bTree, FOOS);
     }
     
     protected void expectKeysSearch(BTree btree, int[] values) {

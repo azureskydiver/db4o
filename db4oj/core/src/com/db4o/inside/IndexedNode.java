@@ -10,13 +10,13 @@ import com.db4o.inside.btree.*;
 /**
  * @exclude
  */
-public class IndexedLeaf {
+public class IndexedNode {
     
     private final Transaction _transaction;
     private final QConObject _constraint;
     private BTreeRange _range;
     
-    public IndexedLeaf(Transaction transaction, QConObject qcon) {
+    public IndexedNode(Transaction transaction, QConObject qcon) {
         _transaction = transaction;
         _constraint = qcon;
         _range = search();
