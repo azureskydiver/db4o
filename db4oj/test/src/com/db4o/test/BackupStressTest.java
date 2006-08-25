@@ -10,18 +10,17 @@ import com.db4o.query.*;
 
 public class BackupStressTest implements Runnable{
     
+    private static boolean verbose = false;
     
     private static final String FILE = "backupstress.yap";
     
-    private static final int ITERATIONS = 10;
+    private static final int ITERATIONS = 5;
     
-    private static final int OBJECTS = 100;
+    private static final int OBJECTS = 50;
     
     private static final int COMMITS = 10;
     
     private ObjectContainer _objectContainer;
-    
-    private volatile boolean _backupsStarted;
     
     private volatile boolean _inBackup;
     
@@ -33,14 +32,32 @@ public class BackupStressTest implements Runnable{
     
     
     public static void main(String[] args) throws Exception {
-        new BackupStressTest().test();
+        
+        verbose = true;
+        
+        BackupStressTest stressTest = new BackupStressTest();
+        stressTest.configure();
+        stressTest.test();
     }
     
+    public void configure(){
+        Db4o.configure().objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
+    }
 
     public void test() throws Exception {
+        
         openDatabase();
+        if(usesLockFileThread()){
+            System.out.println("BackupStressTest is too slow for regression testing on Java JDKs < 1.4");
+            closeDatabase();
+            return;
+        }
+        
         BackupStressIteration iteration = new BackupStressIteration();
-        for (int i = 0; i < ITERATIONS; i++) {
+        _objectContainer.set(iteration);
+        _objectContainer.commit();
+        new Thread(this).start();
+        for (int i = 1; i <= ITERATIONS; i++) {
             for (int obj = 0; obj < OBJECTS; obj++) {
                 _objectContainer.set(new BackupStressItem("i" + obj, i));
                 _commitCounter ++;
@@ -49,13 +66,9 @@ public class BackupStressTest implements Runnable{
                     _commitCounter = 0;
                 }
             }
-            iteration.setIteration(i);
+            iteration.setCount(i);
             _objectContainer.set(iteration);
             _objectContainer.commit();
-            if(! _backupsStarted){
-                _backupsStarted = true;
-                new Thread(this).start();
-            }
         }
         closeDatabase();
         checkBackups();
@@ -75,25 +88,45 @@ public class BackupStressTest implements Runnable{
     }
     
     private void checkBackups(){
-        System.out.println("BackupStressTest");
-        System.out.println("Backups created: " + _backups);
+        stdout("BackupStressTest");
+        stdout("Backups created: " + _backups);
         
         for (int i = 1; i < _backups; i++) {
-            System.out.println("Backup " + i);
+            stdout("Backup " + i);
             _objectContainer = Db4o.openFile(backupFile(i));
-            System.out.println("Open successful");
+            stdout("Open successful");
             Query q = _objectContainer.query();
             q.constrain(BackupStressIteration.class);
             BackupStressIteration iteration = (BackupStressIteration) q.execute().next();
-            System.out.println("Iterations in backup: " + iteration.getIteration());
+            
+            int iterations = iteration.getCount();
+            
+            stdout("Iterations in backup: " + iterations);
+            
+            if(iterations > 0){
+                q = _objectContainer.query();
+                q.constrain(BackupStressItem.class);
+                q.descend("_iteration").constrain(new Integer(iteration.getCount()));
+                ObjectSet items = q.execute();
+                Test.ensure(items.size() == OBJECTS);
+                while(items.hasNext()){
+                    BackupStressItem item = (BackupStressItem) items.next();
+                    Test.ensure(item._iteration == iterations);
+                }
+            }
+            
             _objectContainer.close();
-            System.out.println("Backup OK");
+            stdout("Backup OK");
+        }
+        System.out.println("BackupStressTest " + _backups + " files OK.");
+        for (int i = 1; i < _backups; i++) {
+            new File(backupFile(i)).delete();
         }
     }
-    
+
 
     /**
-     * for backup thread
+     * for the backup thread
      */
     public void run() {
         while(!_noMoreBackups){
@@ -110,9 +143,20 @@ public class BackupStressTest implements Runnable{
         }
     }
     
+    private boolean usesLockFileThread(){
+        YapStream stream = (YapStream)_objectContainer;
+        return stream.needsLockFileThread();
+    }
+    
     private String backupFile(int count){
         return "" + count + FILE;
     }
-    
+
+    private void stdout(String string) {
+        if(verbose){
+            System.out.println(string);
+        }
+    }
+
 
 }

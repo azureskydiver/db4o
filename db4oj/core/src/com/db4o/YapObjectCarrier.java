@@ -117,10 +117,6 @@ public class YapObjectCarrier extends YapMemoryFile {
 		// do nothing
 	}
 	
-	boolean needsLockFileThread() {
-	    return false;
-	}
-	
 	public void raiseVersion(long a_minimumVersion){
 	    // do nothing
 	}

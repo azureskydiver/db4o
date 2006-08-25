@@ -30,6 +30,7 @@ public class AllTestsConfAll extends TestSuite{
         return new Class[] {
 	    	ArrayNOrder.class,
 	    	Backup.class,
+            BackupStressTest.class,
             BasicClusterTest.class,
 	    	BindFileSize.class,
             Book.class,

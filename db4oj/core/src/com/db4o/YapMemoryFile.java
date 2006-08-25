@@ -83,7 +83,7 @@ public class YapMemoryFile extends YapFile {
         return false;
     }
 
-    boolean needsLockFileThread() {
+    public final boolean needsLockFileThread() {
         return false;
     }
 
