@@ -5,20 +5,19 @@ package com.db4o.test;
 
 public class BackupStressIteration {
     
-    public int _iteration;
-    
+    public int _count;
     
     public BackupStressIteration() {
      
     }
 
-    public void setIteration(int iteration) {
-        _iteration = iteration;
+    public void setCount(int count) {
+        _count = count;
     }
 
 
-    public int getIteration() {
-        return _iteration;
+    public int getCount() {
+        return _count;
     }
 
 }

@@ -384,7 +384,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return null;
 	}
 
-	boolean needsLockFileThread() {
+	public boolean needsLockFileThread() {
 		return false;
 	}
 

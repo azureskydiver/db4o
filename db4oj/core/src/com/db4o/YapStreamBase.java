@@ -986,7 +986,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     	return i_handlers;
     }
 
-    boolean needsLockFileThread() {
+    public boolean needsLockFileThread() {
         if (!Platform4.hasLockFileThread()) {
             return false;
         }
