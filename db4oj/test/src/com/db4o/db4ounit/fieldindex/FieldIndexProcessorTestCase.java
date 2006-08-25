@@ -3,7 +3,7 @@ package com.db4o.db4ounit.fieldindex;
 import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
 import com.db4o.db4ounit.btree.*;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.query.Query;
@@ -18,10 +18,46 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		new FieldIndexProcessorTestCase().runSolo();
 	}
 	
-	public void store() {
-		store(new int[] { 3, 4, 7, 9 });
+	protected void configure() {
+		super.configure();
+		index(ComplexFieldIndexItem.class, "foo");
+		index(ComplexFieldIndexItem.class, "bar");
+		index(ComplexFieldIndexItem.class, "child");
 	}
 	
+	public void store() {
+		storeItems(new int[] { 3, 4, 7, 9 });
+		storeComplexItems(
+						new int[] { 3, 4, 7, 9 },
+						new int[] { 2, 2, 8, 8 });
+	}
+	
+	public void testIndexSelection() {		
+		Query query = createQuery(ComplexFieldIndexItem.class);		
+		query.descend("bar").constrain(new Integer(2));
+		query.descend("foo").constrain(new Integer(3));
+		
+		assertFooBarIndexOrder(query);
+		
+		query = createQuery(ComplexFieldIndexItem.class);
+		query.descend("foo").constrain(new Integer(3));
+		query.descend("bar").constrain(new Integer(2));
+		
+		assertFooBarIndexOrder(query);
+	}
+
+	private void assertFooBarIndexOrder(final Query query) {
+		final FieldIndexProcessor processor = createProcessor(query);		
+		IndexedLeaf leaf = processor.selectBestIndex();
+		Assert.areSame(complexItemIndex("foo"), leaf.getIndex());
+	}
+	
+//	public void testIndexDescending() {
+//		final Query query = createQuery(ComplexFieldIndexItem.class);
+//		query.descend("child").descend("foo").constrain(new Integer(4));	
+//		
+//	}
+
 	public void testSingleIndexEquals() {
 		final int expectedBar = 3;
 		assertExpectedBars(new int[] { expectedBar }, createQuery(expectedBar));
@@ -105,9 +141,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
 	
 	private void assertExpectedIDs(final int[] expectedIds, final Query query) {
-		final QCandidates candidates = getQCandidates(query);
-		
-		final FieldIndexProcessor processor = new FieldIndexProcessor(candidates);
+		final FieldIndexProcessor processor = createProcessor(query);
 		final FieldIndexProcessorResult result = processor.run();		
 		if (expectedIds.length == 0) {
 			Assert.areSame(FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH, result);
@@ -122,6 +156,12 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 			}
 		});
 		visitor.assertExpectations();
+	}
+
+	private FieldIndexProcessor createProcessor(final Query query) {
+		final QCandidates candidates = getQCandidates(query);		
+		final FieldIndexProcessor processor = new FieldIndexProcessor(candidates);
+		return processor;
 	}
  
 	private Transaction transactionFromQuery(Query query) {
@@ -177,9 +217,13 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
     
     private BTree btree(){
-        final ReflectClass reflectClass = stream().reflector().forClass(FieldIndexItem.class);
-        return stream().getYapClass(reflectClass, false).getYapField("bar").getIndex();
+        return fieldIndexBTree(FieldIndexItem.class, "bar");
     }
+
+	private BTree fieldIndexBTree(Class clazz, String fieldName) {
+		final ReflectClass reflectClass = stream().reflector().forClass(clazz);
+        return stream().getYapClass(reflectClass, false).getYapField(fieldName).getIndex();
+	}
 
 	private void store(final Transaction trans, final FieldIndexItem item) {
 		stream().set(trans, item);
@@ -236,4 +280,17 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	private Transaction newTransaction() {
 		return stream().newTransaction();
 	}
+	
+	private void storeComplexItems(int[] foos, int[] bars) {
+		ComplexFieldIndexItem last = null;
+		for (int i = 0; i < foos.length; i++) {
+			last = new ComplexFieldIndexItem(foos[i], bars[i], last);
+			store(last);
+	    }
+	}
+	
+	private BTree complexItemIndex(String fieldName) {
+		return fieldIndexBTree(ComplexFieldIndexItem.class, fieldName);
+	}
+
 }
