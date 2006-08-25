@@ -1443,7 +1443,9 @@
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
 		
+		<!--
 		<antcall target="sharpen-db4ounit-extensions" />
+		-->
 		
 		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
 			<sources dir="${dir.n.test}">
