@@ -27,7 +27,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		assertExpectedBars(new int[] { expectedBar }, createQuery(expectedBar));
 	}
 	
-	public void _testMultiTransactionSmallerWithCommit() {
+	public void testMultiTransactionSmallerWithCommit() {
 		final Transaction transaction = newTransaction();
 		fillTransactionWith(transaction, 0);
 		
