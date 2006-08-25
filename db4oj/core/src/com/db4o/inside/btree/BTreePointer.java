@@ -41,6 +41,11 @@ public class BTreePointer{
             if(nextNode == null){
                 return null;
             }
+
+            // TODO: Try to operate the node in read mode wherever
+            //       that is possible
+            nextNode.prepareWrite(trans);
+            
             newIndex = nextNode.firstKeyIndex(trans);
         }
         return new BTreePointer(nextNode, newIndex);
@@ -73,5 +78,15 @@ public class BTreePointer{
 	Object value() {
 		return node().value(index());
 	}
+    
+    public String toString() {
+        String key = "[Unavail]";
+        try{
+            key = key(null).toString();
+        }catch(Exception e){
+            
+        }
+        return "BTreePointer (" + _index + ") to " + key + " on" + node().toString();      
+    }
     
 }
