@@ -2,6 +2,7 @@
 
 package com.db4o.test;
 
+import com.db4o.db4ounit.assorted.BackupStressTestCase;
 import com.db4o.test.cluster.BasicClusterTest;
 import com.db4o.test.conjunctions.ConjunctionsTestSuite;
 import com.db4o.test.constraints.ConstraintsTestSuite;
@@ -30,7 +31,6 @@ public class AllTestsConfAll extends TestSuite{
         return new Class[] {
 	    	ArrayNOrder.class,
 	    	Backup.class,
-            BackupStressTest.class,
             BasicClusterTest.class,
 	    	BindFileSize.class,
             Book.class,
