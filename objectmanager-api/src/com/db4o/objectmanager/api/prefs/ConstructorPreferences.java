@@ -14,7 +14,7 @@ public class ConstructorPreferences {
     public static ConstructorPreferences getDefault() {
         // If the object already exists in the preference store, just return
         // it. Otherwise, create it.
-        ConstructorPreferences result = (ConstructorPreferences) PreferencesCore
+        ConstructorPreferences result = (ConstructorPreferences) Preferences
                 .getDefault().getPreference(CONSTRUCTOR_PREFERENCES_ID);
 
         if (result == null) {

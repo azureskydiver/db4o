@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.db4o.objectmanager.api.prefs.PreferencesCore;
+import com.db4o.objectmanager.api.prefs.Preferences;
 
 /**
  * BrowserCore.  The root of the model hierarchy in the browser.
@@ -20,7 +20,7 @@ public class BrowserCore implements ICloseListener {
 	public static BrowserCore getDefault() {
         if (model == null) {
             model = new BrowserCore();
-			PreferencesCore.initialize();
+			Preferences.initialize();
         }
         return model;
     }
@@ -53,7 +53,7 @@ public class BrowserCore implements ICloseListener {
 	 */
 	public void closing() {
 		closeAllDatabases();
-		PreferencesCore.close();
+		Preferences.close();
 	}
 
 	/**

@@ -2,8 +2,11 @@ package com.db4o.objectManager.v2;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.DefaultMetalTheme;
@@ -23,7 +26,7 @@ import com.db4o.objectmanager.model.Db4oConnectionSpec;
  * Date: Aug 8, 2006
  * Time: 11:21:49 AM
  */
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements WindowListener {
 
     protected static final Dimension PREFERRED_SIZE =
             LookUtils.IS_LOW_RESOLUTION
@@ -50,6 +53,7 @@ public class MainFrame extends JFrame {
         configureUI();
         build();
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(this);
     }
 
     public static void main(String[] args) {
@@ -71,19 +75,21 @@ public class MainFrame extends JFrame {
             System.out.println("L&f chosen: " + lafClassName);
             settings.setSelectedLookAndFeel(lafClassName);
         }
-        MainFrame.createDefaultFrame(settings);
+        MainFrame.createDefaultFrame(settings, null, null);
     }
 
-    private static MainFrame createDefaultFrame(Settings settings) {
+    private static MainFrame createDefaultFrame(Settings settings, Dimension frameSize, Point frameLocation) {
         MainFrame instance = new MainFrame(settings);
-        instance.setSize(PREFERRED_SIZE);
-        instance.locateOnScreen(instance);
+        if(frameSize != null) instance.setSize(frameSize);
+        else instance.setSize(PREFERRED_SIZE);
+        if(frameLocation != null) instance.setLocation(frameLocation);
+        else instance.locateOnScreen(instance);
         instance.setVisible(true);
         return instance;
     }
 
-    public static MainFrame createDefaultFrame() {
-        return createDefaultFrame(MainFrame.createDefaultSettings());
+    public static MainFrame createDefaultFrame(Dimension frameSize, Point frameLocation) {
+        return createDefaultFrame(MainFrame.createDefaultSettings(), frameSize, frameLocation);
     }
 
     static Settings createDefaultSettings() {
@@ -190,6 +196,34 @@ public class MainFrame extends JFrame {
 
     public void setConnectionInfo(Db4oConnectionSpec connectionInfo) {
         mainPanel.setConnectionInfo(connectionInfo);
+    }
+
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    public void windowClosed(WindowEvent e) {
+        mainPanel.getObjectContainer().close();
+    }
+
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+
     }
 
 

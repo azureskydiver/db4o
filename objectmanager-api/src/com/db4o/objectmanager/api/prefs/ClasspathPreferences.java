@@ -17,7 +17,7 @@ public class ClasspathPreferences {
     public static ClasspathPreferences getDefault() {
         // If the object already exists in the preference store, just return
         // it. Otherwise, create it.
-        ClasspathPreferences result = (ClasspathPreferences) PreferencesCore
+        ClasspathPreferences result = (ClasspathPreferences) Preferences
                 .getDefault().getPreference(CLASSPATH_PREFERENCES_ID);
 
         if (result == null) {

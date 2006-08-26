@@ -44,6 +44,7 @@ import com.spaceprogram.db4o.sql.ReflectHelper;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
@@ -117,7 +118,13 @@ final class QueryResultsPanel extends JPanel {
 
     private JScrollPane buildResultsTable() {
         resultsTable = new JTable();
+        resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+       /* TableColumn col = resultsTable.getColumnModel().getColumn(vColIndex);
+    col.setMinWidth(width);
+    col.setMaxWidth(width);
+    col.setPreferredWidth(width);*/
         JScrollPane scrollpane = new JScrollPane(resultsTable);
+        //scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         return scrollpane;
     }
 
@@ -164,7 +171,17 @@ final class QueryResultsPanel extends JPanel {
      * @param results
      */
     public void displayResults(List<Result> results) {
-        tableModel = new ResultsTableModel(results);
+        tableModel = new ResultsTableModel(results, this);
         resultsTable.setModel(tableModel);
+    }
+
+    /**
+     * This method will batch up any changed objects until the user closes this panel, or clicks the Commit/Apply button
+     * @param o
+     */
+    public void addObjectToBatch(Object o) {
+        // todo: implement the batch with button
+        mainPanel.getObjectContainer().set(o);
+        mainPanel.getObjectContainer().commit();
     }
 }

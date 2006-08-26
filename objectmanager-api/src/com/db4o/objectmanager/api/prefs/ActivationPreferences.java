@@ -12,8 +12,8 @@ public class ActivationPreferences {
 	public static ActivationPreferences getDefault() {
 		// If the object already exists in the preference store, just return
 		// it. Otherwise, create it.
-		ActivationPreferences result = (ActivationPreferences) PreferencesCore
-				.getDefault().getPreference(ACTIVATION_PREFERENCES_ID);
+		ActivationPreferences result = (ActivationPreferences) Preferences
+                .getDefault().getPreference(ACTIVATION_PREFERENCES_ID);
 
 		if (result == null) {
 			result = new ActivationPreferences();

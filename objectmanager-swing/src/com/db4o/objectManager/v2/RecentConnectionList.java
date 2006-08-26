@@ -1,6 +1,6 @@
 package com.db4o.objectManager.v2;
 
-import com.db4o.objectmanager.api.prefs.PreferencesCore;
+import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Date: Aug 8, 2006
  * Time: 11:50:33 PM
  */
-public class RecentConnectionList extends JPanel{
+public class RecentConnectionList extends JPanel {
     private JList list;
     private DefaultListModel listModel;
     private static final String RECENT_CONNECTIONS = "recentConnections";
@@ -35,27 +35,30 @@ public class RecentConnectionList extends JPanel{
     }
 
     private List<Db4oConnectionSpec> getRecentConnectionSpecsFromDb() {
-        List<Db4oConnectionSpec> connections = (List<Db4oConnectionSpec>) PreferencesCore.getDefault().getPreference(RECENT_CONNECTIONS);
-        if(connections == null) connections = new ArrayList<Db4oConnectionSpec>();        
+        List<Db4oConnectionSpec> connections = (List<Db4oConnectionSpec>) Preferences.getDefault().getPreference(RECENT_CONNECTIONS);
+        if (connections == null) connections = new ArrayList<Db4oConnectionSpec>();
         return connections;
     }
 
     public void addNewConnectionSpec(Db4oConnectionSpec connectionSpec) {
         // make sure it's not already here
-        for(int i = 0; i < listModel.getSize(); i++){
+        for (int i = 0; i < listModel.getSize(); i++) {
             Db4oConnectionSpec spec = (Db4oConnectionSpec) listModel.get(i);
-            if(spec.getPath().equals(connectionSpec.getPath())){
+            if (spec.getPath().equals(connectionSpec.getPath())) {
                 return;
             }
         }
         List<Db4oConnectionSpec> connections = getRecentConnectionSpecsFromDb();
         connections.add(connectionSpec);
-        PreferencesCore.getDefault().setPreference(RECENT_CONNECTIONS, connections);
+        Preferences.getDefault().setPreference(RECENT_CONNECTIONS, connections);
         listModel.addElement(connectionSpec);
     }
 
     public Db4oConnectionSpec getSelected() {
-        return (Db4oConnectionSpec) listModel.get(list.getSelectedIndex());
+        if (list.getSelectedIndex() != -1) {
+            return (Db4oConnectionSpec) listModel.get(list.getSelectedIndex());
+        }
+        return null;
     }
 
     public Component getList() {
