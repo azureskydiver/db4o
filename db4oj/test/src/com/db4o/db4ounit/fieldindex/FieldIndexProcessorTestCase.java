@@ -51,15 +51,15 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	}
 
 	private void assertBestIndex(String expectedFieldIndex, final Query query) {
-		IndexedNode node = selectBestIndex(query);
+		IndexedNodeBase node = selectBestIndex(query);
 		assertComplexItemIndex(expectedFieldIndex, node);
 	}
 
-	private void assertComplexItemIndex(String expectedFieldIndex, IndexedNode leaf) {
-		Assert.areSame(complexItemIndex(expectedFieldIndex), leaf.getIndex());
+	private void assertComplexItemIndex(String expectedFieldIndex, IndexedNode node) {
+		Assert.areSame(complexItemIndex(expectedFieldIndex), node.getIndex());
 	}
 
-	private IndexedNode selectBestIndex(final Query query) {
+	private IndexedNodeBase selectBestIndex(final Query query) {
 		final FieldIndexProcessor processor = createProcessor(query);		
 		return processor.selectBestIndex();
 	}
@@ -69,19 +69,23 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		query.descend("child").descend("foo").constrain(new Integer(3));
 		query.descend("bar").constrain(new Integer(2));
 		
-		final IndexedNode index = selectBestIndex(query);
+		final IndexedNodeBase index = selectBestIndex(query);
 		assertComplexItemIndex("foo", index);
 		
-//		Assert.isFalse(index.isResolved());
-//		
-//		IndexedNode result = index.resolve();
-//		assertComplexItemIndex("child", result);
-//		
-//		Assert.isTrue(result.isResolved());
-//		
-//		assertTreeInt(
-//				mapToObjectIds(createComplexItemQuery(), new int[] { 4 }),
-//				result.toTreeInt());
+		Assert.isFalse(index.isResolved());
+		
+		IndexedNode result = index.resolve();
+		Assert.isNotNull(result);
+		assertComplexItemIndex("child", result);
+		
+		Assert.isTrue(result.isResolved());
+		Assert.isNull(result.resolve());
+		
+		final TreeInt found = result.toTreeInt();
+		Assert.isNotNull(found);
+		assertTreeInt(
+				mapToObjectIds(createComplexItemQuery(), new int[] { 4 }),
+				found);
 	}
 
 	public void testSingleIndexEquals() {

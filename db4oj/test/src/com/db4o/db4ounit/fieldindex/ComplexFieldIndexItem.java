@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.fieldindex;
 
-public class ComplexFieldIndexItem {
+public class ComplexFieldIndexItem implements HasFoo {
 	public int foo;
 	public int bar;
 	public ComplexFieldIndexItem child;
@@ -12,5 +12,9 @@ public class ComplexFieldIndexItem {
 		foo = foo_;
 		bar = bar_;
 		child = child_;
+	}
+	
+	public int getFoo() {
+		return foo;
 	}
 }
