@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.db4o.objectManager.v2.custom.BackgroundPanel;
 import com.db4o.objectmanager.model.Db4oFileConnectionSpec;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
+import com.db4o.objectmanager.api.prefs.Preferences;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -147,7 +148,12 @@ public class Dashboard {
         recentConnectionList.getList().addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 Db4oConnectionSpec connectionSpec = recentConnectionList.getSelected();
-                showInForm(connectionSpec);
+                if (connectionSpec != null) {
+                    showInForm(connectionSpec);
+                    if (e.getClickCount() == 2) {
+                        connectAndOpenFrame();
+                    }
+                }
             }
         });
 
@@ -205,11 +211,7 @@ public class Dashboard {
         JButton connectButton = new JButton("Connect");
         connectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MainFrame instance = MainFrame.createDefaultFrame();
-                Db4oConnectionSpec connectionSpec = new Db4oFileConnectionSpec(fileTextField.getText(), false);
-                recentConnectionList.addNewConnectionSpec(connectionSpec);
-                instance.setConnectionInfo(connectionSpec);
-                fileTextField.setText("");
+                connectAndOpenFrame();
             }
         });
         builder.append("", connectButton);
@@ -222,6 +224,35 @@ public class Dashboard {
         panel.add(backgroundPanel, BorderLayout.CENTER);
 
         return panel;
+    }
+
+    private void connectAndOpenFrame() {
+        Dimension frameSize = (Dimension) Preferences.getDefault().getPreference(Preferences.FRAME_SIZE);
+        Point frameLocation = (Point) Preferences.getDefault().getPreference(Preferences.FRAME_LOCATION);
+        MainFrame instance = MainFrame.createDefaultFrame(frameSize, frameLocation);
+        Db4oConnectionSpec connectionSpec = new Db4oFileConnectionSpec(fileTextField.getText(), false);
+        recentConnectionList.addNewConnectionSpec(connectionSpec);
+        instance.setConnectionInfo(connectionSpec);
+        fileTextField.setText("");
+        instance.addComponentListener(new ComponentListener() {
+            public void componentResized(ComponentEvent e) {
+                // save size in prefs
+                Preferences.getDefault().setPreference(Preferences.FRAME_SIZE, e.getComponent().getSize());
+            }
+
+            public void componentMoved(ComponentEvent e) {
+                // save location in prefs
+                Preferences.getDefault().setPreference(Preferences.FRAME_LOCATION, e.getComponent().getLocation());
+            }
+
+            public void componentShown(ComponentEvent e) {
+
+            }
+
+            public void componentHidden(ComponentEvent e) {
+
+            }
+        });
     }
 
     private void showInForm(Db4oConnectionSpec connectionSpec) {
@@ -243,7 +274,7 @@ public class Dashboard {
      * Creates and answers a <code>JLabel</code> that has the text
      * centered and that is wrapped with an empty border.
      */
-    private Component createCenteredLabel (String text) {
+    private Component createCenteredLabel(String text) {
         JLabel label = new JLabel(text);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setBorder(new EmptyBorder(3, 3, 3, 3));

@@ -14,18 +14,21 @@ import com.db4o.ObjectSet;
 import com.db4o.config.ObjectClass;
 import com.db4o.query.Query;
 
-public class PreferencesCore {
-    private static Logger logger = Logger.getLogger(PreferencesCore.class.getName());
+public class Preferences {
+    private static Logger logger = Logger.getLogger(Preferences.class.getName());
 
-    private static PreferencesCore prefs = null;
+    private static Preferences prefs = null;
 
-	private static transient ObjectContainer db;
+    private static transient ObjectContainer db;
 
-	private static transient final String preferencesFile = new File(new File(System
+    private static transient final String preferencesFile = new File(new File(System
 			.getProperty("user.home")), ".objectmanager.yap")
 			.getAbsolutePath();
 
-	/**
+    public static final String FRAME_SIZE = "frameSize";
+    public static final String FRAME_LOCATION = "frameLocation";
+
+    /**
 	 * Called by BrowserCore during initialization
 	 */
 	public static void initialize() {
@@ -38,7 +41,7 @@ public class PreferencesCore {
 	 * 
 	 * @return the PreferenceCore singleton
 	 */
-	public static PreferencesCore getDefault() {
+	public static Preferences getDefault() {
 		if (prefs == null) {
 			loadOrCreatePreferences();
 		}
@@ -76,7 +79,7 @@ public class PreferencesCore {
 	 */
 	private static void loadOrCreatePreferences() {
 		ObjectClass prefsCore = Db4o.configure().objectClass(
-				PreferencesCore.class);
+				Preferences.class);
 		prefsCore.minimumActivationDepth(Integer.MAX_VALUE);
 		prefsCore.updateDepth(Integer.MAX_VALUE);
 
@@ -84,13 +87,13 @@ public class PreferencesCore {
 		db = Db4o.openFile(preferencesFile);
 		Db4o.configure().allowVersionUpdates(false);
 		Query query = db.query();
-		query.constrain(PreferencesCore.class);
+		query.constrain(Preferences.class);
 		ObjectSet result = query.execute();
 
 		if (result.hasNext()) {
-			prefs = (PreferencesCore) result.next();
+			prefs = (Preferences) result.next();
 		} else {
-			prefs = new PreferencesCore();
+			prefs = new Preferences();
 		}
 
 		if (result.size() > 1) {
@@ -107,7 +110,7 @@ public class PreferencesCore {
 	 */
 	private static void rebuildCorruptDatabase(int resultsize) {
 		logger.info(resultsize
-				+ " instances of PreferencesCore found in the database.");
+				+ " instances of Preferences found in the database.");
 		String backupFile = preferencesFile + ".bkp";
         logger.info("Backing up database to " + backupFile);
 		try {

@@ -4,25 +4,20 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.objectmanager.api.impl.DatabaseInspectorImpl;
-import com.db4o.objectmanager.api.prefs.PreferencesCore;
+import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 import com.spaceprogram.db4o.sql.Result;
-import com.spaceprogram.db4o.sql.Sql4o;
-import com.spaceprogram.db4o.sql.Sql4oException;
-import com.spaceprogram.db4o.sql.parser.SqlParseException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,8 +66,8 @@ public class MainPanel extends JPanel {
     }
 
 
-    private PreferencesCore getPreferences() {
-        return PreferencesCore.getDefault();
+    private Preferences getPreferences() {
+        return Preferences.getDefault();
     }
     public void setPreference(String key, Object pref) {
         getPreferences().setPreference(key, pref);

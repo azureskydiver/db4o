@@ -4,10 +4,7 @@ import com.db4o.reflect.ReflectClass;
 import com.db4o.ext.StoredClass;
 import com.db4o.ObjectContainer;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.*;
 import java.text.Collator;
 
 /**
@@ -24,20 +21,43 @@ public class ReflectHelper {
      */
     public static List getUserStoredClasses(ObjectContainer container) {
         String[] ignore = new String[]{
-            "com.db4o.P1Object",
-            "j4o.lang.AssemblyNameHint, db4o",
-            "java.lang.Object"
+                // todo: decide which should be filtered for sure
+                "java.lang.",
+                "java.util.",
+                "java.math.",
+                //"com.db4o.",
+                "j4o.lang.AssemblyNameHint",
         };
-
-        // YYY
-        //System.out.println("PURGE");
-        //container.ext().purge();
 
         // Get the known classes
         ReflectClass[] knownClasses = container.ext().knownClasses();
 
-        // Sort them
-        Arrays.sort(knownClasses, new Comparator() {
+        // Filter them
+        List filteredList = new ArrayList();
+        for (int i = 0; i < knownClasses.length; i++) {
+            ReflectClass knownClass = knownClasses[i];
+            if (knownClass.isArray() || knownClass.isPrimitive()) {
+                continue;
+            }
+            boolean take = true;
+            for (int j = 0; j < ignore.length; j++) {
+                if(knownClass.getName().startsWith(ignore[j])){
+                    take = false;
+                    break;
+                }
+            }
+            if(! take){
+                continue;
+            }
+            StoredClass sc = container.ext().storedClass(knownClass.getName());
+            if(sc == null){
+                continue;
+            }
+            filteredList.add(knownClass);
+        }
+
+          // Sort them
+        Collections.sort(filteredList, new Comparator() {
             private Collator comparator = Collator.getInstance();
             public int compare(Object arg0, Object arg1) {
                 ReflectClass class0 = (ReflectClass) arg0;
@@ -47,31 +67,6 @@ public class ReflectHelper {
             }
         });
 
-        // Filter them
-        LinkedList filteredList = new LinkedList();
-        for (int i = 0; i < knownClasses.length; i++) {
-
-            boolean take = true;
-            for (int j = 0; j < ignore.length; j++) {
-                if(knownClasses[i].getName().equals(ignore[j])){
-                    take = false;
-                    break;
-                }
-            }
-            if(! take){
-                continue;
-            }
-
-            if (knownClasses[i].isArray()) {
-                continue;
-            }
-
-            StoredClass sc = container.ext().storedClass(knownClasses[i].getName());
-            if(sc == null){
-                continue;
-            }
-            filteredList.add(knownClasses[i]);
-        }
         return filteredList;
     }
 }

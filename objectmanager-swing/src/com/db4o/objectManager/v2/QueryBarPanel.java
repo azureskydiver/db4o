@@ -26,6 +26,7 @@ public class QueryBarPanel extends JPanel {
     static final String LAST_QUERY = "lastQuery";
     private static final String QUERY_HISTORY = "queryHistory";
     private MainPanel mainPanel;
+    private List queryHistory;
 
 
     public QueryBarPanel(MainPanel mainPanel2) {
@@ -35,8 +36,9 @@ public class QueryBarPanel extends JPanel {
         add(new JLabel("Query:"), BorderLayout.WEST);
 
         // have drop down with last X queries
-        queryList = new JComboBox();
-        queryList.addItem("Query history...");
+        queryHistory = (List) mainPanel.getPreference(QUERY_HISTORY);
+        ComboBoxModel queryListModel = new QueryHistoryComboBoxModel(queryHistory);
+        queryList = new JComboBox(queryListModel);
         queryList.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource();
@@ -46,13 +48,7 @@ public class QueryBarPanel extends JPanel {
                 }
             }
         });
-        List queryHistory = (List) mainPanel.getPreference(QUERY_HISTORY);
-        if (queryHistory != null) {
-            for (int i = 0; i < queryHistory.size(); i++) {
-                String s = (String) queryHistory.get(i);
-                queryList.addItem(s);
-            }
-        }
+
         add(queryList, BorderLayout.NORTH);
 
         queryText = new JTextArea(5, 0);
@@ -93,7 +89,7 @@ public class QueryBarPanel extends JPanel {
 
     private void addToQueryHistory(String query) {
         mainPanel.setPreference(LAST_QUERY, query);
-        List<String> x = (List) mainPanel.getPreference(QUERY_HISTORY);
+        List<String> x = queryHistory; // (List) mainPanel.getPreference(QUERY_HISTORY);
         if (x == null) x = new ArrayList();
         // remove any dupe query
         int exists = -1;
