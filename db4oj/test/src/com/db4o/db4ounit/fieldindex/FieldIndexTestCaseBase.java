@@ -42,17 +42,25 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	protected Query createItemQuery() {
 		return createQuery(FieldIndexItem.class);
 	}
-
+	
 	protected Query createQuery(Class clazz) {
-		Query q = db().query();
+		return createQuery(trans(), clazz);
+	}
+
+	protected Query createQuery(Transaction trans, Class clazz) {
+		Query q = createQuery(trans);
 		q.constrain(clazz);
 		return q;
 	}
 
 	protected Query createItemQuery(Transaction trans) {
-		Query q = stream().query(trans);
+		Query q = createQuery(trans);
 		q.constrain(FieldIndexItem.class);
 		return q;
+	}
+
+	private Query createQuery(Transaction trans) {
+		return stream().query(trans);
 	}
 
 }

@@ -64,7 +64,14 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		return processor.selectBestIndex();
 	}
 	
-	public void testIndexDescending() {
+	public void testDescendingQuery() {
+		final Query query = createComplexItemQuery();
+		query.descend("child").descend("foo").constrain(new Integer(3));
+		
+		assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 4 }, query);
+	}
+	
+	public void testDescendingOnIndexedNodes() {
 		final Query query = createComplexItemQuery();
 		query.descend("child").descend("foo").constrain(new Integer(3));
 		query.descend("bar").constrain(new Integer(2));
@@ -90,7 +97,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 
 	public void testSingleIndexEquals() {
 		final int expectedBar = 3;
-		assertExpectedFoos(new int[] { expectedBar }, createQuery(expectedBar));
+		assertExpectedFoos(FieldIndexItem.class, new int[] { expectedBar }, createQuery(expectedBar));
 	}
 	
 	public void testMultiTransactionSmallerWithCommit() {
@@ -153,20 +160,20 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	private void assertGreater(int[] expectedBars, int greaterThan) {
 		final Query query = createItemQuery();
 		query.descend("foo").constrain(new Integer(greaterThan)).greater();		
-		assertExpectedFoos(expectedBars, query);
+		assertExpectedFoos(FieldIndexItem.class, expectedBars, query);
 	}
 	
 	public void testSingleIndexGreaterOrEqual() {
 		final Query query = createItemQuery();
 		query.descend("foo").constrain(new Integer(7)).greater().equal();
 		
-		assertExpectedFoos(new int[] { 7, 9 }, query);
+		assertExpectedFoos(FieldIndexItem.class, new int[] { 7, 9 }, query);
 	}
 
-	private void assertExpectedFoos(final int[] expectedFoos, final Query query) {
+	private void assertExpectedFoos(Class itemClass, final int[] expectedFoos, final Query query) {
 		
 		final Transaction trans = transactionFromQuery(query);
-		final int[] expectedIds = mapToObjectIds(createItemQuery(trans), expectedFoos);
+		final int[] expectedIds = mapToObjectIds(createQuery(trans, itemClass), expectedFoos);
 		assertExpectedIDs(expectedIds, query);
 	}
 	
@@ -308,7 +315,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	private void assertSmaller(final Transaction transaction, final int[] expectedFoos, final int smallerThan) {
 		final Query query = createItemQuery(transaction);
 		query.descend("foo").constrain(new Integer(smallerThan)).smaller();
-		assertExpectedFoos(expectedFoos, query);
+		assertExpectedFoos(FieldIndexItem.class, expectedFoos, query);
 	}
 	
 	private Transaction newTransaction() {

@@ -17,9 +17,16 @@ public class FieldIndexProcessor {
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
 		if (bestIndex.resultSize() > 0) {
-			return new FieldIndexProcessorResult(bestIndex.toTreeInt());
+			return new FieldIndexProcessorResult(resolveFully(bestIndex));
 		}
 		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
+	}
+
+	private TreeInt resolveFully(IndexedNode bestIndex) {
+		if (bestIndex.isResolved()) {
+			return bestIndex.toTreeInt();
+		}
+		return resolveFully(bestIndex.resolve());
 	}
 	
 	public IndexedLeaf selectBestIndex() {		
