@@ -462,5 +462,4 @@ public class QConObject extends QCon {
         }
         return str;
     }
-
 }

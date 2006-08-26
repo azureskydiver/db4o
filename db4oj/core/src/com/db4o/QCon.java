@@ -361,6 +361,14 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return _children != null;
     }
     
+	public boolean hasParent() {
+		return i_parent != null;
+	}
+	
+	public QCon parent() {
+		return i_parent;
+	}
+    
     public boolean hasOrJoins(){
         Collection4 lookedAt = new Collection4();
         return hasOrJoins(lookedAt);
