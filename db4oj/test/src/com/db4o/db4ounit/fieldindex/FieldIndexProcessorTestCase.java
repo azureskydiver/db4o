@@ -1,28 +1,17 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
-import com.db4o.QQueryBase.CreateCandidateCollectionResult;
-import com.db4o.db4ounit.btree.*;
-import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
 
 import db4ounit.Assert;
 
 
-public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
+public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase {
 	
 	public static void main(String[] args) {
 		new FieldIndexProcessorTestCase().runSolo();
-	}
-	
-	protected void configure() {
-		super.configure();
-		index(ComplexFieldIndexItem.class, "foo");
-		index(ComplexFieldIndexItem.class, "bar");
-		index(ComplexFieldIndexItem.class, "child");
 	}
 	
 	public void store() {
@@ -46,53 +35,23 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		assertBestIndex("foo", query);
 	}
 
-	private Query createComplexItemQuery() {
-		return createQuery(ComplexFieldIndexItem.class);
-	}
-
 	private void assertBestIndex(String expectedFieldIndex, final Query query) {
-		IndexedNodeBase node = selectBestIndex(query);
+		IndexedNode node = selectBestIndex(query);
 		assertComplexItemIndex(expectedFieldIndex, node);
 	}
 
-	private void assertComplexItemIndex(String expectedFieldIndex, IndexedNode node) {
-		Assert.areSame(complexItemIndex(expectedFieldIndex), node.getIndex());
-	}
-
-	private IndexedNodeBase selectBestIndex(final Query query) {
-		final FieldIndexProcessor processor = createProcessor(query);		
-		return processor.selectBestIndex();
-	}
-	
-	public void testDescendingQuery() {
+	public void testDoubleDescendingOnQuery() {
 		final Query query = createComplexItemQuery();
 		query.descend("child").descend("foo").constrain(new Integer(3));
 		
 		assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 4 }, query);
 	}
 	
-	public void testDescendingOnIndexedNodes() {
+	public void testTripleDescendingOnQuery() {
 		final Query query = createComplexItemQuery();
-		query.descend("child").descend("foo").constrain(new Integer(3));
-		query.descend("bar").constrain(new Integer(2));
+		query.descend("child").descend("child").descend("foo").constrain(new Integer(3));
 		
-		final IndexedNodeBase index = selectBestIndex(query);
-		assertComplexItemIndex("foo", index);
-		
-		Assert.isFalse(index.isResolved());
-		
-		IndexedNode result = index.resolve();
-		Assert.isNotNull(result);
-		assertComplexItemIndex("child", result);
-		
-		Assert.isTrue(result.isResolved());
-		Assert.isNull(result.resolve());
-		
-		final TreeInt found = result.toTreeInt();
-		Assert.isNotNull(found);
-		assertTreeInt(
-				mapToObjectIds(createComplexItemQuery(), new int[] { 4 }),
-				found);
+		assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 7 }, query);
 	}
 
 	public void testSingleIndexEquals() {
@@ -189,70 +148,10 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 		assertTreeInt(expectedIds, result.found);
 	}
 
-	private void assertTreeInt(final int[] expectedValues, final TreeInt treeInt) {
-		final ExpectingVisitor visitor = createExpectingVisitor(expectedValues);
-		treeInt.traverse(new Visitor4() {
-			public void visit(Object obj) {
-				visitor.visit(new Integer(((TreeInt)obj)._key));
-			}
-		});
-		visitor.assertExpectations();
-	}
-
-	private FieldIndexProcessor createProcessor(final Query query) {
-		final QCandidates candidates = getQCandidates(query);		
-		final FieldIndexProcessor processor = new FieldIndexProcessor(candidates);
-		return processor;
-	}
- 
 	private Transaction transactionFromQuery(Query query) {
 		return ((QQuery)query).getTransaction();
 	}
 
-	private int[] mapToObjectIds(Query itemQuery, int[] foos) {
-		int[] lookingFor = clone(foos);
-		
-		int[] objectIds = new int[foos.length];
-		final ObjectSet set = itemQuery.execute();
-		while (set.hasNext()) {
-			HasFoo item = (HasFoo)set.next();
-			for (int i = 0; i < lookingFor.length; i++) {
-				if(lookingFor[i] == item.getFoo()){
-					lookingFor[i] = -1;
-					objectIds[i] = (int) db().getID(item);
-					break;
-				}
-			}
-		}		
-		
-		if (!all(lookingFor, -1)) {
-			throw new IllegalArgumentException();
-		}
-		
-		return objectIds;
-	}
-
-	private boolean all(int[] array, int value) {
-		for (int i=0; i<array.length; ++i) {
-			if (value != array[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private int[] clone(int[] bars) {
-		int[] array = new int[bars.length];
-		System.arraycopy(bars, 0, array, 0, bars.length);
-		return array;
-	}
-
-	private QCandidates getQCandidates(final Query query) {
-		final CreateCandidateCollectionResult result = ((QQuery)query).createCandidateCollection();
-		QCandidates candidates = (QCandidates)result.candidateCollection._element;
-		return candidates;
-	}
-	
 	private int btreeNodeSize() {		
 		return btree().nodeSize();
 	}
@@ -260,11 +159,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
     private BTree btree(){
         return fieldIndexBTree(FieldIndexItem.class, "foo");
     }
-
-	private BTree fieldIndexBTree(Class clazz, String fieldName) {
-		final ReflectClass reflectClass = stream().reflector().forClass(clazz);
-        return stream().getYapClass(reflectClass, false).getYapField(fieldName).getIndex();
-	}
 
 	private void store(final Transaction trans, final FieldIndexItem item) {
 		stream().set(trans, item);
@@ -320,18 +214,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexTestCaseBase {
 	
 	private Transaction newTransaction() {
 		return stream().newTransaction();
-	}
-	
-	private void storeComplexItems(int[] foos, int[] bars) {
-		ComplexFieldIndexItem last = null;
-		for (int i = 0; i < foos.length; i++) {
-			last = new ComplexFieldIndexItem(foos[i], bars[i], last);
-			store(last);
-	    }
-	}
-	
-	private BTree complexItemIndex(String fieldName) {
-		return fieldIndexBTree(ComplexFieldIndexItem.class, fieldName);
 	}
 
 }
