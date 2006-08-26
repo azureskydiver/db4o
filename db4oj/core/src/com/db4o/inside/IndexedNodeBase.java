@@ -5,15 +5,13 @@ import com.db4o.foundation.KeyValueIterator;
 import com.db4o.inside.btree.*;
 
 public abstract class IndexedNodeBase  implements IndexedNode {
+	
+	private final Transaction _transaction;
+	private final QConObject _constraint;
 
-	protected final Transaction _transaction;
-	protected final QConObject _constraint;
-	protected BTreeRange _range;
-
-	public IndexedNodeBase(Transaction transaction, QConObject qcon, BTreeRange range) {
+	public IndexedNodeBase(Transaction transaction, QConObject qcon) {
 		_transaction = transaction;
         _constraint = qcon;
-        _range = range;
 	}
 	
 	public BTree getIndex() {
@@ -29,7 +27,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	}
 
 	public boolean isResolved() {
-		final QCon parent = constraint().parent();
+		final QCon parent = parentConstraint();
 		return null == parent || !parent.hasParent();
 	}
 
@@ -58,6 +56,25 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	        tree = (TreeInt) Tree.add(tree, new TreeInt(composite.parentID()));
 	    }
 		return tree;
+	}
+
+	protected IndexedNode parentNode() {
+		QCon parent = parentConstraint();
+		if (parent instanceof QConObject) {
+			return new IndexedPath(_transaction, (QConObject) parent, this);
+		}
+		return null;
+	}
+
+	protected QCon parentConstraint() {
+		return constraint().parent();
+	}
+
+	public IndexedNode resolve() {
+		if (isResolved()) {
+			return null;
+		}
+		return parentNode();
 	}
 
 }

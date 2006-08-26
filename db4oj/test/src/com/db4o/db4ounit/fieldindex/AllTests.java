@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
             return new Class[]{};
         }
 		return  new Class[] {
+			IndexedNodeTestCase.class,
             FieldIndexTestCase.class,
             FieldIndexProcessorTestCase.class,
 		};

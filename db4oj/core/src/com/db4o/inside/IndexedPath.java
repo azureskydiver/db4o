@@ -6,21 +6,24 @@ import com.db4o.inside.btree.*;
 
 public class IndexedPath extends IndexedNodeBase {
 
-	public IndexedPath(Transaction transaction, QConObject parent, BTreeRange range) {
-		super(transaction, parent, range);
+	private IndexedNode _next;
+
+	public IndexedPath(Transaction transaction, QConObject parent, IndexedNode next) {
+		super(transaction, parent);
+		_next = next;
 	}
 
-	public IndexedNode resolve() {
-		return null;
-	}
-
-	public TreeInt toTreeInt() {		
+	public TreeInt toTreeInt() {
 		TreeInt tree = null;
-		final KeyValueIterator i = _range.iterator();
-		while (i.moveNext()) {
-			final FieldIndexKey key = (FieldIndexKey) i.key();			
-			tree = addRangeToTree(tree, search(new Integer(key.parentID())));
+		KeyValueIterator iterator = iterator();
+		while (iterator.moveNext()) {
+			final FieldIndexKey key = (FieldIndexKey) iterator.key();
+			tree = (TreeInt) TreeInt.add(tree, new TreeInt(key.parentID()));
 		}
 		return tree;
+	}
+
+	public KeyValueIterator iterator() {		
+		return new IndexedPathIterator(this, _next.iterator());
 	}
 }
