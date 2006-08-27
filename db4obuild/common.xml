@@ -80,7 +80,7 @@
 				fork="yes"
 				failonerror="true"
 				timeout="1800000"
-				maxmemory="128M">
+				maxmemory="512M">
 				<classpath>
 					<pathelement location="${eclipse.home}/startup.jar" />
 				</classpath>

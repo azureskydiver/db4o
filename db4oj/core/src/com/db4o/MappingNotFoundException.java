@@ -12,14 +12,11 @@ public class MappingNotFoundException extends RuntimeException {
 	private int _id;
 	
 	public MappingNotFoundException(int id) {
+		super("Mapping not found for "+id);
 		this._id = id;
 	}
 
 	public int id() {
 		return _id;
-	}
-	
-	public String getMessage() {
-		return "Not found: "+_id;
 	}
 }
