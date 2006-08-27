@@ -412,7 +412,7 @@ public final class YapHandlers {
     	return false;
     }
 
-    int maxTypeID() {
-        return i_maxTypeID;
+    public boolean isSystemHandler(int id) {
+    	return id<=i_maxTypeID;
     }
 }

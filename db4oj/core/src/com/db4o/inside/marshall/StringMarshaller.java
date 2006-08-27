@@ -52,15 +52,19 @@ public abstract class StringMarshaller {
     
     public abstract YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException;
     
-    public static String readShort(YapStream stream, YapReader a_bytes) throws CorruptionException {
-        int length = a_bytes.readInt();
+    public static String readShort(YapStream stream, YapReader bytes) throws CorruptionException {
+    	return readShort(stream.stringIO(),stream.configImpl().internStrings(),bytes);
+    }
+
+    public static String readShort(YapStringIO io, boolean internStrings, YapReader bytes) throws CorruptionException {
+        int length = bytes.readInt();
         if (length > YapConst.MAXIMUM_BLOCK_SIZE) {
             throw new CorruptionException();
         }
         if (length > 0) {
-            String str = stream.stringIO().read(a_bytes, length);
+            String str = io.read(bytes, length);
             if(! Deploy.csharp){
-                if(stream.configImpl().internStrings()){
+                if(internStrings){
                     str = str.intern();
                 }
             }
@@ -68,7 +72,6 @@ public abstract class StringMarshaller {
         }
         return "";
     }
-
 
     // TODO: Instead of working with YapReader objects to transport
     // string buffers, we should consider to have a specific string

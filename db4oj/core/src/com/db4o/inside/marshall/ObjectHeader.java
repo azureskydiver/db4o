@@ -51,7 +51,7 @@ public class ObjectHeader {
 		header._marshallerFamily._object.skipMarshallerInfo(target);
 		// TODO defrag for attributes
 		readAttributes(header._marshallerFamily, target);
-		System.out.println("MAP CLASS REF "+yapClass.getID()+" -> "+newID+", "+source._offset+"/"+target._offset);
+		PMFDDebug.logModify("ObjectHeader CLASS",yapClass.getID(),newID,source,target);
     	return header;
     }		
     		

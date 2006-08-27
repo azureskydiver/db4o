@@ -86,12 +86,4 @@ public abstract class Debug extends Debug4 {
         }
         return false;
     }
-
-    private final static boolean DO_LOG=false;
-    
-    public static void log(String msg) {
-    	if(DO_LOG) {
-    		System.out.println(msg);
-    	}
-    }
 }

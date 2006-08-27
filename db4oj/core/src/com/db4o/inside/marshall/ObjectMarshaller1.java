@@ -196,7 +196,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     }
 
 	public void defragFields(YapClass yc,ObjectHeader header, final YapReader source, final YapReader target, final IDMapping mapping) {
-		Debug.log("BEFORE DEFRAG FIELDS "+source._offset+"/"+target._offset);
+		PMFDDebug.logEnter("ObjectMarshaller DEFRAGFIELDS",source,target);
         TraverseFieldCommand command = new TraverseFieldCommand() {
         	
         	public int fieldCount(YapClass yapClass, YapReader reader) {
@@ -205,16 +205,15 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         	}
         	
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
-				Debug.log("BEFORE DEFRAG FIELD "+containingClass.getName()+"#"+field.getName()+": "+source._offset+"/"+target._offset);
-				if (isNull) {
-					return;
+				PMFDDebug.logEnter("ObjectMarshaller DEFRAGFIELD "+containingClass.getName()+"#"+field.getName(),source,target);
+				if (!isNull) {
+					field.getHandler().defrag(_family,source,target,mapping);
 				} 
-				field.getHandler().defrag(_family,source,target,mapping);
-				Debug.log("AFTER DEFRAG FIELD "+containingClass.getName()+"#"+field.getName()+": "+source._offset+"/"+target._offset);
+				PMFDDebug.logExit("ObjectMarshaller DEFRAGFIELD "+containingClass.getName()+"#"+field.getName(),source,target);
 			}
 		};
 		traverseFields(yc, source, header._headerAttributes, command);
-		Debug.log("AFTER DEFRAG FIELDS "+source._offset+"/"+target._offset);
+		PMFDDebug.logExit("ObjectMarshaller DEFRAGFIELDS",source,target);
 	}
 
 	public void writeObjectClassID(YapReader reader, int id) {

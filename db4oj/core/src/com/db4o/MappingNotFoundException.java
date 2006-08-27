@@ -1,16 +1,25 @@
+/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class MappingNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = -1771324770287654802L;
 	
-	private int id;
+	private int _id;
 	
-	public MappingNotFoundException(int id_) {
-		id = id_;
+	public MappingNotFoundException(int id) {
+		this._id = id;
 	}
 
 	public int id() {
-		return id;
+		return _id;
+	}
+	
+	public String getMessage() {
+		return "Not found: "+_id;
 	}
 }

@@ -980,11 +980,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         storeStaticFieldValues(systemTrans, false);
     }
 
-    public void defrag(YapReader source,YapReader target,IDMapping mapping) {
-    	ObjectHeader header=ObjectHeader.defrag(this,source, target, mapping);
-    	header._marshallerFamily._object.defragFields(this,header,source,target,mapping);
-    }	
-
 	Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, boolean a_addToIDTree) {
         
         // overridden in YapClassPrimitive
@@ -1860,20 +1855,25 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
     }
 
+    public void defragObject(YapReader source,YapReader target,IDMapping mapping) {
+    	ObjectHeader header=ObjectHeader.defrag(this,source, target, mapping);
+    	header._marshallerFamily._object.defragFields(this,header,source,target,mapping);
+    }	
+
 	public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
-		Debug.log("BEFORE YAPCLASS MAP "+source._offset+"/"+target._offset);
+		PMFDDebug.logEnter("YapClass Handler",source,target);
 		int oldID=source.readInt();
 		int newID=mapping.mappedID(oldID);
 		target.writeInt(newID);
 		int restLength = (linkLength()-YapConst.INT_LENGTH);
 		source.incrementOffset(restLength);
 		target.incrementOffset(restLength);
-		System.out.println("Mapped field ref: "+oldID+" => "+newID+" ("+getName()+") ");
-		Debug.log("AFTER YAPCLASS MAP "+source._offset+"/"+target._offset);
+		PMFDDebug.logModify("FIELD REF("+getName()+")",oldID,newID,source,target);
+		PMFDDebug.logExit("YapClass Handler",source,target);
 	}
 	
-	public static void defrag(YapStringIO sio, YapReader source, YapReader target, IDMapping mapping) {
+	public void defragClass(YapReader source, YapReader target, IDMapping mapping) throws CorruptionException {
 		MarshallerFamily mf = MarshallerFamily.current();
-		mf._class.defrag(sio, source, target, mapping);
+		mf._class.defrag(this,i_stream.stringIO(), source, target, mapping);
 	}
 }
