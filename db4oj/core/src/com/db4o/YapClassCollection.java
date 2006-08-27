@@ -421,4 +421,17 @@ public final class YapClassCollection extends YapMeta {
 		return str;
 	}
 
+	public static void defrag(YapReader source, YapReader target, IDMapping mapping) {
+		PMFDDebug.logEnter("CLASS COLLECTION", source, target);
+		int numClasses=source.readInt();
+		target.incrementOffset(YapConst.INT_LENGTH);
+		for(int classIdx=0;classIdx<numClasses;classIdx++) {
+			int oldID=source.readInt();
+			int newID=mapping.mappedID(oldID);
+			target.writeInt(newID);
+			PMFDDebug.logModify("CLASS", oldID, newID, source, target);
+		}
+		PMFDDebug.logExit("CLASS COLLECTION", source, target);
+	}
+
 }
