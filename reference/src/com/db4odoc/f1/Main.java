@@ -7,6 +7,8 @@ import com.db4odoc.f1.clientserver.TransactionExample;
 import com.db4odoc.f1.diagnostics.DiagnosticExample;
 import com.db4odoc.f1.indexes.IndexedExample;
 import com.db4odoc.f1.lists.CollectionExample;
+import com.db4odoc.f1.reflections.ReflectorExample;
+
 
 
 
@@ -26,5 +28,7 @@ public class Main {
         DiagnosticExample.testTranslatorDiagnostics();
     	BlobExample.main(args);
     	CollectionExample.main(args);
+    	ReflectorExample.main(args);
+        ReflectorExample.testReflector();
     }
 }
