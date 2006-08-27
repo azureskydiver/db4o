@@ -3,7 +3,7 @@ package com.db4o.db4ounit.fieldindex;
 import com.db4o.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
 import db4ounit.Assert;
 
@@ -20,6 +20,55 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 						new int[] { 3, 4, 7, 9 },
 						new int[] { 2, 2, 8, 8 });
 	}
+    
+    public void _testSingleIndexNotSmaller(){
+        final Query query = createItemQuery();
+        query.descend("foo").constrain(new Integer(5)).smaller().not();     
+        assertExpectedFoos(FieldIndexItem.class, new int[]{7, 9}, query);
+    }
+    
+    public void _testSingleIndexNotGreater(){
+        final Query query = createItemQuery();
+        query.descend("foo").constrain(new Integer(4)).greater().not();     
+        assertExpectedFoos(FieldIndexItem.class, new int[]{3, 4}, query);
+    }
+    
+    public void _testSingleIndexSmallerOrEqual() {
+        final Query query = createItemQuery();
+        query.descend("foo").constrain(new Integer(7)).smaller().equal();
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 3,4,7 }, query);
+    }
+
+    public void testSingleIndexGreaterOrEqual() {
+        final Query query = createItemQuery();
+        query.descend("foo").constrain(new Integer(7)).greater().equal();
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 7, 9 }, query);
+    }
+    
+    public void _testSingleIndexRange(){
+        final Query query = createItemQuery();
+        query.descend("foo").constrain(new Integer(3)).greater();
+        query.descend("foo").constrain(new Integer(9)).smaller();
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 4, 7 }, query);
+    }
+    
+    public void _testSingleIndexAndRange(){
+        final Query query = createItemQuery();
+        Constraint c1 = query.descend("foo").constrain(new Integer(3)).greater();
+        Constraint c2 = query.descend("foo").constrain(new Integer(9)).smaller();
+        c1.and(c2);
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 4, 7 }, query);
+    }
+    
+    public void _testSingleIndexOrRange(){
+        final Query query = createItemQuery();
+        Constraint c1 = query.descend("foo").constrain(new Integer(4)).smaller();
+        Constraint c2 = query.descend("foo").constrain(new Integer(7)).greater();
+        c1.or(c2);
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 9 }, query);
+    }
+    
+    
 	
 	public void testIndexSelection() {		
 		Query query = createComplexItemQuery();		
@@ -43,22 +92,15 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 	public void testDoubleDescendingOnQuery() {
 		final Query query = createComplexItemQuery();
 		query.descend("child").descend("foo").constrain(new Integer(3));
-		
 		assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 4 }, query);
 	}
 	
 	public void testTripleDescendingOnQuery() {
 		final Query query = createComplexItemQuery();
 		query.descend("child").descend("child").descend("foo").constrain(new Integer(3));
-		
 		assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 7 }, query);
 	}
 
-	public void testSingleIndexEquals() {
-		final int expectedBar = 3;
-		assertExpectedFoos(FieldIndexItem.class, new int[] { expectedBar }, createQuery(expectedBar));
-	}
-	
 	public void testMultiTransactionSmallerWithCommit() {
 		final Transaction transaction = newTransaction();
 		fillTransactionWith(transaction, 0);
@@ -98,6 +140,21 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertSmaller(new int[] { 3, 4 }, 7);
 	}
 
+    public void testMultiTransactionGreater() {
+        fillTransactionWith(systemTrans(), 10);
+        fillTransactionWith(systemTrans(), 5);      
+        assertGreater(new int[] { 4, 7, 9 }, 3);
+        removeFromTransaction(systemTrans(), 5);
+        assertGreater(new int[] { 4, 7, 9 }, 3);
+        removeFromTransaction(systemTrans(), 10);
+        assertGreater(new int[] { 4, 7, 9 }, 3);
+    }
+
+    public void testSingleIndexEquals() {
+        final int expectedBar = 3;
+        assertExpectedFoos(FieldIndexItem.class, new int[] { expectedBar }, createQuery(expectedBar));
+    }
+    
 	public void testSingleIndexSmaller() {
 		assertSmaller(new int[] { 3, 4 }, 7);
 	}
@@ -106,29 +163,12 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		assertGreater(new int[] { 4, 7, 9 }, 3);
 	}
 	
-	public void testMultiTransactionGreater() {
-		fillTransactionWith(systemTrans(), 10);
-		fillTransactionWith(systemTrans(), 5);		
-		assertGreater(new int[] { 4, 7, 9 }, 3);
-		removeFromTransaction(systemTrans(), 5);
-        assertGreater(new int[] { 4, 7, 9 }, 3);
-		removeFromTransaction(systemTrans(), 10);
-		assertGreater(new int[] { 4, 7, 9 }, 3);
-	}
-
 	private void assertGreater(int[] expectedBars, int greaterThan) {
 		final Query query = createItemQuery();
 		query.descend("foo").constrain(new Integer(greaterThan)).greater();		
 		assertExpectedFoos(FieldIndexItem.class, expectedBars, query);
 	}
 	
-	public void testSingleIndexGreaterOrEqual() {
-		final Query query = createItemQuery();
-		query.descend("foo").constrain(new Integer(7)).greater().equal();
-		
-		assertExpectedFoos(FieldIndexItem.class, new int[] { 7, 9 }, query);
-	}
-
 	private void assertExpectedFoos(Class itemClass, final int[] expectedFoos, final Query query) {
 		
 		final Transaction trans = transactionFromQuery(query);
