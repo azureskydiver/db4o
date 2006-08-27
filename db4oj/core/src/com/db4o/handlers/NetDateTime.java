@@ -43,7 +43,7 @@ public class NetDateTime extends NetSimpleTypeHandler{
 	public String toString(byte[] bytes) {
         long ticks = 0;
         for (int i = 0; i < 8; i++) {
-            ticks = (ticks << 8) + (long)(bytes[i] & 255);
+            ticks = (ticks << 8) + (bytes[i] & 255);
         }
         long ms = ticks / TICKS_TO_MS_RATIO - ERA_DIFFERENCE_IN_MS;
         Date date=new Date(ms);

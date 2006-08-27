@@ -5,11 +5,10 @@ package com.db4o.reflect.self;
 import com.db4o.reflect.*;
 
 public class SelfArray implements ReflectArray {
-	private final Reflector _reflector;
+    
 	private final SelfReflectionRegistry _registry;
 
 	SelfArray(Reflector reflector,SelfReflectionRegistry registry) {
-		_reflector = reflector;
 		_registry=registry;
 	}
 

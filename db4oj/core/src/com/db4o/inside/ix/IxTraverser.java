@@ -129,14 +129,13 @@ public class IxTraverser{
     private int countGreater(IxPath a_path, int a_sum) {
         if (a_path.i_next == null) {
             return a_sum + countSubsequent(a_path);
+        } 
+        if (a_path.i_next.i_tree == a_path.i_tree._preceding) {
+            a_sum += countSubsequent(a_path);
         } else {
-            if (a_path.i_next.i_tree == a_path.i_tree._preceding) {
-                a_sum += countSubsequent(a_path);
-            } else {
-                a_sum += a_path.countMatching();
-            }
-            return countGreater(a_path.i_next, a_sum);
+            a_sum += a_path.countMatching();
         }
+        return countGreater(a_path.i_next, a_sum);
     }
     
     private int countPreceding(IxPath a_path) {
@@ -146,23 +145,21 @@ public class IxTraverser{
     private int countSmaller(IxPath a_path, int a_sum) {
         if (a_path.i_next == null) {
             return a_sum + countPreceding(a_path);
+        } 
+        if (a_path.i_next.i_tree == a_path.i_tree._subsequent) {
+            a_sum += countPreceding(a_path);
         } else {
-            if (a_path.i_next.i_tree == a_path.i_tree._subsequent) {
-                a_sum += countPreceding(a_path);
-            } else {
-                a_sum += a_path.countMatching();
-            }
-            return countSmaller(a_path.i_next, a_sum);
+            a_sum += a_path.countMatching();
         }
+        return countSmaller(a_path.i_next, a_sum);
     }
 
     private int countSpan(IxPath a_previousPath, IxPath a_great, IxPath a_small) {
         if (a_great == null) {
             if (a_small == null) {
                 return a_previousPath.countMatching();
-            } else {
-                return countGreater(a_small, a_previousPath.countMatching());
-            }
+            } 
+            return countGreater(a_small, a_previousPath.countMatching());
         } else if (a_small == null) {
             return countSmaller(a_great, a_previousPath.countMatching());
         }
@@ -316,22 +313,6 @@ public class IxTraverser{
         return findBounds(constraint, a_qcon.indexRoot());
     }
     
-    private void findGreatestEqual(IxTree a_tree) {
-        int res = a_tree.compare(null);
-        i_greatTail = i_greatTail.append(a_tree, res, a_tree.lowerAndUpperMatch());
-        if (res == 0) {
-            findGreatestEqualFromEqual(a_tree);
-        } else if (res < 0) {
-            if (a_tree._subsequent != null) {
-                findGreatestEqual((IxTree)a_tree._subsequent);
-            }
-        } else {
-            if (a_tree._preceding != null) {
-                findGreatestEqual((IxTree)a_tree._preceding);
-            }
-        }
-    }
-    
     private void findGreatestEqualFromEqual(IxTree a_tree) {
         if (a_tree != null) {
             int res = a_tree.compare(null);
@@ -344,22 +325,6 @@ public class IxTraverser{
                 findGreatestEqualFromEqual((IxTree)a_tree._preceding);
             } else {
                 findGreatestEqualFromEqual((IxTree)a_tree._subsequent);
-            }
-        }
-    }
-    
-    private void findSmallestEqual(IxTree a_tree) {
-        int res = a_tree.compare(null);
-        i_smallTail = i_smallTail.append(a_tree, res, a_tree.lowerAndUpperMatch());
-        if (res == 0) {
-            findSmallestEqualFromEqual(a_tree);
-        } else if (res < 0) {
-            if (a_tree._subsequent != null) {
-                findSmallestEqual((IxTree)a_tree._subsequent);
-            }
-        } else {
-            if (a_tree._preceding != null) {
-                findSmallestEqual((IxTree)a_tree._preceding);
             }
         }
     }

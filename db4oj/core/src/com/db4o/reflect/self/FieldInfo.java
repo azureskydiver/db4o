@@ -11,12 +11,12 @@ public class FieldInfo {
 
 	
 	
-	public FieldInfo(String _name, Class _clazz, boolean isPublic, boolean isStatic, boolean isTransient) {
-		this._name = _name;
-		this._clazz = _clazz;
-		this._isPublic = isPublic;
-		this._isStatic = isStatic;
-		this._isTransient = isTransient;
+	public FieldInfo(String name, Class clazz, boolean isPublic, boolean isStatic, boolean isTransient) {
+		_name = name;
+		_clazz = clazz;
+		_isPublic = isPublic;
+		_isStatic = isStatic;
+		_isTransient = isTransient;
 	}
 
 	public String name() {

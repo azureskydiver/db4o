@@ -36,7 +36,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
     public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {
         
         int address = reader.readInt();
-        int length = reader.readInt();
+        reader.readInt();  // length
         if (address <= 0) {
             return;
         }

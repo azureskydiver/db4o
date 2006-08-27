@@ -33,13 +33,11 @@ public final class YapConfigBlock implements Runnable
     // int    freespace address
     // int    converter version
     
-    private final Object		_timeWriterLock = new Object();
 	private final YapFile		_stream;
 	public int							_address;
 	private Transaction			_transactionToCommit;
 	public int                 		_bootRecordID;
 	
-	private static final int	POINTER_ADDRESS = 2;
 	private static final int	MINIMUM_LENGTH = 
 		YapConst.INT_LENGTH    			// own length
 		+ (YapConst.LONG_LENGTH * 2)	 	// candidate ID and last access time
@@ -239,7 +237,7 @@ public final class YapConfigBlock implements Runnable
                 Exceptions4.throwRuntimeException(65);
             }
         }
-		long lastOpenTime = YLong.readLong(reader);
+		YLong.readLong(reader);  // open time
 		long lastAccessTime = YLong.readLong(reader);
 		_encoding = reader.readByte();
 		
@@ -313,7 +311,7 @@ public final class YapConfigBlock implements Runnable
 			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, YapConst.LONG_LENGTH * 2);
 			reader.moveForward(OPEN_TIME_OFFSET);
 			reader.read();
-			long currentOpenTime = YLong.readLong(reader);
+			YLong.readLong(reader);  // open time
 			long currentAccessTime = YLong.readLong(reader);
 			if((currentAccessTime > lastAccessTime) ){
 				throw new DatabaseFileLockedException();
@@ -400,8 +398,6 @@ public final class YapConfigBlock implements Runnable
 		if(lockFile()){
 			YapWriter writer = headerLockIO();
 			YInt.writeInt(((int)_opentime), writer);
-            
-            int intOpenTime = (int)_opentime;
             
             // System.out.println("Written by " + System.identityHashCode(this) + " " + intOpenTime);
             

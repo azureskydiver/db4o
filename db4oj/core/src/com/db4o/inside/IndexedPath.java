@@ -18,7 +18,7 @@ public class IndexedPath extends IndexedNodeBase {
 		KeyValueIterator iterator = iterator();
 		while (iterator.moveNext()) {
 			final FieldIndexKey key = (FieldIndexKey) iterator.key();
-			tree = (TreeInt) TreeInt.add(tree, new TreeInt(key.parentID()));
+			tree = (TreeInt) Tree.add(tree, new TreeInt(key.parentID()));
 		}
 		return tree;
 	}

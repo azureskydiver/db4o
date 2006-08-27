@@ -92,7 +92,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         return getName();
     }
     
-    ReflectClass classReflector() throws ClassNotFoundException {
+    ReflectClass classReflector() {
     	return config().reflector().forName(getName());
     }
 

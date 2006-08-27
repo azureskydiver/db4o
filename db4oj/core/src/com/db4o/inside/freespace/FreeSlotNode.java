@@ -44,25 +44,23 @@ public final class FreeSlotNode extends TreeInt {
 		if (cmp == 0) {
 			a_finder._object = a_in; // the highest node in the hierarchy !!!
 			return a_in.remove();
-		} else {
-			if (cmp > 0) {
-				a_in._preceding = removeGreaterOrEqual(
-						(FreeSlotNode) a_in._preceding, a_finder);
-				if (a_finder._object != null) {
-					a_in._size--;
-					return a_in;
-				}
-				a_finder._object = a_in;
-				return a_in.remove();
-			} else {
-				a_in._subsequent = removeGreaterOrEqual(
-						(FreeSlotNode) a_in._subsequent, a_finder);
-				if (a_finder._object != null) {
-					a_in._size--;
-				}
+		} 
+		if (cmp > 0) {
+			a_in._preceding = removeGreaterOrEqual(
+					(FreeSlotNode) a_in._preceding, a_finder);
+			if (a_finder._object != null) {
+				a_in._size--;
 				return a_in;
 			}
+			a_finder._object = a_in;
+			return a_in.remove();
+		} 
+		a_in._subsequent = removeGreaterOrEqual(
+				(FreeSlotNode) a_in._subsequent, a_finder);
+		if (a_finder._object != null) {
+			a_in._size--;
 		}
+		return a_in;
 	}
 
 	public Object read(YapReader a_reader) {

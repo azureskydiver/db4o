@@ -117,9 +117,7 @@ public abstract class Predicate implements Serializable {
 					cachedFilterMethod=method;
 					return method;
 				}
-				else {
-					untypedMethod=method;
-				}
+				untypedMethod=method;
 			}
 		}
 		if(untypedMethod!=null) {
@@ -135,9 +133,8 @@ public abstract class Predicate implements Serializable {
 		}
 		if (Deploy.csharp) {
 			return method.getName().equalsIgnoreCase(PREDICATEMETHOD_NAME);
-		} else {
-			return method.getName().equals(PREDICATEMETHOD_NAME);
-		}
+		} 
+		return method.getName().equals(PREDICATEMETHOD_NAME);
 	}
 
     /**

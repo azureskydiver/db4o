@@ -14,6 +14,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     /** temporary variable for value and search coding */
     private static final boolean DEBUG = MarshallerFamily.BTREE_FIELD_INDEX;
+    // private static final boolean DEBUG = false;
     
     private static final byte BTREE_VERSION = (byte)1;
     

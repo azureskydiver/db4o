@@ -169,14 +169,13 @@ public final class YapHandlers {
 
 	int arrayType(Object a_object) {
     	ReflectClass claxx = _masterStream.reflector().forObject(a_object);
-        if (claxx.isArray()) {
-            if (_masterStream.reflector().array().isNDimensional(claxx)) {
-                return YapConst.TYPE_NARRAY;
-            } else {
-                return YapConst.TYPE_ARRAY;
-            }
+        if (! claxx.isArray()) {
+            return 0;
         }
-        return 0;
+        if (_masterStream.reflector().array().isNDimensional(claxx)) {
+            return YapConst.TYPE_NARRAY;
+        } 
+        return YapConst.TYPE_ARRAY;
     }
 	
     boolean createConstructor(final ReflectClass claxx, boolean skipConstructor){

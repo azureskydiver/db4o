@@ -395,7 +395,7 @@ public abstract class QQueryBase implements Unversioned {
                 if (topLevel) {
                     candidates.traverse(result);
                 } else {
-                    QQueryBase q = (QQueryBase)this;
+                    QQueryBase q = this;
                     final Collection4 fieldPath = new Collection4();
                     while (q.i_parent != null) {
                         fieldPath.add(q.i_field);

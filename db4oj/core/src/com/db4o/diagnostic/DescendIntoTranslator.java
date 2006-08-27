@@ -10,9 +10,9 @@ public class DescendIntoTranslator extends DiagnosticBase {
 	private String className;
 	private String fieldName;
 	
-	public DescendIntoTranslator(String className, String fieldName) {
-		this.className = className;
-		this.fieldName = fieldName;
+	public DescendIntoTranslator(String className_, String fieldName_) {
+		className = className_;
+		fieldName = fieldName_;
 	}
 
 	public String problem() {

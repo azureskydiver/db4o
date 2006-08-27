@@ -41,9 +41,8 @@ public abstract class Tree implements ShallowClone,Readable{
 	            _subsequent = _subsequent.add(a_new);
 	            if(_preceding == null){
 	                return rotateLeft();
-	            }else{
-	                return balance();
 	            }
+	            return balance();
 	        }
 	    }else if(a_cmp > 0 || a_new.duplicates()){
 	        if(_preceding == null){
@@ -53,9 +52,8 @@ public abstract class Tree implements ShallowClone,Readable{
 	            _preceding = _preceding.add(a_new);
 	            if(_subsequent == null){
 	                return rotateRight();
-	            }else{
-	                return balance();
 	            }
+	            return balance();
 	        }
 	    }else{
 	        a_new.isDuplicateOf(this);
@@ -119,9 +117,8 @@ public abstract class Tree implements ShallowClone,Readable{
 				}
 			});
 			return length[0];
-		}else{
-			return YapConst.INT_LENGTH + (size() * ownLength());
 		}
+		return YapConst.INT_LENGTH + (size() * ownLength());
 	}
 
 	
@@ -216,17 +213,15 @@ public abstract class Tree implements ShallowClone,Readable{
 		int cmp = a_in.compare(a_finder);
 		if(cmp == 0){
 			return a_in; // the highest node in the hierarchy !!!
-		}else{
-			if(cmp > 0){
-				Tree node = findGreaterOrEqual(a_in._preceding, a_finder);
-				if(node != null){
-					return node;
-				}
-				return a_in;
-			}else{
-				return findGreaterOrEqual(a_in._subsequent, a_finder);
-			}
 		}
+		if(cmp > 0){
+			Tree node = findGreaterOrEqual(a_in._preceding, a_finder);
+			if(node != null){
+				return node;
+			}
+			return a_in;
+		}
+		return findGreaterOrEqual(a_in._subsequent, a_finder);
 	}
 	
 	
@@ -241,9 +236,8 @@ public abstract class Tree implements ShallowClone,Readable{
 				return node;
 			}
 			return a_in;
-		}else{
-			return findSmaller(a_in._preceding, a_node);
 		}
+		return findSmaller(a_in._preceding, a_node);
 	}
     
     public final Tree first(){

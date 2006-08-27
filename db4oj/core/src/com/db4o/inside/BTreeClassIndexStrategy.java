@@ -55,7 +55,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         if (stream.isClient()) {
         	return;
         }
-        _btreeIndex = ((YapFile)stream).createBTreeClassIndex(_yapClass, btreeID);
+        _btreeIndex = ((YapFile)stream).createBTreeClassIndex(btreeID);
         _btreeIndex.setRemoveListener(new Visitor4() {
             public void visit(Object obj) {
                 int id = ((Integer)obj).intValue();

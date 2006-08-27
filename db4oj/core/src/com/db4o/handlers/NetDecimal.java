@@ -20,7 +20,6 @@ public class NetDecimal extends NetSimpleTypeHandler{
 	 
 	private static final BigInteger ZERO = new BigInteger("0", 16);
     
-    private static final BigDecimal ONE = new BigDecimal("1"); 
 	private static final BigDecimal TEN = new BigDecimal("10"); 
 
 	public NetDecimal(YapStream stream) {

@@ -14,7 +14,6 @@ public class GenericVirtualField extends GenericField{
     }
     
     public Object deepClone(Object obj) {
-        Reflector reflector = (Reflector)obj;
         return new GenericVirtualField(getName());
     }
 

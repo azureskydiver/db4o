@@ -186,9 +186,9 @@ public class FileHeader0 {
         file.blockSeek(_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
     }
 
-    public void writeFixedPart(boolean shuttingDown, YapWriter writer, byte blockSize, int classCollectionID, int freespaceID) {
+    public void writeFixedPart(boolean shuttingDown, YapWriter writer, byte blockSize_, int classCollectionID, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
-        writer.append(blockSize);
+        writer.append(blockSize_);
         writer.writeInt(  _configBlock._address);
         
         int headerLockOpenTime = shuttingDown ? 0 : (int)_configBlock._opentime;  

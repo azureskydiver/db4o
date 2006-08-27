@@ -10,23 +10,23 @@ public class MarshallerFamily {
     
     public static class Version{
         
-        public static final int LEGACY = 0;
+        public static final int PRE_MARSHALLER = 0;
         
         public static final int MARSHALLER = 1;
         
-        public static final int BTREE_FIELD_INDEX = 2; 
+        public static final int BTREE_FIELD_INDEXES = 2; 
         
     }
     
     public static int VERSION = Version.MARSHALLER;
 
-    public static final boolean LEGACY = (VERSION == Version.LEGACY);
+    public static final boolean LEGACY = (VERSION == Version.PRE_MARSHALLER);
     
     public static final boolean OLD_CLASS_INDEX = LEGACY;
     
-    public static final boolean BTREE_FIELD_INDEX = (VERSION == Version.BTREE_FIELD_INDEX);
+    public static final boolean BTREE_FIELD_INDEX = (VERSION == Version.BTREE_FIELD_INDEXES);
     
-    public static final boolean OLD_FIELD_INDEX = (VERSION < Version.BTREE_FIELD_INDEX);
+    public static final boolean OLD_FIELD_INDEX = (VERSION < Version.BTREE_FIELD_INDEXES);
     
     public final ArrayMarshaller _array;
     

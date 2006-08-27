@@ -17,7 +17,7 @@ public class MetaField implements Internal4{
 	public MetaField(){
 	}
 	
-	public MetaField(String name){
-		this.name = name;
+	public MetaField(String name_){
+		name = name_;
 	}
 }

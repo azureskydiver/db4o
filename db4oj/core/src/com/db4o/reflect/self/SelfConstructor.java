@@ -9,8 +9,8 @@ public class SelfConstructor implements ReflectConstructor{
 
 	private Class _class;
 	
-	public SelfConstructor(Class _class) {
-		this._class = _class;
+	public SelfConstructor(Class clazz) {
+		_class = clazz;
 	}
 
 	public void setAccessible() {

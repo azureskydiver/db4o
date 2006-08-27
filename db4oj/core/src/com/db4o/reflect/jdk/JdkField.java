@@ -15,9 +15,9 @@ public class JdkField implements ReflectField {
     private final Reflector reflector;
 	private final Field field;
 
-    public JdkField(Reflector reflector, Field field) {
-    	this.reflector = reflector;
-        this.field = field;
+    public JdkField(Reflector reflector_, Field field_) {
+    	reflector = reflector_;
+        field = field_;
     }
 
     public String getName() {

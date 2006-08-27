@@ -79,16 +79,15 @@ class IxFileRangeReader {
                     }
                     fileRange.calculateSize();
                     return newTree.balanceCheckNulls();
-                } else {
-                    if (_cursor == 0) {
-                        newTree._subsequent = fileRange;
-                        return newTree.rotateLeft();
-                    } else if (_cursor == fileRange._entries) {
-                        newTree._preceding = fileRange;
-                        return newTree.rotateRight();
-                    }
-                    return insert(fileRange, newTree, _cursor, cmp);
+                } 
+                if (_cursor == 0) {
+                    newTree._subsequent = fileRange;
+                    return newTree.rotateLeft();
+                } else if (_cursor == fileRange._entries) {
+                    newTree._preceding = fileRange;
+                    return newTree.rotateRight();
                 }
+                return insert(fileRange, newTree, _cursor, cmp);
             }
             if (!adjustCursor()) {
                 if (_cursor == 0 && cmp > 0) {

@@ -25,7 +25,6 @@ package com.db4o.io.crypt;
 
 import java.io.*;
 
-import com.db4o.*;
 import com.db4o.io.*;
 
 /**

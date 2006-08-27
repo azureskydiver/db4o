@@ -15,9 +15,9 @@ public class JdkConstructor implements ReflectConstructor{
 	private final Reflector reflector;
 	private final Constructor constructor;
 	
-	public JdkConstructor(Reflector reflector, Constructor constructor){
-		this.reflector = reflector;
-		this.constructor = constructor;
+	public JdkConstructor(Reflector reflector_, Constructor constructor_){
+		reflector = reflector_;
+		constructor = constructor_;
 	}
 	
 	public ReflectClass[] getParameterTypes(){
