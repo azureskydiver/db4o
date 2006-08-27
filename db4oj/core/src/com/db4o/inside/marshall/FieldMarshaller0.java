@@ -39,7 +39,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
                 }
             }
         }
-        field.init(field.getParentYapClass(), name, 0);
+        field.init(field.getParentYapClass(), name);
         int handlerID = reader.readInt();
         YapBit yb = new YapBit(reader.readByte());
         boolean isPrimitive = yb.get();

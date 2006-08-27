@@ -361,13 +361,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			a_pending.changeConstraint();
 			_pendingJoins = Tree.add(_pendingJoins, a_pending);
 			return true;
-		} else {
-			_pendingJoins = _pendingJoins.removeNode(oldPending);
-			oldPending._join.evaluatePending(this, oldPending, a_pending,
-					a_pending._result);
-			return false;
-		}
-
+		} 
+		_pendingJoins = _pendingJoins.removeNode(oldPending);
+		oldPending._join.evaluatePending(this, oldPending, a_pending,
+				a_pending._result);
+		return false;
 	}
 
 	ReflectClass classReflector() {
@@ -468,18 +466,17 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							memberClass())) {
 						YapArrayN yan = new YapArrayN(a_stream, ydt, false);
 						return yan;
-					} else {
-						YapArray ya = new YapArray(a_stream, ydt, false);
-						return ya;
-					}
-				} else {
-					return yc.prepareComparison(a_constraint);
-				}
+					} 
+					YapArray ya = new YapArray(a_stream, ydt, false);
+					return ya;
+					
+				} 
+				return yc.prepareComparison(a_constraint);
+				
 			}
 			return null;
-		} else {
-			return _yapClass.prepareComparison(a_constraint);
-		}
+		} 
+		return _yapClass.prepareComparison(a_constraint);
 	}
 
 	private void read() {

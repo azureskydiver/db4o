@@ -165,7 +165,7 @@ public abstract class YapMeta {
             writer.writeEnd();
         }
 
-        ((YapFile)stream).writeObject(this, writer, address);
+        stream.writeObject(this, writer, address);
 
         if (isActive()) {
             setStateClean();

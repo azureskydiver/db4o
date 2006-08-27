@@ -26,9 +26,10 @@ final class MCreateClass extends MsgD {
                             Msg.OBJECT_TO_CLIENT.getWriter(returnBytes).write(stream, sock);
                             return true;
     
-                        } else {
-                            // TODO: handling, if the class can't be created 
-                        }
+                        } 
+                        
+                        // TODO: handling, if the class can't be created
+                        
                     } catch (Throwable t) {
                         if (Deploy.debug) {
                             System.out.println("MCreateClass failed");

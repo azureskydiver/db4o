@@ -916,12 +916,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return a_object;
     }
     
-    boolean init(
-        YapStream a_stream,
-        YapClass a_ancestor,
-        ReflectClass claxx,
-        boolean errMessages
-        ) {
+    final boolean init( YapStream a_stream, YapClass a_ancestor,ReflectClass claxx) {
         
         if(DTrace.enabled){
             DTrace.YAPCLASS_INIT.log(getID());

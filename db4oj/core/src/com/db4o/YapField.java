@@ -61,7 +61,7 @@ public class YapField implements StoredField {
     YapField(YapClass a_yapClass, ObjectTranslator a_translator) {
         // for YapFieldTranslator only
         i_yapClass = a_yapClass;
-        init(a_yapClass, a_translator.getClass().getName(), 0);
+        init(a_yapClass, a_translator.getClass().getName());
         i_state = AVAILABLE;
         YapStream stream =getStream(); 
         i_handler = stream.i_handlers.handlerForClass(
@@ -69,7 +69,7 @@ public class YapField implements StoredField {
     }
 
     YapField(YapClass a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
-        init(a_yapClass, a_field.getName(), 0);
+        init(a_yapClass, a_field.getName());
         i_javaField = a_field;
         i_javaField.setAccessible();
         i_handler = a_handler;
@@ -543,7 +543,7 @@ public class YapField implements StoredField {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public void init(YapClass a_yapClass, String a_name, int syntheticforJad) {
+    public final void init(YapClass a_yapClass, String a_name) {
         i_yapClass = a_yapClass;
         i_name = a_name;
         if (a_yapClass.i_config != null) {
@@ -839,7 +839,7 @@ public class YapField implements StoredField {
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        if (Debug.prettyToStrings) {
+        if (Debug4.prettyToStrings) {
             sb.append("YapField ");
             sb.append(i_name);
             sb.append("\n");

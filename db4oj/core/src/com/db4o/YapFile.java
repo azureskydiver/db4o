@@ -102,7 +102,7 @@ public abstract class YapFile extends YapStream {
         i_classCollection.initTables(1);
     }
     
-    public final BTree createBTreeClassIndex(YapClass a_yapClass, int id){
+    public final BTree createBTreeClassIndex(int id){
         return new BTree(i_trans, id, new YInt(this));
     }
 
@@ -597,7 +597,7 @@ public abstract class YapFile extends YapStream {
     public abstract void syncFiles();
 
     public String toString() {
-        if (Debug.prettyToStrings) {
+        if (Debug4.prettyToStrings) {
             return super.toString();
         }
         return fileName();
@@ -708,9 +708,8 @@ public abstract class YapFile extends YapStream {
                 bytes.append(YapConst.XBYTE);
             }
             return bytes;
-        } else {
-            throw Exceptions4.virtualException();
-        }
+        } 
+        throw Exceptions4.virtualException();
     }
 
     final void writeTransactionPointer(int address) {

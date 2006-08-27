@@ -20,8 +20,8 @@ public class MetaClass implements Internal4{
 	public MetaClass(){
 	}
 	
-	public MetaClass(String name){
-		this.name = name;
+	public MetaClass(String name_){
+		name = name_;
 	}
 	
 	MetaField ensureField(Transaction trans, String a_name){

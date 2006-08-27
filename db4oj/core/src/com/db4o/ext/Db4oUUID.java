@@ -23,9 +23,9 @@ public class Db4oUUID {
 	 * @param longPart      the long part
 	 * @param signaturePart the signature part
 	 */
-	public Db4oUUID(long longPart, byte[] signaturePart) {
-		this.longPart = longPart;
-		this.signaturePart = signaturePart;
+	public Db4oUUID(long longPart_, byte[] signaturePart_) {
+		longPart = longPart_;
+		signaturePart = signaturePart_;
 	}
 
 	/**

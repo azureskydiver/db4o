@@ -318,7 +318,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
         if(MarshallerFamily.LEGACY){
     		if (i_yapClass.isPrimitive()){
                 YapClassPrimitive ycp = (YapClassPrimitive)i_yapClass;
-                TypeHandler4 handler = ycp.i_handler;
                 int id = MarshallerFamily.current()._primitive.writeNew(a_trans, ycp, a_object, true, null, true, false);
                 setID(id);
     			return false;
@@ -422,9 +421,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		if (obj != null) {
 			a_add.hc_init(obj);
 			return hc_add1(a_add);
-		} else {
-			return this;
-		}
+		} 
+		return this;
 	}
     
     public void hc_init(Object obj){
@@ -444,9 +442,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				hc_preceding = hc_preceding.hc_add1(a_new);
 				if (hc_subsequent == null) {
 					return hc_rotateRight();
-				} else {
-					return hc_balance();
-				}
+				} 
+				return hc_balance();
 			}
 		} else {
 			if (hc_subsequent == null) {
@@ -456,9 +453,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				hc_subsequent = hc_subsequent.hc_add1(a_new);
 				if (hc_preceding == null) {
 					return hc_rotateLeft();
-				} else {
-					return hc_balance();
-				}
+				} 
+				return hc_balance();
 			}
 		}
 		return this;
@@ -634,9 +630,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				id_preceding = id_preceding.id_add1(a_new);
 				if (id_subsequent == null) {
 					return id_rotateRight();
-				} else {
-					return id_balance();
-				}
+				} 
+				return id_balance();
 			}
 		} else {
 			if (id_subsequent == null) {
@@ -646,9 +641,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				id_subsequent = id_subsequent.id_add1(a_new);
 				if (id_preceding == null) {
 					return id_rotateLeft();
-				} else {
-					return id_balance();
-				}
+				} 
+				return id_balance();
 			}
 		}
 		return this;

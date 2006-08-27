@@ -10,7 +10,6 @@ final class YBoolean extends YapJavaClass
 	
 	private static final byte TRUE = (byte) 'T';
 	private static final byte FALSE = (byte) 'F';
-	private static final byte NULL = (byte) 'N';
 	
 	private static final Boolean i_primitive = new Boolean(false);
 	

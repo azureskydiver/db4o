@@ -114,9 +114,8 @@ public class QConJoin extends QCon {
 		if (Deploy.debugQueries) {
 			String msg = i_and ? "&" : "|";
 			return " " + i_constraint1.i_id + msg + i_constraint2.i_id;
-		}else{
-			return "";
 		}
+		return "";
 	}
 	
 	

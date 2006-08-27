@@ -37,12 +37,11 @@ public final class TreeReader
 				    tree = Tree.add(tree, (Tree)i_template.read(i_bytes));
                 }
                 return tree;
-			}else{
-				while ((1 << i_levels) < (i_size + 1)){
-					i_levels ++;
-				}
-				return linkUp(null, i_levels);
 			}
+			while ((1 << i_levels) < (i_size + 1)){
+				i_levels ++;
+			}
+			return linkUp(null, i_levels);
 		}
 		return null;
 	}
@@ -70,9 +69,8 @@ public final class TreeReader
 				node._subsequent = linkDown(a_level + 1);
 				node.calculateSize();
 				return node;
-			}else {
-			    return (Tree)i_template.read(i_bytes);
 			}
+			return (Tree)i_template.read(i_bytes);
 		}
 		return null;
 	}

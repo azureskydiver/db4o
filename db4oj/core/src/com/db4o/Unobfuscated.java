@@ -46,12 +46,11 @@ public class Unobfuscated {
 	    if(Deploy.csharp) {
 	        // TODO: route to .NET implementation
 	        return System.currentTimeMillis();
-	    }else {
-	        if(random == null){
-	            random = new java.util.Random();
-	        }
-	        return ((java.util.Random)random).nextLong();
 	    }
+        if(random == null){
+            random = new java.util.Random();
+        }
+        return ((java.util.Random)random).nextLong();
 	}
 	
 	static void shutDownHookCallback(Object a_stream){

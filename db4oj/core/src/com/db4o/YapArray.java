@@ -12,14 +12,12 @@ import com.db4o.reflect.*;
  */
 public class YapArray extends YapIndependantType {
 	
-	public final YapStream _stream;
     public final TypeHandler4 i_handler;
     public final boolean i_isPrimitive;
     public final ReflectArray _reflectArray;
 
     public YapArray(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
-    	_stream = stream;
         i_handler = a_handler;
         i_isPrimitive = a_isPrimitive;
         _reflectArray = stream.reflector().array();
@@ -251,10 +249,9 @@ public class YapArray extends YapIndependantType {
 		a_elements[0] = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
 			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), a_elements[0]);
-		} else {
-			if (clazz[0] != null) {
-				return _reflectArray.newInstance(clazz[0], a_elements[0]);	
-			}
+		} 
+		if (clazz[0] != null) {
+			return _reflectArray.newInstance(clazz[0], a_elements[0]);	
 		}
 		return null;
 	}

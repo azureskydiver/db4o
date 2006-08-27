@@ -85,7 +85,6 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
 
         TypeHandler4 ret = null;
 
-        int linkOffSet = reader[0]._offset;
         reader[0]._offset = payLoadOffSet;
         
         int yapClassID = reader[0].readInt();

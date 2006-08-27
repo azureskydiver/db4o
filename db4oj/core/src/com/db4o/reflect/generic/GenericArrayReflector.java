@@ -9,11 +9,9 @@ import com.db4o.reflect.*;
  */
 public class GenericArrayReflector implements ReflectArray{
     
-    private final GenericReflector _reflector;
     private final ReflectArray _delegate;
     
     public GenericArrayReflector(GenericReflector reflector){
-        _reflector = reflector;
         _delegate = reflector.getDelegate().array();
     }
 

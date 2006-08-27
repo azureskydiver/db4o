@@ -281,7 +281,7 @@ public final class QCandidates implements Visitor4 {
     	public TreeInt tree;
     	
     	public void add(TreeInt node) {
-    		tree = (TreeInt)TreeInt.add(tree, node);
+    		tree = (TreeInt)Tree.add(tree, node);
     	}
     }
 

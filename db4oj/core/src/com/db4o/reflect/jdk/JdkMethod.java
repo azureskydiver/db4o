@@ -11,9 +11,9 @@ public class JdkMethod implements ReflectMethod{
 	private final Method method;
     private Reflector reflector;
 	
-	public JdkMethod(Method method, Reflector reflector){
-		this.method = method;
-        this.reflector = reflector;
+	public JdkMethod(Method method_, Reflector reflector_){
+		method = method_;
+        reflector = reflector_;
 	}
 	
 	public Object invoke(Object onObject, Object[] parameters){

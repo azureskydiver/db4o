@@ -328,9 +328,8 @@ public final class Platform4 {
                 if (jdk().ver() >= 3){
                     shutDownHookCheck = YapConst.YES;
                     return true;
-                } else {
-                    JavaOnly.runFinalizersOnExit();
-                }
+                } 
+                JavaOnly.runFinalizersOnExit();
             }
             shutDownHookCheck = YapConst.NO;
         }

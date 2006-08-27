@@ -305,7 +305,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		classreader.incrementOffset(YapConst.INT_LENGTH); // skip empty unused int slot
         
 		int ancestorid=classreader.readInt();
-        int indexID=classreader.readInt();
+        classreader.readInt();  // index id, not used
         int fieldCount=classreader.readInt();
 		
 		ReflectClass nativeClass = _delegate.forName(classname);

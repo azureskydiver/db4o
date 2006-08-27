@@ -13,8 +13,8 @@ public class StaticField implements Internal4{
     public StaticField(){
     }
     
-    public StaticField(String name, Object value){
-        this.name = name;
-        this.value = value;
+    public StaticField(String name_, Object value_){
+        name = name_;
+        value = value_;
     }
 }

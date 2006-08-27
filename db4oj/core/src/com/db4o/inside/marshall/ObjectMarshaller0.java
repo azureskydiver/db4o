@@ -104,9 +104,9 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         final Config4Class config = yapClass.configOrAncestorConfig();
         final Transaction trans=writer.getTransaction();
     	TraverseFieldCommand command=new TraverseFieldCommand() {
-    		public int fieldCount(YapClass yapClass, YapReader reader) {
-    	        writer.writeInt(yapClass.i_fields.length);
-    	        return yapClass.i_fields.length;
+    		public int fieldCount(YapClass yc, YapReader reader) {
+    	        writer.writeInt(yc.i_fields.length);
+    	        return yc.i_fields.length;
     		}
     		
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {

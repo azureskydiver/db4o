@@ -408,7 +408,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public abstract long currentVersion();
     
     boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
-        return a_yapClass.init(_this, a_superYapClass, a_class, false);
+        return a_yapClass.init(_this, a_superYapClass, a_class);
     }
 
 
@@ -587,10 +587,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         YapClass yc = yo.getYapClass();
         final YapField[] field = new YapField[]{null};
         yc.forEachYapField(new Visitor4() {
-            public void visit(Object obj) {
-                YapField yf = (YapField)obj;
-                if(yf.canAddToQuery(fieldName)){
-                    field[0] = yf;
+            public void visit(Object yf) {
+                YapField yapField = (YapField)yf;
+                if(yapField.canAddToQuery(fieldName)){
+                    field[0] = yapField;
                 }
             }
         });
@@ -1313,9 +1313,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             return new YapObject(a_id).read(a_ta, null, null, a_depth,
                 YapConst.TRANSIENT, false);
     
-        } else {
-            return tio._object;
-        }
+        } 
+        return tio._object;
     }
 
     void peeked(int a_id, Object a_object) {
@@ -1625,7 +1624,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (obj instanceof Db4oType) {
             Db4oType db4oType = db4oTypeStored(ta, obj);
             if (db4oType != null) {
-                return (int)getID1(ta, db4oType);
+                return getID1(ta, db4oType);
             }
         }
         
@@ -1895,30 +1894,29 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                         a_just[0] = new TreeInt(id);
                     }
                     return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
+                } 
+                final ReflectClass clazz = reflector().forObject(a_object);
+				if (clazz.isArray()) {
+					if (!clazz.getComponentType().isPrimitive()) {
+                        Object[] arr = YapArray.toArray(_this, a_object);
+                        for (int i = 0; i < arr.length; i++) {
+                            a_still = stillTo1(a_still, a_just, arr[i],
+                                a_depth, a_forceUnknownDeactivate);
+                        }
+					}
                 } else {
-                    final ReflectClass clazz = reflector().forObject(a_object);
-					if (clazz.isArray()) {
-						if (!clazz.getComponentType().isPrimitive()) {
-	                        Object[] arr = YapArray.toArray(_this, a_object);
-	                        for (int i = 0; i < arr.length; i++) {
-	                            a_still = stillTo1(a_still, a_just, arr[i],
-	                                a_depth, a_forceUnknownDeactivate);
-	                        }
-						}
+                    if (a_object instanceof Entry) {
+                        a_still = stillTo1(a_still, a_just,
+                            ((Entry) a_object).key, a_depth, false);
+                        a_still = stillTo1(a_still, a_just,
+                            ((Entry) a_object).value, a_depth, false);
                     } else {
-                        if (a_object instanceof Entry) {
-                            a_still = stillTo1(a_still, a_just,
-                                ((Entry) a_object).key, a_depth, false);
-                            a_still = stillTo1(a_still, a_just,
-                                ((Entry) a_object).value, a_depth, false);
-                        } else {
-                            if (a_forceUnknownDeactivate) {
-                                // Special handling to deactivate Top-Level unknown objects only.
-                                YapClass yc = getYapClass(reflector().forObject(a_object),
-                                    false);
-                                if (yc != null) {
-                                    yc.deactivate(i_trans, a_object, a_depth);
-                                }
+                        if (a_forceUnknownDeactivate) {
+                            // Special handling to deactivate Top-Level unknown objects only.
+                            YapClass yc = getYapClass(reflector().forObject(a_object),
+                                false);
+                            if (yc != null) {
+                                yc.deactivate(i_trans, a_object, a_depth);
                             }
                         }
                     }

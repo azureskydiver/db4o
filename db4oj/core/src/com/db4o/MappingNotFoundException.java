@@ -6,8 +6,8 @@ public class MappingNotFoundException extends RuntimeException {
 	
 	private int id;
 	
-	public MappingNotFoundException(int id) {
-		this.id = id;
+	public MappingNotFoundException(int id_) {
+		id = id_;
 	}
 
 	public int id() {

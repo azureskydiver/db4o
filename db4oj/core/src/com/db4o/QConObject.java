@@ -36,10 +36,6 @@ public class QConObject extends QCon {
 
     private transient boolean     i_selfComparison = false;
 
-    private transient IxTraverser i_indexTraverser;
-
-    private transient QCon        i_indexConstraint;
-
     private transient boolean     i_loadedFromIndex;
 
     public QConObject() {
@@ -265,9 +261,8 @@ public class QConObject extends QCon {
                 return i_object.toString();
             }
             return "[NULL]";
-        } else {
-            return "";
-        }
+        } 
+        return "";
     }
 
     void marshall() {

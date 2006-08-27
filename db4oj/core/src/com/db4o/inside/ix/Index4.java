@@ -108,11 +108,11 @@ public class Index4 {
         doFree(freeForMetaIndex());
         doFree(other.freeForMetaIndex());
         
-        entries = writeToNewSlot(mySlot, length);
+        entries = writeToNewSlot(mySlot);
         metaIndexSetMembers(entries, length, mySlot);
         createGlobalFileRange();
         
-        int otherEntries = other.writeToNewSlot(otherSlot, length);
+        int otherEntries = other.writeToNewSlot(otherSlot);
         
         if(Deploy.debug){
             if(entries != otherEntries){
@@ -140,7 +140,7 @@ public class Index4 {
         _metaIndex.indexAddress = address;
     }
     
-    private int writeToNewSlot(int slot, int length ){
+    private int writeToNewSlot(int slot){
         Tree root = getRoot();
         final YapWriter writer = new YapWriter(trans(),slot, lengthPerEntry());
         final int[] entries = new int[] {0};
@@ -180,7 +180,7 @@ public class Index4 {
             
             metaIndexStore(entries, length, slot);
             
-            writeToNewSlot(slot, length);
+            writeToNewSlot(slot);
             
             IxFileRange newFileRange = createGlobalFileRange();
 

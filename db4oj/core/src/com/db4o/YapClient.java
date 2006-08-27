@@ -71,7 +71,7 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 	}
 
-	YapClient(YapSocket socket, String user, String password, boolean login)
+	YapClient(YapSocket socket, String user, String password_, boolean login)
 			throws IOException {
 		this();
 		synchronized (lock()) {
@@ -82,15 +82,15 @@ public class YapClient extends YapStream implements ExtClient {
 			// socket.setTcpNoDelay(true);
 			// System.out.println(socket.getSendBufferSize());
 
-			if (password == null) {
+			if (password_ == null) {
 				throw new NullPointerException(Messages.get(56));
 			}
 			if (!login) {
-				password = null;
+				password_ = null;
 			}
 
 			userName = user;
-			this.password = password;
+			password = password_;
 			i_socket = socket;
 			try {
 				loginToServer(socket);
@@ -423,7 +423,7 @@ public class YapClient extends YapStream implements ExtClient {
 				throw new IOException(Messages.get(42));
 			}
             YapWriter payLoad = msg.getPayLoad();
-            _blockSize = (byte)payLoad.readInt();
+            _blockSize = payLoad.readInt();
             int doEncrypt = payLoad.readInt();
             if(doEncrypt == 0){
                 i_handlers.oldEncryptionOff();

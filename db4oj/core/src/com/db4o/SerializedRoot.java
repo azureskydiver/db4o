@@ -11,7 +11,7 @@ public class SerializedRoot{
 	
 	public SerializedRoot(){
 	}
-	public SerializedRoot(Object root){
-		this.root = root;
+	public SerializedRoot(Object root_){
+		root = root_;
 	}
 }
