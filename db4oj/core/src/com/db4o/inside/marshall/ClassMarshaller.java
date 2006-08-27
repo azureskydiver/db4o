@@ -102,26 +102,37 @@ public class ClassMarshaller {
         return len;
     }
 
-	public void defrag(YapStringIO sio, YapReader source, YapReader target, IDMapping mapping) {
+	public void defrag(YapClass yapClass,YapStringIO sio,YapReader source, YapReader target, IDMapping mapping) throws CorruptionException {
+		PMFDDebug.logEnter("CLASS MARSHALLER", source, target);
 		readName(sio, source);
 		readName(sio, target);
 		
 		int metaClassOldID = source.readInt();
 		int metaClassNewId = 0;
 		target.writeInt(metaClassNewId);
-		Debug.log("AFTER METACLASS ID " + metaClassOldID + ">" + metaClassNewId + " " +source._offset+"/"+target._offset);
+		PMFDDebug.logModify("METACLASS",metaClassOldID,metaClassNewId,source,target);
 		
 		int ancestorOldID = source.readInt();
+		int ancestorNewId = 0;
 		if (ancestorOldID != 0) {
-			int ancestorNewId = mapping.mappedID(ancestorOldID);
+			ancestorNewId = mapping.mappedID(ancestorOldID);
 			target.writeInt(ancestorNewId);
-			Debug.log("AFTER ANCESTOR ID " + ancestorOldID + ">" + ancestorNewId + " " +source._offset+"/"+target._offset);
-		} else
+		} 
+		else {
 			target.incrementOffset(YapConst.INT_LENGTH);
+		}
+		PMFDDebug.logModify("ANCESTOR",metaClassOldID,metaClassNewId,source,target);
+
+		yapClass.index().defragReference(yapClass, source, target, mapping);
 		
-		int indexOldID = source.readInt();
-		int indexNewID = 0;
-		target.writeInt(indexNewID);
-		Debug.log("AFTER INDEX ID " + indexOldID + ">" + indexNewID + " " +source._offset+"/"+target._offset);
+		source.incrementOffset(YapConst.INT_LENGTH);
+		target.incrementOffset(YapConst.INT_LENGTH);
+		
+		YapField[] fields=yapClass.i_fields;
+		for(int fieldIdx=0;fieldIdx<fields.length;fieldIdx++) {
+			_family._field.defrag(yapClass,fields[fieldIdx],sio,source,target,mapping);
+		}
+		
+		PMFDDebug.logExit("CLASS MARSHALLER", source, target);
 	}
 }

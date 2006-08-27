@@ -232,7 +232,7 @@ public abstract class YapFile extends YapStream {
         
         // We have to make sure that object IDs do not collide
         // with built-in type IDs.
-        if(id <= i_handlers.maxTypeID()){
+        if(i_handlers.isSystemHandler(id)){
             return getPointerSlot();
         }
             

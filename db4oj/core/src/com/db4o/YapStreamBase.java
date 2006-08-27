@@ -1215,6 +1215,15 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
     }
     
+    public TypeHandler4 handlerByID(int id) {
+        if (id < 1) {
+            return null;
+        }
+        if (i_handlers.isSystemHandler(id)) {
+            return i_handlers.getHandler(id);
+        } 
+        return getYapClass(id);
+    }
 
     public Object lock() {
         return i_lock;

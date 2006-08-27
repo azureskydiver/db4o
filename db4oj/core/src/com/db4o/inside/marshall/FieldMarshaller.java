@@ -16,4 +16,6 @@ public interface FieldMarshaller {
 
     int marshalledLength(YapStream stream, YapField field);
 
+	void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,YapReader source, YapReader target, IDMapping mapping) throws CorruptionException;
+
 }

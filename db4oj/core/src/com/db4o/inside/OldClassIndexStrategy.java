@@ -204,4 +204,11 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 	public void rollback(Transaction transaction) {
 		// nothing to do
 	}
+
+	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping) {
+	}
+
+	public int id() {
+		return _index.getID();
+	}
 }

@@ -633,13 +633,7 @@ public class YapField implements StoredField {
     
 
     public void loadHandler(YapStream a_stream) {
-        if (i_handlerID < 1) {
-            i_handler = null;
-        } else if (i_handlerID <= a_stream.i_handlers.maxTypeID()) {
-            i_handler = a_stream.i_handlers.getHandler(i_handlerID);
-        } else {
-            i_handler = a_stream.getYapClass(i_handlerID);
-        }
+    	i_handler=a_stream.handlerByID(i_handlerID);
     }
 
     private void loadJavaField() {
