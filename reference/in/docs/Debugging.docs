@@ -1,0 +1,95 @@
+.n
+.a Debugging ..
+.1 Debugging db4o ..
+
+Debugging is, in general, a cumbersome and tiring task. And it tends to be harder when various subsystems ._
+are tightly coupled, like db4o library and your application. How can db4o help you with the process?
+
+.2 db4o messaging system .. 
+
+Db4o messaging system is a special tool, which makes db4o functionality more transparent to the user. ._
+It can be used:
+-	in debugging session - to find out where the problem can reside;
+-	for learning - to watch, what does db4o actually do with the objects.
+
+In order to activate messaging before opening a database file use:
+.c Db4o.configure().messageLevel(level) ..
+where  .i level ..  can be:
+level = 0: no messages;
+level > 0: normal messages;
+level > 1: state messages (new object, object update, delete);
+level > 2: activation messages (object activated, deactivated).
+
+In order to set up a convenient output stream for the messages, call:
+.c Db4o.configure().setOut(outStream) ..
+.i outStream = System.out ..  will set up your system to print messages to console.
+
+#messageLevel(level) also can be set after a database has been opened:
+.c ObjectContainer#ext().configure().messageLevel(level) ..
+The same applies for #setOut().
+
+Let's use the simplest example to see all types of debug messages:
+
+.s com.db4odoc.f1.debugging.DebugExample#setCars ..
+
+Output looks quite messy, but allows you to follow the whole process. For debugging purposes messaging ._
+system provides a timestamp and internal ID information for each object (first number in state and activate ._
+messages).
+
+
+.2 exceptionsOnNotStorable .. 
+
+There is another setting that can be of great value in debug process:
+.c Db4o.configure().exceptionsOnNotStorable (true) ..
+In some environments (especially those that provide plugin mechanics or perform some kind of class ._
+reloading) you may encounter strange problems due to classloader issues. These environments include ._
+servlet containers, Eclipse plugins, reloading JUnit test runners, etc. 
+
+In most of those cases db4o will fail quietly (i.e. will not deliver any results on queries), unless you have ._
+configured #exceptionsOnNotStorable(true) - then you may see messages related to not being able to store ._
+db4o internal classes or set db4o internal translators, etc. 
+
+Db4o uses the context classloader by default. This is an appropriate choice in most situations, but it's not ._
+really reliable, since the concrete context classloader depends on the environment you're running in. ._
+Therefore you can explicitly specify the classloader to be used for db4o operation by calling 
+.c Db4o.configure()reflectWith(new JdkReflector(classLoader)) .. 
+Basically you just have to find out the appropriate classloader and configure db4o accordingly. The right ._
+choice depends on the specific classloader hierarchy of your application context. Two examples:
+
+-	In servlet containers, there usually should be no problem, since most containers automatically set ._
+the context classloader to the webapp classloader. So it shouldn't matter, whether the db4o.jar resides ._
+in your webapp's WEB_INF/lib (where it will be loaded by the appropriate classloader itself, anyway) or ._
+in one of the shared lib folders (where the classloader responsible for loading db4o will not be able to see ._
+webapp specific classes). 
+
+-	In Eclipse, the context classloader is the system classloader, which is agnostic of plugin-specific ._
+classes. You'll have to configure db4o to use your plugin's classloader, e.g. ._
+MyPlugin.class.getClassLoader(). (If the db4o.jar resides in your plugin, you'll get the same effect by ._
+just using Db4o.class.getClassLoader()). 
+
+The approach to solving classloader problems (not only for db4o, but generally) is: 
+-	identify the classes/libs db4o needs to know 
+-	identify the classloader hierarchy of your application context 
+-	use the most generic classloader that knows all needed classes, either directly or indirectly via delegation
+See also: .l Classloader Classloader issues ..  
+
+#exceptionsOnNotStorable(true) will also help you to identify classes that db4o cannot persist.
+
+db4o needs a constructor that it can use to create user objects. Ideally this is a zero-parameter constructor (declared public for ._
+Java JDK versions prior to JDK 1.2). If db4o does not find a zero-parameter constructor, it iterates ._
+through all other constructors and internally attempts to create an instance of an object by passing ._
+appropriate null parameters. If this is successful with any of the present constructors, this constructor is used. 
+There are classes that do not have usable constructors. java.net.URL is an example from the ._
+Java JDK. In this case you have the following options: 
+-	add a zero-parameter constructor specifically for db4o; 
+-	derive from the class and add a zero-parameter constructor; 
+-	add a custom translator. 
+If you need to quickly implement a solution for one of the JDK classes, and querying members is not an ._
+issue, you may choose to use the built-in serializable translator. Here is an example, how this is done for ._
+java.net.URL: 
+.c Db4o.configure().objectClass("java.net.URL").translate(new com.db4o.config.TSerializable()); .. 
+The above code needs to be executed every time before the db4o engine is started. ._
+See also: .l Constructors Constructors ..  ,  .l Translators Translators ..  .
+
+Another db4o system, which can give you a valuable feedback about db4o functioning in your ._
+application is  .l Diagnostics Diagnostics .. .
