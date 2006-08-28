@@ -67,6 +67,10 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         _children = new List4(_children, a_child);
         return a_child;
     }
+    
+    public Transaction transaction() {
+    	return i_trans;
+    }
 
     void addJoin(QConJoin a_join) {
         if (i_joins == null) {

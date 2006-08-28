@@ -79,4 +79,35 @@ public class BTreeRangeImpl implements BTreeRange {
 	private BTree btree() {
 		return _first.node().btree();
 	}
+
+	public BTreeRange intersect(BTreeRange range) {
+		final BTreeRangeImpl rangeImpl = checkRangeArgument(range);
+		BTreePointer first = max(_first, rangeImpl._first);
+		BTreePointer end = min(_end, rangeImpl._end);
+		return new BTreeRangeImpl(_trans, first, end);
+	}
+
+	private BTreePointer min(BTreePointer x, BTreePointer y) {
+		return null;
+	}
+
+	private BTreePointer max(BTreePointer x, BTreePointer y) {
+		return null;
+	}
+
+	public BTreeRange extendToLast(BTreeRange upperRange) {
+		BTreeRangeImpl upper = checkRangeArgument(upperRange);
+		return new BTreeRangeImpl(_trans, _first, upper._end);
+	}
+
+	private BTreeRangeImpl checkRangeArgument(BTreeRange range) {
+		if (null == range) {
+			throw new ArgumentNullException();
+		}
+		BTreeRangeImpl upper = (BTreeRangeImpl)range;
+		if (btree() != upper.btree()) {
+			throw new IllegalArgumentException();
+		}
+		return upper;
+	}
 }

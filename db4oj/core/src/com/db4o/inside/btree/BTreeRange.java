@@ -22,4 +22,8 @@ public interface BTreeRange {
 
 	public BTreeRange extendToFirst();
 
+	public BTreeRange intersect(BTreeRange range);
+
+	public BTreeRange extendToLast(BTreeRange upperRange);
+
 }
