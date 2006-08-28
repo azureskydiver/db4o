@@ -27,7 +27,7 @@ public class AllTestsReplication extends AllTests {
 	public void run() {
 		new File(AllTestsConfAll.FILE_SERVER).delete();
 
-		Test.clientServer = true;
+		//Test.clientServer = true;
 		//Test.clientServer = false;
 		//Debug.longTimeOuts = true; //ReplicationFeaturesMain fails if set to false in C/S
 
@@ -44,9 +44,9 @@ public class AllTestsReplication extends AllTests {
 		//db4o();
 		transients();
 		//hsql();
-		//db4otransient();
-		//hsqlDb4o();
-		//db4oHsql();
+//		db4otransient();
+//		hsqlDb4o();
+//		db4oHsql();
 
 		//oracle();
 		//mysql();

@@ -39,7 +39,7 @@ public abstract class ReplicationTestCase {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
 				SPCParent.class, SPCChild.class,
 				ListHolder.class, ListContent.class,
-				MapHolder.class, MapKey.class,
+				MapHolder.class, MapKey.class, MapContent.class,
 				SimpleArrayContent.class, SimpleArrayHolder.class,
 				R0.class, Pilot.class, Car.class};
 	}
@@ -144,7 +144,7 @@ public abstract class ReplicationTestCase {
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
-		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
+		System.out.println("replicateAll() from = " + providerFrom + ", to = " + providerTo);
 		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
 		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
 
@@ -174,14 +174,29 @@ public abstract class ReplicationTestCase {
 	}
 
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
-		//System.out.println("ReplicationTestcase.replicateClass");
+		System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB);
 		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
 		while (allObjects.hasNext()) {
 			final Object obj = allObjects.next();
-			//System.out.println("obj = " + obj);
+			System.out.println("obj = " + obj);
 			replication.replicate(obj);
 		}
+		replication.commit();
+	}
+	
+	protected void replicateClasses(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class[] classes) {
+		ReplicationSession replication = Replication.begin(providerA, providerB);
+		for (int i = 0; i < classes.length; i++) {
+			ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(classes[i]);
+			
+			while (allObjects.hasNext()) {
+				final Object obj = allObjects.next();
+				System.out.println("obj = " + obj);
+				replication.replicate(obj);
+			}
+		}
+		
 		replication.commit();
 	}
 
