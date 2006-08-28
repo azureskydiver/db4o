@@ -73,10 +73,8 @@ public abstract class YapIndependantType implements TypeHandler4 {
     public abstract void writeIndexEntry(YapReader a_writer, Object a_object);
     
     public final void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
-		PMFDDebug.logEnter("YapIndependentType",source,target);
     	int linkLength = linkLength();
 		source._offset+=linkLength;
     	target._offset+=linkLength;
-		PMFDDebug.logExit("YapIndependentType",source,target);
     }
 }

@@ -96,7 +96,6 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		int oldID=source.readInt();
 		int newID = -classIndexID;
 		target.writeInt(newID);
-		PMFDDebug.logModify("CLASS INDEX",oldID,newID,source,target);
 	}
 	
 	public int id() {
