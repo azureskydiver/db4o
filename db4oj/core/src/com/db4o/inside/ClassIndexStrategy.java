@@ -24,6 +24,6 @@ public interface ClassIndexStrategy {
 	void traverseAll(Transaction transaction, Visitor4 command);
 	void dontDelete(Transaction transaction, int id);
 	
-	void defragReference(YapClass yapClass,YapReader source,YapReader target,IDMapping mapping);
+	void defragReference(YapClass yapClass,YapReader source,YapReader target,IDMapping mapping,int classIndexID);
 	int id();
 }

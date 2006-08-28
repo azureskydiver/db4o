@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -102,7 +103,7 @@ public class ClassMarshaller {
         return len;
     }
 
-	public void defrag(YapClass yapClass,YapStringIO sio,YapReader source, YapReader target, IDMapping mapping) throws CorruptionException {
+	public void defrag(YapClass yapClass,YapStringIO sio,YapReader source, YapReader target, IDMapping mapping, int classIndexID) throws CorruptionException {
 		PMFDDebug.logEnter("CLASS MARSHALLER", source, target);
 		readName(sio, source);
 		readName(sio, target);
@@ -123,7 +124,7 @@ public class ClassMarshaller {
 		}
 		PMFDDebug.logModify("ANCESTOR",metaClassOldID,metaClassNewId,source,target);
 
-		yapClass.index().defragReference(yapClass, source, target, mapping);
+		yapClass.index().defragReference(yapClass, source, target, mapping,classIndexID);
 		
 		source.incrementOffset(YapConst.INT_LENGTH);
 		target.incrementOffset(YapConst.INT_LENGTH);

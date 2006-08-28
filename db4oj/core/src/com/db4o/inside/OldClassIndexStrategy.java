@@ -205,7 +205,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		// nothing to do
 	}
 
-	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping) {
+	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping,int classIndexID) {
 	}
 
 	public int id() {
