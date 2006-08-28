@@ -104,14 +104,12 @@ public class ClassMarshaller {
     }
 
 	public void defrag(YapClass yapClass,YapStringIO sio,YapReader source, YapReader target, IDMapping mapping, int classIndexID) throws CorruptionException {
-		PMFDDebug.logEnter("CLASS MARSHALLER", source, target);
 		readName(sio, source);
 		readName(sio, target);
 		
 		int metaClassOldID = source.readInt();
 		int metaClassNewId = 0;
 		target.writeInt(metaClassNewId);
-		PMFDDebug.logModify("METACLASS",metaClassOldID,metaClassNewId,source,target);
 		
 		int ancestorOldID = source.readInt();
 		int ancestorNewId = 0;
@@ -122,7 +120,6 @@ public class ClassMarshaller {
 		else {
 			target.incrementOffset(YapConst.INT_LENGTH);
 		}
-		PMFDDebug.logModify("ANCESTOR",metaClassOldID,metaClassNewId,source,target);
 
 		yapClass.index().defragReference(yapClass, source, target, mapping,classIndexID);
 		
@@ -133,7 +130,5 @@ public class ClassMarshaller {
 		for(int fieldIdx=0;fieldIdx<fields.length;fieldIdx++) {
 			_family._field.defrag(yapClass,fields[fieldIdx],sio,source,target,mapping);
 		}
-		
-		PMFDDebug.logExit("CLASS MARSHALLER", source, target);
 	}
 }

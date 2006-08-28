@@ -97,7 +97,6 @@ public class FieldMarshaller0 implements FieldMarshaller {
 
 
 	public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,YapReader source, YapReader target, IDMapping mapping) throws CorruptionException {
-		PMFDDebug.logEnter("FIELD "+yapClass.getName()+"#"+yapField.getName(), source, target);
 		StringMarshaller.readShort(sio,false,source);
 		StringMarshaller.readShort(sio,false,target);
         if (yapField.isVirtual()) {
@@ -111,11 +110,8 @@ public class FieldMarshaller0 implements FieldMarshaller {
         else {
         	target.incrementOffset(YapConst.INT_LENGTH);
         }
-        PMFDDebug.logModify("HANDLER", oldHandlerID, newHandlerID, source, target);
 
         source.incrementOffset(1);
         target.incrementOffset(1);
-
-        PMFDDebug.logExit("FIELD "+yapClass.getName()+"#"+yapField.getName(), source, target);
 	}
 }

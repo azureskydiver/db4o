@@ -111,10 +111,8 @@ final class YapClassAny extends YapClass {
 
     // FIXME
     public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
-		PMFDDebug.logEnter("YapClassAny",source,target);
     	int linkLength=linkLength();
     	source.incrementOffset(linkLength);
     	target.incrementOffset(linkLength);
-		PMFDDebug.logExit("YapClassAny",source,target);
     }
 }

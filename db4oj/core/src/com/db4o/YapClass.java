@@ -1861,15 +1861,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }	
 
 	public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
-		PMFDDebug.logEnter("YapClass Handler",source,target);
 		int oldID=source.readInt();
 		int newID=mapping.mappedID(oldID);
 		target.writeInt(newID);
 		int restLength = (linkLength()-YapConst.INT_LENGTH);
 		source.incrementOffset(restLength);
 		target.incrementOffset(restLength);
-		PMFDDebug.logModify("FIELD REF("+getName()+")",oldID,newID,source,target);
-		PMFDDebug.logExit("YapClass Handler",source,target);
 	}
 	
 	public void defragClass(YapReader source, YapReader target, IDMapping mapping, int classIndexID) throws CorruptionException {
