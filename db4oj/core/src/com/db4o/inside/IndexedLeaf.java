@@ -25,12 +25,15 @@ public class IndexedLeaf extends IndexedNodeBase {
         final QEBitmap bitmap = QEBitmap.forQE(constraint().i_evaluator);
         if (bitmap.takeGreater()) {             
             if (bitmap.takeEqual()) {
-                return range.extend();
+                return range.extendToLast();
             }
             return range.greater();
         }
         if (bitmap.takeSmaller()) {
-            return range.smaller();
+        	if (bitmap.takeEqual()) {
+        		return range.extendToFirst();
+        	}
+        	return range.smaller();
         }
         return range;
     }

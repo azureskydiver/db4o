@@ -21,19 +21,19 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 						new int[] { 2, 2, 8, 8 });
 	}
     
-    public void _testSingleIndexNotSmaller(){
+    public void testSingleIndexNotSmaller(){
         final Query query = createItemQuery();
         query.descend("foo").constrain(new Integer(5)).smaller().not();     
         assertExpectedFoos(FieldIndexItem.class, new int[]{7, 9}, query);
     }
     
-    public void _testSingleIndexNotGreater(){
+    public void testSingleIndexNotGreater(){
         final Query query = createItemQuery();
         query.descend("foo").constrain(new Integer(4)).greater().not();     
         assertExpectedFoos(FieldIndexItem.class, new int[]{3, 4}, query);
     }
     
-    public void _testSingleIndexSmallerOrEqual() {
+    public void testSingleIndexSmallerOrEqual() {
         final Query query = createItemQuery();
         query.descend("foo").constrain(new Integer(7)).smaller().equal();
         assertExpectedFoos(FieldIndexItem.class, new int[] { 3,4,7 }, query);
@@ -66,9 +66,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         Constraint c2 = query.descend("foo").constrain(new Integer(7)).greater();
         c1.or(c2);
         assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 9 }, query);
-    }
-    
-    
+    }    
 	
 	public void testIndexSelection() {		
 		Query query = createComplexItemQuery();		

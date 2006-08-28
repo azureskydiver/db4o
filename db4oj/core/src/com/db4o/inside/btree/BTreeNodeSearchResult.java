@@ -44,21 +44,11 @@ public class BTreeNodeSearchResult {
     }
     
     public BTreeRange createIncludingRange(Transaction trans, BTreeNodeSearchResult end) {
-        if(!_foundMatch && pointsToSameAs(end)){
-            return EmptyBTreeRange.INSTANCE;
-        }
         BTreePointer endPointer = end._pointer;
         if(endPointer != null && end._foundMatch){
             endPointer = endPointer.next(trans);
         }
         return new BTreeRangeImpl(trans, _pointer, endPointer);
     }
-    
-    private boolean pointsToSameAs(BTreeNodeSearchResult other){
-        if(_pointer == null || other._pointer == null){
-            return false;
-        }
-        return _pointer.equals(other._pointer);
-    }
-
+   
 }

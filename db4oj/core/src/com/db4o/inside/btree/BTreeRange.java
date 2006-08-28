@@ -16,8 +16,10 @@ public interface BTreeRange {
 
 	public BTreeRange union(BTreeRange other);
 
-	public BTreeRange extend();
+	public BTreeRange extendToLast();
 
 	public BTreeRange smaller();
+
+	public BTreeRange extendToFirst();
 
 }
