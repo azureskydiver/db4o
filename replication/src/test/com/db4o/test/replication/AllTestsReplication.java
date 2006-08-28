@@ -7,6 +7,7 @@ import java.io.File;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
@@ -28,7 +29,7 @@ public class AllTestsReplication extends AllTests {
 		new File(AllTestsConfAll.FILE_SERVER).delete();
 
 		//Test.clientServer = true;
-		//Test.clientServer = false;
+		Test.clientServer = false;
 		//Debug.longTimeOuts = true; //ReplicationFeaturesMain fails if set to false in C/S
 
 		Db4oReplicationTestUtil.configure();
@@ -41,12 +42,14 @@ public class AllTestsReplication extends AllTests {
 		// In SOLO, you can run all combinations together
 		// In C/S, you can't run all combinations together, it causes db4o connection to timeout.
 
-		//db4o();
+		db4o();
 		transients();
-		//hsql();
-//		db4otransient();
-//		hsqlDb4o();
-//		db4oHsql();
+		hsql();
+		transienthsql();
+		hsqltransient();
+		db4otransient();
+		hsqlDb4o();
+		db4oHsql();
 
 		//oracle();
 		//mysql();
@@ -66,7 +69,15 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void db4otransient() {
-		ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), new TransientReplicationProvider(new byte[]{65, 58, 89}, "Transient B"));
+		final TransientReplicationProvider transients = new TransientReplicationProvider(new byte[]{65, 58, 89}, "Transient B");
+		final TestableReplicationProviderInside db4o;
+		
+		if (Test.clientServer)
+			db4o = new Db4oReplicationProvider(Test.objectContainer(), "db4o C/S a");
+		else
+			db4o = Db4oReplicationTestUtil.newProviderA();		
+		
+		ReplicationTestCase.registerProviderPair(db4o, transients);
 	}
 
 	private void db4o() {
@@ -79,6 +90,15 @@ public class AllTestsReplication extends AllTests {
 
 	private void hsql() {ReplicationTestCase.registerProviderPair(HibernateUtil.newProviderA(), HibernateUtil.newProviderB());}
 
+	
+	private void transienthsql() {
+		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65,36,48}), HibernateUtil.newProviderB());
+	}
+	
+	private void hsqltransient() {
+		ReplicationTestCase.registerProviderPair(HibernateUtil.newProviderA(), new TransientReplicationProvider(new byte[]{65,36,49}));
+	}
+	
 	private void oracle() {
 		Configuration tmp = HibernateUtil.oracleConfigA();
 		cleanDb(tmp);

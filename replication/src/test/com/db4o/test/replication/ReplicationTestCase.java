@@ -144,7 +144,7 @@ public abstract class ReplicationTestCase {
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
-		System.out.println("replicateAll() from = " + providerFrom + ", to = " + providerTo);
+		//System.out.println("replicateAll() from = " + providerFrom + ", to = " + providerTo);
 		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
 		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
 
@@ -153,7 +153,7 @@ public abstract class ReplicationTestCase {
 
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
-			System.out.println("changed = " + changed);
+			//System.out.println("changed = " + changed);
 			replication.replicate(changed);
 		}
 		replication.commit();
@@ -174,12 +174,12 @@ public abstract class ReplicationTestCase {
 	}
 
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
-		System.out.println("ReplicationTestcase.replicateClass");
+		//System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB);
 		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
 		while (allObjects.hasNext()) {
 			final Object obj = allObjects.next();
-			System.out.println("obj = " + obj);
+			//System.out.println("obj = " + obj);
 			replication.replicate(obj);
 		}
 		replication.commit();
@@ -192,7 +192,7 @@ public abstract class ReplicationTestCase {
 			
 			while (allObjects.hasNext()) {
 				final Object obj = allObjects.next();
-				System.out.println("obj = " + obj);
+				//System.out.println("obj = " + obj);
 				replication.replicate(obj);
 			}
 		}
