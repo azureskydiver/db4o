@@ -8,8 +8,7 @@ package com.db4o;
  */
 public interface IDMapping {
 	/**
-	 * @return a mapping for the given id if it doesn't refer to a system handler, the given id otherwise
-	 * @throws MappingNotFoundException if the given id does not refer to a system handler and if no mapping is found
+	 * @return a mapping for the given id if it doesn't refer to a system handler and a mapping is known, the given id otherwise
 	 */
 	int mappedID(int oldID);
 }
