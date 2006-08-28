@@ -518,6 +518,9 @@ public class YapField implements StoredField {
                 return i_handler.primitiveClassReflector();
             }
         }
+        if(i_handler==null) {
+        	return null;
+        }
         return i_handler.classReflector();
     }
     

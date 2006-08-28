@@ -92,16 +92,10 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void dontDelete(Transaction transaction, int id) {
 	}
 	
-	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping) {
-		int oldID=-source.readInt();
-		int newID=0;
-		if(oldID!=0) {
-			newID=mapping.mappedID(oldID);
-			target.writeInt(-newID);
-		}
-		else {
-			target.incrementOffset(YapConst.INT_LENGTH);
-		}
+	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping,int classIndexID) {
+		int oldID=source.readInt();
+		int newID = -classIndexID;
+		target.writeInt(newID);
 		PMFDDebug.logModify("CLASS INDEX",oldID,newID,source,target);
 	}
 	

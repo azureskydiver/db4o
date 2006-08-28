@@ -1872,8 +1872,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		PMFDDebug.logExit("YapClass Handler",source,target);
 	}
 	
-	public void defragClass(YapReader source, YapReader target, IDMapping mapping) throws CorruptionException {
+	public void defragClass(YapReader source, YapReader target, IDMapping mapping, int classIndexID) throws CorruptionException {
 		MarshallerFamily mf = MarshallerFamily.current();
-		mf._class.defrag(this,i_stream.stringIO(), source, target, mapping);
+		mf._class.defrag(this,i_stream.stringIO(), source, target, mapping, classIndexID);
 	}
 }
