@@ -45,8 +45,8 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     public BTree(Transaction trans, int id, Indexable4 keyHandler){
         this(trans, id, keyHandler, null);
-    }
-    
+    }		
+    		
     public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
     	
     	if (null == keyHandler) {
@@ -335,5 +335,25 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		return this;
 	}
 
+	public void traverseAllSlotIDs(Transaction trans, Visitor4 command) {
+		Queue4 queue=new Queue4();
+		if(_root==null) {
+			read(trans);
+		}
+		queue.add(_root);
+		while(queue.hasNext()) {	
+			BTreeNode curNode=(BTreeNode)queue.next();
+			curNode.prepareWrite(trans);
+			int childCount = curNode.childCount();
+			for(int childIdx=0;childIdx<childCount;childIdx++) {
+				queue.add(curNode.child(childIdx));
+			}
+			command.visit(new Integer(curNode.getID()));
+		}
+	}
+
+	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
+		BTreeNode.defragIndex(source,target,mapping,_keyHandler);
+	}
 }
 

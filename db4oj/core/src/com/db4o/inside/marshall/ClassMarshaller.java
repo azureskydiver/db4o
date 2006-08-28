@@ -112,14 +112,8 @@ public class ClassMarshaller {
 		target.writeInt(metaClassNewId);
 		
 		int ancestorOldID = source.readInt();
-		int ancestorNewId = 0;
-		if (ancestorOldID != 0) {
-			ancestorNewId = mapping.mappedID(ancestorOldID);
-			target.writeInt(ancestorNewId);
-		} 
-		else {
-			target.incrementOffset(YapConst.INT_LENGTH);
-		}
+		int ancestorNewId = mapping.mappedID(ancestorOldID);
+		target.writeInt(ancestorNewId);
 
 		yapClass.index().defragReference(yapClass, source, target, mapping,classIndexID);
 		

@@ -101,4 +101,12 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public int id() {
 		return _btreeIndex.getID();
 	}
+
+	public void traverseAllSlotIDs(Transaction trans, Visitor4 command) {
+		_btreeIndex.traverseAllSlotIDs(trans, command);
+	}
+
+	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
+		_btreeIndex.defragIndex(source,target,mapping);
+	}
 }

@@ -245,7 +245,11 @@ public class BTreeNode extends YapMeta{
         return _keys != null;
     }
     
-    private BTreeNode child(int index){
+    int childCount() {
+    	return (_children==null ? 0 : _children.length);
+    }
+    
+    BTreeNode child(int index){
         if (_children[index] instanceof BTreeNode){
             return (BTreeNode)_children[index];
         }
@@ -1133,5 +1137,38 @@ public class BTreeNode extends YapMeta{
 		for (int i=0; i<_count; ++i) {
 			((BTreeNode)_children[i]).debugLoadFully(trans);
 		}
+	}
+
+	public static void defragIndex(YapReader source, YapReader target, IDMapping mapping,Indexable4 keyHandler) {
+        int count = source.readInt();
+        int targetCount=target.readInt();
+        if(count!=targetCount) {
+        	throw new RuntimeException("Expected target count "+count+", was "+targetCount);
+        }
+
+        byte leafByte = source.readByte();
+        byte targetLeafByte = target.readByte();
+        if(leafByte!=targetLeafByte) {
+        	throw new RuntimeException("Expected target leaf "+leafByte+", was "+targetLeafByte);
+        }
+        boolean isLeaf = (leafByte == 1);
+
+        mapID(source, target, mapping); // parent ID
+        mapID(source, target, mapping); // previous ID
+        mapID(source, target, mapping); // next ID
+
+        for (int i = 0; i < count; i++) {
+            Integer curKey = (Integer)keyHandler.readIndexEntry(source);
+            keyHandler.writeIndexEntry(target, curKey);
+            if(!isLeaf){
+            	mapID(source, target, mapping); // child ID
+            }
+        }
+	}
+
+	private static void mapID(YapReader source,YapReader target,IDMapping mapping) {
+        int oldParentID = source.readInt();
+	    int newParentID = mapping.mappedID(oldParentID);
+	    target.writeInt(newParentID);
 	}
 }
