@@ -153,7 +153,7 @@ public abstract class ReplicationTestCase {
 
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
-			//System.out.println("changed = " + changed);
+			System.out.println("changed = " + changed);
 			replication.replicate(changed);
 		}
 		replication.commit();
