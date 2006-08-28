@@ -11,6 +11,8 @@ public interface IndexedNode {
 	IndexedNode resolve();
 	
 	BTree getIndex();
+	
+	int resultSize();
 
 	//FIXME: do we need this?
 	TreeInt toTreeInt();

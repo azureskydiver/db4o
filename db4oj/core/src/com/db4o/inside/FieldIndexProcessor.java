@@ -12,7 +12,7 @@ public class FieldIndexProcessor {
 	}
 	
 	public FieldIndexProcessorResult run() {
-		IndexedLeaf bestIndex = selectBestIndex();
+		IndexedNode bestIndex = selectBestIndex();
 		if (null == bestIndex) {
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
@@ -29,13 +29,13 @@ public class FieldIndexProcessor {
 		return resolveFully(bestIndex.resolve());
 	}
 	
-	public IndexedLeaf selectBestIndex() {		
+	public IndexedNode selectBestIndex() {		
 		final Iterator4 i = selectIndexes();
 		if (!i.hasNext()) {
 			return null;
 		}
 		
-		IndexedLeaf best = (IndexedLeaf)i.next();
+		IndexedNode best = (IndexedNode)i.next();
 		while (i.hasNext()) {
 			IndexedLeaf leaf = (IndexedLeaf)i.next();
 			if (leaf.resultSize() < best.resultSize()) {
@@ -45,10 +45,6 @@ public class FieldIndexProcessor {
 		return best;
 	}
 
-	private Transaction transaction() {
-		return _candidates.i_trans;
-	}
-
 	private Iterator4 selectIndexes() {
 		final Collection4 leaves = new Collection4();
 		collectIndexedLeaves(leaves, _candidates.iterateConstraints());		
@@ -56,16 +52,35 @@ public class FieldIndexProcessor {
 	}
 
 	private void collectIndexedLeaves(final Collection4 leaves, final Iterator4 qcons) {
+		
 		while (qcons.hasNext()) {
 			QCon qcon = (QCon)qcons.next();
 			if (isLeaf(qcon)) {
 				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {
-					leaves.add(new IndexedLeaf(transaction(), (QConObject) qcon));
+					
+					final QConObject conObject = (QConObject) qcon;
+					IndexedLeaf leaf = findLeafOnSameField(leaves, conObject);
+					if (leaf != null) {
+						leaves.add(new AndIndexedLeaf(leaf, new IndexedLeaf(conObject)));
+					} else {
+						leaves.add(new IndexedLeaf(conObject));
+					}
 				}
 			} else {
 				collectIndexedLeaves(leaves, qcon.iterateChildren());
 			}
 		}
+	}
+
+	private IndexedLeaf findLeafOnSameField(Collection4 leaves, QConObject conObject) {
+		final Iterator4 i = leaves.iterator();
+		while (i.hasNext()) {
+			IndexedLeaf leaf = (IndexedLeaf)i.next();
+			if (conObject.onSameFieldAs(leaf.constraint())) {
+				return leaf;
+			}
+		}
+		return null;
 	}
 
 	private boolean isLeaf(QCon qcon) {

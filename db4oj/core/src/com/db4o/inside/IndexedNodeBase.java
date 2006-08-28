@@ -6,11 +6,9 @@ import com.db4o.inside.btree.*;
 
 public abstract class IndexedNodeBase  implements IndexedNode {
 	
-	private final Transaction _transaction;
 	private final QConObject _constraint;
 
-	public IndexedNodeBase(Transaction transaction, QConObject qcon) {
-		_transaction = transaction;
+	public IndexedNodeBase(QConObject qcon) {
         _constraint = qcon;
 	}
 	
@@ -27,18 +25,18 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	}
 
 	public boolean isResolved() {
-		final QCon parent = parentConstraint();
+		final QCon parent = constraint().parent();
 		return null == parent || !parent.hasParent();
 	}
 
 	private BTreeNodeSearchResult searchBound(int bound, Object keyPart) {
-	    return getIndex().searchLeaf(_transaction, new FieldIndexKey(bound, keyPart), SearchTarget.LOWEST);
+	    return getIndex().searchLeaf(transaction(), new FieldIndexKey(bound, keyPart), SearchTarget.LOWEST);
 	}
 
 	public BTreeRange search(final Object value) {
 		BTreeNodeSearchResult lowerBound = searchLowerBound(value);
 	    BTreeNodeSearchResult upperBound = searchUpperBound(value);	    
-		return lowerBound.createIncludingRange(_transaction, upperBound);
+		return lowerBound.createIncludingRange(transaction(), upperBound);
 	}
 
 	private BTreeNodeSearchResult searchUpperBound(final Object value) {
@@ -58,23 +56,15 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 		return tree;
 	}
 
-	protected IndexedNode parentNode() {
-		QCon parent = parentConstraint();
-		if (parent instanceof QConObject) {
-			return new IndexedPath(_transaction, (QConObject) parent, this);
-		}
-		return null;
-	}
-
-	protected QCon parentConstraint() {
-		return constraint().parent();
-	}
-
 	public IndexedNode resolve() {
 		if (isResolved()) {
 			return null;
 		}
-		return parentNode();
+		return IndexedPath.newParentPath(this, constraint());
+	}
+
+	private Transaction transaction() {
+		return constraint().transaction();
 	}
 
 }

@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.foundation.KeyValueIterator;
 import com.db4o.inside.btree.BTreeRange;
 
-
 /**
  * @exclude
  */
@@ -14,8 +13,8 @@ public class IndexedLeaf extends IndexedNodeBase {
 	
 	private final BTreeRange _range;
     
-    public IndexedLeaf(Transaction transaction, QConObject qcon) {
-    	super(transaction, qcon);
+    public IndexedLeaf(QConObject qcon) {
+    	super(qcon);
     	_range = search();
     }
     
@@ -23,7 +22,7 @@ public class IndexedLeaf extends IndexedNodeBase {
         
 		final BTreeRange range = search(constraint().getObject());
         final QEBitmap bitmap = QEBitmap.forQE(constraint().i_evaluator);
-        if (bitmap.takeGreater()) {             
+        if (bitmap.takeGreater()) {        
             if (bitmap.takeEqual()) {
                 return range.extendToLast();
             }
@@ -49,5 +48,9 @@ public class IndexedLeaf extends IndexedNodeBase {
 
 	public KeyValueIterator iterator() {
 		return _range.iterator();
+	}
+
+	public BTreeRange getRange() {
+		return _range;
 	}
 }
