@@ -37,6 +37,6 @@ public class MapContent {
 	}
 	
 	public String toString() {
-		return name.toString();
+		return name;
 	}
 }

@@ -82,6 +82,8 @@ public class MapTest extends ReplicationTestCase {
 	}
 
 	private void replicateAllToProviderBFirstTime() {
+		//replicateAll(_providerA, _providerB);
+		//replicateClass(_providerA, _providerB, MapKey.class);
 		replicateClasses(_providerA, _providerB, new Class[]{MapKey.class, MapContent.class, MapHolder.class});
 				
 		ensureContent(_providerA, "h1", EXP_2_KEYS, EXP_2_VALUES);
@@ -138,7 +140,7 @@ public class MapTest extends ReplicationTestCase {
 	}
 
 	private void replicateHolderStep3() {
-		replicateClass(_providerA, _providerB, MapHolder.class);
+		replicateClasses(_providerA, _providerB, new Class[]{MapKey.class, MapHolder.class});
 		
 		ensureContent(_providerA, "h3", EXP_3_KEYS, EXP_3_VALUES);
 		ensureContent(_providerB, "h3", EXP_3_KEYS, EXP_3_VALUES);
