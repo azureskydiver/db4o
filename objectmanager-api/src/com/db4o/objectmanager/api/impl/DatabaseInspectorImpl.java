@@ -9,7 +9,6 @@ import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.objectmanager.api.helpers.ReflectHelper;
 
 import java.util.List;
-import java.util.Arrays;
 
 /**
  * User: treeder
@@ -60,7 +59,7 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
         return 0;
     }
 
-    public long getSpaceNotUsed() {
+    public long getSpaceFree() {
         return 0;
     }
 
@@ -91,5 +90,9 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
 
     public List getReplicationRecords() {
         return null;
+    }
+
+    public long getSize() {
+        return 0;
     }
 }

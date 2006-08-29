@@ -25,7 +25,7 @@ public class ReflectHelper {
                 "java.lang.",
                 "java.util.",
                 "java.math.",
-                //"com.db4o.",
+                "com.db4o.",
                 "j4o.lang.AssemblyNameHint",
         };
 

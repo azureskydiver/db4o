@@ -68,7 +68,7 @@ public interface DatabaseInspector {
      *
      * @return space not used in bytes
      */
-    long getSpaceNotUsed();
+    long getSpaceFree();
 
     /**
      * Unallocated space is space that is not used and cannot be reused.
@@ -97,5 +97,9 @@ public interface DatabaseInspector {
     List getReplicationRecords();
 
 
-    
+    /**
+     *
+     * @return size of database in bytes on disk
+     */
+    long getSize();
 }
