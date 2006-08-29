@@ -7,9 +7,10 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 
 import db4ounit.*;
+import db4ounit.extensions.Db4oTestCase;
 
 
-public class BTreeSimpleTestCase extends BTreeTestCaseBase{
+public class BTreeSimpleTestCase extends Db4oTestCase {
     
     public BTreeSimpleTestCase(){
         super();
@@ -31,7 +32,7 @@ public class BTreeSimpleTestCase extends BTreeTestCaseBase{
     }
     
     public void testIntKeys() throws Exception{
-        BTree btree = createIntKeyBTree(0);
+        BTree btree = BTreeAssert.createIntKeyBTree(stream(), 0);
         for (int i = 0; i < 5; i++) {
             btree = cycleIntKeys(btree);    
         }
@@ -65,7 +66,7 @@ public class BTreeSimpleTestCase extends BTreeTestCaseBase{
         
         reopen();
         
-        btree = createIntKeyBTree(id);
+        btree = BTreeAssert.createIntKeyBTree(stream(), id);
         
         expectKeys(btree, _sortedKeys);
         
@@ -209,7 +210,16 @@ public class BTreeSimpleTestCase extends BTreeTestCaseBase{
     }
 
     
-    int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
+    private BTree createIntKeyValueBTree(int id) {
+		return new BTree(stream().getSystemTransaction(), id, new YInt(stream()), new YInt(stream()));
+	}
+
+	private void expectKeys(BTree btree, final int[] keys) {
+		BTreeAssert.assertKeys(trans(), btree, keys);
+	}
+
+
+	int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
     
     int[] _values;
     

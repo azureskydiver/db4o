@@ -2,7 +2,8 @@ package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
-import com.db4o.db4ounit.btree.ExpectingVisitor;
+import com.db4o.db4ounit.btree.*;
+import com.db4o.db4ounit.foundation.Arrays4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
@@ -51,8 +52,17 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected BTree fieldIndexBTree(Class clazz, String fieldName) {
+		return getYapClass(clazz).getYapField(fieldName).getIndex();
+	}
+
+	private YapClass getYapClass(Class clazz) {
 		final ReflectClass reflectClass = stream().reflector().forClass(clazz);
-	    return stream().getYapClass(reflectClass, false).getYapField(fieldName).getIndex();
+	    final YapClass yapClass = stream().getYapClass(reflectClass, false);
+		return yapClass;
+	}
+	
+	protected BTree classIndexBTree(Class clazz) {
+		return ((BTreeClassIndexStrategy)getYapClass(clazz).index()).btree();
 	}
 
 	private BTree complexItemIndex(String fieldName) {
@@ -60,7 +70,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected int[] mapToObjectIds(Query itemQuery, int[] foos) {
-		int[] lookingFor = clone(foos);
+		int[] lookingFor = Arrays4.clone(foos);
 		
 		int[] objectIds = new int[foos.length];
 		final ObjectSet set = itemQuery.execute();
@@ -75,26 +85,21 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 			}
 		}		
 		
-		if (!all(lookingFor, -1)) {
-			throw new IllegalArgumentException();
+		int index = indexOfNot(lookingFor, -1);
+		if (-1 != index) {
+			throw new IllegalArgumentException("Foo '" + lookingFor[index] + "' not found!");
 		}
 		
 		return objectIds;
 	}
 
-	private boolean all(int[] array, int value) {
+	private int indexOfNot(int[] array, int value) {
 		for (int i=0; i<array.length; ++i) {
 			if (value != array[i]) {
-				return false;
+				return i;
 			}
 		}
-		return true;
-	}
-
-	private int[] clone(int[] bars) {
-		int[] array = new int[bars.length];
-		System.arraycopy(bars, 0, array, 0, bars.length);
-		return array;
+		return -1;
 	}
 
 	protected void storeComplexItems(int[] foos, int[] bars) {
@@ -106,7 +111,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected void assertTreeInt(final int[] expectedValues, final TreeInt treeInt) {
-		final ExpectingVisitor visitor = createExpectingVisitor(expectedValues);
+		final ExpectingVisitor visitor = BTreeAssert.createExpectingVisitor(expectedValues);
 		treeInt.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				visitor.visit(new Integer(((TreeInt)obj)._key));

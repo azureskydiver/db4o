@@ -1,18 +1,12 @@
 package com.db4o.db4ounit.btree;
 
-import com.db4o.Transaction;
-import com.db4o.inside.btree.BTree;
-import com.db4o.inside.btree.BTreeRange;
 
-import db4ounit.Assert;
 
 public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 	
-	private BTree _tree;
-	
 	public void setUp() throws Exception {
 		super.setUp();
-		_tree = createIntKeyBTree(0);
+		_btree = BTreeAssert.createIntKeyBTree(stream(), 0);
 	}
 
 	public void testSingleRemoveAdd() {
@@ -41,6 +35,26 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		assertSingleElement(element);
 	}
 	
+	public void testMultiTransactionSearch() {
+		
+		final int[] keys = new int[] { 3, 4, 7, 9 };
+		add(trans(), keys);
+		commit(trans());
+		
+        final int[] assorted = new int[] { 1, 2, 11, 13, 21, 52, 51, 66, 89, 10 };
+		add(systemTrans(), assorted);
+		assertKeys(keys);
+		
+        remove(systemTrans(), assorted);
+        assertKeys(keys);
+        
+        BTreeAssert.assertRange(new int[] { 7, 9 }, search(trans(), 4).greater());
+	}
+
+	private void assertKeys(final int[] keys) {
+		BTreeAssert.assertKeys(trans(), _btree, keys);
+	}
+
 	public void testAddRemoveInDifferentTransactions() {
 		
 		final Integer element = new Integer(1);
@@ -74,52 +88,6 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		add(systemTrans(), element);
 		assertSingleElement(systemTrans(), element);
 	}
-	
-	private void assertEmpty(Transaction transaction) {
-		assertEmpty(transaction, _tree);
-	}
-
-    private void add(Transaction transaction, Integer element) {
-		_tree.add(transaction, element);
-	}
-
-	private void remove(final Integer element) {
-		remove(trans(), element);
-	}
-
-	private void remove(final Transaction trans, final Integer element) {
-		_tree.remove(trans, element);
-	}
-
-	private void add(final Integer element) {
-		_tree.add(trans(), element);
-	}
-
-	private int size() {
-		return _tree.size(trans());
-	}
-	
-	private void assertSize(int expected) {
-		Assert.areEqual(expected, size());
-	}
-	
-	private void assertSingleElement(final Integer element) {
-		assertSingleElement(trans(), element);
-	}
-
-	private void assertSingleElement(final Transaction trans, final Integer element) {
-		Assert.areEqual(1, _tree.size(trans));
-		
-		final BTreeRange result = _tree.search(trans, element);
-		ExpectingVisitor expectingVisitor = new ExpectingVisitor(new Object[] { element });
-		traverseKeys(result, expectingVisitor);
-		expectingVisitor.assertExpectations();
-		
-		expectingVisitor = new ExpectingVisitor(new Object[] { element });
-		_tree.traverseKeys(trans, expectingVisitor);
-		expectingVisitor.assertExpectations();
-	}
-	
 	
 	public static void main(String[] args) {
 		new BTreeAddRemoveTestCase().runSolo();

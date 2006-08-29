@@ -2,10 +2,14 @@
 
 package com.db4o.db4ounit.btree;
 
-import com.db4o.inside.btree.BTree;
+import com.db4o.*;
+import com.db4o.db4ounit.foundation.Arrays4;
+import com.db4o.inside.btree.*;
+
+import db4ounit.extensions.Db4oTestCase;
 
 
-public class BTreeSearchTestCase extends BTreeTestCaseBase{
+public class BTreeSearchTestCase extends Db4oTestCase {
     
     public static void main(String[] arguments) {
         new BTreeSearchTestCase().runSolo();
@@ -20,7 +24,7 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
     }
     
     private void cycleIntKeys(int[] values) throws Exception{
-        BTree btree = createIntKeyBTree(0);
+        BTree btree = BTreeAssert.createIntKeyBTree(stream(), 0);
         for (int i = 0; i < 5; i++) {
             btree = cycleIntKeys(btree, values);    
         }
@@ -30,7 +34,7 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
         for (int i = 0; i < values.length; i++) {
             btree.add(trans(), new Integer(values[i]));
         }
-        expectKeysSearch(btree, values);
+        expectKeysSearch(trans(), btree, values);
         
         btree.commit(trans());
         
@@ -40,21 +44,33 @@ public class BTreeSearchTestCase extends BTreeTestCaseBase{
         
         reopen();
         
-        btree = createIntKeyBTree(id);
+        btree = BTreeAssert.createIntKeyBTree(stream(), id);
         
-        expectKeysSearch(btree, values);
+        expectKeysSearch(trans(), btree, values);
         
         for (int i = 0; i < values.length; i++) {
             btree.remove(trans(), new Integer(values[i]));
         }
         
-        assertEmpty(trans(), btree);
+        BTreeAssert.assertEmpty(trans(), btree);
         
         btree.commit(trans());
         
-        assertEmpty(trans(), btree);
+        BTreeAssert.assertEmpty(trans(), btree);
         
         return btree;
     }
 
+	private void expectKeysSearch(Transaction trans, BTree btree, int[] keys) {
+	    int lastValue = Integer.MIN_VALUE;
+	    for (int i = 0; i < keys.length; i++) {
+	        if(keys[i] != lastValue){
+	            ExpectingVisitor expectingVisitor = BTreeAssert.createExpectingVisitor(keys[i], Arrays4.occurences(keys, keys[i]));
+	            BTreeRange range = btree.search(trans, new Integer(keys[i]));
+	            BTreeAssert.traverseKeys(range, expectingVisitor);
+	            expectingVisitor.assertExpectations();
+	            lastValue = keys[i];
+	        }
+	    }
+	}
 }

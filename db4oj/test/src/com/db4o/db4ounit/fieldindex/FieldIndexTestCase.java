@@ -4,6 +4,7 @@ package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
 import com.db4o.db4ounit.btree.*;
+import com.db4o.db4ounit.foundation.Arrays4;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.query.Query;
@@ -46,13 +47,13 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         expectKeysSearch(bTree, FOOS);
     }
     
-    protected void expectKeysSearch(BTree btree, int[] values) {
+    private void expectKeysSearch(BTree btree, int[] values) {
         int lastValue = Integer.MIN_VALUE;
         for (int i = 0; i < values.length; i++) {
             if(values[i] != lastValue){
-                final ExpectingVisitor expectingVisitor = createExpectingVisitor(values[i], occurences(values, values[i]));
+                final ExpectingVisitor expectingVisitor = BTreeAssert.createExpectingVisitor(values[i], Arrays4.occurences(values, values[i]));
                 BTreeRange range = fieldIndexKeySearch(trans(), btree, new Integer(values[i]));
-                traverseKeys(range, new Visitor4() {
+                BTreeAssert.traverseKeys(range, new Visitor4() {
                     public void visit(Object obj) {
                         FieldIndexKey fik = (FieldIndexKey)obj;
                         expectingVisitor.visit(fik.value());
@@ -68,7 +69,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         return new FieldIndexKey(integerPart, composite);
     }
     
-    public BTreeRange fieldIndexKeySearch(Transaction trans, BTree btree, Object key) {
+    private BTreeRange fieldIndexKeySearch(Transaction trans, BTree btree, Object key) {
         // SearchTarget should not make a difference, HIGHEST is faster
         BTreeNodeSearchResult start = btree.searchLeaf(trans, fieldIndexKey(0, key), SearchTarget.LOWEST);
         BTreeNodeSearchResult end = btree.searchLeaf(trans, fieldIndexKey(Integer.MAX_VALUE, key), SearchTarget.LOWEST);
