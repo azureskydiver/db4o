@@ -9,7 +9,7 @@ import com.db4odoc.f1.diagnostics.DiagnosticExample;
 import com.db4odoc.f1.indexes.IndexedExample;
 import com.db4odoc.f1.lists.CollectionExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
-import com.db4odoc.f1.debugging.DebugExample;
+import com.db4odoc.f1.activating.ActivationExample;
 
 
 
@@ -31,7 +31,8 @@ public class Main {
     	BlobExample.main(args);
     	CollectionExample.main(args);
     	ReflectorExample.main(args);
-        ReflectorExample.testReflector();
+        //ReflectorExample.testReflector(); //should be commented for successful doctor build
     	DebugExample.main(args);
+    	ActivationExample.main(args);
     }
 }
