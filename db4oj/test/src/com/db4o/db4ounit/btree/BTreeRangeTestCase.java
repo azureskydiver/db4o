@@ -32,7 +32,7 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 	private BTreeRange createIncludingRange(int lower, int upper) {
 		final BTreeRange lowerRange = search(lower);
 		final BTreeRange upperRange = search(upper);
-		return lowerRange.extendToLast(upperRange);
+		return lowerRange.extendToLastOf(upperRange);
 	}
 	
 	private void assertRange(int[] expectedKeys, BTreeRange intersection) {

@@ -52,6 +52,7 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 	
 	public BTreeRange union(BTreeRange other) {
+//		BTreeRangeImpl rangeImpl = checkRangeArgument(other);
 //		return new BTreeRangeImpl(
 //					trans(),
 //					min(_first, other._first),
@@ -88,26 +89,32 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 
 	private BTreePointer min(BTreePointer x, BTreePointer y) {
-		return null;
+		if (x == null) {
+			return y;
+		}
+		return x;
 	}
 
 	private BTreePointer max(BTreePointer x, BTreePointer y) {
-		return null;
+		if (x == null) {
+			return x;
+		}
+		return y;
 	}
 
-	public BTreeRange extendToLast(BTreeRange upperRange) {
-		BTreeRangeImpl upper = checkRangeArgument(upperRange);
-		return new BTreeRangeImpl(_trans, _first, upper._end);
+	public BTreeRange extendToLastOf(BTreeRange range) {
+		BTreeRangeImpl rangeImpl = checkRangeArgument(range);
+		return new BTreeRangeImpl(_trans, _first, rangeImpl._end);
 	}
 
 	private BTreeRangeImpl checkRangeArgument(BTreeRange range) {
 		if (null == range) {
 			throw new ArgumentNullException();
 		}
-		BTreeRangeImpl upper = (BTreeRangeImpl)range;
-		if (btree() != upper.btree()) {
+		BTreeRangeImpl rangeImpl = (BTreeRangeImpl)range;
+		if (btree() != rangeImpl.btree()) {
 			throw new IllegalArgumentException();
 		}
-		return upper;
+		return rangeImpl;
 	}
 }
