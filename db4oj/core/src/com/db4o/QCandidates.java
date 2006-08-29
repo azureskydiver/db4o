@@ -4,7 +4,9 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.classindex.ClassIndexStrategy;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
+import com.db4o.inside.fieldindex.*;
 import com.db4o.inside.ix.QxProcessor;
 import com.db4o.inside.marshall.MarshallerFamily;
 

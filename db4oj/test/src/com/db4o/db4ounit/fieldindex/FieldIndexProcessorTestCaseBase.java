@@ -7,6 +7,8 @@ import com.db4o.db4ounit.foundation.Arrays4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
+import com.db4o.inside.classindex.BTreeClassIndexStrategy;
+import com.db4o.inside.fieldindex.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 

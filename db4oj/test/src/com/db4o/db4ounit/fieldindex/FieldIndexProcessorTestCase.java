@@ -5,6 +5,7 @@ import com.db4o.db4ounit.btree.BTreeAssert;
 import com.db4o.db4ounit.foundation.Arrays4;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
+import com.db4o.inside.fieldindex.*;
 import com.db4o.query.*;
 
 import db4ounit.Assert;
@@ -54,7 +55,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(FieldIndexItem.class, new int[] { 4, 7 }, query);
     }
     
-    public void _testSingleIndexAndRange(){
+    public void testSingleIndexAndRange(){
         final Query query = createItemQuery();
         Constraint c1 = query.descend("foo").constrain(new Integer(3)).greater();
         Constraint c2 = query.descend("foo").constrain(new Integer(9)).smaller();
@@ -62,7 +63,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(FieldIndexItem.class, new int[] { 4, 7 }, query);
     }
     
-    public void _testSingleIndexOrRange(){
+    public void testSingleIndexOrRange(){
         final Query query = createItemQuery();
         Constraint c1 = query.descend("foo").constrain(new Integer(4)).smaller();
         Constraint c2 = query.descend("foo").constrain(new Integer(7)).greater();
@@ -170,7 +171,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 	}
 	
 	private void assertExpectedFoos(Class itemClass, final int[] expectedFoos, final Query query) {
-		
 		final Transaction trans = transactionFromQuery(query);
 		final int[] expectedIds = mapToObjectIds(createQuery(trans, itemClass), expectedFoos);
 		assertExpectedIDs(expectedIds, query);

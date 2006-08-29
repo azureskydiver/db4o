@@ -2,6 +2,7 @@ package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.TreeInt;
 import com.db4o.inside.*;
+import com.db4o.inside.fieldindex.IndexedNode;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;

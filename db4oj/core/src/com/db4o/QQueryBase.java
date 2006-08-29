@@ -3,8 +3,8 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.ClassIndexStrategy;
 import com.db4o.inside.callbacks.Callbacks;
+import com.db4o.inside.classindex.ClassIndexStrategy;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
