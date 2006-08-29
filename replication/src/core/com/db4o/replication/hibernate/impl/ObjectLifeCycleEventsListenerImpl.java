@@ -1,19 +1,19 @@
 package com.db4o.replication.hibernate.impl;
 
-import com.db4o.ext.Db4oUUID;
-import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.replication.hibernate.metadata.ObjectReference;
-import com.db4o.replication.hibernate.metadata.ComponentIdentity;
-import com.db4o.replication.hibernate.metadata.ProviderSignature;
-import com.db4o.replication.hibernate.metadata.Uuid;
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.hibernate.CallbackException;
-import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.collection.PersistentCollection;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.EventListeners;
 import org.hibernate.event.FlushEvent;
 import org.hibernate.event.FlushEventListener;
@@ -24,15 +24,9 @@ import org.hibernate.event.PostUpdateEventListener;
 import org.hibernate.event.PreDeleteEvent;
 import org.hibernate.event.PreDeleteEventListener;
 
-import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.db4o.foundation.TimeStampIdGenerator;
+import com.db4o.replication.hibernate.metadata.ObjectReference;
+import com.db4o.replication.hibernate.metadata.Uuid;
 
 public class ObjectLifeCycleEventsListenerImpl 
 	extends EmptyInterceptor 
@@ -45,8 +39,6 @@ public class ObjectLifeCycleEventsListenerImpl
 	private final Set<ObjectReference> _dirtyNewRefs = new HashSet<ObjectReference>();
 
 	private final Set<HibernateObjectId> _dirtyUpdatedRefs = new HashSet<HibernateObjectId>();
-	
-	private final Set<ObjectIdField> _updatedCollections = new HashSet<ObjectIdField>();
 
 	private final Set<ObjectReference> _deletedRefs = new HashSet<ObjectReference>();
 
@@ -115,32 +107,10 @@ public class ObjectLifeCycleEventsListenerImpl
 				getSession().update(ref);
 			}
 		}
-		
-		for (ObjectIdField f : _updatedCollections) {
-			ObjectReference ref = Util.getObjectReferenceById(getSession(), f._className, f._hibernateId);
-			
-			if (ref != null && !_dirtyNewRefs.contains(ref) && !_deletedRefs.contains(ref)) {
-				Uuid ownerUuid = Util.getUuidById(getSession(), f._className, f._hibernateId);
-				final ComponentIdentity col = Util.findCollection(Util.translate(ownerUuid), f._fieldName, s);
-//				
-				//System.out.println("col = " + col); 
-				
-				//col is null when a col is inserted after a replication session
-				if (col == null) 
-					continue;
-				
-				col.setVersion(generator.generate());
-				s.update(col);
-			} else {
-				//Intended to do nothing here
-				//System.out.println("owner deleted");
-			}
-		}
 
 		_dirtyNewRefs.clear();
 		_dirtyUpdatedRefs.clear();
 		_deletedRefs.clear();
-		_updatedCollections.clear();
 	}
 
 	public void onPostInsert(PostInsertEvent event) {
@@ -194,13 +164,6 @@ public class ObjectLifeCycleEventsListenerImpl
 		
 		final long ownerId = getId(owner);
 		ObjectUpdated(owner, ownerId);
-		
-		final String role = persistentCollection.getRole();
-		String fieldName = role.substring(role.lastIndexOf(".")+1);
-		
-		ObjectIdField tmp = new ObjectIdField(ownerId, owner.getClass().getName(), fieldName);
-		
-		_updatedCollections.add(tmp);
 	}
 	
 	private void deleteObjectRef(ObjectReference ref) {
@@ -221,23 +184,6 @@ public class ObjectLifeCycleEventsListenerImpl
 		s.evict(ref);
 	}
 
-	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
-		Session s = getSession();
-		Uuid uuid = getUuid(event.getEntity());
-
-		if (uuid == null) return;
-
-		Criteria criteria = s.createCriteria(ComponentIdentity.class);
-		criteria.add(Restrictions.eq(ComponentIdentity.Fields.REF_OBJ_UUID_LONG, uuid.getLongPart()));
-		criteria.createCriteria(ComponentIdentity.Fields.PROVIDER).add(Restrictions.eq(ProviderSignature.Fields.BYTES, uuid.getProvider().getBytes()));
-
-		final List exisitings = criteria.list();
-		for (Iterator iterator = exisitings.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
-			s.delete(o);
-		}
-	}
-
 	private void ensureAlive() {if (!_alive) throw new RuntimeException("dead");}
 
 	private long getId(Object obj) {
@@ -253,13 +199,7 @@ public class ObjectLifeCycleEventsListenerImpl
 		return session;
 	}
 
-	private Uuid getUuid(Object entity) {
-		return Util.getUuid(getSession(), entity);
-	}
-
 	private void objectDeleted(PreDeleteEvent event) {
-		deleteReplicationComponentIdentity(event);
-
 		ObjectReference ref = Util.getObjectReferenceById(getSession(), event.getEntity().getClass().getName(), Util.castAsLong(event.getId()));
 		if (ref == null) return;
 

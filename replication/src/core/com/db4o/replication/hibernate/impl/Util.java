@@ -1,14 +1,13 @@
 package com.db4o.replication.hibernate.impl;
 
-import com.db4o.ext.Db4oUUID;
-import com.db4o.replication.hibernate.metadata.MySignature;
-import com.db4o.replication.hibernate.metadata.ObjectReference;
-import com.db4o.replication.hibernate.metadata.ComponentField;
-import com.db4o.replication.hibernate.metadata.ComponentIdentity;
-import com.db4o.replication.hibernate.metadata.ProviderSignature;
-import com.db4o.replication.hibernate.metadata.Record;
-import com.db4o.replication.hibernate.metadata.Uuid;
-import com.db4o.replication.hibernate.metadata.ComponentIdentity.Fields;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -18,24 +17,20 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.replication.hibernate.metadata.MySignature;
+import com.db4o.replication.hibernate.metadata.ObjectReference;
+import com.db4o.replication.hibernate.metadata.ProviderSignature;
+import com.db4o.replication.hibernate.metadata.Record;
+import com.db4o.replication.hibernate.metadata.Uuid;
 
 public final class Util {
 	public static final Class[] _metadataClasses = new Class[]{
 			Record.class, ProviderSignature.class,
-			ComponentField.class, ComponentIdentity.class,
 			ObjectReference.class};
 
 	public static boolean isAssignableFromInternalObject(Class claxx) {
-		for (Class aClass : _metadataClasses)
+		for (Class<?> aClass : _metadataClasses)
 			if (aClass.isAssignableFrom(claxx)) return true;
 		return false;
 	}
@@ -95,16 +90,6 @@ public final class Util {
 		if (rs != null) {
 			try {
 				rs.close();
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
-	private static void closeStatement(Statement st) {
-		if (st != null) {
-			try {
-				st.close();
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
@@ -304,30 +289,5 @@ public final class Util {
 
 	private static Object[] newArray(Object[] array, int length) {
 		return (Object[]) Array.newInstance(array.getClass().getComponentType(), length);
-	}
-
-	public static ComponentIdentity findCollection(Db4oUUID refObjUuid, String fieldName, Session session) {
-		Criteria criteria = session.createCriteria(ComponentIdentity.class);
-		criteria.add(Restrictions.eq(
-			ComponentIdentity.Fields.REF_OBJ_UUID_LONG, 
-				refObjUuid.getLongPart()));
-	
-		criteria.createCriteria(ComponentIdentity.Fields.REF_OBJ_FIELD)
-			.add(Restrictions.eq(
-				ComponentField.Fields.REF_OBJ_FIELD_NAME, fieldName));
-	
-		criteria.createCriteria(ComponentIdentity.Fields.PROVIDER)
-			.add(Restrictions.eq(ProviderSignature.Fields.BYTES, 
-					refObjUuid.getSignaturePart()));
-	
-		final List exisitings = criteria.list();
-		int count = exisitings.size();
-	
-		if (count == 0)
-			return null;
-		else if (count > 1)
-			throw new RuntimeException("Only one Record should exist for this peer");
-		else
-			return (ComponentIdentity) exisitings.get(0);
 	}
 }

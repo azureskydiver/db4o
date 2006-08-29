@@ -15,7 +15,7 @@ import com.db4o.test.replication.r0tor4.R0to4Runner;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return map();
+		return all();
 	}
 
 	private Class[] all() {
@@ -33,7 +33,7 @@ public class ReplicationTestSuite extends TestSuite {
 				ListTest.class,
 				Db4oListTest.class,
 				
-//				MapTest.class,
+				MapTest.class,
 //				Db4oMapTest.class,
 	//			Db4oIdentityMapTest.class,
 				
