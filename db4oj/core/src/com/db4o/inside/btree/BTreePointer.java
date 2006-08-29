@@ -105,6 +105,7 @@ public class BTreePointer{
     }
 
 	Object key() {
+		node().prepareWrite(_transaction);
 		return node().key(_transaction, index());
 	}
 	

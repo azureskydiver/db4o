@@ -6,14 +6,12 @@ import com.db4o.inside.btree.*;
 
 public class AndIndexedLeaf implements IndexedNode {
 
-	private IndexedLeaf _leaf1;
-	private IndexedLeaf _leaf2;
-	private BTreeRange _range;
+	private final IndexedLeaf _leaf1;
+	private final BTreeRange _range;
 
 	public AndIndexedLeaf(IndexedLeaf leaf1, IndexedLeaf leaf2) {
 		_leaf1 = leaf1;
-		_leaf2 = leaf2;
-		_range = _leaf1.getRange().intersect(_leaf2.getRange());
+		_range = _leaf1.getRange().intersect(leaf2.getRange());
 	}
 
 	public KeyValueIterator iterator() {
@@ -21,9 +19,8 @@ public class AndIndexedLeaf implements IndexedNode {
 	}
 
 	public TreeInt toTreeInt() {
-		Exceptions4.notSupported();
-		return null;
-	}
+    	return IndexedNodeBase.addRangeToTree(null, _range);
+    }
 
 	public BTree getIndex() {
 		return _leaf1.getIndex();
