@@ -1,7 +1,7 @@
 package com.db4o.inside;
 
 import com.db4o.*;
-import com.db4o.foundation.KeyValueIterator;
+import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 
 public abstract class IndexedNodeBase  implements IndexedNode {
@@ -9,6 +9,12 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	private final QConObject _constraint;
 
 	public IndexedNodeBase(QConObject qcon) {
+		if (null == qcon) {
+			throw new ArgumentNullException();
+		}
+		if (null == qcon.getField()) {
+			throw new IllegalArgumentException();
+		}
         _constraint = qcon;
 	}
 	
@@ -47,7 +53,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 		return searchBound(0, value);
 	}
 
-	protected TreeInt addRangeToTree(TreeInt tree, final BTreeRange range) {
+	public static TreeInt addRangeToTree(TreeInt tree, final BTreeRange range) {
 		final KeyValueIterator i = range.iterator();
 	    while (i.moveNext()) {
 	        FieldIndexKey composite = (FieldIndexKey)i.key();

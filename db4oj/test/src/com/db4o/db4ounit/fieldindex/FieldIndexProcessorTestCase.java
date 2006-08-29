@@ -47,7 +47,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(FieldIndexItem.class, new int[] { 7, 9 }, query);
     }
     
-    public void _testSingleIndexRange(){
+    public void testSingleIndexRange(){
         final Query query = createItemQuery();
         query.descend("foo").constrain(new Integer(3)).greater();
         query.descend("foo").constrain(new Integer(9)).smaller();

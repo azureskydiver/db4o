@@ -6,7 +6,7 @@ import com.db4o.inside.btree.*;
 
 public class IndexedPath extends IndexedNodeBase {
 	
-	public static IndexedNode newParentPath(IndexedNode next, final QConObject constraint) {
+	public static IndexedNode newParentPath(IndexedNode next, QConObject constraint) {
 		QCon parent = constraint.parent();
 		if (parent instanceof QConObject) {
 			return new IndexedPath((QConObject) parent, next);
