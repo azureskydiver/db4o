@@ -1,0 +1,85 @@
+<project name="objectmanager" default="dist" basedir=".">
+    <description>
+        ObjectManager build file
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" location="src"/>
+    <property name="lib" location="lib"/>
+    <property name="build" location="classes/production"/>
+    <property name="dist" location="dist"/>
+
+    <path id="class.path">
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="compile" depends="init"
+            description="compile the source ">
+        <ant antfile="../objectmanager-api/build.xml"
+             dir="../objectmanager-api"
+             target="dist"
+             inheritAll="false"/>
+        <copy file="../objectmanager-api/dist/lib/objectmanager-api.jar"
+              todir="./lib/"/>
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}">
+            <classpath refid="class.path"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile"
+            description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+
+        <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+        <jar jarfile="${dist}/lib/${ant.project.name}.jar" basedir="${build}"/>
+
+    </target>
+    <target name="dist-webstart" depends="dist">
+        <property name="wslib" value="./webstart/lib"/>
+        <mkdir dir="${wslib}"/>
+        <copy todir="${wslib}">
+            <fileset dir="${dist}/lib"/>
+            <fileset dir="${lib}"/>
+        </copy>
+
+        <!-- now sign all jars -->
+        <property name="alias" value="db4objects"/>
+        <property name="keystore" value=".keystore-db4o"/>
+        <!-- todo: make it so it doesn't have to delete the whole keystore -->
+        <delete file="${keystore}"/>
+        <genkey alias="${alias}" storepass="secret" keystore="${keystore}">
+            <dname>
+                <param name="CN" value="db4objects Inc."/>
+                <param name="OU" value="ObjectManager"/>
+                <param name="O" value="db4objects"/>
+                <param name="C" value="US"/>
+            </dname>
+        </genkey>
+
+        <!-- There's gotta be a better way than this -->
+        <signjar jar="${wslib}/db4o-5.6-java5.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+        <signjar jar="${wslib}/db4o-sql.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+        <signjar jar="${wslib}/forms-1.0.7.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+        <signjar jar="${wslib}/looks-2.0.4.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+        <signjar jar="${wslib}/objectmanager-api.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+        <signjar jar="${wslib}/objectmanager.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+
+    </target>
+
+    <target name="clean"
+            description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+</project>

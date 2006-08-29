@@ -56,8 +56,6 @@ import java.util.List;
 
 final class QueryResultsPanel extends JPanel {
     private MainPanel mainPanel;
-    private TreeModel classTreeModel;
-    private JTree classTree;
     private JTable resultsTable;
     private TableModel tableModel;
     private SimpleInternalFrame resultsFrame;
@@ -67,45 +65,9 @@ final class QueryResultsPanel extends JPanel {
         this.mainPanel = mainPanel;
         setOpaque(false);
         setBorder(Borders.DIALOG_BORDER);
-        add(buildHorizontalSplit());
+        add(buildMainRightPanel());
     }
 
-
-    private JComponent buildHorizontalSplit() {
-        return Factory.createStrippedSplitPane(
-                JSplitPane.HORIZONTAL_SPLIT,
-                buildMainLeftPanel(),
-                buildMainRightPanel(),
-                0.2f);
-    }
-
-
-    private JComponent buildMainLeftPanel() {
-        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.BOTTOM);
-        tabbedPane.putClientProperty(Options.EMBEDDED_TABS_KEY, Boolean.TRUE);
-        tabbedPane.addTab("Tree", Factory.createStrippedScrollPane(buildTree()));
-        tabbedPane.addTab("Help", Factory.createStrippedScrollPane(buildHelp()));
-
-        SimpleInternalFrame sif = new SimpleInternalFrame("Tree View");
-        sif.setPreferredSize(new Dimension(150, 100));
-        sif.add(tabbedPane);
-        return sif;
-    }
-
-    private JTree buildTree() {
-        classTree = new JTree(createClassTreeModel());
-        classTree.putClientProperty(Options.TREE_LINE_STYLE_KEY,
-                Options.TREE_LINE_STYLE_NONE_VALUE);
-        classTree.setToggleClickCount(2);
-
-        return classTree;
-    }
-
-
-    private JComponent buildHelp() {
-        JTextArea area = new JTextArea("\n Some help info could go here.");
-        return area;
-    }
 
 
     private JComponent buildMainRightPanel() {
@@ -119,50 +81,8 @@ final class QueryResultsPanel extends JPanel {
     private JScrollPane buildResultsTable() {
         resultsTable = new JTable();
         resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-       /* TableColumn col = resultsTable.getColumnModel().getColumn(vColIndex);
-    col.setMinWidth(width);
-    col.setMaxWidth(width);
-    col.setPreferredWidth(width);*/
         JScrollPane scrollpane = new JScrollPane(resultsTable);
-        //scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         return scrollpane;
-    }
-
-    private TreeModel createClassTreeModel() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Stored Classes");
-        classTreeModel = new DefaultTreeModel(root);
-        return classTreeModel;
-    }
-    
-    public void initClassTree(){
-        DefaultMutableTreeNode root = (DefaultMutableTreeNode) classTreeModel.getRoot();
-        DefaultMutableTreeNode parent;
-
-        DatabaseInspector inspector = mainPanel.getDatabaseInspector();
-        List<ReflectClass> classesStored = inspector.getClassesStored();
-        for (int i = 0; i < classesStored.size(); i++) {
-            ReflectClass storedClass = classesStored.get(i);
-            parent = new DefaultMutableTreeNode(storedClass.getName());
-            root.add(parent);
-            ReflectField[] fields = ReflectHelper.getDeclaredFields(storedClass);
-            for (int j = 0; j < fields.length; j++) {
-                ReflectField field = fields[j];
-                parent.add(new DefaultMutableTreeNode(field.getName()));
-            }
-        }
-        classTree.expandRow(0);
-    }
-
-
-    /**
-     * Called when the connection info changes to reinitialized itself
-     */
-    public void init() {
-        initClassTree();
-    }
-
-    public void addClassTreeListener(MouseListener classTreeListener) {
-        classTree.addMouseListener(classTreeListener);
     }
 
 

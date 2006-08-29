@@ -33,6 +33,8 @@ public class ClassTreeListener extends MouseAdapter {
                 if (!node.isLeaf()) {
                     String nodeInfo = (String) node.getUserObject();
                     queryText.setText("FROM " + nodeInfo);
+                } else {
+                    
                 }
             }
         }
