@@ -1,0 +1,88 @@
+.n
+.a Activation ..
+.1 Activation ..
+
+.2 Principles of activation ..
+
+Activation is a db4o mechanism, which controls object's fields instantiation. Why is it necessary? ._
+Let's look at an example of a database, that has a Tree structure, i.e. there is one Root object, ._
+which has N nodes, each nodes in its turn has K subnodes etc. Let the whole structure has M levels. ._
+What happens when you run a query, retrieving the root object? All the sub-objects will have to be ._
+created in the memory. If N,K,M are large numbers, you will most probably end up with the ._
+OutOfMemory exception.
+Luckily db4o does not behave like this - when query retrieves objects, their fields are loaded into ._
+memory (activated in db4o terms) only to a certain depth - activation depth. In this case depth ._
+means "number of member references away from the original object". All the fields at lower ._
+levels (below activation depth) are set to null (for classes) or to default values (for primitive types).
+Activation occurs in the following cases:
+1) ObjectSet#next() is called on an ObjectSet retrieved in a query;
+2) Object is activated explicitly with ObjectContainer#activate(object, depth);
+3) built-in collection element is accessed;
+4) for the environment collections (.NET, Java) their members are activated automatically, when the ._
+collection is activated, using at least depth 1 for lists and depth 2 for maps.
+
+
+.2 Activation management ..
+db4o comes with default activation depth set to 5. This means that, when you go through ObjectSet, ._
+retrieved as a result of your query, each ObjectSet#next() call will go through the structure of the next ._
+retrieved object and load 5 levels of its fields'  values into memory. 
+.s com.db4odoc.f1.activating.ActivationExample#testActivationDefault .. 
+If the default value does not satisfy your needs you can use db4o activation API, which allows tuning up ._
+activation strategy for any application.
+
+.3 Global activation settings ..
+
+.c Db4o.configure().activationDepth(activationDepth) ..
+configures global activation depth, which will be used for all objects instead of the default value. ._
+This method should be called before opening a database file.
+.c objectContainer#ext().configure().activationDepth(activationDepth) ..
+has a similar effect, but the setting will be applied to the specific ObjectContainer and can be changed ._
+for the open database file.
+.s com.db4odoc.f1.activating.ActivationExample#testActivationConfig ..
+By configuring db4o you can have full control over activation behavior. The two extremes: 
+-	using an activationDepth of Integer.MAX_VALUE lets you forget about manual activation, but does ._
+not give you the best performance and memory footprint; 
+-	using an activationDepth of 0 and activating and deactivating all objects manually keeps memory ._
+consumption extremely low, but needs more coding and attention.
+
+.3 Object-specific activation ..
+
+You can tune up activation settings for specific classes with the following methods:
+.c Db4o.configure().objectClass("yourClass").minimumActivationDepth(minimumDepth) ..
+.c Db4o.configure().objectClass("yourClass").maximumActivationDepth(maximumDepth) ..
+Cascading the activation depth to member fields, the depth value is reduced by one for the field. If the ._
+depth exceeds the maximumDepth specified for the class of the object, it is reduced to the ._
+maximumDepth. If the depth value is lower than the minimumDepth it is raised to the minimumDepth.
+.s com.db4odoc.f1.activating.ActivationExample#testMaxActivate ..
+.s com.db4odoc.f1.activating.ActivationExample#testMinActivate ..
+You can set up automatic activation for specific objects or fields:
+.c Db4o.configure().objectClass("yourClass").cascadeOnActivate (bool)  ..
+.c Db4o.configure().objectClass("yourClass").ObjectField(“field”).cascadeOnActivate(bool) .. 
+Cascade activation will retrieve the whole object graph, starting from the specified object(field). ._
+This setting can lead to increased memory consumption. 
+.s com.db4odoc.f1.activating.ActivationExample#testCascadeActivate ..
+An alternative to cascade activation can be manual activation of objects:
+.c ObjectContainer#activate(object, activationDepth); ..
+Manual deactivation may be used to save memory: 
+.c ObjectContainer#deactivate(object, activationDepth); ..
+These 2 methods give you an excellent control over object activation, but they obviously need more ._
+attention from the application side.
+.s com.db4odoc.f1.activating.ActivationExample#testActivateDeactivate ..
+
+.3 Collections activation ..
+
+For built-in db4o collections:
+.c Db4oCollection.activationDepth(activationDepth) ..
+configures the activation depth for the objects returned from this collection. Default activation depth ._
+value for collections is 1, for hashmaps - 2.
+.s com.db4odoc.f1.activating.ActivationExample#testCollectionDef ..
+Let's change the activation depth:
+.s com.db4odoc.f1.activating.ActivationExample#testCollectionActivation ..
+Specify a value less than zero to use the default activation depth configured for the ObjectContainer ._
+or for individual objects.
+
+.2 Full source ..
+.s com.db4odoc.f1.activating.ActivationExample ..
+.s com.db4odoc.f1.activating.SensorPanel ..
+
+

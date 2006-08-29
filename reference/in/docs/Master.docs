@@ -3,6 +3,7 @@
 .0 Mastering db4o ..
 
 .e Recursive ..
+.e Activation ..
 .e Evaluations ..
 .e Constructors ..
 .e Translators ..
