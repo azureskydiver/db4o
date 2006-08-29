@@ -17,6 +17,10 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public BTreeClassIndexStrategy(YapClass yapClass) {
 		super(yapClass);
 	}	
+	
+	public BTree btree() {
+		return _btreeIndex;
+	}
 
 	public int entryCount(Transaction ta) {
 		return _btreeIndex != null
@@ -93,7 +97,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	}
 	
 	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping,int classIndexID) {
-		int oldID=source.readInt();
+		/*int oldID=*/ source.readInt();
 		int newID = -classIndexID;
 		target.writeInt(newID);
 	}
