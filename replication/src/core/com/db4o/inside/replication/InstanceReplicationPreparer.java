@@ -3,7 +3,6 @@ package com.db4o.inside.replication;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.inside.traversal.TraversedField;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Visitor;
 import com.db4o.reflect.ReflectClass;

@@ -1,15 +1,15 @@
 package com.db4o.test.traversal;
 
+import com.db4o.inside.replication.CollectionHandlerImpl;
 import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.inside.traversal.Traverser;
-import com.db4o.inside.traversal.VectorFlattener;
 import com.db4o.reflect.Reflector;
 import com.db4o.test.Test;
 
 public class TraversalTest extends Test {
 
 	public void test() {
-		Traverser traverser = new GenericTraverser(reflector(), new VectorFlattener());
+		Traverser traverser = new GenericTraverser(reflector(), new CollectionHandlerImpl());
 
 		TraversalTestSubject subject = new TraversalTestSubject();
 		CountingVisitor visitor = new CountingVisitor();
