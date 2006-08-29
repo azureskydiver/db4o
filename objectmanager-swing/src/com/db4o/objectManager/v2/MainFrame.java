@@ -42,44 +42,24 @@ public class MainFrame extends JFrame implements WindowListener {
      * Describes optional settings of the JGoodies Looks.
      */
     private final Settings settings;
+    private Db4oConnectionSpec connectionSpec;
     private MainPanel mainPanel;
 
     /**
      * Constructs a <code>DemoFrame</code>, configures the UI,
      * and builds the content.
      */
-    protected MainFrame(Settings settings) {
+    protected MainFrame(Settings settings, Db4oConnectionSpec connectionSpec) {
         this.settings = settings;
+        this.connectionSpec = connectionSpec;
         configureUI();
         build();
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(this);
     }
 
-    public static void main(String[] args) {
-        Settings settings = createDefaultSettings();
-        if (args.length > 0) {
-            String lafShortName = args[0];
-            String lafClassName;
-            if ("Windows".equalsIgnoreCase(lafShortName)) {
-                lafClassName = Options.JGOODIES_WINDOWS_NAME;
-            } else if ("Plastic".equalsIgnoreCase(lafShortName)) {
-                lafClassName = Options.PLASTIC_NAME;
-            } else if ("Plastic3D".equalsIgnoreCase(lafShortName)) {
-                lafClassName = Options.PLASTIC3D_NAME;
-            } else if ("PlasticXP".equalsIgnoreCase(lafShortName)) {
-                lafClassName = Options.PLASTICXP_NAME;
-            } else {
-                lafClassName = lafShortName;
-            }
-            System.out.println("L&f chosen: " + lafClassName);
-            settings.setSelectedLookAndFeel(lafClassName);
-        }
-        MainFrame.createDefaultFrame(settings, null, null);
-    }
-
-    private static MainFrame createDefaultFrame(Settings settings, Dimension frameSize, Point frameLocation) {
-        MainFrame instance = new MainFrame(settings);
+    private static MainFrame createDefaultFrame(Settings settings, Dimension frameSize, Point frameLocation, Db4oConnectionSpec connectionSpec) {
+        MainFrame instance = new MainFrame(settings, connectionSpec);
         if(frameSize != null) instance.setSize(frameSize);
         else instance.setSize(PREFERRED_SIZE);
         if(frameLocation != null) instance.setLocation(frameLocation);
@@ -88,8 +68,8 @@ public class MainFrame extends JFrame implements WindowListener {
         return instance;
     }
 
-    public static MainFrame createDefaultFrame(Dimension frameSize, Point frameLocation) {
-        return createDefaultFrame(MainFrame.createDefaultSettings(), frameSize, frameLocation);
+    public static MainFrame createDefaultFrame(Dimension frameSize, Point frameLocation, Db4oConnectionSpec connectionSpec) {
+        return createDefaultFrame(MainFrame.createDefaultSettings(), frameSize, frameLocation, connectionSpec);
     }
 
     static Settings createDefaultSettings() {
@@ -162,7 +142,7 @@ public class MainFrame extends JFrame implements WindowListener {
      * Builds and answers the content.
      */
     private JComponent buildContentPane() {
-        mainPanel = new MainPanel(this, settings);
+        mainPanel = new MainPanel(this, settings, connectionSpec);
         return mainPanel;
     }
 
@@ -195,7 +175,7 @@ public class MainFrame extends JFrame implements WindowListener {
     }
 
     public void setConnectionInfo(Db4oConnectionSpec connectionInfo) {
-        mainPanel.setConnectionInfo(connectionInfo);
+        mainPanel.setConnectionSpec(connectionInfo);
     }
 
     public void windowOpened(WindowEvent e) {

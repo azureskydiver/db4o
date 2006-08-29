@@ -227,13 +227,13 @@ public class Dashboard {
     }
 
     private void connectAndOpenFrame() {
-        Dimension frameSize = (Dimension) Preferences.getDefault().getPreference(Preferences.FRAME_SIZE);
-        Point frameLocation = (Point) Preferences.getDefault().getPreference(Preferences.FRAME_LOCATION);
-        MainFrame instance = MainFrame.createDefaultFrame(frameSize, frameLocation);
         Db4oConnectionSpec connectionSpec = new Db4oFileConnectionSpec(fileTextField.getText(), false);
         recentConnectionList.addNewConnectionSpec(connectionSpec);
-        instance.setConnectionInfo(connectionSpec);
         fileTextField.setText("");
+        Dimension frameSize = (Dimension) Preferences.getDefault().getPreference(Preferences.FRAME_SIZE);
+        Point frameLocation = (Point) Preferences.getDefault().getPreference(Preferences.FRAME_LOCATION);
+        MainFrame instance = MainFrame.createDefaultFrame(frameSize, frameLocation, connectionSpec);
+
         instance.addComponentListener(new ComponentListener() {
             public void componentResized(ComponentEvent e) {
                 // save size in prefs
@@ -253,6 +253,8 @@ public class Dashboard {
 
             }
         });
+
+
     }
 
     private void showInForm(Db4oConnectionSpec connectionSpec) {

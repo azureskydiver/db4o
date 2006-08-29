@@ -2,6 +2,10 @@ package com.db4o.objectManager.v2;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+import com.db4o.objectManager.v2.uif_lite.component.Factory;
+import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.objectmanager.api.impl.DatabaseInspectorImpl;
 import com.db4o.objectmanager.api.prefs.Preferences;
@@ -9,15 +13,22 @@ import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
+import com.jgoodies.forms.factories.Borders;
 import com.spaceprogram.db4o.sql.Result;
+import com.spaceprogram.db4o.sql.ReflectHelper;
 
 import javax.swing.*;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 /**
@@ -29,17 +40,27 @@ public class MainPanel extends JPanel {
     private MainFrame mainFrame;
     private Settings settings;
     private ObjectContainer objectContainer;
-    private Db4oConnectionSpec connectionInfo;
+    private Db4oConnectionSpec connectionSpec;
     private DatabaseInspector databaseInspector;
-    private QueryResultsPanel queryResultsPanel;
+    //2private QueryResultsPanel queryResultsPanel;
     private QueryBarPanel queryBarPanel;
+    private JTabbedPane tabbedPane;
+    private int queryCounter;
+
+    private TreeModel classTreeModel;
+    private JTree classTree;
+    private DatabaseStatsPanel databaseStatsPanel;
 
 
-    public MainPanel(MainFrame mainFrame, Settings settings) {
+    public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec) {
         super(new BorderLayout());
         this.mainFrame = mainFrame;
         this.settings = settings;
+        this.connectionSpec = connectionSpec;
         build();
+        initClassTree();
+        mainFrame.addKeyListener(new ShortcutsListener());
+
     }
 
     public void build() {
@@ -56,9 +77,16 @@ public class MainPanel extends JPanel {
     private Component buildQueryPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(buildQueryBar(), BorderLayout.NORTH);
-        panel.add(buildTabbedPane(), BorderLayout.CENTER);
+        JSplitPane splitPane = Factory.createStrippedSplitPane(
+                JSplitPane.HORIZONTAL_SPLIT,
+                buildMainLeftPanel(),
+                buildTabbedPane(),
+                0.2f);
+
+        panel.add(splitPane, BorderLayout.CENTER);
         return panel;
     }
+
 
     private Component buildQueryBar() {
         queryBarPanel = new QueryBarPanel(this);
@@ -66,43 +94,107 @@ public class MainPanel extends JPanel {
     }
 
 
+    private JComponent buildMainLeftPanel() {
+        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.BOTTOM);
+        tabbedPane.putClientProperty(Options.EMBEDDED_TABS_KEY, Boolean.TRUE);
+        tabbedPane.addTab("Tree", buildTree());
+        tabbedPane.addTab("Help", Factory.createStrippedScrollPane(buildHelp()));
+
+        SimpleInternalFrame sif = new SimpleInternalFrame("Tree View");
+        sif.setPreferredSize(new Dimension(150, 100));
+        sif.setBorder(Borders.DIALOG_BORDER);    
+        sif.add(tabbedPane);
+        return sif;
+    }
+
+
+    private JScrollPane buildTree() {
+        classTree = new JTree(createClassTreeModel());
+        classTree.putClientProperty(Options.TREE_LINE_STYLE_KEY,
+                Options.TREE_LINE_STYLE_NONE_VALUE);
+        classTree.setToggleClickCount(2);
+        return new JScrollPane(classTree);
+
+    }
+
+
+    private JComponent buildHelp() {
+        JTextArea area = new JTextArea("\n Some help info could go here.");
+        return area;
+    }
+
+    private TreeModel createClassTreeModel() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Stored Classes");
+        classTreeModel = new DefaultTreeModel(root);
+        return classTreeModel;
+    }
+
+    public void initClassTree() {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) classTreeModel.getRoot();
+        DefaultMutableTreeNode parent;
+
+        DatabaseInspector inspector = getDatabaseInspector();
+        List<ReflectClass> classesStored = inspector.getClassesStored();
+        for (int i = 0; i < classesStored.size(); i++) {
+            ReflectClass storedClass = classesStored.get(i);
+            parent = new DefaultMutableTreeNode(storedClass.getName());
+            root.add(parent);
+            ReflectField[] fields = ReflectHelper.getDeclaredFields(storedClass);
+            for (int j = 0; j < fields.length; j++) {
+                ReflectField field = fields[j];
+                parent.add(new DefaultMutableTreeNode(field.getName()));
+            }
+        }
+        classTree.expandRow(0);
+
+        addClassTreeListener(new ClassTreeListener(queryBarPanel));
+    }
+
+
+
+
+    public void addClassTreeListener(MouseListener classTreeListener) {
+        classTree.addMouseListener(classTreeListener);
+    }
+
+
     private Preferences getPreferences() {
         return Preferences.getDefault();
     }
+
     public void setPreference(String key, Object pref) {
         getPreferences().setPreference(key, pref);
     }
-    public Object getPreference(String key){
+
+    public Object getPreference(String key) {
         return getPreferences().getPreference(key);
     }
 
     ObjectContainer getObjectContainer() {
         if (objectContainer == null) {
-            objectContainer = Db4o.openFile(connectionInfo.getPath());
+            objectContainer = Db4o.openFile(connectionSpec.getPath());
         }
         return objectContainer;
     }
 
     private Component buildTabbedPane() {
-        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
+
+        tabbedPane = new JTabbedPane(SwingConstants.TOP);
         //tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        tabbedPane.addKeyListener(new TabShortCutsListener(tabbedPane));
 
         addTabs(tabbedPane);
 
-        tabbedPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         return tabbedPane;
     }
 
     private void addTabs(JTabbedPane tabbedPane) {
-        queryResultsPanel = new QueryResultsPanel(this);
-        tabbedPane.addTab("Home", queryResultsPanel);
-        queryResultsPanel.addClassTreeListener(new ClassTreeListener(queryBarPanel));
-    
-        tabbedPane.addTab("Query 1", new JPanel());
-        tabbedPane.addTab("Query 2", new JPanel());
+        databaseStatsPanel = new DatabaseStatsPanel(getDatabaseInspector());
+        tabbedPane.addTab("Home", databaseStatsPanel);
     }
 
- 
+
     private Component buildToolBar() {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(true);
@@ -165,20 +257,25 @@ public class MainPanel extends JPanel {
         return button;
     }
 
-    public void setConnectionInfo(Db4oConnectionSpec connectionInfo) {
-        this.connectionInfo = connectionInfo;
-        queryResultsPanel.init();
+    public void setConnectionSpec(Db4oConnectionSpec connectionSpec) {
+        this.connectionSpec = connectionSpec;
+        initClassTree();        
     }
 
     public DatabaseInspector getDatabaseInspector() {
-        if(databaseInspector == null){
+        if (databaseInspector == null) {
             databaseInspector = new DatabaseInspectorImpl(getObjectContainer());
         }
         return databaseInspector;
     }
 
     public void displayResults(List<Result> results) {
-        queryResultsPanel.displayResults(results);
+        QueryResultsPanel p = new QueryResultsPanel(this);
+        tabbedPane.add("Query " + (++queryCounter), p);
+        tabbedPane.setSelectedComponent(p);
+        p.displayResults(results);
+
+        //queryResultsPanel.displayResults(results);
     }
 
 
@@ -187,6 +284,7 @@ public class MainPanel extends JPanel {
             new JFileChooser().showOpenDialog(MainPanel.this);
         }
     }
+
     protected ActionListener createHelpActionListener() {
         return null;
     }
