@@ -1,10 +1,11 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
-import com.db4o.db4ounit.btree.*;
 import com.db4o.query.Query;
 
-public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
+import db4ounit.extensions.Db4oTestCase;
+
+public abstract class FieldIndexTestCaseBase extends Db4oTestCase {
 
 	public FieldIndexTestCaseBase() {
 		super();
@@ -62,5 +63,4 @@ public abstract class FieldIndexTestCaseBase extends BTreeTestCaseBase {
 	private Query createQuery(Transaction trans) {
 		return stream().query(trans);
 	}
-
 }

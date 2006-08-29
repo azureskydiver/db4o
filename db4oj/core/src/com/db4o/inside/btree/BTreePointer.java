@@ -41,7 +41,7 @@ public class BTreePointer{
     private final int _index;
 
 	private final Transaction _transaction;
-    
+   
     public BTreePointer(Transaction transaction, BTreeNode node, int index) {
         if(transaction == null || node == null){
             throw new ArgumentNullException();

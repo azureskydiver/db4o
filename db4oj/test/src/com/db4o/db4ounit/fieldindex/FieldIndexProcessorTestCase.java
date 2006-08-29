@@ -1,6 +1,8 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
+import com.db4o.db4ounit.btree.BTreeAssert;
+import com.db4o.db4ounit.foundation.Arrays4;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.query.*;
@@ -109,7 +111,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		transaction.commit();
 		
 		fillTransactionWith(transaction, 5);
-        assertSmaller(concat(expectedZeros, new int[] { 3, 4 }), 7);
+        assertSmaller(Arrays4.concat(expectedZeros, new int[] { 3, 4 }), 7);
 	}
 
 	public void testMultiTransactionWithRollback() {
@@ -147,7 +149,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         removeFromTransaction(systemTrans(), 10);
         assertGreater(new int[] { 4, 7, 9 }, 3);
     }
-
+	
     public void testSingleIndexEquals() {
         final int expectedBar = 3;
         assertExpectedFoos(FieldIndexItem.class, new int[] { expectedBar }, createQuery(expectedBar));
@@ -161,10 +163,10 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		assertGreater(new int[] { 4, 7, 9 }, 3);
 	}
 	
-	private void assertGreater(int[] expectedBars, int greaterThan) {
+	private void assertGreater(int[] expectedFoos, int greaterThan) {
 		final Query query = createItemQuery();
 		query.descend("foo").constrain(new Integer(greaterThan)).greater();		
-		assertExpectedFoos(FieldIndexItem.class, expectedBars, query);
+		assertExpectedFoos(FieldIndexItem.class, expectedFoos, query);
 	}
 	
 	private void assertExpectedFoos(Class itemClass, final int[] expectedFoos, final Query query) {
@@ -190,11 +192,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		return ((QQuery)query).getTransaction();
 	}
 
-	private int btreeNodeSize() {		
-		return btree().nodeSize();
-	}
-    
-    private BTree btree(){
+	private BTree btree(){
         return fieldIndexBTree(FieldIndexItem.class, "foo");
     }
 
@@ -203,33 +201,16 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 	}
 	
 	private void fillTransactionWith(Transaction trans, final int bar) {
-		for (int i=0; i<fillSize(); ++i) {
+		for (int i=0; i<BTreeAssert.fillSize(btree()); ++i) {
 			store(trans, new FieldIndexItem(bar));
 		}
 	}
 
-	private int fillSize() {
-		return btreeNodeSize()+1;
-	}
-	
 	private int[] newBTreeNodeSizedArray(int value) {
-		return fill(new int[fillSize()], value);
+		final BTree btree = btree();
+		return BTreeAssert.newBTreeNodeSizedArray(btree, value);
 	}
 
-	private int[] fill(int[] array, int value) {
-		for (int i=0; i<array.length; ++i) {
-			array[i] = value;
-		}
-		return array;
-	}
-	
-	private int[] concat(int[] a, int[] b) {
-		int[] array = new int[a.length + b.length];
-		System.arraycopy(a, 0, array, 0, a.length);
-		System.arraycopy(b, 0, array, a.length, b.length);
-		return array;
-	}
-	
 	private void removeFromTransaction(Transaction trans, final int foo) {
 		final ObjectSet found = createItemQuery(trans).execute();
 		while (found.hasNext()) {

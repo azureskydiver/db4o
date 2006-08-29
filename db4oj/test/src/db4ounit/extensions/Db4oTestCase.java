@@ -2,6 +2,7 @@
 
 package db4ounit.extensions;
 
+import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.*;
@@ -54,5 +55,17 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 		return new TestRunner(
 					new Db4oTestSuiteBuilder(
 							new Db4oSolo(), testCases())).run();
+	}
+
+	protected YapStream stream() {
+	    return (YapStream) db();
+	}
+
+	protected Transaction trans() {
+	    return stream().getTransaction();
+	}
+
+	protected Transaction systemTrans() {
+	    return stream().getSystemTransaction();
 	}
 }

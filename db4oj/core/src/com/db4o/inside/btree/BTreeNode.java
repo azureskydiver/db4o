@@ -156,7 +156,7 @@ public class BTreeNode extends YapMeta{
     }
 
     private BTreeAdd newAddPatch(Transaction trans) {
-        _btree.sizeChanged(trans, 1);
+        sizeIncrement(trans);
         return new BTreeAdd(trans, keyHandler().current());
     }
 
@@ -164,7 +164,11 @@ public class BTreeNode extends YapMeta{
 		final BTreeRemove patch = (BTreeRemove)keyPatch(index);
         BTreeRemove nextPatch = patch.removeFor(trans);
         _keys[index] = nextPatch == null ? patch.getObject() : nextPatch;
-        _btree.sizeChanged(trans, 1);
+        sizeIncrement(trans);
+	}
+
+	private void sizeIncrement(Transaction trans) {
+		_btree.sizeChanged(trans, 1);
 	}
 
 	private boolean wasRemoved(Transaction trans, Searcher s) {
@@ -797,9 +801,17 @@ public class BTreeNode extends YapMeta{
 
 	private void cancelAdding(Transaction trans, int index) {
 		_btree.notifyRemoveListener(keyPatch(index).getObject());
+		if(freeIfEmpty(trans, _count-1)){
+			sizeDecrement(trans);
+			return;
+		}
 		remove(index);
 		keyChanged(trans, index);
-        _btree.sizeChanged(trans, -1);
+        sizeDecrement(trans);
+	}
+
+	private void sizeDecrement(Transaction trans) {
+		_btree.sizeChanged(trans, -1);
 	}
 
 	private int lastIndex() {
