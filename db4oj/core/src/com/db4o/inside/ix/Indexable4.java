@@ -16,5 +16,4 @@ public interface Indexable4 extends YapComparable{
     Object readIndexEntry(YapReader a_reader);
     
     void writeIndexEntry(YapReader a_writer, Object a_object);
-
 }

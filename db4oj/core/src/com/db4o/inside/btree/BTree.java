@@ -4,7 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.ix.*;
+import com.db4o.inside.ix.Indexable4;
 import com.db4o.inside.marshall.MarshallerFamily;
 
 /**
@@ -13,8 +13,7 @@ import com.db4o.inside.marshall.MarshallerFamily;
 public class BTree extends YapMeta implements TransactionParticipant {
     
     /** temporary variable for value and search coding */
-    private static final boolean DEBUG = false; //MarshallerFamily.BTREE_FIELD_INDEX;
-    // private static final boolean DEBUG = false;
+    private static final boolean DEBUG = MarshallerFamily.BTREE_FIELD_INDEX;
     
     private static final byte BTREE_VERSION = (byte)1;
     
@@ -114,7 +113,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
         
         BTreeNodeSearchResult start = searchLeaf(trans, key, SearchTarget.LOWEST);
         BTreeNodeSearchResult end = searchLeaf(trans, key, SearchTarget.HIGHEST);
-        return start.createIncludingRange(trans, end);
+        return start.createIncludingRange(end);
     }
     
     public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
@@ -354,6 +353,11 @@ public class BTree extends YapMeta implements TransactionParticipant {
 
 	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
 		BTreeNode.defragIndex(source,target,mapping,_keyHandler);
+	}
+
+	public int compareKeys(Object key1, Object key2) {
+		_keyHandler.prepareComparison(key2);
+		return _keyHandler.compareTo(key1);
 	}
 }
 

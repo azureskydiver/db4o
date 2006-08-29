@@ -36,7 +36,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	public BTreeRange search(final Object value) {
 		BTreeNodeSearchResult lowerBound = searchLowerBound(value);
 	    BTreeNodeSearchResult upperBound = searchUpperBound(value);	    
-		return lowerBound.createIncludingRange(transaction(), upperBound);
+		return lowerBound.createIncludingRange(upperBound);
 	}
 
 	private BTreeNodeSearchResult searchUpperBound(final Object value) {

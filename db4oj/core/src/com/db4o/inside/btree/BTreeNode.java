@@ -183,7 +183,7 @@ public class BTreeNode extends YapMeta{
         }
             
         if(! s.foundMatch() || target == SearchTarget.ANY || target == SearchTarget.HIGHEST){
-            return new BTreeNodeSearchResult(trans, s, this);
+            return new BTreeNodeSearchResult(trans, btree(), s, this);
         }
         
         if(target == SearchTarget.LOWEST){
@@ -191,14 +191,14 @@ public class BTreeNode extends YapMeta{
             if(res != null){
                 return res;
             }
-            return createMatchingSearchResult(s.cursor());
+            return createMatchingSearchResult(trans, s.cursor());
         }
         
         throw new IllegalStateException();
         
     }
-    
-    private BTreeNodeSearchResult findLowestLeafMatch (Transaction trans, int index){
+
+	private BTreeNodeSearchResult findLowestLeafMatch (Transaction trans, int index){
         
         // TODO: only working in write mode here, 
         //       could maybe optimize later
@@ -214,7 +214,7 @@ public class BTreeNode extends YapMeta{
                 if(res != null){
                     return res;
                 }
-                return createMatchingSearchResult(index);
+                return createMatchingSearchResult(trans, index);
             }
         }
         
@@ -230,15 +230,15 @@ public class BTreeNode extends YapMeta{
             return null;
         }
         
-        return  createMatchingSearchResult(index);
+        return  createMatchingSearchResult(trans, index);
     }
 
     private boolean compareInWriteModeEquals(int index) {
         return compareInWriteMode(index) == 0;
     }
 
-    private BTreeNodeSearchResult createMatchingSearchResult(int index) {
-        return new BTreeNodeSearchResult(this, index, true);
+    private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, int index) {
+        return new BTreeNodeSearchResult(trans, btree(), this, index, true);
     }
     
     private boolean canWrite(){
@@ -934,7 +934,7 @@ public class BTreeNode extends YapMeta{
             if(index == -1){
                 return null;
             }
-			return new BTreePointer(this, index);
+			return new BTreePointer(trans, this, index);
 		}
         for (int i = 0; i < _count; i++) {
             BTreePointer childFirstPointer = child(reader, i).firstPointer(trans);

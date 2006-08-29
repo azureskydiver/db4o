@@ -34,22 +34,22 @@ class BTreeRangeIterator implements KeyValueIterator {
                 _lastNode = node;
             }
             
-            Object obj = _cursor.key(transaction());
+            Object obj = _cursor.key();
             
             if(obj != No4.INSTANCE){
                 _current = _cursor;
-                _cursor = _cursor.next(transaction());
+                _cursor = _cursor.next();
                 return true;
             }
             
-            _cursor = _cursor.next(transaction());
+            _cursor = _cursor.next();
         }
 		_current = null;
 		return false;
 	}
 	
 	public Object key() {
-		return current().key(_range.transaction());
+		return current().key();
 	}
 	
 	public Object value() {

@@ -18,18 +18,29 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		
 	}	
 
-	public void _testIntersect() {
-		final BTreeRange range1 = createIncludingRange(3, 7);
-		assertRange(new int[] { 3, 4, 7 }, range1);
+	public void testIntersect() {
+		assertIntersection(new int[] { 4, 7 }, range(3, 7), range(4, 9));
 		
-		final BTreeRange range2 = createIncludingRange(4, 9);
-		assertRange(new int[] { 4, 7, 9 }, range2);
+		assertIntersection(new int[] {}, range(3, 4), range(7, 9));
 		
-		final BTreeRange intersection = range1.intersect(range2);		
-		assertRange(new int[] { 4, 7 }, intersection);
+		assertIntersection(new int[] { 3, 4, 7, 9 }, range(3, 9), range(3, 9));
+		
+		assertIntersection(new int[] { 3, 4, 7, 9 }, range(3, 10), range(3, 9));
+		
+		assertIntersection(new int[] {}, range(1, 2), range(3, 9));
 	}
 
-	private BTreeRange createIncludingRange(int lower, int upper) {
+	private void assertIntersection(int[] expectedKeys, BTreeRange range1, BTreeRange range2) {
+		assertRange(expectedKeys, range1.intersect(range2));
+		assertRange(expectedKeys, range2.intersect(range1));
+	}
+	
+	public void testExtendToLastOf() {
+		assertRange(new int[] { 3, 4, 7 }, range(3, 7));		
+		assertRange(new int[] { 4, 7, 9 }, range(4, 9));
+	}
+
+	private BTreeRange range(int lower, int upper) {
 		final BTreeRange lowerRange = search(lower);
 		final BTreeRange upperRange = search(upper);
 		return lowerRange.extendToLastOf(upperRange);
