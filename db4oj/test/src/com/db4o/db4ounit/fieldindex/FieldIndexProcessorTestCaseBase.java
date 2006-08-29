@@ -5,7 +5,6 @@ import com.db4o.QQueryBase.CreateCandidateCollectionResult;
 import com.db4o.db4ounit.btree.*;
 import com.db4o.db4ounit.foundation.Arrays4;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.classindex.BTreeClassIndexStrategy;
 import com.db4o.inside.fieldindex.*;

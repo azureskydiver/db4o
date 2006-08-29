@@ -3,7 +3,6 @@ package com.db4o.db4ounit.fieldindex;
 import com.db4o.*;
 import com.db4o.db4ounit.btree.BTreeAssert;
 import com.db4o.db4ounit.foundation.Arrays4;
-import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.fieldindex.*;
 import com.db4o.query.*;
@@ -63,7 +62,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(FieldIndexItem.class, new int[] { 4, 7 }, query);
     }
     
-    public void testSingleIndexOrRange(){
+    public void _testSingleIndexOrRange(){
         final Query query = createItemQuery();
         Constraint c1 = query.descend("foo").constrain(new Integer(4)).smaller();
         Constraint c2 = query.descend("foo").constrain(new Integer(7)).greater();
