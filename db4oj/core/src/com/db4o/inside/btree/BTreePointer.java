@@ -9,28 +9,61 @@ import com.db4o.foundation.*;
  * @exclude
  */
 public class BTreePointer{
+	
+	public static BTreePointer max(BTreePointer x, BTreePointer y) {
+		if (x == null) {
+			return x;
+		}
+		if (y == null) {
+			return y;
+		}
+		if (x.compareTo(y) > 0) {
+			return x;
+		}
+		return y;
+	}
+
+	public static BTreePointer min(BTreePointer x, BTreePointer y) {
+		if (x == null) {
+			return y;
+		}
+		if (y == null) {
+			return x;
+		}
+		if (x.compareTo(y) < 0) {
+			return x;
+		}
+		return y;
+	}
     
     private final BTreeNode _node;
     
     private final int _index;
+
+	private final Transaction _transaction;
     
-    public BTreePointer(BTreeNode node, int index) {
-        if(node == null){
+    public BTreePointer(Transaction transaction, BTreeNode node, int index) {
+        if(transaction == null || node == null){
             throw new ArgumentNullException();
         }
+        _transaction = transaction;
         _node = node;
         _index = index;
+    }
+    
+    public Transaction transaction() {
+    	return _transaction;
     }
     
     public int index(){
         return _index;
     }
     
-    public BTreePointer next(Transaction trans){
+    public BTreePointer next(){
         int indexInMyNode = _index + 1;
         while(indexInMyNode < _node.count()){
-            if(_node.indexIsValid(trans, indexInMyNode)){
-                return new BTreePointer(_node, indexInMyNode);
+            if(_node.indexIsValid(_transaction, indexInMyNode)){
+                return new BTreePointer(_transaction, _node, indexInMyNode);
             }
             indexInMyNode ++;
         }
@@ -44,11 +77,11 @@ public class BTreePointer{
 
             // TODO: Try to operate the node in read mode wherever
             //       that is possible
-            nextNode.prepareWrite(trans);
+            nextNode.prepareWrite(_transaction);
             
-            newIndex = nextNode.firstKeyIndex(trans);
+            newIndex = nextNode.firstKeyIndex(_transaction);
         }
-        return new BTreePointer(nextNode, newIndex);
+        return new BTreePointer(_transaction, nextNode, newIndex);
     }
     
     public BTreeNode node() {
@@ -71,8 +104,8 @@ public class BTreePointer{
         return _node.equals(other._node);
     }
 
-	Object key(Transaction trans) {
-		return node().key(trans, index());
+	Object key() {
+		return node().key(_transaction, index());
 	}
 	
 	Object value() {
@@ -82,11 +115,24 @@ public class BTreePointer{
     public String toString() {
         String key = "[Unavail]";
         try{
-            key = key(null).toString();
+            key = key().toString();
         }catch(Exception e){
             
         }
         return "BTreePointer (" + _index + ") to " + key + " on" + node().toString();      
     }
-    
+
+	public int compareTo(BTreePointer y) {
+		if (null == y) {
+			throw new ArgumentNullException();
+		}
+		if (btree() != y.btree()) {
+			throw new IllegalArgumentException();
+		}		
+		return btree().compareKeys(key(), y.key());
+	}
+
+	private BTree btree() {
+		return _node.btree();
+	}    
 }

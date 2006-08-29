@@ -2,7 +2,8 @@
 
 package com.db4o.inside.btree;
 
-import com.db4o.*;
+import com.db4o.Transaction;
+import com.db4o.foundation.ArgumentNullException;
 
 
 /**
@@ -10,45 +11,55 @@ import com.db4o.*;
  */
 public class BTreeNodeSearchResult {
     
-    private final boolean _foundMatch;
-    
+    private final Transaction _transaction;
+
+	private final BTree _btree;
+	
     private final BTreePointer _pointer;
     
-    BTreeNodeSearchResult(BTreePointer pointer, boolean foundMatch) {
+    private final boolean _foundMatch;
+    
+    BTreeNodeSearchResult(Transaction transaction, BTree btree, BTreePointer pointer, boolean foundMatch) {
+    	if (null == transaction || null == btree) {
+    		throw new ArgumentNullException();
+    	}
+    	_transaction = transaction;
+    	_btree = btree;
         _pointer = pointer;
         _foundMatch = foundMatch;
     }
 
-    BTreeNodeSearchResult(BTreeNode node, int cursor, boolean foundMatch) {
-        this(pointerOrNull(node, cursor), foundMatch);
+    BTreeNodeSearchResult(Transaction trans, BTree btree, BTreeNode node, int cursor, boolean foundMatch) {
+        this(trans, btree, pointerOrNull(trans, node, cursor), foundMatch);
     }
 
-    BTreeNodeSearchResult(Transaction trans, Searcher searcher, BTreeNode node) {
-        this(
-            nextPointerIf(trans, pointerOrNull(node, searcher.cursor()), searcher.isGreater()),
+    BTreeNodeSearchResult(Transaction trans, BTree btree, Searcher searcher, BTreeNode node) {
+        this(trans,
+        	btree,
+            nextPointerIf(pointerOrNull(trans, node, searcher.cursor()), searcher.isGreater()),
             searcher.foundMatch());
     }
     
-    private static BTreePointer nextPointerIf(Transaction trans, BTreePointer pointer, boolean condition) {
+    private static BTreePointer nextPointerIf(BTreePointer pointer, boolean condition) {
         if (null == pointer) {
             return null;
         }
         if (condition) {
-            return pointer.next(trans);
+            return pointer.next();
         }
         return pointer;
     }
     
-    private static BTreePointer pointerOrNull(BTreeNode node, int cursor) {
-        return node == null ? null : new BTreePointer(node, cursor);
+    private static BTreePointer pointerOrNull(Transaction trans, BTreeNode node, int cursor) {
+        return node == null ? null : new BTreePointer(trans, node, cursor);
     }
     
-    public BTreeRange createIncludingRange(Transaction trans, BTreeNodeSearchResult end) {
+    public BTreeRange createIncludingRange(BTreeNodeSearchResult end) {
         BTreePointer endPointer = end._pointer;
         if(endPointer != null && end._foundMatch){
-            endPointer = endPointer.next(trans);
+            endPointer = endPointer.next();
         }
-        return new BTreeRangeImpl(trans, _pointer, endPointer);
+        return new BTreeRangeImpl(_transaction, _btree, _pointer, endPointer);
     }
    
 }

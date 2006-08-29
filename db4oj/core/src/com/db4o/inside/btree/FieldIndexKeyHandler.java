@@ -79,6 +79,5 @@ public class FieldIndexKeyHandler implements Indexable4{
     public Object current() {
         return new FieldIndexKey(_integerHandler.currentInt(), _delegate.current());  
     }
-
 }
 

@@ -10,14 +10,20 @@ import com.db4o.foundation.*;
  */
 public class BTreeRangeImpl implements BTreeRange {
     
-    private final Transaction _trans;
-    
-    private final BTreePointer _first;
-    
-    private final BTreePointer _end; 
+    private final Transaction _transaction;
 
-    public BTreeRangeImpl(Transaction trans, BTreePointer first, BTreePointer end) {
-        _trans = trans;
+	private final BTree _btree;
+	
+	private final BTreePointer _first;
+    
+    private final BTreePointer _end;
+
+    public BTreeRangeImpl(Transaction transaction, BTree btree, BTreePointer first, BTreePointer end) {
+    	if (transaction == null || btree == null) {
+    		throw new ArgumentNullException();
+    	}
+    	_transaction = transaction;
+    	_btree = btree;
         _first = first;
         _end = end;
     }
@@ -40,7 +46,7 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 
 	public Transaction transaction() {
-		return _trans;
+		return _transaction;
 	}
 
 	public BTreePointer first() {
@@ -48,7 +54,7 @@ public class BTreeRangeImpl implements BTreeRange {
     }
 
 	public BTreeRange greater() {
-		return new BTreeRangeImpl(_trans, _end, null);
+		return newBTreeRangeImpl(_end, null);
 	}
 	
 	public BTreeRange union(BTreeRange other) {
@@ -62,49 +68,39 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 	
 	public BTreeRange extendToFirst() {
-		return new BTreeRangeImpl(_trans, firstBTreePointer(), _end);
+		return newBTreeRangeImpl(firstBTreePointer(), _end);
 	}
 
 	public BTreeRange extendToLast() {
-		return new BTreeRangeImpl(_trans, _first, null);
+		return newBTreeRangeImpl(_first, null);
 	}
 
 	public BTreeRange smaller() {
-		return new BTreeRangeImpl(_trans, firstBTreePointer(), _first);
+		return newBTreeRangeImpl(firstBTreePointer(), _first);
+	}
+
+	private BTreeRange newBTreeRangeImpl(BTreePointer first, BTreePointer end) {
+		return new BTreeRangeImpl(transaction(), _btree, first, end);
 	}
 
 	private BTreePointer firstBTreePointer() {
-		return btree().firstPointer(_trans);
+		return btree().firstPointer(transaction());
 	}
 
 	private BTree btree() {
-		return _first.node().btree();
+		return _btree;
 	}
 
 	public BTreeRange intersect(BTreeRange range) {
 		final BTreeRangeImpl rangeImpl = checkRangeArgument(range);
-		BTreePointer first = max(_first, rangeImpl._first);
-		BTreePointer end = min(_end, rangeImpl._end);
-		return new BTreeRangeImpl(_trans, first, end);
-	}
-
-	private BTreePointer min(BTreePointer x, BTreePointer y) {
-		if (x == null) {
-			return y;
-		}
-		return x;
-	}
-
-	private BTreePointer max(BTreePointer x, BTreePointer y) {
-		if (x == null) {
-			return x;
-		}
-		return y;
+		BTreePointer first = BTreePointer.max(_first, rangeImpl._first);
+		BTreePointer end = BTreePointer.min(_end, rangeImpl._end);
+		return newBTreeRangeImpl(first, end);
 	}
 
 	public BTreeRange extendToLastOf(BTreeRange range) {
 		BTreeRangeImpl rangeImpl = checkRangeArgument(range);
-		return new BTreeRangeImpl(_trans, _first, rangeImpl._end);
+		return newBTreeRangeImpl(_first, rangeImpl._end);
 	}
 
 	private BTreeRangeImpl checkRangeArgument(BTreeRange range) {
