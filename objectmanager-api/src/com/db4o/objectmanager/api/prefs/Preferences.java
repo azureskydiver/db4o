@@ -22,7 +22,7 @@ public class Preferences {
     private static transient ObjectContainer db;
 
     private static transient final String preferencesFile = new File(new File(System
-			.getProperty("user.home")), ".objectmanager.yap")
+			.getProperty("user.home")), ".objectmanager2.yap")
 			.getAbsolutePath();
 
     public static final String FRAME_SIZE = "frameSize";

@@ -1,5 +1,7 @@
 package com.db4o.objectmanager.api;
 
+import java.util.List;
+
 /**
  * User: treeder
  * Date: Aug 9, 2006
@@ -9,6 +11,7 @@ public class Contact {
     private Integer id;
     private String name;
     private int age;
+    List addresses;
 
     public Integer getId() {
         return id;
@@ -32,5 +35,13 @@ public class Contact {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public List getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List addresses) {
+        this.addresses = addresses;
     }
 }
