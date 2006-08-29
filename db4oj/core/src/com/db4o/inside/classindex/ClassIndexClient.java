@@ -1,8 +1,9 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.classindex;
 
 import com.db4o.*;
+import com.db4o.inside.Exceptions4;
 
 /**
  * client class index. Largly intended to do nothing or

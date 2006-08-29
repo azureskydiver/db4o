@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.classindex.*;
 import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.query.*;

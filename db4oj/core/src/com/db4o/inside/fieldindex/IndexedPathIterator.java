@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.db4o.inside;
+package com.db4o.inside.fieldindex;
 
 import com.db4o.foundation.KeyValueIterator;
 import com.db4o.inside.btree.FieldIndexKey;

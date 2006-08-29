@@ -1,4 +1,4 @@
-package com.db4o.inside;
+package com.db4o.inside.fieldindex;
 
 import com.db4o.TreeInt;
 import com.db4o.foundation.KeyValueIterator;
