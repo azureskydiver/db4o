@@ -162,9 +162,9 @@ namespace com.db4o.test.soda
 			{
 				j4o.lang.JavaSystem.err.Println("\nFailed test classes:\n");
 				Iterator4 i1 = failedTestClasses.Iterator();
-				while (i1.HasNext()) 
+				while (i1.MoveNext()) 
 				{
-					j4o.lang.JavaSystem.err.Println(j4o.lang.Class.GetClassForObject(i1.Next()).GetName());
+					j4o.lang.JavaSystem.err.Println(j4o.lang.Class.GetClassForObject(i1.Current()).GetName());
 				}
 				j4o.lang.JavaSystem.err.Println("\n");
 			}

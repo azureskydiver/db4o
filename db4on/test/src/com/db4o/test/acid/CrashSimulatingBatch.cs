@@ -35,27 +35,27 @@ namespace com.db4o.test.acid
 			string rightFileName = file + "R";
 			CopyFile(lastFileName,rightFileName);
 			com.db4o.foundation.Iterator4 syncIter = writes.StrictIterator();
-			while (syncIter.HasNext())
+			while (syncIter.MoveNext())
 			{
 				com.db4o.foundation.Collection4 writesBetweenSync = (com.db4o.foundation.Collection4
-					)syncIter.Next();
+				                                                    ) syncIter.Current();
 				j4o.io.RandomAccessFile rightRaf = new j4o.io.RandomAccessFile(rightFileName, "rw"
 					);
 				com.db4o.foundation.Iterator4 singleForwardIter = writesBetweenSync.StrictIterator
 					();
-				while (singleForwardIter.HasNext())
+				while (singleForwardIter.MoveNext())
 				{
 					com.db4o.test.acid.CrashSimulatingWrite csw = (com.db4o.test.acid.CrashSimulatingWrite
-						)singleForwardIter.Next();
+						)singleForwardIter.Current();
 					csw.Write(rightRaf);
 				}
 				rightRaf.Close();
 				com.db4o.foundation.Iterator4 singleBackwardIter = writesBetweenSync.Iterator();
-				while (singleBackwardIter.HasNext())
+				while (singleBackwardIter.MoveNext())
 				{
 					count++;
 					com.db4o.test.acid.CrashSimulatingWrite csw = (com.db4o.test.acid.CrashSimulatingWrite
-						)singleBackwardIter.Next();
+						)singleBackwardIter.Current();
 					string currentFileName = file + "W" + count;
 					CopyFile(lastFileName,currentFileName);
 					j4o.io.RandomAccessFile raf = new j4o.io.RandomAccessFile(currentFileName, "rw");
