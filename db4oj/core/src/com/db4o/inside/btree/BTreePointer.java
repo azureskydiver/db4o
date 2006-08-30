@@ -135,5 +135,17 @@ public class BTreePointer{
 
 	private BTree btree() {
 		return _node.btree();
+	}
+
+	public static boolean lessThan(BTreePointer x, BTreePointer y) {
+		return BTreePointer.min(x, y) == x
+			&& !equals(x, y);
+	}
+
+	public static boolean equals(BTreePointer x, BTreePointer y) {
+		if (x == null) {
+			return y == null;
+		}
+		return x.equals(y);
 	}    
 }

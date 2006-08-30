@@ -12,7 +12,7 @@ import com.db4o.foundation.*;
  */
 public class QConJoin extends QCon {
 
-	public boolean i_and;
+	private boolean i_and;
 	public QCon i_constraint1;
 	public QCon i_constraint2;
 	
@@ -98,16 +98,13 @@ public class QConJoin extends QCon {
 		}
 	}
 
-	QCon getOtherConstraint(QCon a_constraint) {
+	public QCon getOtherConstraint(QCon a_constraint) {
 		if (a_constraint == i_constraint1) {
 			return i_constraint2;
 		} else if (a_constraint == i_constraint2) {
 			return i_constraint1;
 		}
-		if (Deploy.debug) {
-			throw new RuntimeException("Should never happen.");
-		}
-		return null;
+		throw new IllegalArgumentException();
 	}
 	
 	String logObject(){
@@ -141,6 +138,10 @@ public class QConJoin extends QCon {
 			str += "\n   " + i_constraint2;  
 		}
 		return str;
+	}
+
+	public boolean isOr() {
+		return !i_and;
 	}
 	
 

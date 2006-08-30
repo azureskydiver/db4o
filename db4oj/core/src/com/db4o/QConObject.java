@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
+import com.db4o.inside.marshall.MarshallerFamily;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -111,12 +112,12 @@ public class QConObject extends QCon {
             return false;
         }
         
-        // FIXME: As soon as join index evaluation works, remove
-        if(hasOrJoins()){
-            return false;
-        }
-        
-        return i_field.i_yapField.canLoadByIndex(this, i_evaluator);
+        if (!MarshallerFamily.BTREE_FIELD_INDEX) {
+	        if(hasOrJoins()){
+	            return false;
+	        }
+        }        
+        return i_field.i_yapField.canLoadByIndex();
     }
 
     void createCandidates(Collection4 a_candidateCollection) {

@@ -77,6 +77,7 @@ public class BTreeAssert {
 	}
 
 	public static void assertRange(int[] expectedKeys, BTreeRange range) {
+		Assert.isNotNull(range);
 		final ExpectingVisitor visitor = createExpectingVisitor(expectedKeys);
 		traverseKeys(range, visitor);
 		visitor.assertExpectations();
