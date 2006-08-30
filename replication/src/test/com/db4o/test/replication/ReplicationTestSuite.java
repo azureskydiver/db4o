@@ -8,6 +8,7 @@ import com.db4o.test.replication.collections.SimpleArrayTest;
 import com.db4o.test.replication.collections.map.Db4oIdentityMapTest;
 import com.db4o.test.replication.collections.map.Db4oMapTest;
 import com.db4o.test.replication.collections.map.MapTest;
+import com.db4o.test.replication.collections.map.BugDrs8;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
@@ -15,7 +16,7 @@ import com.db4o.test.replication.r0tor4.R0to4Runner;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return all();
+		return map();
 	}
 
 	private Class[] all() {
@@ -33,7 +34,7 @@ public class ReplicationTestSuite extends TestSuite {
 				ListTest.class,
 				Db4oListTest.class,
 				
-				MapTest.class,
+//				MapTest.class,
 //				Db4oMapTest.class,
 	//			Db4oIdentityMapTest.class,
 				
@@ -55,7 +56,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] map() {
 		return new Class[]{
-				MapTest.class,
+				BugDrs8.class,
 				//Db4oMapTest.class,
 				//Db4oIdentityMapTest.class,
 		};
