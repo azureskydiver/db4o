@@ -2,10 +2,10 @@
 
 package com.db4o;
 
-import com.db4o.config.*;
-import com.db4o.ext.*;
+import com.db4o.config.ObjectTranslator;
+import com.db4o.ext.StoredField;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
+import com.db4o.inside.Exceptions4;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
@@ -235,14 +235,11 @@ public class YapField implements StoredField {
         return i_handler.coerce(claxx, obj);
     }
 
-    public boolean canLoadByIndex(QConObject a_qco, QE a_evaluator) {
+    public final boolean canLoadByIndex() {
         if (i_handler instanceof YapClass) {
             YapClass yc = (YapClass) i_handler;
             if(yc.isArray()){
                 return false;
-            }
-            if (a_evaluator instanceof QEIdentity) {
-                yc.i_lastID = a_qco.getObjectID();
             }
         }
         return true;

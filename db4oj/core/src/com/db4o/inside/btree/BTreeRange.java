@@ -26,4 +26,6 @@ public interface BTreeRange {
 
 	public BTreeRange extendToLastOf(BTreeRange upperRange);
 
+	public boolean overlaps(BTreeRange range);
+
 }

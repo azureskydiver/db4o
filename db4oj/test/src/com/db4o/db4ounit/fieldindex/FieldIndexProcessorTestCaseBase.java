@@ -57,9 +57,11 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	private YapClass getYapClass(Class clazz) {
-		final ReflectClass reflectClass = stream().reflector().forClass(clazz);
-	    final YapClass yapClass = stream().getYapClass(reflectClass, false);
-		return yapClass;
+		return stream().getYapClass(getReflectClass(clazz), false);
+	}
+
+	private ReflectClass getReflectClass(Class clazz) {
+		return stream().reflector().forClass(clazz);
 	}
 	
 	protected BTree classIndexBTree(Class clazz) {
@@ -94,7 +96,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 		return objectIds;
 	}
 
-	private int indexOfNot(int[] array, int value) {
+	public static int indexOfNot(int[] array, int value) {
 		for (int i=0; i<array.length; ++i) {
 			if (value != array[i]) {
 				return i;

@@ -61,7 +61,7 @@ public class FieldIndexProcessor {
 					final QConObject conObject = (QConObject) qcon;
 					IndexedLeaf leaf = findLeafOnSameField(leaves, conObject);
 					if (leaf != null) {
-						leaves.add(new AndIndexedLeaf(leaf, new IndexedLeaf(conObject)));
+						leaves.add(join(leaf, conObject));
 					} else {
 						leaves.add(new IndexedLeaf(conObject));
 					}
@@ -70,6 +70,13 @@ public class FieldIndexProcessor {
 				collectIndexedLeaves(leaves, qcon.iterateChildren());
 			}
 		}
+	}
+
+	private IndexedNode join(IndexedLeaf existing, final QConObject conObject) {
+		if (existing.constraint().hasOrJoinWith(conObject)) {
+			return new OrIndexedLeaf(existing, new IndexedLeaf(conObject));
+		}
+		return new AndIndexedLeaf(existing, new IndexedLeaf(conObject));
 	}
 
 	private IndexedLeaf findLeafOnSameField(Collection4 leaves, QConObject conObject) {

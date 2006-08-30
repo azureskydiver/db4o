@@ -69,7 +69,28 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         c1.or(c2);
         assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 9 }, query);
     }    
+    
+    public void _testOrOnDifferentFields(){
+        final Query query = createComplexItemQuery();
+        Constraint c1 = query.descend("foo").constrain(new Integer(3));
+        Constraint c2 = query.descend("bar").constrain(new Integer(8));
+        c1.or(c2);
+        assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 3, 7, 9 }, query);
+    }
+    
+    public void _testCantOptimizeDifferentLevels(){
+        final Query query = createComplexItemQuery();
+        Constraint c1 = query.descend("child").descend("foo").constrain(new Integer(4)).smaller();
+        Constraint c2 = query.descend("foo").constrain(new Integer(7)).greater();
+        c1.or(c2);
+        assertCantOptimize(query);
+    }
 	
+	private void assertCantOptimize(Query query) {
+		final FieldIndexProcessorResult result = executeProcessor(query);
+		Assert.isNull(result.found);
+	}
+
 	public void testIndexSelection() {		
 		Query query = createComplexItemQuery();		
 		query.descend("bar").constrain(new Integer(2));
@@ -176,8 +197,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 	}
 	
 	private void assertExpectedIDs(final int[] expectedIds, final Query query) {
-		final FieldIndexProcessor processor = createProcessor(query);
-		final FieldIndexProcessorResult result = processor.run();		
+		final FieldIndexProcessorResult result = executeProcessor(query);		
 		if (expectedIds.length == 0) {
 			Assert.areSame(FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH, result);
 			return;
@@ -185,6 +205,10 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		Assert.isNotNull(result.found);
 				 
 		assertTreeInt(expectedIds, result.found);
+	}
+
+	private FieldIndexProcessorResult executeProcessor(final Query query) {
+		return createProcessor(query).run();
 	}
 
 	private Transaction transactionFromQuery(Query query) {

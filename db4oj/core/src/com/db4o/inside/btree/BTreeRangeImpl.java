@@ -58,15 +58,36 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 	
 	public BTreeRange union(BTreeRange other) {
-//		BTreeRangeImpl rangeImpl = checkRangeArgument(other);
-//		return new BTreeRangeImpl(
-//					trans(),
-//					min(_first, other._first),
-//					max(_end, other._end));
+		BTreeRangeImpl rangeImpl = checkRangeArgument(other);
+		if (internalOverlaps(rangeImpl)
+			|| internalAdjacent(rangeImpl)) {
+			return newBTreeRangeImpl(
+						BTreePointer.min(_first, rangeImpl._first),
+						BTreePointer.max(_end, rangeImpl._end));
+		}
 		//return new BTreeRangeUnion(this, other);
 		return null;
 	}
 	
+	private boolean internalAdjacent(BTreeRangeImpl rangeImpl) {
+		return BTreePointer.equals(_end, rangeImpl._first)
+			|| BTreePointer.equals(rangeImpl._end, _first);
+	}
+
+	public boolean overlaps(BTreeRange other) {
+		return internalOverlaps(checkRangeArgument(other));
+	}
+	
+	private boolean internalOverlaps(BTreeRangeImpl y) {
+		return firstOverlaps(this, y)
+				|| firstOverlaps(y, this);
+	}
+
+	private boolean firstOverlaps(BTreeRangeImpl x, BTreeRangeImpl y) {
+		return BTreePointer.lessThan(y._first, x._end)
+			&& BTreePointer.lessThan(x._first, y._end);
+	}
+
 	public BTreeRange extendToFirst() {
 		return newBTreeRangeImpl(firstBTreePointer(), _end);
 	}

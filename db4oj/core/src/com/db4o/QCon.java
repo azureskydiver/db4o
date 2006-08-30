@@ -391,7 +391,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         Iterator4 i = iterateJoins();
         while(i.moveNext()){
             QConJoin join = (QConJoin)i.current();
-            if(! join.i_and){
+            if(join.isOr()){
                 return true;
             }
             if(join.hasOrJoins(lookedAt)){
@@ -400,6 +400,19 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         }
         return false;
     }
+    
+	public boolean hasOrJoinWith(QConObject y) {
+		Iterator4 i = iterateJoins();
+        while(i.moveNext()){
+            QConJoin join = (QConJoin)i.current();
+            if(join.isOr()){
+                if (y == join.getOtherConstraint(this)) {
+                	return true;
+                }
+            }
+        }
+        return false;
+	}
     
     public boolean hasJoins(){
         if(i_joins == null){

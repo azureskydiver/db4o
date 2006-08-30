@@ -58,7 +58,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
 	// for indexing purposes.
     // TODO: check race conditions, upon multiple calls against the same class
-    int i_lastID;
+    private int i_lastID;
     
     YapClass(YapStream stream, ReflectClass reflector){
     	i_stream = stream;
