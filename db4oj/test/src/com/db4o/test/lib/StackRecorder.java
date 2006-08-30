@@ -66,8 +66,8 @@ public class StackRecorder {
         
         if(_excludes != null){
             Iterator4 i = _excludes.iterator();
-            while(i.hasNext()){
-                String name = (String)i.next();
+            while(i.moveNext()){
+                String name = (String)i.current();
                 if(className.indexOf(name) >= 0){
                     return false;
                 }
@@ -79,8 +79,8 @@ public class StackRecorder {
         if(_includes != null){
             onNotFound = false;
             Iterator4 i = _includes.iterator();
-            while(i.hasNext()){
-                String name = (String)i.next();
+            while(i.moveNext()){
+                String name = (String)i.current();
                 if(className.indexOf(name) >= 0){
                     onNotFound = true;
                 }
@@ -100,9 +100,9 @@ public class StackRecorder {
 	
 	public static void logAll() {
 		Iterator4 iter=_traces.strictIterator();
-		while(iter.hasNext()) {
-			System.out.println(iter.next());
-			if(iter.hasNext()) {
+		while(iter.moveNext()) {
+			System.out.println(iter.current());
+			if(iter.moveNext()) {
 				System.out.println("\n---\n");
 			}
 		}

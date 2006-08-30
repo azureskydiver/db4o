@@ -9,15 +9,24 @@ public class ArrayIterator4 implements Iterator4 {
 
 	public ArrayIterator4(Object[] elements) {
 		_elements = elements;
-		_next = 0;
+		_next = -1;
 	}
 
-	public boolean hasNext() {
-		return _next < _elements.length;
+	public boolean moveNext() {
+		if (_next < lastIndex()) {
+			++_next;
+			return true;
+		}
+		// force exception on unexpected call to current
+		_next = _elements.length;
+		return false;
 	}
 
-	public Object next() {
-		return _elements[_next++]; 
+	public Object current() {
+		return _elements[_next]; 
 	}
-
+	
+	private int lastIndex() {
+		return _elements.length - 1;
+	}
 }

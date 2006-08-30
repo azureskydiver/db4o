@@ -70,8 +70,8 @@ public class FreespaceManagerIx extends FreespaceManager{
         if(Debug.xbytes){
             Iterator4 i = _xBytes.iterator();
             _xBytes = null;
-            while(i.hasNext()){
-                int[] addressLength = (int[])i.next();
+            while(i.moveNext()){
+                int[] addressLength = (int[])i.current();
                 writeXBytes(addressLength[0], addressLength[1]);
             }
         }

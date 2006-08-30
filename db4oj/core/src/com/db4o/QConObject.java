@@ -139,8 +139,8 @@ public class QConObject extends QCon {
         if (i_field.isSimple()) {
             boolean hasEvaluation = false;
             Iterator4 i = iterateChildren();
-            while (i.hasNext()) {
-                if (i.next() instanceof QConEvaluation) {
+            while (i.moveNext()) {
+                if (i.current() instanceof QConEvaluation) {
                     hasEvaluation = true;
                     break;
                 }
@@ -148,8 +148,8 @@ public class QConObject extends QCon {
             if (hasEvaluation) {
                 a_candidates.traverse(i_field);
                 Iterator4 j = iterateChildren();
-                while (j.hasNext()) {
-                    ((QCon) j.next()).evaluateEvaluationsExec(a_candidates,false);
+                while (j.moveNext()) {
+                    ((QCon) j.current()).evaluateEvaluationsExec(a_candidates,false);
                 }
             }
         }

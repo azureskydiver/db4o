@@ -50,8 +50,8 @@ public class QxProcessor {
     
     private void buildPaths(QCandidates candidates){
         Iterator4 i = candidates.iterateConstraints();
-        while(i.hasNext()){
-            QCon qCon = (QCon)i.next();
+        while(i.moveNext()){
+            QCon qCon = (QCon)i.current();
             qCon.setCandidates(candidates);
             if(! qCon.hasOrJoins()){
                 new QxPath(this, null, qCon, 0).buildPaths();

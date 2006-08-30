@@ -137,7 +137,8 @@ public class StackTrace {
 		String[][] trace=new String[split.size()][2];
 		Iterator4 iter=split.iterator();
 		for (int idx = 0; idx < trace.length; idx++) {
-			trace[idx][0]=(String)iter.next();
+			iter.moveNext();
+			trace[idx][0]=(String)iter.current();
 		}
 		trace[trace.length-1][1]=caseInfo;
 		return trace;

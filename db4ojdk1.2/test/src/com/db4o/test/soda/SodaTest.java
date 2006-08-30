@@ -169,8 +169,8 @@ public class SodaTest {
             if (failedTestClasses.size() > 0) {
                 System.err.println("\nFailed test classes:\n");
                 Iterator4 i = failedTestClasses.iterator();
-                while (i.hasNext()) {
-                    System.err.println(i.next().getClass().getName());
+                while (i.moveNext()) {
+                    System.err.println(i.current().getClass().getName());
                 }
                 System.err.println("\n");
             }

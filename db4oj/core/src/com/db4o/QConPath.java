@@ -86,8 +86,8 @@ public class QConPath extends QConClass {
         	YapClass yc = i_trans.stream().getYapClass(claxx, true);
         	if (yc != null) {
         		Iterator4 i = iterateChildren();
-        		while (i.hasNext()) {
-        			QField qf = ((QCon) i.next()).getField();
+        		while (i.moveNext()) {
+        			QField qf = ((QCon) i.current()).getField();
         			if (!yc.hasField(i_trans.stream(), qf.i_name)) {
         				mayMorph = false;
         				break;
@@ -100,13 +100,13 @@ public class QConPath extends QConClass {
         
         if (mayMorph) {
     		Iterator4 j = iterateChildren();
-    		while (j.hasNext()) {
-    			newConstraint.addConstraint((QCon) j.next());
+    		while (j.moveNext()) {
+    			newConstraint.addConstraint((QCon) j.current());
     		}
         	if(hasJoins()){
         		Iterator4 k = iterateJoins();
-        		while (k.hasNext()) {
-        			QConJoin qcj = (QConJoin)k.next();
+        		while (k.moveNext()) {
+        			QConJoin qcj = (QConJoin)k.current();
         			qcj.exchangeConstraint(this, newConstraint);
         			newConstraint.addJoin(qcj);
         		}

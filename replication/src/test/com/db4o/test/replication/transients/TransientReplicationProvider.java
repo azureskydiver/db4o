@@ -3,7 +3,6 @@ package com.db4o.test.replication.transients;
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Collection4;
-import com.db4o.foundation.ObjectSetCollection4Facade;
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.CollectionHandler;
@@ -17,6 +16,7 @@ import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Visitor;
 import com.db4o.reflect.Reflector;
+import com.db4o.replication.foundation.ObjectSetCollection4Facade;
 
 import java.util.IdentityHashMap;
 import java.util.Iterator;

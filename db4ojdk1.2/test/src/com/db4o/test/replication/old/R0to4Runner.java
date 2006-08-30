@@ -168,8 +168,8 @@ public class R0to4Runner {
         ensureCount(_peerA, LINKERS);
         ensureCount(_peerB, LINKERS);
         Iterator4 i = allR0.iterator();
-        while(i.hasNext()){
-            R0 r0 = (R0)i.next();
+        while(i.moveNext()){
+            R0 r0 = (R0)i.current();
             ObjectInfo infoA = _peerA.getObjectInfo(r0);
             ObjectInfo infoB = _peerB.getObjectInfo(r0);
             Db4oUUID uuidA = infoA.getUUID();
@@ -184,8 +184,8 @@ public class R0to4Runner {
         _peerB = Test.replica();
         
         i = allR0.iterator();
-        while(i.hasNext()){
-            R0 r0 = (R0)i.next();
+        while(i.moveNext()){
+            R0 r0 = (R0)i.current();
             ObjectInfo infoA = _peerA.getObjectInfo(r0);
             ObjectInfo infoB = _peerB.getObjectInfo(r0);
             Db4oUUID uuidA = infoA.getUUID();

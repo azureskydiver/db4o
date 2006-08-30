@@ -139,8 +139,8 @@ public final class QCandidates implements Visitor4 {
     	// Step 4: Add them to our tree again.
     	final Tree[] newTree = { null };
     	Iterator4 i = col.iterator();
-    	while(i.hasNext()){
-    		QCandidate candidate = (QCandidate) i.next();
+    	while(i.moveNext()){
+    		QCandidate candidate = (QCandidate) i.current();
     		candidate._preceding = null;
     		candidate._subsequent = null;
     		candidate._size = 1;
@@ -152,8 +152,8 @@ public final class QCandidates implements Visitor4 {
 
     void collect(final QCandidates a_candidates) {
 		Iterator4 i = iterateConstraints();
-		while(i.hasNext()){
-			QCon qCon = (QCon)i.next();
+		while(i.moveNext()){
+			QCon qCon = (QCon)i.current();
 			setCurrentConstraint(qCon);
 			qCon.collect(a_candidates);
 		}
@@ -208,35 +208,35 @@ public final class QCandidates implements Visitor4 {
     	}
     	
     	Iterator4 i = iterateConstraints();
-    	while(i.hasNext()){
-            QCon qCon = (QCon)i.next();
+    	while(i.moveNext()){
+            QCon qCon = (QCon)i.current();
             qCon.setCandidates(this);
     		qCon.evaluateSelf();
     	}
     	
     	i = iterateConstraints();
-    	while(i.hasNext()){
-    		((QCon)i.next()).evaluateSimpleChildren();
+    	while(i.moveNext()){
+    		((QCon)i.current()).evaluateSimpleChildren();
     	}
     	
     	i = iterateConstraints();
-    	while(i.hasNext()){
-    		((QCon)i.next()).evaluateEvaluations();
+    	while(i.moveNext()){
+    		((QCon)i.current()).evaluateEvaluations();
     	}
     	
     	i = iterateConstraints();
-    	while(i.hasNext()){
-    		((QCon)i.next()).evaluateCreateChildrenCandidates();
+    	while(i.moveNext()){
+    		((QCon)i.current()).evaluateCreateChildrenCandidates();
     	}
     	
     	i = iterateConstraints();
-    	while(i.hasNext()){
-    		((QCon)i.next()).evaluateCollectChildren();
+    	while(i.moveNext()){
+    		((QCon)i.current()).evaluateCollectChildren();
     	}
     	
     	i = iterateConstraints();
-    	while(i.hasNext()){
-    		((QCon)i.next()).evaluateChildren();
+    	while(i.moveNext()){
+    		((QCon)i.current()).evaluateChildren();
     	}
     }
 
@@ -356,8 +356,8 @@ public final class QCandidates implements Visitor4 {
     	// All children constraints are necessarily false.
     	// Check immediately.
 		Iterator4 i = iterateConstraints();
-		while(i.hasNext()){
-			((QCon)i.next()).visitOnNull(parent.getRoot());
+		while(i.moveNext()){
+			((QCon)i.current()).visitOnNull(parent.getRoot());
 		}
     		
     }

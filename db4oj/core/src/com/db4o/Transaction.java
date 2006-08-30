@@ -141,8 +141,8 @@ public class Transaction {
 
 	private void disposeParticipants() {
 		Iterator4 iterator = _participants.iterator();
-        while (iterator.hasNext()) {
-        	((TransactionParticipant)iterator.next()).dispose(this);
+        while (iterator.moveNext()) {
+        	((TransactionParticipant)iterator.current()).dispose(this);
         }
 	}
 
@@ -230,8 +230,8 @@ public class Transaction {
         }
         if (i_dirtyFieldIndexes != null) {
             Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
-            while (i.hasNext()) {
-                ((IndexTransaction) i.next()).commit();
+            while (i.moveNext()) {
+                ((IndexTransaction) i.current()).commit();
             }
         }
     }
@@ -242,8 +242,8 @@ public class Transaction {
         }
         
         Iterator4 iterator = _participants.iterator();
-		while (iterator.hasNext()) {
-			((TransactionParticipant)iterator.next()).commit(this);
+		while (iterator.moveNext()) {
+			((TransactionParticipant)iterator.current()).commit(this);
 		}
     }
 
@@ -289,8 +289,8 @@ public class Transaction {
         checkSynchronization();
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(i_transactionListeners);
-            while (i.hasNext()) {
-                ((TransactionListener) i.next()).preCommit();
+            while (i.moveNext()) {
+                ((TransactionListener) i.current()).preCommit();
             }
             i_transactionListeners = null;
         }
@@ -526,16 +526,16 @@ public class Transaction {
 	private void rollbackFieldIndexes() {
 		if (i_dirtyFieldIndexes != null) {
 		    Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
-		    while (i.hasNext()) {
-		        ((IndexTransaction) i.next()).rollback();
+		    while (i.moveNext()) {
+		        ((IndexTransaction) i.current()).rollback();
 		    }
 		}
 	}
     
     private void rollbackParticipants() {
     	Iterator4 iterator = _participants.iterator();
-		while (iterator.hasNext()) {
-			((TransactionParticipant)iterator.next()).rollback(this);
+		while (iterator.moveNext()) {
+			((TransactionParticipant)iterator.current()).rollback(this);
 		}
 	}
 
@@ -543,8 +543,8 @@ public class Transaction {
         checkSynchronization();
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(i_transactionListeners);
-            while (i.hasNext()) {
-                ((TransactionListener) i.next()).postRollback();
+            while (i.moveNext()) {
+                ((TransactionListener) i.current()).postRollback();
             }
             i_transactionListeners = null;
         }

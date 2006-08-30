@@ -55,8 +55,8 @@ public abstract class QQueryBase implements Unversioned {
     private void addConstraint(Collection4 col, Object obj) {
         boolean found = false;
         Iterator4 j = iterateConstraints();
-        while (j.hasNext()) {
-            QCon existingConstraint = (QCon)j.next();
+        while (j.moveNext()) {
+            QCon existingConstraint = (QCon)j.current();
             boolean[] removeExisting = { false };
             QCon newConstraint = existingConstraint.shareParent(obj, removeExisting);
             if (newConstraint != null) {
@@ -111,8 +111,8 @@ public abstract class QQueryBase implements Unversioned {
                     }
                     Iterator4 i = classes.iterator();
                     Constraint constr = null;
-                    while (i.hasNext()) {
-                        YapClass yapClass = (YapClass)i.next();
+                    while (i.moveNext()) {
+                        YapClass yapClass = (YapClass)i.current();
                         ReflectClass yapClassClaxx = yapClass.classReflector();
                         if(yapClassClaxx != null){
                             if(! yapClassClaxx.isInterface()){
@@ -129,8 +129,8 @@ public abstract class QQueryBase implements Unversioned {
                 }
 
                 Iterator4 constraintsIterator = iterateConstraints();
-                while (constraintsIterator.hasNext()) {
-                    QCon existingConstraint = (QConObject)constraintsIterator.next();
+                while (constraintsIterator.moveNext()) {
+                    QCon existingConstraint = (QConObject)constraintsIterator.current();
                     boolean[] removeExisting = { false };
                     QCon newConstraint =
                         existingConstraint.shareParentForClass(claxx, removeExisting);
@@ -149,7 +149,7 @@ public abstract class QQueryBase implements Unversioned {
                 }
 
                 if (col.size() == 1) {
-                    return (Constraint)col.iterator().next();
+                    return firstConstraint(col);
                 }
                 Constraint[] constraintArray = new Constraint[col.size()];
                 col.toArray(constraintArray);
@@ -159,8 +159,8 @@ public abstract class QQueryBase implements Unversioned {
             QConEvaluation eval = Platform4.evaluationCreate(i_trans, example);
 			if (eval != null) {
                 Iterator4 i = iterateConstraints();
-                while (i.hasNext()) {
-                    ((QCon)i.next()).addConstraint(eval);
+                while (i.moveNext()) {
+                    ((QCon)i.current()).addConstraint(eval);
                 }
                 return null;
             }
@@ -169,6 +169,12 @@ public abstract class QQueryBase implements Unversioned {
             return toConstraint(constraints);
         }
     }
+
+	private Constraint firstConstraint(Collection4 col) {
+		Iterator4 i = col.iterator();
+		i.moveNext();
+		return (Constraint)i.current();
+	}
 
     public Constraints constraints() {
         synchronized (streamLock()) {
@@ -248,8 +254,8 @@ public abstract class QQueryBase implements Unversioned {
 
         }
         Iterator4 i = iterateConstraints();
-        while (i.hasNext()) {
-            if (((QCon)i.next()).attach(query, a_field)) {
+        while (i.moveNext()) {
+            if (((QCon)i.current()).attach(query, a_field)) {
                 foundClass[0] = true;
             }
         }
@@ -299,7 +305,7 @@ public abstract class QQueryBase implements Unversioned {
 		if(i_constraints.size()!=1||_comparator!=null) {
 			return null;
 		}
-		Constraint constr=(Constraint)iterateConstraints().next(); 
+		Constraint constr=firstConstraint(); 
 		if(constr.getClass()!=QConClass.class) {
 			return null;
 		}
@@ -337,6 +343,14 @@ public abstract class QQueryBase implements Unversioned {
 		return resLocal;
 	}
 
+	private Constraint firstConstraint() {
+		Iterator4 iterator = iterateConstraints();
+		if (!iterator.moveNext()) {
+			return null;
+		}
+		return (Constraint)iterator.current();
+	}
+
     void execute1(final QueryResultImpl result) {
         if (stream().isClient()) {
             marshall();
@@ -368,16 +382,16 @@ public abstract class QQueryBase implements Unversioned {
         
         if (Deploy.debugQueries) {
         	Iterator4 i = iterateConstraints();
-            while (i.hasNext()) {
-                ((QCon)i.next()).log("");
+            while (i.moveNext()) {
+                ((QCon)i.current()).log("");
             }
         }
         
         if (candidateCollection != null) {
 
         	Iterator4 i = new Iterator4Impl(candidateCollection);
-            while (i.hasNext()) {
-                ((QCandidates)i.next()).execute();
+            while (i.moveNext()) {
+                ((QCandidates)i.current()).execute();
             }
 
             if (candidateCollection._next != null) {
@@ -390,8 +404,8 @@ public abstract class QQueryBase implements Unversioned {
 
             final YapStream stream = stream();
             i = new Iterator4Impl(candidateCollection);
-            while (i.hasNext()) {
-                QCandidates candidates = (QCandidates)i.next();
+            while (i.moveNext()) {
+                QCandidates candidates = (QCandidates)i.current();
                 if (topLevel) {
                     candidates.traverse(result);
                 } else {
@@ -408,9 +422,9 @@ public abstract class QQueryBase implements Unversioned {
                                 TreeInt ids = new TreeInt(candidate._key);
                                 final TreeInt[] idsNew = new TreeInt[1];
                                 Iterator4 itPath = fieldPath.iterator();
-                                while (itPath.hasNext()) {
+                                while (itPath.moveNext()) {
                                     idsNew[0] = null;
-                                    final String fieldName = (String) (itPath.next());
+                                    final String fieldName = (String) (itPath.current());
                                     if (ids != null) {
                                         ids.traverse(new Visitor4() {
                                             public void visit(Object treeInt) {
@@ -453,8 +467,8 @@ public abstract class QQueryBase implements Unversioned {
         boolean topLevel = true;
         List4 candidateCollection = null;
         Iterator4 i = iterateConstraints();
-        while (i.hasNext()) {
-            QCon qcon = (QCon)i.next();
+        while (i.moveNext()) {
+            QCon qcon = (QCon)i.current();
             QCon old = qcon;            
             qcon = qcon.getRoot();
             if (qcon != old) {
@@ -485,8 +499,8 @@ public abstract class QQueryBase implements Unversioned {
 
 	private boolean tryToAddToExistingCandidate(List4 candidateCollection, QCon qcon) {
 		Iterator4 j = new Iterator4Impl(candidateCollection);
-		while (j.hasNext()) {
-		    QCandidates candidates = (QCandidates)j.next();
+		while (j.moveNext()) {
+		    QCandidates candidates = (QCandidates)j.current();
 		    if (candidates.tryAddConstraint(qcon)) {
 		        return true;
 		    }
@@ -518,15 +532,15 @@ public abstract class QQueryBase implements Unversioned {
 
     private void setOrdering(final int ordering) {
         Iterator4 i = iterateConstraints();
-        while (i.hasNext()) {
-            ((QCon)i.next()).setOrdering(ordering);
+        while (i.moveNext()) {
+            ((QCon)i.current()).setOrdering(ordering);
         }
     }
 
     void marshall() {
         Iterator4 i = iterateConstraints();
-        while (i.hasNext()) {
-            ((QCon)i.next()).getRoot().marshall();
+        while (i.moveNext()) {
+            ((QCon)i.current()).getRoot().marshall();
         }
     }
 
@@ -537,15 +551,14 @@ public abstract class QQueryBase implements Unversioned {
     void unmarshall(final Transaction a_trans) {
         i_trans = a_trans;
         Iterator4 i = iterateConstraints();
-        while (i.hasNext()) {
-            ((QCon)i.next()).unmarshall(a_trans);
+        while (i.moveNext()) {
+            ((QCon)i.current()).unmarshall(a_trans);
         }
     }
 
-    Constraint toConstraint(final Collection4 constraints) {
-        Iterator4 i = constraints.iterator();
+    Constraint toConstraint(final Collection4 constraints) {       
         if (constraints.size() == 1) {
-            return (Constraint)i.next();
+        	return firstConstraint();        	
         } else if (constraints.size() > 0) {
             Constraint[] constraintArray = new Constraint[constraints.size()];
             constraints.toArray(constraintArray);

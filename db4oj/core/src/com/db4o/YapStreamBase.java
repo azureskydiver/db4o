@@ -204,9 +204,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             Iterator4 i = new Iterator4Impl(i_stillToActivate);
             i_stillToActivate = null;
 
-            while (i.hasNext()) {
-                YapObject yo = (YapObject) i.next();
-                int depth = ((Integer) i.next()).intValue();
+            while (i.moveNext()) {
+                YapObject yo = (YapObject) i.current();
+                
+                i.moveNext();
+                int depth = ((Integer) i.current()).intValue();
+                
                 Object obj = yo.getObject();
                 if (obj == null) {
                     yapObjectGCd(yo);
@@ -299,8 +302,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     final void checkNeededUpdates() {
         if (i_needsUpdate != null) {
             Iterator4 i = new Iterator4Impl(i_needsUpdate);
-            while (i.hasNext()) {
-                YapClass yapClass = (YapClass) i.next();
+            while (i.moveNext()) {
+                YapClass yapClass = (YapClass) i.current();
                 yapClass.setStateDirty();
                 yapClass.write(i_systemTrans);
             }
@@ -456,9 +459,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         while (i_stillToDeactivate != null) {
             Iterator4 i = new Iterator4Impl(i_stillToDeactivate);
             i_stillToDeactivate = null;
-            while (i.hasNext()) {
-                ((YapObject) i.next()).deactivate(i_trans, ((Integer) i.next())
-                    .intValue());
+            while (i.moveNext()) {
+                YapObject currentObject = (YapObject) i.current();
+                
+                i.moveNext();
+				Integer currentInteger = ((Integer) i.current());
+				
+				currentObject.deactivate(i_trans, currentInteger.intValue());
             }
         }
     }
@@ -1497,8 +1504,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         boolean renamedOne = false;
         try {
             Iterator4 i = config.rename().iterator();
-            while (i.hasNext()) {
-                Rename ren = (Rename) i.next();
+            while (i.moveNext()) {
+                Rename ren = (Rename) i.current();
                 if (get(ren).size() == 0) {
                     boolean renamed = false;
 
@@ -1696,10 +1703,15 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         while (i_stillToSet != null) {
             Iterator4 i = new Iterator4Impl(i_stillToSet);
             i_stillToSet = null;
-            while (i.hasNext()) {
-                Integer updateDepth = (Integer)i.next();
-                YapObject yo = (YapObject)i.next();
-                Transaction trans = (Transaction)i.next();
+            while (i.moveNext()) {
+                Integer updateDepth = (Integer)i.current();
+                
+                i.moveNext();
+                YapObject yo = (YapObject)i.current();
+                
+                i.moveNext();
+                Transaction trans = (Transaction)i.current();
+                
                 if(! yo.continueSet(trans, updateDepth.intValue())){
                     postponedStillToSet = new List4(postponedStillToSet, trans);
                     postponedStillToSet = new List4(postponedStillToSet, yo);

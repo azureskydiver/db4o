@@ -57,8 +57,8 @@ public class QConJoin extends QCon {
 					
 		if (hasJoins()) {
 			Iterator4 i = iterateJoins();
-			while (i.hasNext()) {
-				QConJoin qcj = (QConJoin) i.next();
+			while (i.moveNext()) {
+				QConJoin qcj = (QConJoin) i.current();
 				if (Deploy.debugQueries) {
 					System.out.println(
 						"QConJoin creates pending this:"

@@ -21,10 +21,10 @@ public class Collection4TestCase implements TestCase {
 		Assert.isNotNull(iterator);
 		
 		for (int i=expected.length-1; i>=0; --i) {
-			Test.ensure(iterator.hasNext());
-			Test.ensureEquals(expected[i], iterator.next());
+			Test.ensure(iterator.moveNext());
+			Test.ensureEquals(expected[i], iterator.current());
 		}
-		Assert.isFalse(iterator.hasNext());
+		Assert.isFalse(iterator.moveNext());
 	}
 	
 	public void testStrictIterator() {
@@ -37,9 +37,9 @@ public class Collection4TestCase implements TestCase {
 		Assert.isNotNull(iterator);
 		
 		for (int i=0; i<expected.length; ++i) {
-			Assert.isTrue(iterator.hasNext());
-			Assert.areEqual(expected[i], iterator.next());
+			Assert.isTrue(iterator.moveNext());
+			Assert.areEqual(expected[i], iterator.current());
 		}
-		Assert.isFalse(iterator.hasNext());
+		Assert.isFalse(iterator.moveNext());
 	}
 }
