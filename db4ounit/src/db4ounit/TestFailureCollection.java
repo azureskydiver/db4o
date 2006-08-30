@@ -22,6 +22,23 @@ public class TestFailureCollection extends Printable {
 	}
 	
 	public void print(Writer writer) throws IOException {
+		printSummary(writer);
+		printDetails(writer);
+	}
+
+	private void printSummary(Writer writer) throws IOException {
+		int index = 1;
+		Enumeration e = iterator();
+		while (e.hasMoreElements()) {
+			writer.write(String.valueOf(index));
+			writer.write(") ");
+			writer.write(((TestFailure)e.nextElement()).getTest().getLabel());
+			writer.write("\n");
+			++index;
+		}
+	}
+
+	private void printDetails(Writer writer) throws IOException {
 		int index = 1;
 		Enumeration e = iterator();
 		while (e.hasMoreElements()) {
