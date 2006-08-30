@@ -14,7 +14,7 @@ public class BugDrs8 extends ReplicationTestCase {
 		ExtObjectContainer oc = ((Db4oReplicationProvider) _providerA).getObjectContainer();
 
 		MapContent c1 = new MapContent("c1");
-		_providerA.storeNew(c1);
+		_providerA.storeNew(c1);	//comment me bypass the bug
 
 		//Db4oUUID uuid1 = oc.getObjectInfo(c1).getUUID();	//Uncomment me bypass the bug
 
@@ -22,10 +22,6 @@ public class BugDrs8 extends ReplicationTestCase {
 		mh.put("key1", c1);
 
 		_providerA.storeNew(mh);	//comment me bypass the bug
-
-		// Db4oUUID uuid2 = oc.getObjectInfo(c1).getUUID();
-		
-		_providerA.commit();
 
 		Db4oUUID uuid3 = oc.getObjectInfo(c1).getUUID();
 		ensure(uuid3 != null);
