@@ -17,8 +17,8 @@ namespace com.db4o.test.types {
             i_compare = new Collection4();
          } else {
             Iterator4 i = i_compare.Iterator();
-            while (i.HasNext()) {
-               if (i.Next() == a_compare) {
+            while (i.MoveNext()) {
+               if (i.Current() == a_compare) {
                   return false;
                }
             }
