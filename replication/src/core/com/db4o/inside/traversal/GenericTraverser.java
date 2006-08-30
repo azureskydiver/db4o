@@ -57,8 +57,8 @@ public class GenericTraverser implements Traverser {
 
 	protected void traverseCollection(Object collection) {
 		Iterator4 elements = _collectionFlattener.iteratorFor(collection); //TODO Optimization: visit instead of flattening.
-		while (elements.hasNext()) {
-			Object element = elements.next();
+		while (elements.moveNext()) {
+			Object element = elements.current();
 			if (element == null) continue;
 			queueUpForTraversing(element);
 		}

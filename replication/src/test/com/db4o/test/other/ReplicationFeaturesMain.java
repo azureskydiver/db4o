@@ -2,23 +2,13 @@
 
 package com.db4o.test.other;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.Visitor4;
-import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.ObjectState;
-import com.db4o.replication.ReplicationConflictException;
-import com.db4o.replication.ReplicationEvent;
-import com.db4o.replication.ReplicationEventListener;
-import com.db4o.replication.ReplicationProvider;
-import com.db4o.replication.ReplicationSession;
+import com.db4o.*;
+import com.db4o.foundation.*;
+import com.db4o.inside.replication.*;
+import com.db4o.replication.*;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.replication.db4ounit.DrsTestCase;
+
 import db4ounit.Assert;
 
 public class ReplicationFeaturesMain extends DrsTestCase {
@@ -71,12 +61,18 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 	private boolean wasConflictReplicatingDeletions() {
 		if (_containersWithDeletedObjects.size() != 1) return false;
-		String container = (String)_containersWithDeletedObjects.iterator().next();
+		String container = (String)firstContainerWithDeletedObjects();
 
 		if (hasChanges(other(container))) return true;
 
 		if (_direction.size() != 1) return false;
 		return _direction.contains(container);
+	}
+	
+	private String firstContainerWithDeletedObjects() {
+		Iterator4 i = _containersWithDeletedObjects.iterator();
+		i.moveNext();
+		return (String)i.current();
 	}
 
 	private boolean isDefaultReplicationBehaviorAllowed() {
@@ -436,7 +432,13 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		if (containerSet == null) return "null";
 		if (containerSet.isEmpty()) return "NONE";
 		if (containerSet.size() == 2) return "BOTH";
-		return (String) containerSet.iterator().next();
+		return first(containerSet);
+	}
+	
+	private String first(Set4 containerSet) {
+		Iterator4 i = containerSet.iterator();
+		i.moveNext();
+		return (String) i.current();
 	}
 
 	private void printCombination() {
@@ -581,8 +583,8 @@ class Set4 {
 	
 	public boolean containsAll(Set4 other) {
 		Iterator4 i = other.iterator();
-		while (i.hasNext()) {
-			if (!contains(i.next())) return false;
+		while (i.moveNext()) {
+			if (!contains(i.current())) return false;
 		}
 		return true;
 	}
@@ -600,14 +602,14 @@ class Set4 {
 	public String toString() {
 		StringBuffer buf=new StringBuffer("[");
 		boolean first=true;
-		for(Iterator4 iter=iterator();iter.hasNext();) {
+		for(Iterator4 iter=iterator();iter.moveNext();) {
 			if(!first) {
 				buf.append(',');
 			}
 			else {
 				first=false;
 			}
-			buf.append(iter.next().toString());
+			buf.append(iter.current().toString());
 		}
 		buf.append(']');
 		return buf.toString();

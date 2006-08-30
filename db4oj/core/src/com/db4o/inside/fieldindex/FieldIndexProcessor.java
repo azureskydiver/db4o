@@ -31,13 +31,13 @@ public class FieldIndexProcessor {
 	
 	public IndexedNode selectBestIndex() {		
 		final Iterator4 i = selectIndexes();
-		if (!i.hasNext()) {
+		if (!i.moveNext()) {
 			return null;
 		}
 		
-		IndexedNode best = (IndexedNode)i.next();
-		while (i.hasNext()) {
-			IndexedLeaf leaf = (IndexedLeaf)i.next();
+		IndexedNode best = (IndexedNode)i.current();
+		while (i.moveNext()) {
+			IndexedLeaf leaf = (IndexedLeaf)i.current();
 			if (leaf.resultSize() < best.resultSize()) {
 				best = leaf;
 			}
@@ -53,8 +53,8 @@ public class FieldIndexProcessor {
 
 	private void collectIndexedLeaves(final Collection4 leaves, final Iterator4 qcons) {
 		
-		while (qcons.hasNext()) {
-			QCon qcon = (QCon)qcons.next();
+		while (qcons.moveNext()) {
+			QCon qcon = (QCon)qcons.current();
 			if (isLeaf(qcon)) {
 				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {
 					
@@ -74,8 +74,8 @@ public class FieldIndexProcessor {
 
 	private IndexedLeaf findLeafOnSameField(Collection4 leaves, QConObject conObject) {
 		final Iterator4 i = leaves.iterator();
-		while (i.hasNext()) {
-			IndexedLeaf leaf = (IndexedLeaf)i.next();
+		while (i.moveNext()) {
+			IndexedLeaf leaf = (IndexedLeaf)i.current();
 			if (conObject.onSameFieldAs(leaf.constraint())) {
 				return leaf;
 			}

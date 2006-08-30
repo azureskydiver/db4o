@@ -200,8 +200,8 @@ public abstract class YapFile extends YapStream {
         final Tree[] duplicates = new Tree[1];
 
         YapClassCollectionIterator i = i_classCollection.iterator();
-        while (i.hasNext()) {
-			final YapClass yapClass = i.readNextClass();
+        while (i.moveNext()) {
+			final YapClass yapClass = i.currentClass();
 			if (yapClass.getName() != null) {
 				ReflectClass claxx = yapClass.classReflector();
 				if (claxx == null
@@ -274,8 +274,8 @@ public abstract class YapFile extends YapStream {
                         freeCheck = _fmChecker.getSlot(bytes);
                     }
                     Iterator4 i = wrongOnes.iterator();
-                    while(i.hasNext()){
-                        int[] adrLength = (int[])i.next();
+                    while(i.moveNext()){
+                        int[] adrLength = (int[])i.current();
                         _fmChecker.free(adrLength[0], adrLength[1]);
                     }
                     if(freeCheck == 0){
@@ -622,8 +622,8 @@ public abstract class YapFile extends YapStream {
     final void writeDirty() {
         YapMeta dirty;
         Iterator4 i = i_dirty.iterator();
-        while (i.hasNext()) {
-            dirty = (YapMeta) i.next();
+        while (i.moveNext()) {
+            dirty = (YapMeta) i.current();
             dirty.write(i_systemTrans);
             dirty.notCachedDirty();
         }

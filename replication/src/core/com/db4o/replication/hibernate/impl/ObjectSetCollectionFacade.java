@@ -1,6 +1,6 @@
 package com.db4o.replication.hibernate.impl;
 
-import com.db4o.foundation.ObjectSetAbstractFacade;
+import com.db4o.replication.foundation.ObjectSetAbstractFacade;
 
 import java.util.Collection;
 import java.util.Iterator;

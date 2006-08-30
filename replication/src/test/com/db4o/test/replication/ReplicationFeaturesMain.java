@@ -54,8 +54,8 @@ class Set4 {
 	
 	public boolean containsAll(Set4 other) {
 		Iterator4 i = other.iterator();
-		while (i.hasNext()) {
-			if (!contains(i.next())) return false;
+		while (i.moveNext()) {
+			if (!contains(i.current())) return false;
 		}
 		return true;
 	}
@@ -73,14 +73,14 @@ class Set4 {
 	public String toString() {
 		StringBuffer buf=new StringBuffer("[");
 		boolean first=true;
-		for(Iterator4 iter=iterator();iter.hasNext();) {
+		for(Iterator4 iter=iterator();iter.moveNext();) {
 			if(!first) {
 				buf.append(',');
 			}
 			else {
 				first=false;
 			}
-			buf.append(iter.next().toString());
+			buf.append(iter.current().toString());
 		}
 		buf.append(']');
 		return buf.toString();
@@ -136,12 +136,18 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private boolean wasConflictReplicatingDeletions() {
 		if (_containersWithDeletedObjects.size() != 1) return false;
-		String container = (String)_containersWithDeletedObjects.iterator().next();
+		String container = firstContainerWithDeletedObjects();
 
 		if (hasChanges(other(container))) return true;
 
 		if (_direction.size() != 1) return false;
 		return _direction.contains(container);
+	}
+
+	private String firstContainerWithDeletedObjects() {
+		Iterator4 i = _containersWithDeletedObjects.iterator();
+		i.moveNext();
+		return (String)i.current();
 	}
 
 	private boolean isDefaultReplicationBehaviorAllowed() {
@@ -500,7 +506,13 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		if (containerSet == null) return "null";
 		if (containerSet.isEmpty()) return "NONE";
 		if (containerSet.size() == 2) return "BOTH";
-		return (String) containerSet.iterator().next();
+		return first(containerSet);
+	}
+
+	private String first(Set4 containerSet) {
+		Iterator4 i = containerSet.iterator();
+		i.moveNext();
+		return (String) i.current();
 	}
 
 	private void printCombination() {

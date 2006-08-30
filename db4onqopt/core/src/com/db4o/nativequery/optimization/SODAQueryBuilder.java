@@ -40,8 +40,8 @@ public class SODAQueryBuilder {
 		public void visit(ComparisonExpression expression) {
 			Query subQuery=_query;
 			Iterator4 fieldNameIterator = fieldNames(expression.left());
-			while(fieldNameIterator.hasNext()) {
-				subQuery=subQuery.descend((String)fieldNameIterator.next());
+			while(fieldNameIterator.moveNext()) {
+				subQuery=subQuery.descend((String)fieldNameIterator.current());
 			}
 			ComparisonQueryGeneratingVisitor visitor = new ComparisonQueryGeneratingVisitor(_predicate);
 			expression.right().accept(visitor);

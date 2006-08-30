@@ -38,11 +38,11 @@ public class CrashSimulatingBatch {
         File4.copy(lastFileName, rightFileName);
                 
         Iterator4 syncIter = writes.strictIterator();
-        while(syncIter.hasNext()){
+        while(syncIter.moveNext()){
             
             rcount++;
             
-            Collection4 writesBetweenSync = (Collection4)syncIter.next();
+            Collection4 writesBetweenSync = (Collection4)syncIter.current();
             
             if(CrashSimulatingTest.LOG){
                 System.out.println("Writing file " + rightFileName + rcount );
@@ -50,8 +50,8 @@ public class CrashSimulatingBatch {
             
             RandomAccessFile rightRaf = new RandomAccessFile(rightFileName, "rw");
             Iterator4 singleForwardIter = writesBetweenSync.strictIterator();
-            while(singleForwardIter.hasNext()){
-                CrashSimulatingWrite csw = (CrashSimulatingWrite)singleForwardIter.next();
+            while(singleForwardIter.moveNext()){
+                CrashSimulatingWrite csw = (CrashSimulatingWrite)singleForwardIter.current();
                 csw.write(rightRaf);
                 
                 if(CrashSimulatingTest.LOG){
@@ -62,9 +62,9 @@ public class CrashSimulatingBatch {
             rightRaf.close();
                         
             Iterator4 singleBackwardIter = writesBetweenSync.iterator();
-            while(singleBackwardIter.hasNext()){
+            while(singleBackwardIter.moveNext()){
                 count ++;
-                CrashSimulatingWrite csw = (CrashSimulatingWrite)singleBackwardIter.next();
+                CrashSimulatingWrite csw = (CrashSimulatingWrite)singleBackwardIter.current();
                 String currentFileName = file + "W" + count;
                 File4.copy(lastFileName, currentFileName);
                 

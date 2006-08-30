@@ -73,8 +73,8 @@ public class NativeQueryHandler {
 
 	private void notifyListeners(Predicate predicate, String msg,Object optimized) {
 		NQOptimizationInfo info=new NQOptimizationInfo(predicate,msg,optimized);
-		for(Iterator4 iter=new Iterator4Impl(_listeners);iter.hasNext();/**/) {
-			((Db4oQueryExecutionListener)iter.next()).notifyQueryExecuted(info);
+		for(Iterator4 iter=new Iterator4Impl(_listeners);iter.moveNext();/**/) {
+			((Db4oQueryExecutionListener)iter.current()).notifyQueryExecuted(info);
 		}
 	}
 	

@@ -547,8 +547,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     	if (null == configuredAliases) return runtimeType;
     	
     	Iterator4 i = configuredAliases.iterator();
-    	while (i.hasNext()) {
-    		String resolved = ((Alias)i.next()).resolve(runtimeType);
+    	while (i.moveNext()) {
+    		String resolved = ((Alias)i.current()).resolve(runtimeType);
     		if (null != resolved) return resolved; 
     	}
     	

@@ -53,8 +53,8 @@ public class Collection4 implements DeepClone, Unversioned {
     }
     
 	public final void addAll(Iterator4 iterator) {
-		while (iterator.hasNext()) {
-			add(iterator.next());
+		while (iterator.moveNext()) {
+			add(iterator.current());
 		}
 	}
 
@@ -88,8 +88,8 @@ public class Collection4 implements DeepClone, Unversioned {
      */
     public final Object get(Object element) {
         Iterator4 i = iterator();
-        while (i.hasNext()) {
-        	Object current = i.next();
+        while (i.moveNext()) {
+        	Object current = i.current();
             if (current.equals(element)) {
                 return current;
             }
@@ -101,8 +101,8 @@ public class Collection4 implements DeepClone, Unversioned {
         Collection4 col = new Collection4();
         Object element = null;
         Iterator4 i = this.iterator();
-        while (i.hasNext()) {
-            element = i.next();
+        while (i.moveNext()) {
+            element = i.current();
             if (element instanceof DeepClone) {
                 col.add(((DeepClone) element).deepClone(newParent));
             } else {
@@ -186,8 +186,8 @@ public class Collection4 implements DeepClone, Unversioned {
         Iterator4 i = iterator();
 
         // backwards, since our linked list is the wrong way around
-        while (i.hasNext()) {
-            a_array[--j] = i.next();
+        while (i.moveNext()) {
+            a_array[--j] = i.current();
         }
         return a_array;
     }
@@ -208,10 +208,11 @@ public class Collection4 implements DeepClone, Unversioned {
         StringBuffer sb = new StringBuffer();
         sb.append("[");
         Iterator4 i = iterator();
-        sb.append(i.next());
-        while(i.hasNext()){
+        i.moveNext();
+        sb.append(i.current());
+        while(i.moveNext()){
             sb.append(", ");
-            sb.append(i.next());
+            sb.append(i.current());
         }
         sb.append("]");
         return sb.toString();

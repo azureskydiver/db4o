@@ -4,8 +4,8 @@ package com.db4o.foundation;
 
 public interface Iterator4 {
 
-	boolean hasNext();
+	boolean moveNext();
 
-	Object next();
+	Object current();
 
 }

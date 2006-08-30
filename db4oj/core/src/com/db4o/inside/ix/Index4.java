@@ -186,8 +186,8 @@ public class Index4 {
 
             if(_indexTransactions != null){
                 Iterator4 i = _indexTransactions.iterator();
-                while (i.hasNext()) {
-                    final IndexTransaction ft = (IndexTransaction) i.next();
+                while (i.moveNext()) {
+                    final IndexTransaction ft = (IndexTransaction) i.current();
                     Tree clonedTree = newFileRange;
                     if (clonedTree != null) {
                         clonedTree = clonedTree.deepClone(ft);
@@ -213,8 +213,8 @@ public class Index4 {
 
         } else {
             Iterator4 i = _indexTransactions.iterator();
-            while (i.hasNext()) {
-                ((IndexTransaction) i.next()).merge(ixTrans);
+            while (i.moveNext()) {
+                ((IndexTransaction) i.current()).merge(ixTrans);
             }
         }
     }
@@ -254,9 +254,9 @@ public class Index4 {
         }
         if (_indexTransactions != null) {
             Iterator4 i = _indexTransactions.iterator();
-            while (i.hasNext()) {
+            while (i.moveNext()) {
                 sb.append("\n");
-                sb.append(i.next().toString());
+                sb.append(i.current().toString());
             }
         }
         return sb.toString();

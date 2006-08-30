@@ -144,9 +144,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 					// kept fairly easy. TODO: Optimize!
 
 					Iterator4 i = a_candidates.iterateConstraints();
-					while (i.hasNext()) {
+					while (i.moveNext()) {
 
-						QCon qcon = (QCon) i.next();
+						QCon qcon = (QCon) i.current();
 						QField qf = qcon.getField();
 						if (qf == null || qf.i_name.equals(_yapField.getName())) {
 
@@ -326,8 +326,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		if (_dependants != null) {
 			Iterator4 i = new Iterator4Impl(_dependants);
 			_dependants = null;
-			while (i.hasNext()) {
-				((QCandidate) i.next()).doNotInclude();
+			while (i.moveNext()) {
+				((QCandidate) i.current()).doNotInclude();
 			}
 		}
 	}

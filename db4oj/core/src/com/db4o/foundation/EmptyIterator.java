@@ -3,13 +3,16 @@
 package com.db4o.foundation;
 
 
-final class EmptyIterator extends Iterator4Impl {
+final class EmptyIterator implements Iterator4 {
 
 	EmptyIterator() {
-		super(null);
 	}
 
-	public final boolean hasNext() {
+	public final boolean moveNext() {
 		return false;
+	}
+
+	public Object current() {
+		throw new IllegalStateException();
 	}
 }

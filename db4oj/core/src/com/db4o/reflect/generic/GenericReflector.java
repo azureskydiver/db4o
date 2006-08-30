@@ -80,8 +80,8 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public int collectionUpdateDepth(ReflectClass candidate) {
         Iterator4 i = _collectionUpdateDepths.iterator();
-        while(i.hasNext()){
-        	CollectionUpdateDepthEntry entry = (CollectionUpdateDepthEntry) i.next();
+        while(i.moveNext()){
+        	CollectionUpdateDepthEntry entry = (CollectionUpdateDepthEntry) i.current();
         	if (entry._predicate.match(candidate)) {
         		return entry._depth;
         	}
@@ -174,8 +174,8 @@ public class GenericReflector implements Reflector, DeepClone {
     public boolean isCollection(ReflectClass candidate) {
         //candidate = candidate.getDelegate(); 
         Iterator4 i = _collectionPredicates.iterator();
-        while(i.hasNext()){
-            if (((ReflectClassPredicate)i.next()).match(candidate)) {
+        while(i.moveNext()){
+            if (((ReflectClassPredicate)i.current()).match(candidate)) {
             	return true;
             }
         }
@@ -225,8 +225,8 @@ public class GenericReflector implements Reflector, DeepClone {
         Collection4 classes = new Collection4();
 		
 		Iterator4 i = _classes.iterator();
-		while(i.hasNext()){
-            GenericClass clazz = (GenericClass)i.next();
+		while(i.moveNext()){
+            GenericClass clazz = (GenericClass)i.current();
             if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
                 if(! clazz.isSecondClass()){
 					if(! clazz.isArray()){
@@ -239,8 +239,8 @@ public class GenericReflector implements Reflector, DeepClone {
         ReflectClass[] ret = new ReflectClass[classes.size()];
         int j = 0;
         i = classes.iterator();
-        while(i.hasNext()){
-            ret[j++] = (ReflectClass)i.next();
+        while(i.moveNext()){
+            ret[j++] = (ReflectClass)i.current();
         }
         return ret;
 	}
@@ -271,8 +271,8 @@ public class GenericReflector implements Reflector, DeepClone {
 			Collection4 pending = _pendingClasses;
 			_pendingClasses = new Collection4();
 			Iterator4 i = pending.iterator();
-			while(i.hasNext()) {
-				ensureClassRead(((Integer)i.next()).intValue());
+			while(i.moveNext()) {
+				ensureClassRead(((Integer)i.current()).intValue());
 			}
 		}
 		return ret;

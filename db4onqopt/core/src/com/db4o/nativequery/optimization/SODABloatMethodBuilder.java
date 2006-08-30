@@ -57,8 +57,8 @@ public class SODABloatMethodBuilder {
 		public void visit(final ComparisonExpression expression) {
 			methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable("query",queryType,1));
 			Iterator4 fieldNames = fieldNames(expression.left());
-			while(fieldNames.hasNext()) {
-				methodEditor.addInstruction(Opcode.opc_ldc,(String)fieldNames.next());
+			while(fieldNames.moveNext()) {
+				methodEditor.addInstruction(Opcode.opc_ldc,(String)fieldNames.current());
 				methodEditor.addInstruction(Opcode.opc_invokeinterface,descendRef);
 			}
 			expression.right().accept(new ComparisonBytecodeGeneratingVisitor(methodEditor,predicateClass,candidateClass));

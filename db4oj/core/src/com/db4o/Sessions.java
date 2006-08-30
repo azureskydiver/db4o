@@ -12,8 +12,8 @@ class Sessions extends Collection4{
 	void forEach(Visitor4 visitor){
 		synchronized(Db4o.lock){
 			Iterator4 i = iterator();
-			while(i.hasNext()){
-				visitor.visit(i.next());
+			while(i.moveNext()){
+				visitor.visit(i.current());
 			}
 		}
 	}

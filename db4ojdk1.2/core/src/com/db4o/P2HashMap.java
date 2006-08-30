@@ -240,8 +240,8 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
             }
             int i = 0;
             Iterator4 it = col.iterator();
-            while (it.hasNext()) {
-                i_entries[i++] = (P1HashElement)it.next();
+            while (it.moveNext()) {
+                i_entries[i++] = (P1HashElement)it.current();
             }
             store(2);
         }

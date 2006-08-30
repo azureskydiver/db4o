@@ -97,8 +97,8 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
             return;
         }
         Iterator4 i = _listeners.iterator();
-        while(i.hasNext()){
-            ((DiagnosticListener)i.next()).onDiagnostic(d);
+        while(i.moveNext()){
+            ((DiagnosticListener)i.current()).onDiagnostic(d);
         }
     }
     

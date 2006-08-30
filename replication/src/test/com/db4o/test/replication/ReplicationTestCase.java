@@ -241,8 +241,8 @@ public abstract class ReplicationTestCase {
 
 	public void test() {
 		Iterator4 it = PROVIDER_PAIRS.strictIterator();
-		while (it.hasNext()) {
-			prepareNextProviderPair((ProviderPair) it.next());
+		while (it.moveNext()) {
+			prepareNextProviderPair((ProviderPair) it.current());
 			doActualTest();
 		}
 	}

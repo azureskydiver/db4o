@@ -127,8 +127,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
                     found = false;
                     m = members.iterator();
-                    while (m.hasNext()) {
-                        if (((YapField)m.next()).equals(field)) {
+                    while (m.moveNext()) {
+                        if (((YapField)m.current()).equals(field)) {
                             found = true;
                             break;
                         }
