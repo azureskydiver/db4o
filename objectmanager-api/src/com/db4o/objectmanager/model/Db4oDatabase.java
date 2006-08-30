@@ -113,10 +113,9 @@ public class Db4oDatabase implements IDatabase {
 	
 	public Object byId(long id) {
 		Object obj=container.ext().getByID(id);
-// YYY
-//		System.out.println("REFRESH: "+obj);
-		container.ext().deactivate(obj,Integer.MAX_VALUE);
-		container.ext().refresh(obj, Integer.MAX_VALUE);
+		//container.ext().deactivate(obj,Integer.MAX_VALUE);
+		//container.ext().refresh(obj, Integer.MAX_VALUE);
+		container.ext().activate(obj,1);
 		return obj;
 	}
 	
