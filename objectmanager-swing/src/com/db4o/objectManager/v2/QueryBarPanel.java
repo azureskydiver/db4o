@@ -66,18 +66,13 @@ public class QueryBarPanel extends JPanel {
                 String query = queryText.getText();
                 if (query.length() > 0) {
                     addToQueryHistory(query);
-                    try {
-                        long startTime = System.currentTimeMillis();
-                        List<Result> results = Sql4o.execute(mainPanel.getObjectContainer(), query);
-                        long duration = System.currentTimeMillis() - startTime;
-                        setStatusMessage("Query duration: " + duration + "ms");
-                        // display in table
-                        mainPanel.displayResults(results);
-                    } catch (SqlParseException e1) {
-                        setErrorMessage(e1.getMessage());
-                    } catch (Sql4oException e1) {
-                        setErrorMessage(e1.getMessage());
-                    }
+                    //long startTime = System.currentTimeMillis();
+                    //List<Result> results = Sql4o.execute(mainPanel.getObjectContainer(), query);
+                    //long duration = System.currentTimeMillis() - startTime;
+                    //setStatusMessage("Query duration: " + duration + "ms");
+                    // instead of executing here like above, i'll pass the query along so the result table can do paging
+                    mainPanel.displayResults(query);
+
                 }
             }
         });

@@ -10,7 +10,7 @@
         <description>db4o ObjectManager 2.0</description>
         <description kind="short">db4o ObjectManager 2.0</description>
         <icon href="images/database2.gif"/>
-        <icon kind="splash" href="images/splash.png"/>
+        <icon kind  ="splash" href="images/splash.png"/>
         <offline-allowed/>
         <shortcut online="false">
             <desktop/>

@@ -95,25 +95,8 @@ public class Dashboard {
      * Builds and answers the menu bar.
      */
     private JMenuBar buildMenuBar() {
-        JMenu menu;
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.putClientProperty(Options.HEADER_STYLE_KEY, Boolean.TRUE);
-
-        menu = new JMenu("File");
-        menu.add(new JMenuItem("New..."));
-        menu.add(new JMenuItem("Open..."));
-        menu.add(new JMenuItem("Save"));
-        menu.addSeparator();
-        menu.add(new JMenuItem("Print..."));
-        menuBar.add(menu);
-
-        menu = new JMenu("Edit");
-        menu.add(new JMenuItem("Cut"));
-        menu.add(new JMenuItem("Copy"));
-        menu.add(new JMenuItem("Paste"));
-        menuBar.add(menu);
-
-        return menuBar;
+        DashboardMenuBar dashboardMenuBar = new DashboardMenuBar(this);
+        return dashboardMenuBar;
     }
 
     /**
@@ -226,6 +209,12 @@ public class Dashboard {
         return panel;
     }
 
+
+    public void connectTo(String dataFile) {
+        fileTextField.setText(dataFile);
+        connectAndOpenFrame();
+    }
+
     private void connectAndOpenFrame() {
         Db4oConnectionSpec connectionSpec = new Db4oFileConnectionSpec(fileTextField.getText(), false);
         recentConnectionList.addNewConnectionSpec(connectionSpec);
@@ -282,4 +271,9 @@ public class Dashboard {
         label.setBorder(new EmptyBorder(3, 3, 3, 3));
         return label;
     }
+
+    public void showError(String msg) {
+        JOptionPane.showMessageDialog(frame, "msg", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
 }

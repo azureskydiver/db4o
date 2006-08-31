@@ -269,11 +269,11 @@ public class MainPanel extends JPanel {
         return databaseInspector;
     }
 
-    public void displayResults(List<Result> results) {
+    public void displayResults(String query) {
         QueryResultsPanel p = new QueryResultsPanel(this);
         tabbedPane.add("Query " + (++queryCounter), p);
         tabbedPane.setSelectedComponent(p);
-        p.displayResults(results);
+        p.displayResults(query);
 
         //queryResultsPanel.displayResults(results);
     }
