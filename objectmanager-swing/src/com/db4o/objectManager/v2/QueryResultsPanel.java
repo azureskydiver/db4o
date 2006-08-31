@@ -30,28 +30,17 @@
 
 package com.db4o.objectManager.v2;
 
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
-import com.db4o.objectManager.v2.uif_lite.component.Factory;
 import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
-import com.db4o.objectmanager.api.DatabaseInspector;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
+import com.db4o.objectManager.v2.custom.FastScrollPane;
+import com.db4o.ObjectContainer;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.looks.Options;
-import com.spaceprogram.db4o.sql.Result;
-import com.spaceprogram.db4o.sql.ReflectHelper;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.MouseListener;
 import java.util.List;
 
 final class QueryResultsPanel extends JPanel {
@@ -59,18 +48,25 @@ final class QueryResultsPanel extends JPanel {
     private JTable resultsTable;
     private TableModel tableModel;
     private SimpleInternalFrame resultsFrame;
+    private JLabel statusLabel = new JLabel();
 
     public QueryResultsPanel(MainPanel mainPanel) {
         super(new BorderLayout());
         this.mainPanel = mainPanel;
         setOpaque(false);
         setBorder(Borders.DIALOG_BORDER);
-        add(buildMainRightPanel());
+        add(buildTablePanel());
+        add(buildStatusBar(), BorderLayout.SOUTH);
+    }
+
+    private JPanel buildStatusBar() {
+        JPanel p = new JPanel();
+        p.add(statusLabel);
+        return p;
     }
 
 
-
-    private JComponent buildMainRightPanel() {
+    private JComponent buildTablePanel() {
         Component table = buildResultsTable();
         resultsFrame = new SimpleInternalFrame("Results");
         resultsFrame.setPreferredSize(new Dimension(300, 100));
@@ -81,17 +77,18 @@ final class QueryResultsPanel extends JPanel {
     private JScrollPane buildResultsTable() {
         resultsTable = new JTable();
         resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        JScrollPane scrollpane = new JScrollPane(resultsTable);
+        JScrollPane scrollpane = new FastScrollPane(resultsTable);
+
         return scrollpane;
     }
 
 
     /**
      * After a query executes, this will setup the table to display results.
-     * @param results
+     * @param query
      */
-    public void displayResults(List<Result> results) {
-        tableModel = new ResultsTableModel(results, this);
+    public void displayResults(String query) {
+        tableModel = new ResultsTableModel(query, this);
         resultsTable.setModel(tableModel);
     }
 
@@ -103,5 +100,13 @@ final class QueryResultsPanel extends JPanel {
         // todo: implement the batch with button
         mainPanel.getObjectContainer().set(o);
         mainPanel.getObjectContainer().commit();
+    }
+
+    public ObjectContainer getObjectContainer() {
+        return mainPanel.getObjectContainer();
+    }
+
+    public void setStatusMessage(String msg) {
+        statusLabel.setText(msg);
     }
 }

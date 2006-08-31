@@ -1,6 +1,7 @@
-package com.db4o.objectmanager.api;
+package demo.objectmanager.model;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * User: treeder
@@ -12,6 +13,8 @@ public class Contact {
     private String name;
     private int age;
     List addresses;
+    List emails;
+    private List emailAddresses;
 
     public Integer getId() {
         return id;
@@ -38,10 +41,32 @@ public class Contact {
     }
 
     public List getAddresses() {
+        if(addresses == null) addresses = new ArrayList();
         return addresses;
     }
 
     public void setAddresses(List addresses) {
         this.addresses = addresses;
+    }
+
+    public List getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List emails) {
+        this.emails = emails;
+    }
+
+    public void addAddress(Address address) {
+        getAddresses().add(address);
+    }
+
+    public void addEmail(EmailAddress emailAddress) {
+        getEmailAddresses().add(emailAddress);
+    }
+
+    public List getEmailAddresses() {
+        if(emailAddresses == null) emailAddresses = new ArrayList();
+        return emailAddresses;
     }
 }

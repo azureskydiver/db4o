@@ -6,24 +6,16 @@ import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * User: treeder
  * Date: Aug 21, 2006
  * Time: 6:07:00 PM
  */
-public class ConnectedMenuBar extends JMenuBar {
+public class ConnectedMenuBar extends BaseMenuBar {
     public ConnectedMenuBar(Settings settings, ActionListener helpActionListener, ActionListener aboutActionListener) {
-        super();
-
-        putClientProperty(Options.HEADER_STYLE_KEY,
-                settings.getMenuBarHeaderStyle());
-        putClientProperty(PlasticLookAndFeel.BORDER_STYLE_KEY,
-                settings.getMenuBarPlasticBorderStyle());
-        putClientProperty(WindowsLookAndFeel.BORDER_STYLE_KEY,
-                settings.getMenuBarWindowsBorderStyle());
-        putClientProperty(PlasticLookAndFeel.IS_3D_KEY,
-                settings.getMenuBar3DHint());
+        super(settings, helpActionListener, aboutActionListener);
 
         add(buildFileMenu());
         add(buildHelpMenu(helpActionListener, aboutActionListener));
@@ -66,63 +58,5 @@ public class ConnectedMenuBar extends JMenuBar {
         return menu;
     }
 
-    private JMenu buildHelpMenu(ActionListener helpActionListener, ActionListener aboutActionListener) {
 
-        JMenu menu = createMenu("Help", 'H');
-
-        JMenuItem item;
-        item = createMenuItem("Help Contents", ResourceManager.createImageIcon("help.gif"), 'H');
-        if (helpActionListener != null) {
-            item.addActionListener(helpActionListener);
-        }
-        menu.add(item);
-
-        menu.addSeparator();
-        item = createMenuItem("About", 'a');
-        item.addActionListener(aboutActionListener);
-        menu.add(item);
-
-        return menu;
-    }
-
-    protected JMenu createMenu(String text, char mnemonic) {
-        JMenu menu = new JMenu(text);
-        menu.setMnemonic(mnemonic);
-        return menu;
-    }
-
-
-    protected JMenuItem createMenuItem(String text) {
-        return new JMenuItem(text);
-    }
-
-
-    protected JMenuItem createMenuItem(String text, char mnemonic) {
-        return new JMenuItem(text, mnemonic);
-    }
-
-    protected JMenuItem createMenuItem(String text, char mnemonic, KeyStroke key) {
-        JMenuItem menuItem = new JMenuItem(text, mnemonic);
-        menuItem.setAccelerator(key);
-        return menuItem;
-    }
-
-
-    protected JMenuItem createMenuItem(String text, Icon icon) {
-        return new JMenuItem(text, icon);
-    }
-
-
-    protected JMenuItem createMenuItem(String text, Icon icon, char mnemonic) {
-        JMenuItem menuItem = new JMenuItem(text, icon);
-        menuItem.setMnemonic(mnemonic);
-        return menuItem;
-    }
-
-
-    protected JMenuItem createMenuItem(String text, Icon icon, char mnemonic, KeyStroke key) {
-        JMenuItem menuItem = createMenuItem(text, icon, mnemonic);
-        menuItem.setAccelerator(key);
-        return menuItem;
-    }
 }

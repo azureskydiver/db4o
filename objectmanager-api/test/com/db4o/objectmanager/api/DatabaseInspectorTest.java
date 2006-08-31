@@ -3,6 +3,7 @@ package com.db4o.objectmanager.api;
 import com.db4o.ObjectContainer;
 import com.db4o.ext.StoredClass;
 import com.db4o.objectmanager.api.impl.DatabaseInspectorImpl;
+import demo.objectmanager.model.Contact;
 import com.db4o.reflect.ReflectClass;
 import db4ounit.Assert;
 
