@@ -35,14 +35,14 @@ public class Circuits {
     
     static final Circuit[] all(){
         return new Circuit[]{
-//            new Melbourne(),
-//            new Sepang(),
-//            new Bahrain(),
-//            new Imola(),
-//            new Barcelona(),
-//            new Monaco(),
-//            new Nurburgring(),
-//            new Montreal(),
+            new Melbourne(),
+            new Sepang(),
+            new Bahrain(),
+            new Imola(),
+            new Barcelona(),
+            new Monaco(),
+            new Nurburgring(),
+            new Montreal(),
             new Indianapolis(),
         };
     }
