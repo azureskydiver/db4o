@@ -11,14 +11,13 @@ import org.polepos.framework.*;
 /**
  * @exclude
  */
-public class DrsPos {
+public class RunReplicationSeason {
     
     public static void main(String[] arguments) {
         List <Circuit> circuits = new ArrayList <Circuit>();
         List <Team> teams = new ArrayList <Team>();
         
         circuits.add(new Kyalami());
-        
         teams.add(new DrsTeam());
         
         new Racer(circuits, teams).run();
