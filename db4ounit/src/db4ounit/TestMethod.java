@@ -48,7 +48,7 @@ public class TestMethod implements Test {
 		}
 	}
 
-	protected void invoke() throws IllegalAccessException, InvocationTargetException {
+	protected void invoke() throws Exception {
 		_method.invoke(_subject, new Object[0]);
 	}
 
