@@ -26,7 +26,7 @@ namespace com.db4o.inside.marshall
 			{
 				return;
 			}
-			header.AddPayLoadLength(trans.i_stream.StringIO().Length((string)obj));
+			header.AddPayLoadLength(trans.Stream().StringIO().Length((string)obj));
 		}
 
 		public override object WriteNew(object obj, bool topLevel, com.db4o.YapWriter writer

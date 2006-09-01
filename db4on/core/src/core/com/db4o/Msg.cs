@@ -190,7 +190,7 @@ namespace com.db4o
 
 		internal virtual com.db4o.YapStream GetStream()
 		{
-			return GetTransaction().i_stream;
+			return GetTransaction().Stream();
 		}
 
 		/// <summary>server side execution</summary>
@@ -263,11 +263,11 @@ namespace com.db4o
 			 qr, com.db4o.foundation.network.YapSocket sock)
 		{
 			int size = qr.Size();
-			com.db4o.MsgD message = ID_LIST.GetWriterForLength(a_trans, com.db4o.YapConst.YAPID_LENGTH
+			com.db4o.MsgD message = ID_LIST.GetWriterForLength(a_trans, com.db4o.YapConst.ID_LENGTH
 				 * (size + 1));
 			com.db4o.YapWriter writer = message.GetPayLoad();
 			writer.WriteQueryResult(qr);
-			message.Write(a_trans.i_stream, sock);
+			message.Write(a_trans.Stream(), sock);
 		}
 	}
 }

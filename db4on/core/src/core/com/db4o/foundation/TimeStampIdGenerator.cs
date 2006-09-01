@@ -3,7 +3,7 @@ namespace com.db4o.foundation
 	/// <exclude></exclude>
 	public class TimeStampIdGenerator
 	{
-		private long _next;
+		private long _last;
 
 		public static long IdToMilliseconds(long id)
 		{
@@ -16,32 +16,37 @@ namespace com.db4o.foundation
 
 		public TimeStampIdGenerator(long minimumNext)
 		{
-			_next = minimumNext;
+			_last = minimumNext;
 		}
 
 		public virtual long Generate()
 		{
 			long t = j4o.lang.JavaSystem.CurrentTimeMillis();
 			t = t << 15;
-			if (t <= _next)
+			if (t <= _last)
 			{
-				_next++;
+				_last++;
 			}
 			else
 			{
-				_next = t;
+				_last = t;
 			}
-			return _next;
+			return _last;
 		}
 
-		public virtual long MinimumNext()
+		public virtual long Last()
 		{
-			return _next;
+			return _last;
 		}
 
-		public virtual void SetMinimumNext(long newMinimum)
+		public virtual bool SetMinimumNext(long newMinimum)
 		{
-			_next = newMinimum;
+			if (newMinimum <= _last)
+			{
+				return false;
+			}
+			_last = newMinimum;
+			return true;
 		}
 	}
 }

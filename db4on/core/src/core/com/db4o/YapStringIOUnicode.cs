@@ -3,7 +3,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public sealed class YapStringIOUnicode : com.db4o.YapStringIO
 	{
-		internal override int BytesPerChar()
+		public override int BytesPerChar()
 		{
 			return 2;
 		}
@@ -16,7 +16,7 @@ namespace com.db4o
 		public override int Length(string a_string)
 		{
 			return (a_string.Length * 2) + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst
-				.YAPINT_LENGTH;
+				.INT_LENGTH;
 		}
 
 		public override string Read(com.db4o.YapReader bytes, int a_length)
@@ -43,9 +43,9 @@ namespace com.db4o
 			return new string(chars, 0, len);
 		}
 
-		internal override int ShortLength(string a_string)
+		public override int ShortLength(string a_string)
 		{
-			return (a_string.Length * 2) + com.db4o.YapConst.YAPINT_LENGTH;
+			return (a_string.Length * 2) + com.db4o.YapConst.INT_LENGTH;
 		}
 
 		public override void Write(com.db4o.YapReader bytes, string _string)

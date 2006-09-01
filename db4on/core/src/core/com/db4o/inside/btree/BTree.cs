@@ -1,8 +1,11 @@
 namespace com.db4o.inside.btree
 {
 	/// <exclude></exclude>
-	public class BTree : com.db4o.YapMeta
+	public class BTree : com.db4o.YapMeta, com.db4o.TransactionParticipant
 	{
+		/// <summary>temporary variable for value and search coding</summary>
+		private static readonly bool DEBUG = com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX;
+
 		private const byte BTREE_VERSION = (byte)1;
 
 		internal readonly com.db4o.inside.ix.Indexable4 _keyHandler;
@@ -23,18 +26,28 @@ namespace com.db4o.inside.btree
 
 		private com.db4o.foundation.Queue4 _processing;
 
-		internal int _nodeSize;
+		private int _nodeSize;
 
 		internal int _halfNodeSize;
 
 		private readonly int _cacheHeight;
 
-		public BTree(int nodeSize, int cacheHeight, com.db4o.Transaction trans, int id, com.db4o.inside.ix.Indexable4
-			 keyHandler, com.db4o.inside.ix.Indexable4 valueHandler)
+		public BTree(com.db4o.Transaction trans, int id, com.db4o.inside.ix.Indexable4 keyHandler
+			) : this(trans, id, keyHandler, null)
 		{
-			_halfNodeSize = nodeSize / 2;
+		}
+
+		public BTree(com.db4o.Transaction trans, int id, com.db4o.inside.ix.Indexable4 keyHandler
+			, com.db4o.inside.ix.Indexable4 valueHandler)
+		{
+			if (null == keyHandler)
+			{
+				throw new System.ArgumentNullException();
+			}
+			_nodeSize = DEBUG ? 7 : trans.Stream().ConfigImpl().BTreeNodeSize();
+			_halfNodeSize = _nodeSize / 2;
 			_nodeSize = _halfNodeSize * 2;
-			_cacheHeight = cacheHeight;
+			_cacheHeight = trans.Stream().ConfigImpl().BTreeCacheHeight();
 			_keyHandler = keyHandler;
 			_valueHandler = (valueHandler == null) ? com.db4o.Null.INSTANCE : valueHandler;
 			_sizesByTransaction = new com.db4o.foundation.Hashtable4(1);
@@ -53,10 +66,21 @@ namespace com.db4o.inside.btree
 			}
 		}
 
-		public virtual void Add(com.db4o.Transaction trans, object value)
+		public virtual int NodeSize()
 		{
+			return _nodeSize;
+		}
+
+		public virtual void Add(com.db4o.Transaction trans, object key)
+		{
+			Add(trans, key, null);
+		}
+
+		public virtual void Add(com.db4o.Transaction trans, object key, object value)
+		{
+			_keyHandler.PrepareComparison(key);
+			_valueHandler.PrepareComparison(value);
 			EnsureDirty(trans);
-			_keyHandler.PrepareComparison(value);
 			com.db4o.inside.btree.BTreeNode rootOrSplit = _root.Add(trans);
 			if (rootOrSplit != null && rootOrSplit != _root)
 			{
@@ -64,16 +88,37 @@ namespace com.db4o.inside.btree
 				_root.Write(trans.SystemTransaction());
 				AddNode(_root);
 			}
-			SetStateDirty();
-			SizeChanged(trans, 1);
 		}
 
-		public virtual void Remove(com.db4o.Transaction trans, object value)
+		public virtual void Remove(com.db4o.Transaction trans, object key)
 		{
+			com.db4o.inside.btree.BTreeRange range = Search(trans, key);
+			com.db4o.inside.btree.BTreePointer first = range.First();
+			if (first == null)
+			{
+				return;
+			}
 			EnsureDirty(trans);
-			_keyHandler.PrepareComparison(value);
-			_root.Remove(trans);
-			SizeChanged(trans, -1);
+			com.db4o.inside.btree.BTreeNode node = first.Node();
+			node.Remove(trans, first.Index());
+		}
+
+		public virtual com.db4o.inside.btree.BTreeRange Search(com.db4o.Transaction trans
+			, object key)
+		{
+			com.db4o.inside.btree.BTreeNodeSearchResult start = SearchLeaf(trans, key, com.db4o.inside.btree.SearchTarget
+				.LOWEST);
+			com.db4o.inside.btree.BTreeNodeSearchResult end = SearchLeaf(trans, key, com.db4o.inside.btree.SearchTarget
+				.HIGHEST);
+			return start.CreateIncludingRange(end);
+		}
+
+		public virtual com.db4o.inside.btree.BTreeNodeSearchResult SearchLeaf(com.db4o.Transaction
+			 trans, object key, com.db4o.inside.btree.SearchTarget target)
+		{
+			EnsureActive(trans);
+			_keyHandler.PrepareComparison(key);
+			return _root.SearchLeaf(trans, target);
 		}
 
 		public virtual void Commit(com.db4o.Transaction trans)
@@ -95,7 +140,7 @@ namespace com.db4o.inside.btree
 				_processing = null;
 				if (_nodes != null)
 				{
-					_nodes.Traverse(new _AnonymousInnerClass102(this, systemTransAction));
+					_nodes.Traverse(new _AnonymousInnerClass145(this, systemTransAction));
 				}
 			}
 			SetStateDirty();
@@ -103,9 +148,9 @@ namespace com.db4o.inside.btree
 			Purge();
 		}
 
-		private sealed class _AnonymousInnerClass102 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass145 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass102(BTree _enclosing, com.db4o.Transaction systemTransAction
+			public _AnonymousInnerClass145(BTree _enclosing, com.db4o.Transaction systemTransAction
 				)
 			{
 				this._enclosing = _enclosing;
@@ -158,12 +203,12 @@ namespace com.db4o.inside.btree
 				_root.HoldChildrenAsIDs();
 				AddNode(_root);
 			}
-			temp.Traverse(new _AnonymousInnerClass152(this));
+			temp.Traverse(new _AnonymousInnerClass195(this));
 		}
 
-		private sealed class _AnonymousInnerClass152 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass195 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass152(BTree _enclosing)
+			public _AnonymousInnerClass195(BTree _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -181,12 +226,12 @@ namespace com.db4o.inside.btree
 		private void ProcessAllNodes()
 		{
 			_processing = new com.db4o.foundation.Queue4();
-			_nodes.Traverse(new _AnonymousInnerClass162(this));
+			_nodes.Traverse(new _AnonymousInnerClass205(this));
 		}
 
-		private sealed class _AnonymousInnerClass162 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass205 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass162(BTree _enclosing)
+			public _AnonymousInnerClass205(BTree _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -210,7 +255,7 @@ namespace com.db4o.inside.btree
 		private void EnsureDirty(com.db4o.Transaction trans)
 		{
 			EnsureActive(trans);
-			trans.DirtyBTree(this);
+			trans.Enlist(this);
 			SetStateDirty();
 		}
 
@@ -226,8 +271,8 @@ namespace com.db4o.inside.btree
 
 		public override int OwnLength()
 		{
-			return 1 + com.db4o.YapConst.OBJECT_LENGTH + (com.db4o.YapConst.YAPINT_LENGTH * 2
-				) + com.db4o.YapConst.YAPID_LENGTH;
+			return 1 + com.db4o.YapConst.OBJECT_LENGTH + (com.db4o.YapConst.INT_LENGTH * 2) +
+				 com.db4o.YapConst.ID_LENGTH;
 		}
 
 		internal virtual com.db4o.inside.btree.BTreeNode ProduceNode(int id)
@@ -281,7 +326,7 @@ namespace com.db4o.inside.btree
 			a_reader.IncrementOffset(1);
 			_size = a_reader.ReadInt();
 			_nodeSize = a_reader.ReadInt();
-			_halfNodeSize = _nodeSize / 2;
+			_halfNodeSize = NodeSize() / 2;
 			_root = ProduceNode(a_reader.ReadInt());
 		}
 
@@ -290,7 +335,7 @@ namespace com.db4o.inside.btree
 		{
 			a_writer.Append(BTREE_VERSION);
 			a_writer.WriteInt(_size);
-			a_writer.WriteInt(_nodeSize);
+			a_writer.WriteInt(NodeSize());
 			a_writer.WriteIDOf(trans, _root);
 		}
 
@@ -316,7 +361,18 @@ namespace com.db4o.inside.btree
 			_root.TraverseKeys(trans, visitor);
 		}
 
-		private void SizeChanged(com.db4o.Transaction trans, int changeBy)
+		public virtual void TraverseValues(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
+			 visitor)
+		{
+			EnsureActive(trans);
+			if (_root == null)
+			{
+				return;
+			}
+			_root.TraverseValues(trans, visitor);
+		}
+
+		public virtual void SizeChanged(com.db4o.Transaction trans, int changeBy)
 		{
 			object sizeDiff = _sizesByTransaction.Get(trans);
 			if (sizeDiff == null)
@@ -325,6 +381,64 @@ namespace com.db4o.inside.btree
 				return;
 			}
 			_sizesByTransaction.Put(trans, ((int)sizeDiff) + changeBy);
+		}
+
+		public virtual void Dispose(com.db4o.Transaction transaction)
+		{
+		}
+
+		public virtual com.db4o.inside.btree.BTreePointer FirstPointer(com.db4o.Transaction
+			 trans)
+		{
+			EnsureActive(trans);
+			if (null == _root)
+			{
+				return null;
+			}
+			return _root.FirstPointer(trans);
+		}
+
+		public virtual com.db4o.inside.btree.BTree DebugLoadFully(com.db4o.Transaction trans
+			)
+		{
+			EnsureActive(trans);
+			_root.DebugLoadFully(trans);
+			return this;
+		}
+
+		public virtual void TraverseAllSlotIDs(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
+			 command)
+		{
+			com.db4o.foundation.Queue4 queue = new com.db4o.foundation.Queue4();
+			if (_root == null)
+			{
+				Read(trans);
+			}
+			queue.Add(_root);
+			while (queue.HasNext())
+			{
+				com.db4o.inside.btree.BTreeNode curNode = (com.db4o.inside.btree.BTreeNode)queue.
+					Next();
+				curNode.PrepareWrite(trans);
+				int childCount = curNode.ChildCount();
+				for (int childIdx = 0; childIdx < childCount; childIdx++)
+				{
+					queue.Add(curNode.Child(childIdx));
+				}
+				command.Visit(curNode.GetID());
+			}
+		}
+
+		public virtual void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target
+			, com.db4o.IDMapping mapping)
+		{
+			com.db4o.inside.btree.BTreeNode.DefragIndex(source, target, mapping, _keyHandler);
+		}
+
+		public virtual int CompareKeys(object key1, object key2)
+		{
+			_keyHandler.PrepareComparison(key2);
+			return _keyHandler.CompareTo(key1);
 		}
 	}
 }

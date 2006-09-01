@@ -8,25 +8,50 @@ namespace com.db4o.inside.btree
 		{
 		}
 
-		protected override object GetObject()
+		protected virtual object RolledBack(com.db4o.inside.btree.BTree btree)
 		{
-			return _object;
-		}
-
-		protected override object Committed(com.db4o.inside.btree.BTree btree)
-		{
-			return _object;
-		}
-
-		protected override object RolledBack(com.db4o.inside.btree.BTree btree)
-		{
-			btree.NotifyRemoveListener(_object);
+			btree.NotifyRemoveListener(GetObject());
 			return com.db4o.foundation.No4.INSTANCE;
 		}
 
 		public override string ToString()
 		{
-			return "+B " + base.ToString();
+			return "(+) " + base.ToString();
+		}
+
+		public override object Commit(com.db4o.Transaction trans, com.db4o.inside.btree.BTree
+			 btree)
+		{
+			if (_transaction == trans)
+			{
+				return GetObject();
+			}
+			return this;
+		}
+
+		public override com.db4o.inside.btree.BTreePatch ForTransaction(com.db4o.Transaction
+			 trans)
+		{
+			if (_transaction == trans)
+			{
+				return this;
+			}
+			return null;
+		}
+
+		public override object Rollback(com.db4o.Transaction trans, com.db4o.inside.btree.BTree
+			 btree)
+		{
+			if (_transaction == trans)
+			{
+				return RolledBack(btree);
+			}
+			return this;
+		}
+
+		public override bool IsAdd()
+		{
+			return true;
 		}
 	}
 }

@@ -22,9 +22,9 @@ namespace com.db4o
 		{
 		}
 
-		public MetaClass(string name)
+		public MetaClass(string name_)
 		{
-			this.name = name;
+			name = name_;
 		}
 
 		internal virtual com.db4o.MetaField EnsureField(com.db4o.Transaction trans, string
@@ -49,9 +49,9 @@ namespace com.db4o
 			}
 			com.db4o.MetaField newMetaField = new com.db4o.MetaField(a_name);
 			fields[fields.Length - 1] = newMetaField;
-			trans.i_stream.SetInternal(trans, newMetaField, com.db4o.YapConst.UNSPECIFIED, false
+			trans.Stream().SetInternal(trans, newMetaField, com.db4o.YapConst.UNSPECIFIED, false
 				);
-			trans.i_stream.SetInternal(trans, this, com.db4o.YapConst.UNSPECIFIED, false);
+			trans.Stream().SetInternal(trans, this, com.db4o.YapConst.UNSPECIFIED, false);
 			return newMetaField;
 		}
 	}

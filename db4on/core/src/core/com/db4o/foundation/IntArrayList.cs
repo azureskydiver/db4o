@@ -1,4 +1,4 @@
-namespace com.db4o
+namespace com.db4o.foundation
 {
 	/// <exclude></exclude>
 	public class IntArrayList

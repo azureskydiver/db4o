@@ -27,7 +27,7 @@ namespace com.db4o.inside.ix
 		{
 			_handler = handler;
 			_linkLegth = handler.LinkLength();
-			_slotLength = _linkLegth + com.db4o.YapConst.YAPINT_LENGTH;
+			_slotLength = _linkLegth + com.db4o.YapConst.INT_LENGTH;
 			_reader = new com.db4o.YapReader(_slotLength);
 		}
 
@@ -99,23 +99,20 @@ namespace com.db4o.inside.ix
 							fileRange.CalculateSize();
 							return newTree.BalanceCheckNulls();
 						}
+						if (_cursor == 0)
+						{
+							newTree._subsequent = fileRange;
+							return newTree.RotateLeft();
+						}
 						else
 						{
-							if (_cursor == 0)
+							if (_cursor == fileRange._entries)
 							{
-								newTree._subsequent = fileRange;
-								return newTree.RotateLeft();
+								newTree._preceding = fileRange;
+								return newTree.RotateRight();
 							}
-							else
-							{
-								if (_cursor == fileRange._entries)
-								{
-									newTree._preceding = fileRange;
-									return newTree.RotateRight();
-								}
-							}
-							return Insert(fileRange, newTree, _cursor, cmp);
 						}
+						return Insert(fileRange, newTree, _cursor, cmp);
 					}
 				}
 				if (!AdjustCursor())

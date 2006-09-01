@@ -1,14 +1,19 @@
 namespace com.db4o.foundation
 {
-	internal sealed class EmptyIterator : com.db4o.foundation.Iterator4Impl
+	internal sealed class EmptyIterator : com.db4o.foundation.Iterator4
 	{
-		internal EmptyIterator() : base(null)
+		internal EmptyIterator()
 		{
 		}
 
-		public sealed override bool HasNext()
+		public bool MoveNext()
 		{
 			return false;
+		}
+
+		public object Current()
+		{
+			throw new System.InvalidOperationException();
 		}
 	}
 }

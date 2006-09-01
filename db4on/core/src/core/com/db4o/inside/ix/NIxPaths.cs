@@ -33,9 +33,9 @@ namespace com.db4o.inside.ix
 			_paths.Traverse(new _AnonymousInnerClass41(this, stop, add));
 			_paths = null;
 			com.db4o.foundation.Iterator4 i = add.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				this.Add((com.db4o.inside.ix.NIxPath)i.Next());
+				this.Add((com.db4o.inside.ix.NIxPath)i.Current());
 			}
 		}
 

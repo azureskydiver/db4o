@@ -5,11 +5,11 @@ namespace com.db4o
 	{
 		internal static readonly object initMe = Init();
 
-		internal const byte YAPFILEVERSION = 4;
+		public const byte YAPFILEVERSION = 4;
 
-		internal const byte YAPBEGIN = (byte)'{';
+		public const byte YAPBEGIN = (byte)'{';
 
-		internal const byte YAPFILE = (byte)'Y';
+		public const byte YAPFILE = (byte)'Y';
 
 		internal const byte YAPID = (byte)'#';
 
@@ -27,7 +27,7 @@ namespace com.db4o
 
 		internal const byte YAPARRAYN = (byte)'Z';
 
-		internal const byte YAPINDEX = (byte)'X';
+		public const byte YAPINDEX = (byte)'X';
 
 		public const byte YAPSTRING = (byte)'S';
 
@@ -79,19 +79,19 @@ namespace com.db4o
 
 		internal const int UNSPECIFIED = int.MinValue + 100;
 
-		public const int YAPINT_LENGTH = INTEGER_BYTES + ADDED_LENGTH;
+		public const int INT_LENGTH = INTEGER_BYTES + ADDED_LENGTH;
 
-		public const int YAPID_LENGTH = YAPINT_LENGTH;
+		public const int ID_LENGTH = INT_LENGTH;
 
-		internal const int YAPLONG_LENGTH = LONG_BYTES + ADDED_LENGTH;
+		internal const int LONG_LENGTH = LONG_BYTES + ADDED_LENGTH;
 
 		internal const int WRITE_LOOP = (INTEGER_BYTES - 1) * 8;
 
 		public const int OBJECT_LENGTH = ADDED_LENGTH;
 
-		public const int POINTER_LENGTH = (YAPINT_LENGTH * 2) + ADDED_LENGTH;
+		public const int POINTER_LENGTH = (INT_LENGTH * 2) + ADDED_LENGTH;
 
-		internal const int MESSAGE_LENGTH = YAPINT_LENGTH * 2 + 1;
+		internal const int MESSAGE_LENGTH = INT_LENGTH * 2 + 1;
 
 		internal const byte SYSTEM_TRANS = (byte)'s';
 
@@ -167,8 +167,6 @@ namespace com.db4o
 
 		internal static j4o.lang.Class CLASS_OBJECTCONTAINER;
 
-		internal static j4o.lang.Class CLASS_PBOOTRECORD;
-
 		internal static j4o.lang.Class CLASS_REPLICATIONRECORD;
 
 		internal static j4o.lang.Class CLASS_STATICFIELD;
@@ -226,7 +224,6 @@ namespace com.db4o
 			CLASS_METAFIELD = j4o.lang.Class.GetClassForObject(new com.db4o.MetaField());
 			CLASS_METAINDEX = j4o.lang.Class.GetClassForObject(new com.db4o.MetaIndex());
 			CLASS_OBJECTCONTAINER = Db4oClass("ObjectContainer");
-			CLASS_PBOOTRECORD = j4o.lang.Class.GetClassForObject(new com.db4o.PBootRecord());
 			CLASS_REPLICATIONRECORD = j4o.lang.Class.GetClassForObject(new com.db4o.ReplicationRecord
 				());
 			CLASS_STATICFIELD = j4o.lang.Class.GetClassForObject(new com.db4o.StaticField());

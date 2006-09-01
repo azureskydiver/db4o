@@ -8,7 +8,7 @@ namespace com.db4o
 			int id = _payLoad.ReadInt();
 			int cascade = _payLoad.ReadInt();
 			com.db4o.Transaction trans = GetTransaction();
-			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.YapStream stream = trans.Stream();
 			lock (stream.i_lock)
 			{
 				object[] arr = stream.GetObjectAndYapObjectByID(trans, id);

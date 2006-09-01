@@ -75,7 +75,7 @@ namespace com.db4o
 
 		public override int OwnLength()
 		{
-			return com.db4o.YapConst.YAPINT_LENGTH;
+			return com.db4o.YapConst.INT_LENGTH;
 		}
 
 		internal override bool VariableLength()

@@ -37,7 +37,7 @@ namespace com.db4o
 		{
 			lock (StreamLock())
 			{
-				com.db4o.YapClient stream = (com.db4o.YapClient)i_trans.i_stream;
+				com.db4o.YapClient stream = (com.db4o.YapClient)i_trans.Stream();
 				stream.CheckClosed();
 				if (i_remainingObjects < 1)
 				{

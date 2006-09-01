@@ -7,9 +7,9 @@ namespace com.db4o
 			lock (com.db4o.Db4o.Lock)
 			{
 				com.db4o.foundation.Iterator4 i = Iterator();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					visitor.Visit(i.Next());
+					visitor.Visit(i.Current());
 				}
 			}
 		}

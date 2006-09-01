@@ -6,103 +6,201 @@ namespace com.db4o.inside.marshall
 		public override void AddFieldIndices(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
 			 attributes, com.db4o.YapWriter writer, bool isNew)
 		{
-			int fieldCount = writer.ReadInt();
-			for (int i = 0; i < fieldCount; i++)
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass14
+				(this, writer, isNew);
+			TraverseFields(yc, writer, attributes, command);
+		}
+
+		private sealed class _AnonymousInnerClass14 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		{
+			public _AnonymousInnerClass14(ObjectMarshaller0 _enclosing, com.db4o.YapWriter writer
+				, bool isNew)
 			{
-				yc.i_fields[i].AddFieldIndex(_family, writer, isNew);
+				this._enclosing = _enclosing;
+				this.writer = writer;
+				this.isNew = isNew;
 			}
-			if (yc.i_ancestor != null)
+
+			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
+				 containingClass)
 			{
-				AddFieldIndices(yc.i_ancestor, attributes, writer, isNew);
+				field.AddFieldIndex(this._enclosing._family, writer, isNew);
 			}
+
+			private readonly ObjectMarshaller0 _enclosing;
+
+			private readonly com.db4o.YapWriter writer;
+
+			private readonly bool isNew;
 		}
 
 		public override com.db4o.TreeInt CollectFieldIDs(com.db4o.TreeInt tree, com.db4o.YapClass
 			 yc, com.db4o.inside.marshall.ObjectHeaderAttributes attributes, com.db4o.YapWriter
-			 reader, string name)
+			 writer, string name)
 		{
-			int length = yc.ReadFieldCount(reader);
-			for (int i = 0; i < length; i++)
+			com.db4o.TreeInt[] ret = { tree };
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass24
+				(this, name, ret, writer);
+			TraverseFields(yc, writer, attributes, command);
+			return ret[0];
+		}
+
+		private sealed class _AnonymousInnerClass24 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		{
+			public _AnonymousInnerClass24(ObjectMarshaller0 _enclosing, string name, com.db4o.TreeInt[]
+				 ret, com.db4o.YapWriter writer)
 			{
-				if (name.Equals(yc.i_fields[i].GetName()))
+				this._enclosing = _enclosing;
+				this.name = name;
+				this.ret = ret;
+				this.writer = writer;
+			}
+
+			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
+				 containingClass)
+			{
+				if (name.Equals(field.GetName()))
 				{
-					tree = yc.i_fields[i].CollectIDs(_family, tree, reader);
+					ret[0] = field.CollectIDs(this._enclosing._family, ret[0], writer);
 				}
 				else
 				{
-					yc.i_fields[i].IncrementOffset(reader);
+					field.IncrementOffset(writer);
 				}
 			}
-			if (yc.i_ancestor != null)
-			{
-				return CollectFieldIDs(tree, yc.i_ancestor, attributes, reader, name);
-			}
-			return tree;
+
+			private readonly ObjectMarshaller0 _enclosing;
+
+			private readonly string name;
+
+			private readonly com.db4o.TreeInt[] ret;
+
+			private readonly com.db4o.YapWriter writer;
 		}
 
 		public override void DeleteMembers(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
-			 attributes, com.db4o.YapWriter a_bytes, int a_type, bool isUpdate)
+			 attributes, com.db4o.YapWriter writer, int type, bool isUpdate)
 		{
-			int length = yc.ReadFieldCount(a_bytes);
-			for (int i = 0; i < length; i++)
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass38
+				(this, writer, isUpdate);
+			TraverseFields(yc, writer, attributes, command);
+		}
+
+		private sealed class _AnonymousInnerClass38 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		{
+			public _AnonymousInnerClass38(ObjectMarshaller0 _enclosing, com.db4o.YapWriter writer
+				, bool isUpdate)
 			{
-				yc.i_fields[i].Delete(_family, a_bytes, isUpdate);
+				this._enclosing = _enclosing;
+				this.writer = writer;
+				this.isUpdate = isUpdate;
 			}
-			if (yc.i_ancestor != null)
+
+			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
+				 containingClass)
 			{
-				DeleteMembers(yc.i_ancestor, attributes, a_bytes, a_type, isUpdate);
+				field.Delete(this._enclosing._family, writer, isUpdate);
 			}
+
+			private readonly ObjectMarshaller0 _enclosing;
+
+			private readonly com.db4o.YapWriter writer;
+
+			private readonly bool isUpdate;
 		}
 
 		public override bool FindOffset(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
-			 attributes, com.db4o.YapReader a_bytes, com.db4o.YapField a_field)
+			 attributes, com.db4o.YapReader writer, com.db4o.YapField field)
 		{
-			int length = com.db4o.Debug.atHome ? yc.ReadFieldCountSodaAtHome(a_bytes) : yc.ReadFieldCount
-				(a_bytes);
-			for (int i = 0; i < length; i++)
+			bool[] ret = { false };
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass48
+				(this, field, ret, writer);
+			TraverseFields(yc, writer, attributes, command);
+			return ret[0];
+		}
+
+		private sealed class _AnonymousInnerClass48 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		{
+			public _AnonymousInnerClass48(ObjectMarshaller0 _enclosing, com.db4o.YapField field
+				, bool[] ret, com.db4o.YapReader writer)
 			{
-				if (yc.i_fields[i] == a_field)
+				this._enclosing = _enclosing;
+				this.field = field;
+				this.ret = ret;
+				this.writer = writer;
+			}
+
+			public override void ProcessField(com.db4o.YapField curField, bool isNull, com.db4o.YapClass
+				 containingClass)
+			{
+				if (curField == field)
 				{
-					return true;
+					ret[0] = true;
+					this.Cancel();
+					return;
 				}
-				a_bytes.IncrementOffset(yc.i_fields[i].LinkLength());
+				writer.IncrementOffset(curField.LinkLength());
 			}
-			if (yc.i_ancestor == null)
-			{
-				return false;
-			}
-			return FindOffset(yc.i_ancestor, attributes, a_bytes, a_field);
+
+			private readonly ObjectMarshaller0 _enclosing;
+
+			private readonly com.db4o.YapField field;
+
+			private readonly bool[] ret;
+
+			private readonly com.db4o.YapReader writer;
 		}
 
 		protected int HeaderLength()
 		{
-			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.YAPID_LENGTH;
+			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.ID_LENGTH;
 		}
 
 		public override void InstantiateFields(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
-			 attributes, com.db4o.YapObject a_yapObject, object a_onObject, com.db4o.YapWriter
-			 a_bytes)
+			 attributes, com.db4o.YapObject yapObject, object onObject, com.db4o.YapWriter writer
+			)
 		{
-			int length = yc.ReadFieldCount(a_bytes);
-			try
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass67
+				(this, yapObject, onObject, writer);
+			TraverseFields(yc, writer, attributes, command);
+		}
+
+		private sealed class _AnonymousInnerClass67 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		{
+			public _AnonymousInnerClass67(ObjectMarshaller0 _enclosing, com.db4o.YapObject yapObject
+				, object onObject, com.db4o.YapWriter writer)
 			{
-				for (int i = 0; i < length; i++)
+				this._enclosing = _enclosing;
+				this.yapObject = yapObject;
+				this.onObject = onObject;
+				this.writer = writer;
+			}
+
+			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
+				 containingClass)
+			{
+				try
 				{
-					yc.i_fields[i].Instantiate(_family, a_yapObject, a_onObject, a_bytes);
+					field.Instantiate(this._enclosing._family, yapObject, onObject, writer);
 				}
-				if (yc.i_ancestor != null)
+				catch (com.db4o.CorruptionException e)
 				{
-					InstantiateFields(yc.i_ancestor, attributes, a_yapObject, a_onObject, a_bytes);
+					this.Cancel();
 				}
 			}
-			catch (com.db4o.CorruptionException ce)
-			{
-			}
+
+			private readonly ObjectMarshaller0 _enclosing;
+
+			private readonly com.db4o.YapObject yapObject;
+
+			private readonly object onObject;
+
+			private readonly com.db4o.YapWriter writer;
 		}
 
 		private int LinkLength(com.db4o.YapClass yc, com.db4o.YapObject yo)
 		{
-			int length = com.db4o.YapConst.YAPINT_LENGTH;
+			int length = com.db4o.YapConst.INT_LENGTH;
 			if (yc.i_fields != null)
 			{
 				for (int i = 0; i < yc.i_fields.Length; i++)
@@ -129,24 +227,60 @@ namespace com.db4o.inside.marshall
 		}
 
 		private void MarshallDeclaredFields(com.db4o.YapClass yapClass, com.db4o.YapObject
-			 a_yapObject, object a_object, com.db4o.YapWriter a_bytes, bool a_new)
+			 yapObject, object _object, com.db4o.YapWriter writer, bool isNew)
 		{
 			com.db4o.Config4Class config = yapClass.ConfigOrAncestorConfig();
-			a_bytes.WriteInt(yapClass.i_fields.Length);
-			for (int i = 0; i < yapClass.i_fields.Length; i++)
+			com.db4o.Transaction trans = writer.GetTransaction();
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass107
+				(this, writer, trans, _object, yapObject, config, isNew);
+			TraverseFields(yapClass, writer, ReadHeaderAttributes(writer), command);
+		}
+
+		private sealed class _AnonymousInnerClass107 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		{
+			public _AnonymousInnerClass107(ObjectMarshaller0 _enclosing, com.db4o.YapWriter writer
+				, com.db4o.Transaction trans, object _object, com.db4o.YapObject yapObject, com.db4o.Config4Class
+				 config, bool isNew)
 			{
-				object obj = yapClass.i_fields[i].GetOrCreate(a_bytes.GetTransaction(), a_object);
+				this._enclosing = _enclosing;
+				this.writer = writer;
+				this.trans = trans;
+				this._object = _object;
+				this.yapObject = yapObject;
+				this.config = config;
+				this.isNew = isNew;
+			}
+
+			public override int FieldCount(com.db4o.YapClass yc, com.db4o.YapReader reader)
+			{
+				writer.WriteInt(yc.i_fields.Length);
+				return yc.i_fields.Length;
+			}
+
+			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
+				 containingClass)
+			{
+				object obj = field.GetOrCreate(trans, _object);
 				if (obj is com.db4o.Db4oTypeImpl)
 				{
-					obj = ((com.db4o.Db4oTypeImpl)obj).StoredTo(a_bytes.GetTransaction());
+					obj = ((com.db4o.Db4oTypeImpl)obj).StoredTo(trans);
 				}
-				yapClass.i_fields[i].Marshall(a_yapObject, obj, _family, a_bytes, config, a_new);
+				field.Marshall(yapObject, obj, this._enclosing._family, writer, config, isNew);
 			}
-			if (yapClass.i_ancestor != null)
-			{
-				MarshallDeclaredFields(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new
-					);
-			}
+
+			private readonly ObjectMarshaller0 _enclosing;
+
+			private readonly com.db4o.YapWriter writer;
+
+			private readonly com.db4o.Transaction trans;
+
+			private readonly object _object;
+
+			private readonly com.db4o.YapObject yapObject;
+
+			private readonly com.db4o.Config4Class config;
+
+			private readonly bool isNew;
 		}
 
 		protected virtual int MarshalledLength(com.db4o.YapField yf, com.db4o.YapObject yo
@@ -169,7 +303,7 @@ namespace com.db4o.inside.marshall
 			}
 			else
 			{
-				writer.WriteInt(yc.GetID());
+				WriteObjectClassID(writer, yc.GetID());
 				yc.CheckUpdateDepth(writer);
 				Marshall(yc, yo, obj, writer, true);
 			}
@@ -217,15 +351,56 @@ namespace com.db4o.inside.marshall
 			 yc, com.db4o.YapObject yo, com.db4o.inside.marshall.ObjectHeaderAttributes attributes
 			, com.db4o.YapReader reader)
 		{
-			int length = yc.ReadFieldCount(reader);
-			for (int i = 0; i < length; i++)
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass189
+				(this, trans, reader, yo);
+			TraverseFields(yc, reader, attributes, command);
+		}
+
+		private sealed class _AnonymousInnerClass189 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		{
+			public _AnonymousInnerClass189(ObjectMarshaller0 _enclosing, com.db4o.Transaction
+				 trans, com.db4o.YapReader reader, com.db4o.YapObject yo)
 			{
-				yc.i_fields[i].ReadVirtualAttribute(trans, reader, yo);
+				this._enclosing = _enclosing;
+				this.trans = trans;
+				this.reader = reader;
+				this.yo = yo;
 			}
-			if (yc.i_ancestor != null)
+
+			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
+				 containingClass)
 			{
-				ReadVirtualAttributes(trans, yc.i_ancestor, yo, attributes, reader);
+				field.ReadVirtualAttribute(trans, reader, yo);
 			}
+
+			private readonly ObjectMarshaller0 _enclosing;
+
+			private readonly com.db4o.Transaction trans;
+
+			private readonly com.db4o.YapReader reader;
+
+			private readonly com.db4o.YapObject yo;
+		}
+
+		protected override bool IsNull(com.db4o.inside.marshall.ObjectHeaderAttributes attributes
+			, int fieldIndex)
+		{
+			return false;
+		}
+
+		public override void DefragFields(com.db4o.YapClass yapClass, com.db4o.inside.marshall.ObjectHeader
+			 header, com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping
+			 mapping)
+		{
+		}
+
+		public override void WriteObjectClassID(com.db4o.YapReader reader, int id)
+		{
+			reader.WriteInt(id);
+		}
+
+		public override void SkipMarshallerInfo(com.db4o.YapReader reader)
+		{
 		}
 	}
 }

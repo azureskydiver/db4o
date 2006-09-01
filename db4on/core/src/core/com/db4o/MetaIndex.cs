@@ -15,20 +15,20 @@ namespace com.db4o
 
 		public int indexLength;
 
-		public int patchAddress;
+		private const int patchAddress = 0;
 
-		public int patchEntries;
+		private const int patchEntries = 0;
 
-		public int patchLength;
+		private const int patchLength = 0;
 
 		public virtual void Read(com.db4o.YapReader reader)
 		{
 			indexAddress = reader.ReadInt();
 			indexEntries = reader.ReadInt();
 			indexLength = reader.ReadInt();
-			patchAddress = reader.ReadInt();
-			patchEntries = reader.ReadInt();
-			patchLength = reader.ReadInt();
+			reader.ReadInt();
+			reader.ReadInt();
+			reader.ReadInt();
 		}
 
 		public virtual void Write(com.db4o.YapWriter writer)
@@ -44,11 +44,8 @@ namespace com.db4o
 		public virtual void Free(com.db4o.YapFile file)
 		{
 			file.Free(indexAddress, indexLength);
-			file.Free(patchAddress, patchLength);
 			indexAddress = 0;
 			indexLength = 0;
-			patchAddress = 0;
-			patchLength = 0;
 		}
 	}
 }

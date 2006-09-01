@@ -44,9 +44,9 @@ namespace com.db4o.nativequery.optimization
 			{
 				com.db4o.query.Query subQuery = _query;
 				com.db4o.foundation.Iterator4 fieldNameIterator = FieldNames(expression.Left());
-				while (fieldNameIterator.HasNext())
+				while (fieldNameIterator.MoveNext())
 				{
-					subQuery = subQuery.Descend((string)fieldNameIterator.Next());
+					subQuery = subQuery.Descend((string)fieldNameIterator.Current());
 				}
 				com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor visitor = new 
 					com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor(_predicate);

@@ -5,9 +5,9 @@ namespace com.db4o
 	{
 		private bool caseSensitive;
 
-		public QEStringCmp(bool caseSensitive)
+		public QEStringCmp(bool caseSensitive_)
 		{
-			this.caseSensitive = caseSensitive;
+			this.caseSensitive = caseSensitive_;
 		}
 
 		internal override bool Evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
@@ -18,7 +18,7 @@ namespace com.db4o
 				if (a_value is com.db4o.YapReader)
 				{
 					a_value = a_candidate._marshallerFamily._string.ReadFromOwnSlot(a_constraint.i_trans
-						.i_stream, ((com.db4o.YapReader)a_value));
+						.Stream(), ((com.db4o.YapReader)a_value));
 				}
 				string candidate = a_value.ToString();
 				string constraint = a_constraint.i_object.ToString();

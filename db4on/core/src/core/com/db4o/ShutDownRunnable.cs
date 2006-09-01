@@ -8,9 +8,9 @@ namespace com.db4o
 		{
 			dontRemove = true;
 			com.db4o.foundation.Iterator4 i = Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.YapStream)i.Next()).FailedToShutDown();
+				((com.db4o.YapStream)i.Current()).FailedToShutDown();
 			}
 		}
 	}

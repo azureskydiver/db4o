@@ -4,7 +4,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class QConJoin : com.db4o.QCon
 	{
-		public bool i_and;
+		private bool i_and;
 
 		public com.db4o.QCon i_constraint1;
 
@@ -50,9 +50,9 @@ namespace com.db4o
 			if (HasJoins())
 			{
 				com.db4o.foundation.Iterator4 i = IterateJoins();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.Next();
+					com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.Current();
 					a_root.Evaluate(new com.db4o.QPending(qcj, this, res));
 				}
 			}
@@ -66,7 +66,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.QCon GetOtherConstraint(com.db4o.QCon a_constraint)
+		public virtual com.db4o.QCon GetOtherConstraint(com.db4o.QCon a_constraint)
 		{
 			if (a_constraint == i_constraint1)
 			{
@@ -79,7 +79,7 @@ namespace com.db4o
 					return i_constraint1;
 				}
 			}
-			return null;
+			throw new System.ArgumentException();
 		}
 
 		internal override string LogObject()
@@ -112,6 +112,11 @@ namespace com.db4o
 				str += "\n   " + i_constraint2;
 			}
 			return str;
+		}
+
+		public virtual bool IsOr()
+		{
+			return !i_and;
 		}
 	}
 }

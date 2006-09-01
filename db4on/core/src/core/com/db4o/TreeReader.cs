@@ -13,17 +13,18 @@ namespace com.db4o
 
 		private int i_size;
 
-		private bool i_orderOnRead = false;
+		private bool i_orderOnRead;
 
-		internal TreeReader(com.db4o.YapReader a_bytes, com.db4o.Readable a_template)
+		public TreeReader(com.db4o.YapReader a_bytes, com.db4o.Readable a_template) : this
+			(a_bytes, a_template, false)
 		{
-			i_template = a_template;
-			i_bytes = a_bytes;
 		}
 
 		public TreeReader(com.db4o.YapReader a_bytes, com.db4o.Readable a_template, bool 
-			a_orderOnRead) : this(a_bytes, a_template)
+			a_orderOnRead)
 		{
+			i_template = a_template;
+			i_bytes = a_bytes;
 			i_orderOnRead = a_orderOnRead;
 		}
 
@@ -46,14 +47,11 @@ namespace com.db4o
 					}
 					return tree;
 				}
-				else
+				while ((1 << i_levels) < (i_size + 1))
 				{
-					while ((1 << i_levels) < (i_size + 1))
-					{
-						i_levels++;
-					}
-					return LinkUp(null, i_levels);
+					i_levels++;
 				}
+				return LinkUp(null, i_levels);
 			}
 			return null;
 		}
@@ -86,10 +84,7 @@ namespace com.db4o
 					node.CalculateSize();
 					return node;
 				}
-				else
-				{
-					return (com.db4o.Tree)i_template.Read(i_bytes);
-				}
+				return (com.db4o.Tree)i_template.Read(i_bytes);
 			}
 			return null;
 		}

@@ -10,7 +10,7 @@ namespace com.db4o
 			i_value = a_value;
 		}
 
-		internal void Set(bool a_bit)
+		public void Set(bool a_bit)
 		{
 			i_value = i_value * 2;
 			if (a_bit)
@@ -26,7 +26,7 @@ namespace com.db4o
 			return (cmp != i_value);
 		}
 
-		internal byte GetByte()
+		public byte GetByte()
 		{
 			return (byte)i_value;
 		}

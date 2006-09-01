@@ -33,7 +33,7 @@ namespace com.db4o
 
 		private bool _doFinalize = true;
 
-		private byte _blockSize = 1;
+		private int _blockSize = 1;
 
 		private YapClient() : base(null)
 		{
@@ -43,7 +43,7 @@ namespace com.db4o
 		{
 			lock (Lock())
 			{
-				_singleThreaded = i_config.SingleThreadedClient();
+				_singleThreaded = ConfigImpl().SingleThreadedClient();
 				throw new j4o.lang.RuntimeException("This constructor is for Debug.fakeServer use only."
 					);
 				Initialize3();
@@ -52,21 +52,21 @@ namespace com.db4o
 		}
 
 		internal YapClient(com.db4o.foundation.network.YapSocket socket, string user, string
-			 password, bool login) : this()
+			 password_, bool login) : this()
 		{
 			lock (Lock())
 			{
-				_singleThreaded = i_config.SingleThreadedClient();
-				if (password == null)
+				_singleThreaded = ConfigImpl().SingleThreadedClient();
+				if (password_ == null)
 				{
 					throw new System.ArgumentNullException(com.db4o.Messages.Get(56));
 				}
 				if (!login)
 				{
-					password = null;
+					password_ = null;
 				}
 				userName = user;
-				this.password = password;
+				password = password_;
 				i_socket = socket;
 				try
 				{
@@ -102,14 +102,14 @@ namespace com.db4o
 			com.db4o.inside.Exceptions4.ThrowRuntimeException(60);
 		}
 
-		public override byte BlockSize()
+		public virtual void BlockSize(int blockSize)
 		{
-			return _blockSize;
+			_blockSize = blockSize;
 		}
 
-		public override com.db4o.PBootRecord BootRecord()
+		public override byte BlockSize()
 		{
-			return null;
+			return (byte)_blockSize;
 		}
 
 		internal override bool Close2()
@@ -163,12 +163,6 @@ namespace com.db4o
 			i_trans.Commit();
 		}
 
-		internal sealed override com.db4o.ClassIndex CreateClassIndex(com.db4o.YapClass a_yapClass
-			)
-		{
-			return new com.db4o.ClassIndexClient(a_yapClass);
-		}
-
 		internal virtual com.db4o.foundation.network.YapSocket CreateParalellSocket()
 		{
 			com.db4o.Msg.GET_THREAD_ID.Write(this, i_socket);
@@ -199,10 +193,10 @@ namespace com.db4o
 			return new com.db4o.QResultClient(a_ta);
 		}
 
-		internal sealed override void CreateTransaction()
+		public sealed override com.db4o.Transaction NewTransaction(com.db4o.Transaction parentTransaction
+			)
 		{
-			i_systemTrans = new com.db4o.TransactionClient(this, null);
-			i_trans = new com.db4o.TransactionClient(this, i_systemTrans);
+			return new com.db4o.TransactionClient(this, parentTransaction);
 		}
 
 		internal override bool CreateYapClass(com.db4o.YapClass a_yapClass, com.db4o.reflect.ReflectClass
@@ -217,7 +211,7 @@ namespace com.db4o
 			}
 			if (resp.Equals(com.db4o.Msg.FAILED))
 			{
-				if (i_config.ExceptionsOnNotStorable())
+				if (ConfigImpl().ExceptionsOnNotStorable())
 				{
 					throw new com.db4o.ext.ObjectNotStorableException(a_class);
 				}
@@ -245,7 +239,7 @@ namespace com.db4o
 			return true;
 		}
 
-		internal override long CurrentVersion()
+		public override long CurrentVersion()
 		{
 			WriteMsg(com.db4o.Msg.CURRENT_VERSION);
 			return ((com.db4o.MsgD)ExpectedResponse(com.db4o.Msg.ID_LIST)).ReadLong();
@@ -316,7 +310,7 @@ namespace com.db4o
 		{
 			try
 			{
-				return (com.db4o.Msg)messageQueueLock.Run(new _AnonymousInnerClass315(this));
+				return (com.db4o.Msg)messageQueueLock.Run(new _AnonymousInnerClass308(this));
 			}
 			catch (System.Exception ex)
 			{
@@ -325,9 +319,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass315 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass308 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass315(YapClient _enclosing)
+			public _AnonymousInnerClass308(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -340,7 +334,7 @@ namespace com.db4o
 					return message;
 				}
 				this.ThrowOnClosed();
-				this._enclosing.messageQueueLock.Snooze(this._enclosing.i_config.TimeoutClientSocket
+				this._enclosing.messageQueueLock.Snooze(this._enclosing.ConfigImpl().TimeoutClientSocket
 					());
 				this.ThrowOnClosed();
 				return this.RetrieveMessage();
@@ -348,7 +342,8 @@ namespace com.db4o
 
 			private void ThrowOnClosed()
 			{
-				if (this._enclosing._readerThread.IsClosed())
+				if (this._enclosing._readerThread == null || this._enclosing._readerThread.IsClosed
+					())
 				{
 					this._enclosing._doFinalize = false;
 					com.db4o.inside.Exceptions4.ThrowRuntimeException(20, this._enclosing.Name());
@@ -429,7 +424,7 @@ namespace com.db4o
 			return null;
 		}
 
-		internal override bool NeedsLockFileThread()
+		public override bool NeedsLockFileThread()
 		{
 			return false;
 		}
@@ -476,7 +471,7 @@ namespace com.db4o
 					throw new System.IO.IOException(com.db4o.Messages.Get(42));
 				}
 				com.db4o.YapWriter payLoad = msg.GetPayLoad();
-				_blockSize = (byte)payLoad.ReadInt();
+				_blockSize = payLoad.ReadInt();
 				int doEncrypt = payLoad.ReadInt();
 				if (doEncrypt == 0)
 				{
@@ -687,7 +682,7 @@ namespace com.db4o
 			remainingIDs = 0;
 			Initialize0();
 			Initialize1();
-			CreateTransaction();
+			InitializeTransactions();
 			ReadThis();
 		}
 
@@ -708,7 +703,8 @@ namespace com.db4o
 			}
 		}
 
-		internal sealed override void SetDirty(com.db4o.UseSystemTransaction a_object)
+		public sealed override void SetDirtyInSystemTransaction(com.db4o.YapMeta a_object
+			)
 		{
 		}
 

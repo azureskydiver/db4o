@@ -8,7 +8,7 @@ namespace com.db4o
 			int classID = _payLoad.ReadInt();
 			int id = _payLoad.ReadInt();
 			com.db4o.Transaction trans = GetTransaction();
-			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.YapStream stream = trans.Stream();
 			lock (stream.i_lock)
 			{
 				trans.DontDelete(classID, id);

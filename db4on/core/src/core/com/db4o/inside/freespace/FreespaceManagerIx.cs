@@ -46,7 +46,7 @@ namespace com.db4o.inside.freespace
 				_slotAddress, SlotLength());
 			_addressIx._index._metaIndex.Write(writer);
 			_lengthIx._index._metaIndex.Write(writer);
-			if (_file.i_config.FlushFileBuffers())
+			if (_file.ConfigImpl().FlushFileBuffers())
 			{
 				_file.SyncFiles();
 			}

@@ -20,9 +20,13 @@ namespace com.db4o.config
 
 		public WildcardAlias(string storedPattern, string runtimePattern)
 		{
-			if (null == storedPattern || null == runtimePattern)
+			if (null == storedPattern)
 			{
-				throw new System.ArgumentException();
+				throw new System.ArgumentNullException("storedPattern");
+			}
+			if (null == runtimePattern)
+			{
+				throw new System.ArgumentNullException("runtimePattern");
 			}
 			_storedPattern = new com.db4o.config.WildcardAlias.WildcardPattern(storedPattern);
 			_runtimePattern = new com.db4o.config.WildcardAlias.WildcardPattern(runtimePattern

@@ -15,7 +15,7 @@ namespace com.db4o
 
 		public override void IndexBitMap(bool[] bits)
 		{
-			bits[com.db4o.inside.ix.IxTraverser.SMALLER] = true;
+			bits[com.db4o.QE.SMALLER] = true;
 		}
 	}
 }

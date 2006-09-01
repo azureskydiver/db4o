@@ -2,8 +2,8 @@ namespace com.db4o
 {
 	internal class YapFieldUUID : com.db4o.YapFieldVirtual
 	{
-		private const int LINK_LENGTH = com.db4o.YapConst.YAPLONG_LENGTH + com.db4o.YapConst
-			.YAPID_LENGTH;
+		private const int LINK_LENGTH = com.db4o.YapConst.LONG_LENGTH + com.db4o.YapConst
+			.ID_LENGTH;
 
 		internal YapFieldUUID(com.db4o.YapStream stream) : base()
 		{
@@ -25,11 +25,11 @@ namespace com.db4o
 			}
 			else
 			{
-				writer.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+				writer.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
 			}
 			if (uuid == 0)
 			{
-				uuid = yf.BootRecord().NewUUID();
+				uuid = yf.GenerateTimeStampId();
 			}
 			com.db4o.YLong.WriteLong(uuid, writer);
 			if (isnew)
@@ -46,7 +46,7 @@ namespace com.db4o
 				a_bytes.IncrementOffset(LinkLength());
 				return;
 			}
-			a_bytes.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+			a_bytes.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
 			long longPart = com.db4o.YLong.ReadLong(a_bytes);
 			if (longPart > 0)
 			{
@@ -58,20 +58,25 @@ namespace com.db4o
 			}
 		}
 
-		internal override com.db4o.inside.ix.Index4 GetIndex(com.db4o.Transaction a_trans
+		internal override com.db4o.inside.ix.Index4 GetOldIndex(com.db4o.Transaction a_trans
 			)
 		{
-			if (i_index != null)
+			if (_oldIndex != null)
 			{
-				return i_index;
+				return _oldIndex;
 			}
-			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
-			if (i_index == null)
+			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.Stream();
+			if (_oldIndex == null)
 			{
-				i_index = new com.db4o.inside.ix.Index4(stream.GetSystemTransaction(), GetHandler
-					(), stream.BootRecord().GetUUIDMetaIndex(), false);
+				com.db4o.MetaIndex metaIndex = stream.GetUUIDMetaIndex();
+				if (metaIndex == null)
+				{
+					return null;
+				}
+				_oldIndex = new com.db4o.inside.ix.Index4(stream.GetSystemTransaction(), GetHandler
+					(), metaIndex, false);
 			}
-			return i_index;
+			return _oldIndex;
 		}
 
 		internal override bool HasIndex()
@@ -83,7 +88,7 @@ namespace com.db4o
 			 a_yapObject, com.db4o.YapReader a_bytes)
 		{
 			int dbID = a_bytes.ReadInt();
-			com.db4o.YapStream stream = a_trans.i_stream;
+			com.db4o.YapStream stream = a_trans.Stream();
 			stream.ShowInternalClasses(true);
 			com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)stream.GetByID2(a_trans
 				, dbID);
@@ -128,12 +133,8 @@ namespace com.db4o
 						attr.i_database = db;
 						if (stream is com.db4o.YapFile)
 						{
-							com.db4o.PBootRecord br = stream.BootRecord();
-							if (br != null)
-							{
-								attr.i_uuid = br.NewUUID();
-								indexEntry = true;
-							}
+							attr.i_uuid = stream.GenerateTimeStampId();
+							indexEntry = true;
 						}
 					}
 					db = attr.i_database;

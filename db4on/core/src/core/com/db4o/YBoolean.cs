@@ -8,8 +8,6 @@ namespace com.db4o
 
 		private const byte FALSE = (byte)'F';
 
-		private const byte NULL = (byte)'N';
-
 		private static readonly bool i_primitive = false;
 
 		public YBoolean(com.db4o.YapStream stream) : base(stream)

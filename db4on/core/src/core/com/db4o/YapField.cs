@@ -29,16 +29,18 @@ namespace com.db4o
 
 		private const int AVAILABLE = 1;
 
-		protected com.db4o.inside.ix.Index4 i_index;
+		protected com.db4o.inside.ix.Index4 _oldIndex;
 
 		private com.db4o.Config4Field i_config;
 
 		private com.db4o.Db4oTypeImpl i_db4oType;
 
+		private com.db4o.inside.btree.BTree _index;
+
 		internal static readonly com.db4o.YapField[] EMPTY_ARRAY = new com.db4o.YapField[
 			0];
 
-		internal YapField(com.db4o.YapClass a_yapClass)
+		public YapField(com.db4o.YapClass a_yapClass)
 		{
 			i_yapClass = a_yapClass;
 		}
@@ -47,7 +49,7 @@ namespace com.db4o
 			a_translator)
 		{
 			i_yapClass = a_yapClass;
-			Init(a_yapClass, j4o.lang.Class.GetClassForObject(a_translator).GetName(), 0);
+			Init(a_yapClass, j4o.lang.Class.GetClassForObject(a_translator).GetName());
 			i_state = AVAILABLE;
 			com.db4o.YapStream stream = GetStream();
 			i_handler = stream.i_handlers.HandlerForClass(stream, stream.Reflector().ForClass
@@ -57,7 +59,7 @@ namespace com.db4o
 		internal YapField(com.db4o.YapClass a_yapClass, com.db4o.reflect.ReflectField a_field
 			, com.db4o.TypeHandler4 a_handler)
 		{
-			Init(a_yapClass, a_field.GetName(), 0);
+			Init(a_yapClass, a_field.GetName());
 			i_javaField = a_field;
 			i_javaField.SetAccessible();
 			i_handler = a_handler;
@@ -72,14 +74,14 @@ namespace com.db4o
 		}
 
 		public virtual void AddFieldIndex(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
-			 a_writer, bool a_new)
+			 writer, bool a_new)
 		{
 			if (!HasIndex())
 			{
-				a_writer.IncrementOffset(LinkLength());
+				writer.IncrementOffset(LinkLength());
 				return;
 			}
-			AddIndexEntry(a_writer, ReadIndexEntry(mf, a_writer));
+			AddIndexEntry(writer, ReadIndexEntry(mf, writer));
 		}
 
 		protected virtual void AddIndexEntry(com.db4o.YapWriter a_bytes, object indexEntry
@@ -88,17 +90,32 @@ namespace com.db4o
 			AddIndexEntry(a_bytes.GetTransaction(), a_bytes.GetID(), indexEntry);
 		}
 
-		public virtual void AddIndexEntry(com.db4o.Transaction a_trans, int parentID, object
+		public virtual void AddIndexEntry(com.db4o.Transaction trans, int parentID, object
 			 indexEntry)
 		{
 			if (!HasIndex())
 			{
 				return;
 			}
-			i_handler.PrepareComparison(a_trans, indexEntry);
-			com.db4o.inside.ix.IndexTransaction ift = GetIndex(a_trans).DirtyIndexTransaction
-				(a_trans);
-			ift.Add(parentID, indexEntry);
+			if (com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX)
+			{
+				if (_index == null)
+				{
+					return;
+				}
+				_index.Add(trans, new com.db4o.inside.btree.FieldIndexKey(parentID, indexEntry));
+			}
+			if (com.db4o.inside.marshall.MarshallerFamily.OLD_FIELD_INDEX)
+			{
+				com.db4o.inside.ix.Index4 index = GetOldIndex(trans);
+				if (index == null)
+				{
+					return;
+				}
+				i_handler.PrepareComparison(trans, indexEntry);
+				com.db4o.inside.ix.IndexTransaction ift = index.DirtyIndexTransaction(trans);
+				ift.Add(parentID, indexEntry);
+			}
 		}
 
 		public virtual bool CanUseNullBitmap()
@@ -126,10 +143,26 @@ namespace com.db4o
 			{
 				return;
 			}
-			i_handler.PrepareComparison(indexEntry);
-			com.db4o.inside.ix.IndexTransaction ift = GetIndex(trans).DirtyIndexTransaction(trans
-				);
-			ift.Remove(parentID, indexEntry);
+			if (com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX)
+			{
+				if (_index == null)
+				{
+					return;
+				}
+				_index.Remove(trans, new com.db4o.inside.btree.FieldIndexKey(parentID, indexEntry
+					));
+			}
+			if (com.db4o.inside.marshall.MarshallerFamily.OLD_FIELD_INDEX)
+			{
+				com.db4o.inside.ix.Index4 index = GetOldIndex(trans);
+				if (index == null)
+				{
+					return;
+				}
+				i_handler.PrepareComparison(indexEntry);
+				com.db4o.inside.ix.IndexTransaction ift = index.DirtyIndexTransaction(trans);
+				ift.Remove(parentID, indexEntry);
+			}
 		}
 
 		public virtual bool Alive()
@@ -202,8 +235,7 @@ namespace com.db4o
 			return i_handler.Coerce(claxx, obj);
 		}
 
-		public virtual bool CanLoadByIndex(com.db4o.QConObject a_qco, com.db4o.QE a_evaluator
-			)
+		public bool CanLoadByIndex()
 		{
 			if (i_handler is com.db4o.YapClass)
 			{
@@ -211,10 +243,6 @@ namespace com.db4o
 				if (yc.IsArray())
 				{
 					return false;
-				}
-				if (a_evaluator is com.db4o.QEIdentity)
-				{
-					yc.i_lastID = a_qco.GetObjectID();
 				}
 			}
 			return true;
@@ -258,11 +286,11 @@ namespace com.db4o
 			if (obj != null)
 			{
 				com.db4o.foundation.Collection4 objs = com.db4o.Platform4.FlattenCollection(a_trans
-					.i_stream, obj);
+					.Stream(), obj);
 				com.db4o.foundation.Iterator4 j = objs.Iterator();
-				while (j.HasNext())
+				while (j.MoveNext())
 				{
-					obj = j.Next();
+					obj = j.Current();
 					if (obj != null)
 					{
 						if (i_isPrimitive)
@@ -370,7 +398,7 @@ namespace com.db4o
 				IncrementOffset(a_bytes);
 				return;
 			}
-			if (i_index != null)
+			if (_oldIndex != null)
 			{
 				int offset = a_bytes._offset;
 				object obj = null;
@@ -475,19 +503,25 @@ namespace com.db4o
 			return i_handler.GetYapClass(a_stream);
 		}
 
-		internal virtual com.db4o.inside.ix.Index4 GetIndex(com.db4o.Transaction a_trans)
+		internal virtual com.db4o.inside.ix.Index4 GetOldIndex(com.db4o.Transaction a_trans
+			)
 		{
-			return i_index;
+			return _oldIndex;
 		}
 
-		internal virtual com.db4o.Tree GetIndexRoot(com.db4o.Transaction a_trans)
+		internal virtual com.db4o.Tree GetOldIndexRoot(com.db4o.Transaction a_trans)
 		{
-			return GetIndex(a_trans).IndexTransactionFor(a_trans).GetRoot();
+			return GetOldIndex(a_trans).IndexTransactionFor(a_trans).GetRoot();
 		}
 
-		internal virtual com.db4o.TypeHandler4 GetHandler()
+		public virtual com.db4o.TypeHandler4 GetHandler()
 		{
 			return i_handler;
+		}
+
+		public virtual int GetHandlerID()
+		{
+			return i_handlerID;
 		}
 
 		public virtual object GetOn(com.db4o.Transaction a_trans, object a_OnObject)
@@ -534,13 +568,17 @@ namespace com.db4o
 			return null;
 		}
 
-		internal virtual com.db4o.YapClass GetParentYapClass()
+		public virtual com.db4o.YapClass GetParentYapClass()
 		{
 			return i_yapClass;
 		}
 
 		public virtual com.db4o.reflect.ReflectClass GetStoredType()
 		{
+			if (i_handler == null)
+			{
+				return null;
+			}
 			return i_handler.ClassReflector();
 		}
 
@@ -555,7 +593,15 @@ namespace com.db4o
 
 		internal virtual bool HasIndex()
 		{
-			return i_index != null;
+			if (com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX)
+			{
+				return _index != null;
+			}
+			if (com.db4o.inside.marshall.MarshallerFamily.OLD_FIELD_INDEX)
+			{
+				return _oldIndex != null;
+			}
+			return false;
 		}
 
 		public void IncrementOffset(com.db4o.YapReader a_bytes)
@@ -563,8 +609,7 @@ namespace com.db4o
 			a_bytes.IncrementOffset(LinkLength());
 		}
 
-		internal virtual void Init(com.db4o.YapClass a_yapClass, string a_name, int syntheticforJad
-			)
+		public void Init(com.db4o.YapClass a_yapClass, string a_name)
 		{
 			i_yapClass = a_yapClass;
 			i_name = a_name;
@@ -572,6 +617,15 @@ namespace com.db4o
 			{
 				i_config = a_yapClass.i_config.ConfigField(a_name);
 			}
+		}
+
+		public virtual void Init(int handlerID, bool isPrimitive, bool isArray, bool isNArray
+			)
+		{
+			i_handlerID = handlerID;
+			i_isPrimitive = isPrimitive;
+			i_isArray = isArray;
+			i_isNArray = isNArray;
 		}
 
 		internal virtual void InitConfigOnUp(com.db4o.Transaction trans)
@@ -582,12 +636,12 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void InitIndex(com.db4o.Transaction systemTrans, com.db4o.MetaIndex
+		internal virtual void InitOldIndex(com.db4o.Transaction systemTrans, com.db4o.MetaIndex
 			 metaIndex)
 		{
 			if (SupportsIndex())
 			{
-				i_index = new com.db4o.inside.ix.Index4(systemTrans, GetHandler(), metaIndex, i_handler
+				_oldIndex = new com.db4o.inside.ix.Index4(systemTrans, GetHandler(), metaIndex, i_handler
 					.IndexNullHandling());
 			}
 		}
@@ -629,7 +683,7 @@ namespace com.db4o
 			Alive();
 			if (i_handler == null)
 			{
-				return com.db4o.YapConst.YAPID_LENGTH;
+				return com.db4o.YapConst.ID_LENGTH;
 			}
 			return i_handler.LinkLength();
 		}
@@ -640,29 +694,15 @@ namespace com.db4o
 			Alive();
 			if (i_handler == null)
 			{
-				header.AddBaseLength(com.db4o.YapConst.YAPID_LENGTH);
+				header.AddBaseLength(com.db4o.YapConst.ID_LENGTH);
 				return;
 			}
 			i_handler.CalculateLengths(trans, header, true, obj, true);
 		}
 
-		internal virtual void LoadHandler(com.db4o.YapStream a_stream)
+		public virtual void LoadHandler(com.db4o.YapStream a_stream)
 		{
-			if (i_handlerID < 1)
-			{
-				i_handler = null;
-			}
-			else
-			{
-				if (i_handlerID <= a_stream.i_handlers.MaxTypeID())
-				{
-					i_handler = a_stream.i_handlers.GetHandler(i_handlerID);
-				}
-				else
-				{
-					i_handler = a_stream.GetYapClass(i_handlerID);
-				}
-			}
+			i_handler = a_stream.HandlerByID(i_handlerID);
 		}
 
 		private void LoadJavaField()
@@ -732,9 +772,14 @@ namespace com.db4o
 			AddIndexEntry(writer, indexEntry);
 		}
 
-		internal virtual int OwnLength(com.db4o.YapStream a_stream)
+		public virtual bool NeedsArrayAndPrimitiveInfo()
 		{
-			return a_stream.StringIO().ShortLength(i_name) + 1 + com.db4o.YapConst.YAPID_LENGTH;
+			return true;
+		}
+
+		public virtual bool NeedsHandlerId()
+		{
+			return true;
 		}
 
 		internal virtual com.db4o.YapComparable PrepareComparison(object obj)
@@ -774,38 +819,6 @@ namespace com.db4o
 			return i_handler.ReadQuery(a_trans, mf, true, a_reader, false);
 		}
 
-		internal virtual com.db4o.YapField ReadThis(com.db4o.YapStream a_stream, com.db4o.YapReader
-			 a_reader)
-		{
-			try
-			{
-				i_name = com.db4o.inside.marshall.StringMarshaller.ReadShort(a_stream, a_reader);
-			}
-			catch (com.db4o.CorruptionException ce)
-			{
-				i_handler = null;
-				return this;
-			}
-			if (i_name.IndexOf(com.db4o.YapConst.VIRTUAL_FIELD_PREFIX) == 0)
-			{
-				com.db4o.YapFieldVirtual[] virtuals = a_stream.i_handlers.i_virtualFields;
-				for (int i = 0; i < virtuals.Length; i++)
-				{
-					if (i_name.Equals(virtuals[i].i_name))
-					{
-						return virtuals[i];
-					}
-				}
-			}
-			Init(i_yapClass, i_name, 0);
-			i_handlerID = a_reader.ReadInt();
-			com.db4o.YapBit yb = new com.db4o.YapBit(a_reader.ReadByte());
-			i_isPrimitive = yb.Get();
-			i_isArray = yb.Get();
-			i_isNArray = yb.Get();
-			return this;
-		}
-
 		public virtual void ReadVirtualAttribute(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader, com.db4o.YapObject a_yapObject)
 		{
@@ -842,7 +855,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void SetArrayPosition(int a_index)
+		public virtual void SetArrayPosition(int a_index)
 		{
 			i_arrayPosition = a_index;
 		}
@@ -888,15 +901,15 @@ namespace com.db4o
 			lock (stream.Lock())
 			{
 				com.db4o.Transaction trans = stream.GetTransaction();
-				com.db4o.Tree tree = GetIndex(trans).IndexTransactionFor(trans).GetRoot();
-				com.db4o.Tree.Traverse(tree, new _AnonymousInnerClass788(this, userVisitor, trans
+				com.db4o.Tree tree = GetOldIndex(trans).IndexTransactionFor(trans).GetRoot();
+				com.db4o.Tree.Traverse(tree, new _AnonymousInnerClass809(this, userVisitor, trans
 					));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass788 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass809 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass788(YapField _enclosing, com.db4o.foundation.Visitor4 
+			public _AnonymousInnerClass809(YapField _enclosing, com.db4o.foundation.Visitor4 
 				userVisitor, com.db4o.Transaction trans)
 			{
 				this._enclosing = _enclosing;
@@ -907,12 +920,12 @@ namespace com.db4o
 			public void Visit(object obj)
 			{
 				com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)obj;
-				ixTree.VisitAll(new _AnonymousInnerClass791(this, userVisitor, trans));
+				ixTree.VisitAll(new _AnonymousInnerClass812(this, userVisitor, trans));
 			}
 
-			private sealed class _AnonymousInnerClass791 : com.db4o.foundation.IntObjectVisitor
+			private sealed class _AnonymousInnerClass812 : com.db4o.foundation.IntObjectVisitor
 			{
-				public _AnonymousInnerClass791(_AnonymousInnerClass788 _enclosing, com.db4o.foundation.Visitor4
+				public _AnonymousInnerClass812(_AnonymousInnerClass809 _enclosing, com.db4o.foundation.Visitor4
 					 userVisitor, com.db4o.Transaction trans)
 				{
 					this._enclosing = _enclosing;
@@ -926,7 +939,7 @@ namespace com.db4o
 						anObject));
 				}
 
-				private readonly _AnonymousInnerClass788 _enclosing;
+				private readonly _AnonymousInnerClass809 _enclosing;
 
 				private readonly com.db4o.foundation.Visitor4 userVisitor;
 
@@ -955,38 +968,6 @@ namespace com.db4o
 				}
 			}
 			return a_handler;
-		}
-
-		internal virtual void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
-			, com.db4o.YapClass a_onClass)
-		{
-			Alive();
-			a_writer.WriteShortString(trans, i_name);
-			if (i_handler is com.db4o.YapClass)
-			{
-				if (i_handler.GetID() == 0)
-				{
-					trans.i_stream.NeedsUpdate(a_onClass);
-				}
-			}
-			int wrapperID = 0;
-			try
-			{
-				wrapperID = i_handler.GetID();
-			}
-			catch (System.Exception e)
-			{
-			}
-			if (wrapperID == 0)
-			{
-				wrapperID = i_handlerID;
-			}
-			a_writer.WriteInt(wrapperID);
-			com.db4o.YapBit yb = new com.db4o.YapBit(0);
-			yb.Set(i_handler is com.db4o.YapArrayN);
-			yb.Set(i_handler is com.db4o.YapArray);
-			yb.Set(i_isPrimitive);
-			a_writer.Append(yb.GetByte());
 		}
 
 		public override string ToString()
@@ -1029,6 +1010,36 @@ namespace com.db4o
 				}
 			}
 			return str;
+		}
+
+		public virtual void InitIndex(com.db4o.Transaction systemTrans)
+		{
+			InitIndex(systemTrans, 0);
+		}
+
+		public virtual void InitIndex(com.db4o.Transaction systemTrans, int id)
+		{
+			if (_index != null)
+			{
+				throw new System.InvalidOperationException();
+			}
+			_index = new com.db4o.inside.btree.BTree(systemTrans, id, new com.db4o.inside.btree.FieldIndexKeyHandler
+				(systemTrans.Stream(), i_handler));
+		}
+
+		public virtual com.db4o.inside.btree.BTree GetIndex()
+		{
+			return _index;
+		}
+
+		public virtual bool IsVirtual()
+		{
+			return false;
+		}
+
+		public virtual bool IsPrimitive()
+		{
+			return i_isPrimitive;
 		}
 	}
 }

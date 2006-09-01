@@ -49,7 +49,7 @@ namespace com.db4o
 		{
 			base.Marshall();
 			int[] id = { 0 };
-			i_marshalledEvaluation = i_trans.i_stream.Marshall(com.db4o.Platform4.WrapEvaluation
+			i_marshalledEvaluation = i_trans.Stream().Marshall(com.db4o.Platform4.WrapEvaluation
 				(i_evaluation), id);
 			i_marshalledID = id[0];
 		}
@@ -59,7 +59,7 @@ namespace com.db4o
 			if (i_trans == null)
 			{
 				base.Unmarshall(a_trans);
-				i_evaluation = i_trans.i_stream.Unmarshall(i_marshalledEvaluation, i_marshalledID
+				i_evaluation = i_trans.Stream().Unmarshall(i_marshalledEvaluation, i_marshalledID
 					);
 			}
 		}

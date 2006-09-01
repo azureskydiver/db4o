@@ -30,6 +30,8 @@ namespace com.db4o.io.crypt
 
 		private com.db4o.io.crypt.XTEA.IterationSpec _iterat;
 
+		private const bool DEBUG = false;
+
 		public XTeaEncryptionFileAdapter(string password) : this(new com.db4o.io.RandomAccessFileAdapter
 			(), password, com.db4o.io.crypt.XTEA.ITERATIONS32)
 		{

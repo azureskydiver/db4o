@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal abstract class YapFieldVirtual : com.db4o.YapField
+	/// <exclude></exclude>
+	public abstract class YapFieldVirtual : com.db4o.YapField
 	{
 		internal YapFieldVirtual() : base(null)
 		{
@@ -49,17 +50,22 @@ namespace com.db4o
 			return null;
 		}
 
-		internal override int OwnLength(com.db4o.YapStream a_stream)
+		public override bool NeedsArrayAndPrimitiveInfo()
 		{
-			return a_stream.StringIO().ShortLength(i_name);
+			return false;
 		}
 
-		internal override void InitIndex(com.db4o.Transaction systemTrans, com.db4o.MetaIndex
+		public override bool NeedsHandlerId()
+		{
+			return false;
+		}
+
+		internal override void InitOldIndex(com.db4o.Transaction systemTrans, com.db4o.MetaIndex
 			 metaIndex)
 		{
-			if (i_index == null)
+			if (_oldIndex == null)
 			{
-				i_index = new com.db4o.inside.ix.Index4(systemTrans, GetHandler(), metaIndex, false
+				_oldIndex = new com.db4o.inside.ix.Index4(systemTrans, GetHandler(), metaIndex, false
 					);
 			}
 		}
@@ -77,7 +83,7 @@ namespace com.db4o
 		internal abstract void Instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
 			 a_yapObject, com.db4o.YapReader a_bytes);
 
-		internal override void LoadHandler(com.db4o.YapStream a_stream)
+		public override void LoadHandler(com.db4o.YapStream a_stream)
 		{
 		}
 
@@ -91,7 +97,7 @@ namespace com.db4o
 				MarshallIgnore(a_bytes);
 				return;
 			}
-			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.YapStream stream = trans.Stream();
 			com.db4o.YapHandlers handlers = stream.i_handlers;
 			bool migrating = false;
 			if (stream._replicationCallState != com.db4o.YapConst.NONE)
@@ -170,10 +176,9 @@ namespace com.db4o
 			Instantiate1(a_trans, a_yapObject, a_reader);
 		}
 
-		internal override void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
-			, com.db4o.YapClass a_onClass)
+		public override bool IsVirtual()
 		{
-			a_writer.WriteShortString(trans, i_name);
+			return true;
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace com.db4o
 		{
 			com.db4o.YapFile stream = (com.db4o.YapFile)GetStream();
 			com.db4o.MsgD reply = com.db4o.Msg.ID_LIST.GetWriterForLength(GetTransaction(), com.db4o.YapConst
-				.YAPINT_LENGTH * com.db4o.YapConst.PREFETCH_ID_COUNT);
+				.INT_LENGTH * com.db4o.YapConst.PREFETCH_ID_COUNT);
 			lock (stream.i_lock)
 			{
 				for (int i = 0; i < com.db4o.YapConst.PREFETCH_ID_COUNT; i++)

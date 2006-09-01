@@ -124,7 +124,7 @@ namespace com.db4o.inside.ix
 
 		internal virtual int SlotLength()
 		{
-			return Handler().LinkLength() + com.db4o.YapConst.YAPINT_LENGTH;
+			return Handler().LinkLength() + com.db4o.YapConst.INT_LENGTH;
 		}
 
 		internal com.db4o.YapFile Stream()

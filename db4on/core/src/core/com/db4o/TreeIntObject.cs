@@ -76,12 +76,9 @@ namespace com.db4o
 		{
 			if (_object == null)
 			{
-				return com.db4o.YapConst.YAPINT_LENGTH * 2;
+				return com.db4o.YapConst.INT_LENGTH * 2;
 			}
-			else
-			{
-				return com.db4o.YapConst.YAPINT_LENGTH + ((com.db4o.Readable)_object).ByteCount();
-			}
+			return com.db4o.YapConst.INT_LENGTH + ((com.db4o.Readable)_object).ByteCount();
 		}
 
 		internal override bool VariableLength()

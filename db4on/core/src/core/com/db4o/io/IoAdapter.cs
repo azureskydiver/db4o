@@ -17,6 +17,10 @@ namespace com.db4o.io
 		/// <summary>converts address and address offset to an absolute address</summary>
 		protected long RegularAddress(int blockAddress, int blockAddressOffset)
 		{
+			if (0 == _blockSize)
+			{
+				throw new System.InvalidOperationException();
+			}
 			return (long)blockAddress * _blockSize + blockAddressOffset;
 		}
 
@@ -43,6 +47,10 @@ namespace com.db4o.io
 		/// <summary>outside call to set the block size of this adapter</summary>
 		public virtual void BlockSize(int blockSize)
 		{
+			if (blockSize < 1)
+			{
+				throw new System.ArgumentException();
+			}
 			_blockSize = blockSize;
 		}
 

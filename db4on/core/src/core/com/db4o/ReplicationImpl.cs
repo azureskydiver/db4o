@@ -88,21 +88,11 @@ namespace com.db4o
 					_peerA.Commit();
 					_peerB.Commit();
 					EndReplication();
-					long versionA = _peerA.CurrentVersion() - 1;
-					long versionB = _peerB.CurrentVersion() - 1;
-					_record._version = versionB;
-					if (versionA > versionB)
-					{
-						_record._version = versionA;
-						_peerB.RaiseVersion(_record._version + 1);
-					}
-					else
-					{
-						if (versionB > versionA)
-						{
-							_peerA.RaiseVersion(_record._version + 1);
-						}
-					}
+					long versionA = _peerA.CurrentVersion();
+					long versionB = _peerB.CurrentVersion();
+					_record._version = (versionA > versionB) ? versionA : versionB;
+					_peerA.RaiseVersion(_record._version + 1);
+					_peerB.RaiseVersion(_record._version + 1);
 					_record.Store(_peerA);
 					_record.Store(_peerB);
 				}

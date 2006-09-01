@@ -24,14 +24,14 @@ namespace com.db4o
 			{
 				CascadeActivation(a_trans, a_onObject, a_depth, false);
 			}
-			SetOn(a_trans.i_stream, a_onObject, null);
+			SetOn(a_trans.Stream(), a_onObject, null);
 		}
 
 		public override object GetOn(com.db4o.Transaction a_trans, object a_OnObject)
 		{
 			try
 			{
-				return i_translator.OnStore(a_trans.i_stream, a_OnObject);
+				return i_translator.OnStore(a_trans.Stream(), a_OnObject);
 			}
 			catch (System.Exception t)
 			{
@@ -49,7 +49,7 @@ namespace com.db4o
 			 a_yapObject, object a_onObject, com.db4o.YapWriter a_bytes)
 		{
 			object toSet = Read(mf, a_bytes);
-			a_bytes.GetStream().Activate2(a_bytes.GetTransaction(), toSet, a_bytes.GetInstantiationDepth
+			a_bytes.GetStream().Activate1(a_bytes.GetTransaction(), toSet, a_bytes.GetInstantiationDepth
 				());
 			SetOn(a_bytes.GetStream(), a_onObject, toSet);
 		}

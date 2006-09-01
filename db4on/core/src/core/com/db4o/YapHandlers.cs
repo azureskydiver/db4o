@@ -34,7 +34,7 @@ namespace com.db4o
 
 		public const int ANY_ID = 11;
 
-		internal readonly com.db4o.YapFieldVirtual[] i_virtualFields = new com.db4o.YapFieldVirtual
+		public readonly com.db4o.YapFieldVirtual[] i_virtualFields = new com.db4o.YapFieldVirtual
 			[2];
 
 		private readonly com.db4o.foundation.Hashtable4 i_classByClass = new com.db4o.foundation.Hashtable4
@@ -74,8 +74,6 @@ namespace com.db4o
 
 		internal com.db4o.reflect.ReflectClass ICLASS_OBJECTCONTAINER;
 
-		internal com.db4o.reflect.ReflectClass ICLASS_PBOOTRECORD;
-
 		internal com.db4o.reflect.ReflectClass ICLASS_STATICCLASS;
 
 		internal com.db4o.reflect.ReflectClass ICLASS_STRING;
@@ -88,7 +86,7 @@ namespace com.db4o
 			_masterStream = a_stream;
 			a_stream.i_handlers = this;
 			_reflector = reflector;
-			_diagnosticProcessor = a_stream.i_config.DiagnosticProcessor();
+			_diagnosticProcessor = a_stream.ConfigImpl().DiagnosticProcessor();
 			InitClassReflectors(reflector);
 			i_indexes = new com.db4o.YapIndexes(a_stream);
 			i_virtualFields[0] = i_indexes.i_fieldVersion;
@@ -125,7 +123,7 @@ namespace com.db4o
 			{
 				int id = i + 1;
 				i_yapClasses[i] = new com.db4o.YapClassPrimitive(a_stream, i_handlers[i]);
-				i_yapClasses[i].i_id = id;
+				i_yapClasses[i].SetID(id);
 				i_classByClass.Put(i_handlers[i].ClassReflector(), i_yapClasses[i]);
 				if (i < ANY_INDEX)
 				{
@@ -142,8 +140,8 @@ namespace com.db4o
 				reflector.RegisterPrimitiveClass(id, i_platformTypes[i].GetName(), converter);
 				i_handlers[idx] = i_platformTypes[i];
 				i_yapClasses[idx] = new com.db4o.YapClassPrimitive(a_stream, i_platformTypes[i]);
-				i_yapClasses[idx].i_id = id;
-				if (i_yapClasses[idx].i_id > i_maxTypeID)
+				i_yapClasses[idx].SetID(id);
+				if (id > i_maxTypeID)
 				{
 					i_maxTypeID = idx;
 				}
@@ -151,11 +149,11 @@ namespace com.db4o
 			}
 			i_anyArray = new com.db4o.YapClassPrimitive(a_stream, new com.db4o.YapArray(_masterStream
 				, i_handlers[ANY_INDEX], false));
-			i_anyArray.i_id = ANY_ARRAY_ID;
+			i_anyArray.SetID(ANY_ARRAY_ID);
 			i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 			i_anyArrayN = new com.db4o.YapClassPrimitive(a_stream, new com.db4o.YapArrayN(_masterStream
 				, i_handlers[ANY_INDEX], false));
-			i_anyArrayN.i_id = ANY_ARRAY_N_ID;
+			i_anyArrayN.SetID(ANY_ARRAY_N_ID);
 			i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
 		}
 
@@ -163,18 +161,15 @@ namespace com.db4o
 		{
 			com.db4o.reflect.ReflectClass claxx = _masterStream.Reflector().ForObject(a_object
 				);
-			if (claxx.IsArray())
+			if (!claxx.IsArray())
 			{
-				if (_masterStream.Reflector().Array().IsNDimensional(claxx))
-				{
-					return com.db4o.YapConst.TYPE_NARRAY;
-				}
-				else
-				{
-					return com.db4o.YapConst.TYPE_ARRAY;
-				}
+				return 0;
 			}
-			return 0;
+			if (_masterStream.Reflector().Array().IsNDimensional(claxx))
+			{
+				return com.db4o.YapConst.TYPE_NARRAY;
+			}
+			return com.db4o.YapConst.TYPE_ARRAY;
 		}
 
 		internal bool CreateConstructor(com.db4o.reflect.ReflectClass claxx, bool skipConstructor
@@ -195,7 +190,7 @@ namespace com.db4o
 					return true;
 				}
 			}
-			if (!_masterStream.i_config.TestConstructors())
+			if (!_masterStream.ConfigImpl().TestConstructors())
 			{
 				return true;
 			}
@@ -226,7 +221,7 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.Traverse(new _AnonymousInnerClass231(this, foundConstructor, claxx
+						sortedConstructors.Traverse(new _AnonymousInnerClass228(this, foundConstructor, claxx
 							));
 					}
 					if (foundConstructor[0])
@@ -241,9 +236,9 @@ namespace com.db4o
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass231 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass228 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass231(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass228(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
 				 claxx)
 			{
 				this._enclosing = _enclosing;
@@ -339,7 +334,7 @@ namespace com.db4o
 			i_encrypt = false;
 			i_encryptor = null;
 			i_lastEncryptorByte = 0;
-			_masterStream.i_config.OldEncryptionOff();
+			_masterStream.ConfigImpl().OldEncryptionOff();
 		}
 
 		internal com.db4o.TypeHandler4 GetHandler(int a_index)
@@ -398,7 +393,6 @@ namespace com.db4o
 			ICLASS_OBJECT = reflector.ForClass(com.db4o.YapConst.CLASS_OBJECT);
 			ICLASS_OBJECTCONTAINER = reflector.ForClass(com.db4o.YapConst.CLASS_OBJECTCONTAINER
 				);
-			ICLASS_PBOOTRECORD = reflector.ForClass(com.db4o.YapConst.CLASS_PBOOTRECORD);
 			ICLASS_STATICCLASS = reflector.ForClass(com.db4o.YapConst.CLASS_STATICCLASS);
 			ICLASS_STRING = reflector.ForClass(j4o.lang.Class.GetClassForType(typeof(string))
 				);
@@ -480,9 +474,9 @@ namespace com.db4o
 			return false;
 		}
 
-		internal int MaxTypeID()
+		public bool IsSystemHandler(int id)
 		{
-			return i_maxTypeID;
+			return id <= i_maxTypeID;
 		}
 	}
 }

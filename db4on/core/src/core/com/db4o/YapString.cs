@@ -42,7 +42,7 @@ namespace com.db4o
 				return a_object;
 			}
 			int[] slot = (int[])a_object;
-			return a_trans.i_stream.ReadObjectReaderByAddress(slot[0], slot[1]);
+			return a_trans.Stream().ReadObjectReaderByAddress(slot[0], slot[1]);
 		}
 
 		public override void DeleteEmbedded(com.db4o.inside.marshall.MarshallerFamily mf, 
@@ -168,7 +168,12 @@ namespace com.db4o
 		/// </remarks>
 		public override object ReadIndexEntry(com.db4o.YapReader a_reader)
 		{
-			return new int[] { a_reader.ReadInt(), a_reader.ReadInt() };
+			int[] pointer = new int[] { a_reader.ReadInt(), a_reader.ReadInt() };
+			if (pointer[0] == 0 && pointer[1] == 0)
+			{
+				return null;
+			}
+			return pointer;
 		}
 
 		public override object ReadQuery(com.db4o.Transaction a_trans, com.db4o.inside.marshall.MarshallerFamily
@@ -176,15 +181,15 @@ namespace com.db4o
 		{
 			if (!withRedirection)
 			{
-				return mf._string.Read(a_trans.i_stream, a_reader);
+				return mf._string.Read(a_trans.Stream(), a_reader);
 			}
-			com.db4o.YapReader reader = mf._string.ReadSlotFromParentSlot(a_trans.i_stream, a_reader
+			com.db4o.YapReader reader = mf._string.ReadSlotFromParentSlot(a_trans.Stream(), a_reader
 				);
 			if (a_toArray)
 			{
 				if (reader != null)
 				{
-					return mf._string.ReadFromOwnSlot(a_trans.i_stream, reader);
+					return mf._string.ReadFromOwnSlot(a_trans.Stream(), reader);
 				}
 			}
 			return reader;
@@ -200,20 +205,29 @@ namespace com.db4o
 			return true;
 		}
 
-		public override void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object
-			)
+		public override void WriteIndexEntry(com.db4o.YapReader writer, object entry)
 		{
-			if (a_object == null)
+			if (entry == null)
 			{
-				a_writer.WriteInt(0);
-				a_writer.WriteInt(0);
+				writer.WriteInt(0);
+				writer.WriteInt(0);
+				return;
 			}
-			else
+			if (entry is com.db4o.YapWriter)
 			{
-				com.db4o.YapWriter writer = (com.db4o.YapWriter)a_object;
-				a_writer.WriteInt(writer.GetAddress());
-				a_writer.WriteInt(writer.GetLength());
+				com.db4o.YapWriter entryAsWriter = (com.db4o.YapWriter)entry;
+				writer.WriteInt(entryAsWriter.GetAddress());
+				writer.WriteInt(entryAsWriter.GetLength());
+				return;
 			}
+			if (entry is int[])
+			{
+				int[] addressLength = (int[])entry;
+				writer.WriteInt(addressLength[0]);
+				writer.WriteInt(addressLength[0]);
+				return;
+			}
+			throw new System.ArgumentException();
 		}
 
 		public override object WriteNew(com.db4o.inside.marshall.MarshallerFamily mf, object
@@ -345,7 +359,7 @@ namespace com.db4o
 		internal static int Compare(byte[] compare, byte[] with)
 		{
 			int min = compare.Length < with.Length ? compare.Length : with.Length;
-			int start = com.db4o.YapConst.YAPINT_LENGTH;
+			int start = com.db4o.YapConst.INT_LENGTH;
 			for (int i = start; i < min; i++)
 			{
 				if (compare[i] != with[i])

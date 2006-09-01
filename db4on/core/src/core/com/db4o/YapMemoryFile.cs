@@ -75,7 +75,7 @@ namespace com.db4o
 			i_closed = true;
 		}
 
-		internal override long FileLength()
+		public override long FileLength()
 		{
 			return i_length;
 		}
@@ -90,7 +90,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal override bool NeedsLockFileThread()
+		public sealed override bool NeedsLockFileThread()
 		{
 			return false;
 		}
@@ -139,7 +139,7 @@ namespace com.db4o
 			return true;
 		}
 
-		internal override void WriteBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
+		public override void WriteBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
 			)
 		{
 			int fullAddress = address + addressOffset;

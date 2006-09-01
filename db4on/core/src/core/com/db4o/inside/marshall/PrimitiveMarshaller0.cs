@@ -15,11 +15,11 @@ namespace com.db4o.inside.marshall
 			if (obj != null)
 			{
 				com.db4o.TypeHandler4 handler = yapClassPrimitive.i_handler;
-				com.db4o.YapStream stream = trans.i_stream;
+				com.db4o.YapStream stream = trans.Stream();
 				id = stream.NewUserObject();
 				int address = -1;
 				int length = ObjectLength(handler, obj);
-				if (!trans.i_stream.IsClient())
+				if (!stream.IsClient())
 				{
 					address = trans.i_file.GetSlot(length);
 				}
@@ -29,7 +29,7 @@ namespace com.db4o.inside.marshall
 				writer.WriteInt(yapClassPrimitive.GetID());
 				handler.WriteNew(_family, obj, false, writer, true, false);
 				writer.WriteEnd();
-				trans.i_stream.WriteNew(yapClassPrimitive, writer);
+				stream.WriteNew(yapClassPrimitive, writer);
 			}
 			if (parentWriter != null)
 			{

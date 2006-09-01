@@ -47,6 +47,11 @@ namespace com.db4o
 			return a_child;
 		}
 
+		public virtual com.db4o.Transaction Transaction()
+		{
+			return i_trans;
+		}
+
 		internal virtual void AddJoin(com.db4o.QConJoin a_join)
 		{
 			if (i_joins == null)
@@ -87,7 +92,7 @@ namespace com.db4o
 			com.db4o.QCon qcon = this;
 			com.db4o.YapClass yc = GetYapClass();
 			bool[] foundField = { false };
-			ForEachChildField(a_field, new _AnonymousInnerClass103(this, foundField, query));
+			ForEachChildField(a_field, new _AnonymousInnerClass107(this, foundField, query));
 			if (foundField[0])
 			{
 				return true;
@@ -97,7 +102,7 @@ namespace com.db4o
 			{
 				int[] count = { 0 };
 				com.db4o.YapField[] yfs = { null };
-				i_trans.i_stream.i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass121
+				i_trans.Stream().i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass125
 					(this, yfs, count));
 				if (count[0] == 0)
 				{
@@ -114,6 +119,11 @@ namespace com.db4o
 			}
 			else
 			{
+				if (yc.ConfigInstantiates())
+				{
+					i_trans.Stream().i_handlers._diagnosticProcessor.DescendIntoTranslator(yc, a_field
+						);
+				}
 				if (yc != null)
 				{
 					com.db4o.YapField yf = yc.GetYapField(a_field);
@@ -133,9 +143,9 @@ namespace com.db4o
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass103 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass107 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass103(QCon _enclosing, bool[] foundField, com.db4o.QQuery
+			public _AnonymousInnerClass107(QCon _enclosing, bool[] foundField, com.db4o.QQuery
 				 query)
 			{
 				this._enclosing = _enclosing;
@@ -156,9 +166,9 @@ namespace com.db4o
 			private readonly com.db4o.QQuery query;
 		}
 
-		private sealed class _AnonymousInnerClass121 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass125 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass121(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
+			public _AnonymousInnerClass125(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
 				)
 			{
 				this._enclosing = _enclosing;
@@ -210,9 +220,9 @@ namespace com.db4o
 			)
 		{
 			com.db4o.foundation.Iterator4 j = a_candidateCollection.Iterator();
-			while (j.HasNext())
+			while (j.MoveNext())
 			{
-				com.db4o.QCandidates candidates = (com.db4o.QCandidates)j.Next();
+				com.db4o.QCandidates candidates = (com.db4o.QCandidates)j.Current();
 				if (candidates.TryAddConstraint(this))
 				{
 					i_candidates = candidates;
@@ -249,18 +259,18 @@ namespace com.db4o
 		internal virtual void EvaluateChildren()
 		{
 			com.db4o.foundation.Iterator4 i = i_childrenCandidates.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QCandidates)i.Next()).Evaluate();
+				((com.db4o.QCandidates)i.Current()).Evaluate();
 			}
 		}
 
 		internal virtual void EvaluateCollectChildren()
 		{
 			com.db4o.foundation.Iterator4 i = i_childrenCandidates.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QCandidates)i.Next()).Collect(i_candidates);
+				((com.db4o.QCandidates)i.Current()).Collect(i_candidates);
 			}
 		}
 
@@ -268,18 +278,18 @@ namespace com.db4o
 		{
 			i_childrenCandidates = new com.db4o.foundation.Collection4();
 			com.db4o.foundation.Iterator4 i = IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QCon)i.Next()).CreateCandidates(i_childrenCandidates);
+				((com.db4o.QCon)i.Current()).CreateCandidates(i_childrenCandidates);
 			}
 		}
 
 		internal virtual void EvaluateEvaluations()
 		{
 			com.db4o.foundation.Iterator4 i = IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QCon)i.Next()).EvaluateEvaluationsExec(i_candidates, true);
+				((com.db4o.QCon)i.Current()).EvaluateEvaluationsExec(i_candidates, true);
 			}
 		}
 
@@ -300,9 +310,9 @@ namespace com.db4o
 				return;
 			}
 			com.db4o.foundation.Iterator4 i = IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				com.db4o.QCon qcon = (com.db4o.QCon)i.Next();
+				com.db4o.QCon qcon = (com.db4o.QCon)i.Current();
 				i_candidates.SetCurrentConstraint(qcon);
 				qcon.SetCandidates(i_candidates);
 				qcon.EvaluateSimpleExec(i_candidates);
@@ -343,9 +353,9 @@ namespace com.db4o
 			 visitor)
 		{
 			com.db4o.foundation.Iterator4 i = IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				object obj = i.Next();
+				object obj = i.Current();
 				if (obj is com.db4o.QConObject)
 				{
 					if (((com.db4o.QConObject)obj).i_field.i_name.Equals(name))
@@ -356,7 +366,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.QField GetField()
+		public virtual com.db4o.QField GetField()
 		{
 			return null;
 		}
@@ -384,22 +394,24 @@ namespace com.db4o
 			com.db4o.foundation.Iterator4 i = IterateJoins();
 			if (i_joins.Size() == 1)
 			{
-				return ((com.db4o.QCon)i.Next()).GetTopLevelJoin();
+				i.MoveNext();
+				return ((com.db4o.QCon)i.Current()).GetTopLevelJoin();
 			}
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				col.Ensure(((com.db4o.QCon)i.Next()).GetTopLevelJoin());
+				col.Ensure(((com.db4o.QCon)i.Current()).GetTopLevelJoin());
 			}
 			i = col.Iterator();
-			com.db4o.QCon qcon = (com.db4o.QCon)i.Next();
+			i.MoveNext();
+			com.db4o.QCon qcon = (com.db4o.QCon)i.Current();
 			if (col.Size() == 1)
 			{
 				return qcon;
 			}
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				qcon = (com.db4o.QCon)qcon.And((com.db4o.query.Constraint)i.Next());
+				qcon = (com.db4o.QCon)qcon.And((com.db4o.query.Constraint)i.Current());
 			}
 			return qcon;
 		}
@@ -417,6 +429,16 @@ namespace com.db4o
 		public virtual bool HasChildren()
 		{
 			return _children != null;
+		}
+
+		public virtual bool HasParent()
+		{
+			return i_parent != null;
+		}
+
+		public virtual com.db4o.QCon Parent()
+		{
+			return i_parent;
 		}
 
 		public virtual bool HasOrJoins()
@@ -437,16 +459,33 @@ namespace com.db4o
 				return false;
 			}
 			com.db4o.foundation.Iterator4 i = IterateJoins();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				com.db4o.QConJoin join = (com.db4o.QConJoin)i.Next();
-				if (!join.i_and)
+				com.db4o.QConJoin join = (com.db4o.QConJoin)i.Current();
+				if (join.IsOr())
 				{
 					return true;
 				}
 				if (join.HasOrJoins(lookedAt))
 				{
 					return true;
+				}
+			}
+			return false;
+		}
+
+		public virtual bool HasOrJoinWith(com.db4o.QConObject y)
+		{
+			com.db4o.foundation.Iterator4 i = IterateJoins();
+			while (i.MoveNext())
+			{
+				com.db4o.QConJoin join = (com.db4o.QConJoin)i.Current();
+				if (join.IsOr())
+				{
+					if (y == join.GetOtherConstraint(this))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
@@ -544,9 +583,9 @@ namespace com.db4o
 					)];
 				j = 0;
 				com.db4o.foundation.Iterator4 i = joinHooks.Iterator();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					joins[j++] = Join((com.db4o.query.Constraint)i.Next(), a_and);
+					joins[j++] = Join((com.db4o.query.Constraint)i.Current(), a_and);
 				}
 				return new com.db4o.QConstraints(i_trans, joins);
 			}
@@ -594,9 +633,9 @@ namespace com.db4o
 		internal virtual void Marshall()
 		{
 			com.db4o.foundation.Iterator4 i = IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QCon)i.Next()).Marshall();
+				((com.db4o.QCon)i.Current()).Marshall();
 			}
 		}
 
@@ -648,9 +687,9 @@ namespace com.db4o
 				return;
 			}
 			com.db4o.foundation.Iterator4 i = IterateJoins();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.Next();
+				com.db4o.QConJoin qcj = (com.db4o.QConJoin)i.Current();
 				if (qcj.RemoveForParent(this))
 				{
 					i_joins.Remove(qcj);
@@ -707,7 +746,7 @@ namespace com.db4o
 
 		protected virtual object StreamLock()
 		{
-			return i_trans.i_stream.i_lock;
+			return i_trans.Stream().i_lock;
 		}
 
 		internal virtual bool SupportsOrdering()
@@ -738,9 +777,9 @@ namespace com.db4o
 		private void UnmarshallChildren(com.db4o.Transaction a_trans)
 		{
 			com.db4o.foundation.Iterator4 i = IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QCon)i.Next()).Unmarshall(a_trans);
+				((com.db4o.QCon)i.Current()).Unmarshall(a_trans);
 			}
 		}
 
@@ -749,9 +788,9 @@ namespace com.db4o
 			if (HasJoins())
 			{
 				com.db4o.foundation.Iterator4 i = IterateJoins();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					((com.db4o.QCon)i.Next()).Unmarshall(a_trans);
+					((com.db4o.QCon)i.Current()).Unmarshall(a_trans);
 				}
 			}
 		}
@@ -773,9 +812,9 @@ namespace com.db4o
 			if (HasJoins())
 			{
 				com.db4o.foundation.Iterator4 i = IterateJoins();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					a_root.Evaluate(new com.db4o.QPending((com.db4o.QConJoin)i.Next(), this, res));
+					a_root.Evaluate(new com.db4o.QPending((com.db4o.QConJoin)i.Current(), this, res));
 				}
 			}
 			else
@@ -790,9 +829,9 @@ namespace com.db4o
 		internal void VisitOnNull(com.db4o.QCandidate a_root)
 		{
 			com.db4o.foundation.Iterator4 i = IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QCon)i.Next()).VisitOnNull(a_root);
+				((com.db4o.QCon)i.Current()).VisitOnNull(a_root);
 			}
 			if (VisitSelfOnNull())
 			{

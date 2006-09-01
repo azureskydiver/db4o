@@ -15,10 +15,10 @@ namespace com.db4o.ext
 
 		private readonly byte[] signaturePart;
 
-		public Db4oUUID(long longPart, byte[] signaturePart)
+		public Db4oUUID(long longPart_, byte[] signaturePart_)
 		{
-			this.longPart = longPart;
-			this.signaturePart = signaturePart;
+			longPart = longPart_;
+			signaturePart = signaturePart_;
 		}
 
 		/// <summary>returns the long part of this UUID.</summary>

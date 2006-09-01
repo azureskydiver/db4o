@@ -9,7 +9,7 @@ namespace com.db4o.inside.marshall
 
 		protected int LinkLength()
 		{
-			return com.db4o.YapConst.YAPINT_LENGTH + com.db4o.YapConst.YAPID_LENGTH;
+			return com.db4o.YapConst.INT_LENGTH + com.db4o.YapConst.ID_LENGTH;
 		}
 
 		public abstract object WriteNew(object a_object, bool topLevel, com.db4o.YapWriter
@@ -54,17 +54,23 @@ namespace com.db4o.inside.marshall
 
 		public abstract com.db4o.YapWriter ReadIndexEntry(com.db4o.YapWriter parentSlot);
 
-		public static string ReadShort(com.db4o.YapStream stream, com.db4o.YapReader a_bytes
+		public static string ReadShort(com.db4o.YapStream stream, com.db4o.YapReader bytes
 			)
 		{
-			int length = a_bytes.ReadInt();
+			return ReadShort(stream.StringIO(), stream.ConfigImpl().InternStrings(), bytes);
+		}
+
+		public static string ReadShort(com.db4o.YapStringIO io, bool internStrings, com.db4o.YapReader
+			 bytes)
+		{
+			int length = bytes.ReadInt();
 			if (length > com.db4o.YapConst.MAXIMUM_BLOCK_SIZE)
 			{
 				throw new com.db4o.CorruptionException();
 			}
 			if (length > 0)
 			{
-				string str = stream.StringIO().Read(a_bytes, length);
+				string str = io.Read(bytes, length);
 				return str;
 			}
 			return "";

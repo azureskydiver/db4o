@@ -19,14 +19,6 @@ namespace com.db4o.inside.ix
 
 		internal bool[] i_take;
 
-		public const int NULLS = 0;
-
-		public const int SMALLER = 1;
-
-		public const int EQUAL = 2;
-
-		public const int GREATER = 3;
-
 		private void Add(com.db4o.foundation.Visitor4 visitor, com.db4o.inside.ix.IxPath 
 			a_previousPath, com.db4o.inside.ix.IxPath a_great, com.db4o.inside.ix.IxPath a_small
 			)
@@ -133,27 +125,31 @@ namespace com.db4o.inside.ix
 		public virtual com.db4o.inside.ix.NIxPaths Convert()
 		{
 			com.db4o.inside.ix.NIxPaths res = new com.db4o.inside.ix.NIxPaths();
-			if (i_take[NULLS] || i_take[SMALLER] || i_take[EQUAL])
+			if (i_take[com.db4o.QE.NULLS] || i_take[com.db4o.QE.SMALLER] || i_take[com.db4o.QE
+				.EQUAL])
 			{
 				com.db4o.inside.ix.NIxPath smaller = CreateNIxPath(i_smallHead.Convert(), i_take[
-					SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER);
+					com.db4o.QE.SMALLER], i_take[com.db4o.QE.EQUAL], i_take[com.db4o.QE.GREATER], com.db4o.QE
+					.SMALLER);
 				res.Add(smaller);
 			}
-			if (i_take[EQUAL] || i_take[GREATER])
+			if (i_take[com.db4o.QE.EQUAL] || i_take[com.db4o.QE.GREATER])
 			{
 				com.db4o.inside.ix.NIxPath greater = CreateNIxPath(i_greatHead.Convert(), i_take[
-					SMALLER], i_take[EQUAL], i_take[GREATER], GREATER);
+					com.db4o.QE.SMALLER], i_take[com.db4o.QE.EQUAL], i_take[com.db4o.QE.GREATER], com.db4o.QE
+					.GREATER);
 				res.Add(greater);
 			}
-			if (i_take[SMALLER] || i_take[NULLS])
+			if (i_take[com.db4o.QE.SMALLER] || i_take[com.db4o.QE.NULLS])
 			{
 				if (i_smallHead != null)
 				{
 					if (i_smallHead.i_tree.Index()._nullHandling)
 					{
 						com.db4o.inside.ix.IxPath nullPath = FindNullPath();
-						com.db4o.inside.ix.NIxPath np = CreateNIxPath(nullPath.Convert(), i_take[NULLS], 
-							i_take[NULLS], i_take[SMALLER], NULLS);
+						com.db4o.inside.ix.NIxPath np = CreateNIxPath(nullPath.Convert(), i_take[com.db4o.QE
+							.NULLS], i_take[com.db4o.QE.NULLS], i_take[com.db4o.QE.SMALLER], com.db4o.QE.NULLS
+							);
 						res.Add(np);
 					}
 				}
@@ -167,18 +163,15 @@ namespace com.db4o.inside.ix
 			{
 				return a_sum + CountSubsequent(a_path);
 			}
+			if (a_path.i_next.i_tree == a_path.i_tree._preceding)
+			{
+				a_sum += CountSubsequent(a_path);
+			}
 			else
 			{
-				if (a_path.i_next.i_tree == a_path.i_tree._preceding)
-				{
-					a_sum += CountSubsequent(a_path);
-				}
-				else
-				{
-					a_sum += a_path.CountMatching();
-				}
-				return CountGreater(a_path.i_next, a_sum);
+				a_sum += a_path.CountMatching();
 			}
+			return CountGreater(a_path.i_next, a_sum);
 		}
 
 		private int CountPreceding(com.db4o.inside.ix.IxPath a_path)
@@ -192,18 +185,15 @@ namespace com.db4o.inside.ix
 			{
 				return a_sum + CountPreceding(a_path);
 			}
+			if (a_path.i_next.i_tree == a_path.i_tree._subsequent)
+			{
+				a_sum += CountPreceding(a_path);
+			}
 			else
 			{
-				if (a_path.i_next.i_tree == a_path.i_tree._subsequent)
-				{
-					a_sum += CountPreceding(a_path);
-				}
-				else
-				{
-					a_sum += a_path.CountMatching();
-				}
-				return CountSmaller(a_path.i_next, a_sum);
+				a_sum += a_path.CountMatching();
 			}
+			return CountSmaller(a_path.i_next, a_sum);
 		}
 
 		private int CountSpan(com.db4o.inside.ix.IxPath a_previousPath, com.db4o.inside.ix.IxPath
@@ -215,10 +205,7 @@ namespace com.db4o.inside.ix
 				{
 					return a_previousPath.CountMatching();
 				}
-				else
-				{
-					return CountGreater(a_small, a_previousPath.CountMatching());
-				}
+				return CountGreater(a_small, a_previousPath.CountMatching());
 			}
 			else
 			{
@@ -375,20 +362,20 @@ namespace com.db4o.inside.ix
 				i_smallTail = i_smallHead;
 				FindBoth();
 				int span = 0;
-				if (i_take[EQUAL])
+				if (i_take[com.db4o.QE.EQUAL])
 				{
 					span += CountSpan(i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
 				}
-				if (i_take[SMALLER])
+				if (i_take[com.db4o.QE.SMALLER])
 				{
 					com.db4o.inside.ix.IxPath head = i_smallHead;
 					while (head != null)
 					{
-						span += head.CountPreceding(i_take[NULLS]);
+						span += head.CountPreceding(i_take[com.db4o.QE.NULLS]);
 						head = head.i_next;
 					}
 				}
-				if (i_take[GREATER])
+				if (i_take[com.db4o.QE.GREATER])
 				{
 					com.db4o.inside.ix.IxPath head = i_greatHead;
 					while (head != null)
@@ -406,7 +393,7 @@ namespace com.db4o.inside.ix
 			 a_tree)
 		{
 			i_take = new bool[] { false, false, false, false };
-			i_take[EQUAL] = true;
+			i_take[com.db4o.QE.EQUAL] = true;
 			return FindBounds(a_constraint, a_tree);
 		}
 
@@ -419,33 +406,6 @@ namespace com.db4o.inside.ix
 			i_take = new bool[] { false, false, false, false };
 			a_qcon.i_evaluator.IndexBitMap(i_take);
 			return FindBounds(constraint, a_qcon.IndexRoot());
-		}
-
-		private void FindGreatestEqual(com.db4o.inside.ix.IxTree a_tree)
-		{
-			int res = a_tree.Compare(null);
-			i_greatTail = i_greatTail.Append(a_tree, res, a_tree.LowerAndUpperMatch());
-			if (res == 0)
-			{
-				FindGreatestEqualFromEqual(a_tree);
-			}
-			else
-			{
-				if (res < 0)
-				{
-					if (a_tree._subsequent != null)
-					{
-						FindGreatestEqual((com.db4o.inside.ix.IxTree)a_tree._subsequent);
-					}
-				}
-				else
-				{
-					if (a_tree._preceding != null)
-					{
-						FindGreatestEqual((com.db4o.inside.ix.IxTree)a_tree._preceding);
-					}
-				}
-			}
 		}
 
 		private void FindGreatestEqualFromEqual(com.db4o.inside.ix.IxTree a_tree)
@@ -466,33 +426,6 @@ namespace com.db4o.inside.ix
 				else
 				{
 					FindGreatestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree._subsequent);
-				}
-			}
-		}
-
-		private void FindSmallestEqual(com.db4o.inside.ix.IxTree a_tree)
-		{
-			int res = a_tree.Compare(null);
-			i_smallTail = i_smallTail.Append(a_tree, res, a_tree.LowerAndUpperMatch());
-			if (res == 0)
-			{
-				FindSmallestEqualFromEqual(a_tree);
-			}
-			else
-			{
-				if (res < 0)
-				{
-					if (a_tree._subsequent != null)
-					{
-						FindSmallestEqual((com.db4o.inside.ix.IxTree)a_tree._subsequent);
-					}
-				}
-				else
-				{
-					if (a_tree._preceding != null)
-					{
-						FindSmallestEqual((com.db4o.inside.ix.IxTree)a_tree._preceding);
-					}
 				}
 			}
 		}
@@ -527,14 +460,14 @@ namespace com.db4o.inside.ix
 
 		public virtual void VisitAll(com.db4o.foundation.Visitor4 visitor)
 		{
-			if (i_take[EQUAL])
+			if (i_take[com.db4o.QE.EQUAL])
 			{
 				if (i_greatHead != null)
 				{
 					Add(visitor, i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
 				}
 			}
-			if (i_take[SMALLER])
+			if (i_take[com.db4o.QE.SMALLER])
 			{
 				com.db4o.inside.ix.IxPath head = i_smallHead;
 				while (head != null)
@@ -543,7 +476,7 @@ namespace com.db4o.inside.ix
 					head = head.i_next;
 				}
 			}
-			if (i_take[GREATER])
+			if (i_take[com.db4o.QE.GREATER])
 			{
 				com.db4o.inside.ix.IxPath head = i_greatHead;
 				while (head != null)

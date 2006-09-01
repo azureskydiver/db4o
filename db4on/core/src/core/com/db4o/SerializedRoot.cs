@@ -9,9 +9,9 @@ namespace com.db4o
 		{
 		}
 
-		public SerializedRoot(object root)
+		public SerializedRoot(object root_)
 		{
-			this.root = root;
+			root = root_;
 		}
 	}
 }

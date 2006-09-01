@@ -3,10 +3,6 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class Debug : com.db4o.foundation.Debug4
 	{
-		public const bool useOldClassIndex = com.db4o.inside.marshall.MarshallerFamily.LEGACY;
-
-		public const bool useBTrees = !com.db4o.inside.marshall.MarshallerFamily.LEGACY;
-
 		public const bool useNIxPaths = true;
 
 		public const bool ixTrees = false;

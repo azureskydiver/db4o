@@ -13,7 +13,7 @@ namespace com.db4o.inside.marshall
 		protected virtual int ObjectLength(com.db4o.TypeHandler4 handler, object obj)
 		{
 			return handler.LinkLength() + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst
-				.YAPID_LENGTH;
+				.ID_LENGTH;
 		}
 	}
 }

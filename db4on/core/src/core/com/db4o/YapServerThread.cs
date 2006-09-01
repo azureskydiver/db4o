@@ -42,7 +42,7 @@ namespace com.db4o
 			i_mainStream = aStream;
 			i_threadID = aThreadID;
 			SetName("db4o message server " + aThreadID);
-			i_mainTrans = new com.db4o.Transaction(aStream, aStream.GetSystemTransaction());
+			i_mainTrans = aStream.NewTransaction();
 			try
 			{
 				i_socket = aSocket;
@@ -243,16 +243,15 @@ namespace com.db4o
 			}
 			if (com.db4o.Msg.IDENTITY.Equals(message))
 			{
-				RespondInt((int)GetStream().GetID(GetStream().BootRecord().i_db));
+				RespondInt((int)GetStream().GetID(GetStream().Identity()));
 				return true;
 			}
 			if (com.db4o.Msg.CURRENT_VERSION.Equals(message))
 			{
-				com.db4o.YapStream stream = GetStream();
 				long ver = 0;
-				lock (stream)
+				lock (GetStream())
 				{
-					ver = GetStream().BootRecord().CurrentVersion();
+					ver = GetStream().CurrentVersion();
 				}
 				com.db4o.Msg.ID_LIST.GetWriterForLong(GetTransaction(), ver).Write(GetStream(), i_socket
 					);
@@ -300,9 +299,8 @@ namespace com.db4o
 				{
 					CloseSubstituteStream();
 					i_substituteStream = (com.db4o.YapFile)com.db4o.Db4o.OpenFile(fileName);
-					i_substituteTrans = new com.db4o.Transaction(i_substituteStream, i_substituteStream
-						.GetSystemTransaction());
-					i_substituteStream.i_config.SetMessageRecipient(i_mainStream.i_config.MessageRecipient
+					i_substituteTrans = i_substituteStream.NewTransaction();
+					i_substituteStream.ConfigImpl().SetMessageRecipient(i_mainStream.ConfigImpl().MessageRecipient
 						());
 					com.db4o.Msg.OK.Write(GetStream(), i_socket);
 				}

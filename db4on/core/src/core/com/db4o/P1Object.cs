@@ -26,11 +26,11 @@ namespace com.db4o
 			{
 				if (a_depth < 0)
 				{
-					i_trans.i_stream.Activate1(i_trans, a_obj);
+					i_trans.Stream().Activate1(i_trans, a_obj);
 				}
 				else
 				{
-					i_trans.i_stream.Activate1(i_trans, a_obj, a_depth);
+					i_trans.Stream().Activate1(i_trans, a_obj, a_depth);
 				}
 			}
 		}
@@ -56,11 +56,11 @@ namespace com.db4o
 			{
 				if (i_yapObject == null)
 				{
-					i_yapObject = i_trans.i_stream.GetYapObject(this);
+					i_yapObject = i_trans.Stream().GetYapObject(this);
 					if (i_yapObject == null)
 					{
-						i_trans.i_stream.Set(this);
-						i_yapObject = i_trans.i_stream.GetYapObject(this);
+						i_trans.Stream().Set(this);
+						i_yapObject = i_trans.Stream().GetYapObject(this);
 					}
 				}
 				if (ValidYapObject())
@@ -89,11 +89,11 @@ namespace com.db4o
 			{
 				if (i_yapObject == null)
 				{
-					i_yapObject = i_trans.i_stream.GetYapObject(this);
+					i_yapObject = i_trans.Stream().GetYapObject(this);
 				}
 				if (ValidYapObject())
 				{
-					i_trans.i_stream.Delete3(i_trans, i_yapObject, this, 0, false);
+					i_trans.Stream().Delete3(i_trans, i_yapObject, this, 0, false);
 				}
 			}
 		}
@@ -102,7 +102,7 @@ namespace com.db4o
 		{
 			if (i_trans != null)
 			{
-				i_trans.i_stream.Delete(a_obj);
+				i_trans.Stream().Delete(a_obj);
 			}
 		}
 
@@ -112,7 +112,7 @@ namespace com.db4o
 			{
 				return 0;
 			}
-			return i_trans.i_stream.GetID(a_obj);
+			return i_trans.Stream().GetID(a_obj);
 		}
 
 		protected virtual com.db4o.Transaction GetTrans()
@@ -132,8 +132,8 @@ namespace com.db4o
 		protected virtual object Replicate(com.db4o.Transaction fromTrans, com.db4o.Transaction
 			 toTrans)
 		{
-			com.db4o.YapStream fromStream = fromTrans.i_stream;
-			com.db4o.YapStream toStream = toTrans.i_stream;
+			com.db4o.YapStream fromStream = fromTrans.Stream();
+			com.db4o.YapStream toStream = toTrans.Stream();
 			com.db4o.inside.replication.MigrationConnection mgc = fromStream.i_handlers.i_migration;
 			lock (fromStream.Lock())
 			{
@@ -183,7 +183,7 @@ namespace com.db4o
 		{
 			if (i_trans != null)
 			{
-				i_trans.i_stream.SetInternal(i_trans, a_obj, true);
+				i_trans.Stream().SetInternal(i_trans, a_obj, true);
 			}
 		}
 
@@ -197,8 +197,8 @@ namespace com.db4o
 		{
 			if (i_trans != null)
 			{
-				i_trans.i_stream.CheckClosed();
-				return i_trans.i_stream.Lock();
+				i_trans.Stream().CheckClosed();
+				return i_trans.Stream().Lock();
 			}
 			return this;
 		}
@@ -209,11 +209,11 @@ namespace com.db4o
 			{
 				if (i_yapObject == null)
 				{
-					i_yapObject = i_trans.i_stream.GetYapObject(this);
+					i_yapObject = i_trans.Stream().GetYapObject(this);
 					if (i_yapObject == null)
 					{
-						i_trans.i_stream.SetInternal(i_trans, this, true);
-						i_yapObject = i_trans.i_stream.GetYapObject(this);
+						i_trans.Stream().SetInternal(i_trans, this, true);
+						i_yapObject = i_trans.Stream().GetYapObject(this);
 						return;
 					}
 				}
@@ -230,10 +230,10 @@ namespace com.db4o
 		{
 			if (ValidYapObject())
 			{
-				i_trans.i_stream.BeginEndSet(i_trans);
+				i_trans.Stream().BeginEndSet(i_trans);
 				i_yapObject.WriteUpdate(i_trans, depth);
-				i_trans.i_stream.CheckStillToSet();
-				i_trans.i_stream.BeginEndSet(i_trans);
+				i_trans.Stream().CheckStillToSet();
+				i_trans.Stream().BeginEndSet(i_trans);
 			}
 		}
 
@@ -247,8 +247,8 @@ namespace com.db4o
 			if (ValidYapObject())
 			{
 				i_yapObject.WriteUpdate(i_trans, depth);
-				i_trans.i_stream.RememberJustSet(i_yapObject.GetID());
-				i_trans.i_stream.CheckStillToSet();
+				i_trans.Stream().RememberJustSet(i_yapObject.GetID());
+				i_trans.Stream().CheckStillToSet();
 			}
 		}
 

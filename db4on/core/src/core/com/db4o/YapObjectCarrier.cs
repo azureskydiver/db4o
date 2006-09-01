@@ -24,7 +24,7 @@ namespace com.db4o
 		{
 			i_handlers = i_parent.i_handlers;
 			i_classCollection = i_parent.i_classCollection;
-			i_config = i_parent.i_config;
+			i_config = i_parent.ConfigImpl();
 			i_references = new com.db4o.YapReferences(this);
 			Initialize2();
 		}
@@ -68,13 +68,17 @@ namespace com.db4o
 			}
 		}
 
-		internal override void CreateTransaction()
+		public sealed override com.db4o.Transaction NewTransaction(com.db4o.Transaction parentTransaction
+			)
 		{
-			i_trans = new com.db4o.TransactionObjectCarrier(this, null);
-			i_systemTrans = i_trans;
+			if (null != parentTransaction)
+			{
+				return parentTransaction;
+			}
+			return new com.db4o.TransactionObjectCarrier(this, null);
 		}
 
-		internal override long CurrentVersion()
+		public override long CurrentVersion()
 		{
 			return 0;
 		}
@@ -119,11 +123,6 @@ namespace com.db4o
 		{
 		}
 
-		internal override bool NeedsLockFileThread()
-		{
-			return false;
-		}
-
 		public override void RaiseVersion(long a_minimumVersion)
 		{
 		}
@@ -148,7 +147,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override void WriteBootRecord()
+		protected override void WriteVariableHeader()
 		{
 		}
 	}

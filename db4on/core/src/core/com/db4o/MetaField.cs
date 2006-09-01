@@ -17,9 +17,9 @@ namespace com.db4o
 		{
 		}
 
-		public MetaField(string name)
+		public MetaField(string name_)
 		{
-			this.name = name;
+			name = name_;
 		}
 	}
 }

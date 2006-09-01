@@ -12,10 +12,10 @@ namespace com.db4o
 		{
 		}
 
-		public StaticField(string name, object value)
+		public StaticField(string name_, object value_)
 		{
-			this.name = name;
-			this.value = value;
+			name = name_;
+			value = value_;
 		}
 	}
 }

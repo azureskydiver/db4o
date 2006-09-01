@@ -30,18 +30,16 @@ namespace com.db4o
 
 		internal static readonly object Lock = Initialize();
 
-		internal static string licTo = "";
-
-		private static bool expirationMessagePrinted;
-
 		private static object Initialize()
 		{
 			com.db4o.Platform4.GetDefaultConfiguration(i_config);
 			return new object();
 		}
 
-		/// <summary>prints the version name of this version to <code>System.out</code>.</summary>
-		/// <remarks>prints the version name of this version to <code>System.out</code>.</remarks>
+		/// <summary>prints the version name of this db4o version to <code>System.out</code>.
+		/// 	</summary>
+		/// <remarks>prints the version name of this db4o version to <code>System.out</code>.
+		/// 	</remarks>
 		public static void Main(string args)
 		{
 			j4o.lang.JavaSystem._out.Println(Version());
@@ -67,12 +65,6 @@ namespace com.db4o
 		public static com.db4o.config.Configuration Configure()
 		{
 			return i_config;
-		}
-
-		/// <summary>enters the licensing information into licensed versions.</summary>
-		/// <remarks>enters the licensing information into licensed versions.</remarks>
-		public static void LicensedTo(string emailAddress)
-		{
 		}
 
 		/// <summary>
@@ -131,7 +123,7 @@ namespace com.db4o
 		/// internal mechanism to lock the database file for other processes.
 		/// <br /><br />
 		/// </summary>
-		/// <param name="databaseFileName">the full path to the database file</param>
+		/// <param name="databaseFileName">an absolute or relative path to the database file</param>
 		/// <returns>
 		/// an open
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
@@ -189,7 +181,7 @@ namespace com.db4o
 		/// , specify '0' as the
 		/// port number.
 		/// </summary>
-		/// <param name="databaseFileName">the full path to the database file</param>
+		/// <param name="databaseFileName">an absolute or relative path to the database file</param>
 		/// <param name="port">
 		/// the port to be used, or 0, if the server should not open a port,
 		/// because it will only be used with

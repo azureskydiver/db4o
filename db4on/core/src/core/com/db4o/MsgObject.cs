@@ -2,8 +2,8 @@ namespace com.db4o
 {
 	internal class MsgObject : com.db4o.MsgD
 	{
-		private const int LENGTH_FOR_ALL = com.db4o.YapConst.YAPID_LENGTH + (com.db4o.YapConst
-			.YAPINT_LENGTH * 3);
+		private const int LENGTH_FOR_ALL = com.db4o.YapConst.ID_LENGTH + (com.db4o.YapConst
+			.INT_LENGTH * 3);
 
 		private const int LENGTH_FOR_FIRST = LENGTH_FOR_ALL;
 
@@ -17,7 +17,7 @@ namespace com.db4o
 			int lengthNeeded = bytes.GetLength() + LENGTH_FOR_FIRST;
 			if (prependInts != null)
 			{
-				lengthNeeded += (prependInts.Length * com.db4o.YapConst.YAPINT_LENGTH);
+				lengthNeeded += (prependInts.Length * com.db4o.YapConst.INT_LENGTH);
 			}
 			int embeddedCount = bytes.EmbeddedCount();
 			if (embeddedCount > 0)

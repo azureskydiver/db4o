@@ -46,8 +46,7 @@ namespace com.db4o.inside.ix
 
 		internal virtual void Add(com.db4o.foundation.Visitor4 visitor)
 		{
-			if (i_comparisonResult == 0 && i_traverser.i_take[com.db4o.inside.ix.IxTraverser.
-				EQUAL])
+			if (i_comparisonResult == 0 && i_traverser.i_take[com.db4o.QE.EQUAL])
 			{
 				i_tree.Visit(visitor, i_lowerAndUpperMatch);
 			}

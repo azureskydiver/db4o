@@ -31,7 +31,7 @@ namespace com.db4o
 
 		public override int LinkLength()
 		{
-			return com.db4o.YapConst.YAPINT_LENGTH;
+			return com.db4o.YapConst.INT_LENGTH;
 		}
 
 		internal override object PrimitiveNull()
@@ -49,9 +49,14 @@ namespace com.db4o
 			return a_bytes.ReadInt();
 		}
 
-		public override void Write(object a_object, com.db4o.YapReader a_bytes)
+		public override void Write(object obj, com.db4o.YapReader writer)
 		{
-			WriteInt(((int)a_object), a_bytes);
+			Write(((int)obj), writer);
+		}
+
+		public virtual void Write(int intValue, com.db4o.YapReader writer)
+		{
+			WriteInt(intValue, writer);
 		}
 
 		internal static void WriteInt(int a_int, com.db4o.YapReader a_bytes)
@@ -66,12 +71,27 @@ namespace com.db4o
 			return ((int)obj);
 		}
 
+		public virtual int CompareTo(int other)
+		{
+			return other - i_compareTo;
+		}
+
+		public virtual void PrepareComparison(int i)
+		{
+			i_compareTo = i;
+		}
+
 		internal override void PrepareComparison1(object obj)
 		{
-			i_compareTo = Val(obj);
+			PrepareComparison(Val(obj));
 		}
 
 		public override object Current1()
+		{
+			return CurrentInt();
+		}
+
+		public virtual int CurrentInt()
 		{
 			return i_compareTo;
 		}

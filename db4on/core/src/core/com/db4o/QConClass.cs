@@ -21,8 +21,8 @@ namespace com.db4o
 		{
 			if (claxx != null)
 			{
-				i_yapClass = a_trans.i_stream.GetYapClass(claxx, true);
-				if (claxx.Equals(a_trans.i_stream.i_handlers.ICLASS_OBJECT))
+				i_yapClass = a_trans.Stream().GetYapClass(claxx, true);
+				if (claxx.Equals(a_trans.Stream().i_handlers.ICLASS_OBJECT))
 				{
 					i_yapClass = (com.db4o.YapClass)((com.db4o.YapClassPrimitive)i_yapClass).i_handler;
 				}

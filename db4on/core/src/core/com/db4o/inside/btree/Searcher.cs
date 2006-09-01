@@ -3,50 +3,34 @@ namespace com.db4o.inside.btree
 	/// <exclude></exclude>
 	public class Searcher
 	{
-		public int _lower;
+		private int _lower;
 
-		public int _upper;
+		private int _upper;
 
-		public int _cursor;
+		private int _cursor;
 
-		public int _cmp;
+		private int _cmp;
 
-		private int _target;
+		private readonly com.db4o.inside.btree.SearchTarget _target;
 
-		private const int ANY = 0;
+		private readonly int _count;
 
-		private const int HIGHEST = 1;
-
-		private const int LOWEST = -1;
-
-		public Searcher(int count)
+		public Searcher(com.db4o.inside.btree.SearchTarget target, int count)
 		{
-			Start(count);
-		}
-
-		public virtual void Start(int count)
-		{
-			_lower = 0;
-			_upper = count - 1;
+			_target = target;
+			_count = count;
+			_cmp = -1;
+			if (count == 0)
+			{
+				Complete();
+				return;
+			}
 			_cursor = -1;
+			_upper = count - 1;
+			AdjustCursor();
 		}
 
-		public virtual bool Incomplete()
-		{
-			if (_upper < _lower)
-			{
-				return false;
-			}
-			int oldCursor = _cursor;
-			_cursor = _lower + ((_upper - _lower) / 2);
-			if (_cursor == oldCursor && _cursor == _lower && _lower < _upper)
-			{
-				_cursor++;
-			}
-			return _cursor != oldCursor;
-		}
-
-		internal virtual void ResultIs(int cmp)
+		private void AdjustBounds(int cmp)
 		{
 			_cmp = cmp;
 			if (cmp > 0)
@@ -60,35 +44,118 @@ namespace com.db4o.inside.btree
 			}
 			if (cmp < 0)
 			{
-				_lower = _cursor + 1;
-				if (_lower > _upper)
+				if (_lower == _cursor && _lower < _upper)
 				{
-					_lower = _upper;
+					_lower++;
+				}
+				else
+				{
+					_lower = _cursor;
 				}
 				return;
 			}
-			if (_target == ANY)
+			if (_target == com.db4o.inside.btree.SearchTarget.ANY)
 			{
 				_lower = _cursor;
 				_upper = _cursor;
-				return;
 			}
-			if (_target == HIGHEST)
+			else
 			{
-				_lower = _cursor;
-				return;
+				if (_target == com.db4o.inside.btree.SearchTarget.HIGHEST)
+				{
+					_lower = _cursor;
+				}
+				else
+				{
+					if (_target == com.db4o.inside.btree.SearchTarget.LOWEST)
+					{
+						_upper = _cursor;
+					}
+					else
+					{
+						throw new System.InvalidOperationException("Unknown target");
+					}
+				}
 			}
-			_upper = _cursor;
 		}
 
-		internal virtual void Highest()
+		private void AdjustCursor()
 		{
-			_target = HIGHEST;
+			int oldCursor = _cursor;
+			if (_upper - _lower <= 1)
+			{
+				if ((_target == com.db4o.inside.btree.SearchTarget.LOWEST) && (_cmp == 0))
+				{
+					_cursor = _lower;
+				}
+				else
+				{
+					_cursor = _upper;
+				}
+			}
+			else
+			{
+				_cursor = _lower + ((_upper - _lower) / 2);
+			}
+			if (_cursor == oldCursor)
+			{
+				Complete();
+			}
 		}
 
-		internal virtual void Lowest()
+		public virtual bool AfterLast()
 		{
-			_target = LOWEST;
+			if (_count == 0)
+			{
+				return false;
+			}
+			return (_cursor == _count - 1) && _cmp < 0;
+		}
+
+		public virtual bool BeforeFirst()
+		{
+			return (_cursor == 0) && (_cmp > 0);
+		}
+
+		private void Complete()
+		{
+			_upper = -2;
+		}
+
+		public virtual int Count()
+		{
+			return _count;
+		}
+
+		public virtual int Cursor()
+		{
+			return _cursor;
+		}
+
+		public virtual bool FoundMatch()
+		{
+			return _cmp == 0;
+		}
+
+		public virtual bool Incomplete()
+		{
+			return _upper >= _lower;
+		}
+
+		public virtual void MoveForward()
+		{
+			_cursor++;
+		}
+
+		public virtual void ResultIs(int cmp)
+		{
+			AdjustBounds(cmp);
+			AdjustCursor();
+		}
+
+		public virtual bool IsGreater()
+		{
+			return _cmp < 0;
 		}
 	}
 }

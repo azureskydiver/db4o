@@ -46,8 +46,8 @@ namespace com.db4o
 		public static com.db4o.ReplicationRecord BeginReplication(com.db4o.Transaction transA
 			, com.db4o.Transaction transB)
 		{
-			com.db4o.YapStream peerA = transA.i_stream;
-			com.db4o.YapStream peerB = transB.i_stream;
+			com.db4o.YapStream peerA = transA.Stream();
+			com.db4o.YapStream peerB = transB.Stream();
 			com.db4o.ext.Db4oDatabase dbA = peerA.Identity();
 			com.db4o.ext.Db4oDatabase dbB = peerB.Identity();
 			dbB.Bind(transA);
@@ -95,7 +95,7 @@ namespace com.db4o
 		{
 			com.db4o.ReplicationRecord res = null;
 			stream.ShowInternalClasses(true);
-			com.db4o.query.Query q = stream.QuerySharpenBug();
+			com.db4o.query.Query q = stream.Query();
 			q.Constrain(com.db4o.YapConst.CLASS_REPLICATIONRECORD);
 			q.Descend("_youngerPeer").Constrain(younger).Identity();
 			q.Descend("_olderPeer").Constrain(older).Identity();

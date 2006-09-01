@@ -42,15 +42,15 @@ namespace com.db4o
 		public sealed override int ObjectLength(object a_object)
 		{
 			int[] dim = _reflectArray.Dimensions(a_object);
-			return com.db4o.YapConst.OBJECT_LENGTH + (com.db4o.YapConst.YAPINT_LENGTH * (2 + 
-				dim.Length)) + (ElementCount(dim) * i_handler.LinkLength());
+			return com.db4o.YapConst.OBJECT_LENGTH + (com.db4o.YapConst.INT_LENGTH * (2 + dim
+				.Length)) + (ElementCount(dim) * i_handler.LinkLength());
 		}
 
 		public override int OwnLength(object obj)
 		{
 			int[] dim = _reflectArray.Dimensions(obj);
-			return com.db4o.YapConst.OBJECT_LENGTH + (com.db4o.YapConst.YAPINT_LENGTH * (2 + 
-				dim.Length));
+			return com.db4o.YapConst.OBJECT_LENGTH + (com.db4o.YapConst.INT_LENGTH * (2 + dim
+				.Length));
 		}
 
 		public sealed override object Read1(com.db4o.inside.marshall.MarshallerFamily mf, 

@@ -13,32 +13,28 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public sealed class YapConfigBlock : j4o.lang.Runnable
 	{
-		private readonly object _timeWriterLock = new object();
-
 		private readonly com.db4o.YapFile _stream;
 
-		internal int _address;
+		public int _address;
 
 		private com.db4o.Transaction _transactionToCommit;
 
-		internal int _bootRecordID;
+		public int _bootRecordID;
 
-		private const int POINTER_ADDRESS = 2;
+		private const int MINIMUM_LENGTH = com.db4o.YapConst.INT_LENGTH + (com.db4o.YapConst
+			.LONG_LENGTH * 2) + 1;
 
-		private const int MINIMUM_LENGTH = com.db4o.YapConst.YAPINT_LENGTH + (com.db4o.YapConst
-			.YAPLONG_LENGTH * 2) + 1;
+		internal const int OPEN_TIME_OFFSET = com.db4o.YapConst.INT_LENGTH;
 
-		internal const int OPEN_TIME_OFFSET = com.db4o.YapConst.YAPINT_LENGTH;
+		public const int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + com.db4o.YapConst.LONG_LENGTH;
 
-		internal const int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + com.db4o.YapConst.YAPLONG_LENGTH;
+		public const int TRANSACTION_OFFSET = MINIMUM_LENGTH;
 
-		internal const int TRANSACTION_OFFSET = MINIMUM_LENGTH;
-
-		private const int BOOTRECORD_OFFSET = TRANSACTION_OFFSET + com.db4o.YapConst.YAPINT_LENGTH
+		private const int BOOTRECORD_OFFSET = TRANSACTION_OFFSET + com.db4o.YapConst.INT_LENGTH
 			 * 2;
 
 		private const int INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + com.db4o.YapConst
-			.YAPINT_LENGTH;
+			.INT_LENGTH;
 
 		private const int ENCRYPTION_PASSWORD_LENGTH = 5;
 
@@ -47,30 +43,30 @@ namespace com.db4o
 		private const int FREESPACE_SYSTEM_OFFSET = PASSWORD_OFFSET + 1;
 
 		private const int FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + com.db4o.YapConst
-			.YAPINT_LENGTH;
+			.INT_LENGTH;
 
 		private const int CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + com.db4o.YapConst
-			.YAPINT_LENGTH;
+			.INT_LENGTH;
 
-		private const int LENGTH = MINIMUM_LENGTH + (com.db4o.YapConst.YAPINT_LENGTH * 6)
-			 + ENCRYPTION_PASSWORD_LENGTH + 1;
+		private const int LENGTH = MINIMUM_LENGTH + (com.db4o.YapConst.INT_LENGTH * 6) + 
+			ENCRYPTION_PASSWORD_LENGTH + 1;
 
-		private readonly long _opentime;
+		public readonly long _opentime;
 
 		internal byte _encoding;
 
-		internal byte _freespaceSystem;
+		public byte _freespaceSystem;
 
-		internal int _freespaceAddress;
+		public int _freespaceAddress;
 
 		private int _converterVersion;
 
-		internal YapConfigBlock(com.db4o.YapFile stream)
+		public YapConfigBlock(com.db4o.YapFile stream)
 		{
 			_stream = stream;
-			_encoding = stream.i_config.Encoding();
-			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.CheckType(stream.i_config
-				.FreespaceSystem());
+			_encoding = stream.ConfigImpl().Encoding();
+			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.CheckType(stream.ConfigImpl
+				().FreespaceSystem());
 			_opentime = ProcessID();
 			if (LockFile())
 			{
@@ -78,7 +74,7 @@ namespace com.db4o
 			}
 		}
 
-		internal com.db4o.Transaction GetTransactionToCommit()
+		public com.db4o.Transaction GetTransactionToCommit()
 		{
 			return _transactionToCommit;
 		}
@@ -98,7 +94,7 @@ namespace com.db4o
 			return _freespaceAddress;
 		}
 
-		internal void Go()
+		public void Go()
 		{
 			_stream.CreateStringIO(_encoding);
 			if (LockFile())
@@ -119,8 +115,8 @@ namespace com.db4o
 		private com.db4o.YapWriter HeaderLockIO()
 		{
 			com.db4o.YapWriter writer = _stream.GetWriter(_stream.GetTransaction(), 0, com.db4o.YapConst
-				.YAPINT_LENGTH);
-			writer.MoveForward(2 + com.db4o.YapConst.YAPINT_LENGTH);
+				.INT_LENGTH);
+			writer.MoveForward(2 + com.db4o.YapConst.INT_LENGTH);
 			return writer;
 		}
 
@@ -130,7 +126,8 @@ namespace com.db4o
 			{
 				com.db4o.YapWriter bytes = HeaderLockIO();
 				bytes.Read();
-				if (com.db4o.YInt.ReadInt(bytes) != ((int)_opentime))
+				int newOpenTime = com.db4o.YInt.ReadInt(bytes);
+				if (newOpenTime != ((int)_opentime))
 				{
 					throw new com.db4o.ext.DatabaseFileLockedException();
 				}
@@ -146,7 +143,7 @@ namespace com.db4o
 		private com.db4o.YapWriter OpenTimeIO()
 		{
 			com.db4o.YapWriter writer = _stream.GetWriter(_stream.GetTransaction(), _address, 
-				com.db4o.YapConst.YAPLONG_LENGTH);
+				com.db4o.YapConst.LONG_LENGTH);
 			writer.MoveForward(OPEN_TIME_OFFSET);
 			return writer;
 		}
@@ -168,8 +165,8 @@ namespace com.db4o
 		private byte[] PasswordToken()
 		{
 			byte[] pwdtoken = new byte[ENCRYPTION_PASSWORD_LENGTH];
-			string fullpwd = _stream.i_config.Password();
-			if (_stream.i_config.Encrypt() && fullpwd != null)
+			string fullpwd = _stream.ConfigImpl().Password();
+			if (_stream.ConfigImpl().Encrypt() && fullpwd != null)
 			{
 				try
 				{
@@ -195,7 +192,7 @@ namespace com.db4o
 			return id;
 		}
 
-		internal void Read(int address)
+		public void Read(int address)
 		{
 			_address = address;
 			WriteOpenTime();
@@ -215,16 +212,17 @@ namespace com.db4o
 			}
 			if (oldLength != LENGTH)
 			{
-				if (!_stream.i_config.IsReadOnly() && !_stream.i_config.AllowVersionUpdates())
+				if (!_stream.ConfigImpl().IsReadOnly() && !_stream.ConfigImpl().AllowVersionUpdates
+					())
 				{
-					if (_stream.i_config.AutomaticShutDown())
+					if (_stream.ConfigImpl().AutomaticShutDown())
 					{
 						com.db4o.Platform4.RemoveShutDownHook(_stream, _stream.i_lock);
 					}
 					com.db4o.inside.Exceptions4.ThrowRuntimeException(65);
 				}
 			}
-			long lastOpenTime = com.db4o.YLong.ReadLong(reader);
+			com.db4o.YLong.ReadLong(reader);
 			long lastAccessTime = com.db4o.YLong.ReadLong(reader);
 			_encoding = reader.ReadByte();
 			if (oldLength > TRANSACTION_OFFSET)
@@ -233,7 +231,7 @@ namespace com.db4o
 				int transactionID2 = com.db4o.YInt.ReadInt(reader);
 				if ((transactionID1 > 0) && (transactionID1 == transactionID2))
 				{
-					_transactionToCommit = new com.db4o.Transaction(_stream, null);
+					_transactionToCommit = _stream.NewTransaction(null);
 					_transactionToCommit.SetAddress(transactionID1);
 				}
 			}
@@ -297,10 +295,10 @@ namespace com.db4o
 					com.db4o.foundation.Cool.SleepIgnoringInterruption(waitTime);
 				}
 				reader = _stream.GetWriter(_stream.GetSystemTransaction(), _address, com.db4o.YapConst
-					.YAPLONG_LENGTH * 2);
+					.LONG_LENGTH * 2);
 				reader.MoveForward(OPEN_TIME_OFFSET);
 				reader.Read();
-				long currentOpenTime = com.db4o.YLong.ReadLong(reader);
+				com.db4o.YLong.ReadLong(reader);
 				long currentAccessTime = com.db4o.YLong.ReadLong(reader);
 				if ((currentAccessTime > lastAccessTime))
 				{
@@ -390,7 +388,7 @@ namespace com.db4o
 		{
 			HeaderLockOverwritten();
 			com.db4o.YapWriter writer = _stream.GetWriter(_stream.i_trans, 0, com.db4o.YapConst
-				.YAPID_LENGTH);
+				.ID_LENGTH);
 			writer.MoveForward(2);
 			com.db4o.YInt.WriteInt(_address, writer);
 			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)

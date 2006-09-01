@@ -107,9 +107,9 @@ namespace com.db4o
 				lock (i_threads)
 				{
 					com.db4o.foundation.Iterator4 i = i_threads.Iterator();
-					while (i.HasNext())
+					while (i.MoveNext())
 					{
-						((com.db4o.YapServerThread)i.Next()).Close();
+						((com.db4o.YapServerThread)i.Current()).Close();
 					}
 				}
 				i_yapFile = null;
@@ -132,9 +132,9 @@ namespace com.db4o
 			lock (i_threads)
 			{
 				com.db4o.foundation.Iterator4 i = i_threads.Iterator();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					com.db4o.YapServerThread serverThread = (com.db4o.YapServerThread)i.Next();
+					com.db4o.YapServerThread serverThread = (com.db4o.YapServerThread)i.Current();
 					if (serverThread.i_threadID == a_threadID)
 					{
 						return serverThread;
@@ -177,8 +177,10 @@ namespace com.db4o
 		{
 			try
 			{
-				return new com.db4o.YapClient(OpenClientSocket(), com.db4o.YapConst.EMBEDDED_CLIENT_USER
-					 + (i_threadIDGen - 1), "", false);
+				com.db4o.YapClient client = new com.db4o.YapClient(OpenClientSocket(), com.db4o.YapConst
+					.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "", false);
+				client.BlockSize(i_yapFile.BlockSize());
+				return client;
 			}
 			catch (System.IO.IOException e)
 			{

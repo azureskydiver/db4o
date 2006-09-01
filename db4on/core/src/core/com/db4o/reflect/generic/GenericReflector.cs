@@ -69,7 +69,7 @@ namespace com.db4o.reflect.generic
 			if (trans != null)
 			{
 				_trans = trans;
-				_stream = trans.i_stream;
+				_stream = trans.Stream();
 			}
 		}
 
@@ -85,10 +85,10 @@ namespace com.db4o.reflect.generic
 		public virtual int CollectionUpdateDepth(com.db4o.reflect.ReflectClass candidate)
 		{
 			com.db4o.foundation.Iterator4 i = _collectionUpdateDepths.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
 				com.db4o.reflect.generic.CollectionUpdateDepthEntry entry = (com.db4o.reflect.generic.CollectionUpdateDepthEntry
-					)i.Next();
+					)i.Current();
 				if (entry._predicate.Match(candidate))
 				{
 					return entry._depth;
@@ -196,9 +196,9 @@ namespace com.db4o.reflect.generic
 		public virtual bool IsCollection(com.db4o.reflect.ReflectClass candidate)
 		{
 			com.db4o.foundation.Iterator4 i = _collectionPredicates.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				if (((com.db4o.reflect.ReflectClassPredicate)i.Next()).Match(candidate))
+				if (((com.db4o.reflect.ReflectClassPredicate)i.Current()).Match(candidate))
 				{
 					return true;
 				}
@@ -273,10 +273,10 @@ namespace com.db4o.reflect.generic
 			ReadAll();
 			com.db4o.foundation.Collection4 classes = new com.db4o.foundation.Collection4();
 			com.db4o.foundation.Iterator4 i = _classes.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
 				com.db4o.reflect.generic.GenericClass clazz = (com.db4o.reflect.generic.GenericClass
-					)i.Next();
+					)i.Current();
 				if (!_stream.i_handlers.ICLASS_INTERNAL.IsAssignableFrom(clazz))
 				{
 					if (!clazz.IsSecondClass())
@@ -292,9 +292,9 @@ namespace com.db4o.reflect.generic
 				()];
 			int j = 0;
 			i = classes.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				ret[j++] = (com.db4o.reflect.ReflectClass)i.Next();
+				ret[j++] = (com.db4o.reflect.ReflectClass)i.Current();
 			}
 			return ret;
 		}
@@ -325,9 +325,9 @@ namespace com.db4o.reflect.generic
 				com.db4o.foundation.Collection4 pending = _pendingClasses;
 				_pendingClasses = new com.db4o.foundation.Collection4();
 				com.db4o.foundation.Iterator4 i = pending.Iterator();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					EnsureClassRead(((int)i.Next()));
+					EnsureClassRead(((int)i.Current()));
 				}
 			}
 			return ret;
@@ -355,9 +355,9 @@ namespace com.db4o.reflect.generic
 				_pendingClasses.Add(id);
 				return ret;
 			}
-			classreader.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+			classreader.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
 			int ancestorid = classreader.ReadInt();
-			int indexID = classreader.ReadInt();
+			classreader.ReadInt();
 			int fieldCount = classreader.ReadInt();
 			com.db4o.reflect.ReflectClass nativeClass = _delegate.ForName(classname);
 			ret = new com.db4o.reflect.generic.GenericClass(this, nativeClass, classname, EnsureClassAvailability
@@ -381,7 +381,7 @@ namespace com.db4o.reflect.generic
 			}
 			_classByName.Put(classname, clazz);
 			_classes.Add(clazz);
-			classreader.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH * 3);
+			classreader.IncrementOffset(com.db4o.YapConst.INT_LENGTH * 3);
 			int numfields = classreader.ReadInt();
 			com.db4o.reflect.generic.GenericField[] fields = new com.db4o.reflect.generic.GenericField
 				[numfields];

@@ -2,8 +2,8 @@ namespace com.db4o.foundation
 {
 	public interface Iterator4
 	{
-		bool HasNext();
+		bool MoveNext();
 
-		object Next();
+		object Current();
 	}
 }
