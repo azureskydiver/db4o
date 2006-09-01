@@ -22,11 +22,15 @@ public class DemoPopulator {
 
     public void start() {
         ObjectContainer db = getDb();
+        int ageCounter = 0;
         for(int i = 0; i < NUMBER_TO_MAKE; i++){
             Contact c = new Contact();
             c.setId(new Integer(i));
             c.setName("Contact " + i);
-            c.setAge(i * 5);
+            c.setAge(++ageCounter);
+            if(ageCounter >= 100){
+                ageCounter = 0;
+            }
             addAddresses(c);
             addEmails(c);
             db.set(c);
