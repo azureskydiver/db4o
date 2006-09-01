@@ -9,6 +9,14 @@ namespace com.db4o
 	{
 		internal static readonly com.db4o.QE DEFAULT = new com.db4o.QE();
 
+		public const int NULLS = 0;
+
+		public const int SMALLER = 1;
+
+		public const int EQUAL = 2;
+
+		public const int GREATER = 3;
+
 		internal virtual com.db4o.QE Add(com.db4o.QE evaluator)
 		{
 			return evaluator;
@@ -57,7 +65,7 @@ namespace com.db4o
 		/// <param name="bits"></param>
 		public virtual void IndexBitMap(bool[] bits)
 		{
-			bits[com.db4o.inside.ix.IxTraverser.EQUAL] = true;
+			bits[com.db4o.QE.EQUAL] = true;
 		}
 
 		public virtual bool SupportsIndex()

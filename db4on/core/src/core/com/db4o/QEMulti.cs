@@ -16,9 +16,9 @@ namespace com.db4o
 		{
 			bool ret = false;
 			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				if (((com.db4o.QE)i.Next()).Identity())
+				if (((com.db4o.QE)i.Current()).Identity())
 				{
 					ret = true;
 				}
@@ -39,9 +39,9 @@ namespace com.db4o
 			 a_candidate, object a_value)
 		{
 			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				if (((com.db4o.QE)i.Next()).Evaluate(a_constraint, a_candidate, a_value))
+				if (((com.db4o.QE)i.Current()).Evaluate(a_constraint, a_candidate, a_value))
 				{
 					return true;
 				}
@@ -52,18 +52,18 @@ namespace com.db4o
 		public override void IndexBitMap(bool[] bits)
 		{
 			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.QE)i.Next()).IndexBitMap(bits);
+				((com.db4o.QE)i.Current()).IndexBitMap(bits);
 			}
 		}
 
 		public override bool SupportsIndex()
 		{
 			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				if (!((com.db4o.QE)i.Next()).SupportsIndex())
+				if (!((com.db4o.QE)i.Current()).SupportsIndex())
 				{
 					return false;
 				}

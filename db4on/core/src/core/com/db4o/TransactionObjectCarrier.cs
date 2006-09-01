@@ -8,7 +8,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override void Commit()
+		public override void Commit()
 		{
 		}
 

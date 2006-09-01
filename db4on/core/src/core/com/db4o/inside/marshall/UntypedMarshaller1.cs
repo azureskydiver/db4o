@@ -57,7 +57,7 @@ namespace com.db4o.inside.marshall
 			int linkOffSet = reader._offset;
 			reader._offset = payLoadOffSet;
 			int yapClassID = reader.ReadInt();
-			com.db4o.YapClass yc = trans.i_stream.GetYapClass(yapClassID);
+			com.db4o.YapClass yc = trans.Stream().GetYapClass(yapClassID);
 			if (yc != null)
 			{
 				ret = yc.ReadQuery(trans, _family, false, reader, toArray);
@@ -75,10 +75,9 @@ namespace com.db4o.inside.marshall
 				return null;
 			}
 			com.db4o.TypeHandler4 ret = null;
-			int linkOffSet = reader[0]._offset;
 			reader[0]._offset = payLoadOffSet;
 			int yapClassID = reader[0].ReadInt();
-			com.db4o.YapClass yc = trans.i_stream.GetYapClass(yapClassID);
+			com.db4o.YapClass yc = trans.Stream().GetYapClass(yapClassID);
 			if (yc != null)
 			{
 				ret = yc.ReadArrayHandler(trans, _family, reader);
@@ -98,7 +97,7 @@ namespace com.db4o.inside.marshall
 			int linkOffSet = reader._offset;
 			reader._offset = payLoadOffSet;
 			int yapClassID = reader.ReadInt();
-			com.db4o.YapClass yc = candidates.i_trans.i_stream.GetYapClass(yapClassID);
+			com.db4o.YapClass yc = candidates.i_trans.Stream().GetYapClass(yapClassID);
 			if (yc != null)
 			{
 				ret = yc.ReadSubCandidate(_family, reader, candidates, false);

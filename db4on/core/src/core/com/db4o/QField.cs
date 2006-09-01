@@ -71,7 +71,7 @@ namespace com.db4o
 		{
 			if (i_yapField != null)
 			{
-				return i_yapField.GetFieldYapClass(i_trans.i_stream);
+				return i_yapField.GetFieldYapClass(i_trans.Stream());
 			}
 			return null;
 		}
@@ -88,6 +88,11 @@ namespace com.db4o
 				yf.Alive();
 			}
 			return yf;
+		}
+
+		public virtual com.db4o.YapField GetYapField()
+		{
+			return i_yapField;
 		}
 
 		internal virtual bool IsArray()
@@ -117,7 +122,7 @@ namespace com.db4o
 			{
 				return com.db4o.Null.INSTANCE;
 			}
-			com.db4o.YapClass yc = i_trans.i_stream.GetYapClass(i_trans.Reflector().ForObject
+			com.db4o.YapClass yc = i_trans.Stream().GetYapClass(i_trans.Reflector().ForObject
 				(obj), true);
 			com.db4o.YapField yf = yc.GetYapField(i_name);
 			if (yf != null)
@@ -131,7 +136,7 @@ namespace com.db4o
 		{
 			if (i_yapClassID != 0)
 			{
-				com.db4o.YapClass yc = a_trans.i_stream.GetYapClass(i_yapClassID);
+				com.db4o.YapClass yc = a_trans.Stream().GetYapClass(i_yapClassID);
 				i_yapField = yc.i_fields[i_index];
 			}
 		}

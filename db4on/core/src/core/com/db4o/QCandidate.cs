@@ -115,9 +115,9 @@ namespace com.db4o
 						int offset = arrayBytes[0]._offset;
 						bool outerRes = true;
 						com.db4o.foundation.Iterator4 i = a_candidates.IterateConstraints();
-						while (i.HasNext())
+						while (i.MoveNext())
 						{
-							com.db4o.QCon qcon = (com.db4o.QCon)i.Next();
+							com.db4o.QCon qcon = (com.db4o.QCon)i.Current();
 							com.db4o.QField qf = qcon.GetField();
 							if (qf == null || qf.i_name.Equals(_yapField.GetName()))
 							{
@@ -292,9 +292,9 @@ namespace com.db4o
 				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(_dependants
 					);
 				_dependants = null;
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					((com.db4o.QCandidate)i.Next()).DoNotInclude();
+					((com.db4o.QCandidate)i.Current()).DoNotInclude();
 				}
 			}
 		}
@@ -328,12 +328,9 @@ namespace com.db4o
 				_pendingJoins = com.db4o.Tree.Add(_pendingJoins, a_pending);
 				return true;
 			}
-			else
-			{
-				_pendingJoins = _pendingJoins.RemoveNode(oldPending);
-				oldPending._join.EvaluatePending(this, oldPending, a_pending, a_pending._result);
-				return false;
-			}
+			_pendingJoins = _pendingJoins.RemoveNode(oldPending);
+			oldPending._join.EvaluatePending(this, oldPending, a_pending, a_pending._result);
+			return false;
 		}
 
 		internal virtual com.db4o.reflect.ReflectClass ClassReflector()
@@ -448,23 +445,14 @@ namespace com.db4o
 							com.db4o.YapArrayN yan = new com.db4o.YapArrayN(a_stream, ydt, false);
 							return yan;
 						}
-						else
-						{
-							com.db4o.YapArray ya = new com.db4o.YapArray(a_stream, ydt, false);
-							return ya;
-						}
+						com.db4o.YapArray ya = new com.db4o.YapArray(a_stream, ydt, false);
+						return ya;
 					}
-					else
-					{
-						return yc.PrepareComparison(a_constraint);
-					}
+					return yc.PrepareComparison(a_constraint);
 				}
 				return null;
 			}
-			else
-			{
-				return _yapClass.PrepareComparison(a_constraint);
-			}
+			return _yapClass.PrepareComparison(a_constraint);
 		}
 
 		private void Read()
@@ -522,10 +510,10 @@ namespace com.db4o
 			com.db4o.Transaction trans = GetTransaction();
 			if (trans != null)
 			{
-				_member = trans.i_stream.GetByID1(trans, _key);
+				_member = trans.Stream().GetByID1(trans, _key);
 				if (_member != null && (a_activate || _member is com.db4o.config.Compare))
 				{
-					trans.i_stream.Activate1(trans, _member);
+					trans.Stream().Activate1(trans, _member);
 					CheckInstanceOfCompare();
 				}
 			}

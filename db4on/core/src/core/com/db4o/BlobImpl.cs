@@ -53,11 +53,8 @@ namespace com.db4o
 				i_ext = j4o.lang.JavaSystem.Substring(name, pos);
 				return j4o.lang.JavaSystem.Substring(name, 0, pos);
 			}
-			else
-			{
-				i_ext = "";
-				return name;
-			}
+			i_ext = "";
+			return name;
 		}
 
 		private void Copy(j4o.io.File from, j4o.io.File to)
@@ -203,7 +200,7 @@ namespace com.db4o
 				i_stream.Activate1(i_trans, this, 2);
 			}
 			string path = ServerPath();
-			i_stream.i_config.EnsureDirExists(path);
+			i_stream.ConfigImpl().EnsureDirExists(path);
 			if (writeToServer)
 			{
 				if (fileName == null)
@@ -254,12 +251,12 @@ namespace com.db4o
 
 		private string ServerPath()
 		{
-			string path = i_stream.i_config.BlobPath();
+			string path = i_stream.ConfigImpl().BlobPath();
 			if (path == null)
 			{
 				path = "blobs";
 			}
-			i_stream.i_config.EnsureDirExists(path);
+			i_stream.ConfigImpl().EnsureDirExists(path);
 			return path;
 		}
 
@@ -271,7 +268,7 @@ namespace com.db4o
 		public virtual void SetTrans(com.db4o.Transaction a_trans)
 		{
 			i_trans = a_trans;
-			i_stream = a_trans.i_stream;
+			i_stream = a_trans.Stream();
 		}
 
 		public virtual void WriteLocal(j4o.io.File file)

@@ -6,7 +6,7 @@ namespace com.db4o
 
 		internal Message(com.db4o.YapStream a_stream, string msg)
 		{
-			stream = a_stream.i_config.OutStream();
+			stream = a_stream.ConfigImpl().OutStream();
 			Print(msg, true);
 		}
 

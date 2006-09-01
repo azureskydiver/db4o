@@ -51,10 +51,7 @@ namespace com.db4o
 					{
 						return RotateLeft();
 					}
-					else
-					{
-						return Balance();
-					}
+					return Balance();
 				}
 			}
 			else
@@ -73,10 +70,7 @@ namespace com.db4o
 						{
 							return RotateRight();
 						}
-						else
-						{
-							return Balance();
-						}
+						return Balance();
 					}
 				}
 				else
@@ -154,7 +148,7 @@ namespace com.db4o
 		{
 			if (a_tree == null)
 			{
-				return com.db4o.YapConst.YAPINT_LENGTH;
+				return com.db4o.YapConst.INT_LENGTH;
 			}
 			return a_tree.ByteCount();
 		}
@@ -163,19 +157,16 @@ namespace com.db4o
 		{
 			if (VariableLength())
 			{
-				int[] length = new int[] { com.db4o.YapConst.YAPINT_LENGTH };
-				Traverse(new _AnonymousInnerClass116(this, length));
+				int[] length = new int[] { com.db4o.YapConst.INT_LENGTH };
+				Traverse(new _AnonymousInnerClass114(this, length));
 				return length[0];
 			}
-			else
-			{
-				return com.db4o.YapConst.YAPINT_LENGTH + (Size() * OwnLength());
-			}
+			return com.db4o.YapConst.INT_LENGTH + (Size() * OwnLength());
 		}
 
-		private sealed class _AnonymousInnerClass116 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass114 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass116(Tree _enclosing, int[] length)
+			public _AnonymousInnerClass114(Tree _enclosing, int[] length)
 			{
 				this._enclosing = _enclosing;
 				this.length = length;
@@ -314,22 +305,16 @@ namespace com.db4o
 			{
 				return a_in;
 			}
-			else
+			if (cmp > 0)
 			{
-				if (cmp > 0)
+				com.db4o.Tree node = FindGreaterOrEqual(a_in._preceding, a_finder);
+				if (node != null)
 				{
-					com.db4o.Tree node = FindGreaterOrEqual(a_in._preceding, a_finder);
-					if (node != null)
-					{
-						return node;
-					}
-					return a_in;
+					return node;
 				}
-				else
-				{
-					return FindGreaterOrEqual(a_in._subsequent, a_finder);
-				}
+				return a_in;
 			}
+			return FindGreaterOrEqual(a_in._subsequent, a_finder);
 		}
 
 		public static com.db4o.Tree FindSmaller(com.db4o.Tree a_in, com.db4o.Tree a_node)
@@ -348,10 +333,7 @@ namespace com.db4o
 				}
 				return a_in;
 			}
-			else
-			{
-				return FindSmaller(a_in._preceding, a_node);
-			}
+			return FindSmaller(a_in._preceding, a_node);
 		}
 
 		public com.db4o.Tree First()
@@ -434,8 +416,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal static com.db4o.Tree RemoveLike(com.db4o.Tree from, com.db4o.Tree a_find
-			)
+		public static com.db4o.Tree RemoveLike(com.db4o.Tree from, com.db4o.Tree a_find)
 		{
 			if (from == null)
 			{
@@ -638,12 +619,12 @@ namespace com.db4o
 				return;
 			}
 			a_writer.WriteInt(size);
-			a_tree.Traverse(new _AnonymousInnerClass473(a_writer));
+			a_tree.Traverse(new _AnonymousInnerClass467(a_writer));
 		}
 
-		private sealed class _AnonymousInnerClass473 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass467 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass473(com.db4o.YapReader a_writer)
+			public _AnonymousInnerClass467(com.db4o.YapReader a_writer)
 			{
 				this.a_writer = a_writer;
 			}

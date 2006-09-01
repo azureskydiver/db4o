@@ -59,10 +59,10 @@ namespace com.db4o.inside.ix
 			}
 			bool isLeaf = true;
 			com.db4o.foundation.Iterator4 i = _constraint.IterateChildren();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
 				isLeaf = false;
-				com.db4o.QCon childConstraint = (com.db4o.QCon)i.Next();
+				com.db4o.QCon childConstraint = (com.db4o.QCon)i.Current();
 				if (childConstraint.CanLoadByIndex())
 				{
 					new com.db4o.inside.ix.QxPath(_processor, this, childConstraint, _depth + 1).BuildPaths

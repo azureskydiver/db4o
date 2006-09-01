@@ -177,7 +177,7 @@ namespace com.db4o.nativequery.optimization
 			}
 			j4o.lang.Class clazz = j4o.lang.Class.GetClassForObject(receiver);
 			if (operand.Parent().Root() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
-				)
+				 && clazz.Equals(j4o.lang.Class.GetClassForType(typeof(j4o.lang.Class))))
 			{
 				clazz = (j4o.lang.Class)receiver;
 			}

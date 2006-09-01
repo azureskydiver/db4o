@@ -106,11 +106,6 @@ namespace com.db4o
 				.GetLength());
 		}
 
-		internal sealed override com.db4o.ClassIndex GetIndex()
-		{
-			return null;
-		}
-
 		internal override bool HasIndex()
 		{
 			return false;
@@ -270,6 +265,19 @@ namespace com.db4o
 		public override string ToString()
 		{
 			return "Wraps " + i_handler.ToString() + " in YapClassPrimitive";
+		}
+
+		public override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
+			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
+		{
+			if (mf._primitive.UseNormalClassRead())
+			{
+				base.Defrag(mf, source, target, mapping);
+			}
+			else
+			{
+				i_handler.Defrag(mf, source, target, mapping);
+			}
 		}
 	}
 }

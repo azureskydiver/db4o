@@ -7,7 +7,7 @@ namespace com.db4o
 		{
 			int yapClassId = _payLoad.ReadInt();
 			com.db4o.YapFile stream = (com.db4o.YapFile)GetStream();
-			Unmarshall(com.db4o.YapConst.YAPINT_LENGTH);
+			Unmarshall(com.db4o.YapConst.INT_LENGTH);
 			lock (stream.i_lock)
 			{
 				com.db4o.YapClass yc = yapClassId == 0 ? null : stream.GetYapClass(yapClassId);

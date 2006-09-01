@@ -6,10 +6,10 @@ namespace com.db4o
 			 sock)
 		{
 			com.db4o.YapStream stream = GetStream();
-			if (stream.i_config.MessageRecipient() != null)
+			if (stream.ConfigImpl().MessageRecipient() != null)
 			{
 				this.Unmarshall();
-				stream.i_config.MessageRecipient().ProcessMessage(stream, stream.Unmarshall(_payLoad
+				stream.ConfigImpl().MessageRecipient().ProcessMessage(stream, stream.Unmarshall(_payLoad
 					));
 			}
 			return true;

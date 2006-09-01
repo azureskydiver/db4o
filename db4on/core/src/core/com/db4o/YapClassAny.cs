@@ -70,18 +70,18 @@ namespace com.db4o
 		{
 			if (topLevel)
 			{
-				header.AddBaseLength(com.db4o.YapConst.YAPINT_LENGTH);
+				header.AddBaseLength(com.db4o.YapConst.INT_LENGTH);
 			}
 			else
 			{
-				header.AddPayLoadLength(com.db4o.YapConst.YAPINT_LENGTH);
+				header.AddPayLoadLength(com.db4o.YapConst.INT_LENGTH);
 			}
 			com.db4o.YapClass yc = ForObject(trans, obj, true);
 			if (yc == null)
 			{
 				return;
 			}
-			header.AddPayLoadLength(com.db4o.YapConst.YAPINT_LENGTH);
+			header.AddPayLoadLength(com.db4o.YapConst.INT_LENGTH);
 			yc.CalculateLengths(trans, header, false, obj, false);
 		}
 
@@ -132,6 +132,14 @@ namespace com.db4o
 			)
 		{
 			return mf._untyped.WriteNew(obj, restoreLinkeOffset, writer);
+		}
+
+		public override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
+			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
+		{
+			int linkLength = LinkLength();
+			source.IncrementOffset(linkLength);
+			target.IncrementOffset(linkLength);
 		}
 	}
 }

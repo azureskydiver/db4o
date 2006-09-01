@@ -3,7 +3,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class YapMeta
 	{
-		internal int i_id;
+		protected int i_id;
 
 		protected int i_state = 2;
 
@@ -76,7 +76,7 @@ namespace com.db4o
 
 		public virtual int LinkLength()
 		{
-			return com.db4o.YapConst.YAPID_LENGTH;
+			return com.db4o.YapConst.ID_LENGTH;
 		}
 
 		internal void NotCachedDirty()
@@ -92,7 +92,7 @@ namespace com.db4o
 			{
 				if (BeginProcessing())
 				{
-					com.db4o.YapReader reader = a_trans.i_stream.ReadReaderByID(a_trans, GetID());
+					com.db4o.YapReader reader = a_trans.Stream().ReadReaderByID(a_trans, GetID());
 					if (reader != null)
 					{
 						ReadThis(a_trans, reader);
@@ -153,7 +153,7 @@ namespace com.db4o
 			{
 				return;
 			}
-			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
+			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.Stream();
 			int address = 0;
 			int length = OwnLength();
 			com.db4o.YapReader writer = new com.db4o.YapReader(length);
@@ -169,7 +169,7 @@ namespace com.db4o
 				a_trans.SlotFreeOnRollbackCommitSetPointer(i_id, address, length);
 			}
 			WriteThis(a_trans, writer);
-			((com.db4o.YapFile)stream).WriteObject(this, writer, address);
+			stream.WriteObject(this, writer, address);
 			if (IsActive())
 			{
 				SetStateClean();
@@ -186,7 +186,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual void WriteOwnID(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+		public virtual void WriteOwnID(com.db4o.Transaction trans, com.db4o.YapReader a_writer
 			)
 		{
 			Write(trans);

@@ -186,7 +186,7 @@ namespace com.db4o
 				return false;
 			}
 			_processing = true;
-			com.db4o.YapStream stream = systemTrans.i_stream;
+			com.db4o.YapStream stream = systemTrans.Stream();
 			if (stream.MaintainsIndices())
 			{
 				bool maintainMetaClass = _config.GetAsBoolean(MAINTAIN_METACLASS);

@@ -9,17 +9,28 @@ namespace com.db4o.foundation
 		public ArrayIterator4(object[] elements)
 		{
 			_elements = elements;
-			_next = 0;
+			_next = -1;
 		}
 
-		public virtual bool HasNext()
+		public virtual bool MoveNext()
 		{
-			return _next < _elements.Length;
+			if (_next < LastIndex())
+			{
+				++_next;
+				return true;
+			}
+			_next = _elements.Length;
+			return false;
 		}
 
-		public virtual object Next()
+		public virtual object Current()
 		{
-			return _elements[_next++];
+			return _elements[_next];
+		}
+
+		private int LastIndex()
+		{
+			return _elements.Length - 1;
 		}
 	}
 }

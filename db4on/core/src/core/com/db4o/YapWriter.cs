@@ -222,7 +222,7 @@ namespace com.db4o
 
 		public com.db4o.YapStream GetStream()
 		{
-			return i_trans.i_stream;
+			return i_trans.Stream();
 		}
 
 		public com.db4o.Transaction GetTransaction()
@@ -254,7 +254,7 @@ namespace com.db4o
 
 		public void Read()
 		{
-			i_trans.i_stream.ReadBytes(_buffer, i_address, _addressOffset, i_length);
+			i_trans.Stream().ReadBytes(_buffer, i_address, _addressOffset, i_length);
 		}
 
 		internal bool Read(com.db4o.foundation.network.YapSocket sock)
@@ -286,7 +286,7 @@ namespace com.db4o
 			}
 			else
 			{
-				bytes = i_trans.i_stream.ReadObjectWriterByAddress(i_trans, id, length);
+				bytes = i_trans.Stream().ReadObjectWriterByAddress(i_trans, id, length);
 				if (bytes != null)
 				{
 					bytes.SetID(id);
@@ -392,7 +392,7 @@ namespace com.db4o
 			UseSlot(a_adress, a_length);
 		}
 
-		internal void Write()
+		public void Write()
 		{
 			i_trans.i_file.WriteBytes(this, i_address, _addressOffset);
 		}
@@ -416,7 +416,7 @@ namespace com.db4o
 			public void Visit(com.db4o.YapWriter a_bytes)
 			{
 				a_bytes.WriteEmbedded();
-				this._enclosing.i_trans.i_stream.WriteEmbedded(finalThis, a_bytes);
+				this._enclosing.i_trans.Stream().WriteEmbedded(finalThis, a_bytes);
 			}
 
 			private readonly YapWriter _enclosing;
@@ -432,9 +432,9 @@ namespace com.db4o
 
 		public void WriteEncrypt()
 		{
-			i_trans.i_stream.i_handlers.Encrypt(this);
+			i_trans.Stream().i_handlers.Encrypt(this);
 			i_trans.i_file.WriteBytes(this, i_address, _addressOffset);
-			i_trans.i_stream.i_handlers.Decrypt(this);
+			i_trans.Stream().i_handlers.Decrypt(this);
 		}
 
 		public void WritePayload(com.db4o.YapWriter payLoad, bool topLevel)
@@ -449,9 +449,9 @@ namespace com.db4o
 		private void CheckMinimumPayLoadOffsetAndWritePointerAndLength(int length, bool alignToBlockSize
 			)
 		{
-			if (_payloadOffset <= _offset + (com.db4o.YapConst.YAPINT_LENGTH * 2))
+			if (_payloadOffset <= _offset + (com.db4o.YapConst.INT_LENGTH * 2))
 			{
-				_payloadOffset = _offset + (com.db4o.YapConst.YAPINT_LENGTH * 2);
+				_payloadOffset = _offset + (com.db4o.YapConst.INT_LENGTH * 2);
 			}
 			if (alignToBlockSize)
 			{
@@ -490,8 +490,8 @@ namespace com.db4o
 		{
 			int size = a_qr.Size();
 			WriteInt(size);
-			_offset += (size - 1) * com.db4o.YapConst.YAPID_LENGTH;
-			int dec = com.db4o.YapConst.YAPID_LENGTH * 2;
+			_offset += (size - 1) * com.db4o.YapConst.ID_LENGTH;
+			int dec = com.db4o.YapConst.ID_LENGTH * 2;
 			for (int i = 0; i < size; i++)
 			{
 				WriteInt(a_qr.NextInt());

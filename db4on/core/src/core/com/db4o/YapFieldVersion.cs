@@ -11,7 +11,7 @@ namespace com.db4o
 		public override void AddFieldIndex(com.db4o.inside.marshall.MarshallerFamily mf, 
 			com.db4o.YapWriter writer, bool isnew)
 		{
-			com.db4o.YLong.WriteLong(writer.GetStream().BootRecord().NextVersion(), writer);
+			com.db4o.YLong.WriteLong(writer.GetStream().GenerateTimeStampId(), writer);
 		}
 
 		public override void Delete(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
@@ -30,20 +30,9 @@ namespace com.db4o
 			 a_bytes, bool a_migrating, bool a_new)
 		{
 			com.db4o.YapStream stream = a_bytes.GetStream().i_parent;
-			com.db4o.PBootRecord br = stream.BootRecord();
 			if (!a_migrating)
 			{
-				if (br != null)
-				{
-					a_yapObject.i_virtualAttributes.i_version = br.NextVersion();
-				}
-			}
-			else
-			{
-				if (br != null)
-				{
-					br.SetDirty();
-				}
+				a_yapObject.i_virtualAttributes.i_version = stream.GenerateTimeStampId();
 			}
 			if (a_yapObject.i_virtualAttributes == null)
 			{
@@ -57,7 +46,7 @@ namespace com.db4o
 
 		public override int LinkLength()
 		{
-			return com.db4o.YapConst.YAPLONG_LENGTH;
+			return com.db4o.YapConst.LONG_LENGTH;
 		}
 
 		internal override void MarshallIgnore(com.db4o.YapWriter writer)

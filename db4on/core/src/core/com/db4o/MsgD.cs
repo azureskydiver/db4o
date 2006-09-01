@@ -53,8 +53,8 @@ namespace com.db4o
 
 		internal com.db4o.MsgD GetWriterForInts(com.db4o.Transaction a_trans, int[] ints)
 		{
-			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
-				 * ints.Length);
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.INT_LENGTH 
+				* ints.Length);
 			for (int i = 0; i < ints.Length; i++)
 			{
 				message.WriteInt(ints[i]);
@@ -65,8 +65,8 @@ namespace com.db4o
 		internal com.db4o.MsgD GetWriterForIntArray(com.db4o.Transaction a_trans, int[] ints
 			, int length)
 		{
-			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
-				 * (length + 1));
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.INT_LENGTH 
+				* (length + 1));
 			message.WriteInt(length);
 			for (int i = 0; i < length; i++)
 			{
@@ -77,8 +77,7 @@ namespace com.db4o
 
 		internal com.db4o.MsgD GetWriterForInt(com.db4o.Transaction a_trans, int id)
 		{
-			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
-				);
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.INT_LENGTH);
 			message.WriteInt(id);
 			return message;
 		}
@@ -87,7 +86,7 @@ namespace com.db4o
 			, string str)
 		{
 			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.stringIO.Length
-				(str) + com.db4o.YapConst.YAPINT_LENGTH * 2);
+				(str) + com.db4o.YapConst.INT_LENGTH * 2);
 			message.WriteInt(anInt);
 			message.WriteString(str);
 			return message;
@@ -96,7 +95,7 @@ namespace com.db4o
 		internal com.db4o.MsgD GetWriterForLong(com.db4o.Transaction a_trans, long a_long
 			)
 		{
-			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.YAPLONG_LENGTH
+			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.LONG_LENGTH
 				);
 			message.WriteLong(a_long);
 			return message;
@@ -106,7 +105,7 @@ namespace com.db4o
 			)
 		{
 			com.db4o.MsgD message = GetWriterForLength(a_trans, com.db4o.YapConst.stringIO.Length
-				(str) + com.db4o.YapConst.YAPINT_LENGTH);
+				(str) + com.db4o.YapConst.INT_LENGTH);
 			message.WriteString(str);
 			return message;
 		}

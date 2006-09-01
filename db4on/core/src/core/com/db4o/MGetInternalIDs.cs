@@ -21,7 +21,7 @@ namespace com.db4o
 			}
 			int size = ids.Length;
 			com.db4o.MsgD message = com.db4o.Msg.ID_LIST.GetWriterForLength(GetTransaction(), 
-				com.db4o.YapConst.YAPID_LENGTH * (size + 1));
+				com.db4o.YapConst.ID_LENGTH * (size + 1));
 			com.db4o.YapWriter writer = message.GetPayLoad();
 			writer.WriteInt(size);
 			for (int i = 0; i < size; i++)

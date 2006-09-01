@@ -3,8 +3,6 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class YapArray : com.db4o.YapIndependantType
 	{
-		public readonly com.db4o.YapStream _stream;
-
 		public readonly com.db4o.TypeHandler4 i_handler;
 
 		public readonly bool i_isPrimitive;
@@ -14,7 +12,6 @@ namespace com.db4o
 		public YapArray(com.db4o.YapStream stream, com.db4o.TypeHandler4 a_handler, bool 
 			a_isPrimitive) : base(stream)
 		{
-			_stream = stream;
 			i_handler = a_handler;
 			i_isPrimitive = a_isPrimitive;
 			_reflectArray = stream.Reflector().Array();
@@ -197,7 +194,7 @@ namespace com.db4o
 
 		public virtual int OwnLength(object obj)
 		{
-			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.YAPINT_LENGTH * 2;
+			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.INT_LENGTH * 2;
 		}
 
 		public override void PrepareComparison(com.db4o.Transaction a_trans, object obj)
@@ -266,12 +263,9 @@ namespace com.db4o
 				return _reflectArray.NewInstance(i_handler.PrimitiveClassReflector(), a_elements[
 					0]);
 			}
-			else
+			if (clazz[0] != null)
 			{
-				if (clazz[0] != null)
-				{
-					return _reflectArray.NewInstance(clazz[0], a_elements[0]);
-				}
+				return _reflectArray.NewInstance(clazz[0], a_elements[0]);
 			}
 			return null;
 		}
@@ -324,7 +318,7 @@ namespace com.db4o
 				if (elements != com.db4o.YapConst.IGNORE_ID)
 				{
 					bool primitive = false;
-					com.db4o.YapClass yc = a_trans.i_stream.GetYapClass(-elements);
+					com.db4o.YapClass yc = a_trans.Stream().GetYapClass(-elements);
 					if (yc != null)
 					{
 						if (primitive)

@@ -32,7 +32,7 @@ namespace com.db4o.inside.freespace
 
 		public sealed override int OwnLength()
 		{
-			return com.db4o.YapConst.YAPINT_LENGTH * 2;
+			return com.db4o.YapConst.INT_LENGTH * 2;
 		}
 
 		internal static com.db4o.Tree RemoveGreaterOrEqual(com.db4o.inside.freespace.FreeSlotNode
@@ -48,31 +48,25 @@ namespace com.db4o.inside.freespace
 				a_finder._object = a_in;
 				return a_in.Remove();
 			}
-			else
+			if (cmp > 0)
 			{
-				if (cmp > 0)
+				a_in._preceding = RemoveGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)a_in
+					._preceding, a_finder);
+				if (a_finder._object != null)
 				{
-					a_in._preceding = RemoveGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)a_in
-						._preceding, a_finder);
-					if (a_finder._object != null)
-					{
-						a_in._size--;
-						return a_in;
-					}
-					a_finder._object = a_in;
-					return a_in.Remove();
-				}
-				else
-				{
-					a_in._subsequent = RemoveGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)a_in
-						._subsequent, a_finder);
-					if (a_finder._object != null)
-					{
-						a_in._size--;
-					}
+					a_in._size--;
 					return a_in;
 				}
+				a_finder._object = a_in;
+				return a_in.Remove();
 			}
+			a_in._subsequent = RemoveGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)a_in
+				._subsequent, a_finder);
+			if (a_finder._object != null)
+			{
+				a_in._size--;
+			}
+			return a_in;
 		}
 
 		public override object Read(com.db4o.YapReader a_reader)

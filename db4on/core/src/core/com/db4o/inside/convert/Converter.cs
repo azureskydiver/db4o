@@ -3,20 +3,21 @@ namespace com.db4o.inside.convert
 	/// <exclude></exclude>
 	public class Converter
 	{
-		public const int VERSION = com.db4o.inside.marshall.MarshallerFamily.LEGACY ? 0 : 
-			5;
+		public static readonly int VERSION = com.db4o.inside.marshall.MarshallerFamily.LEGACY
+			 ? 0 : 5;
 
 		private com.db4o.foundation.Hashtable4 _conversions;
 
-		public static bool Convert(com.db4o.YapFile file, com.db4o.YapConfigBlock config)
+		public static bool Convert(com.db4o.YapFile file, com.db4o.header.FileHeader0 fileHeader
+			)
 		{
-			if (config.ConverterVersion() >= VERSION)
+			if (fileHeader.ConverterVersion() >= VERSION)
 			{
 				return false;
 			}
 			com.db4o.inside.convert.Converter converter = new com.db4o.inside.convert.Converter
 				();
-			converter.Run(file, config);
+			converter.Run(file, fileHeader);
 			return true;
 		}
 
@@ -36,9 +37,9 @@ namespace com.db4o.inside.convert
 			_conversions.Put(idx, conversion);
 		}
 
-		private void Run(com.db4o.YapFile file, com.db4o.YapConfigBlock config)
+		private void Run(com.db4o.YapFile file, com.db4o.header.FileHeader0 fileHeader)
 		{
-			int start = config.ConverterVersion();
+			int start = fileHeader.ConverterVersion();
 			for (int i = start; i <= VERSION; i++)
 			{
 				com.db4o.inside.convert.Conversion conversion = (com.db4o.inside.convert.Conversion
@@ -49,8 +50,8 @@ namespace com.db4o.inside.convert
 					conversion.Run();
 				}
 			}
-			config.ConverterVersion(VERSION);
-			config.Write();
+			fileHeader.ConverterVersion(VERSION);
+			fileHeader.WriteVariablePart1();
 		}
 	}
 }

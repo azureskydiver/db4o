@@ -20,8 +20,8 @@ namespace com.db4o {
             lock(this){
                 Iterator4 i = new Iterator4Impl(list);
                 list = null;
-                while(i.HasNext()){
-                    YapRef yapRef = (YapRef)i.Next();
+                while(i.MoveNext()){
+                    YapRef yapRef = (YapRef)i.Current();
                     if(yapRef.IsAlive){
                         list = new List4(list, yapRef);
                     }else{
@@ -30,8 +30,8 @@ namespace com.db4o {
                 }
             }
             Iterator4 j = new Iterator4Impl(remove);
-            while(j.HasNext() && (!objectContainer.IsClosed())){
-                objectContainer.Purge(j.Next());
+            while(j.MoveNext() && (!objectContainer.IsClosed())){
+                objectContainer.Purge(j.Current());
             }
         }
     }

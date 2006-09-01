@@ -5,8 +5,8 @@ namespace com.db4o
 		internal sealed override com.db4o.YapWriter GetByteLoad()
 		{
 			int address = this._payLoad.ReadInt();
-			int length = this._payLoad.GetLength() - (com.db4o.YapConst.YAPINT_LENGTH);
-			this._payLoad.RemoveFirstBytes(com.db4o.YapConst.YAPINT_LENGTH);
+			int length = this._payLoad.GetLength() - (com.db4o.YapConst.INT_LENGTH);
+			this._payLoad.RemoveFirstBytes(com.db4o.YapConst.INT_LENGTH);
 			this._payLoad.UseSlot(address, length);
 			return this._payLoad;
 		}
@@ -14,7 +14,7 @@ namespace com.db4o
 		internal sealed override com.db4o.MsgD GetWriter(com.db4o.YapWriter bytes)
 		{
 			com.db4o.MsgD message = this.GetWriterForLength(bytes.GetTransaction(), bytes.GetLength
-				() + com.db4o.YapConst.YAPINT_LENGTH);
+				() + com.db4o.YapConst.INT_LENGTH);
 			message._payLoad.WriteInt(bytes.GetAddress());
 			message._payLoad.Append(bytes._buffer);
 			return message;

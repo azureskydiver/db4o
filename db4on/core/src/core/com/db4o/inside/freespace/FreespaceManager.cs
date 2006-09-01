@@ -67,7 +67,7 @@ namespace com.db4o.inside.freespace
 
 		internal static int SlotLength()
 		{
-			return com.db4o.YapConst.YAPINT_LENGTH * INTS_IN_SLOT;
+			return com.db4o.YapConst.INT_LENGTH * INTS_IN_SLOT;
 		}
 
 		public abstract void BeginCommit();
@@ -81,7 +81,7 @@ namespace com.db4o.inside.freespace
 
 		internal int DiscardLimit()
 		{
-			return _file.i_config.DiscardFreeSpace();
+			return _file.ConfigImpl().DiscardFreeSpace();
 		}
 
 		public abstract void EndCommit();

@@ -34,7 +34,7 @@ namespace com.db4o
 				com.db4o.Transaction trans = GetTrans();
 				if (trans != null)
 				{
-					if (trans.i_stream.i_config.ActivationDepth() < 1)
+					if (trans.Stream().ConfigImpl().ActivationDepth() < 1)
 					{
 						a_depth = 1;
 					}

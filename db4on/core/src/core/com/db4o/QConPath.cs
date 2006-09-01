@@ -93,14 +93,14 @@ namespace com.db4o
 			bool mayMorph = true;
 			if (claxx != null)
 			{
-				com.db4o.YapClass yc = i_trans.i_stream.GetYapClass(claxx, true);
+				com.db4o.YapClass yc = i_trans.Stream().GetYapClass(claxx, true);
 				if (yc != null)
 				{
 					com.db4o.foundation.Iterator4 i = IterateChildren();
-					while (i.HasNext())
+					while (i.MoveNext())
 					{
-						com.db4o.QField qf = ((com.db4o.QCon)i.Next()).GetField();
-						if (!yc.HasField(i_trans.i_stream, qf.i_name))
+						com.db4o.QField qf = ((com.db4o.QCon)i.Current()).GetField();
+						if (!yc.HasField(i_trans.Stream(), qf.i_name))
 						{
 							mayMorph = false;
 							break;
@@ -111,16 +111,16 @@ namespace com.db4o
 			if (mayMorph)
 			{
 				com.db4o.foundation.Iterator4 j = IterateChildren();
-				while (j.HasNext())
+				while (j.MoveNext())
 				{
-					newConstraint.AddConstraint((com.db4o.QCon)j.Next());
+					newConstraint.AddConstraint((com.db4o.QCon)j.Current());
 				}
 				if (HasJoins())
 				{
 					com.db4o.foundation.Iterator4 k = IterateJoins();
-					while (k.HasNext())
+					while (k.MoveNext())
 					{
-						com.db4o.QConJoin qcj = (com.db4o.QConJoin)k.Next();
+						com.db4o.QConJoin qcj = (com.db4o.QConJoin)k.Current();
 						qcj.ExchangeConstraint(this, newConstraint);
 						newConstraint.AddJoin(qcj);
 					}

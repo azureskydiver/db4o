@@ -54,7 +54,7 @@ namespace com.db4o.inside.marshall
 			a_bytes[0]._offset = offset;
 			if (id != 0)
 			{
-				com.db4o.YapWriter reader = a_trans.i_stream.ReadWriterByID(a_trans, id);
+				com.db4o.YapWriter reader = a_trans.Stream().ReadWriterByID(a_trans, id);
 				if (reader != null)
 				{
 					com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader

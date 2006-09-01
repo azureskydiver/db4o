@@ -16,8 +16,8 @@ namespace com.db4o.inside.btree
 	/// <exclude></exclude>
 	public class BTreeNode : com.db4o.YapMeta
 	{
-		private const int COUNT_LEAF_AND_3_LINK_LENGTH = (com.db4o.YapConst.YAPINT_LENGTH
-			 * 4) + 1;
+		private const int COUNT_LEAF_AND_3_LINK_LENGTH = (com.db4o.YapConst.INT_LENGTH * 
+			4) + 1;
 
 		private const int SLOT_LEADING_LENGTH = com.db4o.YapConst.LEADING_LENGTH + COUNT_LEAF_AND_3_LINK_LENGTH;
 
@@ -78,6 +78,11 @@ namespace com.db4o.inside.btree
 			secondChild._parentID = GetID();
 		}
 
+		public virtual com.db4o.inside.btree.BTree Btree()
+		{
+			return _btree;
+		}
+
 		/// <returns>
 		/// the split node if this node is split
 		/// or this if the first key has changed
@@ -85,49 +90,161 @@ namespace com.db4o.inside.btree
 		public virtual com.db4o.inside.btree.BTreeNode Add(com.db4o.Transaction trans)
 		{
 			com.db4o.YapReader reader = PrepareRead(trans);
-			com.db4o.inside.btree.Searcher s = Search(trans, reader);
+			com.db4o.inside.btree.Searcher s = Search(reader);
 			if (_isLeaf)
 			{
 				PrepareWrite(trans);
-				if (s._cmp < 0)
+				if (WasRemoved(trans, s))
 				{
-					s._cursor++;
+					CancelRemoval(trans, s.Cursor());
+					return null;
 				}
-				Insert(s._cursor);
-				_keys[s._cursor] = new com.db4o.inside.btree.BTreeAdd(trans, KeyHandler().Current
-					());
+				if (s.Count() > 0 && !s.BeforeFirst())
+				{
+					s.MoveForward();
+				}
+				PrepareInsert(s.Cursor());
+				_keys[s.Cursor()] = NewAddPatch(trans);
 				if (HandlesValues())
 				{
-					_values[s._cursor] = ValueHandler().Current();
+					_values[s.Cursor()] = ValueHandler().Current();
 				}
 			}
 			else
 			{
-				com.db4o.inside.btree.BTreeNode childNode = Child(reader, s._cursor);
+				com.db4o.inside.btree.BTreeNode childNode = Child(reader, s.Cursor());
 				com.db4o.inside.btree.BTreeNode childNodeOrSplit = childNode.Add(trans);
 				if (childNodeOrSplit == null)
 				{
 					return null;
 				}
 				PrepareWrite(trans);
-				_keys[s._cursor] = childNode._keys[0];
+				_keys[s.Cursor()] = childNode._keys[0];
 				if (childNode != childNodeOrSplit)
 				{
-					int splitCursor = s._cursor + 1;
-					Insert(splitCursor);
+					int splitCursor = s.Cursor() + 1;
+					PrepareInsert(splitCursor);
 					_keys[splitCursor] = childNodeOrSplit._keys[0];
 					_children[splitCursor] = childNodeOrSplit;
 				}
 			}
-			if (_count >= _btree._nodeSize)
+			if (_count >= _btree.NodeSize())
 			{
 				return Split(trans);
 			}
-			if (s._cursor == 0)
+			if (s.Cursor() == 0)
 			{
 				return this;
 			}
 			return null;
+		}
+
+		private com.db4o.inside.btree.BTreeAdd NewAddPatch(com.db4o.Transaction trans)
+		{
+			SizeIncrement(trans);
+			return new com.db4o.inside.btree.BTreeAdd(trans, KeyHandler().Current());
+		}
+
+		private void CancelRemoval(com.db4o.Transaction trans, int index)
+		{
+			com.db4o.inside.btree.BTreeRemove patch = (com.db4o.inside.btree.BTreeRemove)KeyPatch
+				(index);
+			com.db4o.inside.btree.BTreeRemove nextPatch = patch.RemoveFor(trans);
+			_keys[index] = nextPatch == null ? patch.GetObject() : nextPatch;
+			SizeIncrement(trans);
+		}
+
+		private void SizeIncrement(com.db4o.Transaction trans)
+		{
+			_btree.SizeChanged(trans, 1);
+		}
+
+		private bool WasRemoved(com.db4o.Transaction trans, com.db4o.inside.btree.Searcher
+			 s)
+		{
+			if (!s.FoundMatch())
+			{
+				return false;
+			}
+			com.db4o.inside.btree.BTreePatch patch = KeyPatch(trans, s.Cursor());
+			return patch != null && patch.IsRemove();
+		}
+
+		internal virtual com.db4o.inside.btree.BTreeNodeSearchResult SearchLeaf(com.db4o.Transaction
+			 trans, com.db4o.inside.btree.SearchTarget target)
+		{
+			com.db4o.YapReader reader = PrepareRead(trans);
+			com.db4o.inside.btree.Searcher s = Search(reader, target);
+			if (!_isLeaf)
+			{
+				return Child(reader, s.Cursor()).SearchLeaf(trans, target);
+			}
+			if (!s.FoundMatch() || target == com.db4o.inside.btree.SearchTarget.ANY || target
+				 == com.db4o.inside.btree.SearchTarget.HIGHEST)
+			{
+				return new com.db4o.inside.btree.BTreeNodeSearchResult(trans, Btree(), s, this);
+			}
+			if (target == com.db4o.inside.btree.SearchTarget.LOWEST)
+			{
+				com.db4o.inside.btree.BTreeNodeSearchResult res = FindLowestLeafMatch(trans, s.Cursor
+					() - 1);
+				if (res != null)
+				{
+					return res;
+				}
+				return CreateMatchingSearchResult(trans, s.Cursor());
+			}
+			throw new System.InvalidOperationException();
+		}
+
+		private com.db4o.inside.btree.BTreeNodeSearchResult FindLowestLeafMatch(com.db4o.Transaction
+			 trans, int index)
+		{
+			PrepareWrite(trans);
+			if (index >= 0)
+			{
+				if (!CompareInWriteModeEquals(index))
+				{
+					return null;
+				}
+				if (index > 0)
+				{
+					com.db4o.inside.btree.BTreeNodeSearchResult res = FindLowestLeafMatch(trans, index
+						 - 1);
+					if (res != null)
+					{
+						return res;
+					}
+					return CreateMatchingSearchResult(trans, index);
+				}
+			}
+			com.db4o.inside.btree.BTreeNode node = PreviousNode();
+			if (node != null)
+			{
+				com.db4o.inside.btree.BTreeNodeSearchResult res = node.FindLowestLeafMatch(trans, 
+					node.LastIndex());
+				if (res != null)
+				{
+					return res;
+				}
+			}
+			if (index < 0)
+			{
+				return null;
+			}
+			return CreateMatchingSearchResult(trans, index);
+		}
+
+		private bool CompareInWriteModeEquals(int index)
+		{
+			return CompareInWriteMode(index) == 0;
+		}
+
+		private com.db4o.inside.btree.BTreeNodeSearchResult CreateMatchingSearchResult(com.db4o.Transaction
+			 trans, int index)
+		{
+			return new com.db4o.inside.btree.BTreeNodeSearchResult(trans, Btree(), this, index
+				, true);
 		}
 
 		private bool CanWrite()
@@ -135,7 +252,12 @@ namespace com.db4o.inside.btree
 			return _keys != null;
 		}
 
-		private com.db4o.inside.btree.BTreeNode Child(int index)
+		internal virtual int ChildCount()
+		{
+			return (_children == null ? 0 : _children.Length);
+		}
+
+		internal virtual com.db4o.inside.btree.BTreeNode Child(int index)
 		{
 			if (_children[index] is com.db4o.inside.btree.BTreeNode)
 			{
@@ -202,12 +324,17 @@ namespace com.db4o.inside.btree
 
 		internal virtual void Commit(com.db4o.Transaction trans)
 		{
+			CommitOrRollback(trans, true);
+		}
+
+		internal virtual void CommitOrRollback(com.db4o.Transaction trans, bool isCommit)
+		{
 			if (_dead)
 			{
 				return;
 			}
 			_cached = false;
-			if (!CanWrite())
+			if (!_isLeaf)
 			{
 				return;
 			}
@@ -216,46 +343,63 @@ namespace com.db4o.inside.btree
 				return;
 			}
 			object keyZero = _keys[0];
-			if (_isLeaf)
+			bool vals = HandlesValues();
+			object[] tempKeys = new object[_btree.NodeSize()];
+			object[] tempValues = vals ? new object[_btree.NodeSize()] : null;
+			int count = 0;
+			for (int i = 0; i < _count; i++)
 			{
-				bool vals = HandlesValues();
-				object[] tempKeys = new object[_btree._nodeSize];
-				object[] tempValues = vals ? new object[_btree._nodeSize] : null;
-				int count = 0;
-				for (int i = 0; i < _count; i++)
+				object key = _keys[i];
+				com.db4o.inside.btree.BTreePatch patch = KeyPatch(i);
+				if (patch != null)
 				{
-					object key = _keys[i];
-					com.db4o.inside.btree.BTreePatch patch = KeyPatch(i);
-					if (patch != null)
-					{
-						key = patch.Commit(trans, _btree);
-					}
-					if (key != com.db4o.foundation.No4.INSTANCE)
-					{
-						tempKeys[count] = key;
-						if (vals)
-						{
-							tempValues[count] = _values[i];
-						}
-						count++;
-					}
+					key = isCommit ? patch.Commit(trans, _btree) : patch.Rollback(trans, _btree);
 				}
-				_keys = tempKeys;
-				_values = tempValues;
-				_count = count;
-				if (_count == 0)
+				if (key != com.db4o.foundation.No4.INSTANCE)
 				{
-					if (_parentID != 0)
+					tempKeys[count] = key;
+					if (vals)
 					{
-						Free(trans);
-						return;
+						tempValues[count] = _values[i];
 					}
+					count++;
 				}
+			}
+			_keys = tempKeys;
+			_values = tempValues;
+			_count = count;
+			if (FreeIfEmpty(trans))
+			{
+				return;
 			}
 			if (_keys[0] != keyZero)
 			{
 				TellParentAboutChangedKey(trans);
 			}
+		}
+
+		private bool FreeIfEmpty(com.db4o.Transaction trans)
+		{
+			return FreeIfEmpty(trans, _count);
+		}
+
+		private bool FreeIfEmpty(com.db4o.Transaction trans, int count)
+		{
+			if (count > 0)
+			{
+				return false;
+			}
+			if (_parentID == 0)
+			{
+				return false;
+			}
+			Free(trans);
+			return true;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return this == obj;
 		}
 
 		private void Free(com.db4o.Transaction trans)
@@ -296,28 +440,21 @@ namespace com.db4o.inside.btree
 			{
 				if (ChildID(i) == id)
 				{
-					if (_count == 1)
+					if (FreeIfEmpty(trans, _count - 1))
 					{
-						if (_parentID != 0)
-						{
-							Free(trans);
-							return;
-						}
+						return;
 					}
 					Remove(i);
 					if (i <= 1)
 					{
-						if (_parentID != 0)
-						{
-							com.db4o.inside.btree.BTreeNode parent = _btree.ProduceNode(_parentID);
-							parent.KeyChanged(trans, this);
-							return;
-						}
+						TellParentAboutChangedKey(trans);
 					}
 					if (_count == 0)
 					{
 						_isLeaf = true;
+						PrepareValues();
 					}
+					return;
 				}
 			}
 		}
@@ -333,10 +470,7 @@ namespace com.db4o.inside.btree
 				{
 					_keys[i] = child._keys[0];
 					_children[i] = child;
-					if (i == 0)
-					{
-						TellParentAboutChangedKey(trans);
-					}
+					KeyChanged(trans, i);
 					return;
 				}
 			}
@@ -359,13 +493,9 @@ namespace com.db4o.inside.btree
 			}
 			for (int i = 0; i < _count; i++)
 			{
-				com.db4o.inside.btree.BTreePatch patch = KeyPatch(i);
-				if (patch != null)
+				if (KeyPatch(trans, i) != null)
 				{
-					if (patch.ForTransaction(trans) != null)
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 			return false;
@@ -373,16 +503,30 @@ namespace com.db4o.inside.btree
 
 		private void Compare(com.db4o.inside.btree.Searcher s, com.db4o.YapReader reader)
 		{
-			com.db4o.inside.ix.Indexable4 handler = KeyHandler();
-			if (_keys != null)
+			if (CanWrite())
 			{
-				s.ResultIs(handler.CompareTo(Key(s._cursor)));
+				s.ResultIs(CompareInWriteMode(s.Cursor()));
 			}
 			else
 			{
-				SeekKey(reader, s._cursor);
-				s.ResultIs(handler.CompareTo(handler.ReadIndexEntry(reader)));
+				s.ResultIs(CompareInReadMode(reader, s.Cursor()));
 			}
+		}
+
+		private int CompareInWriteMode(int index)
+		{
+			return KeyHandler().CompareTo(Key(index));
+		}
+
+		private int CompareInReadMode(com.db4o.YapReader reader, int index)
+		{
+			SeekKey(reader, index);
+			return KeyHandler().CompareTo(KeyHandler().ReadIndexEntry(reader));
+		}
+
+		public virtual int Count()
+		{
+			return _count;
 		}
 
 		private int EntryLength()
@@ -397,27 +541,45 @@ namespace com.db4o.inside.btree
 			}
 			else
 			{
-				len += com.db4o.YapConst.YAPID_LENGTH;
+				len += com.db4o.YapConst.ID_LENGTH;
 			}
 			return len;
 		}
 
-		private object FirstKey(com.db4o.Transaction trans)
+		public virtual int FirstKeyIndex(com.db4o.Transaction trans)
 		{
 			for (int ix = 0; ix < _count; ix++)
 			{
-				com.db4o.inside.btree.BTreePatch patch = KeyPatch(ix);
-				if (patch == null)
+				if (IndexIsValid(trans, ix))
 				{
-					return _keys[ix];
-				}
-				object obj = patch.GetObject(trans);
-				if (obj != com.db4o.foundation.No4.INSTANCE)
-				{
-					return obj;
+					return ix;
 				}
 			}
-			return com.db4o.foundation.No4.INSTANCE;
+			return -1;
+		}
+
+		public virtual bool IndexIsValid(com.db4o.Transaction trans, int index)
+		{
+			if (_keys == null)
+			{
+				return true;
+			}
+			com.db4o.inside.btree.BTreePatch patch = KeyPatch(index);
+			if (patch == null)
+			{
+				return true;
+			}
+			return patch.Key(trans) != com.db4o.foundation.No4.INSTANCE;
+		}
+
+		private object FirstKey(com.db4o.Transaction trans)
+		{
+			int index = FirstKeyIndex(trans);
+			if (-1 == index)
+			{
+				return com.db4o.foundation.No4.INSTANCE;
+			}
+			return Key(trans, index);
 		}
 
 		public override byte GetIdentifier()
@@ -430,13 +592,13 @@ namespace com.db4o.inside.btree
 			return _btree._valueHandler != com.db4o.Null.INSTANCE;
 		}
 
-		private void Insert(int pos)
+		private void PrepareInsert(int pos)
 		{
 			if (pos < 0)
 			{
-				pos = 0;
+				throw new System.ArgumentException("pos");
 			}
-			if (pos > _count - 1)
+			if (pos > LastIndex())
 			{
 				_count++;
 				return;
@@ -472,14 +634,14 @@ namespace com.db4o.inside.btree
 			}
 		}
 
-		private object Key(int index)
+		internal virtual object Key(int index)
 		{
 			com.db4o.inside.btree.BTreePatch patch = KeyPatch(index);
 			if (patch == null)
 			{
 				return _keys[index];
 			}
-			return patch._object;
+			return patch.GetObject();
 		}
 
 		private object Key(com.db4o.Transaction trans, com.db4o.YapReader reader, int index
@@ -493,14 +655,14 @@ namespace com.db4o.inside.btree
 			return KeyHandler().ReadIndexEntry(reader);
 		}
 
-		private object Key(com.db4o.Transaction trans, int index)
+		internal virtual object Key(com.db4o.Transaction trans, int index)
 		{
 			com.db4o.inside.btree.BTreePatch patch = KeyPatch(index);
 			if (patch == null)
 			{
 				return _keys[index];
 			}
-			return patch.GetObject(trans);
+			return patch.Key(trans);
 		}
 
 		private com.db4o.inside.btree.BTreePatch KeyPatch(int index)
@@ -508,6 +670,16 @@ namespace com.db4o.inside.btree
 			if (_keys[index] is com.db4o.inside.btree.BTreePatch)
 			{
 				return (com.db4o.inside.btree.BTreePatch)_keys[index];
+			}
+			return null;
+		}
+
+		private com.db4o.inside.btree.BTreePatch KeyPatch(com.db4o.Transaction trans, int
+			 index)
+		{
+			if (_keys[index] is com.db4o.inside.btree.BTreePatch)
+			{
+				return ((com.db4o.inside.btree.BTreePatch)_keys[index]).ForTransaction(trans);
 			}
 			return null;
 		}
@@ -563,7 +735,7 @@ namespace com.db4o.inside.btree
 			}
 			com.db4o.YapReader reader = trans.i_file.ReadReaderByID(trans.SystemTransaction()
 				, GetID());
-			ReadSlotHeader(reader);
+			ReadNodeHeader(reader);
 			return reader;
 		}
 
@@ -586,27 +758,32 @@ namespace com.db4o.inside.btree
 			}
 		}
 
-		internal virtual void PrepareArrays()
+		private void PrepareArrays()
 		{
 			if (_keys != null)
 			{
 				return;
 			}
-			_keys = new object[_btree._nodeSize];
+			_keys = new object[_btree.NodeSize()];
 			if (_isLeaf)
 			{
-				if (HandlesValues())
-				{
-					_values = new object[_btree._nodeSize];
-				}
+				PrepareValues();
 			}
 			else
 			{
-				_children = new object[_btree._nodeSize];
+				_children = new object[_btree.NodeSize()];
 			}
 		}
 
-		private void ReadSlotHeader(com.db4o.YapReader reader)
+		private void PrepareValues()
+		{
+			if (HandlesValues())
+			{
+				_values = new object[_btree.NodeSize()];
+			}
+		}
+
+		private void ReadNodeHeader(com.db4o.YapReader reader)
 		{
 			_count = reader.ReadInt();
 			byte leafByte = reader.ReadByte();
@@ -619,7 +796,7 @@ namespace com.db4o.inside.btree
 		public override void ReadThis(com.db4o.Transaction trans, com.db4o.YapReader reader
 			)
 		{
-			ReadSlotHeader(reader);
+			ReadNodeHeader(reader);
 			PrepareArrays();
 			bool isInner = !_isLeaf;
 			bool vals = HandlesValues() && _isLeaf;
@@ -640,103 +817,115 @@ namespace com.db4o.inside.btree
 			}
 		}
 
-		public virtual void Remove(com.db4o.Transaction trans)
+		public virtual void Remove(com.db4o.Transaction trans, int index)
 		{
-			com.db4o.YapReader reader = PrepareRead(trans);
-			com.db4o.inside.btree.Searcher s = Search(trans, reader);
-			if (s._cursor < 0)
+			if (!_isLeaf)
 			{
+				throw new System.InvalidOperationException();
+			}
+			PrepareWrite(trans);
+			com.db4o.inside.btree.BTreePatch patch = KeyPatch(index);
+			if (patch == null)
+			{
+				_keys[index] = NewRemovePatch(trans);
+				KeyChanged(trans, index);
 				return;
 			}
-			if (_isLeaf)
+			com.db4o.inside.btree.BTreePatch transPatch = patch.ForTransaction(trans);
+			if (transPatch != null)
 			{
-				if (s._cmp != 0)
+				if (transPatch.IsAdd())
+				{
+					CancelAdding(trans, index);
+					return;
+				}
+			}
+			else
+			{
+				if (patch.IsRemove())
+				{
+					((com.db4o.inside.btree.BTreeRemove)patch).Append(NewRemovePatch(trans));
+					return;
+				}
+			}
+			if (index != LastIndex())
+			{
+				if (CompareInWriteMode(index + 1) != 0)
 				{
 					return;
 				}
-				PrepareWrite(trans);
-				com.db4o.inside.btree.BTreeRemove btr = new com.db4o.inside.btree.BTreeRemove(trans
-					, KeyHandler().Current());
-				com.db4o.inside.btree.BTreePatch patch = KeyPatch(s._cursor);
-				if (patch != null)
-				{
-					_keys[s._cursor] = patch.Append(btr);
-				}
-				else
-				{
-					_keys[s._cursor] = btr;
-				}
-				if (s._cursor == 0)
-				{
-					TellParentAboutChangedKey(trans);
-				}
+				Remove(trans, index + 1);
 				return;
 			}
-			Child(reader, s._cursor).Remove(trans);
+			com.db4o.inside.btree.BTreeNode node = NextNode();
+			if (node == null)
+			{
+				return;
+			}
+			node.PrepareWrite(trans);
+			if (node.CompareInWriteMode(0) != 0)
+			{
+				return;
+			}
+			node.Remove(trans, 0);
+		}
+
+		private void CancelAdding(com.db4o.Transaction trans, int index)
+		{
+			_btree.NotifyRemoveListener(KeyPatch(index).GetObject());
+			if (FreeIfEmpty(trans, _count - 1))
+			{
+				SizeDecrement(trans);
+				return;
+			}
+			Remove(index);
+			KeyChanged(trans, index);
+			SizeDecrement(trans);
+		}
+
+		private void SizeDecrement(com.db4o.Transaction trans)
+		{
+			_btree.SizeChanged(trans, -1);
+		}
+
+		private int LastIndex()
+		{
+			return _count - 1;
+		}
+
+		private com.db4o.inside.btree.BTreeRemove NewRemovePatch(com.db4o.Transaction trans
+			)
+		{
+			_btree.SizeChanged(trans, -1);
+			return new com.db4o.inside.btree.BTreeRemove(trans, KeyHandler().Current());
+		}
+
+		private void KeyChanged(com.db4o.Transaction trans, int index)
+		{
+			if (index == 0)
+			{
+				TellParentAboutChangedKey(trans);
+			}
 		}
 
 		internal virtual void Rollback(com.db4o.Transaction trans)
 		{
-			if (!CanWrite())
-			{
-				return;
-			}
-			if (_isLeaf)
-			{
-				object keyZero = _keys[0];
-				bool vals = HandlesValues();
-				object[] tempKeys = new object[_btree._nodeSize];
-				object[] tempValues = vals ? new object[_btree._nodeSize] : null;
-				int count = 0;
-				for (int i = 0; i < _count; i++)
-				{
-					object key = _keys[i];
-					com.db4o.inside.btree.BTreePatch patch = KeyPatch(i);
-					if (patch != null)
-					{
-						key = patch.Rollback(trans, _btree);
-					}
-					if (key != com.db4o.foundation.No4.INSTANCE)
-					{
-						tempKeys[count] = key;
-						if (vals)
-						{
-							tempValues[count] = _values[i];
-						}
-						count++;
-					}
-				}
-				_keys = tempKeys;
-				_values = tempValues;
-				_count = count;
-				if (keyZero != _keys[0])
-				{
-					TellParentAboutChangedKey(trans);
-				}
-			}
+			CommitOrRollback(trans, false);
 		}
 
-		private com.db4o.inside.btree.Searcher Search(com.db4o.Transaction trans, com.db4o.YapReader
-			 reader)
+		private com.db4o.inside.btree.Searcher Search(com.db4o.YapReader reader)
 		{
-			com.db4o.inside.btree.Searcher s = new com.db4o.inside.btree.Searcher(_count);
+			return Search(reader, com.db4o.inside.btree.SearchTarget.ANY);
+		}
+
+		private com.db4o.inside.btree.Searcher Search(com.db4o.YapReader reader, com.db4o.inside.btree.SearchTarget
+			 target)
+		{
+			com.db4o.inside.btree.Searcher s = new com.db4o.inside.btree.Searcher(target, _count
+				);
 			while (s.Incomplete())
 			{
 				Compare(s, reader);
-			}
-			if (s._cursor < 0)
-			{
-				s._cursor = 0;
-			}
-			else
-			{
-				if (!_isLeaf)
-				{
-					if (s._cmp > 0 && s._cursor > 0)
-					{
-						s._cursor--;
-					}
-				}
 			}
 			return s;
 		}
@@ -781,7 +970,7 @@ namespace com.db4o.inside.btree
 			}
 			if (_values != null)
 			{
-				res._values = new object[_btree._nodeSize];
+				res._values = new object[_btree.NodeSize()];
 				System.Array.Copy(_values, _btree._halfNodeSize, res._values, 0, _btree._halfNodeSize
 					);
 				for (int i = _btree._halfNodeSize; i < _values.Length; i++)
@@ -791,7 +980,7 @@ namespace com.db4o.inside.btree
 			}
 			if (_children != null)
 			{
-				res._children = new object[_btree._nodeSize];
+				res._children = new object[_btree.NodeSize()];
 				System.Array.Copy(_children, _btree._halfNodeSize, res._children, 0, _btree._halfNodeSize
 					);
 				for (int i = _btree._halfNodeSize; i < _children.Length; i++)
@@ -821,9 +1010,9 @@ namespace com.db4o.inside.btree
 
 		private void PointNextTo(com.db4o.Transaction trans, int id)
 		{
-			if (_nextID > 0)
+			if (_nextID != 0)
 			{
-				_btree.ProduceNode(_nextID).SetPreviousID(trans, id);
+				NextNode().SetPreviousID(trans, id);
 			}
 		}
 
@@ -831,8 +1020,51 @@ namespace com.db4o.inside.btree
 		{
 			if (_previousID != 0)
 			{
-				_btree.ProduceNode(_previousID).SetNextID(trans, id);
+				PreviousNode().SetNextID(trans, id);
 			}
+		}
+
+		public virtual com.db4o.inside.btree.BTreeNode PreviousNode()
+		{
+			if (_previousID == 0)
+			{
+				return null;
+			}
+			return _btree.ProduceNode(_previousID);
+		}
+
+		public virtual com.db4o.inside.btree.BTreeNode NextNode()
+		{
+			if (_nextID == 0)
+			{
+				return null;
+			}
+			return _btree.ProduceNode(_nextID);
+		}
+
+		internal virtual com.db4o.inside.btree.BTreePointer FirstPointer(com.db4o.Transaction
+			 trans)
+		{
+			com.db4o.YapReader reader = PrepareRead(trans);
+			if (_isLeaf)
+			{
+				int index = FirstKeyIndex(trans);
+				if (index == -1)
+				{
+					return null;
+				}
+				return new com.db4o.inside.btree.BTreePointer(trans, this, index);
+			}
+			for (int i = 0; i < _count; i++)
+			{
+				com.db4o.inside.btree.BTreePointer childFirstPointer = Child(reader, i).FirstPointer
+					(trans);
+				if (childFirstPointer != null)
+				{
+					return childFirstPointer;
+				}
+			}
+			return null;
 		}
 
 		internal virtual void Purge()
@@ -931,6 +1163,11 @@ namespace com.db4o.inside.btree
 					Child(reader, i).TraverseValues(trans, visitor);
 				}
 			}
+		}
+
+		internal virtual object Value(int index)
+		{
+			return _values[index];
 		}
 
 		private object Value(com.db4o.YapReader reader, int index)
@@ -1050,6 +1287,59 @@ namespace com.db4o.inside.btree
 				str += " }";
 			}
 			return str;
+		}
+
+		public virtual void DebugLoadFully(com.db4o.Transaction trans)
+		{
+			PrepareWrite(trans);
+			if (_isLeaf)
+			{
+				return;
+			}
+			for (int i = 0; i < _count; ++i)
+			{
+				((com.db4o.inside.btree.BTreeNode)_children[i]).DebugLoadFully(trans);
+			}
+		}
+
+		public static void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target
+			, com.db4o.IDMapping mapping, com.db4o.inside.ix.Indexable4 keyHandler)
+		{
+			int count = source.ReadInt();
+			int targetCount = target.ReadInt();
+			if (count != targetCount)
+			{
+				throw new j4o.lang.RuntimeException("Expected target count " + count + ", was " +
+					 targetCount);
+			}
+			byte leafByte = source.ReadByte();
+			byte targetLeafByte = target.ReadByte();
+			if (leafByte != targetLeafByte)
+			{
+				throw new j4o.lang.RuntimeException("Expected target leaf " + leafByte + ", was "
+					 + targetLeafByte);
+			}
+			bool isLeaf = (leafByte == 1);
+			MapID(source, target, mapping);
+			MapID(source, target, mapping);
+			MapID(source, target, mapping);
+			for (int i = 0; i < count; i++)
+			{
+				int curKey = (int)keyHandler.ReadIndexEntry(source);
+				keyHandler.WriteIndexEntry(target, curKey);
+				if (!isLeaf)
+				{
+					MapID(source, target, mapping);
+				}
+			}
+		}
+
+		private static void MapID(com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping
+			 mapping)
+		{
+			int oldParentID = source.ReadInt();
+			int newParentID = mapping.MappedID(oldParentID);
+			target.WriteInt(newParentID);
 		}
 	}
 }

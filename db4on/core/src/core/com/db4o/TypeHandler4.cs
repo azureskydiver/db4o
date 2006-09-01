@@ -87,5 +87,8 @@ namespace com.db4o
 		com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily mf
 			, com.db4o.YapReader reader, com.db4o.QCandidates candidates, bool withIndirection
 			);
+
+		void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader source
+			, com.db4o.YapReader target, com.db4o.IDMapping mapping);
 	}
 }

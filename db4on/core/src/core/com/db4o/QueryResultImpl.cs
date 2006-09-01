@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	internal class QueryResultImpl : com.db4o.IntArrayList, com.db4o.foundation.Visitor4
+	internal class QueryResultImpl : com.db4o.foundation.IntArrayList, com.db4o.foundation.Visitor4
 		, com.db4o.inside.query.QueryResult
 	{
 		internal com.db4o.Tree i_candidates;
@@ -23,16 +23,14 @@ namespace com.db4o
 
 		internal object Activate(object obj)
 		{
-			com.db4o.YapStream stream = i_trans.i_stream;
-			stream.BeginEndActivation();
-			stream.Activate2(i_trans, obj, stream.i_config.ActivationDepth());
-			stream.BeginEndActivation();
+			com.db4o.YapStream stream = i_trans.Stream();
+			stream.Activate1(i_trans, obj, stream.ConfigImpl().ActivationDepth());
 			return obj;
 		}
 
 		private object ActivatedObject(int id)
 		{
-			com.db4o.YapStream stream = i_trans.i_stream;
+			com.db4o.YapStream stream = i_trans.Stream();
 			object ret = stream.GetActivatedObjectFromCache(i_trans, id);
 			if (ret != null)
 			{
@@ -78,7 +76,7 @@ namespace com.db4o
 		{
 			lock (StreamLock())
 			{
-				com.db4o.YapStream stream = i_trans.i_stream;
+				com.db4o.YapStream stream = i_trans.Stream();
 				stream.CheckClosed();
 				if (base.HasNext())
 				{
@@ -126,12 +124,12 @@ namespace com.db4o
 
 		public virtual object StreamLock()
 		{
-			return i_trans.i_stream.i_lock;
+			return i_trans.Stream().i_lock;
 		}
 
 		public virtual com.db4o.ObjectContainer ObjectContainer()
 		{
-			return i_trans.i_stream;
+			return i_trans.Stream();
 		}
 
 		public virtual void Sort(com.db4o.query.QueryComparator cmp)

@@ -91,7 +91,7 @@ namespace com.db4o.ext
 		/// <returns>the db4o ID for the ObjectContainer</returns>
 		public virtual int GetID(com.db4o.Transaction trans)
 		{
-			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.YapStream stream = trans.Stream();
 			if (stream != i_stream)
 			{
 				i_stream = stream;
@@ -144,7 +144,7 @@ namespace com.db4o.ext
 		/// <remarks>make sure this Db4oDatabase is stored. Return the ID.</remarks>
 		public virtual int Bind(com.db4o.Transaction trans)
 		{
-			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.YapStream stream = trans.Stream();
 			com.db4o.ext.Db4oDatabase stored = (com.db4o.ext.Db4oDatabase)stream.Db4oTypeStored
 				(trans, this);
 			if (stored == null)
@@ -187,8 +187,8 @@ namespace com.db4o.ext
 		private com.db4o.ext.Db4oDatabase Query(com.db4o.Transaction trans, bool constrainByUUID
 			)
 		{
-			com.db4o.YapStream stream = trans.i_stream;
-			com.db4o.query.Query q = stream.QuerySharpenBug(trans);
+			com.db4o.YapStream stream = trans.Stream();
+			com.db4o.query.Query q = stream.Query(trans);
 			q.Constrain(j4o.lang.Class.GetClassForObject(this));
 			if (constrainByUUID)
 			{

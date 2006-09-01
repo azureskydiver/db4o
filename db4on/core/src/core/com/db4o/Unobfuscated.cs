@@ -34,6 +34,11 @@ namespace com.db4o
 		public static long RandomLong()
 		{
 			return j4o.lang.JavaSystem.CurrentTimeMillis();
+			if (random == null)
+			{
+				random = new j4o.util.Random();
+			}
+			return ((j4o.util.Random)random).NextLong();
 		}
 
 		internal static void ShutDownHookCallback(object a_stream)

@@ -53,9 +53,9 @@ namespace com.db4o.foundation
 
 		public void AddAll(com.db4o.foundation.Iterator4 iterator)
 		{
-			while (iterator.HasNext())
+			while (iterator.MoveNext())
 			{
-				Add(iterator.Next());
+				Add(iterator.Current());
 			}
 		}
 
@@ -96,9 +96,9 @@ namespace com.db4o.foundation
 		public object Get(object element)
 		{
 			com.db4o.foundation.Iterator4 i = Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				object current = i.Next();
+				object current = i.Current();
 				if (current.Equals(element))
 				{
 					return current;
@@ -112,9 +112,9 @@ namespace com.db4o.foundation
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
 			object element = null;
 			com.db4o.foundation.Iterator4 i = this.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				element = i.Next();
+				element = i.Current();
 				if (element is com.db4o.foundation.DeepClone)
 				{
 					col.Add(((com.db4o.foundation.DeepClone)element).DeepClone(newParent));
@@ -219,9 +219,9 @@ namespace com.db4o.foundation
 		{
 			int j = _size;
 			com.db4o.foundation.Iterator4 i = Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				a_array[--j] = i.Next();
+				a_array[--j] = i.Current();
 			}
 			return a_array;
 		}
@@ -243,11 +243,12 @@ namespace com.db4o.foundation
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
 			sb.Append("[");
 			com.db4o.foundation.Iterator4 i = Iterator();
-			sb.Append(i.Next());
-			while (i.HasNext())
+			i.MoveNext();
+			sb.Append(i.Current());
+			while (i.MoveNext())
 			{
 				sb.Append(", ");
-				sb.Append(i.Next());
+				sb.Append(i.Current());
 			}
 			sb.Append("]");
 			return sb.ToString();

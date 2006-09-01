@@ -14,7 +14,7 @@ namespace com.db4o
 		{
 			_stream = a_stream;
 			_weak = (!(a_stream is com.db4o.YapObjectCarrier) && com.db4o.Platform4.HasWeakReferences
-				() && a_stream.i_config.WeakReferences());
+				() && a_stream.ConfigImpl().WeakReferences());
 			_queue = _weak ? com.db4o.Platform4.CreateReferenceQueue() : null;
 		}
 
@@ -46,11 +46,11 @@ namespace com.db4o
 			{
 				return;
 			}
-			if (!_stream.i_config.WeakReferences())
+			if (!_stream.ConfigImpl().WeakReferences())
 			{
 				return;
 			}
-			if (_stream.i_config.WeakReferenceCollectionInterval() <= 0)
+			if (_stream.ConfigImpl().WeakReferenceCollectionInterval() <= 0)
 			{
 				return;
 			}
@@ -58,7 +58,7 @@ namespace com.db4o
 			{
 				return;
 			}
-			_timer = new com.db4o.foundation.SimpleTimer(this, _stream.i_config.WeakReferenceCollectionInterval
+			_timer = new com.db4o.foundation.SimpleTimer(this, _stream.ConfigImpl().WeakReferenceCollectionInterval
 				(), "db4o WeakReference collector");
 		}
 

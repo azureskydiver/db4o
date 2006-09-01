@@ -313,6 +313,14 @@ namespace com.db4o
 
 		public abstract int LinkLength();
 
+		public void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
+			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
+		{
+			int linkLength = LinkLength();
+			source.IncrementOffset(linkLength);
+			target.IncrementOffset(linkLength);
+		}
+
 		public abstract int GetID();
 	}
 }

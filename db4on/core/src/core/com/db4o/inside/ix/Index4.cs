@@ -76,8 +76,7 @@ namespace com.db4o.inside.ix
 
 		private int[] FreeForMetaIndex()
 		{
-			return new int[] { _metaIndex.indexAddress, _metaIndex.indexLength, _metaIndex.patchAddress
-				, _metaIndex.patchLength };
+			return new int[] { _metaIndex.indexAddress, _metaIndex.indexLength };
 		}
 
 		private void DoFree(int[] addressLength)
@@ -107,30 +106,24 @@ namespace com.db4o.inside.ix
 			int otherSlot = GetSlot(length);
 			DoFree(FreeForMetaIndex());
 			DoFree(other.FreeForMetaIndex());
-			entries = WriteToNewSlot(mySlot, length);
+			entries = WriteToNewSlot(mySlot);
 			MetaIndexSetMembers(entries, length, mySlot);
 			CreateGlobalFileRange();
-			int otherEntries = other.WriteToNewSlot(otherSlot, length);
+			int otherEntries = other.WriteToNewSlot(otherSlot);
 			other.MetaIndexSetMembers(entries, length, otherSlot);
 			other.CreateGlobalFileRange();
 		}
 
 		private int LengthPerEntry()
 		{
-			return _handler.LinkLength() + com.db4o.YapConst.YAPINT_LENGTH;
-		}
-
-		private void Free()
-		{
-			File().Free(_metaIndex.indexAddress, _metaIndex.indexLength);
-			File().Free(_metaIndex.patchAddress, _metaIndex.indexLength);
+			return _handler.LinkLength() + com.db4o.YapConst.INT_LENGTH;
 		}
 
 		private void MetaIndexStore(int entries, int length, int address)
 		{
 			com.db4o.Transaction transact = Trans();
 			MetaIndexSetMembers(entries, length, address);
-			transact.i_stream.SetInternal(transact, _metaIndex, 1, false);
+			transact.Stream().SetInternal(transact, _metaIndex, 1, false);
 		}
 
 		private void MetaIndexSetMembers(int entries, int length, int address)
@@ -138,12 +131,9 @@ namespace com.db4o.inside.ix
 			_metaIndex.indexEntries = entries;
 			_metaIndex.indexLength = length;
 			_metaIndex.indexAddress = address;
-			_metaIndex.patchEntries = 0;
-			_metaIndex.patchAddress = 0;
-			_metaIndex.patchLength = 0;
 		}
 
-		private int WriteToNewSlot(int slot, int length)
+		private int WriteToNewSlot(int slot)
 		{
 			com.db4o.Tree root = GetRoot();
 			com.db4o.YapWriter writer = new com.db4o.YapWriter(Trans(), slot, LengthPerEntry(
@@ -151,14 +141,14 @@ namespace com.db4o.inside.ix
 			int[] entries = new int[] { 0 };
 			if (root != null)
 			{
-				root.Traverse(new _AnonymousInnerClass175(this, entries, writer));
+				root.Traverse(new _AnonymousInnerClass148(this, entries, writer));
 			}
 			return entries[0];
 		}
 
-		private sealed class _AnonymousInnerClass175 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass148 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass175(Index4 _enclosing, int[] entries, com.db4o.YapWriter
+			public _AnonymousInnerClass148(Index4 _enclosing, int[] entries, com.db4o.YapWriter
 				 writer)
 			{
 				this._enclosing = _enclosing;
@@ -191,14 +181,14 @@ namespace com.db4o.inside.ix
 				int slot = GetSlot(length);
 				int[] free = FreeForMetaIndex();
 				MetaIndexStore(entries, length, slot);
-				WriteToNewSlot(slot, length);
+				WriteToNewSlot(slot);
 				com.db4o.inside.ix.IxFileRange newFileRange = CreateGlobalFileRange();
 				if (_indexTransactions != null)
 				{
 					com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
-					while (i.HasNext())
+					while (i.MoveNext())
 					{
-						com.db4o.inside.ix.IndexTransaction ft = (com.db4o.inside.ix.IndexTransaction)i.Next
+						com.db4o.inside.ix.IndexTransaction ft = (com.db4o.inside.ix.IndexTransaction)i.Current
 							();
 						com.db4o.Tree clonedTree = newFileRange;
 						if (clonedTree != null)
@@ -206,7 +196,7 @@ namespace com.db4o.inside.ix
 							clonedTree = clonedTree.DeepClone(ft);
 						}
 						com.db4o.Tree[] tree = { clonedTree };
-						ft.GetRoot().TraverseFromLeaves((new _AnonymousInnerClass223(this, ft, tree)));
+						ft.GetRoot().TraverseFromLeaves((new _AnonymousInnerClass196(this, ft, tree)));
 						ft.SetRoot(tree[0]);
 					}
 				}
@@ -215,16 +205,16 @@ namespace com.db4o.inside.ix
 			else
 			{
 				com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					((com.db4o.inside.ix.IndexTransaction)i.Next()).Merge(ixTrans);
+					((com.db4o.inside.ix.IndexTransaction)i.Current()).Merge(ixTrans);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass223 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass196 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass223(Index4 _enclosing, com.db4o.inside.ix.IndexTransaction
+			public _AnonymousInnerClass196(Index4 _enclosing, com.db4o.inside.ix.IndexTransaction
 				 ft, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
@@ -295,10 +285,10 @@ namespace com.db4o.inside.ix
 			if (_indexTransactions != null)
 			{
 				com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
 					sb.Append("\n");
-					sb.Append(i.Next().ToString());
+					sb.Append(i.Current().ToString());
 				}
 			}
 			return sb.ToString();

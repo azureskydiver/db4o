@@ -296,29 +296,11 @@ namespace com.db4o
 		public void GenerateUUIDs(int setting)
 		{
 			_config.Put(GENERATE_UUIDS, setting);
-			StoreStreamBootRecord();
-		}
-
-		private void StoreStreamBootRecord()
-		{
-			if (i_stream == null)
-			{
-				return;
-			}
-			com.db4o.PBootRecord bootRecord = i_stream.BootRecord();
-			if (bootRecord != null)
-			{
-				bootRecord.InitConfig(this);
-				com.db4o.Transaction trans = i_stream.GetSystemTransaction();
-				i_stream.SetInternal(trans, bootRecord, false);
-				trans.Commit();
-			}
 		}
 
 		public void GenerateVersionNumbers(int setting)
 		{
 			_config.Put(GENERATE_VERSION_NUMBERS, setting);
-			StoreStreamBootRecord();
 		}
 
 		public com.db4o.messaging.MessageSender GetMessageSender()
@@ -467,7 +449,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass420(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass405(this));
 			}
 			else
 			{
@@ -475,9 +457,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass420 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass405 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass420(Config4Impl _enclosing)
+			public _AnonymousInnerClass405(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -524,7 +506,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass459(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass444(this));
 			}
 			else
 			{
@@ -532,9 +514,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass459 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass444 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass459(Config4Impl _enclosing)
+			public _AnonymousInnerClass444(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -658,7 +640,7 @@ namespace com.db4o
 		{
 			if (null == alias)
 			{
-				throw new System.ArgumentException("alias");
+				throw new System.ArgumentNullException("alias");
 			}
 			Aliases().Add(alias);
 		}
@@ -671,9 +653,9 @@ namespace com.db4o
 				return runtimeType;
 			}
 			com.db4o.foundation.Iterator4 i = configuredAliases.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				string resolved = ((com.db4o.config.Alias)i.Next()).Resolve(runtimeType);
+				string resolved = ((com.db4o.config.Alias)i.Current()).Resolve(runtimeType);
 				if (null != resolved)
 				{
 					return resolved;
@@ -715,12 +697,12 @@ namespace com.db4o
 			return _config.GetAsByte(BLOCKSIZE);
 		}
 
-		internal int BTreeNodeSize()
+		public int BTreeNodeSize()
 		{
 			return _config.GetAsInt(BTREE_NODE_SIZE);
 		}
 
-		internal int BTreeCacheHeight()
+		public int BTreeCacheHeight()
 		{
 			return _config.GetAsInt(BTREE_CACHE_HEIGHT);
 		}
@@ -805,12 +787,12 @@ namespace com.db4o
 			return _config.GetAsByte(FREESPACE_SYSTEM);
 		}
 
-		internal int GenerateUUIDs()
+		public int GenerateUUIDs()
 		{
 			return _config.GetAsInt(GENERATE_UUIDS);
 		}
 
-		internal int GenerateVersionNumbers()
+		public int GenerateVersionNumbers()
 		{
 			return _config.GetAsInt(GENERATE_VERSION_NUMBERS);
 		}

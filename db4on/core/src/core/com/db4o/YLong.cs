@@ -30,7 +30,7 @@ namespace com.db4o
 
 		public override int LinkLength()
 		{
-			return com.db4o.YapConst.YAPLONG_LENGTH;
+			return com.db4o.YapConst.LONG_LENGTH;
 		}
 
 		internal override object PrimitiveNull()

@@ -42,7 +42,7 @@ namespace com.db4o
 			, bool a_refresh)
 		{
 			Activate1(ta, a_object, a_depth, a_refresh);
-			ta.i_stream.Activate3CheckStill(ta);
+			ta.Stream().Activate3CheckStill(ta);
 		}
 
 		internal virtual void Activate1(com.db4o.Transaction ta, object a_object, int a_depth
@@ -54,10 +54,10 @@ namespace com.db4o
 			}
 			if (a_depth > 0)
 			{
-				com.db4o.YapStream stream = ta.i_stream;
+				com.db4o.YapStream stream = ta.Stream();
 				if (a_refresh)
 				{
-					if (stream.i_config.MessageLevel() > com.db4o.YapConst.ACTIVATION)
+					if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.ACTIVATION)
 					{
 						stream.Message("" + GetID() + " refresh " + i_yapClass.GetName());
 					}
@@ -79,7 +79,7 @@ namespace com.db4o
 							return;
 						}
 					}
-					if (stream.i_config.MessageLevel() > com.db4o.YapConst.ACTIVATION)
+					if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.ACTIVATION)
 					{
 						stream.Message("" + GetID() + " activate " + i_yapClass.GetName());
 					}
@@ -110,10 +110,10 @@ namespace com.db4o
 				BitFalse(com.db4o.YapConst.CONTINUE);
 				com.db4o.YapWriter writer = com.db4o.inside.marshall.MarshallerFamily.Current()._object
 					.MarshallNew(a_trans, this, a_updateDepth);
-				com.db4o.YapStream stream = a_trans.i_stream;
+				com.db4o.YapStream stream = a_trans.Stream();
 				stream.WriteNew(i_yapClass, writer);
 				object obj = GetObject();
-				i_yapClass.DispatchEvent(stream, obj, com.db4o.EventDispatcher.NEW);
+				ObjectOnNew(stream, obj);
 				if (!i_yapClass.IsPrimitive())
 				{
 					i_object = stream.i_references.CreateYapRef(this, obj);
@@ -122,6 +122,12 @@ namespace com.db4o
 				EndProcessing();
 			}
 			return true;
+		}
+
+		private void ObjectOnNew(com.db4o.YapStream stream, object obj)
+		{
+			stream.Callbacks().ObjectOnNew(obj);
+			i_yapClass.DispatchEvent(stream, obj, com.db4o.EventDispatcher.NEW);
 		}
 
 		internal virtual void Deactivate(com.db4o.Transaction a_trans, int a_depth)
@@ -135,8 +141,8 @@ namespace com.db4o
 					{
 						((com.db4o.Db4oTypeImpl)obj).PreDeactivate();
 					}
-					com.db4o.YapStream stream = a_trans.i_stream;
-					if (stream.i_config.MessageLevel() > com.db4o.YapConst.ACTIVATION)
+					com.db4o.YapStream stream = a_trans.Stream();
+					if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.ACTIVATION)
 					{
 						stream.Message("" + GetID() + " deactivate " + i_yapClass.GetName());
 					}
@@ -214,7 +220,7 @@ namespace com.db4o
 		{
 			if (BeginProcessing())
 			{
-				com.db4o.YapStream stream = ta.i_stream;
+				com.db4o.YapStream stream = ta.Stream();
 				if (a_reader == null)
 				{
 					a_reader = stream.ReadWriterByID(ta, GetID());
@@ -325,8 +331,19 @@ namespace com.db4o
 		{
 			i_object = a_object;
 			WriteObjectBegin();
-			com.db4o.YapStream stream = a_trans.i_stream;
+			com.db4o.YapStream stream = a_trans.Stream();
 			i_yapClass = a_yapClass;
+			if (com.db4o.inside.marshall.MarshallerFamily.LEGACY)
+			{
+				if (i_yapClass.IsPrimitive())
+				{
+					com.db4o.YapClassPrimitive ycp = (com.db4o.YapClassPrimitive)i_yapClass;
+					int id = com.db4o.inside.marshall.MarshallerFamily.Current()._primitive.WriteNew(
+						a_trans, ycp, a_object, true, null, true, false);
+					SetID(id);
+					return false;
+				}
+			}
 			SetID(stream.NewUserObject());
 			BeginProcessing();
 			BitTrue(com.db4o.YapConst.CONTINUE);
@@ -378,20 +395,19 @@ namespace com.db4o
 			if (BeginProcessing())
 			{
 				object obj = GetObject();
-				if (i_yapClass.DispatchEvent(a_trans.i_stream, obj, com.db4o.EventDispatcher.CAN_UPDATE
-					))
+				if (ObjectCanUpdate(a_trans.Stream(), obj))
 				{
 					if ((!IsActive()) || obj == null)
 					{
 						EndProcessing();
 						return;
 					}
-					if (a_trans.i_stream.i_config.MessageLevel() > com.db4o.YapConst.STATE)
+					if (a_trans.Stream().ConfigImpl().MessageLevel() > com.db4o.YapConst.STATE)
 					{
-						a_trans.i_stream.Message("" + GetID() + " update " + i_yapClass.GetName());
+						a_trans.Stream().Message("" + GetID() + " update " + i_yapClass.GetName());
 					}
 					SetStateClean();
-					a_trans.WriteUpdateDeleteMembers(GetID(), i_yapClass, a_trans.i_stream.i_handlers
+					a_trans.WriteUpdateDeleteMembers(GetID(), i_yapClass, a_trans.Stream().i_handlers
 						.ArrayType(obj), 0);
 					com.db4o.inside.marshall.MarshallerFamily.Current()._object.MarshallUpdate(a_trans
 						, a_updatedepth, this, obj);
@@ -403,6 +419,12 @@ namespace com.db4o
 			}
 		}
 
+		private bool ObjectCanUpdate(com.db4o.YapStream stream, object obj)
+		{
+			return stream.Callbacks().ObjectCanUpdate(obj) && i_yapClass.DispatchEvent(stream
+				, obj, com.db4o.EventDispatcher.CAN_UPDATE);
+		}
+
 		/// <summary>HCTREE ****</summary>
 		public virtual com.db4o.YapObject Hc_add(com.db4o.YapObject a_add)
 		{
@@ -412,10 +434,7 @@ namespace com.db4o
 				a_add.Hc_init(obj);
 				return Hc_add1(a_add);
 			}
-			else
-			{
-				return this;
-			}
+			return this;
 		}
 
 		public virtual void Hc_init(object obj)
@@ -443,10 +462,7 @@ namespace com.db4o
 					{
 						return Hc_rotateRight();
 					}
-					else
-					{
-						return Hc_balance();
-					}
+					return Hc_balance();
 				}
 			}
 			else
@@ -463,10 +479,7 @@ namespace com.db4o
 					{
 						return Hc_rotateLeft();
 					}
-					else
-					{
-						return Hc_balance();
-					}
+					return Hc_balance();
 				}
 			}
 			return this;
@@ -710,10 +723,7 @@ namespace com.db4o
 					{
 						return Id_rotateRight();
 					}
-					else
-					{
-						return Id_balance();
-					}
+					return Id_balance();
 				}
 			}
 			else
@@ -730,10 +740,7 @@ namespace com.db4o
 					{
 						return Id_rotateLeft();
 					}
-					else
-					{
-						return Id_balance();
-					}
+					return Id_balance();
 				}
 			}
 			return this;

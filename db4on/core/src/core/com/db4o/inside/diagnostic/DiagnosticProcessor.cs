@@ -1,6 +1,6 @@
 namespace com.db4o.inside.diagnostic
 {
-	/// <exclude></exclude>
+	/// <exclude>FIXME: remove me from the core and make me a facade over Events</exclude>
 	public class DiagnosticProcessor : com.db4o.diagnostic.DiagnosticConfiguration, com.db4o.foundation.DeepClone
 	{
 		private com.db4o.foundation.Collection4 _listeners;
@@ -55,9 +55,12 @@ namespace com.db4o.inside.diagnostic
 
 		public virtual object DeepClone(object context)
 		{
-			return _listeners != null ? new com.db4o.inside.diagnostic.DiagnosticProcessor(new 
-				com.db4o.foundation.Collection4(_listeners)) : new com.db4o.inside.diagnostic.DiagnosticProcessor
-				();
+			return new com.db4o.inside.diagnostic.DiagnosticProcessor(CloneListeners());
+		}
+
+		private com.db4o.foundation.Collection4 CloneListeners()
+		{
+			return _listeners != null ? new com.db4o.foundation.Collection4(_listeners) : null;
 		}
 
 		public virtual bool Enabled()
@@ -84,6 +87,13 @@ namespace com.db4o.inside.diagnostic
 			OnDiagnostic(new com.db4o.diagnostic.LoadedFromClassIndex(yc.GetName()));
 		}
 
+		public virtual void DescendIntoTranslator(com.db4o.YapClass parent, string fieldName
+			)
+		{
+			OnDiagnostic(new com.db4o.diagnostic.DescendIntoTranslator(parent.GetName(), fieldName
+				));
+		}
+
 		public virtual void NativeQueryUnoptimized(com.db4o.query.Predicate predicate)
 		{
 			OnDiagnostic(new com.db4o.diagnostic.NativeQueryNotOptimized(predicate));
@@ -96,9 +106,9 @@ namespace com.db4o.inside.diagnostic
 				return;
 			}
 			com.db4o.foundation.Iterator4 i = _listeners.Iterator();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				((com.db4o.diagnostic.DiagnosticListener)i.Next()).OnDiagnostic(d);
+				((com.db4o.diagnostic.DiagnosticListener)i.Current()).OnDiagnostic(d);
 			}
 		}
 

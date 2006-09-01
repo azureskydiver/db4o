@@ -117,10 +117,7 @@ namespace com.db4o.query
 						cachedFilterMethod = method;
 						return method;
 					}
-					else
-					{
-						untypedMethod = method;
-					}
+					untypedMethod = method;
 				}
 			}
 			if (untypedMethod != null)
@@ -139,6 +136,7 @@ namespace com.db4o.query
 			}
 			return j4o.lang.JavaSystem.EqualsIgnoreCase(method.GetName(), PREDICATEMETHOD_NAME
 				);
+			return method.GetName().Equals(PREDICATEMETHOD_NAME);
 		}
 
 		/// <summary>public for implementation reasons, please ignore.</summary>

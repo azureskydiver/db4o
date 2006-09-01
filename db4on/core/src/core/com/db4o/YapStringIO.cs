@@ -5,7 +5,7 @@ namespace com.db4o
 	{
 		protected char[] chars = new char[0];
 
-		internal virtual int BytesPerChar()
+		public virtual int BytesPerChar()
 		{
 			return 1;
 		}
@@ -34,7 +34,7 @@ namespace com.db4o
 
 		public virtual int Length(string a_string)
 		{
-			return a_string.Length + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.YAPINT_LENGTH;
+			return a_string.Length + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.INT_LENGTH;
 		}
 
 		protected virtual void CheckBufferLength(int a_length)
@@ -65,9 +65,9 @@ namespace com.db4o
 			return new string(chars, 0, a_bytes.Length);
 		}
 
-		internal virtual int ShortLength(string a_string)
+		public virtual int ShortLength(string a_string)
 		{
-			return a_string.Length + com.db4o.YapConst.YAPINT_LENGTH;
+			return a_string.Length + com.db4o.YapConst.INT_LENGTH;
 		}
 
 		protected virtual int WritetoBuffer(string str)

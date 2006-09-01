@@ -50,7 +50,7 @@ namespace com.db4o.inside.marshall
 		private void CalculateLengths(com.db4o.Transaction trans, com.db4o.YapClass yc, object
 			 obj, int fieldIndex)
 		{
-			_baseLength += com.db4o.YapConst.YAPINT_LENGTH;
+			_baseLength += com.db4o.YapConst.INT_LENGTH;
 			if (yc.i_fields != null)
 			{
 				for (int i = 0; i < yc.i_fields.Length; i++)
@@ -77,7 +77,7 @@ namespace com.db4o.inside.marshall
 
 		private int HeaderLength()
 		{
-			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.YAPID_LENGTH + 1;
+			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.ID_LENGTH + 1;
 		}
 
 		public virtual bool IsNull(int fieldIndex)
@@ -87,7 +87,7 @@ namespace com.db4o.inside.marshall
 
 		private int NullBitMapLength()
 		{
-			return com.db4o.YapConst.YAPINT_LENGTH + _nullBitMap.MarshalledLength();
+			return com.db4o.YapConst.INT_LENGTH + _nullBitMap.MarshalledLength();
 		}
 
 		public virtual int ObjectLength()
@@ -97,7 +97,7 @@ namespace com.db4o.inside.marshall
 
 		public override void PrepareIndexedPayLoadEntry(com.db4o.Transaction trans)
 		{
-			_payLoadLength = trans.i_stream.AlignToBlockSize(_payLoadLength);
+			_payLoadLength = trans.Stream().AlignToBlockSize(_payLoadLength);
 		}
 
 		public virtual void Write(com.db4o.YapWriter writer)

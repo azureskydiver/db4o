@@ -58,9 +58,9 @@ namespace com.db4o.inside.ix
 		private void BuildPaths(com.db4o.QCandidates candidates)
 		{
 			com.db4o.foundation.Iterator4 i = candidates.IterateConstraints();
-			while (i.HasNext())
+			while (i.MoveNext())
 			{
-				com.db4o.QCon qCon = (com.db4o.QCon)i.Next();
+				com.db4o.QCon qCon = (com.db4o.QCon)i.Current();
 				qCon.SetCandidates(candidates);
 				if (!qCon.HasOrJoins())
 				{

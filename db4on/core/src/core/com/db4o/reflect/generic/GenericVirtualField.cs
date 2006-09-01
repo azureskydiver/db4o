@@ -9,7 +9,6 @@ namespace com.db4o.reflect.generic
 
 		public override object DeepClone(object obj)
 		{
-			com.db4o.reflect.Reflector reflector = (com.db4o.reflect.Reflector)obj;
 			return new com.db4o.reflect.generic.GenericVirtualField(GetName());
 		}
 

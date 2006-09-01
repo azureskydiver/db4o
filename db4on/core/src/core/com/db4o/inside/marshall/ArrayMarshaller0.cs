@@ -55,7 +55,7 @@ namespace com.db4o.inside.marshall
 			arrayHandler.WriteNew1(a_object, bytes, length);
 			bytes.SetID(a_bytes._offset);
 			a_bytes.GetStream().WriteEmbedded(a_bytes, bytes);
-			a_bytes.IncrementOffset(com.db4o.YapConst.YAPID_LENGTH);
+			a_bytes.IncrementOffset(com.db4o.YapConst.ID_LENGTH);
 			a_bytes.WriteInt(length);
 			return a_object;
 		}

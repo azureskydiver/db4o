@@ -2,19 +2,16 @@ namespace com.db4o
 {
 	/// <exclude></exclude>
 	public class YapClass : com.db4o.YapMeta, com.db4o.TypeHandler4, com.db4o.ext.StoredClass
-		, com.db4o.UseSystemTransaction
 	{
 		public com.db4o.YapClass i_ancestor;
 
 		internal com.db4o.Config4Class i_config;
 
-		internal int _metaClassID;
+		public int _metaClassID;
 
 		public com.db4o.YapField[] i_fields;
 
-		private com.db4o.ClassIndex i_index;
-
-		private com.db4o.inside.btree.BTree _index;
+		private readonly com.db4o.inside.classindex.ClassIndexStrategy _index;
 
 		protected string i_name;
 
@@ -30,7 +27,7 @@ namespace com.db4o
 
 		private bool _isEnum;
 
-		internal bool i_dontCallConstructors;
+		public bool i_dontCallConstructors;
 
 		private com.db4o.EventDispatcher _eventDispatcher;
 
@@ -43,20 +40,29 @@ namespace com.db4o
 			return _internal;
 		}
 
-		internal int i_lastID;
+		private com.db4o.inside.classindex.ClassIndexStrategy CreateIndexStrategy()
+		{
+			if (com.db4o.inside.marshall.MarshallerFamily.OLD_CLASS_INDEX)
+			{
+				return new com.db4o.inside.classindex.OldClassIndexStrategy(this);
+			}
+			return new com.db4o.inside.classindex.BTreeClassIndexStrategy(this);
+		}
+
+		private int i_lastID;
 
 		internal YapClass(com.db4o.YapStream stream, com.db4o.reflect.ReflectClass reflector
 			)
 		{
 			i_stream = stream;
 			_reflector = reflector;
+			_index = CreateIndexStrategy();
 		}
 
 		internal virtual void ActivateFields(com.db4o.Transaction a_trans, object a_object
 			, int a_depth)
 		{
-			if (DispatchEvent(a_trans.i_stream, a_object, com.db4o.EventDispatcher.CAN_ACTIVATE
-				))
+			if (ObjectCanActivate(a_trans.Stream(), a_object))
 			{
 				ActivateFields1(a_trans, a_object, a_depth);
 			}
@@ -131,9 +137,9 @@ namespace com.db4o
 						field = new com.db4o.YapField(this, fields[i], wrapper);
 						found = false;
 						m = members.Iterator();
-						while (m.HasNext())
+						while (m.MoveNext())
 						{
-							if (((com.db4o.YapField)m.Next()).Equals(field))
+							if (((com.db4o.YapField)m.Current()).Equals(field))
 							{
 								found = true;
 								break;
@@ -149,7 +155,7 @@ namespace com.db4o
 				}
 				if (dirty)
 				{
-					i_stream.SetDirty(this);
+					i_stream.SetDirtyInSystemTransaction(this);
 					i_fields = new com.db4o.YapField[members.Size()];
 					members.ToArray(i_fields);
 					for (int i = 0; i < i_fields.Length; i++)
@@ -189,7 +195,7 @@ namespace com.db4o
 			}
 			if (IsNewTranslator(ot))
 			{
-				i_stream.SetDirty(this);
+				i_stream.SetDirtyInSystemTransaction(this);
 			}
 			int fieldCount = 1;
 			bool versions = GenerateVersionNumbers() && !AncestorHasVersionField();
@@ -289,7 +295,7 @@ namespace com.db4o
 			}
 			if (a_depth > 0)
 			{
-				com.db4o.YapStream stream = a_trans.i_stream;
+				com.db4o.YapStream stream = a_trans.Stream();
 				if (a_activate)
 				{
 					if (IsValueType())
@@ -331,7 +337,7 @@ namespace com.db4o
 			}
 		}
 
-		private void CheckDb4oType()
+		public virtual void CheckDb4oType()
 		{
 			com.db4o.reflect.ReflectClass claxx = ClassReflector();
 			if (claxx == null)
@@ -381,7 +387,7 @@ namespace com.db4o
 
 		internal virtual int CheckUpdateDepthUnspecified(com.db4o.YapStream a_stream)
 		{
-			int depth = a_stream.i_config.UpdateDepth() + 1;
+			int depth = a_stream.ConfigImpl().UpdateDepth() + 1;
 			if (i_config != null && i_config.UpdateDepth() != 0)
 			{
 				depth = i_config.UpdateDepth() + 1;
@@ -447,35 +453,6 @@ namespace com.db4o
 		{
 		}
 
-		private void CreateBTreeIndex(int btreeID)
-		{
-			if (HasIndex() && !i_stream.IsClient())
-			{
-				_index = ((com.db4o.YapFile)i_stream).CreateBTreeClassIndex(this, btreeID);
-				_index.SetRemoveListener(new _AnonymousInnerClass414(this));
-			}
-		}
-
-		private sealed class _AnonymousInnerClass414 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass414(YapClass _enclosing)
-			{
-				this._enclosing = _enclosing;
-			}
-
-			public void Visit(object obj)
-			{
-				int id = ((int)obj);
-				com.db4o.YapObject yo = this._enclosing.i_stream.GetYapObject(id);
-				if (yo != null)
-				{
-					this._enclosing.i_stream.YapObjectGCd(yo);
-				}
-			}
-
-			private readonly YapClass _enclosing;
-		}
-
 		private bool CreateConstructor(com.db4o.YapStream a_stream, string a_name)
 		{
 			com.db4o.reflect.ReflectClass claxx;
@@ -490,7 +467,7 @@ namespace com.db4o
 			return CreateConstructor(a_stream, claxx, a_name, true);
 		}
 
-		private bool CreateConstructor(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
+		public virtual bool CreateConstructor(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
 			 a_class, string a_name, bool errMessages)
 		{
 			_reflector = a_class;
@@ -528,7 +505,7 @@ namespace com.db4o
 			{
 				a_stream.LogMsg(7, a_name);
 			}
-			if (a_stream.i_config.ExceptionsOnNotStorable())
+			if (a_stream.ConfigImpl().ExceptionsOnNotStorable())
 			{
 				throw new com.db4o.ext.ObjectNotStorableException(a_class);
 			}
@@ -538,12 +515,23 @@ namespace com.db4o
 		public virtual void Deactivate(com.db4o.Transaction a_trans, object a_object, int
 			 a_depth)
 		{
-			if (DispatchEvent(a_trans.i_stream, a_object, com.db4o.EventDispatcher.CAN_DEACTIVATE
-				))
+			if (ObjectCanDeactivate(a_trans.Stream(), a_object))
 			{
 				Deactivate1(a_trans, a_object, a_depth);
-				DispatchEvent(a_trans.i_stream, a_object, com.db4o.EventDispatcher.DEACTIVATE);
+				ObjectOnDeactivate(a_trans.Stream(), a_object);
 			}
+		}
+
+		private void ObjectOnDeactivate(com.db4o.YapStream stream, object obj)
+		{
+			stream.Callbacks().ObjectOnDeactivate(obj);
+			DispatchEvent(stream, obj, com.db4o.EventDispatcher.DEACTIVATE);
+		}
+
+		private bool ObjectCanDeactivate(com.db4o.YapStream stream, object obj)
+		{
+			return stream.Callbacks().ObjectCanDeactivate(obj) && DispatchEvent(stream, obj, 
+				com.db4o.EventDispatcher.CAN_DEACTIVATE);
 		}
 
 		internal virtual void Deactivate1(com.db4o.Transaction a_trans, object a_object, 
@@ -570,7 +558,7 @@ namespace com.db4o
 			 attributes, com.db4o.YapWriter a_bytes, object a_object)
 		{
 			RemoveFromIndex(a_bytes.GetTransaction(), a_bytes.GetID());
-			DeleteMembers(mf, attributes, a_bytes, a_bytes.GetTransaction().i_stream.i_handlers
+			DeleteMembers(mf, attributes, a_bytes, a_bytes.GetTransaction().Stream().i_handlers
 				.ArrayType(a_object), false);
 		}
 
@@ -653,12 +641,9 @@ namespace com.db4o
 
 		public bool DispatchEvent(com.db4o.YapStream stream, object obj, int message)
 		{
-			if (_eventDispatcher != null)
+			if (_eventDispatcher != null && stream.DispatchsEvents())
 			{
-				if (stream.DispatchsEvents())
-				{
-					return _eventDispatcher.Dispatch(stream, obj, message);
-				}
+				return _eventDispatcher.Dispatch(stream, obj, message);
 			}
 			return true;
 		}
@@ -715,7 +700,7 @@ namespace com.db4o
 		public static com.db4o.YapClass ForObject(com.db4o.Transaction trans, object obj, 
 			bool allowCreation)
 		{
-			return trans.i_stream.GetYapClass(trans.Reflector().ForObject(obj), allowCreation
+			return trans.Stream().GetYapClass(trans.Reflector().ForObject(obj), allowCreation
 				);
 		}
 
@@ -726,7 +711,7 @@ namespace com.db4o
 				return false;
 			}
 			int configValue = (i_config == null) ? 0 : i_config.GenerateUUIDs();
-			return Generate1(i_stream.BootRecord().i_generateUUIDs, configValue);
+			return Generate1(i_stream.Config().GenerateUUIDs(), configValue);
 		}
 
 		private bool GenerateVersionNumbers()
@@ -736,7 +721,7 @@ namespace com.db4o
 				return false;
 			}
 			int configValue = (i_config == null) ? 0 : i_config.GenerateVersionNumbers();
-			return Generate1(i_stream.BootRecord().i_generateVersionNumbers, configValue);
+			return Generate1(i_stream.Config().GenerateVersionNumbers(), configValue);
 		}
 
 		private bool GenerateVirtual()
@@ -753,7 +738,7 @@ namespace com.db4o
 			{
 				return false;
 			}
-			return i_stream.BootRecord() != null;
+			return true;
 		}
 
 		private bool Generate1(int bootRecordValue, int configValue)
@@ -860,51 +845,51 @@ namespace com.db4o
 			{
 				return new long[0];
 			}
-			long[] ids;
-			if (trans.i_stream.IsClient())
+			if (trans.Stream().IsClient())
 			{
-				com.db4o.YapClient stream = (com.db4o.YapClient)trans.i_stream;
-				stream.WriteMsg(com.db4o.Msg.GET_INTERNAL_IDS.GetWriterForInt(trans, GetID()));
-				com.db4o.YapWriter reader = stream.ExpectedByteResponse(com.db4o.Msg.ID_LIST);
-				int size = reader.ReadInt();
-				ids = new long[size];
-				for (int i = 0; i < size; i++)
-				{
-					ids[i] = reader.ReadInt();
-				}
-				return ids;
+				return GetClientIDs(trans);
 			}
-			ids = new long[_index.Size(trans)];
-			int[] count = new int[] { 0 };
-			_index.TraverseKeys(trans, new _AnonymousInnerClass780(this, ids, count));
-			return ids;
-			return new long[0];
+			return GetIndexIDs(trans);
 		}
 
-		private sealed class _AnonymousInnerClass780 : com.db4o.foundation.Visitor4
+		private long[] GetIndexIDs(com.db4o.Transaction trans)
 		{
-			public _AnonymousInnerClass780(YapClass _enclosing, long[] ids, int[] count)
+			com.db4o.foundation.IntArrayList ids = new com.db4o.foundation.IntArrayList();
+			_index.TraverseAll(trans, new _AnonymousInnerClass749(this, ids));
+			return ids.AsLong();
+		}
+
+		private sealed class _AnonymousInnerClass749 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass749(YapClass _enclosing, com.db4o.foundation.IntArrayList
+				 ids)
 			{
 				this._enclosing = _enclosing;
 				this.ids = ids;
-				this.count = count;
 			}
 
 			public void Visit(object obj)
 			{
-				int id = ((int)obj);
-				if (id > 0)
-				{
-					ids[count[0]] = id;
-					count[0]++;
-				}
+				ids.Add(((int)obj));
 			}
 
 			private readonly YapClass _enclosing;
 
-			private readonly long[] ids;
+			private readonly com.db4o.foundation.IntArrayList ids;
+		}
 
-			private readonly int[] count;
+		private long[] GetClientIDs(com.db4o.Transaction trans)
+		{
+			com.db4o.YapClient stream = (com.db4o.YapClient)trans.Stream();
+			stream.WriteMsg(com.db4o.Msg.GET_INTERNAL_IDS.GetWriterForInt(trans, GetID()));
+			com.db4o.YapWriter reader = stream.ExpectedByteResponse(com.db4o.Msg.ID_LIST);
+			int size = reader.ReadInt();
+			long[] ids = new long[size];
+			for (int i = 0; i < size; i++)
+			{
+				ids[i] = reader.ReadInt();
+			}
+			return ids;
 		}
 
 		internal virtual bool HasIndex()
@@ -968,23 +953,9 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual com.db4o.inside.btree.BTree Index()
+		public virtual com.db4o.inside.classindex.ClassIndexStrategy Index()
 		{
-			if (!StateOK())
-			{
-				return null;
-			}
 			return _index;
-		}
-
-		internal virtual com.db4o.ClassIndex GetIndex()
-		{
-			if (StateOK() && i_index != null)
-			{
-				i_index.EnsureActive();
-				return i_index;
-			}
-			return null;
 		}
 
 		internal virtual int IndexEntryCount(com.db4o.Transaction ta)
@@ -993,11 +964,7 @@ namespace com.db4o
 			{
 				return 0;
 			}
-			if (_index != null)
-			{
-				return _index.Size(ta);
-			}
-			return 0;
+			return _index.EntryCount(ta);
 		}
 
 		public virtual object IndexEntryToObject(com.db4o.Transaction trans, object indexEntry
@@ -1009,52 +976,6 @@ namespace com.db4o
 			}
 			int id = ((int)indexEntry);
 			return GetStream().GetByID2(trans, id);
-		}
-
-		internal com.db4o.Tree GetIndex(com.db4o.Transaction a_trans)
-		{
-			if (!HasIndex())
-			{
-				return null;
-			}
-			com.db4o.TreeInt zero = new com.db4o.TreeInt(0);
-			com.db4o.Tree[] tree = new com.db4o.Tree[] { zero };
-			_index.TraverseKeys(a_trans, new _AnonymousInnerClass897(this, tree));
-			tree[0] = tree[0].RemoveNode(zero);
-			return tree[0];
-			return null;
-		}
-
-		private sealed class _AnonymousInnerClass897 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass897(YapClass _enclosing, com.db4o.Tree[] tree)
-			{
-				this._enclosing = _enclosing;
-				this.tree = tree;
-			}
-
-			public void Visit(object obj)
-			{
-				tree[0] = tree[0].Add(new com.db4o.TreeInt(((int)obj)));
-			}
-
-			private readonly YapClass _enclosing;
-
-			private readonly com.db4o.Tree[] tree;
-		}
-
-		internal com.db4o.TreeInt GetIndexRoot()
-		{
-			if (!HasIndex())
-			{
-				return null;
-			}
-			com.db4o.ClassIndex ci = GetIndex();
-			if (ci == null)
-			{
-				return null;
-			}
-			return (com.db4o.TreeInt)ci.GetRoot();
 		}
 
 		public virtual com.db4o.reflect.ReflectClass ClassReflector()
@@ -1111,13 +1032,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField GetYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			ForEachYapField(new _AnonymousInnerClass968(this, name, yf));
+			ForEachYapField(new _AnonymousInnerClass876(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass968 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass876 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass968(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass876(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1184,11 +1105,11 @@ namespace com.db4o
 			return a_object;
 		}
 
-		internal virtual bool Init(com.db4o.YapStream a_stream, com.db4o.YapClass a_ancestor
-			, com.db4o.reflect.ReflectClass claxx, bool errMessages)
+		internal bool Init(com.db4o.YapStream a_stream, com.db4o.YapClass a_ancestor, com.db4o.reflect.ReflectClass
+			 claxx)
 		{
 			i_ancestor = a_ancestor;
-			com.db4o.Config4Impl config = a_stream.i_config;
+			com.db4o.Config4Impl config = a_stream.ConfigImpl();
 			string className = claxx.GetName();
 			SetConfig(config.ConfigClass(className));
 			if (!CreateConstructor(a_stream, claxx, className, false))
@@ -1198,7 +1119,7 @@ namespace com.db4o
 			CheckDb4oType();
 			if (AllowsQueries())
 			{
-				CreateBTreeIndex(0);
+				_index.Initialize(a_stream);
 			}
 			i_name = className;
 			i_ancestor = a_ancestor;
@@ -1222,7 +1143,7 @@ namespace com.db4o
 			{
 				return;
 			}
-			com.db4o.YapStream stream = systemTrans.i_stream;
+			com.db4o.YapStream stream = systemTrans.Stream();
 			stream.ShowInternalClasses(true);
 			int[] metaClassID = new int[] { _metaClassID };
 			if (i_config.InitOnUp(systemTrans, metaClassID))
@@ -1273,14 +1194,14 @@ namespace com.db4o
 				if (ConfigInstantiates())
 				{
 					int bytesOffset = a_bytes._offset;
-					a_bytes.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+					a_bytes.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
 					try
 					{
 						a_object = i_config.Instantiate(stream, i_fields[0].Read(mf, a_bytes));
 					}
 					catch (System.Exception e)
 					{
-						com.db4o.Messages.LogErr(stream.i_config, 6, ClassReflector().GetName(), e);
+						com.db4o.Messages.LogErr(stream.ConfigImpl(), 6, ClassReflector().GetName(), e);
 						return null;
 					}
 					a_bytes._offset = bytesOffset;
@@ -1336,11 +1257,11 @@ namespace com.db4o
 			}
 			if (doFields)
 			{
-				if (DispatchEvent(stream, a_object, com.db4o.EventDispatcher.CAN_ACTIVATE))
+				if (ObjectCanActivate(stream, a_object))
 				{
 					a_yapObject.SetStateClean();
 					InstantiateFields(a_yapObject, a_object, mf, attributes, a_bytes);
-					DispatchEvent(stream, a_object, com.db4o.EventDispatcher.ACTIVATE);
+					ObjectOnActivate(stream, a_object);
 				}
 				else
 				{
@@ -1367,6 +1288,18 @@ namespace com.db4o
 			return a_object;
 		}
 
+		private void ObjectOnActivate(com.db4o.YapStream stream, object obj)
+		{
+			stream.Callbacks().ObjectOnActivate(obj);
+			DispatchEvent(stream, obj, com.db4o.EventDispatcher.ACTIVATE);
+		}
+
+		private bool ObjectCanActivate(com.db4o.YapStream stream, object obj)
+		{
+			return stream.Callbacks().ObjectCanActivate(obj) && DispatchEvent(stream, obj, com.db4o.EventDispatcher
+				.CAN_ACTIVATE);
+		}
+
 		internal virtual object InstantiateTransient(com.db4o.YapObject a_yapObject, object
 			 a_object, com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.inside.marshall.ObjectHeaderAttributes
 			 attributes, com.db4o.YapWriter a_bytes)
@@ -1375,14 +1308,14 @@ namespace com.db4o
 			if (ConfigInstantiates())
 			{
 				int bytesOffset = a_bytes._offset;
-				a_bytes.IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+				a_bytes.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
 				try
 				{
 					a_object = i_config.Instantiate(stream, i_fields[0].Read(mf, a_bytes));
 				}
 				catch (System.Exception e)
 				{
-					com.db4o.Messages.LogErr(stream.i_config, 6, ClassReflector().GetName(), e);
+					com.db4o.Messages.LogErr(stream.ConfigImpl(), 6, ClassReflector().GetName(), e);
 					return null;
 				}
 				a_bytes._offset = bytesOffset;
@@ -1490,9 +1423,8 @@ namespace com.db4o
 			}
 		}
 
-		private string NameToWrite()
+		public virtual string NameToWrite()
 		{
-			string name = i_name;
 			if (i_config != null && i_config.WriteAs() != null)
 			{
 				return i_config.WriteAs();
@@ -1517,7 +1449,7 @@ namespace com.db4o
 			{
 				return res == com.db4o.YapConst.YES;
 			}
-			return (i_stream.i_config.CallConstructors() == com.db4o.YapConst.YES);
+			return (i_stream.ConfigImpl().CallConstructors() == com.db4o.YapConst.YES);
 		}
 
 		private int CallConstructorSpecialized()
@@ -1543,17 +1475,8 @@ namespace com.db4o
 
 		public override int OwnLength()
 		{
-			int len = i_stream.StringIO().ShortLength(NameToWrite()) + com.db4o.YapConst.OBJECT_LENGTH
-				 + (com.db4o.YapConst.YAPINT_LENGTH * 2) + (com.db4o.YapConst.YAPID_LENGTH);
-			len += com.db4o.YapConst.YAPID_LENGTH;
-			if (i_fields != null)
-			{
-				for (int i = 0; i < i_fields.Length; i++)
-				{
-					len += i_fields[i].OwnLength(i_stream);
-				}
-			}
-			return len;
+			return com.db4o.inside.marshall.MarshallerFamily.Current()._class.MarshalledLength
+				(i_stream, this);
 		}
 
 		public virtual com.db4o.reflect.ReflectClass PrimitiveClassReflector()
@@ -1563,14 +1486,7 @@ namespace com.db4o
 
 		internal virtual void Purge()
 		{
-			if (i_index != null)
-			{
-				if (!i_index.IsDirty())
-				{
-					i_index.Clear();
-					i_index.SetStateDeactivated();
-				}
-			}
+			_index.Purge();
 		}
 
 		public virtual object Read(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
@@ -1581,7 +1497,7 @@ namespace com.db4o
 				int id = a_bytes.ReadInt();
 				int depth = a_bytes.GetInstantiationDepth() - 1;
 				com.db4o.Transaction trans = a_bytes.GetTransaction();
-				com.db4o.YapStream stream = trans.i_stream;
+				com.db4o.YapStream stream = trans.Stream();
 				if (a_bytes.GetUpdateDepth() == com.db4o.YapConst.TRANSIENT)
 				{
 					return stream.PeekPersisted1(trans, id, depth);
@@ -1609,16 +1525,13 @@ namespace com.db4o
 					return new com.db4o.YapObject(id).Read(trans, null, null, depth, com.db4o.YapConst
 						.ADD_TO_ID_TREE, false);
 				}
-				else
+				object ret = stream.GetByID2(trans, id);
+				if (ret is com.db4o.Db4oTypeImpl)
 				{
-					object ret = stream.GetByID2(trans, id);
-					if (ret is com.db4o.Db4oTypeImpl)
-					{
-						depth = ((com.db4o.Db4oTypeImpl)ret).AdjustReadDepth(depth);
-					}
-					stream.StillToActivate(ret, depth);
-					return ret;
+					depth = ((com.db4o.Db4oTypeImpl)ret).AdjustReadDepth(depth);
 				}
+				stream.StillToActivate(ret, depth);
+				return ret;
 			}
 			catch (System.Exception e)
 			{
@@ -1631,7 +1544,7 @@ namespace com.db4o
 		{
 			try
 			{
-				return a_trans.i_stream.GetByID2(a_trans, a_reader.ReadInt());
+				return a_trans.Stream().GetByID2(a_trans, a_reader.ReadInt());
 			}
 			catch (System.Exception e)
 			{
@@ -1656,7 +1569,7 @@ namespace com.db4o
 			{
 				if (com.db4o.Platform4.IsCollectionTranslator(this.i_config))
 				{
-					a_bytes[0].IncrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+					a_bytes[0].IncrementOffset(com.db4o.YapConst.INT_LENGTH);
 					return new com.db4o.YapArray(i_stream, null, false);
 				}
 				IncrementFieldsOffset1(a_bytes[0]);
@@ -1696,19 +1609,19 @@ namespace com.db4o
 			if (id != 0)
 			{
 				com.db4o.Transaction trans = a_candidates.i_trans;
-				object obj = trans.i_stream.GetByID1(trans, id);
+				object obj = trans.Stream().GetByID1(trans, id);
 				if (obj != null)
 				{
-					a_candidates.i_trans.i_stream.Activate1(trans, obj, 2);
-					com.db4o.Platform4.ForEachCollectionElement(obj, new _AnonymousInnerClass1482(this
+					a_candidates.i_trans.Stream().Activate1(trans, obj, 2);
+					com.db4o.Platform4.ForEachCollectionElement(obj, new _AnonymousInnerClass1361(this
 						, a_candidates, trans));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1482 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1361 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1482(YapClass _enclosing, com.db4o.QCandidates a_candidates
+			public _AnonymousInnerClass1361(YapClass _enclosing, com.db4o.QCandidates a_candidates
 				, com.db4o.Transaction trans)
 			{
 				this._enclosing = _enclosing;
@@ -1719,7 +1632,7 @@ namespace com.db4o
 			public void Visit(object elem)
 			{
 				a_candidates.AddByIdentity(new com.db4o.QCandidate(a_candidates, elem, (int)trans
-					.i_stream.GetID(elem), true));
+					.Stream().GetID(elem), true));
 			}
 
 			private readonly YapClass _enclosing;
@@ -1757,7 +1670,7 @@ namespace com.db4o
 
 		internal virtual byte[] ReadName(com.db4o.Transaction a_trans)
 		{
-			i_reader = a_trans.i_stream.ReadReaderByID(a_trans, GetID());
+			i_reader = a_trans.Stream().ReadReaderByID(a_trans, GetID());
 			if (i_reader != null)
 			{
 				return ReadName1(a_trans, i_reader);
@@ -1765,19 +1678,13 @@ namespace com.db4o
 			return null;
 		}
 
-		internal virtual byte[] ReadName1(com.db4o.Transaction a_trans, com.db4o.YapReader
-			 a_reader)
+		internal byte[] ReadName1(com.db4o.Transaction trans, com.db4o.YapReader reader)
 		{
-			i_reader = a_reader;
+			i_reader = reader;
 			try
 			{
-				int len = a_reader.ReadInt();
-				len = len * a_trans.i_stream.StringIO().BytesPerChar();
-				i_nameBytes = new byte[len];
-				System.Array.Copy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, len);
-				i_nameBytes = com.db4o.Platform4.UpdateClassName(i_nameBytes);
-				a_reader.IncrementOffset(len);
-				_metaClassID = a_reader.ReadInt();
+				i_nameBytes = com.db4o.inside.marshall.MarshallerFamily.Current()._class.ReadName
+					(trans, this, reader);
 				SetStateUnread();
 				BitFalse(com.db4o.YapConst.CHECKED_CHANGES);
 				BitFalse(com.db4o.YapConst.STATIC_FIELDS_STORED);
@@ -1794,7 +1701,7 @@ namespace com.db4o
 			 a_yapObject)
 		{
 			int id = a_yapObject.GetID();
-			com.db4o.YapStream stream = a_trans.i_stream;
+			com.db4o.YapStream stream = a_trans.Stream();
 			com.db4o.YapReader reader = stream.ReadReaderByID(a_trans, id);
 			com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
 				(stream, this, reader);
@@ -1838,7 +1745,7 @@ namespace com.db4o
 			{
 				i_name = a_class.GetName();
 			}
-			SetConfig(i_stream.i_config.ConfigClass(i_name));
+			SetConfig(i_stream.ConfigImpl().ConfigClass(i_name));
 			if (a_class == null)
 			{
 				CreateConstructor(a_stream, i_name);
@@ -1866,51 +1773,18 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual void ForceRead()
+		internal void ForceRead()
 		{
-			if (i_reader != null && BitIsFalse(com.db4o.YapConst.READING))
+			if (i_reader == null || BitIsTrue(com.db4o.YapConst.READING))
 			{
-				BitTrue(com.db4o.YapConst.READING);
-				i_ancestor = i_stream.GetYapClass(i_reader.ReadInt());
-				if (i_dontCallConstructors)
-				{
-					CreateConstructor(i_stream, ClassReflector(), i_name, true);
-				}
-				CheckDb4oType();
-				int indexId = i_reader.ReadInt();
-				if (!i_stream.IsClient() && HasIndex() && _index == null)
-				{
-					com.db4o.YapFile yf = (com.db4o.YapFile)i_stream;
-					if (indexId < 0)
-					{
-						CreateBTreeIndex(-indexId);
-					}
-					else
-					{
-						CreateBTreeIndex(0);
-						new com.db4o.inside.convert.conversions.ClassIndexesToBTrees().Convert(yf, indexId
-							, _index);
-						yf.SetDirty(this);
-					}
-				}
-				i_fields = new com.db4o.YapField[i_reader.ReadInt()];
-				for (int i = 0; i < i_fields.Length; i++)
-				{
-					i_fields[i] = new com.db4o.YapField(this);
-					i_fields[i].SetArrayPosition(i);
-				}
-				for (int i = 0; i < i_fields.Length; i++)
-				{
-					i_fields[i] = i_fields[i].ReadThis(i_stream, i_reader);
-				}
-				for (int i = 0; i < i_fields.Length; i++)
-				{
-					i_fields[i].LoadHandler(i_stream);
-				}
-				i_nameBytes = null;
-				i_reader = null;
-				BitFalse(com.db4o.YapConst.READING);
+				return;
 			}
+			BitTrue(com.db4o.YapConst.READING);
+			com.db4o.inside.marshall.MarshallerFamily.Current()._class.Read(i_stream, this, i_reader
+				);
+			i_nameBytes = null;
+			i_reader = null;
+			BitFalse(com.db4o.YapConst.READING);
 		}
 
 		public virtual bool ReadArray(object array, com.db4o.YapWriter reader)
@@ -2061,7 +1935,7 @@ namespace com.db4o
 		{
 			lock (i_stream.i_lock)
 			{
-				com.db4o.YapClass yc = i_stream.GetYapClass(i_stream.i_config.ReflectorFor(a_type
+				com.db4o.YapClass yc = i_stream.GetYapClass(i_stream.ConfigImpl().ReflectorFor(a_type
 					), false);
 				if (i_fields != null)
 				{
@@ -2090,9 +1964,9 @@ namespace com.db4o
 					.StoreStaticFieldValues(trans.Reflector(), ClassReflector());
 				if (store)
 				{
-					com.db4o.YapStream stream = trans.i_stream;
+					com.db4o.YapStream stream = trans.Stream();
 					stream.ShowInternalClasses(true);
-					com.db4o.query.Query q = stream.QuerySharpenBug(trans);
+					com.db4o.query.Query q = stream.Query(trans);
 					q.Constrain(com.db4o.YapConst.CLASS_STATICCLASS);
 					q.Descend("name").Constrain(i_name);
 					com.db4o.StaticClass sc = new com.db4o.StaticClass();
@@ -2233,32 +2107,10 @@ namespace com.db4o
 		}
 
 		public sealed override void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader
-			 a_writer)
+			 writer)
 		{
-			a_writer.WriteShortString(trans, NameToWrite());
-			a_writer.WriteInt(_metaClassID);
-			a_writer.WriteIDOf(trans, i_ancestor);
-			if (_index == null)
-			{
-				a_writer.WriteInt(0);
-			}
-			else
-			{
-				_index.Write(trans);
-				a_writer.WriteInt(-_index.GetID());
-			}
-			if (i_fields == null)
-			{
-				a_writer.WriteInt(0);
-			}
-			else
-			{
-				a_writer.WriteInt(i_fields.Length);
-				for (int i = 0; i < i_fields.Length; i++)
-				{
-					i_fields[i].WriteThis(trans, a_writer, this);
-				}
-			}
+			com.db4o.inside.marshall.MarshallerFamily.Current()._class.Write(trans, this, writer
+				);
 		}
 
 		private com.db4o.reflect.ReflectClass i_compareTo;
@@ -2345,6 +2197,35 @@ namespace com.db4o
 				str += i_ancestor.ToString(mf, writer, yapObject, depth, maxDepth);
 			}
 			return str;
+		}
+
+		public virtual void DefragObject(com.db4o.YapReader source, com.db4o.YapReader target
+			, com.db4o.IDMapping mapping)
+		{
+			com.db4o.inside.marshall.ObjectHeader header = com.db4o.inside.marshall.ObjectHeader
+				.Defrag(this, source, target, mapping);
+			header._marshallerFamily._object.DefragFields(this, header, source, target, mapping
+				);
+		}
+
+		public virtual void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
+			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
+		{
+			int oldID = source.ReadInt();
+			int newID = mapping.MappedID(oldID);
+			target.WriteInt(newID);
+			int restLength = (LinkLength() - com.db4o.YapConst.INT_LENGTH);
+			source.IncrementOffset(restLength);
+			target.IncrementOffset(restLength);
+		}
+
+		public virtual void DefragClass(com.db4o.YapReader source, com.db4o.YapReader target
+			, com.db4o.IDMapping mapping, int classIndexID)
+		{
+			com.db4o.inside.marshall.MarshallerFamily mf = com.db4o.inside.marshall.MarshallerFamily
+				.Current();
+			mf._class.Defrag(this, i_stream.StringIO(), source, target, mapping, classIndexID
+				);
 		}
 	}
 }

@@ -24,12 +24,6 @@ namespace com.db4o
 		private bool i_selfComparison = false;
 
 		[com.db4o.Transient]
-		private com.db4o.inside.ix.IxTraverser i_indexTraverser;
-
-		[com.db4o.Transient]
-		private com.db4o.QCon i_indexConstraint;
-
-		[com.db4o.Transient]
 		private bool i_loadedFromIndex;
 
 		public QConObject()
@@ -59,7 +53,7 @@ namespace com.db4o
 			}
 			else
 			{
-				i_yapClass = a_trans.i_stream.GetYapClass(a_trans.Reflector().ForObject(a_object)
+				i_yapClass = a_trans.Stream().GetYapClass(a_trans.Reflector().ForObject(a_object)
 					, true);
 				if (i_yapClass != null)
 				{
@@ -67,12 +61,12 @@ namespace com.db4o
 					if (a_object != i_object)
 					{
 						i_attributeProvider = i_yapClass.i_config.QueryAttributeProvider();
-						i_yapClass = a_trans.i_stream.GetYapClass(a_trans.Reflector().ForObject(i_object)
+						i_yapClass = a_trans.Stream().GetYapClass(a_trans.Reflector().ForObject(i_object)
 							, true);
 					}
 					if (i_yapClass != null)
 					{
-						i_yapClass.CollectConstraints(a_trans, this, i_object, new _AnonymousInnerClass88
+						i_yapClass.CollectConstraints(a_trans, this, i_object, new _AnonymousInnerClass85
 							(this));
 					}
 					else
@@ -87,9 +81,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass88 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass85 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass88(QConObject _enclosing)
+			public _AnonymousInnerClass85(QConObject _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -121,11 +115,14 @@ namespace com.db4o
 			{
 				return false;
 			}
-			if (HasOrJoins())
+			if (!com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX)
 			{
-				return false;
+				if (HasOrJoins())
+				{
+					return false;
+				}
 			}
-			return i_field.i_yapField.CanLoadByIndex(this, i_evaluator);
+			return i_field.i_yapField.CanLoadByIndex();
 		}
 
 		internal override void CreateCandidates(com.db4o.foundation.Collection4 a_candidateCollection
@@ -157,9 +154,9 @@ namespace com.db4o
 			{
 				bool hasEvaluation = false;
 				com.db4o.foundation.Iterator4 i = IterateChildren();
-				while (i.HasNext())
+				while (i.MoveNext())
 				{
-					if (i.Next() is com.db4o.QConEvaluation)
+					if (i.Current() is com.db4o.QConEvaluation)
 					{
 						hasEvaluation = true;
 						break;
@@ -169,9 +166,9 @@ namespace com.db4o
 				{
 					a_candidates.Traverse(i_field);
 					com.db4o.foundation.Iterator4 j = IterateChildren();
-					while (j.HasNext())
+					while (j.MoveNext())
 					{
-						((com.db4o.QCon)j.Next()).EvaluateEvaluationsExec(a_candidates, false);
+						((com.db4o.QCon)j.Current()).EvaluateEvaluationsExec(a_candidates, false);
 					}
 				}
 			}
@@ -233,7 +230,7 @@ namespace com.db4o
 		{
 			if (i_comparator == null)
 			{
-				return a_candidate.PrepareComparison(i_trans.i_stream, i_object);
+				return a_candidate.PrepareComparison(i_trans.Stream(), i_object);
 			}
 			return i_comparator;
 		}
@@ -243,7 +240,7 @@ namespace com.db4o
 			return i_yapClass;
 		}
 
-		internal override com.db4o.QField GetField()
+		public override com.db4o.QField GetField()
 		{
 			return i_field;
 		}
@@ -252,7 +249,7 @@ namespace com.db4o
 		{
 			if (i_objectID == 0)
 			{
-				i_objectID = i_trans.i_stream.GetID1(i_trans, i_object);
+				i_objectID = i_trans.Stream().GetID1(i_trans, i_object);
 				if (i_objectID == 0)
 				{
 					i_objectID = -1;
@@ -288,7 +285,7 @@ namespace com.db4o
 
 		public override com.db4o.inside.ix.IxTree IndexRoot()
 		{
-			return (com.db4o.inside.ix.IxTree)i_field.i_yapField.GetIndexRoot(i_trans);
+			return (com.db4o.inside.ix.IxTree)i_field.i_yapField.GetOldIndexRoot(i_trans);
 		}
 
 		internal override bool IsNullConstraint()
@@ -378,7 +375,7 @@ namespace com.db4o
 		{
 			if (i_attributeProvider != null)
 			{
-				i_candidates.i_trans.i_stream.Activate1(i_candidates.i_trans, candidate);
+				i_candidates.i_trans.Stream().Activate1(i_candidates.i_trans, candidate);
 				return i_attributeProvider.Attribute(candidate);
 			}
 			return candidate;
@@ -395,7 +392,7 @@ namespace com.db4o
 				}
 				if (i_yapClassID != 0)
 				{
-					i_yapClass = a_trans.i_stream.GetYapClass(i_yapClassID);
+					i_yapClass = a_trans.Stream().GetYapClass(i_yapClassID);
 				}
 				if (i_field != null)
 				{
@@ -403,7 +400,7 @@ namespace com.db4o
 				}
 				if (i_objectID != 0)
 				{
-					object obj = a_trans.i_stream.GetByID(i_objectID);
+					object obj = a_trans.Stream().GetByID(i_objectID);
 					if (obj != null)
 					{
 						i_object = obj;

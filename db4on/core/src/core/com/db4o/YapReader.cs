@@ -5,7 +5,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class YapReader
 	{
-		internal byte[] _buffer;
+		public byte[] _buffer;
 
 		public int _offset;
 
@@ -106,10 +106,10 @@ namespace com.db4o
 
 		public com.db4o.YapReader ReadEmbeddedObject(com.db4o.Transaction a_trans)
 		{
-			return a_trans.i_stream.ReadObjectReaderByAddress(ReadInt(), ReadInt());
+			return a_trans.Stream().ReadObjectReaderByAddress(ReadInt(), ReadInt());
 		}
 
-		internal virtual void ReadEncrypt(com.db4o.YapStream a_stream, int a_address)
+		public virtual void ReadEncrypt(com.db4o.YapStream a_stream, int a_address)
 		{
 			a_stream.ReadBytes(_buffer, a_address, GetLength());
 			a_stream.i_handlers.Decrypt(this);
@@ -234,10 +234,15 @@ namespace com.db4o
 			WriteInt(i);
 		}
 
-		internal virtual void WriteShortString(com.db4o.Transaction trans, string a_string
-			)
+		public virtual void WriteShortString(com.db4o.Transaction trans, string a_string)
 		{
-			trans.i_stream.i_handlers.i_stringHandler.WriteShort(a_string, this);
+			trans.Stream().i_handlers.i_stringHandler.WriteShort(a_string, this);
+		}
+
+		public virtual void CopyTo(com.db4o.YapReader to, int fromOffset, int toOffset, int
+			 length)
+		{
+			System.Array.Copy(_buffer, fromOffset, to._buffer, toOffset, length);
 		}
 	}
 }

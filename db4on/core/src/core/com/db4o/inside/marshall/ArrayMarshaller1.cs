@@ -40,7 +40,7 @@ namespace com.db4o.inside.marshall
 			 reader)
 		{
 			int address = reader.ReadInt();
-			int length = reader.ReadInt();
+			reader.ReadInt();
 			if (address <= 0)
 			{
 				return;

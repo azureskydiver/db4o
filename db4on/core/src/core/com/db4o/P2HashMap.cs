@@ -226,7 +226,7 @@ namespace com.db4o
 			return 2;
 		}
 
-		internal override void CheckActive()
+		public override void CheckActive()
 		{
 			base.CheckActive();
 			if (i_table == null)
@@ -379,9 +379,9 @@ namespace com.db4o
 				}
 				int j = 0;
 				Iterator4 it = col.Iterator();
-				while (it.HasNext())
+				while (it.MoveNext())
 				{
-					i_entries[j++] = (P1HashElement)it.Next();
+					i_entries[j++] = (P1HashElement)it.Current();
 				}
 				Store(2);
 			}

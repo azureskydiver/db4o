@@ -17,7 +17,7 @@ namespace com.db4o
 				}
 			}
 			com.db4o.MsgD message = com.db4o.Msg.GET_CLASSES.GetWriterForLength(GetTransaction
-				(), com.db4o.YapConst.YAPINT_LENGTH + 1);
+				(), com.db4o.YapConst.INT_LENGTH + 1);
 			com.db4o.YapWriter writer = message.GetPayLoad();
 			writer.WriteInt(stream.i_classCollection.GetID());
 			writer.Append(stream.StringIO().EncodingByte());

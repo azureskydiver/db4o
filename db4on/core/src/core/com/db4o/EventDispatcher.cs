@@ -33,9 +33,9 @@ namespace com.db4o
 
 		private readonly com.db4o.reflect.ReflectMethod[] methods;
 
-		private EventDispatcher(com.db4o.reflect.ReflectMethod[] methods)
+		private EventDispatcher(com.db4o.reflect.ReflectMethod[] methods_)
 		{
-			this.methods = methods;
+			methods = methods_;
 		}
 
 		internal bool Dispatch(com.db4o.YapStream stream, object obj, int eventID)
@@ -67,13 +67,13 @@ namespace com.db4o
 			}
 			com.db4o.EventDispatcher dispatcher = null;
 			int count = 0;
-			if (a_stream.i_config.Callbacks())
+			if (a_stream.ConfigImpl().Callbacks())
 			{
 				count = COUNT;
 			}
 			else
 			{
-				if (a_stream.i_config.IsServer())
+				if (a_stream.ConfigImpl().IsServer())
 				{
 					count = SERVER_COUNT;
 				}

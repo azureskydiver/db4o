@@ -43,7 +43,7 @@ namespace com.db4o
 			private readonly TransactionClient _enclosing;
 		}
 
-		internal override void Commit()
+		public override void Commit()
 		{
 			CommitTransactionListeners();
 			if (i_yapObjectsToGc != null)
@@ -64,7 +64,7 @@ namespace com.db4o
 			public void Visit(object a_object)
 			{
 				com.db4o.YapObject yo = (com.db4o.YapObject)((com.db4o.TreeIntObject)a_object)._object;
-				this._enclosing.i_stream.YapObjectGCd(yo);
+				this._enclosing.Stream().YapObjectGCd(yo);
 			}
 
 			private readonly TransactionClient _enclosing;
@@ -94,8 +94,8 @@ namespace com.db4o
 		internal override object[] ObjectAndYapObjectBySignature(long a_uuid, byte[] a_signature
 			)
 		{
-			int messageLength = com.db4o.YapConst.YAPLONG_LENGTH + com.db4o.YapConst.YAPINT_LENGTH
-				 + a_signature.Length;
+			int messageLength = com.db4o.YapConst.LONG_LENGTH + com.db4o.YapConst.INT_LENGTH 
+				+ a_signature.Length;
 			com.db4o.MsgD message = com.db4o.Msg.OBJECT_BY_UUID.GetWriterForLength(this, messageLength
 				);
 			message.WriteLong(a_uuid);
@@ -105,7 +105,7 @@ namespace com.db4o
 			int id = message.ReadInt();
 			if (id > 0)
 			{
-				return i_stream.GetObjectAndYapObjectByID(this, id);
+				return Stream().GetObjectAndYapObjectByID(this, id);
 			}
 			return new object[2];
 		}

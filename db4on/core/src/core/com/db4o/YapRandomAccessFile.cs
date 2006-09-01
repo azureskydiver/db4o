@@ -45,7 +45,8 @@ namespace com.db4o
 				}
 				try
 				{
-					i_backupFile = i_config.IoAdapter().Open(path, true, i_file.GetLength());
+					i_backupFile = ConfigImpl().IoAdapter().Open(path, true, i_file.GetLength());
+					i_backupFile.BlockSize(BlockSize());
 				}
 				catch (System.Exception e)
 				{
@@ -56,18 +57,28 @@ namespace com.db4o
 			long pos = 0;
 			int bufferlength = 8192;
 			byte[] buffer = new byte[bufferlength];
-			do
+			while (true)
 			{
 				lock (i_lock)
 				{
 					i_file.Seek(pos);
 					int read = i_file.Read(buffer);
+					if (read <= 0)
+					{
+						break;
+					}
 					i_backupFile.Seek(pos);
 					i_backupFile.Write(buffer, read);
 					pos += read;
 				}
+				try
+				{
+					j4o.lang.Thread.Sleep(1);
+				}
+				catch (System.Exception e)
+				{
+				}
 			}
-			while (pos < i_file.GetLength());
 			lock (i_lock)
 			{
 				i_backupFile.Close();
@@ -75,13 +86,14 @@ namespace com.db4o
 			}
 		}
 
-		internal override void BlockSize(int blockSize)
+		public override void BlockSize(int blockSize, long fileLength)
 		{
 			i_file.BlockSize(blockSize);
 			if (i_timerFile != null)
 			{
 				i_timerFile.BlockSize(blockSize);
 			}
+			base.BlockSize(blockSize, fileLength);
 		}
 
 		public override byte BlockSize()
@@ -119,10 +131,9 @@ namespace com.db4o
 							if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
 							{
 								com.db4o.YapWriter lockBytes = new com.db4o.YapWriter(i_systemTrans, com.db4o.YapConst
-									.YAPLONG_LENGTH);
+									.LONG_LENGTH);
 								com.db4o.YLong.WriteLong(0, lockBytes);
-								i_timerFile.BlockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
-									);
+								_fileHeader.SeekForTimeLock(i_timerFile);
 								i_timerFile.Write(lockBytes._buffer);
 								i_timerFile.Close();
 							}
@@ -222,7 +233,7 @@ namespace com.db4o
 			i_file = null;
 		}
 
-		internal override long FileLength()
+		public override long FileLength()
 		{
 			try
 			{
@@ -242,7 +253,7 @@ namespace com.db4o
 		private void Open()
 		{
 			bool isNew = false;
-			com.db4o.io.IoAdapter ioAdapter = i_config.IoAdapter();
+			com.db4o.io.IoAdapter ioAdapter = ConfigImpl().IoAdapter();
 			try
 			{
 				if (FileName().Length > 0)
@@ -255,8 +266,8 @@ namespace com.db4o
 					}
 					try
 					{
-						bool lockFile = com.db4o.Debug.lockFile && i_config.LockFile() && (!i_config.IsReadOnly
-							());
+						bool lockFile = com.db4o.Debug.lockFile && ConfigImpl().LockFile() && (!ConfigImpl
+							().IsReadOnly());
 						i_file = ioAdapter.Open(FileName(), lockFile, 0);
 						if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
 						{
@@ -274,9 +285,9 @@ namespace com.db4o
 					if (isNew)
 					{
 						ConfigureNewFile();
-						if (i_config.ReservedStorageSpace() > 0)
+						if (ConfigImpl().ReservedStorageSpace() > 0)
 						{
-							Reserve(i_config.ReservedStorageSpace());
+							Reserve(ConfigImpl().ReservedStorageSpace());
 						}
 						Write(false);
 						WriteHeader(false);
@@ -357,19 +368,22 @@ namespace com.db4o
 				{
 					return false;
 				}
+				if (_fileHeader == null)
+				{
+					return false;
+				}
 				long lockTime = j4o.lang.JavaSystem.CurrentTimeMillis();
 				com.db4o.YLong.WriteLong(lockTime, i_timerBytes);
-				i_timerFile.BlockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
-					);
+				_fileHeader.SeekForTimeLock(i_timerFile);
 				i_timerFile.Write(i_timerBytes);
 			}
 			return true;
 		}
 
-		internal override void WriteBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
+		public override void WriteBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
 			)
 		{
-			if (i_config.IsReadOnly())
+			if (ConfigImpl().IsReadOnly())
 			{
 				return;
 			}

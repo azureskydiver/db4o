@@ -7,7 +7,7 @@ namespace com.db4o
 		{
 			int size = ReadInt();
 			com.db4o.MsgD[] ret = new com.db4o.MsgD[size];
-			int length = (1 + size) * com.db4o.YapConst.YAPINT_LENGTH;
+			int length = (1 + size) * com.db4o.YapConst.INT_LENGTH;
 			com.db4o.YapStream stream = GetStream();
 			com.db4o.YapWriter bytes = null;
 			lock (stream.i_lock)

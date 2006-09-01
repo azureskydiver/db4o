@@ -3,13 +3,10 @@ namespace com.db4o.reflect.generic
 	/// <exclude></exclude>
 	public class GenericArrayReflector : com.db4o.reflect.ReflectArray
 	{
-		private readonly com.db4o.reflect.generic.GenericReflector _reflector;
-
 		private readonly com.db4o.reflect.ReflectArray _delegate;
 
 		public GenericArrayReflector(com.db4o.reflect.generic.GenericReflector reflector)
 		{
-			_reflector = reflector;
 			_delegate = reflector.GetDelegate().Array();
 		}
 
