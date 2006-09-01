@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/replication"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4opolepos"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4ojdk5"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4ojdk1.2"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4oj"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
