@@ -31,7 +31,7 @@ public class TestMethod implements Test {
 	}
 
 	public void run(TestResult result) {
-		result.testStarted(this);
+		result.testStarted(/*this*/);
 		try {
 			setUp();
 			invoke();

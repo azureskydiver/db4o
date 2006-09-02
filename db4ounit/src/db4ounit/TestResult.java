@@ -8,7 +8,7 @@ public class TestResult extends Printable {
 	
 	private int _testCount = 0;
 	
-	public void testStarted(Test test) {
+	public void testStarted(/*Test test*/) {
 		++_testCount;
 	}
 	
