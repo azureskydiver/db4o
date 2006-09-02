@@ -52,12 +52,22 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		Method[] methods = clazz.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (!isTestMethod(method)) continue;			
+			if (!isTestMethod(method)) {
+				emitWarningOnIgnoredTestMethod(instance, method);
+				continue;			
+			}
 			tests.addElement(createTest(instance, method));
 		}		
 		return new TestSuite(clazz.getName(), toArray(tests));
 	}
 	
+	private void emitWarningOnIgnoredTestMethod(Object subject, Method method) {
+		if (!method.getName().startsWith("_test")) {
+			return;
+		}
+		System.err.println("IGNORED: " + TestMethod.createLabel(subject, method));
+	}
+
 	protected boolean isTestMethod(Method method) {
 		return method.getName().startsWith("test")			
 			&& TestPlatform.isPublic(method)

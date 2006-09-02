@@ -8,6 +8,10 @@ import java.lang.reflect.Method;
  */
 public class TestMethod implements Test {
 	
+	public static String createLabel(Object subject, Method method) {
+		return subject.getClass().getName() + "." + method.getName();
+	}
+	
 	private Object _subject;
 	private Method _method;
 
@@ -27,7 +31,7 @@ public class TestMethod implements Test {
 	}
 
 	public String getLabel() {
-		return _subject.getClass().getName() + "." + _method.getName();
+		return createLabel(_subject, _method);
 	}
 
 	public void run(TestResult result) {
