@@ -26,12 +26,8 @@ final class ClassIndexClient extends ClassIndex {
 	public void read(Transaction a_trans) {
 		// do nothing
 	}
-
+	
 	void setDirty(YapStream a_stream) {
-		// do nothing
-	}
-
-	void write(YapStream a_stream) {
 		// do nothing
 	}
 
