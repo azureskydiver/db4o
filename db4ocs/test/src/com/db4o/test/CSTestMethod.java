@@ -10,11 +10,11 @@ public class CSTestMethod extends TestMethod {
 
 	static int CONCURRENCY_THREAD_COUNT = 10;
 
-	static final String COCURRENCY_TEST_PREFIX = "testConcurrency";
+	static final String COCURRENCY_TEST_PREFIX = "conc";
 
-	static final String COCURRENCY_CHECK_PREFIX = "checkConcurrency";
+	static final String COCURRENCY_CHECK_PREFIX = "check";
 
-	static final int COCURRENCY_TEST_PREFIX_LENGTH = "testConcurrency".length();
+	static final int COCURRENCY_TEST_PREFIX_LENGTH = "conc".length();
 
 	public CSTestMethod(Object instance, Method method) {
 		super(instance, method);
