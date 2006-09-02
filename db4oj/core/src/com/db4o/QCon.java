@@ -743,4 +743,18 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return true;
     }
 
+	public void collectTopLevelJoins(Collection4 joins) {
+		final Iterator4 i = i_joins.iterator();
+		while (i.moveNext()) {
+			QConJoin join = (QConJoin)i.current();
+			if (!join.hasJoins()) {
+				if (!joins.containsByIdentity(join)) {
+					joins.add(join);
+				}
+			} else {
+				join.collectTopLevelJoins(joins);
+			}
+		}
+	}
+
 }

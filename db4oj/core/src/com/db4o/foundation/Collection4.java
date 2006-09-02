@@ -25,6 +25,13 @@ public class Collection4 implements DeepClone, Unversioned {
     public Collection4(Collection4 other) {
     	addAll(other);
     }
+    
+    public Object singleElement() {
+    	if (size() != 1) {
+    		throw new IllegalStateException();
+    	}
+    	return _first._element;
+	}
 
     /**
      * Adds an element to the beginning of this collection.
@@ -216,5 +223,5 @@ public class Collection4 implements DeepClone, Unversioned {
         }
         sb.append("]");
         return sb.toString();
-    }
+    }	
 }
