@@ -82,6 +82,25 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 7, 9 }, query);
     }
     
+    public void testImplicitAndOnOrs() {
+    	Query query = createItemQuery();
+        Constraint c1 = query.descend("foo").constrain(new Integer(4)).smaller();
+        Constraint c2 = query.descend("foo").constrain(new Integer(3)).greater();
+        Constraint c3 = query.descend("foo").constrain(new Integer(4)).greater();
+        c1.or(c2);
+        c1.or(c3);
+        
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 4, 7, 9 }, query);
+    }
+    
+    public void testTwoLevelDescendOr() {
+    	Query query = createComplexItemQuery();
+        Constraint c1 = query.descend("child").descend("foo").constrain(new Integer(4)).smaller();
+        Constraint c2 = query.descend("child").descend("foo").constrain(new Integer(4)).greater();        
+        c1.or(c2);
+        assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 4, 9 }, query);
+    }
+    
     public void _testOrOnDifferentFields(){
         final Query query = createComplexItemQuery();
         Constraint c1 = query.descend("foo").constrain(new Integer(3));
