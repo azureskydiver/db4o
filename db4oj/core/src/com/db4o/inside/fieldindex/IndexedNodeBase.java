@@ -54,9 +54,9 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	}
 
 	public static TreeInt addRangeToTree(TreeInt tree, final BTreeRange range) {
-		final KeyValueIterator i = range.iterator();
+		final Iterator4 i = range.keys();
 	    while (i.moveNext()) {
-	        FieldIndexKey composite = (FieldIndexKey)i.key();
+	        FieldIndexKey composite = (FieldIndexKey)i.current();
 	        tree = (TreeInt) Tree.add(tree, new TreeInt(composite.parentID()));
 	    }
 		return tree;

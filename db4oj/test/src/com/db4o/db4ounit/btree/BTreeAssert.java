@@ -14,33 +14,18 @@ public class BTreeAssert {
 	    for (int i = 0; i < values.length; i++) {
 	        values[i] = value;
 	    }
-	    return new ExpectingVisitor(BTreeAssert.toObjectArray(values));
+	    return new ExpectingVisitor(Arrays4.toObjectArray(values));
 	}
 
 	public static ExpectingVisitor createExpectingVisitor(int[] keys) {
-		return new ExpectingVisitor(toObjectArray(keys));
+		return new ExpectingVisitor(Arrays4.toObjectArray(keys));
 	}
 
-	public static Object[] toObjectArray(int[] values) {
-	    Object[] ret = new Object[values.length];
-	    for (int i = 0; i < values.length; i++) {
-	        ret[i] = new Integer(values[i]);
-	    }
-	    return ret;
-	}
-
-	public static void traverseKeys(BTreeRange result, Visitor4 expectingVisitor) {
-		final KeyValueIterator i = result.iterator();
+	public static void traverseKeys(BTreeRange result, Visitor4 visitor) {
+		final Iterator4 i = result.keys();
 		while (i.moveNext()) {
-			expectingVisitor.visit(i.key());
-		} 
-	}
-
-	public static void traverseValues(BTreeRange result, ExpectingVisitor expectingVisitor) {
-	    final KeyValueIterator i = result.iterator();
-	    while (i.moveNext()) {
-	        expectingVisitor.visit(i.key());
-	    } 
+			visitor.visit(i.current());
+		}
 	}
 
 	public static void assertKeys(final Transaction transaction, BTree btree, final int[] keys) {

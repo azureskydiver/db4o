@@ -2,13 +2,13 @@
 
 package com.db4o.inside.btree;
 
-import com.db4o.foundation.*;
+import com.db4o.foundation.Iterator4;
 
 
 public interface BTreeRange {
 	public BTreePointer first();
     
-    public KeyValueIterator iterator();
+    public Iterator4 keys();
 
 	public int size();
 

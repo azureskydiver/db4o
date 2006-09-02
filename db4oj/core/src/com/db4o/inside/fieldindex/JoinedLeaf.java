@@ -1,7 +1,7 @@
 package com.db4o.inside.fieldindex;
 
 import com.db4o.TreeInt;
-import com.db4o.foundation.KeyValueIterator;
+import com.db4o.foundation.Iterator4;
 import com.db4o.inside.btree.*;
 
 public class JoinedLeaf implements IndexedNode {
@@ -14,8 +14,8 @@ public class JoinedLeaf implements IndexedNode {
 		_range = range;
 	}
 
-	public KeyValueIterator iterator() {
-		return _range.iterator();
+	public Iterator4 iterator() {
+		return _range.keys();
 	}
 
 	public TreeInt toTreeInt() {

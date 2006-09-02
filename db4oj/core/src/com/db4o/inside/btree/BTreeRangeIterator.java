@@ -3,19 +3,18 @@
  */
 package com.db4o.inside.btree;
 
-import com.db4o.*;
-import com.db4o.foundation.KeyValueIterator;
-import com.db4o.foundation.No4;
+import com.db4o.Transaction;
+import com.db4o.foundation.*;
 
-class BTreeRangeIterator implements KeyValueIterator {
+class BTreeRangeIterator implements Iterator4 {
 	
-	private final BTreeRangeImpl _range;
+	private final BTreeRangeSingle _range;
 	
 	private BTreePointer _cursor;
 	private BTreeNode _lastNode = null;
 	private BTreePointer _current;
 	
-	public BTreeRangeIterator(BTreeRangeImpl range) {
+	public BTreeRangeIterator(BTreeRangeSingle range) {
 		_range = range;
 		_cursor = range.first();
 	}
@@ -48,15 +47,11 @@ class BTreeRangeIterator implements KeyValueIterator {
 		return false;
 	}
 	
-	public Object key() {
-		return current().key();
+	public Object current() {
+		return currentPointer().key();
 	}
-	
-	public Object value() {
-		return current().value();
-	}
-	
-	private BTreePointer current() {
+
+	private BTreePointer currentPointer() {
 		if (null == _current) {
 			throw new IllegalStateException();
 		}
