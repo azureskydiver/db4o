@@ -46,7 +46,7 @@ public class BTreeRangeUnion implements BTreeRange {
 	}
 
 	public Iterator4 keys() {
-		return null;
+		return new CompositeIterator4(new ArrayIterator4(new Iterator4[] { _first.keys(), _second.keys() }));
 	}
 
 	public boolean overlaps(BTreeRange range) {
@@ -55,8 +55,7 @@ public class BTreeRangeUnion implements BTreeRange {
 	}
 
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _first.size() + _second.size();
 	}
 
 	public BTreeRange smaller() {

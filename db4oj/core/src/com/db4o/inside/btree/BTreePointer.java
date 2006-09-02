@@ -114,13 +114,7 @@ public class BTreePointer{
 	}
     
     public String toString() {
-        String key = "[Unavail]";
-        try{
-            key = key().toString();
-        }catch(Exception e){
-            
-        }
-        return "BTreePointer (" + _index + ") to " + key + " on" + node().toString();      
+        return "BTreePointer(index=" + _index + ", node=" + node() + ")";      
     }
 
 	public int compareTo(BTreePointer y) {

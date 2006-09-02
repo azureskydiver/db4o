@@ -26,7 +26,7 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		assertIntersection(new int[] {}, range(1, 2), range(3, 9));		
 	}
 	
-	public void _testUnion() {		
+	public void testUnion() {		
 		assertUnion(new int[] { 3, 4, 7, 9 }, range(3, 4), range(7, 9));
 		assertUnion(new int[] { 3, 4, 7, 9 }, range(3, 7), range(4, 9));
 		assertUnion(new int[] { 3, 7, 9 }, range(3, 3), range(7, 9));
@@ -37,7 +37,6 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		BTreeAssert.assertRange(new int[] { 3, 4, 7 }, range(3, 7));		
 		BTreeAssert.assertRange(new int[] { 4, 7, 9 }, range(4, 9));
 	}
-
 	
 	public void testOverlaps() {		
 		assertOverlaps(range(3, 4), range(4, 9));		
