@@ -122,6 +122,10 @@ public class BTreeRangeSingle implements BTreeRange {
 		BTreeRangeSingle rangeImpl = checkRangeArgument(range);
 		return newBTreeRangeImpl(_first, rangeImpl._end);
 	}
+	
+	public String toString() {
+		return "BTreeRangeSingle(first=" + _first + ", end=" + _end + ")";
+	}
 
 	private BTreeRangeSingle checkRangeArgument(BTreeRange range) {
 		if (null == range) {

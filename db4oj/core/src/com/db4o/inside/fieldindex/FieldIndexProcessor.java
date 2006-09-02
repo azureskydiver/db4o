@@ -61,6 +61,7 @@ public class FieldIndexProcessor {
 					final QConObject conObject = (QConObject) qcon;
 					IndexedLeaf leaf = findLeafOnSameField(leaves, conObject);
 					if (leaf != null) {
+						leaves.remove(leaf);
 						leaves.add(join(leaf, conObject));
 					} else {
 						leaves.add(new IndexedLeaf(conObject));
