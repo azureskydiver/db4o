@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4ojdk5"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4ojdk1.2"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4oj"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/polepos"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4onqopt"/>
+	<classpathentry sourcepath="/ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/5"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
