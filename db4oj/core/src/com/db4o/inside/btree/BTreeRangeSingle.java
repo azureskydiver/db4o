@@ -8,7 +8,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class BTreeRangeImpl implements BTreeRange {
+public class BTreeRangeSingle implements BTreeRange {
     
     private final Transaction _transaction;
 
@@ -18,7 +18,7 @@ public class BTreeRangeImpl implements BTreeRange {
     
     private final BTreePointer _end;
 
-    public BTreeRangeImpl(Transaction transaction, BTree btree, BTreePointer first, BTreePointer end) {
+    public BTreeRangeSingle(Transaction transaction, BTree btree, BTreePointer first, BTreePointer end) {
     	if (transaction == null || btree == null) {
     		throw new ArgumentNullException();
     	}
@@ -30,14 +30,14 @@ public class BTreeRangeImpl implements BTreeRange {
     
     public int size() {
     	int size = 0;
-		final KeyValueIterator i = iterator();
+		final Iterator4 i = keys();
 		while (i.moveNext()) {
 			++size;
 		}
 		return size;
     }
 
-	public KeyValueIterator iterator() {
+	public Iterator4 keys() {
 		return new BTreeRangeIterator(this);
 	}
 
@@ -58,18 +58,17 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 	
 	public BTreeRange union(BTreeRange other) {
-		BTreeRangeImpl rangeImpl = checkRangeArgument(other);
+		BTreeRangeSingle rangeImpl = checkRangeArgument(other);
 		if (internalOverlaps(rangeImpl)
 			|| internalAdjacent(rangeImpl)) {
 			return newBTreeRangeImpl(
 						BTreePointer.min(_first, rangeImpl._first),
 						BTreePointer.max(_end, rangeImpl._end));
 		}
-		//return new BTreeRangeUnion(this, other);
-		return null;
+		return new BTreeRangeUnion(this, other);
 	}
 	
-	private boolean internalAdjacent(BTreeRangeImpl rangeImpl) {
+	private boolean internalAdjacent(BTreeRangeSingle rangeImpl) {
 		return BTreePointer.equals(_end, rangeImpl._first)
 			|| BTreePointer.equals(rangeImpl._end, _first);
 	}
@@ -78,12 +77,12 @@ public class BTreeRangeImpl implements BTreeRange {
 		return internalOverlaps(checkRangeArgument(other));
 	}
 	
-	private boolean internalOverlaps(BTreeRangeImpl y) {
+	private boolean internalOverlaps(BTreeRangeSingle y) {
 		return firstOverlaps(this, y)
 				|| firstOverlaps(y, this);
 	}
 
-	private boolean firstOverlaps(BTreeRangeImpl x, BTreeRangeImpl y) {
+	private boolean firstOverlaps(BTreeRangeSingle x, BTreeRangeSingle y) {
 		return BTreePointer.lessThan(y._first, x._end)
 			&& BTreePointer.lessThan(x._first, y._end);
 	}
@@ -101,7 +100,7 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 
 	private BTreeRange newBTreeRangeImpl(BTreePointer first, BTreePointer end) {
-		return new BTreeRangeImpl(transaction(), _btree, first, end);
+		return new BTreeRangeSingle(transaction(), _btree, first, end);
 	}
 
 	private BTreePointer firstBTreePointer() {
@@ -113,22 +112,22 @@ public class BTreeRangeImpl implements BTreeRange {
 	}
 
 	public BTreeRange intersect(BTreeRange range) {
-		final BTreeRangeImpl rangeImpl = checkRangeArgument(range);
+		final BTreeRangeSingle rangeImpl = checkRangeArgument(range);
 		BTreePointer first = BTreePointer.max(_first, rangeImpl._first);
 		BTreePointer end = BTreePointer.min(_end, rangeImpl._end);
 		return newBTreeRangeImpl(first, end);
 	}
 
 	public BTreeRange extendToLastOf(BTreeRange range) {
-		BTreeRangeImpl rangeImpl = checkRangeArgument(range);
+		BTreeRangeSingle rangeImpl = checkRangeArgument(range);
 		return newBTreeRangeImpl(_first, rangeImpl._end);
 	}
 
-	private BTreeRangeImpl checkRangeArgument(BTreeRange range) {
+	private BTreeRangeSingle checkRangeArgument(BTreeRange range) {
 		if (null == range) {
 			throw new ArgumentNullException();
 		}
-		BTreeRangeImpl rangeImpl = (BTreeRangeImpl)range;
+		BTreeRangeSingle rangeImpl = (BTreeRangeSingle)range;
 		if (btree() != rangeImpl.btree()) {
 			throw new IllegalArgumentException();
 		}

@@ -59,7 +59,7 @@ public class BTreeNodeSearchResult {
         if(endPointer != null && end._foundMatch){
             endPointer = endPointer.next();
         }
-        return new BTreeRangeImpl(_transaction, _btree, _pointer, endPointer);
+        return new BTreeRangeSingle(_transaction, _btree, _pointer, endPointer);
     }
    
 }

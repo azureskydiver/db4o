@@ -3,7 +3,7 @@
 package com.db4o.inside.fieldindex;
 
 import com.db4o.*;
-import com.db4o.foundation.KeyValueIterator;
+import com.db4o.foundation.Iterator4;
 import com.db4o.inside.btree.BTreeRange;
 
 /**
@@ -46,8 +46,8 @@ public class IndexedLeaf extends IndexedNodeBase {
     	return addRangeToTree(null, _range);
     }
 
-	public KeyValueIterator iterator() {
-		return _range.iterator();
+	public Iterator4 iterator() {
+		return _range.keys();
 	}
 
 	public BTreeRange getRange() {

@@ -1,9 +1,9 @@
 package com.db4o.inside.fieldindex;
 
 import com.db4o.*;
-import com.db4o.foundation.KeyValueIterator;
+import com.db4o.foundation.Iterator4;
 import com.db4o.inside.Exceptions4;
-import com.db4o.inside.btree.*;
+import com.db4o.inside.btree.FieldIndexKey;
 
 public class IndexedPath extends IndexedNodeBase {
 	
@@ -24,15 +24,15 @@ public class IndexedPath extends IndexedNodeBase {
 	
 	public TreeInt toTreeInt() {
 		TreeInt tree = null;
-		KeyValueIterator iterator = iterator();
+		Iterator4 iterator = iterator();
 		while (iterator.moveNext()) {
-			final FieldIndexKey key = (FieldIndexKey) iterator.key();
+			final FieldIndexKey key = (FieldIndexKey) iterator.current();
 			tree = (TreeInt) Tree.add(tree, new TreeInt(key.parentID()));
 		}
 		return tree;
 	}
 
-	public KeyValueIterator iterator() {		
+	public Iterator4 iterator() {		
 		return new IndexedPathIterator(this, _next.iterator());
 	}
 

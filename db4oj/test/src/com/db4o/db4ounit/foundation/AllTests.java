@@ -14,6 +14,7 @@ public class AllTests implements TestSuiteBuilder {
 		return new ReflectionTestSuiteBuilder(new Class[] {
 			ArrayIterator4TestCase.class,
 			Collection4TestCase.class,
+			CompositeIterator4TestCase.class,
 			Hashtable4TestCase.class,
 			BitMap4TestCase.class,
 			YapReaderTestCase.class,

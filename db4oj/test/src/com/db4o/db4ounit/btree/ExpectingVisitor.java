@@ -37,7 +37,7 @@ public class ExpectingVisitor implements Visitor4{
     public ExpectingVisitor(Object singleObject){
         this(new Object[] { singleObject });
     }
-
+    
     public void visit(Object obj) {
         if(_obeyOrder){
             visitOrdered(obj);

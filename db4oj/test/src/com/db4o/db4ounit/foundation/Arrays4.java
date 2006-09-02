@@ -32,4 +32,12 @@ public class Arrays4 {
 		return array;
 	}
 
+	public static Object[] toObjectArray(int[] values) {
+	    Object[] ret = new Object[values.length];
+	    for (int i = 0; i < values.length; i++) {
+	        ret[i] = new Integer(values[i]);
+	    }
+	    return ret;
+	}
+
 }
