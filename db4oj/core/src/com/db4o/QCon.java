@@ -330,18 +330,18 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return this;
     }
 
-    QCon getTopLevelJoin() {
+    QCon produceTopLevelJoin() {
         if(! hasJoins()){
             return this;
         }
         Iterator4 i = iterateJoins();
         if (i_joins.size() == 1) {
         	i.moveNext();
-            return ((QCon) i.current()).getTopLevelJoin();
+            return ((QCon) i.current()).produceTopLevelJoin();
         }
         Collection4 col = new Collection4();
         while (i.moveNext()) {
-            col.ensure(((QCon) i.current()).getTopLevelJoin());
+            col.ensure(((QCon) i.current()).produceTopLevelJoin());
         }
         i = col.iterator();
         i.moveNext();
@@ -512,7 +512,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     QCon joinHook() {
-        return getTopLevelJoin();
+        return produceTopLevelJoin();
     }
 
     public Constraint like() {

@@ -17,6 +17,10 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 		}
         _constraint = qcon;
 	}
+
+    public TreeInt toTreeInt() {
+    	return addToTree(null, this);
+    }
 	
 	public BTree getIndex() {
 	    return getYapField().getIndex();
@@ -26,7 +30,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	    return _constraint.getField().getYapField();
 	}
 
-	public QConObject constraint() {
+	public QCon constraint() {
 	    return _constraint;
 	}
 
@@ -53,12 +57,12 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 		return searchBound(0, value);
 	}
 
-	public static TreeInt addRangeToTree(TreeInt tree, final BTreeRange range) {
-		final Iterator4 i = range.keys();
-	    while (i.moveNext()) {
-	        FieldIndexKey composite = (FieldIndexKey)i.current();
-	        tree = (TreeInt) Tree.add(tree, new TreeInt(composite.parentID()));
-	    }
+	public static TreeInt addToTree(TreeInt tree, final IndexedNode node) {
+	    Iterator4 i = node.iterator();
+		while (i.moveNext()) {
+		    FieldIndexKey composite = (FieldIndexKey)i.current();
+		    tree = (TreeInt) Tree.add(tree, new TreeInt(composite.parentID()));
+		}
 		return tree;
 	}
 

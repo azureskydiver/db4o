@@ -1,15 +1,15 @@
 package com.db4o.inside.fieldindex;
 
-import com.db4o.TreeInt;
+import com.db4o.*;
 import com.db4o.foundation.Iterator4;
-import com.db4o.inside.btree.BTree;
+import com.db4o.inside.btree.*;
 
 public interface IndexedNode {
 
 	boolean isResolved();
 
 	IndexedNode resolve();
-	
+
 	BTree getIndex();
 	
 	int resultSize();

@@ -5,7 +5,7 @@ import com.db4o.foundation.*;
 
 public class FieldIndexProcessor {
 
-	private QCandidates _candidates;
+	private final QCandidates _candidates;
 
 	public FieldIndexProcessor(QCandidates candidates) {
 		_candidates = candidates;
@@ -30,14 +30,14 @@ public class FieldIndexProcessor {
 	}
 	
 	public IndexedNode selectBestIndex() {		
-		final Iterator4 i = selectIndexes();
+		final Iterator4 i = collectIndexedNodes();
 		if (!i.moveNext()) {
 			return null;
 		}
 		
 		IndexedNode best = (IndexedNode)i.current();
 		while (i.moveNext()) {
-			IndexedLeaf leaf = (IndexedLeaf)i.current();
+			IndexedNode leaf = (IndexedNode)i.current();
 			if (leaf.resultSize() < best.resultSize()) {
 				best = leaf;
 			}
@@ -45,47 +45,86 @@ public class FieldIndexProcessor {
 		return best;
 	}
 
-	private Iterator4 selectIndexes() {
-		final Collection4 leaves = new Collection4();
-		collectIndexedLeaves(leaves, _candidates.iterateConstraints());		
-		return leaves.iterator();
+	private Iterator4 collectIndexedNodes() {
+		final Collection4 nodes = new Collection4();
+		collectIndexedNodes(nodes, _candidates.iterateConstraints());		
+		return nodes.iterator();
 	}
 
-	private void collectIndexedLeaves(final Collection4 leaves, final Iterator4 qcons) {
+	private void collectIndexedNodes(final Collection4 nodes, final Iterator4 qcons) {
 		
 		while (qcons.moveNext()) {
 			QCon qcon = (QCon)qcons.current();
 			if (isLeaf(qcon)) {
-				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {
-					
+				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {					
 					final QConObject conObject = (QConObject) qcon;
-					IndexedLeaf leaf = findLeafOnSameField(leaves, conObject);
-					if (leaf != null) {
-						leaves.remove(leaf);
-						leaves.add(join(leaf, conObject));
+					if (conObject.hasJoins()) {
+						collectionJoinedNode(nodes, conObject);
 					} else {
-						leaves.add(new IndexedLeaf(conObject));
+						collectStandaloneNode(nodes, conObject);
 					}
 				}
 			} else {
-				collectIndexedLeaves(leaves, qcon.iterateChildren());
+				collectIndexedNodes(nodes, qcon.iterateChildren());
 			}
 		}
 	}
 
-	private IndexedNode join(IndexedLeaf existing, final QConObject conObject) {
-		if (existing.constraint().hasOrJoinWith(conObject)) {
-			return new OrIndexedLeaf(existing, new IndexedLeaf(conObject));
+	private void collectStandaloneNode(final Collection4 nodes, final QConObject conObject) {
+		IndexedLeaf existing = findLeafOnSameField(nodes, conObject);
+		if (existing != null) {
+			collectImplicitAnd(nodes, existing, conObject);
+		} else {
+			nodes.add(new IndexedLeaf(conObject));
 		}
-		return new AndIndexedLeaf(existing, new IndexedLeaf(conObject));
 	}
 
-	private IndexedLeaf findLeafOnSameField(Collection4 leaves, QConObject conObject) {
-		final Iterator4 i = leaves.iterator();
+	private void collectionJoinedNode(Collection4 nodes, QConObject conObject) {
+		QConJoin join = findTopLevelJoin(conObject);
+		nodes.add(nodeForConstraint(join));
+	}
+
+	private QConJoin findTopLevelJoin(QCon conObject) {
+		final Iterator4 i = conObject.i_joins.iterator();
+		if (!i.moveNext()) {
+			return null;
+		}
+		QConJoin join = (QConJoin)i.current();
+		if (!join.hasJoins()) {
+			return join;
+		}
+		return findTopLevelJoin(join);
+	}
+
+	private IndexedNodeWithRange nodeForConstraint(QConJoin join) {
+		final IndexedNodeWithRange c1 = nodeForConstraint(join.i_constraint1);
+		final IndexedNodeWithRange c2 = nodeForConstraint(join.i_constraint2);
+		if (join.isOr()) {
+			return new OrIndexedLeaf(join, c1, c2);
+		}
+		return new AndIndexedLeaf(join, c1, c2);
+	}
+	
+	private IndexedNodeWithRange nodeForConstraint(QCon con) {
+		if (con instanceof QConJoin) {
+			return nodeForConstraint((QConJoin)con);
+		}
+		return new IndexedLeaf((QConObject)con);
+	}
+
+	private void collectImplicitAnd(final Collection4 nodes, IndexedLeaf existing, final QConObject conObject) {
+		nodes.remove(existing);
+		nodes.add(new AndIndexedLeaf(existing.constraint(), existing, new IndexedLeaf(conObject)));
+	}
+
+	private IndexedLeaf findLeafOnSameField(Collection4 nodes, QConObject conObject) {
+		final Iterator4 i = nodes.iterator();
 		while (i.moveNext()) {
-			IndexedLeaf leaf = (IndexedLeaf)i.current();
-			if (conObject.onSameFieldAs(leaf.constraint())) {
-				return leaf;
+			if (i.current() instanceof IndexedLeaf) {
+				IndexedLeaf leaf = (IndexedLeaf)i.current();
+				if (conObject.onSameFieldAs(leaf.constraint())) {
+					return leaf;
+				}
 			}
 		}
 		return null;
