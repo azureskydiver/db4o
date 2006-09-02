@@ -9,7 +9,7 @@ import com.db4o.inside.btree.BTreeRange;
 /**
  * @exclude
  */
-public class IndexedLeaf extends IndexedNodeBase {
+public class IndexedLeaf extends IndexedNodeBase implements IndexedNodeWithRange {
 	
 	private final BTreeRange _range;
     
@@ -39,11 +39,6 @@ public class IndexedLeaf extends IndexedNodeBase {
 
 	public int resultSize() {
         return _range.size();
-    }
-
-	// FIXME: do we need this?
-    public TreeInt toTreeInt() {
-    	return addRangeToTree(null, _range);
     }
 
 	public Iterator4 iterator() {
