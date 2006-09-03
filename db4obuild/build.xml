@@ -616,9 +616,9 @@
 
 	<target name="compilejreference" depends="compilecorejava" description="Compile Db4o Java reference sources">
 		<mkdir dir="${dir.dist.classes.reference}" />
-		<antcall target="copyjava1.2" />
-		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.reference}" target="1.3" source="1.3" encoding="UTF-8" />
-		<javac fork="true" srcdir="${dir.j.reference.src}" destdir="${dir.dist.classes.reference}" classpath="${dir.dist.classes.reference}" target="1.3" source="1.3" debug="on" encoding="UTF-8" />
+		<antcall target="copyjava5" />
+		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.reference}" target="1.5" source="1.5" encoding="UTF-8" />
+		<javac fork="true" srcdir="${dir.j.reference.src}" destdir="${dir.dist.classes.reference}" classpath="${dir.dist.classes.reference}" target="1.5" source="1.5" debug="on" encoding="UTF-8" />
 	</target>
 
 	<target name="compilenreference" depends="compiledllnet">
