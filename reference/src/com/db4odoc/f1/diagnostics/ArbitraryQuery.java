@@ -10,14 +10,15 @@ public class ArbitraryQuery extends Predicate{
         this.points=points;
     }
     
-    public boolean match(Pilot pilot) {
+    public boolean match(Object pilot) {
     	for (int i = 0; i < points.length; i++) {
- 			if (pilot.getPoints() == points[i])
+ 			if (((Pilot)pilot).getPoints() == points[i])
 			{
 				return true;
 			}
 		}
-    	return pilot.getName().startsWith("Rubens");
+    	return ((Pilot)pilot).getName().startsWith("Rubens");
     }
+
     
 }
