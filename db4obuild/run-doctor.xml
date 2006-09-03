@@ -143,7 +143,7 @@
 			outputfile="${db4o.file}reference" 
 			outputpath="${dir.j.reference.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.reference.jar}, ${filename.nqopt.jar}, ${filename.bloat.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java5.jar}, ${filename.reference.jar}, ${filename.nqopt.jar}, ${filename.bloat.jar}" 
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
@@ -157,10 +157,10 @@
 				<include name="*.jar" />
 			</fileset>
 			<fileset dir="${dir.dist.jars}">
-				<include name="${filename.java1.2.jar}" />
+				<include name="${filename.java5.jar}" />
 			</fileset>
 		</copy>
-		<signjar keystore="${file.keystore}" jar="${dir.j.reference.out.java}/docs/${filename.java1.2.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<signjar keystore="${file.keystore}" jar="${dir.j.reference.out.java}/docs/${filename.java5.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<doctor 
 					name="f1" 
 					home="${dir.j.reference}" 
