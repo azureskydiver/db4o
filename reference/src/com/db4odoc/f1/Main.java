@@ -10,7 +10,8 @@ import com.db4odoc.f1.indexes.IndexedExample;
 import com.db4odoc.f1.lists.CollectionExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
 import com.db4odoc.f1.activating.ActivationExample;
-
+import com.db4odoc.f1.staticfields.StaticFieldExample;
+import com.db4odoc.f1.enum5.EnumExample;
 
 
 
@@ -34,5 +35,7 @@ public class Main {
         //ReflectorExample.testReflector(); //should be commented for successful doctor build
     	DebugExample.main(args);
     	ActivationExample.main(args);
+    	StaticFieldExample.main(args);
+    	EnumExample.main(args);
     }
 }
