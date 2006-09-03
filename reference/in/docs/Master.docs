@@ -9,6 +9,7 @@
 .e Translators ..
 .e Collections ..
 .e IDs ..
+.e StaticFields ..
 .e Callbacks ..
 .e Classloader ..
 .e Reflection ..
