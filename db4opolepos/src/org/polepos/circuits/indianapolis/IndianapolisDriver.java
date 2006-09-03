@@ -40,6 +40,10 @@ public interface IndianapolisDriver {
     
     void queryOrTwoLevels();
     
+    void queryBigRangeFound();
+    
+    void queryByChildIdentity();
+    
     void addSingleObjectAndCommit();
 
 }

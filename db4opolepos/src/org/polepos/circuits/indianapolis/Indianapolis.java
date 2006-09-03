@@ -26,7 +26,7 @@ public class Indianapolis extends Circuit {
 
     @Override
     public String description() {
-        return "excecutes varying queries to test the efficiency of the query processor";
+        return "excecutes a variety of queries to test the efficiency of the query processor";
     }
 
     @Override
@@ -46,6 +46,9 @@ public class Indianapolis extends Circuit {
         add(new Lap("queryNotGreater"));
         add(new Lap("queryNotRange"));
         add(new Lap("queryOrTwoLevels"));
+        add(new Lap("queryBigRangeFound"));
+        add(new Lap("queryByChildIdentity"));
+        
         add(new Lap("addSingleObjectAndCommit"));
     }
 
