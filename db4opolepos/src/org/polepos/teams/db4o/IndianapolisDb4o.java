@@ -54,15 +54,14 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryRange(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = db().query();
-            q.constrain(IndianapolisList.class);
+            Query q = newIndianapolisListQuery();
             Query qPayload = q.descend(fieldPayload());
             qPayload.constrain(new Integer(1)).greater();
             qPayload.constrain(new Integer(3)).smaller();
             doQuery(q);
         }
     }
-    
+
     public void query5Links(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
@@ -79,8 +78,7 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryPreferShortPath(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = db().query();
-            q.constrain(IndianapolisList.class);
+            Query q = newIndianapolisListQuery();
             q.descend(fieldNext()).descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload - 4));
             q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload - 2));
             doQuery(q);
@@ -90,8 +88,7 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryOr(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = db().query();
-            q.constrain(IndianapolisList.class);
+            Query q = newIndianapolisListQuery();
             Constraint cMax = q.descend(fieldPayload()).constrain(new Integer(maximumPayload));
             Constraint cMin = q.descend(fieldPayload()).constrain(new Integer(1));
             cMax.or(cMin);
@@ -102,8 +99,7 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryOrRange(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = db().query();
-            q.constrain(IndianapolisList.class);
+            Query q = newIndianapolisListQuery();
             Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(1)).greater();
             Constraint c2 = q.descend(fieldPayload()).constrain(new Integer(3)).smaller();
             Constraint c3 = q.descend(fieldPayload()).constrain(new Integer(maximumPayload - 2)).greater();
@@ -118,8 +114,7 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryNotGreater(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = db().query();
-            q.constrain(IndianapolisList.class);
+            Query q = newIndianapolisListQuery();
             q.descend(fieldPayload()).constrain(new Integer(2)).greater().not();
             doQuery(q);
         }
@@ -128,8 +123,7 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryNotRange(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = db().query();
-            q.constrain(IndianapolisList.class);
+            Query q = newIndianapolisListQuery();
             Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(2)).greater();
             Constraint c2 = q.descend(fieldPayload()).constrain(new Integer(maximumPayload)).smaller();
             c1.and(c2).not();
@@ -140,11 +134,35 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryOrTwoLevels(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = db().query();
-            q.constrain(IndianapolisList.class);
+            Query q = newIndianapolisListQuery();
             Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(2)).smaller();
             Constraint c2 = q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload - 2)).greater();
             c1.or(c2);
+            doQuery(q);
+        }
+    }
+    
+    public void queryBigRangeFound(){
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            Query q = newIndianapolisListQuery();
+            Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(1)).greater();
+            Constraint c2 = q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload)).smaller();
+            c1.or(c2);
+            doQuery(q);
+        }
+    }
+    
+    public void queryByChildIdentity(){
+        
+        Query q = newIndianapolisListQuery();
+        q.descend(fieldPayload()).constrain(new Integer(2));
+        IndianapolisList il = (IndianapolisList) q.execute().next();
+        
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            q = newIndianapolisListQuery();
+            q.descend(fieldNext()).constrain(il).identity();
             doQuery(q);
         }
     }
@@ -156,6 +174,12 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
             store(new IndianapolisList());
             commit();
         }
+    }
+    
+    private Query newIndianapolisListQuery() {
+        Query q = db().query();
+        q.constrain(IndianapolisList.class);
+        return q;
     }
     
     private String fieldNext(){
