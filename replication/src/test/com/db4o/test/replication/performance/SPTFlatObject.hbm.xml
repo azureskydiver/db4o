@@ -9,7 +9,7 @@
 
 <hibernate-mapping default-access="field">
 	<class name="com.db4o.test.replication.performance.SPTFlatObject">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 		<discriminator/>

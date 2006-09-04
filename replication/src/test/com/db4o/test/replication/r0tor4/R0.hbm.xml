@@ -8,7 +8,7 @@
 
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="com.db4o.test.replication.r0tor4.R0" table="R0">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 		<discriminator/>

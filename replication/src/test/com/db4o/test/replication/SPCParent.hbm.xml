@@ -8,7 +8,7 @@
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
 	<class name="com.db4o.test.replication.SPCParent">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 		<property name="name"/>
