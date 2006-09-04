@@ -171,7 +171,7 @@ To replicate Pilot using Hibernate, you need to define a mapping file for it.
 
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.singleobject.Pilot">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 		<property name="name"/>

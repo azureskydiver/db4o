@@ -29,7 +29,7 @@ will not work.
 ..
 You must define an artificial identity column for the object. The type must be "long".
 .c
-<id column="id" type="long">
+<id column="typed_id" type="long">
 	<generator class="native"/>
 </id>
 ..
@@ -86,7 +86,7 @@ A one-to-one association to another persistent class is declared using a one-to-
 .c
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.one_to_one.Pilot">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 		<property name="name"/>
@@ -152,7 +152,7 @@ public class Car {
 
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.Car">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 		<property name="brand"/>
@@ -173,7 +173,7 @@ public class Pilot {
 .c
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.array.Pilot">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 
@@ -240,7 +240,7 @@ Map the List using the list tag in Pilot.hbm.xml
 .c
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.list.Pilot">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 
@@ -305,7 +305,7 @@ Use the set tag.
 .c
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.set.Pilot">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 
@@ -368,7 +368,7 @@ Use the map element to define the Map in the hbm file.
 .c
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
 	<class name="f1.collection.map.Pilot">
-		<id column="id" type="long">
+		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 
