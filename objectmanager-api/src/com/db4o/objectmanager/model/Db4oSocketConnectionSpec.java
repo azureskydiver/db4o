@@ -41,8 +41,24 @@ public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
         return getPath();
     }
 
-    public String getShortPath() {
+    public String getFullPath() {
 		return getPath();
 	}
 
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }

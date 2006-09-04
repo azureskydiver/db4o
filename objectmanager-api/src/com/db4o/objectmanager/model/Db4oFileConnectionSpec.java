@@ -24,7 +24,7 @@ public class Db4oFileConnectionSpec extends Db4oConnectionSpec {
         return filePath;
     }
 
-    public String getShortPath() {
+    public String getFullPath() {
 		return new File(filePath).getName();
 	}
 }
