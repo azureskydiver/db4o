@@ -453,6 +453,7 @@ public class Transaction {
         IxTree ixTree = (IxTree) stream().i_handlers.i_indexes.i_fieldUUID.getOldIndexRoot(this);
         IxTraverser ixTraverser = new IxTraverser();
         int count = ixTraverser.findBoundsExactMatch(new Long(a_uuid), ixTree);
+        //System.out.println("count = " + count);
         if (count > 0) {
             final Transaction finalThis = this;
             ixTraverser.visitAll(new Visitor4() {

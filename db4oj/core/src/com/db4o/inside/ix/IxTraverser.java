@@ -155,6 +155,7 @@ public class IxTraverser{
     }
 
     private int countSpan(IxPath a_previousPath, IxPath a_great, IxPath a_small) {
+    	//System.out.println("countSpan");
         if (a_great == null) {
             if (a_small == null) {
                 return a_previousPath.countMatching();
@@ -293,6 +294,9 @@ public class IxTraverser{
                     head = head.i_next;
                 }
             }
+            
+            //System.out.println("findBounds() span = " + span);
+            
             return span;
         }
         return 0;
