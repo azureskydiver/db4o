@@ -14,7 +14,6 @@ import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 import com.jgoodies.forms.factories.Borders;
-import com.spaceprogram.db4o.sql.Result;
 import com.spaceprogram.db4o.sql.ReflectHelper;
 
 import javax.swing.*;
@@ -49,7 +48,7 @@ public class MainPanel extends JPanel {
 
     private TreeModel classTreeModel;
     private JTree classTree;
-    private DatabaseStatsPanel databaseStatsPanel;
+    private DatabaseSummaryPanel databaseSummaryPanel;
 
 
     public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec) {
@@ -183,6 +182,8 @@ public class MainPanel extends JPanel {
         //tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         tabbedPane.addKeyListener(new TabShortCutsListener(tabbedPane));
+        tabbedPane.addMouseListener(new CloseTabListener(tabbedPane));
+
 
         addTabs(tabbedPane);
 
@@ -190,8 +191,8 @@ public class MainPanel extends JPanel {
     }
 
     private void addTabs(JTabbedPane tabbedPane) {
-        databaseStatsPanel = new DatabaseStatsPanel(getDatabaseInspector());
-        tabbedPane.addTab("Home", databaseStatsPanel);
+        databaseSummaryPanel = new DatabaseSummaryPanel(connectionSpec, getDatabaseInspector());
+        tabbedPane.addTab("Home", databaseSummaryPanel);
     }
 
 
@@ -276,6 +277,11 @@ public class MainPanel extends JPanel {
         p.displayResults(query);
 
         //queryResultsPanel.displayResults(results);
+    }
+
+    public void showClassSummary(String className) {
+        ClassSummaryPanel panel = new ClassSummaryPanel(getObjectContainer(), getDatabaseInspector(), className);
+        tabbedPane.addTab("Class: " + className, panel);
     }
 
 

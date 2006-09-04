@@ -20,6 +20,7 @@ public class QueryHistoryComboBoxModel extends AbstractListModel implements Comb
     public QueryHistoryComboBoxModel(List queryHistory) {
         this.queryHistory = queryHistory;
         if(this.queryHistory == null) this.queryHistory = new ArrayList();
+        setSelectedItem(topItem);
     }
 
     public void setSelectedItem(Object anItem) {

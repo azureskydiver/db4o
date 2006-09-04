@@ -27,6 +27,7 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
     private static final int NUM_IN_WINDOW = 100;
     private int windowStartIndex = -1;
     private int windowEndIndex = -1;
+    private int extraColumns = 1; // for row counter
 
     public ResultsTableModel(String query, QueryResultsPanel queryResultsPanel) {
         this.query = query;
@@ -57,11 +58,12 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
     }
 
     public int getColumnCount() {
-        return results.getMetaData().getColumnCount();
+        return results.getMetaData().getColumnCount() + extraColumns;
     }
 
     public Object getValueAt(int row, int column) {
         //if(row > 0) System.out.println("getting row: " + row);
+        if(column == 0) return row;
 
         Result result;
         if(row < NUM_IN_TOP){
@@ -75,7 +77,7 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
                 result = (Result) resultWindow.get(index);
             }
         }
-        Object ret = result.getObject(column);
+        Object ret = result.getObject(column-1);
         return ret;
     }
 
@@ -108,6 +110,7 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
     }
 
     public boolean isCellEditable(int row, int col) {
+        if(col == 0) return false;
         Class c = getColumnClass(col);
         return c.isPrimitive() || String.class.isAssignableFrom(c) || Number.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
     }
@@ -121,22 +124,24 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
         //System.out.println("base object: " + o);
         ReflectClass rc = results.getReflector().forObject(o);
         ReflectField[] rfs = ReflectHelper.getDeclaredFields(rc);
-        if (rfs.length > col) {
-            ReflectField rf = rfs[col];
+        if (rfs.length > col-1) {
+            ReflectField rf = rfs[col-1];
             rf.setAccessible();
             rf.set(o, value);
             //System.out.println("Set value on field: " + rf.getName() + " " + rf.getFieldType() + " new value: " + rf.get(o));
             queryResultsPanel.addObjectToBatch(o);
         }
-        super.setValueAt(value, row, col);
+        super.setValueAt(value, row, col-1);
         fireTableCellUpdated(row, col);
     }
 
     public String getColumnName(int column) {
-        return results.getMetaData().getColumnName(column);
+        if(column == 0) return "Row";
+        return results.getMetaData().getColumnName(column-1);
     }
 
     public Class getColumnClass(int c) {
+        if(c == 0) return Number.class;
         for (int i = 0; i < results.size(); i++) {
             Object o = getValueAt(0, c);
             if (o != null) return o.getClass();
