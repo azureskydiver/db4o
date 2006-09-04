@@ -9,18 +9,14 @@ public class CompositeIterator4TestCase implements TestCase {
 	public void testWithEmptyIterators() {
 		
 		Collection4 iterators = new Collection4();
-		iterators.add(newIterator(new int[] { 1, 2, 3 }));
-		iterators.add(newIterator(new int[] { }));
-		iterators.add(newIterator(new int[] { 4 }));
-		iterators.add(newIterator(new int[] { 5, 6 }));
+		iterators.add(Arrays4.newIterator(new int[] { 1, 2, 3 }));
+		iterators.add(Arrays4.newIterator(new int[] { }));
+		iterators.add(Arrays4.newIterator(new int[] { 4 }));
+		iterators.add(Arrays4.newIterator(new int[] { 5, 6 }));
 		
 		final CompositeIterator4 iterator = new CompositeIterator4(iterators.strictIterator());
-		IteratorAssert.areEqual(newIterator(new int[] { 1, 2, 3, 4, 5, 6 }), iterator);
+		IteratorAssert.areEqual(Arrays4.newIterator(new int[] { 1, 2, 3, 4, 5, 6 }), iterator);
 		
-	}
-
-	private static Iterator4 newIterator(int[] values) {
-		return new ArrayIterator4(Arrays4.toObjectArray(values));
 	}
 
 }

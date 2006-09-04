@@ -7,11 +7,11 @@ public class IndexedNodeCollector {
 
 	private final Collection4 _nodes;
 	
-	private final Hashtable4 _visitedNodes;
+	private final Hashtable4 _nodeCache;
 
 	public IndexedNodeCollector(QCandidates candidates) {
 		_nodes = new Collection4();
-		_visitedNodes = new Hashtable4();
+		_nodeCache = new Hashtable4();
 		collectIndexedNodes(candidates);
 	}
 	
@@ -27,6 +27,9 @@ public class IndexedNodeCollector {
 		
 		while (qcons.moveNext()) {
 			QCon qcon = (QCon)qcons.current();
+			if (isCached(qcon)) {
+				continue;
+			}
 			if (isLeaf(qcon)) {
 				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {					
 					final QConObject conObject = (QConObject) qcon;
@@ -42,6 +45,10 @@ public class IndexedNodeCollector {
 		}
 	}
 
+	private boolean isCached(QCon qcon) {
+		return null != _nodeCache.get(qcon);
+	}
+
 	private void collectStandaloneNode(final QConObject conObject) {
 		IndexedLeaf existing = findLeafOnSameField(conObject);
 		if (existing != null) {
@@ -54,7 +61,7 @@ public class IndexedNodeCollector {
 	private void collectJoinedNode(QConObject constraintWithJoins) {
 		Collection4 joins = collectTopLevelJoins(constraintWithJoins);
 		if (1 == joins.size()) {
-			_nodes.add(nodeForConstraint((QConJoin)joins.singleElement()));
+			_nodes.add(nodeForConstraint((QCon)joins.singleElement()));
 			return;
 		}
 		collectImplicitlyAndingJoins(joins, constraintWithJoins);
@@ -63,9 +70,9 @@ public class IndexedNodeCollector {
 	private void collectImplicitlyAndingJoins(Collection4 joins, QConObject constraintWithJoins) {
 		final Iterator4 i = joins.iterator();
 		i.moveNext();
-		IndexedNodeWithRange last = nodeForCurrentJoin(i);
+		IndexedNodeWithRange last = nodeForConstraint((QCon)i.current());
 		while (i.moveNext()) {
-			final IndexedNodeWithRange node = nodeForCurrentJoin(i);
+			final IndexedNodeWithRange node = nodeForConstraint((QCon)i.current());
 			last = new AndIndexedLeaf(constraintWithJoins, node, last);
 			_nodes.add(last);
 		}
@@ -77,12 +84,7 @@ public class IndexedNodeCollector {
 		return joins;
 	}
 
-	private IndexedNodeWithRange nodeForCurrentJoin(final Iterator4 i) {
-		final QConJoin join = (QConJoin)i.current();
-		return nodeForConstraint(join);
-	}
-
-	private IndexedNodeWithRange nodeForConstraint(QConJoin join) {
+	private IndexedNodeWithRange newNodeForConstraint(QConJoin join) {
 		final IndexedNodeWithRange c1 = nodeForConstraint(join.i_constraint1);
 		final IndexedNodeWithRange c2 = nodeForConstraint(join.i_constraint2);
 		if (join.isOr()) {
@@ -92,8 +94,18 @@ public class IndexedNodeCollector {
 	}
 	
 	private IndexedNodeWithRange nodeForConstraint(QCon con) {
+		IndexedNodeWithRange node = (IndexedNodeWithRange) _nodeCache.get(con);
+		if (null != node) {
+			return node;
+		}
+		node = newNodeForConstraint(con);
+		_nodeCache.put(con, node);
+		return node;
+	}
+
+	private IndexedNodeWithRange newNodeForConstraint(QCon con) {
 		if (con instanceof QConJoin) {
-			return nodeForConstraint((QConJoin)con);
+			return newNodeForConstraint((QConJoin)con);
 		}
 		return new IndexedLeaf((QConObject)con);
 	}

@@ -2,74 +2,66 @@ package com.db4o.inside.btree;
 
 import com.db4o.foundation.*;
 
-public class BTreeRangeUnion implements BTreeRange {
+class BTreeRangeUnion implements BTreeRange {
 
-	private BTreeRange _first;
-	private BTreeRange _second;
+	private final BTreeRangeSingle[] _ranges;
 
-	public BTreeRangeUnion(BTreeRange first, BTreeRange second) {
-		if (null == first || null == second) {
+	public BTreeRangeUnion(BTreeRangeSingle[] ranges) {
+		if (null == ranges) {
 			throw new ArgumentNullException();
 		}
-		_first = first;
-		_second = second;
+		_ranges = ranges;
 	}
 
 	public BTreeRange extendToFirst() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	public BTreeRange extendToLast() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	public BTreeRange extendToLastOf(BTreeRange upperRange) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public BTreePointer first() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	public BTreeRange greater() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	public BTreeRange intersect(BTreeRange range) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 	
 	public Iterator4 iterator() {
-		return new CompositeIterator4(new Iterator4[] { _first.iterator(), _second.iterator() });
+		return Iterators.cat(Iterators.map(_ranges, new Function() {
+			public Object apply(Object range) {
+				return ((BTreeRange)range).iterator();
+			}
+		}));
 	}
 
 	public Iterator4 keys() {
-		return new CompositeIterator4(new Iterator4[] { _first.keys(), _second.keys() });
+		return Iterators.cat(Iterators.map(_ranges, new Function() {
+			public Object apply(Object range) {
+				return ((BTreeRange)range).keys();
+			}
+		}));
 	}
-
-	public boolean overlaps(BTreeRange range) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	public int size() {
-		return _first.size() + _second.size();
+		int size = 0;
+		for (int i = 0; i < _ranges.length; i++) {
+			size += _ranges[i].size();
+		}
+		return size;
 	}
 
 	public BTreeRange smaller() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	public BTreeRange union(BTreeRange other) {
-		// TODO Auto-generated method stub
-		return null;
+		return BTreeAlgebra.union(this, other);
 	}
-
 }
