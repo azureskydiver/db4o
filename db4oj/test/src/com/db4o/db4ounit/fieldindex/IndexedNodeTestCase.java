@@ -20,7 +20,7 @@ public class IndexedNodeTestCase extends FieldIndexProcessorTestCaseBase {
 						new int[] { 2, 2, 8, 8 });
 	}
 	
-	public void _testTwoLevelDescendOr() {
+	public void testTwoLevelDescendOr() {
     	Query query = createComplexItemQuery();
         Constraint c1 = query.descend("child").descend("foo").constrain(new Integer(4)).smaller();
         Constraint c2 = query.descend("child").descend("foo").constrain(new Integer(4)).greater();        

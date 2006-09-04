@@ -1,5 +1,7 @@
 package com.db4o.db4ounit.foundation;
 
+import com.db4o.foundation.*;
+
 public class Arrays4 {
 
 	public static int[] fill(int[] array, int value) {
@@ -38,6 +40,10 @@ public class Arrays4 {
 	        ret[i] = new Integer(values[i]);
 	    }
 	    return ret;
+	}
+
+	public static Iterator4 newIterator(int[] values) {
+		return new ArrayIterator4(toObjectArray(values));
 	}
 
 }

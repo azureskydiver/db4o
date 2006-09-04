@@ -33,20 +33,28 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		assertUnion(new int[] { 3, 9 }, range(3, 3), range(9, 9));		
 	}
 	
+	public void _testUnionsOfUnions() {
+		final BTreeRange range1 = range(3, 4);
+		final BTreeRange range2 = range(8, 9);
+		final BTreeRange range3 = range1.union(range2);
+		
+		BTreeAssert.assertRange(
+				new int[] { 3, 4, 9 },
+				range3);
+		BTreeAssert.assertRange(
+				new int[] { 3, 4, 7, 9 },
+				range3.union(range(7, 7)));
+	}
+	
 	public void testExtendToLastOf() {
 		BTreeAssert.assertRange(new int[] { 3, 4, 7 }, range(3, 7));		
 		BTreeAssert.assertRange(new int[] { 4, 7, 9 }, range(4, 9));
 	}
 	
-	public void testOverlaps() {		
-		assertOverlaps(range(3, 4), range(4, 9));		
-		Assert.isFalse(range(3, 4).overlaps(range(7, 9)));
+	public void testUnionOfOverlappingSingleRangesYieldSingleRange() {		
+		Assert.isInstanceOf(BTreeRangeSingle.class, range(3, 4).union(range(4, 9)));
 	}
 
-	private void assertOverlaps(BTreeRange range1, BTreeRange range2) {
-		Assert.isTrue(range1.overlaps(range2));
-		Assert.isTrue(range2.overlaps(range1));
-	}
 
 	private void assertUnion(int[] expectedKeys, BTreeRange range1, BTreeRange range2) {
 		BTreeAssert.assertRange(expectedKeys, range1.union(range2));

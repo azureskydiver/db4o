@@ -8,22 +8,20 @@ package  com.db4o.foundation;
  */
 public class Iterator4Impl implements Iterator4 {
 	
-    public static final Iterator4 EMPTY = new EmptyIterator();
+    public static final Iterator4 EMPTY = new Iterator4Impl(null);
     
-    private static final Object NO_ELEMENT = new Object();
-    
-	private List4 _next;
+    private List4 _next;
 	
 	private Object _current;
 
 	public Iterator4Impl(List4 first){
 		_next = first;
-		_current = NO_ELEMENT;
+		_current = Iterators.NO_ELEMENT;
 	}
 
 	public boolean moveNext(){
 		if (_next == null) {
-			_current = NO_ELEMENT;
+			_current = Iterators.NO_ELEMENT;
 			return false;
 		}
 		_current = _next._element;
@@ -32,7 +30,7 @@ public class Iterator4Impl implements Iterator4 {
 	}
 
 	public Object current(){
-		if (NO_ELEMENT == _current) {
+		if (Iterators.NO_ELEMENT == _current) {
 			throw new IllegalStateException();
 		}
 		return _current;

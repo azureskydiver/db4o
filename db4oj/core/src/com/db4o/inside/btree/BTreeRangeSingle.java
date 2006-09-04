@@ -58,32 +58,20 @@ public class BTreeRangeSingle implements BTreeRange {
     }
 
 	public BTreeRange greater() {
-		return newBTreeRangeImpl(_end, null);
+		return newBTreeRangeSingle(_end, null);
 	}
 	
 	public BTreeRange union(BTreeRange other) {
-		BTreeRangeSingle rangeImpl = checkRangeArgument(other);
-		if (internalOverlaps(rangeImpl)
-			|| internalAdjacent(rangeImpl)) {
-			return newBTreeRangeImpl(
-						BTreePointer.min(_first, rangeImpl._first),
-						BTreePointer.max(_end, rangeImpl._end));
-		}
-		return new BTreeRangeUnion(this, other);
+		return BTreeAlgebra.union(this, other);
 	}
 	
-	private boolean internalAdjacent(BTreeRangeSingle rangeImpl) {
+	boolean internalAdjacent(BTreeRangeSingle rangeImpl) {
 		return BTreePointer.equals(_end, rangeImpl._first)
 			|| BTreePointer.equals(rangeImpl._end, _first);
 	}
 
-	public boolean overlaps(BTreeRange other) {
-		return internalOverlaps(checkRangeArgument(other));
-	}
-	
-	private boolean internalOverlaps(BTreeRangeSingle y) {
-		return firstOverlaps(this, y)
-				|| firstOverlaps(y, this);
+	boolean internalOverlaps(BTreeRangeSingle y) {
+		return firstOverlaps(this, y) || firstOverlaps(y, this);
 	}
 
 	private boolean firstOverlaps(BTreeRangeSingle x, BTreeRangeSingle y) {
@@ -92,18 +80,18 @@ public class BTreeRangeSingle implements BTreeRange {
 	}
 
 	public BTreeRange extendToFirst() {
-		return newBTreeRangeImpl(firstBTreePointer(), _end);
+		return newBTreeRangeSingle(firstBTreePointer(), _end);
 	}
 
 	public BTreeRange extendToLast() {
-		return newBTreeRangeImpl(_first, null);
+		return newBTreeRangeSingle(_first, null);
 	}
 
 	public BTreeRange smaller() {
-		return newBTreeRangeImpl(firstBTreePointer(), _first);
+		return newBTreeRangeSingle(firstBTreePointer(), _first);
 	}
 
-	private BTreeRange newBTreeRangeImpl(BTreePointer first, BTreePointer end) {
+	BTreeRange newBTreeRangeSingle(BTreePointer first, BTreePointer end) {
 		return new BTreeRangeSingle(transaction(), _btree, first, end);
 	}
 
@@ -119,12 +107,12 @@ public class BTreeRangeSingle implements BTreeRange {
 		final BTreeRangeSingle rangeImpl = checkRangeArgument(range);
 		BTreePointer first = BTreePointer.max(_first, rangeImpl._first);
 		BTreePointer end = BTreePointer.min(_end, rangeImpl._end);
-		return newBTreeRangeImpl(first, end);
+		return newBTreeRangeSingle(first, end);
 	}
 
 	public BTreeRange extendToLastOf(BTreeRange range) {
 		BTreeRangeSingle rangeImpl = checkRangeArgument(range);
-		return newBTreeRangeImpl(_first, rangeImpl._end);
+		return newBTreeRangeSingle(_first, rangeImpl._end);
 	}
 	
 	public String toString() {

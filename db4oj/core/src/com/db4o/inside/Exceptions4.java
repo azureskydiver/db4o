@@ -47,5 +47,5 @@ public class Exceptions4 {
 
     public static RuntimeException virtualException(){
         throw new RuntimeException();
-    }
+    }	
 }
