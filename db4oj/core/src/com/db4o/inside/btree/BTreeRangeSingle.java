@@ -36,9 +36,13 @@ public class BTreeRangeSingle implements BTreeRange {
 		}
 		return size;
     }
+    
+    public Iterator4 iterator() {
+    	return new BTreeRangePointerIterator(this);
+    }
 
 	public Iterator4 keys() {
-		return new BTreeRangeIterator(this);
+		return new BTreeRangeKeyIterator(this);
 	}
 
     public final BTreePointer end() {
@@ -49,7 +53,7 @@ public class BTreeRangeSingle implements BTreeRange {
 		return _transaction;
 	}
 
-	public BTreePointer first() {
+	BTreePointer first() {
         return _first;
     }
 

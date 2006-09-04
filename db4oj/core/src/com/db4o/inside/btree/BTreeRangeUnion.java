@@ -44,9 +44,13 @@ public class BTreeRangeUnion implements BTreeRange {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public Iterator4 iterator() {
+		return new CompositeIterator4(new Iterator4[] { _first.iterator(), _second.iterator() });
+	}
 
 	public Iterator4 keys() {
-		return new CompositeIterator4(new ArrayIterator4(new Iterator4[] { _first.keys(), _second.keys() }));
+		return new CompositeIterator4(new Iterator4[] { _first.keys(), _second.keys() });
 	}
 
 	public boolean overlaps(BTreeRange range) {
