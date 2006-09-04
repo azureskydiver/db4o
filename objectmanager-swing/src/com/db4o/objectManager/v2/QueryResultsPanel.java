@@ -38,6 +38,7 @@ import com.jgoodies.forms.factories.Borders;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -78,22 +79,26 @@ final class QueryResultsPanel extends JPanel {
         resultsTable = new JTable();
         resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         JScrollPane scrollpane = new FastScrollPane(resultsTable);
-
         return scrollpane;
     }
 
 
     /**
      * After a query executes, this will setup the table to display results.
+     *
      * @param query
      */
     public void displayResults(String query) {
         tableModel = new ResultsTableModel(query, this);
         resultsTable.setModel(tableModel);
+        TableColumn col = resultsTable.getColumnModel().getColumn(1);
+        int width = 200;
+        col.setPreferredWidth(width);
     }
 
     /**
      * This method will batch up any changed objects until the user closes this panel, or clicks the Commit/Apply button
+     *
      * @param o
      */
     public void addObjectToBatch(Object o) {

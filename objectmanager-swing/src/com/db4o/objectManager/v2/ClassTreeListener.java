@@ -15,8 +15,10 @@ import java.awt.event.MouseEvent;
  */
 public class ClassTreeListener extends MouseAdapter {
     private JTextArea queryText;
+    private QueryBarPanel queryBarPanel;
 
     public ClassTreeListener(QueryBarPanel queryBarPanel) {
+        this.queryBarPanel = queryBarPanel;
         this.queryText = queryBarPanel.getQueryText();
     }
 
@@ -30,9 +32,11 @@ public class ClassTreeListener extends MouseAdapter {
             if (e.getClickCount() == 1) {
 
             } else if (e.getClickCount() == 2) {
-                if (!node.isLeaf()) {
+                if (!node.isLeaf() && !node.isRoot()) {
                     String nodeInfo = (String) node.getUserObject();
                     queryText.setText("FROM " + nodeInfo);
+
+                    queryBarPanel.showClassSummary(nodeInfo);
                 } else {
                     
                 }

@@ -119,4 +119,8 @@ public class QueryBarPanel extends JPanel {
     public JTextArea getQueryText() {
         return queryText;
     }
+
+    public void showClassSummary(String className) {
+        mainPanel.showClassSummary(className);
+    }
 }
