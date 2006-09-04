@@ -17,8 +17,8 @@ public class MigrationConnection {
     private final Hashtable4 _identityMap;
 
     public MigrationConnection(YapStream peerA, YapStream peerB) {
-        _referenceMap = new Hashtable4(1);
-        _identityMap = new Hashtable4(1);
+        _referenceMap = new Hashtable4();
+        _identityMap = new Hashtable4();
         _peerA = peerA;
         _peerB = peerB;
     }

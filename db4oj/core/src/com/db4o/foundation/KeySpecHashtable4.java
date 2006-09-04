@@ -7,7 +7,7 @@ package com.db4o.foundation;
  */
 public class KeySpecHashtable4 extends Hashtable4 {
 	private KeySpecHashtable4() {
-		super();
+		super((DeepClone)null);
 	}
 	
 	public KeySpecHashtable4(int a_size) {

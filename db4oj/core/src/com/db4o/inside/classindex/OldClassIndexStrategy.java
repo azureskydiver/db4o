@@ -12,7 +12,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 	
 	private ClassIndex _index;
 	
-	private final Hashtable4 _perTransaction = new Hashtable4(1);
+	private final Hashtable4 _perTransaction = new Hashtable4();
 	
 	public OldClassIndexStrategy(YapClass yapClass) {
 		super(yapClass);

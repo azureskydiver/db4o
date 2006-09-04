@@ -60,7 +60,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
         
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
-        _sizesByTransaction = new Hashtable4(1);
+        _sizesByTransaction = new Hashtable4();
         if(id == 0){
             setStateDirty();
             _root = new BTreeNode(this, 0, true, 0, 0, 0);

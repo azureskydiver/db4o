@@ -15,7 +15,7 @@ class Db4oSignatureMap {
     
     Db4oSignatureMap(YapStream stream){
         _stream = stream;
-        _identities = new Hashtable4(1);
+        _identities = new Hashtable4();
     }
     
     Db4oDatabase produce(byte[] signature, long creationTime){

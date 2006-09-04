@@ -38,8 +38,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 
 	protected FieldIndexProcessor createProcessor(final Query query) {
 		final QCandidates candidates = getQCandidates(query);		
-		final FieldIndexProcessor processor = new FieldIndexProcessor(candidates);
-		return processor;
+		return new FieldIndexProcessor(candidates);
 	}
 
 	private QCandidates getQCandidates(final Query query) {
