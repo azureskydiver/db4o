@@ -27,21 +27,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="drs_object_references" name="com.db4o.replication.hibernate.metadata.ObjectReference">
-		<id column="object_id" type="long">
+	<class table="drs_objects" name="com.db4o.replication.hibernate.metadata.ObjectReference">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
 			<component name="uuid">
-				<property name="longPart" column="long_part" not-null="true"/>
+				<property name="created" column="created" not-null="true"/>
 				<many-to-one name="provider" column="provider_id" cascade="none" not-null="true"/>
 			</component>
 		</natural-id>
 
 		<property name="className" column="class_name"/>
-		<property name="hibernateId" column="hibernate_id"/>
+		<property name="typedId" column="typed_id"/>
 
-		<property name="version" column="version"/>
+		<property name="modified" column="modified"/>
 	</class>
 </hibernate-mapping>

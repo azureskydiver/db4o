@@ -7,24 +7,24 @@ package com.db4o.replication.hibernate.metadata;
  * 
  * @author Albert Kwan
  *
- * @version 1.1
- * @since dRS 1.1
+ * @version 1.2
+ * @since dRS 1.0
  */
 public class Uuid {
 	public static class Table {
-		public static final String LONG_PART = "long_part";
+		public static final String CREATED = "created";
 		public static final String PROVIDER = "provider_id";
 	}
 	
 	public static class Fields {
-		public static final String LONG_PART = "longPart";
+		public static final String CREATED = "created";
 		public static final String PROVIDER = "provider";	
 	}
 	
 	/**
 	 * An id that is unique across types within a provider.
 	 */
-	private long longPart;
+	private long created;
 
 	/**
 	 * The provider that orginates this id.
@@ -33,23 +33,40 @@ public class Uuid {
 	
 	public Uuid() {}
 
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + (int) (created ^ (created >>> 32));
+		result = PRIME * result + ((provider == null) ? 0 : provider.hashCode());
+		return result;
+	}
 
-		final Uuid uuid = (Uuid) o;
-
-		if (longPart != uuid.longPart) return false;
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Uuid other = (Uuid) obj;
+		if (created != other.created)
+			return false;
+		if (provider == null) {
+			if (other.provider != null)
+				return false;
+		} else if (!provider.equals(other.provider))
+			return false;
 		return true;
 	}
 
-	public long getLongPart() {
-		return longPart;
+	public long getCreated() {
+		return created;
 	}
 
-	public void setLongPart(long longPart) {
-		this.longPart = longPart;
+	public void setCreated(long created) {
+		this.created = created;
 	}
 
 	public ProviderSignature getProvider() {
@@ -58,16 +75,5 @@ public class Uuid {
 
 	public void setProvider(ProviderSignature provider) {
 		this.provider = provider;
-	}
-
-	public int hashCode() {
-		return (int) (longPart ^ (longPart >>> 32));
-	}
-
-	public String toString() {
-		return "Uuid{" +
-				"longPart=" + longPart +
-				", provider=" + provider +
-				'}';
 	}
 }

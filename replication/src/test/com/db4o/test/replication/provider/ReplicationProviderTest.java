@@ -17,7 +17,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	private ReadonlyReplicationProviderSignature A_SIGNATURE;
 
 	public void actualTest() {
-		B_SIGNATURE_BYTES = _providerB.getSignature().getBytes();
+		B_SIGNATURE_BYTES = _providerB.getSignature().getSignature();
 
 		A_SIGNATURE = _providerA.getSignature();
 		B_SIGNATURE = _providerB.getSignature();

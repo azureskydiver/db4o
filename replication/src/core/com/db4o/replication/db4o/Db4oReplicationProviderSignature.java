@@ -18,11 +18,11 @@ public class Db4oReplicationProviderSignature implements ReadonlyReplicationProv
         return 0;
     }
 
-    public byte[] getBytes() {
+    public byte[] getSignature() {
         return _delegate.getSignature();
     }
 
-    public long getCreationTime() {
+    public long getCreated() {
         return _delegate.getCreationTime();
     }
 

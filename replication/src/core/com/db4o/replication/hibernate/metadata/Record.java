@@ -7,25 +7,22 @@ package com.db4o.replication.hibernate.metadata;
  * 
  * @author Albert Kwan
  *
- * @version 1.1
+ * @version 1.2
  * @since dRS 1.1
  */
 public class Record {
-	public static class Table {
-		public static final String NAME = "drs_records";
-	}
 	
 	public static class Fields {
+		public static final String TIME = "time";
 		public static final String PEER_SIGNATURE = "peerSignature";
-		public static final String VERSION = "version";
 	}
 
-	private long version;
+	private long time;
 
 	private PeerSignature peerSignature;
 
 	public Record() {
-		version = 0;
+		time = 0;
 	}
 
 	public PeerSignature getPeerSignature() {
@@ -36,15 +33,11 @@ public class Record {
 		this.peerSignature = peerSignature;
 	}
 
-	public long getVersion() {
-		return version;
+	public long getTime() {
+		return time;
 	}
 
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
-	public String toString() {
-		return "peerSignature = " + peerSignature + ", version = " + version;
+	public void setTime(long version) {
+		this.time = version;
 	}
 }

@@ -7,7 +7,7 @@ package com.db4o.replication.hibernate.metadata;
  * 
  * @author Albert Kwan
  *
- * @version 1.1
+ * @version 1.2
  * @since dRS 1.1
  */
 public class PeerSignature extends ProviderSignature {

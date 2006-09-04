@@ -209,7 +209,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public long getLastReplicationVersion() {
 		ensureReplicationActive();
 
-		return _replicationRecord.getVersion();
+		return _replicationRecord.getTime();
 	}
 
 	public final Object getMonitor() {
@@ -327,7 +327,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		if (ref == null) return;
 
-		Object loaded = getSession().get(ref.getClassName(), ref.getHibernateId());
+		Object loaded = getSession().get(ref.getClassName(), ref.getTypedId());
 		if (loaded == null) return;
 
 		getSession().delete(loaded);
@@ -353,13 +353,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_transaction = getSession().beginTransaction();
 		clearSession();
 
-		byte[] peerSigBytes = aPeerSignature.getBytes();
+		byte[] peerSigBytes = aPeerSignature.getSignature();
 
-		if (Arrays.equals(peerSigBytes, getSignature().getBytes()))
+		if (Arrays.equals(peerSigBytes, getSignature().getSignature()))
 			throw new RuntimeException("peerSigBytes must not equal to my own sig");
 
 		final List exisitingSigs = getSession().createCriteria(PeerSignature.class)
-				.add(Restrictions.eq(ProviderSignature.Fields.BYTES, peerSigBytes)).list();
+				.add(Restrictions.eq(ProviderSignature.Fields.SIG, peerSigBytes)).list();
 
 		if (exisitingSigs.size() == 1) {
 			_peerSignature = (PeerSignature) exisitingSigs.get(0);
@@ -433,7 +433,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final void syncVersionWithPeer(long version) {
 		ensureReplicationActive();
 
-		_replicationRecord.setVersion(version);
+		_replicationRecord.setTime(version);
 		getSession().saveOrUpdate(_replicationRecord);
 		getSession().flush();
 	}
@@ -484,7 +484,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	Uuid translate(Db4oUUID du) {
 		Uuid uuid = new Uuid();
-		uuid.setLongPart(du.getLongPart());
+		uuid.setCreated(du.getLongPart());
 		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
 		return uuid;
 	}
@@ -539,14 +539,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		Set out = new HashSet();
 		for (Object o : criteria.list()) {
 			ObjectReference ref = (ObjectReference) o;
-			out.add(getSession().load(persistentClass.getRootClass().getClassName(), ref.getHibernateId()));
+			out.add(getSession().load(persistentClass.getRootClass().getClassName(), ref.getTypedId()));
 		}
 		return out;
 	}
 
 	private ProviderSignature getProviderSignature(byte[] signaturePart) {
 		final List exisitingSigs = getSession().createCriteria(ProviderSignature.class)
-				.add(Restrictions.eq(ProviderSignature.Fields.BYTES, signaturePart))
+				.add(Restrictions.eq(ProviderSignature.Fields.SIG, signaturePart))
 				.list();
 		if (exisitingSigs.size() == 1)
 			return (ProviderSignature) exisitingSigs.get(0);
@@ -567,7 +567,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
 		Uuid uuid = ref.getUuid();
-		return _objRefs.put(obj, new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes()), ref.getVersion());
+		return _objRefs.put(obj, new Db4oUUID(uuid.getCreated(), uuid.getProvider().getSignature()), ref.getModified());
 	}
 
 	private ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid) {
@@ -575,9 +575,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (of == null)
 			return null;
 		else {
-			Object obj = getSession().load(of.getClassName(), of.getHibernateId());
+			Object obj = getSession().load(of.getClassName(), of.getTypedId());
 
-			return _objRefs.put(obj, uuid, of.getVersion());
+			return _objRefs.put(obj, uuid, of.getModified());
 		}
 	}
 
@@ -601,9 +601,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 				if (exist == null) {
 					ObjectReference tmp = new ObjectReference();
 					tmp.setClassName(obj.getClass().getName());
-					tmp.setHibernateId(Util.castAsLong(getSession().getIdentifier(obj)));
+					tmp.setTypedId(Util.castAsLong(getSession().getIdentifier(obj)));
 					tmp.setUuid(uuid);
-					tmp.setVersion(ref.version());
+					tmp.setModified(ref.version());
 					try {
 						getSession().save(tmp);
 					} catch (HibernateException e) {
@@ -613,10 +613,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 					if (!exist.getClassName().equals(obj.getClass().getName()))
 						throw new RuntimeException("Same classname expected");
 
-					if (exist.getHibernateId() != id) //deletion rollback case, id may change
-						exist.setHibernateId(id);
+					if (exist.getTypedId() != id) //deletion rollback case, id may change
+						exist.setTypedId(id);
 
-					exist.setVersion(ref.version());
+					exist.setModified(ref.version());
 					getSession().update(exist);
 				}
 			}

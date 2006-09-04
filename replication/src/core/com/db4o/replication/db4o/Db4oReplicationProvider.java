@@ -89,7 +89,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 			Db4oDatabase myIdentity = _stream.identity();
 			_signatureMap.put(myIdentity);
 
-			Db4oDatabase otherIdentity = _signatureMap.produce(peerSignature.getBytes(), peerSignature.getCreationTime());
+			Db4oDatabase otherIdentity = _signatureMap.produce(peerSignature.getSignature(), peerSignature.getCreated());
 
 			Db4oDatabase younger = null;
 			Db4oDatabase older = null;

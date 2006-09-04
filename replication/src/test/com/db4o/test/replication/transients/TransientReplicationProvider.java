@@ -296,7 +296,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 		ObjectInfo info = getInfo(obj);
 		if (info == null)
-			store(obj, new Db4oUUID(_timeStampIdGenerator.generate(), _signature.getBytes()), vvv);
+			store(obj, new Db4oUUID(_timeStampIdGenerator.generate(), _signature.getSignature()), vvv);
 		else
 			info._version = vvv;
 	}
@@ -326,11 +326,11 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			throw new RuntimeException("Never used?");
 		}
 
-		public byte[] getBytes() {
+		public byte[] getSignature() {
 			return _bytes;
 		}
 
-		public long getCreationTime() {
+		public long getCreated() {
 			return creatimeTime;
 		}
 	}
