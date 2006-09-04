@@ -13,28 +13,24 @@ import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
  * @see PeerSignature
  * @see MySignature
  * 
- * @version 1.1
+ * @version 1.2
  * @since dRS 1.1
  */
 public abstract class ProviderSignature 
 	implements ReadonlyReplicationProviderSignature {
 	
-	public static class Table {
-		public static final String NAME = "drs_provider_signatures";
-	}
-	
 	public static class Fields {
 		public static final String ID = "id";
-		public static final String BYTES = "bytes";
+		public static final String SIG = "signature";
 	}
 
 	/**
 	 * unique identifier for this ProviderSignature.
 	 */
-	private byte[] bytes;
+	private byte[] signature;
 
 	/**
-	 * 1 to 1 identifier of "bytes", for space usage optimization. 
+	 * 1 to 1 identifier of "signature", for space usage optimization. 
 	 * Serves as the primary key in relational table.
 	 */
 	private long id;
@@ -43,42 +39,37 @@ public abstract class ProviderSignature
 	 * legacy field used by pre-dRS db4o replication code.
 	 * @deprecated
 	 */
-	private long creationTime;
+	private long created;
 	
-	public ProviderSignature() {}
+	public ProviderSignature() {
+		this.created = System.currentTimeMillis();
+	}
 
 	public ProviderSignature(byte[] signature) {
-		this.bytes = signature;
-		this.creationTime = System.currentTimeMillis();
+		this();
+		this.signature = signature;
 	}
 
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + Arrays.hashCode(signature);
+		return result;
+	}
 
-		final ProviderSignature that = (ProviderSignature) o;
-
-		if (creationTime != that.creationTime) return false;
-		if (id != that.id) return false;
-		if (!Arrays.equals(bytes, that.bytes)) return false;
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final ProviderSignature other = (ProviderSignature) obj;
+		if (!Arrays.equals(signature, other.signature))
+			return false;
 		return true;
-	}
-
-	public byte[] getBytes() {
-		return bytes;
-	}
-
-	public void setBytes(byte[] signature) {
-		this.bytes = signature;
-	}
-
-	public long getCreationTime() {
-		return creationTime;
-	}
-
-	public void setCreationTime(long creationTime) {
-		this.creationTime = creationTime;
 	}
 
 	public long getId() {
@@ -89,18 +80,19 @@ public abstract class ProviderSignature
 		this.id = id;
 	}
 
-	public int hashCode() {
-		int result;
-		result = (int) (id ^ (id >>> 32));
-		result = 29 * result + (int) (creationTime ^ (creationTime >>> 32));
-		return result;
+	public byte[] getSignature() {
+		return signature;
 	}
 
-	public String toString() {
-		return "ProviderSignature{" +
-				"bytes=" + bytes +
-				", id=" + id +
-				", creationTime=" + creationTime +
-				'}';
+	public void setSignature(byte[] signature) {
+		this.signature = signature;
+	}
+
+	public long getCreated() {
+		return created;
+	}
+
+	public void setCreated(long created) {
+		this.created = created;
 	}
 }

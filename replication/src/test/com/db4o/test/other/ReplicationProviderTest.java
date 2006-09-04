@@ -20,7 +20,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 	private ReadonlyReplicationProviderSignature A_SIGNATURE;
 
 	public void test() {
-		B_SIGNATURE_BYTES = b().provider().getSignature().getBytes();
+		B_SIGNATURE_BYTES = b().provider().getSignature().getSignature();
 
 		A_SIGNATURE = a().provider().getSignature();
 		B_SIGNATURE = b().provider().getSignature();

@@ -146,7 +146,7 @@ public final class Util {
 	}
 
 	public static Db4oUUID translate(Uuid uuid) {
-		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
+		return new Db4oUUID(uuid.getCreated(), uuid.getProvider().getSignature());
 	}
 
 	public static long castAsLong(Serializable id) {
@@ -156,7 +156,7 @@ public final class Util {
 	}
 	
 	public static long getMaxReplicationRecordVersion(Session s) {
-		String hql = "SELECT max(r.version) FROM Record r";
+		String hql = "SELECT max(r." + Record.Fields.TIME + ") FROM Record r";
 		
 		List results = s.createQuery(hql).list();
 		
@@ -171,35 +171,9 @@ public final class Util {
 			return ((Long)ver).longValue();
 	}
 
-	public static long getVersion1(Connection con, String className, long id) {
-		String sql = "SELECT " + ObjectReference.Table.VERSION + " FROM " + ObjectReference.Table.NAME
-				+ " WHERE " + ObjectReference.Table.CLASS_NAME + " = ?"
-				+ " AND " + ObjectReference.Table.HIBERNATE_ID + " = ?";
-
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			ps = con.prepareStatement(sql);
-			ps.setString(1, className);
-			ps.setLong(2, id);
-
-			rs = ps.executeQuery();
-
-			if (!rs.next())
-				throw new RuntimeException("failed to get the version, the sql was = " + sql);
-
-			return rs.getLong(1);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			closeResultSet(rs);
-			closePreparedStatement(ps);
-		}
-	}
-
 	static ObjectReference getObjectReferenceById(Session session, String className, long id) {
 		Criteria criteria = session.createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq(ObjectReference.Fields.HIBERNATE_ID, id));
+		criteria.add(Restrictions.eq(ObjectReference.Fields.TYPED_ID, id));
 		criteria.add(Restrictions.eq(ObjectReference.Fields.CLASS_NAME, className));
 		List list = criteria.list();
 
@@ -232,11 +206,11 @@ public final class Util {
 		String alias = "objRef";
 		String uuidPath = alias + "." + ObjectReference.Fields.UUID + ".";
 		String queryString = "from " + "ObjectReference"
-				+ " as " + alias + " where " + uuidPath + Uuid.Fields.LONG_PART + "=?"
-				+ " AND " + uuidPath + Uuid.Fields.PROVIDER + "." + ProviderSignature.Fields.BYTES + "=?";
+				+ " as " + alias + " where " + uuidPath + Uuid.Fields.CREATED + "=?"
+				+ " AND " + uuidPath + Uuid.Fields.PROVIDER + "." + ProviderSignature.Fields.SIG + "=?";
 		Query c = session.createQuery(queryString);
-		c.setLong(0, uuid.getLongPart());
-		c.setBinary(1, uuid.getProvider().getBytes());
+		c.setLong(0, uuid.getCreated());
+		c.setBinary(1, uuid.getProvider().getSignature());
 
 		final List exisitings = c.list();
 		int count = exisitings.size();

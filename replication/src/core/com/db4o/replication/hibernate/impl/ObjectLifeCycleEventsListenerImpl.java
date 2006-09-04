@@ -33,7 +33,7 @@ public class ObjectLifeCycleEventsListenerImpl
 	implements ObjectLifeCycleEventsListener {
 	
 	private final static String DELETE_SQL = "delete from " + ObjectReference.Table.NAME
-			+ " where " +Uuid.Table.LONG_PART +"= ? "
+			+ " where " +Uuid.Table.CREATED +"= ? "
 			+ " AND " +Uuid.Table.PROVIDER+ " = ?";
 
 	private final Set<ObjectReference> _dirtyNewRefs = new HashSet<ObjectReference>();
@@ -92,18 +92,18 @@ public class ObjectLifeCycleEventsListenerImpl
 
 		for (ObjectReference ref : _dirtyNewRefs) {
 			Uuid uuid = new Uuid();
-			uuid.setLongPart(generator.generate());
+			uuid.setCreated(generator.generate());
 			uuid.setProvider(Util.genMySignature(s));
 
 			ref.setUuid(uuid);
-			ref.setVersion(generator.generate());
+			ref.setModified(generator.generate());
 			getSession().save(ref);
 		}
 
 		for (HibernateObjectId hid : _dirtyUpdatedRefs) {
 			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid._className, hid._hibernateId);
 			if (ref != null && !_dirtyNewRefs.contains(ref) && !_deletedRefs.contains(ref)) {
-				ref.setVersion(generator.generate());
+				ref.setModified(generator.generate());
 				getSession().update(ref);
 			}
 		}
@@ -124,7 +124,7 @@ public class ObjectLifeCycleEventsListenerImpl
 		ObjectReference ref = new ObjectReference();
 
 		ref.setClassName(entity.getClass().getName());
-		ref.setHibernateId(id);
+		ref.setTypedId(id);
 
 		_dirtyNewRefs.add(ref);
 	}
@@ -171,7 +171,7 @@ public class ObjectLifeCycleEventsListenerImpl
 
 		try {
 			PreparedStatement ps = s.connection().prepareStatement(DELETE_SQL);
-			ps.setLong(1, ref.getUuid().getLongPart());
+			ps.setLong(1, ref.getUuid().getCreated());
 			ps.setLong(2, ref.getUuid().getProvider().getId());
 
 			int affected = ps.executeUpdate();

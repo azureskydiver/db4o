@@ -10,14 +10,13 @@ import com.db4o.Unobfuscated;
  * @see HibernateReplicationProvider
  * @author Albert Kwan
  *
- * @version 1.1
+ * @version 1.2
  * @since dRS 1.1
  */
 public class MySignature extends ProviderSignature {
 	public static MySignature generateSignature() {
 		MySignature out = new MySignature();
-		out.setBytes(Unobfuscated.generateSignature());
-		out.setCreationTime(System.currentTimeMillis());
+		out.setSignature(Unobfuscated.generateSignature());
 		return out;
 	}
 

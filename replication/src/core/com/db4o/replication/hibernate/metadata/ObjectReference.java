@@ -8,22 +8,18 @@ package com.db4o.replication.hibernate.metadata;
  * @author Albert Kwan
  *
  * @version 1.1
- * @since dRS 1.1
+ * @since dRS 1.2
  */
 public class ObjectReference {
 	public static class Table {
-		public static final String NAME = "drs_object_references";
-		public static final String CLASS_NAME = "class_name";
-		public static final String HIBERNATE_ID = "hibernate_id";
-		public static final String VERSION = "version";
+		public static final String NAME = "drs_objects";
 	}
 	
 	public static class Fields {
 		public static final String UUID = "uuid";
-		public static final String VERSION = Table.VERSION;
-		public static final String HIBERNATE_ID = "hibernateId";
+		public static final String VERSION = "modified";
+		public static final String TYPED_ID = "typedId";
 		public static final String CLASS_NAME = "className";
-		
 	}
 	
 	/**
@@ -36,7 +32,7 @@ public class ObjectReference {
 	 * 
 	 * @see org.hibernate.Session#getIdentifier(Object refObj)
 	 */
-	private long hibernateId;
+	private long typedId;
 
 	/**
 	 * The UUID of the referenced object.
@@ -48,7 +44,7 @@ public class ObjectReference {
 	/**
 	 * The version number of the referenced object.
 	 */
-	private long version;
+	private long modified;
 	
 	public ObjectReference() {}
 
@@ -60,12 +56,12 @@ public class ObjectReference {
 		this.className = className;
 	}
 
-	public long getHibernateId() {
-		return hibernateId;
+	public long getTypedId() {
+		return typedId;
 	}
 
-	public void setHibernateId(long objectId) {
-		this.hibernateId = objectId;
+	public void setTypedId(long objectId) {
+		this.typedId = objectId;
 	}
 
 	public Uuid getUuid() {
@@ -76,20 +72,11 @@ public class ObjectReference {
 		this.uuid = uuid;
 	}
 
-	public long getVersion() {
-		return version;
+	public long getModified() {
+		return modified;
 	}
 
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
-	public String toString() {
-		return "ObjectReference{" +
-				"_className='" + className + '\'' +
-				", hibernateId=" + hibernateId +
-				", uuid=" + uuid +
-				", version=" + version +
-				'}';
+	public void setModified(long version) {
+		this.modified = version;
 	}
 }
