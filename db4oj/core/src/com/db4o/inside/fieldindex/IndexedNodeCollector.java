@@ -5,22 +5,22 @@ import com.db4o.foundation.*;
 
 public class IndexedNodeCollector {
 
-	private final QCandidates _candidates;
-	
 	private final Collection4 _nodes;
+	
+	private final Hashtable4 _visitedNodes;
 
 	public IndexedNodeCollector(QCandidates candidates) {
-		_candidates = candidates;
 		_nodes = new Collection4();
-		collectIndexedNodes();
+		_visitedNodes = new Hashtable4();
+		collectIndexedNodes(candidates);
 	}
 	
 	public Iterator4 getNodes() {
 		return _nodes.iterator();
 	}
 	
-	private void collectIndexedNodes() {
-		collectIndexedNodes(_candidates.iterateConstraints());
+	private void collectIndexedNodes(QCandidates candidates) {
+		collectIndexedNodes(candidates.iterateConstraints());
 	}
 
 	private void collectIndexedNodes(final Iterator4 qcons) {

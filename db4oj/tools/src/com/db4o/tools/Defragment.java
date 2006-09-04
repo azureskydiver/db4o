@@ -81,7 +81,7 @@ public class Defragment {
      */
     public static void setSecondClass(String className){
         if(_secondClassNames == null){
-            _secondClassNames = new Hashtable4(1);
+            _secondClassNames = new Hashtable4();
         }
         _secondClassNames.put(className, className);
     }

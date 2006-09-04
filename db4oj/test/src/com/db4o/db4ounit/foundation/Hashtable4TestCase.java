@@ -43,7 +43,7 @@ public class Hashtable4TestCase implements TestCase {
 		
 		Integer key = new Integer(1);
 		
-		Hashtable4 table = new Hashtable4(1);
+		Hashtable4 table = new Hashtable4();
 		table.put(key, "foo");
 		table.put(key, "bar");
 		

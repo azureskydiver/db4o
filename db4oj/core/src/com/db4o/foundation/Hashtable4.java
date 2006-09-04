@@ -30,7 +30,11 @@ public class Hashtable4 implements DeepClone {
 		i_table = new HashtableIntEntry[i_tableSize];
 	}
 
-	protected Hashtable4() {
+	public Hashtable4() {
+		this(1);
+	}
+	
+	protected Hashtable4(DeepClone cloneOnlyCtor) {
 	}
 	
 	public int size() {
@@ -38,7 +42,7 @@ public class Hashtable4 implements DeepClone {
 	}
 
 	public Object deepClone(Object obj) {
-		return deepCloneInternal(new Hashtable4(), obj);
+		return deepCloneInternal(new Hashtable4((DeepClone)null), obj);
 	}
 
 	public void forEachKey(Visitor4 visitor) {

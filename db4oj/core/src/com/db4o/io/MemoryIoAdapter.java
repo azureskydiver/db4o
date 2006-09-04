@@ -34,7 +34,7 @@ public class MemoryIoAdapter extends IoAdapter{
     private int _growBy;
     
     public MemoryIoAdapter(){
-        _memoryFiles = new Hashtable4(1);
+        _memoryFiles = new Hashtable4();
         _growBy = 10000;
     }
     

@@ -28,7 +28,7 @@ public class Converter {
     }
     
     private Converter(){
-        _conversions = new Hashtable4(1);
+        _conversions = new Hashtable4();
         new CommonConversions(this);
         // TODO: There probably will be Java and .NET conversions
         //       Create Platform4.registerConversions() method ann

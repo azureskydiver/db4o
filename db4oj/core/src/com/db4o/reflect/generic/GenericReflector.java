@@ -14,10 +14,10 @@ public class GenericReflector implements Reflector, DeepClone {
     private Reflector _delegate;
     private GenericArrayReflector _array;
     
-    private final Hashtable4 _classByName = new Hashtable4(1);
-    private final Hashtable4 _classByClass = new Hashtable4(1);
+    private final Hashtable4 _classByName = new Hashtable4();
+    private final Hashtable4 _classByClass = new Hashtable4();
     private final Collection4 _classes = new Collection4();
-    private final Hashtable4 _classByID = new Hashtable4(1);
+    private final Hashtable4 _classByID = new Hashtable4();
     
     private Collection4 _collectionPredicates = new Collection4();
     private Collection4 _collectionUpdateDepths = new Collection4();
