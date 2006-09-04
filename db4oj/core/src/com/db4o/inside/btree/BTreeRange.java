@@ -6,9 +6,15 @@ import com.db4o.foundation.Iterator4;
 
 
 public interface BTreeRange {
-	public BTreePointer first();
-    
-    public Iterator4 keys();
+	
+	/**
+	 * Iterates through all the valid pointers in 
+	 * this range.
+	 * @return an Iterator4 over BTreePointer value
+	 */
+	public Iterator4 iterator();
+	
+	public Iterator4 keys();
 
 	public int size();
 

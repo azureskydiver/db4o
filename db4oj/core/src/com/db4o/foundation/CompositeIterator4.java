@@ -6,6 +6,10 @@ public class CompositeIterator4 implements Iterator4 {
 	private final Iterator4 _iterators;	
 
 	private Iterator4 _currentIterator;
+	
+	public CompositeIterator4(Iterator4[] iterators) {
+		this(new ArrayIterator4(iterators));
+	}
 
 	public CompositeIterator4(Iterator4 iterators) {
 		if (null == iterators) {

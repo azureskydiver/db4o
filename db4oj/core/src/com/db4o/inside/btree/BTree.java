@@ -94,11 +94,11 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
 
     public void remove(Transaction trans, Object key){
-        BTreeRange range = search(trans, key);
-        BTreePointer first = range.first();
-        if(first == null){
-            return;
+        final Iterator4 pointers = search(trans, key).iterator();
+        if (!pointers.moveNext()) {
+        	return;
         }
+        BTreePointer first = (BTreePointer)pointers.current();
         ensureDirty(trans);
         BTreeNode node = first.node();
         node.remove(trans, first.index());
