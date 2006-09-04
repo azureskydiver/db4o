@@ -104,12 +104,12 @@ public class BTreePointer{
         return _node.equals(other._node);
     }
 
-	Object key() {
+	public Object key() {
 		node().prepareWrite(_transaction);
 		return node().key(_transaction, index());
 	}
 	
-	Object value() {
+	public Object value() {
 		return node().value(index());
 	}
     
