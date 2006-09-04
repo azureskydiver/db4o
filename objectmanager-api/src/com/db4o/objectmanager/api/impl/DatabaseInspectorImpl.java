@@ -95,4 +95,12 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
     public long getSize() {
         return 0;
     }
+
+    public long getSpaceUsedByClass(String className) {
+        return 0;
+    }
+
+    public long getSpaceUsedByClassIndexes(String className) {
+        return 0;
+    }
 }

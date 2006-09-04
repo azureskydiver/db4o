@@ -102,4 +102,18 @@ public interface DatabaseInspector {
      * @return size of database in bytes on disk
      */
     long getSize();
+
+    /**
+     *
+     * @param className
+     * @return size of data for class
+     */
+    long getSpaceUsedByClass(String className);
+
+    /**
+     *
+     * @param className
+     * @return size of data for class indexes
+     */
+    long getSpaceUsedByClassIndexes(String className);
 }
