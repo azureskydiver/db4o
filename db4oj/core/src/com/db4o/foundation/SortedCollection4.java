@@ -18,6 +18,13 @@ public class SortedCollection4 {
 		_tree = null;
 	}
 	
+	public Object singleElement() {
+		if (1 != size()) {
+			throw new IllegalStateException();
+		}
+		return ((TreeObject)_tree).getObject();
+	}
+	
 	public void addAll(Iterator4 iterator) {		
 		while (iterator.moveNext()) {
 			add(iterator.current());
@@ -62,5 +69,5 @@ public class SortedCollection4 {
 		public Object getObject() {
 			return _object;
 		}
-	}
+	}	
 }

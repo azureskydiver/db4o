@@ -53,21 +53,32 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 	
 	public void testUnionsMerge() {
 		final BTreeRange range = range(3, 3).union(range(7, 7)).union(range(4, 4));
-		Assert.isInstanceOf(BTreeRangeSingle.class, range);
+		assertIsRangeSingle(range);
 		BTreeAssert.assertRange(new int[] { 3, 4, 7 }, range);
+	}
+
+	private void assertIsRangeSingle(final BTreeRange range) {
+		Assert.isInstanceOf(BTreeRangeSingle.class, range);
 	}
 	
 	public void testUnionsOfUnions() {
-		final BTreeRange range1 = range(3, 4);
-		final BTreeRange range2 = range(8, 9);
-		final BTreeRange range3 = range1.union(range2);
+		final BTreeRange union1 = range(3, 4).union(range(8, 9));
 		
 		BTreeAssert.assertRange(
 				new int[] { 3, 4, 9 },
-				range3);
+				union1);
 		BTreeAssert.assertRange(
 				new int[] { 3, 4, 7, 9 },
-				range3.union(range(7, 7)));
+				union1.union(range(7, 7)));
+		
+		final BTreeRange union2 = range(3, 3).union(range(7, 7));
+		assertUnion(new int[] { 3, 4, 7, 9 }, union1, union2);
+		
+		assertIsRangeSingle(union1.union(union2));
+		assertIsRangeSingle(union2.union(union1));
+		
+		final BTreeRange union3 = range(3, 3).union(range(9, 9));
+		assertUnion(new int[] { 3, 7, 9 }, union2, union3);
 	}
 	
 	public void testExtendToLastOf() {
