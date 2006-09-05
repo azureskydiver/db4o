@@ -4,7 +4,7 @@ package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
 import com.db4o.db4ounit.btree.*;
-import com.db4o.db4ounit.foundation.Arrays4;
+import com.db4o.db4ounit.foundation.IntArrays4;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.query.Query;
@@ -51,7 +51,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         int lastValue = Integer.MIN_VALUE;
         for (int i = 0; i < values.length; i++) {
             if(values[i] != lastValue){
-                final ExpectingVisitor expectingVisitor = BTreeAssert.createExpectingVisitor(values[i], Arrays4.occurences(values, values[i]));
+                final ExpectingVisitor expectingVisitor = BTreeAssert.createExpectingVisitor(values[i], IntArrays4.occurences(values, values[i]));
                 BTreeRange range = fieldIndexKeySearch(trans(), btree, new Integer(values[i]));
                 BTreeAssert.traverseKeys(range, new Visitor4() {
                     public void visit(Object obj) {

@@ -5,13 +5,13 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class MapIterator4 implements Iterator4 {
+public class FunctionApplicationIterator implements Iterator4 {
 
 	private final Iterator4 _iterator;
-	private final Function _function;
+	private final Function4 _function;
 	private Object _current;
 
-	public MapIterator4(Iterator4 iterator, Function function) {
+	public FunctionApplicationIterator(Iterator4 iterator, Function4 function) {
 		if (null == iterator) {
 			throw new ArgumentNullException();
 		}
@@ -22,14 +22,7 @@ public class MapIterator4 implements Iterator4 {
 		_function = function;
 		_current = Iterators.NO_ELEMENT;
 	}
-
-	public Object current() {
-		if (Iterators.NO_ELEMENT == _current) {
-			throw new IllegalStateException();
-		}
-		return _current;
-	}
-
+	
 	public boolean moveNext() {
 		if (!_iterator.moveNext()) {
 			_current = Iterators.NO_ELEMENT;
@@ -39,4 +32,10 @@ public class MapIterator4 implements Iterator4 {
 		return true;
 	}
 
+	public Object current() {
+		if (Iterators.NO_ELEMENT == _current) {
+			throw new IllegalStateException();
+		}
+		return _current;
+	}
 }

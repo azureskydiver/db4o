@@ -71,7 +71,7 @@ public class Transaction {
         
         Tree.traverse(_slotChanges, new Visitor4() {
             public void visit(Object obj) {
-                ((Tree)obj).write(writer);
+                ((TreeInt)obj).write(writer);
             }
         });
         

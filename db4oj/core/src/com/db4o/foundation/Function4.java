@@ -5,6 +5,6 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public interface Function {
+public interface Function4 {
 	Object apply(Object arg);
 }

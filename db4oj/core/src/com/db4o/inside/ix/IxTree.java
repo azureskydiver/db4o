@@ -48,6 +48,7 @@ public abstract class IxTree extends Tree implements Visitor4{
     public Tree deepClone(Object a_param) {
 		IxTree tree = (IxTree) this.shallowClone();
 		tree._fieldTransaction = (IndexTransaction) a_param;
+		tree._nodes = _nodes;
 		return tree;
 	}
     
@@ -69,10 +70,6 @@ public abstract class IxTree extends Tree implements Visitor4{
     
     public final int nodes(){
         return _nodes;
-    }
-    
-    public final void nodes(int count){
-       _nodes = count;
     }
     
     public void setSizeOwn(){

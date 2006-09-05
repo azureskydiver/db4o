@@ -15,8 +15,8 @@ public class IteratorsTestCase implements TestCase {
 		final int[] array = new int[] { 1, 2, 3 };
 		final Collection4 args = new Collection4();
 		final Iterator4 iterator = Iterators.map(
-			Arrays4.newIterator(array),
-			new Function() {
+			IntArrays4.newIterator(array),
+			new Function4() {
 				public Object apply(Object arg) {
 					args.add(arg);
 					return new Integer(((Integer)arg).intValue()*2);
