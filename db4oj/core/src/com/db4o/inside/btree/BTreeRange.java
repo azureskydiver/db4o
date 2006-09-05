@@ -33,4 +33,6 @@ public interface BTreeRange {
 	public BTreeRange extendToLastOf(BTreeRange upperRange);
 
 	public boolean isEmpty();
+	
+	public void accept(BTreeRangeVisitor visitor);
 }

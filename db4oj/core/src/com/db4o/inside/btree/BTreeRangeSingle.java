@@ -4,6 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.Transaction;
 import com.db4o.foundation.*;
+import com.db4o.inside.btree.algebra.*;
 
 /**
  * @exclude
@@ -36,6 +37,10 @@ public class BTreeRangeSingle implements BTreeRange {
         _end = end;
     }
     
+    public void accept(BTreeRangeVisitor visitor) {
+    	visitor.visit(this);
+    }
+    
     public boolean isEmpty() {
 		return BTreePointer.equals(_first, _end);
 	}
@@ -65,7 +70,7 @@ public class BTreeRangeSingle implements BTreeRange {
 		return _transaction;
 	}
 
-	BTreePointer first() {
+	public BTreePointer first() {
         return _first;
     }
 
@@ -74,16 +79,19 @@ public class BTreeRangeSingle implements BTreeRange {
 	}
 	
 	public BTreeRange union(BTreeRange other) {
-		return BTreeAlgebra.union(this, other);
+		if (null == other) {
+			throw new ArgumentNullException();
+		}
+		return new BTreeRangeSingleUnion(this).dispatch(other);
 	}
 	
-	boolean internalAdjacent(BTreeRangeSingle rangeImpl) {
-		return BTreePointer.equals(_end, rangeImpl._first)
-			|| BTreePointer.equals(rangeImpl._end, _first);
+	public boolean adjacent(BTreeRangeSingle range) {
+		return BTreePointer.equals(_end, range._first)
+			|| BTreePointer.equals(range._end, _first);
 	}
 
-	boolean internalOverlaps(BTreeRangeSingle y) {
-		return firstOverlaps(this, y) || firstOverlaps(y, this);
+	public boolean overlaps(BTreeRangeSingle range) {
+		return firstOverlaps(this, range) || firstOverlaps(range, this);
 	}
 
 	private boolean firstOverlaps(BTreeRangeSingle x, BTreeRangeSingle y) {
@@ -103,7 +111,7 @@ public class BTreeRangeSingle implements BTreeRange {
 		return newBTreeRangeSingle(firstBTreePointer(), _first);
 	}
 
-	BTreeRangeSingle newBTreeRangeSingle(BTreePointer first, BTreePointer end) {
+	public BTreeRangeSingle newBTreeRangeSingle(BTreePointer first, BTreePointer end) {
 		return new BTreeRangeSingle(transaction(), _btree, first, end);
 	}
 
@@ -116,10 +124,10 @@ public class BTreeRangeSingle implements BTreeRange {
 	}
 
 	public BTreeRange intersect(BTreeRange range) {
-		final BTreeRangeSingle rangeImpl = checkRangeArgument(range);
-		BTreePointer first = BTreePointer.max(_first, rangeImpl._first);
-		BTreePointer end = BTreePointer.min(_end, rangeImpl._end);
-		return newBTreeRangeSingle(first, end);
+		if (null == range) {
+			throw new ArgumentNullException();
+		}
+		return new BTreeRangeSingleIntersect(this).dispatch(range);
 	}
 
 	public BTreeRange extendToLastOf(BTreeRange range) {

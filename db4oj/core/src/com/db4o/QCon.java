@@ -756,5 +756,4 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 			}
 		}
 	}
-
 }

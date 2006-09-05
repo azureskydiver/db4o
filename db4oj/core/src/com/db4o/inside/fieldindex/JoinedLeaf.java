@@ -19,6 +19,10 @@ public class JoinedLeaf implements IndexedNodeWithRange {
 		_range = range;
 	}
 	
+	public QCon getConstraint() {
+		return _constraint;
+	}
+	
 	public BTreeRange getRange() {
 		return _range;
 	}
