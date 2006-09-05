@@ -11,7 +11,7 @@ import com.db4odoc.f1.lists.CollectionExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
 import com.db4odoc.f1.activating.ActivationExample;
 import com.db4odoc.f1.staticfields.StaticFieldExample;
-import com.db4odoc.f1.enum5.EnumExample;
+import com.db4odoc.f1.enums.EnumExample;
 
 
 

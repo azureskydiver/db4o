@@ -1,6 +1,7 @@
 .n
 .a StaticFields ..
-.1 Static fields and enums ..
+.? java  .1 Static fields and enums ..  ..?  
+.? net  .1 Static fields ..  ..?  
 
 .2 Usage of static fields ..
 As an object database db4o can take advantage of programming language specifics such as ._
@@ -71,22 +72,4 @@ What about deletion? Nothing is new here. We can delete static fields from the r
 object, or directly from the database:
 .s com.db4odoc.f1.staticfields.StaticFieldExample#deleteTest ..
 
-.2 Java enumerations ..
-Enumerated types were brought into Java with the JDK 1.5 release. In fact they represent a ._
-class with static fields similar to the one reviewed in the  .l StaticFieldsAPI previous paragraph .. .
-.s com.db4odoc.f1.enum5.Qualification ..
-db4o takes care about storing enumeration objects automatically without any additional settings:
-.s com.db4odoc.f1.enum5.EnumExample#setPilots -out ..
-.s com.db4odoc.f1.enum5.EnumExample#checkPilots ..
-Another specific feature of enums in db4o: deletion is not possible:
-.s com.db4odoc.f1.enum5.EnumExample#deletePilots ..
-.s com.db4odoc.f1.enum5.EnumExample#checkPilots ..
-Deletion of references does not automatically delete the enum. Even explicit deletion does not ._
-work:
-.s com.db4odoc.f1.enum5.EnumExample#deleteQualification ..
-Enum update works in the same way as for normal static objects - updated enum should be ._
-explicitly saved to database (#set(enum)).
-.s com.db4odoc.f1.enum5.EnumExample#updateQualification ..
-
-You can use either build-in Java enums or write your own. Db4o will take care of keeping ._
-object references unique and database file as small as possible.
+.? java .e JavaEnums ..  ..?
