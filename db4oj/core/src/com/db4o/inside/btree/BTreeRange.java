@@ -12,7 +12,7 @@ public interface BTreeRange {
 	 * this range.
 	 * @return an Iterator4 over BTreePointer value
 	 */
-	public Iterator4 iterator();
+	public Iterator4 pointers();
 	
 	public Iterator4 keys();
 
