@@ -60,7 +60,7 @@ public class StaticFieldExample extends Util {
 	        ObjectSet result = db.query(Pilot.class);
 	        for(int x = 0; x < result.size(); x++){
 	        	Pilot pilot = (Pilot )result.get(x);
-	        	if (pilot.getCategory() .equals(PilotCategories.WINNER)){
+	        	if (pilot.getCategory()  == PilotCategories.WINNER){
 	        		System.out.println("Winner pilot: " + pilot);
 	        	} else if (pilot.getCategory() == PilotCategories.TALENTED){
 	        		System.out.println("Talented pilot: " + pilot);
@@ -80,7 +80,7 @@ public class StaticFieldExample extends Util {
 	        ObjectSet result = db.query(Pilot.class);
 	        for(int x = 0; x < result.size(); x++){
 	        	Pilot pilot = (Pilot )result.get(x);
-	        	if (pilot.getCategory() .equals(PilotCategories.WINNER)){
+	        	if (pilot.getCategory()  == PilotCategories.WINNER){
 	        		System.out.println("Winner pilot: " + pilot);
 	        		PilotCategories pc = pilot.getCategory();
 	        		pc.testChange("WINNER2006");
@@ -100,8 +100,23 @@ public class StaticFieldExample extends Util {
 	        ObjectSet result = db.query(PilotCategories.class);
 	        for(int x = 0; x < result.size(); x++){
 	        	PilotCategories pc = (PilotCategories)result.get(x);
-	        	if (pc.equals(PilotCategories.WINNER)){
+	        	if (pc == PilotCategories.WINNER){
 	        		pc.testChange("WINNER2006");
+	        		db.set(pc);
+	        	}
+	        }
+		} finally {
+			db.close();
+		}
+		printCategories();
+		System.out.println("Change the value back:");
+		db=Db4o.openFile(Util.YAPFILENAME);
+		try {
+	        ObjectSet result = db.query(PilotCategories.class);
+	        for(int x = 0; x < result.size(); x++){
+	        	PilotCategories pc = (PilotCategories)result.get(x);
+	        	if (pc == PilotCategories.WINNER){
+	        		pc.testChange("WINNER");
 	        		db.set(pc);
 	        	}
 	        }

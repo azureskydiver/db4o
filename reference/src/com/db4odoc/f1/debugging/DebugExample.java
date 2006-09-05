@@ -37,5 +37,7 @@ public class DebugExample extends Util {
 		} finally {
 			db.close();
 		}
+		Db4o.configure().messageLevel(0);
+		
 	}
 }

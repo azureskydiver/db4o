@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4odoc.f1.enum5;
+package com.db4odoc.f1.enums;
 
 import java.io.File;
 
@@ -42,7 +42,7 @@ public class EnumExample extends Util {
 	        System.out.println("Saved pilots: " + result.size());
 	        for(int x = 0; x < result.size(); x++){
 	        	Pilot pilot = (Pilot )result.get(x);
-	        	if (pilot.getQualification() .equals(Qualification.WINNER)){
+	        	if (pilot.getQualification() == Qualification.WINNER){
 	        		System.out.println("Winner pilot: " + pilot);
 	        	} else if (pilot.getQualification() == Qualification.PROFESSIONAL){
 	        		System.out.println("Professional pilot: " + pilot);
