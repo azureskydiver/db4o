@@ -33,7 +33,7 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		assertUnion(new int[] { 3, 9 }, range(3, 3), range(9, 9));		
 	}
 	
-	public void _testUnionsOfUnions() {
+	public void testUnionsOfUnions() {
 		final BTreeRange range1 = range(3, 4);
 		final BTreeRange range2 = range(8, 9);
 		final BTreeRange range3 = range1.union(range2);
@@ -54,7 +54,6 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 	public void testUnionOfOverlappingSingleRangesYieldSingleRange() {		
 		Assert.isInstanceOf(BTreeRangeSingle.class, range(3, 4).union(range(4, 9)));
 	}
-
 
 	private void assertUnion(int[] expectedKeys, BTreeRange range1, BTreeRange range2) {
 		BTreeAssert.assertRange(expectedKeys, range1.union(range2));

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.Tree;
+
 /**
  * @exclude
  */
@@ -39,8 +41,8 @@ public class TreeIntObject extends TreeInt {
 	public Object read(YapReader a_bytes) {
 		int key = a_bytes.readInt();
 		Object obj = null;
-		if (_object instanceof Tree) {
-			obj = new TreeReader(a_bytes, (Tree) _object).read();
+		if (_object instanceof TreeInt) {
+			obj = new TreeReader(a_bytes, (Readable) _object).read();
 		} else {
 			obj = ((Readable) _object).read(a_bytes);
 		}
@@ -52,8 +54,8 @@ public class TreeIntObject extends TreeInt {
 		if (_object == null) {
 			a_writer.writeInt(0);
 		} else {
-			if (_object instanceof Tree) {
-				Tree.write(a_writer, (Tree) _object);
+			if (_object instanceof TreeInt) {
+				TreeInt.write(a_writer, (TreeInt) _object);
 			} else {
 				((ReadWriteable) _object).write(a_writer);
 			}

@@ -3,7 +3,7 @@ package com.db4o.db4ounit.fieldindex;
 import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
 import com.db4o.db4ounit.btree.*;
-import com.db4o.db4ounit.foundation.Arrays4;
+import com.db4o.db4ounit.foundation.IntArrays4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.classindex.BTreeClassIndexStrategy;
@@ -72,7 +72,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected int[] mapToObjectIds(Query itemQuery, int[] foos) {
-		int[] lookingFor = Arrays4.clone(foos);
+		int[] lookingFor = IntArrays4.clone(foos);
 		
 		int[] objectIds = new int[foos.length];
 		final ObjectSet set = itemQuery.execute();

@@ -3,7 +3,7 @@
 package com.db4o.db4ounit.btree;
 
 import com.db4o.*;
-import com.db4o.db4ounit.foundation.Arrays4;
+import com.db4o.db4ounit.foundation.IntArrays4;
 import com.db4o.inside.btree.*;
 
 import db4ounit.extensions.Db4oTestCase;
@@ -65,7 +65,7 @@ public class BTreeSearchTestCase extends Db4oTestCase {
 	    int lastValue = Integer.MIN_VALUE;
 	    for (int i = 0; i < keys.length; i++) {
 	        if(keys[i] != lastValue){
-	            ExpectingVisitor expectingVisitor = BTreeAssert.createExpectingVisitor(keys[i], Arrays4.occurences(keys, keys[i]));
+	            ExpectingVisitor expectingVisitor = BTreeAssert.createExpectingVisitor(keys[i], IntArrays4.occurences(keys, keys[i]));
 	            BTreeRange range = btree.search(trans, new Integer(keys[i]));
 	            BTreeAssert.traverseKeys(range, expectingVisitor);
 	            expectingVisitor.assertExpectations();

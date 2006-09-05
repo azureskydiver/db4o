@@ -219,13 +219,13 @@ public class FreespaceManagerRam extends FreespaceManager {
             return 0;
         }
         int freeBySizeID = 0;
-        int length = Tree.byteCount(_freeBySize);
+        int length = TreeInt.byteCount((TreeInt)_freeBySize);
         
         Pointer4 ptr = _file.newSlot(trans(), length); 
         freeBySizeID = ptr._id;
         YapWriter sdwriter = new YapWriter(trans(), length);
         sdwriter.useSlot(freeBySizeID, ptr._address, length);
-        Tree.write(sdwriter, _freeBySize);
+        TreeInt.write(sdwriter, (TreeInt)_freeBySize);
         sdwriter.writeEncrypt();
         trans().writePointer(ptr._id, ptr._address, length);
         return freeBySizeID;

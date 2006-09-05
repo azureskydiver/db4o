@@ -2,7 +2,7 @@ package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
 import com.db4o.db4ounit.btree.BTreeAssert;
-import com.db4o.db4ounit.foundation.Arrays4;
+import com.db4o.db4ounit.foundation.IntArrays4;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.fieldindex.*;
 import com.db4o.query.*;
@@ -163,7 +163,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		transaction.commit();
 		
 		fillTransactionWith(transaction, 5);
-        assertSmaller(Arrays4.concat(expectedZeros, new int[] { 3, 4 }), 7);
+        assertSmaller(IntArrays4.concat(expectedZeros, new int[] { 3, 4 }), 7);
 	}
 
 	public void testMultiTransactionWithRollback() {

@@ -2,12 +2,22 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 /**
  * Base class for balanced trees.
  * 
  * @exclude
  */
 public class TreeInt extends Tree implements ReadWriteable {
+	
+	public static TreeInt add(TreeInt tree, int value) {
+		return (TreeInt) Tree.add(tree, new TreeInt(value));
+	}
+	
+	public static TreeInt removeLike(TreeInt tree, int value) {
+		return (TreeInt) Tree.removeLike(tree, new TreeInt(value));
+	}
 
 	public int _key;
 
@@ -59,6 +69,23 @@ public class TreeInt extends Tree implements ReadWriteable {
 	public void write(YapReader a_writer) {
 		a_writer.writeInt(_key);
 	}
+	
+	public static void write(final YapReader a_writer, TreeInt a_tree){
+        write(a_writer, a_tree, a_tree == null ? 0 : a_tree.size());
+	}
+    
+    public static void write(final YapReader a_writer, TreeInt a_tree, int size){
+        if(a_tree == null){
+            a_writer.writeInt(0);
+            return;
+        }
+        a_writer.writeInt(size);
+        a_tree.traverse(new Visitor4() {
+            public void visit(Object a_object) {
+                ((TreeInt)a_object).write(a_writer);
+            }
+        });
+    }
 
 	public int ownLength() {
 		return YapConst.INT_LENGTH;
@@ -96,6 +123,26 @@ public class TreeInt extends Tree implements ReadWriteable {
 	public Object shallowClone() {
 		TreeInt treeint= new TreeInt(_key);
 		return shallowCloneInternal(treeint);
+	}
+	
+	public static int byteCount(TreeInt a_tree){
+		if(a_tree == null){
+			return YapConst.INT_LENGTH;
+		}
+		return a_tree.byteCount();
+	}
+	
+	public final int byteCount(){
+		if(variableLength()){
+			final int[] length = new int[]{YapConst.INT_LENGTH};
+			traverse(new Visitor4(){
+				public void visit(Object obj){
+					length[0] += ((TreeInt)obj).ownLength();
+				}
+			});
+			return length[0];
+		}
+		return YapConst.INT_LENGTH + (size() * ownLength());
 	}
 
 }

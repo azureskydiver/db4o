@@ -1,7 +1,7 @@
 package com.db4o.db4ounit.btree;
 
 import com.db4o.*;
-import com.db4o.db4ounit.foundation.Arrays4;
+import com.db4o.db4ounit.foundation.IntArrays4;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 
@@ -14,11 +14,15 @@ public class BTreeAssert {
 	    for (int i = 0; i < values.length; i++) {
 	        values[i] = value;
 	    }
-	    return new ExpectingVisitor(Arrays4.toObjectArray(values));
+	    return new ExpectingVisitor(IntArrays4.toObjectArray(values));
 	}
 
 	public static ExpectingVisitor createExpectingVisitor(int[] keys) {
-		return new ExpectingVisitor(Arrays4.toObjectArray(keys));
+		return new ExpectingVisitor(IntArrays4.toObjectArray(keys));
+	}
+	
+	private static ExpectingVisitor createSortedExpectingVisitor(int[] keys) {
+		return new ExpectingVisitor(IntArrays4.toObjectArray(keys), true);
 	}
 
 	public static void traverseKeys(BTreeRange result, Visitor4 visitor) {
@@ -58,12 +62,13 @@ public class BTreeAssert {
 	}
 
 	public static int[] newBTreeNodeSizedArray(final BTree btree, int value) {
-		return Arrays4.fill(new int[fillSize(btree)], value);
+		return IntArrays4.fill(new int[fillSize(btree)], value);
 	}
 
 	public static void assertRange(int[] expectedKeys, BTreeRange range) {
 		Assert.isNotNull(range);
-		final ExpectingVisitor visitor = createExpectingVisitor(expectedKeys);
+		final ExpectingVisitor visitor = createSortedExpectingVisitor(expectedKeys);
+		
 		traverseKeys(range, visitor);
 		visitor.assertExpectations();
 	}

@@ -255,8 +255,8 @@ public final class QCandidates implements Visitor4 {
     boolean filter(Visitor4 a_host) {
         if (i_root != null) {
             i_root.traverse(a_host);
-            i_root = i_root.filter(new VisitorBoolean() {
-                public boolean isVisit(Object a_candidate) {
+            i_root = i_root.filter(new Predicate4() {
+                public boolean match(Object a_candidate) {
                     return ((QCandidate) a_candidate)._include;
                 }
             });

@@ -28,6 +28,10 @@ public class BTreeRangeSingle implements BTreeRange {
         _end = end;
     }
     
+    public boolean isEmpty() {
+		return _first == _end;
+	}
+    
     public int size() {
     	int size = 0;
 		final Iterator4 i = keys();
@@ -128,5 +132,5 @@ public class BTreeRangeSingle implements BTreeRange {
 			throw new IllegalArgumentException();
 		}
 		return rangeImpl;
-	}
+	}	
 }

@@ -1,14 +1,12 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.foundation;
 
-import com.db4o.foundation.*;
-import com.db4o.inside.*;
 
 /**
  * @exclude
  */
-public abstract class Tree implements ShallowClone,Readable{
+public abstract class Tree implements ShallowClone {
     
 	public Tree _preceding;
 	public int _size = 1;
@@ -101,27 +99,6 @@ public abstract class Tree implements ShallowClone,Readable{
 	    return balance();
 	}
 	
-	public static int byteCount(Tree a_tree){
-		if(a_tree == null){
-			return YapConst.INT_LENGTH;
-		}
-		return a_tree.byteCount();
-	}
-	
-	public final int byteCount(){
-		if(variableLength()){
-			final int[] length = new int[]{YapConst.INT_LENGTH};
-			traverse(new Visitor4(){
-				public void visit(Object obj){
-					length[0] += ((Tree)obj).ownLength();
-				}
-			});
-			return length[0];
-		}
-		return YapConst.INT_LENGTH + (size() * ownLength());
-	}
-
-	
 	public void calculateSize(){
 		if(_preceding == null){
 			if (_subsequent == null){
@@ -153,7 +130,6 @@ public abstract class Tree implements ShallowClone,Readable{
 		}
 		Tree newNode = a_tree.deepClone(a_param);
 		newNode._size = a_tree._size;
-        newNode.nodes( a_tree.nodes());
 		newNode._preceding = Tree.deepClone(a_tree._preceding, a_param); 
 		newNode._subsequent = Tree.deepClone(a_tree._subsequent, a_param); 
 		return newNode;
@@ -168,14 +144,14 @@ public abstract class Tree implements ShallowClone,Readable{
 		return true;
 	}
 	
-	final Tree filter(final VisitorBoolean a_filter){
+	public final Tree filter(final Predicate4 a_filter){
 		if(_preceding != null){
 			_preceding = _preceding.filter(a_filter);
 		}
 		if(_subsequent != null){
 			_subsequent = _subsequent.filter(a_filter);
 		}
-		if(! a_filter.isVisit(this)){
+		if(! a_filter.match(this)){
 			return remove();
 		}
 		return this;
@@ -259,26 +235,10 @@ public abstract class Tree implements ShallowClone,Readable{
         return _size;
     }
     
-    public void nodes(int count){
-        // do nothing, virtual
-    }
-    
-	public int ownLength(){
-		throw Exceptions4.virtualException();
-	}
-	
-	public int ownSize(){
+    public int ownSize(){
 	    return 1;
 	}
 	
-	static Tree read(Tree a_tree, YapReader a_bytes){
-		throw Exceptions4.virtualException();
-	}
-	
-	public Object read(YapReader a_bytes){
-		throw Exceptions4.virtualException();
-	}
-
 	public Tree remove(){
 		if(_subsequent != null && _preceding != null){
 			_subsequent = _subsequent.rotateSmallestUp();
@@ -448,34 +408,7 @@ public abstract class Tree implements ShallowClone,Readable{
 	        _subsequent.traverseFromLeaves(a_visitor);
 	    }
 	    a_visitor.visit(this);
-	}
-	
-	boolean variableLength(){
-		throw Exceptions4.virtualException();
-	}
-	
-	public static void write(final YapReader a_writer, Tree a_tree){
-        write(a_writer, a_tree, a_tree == null ? 0 : a_tree.size());
-	}
-    
-    public static void write(final YapReader a_writer, Tree a_tree, int size){
-        if(a_tree == null){
-            a_writer.writeInt(0);
-            return;
-        }
-        a_writer.writeInt(size);
-        a_tree.traverse(new Visitor4() {
-            public void visit(Object a_object) {
-                ((Tree)a_object).write(a_writer);
-            }
-        });
-    }
-
-	
-	public void write(YapReader a_writer){
-		throw Exceptions4.virtualException();
-	}
-
+	}	
 	
 // Keep the debug methods to debug the depth	
 	
@@ -502,5 +435,9 @@ public abstract class Tree implements ShallowClone,Readable{
 		tree._size=_size;
 		tree._subsequent=_subsequent;
 		return tree;
+	}
+	
+	public Object shallowClone() {
+		throw new com.db4o.foundation.NotImplementedException();
 	}
 }

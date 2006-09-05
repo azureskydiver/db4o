@@ -2,7 +2,7 @@ package com.db4o.db4ounit.foundation;
 
 import com.db4o.foundation.*;
 
-public class Arrays4 {
+public class IntArrays4 {
 
 	public static int[] fill(int[] array, int value) {
 		for (int i=0; i<array.length; ++i) {

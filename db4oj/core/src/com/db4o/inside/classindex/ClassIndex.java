@@ -3,7 +3,7 @@
 package com.db4o.inside.classindex;
 
 import com.db4o.*;
-import com.db4o.foundation.Debug4;
+import com.db4o.foundation.*;
 import com.db4o.inside.Exceptions4;
 import com.db4o.inside.slots.Slot;
 
@@ -18,14 +18,14 @@ import com.db4o.inside.slots.Slot;
 	/**
 	 * contains TreeInt with object IDs 
 	 */
-	private Tree i_root;
+	private TreeInt i_root;
     
     ClassIndex(YapClass yapClass){
         _yapClass = yapClass;
     }
 	
 	public void add(int a_id){
-		i_root = Tree.add(i_root, new TreeInt(a_id));
+		i_root = TreeInt.add(i_root, a_id);
 	}
 
     public final int byteCount() {
@@ -80,11 +80,11 @@ import com.db4o.inside.slots.Slot;
     }
 
     public final void readThis(Transaction a_trans, YapReader a_reader) {
-    	i_root = new TreeReader(a_reader, new TreeInt(0)).read();
+    	i_root = (TreeInt)new TreeReader(a_reader, new TreeInt(0)).read();
     }
 
 	public void remove(int a_id){
-		i_root = Tree.removeLike(i_root, new TreeInt(a_id));
+		i_root = TreeInt.removeLike(i_root, a_id);
 	}
 
     void setDirty(YapStream a_stream) {
@@ -97,7 +97,7 @@ import com.db4o.inside.slots.Slot;
     }
 
     public final void writeThis(Transaction trans, final YapReader a_writer) {
-    	Tree.write(a_writer, i_root);
+    	TreeInt.write(a_writer, i_root);
     }
     
     public String toString(){

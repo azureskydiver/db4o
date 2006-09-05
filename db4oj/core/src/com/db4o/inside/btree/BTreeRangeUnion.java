@@ -10,7 +10,25 @@ class BTreeRangeUnion implements BTreeRange {
 		if (null == ranges) {
 			throw new ArgumentNullException();
 		}
-		_ranges = ranges;
+		_ranges = toSortedArray(ranges);
+	}
+
+	private BTreeRangeSingle[] toSortedArray(BTreeRangeSingle[] ranges) {
+		Comparison4 comparison = new Comparison4() {
+			public int compare(Object x, Object y) {
+				BTreeRangeSingle xRange = (BTreeRangeSingle)x;
+				BTreeRangeSingle yRange = (BTreeRangeSingle)y;
+				return xRange.first().compareTo(yRange.first());
+			}
+		};
+		SortedCollection4 collection = new SortedCollection4(comparison);
+		for (int i = 0; i < ranges.length; i++) {
+			BTreeRangeSingle range = ranges[i];
+			if (!range.isEmpty()) {
+				collection.add(range);
+			}
+		}		
+		return (BTreeRangeSingle[]) collection.toArray(new BTreeRangeSingle[collection.size()]);
 	}
 
 	public BTreeRange extendToFirst() {
@@ -34,7 +52,7 @@ class BTreeRangeUnion implements BTreeRange {
 	}
 	
 	public Iterator4 iterator() {
-		return Iterators.cat(Iterators.map(_ranges, new Function() {
+		return Iterators.concat(Iterators.map(_ranges, new Function4() {
 			public Object apply(Object range) {
 				return ((BTreeRange)range).iterator();
 			}
@@ -42,7 +60,7 @@ class BTreeRangeUnion implements BTreeRange {
 	}
 
 	public Iterator4 keys() {
-		return Iterators.cat(Iterators.map(_ranges, new Function() {
+		return Iterators.concat(Iterators.map(_ranges, new Function4() {
 			public Object apply(Object range) {
 				return ((BTreeRange)range).keys();
 			}
