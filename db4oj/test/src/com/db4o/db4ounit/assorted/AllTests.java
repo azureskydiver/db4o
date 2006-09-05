@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			ReAddCascadedDeleteTestCase.class,
             BackupStressTestCase.class,
+            NakedObjectTestCase.class,
 		};
 	}
 }
