@@ -29,7 +29,7 @@ public class IndexedNodeTestCase extends FieldIndexProcessorTestCaseBase {
         assertSingleOrNode(query);
 	}
 	
-	public void _testMultipleOrs() {
+	public void testMultipleOrs() {
     	Query query = createComplexItemQuery();    	
         Constraint c1 = query.descend("foo").constrain(new Integer(4)).smaller();
         for (int i = 0; i < 5; i++) {

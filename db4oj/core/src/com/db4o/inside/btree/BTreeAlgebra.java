@@ -29,8 +29,13 @@ class BTreeAlgebra {
 		return BTreeAlgebra.unionImpl((BTreeRangeSingle)range, union);
 	}
 	
-	private static BTreeRange unionImpl(BTreeRangeUnion union, BTreeRangeUnion union2) {
-		throw new com.db4o.foundation.NotImplementedException();
+	private static BTreeRange unionImpl(BTreeRangeUnion union1, BTreeRangeUnion union2) {
+		final Iterator4 ranges = union1.ranges();
+		BTreeRange merged = union2;
+		while (ranges.moveNext()) {
+			merged = merged.union((BTreeRange) ranges.current());
+		}
+		return merged;
 	}
 
 	private static BTreeRange unionImpl(BTreeRangeSingle single, BTreeRangeUnion union) {
@@ -55,8 +60,7 @@ class BTreeAlgebra {
 		}
 		
 		if (1 == sorted.size()) {
-			//TODO: cleanup this mess
-			return (BTreeRange)sorted.toArray(new Object[1])[0];
+			return (BTreeRange)sorted.singleElement();
 		}
 		
 		return new BTreeRangeUnion(sorted);
