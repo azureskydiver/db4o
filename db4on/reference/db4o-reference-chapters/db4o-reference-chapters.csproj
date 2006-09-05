@@ -94,6 +94,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\activating\ActivationExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\activating\SensorPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\blobs\BlobExample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -160,6 +170,11 @@
                 />
                 <File
                     RelPath = "src\com\db4odoc\f1\clientserver\TransactionExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\debugging\DebugExample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -275,6 +290,41 @@
                 />
                 <File
                     RelPath = "src\com\db4odoc\f1\lists\VerboseList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\reflections\Car.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\reflections\LoggingArray.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\reflections\LoggingReflector.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\reflections\ReflectorExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\staticfields\Pilot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\staticfields\PilotCategories.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\staticfields\StaticFieldExample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

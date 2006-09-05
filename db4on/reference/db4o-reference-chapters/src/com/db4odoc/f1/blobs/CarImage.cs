@@ -9,7 +9,7 @@ namespace com.db4odoc.f1.blobs
 	using j4o.io;
 
 	public class CarImage {
-		Blob _blob;
+		Blob _blob = null;
 		private string _file = null;
 		private string inFolder = "blobs\\in\\";	
 		private string outFolder = "blobs\\out\\";
