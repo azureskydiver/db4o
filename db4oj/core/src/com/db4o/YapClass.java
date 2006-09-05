@@ -624,7 +624,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
     
     public static YapClass forObject(Transaction trans, Object obj, boolean allowCreation){
-        return trans.stream().getYapClass(trans.reflector().forObject(obj), allowCreation);
+        ReflectClass reflectClass = trans.reflector().forObject(obj);
+        if (reflectClass != null && reflectClass.getSuperclass() == null && obj != null) {
+        	throw new ObjectNotStorableException(obj.toString());
+        }
+		return trans.stream().getYapClass(reflectClass, allowCreation);
     }
     
     private boolean generateUUIDs() {
