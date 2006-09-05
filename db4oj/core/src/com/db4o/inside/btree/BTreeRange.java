@@ -31,4 +31,6 @@ public interface BTreeRange {
 	public BTreeRange intersect(BTreeRange range);
 
 	public BTreeRange extendToLastOf(BTreeRange upperRange);
+
+	public boolean isEmpty();
 }

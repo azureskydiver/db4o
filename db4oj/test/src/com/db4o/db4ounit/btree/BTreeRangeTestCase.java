@@ -33,6 +33,30 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		assertUnion(new int[] { 3, 9 }, range(3, 3), range(9, 9));		
 	}
 	
+	public void testIsEmpty() {
+		Assert.isTrue(range(0, 0).isEmpty());
+		Assert.isFalse(range(3, 3).isEmpty());
+		Assert.isFalse(range(9, 9).isEmpty());
+		Assert.isTrue(range(10, 10).isEmpty());		
+	}
+	
+	public void testUnionWithEmptyDoesNotCreateNewRange() {
+		final BTreeRange range = range(3, 4);
+		final BTreeRange empty = range(0, 0);
+		Assert.areSame(range, range.union(empty));
+		Assert.areSame(range, empty.union(range));
+		
+		final BTreeRange union = range.union(range(8, 9));
+		Assert.areSame(union, union.union(empty));
+		Assert.areSame(union, empty.union(union));
+	}
+	
+	public void testUnionsMerge() {
+		final BTreeRange range = range(3, 3).union(range(7, 7)).union(range(4, 4));
+		Assert.isInstanceOf(BTreeRangeSingle.class, range);
+		BTreeAssert.assertRange(new int[] { 3, 4, 7 }, range);
+	}
+	
 	public void testUnionsOfUnions() {
 		final BTreeRange range1 = range(3, 4);
 		final BTreeRange range2 = range(8, 9);
