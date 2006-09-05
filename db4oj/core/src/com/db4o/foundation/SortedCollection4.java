@@ -2,7 +2,6 @@
 
 package com.db4o.foundation;
 
-
 /**
  * @exclude
  */
@@ -27,6 +26,10 @@ public class SortedCollection4 {
 
 	public void add(Object element) {
 		_tree = Tree.add(_tree, new TreeObject(element, _comparison));
+	}	
+
+	public void remove(Object element) {
+		_tree = Tree.removeLike(_tree, new TreeObject(element, _comparison));
 	}
 
 	public Object[] toArray(final Object[] array) {
@@ -59,5 +62,5 @@ public class SortedCollection4 {
 		public Object getObject() {
 			return _object;
 		}
-	}	
+	}
 }

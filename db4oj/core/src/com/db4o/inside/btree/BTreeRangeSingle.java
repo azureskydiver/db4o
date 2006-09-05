@@ -9,6 +9,14 @@ import com.db4o.foundation.*;
  * @exclude
  */
 public class BTreeRangeSingle implements BTreeRange {
+	
+	public static final Comparison4 COMPARISON = new Comparison4() {
+		public int compare(Object x, Object y) {
+			BTreeRangeSingle xRange = (BTreeRangeSingle)x;
+			BTreeRangeSingle yRange = (BTreeRangeSingle)y;
+			return xRange.first().compareTo(yRange.first());
+		}
+	};
     
     private final Transaction _transaction;
 
@@ -29,7 +37,7 @@ public class BTreeRangeSingle implements BTreeRange {
     }
     
     public boolean isEmpty() {
-		return _first == _end;
+		return BTreePointer.equals(_first, _end);
 	}
     
     public int size() {
@@ -95,7 +103,7 @@ public class BTreeRangeSingle implements BTreeRange {
 		return newBTreeRangeSingle(firstBTreePointer(), _first);
 	}
 
-	BTreeRange newBTreeRangeSingle(BTreePointer first, BTreePointer end) {
+	BTreeRangeSingle newBTreeRangeSingle(BTreePointer first, BTreePointer end) {
 		return new BTreeRangeSingle(transaction(), _btree, first, end);
 	}
 
