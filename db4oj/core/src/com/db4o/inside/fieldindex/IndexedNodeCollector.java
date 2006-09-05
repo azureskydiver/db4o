@@ -21,6 +21,43 @@ public class IndexedNodeCollector {
 	
 	private void collectIndexedNodes(QCandidates candidates) {
 		collectIndexedNodes(candidates.iterateConstraints());
+		implicitlyAndJoinsOnSameField();
+	}
+
+	private void implicitlyAndJoinsOnSameField() {
+		final Object[] nodes = _nodes.toArray();
+		for (int i = 0; i < nodes.length; i++) {
+			Object node = nodes[i];
+			if (node instanceof OrIndexedLeaf) {
+				OrIndexedLeaf current = (OrIndexedLeaf) node;
+				OrIndexedLeaf other = findJoinOnSameFieldAtSameLevel(current);
+				if (null != other) {
+					nodes[Arrays4.indexOf(nodes, other)] = null;
+					collectImplicitAnd(current.getConstraint(), current, other);
+				}
+			}
+		}
+	}
+
+	private OrIndexedLeaf findJoinOnSameFieldAtSameLevel(OrIndexedLeaf join) {
+		final Iterator4 i = _nodes.iterator();
+		while (i.moveNext()) {
+			if (i.current() == join) {
+				continue;
+			}
+			if (i.current() instanceof OrIndexedLeaf) {
+				OrIndexedLeaf current = (OrIndexedLeaf) i.current();
+				if (current.getIndex() == join.getIndex()
+					&& parentConstraint(current) == parentConstraint(join)) {
+					return current;
+				}
+			}
+		}
+		return null;
+	}
+
+	private Object parentConstraint(OrIndexedLeaf node) {
+		return node.getConstraint().parent();
 	}
 
 	private void collectIndexedNodes(final Iterator4 qcons) {
@@ -42,7 +79,7 @@ public class IndexedNodeCollector {
 			} else {
 				collectIndexedNodes(qcon.iterateChildren());
 			}
-		}
+		}		
 	}
 
 	private boolean isCached(QCon qcon) {
@@ -52,7 +89,7 @@ public class IndexedNodeCollector {
 	private void collectStandaloneNode(final QConObject conObject) {
 		IndexedLeaf existing = findLeafOnSameField(conObject);
 		if (existing != null) {
-			collectImplicitAnd(existing, conObject);
+			collectImplicitAnd(conObject, existing, new IndexedLeaf(conObject));
 		} else {
 			_nodes.add(new IndexedLeaf(conObject));
 		}
@@ -110,12 +147,10 @@ public class IndexedNodeCollector {
 		return new IndexedLeaf((QConObject)con);
 	}
 
-	private void collectImplicitAnd(IndexedLeaf existing, final QConObject conObject) {
-		_nodes.remove(existing);
-		_nodes.add(new AndIndexedLeaf(
-						existing.constraint(),
-						existing,
-						new IndexedLeaf(conObject)));
+	private void collectImplicitAnd(final QCon constraint, IndexedNodeWithRange x, final IndexedNodeWithRange y) {
+		_nodes.remove(x);
+		_nodes.remove(y);
+		_nodes.add(new AndIndexedLeaf(constraint, x, y));
 	}
 
 	private IndexedLeaf findLeafOnSameField(QConObject conObject) {

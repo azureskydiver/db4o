@@ -70,6 +70,28 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 9 }, query);
     }    
     
+    public void _testExplicitAndOverOr() {
+    	assertAndOverOrQuery(true);
+    }
+    
+    public void _testImplicitAndOverOr() {
+    	assertAndOverOrQuery(false);
+    }
+
+	private void assertAndOverOrQuery(boolean explicitAnd) {
+		Query query = createItemQuery();
+        Constraint c1 = query.descend("foo").constrain(new Integer(3));
+        Constraint c2 = query.descend("foo").constrain(new Integer(9));
+        Constraint c3 = query.descend("foo").constrain(new Integer(3));
+        Constraint c4 = query.descend("foo").constrain(new Integer(7));
+        Constraint cc1 = c1.or(c2);
+        Constraint cc2 = c3.or(c4);
+        if (explicitAnd) {
+        	cc1.and(cc2);
+        }
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 3 }, query);
+	}
+    
     public void testSingleIndexOrRange() {
     	Query query = createItemQuery();
         Constraint c1 = query.descend("foo").constrain(new Integer(1)).greater();

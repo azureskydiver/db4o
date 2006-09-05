@@ -1,24 +1,29 @@
 package com.db4o.inside.btree;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.btree.algebra.*;
 
-class BTreeRangeUnion implements BTreeRange {
+public class BTreeRangeUnion implements BTreeRange {
 
 	private final BTreeRangeSingle[] _ranges;
 
-	BTreeRangeUnion(BTreeRangeSingle[] ranges) {
+	public BTreeRangeUnion(BTreeRangeSingle[] ranges) {
 		if (null == ranges) {
 			throw new ArgumentNullException();
 		}
 		_ranges = toSortedArray(ranges);
 	}
 
-	BTreeRangeUnion(SortedCollection4 sorted) {
+	public BTreeRangeUnion(SortedCollection4 sorted) {
 		if (null == sorted) {
 			throw new ArgumentNullException();
 		}
 		_ranges = toArray(sorted);
 	}
+	
+    public void accept(BTreeRangeVisitor visitor) {
+    	visitor.visit(this);
+    }
 	
 	public boolean isEmpty() {
 		return false;
@@ -56,7 +61,10 @@ class BTreeRangeUnion implements BTreeRange {
 	}
 
 	public BTreeRange intersect(BTreeRange range) {
-		throw new NotImplementedException();
+		if (null == range) {
+			throw new ArgumentNullException();
+		}
+		return new BTreeRangeUnionIntersect(this).dispatch(range);
 	}
 	
 	public Iterator4 pointers() {
@@ -88,7 +96,10 @@ class BTreeRangeUnion implements BTreeRange {
 	}
 
 	public BTreeRange union(BTreeRange other) {
-		return BTreeAlgebra.union(this, other);
+		if (null == other) {
+			throw new ArgumentNullException();
+		}
+		return new BTreeRangeUnionUnion(this).dispatch(other);
 	}
 
 	public Iterator4 ranges() {
