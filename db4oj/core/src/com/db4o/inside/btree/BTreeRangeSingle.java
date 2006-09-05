@@ -41,7 +41,7 @@ public class BTreeRangeSingle implements BTreeRange {
 		return size;
     }
     
-    public Iterator4 iterator() {
+    public Iterator4 pointers() {
     	return new BTreeRangePointerIterator(this);
     }
 

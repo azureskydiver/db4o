@@ -51,10 +51,10 @@ class BTreeRangeUnion implements BTreeRange {
 		throw new NotImplementedException();
 	}
 	
-	public Iterator4 iterator() {
+	public Iterator4 pointers() {
 		return Iterators.concat(Iterators.map(_ranges, new Function4() {
 			public Object apply(Object range) {
-				return ((BTreeRange)range).iterator();
+				return ((BTreeRange)range).pointers();
 			}
 		}));
 	}

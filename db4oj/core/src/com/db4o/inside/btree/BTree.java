@@ -94,7 +94,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
 
     public void remove(Transaction trans, Object key){
-        final Iterator4 pointers = search(trans, key).iterator();
+        final Iterator4 pointers = search(trans, key).pointers();
         if (!pointers.moveNext()) {
         	return;
         }
