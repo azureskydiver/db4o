@@ -49,7 +49,7 @@ public class SetCollectionOnUpdateTestCase extends Db4oTestCase {
 		db().set(list);
     }
     
-    public void _testUpdateAndReread() throws Exception{
+    public void testUpdateAndReread() throws Exception{
 		DataList list=readDataList();
 		db().ext().activate(list,Integer.MAX_VALUE);
 		list.data().name(OLDNAME+"X");
