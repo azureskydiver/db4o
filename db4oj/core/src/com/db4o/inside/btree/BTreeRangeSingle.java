@@ -114,6 +114,10 @@ public class BTreeRangeSingle implements BTreeRange {
 	public BTreeRangeSingle newBTreeRangeSingle(BTreePointer first, BTreePointer end) {
 		return new BTreeRangeSingle(transaction(), _btree, first, end);
 	}
+	
+	public BTreeRange newEmptyRange() {
+		return newBTreeRangeSingle(null, null);
+	}
 
 	private BTreePointer firstBTreePointer() {
 		return btree().firstPointer(transaction());
@@ -148,5 +152,5 @@ public class BTreeRangeSingle implements BTreeRange {
 			throw new IllegalArgumentException();
 		}
 		return rangeImpl;
-	}	
+	}		
 }

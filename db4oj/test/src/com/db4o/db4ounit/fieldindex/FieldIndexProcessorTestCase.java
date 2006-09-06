@@ -70,11 +70,11 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 9 }, query);
     }    
     
-    public void _testExplicitAndOverOr() {
+    public void testExplicitAndOverOr() {
     	assertAndOverOrQuery(true);
     }
     
-    public void _testImplicitAndOverOr() {
+    public void testImplicitAndOverOr() {
     	assertAndOverOrQuery(false);
     }
 
