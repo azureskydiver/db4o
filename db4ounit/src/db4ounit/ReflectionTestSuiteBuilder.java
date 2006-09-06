@@ -62,17 +62,25 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 	
 	private void emitWarningOnIgnoredTestMethod(Object subject, Method method) {
-		if (!method.getName().startsWith("_test")) {
+		if (!startsWithIgnoringCase(method.getName(), "_test")) {
 			return;
 		}
 		TestPlatform.emitWarning("IGNORED: " + TestMethod.createLabel(subject, method));
 	}
 
 	protected boolean isTestMethod(Method method) {
-		return method.getName().startsWith("test")			
+		return hasTestPrefix(method)
 			&& TestPlatform.isPublic(method)
 			&& !TestPlatform.isStatic(method)
 			&& !TestPlatform.hasParameters(method);
+	}
+
+	private boolean hasTestPrefix(Method method) {
+		return startsWithIgnoringCase(method.getName(), "TEST");
+	}
+
+	private boolean startsWithIgnoringCase(final String name, final String prefix) {
+		return name.toUpperCase().startsWith(prefix);
 	}
 	
 	private static Test[] toArray(Vector tests) {
