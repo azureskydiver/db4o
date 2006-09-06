@@ -65,7 +65,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		if (!method.getName().startsWith("_test")) {
 			return;
 		}
-		System.err.println("IGNORED: " + TestMethod.createLabel(subject, method));
+		TestPlatform.emitWarning("IGNORED: " + TestMethod.createLabel(subject, method));
 	}
 
 	protected boolean isTestMethod(Method method) {
