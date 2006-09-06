@@ -2,20 +2,12 @@
 
 package com.db4o.test.other;
 
-import com.db4o.test.replication.db4ounit.DrsTestCase;
-import com.db4o.test.replication.db4ounit.DrsTestSuiteBuilder;
-import com.db4o.test.replication.db4ounit.fixtures.Db4oClientServerDrsFixture;
-import com.db4o.test.replication.db4ounit.fixtures.Db4oDrsFixture;
+import com.db4o.test.replication.db4ounit.DrsTestSuite;
 
-import db4ounit.TestRunner;
-import db4ounit.TestSuite;
-import db4ounit.TestSuiteBuilder;
+public class AllReplicationTests extends DrsTestSuite {
 
-public class AllReplicationTests extends DrsTestCase implements
-		TestSuiteBuilder {
-
-	public TestSuite build() {
-		return new DrsTestSuiteBuilder(a(), b(), new Class[] {
+	protected Class[] testCases() {
+		return new Class[] {
 				// Bugs
 				BugDrs8.class,
 
@@ -43,7 +35,7 @@ public class AllReplicationTests extends DrsTestCase implements
 				CollectionHandlerImplTest.class,
 				ReplicationTraversalTest.class, DatabaseUnicityTest.class
 
-		}).build();
+		};
 	}
 
 	public static void main(String[] args) {
@@ -52,8 +44,7 @@ public class AllReplicationTests extends DrsTestCase implements
 //				"db4o-cs-a", 0xdb40), new Db4oClientServerDrsFixture(
 //				"db4o-cs-b", 4455), AllReplicationTests.class)).run();
 
-		new TestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
-				new Db4oDrsFixture("db4o-b"), AllReplicationTests.class)).run();
+		new AllReplicationTests().runDb4oDb4o();
 
 //		new TestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
 //				new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
