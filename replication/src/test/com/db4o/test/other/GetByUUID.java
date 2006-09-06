@@ -2,10 +2,9 @@
 
 package com.db4o.test.other;
 
-import java.util.Hashtable;
-
 import com.db4o.*;
 import com.db4o.ext.Db4oUUID;
+import com.db4o.foundation.Hashtable4;
 import com.db4o.query.Query;
 import com.db4o.test.replication.db4ounit.DrsTestCase;
 
@@ -32,7 +31,7 @@ public class GetByUUID extends DrsTestCase {
 	}
 
 	public void test() throws Exception {
-		Hashtable ht = new Hashtable();
+		Hashtable4 ht = new Hashtable4();
 		//ExtObjectContainer oc = Test.objectContainer();
 		Query q = a().db().query();
 		q.constrain(GetByUUID.class);
