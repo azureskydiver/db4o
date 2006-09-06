@@ -76,11 +76,11 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 
 	private boolean hasTestPrefix(Method method) {
-		return startsWithIgnoringCase(method.getName(), "TEST");
+		return startsWithIgnoringCase(method.getName(), "test");
 	}
 
-	private boolean startsWithIgnoringCase(final String name, final String prefix) {
-		return name.toUpperCase().startsWith(prefix);
+	private boolean startsWithIgnoringCase(final String s, final String prefix) {
+		return s.toUpperCase().startsWith(prefix.toUpperCase());
 	}
 	
 	private static Test[] toArray(Vector tests) {
