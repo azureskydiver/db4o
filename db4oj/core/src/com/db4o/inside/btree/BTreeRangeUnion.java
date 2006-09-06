@@ -7,11 +7,8 @@ public class BTreeRangeUnion implements BTreeRange {
 
 	private final BTreeRangeSingle[] _ranges;
 
-	public BTreeRangeUnion(BTreeRangeSingle[] ranges) {
-		if (null == ranges) {
-			throw new ArgumentNullException();
-		}
-		_ranges = toSortedArray(ranges);
+	public BTreeRangeUnion(BTreeRangeSingle[] ranges) {		
+		this(toSortedCollection(ranges));
 	}
 
 	public BTreeRangeUnion(SortedCollection4 sorted) {
@@ -26,10 +23,18 @@ public class BTreeRangeUnion implements BTreeRange {
     }
 	
 	public boolean isEmpty() {
-		return false;
+		for (int i = 0; i < _ranges.length; i++) {
+			if (!_ranges[i].isEmpty()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
-	private BTreeRangeSingle[] toSortedArray(BTreeRangeSingle[] ranges) {		
+	private static SortedCollection4 toSortedCollection(BTreeRangeSingle[] ranges) {
+		if (null == ranges) {
+			throw new ArgumentNullException();
+		}
 		SortedCollection4 collection = new SortedCollection4(BTreeRangeSingle.COMPARISON);
 		for (int i = 0; i < ranges.length; i++) {
 			BTreeRangeSingle range = ranges[i];
@@ -37,10 +42,10 @@ public class BTreeRangeUnion implements BTreeRange {
 				collection.add(range);
 			}
 		}		
-		return toArray(collection);
+		return collection;
 	}
 
-	private BTreeRangeSingle[] toArray(SortedCollection4 collection) {
+	private static BTreeRangeSingle[] toArray(SortedCollection4 collection) {
 		return (BTreeRangeSingle[]) collection.toArray(new BTreeRangeSingle[collection.size()]);
 	}
 

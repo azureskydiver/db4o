@@ -15,15 +15,27 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		
 		_btree = BTreeAssert.createIntKeyBTree(stream(), 0);		
 		add(new int[] { 3, 7, 4, 9 });
-		
 	}	
 
-	public void testIntersect() {		
+	public void testIntersectSingleSingle() {		
 		assertIntersection(new int[] { 4, 7 }, range(3, 7), range(4, 9));		
 		assertIntersection(new int[] {}, range(3, 4), range(7, 9));		
 		assertIntersection(new int[] { 3, 4, 7, 9 }, range(3, 9), range(3, 9));		
 		assertIntersection(new int[] { 3, 4, 7, 9 }, range(3, 10), range(3, 9));		
 		assertIntersection(new int[] {}, range(1, 2), range(3, 9));		
+	}
+	
+	public void testIntersectSingleUnion() {
+		BTreeRange union = range(3, 3).union(range(7, 9));
+		BTreeRange single = range(4, 7);
+		assertIntersection(new int[] { 7 }, union, single);		
+		assertIntersection(new int[] { 3, 7 }, union, range(3, 7));
+	}
+	
+	public void testIntersectUnionUnion() {
+		final BTreeRange union1 = range(3, 3).union(range(7, 9));
+		final BTreeRange union2 = range(3, 3).union(range(9, 9));
+		assertIntersection(new int[] { 3, 9 }, union1, union2);
 	}
 	
 	public void testUnion() {		

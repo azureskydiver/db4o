@@ -11,12 +11,30 @@ import com.db4o.inside.btree.*;
  */
 class BTreeAlgebra {
 
-	public static BTreeRange intersect(BTreeRangeUnion union, BTreeRangeSingle single) {
-		throw new com.db4o.foundation.NotImplementedException();
+	public static BTreeRange intersect(BTreeRangeUnion union, BTreeRangeSingle single) {		
+		final SortedCollection4 collection = newBTreeRangeSingleCollection();		
+		collectIntersections(collection, union, single);
+		return toRange(collection);
 	}
 
 	public static BTreeRange intersect(BTreeRangeUnion union1, BTreeRangeUnion union2) {
-		throw new com.db4o.foundation.NotImplementedException();
+		final SortedCollection4 collection = newBTreeRangeSingleCollection();
+		final Iterator4 ranges = union1.ranges();
+		while (ranges.moveNext()) {
+			final BTreeRangeSingle current = (BTreeRangeSingle) ranges.current();
+			collectIntersections(collection, union2, current);
+		}
+		return toRange(collection);
+	}
+	
+	private static void collectIntersections(final SortedCollection4 collection, BTreeRangeUnion union, BTreeRangeSingle single) {
+		final Iterator4 ranges = union.ranges();
+		while (ranges.moveNext()) {
+			final BTreeRangeSingle current = (BTreeRangeSingle) ranges.current();
+			if (single.overlaps(current)) {
+				collection.add(single.intersect(current));
+			}
+		}
 	}
 
 	public static BTreeRange intersect(BTreeRangeSingle single1, BTreeRangeSingle single2) {
@@ -39,7 +57,7 @@ class BTreeAlgebra {
 			return union;
 		}
 		
-		SortedCollection4 sorted = new SortedCollection4(BTreeRangeSingle.COMPARISON);
+		SortedCollection4 sorted = newBTreeRangeSingleCollection();
 		sorted.add(single);		
 		
 		BTreeRangeSingle range = single;
@@ -55,11 +73,18 @@ class BTreeAlgebra {
 			}
 		}
 		
+		return toRange(sorted);
+	}
+
+	private static BTreeRange toRange(SortedCollection4 sorted) {
 		if (1 == sorted.size()) {
 			return (BTreeRange)sorted.singleElement();
 		}
-		
 		return new BTreeRangeUnion(sorted);
+	}
+
+	private static SortedCollection4 newBTreeRangeSingleCollection() {
+		return new SortedCollection4(BTreeRangeSingle.COMPARISON);
 	}
 	
 	public static BTreeRange union(final BTreeRangeSingle single1, final BTreeRangeSingle single2) {
