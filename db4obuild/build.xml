@@ -1244,6 +1244,22 @@
 		</updateAssemblyHintPath>
 	</target>
 	
+	<target name="compiledb4ounit-net">		
+		<csc srcdir="${dir.n}/Db4oUnit/src"
+			targettype="library"
+			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.dll">
+		</csc>
+
+		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
+			targettype="library"
+			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.Extensions.dll">
+			<reference dir="${dir.dist.db4ounit.dll}">
+				<include name="Db4oUnit.dll" />
+				<include name="${file.dll.net}" />
+			</reference>
+		</csc>
+	</target>
+	
 	<target name="compilenet-all" depends="sharpen">
 		
 		<antcall target="compilecoredll-compact">
@@ -1256,6 +1272,9 @@
 		</antcall>
 		
 		<antcall target="compiletools-net">
+		</antcall>
+		
+		<antcall target="compiledb4ounit-net">
 		</antcall>
 		
 		<ant dir="${dir.n.tutorial}">
@@ -1294,7 +1313,12 @@
 		</copy>
 	</target>	
 	
-	<target name="sharpen-db4ounit-extensions" depends="compilecorejava,install-javatocsharp-plugin">		
+	<target name="sharpen-db4ounit">
+		<ant antfile="build-db4ounit.xml" target="buildnet" inheritall="false">
+		</ant>
+	</target>
+	
+	<target name="sharpen-db4ounit-extensions" depends="compiletestsjava,install-javatocsharp-plugin">		
 		
 		<property name="target.dir" value="${dir.sharpen}" />
 		
@@ -1304,13 +1328,13 @@
 		<mkdir dir="${target.dir}/lib" />
 		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
 		<jar destfile="${dependencies.jar}">			
-			<fileset dir="${dir.dist.classes.java1.1}">								
+			<fileset dir="${dir.dist.classes.java1.1}">
 				<exclude name="db4ounit/**" />
 			</fileset>
 			<fileset dir="${dir.dist.classes.test}">								
 			</fileset>
 		</jar>
-				
+
 		<copy todir="${target.dir}">
 			<fileset dir="..">
 				<include name="db4oj/test/src/db4ounit/**/*.java" />
@@ -1349,9 +1373,17 @@
 				<include name="Db4oUnit/**/*.cs" />
 			</fileset>
 		</copy>
+		
+		<!--
+		1) Update Db4oUnit.Extensions C# Project
+		2) Compile to make sure conversion works
+		-->
 	</target>
 	
-	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin" unless="skip.conversion">
+	<target name="sharpen" description="create .NET sources" depends="sharpen-core, sharpen-db4ounit, sharpen-db4ounit-extensions" unless="skip.conversion">
+	</target>
+	
+	<target name="sharpen-core" depends="install-javatocsharp-plugin">
 
 		<property name="sharpen.src.dir" location="${dir.sharpen}" />
 		
@@ -1442,10 +1474,6 @@
 		<updatecsharpproject projectfile="${dir.n.tools}/db4o-net-tools.csproj">
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
-		
-		<!--
-		<antcall target="sharpen-db4ounit-extensions" />
-		-->
 		
 		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
 			<sources dir="${dir.n.test}">

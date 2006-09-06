@@ -72,11 +72,17 @@
 	
 	<target name="test" depends="update-csharp-projects">
 		
+		<csc srcdir="${dir.n}/Db4oUnit/src"
+			targettype="library"
+			destfile="${drs.net.bin.dir}/Db4oUnit.dll">
+		</csc>
+		
 		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
 			targettype="library"
 			destfile="${drs.net.bin.dir}/Db4oUnit.Extensions.dll">
 			<reference dir="${drs.net.bin.dir}">
 				<include name="*.dll" />
+				<exclude name="Db4oUnit.Extensions.dll" />
 			</reference>
 		</csc>
 		
@@ -133,7 +139,6 @@
 	</target>
 		
 	<target name="update-csharp-projects" depends="update-drs-project, update-drs.tests-project">				
-		
 	</target>
 	
 	<target name="reset-workspace" depends="init">
@@ -180,6 +185,5 @@
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
 		<copy file="${db4o.dll}" todir="${drs.net.bin.dir}" />
-		<copy file="${dir.n.test}/lib/Db4oUnit.dll" todir="${drs.net.bin.dir}" />
 	</target>
 </project>
