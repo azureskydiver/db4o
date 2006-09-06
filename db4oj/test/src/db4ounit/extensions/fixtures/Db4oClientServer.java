@@ -15,10 +15,10 @@ public class Db4oClientServer implements Db4oFixture {
 	private static final String USERNAME = "db4o";
 	private static final String PASSWORD = USERNAME;
 	
-	File _yap;
+	private final File _yap;
 	private ObjectServer _server;
 	private ExtObjectContainer _db;
-	private int _port;
+	private final int _port;
 	
 	public Db4oClientServer(String fileName, int port) {
 		_yap = new File(fileName);
@@ -39,7 +39,7 @@ public class Db4oClientServer implements Db4oFixture {
 	}
 
 	public void open() throws Exception {
-		_server = Db4o.openServer(_yap.getCanonicalPath(), _port);
+		_server = Db4o.openServer(_yap.getAbsolutePath(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
 		_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
 	}
