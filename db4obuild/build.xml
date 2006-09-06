@@ -1255,8 +1255,8 @@
 			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.Extensions.dll">
 			<reference dir="${dir.dist.db4ounit.dll}">
 				<include name="Db4oUnit.dll" />
-				<include name="${file.dll.net}" />
 			</reference>
+			<reference file="${file.dll.net}" />
 		</csc>
 	</target>
 	
