@@ -5,6 +5,8 @@
  */
 package db4ounit.extensions;
 
+import com.db4o.foundation.ArgumentNullException;
+
 import db4ounit.ReflectionTestSuiteBuilder;
 
 public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
@@ -22,7 +24,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
     }
     
     private void setFixture(Db4oFixture fixture){
-        if (null == fixture) throw new IllegalArgumentException("fixture");     
+        if (null == fixture) throw new ArgumentNullException("fixture");     
         _fixture = fixture;
     }
 
