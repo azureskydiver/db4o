@@ -2,33 +2,17 @@
 
 package db4ounit.extensions.fixtures;
 
-import java.io.File;
 import java.io.IOException;
 
 import com.db4o.Db4o;
-import com.db4o.ext.ExtObjectContainer;
 
-import db4ounit.extensions.Db4oFixture;
+public class Db4oSolo extends AbstractFileBasedDb4oFixture {
 
-public class Db4oSolo implements Db4oFixture {
+	public Db4oSolo() {
+		super("db4oSoloTest.yap");	
+	}
     
-    public static final String FILENAME = "db4oSoloTest.yap"; 
-    
-	private ExtObjectContainer _db;
-	
 	public void open() throws IOException {
-		_db=Db4o.openFile(new File(FILENAME).getPath()).ext();
-	}
-
-	public void close() {
-		_db.close();
-	}
-    
-    public void clean() {
-        new File(FILENAME).delete();
-    }
-
-	public ExtObjectContainer db() {
-		return _db;
+		db(Db4o.openFile(getAbsolutePath()).ext());
 	}
 }

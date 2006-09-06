@@ -2,45 +2,30 @@
 
 package db4ounit.extensions.fixtures;
 
-import java.io.File;
-
-import com.db4o.Db4o;
-import com.db4o.ObjectServer;
+import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
 
-import db4ounit.extensions.Db4oFixture;
-
-public class Db4oClientServer implements Db4oFixture {
+public class Db4oClientServer extends AbstractFileBasedDb4oFixture {
 	private static final String HOST = "localhost";
 	private static final String USERNAME = "db4o";
 	private static final String PASSWORD = USERNAME;
 	
-	private final File _yap;
 	private ObjectServer _server;
-	private ExtObjectContainer _db;
 	private final int _port;
 	
 	public Db4oClientServer(String fileName, int port) {
-		_yap = new File(fileName);
+		super(fileName);		
 		_port = port;
 	}
 
-	public void clean() {
-		_yap.delete();
-	}
-
 	public void close() throws Exception {
-		_db.close();
+		super.close();
 		_server.close();
 	}
 
-	public ExtObjectContainer db() {
-		return _db;
-	}
-
 	public void open() throws Exception {
-		_server = Db4o.openServer(_yap.getAbsolutePath(), _port);
+		_server = Db4o.openServer(getAbsolutePath(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
-		_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
-	}
+		db((ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD));
+	}	
 }
