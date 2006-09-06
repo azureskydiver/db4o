@@ -7,8 +7,8 @@ import db4ounit.extensions.*;
 
 public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
-	DrsFixture _a;
-	DrsFixture _b;
+	private DrsFixture _a;
+	private DrsFixture _b;
 
 	public DrsTestSuiteBuilder(DrsFixture a, DrsFixture b, Class clazz) {
 		super(clazz);
