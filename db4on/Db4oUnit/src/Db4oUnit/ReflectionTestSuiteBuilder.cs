@@ -78,7 +78,7 @@ namespace Db4oUnit
 		private void EmitWarningOnIgnoredTestMethod(object subject, System.Reflection.MethodInfo
 			 method)
 		{
-			if (!method.Name.StartsWith("_test"))
+			if (!StartsWithIgnoringCase(method.Name, "_test"))
 			{
 				return;
 			}
@@ -88,9 +88,18 @@ namespace Db4oUnit
 
 		protected virtual bool IsTestMethod(System.Reflection.MethodInfo method)
 		{
-			return method.Name.StartsWith("test") && Db4oUnit.TestPlatform.IsPublic(method) &&
-				 !Db4oUnit.TestPlatform.IsStatic(method) && !Db4oUnit.TestPlatform.HasParameters
-				(method);
+			return HasTestPrefix(method) && Db4oUnit.TestPlatform.IsPublic(method) && !Db4oUnit.TestPlatform
+				.IsStatic(method) && !Db4oUnit.TestPlatform.HasParameters(method);
+		}
+
+		private bool HasTestPrefix(System.Reflection.MethodInfo method)
+		{
+			return StartsWithIgnoringCase(method.Name, "test");
+		}
+
+		private bool StartsWithIgnoringCase(string s, string prefix)
+		{
+			return s.ToUpper().StartsWith(prefix.ToUpper());
 		}
 
 		private static Db4oUnit.Test[] ToArray(System.Collections.ArrayList tests)
