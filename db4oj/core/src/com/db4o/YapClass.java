@@ -343,15 +343,23 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         Config4Class config = configOrAncestorConfig();
         if (depth == YapConst.UNSPECIFIED) {
             depth = checkUpdateDepthUnspecified(a_bytes.getStream());
-        }
-        if (classReflector().isCollection() || (config != null && (config.cascadeOnDelete() == YapConst.YES || config.cascadeOnUpdate() == YapConst.YES))) {
-            int depthBorder = reflector().collectionUpdateDepth(classReflector());
-            if (depth>Integer.MIN_VALUE && depth < depthBorder) {
-                depth = depthBorder;
+            if (classReflector().isCollection()) {
+                depth = adjustDepth(depth);
             }
+        }
+        if ((config != null && (config.cascadeOnDelete() == YapConst.YES || config.cascadeOnUpdate() == YapConst.YES))) {
+            depth = adjustDepth(depth);
         }
         a_bytes.setUpdateDepth(depth - 1);
     }
+
+	private int adjustDepth(int depth) {
+		int depthBorder = reflector().collectionUpdateDepth(classReflector());
+		if (depth>Integer.MIN_VALUE && depth < depthBorder) {
+		    depth = depthBorder;
+		}
+		return depth;
+	}
 
     int checkUpdateDepthUnspecified(YapStream a_stream) {
         int depth = a_stream.configImpl().updateDepth() + 1;
