@@ -1,5 +1,7 @@
 package db4ounit;
 
+import java.io.PrintWriter;
+
 public class TestException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
@@ -12,5 +14,20 @@ public class TestException extends RuntimeException {
 	
 	public final Exception getReason() {
 		return _reason;
+	}
+	
+	public void printStackTrace(PrintWriter s) {
+		if (null != _reason) {
+			_reason.printStackTrace(s);
+		} else {
+			super.printStackTrace();
+		}
+		
+	}
+	
+	public String toString() {
+		return null != _reason
+			? _reason.toString()
+			: super.toString();
 	}
 }

@@ -7,5 +7,4 @@ public class SetupFailureException extends TestException {
 	public SetupFailureException(Exception cause) {
 		super(cause);
 	}
-
 }
