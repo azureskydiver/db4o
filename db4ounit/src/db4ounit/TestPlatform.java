@@ -13,7 +13,7 @@ public class TestPlatform {
 	public static Writer getStdOut() {
 		return new PrintWriter(System.out);
 	}
-
+	
 	public static boolean isStatic(Method method) {
 		return Modifier.isStatic(method.getModifiers());
 	}
@@ -24,5 +24,9 @@ public class TestPlatform {
 
 	public static boolean hasParameters(Method method) {
 		return method.getParameterTypes().length > 0;
+	}
+
+	public static void emitWarning(String warning) {
+		System.err.println(warning);
 	}
 }
