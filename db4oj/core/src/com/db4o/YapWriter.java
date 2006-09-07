@@ -218,7 +218,7 @@ public final class YapWriter extends YapReader {
         if (tio != null) {
             bytes = (YapWriter) ((TreeIntObject)tio)._object; 
         }else{
-            bytes = i_trans.stream().readObjectWriterByAddress(i_trans, id, length);
+            bytes = i_trans.stream().readWriterByAddress(i_trans, id, length);
             if (bytes != null) {
                 bytes.setID(id);
             }

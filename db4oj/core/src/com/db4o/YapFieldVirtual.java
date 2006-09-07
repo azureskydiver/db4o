@@ -6,6 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.replication.*;
+import com.db4o.inside.slots.*;
 
 /**
  * @exclude
@@ -16,7 +17,7 @@ public abstract class YapFieldVirtual extends YapField {
         super(null);
     }
     
-    public abstract void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new);
+    public abstract void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter a_writer, Slot oldSlot);
     
     public boolean alive() {
         return true;

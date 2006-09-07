@@ -9,6 +9,7 @@ import com.db4o.inside.Exceptions4;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
@@ -84,7 +85,7 @@ public class YapField implements StoredField {
         i_state = AVAILABLE;
     }
 
-    public void addFieldIndex(MarshallerFamily mf, YapWriter writer, boolean a_new) {
+    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter writer, Slot oldSlot) {
         if (! hasIndex()) {
             writer.incrementOffset(linkLength());
             return;

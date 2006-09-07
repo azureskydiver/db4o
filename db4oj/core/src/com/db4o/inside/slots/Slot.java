@@ -15,5 +15,13 @@ public class Slot {
         _address = address;
         _length = length;
     }
+    
+    public int getAddress() {
+        return _address;
+    }
 
+    public int getLength() {
+        return _length;
+    }
+    
 }

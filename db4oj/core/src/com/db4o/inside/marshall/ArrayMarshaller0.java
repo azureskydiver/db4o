@@ -21,7 +21,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         Transaction trans = reader.getTransaction();
         if (reader.cascadeDeletes() > 0 && arrayHandler.i_handler instanceof YapClass) {
             YapWriter bytes =
-                reader.getStream().readObjectWriterByAddress(
+                reader.getStream().readWriterByAddress(
                     trans,
                     address,
                     length);

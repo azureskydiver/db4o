@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.ext.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.slots.*;
 
 /**
  * 
@@ -19,31 +20,40 @@ class YapFieldUUID extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, YapWriter writer, boolean isnew) {
+    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter writer, Slot oldSlot) {
+        
+        boolean isnew = (oldSlot == null);
 
         int offset = writer._offset;
-        int id = writer.readInt();
+        int db4oDatabaseIdentityID = writer.readInt();
         long uuid = YLong.readLong(writer);
         writer._offset = offset;
         
         YapFile yf = (YapFile)writer.getStream();
         
-        if(id == 0){
-            writer.writeInt(yf.identity().getID(writer.getTransaction()));
-        }else{
-            writer.incrementOffset(YapConst.INT_LENGTH);
+        if( (uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0 && ! isnew){
+            YapReader reader = yf.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
+            yapClass.findOffset(reader, this);
+            db4oDatabaseIdentityID = reader.readInt();
+            uuid = YLong.readLong(reader);
+        }
+        
+        if(db4oDatabaseIdentityID == 0){
+            db4oDatabaseIdentityID = yf.identity().getID(writer.getTransaction());
         }
         
         if(uuid == 0){
             uuid = yf.generateTimeStampId();
         }
+        
+        writer.writeInt(db4oDatabaseIdentityID);
         YLong.writeLong(uuid, writer);
         
         if(isnew){
             addIndexEntry(writer, new Long(uuid));
         }
     }
-    
+
     public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         if(isUpdate){
             a_bytes.incrementOffset(linkLength());

@@ -4,6 +4,7 @@ package com.db4o.inside.marshall;
 
 import com.db4o.*;
 import com.db4o.inside.*;
+import com.db4o.inside.slots.*;
 
 public abstract class ObjectMarshaller {
     
@@ -45,7 +46,7 @@ public abstract class ObjectMarshaller {
             YapClass yc, 
             ObjectHeaderAttributes attributes, 
             YapWriter writer, 
-            boolean isNew) ;
+            Slot oldSlot) ;
     
     public abstract TreeInt collectFieldIDs(
         TreeInt tree, 

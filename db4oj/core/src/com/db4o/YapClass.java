@@ -9,6 +9,7 @@ import com.db4o.inside.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.slots.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -81,10 +82,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    final void addFieldIndices(YapWriter a_writer, boolean a_new) {
+    final void addFieldIndices(YapWriter a_writer, Slot oldSlot) {
         if(hasIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(i_stream, this, a_writer);
-            oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, a_new);
+            oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, oldSlot);
         }
     }
     

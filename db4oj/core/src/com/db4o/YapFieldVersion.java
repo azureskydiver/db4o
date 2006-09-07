@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.slots.*;
 
 /**
  * 
@@ -16,7 +17,7 @@ class YapFieldVersion extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, YapWriter writer, boolean isnew) {
+    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter writer, Slot oldSlot) {
         YLong.writeLong(writer.getStream().generateTimeStampId(), writer);
     }
     

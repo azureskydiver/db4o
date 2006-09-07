@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.network.YapSocket;
+import com.db4o.inside.slots.*;
 
 final class MWriteNew extends MsgObject {
     final boolean processMessageAtServer(YapSocket sock) {
@@ -15,7 +16,7 @@ final class MWriteNew extends MsgObject {
             stream.prefetchedIDConsumed(_payLoad.getID());
             _payLoad.address(stream.getSlot(_payLoad.getLength()));
             if(yc != null){
-                yc.addFieldIndices(_payLoad, true);
+                yc.addFieldIndices(_payLoad,null);
             }
             stream.writeNew(yc, _payLoad);
             getTransaction().writePointer(

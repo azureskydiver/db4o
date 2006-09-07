@@ -38,7 +38,7 @@ public class StringMarshaller0 extends StringMarshaller {
     }
     
     public YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException{
-        return parentSlot.getStream().readObjectWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
+        return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
     
     public YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
