@@ -2,6 +2,7 @@
 .a StaticFields ..
 .? java  .1 Static fields and enums ..  ..?  
 .? net  .1 Static fields ..  ..?  
+.? mono  .1 Static fields ..  ..?  
 
 .2 Usage of static fields ..
 As an object database db4o can take advantage of programming language specifics such as ._

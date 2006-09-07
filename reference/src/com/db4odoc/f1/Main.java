@@ -1,17 +1,18 @@
 package com.db4odoc.f1;
 
+import com.db4odoc.f1.activating.ActivationExample;
 import com.db4odoc.f1.blobs.BlobExample;
 import com.db4odoc.f1.clientserver.ClientServerExample;
 import com.db4odoc.f1.clientserver.DeepExample;
 import com.db4odoc.f1.clientserver.TransactionExample;
 import com.db4odoc.f1.debugging.DebugExample;
 import com.db4odoc.f1.diagnostics.DiagnosticExample;
+import com.db4odoc.f1.enums.EnumExample;
 import com.db4odoc.f1.indexes.IndexedExample;
 import com.db4odoc.f1.lists.CollectionExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
-import com.db4odoc.f1.activating.ActivationExample;
 import com.db4odoc.f1.staticfields.StaticFieldExample;
-import com.db4odoc.f1.enums.EnumExample;
+import com.db4odoc.f1.uuids.UUIDExample;
 
 
 
@@ -37,5 +38,6 @@ public class Main {
     	ActivationExample.main(args);
     	StaticFieldExample.main(args);
     	EnumExample.main(args);
+    	UUIDExample.main(args);
     }
 }
