@@ -4,20 +4,21 @@ package com.db4o.inside.marshall;
 
 import com.db4o.*;
 import com.db4o.inside.*;
+import com.db4o.inside.slots.*;
 
 /**
  * @exclude
  */
 public class ObjectMarshaller1 extends ObjectMarshaller{
 
-    public void addFieldIndices(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final boolean isNew) {
+    public void addFieldIndices(final YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final Slot oldSlot) {
 		TraverseFieldCommand command = new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 				if (isNull) {
 					field.addIndexEntry(writer.getTransaction(), writer.getID(), null);
 				} 
 				else {
-					field.addFieldIndex(_family, writer, isNew);
+					field.addFieldIndex(_family, yc, writer, oldSlot);
 				}
 			}
 		};

@@ -45,7 +45,7 @@ public final class YapString extends YapIndependantType {
             return a_object;    
         }
         int[] slot = (int[]) a_object;
-        return a_trans.stream().readObjectReaderByAddress(slot[0], slot[1]);
+        return a_trans.stream().readReaderByAddress(slot[0], slot[1]);
     }
     
     public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes){
