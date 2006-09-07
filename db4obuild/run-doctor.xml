@@ -131,7 +131,7 @@
 			<variable name="mono" boolean="false" />
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="mono" />
-		</doctor>
+		</doctor> 
 
 		<doctor 
 			name="reference" 
@@ -161,10 +161,12 @@
 			</fileset>
 		</copy>
 		<signjar keystore="${file.keystore}" jar="${dir.j.reference.out.java}/docs/${filename.java5.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+
 		<doctor 
 					name="f1" 
 					home="${dir.j.reference}" 
 					interactive="false" 
+        			showcodeexecutionresults="true"
 					workspace="${dir.workspace}" 
 					inputsource="${dir.n.reference.src}/" 
 					sourceextension="cs" 
