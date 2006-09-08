@@ -26,5 +26,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
