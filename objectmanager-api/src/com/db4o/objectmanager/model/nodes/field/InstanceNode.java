@@ -35,7 +35,7 @@ import com.db4o.reflect.ReflectField;
  * 
  * @author djo
  */
-class InstanceNode implements IModelNode {
+public class InstanceNode implements IModelNode {
 	private ReflectClass _clazz=null;
     private Object _instance=null;
 	private IDatabase _database;

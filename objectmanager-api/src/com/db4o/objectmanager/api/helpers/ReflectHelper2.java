@@ -8,14 +8,21 @@ import java.util.*;
 import java.text.Collator;
 
 /**
+ * 
+ * <p>
+ * Named ReflectHelper2 so it doesn't conflict with the one in db4o-sql
+ * </p>
+ *
  * User: treeder
  * Date: Aug 21, 2006
  * Time: 7:02:15 PM
  */
-public class ReflectHelper {
+public class ReflectHelper2 {
 
     /**
-     *
+     * <p>
+     * Returns all the classes that the user would have stored.  Ignores core java classes and db4o classes.
+     * </p>
      * @param container
      * @return List<ReflectClass>
      */
@@ -68,5 +75,16 @@ public class ReflectHelper {
         });
 
         return filteredList;
+    }
+
+    /**
+     * <p>
+     * Equivalent to isLeaf, isEditable, isSortaPrimitive... ;)
+     * </p>
+     * @param c
+     * @return
+     */
+    public static boolean isEditable(Class c) {
+        return c.isPrimitive() || String.class.isAssignableFrom(c) || Number.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
     }
 }

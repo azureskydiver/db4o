@@ -1,5 +1,7 @@
 package com.db4o.objectmanager.model;
 
+import com.db4o.objectmanager.model.nodes.IModelNode;
+
 public class TheNullGraphIterator implements IGraphIterator {
 	
 	private static IGraphIterator nullIterator = null;
@@ -42,8 +44,9 @@ public class TheNullGraphIterator implements IGraphIterator {
 	public void selectParent() {
 	}
 
-	public void selectNextChild() {
-	}
+	public IModelNode selectNextChild() {
+        return null;
+    }
 
 	public void selectPreviousChild() {
 	}

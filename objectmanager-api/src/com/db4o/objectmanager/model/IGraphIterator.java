@@ -3,6 +3,8 @@
  */
 package com.db4o.objectmanager.model;
 
+import com.db4o.objectmanager.model.nodes.IModelNode;
+
 import java.util.ListIterator;
 
 
@@ -98,7 +100,7 @@ public interface IGraphIterator extends ListIterator {
      * Method selectNextChild().  Makes the next child in the object graph 
      * the new parent, and selects its children to iterate over.
      */
-    public void selectNextChild();
+    public IModelNode selectNextChild();
     
     /**
 	 * Method selectPreviousChild(). Makes the previous child in the object

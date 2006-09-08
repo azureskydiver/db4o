@@ -6,7 +6,7 @@ import com.db4o.ext.StoredField;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.query.Query;
 import com.db4o.objectmanager.api.DatabaseInspector;
-import com.db4o.objectmanager.api.helpers.ReflectHelper;
+import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
     }
 
     public List getClassesStored() {
-        return ReflectHelper.getUserStoredClasses(oc);
+        return ReflectHelper2.getUserStoredClasses(oc);
     }
 
     public int getNumberOfObjectsForClass(Class aClass) {

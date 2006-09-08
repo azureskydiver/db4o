@@ -108,9 +108,15 @@ public abstract class AbstractGraphIterator implements IGraphIterator {
         setCurrentIndex(-1);
     }
 
-    public void selectNextChild() {
+
+    /**
+     * Gets next() item and then moves cursor down into children
+     * @return next object, as if calling iter.next()
+     */
+    public IModelNode selectNextChild() {
+        IModelNode child;
         if (hasNext()) {
-        	IModelNode child = (IModelNode) next();
+        	child = (IModelNode) next();
     		previous();
             path.push(currentFamily, getCurrentIndex());
             currentFamily = child.children();
@@ -118,6 +124,7 @@ public abstract class AbstractGraphIterator implements IGraphIterator {
             throw new IllegalArgumentException("There is no next child to select");
         }
         setCurrentIndex(-1);
+        return child;
     }
 
     public void selectPreviousChild() {
