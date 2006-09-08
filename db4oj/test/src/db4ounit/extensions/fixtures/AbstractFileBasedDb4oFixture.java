@@ -13,7 +13,7 @@ public abstract class AbstractFileBasedDb4oFixture extends AbstractDb4oFixture {
 		_yap = new File(fileName);
 	}
 
-	protected String getAbsolutePath() {
+	public String getAbsolutePath() {
 		return _yap.getAbsolutePath();
 	}
 
