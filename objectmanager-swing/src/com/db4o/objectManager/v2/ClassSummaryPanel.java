@@ -16,9 +16,11 @@ import java.awt.Component;
 public class ClassSummaryPanel extends JPanel {
     private ObjectContainer objectContainer;
     private DatabaseInspector databaseInspector;
+    private String className;
 
     public ClassSummaryPanel(ObjectContainer objectContainer, DatabaseInspector databaseInspector, String className) {
         super(new BorderLayout());
+        this.className = className;
         setOpaque(false);
         setBorder(Borders.DIALOG_BORDER);
         this.objectContainer = objectContainer;
@@ -32,5 +34,9 @@ public class ClassSummaryPanel extends JPanel {
         //box.add(buildConnectionInfo());
 
         return box;
+    }
+
+    public String getClassName() {
+        return className;
     }
 }

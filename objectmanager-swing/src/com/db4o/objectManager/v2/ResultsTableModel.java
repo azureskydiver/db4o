@@ -4,12 +4,15 @@ import com.spaceprogram.db4o.sql.*;
 import com.spaceprogram.db4o.sql.parser.SqlParseException;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
+import com.db4o.ObjectContainer;
+import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import java.util.List;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * User: treeder
@@ -40,8 +43,10 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
             queryResultsPanel.setStatusMessage("Returned " + results.size() + " results in " + duration + "ms");
             initTop(results);
         } catch (SqlParseException e) {
+            queryResultsPanel.setStatusMessage("Error executing query!  " + e.getMessage());
             e.printStackTrace();
         } catch (Sql4oException e) {
+            queryResultsPanel.setStatusMessage("Error executing query!  " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -78,6 +83,10 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
             }
         }
         Object ret = result.getObject(column-1);
+        if(ret instanceof Collection){
+            Collection c = (Collection) ret;
+            return new CollectionValue("Collection: " + c.size() + " items");
+        }
         return ret;
     }
 
@@ -112,7 +121,7 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
     public boolean isCellEditable(int row, int col) {
         if(col == 0) return false;
         Class c = getColumnClass(col);
-        return c.isPrimitive() || String.class.isAssignableFrom(c) || Number.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
+        return ReflectHelper2.isEditable(c);
     }
 
     public void setValueAt(Object value, int row, int col) {
@@ -150,4 +159,12 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
         return super.getColumnClass(c);
     }
 
+    public ObjectContainer getObjectContainer() {
+        return queryResultsPanel.getObjectContainer();
+    }
+
+    public Object getRowObject(int row) {
+        Result wrapper = (Result) results.get(row);
+        return wrapper.getBaseObject(0);
+    }
 }

@@ -9,6 +9,6 @@ Developing ObjectManager
 ====================================================
 objectmanger-swing depends on objectmanager-api module
 
-Dashboard.java is the main() startingn point.
+Dashboard.java is the main() starting point.
 
 
