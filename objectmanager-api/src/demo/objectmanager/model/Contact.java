@@ -12,9 +12,11 @@ public class Contact {
     private Integer id;
     private String name;
     private int age;
-    List addresses;
-    List emails;
+    private List addresses;
     private List emailAddresses;
+    private Note note;
+    private List friends;
+
 
     public Integer getId() {
         return id;
@@ -49,14 +51,6 @@ public class Contact {
         this.addresses = addresses;
     }
 
-    public List getEmails() {
-        return emails;
-    }
-
-    public void setEmails(List emails) {
-        this.emails = emails;
-    }
-
     public void addAddress(Address address) {
         getAddresses().add(address);
     }
@@ -68,5 +62,30 @@ public class Contact {
     public List getEmailAddresses() {
         if(emailAddresses == null) emailAddresses = new ArrayList();
         return emailAddresses;
+    }
+
+    public void setEmailAddresses(List emailAddresses) {
+        this.emailAddresses = emailAddresses;
+    }
+
+    public List getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List friends) {
+        this.friends = friends;
+    }
+
+
+    public Note getNote() {
+        return note;
+    }
+
+    public void setNote(Note note) {
+        this.note = note;
+    }
+
+    public String toString() {
+        return "Contact: id=" + id + " name=" + name + " age=" + age;
     }
 }

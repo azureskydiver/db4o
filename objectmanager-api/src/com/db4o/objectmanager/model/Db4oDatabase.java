@@ -16,10 +16,6 @@
  */
 package com.db4o.objectmanager.model;
 
-import java.text.Collator;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
 //import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
@@ -29,8 +25,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.objectmanager.api.prefs.ActivationPreferences;
-import com.db4o.objectmanager.api.helpers.ReflectHelper;
-import com.db4o.ext.StoredClass;
+import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
@@ -43,7 +38,29 @@ import com.db4o.reflect.Reflector;
  */
 public class Db4oDatabase implements IDatabase {    
     private Db4oConnectionSpec spec;
-    
+
+    /**
+     * Used to create a Db4oDatabase object from an already open object container instance.
+     * 
+     * @param objectContainer
+     * @param connectionSpec
+     * @return
+     */
+    public static IDatabase getForObjectContainer(ObjectContainer objectContainer, Db4oConnectionSpec connectionSpec) {
+        Db4oDatabase db = new Db4oDatabase();
+        db.setObjectContainer(objectContainer);
+        db.setConnectionSpec(connectionSpec);
+        return db;
+    }
+
+    private void setConnectionSpec(Db4oConnectionSpec connectionSpec) {
+        this.spec = connectionSpec;
+    }
+
+    private void setObjectContainer(ObjectContainer objectContainer) {
+        this.container = objectContainer;
+    }
+
     public void open(Db4oConnectionSpec spec) {
         if (this.spec==null||!spec.getPath().equals(this.spec.getPath())) {
             this.spec=spec;
@@ -79,7 +96,7 @@ public class Db4oDatabase implements IDatabase {
 
     public DatabaseGraphIterator graphIterator() {
 
-        List filteredList = ReflectHelper.getUserStoredClasses(container);
+        List filteredList = ReflectHelper2.getUserStoredClasses(container);
 
         // Return the iterator
         return new DatabaseGraphIterator(this, (ReflectClass[])filteredList.toArray(new ReflectClass[filteredList.size()]));
@@ -149,6 +166,8 @@ public class Db4oDatabase implements IDatabase {
     public ObjectContainer getObjectContainer() {
         return container;
     }
+
+
 }
 
 
