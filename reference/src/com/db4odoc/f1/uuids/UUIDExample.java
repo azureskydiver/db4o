@@ -103,7 +103,7 @@ public class UUIDExample extends Util {
 			System.out.println("long part: " + pilotUUID.getLongPart() +"; signature: " + printSignature(pilotUUID.getSignaturePart()));
 			long ms = TimeStampIdGenerator.idToMilliseconds(pilotUUID.getLongPart());
 			System.out.println("Pilot object was created: " + (new Date(ms)).toString());
-			Pilot pilotReturned = oc.ext().getByUUID(pilotUUID);
+			Pilot pilotReturned = (Pilot) oc.ext().getByUUID(pilotUUID);
 			System.out.println("Pilot from UUID: " + pilotReturned);	
         } finally {
         	oc.close();
