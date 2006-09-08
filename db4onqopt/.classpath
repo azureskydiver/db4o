@@ -9,5 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
