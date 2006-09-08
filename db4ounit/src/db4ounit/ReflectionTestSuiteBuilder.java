@@ -31,26 +31,24 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		return new TestSuite(suites);
 	}
 	
-	protected TestSuite fromClass(Class clazz) {		
-		Object instance = newInstance(clazz);
-		return fromInstance(instance);
-	}
-
-	private TestSuite fromInstance(Object instance) {
-		if (instance instanceof TestSuiteBuilder) {
-			return ((TestSuiteBuilder)instance).build();
+	protected TestSuite fromClass(Class clazz) {
+		if(TestSuiteBuilder.class.isAssignableFrom(clazz)) {
+			return ((TestSuiteBuilder)newInstance(clazz)).build();
 		}
-		final Class clazz = instance.getClass();
-		
-		if (instance instanceof Test) {
-			return new TestSuite(clazz.getName(), new Test[] { (Test)instance });
+		if (Test.class.isAssignableFrom(clazz)) {
+			return new TestSuite(clazz.getName(), new Test[] { (Test)newInstance(clazz) });
 		}
-		if (!(instance instanceof TestCase)) {
+		if (!(TestCase.class.isAssignableFrom(clazz))) {
 			throw new IllegalArgumentException("" + clazz + " is not marked as " + TestCase.class);
 		}
+		return fromMethods(clazz);
+	}
+
+	private TestSuite fromMethods(Class clazz) {
 		Vector tests = new Vector();
 		Method[] methods = clazz.getMethods();
 		for (int i = 0; i < methods.length; i++) {
+			Object instance=newInstance(clazz);
 			Method method = methods[i];
 			if (!isTestMethod(method)) {
 				emitWarningOnIgnoredTestMethod(instance, method);
