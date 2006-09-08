@@ -33,16 +33,15 @@ package com.db4o.objectManager.v2;
 import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
 import com.db4o.objectManager.v2.custom.FastScrollPane;
 import com.db4o.ObjectContainer;
+import com.db4o.objectmanager.model.IGraphIterator;
 import com.jgoodies.forms.factories.Borders;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.table.TableModel;
-import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.List;
 
 final class QueryResultsPanel extends JPanel {
     private MainPanel mainPanel;
@@ -79,6 +78,8 @@ final class QueryResultsPanel extends JPanel {
         resultsTable = new JTable();
         resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         JScrollPane scrollpane = new FastScrollPane(resultsTable);
+        ResultsTableSelectionListener listener = new ResultsTableSelectionListener(resultsTable, this);
+        resultsTable.addMouseListener(listener);
         return scrollpane;
     }
 
@@ -91,9 +92,11 @@ final class QueryResultsPanel extends JPanel {
     public void displayResults(String query) {
         tableModel = new ResultsTableModel(query, this);
         resultsTable.setModel(tableModel);
+        /*
+        todo: should grow depending on avg column length
         TableColumn col = resultsTable.getColumnModel().getColumn(1);
         int width = 200;
-        col.setPreferredWidth(width);
+        col.setPreferredWidth(width);*/
     }
 
     /**
@@ -114,4 +117,39 @@ final class QueryResultsPanel extends JPanel {
     public void setStatusMessage(String msg) {
         statusLabel.setText(msg);
     }
+
+    /**
+     * Will display a tree of the object in a tab.
+     *
+     * @param o object tree to display
+     */
+    public void showObjectTree(Object o) {
+        ObjectTreeNode top = new ObjectTreeNode(null, o);
+        //IGraphIterator graphIterator = new ObjectGraphIterator(o, Db4oDatabase.getForObjectContainer(mainPanel.getObjectContainer(), mainPanel.getConnectionSpec()));
+        //createNodes(top, graphIterator);
+        ObjectTreeModel objectTreeModel = new ObjectTreeModel(top, mainPanel.getObjectContainer());
+        JTree tree = new JTree(objectTreeModel);
+        JScrollPane treeView = new JScrollPane(tree);
+        mainPanel.addTab("Object: " + o, treeView);
+    }
+
+    private void createNodes(DefaultMutableTreeNode top, IGraphIterator iter) {
+        while (iter.hasNext()) {
+            if (iter.nextHasChildren()) {
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.selectNextChild());
+                top.add(node);
+            } else {
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
+                top.add(node);
+            }
+        }
+        // no more next, so see if we can go back up tree
+        if(iter.hasParent()){
+            iter.selectParent();
+
+            // continue up a level
+            createNodes(new DefaultMutableTreeNode(iter.next()), iter);
+        }
+    }
+
 }

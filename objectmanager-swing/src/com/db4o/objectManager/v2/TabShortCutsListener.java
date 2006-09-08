@@ -18,7 +18,6 @@ public class TabShortCutsListener implements KeyListener {
 
     public void keyTyped(KeyEvent e) {
         if (e.getKeyChar() == '') { // ctrl-w - close tab
-            System.out.println("closing tab");
             if (tabbedPane.getSelectedIndex() > 0) { // never remove Home tab
                 tabbedPane.remove(tabbedPane.getSelectedIndex());
             }

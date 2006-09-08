@@ -49,6 +49,7 @@ public class MainPanel extends JPanel {
     private TreeModel classTreeModel;
     private JTree classTree;
     private DatabaseSummaryPanel databaseSummaryPanel;
+    private static final int MAX_TABS = 10;
 
 
     public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec) {
@@ -101,7 +102,7 @@ public class MainPanel extends JPanel {
 
         SimpleInternalFrame sif = new SimpleInternalFrame("Tree View");
         sif.setPreferredSize(new Dimension(150, 100));
-        sif.setBorder(Borders.DIALOG_BORDER);    
+        sif.setBorder(Borders.DIALOG_BORDER);
         sif.add(tabbedPane);
         return sif;
     }
@@ -148,8 +149,6 @@ public class MainPanel extends JPanel {
 
         addClassTreeListener(new ClassTreeListener(queryBarPanel));
     }
-
-
 
 
     public void addClassTreeListener(MouseListener classTreeListener) {
@@ -260,7 +259,7 @@ public class MainPanel extends JPanel {
 
     public void setConnectionSpec(Db4oConnectionSpec connectionSpec) {
         this.connectionSpec = connectionSpec;
-        initClassTree();        
+        initClassTree();
     }
 
     public DatabaseInspector getDatabaseInspector() {
@@ -272,16 +271,37 @@ public class MainPanel extends JPanel {
 
     public void displayResults(String query) {
         QueryResultsPanel p = new QueryResultsPanel(this);
-        tabbedPane.add("Query " + (++queryCounter), p);
-        tabbedPane.setSelectedComponent(p);
+        addTab("Query " + (++queryCounter), p);
         p.displayResults(query);
+    }
 
-        //queryResultsPanel.displayResults(results);
+    public void addTab(String name, Component p) {
+        tabbedPane.add(name, p);
+        tabbedPane.setSelectedComponent(p);
+        // todo: remove tabs based on usage time rather than FIFO
+        if (tabbedPane.getTabCount() > MAX_TABS) {
+            tabbedPane.remove(1);
+        }
     }
 
     public void showClassSummary(String className) {
+        // make sure class summary isn't already there
+        for(int i = 0; i < tabbedPane.getTabCount(); i++){
+            Component c = tabbedPane.getComponentAt(i);
+            if(c instanceof ClassSummaryPanel){
+                ClassSummaryPanel csp = (ClassSummaryPanel) c;
+                if(csp.getClassName().equals(className)){
+                    tabbedPane.setSelectedIndex(i);
+                    return;
+                }
+            }
+        }
         ClassSummaryPanel panel = new ClassSummaryPanel(getObjectContainer(), getDatabaseInspector(), className);
-        tabbedPane.addTab("Class: " + className, panel);
+        addTab("Class: " + className, panel);
+    }
+
+    public Db4oConnectionSpec getConnectionSpec() {
+        return connectionSpec;
     }
 
 
