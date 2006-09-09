@@ -4,17 +4,11 @@ package com.db4o.test;
 
 import java.lang.reflect.Method;
 
+import com.db4o.test.config.Configure;
+
 import db4ounit.TestMethod;
 
 public class CSTestMethod extends TestMethod {
-
-	static int CONCURRENCY_THREAD_COUNT = 10;
-
-	static final String COCURRENCY_TEST_PREFIX = "conc";
-
-	static final String COCURRENCY_CHECK_PREFIX = "check";
-
-	static final int COCURRENCY_TEST_PREFIX_LENGTH = "conc".length();
 
 	public CSTestMethod(Object instance, Method method) {
 		super(instance, method);
@@ -22,12 +16,13 @@ public class CSTestMethod extends TestMethod {
 
 	/*
 	 * Override invoke method to support concurrency test
+	 * 
 	 * @see db4ounit.TestMethod#invoke()
 	 */
 	protected void invoke() throws Exception {
 		Object toTest = getSubject();
 		Method method = getMethod();
-		if (method.getName().startsWith(COCURRENCY_TEST_PREFIX)) {
+		if (method.getName().startsWith(Configure.COCURRENCY_TEST_PREFIX)) {
 			// concurrency test
 			invokeConcurrencyMethod(toTest, method);
 		} else {
@@ -49,8 +44,8 @@ public class CSTestMethod extends TestMethod {
 			return;
 		}
 
-		ConcurrencyThread[] threads = new ConcurrencyThread[CONCURRENCY_THREAD_COUNT];
-		for (int i = 0; i < CONCURRENCY_THREAD_COUNT; ++i) {
+		ConcurrencyThread[] threads = new ConcurrencyThread[Configure.CONCURRENCY_THREAD_COUNT];
+		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; ++i) {
 			if (hasArgs) {
 				threads[i] = new ConcurrencyThread(toTest, method, i);
 			} else {
@@ -58,15 +53,15 @@ public class CSTestMethod extends TestMethod {
 			}
 		}
 		// start threads simultaneously
-		for (int i = 0; i < CONCURRENCY_THREAD_COUNT; ++i) {
+		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; ++i) {
 			threads[i].start();
 		}
 		// wait for the threads to end
-		for (int i = 0; i < CONCURRENCY_THREAD_COUNT; ++i) {
+		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; ++i) {
 			threads[i].join();
 		}
 		// check if any of the threads ended abnormally
-		for (int i = 0; i < CONCURRENCY_THREAD_COUNT; ++i) {
+		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; ++i) {
 			if (threads[i].fail) {
 				throw threads[i].ex;
 			}
@@ -77,9 +72,10 @@ public class CSTestMethod extends TestMethod {
 
 	private void checkConcurrencyMethod(Object toTest, String testMethodName)
 			throws Exception {
-		String subMethodName = testMethodName
-				.substring(COCURRENCY_TEST_PREFIX_LENGTH);
-		String checkMethodName = COCURRENCY_CHECK_PREFIX + subMethodName;
+		int testPrefixLength = Configure.COCURRENCY_TEST_PREFIX.length();
+		String subMethodName = testMethodName.substring(testPrefixLength);
+		String checkMethodName = Configure.COCURRENCY_CHECK_PREFIX
+				+ subMethodName;
 		Method checkMethod = null;
 		try {
 			checkMethod = toTest.getClass().getDeclaredMethod(checkMethodName,
@@ -122,10 +118,10 @@ public class CSTestMethod extends TestMethod {
 					args = new Integer[1];
 					args[0] = new Integer(seq);
 				}
-				method.invoke(toTest, (Object[])args);
+				method.invoke(toTest, (Object[]) args);
 				fail = false;
 			} catch (Exception ex) {
-				// empty
+				// record the exception
 				this.ex = ex;
 			}
 		}
