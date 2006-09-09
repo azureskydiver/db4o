@@ -561,12 +561,17 @@
 			<include name="**/*" />
 		</delete>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
-			<fileset dir="${dir.db4ounit}/src">
+			<fileset dir="${dir.db4ounit.src}">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
-			<fileset dir="${dir.j.test.src}">
+			<fileset dir="${dir.db4ounit.extensions.src}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
+			<fileset dir="${dir.db4o.j.tests.src}">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
@@ -593,9 +598,10 @@
 				<dirset dir="${dir.dist.classes.nqopt}" />
 				<pathelement location="${file.bloat.jar}" />
 			</classpath>
-			<src path="${dir.j.test.src}"/>
+			<src path="${dir.db4o.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />
-			<src path="${dir.workspace}/db4ounit/src" />
+			<src path="${dir.db4ounit.src}" />
+			<src path="${dir.db4ounit.extensions.src}" />
 			<src path="${dir.j.nqopt}/test/src" />
 			<src path="${dir.j.nqopt}/core/testsrc" />
 		</javac>
@@ -1341,7 +1347,7 @@
 			</fileset>
 		</copy>
 		
-		<sharpen workspace="${target.dir}" resource="db4oj/test/src">
+		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
 			<args>
 				<arg value="-pascalcase" />
 				
