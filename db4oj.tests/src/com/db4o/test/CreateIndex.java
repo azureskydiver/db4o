@@ -75,9 +75,6 @@ public class CreateIndex {
         q.descend("i_intWrapper").constrain(new Integer(4)).greater().equal();
         tExpectInts(q, new int[] { 5, 7 });
 
-        if(MarshallerFamily.LEGACY){
-            return;
-        }
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_intWrapper").constrain(new Integer(4)).smaller();
