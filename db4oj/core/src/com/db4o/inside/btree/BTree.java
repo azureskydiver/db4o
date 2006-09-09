@@ -321,7 +321,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
 
 	public void dispose(Transaction transaction) {
-		// TODO Auto-generated method stub
+		// nothing to do here
 	}
 
 	public BTreePointer firstPointer(Transaction trans) {
