@@ -5,13 +5,23 @@ package com.db4o.inside.convert;
 import com.db4o.*;
 
 
-public abstract class Conversion implements Runnable{
+public abstract class Conversion {
     
     protected YapFile _yapFile;
     
     public void setFile(YapFile yapFile){
         _yapFile = yapFile;
     }
+
+    public void convertWhenSystemIsUp() {
+        
+    }
+    
+    public void convertWhenClassCollectionAvailable(){
+        
+    }
+    
+    
     
     
 

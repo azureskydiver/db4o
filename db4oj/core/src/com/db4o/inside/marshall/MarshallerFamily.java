@@ -18,12 +18,8 @@ public class MarshallerFamily {
         
     }
     
-    public static int VERSION = Version.MARSHALLER;
+    private static int VERSION = Version.MARSHALLER;
 
-    public static final boolean LEGACY = (VERSION == Version.PRE_MARSHALLER);
-    
-    public static final boolean OLD_CLASS_INDEX = LEGACY;
-    
     public static final boolean BTREE_FIELD_INDEX = (VERSION == Version.BTREE_FIELD_INDEXES);
     
     public static final boolean OLD_FIELD_INDEX = (VERSION < Version.BTREE_FIELD_INDEXES);
