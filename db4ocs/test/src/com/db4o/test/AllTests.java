@@ -2,10 +2,17 @@
 
 package com.db4o.test;
 
-import db4ounit.TestRunner;
+import db4ounit.extensions.CSTestSuite;
 
-public class AllTests {
+public class AllTests extends CSTestSuite {
+
+	protected Class[] testCases() {
+		return new Class[] {
+				ReadObjectQBETest.class,
+				ReadObjectSODATest.class, };
+	}
+	
 	public static void main(String[] args) {
-		new TestRunner(CSTestSuite.class).run();
+		new AllTests().run();
 	}
 }
