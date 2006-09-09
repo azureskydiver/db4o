@@ -3,6 +3,8 @@ package com.db4o.test;
 
 import java.lang.reflect.Method;
 
+import com.db4o.test.config.Configure;
+
 import db4ounit.ReflectionTestSuiteBuilder;
 import db4ounit.Test;
 import db4ounit.TestPlatform;
@@ -19,7 +21,7 @@ public class CSTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 
 	protected boolean isTestMethod(Method method) {
 		String name = method.getName();
-		if (name.startsWith(CSTestMethod.COCURRENCY_TEST_PREFIX)) {
+		if (startsWithIgnoreCase(name, Configure.COCURRENCY_TEST_PREFIX)) {
 			return TestPlatform.isPublic(method)
 					&& !TestPlatform.isStatic(method)
 					&& hasValidParamter(method);
