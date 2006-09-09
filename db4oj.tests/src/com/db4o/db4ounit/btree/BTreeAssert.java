@@ -74,7 +74,11 @@ public class BTreeAssert {
 	}
 
 	public static BTree createIntKeyBTree(final YapStream stream, int id) {
-		return new BTree(stream.getSystemTransaction(), id, new YInt(stream));
+		return new BTree(stream.getSystemTransaction(), id, new YInt(stream), null, 7, stream.configImpl().bTreeCacheHeight());
+	}
+	
+	public static BTree createIntKeyBTree(final YapStream stream, int id, int treeCacheHeight) {
+		return new BTree(stream.getSystemTransaction(), id, new YInt(stream), null, 7, treeCacheHeight);
 	}
 
 }

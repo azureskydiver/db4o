@@ -14,6 +14,15 @@ public abstract class BTreeTestCaseBase extends Db4oTestCase{
 
 	protected BTree _btree;
 	
+	public void setUp() throws Exception {
+		super.setUp();
+		_btree = newBTree();
+	}
+
+	protected BTree newBTree() {
+		return BTreeAssert.createIntKeyBTree(stream(), 0);
+	}
+	
 	protected BTreeRange range(int lower, int upper) {
 		final BTreeRange lowerRange = search(lower);
 		final BTreeRange upperRange = search(upper);
@@ -36,6 +45,10 @@ public abstract class BTreeTestCaseBase extends Db4oTestCase{
 
 	protected void commit(Transaction trans) {
 		_btree.commit(trans);
+	}
+	
+	protected void commit() {
+		commit(trans());
 	}
 
 	protected void remove(Transaction transaction, int[] keys) {
