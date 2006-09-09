@@ -6,7 +6,6 @@ public abstract class AbstractBTreeRangeIterator implements Iterator4 {
 
 	private final BTreeRangeSingle _range;
 	private BTreePointer _cursor;
-	private BTreeNode _lastNode = null;
 	private BTreePointer _current;
 
 	public AbstractBTreeRangeIterator(BTreeRangeSingle range) {
@@ -15,27 +14,13 @@ public abstract class AbstractBTreeRangeIterator implements Iterator4 {
 	}
 
 	public boolean moveNext() {
-		
-		while(! reachedEnd(_cursor)){
-	        
-	        BTreeNode node = _cursor.node();
-	        
-	        if(node != _lastNode){
-	            _lastNode = node;
-	        }
-	        
-	        Object obj = _cursor.key();
-	        
-	        if(obj != No4.INSTANCE){
-	            _current = _cursor;
-	            _cursor = _cursor.next();
-	            return true;
-	        }
-	        
-	        _cursor = _cursor.next();
-	    }
-		_current = null;
-		return false;
+		if (reachedEnd(_cursor)) {
+			_current = null;
+			return false;
+		}
+		_current = _cursor;
+		_cursor = _cursor.next();
+		return true;		
 	}
 
 	protected BTreePointer currentPointer() {
