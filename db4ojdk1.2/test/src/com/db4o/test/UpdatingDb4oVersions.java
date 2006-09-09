@@ -26,9 +26,11 @@ public class UpdatingDb4oVersions {
         "db4o_5.1.001",
         "db4o_5.2.001", 
         "db4o_5.2.003",
+        "db4o_5.2.008",
         "db4o_5.3.001", 
         "db4o_5.4.004",
-        "db4o_5.5.2"};
+        "db4o_5.5.2",
+        "db4o_5.6.2"};
 
     List list;
     Map map;
@@ -36,6 +38,7 @@ public class UpdatingDb4oVersions {
     
     public void configure(){
         Db4o.configure().allowVersionUpdates(true);
+        Db4o.configure().objectClass(UpdatingDb4oVersions.class).objectField("name").indexed(true);
     }
 
     public void store(){
