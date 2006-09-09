@@ -60,7 +60,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 	
 	private void emitWarningOnIgnoredTestMethod(Object subject, Method method) {
-		if (!startsWithIgnoringCase(method.getName(), "_test")) {
+		if (!startsWithIgnoreCase(method.getName(), "_test")) {
 			return;
 		}
 		TestPlatform.emitWarning("IGNORED: " + TestMethod.createLabel(subject, method));
@@ -74,10 +74,10 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 
 	private boolean hasTestPrefix(Method method) {
-		return startsWithIgnoringCase(method.getName(), "test");
+		return startsWithIgnoreCase(method.getName(), "test");
 	}
 
-	private boolean startsWithIgnoringCase(final String s, final String prefix) {
+	protected boolean startsWithIgnoreCase(final String s, final String prefix) {
 		return s.toUpperCase().startsWith(prefix.toUpperCase());
 	}
 	
