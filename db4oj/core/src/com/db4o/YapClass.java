@@ -51,9 +51,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
     private ClassIndexStrategy createIndexStrategy() {
-    	if (MarshallerFamily.OLD_CLASS_INDEX) {
-			return new OldClassIndexStrategy(this);
-		}
 		return new BTreeClassIndexStrategy(this);
 	}
 

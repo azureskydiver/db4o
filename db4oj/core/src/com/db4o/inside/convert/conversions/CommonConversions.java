@@ -6,16 +6,11 @@ import com.db4o.inside.convert.*;
 
 /**
  * @exclude
- *
  */
 public class CommonConversions {
     
-    public CommonConversions(Converter converter){
-        
-        // Start with '5' to allow adding further converters to fix
-        // possible remaining old problems before class indexes are
-        // updated
+    public static void register(Converter converter){
         converter.register(5, new ClassIndexesToBTrees());
     }
-
+    
 }

@@ -311,19 +311,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 		i_yapClass = a_yapClass;
 
-
-
-		// FIXME: The following is code to keep the old MarshallerFamily  
-		//        running. It can be safely removed when we drop.
-        if(MarshallerFamily.LEGACY){
-    		if (i_yapClass.isPrimitive()){
-                YapClassPrimitive ycp = (YapClassPrimitive)i_yapClass;
-                int id = MarshallerFamily.current()._primitive.writeNew(a_trans, ycp, a_object, true, null, true, false);
-                setID(id);
-    			return false;
-    		}
-        }
-
         setID(stream.newUserObject());
 
         // will be ended in continueset()

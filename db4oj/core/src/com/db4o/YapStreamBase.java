@@ -1786,8 +1786,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             yc = yapObject.getYapClass();
         }
         
-        if (yc.getID() == YapHandlers.ANY_ID  || 
-            yc.isPrimitive() && ! MarshallerFamily.LEGACY) {
+        if (isPlainObjectOrPrimitive(yc) ) {
             notStorable(yc.classReflector(), a_object);
             return 0;
         }
@@ -1852,6 +1851,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             a_trans.dontDelete(yapObject.getYapClass().getID(), id);
         }
         return id;
+    }
+
+    private final boolean isPlainObjectOrPrimitive(YapClass yc) {
+        return yc.getID() == YapHandlers.ANY_ID  || yc.isPrimitive();
     }
 
 	private boolean objectCanNew(YapClass yc, Object a_object) {

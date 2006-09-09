@@ -12,7 +12,7 @@ import com.db4o.inside.convert.*;
  */
 public class ClassIndexesToBTrees extends Conversion{
 
-    public void run(){
+    public void convertWhenSystemIsUp(){
         // calling #storedClasses forces reading all classes
         // That's fair enough to load them.
         _yapFile.storedClasses();
