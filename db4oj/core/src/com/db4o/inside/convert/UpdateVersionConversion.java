@@ -5,15 +5,12 @@ package com.db4o.inside.convert;
 import com.db4o.header.*;
 import com.db4o.inside.convert.ConversionStage.*;
 
-public class UpdateVersionConversion implements Conversion {
+public class UpdateVersionConversion extends Conversion {
 
-	private int _version;
+	private final int _version;
 	
 	public UpdateVersionConversion(int version) {
 		_version = version;
-	}
-
-	public void convert(ClassCollectionAvailableStage stage) {
 	}
 
 	public void convert(SystemUpStage stage) {
