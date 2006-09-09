@@ -447,7 +447,7 @@ public abstract class YapFile extends YapStream {
         i_classCollection.setID(_fileHeader.classCollectionID());
         i_classCollection.read(i_systemTrans);
         
-        Converter.convertWhenClassCollectionAvailable(this, _fileHeader);
+        Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this, _fileHeader));
         
         _freespaceManager = FreespaceManager.createNew(this, _fileHeader.freespaceSystem());
         _freespaceManager.read(_fileHeader.freeSpaceID());
@@ -491,8 +491,8 @@ public abstract class YapFile extends YapStream {
                 trans.writeOld();
             }
         }
-        
-        if(Converter.convertWhenSystemIsUp(this, _fileHeader)){
+
+        if(Converter.convert(new ConversionStage.SystemUpStage(this, _fileHeader))){
             getTransaction().commit();
         }
         
