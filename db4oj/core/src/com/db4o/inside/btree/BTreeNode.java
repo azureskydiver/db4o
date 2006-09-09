@@ -245,7 +245,7 @@ public class BTreeNode extends YapMeta{
         return new BTreeNodeSearchResult(trans, btree(), this, index, true);
     }
     
-    private boolean canWrite(){
+    public boolean canWrite(){
         return _keys != null;
     }
     
@@ -591,7 +591,7 @@ public class BTreeNode extends YapMeta{
         return patch.getObject();
     }
     
-    private Object key(Transaction trans, YapReader reader, int index){
+    Object key(Transaction trans, YapReader reader, int index){
         if( _keys != null ){
             return key(trans, index);
         }
@@ -653,7 +653,7 @@ public class BTreeNode extends YapMeta{
           + YapConst.BRACKETS_BYTES;
     }
     
-    private YapReader prepareRead(Transaction trans){
+    YapReader prepareRead(Transaction trans){
 
         if(canWrite()){
             return null;
@@ -1036,7 +1036,7 @@ public class BTreeNode extends YapMeta{
     	return _values[index];
     }
     
-    private Object value(YapReader reader, int index){
+    Object value(YapReader reader, int index){
         if( _values != null ){
             return _values[index];
         }

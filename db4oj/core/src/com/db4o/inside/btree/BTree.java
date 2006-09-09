@@ -47,17 +47,17 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }		
     		
     public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
-    	
-    	if (null == keyHandler) {
+		this(trans, id, keyHandler, valueHandler, config(trans).bTreeNodeSize(), config(trans).bTreeCacheHeight());
+    }	
+
+	public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler, final int treeNodeSize, final int treeCacheHeight) {
+		if (null == keyHandler) {
     		throw new ArgumentNullException();
     	}
-        
-        _nodeSize = DEBUG ? 7 : trans.stream().configImpl().bTreeNodeSize();
+		_nodeSize = DEBUG ? 7 : treeNodeSize;
         _halfNodeSize = _nodeSize / 2;
         _nodeSize = _halfNodeSize * 2;
-        
-        _cacheHeight = trans.stream().configImpl().bTreeCacheHeight();
-        
+		_cacheHeight = treeCacheHeight;
         _keyHandler = keyHandler;
         _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         _sizesByTransaction = new Hashtable4();
@@ -71,7 +71,11 @@ public class BTree extends YapMeta implements TransactionParticipant {
             setID(id);
             setStateDeactivated();
         }
-    } 
+	}
+    
+	public BTreeNode root() {
+		return _root;
+	}
     
     public int nodeSize() {
 		return _nodeSize;
@@ -358,6 +362,13 @@ public class BTree extends YapMeta implements TransactionParticipant {
 	public int compareKeys(Object key1, Object key2) {
 		_keyHandler.prepareComparison(key2);
 		return _keyHandler.compareTo(key1);
+	}
+	
+	private static Config4Impl config(Transaction trans) {
+		if (null == trans) {
+			throw new ArgumentNullException();
+		}
+		return trans.stream().configImpl();
 	}
 }
 

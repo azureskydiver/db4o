@@ -2,12 +2,7 @@ package com.db4o.db4ounit.btree;
 
 
 
-public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
-	
-	public void setUp() throws Exception {
-		super.setUp();
-		_btree = BTreeAssert.createIntKeyBTree(stream(), 0);
-	}
+public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {	
 
 	public void testSingleRemoveAdd() {
 		

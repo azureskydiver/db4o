@@ -11,6 +11,22 @@ import db4ounit.extensions.Db4oTestCase;
 
 
 public class BTreeSimpleTestCase extends Db4oTestCase {
+	
+	int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
+    
+    int[] _values;
+    
+    int[] _sortedKeys = {1, 2, 3, 55, 59, 70, 87, 101, 234, 288, 300};
+    
+    int[] _sortedValues;
+    
+    int[] _keysOnRemoval = {1, 2, 55, 59, 70, 87, 234, 288, 300};
+    
+    int[] _valuesOnRemoval;
+    
+    int[] _one = {1};
+    
+    int[] _none = {};
     
     public BTreeSimpleTestCase(){
         super();
@@ -217,22 +233,4 @@ public class BTreeSimpleTestCase extends Db4oTestCase {
 	private void expectKeys(BTree btree, final int[] keys) {
 		BTreeAssert.assertKeys(trans(), btree, keys);
 	}
-
-
-	int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
-    
-    int[] _values;
-    
-    int[] _sortedKeys = {1, 2, 3, 55, 59, 70, 87, 101, 234, 288, 300};
-    
-    int[] _sortedValues;
-    
-    int[] _keysOnRemoval = {1, 2, 55, 59, 70, 87, 234, 288, 300};
-    
-    int[] _valuesOnRemoval;
-    
-    int[] _one = {1};
-    
-    int[] _none = {};
-
 }

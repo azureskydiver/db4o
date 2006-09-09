@@ -11,9 +11,7 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 	}
 	
 	public void setUp() throws Exception {
-		super.setUp();
-		
-		_btree = BTreeAssert.createIntKeyBTree(stream(), 0);		
+		super.setUp();		
 		add(new int[] { 3, 7, 4, 9 });
 	}	
 

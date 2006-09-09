@@ -1,6 +1,5 @@
 package com.db4o.inside.btree;
 
-import com.db4o.Transaction;
 import com.db4o.foundation.*;
 
 public abstract class AbstractBTreeRangeIterator implements Iterator4 {
@@ -22,10 +21,6 @@ public abstract class AbstractBTreeRangeIterator implements Iterator4 {
 	        BTreeNode node = _cursor.node();
 	        
 	        if(node != _lastNode){
-	            node.prepareWrite(transaction());
-	            
-	            // Alternative: work in read mode, hold the reader here.
-	            
 	            _lastNode = node;
 	        }
 	        
@@ -59,9 +54,4 @@ public abstract class AbstractBTreeRangeIterator implements Iterator4 {
 	    }
 	    return _range.end().equals(cursor);
 	}
-
-	private Transaction transaction() {
-	    return _range.transaction();
-	}
-
 }

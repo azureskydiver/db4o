@@ -2,7 +2,7 @@
 
 package com.db4o.inside.btree;
 
-import com.db4o.Transaction;
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -74,11 +74,7 @@ public class BTreePointer{
             if(nextNode == null){
                 return null;
             }
-
-            // TODO: Try to operate the node in read mode wherever
-            //       that is possible
-            nextNode.prepareWrite(_transaction);
-            
+            nextNode.prepareRead(_transaction);
             newIndex = nextNode.firstKeyIndex(_transaction);
         }
         return new BTreePointer(_transaction, nextNode, newIndex);
@@ -105,12 +101,15 @@ public class BTreePointer{
     }
 
 	public Object key() {
-		node().prepareWrite(_transaction);
-		return node().key(_transaction, index());
+		return node().key(_transaction, prepareRead(), _index);
+	}
+
+	public Object value() {
+		return node().value(prepareRead(), index());
 	}
 	
-	public Object value() {
-		return node().value(index());
+	private YapReader prepareRead() {
+		return node().prepareRead(_transaction);
 	}
     
     public String toString() {
