@@ -2,12 +2,9 @@
 
 package com.db4o.inside.convert;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
-import com.db4o.inside.*;
 import com.db4o.inside.convert.conversions.*;
-import com.db4o.inside.marshall.*;
 
 /**
  * @exclude
@@ -16,74 +13,55 @@ public class Converter {
     
     public static final int VERSION = 5;
     
-    private static Converter _converter;
-    
+    public static boolean convert(ConversionStage stage) {
+    	if(!needsConversion(stage.header())) {
+    		return false;
+    	}
+    	if(CONVERTER == null){
+    		CONVERTER = new Converter();
+    	}
+    	return CONVERTER.runConversions(stage);
+    }
+
+    private static Converter CONVERTER;
+
+    private static boolean needsConversion(FileHeader0 fileHeader) {
+        return fileHeader.converterVersion() >= VERSION;
+    }
+
     private Hashtable4 _conversions;
+    private Conversion updateVersionConv=new UpdateVersionConversion(VERSION);
     
-    private Converter(){
+    private Converter() {
         _conversions = new Hashtable4();
         
         // TODO: There probably will be Java and .NET conversions
         //       Create Platform4.registerConversions() method ann
         //       call from here when needed.
         CommonConversions.register(this);
-
+        register(Integer.MAX_VALUE, new UpdateVersionConversion(VERSION));
     }
-    
-    public void register(int idx, Conversion conversion){
+
+    public void register(int idx, Conversion conversion) {
         if(_conversions.get(idx) != null){
             throw new IllegalStateException();
         }
         _conversions.put(idx, conversion);
     }
     
-    
-    private static boolean needsConversion(FileHeader0 fileHeader){
-        if(fileHeader.converterVersion() >= VERSION){
+    public boolean runConversions(ConversionStage stage) {
+    	FileHeader0 fileHeader=stage.header();
+        if(!needsConversion(stage.header())){
             return false;
         }
-        if(_converter == null){
-            _converter = new Converter();
-        }
-        return true;
-    }
-    
-    
-    public static void convertWhenClassCollectionAvailable(YapFile file, FileHeader0 fileHeader) {
-        if(!needsConversion(fileHeader)){
-            return;
-        }
-        _converter.convertWhenClassCollectionAvailable1(file, fileHeader);
-    }
-    
-    public static final boolean convertWhenSystemIsUp(YapFile file, FileHeader0 fileHeader){
-        if(!needsConversion(fileHeader)){
-            return false;
-        }
-        _converter.convertWhenSystemIsUp1(file, fileHeader);
-        return true;
-    }
-    
-    private void convertWhenSystemIsUp1(YapFile file, FileHeader0 fileHeader){
         for (int i = fileHeader.converterVersion(); i <= VERSION; i++) {
             Conversion conversion = (Conversion)_conversions.get(i);
             if(conversion != null){
-                conversion.setFile(file);
-                conversion.convertWhenSystemIsUp();
+                stage.accept(conversion);
             }
         }
-        fileHeader.converterVersion(VERSION);
-        fileHeader.writeVariablePart1();
-    }
-
-    private void convertWhenClassCollectionAvailable1(YapFile file, FileHeader0 fileHeader){
-        for (int i = fileHeader.converterVersion(); i <= VERSION; i++) {
-            Conversion conversion = (Conversion)_conversions.get(i);
-            if(conversion != null){
-                conversion.setFile(file);
-                conversion.convertWhenClassCollectionAvailable();
-            }
-        }
+        stage.accept(updateVersionConv);
+        return true;
     }
 
 }

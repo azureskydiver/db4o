@@ -2,27 +2,12 @@
 
 package com.db4o.inside.convert;
 
-import com.db4o.*;
+import com.db4o.inside.convert.ConversionStage.*;
 
-
-public abstract class Conversion {
-    
-    protected YapFile _yapFile;
-    
-    public void setFile(YapFile yapFile){
-        _yapFile = yapFile;
-    }
-
-    public void convertWhenSystemIsUp() {
-        
-    }
-    
-    public void convertWhenClassCollectionAvailable(){
-        
-    }
-    
-    
-    
-    
-
+/**
+ * @exclude
+ */
+public interface Conversion {
+	void convert(ClassCollectionAvailableStage stage);
+	void convert(SystemUpStage stage);
 }
