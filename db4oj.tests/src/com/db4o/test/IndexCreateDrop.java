@@ -118,29 +118,18 @@ public class IndexCreateDrop {
         q.constrain(IndexCreateDrop.class);
         q.descend("myDate").constrain(new Date(7)).smaller().equal();
         
-        if(MarshallerFamily.LEGACY){
-            q.descend("myDate").constrain(new Date(0)).greater();
-        }
-        
         Test.ensure(q.execute().size() == 6);
         
         q = Test.query();
         q.constrain(IndexCreateDrop.class);
         q.descend("myDate").constrain(new Date(7)).smaller();
         
-        if(MarshallerFamily.LEGACY){
-            q.descend("myDate").constrain(new Date(0)).greater();
-        }
-        
         Test.ensure(q.execute().size() == 5);
         
-        
-        if(! MarshallerFamily.LEGACY){
-            q = Test.query();
-            q.constrain(IndexCreateDrop.class);
-            q.descend("myDate").constrain(null);
-            Test.ensureEquals(2,  q.execute().size());
-        }
+        q = Test.query();
+        q.constrain(IndexCreateDrop.class);
+        q.descend("myDate").constrain(null);
+        Test.ensureEquals(2,  q.execute().size());
     }
 
 }

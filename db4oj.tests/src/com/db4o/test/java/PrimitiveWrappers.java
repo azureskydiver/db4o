@@ -72,11 +72,6 @@ public class PrimitiveWrappers {
     }
     
     public void testOne(){
-        
-        if(MarshallerFamily.LEGACY){
-            return;
-        }
-        
         PrimitiveWrappers original = new PrimitiveWrappers();
         original.storeOne();
         Test.ensure(this.equals(original));
