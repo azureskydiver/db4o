@@ -202,19 +202,18 @@ public class BTreeNode extends YapMeta{
         
     }
 
-	private BTreeNodeSearchResult findLowestLeafMatch (Transaction trans, int index){
-        
-        // TODO: only working in write mode here, 
-        //       could maybe optimize later
-        
-        prepareWrite(trans);
+	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, int index){		
+		return findLowestLeafMatch(trans, prepareRead(trans), index);
+	}
+	
+	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, YapReader reader, int index){
         
         if(index >= 0){
-            if(! compareInWriteModeEquals(index)){
+            if(!compareInReadModeEquals(reader, index)){
                 return null;
             }
             if(index > 0){
-                BTreeNodeSearchResult res = findLowestLeafMatch(trans, index - 1);
+                BTreeNodeSearchResult res = findLowestLeafMatch(trans, reader, index - 1);
                 if(res != null){
                     return res;
                 }
@@ -222,9 +221,10 @@ public class BTreeNode extends YapMeta{
             }
         }
         
-        BTreeNode node = previousNode();
+        final BTreeNode node = previousNode();
         if(node != null){
-            BTreeNodeSearchResult res = node.findLowestLeafMatch(trans, node.lastIndex());
+        	final YapReader nodeReader = node.prepareRead(trans);
+            BTreeNodeSearchResult res = node.findLowestLeafMatch(trans, nodeReader, node.lastIndex());
             if(res != null){
                 return res;
             }
@@ -237,9 +237,9 @@ public class BTreeNode extends YapMeta{
         return  createMatchingSearchResult(trans, index);
     }
 
-    private boolean compareInWriteModeEquals(int index) {
-        return compareInWriteMode(index) == 0;
-    }
+	private boolean compareInReadModeEquals(final YapReader reader, int index) {		
+		return compareInReadMode(reader, index) == 0;
+	}
 
     private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, int index) {
         return new BTreeNodeSearchResult(trans, btree(), this, index, true);
@@ -492,6 +492,9 @@ public class BTreeNode extends YapMeta{
     }
     
     private int compareInReadMode(YapReader reader, int index){
+    	if (canWrite()) {
+    		return compareInWriteMode(index);
+    	}
         seekKey(reader, index);
         return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
     }
@@ -946,7 +949,7 @@ public class BTreeNode extends YapMeta{
             if(index == -1){
                 return null;
             }
-			return new BTreePointer(trans, this, index);
+			return new BTreePointer(trans, reader, this, index);
 		}
         for (int i = 0; i < _count; i++) {
             BTreePointer childFirstPointer = child(reader, i).firstPointer(trans);
