@@ -13,24 +13,9 @@ public class Converter {
     
     public static final int VERSION = 5;
     
-    public static boolean convert(ConversionStage stage) {
-    	if(!needsConversion(stage.header())) {
-    		return false;
-    	}
-    	if(CONVERTER == null){
-    		CONVERTER = new Converter();
-    	}
-    	return CONVERTER.runConversions(stage);
-    }
-
-    private static Converter CONVERTER;
-
-    private static boolean needsConversion(FileHeader0 fileHeader) {
-        return fileHeader.converterVersion() >= VERSION;
-    }
-
+    private static Converter _converter;
+    
     private Hashtable4 _conversions;
-    private Conversion updateVersionConv=new UpdateVersionConversion(VERSION);
     
     private Converter() {
         _conversions = new Hashtable4();
@@ -39,7 +24,32 @@ public class Converter {
         //       Create Platform4.registerConversions() method ann
         //       call from here when needed.
         CommonConversions.register(this);
-        register(Integer.MAX_VALUE, new UpdateVersionConversion(VERSION));
+    }
+
+    public static boolean convert(ConversionStage stage) {
+    	if(!needsConversion(stage.header())) {
+    		return false;
+    	}
+    	if(_converter == null){
+    		_converter = new Converter();
+    	}
+        
+    	boolean result = _converter.runConversions(stage);
+        
+        if(stage.isLastStage()){
+            writeFileHeader(stage.header());
+        }
+        
+        return result;
+    }
+
+    private static void writeFileHeader(FileHeader0 fileHeader) {
+        fileHeader.converterVersion(VERSION);
+        fileHeader.writeVariablePart1();
+    }
+
+    private static boolean needsConversion(FileHeader0 fileHeader) {
+        return fileHeader.converterVersion() < VERSION;
     }
 
     public void register(int idx, Conversion conversion) {
@@ -60,8 +70,7 @@ public class Converter {
                 stage.accept(conversion);
             }
         }
-        stage.accept(updateVersionConv);
         return true;
     }
-
+    
 }
