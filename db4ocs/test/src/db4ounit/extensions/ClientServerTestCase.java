@@ -33,7 +33,7 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 		// default: do nothing
 	}
 
-	protected ObjectContainer getObjectContainer() {
+	protected ObjectContainer openClient() {
 		return server.openClient();
 	}
 
