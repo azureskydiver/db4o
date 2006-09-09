@@ -7,7 +7,13 @@ import com.db4o.inside.convert.ConversionStage.*;
 /**
  * @exclude
  */
-public interface Conversion {
-	void convert(ClassCollectionAvailableStage stage);
-	void convert(SystemUpStage stage);
+public abstract class Conversion {
+    
+	public void convert(ClassCollectionAvailableStage stage){
+        
+    }
+    
+	public void convert(SystemUpStage stage){
+        
+    }
 }
