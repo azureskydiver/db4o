@@ -187,7 +187,7 @@ public class BTreeNode extends YapMeta{
         }
             
         if(! s.foundMatch() || target == SearchTarget.ANY || target == SearchTarget.HIGHEST){
-            return new BTreeNodeSearchResult(trans, btree(), s, this);
+            return new BTreeNodeSearchResult(trans, reader, btree(), s, this);
         }
         
         if(target == SearchTarget.LOWEST){
@@ -195,7 +195,7 @@ public class BTreeNode extends YapMeta{
             if(res != null){
                 return res;
             }
-            return createMatchingSearchResult(trans, s.cursor());
+            return createMatchingSearchResult(trans, reader, s.cursor());
         }
         
         throw new IllegalStateException();
@@ -217,7 +217,7 @@ public class BTreeNode extends YapMeta{
                 if(res != null){
                     return res;
                 }
-                return createMatchingSearchResult(trans, index);
+                return createMatchingSearchResult(trans, reader, index);
             }
         }
         
@@ -234,15 +234,15 @@ public class BTreeNode extends YapMeta{
             return null;
         }
         
-        return  createMatchingSearchResult(trans, index);
+        return createMatchingSearchResult(trans, reader, index);
     }
 
 	private boolean compareInReadModeEquals(final YapReader reader, int index) {		
 		return compareInReadMode(reader, index) == 0;
 	}
 
-    private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, int index) {
-        return new BTreeNodeSearchResult(trans, btree(), this, index, true);
+    private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, YapReader reader, int index) {
+        return new BTreeNodeSearchResult(trans, reader, btree(), this, index, true);
     }
     
     public boolean canWrite(){

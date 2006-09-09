@@ -42,20 +42,16 @@ public class BTreePointer{
 
 	private final Transaction _transaction;
 
-	private YapReader _reader;
+	private YapReader _nodeReader;
    
-    public BTreePointer(Transaction transaction, BTreeNode node, int index) {
-        if(transaction == null || node == null){
+    public BTreePointer(Transaction transaction, YapReader nodeReader, BTreeNode node, int index) {
+    	if(transaction == null || node == null){
             throw new ArgumentNullException();
         }
         _transaction = transaction;
+        _nodeReader = nodeReader;
         _node = node;
         _index = index;
-    }
-    
-    public BTreePointer(Transaction transaction, YapReader nodeReader, BTreeNode node, int index) {
-    	this(transaction, node, index);
-    	_reader = nodeReader;
 	}
 
 	public Transaction transaction() {
@@ -70,7 +66,7 @@ public class BTreePointer{
         int indexInMyNode = _index + 1;
         while(indexInMyNode < _node.count()){
             if(_node.indexIsValid(_transaction, indexInMyNode)){
-                return new BTreePointer(_transaction, _reader, _node, indexInMyNode);
+                return new BTreePointer(_transaction, _nodeReader, _node, indexInMyNode);
             }
             indexInMyNode ++;
         }
@@ -117,10 +113,10 @@ public class BTreePointer{
 	}
 	
 	private YapReader prepareRead() {
-		if (_reader == null) {
-			_reader = node().prepareRead(_transaction);
+		if (_nodeReader == null) {
+			_nodeReader = node().prepareRead(_transaction);
 		}
-		return _reader;
+		return _nodeReader;
 	}
     
     public String toString() {
