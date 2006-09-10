@@ -10,6 +10,14 @@ import com.db4odoc.f1.Util;
 
 
 public class IndexedExample extends Util {
+	public static void main(String[] args){
+		IndexedExample.fillUpDB();
+        IndexedExample.noIndex();
+        IndexedExample.fullIndex();
+        IndexedExample.pilotIndex();
+        IndexedExample.pointsIndex();
+	}
+	
     public static void noIndex() {
     	ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
         try {
