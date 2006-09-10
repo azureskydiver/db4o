@@ -30,7 +30,7 @@ public final class Assert {
 	}
 	
 	public static void isNull(Object reference) {
-		isNull("Expected reference to be null, but was "+reference);
+		isNull(reference, "Expected reference to be null, but was "+reference);
 	}
 
 	public static void isNull(Object reference,String message) {
@@ -40,7 +40,7 @@ public final class Assert {
 	}
 
 	public static void isNotNull(Object reference) {
-		isNotNull("Expected reference to be not null.");
+		isNotNull(reference, "Expected reference to be not null.");
 	}
 
 	public static void isNotNull(Object reference,String message) {
