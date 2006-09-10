@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 
 class PendingClassInits {
 	
-	private final YapClassCollection _classColl;
+    private final Transaction _systemTransaction;
 	
 	private Collection4 _pending = new Collection4();
 
@@ -17,8 +17,8 @@ class PendingClassInits {
 	
 	private boolean _running = false;
 	
-	PendingClassInits(YapClassCollection classColl){
-		_classColl = classColl;
+	PendingClassInits(Transaction systemTransaction){
+        _systemTransaction = systemTransaction;
 	}
 	
 	void process(YapClass newYapClass) {
@@ -54,16 +54,20 @@ class PendingClassInits {
 	private void checkMembers() {
 		while(_members.hasNext()) {
 			YapClass yc = (YapClass)_members.next();
-			yc.addMembers(_classColl.i_stream);
+			yc.addMembers(stream());
             _statics.add(yc);
 		}
 	}
+
+    private YapStream stream() {
+        return _systemTransaction.stream();
+    }
 	
 	private void checkStatics() {
 		checkMembers();
 		while(_statics.hasNext()) {
 			YapClass yc = (YapClass)_statics.next();
-			yc.storeStaticFieldValues(_classColl.i_systemTrans, true);
+			yc.storeStaticFieldValues(_systemTransaction, true);
 			_writes.add(yc);
 			checkMembers();
 		}
@@ -74,7 +78,7 @@ class PendingClassInits {
 		while(_writes.hasNext()) {
 			YapClass yc = (YapClass)_writes.next();
 	        yc.setStateDirty();
-	        yc.write(_classColl.i_systemTrans);
+	        yc.write(_systemTransaction);
             _inits.add(yc);
 			checkStatics();
 		}
@@ -84,7 +88,7 @@ class PendingClassInits {
         checkWrites();
         while(_inits.hasNext()) {
             YapClass yc = (YapClass)_inits.next();
-            yc.initConfigOnUp(_classColl.i_systemTrans);
+            yc.initConfigOnUp(_systemTransaction);
             checkWrites();
         }
     }

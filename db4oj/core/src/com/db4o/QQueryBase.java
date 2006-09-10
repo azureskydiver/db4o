@@ -102,7 +102,7 @@ public abstract class QQueryBase implements Unversioned {
                 
                 Collection4 col = new Collection4();
                 if (claxx.isInterface()) {
-                    Collection4 classes = stream().i_classCollection.forInterface(claxx);
+                    Collection4 classes = stream().classCollection().forInterface(claxx);
                     if (classes.size() == 0) {
                         QConClass qcc = new QConClass(i_trans, null, null, claxx);
                         addConstraint(qcc);
@@ -218,7 +218,7 @@ public abstract class QQueryBase implements Unversioned {
 
             final boolean[] anyClassCollected = { false };
 
-            stream().i_classCollection.attachQueryNode(a_field, new Visitor4() {
+            stream().classCollection().attachQueryNode(a_field, new Visitor4() {
 
                 public void visit(Object obj) {
 

@@ -5,13 +5,14 @@ package com.db4o.inside.convert;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
 import com.db4o.inside.convert.conversions.*;
+import com.db4o.inside.marshall.*;
 
 /**
  * @exclude
  */
 public class Converter {
     
-    public static final int VERSION = 5;
+    public static final int VERSION = MarshallerFamily.BTREE_FIELD_INDEX ? 6 : 5;
     
     private static Converter _converter;
     
@@ -33,19 +34,7 @@ public class Converter {
     	if(_converter == null){
     		_converter = new Converter();
     	}
-        
-    	boolean result = _converter.runConversions(stage);
-        
-        if(stage.isLastStage()){
-            writeFileHeader(stage.header());
-        }
-        
-        return result;
-    }
-
-    private static void writeFileHeader(FileHeader0 fileHeader) {
-        fileHeader.converterVersion(VERSION);
-        fileHeader.writeVariablePart1();
+    	return _converter.runConversions(stage);
     }
 
     private static boolean needsConversion(FileHeader0 fileHeader) {

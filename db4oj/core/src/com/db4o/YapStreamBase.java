@@ -72,7 +72,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     // Collection of all classes
     // if (i_classCollection == null) the engine is down.
-    public YapClassCollection      i_classCollection;
+    protected YapClassCollection      _classCollection;
 
     // the Configuration context for this ObjectContainer
     protected Config4Impl             i_config;
@@ -294,7 +294,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     final void checkClosed() {
-        if (i_classCollection == null) {
+        if (_classCollection == null) {
             Exceptions4.throwRuntimeException(20, toString());
         }
     }
@@ -330,7 +330,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     final boolean close1() {
         // this is set to null in close2 and is therefore our check for down.
-        if (i_classCollection == null) {
+        if (_classCollection == null) {
             return true;
         }
         Platform4.preClose(_this);
@@ -346,7 +346,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (hasShutDownHook()) {
             Platform4.removeShutDownHook(this, i_lock);
         }
-        i_classCollection = null;
+        _classCollection = null;
         i_references.stopTimer();
         i_hcTree = null;
         i_idTree = null;
@@ -388,6 +388,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public Config4Impl config(){
         return configImpl();
     }
+    
+    abstract int converterVersion();
 
     abstract QueryResultImpl createQResult(Transaction a_ta);
 
@@ -645,7 +647,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     void emergencyClose() {
-        i_classCollection = null;
+        _classCollection = null;
         i_references.stopTimer();
     }
 
@@ -655,7 +657,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     void failedToShutDown() {
         synchronized (Db4o.lock) {
-            if (i_classCollection != null) {
+            if (_classCollection != null) {
                 if (i_entryCounter == 0) {
                     Messages.logErr(configImpl(), 50, toString(), null);
                     while (!close()) {
@@ -681,7 +683,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     void fatalException(Throwable t, int msgID) {
         if (!i_amDuringFatalExit) {
             i_amDuringFatalExit = true;
-            i_classCollection = null;
+            _classCollection = null;
             emergencyClose();
 			
             Messages.logErr(configImpl(), (msgID==Messages.FATAL_MSG_ID ? 18 : msgID), null, t);
@@ -937,7 +939,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             return yc;
         }
         
-        return i_classCollection.getYapClass(a_class, a_create);
+        return _classCollection.getYapClass(a_class, a_create);
     }
     
     /**
@@ -962,7 +964,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (yc != null) {
             return yc;
         }
-        return i_classCollection.getActiveYapClass(a_class);
+        return _classCollection.getActiveYapClass(a_class);
     }
     
 
@@ -977,7 +979,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (yc != null) {
             return yc;
         }
-        return i_classCollection.getYapClass(a_id);
+        return _classCollection.getYapClass(a_id);
     }
 
     public final YapObject getYapObject(int a_id) {
@@ -1115,7 +1117,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
      * overridden in YapObjectCarrier
      */
     void initialize2NObjectCarrier() {
-        i_classCollection = new YapClassCollection(i_systemTrans);
+        _classCollection = new YapClassCollection(i_systemTrans);
         i_references.startTimer();
     }
 
@@ -1128,7 +1130,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     void initialize4NObjectCarrier() {
         initializeEssentialClasses();
         rename(configImpl());
-        i_classCollection.initOnUp(i_systemTrans);
+        _classCollection.initOnUp(i_systemTrans);
         if (configImpl().detectSchemaChanges()) {
             i_systemTrans.commit();
         }
@@ -1187,7 +1189,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public boolean isClosed() {
         synchronized (i_lock) {
-            return i_classCollection == null;
+            return _classCollection == null;
         }
     }
 
@@ -1358,7 +1360,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         System.runFinalization();
         System.gc();
         gc();
-        i_classCollection.purge();
+        _classCollection.purge();
     }
 
     final void purge1(Object obj) {
@@ -1448,11 +1450,11 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     private void reboot() {
         commit();
-        int ccID = i_classCollection.getID();
+        int ccID = _classCollection.getID();
         i_references.stopTimer();
         initialize2();
-        i_classCollection.setID(ccID);
-        i_classCollection.read(i_systemTrans);
+        _classCollection.setID(ccID);
+        _classCollection.read(i_systemTrans);
     }
     
     public GenericReflector reflector(){
@@ -1472,7 +1474,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     final void refreshClasses() {
         synchronized (i_lock) {
-            i_classCollection.refreshClasses();
+            _classCollection.refreshClasses();
         }
     }
 
@@ -1496,7 +1498,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (config.rename() != null) {
             renamedOne = rename1(config);
         }
-        i_classCollection.checkChanges();
+        _classCollection.checkChanges();
         if (renamedOne) {
             reboot();
         }
@@ -1512,13 +1514,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     boolean renamed = false;
 
                     boolean isField = ren.rClass.length() > 0;
-                    YapClass yapClass = i_classCollection
+                    YapClass yapClass = _classCollection
                         .getYapClass(isField ? ren.rClass : ren.rFrom);
                     if (yapClass != null) {
                         if (isField) {
                             renamed = yapClass.renameField(ren.rFrom, ren.rTo);
                         } else {
-                            YapClass existing = i_classCollection
+                            YapClass existing = _classCollection
                                 .getYapClass(ren.rTo);
                             if (existing == null) {
                                 yapClass.setName(ren.rTo);
@@ -1986,7 +1988,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     void stopSession() {
-        i_classCollection = null;
+        _classCollection = null;
     }
 
     public StoredClass storedClass(Object clazz) {
@@ -2011,7 +2013,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public StoredClass[] storedClasses() {
         synchronized (i_lock) {
             checkClosed();
-            return i_classCollection.storedClasses();
+            return _classCollection.storedClasses();
         }
     }
 		
@@ -2088,5 +2090,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public Config4Impl configImpl() {
         return i_config;
+    }
+
+    public YapClassCollection classCollection() {
+        return _classCollection;
     }
 }

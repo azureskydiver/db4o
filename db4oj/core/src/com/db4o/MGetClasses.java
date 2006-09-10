@@ -13,7 +13,7 @@ final class MGetClasses extends MsgD {
 				// Since every new Client reads the class
 				// collection from the file, we have to 
 				// make sure, it has been written.
-				stream.i_classCollection.write(getTransaction());
+				stream.classCollection().write(getTransaction());
 
 			} catch (Exception e) {
 				if (Deploy.debug) {
@@ -23,7 +23,7 @@ final class MGetClasses extends MsgD {
 		}
 		MsgD message = Msg.GET_CLASSES.getWriterForLength(getTransaction(), YapConst.INT_LENGTH + 1);
 		YapWriter writer = message.getPayLoad();
-		writer.writeInt(stream.i_classCollection.getID());
+		writer.writeInt(stream.classCollection().getID());
 		writer.append(stream.stringIO().encodingByte());
 		message.write(stream, sock);
 		return true;

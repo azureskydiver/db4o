@@ -92,6 +92,10 @@ public abstract class YapFile extends YapStream {
         
     }
     
+    int converterVersion() {
+        return _fileHeader.converterVersion();
+    }
+    
     public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
     
     public long currentVersion() {
@@ -100,7 +104,7 @@ public abstract class YapFile extends YapStream {
 
     void initNewClassCollection() {
         // overridden in YapObjectCarrier to do nothing
-        i_classCollection.initTables(1);
+        classCollection().initTables(1);
     }
     
     public final BTree createBTreeClassIndex(int id){
@@ -158,6 +162,11 @@ public abstract class YapFile extends YapStream {
         if(DTrace.enabled){
             DTrace.FILE_FREE.logLength(a_address, a_length);
         }
+        if(_freespaceManager == null){
+            // Can happen on early free before freespacemanager
+            // is up, during conversion.
+           return;
+        }
         _freespaceManager.free(a_address, a_length);
         if(Debug.freespace && Debug.freespaceChecker){
             _fmChecker.free(a_address, a_length);
@@ -199,7 +208,7 @@ public abstract class YapFile extends YapStream {
         // duplicates because of inheritance hierarchies
         final Tree[] duplicates = new Tree[1];
 
-        YapClassCollectionIterator i = i_classCollection.iterator();
+        YapClassCollectionIterator i = classCollection().iterator();
         while (i.moveNext()) {
 			final YapClass yapClass = i.currentClass();
 			if (yapClass.getName() != null) {
@@ -444,8 +453,8 @@ public abstract class YapFile extends YapStream {
         _fileHeader.read0(this);
         
         
-        i_classCollection.setID(_fileHeader.classCollectionID());
-        i_classCollection.read(i_systemTrans);
+        classCollection().setID(_fileHeader.classCollectionID());
+        classCollection().read(i_systemTrans);
         
         Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this, _fileHeader));
         
@@ -493,6 +502,8 @@ public abstract class YapFile extends YapStream {
         }
 
         if(Converter.convert(new ConversionStage.SystemUpStage(this, _fileHeader))){
+            _fileHeader.converterVersion(Converter.VERSION);
+            _fileHeader.writeVariablePart1();
             getTransaction().commit();
         }
         
@@ -576,7 +587,7 @@ public abstract class YapFile extends YapStream {
                         e.printStackTrace();
                     }
                 }
-                if (i_classCollection == null) {
+                if (classCollection() == null) {
                     return false;
                 }
 
@@ -675,7 +686,7 @@ public abstract class YapFile extends YapStream {
         // FIXME: blocksize should be already valid in FileHeader
         YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
         
-        _fileHeader.writeFixedPart(shuttingDown, writer, blockSize(), i_classCollection.getID(), freespaceID);
+        _fileHeader.writeFixedPart(shuttingDown, writer, blockSize(), classCollection().getID(), freespaceID);
         
         if(shuttingDown){
             ensureLastSlotWritten();

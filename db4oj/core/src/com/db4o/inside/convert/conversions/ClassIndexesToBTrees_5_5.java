@@ -11,7 +11,9 @@ import com.db4o.inside.convert.ConversionStage.*;
 /**
  * @exclude
  */
-public class ClassIndexesToBTrees extends Conversion {
+public class ClassIndexesToBTrees_5_5 extends Conversion {
+    
+    public static final int VERSION = 5;
 
     public void convert(YapFile yapFile, int classIndexId, BTree bTree){
         Transaction trans = yapFile.getSystemTransaction();

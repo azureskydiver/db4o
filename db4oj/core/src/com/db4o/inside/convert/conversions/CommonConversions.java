@@ -10,7 +10,10 @@ import com.db4o.inside.convert.*;
 public class CommonConversions {
     
     public static void register(Converter converter){
-        converter.register(5, new ClassIndexesToBTrees());
+        converter.register(ClassIndexesToBTrees_5_5.VERSION, new ClassIndexesToBTrees_5_5());
+        converter.register(FieldIndexesToBTrees_5_7.VERSION, new FieldIndexesToBTrees_5_7());
     }
+    
+    
     
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.inside.marshall;
 
+import com.db4o.inside.convert.conversions.*;
+
 /**
  * @exclude
  */
@@ -18,11 +20,11 @@ public class MarshallerFamily {
         
     }
     
-    private static int VERSION = Version.MARSHALLER;
+    private static int FAMILY_VERSION = Version.MARSHALLER;
 
-    public static final boolean BTREE_FIELD_INDEX = (VERSION == Version.BTREE_FIELD_INDEXES);
+    public static final boolean BTREE_FIELD_INDEX = (FAMILY_VERSION == Version.BTREE_FIELD_INDEXES);
     
-    public static final boolean OLD_FIELD_INDEX = (VERSION < Version.BTREE_FIELD_INDEXES);
+    public static final boolean OLD_FIELD_INDEX = (FAMILY_VERSION < Version.BTREE_FIELD_INDEXES);
     
     public final ArrayMarshaller _array;
     
@@ -38,36 +40,37 @@ public class MarshallerFamily {
     
     public final UntypedMarshaller _untyped;
 
+    private final int _converterVersion;
 
-    private final static MarshallerFamily[] allVersions     = new MarshallerFamily[] {
+
+    private final static MarshallerFamily[] allVersions = new MarshallerFamily[] {
         
         // LEGACY => before 5.4
         
         new MarshallerFamily(
+            0,
             new ArrayMarshaller0(),
-            new ClassMarshaller(),
+            new ClassMarshaller0(),
             new FieldMarshaller0(),
             new ObjectMarshaller0(), 
             new PrimitiveMarshaller0(),
             new StringMarshaller0(),
             new UntypedMarshaller0()),
         
-        // 5.4 => 5.5
-            
         new MarshallerFamily(
+            ClassIndexesToBTrees_5_5.VERSION,
             new ArrayMarshaller1(),
-            new ClassMarshaller(),
+            new ClassMarshaller1(),
             new FieldMarshaller0(),
             new ObjectMarshaller1(), 
             new PrimitiveMarshaller1(),
             new StringMarshaller1(),
             new UntypedMarshaller1()),
     
-        // BTREE_FIELD_INDEX release
-    
     new MarshallerFamily(
+        FieldIndexesToBTrees_5_7.VERSION,
         new ArrayMarshaller1(),
-        new ClassMarshaller(),
+        new ClassMarshaller2(),
         new FieldMarshaller1(),
         new ObjectMarshaller1(), 
         new PrimitiveMarshaller1(),
@@ -75,6 +78,7 @@ public class MarshallerFamily {
         new UntypedMarshaller1())};
 
     private MarshallerFamily(
+            int converterVersion,
             ArrayMarshaller arrayMarshaller,
             ClassMarshaller classMarshaller,
             FieldMarshaller fieldMarshaller,
@@ -82,6 +86,7 @@ public class MarshallerFamily {
             PrimitiveMarshaller primitiveMarshaller, 
             StringMarshaller stringMarshaller,
             UntypedMarshaller untypedMarshaller) {
+        _converterVersion = converterVersion;
         _array = arrayMarshaller;
         _array._family = this;
         _class = classMarshaller;
@@ -96,12 +101,23 @@ public class MarshallerFamily {
         _untyped._family = this;
     }
 
-    public static MarshallerFamily forVersion(int n) {
+    public static MarshallerFamily version(int n) {
         return allVersions[n];
     }
 
     public static MarshallerFamily current() {
-        return forVersion(VERSION);
+        return version(FAMILY_VERSION);
+    }
+    
+    public static MarshallerFamily forConverterVersion(int n){
+        MarshallerFamily result = allVersions[0];
+        for (int i = 1; i < allVersions.length; i++) {
+            if(allVersions[i]._converterVersion > n){
+                return result;
+            }
+            result = allVersions[i]; 
+        }
+        return result;
     }
 
 }

@@ -122,7 +122,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		final int[] count = { 0 };
     		final YapField[] yfs = { null };
     		
-    		i_trans.stream().i_classCollection.attachQueryNode(a_field, new Visitor4() {
+    		i_trans.stream().classCollection().attachQueryNode(a_field, new Visitor4() {
     			public void visit(Object obj) {
     				yfs[0] = (YapField) ((Object[]) obj)[1];
     				count[0]++;

@@ -1510,8 +1510,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         
         bitTrue(YapConst.READING);
         
-        MarshallerFamily.current()._class.read(i_stream, this, i_reader);
-        
+        MarshallerFamily.forConverterVersion(i_stream.converterVersion())._class.read(i_stream, this, i_reader);
+       
         i_nameBytes = null;
         i_reader = null;
         bitFalse(YapConst.READING);
