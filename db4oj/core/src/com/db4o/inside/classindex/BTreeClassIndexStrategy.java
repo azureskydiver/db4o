@@ -5,7 +5,7 @@ package com.db4o.inside.classindex;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.BTree;
-import com.db4o.inside.convert.conversions.ClassIndexesToBTrees;
+import com.db4o.inside.convert.conversions.ClassIndexesToBTrees_5_5;
 
 /**
  * @exclude
@@ -79,7 +79,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		        createBTreeIndex(stream, - indexId);
 		    }else{
 		        createBTreeIndex(stream, 0);
-		        new ClassIndexesToBTrees().convert(yf, indexId, _btreeIndex);
+		        new ClassIndexesToBTrees_5_5().convert(yf, indexId, _btreeIndex);
 		        yf.setDirtyInSystemTransaction(_yapClass);
 		    }
 		}

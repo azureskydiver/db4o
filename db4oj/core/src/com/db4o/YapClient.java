@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.inside.Exceptions4;
+import com.db4o.inside.convert.*;
 import com.db4o.reflect.ReflectClass;
 
 /**
@@ -169,6 +170,10 @@ public class YapClient extends YapStream implements ExtClient {
 	final void commit1() {
 		i_trans.commit();
 	}
+    
+    int converterVersion() {
+        return Converter.VERSION;
+    }
 	
 	YapSocket createParalellSocket() throws IOException {
 		Msg.GET_THREAD_ID.write(this, i_socket);
@@ -230,8 +235,8 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 		a_yapClass.setID(message._id);
 		a_yapClass.readName1(getSystemTransaction(), bytes);
-		i_classCollection.addYapClass(a_yapClass);
-		i_classCollection.readYapClass(a_yapClass, a_class);
+		classCollection().addYapClass(a_yapClass);
+		classCollection().readYapClass(a_yapClass, a_class);
 		return true;
 	}
 
@@ -573,10 +578,10 @@ public class YapClient extends YapStream implements ExtClient {
 	void readThis() {
 		writeMsg(Msg.GET_CLASSES.getWriter(i_systemTrans));
 		YapWriter bytes = expectedByteResponse(Msg.GET_CLASSES);
-		i_classCollection.setID(bytes.readInt());
+		classCollection().setID(bytes.readInt());
 		createStringIO(bytes.readByte());
-		i_classCollection.read(i_systemTrans);
-		i_classCollection.refreshClasses();
+		classCollection().read(i_systemTrans);
+		classCollection().refreshClasses();
 	}
 
 	public void releaseSemaphore(String name) {
@@ -707,4 +712,5 @@ public class YapClient extends YapStream implements ExtClient {
 	public YapSocket socket() {
 		return i_socket;
 	}
+
 }

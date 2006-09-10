@@ -220,7 +220,7 @@ public class Transaction {
     private void commit3Stream(){
         stream().checkNeededUpdates();
         stream().writeDirty();
-        stream().i_classCollection.write(stream().getSystemTransaction());
+        stream().classCollection().write(stream().getSystemTransaction());
     }
     
     

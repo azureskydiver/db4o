@@ -19,7 +19,7 @@ public class ClassMarshaller {
         
         writer.writeIDOf(trans, clazz.i_ancestor);
         
-        clazz.index().writeId(writer, trans);
+        writeIndex(trans, clazz, writer);
         
         YapField[] fields = clazz.i_fields; 
         
@@ -31,6 +31,10 @@ public class ClassMarshaller {
         for (int i = 0; i < fields.length; i++) {
             _family._field.write(trans, clazz, fields[i], writer);
         }
+    }
+
+    protected void writeIndex(Transaction trans, YapClass clazz, YapReader writer) {
+        clazz.index().writeId(writer, trans);
     }
 
     public byte[] readName(Transaction trans, YapClass clazz, YapReader reader) {
@@ -66,10 +70,14 @@ public class ClassMarshaller {
         
         clazz.checkDb4oType();
         
-        clazz.index().read(reader, stream);
+        readIndex(stream, clazz, reader);
         
         clazz.i_fields = createFields(clazz, reader.readInt());
         readFields(stream, reader, clazz.i_fields);        
+    }
+
+    protected void readIndex(YapStream stream, YapClass clazz, YapReader reader) {
+        clazz.index().read(reader, stream);
     }
 
 	private YapField[] createFields(YapClass clazz, final int fieldCount) {

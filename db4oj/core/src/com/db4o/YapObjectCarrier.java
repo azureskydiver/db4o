@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.inside.convert.*;
 import com.db4o.types.*;
 
 /**
@@ -27,7 +28,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 	
 	void initialize1(){
 	    i_handlers = i_parent.i_handlers;
-		i_classCollection = i_parent.i_classCollection;
+        _classCollection = i_parent.classCollection();
 		i_config = i_parent.configImpl();
 		i_references = new YapReferences(this);
 		initialize2();
@@ -56,6 +57,10 @@ public class YapObjectCarrier extends YapMemoryFile {
 	void configureNewFile() {
 	    i_writeAt = HEADER_LENGTH;
 	}
+    
+    int converterVersion() {
+        return Converter.VERSION;
+    }
 		
     public boolean close() {
         

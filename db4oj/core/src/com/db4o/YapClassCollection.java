@@ -14,8 +14,7 @@ public final class YapClassCollection extends YapMeta {
     private Collection4 i_classes;
     private Hashtable4 i_creating;
     
-    final YapStream i_stream;
-    final Transaction i_systemTrans;
+    private final Transaction _systemTransaction;
 
     private Hashtable4 i_yapClassByBytes;
     private Hashtable4 i_yapClassByClass;
@@ -27,15 +26,14 @@ public final class YapClassCollection extends YapMeta {
 	private final PendingClassInits _classInits; 
 
 
-    YapClassCollection(Transaction a_trans) {
-        i_systemTrans = a_trans;
-        i_stream = a_trans.stream();
+    YapClassCollection(Transaction systemTransaction) {
+        _systemTransaction = systemTransaction;
         i_initYapClassesOnUp = new Queue4();
-		_classInits = new PendingClassInits(this);
+		_classInits = new PendingClassInits(_systemTransaction);
     }
 
     void addYapClass(YapClass yapClass) {
-        i_stream.setDirtyInSystemTransaction(this);
+        stream().setDirtyInSystemTransaction(this);
         i_classes.add(yapClass);
         if(yapClass.stateUnread()){
             i_yapClassByBytes.put(yapClass.i_nameBytes, yapClass);
@@ -43,13 +41,13 @@ public final class YapClassCollection extends YapMeta {
             i_yapClassByClass.put(yapClass.classReflector(), yapClass);
         }
         if (yapClass.getID() == 0) {
-            yapClass.write(i_systemTrans);
+            yapClass.write(_systemTransaction);
         }
         i_yapClassByID.put(yapClass.getID(), yapClass);
     }
     
     private byte[] asBytes(String str){
-        return i_stream.stringIO().write(str);
+        return stream().stringIO().write(str);
     }
 
     void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
@@ -80,10 +78,10 @@ public final class YapClassCollection extends YapMeta {
         i_yapClassCreationDepth++;
         ReflectClass superClass = a_class.getSuperclass();
         YapClass superYapClass = null;
-        if (superClass != null && ! superClass.equals(i_stream.i_handlers.ICLASS_OBJECT)) {
+        if (superClass != null && ! superClass.equals(stream().i_handlers.ICLASS_OBJECT)) {
             superYapClass = getYapClass(superClass, true);
         }
-        boolean ret = i_stream.createYapClass(a_yapClass, a_class, superYapClass);
+        boolean ret = stream().createYapClass(a_yapClass, a_class, superYapClass);
         i_yapClassCreationDepth--;
         initYapClassesOnUp();
         return ret;
@@ -156,7 +154,7 @@ public final class YapClassCollection extends YapMeta {
             return yapClass;
         }
         
-        yapClass = new YapClass(i_stream, a_class);
+        yapClass = new YapClass(stream(), a_class);
         
         i_creating.put(a_class, yapClass);
         
@@ -177,7 +175,7 @@ public final class YapClassCollection extends YapMeta {
         
         int id = yapClass.getID();
         if(id == 0){
-            yapClass.write(i_stream.getSystemTransaction());
+            yapClass.write(stream().getSystemTransaction());
             id = yapClass.getID();
         }
         
@@ -192,7 +190,7 @@ public final class YapClassCollection extends YapMeta {
         
         i_creating.remove(a_class);
         
-        i_stream.setDirtyInSystemTransaction(this);
+        stream().setDirtyInSystemTransaction(this);
         
         return yapClass;
     }    
@@ -231,7 +229,7 @@ public final class YapClassCollection extends YapMeta {
 	}
 
 	private String resolveAlias(String name) {
-		return i_stream.configImpl().resolveAlias(name);
+		return stream().configImpl().resolveAlias(name);
 	}
 
     void initOnUp(Transaction systemTrans) {
@@ -261,7 +259,7 @@ public final class YapClassCollection extends YapMeta {
         if(i_yapClassCreationDepth == 0){
             YapClass yc = (YapClass)i_initYapClassesOnUp.next();
             while(yc != null){
-                yc.initOnUp(i_systemTrans);
+                yc.initOnUp(_systemTransaction);
                 yc = (YapClass)i_initYapClassesOnUp.next();
             }
         }
@@ -290,7 +288,7 @@ public final class YapClassCollection extends YapMeta {
         initTables(classCount);
 
         for (int i = classCount; i > 0; i--) {
-            YapClass yapClass = new YapClass(i_stream, null);
+            YapClass yapClass = new YapClass(stream(), null);
             int id = a_reader.readInt();
             yapClass.setID(id);
             i_classes.add(yapClass);
@@ -303,7 +301,7 @@ public final class YapClassCollection extends YapMeta {
     }
     
     private void applyReadAs(){
-        final Hashtable4 readAs = i_stream.configImpl().readAs(); 
+        final Hashtable4 readAs = stream().configImpl().readAs(); 
         readAs.forEachKey(new Visitor4() {
             public void visit(Object a_object) {
                 String dbName = (String)a_object;
@@ -314,7 +312,7 @@ public final class YapClassCollection extends YapMeta {
                     YapClass yc = (YapClass)i_yapClassByBytes.get(dbbytes);
                     if(yc != null){
                         yc.i_nameBytes = useBytes;
-                        yc.setConfig(i_stream.configImpl().configClass(dbName));
+                        yc.setConfig(stream().configImpl().configClass(dbName));
                         i_yapClassByBytes.put(dbbytes, null);
                         i_yapClassByBytes.put(useBytes, yc);
                     }
@@ -329,7 +327,7 @@ public final class YapClassCollection extends YapMeta {
         }
         i_yapClassCreationDepth++;
         if (yapClass != null  && yapClass.stateUnread()) {
-            yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
+            yapClass.createConfigAndConstructor(i_yapClassByBytes, stream(), a_class);
             ReflectClass claxx = yapClass.classReflector();
             if(claxx != null){
                 i_yapClassByClass.put(claxx, yapClass);
@@ -344,9 +342,9 @@ public final class YapClassCollection extends YapMeta {
     }
 
     void refreshClasses() {
-        YapClassCollection rereader = new YapClassCollection(i_systemTrans);
+        YapClassCollection rereader = new YapClassCollection(_systemTransaction);
         rereader.i_id = i_id;
-        rereader.read(i_stream.getSystemTransaction());
+        rereader.read(stream().getSystemTransaction());
         Iterator4 i = rereader.i_classes.iterator();
         while (i.moveNext()) {
             YapClass yc = (YapClass)i.current();
@@ -354,7 +352,7 @@ public final class YapClassCollection extends YapMeta {
                 i_classes.add(yc);
                 i_yapClassByID.put(yc.getID(), yc);
                 if(yc.stateUnread()){
-                    i_yapClassByBytes.put(yc.readName(i_systemTrans), yc);
+                    i_yapClassByBytes.put(yc.readName(_systemTransaction), yc);
                 }else{
                     i_yapClassByClass.put(yc.classReflector(), yc);
                 }
@@ -370,7 +368,7 @@ public final class YapClassCollection extends YapMeta {
     void reReadYapClass(YapClass yapClass){
         if(yapClass != null){
             reReadYapClass(yapClass.i_ancestor);
-            yapClass.readName(i_systemTrans);
+            yapClass.readName(_systemTransaction);
             yapClass.forceRead();
             yapClass.setStateClean();
             yapClass.bitFalse(YapConst.CHECKED_CHANGES);
@@ -398,6 +396,19 @@ public final class YapClassCollection extends YapMeta {
         StoredClass[] sclasses = new StoredClass[classes.size()];
         classes.toArray(sclasses);
         return sclasses;
+    }
+    
+    public void writeAllClasses(){
+        StoredClass[] storedClasses = storedClasses();
+        for (int i = 0; i < storedClasses.length; i++) {
+            YapClass yc = (YapClass)storedClasses[i];
+            yc.setStateDirty();
+        }
+        
+        for (int i = 0; i < storedClasses.length; i++) {
+            YapClass yc = (YapClass)storedClasses[i];
+            yc.write(_systemTransaction);
+        }
     }
 
     public void writeThis(Transaction trans, YapReader a_writer) {
@@ -430,5 +441,9 @@ public final class YapClassCollection extends YapMeta {
 			target.writeInt(newID);
 		}
 	}
+
+    private YapStream stream() {
+        return _systemTransaction.stream();
+    }
 
 }

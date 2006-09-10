@@ -28,9 +28,6 @@ public abstract class ConversionStage {
 		public void accept(Conversion conversion) {
 			conversion.convert(this);
 		}
-        public boolean isLastStage(){
-            return true;
-        }
 	}
 
 	private YapFile _file;
@@ -50,8 +47,4 @@ public abstract class ConversionStage {
 	}
 	
 	public abstract void accept(Conversion conversion);
-    
-    public boolean isLastStage(){
-        return false;
-    }
 }

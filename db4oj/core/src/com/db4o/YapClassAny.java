@@ -39,7 +39,7 @@ final class YapClassAny extends YapClass {
 	}
 
 	public boolean hasField(YapStream a_stream, String a_path) {
-		return a_stream.i_classCollection.fieldExists(a_path);
+		return a_stream.classCollection().fieldExists(a_path);
 	}
 	
 	boolean hasIndex() {

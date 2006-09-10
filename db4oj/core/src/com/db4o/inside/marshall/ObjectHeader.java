@@ -65,7 +65,7 @@ public class ObjectHeader {
         if(marshallerAware) {
             marshallerVersion = reader.readByte();
         }
-        MarshallerFamily marshallerFamily=MarshallerFamily.forVersion(marshallerVersion);
+        MarshallerFamily marshallerFamily=MarshallerFamily.version(marshallerVersion);
 		return marshallerFamily;
 	}
     
