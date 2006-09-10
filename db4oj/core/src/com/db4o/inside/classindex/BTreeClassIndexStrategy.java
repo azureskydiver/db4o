@@ -35,17 +35,16 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void purge() {
 	}
 
-	public void read(YapReader reader, YapStream stream) {
-		readBTreeIndex(reader, stream);
+	public void read(YapStream stream, int indexID) {
+		readBTreeIndex(stream, indexID);
 	}
 
-	public void writeId(YapReader writer, Transaction trans) {
+	public int write(Transaction trans) {
 		if (_btreeIndex == null){
-            writer.writeInt(0);
-        } else {
-            _btreeIndex.write(trans);
-            writer.writeInt(- _btreeIndex.getID());
-        }
+            return 0;
+        } 
+        _btreeIndex.write(trans);
+        return _btreeIndex.getID();
 	}
 	
 	public void traverseAll(Transaction ta,Visitor4 command) {
@@ -71,17 +70,9 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         });
     }
 	
-	private void readBTreeIndex(YapReader reader, YapStream stream) {
-		int indexId = reader.readInt();
+	private void readBTreeIndex(YapStream stream, int indexId) {
 		if(! stream.isClient() && _btreeIndex == null){
-		    YapFile yf = (YapFile)stream;
-		    if(indexId < 0){
-		        createBTreeIndex(stream, - indexId);
-		    }else{
-		        createBTreeIndex(stream, 0);
-		        new ClassIndexesToBTrees_5_5().convert(yf, indexId, _btreeIndex);
-		        yf.setDirtyInSystemTransaction(_yapClass);
-		    }
+            createBTreeIndex(stream, indexId);
 		}
 	}
 

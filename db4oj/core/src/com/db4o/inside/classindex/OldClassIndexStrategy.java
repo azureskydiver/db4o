@@ -18,11 +18,10 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		super(yapClass);
 	}
 
-	public void read(YapReader reader, YapStream stream) {
-		int classIndexId = reader.readInt();
+	public void read(YapStream stream, int indexID) {
 		_index = createClassIndex(stream);
-		if (classIndexId > 0) {
-			_index.setID(classIndexId);
+		if (indexID > 0) {
+			_index.setID(indexID);
 		}
 		_index.setStateDeactivated();
 	}
@@ -54,8 +53,12 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
         }
 	}
 
-	public void writeId(YapReader writer, Transaction transaction) {
-		writer.writeIDOf(transaction, _index);
+	public int write(Transaction transaction) {
+        if(_index == null){
+            return 0;
+        }
+        _index.write(transaction);
+        return _index.getID();
 	}
 
 	private void flushContext(final Transaction transaction) {

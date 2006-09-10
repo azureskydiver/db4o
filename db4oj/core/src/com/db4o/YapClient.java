@@ -437,7 +437,7 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 	}
 
-	boolean maintainsIndices() {
+	public boolean maintainsIndices() {
 		return false;
 	}
 
