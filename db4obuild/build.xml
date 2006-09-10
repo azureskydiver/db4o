@@ -1112,7 +1112,7 @@
 				<include name="**/*.cs" />
 				<include name="**/*.csproj" />
 				<include name="**/*.sln" />				
-				<include name="**/*.mdp" />
+				<include name="**/*.mdp" />				
 				<include name="**/*.mds" />
 				<exclude name="**/compact*/**"/>
 			</fileset>
@@ -1334,20 +1334,17 @@
 		<mkdir dir="${target.dir}/lib" />
 		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
 		<jar destfile="${dependencies.jar}">			
-			<fileset dir="${dir.dist.classes.java1.1}">
-				<exclude name="db4ounit/**" />
-			</fileset>
-			<fileset dir="${dir.dist.classes.test}">								
-			</fileset>
+			<fileset dir="${dir.dist.classes.java1.1}" />
+			<fileset dir="${dir.dist.classes.test}" />
 		</jar>
 
-		<copy todir="${target.dir}">
-			<fileset dir="..">
-				<include name="db4oj/test/src/db4ounit/**/*.java" />
+		<copy todir="${target.dir}/db4ounit.extensions/src">
+			<fileset dir="${dir.db4ounit.extensions.src}">
+				<include name="**/*.java" />
 			</fileset>
 		</copy>
 		
-		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
+		<sharpen workspace="${target.dir}" resource="db4ounit.extensions/src">
 			<args>
 				<arg value="-pascalcase" />
 				
@@ -1375,7 +1372,7 @@
 		</sharpen>
 		
 		<copy todir="${dir.n}/Db4oUnit.Extensions/src">
-			<fileset dir="${target.dir}/db4ojcsharp/src">
+			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src">
 				<include name="Db4oUnit/**/*.cs" />
 			</fileset>
 		</copy>
