@@ -15,7 +15,7 @@ public class ReadObjectSODATest extends ClientServerTestCase {
 	private String testString = "simple test string";
 
 	protected void store() {
-		oc = server.openClient();
+		oc = openClient();
 		try {
 			int total = Configure.CONCURRENCY_THREAD_COUNT;
 			for (int i = 0; i < total; i++) {
@@ -27,7 +27,7 @@ public class ReadObjectSODATest extends ClientServerTestCase {
 	}
 
 	public void concReadSameObject() throws Exception {
-		oc = server.openClient();
+		oc = openClient();
 		try {
 			int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
 			Query query = oc.query();
@@ -43,7 +43,7 @@ public class ReadObjectSODATest extends ClientServerTestCase {
 	}
 
 	public void concReadDifferentObject(int seq) throws Exception {
-		oc = server.openClient();
+		oc = openClient();
 		try {
 			Query query = oc.query();
 			query.descend("_s").constrain(testString + seq).and(

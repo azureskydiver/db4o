@@ -17,7 +17,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 
 	protected void store() {
 		int total = Configure.CONCURRENCY_THREAD_COUNT;
-		oc = server.openClient();
+		oc = openClient();
 		try {
 			for (int i = 0; i < total; i++) {
 				oc.set(new SimpleObject(testString + i, i));
@@ -28,7 +28,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 	}
 
 	public void concReadSameObject() throws Exception {
-		oc = server.openClient();
+		oc = openClient();
 		try {
 			int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
 			final SimpleObject expected = new SimpleObject(testString + mid,
@@ -46,7 +46,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 	}
 
 	public void concReadDifferentObject(int seq) throws Exception {
-		oc = server.openClient();
+		oc = openClient();
 		try {
 			final SimpleObject expected = new SimpleObject(testString + seq,
 					seq);

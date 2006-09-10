@@ -16,7 +16,7 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 	public static String TEST_SERVER_FILENAME = "server.yap";
 
 	transient protected ObjectServer server;
-	
+
 	protected ObjectContainer oc;
 
 	public void setUp() throws Exception {
@@ -25,6 +25,10 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 		configure();
 		server = Db4o.openServer(TEST_SERVER_FILENAME, 0);
 		store();
+	}
+
+	protected ObjectContainer openClient() {
+		return server.openClient();
 	}
 
 	protected void configure() {
