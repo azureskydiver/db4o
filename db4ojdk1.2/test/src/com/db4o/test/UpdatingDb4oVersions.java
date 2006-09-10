@@ -7,7 +7,10 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.inside.btree.*;
+import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
+import com.db4o.test.lib.*;
 
 /**
  * 
@@ -30,7 +33,8 @@ public class UpdatingDb4oVersions {
         "db4o_5.3.001", 
         "db4o_5.4.004",
         "db4o_5.5.2",
-        "db4o_5.6.2"};
+        "db4o_5.6.2"
+    };
 
     List list;
     Map map;
@@ -64,34 +68,22 @@ public class UpdatingDb4oVersions {
             return;
         }
         for(int i = 0; i < VERSIONS.length; i ++){
-            File oldFile = new File(PATH + VERSIONS[i]);
+            String oldFilePath = PATH + VERSIONS[i];
+            File oldFile = new File(oldFilePath);
             if(oldFile.exists()){
-                String testFile = PATH + VERSIONS[i] + ".yap";
-                new File(testFile).delete();
-                try {
-                    byte[] bytes = new byte[(int)oldFile.length()]; 
-                    FileInputStream fin = new FileInputStream(oldFile);
-                    fin.read(bytes);
-                    fin.close();
-                    FileOutputStream fout = new FileOutputStream(new File(testFile));
-                    fout.write(bytes);
-                    fout.flush();
-                    fout.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    break;
-                }
-                ExtObjectContainer objectContainer = Db4o.openFile(testFile).ext();
-                Query q = objectContainer.query();
-                q.constrain(UpdatingDb4oVersions.class);
-                ObjectSet objectSet = q.execute();
-                Test.ensure(objectSet.size() == 1);
-                UpdatingDb4oVersions udv = (UpdatingDb4oVersions)objectSet.next();
-                Test.ensure(udv.name.equals("check"));
-                Test.ensure(udv.list.size() == 1);
-                Test.ensure(udv.list.get(0).equals("check"));
-                Test.ensure(udv.map.get("check").equals("check"));
-                objectContainer.close();
+                
+                String testFilePath = PATH + VERSIONS[i] + ".yap";
+                new File(testFilePath).delete();
+                
+                File4.copy(oldFilePath, testFilePath);
+                
+                
+                checkDatabaseFile(testFilePath);
+                
+                // Twice, to ensure everything is fine after opening, converting and closing.
+                checkDatabaseFile(testFilePath);
+                
+                
             }else{
                 System.err.println("Version upgrade check failed. File not found:");
                 System.err.println(oldFile);
@@ -99,6 +91,36 @@ public class UpdatingDb4oVersions {
         }
     }
 
+    private void checkDatabaseFile(String testFile) {
+        ExtObjectContainer objectContainer = Db4o.openFile(testFile).ext();
+        checkStoredObjectsArePresent(objectContainer);
+        checkBTreeSize(objectContainer);
+        objectContainer.close();
+    }
+
+    private void checkBTreeSize(ExtObjectContainer objectContainer) {
+        YapStream yapStream = (YapStream)objectContainer;
+        StoredClass storedClass = objectContainer.storedClass(this.getClass().getName());
+        YapClass yc = (YapClass) storedClass;
+        BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) yc.index();
+        BTree btree = btreeClassIndexStrategy.btree();
+        Test.ensure(btree != null);
+        int size = btree.size(yapStream.getTransaction());
+        Test.ensure(size == 1);
+    }
+
+    private void checkStoredObjectsArePresent(ExtObjectContainer objectContainer) {
+        Query q = objectContainer.query();
+        q.constrain(UpdatingDb4oVersions.class);
+        ObjectSet objectSet = q.execute();
+        Test.ensure(objectSet.size() == 1);
+        UpdatingDb4oVersions udv = (UpdatingDb4oVersions)objectSet.next();
+        Test.ensure(udv.name.equals("check"));
+        Test.ensure(udv.list.size() == 1);
+        Test.ensure(udv.list.get(0).equals("check"));
+        Test.ensure(udv.map.get("check").equals("check"));
+    }
+    
     private static String fileName(){
         return Db4o.version().replace(' ', '_') + ".yap";
     }
