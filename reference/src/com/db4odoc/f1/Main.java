@@ -9,6 +9,7 @@ import com.db4odoc.f1.debugging.DebugExample;
 import com.db4odoc.f1.diagnostics.DiagnosticExample;
 import com.db4odoc.f1.enums.EnumExample;
 import com.db4odoc.f1.indexes.IndexedExample;
+import com.db4odoc.f1.ios.IOExample;
 import com.db4odoc.f1.lists.CollectionExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
 import com.db4odoc.f1.staticfields.StaticFieldExample;
@@ -21,11 +22,7 @@ public class Main {
         DeepExample.main(args);
         TransactionExample.main(args);
         ClientServerExample.main(args);
-        IndexedExample.fillUpDB();
-        IndexedExample.noIndex();
-        IndexedExample.fullIndex();
-        IndexedExample.pilotIndex();
-        IndexedExample.pointsIndex();
+        IndexedExample.main(args);
         DiagnosticExample.testEmpty();
         DiagnosticExample.testArbitrary();
         DiagnosticExample.testIndexDiagnostics();
@@ -39,5 +36,6 @@ public class Main {
     	StaticFieldExample.main(args);
     	EnumExample.main(args);
     	UUIDExample.main(args);
+        IOExample.main(args);
     }
 }
