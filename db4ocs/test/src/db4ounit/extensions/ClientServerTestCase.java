@@ -15,13 +15,16 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 
 	public static String TEST_SERVER_FILENAME = "server.yap";
 
-	protected ObjectServer server;
+	transient protected ObjectServer server;
+	
+	protected ObjectContainer oc;
 
 	public void setUp() throws Exception {
 		// start test server
 		// TODO: start server in seperate vm
 		configure();
 		server = Db4o.openServer(TEST_SERVER_FILENAME, 0);
+		oc = server.openClient();
 		store();
 	}
 
@@ -33,12 +36,9 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 		// default: do nothing
 	}
 
-	protected ObjectContainer openClient() {
-		return server.openClient();
-	}
-
 	public void tearDown() throws Exception {
 		// tear down test server
+		oc.close();
 		server.close();
 		File file = new File(TEST_SERVER_FILENAME);
 		file.delete();

@@ -9,7 +9,9 @@ public class AllTests extends CSTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 				ReadObjectQBETest.class,
-				ReadObjectSODATest.class, };
+				ReadObjectSODATest.class,
+				ReadObjectNQTest.class,
+				};
 	}
 	
 	public static void main(String[] args) {
