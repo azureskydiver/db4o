@@ -18,40 +18,48 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 	protected void store() {
 		int total = Configure.CONCURRENCY_THREAD_COUNT;
 		oc = server.openClient();
-		for (int i = 0; i < total; i++) {
-			oc.set(new SimpleObject(testString + i, i));
+		try {
+			for (int i = 0; i < total; i++) {
+				oc.set(new SimpleObject(testString + i, i));
+			}
+		} finally {
+			oc.close();
 		}
-		oc.close();
 	}
 
 	public void concReadSameObject() throws Exception {
 		oc = server.openClient();
-		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
-		final SimpleObject expected = new SimpleObject(testString + mid, mid);
-		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
-			public boolean match(SimpleObject o) {
-				return expected.equals(o);
-			}
-		});
-		Assert.areEqual(1, result.size());
-		Assert.areEqual(expected, result.get(0));
+		try {
+			int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
+			final SimpleObject expected = new SimpleObject(testString + mid,
+					mid);
+			List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
+				public boolean match(SimpleObject o) {
+					return expected.equals(o);
+				}
+			});
+			Assert.areEqual(1, result.size());
+			Assert.areEqual(expected, result.get(0));
+		} finally {
+			oc.close();
+		}
 	}
 
 	public void concReadDifferentObject(int seq) throws Exception {
 		oc = server.openClient();
-		final SimpleObject expected = new SimpleObject(testString + seq, seq);
-		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
-			public boolean match(SimpleObject o) {
-				return expected.equals(o);
-			}
-		});
-		Assert.areEqual(1, result.size());
-		Assert.areEqual(expected, result.get(0));
-	}
-
-	public void tearDown() throws Exception {
-		oc.close();
-		super.tearDown();
+		try {
+			final SimpleObject expected = new SimpleObject(testString + seq,
+					seq);
+			List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
+				public boolean match(SimpleObject o) {
+					return expected.equals(o);
+				}
+			});
+			Assert.areEqual(1, result.size());
+			Assert.areEqual(expected, result.get(0));
+		} finally {
+			oc.close();
+		}
 	}
 
 }
