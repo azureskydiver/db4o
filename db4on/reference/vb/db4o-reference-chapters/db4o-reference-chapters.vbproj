@@ -29,9 +29,11 @@
     <DefineConstants>_MyType="Windows"</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
+  <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +81,9 @@
     <Compile Include="src\com\db4odoc\f1\indexes\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\indexes\IndexedExample.vb" />
     <Compile Include="src\com\db4odoc\f1\indexes\Pilot.vb" />
+    <Compile Include="src\com\db4odoc\f1\ios\IOExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\ios\LoggingAdapter.vb" />
+    <Compile Include="src\com\db4odoc\f1\ios\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\lists\CollectionExample.vb" />
     <Compile Include="src\com\db4odoc\f1\lists\CollectionFactory.vb" />
     <Compile Include="src\com\db4odoc\f1\lists\Team.vb" />
@@ -91,10 +96,13 @@
     <Compile Include="src\com\db4odoc\f1\staticfields\PilotCategories.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\StaticFieldExample.vb" />
     <Compile Include="src\com\db4odoc\f1\Util.vb" />
+    <Compile Include="src\com\db4odoc\f1\uuids\Car.vb" />
+    <Compile Include="src\com\db4odoc\f1\uuids\Pilot.vb" />
+    <Compile Include="src\com\db4odoc\f1\uuids\UUIDExample.vb" />
     <Compile Include="src\Program.vb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\core\db4o-net2.csproj">
+  <ProjectReference Include="..\..\..\core\db4o-net2.csproj">
       <Project>{7A07E089-078C-433A-BD15-60763FE3B8F2}</Project>
       <Name>db4o-net2</Name>
     </ProjectReference>
