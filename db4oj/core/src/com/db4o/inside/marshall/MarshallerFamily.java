@@ -67,15 +67,15 @@ public class MarshallerFamily {
             new StringMarshaller1(),
             new UntypedMarshaller1()),
     
-    new MarshallerFamily(
-        FieldIndexesToBTrees_5_7.VERSION,
-        new ArrayMarshaller1(),
-        new ClassMarshaller2(),
-        new FieldMarshaller1(),
-        new ObjectMarshaller1(), 
-        new PrimitiveMarshaller1(),
-        new StringMarshaller1(),
-        new UntypedMarshaller1())};
+        new MarshallerFamily(
+            FieldIndexesToBTrees_5_7.VERSION,
+            new ArrayMarshaller1(),
+            new ClassMarshaller2(),
+            new FieldMarshaller1(),
+            new ObjectMarshaller1(), 
+            new PrimitiveMarshaller1(),
+            new StringMarshaller1(),
+            new UntypedMarshaller1())};
 
     private MarshallerFamily(
             int converterVersion,

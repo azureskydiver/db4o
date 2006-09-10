@@ -114,7 +114,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 	    return i_parent.identity();
 	}
 	
-	boolean maintainsIndices(){
+	public boolean maintainsIndices(){
 		return false;
 	}
 	

@@ -1244,7 +1244,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         Messages.logMsg(configImpl(), code, msg);
     }
 
-    boolean maintainsIndices() {
+    public boolean maintainsIndices() {
         return true;
     }
 

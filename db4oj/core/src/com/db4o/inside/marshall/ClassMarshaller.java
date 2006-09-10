@@ -3,19 +3,21 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
-import com.db4o.inside.*;
 
 /**
  * @exclude
  */
-public class ClassMarshaller {
+public abstract class ClassMarshaller {
     
     public MarshallerFamily _family;
+    
 
     public void write(Transaction trans, YapClass clazz, YapReader writer) {
         
         writer.writeShortString(trans, clazz.nameToWrite());
-        writer.writeInt(clazz._metaClassID);
+        
+        int intFormerlyKnownAsMetaClassID = 0;
+        writer.writeInt(intFormerlyKnownAsMetaClassID);
         
         writer.writeIDOf(trans, clazz.i_ancestor);
         
@@ -34,8 +36,11 @@ public class ClassMarshaller {
     }
 
     protected void writeIndex(Transaction trans, YapClass clazz, YapReader writer) {
-        clazz.index().writeId(writer, trans);
+        int indexID = clazz.index().write(trans);
+        writer.writeInt(indexIDForWriting(indexID));
     }
+    
+    protected abstract int indexIDForWriting(int indexID);
 
     public byte[] readName(Transaction trans, YapClass clazz, YapReader reader) {
         byte[] name = readName(trans.stream().stringIO(), reader);
@@ -76,9 +81,7 @@ public class ClassMarshaller {
         readFields(stream, reader, clazz.i_fields);        
     }
 
-    protected void readIndex(YapStream stream, YapClass clazz, YapReader reader) {
-        clazz.index().read(reader, stream);
-    }
+    protected abstract void readIndex(YapStream stream, YapClass clazz, YapReader reader) ;
 
 	private YapField[] createFields(YapClass clazz, final int fieldCount) {
 		final YapField[] fields = new YapField[fieldCount];

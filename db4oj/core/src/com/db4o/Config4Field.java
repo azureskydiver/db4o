@@ -107,6 +107,9 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	private void createIndex(Transaction systemTrans, YapField yapField, YapFile stream) {
 		
 		if(MarshallerFamily.BTREE_FIELD_INDEX){
+            if (stream.configImpl().messageLevel() > YapConst.NONE) {
+                stream.message("creating index " + yapField.toString());
+            }
 		    yapField.initIndex(systemTrans);
 		    stream.setDirtyInSystemTransaction(yapField.getParentYapClass());
 		}

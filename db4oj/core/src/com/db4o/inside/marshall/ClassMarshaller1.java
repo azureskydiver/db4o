@@ -2,10 +2,23 @@
 
 package com.db4o.inside.marshall;
 
+import com.db4o.*;
+
 
 /**
  * @exclude
  */
 public class ClassMarshaller1 extends ClassMarshaller {
+    
+
+    protected void readIndex(YapStream stream, YapClass clazz, YapReader reader) {
+        int indexID = reader.readInt();
+        clazz.index().read(stream, - indexID);
+    }
+    
+    protected int indexIDForWriting(int indexID){
+        return - indexID;
+    }
+
 
 }
