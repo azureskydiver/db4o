@@ -14,13 +14,16 @@ public class ReadObjectQBETest extends ClientServerTestCase {
 	private String testString = "simple test string";
 
 	protected void store() {
+		oc = server.openClient();
 		int total = Configure.CONCURRENCY_THREAD_COUNT;
 		for (int i = 0; i < total; i++) {
 			oc.set(new SimpleObject(testString + i, i));
 		}
+		oc.close();
 	}
 
 	public void concReadSameObject() throws Exception {
+		oc = server.openClient();
 		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
 		SimpleObject example = new SimpleObject(testString + mid, mid);
 		ObjectSet result = oc.get(example);
@@ -29,10 +32,16 @@ public class ReadObjectQBETest extends ClientServerTestCase {
 	}
 
 	public void concReadDifferentObject(int seq) throws Exception {
+		oc = server.openClient();
 		SimpleObject example = new SimpleObject(testString + seq, seq);
 		ObjectSet result = oc.get(example);
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(example, result.next());
+	}
+
+	public void tearDown() throws Exception {
+		oc.close();
+		super.tearDown();
 	}
 
 }

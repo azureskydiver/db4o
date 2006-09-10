@@ -24,7 +24,6 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 		// TODO: start server in seperate vm
 		configure();
 		server = Db4o.openServer(TEST_SERVER_FILENAME, 0);
-		oc = server.openClient();
 		store();
 	}
 
@@ -38,7 +37,6 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 
 	public void tearDown() throws Exception {
 		// tear down test server
-		oc.close();
 		server.close();
 		File file = new File(TEST_SERVER_FILENAME);
 		file.delete();
