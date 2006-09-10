@@ -301,7 +301,7 @@ public class BTreeNode extends YapMeta{
         if(! childLoaded(index)){
             return false;
         }
-        return ((BTreeNode)_children[index])._keys != null;
+        return ((BTreeNode)_children[index]).canWrite();
     }
     
     void commit(Transaction trans){
@@ -525,7 +525,7 @@ public class BTreeNode extends YapMeta{
     }
     
     public boolean indexIsValid(Transaction trans, int index){
-        if(_keys == null){
+        if(!canWrite()){
             return true;
         }
         BTreePatch patch = keyPatch(index);
@@ -595,7 +595,7 @@ public class BTreeNode extends YapMeta{
     }
     
     Object key(Transaction trans, YapReader reader, int index){
-        if( _keys != null ){
+        if(canWrite()){
             return key(trans, index);
         }
         seekKey(reader, index);
@@ -694,15 +694,13 @@ public class BTreeNode extends YapMeta{
             return;
         }
         
-        if(_keys == null){
-            read(trans.systemTransaction());
-            setStateDirty();
-            _btree.addToProcessing(this);
-        }
+        read(trans.systemTransaction());
+        setStateDirty();
+        _btree.addToProcessing(this);
     }
     
     private void prepareArrays(){
-        if(_keys != null){
+        if(canWrite()){
             return;
         }
         _keys = new Object[_btree.nodeSize()];
@@ -972,7 +970,7 @@ public class BTreeNode extends YapMeta{
             return;
         }
         
-        if(_keys == null){
+        if(!canWrite()){
             return;
         }
         
@@ -1056,7 +1054,7 @@ public class BTreeNode extends YapMeta{
         if(_dead){
             return false;
         }
-        if(_keys == null){
+        if(!canWrite()){
             return false;
         }
         return super.writeObjectBegin();
@@ -1123,7 +1121,7 @@ public class BTreeNode extends YapMeta{
         str += "\ncount:" + _count;
         str += "\nleaf:" + _isLeaf + "\n";
         
-        if(_keys != null){
+        if(canWrite()){
             
             str += " { ";
             
