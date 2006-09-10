@@ -10,6 +10,11 @@ public class SimpleObject {
 	private String _s;
 
 	private int _i;
+	
+	public SimpleObject(String s, int i) {
+		_s = s;
+		_i = i;
+	}
 
 	public boolean equals(Object obj) {
 		if (!(obj instanceof SimpleObject)) {
@@ -28,10 +33,6 @@ public class SimpleObject {
 		_i = i;
 	}
 
-	public SimpleObject(String s, int i) {
-		_s = s;
-		_i = i;
-	}
 
 	public String getS() {
 		return _s;

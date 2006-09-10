@@ -2,14 +2,16 @@
 
 package com.db4o.test;
 
-import com.db4o.ObjectSet;
+import java.util.List;
+
+import com.db4o.query.Predicate;
 import com.db4o.test.config.Configure;
 import com.db4o.test.data.SimpleObject;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
 
-public class ReadObjectQBETest extends ClientServerTestCase {
+public class ReadObjectNQTest extends ClientServerTestCase {
 
 	private String testString = "simple test string";
 
@@ -22,17 +24,25 @@ public class ReadObjectQBETest extends ClientServerTestCase {
 
 	public void concReadSameObject() throws Exception {
 		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
-		SimpleObject example = new SimpleObject(testString + mid, mid);
-		ObjectSet result = oc.get(example);
+		final SimpleObject expected = new SimpleObject(testString + mid, mid);
+		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
+			public boolean match(SimpleObject o) {
+				return expected.equals(o);
+			}
+		});
 		Assert.areEqual(1, result.size());
-		Assert.areEqual(example, result.next());
+		Assert.areEqual(expected, result.get(0));
 	}
 
 	public void concReadDifferentObject(int seq) throws Exception {
-		SimpleObject example = new SimpleObject(testString + seq, seq);
-		ObjectSet result = oc.get(example);
+		final SimpleObject expected = new SimpleObject(testString + seq, seq);
+		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
+			public boolean match(SimpleObject o) {
+				return expected.equals(o);
+			}
+		});
 		Assert.areEqual(1, result.size());
-		Assert.areEqual(example, result.next());
+		Assert.areEqual(expected, result.get(0));
 	}
-
+	
 }

@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
 import com.db4o.test.config.Configure;
@@ -13,21 +12,13 @@ import db4ounit.extensions.ClientServerTestCase;
 
 public class ReadObjectSODATest extends ClientServerTestCase {
 
-	ObjectContainer oc;
-
 	private String testString = "simple test string";
 
 	protected void store() {
-		oc = openClient();
 		int total = Configure.CONCURRENCY_THREAD_COUNT;
 		for (int i = 0; i < total; i++) {
 			oc.set(new SimpleObject(testString + i, i));
 		}
-	}
-
-	public void tearDown() throws Exception {
-		oc.close();
-		super.tearDown();
 	}
 
 	public void concReadSameObject() throws Exception {
