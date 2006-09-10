@@ -26,6 +26,8 @@ import java.net.*;
 
 import org.polepos.framework.*;
 import org.polepos.teams.db4o.*;
+import org.polepos.teams.hibernate.*;
+import org.polepos.teams.jdbc.*;
 
 
 public class Db4oVersions {
@@ -41,11 +43,20 @@ public class Db4oVersions {
         
         String workSpacePath = guessWorkSpace();
         
+        String jar45 = "db4o-4.5-java1.4.jar";
+        String jar50 = "db4o-5.0-java5.jar";
+        String jar52 = "db4o-5.2-java5.jar";
         String jar55 = "db4o-5.5-java5.jar";
+
         
         return new Team[]{
             workspaceTeam(workSpacePath),
+            db4oTeam(workSpacePath, jar45, new int[]{} ),
+            db4oTeam(workSpacePath, jar50, new int[]{} ),
+            db4oTeam(workSpacePath, jar52, new int[]{} ),
             db4oTeam(workSpacePath, jar55, new int[]{} ),
+            new HibernateTeam(),
+            new JdbcTeam(),
         };
     }
     
