@@ -823,7 +823,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 return null;
             }
             Transaction ta = checkTransaction(null);
-            Object[] arr = ta.objectAndYapObjectBySignature(uuid.getLongPart(), uuid.getSignaturePart());
+            Object[] arr = ta.objectAndYapObjectBySignature(
+            					uuid.getLongPart(),
+            					uuid.getSignaturePart());
             return arr[0]; 
         }
     }

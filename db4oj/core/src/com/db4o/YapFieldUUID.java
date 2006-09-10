@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.Visitor4;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
@@ -156,6 +157,44 @@ class YapFieldUUID extends YapFieldVirtual {
         writer.writeInt(0);
         YLong.writeLong(0, writer);
     }
+
+	public Object[] objectAndYapObjectBySiganture(final Transaction transaction, final long a_uuid, final byte[] a_signature) {
+		IxTree ixTree = (IxTree) getOldIndexRoot(transaction);
+        final Object[] ret = new Object[2];
+        IxTraverser ixTraverser = new IxTraverser();
+        int count = ixTraverser.findBoundsExactMatch(new Long(a_uuid), ixTree);
+        //System.out.println("count = " + count);
+        if (count > 0) {
+            ixTraverser.visitAll(new Visitor4() {
+                public void visit(Object a_object) {
+                    Object[] arr = transaction.stream().getObjectAndYapObjectByID(
+                    		transaction, ((Integer)a_object).intValue());
+                    if (arr[1] != null) {
+                        YapObject yod = (YapObject) arr[1];
+                        VirtualAttributes vad = yod.virtualAttributes(transaction);
+                        byte[] cmp = vad.i_database.i_signature;
+                        boolean same = true;
+                        if (a_signature.length == cmp.length) {
+                            for (int i = 0; i < a_signature.length; i++) {
+                                if (a_signature[i] != cmp[i]) {
+                                    same = false;
+                                    break;
+                                }
+                            }
+                        } else {
+                            same = false;
+                        }
+                        if (same) {
+                            ret[0] = arr[0];
+                            ret[1] = arr[1];
+                        }
+                    }
+                }
+            });
+            
+        }
+        return ret;
+	}
  
 
 }

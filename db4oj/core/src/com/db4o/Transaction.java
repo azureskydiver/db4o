@@ -448,44 +448,13 @@ public class Transaction {
     }
     
     Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
-        checkSynchronization();
-        final Object[] ret = new Object[2];
-        IxTree ixTree = (IxTree) stream().i_handlers.i_indexes.i_fieldUUID.getOldIndexRoot(this);
-        IxTraverser ixTraverser = new IxTraverser();
-        int count = ixTraverser.findBoundsExactMatch(new Long(a_uuid), ixTree);
-        //System.out.println("count = " + count);
-        if (count > 0) {
-            final Transaction finalThis = this;
-            ixTraverser.visitAll(new Visitor4() {
-                public void visit(Object a_object) {
-                    Object[] arr = finalThis.stream().getObjectAndYapObjectByID(
-                        finalThis, ((Integer)a_object).intValue());
-                    if (arr[1] != null) {
-                        YapObject yod = (YapObject) arr[1];
-                        VirtualAttributes vad = yod.virtualAttributes(finalThis);
-                        byte[] cmp = vad.i_database.i_signature;
-                        boolean same = true;
-                        if (a_signature.length == cmp.length) {
-                            for (int i = 0; i < a_signature.length; i++) {
-                                if (a_signature[i] != cmp[i]) {
-                                    same = false;
-                                    break;
-                                }
-                            }
-                        } else {
-                            same = false;
-                        }
-                        if (same) {
-                            ret[0] = arr[0];
-                            ret[1] = arr[1];
-                        }
-                    }
-                }
-            });
-            
-        }
-        return ret;
+        checkSynchronization();  
+        return getFieldUUID().objectAndYapObjectBySiganture(this, a_uuid, a_signature);
     }
+
+	private YapFieldUUID getFieldUUID() {
+		return stream().i_handlers.i_indexes.i_fieldUUID;
+	}
     
     private SlotChange produceSlotChange(int id){
         SlotChange slot = new SlotChange(id);
