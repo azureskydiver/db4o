@@ -16,38 +16,44 @@ public class ReadObjectSODATest extends ClientServerTestCase {
 
 	protected void store() {
 		oc = server.openClient();
-		int total = Configure.CONCURRENCY_THREAD_COUNT;
-		for (int i = 0; i < total; i++) {
-			oc.set(new SimpleObject(testString + i, i));
+		try {
+			int total = Configure.CONCURRENCY_THREAD_COUNT;
+			for (int i = 0; i < total; i++) {
+				oc.set(new SimpleObject(testString + i, i));
+			}
+		} finally {
+			oc.close();
 		}
-		oc.close();
 	}
 
 	public void concReadSameObject() throws Exception {
 		oc = server.openClient();
-		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
-		Query query = oc.query();
-		query.descend("_s").constrain(testString + mid).and(
-				query.descend("_i").constrain(new Integer(mid)));
-		ObjectSet result = query.execute();
-		Assert.areEqual(1, result.size());
-		SimpleObject expected = new SimpleObject(testString + mid, mid);
-		Assert.areEqual(expected, result.next());
+		try {
+			int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
+			Query query = oc.query();
+			query.descend("_s").constrain(testString + mid).and(
+					query.descend("_i").constrain(new Integer(mid)));
+			ObjectSet result = query.execute();
+			Assert.areEqual(1, result.size());
+			SimpleObject expected = new SimpleObject(testString + mid, mid);
+			Assert.areEqual(expected, result.next());
+		} finally {
+			oc.close();
+		}
 	}
 
 	public void concReadDifferentObject(int seq) throws Exception {
 		oc = server.openClient();
-		Query query = oc.query();
-		query.descend("_s").constrain(testString + seq).and(
-				query.descend("_i").constrain(new Integer(seq)));
-		ObjectSet result = query.execute();
-		Assert.areEqual(1, result.size());
-		SimpleObject expected = new SimpleObject(testString + seq, seq);
-		Assert.areEqual(expected, result.next());
-	}
-
-	public void tearDown() throws Exception {
-		oc.close();
-		super.tearDown();
+		try {
+			Query query = oc.query();
+			query.descend("_s").constrain(testString + seq).and(
+					query.descend("_i").constrain(new Integer(seq)));
+			ObjectSet result = query.execute();
+			Assert.areEqual(1, result.size());
+			SimpleObject expected = new SimpleObject(testString + seq, seq);
+			Assert.areEqual(expected, result.next());
+		} finally {
+			oc.close();
+		}
 	}
 }
