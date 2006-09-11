@@ -42,7 +42,7 @@ public class BTreePointer{
 
 	private final Transaction _transaction;
 
-	private YapReader _nodeReader;
+	private final YapReader _nodeReader;
    
     public BTreePointer(Transaction transaction, YapReader nodeReader, BTreeNode node, int index) {
     	if(transaction == null || node == null){
@@ -54,38 +54,50 @@ public class BTreePointer{
         _index = index;
 	}
 
-	public Transaction transaction() {
+	public final Transaction transaction() {
     	return _transaction;
     }
     
-    public int index(){
+    public final int index(){
         return _index;
     }
     
+    public final BTreeNode node() {
+        return _node;
+    }
+    
+    public final Object key() {
+		return node().key(transaction(), nodeReader(), index());
+	}
+
+	public final Object value() {
+		return node().value(nodeReader(), index());
+	}
+	
+	private YapReader nodeReader() {
+		return _nodeReader;
+	}
+    
     public BTreePointer next(){
-        int indexInMyNode = _index + 1;
-        while(indexInMyNode < _node.count()){
-            if(_node.indexIsValid(_transaction, indexInMyNode)){
-                return new BTreePointer(_transaction, _nodeReader, _node, indexInMyNode);
+        int indexInMyNode = index() + 1;
+        while(indexInMyNode < node().count()){
+            if(node().indexIsValid(transaction(), indexInMyNode)){
+                return new BTreePointer(transaction(), nodeReader(), node(), indexInMyNode);
             }
             indexInMyNode ++;
         }
         int newIndex = -1;
-        BTreeNode nextNode = _node;
+        BTreeNode nextNode = node();
         YapReader nextReader = null;
         while(newIndex == -1){
             nextNode = nextNode.nextNode();
             if(nextNode == null){
                 return null;
             }
-            nextReader = nextNode.prepareRead(_transaction);
-            newIndex = nextNode.firstKeyIndex(_transaction);
+            nextReader = nextNode.prepareRead(transaction());
+            newIndex = nextNode.firstKeyIndex(transaction());
         }
-        return new BTreePointer(_transaction, nextReader, nextNode, newIndex);
-    }
-    
-    public BTreeNode node() {
-        return _node;
+        return new BTreePointer(transaction(), nextReader, nextNode, newIndex);
     }
     
     public boolean equals(Object obj) {
@@ -97,30 +109,15 @@ public class BTreePointer{
         }
         BTreePointer other = (BTreePointer) obj;
         
-        if(_index != other._index){
+        if(index() != other.index()){
             return false;
         }
         
-        return _node.equals(other._node);
-    }
-
-	public Object key() {
-		return node().key(_transaction, prepareRead(), _index);
-	}
-
-	public Object value() {
-		return node().value(prepareRead(), index());
-	}
-	
-	private YapReader prepareRead() {
-		if (_nodeReader == null) {
-			_nodeReader = node().prepareRead(_transaction);
-		}
-		return _nodeReader;
-	}
+        return node().equals(other.node());
+    }	
     
     public String toString() {
-        return "BTreePointer(index=" + _index + ", node=" + node() + ")";      
+        return "BTreePointer(index=" + index() + ", node=" + node() + ")";      
     }
 
 	public int compareTo(BTreePointer y) {
@@ -134,7 +131,7 @@ public class BTreePointer{
 	}
 
 	private BTree btree() {
-		return _node.btree();
+		return node().btree();
 	}
 
 	public static boolean lessThan(BTreePointer x, BTreePointer y) {
