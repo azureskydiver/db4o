@@ -72,7 +72,6 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
     public Object getValueAt(int row, int column) {
         //if(row > 0) System.out.println("getting row: " + row);
         if (column == 0) return row;
-
         Result result;
         if (row < NUM_IN_TOP) {
             result = (Result) topResults.get(row);
