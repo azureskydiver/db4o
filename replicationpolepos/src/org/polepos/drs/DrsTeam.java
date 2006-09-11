@@ -36,7 +36,11 @@ public class DrsTeam extends Team{
 
     @Override
     public Car[] cars() {
-        return new Car[]{new Db4oDb4oCar()};
+        return new Car[]{
+        		new Db4oDb4oCar(), 
+        		new Db4oCSCar(),
+        		new CSDb4oCar(),
+        		new CSCSCar()};
     }
 
     @Override
