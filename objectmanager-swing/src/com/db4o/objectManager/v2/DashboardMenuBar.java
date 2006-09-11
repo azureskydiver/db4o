@@ -1,6 +1,7 @@
 package com.db4o.objectManager.v2;
 
 import com.jgoodies.looks.Options;
+import com.db4o.objectManager.v2.util.Log;
 import demo.objectmanager.model.DemoPopulator;
 
 import javax.swing.*;
@@ -50,6 +51,25 @@ public class DashboardMenuBar extends BaseMenuBar{
         menu.add(new JMenuItem("Cut"));
         menu.add(new JMenuItem("Copy"));
         menu.add(new JMenuItem("Paste"));
+        this.add(menu);
+
+        menu = new JMenu("Help");
+        menu.add(new JMenuItem("About"));
+        menu.addSeparator();
+        item = new JMenuItem("Exception Log");
+        item.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFrame logFrame = new JFrame("Exception Log");
+                JTextArea ta = new JTextArea(20, 80);
+                JScrollPane scrollPane = new JScrollPane(ta);
+                logFrame.add(scrollPane);
+                //logFrame.setSize(400, 300);
+                logFrame.pack();
+                logFrame.setVisible(true);
+                ta.setText(Log.dump());
+            }
+        });
+        menu.add(item);
         this.add(menu);
 
     }

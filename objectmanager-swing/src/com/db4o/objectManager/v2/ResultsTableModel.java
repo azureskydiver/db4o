@@ -5,6 +5,7 @@ import com.spaceprogram.db4o.sql.parser.SqlParseException;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.ObjectContainer;
+import com.db4o.objectManager.v2.util.Log;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 
 import javax.swing.table.AbstractTableModel;
@@ -44,11 +45,11 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
             initTop(results);
         } catch (SqlParseException e) {
             queryResultsPanel.setErrorMessage("Error executing query!  " + e.getMessage());
-            e.printStackTrace();
+            Log.addException(e);
             throw e;
         } catch (Sql4oException e) {
             queryResultsPanel.setErrorMessage("Error executing query!  " + e.getMessage());
-            e.printStackTrace();
+            Log.addException(e);
             throw e;
         }
     }
