@@ -3,6 +3,7 @@
 package com.db4o.ext;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.types.*;
 
@@ -54,6 +55,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
      * constructor for comparison and to store new ones
      */
     public Db4oDatabase(byte[] signature, long creationTime){
+    	// FIXME: make sure signature is null
         i_signature = signature;
         i_uuid = creationTime;
     }
@@ -62,10 +64,9 @@ public class Db4oDatabase implements Db4oType, Internal4{
      * generates a new Db4oDatabase object with a unique signature.
      */
     public static Db4oDatabase generate() {
-        Db4oDatabase db = new Db4oDatabase();
-        db.i_signature = Unobfuscated.generateSignature();
-        db.i_uuid = System.currentTimeMillis();
-        return db;
+        return new Db4oDatabase(
+        		Unobfuscated.generateSignature(),
+        		System.currentTimeMillis());
     }
     
     /**
@@ -79,22 +80,13 @@ public class Db4oDatabase implements Db4oType, Internal4{
     		return false;
     	}
         Db4oDatabase other = (Db4oDatabase)obj;
-        // FIXME: Should never happen?
-        if(other.i_signature==null||this.i_signature==null) {
+        if (null == other.i_signature || null == this.i_signature) {
         	return false;
         }
-        if(other.i_signature.length != i_signature.length) {
-        	return false;
-        }
-        for (int i = 0; i < i_signature.length; i++) {
-			if (i_signature[i] != other.i_signature[i]) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays4.areEqual(other.i_signature, this.i_signature);
     }
-    
-    /**
+
+	/**
 	 * gets the db4o ID, and may cache it for performance reasons.
 	 * 
 	 * @return the db4o ID for the ObjectContainer
