@@ -15,7 +15,7 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
     public static final int VERSION = 6;
 
     public void convert(ClassCollectionAvailableStage stage) {
-        stage.file().classCollection().writeAllClasses();
+        stage.file().classCollection().writeAllClasses();        
     }
     
 	public void convert(SystemUpStage stage) {
@@ -27,7 +27,10 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
 		final YapFieldUUID uuid = file.getFieldUUID();
 		final YapClassCollectionIterator i = file.classCollection().iterator();
 		while (i.moveNext()) {
-			uuid.rebuildIndexForClass(file, i.currentClass());
+			final YapClass clazz = i.currentClass();
+			if (clazz.generateUUIDs()) {
+				uuid.rebuildIndexForClass(file, clazz);
+			}
 		}
 	}
 
