@@ -42,6 +42,7 @@ import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Color;
 
 final class QueryResultsPanel extends JPanel {
     private MainPanel mainPanel;
@@ -90,8 +91,12 @@ final class QueryResultsPanel extends JPanel {
      * @param query
      */
     public void displayResults(String query) {
-        tableModel = new ResultsTableModel(query, this);
-        resultsTable.setModel(tableModel);
+        try {
+            tableModel = new ResultsTableModel(query, this);
+            resultsTable.setModel(tableModel);
+        } catch (Exception e) {
+            // don't display if there was an error
+        }
         /*
         todo: should grow depending on avg column length
         TableColumn col = resultsTable.getColumnModel().getColumn(1);
@@ -115,7 +120,13 @@ final class QueryResultsPanel extends JPanel {
     }
 
     public void setStatusMessage(String msg) {
+        statusLabel.setForeground(Color.BLACK);
         statusLabel.setText(msg);
+    }
+
+    public void setErrorMessage(String s) {
+        statusLabel.setForeground(Color.RED);
+        statusLabel.setText(s);
     }
 
     /**

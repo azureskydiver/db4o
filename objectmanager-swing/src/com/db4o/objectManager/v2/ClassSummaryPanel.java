@@ -1,10 +1,13 @@
 package com.db4o.objectManager.v2;
 
 import com.db4o.ObjectContainer;
+import com.db4o.objectManager.v2.custom.BorderedPanel;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.jgoodies.forms.factories.Borders;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
 import java.awt.Component;
 
@@ -31,9 +34,28 @@ public class ClassSummaryPanel extends JPanel {
     private Component buildMain() {
         Box box = new Box(BoxLayout.PAGE_AXIS);
 
-        //box.add(buildConnectionInfo());
+        box.add(buildFieldInfo());
 
         return box;
+    }
+
+    private Component buildFieldInfo() {
+        BorderedPanel builder = new BorderedPanel("Fields");
+
+        TableModel classModel = createFieldModel();
+        JTable table = new JTable(classModel);
+        TableColumn col = table.getColumnModel().getColumn(0);
+        int width = 200;
+        col.setPreferredWidth(width);
+        JScrollPane scrollPane = new JScrollPane(table);
+        builder.add(scrollPane);
+
+        return builder.getPanel();
+    }
+
+    private TableModel createFieldModel() {
+        TableModel tableModel = new FieldInfoTableModel(databaseInspector);
+        return tableModel;
     }
 
     public String getClassName() {

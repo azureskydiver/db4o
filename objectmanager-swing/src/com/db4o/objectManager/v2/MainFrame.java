@@ -16,6 +16,7 @@ import com.jgoodies.looks.LookUtils;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
+import com.db4o.ObjectContainer;
 
 /**
  * Main frame for a particular connection.
@@ -128,7 +129,7 @@ public class MainFrame extends JFrame implements WindowListener {
     private void build() {
         setContentPane(buildContentPane());
         setTitle(getWindowTitle());
-        setJMenuBar(new ConnectedMenuBar(settings,
+        setJMenuBar(new ConnectedMenuBar(this, settings,
                         createHelpActionListener(),
                         createAboutActionListener()));
         setIconImage(ResourceManager.createImageIcon("database2.gif", "database").getImage());
@@ -204,6 +205,14 @@ public class MainFrame extends JFrame implements WindowListener {
 
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    public ObjectContainer getObjectContainer() {
+        return mainPanel.getObjectContainer();
+    }
+
+    public Db4oConnectionSpec getConnectionSpec() {
+        return connectionSpec;
     }
 
 

@@ -74,6 +74,7 @@ public class Dashboard {
         frame.setJMenuBar(buildMenuBar());
         frame.setContentPane(buildContentPane());
         frame.setSize(600, 400);
+        frame.setResizable(false);
         locateOnScreen(frame);
         frame.setTitle("ObjectManager 2.0");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
