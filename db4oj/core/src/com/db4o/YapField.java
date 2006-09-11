@@ -104,10 +104,7 @@ public class YapField implements StoredField {
         }
         
         if(MarshallerFamily.BTREE_FIELD_INDEX){
-            if(_index == null){
-                return;
-            }
-            _index.add(trans, new FieldIndexKey(parentID,  indexEntry));
+            getIndex(trans).add(trans, new FieldIndexKey(parentID,  indexEntry));
         }
         
         if(MarshallerFamily.OLD_FIELD_INDEX){
@@ -794,9 +791,7 @@ public class YapField implements StoredField {
             return;
         }
         
-        if(! hasIndex()){
-            Exceptions4.throwRuntimeException(Messages.ONLY_FOR_INDEXED_FIELDS);
-        }
+        assertHasIndex();
         
         YapStream stream = i_yapClass.getStream();
         
@@ -819,6 +814,12 @@ public class YapField implements StoredField {
             });
         }
     }
+
+	private void assertHasIndex() {
+		if(! hasIndex()){
+            Exceptions4.throwRuntimeException(Messages.ONLY_FOR_INDEXED_FIELDS);
+        }
+	}
 
 
     private final TypeHandler4 wrapHandlerToArrays(YapStream a_stream, TypeHandler4 a_handler) {
@@ -880,10 +881,14 @@ public class YapField implements StoredField {
     	if(_index != null){
     		throw new IllegalStateException();
         }
-        _index = new BTree(systemTrans, id, new FieldIndexKeyHandler(systemTrans.stream(), i_handler));
+        _index = newBTree(systemTrans, id);
     }
+
+	protected BTree newBTree(Transaction systemTrans, final int id) {
+		return new BTree(systemTrans, id, new FieldIndexKeyHandler(systemTrans.stream(), i_handler));
+	}
     
-    public BTree getIndex(){
+    public BTree getIndex(Transaction transaction){
         return _index;
     }
 
@@ -894,6 +899,23 @@ public class YapField implements StoredField {
     public boolean isPrimitive() {
         return i_isPrimitive;
     }
+	
+	public BTreeRange search(Transaction transaction, Object value) {
+		assertHasIndex();
+		BTreeNodeSearchResult lowerBound = searchLowerBound(transaction, value);
+	    BTreeNodeSearchResult upperBound = searchUpperBound(transaction, value);	    
+		return lowerBound.createIncludingRange(upperBound);
+	}
+	
+	private BTreeNodeSearchResult searchUpperBound(Transaction transaction, final Object value) {
+		return searchBound(transaction, Integer.MAX_VALUE, value);
+	}
 
+	private BTreeNodeSearchResult searchLowerBound(Transaction transaction, final Object value) {
+		return searchBound(transaction, 0, value);
+	}
 
+	private BTreeNodeSearchResult searchBound(Transaction transaction, int bound, Object keyPart) {
+	    return getIndex(transaction).searchLeaf(transaction, new FieldIndexKey(bound, keyPart), SearchTarget.LOWEST);
+	}
 }

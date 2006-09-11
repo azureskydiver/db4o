@@ -52,7 +52,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected BTree fieldIndexBTree(Class clazz, String fieldName) {
-		return getYapClass(clazz).getYapField(fieldName).getIndex();
+		return getYapClass(clazz).getYapField(fieldName).getIndex(null);
 	}
 
 	private YapClass getYapClass(Class clazz) {

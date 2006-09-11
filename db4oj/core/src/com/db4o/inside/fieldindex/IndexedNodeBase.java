@@ -22,8 +22,8 @@ public abstract class IndexedNodeBase  implements IndexedNode {
     	return addToTree(null, this);
     }
 	
-	public BTree getIndex() {
-	    return getYapField().getIndex();
+	public final BTree getIndex() {
+	    return getYapField().getIndex(transaction());
 	}
 
 	private YapField getYapField() {
@@ -39,22 +39,8 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 		return null == parent || !parent.hasParent();
 	}
 
-	private BTreeNodeSearchResult searchBound(int bound, Object keyPart) {
-	    return getIndex().searchLeaf(transaction(), new FieldIndexKey(bound, keyPart), SearchTarget.LOWEST);
-	}
-
 	public BTreeRange search(final Object value) {
-		BTreeNodeSearchResult lowerBound = searchLowerBound(value);
-	    BTreeNodeSearchResult upperBound = searchUpperBound(value);	    
-		return lowerBound.createIncludingRange(upperBound);
-	}
-
-	private BTreeNodeSearchResult searchUpperBound(final Object value) {
-		return searchBound(Integer.MAX_VALUE, value);
-	}
-
-	private BTreeNodeSearchResult searchLowerBound(final Object value) {
-		return searchBound(0, value);
+		return getYapField().search(transaction(), value);
 	}
 
 	public static TreeInt addToTree(TreeInt tree, final IndexedNode node) {

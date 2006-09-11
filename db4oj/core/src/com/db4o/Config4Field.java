@@ -98,7 +98,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 		}
 		
 		if (MarshallerFamily.BTREE_FIELD_INDEX){
-			return yapField.getIndex() != null;
+			return yapField.getIndex(systemTrans) != null;
 		}
 		
         return true;

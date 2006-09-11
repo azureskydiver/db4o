@@ -41,7 +41,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
         YapClass yc = stream.getYapClass(claxx, false);
         YapField yf = yc.getYapField("foo");
-        BTree bTree = yf.getIndex();
+        BTree bTree = yf.getIndex(stream.getTransaction());
         
         Assert.isNotNull(bTree);
         expectKeysSearch(bTree, FOOS);

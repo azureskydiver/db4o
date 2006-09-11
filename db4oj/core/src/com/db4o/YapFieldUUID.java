@@ -3,7 +3,9 @@
 package com.db4o;
 
 import com.db4o.ext.*;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
+import com.db4o.header.FileHeader0;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
@@ -70,23 +72,48 @@ class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
-    Index4 getOldIndex(Transaction a_trans){
+    boolean hasIndex() {
+    	return true;
+    }
+    
+    public BTree getIndex(Transaction transaction) {
+    	ensureIndex(transaction);
+    	return super.getIndex(transaction);
+    }
+
+	private void ensureIndex(Transaction transaction) {
+		if (null == transaction) {
+    		throw new ArgumentNullException();
+    	}
+    	if (null != super.getIndex(transaction)) {
+    		return;    		
+    	}    	
+    	// TODO: find a better home for the index id
+    	FileHeader0 header = getFileHeader(transaction);
+    	initIndex(transaction, header.getUUIDIndexId());
+    	if (header.getUUIDIndexId() == 0) {
+    		header.writeUUIDIndexId(super.getIndex(transaction).getID());
+    	}
+	}
+
+	private FileHeader0 getFileHeader(Transaction transaction) {
+		return ((YapFile)transaction.stream()).getFileHeader();
+	}
+
+	Index4 getOldIndex(Transaction a_trans){
+    	if (MarshallerFamily.BTREE_FIELD_INDEX) {
+    		throw new IllegalStateException();
+    	}
         if(_oldIndex != null){
             return _oldIndex;
         }
         YapFile stream = (YapFile)a_trans.stream();
-        if(_oldIndex == null){
-            MetaIndex metaIndex = stream.getUUIDMetaIndex();
-            if(metaIndex == null){
-                return null;
-            }
-            _oldIndex = new Index4(stream.getSystemTransaction(), getHandler(), metaIndex, false);
+        MetaIndex metaIndex = stream.getUUIDMetaIndex();
+        if(metaIndex == null){
+            return null;
         }
+        _oldIndex = new Index4(stream.getSystemTransaction(), getHandler(), metaIndex, false);
         return _oldIndex;
-    }
-    
-    boolean hasIndex() {
-        return true;
     }
     
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
@@ -158,7 +185,24 @@ class YapFieldUUID extends YapFieldVirtual {
         YLong.writeLong(0, writer);
     }
 
-	public Object[] objectAndYapObjectBySiganture(final Transaction transaction, final long a_uuid, final byte[] a_signature) {
+	public Object[] objectAndYapObjectBySignature(final Transaction transaction, final long longPart, final byte[] signature) {
+		if (MarshallerFamily.OLD_FIELD_INDEX) {
+			return oldObjectAndYapObjectBySignature(transaction, longPart, signature);
+		}
+		
+		final BTreeRange range = search(transaction, new Long(longPart));		
+		final Iterator4 keys = range.keys();
+		while (keys.moveNext()) {
+			final FieldIndexKey current = (FieldIndexKey) keys.current();
+			final Object[] objectAndYapObject = getObjectAndYapObjectByID(transaction, current.parentID(), signature);
+			if (null != objectAndYapObject) {
+				return objectAndYapObject;
+			}
+		}
+		return new Object[2];
+	}
+
+	private Object[] oldObjectAndYapObjectBySignature(final Transaction transaction, final long a_uuid, final byte[] a_signature) {
 		IxTree ixTree = (IxTree) getOldIndexRoot(transaction);
         final Object[] ret = new Object[2];
         IxTraverser ixTraverser = new IxTraverser();
@@ -167,33 +211,35 @@ class YapFieldUUID extends YapFieldVirtual {
         if (count > 0) {
             ixTraverser.visitAll(new Visitor4() {
                 public void visit(Object a_object) {
-                    Object[] arr = transaction.stream().getObjectAndYapObjectByID(
-                    		transaction, ((Integer)a_object).intValue());
-                    if (arr[1] != null) {
-                        YapObject yod = (YapObject) arr[1];
-                        VirtualAttributes vad = yod.virtualAttributes(transaction);
-                        byte[] cmp = vad.i_database.i_signature;
-                        boolean same = true;
-                        if (a_signature.length == cmp.length) {
-                            for (int i = 0; i < a_signature.length; i++) {
-                                if (a_signature[i] != cmp[i]) {
-                                    same = false;
-                                    break;
-                                }
-                            }
-                        } else {
-                            same = false;
-                        }
-                        if (same) {
-                            ret[0] = arr[0];
-                            ret[1] = arr[1];
-                        }
+                	if (ret[0] != null) {
+                		// already found
+                		return;
+                	}
+                    final int parentId = ((Integer)a_object).intValue();                    
+                    Object[] arr = getObjectAndYapObjectByID(transaction, parentId, a_signature);
+                    if (arr != null) {
+                    	ret[0] = arr[0];
+                        ret[1] = arr[1];
                     }
                 }
             });
             
         }
         return ret;
+	}
+
+	protected Object[] getObjectAndYapObjectByID(Transaction transaction, int parentId, byte[] signature) {
+		Object[] arr = transaction.stream().getObjectAndYapObjectByID(
+        		transaction, parentId);
+        if (arr[1] == null) {
+        	return null;
+        }
+        YapObject yod = (YapObject) arr[1];
+        VirtualAttributes vad = yod.virtualAttributes(transaction);
+        if (!Arrays4.areEqual(signature, vad.i_database.i_signature)) {
+            return null;
+        }
+        return arr;
 	}
  
 

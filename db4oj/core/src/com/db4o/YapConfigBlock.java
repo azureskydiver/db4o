@@ -54,12 +54,13 @@ public final class YapConfigBlock implements Runnable
     private static final int    FREESPACE_SYSTEM_OFFSET = PASSWORD_OFFSET + 1; 
     private static final int    FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + YapConst.INT_LENGTH; 
     private static final int    CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + YapConst.INT_LENGTH;
+    private static final int    UUID_INDEX_ID_OFFSET = CONVERTER_VERSION_OFFSET + YapConst.INT_LENGTH;
 	
 	
 	// complete possible data in config block
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
-		+ (YapConst.INT_LENGTH * 6)		// (two transaction pointers, PDB ID, lost int, freespace address, converter_version
+		+ (YapConst.INT_LENGTH * 7)	// (two transaction pointers, PDB ID, lost int, freespace address, converter_version, index id)
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
 		
@@ -68,6 +69,9 @@ public final class YapConfigBlock implements Runnable
     public byte                        _freespaceSystem;
     public int                         _freespaceAddress;
     private int                 _converterVersion;
+    
+    
+	public int _uuidIndexId;
 	
 	public YapConfigBlock(YapFile stream){
 		_stream = stream;
@@ -295,6 +299,9 @@ public final class YapConfigBlock implements Runnable
         if(oldLength > CONVERTER_VERSION_OFFSET){
             _converterVersion = reader.readInt();
         }
+        if(oldLength > UUID_INDEX_ID_OFFSET){
+            _uuidIndexId = reader.readInt();
+        }
         
         ensureFreespaceSlot();
 		
@@ -378,6 +385,7 @@ public final class YapConfigBlock implements Runnable
         ensureFreespaceSlot();
         YInt.writeInt(_freespaceAddress, writer);
         YInt.writeInt(_converterVersion, writer);
+        YInt.writeInt(_uuidIndexId, writer);
 		writer.write();
 		writePointer();
 	}
