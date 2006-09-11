@@ -4,6 +4,12 @@ package org.polepos.drs;
 
 import org.polepos.circuits.kyalami.*;
 
+import com.db4o.ObjectSet;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.Replication;
+import com.db4o.replication.ReplicationSession;
+import com.db4o.test.replication.SPCChild;
+
 public class KyalamiDrs extends DrsDriver implements KyalamiDriver {
 
     public  void storeInA() {
@@ -19,5 +25,56 @@ public class KyalamiDrs extends DrsDriver implements KyalamiDriver {
     public void replicate() {
         replicateAll();
     }
+
+	public void modifyInB() {
+		int count = setup().getObjectCount();
+		
+		for (int i = 0; i < count; i++) {
+			ObjectSet objectSet = providerB().getStoredObjects(new KyalamiObject(i).getClass());
+			
+			KyalamiObject ko = (KyalamiObject)objectSet.next();
+			
+			ko.setVal(1000+i);
+			addToCheckSum(ko.checkSum());
+			providerB().update(ko);
+		}
+		providerB().commit();
+	}
+
+	public void replicate2() {
+		replicateAll(providerB(), providerA());
+	}
+
+	public void modifyInA() {
+		int count = setup().getObjectCount();
+		
+		for (int i = 0; i < count; i++) {
+			ObjectSet objectSet = providerA().getStoredObjects(new KyalamiObject(i).getClass());
+			
+			KyalamiObject ko = (KyalamiObject)objectSet.next();
+			
+			ko.setVal(500+i);
+			addToCheckSum(ko.checkSum());
+			providerA().update(ko);
+		}
+		providerB().commit();
+	}
+
+	public void replicate3() {
+		replicateClass(providerA(), providerB(), SPCChild.class);
+
+	}
+
+	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
+		//System.out.println("ReplicationTestcase.replicateClass");
+		ReplicationSession replication = Replication.begin(providerA, providerB);
+		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
+		while (allObjects.hasNext()) {
+			final Object obj = allObjects.next();
+			//System.out.println("obj = " + obj);
+			replication.replicate(obj);
+		}
+		replication.commit();
+	}
 
 }

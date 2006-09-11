@@ -24,6 +24,10 @@ public class Kyalami extends Circuit {
     protected void addLaps() {
         add(new Lap("storeInA"));
         add(new Lap("replicate"));
+		add(new Lap("modifyInB"));
+		add(new Lap("replicate2"));
+		add(new Lap("modifyInA"));
+		add(new Lap("replicate3"));
     }
 
 }

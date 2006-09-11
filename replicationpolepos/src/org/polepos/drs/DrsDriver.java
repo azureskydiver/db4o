@@ -10,7 +10,6 @@ import com.db4o.inside.replication.*;
 import com.db4o.replication.*;
 import com.db4o.test.replication.db4ounit.*;
 
-
 /**
  * @exclude
  */
@@ -75,5 +74,30 @@ public class DrsDriver extends Driver {
         }
         replication.commit();
     }
+    
+	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
+		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
+		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
+		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
+
+		if (!allObjects.hasNext())
+			throw new RuntimeException("Can't find any objects to replicate");
+
+		while (allObjects.hasNext()) {
+			Object changed = allObjects.next();
+			//System.out.println("changed = " + changed);
+			replication.replicate(changed);
+		}
+		replication.commit();
+	}
+
+	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
+		ObjectSet objectSet = provider.getStoredObjects(clazz);
+
+		if (1 != objectSet.size())
+			throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + provider);
+
+		return objectSet.next();
+	}
 
 }
