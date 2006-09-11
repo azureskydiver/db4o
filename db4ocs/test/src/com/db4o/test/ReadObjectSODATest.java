@@ -14,7 +14,7 @@ public class ReadObjectSODATest extends ClientServerTestCase {
 
 	private String testString = "simple test string";
 
-	protected void store() {
+	protected void store() throws Exception {
 		oc = openClient();
 		try {
 			int total = Configure.CONCURRENCY_THREAD_COUNT;

@@ -15,7 +15,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 
 	private String testString = "simple test string";
 
-	protected void store() {
+	protected void store() throws Exception {
 		int total = Configure.CONCURRENCY_THREAD_COUNT;
 		oc = openClient();
 		try {

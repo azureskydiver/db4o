@@ -11,6 +11,7 @@ public class AllTests extends CSTestSuite {
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
+				UpdateObjectTest.class,
 				};
 	}
 	

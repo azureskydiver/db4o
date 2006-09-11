@@ -3,10 +3,12 @@
 package db4ounit.extensions;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
+import com.db4o.test.config.Configure;
 
 import db4ounit.TestCase;
 import db4ounit.TestLifeCycle;
@@ -23,19 +25,21 @@ public class ClientServerTestCase implements TestCase, TestLifeCycle {
 		// start test server
 		// TODO: start server in seperate vm
 		configure();
-		server = Db4o.openServer(TEST_SERVER_FILENAME, 0);
+		server = Db4o.openServer(TEST_SERVER_FILENAME, Configure.PORT);
+		server.grantAccess(Configure.USER, Configure.PASSWORD);
 		store();
 	}
 
-	protected ObjectContainer openClient() {
-		return server.openClient();
+	protected ObjectContainer openClient() throws IOException {
+		return Db4o.openClient("localhost", Configure.PORT, Configure.USER,
+				Configure.PASSWORD);
 	}
 
 	protected void configure() {
 		// default: do nothing
 	}
 
-	protected void store() {
+	protected void store() throws Exception {
 		// default: do nothing
 	}
 
