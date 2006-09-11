@@ -11,14 +11,14 @@ import com.db4o.inside.ix.*;
  * @exclude
  */
 public class FieldIndexKeyHandler implements Indexable4{
+	
+    private final Indexable4 _valueHandler;
     
-    private final YInt _integerHandler;
-    
-    private final Indexable4 _delegate;
+    private final YInt _parentIdHandler;
     
     public FieldIndexKeyHandler(YapStream stream, Indexable4 delegate_) {
-        _integerHandler = new YInt(stream);
-        _delegate = delegate_;
+        _parentIdHandler = new YInt(stream);
+        _valueHandler = delegate_;
     }
 
     public Object comparableObject(Transaction trans, Object indexEntry) {
@@ -26,19 +26,19 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public int linkLength() {
-        return _delegate.linkLength() + YapConst.INT_LENGTH;
+        return _valueHandler.linkLength() + YapConst.INT_LENGTH;
     }
 
     public Object readIndexEntry(YapReader a_reader) {
-        Integer intPart = (Integer)_integerHandler.readIndexEntry(a_reader);
-        Object objPart = _delegate.readIndexEntry(a_reader);
+        Integer intPart = (Integer)_parentIdHandler.readIndexEntry(a_reader);
+        Object objPart = _valueHandler.readIndexEntry(a_reader);
         return new FieldIndexKey(intPart.intValue(), objPart);
     }
 
     public void writeIndexEntry(YapReader writer, Object obj) {
         FieldIndexKey composite = cast(obj);
-        _integerHandler.write(composite.parentID(), writer);
-        _delegate.writeIndexEntry(writer, composite.value());
+        _parentIdHandler.write(composite.parentID(), writer);
+        _valueHandler.writeIndexEntry(writer, composite.value());
     }
     
     private FieldIndexKey cast(Object obj){
@@ -47,8 +47,8 @@ public class FieldIndexKeyHandler implements Indexable4{
 
     public YapComparable prepareComparison(Object obj) {
         FieldIndexKey composite = cast(obj);
-        _delegate.prepareComparison(composite.value());
-        _integerHandler.prepareComparison(composite.parentID());
+        _valueHandler.prepareComparison(composite.value());
+        _parentIdHandler.prepareComparison(composite.parentID());
         return this;
     }
 
@@ -57,11 +57,11 @@ public class FieldIndexKeyHandler implements Indexable4{
     		throw new ArgumentNullException();
     	}
         FieldIndexKey composite = cast(obj);
-        int delegateResult = _delegate.compareTo(composite.value());  
+        int delegateResult = _valueHandler.compareTo(composite.value());  
         if(delegateResult != 0 ){
             return delegateResult;
         }
-        return _integerHandler.compareTo(composite.parentID());
+        return _parentIdHandler.compareTo(composite.parentID());
     }
 
     public boolean isEqual(Object obj) {
@@ -77,7 +77,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public Object current() {
-        return new FieldIndexKey(_integerHandler.currentInt(), _delegate.current());  
+        return new FieldIndexKey(_parentIdHandler.currentInt(), _valueHandler.current());  
     }
 }
 

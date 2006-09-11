@@ -4,17 +4,21 @@ package com.db4o.inside.btree;
 
 
 /**
+ * Composite key for field indexes, first compares on the actual
+ * indexed field _value and then on the _parentID (which is a
+ * reference to the containing object). 
+ * 
  * @exclude
  */
 public class FieldIndexKey {
+	
+	private final Object _value;
     
     private final int _parentID;
     
-    private final Object _value;
-    
-    public FieldIndexKey(int parentID_, Object value_){
-        _parentID = parentID_;
-        _value = value_;
+    public FieldIndexKey(int parentID, Object value){
+        _parentID = parentID;
+        _value = value;
     }
     
     public int parentID(){
