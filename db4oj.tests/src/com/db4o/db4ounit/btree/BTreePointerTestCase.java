@@ -33,12 +33,20 @@ public class BTreePointerTestCase extends BTreeTestCaseBase {
 	}	
 	
 	public void testSearchOperatesInReadMode() {
-		final BTreeRange range = search(3);
+		final BTreePointer pointer = getPointerForKey(3);
+		assertReadModePointerIteration(
+				new int[] { 3, 4, 7, 9 },
+				pointer);
+	}
+
+	private BTreePointer getPointerForKey(final int key) {
+		final BTreeRange range = search(key);
 		final Iterator4 pointers = range.pointers();
 		Assert.isTrue(pointers.moveNext());
-		assertReadModePointerIteration(new int[] { 3, 4, 7, 9 }, (BTreePointer) pointers.current());
+		final BTreePointer pointer = (BTreePointer) pointers.current();
+		return pointer;
 	}
-	
+
 	private void assertReadModePointerIteration(final int[] expectedKeys, BTreePointer pointer) {
 		Object[] expected = IntArrays4.toObjectArray(expectedKeys);
 		for (int i = 0; i < expected.length; i++) {

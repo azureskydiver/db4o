@@ -74,6 +74,10 @@ public abstract class BTreeTestCaseBase extends Db4oTestCase{
 	protected void remove(final Integer element) {
 		remove(trans(), element);
 	}
+	
+	protected void remove(int element) {
+		remove(new Integer(element));
+	}
 
 	protected void remove(final Transaction trans, final Integer element) {
 		_btree.remove(trans, element);
@@ -81,6 +85,10 @@ public abstract class BTreeTestCaseBase extends Db4oTestCase{
 
 	protected void add(final Integer element) {
 		_btree.add(trans(), element);
+	}
+	
+	protected void add(int element) {
+		add(new Integer(element));
 	}
 
 	private int size() {
