@@ -5,7 +5,6 @@ package com.db4o.test.replication.db4ounit.fixtures;
 import java.io.File;
 
 import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
