@@ -18,7 +18,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         if(! hasBTreeIndex(field)){
             return;
         }
-        writer.writeIDOf(trans, field.getIndex());
+        writer.writeIDOf(trans, field.getIndex(trans));
     }
 
     public YapField read(YapStream stream, YapField originalField, YapReader reader) {

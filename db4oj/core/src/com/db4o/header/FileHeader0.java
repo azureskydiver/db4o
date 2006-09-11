@@ -27,7 +27,7 @@ public class FileHeader0 {
     
     private int _classCollectionID;
     
-    private int _freeSpaceID;
+    private int _freeSpaceID; 
     
     PBootRecord _bootRecord;
 
@@ -37,7 +37,6 @@ public class FileHeader0 {
         reader.read(file, 0, 0);
         
         byte firstFileByte = reader.readByte();
-        
         if (firstFileByte != YapConst.YAPBEGIN) {
             if(firstFileByte != YapConst.YAPFILEVERSION){
                 Exceptions4.throwRuntimeException(17);
@@ -213,5 +212,14 @@ public class FileHeader0 {
     public void setIdentity(Db4oDatabase database) {
         _bootRecord.i_db = database;
     }
+
+	public int getUUIDIndexId() {
+		return _configBlock._uuidIndexId;
+	}
+
+	public void writeUUIDIndexId(int id) {
+		_configBlock._uuidIndexId = id;
+		writeVariablePart1();
+	}
 
 }
