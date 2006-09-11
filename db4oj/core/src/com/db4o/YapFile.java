@@ -452,7 +452,6 @@ public abstract class YapFile extends YapStream {
         _fileHeader = new FileHeader0();
         _fileHeader.read0(this);
         
-        
         classCollection().setID(_fileHeader.classCollectionID());
         classCollection().read(i_systemTrans);
         

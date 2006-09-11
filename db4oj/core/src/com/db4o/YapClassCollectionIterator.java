@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 /**
  * 
  */
-class YapClassCollectionIterator extends Iterator4Impl{
+public class YapClassCollectionIterator extends Iterator4Impl{
     
     private final YapClassCollection i_collection;
     
@@ -16,9 +16,15 @@ class YapClassCollectionIterator extends Iterator4Impl{
         i_collection = a_collection;
     }
     
-    YapClass currentClass(){
-        YapClass yc = (YapClass)current();
-        i_collection.readYapClass(yc, null);
-        return yc;
+    public boolean moveNext() {
+    	if (super.moveNext()) {
+    		i_collection.readYapClass(currentClass(), null);
+    		return true;
+    	}
+    	return false;
+    }
+    
+    public YapClass currentClass(){
+        return (YapClass)current();
     }
 }

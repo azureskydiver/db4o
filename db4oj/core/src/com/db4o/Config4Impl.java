@@ -541,6 +541,11 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     	aliases().add(alias);
     }
     
+    public void removeAlias(Alias alias) {
+    	if (null == alias) throw new com.db4o.foundation.ArgumentNullException("alias");
+    	aliases().remove(alias);
+    }
+    
     public String resolveAlias(String runtimeType) {
 
     	Collection4 configuredAliases=aliases();

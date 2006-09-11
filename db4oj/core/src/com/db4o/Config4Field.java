@@ -152,29 +152,12 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	}
 
 	private void reindex(Transaction systemTrans, YapField yapField, YapFile stream) {
-		YapClass yapClassField = yapField.getParentYapClass();
-		
-		// FIXME: BTree traversal over index here.
-		
-		long[] ids = yapClassField.getIDs();
-		for (int i = 0; i < ids.length; i++) {
-		    YapWriter writer = stream.readWriterByID(systemTrans, (int)ids[i]);
-		    if(writer != null){
-		        ObjectHeader oh = new ObjectHeader(stream, writer);
-		        Object obj = oh.objectMarshaller().readIndexEntry(oh._yapClass, oh._headerAttributes, yapField, writer);
-		        yapField.addIndexEntry(systemTrans, (int)ids[i], obj);
-		        
-		    }else{
-		        if(Deploy.debug){
-		            throw new RuntimeException("Unexpected null object for ID");
-		        }
-		    }
-		}
-		if(ids.length > 0){
+		YapClass yapClass = yapField.getParentYapClass();		
+		if (yapField.rebuildIndexForClass(stream, yapClass)) {
 		    systemTrans.commit();
 		}
 	}
-
+	
 	boolean queryEvaluation() {
 		return _config.getAsBoolean(QUERY_EVALUATION);
 	}

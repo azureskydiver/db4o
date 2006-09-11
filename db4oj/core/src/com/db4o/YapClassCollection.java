@@ -265,9 +265,9 @@ public final class YapClassCollection extends YapMeta {
         }
     }
     
-    YapClassCollectionIterator iterator(){
+    public YapClassCollectionIterator iterator(){
         return new YapClassCollectionIterator(this, i_classes._first);
-    }
+    } 
 
     public int ownLength() {
         return YapConst.OBJECT_LENGTH
