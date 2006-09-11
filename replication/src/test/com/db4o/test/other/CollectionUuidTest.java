@@ -3,6 +3,7 @@ package com.db4o.test.other;
 import java.util.ArrayList;
 
 import com.db4o.Db4o;
+import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.replication.db4ounit.DrsTestCase;
 
@@ -20,6 +21,7 @@ public class CollectionUuidTest extends DrsTestCase {
 		ArrayList list = new ArrayList();
 		oc.set(list);
 		oc.commit();
-		Assert.isNotNull(oc.getObjectInfo(list).getUUID());
+		final Db4oUUID uuid = oc.getObjectInfo(list).getUUID();
+		Assert.isNotNull(uuid);
 	}
 }
