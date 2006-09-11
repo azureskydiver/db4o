@@ -637,7 +637,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return trans.stream().getYapClass(reflectClass, allowCreation);
     }
     
-    private boolean generateUUIDs() {
+    public boolean generateUUIDs() {
         if(! generateVirtual()){
             return false;
         }

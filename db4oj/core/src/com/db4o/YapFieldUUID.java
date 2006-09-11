@@ -79,11 +79,11 @@ public class YapFieldUUID extends YapFieldVirtual {
     public BTree getIndex(Transaction transaction) {
     	ensureIndex(transaction);
     	return super.getIndex(transaction);
-    }
+    }    
     
-    protected Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh, int objectId) {
-    	throw new NotImplementedException();
-    }
+//    protected Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh, int objectId) {
+//    	throw new NotImplementedException();
+//    }
     
 	private void ensureIndex(Transaction transaction) {
 		if (null == transaction) {
