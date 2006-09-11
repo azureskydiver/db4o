@@ -31,6 +31,10 @@ import java.awt.event.MouseListener;
 import java.util.List;
 
 /**
+ * <p>
+ * Most of the main items related to this connection are in here, this is mainly so that this panel could be embedded in
+ * a different top level container (ie: doesn't have to be in MainFrame).
+ * </p>
  * User: treeder
  * Date: Aug 18, 2006
  * Time: 1:12:30 PM
@@ -175,6 +179,18 @@ public class MainPanel extends JPanel {
         return objectContainer;
     }
 
+    public void closeObjectContainer() {
+        if(objectContainer != null){
+            objectContainer.close();
+            objectContainer = null;
+        }
+    }
+
+    public Db4oConnectionSpec getConnectionSpec() {
+        return connectionSpec;
+    }
+
+
     private Component buildTabbedPane() {
 
         tabbedPane = new JTabbedPane(SwingConstants.TOP);
@@ -300,9 +316,6 @@ public class MainPanel extends JPanel {
         addTab("Class: " + className, panel);
     }
 
-    public Db4oConnectionSpec getConnectionSpec() {
-        return connectionSpec;
-    }
 
 
     private final class OpenFileActionListener implements ActionListener {

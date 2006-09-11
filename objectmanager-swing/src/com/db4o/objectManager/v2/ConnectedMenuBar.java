@@ -1,9 +1,7 @@
 package com.db4o.objectManager.v2;
 
-import com.jgoodies.looks.Options;
-import com.jgoodies.looks.windows.WindowsLookAndFeel;
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.db4o.objectmanager.api.util.Defragment;
+import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -40,13 +38,13 @@ public class ConnectedMenuBar extends BaseMenuBar {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 int response = fileChooser.showSaveDialog(frame);
-                if(response == JFileChooser.APPROVE_OPTION){
+                if (response == JFileChooser.APPROVE_OPTION) {
                     File f = fileChooser.getSelectedFile();
                     try {
                         frame.getObjectContainer().ext().backup(f.getAbsolutePath());
                     } catch (IOException e1) {
                         e1.printStackTrace();
-                        JOptionPane.showMessageDialog(frame, "Error during backup! " + e1.getMessage(), "Error during backup", JOptionPane.ERROR_MESSAGE, ResourceManager.createImageIcon("icons/32x32/warning.png"));
+                        OptionPaneHelper.showErrorMessage(frame, "Error during backup! " + e1.getMessage(), "Error during backup");
                     }
                 }
             }
@@ -55,9 +53,19 @@ public class ConnectedMenuBar extends BaseMenuBar {
         item = createMenuItem("Defragment", 'd', KeyStroke.getKeyStroke("ctrl shift D"));
         item.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showConfirmDialog(frame, "Are you sure you want to defragment this database?" +
+                int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to defragment this database?\n" +
+                        "This operation will shutdown the currently running database and reopen after the operation completes.\n" +
                         "Please be aware of the side effects of running defragment. See db4o manual.");
-                new Defragment().run(frame.getConnectionSpec().getFullPath(), true);
+                if (result == JOptionPane.YES_OPTION) {
+                    frame.closeObjectContainer();
+                    try {
+                        new Defragment().run(frame.getConnectionSpec().getFullPath(), true);
+                        OptionPaneHelper.showSuccessDialog(frame, "Defragment was successful!", "Defragment Complete");
+                        // todo: progress bar
+                    } catch (Exception e1) {
+                        OptionPaneHelper.showErrorMessage(frame, e1.getMessage(), "Error during Defragment");
+                    }
+                }
             }
         });
         item.setEnabled(true);

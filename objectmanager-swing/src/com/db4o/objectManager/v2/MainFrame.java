@@ -215,6 +215,10 @@ public class MainFrame extends JFrame implements WindowListener {
         return connectionSpec;
     }
 
+    public void closeObjectContainer() {
+        mainPanel.closeObjectContainer();
+    }
+
 
     private final class AboutActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
