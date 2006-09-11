@@ -216,6 +216,10 @@ public final class YapString extends YapIndependantType {
         if(obj instanceof String) {
             return StringMarshaller.writeShort(_stream, (String)obj);
         }
+        if(obj instanceof int[]){
+            int[] slot = (int[])obj;
+            return _stream.readReaderByAddress(slot[0], slot[1]);
+        }
         return null;
     }
     
