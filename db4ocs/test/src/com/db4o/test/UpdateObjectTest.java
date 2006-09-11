@@ -10,13 +10,12 @@ import db4ounit.extensions.ClientServerTestCase;
 
 public class UpdateObjectTest extends ClientServerTestCase {
 
-	private String testString = "simple test string";
+	private static String testString = "simple test string";
 
 	protected void store() throws Exception {
 		oc = openClient();
 		try {
-			int total = Configure.CONCURRENCY_THREAD_COUNT;
-			for (int i = 0; i < total; i++) {
+			for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
 				oc.set(new SimpleObject(testString + i, i));
 			}
 		} finally {
@@ -65,7 +64,7 @@ public class UpdateObjectTest extends ClientServerTestCase {
 			ObjectSet result = query.execute();
 			Assert.areEqual(1, result.size());
 			SimpleObject o = (SimpleObject) result.next();
-			o.setI(seq+1);
+			o.setI(seq + 1);
 			oc.set(o);
 		} finally {
 			oc.close();
@@ -77,10 +76,10 @@ public class UpdateObjectTest extends ClientServerTestCase {
 		try {
 			ObjectSet result = oc.query(SimpleObject.class);
 			Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT, result.size());
-			while(result.hasNext()){
-				SimpleObject o = (SimpleObject)result.next();
+			while (result.hasNext()) {
+				SimpleObject o = (SimpleObject) result.next();
 				int i = o.getI() - 1;
-				Assert.areEqual(testString+i,o.getS());
+				Assert.areEqual(testString + i, o.getS());
 			}
 		} finally {
 			oc.close();

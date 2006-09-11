@@ -13,13 +13,12 @@ import db4ounit.extensions.ClientServerTestCase;
 
 public class ReadObjectNQTest extends ClientServerTestCase {
 
-	private String testString = "simple test string";
+	private static String testString = "simple test string";
 
 	protected void store() throws Exception {
-		int total = Configure.CONCURRENCY_THREAD_COUNT;
 		oc = openClient();
 		try {
-			for (int i = 0; i < total; i++) {
+			for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
 				oc.set(new SimpleObject(testString + i, i));
 			}
 		} finally {

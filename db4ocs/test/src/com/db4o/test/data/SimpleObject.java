@@ -41,4 +41,8 @@ public class SimpleObject {
 	public void setS(String s) {
 		_s = s;
 	}
+	
+	public String toString() {
+		return _s+":"+_i;
+	}
 }
