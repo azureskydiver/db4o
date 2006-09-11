@@ -23,7 +23,7 @@ public class AllReplicationTests extends DrsTestSuite {
 				// Collection
 				MapTest.class,
 				ArrayReplicationTest.class,
-				// CollectionUuidTest.class,
+				//CollectionUuidTest.class,
 				ListTest.class, Db4oListTest.class, MapTest.class,
 				SingleTypeCollectionReplicationTest.class,
 				MixedTypesCollectionReplicationTest.class,
@@ -40,14 +40,10 @@ public class AllReplicationTests extends DrsTestSuite {
 
 	public static void main(String[] args) {
 
-//		new TestRunner(new DrsTestSuiteBuilder(new Db4oClientServerDrsFixture(
-//				"db4o-cs-a", 0xdb40), new Db4oClientServerDrsFixture(
-//				"db4o-cs-b", 4455), AllReplicationTests.class)).run();
-
 		new AllReplicationTests().runDb4oDb4o();
-
-//		new TestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
-//				new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
-//				AllReplicationTests.class)).run();
+		new AllReplicationTests().rundb4oCS();
+		new AllReplicationTests().runCSdb4o();
+		new AllReplicationTests().runCSCS();
+	
 	}
 }
