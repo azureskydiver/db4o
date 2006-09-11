@@ -9,5 +9,11 @@ public class Configure {
 	public static final String COCURRENCY_TEST_PREFIX = "conc";
 
 	public static final String COCURRENCY_CHECK_PREFIX = "check";
+	
+	public static String USER = "db4o";
+	
+	public static String PASSWORD = "db4o";
+	
+	public static int PORT = 9527;
 
 }
