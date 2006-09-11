@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.db4ounit.assorted.BackupStressTestCase;
 import com.db4o.test.cluster.BasicClusterTest;
 import com.db4o.test.conjunctions.ConjunctionsTestSuite;
 import com.db4o.test.constraints.ConstraintsTestSuite;
@@ -11,7 +10,6 @@ import com.db4o.test.java.JavaTestSuite;
 import com.db4o.test.nativequery.NativeQueryTestSuite;
 import com.db4o.test.performance.IndexQueryingIsFast;
 import com.db4o.test.soda.SodaNumberCoercion;
-import com.db4o.test.virtualfields.VirtualFieldsTestSuite;
 
 public class AllTestsConfAll extends TestSuite{
 
@@ -24,7 +22,6 @@ public class AllTestsConfAll extends TestSuite{
         suites.add(new InterfacesTestSuite());
         suites.add(new JavaTestSuite());
         suites.add(new NativeQueryTestSuite());
-        suites.add(new VirtualFieldsTestSuite());
 	}
     
     public Class[] tests(){
