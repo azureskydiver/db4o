@@ -40,7 +40,7 @@ public final class Assert {
 	}
 
 	public static void isNotNull(Object reference) {
-		isNotNull(reference, "Expected reference to be not null.");
+		isNotNull(reference, failureMessage("not null", reference));
 	}
 
 	public static void isNotNull(Object reference,String message) {
