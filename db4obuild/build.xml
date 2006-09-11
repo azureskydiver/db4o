@@ -752,7 +752,7 @@
 
 	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
 		<copy todir=".">
-			<fileset dir="${dir.j}">
+			<fileset dir="${dir.j.jdk1.2}">
 				<include name="test/db4oVersions/**/*" />
 			</fileset>
 		</copy>
