@@ -1148,7 +1148,10 @@ public class BTreeNode extends YapMeta{
 			return;
 		}
 		for (int i=0; i<_count; ++i) {
-			((BTreeNode)_children[i]).debugLoadFully(trans);
+            if(_children[i] instanceof Integer){
+                _children[i] = btree().produceNode(((Integer)_children[i]).intValue());
+            }
+            ((BTreeNode)_children[i]).debugLoadFully(trans);
 		}
 	}
 
