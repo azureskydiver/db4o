@@ -10,7 +10,7 @@ import com.db4o.inside.convert.conversions.*;
 public class MarshallerFamily {
     
     
-    public static class Version{
+    public static class FamilyVersion{
         
         public static final int PRE_MARSHALLER = 0;
         
@@ -20,11 +20,11 @@ public class MarshallerFamily {
         
     }
     
-    private static int FAMILY_VERSION = Version.MARSHALLER;
+    private static int FAMILY_VERSION = FamilyVersion.MARSHALLER;
 
-    public static final boolean BTREE_FIELD_INDEX = (FAMILY_VERSION == Version.BTREE_FIELD_INDEXES);
+    public static final boolean BTREE_FIELD_INDEX = (FAMILY_VERSION == FamilyVersion.BTREE_FIELD_INDEXES);
     
-    public static final boolean OLD_FIELD_INDEX = (FAMILY_VERSION < Version.BTREE_FIELD_INDEXES);
+    public static final boolean OLD_FIELD_INDEX = (FAMILY_VERSION < FamilyVersion.BTREE_FIELD_INDEXES);
     
     public final ArrayMarshaller _array;
     
