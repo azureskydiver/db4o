@@ -35,10 +35,9 @@ public class YapFieldUUID extends YapFieldVirtual {
         YapFile yf = (YapFile)writer.getStream();
         
         if( (uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0 && ! isnew){
-            YapReader reader = yf.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
-            yapClass.findOffset(reader, this);
-            db4oDatabaseIdentityID = reader.readInt();
-            uuid = YLong.readLong(reader);
+        	DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(yf, yapClass, oldSlot);            
+            db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
+            uuid = identityAndUUID.uuid;
         }
         
         if(db4oDatabaseIdentityID == 0){
@@ -56,6 +55,23 @@ public class YapFieldUUID extends YapFieldVirtual {
             addIndexEntry(writer, new Long(uuid));
         }
     }
+    
+    static class DatabaseIdentityIDAndUUID {
+    	public int databaseIdentityID;
+    	public long uuid;
+		public DatabaseIdentityIDAndUUID(int databaseIdentityID, long uuid) {
+			this.databaseIdentityID = databaseIdentityID;
+			this.uuid = uuid;
+		}
+    }
+
+	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream yf, YapClass yapClass, Slot oldSlot) {		
+		YapReader reader = yf.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
+		if (null == yapClass.findOffset(reader, this)) {
+			return null;
+		}
+		return new DatabaseIdentityIDAndUUID(reader.readInt(), YLong.readLong(reader));
+	}
 
     public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         if(isUpdate){
@@ -79,11 +95,15 @@ public class YapFieldUUID extends YapFieldVirtual {
     public BTree getIndex(Transaction transaction) {
     	ensureIndex(transaction);
     	return super.getIndex(transaction);
-    }    
+    }
     
-//    protected Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh, int objectId) {
-//    	throw new NotImplementedException();
-//    }
+    protected void rebuildIndexForObject(YapFile stream, YapClass yapClass, int objectId) {
+    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, stream.getSystemTransaction().getSlotInformation(objectId));
+    	if (null == data) {
+    		return;
+    	}
+    	addIndexEntry(stream.getSystemTransaction(), objectId, new Long(data.uuid));
+    }
     
 	private void ensureIndex(Transaction transaction) {
 		if (null == transaction) {

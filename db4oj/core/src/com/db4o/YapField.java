@@ -923,12 +923,12 @@ public class YapField implements StoredField {
 		// FIXME: BTree traversal over index here.
 		long[] ids = yapClass.getIDs();		
 		for (int i = 0; i < ids.length; i++) {
-		    rebuildIndexForObject(stream, (int)ids[i]);
+		    rebuildIndexForObject(stream, yapClass, (int)ids[i]);
 		}
 		return ids.length > 0;
 	}
 
-	protected void rebuildIndexForObject(YapFile stream, final int objectId) {
+	protected void rebuildIndexForObject(YapFile stream, final YapClass yapClass, final int objectId) {
 		YapWriter writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);
@@ -941,11 +941,11 @@ public class YapField implements StoredField {
 
 	protected void rebuildIndexForWriter(YapFile stream, YapWriter writer, final int objectId) {
 		ObjectHeader oh = new ObjectHeader(stream, writer);
-		Object obj = readIndexEntryForRebuild(writer, oh, objectId);
+		Object obj = readIndexEntryForRebuild(writer, oh);
 		addIndexEntry(stream.getSystemTransaction(), objectId, obj);
 	}
 
-	protected Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh, final int objectId) {
+	private Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh) {
 		return oh.objectMarshaller().readIndexEntry(oh._yapClass, oh._headerAttributes, this, writer);
 	}
 }
