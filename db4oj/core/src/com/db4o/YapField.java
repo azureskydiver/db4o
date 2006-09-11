@@ -357,19 +357,8 @@ public class YapField implements StoredField {
             incrementOffset(a_bytes);
             return;
         }
-        if (_oldIndex != null) {
-            int offset = a_bytes._offset;
-            Object obj = null;
-            try {
-                obj = i_handler.readIndexEntry(mf, a_bytes);
-            } catch (CorruptionException e) {
-                if(Debug.atHome){
-                    e.printStackTrace();
-                }
-            }
-            removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
-            a_bytes._offset = offset;
-        }
+        
+        removeIndexEntry(mf, a_bytes);
         
         boolean dotnetValueType = false;
         if(Deploy.csharp){
@@ -390,6 +379,23 @@ public class YapField implements StoredField {
         } else {
             i_handler.deleteEmbedded(mf, a_bytes);
         }
+    }
+
+    private final void removeIndexEntry(MarshallerFamily mf, YapWriter a_bytes) {
+        if(! hasIndex()){
+            return;
+        }
+        int offset = a_bytes._offset;
+        Object obj = null;
+        try {
+            obj = i_handler.readIndexEntry(mf, a_bytes);
+        } catch (CorruptionException e) {
+            if(Debug.atHome){
+                e.printStackTrace();
+            }
+        }
+        removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
+        a_bytes._offset = offset;
     }
 
     public boolean equals(Object obj) {
