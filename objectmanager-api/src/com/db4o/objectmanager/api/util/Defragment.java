@@ -42,9 +42,10 @@ import com.db4o.types.*;
 public class Defragment {
 
     private static Hashtable4 _secondClassNames;
+    private ExtFile backupTest;
 
 
-	/**
+    /**
 	 * the main method is the only entry point
 	 */
 	public Defragment() {
@@ -63,9 +64,13 @@ public class Defragment {
 			// can be forced by supplying an additional "!" parameter.
 			boolean forceBackupDelete = (args.length > 1 && "!".equals(args[1]));
 
-			new Defragment().run(args[0], forceBackupDelete);
+            try {
+                new Defragment().run(args[0], forceBackupDelete);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-		} else {
+        } else {
 			System.out.println("Usage: java com.db4o.tools.Defragment <database filename>");
 		}
 	}
@@ -94,20 +99,17 @@ public class Defragment {
 	 * @param filename the database file.
 	 * @param forceBackupDelete forces deleting an old backup. <b>Not recommended.</b>
 	 */
-	public void run(String filename, boolean forceBackupDelete) {
+	public void run(String filename, boolean forceBackupDelete) throws Exception {
 		File file = new File(filename);
 		if (file.exists()) {
 			boolean canRun = true;
-			ExtFile backupTest = new ExtFile(file.getAbsolutePath() + ".bak");
-			if (backupTest.exists()) {
+            backupTest = new ExtFile(file.getAbsolutePath() + ".bak");
+            if (backupTest.exists()) {
 				if (forceBackupDelete) {
 					backupTest.delete();
 				} else {
 					canRun = false;
-					System.out.println("A backup file with the name ");
-					System.out.println("'" + backupTest.getAbsolutePath() + "'");
-					System.out.println("already exists.");
-					System.out.println("Remove this file before calling 'Defragment'.");
+                    throw new Exception("A backup file with the name '" + backupTest.getAbsolutePath() + "' already exists. Remove this file before calling 'Defragment'.");
 				}
 			}
 			if (canRun) {
@@ -120,30 +122,27 @@ public class Defragment {
 					migrate(readFrom, writeTo);
 					readFrom.close();
 					writeTo.close();
-					System.out.println("Defragment operation completed successfully.");
+					//System.out.println("Defragment operation completed successfully.");
 				} catch (Exception e) {
-					System.out.println("Defragment operation failed.");
+					String es = ("Defragment operation failed.");
 					e.printStackTrace();
 					try {
 						new File(filename).delete();
 						backupTest.copy(filename);
 					} catch (Exception ex) {
-						System.out.println("Restore failed.");
-						System.out.println("Please use the backup file:");
-						System.out.println("'" + backupTest.getAbsolutePath() + "'");
-						return;
+                        throw new Exception(es + " Restore also failed. Please use the backup file: '" + backupTest.getAbsolutePath() + "'");
 					}
-					System.out.println("The original file was restored.");
 					try {
 						new File(backupTest.getAbsolutePath()).delete();
 					} catch (Exception ex) {
 					}
-				} finally{
+                    throw new Exception(es + " The original file was restored.");
+                } finally{
 					restoreConfiguration();
 				}
 			}
 		} else {
-			System.out.println("File '" + file.getAbsolutePath() + "' does not exist.");
+			throw new Exception("File '" + file.getAbsolutePath() + "' does not exist.");
 		}
 	}
 
