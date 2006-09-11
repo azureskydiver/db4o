@@ -16,4 +16,22 @@ public class Arrays4 {
 		}
 		return -1;
 	}
+
+	public static boolean areEqual(final byte[] x, final byte[] y) {
+		if (x == y) {
+			return true;
+		}
+	    if (x == null) {
+	    	return false;
+	    }
+	    if (x.length != y.length) {
+	    	return false;
+	    }
+	    for (int i = 0; i < x.length; i++) {
+			if (y[i] != x[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
