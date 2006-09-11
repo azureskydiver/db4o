@@ -918,4 +918,34 @@ public class YapField implements StoredField {
 	private BTreeNodeSearchResult searchBound(Transaction transaction, int bound, Object keyPart) {
 	    return getIndex(transaction).searchLeaf(transaction, new FieldIndexKey(bound, keyPart), SearchTarget.LOWEST);
 	}
+
+	public boolean rebuildIndexForClass(YapFile stream, YapClass yapClass) {
+		// FIXME: BTree traversal over index here.
+		long[] ids = yapClass.getIDs();		
+		for (int i = 0; i < ids.length; i++) {
+		    rebuildIndexForObject(stream, (int)ids[i]);
+		}
+		return ids.length > 0;
+	}
+
+	protected void rebuildIndexForObject(YapFile stream, final int objectId) {
+		YapWriter writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
+		if (writer != null) {
+		    rebuildIndexForWriter(stream, writer, objectId);
+		} else {
+		    if(Deploy.debug){
+		        throw new RuntimeException("Unexpected null object for ID");
+		    }
+		}
+	}
+
+	protected void rebuildIndexForWriter(YapFile stream, YapWriter writer, final int objectId) {
+		ObjectHeader oh = new ObjectHeader(stream, writer);
+		Object obj = readIndexEntryForRebuild(writer, oh, objectId);
+		addIndexEntry(stream.getSystemTransaction(), objectId, obj);
+	}
+
+	protected Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh, final int objectId) {
+		return oh.objectMarshaller().readIndexEntry(oh._yapClass, oh._headerAttributes, this, writer);
+	}
 }

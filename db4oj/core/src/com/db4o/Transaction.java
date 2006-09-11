@@ -449,12 +449,8 @@ public class Transaction {
     
     Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
-        return getFieldUUID().objectAndYapObjectBySignature(this, a_uuid, a_signature);
+        return stream().getFieldUUID().objectAndYapObjectBySignature(this, a_uuid, a_signature);
     }
-
-	private YapFieldUUID getFieldUUID() {
-		return stream().i_handlers.i_indexes.i_fieldUUID;
-	}
     
     private SlotChange produceSlotChange(int id){
         SlotChange slot = new SlotChange(id);

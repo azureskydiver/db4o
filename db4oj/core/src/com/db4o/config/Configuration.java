@@ -110,6 +110,13 @@ public interface Configuration {
     public void addAlias(Alias alias);
     
     /**
+     * Removes an alias previously added with {@link addAlias}.
+     * 
+     * @param alias the alias to remove
+     */
+    public void removeAlias(Alias alias);
+    
+    /**
      * turns automatic database file format version updates on.
      * <br><br>Upon db4o database file format version changes,
      * db4o can automatically update database files to the 

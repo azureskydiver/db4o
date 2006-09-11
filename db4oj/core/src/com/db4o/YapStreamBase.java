@@ -2091,6 +2091,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public Config4Impl configImpl() {
         return i_config;
     }
+    
+	public YapFieldUUID getFieldUUID() {
+		return i_handlers.i_indexes.i_fieldUUID;
+	}
 
     public YapClassCollection classCollection() {
         return _classCollection;

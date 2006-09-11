@@ -13,7 +13,7 @@ import com.db4o.inside.slots.*;
 /**
  * 
  */
-class YapFieldUUID extends YapFieldVirtual {
+public class YapFieldUUID extends YapFieldVirtual {
     
     private static final int LINK_LENGTH = YapConst.LONG_LENGTH + YapConst.ID_LENGTH;
 
@@ -80,7 +80,11 @@ class YapFieldUUID extends YapFieldVirtual {
     	ensureIndex(transaction);
     	return super.getIndex(transaction);
     }
-
+    
+    protected Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh, int objectId) {
+    	throw new NotImplementedException();
+    }
+    
 	private void ensureIndex(Transaction transaction) {
 		if (null == transaction) {
     		throw new ArgumentNullException();

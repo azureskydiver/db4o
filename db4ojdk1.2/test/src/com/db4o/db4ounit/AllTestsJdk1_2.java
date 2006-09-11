@@ -13,6 +13,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+				CollectionUuidTest.class,
 				SetCollectionOnUpdateTestCase.class,
 				SimpleMapTestCase.class,
 		};

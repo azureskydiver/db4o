@@ -3,8 +3,7 @@
 package com.db4o.inside.convert.conversions;
 
 import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.inside.convert.*;
+import com.db4o.inside.convert.Conversion;
 import com.db4o.inside.convert.ConversionStage.*;
 
 
@@ -18,5 +17,22 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
     public void convert(ClassCollectionAvailableStage stage) {
         stage.file().classCollection().writeAllClasses();
     }
+    
+	public void convert(SystemUpStage stage) {
+		rebuildUUIDIndex(stage.file());
+    	freeOldUUIDMetaIndex(stage.file());
+    }
+	
+    private void rebuildUUIDIndex(YapFile file) {
+		final YapFieldUUID uuid = file.getFieldUUID();
+		final YapClassCollectionIterator i = file.classCollection().iterator();
+		while (i.moveNext()) {
+			uuid.rebuildIndexForClass(file, i.currentClass());
+		}
+	}
 
+	private void freeOldUUIDMetaIndex(YapFile file) {
+		final MetaIndex metaIndex = file.getFileHeader().getUUIDMetaIndex();
+		file.free(metaIndex.indexAddress, metaIndex.indexLength);
+	}
 }

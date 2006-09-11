@@ -14,16 +14,20 @@ public class OldHeaderTest implements TestCase {
     private static final String ORIGINAL_FILE = "test/db4oVersions/db4o_5.5.2";
     
     private static final String DB_FILE = "test/db4oVersions/db4o_5.5.2.yap";    
+
     
     public void test() {
         
     	File4.copy(ORIGINAL_FILE, DB_FILE);
         
+    	Db4o.configure().allowVersionUpdates(true);    	
         ObjectContainer oc = Db4o.openFile(DB_FILE);
-        
-        Assert.isNotNull(oc);
-        
-        oc.close();
+        try {
+        	Assert.isNotNull(oc);
+        } finally {
+        	oc.close();
+        	Db4o.configure().allowVersionUpdates(false);
+        }
     }
 
 }
