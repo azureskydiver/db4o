@@ -15,10 +15,11 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
     public static final int VERSION = 6;
 
     public void convert(ClassCollectionAvailableStage stage) {
-        stage.file().classCollection().writeAllClasses();        
+    	super.convert(stage);
     }
     
 	public void convert(SystemUpStage stage) {
+        stage.file().classCollection().writeAllClasses();        
 		rebuildUUIDIndex(stage.file());
     	freeOldUUIDMetaIndex(stage.file());
     }
