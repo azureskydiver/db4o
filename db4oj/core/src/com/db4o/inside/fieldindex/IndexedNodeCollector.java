@@ -68,7 +68,7 @@ public class IndexedNodeCollector {
 				continue;
 			}
 			if (isLeaf(qcon)) {
-				if (qcon.canLoadByIndex() && qcon instanceof QConObject) {					
+				if (qcon.canLoadByIndex()) {					
 					final QConObject conObject = (QConObject) qcon;
 					if (conObject.hasJoins()) {
 						collectJoinedNode(conObject);
@@ -123,7 +123,16 @@ public class IndexedNodeCollector {
 
 	private IndexedNodeWithRange newNodeForConstraint(QConJoin join) {
 		final IndexedNodeWithRange c1 = nodeForConstraint(join.i_constraint1);
+		if (c1 instanceof MultiFieldNode) {
+			return c1;
+		}
 		final IndexedNodeWithRange c2 = nodeForConstraint(join.i_constraint2);
+		if (c2 instanceof MultiFieldNode) {
+			return c2;
+		}
+		if (c1.getIndex() != c2.getIndex()) {
+			return new MultiFieldNode();
+		}
 		if (join.isOr()) {
 			return new OrIndexedLeaf(join.i_constraint1, c1, c2);
 		}
