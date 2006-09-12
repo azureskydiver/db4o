@@ -8,6 +8,7 @@
 	<property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />	
 	<property name="drs.net.src.dir" location="${drs.net.dir}/drs/src" />
 	<property name="drs.net.in.dir" location="${drs.net.dir}/in" />
+	<property name="drs.net.tests.in.dir" location="${drs.net.dir}/drs.tests.in" />
 	<property name="conversion.workspace.dir" location="${dir.dist}/drs.net/workspace" />
 	
 	<condition property="mono" value="1">
@@ -135,6 +136,12 @@
 			</fileset>
 		</copy>
 
+		<copy todir="${drs.net.dir}/drs.tests/src" overwrite="true">
+			<fileset dir="${drs.net.tests.in.dir}">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+
 		<updatecsharpproject projectfile="${drs.net.dir}/drs.tests/drs.tests.csproj">
 			<sources dir="${drs.net.dir}/drs.tests">
 				<include name="**/*.cs" />
@@ -158,6 +165,8 @@
 				<include name="test/**/other/AllTests.java" />
 <!--				<include name="test/**/other/CollectionUuidTest.java" /> -->
 				<include name="test/**/other/GetByUUID.java" />
+				<include name="test/**/other/TheSimplest.java" />
+				<include name="test/**/other/SPCChild.java" />
 				<include name="test/**/replication/db4ounit/**" />
 				
 
