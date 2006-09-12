@@ -33,16 +33,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\bin\db4o.dll</HintPath>
     </Reference>
-    <Reference Include="db4ounit, Version=5.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\db4ounit.dll</HintPath>
-    </Reference>
     <Reference Include="System"/>
     <Reference Include="System.Data"/>
     <Reference Include="System.Xml"/>
   </ItemGroup>
-  <ItemGroup><Compile Include="Program.cs"/><Compile Include="Properties\AssemblyInfo.cs"/></ItemGroup>
+  <ItemGroup><Compile Include="Program.cs"/><Compile Include="Properties\AssemblyInfo.cs"/><Compile Include="src\com\db4o\test\other\AllTests.cs"/><Compile Include="src\com\db4o\test\other\GetByUUID.cs"/><Compile Include="src\com\db4o\test\other\ListContent.cs"/><Compile Include="src\com\db4o\test\other\ListHolder.cs"/><Compile Include="src\com\db4o\test\other\MapContent.cs"/><Compile Include="src\com\db4o\test\other\MapHolder.cs"/><Compile Include="src\com\db4o\test\other\Replicated.cs"/><Compile Include="src\com\db4o\test\other\SPCChild.cs"/><Compile Include="src\com\db4o\test\other\SPCParent.cs"/><Compile Include="src\com\db4o\test\other\TheSimplest.cs"/><Compile Include="src\com\db4o\test\replication\db4ounit\DrsFixture.cs"/><Compile Include="src\com\db4o\test\replication\db4ounit\DrsTestCase.cs"/><Compile Include="src\com\db4o\test\replication\db4ounit\DrsTestSuite.cs"/><Compile Include="src\com\db4o\test\replication\db4ounit\DrsTestSuiteBuilder.cs"/><Compile Include="src\com\db4o\test\replication\db4ounit\fixtures\Db4oClientServerDrsFixture.cs"/><Compile Include="src\com\db4o\test\replication\db4ounit\fixtures\Db4oDrsFixture.cs"/></ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\db4on\Db4oUnit.Extensions\db4ounit.ext\db4ounit.ext.csproj">
+      <Project>{D899FAD3-06A2-4C0E-8FDB-0D94795B7F56}</Project>
+      <Name>db4ounit.ext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\db4on\Db4oUnit\Db4oUnit.csproj">
+      <Project>{9ABAFC31-D29D-4000-B6A0-C24F0BB221F5}</Project>
+      <Name>Db4oUnit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\drs\drs.csproj">
       <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
       <Name>drs</Name>
