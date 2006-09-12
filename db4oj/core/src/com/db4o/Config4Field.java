@@ -141,17 +141,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	private void dropIndex(Transaction systemTrans, YapField yapField, YapFile stream) {
         
         if(MarshallerFamily.BTREE_FIELD_INDEX){
-        
-        	// FIXME: Work in progress.
-        	// FIXME: Work in progress.
-        	// FIXME: Work in progress.
-            
-            BTree btree = yapField.getIndex(systemTrans);
-            if(btree == null){
-                return;
-            }
-            
-            
+            yapField.dropIndex(systemTrans);
             return;
         }
         
