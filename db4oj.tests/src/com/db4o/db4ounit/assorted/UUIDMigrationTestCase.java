@@ -44,7 +44,7 @@ public class UUIDMigrationTestCase implements TestCase {
 	
 	private String getUUIDMigrationSourcePath() throws IOException {
 		final URL resource = getClass().getResource("./UUIDMigrationSource-db4o-5.5.yap");
-		final String targetFile = File4.createTempFile();
+		String targetFile = resource.getFile()+".work";
 		File4.copy(resource.getFile(), targetFile);
 		return targetFile;
 	}

@@ -62,8 +62,4 @@ public class File4 {
             ? pathName + fileName
             : pathName + java.io.File.separator + fileName;
     }
-
-	public static String createTempFile() throws IOException {
-		return File.createTempFile("db4o-", null).getAbsolutePath();
-	}
 }
