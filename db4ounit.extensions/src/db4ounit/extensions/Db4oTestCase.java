@@ -71,7 +71,7 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 	    return stream().getSystemTransaction();
 	}
     
-    protected Query query(){
+    protected Query newQuery(){
         return db().query();
     }
     
