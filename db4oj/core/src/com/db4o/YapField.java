@@ -104,7 +104,17 @@ public class YapField implements StoredField {
         }
         
         if(MarshallerFamily.BTREE_FIELD_INDEX){
-            getIndex(trans).add(trans, new FieldIndexKey(parentID,  indexEntry));
+            
+            BTree index = getIndex(trans);
+            
+            // Although we checked hasIndex() already, we have to check
+            // again here since index creation in YapFieldUUID can be
+            // unsuccessful if it's called too early for PBootRecord.
+            if(index == null){
+                return;
+            }
+            
+            index.add(trans, new FieldIndexKey(parentID,  indexEntry));
         }
         
         if(MarshallerFamily.OLD_FIELD_INDEX){
