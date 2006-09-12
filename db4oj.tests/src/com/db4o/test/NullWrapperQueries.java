@@ -59,7 +59,7 @@ public class NullWrapperQueries {
             q.constrain(NullWrapperQueries.class);
             String desc = "m" + i;
             q.descend(desc).constrain(null);
-            Test.ensure(q.execute().size() == 2);
+            Test.ensureEquals(2,q.execute().size());
         }
     }
     
