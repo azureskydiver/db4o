@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.ObjectField;
 import com.db4o.foundation.*;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.marshall.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
@@ -138,6 +139,22 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	}
 
 	private void dropIndex(Transaction systemTrans, YapField yapField, YapFile stream) {
+        
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
+        
+        	// FIXME: Work in progress.
+        	// FIXME: Work in progress.
+        	// FIXME: Work in progress.
+            
+            BTree btree = yapField.getIndex(systemTrans);
+            if(btree == null){
+                return;
+            }
+            
+            
+            return;
+        }
+        
 		final MetaField metaField = getMetaField(systemTrans);
 		if (metaField.index != null) {
 			if (stream.configImpl().messageLevel() > YapConst.NONE) {
