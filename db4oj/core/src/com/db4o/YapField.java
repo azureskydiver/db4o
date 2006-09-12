@@ -582,7 +582,7 @@ public class YapField implements StoredField {
     }
 
 
-    void initConfigOnUp(Transaction trans) {
+    final void initConfigOnUp(Transaction trans) {
         if (i_config != null) {
             i_config.initOnUp(trans, this);
         }

@@ -954,7 +954,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return true;
     }
     
-    void initConfigOnUp(Transaction systemTrans) {
+    final void initConfigOnUp(Transaction systemTrans) {
         Config4Class extendedConfig=Platform4.extendConfiguration(_reflector, i_stream.configure(), i_config);
     	if(extendedConfig!=null) {
     		i_config=extendedConfig;
@@ -965,15 +965,35 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         if (! stateOK()) {
             return;
         }
+        
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
+            
+            if (i_fields == null) {
+                return;
+            }
+            
+            for (int i = 0; i < i_fields.length; i++) {
+                i_fields[i].initConfigOnUp(systemTrans);
+            }
+            
+            return;
+        }
+        
+        
+        // FIXME: The code below can be removed on switch to BTREE_FIELD_INDEX.
+        
+        
         YapStream stream = systemTrans.stream(); 
         stream.showInternalClasses(true);
         int[] metaClassID = new int[]{_metaClassID};
         if(i_config.initOnUp(systemTrans, metaClassID)){
+            
             if(_metaClassID != metaClassID[0]){
                 _metaClassID = metaClassID[0];
                 setStateDirty();
                 write(systemTrans);
             }
+            
             if (i_fields != null) {
                 for (int i = 0; i < i_fields.length; i++) {
                     i_fields[i].initConfigOnUp(systemTrans);

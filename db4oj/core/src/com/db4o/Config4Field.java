@@ -112,6 +112,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
             }
 		    yapField.initIndex(systemTrans);
 		    stream.setDirtyInSystemTransaction(yapField.getParentYapClass());
+            reindex(systemTrans, yapField, stream);
 		}
 
 		if(MarshallerFamily.OLD_FIELD_INDEX) {
