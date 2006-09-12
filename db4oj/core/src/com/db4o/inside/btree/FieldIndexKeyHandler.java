@@ -30,23 +30,29 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public Object readIndexEntry(YapReader a_reader) {
-        Integer intPart = (Integer)_parentIdHandler.readIndexEntry(a_reader);
+        // TODO: could read int directly here with a_reader.readInt()
+        int parentID = ((Integer)_parentIdHandler.readIndexEntry(a_reader)).intValue();
         Object objPart = _valueHandler.readIndexEntry(a_reader);
-        return new FieldIndexKey(intPart.intValue(), objPart);
+        if (parentID < 0){
+            objPart = null;
+            parentID = - parentID;
+        }
+        return new FieldIndexKey(parentID, objPart);
     }
 
     public void writeIndexEntry(YapReader writer, Object obj) {
-        FieldIndexKey composite = cast(obj);
-        _parentIdHandler.write(composite.parentID(), writer);
+        FieldIndexKey composite = (FieldIndexKey)obj;
+        int parentID = composite.parentID();
+        Object value = composite.value();
+        if (value == null){
+            parentID = - parentID;
+        }
+        _parentIdHandler.write(parentID, writer);
         _valueHandler.writeIndexEntry(writer, composite.value());
     }
     
-    private FieldIndexKey cast(Object obj){
-        return (FieldIndexKey)obj;
-    }
-
     public YapComparable prepareComparison(Object obj) {
-        FieldIndexKey composite = cast(obj);
+        FieldIndexKey composite = (FieldIndexKey)obj;
         _valueHandler.prepareComparison(composite.value());
         _parentIdHandler.prepareComparison(composite.parentID());
         return this;
@@ -56,7 +62,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     	if (null == obj) {
     		throw new ArgumentNullException();
     	}
-        FieldIndexKey composite = cast(obj);
+        FieldIndexKey composite = (FieldIndexKey)obj;
         int delegateResult = _valueHandler.compareTo(composite.value());  
         if(delegateResult != 0 ){
             return delegateResult;
