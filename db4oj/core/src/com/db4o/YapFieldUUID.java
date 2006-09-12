@@ -114,6 +114,10 @@ public class YapFieldUUID extends YapFieldVirtual {
     	}    	
     	// TODO: find a better home for the index id
     	FileHeader0 header = getFileHeader(transaction);
+        if(header == null){
+            // too early, in new file, try again later.
+            return;
+        }
     	initIndex(transaction, header.getUUIDIndexId());
     	if (header.getUUIDIndexId() == 0) {
     		header.writeUUIDIndexId(super.getIndex(transaction).getID());
