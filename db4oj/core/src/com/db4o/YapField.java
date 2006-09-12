@@ -897,6 +897,9 @@ public class YapField implements StoredField {
     	if(_index != null){
     		throw new IllegalStateException();
         }
+        if(systemTrans.stream().isClient()){
+            return;
+        }
         _index = newBTree(systemTrans, id);
     }
 
