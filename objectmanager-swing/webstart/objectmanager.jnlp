@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
         spec="1.5+"
-        codebase="http://developer.db4o.com/objectmanager"
+        codebase="http://www.db4objects.net/om"
         href="objectmanager.jnlp">
     <information>
         <title>db4o ObjectManager 2.0</title>
@@ -22,12 +22,12 @@
     </security>
     <resources>
         <j2se version="1.5+" java-vm-args="-esa -Xnoclassgc"/>
+        <jar href="lib/objectmanager.jar"/>
+        <jar href="lib/objectmanager-api.jar"/>
         <jar href="lib/db4o-5.6-java5.jar"/>
         <jar href="lib/db4o-sql.jar"/>
-        <jar href="lib/look-2.0.4.jar"/>
+        <jar href="lib/looks-2.0.4.jar"/>
         <jar href="lib/forms-1.0.7.jar"/>
-        <jar href="lib/objectmanager-api.jar"/>
-        <jar href="lib/objectmanager.jar"/>
     </resources>
-    <application-desc main-class="com.db4o.objectManager.v2.Dashboard"/>
+    <application-desc />
 </jnlp>
