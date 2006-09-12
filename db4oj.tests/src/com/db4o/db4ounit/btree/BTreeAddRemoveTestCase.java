@@ -18,20 +18,6 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		assertSingleElement(element);
 	}
 
-	public void testSingleRemoveAddNull() {
-		
-		final Integer element = null;
-		add(element);		
-		assertSize(1);
-		
-		remove(element);		
-		assertSize(0);
-		
-		add(element);
-		
-		assertSingleElement(element);
-	}
-
 	public void testMultipleRemoveAdds() {
 		
 		final Integer element = new Integer(1);
