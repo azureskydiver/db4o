@@ -1,0 +1,8 @@
+.a RegressionTestsRun ..
+.2 Running the regression tests ..
+
+The easiest way to run the regression tests for Mono is to download the .tar.gz ._
+distribution of db4o.  After untarring the tarball, simply change into the ._
+created directory and run "make".
+
+The Makefile will automatically compile db4o and run the test suite.
