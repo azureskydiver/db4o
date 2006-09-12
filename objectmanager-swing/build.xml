@@ -7,6 +7,8 @@
     <property name="lib" location="lib"/>
     <property name="build" location="classes/production"/>
     <property name="dist" location="dist"/>
+    <property name="webstart" value="webstart"/>
+    <property name="dist-webstart" value="dist-webstart"/>
 
     <path id="class.path">
         <fileset dir="${lib}">
@@ -27,12 +29,18 @@
              dir="../objectmanager-api"
              target="dist"
              inheritAll="false"/>
-        <copy file="../objectmanager-api/dist/lib/objectmanager-api.jar"
-              todir="./lib/"/>
+        <copy file="../objectmanager-api/dist/lib/objectmanager-api.jar" todir="./lib/"/>
         <!-- Compile the java code from ${src} into ${build} -->
         <javac srcdir="${src}" destdir="${build}">
             <classpath refid="class.path"/>
         </javac>
+        <copy todir="${build}" filtering="false">
+            <fileset dir="${src}">
+                <include name="**/*.gif"/>
+                <include name="**/*.jpg"/>
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="dist" depends="compile"
@@ -53,11 +61,15 @@
 
     </target>
     <target name="dist-webstart" depends="dist">
-        <property name="wslib" value="./webstart/lib"/>
+
+        <property name="wslib" value="${dist-webstart}/lib"/>
         <mkdir dir="${wslib}"/>
         <copy todir="${wslib}">
             <fileset dir="${dist}/lib"/>
-            <fileset dir="${lib}"/>
+        </copy>
+        <copy todir="${wslib}" file="${dist}/objectmanager.jar"/>
+        <copy todir="${dist-webstart}">
+            <fileset dir="${webstart}"/>
         </copy>
 
         <!-- now sign all jars -->
@@ -89,5 +101,6 @@
         <!-- Delete the ${build} and ${dist} directory trees -->
         <delete dir="${build}"/>
         <delete dir="${dist}"/>
+        <delete dir="${dist-webstart}"/>
     </target>
 </project>
