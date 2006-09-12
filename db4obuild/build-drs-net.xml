@@ -161,22 +161,13 @@
 		<copy todir="${conversion.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
-				
 				<include name="test/**/other/AllTests.java" />
-<!--				<include name="test/**/other/CollectionUuidTest.java" /> -->
 				<include name="test/**/other/GetByUUID.java" />
 				<include name="test/**/other/TheSimplest.java" />
 				<include name="test/**/other/SPCChild.java" />
+				<include name="test/**/other/SPCParent.java" />
+				<include name="test/**/other/SimpleParentChild.java" />
 				<include name="test/**/replication/db4ounit/**" />
-				
-
-				<!--
-				<include name="test/**/ReplicationTestCase.java" />
-				<include name="test/**/ReplicationFeaturesMain.java" />
-				<include name="test/**/ProviderPair.java" />
-				<include name="test/**/Replicated.java" />
-				-->
-				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>
