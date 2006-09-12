@@ -571,7 +571,7 @@
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
-			<fileset dir="${dir.db4o.j.tests.src}">
+			<fileset dir="${dir.j.tests.src}">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
@@ -598,13 +598,18 @@
 				<dirset dir="${dir.dist.classes.nqopt}" />
 				<pathelement location="${file.bloat.jar}" />
 			</classpath>
-			<src path="${dir.db4o.j.tests.src}"/>
+			<src path="${dir.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />
 			<src path="${dir.db4ounit.src}" />
 			<src path="${dir.db4ounit.extensions.src}" />
 			<src path="${dir.j.nqopt}/test/src" />
 			<src path="${dir.j.nqopt}/core/testsrc" />
 		</javac>
+		<copy todir="${dir.dist.classes.test}" overwrite="true">
+			<fileset dir="${dir.j.tests.src}">
+				<include name="**/*.yap" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="compilejtutorial" depends="compilecorejava" description="Compile Db4o Java tutorial sources">
