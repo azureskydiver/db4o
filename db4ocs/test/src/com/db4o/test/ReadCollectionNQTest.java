@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.db4o.ObjectSet;
+import com.db4o.query.Predicate;
 import com.db4o.test.config.Configure;
 import com.db4o.test.data.SimpleObject;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
 
-public class ReadCollectionQBETest extends ClientServerTestCase {
-
+public class ReadCollectionNQTest extends ClientServerTestCase {
 	private static String testString = "simple test string";
 
 	private List list = new ArrayList();
@@ -34,7 +34,11 @@ public class ReadCollectionQBETest extends ClientServerTestCase {
 	public void concReadCollection() throws Exception {
 		oc = openClient();
 		try {
-			ObjectSet result = oc.get(new ArrayList());
+			ObjectSet result = oc.query(new Predicate<List>() {
+				public boolean match(List list) {
+					return list.size() == Configure.CONCURRENCY_THREAD_COUNT;
+				}
+			});
 			Assert.areEqual(1, result.size());
 			List resultList = (List) result.next();
 			Assert.areEqual(list, resultList);

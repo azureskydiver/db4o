@@ -12,7 +12,10 @@ public class AllTests extends CSTestSuite {
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
 				ReadCollectionQBETest.class,
+				ReadCollectionSODATest.class,
+				ReadCollectionNQTest.class,
 				UpdateObjectTest.class,
+				UpdateCollectionTest.class,
 				};
 	}
 	

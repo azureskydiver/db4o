@@ -12,8 +12,7 @@ import com.db4o.test.data.SimpleObject;
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
 
-public class ReadCollectionQBETest extends ClientServerTestCase {
-
+public class ReadCollectionSODATest extends ClientServerTestCase {
 	private static String testString = "simple test string";
 
 	private List list = new ArrayList();
@@ -34,7 +33,7 @@ public class ReadCollectionQBETest extends ClientServerTestCase {
 	public void concReadCollection() throws Exception {
 		oc = openClient();
 		try {
-			ObjectSet result = oc.get(new ArrayList());
+			ObjectSet result = oc.query(List.class);
 			Assert.areEqual(1, result.size());
 			List resultList = (List) result.next();
 			Assert.areEqual(list, resultList);

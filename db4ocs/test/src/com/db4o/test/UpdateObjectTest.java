@@ -1,3 +1,5 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.test;
 
 import com.db4o.ObjectSet;
@@ -32,7 +34,7 @@ public class UpdateObjectTest extends ClientServerTestCase {
 			ObjectSet result = query.execute();
 			Assert.areEqual(1, result.size());
 			SimpleObject o = (SimpleObject) result.next();
-			o.setI(seq);
+			o.setI(Configure.CONCURRENCY_THREAD_COUNT + seq);
 			oc.set(o);
 		} finally {
 			oc.close();
@@ -48,8 +50,9 @@ public class UpdateObjectTest extends ClientServerTestCase {
 			ObjectSet result = query.execute();
 			Assert.areEqual(1, result.size());
 			SimpleObject o = (SimpleObject) result.next();
-			Assert.isTrue(o.getI() >= 0
-					&& o.getI() <= Configure.CONCURRENCY_THREAD_COUNT);
+			int i = o.getI();
+			Assert.isTrue(Configure.CONCURRENCY_THREAD_COUNT <= i
+					&& i <= 2 * Configure.CONCURRENCY_THREAD_COUNT);
 		} finally {
 			oc.close();
 		}
