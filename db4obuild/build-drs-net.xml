@@ -35,6 +35,10 @@
 			</fileset>
 			<fileset dir="${dir.workspace}/db4ounit/bin/">
 			</fileset>
+			<fileset dir="${dir.workspace}/db4ounit.extensions/bin/">
+			</fileset>
+			<fileset dir="${dir.workspace}/db4oj.tests/bin">
+			</fileset>
 		</jar>
 	</target>
 	
@@ -137,7 +141,7 @@
 			</sources>
 		</updatecsharpproject>
 	</target>
-		
+	
 	<target name="update-csharp-projects" depends="update-drs-project, update-drs.tests-project">				
 	</target>
 	
@@ -152,7 +156,7 @@
 				<include name="core/**/*.java" />
 				
 				<include name="test/**/other/AllTests.java" />
-				<include name="test/**/other/CollectionUuidTest.java" />
+<!--				<include name="test/**/other/CollectionUuidTest.java" /> -->
 				<include name="test/**/other/GetByUUID.java" />
 				<include name="test/**/replication/db4ounit/**" />
 				
