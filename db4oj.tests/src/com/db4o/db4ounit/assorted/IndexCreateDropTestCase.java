@@ -6,7 +6,6 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.inside.btree.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -17,7 +16,6 @@ public class IndexCreateDropTestCase extends Db4oTestCase{
     private final int[] VALUES = new int[]{4, 7, 6, 6, 5, 4, 0, 0};
     
     public static void main(String[] arguments) {
-        Db4o.configure().messageLevel(1);
         new IndexCreateDropTestCase().runSolo();
     }
     
@@ -105,12 +103,10 @@ public class IndexCreateDropTestCase extends Db4oTestCase{
         q = newQuery();
         q.descend("_date").constrain(new Date(7)).smaller();
         assertQuerySize(5, q);
-
-        // FIXME:
         
-//        q = query();
-//        q.descend("_date").constrain(null);
-//        assertQuerySize(2, q);
+        q = newQuery();
+        q.descend("_date").constrain(null);
+        assertQuerySize(2, q);
         
     }
 
