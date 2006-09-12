@@ -2,6 +2,8 @@
 
 package db4ounit.extensions;
 
+import java.lang.reflect.Field;
+
 import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.*;
@@ -43,7 +45,7 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 
 	protected void configure() {}
 	
-	protected void store() {}
+	protected void store() throws Exception {}
 
 	protected ExtObjectContainer db() {
 		return fixture().db();
@@ -78,4 +80,19 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
     protected Reflector reflector(){
         return stream().reflector();
     }
+
+	protected void indexField(Class clazz, String fieldName) {
+		Db4o.configure().objectClass(clazz).objectField(fieldName).indexed(true);
+	}
+
+	protected void indexAllFields(Class clazz) {
+		final Field[] fields = clazz.getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			indexField(clazz, fields[i].getName());
+		}
+		final Class superclass = clazz.getSuperclass();
+		if (superclass != null) {
+			indexAllFields(superclass);
+		}
+	}
 }
