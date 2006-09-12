@@ -61,8 +61,8 @@ public class ExpectingVisitor implements Visitor4{
     
     private void visitUnOrdered(Object obj){
         for (int i = 0; i < _expected.length; i++) {
-            if(obj.equals(_expected[i])){
-                ods("Expected OK: " + obj.toString());
+            if((obj==null&&_expected[i]==null)||obj.equals(_expected[i])){
+                ods("Expected OK: " + obj);
                 _expected[i] = FOUND;
                 return;
             }
