@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -159,6 +160,14 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public boolean initOnUp(Transaction systemTrans, final int[] metaClassID) {
+
+        if(MarshallerFamily.BTREE_FIELD_INDEX){
+            
+            throw new IllegalStateException("Should never be called.");
+            
+            // Removed this method completely on final switch to BTREE_FIELD_INDEX  
+            
+        }
         if(_processing){
             return false;
         }
