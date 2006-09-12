@@ -4,6 +4,8 @@ package db4ounit.extensions;
 
 import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
+import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.Db4oSolo;
@@ -68,4 +70,12 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 	protected Transaction systemTrans() {
 	    return stream().getSystemTransaction();
 	}
+    
+    protected Query query(){
+        return db().query();
+    }
+    
+    protected Reflector reflector(){
+        return stream().reflector();
+    }
 }
