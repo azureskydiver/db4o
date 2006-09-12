@@ -370,5 +370,9 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		}
 		return trans.stream().configImpl();
 	}
+
+    public void free(Transaction systemTrans) {
+        System.err.println("BTree#free needs to be implemented");
+    }
 }
 

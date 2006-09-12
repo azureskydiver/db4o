@@ -967,4 +967,18 @@ public class YapField implements StoredField {
 	private Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh) {
 		return oh.objectMarshaller().readIndexEntry(oh._yapClass, oh._headerAttributes, this, writer);
 	}
+
+    public void dropIndex(Transaction systemTrans) {
+        if(_index == null){
+            return;
+        }
+        YapStream stream = systemTrans.stream(); 
+        if (stream.configImpl().messageLevel() > YapConst.NONE) {
+            stream.message("dropping index " + toString());
+        }
+        _index.free(systemTrans);
+        stream.setDirtyInSystemTransaction(getParentYapClass());
+        _index = null;
+    }
+    
 }
