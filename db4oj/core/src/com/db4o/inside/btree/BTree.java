@@ -374,12 +374,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
 	}
 
     public void free(Transaction systemTrans) {
-        final Collection4 allNodeIDs = new Collection4(); 
-        traverseAllSlotIDs(systemTrans, new Visitor4() {
-            public void visit(Object obj) {
-                allNodeIDs.add(obj);
-            }
-        });
+        final Collection4 allNodeIDs = collectAllNodeIds(systemTrans);
         
         Iterator4 iter = allNodeIDs.iterator();
         while(iter.moveNext()){
@@ -387,5 +382,15 @@ public class BTree extends YapMeta implements TransactionParticipant {
             systemTrans.slotFreePointerOnCommit(id);
         }
     }
+
+	private Collection4 collectAllNodeIds(Transaction systemTrans) {
+		final Collection4 allNodeIDs = new Collection4(); 
+        traverseAllSlotIDs(systemTrans, new Visitor4() {
+            public void visit(Object obj) {
+                allNodeIDs.add(obj);
+            }
+        });
+		return allNodeIDs;
+	}
 }
 
