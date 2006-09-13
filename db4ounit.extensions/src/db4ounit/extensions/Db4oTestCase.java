@@ -84,15 +84,4 @@ public class Db4oTestCase implements TestCase, TestLifeCycle {
 	protected void indexField(Class clazz, String fieldName) {
 		Db4o.configure().objectClass(clazz).objectField(fieldName).indexed(true);
 	}
-
-	protected void indexAllFields(Class clazz) {
-		final Field[] fields = clazz.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			indexField(clazz, fields[i].getName());
-		}
-		final Class superclass = clazz.getSuperclass();
-		if (superclass != null) {
-			indexAllFields(superclass);
-		}
-	}
 }

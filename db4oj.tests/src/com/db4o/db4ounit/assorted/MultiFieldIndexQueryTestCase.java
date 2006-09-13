@@ -3,6 +3,8 @@
 package com.db4o.db4ounit.assorted;
 
 
+import java.lang.reflect.Field;
+
 import com.db4o.ObjectSet;
 import com.db4o.query.*;
 
@@ -56,14 +58,22 @@ public class MultiFieldIndexQueryTestCase extends Db4oTestCase {
 	    public String toString(){
 	        return "Person " + firstName + " " + lastName;
 	    }
-
 	}
-
-
 	
 	protected void configure() {
 		indexAllFields(Book.class);
 		indexAllFields(Person.class);		
+	}
+	
+	protected void indexAllFields(Class clazz) {
+		final Field[] fields = clazz.getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			indexField(clazz, fields[i].getName());
+		}
+		final Class superclass = clazz.getSuperclass();
+		if (superclass != null) {
+			indexAllFields(superclass);
+		}
 	}
 
 	public void store() throws Exception {
