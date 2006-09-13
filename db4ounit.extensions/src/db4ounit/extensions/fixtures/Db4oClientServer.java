@@ -2,6 +2,8 @@
 
 package db4ounit.extensions.fixtures;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
 
@@ -19,13 +21,25 @@ public class Db4oClientServer extends AbstractFileBasedDb4oFixture {
 	}
 
 	public void close() throws Exception {
-		super.close();
 		_server.close();
 	}
 
 	public void open() throws Exception {
 		_server = Db4o.openServer(getAbsolutePath(), _port);
+	}
+
+	public ExtObjectContainer openClient() throws IOException {
 		_server.grantAccess(USERNAME, PASSWORD);
-		db((ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD));
+		return Db4o.openClient(HOST, _port, USERNAME, PASSWORD).ext();
+	}
+
+	public ExtObjectContainer db() {
+		throw new UnsupportedOperationException();
+	}
+
+	protected void db(ExtObjectContainer container) {
+		throw new UnsupportedOperationException();
 	}	
+	
+	
 }
