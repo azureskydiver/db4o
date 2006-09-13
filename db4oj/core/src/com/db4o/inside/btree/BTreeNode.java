@@ -249,10 +249,6 @@ public class BTreeNode extends YapMeta{
         return _keys != null;
     }
     
-    int childCount() {
-    	return (_children==null ? 0 : _children.length);
-    }
-    
     BTreeNode child(int index){
         if (_children[index] instanceof BTreeNode){
             return (BTreeNode)_children[index];
@@ -1187,4 +1183,8 @@ public class BTreeNode extends YapMeta{
 	    int newParentID = mapping.mappedID(oldParentID);
 	    target.writeInt(newParentID);
 	}
+
+    public boolean isLeaf() {
+        return _isLeaf;
+    }
 }

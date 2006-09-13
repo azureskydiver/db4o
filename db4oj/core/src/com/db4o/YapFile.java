@@ -762,4 +762,8 @@ public abstract class YapFile extends YapStream {
 		return _fileHeader;
 	}
 
+    public void installDebugFreespaceManager(FreespaceManager manager) {
+        _freespaceManager = manager;
+    }
+
 }

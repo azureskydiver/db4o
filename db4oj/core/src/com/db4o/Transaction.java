@@ -593,6 +593,10 @@ public class Transaction {
         if(slot == null){
             return;
         }
+        
+        // FIXME: From looking at this it should call slotFreePointerOnCommit
+        //        Write a test case and check.
+        
         slotFreeOnCommit(a_id, slot._address, slot._length);
     }
     

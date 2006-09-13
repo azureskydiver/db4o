@@ -13,10 +13,11 @@ public abstract class FreespaceManager {
     public static final byte FM_LEGACY_RAM = 1;
     public static final byte FM_RAM = 2;
     public static final byte FM_IX = 3;
+    public static final byte FM_DEBUG = 4;
     
     private static final int INTS_IN_SLOT = 12;
     
-    FreespaceManager(YapFile file){
+    public FreespaceManager(YapFile file){
         _file = file;
     }
 
