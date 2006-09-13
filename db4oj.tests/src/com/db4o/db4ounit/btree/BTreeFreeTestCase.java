@@ -21,18 +21,12 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         
         add(VALUES);
         
-        final Collection4 allSlotIDs = new Collection4();
-        _btree.traverseAllSlotIDs(systemTrans(), new Visitor4() {
-            public void visit(Object slotID) {
-                allSlotIDs.add(slotID);
-            }
-        });
+        Iterator4 allSlotIDs = _btree.allNodeIds(systemTrans());
         
-        final Collection4 allSlots = new Collection4();
+        Collection4 allSlots = new Collection4();
         
-        Iterator4 i = allSlotIDs.iterator();
-        while(i.moveNext()){
-            Integer slotID = (Integer)i.current();
+        while(allSlotIDs.moveNext()){
+            Integer slotID = (Integer)allSlotIDs.current();
             Slot slot = trans().getSlotInformation(slotID.intValue());
             allSlots.add(slot);
         }
