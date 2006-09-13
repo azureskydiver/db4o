@@ -433,7 +433,7 @@ public abstract class QQueryBase implements Unversioned {
                                                     stream.readWriterByID(i_trans, id);
                                                 if (reader != null) {
                                                     ObjectHeader oh = new ObjectHeader(stream, reader);
-                                                    idsNew[0] = oh._yapClass.collectFieldIDs(
+                                                    idsNew[0] = oh.yapClass().collectFieldIDs(
                                                             oh._marshallerFamily,
                                                             oh._headerAttributes,
                                                             idsNew[0],

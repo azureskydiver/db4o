@@ -1775,6 +1775,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
     public String toString() {
+        if(i_name == null  && i_nameBytes != null){
+            YapStringIO stringIO = 
+                i_stream == null ? 
+                    YapConst.stringIO 
+                  : i_stream.stringIO();
+            return stringIO.read(i_nameBytes);
+        }
         return i_name;
     }
     
@@ -1904,4 +1911,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		MarshallerFamily mf = MarshallerFamily.current();
 		mf._class.defrag(this,i_stream.stringIO(), source, target, mapping, classIndexID);
 	}
+
+    public static YapClass readClass(YapStream stream, YapReader reader) {
+        ObjectHeader oh = new ObjectHeader(stream, reader);
+        return oh.yapClass();
+    }
 }

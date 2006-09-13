@@ -3,7 +3,6 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
-import com.db4o.inside.*;
 
 
 /**
@@ -11,7 +10,7 @@ import com.db4o.inside.*;
  */
 public class ObjectHeader {
     
-    public final YapClass _yapClass;
+    private final YapClass _yapClass;
     
     public final MarshallerFamily _marshallerFamily;
     
@@ -79,5 +78,9 @@ public class ObjectHeader {
     
     private int normalizeID(int id) {
     	return (id<0 ? -id : id);
+    }
+
+    public YapClass yapClass() {
+        return _yapClass;
     }
 }
