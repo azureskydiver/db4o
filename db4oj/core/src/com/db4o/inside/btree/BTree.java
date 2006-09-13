@@ -345,12 +345,10 @@ public class BTree extends YapMeta implements TransactionParticipant {
         command.visit(new Integer(_root.getID()));
 		while(queue.hasNext()) {	
 			BTreeNode curNode=(BTreeNode)queue.next();
-            
-            // FIXME: We should not work in write mode here.
-			curNode.prepareWrite(trans);
+            YapReader reader = curNode.prepareRead(trans);
 			int childCount = curNode.count();
 			for (int childIdx=0;childIdx<childCount;childIdx++) {
-				BTreeNode child = curNode.child(childIdx);
+				BTreeNode child = curNode.child(reader, childIdx);
                 if(! child.isLeaf()){
                     queue.add(child);
                 }
