@@ -4,8 +4,8 @@ package com.db4o.db4ounit.assorted;
 
 import com.db4o.*;
 import com.db4o.query.*;
-import com.db4o.test.*;
 
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class IndexedQueriesTestCase extends Db4oTestCase{
@@ -85,14 +85,11 @@ public class IndexedQueriesTestCase extends Db4oTestCase{
     }
     
     private void assertIntegers(){
-        
-        Query q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        Query q = newQuery();
         q.descend("_integer").constrain(new Integer(4)).greater().equal();
         assertIntsFound(new int[] { 5, 7 }, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_integer").constrain(new Integer(4)).smaller();
         assertIntsFound(new int[] { 1, 2, 3, 3 }, q);
         
@@ -100,91 +97,72 @@ public class IndexedQueriesTestCase extends Db4oTestCase{
 
     private void assertInts(int expectedZeroSize) {
         
-        Query q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        Query q = newQuery();
         q.descend("_int").constrain(new Integer(0));
         int zeroSize = q.execute().size();
-        Test.ensure(zeroSize == expectedZeroSize);
+        Assert.areEqual(expectedZeroSize, zeroSize);
         
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(4)).greater().equal();
         assertIntsFound(new int[] { 5, 7 }, q);
          
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(4)).greater();
         assertIntsFound(new int[] { 5, 7 }, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(3)).greater();
         assertIntsFound(new int[] { 5, 7 }, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(3)).greater().equal();
         assertIntsFound(new int[] { 3, 3, 5, 7 }, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(2)).greater().equal();
         assertIntsFound(new int[] { 2, 3, 3, 5, 7 }, q);
-        q = Test.query();
-
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        
+        q = newQuery();
         q.descend("_int").constrain(new Integer(2)).greater();
         assertIntsFound(new int[] { 3, 3, 5, 7 }, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(1)).greater().equal();
         assertIntsFound(new int[] { 1, 2, 3, 3, 5, 7 }, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(1)).greater();
         assertIntsFound(new int[] { 2, 3, 3, 5, 7 }, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(4)).smaller();
         assertIntsFound(new int[] { 1, 2, 3, 3 }, expectedZeroSize, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(4)).smaller().equal();
         assertIntsFound(new int[] { 1, 2, 3, 3 }, expectedZeroSize, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(3)).smaller();
         assertIntsFound(new int[] { 1, 2 }, expectedZeroSize, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(3)).smaller().equal();
         assertIntsFound(new int[] { 1, 2, 3, 3 }, expectedZeroSize, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(2)).smaller().equal();
         assertIntsFound(new int[] { 1, 2 }, expectedZeroSize, q);
-        q = Test.query();
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(2)).smaller();
         assertIntsFound(new int[] { 1 }, expectedZeroSize, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(1)).smaller().equal();
         assertIntsFound(new int[] { 1 }, expectedZeroSize, q);
 
-        q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        q = newQuery();
         q.descend("_int").constrain(new Integer(1)).smaller();
         assertIntsFound(new int[] {}, expectedZeroSize, q);
 
@@ -192,7 +170,7 @@ public class IndexedQueriesTestCase extends Db4oTestCase{
 
     private void assertIntsFound(int[] ints, int zeroSize, Query q) {
         ObjectSet res = q.execute();
-        Test.ensure(res.size() == (ints.length + zeroSize));
+        Assert.areEqual((ints.length + zeroSize), res.size());
         while (res.hasNext()) {
             IndexedQueriesItem ci = (IndexedQueriesItem)res.next();
             for (int i = 0; i < ints.length; i++) {
@@ -203,7 +181,7 @@ public class IndexedQueriesTestCase extends Db4oTestCase{
             }
         }
         for (int i = 0; i < ints.length; i++) {
-            Test.ensure(ints[i] == 0);
+            Assert.areEqual(0, ints[i]);
         }
     }
 
@@ -213,17 +191,18 @@ public class IndexedQueriesTestCase extends Db4oTestCase{
 
     private void assertQuery(int count, String string) {
         ObjectSet res = queryForName(string);
-        Test.ensure(res.size() == count);
-        IndexedQueriesItem ci = (IndexedQueriesItem)res.next();
-        Test.ensure(ci._name.equals("b"));
+        Assert.areEqual(count, res.size());
+
+        IndexedQueriesItem item = (IndexedQueriesItem)res.next();
+        Assert.areEqual("b", item._name);
     }
     
     private void assertNullNameCount(int count) {
         ObjectSet res = queryForName(null);
-        Test.ensure(res.size() == count);
+        Assert.areEqual(count, res.size());
         while(res.hasNext()){
             IndexedQueriesItem ci = (IndexedQueriesItem)res.next();
-            Test.ensure(ci._name == null);
+            Assert.isNull(ci._name);
         }
     }
 
@@ -231,21 +210,26 @@ public class IndexedQueriesTestCase extends Db4oTestCase{
         ObjectSet res = queryForName("b");
         IndexedQueriesItem ci = (IndexedQueriesItem)res.next();
         ci._name = "j";
-        Test.objectContainer().set(ci);
+        db().set(ci);
         res = queryForName("b");
-        Test.ensure(res.size() == 0);
+        Assert.areEqual(0, res.size());
         res = queryForName("j");
-        Test.ensure(res.size() == 1);
+        Assert.areEqual(1, res.size());
         ci._name = "b";
-        Test.objectContainer().set(ci);
+        db().set(ci);
         assertQuery(1, "b");
     }
 
     private ObjectSet queryForName(String n) {
-        Query q = Test.query();
-        q.constrain(IndexedQueriesItem.class);
+        Query q = newQuery();
         q.descend("_name").constrain(n);
         return q.execute();
+    }
+    
+    protected Query newQuery(){
+        Query q = newQuery();
+        q.constrain(IndexedQueriesItem.class);
+        return q;
     }
 
 }
