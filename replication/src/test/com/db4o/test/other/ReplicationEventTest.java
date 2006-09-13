@@ -255,6 +255,7 @@ public class ReplicationEventTest extends DrsTestCase {
 				//do nothing
 			}
 		};
+		
 		replicateAll(b().provider(), a().provider(), listener);
 
 		ensureNames(a().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
@@ -324,12 +325,11 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNames(b().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
-	class BooleanClosure {
+	static class BooleanClosure {
 		private boolean value;
 
 		public BooleanClosure(boolean value) {
-			this.value = value;
-		}
+			this.value = value;		}
 
 		void setValue(boolean v) {
 			value = v;
