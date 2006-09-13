@@ -4,6 +4,7 @@ package com.db4o.reflect.generic;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -246,22 +247,11 @@ public class GenericReflector implements Reflector, DeepClone {
 	}
 	
 	private void readAll(){
-		int classCollectionID = _stream.classCollection().getID();
-		YapWriter classcollreader = _stream.readWriterByID(_trans, classCollectionID);
-        if (Deploy.debug) {
-            classcollreader.readBegin(YapConst.YAPCLASSCOLLECTION);
-        }
-        
-		int numclasses = classcollreader.readInt();
-		int[] classIDs = new int[numclasses];
-		
-		for (int classidx = 0; classidx < numclasses; classidx++) {
-			classIDs[classidx] = classcollreader.readInt(); 
-			ensureClassAvailability(classIDs[classidx]);
+		for(Iterator4 idIter=_stream.classCollection().ids();idIter.moveNext();) {
+			ensureClassAvailability(((Integer)idIter.current()).intValue());
 		}
-
-		for (int classidx = 0; classidx < numclasses; classidx++) {
-			ensureClassRead(classIDs[classidx]);
+		for(Iterator4 idIter=_stream.classCollection().ids();idIter.moveNext();) {
+			ensureClassRead(((Integer)idIter.current()).intValue());
 		}
 	}
 	
@@ -290,27 +280,21 @@ public class GenericReflector implements Reflector, DeepClone {
 		}
         
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
-        if (Deploy.debug) {
-            classreader.readBegin(YapConst.YAPCLASS);
-        }
-		int namelength= classreader.readInt();
-		String classname= _stream.stringIO().read(classreader,namelength);
-		ret = (GenericClass)_classByName.get(classname);
+
+		ClassMarshaller marshaller = MarshallerFamily.current()._class;
+		RawClassSpec basicInfo=marshaller.readBasicInfo(_trans, classreader);
+
+		String className = basicInfo.name();
+		ret = (GenericClass)_classByName.get(className);
 		if(ret != null){
 			_classByID.put(id, ret);
 			_pendingClasses.add(new Integer(id));
 			return ret;
 		}
 		
-		classreader.incrementOffset(YapConst.INT_LENGTH); // skip empty unused int slot
-        
-		int ancestorid=classreader.readInt();
-        classreader.readInt();  // index id, not used
-        int fieldCount=classreader.readInt();
-		
-		ReflectClass nativeClass = _delegate.forName(classname);
-		ret = new GenericClass(this, nativeClass,classname, ensureClassAvailability(ancestorid));
-		ret.setDeclaredFieldCount(fieldCount);
+		ReflectClass nativeClass = _delegate.forName(className);
+		ret = new GenericClass(this, nativeClass,className, ensureClassAvailability(basicInfo.superClassID()));
+		ret.setDeclaredFieldCount(basicInfo.numFields());
 		
 		// step 1 only add to _classByID, keep the class out of _classByName and _classes
         _classByID.put(id, ret);
@@ -324,64 +308,53 @@ public class GenericReflector implements Reflector, DeepClone {
 		GenericClass clazz = (GenericClass)_classByID.get(id);
 		
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
-        if (Deploy.debug) {
-            classreader.readBegin(YapConst.YAPCLASS);
-        }
-		int namelength= classreader.readInt();
-		String classname= _stream.stringIO().read(classreader,namelength);
+
+		ClassMarshaller classMarshaller = MarshallerFamily.current()._class;
+		RawClassSpec classInfo=classMarshaller.readBasicInfo(_trans, classreader);
+		String className=classInfo.name();
 		
 		// Having the class in the _classByName Map for now indicates
 		// that the class is fully read. This is breakable if we start
 		// returning GenericClass'es in other methods like forName
 		// even if a native class has not been found
-		if(_classByName.get(classname) != null){
+		if(_classByName.get(className) != null){
 			return;
 		}
 		
         // step 2 add the class to _classByName and _classes to denote reading is completed
-        _classByName.put(classname, clazz);
+        _classByName.put(className, clazz);
 		_classes.add(clazz);
 		
-		// skip empty unused int slot, ancestor, index
-		classreader.incrementOffset(YapConst.INT_LENGTH * 3);
+		int numFields=classInfo.numFields();
+		GenericField[] fields=new GenericField[numFields];
+		FieldMarshaller fieldMarshaller=MarshallerFamily.current()._field;
 		
-		int numfields=classreader.readInt();
-		
-		
-		GenericField[] fields=new GenericField[numfields];
-		for (int i = 0; i < numfields; i++) {
-			String fieldname=null;
-			int fieldnamelength= classreader.readInt();
-			fieldname = _stream.stringIO().read(classreader,fieldnamelength);
-            
-            if (fieldname.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
-                fields[i] = new GenericVirtualField(fieldname);
-            }else{
-                
-                GenericClass fieldClass = null;
-    			
-    		    int handlerid=classreader.readInt();
-                
-                // need to take care of special handlers here
-                switch (handlerid){
-                    case YapHandlers.ANY_ID:
-                        fieldClass = (GenericClass)forClass(Object.class);
-                        break;
-                    case YapHandlers.ANY_ARRAY_ID:
-                        fieldClass = ((GenericClass)forClass(Object.class)).arrayClass();
-                        break;
-                    default:
-						ensureClassAvailability(handlerid);
-                        fieldClass = (GenericClass)_classByID.get(handlerid);        
-                }
-    		    
-    		    YapBit attribs=new YapBit(classreader.readByte());
-    		    boolean isprimitive=attribs.get();
-    		    boolean isarray = attribs.get();
-    		    boolean ismultidimensional=attribs.get();
-    		    
-    			fields[i]=new GenericField(fieldname,fieldClass, isprimitive, isarray, ismultidimensional );
+		for (int i = 0; i < numFields; i++) {
+			
+			RawFieldSpec fieldInfo=fieldMarshaller.readBasicInfo(_stream, classreader);
+			String fieldName=fieldInfo.name();
+            int handlerID=fieldInfo.handlerID();
+			
+            if (fieldInfo.isVirtual()) {
+                fields[i] = new GenericVirtualField(fieldName);
+                continue;
+            }   
+            GenericClass fieldClass = null;
+
+            // need to take care of special handlers here
+            switch (handlerID){
+                case YapHandlers.ANY_ID:
+                    fieldClass = (GenericClass)forClass(Object.class);
+                    break;
+                case YapHandlers.ANY_ARRAY_ID:
+                    fieldClass = ((GenericClass)forClass(Object.class)).arrayClass();
+                    break;
+                default:
+					ensureClassAvailability(handlerID);
+                    fieldClass = (GenericClass)_classByID.get(handlerID);        
             }
+		    		    
+			fields[i]=new GenericField(fieldName,fieldClass, fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
 		}
 		
         clazz.initFields(fields);

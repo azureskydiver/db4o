@@ -1447,7 +1447,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         i_reader = reader;
         
         try {
-            i_nameBytes = MarshallerFamily.current()._class.readName(trans, this, reader);
+            ClassMarshaller marshaller = MarshallerFamily.current()._class;
+			i_nameBytes = marshaller.readName(trans, reader);
+            _metaClassID = marshaller.readMetaClassID(reader);
 
             setStateUnread();
 

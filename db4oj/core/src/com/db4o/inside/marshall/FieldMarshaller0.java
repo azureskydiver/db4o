@@ -20,9 +20,32 @@ public class FieldMarshaller0 implements FieldMarshaller {
         return len;
     }
     
-
-    public YapField read(YapStream stream, YapField field, YapReader reader) {
+    public RawFieldSpec readBasicInfo(YapStream stream, YapReader reader) {
         
+        String name = null;
+        
+        try {
+            name = StringMarshaller.readShort(stream, reader);
+        } catch (CorruptionException ce) {
+            return null;
+        }
+        
+        if (name.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
+            YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
+            for (int i = 0; i < virtuals.length; i++) {
+                if (name.equals(virtuals[i].getName())) {
+                    return new RawFieldSpec(name);
+                }
+            }
+        }
+        int handlerID = reader.readInt();
+        byte attribs=reader.readByte();
+        
+        return new RawFieldSpec(name,handlerID,attribs);
+    }
+
+    
+    public YapField read(YapStream stream, YapField field, YapReader reader) {
         String name = null;
         
         try {
@@ -50,6 +73,24 @@ public class FieldMarshaller0 implements FieldMarshaller {
         field.loadHandler(stream);
         
         return field;
+
+// FIXME 
+//    	RawFieldSpec basicInfo=readBasicInfo(stream, reader);
+//    	String name=basicInfo.name();
+//        if (basicInfo.isVirtual()) {
+//            YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
+//            for (int i = 0; i < virtuals.length; i++) {
+//                if (name.equals(virtuals[i].getName())) {
+//                    return virtuals[i];
+//                }
+//            }
+//        }
+//        
+//        field.init(field.getParentYapClass(), name);
+//        field.init(basicInfo.handlerID(), basicInfo.isPrimitive(), basicInfo.isArray(), basicInfo.isNArray());
+//        field.loadHandler(stream);
+//        
+//        return field;
     }
 
 

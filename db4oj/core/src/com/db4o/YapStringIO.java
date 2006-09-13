@@ -59,7 +59,7 @@ public class YapStringIO {
 		return new String(chars,0,a_length);
 	}
 	
-	String read(byte[] a_bytes){
+	public String read(byte[] a_bytes){
 	    checkBufferLength(a_bytes.length);
 	    for(int i = 0; i < a_bytes.length; i++){
 	        chars[i] = (char)(a_bytes[i]& 0xff);

@@ -269,6 +269,14 @@ public final class YapClassCollection extends YapMeta {
         return new YapClassCollectionIterator(this, i_classes._first);
     } 
 
+    public Iterator4 ids(){
+        return new Iterator4Impl(i_classes._first) {
+        	public Object current() {
+        		return new Integer(((YapClass)super.current()).getID());
+        	}
+        };
+    } 
+
     public int ownLength() {
         return YapConst.OBJECT_LENGTH
             + YapConst.INT_LENGTH

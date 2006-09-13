@@ -5,10 +5,13 @@ package com.db4o.test.reflect;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.db4ounit.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
+import com.db4o.test.AllTests;
+import com.db4o.test.Test;
 import com.db4o.test.util.*;
 
 // TODO: Works for solo mode only currently
@@ -48,6 +51,9 @@ public class GRHierarchy {
 	}
 
 	public void store() {
+		if(Test.clientServer) {
+			return;
+		}
 		A a = new A1(42, new Character('x'));
 		B b = new B1("test", a);
 		Db4o.configure().reflectWith(new JdkReflector(getClass().getClassLoader()));
@@ -57,6 +63,9 @@ public class GRHierarchy {
 	}
 
 	public void test() {
+		if(Test.clientServer) {
+			return;
+		}
 		List excluded=new ArrayList();
 		excluded.add(A.class.getName());
 		excluded.add(B.class.getName());
@@ -66,6 +75,9 @@ public class GRHierarchy {
 		Db4o.configure().reflectWith(new JdkReflector(loader));
 		com.db4o.test.Test.reOpenServer();
 		com.db4o.test.Test.reOpen();
+		
+		com.db4o.test.Test.objectContainer().storedClasses();
+		
 		GenericReflector reflector = com.db4o.test.Test.objectContainer().ext().reflector();
 		ReflectClass proto=reflector.forName(B.class.getName());
 		Query query=com.db4o.test.Test.query();
@@ -102,5 +114,9 @@ public class GRHierarchy {
 		com.db4o.test.Test.ensureEquals("test",superfieldvalue);		
 		
 		Db4o.configure().reflectWith(new JdkReflector(getClass().getClassLoader()));
+	}
+	
+	public static void main(String[] args) {
+		AllTests.run(GRHierarchy.class);
 	}
 }
