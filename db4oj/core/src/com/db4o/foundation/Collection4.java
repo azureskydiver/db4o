@@ -73,6 +73,15 @@ public class Collection4 implements DeepClone, Unversioned {
     public final boolean contains(Object element) {
         return get(element) != null;
     }
+    
+    public boolean containsAll(Iterator4 iter) {
+        while(iter.moveNext()){
+            if(! contains(iter.current())){
+                return false;
+            }
+        }
+        return true;
+    }   
 
     /**
      * tests if the object is in the Collection.
@@ -223,5 +232,6 @@ public class Collection4 implements DeepClone, Unversioned {
         }
         sb.append("]");
         return sb.toString();
-    }	
+    }
+
 }

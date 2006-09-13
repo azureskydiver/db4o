@@ -24,4 +24,19 @@ public class Slot {
         return _length;
     }
     
+    public boolean equals(Object obj) {
+        if(obj == this){
+            return true;
+        }
+        if(! (obj instanceof Slot)){
+            return false;
+        }
+        Slot other = (Slot) obj;
+        return (_address == other._address) && (_length == other._length);
+    }
+    
+    public int hashCode() {
+        return _address ^ _length;
+    }
+    
 }

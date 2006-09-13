@@ -34,7 +34,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     private Hashtable4 _sizesByTransaction;
     
-    private Queue4 _processing;
+    protected Queue4 _processing;
     
     private int _nodeSize;
     
@@ -339,19 +339,23 @@ public class BTree extends YapMeta implements TransactionParticipant {
 	}
 
 	public void traverseAllSlotIDs(Transaction trans, Visitor4 command) {
+        ensureActive(trans);
 		Queue4 queue=new Queue4();
-		if(_root==null) {
-			read(trans);
-		}
 		queue.add(_root);
+        command.visit(new Integer(_root.getID()));
 		while(queue.hasNext()) {	
 			BTreeNode curNode=(BTreeNode)queue.next();
+            
+            // FIXME: We should not work in write mode here.
 			curNode.prepareWrite(trans);
-			int childCount = curNode.childCount();
-			for(int childIdx=0;childIdx<childCount;childIdx++) {
-				queue.add(curNode.child(childIdx));
+			int childCount = curNode.count();
+			for (int childIdx=0;childIdx<childCount;childIdx++) {
+				BTreeNode child = curNode.child(childIdx);
+                if(! child.isLeaf()){
+                    queue.add(child);
+                }
+                command.visit(new Integer(child.getID()));
 			}
-			command.visit(new Integer(curNode.getID()));
 		}
 	}
 
@@ -372,7 +376,18 @@ public class BTree extends YapMeta implements TransactionParticipant {
 	}
 
     public void free(Transaction systemTrans) {
-        System.err.println("BTree#free needs to be implemented");
+        final Collection4 allNodeIDs = new Collection4(); 
+        traverseAllSlotIDs(systemTrans, new Visitor4() {
+            public void visit(Object obj) {
+                allNodeIDs.add(obj);
+            }
+        });
+        
+        Iterator4 iter = allNodeIDs.iterator();
+        while(iter.moveNext()){
+            int id = ((Integer)iter.current()).intValue();
+            systemTrans.slotFreePointerOnCommit(id);
+        }
     }
 }
 
