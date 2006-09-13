@@ -167,6 +167,7 @@
 				<include name="test/**/other/SPCChild.java" />
 				<include name="test/**/other/SPCParent.java" />
 				<include name="test/**/other/SimpleParentChild.java" />
+				<include name="test/**/other/ReplicationEventTest.java" />
 				<include name="test/**/replication/db4ounit/**" />
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
