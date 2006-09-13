@@ -37,7 +37,7 @@ public class ObjectHeader {
         _yapClass=(yc!=null ? yc : stream.getYapClass(classID));
 
         if (Deploy.debug) {
-            int ycID = yc.getID();
+            int ycID = _yapClass.getID();
             if (classID != ycID) {
                 System.out.println("ObjectHeader::init YapClass does not match. Expected ID: " + ycID + " Read ID: " + classID);
             }
