@@ -256,7 +256,7 @@ public class BTreeNode extends YapMeta{
         return _btree.produceNode(((Integer)_children[index]).intValue());
     }
     
-    private BTreeNode child(YapReader reader, int index){
+    BTreeNode child(YapReader reader, int index){
         if( childLoaded(index) ){
             return (BTreeNode)_children[index];
         }
