@@ -35,7 +35,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         YapFile yf = (YapFile)writer.getStream();
         
         if( (uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0 && ! isnew){
-        	DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(yf, yapClass, oldSlot);            
+        	DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(yf, yapClass, oldSlot, false);            
             db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
             uuid = identityAndUUID.uuid;
         }
@@ -59,14 +59,17 @@ public class YapFieldUUID extends YapFieldVirtual {
     static class DatabaseIdentityIDAndUUID {
     	public int databaseIdentityID;
     	public long uuid;
-		public DatabaseIdentityIDAndUUID(int databaseIdentityID, long uuid) {
-			this.databaseIdentityID = databaseIdentityID;
-			this.uuid = uuid;
+		public DatabaseIdentityIDAndUUID(int databaseIdentityID_, long uuid_) {
+			databaseIdentityID = databaseIdentityID_;
+			uuid = uuid_;
 		}
     }
 
-	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream yf, YapClass yapClass, Slot oldSlot) {		
-		YapReader reader = yf.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
+	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream stream, YapClass yapClass, Slot oldSlot, boolean readClass) {		
+		YapReader reader = stream.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
+		if(readClass){
+            yapClass = YapClass.readClass(stream,reader);
+        }
 		if (null == yapClass.findOffset(reader, this)) {
 			return null;
 		}
@@ -98,7 +101,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     }
     
     protected void rebuildIndexForObject(YapFile stream, YapClass yapClass, int objectId) {
-    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, stream.getSystemTransaction().getSlotInformation(objectId));
+    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, stream.getSystemTransaction().getSlotInformation(objectId), true);
     	if (null == data) {
     		return;
     	}

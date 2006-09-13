@@ -542,7 +542,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                 
                 YapStream stream = getStream();
                 ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
-				_yapClass = objectHeader._yapClass;
+				_yapClass = objectHeader.yapClass();
                 
 				if (_yapClass != null) {
 					if (stream.i_handlers.ICLASS_COMPARE

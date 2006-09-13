@@ -19,8 +19,8 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
             if (reader != null) {
                 reader.setCascadeDeletes(parentBytes.cascadeDeletes());
                 ObjectHeader oh = new ObjectHeader(reader);
-                if(oh._yapClass != null){
-                    oh._yapClass.deleteEmbedded1(_family, reader, objectID);
+                if(oh.yapClass() != null){
+                    oh.yapClass().deleteEmbedded1(_family, reader, objectID);
                 }
             }
         }
@@ -56,9 +56,9 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
             if (reader != null) {
                 ObjectHeader oh = new ObjectHeader(reader);
                 try {
-                    if (oh._yapClass != null) {
+                    if (oh.yapClass() != null) {
                         a_bytes[0] = reader;
-                        return oh._yapClass.readArrayHandler1(a_bytes);
+                        return oh.yapClass().readArrayHandler1(a_bytes);
                     }
                 } catch (Exception e) {
                     

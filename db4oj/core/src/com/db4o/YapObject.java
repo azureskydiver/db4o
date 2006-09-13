@@ -209,7 +209,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
                 
                 ObjectHeader header = new ObjectHeader(stream, a_reader);
 			    
-				i_yapClass = header._yapClass;
+				i_yapClass = header.yapClass();
 
 				if (i_yapClass == null) {
 					return null;
@@ -249,7 +249,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
             
             ObjectHeader header = new ObjectHeader(a_stream, a_reader);
 
-			i_yapClass = header._yapClass;
+			i_yapClass = header.yapClass();
 
 			if (i_yapClass == null) {
 				return null;
@@ -758,7 +758,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		                str += "\nAddress=" + writer.getAddress();
 		            }
                     ObjectHeader oh = new ObjectHeader(stream, writer);
-		            YapClass yc = oh._yapClass;
+		            YapClass yc = oh.yapClass();
 		            if(yc != i_yapClass){
 		                str += "\nYapClass corruption";
 		            }else{
