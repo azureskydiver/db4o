@@ -8,7 +8,8 @@ public class IndexedPath extends IndexedNodeBase {
 	
 	public static IndexedNode newParentPath(IndexedNode next, QCon constraint) {
 		QCon parent = constraint.parent();
-		if (parent.canLoadByIndex()) {
+		// FIXME: needs something like parent.canLoadByIndex() for QConPath roots
+		if (parent instanceof QConObject) {
 			return new IndexedPath((QConObject) parent, next);
 		}
 		return null;
