@@ -65,10 +65,13 @@ public class YapFieldUUID extends YapFieldVirtual {
 		}
     }
 
-	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream stream, YapClass yapClass, Slot oldSlot, boolean readClass) {		
+	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream stream, YapClass yapClass, Slot oldSlot, boolean checkClass) {		
 		YapReader reader = stream.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
-		if(readClass){
-            yapClass = YapClass.readClass(stream,reader);
+		if(checkClass){
+            YapClass realClass = YapClass.readClass(stream,reader);
+            if(realClass != yapClass){
+                return null;
+            }
         }
 		if (null == yapClass.findOffset(reader, this)) {
 			return null;
