@@ -16,6 +16,7 @@ public class AllTests extends Db4oTestSuite {
             MultiFieldIndexQueryTestCase.class,
             GetByUUIDTestCase.class,
             IndexCreateDropTestCase.class,
+            IndexedQueriesTestCase.class,
             NakedObjectTestCase.class,
             NullWrapperTestCase.class,
             ReAddCascadedDeleteTestCase.class,

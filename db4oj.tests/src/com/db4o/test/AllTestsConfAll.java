@@ -50,7 +50,6 @@ public class AllTestsConfAll extends TestSuite{
 	    	ComparatorSort.class,
 	        // takes too long in JDK1.1 setup due to locking timeout
             // CrashSimulatingTest.class,
-	        CreateIndex.class,
 	        CreateIndexInherited.class,
 			CustomActivationDepth.class,
             DeleteDeep.class,

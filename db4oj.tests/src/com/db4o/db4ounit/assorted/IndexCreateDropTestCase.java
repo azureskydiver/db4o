@@ -13,6 +13,27 @@ import db4ounit.extensions.*;
 
 public class IndexCreateDropTestCase extends Db4oTestCase{
     
+    public static class IndexCreateDropItem {
+        
+        public int _int;
+        
+        public String _string;
+        
+        public Date _date;
+
+        public IndexCreateDropItem(int int_, String string_, Date date_) {
+            _int = int_;
+            _string = string_;
+            _date = date_;
+        }
+        
+        public IndexCreateDropItem(int int_) {
+            this(int_, int_ == 0 ? null : "" + int_, int_ == 0 ? null : new Date(int_));
+        }
+
+    }
+
+    
     private final int[] VALUES = new int[]{4, 7, 6, 6, 5, 4, 0, 0};
     
     public static void main(String[] arguments) {
