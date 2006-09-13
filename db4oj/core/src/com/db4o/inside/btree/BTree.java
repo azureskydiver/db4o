@@ -337,25 +337,11 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		_root.debugLoadFully(trans);
 		return this;
 	}
-
-	public void traverseAllSlotIDs(Transaction trans, Visitor4 command) {
+    
+    private void traverseAllNodes(Transaction trans, Visitor4 command) {
         ensureActive(trans);
-		Queue4 queue=new Queue4();
-		queue.add(_root);
-        command.visit(new Integer(_root.getID()));
-		while(queue.hasNext()) {	
-			BTreeNode curNode=(BTreeNode)queue.next();
-            YapReader reader = curNode.prepareRead(trans);
-			int childCount = curNode.count();
-			for (int childIdx=0;childIdx<childCount;childIdx++) {
-				BTreeNode child = curNode.child(reader, childIdx);
-                if(! child.isLeaf()){
-                    queue.add(child);
-                }
-                command.visit(new Integer(child.getID()));
-			}
-		}
-	}
+        _root.traverseAllNodes(trans, command);
+    }
 
 	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
 		BTreeNode.defragIndex(source,target,mapping,_keyHandler);
@@ -374,26 +360,24 @@ public class BTree extends YapMeta implements TransactionParticipant {
 	}
 
     public void free(Transaction systemTrans) {
-        final Collection4 allNodeIDs = collectAllNodeIds(systemTrans);        
-        freeAllNodeIds(systemTrans, allNodeIDs);
+        freeAllNodeIds(systemTrans, allNodeIds(systemTrans));
     }
 
-	private void freeAllNodeIds(Transaction systemTrans, final Collection4 allNodeIDs) {
-		Iterator4 iter = allNodeIDs.iterator();
-        while(iter.moveNext()){
-            int id = ((Integer)iter.current()).intValue();
+	private void freeAllNodeIds(Transaction systemTrans, final Iterator4 allNodeIDs) {
+        while(allNodeIDs.moveNext()){
+            int id = ((Integer)allNodeIDs.current()).intValue();
             systemTrans.slotFreePointerOnCommit(id);
         }
 	}
 
-	private Collection4 collectAllNodeIds(Transaction systemTrans) {
+	public Iterator4 allNodeIds(Transaction systemTrans) {
 		final Collection4 allNodeIDs = new Collection4(); 
-        traverseAllSlotIDs(systemTrans, new Visitor4() {
-            public void visit(Object obj) {
-                allNodeIDs.add(obj);
+        traverseAllNodes(systemTrans, new Visitor4() {
+            public void visit(Object node) {
+                allNodeIDs.add(new Integer(((BTreeNode)node).getID()));
             }
         });
-		return allNodeIDs;
+		return allNodeIDs.iterator();
 	}
 }
 

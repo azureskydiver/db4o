@@ -215,7 +215,9 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		return _index.getID();
 	}
 
-	public void traverseAllSlotIDs(Transaction trans, Visitor4 command) {
+    
+	public Iterator4 allSlotIDs(Transaction trans){
+        throw new NotImplementedException();
 	}
 
 	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {

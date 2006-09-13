@@ -5,7 +5,6 @@ package com.db4o.inside.classindex;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.BTree;
-import com.db4o.inside.convert.conversions.ClassIndexesToBTrees_5_5;
 
 /**
  * @exclude
@@ -97,8 +96,8 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		return _btreeIndex.getID();
 	}
 
-	public void traverseAllSlotIDs(Transaction trans, Visitor4 command) {
-		_btreeIndex.traverseAllSlotIDs(trans, command);
+	public Iterator4 allSlotIDs(Transaction trans) {
+        return _btreeIndex.allNodeIds(trans);
 	}
 
 	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
