@@ -227,7 +227,7 @@ public class IndexedQueriesTestCase extends Db4oTestCase{
     }
     
     protected Query newQuery(){
-        Query q = newQuery();
+        Query q = super.newQuery();
         q.constrain(IndexedQueriesItem.class);
         return q;
     }
