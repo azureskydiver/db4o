@@ -8,7 +8,7 @@ public class IndexedPath extends IndexedNodeBase {
 	
 	public static IndexedNode newParentPath(IndexedNode next, QCon constraint) {
 		QCon parent = constraint.parent();
-		if (parent instanceof QConObject) {
+		if (parent.canLoadByIndex()) {
 			return new IndexedPath((QConObject) parent, next);
 		}
 		return null;

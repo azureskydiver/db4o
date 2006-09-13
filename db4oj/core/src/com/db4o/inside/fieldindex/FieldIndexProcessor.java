@@ -17,14 +17,21 @@ public class FieldIndexProcessor {
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
 		if (bestIndex.resultSize() > 0) {
-			return new FieldIndexProcessorResult(resolveFully(bestIndex));
+			IndexedNode resolved = resolveFully(bestIndex);
+			if (null == resolved) {
+				return FieldIndexProcessorResult.NO_INDEX_FOUND;
+			}
+			return new FieldIndexProcessorResult(resolved.toTreeInt());
 		}
 		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
 	}
 
-	private TreeInt resolveFully(IndexedNode bestIndex) {
+	private IndexedNode resolveFully(IndexedNode bestIndex) {
+		if (null == bestIndex) {
+			return null;
+		}
 		if (bestIndex.isResolved()) {
-			return bestIndex.toTreeInt();
+			return bestIndex;
 		}
 		return resolveFully(bestIndex.resolve());
 	}

@@ -27,6 +27,10 @@ public class QConPath extends QConClass {
 		}
 	}
 	
+	public boolean canLoadByIndex() {
+		return false;
+	}
+	
 	boolean evaluate(QCandidate a_candidate) {
 		if (a_candidate.classReflector() == null) {
 			visitOnNull(a_candidate.getRoot());
