@@ -1187,4 +1187,16 @@ public class BTreeNode extends YapMeta{
     public boolean isLeaf() {
         return _isLeaf;
     }
+
+    /** This traversal goes over all nodes, not just leafs */
+    void traverseAllNodes(Transaction trans, Visitor4 command) {
+        YapReader reader = prepareRead(trans);
+        command.visit(this);
+        if(_isLeaf){
+            return;
+        }
+        for (int childIdx=0;childIdx<_count;childIdx++) {
+            child(reader, childIdx).traverseAllNodes(trans, command);
+        }
+    }
 }
