@@ -4,7 +4,10 @@ namespace com.db4o.test.other
     {
         protected override System.Type[] TestCases()
         {
-            return new System.Type[] { typeof(TheSimplest), typeof(GetByUUID) };
+            return new System.Type[] { typeof(TheSimplest), 
+                                       typeof(GetByUUID),
+                                       typeof(SimpleParentChild),
+                                       typeof(ReplicationEventTest) };
         }
 
         public static void Main(string[] args)
