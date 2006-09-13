@@ -12,6 +12,8 @@ public interface FieldMarshaller {
 
     void write(Transaction trans, YapClass clazz, YapField field, YapReader writer);
 
+    RawFieldSpec readBasicInfo(YapStream stream,YapReader reader);
+    
     YapField read(YapStream stream, YapField field, YapReader reader);
 
     int marshalledLength(YapStream stream, YapField field);

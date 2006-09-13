@@ -11,6 +11,15 @@ public abstract class ClassMarshaller {
     
     public MarshallerFamily _family;
     
+    public RawClassSpec readBasicInfo(Transaction trans,YapReader reader) {
+		byte[] nameBytes=readName(trans, reader);
+		String className=trans.stream().stringIO().read(nameBytes);
+		readMetaClassID(reader); // skip
+		int ancestorID=reader.readInt();
+		reader.incrementOffset(YapConst.INT_LENGTH); // index ID
+		int numFields=reader.readInt();
+		return new RawClassSpec(className,ancestorID,numFields);
+    }
 
     public void write(Transaction trans, YapClass clazz, YapReader writer) {
         
@@ -42,10 +51,13 @@ public abstract class ClassMarshaller {
     
     protected abstract int indexIDForWriting(int indexID);
 
-    public byte[] readName(Transaction trans, YapClass clazz, YapReader reader) {
+    public byte[] readName(Transaction trans, YapReader reader) {
         byte[] name = readName(trans.stream().stringIO(), reader);
-        clazz._metaClassID = reader.readInt();
         return name;
+    }
+    
+    public int readMetaClassID(YapReader reader) {
+    	return reader.readInt();
     }
     
     private byte[] readName(YapStringIO sio, YapReader reader) {

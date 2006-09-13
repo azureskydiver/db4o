@@ -21,6 +21,12 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         writer.writeIDOf(trans, field.getIndex(trans));
     }
 
+    public RawFieldSpec readBasicInfo(YapStream stream, YapReader reader) {
+    	RawFieldSpec spec=super.readBasicInfo(stream, reader);
+    	reader.incrementOffset(YapConst.INT_LENGTH);
+    	return spec;
+    }
+    
     public YapField read(YapStream stream, YapField originalField, YapReader reader) {
         YapField actualField = super.read(stream, originalField, reader);
         if(! hasBTreeIndex(actualField)){
@@ -32,6 +38,20 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         }
         actualField.initIndex(stream.getSystemTransaction(), id);
         return actualField;
+
+// FIXME
+//        YapField actualField = super.read(stream, originalField, reader);
+//        if(! hasBTreeIndex(actualField)){
+//            return actualField;
+//        }
+//        // TODO dirty quickfix, reorganize logic
+//        reader._offset-=YapConst.INT_LENGTH;
+//        int id = reader.readInt();
+//        if(id == 0){
+//            return actualField;
+//        }
+//        actualField.initIndex(stream.getSystemTransaction(), id);
+//        return actualField;
     }
 
     public int marshalledLength(YapStream stream, YapField field) {

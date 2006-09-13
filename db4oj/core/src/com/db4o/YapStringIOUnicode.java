@@ -44,7 +44,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 		return new String(chars,0,a_length);
 	}
 	
-	String read(byte[] a_bytes){
+	public String read(byte[] a_bytes){
 	    int len = a_bytes.length / 2;
 	    checkBufferLength(len);
 	    int j = 0;
