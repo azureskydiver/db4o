@@ -374,14 +374,17 @@ public class BTree extends YapMeta implements TransactionParticipant {
 	}
 
     public void free(Transaction systemTrans) {
-        final Collection4 allNodeIDs = collectAllNodeIds(systemTrans);
-        
-        Iterator4 iter = allNodeIDs.iterator();
+        final Collection4 allNodeIDs = collectAllNodeIds(systemTrans);        
+        freeAllNodeIds(systemTrans, allNodeIDs);
+    }
+
+	private void freeAllNodeIds(Transaction systemTrans, final Collection4 allNodeIDs) {
+		Iterator4 iter = allNodeIDs.iterator();
         while(iter.moveNext()){
             int id = ((Integer)iter.current()).intValue();
             systemTrans.slotFreePointerOnCommit(id);
         }
-    }
+	}
 
 	private Collection4 collectAllNodeIds(Transaction systemTrans) {
 		final Collection4 allNodeIDs = new Collection4(); 
