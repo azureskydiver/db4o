@@ -164,7 +164,7 @@ public class GenericClass implements ReflectClass, DeepClone {
             return _superclass;
         }
         if(_delegate == null){
-            return null;
+            return _reflector.forClass(Object.class);
         }
         ReflectClass delegateSuperclass = _delegate.getSuperclass();
         if(delegateSuperclass != null){

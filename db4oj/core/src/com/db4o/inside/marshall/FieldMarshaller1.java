@@ -21,39 +21,30 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         writer.writeIDOf(trans, field.getIndex(trans));
     }
 
-    public RawFieldSpec readBasicInfo(YapStream stream, YapReader reader) {
-    	RawFieldSpec spec=super.readBasicInfo(stream, reader);
-    	reader.incrementOffset(YapConst.INT_LENGTH);
+    public RawFieldSpec readSpec(YapStream stream, YapReader reader) {
+    	RawFieldSpec spec=super.readSpec(stream, reader);
+    	if(spec==null) {
+    		return null;
+    	}
+		if (spec.isVirtual()) {
+			return spec;
+		}
+        int indexID = reader.readInt();
+        spec.indexID(indexID);
     	return spec;
     }
     
-    public YapField read(YapStream stream, YapField originalField, YapReader reader) {
-        YapField actualField = super.read(stream, originalField, reader);
-        if(! hasBTreeIndex(actualField)){
-            return actualField;
-        }
-        int id = reader.readInt();
-        if(id == 0){
-            return actualField;
-        }
-        actualField.initIndex(stream.getSystemTransaction(), id);
-        return actualField;
-
-// FIXME
-//        YapField actualField = super.read(stream, originalField, reader);
-//        if(! hasBTreeIndex(actualField)){
-//            return actualField;
-//        }
-//        // TODO dirty quickfix, reorganize logic
-//        reader._offset-=YapConst.INT_LENGTH;
-//        int id = reader.readInt();
-//        if(id == 0){
-//            return actualField;
-//        }
-//        actualField.initIndex(stream.getSystemTransaction(), id);
-//        return actualField;
-    }
-
+    protected YapField fromSpec(RawFieldSpec spec, YapStream stream, YapField field) {
+		YapField actualField = super.fromSpec(spec, stream, field);
+		if(spec==null) {
+			return field;
+		}
+		if (spec.indexID() != 0) {
+			actualField.initIndex(stream.getSystemTransaction(), spec.indexID());
+		}
+		return actualField;
+	}
+    
     public int marshalledLength(YapStream stream, YapField field) {
         int len = super.marshalledLength(stream, field);
         if(! hasBTreeIndex(field)){

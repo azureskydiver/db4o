@@ -80,6 +80,11 @@ public class GRHierarchy {
 		
 		GenericReflector reflector = com.db4o.test.Test.objectContainer().ext().reflector();
 		ReflectClass proto=reflector.forName(B.class.getName());
+		
+		ReflectClass protoSuper = proto.getSuperclass();
+		Test.ensure(protoSuper!=null);
+		Test.ensureEquals(Object.class.getName(), protoSuper.getName());
+		
 		Query query=com.db4o.test.Test.query();
 		query.constrain(proto);
 		ObjectSet result=query.execute();

@@ -281,10 +281,10 @@ public class GenericReflector implements Reflector, DeepClone {
         
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
 
-		ClassMarshaller marshaller = MarshallerFamily.current()._class;
-		RawClassSpec basicInfo=marshaller.readBasicInfo(_trans, classreader);
+		ClassMarshaller marshaller = marshallerFamily()._class;
+		RawClassSpec spec=marshaller.readSpec(_trans, classreader);
 
-		String className = basicInfo.name();
+		String className = spec.name();
 		ret = (GenericClass)_classByName.get(className);
 		if(ret != null){
 			_classByID.put(id, ret);
@@ -293,14 +293,18 @@ public class GenericReflector implements Reflector, DeepClone {
 		}
 		
 		ReflectClass nativeClass = _delegate.forName(className);
-		ret = new GenericClass(this, nativeClass,className, ensureClassAvailability(basicInfo.superClassID()));
-		ret.setDeclaredFieldCount(basicInfo.numFields());
+		ret = new GenericClass(this, nativeClass,className, ensureClassAvailability(spec.superClassID()));
+		ret.setDeclaredFieldCount(spec.numFields());
 		
 		// step 1 only add to _classByID, keep the class out of _classByName and _classes
         _classByID.put(id, ret);
 		_pendingClasses.add(new Integer(id));
 		
 		return ret;
+	}
+
+	private MarshallerFamily marshallerFamily() {
+		return MarshallerFamily.forConverterVersion(_stream.converterVersion());
 	}
 	
 	private void ensureClassRead(int id) {
@@ -309,8 +313,8 @@ public class GenericReflector implements Reflector, DeepClone {
 		
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
 
-		ClassMarshaller classMarshaller = MarshallerFamily.current()._class;
-		RawClassSpec classInfo=classMarshaller.readBasicInfo(_trans, classreader);
+		ClassMarshaller classMarshaller = marshallerFamily()._class;
+		RawClassSpec classInfo=classMarshaller.readSpec(_trans, classreader);
 		String className=classInfo.name();
 		
 		// Having the class in the _classByName Map for now indicates
@@ -327,11 +331,11 @@ public class GenericReflector implements Reflector, DeepClone {
 		
 		int numFields=classInfo.numFields();
 		GenericField[] fields=new GenericField[numFields];
-		FieldMarshaller fieldMarshaller=MarshallerFamily.current()._field;
+		FieldMarshaller fieldMarshaller=marshallerFamily()._field;
 		
 		for (int i = 0; i < numFields; i++) {
 			
-			RawFieldSpec fieldInfo=fieldMarshaller.readBasicInfo(_stream, classreader);
+			RawFieldSpec fieldInfo=fieldMarshaller.readSpec(_stream, classreader);
 			String fieldName=fieldInfo.name();
             int handlerID=fieldInfo.handlerID();
 			

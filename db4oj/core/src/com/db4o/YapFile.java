@@ -92,7 +92,7 @@ public abstract class YapFile extends YapStream {
         
     }
     
-    int converterVersion() {
+    public int converterVersion() {
         return _fileHeader.converterVersion();
     }
     
