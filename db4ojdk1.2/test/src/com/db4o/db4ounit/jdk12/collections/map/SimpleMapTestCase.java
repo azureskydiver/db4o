@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.collections.map;
+package com.db4o.db4ounit.jdk12.collections.map;
 
 import com.db4o.Db4o;
 import com.db4o.ext.Db4oUUID;

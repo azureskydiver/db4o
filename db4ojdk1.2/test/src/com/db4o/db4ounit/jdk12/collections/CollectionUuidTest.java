@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.collections;
+package com.db4o.db4ounit.jdk12.collections;
 
 import java.util.ArrayList;
 
