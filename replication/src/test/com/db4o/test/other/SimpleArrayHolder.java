@@ -6,7 +6,7 @@ public class SimpleArrayHolder {
     
     private String name;
     
-    private SimpleArrayContent arr[];
+    private SimpleArrayContent[] arr;
     
     public SimpleArrayHolder() {
         
