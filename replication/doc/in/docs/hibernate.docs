@@ -16,46 +16,60 @@ to store the metadata for replication to work properly.
 Also, if there are no tables in the database, Hibernate will create the tables according to the hbm.xml files ._
 specified automatically. This way, you can save the time needed in creating tables.
 
+.2 Turning off the automatic creation of dRS tables and columns ..
+In some situations, you may not have the privilege to create or alter tables. You may need to ask your DBA ._
+to create the tables for you before using dRS.
+
+You can turn off the automatic creation of dRS tables and columns by changing the "hibernate.hbm2ddl.auto" ._
+property to "validate" in hibernate.cfg.xml. By doing so, dRS will not create or alter any tables. Rather, ._
+it will check the existence of the dRS tables before starting replication.
+
+If the required dRS tables do not exist, dRS will throw a RuntimeException notifying the user ._
+and the replication will halt.
+
 .2 Hibernate mapping files ..
-For each persisted class, you need to define a mapping file for Hibernate to understand how to store and load ._
-the objects. Here are some important information:
+Persisted Objects are objects that the user wants to store to the database, e.g. cars, pilots, purchase orders.
+
+For dRS to operate properly, for each persisted object, the user MUST declare the primary key column of the database table in the hbm.xml mapping file as follow:
+.c
+<id column="typed_id" type="long">
+    <generator class="native"/>
+</id> ..
+    - column - The name of the primary key column. The value can be well-formed string . "typed_id" is recommended.
+    - type - MUST be "long"
+    - class - MUST be "native"
+
+The "typed_id" column stores the id used by Hibernate. It allows dRS to identify a persisted object by invoking org.hibernate.Session#getIdentifier(Object object).
 
 If you do not define getter/setter for property, make default-access="field". default-lazy="false" default-cascade="save-update" ._
 is required for replication to work properly. Note, you should not set the cascade style to "delete", otherwise deletion replication ._
 will not work.
 
-.c
-<hibernate-mapping default-access="field" default-lazy="false" default-cascade="save-update">
-..
-You must define an artificial identity column for the object. The type must be "long".
-.c
-<id column="typed_id" type="long">
-	<generator class="native"/>
-</id>
-..
-For complete reference in using Hibernate, please refer to the Hibernate reference ( .l http://www.hibernate.org/hib_docs/v3/reference/en/html_single/ ..)
+.1 Detecting object changes ..
+This section describes how do you configure dRS to detect object changes.
 
-.1 Keeping track of object changes ..
 After replication completes, objects are synchronized across db4o and RDBMS. ._
 Later, in the next round replication, you can replicate objects that are changed ._
-since last round of replication. This section describes how do you configure ._
-dRS to detect object changes.
+since last round of replication. 
 
-dRS detects object changes by listening the the object update events thrown by Hibernate. ._ 
-In your day to day usage of Hibernate, you can enable the listening by following ._
-this code.
-
+In addition, dRS also generates UUIDs for newly inserted objects. You can enable the generation of UUIDs and Version by following this code.
 .c 
 // Read or create the Configuration as usual
 Configuration cfg = new Configuration().configure("your-hibernate.cfg.xml");
+
 // Let the ReplicationConfigurator adjust the configuration
 ReplicationConfigurator.configure(cfg);
+
 // Create the SessionFactory as usual
 SessionFactory sessionFactory = cfg.buildSessionFactory();
+
 // Create the Session as usual
 Session session = sessionFactory.openSession();
+
 // Let the ReplicationConfigurator install the listeners to the Session
 ReplicationConfigurator.install(session, cfg);
+
+//Update objects as usual
 Transaction tx = session.beginTransaction();
 Pilot john = (Pilot) session.createCriteria(Pilot.class) .add(Restrictions.eq("name", "John")).list().get(0);
 john.name = "Anna";
@@ -64,7 +78,7 @@ session.flush();
 tx.commit();
 ..
 
-Here you can see, you can create the Configuration and the Session objects as usual. ._
+As you can see, you can create the Configuration and the Session objects as usual. ._
 dRS will automatically install the listeners to Hibernate.
 
 .1 Examples ..
@@ -425,67 +439,19 @@ mappings in hbm files, then you can replicate the objects in Collections success
 
 Remember that a Collection must not be shared by two owners, otherwise, hibernate will throw an exception.
 
-.1 How dRS modifies database schema ..
+.1 Hibernate Replication internals  ..
 So far we have seen that dRS allows you to replicate objects between db4o and relational database. ._
 You maybe curious that how dRS keeps track of the identity of objects in relational database and how ._
 dRS knows which objects are changed since last round of replication. Read on and you will see how ._
 dRS does that.
 
-.2 keeping track of the object identity ..
-In chapter 3  .l db4oReplication db4o replication ..  , you have already seen that dRS uses UUID to identify an object. ._
-To store this metadate in relational database, dRS will do the following:
-1) - Creates a "ReplicationProviderSignature" table to store the signature of the database system that originates the object (the second part of UUID)
-2) - Creates a "ObjectReference" table to store the UUIDs and version numbers of objects
+dRS internal objects keep information used by dRS. They are defined in the com.db4o.replication.hibernate.metadata package.
+
+Each internal object is associated with a Hibernate mapping file (.hbm.xml). Hibernate reads these files and understands  ._
+how to store / retrieve these internal objects to / from the RDBMS. Each type of internal object maps to one table in  ._
+RDBMS. If such table does not exist, Hibernate creates it automatically.
 
 During replication, dRS will makes use of these tables to uniquely identify objects.
 
-.2 Replication histories ..
-dRS creates a table called "ReplicationRecord" to store the histories of replication. ._
-The history contains the signature of the opposite database, version number in a round of ._
-replication.
 
-Suppose this database is replicated against 10 different opposite databases. The ReplicationRecord ._
-contains 10 records. The maximum of these 10 version number is used as the base version number of ._
-next round of replication.
 
-For example, if the maximum version number is 10, then the version number used in the next round of ._
-replication is 11. dRS uses this number to compare with the version number of objects. If the object ._
-version number is larger than the replication version number, then dRS knows the object is changed since ._
-last replication.
-
-.2 List of dRS tables ..
-
-.3 dRS tables ..
- - ReplicationComponentField
- - ReplicationComponentIdentity
- - ReplicationProviderSignature
- - ReplicationRecord
- - ObjectReference
-
-Oracle 9i/10g dialect of the DDL
-.c
-create table ObjectReference (id number(19,0) not null, longPart number(19,0) not null, provider number(19,0) not null, className varchar2(255), objectId number(19,0), version number(19,0), deleted char(1), primary key (id), unique (longPart, provider))
-create table ReplicationComponentField (id number(19,0) not null, referencingObjectClassName varchar2(255) not null, referencingObjectFieldName varchar2(255) not null, primary key (id), unique (referencingObjectClassName, referencingObjectFieldName))
-create table ReplicationComponentIdentity (id number(19,0) not null, uuidLongPart number(19,0) not null, provider number(19,0) not null, referencingObjectUuidLongPart number(19,0) not null, referencingObjectField number(19,0) not null, primary key (id), unique (uuidLongPart, provider))
-create table ReplicationProviderSignature (drs_provider_id number(19,0) not null, class varchar2(255) not null, bytes raw(255) not null, creationTime number(19,0), primary key (drs_provider_id))
-create table ReplicationRecord (id number(19,0) not null, version number(19,0) not null, primary key (id))
-alter table ObjectReference add constraint FK82F9AAAC8071AB25 foreign key (provider) references ReplicationProviderSignature
-alter table ReplicationComponentIdentity add constraint FK4BFE028F9FC4B083 foreign key (referencingObjectField) references ReplicationComponentField
-alter table ReplicationComponentIdentity add constraint FK4BFE028F8071AB25 foreign key (provider) references ReplicationProviderSignature
-alter table ReplicationRecord add constraint FK7F31971DB6D8E1D8 foreign key (id) references ReplicationProviderSignature
-..
-
-To find out the dialect of other RDBMS, run any of the dRS example with your RDBMS, set the output level ._
-in log4j.xml from "FATAL" to "DEBUG". Search for entries of "SchemaUpdate" , then you will find out the ._
-DDL of your RDBMS dialect.
-
-.2 Turning off the automatic creation of dRS tables and columns ..
-In some situations, you may not have the privilege to create or alter tables. You may need to ask your DBA ._
-to create the tables for you before using dRS.
-
-You can turn off the automatic creation of dRS tables and columns by changing the "hibernate.hbm2ddl.auto" ._
-property to "validate" in hibernate.cfg.xml. By doing so, dRS will not create or alter any tables. Rather, ._
-it will check the existence of the dRS tables before starting replication.
-
-If the required dRS tables do not exist, dRS will throw a RuntimeException notifying the user ._
-and the replication will halt.

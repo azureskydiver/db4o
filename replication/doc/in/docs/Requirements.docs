@@ -1,8 +1,7 @@
 .n
-.a Getting Started ..
-.0 Getting Started ..
+.a Requirements ..
+.0 Requirements ..
 
-.1 Requirements ..
 To run the provided build scripts dRS requires Apache Ant 1.6 or later. 
 .l http://ant.apache.org .. 
 
@@ -18,7 +17,7 @@ configurations, you may wish to ._
 download the full Hibernate documentation ._
 from the  .l http://www.hibernate.org/ Hibernate project website .. .
 
-.1 Testing ..
+.1 Testing the installation..
 The build.xml contains targets for running the example and ._
 the regression tests:
 - run-example
