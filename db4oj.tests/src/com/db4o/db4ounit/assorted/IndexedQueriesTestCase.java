@@ -8,7 +8,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class IndexedQueriesTestCase extends Db4oTestCase{
+public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
     
     public static void main(String[] arguments) {
         new IndexedQueriesTestCase().runSolo();

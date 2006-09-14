@@ -4,6 +4,7 @@ package db4ounit.extensions;
 
 import java.lang.reflect.Method;
 
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.config.Configure;
 
 import db4ounit.TestMethod;
@@ -20,7 +21,7 @@ public class CSTestMethod extends TestMethod {
 	 * @see db4ounit.TestMethod#invoke()
 	 */
 	protected void invoke() throws Exception {
-		Object toTest = getSubject();
+		Db4oTestCase toTest = getSubject();
 		Method method = getMethod();
 		if (method.getName().startsWith(Configure.COCURRENCY_TEST_PREFIX)) {
 			// concurrency test
@@ -31,22 +32,17 @@ public class CSTestMethod extends TestMethod {
 		}
 	}
 
-	private void invokeConcurrencyMethod(Object toTest, Method method)
+	private void invokeConcurrencyMethod(Db4oTestCase toTest, Method method)
 			throws Exception {
 		Class[] parameters = method.getParameterTypes();
-		boolean hasArgs = false;
-		if (parameters.length == 0) {
-			// empty
-		} else if (parameters.length == 1 && parameters[0] == Integer.TYPE) {
-			hasArgs = true;
-		} else {
-			// wrong parameters type
-			return;
-		}
+		boolean hasSequenceParameter = false;
+	
+		if (parameters.length == 2) // ExtObjectContainer, seq
+			hasSequenceParameter = true;
 
 		ConcurrencyThread[] threads = new ConcurrencyThread[Configure.CONCURRENCY_THREAD_COUNT];
 		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; ++i) {
-			if (hasArgs) {
+			if (hasSequenceParameter) {
 				threads[i] = new ConcurrencyThread(toTest, method, i);
 			} else {
 				threads[i] = new ConcurrencyThread(toTest, method);
@@ -88,43 +84,55 @@ public class CSTestMethod extends TestMethod {
 	}
 
 	class ConcurrencyThread extends Thread {
-		private Object toTest;
+		private Db4oTestCase toTest;
 
 		private Method method;
 
 		private int seq;
 
-		private boolean hasArgs = false;
+		private boolean hasSequenceParameter = false;
 
 		private boolean fail = true;
 
 		private Exception ex;
 
-		ConcurrencyThread(Object toTest, Method method) {
+		ConcurrencyThread(Db4oTestCase toTest, Method method) {
 			this.toTest = toTest;
 			this.method = method;
 		}
 
-		ConcurrencyThread(Object toTest, Method method, int seq) {
+		ConcurrencyThread(Db4oTestCase toTest, Method method, int seq) {
 			this(toTest, method);
 			this.seq = seq;
-			hasArgs = true;
+			hasSequenceParameter = true;
 		}
 
 		public void run() {
+			ExtObjectContainer oc = toTest.db();
+			Object[] args;
+			if (hasSequenceParameter) {
+				args = new Object[2];
+				args[0] = oc;
+				args[1] = new Integer(seq);
+			} else {
+				args = new Object[1];
+				args[0] = oc;
+			}
 			try {
-				Integer[] args = null;
-				if (hasArgs) {
-					args = new Integer[1];
-					args[0] = new Integer(seq);
-				}
 				method.invoke(toTest, (Object[]) args);
 				fail = false;
 			} catch (Exception ex) {
 				// record the exception
 				this.ex = ex;
+			} finally {
+				oc.close();
 			}
 		}
+	}
+
+	@Override
+	public Db4oTestCase getSubject() {
+		return (Db4oTestCase) super.getSubject();
 	}
 
 }

@@ -8,7 +8,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class SimplestPossibleTestCase extends Db4oTestCase {
+public class SimplestPossibleTestCase extends AbstractDb4oTestCase {
     
     public static void main(String[] args) {
         new SimplestPossibleTestCase().runSolo();

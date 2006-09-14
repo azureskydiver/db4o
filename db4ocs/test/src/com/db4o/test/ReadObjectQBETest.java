@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.config.Configure;
 import com.db4o.test.data.SimpleObject;
 
@@ -13,27 +14,23 @@ public class ReadObjectQBETest extends ClientServerTestCase {
 
 	private static String testString = "simple test string";
 
-	protected void store() throws Exception {
-		oc = openClient();
-		try {
-			for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
-				oc.set(new SimpleObject(testString + i, i));
-			}
-		} finally {
-			oc.close();
+	protected void store() {
+		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
+			db().set(new SimpleObject(testString + i, i));
 		}
 	}
 
 	public void concReadSameObject() throws Exception {
-		oc = openClient();
+		ExtObjectContainer db;
 		try {
 			int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
 			SimpleObject example = new SimpleObject(testString + mid, mid);
-			ObjectSet result = oc.get(example);
+			db = fixture().openClient();
+			ObjectSet result = db.get(example);
 			Assert.areEqual(1, result.size());
 			Assert.areEqual(example, result.next());
 		} finally {
-			oc.close();
+			db().close();
 		}
 	}
 

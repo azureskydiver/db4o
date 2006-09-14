@@ -30,7 +30,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 
 	protected Object newInstance(Class clazz) {
 		Object instance = super.newInstance(clazz);
-		if (instance instanceof Db4oTestCase) {
+		if (instance instanceof AbstractDb4oTestCase) {
 			((Db4oTestCase)instance).fixture(_fixture);
 		}
 		return instance;

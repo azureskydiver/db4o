@@ -3,9 +3,9 @@ package db4ounit.extensions;
 
 import java.lang.reflect.Method;
 
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.config.Configure;
 
-import db4ounit.ReflectionTestSuiteBuilder;
 import db4ounit.Test;
 import db4ounit.TestPlatform;
 import db4ounit.extensions.fixtures.Db4oClientServer;
@@ -14,8 +14,8 @@ public class CSTestSuiteBuilder extends Db4oTestSuiteBuilder {
 
 	public CSTestSuiteBuilder(Class[] classes) {
 		// generate fixture here and pass the fixture as a paramtet to super
-		
-		super(new Db4oClientServer("Db4oClientServer.yap",0xdb40),classes);
+
+		super(new Db4oClientServer("Db4oClientServer.yap", 0xdb40), classes);
 	}
 
 	protected Test createTest(Object instance, Method method) {
@@ -27,17 +27,20 @@ public class CSTestSuiteBuilder extends Db4oTestSuiteBuilder {
 		if (startsWithIgnoreCase(name, Configure.COCURRENCY_TEST_PREFIX)) {
 			return TestPlatform.isPublic(method)
 					&& !TestPlatform.isStatic(method)
-					&& hasValidParamter(method);
+					&& hasValidParameter(method);
 		}
 		return super.isTestMethod(method);
 	}
 
-	private static boolean hasValidParamter(Method method) {
+	static boolean hasValidParameter(Method method) {
 		Class[] parameters = method.getParameterTypes();
-		if (parameters.length == 0) {
+		if (parameters.length == 1 && parameters[0] == ExtObjectContainer.class)
 			return true;
-		}
-		return (parameters.length == 1 && parameters[0] == Integer.TYPE);
+		
+		if (parameters.length == 2 && parameters[0] == ExtObjectContainer.class
+				&& parameters[1] == Integer.TYPE) 
+			return true;
+		
+		return false;
 	}
-
 }

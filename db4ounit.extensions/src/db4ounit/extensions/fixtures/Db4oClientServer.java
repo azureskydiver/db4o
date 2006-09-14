@@ -2,21 +2,30 @@
 
 package db4ounit.extensions.fixtures;
 
+import java.io.File;
 import java.io.IOException;
 
-import com.db4o.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectServer;
 import com.db4o.ext.ExtObjectContainer;
 
-public class Db4oClientServer extends AbstractFileBasedDb4oFixture {
+import db4ounit.extensions.Db4oFixture;
+
+public class Db4oClientServer implements Db4oFixture {
 	private static final String HOST = "localhost";
+
 	private static final String USERNAME = "db4o";
+
 	private static final String PASSWORD = USERNAME;
-	
+
 	private ObjectServer _server;
+
 	private final int _port;
-	
+
+	private final File _yap;
+
 	public Db4oClientServer(String fileName, int port) {
-		super(fileName);		
+		_yap = new File(fileName);
 		_port = port;
 	}
 
@@ -25,21 +34,22 @@ public class Db4oClientServer extends AbstractFileBasedDb4oFixture {
 	}
 
 	public void open() throws Exception {
-		_server = Db4o.openServer(getAbsolutePath(), _port);
-	}
-
-	public ExtObjectContainer openClient() throws IOException {
-		_server.grantAccess(USERNAME, PASSWORD);
-		return Db4o.openClient(HOST, _port, USERNAME, PASSWORD).ext();
+		_server = Db4o.openServer(_yap.getAbsolutePath(), _port);
 	}
 
 	public ExtObjectContainer db() {
-		throw new UnsupportedOperationException();
+		_server.grantAccess(USERNAME, PASSWORD);
+		try {
+			return Db4o.openClient(HOST, _port, USERNAME, PASSWORD).ext();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
-	protected void db(ExtObjectContainer container) {
-		throw new UnsupportedOperationException();
-	}	
-	
-	
+	public void clean() {
+		_yap.delete();
+
+	}
+
 }

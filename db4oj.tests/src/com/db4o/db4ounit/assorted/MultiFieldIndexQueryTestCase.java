@@ -9,12 +9,12 @@ import com.db4o.ObjectSet;
 import com.db4o.query.*;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 /**
  * @exclude
  */
-public class MultiFieldIndexQueryTestCase extends Db4oTestCase {
+public class MultiFieldIndexQueryTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
 		new MultiFieldIndexQueryTestCase().runSolo();

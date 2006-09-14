@@ -11,7 +11,7 @@ import db4ounit.TestRunner;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.Db4oSolo;
 
-public class SelectiveCascadingDeleteTestCase extends Db4oTestCase {
+public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	
 	protected void configure() {
 		enableCascadeOnDelete();

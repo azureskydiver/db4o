@@ -11,7 +11,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class IndexCreateDropTestCase extends Db4oTestCase{
+public class IndexCreateDropTestCase extends AbstractDb4oTestCase{
     
     public static class IndexCreateDropItem {
         

@@ -7,10 +7,10 @@ import com.db4o.Transaction;
 import com.db4o.inside.btree.*;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 
-public abstract class BTreeTestCaseBase extends Db4oTestCase{
+public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 
 	protected BTree _btree;
 	

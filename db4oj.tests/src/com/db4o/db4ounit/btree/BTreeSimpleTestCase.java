@@ -7,10 +7,10 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 
 import db4ounit.*;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 
-public class BTreeSimpleTestCase extends Db4oTestCase {
+public class BTreeSimpleTestCase extends AbstractDb4oTestCase {
 	
 	int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
     

@@ -6,7 +6,7 @@ import db4ounit.TestSuiteBuilder;
 /**
  * Base class for composable db4o test suites (AllTests classes inside each package, for instance).
  */
-public abstract class Db4oTestSuite extends Db4oTestCase implements TestSuiteBuilder {
+public abstract class Db4oTestSuite extends AbstractDb4oTestCase implements TestSuiteBuilder {
 
 	public TestSuite build() {
 		return new Db4oTestSuiteBuilder(fixture(), testCases()).build();

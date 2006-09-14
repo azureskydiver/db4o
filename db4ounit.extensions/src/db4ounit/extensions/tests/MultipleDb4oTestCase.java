@@ -3,9 +3,9 @@
 package db4ounit.extensions.tests;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
-public class MultipleDb4oTestCase extends Db4oTestCase {
+public class MultipleDb4oTestCase extends AbstractDb4oTestCase {
 	public void testFirst() {
 		Assert.fail();
 	}

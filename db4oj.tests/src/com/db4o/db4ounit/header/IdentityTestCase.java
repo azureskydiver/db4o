@@ -7,9 +7,9 @@ import com.db4o.ext.Db4oDatabase;
 
 import db4ounit.Assert;
 import db4ounit.ArrayAssert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
-public class IdentityTestCase extends Db4oTestCase {
+public class IdentityTestCase extends AbstractDb4oTestCase {
     
     public void testIdentityPreserved() throws Exception {
         

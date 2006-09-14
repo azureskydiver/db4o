@@ -14,7 +14,7 @@ import db4ounit.TestRunner;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.Db4oSolo;
 
-public class QueryStatsTestCase extends Db4oTestCase {
+public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	
 	public static class Item {
 	}
