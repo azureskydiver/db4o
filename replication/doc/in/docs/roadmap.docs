@@ -5,8 +5,7 @@
 This section describes the features supported in current release and features planned in
 ._ upcoming releases.
 
-.1 Current Version ..
-.2 Supported Features ..
+.1 Supported Features ..
 - db4o to db4o replication
 - db4o to Hibernate replication
 - Hibernate to Hibernate replication
@@ -18,13 +17,17 @@ This section describes the features supported in current release and features pl
 - One-To-Many Relations 
 - Many-To-One Relations
 
-- UUID generation for db4o and Hibernate
-- Version number generation for db4o and Hibernate
+- UUID and Version generation for db4o and Hibernate
 - Queries for changed objects
 - Parent-to-Child traversal along changed objects
 - Collection Replication
 - Replication Event System
 - Replication of deleted objects
 
-.2 Unsupported Features ..
+.1 Unsupported Features ..
 - Multidimensional Arrays in Hibernate replication
+
+.1 Planned Features ..
+- Generation Hibernate mapping files
+- RDBMS triggers for updating version number
+- Instant replication

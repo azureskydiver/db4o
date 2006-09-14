@@ -1,43 +1,23 @@
 .n
 .a db4oReplication ..
 .0 db4o Replication ..
-
-We can meed the first three requirements all at once, by enabling UUIDs in our db4o database.
-
-.c // Enable UUIDs for ALL stored objects. Call this before opening your database.
-Db4o.configure().generateUUIDs(Integer.MAX_VALUE); ..
-
-The db4o UUID contains two parts. The first part, contains an object ID. The second part identifies the ._
-database that originally created this ID. This UUID is not part of your object, but can be retrieved by ._
-any code accessing the database, and by the replication system. Please see the db4o tutorial to learn more ._
-about db4o UUIDs.
-
-The fourth requirement is just as simple. Attatching a version number to an object is also only a single ._
-line of code:
-
-.c //Enable VersionNumbers for ALL stored objects. Call this before opening your database.
-Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE); ..
-
-The replication system will use this version number to invisibly tell when an object was last replicated, ._
-and if any changes have been made to the object since it was last replicated. 
-
-.1 Simple Replication ..
-
 In order to use replication, the following configuration settings have ._
 to be called before a database file is created or opened:
-
 .c Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE); ..
-(See the  .l ReplicatingExisting section below ..  on how to enable replication for ._
-existing databases)
+UUIDs are object IDs that are unique across all databases created with ._
+db4o. That is achieved by having the database's creation timestamp as part ._
+of its objects' UUIDs. The db4o UUID contains two parts. The first part, contains an object ID. The second part identifies the ._
+database that originally created this ID. 
 
-Both settings can also be configured on a per-class basis:
-.c Db4o.configure().objectClass(Foo.class).generateUUIDs(true);
-Db4o.configure().objectClass(Foo.class).generateVersionNumbers(true); ..
+The replication system will use this version number to invisibly tell when an object was last replicated, ._
+and if any changes have been made to the object since it was last replicated. An object's version number ._
+indicates the last time an object was modified. It is the database version at the moment of the modification. The database version starts at zero ._
+and is incremented every time a transaction is commited.
 
+.1 Simple Replication ..
 Now suppose we have opened two ObjectContainers from two different databases called ._
 "handheld" and "desktop", that we want to replicate. This is how we do it:
-
 .c ObjectContainer handheld = db4o.OpenFile("handheld.yap");
 ObjectContainer desktop = db4o.OpenFile("desktop.yap");
 
@@ -51,7 +31,6 @@ while (changed.hasNext())
 replication.commit(); 
 handheld.close();
 desktop.close(); ..
-
 We start by opening two ObjectContainers. The next line, creates the ReplicationSession. This object ._
 contains all of the replication-related logic.
 
