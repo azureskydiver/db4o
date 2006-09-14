@@ -8,10 +8,10 @@ public class IndexedPath extends IndexedNodeBase {
 	
 	public static IndexedNode newParentPath(IndexedNode next, QCon constraint) {
 		QCon parent = constraint.parent();
-		if (hasFieldIndex(parent)) {
-			return new IndexedPath((QConObject) parent, next);
+		if (!hasFieldIndex(parent)) {
+			return null;
 		}
-		return null;
+		return new IndexedPath((QConObject) parent, next);
 	}
 
 	private static boolean hasFieldIndex(QCon parent) {
