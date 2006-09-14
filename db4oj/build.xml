@@ -14,10 +14,11 @@
 	<property name="dir.build.classes.tools" value="${dir.build.classes}/tools" />
 	<property name="dir.build.classes.test" value="${dir.build.classes}/test" />
 	<property name="dir.build.jar" value="${dir.build}/lib" />
+	<property name="dir.j.test" value="../db4oj.tests" />
 	
 	<property name="dir.j.src.core" value="core/src" />
 	<property name="dir.src.tools" value="tools/src" />
-	<property name="dir.j.src.test" value="test/src" />
+	<property name="dir.j.src.test" value="${dir.j.test}/src" />
 		
 	<target name="init">
 		<tstamp />
