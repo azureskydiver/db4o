@@ -19,6 +19,17 @@ public class FreespaceManagerRam extends FreespaceManager {
         super(file);
     }
     
+    public void traverseFreeSlots(final Visitor4 visitor) {
+    	Tree.traverse(_freeByAddress, new Visitor4() {
+			public void visit(Object obj) {
+				FreeSlotNode node = (FreeSlotNode) obj;
+				int address = node._key;
+				int length = node._peer._key;
+				visitor.visit(new Slot(address, length));
+			}
+		});
+    }
+    
     private void addFreeSlotNodes(int a_address, int a_length) {
         FreeSlotNode addressNode = new FreeSlotNode(a_address);
         addressNode.createPeer(a_length);
@@ -111,7 +122,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         }
         if (Debug.xbytes) {
             if(! Debug.freespaceChecker){
-                _file.writeXBytes(a_address, a_length * blockSize());
+                _file.debugWriteXBytes(a_address, a_length * blockSize());
             }
         }
     }

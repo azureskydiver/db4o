@@ -1,13 +1,12 @@
 package com.db4o.db4ounit.btree;
 
+import com.db4o.Transaction;
 import com.db4o.inside.btree.BTreeRange;
 
 import db4ounit.Assert;
 
-
-
-public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {	
-
+public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
+	
 	public void testSingleRemoveAdd() {
 		
 		final Integer element = new Integer(1);
@@ -42,6 +41,24 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		remove(element);
 		add(element);
 		
+		assertSingleElement(element);
+	}
+	
+	public void testMultiTransactionCancelledRemoval() {
+		final Integer element = new Integer(1);
+		add(element);
+		commit();
+		
+		final Transaction trans1 = newTransaction();
+		final Transaction trans2 = newTransaction();
+		
+		remove(trans1, element);
+		assertSingleElement(trans2, element);
+		add(trans1, element);
+		assertSingleElement(trans1, element);
+		assertSingleElement(trans2, element);
+		
+		trans1.commit();
 		assertSingleElement(element);
 	}
 	

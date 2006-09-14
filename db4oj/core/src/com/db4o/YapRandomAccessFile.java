@@ -398,25 +398,29 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    public void writeXBytes(int a_address, int a_length) {
+    public void debugWriteXBytes(int a_address, int a_length) {
         if (Debug.xbytes) {
-            if (Deploy.flush) {
-                if (!configImpl().isReadOnly()) {
-                    if(a_address > 0 && a_length > 0){
-                        try {
-                            if(DTrace.enabled){
-                                DTrace.WRITE_XBYTES.logLength(a_address, a_length);
-                            }
-                            i_file.blockSeek(a_address);
-                            i_file.write(xBytes(a_address, a_length)._buffer, a_length);
-                            
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
+            writeXBytes(a_address, a_length);
         }
     }
+
+	public void writeXBytes(int a_address, int a_length) {
+		if (Deploy.flush) {
+		    if (!configImpl().isReadOnly()) {
+		        if(a_address > 0 && a_length > 0){
+		            try {
+		                if(DTrace.enabled){
+		                    DTrace.WRITE_XBYTES.logLength(a_address, a_length);
+		                }
+		                i_file.blockSeek(a_address);
+		                i_file.write(xBytes(a_address, a_length)._buffer, a_length);
+		                
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+		}
+	}
 
 }

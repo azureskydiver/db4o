@@ -46,6 +46,10 @@ public abstract class YapFile extends YapStream {
         super(a_parent);
     }
     
+	public FreespaceManager freespaceManager() {
+		return _freespaceManager;
+	}
+	
     public void blockSize(int blockSize, long fileLength){
         i_writeAt = blocksFor(fileLength);
     }
@@ -301,7 +305,7 @@ public abstract class YapFile extends YapStream {
         
         int blocksNeeded = blocksFor(bytes);
         if (Debug.xbytes && Deploy.overwrite) {
-            writeXBytes(i_writeAt, blocksNeeded * blockSize());
+            debugWriteXBytes(i_writeAt, blocksNeeded * blockSize());
         }
         int address = i_writeAt;
         i_writeAt += blocksNeeded;
@@ -712,17 +716,14 @@ public abstract class YapFile extends YapStream {
     // This is a reroute of writeBytes to write the free blocks
     // unchecked.
 
-    public abstract void writeXBytes(int a_address, int a_length);
+    public abstract void debugWriteXBytes(int a_address, int a_length);
 
     YapWriter xBytes(int a_address, int a_length) {
-        if (Debug.xbytes) {
-            YapWriter bytes = getWriter(i_systemTrans, a_address, a_length);
-            for (int i = 0; i < a_length; i++) {
-                bytes.append(YapConst.XBYTE);
-            }
-            return bytes;
-        } 
-        throw Exceptions4.virtualException();
+        YapWriter bytes = getWriter(i_systemTrans, a_address, a_length);
+        for (int i = 0; i < a_length; i++) {
+            bytes.append(YapConst.XBYTE);
+        }
+        return bytes;
     }
 
     final void writeTransactionPointer(int address) {

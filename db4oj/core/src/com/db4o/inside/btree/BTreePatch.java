@@ -9,7 +9,7 @@ public abstract class BTreePatch {
     
     protected final Transaction _transaction;
     
-    private final Object _object;
+    protected Object _object;
 
     public BTreePatch(Transaction transaction, Object obj) {
         _transaction = transaction;
@@ -40,11 +40,11 @@ public abstract class BTreePatch {
     public boolean isAdd() {
         return false;
     }
-
+    
     public Object key(Transaction trans){
         BTreePatch patch = forTransaction(trans);
         if(patch != null){
-            if(patch.isAdd()){
+            if(!patch.isRemove()){
                 return patch.getObject();
             }
         }else{

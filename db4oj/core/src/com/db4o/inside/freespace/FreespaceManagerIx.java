@@ -239,7 +239,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         if (Debug.xbytes) {
             if(_xBytes == null){
                 length = length * blockSize();
-                _file.writeXBytes(address, length);
+                _file.debugWriteXBytes(address, length);
             }else{
                 _xBytes.add(new int[] {address, length});
             }
