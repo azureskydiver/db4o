@@ -157,14 +157,23 @@ public class BTreeNode extends YapMeta{
 
     private BTreeAdd newAddPatch(Transaction trans) {
         sizeIncrement(trans);
-        return new BTreeAdd(trans, keyHandler().current());
+        return new BTreeAdd(trans, currentKey());
     }
 
+	private Object currentKey() {
+		return keyHandler().current();
+	}
+
 	private void cancelRemoval(Transaction trans, int index) {
-		final BTreeRemove patch = (BTreeRemove)keyPatch(index);
-        BTreeRemove nextPatch = patch.removeFor(trans);
-        _keys[index] = nextPatch == null ? patch.getObject() : nextPatch;
+		final BTreeUpdate patch = (BTreeUpdate)keyPatch(index);
+        BTreeUpdate nextPatch = patch.removeFor(trans);
+        _keys[index] = nextPatch == null ? currentKey() : newCancelledRemoval(trans, nextPatch);
+//        _keys[index] = nextPatch == null ? currentKey() : nextPatch;
         sizeIncrement(trans);
+	}
+
+	private BTreePatch newCancelledRemoval(Transaction trans, BTreeUpdate existingPatches) {
+		return new BTreeCancelledRemoval(trans, currentKey(), existingPatches);
 	}
 
 	private void sizeIncrement(Transaction trans) {
@@ -767,7 +776,7 @@ public class BTreeNode extends YapMeta{
             // The patch is a removal for another transaction, 
             // We need one for this transaction also.
             if(patch.isRemove()){
-                ((BTreeRemove)patch).append(newRemovePatch(trans));
+                ((BTreeUpdate)patch).append(newRemovePatch(trans));
                 return;
             }
         }
@@ -815,9 +824,9 @@ public class BTreeNode extends YapMeta{
 		return _count - 1;
 	}
 
-	private BTreeRemove newRemovePatch(Transaction trans) {
+	private BTreeUpdate newRemovePatch(Transaction trans) {
         _btree.sizeChanged(trans, -1);
-		return new BTreeRemove(trans, keyHandler().current());
+		return new BTreeRemove(trans, currentKey());
 	}
 
 	private void keyChanged(Transaction trans, int index) {
