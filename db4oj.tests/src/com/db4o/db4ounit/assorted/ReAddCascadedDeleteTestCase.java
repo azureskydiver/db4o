@@ -4,11 +4,15 @@ package com.db4o.db4ounit.assorted;
 
 import com.db4o.*;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.Assert;
+import db4ounit.extensions.Db4oTestCase;
 
 
 public class ReAddCascadedDeleteTestCase extends Db4oTestCase {
+	
+	public static void main(String[] args) {
+		new ReAddCascadedDeleteTestCase().runSolo();
+	}
     
     public static class Item {
         
@@ -32,6 +36,7 @@ public class ReAddCascadedDeleteTestCase extends Db4oTestCase {
     
     public void configure(){
         Db4o.configure().objectClass(Item.class).cascadeOnDelete(true);
+        indexField(Item.class, "_name");
     }
     
     protected void store() {
@@ -39,19 +44,23 @@ public class ReAddCascadedDeleteTestCase extends Db4oTestCase {
     }
     
     public void testDeletingAndReaddingMember() throws Exception{
-        Item i = query("parent");
-        db().delete(i);
-        db().set(i._member);
-        db().commit();
+        deleteParentAndReAddChild();
         
         reopen();
         
         Assert.isNotNull(query("child"));
         Assert.isNull(query("parent"));
     }
+
+	private void deleteParentAndReAddChild() {
+		Item i = query("parent");
+        db().delete(i);
+        db().set(i._member);
+        db().commit();
+	}
     
     private Item query(String name){
-        ObjectSet objectSet = db().get(new Item(name));
+    	ObjectSet objectSet = db().get(new Item(name));
         if (!objectSet.hasNext()) {
         	return null;
         }
