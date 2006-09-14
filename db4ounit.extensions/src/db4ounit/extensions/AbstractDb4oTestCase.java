@@ -93,4 +93,8 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected void indexField(Class clazz, String fieldName) {
 		Db4o.configure().objectClass(clazz).objectField(fieldName).indexed(true);
 	}
+
+	protected Transaction newTransaction() {
+		return stream().newTransaction();
+	}
 }
