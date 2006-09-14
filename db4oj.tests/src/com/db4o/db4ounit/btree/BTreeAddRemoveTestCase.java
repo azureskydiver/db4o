@@ -1,5 +1,9 @@
 package com.db4o.db4ounit.btree;
 
+import com.db4o.inside.btree.BTreeRange;
+
+import db4ounit.Assert;
+
 
 
 public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {	
@@ -16,6 +20,17 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		add(element);
 		
 		assertSingleElement(element);
+	}
+	
+	public void testSearchingRemoved() {
+		final int[] keys = new int[] { 3, 4, 7, 9 };
+		add(keys);
+		remove(4);
+		final BTreeRange result = search(4);
+		Assert.isTrue(result.isEmpty());
+		
+		final BTreeRange range = result.greater();
+		BTreeAssert.assertRange(new int[] { 7, 9 }, range);
 	}
 
 	public void testMultipleRemoveAdds() {

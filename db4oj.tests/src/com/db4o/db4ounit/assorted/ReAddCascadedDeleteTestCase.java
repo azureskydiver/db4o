@@ -20,8 +20,7 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
         
         public Item _member;
         
-        public Item() {
-            
+        public Item() {            
         }
 
         public Item(String name) {
@@ -36,7 +35,6 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
     
     public void configure(){
         Db4o.configure().objectClass(Item.class).cascadeOnDelete(true);
-        indexField(Item.class, "_name");
     }
     
     protected void store() {
@@ -66,6 +64,4 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
         }
         return (Item) objectSet.next();
     }
-    
-
 }
