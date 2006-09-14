@@ -5,12 +5,12 @@ import com.db4o.ext.Db4oUUID;
 
 import db4ounit.Assert;
 import db4ounit.TestRunner;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.Db4oTestSuiteBuilder;
 import db4ounit.extensions.fixtures.Db4oClientServer;
 import db4ounit.extensions.fixtures.Db4oInMemory;
 
-public class SimpleMapTestCase extends Db4oTestCase{
+public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	
 	protected void configure() {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);

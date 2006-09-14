@@ -7,7 +7,7 @@ import com.db4o.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ConfigurationSettingsTestCase extends Db4oTestCase {
+public class ConfigurationSettingsTestCase extends AbstractDb4oTestCase {
     
     public void testChangingUuidSettings() throws Exception {
         

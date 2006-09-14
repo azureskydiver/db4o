@@ -7,9 +7,9 @@ import com.db4o.YapFile;
 import com.db4o.config.ObjectClass;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
-public class SimpleTimeStampIdTestCase extends Db4oTestCase{
+public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase{
     
     public static class STSItem {
     	

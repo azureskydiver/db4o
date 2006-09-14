@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class NullWrapperTestCase extends Db4oTestCase {
+public class NullWrapperTestCase extends AbstractDb4oTestCase {
     
     static final int USE_AS_NULL = -9999;
     

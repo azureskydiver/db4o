@@ -6,9 +6,9 @@ import com.db4o.events.*;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
-public class EventRegistryTestCase extends Db4oTestCase {
+public class EventRegistryTestCase extends AbstractDb4oTestCase {
 	
 	public void testForObjectContainerReturnsSameInstance() {
 		Assert.areSame(

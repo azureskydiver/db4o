@@ -8,7 +8,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.Db4oSolo;
 
-public class SelectiveActivationTestCase extends Db4oTestCase {
+public class SelectiveActivationTestCase extends AbstractDb4oTestCase {
     private boolean debug = false;
 
     protected void configure() {

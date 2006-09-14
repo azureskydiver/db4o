@@ -8,12 +8,12 @@ import com.db4o.ObjectSet;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 /**
  * @exclude
  */
-public class CollectionFieldIndexTestCase extends Db4oTestCase {
+public class CollectionFieldIndexTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
 		new CollectionFieldIndexTestCase().runSolo();

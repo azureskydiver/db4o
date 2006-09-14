@@ -88,4 +88,24 @@ public class UpdateObjectTest extends ClientServerTestCase {
 			oc.close();
 		}
 	}
+	
+	public void concComplextCase(int seq) throws Exception {
+		store an object (store())
+		then one thread update it
+		check 
+		
+		instantiate 10 threads to read the object (read code in concRead())
+		then 5 threads compete to update the object conccurrently, one thread success, other rollback
+		check #2
+	}
+	concRead(int seq){
+		read the object 
+		if(seq % 2 ){
+			then update
+		}
+	}
+	
+	checkRead(){
+		check the result
+	}
 }

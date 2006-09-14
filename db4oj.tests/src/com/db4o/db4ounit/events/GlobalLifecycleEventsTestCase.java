@@ -8,9 +8,9 @@ import com.db4o.events.EventRegistryFactory;
 import com.db4o.events.ObjectEventArgs;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
-public class GlobalLifecycleEventsTestCase extends Db4oTestCase {
+public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	
 	public static final class Item {
 

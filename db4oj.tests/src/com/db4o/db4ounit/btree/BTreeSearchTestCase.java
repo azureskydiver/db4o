@@ -6,10 +6,10 @@ import com.db4o.*;
 import com.db4o.db4ounit.foundation.IntArrays4;
 import com.db4o.inside.btree.*;
 
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 
-public class BTreeSearchTestCase extends Db4oTestCase {
+public class BTreeSearchTestCase extends AbstractDb4oTestCase {
     
     public static void main(String[] arguments) {
         new BTreeSearchTestCase().runSolo();

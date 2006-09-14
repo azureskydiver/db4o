@@ -7,7 +7,7 @@ import com.db4o.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class SetCollectionOnUpdateTestCase extends Db4oTestCase {
+public class SetCollectionOnUpdateTestCase extends AbstractDb4oTestCase {
 	private static final String OLDNAME = "A";
 
 	public static class Data {

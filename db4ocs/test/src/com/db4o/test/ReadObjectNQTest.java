@@ -4,6 +4,7 @@ package com.db4o.test;
 
 import java.util.List;
 
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Predicate;
 import com.db4o.test.config.Configure;
 import com.db4o.test.data.SimpleObject;
@@ -16,7 +17,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 	private static String testString = "simple test string";
 
 	protected void store() throws Exception {
-		oc = openClient();
+		ExtObjectContainer oc = db();
 		try {
 			for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
 				oc.set(new SimpleObject(testString + i, i));
@@ -26,39 +27,28 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 		}
 	}
 
-	public void concReadSameObject() throws Exception {
-		oc = openClient();
-		try {
-			int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
-			final SimpleObject expected = new SimpleObject(testString + mid,
-					mid);
-			List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
-				public boolean match(SimpleObject o) {
-					return expected.equals(o);
-				}
-			});
-			Assert.areEqual(1, result.size());
-			Assert.areEqual(expected, result.get(0));
-		} finally {
-			oc.close();
-		}
+	public void concReadSameObject(ExtObjectContainer oc) throws Exception {
+		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
+		final SimpleObject expected = new SimpleObject(testString + mid, mid);
+		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
+			public boolean match(SimpleObject o) {
+				return expected.equals(o);
+			}
+		});
+		Assert.areEqual(1, result.size());
+		Assert.areEqual(expected, result.get(0));
 	}
 
-	public void concReadDifferentObject(int seq) throws Exception {
-		oc = openClient();
-		try {
-			final SimpleObject expected = new SimpleObject(testString + seq,
-					seq);
-			List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
-				public boolean match(SimpleObject o) {
-					return expected.equals(o);
-				}
-			});
-			Assert.areEqual(1, result.size());
-			Assert.areEqual(expected, result.get(0));
-		} finally {
-			oc.close();
-		}
+	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
+			throws Exception {
+		final SimpleObject expected = new SimpleObject(testString + seq, seq);
+		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
+			public boolean match(SimpleObject o) {
+				return expected.equals(o);
+			}
+		});
+		Assert.areEqual(1, result.size());
+		Assert.areEqual(expected, result.get(0));
 	}
 
 }

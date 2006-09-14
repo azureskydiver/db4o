@@ -5,9 +5,9 @@ package com.db4o.db4ounit.assorted;
 import com.db4o.Db4o;
 import com.db4o.foundation.Hashtable4;
 
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
-public class GetByUUIDTestCase extends Db4oTestCase {
+public class GetByUUIDTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
 		new GetByUUIDTestCase().runSolo();
