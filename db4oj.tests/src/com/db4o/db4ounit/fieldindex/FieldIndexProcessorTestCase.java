@@ -306,9 +306,5 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		query.descend("foo").constrain(new Integer(smallerThan)).smaller();
 		assertExpectedFoos(FieldIndexItem.class, expectedFoos, query);
 	}
-	
-	private Transaction newTransaction() {
-		return stream().newTransaction();
-	}
 
 }
