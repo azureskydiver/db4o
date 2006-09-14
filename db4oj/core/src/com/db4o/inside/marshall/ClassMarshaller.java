@@ -11,7 +11,7 @@ public abstract class ClassMarshaller {
     
     public MarshallerFamily _family;
     
-    public RawClassSpec readBasicInfo(Transaction trans,YapReader reader) {
+    public RawClassSpec readSpec(Transaction trans,YapReader reader) {
 		byte[] nameBytes=readName(trans, reader);
 		String className=trans.stream().stringIO().read(nameBytes);
 		readMetaClassID(reader); // skip

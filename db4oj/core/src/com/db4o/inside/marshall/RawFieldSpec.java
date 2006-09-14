@@ -10,6 +10,7 @@ public class RawFieldSpec {
 	private final boolean _isArray;
 	private final boolean _isNArray;
 	private final boolean _isVirtual;
+	private int _indexID;
 
 	public RawFieldSpec(final String name, final int handlerID, final byte attribs) {
 		_name = name;
@@ -19,6 +20,7 @@ public class RawFieldSpec {
         _isArray = yb.get();
         _isNArray = yb.get();
         _isVirtual=false;
+        _indexID=0;
 	}
 
 	public RawFieldSpec(final String name) {
@@ -28,6 +30,7 @@ public class RawFieldSpec {
         _isArray = false;
         _isNArray = false;
         _isVirtual=true;
+        _indexID=0;
 	}
 
 	public String name() {
@@ -52,5 +55,13 @@ public class RawFieldSpec {
 	
 	public boolean isVirtual() {
 		return _isVirtual;
+	}
+	
+	public int indexID() {
+		return _indexID;
+	}
+	
+	void indexID(int indexID) {
+		_indexID=indexID;
 	}
 }

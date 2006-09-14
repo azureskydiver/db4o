@@ -269,12 +269,19 @@ public final class YapClassCollection extends YapMeta {
         return new YapClassCollectionIterator(this, i_classes._first);
     } 
 
+    private static class ClassIDIterator extends Iterator4Impl {
+
+		public ClassIDIterator(Collection4 classes) {
+			super(classes._first);
+		}
+    	
+    	public Object current() {
+    		return new Integer(((YapClass)super.current()).getID());
+    	}
+    }
+    
     public Iterator4 ids(){
-        return new Iterator4Impl(i_classes._first) {
-        	public Object current() {
-        		return new Integer(((YapClass)super.current()).getID());
-        	}
-        };
+        return new ClassIDIterator(i_classes);
     } 
 
     public int ownLength() {

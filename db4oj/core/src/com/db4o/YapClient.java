@@ -171,7 +171,7 @@ public class YapClient extends YapStream implements ExtClient {
 		i_trans.commit();
 	}
     
-    int converterVersion() {
+    public int converterVersion() {
         return Converter.VERSION;
     }
 	

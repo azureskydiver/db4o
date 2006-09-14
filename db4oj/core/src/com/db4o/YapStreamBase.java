@@ -389,7 +389,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return configImpl();
     }
     
-    abstract int converterVersion();
+    public abstract int converterVersion();
 
     abstract QueryResultImpl createQResult(Transaction a_ta);
 

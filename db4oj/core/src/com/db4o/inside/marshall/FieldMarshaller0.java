@@ -20,7 +20,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         return len;
     }
     
-    public RawFieldSpec readBasicInfo(YapStream stream, YapReader reader) {
+    public RawFieldSpec readSpec(YapStream stream, YapReader reader) {
         
         String name = null;
         
@@ -45,16 +45,17 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
     
-    public YapField read(YapStream stream, YapField field, YapReader reader) {
-        String name = null;
-        
-        try {
-            name = StringMarshaller.readShort(stream, reader);
-        } catch (CorruptionException ce) {
-            return field;
-        }
-        
-        if (name.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
+    public final YapField read(YapStream stream, YapField field, YapReader reader) {
+    	RawFieldSpec spec=readSpec(stream, reader);
+    	return fromSpec(spec, stream, field);
+    }
+    
+    protected YapField fromSpec(RawFieldSpec spec,YapStream stream, YapField field) {
+    	if(spec==null) {
+    		return field;
+    	}
+    	String name=spec.name();
+        if (spec.isVirtual()) {
             YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
             for (int i = 0; i < virtuals.length; i++) {
                 if (name.equals(virtuals[i].getName())) {
@@ -62,35 +63,12 @@ public class FieldMarshaller0 implements FieldMarshaller {
                 }
             }
         }
-        field.init(field.getParentYapClass(), name);
-        int handlerID = reader.readInt();
-        YapBit yb = new YapBit(reader.readByte());
-        boolean isPrimitive = yb.get();
-        boolean isArray = yb.get();
-        boolean isNArray = yb.get();
         
-        field.init(handlerID, isPrimitive, isArray, isNArray);
+        field.init(field.getParentYapClass(), name);
+        field.init(spec.handlerID(), spec.isPrimitive(), spec.isArray(), spec.isNArray());
         field.loadHandler(stream);
         
         return field;
-
-// FIXME 
-//    	RawFieldSpec basicInfo=readBasicInfo(stream, reader);
-//    	String name=basicInfo.name();
-//        if (basicInfo.isVirtual()) {
-//            YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
-//            for (int i = 0; i < virtuals.length; i++) {
-//                if (name.equals(virtuals[i].getName())) {
-//                    return virtuals[i];
-//                }
-//            }
-//        }
-//        
-//        field.init(field.getParentYapClass(), name);
-//        field.init(basicInfo.handlerID(), basicInfo.isPrimitive(), basicInfo.isArray(), basicInfo.isNArray());
-//        field.loadHandler(stream);
-//        
-//        return field;
     }
 
 
