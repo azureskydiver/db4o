@@ -1,5 +1,5 @@
 <project name="drs" default="dist" basedir=".">
-	<description>dRS build file. Shared by both the cvs module and the distribution.</description>
+	<description>dRS build file</description>
 	<property file="machine.properties"/>
 	<property file="ant.properties"/>
 
