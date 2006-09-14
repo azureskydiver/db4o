@@ -56,7 +56,7 @@ public class BTreeNodeSearchResult {
     
     public BTreeRange createIncludingRange(BTreeNodeSearchResult end) {
     	BTreePointer firstPointer = firstValidPointer();
-        BTreePointer endPointer = end._foundMatch ? end._pointer.next() : end._pointer;
+        BTreePointer endPointer = end._foundMatch ? end._pointer.next() : end.firstValidPointer();
         return new BTreeRangeSingle(_transaction, _btree, firstPointer, endPointer);
     }
 
