@@ -1,3 +1,5 @@
+using com.db4o.test.other;
+
 namespace com.db4o.test.replication.db4ounit
 {
     public abstract class DrsTestCase : Db4oUnit.TestCase, Db4oUnit.TestLifeCycle
@@ -8,7 +10,13 @@ namespace com.db4o.test.replication.db4ounit
 
         static DrsTestCase()
         {
-            mappings = new System.Type[] { };
+            mappings = new System.Type[] { 
+                typeof(SPCChild), 
+                typeof(SPCParent), 
+                typeof(Car), 
+                typeof(Pilot),
+                typeof(SimpleArrayHolder),
+                typeof(SimpleArrayContent)};
         }
 
         private com.db4o.test.replication.db4ounit.DrsFixture _a;
@@ -162,6 +170,13 @@ namespace com.db4o.test.replication.db4ounit
         protected virtual void Delete(System.Type[] classes)
         {
             _a.Clean();
+//            for (int i = 0; i < classes.length; i++)
+//            {
+//                _a.Clean(); //.deleteAllInstances(classes[i]);
+//                _b.Clean(); //deleteAllInstances(classes[i]);
+//            }
+//            _a.Provider().Commit();
+//            _b.Provider().Commit(); 
         }
 
         protected virtual void ReplicateClass(com.db4o.inside.replication.TestableReplicationProviderInside
