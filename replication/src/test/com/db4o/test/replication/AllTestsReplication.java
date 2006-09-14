@@ -48,8 +48,8 @@ public class AllTestsReplication extends AllTests {
 		//transienthsql();
 		//hsqltransient();
 		//db4otransient();
-		//hsqlDb4o();
-		//db4oHsql();
+		hsqlDb4o();
+		db4oHsql();
 
 		//oracle();
 		//mysql();

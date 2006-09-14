@@ -82,7 +82,7 @@
 	<target name="build-all" depends="clean">
 		<antcall target="build-core"/>
 		<antcall target="build-example"/>
-		<antcall target="build-regression"/>
+		<!--<antcall target="build-regression"/>-->
 	</target>
 
 	<target name="javadoc">
@@ -132,8 +132,8 @@
 			            fullpath="${zipbasedir}/lib/${filename.drs.core.jar}"/>
 			<zipfileset file="${file.drs.tutorial.jar}"
 			            fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}"/>
-			<zipfileset file="${file.drs.test.jar}"
-			            fullpath="${zipbasedir}/lib/${filename.drs.test.jar}"/>
+			<!--<zipfileset file="${file.drs.test.jar}"
+			            fullpath="${zipbasedir}/lib/${filename.drs.test.jar}"/>-->
 		</zip>
 		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}"/>
 	</target>
