@@ -7,7 +7,8 @@ namespace com.db4o.test.other
             return new System.Type[] { typeof(TheSimplest), 
                                        typeof(GetByUUID),
                                        typeof(SimpleParentChild),
-                                       typeof(ReplicationEventTest) };
+                                       typeof(ReplicationEventTest),
+                                       typeof(SimpleArrayTest)};
         }
 
         public static void Main(string[] args)
