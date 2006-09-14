@@ -144,5 +144,9 @@ public class BTreePointer{
 			return y == null;
 		}
 		return x.equals(y);
+	}
+
+	public boolean isValid() {
+		return node().indexIsValid(transaction(), index());
 	}    
 }

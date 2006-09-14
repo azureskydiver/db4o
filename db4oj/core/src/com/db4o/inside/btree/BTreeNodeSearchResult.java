@@ -55,11 +55,15 @@ public class BTreeNodeSearchResult {
     }
     
     public BTreeRange createIncludingRange(BTreeNodeSearchResult end) {
+    	BTreePointer firstPointer = _pointer;
         BTreePointer endPointer = end._pointer;
+        if (null != firstPointer && !firstPointer.isValid()) {
+        	firstPointer = firstPointer.next();
+        }
         if(endPointer != null && end._foundMatch){
             endPointer = endPointer.next();
         }
-        return new BTreeRangeSingle(_transaction, _btree, _pointer, endPointer);
+        return new BTreeRangeSingle(_transaction, _btree, firstPointer, endPointer);
     }
    
 }
