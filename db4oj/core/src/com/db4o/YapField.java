@@ -542,7 +542,7 @@ public class YapField implements StoredField {
         return i_yapClass.getStream();
     }
     
-    boolean hasIndex() {
+    public boolean hasIndex() {
         // alive needs to be checked by all callers: Done
         if(MarshallerFamily.BTREE_FIELD_INDEX){
             return _index != null;

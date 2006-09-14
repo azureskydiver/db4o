@@ -94,7 +94,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
-    boolean hasIndex() {
+    public boolean hasIndex() {
     	return true;
     }
     
