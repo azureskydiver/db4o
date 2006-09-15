@@ -154,13 +154,13 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 
 	protected void delete(Class[] classes) {
-		_a.clean();
-/*		for (int i = 0; i < classes.length; i++) {
-			_a.deleteAllInstances(classes[i]);
-			_b.deleteAllInstances(classes[i]);
+		for (int i = 0; i < classes.length; i++) {
+			a().provider().deleteAllInstances(classes[i]);
+			b().provider().deleteAllInstances(classes[i]);
 		}
-		_a.commit();
-		_b.commit(); */
+		
+		a().provider().commit();
+		b().provider().commit(); 
 	}
 
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {

@@ -32,4 +32,12 @@ public class Db4oTests extends DrsTestSuite {
 				"db4o-cs-a", 4455), new Db4oDrsFixture("db4o-b"), getClass()))
 				.run();
 	}
+	
+	protected Class[] testCases() {
+		return all();
+	}
+
+	protected Class[] one() {
+		return new Class[] { ReplicationProviderTest.class, };
+	}
 }

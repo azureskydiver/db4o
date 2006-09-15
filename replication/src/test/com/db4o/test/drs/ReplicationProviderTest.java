@@ -241,7 +241,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		startReplication();
 
-		Pilot object1 = new Pilot("John Cleese", 42);
+		Pilot object1 = new Pilot("Albert Kwan", 25);
 		Db4oUUID uuid = new Db4oUUID(5678, B_SIGNATURE_BYTES);
 
 		ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
@@ -253,7 +253,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().rollbackReplication();
 
 		a().provider().startReplicationTransaction(B_SIGNATURE);
-		Assert.isNotNull(a().provider().produceReference(object1, null, null));
+		Assert.isNull(a().provider().produceReference(object1, null, null));
 		ReplicationReference byUUID = a().provider().produceReferenceByUUID(uuid, object1.getClass());
 		Assert.isNull(byUUID);
 		

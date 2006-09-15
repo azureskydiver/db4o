@@ -4,7 +4,7 @@ import com.db4o.YapClient;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.test.Test;
-import com.db4o.test.replication.SPCChild;
+import com.db4o.test.drs.SPCChild;
 
 public class ObjectVersionTest {
 	public void test() {
