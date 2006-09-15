@@ -20,12 +20,15 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 		return all();
 	}
 
-	abstract protected Class[] one() ;
+	protected Class[] one() {
+		return new Class[] { ReplicationProviderTest.class, };
+	}
 
 	protected Class[] all() {
 		return new Class[] {
 				// Simple
-				TheSimplest.class, ReplicationEventTest.class,
+				TheSimplest.class, 
+				ReplicationEventTest.class,
 				ReplicationProviderTest.class,
 				ReplicationAfterDeletionTest.class,
 				SimpleArrayTest.class,
@@ -34,15 +37,18 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				// Collection
 				MapTest.class,
 				ArrayReplicationTest.class,
-				// CollectionUuidTest.class,
-				ListTest.class, Db4oListTest.class, MapTest.class,
+				ListTest.class, 
+				Db4oListTest.class, 
+				MapTest.class,
 				SingleTypeCollectionReplicationTest.class,
 				MixedTypesCollectionReplicationTest.class,
 
 				// Complex
-				R0to4Runner.class, ReplicationFeaturesMain.class,
+				R0to4Runner.class, 
+				ReplicationFeaturesMain.class,
 
 				// General
-				CollectionHandlerImplTest.class, ReplicationTraversalTest.class };
+				CollectionHandlerImplTest.class, 
+				ReplicationTraversalTest.class };
 	}
 }
