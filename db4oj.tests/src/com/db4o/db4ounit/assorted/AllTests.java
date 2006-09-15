@@ -22,6 +22,7 @@ public class AllTests extends Db4oTestSuite {
             ReAddCascadedDeleteTestCase.class,
             SimplestPossibleTestCase.class,
             UUIDMigrationTestCase.class,
+            DatabaseUnicityTest.class
 		};
 	}
 }
