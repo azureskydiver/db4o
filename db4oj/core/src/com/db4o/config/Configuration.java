@@ -501,6 +501,20 @@ public interface Configuration {
     public void password(String pass);
 
     /**
+     * Sets the number of IDs to be prefetched for an ObjectSet in C/S mode
+     * 
+     * @param prefetchIDCount The number of IDs to be prefetched
+     */
+    void prefetchIDCount(int prefetchIDCount);
+
+    /**
+     * Sets the number of objects to be prefetched for an ObjectSet in C/S mode
+     * 
+     * @param prefetchObjectCount The number of objects to be prefetched
+     */
+    void prefetchObjectCount(int prefetchObjectCount);
+    
+    /**
      * turns readOnly mode on and off.
      * <br><br>This method configures the mode in which subsequent calls to
      * {@link com.db4o.Db4o#openFile Db4o.openFile()} will open files.

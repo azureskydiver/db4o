@@ -27,7 +27,7 @@ public class YapClient extends YapStream implements ExtClient {
 
 	private String password; // null denotes password not necessary
 
-	int[] prefetchedIDs = new int[YapConst.PREFETCH_ID_COUNT];
+	int[] _prefetchedIDs;
 
 	private YapClientThread _readerThread;
 
@@ -442,17 +442,19 @@ public class YapClient extends YapStream implements ExtClient {
 	}
 
 	public final int newUserObject() {
+		int prefetchIDCount = config().prefetchIDCount();
+		ensureIDCacheAllocated(prefetchIDCount);
 		YapWriter reader = null;
 		if (remainingIDs < 1) {
 			writeMsg(Msg.PREFETCH_IDS);
 			reader = expectedByteResponse(Msg.ID_LIST);
-			for (int i = YapConst.PREFETCH_ID_COUNT - 1; i >= 0; i--) {
-				prefetchedIDs[i] = reader.readInt();
+			for (int i = prefetchIDCount - 1; i >= 0; i--) {
+				_prefetchedIDs[i] = reader.readInt();
 			}
-			remainingIDs = YapConst.PREFETCH_ID_COUNT;
+			remainingIDs = prefetchIDCount;
 		}
 		remainingIDs--;
-		return prefetchedIDs[remainingIDs];
+		return _prefetchedIDs[remainingIDs];
 	}
 
 	int prefetchObjects(QResultClient qResult, Object[] prefetched,
@@ -711,6 +713,18 @@ public class YapClient extends YapStream implements ExtClient {
 	// Remove, for testing purposes only
 	public YapSocket socket() {
 		return i_socket;
+	}
+	
+	private void ensureIDCacheAllocated(int prefetchIDCount) {
+		if(_prefetchedIDs==null) {
+			_prefetchedIDs = new int[prefetchIDCount];
+			return;
+		}
+		if(prefetchIDCount>_prefetchedIDs.length) {
+			int[] newPrefetchedIDs=new int[prefetchIDCount];
+			System.arraycopy(_prefetchedIDs, 0, newPrefetchedIDs, 0, _prefetchedIDs.length);
+			_prefetchedIDs=newPrefetchedIDs;
+		}
 	}
 
 }

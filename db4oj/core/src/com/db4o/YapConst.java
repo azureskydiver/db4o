@@ -102,11 +102,7 @@ public final class YapConst
 	static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 5000;  // jump out of the loop every 5 seconds
 	static final int CLIENT_SOCKET_TIMEOUT = 300000;  // 5 minutes response time at the client side
 	static final int CONNECTION_TIMEOUT = Debug.longTimeOuts ? 1000000: 180000;  // 1 minute until we start pinging dead or blocking clients
-	
-	// C/S tuning paramaters
-	static final int PREFETCH_ID_COUNT = 10;
-	static final int PREFETCH_OBJECT_COUNT = 10;
-	
+		
 	// TODO: Consider to make configurable
     public static final int MAXIMUM_BLOCK_SIZE = 70000000; // 70 MB   
 	static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
