@@ -39,33 +39,62 @@ public class StringIndexTestCase extends AbstractDb4oTestCase {
         indexField(Item.class, "_name");
     }
     
-    public void testCancelRemoval() throws Exception {
-    	add("original");    	
-    	db().commit();
+    public void testCancelRemovalRollback() throws Exception {
     	
-    	rename("original", "updated");    	
-    	assertExists("updated");
-    	
-    	rename("updated", "original");
-    	db().commit();
+    	prepareCancelRemoval(trans(), "original");
+    	rename("original", "updated");
+    	db().rollback();
     	grafittiFreeSpace();
     	reopen();
     	
     	assertExists("original");
     }
     
+//    public void testCancelRemovalRollbackForMultipleTransactions() throws Exception {
+//    	final Transaction trans1 = newTransaction();
+//    	final Transaction trans2 = newTransaction();
+//    	
+//    	add("original");    	
+//    	db().commit();
+//    	
+//    	rename(trans1, "original", "updated");
+//    	rename(trans2, "original", "updated");
+//    	assertExists(trans1, "updated");
+//    	
+//    	rename(trans1, "updated", "original");
+//    	trans1.commit();
+//    	grafittiFreeSpace();
+//    	reopen();
+//    	
+//    	assertExists("original");
+//    }
+    
+    public void testCancelRemoval() throws Exception {
+    	prepareCancelRemoval(trans(), "original");
+    	db().commit();
+    	grafittiFreeSpace();
+    	reopen();
+    	
+    	assertExists("original");
+    }
+
+	private void prepareCancelRemoval(Transaction transaction, String itemName) {
+		add(itemName);    	
+    	db().commit();
+    	
+    	rename(transaction, itemName, "updated");    	
+    	assertExists(transaction, "updated");
+    	
+    	rename(transaction, "updated", itemName);
+    	assertExists(transaction, itemName);
+	}
+    
     public void testCancelRemovalForMultipleTransactions() throws Exception {
     	final Transaction trans1 = newTransaction();
     	final Transaction trans2 = newTransaction();
     	
-    	add("original");    	
-    	db().commit();
-    	
-    	rename(trans1, "original", "updated");
-    	rename(trans2, "original", "updated");
-    	assertExists(trans1, "updated");
-    	
-    	rename(trans1, "updated", "original");
+    	prepareCancelRemoval(trans1, "original");
+    	rename(trans2, "original", "updated");    	
     	trans1.commit();
     	grafittiFreeSpace();
     	reopen();

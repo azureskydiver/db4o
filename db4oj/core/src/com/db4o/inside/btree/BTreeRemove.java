@@ -23,23 +23,5 @@ public class BTreeRemove extends BTreeUpdate {
     public boolean isRemove() {
         return true;
     }
-
-	public Object rollback(Transaction trans, BTree btree) {
-	    if(_transaction == trans){
-	        if(hasNext()){
-	            return _next;
-	        }
-	        return getObject();
-	    }
-	    if(hasNext()){
-	        Object newNext = _next.rollback(trans, btree);
-	        if(newNext instanceof BTreeRemove){
-	            _next = (BTreeUpdate)newNext;
-	        } else{
-	            _next = null;
-	        }
-	    }
-	    return this;
-	}
     
 }

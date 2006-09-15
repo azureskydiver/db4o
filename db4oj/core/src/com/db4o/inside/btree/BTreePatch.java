@@ -48,7 +48,7 @@ public abstract class BTreePatch {
                 return patch.getObject();
             }
         }else{
-            if(isRemove()){
+            if(!isAdd()){
                 return getObject();
             }
         }

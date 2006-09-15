@@ -167,7 +167,8 @@ public class BTreeNode extends YapMeta{
 	private void cancelRemoval(Transaction trans, int index) {
 		final BTreeUpdate patch = (BTreeUpdate)keyPatch(index);
         BTreeUpdate nextPatch = patch.removeFor(trans);
-        _keys[index] = nextPatch == null ? currentKey() : newCancelledRemoval(trans, nextPatch);
+        _keys[index] = newCancelledRemoval(trans, nextPatch);
+        //_keys[index] = nextPatch == null ? currentKey() : newCancelledRemoval(trans, nextPatch);
 //        _keys[index] = nextPatch == null ? currentKey() : nextPatch;
         sizeIncrement(trans);
 	}
