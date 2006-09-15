@@ -106,5 +106,16 @@ public abstract class BTreeUpdate extends BTreePatch {
 	    }
 	    return this;
 	}
+	
+	public Object key(Transaction trans) {
+		BTreePatch patch = forTransaction(trans);
+		if (patch == null) {
+			return getObject();
+		}
+		if (patch.isRemove()) {
+			return No4.INSTANCE;
+		}
+		return patch.getObject();
+	}
 
 }
