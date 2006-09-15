@@ -1,8 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 package com.db4o.inside.btree;
 
-import com.db4o.*;
-import com.db4o.foundation.*;
+import com.db4o.Transaction;
 
 
 public abstract class BTreePatch {    
@@ -41,17 +40,5 @@ public abstract class BTreePatch {
         return false;
     }
     
-    public Object key(Transaction trans){
-        BTreePatch patch = forTransaction(trans);
-        if(patch != null){
-            if(!patch.isRemove()){
-                return patch.getObject();
-            }
-        }else{
-            if(!isAdd()){
-                return getObject();
-            }
-        }
-        return No4.INSTANCE;
-    }
+    public abstract Object key(Transaction trans);
 }

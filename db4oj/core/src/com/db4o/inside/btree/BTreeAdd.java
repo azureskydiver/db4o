@@ -35,6 +35,13 @@ public class BTreeAdd extends BTreePatch{
 	    }
 	    return null;
 	}
+	
+	public Object key(Transaction trans) {
+		if (_transaction != trans) {
+			return No4.INSTANCE;
+		}
+		return getObject();
+	}
 
 	public Object rollback(Transaction trans, BTree btree) {
 	    if(_transaction == trans){
