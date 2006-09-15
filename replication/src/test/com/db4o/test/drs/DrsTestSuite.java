@@ -20,9 +20,7 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 		return all();
 	}
 
-	protected Class[] one() {
-		return new Class[] { ArrayReplicationTest.class, };
-	}
+	abstract protected Class[] one() ;
 
 	protected Class[] all() {
 		return new Class[] {

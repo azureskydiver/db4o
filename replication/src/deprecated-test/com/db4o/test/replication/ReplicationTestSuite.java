@@ -51,7 +51,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] one() {
 		return new Class[]{
-				ReplicationFeaturesMain.class,
+				ReplicationProviderTest.class,
 				//Db4oMapTest.class,
 				//Db4oIdentityMapTest.class,
 		};

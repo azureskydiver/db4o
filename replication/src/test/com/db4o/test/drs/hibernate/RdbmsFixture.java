@@ -5,23 +5,26 @@ package com.db4o.test.drs.hibernate;
 import org.hibernate.cfg.Configuration;
 
 import com.db4o.test.drs.DrsFixture;
-import com.db4o.test.replication.CollectionHolder;
-import com.db4o.test.replication.Replicated;
-import com.db4o.test.replication.ReplicationTestCase;
-import com.db4o.test.replication.SPCChild;
-import com.db4o.test.replication.SPCParent;
-import com.db4o.test.replication.collections.ListContent;
-import com.db4o.test.replication.collections.ListHolder;
-import com.db4o.test.replication.collections.SimpleArrayContent;
-import com.db4o.test.replication.collections.SimpleArrayHolder;
-import com.db4o.test.replication.collections.map.MapContent;
-import com.db4o.test.replication.collections.map.MapHolder;
-import com.db4o.test.replication.provider.Car;
-import com.db4o.test.replication.provider.Pilot;
-import com.db4o.test.replication.r0tor4.R0;
+import com.db4o.test.drs.CollectionHolder;
+import com.db4o.test.drs.Replicated;
+import com.db4o.test.drs.SPCChild;
+import com.db4o.test.drs.SPCParent;
+import com.db4o.test.drs.ListContent;
+import com.db4o.test.drs.ListHolder;
+import com.db4o.test.drs.SimpleArrayContent;
+import com.db4o.test.drs.SimpleArrayHolder;
+import com.db4o.test.drs.MapContent;
+import com.db4o.test.drs.MapHolder;
+import com.db4o.test.drs.Car;
+import com.db4o.test.drs.Pilot;
+import com.db4o.test.drs.R0;
 
 public abstract class RdbmsFixture implements DrsFixture {
 	public static final Class[] mappings;
+	
+	Configuration config;
+	String dbUrl;
+	
 	static {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
 				SPCParent.class, SPCChild.class,
@@ -32,8 +35,8 @@ public abstract class RdbmsFixture implements DrsFixture {
 	}
 	
 	public static Configuration addAllMappings(Configuration cfg) {
-		for (int i = 0; i < ReplicationTestCase.mappings.length; i++) {
-			cfg.addClass(ReplicationTestCase.mappings[i]);
+		for (int i = 0; i < mappings.length; i++) {
+			cfg.addClass(mappings[i]);
 		}
 		return cfg;
 	}
