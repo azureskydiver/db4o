@@ -4,6 +4,7 @@ import com.db4odoc.f1.activating.ActivationExample;
 import com.db4odoc.f1.blobs.BlobExample;
 import com.db4odoc.f1.clientserver.ClientServerExample;
 import com.db4odoc.f1.clientserver.DeepExample;
+import com.db4odoc.f1.clientserver.ExtClientExample;
 import com.db4odoc.f1.clientserver.TransactionExample;
 import com.db4odoc.f1.debugging.DebugExample;
 import com.db4odoc.f1.diagnostics.DiagnosticExample;
@@ -37,5 +38,6 @@ public class Main {
     	EnumExample.main(args);
     	UUIDExample.main(args);
         IOExample.main(args);
+        ExtClientExample.main(args);
     }
 }
