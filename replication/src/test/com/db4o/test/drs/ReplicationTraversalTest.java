@@ -5,7 +5,6 @@ package com.db4o.test.drs;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.replication.Replicated;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
 
 import db4ounit.Assert;

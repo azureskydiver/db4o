@@ -2,7 +2,6 @@
 
 package com.db4o.test.drs;
 
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 public class ReplicationAfterDeletionTest extends DrsTestCase {
 

@@ -6,7 +6,6 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ObjectState;
 import com.db4o.replication.ReplicationEvent;
 import com.db4o.replication.ReplicationEventListener;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
 

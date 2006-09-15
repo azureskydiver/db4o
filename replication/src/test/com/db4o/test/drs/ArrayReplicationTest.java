@@ -7,7 +7,6 @@ import com.db4o.ObjectSet;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.replication.ArrayHolder;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 
 public class ArrayReplicationTest extends DrsTestCase {

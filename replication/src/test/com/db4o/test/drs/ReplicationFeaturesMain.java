@@ -7,7 +7,6 @@ import com.db4o.foundation.*;
 import com.db4o.inside.replication.*;
 import com.db4o.replication.*;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
 

@@ -1,18 +1,13 @@
 package com.db4o.test.drs;
 
-import com.db4o.test.replication.db4ounit.DrsTestSuite;
-import com.db4o.test.replication.db4ounit.DrsTestSuiteBuilder;
-import com.db4o.test.replication.db4ounit.fixtures.Db4oClientServerDrsFixture;
-import com.db4o.test.replication.db4ounit.fixtures.Db4oDrsFixture;
-
 import db4ounit.TestRunner;
 
-public class AllTests extends DrsTestSuite {
+public class Db4oTests extends DrsTestSuite {
 	public static void main(String[] args) {
-		new AllTests().runDb4oDb4o();
-		new AllTests().rundb4oCS();
-		new AllTests().runCSdb4o();
-		new AllTests().runCSCS();
+		new Db4oTests().rundb4oCS();
+		new Db4oTests().runCSdb4o();
+		new Db4oTests().runCSCS();
+		new Db4oTests().runDb4oDb4o();
 	}
 
 	public void runDb4oDb4o() {

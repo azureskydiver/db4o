@@ -4,7 +4,6 @@ package com.db4o.test.drs;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
 

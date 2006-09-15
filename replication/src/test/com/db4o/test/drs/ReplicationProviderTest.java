@@ -8,7 +8,6 @@ import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 //import com.db4o.test.Test;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
 
