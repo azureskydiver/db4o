@@ -76,7 +76,7 @@ public abstract class BTreeUpdate extends BTreePatch {
 	        if (hasNext()){
 	            return _next;
 	        }
-	        return No4.INSTANCE;
+	        return isRemove() ? No4.INSTANCE : getObject();
 	    }
 	    if(hasNext()){
 	        Object newNext = _next.internalCommit(trans, btree);
@@ -84,6 +84,24 @@ public abstract class BTreeUpdate extends BTreePatch {
 	            _next = null;
 	        } else{
 	        	_next = (BTreeUpdate)newNext;
+	        }
+	    }
+	    return this;
+	}
+
+	public Object rollback(Transaction trans, BTree btree) {
+	    if(_transaction == trans){
+	        if(hasNext()){
+	            return _next;
+	        }
+	        return getObject();
+	    }
+	    if(hasNext()){
+	        Object newNext = _next.rollback(trans, btree);
+	        if(newNext instanceof BTreeUpdate){
+	            _next = (BTreeUpdate)newNext;
+	        } else{
+	            _next = null;
 	        }
 	    }
 	    return this;
