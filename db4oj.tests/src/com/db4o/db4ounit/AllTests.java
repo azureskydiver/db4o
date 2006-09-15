@@ -18,7 +18,8 @@ public class AllTests extends Db4oTestSuite {
             com.db4o.db4ounit.fieldindex.AllTests.class,
             com.db4o.db4ounit.foundation.AllTests.class,
 			com.db4o.db4ounit.header.AllTests.class,
-			com.db4o.db4ounit.tools.AllTests.class
+			com.db4o.db4ounit.tools.AllTests.class,
+			com.db4o.db4ounit.marshall.AllTests.class,
 		};
 	}
 }

@@ -181,7 +181,7 @@ public final class YapString extends YapIndependantType {
          if(entry instanceof int[]){
              int[] addressLength = (int[])entry;
              writer.writeInt(addressLength[0]);
-             writer.writeInt(addressLength[0]);
+             writer.writeInt(addressLength[1]);
              return;
          }
          throw new IllegalArgumentException();
