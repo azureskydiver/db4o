@@ -3,7 +3,9 @@
 package com.db4o.test.replication.db4ounit.fixtures;
 
 import java.io.File;
-import java.io.IOException;
+
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
@@ -13,8 +15,7 @@ import com.db4o.io.MemoryIoAdapter;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.replication.db4ounit.DrsFixture;
 
-
-public class Db4oClientServerDrsFixture implements DrsFixture {
+public class HsqlFixture implements DrsFixture {
 
 	private static final String HOST = "localhost";
 	private static final String USERNAME = "db4o";
@@ -26,7 +27,7 @@ public class Db4oClientServerDrsFixture implements DrsFixture {
 	private TestableReplicationProviderInside _provider;
 	private int _port;
 	
-	public Db4oClientServerDrsFixture(String name, int port) {
+	public HsqlFixture(String name, int port) {
 		_name = name;
 		_port = port;
 	}
@@ -34,17 +35,12 @@ public class Db4oClientServerDrsFixture implements DrsFixture {
 	public TestableReplicationProviderInside provider() {
 		return _provider;
 	}
-	
-	// FIXME: escape _name
-	private String yapFileName() {
-		return "drs_cs_" + _name + ".yap";
-	}
 
 	public void clean() {
-		new File(yapFileName()).delete();
+		//do nothing
 	}
 
-	public void close(){
+	public void close() {
 		_db.close();
 		_provider.destroy();
 		_server.close();
@@ -54,20 +50,10 @@ public class Db4oClientServerDrsFixture implements DrsFixture {
 		return _db;
 	}
 
-	public void open(){
-		Db4o.configure().messageLevel(0);
-		
-		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
-		Db4o.configure().io(memoryIoAdapter);
-
-		_server = Db4o.openServer(yapFileName(), _port);
-		_server.grantAccess(USERNAME, PASSWORD);
-		try {
-			_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		_provider = new Db4oReplicationProvider(_db, _name);
+	public void open()  {
+//		Configuration configuration = new Configuration().configure(HSQL_CFG_XML);
+//		String url = JDBC_URL_HEAD + jdbcUrlCounter++;
+//		return configuration.setProperty(Environment.URL, url);
 	}
 
 }

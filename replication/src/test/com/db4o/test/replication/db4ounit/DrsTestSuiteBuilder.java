@@ -3,7 +3,6 @@
 package com.db4o.test.replication.db4ounit;
 
 import db4ounit.ReflectionTestSuiteBuilder;
-import db4ounit.extensions.*;
 
 public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
