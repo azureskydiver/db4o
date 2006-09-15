@@ -48,6 +48,14 @@ public abstract class DrsTestSuite  extends DrsTestCase implements
 						new Db4oDrsFixture("db4o-b"),
 						getClass())).run();
 	}
+	
+	public void runHsqlHsql() {
+		new TestRunner(
+				new DrsTestSuiteBuilder(
+						new Db4oClientServerDrsFixture("db4o-cs-a", 0xdb40),
+						new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
+						getClass())).run();
+	}
 
 	protected abstract Class[] testCases();
 

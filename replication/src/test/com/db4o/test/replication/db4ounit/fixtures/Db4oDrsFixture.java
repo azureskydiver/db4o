@@ -7,6 +7,7 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.io.MemoryIoAdapter;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.replication.db4ounit.DrsFixture;
 
@@ -34,7 +35,7 @@ public class Db4oDrsFixture implements DrsFixture {
 		new File(yapFileName()).delete();
 	}
 
-	public void close() throws Exception {
+	public void close() {
 		_provider.destroy();
 		_db.close();
 	}
@@ -43,7 +44,10 @@ public class Db4oDrsFixture implements DrsFixture {
 		return _db;
 	}
 
-	public void open() throws Exception {
+	public void open() {
+		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
+		Db4o.configure().io(memoryIoAdapter);
+		
 		_db = Db4o.openFile(new File(yapFileName()).getPath()).ext();
 		_provider = new Db4oReplicationProvider(_db, _name);
 	}

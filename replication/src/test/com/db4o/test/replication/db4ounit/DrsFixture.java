@@ -2,13 +2,14 @@
 
 package com.db4o.test.replication.db4ounit;
 
-//import com.db4o.inside.replication.ReplicationProviderInside;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 
-import db4ounit.extensions.Db4oFixture;
-
-public interface DrsFixture extends Db4oFixture {
-
-//	ReplicationProviderInside provider();
+public interface DrsFixture {
 	TestableReplicationProviderInside provider();
+
+	void open();
+
+	void close();
+
+	void clean();
 }
