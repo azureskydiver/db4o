@@ -52,6 +52,7 @@
     <Compile Include="src\com\db4odoc\f1\clientserver\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\ClientServerExample.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\DeepExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\clientserver\ExtClientExample.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\PressureSensorReadout.vb" />
     <Compile Include="src\com\db4odoc\f1\clientserver\SensorReadout.vb" />

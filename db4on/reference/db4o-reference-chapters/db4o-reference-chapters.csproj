@@ -134,6 +134,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\clientserver\ExtClientExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\clientserver\Pilot.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
