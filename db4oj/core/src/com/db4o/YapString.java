@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.slots.Slot;
 import com.db4o.reflect.*;
 
 
@@ -44,8 +45,8 @@ public final class YapString extends YapIndependantType {
         if(a_object instanceof YapReader){
             return a_object;    
         }
-        int[] slot = (int[]) a_object;
-        return a_trans.stream().readReaderByAddress(slot[0], slot[1]);
+        Slot s = (Slot) a_object;
+        return a_trans.stream().readReaderByAddress(s._address, s._length);
     }
     
     public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes){
@@ -137,12 +138,12 @@ public final class YapString extends YapIndependantType {
      * This readIndexEntry method reads from the actual index in the file.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      */
-    public Object readIndexEntry(YapReader a_reader) {
-        int[] pointer = new int[] {a_reader.readInt(), a_reader.readInt()};
-        if(pointer[0] == 0 && pointer[1] == 0){
-            return null;
-        }
-        return pointer; 
+    public Object readIndexEntry(YapReader reader) {
+    	Slot s = new Slot(reader.readInt(), reader.readInt());
+    	if (s._address == s._length)
+    		return null;
+    	
+    	return s; 
     }
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
@@ -178,10 +179,10 @@ public final class YapString extends YapIndependantType {
              writer.writeInt(entryAsWriter.getLength());
              return;
          }
-         if(entry instanceof int[]){
-             int[] addressLength = (int[])entry;
-             writer.writeInt(addressLength[0]);
-             writer.writeInt(addressLength[1]);
+         if(entry instanceof Slot){
+             Slot s = (Slot) entry;
+             writer.writeInt(s._address);
+             writer.writeInt(s._length);
              return;
          }
          throw new IllegalArgumentException();
@@ -216,9 +217,9 @@ public final class YapString extends YapIndependantType {
         if(obj instanceof String) {
             return StringMarshaller.writeShort(_stream, (String)obj);
         }
-        if(obj instanceof int[]){
-            int[] slot = (int[])obj;
-            return _stream.readReaderByAddress(slot[0], slot[1]);
+        if(obj instanceof Slot){
+            Slot s = (Slot) obj;
+            return _stream.readReaderByAddress(s._address, s._length);
         }
         return null;
     }
