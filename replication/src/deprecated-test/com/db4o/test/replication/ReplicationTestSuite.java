@@ -1,14 +1,9 @@
 package com.db4o.test.replication;
 
 import com.db4o.test.TestSuite;
-import com.db4o.test.other.ObjectVersionTest;
 import com.db4o.test.replication.collections.Db4oListTest;
 import com.db4o.test.replication.collections.ListTest;
 import com.db4o.test.replication.collections.SimpleArrayTest;
-import com.db4o.test.replication.collections.map.Db4oIdentityMapTest;
-import com.db4o.test.replication.collections.map.Db4oMapTest;
-import com.db4o.test.replication.collections.map.MapTest;
-import com.db4o.test.replication.collections.map.BugDrs8;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
