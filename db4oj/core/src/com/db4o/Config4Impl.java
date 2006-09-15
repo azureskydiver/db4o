@@ -93,6 +93,10 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
 	private final static KeySpec PASSWORD=new KeySpec((String)null);
     
+	private static final KeySpec PREFETCH_ID_COUNT = new KeySpec(10);
+
+	private static final KeySpec PREFETCH_OBJECT_COUNT = new KeySpec(10);
+    
 	private final static KeySpec READ_AS=new KeySpec(new Hashtable4(16));
     
 	private final static KeySpec READ_ONLY=new KeySpec(false);
@@ -127,7 +131,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     	//= new NIOFileAdapter(512,3);
     
 	private final static KeySpec ALIASES=new KeySpec(null);
-    
+
 	//  is null in the global configuration until deepClone is called
 	private YapStream        i_stream;                                                   
 
@@ -701,6 +705,22 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 
 	String password() {
 		return _config.getAsString(PASSWORD);
+	}
+
+	public void prefetchIDCount(int prefetchIDCount) {
+		_config.put(PREFETCH_ID_COUNT,prefetchIDCount);
+	}
+
+	public int prefetchIDCount() {
+		return _config.getAsInt(PREFETCH_ID_COUNT);
+	}
+
+	public void prefetchObjectCount(int prefetchObjectCount) {
+		_config.put(PREFETCH_OBJECT_COUNT,prefetchObjectCount);
+	}
+
+	public int prefetchObjectCount() {
+		return _config.getAsInt(PREFETCH_OBJECT_COUNT);
 	}
 
 	Hashtable4 readAs() {

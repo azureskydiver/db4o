@@ -7,23 +7,22 @@ package com.db4o;
  */
 class QResultClient extends QueryResultImpl {
 
-	private Object[] i_prefetched = new Object[YapConst.PREFETCH_OBJECT_COUNT];
-	private int i_remainingObjects;
-	private int i_prefetchCount = YapConst.PREFETCH_OBJECT_COUNT;
-	private int i_prefetchRight;
+	private Object[] _prefetchedObjects;
+	private int _remainingObjects;
+	private int _prefetchRight;
 
-	QResultClient(Transaction a_ta) {
-		super(a_ta);
+	QResultClient(Transaction ta) {
+		super(ta);
 	}
     
-    QResultClient(Transaction a_ta, int initialSize) {
-        super(a_ta, initialSize);
+    QResultClient(Transaction ta, int initialSize) {
+        super(ta, initialSize);
     }
 
 	
 	public boolean hasNext() {
 		synchronized (streamLock()) {
-			if(i_remainingObjects > 0){
+			if(_remainingObjects > 0){
 				return true;
 			}
 			return super.hasNext();
@@ -35,27 +34,29 @@ class QResultClient extends QueryResultImpl {
 		synchronized (streamLock()) {
 			YapClient stream = (YapClient)i_trans.stream();
 			stream.checkClosed();
-			if (i_remainingObjects < 1) {
+			int prefetchCount=stream.config().prefetchObjectCount();
+			ensureObjectCacheAllocated(prefetchCount);
+			if (_remainingObjects < 1) {
 				if (super.hasNext()) {
-					i_remainingObjects = (stream).prefetchObjects(this, i_prefetched, i_prefetchCount);
-					i_prefetchRight=i_remainingObjects;
+					_remainingObjects = (stream).prefetchObjects(this, _prefetchedObjects, prefetchCount);
+					_prefetchRight=_remainingObjects;
 				}
 			}
-			i_remainingObjects --;
-			if(i_remainingObjects < 0){
+			_remainingObjects --;
+			if(_remainingObjects < 0){
 				return null;
 			}
-			if(i_prefetched[i_prefetchRight-i_remainingObjects-1] == null){
+			if(_prefetchedObjects[_prefetchRight-_remainingObjects-1] == null){
 				return next();
 			}
-			return activate(i_prefetched[i_prefetchRight-i_remainingObjects-1]);
+			return activate(_prefetchedObjects[_prefetchRight-_remainingObjects-1]);
 		}
 	}
 	
 	public void reset() {
 		synchronized (streamLock()) {
-			i_remainingObjects = 0;
-			i_prefetchRight=0;
+			_remainingObjects = 0;
+			_prefetchRight=0;
 			super.reset();
 		}
 	}
@@ -76,5 +77,16 @@ class QResultClient extends QueryResultImpl {
 //		i_prefetched = temp;
 //	}
 
+	private void ensureObjectCacheAllocated(int prefetchObjectCount) {
+		if(_prefetchedObjects==null) {
+			_prefetchedObjects = new Object[prefetchObjectCount];
+			return;
+		}
+		if(prefetchObjectCount>_prefetchedObjects.length) {
+			Object[] newPrefetchedObjects=new Object[prefetchObjectCount];
+			System.arraycopy(_prefetchedObjects, 0, newPrefetchedObjects, 0, _prefetchedObjects.length);
+			_prefetchedObjects=newPrefetchedObjects;
+		}
+	}
 
 }
