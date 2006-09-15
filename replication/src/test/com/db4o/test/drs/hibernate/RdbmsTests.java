@@ -20,6 +20,9 @@ public class RdbmsTests extends DrsTestSuite {
 		
 		//new RdbmsTests().runHsqlHsql();
 		new RdbmsTests().runHsqldb4oCS();
+//		new RdbmsTests().runOracledb4oCS();
+//		new RdbmsTests().runMySQLdb4oCS();
+//		new RdbmsTests().runPostgreSQLdb4oCS();
 	}
 
 	public void runHsqlHsql() {
@@ -34,6 +37,30 @@ public class RdbmsTests extends DrsTestSuite {
 	public void runHsqldb4oCS() {
 		new TestRunner(new DrsTestSuiteBuilder(
 				new HsqlMemoryFixture("hsql-a"),
+				new Db4oClientServerDrsFixture("db4o-cs-b", 1234), 
+				getClass()))
+				.run();
+	}
+	
+	public void runOracledb4oCS() {
+		new TestRunner(new DrsTestSuiteBuilder(
+				new OracleFixture("Oracle-a"),
+				new Db4oClientServerDrsFixture("db4o-cs-b", 1234), 
+				getClass()))
+				.run();
+	}
+	
+	public void runMySQLdb4oCS() {
+		new TestRunner(new DrsTestSuiteBuilder(
+				new MySQLFixture("MySQL-a"),
+				new Db4oClientServerDrsFixture("db4o-cs-b", 1234), 
+				getClass()))
+				.run();
+	}
+	
+	public void runPostgreSQLdb4oCS() {
+		new TestRunner(new DrsTestSuiteBuilder(
+				new PostgreSQLFixture("PostgreSQL-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 1234), 
 				getClass()))
 				.run();

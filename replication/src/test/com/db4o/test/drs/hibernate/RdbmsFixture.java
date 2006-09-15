@@ -4,6 +4,7 @@ package com.db4o.test.drs.hibernate;
 
 import org.hibernate.cfg.Configuration;
 
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.drs.DrsFixture;
 import com.db4o.test.drs.CollectionHolder;
 import com.db4o.test.drs.Replicated;
@@ -22,8 +23,13 @@ import com.db4o.test.drs.R0;
 public abstract class RdbmsFixture implements DrsFixture {
 	public static final Class[] mappings;
 	
-	Configuration config;
-	String dbUrl;
+	protected String _name;
+	
+	protected TestableReplicationProviderInside _provider;
+	
+	protected Configuration config;
+	
+	protected String dbUrl;
 	
 	static {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
@@ -39,6 +45,22 @@ public abstract class RdbmsFixture implements DrsFixture {
 			cfg.addClass(mappings[i]);
 		}
 		return cfg;
+	}
+	
+	public RdbmsFixture(String name) {
+		_name = name;
+	}
+	
+	public void clean() {
+		
+	}
+	
+	public void close() {
+		_provider.destroy();
+	}
+
+	public TestableReplicationProviderInside provider() {
+		return _provider;
 	}
 	
 	protected Configuration createConfig() {
