@@ -13,14 +13,20 @@ public class AllTests extends Db4oTestSuite {
     }
 
 	protected Class[] testCases() {
-//        if(! MarshallerFamily.BTREE_FIELD_INDEX ){
-//            return new Class[]{};
-//        }
-		return  new Class[] {
-			IndexedNodeTestCase.class,
-            FieldIndexTestCase.class,
-            FieldIndexProcessorTestCase.class,
-            StringIndexTestCase.class,
+		Class[] fieldBased={
+				IndexedNodeTestCase.class,
+	            FieldIndexTestCase.class,
+	            FieldIndexProcessorTestCase.class,
 		};
+		Class[] neutral={
+	            StringIndexTestCase.class,
+		};
+		Class[] tests=neutral;
+        if(MarshallerFamily.BTREE_FIELD_INDEX ){
+        	tests=new Class[fieldBased.length+neutral.length];
+        	System.arraycopy(neutral, 0, tests, 0, neutral.length);
+        	System.arraycopy(fieldBased, 0, tests, neutral.length, fieldBased.length);
+        }
+        return tests;
     }
 }
