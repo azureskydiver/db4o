@@ -153,7 +153,8 @@ public class ReplicationConfiguratorTest implements TestCase {
 			cfg = HibernateUtil.createNewDbConfig();
 			reuseUrl = cfg.getProperty(Environment.URL);
 		} else {
-			cfg = HibernateUtil.reuse(reuseUrl);
+			Configuration configuration = new Configuration().configure(HibernateUtil.HSQL_CFG_XML);
+			cfg = configuration.setProperty(Environment.URL, reuseUrl);
 		}
 		
 		Util.addClass(cfg, CollectionHolder.class);

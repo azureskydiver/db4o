@@ -7,24 +7,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
 
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 
 public class HsqlMemoryFixture extends RdbmsFixture {
-	private static final String HSQL_CFG_XML = "com/db4o/test/drs/hibernate/hibernate-HSQL.cfg.xml";
+	private static final String HSQL_CFG_XML = "com/db4o/test/drs/hibernate/Hsql.cfg.xml";
 	private static final String JDBC_URL_HEAD = "jdbc:hsqldb:mem:unique_";
 	private static int jdbcUrlCounter = 0;
-	
-	private String _name;
-	
-	private TestableReplicationProviderInside _provider;
-	
+		
 	public HsqlMemoryFixture(String name) {
-		_name = name;
-	}
-
-	public TestableReplicationProviderInside provider() {
-		return _provider;
+		super(name);
 	}
 
 	public void clean() {
@@ -45,10 +36,6 @@ public class HsqlMemoryFixture extends RdbmsFixture {
 		tx.commit();
 		session.close();
 		sf.close();
-	}
-
-	public void close() {
-		_provider.destroy();
 	}
 
 	public void open()  {
