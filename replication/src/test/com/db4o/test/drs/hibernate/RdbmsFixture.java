@@ -4,6 +4,7 @@ package com.db4o.test.drs.hibernate;
 
 import org.hibernate.cfg.Configuration;
 
+import com.db4o.test.drs.DrsFixture;
 import com.db4o.test.replication.CollectionHolder;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.ReplicationTestCase;
@@ -15,7 +16,6 @@ import com.db4o.test.replication.collections.SimpleArrayContent;
 import com.db4o.test.replication.collections.SimpleArrayHolder;
 import com.db4o.test.replication.collections.map.MapContent;
 import com.db4o.test.replication.collections.map.MapHolder;
-import com.db4o.test.replication.db4ounit.DrsFixture;
 import com.db4o.test.replication.provider.Car;
 import com.db4o.test.replication.provider.Pilot;
 import com.db4o.test.replication.r0tor4.R0;

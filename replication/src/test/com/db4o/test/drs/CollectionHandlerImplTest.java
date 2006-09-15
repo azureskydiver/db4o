@@ -13,7 +13,6 @@ import java.util.Vector;
 import com.db4o.inside.replication.CollectionHandlerImpl;
 import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.reflect.Reflector;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 import db4ounit.Assert;
 
 public class CollectionHandlerImplTest extends DrsTestCase {

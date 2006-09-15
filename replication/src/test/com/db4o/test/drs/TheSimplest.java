@@ -7,7 +7,6 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.replication.SPCChild;
-import com.db4o.test.replication.db4ounit.DrsTestCase;
 
 import db4ounit.Assert;
 
