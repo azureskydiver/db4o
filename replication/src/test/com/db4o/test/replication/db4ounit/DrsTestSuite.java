@@ -2,61 +2,65 @@
 
 package com.db4o.test.replication.db4ounit;
 
-import com.db4o.test.replication.db4ounit.fixtures.Db4oClientServerDrsFixture;
-import com.db4o.test.replication.db4ounit.fixtures.Db4oDrsFixture;
+import com.db4o.test.drs.ArrayReplicationTest;
+import com.db4o.test.drs.CollectionHandlerImplTest;
+import com.db4o.test.drs.Db4oListTest;
+import com.db4o.test.drs.ListTest;
+import com.db4o.test.drs.MapTest;
+import com.db4o.test.drs.MixedTypesCollectionReplicationTest;
+import com.db4o.test.drs.R0to4Runner;
+import com.db4o.test.drs.ReplicationAfterDeletionTest;
+import com.db4o.test.drs.ReplicationEventTest;
+import com.db4o.test.drs.ReplicationFeaturesMain;
+import com.db4o.test.drs.ReplicationProviderTest;
+import com.db4o.test.drs.ReplicationTraversalTest;
+import com.db4o.test.drs.SimpleArrayTest;
+import com.db4o.test.drs.SimpleParentChild;
+import com.db4o.test.drs.SingleTypeCollectionReplicationTest;
+import com.db4o.test.drs.TheSimplest;
 
-import db4ounit.*;
+import db4ounit.TestSuite;
+import db4ounit.TestSuiteBuilder;
 
 /**
  * @exclude
  */
-public abstract class DrsTestSuite  extends DrsTestCase implements
+public abstract class DrsTestSuite extends DrsTestCase implements
 		TestSuiteBuilder {
 
 	public TestSuite build() {
 		return new DrsTestSuiteBuilder(a(), b(), testCases()).build();
 	}
-	
-	public void runDb4oDb4o() {
-		new TestRunner(
-				new DrsTestSuiteBuilder(
-						new Db4oDrsFixture("db4o-a"),
-						new Db4oDrsFixture("db4o-b"),
-						getClass())).run();
+
+	protected Class[] testCases() {
+		return all();
 	}
 
-	public void runCSCS() {
-		new TestRunner(
-				new DrsTestSuiteBuilder(
-						new Db4oClientServerDrsFixture("db4o-cs-a", 0xdb40),
-						new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
-						getClass())).run();
+	protected Class[] one() {
+		return new Class[] { ArrayReplicationTest.class, };
 	}
 
-	public void rundb4oCS() {
-		new TestRunner(
-				new DrsTestSuiteBuilder(
-						new Db4oDrsFixture("db4o-a"),
-						new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
-						getClass())).run();
-	}
+	protected Class[] all() {
+		return new Class[] {
+				// Simple
+				TheSimplest.class, ReplicationEventTest.class,
+				ReplicationProviderTest.class,
+				ReplicationAfterDeletionTest.class,
+				SimpleArrayTest.class,
+				SimpleParentChild.class,
 
-	public void runCSdb4o() {
-		new TestRunner(
-				new DrsTestSuiteBuilder(
-						new Db4oClientServerDrsFixture("db4o-cs-a", 4455),
-						new Db4oDrsFixture("db4o-b"),
-						getClass())).run();
-	}
-	
-	public void runHsqlHsql() {
-		new TestRunner(
-				new DrsTestSuiteBuilder(
-						new Db4oClientServerDrsFixture("db4o-cs-a", 0xdb40),
-						new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
-						getClass())).run();
-	}
+				// Collection
+				MapTest.class,
+				ArrayReplicationTest.class,
+				// CollectionUuidTest.class,
+				ListTest.class, Db4oListTest.class, MapTest.class,
+				SingleTypeCollectionReplicationTest.class,
+				MixedTypesCollectionReplicationTest.class,
 
-	protected abstract Class[] testCases();
+				// Complex
+				R0to4Runner.class, ReplicationFeaturesMain.class,
 
+				// General
+				CollectionHandlerImplTest.class, ReplicationTraversalTest.class };
+	}
 }
