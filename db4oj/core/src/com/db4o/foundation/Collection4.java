@@ -215,15 +215,12 @@ public class Collection4 implements DeepClone, Unversioned {
     }
     
     public String toString() {
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
         if(_size == 0){
             return "[]";
         }
         StringBuffer sb = new StringBuffer();
         sb.append("[");
-        Iterator4 i = iterator();
+        Iterator4 i = strictIterator();
         i.moveNext();
         sb.append(i.current());
         while(i.moveNext()){
