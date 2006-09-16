@@ -64,6 +64,11 @@ public final class Assert {
 		fail(message);
 	}
 	
+	public static void areEqual(double expected, double actual) {
+		if (expected == actual) return;
+		fail(failureMessage(new Double(expected), new Double(actual)));
+	}
+	
 	public static void areEqual(long expected, long actual) {
 		if (expected == actual) return;
 		fail(failureMessage(new Long(expected), new Long(actual)));
@@ -101,5 +106,5 @@ public final class Assert {
 
 	public static void isInstanceOf(Class expectedClass, Object actual) {
 		isTrue(expectedClass.isInstance(actual), failureMessage(expectedClass, actual == null ? null : actual.getClass()));
-	}		
+	}			
 }
