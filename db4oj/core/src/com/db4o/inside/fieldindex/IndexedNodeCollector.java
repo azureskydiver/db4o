@@ -68,7 +68,7 @@ public class IndexedNodeCollector {
 				continue;
 			}
 			if (isLeaf(qcon)) {
-				if (qcon.canLoadByIndex()) {					
+				if (qcon.canLoadByIndex() && qcon.canBeIndexLeaf()) {					
 					final QConObject conObject = (QConObject) qcon;
 					if (conObject.hasJoins()) {
 						collectJoinedNode(conObject);
