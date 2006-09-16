@@ -79,14 +79,17 @@ public abstract class BTreeUpdate extends BTreePatch {
 	        return getCommittedObject();
 	    }
 	    if(hasNext()){
-	        Object newNext = _next.internalCommit(trans, btree);
-	        if(newNext instanceof BTreeUpdate){
-	        	_next = (BTreeUpdate)newNext;
-	        } else {
-	            _next = null;
-	        }
+	        setNextIfPatch(_next.internalCommit(trans, btree));
 	    }
 	    return this;
+	}
+
+	private void setNextIfPatch(Object newNext) {
+		if(newNext instanceof BTreeUpdate){
+			_next = (BTreeUpdate)newNext;
+		} else {
+		    _next = null;
+		}
 	}
 
 	protected abstract Object getCommittedObject();
@@ -99,12 +102,7 @@ public abstract class BTreeUpdate extends BTreePatch {
 	        return getObject();
 	    }
 	    if(hasNext()){
-	        Object newNext = _next.rollback(trans, btree);
-	        if(newNext instanceof BTreeUpdate){
-	            _next = (BTreeUpdate)newNext;
-	        } else{
-	            _next = null;
-	        }
+	        setNextIfPatch(_next.rollback(trans, btree));
 	    }
 	    return this;
 	}
