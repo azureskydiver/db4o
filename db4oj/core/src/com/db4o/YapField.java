@@ -225,7 +225,7 @@ public class YapField implements StoredField {
         }
         return fieldName.equals(getName())  && getParentYapClass() != null && !getParentYapClass().isInternal(); 
     }
-
+    
     boolean canHold(ReflectClass claxx) {
         // alive() is checked in QField caller
         if (claxx == null) {
@@ -567,9 +567,6 @@ public class YapField implements StoredField {
                     i_config = (Config4Field) a_yapClass.i_config
                         .objectField(i_name);
                 }
-            }
-            if (Debug.indexAllFields) {
-                i_config.indexed(true);
             }
         }
     }
@@ -979,6 +976,5 @@ public class YapField implements StoredField {
         _index.free(systemTrans);
         stream.setDirtyInSystemTransaction(getParentYapClass());
         _index = null;
-    }
-    
+    }    
 }
