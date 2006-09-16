@@ -13,7 +13,7 @@ public class FieldIndexProcessor {
 	
 	public FieldIndexProcessorResult run() {
 		IndexedNode bestIndex = selectBestIndex();
-		if (null == bestIndex || bestIndex instanceof MultiFieldNode) {
+		if (null == bestIndex) {
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
 		if (bestIndex.resultSize() > 0) {

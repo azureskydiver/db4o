@@ -16,6 +16,11 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		new FieldIndexProcessorTestCase().runSolo();
 	}
 	
+	protected void configure() {
+		super.configure();
+		indexField(NonIndexedFieldIndexItem.class, "indexed");
+	}
+	
 	public void store() {
 		storeItems(new int[] { 3, 4, 7, 9 });
 		storeComplexItems(
@@ -131,12 +136,28 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 3, 7, 9 }, query);
     }
     
-    public void _testCantOptimizeDifferentLevels(){
+    public void testCantOptimizeOrInvolvingNonIndexedField() {
+    	final Query query = createQuery(NonIndexedFieldIndexItem.class);
+    	final Constraint c1 = query.descend("indexed").constrain(new Integer(1));
+    	final Constraint c2 = query.descend("foo").constrain(new Integer(2));
+    	c1.or(c2);
+    	assertCantOptimize(query);
+    }
+    
+    public void testCantOptimizeDifferentLevels(){
         final Query query = createComplexItemQuery();
         Constraint c1 = query.descend("child").descend("foo").constrain(new Integer(4)).smaller();
         Constraint c2 = query.descend("foo").constrain(new Integer(7)).greater();
         c1.or(c2);
         assertCantOptimize(query);
+    }
+    
+    public void testCantOptimizeJoinOnNonIndexedFields() {
+    	final Query query = createQuery(NonIndexedFieldIndexItem.class);
+    	final Constraint c1 = query.descend("foo").constrain(new Integer(1));
+    	final Constraint c2 = query.descend("foo").constrain(new Integer(2));
+    	c1.or(c2);
+    	assertCantOptimize(query);
     }
 	
 	private void assertCantOptimize(Query query) {

@@ -12,8 +12,8 @@ public class IndexedPath extends IndexedNodeBase {
 			return null;
 		}
 		return new IndexedPath((QConObject) parent, next);
-	}
-
+	}	
+	
 	private static boolean hasFieldIndex(QCon parent) {
 		QField field = parent.getField();
 		if (null == field) return false;
