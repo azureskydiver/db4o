@@ -10,6 +10,24 @@ import db4ounit.TestCase;
 
 public class Hashtable4TestCase implements TestCase {
 	
+	public void testContainsKey() {
+		Hashtable4 table = new Hashtable4();
+		Assert.isFalse(table.containsKey(null));
+		Assert.isFalse(table.containsKey("foo"));
+		
+		table.put("foo", null);
+		Assert.isTrue(table.containsKey("foo"));
+		
+		table.put("bar", "baz");
+		Assert.isTrue(table.containsKey("bar"));
+		Assert.isFalse(table.containsKey("baz"));
+		Assert.isTrue(table.containsKey("foo"));
+		
+		table.remove("foo");
+		Assert.isTrue(table.containsKey("bar"));
+		Assert.isFalse(table.containsKey("foo"));
+	}
+	
 	public void testByteArrayKeys() {
 		byte[] key1 = new byte[] { 1, 2, 3 };
 		byte[] key2 = new byte[] { 3, 2, 1 };
