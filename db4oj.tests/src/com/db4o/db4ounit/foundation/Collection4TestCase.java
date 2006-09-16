@@ -42,4 +42,14 @@ public class Collection4TestCase implements TestCase {
 		}
 		Assert.isFalse(iterator.moveNext());
 	}
+	
+	public void testToString() {
+		Collection4 c = new Collection4();
+		Assert.areEqual("[]", c.toString());
+		
+		c.add("foo");
+		Assert.areEqual("[foo]", c.toString());
+		c.add("bar");
+		Assert.areEqual("[foo, bar]", c.toString());
+	}
 }
