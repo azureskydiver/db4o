@@ -50,24 +50,26 @@ public class StringIndexTestCase extends AbstractDb4oTestCase {
     	assertExists("original");
     }
     
-//    public void testCancelRemovalRollbackForMultipleTransactions() throws Exception {
-//    	final Transaction trans1 = newTransaction();
-//    	final Transaction trans2 = newTransaction();
-//    	
-//    	add("original");    	
-//    	db().commit();
-//    	
-//    	rename(trans1, "original", "updated");
-//    	rename(trans2, "original", "updated");
-//    	assertExists(trans1, "updated");
-//    	
-//    	rename(trans1, "updated", "original");
-//    	trans1.commit();
-//    	grafittiFreeSpace();
-//    	reopen();
-//    	
-//    	assertExists("original");
-//    }
+    public void _testCancelRemovalRollbackForMultipleTransactions() throws Exception {
+    	final Transaction trans1 = newTransaction();
+    	final Transaction trans2 = newTransaction();
+        
+        prepareCancelRemoval(trans1, "original");
+        assertExists(trans2, "original");
+    	
+        trans1.rollback();
+        assertExists(trans2, "original");
+        
+        add(trans2, "second");
+        assertExists(trans2, "original");
+        
+        trans2.commit();
+        assertExists(trans2, "original");
+        
+    	grafittiFreeSpace();
+        reopen();
+        assertExists("original");
+    }
     
     public void testCancelRemoval() throws Exception {
     	prepareCancelRemoval(trans(), "original");
