@@ -45,7 +45,32 @@ public class BTreeRangeSingle implements BTreeRange {
 		return BTreePointer.equals(_first, _end);
 	}
     
-    public int size() {
+    public int size(){
+        if(isEmpty()){
+            return 0;
+        }
+        
+// TODO: This was an attempt to improve size calculation.
+//       Since all nodes are read, there is no improvement.        
+
+//        BTreeNode currentNode = _first.node();
+//        int sizeOnFirst = currentNode.count() - _first.index();
+//
+//        BTreeNode endNode = _end == null ? null : _end.node();
+//        int substractForEnd = 
+//            (endNode == null) ? 0 : (endNode.count() -  _end.index());
+//        
+//        int size = sizeOnFirst - substractForEnd;
+//        while(! currentNode.equals(endNode)){
+//            currentNode = currentNode.nextNode();
+//            if(currentNode == null){
+//                break;
+//            }
+//            currentNode.prepareRead(transaction());
+//            size += currentNode.count(); 
+//        }
+//        return size;
+        
     	int size = 0;
 		final Iterator4 i = keys();
 		while (i.moveNext()) {

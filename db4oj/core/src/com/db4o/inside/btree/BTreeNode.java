@@ -383,18 +383,16 @@ public class BTreeNode extends YapMeta{
         free(trans);
         return true;
     }
-
-    
-    
     
     public boolean equals(Object obj) {
-        
-        // For now: equivalence only
-        
-        // In the future there could maybe be multiple reading instances
-        // against a BTreeNode so the comparison would happen by ID 
-        
-        return this == obj;
+        if (this == obj){
+            return true;
+        }
+        if(! (obj instanceof BTreeNode)){
+            return false;
+        }
+        BTreeNode other = (BTreeNode) obj;
+        return getID() == other.getID();
     }
     
     private void free(Transaction trans){
