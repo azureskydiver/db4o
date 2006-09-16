@@ -19,6 +19,7 @@ public class AllTests extends Db4oTestSuite {
 	            FieldIndexProcessorTestCase.class,
 		};
 		Class[] neutral={
+				DoubleFieldIndexTestCase.class,
 	            StringIndexTestCase.class,
 		};
 		Class[] tests=neutral;

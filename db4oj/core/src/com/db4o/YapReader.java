@@ -23,6 +23,10 @@ public class YapReader {
 		_buffer = new byte[a_length];
 	}
 	
+	public void seek(int offset) {
+		_offset = offset;
+	}
+	
     public void append(byte a_byte) {
         _buffer[_offset++] = a_byte;
     }
@@ -261,5 +265,4 @@ public class YapReader {
 	public void copyTo(YapReader to, int fromOffset, int toOffset, int length) {
 		System.arraycopy(_buffer, fromOffset, to._buffer, toOffset, length);
 	}
-    
 }
