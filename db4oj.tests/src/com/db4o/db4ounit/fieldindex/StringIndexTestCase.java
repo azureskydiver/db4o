@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.fieldindex;
 
 import com.db4o.*;
+import com.db4o.db4ounit.btree.ExpectingVisitor;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.freespace.*;
 import com.db4o.inside.slots.Slot;
@@ -21,25 +22,46 @@ public class StringIndexTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static class Item {        
-        public String _name;
+        public String name;
         
         public Item() {            
         }
 
-        public Item(String name) {
-            _name = name;
-        }
-        
-        public void name(String name) {
-        	_name = name;
+        public Item(String name_) {
+            name = name_;
         }
 	}
     
     public void configure(){
-        indexField(Item.class, "_name");
+        indexField(Item.class, "name");
     }
     
-    public void testCancelRemovalRollback() throws Exception {
+    public void testNotEquals() {
+    	add("foo");
+    	add("bar");
+    	add("baz");
+    	add(null);
+    	
+    	final Query query = newQuery(Item.class);
+    	query.descend("name").constrain("bar").not();
+		assertItems(new String[] { "foo", "baz", null }, query.execute());
+    }
+
+	private void assertItems(final String[] expected, final ObjectSet result) {
+		final ExpectingVisitor expectingVisitor = new ExpectingVisitor(toObjectArray(expected));
+    	while (result.hasNext()) {
+    		expectingVisitor.visit(((Item)result.next()).name);
+    	}
+    	expectingVisitor.assertExpectations();
+	}
+    
+    private Object[] toObjectArray(String[] source) {
+    	Object[] array = new Object[source.length];
+    	System.arraycopy(source, 0, array, 0, source.length);
+    	return array;
+	}
+
+	public void testCancelRemovalRollback() throws Exception {
     	
     	prepareCancelRemoval(trans(), "original");
     	rename("original", "updated");
@@ -145,7 +167,7 @@ public class StringIndexTestCase extends AbstractDb4oTestCase {
 	private void rename(Transaction transaction, String from, String to) {
 		final Item item = query(transaction, from);
 		Assert.isNotNull(item);
-		item.name(to);
+		item.name = to;
 		stream().set(transaction, item);
 	}
 
@@ -168,7 +190,7 @@ public class StringIndexTestCase extends AbstractDb4oTestCase {
 	private Query newQuery(Transaction transaction, String itemName) {
 		final Query query = stream().query(transaction);
 		query.constrain(Item.class);
-		query.descend("_name").constrain(itemName);
+		query.descend("name").constrain(itemName);
 		return query;
 	}
 }
