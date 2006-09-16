@@ -62,7 +62,7 @@ final class YDate extends YLong
 	}
     
     public Object current1(){
-        return new Date(i_compareTo);
+        return new Date(currentLong());
     }
 	
 	static String now(){
@@ -74,15 +74,15 @@ final class YDate extends YLong
 	}
 	
 	boolean isEqual1(Object obj){
-		return obj instanceof Date && val(obj) == i_compareTo;
+		return obj instanceof Date && val(obj) == currentLong();
 	}
 	
 	boolean isGreater1(Object obj){
-		return obj instanceof Date && val(obj) > i_compareTo;
+		return obj instanceof Date && val(obj) > currentLong();
 	}
 	
 	boolean isSmaller1(Object obj){
-		return obj instanceof Date && val(obj) < i_compareTo;
+		return obj instanceof Date && val(obj) < currentLong();
 	}
 	
 	

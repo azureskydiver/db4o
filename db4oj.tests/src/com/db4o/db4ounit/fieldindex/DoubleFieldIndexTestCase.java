@@ -38,14 +38,14 @@ public class DoubleFieldIndexTestCase extends AbstractDb4oTestCase {
     	db().set(new Item(2));
     }
     
-    public void _testEqual() {
+    public void testEqual() {
     	final Query query = newQuery(Item.class);
 		query.descend("value").constrain(new Double(1.1));
     	
     	assertItems(new double[] { 1.1 }, query.execute());
     }
     
-    public void _testGreater() {
+    public void testGreater() {
     	final Query query = newQuery(Item.class);
     	final Query descend = query.descend("value");
 		descend.constrain(new Double(1)).greater();

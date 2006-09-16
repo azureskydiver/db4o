@@ -56,7 +56,7 @@ public final class YDouble extends YLong
 	}
     
     public Object current1(){
-        return new Double(i_compareTo);
+        return new Double(i_compareToDouble);
     }
 	
 	boolean isEqual1(Object obj){
