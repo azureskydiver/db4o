@@ -77,7 +77,9 @@ public class IndexedNodeCollector {
 					}
 				}
 			} else {
-				collectIndexedNodes(qcon.iterateChildren());
+				if (!qcon.hasJoins()) {
+					collectIndexedNodes(qcon.iterateChildren());
+				}
 			}
 		}		
 	}

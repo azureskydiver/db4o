@@ -21,6 +21,7 @@ public class IndexedPath extends IndexedNodeBase {
 		if (null == yapField) return false;		
 		return yapField.hasIndex();
 	}
+	
 	private IndexedNode _next;
 
 	public IndexedPath(QConObject parent, IndexedNode next) {
