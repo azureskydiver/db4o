@@ -770,9 +770,9 @@ public class BTreeNode extends YapMeta{
                 return;
             }
         }else{
-            // The patch is a removal for another transaction, 
-            // We need one for this transaction also.
-            if(patch.isRemove()){
+            // If the patch is a removal of a cancelled removal for another
+            // transaction, we need one for this transaction also.
+            if(! patch.isAdd()){
                 ((BTreeUpdate)patch).append(newRemovePatch(trans));
                 return;
             }
