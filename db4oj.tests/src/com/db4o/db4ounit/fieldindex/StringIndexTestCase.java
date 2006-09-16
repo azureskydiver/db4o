@@ -50,7 +50,7 @@ public class StringIndexTestCase extends AbstractDb4oTestCase {
     	assertExists("original");
     }
     
-    public void _testCancelRemovalRollbackForMultipleTransactions() throws Exception {
+    public void testCancelRemovalRollbackForMultipleTransactions() throws Exception {
     	final Transaction trans1 = newTransaction();
     	final Transaction trans2 = newTransaction();
         

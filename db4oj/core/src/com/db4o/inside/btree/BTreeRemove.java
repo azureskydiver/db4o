@@ -2,6 +2,7 @@
 package com.db4o.inside.btree;
 
 import com.db4o.Transaction;
+import com.db4o.foundation.No4;
 
 /**
  * @exclude
@@ -20,15 +21,12 @@ public class BTreeRemove extends BTreeUpdate {
         return "(-) " + super.toString();
     }
     
-    protected void applyKeyChange(Object obj) {
-        _object = obj;
-        if (hasNext()) {
-            _next.applyKeyChange(obj);      
-        }
-    }
-    
     public boolean isRemove() {
         return true;
     }
+
+	protected Object getCommittedObject() {
+		return No4.INSTANCE;
+	}
     
 }

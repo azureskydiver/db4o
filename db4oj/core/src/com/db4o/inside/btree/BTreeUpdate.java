@@ -51,20 +51,24 @@ public abstract class BTreeUpdate extends BTreePatch {
 	        _next.append(patch);
 	    }
 	}
+	
+    protected void applyKeyChange(Object obj) {
+        _object = obj;
+        if (hasNext()) {
+            _next.applyKeyChange(obj);      
+        }
+    }
 
 	protected abstract void committed(BTree btree);
 
 	public Object commit(Transaction trans, BTree btree) {
-		final BTreePatch patch = forTransaction(trans);
+		final BTreeUpdate patch = (BTreeUpdate) forTransaction(trans);
 		if (patch instanceof BTreeCancelledRemoval) {
-			Object obj = patch.getObject();
+			Object obj = patch.getCommittedObject();
 			applyKeyChange(obj);
 		} 
 	    return internalCommit(trans, btree);
 	}
-    
-    protected abstract void applyKeyChange(Object obj);
-
 
 	protected Object internalCommit(Transaction trans, BTree btree) {
 		if(_transaction == trans){	        
@@ -72,18 +76,20 @@ public abstract class BTreeUpdate extends BTreePatch {
 	        if (hasNext()){
 	            return _next;
 	        }
-	        return isRemove() ? No4.INSTANCE : getObject();
+	        return getCommittedObject();
 	    }
 	    if(hasNext()){
 	        Object newNext = _next.internalCommit(trans, btree);
-	        if(newNext == No4.INSTANCE){	        	
-	            _next = null;
-	        } else{
+	        if(newNext instanceof BTreeUpdate){
 	        	_next = (BTreeUpdate)newNext;
+	        } else {
+	            _next = null;
 	        }
 	    }
 	    return this;
 	}
+
+	protected abstract Object getCommittedObject();
 
 	public Object rollback(Transaction trans, BTree btree) {
 	    if(_transaction == trans){
