@@ -97,7 +97,11 @@ public class YLong extends YapJavaClass
 		
 	// Comparison_______________________
 	
-	protected long i_compareTo;
+	private long i_compareTo;
+	
+	protected final long currentLong() {
+		return i_compareTo;
+	}
 	
 	long val(Object obj){
 		return ((Long)obj).longValue();
