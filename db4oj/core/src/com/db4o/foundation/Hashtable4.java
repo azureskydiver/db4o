@@ -2,6 +2,7 @@
 
 package com.db4o.foundation;
 
+
 /**
  * @exclude
  */
@@ -97,8 +98,14 @@ public class Hashtable4 implements DeepClone {
 		if (key == null) {
 			return null;
 		}
-		int intKey = key.hashCode();
-		return getFromObjectEntry(intKey, key);
+		return getFromObjectEntry(key.hashCode(), key);
+	}
+	
+	public boolean containsKey(Object key) {
+		if (null == key) {
+			return false;
+		}
+		return null != getObjectEntry(key.hashCode(), key); 
 	}
 
 	public void put(byte[] key, Object value) {
@@ -166,10 +173,15 @@ public class Hashtable4 implements DeepClone {
 	}
 
 	private Object getFromObjectEntry(int intKey, Object objectKey) {
+		final HashtableObjectEntry entry = getObjectEntry(intKey, objectKey);		
+		return entry == null ? null : entry.i_object;
+	}
+
+	private HashtableObjectEntry getObjectEntry(int intKey, Object objectKey) {
 		HashtableObjectEntry entry = (HashtableObjectEntry) i_table[intKey & i_mask];
 		while (entry != null) {
 			if (entry.i_key == intKey && entry.hasKey(objectKey)) {
-				return entry.i_object;
+				return entry;
 			}
 			entry = (HashtableObjectEntry) entry.i_next;
 		}
@@ -253,5 +265,4 @@ public class Hashtable4 implements DeepClone {
 			i_table[entryIndex(a_entry)] = a_entry;
 		}
 	}
-
 }
