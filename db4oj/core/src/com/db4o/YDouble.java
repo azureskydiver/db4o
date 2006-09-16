@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
-final class YDouble extends YLong
+public final class YDouble extends YLong
 {
     private static final Double i_primitive = new Double(0);
     

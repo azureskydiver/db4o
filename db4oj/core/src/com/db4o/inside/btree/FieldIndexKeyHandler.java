@@ -3,7 +3,7 @@
 package com.db4o.inside.btree;
 
 import com.db4o.*;
-import com.db4o.foundation.ArgumentNullException;
+import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 
 
@@ -22,7 +22,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public Object comparableObject(Transaction trans, Object indexEntry) {
-        return indexEntry;
+        throw new NotImplementedException();
     }
 
     public int linkLength() {
@@ -71,15 +71,15 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public boolean isEqual(Object obj) {
-        return compareTo(obj) == 0;
+    	throw new NotImplementedException();
     }
 
     public boolean isGreater(Object obj) {
-        return compareTo(obj) > 0;
+    	throw new NotImplementedException();
     }
 
     public boolean isSmaller(Object obj) {
-        return compareTo(obj) < 0;
+    	throw new NotImplementedException();
     }
 
     public Object current() {

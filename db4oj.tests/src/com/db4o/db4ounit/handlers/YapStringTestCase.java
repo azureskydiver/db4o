@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.marshall;
+package com.db4o.db4ounit.handlers;
 
 import com.db4o.*;
 import com.db4o.inside.slots.Slot;

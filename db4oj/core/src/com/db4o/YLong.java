@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.reflect.ReflectClass;
 
 
-class YLong extends YapJavaClass
+public class YLong extends YapJavaClass
 {
 
     private static final Long i_primitive = new Long(0);
