@@ -124,14 +124,14 @@ public class IndexedNodeCollector {
 	private boolean haveSamePath(QCon x, QCon y) {
 		if (x == y) {
 			return true;
-		}
+		}		
+		if (!x.onSameFieldAs(y)) {
+			return false;
+		}		
 		if (!x.hasParent()) {
 			return !y.hasParent();
 		}
-		if (x.onSameFieldAs(y)) {
-			return haveSamePath(x.parent(), y.parent());
-		}
-		return false;
+		return haveSamePath(x.parent(), y.parent());
 	}
 
 	private Collection4 collectLeaves(Collection4 joins) {
