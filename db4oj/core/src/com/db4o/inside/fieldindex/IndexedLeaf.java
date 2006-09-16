@@ -25,8 +25,12 @@ public class IndexedLeaf extends IndexedNodeBase implements IndexedNodeWithRange
         if (bitmap.takeGreater()) {        
             if (bitmap.takeEqual()) {
                 return range.extendToLast();
+            }            
+            final BTreeRange greater = range.greater();
+            if (bitmap.takeSmaller()) {
+            	return greater.union(range.smaller());
             }
-            return range.greater();
+			return greater;
         }
         if (bitmap.takeSmaller()) {
         	if (bitmap.takeEqual()) {

@@ -15,7 +15,7 @@ public class ExpectingVisitor implements Visitor4{
     
     private final boolean _obeyOrder;
     
-    private boolean _unexpected;
+    private final Collection4 _unexpected = new Collection4();
     
     private int _cursor;
     
@@ -48,28 +48,39 @@ public class ExpectingVisitor implements Visitor4{
     
     private void visitOrdered(Object obj){
         if(_cursor < _expected.length){
-            if(obj.equals(_expected[_cursor])){
+            if(areEqual(_expected[_cursor], obj)){
                 ods("Expected OK: " + obj.toString());
                 _expected[_cursor] = FOUND;
                 _cursor ++;
                 return;
             }
         }
-        _unexpected = true;
-        ods("Unexpected: " + obj.toString());
+        unexpected(obj);
     }
+
+	private void unexpected(Object obj) {
+		_unexpected.add(obj);
+        ods("Unexpected: " + obj);
+	}
     
     private void visitUnOrdered(Object obj){
         for (int i = 0; i < _expected.length; i++) {
-            if((obj==null&&_expected[i]==null)||obj.equals(_expected[i])){
+            final Object expectedItem = _expected[i];
+			if(areEqual(obj, expectedItem)){
                 ods("Expected OK: " + obj);
                 _expected[i] = FOUND;
                 return;
             }
         }
-        _unexpected = true;
-        ods("Unexpected: " + obj.toString());
+        unexpected(obj);
     }
+
+	private boolean areEqual(Object obj, final Object expectedItem) {
+		return expectedItem == obj
+		|| (expectedItem != null
+			&& obj != null
+			&& expectedItem.equals(obj));
+	}
     
     private static void ods(String message) {
         if(DEBUG){
@@ -78,10 +89,11 @@ public class ExpectingVisitor implements Visitor4{
     }
     
     public void assertExpectations(){
-        Assert.isFalse(_unexpected);
+    	if (_unexpected.size() > 0) {
+        	Assert.fail("UNEXPECTED: " + _unexpected.toString());
+        }
         for (int i = 0; i < _expected.length; i++) {
             Assert.areSame(FOUND, _expected[i]);
         }
-    }
-    
+    }    
 }
