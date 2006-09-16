@@ -9,32 +9,24 @@ import com.db4o.Transaction;
  */
 public class BTreeCancelledRemoval extends BTreeUpdate {
     
-    private Object _original;
+    private final Object _newKey;
     
-	public BTreeCancelledRemoval(Transaction transaction, Object object, BTreeUpdate existingPatches) {
-		super(transaction, object);
+	public BTreeCancelledRemoval(Transaction transaction, Object originalKey, Object newKey, BTreeUpdate existingPatches) {
+		super(transaction, originalKey);
+		_newKey = newKey;
 		if (null != existingPatches) {
 			append(existingPatches);
 		}
 	}
 	
 	protected void committed(BTree btree) {
-		//_next.updateObject()
 	}
-    
-    protected void applyKeyChange(Object obj) {
-        _original = obj;
-        if (hasNext()) {
-            _next.applyKeyChange(obj);      
-        }
-    }
     
     public String toString() {
         return "(u) " + super.toString();
     }
-    
-    
 
-
-
+	protected Object getCommittedObject() {
+		return _newKey;
+	}
 }
