@@ -4,10 +4,10 @@ package com.db4o;
 
 import com.db4o.foundation.network.YapSocket;
 
-final class MPrefetchIDs extends Msg {
+final class MPrefetchIDs extends MsgD {
 	final boolean processMessageAtServer(YapSocket sock) {
 		YapFile stream = (YapFile) getStream();
-		int prefetchIDCount = stream.config().prefetchIDCount();
+		int prefetchIDCount = readInt();
 		MsgD reply =
 			Msg.ID_LIST.getWriterForLength(
 				getTransaction(),

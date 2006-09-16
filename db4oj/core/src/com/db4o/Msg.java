@@ -42,7 +42,7 @@ class Msg implements Cloneable {
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();
 	public static final Msg OK = new Msg("OK");
 	public static final Msg PING = new Msg("PING");
-	public static final Msg PREFETCH_IDS = new MPrefetchIDs();
+	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
 	public static final MsgObject QUERY_EXECUTE = new MQueryExecute();
 	public static final MsgD RAISE_VERSION = new MsgD("RAISE_VERSION");
 	public static final MsgBlob READ_BLOB = new MReadBlob();

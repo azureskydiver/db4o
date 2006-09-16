@@ -446,7 +446,7 @@ public class YapClient extends YapStream implements ExtClient {
 		ensureIDCacheAllocated(prefetchIDCount);
 		YapWriter reader = null;
 		if (remainingIDs < 1) {
-			writeMsg(Msg.PREFETCH_IDS);
+			writeMsg(Msg.PREFETCH_IDS.getWriterForInt(i_trans, prefetchIDCount));
 			reader = expectedByteResponse(Msg.ID_LIST);
 			for (int i = prefetchIDCount - 1; i >= 0; i--) {
 				_prefetchedIDs[i] = reader.readInt();
