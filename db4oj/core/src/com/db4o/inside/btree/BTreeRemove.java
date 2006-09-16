@@ -20,6 +20,13 @@ public class BTreeRemove extends BTreeUpdate {
         return "(-) " + super.toString();
     }
     
+    protected void applyKeyChange(Object obj) {
+        _object = obj;
+        if (hasNext()) {
+            _next.applyKeyChange(obj);      
+        }
+    }
+    
     public boolean isRemove() {
         return true;
     }

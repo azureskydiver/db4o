@@ -8,6 +8,9 @@ import com.db4o.Transaction;
  * @exclude
  */
 public class BTreeCancelledRemoval extends BTreeUpdate {
+    
+    private Object _original;
+    
 	public BTreeCancelledRemoval(Transaction transaction, Object object, BTreeUpdate existingPatches) {
 		super(transaction, object);
 		if (null != existingPatches) {
@@ -18,5 +21,20 @@ public class BTreeCancelledRemoval extends BTreeUpdate {
 	protected void committed(BTree btree) {
 		//_next.updateObject()
 	}
+    
+    protected void applyKeyChange(Object obj) {
+        _original = obj;
+        if (hasNext()) {
+            _next.applyKeyChange(obj);      
+        }
+    }
+    
+    public String toString() {
+        return "(u) " + super.toString();
+    }
+    
+    
+
+
 
 }

@@ -62,13 +62,9 @@ public abstract class BTreeUpdate extends BTreePatch {
 		} 
 	    return internalCommit(trans, btree);
 	}
+    
+    protected abstract void applyKeyChange(Object obj);
 
-	private void applyKeyChange(Object obj) {
-		_object = obj;
-		if (hasNext()) {
-			_next.applyKeyChange(obj);		
-		}
-	}
 
 	protected Object internalCommit(Transaction trans, BTree btree) {
 		if(_transaction == trans){	        
