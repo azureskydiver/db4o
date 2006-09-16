@@ -99,6 +99,9 @@ public class IndexedNodeCollector {
 
 	private void collectJoinedNode(QConObject constraintWithJoins) {
 		Collection4 joins = collectTopLevelJoins(constraintWithJoins);
+		if (!canJoinsBeSearchedByIndex(joins)) {
+			return;
+		}
 		if (1 == joins.size()) {
 			_nodes.add(nodeForConstraint((QCon)joins.singleElement()));
 			return;
@@ -106,6 +109,77 @@ public class IndexedNodeCollector {
 		collectImplicitlyAndingJoins(joins, constraintWithJoins);
 	}
 
+	private boolean allHaveSamePath(Collection4 leaves) {
+		final Iterator4 i = leaves.iterator();
+		i.moveNext();
+		QCon first = (QCon)i.current();
+		while (i.moveNext()) {
+			if (!haveSamePath(first, (QCon)i.current())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean haveSamePath(QCon x, QCon y) {
+		if (x == y) {
+			return true;
+		}
+		if (!x.hasParent()) {
+			return !y.hasParent();
+		}
+		if (x.onSameFieldAs(y)) {
+			return haveSamePath(x.parent(), y.parent());
+		}
+		return false;
+	}
+
+	private Collection4 collectLeaves(Collection4 joins) {
+		Collection4 leaves = new Collection4();
+		collectLeaves(leaves, joins);
+		return leaves;
+	}
+
+	private void collectLeaves(Collection4 leaves, Collection4 joins) {
+		final Iterator4 i = joins.iterator();
+		while (i.moveNext()) {
+			final QConJoin join = ((QConJoin)i.current());
+			collectLeavesFromJoin(leaves, join);
+		}
+	}
+
+	private void collectLeavesFromJoin(Collection4 leaves, QConJoin join) {
+		collectLeavesFromJoinConstraint(leaves, join.i_constraint1);
+		collectLeavesFromJoinConstraint(leaves, join.i_constraint2);
+	}
+
+	private void collectLeavesFromJoinConstraint(Collection4 leaves, QCon constraint) {
+		if (constraint instanceof QConJoin) {
+			collectLeavesFromJoin(leaves, (QConJoin) constraint);
+		} else {
+			if (!leaves.containsByIdentity(constraint)) {
+				leaves.add(constraint);
+			}
+		}
+	}
+
+	private boolean canJoinsBeSearchedByIndex(Collection4 joins) {
+		Collection4 leaves = collectLeaves(joins);
+		return allHaveSamePath(leaves)
+			&& allCanBeSearchedByIndex(leaves);
+	}
+
+	private boolean allCanBeSearchedByIndex(Collection4 leaves) {
+		final Iterator4 i = leaves.iterator();
+		while (i.moveNext()) {
+			final QCon leaf = ((QCon)i.current());
+			if (!leaf.canLoadByIndex()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	private void collectImplicitlyAndingJoins(Collection4 joins, QConObject constraintWithJoins) {
 		final Iterator4 i = joins.iterator();
 		i.moveNext();
@@ -119,22 +193,27 @@ public class IndexedNodeCollector {
 
 	private Collection4 collectTopLevelJoins(QConObject constraintWithJoins) {
 		Collection4 joins = new Collection4();
-		constraintWithJoins.collectTopLevelJoins(joins);
+		collectTopLevelJoins(joins, constraintWithJoins);
 		return joins;
 	}
 
+	private void collectTopLevelJoins(Collection4 joins, QCon constraintWithJoins) {
+		final Iterator4 i = constraintWithJoins.i_joins.iterator();
+		while (i.moveNext()) {
+			QConJoin join = (QConJoin)i.current();
+			if (!join.hasJoins()) {
+				if (!joins.containsByIdentity(join)) {
+					joins.add(join);
+				}
+			} else {
+				collectTopLevelJoins(joins, join);
+			}
+		}
+	}
+	
 	private IndexedNodeWithRange newNodeForConstraint(QConJoin join) {
 		final IndexedNodeWithRange c1 = nodeForConstraint(join.i_constraint1);
-		if (c1 instanceof MultiFieldNode) {
-			return c1;
-		}
 		final IndexedNodeWithRange c2 = nodeForConstraint(join.i_constraint2);
-		if (c2 instanceof MultiFieldNode) {
-			return c2;
-		}
-		if (c1.getIndex() != c2.getIndex()) {
-			return new MultiFieldNode();
-		}
 		if (join.isOr()) {
 			return new OrIndexedLeaf(join.i_constraint1, c1, c2);
 		}
@@ -143,7 +222,7 @@ public class IndexedNodeCollector {
 	
 	private IndexedNodeWithRange nodeForConstraint(QCon con) {
 		IndexedNodeWithRange node = (IndexedNodeWithRange) _nodeCache.get(con);
-		if (null != node) {
+		if (null != node || _nodeCache.containsKey(con)) {
 			return node;
 		}
 		node = newNodeForConstraint(con);
