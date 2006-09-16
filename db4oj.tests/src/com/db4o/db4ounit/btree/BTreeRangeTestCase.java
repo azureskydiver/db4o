@@ -13,9 +13,29 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 	public void setUp() throws Exception {
 		super.setUp();		
 		add(new int[] { 3, 7, 4, 9 });
-	}	
+	}
+    
+    public void testSize(){
+        assertSize(4, range(3,9));
+        assertSize(3, range(4,9));
+        assertSize(3, range(3,7));
+        assertSize(4, range(2,9));
+        assertSize(4, range(3,10));
+        
+        
+        add(new int[]{5, 6, 8, 10, 2, 1});
+        assertSize(10, range(1,10));
+        assertSize(9, range(1,9));
+        assertSize(9, range(2,10));
+        assertSize(9, range(2,11));
+        assertSize(10, range(0,10));
+    }
 
-	public void testIntersectSingleSingle() {		
+	private void assertSize(int size, BTreeRange range) {
+        Assert.areEqual(size, range.size());
+    }
+
+    public void testIntersectSingleSingle() {		
 		assertIntersection(new int[] { 4, 7 }, range(3, 7), range(4, 9));		
 		assertIntersection(new int[] {}, range(3, 4), range(7, 9));		
 		assertIntersection(new int[] { 3, 4, 7, 9 }, range(3, 9), range(3, 9));		
