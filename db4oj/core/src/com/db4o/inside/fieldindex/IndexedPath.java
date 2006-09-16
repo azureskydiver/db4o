@@ -7,19 +7,26 @@ import com.db4o.inside.Exceptions4;
 public class IndexedPath extends IndexedNodeBase {
 	
 	public static IndexedNode newParentPath(IndexedNode next, QCon constraint) {
-		QCon parent = constraint.parent();
-		if (!hasFieldIndex(parent)) {
+		if (!canFollowParent(constraint)) {
 			return null;
 		}
-		return new IndexedPath((QConObject) parent, next);
+		return new IndexedPath((QConObject) constraint.parent(), next);
 	}	
 	
-	private static boolean hasFieldIndex(QCon parent) {
-		QField field = parent.getField();
-		if (null == field) return false;
-		YapField yapField = field.getYapField();
-		if (null == yapField) return false;		
-		return yapField.hasIndex();
+	private static boolean canFollowParent(QCon con) {
+		final QCon parent = con.parent();
+		final YapField parentField = getYapField(parent);
+		if (null == parentField) return false;
+		final YapField conField = getYapField(con);
+		if (null == conField) return false;		
+		return parentField.hasIndex()
+			&& parentField.getParentYapClass().isAssignableFrom(conField.getParentYapClass());
+	}
+	
+	private static YapField getYapField(QCon con) {
+		QField field = con.getField();
+		if (null == field) return null;
+		return field.getYapField();
 	}
 	
 	private IndexedNode _next;

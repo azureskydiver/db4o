@@ -1918,4 +1918,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         ObjectHeader oh = new ObjectHeader(stream, reader);
         return oh.yapClass();
     }
+
+	public boolean isAssignableFrom(YapClass other) {
+		return classReflector().isAssignableFrom(other.classReflector());
+	}
 }
