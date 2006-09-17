@@ -7,7 +7,7 @@ using com.db4o.query;
 using com.db4odoc.f1;
 using com.db4odoc.f1.evaluations;
 
-namespace RefTest1.debugging
+namespace com.db4odoc.f1.debugging
 {
 	public class DebugExample: Util
 	{
