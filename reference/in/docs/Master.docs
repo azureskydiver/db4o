@@ -13,4 +13,5 @@
 .e Callbacks ..
 .e Classloader ..
 .e Reflection ..
+.e MetaInf ..
 .e NQOptimization ..
