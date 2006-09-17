@@ -363,8 +363,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			return true;
 		} 
 		_pendingJoins = _pendingJoins.removeNode(oldPending);
-		oldPending._join.evaluatePending(this, oldPending, a_pending,
-				a_pending._result);
+		oldPending._join.evaluatePending(this, oldPending, a_pending._result);
 		return false;
 	}
 

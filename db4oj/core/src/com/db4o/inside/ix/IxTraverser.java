@@ -97,35 +97,6 @@ public class IxTraverser{
         addAll(visitor, a_path.i_tree._subsequent);
     }
     
-    private NIxPath createNIxPath(NIxPathNode head, boolean takePreceding, boolean takeMatches, boolean takeSubsequent, int pathType){
-        NIxPath np = new NIxPath(head, takePreceding, takeMatches, takeSubsequent, pathType );
-        // for debugging
-        // np._constraint = _constraint;
-        return np;
-    }
-    
-    public NIxPaths convert(){
-        NIxPaths res = new NIxPaths();
-        if(i_take[QE.NULLS] || i_take[QE.SMALLER] || i_take[QE.EQUAL]){
-            NIxPath smaller = createNIxPath(i_smallHead.convert(), i_take[QE.SMALLER], i_take[QE.EQUAL], i_take[QE.GREATER], QE.SMALLER); 
-            res.add(smaller);
-        }
-        if(i_take[QE.EQUAL] || i_take[QE.GREATER]){
-            NIxPath greater = createNIxPath(i_greatHead.convert(), i_take[QE.SMALLER],i_take[QE.EQUAL], i_take[QE.GREATER], QE.GREATER);
-            res.add(greater);
-        }
-        if(i_take[QE.SMALLER] || i_take[QE.NULLS]){
-            if(i_smallHead != null){
-                if( i_smallHead.i_tree.index()._nullHandling){ 
-                    IxPath nullPath = findNullPath();
-                    NIxPath np = createNIxPath(nullPath.convert(), i_take[QE.NULLS], i_take[QE.NULLS], i_take[QE.SMALLER], QE.NULLS);
-                    res.add(np);
-                }
-            }
-        }
-        return res;
-    }
-    
     private int countGreater(IxPath a_path, int a_sum) {
         if (a_path.i_next == null) {
             return a_sum + countSubsequent(a_path);

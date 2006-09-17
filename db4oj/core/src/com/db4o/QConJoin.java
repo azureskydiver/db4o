@@ -46,7 +46,6 @@ public class QConJoin extends QCon {
 	void evaluatePending(
 		QCandidate a_root,
 		QPending a_pending,
-		QPending a_secondPending,
 		int a_secondResult) {
 
 		boolean res =
