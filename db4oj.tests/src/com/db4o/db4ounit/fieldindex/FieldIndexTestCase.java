@@ -5,6 +5,7 @@ package com.db4o.db4ounit.fieldindex;
 import com.db4o.*;
 import com.db4o.db4ounit.btree.*;
 import com.db4o.db4ounit.foundation.IntArrays4;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.query.Query;
@@ -25,6 +26,13 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
 		storeItems(FOOS);
 	}
     
+    public void testTraverseValues(){
+        StoredField field = yapField();
+        ExpectingVisitor expectingVisitor = new ExpectingVisitor(IntArrays4.toObjectArray(FOOS));
+        field.traverseValues(expectingVisitor);
+        expectingVisitor.assertExpectations();
+    }
+    
     public void testAllThere() throws Exception{
         for (int i = 0; i < FOOS.length; i++) {
             Query q = createQuery(FOOS[i]);
@@ -36,17 +44,11 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     }
 
 	public void testAccessingBTree() throws Exception{
-    	
-        YapStream stream = (YapStream)db();
-        ReflectClass claxx = stream.reflector().forObject(new FieldIndexItem());
-        YapClass yc = stream.getYapClass(claxx, false);
-        YapField yf = yc.getYapField("foo");
-        BTree bTree = yf.getIndex(stream.getTransaction());
-        
+        BTree bTree = yapField().getIndex(trans());
         Assert.isNotNull(bTree);
         expectKeysSearch(bTree, FOOS);
     }
-    
+
     private void expectKeysSearch(BTree btree, int[] values) {
         int lastValue = Integer.MIN_VALUE;
         for (int i = 0; i < values.length; i++) {
@@ -75,4 +77,13 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         BTreeNodeSearchResult end = btree.searchLeaf(trans, fieldIndexKey(Integer.MAX_VALUE, key), SearchTarget.LOWEST);
         return start.createIncludingRange(end);
     }
+    
+    private YapField yapField() {
+        ReflectClass claxx = stream().reflector().forObject(new FieldIndexItem());
+        YapClass yc = stream().getYapClass(claxx, false);
+        YapField yf = yc.getYapField("foo");
+        return yf;
+    }
+    
+
 }
