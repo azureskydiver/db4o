@@ -223,10 +223,6 @@ public class YapFieldUUID extends YapFieldVirtual {
     }
 
 	public Object[] objectAndYapObjectBySignature(final Transaction transaction, final long longPart, final byte[] signature) {
-		if (MarshallerFamily.OLD_FIELD_INDEX) {
-			return oldObjectAndYapObjectBySignature(transaction, longPart, signature);
-		}
-		
 		final BTreeRange range = search(transaction, new Long(longPart));		
 		final Iterator4 keys = range.keys();
 		while (keys.moveNext()) {
@@ -237,32 +233,6 @@ public class YapFieldUUID extends YapFieldVirtual {
 			}
 		}
 		return new Object[2];
-	}
-
-	private Object[] oldObjectAndYapObjectBySignature(final Transaction transaction, final long a_uuid, final byte[] a_signature) {
-		IxTree ixTree = (IxTree) getOldIndexRoot(transaction);
-        final Object[] ret = new Object[2];
-        IxTraverser ixTraverser = new IxTraverser();
-        int count = ixTraverser.findBoundsExactMatch(new Long(a_uuid), ixTree);
-        //System.out.println("count = " + count);
-        if (count > 0) {
-            ixTraverser.visitAll(new Visitor4() {
-                public void visit(Object a_object) {
-                	if (ret[0] != null) {
-                		// already found
-                		return;
-                	}
-                    final int parentId = ((Integer)a_object).intValue();                    
-                    Object[] arr = getObjectAndYapObjectByID(transaction, parentId, a_signature);
-                    if (arr != null) {
-                    	ret[0] = arr[0];
-                        ret[1] = arr[1];
-                    }
-                }
-            });
-            
-        }
-        return ret;
 	}
 
 	protected Object[] getObjectAndYapObjectByID(Transaction transaction, int parentId, byte[] signature) {

@@ -115,11 +115,6 @@ public class QConObject extends QCon {
         	return false;
         }
         
-        if (!MarshallerFamily.BTREE_FIELD_INDEX) {
-	        if(hasOrJoins()){
-	            return false;
-	        }
-        }        
         return i_field.i_yapField.canLoadByIndex();
     }
 
