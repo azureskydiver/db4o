@@ -308,15 +308,6 @@ public class IxTraverser{
         return findBounds(a_constraint, a_tree);
     }
     
-    public int findBoundsQuery(QCon a_qcon, Object constraint) {
-        if (!a_qcon.i_evaluator.supportsIndex()) {
-            return -1;
-        }
-        i_take = new boolean[] { false, false, false, false};
-        a_qcon.i_evaluator.indexBitMap(i_take);
-        return findBounds(constraint, a_qcon.indexRoot());
-    }
-    
     private void findGreatestEqualFromEqual(IxTree a_tree) {
         if (a_tree != null) {
             int res = a_tree.compare(null);

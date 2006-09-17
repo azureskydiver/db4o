@@ -3,7 +3,6 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.replication.*;
 import com.db4o.inside.slots.*;
@@ -62,12 +61,6 @@ public abstract class YapFieldVirtual extends YapField {
 
     public boolean needsHandlerId(){
         return false;
-    }
-
-    void initOldIndex(Transaction systemTrans, MetaIndex metaIndex) {
-        if (_oldIndex == null) {
-            _oldIndex = new Index4(systemTrans, getHandler(),metaIndex, false);
-        }
     }
 
     public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)

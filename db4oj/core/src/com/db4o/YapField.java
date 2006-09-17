@@ -45,8 +45,6 @@ public class YapField implements StoredField {
 
     private static final int AVAILABLE   = 1;
 
-    protected Index4        _oldIndex;
-
     private Config4Field     i_config;
 
     private Db4oTypeImpl     i_db4oType;
@@ -438,14 +436,6 @@ public class YapField implements StoredField {
         return i_handler.getYapClass(a_stream);
     }
     
-    Index4 getOldIndex(Transaction a_trans){
-        return _oldIndex;
-    }
-
-    Tree getOldIndexRoot(Transaction a_trans) {
-        return getOldIndex(a_trans).indexTransactionFor(a_trans).getRoot();
-    }
-
     public TypeHandler4 getHandler() {
         // alive needs to be checked by all callers: Done
         return i_handler;
@@ -551,12 +541,6 @@ public class YapField implements StoredField {
     final void initConfigOnUp(Transaction trans) {
         if (i_config != null) {
             i_config.initOnUp(trans, this);
-        }
-    }
-
-    void initOldIndex(Transaction systemTrans, MetaIndex metaIndex) {
-        if (supportsIndex()) {
-            _oldIndex = new Index4(systemTrans, getHandler(), metaIndex, i_handler.indexNullHandling());
         }
     }
 
@@ -810,20 +794,10 @@ public class YapField implements StoredField {
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        if (Debug4.prettyToStrings) {
-            sb.append("YapField ");
-            sb.append(i_name);
-            sb.append("\n");
-            if (_oldIndex != null) {
-                sb.append(_oldIndex.toString());
-            }
-
-        } else {
-            if (i_yapClass != null) {
-                sb.append(i_yapClass.getName());
-                sb.append(".");
-                sb.append(getName());
-            }
+        if (i_yapClass != null) {
+            sb.append(i_yapClass.getName());
+            sb.append(".");
+            sb.append(getName());
         }
         return sb.toString();
     }
