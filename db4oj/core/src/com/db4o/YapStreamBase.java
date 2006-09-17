@@ -212,7 +212,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 
                 Object obj = yo.getObject();
                 if (obj == null) {
-                    yapObjectGCd(yo);
+                    removeReference(yo);
                 } else {
                     yo.activate1(ta, obj, depth, i_refreshInsteadOfActivate);
                 }
@@ -256,7 +256,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     final void bind2(YapObject a_yapObject, Object obj){
         int id = a_yapObject.getID();
-        yapObjectGCd(a_yapObject);
+        removeReference(a_yapObject);
         a_yapObject = new YapObject(getYapClass(reflector().forObject(obj), false),
             id);
         a_yapObject.setObjectWeak(_this, obj);
@@ -756,17 +756,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     final Object getByID2(Transaction ta, int a_id) {
         if (a_id > 0) {
-            YapObject yo = getYapObject(a_id);
-            if (yo != null) {
-
+            Object obj = objectForIDFromCache(a_id);
+            if(obj != null){
+                
                 // Take care about handling the returned candidate reference.
                 // If you loose the reference, weak reference management might also.
-
-                Object candidate = yo.getObject();
-                if (candidate != null) {
-                    return candidate;
-                }
-                yapObjectGCd(yo);
+                return obj;
+                
             }
             try {
                 return new YapObject(a_id).read(ta, null, null, 0,YapConst.ADD_TO_ID_TREE, true);
@@ -780,27 +776,11 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     final Object getActivatedObjectFromCache(Transaction ta, int id){
-        Object obj = getObjectFromCache(ta, id);
+        Object obj = objectForIDFromCache(id);
         if(obj == null){
             return null;
         }
         activate1(ta, obj, configImpl().activationDepth());
-        return obj;
-    }
-    
-    final Object getObjectFromCache(Transaction ta, int id){
-        if (id <= 0) {
-            return null;
-        }
-        YapObject yo = getYapObject(id);
-        if(yo == null){
-            return null;
-        }
-        Object obj = yo.getObject();
-        if(obj == null){
-            yapObjectGCd(yo);
-            return null;
-        }
         return obj;
     }
     
@@ -873,7 +853,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     arr[1] = yo;
                     return arr;
                 }
-                yapObjectGCd(yo);
+                removeReference(yo);
             }
             try {
                 yo = new YapObject(a_id);
@@ -981,12 +961,27 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
         return _classCollection.getYapClass(a_id);
     }
-
-    public final YapObject getYapObject(int a_id) {
-        if(DTrace.enabled){
-            DTrace.GET_YAPOBJECT.log(a_id);
+    
+    Object objectForIDFromCache(int id){
+        YapObject yo = getYapObject(id);
+        if (yo == null) {
+            return null;
         }
-        return i_idTree.id_find(a_id);
+        Object candidate = yo.getObject();
+        if(candidate == null){
+            removeReference(yo);
+        }
+        return candidate;
+    }
+
+    public final YapObject getYapObject(int id) {
+        if(DTrace.enabled){
+            DTrace.GET_YAPOBJECT.log(id);
+        }
+        if(id <= 0){
+            return null;
+        }
+        return i_idTree.id_find(id);
     }
 
     public final YapObject getYapObject(Object a_object) {
@@ -1165,16 +1160,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public boolean isCached(long a_id) {
         synchronized (i_lock) {
-            if (a_id > 0) {
-                YapObject yo = getYapObject((int) a_id);
-                if (yo != null) {
-                    Object candidate = yo.getObject();
-                    if (candidate != null) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return objectForIDFromCache((int)a_id) != null;
         }
     }
 
@@ -1373,7 +1359,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     yo = i_hcTree.hc_find(obj);
                 }
                 if (yo != null) {
-                    yapObjectGCd(yo);
+                    removeReference(yo);
                 }
             }
         }
@@ -2052,10 +2038,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
 
-    public final void yapObjectGCd(YapObject yo) {
-        
-        // TODO: rename to removeReference 
-        
+    public final void removeReference(YapObject yo) {
         if(DTrace.enabled){
             DTrace.REFERENCE_REMOVED.log(yo.getID());
         }

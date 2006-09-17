@@ -37,7 +37,7 @@ final class TransactionClient extends Transaction {
             i_yapObjectsToGc.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     YapObject yo = (YapObject)((TreeIntObject) a_object)._object;
-                    stream().yapObjectGCd(yo);
+                    stream().removeReference(yo);
                 }
             });
         }
