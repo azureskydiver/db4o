@@ -405,7 +405,7 @@ public abstract class YapFile extends YapStream {
         }
         
         try {
-            Slot slot = a_ta.getSlotInformation(a_id);
+            Slot slot = a_ta.getCurrentSlotOfID(a_id);
             if (slot == null) {
                 return null;
             }

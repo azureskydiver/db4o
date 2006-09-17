@@ -117,7 +117,7 @@ public class YapArray extends YapIndependantType {
                 }
                 for (int i = elementCount(trans, bytes); i > 0; i--) {
                     int id = bytes.readInt();
-                    Slot slot = trans.getSlotInformation(id);
+                    Slot slot = trans.getCurrentSlotOfID(id);
                     
 					a_classPrimitive.free(trans, id, slot._address,slot._length);
                 }
