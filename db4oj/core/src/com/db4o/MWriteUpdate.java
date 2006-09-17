@@ -13,7 +13,7 @@ final class MWriteUpdate extends MsgObject {
 	    synchronized(stream.i_lock){
 	        YapClass yc = stream.getYapClass(yapClassId);
 			_payLoad.writeEmbedded();
-            Slot oldSlot = _trans.getSlotInformation(_payLoad.getID());
+            Slot oldSlot = _trans.getCommittedSlotOfID(_payLoad.getID());
             stream.getSlotForUpdate(_payLoad);
 			yc.addFieldIndices(_payLoad, oldSlot);
             stream.i_handlers.encrypt(_payLoad);

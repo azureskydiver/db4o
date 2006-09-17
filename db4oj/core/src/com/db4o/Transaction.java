@@ -398,12 +398,12 @@ public class Transaction {
         }
     }
 
-    public Slot getSlotInformation(int a_id) {
+    public Slot getCurrentSlotOfID(int id) {
         checkSynchronization();
-        if (a_id == 0) {
+        if (id == 0) {
             return null;
         }
-        SlotChange change = findSlotChange(a_id);
+        SlotChange change = findSlotChange(id);
         if (change != null) {
             if(change.isSetPointer()){
                 return change.newSlot();
@@ -411,13 +411,38 @@ public class Transaction {
         }
         
         if (i_parentTransaction != null) {
-            Slot parentSlot = i_parentTransaction.getSlotInformation(a_id); 
+            Slot parentSlot = i_parentTransaction.getCurrentSlotOfID(id); 
             if (parentSlot != null) {
                 return parentSlot;
             }
         }
+        return readCommittedSlotOfID(id);
+    }
+    
+    public Slot getCommittedSlotOfID(int id){
+        if (id == 0) {
+            return null;
+        }
+        SlotChange change = findSlotChange(id);
+        if (change != null) {
+            Slot slot = change.oldSlot();
+            if(slot != null){
+                return slot;
+            }
+        }
+        
+        if (i_parentTransaction != null) {
+            Slot parentSlot = i_parentTransaction.getCommittedSlotOfID(id); 
+            if (parentSlot != null) {
+                return parentSlot;
+            }
+        }
+        return readCommittedSlotOfID(id);
+    }
+
+    private Slot readCommittedSlotOfID(int id) {
         if (Deploy.debug) {
-            i_pointerIo.useSlot(a_id);
+            i_pointerIo.useSlot(id);
             i_pointerIo.read();
             i_pointerIo.readBegin(YapConst.YAPPOINTER);
             int debugAddress = i_pointerIo.readInt();
@@ -425,7 +450,7 @@ public class Transaction {
             i_pointerIo.readEnd();
             return new Slot(debugAddress, debugLength);
         }
-        i_file.readBytes(_pointerBuffer, a_id, YapConst.POINTER_LENGTH);
+        i_file.readBytes(_pointerBuffer, id, YapConst.POINTER_LENGTH);
         int address = (_pointerBuffer[3] & 255)
             | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
             | _pointerBuffer[0] << 24;
@@ -562,7 +587,7 @@ public class Transaction {
 
     void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
         
-        Slot slot = getSlotInformation(a_id);
+        Slot slot = getCurrentSlotOfID(a_id);
         
         checkSynchronization();
         
@@ -589,7 +614,7 @@ public class Transaction {
     
     public void slotFreePointerOnCommit(int a_id) {
         checkSynchronization();
-        Slot slot = getSlotInformation(a_id);
+        Slot slot = getCurrentSlotOfID(a_id);
         if(slot == null){
             return;
         }

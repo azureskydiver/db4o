@@ -48,4 +48,8 @@ public class ReferencedSlot extends TreeInt {
 		return _references < 1;
 	}
 
+    public Slot slot() {
+        return _slot;
+    }
+
 }

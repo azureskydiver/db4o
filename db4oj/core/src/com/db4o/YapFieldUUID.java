@@ -65,7 +65,10 @@ public class YapFieldUUID extends YapFieldVirtual {
 		}
     }
 
-	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream stream, YapClass yapClass, Slot oldSlot, boolean checkClass) {		
+	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream stream, YapClass yapClass, Slot oldSlot, boolean checkClass) {
+        if(DTrace.enabled){
+            DTrace.REREAD_OLD_UUID.logLength(oldSlot.getAddress(), oldSlot.getLength());
+        }
 		YapReader reader = stream.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
 		if(checkClass){
             YapClass realClass = YapClass.readClass(stream,reader);
@@ -104,7 +107,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     }
     
     protected void rebuildIndexForObject(YapFile stream, YapClass yapClass, int objectId) {
-    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, stream.getSystemTransaction().getSlotInformation(objectId), true);
+    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, stream.getSystemTransaction().getCurrentSlotOfID(objectId), true);
     	if (null == data) {
     		return;
     	}

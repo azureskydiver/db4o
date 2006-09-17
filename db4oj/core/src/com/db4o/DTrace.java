@@ -23,23 +23,12 @@ public class DTrace {
             
             // addRangeWithEnd(3835808, 3836267);
             
-            // addRangeWithLength(10666,1);
+            addRangeWithLength(19492,149);
             
-            // addRangeWithLength(1013,1);
-            
-            // addRangeWithLength(3212,1);
-            
-            // addRangeWithLength(0,Integer.MAX_VALUE);
-
             
             trackEventsWithoutRange();
             
-            // addRangeWithLength(3181,1);
             
-            addRangeWithLength(3243,1);
-            
-            
-
             
             
             ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
@@ -75,6 +64,7 @@ public class DTrace {
             REFERENCE_REMOVED = new DTrace(true, true, "reference removed", true);
             REGULAR_SEEK = new DTrace(true, true, "regular seek", true);
             REMOVE_FROM_CLASS_INDEX = new DTrace(true, true, "trans removeFromClassIndexTree", true);
+            REREAD_OLD_UUID = new DTrace(true, true, "reread old uuid", true);
             TRANS_COMMIT = new DTrace(false, false, "trans commit", false);
             TRANS_DELETE = new DTrace(true, true, "trans delete", true);
             TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
@@ -87,7 +77,7 @@ public class DTrace {
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
             WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true); 
             
-            // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
+            // turnAllOffExceptFor(new DTrace[] {FREE_ON_COMMIT, FREE, REREAD_OLD_UUID, WRITE_XBYTES});
             
             // turnAllOffExceptFor(new DTrace[] {WRITE_POINTER});
             
@@ -162,6 +152,7 @@ public class DTrace {
     public static DTrace REFERENCE_REMOVED;
     public static DTrace REGULAR_SEEK;
     public static DTrace REMOVE_FROM_CLASS_INDEX;
+    public static DTrace REREAD_OLD_UUID;
     public static DTrace TRANS_COMMIT;
     public static DTrace TRANS_DONT_DELETE;
     public static DTrace TRANS_DELETE;

@@ -107,6 +107,13 @@ public class SlotChange extends TreeInt {
 	public Slot newSlot() {
 		return _newSlot;
 	}
+    
+    public Slot oldSlot() {
+        if(_shared == null){
+            return null;
+        }
+        return _shared.slot();
+    }
 
 	public Object read(YapReader reader) {
 		SlotChange change = new SlotChange(reader.readInt());
