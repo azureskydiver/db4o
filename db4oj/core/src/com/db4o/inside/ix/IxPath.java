@@ -33,17 +33,6 @@ class IxPath implements ShallowClone,Visitor4 {
         i_lowerAndUpperMatch = lowerAndUpperMatch;
     }
     
-    public NIxPathNode convert() {
-        NIxPathNode res = new NIxPathNode();
-        res._comparisonResult = i_comparisonResult;
-        res._lowerAndUpperMatch = i_lowerAndUpperMatch;
-        res._tree = i_tree;
-        if(i_next != null){
-            res._next = i_next.convert();
-        }
-        return res;
-    }
-
     void add(Visitor4 visitor) {
         if (i_comparisonResult == 0 && i_traverser.i_take[QE.EQUAL]) {
             i_tree.visit(visitor, i_lowerAndUpperMatch);
