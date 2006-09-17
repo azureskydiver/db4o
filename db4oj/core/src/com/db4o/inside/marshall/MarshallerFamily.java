@@ -21,8 +21,6 @@ public class MarshallerFamily {
     }
     
     private static int FAMILY_VERSION = FamilyVersion.BTREE_FIELD_INDEXES;
-
-    public static final boolean BTREE_FIELD_INDEX = (FAMILY_VERSION == FamilyVersion.BTREE_FIELD_INDEXES);
     
     public final ArrayMarshaller _array;
     

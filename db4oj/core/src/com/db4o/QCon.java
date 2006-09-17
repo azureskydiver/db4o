@@ -436,10 +436,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return 0;
     }
     
-    public IxTree indexRoot(){
-        throw Exceptions4.virtualException();
-    }
-
     boolean isNot() {
         return i_evaluator instanceof QENot;
     }

@@ -5,14 +5,13 @@ package com.db4o.inside.convert;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
 import com.db4o.inside.convert.conversions.*;
-import com.db4o.inside.marshall.*;
 
 /**
  * @exclude
  */
 public class Converter {
     
-    public static final int VERSION = MarshallerFamily.BTREE_FIELD_INDEX ? 6 : 5;
+    public static final int VERSION = FieldIndexesToBTrees_5_7.VERSION;
     
     private static Converter _converter;
     

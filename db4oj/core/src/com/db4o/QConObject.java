@@ -192,10 +192,6 @@ public class QConObject extends QCon {
         }
     }
     
-    public int findBoundsQuery(IxTraverser traverser){
-        return traverser.findBoundsQuery(this, i_object);
-    }
-
     YapComparable getComparator(QCandidate a_candidate) {
         if (i_comparator == null) {
             return a_candidate.prepareComparison(i_trans.stream(), i_object);
@@ -240,10 +236,6 @@ public class QConObject extends QCon {
         return 0;
     }
     
-    public IxTree indexRoot(){
-        return (IxTree) i_field.i_yapField.getOldIndexRoot(i_trans);
-    }
-
     boolean isNullConstraint() {
         return i_object == null;
     }

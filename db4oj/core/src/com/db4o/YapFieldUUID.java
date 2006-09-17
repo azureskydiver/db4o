@@ -6,7 +6,6 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.header.FileHeader0;
 import com.db4o.inside.btree.*;
-import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
 
@@ -137,22 +136,6 @@ public class YapFieldUUID extends YapFieldVirtual {
 		return ((YapFile)transaction.stream()).getFileHeader();
 	}
 
-	Index4 getOldIndex(Transaction a_trans){
-    	if (MarshallerFamily.BTREE_FIELD_INDEX) {
-    		throw new IllegalStateException();
-    	}
-        if(_oldIndex != null){
-            return _oldIndex;
-        }
-        YapFile stream = (YapFile)a_trans.stream();
-        MetaIndex metaIndex = stream.getUUIDMetaIndex();
-        if(metaIndex == null){
-            return null;
-        }
-        _oldIndex = new Index4(stream.getSystemTransaction(), getHandler(), metaIndex, false);
-        return _oldIndex;
-    }
-    
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
         int dbID = a_bytes.readInt();
         YapStream stream = a_trans.stream();
