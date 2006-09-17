@@ -29,7 +29,7 @@
     <DefineConstants>_MyType="Windows"</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-  <Reference Include="System" />
+    <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -89,6 +89,9 @@
     <Compile Include="src\com\db4odoc\f1\lists\CollectionFactory.vb" />
     <Compile Include="src\com\db4odoc\f1\lists\Team.vb" />
     <Compile Include="src\com\db4odoc\f1\lists\VerboseList.vb" />
+    <Compile Include="src\com\db4odoc\f1\metainf\Car.vb" />
+    <Compile Include="src\com\db4odoc\f1\metainf\MetaInfExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\metainf\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\reflections\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\reflections\LoggingArray.vb" />
     <Compile Include="src\com\db4odoc\f1\reflections\LoggingReflector.vb" />
@@ -103,7 +106,7 @@
     <Compile Include="src\Program.vb" />
   </ItemGroup>
   <ItemGroup>
-  <ProjectReference Include="..\..\..\core\db4o-net2.csproj">
+    <ProjectReference Include="..\..\..\core\db4o-net2.csproj">
       <Project>{7A07E089-078C-433A-BD15-60763FE3B8F2}</Project>
       <Name>db4o-net2</Name>
     </ProjectReference>

@@ -314,6 +314,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\metainf\Car.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\metainf\MetaInfExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\metainf\Pilot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\reflections\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
