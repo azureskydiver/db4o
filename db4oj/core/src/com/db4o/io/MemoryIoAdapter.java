@@ -38,14 +38,14 @@ public class MemoryIoAdapter extends IoAdapter{
         _growBy = 10000;
     }
     
-    private MemoryIoAdapter(MemoryIoAdapter adapter, String name, byte[] bytes){
+    private MemoryIoAdapter(MemoryIoAdapter adapter, byte[] bytes){
         _bytes = bytes;
         _length = bytes.length;
         _growBy = adapter._growBy;
     }
     
-    private MemoryIoAdapter(MemoryIoAdapter adapter, String name, int initialLength){
-        this(adapter, name, new byte[initialLength]);
+    private MemoryIoAdapter(MemoryIoAdapter adapter, int initialLength){
+        this(adapter, new byte[initialLength]);
     }
     
     /**
@@ -58,7 +58,7 @@ public class MemoryIoAdapter extends IoAdapter{
         if(bytes == null){
             bytes = new byte[0];
         }
-        _memoryFiles.put(name, new MemoryIoAdapter(this,name, bytes));
+        _memoryFiles.put(name, new MemoryIoAdapter(this,bytes));
     }
     
     /**
@@ -125,7 +125,7 @@ public class MemoryIoAdapter extends IoAdapter{
     public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
         MemoryIoAdapter mia = (MemoryIoAdapter)_memoryFiles.get(path);
         if(mia == null){
-            mia = new MemoryIoAdapter(this, path, (int)initialLength);
+            mia = new MemoryIoAdapter(this, (int)initialLength);
             _memoryFiles.put( path, mia);
         }
         return mia;

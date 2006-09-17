@@ -176,17 +176,6 @@ public class IxTraverser{
         }
     }
     
-    private IxPath findNullPath(){
-        resetDelayedAppend();
-        i_handler.prepareComparison(null);
-        IxTree tree = i_greatHead.i_tree;
-        int res = tree.compare(null);
-        IxPath nullHead = new IxPath(this, null, tree, res, tree.lowerAndUpperMatch());
-        IxPath[] headTail = new IxPath[]{nullHead, nullHead};
-        findNullPath1(headTail);
-        return headTail[0];
-    }
-    
     private void findNullPath1(IxPath[] headTail) {
         if(headTail[1].i_comparisonResult == 0){
             findGreatestNullFromNull(headTail, (IxTree)headTail[1].i_tree._subsequent);

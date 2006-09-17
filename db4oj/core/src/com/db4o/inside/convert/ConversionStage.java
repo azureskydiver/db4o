@@ -33,7 +33,7 @@ public abstract class ConversionStage {
 	private YapFile _file;
 	private FileHeader0 _header;
 	
-	private ConversionStage(YapFile file,FileHeader0 header) {
+	protected ConversionStage(YapFile file,FileHeader0 header) {
 		_file = file;
 		_header=header;
 	}
