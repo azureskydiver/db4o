@@ -243,7 +243,7 @@ public final class Platform4 {
             }
         });
         
-        translate(config, config.objectClass("java.lang.Class"), "TClass");
+        translate(config.objectClass("java.lang.Class"), "TClass");
         translateCollection(config, "Hashtable", "THashtable", true);
         if (jdk().ver() >= 2) {
 			try {
@@ -585,12 +585,12 @@ public final class Platform4 {
         return jdk().isEnum(reflector, claxx);
     }
 
-    private static final void translate(Config4Impl config, ObjectClass oc, String to) {
+    private static final void translate(ObjectClass oc, String to) {
         ((Config4Class)oc).translateOnDemand(DB4O_CONFIG + to);
     }
 
     private static final void translate(Config4Impl config, String from, String to) {
-        translate(config, config.objectClass(from), to);
+        translate(config.objectClass(from), to);
     }
 
     private static final void translateCollection(
@@ -603,7 +603,7 @@ public final class Platform4 {
         if (cascadeOnDelete) {
             oc.cascadeOnDelete(true);
         }
-        translate(config, oc, to);
+        translate(oc, to);
     }
 
     private static final void translateUtilNull(Config4Impl config, String className) {

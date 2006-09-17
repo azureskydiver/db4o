@@ -19,5 +19,4 @@ public final class Deploy {
     public static final boolean debugLong = true;
     public static final boolean deleteFile = false;
     public static final boolean csharp = false;
-    public static final boolean debugQueries = false;
 }

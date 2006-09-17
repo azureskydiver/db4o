@@ -223,7 +223,7 @@ public abstract class Tree implements ShallowClone {
         return _preceding.first();
     }
     
-	void isDuplicateOf(Tree a_tree){
+	public void isDuplicateOf(Tree a_tree){
 		_size = 0;
         _preceding = a_tree;
 	}

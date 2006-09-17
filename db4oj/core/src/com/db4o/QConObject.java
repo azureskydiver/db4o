@@ -239,13 +239,13 @@ public class QConObject extends QCon {
     }
 
     void log(String indent) {
-        if (Deploy.debugQueries) {
+        if (Debug.queries) {
             super.log(indent);
         }
     }
 
     String logObject() {
-        if (Deploy.debugQueries) {
+        if (Debug.queries) {
             if (i_object != null) {
                 return i_object.toString();
             }

@@ -248,7 +248,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							if (!innerRes[0]) {
 
-								if (Deploy.debugQueries) {
+								if (Debug.queries) {
 									System.out
 											.println("  Array evaluation false. Constraint:"
 													+ qcon.i_id);
@@ -349,7 +349,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	boolean evaluate(QPending a_pending) {
 
-		if (Deploy.debugQueries) {
+		if (Debug.queries) {
 			System.out.println("Pending arrived Join: " + a_pending._join.i_id
 					+ " Constraint:" + a_pending._constraint.i_id + " res:"
 					+ a_pending._result);
@@ -432,7 +432,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		_include = flag;
 	}
 
-	void isDuplicateOf(Tree a_tree) {
+	public void isDuplicateOf(Tree a_tree) {
 		_size = 0;
 		_root = (QCandidate) a_tree;
 	}
