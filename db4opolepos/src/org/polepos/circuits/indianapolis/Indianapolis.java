@@ -36,8 +36,8 @@ public class Indianapolis extends Circuit {
 
     @Override
     protected void addLaps() {
-        // add(new Lap("write", false, false));
-        add(new Lap("write"));
+        add(new Lap("write", false, false));
+//        add(new Lap("write"));
         add(new Lap("queryRange"));
         add(new Lap("query5Links"));
         add(new Lap("queryPreferShortPath"));
@@ -46,9 +46,8 @@ public class Indianapolis extends Circuit {
         add(new Lap("queryNotGreater"));
         add(new Lap("queryNotRange"));
         add(new Lap("queryOrTwoLevels"));
-        add(new Lap("queryBigRangeFound"));
+//        add(new Lap("queryBigRangeFound"));
         add(new Lap("queryByChildIdentity"));
-        
         add(new Lap("addSingleObjectAndCommit"));
     }
 

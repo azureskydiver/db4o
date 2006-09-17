@@ -44,7 +44,6 @@ public class Db4oVersions {
         String workSpacePath = guessWorkSpace();
         
         String jar45 = "db4o-4.5-java1.4.jar";
-        String jar50 = "db4o-5.0-java5.jar";
         String jar52 = "db4o-5.2-java5.jar";
         String jar55 = "db4o-5.5-java5.jar";
 
@@ -52,11 +51,8 @@ public class Db4oVersions {
         return new Team[]{
             workspaceTeam(workSpacePath),
             db4oTeam(workSpacePath, jar45, new int[]{} ),
-            db4oTeam(workSpacePath, jar50, new int[]{} ),
             db4oTeam(workSpacePath, jar52, new int[]{} ),
             db4oTeam(workSpacePath, jar55, new int[]{} ),
-            new HibernateTeam(),
-            new JdbcTeam(),
         };
     }
     
