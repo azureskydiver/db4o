@@ -3,7 +3,6 @@
 package com.db4o;
 
 import com.db4o.foundation.network.YapSocket;
-import com.db4o.inside.slots.*;
 
 final class MWriteNew extends MsgObject {
     final boolean processMessageAtServer(YapSocket sock) {
