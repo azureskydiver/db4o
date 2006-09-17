@@ -27,7 +27,7 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         
         while(allSlotIDs.moveNext()){
             Integer slotID = (Integer)allSlotIDs.current();
-            Slot slot = trans().getSlotInformation(slotID.intValue());
+            Slot slot = trans().getCurrentSlotOfID(slotID.intValue());
             allSlots.add(slot);
         }
         
