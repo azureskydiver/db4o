@@ -79,7 +79,7 @@ public class QConClass extends QConObject{
 	}
     
     String logObject() {
-        if (Deploy.debugQueries) {
+        if (Debug.queries) {
             if(_claxx != null){
                 return _claxx.toString();
             }

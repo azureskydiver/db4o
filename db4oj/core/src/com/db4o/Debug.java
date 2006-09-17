@@ -9,37 +9,34 @@ import com.db4o.foundation.*;
  */
 public abstract class Debug extends Debug4 {
     
-    public static final boolean useNIxPaths = true;
+    public static final boolean indexAllFields = false;
     
-    public static final boolean ixTrees = false;
-    
+    public static final boolean queries = false;
+
+    public static final boolean atHome = false;
+
+    public static boolean longTimeOuts = false;
+
     public static final boolean freespace = Deploy.debug ? true :false;
     
-    public static final boolean xbytes = Debug.freespace ? true : false;
+    public static final boolean xbytes = freespace ? true : false;
     
     public static final boolean freespaceChecker = false;
     
     public static final boolean checkSychronization = false;
-    
-    public static final boolean atHome = false;
-
-    public static final boolean indexAllFields = false;
     
     public static final boolean configureAllClasses = indexAllFields;
     public static final boolean configureAllFields = indexAllFields;
     
     public static final boolean weakReferences = true;
 
-    public static final boolean verbose = false;
-
     public static final boolean fakeServer = false;
+    
     static final boolean messages = false;
 
     public static final boolean nio = true;
     
     static final boolean lockFile = true;
-
-    public static boolean longTimeOuts = false;
 
     static YapFile serverStream;
     static YapClient clientStream;

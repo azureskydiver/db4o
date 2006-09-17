@@ -380,7 +380,7 @@ public abstract class QQueryBase implements Unversioned {
         boolean topLevel = r.topLevel;
         List4 candidateCollection = r.candidateCollection;
         
-        if (Deploy.debugQueries) {
+        if (Debug.queries) {
         	Iterator4 i = iterateConstraints();
             while (i.moveNext()) {
                 ((QCon)i.current()).log("");
