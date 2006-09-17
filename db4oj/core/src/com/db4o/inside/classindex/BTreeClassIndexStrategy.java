@@ -63,7 +63,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
                 int id = ((Integer)obj).intValue();
                 YapObject yo = stream.getYapObject(id);
                 if (yo != null) {
-                    stream.yapObjectGCd(yo);
+                    stream.removeReference(yo);
                 }
             }
         });

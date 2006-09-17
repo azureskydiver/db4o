@@ -77,7 +77,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
                 final YapStream stream = transaction.stream();
 				YapObject yo = stream.getYapObject(id);
                 if (yo != null) {
-                    stream.yapObjectGCd(yo);
+                    stream.removeReference(yo);
                 }
                 index.remove(id);
             }

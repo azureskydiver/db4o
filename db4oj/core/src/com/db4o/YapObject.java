@@ -217,13 +217,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
                 
                 if(checkIDTree){
                     // the typical side effect: static fields and enums
-                    YapObject classCreationSideEffect = stream.getYapObject(getID());
-                    if(classCreationSideEffect != null){
-                        Object obj = classCreationSideEffect.getObject();
-                        if(obj != null){
-                            return obj;
-                        }
-                        stream.yapObjectGCd(classCreationSideEffect);
+                    
+                    Object objectInCacheFromClassCreation = stream.objectForIDFromCache(getID());
+                    if(objectInCacheFromClassCreation != null){
+                        return objectInCacheFromClassCreation;
                     }
                 }
 
@@ -620,7 +617,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				} 
 				return id_balance();
 			}
-		} else {
+		} else if(cmp > 0) {
 			if (id_subsequent == null) {
 				id_subsequent = a_new;
 				id_size++;

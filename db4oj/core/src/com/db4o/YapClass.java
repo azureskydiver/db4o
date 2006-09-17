@@ -1295,7 +1295,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                 if (yo != null) {
                     Object obj = yo.getObject();
                     if(obj == null){
-                        stream.yapObjectGCd(yo);
+                        stream.removeReference(yo);
                     }else{
                         yo.activate(trans, obj, depth, false);
                         return yo.getObject();

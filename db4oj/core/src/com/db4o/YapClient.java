@@ -467,20 +467,12 @@ public class YapClient extends YapStream implements ExtClient {
 		int[] position = new int[prefetchCount];
 
 		while (qResult.hasNext() && (count < prefetchCount)) {
-			boolean foundInCache = false;
 			int id = qResult.nextInt();
 			if (id > 0) {
-				YapObject yo = getYapObject(id);
-				if (yo != null) {
-					Object candidate = yo.getObject();
-					if (candidate != null) {
-						prefetched[count] = candidate;
-						foundInCache = true;
-					} else {
-						yapObjectGCd(yo);
-					}
-				}
-				if (!foundInCache) {
+                Object obj = objectForIDFromCache(id);
+                if(obj != null){
+                    prefetched[count] = obj;
+                }else{
 					idsToGet[toGet] = id;
 					position[toGet] = count;
 					toGet++;
@@ -501,8 +493,13 @@ public class YapClient extends YapStream implements ExtClient {
 				if (mso._payLoad != null) {
 					mso._payLoad.incrementOffset(YapConst.MESSAGE_LENGTH);
 					YapWriter reader = mso.unmarshall(YapConst.MESSAGE_LENGTH);
-					prefetched[position[i]] = new YapObject(idsToGet[i])
-							.readPrefetch(this, qResult.i_trans, reader);
+                    Object obj = objectForIDFromCache(idsToGet[i]);
+                    if(obj != null){
+                        prefetched[position[i]] = obj;
+                    }else{
+    					prefetched[position[i]] = new YapObject(idsToGet[i])
+    							.readPrefetch(this, qResult.i_trans, reader);
+                    }
 				}
 			}
 		}
