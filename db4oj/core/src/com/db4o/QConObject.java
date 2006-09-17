@@ -208,7 +208,7 @@ public class QConObject extends QCon {
         return i_comparator;
     }
 
-    public YapClass getYapClass() {
+    YapClass getYapClass() {
         return i_yapClass;
     }
 
