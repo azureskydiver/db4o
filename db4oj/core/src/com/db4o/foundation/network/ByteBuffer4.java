@@ -14,22 +14,22 @@ import com.db4o.foundation.*;
 class ByteBuffer4 {
 
     private final int DISCARD_BUFFER_SIZE = 500;
-    private byte[] i_cache;
+    protected byte[] i_cache;
     private boolean i_closed = false;
-    private int i_readOffset;
+    protected int i_readOffset;
     protected int i_timeout;
-    private int i_writeOffset;
-    private final Lock4 i_lock = new Lock4();
+    protected int i_writeOffset;
+    protected final Lock4 i_lock = new Lock4();
 
     public ByteBuffer4(int timeout) {
         i_timeout = timeout;
     }
 
-    private int available() {
+    protected int available() {
         return i_writeOffset - i_readOffset;
     }
 
-    private void checkDiscardCache() {
+    protected void checkDiscardCache() {
         if (i_readOffset == i_writeOffset && i_cache.length > DISCARD_BUFFER_SIZE) {
             i_cache = null;
             i_readOffset = 0;
@@ -41,7 +41,7 @@ class ByteBuffer4 {
         i_closed = true;
     }
 
-    private void makefit(int length) {
+    protected void makefit(int length) {
         if (i_cache == null) {
             i_cache = new byte[length];
         } else {
@@ -115,7 +115,7 @@ class ByteBuffer4 {
         i_timeout = timeout;
     }
 
-    private void waitForAvailable() throws IOException {
+    protected void waitForAvailable() throws IOException {
         while (available() == 0) {
             try {
                 i_lock.snooze(i_timeout);
