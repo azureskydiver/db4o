@@ -4,7 +4,6 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -49,8 +48,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     
 	private final static KeySpec WRITE_AS=new KeySpec((String)null);
     
-	private boolean _processing;
-
     protected Config4Class(Config4Impl configuration, KeySpecHashtable4 config) {
     	super(config);
         _configImpl = configuration;
@@ -157,50 +154,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         }
         translate(translator);
         return translator;
-    }
-
-    public boolean initOnUp(Transaction systemTrans, final int[] metaClassID) {
-
-        if(MarshallerFamily.BTREE_FIELD_INDEX){
-            
-            throw new IllegalStateException("Should never be called.");
-            
-            // Removed this method completely on final switch to BTREE_FIELD_INDEX  
-            
-        }
-        if(_processing){
-            return false;
-        }
-        _processing = true;        
-        YapStream stream = systemTrans.stream();
-        if (stream.maintainsIndices()) {
-        	boolean maintainMetaClass=_config.getAsBoolean(MAINTAIN_METACLASS);
-            if(maintainMetaClass){
-                MetaClass metaClassRef=metaClass();
-                if(metaClassID[0] > 0){
-                    metaClassRef = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
-                    _config.put(METACLASS, metaClassRef);
-                }
-                
-                if(metaClassRef == null){
-                    metaClassRef = (MetaClass) stream.get1(systemTrans,new MetaClass(getName())).next();
-                    _config.put(METACLASS, metaClassRef);
-                    metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
-                }
-                        
-                if (metaClassRef == null) {
-                    metaClassRef = new MetaClass(getName());
-                    _config.put(METACLASS, metaClassRef);
-                    stream.setInternal(systemTrans, metaClassRef, Integer.MAX_VALUE, false);
-                    metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
-                } else {
-                    stream.activate1(systemTrans, metaClassRef,
-                        Integer.MAX_VALUE);
-                }
-            }
-        }
-        _processing = false;
-        return true;
     }
 
     Object instantiate(YapStream a_stream, Object a_toTranslate) {

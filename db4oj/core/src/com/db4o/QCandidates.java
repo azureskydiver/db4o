@@ -179,26 +179,16 @@ public final class QCandidates implements Visitor4 {
 		if(i_constraints == null){
 			return false;
 		}
-		if (MarshallerFamily.BTREE_FIELD_INDEX) {
-			FieldIndexProcessor processor = new FieldIndexProcessor(this);
-			final FieldIndexProcessorResult result = processor.run();
-			if (result == FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH) {
-				return true;
-			}
-			if (result == FieldIndexProcessorResult.NO_INDEX_FOUND) {
-				return false;
-			}
-			i_root = TreeInt.toQCandidate(result.found, this);
+		FieldIndexProcessor processor = new FieldIndexProcessor(this);
+		final FieldIndexProcessorResult result = processor.run();
+		if (result == FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH) {
 			return true;
 		}
-		if (MarshallerFamily.OLD_FIELD_INDEX) {
-			QxProcessor processor = new QxProcessor();
-			if(processor.run(this, classIndexEntryCount())){
-				i_root = processor.toQCandidates(this);
-				return true;
-			}
+		if (result == FieldIndexProcessorResult.NO_INDEX_FOUND) {
+			return false;
 		}
-		return false;
+		i_root = TreeInt.toQCandidate(result.found, this);
+		return true;
 	}
 
     void evaluate() {

@@ -102,30 +102,17 @@ public class YapField implements StoredField {
         if (! hasIndex()) {
             return;
         }
+            
+        BTree index = getIndex(trans);
         
-        if(MarshallerFamily.BTREE_FIELD_INDEX){
-            
-            BTree index = getIndex(trans);
-            
-            // Although we checked hasIndex() already, we have to check
-            // again here since index creation in YapFieldUUID can be
-            // unsuccessful if it's called too early for PBootRecord.
-            if(index == null){
-                return;
-            }
-            
-            index.add(trans, new FieldIndexKey(parentID,  indexEntry));
+        // Although we checked hasIndex() already, we have to check
+        // again here since index creation in YapFieldUUID can be
+        // unsuccessful if it's called too early for PBootRecord.
+        if(index == null){
+            return;
         }
         
-        if(MarshallerFamily.OLD_FIELD_INDEX){
-            Index4 index = getOldIndex(trans);
-            if(index == null){
-                return;
-            }
-            i_handler.prepareComparison(trans, indexEntry);
-            IndexTransaction ift = index.dirtyIndexTransaction(trans);
-            ift.add(parentID, indexEntry);
-        }
+        index.add(trans, new FieldIndexKey(parentID,  indexEntry));
     }
     
     public boolean canUseNullBitmap(){
@@ -146,22 +133,10 @@ public class YapField implements StoredField {
             return;
         }
         
-        if(MarshallerFamily.BTREE_FIELD_INDEX){
-            if(_index == null){
-                return;
-            }
-            _index.remove(trans, new FieldIndexKey(parentID,  indexEntry));
+        if(_index == null){
+            return;
         }
-        
-        if(MarshallerFamily.OLD_FIELD_INDEX){
-            Index4 index = getOldIndex(trans);
-            if(index == null){
-                return;
-            }
-            i_handler.prepareComparison(indexEntry);
-            IndexTransaction ift = index.dirtyIndexTransaction(trans);
-            ift.remove(parentID, indexEntry);
-        }
+        _index.remove(trans, new FieldIndexKey(parentID,  indexEntry));
     }
 
     public boolean alive() {
@@ -544,13 +519,7 @@ public class YapField implements StoredField {
     
     public boolean hasIndex() {
         // alive needs to be checked by all callers: Done
-        if(MarshallerFamily.BTREE_FIELD_INDEX){
-            return _index != null;
-        }
-        if(MarshallerFamily.OLD_FIELD_INDEX){
-            return _oldIndex != null;
-        }        
-        return false;
+        return _index != null;
     }
 
     public final void incrementOffset(YapReader a_bytes) {
@@ -798,8 +767,7 @@ public class YapField implements StoredField {
         return alive() && i_handler.supportsIndex();
     }
     
-    public void traverseValues(final Visitor4 userVisitor) {
-        
+    public final void traverseValues(final Visitor4 userVisitor) {
         if(! alive()){
             return;
         }
@@ -807,22 +775,16 @@ public class YapField implements StoredField {
         assertHasIndex();
         
         YapStream stream = i_yapClass.getStream();
-        
         if(stream.isClient()){
             Exceptions4.throwRuntimeException(Messages.CLIENT_SERVER_UNSUPPORTED);
         }
         
         synchronized(stream.lock()){
             final Transaction trans = stream.getTransaction();
-            Tree tree = getOldIndex(trans).indexTransactionFor(trans).getRoot();
-            Tree.traverse(tree, new Visitor4() {
+            _index.traverseKeys(trans, new Visitor4() {
                 public void visit(Object obj) {
-                    IxTree ixTree = (IxTree)obj;
-                    ixTree.visitAll(new IntObjectVisitor() {
-                        public void visit(int anInt, Object anObject) {
-                            userVisitor.visit(i_handler.indexEntryToObject(trans, anObject));
-                        }
-                    });
+                    FieldIndexKey key = (FieldIndexKey) obj;
+                    userVisitor.visit(i_handler.indexEntryToObject(trans, key.value()));
                 }
             });
         }
