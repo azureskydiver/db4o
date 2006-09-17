@@ -35,7 +35,7 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         return Integer.MAX_VALUE;
     }
 
-    public void init(Config4Impl a_config) {
+    public void init() {
         i_uuidMetaIndex = new MetaIndex();
         i_dirty = true;
     }

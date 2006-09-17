@@ -124,7 +124,7 @@ public class FileHeader0 {
         
         _bootRecord = new PBootRecord();
         _bootRecord.i_stream = yf;
-        _bootRecord.init(yf.configImpl());
+        _bootRecord.init();
         
         yf.setInternal(yf.getSystemTransaction(), _bootRecord, false);
         
