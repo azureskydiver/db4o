@@ -773,12 +773,14 @@
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test}" />
+				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
 			<arg value="-e" />
 		</java>
 		<java fork="true" classname="com.db4o.nativequery.AllUnitTestsNQ" failonerror="true" timeout="180000">
 			<classpath>
+				<pathelement path="${file.db4ounit.jar}" />
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test}" />
