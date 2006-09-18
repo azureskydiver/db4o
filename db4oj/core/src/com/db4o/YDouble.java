@@ -1,11 +1,13 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2006   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o;
 
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
-
+/**
+ * @exclude
+ */
 public final class YDouble extends YLong
 {
     private static final Double i_primitive = new Double(0);
