@@ -554,22 +554,29 @@
 		</antcall>
 	</target>
 
-	<target name="compiletestsjava" depends="compilecorejava" description="Compile Db4o test sources">
+	<target name="compiledb4ounitjava" depends="compilecorejava" description="Compile db4o test framework">
+		<mkdir dir="${dir.dist.classes.db4ounit}" />
+		<delete dir="${dir.dist.classes.db4ounit}">
+			<include name="**/*" />
+		</delete>
+		<javac destdir="${dir.dist.classes.db4ounit}" fork="true" debug="on" target="1.1" source="1.2" encoding="UTF-8">
+			<classpath>
+				<pathelement path="${file.java1.1.jar}" />
+			</classpath>
+			<src path="${dir.db4ounit.src}"/>
+			<src path="${dir.db4ounit.extensions.src}" />
+		</javac>
+		<jar destfile="${file.db4ounit.jar}">
+			<fileset dir="${dir.dist.classes.db4ounit}" />
+		</jar>
+	</target>
+
+	<target name="compiletestsjava" depends="compiledb4ounitjava" description="Compile db4o test sources">
 		<mkdir dir="${dir.dist.classes.test}" />
 		<mkdir dir="${dir.dist.classes.test.nq}" />
 		<delete dir="${dir.dist.classes.test}">
 			<include name="**/*" />
 		</delete>
-		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
-			<fileset dir="${dir.db4ounit.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
-			<fileset dir="${dir.db4ounit.extensions.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
 			<fileset dir="${dir.j.tests.src}">
 				<include name="**/*.java" />
@@ -588,6 +595,7 @@
 		<javac destdir="${dir.dist.classes.test}" fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
+				<pathelement path="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.dist.java.temp.src.test}"/>
 			<src path="${dir.j.tools.src}" />
@@ -597,11 +605,10 @@
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.nqopt}" />
 				<pathelement location="${file.bloat.jar}" />
+				<pathelement path="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />
-			<src path="${dir.db4ounit.src}" />
-			<src path="${dir.db4ounit.extensions.src}" />
 			<src path="${dir.j.nqopt}/test/src" />
 			<src path="${dir.j.nqopt}/core/testsrc" />
 		</javac>
@@ -807,7 +814,7 @@
 			<fileset dir="${dir.db4ounit}">
 				<include name=".project" />
 				<include name=".classpath" />
-				<include name="src/**" />
+				<include name="src/**/*.java" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.j}">
@@ -815,8 +822,22 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="build.xml" />
-				<include name="**/src/**" />
-				<!-- exclude name="tools/**" / -->
+				<include name="**/src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.db4ounit.extensions}">
+			<fileset dir="${dir.db4ounit.extensions}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.j.tests}">
+			<fileset dir="${dir.j.tests}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**/*.java" />
+				<include name="src/**/*.yap" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk1.2}">
@@ -824,7 +845,8 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="build.xml" />
-				<include name="**/src/**" />
+				<include name="**/src/**/*.java" />
+				<include name="**/src/**/*.yap" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk5}">
@@ -832,7 +854,16 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="build.xml" />
-				<include name="**/src/**" />
+				<include name="**/src/**/*.java" />
+				<include name="**/src/**/*.yap" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.bloat}">
+			<fileset dir="${dir.bloat}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**" />
+				<exclude name="**/CVS/**" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.nqopt}">
@@ -840,7 +871,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="build.xml" />
-				<include name="**/src/**" />
+				<include name="**/src/**/*.java" />
 			</fileset>
 		</copy>
 		<filehead beforePattern="package" header="${content.gplheader}" >
@@ -848,19 +879,6 @@
 				<include name="**/*.java" />
 			</sources>
 		</filehead>
-
-		<zip destfile="${file.java.core.src.zip}">
-			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip">
-				<include name="*/**" />
-				<exclude name="*.zip" />
-				<exclude name="tools/**" />
-			</fileset>
-		</zip>
-		<delete includeemptydirs="true">
-			<fileset dir="${dir.dist.java.src}">
-				<include name="**/*" />
-			</fileset>
-		</delete>
 	</target>
 
 	<target name="zipjavatest" depends="javadoc,compilecorejava,compiletestsjava">
@@ -883,17 +901,6 @@
 	</target>
 
 	<target name="zipjava" depends="zipjavasrc, init" description="Zip Java distribution">
-		<copy todir="${dir.dist.java.src}">
-			<fileset file="${file.java.core.src.zip}" />
-			<fileset dir="${dir.j}">
-				<include name="tools/**/*.java" />
-			</fileset>
-		</copy>
-		<filehead beforePattern="package" header="${content.gplheader}" >
-			<sources dir="${dir.dist.java.src}">
-				<include name="**/*.java" />
-			</sources>
-		</filehead>
 		<copy todir="${dir.dist.java.build.tutorial}">
 			<fileset dir="${dir.j.tutorial.out.java}">
 				<include name="**/**" />
