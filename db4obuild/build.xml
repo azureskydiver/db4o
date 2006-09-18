@@ -1347,6 +1347,7 @@
 		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.dist.classes.java1.1}" />
+			<fileset dir="${dir.dist.classes.db4ounit}" />
 			<fileset dir="${dir.dist.classes.test}" />
 		</jar>
 
