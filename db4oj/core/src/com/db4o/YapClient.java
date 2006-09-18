@@ -41,7 +41,7 @@ public class YapClient extends YapStream implements ExtClient {
 
 	private Db4oDatabase i_db;
 
-	private boolean _doFinalize=true;
+	protected boolean _doFinalize=true;
     
     private int _blockSize = 1;
     
@@ -286,10 +286,6 @@ public class YapClient extends YapStream implements ExtClient {
 			}
 		}
 		return null;
-	}
-
-	final void free(int a_address, int a_length) {
-		throw Exceptions4.virtualException();
 	}
 
 	void getAll(Transaction ta, QueryResultImpl a_res) {
@@ -686,10 +682,6 @@ public class YapClient extends YapStream implements ExtClient {
 		writeMsg(Msg.WRITE_NEW.getWriter(a_yapClass, aWriter));
 	}
     
-    final void writeObject(YapMeta a_object, YapReader a_writer, int address) {
-        Exceptions4.shouldNeverBeCalled();
-    }
-
 	final void writeTransactionPointer(int a_address) {
 		// do nothing
 	}
