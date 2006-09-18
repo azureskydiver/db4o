@@ -296,7 +296,7 @@ public abstract class QQueryBase implements Unversioned {
         }
     }
 
-	private YapStream stream() {
+	protected YapStream stream() {
 		return i_trans.stream();
 	}
 
