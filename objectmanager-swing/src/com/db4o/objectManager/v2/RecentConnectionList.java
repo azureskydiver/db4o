@@ -29,6 +29,7 @@ public class RecentConnectionList extends JPanel {
             listModel.addElement(db4oConnectionSpec);
         }
         list = new JList(listModel);
+        list.setCellRenderer(new ConnectionListCellRenderer());
         list.setVisibleRowCount(5);
         JScrollPane listScroller = new JScrollPane(list);
         this.add(listScroller);

@@ -29,6 +29,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
+import java.io.IOException;
 
 /**
  * <p>
@@ -174,7 +175,11 @@ public class MainPanel extends JPanel {
 
     ObjectContainer getObjectContainer() {
         if (objectContainer == null) {
-            objectContainer = Db4o.openFile(connectionSpec.getPath());
+            try {
+                objectContainer = ConnectionHelper.connect(connectionSpec);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return objectContainer;
     }

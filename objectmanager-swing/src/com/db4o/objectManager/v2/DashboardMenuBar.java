@@ -16,8 +16,8 @@ import java.awt.event.ActionEvent;
 public class DashboardMenuBar extends BaseMenuBar{
     private Dashboard dashboard;
 
-    public DashboardMenuBar(Dashboard dashboard2) {
-        super();
+    public DashboardMenuBar(Dashboard dashboard2, Settings settings, ActionListener helpActionListener, ActionListener aboutActionListener) {
+        super(settings, helpActionListener, aboutActionListener);
         this.dashboard = dashboard2;
         JMenu menu;
         JMenuItem item;
@@ -47,14 +47,8 @@ public class DashboardMenuBar extends BaseMenuBar{
         menu.add(item);
         this.add(menu);
 
-        menu = new JMenu("Edit");
-        menu.add(new JMenuItem("Cut"));
-        menu.add(new JMenuItem("Copy"));
-        menu.add(new JMenuItem("Paste"));
-        this.add(menu);
 
-        menu = new JMenu("Help");
-        menu.add(new JMenuItem("About"));
+        menu = buildHelpMenu(helpActionListener, aboutActionListener);
         menu.addSeparator();
         item = new JMenuItem("Exception Log");
         item.addActionListener(new ActionListener() {

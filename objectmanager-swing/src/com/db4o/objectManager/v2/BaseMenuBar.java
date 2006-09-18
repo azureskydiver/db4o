@@ -25,10 +25,6 @@ public class BaseMenuBar extends JMenuBar {
                 settings.getMenuBar3DHint());
     }
 
-    public BaseMenuBar() {
-        
-    }
-
     protected JMenu buildHelpMenu(ActionListener helpActionListener, ActionListener aboutActionListener) {
 
         JMenu menu = createMenu("Help", 'H');

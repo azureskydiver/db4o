@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.db4o.objectManager.v2.custom.BackgroundPanel;
 import com.db4o.objectmanager.model.Db4oFileConnectionSpec;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
+import com.db4o.objectmanager.model.Db4oSocketConnectionSpec;
 import com.db4o.objectmanager.api.prefs.Preferences;
 
 import javax.swing.*;
@@ -20,11 +21,20 @@ import java.io.File;
  * Time: 11:21:49 AM
  */
 public class Dashboard {
+
+    private static final String COPYRIGHT =
+            "\u00a9 2006 db4objects Inc. All Rights Reserved.";
+
+
     private JFrame frame;
     private JTextField fileTextField;
     private RecentConnectionList recentConnectionList;
     private JTextField usernameTextField;
     private JTextField passwordTextField;
+    private Settings settings;
+    private JTextField hostTextField;
+    private JTextField portTextField;
+
 
     /**
      * Configures the UI, then builds and opens the UI.
@@ -46,6 +56,8 @@ public class Dashboard {
      * restore a look and theme.
      */
     private void configureUI() {
+        settings = MainFrame.createDefaultSettings();
+
         UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
         Options.setDefaultIconSize(new Dimension(18, 18));
 
@@ -73,7 +85,7 @@ public class Dashboard {
         frame = new JFrame();
         frame.setJMenuBar(buildMenuBar());
         frame.setContentPane(buildContentPane());
-        frame.setSize(600, 400);
+        frame.setSize(600, 450);
         frame.setResizable(false);
         locateOnScreen(frame);
         frame.setTitle("ObjectManager 2.0");
@@ -96,7 +108,10 @@ public class Dashboard {
      * Builds and answers the menu bar.
      */
     private JMenuBar buildMenuBar() {
-        DashboardMenuBar dashboardMenuBar = new DashboardMenuBar(this);
+        DashboardMenuBar dashboardMenuBar = new DashboardMenuBar(this,
+                settings,
+                createHelpActionListener(),
+                createAboutActionListener(frame));
         return dashboardMenuBar;
     }
 
@@ -163,6 +178,7 @@ public class Dashboard {
         builder.append(welcome2);
         builder.nextLine();
         //builder.append("");
+        builder.appendSeparator("Local");
         fileTextField = new JTextField();
         builder.append("File:", fileTextField);
         final JFileChooser fc = new JFileChooser();
@@ -183,7 +199,16 @@ public class Dashboard {
         });
         builder.append(browse);
         builder.nextLine();
+        builder.appendSeparator("Remote");
+
         //builder.append("");
+        hostTextField = new JTextField();
+        builder.append("Host:", hostTextField);
+        portTextField = new JTextField();
+        portTextField.setColumns(5);
+        // todo: validate port to ensure this is an integer - portTextField.addActionListener();
+        builder.append("Port:", portTextField);
+        builder.nextLine();
         usernameTextField = new JTextField();
         builder.append("Username:", usernameTextField);
         builder.nextLine();
@@ -217,11 +242,18 @@ public class Dashboard {
     }
 
     private void connectAndOpenFrame() {
-        Db4oConnectionSpec connectionSpec = new Db4oFileConnectionSpec(fileTextField.getText(), false);
+        Db4oConnectionSpec connectionSpec = null;
+        if (fileTextField.getText().length() > 0) {
+            // then open file connection
+            connectionSpec = new Db4oFileConnectionSpec(fileTextField.getText(), false);
+        } else if (hostTextField.getText().length() > 0) {
+            connectionSpec = new Db4oSocketConnectionSpec(hostTextField.getText(), Integer.parseInt(portTextField.getText()), usernameTextField.getText(), passwordTextField.getText(), false);
+        }
         recentConnectionList.addNewConnectionSpec(connectionSpec);
-        fileTextField.setText("");
+        clearForm();
         Dimension frameSize = (Dimension) Preferences.getDefault().getPreference(Preferences.FRAME_SIZE);
         Point frameLocation = (Point) Preferences.getDefault().getPreference(Preferences.FRAME_LOCATION);
+        // todo: connect here first, then open frame
         MainFrame instance = MainFrame.createDefaultFrame(frameSize, frameLocation, connectionSpec);
 
         instance.addComponentListener(new ComponentListener() {
@@ -247,8 +279,24 @@ public class Dashboard {
 
     }
 
+    private void clearForm() {
+        fileTextField.setText("");
+        usernameTextField.setText("");
+        passwordTextField.setText("");
+        portTextField.setText("");
+        hostTextField.setText("");
+    }
+
     private void showInForm(Db4oConnectionSpec connectionSpec) {
-        fileTextField.setText(connectionSpec.getPath());
+        if (connectionSpec instanceof Db4oFileConnectionSpec) {
+            fileTextField.setText(connectionSpec.getPath());
+        } else if (connectionSpec instanceof Db4oSocketConnectionSpec) {
+            Db4oSocketConnectionSpec spec = (Db4oSocketConnectionSpec) connectionSpec;
+            hostTextField.setText(spec.getHost());
+            portTextField.setText(spec.getPort() + "");
+            usernameTextField.setText(spec.getUser());
+            passwordTextField.setText(spec.getPassword());
+        }
     }
 
     // Helper Code ********************************************************
@@ -276,5 +324,33 @@ public class Dashboard {
     public void showError(String msg) {
         JOptionPane.showMessageDialog(frame, "msg", "Error", JOptionPane.ERROR_MESSAGE);
     }
+
+    /**
+     * Creates and answers an ActionListener that opens the help viewer.
+     */
+    public static ActionListener createHelpActionListener() {
+        return null;
+    }
+
+    public static ActionListener createAboutActionListener(Component frame) {
+        return new AboutActionListener(frame);
+    }
+
+    private static final class AboutActionListener implements ActionListener {
+        private Component frame;
+
+        public AboutActionListener(Component frame) {
+
+            this.frame = frame;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(
+                    frame,
+                    "db4o Object Manager\n\n"
+                            + COPYRIGHT + "\n\n");
+        }
+    }
+
 
 }

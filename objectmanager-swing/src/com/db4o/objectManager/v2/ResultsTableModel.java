@@ -77,6 +77,7 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
             result = (Result) topResults.get(row);
         } else {
             int index = rowInCurrentWindow(row);
+            System.out.println("got index " + index + " for row " + row);
             if (index != -1) {
                 result = (Result) resultWindow.get(index);
             } else {
@@ -104,11 +105,11 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
         resultWindow.clear(); // maybe don't need this
         int startIndex = row - NUM_IN_WINDOW;
         if (startIndex < NUM_IN_TOP) {
-            ret = startIndex; // - NUM_IN_TOP;
+            ret = startIndex;
             startIndex = NUM_IN_TOP;
         }
         int endIndex = row + NUM_IN_WINDOW;
-        if (endIndex >= results.size()) endIndex = results.size() - 1;
+        if (endIndex >= results.size()) endIndex = results.size();
         System.out.println("Loading window: " + startIndex + " to " + endIndex);
         for (int i = startIndex; i < endIndex; i++) {
             Result result = (Result) results.get(i);

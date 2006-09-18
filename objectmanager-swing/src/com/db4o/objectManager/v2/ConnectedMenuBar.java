@@ -42,6 +42,7 @@ public class ConnectedMenuBar extends BaseMenuBar {
                     File f = fileChooser.getSelectedFile();
                     try {
                         frame.getObjectContainer().ext().backup(f.getAbsolutePath());
+                        OptionPaneHelper.showSuccessDialog(frame, "Backup completed successfully.", "Backup Successful");
                     } catch (IOException e1) {
                         e1.printStackTrace();
                         OptionPaneHelper.showErrorMessage(frame, "Error during backup! " + e1.getMessage(), "Error during backup");
