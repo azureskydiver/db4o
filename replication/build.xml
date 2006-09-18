@@ -1,158 +1,139 @@
 <project name="drs" default="dist" basedir=".">
 	<description>dRS build file</description>
-	<property file="machine.properties"/>
-	<property file="ant.properties"/>
+	<property file="ant.properties" />
 
 	<path id="class.path" description="universal classpath for all targets">
 		<fileset dir="lib">
-			<include name="*.jar"/>
+			<include name="*.jar" />
 		</fileset>
 		<fileset dir="${drs.dir.dist.lib}">
-			<include name="*.jar"/>
+			<include name="*.jar" />
 		</fileset>
-		<pathelement location="${file.java5.jar}"/>
-		<pathelement location="${file.test.jar}"/>
-		<pathelement location="${drs.dir.dist.classes}"/>
+		<pathelement location="${file.java5.jar}" />
+		<pathelement location="${file.test.jar}" />
+		<pathelement location="${drs.dir.dist.classes}" />
 	</path>
 
 	<target name="init">
-		<tstamp/>
-		<mkdir dir="${drs.dir.dist.lib}"/>
-		<mkdir dir="${drs.dir.dist.api}"/>
+		<tstamp />
+		<mkdir dir="${drs.dir.dist.lib}" />
+		<mkdir dir="${drs.dir.dist.api}" />
 	</target>
 
 	<target name="clean">
-		<delete dir="${drs.dir.dist}"/>
-		<delete dir="${drs.dir.test}/temp"/>
+		<delete dir="${drs.dir.dist}" />
+		<delete dir="${drs.dir.test}/temp" />
 	</target>
 
 	<macrodef name="buildjar" description="compile, jar classes for various src folders">
-		<attribute name="srcdir"/>
-		<attribute name="classpathrefid"/>
-		<attribute name="include"/>
-		<attribute name="exclude"/>
-		<attribute name="jar"/>
+		<attribute name="srcdir" />
+		<attribute name="classpathrefid" />
+		<attribute name="include" />
+		<attribute name="exclude" />
+		<attribute name="jar" />
 
 		<sequential>
-			<property name="temp.dir" value="${drs.dir.dist.classes}"/>
-			<delete dir="${temp.dir}"/>
-			<mkdir dir="${temp.dir}"/>
+			<property name="temp.dir" value="${drs.dir.dist.classes}" />
+			<delete dir="${temp.dir}" />
+			<mkdir dir="${temp.dir}" />
 
 			<javac srcdir="@{srcdir}" destdir="${temp.dir}">
-				<classpath refid="@{classpathrefid}"/>
+				<classpath refid="@{classpathrefid}" />
 			</javac>
 			<copy todir="${temp.dir}">
 				<fileset dir="@{srcdir}">
-					<exclude name="@{exclude}"/>
-					<include name="@{include}"/>
+					<exclude name="@{exclude}" />
+					<include name="@{include}" />
 				</fileset>
 			</copy>
-			<jar jarfile="@{jar}" basedir="${temp.dir}"/>
-			<delete dir="${temp.dir}"/>
+			<jar jarfile="@{jar}" basedir="${temp.dir}" />
+			<delete dir="${temp.dir}" />
 		</sequential>
 	</macrodef>
 
 	<target name="build-core" depends="init" description="jar the core src of drs">
-		<buildjar
-				srcdir="${drs.dir.src.core}"
-				classpathrefid="class.path"
-				jar="${file.drs.core.jar}"
-				exclude="log4j.xml"
-				include="**/*.xml"/>
+		<buildjar srcdir="${drs.dir.src.core}" classpathrefid="class.path" jar="${file.drs.core.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
 	<target name="build-example" depends="build-core" description="jar the example src of drs">
-		<buildjar
-				srcdir="${drs.dir.src.tutorial}"
-				classpathrefid="class.path"
-				jar="${file.drs.tutorial.jar}"
-				exclude="log4j.xml"
-				include="**/*.xml"/>
+		<buildjar srcdir="${drs.dir.src.tutorial}" classpathrefid="class.path" jar="${file.drs.tutorial.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
 	<target name="build-regression" depends="build-core" description="jar the test src of drs">
-		<buildjar
-				srcdir="${drs.dir.src.test}"
-				classpathrefid="class.path"
-				jar="${file.drs.test.jar}"
-				exclude="log4j.xml"
-				include="**/*.xml"/>
+		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" exclude="log4j.xml" include="**/*.xml" />
+	</target>
+
+	<!--remove me after deprecating old tests-->
+	<target name="build-old-tests" depends="build-core" description="jar the OLD test src of drs">
+		<buildjar srcdir="src/deprecated-test" classpathrefid="class.path" jar="${file.drs.test.old.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
 	<target name="build-all" depends="clean">
-		<antcall target="build-core"/>
-		<antcall target="build-example"/>
-		<!--<antcall target="build-regression"/>-->
+		<antcall target="build-core" />
+		<antcall target="build-example" />
+		<antcall target="build-regression" />
+		<!--remove me after deprecating old tests-->
+		<antcall target="build-old-tests" />
 	</target>
 
 	<target name="javadoc">
-		<javadoc
-				destdir="${drs.dir.dist.api}"
-				author="true"
-				version="true"
-				use="true"
-				windowtitle="dRS API"
-				classpathref="class.path">
+		<javadoc destdir="${drs.dir.dist.api}" author="true" version="true" use="true" windowtitle="dRS" classpathref="class.path">
 			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
-				<include name="com/db4o/replication/*.java"/>
-				<include name="com/db4o/replication/hibernate/*.java"/>
+				<include name="com/db4o/replication/**/*.java" />
 			</fileset>
 		</javadoc>
 	</target>
 
 	<target name="doctor" depends="">
-		<delete dir="doc/out"/>
+		<delete dir="doc/out" />
 		<java classname="com.yetac.doctor.Doctor">
-			<arg line="doc C:/WINDOWS/Fonts/VERDANA.TTF"/>
+			<arg line="doc C:/WINDOWS/Fonts/VERDANA.TTF" />
 			<classpath>
 				<fileset dir="lib">
-					<include name="*.jar"/>
+					<include name="*.jar" />
 				</fileset>
 				<fileset dir="lib/doctor">
-					<include name="*.jar"/>
+					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</java>
 	</target>
 
 	<target name="dist" depends="build-all, javadoc, doctor,javadoc">
-		<property name="zipbasedir" value="drs-${drs.version.dotted}"/>
+		<property name="zipbasedir" value="drs-${drs.version.dotted}" />
 		<zip destfile="${file.drs.zip}">
-			<zipfileset dir="." prefix="${zipbasedir}"
-			            includes="machine.properties, ant.properties, build.xml, *.txt"/>
+			<zipfileset dir="." prefix="${zipbasedir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
 
-			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.txt"/>
-			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc"/>
+			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.txt" />
+			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc" />
 
-			<zipfileset dir="doc/out" prefix="${zipbasedir}/doc/tutorial"/>
-			<zipfileset dir="${drs.dir.dist.api}"
-			            prefix="${zipbasedir}/doc/api"/>
+			<zipfileset dir="doc/out" prefix="${zipbasedir}/doc/tutorial" />
+			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
 
-			<zipfileset file="${file.drs.core.jar}"
-			            fullpath="${zipbasedir}/lib/${filename.drs.core.jar}"/>
-			<zipfileset file="${file.drs.tutorial.jar}"
-			            fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}"/>
-			<!--<zipfileset file="${file.drs.test.jar}"
-			            fullpath="${zipbasedir}/lib/${filename.drs.test.jar}"/>-->
+			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
+			<zipfileset file="${file.drs.tutorial.jar}" fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}" />
+			<zipfileset file="${file.drs.test.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.jar}" />
+			<!--remove me after deprecating old tests-->
+			<zipfileset file="${file.drs.test.old.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.old.jar}" />
 		</zip>
-		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}"/>
+		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}" />
 	</target>
 
 	<target name="copyLog4j">
-		<mkdir dir="${drs.dir.dist.classes}"/>
-		<copy file="${drs.dir.src.core}/log4j.xml"
-		      todir="${drs.dir.dist.classes}"/>
+		<mkdir dir="${drs.dir.dist.classes}" />
+		<copy file="${drs.dir.src.core}/log4j.xml" todir="${drs.dir.dist.classes}" />
 	</target>
 
 	<target name="run-example" depends="build-example, copyLog4j">
 		<java classname="f1.stepbystep.StepByStepExample">
-			<classpath refid="class.path"/>
+			<classpath refid="class.path" />
 		</java>
 	</target>
-
-	<target name="run-regression" depends="build-regression, copyLog4j">
+	
+	<!--Run db4ounit tests in development release-->
+	<target name="run-regression" depends="build-old-tests, copyLog4j">
 		<java classname="com.db4o.test.replication.AllTestsReplication">
-			<classpath refid="class.path"/>
+			<classpath refid="class.path" />
 		</java>
 	</target>
 </project>
