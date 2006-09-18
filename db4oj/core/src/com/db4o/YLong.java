@@ -6,6 +6,9 @@ import com.db4o.foundation.*;
 import com.db4o.reflect.ReflectClass;
 
 
+/**
+ * @exclude
+ */
 public class YLong extends YapJavaClass
 {
 
