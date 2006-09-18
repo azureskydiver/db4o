@@ -7,7 +7,6 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
-import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.ClassIndexStrategy;
 import com.db4o.inside.convert.*;

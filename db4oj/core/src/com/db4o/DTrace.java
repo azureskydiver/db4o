@@ -11,14 +11,14 @@ public class DTrace {
     public static final boolean enabled = false;
     
     private static void breakPoint(){
-        int placeBreakPointHere = 1;
+        if(enabled){ /* breakpoint here */ }
     }
     
-    private static final Object init(){
+    private static final void configure(){
         if(enabled){
+        
+            breakOnEvent(15);
             
-            // breakOnEvent(15);
-
             // addRange(4874);
             
             // addRangeWithEnd(3835808, 3836267);
@@ -28,9 +28,14 @@ public class DTrace {
             
             trackEventsWithoutRange();
             
+            turnAllOffExceptFor(new DTrace[] {FREE_ON_COMMIT, FREE, REREAD_OLD_UUID, WRITE_XBYTES});
             
-            
-            
+            // turnAllOffExceptFor(new DTrace[] {WRITE_POINTER});
+        }
+    }
+    
+    private static final Object init(){
+        if(enabled){
             ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
             BIND = new DTrace(true, true, "bind", true);
             CANDIDATE_READ = new DTrace(true, true, "candidate read", true);
@@ -75,13 +80,9 @@ public class DTrace {
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
             WRITE_POINTER = new DTrace(true, true, "write pointer", true);
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
-            WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true); 
+            WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true);
             
-            // turnAllOffExceptFor(new DTrace[] {FREE_ON_COMMIT, FREE, REREAD_OLD_UUID, WRITE_XBYTES});
-            
-            // turnAllOffExceptFor(new DTrace[] {WRITE_POINTER});
-            
-         
+            configure();
         }
         return null;
     }
@@ -164,7 +165,7 @@ public class DTrace {
     public static DTrace WRITE_XBYTES;
     public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
     
-    private static final Object forInit = init();
+    public static final Object forInit = init();
     
     private static DTrace all[];
     private static int current;

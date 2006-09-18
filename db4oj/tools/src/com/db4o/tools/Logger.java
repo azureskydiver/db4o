@@ -174,7 +174,7 @@ public class Logger
 			if(classes[i] == java.util.Date.class){
 				String fieldName = className + ".getTime";
 				Object obj = new Long(((java.util.Date)a_object).getTime());
-				log(a_container, obj, Long.class,fieldName, a_depth + 1, -1, a_list);
+				log(a_container, obj, fieldName, a_depth + 1, -1, a_list);
 				
 			}else{
 				Field[] fields = classes[i].getDeclaredFields();
@@ -188,11 +188,10 @@ public class Logger
 							int len = Array.getLength(obj);
 							for (int k = 0 ; k < len; k ++){
 								Object element = Array.get(obj,k);
-								Class arrClass = element==null ? null:element.getClass();
-								log(a_container, element,arrClass,fieldName, a_depth + 1, k, a_list);
+								log(a_container, element,fieldName, a_depth + 1, k, a_list);
 							}
 						}else{
-							log(a_container, obj, fields[j].getType(),fieldName, a_depth + 1, -1, a_list);
+							log(a_container, obj, fieldName, a_depth + 1, -1, a_list);
 						}
 					}catch(Exception e){
 					}
@@ -201,7 +200,7 @@ public class Logger
 		}
 	}
 
-	private static void log(ObjectContainer a_container, Object a_object, Class a_Class, String a_fieldName, int a_depth, int a_arrayElement, Collection4 a_list){
+	private static void log(ObjectContainer a_container, Object a_object, String a_fieldName, int a_depth, int a_arrayElement, Collection4 a_list){
 		if(a_depth > maximumDepth){
 			return;
 		}
@@ -223,9 +222,8 @@ public class Logger
 					log(a_depth, fieldName, "DEACTIVATED " + a_object.getClass().getName());
 				}
 				return;
-			}else{
-				log(a_depth, fieldName, a_object.toString());
 			}
+			log(a_depth, fieldName, a_object.toString());
 		}else{
 			log(a_depth, fieldName, "[NULL]");
 		}
@@ -250,35 +248,6 @@ public class Logger
         log(a_property + ": " + a_value);
     }
 
-    private static void log (boolean a_true) {
-        if (a_true){
-            log("true");
-        } else{
-            log("false");
-        }
-    }
-
-    private static void log (Exception e, Object obj, String msg) {
-        String l_msg;
-        if (e != null) {
-            l_msg = "!!! " + e.getClass().getName();
-            String l_exMsg = e.getMessage();
-            if (l_exMsg != null) {
-                l_msg += sp + l_exMsg;
-            }
-        }
-        else {
-            l_msg = "!!!Exception log";
-        }
-        if (obj != null) {
-            l_msg += " in " + obj.getClass().getName();
-        }
-        if (msg != null) {
-            l_msg += sp + msg;
-        }
-        log(l_msg);
-    }
-	
 	private static Class[] getClassHierarchy(Object a_object){
 		Class[] classes = new Class[] {a_object.getClass()};
 		return getClassHierarchy(classes);

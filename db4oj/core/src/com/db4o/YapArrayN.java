@@ -144,7 +144,7 @@ public final class YapArrayN extends YapArray {
     public final void writeNew1(Object obj, YapWriter writer, int length) {
         
         if (Deploy.debug) {
-            writer.writeBegin(identifier(), length);
+            writer.writeBegin(identifier());
         }
         
         int[] dim = _reflectArray.dimensions(obj);

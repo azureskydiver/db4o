@@ -156,7 +156,7 @@ public abstract class YapMeta {
         }
         
         if (Deploy.debug) {
-            writer.writeBegin(getIdentifier(), length);
+            writer.writeBegin(getIdentifier());
         }
 
         writeThis(a_trans, writer);

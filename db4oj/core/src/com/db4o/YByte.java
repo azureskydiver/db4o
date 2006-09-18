@@ -29,10 +29,6 @@ final class YByte extends YapJavaClass
 		return i_primitive;
 	}
 	
-	boolean isNoConstraint(Object obj, boolean isPrimitive){
-		return obj.equals(primitiveNull());
-	}
-	
 	public int linkLength(){
 		return LENGTH;
 	}

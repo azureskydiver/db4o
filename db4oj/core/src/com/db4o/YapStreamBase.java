@@ -1787,7 +1787,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 return 0;
             }
             yapObject = new YapObject(0);
-            if(yapObject.store(a_trans, yc, a_object, a_updateDepth)){
+            if(yapObject.store(a_trans, yc, a_object)){
 				idTreeAdd(yapObject);
 				hcTreeAdd(yapObject);
 				if(a_object instanceof Db4oTypeImpl){

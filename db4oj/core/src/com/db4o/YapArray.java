@@ -392,7 +392,7 @@ public class YapArray extends YapIndependantType {
     public void writeNew1(Object obj, YapWriter writer, int length) {
         
         if (Deploy.debug) {
-            writer.writeBegin(identifier(), length);
+            writer.writeBegin(identifier());
         }
         
         writeClass(obj, writer);
