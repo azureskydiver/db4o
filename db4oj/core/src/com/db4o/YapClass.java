@@ -1854,11 +1854,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return false;
     }
 
-    public String toString(MarshallerFamily mf, YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
+    public String toString(MarshallerFamily mf, YapWriter writer, YapObject yapObject, int depth, int maxDepth)  {
         int length = readFieldCount(writer);
         String str = "";
         for (int i = 0; i < length; i++) {
-            str += i_fields[i].toString(mf, writer, yapObject, depth + 1, maxDepth);
+            str += i_fields[i].toString(mf, writer);
         }
         if (i_ancestor != null) {
             str+= i_ancestor.toString(mf, writer, yapObject, depth, maxDepth);

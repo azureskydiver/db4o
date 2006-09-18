@@ -239,7 +239,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return a_object;
 	}
 
-	final Object readPrefetch(YapStream a_stream, Transaction ta, YapWriter a_reader) {
+	final Object readPrefetch(YapStream a_stream, YapWriter a_reader) {
 
 		Object readObject = null;
 		if (beginProcessing()) {
@@ -292,14 +292,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		i_object = a_object;
 	}
 
-	void setStateOnRead(YapWriter reader) {
-		// Do nothing
-	}
-	
 	/** return true for complex objects to instruct YapStream to add to lookup trees
 	 * and to perform delayed storage through call to continueset further up the stack.
 	 */ 
-	boolean store(Transaction a_trans, YapClass a_yapClass, Object a_object, int a_updateDepth){
+	boolean store(Transaction a_trans, YapClass a_yapClass, Object a_object){
 		
 		i_object = a_object;
 		writeObjectBegin();

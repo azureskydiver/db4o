@@ -493,8 +493,7 @@ public class YapClient extends YapStream implements ExtClient {
                     if(obj != null){
                         prefetched[position[i]] = obj;
                     }else{
-    					prefetched[position[i]] = new YapObject(idsToGet[i])
-    							.readPrefetch(this, qResult.i_trans, reader);
+    					prefetched[position[i]] = new YapObject(idsToGet[i]).readPrefetch(this, reader);
                     }
 				}
 			}

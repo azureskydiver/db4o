@@ -3,7 +3,6 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
-import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
 
 public abstract class ObjectMarshaller {
@@ -80,7 +79,7 @@ public abstract class ObjectMarshaller {
         YapWriter writer = new YapWriter(a_trans, length);
         writer.useSlot(id, address, length);
         if (Deploy.debug) {
-            writer.writeBegin(YapConst.YAPOBJECT, length);
+            writer.writeBegin(YapConst.YAPOBJECT);
         }
         writer.setUpdateDepth(updateDepth);
         return writer;

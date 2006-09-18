@@ -87,7 +87,7 @@ public abstract class StringMarshaller {
     public static void writeShort(YapStream stream, String str, YapReader reader){
         int length = str.length();
         if (Deploy.debug) {
-            reader.writeBegin(YapConst.YAPSTRING, length);
+            reader.writeBegin(YapConst.YAPSTRING);
         }
         reader.writeInt(length);
         stream.stringIO().write(reader, str);

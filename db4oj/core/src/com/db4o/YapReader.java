@@ -179,7 +179,7 @@ public class YapReader {
         return "";
     }
     
-    void writeBegin(byte a_identifier) {
+    public void writeBegin(byte a_identifier) {
         if (Deploy.debug) {
             if (Deploy.brackets) {
                 append(YapConst.YAPBEGIN);
@@ -187,12 +187,6 @@ public class YapReader {
             if (Deploy.identifiers) {
                 append(a_identifier);
             }
-        }
-    }
-    
-    public void writeBegin(byte a_identifier, int a_length) {
-        if (Deploy.debug) {
-            writeBegin(a_identifier);
         }
     }
     

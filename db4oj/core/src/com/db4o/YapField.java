@@ -7,7 +7,6 @@ import com.db4o.ext.StoredField;
 import com.db4o.foundation.*;
 import com.db4o.inside.Exceptions4;
 import com.db4o.inside.btree.*;
-import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
@@ -802,7 +801,7 @@ public class YapField implements StoredField {
         return sb.toString();
     }
 
-    public String toString(MarshallerFamily mf, YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
+    public final String toString(MarshallerFamily mf, YapWriter writer) {
         String str = "\n Field " + i_name;
         if (! alive()) {
             incrementOffset(writer);

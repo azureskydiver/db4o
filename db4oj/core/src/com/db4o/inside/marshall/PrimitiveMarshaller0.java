@@ -22,7 +22,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             YapStream stream = trans.stream();
             id = stream.newUserObject();
             int address = -1;
-            int length = objectLength(handler, obj);
+            int length = objectLength(handler);
             if(! stream.isClient()){
                 address = trans.i_file.getSlot(length); 
             }
@@ -31,7 +31,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             YapWriter writer = new YapWriter(trans, length);
             writer.useSlot(id, address, length);
             if (Deploy.debug) {
-                writer.writeBegin(YapConst.YAPOBJECT, length);
+                writer.writeBegin(YapConst.YAPOBJECT);
             }
             writer.writeInt(yapClassPrimitive.getID());
             
