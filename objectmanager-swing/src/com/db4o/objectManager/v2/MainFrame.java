@@ -35,10 +35,7 @@ public class MainFrame extends JFrame implements WindowListener {
                     : new Dimension(730, 560);
 
 
-    private static final String COPYRIGHT =
-            "\u00a9 2006 db4objects Inc. All Rights Reserved.";
-
-
+    
     /**
      * Describes optional settings of the JGoodies Looks.
      */
@@ -130,8 +127,8 @@ public class MainFrame extends JFrame implements WindowListener {
         setContentPane(buildContentPane());
         setTitle(getWindowTitle());
         setJMenuBar(new ConnectedMenuBar(this, settings,
-                        createHelpActionListener(),
-                        createAboutActionListener()));
+                        Dashboard.createHelpActionListener(),
+                        Dashboard.createAboutActionListener(this)));
         setIconImage(ResourceManager.createImageIcon("database2.gif", "database").getImage());
 
     }
@@ -164,17 +161,7 @@ public class MainFrame extends JFrame implements WindowListener {
     }
 
 
-    /**
-     * Creates and answers an ActionListener that opens the help viewer.
-     */
-    protected ActionListener createHelpActionListener() {
-        return null;
-    }
-
-    protected ActionListener createAboutActionListener() {
-        return new AboutActionListener();
-    }
-
+   
     public void setConnectionInfo(Db4oConnectionSpec connectionInfo) {
         mainPanel.setConnectionSpec(connectionInfo);
     }
@@ -217,22 +204,6 @@ public class MainFrame extends JFrame implements WindowListener {
 
     public void closeObjectContainer() {
         mainPanel.closeObjectContainer();
-    }
-
-
-    private final class AboutActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(
-                    MainFrame.this,
-                    "db4o Object Manager\n\n"
-                            + COPYRIGHT + "\n\n");
-        }
-    }
-
-    private final class OpenFileActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            new JFileChooser().showOpenDialog(MainFrame.this);
-        }
     }
 
 
