@@ -54,7 +54,8 @@
         </copy>
         <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}">
             <manifest>
-                <attribute name="Class-Path" value="lib/db4o-5.6-java5.jar lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/objectmanager-api.jar"/>
+                <attribute name="Class-Path"
+                           value="lib/db4o-5.6-java5.jar lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/objectmanager-api.jar"/>
                 <attribute name="Main-Class" value="com.db4o.objectManager.v2.Dashboard"/>
             </manifest>
         </jar>
@@ -94,6 +95,12 @@
         <signjar jar="${wslib}/objectmanager-api.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/objectmanager.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
 
+    </target>
+
+    <target name="zip" depends="dist">
+        <zip destfile="objectmanager-2.0.zip"
+             basedir="${dist}"
+                />
     </target>
 
     <target name="clean"
