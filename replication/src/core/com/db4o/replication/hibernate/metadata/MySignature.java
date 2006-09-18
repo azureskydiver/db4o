@@ -7,7 +7,6 @@ import com.db4o.Unobfuscated;
 /**
  * Serves as the identifier of a HibernateReplicationProvider. 
  * 
- * @see HibernateReplicationProvider
  * @author Albert Kwan
  *
  * @version 1.2
