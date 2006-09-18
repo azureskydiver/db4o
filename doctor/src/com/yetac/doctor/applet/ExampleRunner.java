@@ -85,18 +85,17 @@ public class ExampleRunner {
 
     private abstract class Executor {
         public void execute(Method exampleMethod) throws Exception{
-            callSetClassloader();
+            configure();
             executeInternal(exampleMethod);
         }
         
         // TODO: setCL() is deprecated, replace with reflectWith() call
-        private void callSetClassloader() throws Exception {
+        private void configure() throws Exception {
             try {
-				Method configureMethod = db4oClass.getMethod("configure",new Class[] {});
-				Object config = configureMethod.invoke(db4oClass, new Class[] {});
-				Class configClass = classLoader.loadClass("com.db4o.config.Configuration");
-				Method setClassLoaderMethod = configClass.getMethod("setClassLoader",new Class[] { Object.class });
-				setClassLoaderMethod.invoke(config, new Object[] { classLoader });
+				Object configuration = applyMethod(db4oClass, "configure", db4oClass, new Class[] {}, new Object[]{});
+				Class configurationClass = classLoader.loadClass("com.db4o.config.Configuration");
+                applyMethod(configurationClass, "setClassLoader", configuration, new Class[] { Object.class }, new Object[] { classLoader });
+                applyMethod(configurationClass, "allowVersionUpdates", configuration, new Class[] { boolean.class }, new Object[] { new Boolean(true)});
 			} catch (Exception exc) {
 				exc.printStackTrace();
 				throw exc;
