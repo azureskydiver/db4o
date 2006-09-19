@@ -96,6 +96,9 @@
     <Compile Include="src\com\db4odoc\f1\reflections\LoggingArray.vb" />
     <Compile Include="src\com\db4odoc\f1\reflections\LoggingReflector.vb" />
     <Compile Include="src\com\db4odoc\f1\reflections\ReflectorExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\remote\Car.vb" />
+    <Compile Include="src\com\db4odoc\f1\remote\RemoteExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\remote\UpdateServer.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\PilotCategories.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\StaticFieldExample.vb" />
