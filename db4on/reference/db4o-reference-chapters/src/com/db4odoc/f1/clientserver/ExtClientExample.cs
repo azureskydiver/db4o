@@ -38,6 +38,7 @@ namespace com.db4odoc.f1.clientserver
 				System.Console.WriteLine("Main database file again: ");
 				clientExt.SwitchToMainFile();
 				RetrieveAll(clientExt);
+				clientExt.Close();
 			}
 			finally 
 			{
