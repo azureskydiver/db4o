@@ -14,6 +14,7 @@ import com.db4odoc.f1.ios.IOExample;
 import com.db4odoc.f1.lists.CollectionExample;
 import com.db4odoc.f1.metainf.MetaInfExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
+import com.db4odoc.f1.remote.RemoteExample;
 import com.db4odoc.f1.staticfields.StaticFieldExample;
 import com.db4odoc.f1.uuids.UUIDExample;
 
@@ -41,5 +42,6 @@ public class Main {
         IOExample.main(args);
         ExtClientExample.main(args);
         MetaInfExample.main(args);
+        RemoteExample.main(args);
     }
 }

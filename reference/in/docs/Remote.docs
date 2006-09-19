@@ -1,0 +1,47 @@
+.n
+.a Remote ..
+.1 Remote code execution ..
+
+Sometimes you will need your client to update many objects in a similar way on the server. The ._
+solution that is sought in this case is to give a server a criteria for selecting objects and ._
+instructions on what to do with them. In this way you will avoid the overhead of getting the objects ._
+over network and sending the updated set back.
+.2 Remote execution through evaluation API ..
+One of the ways to do that is using evaluation API. Evaluation/candidate classes are serialized ._
+and sent to the server. That means that if we ._
+will put the selection criteria and update code inside evaluation class, we will have that code on the ._
+server and executing a query using evaluation on the client side will run the update code on the server side.
+For easier query execution we can use database singleton - a class that have only one instance saved ._
+in the database. That actually can be the class calling the query itself.
+Let's fill up our server database:
+.s com.db4odoc.f1.remote.RemoteExample#setObjects ..
+Now we can update the cars using specially designed singleton:
+.s com.db4odoc.f1.remote.RemoteExample#updateCars ..
+This method has its pros and cons. 
+Pros:
+- any arbitrary code can be executed;
+- the code is executed on the server side;
+Cons:
+- the code will have to be serialized and sent over a network connection;
+- changing the code will require update of all clients
+
+
+.2 Using messaging API for remote code execution ..
+Messaging API gives you an easy and powerful tool for remote code execution. The short overview of the ._
+API is  .l Messaging here ..  . 
+All you will need to do is to define specific message class or classes (should be shared between ._
+client and server).
+The client side can issue  messages using:
+.c MessageSender#send(message) ..
+The server side should register a message listener:
+.c Configuration#setMessageRecipient(MessageRecipient) ..
+Message recipient should define a response to the different messages received in 
+.c processMessage(objectContainer, message) ..
+method. ObjectContainer parameter gives full control over the database.
+Let's reset our database and try updating using special UpdateServer message.
+.s com.db4odoc.f1.remote.RemoteExample#setObjects ..
+.s com.db4odoc.f1.remote.RemoteExample#updateCarsWithMessage ..
+You can also put some information in the message being sent (UpdateServer class).
+The advantage of this method is that having predefined message types you can make any changes to ._
+the handling code only on the server side. In the situations with many distributed clients it can really ._
+save you lots of time on support.
