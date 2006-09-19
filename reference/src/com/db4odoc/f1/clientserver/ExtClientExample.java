@@ -40,6 +40,7 @@ public class ExtClientExample extends Util {
 			System.out.println("Main database file again: ");
 			clientExt.switchToMainFile();
 			retrieveAll(clientExt);
+			clientExt.close();
         }
         finally {
             server.close();
