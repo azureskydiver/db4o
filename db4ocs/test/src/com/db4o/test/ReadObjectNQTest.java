@@ -16,14 +16,9 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 
 	private static String testString = "simple test string";
 
-	protected void store() throws Exception {
-		ExtObjectContainer oc = db();
-		try {
-			for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
-				oc.set(new SimpleObject(testString + i, i));
-			}
-		} finally {
-			oc.close();
+	protected void store(ExtObjectContainer oc) throws Exception {
+		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
+			oc.set(new SimpleObject(testString + i, i));
 		}
 	}
 
@@ -37,6 +32,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 		});
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
+		System.out.println("AAAAAAAA");
 	}
 
 	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
@@ -49,6 +45,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 		});
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
+		System.out.println("BBBBBBBB");
 	}
 
 }
