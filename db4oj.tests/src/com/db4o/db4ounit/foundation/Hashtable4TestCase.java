@@ -39,21 +39,21 @@ public class Hashtable4TestCase implements TestCase {
 		
 		Assert.areEqual("foo", table.get(key1));
 		Assert.areEqual("bar", table.get(key2));
-		Assert.areEqual(2, keyCount(table));
+		Assert.areEqual(2, countKeys(table));
 		Assert.areEqual(2, table.size());
 		
 		table.put(key3, "baz");
 		Assert.areEqual("foo", table.get(key1));
 		Assert.areEqual("baz", table.get(key2));
-		Assert.areEqual(2, keyCount(table));
+		Assert.areEqual(2, countKeys(table));
 		Assert.areEqual(2, table.size());
 		
 		Assert.areEqual("baz", table.remove(key2));
-		Assert.areEqual(1, keyCount(table));
+		Assert.areEqual(1, countKeys(table));
 		Assert.areEqual(1, table.size());
 		
 		Assert.areEqual("foo", table.remove(key1));
-		Assert.areEqual(0, keyCount(table));
+		Assert.areEqual(0, countKeys(table));
 		Assert.areEqual(0, table.size());
 	}
 	
@@ -66,7 +66,7 @@ public class Hashtable4TestCase implements TestCase {
 		table.put(key, "bar");
 		
 		Assert.areEqual("bar", table.get(key));		
-		Assert.areEqual(1, keyCount(table));
+		Assert.areEqual(1, countKeys(table));
 	}
 	
 	static class Key {
@@ -92,36 +92,36 @@ public class Hashtable4TestCase implements TestCase {
 		
 		Assert.areEqual("foo", table.get(key1));
 		Assert.areEqual("bar", table.get(key2));
-		Assert.areEqual(2, keyCount(table));
+		Assert.areEqual(2, countKeys(table));
 		
 		table.put(key2, "baz");
 		Assert.areEqual("foo", table.get(key1));
 		Assert.areEqual("baz", table.get(key2));
-		Assert.areEqual(2, keyCount(table));
+		Assert.areEqual(2, countKeys(table));
 		
 		table.put(key1, "spam");
 		Assert.areEqual("spam", table.get(key1));
 		Assert.areEqual("baz", table.get(key2));
-		Assert.areEqual(2, keyCount(table));
+		Assert.areEqual(2, countKeys(table));
 		
 		table.put(key3, "eggs");
 		Assert.areEqual("spam", table.get(key1));
 		Assert.areEqual("baz", table.get(key2));
 		Assert.areEqual("eggs", table.get(key3));
-		Assert.areEqual(3, keyCount(table));
+		Assert.areEqual(3, countKeys(table));
 		
 		table.put(key2, "mice");
 		Assert.areEqual("spam", table.get(key1));
 		Assert.areEqual("mice", table.get(key2));
 		Assert.areEqual("eggs", table.get(key3));
-		Assert.areEqual(3, keyCount(table));
+		Assert.areEqual(3, countKeys(table));
 	}
 	
 	static class KeyCount {
 		public int keys;
 	}
 
-	private int keyCount(Hashtable4 table) {
+	private int countKeys(Hashtable4 table) {
 		final KeyCount count = new KeyCount();
 		table.forEachKey(new Visitor4() {
 			public void visit(Object key) {

@@ -40,7 +40,7 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase{
         new IndexCreateDropTestCase().runSolo();
     }
     
-    public void store(){
+    protected void store(){
         for (int i = 0; i < VALUES.length; i++) {
             db().set(new IndexCreateDropItem(VALUES[i]));
         }

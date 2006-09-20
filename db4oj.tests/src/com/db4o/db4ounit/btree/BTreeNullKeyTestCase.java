@@ -22,7 +22,7 @@ public class BTreeNullKeyTestCase extends BTreeTestCaseBase {
 		
 		assertSingleElement(element);
 	}
-	
+
 	public void testMultipleNullKeys() {
 		
 		final Integer[] keys = new Integer[] { new Integer(1), null, new Integer(2), null, new Integer(3) };
@@ -58,6 +58,18 @@ public class BTreeNullKeyTestCase extends BTreeTestCaseBase {
 		BTreeNodeSearchResult higher=btree.searchLeaf(trans(), new FieldIndexKey(42,null),SearchTarget.HIGHEST);
 		range=lower.createIncludingRange(higher);
 		Assert.areEqual(2,range.size());		
+	}
+	
+	public void add(Object element) {
+		_btree.add(trans(), element);
+	}
+	
+	public void remove(Object element) {
+		_btree.remove(trans(), element);
+	}
+	
+	private void assertSingleElement(Object element) {
+		BTreeAssert.assertSingleElement(trans(), _btree, element);
 	}
 
 	public static void main(String[] args) {

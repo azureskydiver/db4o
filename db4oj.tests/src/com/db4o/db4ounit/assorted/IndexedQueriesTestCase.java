@@ -36,7 +36,7 @@ public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
 
     }
 
-    public void configure() {
+    protected void configure() {
         indexField("_name");
         indexField("_int");
         indexField("_integer");
@@ -47,7 +47,7 @@ public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
     }
     
 
-    public void store() {
+    protected void store() {
         
         String[] strings = new String[] {"a", "c", "b", "f", "e"};
         

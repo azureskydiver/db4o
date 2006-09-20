@@ -22,7 +22,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         new FieldIndexTestCase().runSolo();
     }
     
-	public void store() {
+	protected void store() {
 		storeItems(FOOS);
 	}
     

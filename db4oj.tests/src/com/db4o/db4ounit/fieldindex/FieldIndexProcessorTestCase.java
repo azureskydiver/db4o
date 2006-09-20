@@ -21,7 +21,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		indexField(NonIndexedFieldIndexItem.class, "indexed");
 	}
 	
-	public void store() {
+	protected void store() {
 		storeItems(new int[] { 3, 4, 7, 9 });
 		storeComplexItems(
 						new int[] { 3, 4, 7, 9 },

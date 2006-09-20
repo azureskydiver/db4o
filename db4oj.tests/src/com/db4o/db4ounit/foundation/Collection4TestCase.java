@@ -2,12 +2,9 @@
 
 package com.db4o.db4ounit.foundation;
 
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.test.Test;
+import com.db4o.foundation.*;
 
-import db4ounit.Assert;
-import db4ounit.TestCase;
+import db4ounit.*;
 
 public class Collection4TestCase implements TestCase {
 	
@@ -21,8 +18,8 @@ public class Collection4TestCase implements TestCase {
 		Assert.isNotNull(iterator);
 		
 		for (int i=expected.length-1; i>=0; --i) {
-			Test.ensure(iterator.moveNext());
-			Test.ensureEquals(expected[i], iterator.current());
+			Assert.isTrue(iterator.moveNext());
+			Assert.areEqual(expected[i], iterator.current());
 		}
 		Assert.isFalse(iterator.moveNext());
 	}

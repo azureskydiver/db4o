@@ -81,4 +81,17 @@ public class BTreeAssert {
 		return new BTree(stream.getSystemTransaction(), id, new YInt(stream), null, 7, treeCacheHeight);
 	}
 
+	public static void assertSingleElement(Transaction trans, BTree btree, Object element) {
+		Assert.areEqual(1, btree.size(trans));
+		
+		final BTreeRange result = btree.search(trans, element);
+		ExpectingVisitor expectingVisitor = new ExpectingVisitor(new Object[] { element });
+		BTreeAssert.traverseKeys(result, expectingVisitor);
+		expectingVisitor.assertExpectations();
+		
+		expectingVisitor = new ExpectingVisitor(new Object[] { element });
+		btree.traverseKeys(trans, expectingVisitor);
+		expectingVisitor.assertExpectations();
+	}
+
 }

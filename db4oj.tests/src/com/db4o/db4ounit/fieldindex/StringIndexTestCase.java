@@ -32,7 +32,7 @@ public class StringIndexTestCase extends AbstractDb4oTestCase {
         }
 	}
     
-    public void configure(){
+    protected void configure(){
         indexField(Item.class, "name");
     }
     

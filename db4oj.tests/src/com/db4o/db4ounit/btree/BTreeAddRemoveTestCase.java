@@ -9,7 +9,7 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 	
 	public void testSingleRemoveAdd() {
 		
-		final Integer element = new Integer(1);
+		final int element = 1;
 		add(element);		
 		assertSize(1);
 		
@@ -34,7 +34,7 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 
 	public void testMultipleRemoveAdds() {
 		
-		final Integer element = new Integer(1);
+		final int element = 1;
 		
 		add(element);
 		remove(element);
@@ -45,7 +45,7 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 	}
 	
 	public void testMultiTransactionCancelledRemoval() {
-		final Integer element = new Integer(1);
+		final int element = 1;
 		add(element);
 		commit();
 		
@@ -84,7 +84,7 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 
 	public void testAddRemoveInDifferentTransactions() {
 		
-		final Integer element = new Integer(1);
+		final int element = 1;
 		
 		add(trans(), element);
 		add(systemTrans(), element);
@@ -97,7 +97,7 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 	} 
 	
 	public void testRemoveAddInDifferentTransactions() {
-		final Integer element = new Integer(1);
+		final int element = 1;
 		
 		add(element);
 		
