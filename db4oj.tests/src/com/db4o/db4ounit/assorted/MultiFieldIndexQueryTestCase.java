@@ -76,7 +76,7 @@ public class MultiFieldIndexQueryTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	public void store() throws Exception {
+	protected void store() throws Exception {
 		Person aaron = new Person("Aaron", "OneOK");
 		Person bill = new Person("Bill", "TwoOK");
 		Person chris = new Person("Chris", "ThreeOK");

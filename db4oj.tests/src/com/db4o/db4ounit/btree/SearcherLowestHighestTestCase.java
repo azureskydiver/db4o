@@ -11,34 +11,34 @@ public class SearcherLowestHighestTestCase implements TestCase, TestLifeCycle{
     
     private Searcher _searcher;
     
-    private final int SEARCH_FOR = 9;
+    private static final int SEARCH_FOR = 9;
     
-    private final int[] EVEN_EVEN_VALUES = new int[] {4, 9, 9, 9, 9, 11, 13, 17};
+    private static final int[] EVEN_EVEN_VALUES = new int[] {4, 9, 9, 9, 9, 11, 13, 17};
     
-    private final int[] EVEN_ODD_VALUES = new int[] {4, 5, 9, 9, 9, 11, 13, 17};
+    private static final int[] EVEN_ODD_VALUES = new int[] {4, 5, 9, 9, 9, 11, 13, 17};
     
-    private final int[] ODD_EVEN_VALUES = new int[] {4, 9, 9, 9, 9, 11, 13};
+    private static final int[] ODD_EVEN_VALUES = new int[] {4, 9, 9, 9, 9, 11, 13};
     
-    private final int[] ODD_ODD_VALUES = new int[] {4, 5, 9, 9, 9, 11, 13};
+    private static final int[] ODD_ODD_VALUES = new int[] {4, 5, 9, 9, 9, 11, 13};
     
-    private final int[] NO_MATCH_EVEN = new int[] {4, 5, 10, 10, 10, 11};
+    private static final int[] NO_MATCH_EVEN = new int[] {4, 5, 10, 10, 10, 11};
     
-    private final int[] NO_MATCH_ODD = new int[] {4, 5, 10, 10, 10, 11, 13};
+    private static final int[] NO_MATCH_ODD = new int[] {4, 5, 10, 10, 10, 11, 13};
     
     
-    private final int[][] MATCH_VALUES = new int[][]{
+    private static final int[][] MATCH_VALUES = new int[][]{
         EVEN_EVEN_VALUES,
         EVEN_ODD_VALUES,
         ODD_EVEN_VALUES,
         ODD_ODD_VALUES
     };
     
-    private final int[][] NO_MATCH_VALUES = new int[][]{
+    private static final int[][] NO_MATCH_VALUES = new int[][]{
         NO_MATCH_EVEN,
         NO_MATCH_ODD
     };
     
-    private final SearchTarget[] ALL_TARGETS = new SearchTarget[]{SearchTarget.LOWEST, SearchTarget.ANY, SearchTarget.HIGHEST};
+    private static final SearchTarget[] ALL_TARGETS = new SearchTarget[]{SearchTarget.LOWEST, SearchTarget.ANY, SearchTarget.HIGHEST};
     
     public void testMatch(){
         for (int i = 0; i < MATCH_VALUES.length; i++) {

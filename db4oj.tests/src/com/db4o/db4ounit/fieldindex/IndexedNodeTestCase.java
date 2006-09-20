@@ -13,7 +13,7 @@ public class IndexedNodeTestCase extends FieldIndexProcessorTestCaseBase {
 		new IndexedNodeTestCase().runSolo();
 	}
 	
-	public void store() {
+	protected void store() {
 		storeItems(new int[] { 3, 4, 7, 9 });
 		storeComplexItems(
 						new int[] { 3, 4, 7, 9 },

@@ -22,7 +22,7 @@ public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase {
 	    .indexed(true);
 	}
 	
-	public abstract void store();
+	protected abstract void store();
 	
 	protected void storeItems(final int[] foos) {
 		for (int i = 0; i < foos.length; i++) {

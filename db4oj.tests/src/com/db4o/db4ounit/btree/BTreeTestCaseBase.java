@@ -35,7 +35,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 
 	protected void add(int[] keys) {
 		for (int i=0; i<keys.length; ++i) {
-			add(new Integer(keys[i]));
+			add(keys[i]);
 		}
 	}
 
@@ -53,13 +53,13 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 
 	protected void remove(Transaction transaction, int[] keys) {
 		for (int i = 0; i < keys.length; i++) {
-			remove(transaction, new Integer(keys[i]));
+			remove(transaction, keys[i]);
 		}
 	}
 
 	protected void add(Transaction transaction, int[] keys) {
 		for (int i = 0; i < keys.length; i++) {
-			add(transaction, new Integer(keys[i]));
+			add(transaction, keys[i]);
 		}
 	}
 
@@ -67,28 +67,20 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 		BTreeAssert.assertEmpty(transaction, _btree);
 	}
 
-	protected void add(Transaction transaction, Integer element) {
-		_btree.add(transaction, element);
+	protected void add(Transaction transaction, int element) {
+		_btree.add(transaction, new Integer(element));
 	}
 
-	protected void remove(final Integer element) {
+	protected void remove(final int element) {
 		remove(trans(), element);
 	}
 	
-	protected void remove(int element) {
-		remove(new Integer(element));
+	protected void remove(final Transaction trans, final int element) {
+		_btree.remove(trans, new Integer(element));
 	}
 
-	protected void remove(final Transaction trans, final Integer element) {
-		_btree.remove(trans, element);
-	}
-
-	protected void add(final Integer element) {
-		_btree.add(trans(), element);
-	}
-	
 	protected void add(int element) {
-		add(new Integer(element));
+		add(trans(), element);
 	}
 
 	private int size() {
@@ -99,20 +91,11 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 		Assert.areEqual(expected, size());
 	}
 
-	protected void assertSingleElement(final Integer element) {
+	protected void assertSingleElement(final int element) {
 		assertSingleElement(trans(), element);
 	}
-
-	protected void assertSingleElement(final Transaction trans, final Integer element) {
-		Assert.areEqual(1, _btree.size(trans));
-		
-		final BTreeRange result = _btree.search(trans, element);
-		ExpectingVisitor expectingVisitor = new ExpectingVisitor(new Object[] { element });
-		BTreeAssert.traverseKeys(result, expectingVisitor);
-		expectingVisitor.assertExpectations();
-		
-		expectingVisitor = new ExpectingVisitor(new Object[] { element });
-		_btree.traverseKeys(trans, expectingVisitor);
-		expectingVisitor.assertExpectations();
+	
+	protected void assertSingleElement(final Transaction trans, final int element) {
+		BTreeAssert.assertSingleElement(trans, _btree, new Integer(element));
 	}
 }

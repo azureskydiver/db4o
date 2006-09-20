@@ -2,12 +2,9 @@
 
 package com.db4o.db4ounit.assorted;
 
-import java.util.Hashtable;
-
-import com.db4o.ObjectSet;
-import com.db4o.YapStream;
-import com.db4o.ext.Db4oDatabase;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.Hashtable4;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
@@ -16,7 +13,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 public class DatabaseUnicityTest extends AbstractDb4oTestCase  {
 
 	public void test() {
-        Hashtable ht = new Hashtable();
+        Hashtable4 ht = new Hashtable4();
         ExtObjectContainer oc = db();
         YapStream yapStream = ((YapStream) oc);
         yapStream.showInternalClasses(true);

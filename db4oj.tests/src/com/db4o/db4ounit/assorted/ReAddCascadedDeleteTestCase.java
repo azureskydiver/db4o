@@ -33,7 +33,7 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
         }
     }
     
-    public void configure(){
+    protected void configure(){
         Db4o.configure().objectClass(Item.class).cascadeOnDelete(true);
     }
     

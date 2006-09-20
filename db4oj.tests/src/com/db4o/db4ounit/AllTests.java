@@ -10,7 +10,7 @@ public class AllTests extends Db4oTestSuite {
 		System.exit(new AllTests().runSolo());
 	}
 
-	public Class[] testCases() {
+	protected Class[] testCases() {
 		return new Class[] {
 			com.db4o.db4ounit.assorted.AllTests.class,
             com.db4o.db4ounit.btree.AllTests.class,

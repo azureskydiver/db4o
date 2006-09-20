@@ -28,7 +28,7 @@ public class DoubleFieldIndexTestCase extends AbstractDb4oTestCase {
         }
 	}
     
-    public void configure(){
+    protected void configure(){
         indexField(Item.class, "value");
     }
     
