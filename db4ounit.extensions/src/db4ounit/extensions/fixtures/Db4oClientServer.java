@@ -9,6 +9,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectServer;
 import com.db4o.ext.ExtObjectContainer;
 
+import db4ounit.TestException;
 import db4ounit.extensions.Db4oFixture;
 
 public class Db4oClientServer implements Db4oFixture {
@@ -43,13 +44,11 @@ public class Db4oClientServer implements Db4oFixture {
 			return Db4o.openClient(HOST, _port, USERNAME, PASSWORD).ext();
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			throw new TestException(e);
 		}
 	}
 
 	public void clean() {
 		_yap.delete();
-
 	}
-
 }
