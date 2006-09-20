@@ -45,6 +45,8 @@
 
     <target name="dist" depends="compile"
             description="generate the distribution">
+        <property name="db4o.version" value="db4o-5.7-java5.jar"/>
+        
         <!-- Create the distribution directory -->
         <mkdir dir="${dist}/lib"/>
 
@@ -55,7 +57,7 @@
         <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}">
             <manifest>
                 <attribute name="Class-Path"
-                           value="lib/db4o-5.6-java5.jar lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/objectmanager-api.jar"/>
+                           value="lib/${db4o.version} lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/objectmanager-api.jar"/>
                 <attribute name="Main-Class" value="com.db4o.objectManager.v2.Dashboard"/>
             </manifest>
         </jar>
@@ -71,6 +73,9 @@
         <copy todir="${wslib}" file="${dist}/objectmanager.jar"/>
         <copy todir="${dist-webstart}">
             <fileset dir="${webstart}"/>
+            <filterset>
+                <filter token="DB4O_VERSION" value="${db4o.version}"/>
+            </filterset>
         </copy>
 
         <!-- now sign all jars -->
@@ -88,7 +93,7 @@
         </genkey>
 
         <!-- There's gotta be a better way than this -->
-        <signjar jar="${wslib}/db4o-5.6-java5.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+        <signjar jar="${wslib}/${db4o.version}" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/db4o-sql.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/forms-1.0.7.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/looks-2.0.4.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
