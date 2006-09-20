@@ -69,15 +69,15 @@ public class Hashtable4TestCase implements TestCase {
 		Assert.areEqual(1, keyCount(table));
 	}
 	
-	class Key {
-		int _hashCode;
+	static class Key {
+		private int _hashCode;
 		
 		public Key(int hashCode) {
 			_hashCode = hashCode;
 		}
 		
 		public int hashCode() {
-			return 0;
+			return _hashCode;
 		}
 	}
 	
@@ -117,7 +117,7 @@ public class Hashtable4TestCase implements TestCase {
 		Assert.areEqual(3, keyCount(table));
 	}
 	
-	class KeyCount {
+	static class KeyCount {
 		public int keys;
 	}
 
