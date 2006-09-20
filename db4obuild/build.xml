@@ -1361,28 +1361,9 @@
 		
 		<sharpen workspace="${target.dir}" resource="db4ounit.extensions/src">
 			<args>
-				<arg value="-pascalcase" />
-				
-				<arg value="-nativeTypeSystem" />
-				
 				<arg value="-cp" />
 				<arg path="${dependencies.jar}" />
-				
-				<arg value="-typeMapping" />
-				<arg value="com.db4o.foundation.ArgumentNullException" />
-				<arg value="System.ArgumentNullException" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="^db4ounit.extensions.fixtures" />
-				<arg value="Db4oUnit.Extensions.Fixtures" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="^db4ounit.extensions" />
-				<arg value="Db4oUnit.Extensions" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="^db4ounit" />
-				<arg value="Db4oUnit" />
+				<arg value="@sharpen-db4ounit-options" />
 			</args>
 		</sharpen>
 		
@@ -1392,13 +1373,79 @@
 			</fileset>
 		</copy>
 		
+		<updatecsharpproject projectFile="${dir.n}/Db4oUnit.Extensions/Db4oUnit.Extensions.csproj">
+			<sources dir="${dir.n}/Db4oUnit.Extensions">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
 		<!--
-		1) Update Db4oUnit.Extensions C# Project
 		2) Compile to make sure conversion works
 		-->
 	</target>
 	
-	<target name="sharpen" description="create .NET sources" depends="sharpen-core, sharpen-db4ounit, sharpen-db4ounit-extensions" unless="skip.conversion">
+	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">
+		
+		<!-- work in progress
+		<property name="target.dir" location="${dir.sharpen}" />
+		
+		<copy todir="${target.dir}/db4oj.tests/src">
+			<fileset dir="${dir.j.tests.src}">
+				<include name="**/db4ounit/**/*.java" />
+				<exclude name="**/db4ounit/events/**" />
+				<exclude name="**/db4ounit/tools/**" />
+			</fileset>
+		</copy>
+		
+		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
+			<args>
+				<arg value="-cp" />
+				<arg path="${dependencies.jar}" />
+				<arg value="@sharpen-db4ounit-options" />
+				
+				<arg value="-methodMapping" />
+				<arg value="com.db4o.test.lib.File4.copy" />
+				<arg value="System.IO.File.Copy" />
+			</args>
+		</sharpen>
+		
+		<copy todir="${dir.n.test.src}">
+			<fileset dir="${target.dir}/db4oj.testscsharp/src">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+		-->
+
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact-2005/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test-2005.csproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-net2-test.csproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact*/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.test}/db4o-net-test.csproj">
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact*/**" />
+			</sources>
+		</updatecsharpproject>
+	</target>
+	
+	<target name="sharpen" description="create .NET sources" depends="sharpen-core, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests" unless="skip.conversion">
 	</target>
 	
 	<target name="sharpen-core" depends="install-javatocsharp-plugin">
@@ -1491,34 +1538,6 @@
 		
 		<updatecsharpproject projectfile="${dir.n.tools}/db4o-net-tools.csproj">
 			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact-2005/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test-2005.csproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-net2-test.csproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact*/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-net-test.csproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact*/**" />
-			</sources>
 		</updatecsharpproject>
 		
 	</target>

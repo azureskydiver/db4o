@@ -1,0 +1,9 @@
+-pascalcase
+-nativeTypeSystem
+
+-typeMapping com.db4o.foundation.ArgumentNullException System.ArgumentNullException
+-typeMapping java.lang.RuntimeException System.Exception
+
+-namespaceMapping ^db4ounit.extensions.fixtures Db4oUnit.Extensions.Fixtures
+-namespaceMapping ^db4ounit.extensions Db4oUnit.Extensions
+-namespaceMapping ^db4ounit Db4oUnit

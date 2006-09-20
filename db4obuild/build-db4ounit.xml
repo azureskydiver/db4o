@@ -53,12 +53,7 @@
 	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
 		<sharpen resource="db4ounit/src" workspace="${conversion.workspace.dir}">
 			<args>
-				<arg value="-pascalcase" />
-				<arg value="-nativeTypeSystem" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="db4ounit" />
-				<arg value="Db4oUnit" />
+				<arg value="@sharpen-db4ounit-options" />
 				
 				<arg value="-typeMapping" />
 				<arg value="java.io.Writer" />
@@ -67,10 +62,6 @@
 				<arg value="-typeMapping" />
 				<arg value="java.io.StringWriter" />
 				<arg value="System.IO.StringWriter" />
-				
-				<arg value="-typeMapping" />
-				<arg value="java.lang.RuntimeException" />
-				<arg value="System.Exception" />
 			</args>
 		</sharpen>
 	</target>
