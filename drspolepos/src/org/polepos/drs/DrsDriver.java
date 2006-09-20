@@ -4,11 +4,12 @@ package org.polepos.drs;
 
 
 import org.polepos.framework.*;
+import org.polepos.framework.Car;
 
 import com.db4o.*;
-import com.db4o.inside.replication.*;
-import com.db4o.replication.*;
-import com.db4o.test.replication.db4ounit.*;
+import com.db4o.drs.*;
+import com.db4o.drs.inside.*;
+import com.db4o.drs.test.*;
 
 /**
  * @exclude
