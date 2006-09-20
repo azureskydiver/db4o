@@ -2,11 +2,9 @@
 
 package db4ounit.extensions.fixtures;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectServer;
+import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.TestException;
