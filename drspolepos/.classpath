@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/replication"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4ojdk5"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4ojdk1.2"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4oj"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/polepos"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/drs"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
