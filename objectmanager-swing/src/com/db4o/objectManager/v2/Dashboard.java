@@ -253,7 +253,7 @@ public class Dashboard {
         clearForm();
         Dimension frameSize = (Dimension) Preferences.getDefault().getPreference(Preferences.FRAME_SIZE);
         Point frameLocation = (Point) Preferences.getDefault().getPreference(Preferences.FRAME_LOCATION);
-        // todo: connect here first, then open frame
+        // todo: connect here first, then open frame if successful
         MainFrame instance = MainFrame.createDefaultFrame(frameSize, frameLocation, connectionSpec);
 
         instance.addComponentListener(new ComponentListener() {
@@ -288,6 +288,7 @@ public class Dashboard {
     }
 
     private void showInForm(Db4oConnectionSpec connectionSpec) {
+        clearForm();
         if (connectionSpec instanceof Db4oFileConnectionSpec) {
             fileTextField.setText(connectionSpec.getPath());
         } else if (connectionSpec instanceof Db4oSocketConnectionSpec) {
