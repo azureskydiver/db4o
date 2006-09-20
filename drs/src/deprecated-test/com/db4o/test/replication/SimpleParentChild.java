@@ -2,7 +2,7 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.test.Test;
 
 public class SimpleParentChild extends ReplicationTestCase {

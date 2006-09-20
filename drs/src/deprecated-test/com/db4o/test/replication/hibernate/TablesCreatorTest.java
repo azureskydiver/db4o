@@ -1,7 +1,7 @@
 package com.db4o.test.replication.hibernate;
 
-import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
-import com.db4o.replication.hibernate.impl.TablesCreatorImpl;
+import com.db4o.drs.hibernate.impl.ReplicationConfiguration;
+import com.db4o.drs.hibernate.impl.TablesCreatorImpl;
 import com.db4o.test.Test;
 import org.hibernate.cfg.Configuration;
 

@@ -7,10 +7,10 @@ import java.io.File;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
-import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
-import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
+import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.drs.hibernate.impl.ReplicationConfiguration;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.test.AllTests;
 import com.db4o.test.AllTestsConfAll;
 import com.db4o.test.Test;

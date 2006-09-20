@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestCase;
 

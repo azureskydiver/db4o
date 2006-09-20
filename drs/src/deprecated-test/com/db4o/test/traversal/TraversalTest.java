@@ -1,8 +1,8 @@
 package com.db4o.test.traversal;
 
-import com.db4o.inside.replication.CollectionHandlerImpl;
-import com.db4o.inside.traversal.GenericTraverser;
-import com.db4o.inside.traversal.Traverser;
+import com.db4o.drs.inside.CollectionHandlerImpl;
+import com.db4o.drs.inside.traversal.GenericTraverser;
+import com.db4o.drs.inside.traversal.Traverser;
 import com.db4o.reflect.Reflector;
 import com.db4o.test.Test;
 

@@ -7,12 +7,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.ReplicationReflector;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.drs.Replication;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.inside.ReplicationReflector;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
-import com.db4o.replication.Replication;
-import com.db4o.replication.ReplicationSession;
 
 import db4ounit.Assert;
 

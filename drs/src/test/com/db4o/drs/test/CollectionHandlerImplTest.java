@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import com.db4o.inside.replication.CollectionHandlerImpl;
-import com.db4o.inside.replication.ReplicationReflector;
+import com.db4o.drs.inside.CollectionHandlerImpl;
+import com.db4o.drs.inside.ReplicationReflector;
 import com.db4o.reflect.Reflector;
 import db4ounit.Assert;
 

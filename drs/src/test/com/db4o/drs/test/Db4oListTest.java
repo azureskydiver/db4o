@@ -2,7 +2,7 @@
 
 package com.db4o.drs.test;
 
-import com.db4o.replication.db4o.Db4oReplicationProvider;
+import com.db4o.drs.db4o.Db4oReplicationProvider;
 import com.db4o.types.Db4oList;
 
 

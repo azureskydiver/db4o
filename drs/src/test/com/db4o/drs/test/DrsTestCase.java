@@ -7,10 +7,10 @@ import java.util.Map;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.Replication;
-import com.db4o.replication.ReplicationEventListener;
-import com.db4o.replication.ReplicationSession;
+import com.db4o.drs.Replication;
+import com.db4o.drs.ReplicationEventListener;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;

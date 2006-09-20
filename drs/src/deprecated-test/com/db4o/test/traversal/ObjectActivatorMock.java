@@ -1,6 +1,6 @@
 package com.db4o.test.traversal;
 
-import com.db4o.inside.traversal.ObjectActivator;
+import com.db4o.drs.inside.traversal.ObjectActivator;
 
 class ObjectActivatorMock implements ObjectActivator {
 

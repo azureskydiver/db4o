@@ -4,6 +4,7 @@ package com.db4o.drs.test.hibernate;
 
 import org.hibernate.cfg.Configuration;
 
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.drs.test.Car;
 import com.db4o.drs.test.CollectionHolder;
 import com.db4o.drs.test.DrsFixture;
@@ -18,7 +19,6 @@ import com.db4o.drs.test.SPCChild;
 import com.db4o.drs.test.SPCParent;
 import com.db4o.drs.test.SimpleArrayContent;
 import com.db4o.drs.test.SimpleArrayHolder;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 
 public abstract class RdbmsFixture implements DrsFixture {
 	public static final Class[] mappings;

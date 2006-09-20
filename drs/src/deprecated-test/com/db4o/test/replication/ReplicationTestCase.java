@@ -3,12 +3,12 @@
 package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
+import com.db4o.drs.Replication;
+import com.db4o.drs.ReplicationEventListener;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.Replication;
-import com.db4o.replication.ReplicationEventListener;
-import com.db4o.replication.ReplicationSession;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.collections.SimpleArrayContent;

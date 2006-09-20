@@ -7,12 +7,12 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
 import com.db4o.ObjectSet;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.hibernate.HibernateReplication;
+import com.db4o.drs.hibernate.ReplicationConfigurator;
+import com.db4o.drs.hibernate.impl.Util;
+import com.db4o.drs.hibernate.metadata.Uuid;
 import com.db4o.drs.test.CollectionHolder;
-import com.db4o.replication.ReplicationSession;
-import com.db4o.replication.hibernate.HibernateReplication;
-import com.db4o.replication.hibernate.ReplicationConfigurator;
-import com.db4o.replication.hibernate.impl.Util;
-import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.test.Test;
 
 import db4ounit.TestCase;

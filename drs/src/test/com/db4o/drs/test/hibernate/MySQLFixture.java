@@ -2,7 +2,7 @@
 
 package com.db4o.drs.test.hibernate;
 
-import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
 
 public class MySQLFixture extends RdbmsFixture {
 	public MySQLFixture(String name) {
