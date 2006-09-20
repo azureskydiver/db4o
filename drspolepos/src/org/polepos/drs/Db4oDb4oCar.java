@@ -2,8 +2,7 @@
 
 package org.polepos.drs;
 
-import com.db4o.test.replication.db4ounit.fixtures.*;
-
+import com.db4o.drs.test.*;
 
 /**
  * @exclude

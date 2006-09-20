@@ -2,15 +2,15 @@
 
 package org.polepos.drs;
 
-import org.polepos.framework.*;
+import org.polepos.framework.Car;
 
-import com.db4o.test.replication.db4ounit.*;
+import com.db4o.drs.test.*;
 
 
 /**
  * a combination of two replication providers !
  */
-public abstract class DrsCar extends Car{
+public abstract class DrsCar extends Car {
     
     private DrsFixture _a;
     
