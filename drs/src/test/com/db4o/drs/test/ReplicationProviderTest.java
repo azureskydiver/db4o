@@ -3,10 +3,10 @@
 package com.db4o.drs.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.drs.hibernate.impl.ReplicationReferenceImpl;
+import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
+import com.db4o.drs.inside.ReplicationReference;
 import com.db4o.ext.Db4oUUID;
-import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
-import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 //import com.db4o.test.Test;
 
 import db4ounit.Assert;

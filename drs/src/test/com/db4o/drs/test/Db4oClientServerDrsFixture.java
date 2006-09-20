@@ -7,10 +7,10 @@ import java.io.IOException;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
+import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.io.MemoryIoAdapter;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
 
 
 public class Db4oClientServerDrsFixture implements DrsFixture {

@@ -5,19 +5,19 @@ package com.db4o.test.replication;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.drs.ObjectState;
+import com.db4o.drs.ReplicationConflictException;
+import com.db4o.drs.ReplicationEvent;
+import com.db4o.drs.ReplicationEventListener;
+import com.db4o.drs.ReplicationProvider;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.inside.GenericReplicationSession;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.ObjectState;
-import com.db4o.replication.ReplicationConflictException;
-import com.db4o.replication.ReplicationEvent;
-import com.db4o.replication.ReplicationEventListener;
-import com.db4o.replication.ReplicationProvider;
-import com.db4o.replication.ReplicationSession;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
 
 class Set4 {
 	public static final Set4 EMPTY_SET = new Set4(0);

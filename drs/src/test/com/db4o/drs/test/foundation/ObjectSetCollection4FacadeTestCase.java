@@ -2,8 +2,8 @@
 
 package com.db4o.drs.test.foundation;
 
+import com.db4o.drs.foundation.ObjectSetCollection4Facade;
 import com.db4o.foundation.Collection4;
-import com.db4o.replication.foundation.ObjectSetCollection4Facade;
 
 import db4ounit.*;
 

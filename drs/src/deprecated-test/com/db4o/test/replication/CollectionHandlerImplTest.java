@@ -1,7 +1,7 @@
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.CollectionHandlerImpl;
-import com.db4o.inside.replication.ReplicationReflector;
+import com.db4o.drs.inside.CollectionHandlerImpl;
+import com.db4o.drs.inside.ReplicationReflector;
 import com.db4o.reflect.Reflector;
 import com.db4o.test.Test;
 

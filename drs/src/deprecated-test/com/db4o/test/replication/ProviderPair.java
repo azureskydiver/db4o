@@ -1,6 +1,6 @@
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 
 public class ProviderPair {
 	public final TestableReplicationProviderInside _providerA;

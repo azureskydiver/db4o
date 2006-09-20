@@ -1,22 +1,22 @@
 package com.db4o.test.replication.transients;
 
 import com.db4o.ObjectSet;
+import com.db4o.drs.foundation.ObjectSetCollection4Facade;
+import com.db4o.drs.inside.CollectionHandler;
+import com.db4o.drs.inside.CollectionHandlerImpl;
+import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
+import com.db4o.drs.inside.ReplicationReference;
+import com.db4o.drs.inside.ReplicationReflector;
+import com.db4o.drs.inside.TestableReplicationProvider;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
+import com.db4o.drs.inside.traversal.GenericTraverser;
+import com.db4o.drs.inside.traversal.Traverser;
+import com.db4o.drs.inside.traversal.Visitor;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.replication.CollectionHandler;
-import com.db4o.inside.replication.CollectionHandlerImpl;
-import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
-import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.inside.replication.ReplicationReflector;
-import com.db4o.inside.replication.TestableReplicationProvider;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.inside.traversal.GenericTraverser;
-import com.db4o.inside.traversal.Traverser;
-import com.db4o.inside.traversal.Visitor;
 import com.db4o.reflect.Reflector;
-import com.db4o.replication.foundation.ObjectSetCollection4Facade;
 
 import java.util.IdentityHashMap;
 import java.util.Iterator;

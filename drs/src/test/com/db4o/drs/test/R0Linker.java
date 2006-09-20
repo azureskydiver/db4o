@@ -2,7 +2,7 @@
 
 package com.db4o.drs.test;
 
-import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 
 
 class R0Linker {

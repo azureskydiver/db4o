@@ -3,10 +3,10 @@
 package com.db4o.drs.test;
 
 import com.db4o.*;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.inside.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.replication.*;
-import com.db4o.replication.*;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
 
 import db4ounit.Assert;
 

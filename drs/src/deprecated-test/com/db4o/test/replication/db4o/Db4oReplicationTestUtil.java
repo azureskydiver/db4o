@@ -4,10 +4,10 @@ package com.db4o.test.replication.db4o;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.ext.ExtDb4o;
 import com.db4o.ext.MemoryFile;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.Test;
 
 import java.io.File;

@@ -2,8 +2,8 @@
 
 package com.db4o.drs.test.transients;
 
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.drs.test.DrsFixture;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 
 public class TransientFixture implements DrsFixture {
 	private String _name;

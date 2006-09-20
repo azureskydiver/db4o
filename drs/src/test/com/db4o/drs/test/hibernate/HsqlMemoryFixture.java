@@ -7,7 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
 
-import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
 
 public class HsqlMemoryFixture extends RdbmsFixture {
 	private static final String HSQL_CFG_XML = "com/db4o/test/drs/hibernate/Hsql.cfg.xml";

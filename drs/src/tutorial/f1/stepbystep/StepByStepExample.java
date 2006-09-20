@@ -3,11 +3,11 @@ package f1.stepbystep;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.hibernate.HibernateReplication;
+import com.db4o.drs.hibernate.ReplicationConfigurator;
 import com.db4o.ext.ExtDb4o;
 import com.db4o.query.Predicate;
-import com.db4o.replication.ReplicationSession;
-import com.db4o.replication.hibernate.HibernateReplication;
-import com.db4o.replication.hibernate.ReplicationConfigurator;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

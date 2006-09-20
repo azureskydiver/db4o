@@ -3,10 +3,10 @@
 package com.db4o.drs.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.drs.Replication;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.drs.test.SPCChild;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.Replication;
-import com.db4o.replication.ReplicationSession;
 
 import db4ounit.Assert;
 

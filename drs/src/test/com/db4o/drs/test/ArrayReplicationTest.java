@@ -4,8 +4,8 @@ package com.db4o.drs.test;
 
 import db4ounit.Assert;
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.replication.ReplicationSession;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.inside.GenericReplicationSession;
 
 public class ArrayReplicationTest extends DrsTestCase {
 

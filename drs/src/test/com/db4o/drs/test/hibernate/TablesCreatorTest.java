@@ -2,8 +2,8 @@ package com.db4o.drs.test.hibernate;
 
 import org.hibernate.cfg.Configuration;
 
-import com.db4o.replication.hibernate.impl.ReplicationConfiguration;
-import com.db4o.replication.hibernate.impl.TablesCreatorImpl;
+import com.db4o.drs.hibernate.impl.ReplicationConfiguration;
+import com.db4o.drs.hibernate.impl.TablesCreatorImpl;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;

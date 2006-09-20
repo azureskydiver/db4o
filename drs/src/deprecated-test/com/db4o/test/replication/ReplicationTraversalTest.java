@@ -2,8 +2,8 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.replication.ReplicationSession;
+import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.inside.GenericReplicationSession;
 import com.db4o.test.Test;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
 

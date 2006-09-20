@@ -1,8 +1,8 @@
 package com.db4o.test.replication.collections.map;
 
+import com.db4o.drs.db4o.Db4oReplicationProvider;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.replication.ReplicationTestCase;
 
 public class BugDrs8 extends ReplicationTestCase {

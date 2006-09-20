@@ -5,10 +5,10 @@ package com.db4o.drs.test;
 import java.io.File;
 
 import com.db4o.Db4o;
+import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.io.MemoryIoAdapter;
-import com.db4o.replication.db4o.Db4oReplicationProvider;
 
 
 public class Db4oDrsFixture implements DrsFixture {

@@ -3,7 +3,7 @@
 package com.db4o.test.replication.performance;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.test.replication.ReplicationTestCase;
 
 public class SimplePerformanceTests extends ReplicationTestCase {

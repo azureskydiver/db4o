@@ -1,6 +1,6 @@
 package com.db4o.test.traversal;
 
-import com.db4o.inside.traversal.Visitor;
+import com.db4o.drs.inside.traversal.Visitor;
 
 import java.util.Vector;
 
