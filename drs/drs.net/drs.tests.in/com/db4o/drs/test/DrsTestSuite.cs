@@ -23,7 +23,10 @@ namespace com.db4o.drs.test
             return new System.Type[] { typeof(com.db4o.drs.test.TheSimplest), 
 			                           typeof(ReplicationEventTest), 
 			                           typeof(SimpleArrayTest), 
-			                           typeof(SimpleParentChild) };
+			                           typeof(SimpleParentChild),
+                                        typeof(ReplicationAfterDeletionTest),
+                                        typeof(ListTest),
+                                        typeof(Db4oListTest)};
         }
     }
 }
