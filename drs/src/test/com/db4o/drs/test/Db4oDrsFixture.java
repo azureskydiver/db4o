@@ -44,8 +44,8 @@ public class Db4oDrsFixture implements DrsFixture {
 	}
 
 	public void open() {
-		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
-		Db4o.configure().io(memoryIoAdapter);
+//		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
+//		Db4o.configure().io(memoryIoAdapter);
 		
 		_db = Db4o.openFile(new File(yapFileName()).getPath()).ext();
 		_provider = new Db4oReplicationProvider(_db, _name);
