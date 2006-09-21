@@ -34,10 +34,10 @@ public class Db4oClientServer implements Db4oFixture {
 
 	public void open() throws Exception {
 		_server = Db4o.openServer(_yap.getAbsolutePath(), _port);
+		_server.grantAccess(USERNAME, PASSWORD);
 	}
 
 	public ExtObjectContainer db() {
-		_server.grantAccess(USERNAME, PASSWORD);
 		try {
 			return Db4o.openClient(HOST, _port, USERNAME, PASSWORD).ext();
 		} catch (IOException e) {
