@@ -12,7 +12,7 @@ public interface CancellableEventArgs  {
 	/**
 	 * Queries if the action was already cancelled by some event listener.
 	 * 
-	 * @property
+	 * @sharpen.property
 	 */
 	public boolean isCancelled();
 

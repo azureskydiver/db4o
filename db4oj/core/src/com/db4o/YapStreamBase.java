@@ -38,7 +38,7 @@ import com.db4o.types.TransientClass;
  * and should never be used explicitly.
  * 
  * @exclude
- * @partial
+ * @sharpen.partial
  */
 public abstract class YapStreamBase implements TransientClass, Internal4, YapStreamSpec {
 

@@ -12,7 +12,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link QueryEventArgs}.
 	 * 
-	 * @event QueryEventArgs
+	 * @sharpen.event QueryEventArgs
 	 * @return
 	 */
 	public Event4 queryStarted();
@@ -20,7 +20,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link QueryEventArgs}.
 	 *
-	 * @event QueryEventArgs
+	 * @sharpen.event QueryEventArgs
 	 * @return
 	 */
 	public Event4 queryFinished();
@@ -28,7 +28,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link CancellableObjectEventArgs}.
 	 * 
-	 * @event CancellableObjectEventArgs
+	 * @sharpen.event CancellableObjectEventArgs
 	 * @return
 	 */
 	public Event4 creating();
@@ -36,7 +36,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link CancellableObjectEventArgs}.
 	 *
-	 * @event CancellableObjectEventArgs
+	 * @sharpen.event CancellableObjectEventArgs
 	 * @return
 	 */
 	public Event4 activating();
@@ -44,7 +44,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link CancellableObjectEventArgs}
 	 *
-	 * @event CancellableObjectEventArgs
+	 * @sharpen.event CancellableObjectEventArgs
 	 * @return
 	 */
 	public Event4 updating();
@@ -52,7 +52,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link CancellableObjectEventArgs}
 	 * 
-	 * @event CancellableObjectEventArgs
+	 * @sharpen.event CancellableObjectEventArgs
 	 * @return
 	 */
 	public Event4 deleting();
@@ -60,7 +60,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link CancellableObjectEventArgs}
 	 * 
-	 * @event CancellableObjectEventArgs
+	 * @sharpen.event CancellableObjectEventArgs
 	 * @return
 	 */
 	public Event4 deactivating();
@@ -68,7 +68,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link ObjectEventArgs}.
 	 * 
-	 * @event ObjectEventArgs
+	 * @sharpen.event ObjectEventArgs
 	 * @return
 	 */
 	public Event4 activated();
@@ -76,7 +76,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link ObjectEventArgs}.
 	 * 
-	 * @event ObjectEventArgs
+	 * @sharpen.event ObjectEventArgs
 	 * @return
 	 */
 	public Event4 created();
@@ -84,7 +84,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link ObjectEventArgs}
 	 * 
-	 * @event ObjectEventArgs
+	 * @sharpen.event ObjectEventArgs
 	 * @return
 	 */
 	public Event4 updated();
@@ -92,7 +92,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link ObjectEventArgs}
 	 * 
-	 * @event ObjectEventArgs
+	 * @sharpen.event ObjectEventArgs
 	 * @return
 	 */
 	public Event4 deleted();
@@ -100,7 +100,7 @@ public interface EventRegistry {
 	/**
 	 * Receives {@link ObjectEventArgs}
 	 * 
-	 * @event ObjectEventArgs
+	 * @sharpen.event ObjectEventArgs
 	 * @return
 	 */
 	public Event4 deactivated();
