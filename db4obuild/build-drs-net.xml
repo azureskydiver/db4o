@@ -177,9 +177,16 @@
 				<include name="test/**/test/Car.java" />
 				<include name="test/**/test/SimpleParentChild.java" />
 				<include name="test/**/test/ReplicationEventTest.java" />
+				<include name="test/**/test/ReplicationAfterDeletionTest.java" />
 				<include name="test/**/test/SimpleArrayTest.java" />
 				<include name="test/**/test/SimpleArrayHolder.java" />
 				<include name="test/**/test/SimpleArrayContent.java" />
+				<include name="test/**/test/ListTest.java" />
+				<include name="test/**/test/ListHolder.java" />
+				<include name="test/**/test/ListContent.java" />					
+				<include name="test/**/test/Db4oListTest.java" />					
+<!--				<include name="test/**/test/SingleTypeCollectionReplicationTest.java" />									
+				<include name="test/**/test/CollectionHolder.java" /> -->
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>
