@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using com.db4o.ext;
 
-namespace com.db4o.foundation
+namespace com.db4o.drs.foundation
 {
 	public abstract class ObjectSetAbstractFacade : com.db4o.ObjectSet
 	{
