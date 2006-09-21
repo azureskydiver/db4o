@@ -768,7 +768,7 @@
 				<include name="test/db4oVersions/**/*" />
 			</fileset>
 		</copy>
-		<java fork="true" classname="com.db4o.db4ounit.AllTests" failonerror="true" timeout="180000">
+		<java fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="180000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
