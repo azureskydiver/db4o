@@ -19,7 +19,7 @@ import com.db4o.ext.*;
  * when they are actually being used by the application. 
  * @see ExtObjectSet for extended functionality.
  * 
- * @extends System.Collections.IList
+ * @sharpen.extends System.Collections.IList
  */
 public interface ObjectSet {
 	

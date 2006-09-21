@@ -21,7 +21,7 @@ import com.db4o.query.*;
  * {@link ObjectServer#openClient() connect locally} or
  * {@link Db4o#openClient(String, int, String, String) over TCP}.
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
- * @partial
+ * @sharpen.partial
  */
 public interface ObjectContainer {
 	

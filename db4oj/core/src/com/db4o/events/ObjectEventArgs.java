@@ -21,7 +21,7 @@ public class ObjectEventArgs extends EventArgs {
 	/**
 	 * The object that triggered this event.
 	 * 
-	 * @property
+	 * @sharpen.property
 	 */
 	public Object object() {
 		return _obj;

@@ -21,7 +21,7 @@ public class QueryEventArgs extends ObjectEventArgs {
 	/**
 	 * The {@link Query} which triggered the event.
 	 * 
-	 * @property
+	 * @sharpen.property
 	 */
 	public Query query() {
 		return (Query)object();
