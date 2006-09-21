@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.jdk12.collections.map;
+package com.db4o.db4ounit.jre12.collections.map;
 
 public class MapContent {
 	String name;

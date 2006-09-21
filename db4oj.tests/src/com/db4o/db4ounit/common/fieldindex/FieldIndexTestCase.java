@@ -3,11 +3,10 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
-import com.db4o.db4ounit.btree.*;
 import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
+import com.db4o.ext.StoredField;
+import com.db4o.foundation.Visitor4;
 import com.db4o.inside.btree.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
