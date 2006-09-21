@@ -32,7 +32,6 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 		});
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
-		System.out.println("AAAAAAAA");
 	}
 
 	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
@@ -45,7 +44,6 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 		});
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
-		System.out.println("BBBBBBBB");
 	}
 
 }

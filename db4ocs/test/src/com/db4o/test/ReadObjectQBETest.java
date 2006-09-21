@@ -14,36 +14,28 @@ public class ReadObjectQBETest extends ClientServerTestCase {
 
 	private static String testString = "simple test string";
 
-	protected void store() {
+	protected void store(ExtObjectContainer oc) {
 		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
-			db().set(new SimpleObject(testString + i, i));
+			oc.set(new SimpleObject(testString + i, i));
 		}
 	}
 
-	public void concReadSameObject() throws Exception {
-		ExtObjectContainer db;
-		try {
-			int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
-			SimpleObject example = new SimpleObject(testString + mid, mid);
-			db = fixture().openClient();
-			ObjectSet result = db.get(example);
-			Assert.areEqual(1, result.size());
-			Assert.areEqual(example, result.next());
-		} finally {
-			db().close();
-		}
+	public void concReadSameObject(ExtObjectContainer oc) throws Exception {
+		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
+		SimpleObject example = new SimpleObject(testString + mid, mid);
+		ObjectSet result = oc.get(example);
+		Assert.areEqual(1, result.size());
+		Assert.areEqual(example, result.next());
 	}
 
-	public void concReadDifferentObject(int seq) throws Exception {
-		oc = openClient();
-		try {
-			SimpleObject example = new SimpleObject(testString + seq, seq);
-			ObjectSet result = oc.get(example);
-			Assert.areEqual(1, result.size());
-			Assert.areEqual(example, result.next());
-		} finally {
-			oc.close();
-		}
+	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
+			throws Exception {
+
+		SimpleObject example = new SimpleObject(testString + seq, seq);
+		ObjectSet result = oc.get(example);
+		Assert.areEqual(1, result.size());
+		Assert.areEqual(example, result.next());
+
 	}
 
 }
