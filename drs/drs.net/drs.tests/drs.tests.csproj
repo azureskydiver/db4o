@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EAFFAFBE-9BD4-4BAD-A108-980191DF2596}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>drs.tests</RootNamespace>
+    <AssemblyName>drs.tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="db4o, Version=5.5.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\db4o.dll</HintPath>
+    </Reference>
+    <Reference Include="System"/>
+    <Reference Include="System.Data"/>
+    <Reference Include="System.Xml"/>
+  </ItemGroup>
+  <ItemGroup><Compile Include="src\com\db4o\drs\test\Car.cs"/><Compile Include="src\com\db4o\drs\test\Db4oClientServerDrsFixture.cs"/><Compile Include="src\com\db4o\drs\test\Db4oDrsFixture.cs"/><Compile Include="src\com\db4o\drs\test\Db4oListTest.cs"/><Compile Include="src\com\db4o\drs\test\Db4oTests.cs"/><Compile Include="src\com\db4o\drs\test\DrsFixture.cs"/><Compile Include="src\com\db4o\drs\test\DrsTestCase.cs"/><Compile Include="src\com\db4o\drs\test\DrsTestSuite.cs"/><Compile Include="src\com\db4o\drs\test\DrsTestSuiteBuilder.cs"/><Compile Include="src\com\db4o\drs\test\ListContent.cs"/><Compile Include="src\com\db4o\drs\test\ListHolder.cs"/><Compile Include="src\com\db4o\drs\test\ListTest.cs"/><Compile Include="src\com\db4o\drs\test\Pilot.cs"/><Compile Include="src\com\db4o\drs\test\ReplicationAfterDeletionTest.cs"/><Compile Include="src\com\db4o\drs\test\ReplicationEventTest.cs"/><Compile Include="src\com\db4o\drs\test\SPCChild.cs"/><Compile Include="src\com\db4o\drs\test\SPCParent.cs"/><Compile Include="src\com\db4o\drs\test\SimpleArrayContent.cs"/><Compile Include="src\com\db4o\drs\test\SimpleArrayHolder.cs"/><Compile Include="src\com\db4o\drs\test\SimpleArrayTest.cs"/><Compile Include="src\com\db4o\drs\test\SimpleParentChild.cs"/><Compile Include="src\com\db4o\drs\test\TheSimplest.cs"/></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\db4on\Db4oUnit.Extensions\db4ounit.ext\db4ounit.ext.csproj">
+      <Project>{D899FAD3-06A2-4C0E-8FDB-0D94795B7F56}</Project>
+      <Name>db4ounit.ext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\db4on\Db4oUnit\Db4oUnit.csproj">
+      <Project>{9ABAFC31-D29D-4000-B6A0-C24F0BB221F5}</Project>
+      <Name>Db4oUnit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\drs\drs.csproj">
+      <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
+      <Name>drs</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets"/>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
