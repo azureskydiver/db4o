@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.jdk12.collections;
+package com.db4o.db4ounit.jre12.collections;
 
 import java.util.*;
 

@@ -1,9 +1,9 @@
-package com.db4o.db4ounit.jdk12.collections;
+package com.db4o.db4ounit.jre12.collections;
 
 import java.util.ArrayList;
 
 import com.db4o.Db4o;
-import com.db4o.db4ounit.jdk12.collections.map.SimpleMapTestCase;
+import com.db4o.db4ounit.jre12.collections.map.SimpleMapTestCase;
 
 import db4ounit.Assert;
 import db4ounit.TestRunner;

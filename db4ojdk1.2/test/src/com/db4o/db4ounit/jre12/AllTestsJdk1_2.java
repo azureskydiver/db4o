@@ -1,7 +1,7 @@
 package com.db4o.db4ounit.jre12;
 
-import com.db4o.db4ounit.jdk12.collections.*;
-import com.db4o.db4ounit.jdk12.collections.map.SimpleMapTestCase;
+import com.db4o.db4ounit.jre12.collections.*;
+import com.db4o.db4ounit.jre12.collections.map.SimpleMapTestCase;
 
 import db4ounit.extensions.Db4oTestSuite;
 
@@ -17,7 +17,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 			CollectionUuidTest.class,
 			SetCollectionOnUpdateTestCase.class,
 			SimpleMapTestCase.class,
-			com.db4o.db4ounit.jdk12.fieldindex.AllTests.class,
+			com.db4o.db4ounit.jre12.fieldindex.AllTests.class,
 		};
 	}
 }
