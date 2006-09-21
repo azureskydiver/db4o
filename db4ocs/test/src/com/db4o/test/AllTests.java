@@ -8,14 +8,14 @@ public class AllTests extends CSTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-//				ReadObjectQBETest.class,
-//				ReadObjectSODATest.class,
+				ReadObjectQBETest.class,
+				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
-//				ReadCollectionQBETest.class,
-//				ReadCollectionSODATest.class,
-//				ReadCollectionNQTest.class,
-//				UpdateObjectTest.class,
-//				UpdateCollectionTest.class,
+				ReadCollectionQBETest.class,
+				ReadCollectionSODATest.class,
+				ReadCollectionNQTest.class,
+				UpdateObjectTest.class,
+				UpdateCollectionTest.class,
 				};
 	}
 	

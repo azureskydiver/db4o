@@ -23,12 +23,19 @@ public class CSTestMethod extends TestMethod {
 	protected void invoke() throws Exception {
 		Db4oTestCase toTest = getSubject();
 		Method method = getMethod();
-		if (method.getName().startsWith(Configure.COCURRENCY_TEST_PREFIX)) {
-			// concurrency test
-			invokeConcurrencyMethod(toTest, method);
-		} else {
-			// normal test
-			super.invoke();
+		System.out.print(toTest.getClass().getName() + ":" + method.getName());
+		long start = System.currentTimeMillis();
+		try {
+			if (method.getName().startsWith(Configure.COCURRENCY_TEST_PREFIX)) {
+				// concurrency test
+				invokeConcurrencyMethod(toTest, method);
+			} else {
+				// normal test
+				super.invoke();
+			}
+		} finally {
+			long consumed = System.currentTimeMillis() - start;
+			System.out.println("(" + consumed + " ms)");
 		}
 	}
 
@@ -36,7 +43,7 @@ public class CSTestMethod extends TestMethod {
 			throws Exception {
 		Class[] parameters = method.getParameterTypes();
 		boolean hasSequenceParameter = false;
-	
+
 		if (parameters.length == 2) // ExtObjectContainer, seq
 			hasSequenceParameter = true;
 
@@ -66,21 +73,29 @@ public class CSTestMethod extends TestMethod {
 		checkConcurrencyMethod(toTest, method.getName());
 	}
 
-	private void checkConcurrencyMethod(Object toTest, String testMethodName)
-			throws Exception {
+	private void checkConcurrencyMethod(Db4oTestCase toTest,
+			String testMethodName) throws Exception {
 		int testPrefixLength = Configure.COCURRENCY_TEST_PREFIX.length();
 		String subMethodName = testMethodName.substring(testPrefixLength);
 		String checkMethodName = Configure.COCURRENCY_CHECK_PREFIX
 				+ subMethodName;
 		Method checkMethod = null;
 		try {
+			Class[] types = { ExtObjectContainer.class };
 			checkMethod = toTest.getClass().getDeclaredMethod(checkMethodName,
-					(Class[]) null);
+					types);
 		} catch (Exception e) {
 			// if checkMethod is not availble, return as success
 			return;
 		}
-		checkMethod.invoke(toTest, (Object[]) null);
+		// pass ExtObjectContainer as a param to check method
+		ExtObjectContainer oc = toTest.db();
+		Object[] args = { oc };
+		try {
+			checkMethod.invoke(toTest, args);
+		} finally {
+			oc.close();
+		}
 	}
 
 	class ConcurrencyThread extends Thread {
