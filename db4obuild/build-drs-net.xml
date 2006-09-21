@@ -2,7 +2,7 @@
 <project name="drs.net" default="build">
 	<import file="common.xml" />
 	
-	<property name="drs.dir" location="${dir.workspace}/replication" />
+	<property name="drs.dir" location="${dir.workspace}/drs" />
 	<property name="drs.src.dir" location="${drs.dir}/src" />
 	<property name="drs.net.dir" location="${drs.dir}/drs.net" />
 	<property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />	
@@ -58,7 +58,7 @@
 				
 				<arg value="-methodMapping" />
 				<arg value="com.db4o.reflect.Reflector.forClass" />
-				<arg value="com.db4o.inside.replication.ReplicationPlatform.ForType" />
+				<arg value="com.db4o.drs.inside.ReplicationPlatform.ForType" />
 				
 				<arg value="-namespaceMapping" />
 				<arg value="^db4ounit.extensions.fixtures" />
@@ -161,19 +161,25 @@
 		<copy todir="${conversion.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
-				<include name="test/**/other/AllTests.java" />
-				<include name="test/**/other/GetByUUID.java" />
-				<include name="test/**/other/TheSimplest.java" />
-				<include name="test/**/other/SPCChild.java" />
-				<include name="test/**/other/SPCParent.java" />
-				<include name="test/**/other/Pilot.java" />
-				<include name="test/**/other/Car.java" />
-				<include name="test/**/other/SimpleParentChild.java" />
-				<include name="test/**/other/ReplicationEventTest.java" />
-				<include name="test/**/other/SimpleArrayTest.java" />
-				<include name="test/**/other/SimpleArrayHolder.java" />
-				<include name="test/**/other/SimpleArrayContent.java" />
-				<include name="test/**/replication/db4ounit/**" />
+				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
+				<include name="test/**/test/Db4oDrsFixture.java" />
+				<include name="test/**/test/Db4oTests.java" />
+				<include name="test/**/test/DrsFixture.java" />				
+				<include name="test/**/test/DrsTestCase.java" />
+				<include name="test/**/test/DrsTestSuite.java" />
+				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
+<!--				<include name="test/**/test/TransientReplicationProvider.java" />	-->	
+				<include name="test/**/test/GetByUUID.java" />
+				<include name="test/**/test/TheSimplest.java" />
+				<include name="test/**/test/SPCChild.java" />
+				<include name="test/**/test/SPCParent.java" />
+				<include name="test/**/test/Pilot.java" />
+				<include name="test/**/test/Car.java" />
+				<include name="test/**/test/SimpleParentChild.java" />
+				<include name="test/**/test/ReplicationEventTest.java" />
+				<include name="test/**/test/SimpleArrayTest.java" />
+				<include name="test/**/test/SimpleArrayHolder.java" />
+				<include name="test/**/test/SimpleArrayContent.java" />
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>
