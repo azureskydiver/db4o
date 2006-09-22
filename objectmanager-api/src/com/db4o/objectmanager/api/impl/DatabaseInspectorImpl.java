@@ -1,6 +1,6 @@
 package com.db4o.objectmanager.api.impl;
 
-import com.db4o.ObjectContainer;
+import com.db4o.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
 import com.db4o.reflect.ReflectClass;
@@ -75,7 +75,7 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
             StoredField[] storedFields = storedClass.getStoredFields();
             for (int j = 0; j < storedFields.length; j++) {
                 StoredField storedField = storedFields[j];
-                if(storedField.hasIndex()){
+                if(((YapField)storedField).hasIndex()){
                     counter++;
                 }
             }
