@@ -45,28 +45,31 @@ public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
     private void indexField(String fieldName){
         indexField(IndexedQueriesItem.class, fieldName);
     }
-    
 
     protected void store() {
-        
-        String[] strings = new String[] {"a", "c", "b", "f", "e"};
-        
+        String[] strings = new String[] {"a", "c", "b", "f", "e"};        
         for (int i = 0; i < strings.length; i++) {
             db().set(new IndexedQueriesItem(strings[i]));
         }
         
-        int[] ints = new int[] {1, 5, 7, 3, 2, 3};
-        
+        int[] ints = new int[] {1, 5, 7, 3, 2, 3};        
         for (int i = 0; i < ints.length; i++) {
             db().set(new IndexedQueriesItem(ints[i]));
         }
-
-        assertQuery(1, "b");
-        assertInts(5);
-        assertIntegers();
+    }
+    
+    public void testIntQuery() {
+    	assertInts(5);
+    }
+    
+    /**
+     * @sharpen.ignore testing Integer queries only makes sense for java
+     */
+    public void testIntegerQuery() {
+    	assertIntegers();
     }
 
-    public void test() throws Exception {
+    public void testStringQuery() throws Exception {
         
         assertNullNameCount(6);
         
