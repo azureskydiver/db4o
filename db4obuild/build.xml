@@ -1386,14 +1386,11 @@
 	
 	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">
 		
-		<!-- work in progress
 		<property name="target.dir" location="${dir.sharpen}" />
 		
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.tests.src}">
-				<include name="**/db4ounit/**/*.java" />
-				<exclude name="**/db4ounit/events/**" />
-				<exclude name="**/db4ounit/tools/**" />
+				<include name="**/db4ounit/common/**/*.java" />
 			</fileset>
 		</copy>
 		
@@ -1406,6 +1403,14 @@
 				<arg value="-methodMapping" />
 				<arg value="com.db4o.test.lib.File4.copy" />
 				<arg value="System.IO.File.Copy" />
+				
+				<arg value="-methodMapping" />
+				<arg value="com.db4o.reflect.generic.GenericReflector.forClass" />
+				<arg value="com.db4o.db4ounit.Db4oUnitPlatform.GetReflectClass" />
+				
+				<arg value="-methodMapping" />
+				<arg value="java.lang.Class.getDeclaredFields" />
+				<arg value="com.db4o.db4ounit.Db4oUnitPlatform.GetDeclaredFields" />
 			</args>
 		</sharpen>
 		
@@ -1414,7 +1419,6 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-		-->
 
 		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
 			<sources dir="${dir.n.test}">
