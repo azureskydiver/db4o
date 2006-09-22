@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.db4o.*;
+import com.db4o.db4ounit.common.assorted.UUIDTestItem;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.test.lib.File4;
 
