@@ -56,8 +56,8 @@ public class Db4oClientServerDrsFixture implements DrsFixture {
 	public void open(){
 		Db4o.configure().messageLevel(0);
 		
-		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
-		Db4o.configure().io(memoryIoAdapter);
+//		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
+//		Db4o.configure().io(memoryIoAdapter);
 
 		_server = Db4o.openServer(yapFileName(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
