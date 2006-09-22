@@ -46,6 +46,7 @@ public class Db4oVersions {
         String jar45 = "db4o-4.5-java1.4.jar";
         String jar52 = "db4o-5.2-java5.jar";
         String jar55 = "db4o-5.5-java5.jar";
+        String jar57 = "db4o-5.7-java5.jar";
 
         
         return new Team[]{
@@ -53,6 +54,7 @@ public class Db4oVersions {
             db4oTeam(workSpacePath, jar45, new int[]{} ),
             db4oTeam(workSpacePath, jar52, new int[]{} ),
             db4oTeam(workSpacePath, jar55, new int[]{} ),
+            db4oTeam(workSpacePath, jar57, new int[]{} ),
         };
     }
     
