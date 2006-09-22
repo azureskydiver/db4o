@@ -2,16 +2,11 @@
 
 using System;
 using System.Threading;
-using j4o.io;
-using System.Reflection;
 
 namespace j4o.lang 
 {
 	public class JavaSystem 
 	{
-		public static PrintStream _out = new ConsoleWriter();
-		public static PrintStream err = new ConsoleWriter();
-
 		public static long CurrentTimeMillis() 
 		{
 			return j4o.util.Date.ToJavaMilliseconds(DateTime.Now.ToUniversalTime());
@@ -113,12 +108,12 @@ namespace j4o.lang
 
 		public static void PrintStackTrace(Exception exception) 
 		{
-			err.Println(exception);
+			PrintStackTrace(exception, System.Console.Error);
 		}
 
-		public static void PrintStackTrace(Exception exception, PrintStream printStream) 
+		public static void PrintStackTrace(Exception exception, System.IO.TextWriter writer) 
 		{
-			printStream.Println(exception);
+			writer.WriteLine(exception);
 		}
 
 		public static void RunFinalization() 
