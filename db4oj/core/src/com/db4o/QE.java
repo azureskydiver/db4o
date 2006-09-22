@@ -22,7 +22,7 @@ public class QE implements Unversioned {
 		return evaluator;
 	}
     
-	boolean identity(){
+	public boolean identity(){
 		return false;
 	}
 

@@ -24,7 +24,7 @@ public class QENot extends QE{
 		return this;
 	}
 	
-	boolean identity(){
+	public boolean identity(){
 		return i_evaluator.identity();
 	}
     

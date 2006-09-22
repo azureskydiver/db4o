@@ -68,7 +68,7 @@ public class IndexedNodeCollector {
 				continue;
 			}
 			if (isLeaf(qcon)) {
-				if (qcon.canLoadByIndex() && qcon.canBeIndexLeaf()) {					
+				if (canBeIndexedLeaf(qcon)) {					
 					final QConObject conObject = (QConObject) qcon;
 					if (conObject.hasJoins()) {
 						collectJoinedNode(conObject);
@@ -83,6 +83,10 @@ public class IndexedNodeCollector {
 			}
 		}		
 	}
+    
+    private boolean canBeIndexedLeaf(QCon qcon){
+        return qcon.canLoadByIndex() && (qcon.canBeIndexLeaf()  || qcon.evaluator().identity());
+    }
 
 	private boolean isCached(QCon qcon) {
 		return null != _nodeCache.get(qcon);
