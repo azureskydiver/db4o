@@ -9,7 +9,7 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-public class Collection4 implements DeepClone, Unversioned {
+public class Collection4 implements Iterable4, DeepClone, Unversioned {
 
 	// TODO: encapsulate field access
 	
