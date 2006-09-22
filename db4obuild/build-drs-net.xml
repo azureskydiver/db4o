@@ -185,8 +185,14 @@
 				<include name="test/**/test/ListHolder.java" />
 				<include name="test/**/test/ListContent.java" />					
 				<include name="test/**/test/Db4oListTest.java" />					
-<!--				<include name="test/**/test/SingleTypeCollectionReplicationTest.java" />									
-				<include name="test/**/test/CollectionHolder.java" /> -->
+				<include name="test/**/test/R0to4Runner.java" />
+				<include name="test/**/test/R0.java" />
+				<include name="test/**/test/R0Linker.java" />
+				<include name="test/**/test/R1.java" />
+				<include name="test/**/test/R2.java" />
+				<include name="test/**/test/R3.java" />
+				<include name="test/**/test/R4.java" />
+<!--				<include name="test/**/test/CollectionHolder.java" /> -->
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>

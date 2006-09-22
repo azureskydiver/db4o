@@ -12,11 +12,12 @@ namespace com.db4o.drs.test
 			ReplicateHolderStep3();
 		}
 
-		protected override void Clean()
-		{
-			Delete(new System.Type[] { typeof(com.db4o.drs.test.SimpleArrayHolder), typeof(com.db4o.drs.test.SimpleArrayContent
-				) });
-		}
+//		protected override void Clean()
+//		{
+//			Delete(new System.Type[] { typeof(com.db4o.drs.test.SimpleArrayHolder), 
+//	                    typeof(com.db4o.drs.test.SimpleArrayContent
+//				) });
+//		}
 
 		private void StoreListToProviderA()
 		{
