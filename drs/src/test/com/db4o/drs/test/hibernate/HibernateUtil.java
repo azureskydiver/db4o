@@ -4,7 +4,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
 public class HibernateUtil {
-	static final String HSQL_CFG_XML = "com/db4o/test/drs/hibernate/Hsql.cfg.xml";
+	static final String HSQL_CFG_XML = "com/db4o/drs/test/hibernate/Hsql.cfg.xml";
 
 	protected static final String JDBC_URL_HEAD = "jdbc:hsqldb:mem:unique_abc_";
 

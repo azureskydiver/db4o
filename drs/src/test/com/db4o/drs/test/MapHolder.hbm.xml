@@ -7,7 +7,7 @@
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
-	<class name="com.db4o.test.drs.MapHolder">
+	<class name="com.db4o.drs.test.MapHolder">
 		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
@@ -17,7 +17,7 @@
 		<map name="map" table="MapContents">
 			<key column="MapHolderId"/>
 			<map-key type="string"/>
-			<one-to-many class="com.db4o.test.drs.MapContent"/>
+			<one-to-many class="com.db4o.drs.test.MapContent"/>
 		</map>
 	</class>
 </hibernate-mapping>

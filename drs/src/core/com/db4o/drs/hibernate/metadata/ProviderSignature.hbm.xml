@@ -27,7 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="drs_providers" name="com.db4o.replication.hibernate.metadata.ProviderSignature" discriminator-value="f">
+	<class table="drs_providers" name="com.db4o.drs.hibernate.metadata.ProviderSignature" discriminator-value="f">
 		<id name="id" column="id" type="long">
 			<generator class="native"/>
 		</id>
@@ -39,7 +39,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 		<property name="created" column="created"/>
 
-		<subclass name="com.db4o.replication.hibernate.metadata.MySignature" discriminator-value="t"/>
-		<subclass name="com.db4o.replication.hibernate.metadata.PeerSignature" discriminator-value="f"/>
+		<subclass name="com.db4o.drs.hibernate.metadata.MySignature" discriminator-value="t"/>
+		<subclass name="com.db4o.drs.hibernate.metadata.PeerSignature" discriminator-value="f"/>
 	</class>
 </hibernate-mapping>

@@ -10,7 +10,7 @@ import org.hibernate.cfg.Environment;
 import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
 
 public class HsqlMemoryFixture extends RdbmsFixture {
-	private static final String HSQL_CFG_XML = "com/db4o/test/drs/hibernate/Hsql.cfg.xml";
+	private static final String HSQL_CFG_XML = "com/db4o/drs/test/hibernate/Hsql.cfg.xml";
 	private static final String JDBC_URL_HEAD = "jdbc:hsqldb:mem:unique_";
 	private static int jdbcUrlCounter = 0;
 		

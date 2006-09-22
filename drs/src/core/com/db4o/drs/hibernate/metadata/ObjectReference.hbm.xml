@@ -27,7 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class table="drs_objects" name="com.db4o.replication.hibernate.metadata.ObjectReference">
+	<class table="drs_objects" name="com.db4o.drs.hibernate.metadata.ObjectReference">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>

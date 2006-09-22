@@ -7,7 +7,7 @@
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="save-update">
-	<class name="com.db4o.test.drs.SimpleArrayHolder">
+	<class name="com.db4o.drs.test.SimpleArrayHolder">
 		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
@@ -17,7 +17,7 @@
 		<array name="arr" table="SimpleArrayContents">
 			<key column="SimpleArrayHolderId"/>
 			<list-index column="sortOrder"/>
-			<one-to-many class="com.db4o.test.drs.SimpleArrayContent"/>
+			<one-to-many class="com.db4o.drs.test.SimpleArrayContent"/>
 		</array>
 	</class>
 </hibernate-mapping>
