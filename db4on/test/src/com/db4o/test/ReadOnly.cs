@@ -61,10 +61,10 @@ namespace com.db4o.test {
          while (set1.HasNext()) {
             ReadOnly ro1 = (ReadOnly)set1.Next();
             if (ro1.myString.Equals(MY_STRING + "1")) {
-               j4o.lang.JavaSystem._out.Println("O.K. " + ro1.myString);
+               System.Console.WriteLine("O.K. " + ro1.myString);
             }
             if (ro1.myString.Equals(MY_STRING + (COUNT - 1))) {
-               j4o.lang.JavaSystem._out.Println("O.K. " + ro1.myString);
+				System.Console.WriteLine("O.K. " + ro1.myString);
             }
             lock (this) {
                try {

@@ -15,7 +15,7 @@ namespace com.db4o.test.soda.engines.db4o {
       private String FILE = "soda.yap";
       
       public static void Main(String[] arguments) {
-         JavaSystem._out.Println(Db4o.Version());
+		  System.Console.WriteLine(Db4o.Version());
       }
       private com.db4o.ObjectContainer con;
       

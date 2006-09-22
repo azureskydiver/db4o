@@ -147,7 +147,7 @@ namespace com.db4o.test.soda.utils {
                               }
                           }
                     } catch (Exception e) { {
-                                                j4o.lang.JavaSystem.err.Println("STCompare failure executing path:" + path1);
+                                                System.Console.Error.WriteLine("STCompare failure executing path:" + path1);
                                                 j4o.lang.JavaSystem.PrintStackTrace(e);
                                                 return false;
                                             }

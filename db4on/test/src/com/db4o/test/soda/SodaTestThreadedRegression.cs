@@ -49,7 +49,7 @@ namespace com.db4o.test.soda {
         private static void StartThread(STClass[] classes) {
             for (int i1 = 0; i1 < classes.Length; i1++) {
                 if (!JdkOK(classes[i1])) {
-                    JavaSystem._out.Println("Tester case can\'t run on this JDK: " + j4o.lang.Class.GetClassForObject(classes[i1]).GetName());
+					System.Console.WriteLine("Tester case can\'t run on this JDK: " + j4o.lang.Class.GetClassForObject(classes[i1]).GetName());
                     return;
                 }
             }
@@ -69,7 +69,7 @@ namespace com.db4o.test.soda {
             Thread.CurrentThread().SetName(name1);
             for (int i1 = 0; i1 < RUNS; i1++) {
                 if (!QUIET) {
-                    JavaSystem._out.Println(name1 + i1);
+					System.Console.WriteLine(name1 + i1);
                 }
                 Store(classes);
                 engine.Commit();
