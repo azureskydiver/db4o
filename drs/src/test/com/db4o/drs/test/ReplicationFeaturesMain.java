@@ -212,14 +212,14 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 //		printProviderContent(b().provider());
 	}
 	
-	private void printProviderContent(TestableReplicationProviderInside provider) {
-		ObjectContainer db=((Db4oReplicationProvider)provider).objectContainer();
-		ObjectSet result=db.query(Replicated.class);
-		System.out.println("PROVIDER: "+provider);
-		while(result.hasNext()) {
-			System.out.println(result.next());
-		}
-	}
+//	private void printProviderContent(TestableReplicationProviderInside provider) {
+//		ObjectContainer db=((Db4oReplicationProvider)provider).objectContainer();
+//		ObjectSet result=db.query(Replicated.class);
+//		System.out.println("PROVIDER: "+provider);
+//		while(result.hasNext()) {
+//			System.out.println(result.next());
+//		}
+//	}
 
 	private boolean tryToReplicate(final ReplicationSession replication) {
 
