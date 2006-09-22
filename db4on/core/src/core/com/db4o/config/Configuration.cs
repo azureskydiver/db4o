@@ -123,6 +123,14 @@ namespace com.db4o.config
 		/// </remarks>
 		void AddAlias(com.db4o.config.Alias alias);
 
+		/// <summary>
+		/// Removes an alias previously added with
+		/// <see cref="addAlias">addAlias</see>
+		/// .
+		/// </summary>
+		/// <param name="alias">the alias to remove</param>
+		void RemoveAlias(com.db4o.config.Alias alias);
+
 		/// <summary>turns automatic database file format version updates on.</summary>
 		/// <remarks>
 		/// turns automatic database file format version updates on.
@@ -460,7 +468,7 @@ namespace com.db4o.config
 		/// <remarks>
 		/// sets the detail level of db4o messages. Messages will be output to the
 		/// configured output
-		/// <see cref="j4o.io.PrintStream">PrintStream</see>
+		/// <see cref="System.IO.TextWriter">PrintStream</see>
 		/// .
 		/// <br /><br />
 		/// Level 0 - no messages<br />
@@ -569,6 +577,15 @@ namespace com.db4o.config
 		/// </deprecated>
 		void Password(string pass);
 
+		/// <summary>Sets the number of IDs to be prefetched for an ObjectSet in C/S mode</summary>
+		/// <param name="prefetchIDCount">The number of IDs to be prefetched</param>
+		void PrefetchIDCount(int prefetchIDCount);
+
+		/// <summary>Sets the number of objects to be prefetched for an ObjectSet in C/S mode
+		/// 	</summary>
+		/// <param name="prefetchObjectCount">The number of objects to be prefetched</param>
+		void PrefetchObjectCount(int prefetchObjectCount);
+
 		/// <summary>turns readOnly mode on and off.</summary>
 		/// <remarks>
 		/// turns readOnly mode on and off.
@@ -673,7 +690,7 @@ namespace com.db4o.config
 
 		/// <summary>
 		/// Assigns a
-		/// <see cref="j4o.io.PrintStream">PrintStream</see>
+		/// <see cref="System.IO.TextWriter">PrintStream</see>
 		/// where db4o is to print its event messages.
 		/// <br /><br />Messages are useful for debugging purposes and for learning
 		/// to understand, how db4o works. The message level can be raised with
@@ -686,7 +703,7 @@ namespace com.db4o.config
 		/// <param name="outStream">the new <code>PrintStream</code> for messages.</param>
 		/// <seealso cref="com.db4o.config.Configuration.MessageLevel">com.db4o.config.Configuration.MessageLevel
 		/// 	</seealso>
-		void SetOut(j4o.io.PrintStream outStream);
+		void SetOut(System.IO.TextWriter outStream);
 
 		/// <summary>
 		/// configures the client messaging system to be single threaded

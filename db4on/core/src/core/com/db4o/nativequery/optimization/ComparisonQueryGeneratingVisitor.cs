@@ -169,11 +169,11 @@ namespace com.db4o.nativequery.optimization
 		{
 			operand.Parent().Accept(this);
 			object receiver = _value;
-			object[] _params = new object[operand.Args().Length];
+			object[] @params = new object[operand.Args().Length];
 			for (int paramIdx = 0; paramIdx < operand.Args().Length; paramIdx++)
 			{
 				operand.Args()[paramIdx].Accept(this);
-				_params[paramIdx] = _value;
+				@params[paramIdx] = _value;
 			}
 			j4o.lang.Class clazz = j4o.lang.Class.GetClassForObject(receiver);
 			if (operand.Parent().Root() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
@@ -185,7 +185,7 @@ namespace com.db4o.nativequery.optimization
 				(clazz, operand.MethodName(), operand.ParamTypes());
 			try
 			{
-				_value = method.Invoke(receiver, _params);
+				_value = method.Invoke(receiver, @params);
 			}
 			catch (System.Exception exc)
 			{

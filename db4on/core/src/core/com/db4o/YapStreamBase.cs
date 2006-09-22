@@ -22,7 +22,7 @@ namespace com.db4o
 
 		private bool i_amDuringFatalExit = false;
 
-		public com.db4o.YapClassCollection i_classCollection;
+		protected com.db4o.YapClassCollection _classCollection;
 
 		protected com.db4o.Config4Impl i_config;
 
@@ -32,13 +32,13 @@ namespace com.db4o
 
 		private com.db4o.YapObject i_idTree;
 
-		private com.db4o.Tree[] i_justActivated;
+		private com.db4o.foundation.Tree[] i_justActivated;
 
-		private com.db4o.Tree[] i_justDeactivated;
+		private com.db4o.foundation.Tree[] i_justDeactivated;
 
-		private com.db4o.Tree i_justPeeked;
+		private com.db4o.foundation.Tree i_justPeeked;
 
-		private com.db4o.Tree i_justSet;
+		private com.db4o.foundation.Tree i_justSet;
 
 		internal readonly object i_lock;
 
@@ -154,7 +154,7 @@ namespace com.db4o
 					object obj = yo.GetObject();
 					if (obj == null)
 					{
-						YapObjectGCd(yo);
+						RemoveReference(yo);
 					}
 					else
 					{
@@ -207,7 +207,7 @@ namespace com.db4o
 		internal void Bind2(com.db4o.YapObject a_yapObject, object obj)
 		{
 			int id = a_yapObject.GetID();
-			YapObjectGCd(a_yapObject);
+			RemoveReference(a_yapObject);
 			a_yapObject = new com.db4o.YapObject(GetYapClass(Reflector().ForObject(obj), false
 				), id);
 			a_yapObject.SetObjectWeak(_this, obj);
@@ -254,7 +254,7 @@ namespace com.db4o
 
 		internal void CheckClosed()
 		{
-			if (i_classCollection == null)
+			if (_classCollection == null)
 			{
 				com.db4o.inside.Exceptions4.ThrowRuntimeException(20, ToString());
 			}
@@ -300,7 +300,7 @@ namespace com.db4o
 
 		internal bool Close1()
 		{
-			if (i_classCollection == null)
+			if (_classCollection == null)
 			{
 				return true;
 			}
@@ -320,7 +320,7 @@ namespace com.db4o
 			{
 				com.db4o.Platform4.RemoveShutDownHook(this, i_lock);
 			}
-			i_classCollection = null;
+			_classCollection = null;
 			i_references.StopTimer();
 			i_hcTree = null;
 			i_idTree = null;
@@ -364,6 +364,8 @@ namespace com.db4o
 		{
 			return ConfigImpl();
 		}
+
+		public abstract int ConverterVersion();
 
 		internal abstract com.db4o.QueryResultImpl CreateQResult(com.db4o.Transaction a_ta
 			);
@@ -596,7 +598,7 @@ namespace com.db4o
 			}
 			com.db4o.YapClass yc = yo.GetYapClass();
 			com.db4o.YapField[] field = new com.db4o.YapField[] { null };
-			yc.ForEachYapField(new _AnonymousInnerClass596(this, fieldName, field));
+			yc.ForEachYapField(new _AnonymousInnerClass598(this, fieldName, field));
 			if (field[0] == null)
 			{
 				return null;
@@ -638,9 +640,9 @@ namespace com.db4o
 			return Descend1(trans, child, subPath);
 		}
 
-		private sealed class _AnonymousInnerClass596 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass598 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass596(YapStreamBase _enclosing, string fieldName, com.db4o.YapField[]
+			public _AnonymousInnerClass598(YapStreamBase _enclosing, string fieldName, com.db4o.YapField[]
 				 field)
 			{
 				this._enclosing = _enclosing;
@@ -681,7 +683,7 @@ namespace com.db4o
 
 		internal virtual void EmergencyClose()
 		{
-			i_classCollection = null;
+			_classCollection = null;
 			i_references.StopTimer();
 		}
 
@@ -694,7 +696,7 @@ namespace com.db4o
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				if (i_classCollection != null)
+				if (_classCollection != null)
 				{
 					if (i_entryCounter == 0)
 					{
@@ -730,7 +732,7 @@ namespace com.db4o
 			if (!i_amDuringFatalExit)
 			{
 				i_amDuringFatalExit = true;
-				i_classCollection = null;
+				_classCollection = null;
 				EmergencyClose();
 				com.db4o.Messages.LogErr(ConfigImpl(), (msgID == com.db4o.Messages.FATAL_MSG_ID ? 
 					18 : msgID), null, t);
@@ -823,15 +825,10 @@ namespace com.db4o
 		{
 			if (a_id > 0)
 			{
-				com.db4o.YapObject yo = GetYapObject(a_id);
-				if (yo != null)
+				object obj = ObjectForIDFromCache(a_id);
+				if (obj != null)
 				{
-					object candidate = yo.GetObject();
-					if (candidate != null)
-					{
-						return candidate;
-					}
-					YapObjectGCd(yo);
+					return obj;
 				}
 				try
 				{
@@ -847,32 +844,12 @@ namespace com.db4o
 
 		internal object GetActivatedObjectFromCache(com.db4o.Transaction ta, int id)
 		{
-			object obj = GetObjectFromCache(ta, id);
+			object obj = ObjectForIDFromCache(id);
 			if (obj == null)
 			{
 				return null;
 			}
 			Activate1(ta, obj, ConfigImpl().ActivationDepth());
-			return obj;
-		}
-
-		internal object GetObjectFromCache(com.db4o.Transaction ta, int id)
-		{
-			if (id <= 0)
-			{
-				return null;
-			}
-			com.db4o.YapObject yo = GetYapObject(id);
-			if (yo == null)
-			{
-				return null;
-			}
-			object obj = yo.GetObject();
-			if (obj == null)
-			{
-				YapObjectGCd(yo);
-				return null;
-			}
 			return obj;
 		}
 
@@ -954,7 +931,7 @@ namespace com.db4o
 						arr[1] = yo;
 						return arr;
 					}
-					YapObjectGCd(yo);
+					RemoveReference(yo);
 				}
 				try
 				{
@@ -1019,7 +996,7 @@ namespace com.db4o
 			{
 				return yc;
 			}
-			return i_classCollection.GetYapClass(a_class, a_create);
+			return _classCollection.GetYapClass(a_class, a_create);
 		}
 
 		/// <summary>
@@ -1055,7 +1032,7 @@ namespace com.db4o
 			{
 				return yc;
 			}
-			return i_classCollection.GetActiveYapClass(a_class);
+			return _classCollection.GetActiveYapClass(a_class);
 		}
 
 		public virtual com.db4o.YapClass GetYapClass(int a_id)
@@ -1069,12 +1046,31 @@ namespace com.db4o
 			{
 				return yc;
 			}
-			return i_classCollection.GetYapClass(a_id);
+			return _classCollection.GetYapClass(a_id);
 		}
 
-		public com.db4o.YapObject GetYapObject(int a_id)
+		internal virtual object ObjectForIDFromCache(int id)
 		{
-			return i_idTree.Id_find(a_id);
+			com.db4o.YapObject yo = GetYapObject(id);
+			if (yo == null)
+			{
+				return null;
+			}
+			object candidate = yo.GetObject();
+			if (candidate == null)
+			{
+				RemoveReference(yo);
+			}
+			return candidate;
+		}
+
+		public com.db4o.YapObject GetYapObject(int id)
+		{
+			if (id <= 0)
+			{
+				return null;
+			}
+			return i_idTree.Id_find(id);
 		}
 
 		public com.db4o.YapObject GetYapObject(object a_object)
@@ -1133,12 +1129,12 @@ namespace com.db4o
 		{
 			Initialize0b();
 			i_stillToSet = null;
-			i_justActivated = new com.db4o.Tree[1];
+			i_justActivated = new com.db4o.foundation.Tree[1];
 		}
 
 		internal virtual void Initialize0b()
 		{
-			i_justDeactivated = new com.db4o.Tree[1];
+			i_justDeactivated = new com.db4o.foundation.Tree[1];
 		}
 
 		internal virtual void Initialize1()
@@ -1174,7 +1170,7 @@ namespace com.db4o
 		/// <summary>overridden in YapObjectCarrier</summary>
 		internal virtual void Initialize2NObjectCarrier()
 		{
-			i_classCollection = new com.db4o.YapClassCollection(i_systemTrans);
+			_classCollection = new com.db4o.YapClassCollection(i_systemTrans);
 			i_references.StartTimer();
 		}
 
@@ -1189,7 +1185,7 @@ namespace com.db4o
 		{
 			InitializeEssentialClasses();
 			Rename(ConfigImpl());
-			i_classCollection.InitOnUp(i_systemTrans);
+			_classCollection.InitOnUp(i_systemTrans);
 			if (ConfigImpl().DetectSchemaChanges())
 			{
 				i_systemTrans.Commit();
@@ -1235,19 +1231,7 @@ namespace com.db4o
 		{
 			lock (i_lock)
 			{
-				if (a_id > 0)
-				{
-					com.db4o.YapObject yo = GetYapObject((int)a_id);
-					if (yo != null)
-					{
-						object candidate = yo.GetObject();
-						if (candidate != null)
-						{
-							return true;
-						}
-					}
-				}
-				return false;
+				return ObjectForIDFromCache((int)a_id) != null;
 			}
 		}
 
@@ -1270,7 +1254,7 @@ namespace com.db4o
 		{
 			lock (i_lock)
 			{
-				return i_classCollection == null;
+				return _classCollection == null;
 			}
 		}
 
@@ -1339,7 +1323,7 @@ namespace com.db4o
 			com.db4o.Messages.LogMsg(ConfigImpl(), code, msg);
 		}
 
-		internal virtual bool MaintainsIndices()
+		public virtual bool MaintainsIndices()
 		{
 			return true;
 		}
@@ -1441,8 +1425,8 @@ namespace com.db4o
 				return null;
 			}
 			com.db4o.TreeInt ti = new com.db4o.TreeInt(a_id);
-			com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)com.db4o.Tree.Find(i_justPeeked
-				, ti);
+			com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)com.db4o.foundation.Tree.Find
+				(i_justPeeked, ti);
 			if (tio == null)
 			{
 				return new com.db4o.YapObject(a_id).Read(a_ta, null, null, a_depth, com.db4o.YapConst
@@ -1453,8 +1437,8 @@ namespace com.db4o
 
 		internal virtual void Peeked(int a_id, object a_object)
 		{
-			i_justPeeked = com.db4o.Tree.Add(i_justPeeked, new com.db4o.TreeIntObject(a_id, a_object
-				));
+			i_justPeeked = com.db4o.foundation.Tree.Add(i_justPeeked, new com.db4o.TreeIntObject
+				(a_id, a_object));
 		}
 
 		public virtual void Purge()
@@ -1480,7 +1464,7 @@ namespace com.db4o
 			j4o.lang.JavaSystem.RunFinalization();
 			j4o.lang.JavaSystem.Gc();
 			Gc();
-			i_classCollection.Purge();
+			_classCollection.Purge();
 		}
 
 		internal void Purge1(object obj)
@@ -1500,7 +1484,7 @@ namespace com.db4o
 					}
 					if (yo != null)
 					{
-						YapObjectGCd(yo);
+						RemoveReference(yo);
 					}
 				}
 			}
@@ -1557,7 +1541,7 @@ namespace com.db4o
 		internal abstract void ReadBytes(byte[] bytes, int address, int addressOffset, int
 			 length);
 
-		public com.db4o.YapReader ReadObjectReaderByAddress(int a_address, int a_length)
+		public com.db4o.YapReader ReadReaderByAddress(int a_address, int a_length)
 		{
 			if (a_address > 0)
 			{
@@ -1569,8 +1553,8 @@ namespace com.db4o
 			return null;
 		}
 
-		public com.db4o.YapWriter ReadObjectWriterByAddress(com.db4o.Transaction a_trans, 
-			int a_address, int a_length)
+		public com.db4o.YapWriter ReadWriterByAddress(com.db4o.Transaction a_trans, int a_address
+			, int a_length)
 		{
 			if (a_address > 0)
 			{
@@ -1590,11 +1574,11 @@ namespace com.db4o
 		private void Reboot()
 		{
 			Commit();
-			int ccID = i_classCollection.GetID();
+			int ccID = _classCollection.GetID();
 			i_references.StopTimer();
 			Initialize2();
-			i_classCollection.SetID(ccID);
-			i_classCollection.Read(i_systemTrans);
+			_classCollection.SetID(ccID);
+			_classCollection.Read(i_systemTrans);
 		}
 
 		public virtual com.db4o.reflect.generic.GenericReflector Reflector()
@@ -1622,7 +1606,7 @@ namespace com.db4o
 		{
 			lock (i_lock)
 			{
-				i_classCollection.RefreshClasses();
+				_classCollection.RefreshClasses();
 			}
 		}
 
@@ -1649,7 +1633,7 @@ namespace com.db4o
 			{
 				renamedOne = Rename1(config);
 			}
-			i_classCollection.CheckChanges();
+			_classCollection.CheckChanges();
 			if (renamedOne)
 			{
 				Reboot();
@@ -1669,7 +1653,7 @@ namespace com.db4o
 					{
 						bool renamed = false;
 						bool isField = ren.rClass.Length > 0;
-						com.db4o.YapClass yapClass = i_classCollection.GetYapClass(isField ? ren.rClass : 
+						com.db4o.YapClass yapClass = _classCollection.GetYapClass(isField ? ren.rClass : 
 							ren.rFrom);
 						if (yapClass != null)
 						{
@@ -1679,7 +1663,7 @@ namespace com.db4o
 							}
 							else
 							{
-								com.db4o.YapClass existing = i_classCollection.GetYapClass(ren.rTo);
+								com.db4o.YapClass existing = _classCollection.GetYapClass(ren.rTo);
 								if (existing == null)
 								{
 									yapClass.SetName(ren.rTo);
@@ -1951,8 +1935,7 @@ namespace com.db4o
 			{
 				yc = yapObject.GetYapClass();
 			}
-			if (yc.GetID() == com.db4o.YapHandlers.ANY_ID || yc.IsPrimitive() && !com.db4o.inside.marshall.MarshallerFamily
-				.LEGACY)
+			if (IsPlainObjectOrPrimitive(yc))
 			{
 				NotStorable(yc.ClassReflector(), a_object);
 				return 0;
@@ -1965,7 +1948,7 @@ namespace com.db4o
 					return 0;
 				}
 				yapObject = new com.db4o.YapObject(0);
-				if (yapObject.Store(a_trans, yc, a_object, a_updateDepth))
+				if (yapObject.Store(a_trans, yc, a_object))
 				{
 					IdTreeAdd(yapObject);
 					HcTreeAdd(yapObject);
@@ -2029,6 +2012,11 @@ namespace com.db4o
 				a_trans.DontDelete(yapObject.GetYapClass().GetID(), id);
 			}
 			return id;
+		}
+
+		private bool IsPlainObjectOrPrimitive(com.db4o.YapClass yc)
+		{
+			return yc.GetID() == com.db4o.YapHandlers.ANY_ID || yc.IsPrimitive();
 		}
 
 		private bool ObjectCanNew(com.db4o.YapClass yc, object a_object)
@@ -2098,7 +2086,7 @@ namespace com.db4o
 		/// This allows deactivating objects before queries are called.
 		/// </remarks>
 		internal virtual com.db4o.foundation.List4 StillTo1(com.db4o.foundation.List4 a_still
-			, com.db4o.Tree[] a_just, object a_object, int a_depth, bool a_forceUnknownDeactivate
+			, com.db4o.foundation.Tree[] a_just, object a_object, int a_depth, bool a_forceUnknownDeactivate
 			)
 		{
 			if (a_object != null)
@@ -2192,7 +2180,7 @@ namespace com.db4o
 
 		internal virtual void StopSession()
 		{
-			i_classCollection = null;
+			_classCollection = null;
 		}
 
 		public virtual com.db4o.ext.StoredClass StoredClass(object clazz)
@@ -2225,7 +2213,7 @@ namespace com.db4o
 			lock (i_lock)
 			{
 				CheckClosed();
-				return i_classCollection.StoredClasses();
+				return _classCollection.StoredClasses();
 			}
 		}
 
@@ -2273,7 +2261,7 @@ namespace com.db4o
 		public abstract void WriteUpdate(com.db4o.YapClass a_yapClass, com.db4o.YapWriter
 			 a_bytes);
 
-		public void YapObjectGCd(com.db4o.YapObject yo)
+		public void RemoveReference(com.db4o.YapObject yo)
 		{
 			HcTreeRemove(yo);
 			IdTreeRemove(yo.GetID());
@@ -2308,6 +2296,16 @@ namespace com.db4o
 		public virtual com.db4o.Config4Impl ConfigImpl()
 		{
 			return i_config;
+		}
+
+		public virtual com.db4o.YapFieldUUID GetFieldUUID()
+		{
+			return i_handlers.i_indexes.i_fieldUUID;
+		}
+
+		public virtual com.db4o.YapClassCollection ClassCollection()
+		{
+			return _classCollection;
 		}
 	}
 }

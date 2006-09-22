@@ -1,15 +1,16 @@
-namespace com.db4o
+namespace com.db4o.foundation
 {
 	/// <exclude></exclude>
-	public abstract class Tree : com.db4o.foundation.ShallowClone, com.db4o.Readable
+	public abstract class Tree : com.db4o.foundation.ShallowClone
 	{
-		public com.db4o.Tree _preceding;
+		public com.db4o.foundation.Tree _preceding;
 
 		public int _size = 1;
 
-		public com.db4o.Tree _subsequent;
+		public com.db4o.foundation.Tree _subsequent;
 
-		public static com.db4o.Tree Add(com.db4o.Tree a_old, com.db4o.Tree a_new)
+		public static com.db4o.foundation.Tree Add(com.db4o.foundation.Tree a_old, com.db4o.foundation.Tree
+			 a_new)
 		{
 			if (a_old == null)
 			{
@@ -18,7 +19,7 @@ namespace com.db4o
 			return a_old.Add(a_new);
 		}
 
-		public virtual com.db4o.Tree Add(com.db4o.Tree a_new)
+		public virtual com.db4o.foundation.Tree Add(com.db4o.foundation.Tree a_new)
 		{
 			return Add(a_new, Compare(a_new));
 		}
@@ -35,7 +36,8 @@ namespace com.db4o
 		/// prevails in the tree using #duplicateOrThis(). This mechanism
 		/// allows doing find() and add() in one run.
 		/// </remarks>
-		public virtual com.db4o.Tree Add(com.db4o.Tree a_new, int a_cmp)
+		public virtual com.db4o.foundation.Tree Add(com.db4o.foundation.Tree a_new, int a_cmp
+			)
 		{
 			if (a_cmp < 0)
 			{
@@ -93,7 +95,7 @@ namespace com.db4o
 		/// prevails in the tree using #duplicateOrThis(). This mechanism
 		/// allows doing find() and add() in one run.
 		/// </remarks>
-		public virtual com.db4o.Tree DuplicateOrThis()
+		public virtual com.db4o.foundation.Tree DuplicateOrThis()
 		{
 			if (_size == 0)
 			{
@@ -102,7 +104,7 @@ namespace com.db4o
 			return this;
 		}
 
-		public com.db4o.Tree Balance()
+		public com.db4o.foundation.Tree Balance()
 		{
 			int cmp = _subsequent.Nodes() - _preceding.Nodes();
 			if (cmp < -2)
@@ -123,7 +125,7 @@ namespace com.db4o
 			}
 		}
 
-		public virtual com.db4o.Tree BalanceCheckNulls()
+		public virtual com.db4o.foundation.Tree BalanceCheckNulls()
 		{
 			if (_subsequent == null)
 			{
@@ -142,44 +144,6 @@ namespace com.db4o
 				}
 			}
 			return Balance();
-		}
-
-		public static int ByteCount(com.db4o.Tree a_tree)
-		{
-			if (a_tree == null)
-			{
-				return com.db4o.YapConst.INT_LENGTH;
-			}
-			return a_tree.ByteCount();
-		}
-
-		public int ByteCount()
-		{
-			if (VariableLength())
-			{
-				int[] length = new int[] { com.db4o.YapConst.INT_LENGTH };
-				Traverse(new _AnonymousInnerClass114(this, length));
-				return length[0];
-			}
-			return com.db4o.YapConst.INT_LENGTH + (Size() * OwnLength());
-		}
-
-		private sealed class _AnonymousInnerClass114 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass114(Tree _enclosing, int[] length)
-			{
-				this._enclosing = _enclosing;
-				this.length = length;
-			}
-
-			public void Visit(object obj)
-			{
-				length[0] += ((com.db4o.Tree)obj).OwnLength();
-			}
-
-			private readonly Tree _enclosing;
-
-			private readonly int[] length;
 		}
 
 		public virtual void CalculateSize()
@@ -214,25 +178,27 @@ namespace com.db4o
 		/// returns positive if this is greater than a_to
 		/// returns negative if this is smaller than a_to
 		/// </summary>
-		public abstract int Compare(com.db4o.Tree a_to);
+		public abstract int Compare(com.db4o.foundation.Tree a_to);
 
-		public static com.db4o.Tree DeepClone(com.db4o.Tree a_tree, object a_param)
+		public static com.db4o.foundation.Tree DeepClone(com.db4o.foundation.Tree a_tree, 
+			object a_param)
 		{
 			if (a_tree == null)
 			{
 				return null;
 			}
-			com.db4o.Tree newNode = a_tree.DeepClone(a_param);
+			com.db4o.foundation.Tree newNode = a_tree.DeepClone(a_param);
 			newNode._size = a_tree._size;
-			newNode.Nodes(a_tree.Nodes());
-			newNode._preceding = com.db4o.Tree.DeepClone(a_tree._preceding, a_param);
-			newNode._subsequent = com.db4o.Tree.DeepClone(a_tree._subsequent, a_param);
+			newNode._preceding = com.db4o.foundation.Tree.DeepClone(a_tree._preceding, a_param
+				);
+			newNode._subsequent = com.db4o.foundation.Tree.DeepClone(a_tree._subsequent, a_param
+				);
 			return newNode;
 		}
 
-		public virtual com.db4o.Tree DeepClone(object a_param)
+		public virtual com.db4o.foundation.Tree DeepClone(object a_param)
 		{
-			return (com.db4o.Tree)this.ShallowClone();
+			return (com.db4o.foundation.Tree)this.ShallowClone();
 		}
 
 		public virtual bool Duplicates()
@@ -240,7 +206,7 @@ namespace com.db4o
 			return true;
 		}
 
-		internal com.db4o.Tree Filter(com.db4o.VisitorBoolean a_filter)
+		public com.db4o.foundation.Tree Filter(com.db4o.foundation.Predicate4 a_filter)
 		{
 			if (_preceding != null)
 			{
@@ -250,14 +216,15 @@ namespace com.db4o
 			{
 				_subsequent = _subsequent.Filter(a_filter);
 			}
-			if (!a_filter.IsVisit(this))
+			if (!a_filter.Match(this))
 			{
 				return Remove();
 			}
 			return this;
 		}
 
-		public static com.db4o.Tree Find(com.db4o.Tree a_in, com.db4o.Tree a_tree)
+		public static com.db4o.foundation.Tree Find(com.db4o.foundation.Tree a_in, com.db4o.foundation.Tree
+			 a_tree)
 		{
 			if (a_in == null)
 			{
@@ -266,7 +233,7 @@ namespace com.db4o
 			return a_in.Find(a_tree);
 		}
 
-		public com.db4o.Tree Find(com.db4o.Tree a_tree)
+		public com.db4o.foundation.Tree Find(com.db4o.foundation.Tree a_tree)
 		{
 			int cmp = Compare(a_tree);
 			if (cmp < 0)
@@ -293,8 +260,8 @@ namespace com.db4o
 			return null;
 		}
 
-		public static com.db4o.Tree FindGreaterOrEqual(com.db4o.Tree a_in, com.db4o.Tree 
-			a_finder)
+		public static com.db4o.foundation.Tree FindGreaterOrEqual(com.db4o.foundation.Tree
+			 a_in, com.db4o.foundation.Tree a_finder)
 		{
 			if (a_in == null)
 			{
@@ -307,7 +274,7 @@ namespace com.db4o
 			}
 			if (cmp > 0)
 			{
-				com.db4o.Tree node = FindGreaterOrEqual(a_in._preceding, a_finder);
+				com.db4o.foundation.Tree node = FindGreaterOrEqual(a_in._preceding, a_finder);
 				if (node != null)
 				{
 					return node;
@@ -317,7 +284,8 @@ namespace com.db4o
 			return FindGreaterOrEqual(a_in._subsequent, a_finder);
 		}
 
-		public static com.db4o.Tree FindSmaller(com.db4o.Tree a_in, com.db4o.Tree a_node)
+		public static com.db4o.foundation.Tree FindSmaller(com.db4o.foundation.Tree a_in, 
+			com.db4o.foundation.Tree a_node)
 		{
 			if (a_in == null)
 			{
@@ -326,7 +294,7 @@ namespace com.db4o
 			int cmp = a_in.Compare(a_node);
 			if (cmp < 0)
 			{
-				com.db4o.Tree node = FindSmaller(a_in._subsequent, a_node);
+				com.db4o.foundation.Tree node = FindSmaller(a_in._subsequent, a_node);
 				if (node != null)
 				{
 					return node;
@@ -336,7 +304,7 @@ namespace com.db4o
 			return FindSmaller(a_in._preceding, a_node);
 		}
 
-		public com.db4o.Tree First()
+		public com.db4o.foundation.Tree First()
 		{
 			if (_preceding == null)
 			{
@@ -345,7 +313,7 @@ namespace com.db4o
 			return _preceding.First();
 		}
 
-		internal virtual void IsDuplicateOf(com.db4o.Tree a_tree)
+		public virtual void IsDuplicateOf(com.db4o.foundation.Tree a_tree)
 		{
 			_size = 0;
 			_preceding = a_tree;
@@ -357,32 +325,12 @@ namespace com.db4o
 			return _size;
 		}
 
-		public virtual void Nodes(int count)
-		{
-		}
-
-		public virtual int OwnLength()
-		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
-		}
-
 		public virtual int OwnSize()
 		{
 			return 1;
 		}
 
-		internal static com.db4o.Tree Read(com.db4o.Tree a_tree, com.db4o.YapReader a_bytes
-			)
-		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
-		}
-
-		public virtual object Read(com.db4o.YapReader a_bytes)
-		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
-		}
-
-		public virtual com.db4o.Tree Remove()
+		public virtual com.db4o.foundation.Tree Remove()
 		{
 			if (_subsequent != null && _preceding != null)
 			{
@@ -405,7 +353,7 @@ namespace com.db4o
 			SetSizeOwn();
 		}
 
-		public virtual com.db4o.Tree RemoveFirst()
+		public virtual com.db4o.foundation.Tree RemoveFirst()
 		{
 			if (_preceding == null)
 			{
@@ -416,7 +364,8 @@ namespace com.db4o
 			return this;
 		}
 
-		public static com.db4o.Tree RemoveLike(com.db4o.Tree from, com.db4o.Tree a_find)
+		public static com.db4o.foundation.Tree RemoveLike(com.db4o.foundation.Tree from, 
+			com.db4o.foundation.Tree a_find)
 		{
 			if (from == null)
 			{
@@ -425,7 +374,7 @@ namespace com.db4o
 			return from.RemoveLike(a_find);
 		}
 
-		public com.db4o.Tree RemoveLike(com.db4o.Tree a_find)
+		public com.db4o.foundation.Tree RemoveLike(com.db4o.foundation.Tree a_find)
 		{
 			int cmp = Compare(a_find);
 			if (cmp == 0)
@@ -450,7 +399,7 @@ namespace com.db4o
 			return this;
 		}
 
-		public com.db4o.Tree RemoveNode(com.db4o.Tree a_tree)
+		public com.db4o.foundation.Tree RemoveNode(com.db4o.foundation.Tree a_tree)
 		{
 			if (this == a_tree)
 			{
@@ -475,9 +424,9 @@ namespace com.db4o
 			return this;
 		}
 
-		public com.db4o.Tree RotateLeft()
+		public com.db4o.foundation.Tree RotateLeft()
 		{
-			com.db4o.Tree tree = _subsequent;
+			com.db4o.foundation.Tree tree = _subsequent;
 			_subsequent = tree._preceding;
 			CalculateSize();
 			tree._preceding = this;
@@ -492,9 +441,9 @@ namespace com.db4o
 			return tree;
 		}
 
-		public com.db4o.Tree RotateRight()
+		public com.db4o.foundation.Tree RotateRight()
 		{
-			com.db4o.Tree tree = _preceding;
+			com.db4o.foundation.Tree tree = _preceding;
 			_preceding = tree._subsequent;
 			CalculateSize();
 			tree._subsequent = this;
@@ -509,7 +458,7 @@ namespace com.db4o
 			return tree;
 		}
 
-		private com.db4o.Tree RotateSmallestUp()
+		private com.db4o.foundation.Tree RotateSmallestUp()
 		{
 			if (_preceding != null)
 			{
@@ -539,17 +488,18 @@ namespace com.db4o
 			_size = OwnSize() + _subsequent._size;
 		}
 
-		public virtual void SetSizeOwnPlus(com.db4o.Tree tree)
+		public virtual void SetSizeOwnPlus(com.db4o.foundation.Tree tree)
 		{
 			_size = OwnSize() + tree._size;
 		}
 
-		public virtual void SetSizeOwnPlus(com.db4o.Tree tree1, com.db4o.Tree tree2)
+		public virtual void SetSizeOwnPlus(com.db4o.foundation.Tree tree1, com.db4o.foundation.Tree
+			 tree2)
 		{
 			_size = OwnSize() + tree1._size + tree2._size;
 		}
 
-		public static int Size(com.db4o.Tree a_tree)
+		public static int Size(com.db4o.foundation.Tree a_tree)
 		{
 			if (a_tree == null)
 			{
@@ -564,8 +514,8 @@ namespace com.db4o
 			return _size;
 		}
 
-		public static void Traverse(com.db4o.Tree tree, com.db4o.foundation.Visitor4 visitor
-			)
+		public static void Traverse(com.db4o.foundation.Tree tree, com.db4o.foundation.Visitor4
+			 visitor)
 		{
 			if (tree == null)
 			{
@@ -600,49 +550,8 @@ namespace com.db4o
 			a_visitor.Visit(this);
 		}
 
-		internal virtual bool VariableLength()
-		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
-		}
-
-		public static void Write(com.db4o.YapReader a_writer, com.db4o.Tree a_tree)
-		{
-			Write(a_writer, a_tree, a_tree == null ? 0 : a_tree.Size());
-		}
-
-		public static void Write(com.db4o.YapReader a_writer, com.db4o.Tree a_tree, int size
-			)
-		{
-			if (a_tree == null)
-			{
-				a_writer.WriteInt(0);
-				return;
-			}
-			a_writer.WriteInt(size);
-			a_tree.Traverse(new _AnonymousInnerClass467(a_writer));
-		}
-
-		private sealed class _AnonymousInnerClass467 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass467(com.db4o.YapReader a_writer)
-			{
-				this.a_writer = a_writer;
-			}
-
-			public void Visit(object a_object)
-			{
-				((com.db4o.Tree)a_object).Write(a_writer);
-			}
-
-			private readonly com.db4o.YapReader a_writer;
-		}
-
-		public virtual void Write(com.db4o.YapReader a_writer)
-		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
-		}
-
-		protected virtual com.db4o.Tree ShallowCloneInternal(com.db4o.Tree tree)
+		protected virtual com.db4o.foundation.Tree ShallowCloneInternal(com.db4o.foundation.Tree
+			 tree)
 		{
 			tree._preceding = _preceding;
 			tree._size = _size;
@@ -650,6 +559,9 @@ namespace com.db4o
 			return tree;
 		}
 
-		public abstract object ShallowClone();
+		public virtual object ShallowClone()
+		{
+			throw new com.db4o.foundation.NotImplementedException();
+		}
 	}
 }

@@ -4,21 +4,22 @@ namespace com.db4o.inside.marshall
 	public class ObjectMarshaller1 : com.db4o.inside.marshall.ObjectMarshaller
 	{
 		public override void AddFieldIndices(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
-			 attributes, com.db4o.YapWriter writer, bool isNew)
+			 attributes, com.db4o.YapWriter writer, com.db4o.inside.slots.Slot oldSlot)
 		{
 			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass14
-				(this, writer, isNew);
+				(this, writer, yc, oldSlot);
 			TraverseFields(yc, writer, attributes, command);
 		}
 
 		private sealed class _AnonymousInnerClass14 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
 			public _AnonymousInnerClass14(ObjectMarshaller1 _enclosing, com.db4o.YapWriter writer
-				, bool isNew)
+				, com.db4o.YapClass yc, com.db4o.inside.slots.Slot oldSlot)
 			{
 				this._enclosing = _enclosing;
 				this.writer = writer;
-				this.isNew = isNew;
+				this.yc = yc;
+				this.oldSlot = oldSlot;
 			}
 
 			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
@@ -30,7 +31,7 @@ namespace com.db4o.inside.marshall
 				}
 				else
 				{
-					field.AddFieldIndex(this._enclosing._family, writer, isNew);
+					field.AddFieldIndex(this._enclosing._family, yc, writer, oldSlot);
 				}
 			}
 
@@ -38,7 +39,9 @@ namespace com.db4o.inside.marshall
 
 			private readonly com.db4o.YapWriter writer;
 
-			private readonly bool isNew;
+			private readonly com.db4o.YapClass yc;
+
+			private readonly com.db4o.inside.slots.Slot oldSlot;
 		}
 
 		public override com.db4o.TreeInt CollectFieldIDs(com.db4o.TreeInt tree, com.db4o.YapClass

@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	internal class QOrder : com.db4o.Tree
+	internal class QOrder : com.db4o.foundation.Tree
 	{
 		internal readonly com.db4o.QConObject _constraint;
 
@@ -14,7 +14,7 @@ namespace com.db4o
 			_candidate = a_candidate;
 		}
 
-		public override int Compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.foundation.Tree a_to)
 		{
 			if (_constraint.i_comparator.IsSmaller(_candidate.Value()))
 			{

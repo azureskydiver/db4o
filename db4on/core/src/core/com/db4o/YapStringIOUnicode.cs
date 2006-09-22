@@ -30,7 +30,7 @@ namespace com.db4o
 			return new string(chars, 0, a_length);
 		}
 
-		internal override string Read(byte[] a_bytes)
+		public override string Read(byte[] a_bytes)
 		{
 			int len = a_bytes.Length / 2;
 			CheckBufferLength(len);
@@ -48,9 +48,9 @@ namespace com.db4o
 			return (a_string.Length * 2) + com.db4o.YapConst.INT_LENGTH;
 		}
 
-		public override void Write(com.db4o.YapReader bytes, string _string)
+		public override void Write(com.db4o.YapReader bytes, string @string)
 		{
-			int len = WritetoBuffer(_string);
+			int len = WritetoBuffer(@string);
 			for (int i = 0; i < len; i++)
 			{
 				bytes._buffer[bytes._offset++] = (byte)(chars[i] & unchecked((int)(0xff)));
@@ -58,9 +58,9 @@ namespace com.db4o
 			}
 		}
 
-		internal override byte[] Write(string _string)
+		internal override byte[] Write(string @string)
 		{
-			int len = WritetoBuffer(_string);
+			int len = WritetoBuffer(@string);
 			byte[] bytes = new byte[len * 2];
 			int j = 0;
 			for (int i = 0; i < len; i++)

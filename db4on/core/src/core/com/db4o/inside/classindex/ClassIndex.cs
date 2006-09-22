@@ -6,7 +6,7 @@ namespace com.db4o.inside.classindex
 		private readonly com.db4o.YapClass _yapClass;
 
 		/// <summary>contains TreeInt with object IDs</summary>
-		private com.db4o.Tree i_root;
+		private com.db4o.TreeInt i_root;
 
 		internal ClassIndex(com.db4o.YapClass yapClass)
 		{
@@ -15,12 +15,12 @@ namespace com.db4o.inside.classindex
 
 		public virtual void Add(int a_id)
 		{
-			i_root = com.db4o.Tree.Add(i_root, new com.db4o.TreeInt(a_id));
+			i_root = com.db4o.TreeInt.Add(i_root, a_id);
 		}
 
 		public int ByteCount()
 		{
-			return com.db4o.YapConst.INT_LENGTH * (com.db4o.Tree.Size(i_root) + 1);
+			return com.db4o.YapConst.INT_LENGTH * (com.db4o.foundation.Tree.Size(i_root) + 1);
 		}
 
 		public void Clear()
@@ -41,9 +41,9 @@ namespace com.db4o.inside.classindex
 		{
 			if (IsActive() || IsNew())
 			{
-				return com.db4o.Tree.Size(i_root);
+				return com.db4o.foundation.Tree.Size(i_root);
 			}
-			com.db4o.inside.slots.Slot slot = ta.GetSlotInformation(GetID());
+			com.db4o.inside.slots.Slot slot = ta.GetCurrentSlotOfID(GetID());
 			int length = com.db4o.YapConst.INT_LENGTH;
 			com.db4o.YapReader reader = new com.db4o.YapReader(length);
 			reader.ReadEncrypt(ta.Stream(), slot._address);
@@ -77,12 +77,13 @@ namespace com.db4o.inside.classindex
 		public sealed override void ReadThis(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader)
 		{
-			i_root = new com.db4o.TreeReader(a_reader, new com.db4o.TreeInt(0)).Read();
+			i_root = (com.db4o.TreeInt)new com.db4o.TreeReader(a_reader, new com.db4o.TreeInt
+				(0)).Read();
 		}
 
 		public virtual void Remove(int a_id)
 		{
-			i_root = com.db4o.Tree.RemoveLike(i_root, new com.db4o.TreeInt(a_id));
+			i_root = com.db4o.TreeInt.RemoveLike(i_root, a_id);
 		}
 
 		internal virtual void SetDirty(com.db4o.YapStream a_stream)
@@ -98,7 +99,7 @@ namespace com.db4o.inside.classindex
 		public sealed override void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader
 			 a_writer)
 		{
-			com.db4o.Tree.Write(a_writer, i_root);
+			com.db4o.TreeInt.Write(a_writer, i_root);
 		}
 
 		public override string ToString()

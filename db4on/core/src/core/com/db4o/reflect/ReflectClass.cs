@@ -57,7 +57,7 @@ namespace com.db4o.reflect
 		/// <returns>true if the special constructor is in place after the call</returns>
 		bool SkipConstructor(bool flag);
 
-		void UseConstructor(com.db4o.reflect.ReflectConstructor constructor, object[] _params
+		void UseConstructor(com.db4o.reflect.ReflectConstructor constructor, object[] @params
 			);
 
 		object[] ToArray(object obj);

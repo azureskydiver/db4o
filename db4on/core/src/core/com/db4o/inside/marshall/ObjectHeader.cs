@@ -3,7 +3,7 @@ namespace com.db4o.inside.marshall
 	/// <exclude></exclude>
 	public class ObjectHeader
 	{
-		public readonly com.db4o.YapClass _yapClass;
+		private readonly com.db4o.YapClass _yapClass;
 
 		public readonly com.db4o.inside.marshall.MarshallerFamily _marshallerFamily;
 
@@ -56,7 +56,7 @@ namespace com.db4o.inside.marshall
 				marshallerVersion = reader.ReadByte();
 			}
 			com.db4o.inside.marshall.MarshallerFamily marshallerFamily = com.db4o.inside.marshall.MarshallerFamily
-				.ForVersion(marshallerVersion);
+				.Version(marshallerVersion);
 			return marshallerFamily;
 		}
 
@@ -74,6 +74,11 @@ namespace com.db4o.inside.marshall
 		private int NormalizeID(int id)
 		{
 			return (id < 0 ? -id : id);
+		}
+
+		public virtual com.db4o.YapClass YapClass()
+		{
+			return _yapClass;
 		}
 	}
 }

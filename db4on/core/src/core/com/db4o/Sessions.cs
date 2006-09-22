@@ -46,10 +46,6 @@ namespace com.db4o
 				{
 					throw e;
 				}
-				catch (com.db4o.UserException eu)
-				{
-					com.db4o.inside.Exceptions4.ThrowRuntimeException(eu.errCode, eu.errMsg);
-				}
 				catch (System.Exception t)
 				{
 					com.db4o.Messages.LogErr(com.db4o.Db4o.i_config, 4, databaseFileName, t);

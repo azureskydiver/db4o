@@ -111,6 +111,15 @@ namespace com.db4o.inside.slots
 			return _newSlot;
 		}
 
+		public virtual com.db4o.inside.slots.Slot OldSlot()
+		{
+			if (_shared == null)
+			{
+				return null;
+			}
+			return _shared.Slot();
+		}
+
 		public override object Read(com.db4o.YapReader reader)
 		{
 			com.db4o.inside.slots.SlotChange change = new com.db4o.inside.slots.SlotChange(reader

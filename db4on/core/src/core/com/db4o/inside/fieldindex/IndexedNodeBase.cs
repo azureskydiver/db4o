@@ -17,9 +17,14 @@ namespace com.db4o.inside.fieldindex
 			_constraint = qcon;
 		}
 
-		public virtual com.db4o.inside.btree.BTree GetIndex()
+		public virtual com.db4o.TreeInt ToTreeInt()
 		{
-			return GetYapField().GetIndex();
+			return AddToTree(null, this);
+		}
+
+		public com.db4o.inside.btree.BTree GetIndex()
+		{
+			return GetYapField().GetIndex(Transaction());
 		}
 
 		private com.db4o.YapField GetYapField()
@@ -27,7 +32,7 @@ namespace com.db4o.inside.fieldindex
 			return _constraint.GetField().GetYapField();
 		}
 
-		public virtual com.db4o.QConObject Constraint()
+		public virtual com.db4o.QCon Constraint()
 		{
 			return _constraint;
 		}
@@ -38,42 +43,21 @@ namespace com.db4o.inside.fieldindex
 			return null == parent || !parent.HasParent();
 		}
 
-		private com.db4o.inside.btree.BTreeNodeSearchResult SearchBound(int bound, object
-			 keyPart)
-		{
-			return GetIndex().SearchLeaf(Transaction(), new com.db4o.inside.btree.FieldIndexKey
-				(bound, keyPart), com.db4o.inside.btree.SearchTarget.LOWEST);
-		}
-
 		public virtual com.db4o.inside.btree.BTreeRange Search(object value)
 		{
-			com.db4o.inside.btree.BTreeNodeSearchResult lowerBound = SearchLowerBound(value);
-			com.db4o.inside.btree.BTreeNodeSearchResult upperBound = SearchUpperBound(value);
-			return lowerBound.CreateIncludingRange(upperBound);
+			return GetYapField().Search(Transaction(), value);
 		}
 
-		private com.db4o.inside.btree.BTreeNodeSearchResult SearchUpperBound(object value
-			)
+		public static com.db4o.TreeInt AddToTree(com.db4o.TreeInt tree, com.db4o.inside.fieldindex.IndexedNode
+			 node)
 		{
-			return SearchBound(int.MaxValue, value);
-		}
-
-		private com.db4o.inside.btree.BTreeNodeSearchResult SearchLowerBound(object value
-			)
-		{
-			return SearchBound(0, value);
-		}
-
-		public static com.db4o.TreeInt AddRangeToTree(com.db4o.TreeInt tree, com.db4o.inside.btree.BTreeRange
-			 range)
-		{
-			com.db4o.foundation.KeyValueIterator i = range.Iterator();
+			com.db4o.foundation.Iterator4 i = node.Iterator();
 			while (i.MoveNext())
 			{
 				com.db4o.inside.btree.FieldIndexKey composite = (com.db4o.inside.btree.FieldIndexKey
-					)i.Key();
-				tree = (com.db4o.TreeInt)com.db4o.Tree.Add(tree, new com.db4o.TreeInt(composite.ParentID
-					()));
+					)i.Current();
+				tree = (com.db4o.TreeInt)com.db4o.foundation.Tree.Add(tree, new com.db4o.TreeInt(
+					composite.ParentID()));
 			}
 			return tree;
 		}
@@ -92,10 +76,8 @@ namespace com.db4o.inside.fieldindex
 			return Constraint().Transaction();
 		}
 
-		public abstract com.db4o.foundation.KeyValueIterator Iterator();
+		public abstract com.db4o.foundation.Iterator4 Iterator();
 
 		public abstract int ResultSize();
-
-		public abstract com.db4o.TreeInt ToTreeInt();
 	}
 }

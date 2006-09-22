@@ -4,7 +4,7 @@ namespace com.db4o
 	{
 		private readonly com.db4o.YapClient i_client;
 
-		private com.db4o.Tree i_yapObjectsToGc;
+		protected com.db4o.foundation.Tree i_yapObjectsToGc;
 
 		internal TransactionClient(com.db4o.YapClient a_stream, com.db4o.Transaction a_parent
 			) : base(a_stream, a_parent)
@@ -35,7 +35,7 @@ namespace com.db4o
 				com.db4o.DeleteInfo info = (com.db4o.DeleteInfo)a_object;
 				if (info._delete && info._reference != null)
 				{
-					this._enclosing.i_yapObjectsToGc = com.db4o.Tree.Add(this._enclosing.i_yapObjectsToGc
+					this._enclosing.i_yapObjectsToGc = com.db4o.foundation.Tree.Add(this._enclosing.i_yapObjectsToGc
 						, new com.db4o.TreeIntObject(info._key, info._reference));
 				}
 			}
@@ -64,7 +64,7 @@ namespace com.db4o
 			public void Visit(object a_object)
 			{
 				com.db4o.YapObject yo = (com.db4o.YapObject)((com.db4o.TreeIntObject)a_object)._object;
-				this._enclosing.Stream().YapObjectGCd(yo);
+				this._enclosing.Stream().RemoveReference(yo);
 			}
 
 			private readonly TransactionClient _enclosing;

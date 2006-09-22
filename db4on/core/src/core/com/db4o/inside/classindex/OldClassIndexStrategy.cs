@@ -7,19 +7,18 @@ namespace com.db4o.inside.classindex
 		private com.db4o.inside.classindex.ClassIndex _index;
 
 		private readonly com.db4o.foundation.Hashtable4 _perTransaction = new com.db4o.foundation.Hashtable4
-			(1);
+			();
 
 		public OldClassIndexStrategy(com.db4o.YapClass yapClass) : base(yapClass)
 		{
 		}
 
-		public override void Read(com.db4o.YapReader reader, com.db4o.YapStream stream)
+		public override void Read(com.db4o.YapStream stream, int indexID)
 		{
-			int classIndexId = reader.ReadInt();
 			_index = CreateClassIndex(stream);
-			if (classIndexId > 0)
+			if (indexID > 0)
 			{
-				_index.SetID(classIndexId);
+				_index.SetID(indexID);
 			}
 			_index.SetStateDeactivated();
 		}
@@ -60,10 +59,14 @@ namespace com.db4o.inside.classindex
 			}
 		}
 
-		public override void WriteId(com.db4o.YapReader writer, com.db4o.Transaction transaction
-			)
+		public override int Write(com.db4o.Transaction transaction)
 		{
-			writer.WriteIDOf(transaction, _index);
+			if (_index == null)
+			{
+				return 0;
+			}
+			_index.Write(transaction);
+			return _index.GetID();
 		}
 
 		private void FlushContext(com.db4o.Transaction transaction)
@@ -71,13 +74,13 @@ namespace com.db4o.inside.classindex
 			com.db4o.inside.classindex.OldClassIndexStrategy.TransactionState context = GetState
 				(transaction);
 			com.db4o.inside.classindex.ClassIndex index = GetActiveIndex(transaction);
-			context.TraverseAdded(new _AnonymousInnerClass65(this, index));
-			context.TraverseRemoved(new _AnonymousInnerClass71(this, transaction, index));
+			context.TraverseAdded(new _AnonymousInnerClass68(this, index));
+			context.TraverseRemoved(new _AnonymousInnerClass74(this, transaction, index));
 		}
 
-		private sealed class _AnonymousInnerClass65 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass68 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass65(OldClassIndexStrategy _enclosing, com.db4o.inside.classindex.ClassIndex
+			public _AnonymousInnerClass68(OldClassIndexStrategy _enclosing, com.db4o.inside.classindex.ClassIndex
 				 index)
 			{
 				this._enclosing = _enclosing;
@@ -94,9 +97,9 @@ namespace com.db4o.inside.classindex
 			private readonly com.db4o.inside.classindex.ClassIndex index;
 		}
 
-		private sealed class _AnonymousInnerClass71 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass74 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass71(OldClassIndexStrategy _enclosing, com.db4o.Transaction
+			public _AnonymousInnerClass74(OldClassIndexStrategy _enclosing, com.db4o.Transaction
 				 transaction, com.db4o.inside.classindex.ClassIndex index)
 			{
 				this._enclosing = _enclosing;
@@ -111,7 +114,7 @@ namespace com.db4o.inside.classindex
 				com.db4o.YapObject yo = stream.GetYapObject(id);
 				if (yo != null)
 				{
-					stream.YapObjectGCd(yo);
+					stream.RemoveReference(yo);
 				}
 				index.Remove(id);
 			}
@@ -131,33 +134,34 @@ namespace com.db4o.inside.classindex
 
 		internal sealed class TransactionState
 		{
-			private com.db4o.Tree i_addToClassIndex;
+			private com.db4o.foundation.Tree i_addToClassIndex;
 
-			private com.db4o.Tree i_removeFromClassIndex;
+			private com.db4o.foundation.Tree i_removeFromClassIndex;
 
 			public void Add(int id)
 			{
-				i_removeFromClassIndex = com.db4o.Tree.RemoveLike(i_removeFromClassIndex, new com.db4o.TreeInt
+				i_removeFromClassIndex = com.db4o.foundation.Tree.RemoveLike(i_removeFromClassIndex
+					, new com.db4o.TreeInt(id));
+				i_addToClassIndex = com.db4o.foundation.Tree.Add(i_addToClassIndex, new com.db4o.TreeInt
 					(id));
-				i_addToClassIndex = com.db4o.Tree.Add(i_addToClassIndex, new com.db4o.TreeInt(id)
-					);
 			}
 
 			public void Remove(int id)
 			{
-				i_addToClassIndex = com.db4o.Tree.RemoveLike(i_addToClassIndex, new com.db4o.TreeInt
+				i_addToClassIndex = com.db4o.foundation.Tree.RemoveLike(i_addToClassIndex, new com.db4o.TreeInt
 					(id));
-				i_removeFromClassIndex = com.db4o.Tree.Add(i_removeFromClassIndex, new com.db4o.TreeInt
-					(id));
+				i_removeFromClassIndex = com.db4o.foundation.Tree.Add(i_removeFromClassIndex, new 
+					com.db4o.TreeInt(id));
 			}
 
 			public void DontDelete(int id)
 			{
-				i_removeFromClassIndex = com.db4o.Tree.RemoveLike(i_removeFromClassIndex, new com.db4o.TreeInt
-					(id));
+				i_removeFromClassIndex = com.db4o.foundation.Tree.RemoveLike(i_removeFromClassIndex
+					, new com.db4o.TreeInt(id));
 			}
 
-			internal void Traverse(com.db4o.Tree node, com.db4o.foundation.Visitor4 visitor)
+			internal void Traverse(com.db4o.foundation.Tree node, com.db4o.foundation.Visitor4
+				 visitor)
 			{
 				if (node != null)
 				{
@@ -198,26 +202,26 @@ namespace com.db4o.inside.classindex
 			}
 		}
 
-		private com.db4o.Tree GetAll(com.db4o.Transaction transaction)
+		private com.db4o.foundation.Tree GetAll(com.db4o.Transaction transaction)
 		{
 			com.db4o.inside.classindex.ClassIndex ci = GetActiveIndex(transaction);
 			if (ci == null)
 			{
 				return null;
 			}
-			com.db4o.Tree[] tree = new com.db4o.Tree[] { com.db4o.Tree.DeepClone(ci.GetRoot()
-				, null) };
+			com.db4o.foundation.Tree[] tree = new com.db4o.foundation.Tree[] { com.db4o.foundation.Tree
+				.DeepClone(ci.GetRoot(), null) };
 			com.db4o.inside.classindex.OldClassIndexStrategy.TransactionState context = GetState
 				(transaction);
-			context.TraverseAdded(new _AnonymousInnerClass148(this, tree));
-			context.TraverseRemoved(new _AnonymousInnerClass153(this, tree));
+			context.TraverseAdded(new _AnonymousInnerClass151(this, tree));
+			context.TraverseRemoved(new _AnonymousInnerClass156(this, tree));
 			return tree[0];
 		}
 
-		private sealed class _AnonymousInnerClass148 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass151 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass148(OldClassIndexStrategy _enclosing, com.db4o.Tree[] 
-				tree)
+			public _AnonymousInnerClass151(OldClassIndexStrategy _enclosing, com.db4o.foundation.Tree[]
+				 tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
@@ -225,19 +229,19 @@ namespace com.db4o.inside.classindex
 
 			public void Visit(object obj)
 			{
-				tree[0] = com.db4o.Tree.Add(tree[0], new com.db4o.TreeInt(this._enclosing.IdFromValue
-					(obj)));
+				tree[0] = com.db4o.foundation.Tree.Add(tree[0], new com.db4o.TreeInt(this._enclosing
+					.IdFromValue(obj)));
 			}
 
 			private readonly OldClassIndexStrategy _enclosing;
 
-			private readonly com.db4o.Tree[] tree;
+			private readonly com.db4o.foundation.Tree[] tree;
 		}
 
-		private sealed class _AnonymousInnerClass153 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass156 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass153(OldClassIndexStrategy _enclosing, com.db4o.Tree[] 
-				tree)
+			public _AnonymousInnerClass156(OldClassIndexStrategy _enclosing, com.db4o.foundation.Tree[]
+				 tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
@@ -245,12 +249,12 @@ namespace com.db4o.inside.classindex
 
 			public void Visit(object obj)
 			{
-				tree[0] = com.db4o.Tree.RemoveLike(tree[0], (com.db4o.TreeInt)obj);
+				tree[0] = com.db4o.foundation.Tree.RemoveLike(tree[0], (com.db4o.TreeInt)obj);
 			}
 
 			private readonly OldClassIndexStrategy _enclosing;
 
-			private readonly com.db4o.Tree[] tree;
+			private readonly com.db4o.foundation.Tree[] tree;
 		}
 
 		protected override void InternalRemove(com.db4o.Transaction transaction, int id)
@@ -261,16 +265,16 @@ namespace com.db4o.inside.classindex
 		public override void TraverseAll(com.db4o.Transaction transaction, com.db4o.foundation.Visitor4
 			 command)
 		{
-			com.db4o.Tree tree = GetAll(transaction);
+			com.db4o.foundation.Tree tree = GetAll(transaction);
 			if (tree != null)
 			{
-				tree.Traverse(new _AnonymousInnerClass168(this, command));
+				tree.Traverse(new _AnonymousInnerClass171(this, command));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass168 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass171 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass168(OldClassIndexStrategy _enclosing, com.db4o.foundation.Visitor4
+			public _AnonymousInnerClass171(OldClassIndexStrategy _enclosing, com.db4o.foundation.Visitor4
 				 command)
 			{
 				this._enclosing = _enclosing;
@@ -339,9 +343,10 @@ namespace com.db4o.inside.classindex
 			return _index.GetID();
 		}
 
-		public override void TraverseAllSlotIDs(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
-			 command)
+		public override com.db4o.foundation.Iterator4 AllSlotIDs(com.db4o.Transaction trans
+			)
 		{
+			throw new com.db4o.foundation.NotImplementedException();
 		}
 
 		public override void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target

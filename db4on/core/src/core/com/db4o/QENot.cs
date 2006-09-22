@@ -23,7 +23,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal override bool Identity()
+		public override bool Identity()
 		{
 			return i_evaluator.Identity();
 		}

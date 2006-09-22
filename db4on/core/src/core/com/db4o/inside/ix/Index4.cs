@@ -47,7 +47,8 @@ namespace com.db4o.inside.ix
 				}
 			}
 			a_trans.AddDirtyFieldIndex(ift);
-			ift.SetRoot(com.db4o.Tree.DeepClone(_globalIndexTransaction.GetRoot(), ift));
+			ift.SetRoot(com.db4o.foundation.Tree.DeepClone(_globalIndexTransaction.GetRoot(), 
+				ift));
 			ift.i_version = ++_version;
 			_indexTransactions.Add(ift);
 			return ift;
@@ -135,7 +136,7 @@ namespace com.db4o.inside.ix
 
 		private int WriteToNewSlot(int slot)
 		{
-			com.db4o.Tree root = GetRoot();
+			com.db4o.foundation.Tree root = GetRoot();
 			com.db4o.YapWriter writer = new com.db4o.YapWriter(Trans(), slot, LengthPerEntry(
 				));
 			int[] entries = new int[] { 0 };
@@ -190,12 +191,12 @@ namespace com.db4o.inside.ix
 					{
 						com.db4o.inside.ix.IndexTransaction ft = (com.db4o.inside.ix.IndexTransaction)i.Current
 							();
-						com.db4o.Tree clonedTree = newFileRange;
+						com.db4o.foundation.Tree clonedTree = newFileRange;
 						if (clonedTree != null)
 						{
 							clonedTree = clonedTree.DeepClone(ft);
 						}
-						com.db4o.Tree[] tree = { clonedTree };
+						com.db4o.foundation.Tree[] tree = { clonedTree };
 						ft.GetRoot().TraverseFromLeaves((new _AnonymousInnerClass196(this, ft, tree)));
 						ft.SetRoot(tree[0]);
 					}
@@ -215,7 +216,7 @@ namespace com.db4o.inside.ix
 		private sealed class _AnonymousInnerClass196 : com.db4o.foundation.Visitor4
 		{
 			public _AnonymousInnerClass196(Index4 _enclosing, com.db4o.inside.ix.IndexTransaction
-				 ft, com.db4o.Tree[] tree)
+				 ft, com.db4o.foundation.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
 				this.ft = ft;
@@ -230,7 +231,7 @@ namespace com.db4o.inside.ix
 					if (!(ixTree is com.db4o.inside.ix.IxFileRange))
 					{
 						ixTree.BeginMerge();
-						tree[0] = com.db4o.Tree.Add(tree[0], ixTree);
+						tree[0] = com.db4o.foundation.Tree.Add(tree[0], ixTree);
 					}
 				}
 			}
@@ -239,7 +240,7 @@ namespace com.db4o.inside.ix
 
 			private readonly com.db4o.inside.ix.IndexTransaction ft;
 
-			private readonly com.db4o.Tree[] tree;
+			private readonly com.db4o.foundation.Tree[] tree;
 		}
 
 		private com.db4o.inside.ix.IxFileRange CreateGlobalFileRange()
@@ -309,14 +310,14 @@ namespace com.db4o.inside.ix
 			return File().GetSlot(length);
 		}
 
-		private com.db4o.Tree GetRoot()
+		private com.db4o.foundation.Tree GetRoot()
 		{
 			return _globalIndexTransaction.GetRoot();
 		}
 
 		private int CountEntries()
 		{
-			com.db4o.Tree root = GetRoot();
+			com.db4o.foundation.Tree root = GetRoot();
 			return root == null ? 0 : root.Size();
 		}
 	}

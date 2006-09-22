@@ -23,7 +23,7 @@ namespace com.db4o
 		internal override void Initialize1()
 		{
 			i_handlers = i_parent.i_handlers;
-			i_classCollection = i_parent.i_classCollection;
+			_classCollection = i_parent.ClassCollection();
 			i_config = i_parent.ConfigImpl();
 			i_references = new com.db4o.YapReferences(this);
 			Initialize2();
@@ -53,6 +53,11 @@ namespace com.db4o
 		internal override void ConfigureNewFile()
 		{
 			i_writeAt = HEADER_LENGTH;
+		}
+
+		public override int ConverterVersion()
+		{
+			return com.db4o.inside.convert.Converter.VERSION;
 		}
 
 		public override bool Close()
@@ -114,7 +119,7 @@ namespace com.db4o
 			return i_parent.Identity();
 		}
 
-		internal override bool MaintainsIndices()
+		public override bool MaintainsIndices()
 		{
 			return false;
 		}

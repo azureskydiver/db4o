@@ -12,7 +12,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal override bool Identity()
+		public override bool Identity()
 		{
 			bool ret = false;
 			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();

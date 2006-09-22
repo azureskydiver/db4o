@@ -16,23 +16,38 @@ namespace com.db4o.inside.marshall
 			{
 				return;
 			}
-			writer.WriteIDOf(trans, field.GetIndex());
+			writer.WriteIDOf(trans, field.GetIndex(trans));
 		}
 
-		public override com.db4o.YapField Read(com.db4o.YapStream stream, com.db4o.YapField
-			 originalField, com.db4o.YapReader reader)
+		public override com.db4o.inside.marshall.RawFieldSpec ReadSpec(com.db4o.YapStream
+			 stream, com.db4o.YapReader reader)
 		{
-			com.db4o.YapField actualField = base.Read(stream, originalField, reader);
-			if (!HasBTreeIndex(actualField))
+			com.db4o.inside.marshall.RawFieldSpec spec = base.ReadSpec(stream, reader);
+			if (spec == null)
 			{
-				return actualField;
+				return null;
 			}
-			int id = reader.ReadInt();
-			if (id == 0)
+			if (spec.IsVirtual())
 			{
-				return actualField;
+				return spec;
 			}
-			actualField.InitIndex(stream.GetSystemTransaction(), id);
+			int indexID = reader.ReadInt();
+			spec.IndexID(indexID);
+			return spec;
+		}
+
+		protected override com.db4o.YapField FromSpec(com.db4o.inside.marshall.RawFieldSpec
+			 spec, com.db4o.YapStream stream, com.db4o.YapField field)
+		{
+			com.db4o.YapField actualField = base.FromSpec(spec, stream, field);
+			if (spec == null)
+			{
+				return field;
+			}
+			if (spec.IndexID() != 0)
+			{
+				actualField.InitIndex(stream.GetSystemTransaction(), spec.IndexID());
+			}
 			return actualField;
 		}
 

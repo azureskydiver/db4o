@@ -1,7 +1,7 @@
 namespace com.db4o.inside.fieldindex
 {
 	/// <exclude></exclude>
-	public class IndexedLeaf : com.db4o.inside.fieldindex.IndexedNodeBase
+	public class IndexedLeaf : com.db4o.inside.fieldindex.IndexedNodeBase, com.db4o.inside.fieldindex.IndexedNodeWithRange
 	{
 		private readonly com.db4o.inside.btree.BTreeRange _range;
 
@@ -14,14 +14,19 @@ namespace com.db4o.inside.fieldindex
 		{
 			com.db4o.inside.btree.BTreeRange range = Search(Constraint().GetObject());
 			com.db4o.inside.fieldindex.QEBitmap bitmap = com.db4o.inside.fieldindex.QEBitmap.
-				ForQE(Constraint().i_evaluator);
+				ForQE(Constraint().Evaluator());
 			if (bitmap.TakeGreater())
 			{
 				if (bitmap.TakeEqual())
 				{
 					return range.ExtendToLast();
 				}
-				return range.Greater();
+				com.db4o.inside.btree.BTreeRange greater = range.Greater();
+				if (bitmap.TakeSmaller())
+				{
+					return greater.Union(range.Smaller());
+				}
+				return greater;
 			}
 			if (bitmap.TakeSmaller())
 			{
@@ -39,14 +44,9 @@ namespace com.db4o.inside.fieldindex
 			return _range.Size();
 		}
 
-		public override com.db4o.TreeInt ToTreeInt()
+		public override com.db4o.foundation.Iterator4 Iterator()
 		{
-			return AddRangeToTree(null, _range);
-		}
-
-		public override com.db4o.foundation.KeyValueIterator Iterator()
-		{
-			return _range.Iterator();
+			return _range.Keys();
 		}
 
 		public virtual com.db4o.inside.btree.BTreeRange GetRange()

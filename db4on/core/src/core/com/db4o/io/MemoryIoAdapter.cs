@@ -36,20 +36,19 @@ namespace com.db4o.io
 
 		public MemoryIoAdapter()
 		{
-			_memoryFiles = new com.db4o.foundation.Hashtable4(1);
+			_memoryFiles = new com.db4o.foundation.Hashtable4();
 			_growBy = 10000;
 		}
 
-		private MemoryIoAdapter(com.db4o.io.MemoryIoAdapter adapter, string name, byte[] 
-			bytes)
+		private MemoryIoAdapter(com.db4o.io.MemoryIoAdapter adapter, byte[] bytes)
 		{
 			_bytes = bytes;
 			_length = bytes.Length;
 			_growBy = adapter._growBy;
 		}
 
-		private MemoryIoAdapter(com.db4o.io.MemoryIoAdapter adapter, string name, int initialLength
-			) : this(adapter, name, new byte[initialLength])
+		private MemoryIoAdapter(com.db4o.io.MemoryIoAdapter adapter, int initialLength) : 
+			this(adapter, new byte[initialLength])
 		{
 		}
 
@@ -69,7 +68,7 @@ namespace com.db4o.io
 			{
 				bytes = new byte[0];
 			}
-			_memoryFiles.Put(name, new com.db4o.io.MemoryIoAdapter(this, name, bytes));
+			_memoryFiles.Put(name, new com.db4o.io.MemoryIoAdapter(this, bytes));
 		}
 
 		/// <summary>returns the content bytes for a database with the given name.</summary>
@@ -148,7 +147,7 @@ namespace com.db4o.io
 				);
 			if (mia == null)
 			{
-				mia = new com.db4o.io.MemoryIoAdapter(this, path, (int)initialLength);
+				mia = new com.db4o.io.MemoryIoAdapter(this, (int)initialLength);
 				_memoryFiles.Put(path, mia);
 			}
 			return mia;

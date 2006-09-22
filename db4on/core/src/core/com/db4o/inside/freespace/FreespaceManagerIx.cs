@@ -147,7 +147,7 @@ namespace com.db4o.inside.freespace
 			}
 			com.db4o.foundation.IntObjectVisitor addToNewFM = new _AnonymousInnerClass181(this
 				, newFM);
-			com.db4o.Tree.Traverse(_addressIx._indexTrans.GetRoot(), new _AnonymousInnerClass186
+			com.db4o.foundation.Tree.Traverse(_addressIx._indexTrans.GetRoot(), new _AnonymousInnerClass186
 				(this, addToNewFM));
 		}
 

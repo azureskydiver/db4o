@@ -101,6 +101,12 @@ namespace com.db4o
 		private static readonly com.db4o.foundation.KeySpec PASSWORD = new com.db4o.foundation.KeySpec
 			((string)null);
 
+		private static readonly com.db4o.foundation.KeySpec PREFETCH_ID_COUNT = new com.db4o.foundation.KeySpec
+			(10);
+
+		private static readonly com.db4o.foundation.KeySpec PREFETCH_OBJECT_COUNT = new com.db4o.foundation.KeySpec
+			(10);
+
 		private static readonly com.db4o.foundation.KeySpec READ_AS = new com.db4o.foundation.KeySpec
 			(new com.db4o.foundation.Hashtable4(16));
 
@@ -272,10 +278,10 @@ namespace com.db4o
 			}
 		}
 
-		internal j4o.io.PrintStream ErrStream()
+		internal System.IO.TextWriter ErrStream()
 		{
-			j4o.io.PrintStream outStream = OutStreamOrNull();
-			return outStream == null ? j4o.lang.JavaSystem.err : outStream;
+			System.IO.TextWriter outStream = OutStreamOrNull();
+			return outStream == null ? System.Console.Error : outStream;
 		}
 
 		public void ExceptionsOnNotStorable(bool flag)
@@ -343,7 +349,7 @@ namespace com.db4o
 			_config.Put(MESSAGE_LEVEL, level);
 			if (OutStream() == null)
 			{
-				SetOut(j4o.lang.JavaSystem._out);
+				SetOut(System.Console.Out);
 			}
 		}
 
@@ -383,15 +389,15 @@ namespace com.db4o
 			return c4c;
 		}
 
-		private j4o.io.PrintStream OutStreamOrNull()
+		private System.IO.TextWriter OutStreamOrNull()
 		{
-			return (j4o.io.PrintStream)_config.Get(OUTSTREAM);
+			return (System.IO.TextWriter)_config.Get(OUTSTREAM);
 		}
 
-		internal j4o.io.PrintStream OutStream()
+		internal System.IO.TextWriter OutStream()
 		{
-			j4o.io.PrintStream outStream = OutStreamOrNull();
-			return outStream == null ? j4o.lang.JavaSystem._out : outStream;
+			System.IO.TextWriter outStream = OutStreamOrNull();
+			return outStream == null ? System.Console.Out : outStream;
 		}
 
 		public void Password(string pw)
@@ -449,7 +455,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass405(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass409(this));
 			}
 			else
 			{
@@ -457,9 +463,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass405 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass409 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass405(Config4Impl _enclosing)
+			public _AnonymousInnerClass409(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -506,7 +512,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass444(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass448(this));
 			}
 			else
 			{
@@ -514,9 +520,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass444 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass448 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass444(Config4Impl _enclosing)
+			public _AnonymousInnerClass448(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -550,7 +556,7 @@ namespace com.db4o
 			_config.Put(MESSAGE_RECIPIENT, messageRecipient);
 		}
 
-		public void SetOut(j4o.io.PrintStream outStream)
+		public void SetOut(System.IO.TextWriter outStream)
 		{
 			_config.Put(OUTSTREAM, outStream);
 			if (i_stream != null)
@@ -643,6 +649,15 @@ namespace com.db4o
 				throw new System.ArgumentNullException("alias");
 			}
 			Aliases().Add(alias);
+		}
+
+		public void RemoveAlias(com.db4o.config.Alias alias)
+		{
+			if (null == alias)
+			{
+				throw new System.ArgumentNullException("alias");
+			}
+			Aliases().Remove(alias);
 		}
 
 		public string ResolveAlias(string runtimeType)
@@ -835,6 +850,26 @@ namespace com.db4o
 		internal string Password()
 		{
 			return _config.GetAsString(PASSWORD);
+		}
+
+		public void PrefetchIDCount(int prefetchIDCount)
+		{
+			_config.Put(PREFETCH_ID_COUNT, prefetchIDCount);
+		}
+
+		public int PrefetchIDCount()
+		{
+			return _config.GetAsInt(PREFETCH_ID_COUNT);
+		}
+
+		public void PrefetchObjectCount(int prefetchObjectCount)
+		{
+			_config.Put(PREFETCH_OBJECT_COUNT, prefetchObjectCount);
+		}
+
+		public int PrefetchObjectCount()
+		{
+			return _config.GetAsInt(PREFETCH_OBJECT_COUNT);
 		}
 
 		internal com.db4o.foundation.Hashtable4 ReadAs()

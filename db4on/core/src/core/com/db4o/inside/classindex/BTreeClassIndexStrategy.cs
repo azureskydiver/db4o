@@ -28,23 +28,19 @@ namespace com.db4o.inside.classindex
 		{
 		}
 
-		public override void Read(com.db4o.YapReader reader, com.db4o.YapStream stream)
+		public override void Read(com.db4o.YapStream stream, int indexID)
 		{
-			ReadBTreeIndex(reader, stream);
+			ReadBTreeIndex(stream, indexID);
 		}
 
-		public override void WriteId(com.db4o.YapReader writer, com.db4o.Transaction trans
-			)
+		public override int Write(com.db4o.Transaction trans)
 		{
 			if (_btreeIndex == null)
 			{
-				writer.WriteInt(0);
+				return 0;
 			}
-			else
-			{
-				_btreeIndex.Write(trans);
-				writer.WriteInt(-_btreeIndex.GetID());
-			}
+			_btreeIndex.Write(trans);
+			return _btreeIndex.GetID();
 		}
 
 		public override void TraverseAll(com.db4o.Transaction ta, com.db4o.foundation.Visitor4
@@ -63,12 +59,12 @@ namespace com.db4o.inside.classindex
 				return;
 			}
 			_btreeIndex = ((com.db4o.YapFile)stream).CreateBTreeClassIndex(btreeID);
-			_btreeIndex.SetRemoveListener(new _AnonymousInnerClass63(this, stream));
+			_btreeIndex.SetRemoveListener(new _AnonymousInnerClass61(this, stream));
 		}
 
-		private sealed class _AnonymousInnerClass63 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass61 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass63(BTreeClassIndexStrategy _enclosing, com.db4o.YapStream
+			public _AnonymousInnerClass61(BTreeClassIndexStrategy _enclosing, com.db4o.YapStream
 				 stream)
 			{
 				this._enclosing = _enclosing;
@@ -81,7 +77,7 @@ namespace com.db4o.inside.classindex
 				com.db4o.YapObject yo = stream.GetYapObject(id);
 				if (yo != null)
 				{
-					stream.YapObjectGCd(yo);
+					stream.RemoveReference(yo);
 				}
 			}
 
@@ -90,23 +86,11 @@ namespace com.db4o.inside.classindex
 			private readonly com.db4o.YapStream stream;
 		}
 
-		private void ReadBTreeIndex(com.db4o.YapReader reader, com.db4o.YapStream stream)
+		private void ReadBTreeIndex(com.db4o.YapStream stream, int indexId)
 		{
-			int indexId = reader.ReadInt();
 			if (!stream.IsClient() && _btreeIndex == null)
 			{
-				com.db4o.YapFile yf = (com.db4o.YapFile)stream;
-				if (indexId < 0)
-				{
-					CreateBTreeIndex(stream, -indexId);
-				}
-				else
-				{
-					CreateBTreeIndex(stream, 0);
-					new com.db4o.inside.convert.conversions.ClassIndexesToBTrees().Convert(yf, indexId
-						, _btreeIndex);
-					yf.SetDirtyInSystemTransaction(_yapClass);
-				}
+				CreateBTreeIndex(stream, indexId);
 			}
 		}
 
@@ -138,10 +122,10 @@ namespace com.db4o.inside.classindex
 			return _btreeIndex.GetID();
 		}
 
-		public override void TraverseAllSlotIDs(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
-			 command)
+		public override com.db4o.foundation.Iterator4 AllSlotIDs(com.db4o.Transaction trans
+			)
 		{
-			_btreeIndex.TraverseAllSlotIDs(trans, command);
+			return _btreeIndex.AllNodeIds(trans);
 		}
 
 		public override void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target

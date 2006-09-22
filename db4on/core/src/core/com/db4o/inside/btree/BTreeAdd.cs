@@ -39,6 +39,15 @@ namespace com.db4o.inside.btree
 			return null;
 		}
 
+		public override object Key(com.db4o.Transaction trans)
+		{
+			if (_transaction != trans)
+			{
+				return com.db4o.foundation.No4.INSTANCE;
+			}
+			return GetObject();
+		}
+
 		public override object Rollback(com.db4o.Transaction trans, com.db4o.inside.btree.BTree
 			 btree)
 		{

@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal sealed class YDouble : com.db4o.YLong
+	/// <exclude></exclude>
+	public sealed class YDouble : com.db4o.YLong
 	{
 		private static readonly double i_primitive = System.Convert.ToDouble(0);
 
@@ -57,7 +58,7 @@ namespace com.db4o
 
 		public override object Current1()
 		{
-			return System.Convert.ToDouble(i_compareTo);
+			return i_compareToDouble;
 		}
 
 		internal override bool IsEqual1(object obj)

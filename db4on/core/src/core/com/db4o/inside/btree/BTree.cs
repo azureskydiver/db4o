@@ -3,9 +3,6 @@ namespace com.db4o.inside.btree
 	/// <exclude></exclude>
 	public class BTree : com.db4o.YapMeta, com.db4o.TransactionParticipant
 	{
-		/// <summary>temporary variable for value and search coding</summary>
-		private static readonly bool DEBUG = com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX;
-
 		private const byte BTREE_VERSION = (byte)1;
 
 		internal readonly com.db4o.inside.ix.Indexable4 _keyHandler;
@@ -24,7 +21,7 @@ namespace com.db4o.inside.btree
 
 		private com.db4o.foundation.Hashtable4 _sizesByTransaction;
 
-		private com.db4o.foundation.Queue4 _processing;
+		protected com.db4o.foundation.Queue4 _processing;
 
 		private int _nodeSize;
 
@@ -38,19 +35,26 @@ namespace com.db4o.inside.btree
 		}
 
 		public BTree(com.db4o.Transaction trans, int id, com.db4o.inside.ix.Indexable4 keyHandler
-			, com.db4o.inside.ix.Indexable4 valueHandler)
+			, com.db4o.inside.ix.Indexable4 valueHandler) : this(trans, id, keyHandler, valueHandler
+			, Config(trans).BTreeNodeSize(), Config(trans).BTreeCacheHeight())
+		{
+		}
+
+		public BTree(com.db4o.Transaction trans, int id, com.db4o.inside.ix.Indexable4 keyHandler
+			, com.db4o.inside.ix.Indexable4 valueHandler, int treeNodeSize, int treeCacheHeight
+			)
 		{
 			if (null == keyHandler)
 			{
 				throw new System.ArgumentNullException();
 			}
-			_nodeSize = DEBUG ? 7 : trans.Stream().ConfigImpl().BTreeNodeSize();
+			_nodeSize = treeNodeSize;
 			_halfNodeSize = _nodeSize / 2;
 			_nodeSize = _halfNodeSize * 2;
-			_cacheHeight = trans.Stream().ConfigImpl().BTreeCacheHeight();
+			_cacheHeight = treeCacheHeight;
 			_keyHandler = keyHandler;
 			_valueHandler = (valueHandler == null) ? com.db4o.Null.INSTANCE : valueHandler;
-			_sizesByTransaction = new com.db4o.foundation.Hashtable4(1);
+			_sizesByTransaction = new com.db4o.foundation.Hashtable4();
 			if (id == 0)
 			{
 				SetStateDirty();
@@ -64,6 +68,11 @@ namespace com.db4o.inside.btree
 				SetID(id);
 				SetStateDeactivated();
 			}
+		}
+
+		public virtual com.db4o.inside.btree.BTreeNode Root()
+		{
+			return _root;
 		}
 
 		public virtual int NodeSize()
@@ -92,12 +101,13 @@ namespace com.db4o.inside.btree
 
 		public virtual void Remove(com.db4o.Transaction trans, object key)
 		{
-			com.db4o.inside.btree.BTreeRange range = Search(trans, key);
-			com.db4o.inside.btree.BTreePointer first = range.First();
-			if (first == null)
+			com.db4o.foundation.Iterator4 pointers = Search(trans, key).Pointers();
+			if (!pointers.MoveNext())
 			{
 				return;
 			}
+			com.db4o.inside.btree.BTreePointer first = (com.db4o.inside.btree.BTreePointer)pointers
+				.Current();
 			EnsureDirty(trans);
 			com.db4o.inside.btree.BTreeNode node = first.Node();
 			node.Remove(trans, first.Index());
@@ -192,7 +202,7 @@ namespace com.db4o.inside.btree
 			{
 				return;
 			}
-			com.db4o.Tree temp = _nodes;
+			com.db4o.foundation.Tree temp = _nodes;
 			_nodes = null;
 			if (_cacheHeight > 0)
 			{
@@ -278,7 +288,7 @@ namespace com.db4o.inside.btree
 		internal virtual com.db4o.inside.btree.BTreeNode ProduceNode(int id)
 		{
 			com.db4o.TreeIntObject addtio = new com.db4o.TreeIntObject(id);
-			_nodes = (com.db4o.TreeIntObject)com.db4o.Tree.Add(_nodes, addtio);
+			_nodes = (com.db4o.TreeIntObject)com.db4o.foundation.Tree.Add(_nodes, addtio);
 			com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)addtio.DuplicateOrThis();
 			com.db4o.inside.btree.BTreeNode node = (com.db4o.inside.btree.BTreeNode)tio.GetObject
 				();
@@ -293,7 +303,7 @@ namespace com.db4o.inside.btree
 
 		internal virtual void AddNode(com.db4o.inside.btree.BTreeNode node)
 		{
-			_nodes = (com.db4o.TreeIntObject)com.db4o.Tree.Add(_nodes, new com.db4o.TreeIntObject
+			_nodes = (com.db4o.TreeIntObject)com.db4o.foundation.Tree.Add(_nodes, new com.db4o.TreeIntObject
 				(node.GetID(), node));
 			AddToProcessing(node);
 		}
@@ -406,27 +416,11 @@ namespace com.db4o.inside.btree
 			return this;
 		}
 
-		public virtual void TraverseAllSlotIDs(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
+		private void TraverseAllNodes(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
 			 command)
 		{
-			com.db4o.foundation.Queue4 queue = new com.db4o.foundation.Queue4();
-			if (_root == null)
-			{
-				Read(trans);
-			}
-			queue.Add(_root);
-			while (queue.HasNext())
-			{
-				com.db4o.inside.btree.BTreeNode curNode = (com.db4o.inside.btree.BTreeNode)queue.
-					Next();
-				curNode.PrepareWrite(trans);
-				int childCount = curNode.ChildCount();
-				for (int childIdx = 0; childIdx < childCount; childIdx++)
-				{
-					queue.Add(curNode.Child(childIdx));
-				}
-				command.Visit(curNode.GetID());
-			}
+			EnsureActive(trans);
+			_root.TraverseAllNodes(trans, command);
 		}
 
 		public virtual void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target
@@ -439,6 +433,58 @@ namespace com.db4o.inside.btree
 		{
 			_keyHandler.PrepareComparison(key2);
 			return _keyHandler.CompareTo(key1);
+		}
+
+		private static com.db4o.Config4Impl Config(com.db4o.Transaction trans)
+		{
+			if (null == trans)
+			{
+				throw new System.ArgumentNullException();
+			}
+			return trans.Stream().ConfigImpl();
+		}
+
+		public virtual void Free(com.db4o.Transaction systemTrans)
+		{
+			FreeAllNodeIds(systemTrans, AllNodeIds(systemTrans));
+		}
+
+		private void FreeAllNodeIds(com.db4o.Transaction systemTrans, com.db4o.foundation.Iterator4
+			 allNodeIDs)
+		{
+			while (allNodeIDs.MoveNext())
+			{
+				int id = ((int)allNodeIDs.Current());
+				systemTrans.SlotFreePointerOnCommit(id);
+			}
+		}
+
+		public virtual com.db4o.foundation.Iterator4 AllNodeIds(com.db4o.Transaction systemTrans
+			)
+		{
+			com.db4o.foundation.Collection4 allNodeIDs = new com.db4o.foundation.Collection4(
+				);
+			TraverseAllNodes(systemTrans, new _AnonymousInnerClass371(this, allNodeIDs));
+			return allNodeIDs.Iterator();
+		}
+
+		private sealed class _AnonymousInnerClass371 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass371(BTree _enclosing, com.db4o.foundation.Collection4 
+				allNodeIDs)
+			{
+				this._enclosing = _enclosing;
+				this.allNodeIDs = allNodeIDs;
+			}
+
+			public void Visit(object node)
+			{
+				allNodeIDs.Add(((com.db4o.inside.btree.BTreeNode)node).GetID());
+			}
+
+			private readonly BTree _enclosing;
+
+			private readonly com.db4o.foundation.Collection4 allNodeIDs;
 		}
 	}
 }

@@ -1,26 +1,43 @@
 namespace com.db4o.inside.fieldindex
 {
-	public class JoinedLeaf : com.db4o.inside.fieldindex.IndexedNode
+	public class JoinedLeaf : com.db4o.inside.fieldindex.IndexedNodeWithRange
 	{
-		private readonly com.db4o.inside.fieldindex.IndexedLeaf _leaf1;
+		private readonly com.db4o.QCon _constraint;
+
+		private readonly com.db4o.inside.fieldindex.IndexedNodeWithRange _leaf1;
 
 		private readonly com.db4o.inside.btree.BTreeRange _range;
 
-		public JoinedLeaf(com.db4o.inside.fieldindex.IndexedLeaf leaf1, com.db4o.inside.btree.BTreeRange
-			 range)
+		public JoinedLeaf(com.db4o.QCon constraint, com.db4o.inside.fieldindex.IndexedNodeWithRange
+			 leaf1, com.db4o.inside.btree.BTreeRange range)
 		{
+			if (null == constraint || null == leaf1 || null == range)
+			{
+				throw new System.ArgumentNullException();
+			}
+			_constraint = constraint;
 			_leaf1 = leaf1;
 			_range = range;
 		}
 
-		public virtual com.db4o.foundation.KeyValueIterator Iterator()
+		public virtual com.db4o.QCon GetConstraint()
 		{
-			return _range.Iterator();
+			return _constraint;
+		}
+
+		public virtual com.db4o.inside.btree.BTreeRange GetRange()
+		{
+			return _range;
+		}
+
+		public virtual com.db4o.foundation.Iterator4 Iterator()
+		{
+			return _range.Keys();
 		}
 
 		public virtual com.db4o.TreeInt ToTreeInt()
 		{
-			return com.db4o.inside.fieldindex.IndexedNodeBase.AddRangeToTree(null, _range);
+			return com.db4o.inside.fieldindex.IndexedNodeBase.AddToTree(null, this);
 		}
 
 		public virtual com.db4o.inside.btree.BTree GetIndex()
@@ -35,8 +52,7 @@ namespace com.db4o.inside.fieldindex
 
 		public virtual com.db4o.inside.fieldindex.IndexedNode Resolve()
 		{
-			return com.db4o.inside.fieldindex.IndexedPath.NewParentPath(this, _leaf1.Constraint
-				());
+			return com.db4o.inside.fieldindex.IndexedPath.NewParentPath(this, _constraint);
 		}
 
 		public virtual int ResultSize()

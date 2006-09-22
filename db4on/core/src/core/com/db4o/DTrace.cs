@@ -7,7 +7,10 @@ namespace com.db4o
 
 		private static void BreakPoint()
 		{
-			int placeBreakPointHere = 1;
+		}
+
+		private static void Configure()
+		{
 		}
 
 		private static object Init()
@@ -112,6 +115,8 @@ namespace com.db4o
 
 		public static com.db4o.DTrace REMOVE_FROM_CLASS_INDEX;
 
+		public static com.db4o.DTrace REREAD_OLD_UUID;
+
 		public static com.db4o.DTrace TRANS_COMMIT;
 
 		public static com.db4o.DTrace TRANS_DONT_DELETE;
@@ -132,7 +137,7 @@ namespace com.db4o
 
 		public static com.db4o.DTrace WRITE_UPDATE_DELETE_MEMBERS;
 
-		private static readonly object forInit = Init();
+		public static readonly object forInit = Init();
 
 		private static com.db4o.DTrace all;
 

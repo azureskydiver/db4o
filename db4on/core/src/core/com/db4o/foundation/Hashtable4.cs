@@ -28,7 +28,11 @@ namespace com.db4o.foundation
 			i_table = new com.db4o.foundation.HashtableIntEntry[i_tableSize];
 		}
 
-		protected Hashtable4()
+		public Hashtable4() : this(1)
+		{
+		}
+
+		protected Hashtable4(com.db4o.foundation.DeepClone cloneOnlyCtor)
 		{
 		}
 
@@ -39,7 +43,8 @@ namespace com.db4o.foundation
 
 		public virtual object DeepClone(object obj)
 		{
-			return DeepCloneInternal(new com.db4o.foundation.Hashtable4(), obj);
+			return DeepCloneInternal(new com.db4o.foundation.Hashtable4((com.db4o.foundation.DeepClone
+				)null), obj);
 		}
 
 		public virtual void ForEachKey(com.db4o.foundation.Visitor4 visitor)
@@ -111,8 +116,16 @@ namespace com.db4o.foundation
 			{
 				return null;
 			}
-			int intKey = key.GetHashCode();
-			return GetFromObjectEntry(intKey, key);
+			return GetFromObjectEntry(key.GetHashCode(), key);
+		}
+
+		public virtual bool ContainsKey(object key)
+		{
+			if (null == key)
+			{
+				return false;
+			}
+			return null != GetObjectEntry(key.GetHashCode(), key);
 		}
 
 		public virtual void Put(byte[] key, object value)
@@ -198,13 +211,21 @@ namespace com.db4o.foundation
 
 		private object GetFromObjectEntry(int intKey, object objectKey)
 		{
+			com.db4o.foundation.HashtableObjectEntry entry = GetObjectEntry(intKey, objectKey
+				);
+			return entry == null ? null : entry.i_object;
+		}
+
+		private com.db4o.foundation.HashtableObjectEntry GetObjectEntry(int intKey, object
+			 objectKey)
+		{
 			com.db4o.foundation.HashtableObjectEntry entry = (com.db4o.foundation.HashtableObjectEntry
 				)i_table[intKey & i_mask];
 			while (entry != null)
 			{
 				if (entry.i_key == intKey && entry.HasKey(objectKey))
 				{
-					return entry.i_object;
+					return entry;
 				}
 				entry = (com.db4o.foundation.HashtableObjectEntry)entry.i_next;
 			}

@@ -10,7 +10,7 @@ namespace com.db4o
 			{
 				try
 				{
-					stream.i_classCollection.Write(GetTransaction());
+					stream.ClassCollection().Write(GetTransaction());
 				}
 				catch (System.Exception e)
 				{
@@ -19,7 +19,7 @@ namespace com.db4o
 			com.db4o.MsgD message = com.db4o.Msg.GET_CLASSES.GetWriterForLength(GetTransaction
 				(), com.db4o.YapConst.INT_LENGTH + 1);
 			com.db4o.YapWriter writer = message.GetPayLoad();
-			writer.WriteInt(stream.i_classCollection.GetID());
+			writer.WriteInt(stream.ClassCollection().GetID());
 			writer.Append(stream.StringIO().EncodingByte());
 			message.Write(stream, sock);
 			return true;

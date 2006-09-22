@@ -7,11 +7,9 @@ namespace com.db4o
 
 		private com.db4o.foundation.Hashtable4 i_creating;
 
-		internal readonly com.db4o.YapStream i_stream;
+		private readonly com.db4o.Transaction _systemTransaction;
 
-		internal readonly com.db4o.Transaction i_systemTrans;
-
-		private com.db4o.foundation.Hashtable4 i_yapClassByBytes;
+		protected com.db4o.foundation.Hashtable4 i_yapClassByBytes;
 
 		private com.db4o.foundation.Hashtable4 i_yapClassByClass;
 
@@ -23,17 +21,16 @@ namespace com.db4o
 
 		private readonly com.db4o.PendingClassInits _classInits;
 
-		internal YapClassCollection(com.db4o.Transaction a_trans)
+		internal YapClassCollection(com.db4o.Transaction systemTransaction)
 		{
-			i_systemTrans = a_trans;
-			i_stream = a_trans.Stream();
+			_systemTransaction = systemTransaction;
 			i_initYapClassesOnUp = new com.db4o.foundation.Queue4();
-			_classInits = new com.db4o.PendingClassInits(this);
+			_classInits = new com.db4o.PendingClassInits(_systemTransaction);
 		}
 
 		internal void AddYapClass(com.db4o.YapClass yapClass)
 		{
-			i_stream.SetDirtyInSystemTransaction(this);
+			Stream().SetDirtyInSystemTransaction(this);
 			i_classes.Add(yapClass);
 			if (yapClass.StateUnread())
 			{
@@ -45,14 +42,14 @@ namespace com.db4o
 			}
 			if (yapClass.GetID() == 0)
 			{
-				yapClass.Write(i_systemTrans);
+				yapClass.Write(_systemTransaction);
 			}
 			i_yapClassByID.Put(yapClass.GetID(), yapClass);
 		}
 
 		private byte[] AsBytes(string str)
 		{
-			return i_stream.StringIO().Write(str);
+			return Stream().StringIO().Write(str);
 		}
 
 		internal void AttachQueryNode(string fieldName, com.db4o.foundation.Visitor4 a_visitor
@@ -64,14 +61,14 @@ namespace com.db4o
 				com.db4o.YapClass yc = i.CurrentClass();
 				if (!yc.IsInternal())
 				{
-					yc.ForEachYapField(new _AnonymousInnerClass60(this, fieldName, a_visitor, yc));
+					yc.ForEachYapField(new _AnonymousInnerClass58(this, fieldName, a_visitor, yc));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass60 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass58 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass60(YapClassCollection _enclosing, string fieldName, com.db4o.foundation.Visitor4
+			public _AnonymousInnerClass58(YapClassCollection _enclosing, string fieldName, com.db4o.foundation.Visitor4
 				 a_visitor, com.db4o.YapClass yc)
 			{
 				this._enclosing = _enclosing;
@@ -113,11 +110,11 @@ namespace com.db4o
 			i_yapClassCreationDepth++;
 			com.db4o.reflect.ReflectClass superClass = a_class.GetSuperclass();
 			com.db4o.YapClass superYapClass = null;
-			if (superClass != null && !superClass.Equals(i_stream.i_handlers.ICLASS_OBJECT))
+			if (superClass != null && !superClass.Equals(Stream().i_handlers.ICLASS_OBJECT))
 			{
 				superYapClass = GetYapClass(superClass, true);
 			}
-			bool ret = i_stream.CreateYapClass(a_yapClass, a_class, superYapClass);
+			bool ret = Stream().CreateYapClass(a_yapClass, a_class, superYapClass);
 			i_yapClassCreationDepth--;
 			InitYapClassesOnUp();
 			return ret;
@@ -206,7 +203,7 @@ namespace com.db4o
 			{
 				return yapClass;
 			}
-			yapClass = new com.db4o.YapClass(i_stream, a_class);
+			yapClass = new com.db4o.YapClass(Stream(), a_class);
 			i_creating.Put(a_class, yapClass);
 			if (!CreateYapClass(yapClass, a_class))
 			{
@@ -222,7 +219,7 @@ namespace com.db4o
 			int id = yapClass.GetID();
 			if (id == 0)
 			{
-				yapClass.Write(i_stream.GetSystemTransaction());
+				yapClass.Write(Stream().GetSystemTransaction());
 				id = yapClass.GetID();
 			}
 			if (i_yapClassByID.Get(id) == null)
@@ -235,7 +232,7 @@ namespace com.db4o
 				_classInits.Process(yapClass);
 			}
 			i_creating.Remove(a_class);
-			i_stream.SetDirtyInSystemTransaction(this);
+			Stream().SetDirtyInSystemTransaction(this);
 			return yapClass;
 		}
 
@@ -277,14 +274,14 @@ namespace com.db4o
 			return 0;
 		}
 
-		private byte[] GetNameBytes(string name)
+		protected byte[] GetNameBytes(string name)
 		{
 			return AsBytes(ResolveAlias(name));
 		}
 
 		private string ResolveAlias(string name)
 		{
-			return i_stream.ConfigImpl().ResolveAlias(name);
+			return Stream().ConfigImpl().ResolveAlias(name);
 		}
 
 		internal void InitOnUp(com.db4o.Transaction systemTrans)
@@ -321,15 +318,33 @@ namespace com.db4o
 				com.db4o.YapClass yc = (com.db4o.YapClass)i_initYapClassesOnUp.Next();
 				while (yc != null)
 				{
-					yc.InitOnUp(i_systemTrans);
+					yc.InitOnUp(_systemTransaction);
 					yc = (com.db4o.YapClass)i_initYapClassesOnUp.Next();
 				}
 			}
 		}
 
-		internal com.db4o.YapClassCollectionIterator Iterator()
+		public com.db4o.YapClassCollectionIterator Iterator()
 		{
 			return new com.db4o.YapClassCollectionIterator(this, i_classes._first);
+		}
+
+		private class ClassIDIterator : com.db4o.foundation.Iterator4Impl
+		{
+			public ClassIDIterator(com.db4o.foundation.Collection4 classes) : base(classes._first
+				)
+			{
+			}
+
+			public override object Current()
+			{
+				return ((com.db4o.YapClass)base.Current()).GetID();
+			}
+		}
+
+		public com.db4o.foundation.Iterator4 Ids()
+		{
+			return new com.db4o.YapClassCollection.ClassIDIterator(i_classes);
 		}
 
 		public override int OwnLength()
@@ -354,7 +369,7 @@ namespace com.db4o
 			InitTables(classCount);
 			for (int i = classCount; i > 0; i--)
 			{
-				com.db4o.YapClass yapClass = new com.db4o.YapClass(i_stream, null);
+				com.db4o.YapClass yapClass = new com.db4o.YapClass(Stream(), null);
 				int id = a_reader.ReadInt();
 				yapClass.SetID(id);
 				i_classes.Add(yapClass);
@@ -366,13 +381,13 @@ namespace com.db4o
 
 		private void ApplyReadAs()
 		{
-			com.db4o.foundation.Hashtable4 readAs = i_stream.ConfigImpl().ReadAs();
-			readAs.ForEachKey(new _AnonymousInnerClass307(this, readAs));
+			com.db4o.foundation.Hashtable4 readAs = Stream().ConfigImpl().ReadAs();
+			readAs.ForEachKey(new _AnonymousInnerClass320(this, readAs));
 		}
 
-		private sealed class _AnonymousInnerClass307 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass320 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass307(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
+			public _AnonymousInnerClass320(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
 				 readAs)
 			{
 				this._enclosing = _enclosing;
@@ -392,7 +407,7 @@ namespace com.db4o
 					if (yc != null)
 					{
 						yc.i_nameBytes = useBytes;
-						yc.SetConfig(this._enclosing.i_stream.ConfigImpl().ConfigClass(dbName));
+						yc.SetConfig(this._enclosing.Stream().ConfigImpl().ConfigClass(dbName));
 						this._enclosing.i_yapClassByBytes.Put(dbbytes, null);
 						this._enclosing.i_yapClassByBytes.Put(useBytes, yc);
 					}
@@ -414,7 +429,7 @@ namespace com.db4o
 			i_yapClassCreationDepth++;
 			if (yapClass != null && yapClass.StateUnread())
 			{
-				yapClass.CreateConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
+				yapClass.CreateConfigAndConstructor(i_yapClassByBytes, Stream(), a_class);
 				com.db4o.reflect.ReflectClass claxx = yapClass.ClassReflector();
 				if (claxx != null)
 				{
@@ -431,10 +446,10 @@ namespace com.db4o
 
 		internal void RefreshClasses()
 		{
-			com.db4o.YapClassCollection rereader = new com.db4o.YapClassCollection(i_systemTrans
+			com.db4o.YapClassCollection rereader = new com.db4o.YapClassCollection(_systemTransaction
 				);
 			rereader.i_id = i_id;
-			rereader.Read(i_stream.GetSystemTransaction());
+			rereader.Read(Stream().GetSystemTransaction());
 			com.db4o.foundation.Iterator4 i = rereader.i_classes.Iterator();
 			while (i.MoveNext())
 			{
@@ -445,7 +460,7 @@ namespace com.db4o
 					i_yapClassByID.Put(yc.GetID(), yc);
 					if (yc.StateUnread())
 					{
-						i_yapClassByBytes.Put(yc.ReadName(i_systemTrans), yc);
+						i_yapClassByBytes.Put(yc.ReadName(_systemTransaction), yc);
 					}
 					else
 					{
@@ -466,7 +481,7 @@ namespace com.db4o
 			if (yapClass != null)
 			{
 				ReReadYapClass(yapClass.i_ancestor);
-				yapClass.ReadName(i_systemTrans);
+				yapClass.ReadName(_systemTransaction);
 				yapClass.ForceRead();
 				yapClass.SetStateClean();
 				yapClass.BitFalse(com.db4o.YapConst.CHECKED_CHANGES);
@@ -496,6 +511,21 @@ namespace com.db4o
 				];
 			classes.ToArray(sclasses);
 			return sclasses;
+		}
+
+		public void WriteAllClasses()
+		{
+			com.db4o.ext.StoredClass[] storedClasses = StoredClasses();
+			for (int i = 0; i < storedClasses.Length; i++)
+			{
+				com.db4o.YapClass yc = (com.db4o.YapClass)storedClasses[i];
+				yc.SetStateDirty();
+			}
+			for (int i = 0; i < storedClasses.Length; i++)
+			{
+				com.db4o.YapClass yc = (com.db4o.YapClass)storedClasses[i];
+				yc.Write(_systemTransaction);
+			}
 		}
 
 		public override void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
@@ -533,6 +563,11 @@ namespace com.db4o
 				int newID = mapping.MappedID(oldID);
 				target.WriteInt(newID);
 			}
+		}
+
+		protected com.db4o.YapStream Stream()
+		{
+			return _systemTransaction.Stream();
 		}
 	}
 }

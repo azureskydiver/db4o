@@ -2,7 +2,7 @@ namespace com.db4o
 {
 	internal class PendingClassInits
 	{
-		private readonly com.db4o.YapClassCollection _classColl;
+		private readonly com.db4o.Transaction _systemTransaction;
 
 		private com.db4o.foundation.Collection4 _pending = new com.db4o.foundation.Collection4
 			();
@@ -17,9 +17,9 @@ namespace com.db4o
 
 		private bool _running = false;
 
-		internal PendingClassInits(com.db4o.YapClassCollection classColl)
+		internal PendingClassInits(com.db4o.Transaction systemTransaction)
 		{
-			_classColl = classColl;
+			_systemTransaction = systemTransaction;
 		}
 
 		internal virtual void Process(com.db4o.YapClass newYapClass)
@@ -50,9 +50,14 @@ namespace com.db4o
 			while (_members.HasNext())
 			{
 				com.db4o.YapClass yc = (com.db4o.YapClass)_members.Next();
-				yc.AddMembers(_classColl.i_stream);
+				yc.AddMembers(Stream());
 				_statics.Add(yc);
 			}
+		}
+
+		private com.db4o.YapStream Stream()
+		{
+			return _systemTransaction.Stream();
 		}
 
 		private void CheckStatics()
@@ -61,7 +66,7 @@ namespace com.db4o
 			while (_statics.HasNext())
 			{
 				com.db4o.YapClass yc = (com.db4o.YapClass)_statics.Next();
-				yc.StoreStaticFieldValues(_classColl.i_systemTrans, true);
+				yc.StoreStaticFieldValues(_systemTransaction, true);
 				_writes.Add(yc);
 				CheckMembers();
 			}
@@ -74,7 +79,7 @@ namespace com.db4o
 			{
 				com.db4o.YapClass yc = (com.db4o.YapClass)_writes.Next();
 				yc.SetStateDirty();
-				yc.Write(_classColl.i_systemTrans);
+				yc.Write(_systemTransaction);
 				_inits.Add(yc);
 				CheckStatics();
 			}
@@ -86,7 +91,7 @@ namespace com.db4o
 			while (_inits.HasNext())
 			{
 				com.db4o.YapClass yc = (com.db4o.YapClass)_inits.Next();
-				yc.InitConfigOnUp(_classColl.i_systemTrans);
+				yc.InitConfigOnUp(_systemTransaction);
 				CheckWrites();
 			}
 		}

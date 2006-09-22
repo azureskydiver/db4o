@@ -12,8 +12,10 @@ namespace com.db4o
 			{
 				com.db4o.YapClass yc = stream.GetYapClass(yapClassId);
 				_payLoad.WriteEmbedded();
+				com.db4o.inside.slots.Slot oldSlot = _trans.GetCommittedSlotOfID(_payLoad.GetID()
+					);
 				stream.GetSlotForUpdate(_payLoad);
-				yc.AddFieldIndices(_payLoad, false);
+				yc.AddFieldIndices(_payLoad, oldSlot);
 				stream.i_handlers.Encrypt(_payLoad);
 				_payLoad.Write();
 			}

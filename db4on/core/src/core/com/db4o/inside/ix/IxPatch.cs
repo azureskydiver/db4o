@@ -16,7 +16,7 @@ namespace com.db4o.inside.ix
 			_value = a_value;
 		}
 
-		public override com.db4o.Tree Add(com.db4o.Tree a_new)
+		public override com.db4o.foundation.Tree Add(com.db4o.foundation.Tree a_new)
 		{
 			int cmp = Compare(a_new);
 			if (cmp == 0)
@@ -42,7 +42,7 @@ namespace com.db4o.inside.ix
 			return Add(a_new, cmp);
 		}
 
-		public override int Compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.foundation.Tree a_to)
 		{
 			com.db4o.inside.ix.Indexable4 handler = _fieldTransaction.i_index._handler;
 			return handler.CompareTo(handler.ComparableObject(Trans(), _value));
@@ -60,7 +60,8 @@ namespace com.db4o.inside.ix
 			return queue;
 		}
 
-		protected override com.db4o.Tree ShallowCloneInternal(com.db4o.Tree tree)
+		protected override com.db4o.foundation.Tree ShallowCloneInternal(com.db4o.foundation.Tree
+			 tree)
 		{
 			com.db4o.inside.ix.IxPatch patch = (com.db4o.inside.ix.IxPatch)base.ShallowCloneInternal
 				(tree);

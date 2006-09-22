@@ -50,7 +50,7 @@ namespace com.db4o.inside.marshall
 			, int fieldIndex);
 
 		public abstract void AddFieldIndices(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
-			 attributes, com.db4o.YapWriter writer, bool isNew);
+			 attributes, com.db4o.YapWriter writer, com.db4o.inside.slots.Slot oldSlot);
 
 		public abstract com.db4o.TreeInt CollectFieldIDs(com.db4o.TreeInt tree, com.db4o.YapClass
 			 yc, com.db4o.inside.marshall.ObjectHeaderAttributes attributes, com.db4o.YapWriter

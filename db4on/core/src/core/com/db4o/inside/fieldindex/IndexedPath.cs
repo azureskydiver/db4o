@@ -3,15 +3,41 @@ namespace com.db4o.inside.fieldindex
 	public class IndexedPath : com.db4o.inside.fieldindex.IndexedNodeBase
 	{
 		public static com.db4o.inside.fieldindex.IndexedNode NewParentPath(com.db4o.inside.fieldindex.IndexedNode
-			 next, com.db4o.QConObject constraint)
+			 next, com.db4o.QCon constraint)
 		{
-			com.db4o.QCon parent = constraint.Parent();
-			if (parent is com.db4o.QConObject)
+			if (!CanFollowParent(constraint))
 			{
-				return new com.db4o.inside.fieldindex.IndexedPath((com.db4o.QConObject)parent, next
-					);
+				return null;
 			}
-			return null;
+			return new com.db4o.inside.fieldindex.IndexedPath((com.db4o.QConObject)constraint
+				.Parent(), next);
+		}
+
+		private static bool CanFollowParent(com.db4o.QCon con)
+		{
+			com.db4o.QCon parent = con.Parent();
+			com.db4o.YapField parentField = GetYapField(parent);
+			if (null == parentField)
+			{
+				return false;
+			}
+			com.db4o.YapField conField = GetYapField(con);
+			if (null == conField)
+			{
+				return false;
+			}
+			return parentField.HasIndex() && parentField.GetParentYapClass().IsAssignableFrom
+				(conField.GetParentYapClass());
+		}
+
+		private static com.db4o.YapField GetYapField(com.db4o.QCon con)
+		{
+			com.db4o.QField field = con.GetField();
+			if (null == field)
+			{
+				return null;
+			}
+			return field.GetYapField();
 		}
 
 		private com.db4o.inside.fieldindex.IndexedNode _next;
@@ -22,21 +48,7 @@ namespace com.db4o.inside.fieldindex
 			_next = next;
 		}
 
-		public override com.db4o.TreeInt ToTreeInt()
-		{
-			com.db4o.TreeInt tree = null;
-			com.db4o.foundation.KeyValueIterator iterator = Iterator();
-			while (iterator.MoveNext())
-			{
-				com.db4o.inside.btree.FieldIndexKey key = (com.db4o.inside.btree.FieldIndexKey)iterator
-					.Key();
-				tree = (com.db4o.TreeInt)com.db4o.Tree.Add(tree, new com.db4o.TreeInt(key.ParentID
-					()));
-			}
-			return tree;
-		}
-
-		public override com.db4o.foundation.KeyValueIterator Iterator()
+		public override com.db4o.foundation.Iterator4 Iterator()
 		{
 			return new com.db4o.inside.fieldindex.IndexedPathIterator(this, _next.Iterator());
 		}

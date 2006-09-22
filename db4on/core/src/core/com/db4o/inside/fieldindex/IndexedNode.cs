@@ -12,6 +12,6 @@ namespace com.db4o.inside.fieldindex
 
 		com.db4o.TreeInt ToTreeInt();
 
-		com.db4o.foundation.KeyValueIterator Iterator();
+		com.db4o.foundation.Iterator4 Iterator();
 	}
 }

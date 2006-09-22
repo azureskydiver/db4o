@@ -18,7 +18,7 @@ namespace com.db4o.inside.marshall
 				com.db4o.YapStream stream = trans.Stream();
 				id = stream.NewUserObject();
 				int address = -1;
-				int length = ObjectLength(handler, obj);
+				int length = ObjectLength(handler);
 				if (!stream.IsClient())
 				{
 					address = trans.i_file.GetSlot(length);

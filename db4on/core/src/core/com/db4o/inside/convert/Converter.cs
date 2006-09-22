@@ -3,28 +3,35 @@ namespace com.db4o.inside.convert
 	/// <exclude></exclude>
 	public class Converter
 	{
-		public static readonly int VERSION = com.db4o.inside.marshall.MarshallerFamily.LEGACY
-			 ? 0 : 5;
+		public const int VERSION = com.db4o.inside.convert.conversions.FieldIndexesToBTrees_5_7
+			.VERSION;
+
+		private static com.db4o.inside.convert.Converter _converter;
 
 		private com.db4o.foundation.Hashtable4 _conversions;
 
-		public static bool Convert(com.db4o.YapFile file, com.db4o.header.FileHeader0 fileHeader
-			)
+		private Converter()
 		{
-			if (fileHeader.ConverterVersion() >= VERSION)
+			_conversions = new com.db4o.foundation.Hashtable4();
+			com.db4o.inside.convert.conversions.CommonConversions.Register(this);
+		}
+
+		public static bool Convert(com.db4o.inside.convert.ConversionStage stage)
+		{
+			if (!NeedsConversion(stage.Header()))
 			{
 				return false;
 			}
-			com.db4o.inside.convert.Converter converter = new com.db4o.inside.convert.Converter
-				();
-			converter.Run(file, fileHeader);
-			return true;
+			if (_converter == null)
+			{
+				_converter = new com.db4o.inside.convert.Converter();
+			}
+			return _converter.RunConversions(stage);
 		}
 
-		private Converter()
+		private static bool NeedsConversion(com.db4o.header.FileHeader0 fileHeader)
 		{
-			_conversions = new com.db4o.foundation.Hashtable4(1);
-			new com.db4o.inside.convert.conversions.CommonConversions(this);
+			return fileHeader.ConverterVersion() < VERSION;
 		}
 
 		public virtual void Register(int idx, com.db4o.inside.convert.Conversion conversion
@@ -32,26 +39,28 @@ namespace com.db4o.inside.convert
 		{
 			if (_conversions.Get(idx) != null)
 			{
-				com.db4o.inside.Exceptions4.ShouldNeverHappen();
+				throw new System.InvalidOperationException();
 			}
 			_conversions.Put(idx, conversion);
 		}
 
-		private void Run(com.db4o.YapFile file, com.db4o.header.FileHeader0 fileHeader)
+		public virtual bool RunConversions(com.db4o.inside.convert.ConversionStage stage)
 		{
-			int start = fileHeader.ConverterVersion();
-			for (int i = start; i <= VERSION; i++)
+			com.db4o.header.FileHeader0 fileHeader = stage.Header();
+			if (!NeedsConversion(stage.Header()))
+			{
+				return false;
+			}
+			for (int i = fileHeader.ConverterVersion(); i <= VERSION; i++)
 			{
 				com.db4o.inside.convert.Conversion conversion = (com.db4o.inside.convert.Conversion
 					)_conversions.Get(i);
 				if (conversion != null)
 				{
-					conversion.SetFile(file);
-					conversion.Run();
+					stage.Accept(conversion);
 				}
 			}
-			fileHeader.ConverterVersion(VERSION);
-			fileHeader.WriteVariablePart1();
+			return true;
 		}
 	}
 }

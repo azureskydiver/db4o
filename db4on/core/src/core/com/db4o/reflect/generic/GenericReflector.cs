@@ -8,16 +8,16 @@ namespace com.db4o.reflect.generic
 		private com.db4o.reflect.generic.GenericArrayReflector _array;
 
 		private readonly com.db4o.foundation.Hashtable4 _classByName = new com.db4o.foundation.Hashtable4
-			(1);
+			();
 
 		private readonly com.db4o.foundation.Hashtable4 _classByClass = new com.db4o.foundation.Hashtable4
-			(1);
+			();
 
 		private readonly com.db4o.foundation.Collection4 _classes = new com.db4o.foundation.Collection4
 			();
 
 		private readonly com.db4o.foundation.Hashtable4 _classByID = new com.db4o.foundation.Hashtable4
-			(1);
+			();
 
 		private com.db4o.foundation.Collection4 _collectionPredicates = new com.db4o.foundation.Collection4
 			();
@@ -166,9 +166,9 @@ namespace com.db4o.reflect.generic
 			{
 				return null;
 			}
-			if (_stream.i_classCollection != null)
+			if (_stream.ClassCollection() != null)
 			{
-				int classID = _stream.i_classCollection.GetYapClassID(className);
+				int classID = _stream.ClassCollection().GetYapClassID(className);
 				if (classID > 0)
 				{
 					clazz = EnsureClassInitialised(classID);
@@ -221,14 +221,14 @@ namespace com.db4o.reflect.generic
 			)
 		{
 			com.db4o.reflect.ReflectClass collectionClass = ForClass(clazz);
-			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass198(this
+			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass199(this
 				, collectionClass);
 			return predicate;
 		}
 
-		private sealed class _AnonymousInnerClass198 : com.db4o.reflect.ReflectClassPredicate
+		private sealed class _AnonymousInnerClass199 : com.db4o.reflect.ReflectClassPredicate
 		{
-			public _AnonymousInnerClass198(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass199(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
 				 collectionClass)
 			{
 				this._enclosing = _enclosing;
@@ -301,19 +301,15 @@ namespace com.db4o.reflect.generic
 
 		private void ReadAll()
 		{
-			int classCollectionID = _stream.i_classCollection.GetID();
-			com.db4o.YapWriter classcollreader = _stream.ReadWriterByID(_trans, classCollectionID
-				);
-			int numclasses = classcollreader.ReadInt();
-			int[] classIDs = new int[numclasses];
-			for (int classidx = 0; classidx < numclasses; classidx++)
+			for (com.db4o.foundation.Iterator4 idIter = _stream.ClassCollection().Ids(); idIter
+				.MoveNext(); )
 			{
-				classIDs[classidx] = classcollreader.ReadInt();
-				EnsureClassAvailability(classIDs[classidx]);
+				EnsureClassAvailability(((int)idIter.Current()));
 			}
-			for (int classidx = 0; classidx < numclasses; classidx++)
+			for (com.db4o.foundation.Iterator4 idIter = _stream.ClassCollection().Ids(); idIter
+				.MoveNext(); )
 			{
-				EnsureClassRead(classIDs[classidx]);
+				EnsureClassRead(((int)idIter.Current()));
 			}
 		}
 
@@ -346,26 +342,30 @@ namespace com.db4o.reflect.generic
 				return ret;
 			}
 			com.db4o.YapWriter classreader = _stream.ReadWriterByID(_trans, id);
-			int namelength = classreader.ReadInt();
-			string classname = _stream.StringIO().Read(classreader, namelength);
-			ret = (com.db4o.reflect.generic.GenericClass)_classByName.Get(classname);
+			com.db4o.inside.marshall.ClassMarshaller marshaller = MarshallerFamily()._class;
+			com.db4o.inside.marshall.RawClassSpec spec = marshaller.ReadSpec(_trans, classreader
+				);
+			string className = spec.Name();
+			ret = (com.db4o.reflect.generic.GenericClass)_classByName.Get(className);
 			if (ret != null)
 			{
 				_classByID.Put(id, ret);
 				_pendingClasses.Add(id);
 				return ret;
 			}
-			classreader.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
-			int ancestorid = classreader.ReadInt();
-			classreader.ReadInt();
-			int fieldCount = classreader.ReadInt();
-			com.db4o.reflect.ReflectClass nativeClass = _delegate.ForName(classname);
-			ret = new com.db4o.reflect.generic.GenericClass(this, nativeClass, classname, EnsureClassAvailability
-				(ancestorid));
-			ret.SetDeclaredFieldCount(fieldCount);
+			com.db4o.reflect.ReflectClass nativeClass = _delegate.ForName(className);
+			ret = new com.db4o.reflect.generic.GenericClass(this, nativeClass, className, EnsureClassAvailability
+				(spec.SuperClassID()));
+			ret.SetDeclaredFieldCount(spec.NumFields());
 			_classByID.Put(id, ret);
 			_pendingClasses.Add(id);
 			return ret;
+		}
+
+		private com.db4o.inside.marshall.MarshallerFamily MarshallerFamily()
+		{
+			return com.db4o.inside.marshall.MarshallerFamily.ForConverterVersion(_stream.ConverterVersion
+				());
 		}
 
 		private void EnsureClassRead(int id)
@@ -373,61 +373,57 @@ namespace com.db4o.reflect.generic
 			com.db4o.reflect.generic.GenericClass clazz = (com.db4o.reflect.generic.GenericClass
 				)_classByID.Get(id);
 			com.db4o.YapWriter classreader = _stream.ReadWriterByID(_trans, id);
-			int namelength = classreader.ReadInt();
-			string classname = _stream.StringIO().Read(classreader, namelength);
-			if (_classByName.Get(classname) != null)
+			com.db4o.inside.marshall.ClassMarshaller classMarshaller = MarshallerFamily()._class;
+			com.db4o.inside.marshall.RawClassSpec classInfo = classMarshaller.ReadSpec(_trans
+				, classreader);
+			string className = classInfo.Name();
+			if (_classByName.Get(className) != null)
 			{
 				return;
 			}
-			_classByName.Put(classname, clazz);
+			_classByName.Put(className, clazz);
 			_classes.Add(clazz);
-			classreader.IncrementOffset(com.db4o.YapConst.INT_LENGTH * 3);
-			int numfields = classreader.ReadInt();
+			int numFields = classInfo.NumFields();
 			com.db4o.reflect.generic.GenericField[] fields = new com.db4o.reflect.generic.GenericField
-				[numfields];
-			for (int i = 0; i < numfields; i++)
+				[numFields];
+			com.db4o.inside.marshall.FieldMarshaller fieldMarshaller = MarshallerFamily()._field;
+			for (int i = 0; i < numFields; i++)
 			{
-				string fieldname = null;
-				int fieldnamelength = classreader.ReadInt();
-				fieldname = _stream.StringIO().Read(classreader, fieldnamelength);
-				if (fieldname.IndexOf(com.db4o.YapConst.VIRTUAL_FIELD_PREFIX) == 0)
+				com.db4o.inside.marshall.RawFieldSpec fieldInfo = fieldMarshaller.ReadSpec(_stream
+					, classreader);
+				string fieldName = fieldInfo.Name();
+				int handlerID = fieldInfo.HandlerID();
+				if (fieldInfo.IsVirtual())
 				{
-					fields[i] = new com.db4o.reflect.generic.GenericVirtualField(fieldname);
+					fields[i] = new com.db4o.reflect.generic.GenericVirtualField(fieldName);
+					continue;
 				}
-				else
+				com.db4o.reflect.generic.GenericClass fieldClass = null;
+				switch (handlerID)
 				{
-					com.db4o.reflect.generic.GenericClass fieldClass = null;
-					int handlerid = classreader.ReadInt();
-					switch (handlerid)
+					case com.db4o.YapHandlers.ANY_ID:
 					{
-						case com.db4o.YapHandlers.ANY_ID:
-						{
-							fieldClass = (com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.Class.GetClassForType
-								(typeof(object)));
-							break;
-						}
-
-						case com.db4o.YapHandlers.ANY_ARRAY_ID:
-						{
-							fieldClass = ((com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.Class.GetClassForType
-								(typeof(object)))).ArrayClass();
-							break;
-						}
-
-						default:
-						{
-							EnsureClassAvailability(handlerid);
-							fieldClass = (com.db4o.reflect.generic.GenericClass)_classByID.Get(handlerid);
-							break;
-						}
+						fieldClass = (com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.Class.GetClassForType
+							(typeof(object)));
+						break;
 					}
-					com.db4o.YapBit attribs = new com.db4o.YapBit(classreader.ReadByte());
-					bool isprimitive = attribs.Get();
-					bool isarray = attribs.Get();
-					bool ismultidimensional = attribs.Get();
-					fields[i] = new com.db4o.reflect.generic.GenericField(fieldname, fieldClass, isprimitive
-						, isarray, ismultidimensional);
+
+					case com.db4o.YapHandlers.ANY_ARRAY_ID:
+					{
+						fieldClass = ((com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.Class.GetClassForType
+							(typeof(object)))).ArrayClass();
+						break;
+					}
+
+					default:
+					{
+						EnsureClassAvailability(handlerID);
+						fieldClass = (com.db4o.reflect.generic.GenericClass)_classByID.Get(handlerID);
+						break;
+					}
 				}
+				fields[i] = new com.db4o.reflect.generic.GenericField(fieldName, fieldClass, fieldInfo
+					.IsPrimitive(), fieldInfo.IsArray(), fieldInfo.IsNArray());
 			}
 			clazz.InitFields(fields);
 		}

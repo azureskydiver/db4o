@@ -1,16 +1,26 @@
 namespace com.db4o.inside.btree
 {
+	/// <summary>
+	/// Composite key for field indexes, first compares on the actual
+	/// indexed field _value and then on the _parentID (which is a
+	/// reference to the containing object).
+	/// </summary>
+	/// <remarks>
+	/// Composite key for field indexes, first compares on the actual
+	/// indexed field _value and then on the _parentID (which is a
+	/// reference to the containing object).
+	/// </remarks>
 	/// <exclude></exclude>
 	public class FieldIndexKey
 	{
-		private readonly int _parentID;
-
 		private readonly object _value;
 
-		public FieldIndexKey(int parentID_, object value_)
+		private readonly int _parentID;
+
+		public FieldIndexKey(int parentID, object value)
 		{
-			_parentID = parentID_;
-			_value = value_;
+			_parentID = parentID;
+			_value = value;
 		}
 
 		public virtual int ParentID()

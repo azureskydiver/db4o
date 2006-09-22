@@ -55,19 +55,19 @@ namespace com.db4o
 		}
 
 		private int BindAndSet(com.db4o.Transaction trans, com.db4o.YapStream peer, com.db4o.YapObject
-			 _ref, object sourceObject)
+			 @ref, object sourceObject)
 		{
 			if (sourceObject is com.db4o.Db4oTypeImpl)
 			{
 				com.db4o.Db4oTypeImpl db4oType = (com.db4o.Db4oTypeImpl)sourceObject;
 				if (!db4oType.CanBind())
 				{
-					com.db4o.Db4oTypeImpl targetObject = (com.db4o.Db4oTypeImpl)_ref.GetObject();
+					com.db4o.Db4oTypeImpl targetObject = (com.db4o.Db4oTypeImpl)@ref.GetObject();
 					targetObject.ReplicateFrom(sourceObject);
-					return _ref.GetID();
+					return @ref.GetID();
 				}
 			}
-			peer.Bind2(_ref, sourceObject);
+			peer.Bind2(@ref, sourceObject);
 			return peer.SetAfterReplication(trans, sourceObject, 1, true);
 		}
 

@@ -1,12 +1,9 @@
 namespace com.db4o.inside.convert.conversions
 {
 	/// <exclude></exclude>
-	public class ClassIndexesToBTrees : com.db4o.inside.convert.Conversion
+	public class ClassIndexesToBTrees_5_5 : com.db4o.inside.convert.Conversion
 	{
-		public override void Run()
-		{
-			_yapFile.StoredClasses();
-		}
+		public const int VERSION = 5;
 
 		public virtual void Convert(com.db4o.YapFile yapFile, int classIndexId, com.db4o.inside.btree.BTree
 			 bTree)
@@ -22,6 +19,12 @@ namespace com.db4o.inside.convert.conversions
 			{
 				bTree.Add(trans, reader.ReadInt());
 			}
+		}
+
+		public override void Convert(com.db4o.inside.convert.ConversionStage.SystemUpStage
+			 stage)
+		{
+			stage.File().StoredClasses();
 		}
 	}
 }

@@ -31,8 +31,8 @@ namespace com.db4o.inside.ix
 			_reader = new com.db4o.YapReader(_slotLength);
 		}
 
-		internal virtual com.db4o.Tree Add(com.db4o.inside.ix.IxFileRange fileRange, com.db4o.Tree
-			 newTree)
+		internal virtual com.db4o.foundation.Tree Add(com.db4o.inside.ix.IxFileRange fileRange
+			, com.db4o.foundation.Tree newTree)
 		{
 			SetFileRange(fileRange);
 			com.db4o.YapFile yf = fileRange.Stream();
@@ -268,8 +268,8 @@ namespace com.db4o.inside.ix
 				(_reader)));
 		}
 
-		private com.db4o.Tree Insert(com.db4o.inside.ix.IxFileRange fileRange, com.db4o.Tree
-			 a_new, int a_cursor, int a_cmp)
+		private com.db4o.foundation.Tree Insert(com.db4o.inside.ix.IxFileRange fileRange, 
+			com.db4o.foundation.Tree a_new, int a_cursor, int a_cmp)
 		{
 			int incStartNewAt = a_cmp <= 0 ? 1 : 0;
 			int newAddressOffset = (a_cursor + incStartNewAt) * _slotLength;

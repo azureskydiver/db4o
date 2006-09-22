@@ -4,7 +4,7 @@ namespace com.db4o.inside.btree
 	{
 		protected readonly com.db4o.Transaction _transaction;
 
-		private readonly object _object;
+		protected object _object;
 
 		public BTreePatch(com.db4o.Transaction transaction, object obj)
 		{
@@ -45,24 +45,6 @@ namespace com.db4o.inside.btree
 			return false;
 		}
 
-		public virtual object Key(com.db4o.Transaction trans)
-		{
-			com.db4o.inside.btree.BTreePatch patch = ForTransaction(trans);
-			if (patch != null)
-			{
-				if (patch.IsAdd())
-				{
-					return patch.GetObject();
-				}
-			}
-			else
-			{
-				if (IsRemove())
-				{
-					return GetObject();
-				}
-			}
-			return com.db4o.foundation.No4.INSTANCE;
-		}
+		public abstract object Key(com.db4o.Transaction trans);
 	}
 }

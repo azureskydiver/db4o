@@ -48,10 +48,8 @@ namespace com.db4o.ext
 		/// <remarks>generates a new Db4oDatabase object with a unique signature.</remarks>
 		public static com.db4o.ext.Db4oDatabase Generate()
 		{
-			com.db4o.ext.Db4oDatabase db = new com.db4o.ext.Db4oDatabase();
-			db.i_signature = com.db4o.Unobfuscated.GenerateSignature();
-			db.i_uuid = j4o.lang.JavaSystem.CurrentTimeMillis();
-			return db;
+			return new com.db4o.ext.Db4oDatabase(com.db4o.Unobfuscated.GenerateSignature(), j4o.lang.JavaSystem
+				.CurrentTimeMillis());
 		}
 
 		/// <summary>comparison by signature.</summary>
@@ -68,22 +66,11 @@ namespace com.db4o.ext
 				return false;
 			}
 			com.db4o.ext.Db4oDatabase other = (com.db4o.ext.Db4oDatabase)obj;
-			if (other.i_signature == null || this.i_signature == null)
+			if (null == other.i_signature || null == this.i_signature)
 			{
 				return false;
 			}
-			if (other.i_signature.Length != i_signature.Length)
-			{
-				return false;
-			}
-			for (int i = 0; i < i_signature.Length; i++)
-			{
-				if (i_signature[i] != other.i_signature[i])
-				{
-					return false;
-				}
-			}
-			return true;
+			return com.db4o.foundation.Arrays4.AreEqual(other.i_signature, this.i_signature);
 		}
 
 		/// <summary>gets the db4o ID, and may cache it for performance reasons.</summary>

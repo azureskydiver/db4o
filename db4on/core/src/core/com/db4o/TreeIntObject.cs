@@ -19,7 +19,8 @@ namespace com.db4o
 			return ShallowCloneInternal(new com.db4o.TreeIntObject(_key));
 		}
 
-		protected override com.db4o.Tree ShallowCloneInternal(com.db4o.Tree tree)
+		protected override com.db4o.foundation.Tree ShallowCloneInternal(com.db4o.foundation.Tree
+			 tree)
 		{
 			com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)base.ShallowCloneInternal(tree
 				);
@@ -41,9 +42,9 @@ namespace com.db4o
 		{
 			int key = a_bytes.ReadInt();
 			object obj = null;
-			if (_object is com.db4o.Tree)
+			if (_object is com.db4o.TreeInt)
 			{
-				obj = new com.db4o.TreeReader(a_bytes, (com.db4o.Tree)_object).Read();
+				obj = new com.db4o.TreeReader(a_bytes, (com.db4o.Readable)_object).Read();
 			}
 			else
 			{
@@ -61,9 +62,9 @@ namespace com.db4o
 			}
 			else
 			{
-				if (_object is com.db4o.Tree)
+				if (_object is com.db4o.TreeInt)
 				{
-					com.db4o.Tree.Write(a_writer, (com.db4o.Tree)_object);
+					com.db4o.TreeInt.Write(a_writer, (com.db4o.TreeInt)_object);
 				}
 				else
 				{

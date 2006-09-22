@@ -42,7 +42,7 @@ namespace com.db4o
 		/// 	</remarks>
 		public static void Main(string args)
 		{
-			j4o.lang.JavaSystem._out.Println(Version());
+			System.Console.Out.WriteLine(Version());
 		}
 
 		/// <summary>

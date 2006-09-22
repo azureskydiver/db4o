@@ -2,7 +2,7 @@ namespace com.db4o.inside.fieldindex
 {
 	public class FieldIndexProcessor
 	{
-		private com.db4o.QCandidates _candidates;
+		private readonly com.db4o.QCandidates _candidates;
 
 		public FieldIndexProcessor(com.db4o.QCandidates candidates)
 		{
@@ -18,25 +18,34 @@ namespace com.db4o.inside.fieldindex
 			}
 			if (bestIndex.ResultSize() > 0)
 			{
-				return new com.db4o.inside.fieldindex.FieldIndexProcessorResult(ResolveFully(bestIndex
-					));
+				com.db4o.inside.fieldindex.IndexedNode resolved = ResolveFully(bestIndex);
+				if (null == resolved)
+				{
+					return com.db4o.inside.fieldindex.FieldIndexProcessorResult.NO_INDEX_FOUND;
+				}
+				return new com.db4o.inside.fieldindex.FieldIndexProcessorResult(resolved.ToTreeInt
+					());
 			}
 			return com.db4o.inside.fieldindex.FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
 		}
 
-		private com.db4o.TreeInt ResolveFully(com.db4o.inside.fieldindex.IndexedNode bestIndex
-			)
+		private com.db4o.inside.fieldindex.IndexedNode ResolveFully(com.db4o.inside.fieldindex.IndexedNode
+			 bestIndex)
 		{
+			if (null == bestIndex)
+			{
+				return null;
+			}
 			if (bestIndex.IsResolved())
 			{
-				return bestIndex.ToTreeInt();
+				return bestIndex;
 			}
 			return ResolveFully(bestIndex.Resolve());
 		}
 
 		public virtual com.db4o.inside.fieldindex.IndexedNode SelectBestIndex()
 		{
-			com.db4o.foundation.Iterator4 i = SelectIndexes();
+			com.db4o.foundation.Iterator4 i = CollectIndexedNodes();
 			if (!i.MoveNext())
 			{
 				return null;
@@ -45,7 +54,7 @@ namespace com.db4o.inside.fieldindex
 				)i.Current();
 			while (i.MoveNext())
 			{
-				com.db4o.inside.fieldindex.IndexedLeaf leaf = (com.db4o.inside.fieldindex.IndexedLeaf
+				com.db4o.inside.fieldindex.IndexedNode leaf = (com.db4o.inside.fieldindex.IndexedNode
 					)i.Current();
 				if (leaf.ResultSize() < best.ResultSize())
 				{
@@ -55,74 +64,10 @@ namespace com.db4o.inside.fieldindex
 			return best;
 		}
 
-		private com.db4o.foundation.Iterator4 SelectIndexes()
+		public virtual com.db4o.foundation.Iterator4 CollectIndexedNodes()
 		{
-			com.db4o.foundation.Collection4 leaves = new com.db4o.foundation.Collection4();
-			CollectIndexedLeaves(leaves, _candidates.IterateConstraints());
-			return leaves.Iterator();
-		}
-
-		private void CollectIndexedLeaves(com.db4o.foundation.Collection4 leaves, com.db4o.foundation.Iterator4
-			 qcons)
-		{
-			while (qcons.MoveNext())
-			{
-				com.db4o.QCon qcon = (com.db4o.QCon)qcons.Current();
-				if (IsLeaf(qcon))
-				{
-					if (qcon.CanLoadByIndex() && qcon is com.db4o.QConObject)
-					{
-						com.db4o.QConObject conObject = (com.db4o.QConObject)qcon;
-						com.db4o.inside.fieldindex.IndexedLeaf leaf = FindLeafOnSameField(leaves, conObject
-							);
-						if (leaf != null)
-						{
-							leaves.Add(Join(leaf, conObject));
-						}
-						else
-						{
-							leaves.Add(new com.db4o.inside.fieldindex.IndexedLeaf(conObject));
-						}
-					}
-				}
-				else
-				{
-					CollectIndexedLeaves(leaves, qcon.IterateChildren());
-				}
-			}
-		}
-
-		private com.db4o.inside.fieldindex.IndexedNode Join(com.db4o.inside.fieldindex.IndexedLeaf
-			 existing, com.db4o.QConObject conObject)
-		{
-			if (existing.Constraint().HasOrJoinWith(conObject))
-			{
-				return new com.db4o.inside.fieldindex.OrIndexedLeaf(existing, new com.db4o.inside.fieldindex.IndexedLeaf
-					(conObject));
-			}
-			return new com.db4o.inside.fieldindex.AndIndexedLeaf(existing, new com.db4o.inside.fieldindex.IndexedLeaf
-				(conObject));
-		}
-
-		private com.db4o.inside.fieldindex.IndexedLeaf FindLeafOnSameField(com.db4o.foundation.Collection4
-			 leaves, com.db4o.QConObject conObject)
-		{
-			com.db4o.foundation.Iterator4 i = leaves.Iterator();
-			while (i.MoveNext())
-			{
-				com.db4o.inside.fieldindex.IndexedLeaf leaf = (com.db4o.inside.fieldindex.IndexedLeaf
-					)i.Current();
-				if (conObject.OnSameFieldAs(leaf.Constraint()))
-				{
-					return leaf;
-				}
-			}
-			return null;
-		}
-
-		private bool IsLeaf(com.db4o.QCon qcon)
-		{
-			return !qcon.HasChildren();
+			return new com.db4o.inside.fieldindex.IndexedNodeCollector(_candidates).GetNodes(
+				);
 		}
 	}
 }

@@ -28,10 +28,6 @@ namespace com.db4o.inside.classindex
 		{
 		}
 
-		internal void Write(com.db4o.YapStream a_stream)
-		{
-		}
-
 		public sealed override void WriteOwnID(com.db4o.Transaction trans, com.db4o.YapReader
 			 a_writer)
 		{

@@ -204,14 +204,14 @@ namespace com.db4o
 				{
 					com.db4o.reflect.ReflectConstructor[] constructors = claxx.GetDeclaredConstructors
 						();
-					com.db4o.Tree sortedConstructors = null;
+					com.db4o.foundation.Tree sortedConstructors = null;
 					for (int i = 0; i < constructors.Length; i++)
 					{
 						try
 						{
 							constructors[i].SetAccessible();
 							int parameterCount = constructors[i].GetParameterTypes().Length;
-							sortedConstructors = com.db4o.Tree.Add(sortedConstructors, new com.db4o.TreeIntObject
+							sortedConstructors = com.db4o.foundation.Tree.Add(sortedConstructors, new com.db4o.TreeIntObject
 								(i + constructors.Length * parameterCount, constructors[i]));
 						}
 						catch (System.Exception t)

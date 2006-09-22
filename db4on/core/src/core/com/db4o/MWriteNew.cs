@@ -16,7 +16,7 @@ namespace com.db4o
 				_payLoad.Address(stream.GetSlot(_payLoad.GetLength()));
 				if (yc != null)
 				{
-					yc.AddFieldIndices(_payLoad, true);
+					yc.AddFieldIndices(_payLoad, null);
 				}
 				stream.WriteNew(yc, _payLoad);
 				GetTransaction().WritePointer(_payLoad.GetID(), _payLoad.GetAddress(), _payLoad.GetLength

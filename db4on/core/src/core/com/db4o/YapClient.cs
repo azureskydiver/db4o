@@ -17,7 +17,7 @@ namespace com.db4o
 
 		private string password;
 
-		internal int[] prefetchedIDs = new int[com.db4o.YapConst.PREFETCH_ID_COUNT];
+		internal int[] _prefetchedIDs;
 
 		private com.db4o.YapClientThread _readerThread;
 
@@ -31,7 +31,7 @@ namespace com.db4o
 
 		private com.db4o.ext.Db4oDatabase i_db;
 
-		private bool _doFinalize = true;
+		protected bool _doFinalize = true;
 
 		private int _blockSize = 1;
 
@@ -163,6 +163,11 @@ namespace com.db4o
 			i_trans.Commit();
 		}
 
+		public override int ConverterVersion()
+		{
+			return com.db4o.inside.convert.Converter.VERSION;
+		}
+
 		internal virtual com.db4o.foundation.network.YapSocket CreateParalellSocket()
 		{
 			com.db4o.Msg.GET_THREAD_ID.Write(this, i_socket);
@@ -234,8 +239,8 @@ namespace com.db4o
 			}
 			a_yapClass.SetID(message._id);
 			a_yapClass.ReadName1(GetSystemTransaction(), bytes);
-			i_classCollection.AddYapClass(a_yapClass);
-			i_classCollection.ReadYapClass(a_yapClass, a_class);
+			ClassCollection().AddYapClass(a_yapClass);
+			ClassCollection().ReadYapClass(a_yapClass, a_class);
 			return true;
 		}
 
@@ -283,11 +288,6 @@ namespace com.db4o
 			return null;
 		}
 
-		internal void Free(int a_address, int a_length)
-		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
-		}
-
 		internal override void GetAll(com.db4o.Transaction ta, com.db4o.QueryResultImpl a_res
 			)
 		{
@@ -310,7 +310,7 @@ namespace com.db4o
 		{
 			try
 			{
-				return (com.db4o.Msg)messageQueueLock.Run(new _AnonymousInnerClass308(this));
+				return (com.db4o.Msg)messageQueueLock.Run(new _AnonymousInnerClass309(this));
 			}
 			catch (System.Exception ex)
 			{
@@ -319,9 +319,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass308 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass309 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass308(YapClient _enclosing)
+			public _AnonymousInnerClass309(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -480,26 +480,28 @@ namespace com.db4o
 			}
 		}
 
-		internal override bool MaintainsIndices()
+		public override bool MaintainsIndices()
 		{
 			return false;
 		}
 
 		public sealed override int NewUserObject()
 		{
+			int prefetchIDCount = Config().PrefetchIDCount();
+			EnsureIDCacheAllocated(prefetchIDCount);
 			com.db4o.YapWriter reader = null;
 			if (remainingIDs < 1)
 			{
-				WriteMsg(com.db4o.Msg.PREFETCH_IDS);
+				WriteMsg(com.db4o.Msg.PREFETCH_IDS.GetWriterForInt(i_trans, prefetchIDCount));
 				reader = ExpectedByteResponse(com.db4o.Msg.ID_LIST);
-				for (int i = com.db4o.YapConst.PREFETCH_ID_COUNT - 1; i >= 0; i--)
+				for (int i = prefetchIDCount - 1; i >= 0; i--)
 				{
-					prefetchedIDs[i] = reader.ReadInt();
+					_prefetchedIDs[i] = reader.ReadInt();
 				}
-				remainingIDs = com.db4o.YapConst.PREFETCH_ID_COUNT;
+				remainingIDs = prefetchIDCount;
 			}
 			remainingIDs--;
-			return prefetchedIDs[remainingIDs];
+			return _prefetchedIDs[remainingIDs];
 		}
 
 		internal virtual int PrefetchObjects(com.db4o.QResultClient qResult, object[] prefetched
@@ -511,25 +513,15 @@ namespace com.db4o
 			int[] position = new int[prefetchCount];
 			while (qResult.HasNext() && (count < prefetchCount))
 			{
-				bool foundInCache = false;
 				int id = qResult.NextInt();
 				if (id > 0)
 				{
-					com.db4o.YapObject yo = GetYapObject(id);
-					if (yo != null)
+					object obj = ObjectForIDFromCache(id);
+					if (obj != null)
 					{
-						object candidate = yo.GetObject();
-						if (candidate != null)
-						{
-							prefetched[count] = candidate;
-							foundInCache = true;
-						}
-						else
-						{
-							YapObjectGCd(yo);
-						}
+						prefetched[count] = obj;
 					}
-					if (!foundInCache)
+					else
 					{
 						idsToGet[toGet] = id;
 						position[toGet] = count;
@@ -554,8 +546,16 @@ namespace com.db4o
 					{
 						mso._payLoad.IncrementOffset(com.db4o.YapConst.MESSAGE_LENGTH);
 						com.db4o.YapWriter reader = mso.Unmarshall(com.db4o.YapConst.MESSAGE_LENGTH);
-						prefetched[position[i]] = new com.db4o.YapObject(idsToGet[i]).ReadPrefetch(this, 
-							qResult.i_trans, reader);
+						object obj = ObjectForIDFromCache(idsToGet[i]);
+						if (obj != null)
+						{
+							prefetched[position[i]] = obj;
+						}
+						else
+						{
+							prefetched[position[i]] = new com.db4o.YapObject(idsToGet[i]).ReadPrefetch(this, 
+								reader);
+						}
 					}
 				}
 			}
@@ -654,10 +654,10 @@ namespace com.db4o
 		{
 			WriteMsg(com.db4o.Msg.GET_CLASSES.GetWriter(i_systemTrans));
 			com.db4o.YapWriter bytes = ExpectedByteResponse(com.db4o.Msg.GET_CLASSES);
-			i_classCollection.SetID(bytes.ReadInt());
+			ClassCollection().SetID(bytes.ReadInt());
 			CreateStringIO(bytes.ReadByte());
-			i_classCollection.Read(i_systemTrans);
-			i_classCollection.RefreshClasses();
+			ClassCollection().Read(i_systemTrans);
+			ClassCollection().RefreshClasses();
 		}
 
 		public override void ReleaseSemaphore(string name)
@@ -783,12 +783,6 @@ namespace com.db4o
 			WriteMsg(com.db4o.Msg.WRITE_NEW.GetWriter(a_yapClass, aWriter));
 		}
 
-		internal void WriteObject(com.db4o.YapMeta a_object, com.db4o.YapReader a_writer, 
-			int address)
-		{
-			com.db4o.inside.Exceptions4.ShouldNeverBeCalled();
-		}
-
 		internal sealed override void WriteTransactionPointer(int a_address)
 		{
 		}
@@ -815,6 +809,21 @@ namespace com.db4o
 		public virtual com.db4o.foundation.network.YapSocket Socket()
 		{
 			return i_socket;
+		}
+
+		private void EnsureIDCacheAllocated(int prefetchIDCount)
+		{
+			if (_prefetchedIDs == null)
+			{
+				_prefetchedIDs = new int[prefetchIDCount];
+				return;
+			}
+			if (prefetchIDCount > _prefetchedIDs.Length)
+			{
+				int[] newPrefetchedIDs = new int[prefetchIDCount];
+				System.Array.Copy(_prefetchedIDs, 0, newPrefetchedIDs, 0, _prefetchedIDs.Length);
+				_prefetchedIDs = newPrefetchedIDs;
+			}
 		}
 	}
 }

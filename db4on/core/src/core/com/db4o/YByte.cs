@@ -25,11 +25,6 @@ namespace com.db4o
 			return i_primitive;
 		}
 
-		internal bool IsNoConstraint(object obj, bool isPrimitive)
-		{
-			return obj.Equals(PrimitiveNull());
-		}
-
 		public override int LinkLength()
 		{
 			return LENGTH;

@@ -109,7 +109,7 @@ namespace com.db4o
 					com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
 					if (claxx.IsInterface())
 					{
-						com.db4o.foundation.Collection4 classes = Stream().i_classCollection.ForInterface
+						com.db4o.foundation.Collection4 classes = Stream().ClassCollection().ForInterface
 							(claxx);
 						if (classes.Size() == 0)
 						{
@@ -238,7 +238,7 @@ namespace com.db4o
 			{
 				run[0] = 0;
 				bool[] anyClassCollected = { false };
-				Stream().i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass221(this
+				Stream().ClassCollection().AttachQueryNode(a_field, new _AnonymousInnerClass221(this
 					, anyClassCollected));
 			}
 			com.db4o.foundation.Iterator4 i = IterateConstraints();
@@ -323,7 +323,7 @@ namespace com.db4o
 			}
 		}
 
-		private com.db4o.YapStream Stream()
+		protected virtual com.db4o.YapStream Stream()
 		{
 			return i_trans.Stream();
 		}
@@ -537,7 +537,7 @@ namespace com.db4o
 					{
 						com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
 							(stream, reader);
-						idsNew[0] = oh._yapClass.CollectFieldIDs(oh._marshallerFamily, oh._headerAttributes
+						idsNew[0] = oh.YapClass().CollectFieldIDs(oh._marshallerFamily, oh._headerAttributes
 							, idsNew[0], reader, fieldName);
 					}
 				}

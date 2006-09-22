@@ -28,22 +28,23 @@ namespace com.db4o
 			i_orderOnRead = a_orderOnRead;
 		}
 
-		public com.db4o.Tree Read()
+		public com.db4o.foundation.Tree Read()
 		{
 			return Read(i_bytes.ReadInt());
 		}
 
-		public com.db4o.Tree Read(int a_size)
+		public com.db4o.foundation.Tree Read(int a_size)
 		{
 			i_size = a_size;
 			if (i_size > 0)
 			{
 				if (i_orderOnRead)
 				{
-					com.db4o.Tree tree = null;
+					com.db4o.foundation.Tree tree = null;
 					for (int i = 0; i < i_size; i++)
 					{
-						tree = com.db4o.Tree.Add(tree, (com.db4o.Tree)i_template.Read(i_bytes));
+						tree = com.db4o.foundation.Tree.Add(tree, (com.db4o.foundation.Tree)i_template.Read
+							(i_bytes));
 					}
 					return tree;
 				}
@@ -56,9 +57,11 @@ namespace com.db4o
 			return null;
 		}
 
-		private com.db4o.Tree LinkUp(com.db4o.Tree a_preceding, int a_level)
+		private com.db4o.foundation.Tree LinkUp(com.db4o.foundation.Tree a_preceding, int
+			 a_level)
 		{
-			com.db4o.Tree node = (com.db4o.Tree)i_template.Read(i_bytes);
+			com.db4o.foundation.Tree node = (com.db4o.foundation.Tree)i_template.Read(i_bytes
+				);
 			i_current++;
 			node._preceding = a_preceding;
 			node._subsequent = LinkDown(a_level + 1);
@@ -70,21 +73,22 @@ namespace com.db4o
 			return node;
 		}
 
-		private com.db4o.Tree LinkDown(int a_level)
+		private com.db4o.foundation.Tree LinkDown(int a_level)
 		{
 			if (i_current < i_size)
 			{
 				i_current++;
 				if (a_level < i_levels)
 				{
-					com.db4o.Tree preceding = LinkDown(a_level + 1);
-					com.db4o.Tree node = (com.db4o.Tree)i_template.Read(i_bytes);
+					com.db4o.foundation.Tree preceding = LinkDown(a_level + 1);
+					com.db4o.foundation.Tree node = (com.db4o.foundation.Tree)i_template.Read(i_bytes
+						);
 					node._preceding = preceding;
 					node._subsequent = LinkDown(a_level + 1);
 					node.CalculateSize();
 					return node;
 				}
-				return (com.db4o.Tree)i_template.Read(i_bytes);
+				return (com.db4o.foundation.Tree)i_template.Read(i_bytes);
 			}
 			return null;
 		}
