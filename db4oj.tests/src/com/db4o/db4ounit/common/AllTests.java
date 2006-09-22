@@ -6,6 +6,9 @@ import db4ounit.extensions.Db4oTestSuite;
 
 public class AllTests extends Db4oTestSuite {
 	
+	/**
+	 * @sharpen.ignore test suited is executed differently under .net
+	 */
 	public static void main(String[] args) {
 		System.exit(new AllTests().runSolo());
 	}
