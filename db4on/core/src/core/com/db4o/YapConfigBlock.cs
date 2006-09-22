@@ -48,7 +48,10 @@ namespace com.db4o
 		private const int CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + com.db4o.YapConst
 			.INT_LENGTH;
 
-		private const int LENGTH = MINIMUM_LENGTH + (com.db4o.YapConst.INT_LENGTH * 6) + 
+		private const int UUID_INDEX_ID_OFFSET = CONVERTER_VERSION_OFFSET + com.db4o.YapConst
+			.INT_LENGTH;
+
+		private const int LENGTH = MINIMUM_LENGTH + (com.db4o.YapConst.INT_LENGTH * 7) + 
 			ENCRYPTION_PASSWORD_LENGTH + 1;
 
 		public readonly long _opentime;
@@ -60,6 +63,8 @@ namespace com.db4o
 		public int _freespaceAddress;
 
 		private int _converterVersion;
+
+		public int _uuidIndexId;
 
 		public YapConfigBlock(com.db4o.YapFile stream)
 		{
@@ -284,6 +289,10 @@ namespace com.db4o
 			{
 				_converterVersion = reader.ReadInt();
 			}
+			if (oldLength > UUID_INDEX_ID_OFFSET)
+			{
+				_uuidIndexId = reader.ReadInt();
+			}
 			EnsureFreespaceSlot();
 			if (LockFile() && (lastAccessTime != 0))
 			{
@@ -355,6 +364,7 @@ namespace com.db4o
 			EnsureFreespaceSlot();
 			com.db4o.YInt.WriteInt(_freespaceAddress, writer);
 			com.db4o.YInt.WriteInt(_converterVersion, writer);
+			com.db4o.YInt.WriteInt(_uuidIndexId, writer);
 			writer.Write();
 			WritePointer();
 		}

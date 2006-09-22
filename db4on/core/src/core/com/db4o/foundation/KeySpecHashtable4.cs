@@ -3,7 +3,7 @@ namespace com.db4o.foundation
 	/// <exclude></exclude>
 	public class KeySpecHashtable4 : com.db4o.foundation.Hashtable4
 	{
-		private KeySpecHashtable4() : base()
+		private KeySpecHashtable4() : base((com.db4o.foundation.DeepClone)null)
 		{
 		}
 

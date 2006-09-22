@@ -15,9 +15,9 @@ namespace com.db4o.inside.marshall
 					reader.SetCascadeDeletes(parentBytes.CascadeDeletes());
 					com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
 						(reader);
-					if (oh._yapClass != null)
+					if (oh.YapClass() != null)
 					{
-						oh._yapClass.DeleteEmbedded1(_family, reader, objectID);
+						oh.YapClass().DeleteEmbedded1(_family, reader, objectID);
 					}
 				}
 			}
@@ -61,10 +61,10 @@ namespace com.db4o.inside.marshall
 						(reader);
 					try
 					{
-						if (oh._yapClass != null)
+						if (oh.YapClass() != null)
 						{
 							a_bytes[0] = reader;
-							return oh._yapClass.ReadArrayHandler1(a_bytes);
+							return oh.YapClass().ReadArrayHandler1(a_bytes);
 						}
 					}
 					catch (System.Exception e)

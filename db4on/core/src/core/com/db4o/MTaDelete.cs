@@ -3,7 +3,7 @@ namespace com.db4o
 	internal class MTaDelete : com.db4o.MsgD
 	{
 		internal sealed override bool ProcessMessageAtServer(com.db4o.foundation.network.YapSocket
-			 _in)
+			 @in)
 		{
 			int id = _payLoad.ReadInt();
 			int cascade = _payLoad.ReadInt();

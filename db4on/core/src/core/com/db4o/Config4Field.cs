@@ -78,7 +78,7 @@ namespace com.db4o
 			int indexedFlag = _config.GetAsInt(INDEXED);
 			if (indexedFlag == com.db4o.YapConst.NO)
 			{
-				DropIndex(systemTrans, yapField, stream);
+				yapField.DropIndex(systemTrans);
 				return;
 			}
 			if (UseExistingIndex(systemTrans, yapField))
@@ -95,90 +95,26 @@ namespace com.db4o
 		private bool UseExistingIndex(com.db4o.Transaction systemTrans, com.db4o.YapField
 			 yapField)
 		{
-			if (com.db4o.inside.marshall.MarshallerFamily.OLD_FIELD_INDEX)
-			{
-				com.db4o.MetaField metaField = GetMetaField(systemTrans);
-				if (metaField.index == null)
-				{
-					return false;
-				}
-				yapField.InitOldIndex(systemTrans, metaField.index);
-			}
-			if (com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX)
-			{
-				return yapField.GetIndex() != null;
-			}
-			return true;
+			return yapField.GetIndex(systemTrans) != null;
 		}
 
 		private void CreateIndex(com.db4o.Transaction systemTrans, com.db4o.YapField yapField
 			, com.db4o.YapFile stream)
 		{
-			if (com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX)
+			if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.NONE)
 			{
-				yapField.InitIndex(systemTrans);
-				stream.SetDirtyInSystemTransaction(yapField.GetParentYapClass());
+				stream.Message("creating index " + yapField.ToString());
 			}
-			if (com.db4o.inside.marshall.MarshallerFamily.OLD_FIELD_INDEX)
-			{
-				com.db4o.MetaField metaField = GetMetaField(systemTrans);
-				if (metaField.index == null)
-				{
-					metaField.index = new com.db4o.MetaIndex();
-					stream.SetInternal(systemTrans, metaField.index, com.db4o.YapConst.UNSPECIFIED, false
-						);
-					stream.SetInternal(systemTrans, metaField, com.db4o.YapConst.UNSPECIFIED, false);
-					yapField.InitOldIndex(systemTrans, metaField.index);
-					if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.NONE)
-					{
-						stream.Message("creating index " + yapField.ToString());
-					}
-					Reindex(systemTrans, yapField, stream);
-				}
-			}
-		}
-
-		private com.db4o.MetaField GetMetaField(com.db4o.Transaction systemTrans)
-		{
-			return ClassConfig().MetaClass().EnsureField(systemTrans, GetName());
-		}
-
-		private void DropIndex(com.db4o.Transaction systemTrans, com.db4o.YapField yapField
-			, com.db4o.YapFile stream)
-		{
-			com.db4o.MetaField metaField = GetMetaField(systemTrans);
-			if (metaField.index != null)
-			{
-				if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.NONE)
-				{
-					stream.Message("dropping index " + yapField.ToString());
-				}
-				com.db4o.MetaIndex mi = metaField.index;
-				mi.Free(stream);
-				stream.Delete1(systemTrans, mi, false);
-				metaField.index = null;
-				stream.SetInternal(systemTrans, metaField, com.db4o.YapConst.UNSPECIFIED, false);
-			}
+			yapField.InitIndex(systemTrans);
+			stream.SetDirtyInSystemTransaction(yapField.GetParentYapClass());
+			Reindex(systemTrans, yapField, stream);
 		}
 
 		private void Reindex(com.db4o.Transaction systemTrans, com.db4o.YapField yapField
 			, com.db4o.YapFile stream)
 		{
-			com.db4o.YapClass yapClassField = yapField.GetParentYapClass();
-			long[] ids = yapClassField.GetIDs();
-			for (int i = 0; i < ids.Length; i++)
-			{
-				com.db4o.YapWriter writer = stream.ReadWriterByID(systemTrans, (int)ids[i]);
-				if (writer != null)
-				{
-					com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
-						(stream, writer);
-					object obj = oh.ObjectMarshaller().ReadIndexEntry(oh._yapClass, oh._headerAttributes
-						, yapField, writer);
-					yapField.AddIndexEntry(systemTrans, (int)ids[i], obj);
-				}
-			}
-			if (ids.Length > 0)
+			com.db4o.YapClass yapClass = yapField.GetParentYapClass();
+			if (yapField.RebuildIndexForClass(stream, yapClass))
 			{
 				systemTrans.Commit();
 			}

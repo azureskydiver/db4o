@@ -43,7 +43,7 @@ namespace com.db4o
 		}
 
 		internal virtual void EvaluatePending(com.db4o.QCandidate a_root, com.db4o.QPending
-			 a_pending, com.db4o.QPending a_secondPending, int a_secondResult)
+			 a_pending, int a_secondResult)
 		{
 			bool res = i_evaluator.Not(i_and ? ((a_pending._result + a_secondResult) > 0) : (
 				a_pending._result + a_secondResult) > -4);

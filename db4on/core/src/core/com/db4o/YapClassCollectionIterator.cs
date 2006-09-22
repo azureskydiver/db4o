@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal class YapClassCollectionIterator : com.db4o.foundation.Iterator4Impl
+	/// <exclude></exclude>
+	public class YapClassCollectionIterator : com.db4o.foundation.Iterator4Impl
 	{
 		private readonly com.db4o.YapClassCollection i_collection;
 
@@ -10,11 +11,19 @@ namespace com.db4o
 			i_collection = a_collection;
 		}
 
-		internal virtual com.db4o.YapClass CurrentClass()
+		public override bool MoveNext()
 		{
-			com.db4o.YapClass yc = (com.db4o.YapClass)Current();
-			i_collection.ReadYapClass(yc, null);
-			return yc;
+			if (base.MoveNext())
+			{
+				i_collection.ReadYapClass(CurrentClass(), null);
+				return true;
+			}
+			return false;
+		}
+
+		public virtual com.db4o.YapClass CurrentClass()
+		{
+			return (com.db4o.YapClass)Current();
 		}
 	}
 }

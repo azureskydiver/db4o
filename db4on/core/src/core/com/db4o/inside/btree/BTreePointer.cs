@@ -45,41 +45,66 @@ namespace com.db4o.inside.btree
 
 		private readonly com.db4o.Transaction _transaction;
 
-		public BTreePointer(com.db4o.Transaction transaction, com.db4o.inside.btree.BTreeNode
-			 node, int index)
+		private readonly com.db4o.YapReader _nodeReader;
+
+		public BTreePointer(com.db4o.Transaction transaction, com.db4o.YapReader nodeReader
+			, com.db4o.inside.btree.BTreeNode node, int index)
 		{
 			if (transaction == null || node == null)
 			{
 				throw new System.ArgumentNullException();
 			}
 			_transaction = transaction;
+			_nodeReader = nodeReader;
 			_node = node;
 			_index = index;
 		}
 
-		public virtual com.db4o.Transaction Transaction()
+		public com.db4o.Transaction Transaction()
 		{
 			return _transaction;
 		}
 
-		public virtual int Index()
+		public int Index()
 		{
 			return _index;
 		}
 
+		public com.db4o.inside.btree.BTreeNode Node()
+		{
+			return _node;
+		}
+
+		public object Key()
+		{
+			return Node().Key(Transaction(), NodeReader(), Index());
+		}
+
+		public object Value()
+		{
+			return Node().Value(NodeReader(), Index());
+		}
+
+		private com.db4o.YapReader NodeReader()
+		{
+			return _nodeReader;
+		}
+
 		public virtual com.db4o.inside.btree.BTreePointer Next()
 		{
-			int indexInMyNode = _index + 1;
-			while (indexInMyNode < _node.Count())
+			int indexInMyNode = Index() + 1;
+			while (indexInMyNode < Node().Count())
 			{
-				if (_node.IndexIsValid(_transaction, indexInMyNode))
+				if (Node().IndexIsValid(Transaction(), indexInMyNode))
 				{
-					return new com.db4o.inside.btree.BTreePointer(_transaction, _node, indexInMyNode);
+					return new com.db4o.inside.btree.BTreePointer(Transaction(), NodeReader(), Node()
+						, indexInMyNode);
 				}
 				indexInMyNode++;
 			}
 			int newIndex = -1;
-			com.db4o.inside.btree.BTreeNode nextNode = _node;
+			com.db4o.inside.btree.BTreeNode nextNode = Node();
+			com.db4o.YapReader nextReader = null;
 			while (newIndex == -1)
 			{
 				nextNode = nextNode.NextNode();
@@ -87,15 +112,11 @@ namespace com.db4o.inside.btree
 				{
 					return null;
 				}
-				nextNode.PrepareWrite(_transaction);
-				newIndex = nextNode.FirstKeyIndex(_transaction);
+				nextReader = nextNode.PrepareRead(Transaction());
+				newIndex = nextNode.FirstKeyIndex(Transaction());
 			}
-			return new com.db4o.inside.btree.BTreePointer(_transaction, nextNode, newIndex);
-		}
-
-		public virtual com.db4o.inside.btree.BTreeNode Node()
-		{
-			return _node;
+			return new com.db4o.inside.btree.BTreePointer(Transaction(), nextReader, nextNode
+				, newIndex);
 		}
 
 		public override bool Equals(object obj)
@@ -109,35 +130,16 @@ namespace com.db4o.inside.btree
 				return false;
 			}
 			com.db4o.inside.btree.BTreePointer other = (com.db4o.inside.btree.BTreePointer)obj;
-			if (_index != other._index)
+			if (Index() != other.Index())
 			{
 				return false;
 			}
-			return _node.Equals(other._node);
-		}
-
-		internal virtual object Key()
-		{
-			Node().PrepareWrite(_transaction);
-			return Node().Key(_transaction, Index());
-		}
-
-		internal virtual object Value()
-		{
-			return Node().Value(Index());
+			return Node().Equals(other.Node());
 		}
 
 		public override string ToString()
 		{
-			string key = "[Unavail]";
-			try
-			{
-				key = Key().ToString();
-			}
-			catch (System.Exception e)
-			{
-			}
-			return "BTreePointer (" + _index + ") to " + key + " on" + Node().ToString();
+			return "BTreePointer(index=" + Index() + ", node=" + Node() + ")";
 		}
 
 		public virtual int CompareTo(com.db4o.inside.btree.BTreePointer y)
@@ -155,7 +157,7 @@ namespace com.db4o.inside.btree
 
 		private com.db4o.inside.btree.BTree Btree()
 		{
-			return _node.Btree();
+			return Node().Btree();
 		}
 
 		public static bool LessThan(com.db4o.inside.btree.BTreePointer x, com.db4o.inside.btree.BTreePointer
@@ -172,6 +174,11 @@ namespace com.db4o.inside.btree
 				return y == null;
 			}
 			return x.Equals(y);
+		}
+
+		public virtual bool IsValid()
+		{
+			return Node().IndexIsValid(Transaction(), Index());
 		}
 	}
 }

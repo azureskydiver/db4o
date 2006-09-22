@@ -3,14 +3,14 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class Transaction
 	{
-		private com.db4o.Tree _slotChanges;
+		private com.db4o.foundation.Tree _slotChanges;
 
 		private int i_address;
 
 		private readonly byte[] _pointerBuffer = new byte[com.db4o.YapConst.POINTER_LENGTH
 			];
 
-		public com.db4o.Tree i_delete;
+		public com.db4o.foundation.Tree i_delete;
 
 		private com.db4o.foundation.List4 i_dirtyFieldIndexes;
 
@@ -24,7 +24,7 @@ namespace com.db4o
 
 		private com.db4o.foundation.List4 i_transactionListeners;
 
-		protected com.db4o.Tree i_writtenUpdateDeletedMembers;
+		protected com.db4o.foundation.Tree i_writtenUpdateDeletedMembers;
 
 		private readonly com.db4o.foundation.Collection4 _participants = new com.db4o.foundation.Collection4
 			();
@@ -59,7 +59,8 @@ namespace com.db4o
 			{
 				i_parentTransaction.AppendSlotChanges(writer);
 			}
-			com.db4o.Tree.Traverse(_slotChanges, new _AnonymousInnerClass72(this, writer));
+			com.db4o.foundation.Tree.Traverse(_slotChanges, new _AnonymousInnerClass72(this, 
+				writer));
 		}
 
 		private sealed class _AnonymousInnerClass72 : com.db4o.foundation.Visitor4
@@ -72,7 +73,7 @@ namespace com.db4o
 
 			public void Visit(object obj)
 			{
-				((com.db4o.Tree)obj).Write(writer);
+				((com.db4o.TreeInt)obj).Write(writer);
 			}
 
 			private readonly Transaction _enclosing;
@@ -90,7 +91,7 @@ namespace com.db4o
 				do
 				{
 					foundOne[0] = false;
-					com.db4o.Tree delete = i_delete;
+					com.db4o.foundation.Tree delete = i_delete;
 					i_delete = null;
 					delete.Traverse(new _AnonymousInnerClass91(this));
 					delete.Traverse(new _AnonymousInnerClass101(this, foundOne, finalThis));
@@ -113,8 +114,8 @@ namespace com.db4o
 				com.db4o.DeleteInfo info = (com.db4o.DeleteInfo)a_object;
 				if (!info._delete)
 				{
-					this._enclosing.i_delete = com.db4o.Tree.Add(this._enclosing.i_delete, new com.db4o.DeleteInfo
-						(info._key, null, false, info._cascade));
+					this._enclosing.i_delete = com.db4o.foundation.Tree.Add(this._enclosing.i_delete, 
+						new com.db4o.DeleteInfo(info._key, null, false, info._cascade));
 				}
 			}
 
@@ -151,8 +152,8 @@ namespace com.db4o
 					this._enclosing.Stream().Delete4(finalThis, info._reference, obj, info._cascade, 
 						false);
 				}
-				this._enclosing.i_delete = com.db4o.Tree.Add(this._enclosing.i_delete, new com.db4o.DeleteInfo
-					(info._key, null, false, info._cascade));
+				this._enclosing.i_delete = com.db4o.foundation.Tree.Add(this._enclosing.i_delete, 
+					new com.db4o.DeleteInfo(info._key, null, false, info._cascade));
 			}
 
 			private readonly Transaction _enclosing;
@@ -250,7 +251,7 @@ namespace com.db4o
 		{
 			Stream().CheckNeededUpdates();
 			Stream().WriteDirty();
-			Stream().i_classCollection.Write(Stream().GetSystemTransaction());
+			Stream().ClassCollection().Write(Stream().GetSystemTransaction());
 		}
 
 		private void Commit4FieldIndexes()
@@ -379,7 +380,7 @@ namespace com.db4o
 			if (info == null)
 			{
 				info = new com.db4o.DeleteInfo(id, a_yo, true, a_cascade);
-				i_delete = com.db4o.Tree.Add(i_delete, info);
+				i_delete = com.db4o.foundation.Tree.Add(i_delete, info);
 				return;
 			}
 			info._reference = a_yo;
@@ -396,8 +397,8 @@ namespace com.db4o
 				);
 			if (info == null)
 			{
-				i_delete = com.db4o.Tree.Add(i_delete, new com.db4o.DeleteInfo(a_id, null, false, 
-					0));
+				i_delete = com.db4o.foundation.Tree.Add(i_delete, new com.db4o.DeleteInfo(a_id, null
+					, false, 0));
 			}
 			else
 			{
@@ -468,14 +469,14 @@ namespace com.db4o
 			private readonly Transaction _enclosing;
 		}
 
-		public virtual com.db4o.inside.slots.Slot GetSlotInformation(int a_id)
+		public virtual com.db4o.inside.slots.Slot GetCurrentSlotOfID(int id)
 		{
 			CheckSynchronization();
-			if (a_id == 0)
+			if (id == 0)
 			{
 				return null;
 			}
-			com.db4o.inside.slots.SlotChange change = FindSlotChange(a_id);
+			com.db4o.inside.slots.SlotChange change = FindSlotChange(id);
 			if (change != null)
 			{
 				if (change.IsSetPointer())
@@ -485,14 +486,46 @@ namespace com.db4o
 			}
 			if (i_parentTransaction != null)
 			{
-				com.db4o.inside.slots.Slot parentSlot = i_parentTransaction.GetSlotInformation(a_id
+				com.db4o.inside.slots.Slot parentSlot = i_parentTransaction.GetCurrentSlotOfID(id
 					);
 				if (parentSlot != null)
 				{
 					return parentSlot;
 				}
 			}
-			i_file.ReadBytes(_pointerBuffer, a_id, com.db4o.YapConst.POINTER_LENGTH);
+			return ReadCommittedSlotOfID(id);
+		}
+
+		public virtual com.db4o.inside.slots.Slot GetCommittedSlotOfID(int id)
+		{
+			if (id == 0)
+			{
+				return null;
+			}
+			com.db4o.inside.slots.SlotChange change = FindSlotChange(id);
+			if (change != null)
+			{
+				com.db4o.inside.slots.Slot slot = change.OldSlot();
+				if (slot != null)
+				{
+					return slot;
+				}
+			}
+			if (i_parentTransaction != null)
+			{
+				com.db4o.inside.slots.Slot parentSlot = i_parentTransaction.GetCommittedSlotOfID(
+					id);
+				if (parentSlot != null)
+				{
+					return parentSlot;
+				}
+			}
+			return ReadCommittedSlotOfID(id);
+		}
+
+		private com.db4o.inside.slots.Slot ReadCommittedSlotOfID(int id)
+		{
+			i_file.ReadBytes(_pointerBuffer, id, com.db4o.YapConst.POINTER_LENGTH);
 			int address = (_pointerBuffer[3] & 255) | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer
 				[1] & 255) << 16 | _pointerBuffer[0] << 24;
 			int length = (_pointerBuffer[7] & 255) | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer
@@ -519,77 +552,14 @@ namespace com.db4o
 			)
 		{
 			CheckSynchronization();
-			object[] ret = new object[2];
-			com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)Stream().i_handlers
-				.i_indexes.i_fieldUUID.GetOldIndexRoot(this);
-			com.db4o.inside.ix.IxTraverser ixTraverser = new com.db4o.inside.ix.IxTraverser();
-			int count = ixTraverser.FindBoundsExactMatch(a_uuid, ixTree);
-			if (count > 0)
-			{
-				com.db4o.Transaction finalThis = this;
-				ixTraverser.VisitAll(new _AnonymousInnerClass458(this, finalThis, a_signature, ret
-					));
-			}
-			return ret;
-		}
-
-		private sealed class _AnonymousInnerClass458 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass458(Transaction _enclosing, com.db4o.Transaction finalThis
-				, byte[] a_signature, object[] ret)
-			{
-				this._enclosing = _enclosing;
-				this.finalThis = finalThis;
-				this.a_signature = a_signature;
-				this.ret = ret;
-			}
-
-			public void Visit(object a_object)
-			{
-				object[] arr = finalThis.Stream().GetObjectAndYapObjectByID(finalThis, ((int)a_object
-					));
-				if (arr[1] != null)
-				{
-					com.db4o.YapObject yod = (com.db4o.YapObject)arr[1];
-					com.db4o.VirtualAttributes vad = yod.VirtualAttributes(finalThis);
-					byte[] cmp = vad.i_database.i_signature;
-					bool same = true;
-					if (a_signature.Length == cmp.Length)
-					{
-						for (int i = 0; i < a_signature.Length; i++)
-						{
-							if (a_signature[i] != cmp[i])
-							{
-								same = false;
-								break;
-							}
-						}
-					}
-					else
-					{
-						same = false;
-					}
-					if (same)
-					{
-						ret[0] = arr[0];
-						ret[1] = arr[1];
-					}
-				}
-			}
-
-			private readonly Transaction _enclosing;
-
-			private readonly com.db4o.Transaction finalThis;
-
-			private readonly byte[] a_signature;
-
-			private readonly object[] ret;
+			return Stream().GetFieldUUID().ObjectAndYapObjectBySignature(this, a_uuid, a_signature
+				);
 		}
 
 		private com.db4o.inside.slots.SlotChange ProduceSlotChange(int id)
 		{
 			com.db4o.inside.slots.SlotChange slot = new com.db4o.inside.slots.SlotChange(id);
-			_slotChanges = com.db4o.Tree.Add(_slotChanges, slot);
+			_slotChanges = com.db4o.foundation.Tree.Add(_slotChanges, slot);
 			return (com.db4o.inside.slots.SlotChange)slot.DuplicateOrThis();
 		}
 
@@ -615,13 +585,13 @@ namespace com.db4o
 		{
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass518(this));
+				_slotChanges.Traverse(new _AnonymousInnerClass509(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass518 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass509 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass518(Transaction _enclosing)
+			public _AnonymousInnerClass509(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -714,7 +684,7 @@ namespace com.db4o
 		internal virtual void SlotFreeOnRollbackCommitSetPointer(int a_id, int newAddress
 			, int newLength)
 		{
-			com.db4o.inside.slots.Slot slot = GetSlotInformation(a_id);
+			com.db4o.inside.slots.Slot slot = GetCurrentSlotOfID(a_id);
 			CheckSynchronization();
 			com.db4o.inside.slots.SlotChange change = ProduceSlotChange(a_id);
 			change.FreeOnRollbackSetPointer(newAddress, newLength);
@@ -731,7 +701,7 @@ namespace com.db4o
 		public virtual void SlotFreePointerOnCommit(int a_id)
 		{
 			CheckSynchronization();
-			com.db4o.inside.slots.Slot slot = GetSlotInformation(a_id);
+			com.db4o.inside.slots.Slot slot = GetCurrentSlotOfID(a_id);
 			if (slot == null)
 			{
 				return;
@@ -822,15 +792,15 @@ namespace com.db4o
 			}
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass712(this));
+				_slotChanges.Traverse(new _AnonymousInnerClass707(this));
 				ret = true;
 			}
 			return ret;
 		}
 
-		private sealed class _AnonymousInnerClass712 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass707 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass712(Transaction _enclosing)
+			public _AnonymousInnerClass707(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -847,13 +817,13 @@ namespace com.db4o
 			int a_type, int a_cascade)
 		{
 			CheckSynchronization();
-			if (com.db4o.Tree.Find(i_writtenUpdateDeletedMembers, new com.db4o.TreeInt(a_id))
-				 != null)
+			if (com.db4o.foundation.Tree.Find(i_writtenUpdateDeletedMembers, new com.db4o.TreeInt
+				(a_id)) != null)
 			{
 				return;
 			}
-			i_writtenUpdateDeletedMembers = com.db4o.Tree.Add(i_writtenUpdateDeletedMembers, 
-				new com.db4o.TreeInt(a_id));
+			i_writtenUpdateDeletedMembers = com.db4o.foundation.Tree.Add(i_writtenUpdateDeletedMembers
+				, new com.db4o.TreeInt(a_id));
 			com.db4o.YapWriter objectBytes = Stream().ReadWriterByID(this, a_id);
 			if (objectBytes == null)
 			{

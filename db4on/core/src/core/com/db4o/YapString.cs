@@ -41,8 +41,8 @@ namespace com.db4o
 			{
 				return a_object;
 			}
-			int[] slot = (int[])a_object;
-			return a_trans.Stream().ReadObjectReaderByAddress(slot[0], slot[1]);
+			com.db4o.inside.slots.Slot s = (com.db4o.inside.slots.Slot)a_object;
+			return a_trans.Stream().ReadReaderByAddress(s._address, s._length);
 		}
 
 		public override void DeleteEmbedded(com.db4o.inside.marshall.MarshallerFamily mf, 
@@ -166,14 +166,15 @@ namespace com.db4o
 		/// This readIndexEntry method reads from the actual index in the file.
 		/// TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.
 		/// </remarks>
-		public override object ReadIndexEntry(com.db4o.YapReader a_reader)
+		public override object ReadIndexEntry(com.db4o.YapReader reader)
 		{
-			int[] pointer = new int[] { a_reader.ReadInt(), a_reader.ReadInt() };
-			if (pointer[0] == 0 && pointer[1] == 0)
+			com.db4o.inside.slots.Slot s = new com.db4o.inside.slots.Slot(reader.ReadInt(), reader
+				.ReadInt());
+			if (s._address == s._length)
 			{
 				return null;
 			}
-			return pointer;
+			return s;
 		}
 
 		public override object ReadQuery(com.db4o.Transaction a_trans, com.db4o.inside.marshall.MarshallerFamily
@@ -220,11 +221,11 @@ namespace com.db4o
 				writer.WriteInt(entryAsWriter.GetLength());
 				return;
 			}
-			if (entry is int[])
+			if (entry is com.db4o.inside.slots.Slot)
 			{
-				int[] addressLength = (int[])entry;
-				writer.WriteInt(addressLength[0]);
-				writer.WriteInt(addressLength[0]);
+				com.db4o.inside.slots.Slot s = (com.db4o.inside.slots.Slot)entry;
+				writer.WriteInt(s._address);
+				writer.WriteInt(s._length);
 				return;
 			}
 			throw new System.ArgumentException();
@@ -266,6 +267,11 @@ namespace com.db4o
 			if (obj is string)
 			{
 				return com.db4o.inside.marshall.StringMarshaller.WriteShort(_stream, (string)obj);
+			}
+			if (obj is com.db4o.inside.slots.Slot)
+			{
+				com.db4o.inside.slots.Slot s = (com.db4o.inside.slots.Slot)obj;
+				return _stream.ReadReaderByAddress(s._address, s._length);
 			}
 			return null;
 		}

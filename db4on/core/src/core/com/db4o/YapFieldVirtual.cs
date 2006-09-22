@@ -8,7 +8,8 @@ namespace com.db4o
 		}
 
 		public abstract override void AddFieldIndex(com.db4o.inside.marshall.MarshallerFamily
-			 mf, com.db4o.YapWriter a_writer, bool a_new);
+			 mf, com.db4o.YapClass yapClass, com.db4o.YapWriter a_writer, com.db4o.inside.slots.Slot
+			 oldSlot);
 
 		public override bool Alive()
 		{
@@ -58,16 +59,6 @@ namespace com.db4o
 		public override bool NeedsHandlerId()
 		{
 			return false;
-		}
-
-		internal override void InitOldIndex(com.db4o.Transaction systemTrans, com.db4o.MetaIndex
-			 metaIndex)
-		{
-			if (_oldIndex == null)
-			{
-				_oldIndex = new com.db4o.inside.ix.Index4(systemTrans, GetHandler(), metaIndex, false
-					);
-			}
 		}
 
 		public override void Instantiate(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapObject
@@ -136,9 +127,9 @@ namespace com.db4o
 					com.db4o.inside.replication.Db4oReplicationReferenceProvider provider = handlers.
 						_replicationReferenceProvider;
 					object parentObject = a_yapObject.GetObject();
-					com.db4o.inside.replication.Db4oReplicationReference _ref = provider.ReferenceFor
+					com.db4o.inside.replication.Db4oReplicationReference @ref = provider.ReferenceFor
 						(parentObject);
-					if (_ref != null)
+					if (@ref != null)
 					{
 						migrating = true;
 						if (a_yapObject.i_virtualAttributes == null)
@@ -146,9 +137,9 @@ namespace com.db4o
 							a_yapObject.i_virtualAttributes = new com.db4o.VirtualAttributes();
 						}
 						com.db4o.VirtualAttributes va = a_yapObject.i_virtualAttributes;
-						va.i_version = _ref.Version();
-						va.i_uuid = _ref.LongPart();
-						va.i_database = _ref.SignaturePart();
+						va.i_version = @ref.Version();
+						va.i_uuid = @ref.LongPart();
+						va.i_database = @ref.SignaturePart();
 					}
 				}
 			}

@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	internal class QPending : com.db4o.Tree
+	internal class QPending : com.db4o.foundation.Tree
 	{
 		internal readonly com.db4o.QConJoin _join;
 
@@ -23,7 +23,7 @@ namespace com.db4o
 			_result = a_firstResult ? TRUE : FALSE;
 		}
 
-		public override int Compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.foundation.Tree a_to)
 		{
 			return _constraint.i_id - ((com.db4o.QPending)a_to)._constraint.i_id;
 		}

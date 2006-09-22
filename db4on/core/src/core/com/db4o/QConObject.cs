@@ -66,7 +66,7 @@ namespace com.db4o
 					}
 					if (i_yapClass != null)
 					{
-						i_yapClass.CollectConstraints(a_trans, this, i_object, new _AnonymousInnerClass85
+						i_yapClass.CollectConstraints(a_trans, this, i_object, new _AnonymousInnerClass83
 							(this));
 					}
 					else
@@ -81,9 +81,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass85 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass83 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass85(QConObject _enclosing)
+			public _AnonymousInnerClass83(QConObject _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -115,12 +115,9 @@ namespace com.db4o
 			{
 				return false;
 			}
-			if (!com.db4o.inside.marshall.MarshallerFamily.BTREE_FIELD_INDEX)
+			if (!i_evaluator.SupportsIndex())
 			{
-				if (HasOrJoins())
-				{
-					return false;
-				}
+				return false;
 			}
 			return i_field.i_yapField.CanLoadByIndex();
 		}
@@ -220,11 +217,6 @@ namespace com.db4o
 			}
 		}
 
-		public virtual int FindBoundsQuery(com.db4o.inside.ix.IxTraverser traverser)
-		{
-			return traverser.FindBoundsQuery(this, i_object);
-		}
-
 		internal virtual com.db4o.YapComparable GetComparator(com.db4o.QCandidate a_candidate
 			)
 		{
@@ -281,11 +273,6 @@ namespace com.db4o
 				}
 			}
 			return 0;
-		}
-
-		public override com.db4o.inside.ix.IxTree IndexRoot()
-		{
-			return (com.db4o.inside.ix.IxTree)i_field.i_yapField.GetOldIndexRoot(i_trans);
 		}
 
 		internal override bool IsNullConstraint()

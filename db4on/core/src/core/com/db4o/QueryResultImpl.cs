@@ -4,7 +4,7 @@ namespace com.db4o
 	internal class QueryResultImpl : com.db4o.foundation.IntArrayList, com.db4o.foundation.Visitor4
 		, com.db4o.inside.query.QueryResult
 	{
-		internal com.db4o.Tree i_candidates;
+		internal com.db4o.foundation.Tree i_candidates;
 
 		internal bool i_checkDuplicates;
 
@@ -113,7 +113,7 @@ namespace com.db4o
 			if (i_checkDuplicates)
 			{
 				com.db4o.TreeInt newNode = new com.db4o.TreeInt(a_key);
-				i_candidates = com.db4o.Tree.Add(i_candidates, newNode);
+				i_candidates = com.db4o.foundation.Tree.Add(i_candidates, newNode);
 				if (newNode._size == 0)
 				{
 					return;

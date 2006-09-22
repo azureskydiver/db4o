@@ -9,7 +9,8 @@ namespace com.db4o
 		}
 
 		public override void AddFieldIndex(com.db4o.inside.marshall.MarshallerFamily mf, 
-			com.db4o.YapWriter writer, bool isnew)
+			com.db4o.YapClass yapClass, com.db4o.YapWriter writer, com.db4o.inside.slots.Slot
+			 oldSlot)
 		{
 			com.db4o.YLong.WriteLong(writer.GetStream().GenerateTimeStampId(), writer);
 		}

@@ -26,6 +26,11 @@ namespace com.db4o
 			}
 		}
 
+		public override bool CanLoadByIndex()
+		{
+			return false;
+		}
+
 		internal override bool Evaluate(com.db4o.QCandidate a_candidate)
 		{
 			if (a_candidate.ClassReflector() == null)

@@ -16,7 +16,7 @@ namespace com.db4o
 
 		public com.db4o.foundation.List4 _children;
 
-		public com.db4o.QE i_evaluator = com.db4o.QE.DEFAULT;
+		protected com.db4o.QE i_evaluator = com.db4o.QE.DEFAULT;
 
 		public int i_id;
 
@@ -92,7 +92,7 @@ namespace com.db4o
 			com.db4o.QCon qcon = this;
 			com.db4o.YapClass yc = GetYapClass();
 			bool[] foundField = { false };
-			ForEachChildField(a_field, new _AnonymousInnerClass107(this, foundField, query));
+			ForEachChildField(a_field, new _AnonymousInnerClass106(this, foundField, query));
 			if (foundField[0])
 			{
 				return true;
@@ -102,7 +102,7 @@ namespace com.db4o
 			{
 				int[] count = { 0 };
 				com.db4o.YapField[] yfs = { null };
-				i_trans.Stream().i_classCollection.AttachQueryNode(a_field, new _AnonymousInnerClass125
+				i_trans.Stream().ClassCollection().AttachQueryNode(a_field, new _AnonymousInnerClass124
 					(this, yfs, count));
 				if (count[0] == 0)
 				{
@@ -143,9 +143,9 @@ namespace com.db4o
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass107 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass106 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass107(QCon _enclosing, bool[] foundField, com.db4o.QQuery
+			public _AnonymousInnerClass106(QCon _enclosing, bool[] foundField, com.db4o.QQuery
 				 query)
 			{
 				this._enclosing = _enclosing;
@@ -166,9 +166,9 @@ namespace com.db4o
 			private readonly com.db4o.QQuery query;
 		}
 
-		private sealed class _AnonymousInnerClass125 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass124 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass125(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
+			public _AnonymousInnerClass124(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
 				)
 			{
 				this._enclosing = _enclosing;
@@ -385,7 +385,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal virtual com.db4o.QCon GetTopLevelJoin()
+		internal virtual com.db4o.QCon ProduceTopLevelJoin()
 		{
 			if (!HasJoins())
 			{
@@ -395,12 +395,12 @@ namespace com.db4o
 			if (i_joins.Size() == 1)
 			{
 				i.MoveNext();
-				return ((com.db4o.QCon)i.Current()).GetTopLevelJoin();
+				return ((com.db4o.QCon)i.Current()).ProduceTopLevelJoin();
 			}
 			com.db4o.foundation.Collection4 col = new com.db4o.foundation.Collection4();
 			while (i.MoveNext())
 			{
-				col.Ensure(((com.db4o.QCon)i.Current()).GetTopLevelJoin());
+				col.Ensure(((com.db4o.QCon)i.Current()).ProduceTopLevelJoin());
 			}
 			i = col.Iterator();
 			i.MoveNext();
@@ -519,11 +519,6 @@ namespace com.db4o
 			return 0;
 		}
 
-		public virtual com.db4o.inside.ix.IxTree IndexRoot()
-		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
-		}
-
 		internal virtual bool IsNot()
 		{
 			return i_evaluator is com.db4o.QENot;
@@ -603,7 +598,7 @@ namespace com.db4o
 
 		internal virtual com.db4o.QCon JoinHook()
 		{
-			return GetTopLevelJoin();
+			return ProduceTopLevelJoin();
 		}
 
 		public virtual com.db4o.query.Constraint Like()
@@ -842,6 +837,11 @@ namespace com.db4o
 		internal virtual bool VisitSelfOnNull()
 		{
 			return true;
+		}
+
+		public virtual com.db4o.QE Evaluator()
+		{
+			return i_evaluator;
 		}
 	}
 }

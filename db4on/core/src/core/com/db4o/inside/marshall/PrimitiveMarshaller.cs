@@ -10,7 +10,7 @@ namespace com.db4o.inside.marshall
 			 yapClassPrimitive, object obj, bool topLevel, com.db4o.YapWriter parentWriter, 
 			bool withIndirection, bool restoreLinkOffset);
 
-		protected virtual int ObjectLength(com.db4o.TypeHandler4 handler, object obj)
+		protected int ObjectLength(com.db4o.TypeHandler4 handler)
 		{
 			return handler.LinkLength() + com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst
 				.ID_LENGTH;

@@ -40,6 +40,9 @@ namespace com.db4o.inside.classindex
 		{
 		}
 
+		public abstract com.db4o.foundation.Iterator4 AllSlotIDs(com.db4o.Transaction arg1
+			);
+
 		public abstract void DefragIndex(com.db4o.YapReader arg1, com.db4o.YapReader arg2
 			, com.db4o.IDMapping arg3);
 
@@ -56,14 +59,11 @@ namespace com.db4o.inside.classindex
 
 		public abstract void Purge();
 
-		public abstract void Read(com.db4o.YapReader arg1, com.db4o.YapStream arg2);
+		public abstract void Read(com.db4o.YapStream arg1, int arg2);
 
 		public abstract void TraverseAll(com.db4o.Transaction arg1, com.db4o.foundation.Visitor4
 			 arg2);
 
-		public abstract void TraverseAllSlotIDs(com.db4o.Transaction arg1, com.db4o.foundation.Visitor4
-			 arg2);
-
-		public abstract void WriteId(com.db4o.YapReader arg1, com.db4o.Transaction arg2);
+		public abstract int Write(com.db4o.Transaction arg1);
 	}
 }

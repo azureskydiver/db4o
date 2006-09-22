@@ -2,9 +2,18 @@ namespace com.db4o.inside.btree
 {
 	public interface BTreeRange
 	{
-		com.db4o.inside.btree.BTreePointer First();
+		/// <summary>
+		/// Iterates through all the valid pointers in
+		/// this range.
+		/// </summary>
+		/// <remarks>
+		/// Iterates through all the valid pointers in
+		/// this range.
+		/// </remarks>
+		/// <returns>an Iterator4 over BTreePointer value</returns>
+		com.db4o.foundation.Iterator4 Pointers();
 
-		com.db4o.foundation.KeyValueIterator Iterator();
+		com.db4o.foundation.Iterator4 Keys();
 
 		int Size();
 
@@ -24,6 +33,8 @@ namespace com.db4o.inside.btree
 		com.db4o.inside.btree.BTreeRange ExtendToLastOf(com.db4o.inside.btree.BTreeRange 
 			upperRange);
 
-		bool Overlaps(com.db4o.inside.btree.BTreeRange range);
+		bool IsEmpty();
+
+		void Accept(com.db4o.inside.btree.BTreeRangeVisitor visitor);
 	}
 }

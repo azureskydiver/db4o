@@ -21,7 +21,7 @@ namespace com.db4o
 
 		internal com.db4o.Orderable _order;
 
-		internal com.db4o.Tree _pendingJoins;
+		internal com.db4o.foundation.Tree _pendingJoins;
 
 		private com.db4o.QCandidate _root;
 
@@ -85,7 +85,7 @@ namespace com.db4o
 			}
 		}
 
-		public override int Compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.foundation.Tree a_to)
 		{
 			return _order.CompareTo(((com.db4o.QCandidate)a_to)._order);
 		}
@@ -135,7 +135,7 @@ namespace com.db4o
 									qcon.RemoveNot();
 								}
 								candidates.Evaluate();
-								com.db4o.Tree[] pending = new com.db4o.Tree[1];
+								com.db4o.foundation.Tree[] pending = new com.db4o.foundation.Tree[1];
 								bool[] innerRes = { isNot };
 								candidates.Traverse(new _AnonymousInnerClass173(this, innerRes, isNot, pending));
 								if (isNot)
@@ -148,7 +148,7 @@ namespace com.db4o
 								}
 								if (!innerRes[0])
 								{
-									qcon.Visit(GetRoot(), qcon.i_evaluator.Not(false));
+									qcon.Visit(GetRoot(), qcon.Evaluator().Not(false));
 									outerRes = false;
 								}
 								qcon.SetParent(tempParent);
@@ -206,7 +206,7 @@ namespace com.db4o
 		private sealed class _AnonymousInnerClass173 : com.db4o.foundation.Visitor4
 		{
 			public _AnonymousInnerClass173(QCandidate _enclosing, bool[] innerRes, bool isNot
-				, com.db4o.Tree[] pending)
+				, com.db4o.foundation.Tree[] pending)
 			{
 				this._enclosing = _enclosing;
 				this.innerRes = innerRes;
@@ -229,7 +229,7 @@ namespace com.db4o
 
 			private sealed class _AnonymousInnerClass186 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass186(_AnonymousInnerClass173 _enclosing, com.db4o.Tree[]
+				public _AnonymousInnerClass186(_AnonymousInnerClass173 _enclosing, com.db4o.foundation.Tree[]
 					 pending)
 				{
 					this._enclosing = _enclosing;
@@ -240,8 +240,8 @@ namespace com.db4o
 				{
 					com.db4o.QPending newPending = (com.db4o.QPending)a_object;
 					newPending.ChangeConstraint();
-					com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.Tree.Find(pending[0], 
-						newPending);
+					com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.foundation.Tree.Find(pending
+						[0], newPending);
 					if (oldPending != null)
 					{
 						if (oldPending._result != newPending._result)
@@ -251,13 +251,13 @@ namespace com.db4o
 					}
 					else
 					{
-						pending[0] = com.db4o.Tree.Add(pending[0], newPending);
+						pending[0] = com.db4o.foundation.Tree.Add(pending[0], newPending);
 					}
 				}
 
 				private readonly _AnonymousInnerClass173 _enclosing;
 
-				private readonly com.db4o.Tree[] pending;
+				private readonly com.db4o.foundation.Tree[] pending;
 			}
 
 			private readonly QCandidate _enclosing;
@@ -266,7 +266,7 @@ namespace com.db4o
 
 			private readonly bool isNot;
 
-			private readonly com.db4o.Tree[] pending;
+			private readonly com.db4o.foundation.Tree[] pending;
 		}
 
 		private sealed class _AnonymousInnerClass242 : com.db4o.foundation.Visitor4
@@ -320,16 +320,16 @@ namespace com.db4o
 
 		internal virtual bool Evaluate(com.db4o.QPending a_pending)
 		{
-			com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.Tree.Find(_pendingJoins
+			com.db4o.QPending oldPending = (com.db4o.QPending)com.db4o.foundation.Tree.Find(_pendingJoins
 				, a_pending);
 			if (oldPending == null)
 			{
 				a_pending.ChangeConstraint();
-				_pendingJoins = com.db4o.Tree.Add(_pendingJoins, a_pending);
+				_pendingJoins = com.db4o.foundation.Tree.Add(_pendingJoins, a_pending);
 				return true;
 			}
 			_pendingJoins = _pendingJoins.RemoveNode(oldPending);
-			oldPending._join.EvaluatePending(this, oldPending, a_pending, a_pending._result);
+			oldPending._join.EvaluatePending(this, oldPending, a_pending._result);
 			return false;
 		}
 
@@ -402,7 +402,7 @@ namespace com.db4o
 			_include = flag;
 		}
 
-		internal override void IsDuplicateOf(com.db4o.Tree a_tree)
+		public override void IsDuplicateOf(com.db4o.foundation.Tree a_tree)
 		{
 			_size = 0;
 			_root = (com.db4o.QCandidate)a_tree;
@@ -530,7 +530,7 @@ namespace com.db4o
 					com.db4o.YapStream stream = GetStream();
 					com.db4o.inside.marshall.ObjectHeader objectHeader = new com.db4o.inside.marshall.ObjectHeader
 						(stream, _bytes);
-					_yapClass = objectHeader._yapClass;
+					_yapClass = objectHeader.YapClass();
 					if (_yapClass != null)
 					{
 						if (stream.i_handlers.ICLASS_COMPARE.IsAssignableFrom(_yapClass.ClassReflector())

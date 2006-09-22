@@ -12,17 +12,17 @@ namespace com.db4o.foundation.network
 	{
 		private const int DISCARD_BUFFER_SIZE = 500;
 
-		private byte[] i_cache;
+		protected byte[] i_cache;
 
 		private bool i_closed = false;
 
-		private int i_readOffset;
+		protected int i_readOffset;
 
 		protected int i_timeout;
 
-		private int i_writeOffset;
+		protected int i_writeOffset;
 
-		private readonly com.db4o.foundation.Lock4 i_lock = new com.db4o.foundation.Lock4
+		protected readonly com.db4o.foundation.Lock4 i_lock = new com.db4o.foundation.Lock4
 			();
 
 		public ByteBuffer4(int timeout)
@@ -30,12 +30,12 @@ namespace com.db4o.foundation.network
 			i_timeout = timeout;
 		}
 
-		private int Available()
+		protected virtual int Available()
 		{
 			return i_writeOffset - i_readOffset;
 		}
 
-		private void CheckDiscardCache()
+		protected virtual void CheckDiscardCache()
 		{
 			if (i_readOffset == i_writeOffset && i_cache.Length > DISCARD_BUFFER_SIZE)
 			{
@@ -50,7 +50,7 @@ namespace com.db4o.foundation.network
 			i_closed = true;
 		}
 
-		private void Makefit(int length)
+		protected virtual void Makefit(int length)
 		{
 			if (i_cache == null)
 			{
@@ -172,7 +172,7 @@ namespace com.db4o.foundation.network
 			i_timeout = timeout;
 		}
 
-		private void WaitForAvailable()
+		protected virtual void WaitForAvailable()
 		{
 			while (Available() == 0)
 			{

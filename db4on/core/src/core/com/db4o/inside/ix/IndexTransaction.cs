@@ -11,7 +11,7 @@ namespace com.db4o.inside.ix
 
 		internal int i_version;
 
-		private com.db4o.Tree i_root;
+		private com.db4o.foundation.Tree i_root;
 
 		internal IndexTransaction(com.db4o.Transaction a_trans, com.db4o.inside.ix.Index4
 			 a_index)
@@ -37,10 +37,10 @@ namespace com.db4o.inside.ix
 
 		private void Patch(com.db4o.inside.ix.IxPatch patch)
 		{
-			i_root = com.db4o.Tree.Add(i_root, patch);
+			i_root = com.db4o.foundation.Tree.Add(i_root, patch);
 		}
 
-		public virtual com.db4o.Tree GetRoot()
+		public virtual com.db4o.foundation.Tree GetRoot()
 		{
 			return i_root;
 		}
@@ -57,7 +57,7 @@ namespace com.db4o.inside.ix
 
 		internal virtual void Merge(com.db4o.inside.ix.IndexTransaction a_ft)
 		{
-			com.db4o.Tree otherRoot = a_ft.GetRoot();
+			com.db4o.foundation.Tree otherRoot = a_ft.GetRoot();
 			if (otherRoot != null)
 			{
 				otherRoot.TraverseFromLeaves(this);
@@ -136,7 +136,7 @@ namespace com.db4o.inside.ix
 			private readonly int[] leaves;
 		}
 
-		public virtual void SetRoot(com.db4o.Tree a_tree)
+		public virtual void SetRoot(com.db4o.foundation.Tree a_tree)
 		{
 			i_root = a_tree;
 		}

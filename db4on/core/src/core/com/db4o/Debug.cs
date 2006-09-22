@@ -3,29 +3,27 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class Debug : com.db4o.foundation.Debug4
 	{
-		public const bool useNIxPaths = true;
+		public const bool indexAllFields = false;
 
-		public const bool ixTrees = false;
+		public const bool queries = false;
+
+		public const bool atHome = false;
+
+		public static bool longTimeOuts = false;
 
 		public const bool freespace = com.db4o.Deploy.debug ? true : false;
 
-		public const bool xbytes = com.db4o.Debug.freespace ? true : false;
+		public const bool xbytes = freespace ? true : false;
 
 		public const bool freespaceChecker = false;
 
 		public const bool checkSychronization = false;
-
-		public const bool atHome = false;
-
-		public const bool indexAllFields = false;
 
 		public const bool configureAllClasses = indexAllFields;
 
 		public const bool configureAllFields = indexAllFields;
 
 		public const bool weakReferences = true;
-
-		public const bool verbose = false;
 
 		public const bool fakeServer = false;
 
@@ -34,8 +32,6 @@ namespace com.db4o
 		public const bool nio = true;
 
 		internal const bool lockFile = true;
-
-		public static bool longTimeOuts = false;
 
 		internal static com.db4o.YapFile serverStream;
 

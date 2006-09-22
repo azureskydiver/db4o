@@ -170,7 +170,7 @@ namespace com.db4o
 			return bytes;
 		}
 
-		public override void WriteXBytes(int a_address, int a_length)
+		public override void DebugWriteXBytes(int a_address, int a_length)
 		{
 		}
 	}

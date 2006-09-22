@@ -22,7 +22,7 @@ namespace com.db4o
 			return evaluator;
 		}
 
-		internal virtual bool Identity()
+		public virtual bool Identity()
 		{
 			return false;
 		}

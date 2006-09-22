@@ -195,7 +195,7 @@ namespace com.db4o.reflect.generic
 			}
 			if (_delegate == null)
 			{
-				return null;
+				return _reflector.ForClass(j4o.lang.Class.GetClassForType(typeof(object)));
 			}
 			com.db4o.reflect.ReflectClass delegateSuperclass = _delegate.GetSuperclass();
 			if (delegateSuperclass != null)
@@ -387,11 +387,11 @@ namespace com.db4o.reflect.generic
 		}
 
 		public virtual void UseConstructor(com.db4o.reflect.ReflectConstructor constructor
-			, object[] _params)
+			, object[] @params)
 		{
 			if (_delegate != null)
 			{
-				_delegate.UseConstructor(constructor, _params);
+				_delegate.UseConstructor(constructor, @params);
 			}
 		}
 

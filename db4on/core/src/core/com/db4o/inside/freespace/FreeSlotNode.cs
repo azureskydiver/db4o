@@ -35,7 +35,7 @@ namespace com.db4o.inside.freespace
 			return com.db4o.YapConst.INT_LENGTH * 2;
 		}
 
-		internal static com.db4o.Tree RemoveGreaterOrEqual(com.db4o.inside.freespace.FreeSlotNode
+		internal static com.db4o.foundation.Tree RemoveGreaterOrEqual(com.db4o.inside.freespace.FreeSlotNode
 			 a_in, com.db4o.TreeIntObject a_finder)
 		{
 			if (a_in == null)

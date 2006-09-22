@@ -31,19 +31,6 @@ namespace com.db4o.inside.ix
 			i_lowerAndUpperMatch = lowerAndUpperMatch;
 		}
 
-		public virtual com.db4o.inside.ix.NIxPathNode Convert()
-		{
-			com.db4o.inside.ix.NIxPathNode res = new com.db4o.inside.ix.NIxPathNode();
-			res._comparisonResult = i_comparisonResult;
-			res._lowerAndUpperMatch = i_lowerAndUpperMatch;
-			res._tree = i_tree;
-			if (i_next != null)
-			{
-				res._next = i_next.Convert();
-			}
-			return res;
-		}
-
 		internal virtual void Add(com.db4o.foundation.Visitor4 visitor)
 		{
 			if (i_comparisonResult == 0 && i_traverser.i_take[com.db4o.QE.EQUAL])

@@ -87,7 +87,7 @@ namespace com.db4o
 			{
 				config = com.db4o.Db4o.Configure();
 			}
-			j4o.io.PrintStream ps = ((com.db4o.Config4Impl)config).ErrStream();
+			System.IO.TextWriter ps = ((com.db4o.Config4Impl)config).ErrStream();
 			new com.db4o.Message(msg, code, ps);
 			if (t != null)
 			{

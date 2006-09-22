@@ -5,7 +5,7 @@ namespace com.db4o
 	{
 		public int i_objectID;
 
-		internal override bool Identity()
+		public override bool Identity()
 		{
 			return true;
 		}

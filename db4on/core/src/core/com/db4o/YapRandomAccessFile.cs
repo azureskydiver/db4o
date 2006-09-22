@@ -423,8 +423,27 @@ namespace com.db4o
 			}
 		}
 
-		public override void WriteXBytes(int a_address, int a_length)
+		public override void DebugWriteXBytes(int a_address, int a_length)
 		{
+		}
+
+		public virtual void WriteXBytes(int a_address, int a_length)
+		{
+			if (!ConfigImpl().IsReadOnly())
+			{
+				if (a_address > 0 && a_length > 0)
+				{
+					try
+					{
+						i_file.BlockSeek(a_address);
+						i_file.Write(XBytes(a_address, a_length)._buffer, a_length);
+					}
+					catch (System.Exception e)
+					{
+						j4o.lang.JavaSystem.PrintStackTrace(e);
+					}
+				}
+			}
 		}
 	}
 }

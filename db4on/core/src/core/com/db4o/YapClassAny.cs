@@ -37,7 +37,7 @@ namespace com.db4o
 
 		public override bool HasField(com.db4o.YapStream a_stream, string a_path)
 		{
-			return a_stream.i_classCollection.FieldExists(a_path);
+			return a_stream.ClassCollection().FieldExists(a_path);
 		}
 
 		internal override bool HasIndex()

@@ -14,7 +14,7 @@ namespace com.db4o.config.attributes
 			if (null == field)
 				return;
 
-			introspector.Configuration.ObjectClass(field.DeclaringType.Name).ObjectField(field.Name).Indexed(true);
+			introspector.Configuration.ObjectClass(field.DeclaringType.FullName).ObjectField(field.Name).Indexed(true);
 		}
 	}
 }

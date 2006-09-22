@@ -17,7 +17,7 @@ namespace com.db4o.diagnostic
 		/// <remarks>redirects Diagnostic messages to the Console.</remarks>
 		public virtual void OnDiagnostic(com.db4o.diagnostic.Diagnostic d)
 		{
-			j4o.lang.JavaSystem._out.Println(d.ToString());
+			System.Console.Out.WriteLine(d.ToString());
 		}
 	}
 }

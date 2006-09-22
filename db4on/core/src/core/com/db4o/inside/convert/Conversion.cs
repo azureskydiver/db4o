@@ -1,14 +1,16 @@
 namespace com.db4o.inside.convert
 {
-	public abstract class Conversion : j4o.lang.Runnable
+	/// <exclude></exclude>
+	public abstract class Conversion
 	{
-		protected com.db4o.YapFile _yapFile;
-
-		public virtual void SetFile(com.db4o.YapFile yapFile)
+		public virtual void Convert(com.db4o.inside.convert.ConversionStage.ClassCollectionAvailableStage
+			 stage)
 		{
-			_yapFile = yapFile;
 		}
 
-		public abstract void Run();
+		public virtual void Convert(com.db4o.inside.convert.ConversionStage.SystemUpStage
+			 stage)
+		{
+		}
 	}
 }

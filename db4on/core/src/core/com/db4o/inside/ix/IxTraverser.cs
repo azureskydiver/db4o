@@ -33,7 +33,8 @@ namespace com.db4o.inside.ix
 			AddSmaller(visitor, a_great);
 		}
 
-		private void AddAll(com.db4o.foundation.Visitor4 visitor, com.db4o.Tree a_tree)
+		private void AddAll(com.db4o.foundation.Visitor4 visitor, com.db4o.foundation.Tree
+			 a_tree)
 		{
 			if (a_tree != null)
 			{
@@ -114,49 +115,6 @@ namespace com.db4o.inside.ix
 			AddAll(visitor, a_path.i_tree._subsequent);
 		}
 
-		private com.db4o.inside.ix.NIxPath CreateNIxPath(com.db4o.inside.ix.NIxPathNode head
-			, bool takePreceding, bool takeMatches, bool takeSubsequent, int pathType)
-		{
-			com.db4o.inside.ix.NIxPath np = new com.db4o.inside.ix.NIxPath(head, takePreceding
-				, takeMatches, takeSubsequent, pathType);
-			return np;
-		}
-
-		public virtual com.db4o.inside.ix.NIxPaths Convert()
-		{
-			com.db4o.inside.ix.NIxPaths res = new com.db4o.inside.ix.NIxPaths();
-			if (i_take[com.db4o.QE.NULLS] || i_take[com.db4o.QE.SMALLER] || i_take[com.db4o.QE
-				.EQUAL])
-			{
-				com.db4o.inside.ix.NIxPath smaller = CreateNIxPath(i_smallHead.Convert(), i_take[
-					com.db4o.QE.SMALLER], i_take[com.db4o.QE.EQUAL], i_take[com.db4o.QE.GREATER], com.db4o.QE
-					.SMALLER);
-				res.Add(smaller);
-			}
-			if (i_take[com.db4o.QE.EQUAL] || i_take[com.db4o.QE.GREATER])
-			{
-				com.db4o.inside.ix.NIxPath greater = CreateNIxPath(i_greatHead.Convert(), i_take[
-					com.db4o.QE.SMALLER], i_take[com.db4o.QE.EQUAL], i_take[com.db4o.QE.GREATER], com.db4o.QE
-					.GREATER);
-				res.Add(greater);
-			}
-			if (i_take[com.db4o.QE.SMALLER] || i_take[com.db4o.QE.NULLS])
-			{
-				if (i_smallHead != null)
-				{
-					if (i_smallHead.i_tree.Index()._nullHandling)
-					{
-						com.db4o.inside.ix.IxPath nullPath = FindNullPath();
-						com.db4o.inside.ix.NIxPath np = CreateNIxPath(nullPath.Convert(), i_take[com.db4o.QE
-							.NULLS], i_take[com.db4o.QE.NULLS], i_take[com.db4o.QE.SMALLER], com.db4o.QE.NULLS
-							);
-						res.Add(np);
-					}
-				}
-			}
-			return res;
-		}
-
 		private int CountGreater(com.db4o.inside.ix.IxPath a_path, int a_sum)
 		{
 			if (a_path.i_next == null)
@@ -176,7 +134,8 @@ namespace com.db4o.inside.ix
 
 		private int CountPreceding(com.db4o.inside.ix.IxPath a_path)
 		{
-			return com.db4o.Tree.Size(a_path.i_tree._preceding) + a_path.CountMatching();
+			return com.db4o.foundation.Tree.Size(a_path.i_tree._preceding) + a_path.CountMatching
+				();
 		}
 
 		private int CountSmaller(com.db4o.inside.ix.IxPath a_path, int a_sum)
@@ -224,7 +183,8 @@ namespace com.db4o.inside.ix
 
 		private int CountSubsequent(com.db4o.inside.ix.IxPath a_path)
 		{
-			return com.db4o.Tree.Size(a_path.i_tree._subsequent) + a_path.CountMatching();
+			return com.db4o.foundation.Tree.Size(a_path.i_tree._subsequent) + a_path.CountMatching
+				();
 		}
 
 		private void DelayedAppend(com.db4o.inside.ix.IxTree a_tree, int a_comparisonResult
@@ -276,20 +236,6 @@ namespace com.db4o.inside.ix
 				i_smallTail = i_smallTail.Append(a_tree, res, lowerAndUpperMatch);
 				FindBoth();
 			}
-		}
-
-		private com.db4o.inside.ix.IxPath FindNullPath()
-		{
-			ResetDelayedAppend();
-			i_handler.PrepareComparison(null);
-			com.db4o.inside.ix.IxTree tree = i_greatHead.i_tree;
-			int res = tree.Compare(null);
-			com.db4o.inside.ix.IxPath nullHead = new com.db4o.inside.ix.IxPath(this, null, tree
-				, res, tree.LowerAndUpperMatch());
-			com.db4o.inside.ix.IxPath[] headTail = new com.db4o.inside.ix.IxPath[] { nullHead
-				, nullHead };
-			FindNullPath1(headTail);
-			return headTail[0];
 		}
 
 		private void FindNullPath1(com.db4o.inside.ix.IxPath[] headTail)
@@ -395,17 +341,6 @@ namespace com.db4o.inside.ix
 			i_take = new bool[] { false, false, false, false };
 			i_take[com.db4o.QE.EQUAL] = true;
 			return FindBounds(a_constraint, a_tree);
-		}
-
-		public virtual int FindBoundsQuery(com.db4o.QCon a_qcon, object constraint)
-		{
-			if (!a_qcon.i_evaluator.SupportsIndex())
-			{
-				return -1;
-			}
-			i_take = new bool[] { false, false, false, false };
-			a_qcon.i_evaluator.IndexBitMap(i_take);
-			return FindBounds(constraint, a_qcon.IndexRoot());
 		}
 
 		private void FindGreatestEqualFromEqual(com.db4o.inside.ix.IxTree a_tree)

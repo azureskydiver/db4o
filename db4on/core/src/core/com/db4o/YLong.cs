@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal class YLong : com.db4o.YapJavaClass
+	/// <exclude></exclude>
+	public class YLong : com.db4o.YapJavaClass
 	{
 		private static readonly long i_primitive = System.Convert.ToInt64(0);
 
@@ -76,7 +77,12 @@ namespace com.db4o
 			}
 		}
 
-		protected long i_compareTo;
+		private long i_compareTo;
+
+		protected long CurrentLong()
+		{
+			return i_compareTo;
+		}
 
 		internal virtual long Val(object obj)
 		{

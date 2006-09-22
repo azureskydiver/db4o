@@ -21,8 +21,8 @@ namespace com.db4o.inside.marshall
 			com.db4o.Transaction trans = reader.GetTransaction();
 			if (reader.CascadeDeletes() > 0 && arrayHandler.i_handler is com.db4o.YapClass)
 			{
-				com.db4o.YapWriter bytes = reader.GetStream().ReadObjectWriterByAddress(trans, address
-					, length);
+				com.db4o.YapWriter bytes = reader.GetStream().ReadWriterByAddress(trans, address, 
+					length);
 				if (bytes != null)
 				{
 					bytes.SetCascadeDeletes(reader.CascadeDeletes());

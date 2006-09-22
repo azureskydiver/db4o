@@ -1,17 +1,31 @@
 namespace com.db4o.inside.marshall
 {
 	/// <exclude></exclude>
-	public class ClassMarshaller
+	public abstract class ClassMarshaller
 	{
 		public com.db4o.inside.marshall.MarshallerFamily _family;
+
+		public virtual com.db4o.inside.marshall.RawClassSpec ReadSpec(com.db4o.Transaction
+			 trans, com.db4o.YapReader reader)
+		{
+			byte[] nameBytes = ReadName(trans, reader);
+			string className = trans.Stream().StringIO().Read(nameBytes);
+			ReadMetaClassID(reader);
+			int ancestorID = reader.ReadInt();
+			reader.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
+			int numFields = reader.ReadInt();
+			return new com.db4o.inside.marshall.RawClassSpec(className, ancestorID, numFields
+				);
+		}
 
 		public virtual void Write(com.db4o.Transaction trans, com.db4o.YapClass clazz, com.db4o.YapReader
 			 writer)
 		{
 			writer.WriteShortString(trans, clazz.NameToWrite());
-			writer.WriteInt(clazz._metaClassID);
+			int intFormerlyKnownAsMetaClassID = 0;
+			writer.WriteInt(intFormerlyKnownAsMetaClassID);
 			writer.WriteIDOf(trans, clazz.i_ancestor);
-			clazz.Index().WriteId(writer, trans);
+			WriteIndex(trans, clazz, writer);
 			com.db4o.YapField[] fields = clazz.i_fields;
 			if (fields == null)
 			{
@@ -25,12 +39,25 @@ namespace com.db4o.inside.marshall
 			}
 		}
 
-		public virtual byte[] ReadName(com.db4o.Transaction trans, com.db4o.YapClass clazz
-			, com.db4o.YapReader reader)
+		protected virtual void WriteIndex(com.db4o.Transaction trans, com.db4o.YapClass clazz
+			, com.db4o.YapReader writer)
+		{
+			int indexID = clazz.Index().Write(trans);
+			writer.WriteInt(IndexIDForWriting(indexID));
+		}
+
+		protected abstract int IndexIDForWriting(int indexID);
+
+		public virtual byte[] ReadName(com.db4o.Transaction trans, com.db4o.YapReader reader
+			)
 		{
 			byte[] name = ReadName(trans.Stream().StringIO(), reader);
-			clazz._metaClassID = reader.ReadInt();
 			return name;
+		}
+
+		public virtual int ReadMetaClassID(com.db4o.YapReader reader)
+		{
+			return reader.ReadInt();
 		}
 
 		private byte[] ReadName(com.db4o.YapStringIO sio, com.db4o.YapReader reader)
@@ -53,10 +80,13 @@ namespace com.db4o.inside.marshall
 				clazz.CreateConstructor(stream, clazz.ClassReflector(), clazz.GetName(), true);
 			}
 			clazz.CheckDb4oType();
-			clazz.Index().Read(reader, stream);
+			ReadIndex(stream, clazz, reader);
 			clazz.i_fields = CreateFields(clazz, reader.ReadInt());
 			ReadFields(stream, reader, clazz.i_fields);
 		}
+
+		protected abstract void ReadIndex(com.db4o.YapStream stream, com.db4o.YapClass clazz
+			, com.db4o.YapReader reader);
 
 		private com.db4o.YapField[] CreateFields(com.db4o.YapClass clazz, int fieldCount)
 		{

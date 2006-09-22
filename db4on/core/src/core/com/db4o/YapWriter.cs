@@ -18,7 +18,7 @@ namespace com.db4o
 
 		private int i_cascadeDelete;
 
-		private com.db4o.Tree i_embedded;
+		private com.db4o.foundation.Tree i_embedded;
 
 		private int i_id;
 
@@ -66,8 +66,8 @@ namespace com.db4o
 
 		internal void AddEmbedded(com.db4o.YapWriter a_bytes)
 		{
-			i_embedded = com.db4o.Tree.Add(i_embedded, new com.db4o.TreeIntObject(a_bytes.GetID
-				(), a_bytes));
+			i_embedded = com.db4o.foundation.Tree.Add(i_embedded, new com.db4o.TreeIntObject(
+				a_bytes.GetID(), a_bytes));
 		}
 
 		internal int AppendTo(com.db4o.YapWriter a_bytes, int a_id)
@@ -279,14 +279,14 @@ namespace com.db4o
 			int id = ReadInt();
 			int length = ReadInt();
 			com.db4o.YapWriter bytes = null;
-			com.db4o.Tree tio = com.db4o.TreeInt.Find(i_embedded, id);
+			com.db4o.foundation.Tree tio = com.db4o.TreeInt.Find(i_embedded, id);
 			if (tio != null)
 			{
 				bytes = (com.db4o.YapWriter)((com.db4o.TreeIntObject)tio)._object;
 			}
 			else
 			{
-				bytes = i_trans.Stream().ReadObjectWriterByAddress(i_trans, id, length);
+				bytes = i_trans.Stream().ReadWriterByAddress(i_trans, id, length);
 				if (bytes != null)
 				{
 					bytes.SetID(id);

@@ -64,7 +64,7 @@ namespace com.db4o
 
 		public static readonly com.db4o.Msg PING = new com.db4o.Msg("PING");
 
-		public static readonly com.db4o.Msg PREFETCH_IDS = new com.db4o.MPrefetchIDs();
+		public static readonly com.db4o.MsgD PREFETCH_IDS = new com.db4o.MPrefetchIDs();
 
 		public static readonly com.db4o.MsgObject QUERY_EXECUTE = new com.db4o.MQueryExecute
 			();

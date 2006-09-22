@@ -5,9 +5,9 @@ namespace com.db4o.inside.classindex
 	{
 		void Initialize(com.db4o.YapStream stream);
 
-		void Read(com.db4o.YapReader reader, com.db4o.YapStream stream);
+		void Read(com.db4o.YapStream stream, int indexID);
 
-		void WriteId(com.db4o.YapReader writer, com.db4o.Transaction transaction);
+		int Write(com.db4o.Transaction transaction);
 
 		void Add(com.db4o.Transaction transaction, int id);
 
@@ -26,8 +26,7 @@ namespace com.db4o.inside.classindex
 
 		void DontDelete(com.db4o.Transaction transaction, int id);
 
-		void TraverseAllSlotIDs(com.db4o.Transaction trans, com.db4o.foundation.Visitor4 
-			command);
+		com.db4o.foundation.Iterator4 AllSlotIDs(com.db4o.Transaction trans);
 
 		void DefragReference(com.db4o.YapClass yapClass, com.db4o.YapReader source, com.db4o.YapReader
 			 target, com.db4o.IDMapping mapping, int classIndexID);

@@ -142,16 +142,29 @@ namespace com.db4o.inside.btree
 		private com.db4o.inside.btree.BTreeAdd NewAddPatch(com.db4o.Transaction trans)
 		{
 			SizeIncrement(trans);
-			return new com.db4o.inside.btree.BTreeAdd(trans, KeyHandler().Current());
+			return new com.db4o.inside.btree.BTreeAdd(trans, CurrentKey());
+		}
+
+		private object CurrentKey()
+		{
+			return KeyHandler().Current();
 		}
 
 		private void CancelRemoval(com.db4o.Transaction trans, int index)
 		{
-			com.db4o.inside.btree.BTreeRemove patch = (com.db4o.inside.btree.BTreeRemove)KeyPatch
+			com.db4o.inside.btree.BTreeUpdate patch = (com.db4o.inside.btree.BTreeUpdate)KeyPatch
 				(index);
-			com.db4o.inside.btree.BTreeRemove nextPatch = patch.RemoveFor(trans);
-			_keys[index] = nextPatch == null ? patch.GetObject() : nextPatch;
+			com.db4o.inside.btree.BTreeUpdate nextPatch = patch.RemoveFor(trans);
+			_keys[index] = NewCancelledRemoval(trans, patch.GetObject(), nextPatch);
 			SizeIncrement(trans);
+		}
+
+		private com.db4o.inside.btree.BTreePatch NewCancelledRemoval(com.db4o.Transaction
+			 trans, object originalObject, com.db4o.inside.btree.BTreeUpdate existingPatches
+			)
+		{
+			return new com.db4o.inside.btree.BTreeCancelledRemoval(trans, originalObject, CurrentKey
+				(), existingPatches);
 		}
 
 		private void SizeIncrement(com.db4o.Transaction trans)
@@ -182,7 +195,8 @@ namespace com.db4o.inside.btree
 			if (!s.FoundMatch() || target == com.db4o.inside.btree.SearchTarget.ANY || target
 				 == com.db4o.inside.btree.SearchTarget.HIGHEST)
 			{
-				return new com.db4o.inside.btree.BTreeNodeSearchResult(trans, Btree(), s, this);
+				return new com.db4o.inside.btree.BTreeNodeSearchResult(trans, reader, Btree(), s, 
+					this);
 			}
 			if (target == com.db4o.inside.btree.SearchTarget.LOWEST)
 			{
@@ -192,7 +206,7 @@ namespace com.db4o.inside.btree
 				{
 					return res;
 				}
-				return CreateMatchingSearchResult(trans, s.Cursor());
+				return CreateMatchingSearchResult(trans, reader, s.Cursor());
 			}
 			throw new System.InvalidOperationException();
 		}
@@ -200,29 +214,35 @@ namespace com.db4o.inside.btree
 		private com.db4o.inside.btree.BTreeNodeSearchResult FindLowestLeafMatch(com.db4o.Transaction
 			 trans, int index)
 		{
-			PrepareWrite(trans);
+			return FindLowestLeafMatch(trans, PrepareRead(trans), index);
+		}
+
+		private com.db4o.inside.btree.BTreeNodeSearchResult FindLowestLeafMatch(com.db4o.Transaction
+			 trans, com.db4o.YapReader reader, int index)
+		{
 			if (index >= 0)
 			{
-				if (!CompareInWriteModeEquals(index))
+				if (!CompareInReadModeEquals(reader, index))
 				{
 					return null;
 				}
 				if (index > 0)
 				{
-					com.db4o.inside.btree.BTreeNodeSearchResult res = FindLowestLeafMatch(trans, index
-						 - 1);
+					com.db4o.inside.btree.BTreeNodeSearchResult res = FindLowestLeafMatch(trans, reader
+						, index - 1);
 					if (res != null)
 					{
 						return res;
 					}
-					return CreateMatchingSearchResult(trans, index);
+					return CreateMatchingSearchResult(trans, reader, index);
 				}
 			}
 			com.db4o.inside.btree.BTreeNode node = PreviousNode();
 			if (node != null)
 			{
+				com.db4o.YapReader nodeReader = node.PrepareRead(trans);
 				com.db4o.inside.btree.BTreeNodeSearchResult res = node.FindLowestLeafMatch(trans, 
-					node.LastIndex());
+					nodeReader, node.LastIndex());
 				if (res != null)
 				{
 					return res;
@@ -232,29 +252,24 @@ namespace com.db4o.inside.btree
 			{
 				return null;
 			}
-			return CreateMatchingSearchResult(trans, index);
+			return CreateMatchingSearchResult(trans, reader, index);
 		}
 
-		private bool CompareInWriteModeEquals(int index)
+		private bool CompareInReadModeEquals(com.db4o.YapReader reader, int index)
 		{
-			return CompareInWriteMode(index) == 0;
+			return CompareInReadMode(reader, index) == 0;
 		}
 
 		private com.db4o.inside.btree.BTreeNodeSearchResult CreateMatchingSearchResult(com.db4o.Transaction
-			 trans, int index)
+			 trans, com.db4o.YapReader reader, int index)
 		{
-			return new com.db4o.inside.btree.BTreeNodeSearchResult(trans, Btree(), this, index
-				, true);
+			return new com.db4o.inside.btree.BTreeNodeSearchResult(trans, reader, Btree(), this
+				, index, true);
 		}
 
-		private bool CanWrite()
+		public virtual bool CanWrite()
 		{
 			return _keys != null;
-		}
-
-		internal virtual int ChildCount()
-		{
-			return (_children == null ? 0 : _children.Length);
 		}
 
 		internal virtual com.db4o.inside.btree.BTreeNode Child(int index)
@@ -266,8 +281,8 @@ namespace com.db4o.inside.btree
 			return _btree.ProduceNode(((int)_children[index]));
 		}
 
-		private com.db4o.inside.btree.BTreeNode Child(com.db4o.YapReader reader, int index
-			)
+		internal virtual com.db4o.inside.btree.BTreeNode Child(com.db4o.YapReader reader, 
+			int index)
 		{
 			if (ChildLoaded(index))
 			{
@@ -319,7 +334,7 @@ namespace com.db4o.inside.btree
 			{
 				return false;
 			}
-			return ((com.db4o.inside.btree.BTreeNode)_children[index])._keys != null;
+			return ((com.db4o.inside.btree.BTreeNode)_children[index]).CanWrite();
 		}
 
 		internal virtual void Commit(com.db4o.Transaction trans)
@@ -399,7 +414,16 @@ namespace com.db4o.inside.btree
 
 		public override bool Equals(object obj)
 		{
-			return this == obj;
+			if (this == obj)
+			{
+				return true;
+			}
+			if (!(obj is com.db4o.inside.btree.BTreeNode))
+			{
+				return false;
+			}
+			com.db4o.inside.btree.BTreeNode other = (com.db4o.inside.btree.BTreeNode)obj;
+			return GetID() == other.GetID();
 		}
 
 		private void Free(com.db4o.Transaction trans)
@@ -520,6 +544,10 @@ namespace com.db4o.inside.btree
 
 		private int CompareInReadMode(com.db4o.YapReader reader, int index)
 		{
+			if (CanWrite())
+			{
+				return CompareInWriteMode(index);
+			}
 			SeekKey(reader, index);
 			return KeyHandler().CompareTo(KeyHandler().ReadIndexEntry(reader));
 		}
@@ -560,7 +588,7 @@ namespace com.db4o.inside.btree
 
 		public virtual bool IndexIsValid(com.db4o.Transaction trans, int index)
 		{
-			if (_keys == null)
+			if (!CanWrite())
 			{
 				return true;
 			}
@@ -644,10 +672,10 @@ namespace com.db4o.inside.btree
 			return patch.GetObject();
 		}
 
-		private object Key(com.db4o.Transaction trans, com.db4o.YapReader reader, int index
-			)
+		internal virtual object Key(com.db4o.Transaction trans, com.db4o.YapReader reader
+			, int index)
 		{
-			if (_keys != null)
+			if (CanWrite())
 			{
 				return Key(trans, index);
 			}
@@ -717,7 +745,7 @@ namespace com.db4o.inside.btree
 			return SLOT_LEADING_LENGTH + (_count * EntryLength()) + com.db4o.YapConst.BRACKETS_BYTES;
 		}
 
-		private com.db4o.YapReader PrepareRead(com.db4o.Transaction trans)
+		internal virtual com.db4o.YapReader PrepareRead(com.db4o.Transaction trans)
 		{
 			if (CanWrite())
 			{
@@ -750,17 +778,14 @@ namespace com.db4o.inside.btree
 				SetStateDirty();
 				return;
 			}
-			if (_keys == null)
-			{
-				Read(trans.SystemTransaction());
-				SetStateDirty();
-				_btree.AddToProcessing(this);
-			}
+			Read(trans.SystemTransaction());
+			SetStateDirty();
+			_btree.AddToProcessing(this);
 		}
 
 		private void PrepareArrays()
 		{
-			if (_keys != null)
+			if (CanWrite())
 			{
 				return;
 			}
@@ -842,9 +867,9 @@ namespace com.db4o.inside.btree
 			}
 			else
 			{
-				if (patch.IsRemove())
+				if (!patch.IsAdd())
 				{
-					((com.db4o.inside.btree.BTreeRemove)patch).Append(NewRemovePatch(trans));
+					((com.db4o.inside.btree.BTreeUpdate)patch).Append(NewRemovePatch(trans));
 					return;
 				}
 			}
@@ -893,11 +918,11 @@ namespace com.db4o.inside.btree
 			return _count - 1;
 		}
 
-		private com.db4o.inside.btree.BTreeRemove NewRemovePatch(com.db4o.Transaction trans
+		private com.db4o.inside.btree.BTreeUpdate NewRemovePatch(com.db4o.Transaction trans
 			)
 		{
 			_btree.SizeChanged(trans, -1);
-			return new com.db4o.inside.btree.BTreeRemove(trans, KeyHandler().Current());
+			return new com.db4o.inside.btree.BTreeRemove(trans, CurrentKey());
 		}
 
 		private void KeyChanged(com.db4o.Transaction trans, int index)
@@ -1053,7 +1078,7 @@ namespace com.db4o.inside.btree
 				{
 					return null;
 				}
-				return new com.db4o.inside.btree.BTreePointer(trans, this, index);
+				return new com.db4o.inside.btree.BTreePointer(trans, reader, this, index);
 			}
 			for (int i = 0; i < _count; i++)
 			{
@@ -1080,7 +1105,7 @@ namespace com.db4o.inside.btree
 			{
 				return;
 			}
-			if (_keys == null)
+			if (!CanWrite())
 			{
 				return;
 			}
@@ -1170,7 +1195,7 @@ namespace com.db4o.inside.btree
 			return _values[index];
 		}
 
-		private object Value(com.db4o.YapReader reader, int index)
+		internal virtual object Value(com.db4o.YapReader reader, int index)
 		{
 			if (_values != null)
 			{
@@ -1191,7 +1216,7 @@ namespace com.db4o.inside.btree
 			{
 				return false;
 			}
-			if (_keys == null)
+			if (!CanWrite())
 			{
 				return false;
 			}
@@ -1268,7 +1293,7 @@ namespace com.db4o.inside.btree
 			str += "\nnext: " + _nextID;
 			str += "\ncount:" + _count;
 			str += "\nleaf:" + _isLeaf + "\n";
-			if (_keys != null)
+			if (CanWrite())
 			{
 				str += " { ";
 				bool first = true;
@@ -1298,6 +1323,10 @@ namespace com.db4o.inside.btree
 			}
 			for (int i = 0; i < _count; ++i)
 			{
+				if (_children[i] is int)
+				{
+					_children[i] = Btree().ProduceNode(((int)_children[i]));
+				}
 				((com.db4o.inside.btree.BTreeNode)_children[i]).DebugLoadFully(trans);
 			}
 		}
@@ -1340,6 +1369,27 @@ namespace com.db4o.inside.btree
 			int oldParentID = source.ReadInt();
 			int newParentID = mapping.MappedID(oldParentID);
 			target.WriteInt(newParentID);
+		}
+
+		public virtual bool IsLeaf()
+		{
+			return _isLeaf;
+		}
+
+		/// <summary>This traversal goes over all nodes, not just leafs</summary>
+		internal virtual void TraverseAllNodes(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
+			 command)
+		{
+			com.db4o.YapReader reader = PrepareRead(trans);
+			command.Visit(this);
+			if (_isLeaf)
+			{
+				return;
+			}
+			for (int childIdx = 0; childIdx < _count; childIdx++)
+			{
+				Child(reader, childIdx).TraverseAllNodes(trans, command);
+			}
 		}
 	}
 }

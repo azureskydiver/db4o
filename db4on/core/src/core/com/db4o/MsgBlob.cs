@@ -35,7 +35,7 @@ namespace com.db4o
 		protected virtual void Copy(com.db4o.foundation.network.YapSocket sock, j4o.io.OutputStream
 			 rawout, int length, bool update)
 		{
-			j4o.io.BufferedOutputStream _out = new j4o.io.BufferedOutputStream(rawout);
+			j4o.io.BufferedOutputStream @out = new j4o.io.BufferedOutputStream(rawout);
 			byte[] buffer = new byte[com.db4o.BlobImpl.COPYBUFFER_LENGTH];
 			int totalread = 0;
 			while (totalread < length)
@@ -47,21 +47,21 @@ namespace com.db4o
 				{
 					throw new System.IO.IOException();
 				}
-				_out.Write(buffer, 0, curread);
+				@out.Write(buffer, 0, curread);
 				totalread += curread;
 				if (update)
 				{
 					_currentByte += curread;
 				}
 			}
-			_out.Flush();
-			_out.Close();
+			@out.Flush();
+			@out.Close();
 		}
 
 		protected virtual void Copy(j4o.io.InputStream rawin, com.db4o.foundation.network.YapSocket
 			 sock, bool update)
 		{
-			j4o.io.BufferedInputStream _in = new j4o.io.BufferedInputStream(rawin);
+			j4o.io.BufferedInputStream @in = new j4o.io.BufferedInputStream(rawin);
 			byte[] buffer = new byte[com.db4o.BlobImpl.COPYBUFFER_LENGTH];
 			int bytesread = -1;
 			while ((bytesread = rawin.Read(buffer)) >= 0)
@@ -72,7 +72,7 @@ namespace com.db4o
 					_currentByte += bytesread;
 				}
 			}
-			_in.Close();
+			@in.Close();
 		}
 	}
 }

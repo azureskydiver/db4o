@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal class YapFieldUUID : com.db4o.YapFieldVirtual
+	/// <exclude></exclude>
+	public class YapFieldUUID : com.db4o.YapFieldVirtual
 	{
 		private const int LINK_LENGTH = com.db4o.YapConst.LONG_LENGTH + com.db4o.YapConst
 			.ID_LENGTH;
@@ -12,30 +13,71 @@ namespace com.db4o
 		}
 
 		public override void AddFieldIndex(com.db4o.inside.marshall.MarshallerFamily mf, 
-			com.db4o.YapWriter writer, bool isnew)
+			com.db4o.YapClass yapClass, com.db4o.YapWriter writer, com.db4o.inside.slots.Slot
+			 oldSlot)
 		{
+			bool isnew = (oldSlot == null);
 			int offset = writer._offset;
-			int id = writer.ReadInt();
+			int db4oDatabaseIdentityID = writer.ReadInt();
 			long uuid = com.db4o.YLong.ReadLong(writer);
 			writer._offset = offset;
 			com.db4o.YapFile yf = (com.db4o.YapFile)writer.GetStream();
-			if (id == 0)
+			if ((uuid == 0 || db4oDatabaseIdentityID == 0) && writer.GetID() > 0 && !isnew)
 			{
-				writer.WriteInt(yf.Identity().GetID(writer.GetTransaction()));
+				com.db4o.YapFieldUUID.DatabaseIdentityIDAndUUID identityAndUUID = ReadDatabaseIdentityIDAndUUID
+					(yf, yapClass, oldSlot, false);
+				db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
+				uuid = identityAndUUID.uuid;
 			}
-			else
+			if (db4oDatabaseIdentityID == 0)
 			{
-				writer.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
+				db4oDatabaseIdentityID = yf.Identity().GetID(writer.GetTransaction());
 			}
 			if (uuid == 0)
 			{
 				uuid = yf.GenerateTimeStampId();
 			}
+			writer.WriteInt(db4oDatabaseIdentityID);
 			com.db4o.YLong.WriteLong(uuid, writer);
 			if (isnew)
 			{
 				AddIndexEntry(writer, uuid);
 			}
+		}
+
+		internal class DatabaseIdentityIDAndUUID
+		{
+			public int databaseIdentityID;
+
+			public long uuid;
+
+			public DatabaseIdentityIDAndUUID(int databaseIdentityID_, long uuid_)
+			{
+				databaseIdentityID = databaseIdentityID_;
+				uuid = uuid_;
+			}
+		}
+
+		private com.db4o.YapFieldUUID.DatabaseIdentityIDAndUUID ReadDatabaseIdentityIDAndUUID
+			(com.db4o.YapStream stream, com.db4o.YapClass yapClass, com.db4o.inside.slots.Slot
+			 oldSlot, bool checkClass)
+		{
+			com.db4o.YapReader reader = stream.ReadReaderByAddress(oldSlot.GetAddress(), oldSlot
+				.GetLength());
+			if (checkClass)
+			{
+				com.db4o.YapClass realClass = com.db4o.YapClass.ReadClass(stream, reader);
+				if (realClass != yapClass)
+				{
+					return null;
+				}
+			}
+			if (null == yapClass.FindOffset(reader, this))
+			{
+				return null;
+			}
+			return new com.db4o.YapFieldUUID.DatabaseIdentityIDAndUUID(reader.ReadInt(), com.db4o.YLong
+				.ReadLong(reader));
 		}
 
 		public override void Delete(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
@@ -58,30 +100,57 @@ namespace com.db4o
 			}
 		}
 
-		internal override com.db4o.inside.ix.Index4 GetOldIndex(com.db4o.Transaction a_trans
-			)
-		{
-			if (_oldIndex != null)
-			{
-				return _oldIndex;
-			}
-			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.Stream();
-			if (_oldIndex == null)
-			{
-				com.db4o.MetaIndex metaIndex = stream.GetUUIDMetaIndex();
-				if (metaIndex == null)
-				{
-					return null;
-				}
-				_oldIndex = new com.db4o.inside.ix.Index4(stream.GetSystemTransaction(), GetHandler
-					(), metaIndex, false);
-			}
-			return _oldIndex;
-		}
-
-		internal override bool HasIndex()
+		public override bool HasIndex()
 		{
 			return true;
+		}
+
+		public override com.db4o.inside.btree.BTree GetIndex(com.db4o.Transaction transaction
+			)
+		{
+			EnsureIndex(transaction);
+			return base.GetIndex(transaction);
+		}
+
+		protected override void RebuildIndexForObject(com.db4o.YapFile stream, com.db4o.YapClass
+			 yapClass, int objectId)
+		{
+			com.db4o.YapFieldUUID.DatabaseIdentityIDAndUUID data = ReadDatabaseIdentityIDAndUUID
+				(stream, yapClass, stream.GetSystemTransaction().GetCurrentSlotOfID(objectId), true
+				);
+			if (null == data)
+			{
+				return;
+			}
+			AddIndexEntry(stream.GetSystemTransaction(), objectId, data.uuid);
+		}
+
+		private void EnsureIndex(com.db4o.Transaction transaction)
+		{
+			if (null == transaction)
+			{
+				throw new System.ArgumentNullException();
+			}
+			if (null != base.GetIndex(transaction))
+			{
+				return;
+			}
+			com.db4o.header.FileHeader0 header = GetFileHeader(transaction);
+			if (header == null)
+			{
+				return;
+			}
+			InitIndex(transaction, header.GetUUIDIndexId());
+			if (header.GetUUIDIndexId() == 0)
+			{
+				header.WriteUUIDIndexId(base.GetIndex(transaction).GetID());
+			}
+		}
+
+		private com.db4o.header.FileHeader0 GetFileHeader(com.db4o.Transaction transaction
+			)
+		{
+			return ((com.db4o.YapFile)transaction.Stream()).GetFileHeader();
 		}
 
 		internal override void Instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
@@ -170,6 +239,43 @@ namespace com.db4o
 		{
 			writer.WriteInt(0);
 			com.db4o.YLong.WriteLong(0, writer);
+		}
+
+		public virtual object[] ObjectAndYapObjectBySignature(com.db4o.Transaction transaction
+			, long longPart, byte[] signature)
+		{
+			com.db4o.inside.btree.BTreeRange range = Search(transaction, longPart);
+			com.db4o.foundation.Iterator4 keys = range.Keys();
+			while (keys.MoveNext())
+			{
+				com.db4o.inside.btree.FieldIndexKey current = (com.db4o.inside.btree.FieldIndexKey
+					)keys.Current();
+				object[] objectAndYapObject = GetObjectAndYapObjectByID(transaction, current.ParentID
+					(), signature);
+				if (null != objectAndYapObject)
+				{
+					return objectAndYapObject;
+				}
+			}
+			return new object[2];
+		}
+
+		protected virtual object[] GetObjectAndYapObjectByID(com.db4o.Transaction transaction
+			, int parentId, byte[] signature)
+		{
+			object[] arr = transaction.Stream().GetObjectAndYapObjectByID(transaction, parentId
+				);
+			if (arr[1] == null)
+			{
+				return null;
+			}
+			com.db4o.YapObject yod = (com.db4o.YapObject)arr[1];
+			com.db4o.VirtualAttributes vad = yod.VirtualAttributes(transaction);
+			if (!com.db4o.foundation.Arrays4.AreEqual(signature, vad.i_database.i_signature))
+			{
+				return null;
+			}
+			return arr;
 		}
 	}
 }

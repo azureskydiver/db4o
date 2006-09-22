@@ -65,7 +65,7 @@ namespace com.db4o
 
 		public override object Current1()
 		{
-			return new j4o.util.Date(i_compareTo);
+			return new j4o.util.Date(CurrentLong());
 		}
 
 		internal static string Now()
@@ -80,17 +80,17 @@ namespace com.db4o
 
 		internal override bool IsEqual1(object obj)
 		{
-			return obj is j4o.util.Date && Val(obj) == i_compareTo;
+			return obj is j4o.util.Date && Val(obj) == CurrentLong();
 		}
 
 		internal override bool IsGreater1(object obj)
 		{
-			return obj is j4o.util.Date && Val(obj) > i_compareTo;
+			return obj is j4o.util.Date && Val(obj) > CurrentLong();
 		}
 
 		internal override bool IsSmaller1(object obj)
 		{
-			return obj is j4o.util.Date && Val(obj) < i_compareTo;
+			return obj is j4o.util.Date && Val(obj) < CurrentLong();
 		}
 	}
 }

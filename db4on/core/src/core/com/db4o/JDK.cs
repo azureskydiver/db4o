@@ -97,7 +97,7 @@ namespace com.db4o
 		/// or Reflector-aware
 		/// </summary>
 		internal virtual bool MethodIsAvailable(string className, string methodName, j4o.lang.Class[]
-			 _params)
+			 @params)
 		{
 			return false;
 		}

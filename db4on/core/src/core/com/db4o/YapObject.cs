@@ -229,22 +229,17 @@ namespace com.db4o
 				{
 					com.db4o.inside.marshall.ObjectHeader header = new com.db4o.inside.marshall.ObjectHeader
 						(stream, a_reader);
-					i_yapClass = header._yapClass;
+					i_yapClass = header.YapClass();
 					if (i_yapClass == null)
 					{
 						return null;
 					}
 					if (checkIDTree)
 					{
-						com.db4o.YapObject classCreationSideEffect = stream.GetYapObject(GetID());
-						if (classCreationSideEffect != null)
+						object objectInCacheFromClassCreation = stream.ObjectForIDFromCache(GetID());
+						if (objectInCacheFromClassCreation != null)
 						{
-							object obj = classCreationSideEffect.GetObject();
-							if (obj != null)
-							{
-								return obj;
-							}
-							stream.YapObjectGCd(classCreationSideEffect);
+							return objectInCacheFromClassCreation;
 						}
 					}
 					a_reader.SetInstantiationDepth(a_instantiationDepth);
@@ -265,15 +260,15 @@ namespace com.db4o
 			return a_object;
 		}
 
-		internal object ReadPrefetch(com.db4o.YapStream a_stream, com.db4o.Transaction ta
-			, com.db4o.YapWriter a_reader)
+		internal object ReadPrefetch(com.db4o.YapStream a_stream, com.db4o.YapWriter a_reader
+			)
 		{
 			object readObject = null;
 			if (BeginProcessing())
 			{
 				com.db4o.inside.marshall.ObjectHeader header = new com.db4o.inside.marshall.ObjectHeader
 					(a_stream, a_reader);
-				i_yapClass = header._yapClass;
+				i_yapClass = header.YapClass();
 				if (i_yapClass == null)
 				{
 					return null;
@@ -314,10 +309,6 @@ namespace com.db4o
 			i_object = a_object;
 		}
 
-		internal virtual void SetStateOnRead(com.db4o.YapWriter reader)
-		{
-		}
-
 		/// <summary>
 		/// return true for complex objects to instruct YapStream to add to lookup trees
 		/// and to perform delayed storage through call to continueset further up the stack.
@@ -327,23 +318,12 @@ namespace com.db4o
 		/// and to perform delayed storage through call to continueset further up the stack.
 		/// </remarks>
 		internal virtual bool Store(com.db4o.Transaction a_trans, com.db4o.YapClass a_yapClass
-			, object a_object, int a_updateDepth)
+			, object a_object)
 		{
 			i_object = a_object;
 			WriteObjectBegin();
 			com.db4o.YapStream stream = a_trans.Stream();
 			i_yapClass = a_yapClass;
-			if (com.db4o.inside.marshall.MarshallerFamily.LEGACY)
-			{
-				if (i_yapClass.IsPrimitive())
-				{
-					com.db4o.YapClassPrimitive ycp = (com.db4o.YapClassPrimitive)i_yapClass;
-					int id = com.db4o.inside.marshall.MarshallerFamily.Current()._primitive.WriteNew(
-						a_trans, ycp, a_object, true, null, true, false);
-					SetID(id);
-					return false;
-				}
-			}
 			SetID(stream.NewUserObject());
 			BeginProcessing();
 			BitTrue(com.db4o.YapConst.CONTINUE);
@@ -728,19 +708,22 @@ namespace com.db4o
 			}
 			else
 			{
-				if (id_subsequent == null)
+				if (cmp > 0)
 				{
-					id_subsequent = a_new;
-					id_size++;
-				}
-				else
-				{
-					id_subsequent = id_subsequent.Id_add1(a_new);
-					if (id_preceding == null)
+					if (id_subsequent == null)
 					{
-						return Id_rotateLeft();
+						id_subsequent = a_new;
+						id_size++;
 					}
-					return Id_balance();
+					else
+					{
+						id_subsequent = id_subsequent.Id_add1(a_new);
+						if (id_preceding == null)
+						{
+							return Id_rotateLeft();
+						}
+						return Id_balance();
+					}
 				}
 			}
 			return this;
@@ -927,7 +910,7 @@ namespace com.db4o
 						}
 						com.db4o.inside.marshall.ObjectHeader oh = new com.db4o.inside.marshall.ObjectHeader
 							(stream, writer);
-						com.db4o.YapClass yc = oh._yapClass;
+						com.db4o.YapClass yc = oh.YapClass();
 						if (yc != i_yapClass)
 						{
 							str += "\nYapClass corruption";

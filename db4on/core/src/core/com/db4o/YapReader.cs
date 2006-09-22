@@ -18,6 +18,11 @@ namespace com.db4o
 			_buffer = new byte[a_length];
 		}
 
+		public virtual void Seek(int offset)
+		{
+			_offset = offset;
+		}
+
 		public virtual void Append(byte a_byte)
 		{
 			_buffer[_offset++] = a_byte;
@@ -106,7 +111,7 @@ namespace com.db4o
 
 		public com.db4o.YapReader ReadEmbeddedObject(com.db4o.Transaction a_trans)
 		{
-			return a_trans.Stream().ReadObjectReaderByAddress(ReadInt(), ReadInt());
+			return a_trans.Stream().ReadReaderByAddress(ReadInt(), ReadInt());
 		}
 
 		public virtual void ReadEncrypt(com.db4o.YapStream a_stream, int a_address)
@@ -170,11 +175,7 @@ namespace com.db4o
 			return "";
 		}
 
-		internal virtual void WriteBegin(byte a_identifier)
-		{
-		}
-
-		public virtual void WriteBegin(byte a_identifier, int a_length)
+		public virtual void WriteBegin(byte a_identifier)
 		{
 		}
 

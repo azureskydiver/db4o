@@ -20,6 +20,15 @@ namespace com.db4o.foundation
 			AddAll(other);
 		}
 
+		public virtual object SingleElement()
+		{
+			if (Size() != 1)
+			{
+				throw new System.InvalidOperationException();
+			}
+			return _first._element;
+		}
+
 		/// <summary>Adds an element to the beginning of this collection.</summary>
 		/// <remarks>Adds an element to the beginning of this collection.</remarks>
 		/// <param name="element"></param>
@@ -68,6 +77,18 @@ namespace com.db4o.foundation
 		public bool Contains(object element)
 		{
 			return Get(element) != null;
+		}
+
+		public virtual bool ContainsAll(com.db4o.foundation.Iterator4 iter)
+		{
+			while (iter.MoveNext())
+			{
+				if (!Contains(iter.Current()))
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		/// <summary>tests if the object is in the Collection.</summary>
@@ -235,14 +256,13 @@ namespace com.db4o.foundation
 
 		public override string ToString()
 		{
-			return base.ToString();
 			if (_size == 0)
 			{
 				return "[]";
 			}
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
 			sb.Append("[");
-			com.db4o.foundation.Iterator4 i = Iterator();
+			com.db4o.foundation.Iterator4 i = StrictIterator();
 			i.MoveNext();
 			sb.Append(i.Current());
 			while (i.MoveNext())

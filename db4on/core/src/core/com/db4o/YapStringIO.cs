@@ -55,7 +55,7 @@ namespace com.db4o
 			return new string(chars, 0, a_length);
 		}
 
-		internal virtual string Read(byte[] a_bytes)
+		public virtual string Read(byte[] a_bytes)
 		{
 			CheckBufferLength(a_bytes.Length);
 			for (int i = 0; i < a_bytes.Length; i++)
@@ -78,18 +78,18 @@ namespace com.db4o
 			return len;
 		}
 
-		public virtual void Write(com.db4o.YapReader bytes, string _string)
+		public virtual void Write(com.db4o.YapReader bytes, string @string)
 		{
-			int len = WritetoBuffer(_string);
+			int len = WritetoBuffer(@string);
 			for (int i = 0; i < len; i++)
 			{
 				bytes._buffer[bytes._offset++] = (byte)(chars[i] & unchecked((int)(0xff)));
 			}
 		}
 
-		internal virtual byte[] Write(string _string)
+		internal virtual byte[] Write(string @string)
 		{
-			int len = WritetoBuffer(_string);
+			int len = WritetoBuffer(@string);
 			byte[] bytes = new byte[len];
 			for (int i = 0; i < len; i++)
 			{

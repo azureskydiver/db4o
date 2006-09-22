@@ -25,8 +25,8 @@ namespace com.db4o.inside.slots
 			_slot = slot;
 		}
 
-		public virtual com.db4o.Tree Free(com.db4o.YapFile file, com.db4o.Tree treeRoot, 
-			com.db4o.inside.slots.Slot slot)
+		public virtual com.db4o.foundation.Tree Free(com.db4o.YapFile file, com.db4o.foundation.Tree
+			 treeRoot, com.db4o.inside.slots.Slot slot)
 		{
 			file.Free(_slot._address, _slot._length);
 			if (RemoveReferenceIsLast())
@@ -47,6 +47,11 @@ namespace com.db4o.inside.slots
 		{
 			_references--;
 			return _references < 1;
+		}
+
+		public virtual com.db4o.inside.slots.Slot Slot()
+		{
+			return _slot;
 		}
 	}
 }

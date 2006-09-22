@@ -1,7 +1,7 @@
 namespace com.db4o.inside.ix
 {
 	/// <exclude></exclude>
-	public abstract class IxTree : com.db4o.Tree, com.db4o.foundation.Visitor4
+	public abstract class IxTree : com.db4o.foundation.Tree, com.db4o.foundation.Visitor4
 	{
 		internal com.db4o.inside.ix.IndexTransaction _fieldTransaction;
 
@@ -15,7 +15,8 @@ namespace com.db4o.inside.ix
 			_version = a_ft.i_version;
 		}
 
-		public override com.db4o.Tree Add(com.db4o.Tree a_new, int a_cmp)
+		public override com.db4o.foundation.Tree Add(com.db4o.foundation.Tree a_new, int 
+			a_cmp)
 		{
 			if (a_cmp < 0)
 			{
@@ -49,10 +50,11 @@ namespace com.db4o.inside.ix
 			SetSizeOwn();
 		}
 
-		public override com.db4o.Tree DeepClone(object a_param)
+		public override com.db4o.foundation.Tree DeepClone(object a_param)
 		{
 			com.db4o.inside.ix.IxTree tree = (com.db4o.inside.ix.IxTree)this.ShallowClone();
 			tree._fieldTransaction = (com.db4o.inside.ix.IndexTransaction)a_param;
+			tree._nodes = _nodes;
 			return tree;
 		}
 
@@ -80,11 +82,6 @@ namespace com.db4o.inside.ix
 			return _nodes;
 		}
 
-		public sealed override void Nodes(int count)
-		{
-			_nodes = count;
-		}
-
 		public override void SetSizeOwn()
 		{
 			base.SetSizeOwn();
@@ -109,14 +106,14 @@ namespace com.db4o.inside.ix
 			_nodes = 1 + _subsequent.Nodes();
 		}
 
-		public sealed override void SetSizeOwnPlus(com.db4o.Tree tree)
+		public sealed override void SetSizeOwnPlus(com.db4o.foundation.Tree tree)
 		{
 			base.SetSizeOwnPlus(tree);
 			_nodes = 1 + tree.Nodes();
 		}
 
-		public sealed override void SetSizeOwnPlus(com.db4o.Tree tree1, com.db4o.Tree tree2
-			)
+		public sealed override void SetSizeOwnPlus(com.db4o.foundation.Tree tree1, com.db4o.foundation.Tree
+			 tree2)
 		{
 			base.SetSizeOwnPlus(tree1, tree2);
 			_nodes = 1 + tree1.Nodes() + tree2.Nodes();
@@ -201,7 +198,8 @@ namespace com.db4o.inside.ix
 			}
 		}
 
-		protected override com.db4o.Tree ShallowCloneInternal(com.db4o.Tree tree)
+		protected override com.db4o.foundation.Tree ShallowCloneInternal(com.db4o.foundation.Tree
+			 tree)
 		{
 			com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)base.ShallowCloneInternal
 				(tree);

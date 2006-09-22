@@ -60,19 +60,19 @@ namespace com.db4o
 		private void Copy(j4o.io.File from, j4o.io.File to)
 		{
 			to.Delete();
-			j4o.io.BufferedInputStream _in = new j4o.io.BufferedInputStream(new j4o.io.FileInputStream
+			j4o.io.BufferedInputStream @in = new j4o.io.BufferedInputStream(new j4o.io.FileInputStream
 				(from));
-			j4o.io.BufferedOutputStream _out = new j4o.io.BufferedOutputStream(new j4o.io.FileOutputStream
+			j4o.io.BufferedOutputStream @out = new j4o.io.BufferedOutputStream(new j4o.io.FileOutputStream
 				(to));
 			byte[] buffer = new byte[COPYBUFFER_LENGTH];
 			int bytesread = -1;
-			while ((bytesread = _in.Read(buffer)) >= 0)
+			while ((bytesread = @in.Read(buffer)) >= 0)
 			{
-				_out.Write(buffer, 0, bytesread);
+				@out.Write(buffer, 0, bytesread);
 			}
-			_out.Flush();
-			_out.Close();
-			_in.Close();
+			@out.Flush();
+			@out.Close();
+			@in.Close();
 		}
 
 		public virtual object CreateDefault(com.db4o.Transaction a_trans)

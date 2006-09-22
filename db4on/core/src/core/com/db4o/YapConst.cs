@@ -137,10 +137,6 @@ namespace com.db4o
 		internal static readonly int CONNECTION_TIMEOUT = com.db4o.Debug.longTimeOuts ? 1000000
 			 : 180000;
 
-		internal const int PREFETCH_ID_COUNT = 10;
-
-		internal const int PREFETCH_OBJECT_COUNT = 10;
-
 		public const int MAXIMUM_BLOCK_SIZE = 70000000;
 
 		internal const int MAXIMUM_ARRAY_ENTRIES = 7000000;

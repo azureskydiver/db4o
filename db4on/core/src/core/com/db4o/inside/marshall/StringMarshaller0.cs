@@ -35,8 +35,8 @@ namespace com.db4o.inside.marshall
 
 		public override com.db4o.YapWriter ReadIndexEntry(com.db4o.YapWriter parentSlot)
 		{
-			return parentSlot.GetStream().ReadObjectWriterByAddress(parentSlot.GetTransaction
-				(), parentSlot.ReadInt(), parentSlot.ReadInt());
+			return parentSlot.GetStream().ReadWriterByAddress(parentSlot.GetTransaction(), parentSlot
+				.ReadInt(), parentSlot.ReadInt());
 		}
 
 		public override com.db4o.YapReader ReadSlotFromParentSlot(com.db4o.YapStream stream

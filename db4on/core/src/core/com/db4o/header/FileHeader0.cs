@@ -106,7 +106,7 @@ namespace com.db4o.header
 			yf.ShowInternalClasses(true);
 			_bootRecord = new com.db4o.PBootRecord();
 			_bootRecord.i_stream = yf;
-			_bootRecord.Init(yf.ConfigImpl());
+			_bootRecord.Init();
 			yf.SetInternal(yf.GetSystemTransaction(), _bootRecord, false);
 			_configBlock._bootRecordID = yf.GetID1(yf.GetSystemTransaction(), _bootRecord);
 			_configBlock.Write();
@@ -204,6 +204,17 @@ namespace com.db4o.header
 		public virtual void SetIdentity(com.db4o.ext.Db4oDatabase database)
 		{
 			_bootRecord.i_db = database;
+		}
+
+		public virtual int GetUUIDIndexId()
+		{
+			return _configBlock._uuidIndexId;
+		}
+
+		public virtual void WriteUUIDIndexId(int id)
+		{
+			_configBlock._uuidIndexId = id;
+			WriteVariablePart1();
 		}
 	}
 }

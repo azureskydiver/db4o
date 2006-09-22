@@ -12,9 +12,11 @@ namespace com.db4o.inside.freespace
 
 		public const byte FM_IX = 3;
 
+		public const byte FM_DEBUG = 4;
+
 		private const int INTS_IN_SLOT = 12;
 
-		internal FreespaceManager(com.db4o.YapFile file)
+		public FreespaceManager(com.db4o.YapFile file)
 		{
 			_file = file;
 		}

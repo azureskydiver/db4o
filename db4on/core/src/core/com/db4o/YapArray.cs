@@ -75,8 +75,8 @@ namespace com.db4o
 				int count = ElementCount(trans, reader);
 				for (int i = 0; i < count; i++)
 				{
-					tree = (com.db4o.TreeInt)com.db4o.Tree.Add(tree, new com.db4o.TreeInt(reader.ReadInt
-						()));
+					tree = (com.db4o.TreeInt)com.db4o.foundation.Tree.Add(tree, new com.db4o.TreeInt(
+						reader.ReadInt()));
 				}
 			}
 			return tree;
@@ -106,14 +106,14 @@ namespace com.db4o
 			if (address > 0)
 			{
 				com.db4o.Transaction trans = a_bytes.GetTransaction();
-				com.db4o.YapWriter bytes = a_bytes.GetStream().ReadObjectWriterByAddress(trans, address
+				com.db4o.YapWriter bytes = a_bytes.GetStream().ReadWriterByAddress(trans, address
 					, length);
 				if (bytes != null)
 				{
 					for (int i = ElementCount(trans, bytes); i > 0; i--)
 					{
 						int id = bytes.ReadInt();
-						com.db4o.inside.slots.Slot slot = trans.GetSlotInformation(id);
+						com.db4o.inside.slots.Slot slot = trans.GetCurrentSlotOfID(id);
 						a_classPrimitive.Free(trans, id, slot._address, slot._length);
 					}
 				}

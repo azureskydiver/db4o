@@ -3,20 +3,17 @@ namespace com.db4o
 	/// <exclude></exclude>
 	internal class QResultClient : com.db4o.QueryResultImpl
 	{
-		private object[] i_prefetched = new object[com.db4o.YapConst.PREFETCH_OBJECT_COUNT
-			];
+		private object[] _prefetchedObjects;
 
-		private int i_remainingObjects;
+		private int _remainingObjects;
 
-		private int i_prefetchCount = com.db4o.YapConst.PREFETCH_OBJECT_COUNT;
+		private int _prefetchRight;
 
-		private int i_prefetchRight;
-
-		internal QResultClient(com.db4o.Transaction a_ta) : base(a_ta)
+		internal QResultClient(com.db4o.Transaction ta) : base(ta)
 		{
 		}
 
-		internal QResultClient(com.db4o.Transaction a_ta, int initialSize) : base(a_ta, initialSize
+		internal QResultClient(com.db4o.Transaction ta, int initialSize) : base(ta, initialSize
 			)
 		{
 		}
@@ -25,7 +22,7 @@ namespace com.db4o
 		{
 			lock (StreamLock())
 			{
-				if (i_remainingObjects > 0)
+				if (_remainingObjects > 0)
 				{
 					return true;
 				}
@@ -39,25 +36,27 @@ namespace com.db4o
 			{
 				com.db4o.YapClient stream = (com.db4o.YapClient)i_trans.Stream();
 				stream.CheckClosed();
-				if (i_remainingObjects < 1)
+				int prefetchCount = stream.Config().PrefetchObjectCount();
+				EnsureObjectCacheAllocated(prefetchCount);
+				if (_remainingObjects < 1)
 				{
 					if (base.HasNext())
 					{
-						i_remainingObjects = (stream).PrefetchObjects(this, i_prefetched, i_prefetchCount
+						_remainingObjects = (stream).PrefetchObjects(this, _prefetchedObjects, prefetchCount
 							);
-						i_prefetchRight = i_remainingObjects;
+						_prefetchRight = _remainingObjects;
 					}
 				}
-				i_remainingObjects--;
-				if (i_remainingObjects < 0)
+				_remainingObjects--;
+				if (_remainingObjects < 0)
 				{
 					return null;
 				}
-				if (i_prefetched[i_prefetchRight - i_remainingObjects - 1] == null)
+				if (_prefetchedObjects[_prefetchRight - _remainingObjects - 1] == null)
 				{
 					return Next();
 				}
-				return Activate(i_prefetched[i_prefetchRight - i_remainingObjects - 1]);
+				return Activate(_prefetchedObjects[_prefetchRight - _remainingObjects - 1]);
 			}
 		}
 
@@ -65,9 +64,25 @@ namespace com.db4o
 		{
 			lock (StreamLock())
 			{
-				i_remainingObjects = 0;
-				i_prefetchRight = 0;
+				_remainingObjects = 0;
+				_prefetchRight = 0;
 				base.Reset();
+			}
+		}
+
+		private void EnsureObjectCacheAllocated(int prefetchObjectCount)
+		{
+			if (_prefetchedObjects == null)
+			{
+				_prefetchedObjects = new object[prefetchObjectCount];
+				return;
+			}
+			if (prefetchObjectCount > _prefetchedObjects.Length)
+			{
+				object[] newPrefetchedObjects = new object[prefetchObjectCount];
+				System.Array.Copy(_prefetchedObjects, 0, newPrefetchedObjects, 0, _prefetchedObjects
+					.Length);
+				_prefetchedObjects = newPrefetchedObjects;
 			}
 		}
 	}

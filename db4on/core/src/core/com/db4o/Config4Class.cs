@@ -55,8 +55,6 @@ namespace com.db4o
 		private static readonly com.db4o.foundation.KeySpec WRITE_AS = new com.db4o.foundation.KeySpec
 			((string)null);
 
-		private bool _processing;
-
 		protected Config4Class(com.db4o.Config4Impl configuration, com.db4o.foundation.KeySpecHashtable4
 			 config) : base(config)
 		{
@@ -177,49 +175,6 @@ namespace com.db4o
 			}
 			Translate(translator);
 			return translator;
-		}
-
-		public virtual bool InitOnUp(com.db4o.Transaction systemTrans, int[] metaClassID)
-		{
-			if (_processing)
-			{
-				return false;
-			}
-			_processing = true;
-			com.db4o.YapStream stream = systemTrans.Stream();
-			if (stream.MaintainsIndices())
-			{
-				bool maintainMetaClass = _config.GetAsBoolean(MAINTAIN_METACLASS);
-				if (maintainMetaClass)
-				{
-					com.db4o.MetaClass metaClassRef = MetaClass();
-					if (metaClassID[0] > 0)
-					{
-						metaClassRef = (com.db4o.MetaClass)stream.GetByID1(systemTrans, metaClassID[0]);
-						_config.Put(METACLASS, metaClassRef);
-					}
-					if (metaClassRef == null)
-					{
-						metaClassRef = (com.db4o.MetaClass)stream.Get1(systemTrans, new com.db4o.MetaClass
-							(GetName())).Next();
-						_config.Put(METACLASS, metaClassRef);
-						metaClassID[0] = stream.GetID1(systemTrans, metaClassRef);
-					}
-					if (metaClassRef == null)
-					{
-						metaClassRef = new com.db4o.MetaClass(GetName());
-						_config.Put(METACLASS, metaClassRef);
-						stream.SetInternal(systemTrans, metaClassRef, int.MaxValue, false);
-						metaClassID[0] = stream.GetID1(systemTrans, metaClassRef);
-					}
-					else
-					{
-						stream.Activate1(systemTrans, metaClassRef, int.MaxValue);
-					}
-				}
-			}
-			_processing = false;
-			return true;
 		}
 
 		internal virtual object Instantiate(com.db4o.YapStream a_stream, object a_toTranslate

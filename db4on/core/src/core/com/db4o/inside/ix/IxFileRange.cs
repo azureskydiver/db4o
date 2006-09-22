@@ -21,12 +21,12 @@ namespace com.db4o.inside.ix
 			_size = a_entries;
 		}
 
-		public override com.db4o.Tree Add(com.db4o.Tree a_new)
+		public override com.db4o.foundation.Tree Add(com.db4o.foundation.Tree a_new)
 		{
 			return Reader().Add(this, a_new);
 		}
 
-		public override int Compare(com.db4o.Tree a_to)
+		public override int Compare(com.db4o.foundation.Tree a_to)
 		{
 			_lowerAndUpperMatches = new int[2];
 			return Reader().Compare(this, _lowerAndUpperMatches);

@@ -287,11 +287,11 @@ namespace com.db4o.ext
 		/// An application might want to check all changes applied to an object
 		/// by the running transaction.<br /><br />
 		/// </remarks>
-		/// <param name="_object">the object that is to be cloned</param>
+		/// <param name="@object">the object that is to be cloned</param>
 		/// <param name="depth">the member depth to which the object is to be instantiated</param>
 		/// <param name="committed">whether committed or set values are to be returned</param>
 		/// <returns>the object</returns>
-		object PeekPersisted(object _object, int depth, bool committed);
+		object PeekPersisted(object @object, int depth, bool committed);
 
 		/// <summary>unloads all clean indices from memory and frees unused objects.</summary>
 		/// <remarks>

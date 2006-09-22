@@ -34,7 +34,7 @@ namespace com.db4o
 			return int.MaxValue;
 		}
 
-		public virtual void Init(com.db4o.Config4Impl a_config)
+		public virtual void Init()
 		{
 			i_uuidMetaIndex = new com.db4o.MetaIndex();
 			i_dirty = true;

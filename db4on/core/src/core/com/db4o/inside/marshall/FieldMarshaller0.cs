@@ -18,8 +18,8 @@ namespace com.db4o.inside.marshall
 			return len;
 		}
 
-		public virtual com.db4o.YapField Read(com.db4o.YapStream stream, com.db4o.YapField
-			 field, com.db4o.YapReader reader)
+		public virtual com.db4o.inside.marshall.RawFieldSpec ReadSpec(com.db4o.YapStream 
+			stream, com.db4o.YapReader reader)
 		{
 			string name = null;
 			try
@@ -28,9 +28,40 @@ namespace com.db4o.inside.marshall
 			}
 			catch (com.db4o.CorruptionException ce)
 			{
-				return field;
+				return null;
 			}
 			if (name.IndexOf(com.db4o.YapConst.VIRTUAL_FIELD_PREFIX) == 0)
+			{
+				com.db4o.YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
+				for (int i = 0; i < virtuals.Length; i++)
+				{
+					if (name.Equals(virtuals[i].GetName()))
+					{
+						return new com.db4o.inside.marshall.RawFieldSpec(name);
+					}
+				}
+			}
+			int handlerID = reader.ReadInt();
+			byte attribs = reader.ReadByte();
+			return new com.db4o.inside.marshall.RawFieldSpec(name, handlerID, attribs);
+		}
+
+		public com.db4o.YapField Read(com.db4o.YapStream stream, com.db4o.YapField field, 
+			com.db4o.YapReader reader)
+		{
+			com.db4o.inside.marshall.RawFieldSpec spec = ReadSpec(stream, reader);
+			return FromSpec(spec, stream, field);
+		}
+
+		protected virtual com.db4o.YapField FromSpec(com.db4o.inside.marshall.RawFieldSpec
+			 spec, com.db4o.YapStream stream, com.db4o.YapField field)
+		{
+			if (spec == null)
+			{
+				return field;
+			}
+			string name = spec.Name();
+			if (spec.IsVirtual())
 			{
 				com.db4o.YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
 				for (int i = 0; i < virtuals.Length; i++)
@@ -42,12 +73,7 @@ namespace com.db4o.inside.marshall
 				}
 			}
 			field.Init(field.GetParentYapClass(), name);
-			int handlerID = reader.ReadInt();
-			com.db4o.YapBit yb = new com.db4o.YapBit(reader.ReadByte());
-			bool isPrimitive = yb.Get();
-			bool isArray = yb.Get();
-			bool isNArray = yb.Get();
-			field.Init(handlerID, isPrimitive, isArray, isNArray);
+			field.Init(spec.HandlerID(), spec.IsPrimitive(), spec.IsArray(), spec.IsNArray());
 			field.LoadHandler(stream);
 			return field;
 		}
