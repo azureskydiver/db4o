@@ -13,7 +13,13 @@ namespace com.db4o.drs.test
                                            typeof(SimpleArrayContent), 
                                            typeof(SimpleArrayHolder), 
                                            typeof(Pilot), 
-                                           typeof(Car) };
+                                           typeof(Car),
+                                           typeof(R0),
+                                           typeof(R1),
+                                           typeof(R2),
+                                           typeof(R3),
+                                           typeof(R4),
+                                         typeof(Replicated)};
         }
 
         private com.db4o.drs.test.DrsFixture _a;

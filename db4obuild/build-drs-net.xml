@@ -192,7 +192,8 @@
 				<include name="test/**/test/R2.java" />
 				<include name="test/**/test/R3.java" />
 				<include name="test/**/test/R4.java" />
-<!--				<include name="test/**/test/CollectionHolder.java" /> -->
+				<include name="test/**/test/ReplicationFeaturesMain.java" />
+				<include name="test/**/test/Replicated.java" />				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>
