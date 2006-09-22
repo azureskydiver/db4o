@@ -20,7 +20,7 @@ public class UUIDMigrationTestCase implements TestCase {
 		new TestRunner(UUIDMigrationTestCase.class).run();
 	}
 	
-	public void _test() throws Exception {
+	public void test() throws Exception {
 		configure();
 		try {
 			final ObjectContainer container = Db4o.openFile(getUUIDMigrationSourcePath());
