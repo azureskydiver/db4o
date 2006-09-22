@@ -259,8 +259,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 								// We want to clean up the "No route"
 								// at some stage.
 
-								qcon.visit(getRoot(), qcon.i_evaluator
-										.not(false));
+								qcon.visit(getRoot(), qcon.evaluator().not(false));
 
 								outerRes = false;
 							}

@@ -19,9 +19,8 @@ public class IndexedLeaf extends IndexedNodeBase implements IndexedNodeWithRange
     }
     
     private BTreeRange search() {
-        
 		final BTreeRange range = search(constraint().getObject());
-        final QEBitmap bitmap = QEBitmap.forQE(constraint().i_evaluator);
+        final QEBitmap bitmap = QEBitmap.forQE(constraint().evaluator());
         if (bitmap.takeGreater()) {        
             if (bitmap.takeEqual()) {
                 return range.extendToLast();

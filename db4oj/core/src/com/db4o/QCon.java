@@ -30,7 +30,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     public List4 _children;
 
     // for evaluation
-    public QE i_evaluator = QE.DEFAULT;
+    protected QE i_evaluator = QE.DEFAULT;
 
     // ID handling for fast find of QConstraint objects in 
     // pending OR evaluations
@@ -736,5 +736,9 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     boolean visitSelfOnNull() {
         return true;
+    }
+
+    public QE evaluator() {
+        return i_evaluator;
     }	
 }

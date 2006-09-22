@@ -9,7 +9,7 @@ public class QEIdentity extends QEEqual
 {
 	public int i_objectID;
 	
-	boolean identity(){
+	public boolean identity(){
 		return true;
 	}
 	

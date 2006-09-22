@@ -16,7 +16,7 @@ public class QEMulti extends QE{
 		return this;
 	}
 	
-	boolean identity(){
+	public boolean identity(){
 		boolean ret = false;
 		Iterator4 i = i_evaluators.iterator();
 		while(i.moveNext()){
