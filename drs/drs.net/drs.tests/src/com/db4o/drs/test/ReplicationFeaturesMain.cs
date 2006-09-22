@@ -185,12 +185,6 @@ namespace com.db4o.drs.test
 				(origin, inspected));
 		}
 
-//		public override void Configure()
-//		{
-//			com.db4o.Db4o.Configure().GenerateUUIDs(int.MaxValue);
-//			com.db4o.Db4o.Configure().GenerateVersionNumbers(int.MaxValue);
-//		}
-
 		private com.db4o.drs.inside.TestableReplicationProviderInside Container(string aOrB
 			)
 		{
@@ -268,14 +262,14 @@ namespace com.db4o.drs.test
 		private void PrintProviderContent(com.db4o.drs.inside.TestableReplicationProviderInside
 			 provider)
 		{
-//			com.db4o.ObjectContainer db = ((com.db4o.drs.db4o.Db4oReplicationProvider)provider
-//				).ObjectContainer();
-//			com.db4o.ObjectSet result = db.Query(typeof(com.db4o.drs.test.Replicated));
-//			j4o.lang.JavaSystem._out.Println("PROVIDER: " + provider);
-//			while (result.HasNext())
-//			{
-//				j4o.lang.JavaSystem._out.Println(result.Next());
-//			}
+			com.db4o.ObjectContainer db = ((com.db4o.drs.db4o.Db4oReplicationProvider)provider
+				).ObjectContainer();
+			com.db4o.ObjectSet result = db.Query(typeof(com.db4o.drs.test.Replicated));
+			j4o.lang.JavaSystem._out.Println("PROVIDER: " + provider);
+			while (result.HasNext())
+			{
+				j4o.lang.JavaSystem._out.Println(result.Next());
+			}
 		}
 
 		private bool TryToReplicate(com.db4o.drs.ReplicationSession replication)
