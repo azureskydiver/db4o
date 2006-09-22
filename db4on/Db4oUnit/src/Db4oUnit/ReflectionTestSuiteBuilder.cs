@@ -39,31 +39,30 @@ namespace Db4oUnit
 
 		protected virtual Db4oUnit.TestSuite FromClass(System.Type clazz)
 		{
-			object instance = NewInstance(clazz);
-			return FromInstance(instance);
-		}
-
-		private Db4oUnit.TestSuite FromInstance(object instance)
-		{
-			if (instance is Db4oUnit.TestSuiteBuilder)
+			if (typeof(Db4oUnit.TestSuiteBuilder).IsAssignableFrom(clazz))
 			{
-				return ((Db4oUnit.TestSuiteBuilder)instance).Build();
+				return ((Db4oUnit.TestSuiteBuilder)NewInstance(clazz)).Build();
 			}
-			System.Type clazz = instance.GetType();
-			if (instance is Db4oUnit.Test)
+			if (typeof(Db4oUnit.Test).IsAssignableFrom(clazz))
 			{
 				return new Db4oUnit.TestSuite(clazz.FullName, new Db4oUnit.Test[] { (Db4oUnit.Test
-					)instance });
+					)NewInstance(clazz) });
 			}
-			if (!(instance is Db4oUnit.TestCase))
+			if (!(typeof(Db4oUnit.TestCase).IsAssignableFrom(clazz)))
 			{
 				throw new System.ArgumentException("" + clazz + " is not marked as " + typeof(Db4oUnit.TestCase
 					));
 			}
+			return FromMethods(clazz);
+		}
+
+		private Db4oUnit.TestSuite FromMethods(System.Type clazz)
+		{
 			System.Collections.ArrayList tests = new System.Collections.ArrayList();
 			System.Reflection.MethodInfo[] methods = clazz.GetMethods();
 			for (int i = 0; i < methods.Length; i++)
 			{
+				object instance = NewInstance(clazz);
 				System.Reflection.MethodInfo method = methods[i];
 				if (!IsTestMethod(method))
 				{
@@ -78,7 +77,7 @@ namespace Db4oUnit
 		private void EmitWarningOnIgnoredTestMethod(object subject, System.Reflection.MethodInfo
 			 method)
 		{
-			if (!StartsWithIgnoringCase(method.Name, "_test"))
+			if (!StartsWithIgnoreCase(method.Name, "_test"))
 			{
 				return;
 			}
@@ -94,10 +93,10 @@ namespace Db4oUnit
 
 		private bool HasTestPrefix(System.Reflection.MethodInfo method)
 		{
-			return StartsWithIgnoringCase(method.Name, "test");
+			return StartsWithIgnoreCase(method.Name, "test");
 		}
 
-		private bool StartsWithIgnoringCase(string s, string prefix)
+		protected virtual bool StartsWithIgnoreCase(string s, string prefix)
 		{
 			return s.ToUpper().StartsWith(prefix.ToUpper());
 		}

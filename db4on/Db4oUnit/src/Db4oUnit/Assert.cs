@@ -46,17 +46,27 @@ namespace Db4oUnit
 
 		public static void IsNull(object reference)
 		{
+			IsNull(reference, "Expected reference to be null, but was " + reference);
+		}
+
+		public static void IsNull(object reference, string message)
+		{
 			if (reference != null)
 			{
-				Fail("FAILURE");
+				Fail(message);
 			}
 		}
 
 		public static void IsNotNull(object reference)
 		{
+			IsNotNull(reference, FailureMessage("not null", reference));
+		}
+
+		public static void IsNotNull(object reference, string message)
+		{
 			if (reference == null)
 			{
-				Fail("FAILURE");
+				Fail(message);
 			}
 		}
 
@@ -85,6 +95,15 @@ namespace Db4oUnit
 				return;
 			}
 			Fail(message);
+		}
+
+		public static void AreEqual(double expected, double actual)
+		{
+			if (expected == actual)
+			{
+				return;
+			}
+			Fail(FailureMessage(expected, actual));
 		}
 
 		public static void AreEqual(long expected, long actual)

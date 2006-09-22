@@ -6,7 +6,8 @@ namespace Db4oUnit.tests
 		{
 			return new Db4oUnit.ReflectionTestSuiteBuilder(new System.Type[] { typeof(Db4oUnit.tests.FrameworkTestCase
 				), typeof(Db4oUnit.tests.AssertTestCase), typeof(Db4oUnit.tests.TestLifeCycleTestCase
-				), typeof(Db4oUnit.tests.ReflectionTestSuiteBuilderTestCase) }).Build();
+				), typeof(Db4oUnit.tests.ReflectionTestSuiteBuilderTestCase), typeof(Db4oUnit.tests.ReinstantiatePerMethodTest
+				) }).Build();
 		}
 
 		public static void Main(string[] args)

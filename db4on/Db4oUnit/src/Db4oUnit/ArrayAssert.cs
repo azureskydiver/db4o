@@ -48,5 +48,39 @@ namespace Db4oUnit
 			}
 			Db4oUnit.Assert.IsTrue(false);
 		}
+
+		public static void AreEqual(int[] expected, int[] actual)
+		{
+			if (expected == actual)
+			{
+				return;
+			}
+			if (expected == null || actual == null)
+			{
+				Db4oUnit.Assert.AreSame(expected, actual);
+			}
+			Db4oUnit.Assert.AreEqual(expected.Length, actual.Length);
+			for (int i = 0; i < expected.Length; i++)
+			{
+				Db4oUnit.Assert.AreEqual(expected[i], actual[i]);
+			}
+		}
+
+		public static void AreEqual(double[] expected, double[] actual)
+		{
+			if (expected == actual)
+			{
+				return;
+			}
+			if (expected == null || actual == null)
+			{
+				Db4oUnit.Assert.AreSame(expected, actual);
+			}
+			Db4oUnit.Assert.AreEqual(expected.Length, actual.Length);
+			for (int i = 0; i < expected.Length; i++)
+			{
+				Db4oUnit.Assert.AreEqual(expected[i], actual[i]);
+			}
+		}
 	}
 }
