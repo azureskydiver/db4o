@@ -27,13 +27,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-lazy="false">
-	<class name="com.db4o.test.drs.Car">
+	<class name="com.db4o.drs.test.Car">
 		<!--Primary key column-->
 		<id column="typed_id" type="long">
 			<generator class="native"/>
 		</id>
 		<discriminator/>
 		<property name="model"/>
-		<!--<subclass name="com.db4o.test.drs.provider.F1Car"/>-->
+		<!--<subclass name="com.db4o.drs.test.provider.F1Car"/>-->
 	</class>
 </hibernate-mapping>
