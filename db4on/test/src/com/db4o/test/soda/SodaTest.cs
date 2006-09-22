@@ -160,13 +160,13 @@ namespace com.db4o.test.soda
 			}
 			if (failedTestClasses.Size() > 0) 
 			{
-				j4o.lang.JavaSystem.err.Println("\nFailed test classes:\n");
+				System.Console.Error.WriteLine("\nFailed test classes:\n");
 				Iterator4 i1 = failedTestClasses.Iterator();
 				while (i1.MoveNext()) 
 				{
-					j4o.lang.JavaSystem.err.Println(j4o.lang.Class.GetClassForObject(i1.Current()).GetName());
+					System.Console.Error.WriteLine(j4o.lang.Class.GetClassForObject(i1.Current()).GetName());
 				}
-				j4o.lang.JavaSystem.err.Println("\n");
+				System.Console.Error.WriteLine("\n");
 			}
 		}
       
@@ -350,9 +350,9 @@ namespace com.db4o.test.soda
                       
 				}  
 				catch (Exception) 
-				{ 
-					j4o.lang.JavaSystem.err.Println("Add the following line to Class " + j4o.lang.Class.GetClassForObject(classes[i1]).GetName());
-					j4o.lang.JavaSystem.err.Println("public static transient SodaTest st;");
+				{
+					System.Console.Error.WriteLine("Add the following line to Class " + j4o.lang.Class.GetClassForObject(classes[i1]).GetName());
+					System.Console.Error.WriteLine("public static transient SodaTest st;");
 				}
 			}
 		}

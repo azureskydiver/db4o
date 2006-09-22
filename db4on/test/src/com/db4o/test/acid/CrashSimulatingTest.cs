@@ -52,7 +52,7 @@ namespace com.db4o.test.acid
 			int count = adapterFactory.batch.WriteVersions(FILE);
 			CheckFiles("R", adapterFactory.batch.NumSyncs());
 			CheckFiles("W", count);
-			j4o.lang.JavaSystem._out.Println("Total versions: " + count);
+			System.Console.WriteLine("Total versions: " + count);
 		}
 
 		private void CheckFiles(string infix, int count)

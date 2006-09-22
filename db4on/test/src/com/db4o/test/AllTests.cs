@@ -24,7 +24,6 @@ namespace com.db4o.test
 
 		public static void Main(String[] args) 
 		{
-
 			//            Configuration conf = Db4o.Configure();
 			//            conf.MessageLevel(-1);
 			//
@@ -42,7 +41,9 @@ namespace com.db4o.test
 			//
 			//            // BenchMark.Main(null);
 			//
-			new AllTests().Run();
+
+			new com.db4o.db4ounit.common.AllTests().RunSolo();
+			//new AllTests().Run();
 		}
 
 		public AllTests() : base() 

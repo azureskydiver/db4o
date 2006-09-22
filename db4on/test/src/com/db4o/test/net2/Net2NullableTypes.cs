@@ -10,8 +10,8 @@
 
 	class NullableContainer
 	{
-		public int? intValue;
-		public DateTime? dateValue;
+		public int? intValue = null;
+		public DateTime? dateValue = null;
 
 		public NullableContainer(int value)
 		{
@@ -26,10 +26,12 @@
 
 	class Net2NullableTypes
 	{
+		static readonly DateTime TheDate = new DateTime(1983, 3, 7);
+		
 		public void Store()
 		{
 			Tester.Store(new NullableContainer(42));
-			Tester.Store(new NullableContainer(new DateTime(1983, 3, 7)));
+			Tester.Store(new NullableContainer(TheDate));
 		}
 
 		public void TestGlobalQuery()
@@ -53,7 +55,7 @@
 				}
 				else
 				{
-					Tester.EnsureEquals(new DateTime(1983, 3, 7), item.dateValue.Value);
+					Tester.EnsureEquals(TheDate, item.dateValue.Value);
 					Tester.Ensure(!item.intValue.HasValue);
 					foundDate = true;
 				}
@@ -65,13 +67,16 @@
 
 		public void TestDateQuery()
 		{
-			DateTime value = new DateTime(1983, 3, 7);
-			ObjectSet os = Tester.ObjectContainer().Get(new NullableContainer(value));
-			Tester.EnsureEquals(1, os.Size());
+			ObjectSet os = Tester.ObjectContainer().Get(new NullableContainer(TheDate));
+			CheckDateValueQueryResult(os);
+		}
 
+		private static void CheckDateValueQueryResult(ObjectSet os)
+		{
+			Tester.EnsureEquals(1, os.Size());
 			NullableContainer found = (NullableContainer)os.Next();
-			Tester.EnsureEquals(value, found.dateValue.Value);
-			Tester.Ensure(!found.intValue.HasValue);
+			Tester.EnsureEquals(TheDate, found.dateValue.Value);
+			EnsureIsNull(found.intValue);
 		}
 
 		public void TestIntQuery()
@@ -88,14 +93,26 @@
             CheckIntValueQueryResult(q.Execute());
         }
 
+		public void TestSodaQueryWithNullConstrain()
+		{
+			Query q = Tester.ObjectContainer().Query();
+			q.Constrain(typeof(NullableContainer));
+			q.Descend("intValue").Constrain(null);
+			CheckDateValueQueryResult(q.Execute());
+		}
+
 	    private static void CheckIntValueQueryResult(ObjectSet os)
 	    {
 	        Tester.EnsureEquals(1, os.Size());
 	        NullableContainer found = (NullableContainer)os.Next();
 	        Tester.EnsureEquals(42, found.intValue.Value);
-	        Tester.Ensure(!found.dateValue.HasValue);
+	    	EnsureIsNull(found.dateValue);
 	    }
 
+		private static void EnsureIsNull<T>(Nullable<T> value) where T : struct
+		{
+			Tester.Ensure("!nullable.HasValue", !value.HasValue);
+		}
 	}
 #endif
 }

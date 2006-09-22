@@ -14,7 +14,7 @@ namespace com.db4o.test.soda.utils {
       public STLogger() : base() {
       }
       private static int maximumDepth = Int32.MaxValue;
-      private static PrintStream _out = j4o.lang.JavaSystem._out;
+      private static System.IO.TextWriter _out = System.Console.Out;
       private static String cr = "";
       private static String sp = " ";
       private static bool silent = false;
@@ -28,7 +28,7 @@ namespace com.db4o.test.soda.utils {
          }
       }
       
-      public static void SetOut(PrintStream ps) {
+      public static void SetOut(System.IO.TextWriter ps) {
          _out = ps;
       }
       
@@ -117,7 +117,7 @@ namespace com.db4o.test.soda.utils {
       
       private static void Log(String a_msg) {
          if (!silent) {
-            _out.Println(a_msg + cr);
+            _out.WriteLine(a_msg + cr);
          }
       }
       
