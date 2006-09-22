@@ -96,7 +96,7 @@ public class QConObject extends QCon {
     }
     
     public boolean canBeIndexLeaf(){
-        return i_yapClass != null && i_yapClass.isPrimitive();
+        return (i_yapClass != null && i_yapClass.isPrimitive()) || evaluator().identity();
     }
     
     public boolean canLoadByIndex(){
