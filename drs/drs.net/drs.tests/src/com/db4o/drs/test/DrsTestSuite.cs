@@ -27,7 +27,9 @@ namespace com.db4o.drs.test
                                         typeof(ReplicationAfterDeletionTest),
                                         typeof(ListTest),
                                         typeof(Db4oListTest),
-                                     typeof(R0to4Runner)};
+                                        typeof(R0to4Runner),
+                                        typeof(ReplicationFeaturesMain)
+            };
         }
     }
 }
