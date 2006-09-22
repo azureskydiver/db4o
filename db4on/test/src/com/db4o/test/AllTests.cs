@@ -43,7 +43,7 @@ namespace com.db4o.test
 			//
 
 			new com.db4o.db4ounit.common.AllTests().RunSolo();
-			//new AllTests().Run();
+			new AllTests().Run();
 		}
 
 		public AllTests() : base() 
