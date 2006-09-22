@@ -12,8 +12,8 @@ import db4ounit.Assert;
 
 public class ReplicationFeaturesMain extends DrsTestCase {
 
-	private static final String A = "A";
-	private static final String B = "B";
+	private static final String AStuff = "A";
+	private static final String BStuff = "B";
 
 	private final Set4 _setA = new Set4(1);
 	private final Set4 _setB = new Set4(1);
@@ -80,8 +80,8 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 	protected void actualTest() {
 		clean();
-		_setA.add(A);
-		_setB.add(B);
+		_setA.add(AStuff);
+		_setB.add(BStuff);
 
 		_setBoth.addAll(_setA);
 		_setBoth.addAll(_setB);
@@ -137,10 +137,10 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 
 	private void checkNames() {
-		checkNames(A, A);
-		checkNames(A, B);
-		checkNames(B, A);
-		checkNames(B, B);
+		checkNames(AStuff, AStuff);
+		checkNames(AStuff, BStuff);
+		checkNames(BStuff, AStuff);
+		checkNames(BStuff, BStuff);
 	}
 
 	private void checkNames(String origin, String inspected) {
@@ -150,13 +150,13 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		checkName(container(inspected), "oldFromBChangedIn" + origin, isChangedNameExpected(origin, inspected));
 	}
 
-	public void configure() {
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-	}
+//	public void configure() {
+//		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+//		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+//	}
 
 	private TestableReplicationProviderInside container(String aOrB) {
-		return aOrB.equals(A) ? a().provider() : b().provider();
+		return aOrB.equals(AStuff) ? a().provider() : b().provider();
 	}
 
 	private void deleteObject(TestableReplicationProviderInside container, String name) {
@@ -182,7 +182,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 				if (_containerStateToPrevail.isEmpty()) return;  //Default replication behaviour.
 
-				ObjectState override = _containerStateToPrevail.contains(A)
+				ObjectState override = _containerStateToPrevail.contains(AStuff)
 						? e.stateInProviderA()
 						: e.stateInProviderB();
 				e.overrideWith(override);
@@ -190,8 +190,8 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		});
 
 		if (_direction.size() == 1) {
-			if (_direction.contains(A))	replication.setDirection(b().provider(), a().provider());
-			if (_direction.contains(B))	replication.setDirection(a().provider(), b().provider());
+			if (_direction.contains(AStuff))	replication.setDirection(b().provider(), a().provider());
+			if (_direction.contains(BStuff))	replication.setDirection(a().provider(), b().provider());
 		}
 		out("DIRECTION: "+_direction);
 		boolean successful = tryToReplicate(replication);
@@ -224,8 +224,8 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	private boolean tryToReplicate(final ReplicationSession replication) {
 
 		try {
-			replicate(replication, A);
-			replicate(replication, B);
+			replicate(replication, AStuff);
+			replicate(replication, BStuff);
 			Assert.isFalse(isReplicationConflictExceptionExpectedReplicatingModifications());
 		} catch (ReplicationConflictException e) {
 			out("Conflict exception during modification replication.");
@@ -348,12 +348,12 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 
 	private boolean wasConflictReplicatingModifications() {
-		return wasConflictWhileReplicatingModificationsQueryingFrom(A) || wasConflictWhileReplicatingModificationsQueryingFrom(B);
+		return wasConflictWhileReplicatingModificationsQueryingFrom(AStuff) || wasConflictWhileReplicatingModificationsQueryingFrom(BStuff);
 	}
 
 
 	private boolean isModificationReplicationTriggered() {
-		return wasModificationReplicationTriggeredQueryingFrom(A) || wasModificationReplicationTriggeredQueryingFrom(B);
+		return wasModificationReplicationTriggeredQueryingFrom(AStuff) || wasModificationReplicationTriggeredQueryingFrom(BStuff);
 	}
 
 	private boolean isDeletionExpected(String inspectedContainer) {
@@ -386,38 +386,38 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 	private boolean isOldNameExpected(String inspectedContainer) {
 		if (isDeletionExpected(inspectedContainer)) return false;
-		if (isChangedNameExpected(A, inspectedContainer)) return false;
-		if (isChangedNameExpected(B, inspectedContainer)) return false;
+		if (isChangedNameExpected(AStuff, inspectedContainer)) return false;
+		if (isChangedNameExpected(BStuff, inspectedContainer)) return false;
 		return true;
 	}
 
 
 	private String other(String aOrB) {
-		return aOrB.equals(A) ? B : A;
+		return aOrB.equals(AStuff) ? BStuff : AStuff;
 	}
 
 	private void performChanges() {
-		if (_containersWithNewObjects.contains(A)) {
+		if (_containersWithNewObjects.contains(AStuff)) {
 			a().provider().storeNew(new Replicated("newFromA"));
 		}
-		if (_containersWithNewObjects.contains(B)) {
+		if (_containersWithNewObjects.contains(BStuff)) {
 			b().provider().storeNew(new Replicated("newFromB"));
 		}
 
-		if (hasDeletions(A)) {
+		if (hasDeletions(AStuff)) {
 			deleteObject(a().provider(), "oldFromA");
 			deleteObject(a().provider(), "oldFromB");
 		}
-		if (hasDeletions(B)) {
+		if (hasDeletions(BStuff)) {
 			deleteObject(b().provider(), "oldFromA");
 			deleteObject(b().provider(), "oldFromB");
 		}
 
-		if (hasChanges(A)) {
+		if (hasChanges(AStuff)) {
 			changeObject(a().provider(), "oldFromA", "oldFromAChangedInA");
 			changeObject(a().provider(), "oldFromB", "oldFromBChangedInA");
 		}
-		if (hasChanges(B)) {
+		if (hasChanges(BStuff)) {
 			changeObject(b().provider(), "oldFromA", "oldFromAChangedInB");
 			changeObject(b().provider(), "oldFromB", "oldFromBChangedInB");
 		}
