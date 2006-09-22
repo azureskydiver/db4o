@@ -28,6 +28,17 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 						new int[] { 2, 2, 8, 8 });
 	}
     
+    public void testIdentity(){
+        Query query = createComplexItemQuery();
+        query.descend("foo").constrain(new Integer(3));
+        ComplexFieldIndexItem item = (ComplexFieldIndexItem) query.execute().next();
+        
+        query = createComplexItemQuery();
+        query.descend("child").constrain(item).identity();
+        assertExpectedFoos(ComplexFieldIndexItem.class, new int[]{4}, query);
+    }
+    
+
     public void testSingleIndexNotSmaller(){
         final Query query = createItemQuery();
         query.descend("foo").constrain(new Integer(5)).smaller().not();     
