@@ -13,14 +13,15 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
             BackupStressTestCase.class,
-            MultiFieldIndexQueryTestCase.class,
+            DatabaseUnicityTest.class,
             GetByUUIDTestCase.class,
             IndexCreateDropTestCase.class,
             IndexedQueriesTestCase.class,
+            MultiFieldIndexQueryTestCase.class,
             NakedObjectTestCase.class,
             ReAddCascadedDeleteTestCase.class,
             SimplestPossibleTestCase.class,
-            DatabaseUnicityTest.class
+            SystemInfoTestCase.class
 		};
 	}
 }
