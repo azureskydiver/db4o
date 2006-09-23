@@ -28,15 +28,16 @@ abstract class FreespaceIx {
     
     public void debug(){
         if(Debug.freespace){
-            IxTree tree = (IxTree) _indexTrans.getRoot();
-            if(tree != null){
-                tree.traverse(new Visitor4(){
-                    public void visit(Object obj) {
-                        System.out.println(obj);
-                    }
-                });
-            }
+            traverse(new Visitor4(){
+                public void visit(Object obj) {
+                    System.out.println(obj);
+                }
+            });
         }
+    }
+    
+    public int entryCount() {
+        return Tree.size(_indexTrans.getRoot());
     }
     
     void find (int val){
@@ -65,5 +66,10 @@ abstract class FreespaceIx {
         _traverser.visitSubsequent(_visitor);
         return _visitor.visited();
     }
+    
+    public void traverse(Visitor4 visitor){
+        Tree.traverse(_indexTrans.getRoot(), visitor);
+    }
+    
 
 }

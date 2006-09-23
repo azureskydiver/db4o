@@ -75,7 +75,11 @@ public abstract class FreespaceManager {
     
     public abstract void endCommit();
     
+    public abstract int entryCount();
+
     public abstract void free(int a_address, int a_length);
+    
+    public abstract int freeSize();
     
     public abstract void freeSelf();
     
@@ -90,5 +94,6 @@ public abstract class FreespaceManager {
     public abstract byte systemType();
     
     public abstract int write(boolean shuttingDown);
+
     
 }

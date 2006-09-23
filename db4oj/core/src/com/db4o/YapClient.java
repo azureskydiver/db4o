@@ -715,4 +715,8 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 	}
 
+    public SystemInfo systemInfo() {
+        throw new NotImplementedException("Functionality not availble on clients.");
+    }
+
 }

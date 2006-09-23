@@ -6,4 +6,13 @@ package com.db4o.foundation;
  * @exclude
  */
 public class NotImplementedException extends RuntimeException {
+    
+    public NotImplementedException() {
+        super();
+    }
+    
+    public NotImplementedException(String msg) {
+        super(msg);
+    }
+    
 }

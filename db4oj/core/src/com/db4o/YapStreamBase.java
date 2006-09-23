@@ -4,16 +4,9 @@ package com.db4o;
 
 import com.db4o.config.Configuration;
 import com.db4o.config.Entry;
-import com.db4o.ext.Db4oDatabase;
-import com.db4o.ext.Db4oException;
-import com.db4o.ext.Db4oUUID;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.MemoryFile;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.ext.ObjectNotStorableException;
-import com.db4o.ext.StoredClass;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.Exceptions4;
+import com.db4o.inside.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.MarshallerFamily;
 import com.db4o.inside.query.NativeQueryHandler;
@@ -2006,6 +1999,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public YapStringIO stringIO(){
     	return i_handlers.i_stringHandler.i_stringIo;
     }
+    
+    public abstract SystemInfo systemInfo();
 
     Object unmarshall(YapWriter yapBytes) {
         return unmarshall(yapBytes._buffer, yapBytes.getID());
