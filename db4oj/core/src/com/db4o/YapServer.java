@@ -148,7 +148,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
     public ObjectContainer openClient() {
         try {
             YapClient client = 
-                new YapClient(openClientSocket(),YapConst.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1),"",false);
+                new YapClient(Db4o.cloneConfiguration(), openClientSocket(),YapConst.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1),"",false);
             client.blockSize(i_yapFile.blockSize());
             return client;
         } catch (IOException e) {

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import com.db4o.config.Configuration;
 import com.db4o.ext.*;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
 import com.db4o.foundation.network.YapSocketReal;
 import com.db4o.reflect.Reflector;
 
@@ -51,6 +51,14 @@ public class Db4o {
 		return i_config;
 	}
 	
+	public static Configuration newConfiguration() {
+		return new Config4Impl();
+	}
+
+	public static Configuration cloneConfiguration() {
+		return (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(null);
+	}
+
     /**
      * opens an {@link ObjectContainer ObjectContainer}
 	 * client and connects it to the specified named server and port.
@@ -73,7 +81,7 @@ public class Db4o {
 	public static ObjectContainer openClient(String hostName, int port, String user, String password)
 		throws IOException {
 		synchronized(Db4o.lock){
-			return new YapClient(new YapSocketReal(hostName, port), user, password, true);
+			return new YapClient(Db4o.cloneConfiguration(),new YapSocketReal(hostName, port), user, password, true);
 		}
 	}
 	
@@ -95,12 +103,16 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectContainer openFile(String databaseFileName) throws DatabaseFileLockedException {
+		return openFile(cloneConfiguration(),databaseFileName);
+	}
+
+	public static final ObjectContainer openFile(Configuration config,String databaseFileName) throws DatabaseFileLockedException {
 		synchronized(Db4o.lock){
-			return i_sessions.open(databaseFileName);
+			return i_sessions.open(config,databaseFileName);
 		}
 	}
-	
-	protected static final ObjectContainer openMemoryFile1(MemoryFile memoryFile) {
+
+	protected static final ObjectContainer openMemoryFile1(Configuration config,MemoryFile memoryFile) {
 		synchronized(Db4o.lock){
 			if(memoryFile == null){
 				memoryFile = new MemoryFile();
@@ -108,14 +120,14 @@ public class Db4o {
 			ObjectContainer oc = null;
 			if (Deploy.debug) {
 				System.out.println("db4o Debug is ON");
-		        oc = new YapMemoryFile(memoryFile);
+		        oc = new YapMemoryFile(config,memoryFile);
 	
 				// intentionally no exception handling,
 			    // in order to follow uncaught errors
 			}
 			else {
 			    try {
-			        oc = new YapMemoryFile(memoryFile);
+			        oc = new YapMemoryFile(config,memoryFile);
 				}
 			    catch(Throwable t) {
 			        Messages.logErr(i_config, 4, "Memory File", t);

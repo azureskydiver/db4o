@@ -2,6 +2,7 @@
 
 package db4ounit.extensions;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 
 public interface Db4oFixture {
@@ -9,8 +10,12 @@ public interface Db4oFixture {
 	void open() throws Exception;
     
 	void close() throws Exception;
+	
+	void reopen() throws Exception;
     
     void clean();
     
 	ExtObjectContainer db();
+	
+	Configuration config();
 }

@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.Db4o;
+import com.db4o.config.*;
 import com.db4o.foundation.Hashtable4;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -13,8 +14,8 @@ public class GetByUUIDTestCase extends AbstractDb4oTestCase {
 		new GetByUUIDTestCase().runSolo();
 	}
 
-	protected void configure() {
-		Db4o.configure().objectClass(UUIDTestItem.class).generateUUIDs(true);
+	protected void configure(Configuration config) {
+		config.objectClass(UUIDTestItem.class).generateUUIDs(true);
 	}
 
 	protected void store() {

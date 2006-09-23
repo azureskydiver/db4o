@@ -138,13 +138,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     protected final PersistentTimeStampIdGenerator _timeStampIdGenerator = new PersistentTimeStampIdGenerator();
 
-    protected YapStreamBase(YapStream a_parent) {
+    protected YapStreamBase(Configuration config,YapStream a_parent) {
     	_this = cast(this);
         i_parent = a_parent == null ? _this : a_parent;
         i_lock = a_parent == null ? new Object() : a_parent.i_lock;
         initialize0();
         initializeTransactions();
-        initialize1();
+        initialize1(config);
     }
 
     public void activate(Object a_activate, int a_depth) {
@@ -1067,9 +1067,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_justDeactivated = new Tree[1];
     }
 
-    void initialize1() {
+    void initialize1(Configuration config) {
 
-        i_config = (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(this);
+        i_config = initializeConfig(config);
         i_handlers = new YapHandlers(_this, configImpl().encoding(), configImpl().reflector());
         
         if (i_references != null) {
@@ -1086,6 +1086,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         initialize2();
         i_stillToSet = null;
     }
+
+	private Config4Impl initializeConfig(Configuration config) {
+		Config4Impl impl=((Config4Impl)config);
+		impl.stream(_this);
+		return impl;
+	}
 
     /**
      * before file is open
@@ -1242,7 +1248,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
         getYapClass(reflector().forObject(obj), true);
-        YapObjectCarrier carrier = new YapObjectCarrier(_this, memoryFile);
+        YapObjectCarrier carrier = new YapObjectCarrier(config(),_this, memoryFile);
         carrier.i_showInternalClasses = i_showInternalClasses;
         carrier.set(obj);
         id[0] = (int) carrier.getID(obj);
@@ -2008,7 +2014,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     Object unmarshall(byte[] bytes, int id) {
         MemoryFile memoryFile = new MemoryFile(bytes);
-        YapObjectCarrier carrier = new YapObjectCarrier(_this, memoryFile);
+        YapObjectCarrier carrier = new YapObjectCarrier(configure(),_this, memoryFile);
         Object obj = carrier.getByID(id);
         carrier.activate(obj, Integer.MAX_VALUE);
         carrier.close();

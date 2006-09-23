@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.header;
 
 import com.db4o.Db4o;
 import com.db4o.YapFile;
-import com.db4o.config.ObjectClass;
+import com.db4o.config.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -23,8 +23,8 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase{
         }
     }
     
-    protected void configure() {
-        ObjectClass objectClass = Db4o.configure().objectClass(STSItem.class);
+    protected void configure(Configuration config) {
+        ObjectClass objectClass = config.objectClass(STSItem.class);
         objectClass.generateUUIDs(true);
         objectClass.generateVersionNumbers(true);
     }

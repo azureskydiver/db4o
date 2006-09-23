@@ -28,6 +28,6 @@ public class FileSizeOnReopen {
         FileSizeOnReopen fsor =  (FileSizeOnReopen)q.execute().next();
         Test.ensure(fsor.foo.equals("foo"));
         Test.reOpen();
-        Test.ensure(Test.fileLength() == fileLength);
+        Test.ensureEquals(fileLength,Test.fileLength());
     }
 }

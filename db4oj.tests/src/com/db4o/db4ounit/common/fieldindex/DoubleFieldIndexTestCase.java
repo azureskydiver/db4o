@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 import db4ounit.ArrayAssert;
@@ -28,8 +29,8 @@ public class DoubleFieldIndexTestCase extends AbstractDb4oTestCase {
         }
 	}
     
-    protected void configure(){
-        indexField(Item.class, "value");
+    protected void configure(Configuration config){
+        indexField(config,Item.class, "value");
     }
     
     protected void store() throws Exception {

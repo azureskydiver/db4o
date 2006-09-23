@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.inside.convert.*;
 import com.db4o.types.*;
@@ -18,15 +19,15 @@ import com.db4o.types.*;
  */
 public class YapObjectCarrier extends YapMemoryFile {
 	
-	YapObjectCarrier (YapStream a_callingStream, MemoryFile memoryFile) {
-	    super(a_callingStream, memoryFile);
+	YapObjectCarrier (Configuration config,YapStream a_callingStream, MemoryFile memoryFile) {
+	    super(config,a_callingStream, memoryFile);
 	}
 	
 	void initialize0b(){
 		// do nothing
 	}
 	
-	void initialize1(){
+	void initialize1(Configuration config){
 	    i_handlers = i_parent.i_handlers;
         _classCollection = i_parent.classCollection();
 		i_config = i_parent.configImpl();

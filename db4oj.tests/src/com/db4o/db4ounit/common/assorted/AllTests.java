@@ -21,6 +21,7 @@ public class AllTests extends Db4oTestSuite {
             NakedObjectTestCase.class,
             ReAddCascadedDeleteTestCase.class,
             SimplestPossibleTestCase.class,
+            NonStaticConfigurationTestCase.class,
             SystemInfoTestCase.class
 		};
 	}

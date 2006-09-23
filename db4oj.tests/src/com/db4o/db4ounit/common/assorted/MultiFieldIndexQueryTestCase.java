@@ -6,6 +6,7 @@ package com.db4o.db4ounit.common.assorted;
 import java.lang.reflect.Field;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 import db4ounit.Assert;
@@ -60,19 +61,19 @@ public class MultiFieldIndexQueryTestCase extends AbstractDb4oTestCase {
 	    }
 	}
 	
-	protected void configure() {
-		indexAllFields(Book.class);
-		indexAllFields(Person.class);		
+	protected void configure(Configuration config) {
+		indexAllFields(config,Book.class);
+		indexAllFields(config,Person.class);		
 	}
 	
-	protected void indexAllFields(Class clazz) {
+	protected void indexAllFields(Configuration config,Class clazz) {
 		final Field[] fields = clazz.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
-			indexField(clazz, fields[i].getName());
+			indexField(config,clazz, fields[i].getName());
 		}
 		final Class superclass = clazz.getSuperclass();
 		if (superclass != null) {
-			indexAllFields(superclass);
+			indexAllFields(config,superclass);
 		}
 	}
 

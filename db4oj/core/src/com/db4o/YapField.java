@@ -536,9 +536,11 @@ public class YapField implements StoredField {
         i_isNArray = isNArray;
     }
 
+    private boolean _initialized=false;
 
     final void initConfigOnUp(Transaction trans) {
-        if (i_config != null) {
+        if (i_config != null&&!_initialized) {
+        	_initialized=true;
             i_config.initOnUp(trans, this);
         }
     }

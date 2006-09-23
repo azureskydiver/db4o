@@ -2,6 +2,7 @@ package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
 import com.db4o.QQueryBase.CreateCandidateCollectionResult;
+import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.foundation.Visitor4;
@@ -20,11 +21,11 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 		super();
 	}
 
-	protected void configure() {
-		super.configure();
-		index(ComplexFieldIndexItem.class, "foo");
-		index(ComplexFieldIndexItem.class, "bar");
-		index(ComplexFieldIndexItem.class, "child");
+	protected void configure(Configuration config) {
+		super.configure(config);
+		index(config,ComplexFieldIndexItem.class, "foo");
+		index(config,ComplexFieldIndexItem.class, "bar");
+		index(config,ComplexFieldIndexItem.class, "child");
 	}
 
 	protected Query createComplexItemQuery() {

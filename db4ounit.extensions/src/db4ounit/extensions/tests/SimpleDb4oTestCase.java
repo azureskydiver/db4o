@@ -2,6 +2,8 @@
 
 package db4ounit.extensions.tests;
 
+import com.db4o.config.*;
+
 import db4ounit.Assert;
 import db4ounit.extensions.*;
 
@@ -11,7 +13,7 @@ public class SimpleDb4oTestCase extends AbstractDb4oTestCase {
 	private boolean[] _everythingCalled=new boolean[3];
 	private Db4oFixture _expectedFixture;
 	
-	protected void configure() {
+	protected void configure(Configuration config) {
 		Assert.areSame(_expectedFixture, fixture());
 		Assert.isTrue(everythingCalledBefore(0));
 		_everythingCalled[0]=true;
