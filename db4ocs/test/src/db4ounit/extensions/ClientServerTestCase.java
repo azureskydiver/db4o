@@ -2,6 +2,7 @@
 
 package db4ounit.extensions;
 
+import com.db4o.Db4o;
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.TestCase;
@@ -15,7 +16,7 @@ public class ClientServerTestCase extends AbstractDb4oTestCase implements
 	public void setUp() throws Exception {
 		Db4oFixture fixture = fixture();
 		fixture.clean();
-		configure();
+		configure(Db4o.cloneConfiguration());
 		fixture.open();
 		ExtObjectContainer oc = fixture.db();
 		try {
