@@ -4,12 +4,13 @@ package com.db4o;
 
 import java.io.*;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
-import com.db4o.inside.classindex.ClassIndexStrategy;
+import com.db4o.inside.classindex.*;
 import com.db4o.inside.convert.*;
 import com.db4o.inside.freespace.*;
 import com.db4o.inside.slots.*;
@@ -40,13 +41,12 @@ public abstract class YapFile extends YapStream {
     int                         i_writeAt;
     
     private Tree                _freeOnCommit;
-    
-
-    YapFile(YapStream a_parent) {
-        super(a_parent);
+        
+    YapFile(Configuration config,YapStream a_parent) {
+        super(config,a_parent);
     }
-    
-	public FreespaceManager freespaceManager() {
+
+    public FreespaceManager freespaceManager() {
 		return _freespaceManager;
 	}
 	

@@ -4,6 +4,7 @@ package com.db4o;
 
 import java.io.*;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.inside.*;
 import com.db4o.io.*;
@@ -22,8 +23,8 @@ public class YapRandomAccessFile extends YapFile {
 
     private Object             i_fileLock;
 
-    YapRandomAccessFile(Session a_session) throws Exception {
-        super(null);
+    YapRandomAccessFile(Configuration config,Session a_session) throws Exception {
+        super(config,null);
         synchronized (i_lock) {
             i_fileLock = new Object();
             i_session = a_session;

@@ -2,6 +2,8 @@
 
 package db4ounit.extensions.tests;
 
+import com.db4o.*;
+
 import db4ounit.Assert;
 import db4ounit.TestCase;
 import db4ounit.TestMethod;
@@ -17,12 +19,15 @@ public class AllTests implements TestCase {
 	}
 	
 	public void testSingleTestWithDifferentFixtures() {
-		assertSimpleDb4o(new Db4oInMemory());
-		assertSimpleDb4o(new Db4oSolo());
+		ConfigurationSource configSource=new IndependentConfigurationSource();
+		assertSimpleDb4o(new Db4oInMemory(configSource));
+		assertSimpleDb4o(new Db4oSolo(configSource));
 	}
 	
 	public void testMultipleTestsSingleFixture() {
-		FrameworkTestCase.runTestAndExpect(new Db4oTestSuiteBuilder(new Db4oInMemory(), MultipleDb4oTestCase.class).build(), 2, false);
+		MultipleDb4oTestCase.resetConfigureCalls();
+		FrameworkTestCase.runTestAndExpect(new Db4oTestSuiteBuilder(new Db4oInMemory(new IndependentConfigurationSource()), MultipleDb4oTestCase.class).build(), 2, false);
+		Assert.areEqual(2,MultipleDb4oTestCase.configureCalls());
 	}
 	
 	private void assertSimpleDb4o(Db4oFixture fixture) {

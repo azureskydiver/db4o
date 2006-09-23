@@ -11,7 +11,7 @@ public class ConfigurationSettingsTestCase extends AbstractDb4oTestCase {
     
     public void testChangingUuidSettings() throws Exception {
         
-        Db4o.configure().generateUUIDs(0);
+        fixture().config().generateUUIDs(0);
         
         reopen();
         
@@ -21,6 +21,8 @@ public class ConfigurationSettingsTestCase extends AbstractDb4oTestCase {
         
         Assert.areEqual(-1, generateUUIDs());
         
+        fixture().config().generateUUIDs(0);
+
         reopen();
         
         Assert.areEqual(0, generateUUIDs());

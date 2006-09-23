@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
@@ -17,7 +18,7 @@ class Sessions extends Collection4{
 		}
 	}
 
-	ObjectContainer open(String databaseFileName) {
+	ObjectContainer open(Configuration config,String databaseFileName) {
 		
 		synchronized(Db4o.lock){
 			ObjectContainer oc = null;
@@ -38,13 +39,13 @@ class Sessions extends Collection4{
 					System.out.println("Debug option set NOT to flush file.");
 				}
 				try{
-				    oc = new YapRandomAccessFile(newSession);
+				    oc = new YapRandomAccessFile(config,newSession);
 				}catch(Exception e){
 				    e.printStackTrace();
 				}
 			} else {
 				try {
-					oc = new YapRandomAccessFile(newSession);
+					oc = new YapRandomAccessFile(config,newSession);
 				} catch (LongJumpOutException e) {
 					throw e;
 				} catch (DatabaseFileLockedException e) {

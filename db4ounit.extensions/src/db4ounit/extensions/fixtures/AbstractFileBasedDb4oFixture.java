@@ -2,14 +2,15 @@
 
 package db4ounit.extensions.fixtures;
 
-import java.io.File;
+import java.io.*;
 
 
 public abstract class AbstractFileBasedDb4oFixture extends AbstractDb4oFixture {
 	
 	private final File _yap;
 
-	public AbstractFileBasedDb4oFixture(String fileName) {
+	public AbstractFileBasedDb4oFixture(ConfigurationSource configSource,String fileName) {
+		super(configSource);
 		_yap = new File(fileName);
 	}
 
@@ -17,7 +18,7 @@ public abstract class AbstractFileBasedDb4oFixture extends AbstractDb4oFixture {
 		return _yap.getAbsolutePath();
 	}
 
-	public void clean() {
+	protected void doClean() {
 		_yap.delete();
 	}
 

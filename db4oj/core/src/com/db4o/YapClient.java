@@ -2,14 +2,15 @@
 
 package com.db4o;
 
-import java.io.IOException;
+import java.io.*;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
-import com.db4o.inside.Exceptions4;
+import com.db4o.inside.*;
 import com.db4o.inside.convert.*;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -46,15 +47,15 @@ public class YapClient extends YapStream implements ExtClient {
     private int _blockSize = 1;
     
 
-	private YapClient() {
-		super(null);
+	private YapClient(Configuration config) {
+		super(config,null);
 	}
 
 	/**
 	 * Single-Threaded Client-Server Debug Mode
 	 */
 	public YapClient(String fakeServerFile) {
-		this();
+		this(Db4o.cloneConfiguration());
 		synchronized (lock()) {
 			_singleThreaded = configImpl().singleThreadedClient();
 			if (Debug.fakeServer) {
@@ -72,9 +73,9 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 	}
 
-	YapClient(YapSocket socket, String user, String password_, boolean login)
+	YapClient(Configuration config,YapSocket socket, String user, String password_, boolean login)
 			throws IOException {
-		this();
+		this(config);
 		synchronized (lock()) {
 			_singleThreaded = configImpl().singleThreadedClient();
 
@@ -592,10 +593,10 @@ public class YapClient extends YapStream implements ExtClient {
 		// do nothing
 	}
 
-	private void reReadAll() {
+	private void reReadAll(Configuration config) {
 		remainingIDs = 0;
 		initialize0();
-		initialize1();
+		initialize1(config);
 		initializeTransactions();
 		readThis();
 	}
@@ -635,7 +636,8 @@ public class YapClient extends YapStream implements ExtClient {
 			commit();
 			writeMsg(Msg.SWITCH_TO_FILE.getWriterForString(i_trans, fileName));
 			expectedResponse(Msg.OK);
-			reReadAll();
+			// FIXME NSC
+			reReadAll(Db4o.cloneConfiguration());
 			switchedToFile = fileName;
 		}
 	}
@@ -645,7 +647,8 @@ public class YapClient extends YapStream implements ExtClient {
 			commit();
 			writeMsg(Msg.SWITCH_TO_MAIN_FILE);
 			expectedResponse(Msg.OK);
-			reReadAll();
+			// FIXME NSC
+			reReadAll(Db4o.cloneConfiguration());
 			switchedToFile = null;
 		}
 	}

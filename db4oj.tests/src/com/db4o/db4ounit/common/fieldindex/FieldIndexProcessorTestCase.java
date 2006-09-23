@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.BTreeAssert;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.inside.btree.BTree;
@@ -16,9 +17,9 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		new FieldIndexProcessorTestCase().runSolo();
 	}
 	
-	protected void configure() {
-		super.configure();
-		indexField(NonIndexedFieldIndexItem.class, "indexed");
+	protected void configure(Configuration config) {
+		super.configure(config);
+		indexField(config,NonIndexedFieldIndexItem.class, "indexed");
 	}
 	
 	protected void store() {

@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
+import com.db4o.config.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -33,8 +34,8 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
         }
     }
     
-    protected void configure(){
-        Db4o.configure().objectClass(Item.class).cascadeOnDelete(true);
+    protected void configure(Configuration config){
+        config.objectClass(Item.class).cascadeOnDelete(true);
     }
     
     protected void store() {

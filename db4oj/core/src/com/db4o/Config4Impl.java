@@ -223,8 +223,11 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     public Object deepClone(Object param) {
         Config4Impl ret = new Config4Impl();
         ret._config=(KeySpecHashtable4)_config.deepClone(this);
-        ret.i_stream = (YapStream) param;
         return ret;
+    }
+    
+    public void stream(YapStream stream) {
+    	i_stream=stream;
     }
 
     public void detectSchemaChanges(boolean flag) {

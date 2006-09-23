@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.Query;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -11,12 +12,12 @@ public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase {
 		super();
 	}
 
-	protected void configure() {
-		index(FieldIndexItem.class, "foo");
+	protected void configure(Configuration config) {
+		index(config,FieldIndexItem.class, "foo");
 	}
 
-	protected void index(final Class clazz, final String fieldName) {
-		Db4o.configure()
+	protected void index(Configuration config,final Class clazz, final String fieldName) {
+		config
 	    .objectClass(clazz)
 	    .objectField(fieldName)
 	    .indexed(true);

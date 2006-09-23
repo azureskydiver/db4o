@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.jre11.assorted;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -19,8 +20,8 @@ public class NullWrapperTestCase extends AbstractDb4oTestCase {
         new NullWrapperTestCase().runSolo();
     }
     
-    protected void configure() {
-        Db4o.configure().objectClass(NullWrapperItem.class).objectField(NullWrapperItem.INTEGER_FIELDNAME).indexed(true);
+    protected void configure(Configuration config) {
+        config.objectClass(NullWrapperItem.class).objectField(NullWrapperItem.INTEGER_FIELDNAME).indexed(true);
     }
     
     public void test() throws Exception{

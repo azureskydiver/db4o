@@ -2,20 +2,30 @@
 
 package db4ounit.extensions.fixtures;
 
+import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 
 public class Db4oInMemory extends AbstractDb4oFixture {
     
+	public Db4oInMemory() {
+		super(new IndependentConfigurationSource());
+	}
+
+	public Db4oInMemory(ConfigurationSource configSource) {
+		super(configSource);
+	}
+
 	private MemoryFile _memoryFile;
 	
-	public void open() {
+	protected ObjectContainer createDatabase(Configuration config) {
 		if (null == _memoryFile) {
 			_memoryFile = new MemoryFile();
 		}
-		db(ExtDb4o.openMemoryFile(_memoryFile).ext());
+		return ExtDb4o.openMemoryFile(config,_memoryFile);
 	}
 
-    public void clean() {
+    protected void doClean() {
     	_memoryFile = null;
     }
 }

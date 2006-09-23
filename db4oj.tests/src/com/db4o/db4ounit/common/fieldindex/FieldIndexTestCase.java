@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.ext.StoredField;
@@ -20,6 +21,10 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     
     public static void main(String[] arguments) {
         new FieldIndexTestCase().runSolo();
+    }
+    
+    protected void configure(Configuration config) {
+    	super.configure(config);
     }
     
 	protected void store() {

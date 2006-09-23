@@ -4,6 +4,7 @@ package com.db4o;
 
 import java.io.*;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.inside.*;
 
@@ -16,8 +17,8 @@ public class YapMemoryFile extends YapFile {
     final MemoryFile i_memoryFile;
     private int i_length = 0;
 
-    protected YapMemoryFile(YapStream a_parent, MemoryFile memoryFile) {
-        super(a_parent);
+    protected YapMemoryFile(Configuration config,YapStream a_parent, MemoryFile memoryFile) {
+        super(config,a_parent);
         this.i_memoryFile = memoryFile;
         try {
             open();
@@ -27,8 +28,8 @@ public class YapMemoryFile extends YapFile {
         initialize3();
     }
 
-    YapMemoryFile(MemoryFile memoryFile) {
-        this(null, memoryFile);
+    YapMemoryFile(Configuration config,MemoryFile memoryFile) {
+        this(config, null, memoryFile);
     }
     
     public void backup(String path)throws IOException{

@@ -3,6 +3,7 @@
 package com.db4o.ext;
 
 import com.db4o.*;
+import com.db4o.config.*;
 
 /**
  * extended factory class with static methods to open special db4o sessions.
@@ -21,6 +22,10 @@ public final class ExtDb4o extends Db4o {
      * @see MemoryFile
 	 */
 	public static final ObjectContainer openMemoryFile(MemoryFile memoryFile) {
-		return openMemoryFile1(memoryFile);
+		return openMemoryFile1(Db4o.newConfiguration(),memoryFile);
+	}
+
+	public static final ObjectContainer openMemoryFile(Configuration config,MemoryFile memoryFile) {
+		return openMemoryFile1(config,memoryFile);
 	}
 }

@@ -2,15 +2,14 @@
 
 package db4ounit.extensions;
 
-import com.db4o.Db4o;
-import com.db4o.Transaction;
-import com.db4o.YapStream;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
-import com.db4o.reflect.Reflector;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+import com.db4o.reflect.*;
 
-import db4ounit.TestRunner;
-import db4ounit.extensions.fixtures.Db4oSolo;
+import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 public class AbstractDb4oTestCase implements Db4oTestCase {
     
@@ -31,13 +30,12 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
     
     protected void reopen() throws Exception{
-        fixture().close();
-        fixture().open();
+    	_fixture.reopen();
     }
 	
 	public void setUp() throws Exception {
         _fixture.clean();
-		configure();
+		configure(_fixture.config());
 		_fixture.open();
 		store();
         _fixture.close();
@@ -49,7 +47,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         _fixture.clean();
 	}
 
-	protected void configure() {}
+	protected void configure(Configuration config) {}
 	
 	protected void store() throws Exception {}
 
@@ -63,11 +61,16 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected Class[] testCases() {
 		return new Class[] { getClass() };
 	}
-	
+
 	public int runSolo() {
+		return runSolo(true);
+	}
+
+	public int runSolo(boolean independentConfig) {
+		ConfigurationSource configSource=(independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
 		return new TestRunner(
 					new Db4oTestSuiteBuilder(
-							new Db4oSolo(), testCases())).run();
+							new Db4oSolo(configSource), testCases())).run();
 	}
 
 	protected YapStream stream() {
@@ -90,8 +93,8 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         return stream().reflector();
     }
 
-	protected void indexField(Class clazz, String fieldName) {
-		Db4o.configure().objectClass(clazz).objectField(fieldName).indexed(true);
+	protected void indexField(Configuration config,Class clazz, String fieldName) {
+		config.objectClass(clazz).objectField(fieldName).indexed(true);
 	}
 
 	protected Transaction newTransaction() {

@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -36,14 +37,14 @@ public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
 
     }
 
-    protected void configure() {
-        indexField("_name");
-        indexField("_int");
-        indexField("_integer");
+    protected void configure(Configuration config) {
+        indexField(config,"_name");
+        indexField(config,"_int");
+        indexField(config,"_integer");
     }
     
-    private void indexField(String fieldName){
-        indexField(IndexedQueriesItem.class, fieldName);
+    private void indexField(Configuration config,String fieldName){
+        indexField(config,IndexedQueriesItem.class, fieldName);
     }
 
     protected void store() {

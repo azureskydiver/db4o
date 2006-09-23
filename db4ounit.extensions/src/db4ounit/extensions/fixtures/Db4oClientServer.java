@@ -5,6 +5,7 @@ package db4ounit.extensions.fixtures;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.TestException;
@@ -48,5 +49,14 @@ public class Db4oClientServer implements Db4oFixture {
 
 	public void clean() {
 		_yap.delete();
+	}
+
+	public Configuration config() {
+		return Db4o.cloneConfiguration();
+	}
+
+	public void reopen() throws Exception {
+		close();
+		open();
 	}
 }

@@ -5,6 +5,7 @@ package com.db4o.db4ounit.jre12.fieldindex;
 import java.util.*;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.*;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
@@ -43,9 +44,9 @@ public class CollectionFieldIndexTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	protected void configure() {
-		indexField(Item.class, "_name");
-		indexField(UntypedContainer.class, "_set");
+	protected void configure(Configuration config) {
+		indexField(config,Item.class, "_name");
+		indexField(config,UntypedContainer.class, "_set");
 	}
 	
 	protected void store() throws Exception {

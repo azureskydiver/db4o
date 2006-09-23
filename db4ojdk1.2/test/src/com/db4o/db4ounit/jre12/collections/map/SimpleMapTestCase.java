@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.jre12.collections.map;
 
 import com.db4o.Db4o;
+import com.db4o.config.*;
 import com.db4o.ext.Db4oUUID;
 
 import db4ounit.Assert;
@@ -12,8 +13,8 @@ import db4ounit.extensions.fixtures.Db4oInMemory;
 
 public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	
-	protected void configure() {
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+	protected void configure(Configuration config) {
+		config.generateUUIDs(Integer.MAX_VALUE);
 	}
 
 	public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.jre11.events;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.query.Query;
 
@@ -11,9 +12,9 @@ import db4ounit.extensions.fixtures.Db4oSolo;
 public class SelectiveActivationTestCase extends AbstractDb4oTestCase {
     private boolean debug = false;
 
-    protected void configure() {
-        enableCascadeOnDelete();
-        Db4o.configure().activationDepth(1);
+    protected void configure(Configuration config) {
+        enableCascadeOnDelete(config);
+        config.activationDepth(1);
     }
 
     protected void store() {
@@ -86,8 +87,8 @@ public class SelectiveActivationTestCase extends AbstractDb4oTestCase {
         return EventRegistryFactory.forObjectContainer(db());
     }
 
-    private void enableCascadeOnDelete() {
-        Db4o.configure().objectClass(Item.class).cascadeOnDelete(true);
+    private void enableCascadeOnDelete(Configuration config) {
+        config.objectClass(Item.class).cascadeOnDelete(true);
     }
 
     private Item queryItem(final String id) {

@@ -60,7 +60,7 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase{
     }
     
     private void indexed(boolean flag){
-        ObjectClass oc = Db4o.configure().objectClass(IndexCreateDropItem.class);
+        ObjectClass oc = fixture().config().objectClass(IndexCreateDropItem.class);
         oc.objectField("_int").indexed(flag);
         oc.objectField("_string").indexed(flag);
         oc.objectField("_date").indexed(flag);
