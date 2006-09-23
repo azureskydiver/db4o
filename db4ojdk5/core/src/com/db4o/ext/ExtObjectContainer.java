@@ -377,6 +377,16 @@ public interface ExtObjectContainer extends ObjectContainer {
      */
     public StoredClass[] storedClasses();
     
+    
+    /**
+     * returns the {@link SystemInfo} for this ObjectContainer.
+     * <br><br>The {@link SystemInfo} supplies methods that provide
+     * information about system state and system settings of this
+     * ObjectContainer. 
+     * @return the {@link SystemInfo} for this ObjectContainer.
+     */
+    public SystemInfo systemInfo();
+
     /**
      * returns the current transaction serial number.
      * <br><br>This serial number can be used to query for modified objects
