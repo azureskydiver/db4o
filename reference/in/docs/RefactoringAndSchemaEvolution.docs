@@ -2,33 +2,78 @@
 .a RefactoringAndSchemaEvolution ..
 .1 Refactoring and "Schema Evolution" ..
 
-.2 Introduction
+Application design is a volatile thing: it changes from version to version, from one customer ._
+implementation to another. The database (if used) changes together with the application. ._
+For relational databases this process is called Schema Evolution, for object databases the ._
+term Refactoring is used as more appropriate.
+Object database refactoring changes the shape of classes stored on the disk. The main ._
+challenge here is to preserve old object information and make it usable with the new classes' ._
+design. 
 
-By Refactoring, we mean anything that will change the shape of the class as it ._
-is stored on the disk.  In the context of other databases (where the database ._
-structure is said to be a "Schema"), refactoring is also called Schema Evolution.
+.2 Automatic refactoring ..
+In simplest cases db4o handles schema changes automatically:
+- If you  .b add ..  a new field, db4o automatically starts storing the new data. Older instances ._
+of your stored class (from before the field was added) are still loaded, but the new field is set ._
+to its default value, or null. 
+- If you  .b remove ..  a field, db4o ignores the stored value when activating instances of your ._
+class. The stored value is not  removed from the database until the next Defragment, and is still accessible via ._
+the StoredClass/StoredField API.
+- If you  .b add an interface ..  to be implemented by your stored classes, db4o automatically ._
+starts using it and you are able to retrieve your saved data using new interface.
 
-.2 What db4objects does today automatically or easily ..
+.2 Refactoring API ..
+Db4o provides special API which can help you to move classes between ._
+packages (Java)/namespaces(.NET), rename classes or fields:
+.c Db4o.configure().objectClass("package.class").rename("newPackage.newClass") ..
+.c Db4o.configure().objectClass("package.class").objectField("oldField").rename("newField") ..
+The safe order of action for rename calls is:
+1) Rename or move classes or fields in your application.
+2) Issue ObjectClass#rename and objectField#rename calls without having an ObjectContainer ._
+open.
+3) Open database file and close it again without actually working with it.
+After that you will only see the new classes/fields in ObjectManager, the old ones will be gone.
 
-Db4o automaticaly handles the most common refactoring or schema evolution ._
-changes for you.
+Let's look how it works on an example. We will use initial class Pilot:
+.s com.db4odoc.f1.refactoring.Pilot ..
+and change it to the new class PilotNew renaming field and changing package/namespace ._
+at the same time:
+.s com.db4odoc.f1.refactoring.PilotNew ..
+First let's create a database and fill it with some values:
+.s com.db4odoc.f1.refactoring.RefactoringExample#setObjects -out ..
+.s com.db4odoc.f1.refactoring.RefactoringExample#checkDB ..
+We already have PilotNew class so we can go on with renaming:
+.s com.db4odoc.f1.refactoring.RefactoringExample#changeClass -out ..
+Now the data for the old Pilot class should be transferred to the new PilotNew class, ._
+and "name" field data should be stored in "identity" field.
+To make our check more complicated let's add some data for our new class:
+.s com.db4odoc.f1.refactoring.RefactoringExample#setNewObjects -out ..
+We can check what is stored in the database now:
+.s com.db4odoc.f1.refactoring.RefactoringExample#retrievePilotNew ..
+There is one thing to remember. The rename feature is intended to rename a class from one ._
+name to the other. Internally this will rename the meta-information. If you will try to rename ._
+class to the name that is already stored in the database, the renaming will fail, because the ._
+name is reserved. In our example it will happen if setNewObjects method will be called ._
+before changeClass.
 
-- Changing the interface or API to a class
-- Adding a field
-- Removing a field
-
-In addition, Db4o can rename classes and fields simply:
-
-- Db4o.configure().objectClass("package.class").rename("newPackage.newClass");
-- Db4o.configure().objectClass("package.class").objectField("oldField").rename("newField");
-
-If you modify a field's type, db4o will internally create a new field of the ._
-same name, but with the new type.  The values of the old typed field will ._
-still be present, but be hidden.  If you change the type back to the old type ._
-the old values will still be there.
+.2 Field type change ..
+The reviewed refactoring types are fairly easy. It gets more difficult when you need to change ._
+a field's type.
+If you modify a field's type, db4o internally creates a new field of the same name, but with the ._
+new type. The values of the old typed field are still present, but hidden. If you will change the type ._
+back to the old type the old values will still be there. 
+You can access the values of the previous field data using StoredField API.
+.c StoredClass#storedField(name, type) ..
+gives you access to the field, which type was changed.
+.c StoredField#get(Object) ..
+allows you to get the old field value for the specified object.
+To see how it works on example, let's change Pilot's field name from type string to type Identity:
+.s com.db4odoc.f1.refactoring.newclasses.Identity ..
+Now to access old "name" values and transfer them to the new "name" we can use the following ._
+procedure:
+.s com.db4odoc.f1.refactoring.newclasses.RefactoringExample#transferValues -run ..
+These are the basic refactoring types, which can help with any changes you will need to make.
 
 .2 What is not yet automated ..
-
 If you want to move a class to a new place in the inheritence hierarchy, you ._
 will need to follow the following procedure:
 
@@ -38,3 +83,4 @@ will need to follow the following procedure:
 - Run Defragment
 - Rename the temporary class name back to the correct name
 
+ Please, remember to make a backup of data before refactoring.
