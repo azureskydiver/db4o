@@ -28,12 +28,20 @@ public class FreespaceManagerForDebug extends FreespaceManager {
 
     }
 
+    public int entryCount() {
+        return 0;
+    }
+
     public void free(int address, int length) {
         _listener.onFree(new Slot(address, length));
     }
 
     public void freeSelf() {
 
+    }
+
+    public int freeSize() {
+        return 0;
     }
 
     public int getSlot(int length) {
