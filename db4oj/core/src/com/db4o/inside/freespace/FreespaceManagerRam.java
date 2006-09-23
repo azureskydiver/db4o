@@ -131,7 +131,17 @@ public class FreespaceManagerRam extends FreespaceManager {
         // Do nothing.
         // The RAM manager frees itself on reading.
     }
-
+    
+    public int freeSize() {
+        final MutableInt mint = new MutableInt();
+        Tree.traverse(_freeBySize, new Visitor4() {
+            public void visit(Object obj) {
+                FreeSlotNode node = (FreeSlotNode) obj;
+                mint.add(node._key);
+            }
+        });
+        return mint.value();
+    }
     
     public int getSlot(int length) {
         int address = getSlot1(length);
@@ -241,6 +251,11 @@ public class FreespaceManagerRam extends FreespaceManager {
         trans().writePointer(ptr._id, ptr._address, length);
         return freeBySizeID;
     }
+
+    public int entryCount() {
+        return Tree.size(_freeByAddress);
+    }
+
 
 
 }

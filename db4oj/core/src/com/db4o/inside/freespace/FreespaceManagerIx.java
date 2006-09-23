@@ -77,6 +77,10 @@ public class FreespaceManagerIx extends FreespaceManager{
         }
     }
     
+    public int entryCount() {
+        return _addressIx.entryCount();
+    }
+    
     public void free(int address, int length) {
         
         if(! started()){
@@ -131,6 +135,10 @@ public class FreespaceManagerIx extends FreespaceManager{
         }
         _addressIx._index._metaIndex.free(_file);
         _lengthIx._index._metaIndex.free(_file);
+    }
+    
+    public int freeSize() {
+        return _addressIx.freeSize();
     }
 
     public int getSlot(int length) {
@@ -245,5 +253,7 @@ public class FreespaceManagerIx extends FreespaceManager{
             }
         }
     }
+
+
 
 }
