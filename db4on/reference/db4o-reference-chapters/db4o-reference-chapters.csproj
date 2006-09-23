@@ -329,6 +329,36 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\refactoring\Pilot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\refactoring\PilotNew.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\refactoring\RefactoringExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\refactoring\newclasses\Identity.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\refactoring\newclasses\Pilot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\refactoring\newclasses\RefactoringExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\reflections\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
