@@ -13,7 +13,7 @@ import com.db4o.io.*;
 /**
  * @exclude
  */
-public class FileHeader0 {
+public class FileHeader0 extends FileHeader {
     
     private static final int LENGTH = 2 + (YapConst.INT_LENGTH * 4);
 
@@ -51,11 +51,13 @@ public class FileHeader0 {
     
     private byte blockSize = 1;
     
-    private int _classCollectionID;
-    
-    private int _freeSpaceID; 
-    
     PBootRecord _bootRecord;
+
+    private SystemData _systemData;
+    
+    public FileHeader0(){
+        _systemData = new SystemData(this);
+    }
 
     public void read0(YapFile file) {
         
@@ -80,19 +82,21 @@ public class FileHeader0 {
         
         _configBlock.read(reader.readInt());
 
-        // configuration lock time skipped
-        reader.incrementOffset(YapConst.ID_LENGTH);
+        skipConfigurationLockTime(reader);
         
-        _classCollectionID = reader.readInt();
+        _systemData.classCollectionID(reader.readInt());
+        _systemData.freeSpaceID(reader.readInt());
         
-        _freeSpaceID = reader.readInt();
+        _systemData.uuidIndexId(_configBlock._uuidIndexId);
+    }
 
+    private void skipConfigurationLockTime(YapReader reader) {
+        reader.incrementOffset(YapConst.ID_LENGTH);
     }
 
     public byte blockSize() {
         return blockSize;
     }
-
     
     public void readBootRecord(YapFile yapFile){
         if (_configBlock._bootRecordID <= 0) {
@@ -116,20 +120,8 @@ public class FileHeader0 {
         yapFile.setIdentity(_bootRecord.i_db);
     }
 
-    public int classCollectionID() {
-        return _classCollectionID;
-    }
-
-    public int freeSpaceID() {
-        return _freeSpaceID;
-    }
-
     public byte freespaceSystem() {
         return _configBlock._freespaceSystem;
-    }
-
-    public static FileHeader0 forNewFile() {
-        return new FileHeader0();
     }
 
     public void initNew(YapFile yf) {
@@ -164,10 +156,6 @@ public class FileHeader0 {
         return _configBlock.newFreespaceSlot(freeSpaceSystem);
     }
 
-    public void writeVariablePart1() {
-        _configBlock.write();
-    }
-    
     public void writeVariablePart2() {
         _bootRecord.setDirty();
         _bootRecord.store(2);
@@ -235,17 +223,17 @@ public class FileHeader0 {
         _bootRecord.i_db = database;
     }
 
-	public int getUUIDIndexId() {
-		return _configBlock._uuidIndexId;
-	}
-
-	public void writeUUIDIndexId(int id) {
-		_configBlock._uuidIndexId = id;
-		writeVariablePart1();
-	}
-    
     public int length(){
         return LENGTH;
+    }
+
+    public SystemData systemData() {
+        return _systemData;
+    }
+
+    public void variablePartChanged() {
+        _configBlock._uuidIndexId = _systemData.uuidIndexId();
+        _configBlock.write();
     }
 
 }
