@@ -13,13 +13,19 @@ import db4ounit.extensions.Db4oFixture;
 
 public class Db4oClientServer implements Db4oFixture {
     
-	private static final String HOST = "localhost";
+	private static final String FILE = "Db4oClientServer.yap";
+    
+    private static final int PORT = 0xdb40; 
+    
+    private static final String HOST = "localhost";
 
 	private static final String USERNAME = "db4o";
 
 	private static final String PASSWORD = USERNAME;
 
 	private ObjectServer _server;
+    
+    private ExtObjectContainer _objectContainer;
 
 	private final int _port;
 
@@ -31,10 +37,12 @@ public class Db4oClientServer implements Db4oFixture {
 	}
     
     public Db4oClientServer(){
-        this("Db4oClientServer.yap",0xdb40);
+        this(FILE,PORT);
     }
     
 	public void close() throws Exception {
+        _objectContainer.close();
+        _objectContainer = null;
 		_server.close();
 	}
 
@@ -44,12 +52,16 @@ public class Db4oClientServer implements Db4oFixture {
 	}
 
 	public ExtObjectContainer db() {
+        if(_objectContainer != null){
+            return _objectContainer;
+        }
 		try {
-			return Db4o.openClient(HOST, _port, USERNAME, PASSWORD).ext();
+            _objectContainer = Db4o.openClient(HOST, _port, USERNAME, PASSWORD).ext();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new TestException(e);
 		}
+        return _objectContainer;
 	}
 
 	public void clean() {
