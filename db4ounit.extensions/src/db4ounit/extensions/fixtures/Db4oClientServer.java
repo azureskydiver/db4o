@@ -12,6 +12,7 @@ import db4ounit.TestException;
 import db4ounit.extensions.Db4oFixture;
 
 public class Db4oClientServer implements Db4oFixture {
+    
 	private static final String HOST = "localhost";
 
 	private static final String USERNAME = "db4o";
@@ -28,7 +29,11 @@ public class Db4oClientServer implements Db4oFixture {
 		_yap = new File(fileName);
 		_port = port;
 	}
-
+    
+    public Db4oClientServer(){
+        this("Db4oClientServer.yap",0xdb40);
+    }
+    
 	public void close() throws Exception {
 		_server.close();
 	}

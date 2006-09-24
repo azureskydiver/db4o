@@ -67,11 +67,20 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	public int runSolo(boolean independentConfig) {
-		ConfigurationSource configSource=(independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
 		return new TestRunner(
 					new Db4oTestSuiteBuilder(
-							new Db4oSolo(configSource), testCases())).run();
+							new Db4oSolo(configSource(independentConfig)), testCases())).run();
 	}
+    
+    public int runClientServer() {
+        return new TestRunner(
+                    new Db4oTestSuiteBuilder(
+                            new Db4oClientServer(), testCases())).run();
+    }
+
+    private ConfigurationSource configSource(boolean independentConfig) {
+        return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
+    }
 
 	protected YapStream stream() {
 	    return (YapStream) db();
