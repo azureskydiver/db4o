@@ -15,6 +15,32 @@ import com.db4o.io.*;
  */
 public class FileHeader0 {
     
+    private static final int LENGTH = 2 + (YapConst.INT_LENGTH * 4);
+
+    // The header format is:
+
+    // Old format
+    // -------------------------
+    // {
+    // Y
+    // [Rest]
+
+    
+    // New format
+    // -------------------------
+    // (byte)4
+    // block size in bytes 1 to 127
+    // [Rest]
+    
+
+    // Rest (only ints)
+    // -------------------
+    // address of the extended configuration block, see YapConfigBlock
+    // headerLock
+    // YapClassCollection ID
+    // FreeBySize ID
+
+    
     protected YapConfigBlock    _configBlock;
     
     
@@ -33,7 +59,7 @@ public class FileHeader0 {
 
     public void read0(YapFile file) {
         
-        YapReader reader = new YapReader(YapStreamBase.HEADER_LENGTH); 
+        YapReader reader = new YapReader(length()); 
         reader.read(file, 0, 0);
         
         byte firstFileByte = reader.readByte();
@@ -102,21 +128,17 @@ public class FileHeader0 {
         return _configBlock._freespaceSystem;
     }
 
-    public static FileHeader0 forNewFile(YapFile yf) {
-        FileHeader0 fh = new FileHeader0();
-        fh.initNew(yf);
-        return fh;
+    public static FileHeader0 forNewFile() {
+        return new FileHeader0();
     }
 
-    private void initNew(YapFile yf) {
+    public void initNew(YapFile yf) {
         _configBlock = new YapConfigBlock(yf);
         _configBlock.converterVersion(Converter.VERSION);
         _configBlock.write();
         _configBlock.go();
-        
         initBootRecord(yf);
     }
-    
     
     private void initBootRecord(YapFile yf){
         
@@ -221,5 +243,9 @@ public class FileHeader0 {
 		_configBlock._uuidIndexId = id;
 		writeVariablePart1();
 	}
+    
+    public int length(){
+        return LENGTH;
+    }
 
 }
