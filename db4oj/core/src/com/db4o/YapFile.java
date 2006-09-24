@@ -79,14 +79,16 @@ public abstract class YapFile extends YapStream {
             _fmChecker = new FreespaceManagerRam(this);
         }
         
-        blockSize(configImpl().blockSize(), HEADER_LENGTH);
+        _fileHeader = FileHeader0.forNewFile();
+        
+        blockSize(configImpl().blockSize(), _fileHeader.length());
         
         initNewClassCollection();
         initializeEssentialClasses();
         
         generateNewIdentity();
         
-        _fileHeader = FileHeader0.forNewFile(this);
+        _fileHeader.initNew(this);
 
         _freespaceManager.start(_fileHeader.freespaceAddress());
         
@@ -449,11 +451,12 @@ public abstract class YapFile extends YapStream {
     
     
 
-    void readThis() {        
-
-    	setDefaultBlockSize();
-    	
+    void readThis() {
+        
         _fileHeader = new FileHeader0();
+
+    	setDefaultBlockSize(_fileHeader.length());
+    	
         _fileHeader.read0(this);
         
         classCollection().setID(_fileHeader.classCollectionID());
@@ -512,8 +515,8 @@ public abstract class YapFile extends YapStream {
         
     }
 
-	private void setDefaultBlockSize() {
-		blockSize(1, HEADER_LENGTH);
+	private void setDefaultBlockSize(int headerLength) {
+		blockSize(1, headerLength);
 	}
 
     public void releaseSemaphore(String name) {
@@ -687,7 +690,7 @@ public abstract class YapFile extends YapStream {
         }
         
         // FIXME: blocksize should be already valid in FileHeader
-        YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
+        YapWriter writer = getWriter(i_systemTrans, 0, _fileHeader.length());
         
         _fileHeader.writeFixedPart(shuttingDown, writer, blockSize(), classCollection().getID(), freespaceID);
         

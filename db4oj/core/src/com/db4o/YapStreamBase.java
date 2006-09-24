@@ -35,32 +35,6 @@ import com.db4o.types.TransientClass;
  */
 public abstract class YapStreamBase implements TransientClass, Internal4, YapStreamSpec {
 
-	    public static final int        HEADER_LENGTH         = 2 + (YapConst.INT_LENGTH * 4);
-
-    // The header is:
-
-    // Old format
-    // -------------------------
-    // {
-    // Y
-    // [Rest]
-
-    
-    // New format
-    // -------------------------
-    // (byte)4
-    // block size in bytes 1 to 127
-    // [Rest]
-    
-
-    // Rest (only ints)
-    // -------------------
-    // address of the extended configuration block, see YapConfigBlock
-    // headerLock
-    // YapClassCollection ID
-    // FreeBySize ID
-    
-
     private boolean         i_amDuringFatalExit   = false;
 
     // Collection of all classes

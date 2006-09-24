@@ -56,7 +56,7 @@ public class YapObjectCarrier extends YapMemoryFile {
     }
     
 	void configureNewFile() {
-	    i_writeAt = HEADER_LENGTH;
+	    // do nothing
 	}
     
     public int converterVersion() {
