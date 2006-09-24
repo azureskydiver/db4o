@@ -8,14 +8,14 @@ import com.db4o.test.config.Configure;
 
 import db4ounit.Test;
 import db4ounit.TestPlatform;
-import db4ounit.extensions.fixtures.Db4oClientServer;
+import db4ounit.extensions.fixtures.*;
 
 public class CSTestSuiteBuilder extends Db4oTestSuiteBuilder {
 
 	public CSTestSuiteBuilder(Class[] classes) {
 		// generate fixture here and pass the fixture as a paramtet to super
 
-		super(new Db4oClientServer("Db4oClientServer.yap", 0xdb40), classes);
+		super(new Db4oMultiClient(), classes);
 	}
 
 	protected Test createTest(Object instance, Method method) {

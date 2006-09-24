@@ -7,7 +7,7 @@ import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.TestCase;
 import db4ounit.TestLifeCycle;
-import db4ounit.extensions.fixtures.Db4oClientServer;
+import db4ounit.extensions.fixtures.*;
 
 public class ClientServerTestCase extends AbstractDb4oTestCase implements
 		TestCase, TestLifeCycle {
@@ -33,8 +33,8 @@ public class ClientServerTestCase extends AbstractDb4oTestCase implements
 	}
 
 	@Override
-	public Db4oClientServer fixture() {
-		return (Db4oClientServer) super.fixture();
+	public AbstractClientServerDb4oFixture fixture() {
+		return (AbstractClientServerDb4oFixture) super.fixture();
 	}
 
 }
