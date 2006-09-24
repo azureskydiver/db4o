@@ -25,7 +25,7 @@ public class SimpleMapTestCase extends AbstractDb4oTestCase{
         
         new TestRunner(
                 new Db4oTestSuiteBuilder(
-                        new Db4oClientServer("Db4oClientServer.yap",0xdb40),
+                        new Db4oClientServer(),
                         SimpleMapTestCase.class)).run();
     }
 	
