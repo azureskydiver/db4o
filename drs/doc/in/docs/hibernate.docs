@@ -135,7 +135,7 @@ Perform the replication.
 .c
 Configuration config = new Configuration().configure("f1/one_to_one/hibernate.cfg.xml");
 
-ReplicationSession replication = Replication.begin(objectContainer, config);
+ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 
 ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
@@ -231,7 +231,7 @@ objectContainer.commit();
 
 Configuration config = new Configuration().configure("f1/collection/array/hibernate.cfg.xml");
 
-ReplicationSession replication = Replication.begin(objectContainer, config);
+ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 
 ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
@@ -295,7 +295,7 @@ objectContainer.commit();
 
 Configuration config = new Configuration().configure("f1/collection/list/hibernate.cfg.xml");
 
-ReplicationSession replication = Replication.begin(objectContainer, config);
+ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 
 ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
@@ -359,7 +359,7 @@ objectContainer.commit();
 
 Configuration config = new Configuration().configure("f1/collection/set/hibernate.cfg.xml");
 
-ReplicationSession replication = Replication.begin(objectContainer, config);
+ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
 while (changed.hasNext())
@@ -423,7 +423,7 @@ objectContainer.commit();
 
 Configuration config = new Configuration().configure("f1/collection/map/hibernate.cfg.xml");
 
-ReplicationSession replication = Replication.begin(objectContainer, config);
+ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
 while (changed.hasNext())
@@ -445,13 +445,76 @@ You maybe curious that how dRS keeps track of the identity of objects in relatio
 dRS knows which objects are changed since last round of replication. Read on and you will see how ._
 dRS does that.
 
-dRS internal objects keep information used by dRS. They are defined in the com.db4o.replication.hibernate.metadata package.
-
-Each internal object is associated with a Hibernate mapping file (.hbm.xml). Hibernate reads these files and understands  ._
+dRS internal objects keep information used by dRS. Each internal object is associated with a ._
+Hibernate mapping file (.hbm.xml). Hibernate reads these files and understands  ._
 how to store / retrieve these internal objects to / from the RDBMS. Each type of internal object maps to one table in  ._
 RDBMS. If such table does not exist, Hibernate creates it automatically.
 
-During replication, dRS will makes use of these tables to uniquely identify objects.
+.2 ProviderSignature, MySignature and PeerSignature ..
+
+ProviderSignature uniquely identifies a ReplicationProvider. MySignature and PeerSignature are the subclasses of ProviderSignature. A HibernateReplicationProvider has a MySignature to serve as its own identity. PeerSignature identifies the peer ReplicationProvider during a ReplicationSession.
+
+.3 Table: drs_providers ..
+
+Column			Type			Function
+id 					long 			synthetic, auto-increment primary key
+is_my_sig 		char(1) 	't' if MySignature, 'f' if PeerSignature
+signature 		binary 		holds the unique identifier - byte array
+created 		long 			legacy field used by pre-dRS db4o replication code
+
+.2 Record ..
+
+Record contains the version of the RDBMS during a ReplicationSession. Near the end of a ReplicationSession, two ReplicationProviders synchronize their versions.
+
+Record allows dRS to detect changed objects. dRS detects changed objects by comparing the version of an object (v) with the maximum version of all Records (m). An object is updated if v > m.
+
+.3 Table: drs_history ..
+
+Column			Type			Function
+provider_id 	long			primary key, same as the PK of a PeerSignature
+time 				long			the version of the RDBMS during a ReplicationSession
+
+.2 UUID ..
+
+UUID uniquely identifies a persisted object.
+
+As seen in the Persisted Objects section, each persisted object is identified by an "typed_id". This "typed_id" is unique only with its type of that object (i.e. A car has an "typed_id" of 1534, a Pilot can also has an "typed_id" of 1534) and within the current RDBMS.
+
+How do we identify "a Pilot that is originated from Oracle instance pi2763" ? To do so, we need two parameters:
+
+   1. an id that is unique across types
+   2. associates this id with the ProviderSignature of the RDBMS (The RDBMS that owns this object)
+.c
+class UUID {
+    long longPart;
+    ProviderSignature provider;
+}
+..
+Collectively, 1 and 2 forms the "UUID".
+ 
+.2 ObjectReference ..
+
+ObjectReference contains the UUID and the version of a persisted object. It also contains the className and the typed_id of that persisted object.
+
+UUID forms an 1 to 1 relationship with {className, typedId}.
+
+.c
+class ObjectReference {
+    String className;
+    long typedId;
+    Uuid uuid;
+    long version;
+}
+..
+
+.3 Table: drs_objects ..
+Column			Type			Function
+id					long			synthetic, auto-increment primary key
+created			long			the UUID long part of this ObjectReference
+provider_id	long			specifies the originating ReplicationProvider of this ObjectReference
+class_name	varchar		the type of the referenced object
+typed_id		long			the id used by Hibernate, which is only unique within its type
+modified		long			the version of the referenced object
 
 
 
