@@ -28,7 +28,7 @@ public class CollectionUuidTest extends AbstractDb4oTestCase {
         
         new TestRunner(
                 new Db4oTestSuiteBuilder(
-                        new Db4oClientServer(),
+                        new Db4oSingleClient(),
                         CollectionUuidTest.class)).run();
     }
 }
