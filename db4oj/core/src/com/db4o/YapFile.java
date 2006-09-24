@@ -756,13 +756,6 @@ public abstract class YapFile extends YapStream {
         return new SystemInfoFileImpl(this);
     }
 
-    public MetaIndex getUUIDMetaIndex() {
-        if(_fileHeader == null){
-            return null;
-        }
-        return _fileHeader.getUUIDMetaIndex();
-    }
-
 	public FileHeader0 getFileHeader() {
 		return _fileHeader;
 	}

@@ -41,19 +41,6 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     }
 
     public MetaIndex getUUIDMetaIndex(){
-
-        // TODO: This is legacy code for old database files.
-        // Newer versions create i_uuidMetaIndex when PBootRecord
-        // is created. Remove this code after June 2006.
-        if (i_uuidMetaIndex == null) {
-            i_uuidMetaIndex = new MetaIndex();
-            Transaction systemTrans = i_stream.getSystemTransaction();
-            i_stream.showInternalClasses(true);
-            i_stream.setInternal(systemTrans, this, false);
-            i_stream.showInternalClasses(false);
-            systemTrans.commit();
-        }
-
         return i_uuidMetaIndex;
     }
 
