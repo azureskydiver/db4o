@@ -7,10 +7,11 @@ import db4ounit.TestLifeCycle;
 
 public interface Db4oTestCase extends TestCase, TestLifeCycle {
 
-	public void fixture(Db4oFixture fixture);
-
-	public Db4oFixture fixture();
-
+	/**
+	 * returns an ExtObjectContainer as a parameter for test method.
+	 * 
+	 * @return ExtObjectContainer
+	 */
 	public ExtObjectContainer db();
 
 }
