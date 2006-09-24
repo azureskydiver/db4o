@@ -37,6 +37,10 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
 
 	private void freeOldUUIDMetaIndex(YapFile file) {
 		final MetaIndex metaIndex = file.getFileHeader().getUUIDMetaIndex();
-		file.free(metaIndex.indexAddress, metaIndex.indexLength);
+        if(metaIndex == null){
+            return;
+        }
+        file.free(metaIndex.indexAddress, metaIndex.indexLength);
+        
 	}
 }
