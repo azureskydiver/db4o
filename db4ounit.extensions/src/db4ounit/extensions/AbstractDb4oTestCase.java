@@ -75,7 +75,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
     public int runClientServer() {
         return new TestRunner(
                     new Db4oTestSuiteBuilder(
-                            new Db4oClientServer(), testCases())).run();
+                            new Db4oSingleClient(), testCases())).run();
     }
 
     private ConfigurationSource configSource(boolean independentConfig) {
