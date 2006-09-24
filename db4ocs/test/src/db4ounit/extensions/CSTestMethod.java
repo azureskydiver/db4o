@@ -11,6 +11,19 @@ import db4ounit.TestMethod;
 
 public class CSTestMethod extends TestMethod {
 
+	private static ConcurrencyThread[] threads = new ConcurrencyThread[Configure.CONCURRENCY_THREAD_COUNT];
+
+	/**
+	 * waits a certain thread to end.
+	 * 
+	 * @param seq
+	 *            the thread id.
+	 * @throws InterruptedException
+	 */
+	public static void waitThread(int seq) throws InterruptedException {
+		threads[seq].join();
+	}
+
 	public CSTestMethod(Object instance, Method method) {
 		super(instance, method);
 	}
@@ -47,7 +60,6 @@ public class CSTestMethod extends TestMethod {
 		if (parameters.length == 2) // ExtObjectContainer, seq
 			hasSequenceParameter = true;
 
-		ConcurrencyThread[] threads = new ConcurrencyThread[Configure.CONCURRENCY_THREAD_COUNT];
 		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; ++i) {
 			if (hasSequenceParameter) {
 				threads[i] = new ConcurrencyThread(toTest, method, i);
