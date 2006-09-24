@@ -3,6 +3,7 @@
 package com.db4o.inside.convert.conversions;
 
 import com.db4o.*;
+import com.db4o.header.*;
 import com.db4o.inside.convert.Conversion;
 import com.db4o.inside.convert.ConversionStage.*;
 
@@ -36,11 +37,14 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
 	}
 
 	private void freeOldUUIDMetaIndex(YapFile file) {
-		final MetaIndex metaIndex = file.getFileHeader().getUUIDMetaIndex();
+        FileHeader fh = file.getFileHeader();
+        if(! (fh instanceof FileHeader0)){
+            return;
+        }
+		final MetaIndex metaIndex = ((FileHeader0)fh).getUUIDMetaIndex();
         if(metaIndex == null){
             return;
         }
         file.free(metaIndex.indexAddress, metaIndex.indexLength);
-        
 	}
 }

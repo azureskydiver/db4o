@@ -41,6 +41,8 @@ public abstract class YapFile extends YapStream {
     int                         i_writeAt;
     
     private Tree                _freeOnCommit;
+    
+    private SystemData          _systemData;
         
     YapFile(Configuration config,YapStream a_parent) {
         super(config,a_parent);
@@ -79,7 +81,8 @@ public abstract class YapFile extends YapStream {
             _fmChecker = new FreespaceManagerRam(this);
         }
         
-        _fileHeader = FileHeader0.forNewFile();
+        _fileHeader = new FileHeader0();
+        _systemData = _fileHeader.systemData();
         
         blockSize(configImpl().blockSize(), _fileHeader.length());
         
@@ -454,22 +457,23 @@ public abstract class YapFile extends YapStream {
     void readThis() {
         
         _fileHeader = new FileHeader0();
+        _systemData = _fileHeader.systemData();
 
     	setDefaultBlockSize(_fileHeader.length());
     	
         _fileHeader.read0(this);
         
-        classCollection().setID(_fileHeader.classCollectionID());
+        classCollection().setID(_systemData.classCollectionID());
         classCollection().read(i_systemTrans);
         
         Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this, _fileHeader));
         
         _freespaceManager = FreespaceManager.createNew(this, _fileHeader.freespaceSystem());
-        _freespaceManager.read(_fileHeader.freeSpaceID());
+        _freespaceManager.read(_systemData.freeSpaceID());
         
         if(Debug.freespace){
             _fmChecker = new FreespaceManagerRam(this);
-            _fmChecker.read(_fileHeader.freeSpaceID());
+            _fmChecker.read(_systemData.freeSpaceID());
         }
         
         _freespaceManager.start(_fileHeader.freespaceAddress());
@@ -491,7 +495,7 @@ public abstract class YapFile extends YapStream {
                 _freespaceManager.beginCommit();
                 _freespaceManager.endCommit();
                 
-                _fileHeader.writeVariablePart1();
+                _fileHeader.variablePartChanged();
             }
         }
         
@@ -509,7 +513,7 @@ public abstract class YapFile extends YapStream {
 
         if(Converter.convert(new ConversionStage.SystemUpStage(this, _fileHeader))){
             _fileHeader.converterVersion(Converter.VERSION);
-            _fileHeader.writeVariablePart1();
+            _fileHeader.variablePartChanged();
             getTransaction().commit();
         }
         
@@ -759,12 +763,16 @@ public abstract class YapFile extends YapStream {
         return new SystemInfoFileImpl(this);
     }
 
-	public FileHeader0 getFileHeader() {
+	public FileHeader getFileHeader() {
 		return _fileHeader;
 	}
 
     public void installDebugFreespaceManager(FreespaceManager manager) {
         _freespaceManager = manager;
+    }
+
+    public SystemData systemData() {
+        return _systemData;
     }
 
 }

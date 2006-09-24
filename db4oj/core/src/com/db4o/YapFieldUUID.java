@@ -4,7 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.header.FileHeader0;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
@@ -120,20 +120,19 @@ public class YapFieldUUID extends YapFieldVirtual {
     	if (null != super.getIndex(transaction)) {
     		return;    		
     	}    	
-    	// TODO: find a better home for the index id
-    	FileHeader0 header = getFileHeader(transaction);
-        if(header == null){
+        SystemData sd = systemData(transaction);
+        if(sd == null){
             // too early, in new file, try again later.
             return;
         }
-    	initIndex(transaction, header.getUUIDIndexId());
-    	if (header.getUUIDIndexId() == 0) {
-    		header.writeUUIDIndexId(super.getIndex(transaction).getID());
+    	initIndex(transaction, sd.uuidIndexId());
+    	if (sd.uuidIndexId() == 0) {
+            sd.modifyUuidIndexId(super.getIndex(transaction).getID());
     	}
 	}
 
-	private FileHeader0 getFileHeader(Transaction transaction) {
-		return ((YapFile)transaction.stream()).getFileHeader();
+	private SystemData systemData(Transaction transaction) {
+		return ((YapFile)transaction.stream()).systemData();
 	}
 
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
