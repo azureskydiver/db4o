@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit", "Db4oUnit.csproj", "{9ABAFC31-D29D-4000-B6A0-C24F0BB221F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit", "Db4oUnit-2005.csproj", "{9ABAFC31-D29D-4000-B6A0-C24F0BB221F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
