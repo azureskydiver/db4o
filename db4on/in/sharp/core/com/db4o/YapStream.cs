@@ -22,6 +22,11 @@
 		public abstract com.db4o.ext.Db4oDatabase Identity();
 
 		public abstract void Backup(string path);
+		
+		com.db4o.ObjectSet ObjectContainer.Query(System.Type type)
+		{
+			return Query(j4o.lang.Class.GetClassForType(type));
+		}
 
 		class ComparerAdaptor : com.db4o.query.QueryComparator
 		{
