@@ -35,7 +35,8 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         return i_uuidMetaIndex;
     }
 
-    public void write(YapFile file, SystemData systemData) {
+    public void write(YapFile file) {
+        SystemData systemData = file.systemData();
         i_versionGenerator = systemData.lastTimeStampID();
         i_db = systemData.identity();
         file.showInternalClasses(true);

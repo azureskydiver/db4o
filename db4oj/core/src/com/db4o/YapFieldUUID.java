@@ -119,8 +119,9 @@ public class YapFieldUUID extends YapFieldVirtual {
     	}
     	if (null != super.getIndex(transaction)) {
     		return;    		
-    	}    	
-        SystemData sd = file(transaction).systemData();
+    	}
+        YapFile file = ((YapFile)transaction.stream());
+        SystemData sd = file.systemData();
         if(sd == null){
             // too early, in new file, try again later.
             return;
@@ -128,13 +129,9 @@ public class YapFieldUUID extends YapFieldVirtual {
     	initIndex(transaction, sd.uuidIndexId());
     	if (sd.uuidIndexId() == 0) {
             sd.uuidIndexId(super.getIndex(transaction).getID());
-            file(transaction).getFileHeader().writeVariablePart1();
+            file.getFileHeader().writeVariablePart1(file);
     	}
 	}
-
-    private YapFile file(Transaction transaction){
-        return ((YapFile)transaction.stream());
-    }
 
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
         int dbID = a_bytes.readInt();
