@@ -84,7 +84,19 @@
 			</fileset>
 		</copy>
 		
+		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-2005.csproj">
+			<sources dir="${db4ounit.net.dir}">
+				<include name="src/**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
 		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}.csproj">
+			<sources dir="${db4ounit.net.dir}">
+				<include name="src/**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-compact-2005.csproj">
 			<sources dir="${db4ounit.net.dir}">
 				<include name="src/**/*.cs" />
 			</sources>
