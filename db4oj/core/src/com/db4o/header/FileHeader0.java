@@ -101,7 +101,6 @@ public class FileHeader0 extends FileHeader {
         }
         
         _bootRecord = (PBootRecord) bootRecord;
-        _bootRecord.i_stream = yapFile;
         yapFile.activate(bootRecord, Integer.MAX_VALUE);
         yapFile.setNextTimeStampId(_bootRecord.i_versionGenerator);
         
@@ -120,9 +119,6 @@ public class FileHeader0 extends FileHeader {
         yf.showInternalClasses(true);
         
         _bootRecord = new PBootRecord();
-        _bootRecord.i_stream = yf;
-        _bootRecord.init();
-        
         yf.setInternal(yf.getSystemTransaction(), _bootRecord, false);
         
         _configBlock._bootRecordID = yf.getID1(yf.getSystemTransaction(), _bootRecord);
@@ -185,8 +181,8 @@ public class FileHeader0 extends FileHeader {
         _configBlock.write(_systemData);
     }
     
-    public void writeVariablePart2() {
-        _bootRecord.write(_systemData);
+    public void writeVariablePart2(YapFile file) {
+        _bootRecord.write(file, _systemData);
     }
 
 }
