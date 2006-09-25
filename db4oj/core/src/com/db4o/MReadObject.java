@@ -17,7 +17,6 @@ final class MReadObject extends MsgD {
 			try {
 				bytes = stream.readWriterByID(this.getTransaction(), this._payLoad.readInt());
 			} catch (Exception e) {
-				bytes = null;
 				if (Deploy.debug) {
 					System.out.println("MsD.ReadObject:: readObjectByID failed");
 				}

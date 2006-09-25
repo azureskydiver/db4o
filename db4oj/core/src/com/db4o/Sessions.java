@@ -57,12 +57,10 @@ class Sessions extends Collection4{
 					return null;
 				}
 			}
-			if (oc != null) {
-				newSession.i_stream = (YapStream) oc;
-				add(newSession);
-				Platform4.postOpen(oc);
-				Messages.logMsg(Db4o.i_config, 5, databaseFileName);
-			}
+			newSession.i_stream = (YapStream) oc;
+			add(newSession);
+			Platform4.postOpen(oc);
+			Messages.logMsg(Db4o.i_config, 5, databaseFileName);
 			return oc;
 		}
 	}

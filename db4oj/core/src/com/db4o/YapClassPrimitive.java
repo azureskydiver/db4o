@@ -143,7 +143,7 @@ public class YapClassPrimitive extends YapClass{
         try {
             obj = i_handler.read(mf, a_bytes, true);
         } catch (CorruptionException ce) {
-            obj = null;
+            
         }
         if (obj != null) {
             i_handler.copyValue(obj, a_onObject);
