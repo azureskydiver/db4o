@@ -35,6 +35,10 @@ public class YapMemoryFile extends YapFile {
     public void backup(String path)throws IOException{
         Exceptions4.throwRuntimeException(60);
     }
+    
+    public void blockSize(int size){
+        // do nothing, blocksize is always 1
+    }
 
     void checkDemoHop() {
         // do nothing

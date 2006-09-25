@@ -105,10 +105,8 @@ public class YapObjectCarrier extends YapMemoryFile {
 		// do nothing
 	}
 	
-	public int getSlot(int a_length){
-		int address = i_writeAt;
-		i_writeAt += a_length;
-		return address;
+	public int getSlot(int length){
+        return appendBlocks(length);
 	}
 	
 	public Db4oDatabase identity() {

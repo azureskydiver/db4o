@@ -127,7 +127,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         }
     	initIndex(transaction, sd.uuidIndexId());
     	if (sd.uuidIndexId() == 0) {
-            sd.modifyUuidIndexId(super.getIndex(transaction).getID());
+            sd.uuidIndexCreated(super.getIndex(transaction).getID());
     	}
 	}
 

@@ -38,7 +38,7 @@ public abstract class YapFile extends YapStream {
 
     private Hashtable4          i_semaphores;
 
-    int                         i_writeAt;
+    private int _blockEndAddress;
     
     private Tree                _freeOnCommit;
     
@@ -51,9 +51,11 @@ public abstract class YapFile extends YapStream {
     public FreespaceManager freespaceManager() {
 		return _freespaceManager;
 	}
-	
-    public void blockSize(int blockSize, long fileLength){
-        i_writeAt = blocksFor(fileLength);
+    
+    public abstract void blockSize(int size);
+    
+    public void setRegularEndAddress(long address){
+        _blockEndAddress = blocksFor(address);
     }
     
     boolean close2() {
@@ -84,7 +86,9 @@ public abstract class YapFile extends YapStream {
         _fileHeader = new FileHeader0();
         _systemData = _fileHeader.systemData();
         
-        blockSize(configImpl().blockSize(), _fileHeader.length());
+        blockSize(configImpl().blockSize());
+        
+        setRegularEndAddress(_fileHeader.length());
         
         initNewClassCollection();
         initializeEssentialClasses();
@@ -310,18 +314,22 @@ public abstract class YapFile extends YapStream {
         
         int blocksNeeded = blocksFor(bytes);
         if (Debug.xbytes && Deploy.overwrite) {
-            debugWriteXBytes(i_writeAt, blocksNeeded * blockSize());
+            debugWriteXBytes(_blockEndAddress, blocksNeeded * blockSize());
         }
-        int address = i_writeAt;
-        i_writeAt += blocksNeeded;
-        return address;
+        return appendBlocks(blocksNeeded);
+    }
+    
+    protected int appendBlocks(int blockCount){
+        int blockedAddress = _blockEndAddress;
+        _blockEndAddress += blockCount;
+        return blockedAddress;
     }
     
     void ensureLastSlotWritten(){
         if (!Debug.xbytes){
             if(Deploy.overwrite){
-                if(i_writeAt > blocksFor(fileLength())){
-                    YapWriter writer = getWriter(i_systemTrans, i_writeAt - 1, blockSize());
+                if(_blockEndAddress > blocksFor(fileLength())){
+                    YapWriter writer = getWriter(i_systemTrans, _blockEndAddress - 1, blockSize());
                     writer.write();
                 }
             }
@@ -459,9 +467,9 @@ public abstract class YapFile extends YapStream {
         _fileHeader = new FileHeader0();
         _systemData = _fileHeader.systemData();
 
-    	setDefaultBlockSize(_fileHeader.length());
+        blockSize(_fileHeader.length());
     	
-        _fileHeader.read0(this);
+        _fileHeader.read(this);
         
         classCollection().setID(_systemData.classCollectionID());
         classCollection().read(i_systemTrans);
@@ -518,10 +526,6 @@ public abstract class YapFile extends YapStream {
         }
         
     }
-
-	private void setDefaultBlockSize(int headerLength) {
-		blockSize(1, headerLength);
-	}
 
     public void releaseSemaphore(String name) {
         releaseSemaphore(checkTransaction(null), name);
