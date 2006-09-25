@@ -12,6 +12,6 @@ public interface Db4oTestCase extends TestCase, TestLifeCycle {
 	 * 
 	 * @return ExtObjectContainer
 	 */
-	public ExtObjectContainer db();
+	public ExtObjectContainer db() throws Exception;
 
 }
