@@ -30,7 +30,7 @@ public class SystemData {
         _uuidIndexId = id;
     }
     
-    public void modifyUuidIndexId(int id){
+    public void uuidIndexCreated(int id){
         _uuidIndexId = id;
         _fileHeader.variablePartChanged();
     }

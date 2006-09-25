@@ -84,13 +84,12 @@ public class YapRandomAccessFile extends YapFile {
             i_backupFile = null;
         }
     }
-
-    public void blockSize(int blockSize, long fileLength) {
-        i_file.blockSize(blockSize);
+    
+    public void blockSize(int size){
+        i_file.blockSize(size);
         if (i_timerFile != null) {
-            i_timerFile.blockSize(blockSize);
+            i_timerFile.blockSize(size);
         }
-        super.blockSize(blockSize, fileLength);
     }
 
     public byte blockSize() {

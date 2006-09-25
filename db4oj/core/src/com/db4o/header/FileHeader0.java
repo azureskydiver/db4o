@@ -59,7 +59,7 @@ public class FileHeader0 extends FileHeader {
         _systemData = new SystemData(this);
     }
 
-    public void read0(YapFile file) {
+    public void read(YapFile file) {
         
         YapReader reader = new YapReader(length()); 
         reader.read(file, 0, 0);
@@ -76,7 +76,8 @@ public class FileHeader0 extends FileHeader {
             }
         }
         
-        file.blockSize(blockSize, file.fileLength());
+        file.blockSize(blockSize);
+        file.setRegularEndAddress(file.fileLength());
         
         _configBlock = new YapConfigBlock(file);
         
@@ -94,10 +95,6 @@ public class FileHeader0 extends FileHeader {
         reader.incrementOffset(YapConst.ID_LENGTH);
     }
 
-    public byte blockSize() {
-        return blockSize;
-    }
-    
     public void readBootRecord(YapFile yapFile){
         if (_configBlock._bootRecordID <= 0) {
             return;
