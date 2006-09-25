@@ -68,7 +68,7 @@ import com.db4o.inside.slots.Slot;
     }
     
     TreeInt getRoot(){
-        return (TreeInt)i_root;
+        return i_root;
     }
     
     public final int ownLength() {

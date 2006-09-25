@@ -483,13 +483,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
         
         if(a_object instanceof SecondClass){
-            delete4(ta, yo, a_object, a_cascade, userCall);
+            delete4(ta, yo, a_cascade, userCall);
         }else{
             ta.delete(yo, a_cascade);
         }
     }
 
-    final void delete4(Transaction ta, YapObject yo, Object a_object, int a_cascade, boolean userCall) {
+    final void delete4(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
         // The passed YapObject can be null, when calling from Transaction.
         if(yo != null){
             if (yo.beginProcessing()) {

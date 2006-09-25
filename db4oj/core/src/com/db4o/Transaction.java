@@ -119,7 +119,7 @@ public class Transaction {
                                 obj = arr[0];
                                 info._reference = (YapObject)arr[1]; 
                             }
-                            stream().delete4(finalThis,info._reference , obj, info._cascade, false);
+                            stream().delete4(finalThis,info._reference ,info._cascade, false);
                         }
                         i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
                     }

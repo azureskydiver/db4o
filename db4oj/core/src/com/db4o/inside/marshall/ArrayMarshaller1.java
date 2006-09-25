@@ -86,7 +86,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
         int length = arrayHandler.objectLength(obj);
         int linkOffset = writer.reserveAndPointToPayLoadSlot(length);
-        arrayHandler.writeNew1(obj, writer, length);
+        arrayHandler.writeNew1(obj, writer);
         if(restoreLinkOffset){
             writer._offset = linkOffset;
         }
