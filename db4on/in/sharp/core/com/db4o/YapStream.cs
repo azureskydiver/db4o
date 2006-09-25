@@ -9,8 +9,8 @@
 	/// <exclude />
 	public abstract class YapStream : com.db4o.YapStreamBase, ObjectContainer, ExtObjectContainer
 	{
-		internal YapStream(com.db4o.YapStream a_parent)
-			: base(a_parent)
+		internal YapStream(com.db4o.config.Configuration config, com.db4o.YapStream a_parent)
+			: base(config, a_parent)
 		{
 		}
 
