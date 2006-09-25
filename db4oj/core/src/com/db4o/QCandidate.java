@@ -122,8 +122,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			return false;
 		}
 
-		QCandidate candidate = null;
-
 		if (_yapField != null) {
 			TypeHandler4 handler = _yapField.getHandler();
 			if (handler != null) {
@@ -286,13 +284,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         if(_yapField == null || _yapField instanceof YapFieldNull){
             return false;
         }
-
+        
+        _yapClass.findOffset(_bytes, _yapField);
+        QCandidate candidate = readSubCandidate(a_candidates); 
 		if (candidate == null) {
-            _yapClass.findOffset(_bytes, _yapField);
-			candidate = readSubCandidate(a_candidates);
-			if (candidate == null) {
-				return false;
-			}
+			return false;
 		}
 
 		// fast early check for YapClass

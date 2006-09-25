@@ -134,10 +134,8 @@ public class Db4o {
 					return null;
 			    }
 			}
-			if(oc != null){
-			    Platform4.postOpen(oc);
-				Messages.logMsg(i_config, 5, "Memory File");
-			}
+		    Platform4.postOpen(oc);
+			Messages.logMsg(i_config, 5, "Memory File");
 			return oc;
 		}
 	}

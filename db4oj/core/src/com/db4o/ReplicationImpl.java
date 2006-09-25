@@ -312,8 +312,6 @@ public class ReplicationImpl implements ReplicationProcess {
 					referenceB = (YapObject) arr[1];
 					objectB = arr[0];
                     
-				}else {
-					sourceReference = null;
 				}
 				
 				attB = referenceB.virtualAttributes(_transB);

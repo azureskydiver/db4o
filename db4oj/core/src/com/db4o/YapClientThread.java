@@ -13,12 +13,12 @@ class YapClientThread extends Thread{
 	final Lock4 messageQueueLock;
 	
 	
-	YapClientThread(YapClient client, YapSocket a_socket, Queue4 messageQueue, Lock4 messageQueueLock){
+	YapClientThread(YapClient client, YapSocket a_socket, Queue4 messageQueue_, Lock4 messageQueueLock_){
 		synchronized(this){
 			i_stream = client;
-			this.messageQueue = messageQueue;
+			messageQueue = messageQueue_;
 			i_socket = a_socket;
-			this.messageQueueLock = messageQueueLock;
+			messageQueueLock = messageQueueLock_;
 		}
 	}
 	

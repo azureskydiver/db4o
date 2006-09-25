@@ -54,9 +54,6 @@ import com.db4o.inside.slots.Slot;
         }
         YapReader reader = new YapReader(length);
         reader.readEncrypt(ta.stream(), slot._address);
-        if (reader == null) {
-            return 0;
-        }
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
         }
