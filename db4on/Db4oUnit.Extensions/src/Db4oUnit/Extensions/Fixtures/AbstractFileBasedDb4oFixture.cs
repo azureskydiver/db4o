@@ -4,7 +4,8 @@ namespace Db4oUnit.Extensions.Fixtures
 	{
 		private readonly j4o.io.File _yap;
 
-		public AbstractFileBasedDb4oFixture(string fileName)
+		public AbstractFileBasedDb4oFixture(Db4oUnit.Extensions.Fixtures.ConfigurationSource
+			 configSource, string fileName) : base(configSource)
 		{
 			_yap = new j4o.io.File(fileName);
 		}
@@ -14,7 +15,7 @@ namespace Db4oUnit.Extensions.Fixtures
 			return _yap.GetAbsolutePath();
 		}
 
-		public override void Clean()
+		protected override void DoClean()
 		{
 			_yap.Delete();
 		}

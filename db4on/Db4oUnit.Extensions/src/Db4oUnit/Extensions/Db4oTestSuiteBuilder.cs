@@ -30,7 +30,7 @@ namespace Db4oUnit.Extensions
 			object instance = base.NewInstance(clazz);
 			if (instance is Db4oUnit.Extensions.AbstractDb4oTestCase)
 			{
-				((Db4oUnit.Extensions.Db4oTestCase)instance).Fixture(_fixture);
+				((Db4oUnit.Extensions.AbstractDb4oTestCase)instance).Fixture(_fixture);
 			}
 			return instance;
 		}

@@ -6,8 +6,12 @@ namespace Db4oUnit.Extensions
 
 		void Close();
 
+		void Reopen();
+
 		void Clean();
 
 		com.db4o.ext.ExtObjectContainer Db();
+
+		com.db4o.config.Configuration Config();
 	}
 }

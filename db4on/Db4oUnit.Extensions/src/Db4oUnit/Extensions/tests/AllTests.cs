@@ -9,15 +9,20 @@ namespace Db4oUnit.Extensions.tests
 
 		public virtual void TestSingleTestWithDifferentFixtures()
 		{
-			AssertSimpleDb4o(new Db4oUnit.Extensions.Fixtures.Db4oInMemory());
-			AssertSimpleDb4o(new Db4oUnit.Extensions.Fixtures.Db4oSolo());
+			Db4oUnit.Extensions.Fixtures.ConfigurationSource configSource = new Db4oUnit.Extensions.Fixtures.IndependentConfigurationSource
+				();
+			AssertSimpleDb4o(new Db4oUnit.Extensions.Fixtures.Db4oInMemory(configSource));
+			AssertSimpleDb4o(new Db4oUnit.Extensions.Fixtures.Db4oSolo(configSource));
 		}
 
 		public virtual void TestMultipleTestsSingleFixture()
 		{
+			Db4oUnit.Extensions.tests.MultipleDb4oTestCase.ResetConfigureCalls();
 			Db4oUnit.tests.FrameworkTestCase.RunTestAndExpect(new Db4oUnit.Extensions.Db4oTestSuiteBuilder
-				(new Db4oUnit.Extensions.Fixtures.Db4oInMemory(), typeof(Db4oUnit.Extensions.tests.MultipleDb4oTestCase
-				)).Build(), 2, false);
+				(new Db4oUnit.Extensions.Fixtures.Db4oInMemory(new Db4oUnit.Extensions.Fixtures.IndependentConfigurationSource
+				()), typeof(Db4oUnit.Extensions.tests.MultipleDb4oTestCase)).Build(), 2, false);
+			Db4oUnit.Assert.AreEqual(2, Db4oUnit.Extensions.tests.MultipleDb4oTestCase.ConfigureCalls
+				());
 		}
 
 		private void AssertSimpleDb4o(Db4oUnit.Extensions.Db4oFixture fixture)

@@ -10,7 +10,7 @@ namespace Db4oUnit.Extensions.tests
 
 		private Db4oUnit.Extensions.Db4oFixture _expectedFixture;
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
 			Db4oUnit.Assert.AreSame(_expectedFixture, Fixture());
 			Db4oUnit.Assert.IsTrue(EverythingCalledBefore(0));
