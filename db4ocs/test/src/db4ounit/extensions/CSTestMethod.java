@@ -135,24 +135,26 @@ public class CSTestMethod extends TestMethod {
 		}
 
 		public void run() {
-			ExtObjectContainer oc = toTest.db();
-			Object[] args;
-			if (hasSequenceParameter) {
-				args = new Object[2];
-				args[0] = oc;
-				args[1] = new Integer(seq);
-			} else {
-				args = new Object[1];
-				args[0] = oc;
-			}
+			ExtObjectContainer oc = null;
 			try {
+				oc = toTest.db();
+				Object[] args;
+				if (hasSequenceParameter) {
+					args = new Object[2];
+					args[0] = oc;
+					args[1] = new Integer(seq);
+				} else {
+					args = new Object[1];
+					args[0] = oc;
+				}
 				method.invoke(toTest, (Object[]) args);
 				fail = false;
 			} catch (Exception ex) {
 				// record the exception
 				this.ex = ex;
 			} finally {
-				oc.close();
+				if (oc != null)
+					oc.close();
 			}
 		}
 	}
