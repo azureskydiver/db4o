@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.inside.*;
 
 /**
  * database boot record. Responsible for ID generation, version generation and
@@ -55,6 +56,13 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
             i_stream.showInternalClasses(false);
         }
         i_dirty = false;
+    }
+
+    public void write(SystemData systemData) {
+        i_versionGenerator = systemData.lastTimeStampID();
+        i_db = systemData.identity();
+        setDirty();
+        store(2);
     }
 
 }

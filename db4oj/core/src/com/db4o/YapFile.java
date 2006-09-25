@@ -21,8 +21,6 @@ import com.db4o.reflect.*;
  */
 public abstract class YapFile extends YapStream {
     
-    private Db4oDatabase _identity;
-
     protected FileHeader0       _fileHeader;
     
     private Collection4         i_dirty;
@@ -77,14 +75,17 @@ public abstract class YapFile extends YapStream {
 
     void configureNewFile() {
         
-        _freespaceManager = FreespaceManager.createNew(this, configImpl().freespaceSystem());
+        newSystemData(configImpl().freespaceSystem());
+        
+        generateNewIdentity();
+        
+        _freespaceManager = FreespaceManager.createNew(this);
         
         if(Debug.freespaceChecker){
             _fmChecker = new FreespaceManagerRam(this);
         }
         
-        _fileHeader = new FileHeader0();
-        _systemData = _fileHeader.systemData();
+        _fileHeader = new FileHeader0(_systemData);
         
         blockSize(configImpl().blockSize());
         
@@ -93,11 +94,9 @@ public abstract class YapFile extends YapStream {
         initNewClassCollection();
         initializeEssentialClasses();
         
-        generateNewIdentity();
-        
         _fileHeader.initNew(this);
 
-        _freespaceManager.start(_fileHeader.freespaceAddress());
+        _freespaceManager.start(_systemData.freespaceAddress());
         
         if(Debug.freespace  && Debug.freespaceChecker){
             _fmChecker.start(0);
@@ -105,8 +104,13 @@ public abstract class YapFile extends YapStream {
         
     }
     
+    private void newSystemData(byte freespaceSystem){
+        _systemData = new SystemData();
+        _systemData.freespaceSystem(freespaceSystem);
+    }
+    
     public int converterVersion() {
-        return _fileHeader.converterVersion();
+        return _systemData.converterVersion();
     }
     
     public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
@@ -214,6 +218,12 @@ public abstract class YapFile extends YapStream {
     
     public void generateNewIdentity(){
         setIdentity(Db4oDatabase.generate());
+        
+        // The dirty TimeStampIdGenerator triggers writing of
+        // the variable part of the systemdata. We need to
+        // make it dirty here, so the new identity is persisted:
+        _timeStampIdGenerator.next();
+        
     }
 
     void getAll(Transaction ta, final QueryResultImpl a_res) {
@@ -337,11 +347,11 @@ public abstract class YapFile extends YapStream {
     }
 
     public Db4oDatabase identity() {
-        return _identity;
+        return _systemData.identity();
     }
     
     public void setIdentity(Db4oDatabase identity){
-        _identity = identity;
+        _systemData.identity(identity);
     }
 
     void initialize2() {
@@ -464,8 +474,9 @@ public abstract class YapFile extends YapStream {
 
     void readThis() {
         
-        _fileHeader = new FileHeader0();
-        _systemData = _fileHeader.systemData();
+        newSystemData(FreespaceManager.FM_LEGACY_RAM);
+        
+        _fileHeader = new FileHeader0(_systemData);
 
         blockSize(_fileHeader.length());
     	
@@ -474,40 +485,28 @@ public abstract class YapFile extends YapStream {
         classCollection().setID(_systemData.classCollectionID());
         classCollection().read(i_systemTrans);
         
-        Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this, _fileHeader));
+        Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this));
         
-        _freespaceManager = FreespaceManager.createNew(this, _fileHeader.freespaceSystem());
-        _freespaceManager.read(_systemData.freeSpaceID());
-        
+        _freespaceManager = FreespaceManager.createNew(this, _systemData.freespaceSystem());
+        _freespaceManager.read(_systemData.freespaceID());
+       
         if(Debug.freespace){
             _fmChecker = new FreespaceManagerRam(this);
-            _fmChecker.read(_systemData.freeSpaceID());
+            _fmChecker.read(_systemData.freespaceID());
         }
         
-        _freespaceManager.start(_fileHeader.freespaceAddress());
+        _freespaceManager.start(_systemData.freespaceAddress());
         
         if(Debug.freespace){
             _fmChecker.start(0);
         }
         
-        if(configImpl().freespaceSystem() != 0  || _fileHeader.freespaceSystem() == FreespaceManager.FM_LEGACY_RAM){
-            if(_freespaceManager.systemType() != configImpl().freespaceSystem()){
-                FreespaceManager newFM = FreespaceManager.createNew(this, configImpl().freespaceSystem());
-                int fmSlot = _fileHeader.newFreespaceSlot(configImpl().freespaceSystem());
-                
-                newFM.start(fmSlot);
-                _freespaceManager.migrate(newFM);
-                FreespaceManager oldFM = _freespaceManager;
-                _freespaceManager = newFM;
-                oldFM.freeSelf();
-                _freespaceManager.beginCommit();
-                _freespaceManager.endCommit();
-                
-                _fileHeader.variablePartChanged();
-            }
+        if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
+            _freespaceManager = _freespaceManager.migrate(this, configImpl().freespaceSystem());
+            _fileHeader.writeVariablePart1();
         }
         
-        _fileHeader.readBootRecord(this);
+        _fileHeader.readVariablePart2(this);
         
         writeHeader(false);
         
@@ -519,12 +518,24 @@ public abstract class YapFile extends YapStream {
             }
         }
 
-        if(Converter.convert(new ConversionStage.SystemUpStage(this, _fileHeader))){
-            _fileHeader.converterVersion(Converter.VERSION);
-            _fileHeader.variablePartChanged();
+        if(Converter.convert(new ConversionStage.SystemUpStage(this))){
+            _systemData.converterVersion(Converter.VERSION);
+            _fileHeader.writeVariablePart1();
             getTransaction().commit();
         }
         
+    }
+    
+    public int newFreespaceSlot(byte freespaceSystem){
+        _systemData.freespaceAddress(FreespaceManager.initSlot(this));
+        _systemData.freespaceSystem(freespaceSystem);
+        return _systemData.freespaceAddress();
+    }
+    
+    public void ensureFreespaceSlot(){
+        if(systemData().freespaceAddress() == 0){
+            newFreespaceSlot(systemData().freespaceSystem());
+        }
     }
 
     public void releaseSemaphore(String name) {
@@ -661,18 +672,13 @@ public abstract class YapFile extends YapStream {
     }
     
     protected void writeVariableHeader(){
-        
-        // TODO: Optimize to store only the dirty information
-        // use: _timeStampIdGenerator.isDirty() 
-        //
-        
-        _fileHeader.setLastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
-        _fileHeader.setIdentity(identity());
+        if(! _timeStampIdGenerator.isDirty()){
+        	return;
+        }
+        _systemData.lastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
         _fileHeader.writeVariablePart2();
-        
         _timeStampIdGenerator.setClean();
     }
-    
     
     public final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
         int length = a_child.getLength();

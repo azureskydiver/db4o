@@ -3,7 +3,7 @@
 package com.db4o.inside.convert;
 
 import com.db4o.*;
-import com.db4o.header.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -12,8 +12,8 @@ public abstract class ConversionStage {
 	
 	public final static class ClassCollectionAvailableStage extends ConversionStage {
 		
-		public ClassCollectionAvailableStage(YapFile file,FileHeader0 header) {
-			super(file,header);
+		public ClassCollectionAvailableStage(YapFile file) {
+			super(file);
 		}
 
 		public void accept(Conversion conversion) {
@@ -22,8 +22,8 @@ public abstract class ConversionStage {
 	}
 
 	public final static class SystemUpStage extends ConversionStage {
-		public SystemUpStage(YapFile file,FileHeader0 header) {
-			super(file,header);
+		public SystemUpStage(YapFile file) {
+			super(file);
 		}
 		public void accept(Conversion conversion) {
 			conversion.convert(this);
@@ -31,20 +31,18 @@ public abstract class ConversionStage {
 	}
 
 	private YapFile _file;
-	private FileHeader0 _header;
 	
-	protected ConversionStage(YapFile file,FileHeader0 header) {
+	protected ConversionStage(YapFile file) {
 		_file = file;
-		_header=header;
 	}
 
 	public YapFile file() {
 		return _file;
 	}
 	
-	public FileHeader0 header() {
-		return _header;
-	}
+    public SystemData systemData(){
+        return _file.systemData();
+    }
 	
 	public abstract void accept(Conversion conversion);
 }
