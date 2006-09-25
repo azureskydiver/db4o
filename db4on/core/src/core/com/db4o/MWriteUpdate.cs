@@ -16,8 +16,7 @@ namespace com.db4o
 					);
 				stream.GetSlotForUpdate(_payLoad);
 				yc.AddFieldIndices(_payLoad, oldSlot);
-				stream.i_handlers.Encrypt(_payLoad);
-				_payLoad.Write();
+				_payLoad.WriteEncrypt();
 			}
 			return true;
 		}

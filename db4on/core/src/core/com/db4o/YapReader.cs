@@ -185,6 +185,19 @@ namespace com.db4o
 			_offset += nullBitMap.MarshalledLength();
 		}
 
+		public virtual void WriteEncrypt(com.db4o.YapFile file, int address, int addressOffset
+			)
+		{
+			file.i_handlers.Encrypt(this);
+			Write(file, address, addressOffset);
+			file.i_handlers.Decrypt(this);
+		}
+
+		public virtual void Write(com.db4o.YapFile file, int address, int addressOffset)
+		{
+			file.WriteBytes(this, address, addressOffset);
+		}
+
 		public virtual void WriteEnd()
 		{
 			if (com.db4o.Deploy.debug && com.db4o.Deploy.brackets)
@@ -213,7 +226,7 @@ namespace com.db4o
 			}
 			if (obj is com.db4o.YapMeta)
 			{
-				((com.db4o.YapMeta)obj).WriteOwnID(trans, this);
+				WriteIDOf(trans, (com.db4o.YapMeta)obj);
 				return;
 			}
 			WriteInt(((int)obj));
@@ -228,11 +241,6 @@ namespace com.db4o
 				return;
 			}
 			yapMeta.WriteOwnID(trans, this);
-		}
-
-		public virtual void WriteIDOf(com.db4o.Transaction trans, int i)
-		{
-			WriteInt(i);
 		}
 
 		public virtual void WriteShortString(com.db4o.Transaction trans, string a_string)

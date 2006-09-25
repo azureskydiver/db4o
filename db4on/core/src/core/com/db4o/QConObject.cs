@@ -98,7 +98,7 @@ namespace com.db4o
 
 		public override bool CanBeIndexLeaf()
 		{
-			return i_yapClass != null && i_yapClass.IsPrimitive();
+			return (i_yapClass != null && i_yapClass.IsPrimitive()) || Evaluator().Identity();
 		}
 
 		public override bool CanLoadByIndex()

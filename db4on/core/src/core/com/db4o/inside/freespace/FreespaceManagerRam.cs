@@ -122,6 +122,35 @@ namespace com.db4o.inside.freespace
 		{
 		}
 
+		public override int FreeSize()
+		{
+			com.db4o.foundation.MutableInt mint = new com.db4o.foundation.MutableInt();
+			com.db4o.foundation.Tree.Traverse(_freeBySize, new _AnonymousInnerClass137(this, 
+				mint));
+			return mint.Value();
+		}
+
+		private sealed class _AnonymousInnerClass137 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass137(FreespaceManagerRam _enclosing, com.db4o.foundation.MutableInt
+				 mint)
+			{
+				this._enclosing = _enclosing;
+				this.mint = mint;
+			}
+
+			public void Visit(object obj)
+			{
+				com.db4o.inside.freespace.FreeSlotNode node = (com.db4o.inside.freespace.FreeSlotNode
+					)obj;
+				mint.Add(node._key);
+			}
+
+			private readonly FreespaceManagerRam _enclosing;
+
+			private readonly com.db4o.foundation.MutableInt mint;
+		}
+
 		public override int GetSlot(int length)
 		{
 			int address = GetSlot1(length);
@@ -158,13 +187,13 @@ namespace com.db4o.inside.freespace
 		{
 			if (_freeByAddress != null)
 			{
-				_freeByAddress.Traverse(new _AnonymousInnerClass171(this, newFM));
+				_freeByAddress.Traverse(new _AnonymousInnerClass181(this, newFM));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass171 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass181 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass171(FreespaceManagerRam _enclosing, com.db4o.inside.freespace.FreespaceManager
+			public _AnonymousInnerClass181(FreespaceManagerRam _enclosing, com.db4o.inside.freespace.FreespaceManager
 				 newFM)
 			{
 				this._enclosing = _enclosing;
@@ -206,16 +235,16 @@ namespace com.db4o.inside.freespace
 			com.db4o.foundation.Tree[] addressTree = new com.db4o.foundation.Tree[1];
 			if (_freeBySize != null)
 			{
-				_freeBySize.Traverse(new _AnonymousInnerClass200(this, addressTree));
+				_freeBySize.Traverse(new _AnonymousInnerClass210(this, addressTree));
 			}
 			_freeByAddress = addressTree[0];
 			_file.Free(freeSlotsID, com.db4o.YapConst.POINTER_LENGTH);
 			_file.Free(reader.GetAddress(), reader.GetLength());
 		}
 
-		private sealed class _AnonymousInnerClass200 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass210 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass200(FreespaceManagerRam _enclosing, com.db4o.foundation.Tree[]
+			public _AnonymousInnerClass210(FreespaceManagerRam _enclosing, com.db4o.foundation.Tree[]
 				 addressTree)
 			{
 				this._enclosing = _enclosing;
@@ -264,6 +293,11 @@ namespace com.db4o.inside.freespace
 			sdwriter.WriteEncrypt();
 			Trans().WritePointer(ptr._id, ptr._address, length);
 			return freeBySizeID;
+		}
+
+		public override int EntryCount()
+		{
+			return com.db4o.foundation.Tree.Size(_freeByAddress);
 		}
 	}
 }

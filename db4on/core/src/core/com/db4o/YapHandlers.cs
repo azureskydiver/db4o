@@ -221,8 +221,9 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.Traverse(new _AnonymousInnerClass228(this, foundConstructor, claxx
-							));
+						com.db4o.TypeHandler4[] handlers = i_handlers;
+						sortedConstructors.Traverse(new _AnonymousInnerClass229(this, foundConstructor, handlers
+							, claxx));
 					}
 					if (foundConstructor[0])
 					{
@@ -236,13 +237,14 @@ namespace com.db4o
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass228 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass229 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass228(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
-				 claxx)
+			public _AnonymousInnerClass229(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.TypeHandler4[]
+				 handlers, com.db4o.reflect.ReflectClass claxx)
 			{
 				this._enclosing = _enclosing;
 				this.foundConstructor = foundConstructor;
+				this.handlers = handlers;
 				this.claxx = claxx;
 			}
 
@@ -260,9 +262,9 @@ namespace com.db4o
 						{
 							for (int k = 0; k < com.db4o.YapHandlers.PRIMITIVECOUNT; k++)
 							{
-								if (pTypes[j].Equals(this._enclosing.i_handlers[k].PrimitiveClassReflector()))
+								if (pTypes[j].Equals(handlers[k].PrimitiveClassReflector()))
 								{
-									parms[j] = ((com.db4o.YapJavaClass)this._enclosing.i_handlers[k]).PrimitiveNull();
+									parms[j] = ((com.db4o.YapJavaClass)handlers[k]).PrimitiveNull();
 									break;
 								}
 							}
@@ -283,6 +285,8 @@ namespace com.db4o
 			private readonly YapHandlers _enclosing;
 
 			private readonly bool[] foundConstructor;
+
+			private readonly com.db4o.TypeHandler4[] handlers;
 
 			private readonly com.db4o.reflect.ReflectClass claxx;
 		}

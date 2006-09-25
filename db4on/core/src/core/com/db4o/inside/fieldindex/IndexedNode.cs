@@ -1,6 +1,6 @@
 namespace com.db4o.inside.fieldindex
 {
-	public interface IndexedNode
+	public interface IndexedNode : com.db4o.foundation.Iterable4
 	{
 		bool IsResolved();
 
@@ -11,7 +11,5 @@ namespace com.db4o.inside.fieldindex
 		int ResultSize();
 
 		com.db4o.TreeInt ToTreeInt();
-
-		com.db4o.foundation.Iterator4 Iterator();
 	}
 }

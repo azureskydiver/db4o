@@ -406,7 +406,7 @@ namespace com.db4o
 			return mf._array.WriteNew(this, a_object, restoreLinkOffset, a_bytes);
 		}
 
-		public virtual void WriteNew1(object obj, com.db4o.YapWriter writer, int length)
+		public virtual void WriteNew1(object obj, com.db4o.YapWriter writer)
 		{
 			WriteClass(obj, writer);
 			int elements = _reflectArray.GetLength(obj);

@@ -169,7 +169,7 @@ namespace com.db4o
 				a_trans.SlotFreeOnRollbackCommitSetPointer(i_id, address, length);
 			}
 			WriteThis(a_trans, writer);
-			stream.WriteObject(this, writer, address);
+			writer.WriteEncrypt(stream, address, 0);
 			if (IsActive())
 			{
 				SetStateClean();

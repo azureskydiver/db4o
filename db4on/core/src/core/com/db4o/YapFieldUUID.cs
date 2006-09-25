@@ -135,22 +135,21 @@ namespace com.db4o
 			{
 				return;
 			}
-			com.db4o.header.FileHeader0 header = GetFileHeader(transaction);
-			if (header == null)
+			com.db4o.inside.SystemData sd = SystemData(transaction);
+			if (sd == null)
 			{
 				return;
 			}
-			InitIndex(transaction, header.GetUUIDIndexId());
-			if (header.GetUUIDIndexId() == 0)
+			InitIndex(transaction, sd.UuidIndexId());
+			if (sd.UuidIndexId() == 0)
 			{
-				header.WriteUUIDIndexId(base.GetIndex(transaction).GetID());
+				sd.UuidIndexCreated(base.GetIndex(transaction).GetID());
 			}
 		}
 
-		private com.db4o.header.FileHeader0 GetFileHeader(com.db4o.Transaction transaction
-			)
+		private com.db4o.inside.SystemData SystemData(com.db4o.Transaction transaction)
 		{
-			return ((com.db4o.YapFile)transaction.Stream()).GetFileHeader();
+			return ((com.db4o.YapFile)transaction.Stream()).SystemData();
 		}
 
 		internal override void Instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject

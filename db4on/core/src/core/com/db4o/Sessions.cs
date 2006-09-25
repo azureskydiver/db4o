@@ -14,7 +14,8 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.ObjectContainer Open(string databaseFileName)
+		internal virtual com.db4o.ObjectContainer Open(com.db4o.config.Configuration config
+			, string databaseFileName)
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
@@ -32,7 +33,7 @@ namespace com.db4o
 				}
 				try
 				{
-					oc = new com.db4o.YapRandomAccessFile(newSession);
+					oc = new com.db4o.YapRandomAccessFile(config, newSession);
 				}
 				catch (com.db4o.LongJumpOutException e)
 				{

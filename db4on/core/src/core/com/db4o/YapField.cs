@@ -587,10 +587,13 @@ namespace com.db4o
 			i_isNArray = isNArray;
 		}
 
+		private bool _initialized = false;
+
 		internal void InitConfigOnUp(com.db4o.Transaction trans)
 		{
-			if (i_config != null)
+			if (i_config != null && !_initialized)
 			{
+				_initialized = true;
 				i_config.InitOnUp(trans, this);
 			}
 		}
@@ -846,13 +849,13 @@ namespace com.db4o
 			lock (stream.Lock())
 			{
 				com.db4o.Transaction trans = stream.GetTransaction();
-				_index.TraverseKeys(trans, new _AnonymousInnerClass767(this, userVisitor, trans));
+				_index.TraverseKeys(trans, new _AnonymousInnerClass769(this, userVisitor, trans));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass767 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass769 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass767(YapField _enclosing, com.db4o.foundation.Visitor4 
+			public _AnonymousInnerClass769(YapField _enclosing, com.db4o.foundation.Visitor4 
 				userVisitor, com.db4o.Transaction trans)
 			{
 				this._enclosing = _enclosing;

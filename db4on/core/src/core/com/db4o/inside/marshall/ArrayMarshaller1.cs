@@ -96,7 +96,7 @@ namespace com.db4o.inside.marshall
 			}
 			int length = arrayHandler.ObjectLength(obj);
 			int linkOffset = writer.ReserveAndPointToPayLoadSlot(length);
-			arrayHandler.WriteNew1(obj, writer, length);
+			arrayHandler.WriteNew1(obj, writer);
 			if (restoreLinkOffset)
 			{
 				writer._offset = linkOffset;

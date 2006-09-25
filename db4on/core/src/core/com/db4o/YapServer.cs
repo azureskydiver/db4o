@@ -177,8 +177,9 @@ namespace com.db4o
 		{
 			try
 			{
-				com.db4o.YapClient client = new com.db4o.YapClient(OpenClientSocket(), com.db4o.YapConst
-					.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "", false);
+				com.db4o.YapClient client = new com.db4o.YapClient(com.db4o.Db4o.CloneConfiguration
+					(), OpenClientSocket(), com.db4o.YapConst.EMBEDDED_CLIENT_USER + (i_threadIDGen 
+					- 1), "", false);
 				client.BlockSize(i_yapFile.BlockSize());
 				return client;
 			}

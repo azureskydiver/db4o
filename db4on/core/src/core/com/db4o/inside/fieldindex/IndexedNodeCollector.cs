@@ -85,7 +85,7 @@ namespace com.db4o.inside.fieldindex
 				}
 				if (IsLeaf(qcon))
 				{
-					if (CanBeIndexedLeaf(qcon))
+					if (qcon.CanLoadByIndex() && qcon.CanBeIndexLeaf())
 					{
 						com.db4o.QConObject conObject = (com.db4o.QConObject)qcon;
 						if (conObject.HasJoins())
@@ -106,12 +106,6 @@ namespace com.db4o.inside.fieldindex
 					}
 				}
 			}
-		}
-
-		private bool CanBeIndexedLeaf(com.db4o.QCon qcon)
-		{
-			return qcon.CanLoadByIndex() && (qcon.CanBeIndexLeaf() || qcon.Evaluator().Identity
-				());
 		}
 
 		private bool IsCached(com.db4o.QCon qcon)

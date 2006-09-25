@@ -18,8 +18,6 @@ namespace com.db4o
 		, com.db4o.YapStreamSpec
 	#endif
 	{
-		public const int HEADER_LENGTH = 2 + (com.db4o.YapConst.INT_LENGTH * 4);
-
 		private bool i_amDuringFatalExit = false;
 
 		protected com.db4o.YapClassCollection _classCollection;
@@ -78,14 +76,15 @@ namespace com.db4o
 		protected readonly com.db4o.foundation.PersistentTimeStampIdGenerator _timeStampIdGenerator
 			 = new com.db4o.foundation.PersistentTimeStampIdGenerator();
 
-		protected YapStreamBase(com.db4o.YapStream a_parent)
+		protected YapStreamBase(com.db4o.config.Configuration config, com.db4o.YapStream 
+			a_parent)
 		{
 			_this = Cast(this);
 			i_parent = a_parent == null ? _this : a_parent;
 			i_lock = a_parent == null ? new object() : a_parent.i_lock;
 			Initialize0();
 			InitializeTransactions();
-			Initialize1();
+			Initialize1(config);
 		}
 
 		public virtual void Activate(object a_activate, int a_depth)
@@ -520,7 +519,7 @@ namespace com.db4o
 			}
 			if (a_object is com.db4o.types.SecondClass)
 			{
-				Delete4(ta, yo, a_object, a_cascade, userCall);
+				Delete4(ta, yo, a_cascade, userCall);
 			}
 			else
 			{
@@ -528,8 +527,8 @@ namespace com.db4o
 			}
 		}
 
-		internal void Delete4(com.db4o.Transaction ta, com.db4o.YapObject yo, object a_object
-			, int a_cascade, bool userCall)
+		internal void Delete4(com.db4o.Transaction ta, com.db4o.YapObject yo, int a_cascade
+			, bool userCall)
 		{
 			if (yo != null)
 			{
@@ -598,7 +597,7 @@ namespace com.db4o
 			}
 			com.db4o.YapClass yc = yo.GetYapClass();
 			com.db4o.YapField[] field = new com.db4o.YapField[] { null };
-			yc.ForEachYapField(new _AnonymousInnerClass598(this, fieldName, field));
+			yc.ForEachYapField(new _AnonymousInnerClass565(this, fieldName, field));
 			if (field[0] == null)
 			{
 				return null;
@@ -640,9 +639,9 @@ namespace com.db4o
 			return Descend1(trans, child, subPath);
 		}
 
-		private sealed class _AnonymousInnerClass598 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass565 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass598(YapStreamBase _enclosing, string fieldName, com.db4o.YapField[]
+			public _AnonymousInnerClass565(YapStreamBase _enclosing, string fieldName, com.db4o.YapField[]
 				 field)
 			{
 				this._enclosing = _enclosing;
@@ -1137,10 +1136,9 @@ namespace com.db4o
 			i_justDeactivated = new com.db4o.foundation.Tree[1];
 		}
 
-		internal virtual void Initialize1()
+		internal virtual void Initialize1(com.db4o.config.Configuration config)
 		{
-			i_config = (com.db4o.Config4Impl)((com.db4o.foundation.DeepClone)com.db4o.Db4o.Configure
-				()).DeepClone(this);
+			i_config = InitializeConfig(config);
 			i_handlers = new com.db4o.YapHandlers(_this, ConfigImpl().Encoding(), ConfigImpl(
 				).Reflector());
 			if (i_references != null)
@@ -1156,6 +1154,14 @@ namespace com.db4o
 			i_handlers.InitEncryption(ConfigImpl());
 			Initialize2();
 			i_stillToSet = null;
+		}
+
+		private com.db4o.Config4Impl InitializeConfig(com.db4o.config.Configuration config
+			)
+		{
+			com.db4o.Config4Impl impl = ((com.db4o.Config4Impl)config);
+			impl.Stream(_this);
+			return impl;
 		}
 
 		/// <summary>before file is open</summary>
@@ -1344,8 +1350,8 @@ namespace com.db4o
 			memoryFile.SetInitialSize(223);
 			memoryFile.SetIncrementSizeBy(300);
 			GetYapClass(Reflector().ForObject(obj), true);
-			com.db4o.YapObjectCarrier carrier = new com.db4o.YapObjectCarrier(_this, memoryFile
-				);
+			com.db4o.YapObjectCarrier carrier = new com.db4o.YapObjectCarrier(Config(), _this
+				, memoryFile);
 			carrier.i_showInternalClasses = i_showInternalClasses;
 			carrier.Set(obj);
 			id[0] = (int)carrier.GetID(obj);
@@ -2222,6 +2228,8 @@ namespace com.db4o
 			return i_handlers.i_stringHandler.i_stringIo;
 		}
 
+		public abstract com.db4o.ext.SystemInfo SystemInfo();
+
 		internal virtual object Unmarshall(com.db4o.YapWriter yapBytes)
 		{
 			return Unmarshall(yapBytes._buffer, yapBytes.GetID());
@@ -2230,8 +2238,8 @@ namespace com.db4o
 		internal virtual object Unmarshall(byte[] bytes, int id)
 		{
 			com.db4o.ext.MemoryFile memoryFile = new com.db4o.ext.MemoryFile(bytes);
-			com.db4o.YapObjectCarrier carrier = new com.db4o.YapObjectCarrier(_this, memoryFile
-				);
+			com.db4o.YapObjectCarrier carrier = new com.db4o.YapObjectCarrier(Configure(), _this
+				, memoryFile);
 			object obj = carrier.GetByID(id);
 			carrier.Activate(obj, int.MaxValue);
 			carrier.Close();

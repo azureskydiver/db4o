@@ -137,8 +137,7 @@ namespace com.db4o
 			return dim;
 		}
 
-		public sealed override void WriteNew1(object obj, com.db4o.YapWriter writer, int 
-			length)
+		public sealed override void WriteNew1(object obj, com.db4o.YapWriter writer)
 		{
 			int[] dim = _reflectArray.Dimensions(obj);
 			WriteClass(obj, writer);
