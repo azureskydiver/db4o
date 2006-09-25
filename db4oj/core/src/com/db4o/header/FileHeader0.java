@@ -42,21 +42,14 @@ public class FileHeader0 extends FileHeader {
     
     private YapConfigBlock    _configBlock;
     
-    private byte blockSize = 1;
-    
     private PBootRecord _bootRecord;
-
-    private final SystemData _systemData;
-    
-    public FileHeader0(SystemData systemData){
-        _systemData = systemData;
-    }
 
     public void read(YapFile file) {
         
         YapReader reader = new YapReader(length()); 
         reader.read(file, 0, 0);
-        
+     
+        byte blockSize = 1;
         byte firstFileByte = reader.readByte();
         if (firstFileByte != YapConst.YAPBEGIN) {
             if(firstFileByte != YapConst.YAPFILEVERSION){
@@ -74,57 +67,59 @@ public class FileHeader0 extends FileHeader {
         
         _configBlock = new YapConfigBlock(file);
         
-        _configBlock.read(_systemData, reader.readInt());
+        SystemData systemData = file.systemData();
+        
+        _configBlock.read(systemData, reader.readInt());
 
         skipConfigurationLockTime(reader);
         
-        _systemData.classCollectionID(reader.readInt());
-        _systemData.freespaceID(reader.readInt());
+        systemData.classCollectionID(reader.readInt());
+        systemData.freespaceID(reader.readInt());
     }
 
     private void skipConfigurationLockTime(YapReader reader) {
         reader.incrementOffset(YapConst.ID_LENGTH);
     }
 
-    public void readVariablePart2(YapFile yapFile){
+    public void readVariablePart2(YapFile file){
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
-        yapFile.showInternalClasses(true);
-        Object bootRecord = yapFile.getByID1(yapFile.getSystemTransaction(), _configBlock._bootRecordID);
-        yapFile.showInternalClasses(false);
+        file.showInternalClasses(true);
+        Object bootRecord = file.getByID1(file.getSystemTransaction(), _configBlock._bootRecordID);
+        file.showInternalClasses(false);
         
         if (! (bootRecord instanceof PBootRecord)) {
-            initBootRecord(yapFile);
-            yapFile.generateNewIdentity();
+            initBootRecord(file);
+            file.generateNewIdentity();
             return;
         }
         
         _bootRecord = (PBootRecord) bootRecord;
-        yapFile.activate(bootRecord, Integer.MAX_VALUE);
-        yapFile.setNextTimeStampId(_bootRecord.i_versionGenerator);
+        file.activate(bootRecord, Integer.MAX_VALUE);
+        file.setNextTimeStampId(_bootRecord.i_versionGenerator);
         
-        _systemData.identity(_bootRecord.i_db);
+        file.systemData().identity(_bootRecord.i_db);
     }
 
-    public void initNew(YapFile yf) {
-        _systemData.converterVersion(Converter.VERSION);
-        _configBlock = new YapConfigBlock(yf);
+    public void initNew(YapFile file) {
+        file.systemData().converterVersion(Converter.VERSION);
+        _configBlock = new YapConfigBlock(file);
         _configBlock.go();
-        initBootRecord(yf);
+        initBootRecord(file);
     }
     
-    private void initBootRecord(YapFile yf){
+    private void initBootRecord(YapFile file){
         
-        yf.showInternalClasses(true);
+        file.showInternalClasses(true);
         
         _bootRecord = new PBootRecord();
-        yf.setInternal(yf.getSystemTransaction(), _bootRecord, false);
+        file.setInternal(file.getSystemTransaction(), _bootRecord, false);
         
-        _configBlock._bootRecordID = yf.getID1(yf.getSystemTransaction(), _bootRecord);
-        writeVariablePart1();
+        _configBlock._bootRecordID = file.getID1(file.getSystemTransaction(), _bootRecord);
+        writeVariablePart1(file);
         
-        yf.showInternalClasses(false);
+        file.showInternalClasses(false);
     }
 
     public Transaction interruptedTransaction() {
@@ -177,12 +172,12 @@ public class FileHeader0 extends FileHeader {
         writer.write();
     }
 
-    public void writeVariablePart1() {
-        _configBlock.write(_systemData);
+    public void writeVariablePart1(YapFile file) {
+        _configBlock.write(file.systemData());
     }
     
     public void writeVariablePart2(YapFile file) {
-        _bootRecord.write(file, _systemData);
+        _bootRecord.write(file);
     }
 
 }

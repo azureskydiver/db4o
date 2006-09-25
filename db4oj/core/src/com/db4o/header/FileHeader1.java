@@ -2,15 +2,16 @@
 
 package com.db4o.header;
 
+import com.db4o.*;
+
 
 /**
  * @exclude
  */
 public class FileHeader1 extends FileHeader {
 
-    public void writeVariablePart1() {
+    public void writeVariablePart1(YapFile file) {
         // TODO Auto-generated method stub
-        
     }
 
 }
