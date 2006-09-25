@@ -17,14 +17,13 @@ namespace Db4oUnit.Extensions
 
 		protected virtual void Reopen()
 		{
-			Fixture().Close();
-			Fixture().Open();
+			_fixture.Reopen();
 		}
 
 		public virtual void SetUp()
 		{
 			_fixture.Clean();
-			Configure();
+			Configure(_fixture.Config());
 			_fixture.Open();
 			Store();
 			_fixture.Close();
@@ -37,7 +36,7 @@ namespace Db4oUnit.Extensions
 			_fixture.Clean();
 		}
 
-		protected virtual void Configure()
+		protected virtual void Configure(com.db4o.config.Configuration config)
 		{
 		}
 
@@ -57,8 +56,27 @@ namespace Db4oUnit.Extensions
 
 		public virtual int RunSolo()
 		{
+			return RunSolo(true);
+		}
+
+		public virtual int RunSolo(bool independentConfig)
+		{
 			return new Db4oUnit.TestRunner(new Db4oUnit.Extensions.Db4oTestSuiteBuilder(new Db4oUnit.Extensions.Fixtures.Db4oSolo
+				(ConfigSource(independentConfig)), TestCases())).Run();
+		}
+
+		public virtual int RunClientServer()
+		{
+			return new Db4oUnit.TestRunner(new Db4oUnit.Extensions.Db4oTestSuiteBuilder(new Db4oUnit.Extensions.Fixtures.Db4oSingleClient
 				(), TestCases())).Run();
+		}
+
+		private Db4oUnit.Extensions.Fixtures.ConfigurationSource ConfigSource(bool independentConfig
+			)
+		{
+			return (independentConfig ? (Db4oUnit.Extensions.Fixtures.ConfigurationSource)new 
+				Db4oUnit.Extensions.Fixtures.IndependentConfigurationSource() : new Db4oUnit.Extensions.Fixtures.GlobalConfigurationSource
+				());
 		}
 
 		protected virtual com.db4o.YapStream Stream()
@@ -86,9 +104,10 @@ namespace Db4oUnit.Extensions
 			return Stream().Reflector();
 		}
 
-		protected virtual void IndexField(System.Type clazz, string fieldName)
+		protected virtual void IndexField(com.db4o.config.Configuration config, System.Type
+			 clazz, string fieldName)
 		{
-			com.db4o.Db4o.Configure().ObjectClass(clazz).ObjectField(fieldName).Indexed(true);
+			config.ObjectClass(clazz).ObjectField(fieldName).Indexed(true);
 		}
 
 		protected virtual com.db4o.Transaction NewTransaction()

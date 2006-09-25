@@ -4,10 +4,31 @@ namespace Db4oUnit.Extensions.Fixtures
 	{
 		private com.db4o.ext.ExtObjectContainer _db;
 
+		private readonly Db4oUnit.Extensions.Fixtures.ConfigurationSource _configSource;
+
+		private com.db4o.config.Configuration _config;
+
+		protected AbstractDb4oFixture(Db4oUnit.Extensions.Fixtures.ConfigurationSource configSource
+			)
+		{
+			_configSource = configSource;
+		}
+
+		public void Open()
+		{
+			_db = CreateDatabase(Config()).Ext();
+		}
+
 		public virtual void Close()
 		{
 			_db.Close();
 			_db = null;
+		}
+
+		public virtual void Reopen()
+		{
+			_db.Close();
+			Open();
 		}
 
 		public virtual com.db4o.ext.ExtObjectContainer Db()
@@ -15,14 +36,24 @@ namespace Db4oUnit.Extensions.Fixtures
 			return _db;
 		}
 
-		protected virtual void Db(com.db4o.ext.ExtObjectContainer container)
+		public virtual com.db4o.config.Configuration Config()
 		{
-			Db4oUnit.Assert.IsNull(_db);
-			_db = container;
+			if (_config == null)
+			{
+				_config = _configSource.Config();
+			}
+			return _config;
 		}
 
-		public abstract void Clean();
+		public virtual void Clean()
+		{
+			DoClean();
+			_config = null;
+		}
 
-		public abstract void Open();
+		protected abstract void DoClean();
+
+		protected abstract com.db4o.ObjectContainer CreateDatabase(com.db4o.config.Configuration
+			 config);
 	}
 }

@@ -2,10 +2,9 @@ namespace Db4oUnit.Extensions
 {
 	public interface Db4oTestCase : Db4oUnit.TestCase, Db4oUnit.TestLifeCycle
 	{
-		void Fixture(Db4oUnit.Extensions.Db4oFixture fixture);
-
-		Db4oUnit.Extensions.Db4oFixture Fixture();
-
+		/// <summary>returns an ExtObjectContainer as a parameter for test method.</summary>
+		/// <remarks>returns an ExtObjectContainer as a parameter for test method.</remarks>
+		/// <returns>ExtObjectContainer</returns>
 		com.db4o.ext.ExtObjectContainer Db();
 	}
 }
