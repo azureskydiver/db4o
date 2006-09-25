@@ -227,8 +227,12 @@ namespace com.db4o
 		{
 			com.db4o.Config4Impl ret = new com.db4o.Config4Impl();
 			ret._config = (com.db4o.foundation.KeySpecHashtable4)_config.DeepClone(this);
-			ret.i_stream = (com.db4o.YapStream)param;
 			return ret;
+		}
+
+		public void Stream(com.db4o.YapStream stream)
+		{
+			i_stream = stream;
 		}
 
 		public void DetectSchemaChanges(bool flag)
@@ -455,7 +459,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass409(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass412(this));
 			}
 			else
 			{
@@ -463,9 +467,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass409 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass412 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass409(Config4Impl _enclosing)
+			public _AnonymousInnerClass412(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -512,7 +516,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass448(this));
+				com.db4o.Db4o.ForEachSession(new _AnonymousInnerClass451(this));
 			}
 			else
 			{
@@ -520,9 +524,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass448 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass451 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass448(Config4Impl _enclosing)
+			public _AnonymousInnerClass451(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

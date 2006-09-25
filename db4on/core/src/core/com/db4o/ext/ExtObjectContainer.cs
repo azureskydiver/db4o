@@ -489,6 +489,23 @@ namespace com.db4o.ext
 		/// </summary>
 		com.db4o.ext.StoredClass[] StoredClasses();
 
+		/// <summary>
+		/// returns the
+		/// <see cref="com.db4o.ext.SystemInfo">com.db4o.ext.SystemInfo</see>
+		/// for this ObjectContainer.
+		/// <br /><br />The
+		/// <see cref="com.db4o.ext.SystemInfo">com.db4o.ext.SystemInfo</see>
+		/// supplies methods that provide
+		/// information about system state and system settings of this
+		/// ObjectContainer.
+		/// </summary>
+		/// <returns>
+		/// the
+		/// <see cref="com.db4o.ext.SystemInfo">com.db4o.ext.SystemInfo</see>
+		/// for this ObjectContainer.
+		/// </returns>
+		com.db4o.ext.SystemInfo SystemInfo();
+
 		/// <summary>returns the current transaction serial number.</summary>
 		/// <remarks>
 		/// returns the current transaction serial number.

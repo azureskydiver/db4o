@@ -53,6 +53,11 @@ namespace com.db4o.inside.freespace
 			writer.WriteEncrypt();
 		}
 
+		public override int EntryCount()
+		{
+			return _addressIx.EntryCount();
+		}
+
 		public override void Free(int address, int length)
 		{
 			if (!Started())
@@ -102,6 +107,11 @@ namespace com.db4o.inside.freespace
 			_lengthIx._index._metaIndex.Free(_file);
 		}
 
+		public override int FreeSize()
+		{
+			return _addressIx.FreeSize();
+		}
+
 		public override int GetSlot(int length)
 		{
 			if (!Started())
@@ -145,15 +155,15 @@ namespace com.db4o.inside.freespace
 			{
 				return;
 			}
-			com.db4o.foundation.IntObjectVisitor addToNewFM = new _AnonymousInnerClass181(this
+			com.db4o.foundation.IntObjectVisitor addToNewFM = new _AnonymousInnerClass189(this
 				, newFM);
-			com.db4o.foundation.Tree.Traverse(_addressIx._indexTrans.GetRoot(), new _AnonymousInnerClass186
+			com.db4o.foundation.Tree.Traverse(_addressIx._indexTrans.GetRoot(), new _AnonymousInnerClass194
 				(this, addToNewFM));
 		}
 
-		private sealed class _AnonymousInnerClass181 : com.db4o.foundation.IntObjectVisitor
+		private sealed class _AnonymousInnerClass189 : com.db4o.foundation.IntObjectVisitor
 		{
-			public _AnonymousInnerClass181(FreespaceManagerIx _enclosing, com.db4o.inside.freespace.FreespaceManager
+			public _AnonymousInnerClass189(FreespaceManagerIx _enclosing, com.db4o.inside.freespace.FreespaceManager
 				 newFM)
 			{
 				this._enclosing = _enclosing;
@@ -170,9 +180,9 @@ namespace com.db4o.inside.freespace
 			private readonly com.db4o.inside.freespace.FreespaceManager newFM;
 		}
 
-		private sealed class _AnonymousInnerClass186 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass194 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass186(FreespaceManagerIx _enclosing, com.db4o.foundation.IntObjectVisitor
+			public _AnonymousInnerClass194(FreespaceManagerIx _enclosing, com.db4o.foundation.IntObjectVisitor
 				 addToNewFM)
 			{
 				this._enclosing = _enclosing;

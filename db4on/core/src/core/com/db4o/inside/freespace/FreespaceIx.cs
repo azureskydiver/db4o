@@ -25,6 +25,11 @@ namespace com.db4o.inside.freespace
 		{
 		}
 
+		public virtual int EntryCount()
+		{
+			return com.db4o.foundation.Tree.Size(_indexTrans.GetRoot());
+		}
+
 		internal virtual void Find(int val)
 		{
 			_traverser = new com.db4o.inside.ix.IxTraverser();
@@ -55,6 +60,11 @@ namespace com.db4o.inside.freespace
 			_visitor = new com.db4o.inside.freespace.FreespaceVisitor();
 			_traverser.VisitSubsequent(_visitor);
 			return _visitor.Visited();
+		}
+
+		public virtual void Traverse(com.db4o.foundation.Visitor4 visitor)
+		{
+			com.db4o.foundation.Tree.Traverse(_indexTrans.GetRoot(), visitor);
 		}
 	}
 }

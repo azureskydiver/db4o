@@ -225,6 +225,16 @@ namespace com.db4o
 			return i_trans.Stream();
 		}
 
+		public com.db4o.YapStream Stream()
+		{
+			return i_trans.Stream();
+		}
+
+		public com.db4o.YapFile File()
+		{
+			return i_trans.i_file;
+		}
+
 		public com.db4o.Transaction GetTransaction()
 		{
 			return i_trans;
@@ -254,7 +264,7 @@ namespace com.db4o
 
 		public void Read()
 		{
-			i_trans.Stream().ReadBytes(_buffer, i_address, _addressOffset, i_length);
+			Stream().ReadBytes(_buffer, i_address, _addressOffset, i_length);
 		}
 
 		internal bool Read(com.db4o.foundation.network.YapSocket sock)
@@ -286,7 +296,7 @@ namespace com.db4o
 			}
 			else
 			{
-				bytes = i_trans.Stream().ReadWriterByAddress(i_trans, id, length);
+				bytes = Stream().ReadWriterByAddress(i_trans, id, length);
 				if (bytes != null)
 				{
 					bytes.SetID(id);
@@ -394,19 +404,19 @@ namespace com.db4o
 
 		public void Write()
 		{
-			i_trans.i_file.WriteBytes(this, i_address, _addressOffset);
+			Write(File(), i_address, _addressOffset);
 		}
 
 		internal void WriteEmbedded()
 		{
 			com.db4o.YapWriter finalThis = this;
-			ForEachEmbedded(new _AnonymousInnerClass318(this, finalThis));
+			ForEachEmbedded(new _AnonymousInnerClass326(this, finalThis));
 			i_embedded = null;
 		}
 
-		private sealed class _AnonymousInnerClass318 : com.db4o.VisitorYapBytes
+		private sealed class _AnonymousInnerClass326 : com.db4o.VisitorYapBytes
 		{
-			public _AnonymousInnerClass318(YapWriter _enclosing, com.db4o.YapWriter finalThis
+			public _AnonymousInnerClass326(YapWriter _enclosing, com.db4o.YapWriter finalThis
 				)
 			{
 				this._enclosing = _enclosing;
@@ -416,7 +426,7 @@ namespace com.db4o
 			public void Visit(com.db4o.YapWriter a_bytes)
 			{
 				a_bytes.WriteEmbedded();
-				this._enclosing.i_trans.Stream().WriteEmbedded(finalThis, a_bytes);
+				this._enclosing.Stream().WriteEmbedded(finalThis, a_bytes);
 			}
 
 			private readonly YapWriter _enclosing;
@@ -432,9 +442,7 @@ namespace com.db4o
 
 		public void WriteEncrypt()
 		{
-			i_trans.Stream().i_handlers.Encrypt(this);
-			i_trans.i_file.WriteBytes(this, i_address, _addressOffset);
-			i_trans.Stream().i_handlers.Decrypt(this);
+			WriteEncrypt(File(), i_address, _addressOffset);
 		}
 
 		public void WritePayload(com.db4o.YapWriter payLoad, bool topLevel)
@@ -455,7 +463,7 @@ namespace com.db4o
 			}
 			if (alignToBlockSize)
 			{
-				_payloadOffset = GetStream().AlignToBlockSize(_payloadOffset);
+				_payloadOffset = Stream().AlignToBlockSize(_payloadOffset);
 			}
 			WriteInt(_payloadOffset);
 			WriteInt(length);
@@ -480,7 +488,7 @@ namespace com.db4o
 
 		private void TransferPayLoadAddress(com.db4o.YapWriter toWriter, int offset)
 		{
-			int blockedOffset = offset / GetStream().BlockSize();
+			int blockedOffset = offset / Stream().BlockSize();
 			toWriter.i_address = i_address + blockedOffset;
 			toWriter.i_id = toWriter.i_address;
 			toWriter._addressOffset = _addressOffset;

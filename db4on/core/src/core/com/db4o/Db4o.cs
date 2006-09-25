@@ -67,6 +67,17 @@ namespace com.db4o
 			return i_config;
 		}
 
+		public static com.db4o.config.Configuration NewConfiguration()
+		{
+			return new com.db4o.Config4Impl();
+		}
+
+		public static com.db4o.config.Configuration CloneConfiguration()
+		{
+			return (com.db4o.Config4Impl)((com.db4o.foundation.DeepClone)com.db4o.Db4o.Configure
+				()).DeepClone(null);
+		}
+
 		/// <summary>
 		/// opens an
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
@@ -103,8 +114,8 @@ namespace com.db4o
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				return new com.db4o.YapClient(new com.db4o.foundation.network.YapSocketReal(hostName
-					, port), user, password, true);
+				return new com.db4o.YapClient(com.db4o.Db4o.CloneConfiguration(), new com.db4o.foundation.network.YapSocketReal
+					(hostName, port), user, password, true);
 			}
 		}
 
@@ -136,14 +147,20 @@ namespace com.db4o
 		/// 	</seealso>
 		public static com.db4o.ObjectContainer OpenFile(string databaseFileName)
 		{
+			return OpenFile(CloneConfiguration(), databaseFileName);
+		}
+
+		public static com.db4o.ObjectContainer OpenFile(com.db4o.config.Configuration config
+			, string databaseFileName)
+		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				return i_sessions.Open(databaseFileName);
+				return i_sessions.Open(config, databaseFileName);
 			}
 		}
 
-		protected static com.db4o.ObjectContainer OpenMemoryFile1(com.db4o.ext.MemoryFile
-			 memoryFile)
+		protected static com.db4o.ObjectContainer OpenMemoryFile1(com.db4o.config.Configuration
+			 config, com.db4o.ext.MemoryFile memoryFile)
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
@@ -154,7 +171,7 @@ namespace com.db4o
 				com.db4o.ObjectContainer oc = null;
 				try
 				{
-					oc = new com.db4o.YapMemoryFile(memoryFile);
+					oc = new com.db4o.YapMemoryFile(config, memoryFile);
 				}
 				catch (System.Exception t)
 				{

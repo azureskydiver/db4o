@@ -9,8 +9,8 @@ namespace com.db4o
 
 		private int i_length = 0;
 
-		protected YapMemoryFile(com.db4o.YapStream a_parent, com.db4o.ext.MemoryFile memoryFile
-			) : base(a_parent)
+		protected YapMemoryFile(com.db4o.config.Configuration config, com.db4o.YapStream 
+			a_parent, com.db4o.ext.MemoryFile memoryFile) : base(config, a_parent)
 		{
 			this.i_memoryFile = memoryFile;
 			try
@@ -24,14 +24,18 @@ namespace com.db4o
 			Initialize3();
 		}
 
-		internal YapMemoryFile(com.db4o.ext.MemoryFile memoryFile) : this(null, memoryFile
-			)
+		internal YapMemoryFile(com.db4o.config.Configuration config, com.db4o.ext.MemoryFile
+			 memoryFile) : this(config, null, memoryFile)
 		{
 		}
 
 		public override void Backup(string path)
 		{
 			com.db4o.inside.Exceptions4.ThrowRuntimeException(60);
+		}
+
+		public override void BlockSize(int size)
+		{
 		}
 
 		internal virtual void CheckDemoHop()

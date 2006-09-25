@@ -61,7 +61,7 @@ namespace com.db4o.inside.classindex
 
 		internal virtual com.db4o.TreeInt GetRoot()
 		{
-			return (com.db4o.TreeInt)i_root;
+			return i_root;
 		}
 
 		public sealed override int OwnLength()

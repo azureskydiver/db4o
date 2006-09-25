@@ -52,7 +52,7 @@ namespace com.db4o.inside.marshall
 			com.db4o.YapWriter bytes = new com.db4o.YapWriter(a_bytes.GetTransaction(), length
 				);
 			bytes.SetUpdateDepth(a_bytes.GetUpdateDepth());
-			arrayHandler.WriteNew1(a_object, bytes, length);
+			arrayHandler.WriteNew1(a_object, bytes);
 			bytes.SetID(a_bytes._offset);
 			a_bytes.GetStream().WriteEmbedded(a_bytes, bytes);
 			a_bytes.IncrementOffset(com.db4o.YapConst.ID_LENGTH);

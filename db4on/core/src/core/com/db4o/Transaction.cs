@@ -149,8 +149,8 @@ namespace com.db4o
 						obj = arr[0];
 						info._reference = (com.db4o.YapObject)arr[1];
 					}
-					this._enclosing.Stream().Delete4(finalThis, info._reference, obj, info._cascade, 
-						false);
+					this._enclosing.Stream().Delete4(finalThis, info._reference, info._cascade, false
+						);
 				}
 				this._enclosing.i_delete = com.db4o.foundation.Tree.Add(this._enclosing.i_delete, 
 					new com.db4o.DeleteInfo(info._key, null, false, info._cascade));

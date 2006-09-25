@@ -9,8 +9,8 @@
 	/// <exclude />
 	public abstract class YapStream : com.db4o.YapStreamBase, ObjectContainer, ExtObjectContainer
 	{
-		internal YapStream(com.db4o.YapStream a_parent)
-			: base(a_parent)
+		internal YapStream(com.db4o.config.Configuration config, com.db4o.YapStream a_parent)
+			: base(config, a_parent)
 		{
 		}
 
@@ -22,6 +22,11 @@
 		public abstract com.db4o.ext.Db4oDatabase Identity();
 
 		public abstract void Backup(string path);
+		
+		com.db4o.ObjectSet ObjectContainer.Query(System.Type type)
+		{
+			return Query(j4o.lang.Class.GetClassForType(type));
+		}
 
 		class ComparerAdaptor : com.db4o.query.QueryComparator
 		{

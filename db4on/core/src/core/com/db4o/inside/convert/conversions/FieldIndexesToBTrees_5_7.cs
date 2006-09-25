@@ -35,7 +35,17 @@ namespace com.db4o.inside.convert.conversions
 
 		private void FreeOldUUIDMetaIndex(com.db4o.YapFile file)
 		{
-			com.db4o.MetaIndex metaIndex = file.GetFileHeader().GetUUIDMetaIndex();
+			com.db4o.header.FileHeader fh = file.GetFileHeader();
+			if (!(fh is com.db4o.header.FileHeader0))
+			{
+				return;
+			}
+			com.db4o.MetaIndex metaIndex = ((com.db4o.header.FileHeader0)fh).GetUUIDMetaIndex
+				();
+			if (metaIndex == null)
+			{
+				return;
+			}
 			file.Free(metaIndex.indexAddress, metaIndex.indexLength);
 		}
 	}

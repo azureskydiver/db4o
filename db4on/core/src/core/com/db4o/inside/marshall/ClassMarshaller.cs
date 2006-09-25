@@ -131,7 +131,7 @@ namespace com.db4o.inside.marshall
 		{
 			ReadName(sio, source);
 			ReadName(sio, target);
-			int metaClassOldID = source.ReadInt();
+			ReadMetaClassID(source);
 			int metaClassNewId = 0;
 			target.WriteInt(metaClassNewId);
 			int ancestorOldID = source.ReadInt();

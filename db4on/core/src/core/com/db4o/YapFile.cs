@@ -19,11 +19,14 @@ namespace com.db4o
 
 		private com.db4o.foundation.Hashtable4 i_semaphores;
 
-		internal int i_writeAt;
+		private int _blockEndAddress;
 
 		private com.db4o.foundation.Tree _freeOnCommit;
 
-		internal YapFile(com.db4o.YapStream a_parent) : base(a_parent)
+		private com.db4o.inside.SystemData _systemData;
+
+		internal YapFile(com.db4o.config.Configuration config, com.db4o.YapStream a_parent
+			) : base(config, a_parent)
 		{
 		}
 
@@ -32,9 +35,11 @@ namespace com.db4o
 			return _freespaceManager;
 		}
 
-		public virtual void BlockSize(int blockSize, long fileLength)
+		public abstract void BlockSize(int size);
+
+		public virtual void SetRegularEndAddress(long address)
 		{
-			i_writeAt = BlocksFor(fileLength);
+			_blockEndAddress = BlocksFor(address);
 		}
 
 		internal override bool Close2()
@@ -63,11 +68,14 @@ namespace com.db4o
 		{
 			_freespaceManager = com.db4o.inside.freespace.FreespaceManager.CreateNew(this, ConfigImpl
 				().FreespaceSystem());
-			BlockSize(ConfigImpl().BlockSize(), HEADER_LENGTH);
+			_fileHeader = new com.db4o.header.FileHeader0();
+			_systemData = _fileHeader.SystemData();
+			BlockSize(ConfigImpl().BlockSize());
+			SetRegularEndAddress(_fileHeader.Length());
 			InitNewClassCollection();
 			InitializeEssentialClasses();
 			GenerateNewIdentity();
-			_fileHeader = com.db4o.header.FileHeader0.ForNewFile(this);
+			_fileHeader.InitNew(this);
 			_freespaceManager.Start(_fileHeader.FreespaceAddress());
 			if (com.db4o.Debug.freespace && com.db4o.Debug.freespaceChecker)
 			{
@@ -163,14 +171,14 @@ namespace com.db4o
 		{
 			if (i_prefetchedIDs != null)
 			{
-				i_prefetchedIDs.Traverse(new _AnonymousInnerClass181(this));
+				i_prefetchedIDs.Traverse(new _AnonymousInnerClass191(this));
 			}
 			i_prefetchedIDs = null;
 		}
 
-		private sealed class _AnonymousInnerClass181 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass191 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass181(YapFile _enclosing)
+			public _AnonymousInnerClass191(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -221,16 +229,16 @@ namespace com.db4o
 					if (claxx == null || !(i_handlers.ICLASS_INTERNAL.IsAssignableFrom(claxx)))
 					{
 						com.db4o.inside.classindex.ClassIndexStrategy index = yapClass.Index();
-						index.TraverseAll(ta, new _AnonymousInnerClass222(this, duplicates, a_res));
+						index.TraverseAll(ta, new _AnonymousInnerClass232(this, duplicates, a_res));
 					}
 				}
 			}
 			a_res.Reset();
 		}
 
-		private sealed class _AnonymousInnerClass222 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass232 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass222(YapFile _enclosing, com.db4o.foundation.Tree[] duplicates
+			public _AnonymousInnerClass232(YapFile _enclosing, com.db4o.foundation.Tree[] duplicates
 				, com.db4o.QueryResultImpl a_res)
 			{
 				this._enclosing = _enclosing;
@@ -312,18 +320,24 @@ namespace com.db4o
 			int blocksNeeded = BlocksFor(bytes);
 			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
-				DebugWriteXBytes(i_writeAt, blocksNeeded * BlockSize());
+				DebugWriteXBytes(_blockEndAddress, blocksNeeded * BlockSize());
 			}
-			int address = i_writeAt;
-			i_writeAt += blocksNeeded;
-			return address;
+			return AppendBlocks(blocksNeeded);
+		}
+
+		protected virtual int AppendBlocks(int blockCount)
+		{
+			int blockedAddress = _blockEndAddress;
+			_blockEndAddress += blockCount;
+			return blockedAddress;
 		}
 
 		internal virtual void EnsureLastSlotWritten()
 		{
-			if (i_writeAt > BlocksFor(FileLength()))
+			if (_blockEndAddress > BlocksFor(FileLength()))
 			{
-				com.db4o.YapWriter writer = GetWriter(i_systemTrans, i_writeAt - 1, BlockSize());
+				com.db4o.YapWriter writer = GetWriter(i_systemTrans, _blockEndAddress - 1, BlockSize
+					());
 				writer.Write();
 			}
 		}
@@ -464,16 +478,17 @@ namespace com.db4o
 
 		internal virtual void ReadThis()
 		{
-			SetDefaultBlockSize();
 			_fileHeader = new com.db4o.header.FileHeader0();
-			_fileHeader.Read0(this);
-			ClassCollection().SetID(_fileHeader.ClassCollectionID());
+			_systemData = _fileHeader.SystemData();
+			BlockSize(_fileHeader.Length());
+			_fileHeader.Read(this);
+			ClassCollection().SetID(_systemData.ClassCollectionID());
 			ClassCollection().Read(i_systemTrans);
 			com.db4o.inside.convert.Converter.Convert(new com.db4o.inside.convert.ConversionStage.ClassCollectionAvailableStage
 				(this, _fileHeader));
 			_freespaceManager = com.db4o.inside.freespace.FreespaceManager.CreateNew(this, _fileHeader
 				.FreespaceSystem());
-			_freespaceManager.Read(_fileHeader.FreeSpaceID());
+			_freespaceManager.Read(_systemData.FreeSpaceID());
 			_freespaceManager.Start(_fileHeader.FreespaceAddress());
 			if (ConfigImpl().FreespaceSystem() != 0 || _fileHeader.FreespaceSystem() == com.db4o.inside.freespace.FreespaceManager
 				.FM_LEGACY_RAM)
@@ -490,7 +505,7 @@ namespace com.db4o
 					oldFM.FreeSelf();
 					_freespaceManager.BeginCommit();
 					_freespaceManager.EndCommit();
-					_fileHeader.WriteVariablePart1();
+					_fileHeader.VariablePartChanged();
 				}
 			}
 			_fileHeader.ReadBootRecord(this);
@@ -507,14 +522,9 @@ namespace com.db4o
 				(this, _fileHeader)))
 			{
 				_fileHeader.ConverterVersion(com.db4o.inside.convert.Converter.VERSION);
-				_fileHeader.WriteVariablePart1();
+				_fileHeader.VariablePartChanged();
 				GetTransaction().Commit();
 			}
-		}
-
-		private void SetDefaultBlockSize()
-		{
-			BlockSize(1, HEADER_LENGTH);
 		}
 
 		public override void ReleaseSemaphore(string name)
@@ -541,27 +551,33 @@ namespace com.db4o
 		{
 			if (i_semaphores != null)
 			{
-				lock (i_semaphores)
+				com.db4o.foundation.Hashtable4 semaphores = i_semaphores;
+				lock (semaphores)
 				{
-					i_semaphores.ForEachKeyForIdentity(new _AnonymousInnerClass536(this), ta);
-					j4o.lang.JavaSystem.NotifyAll(i_semaphores);
+					semaphores.ForEachKeyForIdentity(new _AnonymousInnerClass549(this, semaphores), ta
+						);
+					j4o.lang.JavaSystem.NotifyAll(semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass536 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass549 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass536(YapFile _enclosing)
+			public _AnonymousInnerClass549(YapFile _enclosing, com.db4o.foundation.Hashtable4
+				 semaphores)
 			{
 				this._enclosing = _enclosing;
+				this.semaphores = semaphores;
 			}
 
 			public void Visit(object a_object)
 			{
-				this._enclosing.i_semaphores.Remove(a_object);
+				semaphores.Remove(a_object);
 			}
 
 			private readonly YapFile _enclosing;
+
+			private readonly com.db4o.foundation.Hashtable4 semaphores;
 		}
 
 		internal sealed override void Rollback1()
@@ -713,7 +729,7 @@ namespace com.db4o
 			{
 				freespaceID = _fmChecker.Write(shuttingDown);
 			}
-			com.db4o.YapWriter writer = GetWriter(i_systemTrans, 0, HEADER_LENGTH);
+			com.db4o.YapWriter writer = GetWriter(i_systemTrans, 0, _fileHeader.Length());
 			_fileHeader.WriteFixedPart(shuttingDown, writer, BlockSize(), ClassCollection().GetID
 				(), freespaceID);
 			if (shuttingDown)
@@ -726,7 +742,7 @@ namespace com.db4o
 		public sealed override void WriteNew(com.db4o.YapClass a_yapClass, com.db4o.YapWriter
 			 aWriter)
 		{
-			WriteObject(null, aWriter, aWriter.GetAddress());
+			aWriter.WriteEncrypt(this, aWriter.GetAddress(), 0);
 			if (a_yapClass == null)
 			{
 				return;
@@ -735,13 +751,6 @@ namespace com.db4o
 			{
 				a_yapClass.AddToIndex(this, aWriter.GetTransaction(), aWriter.GetID());
 			}
-		}
-
-		internal void WriteObject(com.db4o.YapMeta a_object, com.db4o.YapReader a_writer, 
-			int address)
-		{
-			i_handlers.Encrypt(a_writer);
-			WriteBytes(a_writer, address, 0);
 		}
 
 		public abstract void DebugWriteXBytes(int a_address, int a_length);
@@ -778,8 +787,7 @@ namespace com.db4o
 			{
 				GetSlotForUpdate(a_bytes);
 			}
-			i_handlers.Encrypt(a_bytes);
-			a_bytes.Write();
+			a_bytes.WriteEncrypt();
 		}
 
 		public virtual void SetNextTimeStampId(long val)
@@ -788,16 +796,12 @@ namespace com.db4o
 			_timeStampIdGenerator.SetClean();
 		}
 
-		public virtual com.db4o.MetaIndex GetUUIDMetaIndex()
+		public override com.db4o.ext.SystemInfo SystemInfo()
 		{
-			if (_fileHeader == null)
-			{
-				return null;
-			}
-			return _fileHeader.GetUUIDMetaIndex();
+			return new com.db4o.inside.SystemInfoFileImpl(this);
 		}
 
-		public virtual com.db4o.header.FileHeader0 GetFileHeader()
+		public virtual com.db4o.header.FileHeader GetFileHeader()
 		{
 			return _fileHeader;
 		}
@@ -806,6 +810,11 @@ namespace com.db4o
 			 manager)
 		{
 			_freespaceManager = manager;
+		}
+
+		public virtual com.db4o.inside.SystemData SystemData()
+		{
+			return _systemData;
 		}
 	}
 }

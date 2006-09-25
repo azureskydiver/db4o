@@ -35,11 +35,12 @@ namespace com.db4o
 
 		private int _blockSize = 1;
 
-		private YapClient() : base(null)
+		private YapClient(com.db4o.config.Configuration config) : base(config, null)
 		{
 		}
 
-		public YapClient(string fakeServerFile) : this()
+		public YapClient(string fakeServerFile) : this(com.db4o.Db4o.CloneConfiguration()
+			)
 		{
 			lock (Lock())
 			{
@@ -51,8 +52,8 @@ namespace com.db4o
 			}
 		}
 
-		internal YapClient(com.db4o.foundation.network.YapSocket socket, string user, string
-			 password_, bool login) : this()
+		internal YapClient(com.db4o.config.Configuration config, com.db4o.foundation.network.YapSocket
+			 socket, string user, string password_, bool login) : this(config)
 		{
 			lock (Lock())
 			{
@@ -310,7 +311,7 @@ namespace com.db4o
 		{
 			try
 			{
-				return (com.db4o.Msg)messageQueueLock.Run(new _AnonymousInnerClass309(this));
+				return (com.db4o.Msg)messageQueueLock.Run(new _AnonymousInnerClass310(this));
 			}
 			catch (System.Exception ex)
 			{
@@ -319,9 +320,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass309 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass310 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass309(YapClient _enclosing)
+			public _AnonymousInnerClass310(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -677,11 +678,11 @@ namespace com.db4o
 		{
 		}
 
-		private void ReReadAll()
+		private void ReReadAll(com.db4o.config.Configuration config)
 		{
 			remainingIDs = 0;
 			Initialize0();
-			Initialize1();
+			Initialize1(config);
 			InitializeTransactions();
 			ReadThis();
 		}
@@ -731,7 +732,7 @@ namespace com.db4o
 				Commit();
 				WriteMsg(com.db4o.Msg.SWITCH_TO_FILE.GetWriterForString(i_trans, fileName));
 				ExpectedResponse(com.db4o.Msg.OK);
-				ReReadAll();
+				ReReadAll(com.db4o.Db4o.CloneConfiguration());
 				switchedToFile = fileName;
 			}
 		}
@@ -743,7 +744,7 @@ namespace com.db4o
 				Commit();
 				WriteMsg(com.db4o.Msg.SWITCH_TO_MAIN_FILE);
 				ExpectedResponse(com.db4o.Msg.OK);
-				ReReadAll();
+				ReReadAll(com.db4o.Db4o.CloneConfiguration());
 				switchedToFile = null;
 			}
 		}
@@ -824,6 +825,12 @@ namespace com.db4o
 				System.Array.Copy(_prefetchedIDs, 0, newPrefetchedIDs, 0, _prefetchedIDs.Length);
 				_prefetchedIDs = newPrefetchedIDs;
 			}
+		}
+
+		public override com.db4o.ext.SystemInfo SystemInfo()
+		{
+			throw new com.db4o.foundation.NotImplementedException("Functionality not availble on clients."
+				);
 		}
 	}
 }

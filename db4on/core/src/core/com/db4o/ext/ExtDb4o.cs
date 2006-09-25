@@ -30,7 +30,13 @@ namespace com.db4o.ext
 		public static com.db4o.ObjectContainer OpenMemoryFile(com.db4o.ext.MemoryFile memoryFile
 			)
 		{
-			return OpenMemoryFile1(memoryFile);
+			return OpenMemoryFile1(com.db4o.Db4o.NewConfiguration(), memoryFile);
+		}
+
+		public static com.db4o.ObjectContainer OpenMemoryFile(com.db4o.config.Configuration
+			 config, com.db4o.ext.MemoryFile memoryFile)
+		{
+			return OpenMemoryFile1(config, memoryFile);
 		}
 	}
 }

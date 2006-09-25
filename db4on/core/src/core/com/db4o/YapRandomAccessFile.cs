@@ -15,7 +15,8 @@ namespace com.db4o
 
 		private object i_fileLock;
 
-		internal YapRandomAccessFile(com.db4o.Session a_session) : base(null)
+		internal YapRandomAccessFile(com.db4o.config.Configuration config, com.db4o.Session
+			 a_session) : base(config, null)
 		{
 			lock (i_lock)
 			{
@@ -86,14 +87,13 @@ namespace com.db4o
 			}
 		}
 
-		public override void BlockSize(int blockSize, long fileLength)
+		public override void BlockSize(int size)
 		{
-			i_file.BlockSize(blockSize);
+			i_file.BlockSize(size);
 			if (i_timerFile != null)
 			{
-				i_timerFile.BlockSize(blockSize);
+				i_timerFile.BlockSize(size);
 			}
-			base.BlockSize(blockSize, fileLength);
 		}
 
 		public override byte BlockSize()

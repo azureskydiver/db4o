@@ -1,22 +1,26 @@
 namespace com.db4o.header
 {
 	/// <exclude></exclude>
-	public class FileHeader0
+	public class FileHeader0 : com.db4o.header.FileHeader
 	{
+		private const int LENGTH = 2 + (com.db4o.YapConst.INT_LENGTH * 4);
+
 		protected com.db4o.YapConfigBlock _configBlock;
 
 		private byte blockSize = 1;
 
-		private int _classCollectionID;
-
-		private int _freeSpaceID;
-
 		internal com.db4o.PBootRecord _bootRecord;
 
-		public virtual void Read0(com.db4o.YapFile file)
+		private com.db4o.inside.SystemData _systemData;
+
+		public FileHeader0()
 		{
-			com.db4o.YapReader reader = new com.db4o.YapReader(com.db4o.YapStreamBase.HEADER_LENGTH
-				);
+			_systemData = new com.db4o.inside.SystemData(this);
+		}
+
+		public virtual void Read(com.db4o.YapFile file)
+		{
+			com.db4o.YapReader reader = new com.db4o.YapReader(Length());
 			reader.Read(file, 0, 0);
 			byte firstFileByte = reader.ReadByte();
 			if (firstFileByte != com.db4o.YapConst.YAPBEGIN)
@@ -34,17 +38,19 @@ namespace com.db4o.header
 					com.db4o.inside.Exceptions4.ThrowRuntimeException(17);
 				}
 			}
-			file.BlockSize(blockSize, file.FileLength());
+			file.BlockSize(blockSize);
+			file.SetRegularEndAddress(file.FileLength());
 			_configBlock = new com.db4o.YapConfigBlock(file);
 			_configBlock.Read(reader.ReadInt());
-			reader.IncrementOffset(com.db4o.YapConst.ID_LENGTH);
-			_classCollectionID = reader.ReadInt();
-			_freeSpaceID = reader.ReadInt();
+			SkipConfigurationLockTime(reader);
+			_systemData.ClassCollectionID(reader.ReadInt());
+			_systemData.FreeSpaceID(reader.ReadInt());
+			_systemData.UuidIndexId(_configBlock._uuidIndexId);
 		}
 
-		public virtual byte BlockSize()
+		private void SkipConfigurationLockTime(com.db4o.YapReader reader)
 		{
-			return blockSize;
+			reader.IncrementOffset(com.db4o.YapConst.ID_LENGTH);
 		}
 
 		public virtual void ReadBootRecord(com.db4o.YapFile yapFile)
@@ -70,29 +76,12 @@ namespace com.db4o.header
 			yapFile.SetIdentity(_bootRecord.i_db);
 		}
 
-		public virtual int ClassCollectionID()
-		{
-			return _classCollectionID;
-		}
-
-		public virtual int FreeSpaceID()
-		{
-			return _freeSpaceID;
-		}
-
 		public virtual byte FreespaceSystem()
 		{
 			return _configBlock._freespaceSystem;
 		}
 
-		public static com.db4o.header.FileHeader0 ForNewFile(com.db4o.YapFile yf)
-		{
-			com.db4o.header.FileHeader0 fh = new com.db4o.header.FileHeader0();
-			fh.InitNew(yf);
-			return fh;
-		}
-
-		private void InitNew(com.db4o.YapFile yf)
+		public virtual void InitNew(com.db4o.YapFile yf)
 		{
 			_configBlock = new com.db4o.YapConfigBlock(yf);
 			_configBlock.ConverterVersion(com.db4o.inside.convert.Converter.VERSION);
@@ -121,11 +110,6 @@ namespace com.db4o.header
 		public virtual int NewFreespaceSlot(byte freeSpaceSystem)
 		{
 			return _configBlock.NewFreespaceSlot(freeSpaceSystem);
-		}
-
-		public virtual void WriteVariablePart1()
-		{
-			_configBlock.Write();
 		}
 
 		public virtual void WriteVariablePart2()
@@ -206,15 +190,20 @@ namespace com.db4o.header
 			_bootRecord.i_db = database;
 		}
 
-		public virtual int GetUUIDIndexId()
+		public virtual int Length()
 		{
-			return _configBlock._uuidIndexId;
+			return LENGTH;
 		}
 
-		public virtual void WriteUUIDIndexId(int id)
+		public override com.db4o.inside.SystemData SystemData()
 		{
-			_configBlock._uuidIndexId = id;
-			WriteVariablePart1();
+			return _systemData;
+		}
+
+		public override void VariablePartChanged()
+		{
+			_configBlock._uuidIndexId = _systemData.UuidIndexId();
+			_configBlock.Write();
 		}
 	}
 }

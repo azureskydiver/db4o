@@ -42,15 +42,6 @@ namespace com.db4o
 
 		public virtual com.db4o.MetaIndex GetUUIDMetaIndex()
 		{
-			if (i_uuidMetaIndex == null)
-			{
-				i_uuidMetaIndex = new com.db4o.MetaIndex();
-				com.db4o.Transaction systemTrans = i_stream.GetSystemTransaction();
-				i_stream.ShowInternalClasses(true);
-				i_stream.SetInternal(systemTrans, this, false);
-				i_stream.ShowInternalClasses(false);
-				systemTrans.Commit();
-			}
 			return i_uuidMetaIndex;
 		}
 

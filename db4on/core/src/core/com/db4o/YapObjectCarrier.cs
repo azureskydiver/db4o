@@ -11,8 +11,9 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class YapObjectCarrier : com.db4o.YapMemoryFile
 	{
-		internal YapObjectCarrier(com.db4o.YapStream a_callingStream, com.db4o.ext.MemoryFile
-			 memoryFile) : base(a_callingStream, memoryFile)
+		internal YapObjectCarrier(com.db4o.config.Configuration config, com.db4o.YapStream
+			 a_callingStream, com.db4o.ext.MemoryFile memoryFile) : base(config, a_callingStream
+			, memoryFile)
 		{
 		}
 
@@ -20,7 +21,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override void Initialize1()
+		internal override void Initialize1(com.db4o.config.Configuration config)
 		{
 			i_handlers = i_parent.i_handlers;
 			_classCollection = i_parent.ClassCollection();
@@ -52,7 +53,6 @@ namespace com.db4o
 
 		internal override void ConfigureNewFile()
 		{
-			i_writeAt = HEADER_LENGTH;
 		}
 
 		public override int ConverterVersion()
@@ -107,11 +107,9 @@ namespace com.db4o
 		{
 		}
 
-		public override int GetSlot(int a_length)
+		public override int GetSlot(int length)
 		{
-			int address = i_writeAt;
-			i_writeAt += a_length;
-			return address;
+			return AppendBlocks(length);
 		}
 
 		public override com.db4o.ext.Db4oDatabase Identity()

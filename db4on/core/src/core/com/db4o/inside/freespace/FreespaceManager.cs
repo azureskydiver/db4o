@@ -88,7 +88,11 @@ namespace com.db4o.inside.freespace
 
 		public abstract void EndCommit();
 
+		public abstract int EntryCount();
+
 		public abstract void Free(int a_address, int a_length);
+
+		public abstract int FreeSize();
 
 		public abstract void FreeSelf();
 

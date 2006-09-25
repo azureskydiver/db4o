@@ -11,8 +11,6 @@ namespace com.db4o
 		private static readonly com.db4o.foundation.KeySpec INDEXED = new com.db4o.foundation.KeySpec
 			(com.db4o.YapConst.DEFAULT);
 
-		private bool _initialized;
-
 		protected Config4Field(com.db4o.Config4Class a_class, com.db4o.foundation.KeySpecHashtable4
 			 config) : base(config)
 		{
@@ -60,11 +58,6 @@ namespace com.db4o
 		public virtual void InitOnUp(com.db4o.Transaction systemTrans, com.db4o.YapField 
 			yapField)
 		{
-			if (_initialized)
-			{
-				return;
-			}
-			_initialized = true;
 			com.db4o.YapStream anyStream = systemTrans.Stream();
 			if (!anyStream.MaintainsIndices())
 			{

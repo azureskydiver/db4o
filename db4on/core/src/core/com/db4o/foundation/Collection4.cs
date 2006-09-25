@@ -3,7 +3,8 @@ namespace com.db4o.foundation
 	/// <summary>Fast linked list for all usecases.</summary>
 	/// <remarks>Fast linked list for all usecases.</remarks>
 	/// <exclude></exclude>
-	public class Collection4 : com.db4o.foundation.DeepClone, com.db4o.types.Unversioned
+	public class Collection4 : com.db4o.foundation.Iterable4, com.db4o.foundation.DeepClone
+		, com.db4o.types.Unversioned
 	{
 		/// <summary>first element of the linked list</summary>
 		public com.db4o.foundation.List4 _first;
