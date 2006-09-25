@@ -676,7 +676,7 @@ public abstract class YapFile extends YapStream {
         	return;
         }
         _systemData.lastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
-        _fileHeader.writeVariablePart2();
+        _fileHeader.writeVariablePart2(this);
         _timeStampIdGenerator.setClean();
     }
     
