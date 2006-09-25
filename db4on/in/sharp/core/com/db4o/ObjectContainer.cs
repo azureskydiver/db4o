@@ -240,7 +240,7 @@
 		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 		/// returned by the query.
 		/// </returns>
-		com.db4o.ObjectSet Query(j4o.lang.Class clazz);
+		com.db4o.ObjectSet Query(System.Type clazz);
 
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
