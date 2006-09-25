@@ -16,8 +16,7 @@ final class MWriteUpdate extends MsgObject {
             Slot oldSlot = _trans.getCommittedSlotOfID(_payLoad.getID());
             stream.getSlotForUpdate(_payLoad);
 			yc.addFieldIndices(_payLoad, oldSlot);
-            stream.i_handlers.encrypt(_payLoad);
-            _payLoad.write();
+            _payLoad.writeEncrypt();
 		}
 		return true;
 	}

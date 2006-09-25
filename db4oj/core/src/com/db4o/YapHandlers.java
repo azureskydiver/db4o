@@ -225,6 +225,7 @@ public final class YapHandlers {
                 // call zero-arg constructors first
                 final boolean[] foundConstructor={false};
                 if(sortedConstructors != null){
+                    final TypeHandler4[] handlers = i_handlers;
                     sortedConstructors.traverse(new Visitor4() {
                         public void visit(Object a_object) {
                             if(! foundConstructor[0]) {
@@ -234,8 +235,8 @@ public final class YapHandlers {
 	                                Object[] parms = new Object[pTypes.length];
 	                                for (int j = 0; j < parms.length; j++) {
 	                                    for (int k = 0; k < PRIMITIVECOUNT; k++) {
-	                                        if (pTypes[j].equals(i_handlers[k].primitiveClassReflector())) {
-	                                            parms[j] = ((YapJavaClass) i_handlers[k])
+	                                        if (pTypes[j].equals(handlers[k].primitiveClassReflector())) {
+	                                            parms[j] = ((YapJavaClass) handlers[k])
 	                                                .primitiveNull();
 	                                            break;
 	                                        }

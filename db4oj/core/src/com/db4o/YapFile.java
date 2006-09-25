@@ -544,13 +544,14 @@ public abstract class YapFile extends YapStream {
 
     void releaseSemaphores(Transaction ta) {
         if (i_semaphores != null) {
-            synchronized (i_semaphores) {
-                i_semaphores.forEachKeyForIdentity(new Visitor4() {
+            final Hashtable4 semaphores = i_semaphores;
+            synchronized (semaphores) {
+                semaphores.forEachKeyForIdentity(new Visitor4() {
                     public void visit(Object a_object) {
-                        i_semaphores.remove(a_object);
+                        semaphores.remove(a_object);
                     }
                 }, ta);
-                i_semaphores.notifyAll();
+                semaphores.notifyAll();
             }
         }
     }
@@ -709,7 +710,7 @@ public abstract class YapFile extends YapStream {
     }
 
     public final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
-        writeObject(null, aWriter, aWriter.getAddress());
+        aWriter.writeEncrypt(this, aWriter.getAddress(), 0);
         if(a_yapClass == null){
             return;
         }
@@ -717,11 +718,6 @@ public abstract class YapFile extends YapStream {
             a_yapClass.addToIndex(this, aWriter.getTransaction(), aWriter
                 .getID());
         }
-    }
-
-    final void writeObject(YapMeta a_object, YapReader a_writer, int address) {
-        i_handlers.encrypt(a_writer);
-        writeBytes(a_writer, address, 0);
     }
 
     // This is a reroute of writeBytes to write the free blocks
@@ -754,8 +750,7 @@ public abstract class YapFile extends YapStream {
         if(a_bytes.getAddress() == 0){
             getSlotForUpdate(a_bytes);
         }
-        i_handlers.encrypt(a_bytes);
-        a_bytes.write();
+        a_bytes.writeEncrypt();
     }
 
     public void setNextTimeStampId(long val) {

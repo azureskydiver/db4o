@@ -195,6 +195,16 @@ public class YapReader {
         _offset += nullBitMap.marshalledLength();
     }
     
+    public void writeEncrypt(YapFile file, int address, int addressOffset) {
+        file.i_handlers.encrypt(this);
+        write(file, address, addressOffset);
+        file.i_handlers.decrypt(this);
+    }
+    
+    public void write(YapFile file, int address, int addressOffset) {
+        file.writeBytes(this, address, addressOffset);
+    }
+    
     public void writeEnd() {
         if (Deploy.debug && Deploy.brackets) {
             append(YapConst.YAPEND);
@@ -233,7 +243,7 @@ public class YapReader {
         }
         
         if(obj instanceof YapMeta){
-            ((YapMeta)obj).writeOwnID(trans, this);
+            writeIDOf(trans, (YapMeta)obj);
             return;
         }
         
@@ -246,10 +256,6 @@ public class YapReader {
             return;
         }
         yapMeta.writeOwnID(trans, this);
-    }
-    
-    public void writeIDOf(Transaction trans, Integer i) {
-        writeInt(i.intValue());
     }
     
     public void writeShortString(Transaction trans, String a_string) {
