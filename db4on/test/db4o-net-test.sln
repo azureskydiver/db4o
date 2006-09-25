@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net-tools", "..\tools\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit", "..\Db4oUnit\Db4oUnit.csproj", "{3C9C954F-6427-40D7-872F-EDDA79708816}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit.Extensions", "..\Db4oUnit.Extensions\Db4oUnit.Extensions.csproj", "{D020A0AF-C7E4-449D-BC53-ED37397A588F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -29,6 +37,14 @@ Global
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug.Build.0 = Debug|.NET
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release.ActiveCfg = Release|.NET
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release.Build.0 = Release|.NET
+		{3C9C954F-6427-40D7-872F-EDDA79708816}.Debug.ActiveCfg = Debug|.NET
+		{3C9C954F-6427-40D7-872F-EDDA79708816}.Debug.Build.0 = Debug|.NET
+		{3C9C954F-6427-40D7-872F-EDDA79708816}.Release.ActiveCfg = Release|.NET
+		{3C9C954F-6427-40D7-872F-EDDA79708816}.Release.Build.0 = Release|.NET
+		{D020A0AF-C7E4-449D-BC53-ED37397A588F}.Debug.ActiveCfg = Debug|.NET
+		{D020A0AF-C7E4-449D-BC53-ED37397A588F}.Debug.Build.0 = Debug|.NET
+		{D020A0AF-C7E4-449D-BC53-ED37397A588F}.Release.ActiveCfg = Release|.NET
+		{D020A0AF-C7E4-449D-BC53-ED37397A588F}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
