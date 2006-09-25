@@ -1367,6 +1367,8 @@
 			</args>
 		</sharpen>
 		
+		<delete dir="${dir.n}/Db4oUnit.Extensions/Db4oUnit" />
+		
 		<copy todir="${dir.n}/Db4oUnit.Extensions/src">
 			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src">
 				<include name="Db4oUnit/**/*.cs" />
@@ -1378,6 +1380,13 @@
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.n}/Db4oUnit.Extensions/Db4oUnit.Extensions-2005.csproj">
+			<sources dir="${dir.n}/Db4oUnit.Extensions">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+
 		
 		<!--
 		2) Compile to make sure conversion works
@@ -1413,6 +1422,8 @@
 				<arg value="com.db4o.db4ounit.Db4oUnitPlatform.GetDeclaredFields" />
 			</args>
 		</sharpen>
+		
+		<delete dir="${dir.n.test.src}/com/db4o/db4ounit/common" />
 		
 		<copy todir="${dir.n.test.src}">
 			<fileset dir="${target.dir}/db4oj.testscsharp/src">
