@@ -141,7 +141,7 @@ public final class YapArrayN extends YapArray {
         return dim;
     }
 
-    public final void writeNew1(Object obj, YapWriter writer, int length) {
+    public final void writeNew1(Object obj, YapWriter writer) {
         
         if (Deploy.debug) {
             writer.writeBegin(identifier());

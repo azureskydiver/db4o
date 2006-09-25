@@ -389,7 +389,7 @@ public class YapArray extends YapIndependantType {
         return mf._array.writeNew(this, a_object, restoreLinkOffset, a_bytes);
     }
 
-    public void writeNew1(Object obj, YapWriter writer, int length) {
+    public void writeNew1(Object obj, YapWriter writer) {
         
         if (Deploy.debug) {
             writer.writeBegin(identifier());
