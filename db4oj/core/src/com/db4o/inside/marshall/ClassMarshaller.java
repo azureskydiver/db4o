@@ -130,7 +130,8 @@ public abstract class ClassMarshaller {
 		readName(sio, source);
 		readName(sio, target);
 		
-		int metaClassOldID = source.readInt();
+        readMetaClassID(source); 
+        
 		int metaClassNewId = 0;
 		target.writeInt(metaClassNewId);
 		

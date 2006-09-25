@@ -165,7 +165,7 @@ public abstract class YapMeta {
             writer.writeEnd();
         }
 
-        stream.writeObject(this, writer, address);
+        writer.writeEncrypt(stream, address, 0);
 
         if (isActive()) {
             setStateClean();

@@ -168,6 +168,14 @@ public final class YapWriter extends YapReader {
     public YapStream getStream() {
         return i_trans.stream();
     }
+    
+    public YapStream stream(){
+        return i_trans.stream();
+    }
+    
+    public YapFile file(){
+        return i_trans.i_file;
+    }
 
     public Transaction getTransaction() {
         return i_trans;
@@ -193,7 +201,7 @@ public final class YapWriter extends YapReader {
     }
 
     public void read() {
-        i_trans.stream().readBytes(_buffer, i_address,_addressOffset, i_length);
+        stream().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
     final boolean read(YapSocket sock) throws IOException {
@@ -218,7 +226,7 @@ public final class YapWriter extends YapReader {
         if (tio != null) {
             bytes = (YapWriter) ((TreeIntObject)tio)._object; 
         }else{
-            bytes = i_trans.stream().readWriterByAddress(i_trans, id, length);
+            bytes = stream().readWriterByAddress(i_trans, id, length);
             if (bytes != null) {
                 bytes.setID(id);
             }
@@ -310,7 +318,7 @@ public final class YapWriter extends YapReader {
         if (Debug.xbytes) {
             debugCheckBytes();
         }
-        i_trans.i_file.writeBytes(this, i_address, _addressOffset);
+        write(file(), i_address, _addressOffset);
     }
 
     void writeEmbedded() {
@@ -318,7 +326,7 @@ public final class YapWriter extends YapReader {
         forEachEmbedded(new VisitorYapBytes() {
             public void visit(YapWriter a_bytes) {
                 a_bytes.writeEmbedded();
-                i_trans.stream().writeEmbedded(finalThis, a_bytes);
+                stream().writeEmbedded(finalThis, a_bytes);
             }
         });
         
@@ -340,9 +348,7 @@ public final class YapWriter extends YapReader {
         if (Deploy.debug) {
             debugCheckBytes();
         }
-        i_trans.stream().i_handlers.encrypt(this);
-        i_trans.i_file.writeBytes(this, i_address, _addressOffset);
-        i_trans.stream().i_handlers.decrypt(this);
+        writeEncrypt(file(),i_address, _addressOffset);
     }
     
     /* Only used for Strings, topLevel therefore means aligning blocksize, so
@@ -360,7 +366,7 @@ public final class YapWriter extends YapReader {
             _payloadOffset = _offset + (YapConst.INT_LENGTH * 2);
         }
         if(alignToBlockSize){
-            _payloadOffset = getStream().alignToBlockSize(_payloadOffset);
+            _payloadOffset = stream().alignToBlockSize(_payloadOffset);
         }
         writeInt(_payloadOffset);
         
@@ -390,7 +396,7 @@ public final class YapWriter extends YapReader {
     }
 
     private void transferPayLoadAddress(YapWriter toWriter, int offset) {
-        int blockedOffset = offset / getStream().blockSize();
+        int blockedOffset = offset / stream().blockSize();
         toWriter.i_address = i_address + blockedOffset;
         toWriter.i_id = toWriter.i_address;
         toWriter._addressOffset = _addressOffset;
