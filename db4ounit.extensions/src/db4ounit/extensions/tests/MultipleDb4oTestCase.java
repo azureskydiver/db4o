@@ -18,7 +18,7 @@ public class MultipleDb4oTestCase extends AbstractDb4oTestCase {
 		return configureCalls;
 	}
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		configureCalls++;
 	}
 	
