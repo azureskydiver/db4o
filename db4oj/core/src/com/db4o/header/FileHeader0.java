@@ -5,7 +5,6 @@ package com.db4o.header;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.inside.*;
 import com.db4o.inside.convert.*;
 import com.db4o.io.*;
@@ -41,22 +40,16 @@ public class FileHeader0 extends FileHeader {
     // FreeBySize ID
 
     
-    protected YapConfigBlock    _configBlock;
-    
-    
-    // FIXME: All the variables here should always be valid
-    //        or removed from here. Right now some of the variables
-    //        are only used for reading, they are invalid on 
-    //        creating new files
+    private YapConfigBlock    _configBlock;
     
     private byte blockSize = 1;
     
-    PBootRecord _bootRecord;
+    private PBootRecord _bootRecord;
 
-    private SystemData _systemData;
+    private final SystemData _systemData;
     
-    public FileHeader0(){
-        _systemData = new SystemData(this);
+    public FileHeader0(SystemData systemData){
+        _systemData = systemData;
     }
 
     public void read(YapFile file) {
@@ -81,21 +74,19 @@ public class FileHeader0 extends FileHeader {
         
         _configBlock = new YapConfigBlock(file);
         
-        _configBlock.read(reader.readInt());
+        _configBlock.read(_systemData, reader.readInt());
 
         skipConfigurationLockTime(reader);
         
         _systemData.classCollectionID(reader.readInt());
-        _systemData.freeSpaceID(reader.readInt());
-        
-        _systemData.uuidIndexId(_configBlock._uuidIndexId);
+        _systemData.freespaceID(reader.readInt());
     }
 
     private void skipConfigurationLockTime(YapReader reader) {
         reader.incrementOffset(YapConst.ID_LENGTH);
     }
 
-    public void readBootRecord(YapFile yapFile){
+    public void readVariablePart2(YapFile yapFile){
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
@@ -114,17 +105,12 @@ public class FileHeader0 extends FileHeader {
         yapFile.activate(bootRecord, Integer.MAX_VALUE);
         yapFile.setNextTimeStampId(_bootRecord.i_versionGenerator);
         
-        yapFile.setIdentity(_bootRecord.i_db);
-    }
-
-    public byte freespaceSystem() {
-        return _configBlock._freespaceSystem;
+        _systemData.identity(_bootRecord.i_db);
     }
 
     public void initNew(YapFile yf) {
+        _systemData.converterVersion(Converter.VERSION);
         _configBlock = new YapConfigBlock(yf);
-        _configBlock.converterVersion(Converter.VERSION);
-        _configBlock.write();
         _configBlock.go();
         initBootRecord(yf);
     }
@@ -140,34 +126,13 @@ public class FileHeader0 extends FileHeader {
         yf.setInternal(yf.getSystemTransaction(), _bootRecord, false);
         
         _configBlock._bootRecordID = yf.getID1(yf.getSystemTransaction(), _bootRecord);
-        _configBlock.write();
+        writeVariablePart1();
         
         yf.showInternalClasses(false);
     }
 
-    public int freespaceAddress() {
-        return _configBlock._freespaceAddress;
-    }
-
-    public int newFreespaceSlot(byte freeSpaceSystem) {
-        return _configBlock.newFreespaceSlot(freeSpaceSystem);
-    }
-
-    public void writeVariablePart2() {
-        _bootRecord.setDirty();
-        _bootRecord.store(2);
-    }
-
     public Transaction interruptedTransaction() {
         return _configBlock.getTransactionToCommit();
-    }
-
-    public int converterVersion() {
-        return _configBlock.converterVersion();
-    }
-
-    public void converterVersion(int version) {
-        _configBlock.converterVersion(version);
     }
 
     public int transactionPointerAddress() {
@@ -192,10 +157,18 @@ public class FileHeader0 extends FileHeader {
         file.blockSeek(_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
     }
 
+    public MetaIndex getUUIDMetaIndex() {
+        return _bootRecord.getUUIDMetaIndex();
+    }
+
+    public int length(){
+        return LENGTH;
+    }
+
     public void writeFixedPart(boolean shuttingDown, YapWriter writer, byte blockSize_, int classCollectionID, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append(blockSize_);
-        writer.writeInt(  _configBlock._address);
+        writer.writeInt(_configBlock._address);
         
         int headerLockOpenTime = shuttingDown ? 0 : (int)_configBlock._opentime;  
         writer.writeInt(headerLockOpenTime);
@@ -208,29 +181,12 @@ public class FileHeader0 extends FileHeader {
         writer.write();
     }
 
-    public MetaIndex getUUIDMetaIndex() {
-        return _bootRecord.getUUIDMetaIndex();
+    public void writeVariablePart1() {
+        _configBlock.write(_systemData);
     }
-
-    public void setLastTimeStampID(long val) {
-        _bootRecord.i_versionGenerator = val;
-    }
-
-    public void setIdentity(Db4oDatabase database) {
-        _bootRecord.i_db = database;
-    }
-
-    public int length(){
-        return LENGTH;
-    }
-
-    public SystemData systemData() {
-        return _systemData;
-    }
-
-    public void variablePartChanged() {
-        _configBlock._uuidIndexId = _systemData.uuidIndexId();
-        _configBlock.write();
+    
+    public void writeVariablePart2() {
+        _bootRecord.write(_systemData);
     }
 
 }

@@ -3,6 +3,7 @@
 package com.db4o.inside.freespace;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 public abstract class FreespaceManager {
@@ -26,6 +27,10 @@ public abstract class FreespaceManager {
             return FM_RAM;    
         }
         return systemType;
+    }
+    
+    public static FreespaceManager createNew(YapFile file){
+        return createNew(file, file.systemData().freespaceSystem());
     }
     
     public static FreespaceManager createNew(YapFile file, byte systemType){
@@ -95,5 +100,18 @@ public abstract class FreespaceManager {
     
     public abstract int write(boolean shuttingDown);
 
+    public boolean requiresMigration(byte configuredSystem, byte readSystem) {
+        return (configuredSystem != 0 || readSystem == FM_LEGACY_RAM ) && (systemType() != configuredSystem);
+    }
+
+    public FreespaceManager migrate(YapFile file,  byte toSystemType) {
+        FreespaceManager newFM = createNew(file, toSystemType);
+        newFM.start(file.newFreespaceSlot(toSystemType));
+        migrate(newFM);
+        freeSelf();
+        newFM.beginCommit();
+        newFM.endCommit();
+        return newFM;
+    }
     
 }

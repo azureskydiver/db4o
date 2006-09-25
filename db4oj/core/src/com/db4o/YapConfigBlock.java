@@ -7,7 +7,6 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
-import com.db4o.inside.freespace.*;
 
 /**
  * configuration and agent to write the configuration block
@@ -31,12 +30,12 @@ public final class YapConfigBlock implements Runnable
 	// 5 bytes of the encryption password
     // byte   freespace system used
     // int    freespace address
-    // int    converter version
+    // int    converter versions
     
 	private final YapFile		_stream;
-	public int							_address;
+	public int					_address;
 	private Transaction			_transactionToCommit;
-	public int                 		_bootRecordID;
+	public int                 	_bootRecordID;
 	
 	private static final int	MINIMUM_LENGTH = 
 		YapConst.INT_LENGTH    			// own length
@@ -44,9 +43,9 @@ public final class YapConfigBlock implements Runnable
 		+ 1;  						// Unicode byte
 	
 	static final int			OPEN_TIME_OFFSET		= YapConst.INT_LENGTH;
-	public static final int            ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.LONG_LENGTH;
+	public static final int     ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.LONG_LENGTH;
 		
-	public static final int			TRANSACTION_OFFSET = MINIMUM_LENGTH;
+	public static final int		TRANSACTION_OFFSET = MINIMUM_LENGTH;
 	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.INT_LENGTH * 2;  
 	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + YapConst.INT_LENGTH;
 	private static final int	ENCRYPTION_PASSWORD_LENGTH = 5;
@@ -66,17 +65,11 @@ public final class YapConfigBlock implements Runnable
 		
 	public final long			_opentime; // written as pure long 8 bytes
 	byte						_encoding;
-    public byte                        _freespaceSystem;
-    public int                         _freespaceAddress;
-    private int                 _converterVersion;
     
-    
-	public int _uuidIndexId;
 	
 	public YapConfigBlock(YapFile stream){
 		_stream = stream;
         _encoding = stream.configImpl().encoding();
-        _freespaceSystem = FreespaceManager.checkType(stream.configImpl().freespaceSystem());
 		_opentime = processID();
 		if(lockFile()){
 			writeHeaderLock();
@@ -87,18 +80,6 @@ public final class YapConfigBlock implements Runnable
 		return _transactionToCommit;
 	}
     
-    private void ensureFreespaceSlot(){
-        if(_freespaceAddress == 0){
-            newFreespaceSlot(_freespaceSystem);
-        }
-    }
-    
-    public int newFreespaceSlot(byte freespaceSystem){
-        _freespaceAddress = FreespaceManager.initSlot(_stream);
-        _freespaceSystem = freespaceSystem;
-        return _freespaceAddress;
-    }
-	
 	public void go(){
 		_stream.createStringIO(_encoding);
 		if(lockFile()){
@@ -218,7 +199,7 @@ public final class YapConfigBlock implements Runnable
 		return id;
 	}
 
-	public void read(int address) {
+	public void read(SystemData systemData, int address) {
         _address = address;
 		writeOpenTime();
 		YapWriter reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
@@ -286,25 +267,23 @@ public final class YapConfigBlock implements Runnable
             }
 		}
         
-        _freespaceSystem = FreespaceManager.FM_LEGACY_RAM;
-        
         if(oldLength > FREESPACE_SYSTEM_OFFSET){
-            _freespaceSystem = reader.readByte();
+            systemData.freespaceSystem(reader.readByte());
         }
         
         if(oldLength > FREESPACE_ADDRESS_OFFSET){
-            _freespaceAddress = reader.readInt();
+            systemData.freespaceAddress(reader.readInt());
         }
         
         if(oldLength > CONVERTER_VERSION_OFFSET){
-            _converterVersion = reader.readInt();
+            systemData.converterVersion(reader.readInt());
         }
         if(oldLength > UUID_INDEX_ID_OFFSET){
-            _uuidIndexId = reader.readInt();
+            systemData.uuidIndexId(reader.readInt());
         }
         
-        ensureFreespaceSlot();
-		
+        _stream.ensureFreespaceSlot();
+        
 		if(lockFile() && ( lastAccessTime != 0)){
 			_stream.logMsg(28, null);
 			long waitTime = YapConst.LOCK_TIME_INTERVAL * 10;
@@ -332,7 +311,7 @@ public final class YapConfigBlock implements Runnable
 			openTimeOverWritten();
 		}
 		if(oldLength < LENGTH){
-			write();
+			write(systemData);
 		}
 		go();
 	}
@@ -351,19 +330,12 @@ public final class YapConfigBlock implements Runnable
 		}
 	}
     
-    public void converterVersion(int ver){
-        _converterVersion = ver;
-    }
-    
-    public int converterVersion(){
-        return _converterVersion;
-    }
 	
 	void syncFiles(){
 		_stream.syncFiles();
 	}
 	
-	public void write() {
+	public void write(SystemData systemData) {
         
 		headerLockOverwritten();
 		_address = _stream.getSlot(LENGTH);
@@ -381,11 +353,11 @@ public final class YapConfigBlock implements Runnable
 		YInt.writeInt(_bootRecordID, writer);
 		YInt.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
-        writer.append(_freespaceSystem);
-        ensureFreespaceSlot();
-        YInt.writeInt(_freespaceAddress, writer);
-        YInt.writeInt(_converterVersion, writer);
-        YInt.writeInt(_uuidIndexId, writer);
+        writer.append(systemData.freespaceSystem());
+        _stream.ensureFreespaceSlot();
+        YInt.writeInt(systemData.freespaceAddress(), writer);
+        YInt.writeInt(systemData.converterVersion(), writer);
+        YInt.writeInt(systemData.uuidIndexId(), writer);
 		writer.write();
 		writePointer();
 	}

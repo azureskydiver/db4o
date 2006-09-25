@@ -3,7 +3,7 @@
 package com.db4o.inside.convert;
 
 import com.db4o.foundation.*;
-import com.db4o.header.*;
+import com.db4o.inside.*;
 import com.db4o.inside.convert.conversions.*;
 
 /**
@@ -27,7 +27,7 @@ public class Converter {
     }
 
     public static boolean convert(ConversionStage stage) {
-    	if(!needsConversion(stage.header())) {
+    	if(!needsConversion(stage.systemData())) {
     		return false;
     	}
     	if(_converter == null){
@@ -36,8 +36,8 @@ public class Converter {
     	return _converter.runConversions(stage);
     }
 
-    private static boolean needsConversion(FileHeader0 fileHeader) {
-        return fileHeader.converterVersion() < VERSION;
+    private static boolean needsConversion(SystemData systemData) {
+        return systemData.converterVersion() < VERSION;
     }
 
     public void register(int idx, Conversion conversion) {
@@ -48,11 +48,11 @@ public class Converter {
     }
     
     public boolean runConversions(ConversionStage stage) {
-    	FileHeader0 fileHeader=stage.header();
-        if(!needsConversion(stage.header())){
+        SystemData systemData = stage.systemData();
+        if(!needsConversion(systemData)){
             return false;
         }
-        for (int i = fileHeader.converterVersion(); i <= VERSION; i++) {
+        for (int i = systemData.converterVersion(); i <= VERSION; i++) {
             Conversion conversion = (Conversion)_conversions.get(i);
             if(conversion != null){
                 stage.accept(conversion);

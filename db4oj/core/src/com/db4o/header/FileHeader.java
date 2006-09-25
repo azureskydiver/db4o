@@ -2,16 +2,12 @@
 
 package com.db4o.header;
 
-import com.db4o.inside.*;
-
 
 /**
  * @exclude
  */
 public abstract class FileHeader {
     
-    public abstract SystemData systemData();
-
-    public abstract void variablePartChanged();
+    public abstract void writeVariablePart1();
 
 }

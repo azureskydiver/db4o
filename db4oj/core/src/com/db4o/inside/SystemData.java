@@ -2,26 +2,85 @@
 
 package com.db4o.inside;
 
-import com.db4o.header.*;
-
+import com.db4o.ext.Db4oDatabase;
 
 /**
  * @exclude
  */
 public class SystemData {
     
-    private final FileHeader _fileHeader;
-    
-    private int _uuidIndexId;
-    
     private int _classCollectionID;
     
-    private int _freeSpaceID; 
+    private int _converterVersion;
     
-    public SystemData(FileHeader fileHeader){
-        _fileHeader = fileHeader;
+    private int _freespaceAddress;
+    
+    private int _freespaceID;
+    
+    private byte _freespaceSystem;
+    
+    private Db4oDatabase _identity;
+    
+    private long _lastTimeStampID;
+
+    private int _uuidIndexId;
+    
+    public int classCollectionID() {
+        return _classCollectionID;
     }
     
+    public void classCollectionID(int id) {
+        _classCollectionID = id;
+    }
+    
+    public int converterVersion(){
+        return _converterVersion;
+    }
+
+    public void converterVersion(int version){
+        _converterVersion = version;
+    }
+    
+    public int freespaceAddress(){
+        return _freespaceAddress;
+    }
+    
+    public void freespaceAddress(int address){
+        _freespaceAddress = address;
+    }
+
+    public int freespaceID() {
+        return _freespaceID;
+    }
+
+    public void freespaceID(int id) {
+        _freespaceID = id;
+    }
+    
+    public byte freespaceSystem() {
+        return _freespaceSystem;
+    }
+    
+    public void freespaceSystem(byte freespaceSystemtype){
+        _freespaceSystem = freespaceSystemtype;
+    }
+    
+    public Db4oDatabase identity(){
+        return _identity;
+    }
+    
+    public void identity(Db4oDatabase identityObject) {
+        _identity = identityObject;
+    }
+
+    public long lastTimeStampID(){
+        return _lastTimeStampID;
+    }
+    
+    public void lastTimeStampID(long id) {
+        _lastTimeStampID = id;
+    }
+
     public int uuidIndexId(){
         return _uuidIndexId;
     }
@@ -30,25 +89,4 @@ public class SystemData {
         _uuidIndexId = id;
     }
     
-    public void uuidIndexCreated(int id){
-        _uuidIndexId = id;
-        _fileHeader.variablePartChanged();
-    }
-    
-    public int classCollectionID() {
-        return _classCollectionID;
-    }
-
-    public int freeSpaceID() {
-        return _freeSpaceID;
-    }
-
-    public void classCollectionID(int id) {
-        _classCollectionID = id;
-    }
-
-    public void freeSpaceID(int id) {
-        _freeSpaceID = id;
-    }
-
 }
