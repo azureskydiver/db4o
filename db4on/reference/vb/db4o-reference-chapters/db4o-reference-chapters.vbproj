@@ -92,6 +92,10 @@
     <Compile Include="src\com\db4odoc\f1\metainf\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\metainf\MetaInfExample.vb" />
     <Compile Include="src\com\db4odoc\f1\metainf\Pilot.vb" />
+    <Compile Include="src\com\db4odoc\f1\persist\Car.vb" />
+    <Compile Include="src\com\db4odoc\f1\persist\Change1.vb" />
+    <Compile Include="src\com\db4odoc\f1\persist\Change2.vb" />
+    <Compile Include="src\com\db4odoc\f1\persist\PeekPersistedExample.vb" />
     <Compile Include="src\com\db4odoc\f1\refactoring\newclasses\Identity.vb" />
     <Compile Include="src\com\db4odoc\f1\refactoring\newclasses\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\refactoring\newclasses\RefactoringExample.vb" />
