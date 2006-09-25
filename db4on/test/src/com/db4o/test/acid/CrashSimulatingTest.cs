@@ -86,8 +86,8 @@ namespace com.db4o.test.acid
 
 		private bool Expect(com.db4o.ObjectContainer oc, string[] names)
 		{
-			com.db4o.ObjectSet objectSet = oc.Query(j4o.lang.Class.GetClassForType(typeof(com.db4o.test.acid.CrashSimulatingTest
-				)));
+			com.db4o.ObjectSet objectSet = oc.Query(typeof(com.db4o.test.acid.CrashSimulatingTest
+				));
 			if (objectSet.Size() != names.Length)
 			{
 				return false;
@@ -140,8 +140,7 @@ namespace com.db4o.test.acid
 			oc.Set(two);
 			oc.Set(three);
 			oc.Commit();
-			com.db4o.ObjectSet objectSet = oc.Query(j4o.lang.Class.GetClassForType(typeof(com.db4o.test.SimplestPossible
-				)));
+			com.db4o.ObjectSet objectSet = oc.Query(typeof(com.db4o.test.SimplestPossible));
 			while (objectSet.HasNext())
 			{
 				oc.Delete(objectSet.Next());
