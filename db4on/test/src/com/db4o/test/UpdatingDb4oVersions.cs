@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
-
+using com.db4o.db4ounit.util;
 using com.db4o.ext;
 using com.db4o.query;
 

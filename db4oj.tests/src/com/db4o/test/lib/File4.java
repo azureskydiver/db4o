@@ -62,4 +62,8 @@ public class File4 {
             ? pathName + fileName
             : pathName + java.io.File.separator + fileName;
     }
+
+	public static void delete(String fname) {
+		new File(fname).delete();
+	}
 }
