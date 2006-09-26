@@ -1,0 +1,34 @@
+.n 
+.a Utility ..
+.1 Utility methods ..
+.2 peekPersisted ..
+Db4o loads each object into reference cache only once in the session, thus ensuring that independently ._
+of the way of retrieving, you will always get a reference to the same object. This concept certainly makes ._
+things clearer, but in some cases you will want to operate on the copy of an object.
+Typical usecases can be:
+- comparing object's changes in a running transaction with the original object in a database;
+- safely changing an object without making changes to the database;
+- modifying an object in several threads independently, writing the changes to the database after conflict ._
+resolution.
+Db4o helps you with these tasks providing the following method:
+.c ExtObjectContainer#peekPersisted(object, depth, committed) ..
+This method creates a copy of a database object in memory instantiating its members ._
+up to  .i depth ..  parameter value. The object has no connection to the database.
+.i Committed ..  parameter defines whether committed or set values are to be returned.
+Let's see how you can use it.
+We will use 2 threads measuring temperature independently in different parts of the car: somewhere in ._
+the cabin (getCabinTemperature) and on the conditioner unit (getConditionerTemperature). ._
+After some period of time the average measured value will be written to the database.
+.s com.db4odoc.f1.persist.PeekPersistedExample#measureCarTemperature ..
+peekPersisted method gives you an easy way to work with database objects' clones ._
+Remember that these clones are totally disconnected from the database. ._
+If you will try to save such object:
+.c objectContainer#set(peekPersistedObject) ..
+you will get a new object in the database.
+
+.2 Full source ..
+.s com.db4odoc.f1.persist.PeekPersistedExample ..
+.s com.db4odoc.f1.persist.Car .. 
+.s com.db4odoc.f1.persist.Change1 ..
+.s com.db4odoc.f1.persist.Change2 ..
+
