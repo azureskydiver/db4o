@@ -125,11 +125,13 @@ public final class YapConfigBlock implements Runnable
 		if(! Debug.lockFile){
 			return false;
 		}
-        return false;
-		// return _stream.needsLockFileThread();
+		return _stream.needsLockFileThread();
 	}
     
     private YapWriter openTimeIO(){
+        if(_address == 0){
+            return null;
+        }
         YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, YapConst.LONG_LENGTH);
         writer.moveForward(OPEN_TIME_OFFSET);
         if (Debug.xbytes) {
@@ -141,8 +143,12 @@ public final class YapConfigBlock implements Runnable
     private void openTimeOverWritten(){
         if(lockFile()){
             YapWriter bytes = openTimeIO();
+            if(bytes == null){
+                return;
+            }
             bytes.read();
-            if(YLong.readLong(bytes) != _opentime){
+            long t = YLong.readLong(bytes);
+            if(t != _opentime){
                 Exceptions4.throwRuntimeException(22);
             }
             writeOpenTime();
@@ -367,6 +373,9 @@ public final class YapConfigBlock implements Runnable
 	private void writeOpenTime(){
 		if(lockFile()){
 			YapWriter writer = openTimeIO();
+            if(writer== null){
+                return;
+            }
 			YLong.writeLong(_opentime, writer);
 			writer.write();
 		}
@@ -376,9 +385,6 @@ public final class YapConfigBlock implements Runnable
 		if(lockFile()){
 			YapWriter writer = headerLockIO();
 			YInt.writeInt(((int)_opentime), writer);
-            
-            // System.out.println("Written by " + System.identityHashCode(this) + " " + intOpenTime);
-            
 			writer.write();
 		}
 	}
