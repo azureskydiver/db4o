@@ -64,12 +64,10 @@ public final class YapConfigBlock implements Runnable
         + 1;
 		
 	public final long			_opentime; // written as pure long 8 bytes
-	byte						_encoding;
     
 	
 	public YapConfigBlock(YapFile stream){
 		_stream = stream;
-        _encoding = stream.configImpl().encoding();
 		_opentime = processID();
 		if(lockFile()){
 			writeHeaderLock();
@@ -81,7 +79,6 @@ public final class YapConfigBlock implements Runnable
 	}
     
 	public void go(){
-		_stream.createStringIO(_encoding);
 		if(lockFile()){
 			try{
 				writeAccessTime();
@@ -128,7 +125,8 @@ public final class YapConfigBlock implements Runnable
 		if(! Debug.lockFile){
 			return false;
 		}
-		return _stream.needsLockFileThread();
+        return false;
+		// return _stream.needsLockFileThread();
 	}
     
     private YapWriter openTimeIO(){
@@ -224,7 +222,7 @@ public final class YapConfigBlock implements Runnable
         }
 		YLong.readLong(reader);  // open time
 		long lastAccessTime = YLong.readLong(reader);
-		_encoding = reader.readByte();
+        systemData.stringEncoding(reader.readByte());
 		
 		if(oldLength > TRANSACTION_OFFSET){
 			int transactionID1 = YInt.readInt(reader);
@@ -347,7 +345,7 @@ public final class YapConfigBlock implements Runnable
 		YInt.writeInt(LENGTH, writer);
 		YLong.writeLong(_opentime, writer);
 		YLong.writeLong(_opentime, writer);
-		writer.append(_encoding);
+		writer.append(systemData.stringEncoding());
 		YInt.writeInt(0, writer);
 		YInt.writeInt(0, writer);
 		YInt.writeInt(_bootRecordID, writer);

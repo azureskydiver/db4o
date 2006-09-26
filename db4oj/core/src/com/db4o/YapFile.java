@@ -76,6 +76,7 @@ public abstract class YapFile extends YapStream {
     void configureNewFile() {
         
         newSystemData(configImpl().freespaceSystem());
+        createStringIO(_systemData.stringEncoding());
         
         generateNewIdentity();
         
@@ -106,6 +107,7 @@ public abstract class YapFile extends YapStream {
     
     private void newSystemData(byte freespaceSystem){
         _systemData = new SystemData();
+        _systemData.stringEncoding(configImpl().encoding());
         _systemData.freespaceSystem(freespaceSystem);
     }
     
@@ -481,6 +483,7 @@ public abstract class YapFile extends YapStream {
         blockSize(_fileHeader.length());
     	
         _fileHeader.read(this);
+        createStringIO(_systemData.stringEncoding());
         
         classCollection().setID(_systemData.classCollectionID());
         classCollection().read(i_systemTrans);
