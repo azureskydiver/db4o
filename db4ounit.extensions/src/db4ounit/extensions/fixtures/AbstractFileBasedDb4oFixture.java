@@ -5,7 +5,7 @@ package db4ounit.extensions.fixtures;
 import java.io.*;
 
 
-public abstract class AbstractFileBasedDb4oFixture extends AbstractDb4oFixture {
+public abstract class AbstractFileBasedDb4oFixture extends AbstractSoloDb4oFixture {
 	
 	private final File _yap;
 

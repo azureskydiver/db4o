@@ -6,7 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 
-public class Db4oInMemory extends AbstractDb4oFixture {
+public class Db4oInMemory extends AbstractSoloDb4oFixture {
     
 	public Db4oInMemory() {
 		super(new IndependentConfigurationSource());

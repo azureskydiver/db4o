@@ -71,11 +71,15 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 					new Db4oTestSuiteBuilder(
 							new Db4oSolo(configSource(independentConfig)), testCases())).run();
 	}
-    
+
     public int runClientServer() {
+    	return runClientServer(true);
+    }
+
+    public int runClientServer(boolean independentConfig) {
         return new TestRunner(
                     new Db4oTestSuiteBuilder(
-                            new Db4oSingleClient(), testCases())).run();
+                            new Db4oSingleClient(configSource(independentConfig)), testCases())).run();
     }
 
     private ConfigurationSource configSource(boolean independentConfig) {

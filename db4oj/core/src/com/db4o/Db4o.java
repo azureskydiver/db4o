@@ -80,11 +80,16 @@ public class Db4o {
 	 */
 	public static ObjectContainer openClient(String hostName, int port, String user, String password)
 		throws IOException {
-		synchronized(Db4o.lock){
-			return new YapClient(Db4o.cloneConfiguration(),new YapSocketReal(hostName, port), user, password, true);
-		}
+		return openClient(Db4o.cloneConfiguration(),hostName,port,user,password);
 	}
-	
+
+	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
+			throws IOException {
+		synchronized(Db4o.lock){
+			return new YapClient(config,new YapSocketReal(hostName, port), user, password, true);
+		}
+}
+
     /**
      * opens an {@link ObjectContainer ObjectContainer}
 	 * on the specified database file for local use.
@@ -158,8 +163,12 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectServer openServer(String databaseFileName, int port) throws DatabaseFileLockedException {
+		return openServer(cloneConfiguration(),databaseFileName,port);
+	}
+
+	public static final ObjectServer openServer(Configuration config,String databaseFileName, int port) throws DatabaseFileLockedException {
 		synchronized(Db4o.lock){
-			YapFile stream = (YapFile)openFile(databaseFileName);
+			YapFile stream = (YapFile)openFile(config,databaseFileName);
             if(stream == null){
                 return null;
             }
@@ -168,7 +177,7 @@ public class Db4o {
             }
 		}
 	}
-	
+
 	static Reflector reflector(){
 		return i_config.reflector();
 	}

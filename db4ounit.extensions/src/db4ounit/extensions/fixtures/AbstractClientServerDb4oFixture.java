@@ -11,7 +11,7 @@ import com.db4o.ext.*;
 import db4ounit.extensions.*;
 
 
-public abstract class AbstractClientServerDb4oFixture implements Db4oFixture{
+public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{
     
     protected static final String FILE = "Db4oClientServer.yap";
     
@@ -29,13 +29,14 @@ public abstract class AbstractClientServerDb4oFixture implements Db4oFixture{
     
     private final int _port;
     
-    public AbstractClientServerDb4oFixture(String fileName, int port) {
+    public AbstractClientServerDb4oFixture(ConfigurationSource configSource,String fileName, int port) {
+    	super(configSource);
         _yap = new File(fileName);
         _port = port;
     }
     
-    public AbstractClientServerDb4oFixture(){
-        this(FILE, PORT);
+    public AbstractClientServerDb4oFixture(ConfigurationSource configSource){
+        this(configSource,FILE, PORT);
     }
 
     public void close() throws Exception {
@@ -43,22 +44,13 @@ public abstract class AbstractClientServerDb4oFixture implements Db4oFixture{
     }
 
     public void open() throws Exception {
-        _server = Db4o.openServer(_yap.getAbsolutePath(), _port);
+        _server = Db4o.openServer(config(),_yap.getAbsolutePath(), _port);
         _server.grantAccess(USERNAME, PASSWORD);
     }
 
     public abstract ExtObjectContainer db();
     
-    public Configuration config() {
-        return Db4o.cloneConfiguration();
-    }
-
-    public void reopen() throws Exception {
-        close();
-        open();
-    }
-
-    public void clean() {
+    protected void doClean() {
         _yap.delete();
     }
 
