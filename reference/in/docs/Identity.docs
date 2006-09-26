@@ -1,0 +1,88 @@
+.n 
+.a Identity ..
+.1 Object Identity Concept ..
+
+Db4o keeps references to all persistent objects that are currently held in RAM, whether they ._
+were retrieved, created or activated in this session. The main role of the reference system ._
+is to provide access to the required data with the best speed and lowest memory consumption. ._
+Performance and usability of the reference system depend much on how the system manages ._
+objects identities.
+
+.2 Unique identity concept ..
+Db4o uses the concept of uniqueness of each object in reference cache. If an object is ._
+accessed by multiple queries or through multiple navigation access paths, db4o will ._
+always return the one single object, helping you to put your object graph together exactly ._
+the same way as it was when it was stored, without having to use IDs. You can ._
+simply use '==' to check the identity of two database objects.
+.s com.db4odoc.f1.identity.IdentityExample#checkUniqueness ..
+How does db4o realize such behavior? Each object is loaded into reference cache only ._
+once in the session: db4o will return a new object only if it is not present in the cache ._
+yet, otherwise it will give you a reference to the object already in cache. This helps db4o ._
+to distinguish between objects that are to be updated and those ones that are to be ._
+created. All "known" objects are the subjects of update whereas "unknown" should be ._
+created. (Note that the reference system will only be in place as long as an ObjectContainer ._
+is open. Closing and reopening an ObjectContainer will clean the references system of the ._
+ObjectContainer and all objects in RAM will be treated as "new" afterwards.). 
+.s com.db4odoc.f1.identity.IdentityExample#checkReferenceCache ..
+In the example  .i pilot ..  object is retrieved from the database (placed into cache) and ._
+changed, but not saved. The following retrieval uses pilot's name to retrieve the object ._
+from the database, but that object was already instantiated, so its cached (and modified) ._
+instance is actually returned.
+Such behavior can be sometimes undesirable - you may expect to get object as it saved ._
+in the database instead of its modified instance in cache. One of the ways to do that is ._
+to use  .l Utility  ExtObjectContainer#peekPersisted(object) ..  method, which will give you a ._
+disconnected copy of a database object. 
+Another way is to purge objects from the cache before re-retrieving them.
+You can use the following methods:
+- ExtObjectContainer#isCached(object) shows if the object is present in reference cache
+- ExtObjectContainer#purge(object) removes the object from the cache.
+Let’s look at our previous example extended with these methods:
+.s com.db4odoc.f1.identity.IdentityExample#checkReferenceCacheWithPurge ..
+Now the second retrieval re-instantiates Pilot object from the database.
+An object removed with ExtObjectContainer#purge(object) becomes "unknown" to the ._
+ObjectContainer, so this method may also be used to create multiple copies of objects:
+.s com.db4odoc.f1.identity.IdentityExample#testCopyingWithPurge ..
+Each reference in db4o works directly with the object. As only one instance of the object ._
+exists in cache there is no problem with object locks.
+You can see an example of another concept used in JDO system (.l http://access1.sun.com/jdo/   http://access1.sun.com/jdo/ ..  ).
+Actually db4o reference is a pointer to the object in the database file. It means that the size ._
+of the database does not effect query time: the object is retrieved from the known position ._
+without any necessity to traverse values.
+
+.2 Binding objects ..
+ Db4o adds additional flexibility to its reference system allowing the user to re-associate an ._
+ object with its stored instance or to replace an object in database:
+.c ExtObjectContainer#bind(object,id) .. 
+Typical usecases could be:
+-  .l StaticFields  enums and static fields .. 
+- working on objects disconnected from the database
+- refactoring
+The following requirements should be met:
+-	The ID needs to be a valid internal object ID, previously retrieved with ._
+ExtObjectContainer#getID(object) 
+-	The object parameter needs to be of the same class as the stored object.
+Calling ExtObjectContainer#bind(object,id) does not have any impact on persisted ._
+objects. It only attaches the new object to the database identity. ObjectContainer#set(object) ._
+should be used to persist the change.
+Let's look how it works in practice. 
+.s com.db4odoc.f1.identity.IdentityExample#testBind ..
+So this method gives you control over internal object storage. But its usage is potentially ._
+dangerous and normally should be avoided. Use ExtObjectContainer#bind(object,id) only ._
+for short-lived objects and in controlled situations where no other references exist.
+
+.2 Week references ..
+Each retrieved or created object is automatically placed into reference system. Of course you ._
+have control over it and can purge or deactivate retrieved objects to prevent ever-growing ._
+memory consumption. However this requires a lot of attention and coding effort. Luckily, this ._
+is not necessary as db4o offers much easier way to manage the memory – WeakReferences. 
+Any object is kept in the memory while application has references to it otherwise it becomes ._
+eligible for garbage collection.
+In the default configuration db4o uses weak references and a dedicated thread to clean them ._
+up after objects have been garbage collected by the VM. Weak references need extra ._
+resources and the cleanup thread will have a considerable impact on performance since it ._
+has to be synchronized with the normal operations within the ObjectContainer. 
+
+
+
+
+	
