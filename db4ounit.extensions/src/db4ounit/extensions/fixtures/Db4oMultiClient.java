@@ -12,13 +12,20 @@ import db4ounit.*;
 
 public class Db4oMultiClient extends AbstractClientServerDb4oFixture{
     
-    public ExtObjectContainer db() {
+    public Db4oMultiClient(ConfigurationSource configSource) {
+		super(configSource);
+	}
+
+    public Db4oMultiClient() {
+		this(new IndependentConfigurationSource());
+	}
+
+	public ExtObjectContainer db() {
         try {
-            return Db4o.openClient(HOST, PORT, USERNAME, PASSWORD).ext();
+            return Db4o.openClient(config(),HOST, PORT, USERNAME, PASSWORD).ext();
         } catch (IOException e) {
             e.printStackTrace();
             throw new TestException(e);
         }
     }
-
 }
