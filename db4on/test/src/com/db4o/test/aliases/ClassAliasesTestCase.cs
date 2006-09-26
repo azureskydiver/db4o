@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using com.db4o.config;
+using com.db4o.db4ounit.util;
 
 namespace com.db4o.test.aliases
 {

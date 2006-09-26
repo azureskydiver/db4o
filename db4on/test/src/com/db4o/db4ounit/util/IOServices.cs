@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace com.db4o.test
+namespace com.db4o.db4ounit.util
 {
 	class IOServices
 	{

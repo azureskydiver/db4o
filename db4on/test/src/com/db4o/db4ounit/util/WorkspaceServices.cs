@@ -1,14 +1,15 @@
 using System;
 using System.IO;
+using Db4oUnit;
 
-namespace com.db4o.test
+namespace com.db4o.db4ounit.util
 {
 	class WorkspaceServices
 	{
 		public static string JavacPath()
 		{
 			string path = ReadProperty(MachinePropertiesPath(), "file.compiler.jdk1.3");
-			Tester.Ensure(File.Exists(path));
+			Assert.IsTrue(File.Exists(path));
 			return path;
 		}
 
@@ -31,7 +32,7 @@ namespace com.db4o.test
 		public static string MachinePropertiesPath()
 		{
 			string path = WorkspacePath("db4obuild/machine.properties");
-			Tester.Ensure(path, File.Exists(path));
+			Assert.IsTrue(File.Exists(path));
 			return path;
 		}
 
