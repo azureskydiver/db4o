@@ -79,6 +79,9 @@
     <Compile Include="src\com\db4odoc\f1\evaluations\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\evaluations\SensorReadout.vb" />
     <Compile Include="src\com\db4odoc\f1\evaluations\TranslatorExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\identity\Car.vb" />
+    <Compile Include="src\com\db4odoc\f1\identity\IdentityExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\identity\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\indexes\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\indexes\IndexedExample.vb" />
     <Compile Include="src\com\db4odoc\f1\indexes\Pilot.vb" />
