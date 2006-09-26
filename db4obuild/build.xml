@@ -447,19 +447,42 @@
 		</exec>
 	</target>
 	
+	<target name="runtestsnet2" depends="configure-net2, compiletestsnet">
+		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}">
+		</exec>
+	</target>
+	
 	<target name="compiletestsnet" depends="compiledllnet">	
+		
+		<csc srcdir="${dir.n}/Db4oUnit/src"
+				targettype="library"
+				destfile="${dir.dist.dll.net}/Db4oUnit.dll">
+		</csc>
+				
+		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
+			targettype="library"
+			destfile="${dir.dist.dll.net}/Db4oUnit.Extensions.dll">
+			<reference dir="${dir.dist.dll.net}/">
+				<include name="${file.name.dll}" />
+				<include name="Db4oUnit.dll" />
+				<exclude name="Db4oUnit.Extensions.dll" />
+			</reference>
+		</csc>
+		
 		<csc srcdir="${dir.n.test}/src"
 			targettype="exe"
 			destfile="${dir.dist.dll.net}/db4o-net-test.exe"
 			debug="true"
 			mainclass="com.db4o.test.AllTests"
-			definitions="NET">
+			definitions="${csharp.defines}">
 			
 			<exclude name="compact*/**" />
 			
 			<reference dir="${dir.dist.dll.net}">
 				<include name="${file.name.dll}" />
 				<include name="${file.name.tools.dll}" />
+				<include name="Db4oUnit.dll" />
+				<include name="Db4oUnit.Extensions.dll" />
 				<include name="System.Drawing.dll" />
 			</reference>
 		</csc>
