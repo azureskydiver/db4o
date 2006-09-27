@@ -43,7 +43,7 @@ public class FileHeader0 extends FileHeader {
     
     private PBootRecord _bootRecord;
 
-    public void read(YapFile file) throws IOException {
+    public void readFixedPart(YapFile file) throws IOException {
         
         YapReader reader = new YapReader(length()); 
         reader.read(file, 0, 0);
@@ -77,7 +77,7 @@ public class FileHeader0 extends FileHeader {
         reader.incrementOffset(YapConst.ID_LENGTH);
     }
 
-    public void readVariablePart2(YapFile file){
+    public void readVariablePart(YapFile file){
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
@@ -112,7 +112,7 @@ public class FileHeader0 extends FileHeader {
         file.setInternal(file.getSystemTransaction(), _bootRecord, false);
         
         _configBlock._bootRecordID = file.getID1(file.getSystemTransaction(), _bootRecord);
-        writeVariablePart1(file);
+        writeVariablePart(file, 1);
         
         file.showInternalClasses(false);
     }
@@ -160,12 +160,12 @@ public class FileHeader0 extends FileHeader {
         return shuttingDown ? 0 : (int)_configBlock.openTime();
     }
 
-    public void writeVariablePart1(YapFile file) {
-        _configBlock.write();
-    }
-    
-    public void writeVariablePart2(YapFile file) {
-        _bootRecord.write(file);
+    public void writeVariablePart(YapFile file, int part) {
+        if(part == 1){
+            _configBlock.write();
+        }else if(part == 2){
+            _bootRecord.write(file);
+        }
     }
 
     public void close() throws IOException {

@@ -129,7 +129,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     	initIndex(transaction, sd.uuidIndexId());
     	if (sd.uuidIndexId() == 0) {
             sd.uuidIndexId(super.getIndex(transaction).getID());
-            file.getFileHeader().writeVariablePart1(file);
+            file.getFileHeader().writeVariablePart(file, 1);
     	}
 	}
 

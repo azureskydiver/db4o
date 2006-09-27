@@ -482,7 +482,7 @@ public abstract class YapFile extends YapStream {
 
         blockSize(_fileHeader.length());
     	
-        _fileHeader.read(this);
+        _fileHeader.readFixedPart(this);
         createStringIO(_systemData.stringEncoding());
         
         classCollection().setID(_systemData.classCollectionID());
@@ -506,10 +506,10 @@ public abstract class YapFile extends YapStream {
         
         if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
             _freespaceManager = _freespaceManager.migrate(this, configImpl().freespaceSystem());
-            _fileHeader.writeVariablePart1(this);
+            _fileHeader.writeVariablePart(this, 1);
         }
         
-        _fileHeader.readVariablePart2(this);
+        _fileHeader.readVariablePart(this);
         
         writeHeader(false);
         
@@ -523,7 +523,7 @@ public abstract class YapFile extends YapStream {
 
         if(Converter.convert(new ConversionStage.SystemUpStage(this))){
             _systemData.converterVersion(Converter.VERSION);
-            _fileHeader.writeVariablePart1(this);
+            _fileHeader.writeVariablePart(this, 1);
             getTransaction().commit();
         }
         
@@ -679,7 +679,7 @@ public abstract class YapFile extends YapStream {
         	return;
         }
         _systemData.lastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
-        _fileHeader.writeVariablePart2(this);
+        _fileHeader.writeVariablePart(this, 2);
         _timeStampIdGenerator.setClean();
     }
     
