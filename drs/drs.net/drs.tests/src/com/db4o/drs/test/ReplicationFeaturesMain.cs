@@ -259,19 +259,6 @@ namespace com.db4o.drs.test
 		{
 		}
 
-		private void PrintProviderContent(com.db4o.drs.inside.TestableReplicationProviderInside
-			 provider)
-		{
-			com.db4o.ObjectContainer db = ((com.db4o.drs.db4o.Db4oReplicationProvider)provider
-				).ObjectContainer();
-			com.db4o.ObjectSet result = db.Query(typeof(com.db4o.drs.test.Replicated));
-			j4o.lang.JavaSystem._out.Println("PROVIDER: " + provider);
-			while (result.HasNext())
-			{
-				j4o.lang.JavaSystem._out.Println(result.Next());
-			}
-		}
-
 		private bool TryToReplicate(com.db4o.drs.ReplicationSession replication)
 		{
 			try

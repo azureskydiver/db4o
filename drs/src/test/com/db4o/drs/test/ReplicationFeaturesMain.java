@@ -88,8 +88,8 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 		_testCombination = 0;
 
-		tstWithDeletedObjectsIn(_NONE);
-//		tstWithDeletedObjectsIn(_setA);
+//		tstWithDeletedObjectsIn(_NONE);
+		tstWithDeletedObjectsIn(_setA);
 //		tstWithDeletedObjectsIn(_setB);
 //		tstWithDeletedObjectsIn(_setBoth);
 
@@ -97,7 +97,6 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
 			Assert.isTrue(false);
 		}
-
 	}
 
 //	protected void clean() {
@@ -204,6 +203,13 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 			checkNames();
 
 		clean();
+		
+		try {
+			reopen();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	private void printProvidersContent(String msg) {

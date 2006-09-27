@@ -3,7 +3,9 @@
 package com.db4o.drs.test.hibernate;
 
 import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 
+import com.db4o.drs.hibernate.impl.ReplicationConfiguration;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.drs.test.Car;
 import com.db4o.drs.test.CollectionHolder;
@@ -19,6 +21,7 @@ import com.db4o.drs.test.SPCChild;
 import com.db4o.drs.test.SPCParent;
 import com.db4o.drs.test.SimpleArrayContent;
 import com.db4o.drs.test.SimpleArrayHolder;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 
 public abstract class RdbmsFixture implements DrsFixture {
 	public static final Class[] mappings;
@@ -52,7 +55,10 @@ public abstract class RdbmsFixture implements DrsFixture {
 	}
 	
 	public void clean() {
+		if (config==null) 
+			return;
 		
+		new SchemaExport(config).drop(false, true);
 	}
 	
 	public void close() {
@@ -64,7 +70,8 @@ public abstract class RdbmsFixture implements DrsFixture {
 	}
 	
 	protected Configuration createConfig() {
-		Configuration configuration = new Configuration();
-		return addAllMappings(configuration);
+		Configuration tmp = new Configuration();
+		addAllMappings(tmp);
+		return ReplicationConfiguration.decorate(tmp);
 	}
 }
