@@ -21,7 +21,7 @@ import com.db4o.reflect.*;
  */
 public abstract class YapFile extends YapStream {
     
-    protected FileHeader0       _fileHeader;
+    protected FileHeader       _fileHeader;
     
     private Collection4         i_dirty;
     
