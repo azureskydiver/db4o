@@ -130,6 +130,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         	target.incrementOffset(YapConst.INT_LENGTH);
         }
 
+        // skip primitive/array/narray attributes
         source.incrementOffset(1);
         target.incrementOffset(1);
 	}
