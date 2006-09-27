@@ -2,7 +2,6 @@
 
 package com.db4o.drs.test;
 
-
 import db4ounit.TestSuite;
 import db4ounit.TestSuiteBuilder;
 
@@ -17,11 +16,11 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 	}
 
 	protected Class[] testCases() {
-		return all();
+		return one();
 	}
 
 	protected Class[] one() {
-		return new Class[] { ReplicationProviderTest.class, };
+		return new Class[] { ReplicationFeaturesMain.class, };
 	}
 
 	protected Class[] all() {

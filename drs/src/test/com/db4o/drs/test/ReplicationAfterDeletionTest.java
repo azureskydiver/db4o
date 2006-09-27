@@ -9,6 +9,7 @@ public class ReplicationAfterDeletionTest extends DrsTestCase {
 		replicate();
 		clean();
 		replicate();
+		clean();
 	}
 
 	protected void clean() {

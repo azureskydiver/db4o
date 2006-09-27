@@ -10,7 +10,7 @@ public class OracleFixture extends RdbmsFixture {
 	}
 
 	public void open()  {
-		config = createConfig().configure("com/db4o/test/drs/hibernate/Oracle.cfg.xml");
+		config = createConfig().configure("com/db4o/drs/test/hibernate/Oracle.cfg.xml");
 		_provider = new HibernateReplicationProviderImpl(config, _name);
 	}
 }

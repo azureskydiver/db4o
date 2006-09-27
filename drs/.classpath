@@ -29,5 +29,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
+	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-3.1.12-bin.jar"/>
+	<classpathentry kind="lib" path="lib/oracle/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql/postgresql-8.1-404.jdbc3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
