@@ -18,9 +18,9 @@ public abstract class FileHeader {
 
     public abstract void initNew(YapFile file) throws IOException;
 
-    public abstract void read(YapFile file) throws IOException;
+    public abstract void readFixedPart(YapFile file) throws IOException;
 
-    public abstract void readVariablePart2(YapFile file);
+    public abstract void readVariablePart(YapFile file);
 
     public abstract Transaction interruptedTransaction();
 
@@ -29,8 +29,6 @@ public abstract class FileHeader {
     
     public abstract void writeTransactionPointer(Transaction systemTransaction, int address);
     
-    public abstract void writeVariablePart1(YapFile file);
-
-    public abstract void writeVariablePart2(YapFile file);
+    public abstract void writeVariablePart(YapFile file, int part);
 
 }

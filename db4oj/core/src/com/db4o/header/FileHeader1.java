@@ -11,6 +11,8 @@ import com.db4o.*;
  * @exclude
  */
 public class FileHeader1 extends FileHeader {
+    
+    
 
     public void writeVariablePart1(YapFile file) {
         // TODO Auto-generated method stub
@@ -36,12 +38,12 @@ public class FileHeader1 extends FileHeader {
         return 0;
     }
 
-    public void read(YapFile file) throws IOException {
+    public void readFixedPart(YapFile file) throws IOException {
         // TODO Auto-generated method stub
         
     }
 
-    public void readVariablePart2(YapFile file) {
+    public void readVariablePart(YapFile file) {
         // TODO Auto-generated method stub
         
     }
@@ -56,10 +58,10 @@ public class FileHeader1 extends FileHeader {
         // TODO Auto-generated method stub
         
     }
-
-    public void writeVariablePart2(YapFile file) {
-        // TODO Auto-generated method stub
+    
+    public void writeVariablePart(YapFile file, int part) {
         
     }
+
 
 }
