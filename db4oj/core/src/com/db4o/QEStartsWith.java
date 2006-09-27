@@ -7,8 +7,8 @@ package com.db4o;
  */
 public class QEStartsWith extends QEStringCmp
 {
-	public QEStartsWith(boolean caseSensitive) {
-		super(caseSensitive);
+	public QEStartsWith(boolean caseSensitive_) {
+		super(caseSensitive_);
 	}
 
 	protected boolean compareStrings(String candidate, String constraint) {
