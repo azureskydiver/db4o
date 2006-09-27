@@ -92,7 +92,7 @@ public class YapMemoryFile extends YapFile {
         return false;
     }
 
-    private void open() {
+    private void open() throws IOException {
         byte[] bytes = i_memoryFile.getBytes();
         if (bytes == null || bytes.length == 0) {
             i_memoryFile.setBytes(new byte[i_memoryFile.getInitialSize()]);
@@ -120,7 +120,7 @@ public class YapMemoryFile extends YapFile {
     public void syncFiles() {
     }
 
-    boolean writeAccessTime() {
+    public boolean writeAccessTime() {
         return true;
     }
 

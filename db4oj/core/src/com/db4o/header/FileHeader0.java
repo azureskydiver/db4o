@@ -44,7 +44,7 @@ public class FileHeader0 extends FileHeader {
     
     private PBootRecord _bootRecord;
 
-    public void read(YapFile file) {
+    public void read(YapFile file) throws IOException {
         
         YapReader reader = new YapReader(length()); 
         reader.read(file, 0, 0);
@@ -68,8 +68,9 @@ public class FileHeader0 extends FileHeader {
         _configBlock = new YapConfigBlock(file);
         
         SystemData systemData = file.systemData();
-        
+
         _configBlock.read(systemData, reader.readInt());
+        startTimerFileLock(file);
 
         skipConfigurationLockTime(reader);
         
@@ -102,11 +103,15 @@ public class FileHeader0 extends FileHeader {
         file.systemData().identity(_bootRecord.i_db);
     }
 
-    public void initNew(YapFile file) {
+    public void initNew(YapFile file) throws IOException {
         file.systemData().converterVersion(Converter.VERSION);
         _configBlock = new YapConfigBlock(file);
-        _configBlock.go();
+        startTimerFileLock(file);
         initBootRecord(file);
+    }
+    
+    private void startTimerFileLock(YapFile file) throws IOException{
+        file.systemData().timerFileLock().start();
     }
     
     private void initBootRecord(YapFile file){
@@ -127,12 +132,12 @@ public class FileHeader0 extends FileHeader {
     }
 
     public int transactionPointerAddress() {
-        return _configBlock._address;
+        return _configBlock.address();
     }
 
     public void writeTransactionPointer(Transaction trans, int address) {
         YapWriter bytes = new YapWriter(trans,
-            _configBlock._address, YapConst.INT_LENGTH * 2);
+            _configBlock.address(), YapConst.INT_LENGTH * 2);
         
         bytes.moveForward(YapConfigBlock.TRANSACTION_OFFSET);
         
@@ -144,8 +149,12 @@ public class FileHeader0 extends FileHeader {
         bytes.write();
     }
 
-    public void seekForTimeLock(IoAdapter file) throws IOException {
-        file.blockSeek(_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+    public boolean seekForTimeLock(IoAdapter file) throws IOException {
+        if(_configBlock.address() == 0){
+            return false;
+        }
+        file.blockSeek(_configBlock.address(), YapConfigBlock.ACCESS_TIME_OFFSET);
+        return true;
     }
 
     public MetaIndex getUUIDMetaIndex() {
@@ -156,20 +165,21 @@ public class FileHeader0 extends FileHeader {
         return LENGTH;
     }
 
-    public void writeFixedPart(boolean shuttingDown, YapWriter writer, byte blockSize_, int classCollectionID, int freespaceID) {
+    public void writeFixedPart(YapFile file, boolean shuttingDown, YapWriter writer, byte blockSize_, int classCollectionID, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append(blockSize_);
-        writer.writeInt(_configBlock._address);
-        
-        int headerLockOpenTime = shuttingDown ? 0 : (int)_configBlock._opentime;  
-        writer.writeInt(headerLockOpenTime);
-        
+        writer.writeInt(_configBlock.address());
+        writer.writeInt(openTimeToWrite(file, shuttingDown));
         writer.writeInt(classCollectionID);
         writer.writeInt(freespaceID);
         if (Debug.xbytes && Deploy.overwrite) {
             writer.setID(YapConst.IGNORE_ID);
         }
         writer.write();
+    }
+    
+    private int openTimeToWrite(YapFile file, boolean shuttingDown){
+        return shuttingDown ? 0 : (int)file.systemData().timerFileLock().openTime();
     }
 
     public void writeVariablePart1(YapFile file) {
