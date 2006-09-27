@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import java.io.*;
+
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
@@ -31,6 +33,8 @@ public final class YapConfigBlock {
     // int    converter versions
     
 	private final YapFile		_stream;
+    private final TimerFileLock _timerFileLock;
+    
 	private int					_address;
 	private Transaction			_transactionToCommit;
 	public int                 	_bootRecordID;
@@ -61,13 +65,31 @@ public final class YapConfigBlock {
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
     
-	public YapConfigBlock(YapFile stream){
+    
+    public static YapConfigBlock forNewFile(YapFile file) throws IOException{
+        return new YapConfigBlock(file, true, 0);
+    }
+    
+    public static YapConfigBlock forExistingFile(YapFile file, int address) throws IOException{
+        return new YapConfigBlock(file, false, address);
+    }
+    
+	private YapConfigBlock(YapFile stream, boolean isNew, int address) throws IOException{
 		_stream = stream;
+        _timerFileLock = TimerFileLock.forFile(stream);
         timerFileLock().writeHeaderLock();
+        if(! isNew){
+            read(address);
+        }
+        timerFileLock().start();
 	}
     
     private TimerFileLock timerFileLock(){
-        return _stream.systemData().timerFileLock();
+        return _timerFileLock;
+    }
+    
+    public long openTime(){
+        return timerFileLock().openTime();
     }
 	
 	public Transaction getTransactionToCommit(){
@@ -102,8 +124,12 @@ public final class YapConfigBlock {
         }
         return pwdtoken;
     }
+    
+    private SystemData systemData(){
+        return _stream.systemData();
+    }
 	
-	public void read(SystemData systemData, int address) {
+	private void read(int address) {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
 		YapWriter reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
@@ -127,10 +153,10 @@ public final class YapConfigBlock {
             }
         }
         
-        long openTime = YLong.readLong(reader); 
+        YLong.readLong(reader); // open time 
 		long lastAccessTime = YLong.readLong(reader);
         
-        systemData.stringEncoding(reader.readByte());
+        systemData().stringEncoding(reader.readByte());
 		
 		if(oldLength > TRANSACTION_OFFSET){
 			int transactionID1 = YInt.readInt(reader);
@@ -174,18 +200,18 @@ public final class YapConfigBlock {
 		}
         
         if(oldLength > FREESPACE_SYSTEM_OFFSET){
-            systemData.freespaceSystem(reader.readByte());
+            systemData().freespaceSystem(reader.readByte());
         }
         
         if(oldLength > FREESPACE_ADDRESS_OFFSET){
-            systemData.freespaceAddress(reader.readInt());
+            systemData().freespaceAddress(reader.readInt());
         }
         
         if(oldLength > CONVERTER_VERSION_OFFSET){
-            systemData.converterVersion(reader.readInt());
+            systemData().converterVersion(reader.readInt());
         }
         if(oldLength > UUID_INDEX_ID_OFFSET){
-            systemData.uuidIndexId(reader.readInt());
+            systemData().uuidIndexId(reader.readInt());
         }
         
         _stream.ensureFreespaceSlot();
@@ -219,11 +245,11 @@ public final class YapConfigBlock {
             timerFileLock().checkOpenTime();
 		}
 		if(oldLength < LENGTH){
-			write(systemData);
+			write();
 		}
 	}
 	
-	public void write(SystemData systemData) {
+	public void write() {
         
         timerFileLock().checkHeaderLock();
         addressChanged(_stream.getSlot(LENGTH));
@@ -233,17 +259,17 @@ public final class YapConfigBlock {
         for (int i = 0; i < 2; i++) {
             YLong.writeLong(timerFileLock().openTime(), writer);
         }
-		writer.append(systemData.stringEncoding());
+		writer.append(systemData().stringEncoding());
 		YInt.writeInt(0, writer);
 		YInt.writeInt(0, writer);
 		YInt.writeInt(_bootRecordID, writer);
 		YInt.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
-        writer.append(systemData.freespaceSystem());
+        writer.append(systemData().freespaceSystem());
         _stream.ensureFreespaceSlot();
-        YInt.writeInt(systemData.freespaceAddress(), writer);
-        YInt.writeInt(systemData.converterVersion(), writer);
-        YInt.writeInt(systemData.uuidIndexId(), writer);
+        YInt.writeInt(systemData().freespaceAddress(), writer);
+        YInt.writeInt(systemData().converterVersion(), writer);
+        YInt.writeInt(systemData().uuidIndexId(), writer);
 		writer.write();
 		writePointer();
 	}
