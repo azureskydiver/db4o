@@ -14,6 +14,9 @@ public class TimerFileLockDisabled  extends TimerFileLock{
     public void checkOpenTime() {
     }
 
+    public void close() {
+    }
+    
     public boolean lockFile() {
         return false;
     }
@@ -25,7 +28,7 @@ public class TimerFileLockDisabled  extends TimerFileLock{
     public void run() {
     }
 
-    public void setOpenTimeAddress(int address, int offset) {
+    public void setAddresses(int baseAddress, int openTimeOffset, int accessTimeOffset) {
     }
 
     public void start() {
@@ -36,5 +39,6 @@ public class TimerFileLockDisabled  extends TimerFileLock{
 
     public void writeOpenTime() {
     }
+
     
 }
