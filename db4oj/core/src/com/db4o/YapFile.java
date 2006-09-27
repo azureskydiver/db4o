@@ -106,7 +106,7 @@ public abstract class YapFile extends YapStream {
     }
     
     private void newSystemData(byte freespaceSystem){
-        _systemData = new SystemData(this);
+        _systemData = new SystemData();
         _systemData.stringEncoding(configImpl().encoding());
         _systemData.freespaceSystem(freespaceSystem);
     }
@@ -710,7 +710,7 @@ public abstract class YapFile extends YapStream {
         // FIXME: blocksize should be already valid in FileHeader
         YapWriter writer = getWriter(i_systemTrans, 0, _fileHeader.length());
         
-        _fileHeader.writeFixedPart(this, shuttingDown, writer, blockSize(), classCollection().getID(), freespaceID);
+        _fileHeader.writeFixedPart(shuttingDown, writer, blockSize(), classCollection().getID(), freespaceID);
         
         if(shuttingDown){
             ensureLastSlotWritten();

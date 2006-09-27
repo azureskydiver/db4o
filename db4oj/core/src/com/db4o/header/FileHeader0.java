@@ -65,15 +65,11 @@ public class FileHeader0 extends FileHeader {
         file.blockSize(blockSize);
         file.setRegularEndAddress(file.fileLength());
         
-        _configBlock = new YapConfigBlock(file);
-        
-        SystemData systemData = file.systemData();
-
-        _configBlock.read(systemData, reader.readInt());
-        startTimerFileLock(file);
+        _configBlock = YapConfigBlock.forExistingFile(file, reader.readInt());
 
         skipConfigurationLockTime(reader);
-        
+
+        SystemData systemData = file.systemData();
         systemData.classCollectionID(reader.readInt());
         systemData.freespaceID(reader.readInt());
     }
@@ -105,13 +101,8 @@ public class FileHeader0 extends FileHeader {
 
     public void initNew(YapFile file) throws IOException {
         file.systemData().converterVersion(Converter.VERSION);
-        _configBlock = new YapConfigBlock(file);
-        startTimerFileLock(file);
+        _configBlock = YapConfigBlock.forNewFile(file);
         initBootRecord(file);
-    }
-    
-    private void startTimerFileLock(YapFile file) throws IOException{
-        file.systemData().timerFileLock().start();
     }
     
     private void initBootRecord(YapFile file){
@@ -131,10 +122,6 @@ public class FileHeader0 extends FileHeader {
         return _configBlock.getTransactionToCommit();
     }
 
-    public int transactionPointerAddress() {
-        return _configBlock.address();
-    }
-
     public void writeTransactionPointer(Transaction trans, int address) {
         YapWriter bytes = new YapWriter(trans,
             _configBlock.address(), YapConst.INT_LENGTH * 2);
@@ -150,6 +137,9 @@ public class FileHeader0 extends FileHeader {
     }
 
     public boolean seekForTimeLock(IoAdapter file) throws IOException {
+        if(_configBlock == null){
+            return false;
+        }
         if(_configBlock.address() == 0){
             return false;
         }
@@ -165,11 +155,11 @@ public class FileHeader0 extends FileHeader {
         return LENGTH;
     }
 
-    public void writeFixedPart(YapFile file, boolean shuttingDown, YapWriter writer, byte blockSize_, int classCollectionID, int freespaceID) {
+    public void writeFixedPart(boolean shuttingDown, YapWriter writer, byte blockSize_, int classCollectionID, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append(blockSize_);
         writer.writeInt(_configBlock.address());
-        writer.writeInt(openTimeToWrite(file, shuttingDown));
+        writer.writeInt(openTimeToWrite(shuttingDown));
         writer.writeInt(classCollectionID);
         writer.writeInt(freespaceID);
         if (Debug.xbytes && Deploy.overwrite) {
@@ -178,12 +168,12 @@ public class FileHeader0 extends FileHeader {
         writer.write();
     }
     
-    private int openTimeToWrite(YapFile file, boolean shuttingDown){
-        return shuttingDown ? 0 : (int)file.systemData().timerFileLock().openTime();
+    private int openTimeToWrite(boolean shuttingDown){
+        return shuttingDown ? 0 : (int)_configBlock.openTime();
     }
 
     public void writeVariablePart1(YapFile file) {
-        _configBlock.write(file.systemData());
+        _configBlock.write();
     }
     
     public void writeVariablePart2(YapFile file) {
