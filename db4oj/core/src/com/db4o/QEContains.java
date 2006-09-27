@@ -7,8 +7,8 @@ package com.db4o;
  */
 public class QEContains extends QEStringCmp
 {
-	public QEContains(boolean caseSensitive) {
-		super(caseSensitive);
+	public QEContains(boolean caseSensitive_) {
+		super(caseSensitive_);
 	}
 
 	protected boolean compareStrings(String candidate, String constraint) {

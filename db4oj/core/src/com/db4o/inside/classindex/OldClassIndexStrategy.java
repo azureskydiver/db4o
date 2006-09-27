@@ -176,7 +176,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		}
 	}
 
-	private int idFromValue(Object value) {
+	public int idFromValue(Object value) {
 		return ((TreeInt) value)._key;
 	}
 
