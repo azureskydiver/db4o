@@ -36,7 +36,7 @@ public abstract class Debug extends Debug4 {
 
     public static final boolean nio = true;
     
-    static final boolean lockFile = true;
+    public static final boolean lockFile = true;
 
     static YapFile serverStream;
     static YapClient clientStream;

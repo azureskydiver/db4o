@@ -46,7 +46,7 @@ public class YLong extends YapJavaClass
 		return new Long(readLong(a_bytes));
 	}
 	
-	static final long readLong(YapReader a_bytes){
+	public static final long readLong(YapReader a_bytes){
 		long l_return = 0;
 		if (Deploy.debug){
 			a_bytes.readBegin(YapConst.YAPLONG);
@@ -70,7 +70,7 @@ public class YLong extends YapJavaClass
 	    writeLong(((Long)a_object).longValue(), a_bytes);
 	}
 	
-	static final void writeLong(long a_long, YapReader a_bytes){
+	public static final void writeLong(long a_long, YapReader a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPLONG);
 			if(Deploy.debugLong){

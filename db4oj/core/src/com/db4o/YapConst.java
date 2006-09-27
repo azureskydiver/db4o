@@ -53,7 +53,7 @@ public final class YapConst
 
 	public static final int	INT_LENGTH	= INTEGER_BYTES + ADDED_LENGTH;
 	public static final int	ID_LENGTH		= INT_LENGTH;
-	static final int	LONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
+	public static final int	LONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
 	
 	static final int	WRITE_LOOP			= (INTEGER_BYTES - 1) * 8;
 	
@@ -98,7 +98,7 @@ public final class YapConst
 	static final byte	UNICODE = (byte)2;
 
 	// Timings
-	static final int LOCK_TIME_INTERVAL = 1000;
+	public static final int LOCK_TIME_INTERVAL = 1000;
 	static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 5000;  // jump out of the loop every 5 seconds
 	static final int CLIENT_SOCKET_TIMEOUT = 300000;  // 5 minutes response time at the client side
 	static final int CONNECTION_TIMEOUT = Debug.longTimeOuts ? 1000000: 180000;  // 1 minute until we start pinging dead or blocking clients

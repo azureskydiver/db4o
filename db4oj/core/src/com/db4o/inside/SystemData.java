@@ -2,7 +2,9 @@
 
 package com.db4o.inside;
 
+import com.db4o.*;
 import com.db4o.ext.Db4oDatabase;
+import com.db4o.header.*;
 
 /**
  * @exclude
@@ -26,6 +28,12 @@ public class SystemData {
     private byte _stringEncoding;
 
     private int _uuidIndexId;
+    
+    private final TimerFileLock _timerFileLock;
+    
+    public SystemData(YapFile file){
+        _timerFileLock = TimerFileLock.forFile(file);
+    }
     
     public int classCollectionID() {
         return _classCollectionID;
@@ -89,6 +97,10 @@ public class SystemData {
     
     public void stringEncoding(byte encodingByte){
         _stringEncoding = encodingByte; 
+    }
+    
+    public TimerFileLock timerFileLock(){
+        return _timerFileLock;
     }
 
     public int uuidIndexId(){

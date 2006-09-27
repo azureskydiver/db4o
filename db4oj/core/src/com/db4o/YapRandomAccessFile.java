@@ -322,7 +322,7 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    boolean writeAccessTime() throws IOException {
+    public boolean writeAccessTime() throws IOException {
         
         if (!needsLockFileThread()) {
             return true;
@@ -342,17 +342,19 @@ public class YapRandomAccessFile extends YapFile {
             }
             
             // FIXME: All logic to lock file should be fully in FileHeader class
-
+            
             long lockTime = System.currentTimeMillis();
             if (Deploy.debug) {
                 YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.LONG_LENGTH);
                 YLong.writeLong(lockTime, lockBytes);
-                _fileHeader.seekForTimeLock(i_timerFile);
-                i_timerFile.write(lockBytes._buffer);
+                if(_fileHeader.seekForTimeLock(i_timerFile)){
+                    i_timerFile.write(lockBytes._buffer);
+                }
             } else {
                 YLong.writeLong(lockTime, i_timerBytes);
-                _fileHeader.seekForTimeLock(i_timerFile);
-                i_timerFile.write(i_timerBytes);
+                if(_fileHeader.seekForTimeLock(i_timerFile)){
+                    i_timerFile.write(i_timerBytes);
+                }
             }
         }
         return true;
