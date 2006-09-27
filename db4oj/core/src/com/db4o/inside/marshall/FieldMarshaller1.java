@@ -1,8 +1,9 @@
-/* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
+		/* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.btree.*;
 
 /**
  * @exclude
@@ -54,4 +55,19 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return  len + BTREE_ID;
     }
 
+    public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,
+    		YapReader source, YapReader target, IDMapping mapping)
+    		throws CorruptionException {
+    	super.defrag(yapClass, yapField, sio, source, target, mapping);
+//    	BTree index = yapField.getIndex(null);
+//    	if(index!=null) {
+//    		index.defragIndex(source, target, mapping);
+//    	}
+//    	else {
+//    		source.incrementOffset(YapConst.INT_LENGTH);
+//    		target.incrementOffset(YapConst.INT_LENGTH);
+//    	}
+    	source.incrementOffset(YapConst.INT_LENGTH);
+    	target.writeInt(0);
+    }
 }

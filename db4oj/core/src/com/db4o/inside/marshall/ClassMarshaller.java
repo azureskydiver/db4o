@@ -139,8 +139,11 @@ public abstract class ClassMarshaller {
 		int ancestorNewId = mapping.mappedID(ancestorOldID);
 		target.writeInt(ancestorNewId);
 
-		yapClass.index().defragReference(yapClass, source, target, mapping,classIndexID);
+		source.incrementOffset(YapConst.INT_LENGTH);
+		target.writeInt(classIndexID);
 		
+		
+		// field length
 		source.incrementOffset(YapConst.INT_LENGTH);
 		target.incrementOffset(YapConst.INT_LENGTH);
 		
