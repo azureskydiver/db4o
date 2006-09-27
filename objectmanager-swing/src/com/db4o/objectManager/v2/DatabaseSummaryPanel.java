@@ -1,28 +1,18 @@
 package com.db4o.objectManager.v2;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.db4o.objectManager.v2.custom.BorderedFormPanel;
+import com.db4o.objectManager.v2.custom.BorderedPanel;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.db4o.objectmanager.model.Db4oFileConnectionSpec;
 import com.db4o.objectmanager.model.Db4oSocketConnectionSpec;
-import com.db4o.objectManager.v2.custom.BorderedPanel;
-import com.db4o.objectManager.v2.custom.BorderedFormPanel;
-import com.db4o.reflect.ReflectClass;
+import com.jgoodies.forms.factories.Borders;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.border.LineBorder;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Color;
-import java.util.List;
 
 /**
  * User: treeder
@@ -49,7 +39,7 @@ public class DatabaseSummaryPanel extends JPanel {
         box.add(buildConnectionInfo());
         box.add(buildMainDatabaseStats());
         box.add(buildClassStats());
-        box.add(buildReplicationStats());
+        //box.add(buildReplicationStats());
 
         return box;
     }
@@ -101,7 +91,7 @@ public class DatabaseSummaryPanel extends JPanel {
         return tableModel;
     }
 
-    private Component buildReplicationStats() {
+    /*private Component buildReplicationStats() {
         BorderedFormPanel builder = new BorderedFormPanel("Replication Info");
 
         builder.append("To/From Database: ", new JLabel("hostname or filename if possible"));
@@ -110,6 +100,6 @@ public class DatabaseSummaryPanel extends JPanel {
         builder.append("Last Replication: ", new JLabel("Date"));
 
         return builder.getPanel();
-    }
+    }*/
 
 }

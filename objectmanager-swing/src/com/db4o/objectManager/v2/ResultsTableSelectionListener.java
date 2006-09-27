@@ -38,6 +38,9 @@ public class ResultsTableSelectionListener extends MouseAdapter {
         /*Db4oUUID uuid = model.getObjectContainer().ext().getObjectInfo(value).getUUID();
         System.out.println("object uuid: " + uuid);
         */
+         if(col == ResultsTableModel.COL_TREE){
+            queryResultsPanel.showObjectTree(model.getRowObject(row));
+        }
         if(e.getClickCount() == 2 && value instanceof CollectionValue){
             // show collection on double click
             queryResultsPanel.showObjectTree(model.getRowObject(row));

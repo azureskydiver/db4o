@@ -176,7 +176,7 @@ public class MainPanel extends JPanel {
     ObjectContainer getObjectContainer() {
         if (objectContainer == null) {
             try {
-                objectContainer = ConnectionHelper.connect(connectionSpec);
+                objectContainer = ConnectionHelper.connect(this, connectionSpec);
             } catch (IOException e) {
                 e.printStackTrace();
             }

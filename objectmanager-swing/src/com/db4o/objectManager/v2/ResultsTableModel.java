@@ -10,6 +10,7 @@ import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.*;
 import java.util.List;
 import java.util.Date;
 import java.util.ArrayList;
@@ -31,7 +32,10 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
     private static final int NUM_IN_WINDOW = 100;
     private int windowStartIndex = -1;
     private int windowEndIndex = -1;
-    private int extraColumns = 1; // for row counter
+    private int extraColumns = 2; // for row counter
+    private static final int COL_ROW_NUMBER = 1;
+    static final int COL_TREE = 0;
+    private Icon treeIcon = ResourceManager.createImageIcon("icons/16x16/text_tree.png", "View Object Graph");
 
     public ResultsTableModel(String query, QueryResultsPanel queryResultsPanel) throws Exception {
         this.query = query;
@@ -71,7 +75,8 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
 
     public Object getValueAt(int row, int column) {
         //if(row > 0) System.out.println("getting row: " + row);
-        if (column == 0) return row;
+        if(column == COL_TREE) return treeIcon;
+        if (column == COL_ROW_NUMBER) return row;
         Result result;
         if (row < NUM_IN_TOP) {
             result = (Result) topResults.get(row);
@@ -87,7 +92,7 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
         }
         Object ret = null;
         try {
-            ret = result.getObject(column - 1);
+            ret = result.getObject(column - extraColumns);
             if (ret instanceof Collection) {
                 Collection c = (Collection) ret;
                 return new CollectionValue("Collection: " + c.size() + " items");
@@ -128,7 +133,7 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
     }
 
     public boolean isCellEditable(int row, int col) {
-        if (col == 0) return false;
+        if (col < extraColumns) return false;
         Class c = getColumnClass(col);
         return ReflectHelper2.isEditable(c);
     }
@@ -142,24 +147,26 @@ public class ResultsTableModel extends AbstractTableModel implements TableModel 
         //System.out.println("base object: " + o);
         ReflectClass rc = results.getReflector().forObject(o);
         ReflectField[] rfs = ReflectHelper.getDeclaredFields(rc);
-        if (rfs.length > col - 1) {
-            ReflectField rf = rfs[col - 1];
+        if (rfs.length > col - extraColumns) {
+            ReflectField rf = rfs[col - extraColumns];
             rf.setAccessible();
             rf.set(o, value);
             //System.out.println("Set value on field: " + rf.getName() + " " + rf.getFieldType() + " new value: " + rf.get(o));
             queryResultsPanel.addObjectToBatch(o);
         }
-        super.setValueAt(value, row, col - 1);
+        super.setValueAt(value, row, col - extraColumns);
         fireTableCellUpdated(row, col);
     }
 
     public String getColumnName(int column) {
-        if (column == 0) return "Row";
-        return results.getMetaData().getColumnName(column - 1);
+        if(column == COL_TREE) return " "; // tree icons
+        if (column == COL_ROW_NUMBER) return "Row";
+        return results.getMetaData().getColumnName(column - extraColumns);
     }
 
     public Class getColumnClass(int c) {
-        if (c == 0) return Number.class;
+        if(c == COL_TREE) return Icon.class;    
+        if (c == COL_ROW_NUMBER) return Number.class;
         for (int i = 0; i < results.size(); i++) {
             Object o = getValueAt(0, c);
             if (o != null) return o.getClass();

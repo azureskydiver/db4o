@@ -1,5 +1,7 @@
 package com.db4o.objectManager.v2;
 
+import com.db4o.objectManager.v2.query.QueryBuilder;
+
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.*;
@@ -32,13 +34,14 @@ public class ClassTreeListener extends MouseAdapter {
             if (e.getClickCount() == 1) {
 
             } else if (e.getClickCount() == 2) {
+                String nodeInfo = (String) node.getUserObject();
                 if (!node.isLeaf() && !node.isRoot()) {
-                    String nodeInfo = (String) node.getUserObject();
-                    queryText.setText("FROM " + nodeInfo);
-
+                    queryText.setText(QueryBuilder.addClass(queryText.getText(), nodeInfo));
                     queryBarPanel.showClassSummary(nodeInfo);
                 } else {
-                    
+                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
+                    String nodeObject = (String) parent.getUserObject();
+                    queryText.setText(QueryBuilder.addField(queryText.getText(), nodeObject, nodeInfo));
                 }
             }
         }

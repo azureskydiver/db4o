@@ -39,6 +39,7 @@ import com.jgoodies.forms.factories.Borders;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -97,11 +98,9 @@ final class QueryResultsPanel extends JPanel {
         } catch (Exception e) {
             // don't display if there was an error
         }
-        /*
-        todo: should grow depending on avg column length
-        TableColumn col = resultsTable.getColumnModel().getColumn(1);
-        int width = 200;
-        col.setPreferredWidth(width);*/
+        // todo: should grow columns depending on avg column length
+        TableColumn col = resultsTable.getColumnModel().getColumn(ResultsTableModel.COL_TREE);
+        col.setPreferredWidth(20); // icon cell
     }
 
     /**
