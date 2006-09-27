@@ -6,10 +6,11 @@ package com.db4o;
  * @exclude
  */
 public abstract class QEStringCmp extends QEAbstract {
-	private boolean caseSensitive;
+    
+	public boolean caseSensitive;
 
 	public QEStringCmp(boolean caseSensitive_) {
-		this.caseSensitive = caseSensitive_;
+		caseSensitive = caseSensitive_;
 	}
 
 	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
