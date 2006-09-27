@@ -657,7 +657,7 @@ public abstract class YapFile extends YapStream {
         }
     }
 
-    public abstract boolean writeAccessTime() throws IOException;
+    public abstract boolean writeAccessTime(int address, int offset, long time) throws IOException;
 
     public abstract void writeBytes(YapReader a_Bytes, int address, int addressOffset);
 

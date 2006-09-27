@@ -276,7 +276,7 @@ public final class YapConfigBlock {
     
     private void addressChanged(int address){
         _address = address;
-        timerFileLock().setOpenTimeAddress(_address, OPEN_TIME_OFFSET);
+        timerFileLock().setAddresses(_address, OPEN_TIME_OFFSET, ACCESS_TIME_OFFSET);
     }
 	
 	private void writePointer() {
@@ -293,6 +293,10 @@ public final class YapConfigBlock {
     
     public int address(){
         return _address;
+    }
+
+    public void close() throws IOException {
+        timerFileLock().close();
     }
 	
 }

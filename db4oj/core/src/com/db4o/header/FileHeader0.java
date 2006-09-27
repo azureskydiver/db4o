@@ -7,7 +7,6 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.inside.*;
 import com.db4o.inside.convert.*;
-import com.db4o.io.*;
 
 /**
  * @exclude
@@ -136,17 +135,6 @@ public class FileHeader0 extends FileHeader {
         bytes.write();
     }
 
-    public boolean seekForTimeLock(IoAdapter file) throws IOException {
-        if(_configBlock == null){
-            return false;
-        }
-        if(_configBlock.address() == 0){
-            return false;
-        }
-        file.blockSeek(_configBlock.address(), YapConfigBlock.ACCESS_TIME_OFFSET);
-        return true;
-    }
-
     public MetaIndex getUUIDMetaIndex() {
         return _bootRecord.getUUIDMetaIndex();
     }
@@ -178,6 +166,10 @@ public class FileHeader0 extends FileHeader {
     
     public void writeVariablePart2(YapFile file) {
         _bootRecord.write(file);
+    }
+
+    public void close() throws IOException {
+        _configBlock.close();
     }
 
 }

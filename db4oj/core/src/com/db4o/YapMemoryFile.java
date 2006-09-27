@@ -120,7 +120,7 @@ public class YapMemoryFile extends YapFile {
     public void syncFiles() {
     }
 
-    public boolean writeAccessTime() {
+    public boolean writeAccessTime(int address, int offset, long time) {
         return true;
     }
 

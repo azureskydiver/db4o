@@ -21,9 +21,13 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     private final long _opentime;
     
-    private int _openTimeAddress;
+    private int _baseAddress;
     
     private int _openTimeOffset;
+
+    private int _accessTimeOffset;
+    
+    private boolean _closed = false;
     
     
     public TimerFileLockEnabled(YapFile file) {
@@ -52,6 +56,11 @@ public class TimerFileLockEnabled extends TimerFileLock{
         writeOpenTime();
     }
     
+    public void close() throws IOException {
+        writeAccessTime(true);
+        _closed = true;
+    }
+    
     private YapWriter getWriter(int address, int offset, int length) {
         YapWriter writer = _file.getWriter(_file.getTransaction(), address, length);
         writer.moveForward(offset);
@@ -75,10 +84,10 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
 
     private YapWriter openTimeIO(){
-        if(_openTimeAddress == 0){
+        if(_baseAddress == 0){
             return null;
         }
-        YapWriter writer = getWriter(_openTimeAddress,  _openTimeOffset, YapConst.LONG_LENGTH);
+        YapWriter writer = getWriter(_baseAddress,  _openTimeOffset, YapConst.LONG_LENGTH);
         if (Debug.xbytes) {
             writer.setID(YapConst.IGNORE_ID);
         }
@@ -89,20 +98,24 @@ public class TimerFileLockEnabled extends TimerFileLock{
         Thread t = Thread.currentThread();
         t.setName("db4o file lock");
         try{
-            while(_file.writeAccessTime()){
+            while(writeAccessTime(false)){
                 Cool.sleepIgnoringInterruption(YapConst.LOCK_TIME_INTERVAL);
+                if(_closed){
+                    break;
+                }
             }
         }catch(IOException e){
         }
     }
 
-    public void setOpenTimeAddress(int address, int offset){
-        _openTimeAddress = address;
-        _openTimeOffset = offset;
+    public void setAddresses(int baseAddress, int openTimeOffset, int accessTimeOffset){
+        _baseAddress = baseAddress;
+        _openTimeOffset = openTimeOffset;
+        _accessTimeOffset = accessTimeOffset;
     }
-
+    
     public void start() throws IOException{
-        _file.writeAccessTime();
+        writeAccessTime(false);
         _file.syncFiles();
         checkOpenTime();
         // TODO: Thread could be a daemon.
@@ -114,6 +127,15 @@ public class TimerFileLockEnabled extends TimerFileLock{
         // TODO: More security is possible here to make this time unique
         // to other processes. 
     }
+    
+    private boolean writeAccessTime(boolean closing) throws IOException{
+        if(_baseAddress < 1){
+            return true;
+        }
+        long time = closing ? 0 : System.currentTimeMillis();
+        return _file.writeAccessTime(_baseAddress, _accessTimeOffset, time);
+    }
+
 
     public void writeHeaderLock(){
         YapWriter writer = headerLockIO();

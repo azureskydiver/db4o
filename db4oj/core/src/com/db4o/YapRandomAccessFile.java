@@ -119,14 +119,7 @@ public class YapRandomAccessFile extends YapFile {
                     try {
                         i_file.close();
                         i_file = null;
-                        if (needsLockFileThread() && Debug.lockFile) {
-                            YapWriter lockBytes = new YapWriter(i_systemTrans,
-                                YapConst.LONG_LENGTH);
-                            YLong.writeLong(0, lockBytes);
-                            _fileHeader.seekForTimeLock(i_timerFile);
-                            i_timerFile.write(lockBytes._buffer);
-                            i_timerFile.close();
-                        }
+                        _fileHeader.close();
                     } catch (Exception e) {
                         i_file = null;
                         Exceptions4.throwRuntimeException(11, e);
@@ -322,42 +315,22 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    public boolean writeAccessTime() throws IOException {
-        
-        if (!needsLockFileThread()) {
-            return true;
-        }
-
-        if (!Debug.lockFile) {
-            return true;
-        }
-
+    public boolean writeAccessTime(int address, int offset, long time) throws IOException {
         synchronized (i_fileLock) {
-            if (i_file == null) {
-                return false;
-            }
-            
-            if(_fileHeader == null){
-                return false;
-            }
-            
-            // FIXME: All logic to lock file should be fully in FileHeader class
-            
-            long lockTime = System.currentTimeMillis();
+            i_timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
                 YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.LONG_LENGTH);
-                YLong.writeLong(lockTime, lockBytes);
-                if(_fileHeader.seekForTimeLock(i_timerFile)){
-                    i_timerFile.write(lockBytes._buffer);
-                }
+                YLong.writeLong(time, lockBytes);
+                i_timerFile.write(lockBytes._buffer);
             } else {
-                YLong.writeLong(lockTime, i_timerBytes);
-                if(_fileHeader.seekForTimeLock(i_timerFile)){
-                    i_timerFile.write(i_timerBytes);
-                }
+                YLong.writeLong(time, i_timerBytes);
+                i_timerFile.write(i_timerBytes);
             }
+            if(i_file == null){
+                i_timerFile.close();
+            }
+            return i_file != null;
         }
-        return true;
     }
 
     public void writeBytes(YapReader a_bytes, int address, int addressOffset) {

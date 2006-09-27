@@ -34,12 +34,14 @@ public abstract class TimerFileLock implements Runnable{
 
     public abstract long openTime();
 
-    public abstract void setOpenTimeAddress(int address, int offset);
+    public abstract void setAddresses(int baseAddress, int openTimeOffset, int accessTimeOffset);
 
     public abstract void start() throws IOException;
 
     public abstract void writeHeaderLock();
 
     public abstract void writeOpenTime();
+
+    public abstract void close() throws IOException;
 
 }
