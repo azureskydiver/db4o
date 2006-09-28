@@ -452,22 +452,28 @@
 		</exec>
 	</target>
 	
-	<target name="compiletestsnet" depends="compiledllnet">	
-		
+	<target name="compile-db4ounit-libs">
 		<csc srcdir="${dir.n}/Db4oUnit/src"
 				targettype="library"
-				destfile="${dir.dist.dll.net}/Db4oUnit.dll">
+				destfile="${output.dir}/Db4oUnit.dll">
 		</csc>
 				
 		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
 			targettype="library"
-			destfile="${dir.dist.dll.net}/Db4oUnit.Extensions.dll">
-			<reference dir="${dir.dist.dll.net}/">
+			destfile="${output.dir}/Db4oUnit.Extensions.dll">
+			<reference dir="${output.dir}/">
 				<include name="${file.name.dll}" />
 				<include name="Db4oUnit.dll" />
 				<exclude name="Db4oUnit.Extensions.dll" />
 			</reference>
 		</csc>
+	</target>
+	
+	<target name="compiletestsnet" depends="compiledllnet">	
+		
+		<antcall target="compile-db4ounit-libs">
+			<param name="output.dir" value="${dir.dist.dll.net}" />
+		</antcall>
 		
 		<csc srcdir="${dir.n.test}/src"
 			targettype="exe"
@@ -515,6 +521,11 @@
 
 	<target name="do-compiletestsmono">
 		<mkdir dir="${dir.dist.dll.mono}"/>
+		
+		<antcall target="compile-db4ounit-libs">
+			<param name="output.dir" value="${dir.dist.dll.mono}" />
+		</antcall>
+		
 		<csc srcdir="${src.dir}"
 			targettype="exe"
 			destfile="${file.exe.tests.mono}"
@@ -529,6 +540,8 @@
 			<exclude name="**/TestCatSpeed.cs" />
 			
 			<reference dir="${dir.dist.dll.mono}">
+				<include name="Db4oUnit.dll" />
+				<include name="Db4oUnit.Extensions.dll" />
 				<include name="${file.name.dll}" />
 				<include name="${file.name.dll.tools.mono}" />
 			</reference>
@@ -1432,9 +1445,9 @@
 				<arg path="${dependencies.jar}" />
 				<arg value="@sharpen-db4ounit-options" />
 				
-				<arg value="-methodMapping" />
-				<arg value="com.db4o.test.lib.File4.copy" />
-				<arg value="System.IO.File.Copy" />
+				<arg value="-typeMapping" />
+				<arg value="com.db4o.test.lib.File4" />
+				<arg value="System.IO.File" />
 				
 				<arg value="-methodMapping" />
 				<arg value="com.db4o.reflect.generic.GenericReflector.forClass" />
