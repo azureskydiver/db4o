@@ -1,12 +1,27 @@
-﻿/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
+/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
 
 using System;
+using System.IO;
 using System.Threading;
 
 namespace j4o.lang 
 {
 	public class JavaSystem 
 	{
+		public static TextWriter Out =
+#if CF_1_0
+			CompactFramework1Console.Out;
+#else
+			Console.Out;
+#endif
+
+		public static TextWriter Err =
+#if CF_1_0
+			CompactFramework1Console.Error;
+#else
+			Console.Error;
+#endif
+
 		public static long CurrentTimeMillis() 
 		{
 			return j4o.util.Date.ToJavaMilliseconds(DateTime.Now.ToUniversalTime());
@@ -108,7 +123,7 @@ namespace j4o.lang
 
 		public static void PrintStackTrace(Exception exception) 
 		{
-			PrintStackTrace(exception, com.db4o.Platform4.Error);
+			PrintStackTrace(exception, j4o.lang.JavaSystem.Out);
 		}
 
 		public static void PrintStackTrace(Exception exception, System.IO.TextWriter writer) 

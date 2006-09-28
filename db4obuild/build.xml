@@ -1505,6 +1505,14 @@
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.events.EventArgs" />
 				<arg value="System.EventArgs" />
+				
+				<arg value="-propertyMapping" />
+				<arg value="java.lang.System.out" />
+				<arg value="j4o.lang.JavaSystem.Out" />
+				
+				<arg value="-propertyMapping" />
+				<arg value="java.lang.System.err" />
+				<arg value="j4o.lang.JavaSystem.Err" />
 			</args>
 		</sharpen>
 		
