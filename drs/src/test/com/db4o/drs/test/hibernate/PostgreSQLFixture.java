@@ -10,7 +10,7 @@ public class PostgreSQLFixture extends RdbmsFixture {
 	}
 
 	public void open()  {
-		config = createConfig().configure("com/db4o/test/drs/hibernate/PostgreSQL.cfg.xml");
+		config = createConfig().configure("com/db4o/drs/test/hibernate/PostgreSQL.cfg.xml");
 		_provider = new HibernateReplicationProviderImpl(config, _name);
 	}
 }
