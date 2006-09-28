@@ -12,10 +12,42 @@ import com.db4o.*;
  */
 public class FileHeader1 extends FileHeader {
     
+    private static final byte[] SIGNATURE = {'d', 'b', '4', 'o'};
     
+    private static byte VERSION = 1;
+    
+    private static final int HEADER_LOCK_OFFSET = SIGNATURE.length + 1;
+    private static final int TRANSACTION_POINTER_OFFSET = HEADER_LOCK_OFFSET + YapConst.INT_LENGTH; 
+    
+    static final int LENGTH = HEADER_LOCK_OFFSET + (YapConst.INT_LENGTH * 7);
+    
+    // The header format is:
 
-    public void writeVariablePart1(YapFile file) {
+    // New format
+    // -------------------------
+    // (byte) 'd'
+    // (byte) 'b'
+    // (byte) '4'
+    // (byte) 'o'
+    // (byte) headerVersion
+    // (int) headerLock
+    // (int) Transaction pointer 1
+    // (int) Transaction pointer 2
+    // (int) blockSize
+    // (int) classCollectionID
+    // (int) freespaceID
+    // (int) variablePartID
+    
+    private TimerFileLock _timerFileLock;
+    
+    
+    private TimerFileLock timerFileLock(){
+        return _timerFileLock;
+    }
+
+    private int variablePartID() {
         // TODO Auto-generated method stub
+        return 0;
     }
 
     public void close() throws IOException {
@@ -24,22 +56,34 @@ public class FileHeader1 extends FileHeader {
     }
 
     public void initNew(YapFile file) throws IOException {
-        // TODO Auto-generated method stub
+        newTimerFileLock(file);
         
+        
+    }
+    
+    protected FileHeader newOnSignatureMatch(YapFile file, YapReader reader) {
+        if(signatureMatches(reader, SIGNATURE, VERSION)){
+            return new FileHeader1();
+        }
+        return null;
+    }
+
+    private void newTimerFileLock(YapFile file) {
+        _timerFileLock = TimerFileLock.forFile(file);
     }
 
     public Transaction interruptedTransaction() {
+        
         // TODO Auto-generated method stub
         return null;
     }
 
     public int length() {
-        // TODO Auto-generated method stub
-        return 0;
+        return LENGTH;
     }
 
-    public void readFixedPart(YapFile file) throws IOException {
-        // TODO Auto-generated method stub
+    public void readFixedPart(YapFile file, YapReader reader) throws IOException {
+        newTimerFileLock(file);
         
     }
 
@@ -47,21 +91,28 @@ public class FileHeader1 extends FileHeader {
         // TODO Auto-generated method stub
         
     }
-
-    public void writeFixedPart(boolean shuttingDown, YapWriter writer, byte b, int id,
-        int freespaceID) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void writeTransactionPointer(Transaction systemTransaction, int address) {
-        // TODO Auto-generated method stub
-        
-    }
     
+    public void writeFixedPart(
+        boolean shuttingDown, YapWriter writer, int blockSize, int classCollectionId,int freespaceID) {
+        writer.append(SIGNATURE);
+        writer.append(VERSION);
+        writer.writeInt(openTimeToWrite(timerFileLock().openTime(), shuttingDown));
+        writer.writeInt(0);
+        writer.writeInt(0);
+        writer.writeInt(blockSize);
+        writer.writeInt(classCollectionId);
+        writer.writeInt(freespaceID);
+        writer.writeInt(variablePartID());
+    }
+
+    public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {
+        writeTransactionPointer(systemTransaction, transactionAddress, 0, TRANSACTION_POINTER_OFFSET);
+    }
+
     public void writeVariablePart(YapFile file, int part) {
         
     }
+
 
 
 }
