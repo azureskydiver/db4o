@@ -759,4 +759,16 @@ public class Transaction {
 			_participants.add(participant);
 		}
 	}
+    
+    public static Transaction readInterruptedTransaction(YapFile file, YapReader reader) {
+        int transactionID1 = reader.readInt();
+        int transactionID2 = reader.readInt();
+        if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
+            Transaction transaction = file.newTransaction(null);
+            transaction.setAddress(transactionID1);
+            return transaction;
+        }
+        return null;
+    }
+
 }

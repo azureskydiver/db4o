@@ -507,12 +507,12 @@ public abstract class YapFile extends YapStream {
             _fmChecker.start(0);
         }
         
+        _fileHeader.readVariablePart(this);
+        
         if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
             _freespaceManager = _freespaceManager.migrate(this, configImpl().freespaceSystem());
             _fileHeader.writeVariablePart(this, 1);
         }
-        
-        _fileHeader.readVariablePart(this);
         
         writeHeader(false);
         
