@@ -4,7 +4,6 @@ package com.db4o.drs.test;
 
 import com.db4o.*;
 import com.db4o.drs.*;
-import com.db4o.drs.db4o.Db4oReplicationProvider;
 import com.db4o.drs.inside.*;
 import com.db4o.foundation.*;
 
@@ -88,10 +87,10 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 		_testCombination = 0;
 
-//		tstWithDeletedObjectsIn(_NONE);
+		tstWithDeletedObjectsIn(_NONE);
 		tstWithDeletedObjectsIn(_setA);
-//		tstWithDeletedObjectsIn(_setB);
-//		tstWithDeletedObjectsIn(_setBoth);
+		tstWithDeletedObjectsIn(_setB);
+		tstWithDeletedObjectsIn(_setBoth);
 
 		if (_intermittentErrors.length() > 0) {
 			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
@@ -204,12 +203,6 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 		clean();
 		
-		try {
-			reopen();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 	}
 
 	private void printProvidersContent(String msg) {
@@ -620,4 +613,3 @@ class Set4 {
 		return buf.toString();
 	}
 }
-
