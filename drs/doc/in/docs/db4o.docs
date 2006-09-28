@@ -12,8 +12,7 @@ database that originally created this ID.
 
 The replication system will use this version number to invisibly tell when an object was last replicated, ._
 and if any changes have been made to the object since it was last replicated. An object's version number ._
-indicates the last time an object was modified. It is the database version at the moment of the modification. The database version starts at zero ._
-and is incremented every time a transaction is commited.
+indicates the last time an object was modified. It is the database version at the moment of the modification. 
 
 .1 Simple Replication ..
 Now suppose we have opened two ObjectContainers from two different databases called ._
@@ -46,6 +45,9 @@ The replication.commit() call at the end is important. This line will save all o
 have made, and end any needed transactions. Forgetting to make this call will result in ._
 your replication changes being discarded when your application ends, or your ObjectContainers are ._
 closed.
+
+The #commit() calls also mark all objects as replicated. Therefore, changed/new objects that are not ._
+replicated in this session will be be marked as replicated.      
 
 .a ReplicatingExisting ..
 .1 Replicating Existing Data Files ..
