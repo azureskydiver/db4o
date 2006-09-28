@@ -737,8 +737,8 @@ public abstract class YapFile extends YapStream {
 
     public abstract void debugWriteXBytes(int a_address, int a_length);
 
-    YapWriter xBytes(int a_address, int a_length) {
-        YapWriter bytes = getWriter(i_systemTrans, a_address, a_length);
+    YapReader xBytes(int a_address, int a_length) {
+        YapReader bytes = getWriter(i_systemTrans, a_address, a_length);
         for (int i = 0; i < a_length; i++) {
             bytes.append(YapConst.XBYTE);
         }

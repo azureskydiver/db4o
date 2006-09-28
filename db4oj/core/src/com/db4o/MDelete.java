@@ -6,7 +6,7 @@ import com.db4o.foundation.network.YapSocket;
 
 final class MDelete extends MsgD {
 	final boolean processMessageAtServer(YapSocket sock) {
-		YapWriter bytes = this.getByteLoad();
+		YapReader bytes = this.getByteLoad();
 		YapStream stream = getStream();
 		synchronized (stream.i_lock) {
 			Object obj = stream.getByID1(getTransaction(), bytes.readInt());

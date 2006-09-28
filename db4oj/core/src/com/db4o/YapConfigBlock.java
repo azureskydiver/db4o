@@ -109,7 +109,7 @@ public final class YapConfigBlock {
         if(_stream.configImpl().encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new YapStringIO().write(fullpwd);
-                YapWriter encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
+                YapReader encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
                 encwriter.append(pwdbytes);
                 encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
                 _stream.i_handlers.decrypt(encwriter);
@@ -153,8 +153,8 @@ public final class YapConfigBlock {
             }
         }
         
-        YLong.readLong(reader); // open time 
-		long lastAccessTime = YLong.readLong(reader);
+        reader.readLong(); // open time 
+		long lastAccessTime = reader.readLong();
         
         systemData().stringEncoding(reader.readByte());
 		
@@ -230,9 +230,9 @@ public final class YapConfigBlock {
 			reader.moveForward(OPEN_TIME_OFFSET);
 			reader.read();
             
-			YLong.readLong(reader);  // open time
+			reader.readLong();  // open time
             
-			long currentAccessTime = YLong.readLong(reader);
+			long currentAccessTime = reader.readLong();
 			if((currentAccessTime > lastAccessTime) ){
 				throw new DatabaseFileLockedException();
 			}
@@ -257,7 +257,7 @@ public final class YapConfigBlock {
 		YapWriter writer = _stream.getWriter(_stream.i_trans, _address,LENGTH);
 		YInt.writeInt(LENGTH, writer);
         for (int i = 0; i < 2; i++) {
-            YLong.writeLong(timerFileLock().openTime(), writer);
+            writer.writeLong(timerFileLock().openTime());
         }
 		writer.append(systemData().stringEncoding());
 		YInt.writeInt(0, writer);

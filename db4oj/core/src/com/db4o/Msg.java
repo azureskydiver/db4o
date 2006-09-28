@@ -107,7 +107,7 @@ class Msg implements Cloneable {
 	 * dummy method to allow clean override handling
 	 * without casting
 	 */
-	YapWriter getByteLoad() {
+	YapReader getByteLoad() {
 		return null;
 	}
 
@@ -146,7 +146,7 @@ class Msg implements Cloneable {
 		return message;
 	}
 
-	Msg readPayLoad(Transaction a_trans, YapSocket sock, YapWriter reader)
+	Msg readPayLoad(Transaction a_trans, YapSocket sock, YapReader reader)
 		throws IOException {
 	    if(reader.readByte() == YapConst.SYSTEM_TRANS && a_trans.i_parentTransaction != null){
 	        a_trans = a_trans.i_parentTransaction;

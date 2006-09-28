@@ -29,7 +29,7 @@ class MsgD extends Msg{
 		}
 	}
 
-	YapWriter getByteLoad() {
+	YapReader getByteLoad() {
 		return _payLoad;
 	}
 
@@ -112,10 +112,10 @@ class MsgD extends Msg{
 	}
 	
 	final long readLong(){
-	    return YLong.readLong(_payLoad);
+	    return _payLoad.readLong();
 	}
 
-	final Msg readPayLoad(Transaction a_trans, YapSocket sock, YapWriter reader)
+	final Msg readPayLoad(Transaction a_trans, YapSocket sock, YapReader reader)
 		throws IOException {
 		int length = reader.readInt();
 		if((reader.readByte() == YapConst.SYSTEM_TRANS)  && (a_trans.i_parentTransaction != null)){
@@ -141,8 +141,8 @@ class MsgD extends Msg{
 		_payLoad.writeInt(aInt);
 	}
 	
-	final void writeLong(long aLong){
-	    YLong.writeLong(aLong, _payLoad);
+	final void writeLong(long l){
+        _payLoad.writeLong(l);
 	}
 
 	final void writeString(String aStr) {

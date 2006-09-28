@@ -279,7 +279,7 @@ public class GenericReflector implements Reflector, DeepClone {
 			return ret;
 		}
         
-		YapWriter classreader=_stream.readWriterByID(_trans,id);
+		YapReader classreader=_stream.readWriterByID(_trans,id);
 
 		ClassMarshaller marshaller = marshallerFamily()._class;
 		RawClassSpec spec=marshaller.readSpec(_trans, classreader);
@@ -311,7 +311,7 @@ public class GenericReflector implements Reflector, DeepClone {
 
 		GenericClass clazz = (GenericClass)_classByID.get(id);
 		
-		YapWriter classreader=_stream.readWriterByID(_trans,id);
+		YapReader classreader=_stream.readWriterByID(_trans,id);
 
 		ClassMarshaller classMarshaller = marshallerFamily()._class;
 		RawClassSpec classInfo=classMarshaller.readSpec(_trans, classreader);

@@ -94,7 +94,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
     
     abstract Object primitiveNull();
     
-    public boolean readArray(Object array, YapWriter reader) {
+    public boolean readArray(Object array, YapReader reader) {
         return false;
     }
 
@@ -168,7 +168,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     public abstract void write(Object a_object, YapReader a_bytes);
     
-    public boolean writeArray(Object array, YapWriter reader) {
+    public boolean writeArray(Object array, YapReader reader) {
         return false;
     }
 

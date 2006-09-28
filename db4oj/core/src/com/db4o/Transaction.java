@@ -63,7 +63,7 @@ public class Transaction {
         i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
     
-    private void appendSlotChanges(final YapWriter writer){
+    private void appendSlotChanges(final YapReader writer){
         
         if(i_parentTransaction != null){
             i_parentTransaction.appendSlotChanges(writer);

@@ -58,7 +58,7 @@ final class YDate extends YLong
         if(a_object == null){
             a_object = new Date(0);
         }
-		writeLong(((Date)a_object).getTime(), a_bytes);
+		a_bytes.writeLong(((Date)a_object).getTime());
 	}
     
     public Object current1(){

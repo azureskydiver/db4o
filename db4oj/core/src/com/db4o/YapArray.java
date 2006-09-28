@@ -109,7 +109,7 @@ public class YapArray extends YapIndependantType {
         
         if (address > 0) {
             Transaction trans = a_bytes.getTransaction();
-            YapWriter bytes =
+            YapReader bytes =
                 a_bytes.getStream().readWriterByAddress(trans, address, length);
             if (bytes != null) {
                 if (Deploy.debug) {

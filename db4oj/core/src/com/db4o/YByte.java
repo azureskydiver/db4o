@@ -62,7 +62,7 @@ final class YByte extends YapJavaClass
 		}
 	}
 	
-	public boolean readArray(Object array, YapWriter reader) {
+	public boolean readArray(Object array, YapReader reader) {
         if(array instanceof byte[]){
             reader.readBytes((byte[])array);
             return true;
@@ -71,7 +71,7 @@ final class YByte extends YapJavaClass
         return false;
 	}
 
-    public boolean writeArray(Object array, YapWriter writer) {
+    public boolean writeArray(Object array, YapReader writer) {
         if(array instanceof byte[]){
             writer.append((byte[])array);
             return true;

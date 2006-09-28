@@ -41,7 +41,7 @@ public final class YDouble extends YLong
 	}
 	
 	public void write(Object a_object, YapReader a_bytes){
-		writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()), a_bytes);
+		a_bytes.writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()));
 	}
 	
 	

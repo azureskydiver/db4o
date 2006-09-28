@@ -847,7 +847,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return arr;
     }
 
-    final YapWriter getWriter(Transaction a_trans, int a_length) {
+    final YapReader getWriter(Transaction a_trans, int a_length) {
         return new YapWriter(a_trans, a_length);
     }
 

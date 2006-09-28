@@ -58,7 +58,7 @@ public class StringMarshaller1 extends StringMarshaller{
         return bytes;
     }
     
-    public YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException{
+    public YapReader readIndexEntry(YapWriter parentSlot) throws CorruptionException{
         int payLoadOffSet = parentSlot.readInt();
         int length = parentSlot.readInt();
         if(payLoadOffSet == 0){

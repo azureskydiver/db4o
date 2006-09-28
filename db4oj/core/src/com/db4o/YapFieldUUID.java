@@ -28,7 +28,7 @@ public class YapFieldUUID extends YapFieldVirtual {
 
         int offset = writer._offset;
         int db4oDatabaseIdentityID = writer.readInt();
-        long uuid = YLong.readLong(writer);
+        long uuid = writer.readLong();
         writer._offset = offset;
         
         YapFile yf = (YapFile)writer.getStream();
@@ -48,7 +48,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         }
         
         writer.writeInt(db4oDatabaseIdentityID);
-        YLong.writeLong(uuid, writer);
+        writer.writeLong(uuid);
         
         if(isnew){
             addIndexEntry(writer, new Long(uuid));
@@ -78,7 +78,7 @@ public class YapFieldUUID extends YapFieldVirtual {
 		if (null == yapClass.findOffset(reader, this)) {
 			return null;
 		}
-		return new DatabaseIdentityIDAndUUID(reader.readInt(), YLong.readLong(reader));
+		return new DatabaseIdentityIDAndUUID(reader.readInt(), reader.readLong());
 	}
 
     public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
@@ -87,7 +87,7 @@ public class YapFieldUUID extends YapFieldVirtual {
             return;
         }
         a_bytes.incrementOffset(YapConst.INT_LENGTH);
-        long longPart = YLong.readLong(a_bytes);
+        long longPart = a_bytes.readLong();
         if(longPart > 0){
             YapStream stream = a_bytes.getStream();
             if (stream.maintainsIndices()){
@@ -142,7 +142,7 @@ public class YapFieldUUID extends YapFieldVirtual {
             stream.activate2(a_trans, db, 2);
         }
         a_yapObject.i_virtualAttributes.i_database = db; 
-        a_yapObject.i_virtualAttributes.i_uuid = YLong.readLong(a_bytes);
+        a_yapObject.i_virtualAttributes.i_uuid = a_bytes.readLong();
         stream.showInternalClasses(false);
     }
 
@@ -188,18 +188,18 @@ public class YapFieldUUID extends YapFieldVirtual {
         }
         a_bytes.writeInt(dbID);
         if(attr != null){
-	        YLong.writeLong(attr.i_uuid, a_bytes);
+	        a_bytes.writeLong(attr.i_uuid);
 	        if(indexEntry){
 	            addIndexEntry(a_bytes, new Long(attr.i_uuid));
 	        }
         }else{
-            YLong.writeLong(0, a_bytes);
+            a_bytes.writeLong(0);
         }
     }
     
-    void marshallIgnore(YapWriter writer) {
+    void marshallIgnore(YapReader writer) {
         writer.writeInt(0);
-        YLong.writeLong(0, writer);
+        writer.writeLong(0);
     }
 
 	public Object[] objectAndYapObjectBySignature(final Transaction transaction, final long longPart, final byte[] signature) {

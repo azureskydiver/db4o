@@ -73,7 +73,7 @@ public interface TypeHandler4 extends Indexable4
     /**
      * performance optimized read (only used for byte[] so far) 
      */
-    boolean readArray(Object array, YapWriter reader);
+    boolean readArray(Object array, YapReader reader);
 	
 	void readCandidates(MarshallerFamily mf, YapReader reader, QCandidates candidates);
 	
@@ -82,7 +82,7 @@ public interface TypeHandler4 extends Indexable4
     /**
      * performance optimized write (only used for byte[] so far) 
      */
-    boolean writeArray(Object array, YapWriter reader);
+    boolean writeArray(Object array, YapReader reader);
 
     QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection);
 

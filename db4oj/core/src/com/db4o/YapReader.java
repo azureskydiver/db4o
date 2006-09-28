@@ -55,6 +55,10 @@ public class YapReader {
 	    return false;
 	}
 	
+    public void copyTo(YapReader to, int fromOffset, int toOffset, int length) {
+        System.arraycopy(_buffer, fromOffset, to._buffer, toOffset, length);
+    }
+
 	public int getLength() {
 		return _buffer.length;
 	}
@@ -149,6 +153,10 @@ public class YapReader {
 //				return ret;
 //            }
 		
+    }
+    
+    public long readLong() {
+        return YLong.readLong(this);
     }
     
     public YapReader readPayloadReader(int offset, int length){
@@ -262,7 +270,8 @@ public class YapReader {
         trans.stream().i_handlers.i_stringHandler.writeShort(a_string, this);
     }
 
-	public void copyTo(YapReader to, int fromOffset, int toOffset, int length) {
-		System.arraycopy(_buffer, fromOffset, to._buffer, toOffset, length);
-	}
+    public void writeLong(long l) {
+        YLong.writeLong(l, this);
+    }
+
 }

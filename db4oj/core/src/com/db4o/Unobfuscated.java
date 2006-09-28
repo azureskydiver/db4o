@@ -28,9 +28,9 @@ public class Unobfuscated {
 	        } catch (Exception e) {
 	        }
 	    }
-	    YLong.writeLong(System.currentTimeMillis(), writer);
-        YLong.writeLong(randomLong(), writer);
-        YLong.writeLong(randomLong() + 1, writer);
+        writer.writeLong(System.currentTimeMillis());
+        writer.writeLong(randomLong());
+        writer.writeLong(randomLong() + 1);
         return writer.getWrittenBytes();
 	}
 	

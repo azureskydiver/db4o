@@ -50,7 +50,7 @@ public abstract class StringMarshaller {
         return read(stream, readSlotFromParentSlot(stream, reader));
     }
     
-    public abstract YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException;
+    public abstract YapReader readIndexEntry(YapWriter parentSlot) throws CorruptionException;
     
     public static String readShort(YapStream stream, YapReader bytes) throws CorruptionException {
     	return readShort(stream.stringIO(),stream.configImpl().internStrings(),bytes);
