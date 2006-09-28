@@ -14,9 +14,9 @@ public class FileHeaderVariablePart1 extends YapMeta{
     
     // The variable part format is:
 
+    // (int) converter version
     // (byte) freespace system used
     // (int)  freespace address
-    // (int) converter version
     // (int) identity ID
     // (long) versionGenerator
     
@@ -38,17 +38,17 @@ public class FileHeaderVariablePart1 extends YapMeta{
     }
 
     public void readThis(Transaction trans, YapReader reader) {
+        _systemData.converterVersion(reader.readInt());
         _systemData.freespaceSystem(reader.readByte());
         _systemData.freespaceAddress(reader.readInt());
-        _systemData.converterVersion(reader.readInt());
         readIdentity(trans, reader.readInt());
         _systemData.lastTimeStampID(reader.readLong());
     }
 
     public void writeThis(Transaction trans, YapReader writer) {
+        writer.writeInt(_systemData.converterVersion());
         writer.append(_systemData.freespaceSystem());
         writer.writeInt(_systemData.freespaceAddress());
-        writer.writeInt(_systemData.converterVersion());
         writer.writeInt(_systemData.identity().getID(trans));
         writer.writeLong(_systemData.lastTimeStampID());
     }
