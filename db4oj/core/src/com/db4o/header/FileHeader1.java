@@ -12,7 +12,7 @@ import com.db4o.*;
  */
 public class FileHeader1 extends FileHeader {
     
-    private static final byte[] SIGNATURE = {'d', 'b', '4', 'o'};
+    private static final byte[] SIGNATURE = {(byte)'d', (byte)'b', (byte)'4', (byte)'o'};
     
     private static byte VERSION = 1;
     
