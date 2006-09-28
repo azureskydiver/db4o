@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections;
+using System.IO;
+using System.Text;
 using com.db4o.config;
 using com.db4o.config.attributes;
 using com.db4o.ext;
@@ -635,6 +637,48 @@ namespace com.db4o
 		                                        	Class.GetClassForType(typeof(Int16)),
 		                                        	Class.GetClassForType(typeof(String)),
 		                                        	Class.GetClassForType(typeof(Date))
-		                                        };
+		                                        };	
+
+#if CF_1_0
+		internal class VoidTextWriter : TextWriter
+		{
+			public override Encoding Encoding
+			{
+				get { return System.Text.Encoding.UTF8; }
+			}
+		}
+
+		internal class CompactFramework1Console
+		{
+			public static TextWriter Out;
+			public static TextWriter Error;
+
+			public CompactFramework1Console()
+			{
+				Out = new VoidTextWriter();
+				Error = Out;
+			}
+		}
+
+		public static TextWriter Out
+		{
+			get { return CompactFramework1Console.Out; }
+		}
+
+		public static TextWriter Error
+		{
+			get { return CompactFramework1Console.Error; }
+		}
+#else
+		public static TextWriter Out
+		{
+			get { return Console.Out; }
+		}
+
+		public static TextWriter Error
+		{
+			get { return Console.Error; }
+		}
+#endif
 	}
 }

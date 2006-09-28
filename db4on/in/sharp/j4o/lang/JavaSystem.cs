@@ -108,7 +108,7 @@ namespace j4o.lang
 
 		public static void PrintStackTrace(Exception exception) 
 		{
-			PrintStackTrace(exception, System.Console.Error);
+			PrintStackTrace(exception, com.db4o.Platform4.Error);
 		}
 
 		public static void PrintStackTrace(Exception exception, System.IO.TextWriter writer) 
