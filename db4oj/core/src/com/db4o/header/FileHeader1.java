@@ -85,7 +85,7 @@ public class FileHeader1 extends FileHeader {
         return LENGTH;
     }
 
-    public void readFixedPart(YapFile file, YapReader reader) throws IOException {
+    protected void readFixedPart(YapFile file, YapReader reader) throws IOException {
         newTimerFileLock(file);
         
     }
