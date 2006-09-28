@@ -35,7 +35,7 @@ final class YFloat extends YInt {
 	}
 
 	Object read1(YapReader a_bytes) {
-		return new Float(Float.intBitsToFloat(readInt(a_bytes)));
+		return new Float(Float.intBitsToFloat(a_bytes.readInt()));
 	}
 
 	public void write(Object a_object, YapReader a_bytes) {

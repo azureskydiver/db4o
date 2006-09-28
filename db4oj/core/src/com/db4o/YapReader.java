@@ -31,7 +31,7 @@ public class YapReader {
         _buffer[_offset++] = a_byte;
     }
 
-    void append(byte[] a_bytes) {
+    public void append(byte[] a_bytes) {
         System.arraycopy(a_bytes, 0, _buffer, _offset, a_bytes.length);
         _offset += a_bytes.length;
     }

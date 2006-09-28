@@ -159,8 +159,8 @@ public final class YapConfigBlock {
         systemData().stringEncoding(reader.readByte());
 		
 		if(oldLength > TRANSACTION_OFFSET){
-			int transactionID1 = YInt.readInt(reader);
-			int transactionID2 = YInt.readInt(reader);
+			int transactionID1 = reader.readInt();
+			int transactionID2 = reader.readInt();
 			if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
 				_transactionToCommit = _stream.newTransaction(null);
 				_transactionToCommit.setAddress(transactionID1);
@@ -168,13 +168,13 @@ public final class YapConfigBlock {
 		}
 		
 		if(oldLength > BOOTRECORD_OFFSET) {
-		    _bootRecordID = YInt.readInt(reader);
+		    _bootRecordID = reader.readInt();
 		}
 		
 		if(oldLength > INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET) {
 		    // this one is dead.
 		    // Blocksize is in the very first bytes
-		    YInt.readInt(reader);
+		    reader.readInt();
 		}
 		
 		if(oldLength > PASSWORD_OFFSET) {

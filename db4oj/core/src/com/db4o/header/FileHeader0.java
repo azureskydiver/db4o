@@ -6,14 +6,13 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.inside.*;
-import com.db4o.inside.convert.*;
 
 /**
  * @exclude
  */
 public class FileHeader0 extends FileHeader {
     
-    private static final int LENGTH = 2 + (YapConst.INT_LENGTH * 4);
+    static final int LENGTH = 2 + (YapConst.INT_LENGTH * 4);
 
     // The header format is:
 
@@ -42,32 +41,31 @@ public class FileHeader0 extends FileHeader {
     private YapConfigBlock    _configBlock;
     
     private PBootRecord _bootRecord;
+    
 
-    public void readFixedPart(YapFile file) throws IOException {
-        
-        YapReader reader = new YapReader(length()); 
-        reader.read(file, 0, 0);
-     
-        byte blockSize = 1;
+    public void close() throws IOException {
+        _configBlock.close();
+    }
+    
+    protected FileHeader newOnSignatureMatch(YapFile file, YapReader reader) {
         byte firstFileByte = reader.readByte();
         if (firstFileByte != YapConst.YAPBEGIN) {
             if(firstFileByte != YapConst.YAPFILEVERSION){
-                Exceptions4.throwRuntimeException(17);
+                return null;
             }
-            blockSize = reader.readByte();
+            file.blockSizeReadFromFile(reader.readByte());
         }else{
             if (reader.readByte() != YapConst.YAPFILE) {
-                Exceptions4.throwRuntimeException(17);
+                return null;
             }
         }
-        
-        file.blockSize(blockSize);
-        file.setRegularEndAddress(file.fileLength());
-        
+        return new FileHeader0();
+    }
+
+    
+    protected void readFixedPart(YapFile file, YapReader reader) throws IOException {
         _configBlock = YapConfigBlock.forExistingFile(file, reader.readInt());
-
         skipConfigurationLockTime(reader);
-
         SystemData systemData = file.systemData();
         systemData.classCollectionID(reader.readInt());
         systemData.freespaceID(reader.readInt());
@@ -99,7 +97,6 @@ public class FileHeader0 extends FileHeader {
     }
 
     public void initNew(YapFile file) throws IOException {
-        file.systemData().converterVersion(Converter.VERSION);
         _configBlock = YapConfigBlock.forNewFile(file);
         initBootRecord(file);
     }
@@ -121,18 +118,8 @@ public class FileHeader0 extends FileHeader {
         return _configBlock.getTransactionToCommit();
     }
 
-    public void writeTransactionPointer(Transaction trans, int address) {
-        YapWriter bytes = new YapWriter(trans,
-            _configBlock.address(), YapConst.INT_LENGTH * 2);
-        
-        bytes.moveForward(YapConfigBlock.TRANSACTION_OFFSET);
-        
-        bytes.writeInt(address);
-        bytes.writeInt(address);
-        if (Debug.xbytes && Deploy.overwrite) {
-            bytes.setID(YapConst.IGNORE_ID);
-        }
-        bytes.write();
+    public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {
+        writeTransactionPointer(systemTransaction, transactionAddress, _configBlock.address(), YapConfigBlock.TRANSACTION_OFFSET);
     }
 
     public MetaIndex getUUIDMetaIndex() {
@@ -143,11 +130,11 @@ public class FileHeader0 extends FileHeader {
         return LENGTH;
     }
 
-    public void writeFixedPart(boolean shuttingDown, YapWriter writer, byte blockSize_, int classCollectionID, int freespaceID) {
+    public void writeFixedPart(boolean shuttingDown, YapWriter writer, int blockSize_, int classCollectionID, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
-        writer.append(blockSize_);
+        writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());
-        writer.writeInt(openTimeToWrite(shuttingDown));
+        writer.writeInt(openTimeToWrite(_configBlock.openTime(), shuttingDown));
         writer.writeInt(classCollectionID);
         writer.writeInt(freespaceID);
         if (Debug.xbytes && Deploy.overwrite) {
@@ -156,20 +143,12 @@ public class FileHeader0 extends FileHeader {
         writer.write();
     }
     
-    private int openTimeToWrite(boolean shuttingDown){
-        return shuttingDown ? 0 : (int)_configBlock.openTime();
-    }
-
     public void writeVariablePart(YapFile file, int part) {
         if(part == 1){
             _configBlock.write();
         }else if(part == 2){
             _bootRecord.write(file);
         }
-    }
-
-    public void close() throws IOException {
-        _configBlock.close();
     }
 
 }

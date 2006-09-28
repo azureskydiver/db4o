@@ -52,6 +52,11 @@ public abstract class YapFile extends YapStream {
     
     public abstract void blockSize(int size);
     
+    public void blockSizeReadFromFile(int size){
+        blockSize(size);
+        setRegularEndAddress(fileLength());
+    }
+    
     public void setRegularEndAddress(long address){
         _blockEndAddress = blocksFor(address);
     }
@@ -76,6 +81,7 @@ public abstract class YapFile extends YapStream {
     void configureNewFile() throws IOException{
         
         newSystemData(configImpl().freespaceSystem());
+        systemData().converterVersion(Converter.VERSION);
         createStringIO(_systemData.stringEncoding());
         
         generateNewIdentity();
@@ -96,13 +102,12 @@ public abstract class YapFile extends YapStream {
         initializeEssentialClasses();
         
         _fileHeader.initNew(this);
-
+        
         _freespaceManager.start(_systemData.freespaceAddress());
         
         if(Debug.freespace  && Debug.freespaceChecker){
             _fmChecker.start(0);
         }
-        
     }
     
     private void newSystemData(byte freespaceSystem){
@@ -477,12 +482,10 @@ public abstract class YapFile extends YapStream {
     void readThis() throws IOException {
         
         newSystemData(FreespaceManager.FM_LEGACY_RAM);
+        blockSizeReadFromFile(1);
         
-        _fileHeader = new FileHeader0();
-
-        blockSize(_fileHeader.length());
-    	
-        _fileHeader.readFixedPart(this);
+        _fileHeader = FileHeader.readFixedPart(this);
+        
         createStringIO(_systemData.stringEncoding());
         
         classCollection().setID(_systemData.classCollectionID());
