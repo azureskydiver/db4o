@@ -77,15 +77,15 @@ public abstract class YapMeta {
 
     public abstract int ownLength();
 
-    public void read(Transaction a_trans) {
+    public void read(Transaction trans) {
         try {
             if (beginProcessing()) {
-                YapReader reader = a_trans.stream().readReaderByID(a_trans, getID());
+                YapReader reader = trans.stream().readReaderByID(trans, getID());
                 if (reader != null) {
                     if (Deploy.debug) {
                         reader.readBegin(getIdentifier());
                     }
-                    readThis(a_trans, reader);
+                    readThis(trans, reader);
                     setStateOnRead(reader);
                 }
                 endProcessing();
@@ -99,7 +99,7 @@ public abstract class YapMeta {
         }
     }
     
-    public abstract void readThis(Transaction a_trans, YapReader a_reader);
+    public abstract void readThis(Transaction trans, YapReader reader);
 
 
     public void setID(int a_id) {
@@ -131,13 +131,13 @@ public abstract class YapMeta {
         }
     }
 
-    public final void write(Transaction a_trans) {
+    public final void write(Transaction trans) {
         
         if (! writeObjectBegin()) {
             return;
         }
             
-        YapFile stream = (YapFile)a_trans.stream();
+        YapFile stream = (YapFile)trans.stream();
         
         int address = 0;
         int length = ownLength();
@@ -145,21 +145,21 @@ public abstract class YapMeta {
         YapReader writer = new YapReader(length);
         
         if(isNew()){
-            Pointer4 ptr = stream.newSlot(a_trans, length);
+            Pointer4 ptr = stream.newSlot(trans, length);
             setID(ptr._id);
             address = ptr._address;
             
             // FIXME: Free everything on rollback here ?
         }else{
             address = stream.getSlot(length);
-            a_trans.slotFreeOnRollbackCommitSetPointer(i_id, address, length);
+            trans.slotFreeOnRollbackCommitSetPointer(i_id, address, length);
         }
         
         if (Deploy.debug) {
             writer.writeBegin(getIdentifier());
         }
 
-        writeThis(a_trans, writer);
+        writeThis(trans, writer);
 
         if (Deploy.debug) {
             writer.writeEnd();
@@ -181,11 +181,11 @@ public abstract class YapMeta {
         return false;
     }
 
-    public void writeOwnID(Transaction trans, YapReader a_writer) {
+    public void writeOwnID(Transaction trans, YapReader writer) {
         write(trans);
-        a_writer.writeInt(getID());
+        writer.writeInt(getID());
     }
 
-    public abstract void writeThis(Transaction trans, YapReader a_writer);
+    public abstract void writeThis(Transaction trans, YapReader writer);
 
 }

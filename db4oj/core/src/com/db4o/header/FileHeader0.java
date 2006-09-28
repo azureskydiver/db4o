@@ -5,7 +5,6 @@ package com.db4o.header;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -66,9 +65,7 @@ public class FileHeader0 extends FileHeader {
     protected void readFixedPart(YapFile file, YapReader reader) throws IOException {
         _configBlock = YapConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
-        SystemData systemData = file.systemData();
-        systemData.classCollectionID(reader.readInt());
-        systemData.freespaceID(reader.readInt());
+        readClassCollectionAndFreeSpace(file, reader);
     }
 
     private void skipConfigurationLockTime(YapReader reader) {
@@ -134,7 +131,7 @@ public class FileHeader0 extends FileHeader {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());
-        writer.writeInt((int)openTimeToWrite(_configBlock.openTime(), shuttingDown));
+        writer.writeInt((int)timeToWrite(_configBlock.openTime(), shuttingDown));
         writer.writeInt(classCollectionID);
         writer.writeInt(freespaceID);
         if (Debug.xbytes && Deploy.overwrite) {

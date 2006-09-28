@@ -159,12 +159,7 @@ public final class YapConfigBlock {
         systemData().stringEncoding(reader.readByte());
 		
 		if(oldLength > TRANSACTION_OFFSET){
-			int transactionID1 = reader.readInt();
-			int transactionID2 = reader.readInt();
-			if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
-				_transactionToCommit = _stream.newTransaction(null);
-				_transactionToCommit.setAddress(transactionID1);
-			}
+            _transactionToCommit = Transaction.readInterruptedTransaction(_stream, reader);
 		}
 		
 		if(oldLength > BOOTRECORD_OFFSET) {

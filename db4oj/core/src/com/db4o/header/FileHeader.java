@@ -64,8 +64,8 @@ public abstract class FileHeader {
     
     protected abstract FileHeader newOnSignatureMatch(YapFile file, YapReader reader);
     
-    protected long openTimeToWrite(long openTime, boolean shuttingDown) {
-        return shuttingDown ? 0 : openTime;
+    protected long timeToWrite(long time, boolean shuttingDown) {
+        return shuttingDown ? 0 : time;
     }
 
     protected abstract void readFixedPart(YapFile file, YapReader reader) throws IOException;
@@ -98,5 +98,11 @@ public abstract class FileHeader {
     }
     
     public abstract void writeVariablePart(YapFile file, int part);
+
+    protected void readClassCollectionAndFreeSpace(YapFile file, YapReader reader) {
+        SystemData systemData = file.systemData();
+        systemData.classCollectionID(reader.readInt());
+        systemData.freespaceID(reader.readInt());
+    }
 
 }

@@ -12,21 +12,8 @@ import com.db4o.*;
  */
 public class FileHeader1 extends FileHeader {
     
-    private static final byte[] SIGNATURE = {(byte)'d', (byte)'b', (byte)'4', (byte)'o'};
-    
-    private static byte VERSION = 1;
-    
-    private static final int HEADER_LOCK_OFFSET = SIGNATURE.length + 1;
-    private static final int OPEN_TIME_OFFSET = HEADER_LOCK_OFFSET + YapConst.INT_LENGTH;
-    private static final int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + YapConst.LONG_LENGTH;
-    private static final int TRANSACTION_POINTER_OFFSET = ACCESS_TIME_OFFSET + YapConst.LONG_LENGTH; 
-    
-    static final int LENGTH = TRANSACTION_POINTER_OFFSET + (YapConst.INT_LENGTH * 6);
-    
     // The header format is:
 
-    // New format
-    // -------------------------
     // (byte) 'd'
     // (byte) 'b'
     // (byte) '4'
@@ -42,26 +29,31 @@ public class FileHeader1 extends FileHeader {
     // (int) freespaceID
     // (int) variablePartID
     
+    private static final byte[] SIGNATURE = {(byte)'d', (byte)'b', (byte)'4', (byte)'o'};
+    
+    private static byte VERSION = 1;
+    
+    private static final int HEADER_LOCK_OFFSET = SIGNATURE.length + 1;
+    private static final int OPEN_TIME_OFFSET = HEADER_LOCK_OFFSET + YapConst.INT_LENGTH;
+    private static final int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + YapConst.LONG_LENGTH;
+    private static final int TRANSACTION_POINTER_OFFSET = ACCESS_TIME_OFFSET + YapConst.LONG_LENGTH; 
+    
+    static final int LENGTH = TRANSACTION_POINTER_OFFSET + (YapConst.INT_LENGTH * 6);
+    
     private TimerFileLock _timerFileLock;
-    
-    
-    private TimerFileLock timerFileLock(){
-        return _timerFileLock;
-    }
 
-    private int variablePartID() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+    private Transaction _interruptedTransaction;
 
+    private FileHeaderVariablePart1 _variablePart;
+    
     public void close() throws IOException {
-        // TODO Auto-generated method stub
-        
+        _timerFileLock.close();
     }
 
     public void initNew(YapFile file) throws IOException {
         newTimerFileLock(file);
-        
+        _variablePart = new FileHeaderVariablePart1(0, file.systemData());
+        writeVariablePart(file, 0);
     }
     
     protected FileHeader newOnSignatureMatch(YapFile file, YapReader reader) {
@@ -76,9 +68,7 @@ public class FileHeader1 extends FileHeader {
     }
 
     public Transaction interruptedTransaction() {
-        
-        // TODO Auto-generated method stub
-        return null;
+        return _interruptedTransaction;
     }
 
     public int length() {
@@ -87,28 +77,31 @@ public class FileHeader1 extends FileHeader {
 
     protected void readFixedPart(YapFile file, YapReader reader) throws IOException {
         newTimerFileLock(file);
-        
+        reader.seek(TRANSACTION_POINTER_OFFSET);
+        _interruptedTransaction = Transaction.readInterruptedTransaction(file, reader);
+        file.blockSizeReadFromFile(reader.readInt());
+        readClassCollectionAndFreeSpace(file, reader);
+        _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
     }
 
     public void readVariablePart(YapFile file) {
-        // TODO Auto-generated method stub
-        
+        _variablePart.read(file.getSystemTransaction());
     }
     
     public void writeFixedPart(
         boolean shuttingDown, YapWriter writer, int blockSize, int classCollectionId,int freespaceID) {
         writer.append(SIGNATURE);
         writer.append(VERSION);
-        writer.writeInt((int)openTimeToWrite(timerFileLock().openTime(), shuttingDown));
-        
-        writer.writeLong(openTimeToWrite(timerFileLock().openTime(), shuttingDown));
-        
+        writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
+        writer.writeLong(timeToWrite(_timerFileLock.openTime(), shuttingDown));
+        writer.writeLong(timeToWrite(System.currentTimeMillis(), shuttingDown));
         writer.writeInt(0);
         writer.writeInt(0);
         writer.writeInt(blockSize);
         writer.writeInt(classCollectionId);
         writer.writeInt(freespaceID);
-        writer.writeInt(variablePartID());
+        writer.writeInt(_variablePart.getID());
+        writer.write();
     }
 
     public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {
@@ -116,9 +109,7 @@ public class FileHeader1 extends FileHeader {
     }
 
     public void writeVariablePart(YapFile file, int part) {
-        
+        _variablePart.write(file.getSystemTransaction());
     }
-
-
 
 }
