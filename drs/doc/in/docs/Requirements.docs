@@ -17,7 +17,7 @@ configurations, you may wish to ._
 download the full Hibernate documentation ._
 from the  .l http://www.hibernate.org/ Hibernate project website .. .
 
-.1 Testing the installation..
+Testing the installation
 The build.xml contains targets for running the example and ._
 the regression tests:
 - run-example

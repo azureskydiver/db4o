@@ -39,6 +39,10 @@ ReplicationSession replication = Replication.begin(objectContainer, hibernateCon
 ..
 
 .1 Deleted Objects Replication ..
+# Deleting objects
+
+    * Improve this chapter, it's nearly empty.
+    
 When an object is deleted since last replication in provider A and you would like to replicate this changes ._
 to provider B, you can make use of the dRS to handle that.
 
