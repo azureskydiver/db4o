@@ -27,23 +27,32 @@ public abstract class FileHeader {
     }
 
     public static FileHeader readFixedPart(YapFile file) throws IOException{
-        YapReader reader = new YapReader(readerLength()); 
+        YapReader reader = prepareFileHeaderReader(file);
+        FileHeader header = detectFileHeader(file, reader);
+        if(header == null){
+            Exceptions4.throwRuntimeException(17);
+        } else {
+        	header.readFixedPart(file, reader);
+        }
+        return header;
+    }
+
+	private static YapReader prepareFileHeaderReader(YapFile file) {
+		YapReader reader = new YapReader(readerLength()); 
         reader.read(file, 0, 0);
-        FileHeader result = null;
+		return reader;
+	}
+
+	private static FileHeader detectFileHeader(YapFile file, YapReader reader) {
         for (int i = 0; i < AVAILABLE_FILE_HEADERS.length; i++) {
-            reader._offset = 0;
-            result =  AVAILABLE_FILE_HEADERS[i].newOnSignatureMatch(file, reader);
-            if(result != null){
-                break;
+            reader.seek(0);
+            FileHeader result = AVAILABLE_FILE_HEADERS[i].newOnSignatureMatch(file, reader);
+            if(result != null) {
+            	return result;
             }
         }
-        if(result == null){
-            Exceptions4.throwRuntimeException(17);
-        }else{
-            result.readFixedPart(file, reader);
-        }
-        return result;
-    }
+		return null;
+	}
 
     public abstract void close() throws IOException;
 
