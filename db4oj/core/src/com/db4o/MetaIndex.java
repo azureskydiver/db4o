@@ -36,7 +36,7 @@ public class MetaIndex implements Internal4{
         /*patchLength = */reader.readInt();
     }
     
-    public void write(YapWriter writer){
+    public void write(YapReader writer){
         writer.writeInt(indexAddress);
         writer.writeInt(indexEntries);
         writer.writeInt(indexLength);

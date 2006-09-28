@@ -17,9 +17,11 @@ public class FileHeader1 extends FileHeader {
     private static byte VERSION = 1;
     
     private static final int HEADER_LOCK_OFFSET = SIGNATURE.length + 1;
-    private static final int TRANSACTION_POINTER_OFFSET = HEADER_LOCK_OFFSET + YapConst.INT_LENGTH; 
+    private static final int OPEN_TIME_OFFSET = HEADER_LOCK_OFFSET + YapConst.INT_LENGTH;
+    private static final int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + YapConst.LONG_LENGTH;
+    private static final int TRANSACTION_POINTER_OFFSET = ACCESS_TIME_OFFSET + YapConst.LONG_LENGTH; 
     
-    static final int LENGTH = HEADER_LOCK_OFFSET + (YapConst.INT_LENGTH * 7);
+    static final int LENGTH = TRANSACTION_POINTER_OFFSET + (YapConst.INT_LENGTH * 6);
     
     // The header format is:
 
@@ -31,6 +33,8 @@ public class FileHeader1 extends FileHeader {
     // (byte) 'o'
     // (byte) headerVersion
     // (int) headerLock
+    // (long) openTime
+    // (long) accessTime
     // (int) Transaction pointer 1
     // (int) Transaction pointer 2
     // (int) blockSize
@@ -57,7 +61,6 @@ public class FileHeader1 extends FileHeader {
 
     public void initNew(YapFile file) throws IOException {
         newTimerFileLock(file);
-        
         
     }
     
@@ -96,7 +99,10 @@ public class FileHeader1 extends FileHeader {
         boolean shuttingDown, YapWriter writer, int blockSize, int classCollectionId,int freespaceID) {
         writer.append(SIGNATURE);
         writer.append(VERSION);
-        writer.writeInt(openTimeToWrite(timerFileLock().openTime(), shuttingDown));
+        writer.writeInt((int)openTimeToWrite(timerFileLock().openTime(), shuttingDown));
+        
+        writer.writeLong(openTimeToWrite(timerFileLock().openTime(), shuttingDown));
+        
         writer.writeInt(0);
         writer.writeInt(0);
         writer.writeInt(blockSize);

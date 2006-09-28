@@ -154,7 +154,7 @@ public abstract class YapFieldVirtual extends YapField {
     abstract void marshall1(YapObject a_yapObject, YapWriter a_bytes,
         boolean a_migrating, boolean a_new);
     
-    abstract void marshallIgnore(YapWriter writer);
+    abstract void marshallIgnore(YapReader writer);
     
     public void readVirtualAttribute(Transaction a_trans, YapReader a_reader, YapObject a_yapObject) {
         if(! a_trans.supportsVirtualFields()){

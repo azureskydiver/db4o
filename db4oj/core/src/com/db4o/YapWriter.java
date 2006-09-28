@@ -84,7 +84,7 @@ public final class YapWriter extends YapReader {
     }
 
 
-    int appendTo(final YapWriter a_bytes, int a_id) {
+    int appendTo(final YapReader a_bytes, int a_id) {
         a_id++;
         a_bytes.writeInt(i_length);
         a_bytes.writeInt(i_id);
@@ -388,7 +388,7 @@ public final class YapWriter extends YapReader {
         return linkOffset;
     }
     
-    public YapWriter readPayloadWriter(int offset, int length){
+    public YapReader readPayloadWriter(int offset, int length){
         YapWriter payLoad = new YapWriter(i_trans, 0, length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
         transferPayLoadAddress(payLoad, offset);

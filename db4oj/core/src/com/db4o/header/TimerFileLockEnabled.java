@@ -50,7 +50,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
             return;
         }
         reader.read();
-        if(YLong.readLong(reader) != _opentime){
+        if(reader.readLong() != _opentime){
             Exceptions4.throwRuntimeException(22);
         }
         writeOpenTime();
@@ -148,7 +148,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
         if(writer== null){
             return;
         }
-        YLong.writeLong(_opentime, writer);
+        writer.writeLong(_opentime);
         writer.write();
     }
     

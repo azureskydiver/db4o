@@ -22,7 +22,7 @@ final class MGetClasses extends MsgD {
 			}
 		}
 		MsgD message = Msg.GET_CLASSES.getWriterForLength(getTransaction(), YapConst.INT_LENGTH + 1);
-		YapWriter writer = message.getPayLoad();
+		YapReader writer = message.getPayLoad();
 		writer.writeInt(stream.classCollection().getID());
 		writer.append(stream.stringIO().encodingByte());
 		message.write(stream, sock);

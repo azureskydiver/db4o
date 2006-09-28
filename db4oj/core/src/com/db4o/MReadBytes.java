@@ -5,7 +5,7 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MReadBytes extends MsgD {
-	final YapWriter getByteLoad() {
+	final YapReader getByteLoad() {
 		int address = this._payLoad.readInt();
 		int length = this._payLoad.getLength() - (YapConst.INT_LENGTH);
 		this._payLoad.removeFirstBytes(YapConst.INT_LENGTH);

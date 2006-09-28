@@ -319,8 +319,8 @@ public class YapRandomAccessFile extends YapFile {
         synchronized (i_fileLock) {
             i_timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
-                YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.LONG_LENGTH);
-                YLong.writeLong(time, lockBytes);
+                YapReader lockBytes = new YapWriter(i_systemTrans, YapConst.LONG_LENGTH);
+                lockBytes.writeLong(time);
                 i_timerFile.write(lockBytes._buffer);
             } else {
                 YLong.writeLong(time, i_timerBytes);

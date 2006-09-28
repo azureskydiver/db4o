@@ -134,7 +134,7 @@ public class FileHeader0 extends FileHeader {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());
-        writer.writeInt(openTimeToWrite(_configBlock.openTime(), shuttingDown));
+        writer.writeInt((int)openTimeToWrite(_configBlock.openTime(), shuttingDown));
         writer.writeInt(classCollectionID);
         writer.writeInt(freespaceID);
         if (Debug.xbytes && Deploy.overwrite) {

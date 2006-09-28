@@ -6,7 +6,7 @@ import com.db4o.foundation.network.YapSocket;
 
 final class MGetInternalIDs extends MsgD {
 	final boolean processMessageAtServer(YapSocket sock) {
-		YapWriter bytes = this.getByteLoad();
+		YapReader bytes = this.getByteLoad();
 		long[] ids;
 		YapStream stream = getStream();
 		synchronized (stream.i_lock) {
@@ -18,7 +18,7 @@ final class MGetInternalIDs extends MsgD {
 		}
 		int size = ids.length;
 		MsgD message = Msg.ID_LIST.getWriterForLength(getTransaction(), YapConst.ID_LENGTH * (size + 1));
-		YapWriter writer = message.getPayLoad();
+		YapReader writer = message.getPayLoad();
 		writer.writeInt(size);
 		for (int i = 0; i < size; i++) {
 			writer.writeInt((int) ids[i]);

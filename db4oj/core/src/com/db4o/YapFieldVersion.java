@@ -18,7 +18,7 @@ class YapFieldVersion extends YapFieldVirtual {
     }
     
     public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter writer, Slot oldSlot) {
-        YLong.writeLong(writer.getStream().generateTimeStampId(), writer);
+        writer.writeLong(writer.getStream().generateTimeStampId());
     }
     
     public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
@@ -26,7 +26,7 @@ class YapFieldVersion extends YapFieldVirtual {
     }
 
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
-        a_yapObject.i_virtualAttributes.i_version = YLong.readLong(a_bytes);
+        a_yapObject.i_virtualAttributes.i_version = a_bytes.readLong();
     }
 
     void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
@@ -35,9 +35,9 @@ class YapFieldVersion extends YapFieldVirtual {
             a_yapObject.i_virtualAttributes.i_version = stream.generateTimeStampId();
         }
         if(a_yapObject.i_virtualAttributes == null){
-            YLong.writeLong(0, a_bytes);
+            a_bytes.writeLong(0);
         }else{
-            YLong.writeLong(a_yapObject.i_virtualAttributes.i_version, a_bytes);
+            a_bytes.writeLong(a_yapObject.i_virtualAttributes.i_version);
         }
     }
 
@@ -45,8 +45,8 @@ class YapFieldVersion extends YapFieldVirtual {
         return YapConst.LONG_LENGTH;
     }
     
-    void marshallIgnore(YapWriter writer) {
-        YLong.writeLong(0, writer);
+    void marshallIgnore(YapReader writer) {
+        writer.writeLong(0);
     }
 
 

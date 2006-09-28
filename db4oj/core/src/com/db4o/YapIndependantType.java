@@ -49,7 +49,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
 		return null;
 	}
     
-    public boolean readArray(Object array, YapWriter reader) {
+    public boolean readArray(Object array, YapReader reader) {
         return false;
     }
 	
@@ -57,7 +57,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
         return read(mf, a_writer, true);
     }
 	
-    public boolean writeArray(Object array, YapWriter reader) {
+    public boolean writeArray(Object array, YapReader reader) {
         return false;
     }
     

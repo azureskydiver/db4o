@@ -261,7 +261,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return _doFinalize;
 	}
 	
-	final YapWriter expectedByteResponse(Msg expectedMessage) {
+	final YapReader expectedByteResponse(Msg expectedMessage) {
 		Msg msg = expectedResponse(expectedMessage);
 		if (msg == null) {
 			// TODO: throw Exception to allow
@@ -397,7 +397,7 @@ public class YapClient extends YapStream implements ExtClient {
 	public Db4oDatabase identity() {
 		if (i_db == null) {
 			writeMsg(Msg.IDENTITY);
-			YapWriter reader = expectedByteResponse(Msg.ID_LIST);
+			YapReader reader = expectedByteResponse(Msg.ID_LIST);
 			showInternalClasses(true);
 			i_db = (Db4oDatabase) getByID(reader.readInt());
 			activate1(i_systemTrans, i_db, 3);
@@ -424,7 +424,7 @@ public class YapClient extends YapStream implements ExtClient {
 			if (!Msg.LOGIN_OK.equals(msg)) {
 				throw new IOException(Messages.get(42));
 			}
-            YapWriter payLoad = msg.getPayLoad();
+            YapReader payLoad = msg.getPayLoad();
             _blockSize = payLoad.readInt();
             int doEncrypt = payLoad.readInt();
             if(doEncrypt == 0){
@@ -441,7 +441,7 @@ public class YapClient extends YapStream implements ExtClient {
 	public final int newUserObject() {
 		int prefetchIDCount = config().prefetchIDCount();
 		ensureIDCacheAllocated(prefetchIDCount);
-		YapWriter reader = null;
+		YapReader reader = null;
 		if (remainingIDs < 1) {
 			writeMsg(Msg.PREFETCH_IDS.getWriterForInt(i_trans, prefetchIDCount));
 			reader = expectedByteResponse(Msg.ID_LIST);
@@ -532,7 +532,7 @@ public class YapClient extends YapStream implements ExtClient {
 	void readBytes(byte[] a_bytes, int a_address, int a_length) {
 		writeMsg(Msg.READ_BYTES.getWriterForInts(i_trans, new int[] {
 				a_address, a_length }));
-		YapWriter reader = expectedByteResponse(Msg.READ_BYTES);
+		YapReader reader = expectedByteResponse(Msg.READ_BYTES);
 		System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 	}
 
@@ -562,7 +562,7 @@ public class YapClient extends YapStream implements ExtClient {
 	}
 
 	private void readResult(QueryResultImpl aRes) {
-		YapWriter reader = expectedByteResponse(Msg.ID_LIST);
+		YapReader reader = expectedByteResponse(Msg.ID_LIST);
 		int size = reader.readInt();
 		for (int i = 0; i < size; i++) {
 			aRes.add(reader.readInt());
@@ -572,7 +572,7 @@ public class YapClient extends YapStream implements ExtClient {
 
 	void readThis() {
 		writeMsg(Msg.GET_CLASSES.getWriter(i_systemTrans));
-		YapWriter bytes = expectedByteResponse(Msg.GET_CLASSES);
+		YapReader bytes = expectedByteResponse(Msg.GET_CLASSES);
 		classCollection().setID(bytes.readInt());
 		createStringIO(bytes.readByte());
 		classCollection().read(i_systemTrans);

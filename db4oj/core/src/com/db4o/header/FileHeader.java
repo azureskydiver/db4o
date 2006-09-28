@@ -64,8 +64,8 @@ public abstract class FileHeader {
     
     protected abstract FileHeader newOnSignatureMatch(YapFile file, YapReader reader);
     
-    protected int openTimeToWrite(long openTime, boolean shuttingDown) {
-        return shuttingDown ? 0 : (int)openTime;
+    protected long openTimeToWrite(long openTime, boolean shuttingDown) {
+        return shuttingDown ? 0 : openTime;
     }
 
     protected abstract void readFixedPart(YapFile file, YapReader reader) throws IOException;

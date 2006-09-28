@@ -767,7 +767,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 	private long[] getClientIDs(Transaction trans) {
 		YapClient stream = (YapClient)trans.stream();
 		stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, getID()));
-		YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
+		YapReader reader = stream.expectedByteResponse(Msg.ID_LIST);
 		int size = reader.readInt();
 		final long[] ids = new long[size];
 		for (int i = 0; i < size; i++) {
@@ -1511,7 +1511,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         bitFalse(YapConst.READING);
     }	
 
-    public boolean readArray(Object array, YapWriter reader) {
+    public boolean readArray(Object array, YapReader reader) {
         return false;
     }
 
@@ -1759,7 +1759,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return i_name;
     }
     
-    public boolean writeArray(Object array, YapWriter reader) {
+    public boolean writeArray(Object array, YapReader reader) {
         return false;
     }
 
