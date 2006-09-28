@@ -10,7 +10,7 @@ public class MySQLFixture extends RdbmsFixture {
 	}
 
 	public void open()  {
-		config = createConfig().configure("com/db4o/test/drs/hibernate/MySQL.cfg.xml");
+		config = createConfig().configure("com/db4o/drs/test/hibernate/MySQL.cfg.xml");
 		_provider = new HibernateReplicationProviderImpl(config, _name);
 	}
 }
