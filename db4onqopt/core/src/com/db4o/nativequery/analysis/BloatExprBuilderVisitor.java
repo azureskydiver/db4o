@@ -442,6 +442,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		left.visit(this);
 		Object leftObj = purgeReturnValue();
 		if (!(leftObj instanceof ComparisonOperand)) {
+			expression(null);
 			return;
 		}
 		ComparisonOperand leftOp = (ComparisonOperand) leftObj;
@@ -454,7 +455,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			rightOp = swap;
 		}
 		if (!isCandidateFieldValue(leftOp) || rightOp == null) {
-			return;
+			throw new EarlyExitException();
 		}
 		expression(new ComparisonExpression((FieldValue) leftOp, rightOp, op));
 	}
@@ -514,12 +515,16 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitFlowGraph(FlowGraph graph) {
-		super.visitFlowGraph(graph);
-		if (expr == null) {
-			Expression forced = identityOrBoolComparisonOrNull(retval);
-			if (forced != null) {
-				expression(forced);
+		try {
+			super.visitFlowGraph(graph);
+			if (expr == null) {
+				Expression forced = identityOrBoolComparisonOrNull(retval);
+				if (forced != null) {
+					expression(forced);
+				}
 			}
+		} catch (EarlyExitException exc) {
+			expr=null;
 		}
 	}
 
@@ -678,5 +683,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 		}
 		return null;
+	}
+	
+	private static class EarlyExitException extends RuntimeException {
 	}
 }
