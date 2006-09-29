@@ -299,6 +299,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		methodStack.addLast(methodRef);
+		boolean addedLocals=false;
 		try {
 			List params = new ArrayList(expr.params().length + 1);
 			params.add(rcvRetval);
@@ -312,6 +313,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				}
 				params.add(curparam);
 			}
+			addedLocals=true;
 			localStack.addLast(params.toArray(new ComparisonOperand[params
 					.size()]));
 
@@ -353,7 +355,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
-			localStack.removeLast();
+			if(addedLocals) {
+				localStack.removeLast();
+			}
 			Object last = methodStack.removeLast();
 			if (!last.equals(methodRef)) {
 				throw new RuntimeException("method stack inconsistent: push="
