@@ -1091,6 +1091,19 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 	public void testNotApplicableIfCondition() throws Exception {
 		assertInvalid("sampleNotApplicableIfCondition");
 	}
+
+	boolean sampleNotApplicableIfStringAppendCondition(Data data) {
+		if(stringMember.equals(stringMember+"X")) {
+			return data.getName().equals(STRING_CMPVAL);
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void testNotApplicableIfStringAppendCondition() throws Exception {
+		assertInvalid("sampleNotApplicableIfStringAppendCondition");
+	}
 	
 	// internal
 	
