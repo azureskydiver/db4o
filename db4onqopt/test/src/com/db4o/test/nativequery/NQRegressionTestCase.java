@@ -11,9 +11,15 @@ import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
+import com.db4o.test.nativequery.expr.*;
+
+import db4ounit.*;
+import db4ounit.TestSuite;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class NQRegressionTests {
+public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	private final static boolean RUN_LOADTIME=false;
 	
 	private static final String CSTR = "Cc";
@@ -78,7 +84,8 @@ public class NQRegressionTests {
 	}
 
 	public static void main(String[] args) {
-		Test.run(NQRegressionTests.class);
+		TestSuite suite=new Db4oTestSuiteBuilder(new Db4oSolo(),NQRegressionTestCase.class).build();
+		new TestRunner(suite).run();
 	}
 
 	public void store() {
@@ -86,11 +93,12 @@ public class NQRegressionTests {
 		Data b=new Data(2,false,1.1f,BSTR,a, Integer.MIN_VALUE);
 		Data c=new Data(3,true,2.2f,CSTR,b, Integer.MIN_VALUE);
 		Data cc=new Data(3,false,3.3f,CSTR,null, Integer.MIN_VALUE);
-		Test.store(a);
-		Test.store(b);
-		Test.store(c);
-		Test.store(cc);
-		Test.store(new Other());
+		ObjectContainer db=db();
+		db.set(a);
+		db.set(b);
+		db.set(c);
+		db.set(cc);
+		db.set(new Other());
 	}
 	
 	private abstract static class ExpectingPredicate extends Predicate {
@@ -552,7 +560,7 @@ public class NQRegressionTests {
 		new ExpectingPredicate("INTWRAPPER.eq(idwrap)") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
-				return NQRegressionTests.INTWRAPPER.equals(candidate.idWrap);
+				return NQRegressionTestCase.INTWRAPPER.equals(candidate.idWrap);
 			}
 		},
 		new ExpectingPredicate("idwrap.value==1") {
@@ -578,7 +586,7 @@ public class NQRegressionTests {
 		new ExpectingPredicate("PRIVATE_INTWRAPPER.eq(idWrap)") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
-				return NQRegressionTests.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
+				return NQRegressionTestCase.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
 			}
 		},
 	};
@@ -594,30 +602,30 @@ public class NQRegressionTests {
 	
 	private void assertNQResult(final ExpectingPredicate predicate) {
 		final String predicateId = "PREDICATE: "+predicate;
-		ObjectContainer db=Test.objectContainer();
+		ObjectContainer db=db();
 		Db4oQueryExecutionListener listener = new Db4oQueryExecutionListener() {
 			private int run=0;
 			
 			public void notifyQueryExecuted(NQOptimizationInfo info) {
 				if(run<2) {
-					Test.ensureEquals(info.predicate(),predicate,predicateId);
+					Assert.areEqual(info.predicate(),predicate,predicateId);
 				}
 				String expMsg=null;
 				switch(run) {
 					case 0:
 						expMsg=NativeQueryHandler.UNOPTIMIZED;
-						Test.ensure(info.optimized()==null,predicateId);
+						Assert.isNull(info.optimized(),predicateId);
 						break;
 					case 1:
 						expMsg=NativeQueryHandler.DYNOPTIMIZED;
-						Test.ensure(info.optimized() instanceof Expression,predicateId);
+						Assert.isTrue(info.optimized() instanceof Expression,predicateId);
 						break;
 					case 2:
 						expMsg=NativeQueryHandler.PREOPTIMIZED;
-						Test.ensure(info.optimized()==null,predicateId);
+						Assert.isNull(info.optimized(),predicateId);
 						break;
 				}
-				Test.ensureEquals(expMsg,info.message(),predicateId);
+				Assert.areEqual(expMsg,info.message(),predicateId);
 				run++;
 			}
 		};
@@ -641,8 +649,8 @@ public class NQRegressionTests {
 				System.out.println(optimized.next());
 			}
 		}
-		Test.ensure(raw.equals(optimized),predicateId);
-		Test.ensureEquals(predicate.expected(),raw.size(),predicateId);
+		Assert.areEqual(raw,optimized,predicateId);
+		Assert.areEqual(predicate.expected(),raw.size(),predicateId);
 
 		if(RUN_LOADTIME) {
 			db.ext().configure().optimizeNativeQueries(false);
@@ -662,9 +670,9 @@ public class NQRegressionTests {
 				constr.setAccessible(true);
 				Predicate clPredicate=(Predicate)constr.newInstance(args);
 				ObjectSet preoptimized=db.query(clPredicate);
-				Test.ensureEquals(predicate.expected(),preoptimized.size(),predicateId);
-				Test.ensure(raw.equals(preoptimized),predicateId);
-				Test.ensure(optimized.equals(preoptimized),predicateId);
+				Assert.areEqual(predicate.expected(),preoptimized.size(),predicateId);
+				Assert.areEqual(raw,preoptimized,predicateId);
+				Assert.areEqual(optimized,preoptimized,predicateId);
 			} 
 			catch (Throwable exc) {
 				exc.printStackTrace();
