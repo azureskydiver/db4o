@@ -5,24 +5,28 @@ package com.db4o.test.nativequery.cats;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
 
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class TestCatConsistency {
+
+public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
     
-    public void configure(){
-        Db4o.configure().optimizeNativeQueries(false);
-    }
-    
+	protected void configure(Configuration config) {
+        config.optimizeNativeQueries(false);
+	}
+
     public void store(){
         storeCats();
     }
     
     public void test(){
         
-        ExtObjectContainer oc = Test.objectContainer();
+        ExtObjectContainer oc = db();
         oc.configure().optimizeNativeQueries(true);
         runTests();
         oc.configure().optimizeNativeQueries(false);
@@ -153,12 +157,14 @@ public class TestCatConsistency {
         acrobat._father = occam;
         acrobat._mother = zora;
         
-        Test.store(achat);
-        Test.store(acrobat);
+        ObjectContainer db=db();
+        
+        db.set(achat);
+        db.set(acrobat);
         
         Cat trulla = new Cat();
         trulla._firstName = "Trulla";
-        Test.store(trulla);
+        db.set(trulla);
         
     }
     
@@ -168,7 +174,7 @@ public class TestCatConsistency {
             names = new String[] {};
         }
         
-        List list = Test.objectContainer().query(predicate);
+        List list = db().query(predicate);
         
         Iterator i = list.iterator();
         while(i.hasNext()){
@@ -183,10 +189,10 @@ public class TestCatConsistency {
                     }
                 }
             }
-            Test.ensure(good);
+            Assert.isTrue(good);
         }
         for (int j = 0; j < names.length; j++) {
-            Test.ensure(names[j] == null);
+            Assert.isNull(names[j]);
         }
     }
     
