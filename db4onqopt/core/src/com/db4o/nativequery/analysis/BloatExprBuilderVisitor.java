@@ -437,7 +437,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Expr left = expr.receiver();
 		Expr right = expr.params()[0];
 		if (!isComparableExprOperand(left) || !isComparableExprOperand(right)) {
-			return;
+			throw new EarlyExitException();
 		}
 		left.visit(this);
 		Object leftObj = purgeReturnValue();
