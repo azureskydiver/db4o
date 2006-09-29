@@ -1079,6 +1079,19 @@ public class BloatExprBuilderVisitorUnitTest implements TestCase,TestLifeCycle {
 		assertInvalid("sampleExternalWrapperComp");
 	}
 
+	boolean sampleNotApplicableIfCondition(Data data) {
+		if(stringMember.equals("XXX")) {
+			return data.getName().equals(STRING_CMPVAL);
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void testNotApplicableIfCondition() throws Exception {
+		assertInvalid("sampleNotApplicableIfCondition");
+	}
+	
 	// internal
 	
 	private void assertComparison(String methodName, String fieldName,Object value, ComparisonOperator op,boolean negated) {
