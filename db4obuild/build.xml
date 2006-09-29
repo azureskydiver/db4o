@@ -455,11 +455,13 @@
 	<target name="compile-db4ounit-libs">
 		<csc srcdir="${dir.n}/Db4oUnit/src"
 				targettype="library"
+				executable="${csc.executable}"
 				destfile="${output.dir}/Db4oUnit.dll">
 		</csc>
 				
 		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
 			targettype="library"
+			executable="${csc.executable}"
 			destfile="${output.dir}/Db4oUnit.Extensions.dll">
 			<reference dir="${output.dir}/">
 				<include name="${file.name.dll}" />
@@ -524,6 +526,7 @@
 		
 		<antcall target="compile-db4ounit-libs">
 			<param name="output.dir" value="${dir.dist.dll.mono}" />
+			<param name="csc.executable" value="${mono.executable}" />
 		</antcall>
 		
 		<csc srcdir="${src.dir}"
