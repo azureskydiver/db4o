@@ -469,6 +469,14 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertInvalid("sampleFieldStringEndsWithWrongWay");
 	}
 
+	boolean sampleFieldStringToLowerCaseStartsWith(Data data) throws Exception {
+		return data.getName().toLowerCase().startsWith(STRING_CMPVAL);
+	}
+
+	public void testFieldStringToLowerCaseStartsWith() throws Exception {
+		assertInvalid("sampleFieldStringToLowerCaseStartsWith");
+	}
+
 	// primitive wrapper equality
 
 	boolean sampleFieldBooleanWrapperEqualsComp(Data data) {
@@ -599,10 +607,9 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return BOOLEAN_CMPVAL!=data.getBool();
 	}
 
-// FIXME fails when run from Ant
-//	public void testBoolGetterNotEqualsComp() throws Exception {
-//		assertComparison("sampleBoolGetterNotEqualsComp",BOOLEAN_FIELDNAME,Boolean.valueOf(!BOOLEAN_CMPVAL),ComparisonOperator.EQUALS,false);
-//	}
+	public void testBoolGetterNotEqualsComp() throws Exception {
+		assertComparison("sampleBoolGetterNotEqualsComp",BOOLEAN_FIELDNAME,Boolean.valueOf(!BOOLEAN_CMPVAL),ComparisonOperator.EQUALS,false);
+	}
 
 	boolean sampleGetterIntEqualsComp(Data data) {
 		return data.getId()==INT_CMPVAL;
