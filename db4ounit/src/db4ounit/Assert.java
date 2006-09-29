@@ -55,13 +55,12 @@ public final class Assert {
 	}
 
 	public static void areEqual(int expected, int actual) {
-		if (expected == actual) return;
-		fail(failureMessage(new Integer(expected), new Integer(actual)));
+		areEqual(expected,actual,null);
 	}
 	
 	public static void areEqual(int expected, int actual, String message) {
 		if (expected == actual) return;
-		fail(message);
+		fail(failureMessage(new Integer(expected), new Integer(actual),message));
 	}
 	
 	public static void areEqual(double expected, double actual) {
@@ -74,9 +73,13 @@ public final class Assert {
 		fail(failureMessage(new Long(expected), new Long(actual)));
 	}
 
-	public static void areEqual(Object expected, Object actual) {		
+	public static void areEqual(Object expected, Object actual,String message) {		
 		if (objectsAreEqual(expected, actual)) return;
-		fail(failureMessage(expected, actual));
+		fail(failureMessage(expected, actual, message));
+	}
+	
+	public static void areEqual(Object expected, Object actual) {		
+		areEqual(expected,actual,null);
 	}
 
 	public static void areSame(Object expected, Object actual) {
@@ -90,9 +93,13 @@ public final class Assert {
 	}
 	
 	private static String failureMessage(Object expected, Object actual) {
-		return "Expected '"+ expected + "' but was '" + actual + "'";
+		return failureMessage(expected,actual,null);
 	}
-	
+
+	private static String failureMessage(Object expected, Object actual,String message) {
+		return (message==null ? "" : message+": ")+"Expected '"+ expected + "' but was '" + actual + "'";
+	}
+
 	private static boolean objectsAreEqual(Object expected, Object actual) {
 		return expected == actual
 			|| (expected != null
