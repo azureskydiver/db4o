@@ -25,6 +25,8 @@ MAIN_TEST=com.db4o.test.AllTests
 DLL_CORE_DIST=$(DIR_HOME)/dll/db4o.dll
 DLL_CORE=$(DIR_BIN)/db4o.dll
 DLL_TOOLS=$(DIR_BIN)/Db4oTools.dll
+DLL_DB4OUNIT=$(DIR_HOME)/dll/Db4oUnit.dll
+DLL_DB4OUNIT_EXTENSIONS=$(DIR_HOME)/dll/Db4oUnit.Extensions.dll
 DEBUGGER_FILES=$(DIR_BIN)/*.mdb
 EXE_TEST_FILE=Db4oMonoTest.exe
 EXE_TEST_PATH=$(DIR_BIN)/$(EXE_TEST_FILE)
@@ -38,7 +40,7 @@ runtest: buildtest
 	$(MONO) ./$(EXE_TEST_PATH)
 
 buildtest: buildtools
-	find $(DIR_SRC_TEST) -name "*.cs"|grep -v "/compact[^/]*/"|grep -v "/net2/"|grep -v "/ListElementByIdentity.cs"|grep -v "/TestCatSpeed.cs"|xargs $(MCS) $(MCS_OPTS) -target:exe -r:$(DLL_CORE) -r:$(DLL_TOOLS) -main:$(MAIN_TEST) -out:$(EXE_TEST_PATH)
+	find $(DIR_SRC_TEST) -name "*.cs"|grep -v "/compact[^/]*/"|grep -v "/net2/"|grep -v "/ListElementByIdentity.cs"|grep -v "/TestCatSpeed.cs"|xargs $(MCS) $(MCS_OPTS) -target:exe -r:$(DLL_CORE) -r:$(DLL_TOOLS) -r:$(DLL_DB4OUNIT) -r:$(DLL_DB4OUNIT_EXTENSIONS) -main:$(MAIN_TEST) -out:$(EXE_TEST_PATH)
 
 buildtools: buildcore
 	find $(DIR_SRC_TOOLS) -name "*.cs"|grep -v "/templates/"|grep -v "/Cecil.FlowAnalysis.Tests/"|grep -v "/AssemblyInfo.cs"|xargs $(MCS) $(MCS_OPTS) -target:library -r:$(DLL_CORE) -out:$(DLL_TOOLS)
