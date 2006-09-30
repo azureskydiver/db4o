@@ -8,6 +8,7 @@ public class AllTests extends Db4oTestSuite {
 
 	public static void main(String[] args) {
 		new AllTests().runSolo();
+		//new AllTests().runClientServer();
     }
 
 	protected Class[] testCases() {
@@ -22,7 +23,8 @@ public class AllTests extends Db4oTestSuite {
             ReAddCascadedDeleteTestCase.class,
             SimplestPossibleTestCase.class,
             NonStaticConfigurationTestCase.class,
-            SystemInfoTestCase.class
+            SystemInfoTestCase.class,
+            ObjectVersionTest.class,
 		};
 	}
 }
