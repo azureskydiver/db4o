@@ -3,9 +3,9 @@
 package com.db4o.drs.test;
 
 import com.db4o.ObjectSet;
-import com.db4o.drs.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
 import com.db4o.drs.inside.ReplicationReference;
+import com.db4o.drs.inside.ReplicationReferenceImpl;
 import com.db4o.ext.Db4oUUID;
 //import com.db4o.test.Test;
 
@@ -283,10 +283,10 @@ public class ReplicationProviderTest extends DrsTestCase {
 		commitReplication();
 		startReplication();
 
-		ObjectSet<Pilot> storedObjects = a().provider().getStoredObjects(Pilot.class);
+		ObjectSet storedObjects = a().provider().getStoredObjects(Pilot.class);
 		Assert.isTrue(storedObjects.hasNext());
 		
-		Pilot reloaded = storedObjects.next();
+		Pilot reloaded = (Pilot)storedObjects.next();
 
 		Assert.isFalse(storedObjects.hasNext());
 		

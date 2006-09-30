@@ -168,7 +168,7 @@
 				<include name="test/**/test/DrsTestCase.java" />
 				<include name="test/**/test/DrsTestSuite.java" />
 				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
-<!--				<include name="test/**/test/TransientReplicationProvider.java" />	-->	
+				<include name="test/**/test/ReplicationProviderTest.java" />
 				<include name="test/**/test/GetByUUID.java" />
 				<include name="test/**/test/TheSimplest.java" />
 				<include name="test/**/test/SPCChild.java" />
@@ -194,6 +194,11 @@
 				<include name="test/**/test/R4.java" />
 				<include name="test/**/test/ReplicationFeaturesMain.java" />
 				<include name="test/**/test/Replicated.java" />				
+<!--				<include name="test/**/test/CollectionHandlerImplTest.java" /> -->
+<!--				<include name="test/**/test/ReplicationTraversalTest.java" /> -->
+<!--				<include name="test/**/test/SingleTypeCollectionReplicationTest.java" /> -->
+<!--				<include name="test/**/test/CollectionHolder.java" /> -->
+				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>
