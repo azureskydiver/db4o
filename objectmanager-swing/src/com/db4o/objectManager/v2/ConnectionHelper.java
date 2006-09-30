@@ -29,6 +29,8 @@ public class ConnectionHelper {
                 if(e.getMessage().contains("Old database file format detected")){ // this is bad, would be nice to have a more concrete exception
                     OptionPaneHelper.showConfirmWarning(frame, "Old database file format detected. Would you like to upgrade?\n" +
                             "WARNING: This operation is irreversible and your application may not operate unless you update your db4o jar file to the latest version.", "Upgrade Database?");
+                } else {
+                    throw e;
                 }
             }
         } else if(connectionSpec instanceof Db4oSocketConnectionSpec){

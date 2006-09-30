@@ -32,12 +32,18 @@ package com.db4o.objectManager.v2;
 
 import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
 import com.db4o.objectManager.v2.custom.FastScrollPane;
+import com.db4o.objectManager.v2.tree.ObjectTreeModel;
+import com.db4o.objectManager.v2.tree.ObjectTreeNode;
+import com.db4o.objectManager.v2.tree.ObjectTree;
+import com.db4o.objectManager.v2.tree.ObjectTreeCellEditor;
 import com.db4o.ObjectContainer;
 import com.db4o.objectmanager.model.IGraphIterator;
 import com.jgoodies.forms.factories.Borders;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
@@ -134,11 +140,15 @@ final class QueryResultsPanel extends JPanel {
      * @param o object tree to display
      */
     public void showObjectTree(Object o) {
-        ObjectTreeNode top = new ObjectTreeNode(null, o);
+        ObjectTreeNode top = new ObjectTreeNode(null, null, o);
         //IGraphIterator graphIterator = new ObjectGraphIterator(o, Db4oDatabase.getForObjectContainer(mainPanel.getObjectContainer(), mainPanel.getConnectionSpec()));
         //createNodes(top, graphIterator);
         ObjectTreeModel objectTreeModel = new ObjectTreeModel(top, mainPanel.getObjectContainer());
-        JTree tree = new JTree(objectTreeModel);
+        ObjectTree tree = new ObjectTree(objectTreeModel);
+        tree.setEditable(true);
+        JTextField tf = new JTextField();
+        DefaultTreeCellEditor editor = new DefaultTreeCellEditor(tree, (DefaultTreeCellRenderer) tree.getCellRenderer(), new ObjectTreeCellEditor(tf));
+        tree.setCellEditor(editor);
         JScrollPane treeView = new JScrollPane(tree);
         mainPanel.addTab("Object: " + o, treeView);
     }
