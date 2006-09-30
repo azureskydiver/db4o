@@ -13,8 +13,8 @@ import com.db4o.drs.hibernate.ReplicationConfigurator;
 import com.db4o.drs.hibernate.impl.Util;
 import com.db4o.drs.hibernate.metadata.Uuid;
 import com.db4o.drs.test.CollectionHolder;
-import com.db4o.test.Test;
 
+import db4ounit.Assert;
 import db4ounit.TestCase;
 
 public class ReplicationConfiguratorTest implements TestCase {
@@ -38,7 +38,7 @@ public class ReplicationConfiguratorTest implements TestCase {
 		session.flush();
 
 		Uuid uuid = getUuid(session, ch);
-		Test.ensure(uuid != null);
+		Assert.isNotNull(uuid );
 
 		ch.set.add("8");
 		session.flush();
@@ -78,7 +78,7 @@ public class ReplicationConfiguratorTest implements TestCase {
 		session.flush();
 
 		Uuid uuid = getUuid(session, ch);
-		Test.ensure(uuid != null);
+		Assert.isNotNull(uuid);
 
 		ch.set.add("8");
 		session.flush();
@@ -111,7 +111,7 @@ public class ReplicationConfiguratorTest implements TestCase {
 		session.flush();
 
 		Uuid uuid = getUuid(session, ch);
-		Test.ensure(uuid != null);
+		Assert.isNotNull(uuid);
 
 		ch.name = "changed";
 		tx.commit();
@@ -180,7 +180,7 @@ public class ReplicationConfiguratorTest implements TestCase {
 	}
 
 	protected void ensureDeleted(Session session, Uuid uuid) {
-		Test.ensure(Util.getByUUID(session, uuid)==null);
+		Assert.isNull(Util.getByUUID(session, uuid));
 	}
 
 	protected Uuid getUuid(Session session, Object obj) {

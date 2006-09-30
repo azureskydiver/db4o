@@ -21,8 +21,8 @@ public class RdbmsTests extends DrsTestSuite {
 		 */
 		
 		//new RdbmsTests().runHsqlHsql();
-//		new RdbmsTests().runHsqldb4oCS();
-		new RdbmsTests().runOracledb4oCS();
+		new RdbmsTests().runHsqldb4oCS();
+//		new RdbmsTests().runOracledb4oCS();
 //		new RdbmsTests().runMySQLdb4oCS();
 //		new RdbmsTests().runPostgreSQLdb4oCS();
 	}
@@ -71,10 +71,10 @@ public class RdbmsTests extends DrsTestSuite {
 	protected Class[] testCases() {
 		Set<Class> out = new HashSet<Class>();
 		
-	//	out.add(TablesCreatorTest.class);
-		//out.add(ReplicationConfiguratorTest.class);
+		out.add(TablesCreatorTest.class);
+		out.add(ReplicationConfiguratorTest.class);
 		
-		for (Class c : one())
+		for (Class c : all())
 			out.add(c);
 		
 		return out.toArray(new Class[]{});
