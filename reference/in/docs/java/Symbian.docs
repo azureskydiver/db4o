@@ -1,0 +1,66 @@
+.n
+.a Symbian .. 
+.2 Symbian OS ..
+Symbian OS is the global industry standard operating system for smartphones. You can find more ._
+information about it at the  .l http://www.symbian.com/   Symbian website ..   .
+UIQ (formerly known as User Interface Quartz) is a software platform based upon Symbian OS. ._
+UIQ-based devices support Java thus enabling you to use db4o. 
+
+.3 Setting up programming environment ..
+Db4o  was tested for compatibility with UIQ 2.1 SDK. You can download the SDK from:
+.l http://developer.sonyericsson.com/site/global/docstools/symbian/p_symbian.jsp ..
+
+The UIQ Symbian SDK allows you to write applications for Symbian OS using your Windows PC and ._
+a suitable JDK ( JDK 1.1.8). The SDK comes with UIQ emulator, which can be run on a ._
+Windows-based computer allowing you to test and debug your application before deployment.
+The SDK also installs some third party software, including JRE 1.3, which under some conditions can ._
+break Java installations already present ('java.dll not found' error message). In this case you can uninstalling the JRE ._
+that comes with Symbian to solve the problem.
+The Emulator has its own file system ( you can get more information about how it is designed from ._
+the SDK documentation). 
+To be able to run Java applications and use db4o in the emulator, you will have to ._
+map _epoc_drive_j to <path_to_your_sdk_installation>\epoc32\java\. Consult your MS Windows ._
+documentation on how to set environment variables.
+Environment variables can be set locally at the command prompt using the syntax
+.c > set _epoc_drive_j=<path_to_my_sdk_installation>\epoc32\java\ ..
+You can also launch your application on the Emulator from the Windows command prompt: 
+.c pjava -cd j:\demo DemoApp .. 
+You have to ensure that the correct version of the emulator VM executable (pjava.exe) is ._
+used - the correct path is <path_to_my_sdk_installation>/runtime/epoc32/release/wins/urel.
+Command-line launch also allows you to pass arguments to a class's main(). Please, note that ._
+path names given to pjava are paths within the Emulator's drivespace only; they are not Windows paths.
+Some platforms will require additional tuning to run the Emulator successfully. The ._
+following advices should help, if you are experiencing problems running the emulator:
+- use a -cd (change directory) argument for pJava as well as a full -cp, both expressed in terms ._
+of the virtual file system. 
+- add the path to the JDK runtime classes (j:/lib/classes.zip, equivalent ._
+to <path_to_my_sdk_installation>/runtime/epoc32/java/lib/classes.zip) to the -cp argument. 
+The last thing you need to do is to copy the proper version of db4o jar (JDK1.1) to the emulator ._
+file system directory (<path_to_my_sdk_installation>/runtime/epoc32/java) and add its location ._
+to the classpath.
+To make the startup process easier we recommend to create a batch file to run your application, ._
+which can look like this:
+
+.c REM deploy all db4o files to C:\Symbian\UIQ_21\runtime\epoc32\java 
+
+SET SYMB_HOME=C:\Symbian\UIQ_21
+SET SYMB_EPOC32=%SYMB_HOME%\runtime\epoc32
+SET SYMB_BIN=%SYMB_EPOC32%\release\wins\urel
+
+SET _epoc_drive_j=%SYMB_EPOC32%\java\
+
+%SYMB_BIN%\pjava -cd J:\ -cp .;J:\;J:\classes\;J:\db4o-5.0-java1.1.jar;J:\DemoApp.jar DemoClass
+.. 
+
+
+.3 Programming specifics ..
+Tested version of Symbian JDK has problems with IO:
+- seek() cannot move beyond the current file length;
+- under certain (rare) conditions, calls to RandomAccessFile.length() seems to garble up the following reads.
+
+To workaround these problems and make db4o file operations stable special SymbianIoAdapter ._
+is provided for Symbian OS:
+.c Db4o.configure().io(new com.db4o.io.SymbianIoAdapter()) ..
+You can read more about using IOAdapters with db4o in  .l ios  IOAdaper chapter ..
+The following example shows how SymbianIoAdapter can be used:
+.s com.db4odoc.f1.symbian.SymbianTest ..

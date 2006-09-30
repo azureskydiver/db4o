@@ -1,0 +1,9 @@
+.n
+.a Platforms ..
+.1 Platforms ..
+Db4o can be run on a variety of platforms, which have Java or .NET virtual machines. These include ._
+desktop and pocket computers, mobile phones and various embedded devices. However each ._
+platform has its own features, which should be taken into consideration in software development ._
+process. These features will be discussed in the following chapters.
+
+.? java .e Symbian ..  .?  
