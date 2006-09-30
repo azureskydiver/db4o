@@ -21,7 +21,6 @@ import com.db4o.drs.test.SPCChild;
 import com.db4o.drs.test.SPCParent;
 import com.db4o.drs.test.SimpleArrayContent;
 import com.db4o.drs.test.SimpleArrayHolder;
-import com.db4o.test.replication.hibernate.HibernateUtil;
 
 public abstract class RdbmsFixture implements DrsFixture {
 	public static final Class[] mappings;

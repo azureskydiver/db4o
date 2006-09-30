@@ -6,15 +6,15 @@
 		<fileset dir="lib">
 			<include name="*.jar" />
 		</fileset>
+		
 		<fileset dir="${drs.dir.dist.lib}">
 			<include name="*.jar" />
 		</fileset>
-		<pathelement location="${file.java5.jar}" />
-		<pathelement location="${file.test.jar}" />
+		
 		<pathelement location="${drs.dir.dist.classes}" />
 	</path>
 
-	<target name="init">
+	<target name="init" depends="">
 		<tstamp />
 		<mkdir dir="${drs.dir.dist.lib}" />
 		<mkdir dir="${drs.dir.dist.api}" />
@@ -63,23 +63,16 @@
 		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
-	<!--remove me after deprecating old tests-->
-	<target name="build-old-tests" depends="build-core" description="jar the OLD test src of drs">
-		<buildjar srcdir="src/deprecated-test" classpathrefid="class.path" jar="${file.drs.test.old.jar}" exclude="log4j.xml" include="**/*.xml" />
-	</target>
-
 	<target name="build-all" depends="clean">
 		<antcall target="build-core" />
 		<antcall target="build-example" />
 		<antcall target="build-regression" />
-		<!--remove me after deprecating old tests-->
-		<antcall target="build-old-tests" />
 	</target>
 
 	<target name="javadoc">
 		<javadoc destdir="${drs.dir.dist.api}" author="true" version="true" use="true" windowtitle="dRS" classpathref="class.path">
 			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
-				<include name="com/db4o/replication/**/*.java" />
+				<include name="com/db4o/drs/**/*.java" />
 			</fileset>
 		</javadoc>
 	</target>
@@ -113,8 +106,6 @@
 			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
 			<zipfileset file="${file.drs.tutorial.jar}" fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}" />
 			<zipfileset file="${file.drs.test.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.jar}" />
-			<!--remove me after deprecating old tests-->
-			<zipfileset file="${file.drs.test.old.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.old.jar}" />
 		</zip>
 		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}" />
 	</target>
@@ -124,15 +115,14 @@
 		<copy file="${drs.dir.src.core}/log4j.xml" todir="${drs.dir.dist.classes}" />
 	</target>
 
-	<target name="run-example" depends="build-example, copyLog4j">
+	<target name="run-example" depends="init, copyLog4j">
 		<java classname="f1.stepbystep.StepByStepExample">
 			<classpath refid="class.path" />
 		</java>
 	</target>
 	
-	<!--Run db4ounit tests in development release-->
-	<target name="run-regression" depends="build-old-tests, copyLog4j">
-		<java classname="com.db4o.test.replication.AllTestsReplication">
+	<target name="run-regression" depends="init, copyLog4j">
+		<java classname="com.db4o.drs.test.all.AllDrsTests">
 			<classpath refid="class.path" />
 		</java>
 	</target>
