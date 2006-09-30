@@ -1,6 +1,7 @@
 package com.db4o.drs.hibernate.impl;
 
 import com.db4o.drs.inside.ReplicationReference;
+import com.db4o.drs.inside.ReplicationReferenceImpl;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Visitor4;
 
