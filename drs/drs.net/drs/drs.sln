@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drs", "drs.csproj", "{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drs.tests", "..\drs.tests\drs.tests.csproj", "{EAFFAFBE-9BD4-4BAD-A108-980191DF2596}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net2", "..\..\..\db4obuild\dist\net\db4o-5.7\src\core\db4o-net2.csproj", "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +17,14 @@ Global
 		{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAFFAFBE-9BD4-4BAD-A108-980191DF2596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFFAFBE-9BD4-4BAD-A108-980191DF2596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFFAFBE-9BD4-4BAD-A108-980191DF2596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAFFAFBE-9BD4-4BAD-A108-980191DF2596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -20,7 +20,7 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 	}
 
 	protected Class[] one() {
-		return new Class[] { ReplicationFeaturesMain.class, };
+		return new Class[] { ReplicationProviderTest.class, };
 	}
 
 	protected Class[] all() {
@@ -34,20 +34,19 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				SimpleParentChild.class,
 
 				// Collection
-				MapTest.class,
-				ArrayReplicationTest.class,
+				MapTest.class, // TODO : Convert to .NET
+				ArrayReplicationTest.class,// TODO : Convert to .NET
 				ListTest.class, 
 				Db4oListTest.class, 
-				MapTest.class,
 				SingleTypeCollectionReplicationTest.class,
-				MixedTypesCollectionReplicationTest.class,
+				MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
 
 				// Complex
-				R0to4Runner.class, 
+				R0to4Runner.class, 	
 				ReplicationFeaturesMain.class,
 
 				// General
-				CollectionHandlerImplTest.class, 
+				CollectionHandlerImplTest.class,  
 				ReplicationTraversalTest.class };
 	}
 }

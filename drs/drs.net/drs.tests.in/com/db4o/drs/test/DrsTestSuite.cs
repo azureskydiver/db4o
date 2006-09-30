@@ -20,15 +20,19 @@ namespace com.db4o.drs.test
 
         protected virtual System.Type[] All()
         {
-            return new System.Type[] { typeof(com.db4o.drs.test.TheSimplest), 
+            return new System.Type[] { typeof(TheSimplest),
 			                           typeof(ReplicationEventTest), 
-			                           typeof(SimpleArrayTest), 
+                                       typeof(ReplicationProviderTest),
+                                       typeof(ReplicationAfterDeletionTest),
+                                       typeof(SimpleArrayTest), 
 			                           typeof(SimpleParentChild),
-                                        typeof(ReplicationAfterDeletionTest),
-                                        typeof(ListTest),
-                                        typeof(Db4oListTest),
-                                        typeof(R0to4Runner),
-                                        typeof(ReplicationFeaturesMain)
+                                       typeof(ListTest),
+                                       typeof(Db4oListTest),
+                                       typeof(SingleTypeCollectionReplicationTest),
+                                       typeof(R0to4Runner),
+                                       typeof(ReplicationFeaturesMain),
+                                       typeof(CollectionHandlerImplTest),
+                                       typeof(ReplicationTraversalTest)
             };
         }
     }
