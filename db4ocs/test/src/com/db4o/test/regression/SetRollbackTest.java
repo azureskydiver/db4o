@@ -15,10 +15,8 @@ public class SetRollbackTest extends ClientServerTestCase {
 	 * regression test: http://developer.db4o.com/forums/thread/29298.aspx
 	 * 
 	 */
-	public void concSetRollback1(ExtObjectContainer oc, int seq) {
-		if (seq != 0) {
-			return;
-		}
+	public void testSetRollback1() {
+		ExtObjectContainer oc = db();
 		ExtObjectContainer oc2 = db();
 		try {
 			for (int i = 0; i < 1000; i++) {
@@ -35,6 +33,7 @@ public class SetRollbackTest extends ClientServerTestCase {
 			Assert.areEqual(1000, oc.query(SimpleObject.class).size());
 			Assert.areEqual(1000, oc2.query(SimpleObject.class).size());
 		} finally {
+			oc.close();
 			oc2.close();
 		}
 	}

@@ -2,6 +2,7 @@
 
 package db4ounit.extensions;
 
+import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
@@ -26,6 +27,12 @@ public class Db4oUtil {
 	public static void assertOccurrences(ExtObjectContainer oc, Class clazz,
 			int expected) {
 		Assert.areEqual(expected, occurrences(oc, clazz));
+	}
+	
+	public static void deleteObjectSet(ObjectContainer container, ObjectSet all) {
+		while (all.hasNext()) {
+			container.delete(all.next());
+		}
 	}
 
 	private static Class classOf(Object obj) {
