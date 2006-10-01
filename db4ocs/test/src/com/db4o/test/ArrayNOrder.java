@@ -2,14 +2,13 @@
 
 package com.db4o.test;
 
-import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.extensions.Db4oUtil;
 
-public class ArrayNOrder2 extends ClientServerTestCase {
+public class ArrayNOrder extends ClientServerTestCase {
 
 	public String[][][] s1;
 
@@ -59,9 +58,8 @@ public class ArrayNOrder2 extends ClientServerTestCase {
 	 * 
 	 */
 	public void conc(ExtObjectContainer oc) {
-		ArrayNOrder2 ano = (ArrayNOrder2) getOne(oc, this);
+		ArrayNOrder ano = (ArrayNOrder) Db4oUtil.getOne(oc, this);
 		ano.check();
-		System.out.println("yeah!!!!!!!!!!!!");
 	}
 
 	public void check() {
@@ -82,23 +80,4 @@ public class ArrayNOrder2 extends ClientServerTestCase {
 		Assert.areEqual(o1[1][0], new Float(10));
 		Assert.areEqual(o1[1][1], new Double(1.1));
 	}
-
-	public static Object getOne(ExtObjectContainer oc, Object obj) {
-		Query q = oc.query();
-		q.constrain(classOf(obj));
-		ObjectSet set = q.execute();
-		Assert.areEqual(1, set.size());
-		return set.next();
-	}
-
-	private static Class classOf(Object obj) {
-		if (obj == null) {
-			return null;
-		}
-		if (obj instanceof Class) {
-			return (Class) obj;
-		}
-		return obj.getClass();
-	}
-
 }

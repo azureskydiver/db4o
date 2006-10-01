@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.test.config.Configure;
-import com.db4o.test.data.SimpleObject;
+import com.db4o.test.config.TestConfigure;
+import com.db4o.test.persistent.SimpleObject;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
@@ -21,7 +21,7 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 
 	protected void store(ExtObjectContainer oc) throws Exception {
 
-		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
+		for (int i = 0; i < TestConfigure.CONCURRENCY_THREAD_COUNT; i++) {
 			SimpleObject o = new SimpleObject(testString + i, i);
 			list.add(o);
 		}
@@ -32,19 +32,19 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 	public void concUpdateSameElement(ExtObjectContainer oc, int seq)
 			throws Exception {
 
-		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
+		int mid = TestConfigure.CONCURRENCY_THREAD_COUNT / 2;
 
 		ObjectSet result = oc.get(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
-		Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT, l.size());
+		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT, l.size());
 		boolean found = false;
 		Iterator iter = l.iterator();
 		while (iter.hasNext()) {
 			SimpleObject o = (SimpleObject) iter.next();
 			// find the middle element, by comparing SimpleObject.s
 			if ((testString + mid).equals(o.getS())) {
-				o.setI(Configure.CONCURRENCY_THREAD_COUNT + seq);
+				o.setI(TestConfigure.CONCURRENCY_THREAD_COUNT + seq);
 				found = true;
 				break;
 			}
@@ -56,12 +56,12 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 
 	public void checkUpdateSameElement(ExtObjectContainer oc) throws Exception {
 
-		int mid = Configure.CONCURRENCY_THREAD_COUNT / 2;
+		int mid = TestConfigure.CONCURRENCY_THREAD_COUNT / 2;
 
 		ObjectSet result = oc.get(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
-		Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT, l.size());
+		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT, l.size());
 		boolean found = false;
 		Iterator iter = l.iterator();
 		while (iter.hasNext()) {
@@ -69,8 +69,8 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 			// find the middle element, by comparing SimpleObject.s
 			if ((testString + mid).equals(o.getS())) {
 				int i = o.getI();
-				Assert.isTrue(Configure.CONCURRENCY_THREAD_COUNT <= i
-						&& i <= 2 * Configure.CONCURRENCY_THREAD_COUNT);
+				Assert.isTrue(TestConfigure.CONCURRENCY_THREAD_COUNT <= i
+						&& i <= 2 * TestConfigure.CONCURRENCY_THREAD_COUNT);
 				found = true;
 				break;
 			}
@@ -85,13 +85,13 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 		ObjectSet result = oc.get(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
-		Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT, l.size());
+		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT, l.size());
 		boolean found = false;
 		Iterator iter = l.iterator();
 		while (iter.hasNext()) {
 			SimpleObject o = (SimpleObject) iter.next();
 			if ((testString + seq).equals(o.getS())) {
-				o.setI(Configure.CONCURRENCY_THREAD_COUNT + seq);
+				o.setI(TestConfigure.CONCURRENCY_THREAD_COUNT + seq);
 				oc.set(o);
 				found = true;
 				break;
@@ -107,11 +107,11 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 		ObjectSet result = oc.get(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
-		Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT, l.size());
+		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT, l.size());
 		Iterator iter = l.iterator();
 		while (iter.hasNext()) {
 			SimpleObject o = (SimpleObject) iter.next();
-			int i = o.getI() - Configure.CONCURRENCY_THREAD_COUNT;
+			int i = o.getI() - TestConfigure.CONCURRENCY_THREAD_COUNT;
 			Assert.areEqual(testString + i, o.getS());
 		}
 
@@ -122,7 +122,7 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 		ObjectSet result = oc.get(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
-		Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT, l.size());
+		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT, l.size());
 		Iterator iter = l.iterator();
 		while (iter.hasNext()) {
 			SimpleObject o = (SimpleObject) iter.next();
@@ -138,7 +138,7 @@ public class UpdateCollectionTest extends ClientServerTestCase {
 		ObjectSet result = oc.get(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
-		Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT, l.size());
+		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT, l.size());
 		Iterator iter = l.iterator();
 		SimpleObject firstElement = (SimpleObject) iter.next();
 		int expectedI = firstElement.getI();

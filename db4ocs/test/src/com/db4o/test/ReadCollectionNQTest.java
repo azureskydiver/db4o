@@ -8,8 +8,8 @@ import java.util.List;
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Predicate;
-import com.db4o.test.config.Configure;
-import com.db4o.test.data.SimpleObject;
+import com.db4o.test.config.TestConfigure;
+import com.db4o.test.persistent.SimpleObject;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
@@ -21,7 +21,7 @@ public class ReadCollectionNQTest extends ClientServerTestCase {
 
 	protected void store(ExtObjectContainer oc) throws Exception {
 
-		for (int i = 0; i < Configure.CONCURRENCY_THREAD_COUNT; i++) {
+		for (int i = 0; i < TestConfigure.CONCURRENCY_THREAD_COUNT; i++) {
 			SimpleObject o = new SimpleObject(testString + i, i);
 			list.add(o);
 		}
@@ -33,7 +33,7 @@ public class ReadCollectionNQTest extends ClientServerTestCase {
 
 		ObjectSet result = oc.query(new Predicate<List>() {
 			public boolean match(List list) {
-				return list.size() == Configure.CONCURRENCY_THREAD_COUNT;
+				return list.size() == TestConfigure.CONCURRENCY_THREAD_COUNT;
 			}
 		});
 		Assert.areEqual(1, result.size());

@@ -2,7 +2,7 @@
 
 package com.db4o.test.config;
 
-public class Configure {
+public class TestConfigure {
 	
 	public static int CONCURRENCY_THREAD_COUNT = 10;
 
