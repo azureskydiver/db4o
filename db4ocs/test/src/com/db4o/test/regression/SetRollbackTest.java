@@ -3,8 +3,8 @@
 package com.db4o.test.regression;
 
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.test.config.Configure;
-import com.db4o.test.data.SimpleObject;
+import com.db4o.test.config.TestConfigure;
+import com.db4o.test.persistent.SimpleObject;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
@@ -58,7 +58,7 @@ public class SetRollbackTest extends ClientServerTestCase {
 	}
 
 	public void checkSetRollback2(ExtObjectContainer oc) {
-		Assert.areEqual(Configure.CONCURRENCY_THREAD_COUNT / 2 * 1000, oc
+		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT / 2 * 1000, oc
 				.query(SimpleObject.class).size());
 	}
 }

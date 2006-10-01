@@ -8,6 +8,11 @@ public class AllTests extends CSTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+				ArrayNOrder.class,
+				ByteArray.class,
+				CascadedDeleteUpdate.class,
+				CascadeDeleteArray.class,
+				CascadeDeleteDeleted.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
