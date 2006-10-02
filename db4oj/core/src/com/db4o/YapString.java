@@ -146,9 +146,8 @@ public final class YapString extends YapIndependantType {
     	return s; 
     }
 
-    // TODO: What's that?
 	private boolean isInvalidSlot(Slot slot) {
-		return slot._address == slot._length;
+		return (slot._address == 0) && (slot._length == 0);
 	}
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
