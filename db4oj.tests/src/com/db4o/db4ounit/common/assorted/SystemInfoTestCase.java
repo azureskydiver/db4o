@@ -7,6 +7,9 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.AbstractFileBasedDb4oFixture;
+
+import java.io.File;
 
 
 public class SystemInfoTestCase extends AbstractDb4oTestCase{
@@ -43,6 +46,17 @@ public class SystemInfoTestCase extends AbstractDb4oTestCase{
         db().commit();
         Assert.isTrue(info.freespaceEntryCount() > 0);
         Assert.isTrue(info.freespaceSize() > 0);
+    }
+
+    public void testTotalSize(){
+        if(fixture() instanceof AbstractFileBasedDb4oFixture ){
+        	// assuming YapFile only
+            AbstractFileBasedDb4oFixture fixture = (AbstractFileBasedDb4oFixture) fixture();
+            File f = new File(fixture.getAbsolutePath());
+            long expectedSize = f.length();
+            long actual = db().systemInfo().totalSize();
+            Assert.areEqual(expectedSize, actual);
+        }
     }
 
 }

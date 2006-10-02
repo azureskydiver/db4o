@@ -41,10 +41,10 @@ public class SystemInfoFileImpl implements SystemInfo{
         long blockedSize = freespaceManager().freeSize();
         return blockSize * blockedSize;
     }
-    
-   
-    
-    
-    
+
+    public long totalSize() {
+        return _file.fileLength();
+    }
+
 
 }

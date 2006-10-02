@@ -17,8 +17,8 @@ public class ClassStatsTableModel extends DefaultTableModel implements TableMode
     static String columns[] = new String[]{
             "Class",
             "Objects",
-            "Data size",
-            "Index size",
+            /*"Data size",
+            "Index size",*/
     };
 
     public ClassStatsTableModel(DatabaseInspector databaseInspector) {
@@ -32,8 +32,8 @@ public class ClassStatsTableModel extends DefaultTableModel implements TableMode
             c=0;
             setValueAt(storedClass.getName(),r,c++);
             setValueAt(databaseInspector.getNumberOfObjectsForClass(storedClass.getName()),r,c++);
-            setValueAt(databaseInspector.getSpaceUsedByClass(storedClass.getName()),r,c++);
-            setValueAt(databaseInspector.getSpaceUsedByClassIndexes(storedClass.getName()), r, c++);
+            //setValueAt(databaseInspector.getSpaceUsedByClass(storedClass.getName()),r,c++);
+            //setValueAt(databaseInspector.getSpaceUsedByClassIndexes(storedClass.getName()), r, c++);
             r++;
         }
     }

@@ -81,6 +81,7 @@ public class DemoPopulator {
             // delete old file if it exists
             File f = new File(DB_FILE);
             if(f.exists()) f.delete();
+            //Db4o.configure().objectClass(Address.class).objectField("street").indexed(true);
             db = Db4o.openFile(DB_FILE);
         }
         return db;

@@ -62,7 +62,7 @@ public interface StoredField {
      */
     public void traverseValues(Visitor4 visitor);
     
-	
+	public boolean hasIndex();
 
 //  will need for replication. Requested for 3.0 
 //	

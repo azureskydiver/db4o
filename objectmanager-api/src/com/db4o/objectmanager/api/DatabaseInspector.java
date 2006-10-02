@@ -39,30 +39,6 @@ public interface DatabaseInspector {
     int getNumberOfObjectsForClass(String aClass);
 
     /**
-     * 
-     * @return the <b>total</b> disk space in bytes
-     */
-    long getSpaceUsed();
-
-    /**
-     *
-     * @return the disk space used by by indexes in bytes
-     */
-    long getSpaceUsedByIndexes();
-
-    /**
-     *
-     * @return the disk space used by class meta data in bytes
-     */
-    long getSpaceUsedByClassMetaData();
-
-    /**
-     *
-     * @return the disk space used by USER stored objects in bytes
-     */
-    long getSpaceUsedByStoredObjects();
-
-    /**
      * Space that has been acquired, but not used.
      * aka: free space
      *
@@ -76,7 +52,7 @@ public interface DatabaseInspector {
      * 
      * @return unallocated space in bytes
      */
-    long getSpaceUnallocated();
+    long getSpaceLost();
 
     /**
      *
@@ -103,17 +79,4 @@ public interface DatabaseInspector {
      */
     long getSize();
 
-    /**
-     *
-     * @param className
-     * @return size of data for class
-     */
-    long getSpaceUsedByClass(String className);
-
-    /**
-     *
-     * @param className
-     * @return size of data for class indexes
-     */
-    long getSpaceUsedByClassIndexes(String className);
 }
