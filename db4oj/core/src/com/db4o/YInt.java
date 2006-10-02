@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -135,4 +136,7 @@ public class YInt extends YapJavaClass {
         return obj instanceof Integer && val(obj) < i_compareTo;
     }
 
+    public void defragIndexEntry(ReaderPair readers) {
+    	readers.copyID();
+    }
 }
