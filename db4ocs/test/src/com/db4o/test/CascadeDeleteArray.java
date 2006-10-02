@@ -32,6 +32,32 @@ public class CascadeDeleteArray extends ClientServerTestCase {
 		oc.set(this);
 	}
 
+	public void test() {
+		int total = 10;
+		ExtObjectContainer[] ocs = new ExtObjectContainer[total];
+		ObjectSet[] oss = new ObjectSet[total];
+		for (int i = 0; i < total; i++) {
+			ocs[i] = fixture().db();
+			oss[i] = ocs[i].query(SimpleObject.class);
+			Assert.areEqual(TOTAL_COUNT, oss[i].size());
+		}
+		for (int i = 0; i < total; i++) {
+			Db4oUtil.deleteObjectSet(ocs[i], oss[i]);
+		}
+		ExtObjectContainer oc = fixture().db();
+		try {
+			Db4oUtil.assertOccurrences(oc, SimpleObject.class, TOTAL_COUNT);
+			ocs[0].commit();
+			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
+			for (int i = 1; i < total; i++) {
+				ocs[i].close();
+			}
+			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
+		} finally {
+			oc.close();
+		}
+	}
+	
 	public void concDelete(ExtObjectContainer oc) {
 		int size = Db4oUtil.occurrences(oc, SimpleObject.class);
 		if (size != TOTAL_COUNT && size != 0) {
@@ -57,32 +83,6 @@ public class CascadeDeleteArray extends ClientServerTestCase {
 	
 	public void checkDelete(ExtObjectContainer oc) {
 		Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
-	}
-
-	public void test() {
-		int total = 10;
-		ExtObjectContainer[] ocs = new ExtObjectContainer[total];
-		ObjectSet[] oss = new ObjectSet[total];
-		for (int i = 0; i < total; i++) {
-			ocs[i] = fixture().db();
-			oss[i] = ocs[i].query(SimpleObject.class);
-			Assert.areEqual(TOTAL_COUNT, oss[i].size());
-		}
-		for (int i = 0; i < total; i++) {
-			Db4oUtil.deleteObjectSet(ocs[i], oss[i]);
-		}
-		ExtObjectContainer oc = fixture().db();
-		try {
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, TOTAL_COUNT);
-			ocs[0].commit();
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
-			for (int i = 1; i < total; i++) {
-				ocs[i].close();
-			}
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
-		} finally {
-			oc.close();
-		}
 	}
 
 }
