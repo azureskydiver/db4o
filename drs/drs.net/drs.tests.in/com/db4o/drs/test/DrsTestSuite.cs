@@ -32,7 +32,8 @@ namespace com.db4o.drs.test
                                        typeof(R0to4Runner),
                                        typeof(ReplicationFeaturesMain),
                                        typeof(CollectionHandlerImplTest),
-                                       typeof(ReplicationTraversalTest)
+                                       typeof(ReplicationTraversalTest),
+                                       typeof(InheritanceTest)
             };
         }
     }

@@ -194,10 +194,9 @@
 				<include name="test/**/test/R4.java" />
 				<include name="test/**/test/ReplicationFeaturesMain.java" />
 				<include name="test/**/test/Replicated.java" />				
-<!--				<include name="test/**/test/CollectionHandlerImplTest.java" /> -->
-<!--				<include name="test/**/test/ReplicationTraversalTest.java" /> -->
-<!--				<include name="test/**/test/SingleTypeCollectionReplicationTest.java" /> -->
-<!--				<include name="test/**/test/CollectionHolder.java" /> -->
+				<include name="test/**/test/Person.java" />				
+				<include name="test/**/test/Student.java" />				
+				<include name="test/**/test/InheritanceTest.java" />				
 				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />

@@ -27,7 +27,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				ListHolder.class, ListContent.class,
 				MapHolder.class, MapContent.class,
 				SimpleArrayContent.class, SimpleArrayHolder.class,
-				R0.class, Pilot.class, Car.class};
+				R0.class, Pilot.class, Car.class, Student.class, Person.class};
 	}
 	
 

@@ -26,27 +26,29 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 	protected Class[] all() {
 		return new Class[] {
 				// Simple
-				TheSimplest.class, 
-				ReplicationEventTest.class,
-				ReplicationProviderTest.class,
-				ReplicationAfterDeletionTest.class,
-				SimpleArrayTest.class,
-				SimpleParentChild.class,
-
-				// Collection
-				MapTest.class, // TODO : Convert to .NET
-				ArrayReplicationTest.class,// TODO : Convert to .NET
-				ListTest.class, 
-				Db4oListTest.class, 
-				SingleTypeCollectionReplicationTest.class,
-				MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
-
-				// Complex
-				R0to4Runner.class, 	
-				ReplicationFeaturesMain.class,
-
-				// General
-				CollectionHandlerImplTest.class,  
-				ReplicationTraversalTest.class };
+				InheritanceTest.class,
+//				TheSimplest.class, 
+//				ReplicationEventTest.class,
+//				ReplicationProviderTest.class,
+//				ReplicationAfterDeletionTest.class,
+//				SimpleArrayTest.class,
+//				SimpleParentChild.class,
+//
+//				// Collection
+//				MapTest.class, // TODO : Convert to .NET
+//				ArrayReplicationTest.class,// TODO : Convert to .NET
+//				ListTest.class, 
+//				Db4oListTest.class, 
+//				SingleTypeCollectionReplicationTest.class,
+//				MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
+//
+//				// Complex
+//				R0to4Runner.class, 	
+//				ReplicationFeaturesMain.class,
+//
+//				// General
+//				CollectionHandlerImplTest.class,  
+//				ReplicationTraversalTest.class 
+				};
 	}
 }
