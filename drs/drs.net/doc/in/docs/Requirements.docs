@@ -1,0 +1,11 @@
+.n
+.a Requirements ..
+.0 Requirements ..
+
+dRS.NET is provided as source code.  In order to compile you will need ._
+load the solution into Visual Studio 2005.
+
+dRS.NET is dependant on the .NET 2.0.
+
+Testing the installation
+The drs.tests project contains unit tests for testing dRS.NET. ._
