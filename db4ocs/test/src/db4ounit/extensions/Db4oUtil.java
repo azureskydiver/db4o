@@ -34,9 +34,9 @@ public class Db4oUtil {
 		deleteObjectSet(oc, oc.get(null));
 	}
 	
-	public static void deleteObjectSet(ObjectContainer container, ObjectSet all) {
-		while (all.hasNext()) {
-			container.delete(all.next());
+	public static void deleteObjectSet(ObjectContainer oc, ObjectSet os) {
+		while (os.hasNext()) {
+			oc.delete(os.next());
 		}
 	}
 
