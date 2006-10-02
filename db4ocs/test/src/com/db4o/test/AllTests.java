@@ -13,6 +13,7 @@ public class AllTests extends CSTestSuite {
 				CascadedDeleteUpdate.class,
 				CascadeDeleteArray.class,
 				CascadeDeleteDeleted.class,
+				CascadeDeleteFalse.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
