@@ -30,4 +30,10 @@ public interface SystemInfo {
      */
     public long freespaceSize();
 
+    /**
+     * 
+     * @return
+     */
+    public long totalSize();
+
 }

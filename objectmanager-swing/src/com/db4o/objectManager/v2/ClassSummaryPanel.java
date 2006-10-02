@@ -54,7 +54,7 @@ public class ClassSummaryPanel extends JPanel {
     }
 
     private TableModel createFieldModel() {
-        TableModel tableModel = new FieldInfoTableModel(databaseInspector);
+        TableModel tableModel = new FieldInfoTableModel(objectContainer, databaseInspector, className);
         return tableModel;
     }
 

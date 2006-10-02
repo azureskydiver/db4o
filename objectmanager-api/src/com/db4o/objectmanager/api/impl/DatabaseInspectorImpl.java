@@ -43,27 +43,16 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
         return results.size();
     }
 
-    public long getSpaceUsed() {
-        return 0;
-    }
-
-    public long getSpaceUsedByIndexes() {
-        return 0;
-    }
-
-    public long getSpaceUsedByClassMetaData() {
-        return 0;
-    }
-
-    public long getSpaceUsedByStoredObjects() {
-        return 0;
-    }
-
     public long getSpaceFree() {
+        try {
+            return oc.ext().systemInfo().freespaceSize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
-    public long getSpaceUnallocated() {
+    public long getSpaceLost() {
         return 0;
     }
 
@@ -93,6 +82,11 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
     }
 
     public long getSize() {
+        try {
+            return oc.ext().systemInfo().totalSize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
