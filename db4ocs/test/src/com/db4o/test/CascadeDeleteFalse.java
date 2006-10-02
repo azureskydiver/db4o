@@ -43,7 +43,7 @@ public class CascadeDeleteFalse extends ClientServerTestCase {
 		CascadeDeleteFalse cdf = (CascadeDeleteFalse) os.next();
 		try {
 			// sleep 1000 ms, waiting for other threads.
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

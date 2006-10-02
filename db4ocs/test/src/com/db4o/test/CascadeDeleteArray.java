@@ -47,7 +47,9 @@ public class CascadeDeleteArray extends ClientServerTestCase {
 		ExtObjectContainer oc = fixture().db();
 		try {
 			Db4oUtil.assertOccurrences(oc, SimpleObject.class, TOTAL_COUNT);
-			ocs[0].commit();
+			// ocs[0] deletes all SimpleObject
+			ocs[0].close();
+			// FIXME: the following assertion fails
 			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
 			for (int i = 1; i < total; i++) {
 				ocs[i].close();
@@ -55,32 +57,34 @@ public class CascadeDeleteArray extends ClientServerTestCase {
 			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
 		} finally {
 			oc.close();
+			for(int i = 0; i < total; i++) {
+				if(!ocs[i].isClosed()){
+					ocs[i].close();
+				}
+			}
 		}
 	}
-	
-	public void concDelete(ExtObjectContainer oc) {
+
+	public void concDelete(ExtObjectContainer oc) throws Exception {
 		int size = Db4oUtil.occurrences(oc, SimpleObject.class);
-		if (size != TOTAL_COUNT && size != 0) {
-			Assert.fail("Error size " + size + "! The size should either be "
-					+ TOTAL_COUNT + " or 0");
+		if (size == 0) { // already deleted
+			return;
 		}
-		if (size == 0) {
-			CascadeDeleteArray cda = (CascadeDeleteArray) Db4oUtil.getOne(oc, this);
-			oc.delete(cda);
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
-			oc.rollback();
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
-		} else {
-			CascadeDeleteArray cda = (CascadeDeleteArray) Db4oUtil.getOne(oc, this);
-			oc.delete(cda);
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
-			oc.rollback();
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, TOTAL_COUNT);
-			oc.delete(cda);
-			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
+		ObjectSet os = oc.query(CascadeDeleteArray.class);
+		if(os.size() == 0) { // already deteled
+			return; 
 		}
+		Assert.areEqual(1, os.size());
+		CascadeDeleteArray cda = (CascadeDeleteArray) os.next();
+		Assert.areEqual(TOTAL_COUNT, size);
+		
+		// waits for other threads
+		Thread.sleep(500);
+		oc.delete(cda);
+		// FIXME: the following assertion fails
+		Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
 	}
-	
+
 	public void checkDelete(ExtObjectContainer oc) {
 		Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
 	}
