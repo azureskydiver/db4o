@@ -26,9 +26,11 @@ public class CascadeOnSet extends ClientServerTestCase {
 
 	public void checkNoAccidentalDeletes(ExtObjectContainer oc) {
 		Query query = oc.query();
+		// FIXME: The assertion fails without following constration and running
+		// together with CascadeOnActive
+		query.constrain(CascadeOnSet.class);
 		query.descend("name").constrain("child.child");
 		ObjectSet os = query.execute();
-		// FIXME: following assertion fails when executing whole test suites.
 		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT * 4, os.size());
 	}
 

@@ -30,6 +30,10 @@ public class Db4oUtil {
 		Assert.areEqual(expected, occurrences(oc, clazz));
 	}
 
+	public static void deleteAll(ObjectContainer oc) {
+		deleteObjectSet(oc, oc.get(null));
+	}
+	
 	public static void deleteObjectSet(ObjectContainer container, ObjectSet all) {
 		while (all.hasNext()) {
 			container.delete(all.next());
