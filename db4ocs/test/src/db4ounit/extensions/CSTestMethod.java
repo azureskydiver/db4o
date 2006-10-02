@@ -36,7 +36,7 @@ public class CSTestMethod extends TestMethod {
 	protected void invoke() throws Exception {
 		Db4oTestCase toTest = getSubject();
 		Method method = getMethod();
-		System.out.print(toTest.getClass().getName() + ":" + method.getName());
+		System.out.print(toTest.getClass().getName() + "#" + method.getName());
 		Timer timer = new Timer();
 		timer.start();
 		try {

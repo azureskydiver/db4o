@@ -5,6 +5,7 @@ package db4ounit.extensions;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectContainer;
+import com.db4o.foundation.Visitor4;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
@@ -28,10 +29,18 @@ public class Db4oUtil {
 			int expected) {
 		Assert.areEqual(expected, occurrences(oc, clazz));
 	}
-	
+
 	public static void deleteObjectSet(ObjectContainer container, ObjectSet all) {
 		while (all.hasNext()) {
 			container.delete(all.next());
+		}
+	}
+
+	public static void forEach(ExtObjectContainer oc, Object obj, Visitor4 vis) {
+		oc.deactivate(obj, Integer.MAX_VALUE);
+		ObjectSet set = oc.get(obj);
+		while (set.hasNext()) {
+			vis.visit(set.next());
 		}
 	}
 
