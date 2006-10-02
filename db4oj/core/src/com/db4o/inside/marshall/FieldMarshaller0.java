@@ -115,23 +115,13 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-	public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,YapReader source, YapReader target, IDMapping mapping) throws CorruptionException {
-		StringMarshaller.readShort(sio,false,source);
-		StringMarshaller.readShort(sio,false,target);
+	public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException {
+		readers.readShortString(sio);
         if (yapField.isVirtual()) {
         	return;
         }
-        int oldHandlerID = source.readInt();
-        int newHandlerID=mapping.mappedID(oldHandlerID);
-        if(oldHandlerID!=newHandlerID) {
-        	target.writeInt(newHandlerID); 
-        }
-        else {
-        	target.incrementOffset(YapConst.INT_LENGTH);
-        }
-
+        readers.copyID(true);
         // skip primitive/array/narray attributes
-        source.incrementOffset(1);
-        target.incrementOffset(1);
+        readers.incrementOffset(1);
 	}
 }

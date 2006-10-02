@@ -151,7 +151,7 @@ public abstract class ObjectMarshaller {
             ObjectHeaderAttributes attributes, 
             YapReader reader);
 
-	public abstract void defragFields(YapClass yapClass,ObjectHeader header, YapReader source, YapReader target, IDMapping mapping);
+	public abstract void defragFields(YapClass yapClass,ObjectHeader header, ReaderPair readers);
  
 	public abstract void writeObjectClassID(YapReader reader,int id);
 	

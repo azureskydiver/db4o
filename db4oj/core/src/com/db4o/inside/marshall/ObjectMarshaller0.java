@@ -198,7 +198,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	return false;
     }
 
-	public void defragFields(YapClass yapClass,ObjectHeader header, YapReader source, YapReader target, IDMapping mapping) {
+	public void defragFields(YapClass yapClass,ObjectHeader header, ReaderPair readers) {
 	}
 
 	public void writeObjectClassID(YapReader reader, int id) {

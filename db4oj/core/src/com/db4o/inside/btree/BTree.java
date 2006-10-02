@@ -339,8 +339,17 @@ public class BTree extends YapMeta implements TransactionParticipant {
         _root.traverseAllNodes(trans, command);
     }
 
-	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
-		BTreeNode.defragIndex(source,target,mapping,_keyHandler);
+	public void defragIndex(ReaderPair readers) {
+		// skip version
+		readers.incrementOffset(1);
+        // skip size, node size
+		readers.incrementIntSize(2);
+        // root ID
+		readers.copyID();
+	}
+
+	public void defragIndexNode(ReaderPair readers) {
+		BTreeNode.defragIndex(readers, _keyHandler, _valueHandler);
 	}
 
 	public int compareKeys(Object key1, Object key2) {

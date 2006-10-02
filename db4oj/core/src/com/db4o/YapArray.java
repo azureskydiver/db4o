@@ -464,4 +464,9 @@ public class YapArray extends YapIndependantType {
         return false;
     }
 
+	public void defragIndexEntry(ReaderPair readers) {
+        // TODO: implement
+        throw Exceptions4.virtualException();
+	}
+
 }

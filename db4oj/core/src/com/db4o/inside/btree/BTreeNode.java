@@ -1157,37 +1157,28 @@ public class BTreeNode extends YapMeta{
 		}
 	}
 
-	public static void defragIndex(YapReader source, YapReader target, IDMapping mapping,Indexable4 keyHandler) {
-        int count = source.readInt();
-        int targetCount=target.readInt();
-        if(count!=targetCount) {
-        	throw new RuntimeException("Expected target count "+count+", was "+targetCount);
-        }
-
-        byte leafByte = source.readByte();
-        byte targetLeafByte = target.readByte();
-        if(leafByte!=targetLeafByte) {
-        	throw new RuntimeException("Expected target leaf "+leafByte+", was "+targetLeafByte);
-        }
+	public static void defragIndex(ReaderPair readers,Indexable4 keyHandler,Indexable4 valueHandler) {
+		// count
+		int count=readers.readInt();
+		// leafByte
+        byte leafByte = readers.readByte();
         boolean isLeaf = (leafByte == 1);
+        boolean handlesValues=(valueHandler!=null)&&isLeaf;
 
-        mapID(source, target, mapping); // parent ID
-        mapID(source, target, mapping); // previous ID
-        mapID(source, target, mapping); // next ID
+        readers.copyID(); // parent ID
+        readers.copyID(); // previous ID
+        readers.copyID(); // next ID
 
         for (int i = 0; i < count; i++) {
-            Integer curKey = (Integer)keyHandler.readIndexEntry(source);
-            keyHandler.writeIndexEntry(target, curKey);
-            if(!isLeaf){
-            	mapID(source, target, mapping); // child ID
+            keyHandler.defragIndexEntry(readers);
+            if(handlesValues){
+                valueHandler.defragIndexEntry(readers);
+            }else{
+                if(!isLeaf){
+                	readers.copyID();
+                }
             }
         }
-	}
-
-	private static void mapID(YapReader source,YapReader target,IDMapping mapping) {
-        int oldParentID = source.readInt();
-	    int newParentID = mapping.mappedID(oldParentID);
-	    target.writeInt(newParentID);
 	}
 
     public boolean isLeaf() {

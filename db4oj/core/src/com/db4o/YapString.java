@@ -140,11 +140,16 @@ public final class YapString extends YapIndependantType {
      */
     public Object readIndexEntry(YapReader reader) {
     	Slot s = new Slot(reader.readInt(), reader.readInt());
-    	if (s._address == s._length)
+    	if (isInvalidSlot(s))
     		return null;
     	
     	return s; 
     }
+
+    // TODO: What's that?
+	private boolean isInvalidSlot(Slot slot) {
+		return slot._address == slot._length;
+	}
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
         if(! withRedirection){
@@ -309,5 +314,16 @@ public final class YapString extends YapIndependantType {
         }
         return with.length - compare.length;
     }
+
+	public void defragIndexEntry(ReaderPair readers) {
+		YapReader source=readers.source();
+		YapReader target=readers.target();
+    	Slot slot = new Slot(source.readInt(), source.readInt());
+    	if(!isInvalidSlot(slot)) {
+    		slot=new Slot(readers.mapping().mappedID(slot.getAddress()),slot.getLength());
+    	}
+    	target.writeInt(slot.getAddress());
+    	target.writeInt(slot.getLength());
+	}
 
 }

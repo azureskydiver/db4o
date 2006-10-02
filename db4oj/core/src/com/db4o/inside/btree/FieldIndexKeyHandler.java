@@ -31,7 +31,7 @@ public class FieldIndexKeyHandler implements Indexable4{
 
     public Object readIndexEntry(YapReader a_reader) {
         // TODO: could read int directly here with a_reader.readInt()
-        int parentID = ((Integer)_parentIdHandler.readIndexEntry(a_reader)).intValue();
+        int parentID = readParentID(a_reader);
         Object objPart = _valueHandler.readIndexEntry(a_reader);
         if (parentID < 0){
             objPart = null;
@@ -39,6 +39,10 @@ public class FieldIndexKeyHandler implements Indexable4{
         }
         return new FieldIndexKey(parentID, objPart);
     }
+
+	private int readParentID(YapReader a_reader) {
+		return ((Integer)_parentIdHandler.readIndexEntry(a_reader)).intValue();
+	}
 
     public void writeIndexEntry(YapReader writer, Object obj) {
         FieldIndexKey composite = (FieldIndexKey)obj;
@@ -85,5 +89,10 @@ public class FieldIndexKeyHandler implements Indexable4{
     public Object current() {
         return new FieldIndexKey(_parentIdHandler.currentInt(), _valueHandler.current());  
     }
+
+	public void defragIndexEntry(ReaderPair readers) {
+		readers.copyID();
+        _valueHandler.defragIndexEntry(readers);
+	}
 }
 

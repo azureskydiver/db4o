@@ -126,30 +126,24 @@ public abstract class ClassMarshaller {
         return len;
     }
 
-	public void defrag(YapClass yapClass,YapStringIO sio,YapReader source, YapReader target, IDMapping mapping, int classIndexID) throws CorruptionException {
-		readName(sio, source);
-		readName(sio, target);
+	public void defrag(YapClass yapClass,YapStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException {
+		readName(sio, readers.source());
+		readName(sio, readers.target());
 		
-        readMetaClassID(source); 
-        
-		int metaClassNewId = 0;
-		target.writeInt(metaClassNewId);
-		
-		int ancestorOldID = source.readInt();
-		int ancestorNewId = mapping.mappedID(ancestorOldID);
-		target.writeInt(ancestorNewId);
+		int metaClassID=0;
+		readers.writeInt(metaClassID);
 
-		source.incrementOffset(YapConst.INT_LENGTH);
-		target.writeInt(classIndexID);
-		
+		// ancestor ID
+		readers.copyID();
+
+		readers.writeInt(classIndexID);
 		
 		// field length
-		source.incrementOffset(YapConst.INT_LENGTH);
-		target.incrementOffset(YapConst.INT_LENGTH);
+		readers.incrementIntSize();
 		
 		YapField[] fields=yapClass.i_fields;
 		for(int fieldIdx=0;fieldIdx<fields.length;fieldIdx++) {
-			_family._field.defrag(yapClass,fields[fieldIdx],sio,source,target,mapping);
+			_family._field.defrag(yapClass,fields[fieldIdx],sio,readers);
 		}
 	}
 }

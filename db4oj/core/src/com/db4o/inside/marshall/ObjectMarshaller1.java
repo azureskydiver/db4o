@@ -196,21 +196,20 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     	return ((ObjectHeaderAttributes1)attributes).isNull(fieldIndex);
     }
 
-	public void defragFields(YapClass yc,ObjectHeader header, final YapReader source, final YapReader target, final IDMapping mapping) {
+	public void defragFields(YapClass yc,ObjectHeader header, final ReaderPair readers) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
         	
         	public int fieldCount(YapClass yapClass, YapReader reader) {
-        		target.incrementOffset(YapConst.INT_LENGTH);
-        		return source.readInt();
+        		return readers.readInt();
         	}
         	
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 				if (!isNull) {
-					field.getHandler().defrag(_family,source,target,mapping);
+					field.getHandler().defrag(_family,readers);
 				} 
 			}
 		};
-		traverseFields(yc, source, header._headerAttributes, command);
+		traverseFields(yc, null, header._headerAttributes, command);
 	}
 
 	public void writeObjectClassID(YapReader reader, int id) {

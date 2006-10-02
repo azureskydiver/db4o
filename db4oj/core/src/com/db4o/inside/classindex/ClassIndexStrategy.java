@@ -25,7 +25,8 @@ public interface ClassIndexStrategy {
 	void dontDelete(Transaction transaction, int id);
 	
 	Iterator4 allSlotIDs(Transaction trans);
-	void defragReference(YapClass yapClass,YapReader source,YapReader target,IDMapping mapping,int classIndexID);
+	void defragReference(YapClass yapClass,ReaderPair readers,int classIndexID);
 	int id();
-	void defragIndex(YapReader source, YapReader target, IDMapping mapping);
+	void defragIndex(ReaderPair readers);
+	void defragIndexNode(ReaderPair readers);
 }
