@@ -226,12 +226,12 @@ public class YapClassPrimitive extends YapClass{
         return "Wraps " + i_handler.toString() + " in YapClassPrimitive";
     }
 
-    public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+    public void defrag(MarshallerFamily mf, ReaderPair readers) {
         if(mf._primitive.useNormalClassRead()){
-            super.defrag(mf,source,target,mapping);
+            super.defrag(mf,readers);
         }
         else {
-            i_handler.defrag(mf, source, target, mapping);
+            i_handler.defrag(mf, readers);
         }
     }
 }

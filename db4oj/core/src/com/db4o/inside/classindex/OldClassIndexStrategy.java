@@ -208,7 +208,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		// nothing to do
 	}
 
-	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping,int classIndexID) {
+	public void defragReference(YapClass yapClass, ReaderPair readers,int classIndexID) {
 	}
 
 	public int id() {
@@ -220,6 +220,9 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
         throw new NotImplementedException();
 	}
 
-	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
+	public void defragIndex(ReaderPair readers) {
+	}
+
+	public void defragIndexNode(ReaderPair readers) {
 	}
 }

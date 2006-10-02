@@ -4,7 +4,7 @@ package com.db4o.inside.classindex;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.btree.BTree;
+import com.db4o.inside.btree.*;
 
 /**
  * @exclude
@@ -86,10 +86,9 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void dontDelete(Transaction transaction, int id) {
 	}
 	
-	public void defragReference(YapClass yapClass, YapReader source, YapReader target, IDMapping mapping,int classIndexID) {
-		/*int oldID=*/ source.readInt();
+	public void defragReference(YapClass yapClass, ReaderPair readers,int classIndexID) {
 		int newID = -classIndexID;
-		target.writeInt(newID);
+		readers.writeInt(newID);
 	}
 	
 	public int id() {
@@ -100,7 +99,11 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         return _btreeIndex.allNodeIds(trans);
 	}
 
-	public void defragIndex(YapReader source, YapReader target, IDMapping mapping) {
-		_btreeIndex.defragIndex(source,target,mapping);
+	public void defragIndex(ReaderPair readers) {
+		_btreeIndex.defragIndex(readers);
+	}
+
+	public void defragIndexNode(ReaderPair readers) {
+		_btreeIndex.defragIndexNode(readers);
 	}
 }

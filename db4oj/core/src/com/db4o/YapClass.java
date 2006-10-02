@@ -1867,23 +1867,20 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
     }
 
-    public void defragObject(YapReader source,YapReader target,IDMapping mapping) {
-    	ObjectHeader header=ObjectHeader.defrag(this,source, target, mapping);
-    	header._marshallerFamily._object.defragFields(this,header,source,target,mapping);
+    public void defragObject(ReaderPair readers) {
+    	ObjectHeader header=ObjectHeader.defrag(this,readers);
+    	header._marshallerFamily._object.defragFields(this,header,readers);
     }	
 
-	public void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
-		int oldID=source.readInt();
-		int newID=mapping.mappedID(oldID);
-		target.writeInt(newID);
+	public void defrag(MarshallerFamily mf, ReaderPair readers) {
+		readers.copyID();
 		int restLength = (linkLength()-YapConst.INT_LENGTH);
-		source.incrementOffset(restLength);
-		target.incrementOffset(restLength);
+		readers.incrementOffset(restLength);
 	}
 	
-	public void defragClass(YapReader source, YapReader target, IDMapping mapping, int classIndexID) throws CorruptionException {
+	public void defragClass(ReaderPair readers, int classIndexID) throws CorruptionException {
 		MarshallerFamily mf = MarshallerFamily.current();
-		mf._class.defrag(this,i_stream.stringIO(), source, target, mapping, classIndexID);
+		mf._class.defrag(this,i_stream.stringIO(), readers, classIndexID);
 	}
 
     public static YapClass readClass(YapStream stream, YapReader reader) {
@@ -1893,5 +1890,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
 	public boolean isAssignableFrom(YapClass other) {
 		return classReflector().isAssignableFrom(other.classReflector());
+	}
+
+	public final void defragIndexEntry(ReaderPair readers) {
+		readers.copyID();
 	}
 }

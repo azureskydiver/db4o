@@ -56,9 +56,9 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     }
 
     public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,
-    		YapReader source, YapReader target, IDMapping mapping)
+    		ReaderPair readers)
     		throws CorruptionException {
-    	super.defrag(yapClass, yapField, sio, source, target, mapping);
+    	super.defrag(yapClass, yapField, sio, readers);
 //    	BTree index = yapField.getIndex(null);
 //    	if(index!=null) {
 //    		index.defragIndex(source, target, mapping);
@@ -67,7 +67,6 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
 //    		source.incrementOffset(YapConst.INT_LENGTH);
 //    		target.incrementOffset(YapConst.INT_LENGTH);
 //    	}
-    	source.incrementOffset(YapConst.INT_LENGTH);
-    	target.writeInt(0);
+    	readers.writeInt(0);
     }
 }

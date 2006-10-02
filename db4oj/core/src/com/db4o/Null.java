@@ -58,5 +58,9 @@ public class Null implements Indexable4{
     public void writeIndexEntry(YapReader a_writer, Object a_object) {
         // do nothing
     }
+
+	public void defragIndexEntry(ReaderPair readers) {
+        // do nothing
+	}
 }
 

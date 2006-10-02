@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
@@ -257,9 +258,17 @@ public abstract class YapJavaClass implements TypeHandler4 {
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract int linkLength();
     
-    public final void defrag(MarshallerFamily mf, YapReader source, YapReader target, IDMapping mapping) {
+    public final void defrag(MarshallerFamily mf, ReaderPair readers) {
     	int linkLength = linkLength();
-		source.incrementOffset(linkLength);
-    	target.incrementOffset(linkLength);
+    	readers.incrementOffset(linkLength);
+    }
+    
+    public void defragIndexEntry(ReaderPair readers) {
+    	try {
+			read1(readers.source());
+			read1(readers.target());
+		} catch (CorruptionException exc) {
+			Exceptions4.virtualException();
+		}
     }
 }
