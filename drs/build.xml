@@ -92,7 +92,22 @@
 		</java>
 	</target>
 
-	<target name="dist" depends="build-all, javadoc, doctor,javadoc">
+	<target name="doctordrsnet" depends="">
+		<delete dir="drs.net/doc/out" />
+		<java classname="com.yetac.doctor.Doctor">
+			<arg line="drs.net/doc C:/WINDOWS/Fonts/VERDANA.TTF" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="lib/doctor">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="dist" depends="build-all, javadoc, doctor, javadoc">
 		<property name="zipbasedir" value="drs-${drs.version.dotted}" />
 		<zip destfile="${file.drs.zip}">
 			<zipfileset dir="." prefix="${zipbasedir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
