@@ -21,6 +21,8 @@ public class AllTests extends CSTestSuite {
 				CascadeToExistingVectorMember.class,
 				CascadeToHashtable.class,
 				CascadeToVector.class,
+				CaseInsensitive.class,
+				Circular1.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
