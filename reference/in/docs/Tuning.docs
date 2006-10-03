@@ -389,3 +389,107 @@ order.
 
 .c Db4o.Configure().FlushFileBsuffers(true);
 Otherwise file caching can be switched off in OS settings.
+
+.2 B-trees tuning ..
+Db4o uses special B-tree indexes for increased query performance and reduced memory ._
+consumption (the feature was introduced since version 5.4 for class indexes and since 5.7 for field indexes).
+
+.i Advantage ..
+B-trees are optimized for scenarios when part or all of a data set is on secondary storage such ._
+as a hard disk, since disk accesses are extremely expensive operations. B-trees minimize the ._
+number of disk accesses required to find data by traversing a sorted tree structure and only need ._
+a single disk access per level of the tree. 
+In order to use B-tree capabilities for field indexes you will simply need to define indexed fields in your classes:
+.c Db4o.configure().objectClass(class).objectField("field").indexed(true) ..
+
+.i Effect ..
+The caching behaviour of the B-trees can be configured with the following two switches:
+.c Db4o.configure().bTreeCacheHeight(height) ..
+configures the size of BTree nodes in indexes.
+.c Db4o.configure().bTreeNodeSize(size) ..
+configures caching of B-tree nodes. Clean B-tree nodes will be unloaded on #commit and #rollback ._
+unless they are configured as cached here.
+Higher values for the cache height will get you better performance at more RAM consumption.
+With the node size you can fine-tune exactly how many reads the B-tree will need to get to leaf ._
+nodes. Lower values will allow a lower memory footprint and more efficient reading and writing ._
+of small slots. Higher values will reduce the overall number of read and write operations and ._
+allow better performance at the cost of more RAM use.
+If you raise the number of elements per node and/or the cache depth, you will use more RAM ._
+but achieve higher performance. In principle, if you set the node size to a very high value and ._
+cache the first node, you should get exactly the same behavior as with the old class indexes. 
+For now the default settings are 1 for the height of the cache and 100 for the size of the nodes.
+
+When testing B-tree you should remember that B-trees only really start to give you performance ._
+advantages with larger numbers of objects. With object counts of 1,000 or 10,000 the old flat index ._
+is highly efficient because everything is kept in memory. Using tests with more than 100,000 objects ._
+you will really see things degrade with:
+- performance, because of a full purge called each time on commit
+- memory consumption, because the index will be reloaded completely immediately when ._
+the next object is added.
+
+.2 Inheritance hierarchies ..
+Do not create inheritance hierarchies, if you don't need them. 
+.i Advantage ..
+Avoiding inheritance hierarchies will help you to get better performance as only actual classes ._
+will be kept in the class index and in the database.
+.i Effect ..
+Every class in the hierarchy requires db4o to maintain a class index. It is also true for abstract ._
+classes and interfaces since db4o has to be able to run a query against them.
+.i Alternate strategies ..
+Class hierarchies and interfaces may be valuable for your application design. You can also ._
+use interface/superclass to query for implementations/subclasses.
+
+.2 Persistent and transient fields ..
+Do not create fields that you don't need for persistence
+.i Advantage ..
+Storing only needed information will help to keep your database footprint as small as possible.
+.i Effect ..
+If your persistent class contains fields that do not need to be stored you should mark ._
+them as transient to prevent them from being stored:
+.? net 
+.c public class NotStorable {
+  [Transient] private int length;
+  . . .
+  } ..   ..?
+.? mono  
+.c
+public class NotStorable {
+  [Transient] private int length;
+. . .
+} ..   ..?
+.? java  
+.c
+public class NotStorable {
+  private transient int length;
+. . . 
+} ..   ..?
+You can use  .l Callbacks  Callbacks ..  or .l Translators  Translators ..  to set transient fields on retrieval.
+Also avoid storing classes having only transient information - their indexes' maintenance ._
+will produce unnecessary performance overhead.
+.i Alternate strategies ..
+In some cases you may want to persist class meta-information without the actual ._
+object data. The example can be database singleton for  .l Remote  remote code execution .. 
+
+.2 Activation strategies ..
+Db4o.configure().activationDepth(activationDepth)
+.i Advantage ..
+Db4o default activation depth is 5. This setting gives you control over activation depth ._
+level depending on your application requirements.
+.i Effect ..
+The two extremes:
+- activationDepth = Integer.MAX_VALUE - will pop the whole object graph into the memory ._
+on every retrieved object. Can be a reasonable solution for shallow objects' design. No ._
+need to bother about manual activation;
+- activationDepth = 0 - will reduce memory consumption to the lowest level though ._
+leaving all the activation logic for your code.
+
+.i Alternate strategies ..
+If your object is not fully activated due to the default configuration settings you can activate it manually:
+.c ObjectContainer#activate(object,depth) ..
+or use specific object settings:
+.c Db4o.configure().objectClass("yourClass").minimumActivationDepth(minimumDepth) ..
+.c Db4o.configure().objectClass("yourClass").maximumActivationDepth(maximumDepth) ..
+.c Db4o.configure().objectClass("yourClass").cascadeOnActivate (bool) ..
+.c Db4o.configure().objectClass("yourClass").ObjectField("field").cascadeOnActivate(bool) ..
+For more information on activation strategies see  .l Activation Activation chapter ..  .
+
