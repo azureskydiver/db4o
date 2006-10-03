@@ -29,11 +29,11 @@
 namespace Mono.Cecil {
 
 	using System;
-	using System.Reflection;
 
 	using Mono.Cecil.Metadata;
 
-	public class AssemblyDefinition : IAssemblyDefinition {
+	public class AssemblyDefinition : ICustomAttributeProvider,
+		IHasSecurity, IReflectionStructureVisitable {
 
 		MetadataToken m_token;
 		AssemblyNameDefinition m_asmName;
@@ -46,6 +46,8 @@ namespace Mono.Cecil {
 
 		ModuleDefinition m_mainModule;
 		StructureReader m_reader;
+
+		IAssemblyResolver m_resolver;
 
 		public MetadataToken MetadataToken {
 			get { return m_token; }
@@ -108,6 +110,11 @@ namespace Mono.Cecil {
 			get { return m_reader; }
 		}
 
+		public IAssemblyResolver Resolver {
+			get { return m_resolver; }
+			set { m_resolver = value; }
+		}
+
 		internal AssemblyDefinition (AssemblyNameDefinition name)
 		{
 			if (name == null)
@@ -115,6 +122,7 @@ namespace Mono.Cecil {
 
 			m_asmName = name;
 			m_modules = new ModuleDefinitionCollection (this);
+			m_resolver = new DefaultAssemblyResolver ();
 		}
 
 		internal AssemblyDefinition (AssemblyNameDefinition name, StructureReader reader) : this (name)

@@ -34,12 +34,12 @@ namespace Mono.Cecil {
 	using SSP = System.Security.Permissions;
 	using System.Text;
 
-	using Mono.Cecil;
+	using Mono.Cecil.Cil;
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
-	using Mono.Xml;
 
-	public sealed class ModuleDefinition : ModuleReference, IModuleDefinition {
+	public sealed class ModuleDefinition : ModuleReference, ICustomAttributeProvider, IMetadataScope,
+		IReflectionStructureVisitable, IReflectionVisitable {
 
 		Guid m_mvid;
 		bool m_main;
@@ -171,38 +171,10 @@ namespace Mono.Cecil {
 			m_asmRefs = new AssemblyNameReferenceCollection (this);
 			m_res = new ResourceCollection (this);
 			m_types = new TypeDefinitionCollection (this);
-			m_types.OnTypeDefinitionAdded += new TypeDefinitionEventHandler (OnTypeDefinitionAdded);
-			m_types.OnTypeDefinitionRemoved += new TypeDefinitionEventHandler (OnTypeDefinitionRemoved);
 			m_refs = new TypeReferenceCollection (this);
-			m_refs.OnTypeReferenceAdded += new TypeReferenceEventHandler (OnTypeReferenceAdded);
-			m_refs.OnTypeReferenceRemoved += new TypeReferenceEventHandler (OnTypeReferenceRemoved);
 			m_members = new MemberReferenceCollection (this);
 
 			m_controller = new ReflectionController (this);
-		}
-
-		void OnTypeDefinitionAdded (Object sender, TypeDefinitionEventArgs ea)
-		{
-			if (ea.TypeDefinition.Module != null)
-				throw new ReflectionException ("Type is already attached, clone it instead");
-
-			ea.TypeDefinition.Module = this;
-			ea.TypeDefinition.AttachToScope (this);
-		}
-
-		void OnTypeDefinitionRemoved (Object sender, TypeDefinitionEventArgs ea)
-		{
-			ea.TypeDefinition.Module = null;
-		}
-
-		void OnTypeReferenceAdded (Object sender, TypeReferenceEventArgs ea)
-		{
-			ea.TypeReference.Module = this;
-		}
-
-		void OnTypeReferenceRemoved (Object sender, TypeReferenceEventArgs ea)
-		{
-			ea.TypeReference.Module = null;
 		}
 
 		public IMetadataTokenProvider LookupByToken (MetadataToken token)
@@ -411,9 +383,42 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public void LoadSymbols ()
+		{
+			m_controller.Reader.SymbolReader = SymbolStoreHelper.GetReader (this);
+		}
+
+		public void LoadSymbols (ISymbolReader reader)
+		{
+			m_controller.Reader.SymbolReader = reader;
+		}
+
+		public void SaveSymbols ()
+		{
+			m_controller.Writer.SaveSymbols = true;
+		}
+
+		public void SaveSymbols (ISymbolWriter writer)
+		{
+			SaveSymbols ();
+			m_controller.Writer.SymbolWriter = writer;
+		}
+
+		public void SaveSymbols (string outputDirectory)
+		{
+			SaveSymbols ();
+			m_controller.Writer.OutputFile = outputDirectory;
+		}
+
+		public void SaveSymbols (string outputDirectory, ISymbolWriter writer)
+		{
+			SaveSymbols (outputDirectory);
+			m_controller.Writer.SymbolWriter = writer;
+		}
+
 		public byte [] GetAsByteArray (CustomAttribute ca)
 		{
-			CustomAttribute customAttr = ca as CustomAttribute;
+			CustomAttribute customAttr = ca;
 			if (!ca.IsReadable)
 				if (customAttr.Blob != null)
 					return customAttr.Blob;

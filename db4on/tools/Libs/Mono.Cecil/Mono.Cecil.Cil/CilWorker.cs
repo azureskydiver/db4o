@@ -29,12 +29,9 @@
 namespace Mono.Cecil.Cil {
 
 	using System;
-	using System.Collections;
 	using SR = System.Reflection;
 
-	using Mono.Cecil;
-
-	public sealed class CilWorker : ICilWorker {
+	public sealed class CilWorker {
 
 		MethodBody m_mbody;
 		InstructionCollection m_instrs;
@@ -42,7 +39,7 @@ namespace Mono.Cecil.Cil {
 		internal CilWorker (MethodBody body)
 		{
 			m_mbody = body;
-			m_instrs = m_mbody.Instructions as InstructionCollection;
+			m_instrs = m_mbody.Instructions;
 		}
 
 		public MethodBody GetBody ()

@@ -33,7 +33,6 @@ namespace Mono.Cecil.Cil {
 	using System.IO;
 
 	using Mono.Cecil;
-	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
 	using Mono.Cecil.Signatures;
 
@@ -50,8 +49,8 @@ namespace Mono.Cecil.Cil {
 
 		public override void VisitMethodBody (MethodBody body)
 		{
-			MethodDefinition meth = body.Method as MethodDefinition;
-			MethodBody methBody = body as MethodBody;
+			MethodDefinition meth = body.Method;
+			MethodBody methBody = body;
 			BinaryReader br = m_reflectReader.Module.ImageReader.MetadataReader.GetDataReader (meth.RVA);
 
 			// lets read the method
@@ -62,7 +61,7 @@ namespace Mono.Cecil.Cil {
 				methBody.CodeSize = flags >> 2;
 				methBody.MaxStack = 8;
 				ReadCilBody (methBody, br, out instrs);
-				return;
+				break;
 			case (int) MethodHeader.FatFormat :
 				br.BaseStream.Position--;
 				int fatflags = br.ReadUInt16 ();
@@ -75,8 +74,11 @@ namespace Mono.Cecil.Cil {
 				ReadCilBody (methBody, br, out instrs);
 				if ((fatflags & (int) MethodHeader.MoreSects) != 0)
 					ReadSection (methBody, br, instrs);
-				return;
+				break;
 			}
+
+			if (m_reflectReader.SymbolReader != null)
+				m_reflectReader.SymbolReader.Read (methBody);
 		}
 
 		public static uint GetRid (int token)
@@ -113,9 +115,9 @@ namespace Mono.Cecil.Cil {
 				offset = br.BaseStream.Position - start;
 				int cursor = br.ReadByte ();
 				if (cursor == 0xfe)
-					op = OpCodes.Cache.Instance.TwoBytesOpCode [br.ReadByte ()];
+					op = OpCodes.TwoBytesOpCode [br.ReadByte ()];
 				else
-					op = OpCodes.Cache.Instance.OneByteOpCode [cursor];
+					op = OpCodes.OneByteOpCode [cursor];
 
 				Instruction instr = new Instruction ((int) offset, op);
 				switch (op.OperandType) {
@@ -146,10 +148,10 @@ namespace Mono.Cecil.Cil {
 						instr.Operand = br.ReadByte ();
 					break;
 				case OperandType.ShortInlineVar :
-					instr.Operand = body.Variables [(int) br.ReadByte ()];
+					instr.Operand = body.Variables [br.ReadByte ()];
 					break;
 				case OperandType.ShortInlineParam :
-					instr.Operand = GetParameter (body, (int) br.ReadByte ());
+					instr.Operand = GetParameter (body, br.ReadByte ());
 					break;
 				case OperandType.InlineSig :
 					instr.Operand = GetCallSiteAt (br.ReadInt32 (), context);
@@ -158,10 +160,10 @@ namespace Mono.Cecil.Cil {
 					instr.Operand = br.ReadInt32 ();
 					break;
 				case OperandType.InlineVar :
-					instr.Operand = body.Variables [(int) br.ReadInt16 ()];
+					instr.Operand = body.Variables [br.ReadInt16 ()];
 					break;
 				case OperandType.InlineParam :
-					instr.Operand = GetParameter (body, (int) br.ReadInt16 ());
+					instr.Operand = GetParameter (body, br.ReadInt16 ());
 					break;
 				case OperandType.InlineI8 :
 					instr.Operand = br.ReadInt64 ();
@@ -244,17 +246,26 @@ namespace Mono.Cecil.Cil {
 				switch (i.OpCode.OperandType) {
 				case OperandType.ShortInlineBrTarget:
 				case OperandType.InlineBrTarget:
-					i.Operand = instructions [(int) i.Operand];
+					i.Operand = GetInstruction (body, instructions, (int) i.Operand);
 					break;
 				case OperandType.InlineSwitch:
 					int [] lbls = (int []) i.Operand;
 					Instruction [] instrs = new Instruction [lbls.Length];
 					for (int j = 0; j < lbls.Length; j++)
-						instrs [j] = instructions [lbls [j]] as Instruction;
+						instrs [j] = GetInstruction (body, instructions, lbls [j]);
 					i.Operand = instrs;
 					break;
 				}
 			}
+		}
+
+		Instruction GetInstruction (MethodBody body, IDictionary instructions, int offset)
+		{
+			Instruction instruction = instructions [offset] as Instruction;
+			if (instruction != null)
+				return instruction;
+
+			return body.Instructions.Outside;
 		}
 
 		void ReadSection (MethodBody body, BinaryReader br, IDictionary instructions)
@@ -270,10 +281,10 @@ namespace Mono.Cecil.Cil {
 				for (int i = 0; i < length; i++) {
 					ExceptionHandler eh = new ExceptionHandler (
 						(ExceptionHandlerType) (br.ReadInt16 () & 0x7));
-					eh.TryStart = instructions [Convert.ToInt32 (br.ReadInt16 ())] as Instruction;
-					eh.TryEnd = instructions [eh.TryStart.Offset + Convert.ToInt32 (br.ReadByte ())] as Instruction;
-					eh.HandlerStart = instructions [Convert.ToInt32 (br.ReadInt16 ())] as Instruction;
-					eh.HandlerEnd = instructions [eh.HandlerStart.Offset + Convert.ToInt32 (br.ReadByte ())] as Instruction;
+					eh.TryStart = GetInstruction (body, instructions, Convert.ToInt32 (br.ReadInt16 ()));
+					eh.TryEnd = GetInstruction (body, instructions, eh.TryStart.Offset + Convert.ToInt32 (br.ReadByte ()));
+					eh.HandlerStart = GetInstruction (body, instructions, Convert.ToInt32 (br.ReadInt16 ()));
+					eh.HandlerEnd = GetInstruction (body, instructions, eh.HandlerStart.Offset + Convert.ToInt32 (br.ReadByte ()));
 					switch (eh.Type) {
 					case ExceptionHandlerType.Catch :
 						int token = br.ReadInt32 ();
@@ -283,8 +294,8 @@ namespace Mono.Cecil.Cil {
 							eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
 						break;
 					case ExceptionHandlerType.Filter :
-						eh.FilterStart = instructions [br.ReadInt32 ()] as Instruction;
-						eh.FilterEnd = instructions [eh.HandlerStart.Previous.Offset] as Instruction;
+						eh.FilterStart = GetInstruction (body, instructions, br.ReadInt32 ());
+						eh.FilterEnd = GetInstruction (body, instructions, eh.HandlerStart.Previous.Offset);
 						break;
 					default :
 						br.ReadInt32 ();
@@ -300,10 +311,10 @@ namespace Mono.Cecil.Cil {
 				for (int i = 0; i < length; i++) {
 					ExceptionHandler eh = new ExceptionHandler (
 						(ExceptionHandlerType) (br.ReadInt32 () & 0x7));
-					eh.TryStart = instructions [br.ReadInt32 ()] as Instruction;
-					eh.TryEnd = instructions [eh.TryStart.Offset + br.ReadInt32 ()] as Instruction;
-					eh.HandlerStart = instructions [br.ReadInt32 ()] as Instruction;
-					eh.HandlerEnd = instructions [eh.HandlerStart.Offset + br.ReadInt32 ()] as Instruction;
+					eh.TryStart = GetInstruction (body, instructions, br.ReadInt32 ());
+					eh.TryEnd = GetInstruction (body, instructions, eh.TryStart.Offset + br.ReadInt32 ());
+					eh.HandlerStart = GetInstruction (body, instructions, br.ReadInt32 ());
+					eh.HandlerEnd = GetInstruction (body, instructions, eh.HandlerStart.Offset + br.ReadInt32 ());
 					switch (eh.Type) {
 					case ExceptionHandlerType.Catch :
 						int token = br.ReadInt32 ();
@@ -313,8 +324,8 @@ namespace Mono.Cecil.Cil {
 							eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
 						break;
 					case ExceptionHandlerType.Filter :
-						eh.FilterStart = instructions [br.ReadInt32 ()] as Instruction;
-						eh.FilterEnd = instructions [eh.HandlerStart.Previous.Offset] as Instruction;
+						eh.FilterStart = GetInstruction (body, instructions, br.ReadInt32 ());
+						eh.FilterEnd = GetInstruction (body, instructions, eh.HandlerStart.Previous.Offset);
 						break;
 					default :
 						br.ReadInt32 ();
@@ -341,7 +352,7 @@ namespace Mono.Cecil.Cil {
 				Param p = ms.Parameters [i];
 				cs.Parameters.Add (m_reflectReader.BuildParameterDefinition (
 						string.Concat ("A_", i),
-						i, (ParamAttributes) 0,
+						i, (ParameterAttributes) 0,
 						p, context));
 			}
 
@@ -350,8 +361,8 @@ namespace Mono.Cecil.Cil {
 
 		public override void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)
 		{
-			MethodBody body = variables.Container;
-			if (body.LocalVarToken == 0)
+			MethodBody body = variables.Container as MethodBody;
+			if (body == null || body.LocalVarToken == 0)
 				return;
 
 			StandAloneSigTable sasTable = m_reflectReader.TableReader.GetStandAloneSigTable ();
