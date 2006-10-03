@@ -27,8 +27,17 @@ public class ClientServerTestCase extends AbstractDb4oTestCase implements
 		fixture.open();
 	}
 
+	public ExtObjectContainer db() {
+		ExtObjectContainer oc = fixture().db();
+		configure(oc);
+		return oc;
+	}
+	
 	protected void store(ExtObjectContainer oc) throws Exception {
 
 	}
 
+	protected void configure(ExtObjectContainer oc) {
+		
+	}
 }

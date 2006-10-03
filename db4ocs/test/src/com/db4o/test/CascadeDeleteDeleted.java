@@ -2,9 +2,7 @@
 
 package com.db4o.test;
 
-import com.db4o.Db4o;
 import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
 
@@ -26,10 +24,9 @@ public class CascadeDeleteDeleted extends ClientServerTestCase {
 	public CascadeDeleteDeleted(String name) {
 		this.name = name;
 	}
-
-	public void configure(Configuration config) {
-		super.configure(config);
-		Db4o.configure().objectClass(this).cascadeOnDelete(true);
+	
+	protected void configure(ExtObjectContainer oc){
+		oc.configure().objectClass(this).cascadeOnDelete(true);
 	}
 
 	public void store(ExtObjectContainer oc) {
@@ -85,14 +82,14 @@ public class CascadeDeleteDeleted extends ClientServerTestCase {
 		ExtObjectContainer[] ocs = new ExtObjectContainer[total]; 
 		ObjectSet[] oss = new ObjectSet[total];
 		for (int i = 0; i < total; i++) {
-			ocs[i] = fixture().db();
+			ocs[i] = db();
 			oss[i] = ocs[i].query(CddMember.class);
 			Assert.areEqual(CDD_MEMBER_COUNT, oss[i].size());
 		}
 		for (int i = 0; i < total; i++) {
 			Db4oUtil.deleteObjectSet(ocs[i], oss[i]);
 		}
-		ExtObjectContainer oc = fixture().db();
+		ExtObjectContainer oc = db();
 		try {
 			Db4oUtil.assertOccurrences(oc, CddMember.class, CDD_MEMBER_COUNT);
 			// ocs[0] deleted all CddMember objects, and committed the change
