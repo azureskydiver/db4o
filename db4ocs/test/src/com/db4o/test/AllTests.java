@@ -23,6 +23,7 @@ public class AllTests extends CSTestSuite {
 				CascadeToVector.class,
 				CaseInsensitive.class,
 				Circular1.class,
+				Circular2.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,

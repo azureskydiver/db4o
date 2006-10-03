@@ -3,7 +3,6 @@
 package com.db4o.test;
 
 import com.db4o.Db4o;
-import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.persistent.Atom;
 
@@ -17,10 +16,9 @@ public class CascadeOnUpdate2 extends ClientServerTestCase {
 
 	private Atom child[];
 
-	public void configure(Configuration config) {
-		super.configure(config);
-		Db4o.configure().objectClass(this).cascadeOnUpdate(true);
-		Db4o.configure().objectClass(Atom.class).cascadeOnUpdate(false);
+	public void configure(ExtObjectContainer oc) {
+		oc.configure().objectClass(this).cascadeOnUpdate(true);
+		oc.configure().objectClass(Atom.class).cascadeOnUpdate(false);
 	}
 
 	public void store(ExtObjectContainer oc) {

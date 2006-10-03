@@ -3,7 +3,6 @@
 package com.db4o.test;
 
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
 
 import db4ounit.extensions.ClientServerTestCase;
 import db4ounit.extensions.Db4oUtil;
@@ -18,7 +17,6 @@ public class Circular1 extends ClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		Query q = oc.query();
 		Db4oUtil.assertOccurrences(oc, C1C.class, 1);
 	}
 
