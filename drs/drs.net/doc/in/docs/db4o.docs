@@ -62,7 +62,7 @@ Fortunately enabling replication for existing data files is a very simple proces
 We just need to use the Defragment tool in com.db4o.tools (source code only) after ._
 enabling replication:
 
-.c Db4o.Configure().ObjectClass(Task.class).EnableReplication(true);
+.c Db4o.Configure().ObjectClass(typeof(Task)).EnableReplication(true);
  new Defragment().Run(CurrentFileName(), true); ..
 			
 After a successful defragmentation our data files are ready for replication.
