@@ -36,7 +36,7 @@ Another way is to purge objects from the cache before re-retrieving them.
 You can use the following methods:
 - ExtObjectContainer#isCached(object) shows if the object is present in reference cache
 - ExtObjectContainer#purge(object) removes the object from the cache.
-Let’s look at our previous example extended with these methods:
+Let's look at our previous example extended with these methods:
 .s com.db4odoc.f1.identity.IdentityExample#checkReferenceCacheWithPurge ..
 Now the second retrieval re-instantiates Pilot object from the database.
 An object removed with ExtObjectContainer#purge(object) becomes "unknown" to the ._
