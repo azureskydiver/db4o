@@ -7,7 +7,7 @@ To get started as simply as possible, we are going to reuse the Pilot class from
 	int points;
 } ..
 .1 Simple Replication ..
-First, we will also use db4o to db4o replication, as it is the simplest and requires the least initial setup.
+dRS.NET only supports db4o to db4o replication at this stage. ._
 
 When replicating objects to and from a db4o database, we need to enable UUIDs and VersionNumbers. The ._
 chapter on  .l db4oReplication db4o replication ..  explains more about these settings. We need to call these settings ._
@@ -18,20 +18,20 @@ Db4o.Configure().GenerateVersionNumbers(int.MaxValue); ..
 Open the source db4o database
 .c ObjectContainer handheld = Db4o.OpenFile("handheld.yap"); ..
 And let's store an object or two:
-.c source.Set(new Pilot("Scott Felton", 200));
-source.Set(new Pilot("Frank Green", 120)); ..
+.c handheld.Set(new Pilot("Scott Felton", 200));
+handheld.Set(new Pilot("Frank Green", 120)); ..
 Great. Now we need our destination database:
 .c //Open the destination db4o database
 ObjectContainer desktop = Db4o.OpenFile("desktop.yap"); ..
 Now, it's about time we start replicating some data. Let's set up our replication process to replicate some data from ._
 our handheld, to our desktop:
 .c ReplicationSession replication = Replication.Begin(handheld, desktop); ..
-The ReplicationSession object contains all the functionality that the replication system  ._
+The ReplicationSession object contains all the functionality that the replication system ._
 requires to be able to comprehensively replicate modified data from one database to another.
 
 Now that we've got the ReplicationSession set up and ready, let's get to the meat of this process:
 .c //Query for objects changed from db4o
-ObjectSet changed = replication.ProviderA().objectsChangedSinceLastReplication();
+ObjectSet changed = replication.ProviderA().ObjectsChangedSinceLastReplication();
 
 //Iterate changed objects, replicate them
 while (changed.HasNext())
@@ -55,8 +55,8 @@ while(changed.HasNext())
 	replication.Replicate(changed.Next()); ..
 Now our handheld contains all of the new and modified records from our desktop.
 
-Wow, wasn't that easy? Now, if there had been any modifications made to the destination datbase, ._
-the two are now both in sync with eachother. Congratulations, you've now syncronized 2 db4o databases!
+Wow, wasn't that easy? Now, if there had been any modifications made to the destination database, ._
+the two are now both in sync with each other. Congratulations, you've now syncronized 2 db4o databases!
 
 .1 Selective Replication ..
 What if our handheld dosn't have enough memory to store a complete set of all of our data objects? ._
