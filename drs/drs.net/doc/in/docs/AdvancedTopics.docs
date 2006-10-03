@@ -11,11 +11,11 @@ What you can do is to make use of the event system of dRS.NET to stop traversal 
 Here is how:
 
 First, you need to implement the ReplicationEventListener interface and pass it to Replication.
-.c Sample Code - get a nice example tp put in here.
+.c Sample Code - get a nice example to put in here.
 ..
 
 .2 Resolving conflicts ..
-The event system of dRS can also be used to resolve conflicts. When there is a conflict, ._
+The event system of dRS.NET can also be used to resolve conflicts. When there is a conflict, ._
 You can choose to override the result with either the object from provider A, provider B or null. ._
 If you choose null, then the object will not be replicated.
 

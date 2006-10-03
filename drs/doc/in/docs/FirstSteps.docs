@@ -56,7 +56,7 @@ while(changed.hasNext())
 Now our handheld contains all of the new and modified records from our desktop.
 
 Wow, wasn't that easy? Now, if there had been any modifications made to the destination database, ._
-the two are now both in sync with eachother. Congratulations, you've now syncronized 2 db4o databases!
+the two are now both in sync with each other. Congratulations, you've now syncronized 2 db4o databases!
 
 .1 Selective Replication ..
 What if our handheld dosn't have enough memory to store a complete set of all of our data objects? ._
