@@ -31,15 +31,10 @@ namespace Mono.Cecil {
 	using System;
 	using System.Collections;
 
-	using Mono.Cecil.Cil;
-
-	public sealed class SecurityDeclarationCollection : ISecurityDeclarationCollection {
+	public sealed class SecurityDeclarationCollection : IReflectionVisitable {
 
 		IDictionary m_items;
 		IHasSecurity m_container;
-
-		public event SecurityDeclarationEventHandler OnSecurityDeclarationAdded;
-		public event SecurityDeclarationEventHandler OnSecurityDeclarationRemoved;
 
 		public SecurityDeclaration this [int index] {
 			get { return m_items [index] as SecurityDeclaration; }
@@ -78,9 +73,6 @@ namespace Mono.Cecil {
 			if (value == null)
 				throw new ArgumentNullException ("value");
 
-			if (OnSecurityDeclarationAdded != null && !this.Contains (value))
-				OnSecurityDeclarationAdded (this, new SecurityDeclarationEventArgs (value));
-
 			// Each action can only be added once so...
 			SecurityDeclaration current = (SecurityDeclaration) m_items[value.Action];
 			if (current != null) {
@@ -96,9 +88,6 @@ namespace Mono.Cecil {
 
 		public void Clear ()
 		{
-			if (OnSecurityDeclarationRemoved != null)
-				foreach (SecurityDeclaration item in this)
-					OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (item));
 			m_items.Clear ();
 			SetHasSecurity (false);
 		}
@@ -117,7 +106,7 @@ namespace Mono.Cecil {
 			if (item == null)
 				return false;
 
-#if !CF_1_0 && !CF_2_0            
+#if !CF_1_0 && !CF_2_0
 			return value.PermissionSet.IsSubsetOf (item.PermissionSet);
 #else
             // XXX For CF, this concept does not exist--so always be true
@@ -128,8 +117,6 @@ namespace Mono.Cecil {
 		public void Remove (SecurityAction action)
 		{
 			SecurityDeclaration item = (SecurityDeclaration) m_items[action];
-			if (OnSecurityDeclarationRemoved != null && (item != null))
-				OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (item));
 			m_items.Remove (action);
 			SetHasSecurity (this.Count > 0);
 		}
@@ -151,7 +138,7 @@ namespace Mono.Cecil {
 
 		private void SetHasSecurity (bool value)
 		{
-			ITypeDefinition td = (m_container as ITypeDefinition);
+			TypeDefinition td = (m_container as TypeDefinition);
 			if (td != null) {
 				if (value)
 					td.Attributes |= TypeAttributes.HasSecurity;
@@ -159,7 +146,7 @@ namespace Mono.Cecil {
 					td.Attributes &= ~TypeAttributes.HasSecurity;
 				return;
 			}
-			IMethodDefinition md = (m_container as IMethodDefinition);
+			MethodDefinition md = (m_container as MethodDefinition);
 			if (md != null) {
 				if (value)
 					md.Attributes |= MethodAttributes.HasSecurity;

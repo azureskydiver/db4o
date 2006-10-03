@@ -31,7 +31,6 @@ namespace Mono.Cecil {
 	using System;
 	using System.Collections;
 	using System.Globalization;
-	using System.IO;
 	using System.Text;
 
 	using Mono.Cecil.Binary;
@@ -48,6 +47,10 @@ namespace Mono.Cecil {
 		MetadataWriter m_mdWriter;
 		MetadataTableWriter m_tableWriter;
 		MetadataRowWriter m_rowWriter;
+
+		bool m_saveSymbols;
+		string m_asmOutput;
+		ISymbolWriter m_symbolWriter;
 
 		IList m_typeDefStack;
 		IList m_methodStack;
@@ -82,6 +85,22 @@ namespace Mono.Cecil {
 
 		public CodeWriter CodeWriter {
 			get { return m_codeWriter; }
+		}
+
+		public bool SaveSymbols {
+			get { return m_saveSymbols; }
+			set { m_saveSymbols = value; }
+		}
+
+		public string OutputFile
+		{
+			get { return m_asmOutput; }
+			set { m_asmOutput = value; }
+		}
+
+		public ISymbolWriter SymbolWriter {
+			get { return m_symbolWriter; }
+			set { m_symbolWriter = value; }
 		}
 
 		public SignatureWriter SignatureWriter {
@@ -433,7 +452,7 @@ namespace Mono.Cecil {
 		bool RequiresParameterRow (MethodReturnType mrt)
 		{
 			return mrt.HasConstant || mrt.MarshalSpec != null ||
-				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParamAttributes) 0;
+				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParameterAttributes) 0;
 		}
 
 		public override void VisitMethodDefinition (MethodDefinition method)
@@ -611,7 +630,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public override void VisitMarshalSpec (MarshalDesc marshalSpec)
+		public override void VisitMarshalSpec (MarshalSpec marshalSpec)
 		{
 			FieldMarshalTable fmTable = m_tableWriter.GetFieldMarshalTable ();
 			FieldMarshalRow fmRow = m_rowWriter.CreateFieldMarshalRow (
@@ -814,6 +833,9 @@ namespace Mono.Cecil {
 					}
 				}
 			}
+
+			if (m_symbolWriter != null)
+				m_symbolWriter.Dispose ();
 
 			if (m_mod.Assembly.EntryPoint != null)
 				m_mdWriter.EntryPointToken =
@@ -1348,43 +1370,72 @@ namespace Mono.Cecil {
 			return cas;
 		}
 
-		public MarshalSig GetMarshalSig (MarshalDesc mSpec)
+		public MarshalSig GetMarshalSig (MarshalSpec mSpec)
 		{
 			MarshalSig ms = new MarshalSig (mSpec.NativeIntrinsic);
 
-			if (mSpec is ArrayMarshalDesc) {
-				ArrayMarshalDesc amd = mSpec as ArrayMarshalDesc;
+			if (mSpec is ArrayMarshalSpec) {
+				ArrayMarshalSpec amd = mSpec as ArrayMarshalSpec;
 				MarshalSig.Array ar = new MarshalSig.Array ();
 				ar.ArrayElemType = amd.ElemType;
 				ar.NumElem = amd.NumElem;
 				ar.ParamNum = amd.ParamNum;
 				ar.ElemMult = amd.ElemMult;
 				ms.Spec = ar;
-			} else if (mSpec is CustomMarshalerDesc) {
-				CustomMarshalerDesc cmd = mSpec as CustomMarshalerDesc;
+			} else if (mSpec is CustomMarshalerSpec) {
+				CustomMarshalerSpec cmd = mSpec as CustomMarshalerSpec;
 				MarshalSig.CustomMarshaler cm = new MarshalSig.CustomMarshaler ();
 				cm.Guid = cmd.Guid.ToString ();
 				cm.UnmanagedType = cmd.UnmanagedType;
 				cm.ManagedType = cmd.ManagedType;
 				cm.Cookie = cmd.Cookie;
 				ms.Spec = cm;
-			} else if (mSpec is FixedArrayDesc) {
-				FixedArrayDesc fad = mSpec as FixedArrayDesc;
+			} else if (mSpec is FixedArraySpec) {
+				FixedArraySpec fad = mSpec as FixedArraySpec;
 				MarshalSig.FixedArray fa = new MarshalSig.FixedArray ();
 				fa.ArrayElemType  = fad.ElemType;
 				fa.NumElem = fad.NumElem;
 				ms.Spec = fa;
-			} else if (mSpec is FixedSysStringDesc) {
+			} else if (mSpec is FixedSysStringSpec) {
 				MarshalSig.FixedSysString fss = new MarshalSig.FixedSysString ();
-				fss.Size = (mSpec as FixedSysStringDesc).Size;
+				fss.Size = (mSpec as FixedSysStringSpec).Size;
 				ms.Spec = fss;
-			} else if (mSpec is SafeArrayDesc) {
+			} else if (mSpec is SafeArraySpec) {
 				MarshalSig.SafeArray sa = new MarshalSig.SafeArray ();
-				sa.ArrayElemType = (mSpec as SafeArrayDesc).ElemType;
+				sa.ArrayElemType = (mSpec as SafeArraySpec).ElemType;
 				ms.Spec = sa;
 			}
 
 			return ms;
+		}
+
+		public void WriteSymbols (ModuleDefinition module)
+		{
+			if (!m_saveSymbols)
+				return;
+
+			if (m_asmOutput == null)
+				m_asmOutput = module.Assembly.Name.Name + "." + (module.Assembly.Kind == AssemblyKind.Dll ? "dll" : "exe");
+
+			if (m_symbolWriter == null)
+				m_symbolWriter = SymbolStoreHelper.GetWriter (module, m_asmOutput);
+
+			foreach (TypeDefinition type in module.Types) {
+				foreach (MethodDefinition method in type.Methods)
+					WriteSymbols (method);
+				foreach (MethodDefinition ctor in type.Constructors)
+					WriteSymbols (ctor);
+			}
+
+			m_symbolWriter.Dispose ();
+		}
+
+		void WriteSymbols (MethodDefinition meth)
+		{
+			if (!meth.HasBody)
+				return;
+
+			m_symbolWriter.Write (meth.Body);
 		}
 	}
 }

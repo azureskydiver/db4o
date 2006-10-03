@@ -143,7 +143,7 @@ namespace Db4oTools.NativeQueries
 				UnsupportedPredicate("A predicate must have a boolean return type.");
 		}
 
-		private static IExpression GetQueryExpression(IMethodDefinition method)
+		private static IExpression GetQueryExpression(MethodDefinition method)
 		{
 			IActionFlowGraph afg = FlowGraphFactory.CreateActionFlowGraph(FlowGraphFactory.CreateControlFlowGraph(method));
 			return GetQueryExpression(afg);
@@ -218,18 +218,18 @@ namespace Db4oTools.NativeQueries
 			Hashtable _assemblies = new Hashtable();
 			IList _methodDefinitionStack = new ArrayList();
 
-			public Visitor(IMethodDefinition topLevelMethod)
+			public Visitor(MethodDefinition topLevelMethod)
 			{
 				EnterMethodDefinition(topLevelMethod);
 				RegisterAssembly(topLevelMethod.DeclaringType.Module.Assembly);
 			}
 
-			private void EnterMethodDefinition(IMethodDefinition method)
+			private void EnterMethodDefinition(MethodDefinition method)
 			{
 				_methodDefinitionStack.Add(method);
 			}
 
-			private void LeaveMethodDefinition(IMethodDefinition method)
+			private void LeaveMethodDefinition(MethodDefinition method)
 			{
 				int lastIndex = _methodDefinitionStack.Count - 1;
 				object popped = _methodDefinitionStack[lastIndex];
@@ -242,7 +242,7 @@ namespace Db4oTools.NativeQueries
 			/// string later.
 			/// </summary>
 			/// <param name="assembly"></param>
-			private void RegisterAssembly(IAssemblyDefinition assembly)
+			private void RegisterAssembly(AssemblyDefinition assembly)
 			{
 				_assemblies.Add(assembly.Name.FullName, assembly);
 			}
@@ -388,7 +388,7 @@ namespace Db4oTools.NativeQueries
 				if (null == methodRef)
 					UnsupportedExpression(node);
 
-				IMethodReference method = methodRef.Method;
+				MethodReference method = methodRef.Method;
 				if (IsOperator(method))
 				{
 					ProcessOperatorMethodInvocation(node, method);
@@ -411,7 +411,7 @@ namespace Db4oTools.NativeQueries
 
 			private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
 			{
-				IMethodReference method = methodRef.Method;
+				MethodReference method = methodRef.Method;
 
 				if (method.Parameters.Count != 1
 					|| !IsSystemString(method.Parameters[0].ParameterType))
@@ -468,7 +468,7 @@ namespace Db4oTools.NativeQueries
 				}
 			}
 
-			private void ProcessOperatorMethodInvocation(IMethodInvocationExpression node, IMethodReference method)
+			private void ProcessOperatorMethodInvocation(IMethodInvocationExpression node, MethodReference method)
 			{
 				switch (method.Name)
 				{
@@ -509,7 +509,7 @@ namespace Db4oTools.NativeQueries
 
 			private void ProcessCandidateMethodInvocation(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
 			{
-				IMethodDefinition method = GetMethodDefinition(methodRef);
+				MethodDefinition method = GetMethodDefinition(methodRef);
 				if (null == method)
 					UnsupportedExpression(node);
 
@@ -530,29 +530,29 @@ namespace Db4oTools.NativeQueries
 				}
 			}
 
-			private void AssertMethodCanBeVisited(IMethodInvocationExpression node, IMethodDefinition method)
+			private void AssertMethodCanBeVisited(IMethodInvocationExpression node, MethodDefinition method)
 			{
 				if (_methodDefinitionStack.Contains(method))
 					UnsupportedExpression(node);
 			}
 
-			private IMethodDefinition GetMethodDefinition(IMethodReferenceExpression methodRef)
+			private MethodDefinition GetMethodDefinition(IMethodReferenceExpression methodRef)
 			{
-				IMethodDefinition definition = methodRef.Method as IMethodDefinition;
+				MethodDefinition definition = methodRef.Method as MethodDefinition;
 				return definition != null
 					? definition
 					: LoadExternalMethodDefinition(methodRef);
 			}
 
-			private IMethodDefinition LoadExternalMethodDefinition(IMethodReferenceExpression methodRef)
+			private MethodDefinition LoadExternalMethodDefinition(IMethodReferenceExpression methodRef)
 			{
-				IMethodReference method = methodRef.Method;
-				IAssemblyDefinition assemblyDef = GetContainingAssembly(method.DeclaringType);
-				ITypeDefinition type = assemblyDef.MainModule.Types[method.DeclaringType.FullName];
+				MethodReference method = methodRef.Method;
+				AssemblyDefinition assemblyDef = GetContainingAssembly(method.DeclaringType);
+				TypeDefinition type = assemblyDef.MainModule.Types[method.DeclaringType.FullName];
 				return type.Methods.GetMethod(method.Name, method.Parameters);
 			}
 
-			private IAssemblyDefinition GetContainingAssembly(ITypeReference type)
+			private AssemblyDefinition GetContainingAssembly(TypeReference type)
 			{
 				AssemblyNameReference scope = (AssemblyNameReference)type.Scope;
 				string assemblyName = scope.FullName;
@@ -567,19 +567,19 @@ namespace Db4oTools.NativeQueries
 				return definition;
 			}
 
-			private void EnterCandidateMethod(IMethodDefinition method)
+			private void EnterCandidateMethod(MethodDefinition method)
 			{
 				EnterMethodDefinition(method);
 				++_insideCandidate;
 			}
 
-			private void LeaveCandidateMethod(IMethodDefinition method)
+			private void LeaveCandidateMethod(MethodDefinition method)
 			{
 				--_insideCandidate;
 				LeaveMethodDefinition(method);
 			}
 
-			private static bool IsOperator(IMethodReference method)
+			private static bool IsOperator(MethodReference method)
 			{
 				return !method.HasThis && method.Name.StartsWith("op_") && 2 == method.Parameters.Count;
 			}
@@ -742,9 +742,9 @@ namespace Db4oTools.NativeQueries
 
 		private static Assembly LoadAssembly(IMetadataScope scope)
 		{
-			IAssemblyNameReference nameRef = scope as IAssemblyNameReference;
+			AssemblyNameReference nameRef = scope as AssemblyNameReference;
 			if (null != nameRef) return Assembly.Load(nameRef.FullName);
-			IModuleDefinition moduleDef = scope as IModuleDefinition;
+			ModuleDefinition moduleDef = scope as ModuleDefinition;
 			return LoadAssembly(moduleDef.Assembly.Name);
 		}
 	}

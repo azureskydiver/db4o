@@ -33,7 +33,6 @@ namespace Mono.Cecil {
 	using SR = System.Reflection;
 
 	using Mono.Cecil.Binary;
-	using Mono.Cecil.Metadata;
 
 	public sealed class AssemblyFactory {
 
@@ -151,6 +150,10 @@ namespace Mono.Cecil {
 			} finally {
 				bw.Close ();
 			}
+
+			foreach (ModuleDefinition module in asm.Modules)
+				if (module.Controller.Writer.SaveSymbols)
+					module.Controller.Writer.WriteSymbols (module);
 		}
 
 #if !CF_1_0 && !CF_2_0

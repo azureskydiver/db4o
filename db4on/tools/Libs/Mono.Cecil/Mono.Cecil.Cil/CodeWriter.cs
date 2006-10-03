@@ -233,33 +233,71 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
-		int GetLength (Instruction start, Instruction end, Instruction last)
+		int GetLength (Instruction start, Instruction end, InstructionCollection instructions)
 		{
-			return (end == null ? last.Offset + last.OpCode.Size : end.Offset) - start.Offset;
+			Instruction last = instructions [instructions.Count - 1];
+			return (end == instructions.Outside ? last.Offset + GetSize (last) : end.Offset) - start.Offset;
 		}
 
-		bool IsRangeFat (Instruction start, Instruction end, Instruction last)
+		int GetSize (Instruction i)
 		{
-			return GetLength (start, end, last) >= 256 ||
+			int size = i.OpCode.Size;
+
+			switch (i.OpCode.OperandType) {
+			case OperandType.InlineSwitch:
+				size += ((Instruction []) i.Operand).Length * 4;
+				break;
+			case OperandType.InlineI8:
+			case OperandType.InlineR:
+				size += 8;
+				break;
+			case OperandType.InlineBrTarget:
+			case OperandType.InlineField:
+			case OperandType.InlineI:
+			case OperandType.InlineMethod:
+			case OperandType.InlineString:
+			case OperandType.InlineTok:
+			case OperandType.InlineType:
+			case OperandType.ShortInlineR:
+				size += 4;
+				break;
+			case OperandType.InlineParam:
+			case OperandType.InlineVar:
+				size += 2;
+				break;
+			case OperandType.ShortInlineBrTarget:
+			case OperandType.ShortInlineI:
+			case OperandType.ShortInlineParam:
+			case OperandType.ShortInlineVar:
+				size += 1;
+				break;
+			}
+
+			return size;
+		}
+
+		bool IsRangeFat (Instruction start, Instruction end, InstructionCollection instructions)
+		{
+			return GetLength (start, end, instructions) >= 256 ||
 				start.Offset >= 65536;
 		}
 
-		bool IsFat (ExceptionHandlerCollection seh, Instruction last)
+		bool IsFat (ExceptionHandlerCollection seh)
 		{
 			for (int i = 0; i < seh.Count; i++) {
 				ExceptionHandler eh = seh [i];
-				if (IsRangeFat (eh.TryStart, eh.TryEnd, last))
+				if (IsRangeFat (eh.TryStart, eh.TryEnd, seh.Container.Instructions))
 					return true;
 
 				switch (eh.Type) {
 				case ExceptionHandlerType.Catch :
 				case ExceptionHandlerType.Fault :
 				case ExceptionHandlerType.Finally :
-					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd, last))
+					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd, seh.Container.Instructions))
 						return true;
 					break;
 				case ExceptionHandlerType.Filter :
-					if (IsRangeFat (eh.FilterStart, eh.FilterEnd, last))
+					if (IsRangeFat (eh.FilterStart, eh.FilterEnd, seh.Container.Instructions))
 						return true;
 					break;
 				}
@@ -271,9 +309,8 @@ namespace Mono.Cecil.Cil {
 		void WriteExceptionHandlerCollection (ExceptionHandlerCollection seh)
 		{
 			m_codeWriter.QuadAlign ();
-			Instruction last = seh.Container.Instructions [seh.Container.Instructions.Count - 1];
 
-			if (!IsFat (seh, last)) {
+			if (seh.Count < 0x15 && !IsFat (seh)) {
 				m_codeWriter.Write ((byte) MethodDataSection.EHTable);
 				m_codeWriter.Write ((byte) (seh.Count * 12 + 4));
 				m_codeWriter.Write (new byte [2]);
@@ -282,7 +319,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((ushort) eh.TryStart.Offset);
 					m_codeWriter.Write ((byte) (eh.TryEnd.Offset - eh.TryStart.Offset));
 					m_codeWriter.Write ((ushort) eh.HandlerStart.Offset);
-					m_codeWriter.Write ((byte) GetLength (eh.HandlerStart, eh.HandlerEnd, last));
+					m_codeWriter.Write ((byte) GetLength (eh.HandlerStart, eh.HandlerEnd, seh.Container.Instructions));
 					WriteHandlerSpecific (eh);
 				}
 			} else {
@@ -293,7 +330,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((uint) eh.TryStart.Offset);
 					m_codeWriter.Write ((uint) (eh.TryEnd.Offset - eh.TryStart.Offset));
 					m_codeWriter.Write ((uint) eh.HandlerStart.Offset);
-					m_codeWriter.Write ((uint) GetLength (eh.HandlerStart, eh.HandlerEnd, last));
+					m_codeWriter.Write ((uint) GetLength (eh.HandlerStart, eh.HandlerEnd, seh.Container.Instructions));
 					WriteHandlerSpecific (eh);
 				}
 			}
@@ -324,7 +361,10 @@ namespace Mono.Cecil.Cil {
 
 		public override void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)
 		{
-			MethodBody body = variables.Container;
+			MethodBody body = variables.Container as MethodBody;
+			if (body == null)
+				return;
+
 			uint sig = m_reflectWriter.SignatureWriter.AddLocalVarSig (
 					GetLocalVarSig (variables));
 
@@ -362,7 +402,7 @@ namespace Mono.Cecil.Cil {
 				m_binaryWriter.Write (((int) TokenType.Signature | body.LocalVarToken));
 
 				WriteExceptionHandlerCollection (body.ExceptionHandlers);
-			} else 
+			} else
 				m_binaryWriter.Write ((byte) ((byte) MethodHeader.TinyFormat |
 					m_codeWriter.BaseStream.Length << 2));
 
@@ -466,6 +506,9 @@ namespace Mono.Cecil.Cil {
 					current -= 3;
 					break;
 				}
+
+				if (current < 0)
+					current = 0;
 			}
 
 			instructions.Container.MaxStack = max;

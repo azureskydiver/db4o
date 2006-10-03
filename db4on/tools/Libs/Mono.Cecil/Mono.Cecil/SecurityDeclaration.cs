@@ -32,14 +32,14 @@ namespace Mono.Cecil {
 	using System.Security;
 	using System.Text;
 
-	public sealed class SecurityDeclaration : ISecurityDeclaration, ICloneable {
+	public sealed class SecurityDeclaration : IReflectionVisitable {
 
 		SecurityAction m_action;
 
 #if !CF_1_0 && !CF_2_0
 		PermissionSet m_permSet;
 #endif
-        
+
 		bool m_readable;
 		byte [] m_blob;
 
@@ -69,11 +69,6 @@ namespace Mono.Cecil {
 		{
 			m_action = action;
 			m_readable = true;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public SecurityDeclaration Clone ()

@@ -28,14 +28,9 @@
 
 namespace Mono.Cecil.Cil {
 
-	using System;
-	using System.Collections;
-
 	using Mono.Cecil;
-	using Mono.Cecil.Binary;
-	using Mono.Cecil.Signatures;
 
-	public sealed class MethodBody : IMethodBody {
+	public sealed class MethodBody : IVariableDefinitionProvider, IScopeProvider, ICodeVisitable {
 
 		MethodDefinition m_method;
 		int m_maxStack;
@@ -46,6 +41,7 @@ namespace Mono.Cecil.Cil {
 		InstructionCollection m_instructions;
 		ExceptionHandlerCollection m_exceptions;
 		VariableDefinitionCollection m_variables;
+		ScopeCollection m_scopes;
 
 		private CilWorker m_cilWorker;
 
@@ -94,12 +90,17 @@ namespace Mono.Cecil.Cil {
 			get { return m_variables; }
 		}
 
+		public ScopeCollection Scopes {
+			get { return m_scopes; }
+		}
+
 		public MethodBody (MethodDefinition meth)
 		{
 			m_method = meth;
 			m_instructions = new InstructionCollection (this);
 			m_exceptions = new ExceptionHandlerCollection (this);
 			m_variables = new VariableDefinitionCollection (this);
+			m_scopes = new ScopeCollection (this);
 		}
 
 		internal static Instruction GetInstruction (MethodBody oldBody, MethodBody newBody, Instruction i)
@@ -107,7 +108,8 @@ namespace Mono.Cecil.Cil {
 			int pos = oldBody.Instructions.IndexOf (i);
 			if (pos > -1 && pos < newBody.Instructions.Count)
 				return newBody.Instructions [pos];
-			return null;
+
+			return newBody.Instructions.Outside;
 		}
 
 		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ImportContext context)
@@ -201,6 +203,7 @@ namespace Mono.Cecil.Cil {
 			m_variables.Accept (visitor);
 			m_instructions.Accept (visitor);
 			m_exceptions.Accept (visitor);
+			m_scopes.Accept (visitor);
 
 			visitor.TerminateMethodBody (this);
 		}

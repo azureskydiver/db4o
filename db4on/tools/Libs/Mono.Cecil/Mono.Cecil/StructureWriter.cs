@@ -50,17 +50,7 @@ namespace Mono.Cecil {
 		void ResetImage (ModuleDefinition mod)
 		{
 			Image ni = Image.CreateImage ();
-			if (mod.Image.DebugHeader != null) {
-				ni.AddDebugHeader ();
-				DebugHeader old = mod.Image.DebugHeader;
-				ni.DebugHeader.Age = old.Age;
-				ni.DebugHeader.Characteristics = old.Characteristics;
-				ni.DebugHeader.FileName = old.FileName;
-				ni.DebugHeader.Signature = old.Signature;
-				ni.DebugHeader.TimeDateStamp = ImageInitializer.TimeDateStampFromEpoch ();
-				ni.DebugHeader.Type = old.Type;
-			}
-
+			ni.Accept (new CopyImageVisitor (mod.Image));
 			mod.Image = ni;
 		}
 
@@ -93,6 +83,14 @@ namespace Mono.Cecil {
 			m_mdWriter = rw.MetadataWriter;
 			m_tableWriter = rw.MetadataTableWriter;
 			m_rowWriter = rw.MetadataRowWriter;
+
+			if (!rw.SaveSymbols)
+				return;
+
+			FileStream fs = m_binaryWriter.BaseStream as FileStream;
+			if (fs != null) {
+				rw.OutputFile = fs.Name;
+			}
 		}
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)
@@ -205,7 +203,7 @@ namespace Mono.Cecil {
 			if (module.Main) {
 				ModuleTable modTable = m_tableWriter.GetModuleTable ();
 				ModuleRow modRow = m_rowWriter.CreateModuleRow (
-					(ushort) 0,
+					0,
 					m_mdWriter.AddString (module.Name),
 					m_mdWriter.AddGuid (module.Mvid),
 					(uint) 0,

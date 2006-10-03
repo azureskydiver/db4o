@@ -29,10 +29,7 @@
 namespace Mono.Cecil {
 
 	using System;
-	using System.Collections;
 	using System.IO;
-	using System.Security;
-	using System.Security.Permissions;
 	using System.Text;
 
 	using Mono.Cecil.Binary;
@@ -66,6 +63,7 @@ namespace Mono.Cecil {
 
 		protected SignatureReader m_sigReader;
 		protected CodeReader m_codeReader;
+		protected ISymbolReader m_symbolReader;
 
 		public ModuleDefinition Module {
 			get { return m_module; }
@@ -81,6 +79,11 @@ namespace Mono.Cecil {
 
 		public CodeReader Code {
 			get { return m_codeReader; }
+		}
+
+		public ISymbolReader SymbolReader {
+			get { return m_symbolReader; }
+			set { m_symbolReader = value; }
 		}
 
 		public MetadataRoot MetadataRoot {
@@ -192,7 +195,7 @@ namespace Mono.Cecil {
 					for (int j = 0; j < ms.ParamCount; j++) {
 						Param p = ms.Parameters [j];
 						ParameterDefinition pdef = BuildParameterDefinition (
-							string.Concat ("A_", j), j, new ParamAttributes (), p, nc);
+							string.Concat ("A_", j), j, new ParameterAttributes (), p, nc);
 						pdef.Method = methref;
 						methref.Parameters.Add (pdef);
 					}
@@ -288,9 +291,9 @@ namespace Mono.Cecil {
 		public TypeReference SearchCoreType (string fullName)
 		{
 			if (m_isCorlib)
-				return m_module.Types [fullName] as TypeReference;
+				return m_module.Types [fullName];
 
-			TypeReference coreType =  m_module.TypeReferences [fullName] as TypeReference;
+			TypeReference coreType =  m_module.TypeReferences [fullName];
 			if (coreType == null) {
 				if (m_corlib == null) {
 					foreach (AssemblyNameReference ar in m_module.AssemblyReferences) {
@@ -501,7 +504,7 @@ namespace Mono.Cecil {
 				else
 					throw new ReflectionException ("Unknown owner type for generic parameter");
 
-				GenericParameter gp = new GenericParameter ((int) gpRow.Number, owner);
+				GenericParameter gp = new GenericParameter (gpRow.Number, owner);
 				gp.Attributes = gpRow.Flags;
 				gp.Name = MetadataRoot.Streams.StringsHeap [gpRow.Name];
 				gp.MetadataToken = MetadataToken.FromMetadataRow (TokenType.GenericParam, i);
@@ -539,7 +542,7 @@ namespace Mono.Cecil {
 					FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
 					FieldDefinition fdef = new FieldDefinition (
 						m_root.Streams.StringsHeap [frow.Name],
-						this.GetTypeRefFromSig (fsig.Type, context), frow.Flags);
+						GetTypeRefFromSig (fsig.Type, context), frow.Flags);
 					fdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Field, j - 1);
 
 					if (fsig.CustomMods.Length > 0)
@@ -623,26 +626,31 @@ namespace Mono.Cecil {
 					ParameterDefinition retparam = null;
 
 					//TODO: optimize this
-					ParamRow pRow = null;
 					int start = (int) methRow.ParamList - 1;
 
-					if (paramTable != null && start < prms - 1)
-						pRow = paramTable [start];
+					if (paramTable != null && start < prms - 1) {
 
-					if (pRow != null && pRow.Sequence == 0) { // ret type
-						retparam = new ParameterDefinition (
-							m_root.Streams.StringsHeap [pRow.Name],
-							0,
-							pRow.Flags,
-							null);
-						retparam.Method = mdef;
-						m_parameters [start] = retparam;
-						start++;
+						ParamRow pRetRow = paramTable [start];
+
+						if (pRetRow != null && pRetRow.Sequence == 0) { // ret type
+
+							retparam = new ParameterDefinition (
+								m_root.Streams.StringsHeap [pRetRow.Name],
+								0,
+								pRetRow.Flags,
+								null);
+
+							retparam.Method = mdef;
+							m_parameters [start] = retparam;
+							start++;
+						}
 					}
 
 					for (int k = 0; k < msig.ParamCount; k++) {
 
 						int pointer = start + k;
+
+						ParamRow pRow = null;
 
 						if (paramTable != null && pointer < prms - 1)
 							pRow = paramTable [pointer];
@@ -659,14 +667,14 @@ namespace Mono.Cecil {
 						} else
 							pdef = BuildParameterDefinition (
 								string.Concat ("A_", mdef.IsStatic ? k : k + 1),
-								k + 1, (ParamAttributes) 0, psig, context);
+								k + 1, (ParameterAttributes) 0, psig, context);
 
 						pdef.Method = mdef;
 						mdef.Parameters.Add (pdef);
 					}
 
 					mdef.ReturnType = GetMethodReturnType (msig, context);
-					MethodReturnType mrt = mdef.ReturnType as MethodReturnType;
+					MethodReturnType mrt = mdef.ReturnType;
 					mrt.Method = mdef;
 					if (retparam != null) {
 						mrt.Parameter = retparam;
@@ -691,7 +699,7 @@ namespace Mono.Cecil {
 
 		public override void VisitExternTypeCollection (ExternTypeCollection externs)
 		{
-			ExternTypeCollection ext = externs as ExternTypeCollection;
+			ExternTypeCollection ext = externs;
 
 			if (!m_tHeap.HasTable (ExportedTypeTable.RId))
 				return;
@@ -774,10 +782,10 @@ namespace Mono.Cecil {
 		}
 
 		public ParameterDefinition BuildParameterDefinition (string name, int sequence,
-			ParamAttributes attrs, Param psig, GenericContext context)
+			ParameterAttributes attrs, Param psig, GenericContext context)
 		{
 			ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
-			TypeReference paramType = null;
+			TypeReference paramType;
 
 			if (psig.ByRef)
 				paramType = new ReferenceType (GetTypeRefFromSig (psig.Type, context));
@@ -806,10 +814,10 @@ namespace Mono.Cecil {
 			return m_secReader.FromByteArray (action, permset);
 		}
 
-		protected MarshalDesc BuildMarshalDesc (MarshalSig ms, IHasMarshalSpec container)
+		protected MarshalSpec BuildMarshalDesc (MarshalSig ms, IHasMarshalSpec container)
 		{
 			if (ms.Spec is MarshalSig.Array) {
-				ArrayMarshalDesc amd = new ArrayMarshalDesc (container);
+				ArrayMarshalSpec amd = new ArrayMarshalSpec (container);
 				MarshalSig.Array ar = (MarshalSig.Array) ms.Spec;
 				amd.ElemType = ar.ArrayElemType;
 				amd.NumElem = ar.NumElem;
@@ -817,7 +825,7 @@ namespace Mono.Cecil {
 				amd.ElemMult = ar.ElemMult;
 				return amd;
 			} else if (ms.Spec is MarshalSig.CustomMarshaler) {
-				CustomMarshalerDesc cmd = new CustomMarshalerDesc (container);
+				CustomMarshalerSpec cmd = new CustomMarshalerSpec (container);
 				MarshalSig.CustomMarshaler cmsig = (MarshalSig.CustomMarshaler) ms.Spec;
 				cmd.Guid = cmsig.Guid.Length > 0 ? new Guid (cmsig.Guid) : new Guid ();
 				cmd.UnmanagedType = cmsig.UnmanagedType;
@@ -825,21 +833,21 @@ namespace Mono.Cecil {
 				cmd.Cookie = cmsig.Cookie;
 				return cmd;
 			} else if (ms.Spec is MarshalSig.FixedArray) {
-				FixedArrayDesc fad = new FixedArrayDesc (container);
+				FixedArraySpec fad = new FixedArraySpec (container);
 				MarshalSig.FixedArray fasig = (MarshalSig.FixedArray) ms.Spec;
 				fad.ElemType = fasig.ArrayElemType;
 				fad.NumElem = fasig.NumElem;
 				return fad;
 			} else if (ms.Spec is MarshalSig.FixedSysString) {
-				FixedSysStringDesc fssc = new FixedSysStringDesc (container);
+				FixedSysStringSpec fssc = new FixedSysStringSpec (container);
 				fssc.Size = ((MarshalSig.FixedSysString) ms.Spec).Size;
 				return fssc;
 			} else if (ms.Spec is MarshalSig.SafeArray) {
-				SafeArrayDesc sad = new SafeArrayDesc (container);
+				SafeArraySpec sad = new SafeArraySpec (container);
 				sad.ElemType = ((MarshalSig.SafeArray) ms.Spec).ArrayElemType;
 				return sad;
 			} else {
-				return new MarshalDesc (ms.NativeInstrinsic, container);
+				return new MarshalSpec (ms.NativeInstrinsic, container);
 			}
 		}
 
@@ -848,7 +856,7 @@ namespace Mono.Cecil {
 			TypeReference ret = type;
 			for (int i = cmods.Length - 1; i >= 0; i--) {
 				CustomMod cmod = cmods [i];
-				TypeReference modType = null;
+				TypeReference modType;
 
 				if (cmod.TypeDefOrRef.TokenType == TokenType.TypeDef)
 					modType = GetTypeDefAt (cmod.TypeDefOrRef.RID);
@@ -865,7 +873,7 @@ namespace Mono.Cecil {
 
 		public MethodReturnType GetMethodReturnType (MethodSig msig, GenericContext context)
 		{
-			TypeReference retType = null;
+			TypeReference retType;
 			if (msig.RetType.Void)
 				retType = SearchCoreType (Constants.Void);
 			else if (msig.RetType.ByRef)
@@ -949,7 +957,7 @@ namespace Mono.Cecil {
 					Param p = funcptr.Method.Parameters [i];
 					fnptr.Parameters.Add (BuildParameterDefinition (
 							string.Concat ("A_", i),
-							i, (ParamAttributes) 0,
+							i, (ParameterAttributes) 0,
 							p, context));
 				}
 				return fnptr;
@@ -1033,9 +1041,36 @@ namespace Mono.Cecil {
 
 		protected void SetInitialValue (FieldDefinition field)
 		{
-			if (field.RVA != RVA.Zero && field.FieldType is TypeDefinition) {
+			int size = 0;
+			switch (field.FieldType.FullName) {
+			case Constants.Byte:
+			case Constants.SByte:
+				size = 1;
+				break;
+			case Constants.Int16:
+			case Constants.UInt16:
+			case Constants.Char:
+				size = 2;
+				break;
+			case Constants.Int32:
+			case Constants.UInt32:
+			case Constants.Single:
+				size = 4;
+				break;
+			case Constants.Int64:
+			case Constants.UInt64:
+			case Constants.Double:
+				size = 8;
+				break;
+			default:
+				TypeDefinition fieldType = field.FieldType as TypeDefinition;
+				if (fieldType != null)
+					size = (int) fieldType.ClassSize;
+				break;
+			}
+
+			if (size > 0 && field.RVA != RVA.Zero) {
 				BinaryReader br = m_reader.MetadataReader.GetDataReader (field.RVA);
-				int size = (int) (field.FieldType as TypeDefinition).ClassSize;
 				field.InitialValue = br == null ? new byte [size] : br.ReadBytes (size);
 			} else
 				field.InitialValue = new byte [0];

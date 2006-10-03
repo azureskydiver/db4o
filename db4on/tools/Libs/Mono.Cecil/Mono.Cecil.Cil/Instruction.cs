@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil.Cil {
 
-	public sealed class Instruction : IInstruction {
+	public sealed class Instruction : ICodeVisitable {
 
 		int m_offset;
 		OpCode m_opCode;
@@ -36,6 +36,8 @@ namespace Mono.Cecil.Cil {
 
 		Instruction m_previous;
 		Instruction m_next;
+
+		SequencePoint m_sequencePoint;
 
 		public int Offset {
 			get { return m_offset; }
@@ -60,6 +62,11 @@ namespace Mono.Cecil.Cil {
 		public Instruction Next {
 			get { return m_next; }
 			set { m_next = value; }
+		}
+
+		public SequencePoint SequencePoint {
+			get { return m_sequencePoint; }
+			set { m_sequencePoint = value; }
 		}
 
 		internal Instruction (int offset, OpCode opCode, object operand) : this (offset, opCode)
