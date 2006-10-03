@@ -53,7 +53,7 @@ namespace com.db4o.drs.test
 
 		public virtual void Open()
 		{
-			com.db4o.Db4o.Configure().MessageLevel(0);
+			com.db4o.Db4o.Configure().MessageLevel(-1);
 			_server = com.db4o.Db4o.OpenServer(YapFileName(), _port);
 			_server.GrantAccess(USERNAME, PASSWORD);
 			try

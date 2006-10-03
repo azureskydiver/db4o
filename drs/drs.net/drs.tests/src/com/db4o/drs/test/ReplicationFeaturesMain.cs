@@ -30,10 +30,10 @@ namespace com.db4o.drs.test
 
 		private int _testCombination;
 
-		private static void Fail(string _string)
+		private static void Fail(string @string)
 		{
-			j4o.lang.JavaSystem.err.Println(_string);
-			throw new j4o.lang.RuntimeException(_string);
+			System.Console.Error.WriteLine(@string);
+			throw new j4o.lang.RuntimeException(@string);
 		}
 
 		private void ReplicateQueryingFrom(com.db4o.drs.ReplicationSession replication, com.db4o.drs.ReplicationProvider
@@ -109,10 +109,13 @@ namespace com.db4o.drs.test
 			_setBoth.AddAll(_setB);
 			_testCombination = 0;
 			TstWithDeletedObjectsIn(_NONE);
+			TstWithDeletedObjectsIn(_setA);
+			TstWithDeletedObjectsIn(_setB);
+			TstWithDeletedObjectsIn(_setBoth);
 			if (_intermittentErrors.Length > 0)
 			{
-				j4o.lang.JavaSystem.err.Println("Intermittent errors found in test combinations:"
-					 + _intermittentErrors);
+				System.Console.Error.WriteLine("Intermittent errors found in test combinations:" 
+					+ _intermittentErrors);
 				Db4oUnit.Assert.IsTrue(false);
 			}
 		}
@@ -205,7 +208,7 @@ namespace com.db4o.drs.test
 			PerformChanges();
 			PrintProvidersContent("after changes");
 			com.db4o.drs.ReplicationSession replication = new com.db4o.drs.inside.GenericReplicationSession
-				(A().Provider(), B().Provider(), new _AnonymousInnerClass176(this));
+				(A().Provider(), B().Provider(), new _AnonymousInnerClass174(this));
 			if (_direction.Size() == 1)
 			{
 				if (_direction.Contains(AStuff))
@@ -228,9 +231,9 @@ namespace com.db4o.drs.test
 			Clean();
 		}
 
-		private sealed class _AnonymousInnerClass176 : com.db4o.drs.ReplicationEventListener
+		private sealed class _AnonymousInnerClass174 : com.db4o.drs.ReplicationEventListener
 		{
-			public _AnonymousInnerClass176(ReplicationFeaturesMain _enclosing)
+			public _AnonymousInnerClass174(ReplicationFeaturesMain _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -246,10 +249,10 @@ namespace com.db4o.drs.test
 				{
 					return;
 				}
-				com.db4o.drs.ObjectState _override = this._enclosing._containerStateToPrevail.Contains
+				com.db4o.drs.ObjectState @override = this._enclosing._containerStateToPrevail.Contains
 					(com.db4o.drs.test.ReplicationFeaturesMain.AStuff) ? e.StateInProviderA() : e.StateInProviderB
 					();
-				e.OverrideWith(_override);
+				e.OverrideWith(@override);
 			}
 
 			private readonly ReplicationFeaturesMain _enclosing;
@@ -610,7 +613,7 @@ namespace com.db4o.drs.test
 			}
 		}
 
-		private static void Out(string _string)
+		private static void Out(string @string)
 		{
 		}
 
@@ -715,12 +718,12 @@ namespace com.db4o.drs.test
 
 		public virtual void AddAll(com.db4o.drs.test.Set4 other)
 		{
-			other._table.ForEachKey(new _AnonymousInnerClass564(this));
+			other._table.ForEachKey(new _AnonymousInnerClass563(this));
 		}
 
-		private sealed class _AnonymousInnerClass564 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass563 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass564(Set4 _enclosing)
+			public _AnonymousInnerClass563(Set4 _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -764,13 +767,13 @@ namespace com.db4o.drs.test
 		public virtual com.db4o.foundation.Iterator4 Iterator()
 		{
 			com.db4o.foundation.Collection4 elements = new com.db4o.foundation.Collection4();
-			_table.ForEachKey(new _AnonymousInnerClass593(this, elements));
+			_table.ForEachKey(new _AnonymousInnerClass592(this, elements));
 			return elements.Iterator();
 		}
 
-		private sealed class _AnonymousInnerClass593 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass592 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass593(Set4 _enclosing, com.db4o.foundation.Collection4 elements
+			public _AnonymousInnerClass592(Set4 _enclosing, com.db4o.foundation.Collection4 elements
 				)
 			{
 				this._enclosing = _enclosing;
