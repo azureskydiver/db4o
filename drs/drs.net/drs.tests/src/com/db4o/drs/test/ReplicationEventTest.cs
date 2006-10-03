@@ -38,8 +38,8 @@ namespace com.db4o.drs.test
 				provider, typeof(com.db4o.drs.test.SPCParent));
 			if (!parent.GetName().Equals(parentName))
 			{
-				j4o.lang.JavaSystem._out.Println("expected = " + parentName);
-				j4o.lang.JavaSystem._out.Println("actual = " + parent.GetName());
+				System.Console.Out.WriteLine("expected = " + parentName);
+				System.Console.Out.WriteLine("actual = " + parent.GetName());
 			}
 			Db4oUnit.Assert.AreEqual(parent.GetName(), parentName);
 			Db4oUnit.Assert.AreEqual(childName, parent.GetChild().GetName());
@@ -123,16 +123,16 @@ namespace com.db4o.drs.test
 				this.invoked = invoked;
 			}
 
-			public void OnReplicate(com.db4o.drs.ReplicationEvent _event)
+			public void OnReplicate(com.db4o.drs.ReplicationEvent @event)
 			{
 				invoked.SetValue(true);
-				com.db4o.drs.ObjectState stateA = _event.StateInProviderA();
-				com.db4o.drs.ObjectState stateB = _event.StateInProviderB();
+				com.db4o.drs.ObjectState stateA = @event.StateInProviderA();
+				com.db4o.drs.ObjectState stateB = @event.StateInProviderB();
 				Db4oUnit.Assert.IsTrue(stateA.IsNew());
 				Db4oUnit.Assert.IsTrue(!stateB.IsNew());
 				Db4oUnit.Assert.IsNotNull(stateA.GetObject());
 				Db4oUnit.Assert.IsNull(stateB.GetObject());
-				_event.OverrideWith(null);
+				@event.OverrideWith(null);
 			}
 
 			private readonly ReplicationEventTest _enclosing;
@@ -159,7 +159,7 @@ namespace com.db4o.drs.test
 				this._enclosing = _enclosing;
 			}
 
-			public void OnReplicate(com.db4o.drs.ReplicationEvent _event)
+			public void OnReplicate(com.db4o.drs.ReplicationEvent @event)
 			{
 			}
 
@@ -186,12 +186,12 @@ namespace com.db4o.drs.test
 				this._enclosing = _enclosing;
 			}
 
-			public void OnReplicate(com.db4o.drs.ReplicationEvent _event)
+			public void OnReplicate(com.db4o.drs.ReplicationEvent @event)
 			{
-				Db4oUnit.Assert.IsTrue(_event.IsConflict());
-				if (_event.IsConflict())
+				Db4oUnit.Assert.IsTrue(@event.IsConflict());
+				if (@event.IsConflict())
 				{
-					_event.OverrideWith(_event.StateInProviderB());
+					@event.OverrideWith(@event.StateInProviderB());
 				}
 			}
 
@@ -217,10 +217,10 @@ namespace com.db4o.drs.test
 				this._enclosing = _enclosing;
 			}
 
-			public void OnReplicate(com.db4o.drs.ReplicationEvent _event)
+			public void OnReplicate(com.db4o.drs.ReplicationEvent @event)
 			{
-				Db4oUnit.Assert.IsTrue(!_event.IsConflict());
-				_event.OverrideWith(_event.StateInProviderB());
+				Db4oUnit.Assert.IsTrue(!@event.IsConflict());
+				@event.OverrideWith(@event.StateInProviderB());
 			}
 
 			private readonly ReplicationEventTest _enclosing;
@@ -246,10 +246,10 @@ namespace com.db4o.drs.test
 				this._enclosing = _enclosing;
 			}
 
-			public void OnReplicate(com.db4o.drs.ReplicationEvent _event)
+			public void OnReplicate(com.db4o.drs.ReplicationEvent @event)
 			{
-				Db4oUnit.Assert.IsTrue(_event.IsConflict());
-				_event.OverrideWith(null);
+				Db4oUnit.Assert.IsTrue(@event.IsConflict());
+				@event.OverrideWith(null);
 			}
 
 			private readonly ReplicationEventTest _enclosing;

@@ -20,8 +20,8 @@ namespace com.db4o.drs.test
 				provider, typeof(com.db4o.drs.test.SPCParent));
 			if (!parent.GetName().Equals(parentName))
 			{
-				j4o.lang.JavaSystem._out.Println("expected = " + parentName);
-				j4o.lang.JavaSystem._out.Println("actual = " + parent.GetName());
+				System.Console.Out.WriteLine("expected = " + parentName);
+				System.Console.Out.WriteLine("actual = " + parent.GetName());
 			}
 			Db4oUnit.Assert.AreEqual(parent.GetName(), parentName);
 			Db4oUnit.Assert.AreEqual(parent.GetChild().GetName(), childName);

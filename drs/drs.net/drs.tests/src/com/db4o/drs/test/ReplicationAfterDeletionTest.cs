@@ -7,6 +7,7 @@ namespace com.db4o.drs.test
 			Replicate();
 			Clean();
 			Replicate();
+			Clean();
 		}
 
 		protected override void Clean()

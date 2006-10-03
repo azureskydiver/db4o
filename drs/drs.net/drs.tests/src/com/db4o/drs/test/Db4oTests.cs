@@ -4,9 +4,9 @@ namespace com.db4o.drs.test
 	{
 		public static void Main(string[] args)
 		{
-//			new com.db4o.drs.test.Db4oTests().Rundb4oCS();
-//			new com.db4o.drs.test.Db4oTests().RunCSdb4o();
-//			new com.db4o.drs.test.Db4oTests().RunCSCS();
+			new com.db4o.drs.test.Db4oTests().Rundb4oCS();
+			new com.db4o.drs.test.Db4oTests().RunCSdb4o();
+			new com.db4o.drs.test.Db4oTests().RunCSCS();
 			new com.db4o.drs.test.Db4oTests().RunDb4oDb4o();
 		}
 
