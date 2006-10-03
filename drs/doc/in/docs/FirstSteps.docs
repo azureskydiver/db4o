@@ -55,7 +55,7 @@ while(changed.hasNext())
 	replication.replicate(changed.next()); ..
 Now our handheld contains all of the new and modified records from our desktop.
 
-Wow, wasn't that easy? Now, if there had been any modifications made to the destination datbase, ._
+Wow, wasn't that easy? Now, if there had been any modifications made to the destination database, ._
 the two are now both in sync with eachother. Congratulations, you've now syncronized 2 db4o databases!
 
 .1 Selective Replication ..
