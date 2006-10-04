@@ -109,11 +109,14 @@
 
 	<target name="dist" depends="build-all, javadoc, doctor, javadoc">
 		<property name="zipbasedir" value="drs-${drs.version.dotted}" />
+		<property name="zipquickstartbasedir" value="drs-${drs.version.dotted}QuickStart" />
 		<zip destfile="${file.drs.zip}">
 			<zipfileset dir="." prefix="${zipbasedir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
 
 			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.txt" />
 			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc" />
+			
+			<zipfileset dir="../drsquickstarts/src" prefix="${zipquickstartbasedir}/src" excludes="misc" />
 
 			<zipfileset dir="doc/out" prefix="${zipbasedir}/doc/tutorial" />
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
@@ -121,6 +124,7 @@
 			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
 			<zipfileset file="${file.drs.tutorial.jar}" fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}" />
 			<zipfileset file="${file.drs.test.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.jar}" />
+			
 		</zip>
 		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}" />
 	</target>
