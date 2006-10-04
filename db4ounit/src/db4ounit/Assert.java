@@ -96,8 +96,12 @@ public final class Assert {
 		return failureMessage(expected,actual,null);
 	}
 
-	private static String failureMessage(Object expected, Object actual,String message) {
-		return (message==null ? "" : message+": ")+"Expected '"+ expected + "' but was '" + actual + "'";
+	private static String failureMessage(Object expected, Object actual, String customMessage) {
+		return failureMessage(expected, actual, "", customMessage);
+	}
+
+	private static String failureMessage(Object expected, Object actual, final String operator, String customMessage) {
+		return (customMessage==null ? "" : customMessage+": ")+"Expected " + operator + "'"+ expected + "' but was '" + actual + "'";
 	}
 
 	private static boolean objectsAreEqual(Object expected, Object actual) {
@@ -113,5 +117,15 @@ public final class Assert {
 
 	public static void isInstanceOf(Class expectedClass, Object actual) {
 		isTrue(expectedClass.isInstance(actual), failureMessage(expectedClass, actual == null ? null : actual.getClass()));
+	}
+
+	public static void isGreater(long expected, long actual) {
+		if (actual > expected) return;
+		fail(failureMessage(new Long(expected), new Long(actual), "greater than ", null));
 	}			
+	
+	public static void isGreaterOrEqual(long expected, long actual) {
+		if (actual >= expected) return;
+		fail(failureMessage(new Long(expected), new Long(actual), "greater than or equal to ", null));
+	}
 }
