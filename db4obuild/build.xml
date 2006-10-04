@@ -1388,6 +1388,7 @@
 				<arg value="-cp" />
 				<arg path="${dependencies.jar}" />
 				<arg value="@sharpen-db4ounit-options" />
+				<arg value="@sharpen-exceptions-mapping" />
 			</args>
 		</sharpen>
 		
@@ -1432,6 +1433,7 @@
 				<arg value="-cp" />
 				<arg path="${dependencies.jar}" />
 				<arg value="@sharpen-db4ounit-options" />
+				<arg value="@sharpen-exceptions-mapping" />
 				
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.test.lib.File4" />
@@ -1497,15 +1499,9 @@
 		
 		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
 			<args>
+				<arg value="@sharpen-exceptions-mapping" />
+				
 				<arg value="-pascalcase" />
-				
-				<arg value="-typeMapping" />
-				<arg value="com.db4o.foundation.ArgumentNullException" />
-				<arg value="System.ArgumentNullException" />
-				
-				<arg value="-typeMapping" />
-				<arg value="com.db4o.foundation.NotImplementedException" />
-				<arg value="System.NotImplementedException" />
 				
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.events.EventArgs" />

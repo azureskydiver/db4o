@@ -1,0 +1,2 @@
+-typeMapping com.db4o.foundation.ArgumentNullException System.ArgumentNullException
+-typeMapping com.db4o.foundation.NotImplementedException System.NotImplementedException
