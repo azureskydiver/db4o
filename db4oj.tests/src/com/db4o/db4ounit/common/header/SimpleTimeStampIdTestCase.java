@@ -37,9 +37,8 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase{
         STSItem item =  (STSItem) db().get(STSItem.class).next();
         
         long version = db().getObjectInfo(item).getVersion();
-        Assert.isTrue( version > 0);
-        
-        Assert.isTrue(((YapFile)db()).currentVersion() >= version);
+        Assert.isGreater(0, version);        
+        Assert.isGreaterOrEqual(version, currentVersion());
         
         reopen();
         
@@ -48,7 +47,11 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase{
         
         long secondVersion = db().getObjectInfo(item2).getVersion();
         
-        Assert.isTrue(secondVersion > version);
-        Assert.isTrue(((YapFile)db()).currentVersion() >= version);
+        Assert.isGreater(version, secondVersion);
+        Assert.isGreaterOrEqual(secondVersion, currentVersion());
     }
+
+	private long currentVersion() {
+		return ((YapFile)db()).currentVersion();
+	}
 }
