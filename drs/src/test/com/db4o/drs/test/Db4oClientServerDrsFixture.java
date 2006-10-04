@@ -64,7 +64,7 @@ public class Db4oClientServerDrsFixture implements DrsFixture {
 		try {
 			_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 		_provider = new Db4oReplicationProvider(_db, _name);
 	}
