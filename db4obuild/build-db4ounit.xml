@@ -54,6 +54,7 @@
 		<sharpen resource="db4ounit/src" workspace="${conversion.workspace.dir}">
 			<args>
 				<arg value="@sharpen-db4ounit-options" />
+				<arg value="@sharpen-exceptions-mapping" />
 				
 				<arg value="-typeMapping" />
 				<arg value="java.io.Writer" />
