@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.common.header;
 
-import com.db4o.Db4o;
 import com.db4o.YapFile;
 import com.db4o.config.*;
 
