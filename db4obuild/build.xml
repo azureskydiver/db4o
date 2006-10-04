@@ -594,10 +594,8 @@
 	</target>
 
 	<target name="compiledb4ounitjava" depends="compilecorejava" description="Compile db4o test framework">
+		<delete dir="${dir.dist.classes.db4ounit}" />
 		<mkdir dir="${dir.dist.classes.db4ounit}" />
-		<delete dir="${dir.dist.classes.db4ounit}">
-			<include name="**/*" />
-		</delete>
 		<javac destdir="${dir.dist.classes.db4ounit}" fork="true" debug="on" target="1.1" source="1.2" encoding="UTF-8">
 			<classpath>
 				<pathelement path="${file.java1.1.jar}" />
@@ -611,11 +609,9 @@
 	</target>
 
 	<target name="compiletestsjava" depends="compiledb4ounitjava" description="Compile db4o test sources">
+		<delete dir="${dir.dist.classes.test}" />
 		<mkdir dir="${dir.dist.classes.test}" />
 		<mkdir dir="${dir.dist.classes.test.nq}" />
-		<delete dir="${dir.dist.classes.test}">
-			<include name="**/*" />
-		</delete>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
 			<fileset dir="${dir.j.tests.src}">
 				<include name="**/*.java" />
@@ -1506,6 +1502,10 @@
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.foundation.ArgumentNullException" />
 				<arg value="System.ArgumentNullException" />
+				
+				<arg value="-typeMapping" />
+				<arg value="com.db4o.foundation.NotImplementedException" />
+				<arg value="System.NotImplementedException" />
 				
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.events.EventArgs" />
