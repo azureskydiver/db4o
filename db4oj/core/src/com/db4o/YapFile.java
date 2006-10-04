@@ -90,11 +90,11 @@ public abstract class YapFile extends YapStream {
         
         if(Debug.freespaceChecker){
             _fmChecker = new FreespaceManagerRam(this);
-        }
-        
-        _fileHeader = new FileHeader0();
+        }        
         
         blockSize(configImpl().blockSize());
+        
+        _fileHeader = new FileHeader1();
         
         setRegularEndAddress(_fileHeader.length());
         
@@ -507,7 +507,7 @@ public abstract class YapFile extends YapStream {
             _fmChecker.start(0);
         }
         
-        _fileHeader.readVariablePart(this);
+        readHeaderVariablePart();
         
         if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
             _freespaceManager = _freespaceManager.migrate(this, configImpl().freespaceSystem());
@@ -531,6 +531,11 @@ public abstract class YapFile extends YapStream {
         }
         
     }
+
+	private void readHeaderVariablePart() {
+		_fileHeader.readVariablePart(this);
+        setNextTimeStampId(systemData().lastTimeStampID());
+	}
     
     public int newFreespaceSlot(byte freespaceSystem){
         _systemData.freespaceAddress(FreespaceManager.initSlot(this));

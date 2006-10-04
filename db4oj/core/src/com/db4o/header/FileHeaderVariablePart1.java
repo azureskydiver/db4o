@@ -19,14 +19,19 @@ public class FileHeaderVariablePart1 extends YapMeta{
     // (int)  freespace address
     // (int) identity ID
     // (long) versionGenerator
+	// (int) uuid index ID
     
-    private static final int LENGTH = 1 + (YapConst.INT_LENGTH * 3) + YapConst.LONG_LENGTH; 
+    private static final int LENGTH = 1 + (YapConst.INT_LENGTH * 4) + YapConst.LONG_LENGTH; 
     
     private final SystemData _systemData;
     
     public FileHeaderVariablePart1(int id, SystemData systemData) {
         setID(id);
         _systemData = systemData;
+    }
+    
+    SystemData systemData() {
+    	return _systemData;
     }
 
     public byte getIdentifier() {
@@ -43,6 +48,7 @@ public class FileHeaderVariablePart1 extends YapMeta{
         _systemData.freespaceAddress(reader.readInt());
         readIdentity(trans, reader.readInt());
         _systemData.lastTimeStampID(reader.readLong());
+        _systemData.uuidIndexId(reader.readInt());
     }
 
     public void writeThis(Transaction trans, YapReader writer) {
@@ -51,6 +57,7 @@ public class FileHeaderVariablePart1 extends YapMeta{
         writer.writeInt(_systemData.freespaceAddress());
         writer.writeInt(_systemData.identity().getID(trans));
         writer.writeLong(_systemData.lastTimeStampID());
+        writer.writeInt(_systemData.uuidIndexId());
     }
     
     private void readIdentity(Transaction trans, int identityID) {

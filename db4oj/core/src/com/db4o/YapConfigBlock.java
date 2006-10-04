@@ -206,7 +206,10 @@ public final class YapConfigBlock {
             systemData().converterVersion(reader.readInt());
         }
         if(oldLength > UUID_INDEX_ID_OFFSET){
-            systemData().uuidIndexId(reader.readInt());
+            final int uuidIndexId = reader.readInt();
+            if (0 != uuidIndexId) {
+            	systemData().uuidIndexId(uuidIndexId);
+            }
         }
         
         _stream.ensureFreespaceSlot();
