@@ -109,6 +109,7 @@ public class FileHeader1 extends FileHeader {
     }
 
     public void writeVariablePart(YapFile file, int part) {
+    	_variablePart.setStateDirty();
         _variablePart.write(file.getSystemTransaction());
     }
 
