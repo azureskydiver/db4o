@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.SystemData;
 import com.db4o.reflect.*;
 
 /**
@@ -459,10 +460,19 @@ public final class YapClassCollection extends YapMeta {
     }
     
     public void setID(int a_id) {
-        if(i_id == 0){
-            _systemTransaction.i_file.systemData().classCollectionID(a_id);
+    	if (stream().isClient()) {
+    		super.setID(a_id);
+    		return;
+    	}
+    	
+        if(i_id == 0) {        	
+			systemData().classCollectionID(a_id);
         }
         super.setID(a_id);
     }
+
+	private SystemData systemData() {
+		return _systemTransaction.i_file.systemData();
+	}
 
 }
