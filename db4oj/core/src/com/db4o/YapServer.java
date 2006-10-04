@@ -36,9 +36,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
             }
         });
         
-        if (config.messageLevel() == 0) {
-            config.messageLevel(1);
-        }
+       
         if (a_port > 0) {
             try {
                 i_serverSocket = new YapServerSocket(a_port);

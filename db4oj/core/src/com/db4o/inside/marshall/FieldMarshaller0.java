@@ -120,6 +120,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         if (yapField.isVirtual()) {
         	return;
         }
+        // handler ID
         readers.copyID(true);
         // skip primitive/array/narray attributes
         readers.incrementOffset(1);
