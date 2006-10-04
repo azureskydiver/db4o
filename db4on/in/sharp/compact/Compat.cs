@@ -84,6 +84,15 @@ namespace System.IO
 
 #endif
 
+#if CF_1_0 || CF_2_0
+namespace System
+{
+	class SerializableAttribute : Attribute
+	{
+	}
+}
+#endif
+
 namespace com.db4o
 {
 	/// <exclude />
