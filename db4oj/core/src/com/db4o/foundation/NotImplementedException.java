@@ -4,6 +4,7 @@ package com.db4o.foundation;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public class NotImplementedException extends RuntimeException {
     

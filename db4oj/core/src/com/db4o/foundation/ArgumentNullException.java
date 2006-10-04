@@ -4,6 +4,7 @@ package com.db4o.foundation;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public final class ArgumentNullException extends IllegalArgumentException {
     
