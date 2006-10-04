@@ -100,8 +100,8 @@ public final class Assert {
 		return failureMessage(expected, actual, "", customMessage);
 	}
 
-	private static String failureMessage(Object expected, Object actual, final String operator, String customMessage) {
-		return (customMessage==null ? "" : customMessage+": ")+"Expected " + operator + "'"+ expected + "' but was '" + actual + "'";
+	private static String failureMessage(Object expected, Object actual, final String cmpOper, String customMessage) {
+		return (customMessage==null ? "" : customMessage+": ")+"Expected " + cmpOper + "'"+ expected + "' but was '" + actual + "'";
 	}
 
 	private static boolean objectsAreEqual(Object expected, Object actual) {
