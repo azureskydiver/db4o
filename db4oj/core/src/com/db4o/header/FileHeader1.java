@@ -89,7 +89,7 @@ public class FileHeader1 extends FileHeader {
     }
     
     public void writeFixedPart(
-        boolean shuttingDown, YapWriter writer, int blockSize, int classCollectionId,int freespaceID) {
+        YapFile file, boolean shuttingDown, YapWriter writer, int blockSize, int freespaceID) {
         writer.append(SIGNATURE);
         writer.append(VERSION);
         writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
@@ -98,7 +98,7 @@ public class FileHeader1 extends FileHeader {
         writer.writeInt(0);
         writer.writeInt(0);
         writer.writeInt(blockSize);
-        writer.writeInt(classCollectionId);
+        writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
         writer.writeInt(_variablePart.getID());
         writer.write();

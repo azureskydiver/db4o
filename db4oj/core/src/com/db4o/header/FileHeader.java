@@ -81,8 +81,9 @@ public abstract class FileHeader {
         return reader.readByte() == version; 
     }
     
+    // TODO: freespaceID should not be passed here, it should be taken from SystemData
     public abstract void writeFixedPart(
-        boolean shuttingDown, YapWriter writer, int blockSize, int classCollectionID, int freespaceID);
+        YapFile file, boolean shuttingDown, YapWriter writer, int blockSize, int freespaceID);
     
     public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionAddress);
 

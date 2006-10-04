@@ -457,5 +457,12 @@ public final class YapClassCollection extends YapMeta {
     protected YapStream stream() {
         return _systemTransaction.stream();
     }
+    
+    public void setID(int a_id) {
+        if(i_id == 0){
+            _systemTransaction.i_file.systemData().classCollectionID(a_id);
+        }
+        super.setID(a_id);
+    }
 
 }
