@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<WixBuilderParameters>
+	<Shortcuts>
+	<!--
+		<WixShortcut>
+			<Path>doc/tutorial/db4o-tutorial.exe</Path>
+			<Name>db4o tutorial</Name>
+		</WixShortcut>
+		-->
+		</Shortcuts>	
+</WixBuilderParameters>
+		
