@@ -27,10 +27,14 @@ public class IdentityTestCase extends AbstractDb4oTestCase {
         
         byte[] oldSignature = db().identity().getSignature();
 
-        ((YapFile)db()).generateNewIdentity();
+        generateNewIdentity();
         
         reopen();
         
         ArrayAssert.areNotEqual(oldSignature, db().identity().getSignature());
     }
+
+	private void generateNewIdentity() {
+		((YapFile)db()).generateNewIdentity();
+	}
 }
