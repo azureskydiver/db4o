@@ -669,18 +669,20 @@ public abstract class YapFile extends YapStream {
 
     public abstract void writeBytes(YapReader a_Bytes, int address, int addressOffset);
 
-    final void writeDirty() {
-        YapMeta dirty;
-        Iterator4 i = i_dirty.iterator();
+    final void writeDirty() {        
+        writeCachedDirty();
+        writeVariableHeader();
+    }
+
+	private void writeCachedDirty() {
+		Iterator4 i = i_dirty.iterator();
         while (i.moveNext()) {
-            dirty = (YapMeta) i.current();
+        	YapMeta dirty = (YapMeta) i.current();
             dirty.write(i_systemTrans);
             dirty.notCachedDirty();
         }
         i_dirty.clear();
-        
-        writeVariableHeader();
-    }
+	}
     
     protected void writeVariableHeader(){
         if(! _timeStampIdGenerator.isDirty()){
