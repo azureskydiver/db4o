@@ -15,12 +15,12 @@ import com.db4o.drs.ReplicationSession;
 public class Simple {
 
 	public static void main(String[] args) {
-		DoOneWayReplcation();
-		DoBiDirectionalReplication();
-		DoSelectiveReplication();
+		new Simple().DoOneWayReplcation();
+		new Simple().DoBiDirectionalReplication();
+		new Simple().DoSelectiveReplication();
 	}
 
-	private static void DoSelectiveReplication() {
+	public void DoSelectiveReplication() {
 		
 		configureDb4oForReplication();
 
@@ -60,7 +60,7 @@ public class Simple {
 		closeDb(desktop);
 	}
 
-	private static void DoBiDirectionalReplication() {
+	private void DoBiDirectionalReplication() {
 
 		configureDb4oForReplication();
 
@@ -110,7 +110,7 @@ public class Simple {
 		closeDb(desktop);
 	}
 
-	private static void displayContents(String methodname, String pointintime, ObjectContainer handheld, ObjectContainer desktop) {
+	private void displayContents(String methodname, String pointintime, ObjectContainer handheld, ObjectContainer desktop) {
 		if (methodname != "") {
 			System.out.println(methodname + " Replication");
 			System.out.println();
@@ -121,35 +121,35 @@ public class Simple {
 		displayContentsOf("Contents of Desktop", desktop);
 	}
 
-	private static void storeSomeMorePilots(ObjectContainer db) {
+	private void storeSomeMorePilots(ObjectContainer db) {
 		db.set(new Pilot("Peter van der Merwe", 37));
 		db.set(new Pilot("Albert Kwan", 30));
 	}
 
-	private static void displayContentsOf(String heading, ObjectContainer db) {
+	private void displayContentsOf(String heading, ObjectContainer db) {
 		System.out.println(heading);
 		System.out.println();
 		ObjectSet result = db.get(new Pilot());
 		listResult(result);
 	}
 
-	private static void closeDb(ObjectContainer db) {
+	private void closeDb(ObjectContainer db) {
 		db.close();
 	}
 
-	private static ObjectContainer openDb(String dbname) {
+	private ObjectContainer openDb(String dbname) {
 		new File(dbname).delete();
 		ObjectContainer db = Db4o.openFile(dbname);
 		return db;
 	}
 
-	private static void configureDb4oForReplication() {
+	private void configureDb4oForReplication() {
 		// Replication requires UUIDs and VersionNumbers
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 	}
 
-	private static void DoOneWayReplcation() {
+	private void DoOneWayReplcation() {
 
 		configureDb4oForReplication();
 
@@ -186,12 +186,12 @@ public class Simple {
 		closeDb(desktop);
 	}
 
-	private static void storeSomePilots(ObjectContainer db) {
+	private void storeSomePilots(ObjectContainer db) {
 		db.set(new Pilot("Scott Felton", 52));
 		db.set(new Pilot("Frank Green", 45));
 	}
 	
-    public static void listResult(ObjectSet result) {
+    public void listResult(ObjectSet result) {
         while(result.hasNext()) {
             System.out.println(result.next());
         }
