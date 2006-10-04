@@ -90,8 +90,6 @@ public abstract class YapMeta {
                 }
                 endProcessing();
             }
-        } catch (LongJumpOutException ljoe) {
-            throw ljoe;
         } catch (Throwable t) {
             if (Debug.atHome) {
                 t.printStackTrace();
