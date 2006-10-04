@@ -127,12 +127,12 @@ public class FileHeader0 extends FileHeader {
         return LENGTH;
     }
 
-    public void writeFixedPart(boolean shuttingDown, YapWriter writer, int blockSize_, int classCollectionID, int freespaceID) {
+    public void writeFixedPart(YapFile file, boolean shuttingDown, YapWriter writer, int blockSize_, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());
         writer.writeInt((int)timeToWrite(_configBlock.openTime(), shuttingDown));
-        writer.writeInt(classCollectionID);
+        writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
         if (Debug.xbytes && Deploy.overwrite) {
             writer.setID(YapConst.IGNORE_ID);

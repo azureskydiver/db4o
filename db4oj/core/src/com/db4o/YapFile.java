@@ -713,7 +713,7 @@ public abstract class YapFile extends YapStream {
         // FIXME: blocksize should be already valid in FileHeader
         YapWriter writer = getWriter(i_systemTrans, 0, _fileHeader.length());
         
-        _fileHeader.writeFixedPart(shuttingDown, writer, blockSize(), classCollection().getID(), freespaceID);
+        _fileHeader.writeFixedPart(this, shuttingDown, writer, blockSize(), freespaceID);
         
         if(shuttingDown){
             ensureLastSlotWritten();
