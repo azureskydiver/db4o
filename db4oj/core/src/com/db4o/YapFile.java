@@ -226,11 +226,6 @@ public abstract class YapFile extends YapStream {
     public void generateNewIdentity(){
         setIdentity(Db4oDatabase.generate());
         
-        // The dirty TimeStampIdGenerator triggers writing of
-        // the variable part of the systemdata. We need to
-        // make it dirty here, so the new identity is persisted:
-        _timeStampIdGenerator.next();
-        
     }
 
     void getAll(Transaction ta, final QueryResultImpl a_res) {
@@ -359,6 +354,11 @@ public abstract class YapFile extends YapStream {
     
     public void setIdentity(Db4oDatabase identity){
         _systemData.identity(identity);
+        
+        // The dirty TimeStampIdGenerator triggers writing of
+        // the variable part of the systemdata. We need to
+        // make it dirty here, so the new identity is persisted:
+        _timeStampIdGenerator.next();
     }
 
     void initialize2() {
