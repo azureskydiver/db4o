@@ -24,6 +24,8 @@ public class AllTests extends CSTestSuite {
 				CaseInsensitive.class,
 				Circular1.class,
 				Circular2.class,
+				ClientDisconnect.class,
+				ComparatorSort.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
