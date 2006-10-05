@@ -436,6 +436,11 @@ public final class YapWriter extends YapReader {
         }
         return "id " + i_id + " adr " + i_address + " len " + i_length;
     }
-
+    
+    public void noXByteCheck() {
+        if(Debug.xbytes && Deploy.overwrite){
+            setID(YapConst.IGNORE_ID);
+        }
+    }
 
 }

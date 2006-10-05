@@ -21,7 +21,7 @@ public class FileHeaderVariablePart1 extends YapMeta{
     // (long) versionGenerator
 	// (int) uuid index ID
     
-    private static final int LENGTH = 1 + (YapConst.INT_LENGTH * 4) + YapConst.LONG_LENGTH; 
+    private static final int LENGTH = 1 + (YapConst.INT_LENGTH * 4) + YapConst.LONG_LENGTH + YapConst.ADDED_LENGTH; 
     
     private final SystemData _systemData;
     

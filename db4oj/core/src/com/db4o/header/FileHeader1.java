@@ -101,6 +101,7 @@ public class FileHeader1 extends FileHeader {
         writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
         writer.writeInt(_variablePart.getID());
+        writer.noXByteCheck();
         writer.write();
     }
 

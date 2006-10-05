@@ -282,9 +282,7 @@ public final class YapConfigBlock {
 		YapWriter writer = _stream.getWriter(_stream.i_trans, 0, YapConst.ID_LENGTH);
 		writer.moveForward(2);
 		YInt.writeInt(_address, writer);
-		if(Debug.xbytes && Deploy.overwrite){
-			writer.setID(YapConst.IGNORE_ID);
-		}
+        writer.noXByteCheck();
 		writer.write();
 		timerFileLock().writeHeaderLock();
 	}
