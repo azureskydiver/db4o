@@ -1,23 +1,44 @@
 <?xml version="1.0"?>
 <project name="drs.net" default="rebuild">
 	<import file="common.xml" />
-	
+
 	<property name="drs.dir" location="${dir.workspace}/drs" />
+	<property name="drs.dll" location="${drs.dir}/drs.net/bin/drs.dll" />
 	<property name="drs.src.dir" location="${drs.dir}/src" />
 	<property name="drs.net.dir" location="${drs.dir}/drs.net" />
 	<property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />	
 	<property name="drs.net.src.dir" location="${drs.net.dir}/drs/src" />
 	<property name="drs.net.in.dir" location="${drs.net.dir}/in" />
 	<property name="drs.net.tests.in.dir" location="${drs.net.dir}/drs.tests.in" />
-	<property name="conversion.workspace.dir" location="${dir.dist}/drs.net/workspace" />
+	<property name="drs.conversion.workspace.dir" location="${dir.dist}/drs.net/workspace" />	
+	<property name="drsqs.conversion.workspace.dir" location="${dir.dist}/drsquickstarts.net/workspace" />
+	<property name="drsqs.dir" location="${dir.workspace}/drsquickstarts" />
+	<property name="drsqs.src.dir" location="${drsqs.dir}/src" />
+	<property name="drsqs.net.dir" location="${drsqs.dir}/quickstarts.net" />
+	<property name="drsqs.net.in.dir" location="${drsqs.net.dir}/in" />	
+	<property name="drsqs.net.src.dir" location="${drsqs.net.dir}/quickstarts/src" />
+	<property name="drsqs.net.bin.dir" location="${drsqs.net.dir}/bin" />		
 	
 	<condition property="mono" value="1">
 		<os family="unix" />
 	</condition>
-	
+
 	<target name="rebuild" depends="reset-workspace, build" />
 	
-	<target name="build" depends="update-csharp-projects">
+	<target name="build" depends="build-drs, update-quickstarts-project">
+		
+		<property name="drs.dll" location="${drs.net.bin.dir}/drs.dll" />
+		
+<!--		<csc outputfile="${drs.dll}"
+			targettype="library"
+			srcdir="${drs.net.src.dir}">
+			<reference dir="${drs.net.bin.dir}">
+				<include name="${file.name.dll}" />
+			</reference>
+		</csc> -->
+	</target>
+
+	<target name="build-drs" depends="update-csharp-projects">
 		
 		<property name="drs.dll" location="${drs.net.bin.dir}/drs.dll" />
 		
@@ -31,8 +52,8 @@
 	</target>
 	
 	<target name="create-jar-for-dependencies">
-		<mkdir dir="${conversion.workspace.dir}/lib" />
-		<property name="dependencies.jar" location="${conversion.workspace.dir}/lib/dependencies.jar" />
+		<mkdir dir="${drs.conversion.workspace.dir}/lib" />
+		<property name="dependencies.jar" location="${drs.conversion.workspace.dir}/lib/dependencies.jar" />
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.workspace}/db4oj/bin/">								
 			</fileset>
@@ -48,9 +69,20 @@
 			</fileset>
 		</jar>
 	</target>
-	
-	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
-		<sharpen resource="drs/core" workspace="${conversion.workspace.dir}">
+
+	<target name="create-jar-for-quickstart-dependencies">
+		<mkdir dir="${drsqs.conversion.workspace.dir}/lib" />
+		<property name="qsdependencies.jar" location="${drsqs.conversion.workspace.dir}/lib/dependencies.jar" />
+		<jar destfile="${qsdependencies.jar}">			
+			<fileset dir="${dir.workspace}/db4oj/bin/">								
+			</fileset>
+			<fileset dir="${dir.workspace}/drs/bin">
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="sharpen-drs" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
+		<sharpen resource="drs/core" workspace="${drs.conversion.workspace.dir}">
 			<args>
 				<arg value="-cp" />
 				<arg value="${dependencies.jar}" />
@@ -80,7 +112,25 @@
 			</args>
 		</sharpen>
 	</target>
-	
+
+	<target name="sharpen-quickstarts" depends="sharpen-drs, prepare-quickstarts-conversion-workspace, install-javatocsharp-plugin">
+		<sharpen resource="drsquickstarts/core" workspace="${drsqs.conversion.workspace.dir}">
+			<args>
+				<arg value="-cp" />
+				<arg value="${qsdependencies.jar}" />
+				
+				<arg value="-pascalcase" />
+			
+				<arg value="-nativeTypeSystem" />
+				
+				<arg value="-methodMapping" />
+				<arg value="com.db4o.reflect.Reflector.forClass" />
+				<arg value="com.db4o.drs.inside.ReplicationPlatform.ForType" />
+				
+			</args>
+		</sharpen>
+	</target>
+
 	<target name="test" depends="update-csharp-projects">
 		
 		<csc srcdir="${dir.n}/Db4oUnit/src"
@@ -112,11 +162,11 @@
 		</exec>
 	</target>
 	
-	<target name="update-drs-project" depends="sharpen">
+	<target name="update-drs-project" depends="sharpen-drs">
 		<delete dir="${drs.net.src.dir}" />
 		<mkdir dir="${drs.net.src.dir}" />
 		<copy todir="${drs.net.src.dir}">
-			<fileset dir="${conversion.workspace.dir}/drscsharp/src">
+			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src">
 				<include name="**/*.cs" />
 				<exclude name="**/test/**" />
 			</fileset>
@@ -135,9 +185,9 @@
 		</updatecsharpproject>
 	</target>
 	
-	<target name="update-drs.tests-project" depends="sharpen">
+	<target name="update-drs.tests-project" depends="sharpen-drs">
 		<copy todir="${drs.net.dir}/drs.tests/src">
-			<fileset dir="${conversion.workspace.dir}/drscsharp/src">
+			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src">
 				<include name="**/test/**" />
 			</fileset>
 		</copy>
@@ -154,17 +204,47 @@
 			</sources>
 		</updatecsharpproject>
 	</target>
-	
+
+	<target name="update-quickstarts-project" depends="sharpen-quickstarts">
+		<delete dir="${drsqs.net.src.dir}" />
+		<mkdir dir="${drsqs.net.src.dir}" />
+		
+		<copy file="${drs.dll}" todir="${drsqs.net.bin.dir}" />
+			
+		<copy todir="${drsqs.net.src.dir}">
+			<fileset dir="${drsqs.conversion.workspace.dir}/drsquickstartscsharp/src">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+
+		<copy todir="${drsqs.net.src.dir}" overwrite="true">
+			<fileset dir="${drsqs.net.in.dir}">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+		
+<!--		<updatecsharpproject projectfile="${drsqs.net.dir}/drs/drs.csproj">
+			<sources dir="${drs.net.dir}/drs">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject> -->
+	</target>
+
 	<target name="update-csharp-projects" depends="update-drs-project, update-drs.tests-project">				
 	</target>
 	
 	<target name="reset-workspace" depends="init">
-		<delete dir="${conversion.workspace.dir}" />
-		<mkdir dir="${conversion.workspace.dir}" />	
+		<delete dir="${drs.conversion.workspace.dir}" />
+		<mkdir dir="${drs.conversion.workspace.dir}" />
 	</target>
-	
+
+	<target name="reset-drsqs-workspace" depends="init">
+		<delete dir="${drsqs.conversion.workspace.dir}" />
+		<mkdir dir="${drsqs.conversion.workspace.dir}" />
+	</target>
+
 	<target name="prepare-conversion-workspace" depends="create-jar-for-dependencies">
-		<copy todir="${conversion.workspace.dir}/drs">
+		<copy todir="${drs.conversion.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
 				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
@@ -205,14 +285,22 @@
 				<include name="test/**/test/InheritanceTest.java" />				
 				<include name="test/**/test/CollectionHolder.java" />
 				<include name="test/**/test/MapHolder.java" />
-				<include name="test/**/test/MapContent.java" />
+				<include name="test/**/test/MapContent.java" />				
 				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
 			</fileset>
 		</copy>
 	</target>
-	
+
+	<target name="prepare-quickstarts-conversion-workspace" depends="reset-drsqs-workspace, create-jar-for-quickstart-dependencies">
+		<copy todir="${drsqs.conversion.workspace.dir}/drsquickstarts/core">
+			<fileset dir="${drsqs.src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
 	<target name="select-dotnet-assembly" unless="mono">
 		<property name="db4o.dll" value="${file.dll.net}" />
 	</target>
@@ -228,5 +316,8 @@
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
 		<copy file="${db4o.dll}" todir="${drs.net.bin.dir}" />
+		<copy file="${db4o.dll}" todir="${drsqs.net.bin.dir}" />
+		<mkdir dir="${drsqs.net.dir}" />
+		<mkdir dir="${drsqs.net.bin.dir}" />
 	</target>
 </project>
