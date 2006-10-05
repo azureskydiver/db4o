@@ -31,8 +31,8 @@ public interface SystemInfo {
     public long freespaceSize();
 
     /**
-     * Returns the total size of database on disc.
-     * @return total size of database on disc
+     * Returns the total size of the database on disk.
+     * @return total size of database on disk
      */
     public long totalSize();
 
