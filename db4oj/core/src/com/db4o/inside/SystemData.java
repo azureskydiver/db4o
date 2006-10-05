@@ -96,12 +96,6 @@ public class SystemData {
     }
     
     public void uuidIndexId(int id){
-    	if (id == 0) {
-    		throw new IllegalArgumentException();
-    	}
-    	if (_uuidIndexId != 0) {
-    		throw new IllegalStateException();
-    	}
         _uuidIndexId = id;
     }
     
