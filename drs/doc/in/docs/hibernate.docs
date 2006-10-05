@@ -194,7 +194,7 @@ and they cannot be shared among objects.
 To bridge this gap, dRS treats Collections as second class objects and does not assign UUIDs to them. ._
 When a shared Collection is replicated from db4o to Hibernate using dRS, it is automatically cloned. ._
 Each owner of the Collection receives a copy of the Collection. Further modifications to the db4o copy ._
-will not be replicated to cloned copies. Therefore, it is not advisable to share Collections if you want to ._
+will not be replicated to cloned copies. Therefore, you cannot share Collections if you want to ._
 perform RDBMS replications with dRS.
 
 In the following examples, we will use Car as the element in the following examples.
@@ -480,9 +480,6 @@ replication.commit();
 replication.close();
 objectContainer.close();
 ..
-.2 Summary
-Our replication system supports Java array and Collections. Simply use the <one-to-many> or <many-to-many> ._
-mappings in hbm files, then you can replicate the objects in Collections successfully.
 
 .1 Hibernate Replication internals  ..
 So far we have seen that dRS allows you to replicate objects between db4o and relational database. ._
