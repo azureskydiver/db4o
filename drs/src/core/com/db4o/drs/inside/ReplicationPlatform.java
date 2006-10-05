@@ -8,7 +8,6 @@ import java.util.*;
  */
 public class ReplicationPlatform {
 
-	@SuppressWarnings("unchecked")
 	public static void copyCollectionState(Object original, Object destination, CounterpartFinder counterpartFinder) {
 		Collection originalCollection = (Collection) original;
 		Collection destinationCollection = (Collection) destination;

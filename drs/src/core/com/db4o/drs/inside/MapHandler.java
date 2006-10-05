@@ -49,7 +49,7 @@ public class MapHandler implements CollectionHandler {
 		return new HashMap(((Map) original).size());
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public void copyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
 
 		Map originalMap = (Map) original;
