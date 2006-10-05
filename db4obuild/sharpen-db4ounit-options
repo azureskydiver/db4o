@@ -1,4 +1,4 @@
--pascalcase
+-pascalCase
 -nativeTypeSystem
 
 -namespaceMapping ^db4ounit.extensions.fixtures Db4oUnit.Extensions.Fixtures

@@ -1501,7 +1501,7 @@
 			<args>
 				<arg value="@sharpen-exceptions-mapping" />
 				
-				<arg value="-pascalcase" />
+				<arg value="-pascalCase" />
 				
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.events.EventArgs" />
