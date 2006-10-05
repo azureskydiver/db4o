@@ -90,7 +90,7 @@
 				<arg value="-srcfolder" />
 				<arg value="test" />
 				
-				<arg value="-pascalcase" />
+				<arg value="-pascalCase" />
 			
 				<arg value="-nativeTypeSystem" />
 				
