@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @sharpen.ignore
+ */
 public class CollectionHolder {
 	public String name;
 	public Map map = new HashMap();

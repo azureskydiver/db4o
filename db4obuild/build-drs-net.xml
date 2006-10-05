@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="drs.net" default="build">
+<project name="drs.net" default="rebuild">
 	<import file="common.xml" />
 	
 	<property name="drs.dir" location="${dir.workspace}/drs" />
@@ -14,6 +14,8 @@
 	<condition property="mono" value="1">
 		<os family="unix" />
 	</condition>
+	
+	<target name="rebuild" depends="reset-workspace, build" />
 	
 	<target name="build" depends="update-csharp-projects">
 		
@@ -33,6 +35,10 @@
 		<property name="dependencies.jar" location="${conversion.workspace.dir}/lib/dependencies.jar" />
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.workspace}/db4oj/bin/">								
+			</fileset>
+			<fileset dir="${dir.workspace}/db4ojdk1.2/bin/">								
+			</fileset>
+			<fileset dir="${dir.workspace}/db4ojdk5/bin/">								
 			</fileset>
 			<fileset dir="${dir.workspace}/db4ounit/bin/">
 			</fileset>
@@ -157,7 +163,7 @@
 		<mkdir dir="${conversion.workspace.dir}" />	
 	</target>
 	
-	<target name="prepare-conversion-workspace" depends="reset-workspace, create-jar-for-dependencies">
+	<target name="prepare-conversion-workspace" depends="create-jar-for-dependencies">
 		<copy todir="${conversion.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
@@ -197,6 +203,9 @@
 				<include name="test/**/test/Person.java" />				
 				<include name="test/**/test/Student.java" />				
 				<include name="test/**/test/InheritanceTest.java" />				
+				<include name="test/**/test/CollectionHolder.java" />
+				<include name="test/**/test/MapHolder.java" />
+				<include name="test/**/test/MapContent.java" />
 				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/VectorFlattener.java" />
