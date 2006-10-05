@@ -1,0 +1,15 @@
+.n
+.a Known Issues ..
+.0 Known Issues ..
+
+In this chapter, we will look into any known issues there may be.
+
+.1 Problem with Database Signatures ..
+On certain fast machines, you may experience a problem running the test cases .._
+where, on opening the two databases, they each contain the same signature. .._
+This will manifest itself as an error when running the test cases where some tests .._
+will fail when Db4oDatabase.isOlderThan throws an IllegalArgumentException due to .._
+fact that the signatures are the same.
+You can work around this by making sure that you do not open the source and .._
+destination databases straight after each other.  This will ensure that a small amount .._
+of time lapses between opening the first and the second database.
