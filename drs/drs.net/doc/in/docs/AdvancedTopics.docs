@@ -10,16 +10,19 @@ You only want to replicate the root object but not the list. ._
 What you can do is to make use of the event system of dRS.NET to stop traversal at the list.
 Here is how:
 
-First, you need to implement the ReplicationEventListener interface and pass it to Replication.
-.c Sample Code - get a nice example to put in here.
+First, you need to implement the ReplicationEventListener interface and pass it to Replication. .._
+
+Please refer to the ReplicationEventTest inthe drs.tests project to see how .._
+this is done.
 ..
 
 .2 Resolving conflicts ..
 The event system of dRS.NET can also be used to resolve conflicts. When there is a conflict, ._
 You can choose to override the result with either the object from provider A, provider B or null. ._
-If you choose null, then the object will not be replicated.
+If you choose null, then the object will not be replicated. .._
 
-.c Sample Code - get a nice example tp put in here.
+Please refer to the ReplicationEventTest in the drs.tests project to see how .._
+this is done.
 ..
 
 .1 Deleted Objects Replication ..
