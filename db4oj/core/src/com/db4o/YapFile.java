@@ -94,7 +94,7 @@ public abstract class YapFile extends YapStream {
         
         blockSize(configImpl().blockSize());
         
-        _fileHeader = new FileHeader1();
+        _fileHeader = new FileHeader0();
         
         setRegularEndAddress(_fileHeader.length());
         
