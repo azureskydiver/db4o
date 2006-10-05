@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<project name="Db4objects.Db4o" default="build">
+	<import file="common.xml" />
+	
+	<property name="dir.n.v6" location="${dir.n}/Db4objects.Db4o" />
+	
+	<property name="dir.src" location="${dir.n.v6}/Db4objects.Db4o/" />
+	
+	<target name="build" depends="sharpen-core">
+		<csc
+			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
+			srcdir="${dir.n.v6}"
+			targettype="library">
+			<include name="**/*.cs" />
+			<exclude name="native/compact/*.cs" />
+		</csc>
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="init">
+		<delete dir="${dir.sharpen}" />
+		<mkdir dir="${dir.sharpen}" />
+		
+		<copy todir="${dir.sharpen}">
+			<fileset dir="..">
+				<include name="db4oj/core/src/**/*.java" />
+			</fileset>
+		</copy>
+		
+		<!-- shared native query support -->
+		<copy todir="${dir.sharpen}/db4oj">
+			<fileset dir="../db4onqopt">
+				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+			<fileset dir="${dir.n.in.java}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="copy-sharpened-files">
+		<copy todir="${target.dir}">
+			<fileset dir="${src.dir}/Db4objects/Db4o">
+				<include name="**/*.cs" />
+				<exclude name="JDK_*.cs" />
+				<exclude name="JDKReflect*.cs" />
+				<exclude name="Handlers/*.*" />
+				<exclude name="Reflect/Jdk/**/*.*" />
+				<exclude name="Reflect/Self/*.*" />
+			</fileset>
+		</copy>
+	</target>	
+
+	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace">
+
+		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
+			<args>
+				<arg value="@sharpen-exceptions-mapping" />
+				
+				<arg value="-pascalCase+" />
+				<arg value="-nativeTypeSystem" />
+				
+				<arg value="-typeMapping" />
+				<arg value="com.db4o.events.EventArgs" />
+				<arg value="System.EventArgs" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="com.db4o" />
+				<arg value="Db4objects.Db4o" />
+			</args>
+		</sharpen>
+		
+		<delete dir="${dir.src}" />
+		<antcall target="copy-sharpened-files">
+			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
+			<param name="target.dir" value="${dir.src}" />
+		</antcall>
+			
+		<!--
+		<updatecsharpproject projectFile="${dir.n.v6}/Db4objects.Db4o.csproj">
+			<sources dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<exclude name="src/compact*/**" />
+			</sources>
+		</updatecsharpproject>		
+		-->
+	</target>
+	
+	<target name="init">
+	</target>
+</project>
