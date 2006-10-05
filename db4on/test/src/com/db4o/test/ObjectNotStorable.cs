@@ -17,7 +17,7 @@ namespace com.db4o.test {
       
       internal ObjectNotStorable(String name) : base() {
          if (throwException) {
-            throw new RuntimeException();
+            throw new Exception();
          }
          this.name = name;
       }

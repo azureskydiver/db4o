@@ -85,7 +85,7 @@ namespace com.db4o.test {
          ObjectContainer con1 = Db4o.OpenFile(FILE);
          int size1 = con1.Get(new ReadOnly()).Size();
          if (size1 != COUNT) {
-            throw new RuntimeException("ReadOnly.test: unexpected number of objects:" + size1);
+            throw new Exception("ReadOnly.test: unexpected number of objects:" + size1);
          }
          con1.Close();
       }

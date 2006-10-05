@@ -20,7 +20,7 @@ namespace com.db4o.test.types {
                }
             }  catch (Exception e) {
                {
-                  throw new RuntimeException("MasterMonster instantiation failed.");
+                  throw new Exception("MasterMonster instantiation failed.");
                }
             }
          }
