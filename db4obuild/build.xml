@@ -413,13 +413,15 @@
 			<arg value="/recurse:*.cs" />
 		</exec>
 	</target>
-	
-	<target name="compiledllnet" depends="init, sharpen">
-		
+
+	<target name="compiledllnetstandard" depends="init, sharpen">
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
-		<!-- <antcall target="compiletools-net" /> -->
+		<antcall target="compiletools-net" />
+	</target>
+
+	<target name="compiledllnet" depends="init, sharpen, compiledllnetstandard">
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${dir.n.core.src}" />
 		</antcall>
@@ -471,7 +473,7 @@
 		</csc>
 	</target>
 	
-	<target name="compiletestsnet" depends="compiledllnet">	
+	<target name="compiletestsnet" depends="compiledllnetstandard">	
 		
 		<antcall target="compile-db4ounit-libs">
 			<param name="output.dir" value="${dir.dist.dll.net}" />
