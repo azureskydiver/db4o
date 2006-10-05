@@ -1334,27 +1334,10 @@
 			<fileset dir="${src.dir}">
 				<include name="**/*.cs" />
 				<exclude name="com/db4o/handlers/*.*" />
-				<exclude name="com/db4o/eclipse/**/*.*" />
 				<exclude name="com/db4o/reflect/jdk/**/*.*" />
-				<exclude name="com/db4o/foundation/Lock4.cs" />
-				<exclude name="com/db4o/foundation/ArgumentNullException.cs" />
 				<exclude name="com/db4o/JDK_*.cs" />
 				<exclude name="com/db4o/JDKReflect*.cs" />
-				<exclude name="com/db4o/CoercionReflect.cs" />
-				<exclude name="com/db4o/JavaOnly.cs" />
-				<exclude name="com/db4o/config/TSerializable.cs" />
-				<exclude name="com/db4o/config/TCollection.cs" />
-				<exclude name="com/db4o/config/THashtable.cs" />
-				<exclude name="com/db4o/config/TMap.cs" />
-				<exclude name="com/db4o/config/TTreeMap.cs" />
-				<exclude name="com/db4o/config/TTreeSet.cs" />
-				<exclude name="com/db4o/config/TVector.cs" />
-				<exclude name="com/db4o/events/EventArgs.cs" />
-				<exclude name="com/db4o/events/Event4.cs" />
-				<exclude name="com/db4o/events/EventListener4.cs" />
-				<exclude name="com/db4o/events/impl/Event4Impl.cs" />
 				<exclude name="com/db4o/reflect/self/*.*" />
-				
 			</fileset>
 		</copy>
 	</target>	
@@ -1390,7 +1373,7 @@
 				<arg value="-cp" />
 				<arg path="${dependencies.jar}" />
 				<arg value="@sharpen-db4ounit-options" />
-				<arg value="@sharpen-exceptions-mapping" />
+				<arg value="@sharpen-core-options" />
 			</args>
 		</sharpen>
 		
@@ -1435,7 +1418,7 @@
 				<arg value="-cp" />
 				<arg path="${dependencies.jar}" />
 				<arg value="@sharpen-db4ounit-options" />
-				<arg value="@sharpen-exceptions-mapping" />
+				<arg value="@sharpen-core-options" />
 				
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.test.lib.File4" />
@@ -1501,21 +1484,7 @@
 		
 		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
 			<args>
-				<arg value="@sharpen-exceptions-mapping" />
-				
-				<arg value="-pascalCase" />
-				
-				<arg value="-typeMapping" />
-				<arg value="com.db4o.events.EventArgs" />
-				<arg value="System.EventArgs" />
-				
-				<arg value="-propertyMapping" />
-				<arg value="java.lang.System.out" />
-				<arg value="j4o.lang.JavaSystem.Out" />
-				
-				<arg value="-propertyMapping" />
-				<arg value="java.lang.System.err" />
-				<arg value="j4o.lang.JavaSystem.Err" />
+				<arg value="@sharpen-core-options" />
 			</args>
 		</sharpen>
 		
