@@ -62,6 +62,10 @@ public interface StoredField {
      */
     public void traverseValues(Visitor4 visitor);
     
+    /**
+     * Returns whether this field has an index or not.
+     * @return true if this field has an index.
+     */
 	public boolean hasIndex();
 
 //  will need for replication. Requested for 3.0 
