@@ -22,6 +22,16 @@ namespace j4o.lang
 			Console.Error;
 #endif
 
+		public static Class GetClassForType(Type forType)
+		{
+			return Class.GetClassForType(forType);
+		}
+		
+		public static Class GetClassForObject(object o)
+		{
+			return Class.GetClassForObject(o);
+		}
+
 		public static long CurrentTimeMillis() 
 		{
 			return j4o.util.Date.ToJavaMilliseconds(DateTime.Now.ToUniversalTime());
