@@ -31,3 +31,4 @@ This section describes the features supported in current release and features pl
 - Generation Hibernate mapping files
 - RDBMS triggers for updating version number
 - Instant replication
+- Update of UUID generation mechanism, this may break existing data
