@@ -8,9 +8,10 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
-public class TTreeSet implements ObjectConstructor
-{
+public class TTreeSet implements ObjectConstructor {
+	
 	public Object onStore(ObjectContainer con, Object object){
 		return ((TreeSet)object).comparator();
 	}

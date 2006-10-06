@@ -8,9 +8,10 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
-public class TCollection implements ObjectTranslator
-{
+public class TCollection implements ObjectTranslator {
+	
 	public Object onStore(ObjectContainer con, Object object){
 		Collection col = (Collection)object;
 		Object[] elements = new Object[col.size()];
