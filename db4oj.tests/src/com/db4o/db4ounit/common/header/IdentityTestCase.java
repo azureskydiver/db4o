@@ -11,6 +11,10 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class IdentityTestCase extends AbstractDb4oTestCase {
     
+    public static void main(String[] arguments) {
+        new IdentityTestCase().runSolo();
+    }
+    
     public void testIdentityPreserved() throws Exception {
         
         Db4oDatabase ident = db().identity();
