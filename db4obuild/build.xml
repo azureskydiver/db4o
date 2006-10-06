@@ -450,7 +450,7 @@
 	</target>
 	
 	<target name="runtestsnet2" depends="configure-net2, compiletestsnet">
-		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}">
+		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}" failonerror="true" failifexecutionfails="true">
 		</exec>
 	</target>
 	
