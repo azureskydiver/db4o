@@ -8,9 +8,10 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
-public class TVector implements ObjectTranslator
-{
+public class TVector implements ObjectTranslator {
+	
 	public Object onStore(ObjectContainer con, Object object){
 		Vector vt = (Vector)object;
 		Object[] elements = new Object[vt.size()];
