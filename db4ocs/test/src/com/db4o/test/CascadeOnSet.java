@@ -30,6 +30,7 @@ public class CascadeOnSet extends ClientServerTestCase {
 		query.constrain(CascadeOnSet.class);
 		query.descend("name").constrain("child.child");
 		ObjectSet os = query.execute();
+		// FIXME: The following assertion fails, os.size() returns randomly 30,31,32
 		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT * 4, os.size());
 	}
 

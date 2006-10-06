@@ -23,8 +23,8 @@ public class ClientServerTestCase extends AbstractDb4oTestCase implements
 		} finally {
 			oc.close();
 		}
-		fixture.close();
-		fixture.open();
+		fixture().close();
+		fixture().open();
 	}
 
 	public ExtObjectContainer db() {
