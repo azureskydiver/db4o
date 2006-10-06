@@ -51,7 +51,7 @@ public class FileHeader1 extends FileHeader {
     }
 
     public void initNew(YapFile file) throws IOException {
-        newTimerFileLock(file);
+        commonTasksForNewAndRead(file);
         _variablePart = new FileHeaderVariablePart1(0, file.systemData());
         writeVariablePart(file, 0);
     }
@@ -76,14 +76,19 @@ public class FileHeader1 extends FileHeader {
     }
 
     protected void readFixedPart(YapFile file, YapReader reader) throws IOException {
-        newTimerFileLock(file);
+        commonTasksForNewAndRead(file);
         reader.seek(TRANSACTION_POINTER_OFFSET);
         _interruptedTransaction = Transaction.readInterruptedTransaction(file, reader);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
     }
-
+    
+    private void commonTasksForNewAndRead(YapFile file){
+        newTimerFileLock(file);
+        file.i_handlers.oldEncryptionOff();
+    }
+    
     public void readVariablePart(YapFile file) {
         _variablePart.read(file.getSystemTransaction());
     }
