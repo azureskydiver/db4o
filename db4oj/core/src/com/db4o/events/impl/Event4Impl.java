@@ -7,6 +7,7 @@ import com.db4o.foundation.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public class Event4Impl implements Event4 {
 

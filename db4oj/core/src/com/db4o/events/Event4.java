@@ -7,7 +7,9 @@ package com.db4o.events;
  * 
  * Holds a list of {@link EventListener4} objects 
  * which receive {@link EventListener4#onEvent(Event4, EventArgs)}
- * notifications whenever this event is triggered. 
+ * notifications whenever this event is triggered.
+ * 
+ * @sharpen.ignore
  */
 public interface Event4 {
 	
