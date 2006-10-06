@@ -8,9 +8,10 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
-public class TTreeMap implements ObjectConstructor
-{
+public class TTreeMap implements ObjectConstructor {
+	
 	public Object onStore(ObjectContainer con, Object object){
 		return ((TreeMap)object).comparator();
 	}

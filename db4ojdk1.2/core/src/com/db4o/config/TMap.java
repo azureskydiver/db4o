@@ -8,9 +8,10 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
-public class TMap implements ObjectTranslator
-{
+public class TMap implements ObjectTranslator {
+	
 	public Object onStore(ObjectContainer con, Object object){
 		Map map = (Map)object;
 		Entry[] entries = new Entry[map.size()];
