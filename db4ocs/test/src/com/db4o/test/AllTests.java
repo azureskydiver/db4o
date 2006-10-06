@@ -27,6 +27,8 @@ public class AllTests extends CSTestSuite {
 				ClientDisconnect.class,
 				ComparatorSort.class,
 				CreateIndexInherited.class,
+				CustomActivationDepth.class,
+				DeepSet.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
