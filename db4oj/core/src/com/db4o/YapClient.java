@@ -97,7 +97,7 @@ public class YapClient extends YapStream implements ExtClient {
 			try {
 				loginToServer(socket);
 			} catch (IOException e) {
-				i_references.stopTimer();
+				stopSession();
 				throw e;
 			}
 

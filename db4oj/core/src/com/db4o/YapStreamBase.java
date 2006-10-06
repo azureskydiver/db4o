@@ -310,11 +310,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     boolean close2() {
-        if (hasShutDownHook()) {
-            Platform4.removeShutDownHook(this, i_lock);
-        }
-        _classCollection = null;
-        i_references.stopTimer();
+    	stopSession();
         i_hcTree = null;
         i_idTree = null;
         i_systemTrans = null;
@@ -614,8 +610,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     void emergencyClose() {
-        _classCollection = null;
-        i_references.stopTimer();
+    	stopSession();
     }
 
     public ExtObjectContainer ext() {
@@ -650,7 +645,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     void fatalException(Throwable t, int msgID) {
         if (!i_amDuringFatalExit) {
             i_amDuringFatalExit = true;
-            _classCollection = null;
             emergencyClose();
 			
             Messages.logErr(configImpl(), (msgID==Messages.FATAL_MSG_ID ? 18 : msgID), null, t);
@@ -1942,8 +1936,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_stillToSet = new List4(i_stillToSet, new Integer(a_updateDepth));
     }
 
-    void stopSession() {
+    protected void stopSession() {
+        if (hasShutDownHook()) {
+            Platform4.removeShutDownHook(this, i_lock);
+        }
         _classCollection = null;
+        i_references.stopTimer();
     }
 
     public StoredClass storedClass(Object clazz) {
