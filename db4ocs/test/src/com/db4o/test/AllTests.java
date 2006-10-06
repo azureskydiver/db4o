@@ -8,14 +8,15 @@ import db4ounit.extensions.Timer;
 public class AllTests extends CSTestSuite {
 
 	protected Class[] testCases() {
+		return passedTestCases();
+		//return failedTestCases();
+	}
+	
+	protected Class[] passedTestCases() {
 		return new Class[] {
 				ArrayNOrder.class,
 				ByteArray.class,
-				CascadeDeleteArray.class,
-				CascadeDeleteDeleted.class,
-				CascadeDeleteFalse.class,
 				CascadeOnActivate.class,
-				CascadeOnSet.class,
 				CascadeOnUpdate.class,
 				CascadeOnUpdate2.class,
 				CascadeToExistingVectorMember.class,
@@ -24,11 +25,12 @@ public class AllTests extends CSTestSuite {
 				CaseInsensitive.class,
 				Circular1.class,
 				Circular2.class,
-				ClientDisconnect.class,
 				ComparatorSort.class,
 				CreateIndexInherited.class,
-				CustomActivationDepth.class,
 				DeepSet.class,
+				DifferentAccessPaths.class,
+				ExtMethods.class,
+				GetAll.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
@@ -38,6 +40,20 @@ public class AllTests extends CSTestSuite {
 				UpdateObjectTest.class,
 				UpdateCollectionTest.class,
 				};
+	}
+	
+	// failed test cases
+	protected Class[] failedTestCases() {
+		return new Class[] {
+				CascadeDeleteArray.class,
+				CascadeDeleteDeleted.class,
+				CascadeDeleteFalse.class,
+				CascadeOnSet.class,
+				ClientDisconnect.class,
+				CustomActivationDepth.class,
+				DeleteDeep.class,
+				DualDelete.class,
+		};
 	}
 	
 	public static void main(String[] args) {
