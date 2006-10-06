@@ -8,9 +8,10 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
-public class THashtable implements ObjectTranslator
-{
+public class THashtable implements ObjectTranslator {
+	
 	public Object onStore(ObjectContainer con, Object object){
 		Hashtable ht = (Hashtable)object;
 		Entry[] entries = new Entry[ht.size()];
