@@ -25,6 +25,7 @@ public class ServerRevokeAccess {
 				ObjectContainer con = Db4o.openClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, user,password);
 				Test.ensure(con != null);
 				con.close();
+                con=null;
 				
 				server.ext().revokeAccess(user);
 				
@@ -35,13 +36,11 @@ public class ServerRevokeAccess {
 				}catch(Exception e){
 					exceptionThrown = true;
 				}finally{
-                    
-                    // FIXME: openClient should not return anything
-                    //        and all ressources should be cleaned up
-                    
-                    con.close();
+					if(con!=null) {
+						con.close();
+					}
                 }
-				
+				Test.ensure(con==null);
 				Test.ensure(exceptionThrown);
 				
 				server.close();
@@ -58,4 +57,8 @@ public class ServerRevokeAccess {
 		
 	}
 
+	
+	public static void main(String[] args) {
+		AllTests.run(ServerRevokeAccess.class);
+	}
 }
