@@ -8,9 +8,11 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
-public class TSerializable implements ObjectConstructor
-{
+public class TSerializable implements ObjectConstructor {
+	
 	public Object onStore(ObjectContainer con, Object object){
 		try{
 			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();

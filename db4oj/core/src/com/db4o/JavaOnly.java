@@ -4,6 +4,9 @@ package com.db4o;
 
 import com.db4o.config.*;
 
+/**
+ * @sharpen.ignore
+ */
 class JavaOnly {
     
     public static void link(){

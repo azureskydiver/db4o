@@ -6,6 +6,7 @@ package com.db4o.events;
  * A listener for {@link Event4} events.
  *
  * @see Event4
+ * @sharpen.ignore
  */
 public interface EventListener4 {
 	
