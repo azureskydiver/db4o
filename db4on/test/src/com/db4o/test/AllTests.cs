@@ -42,8 +42,14 @@ namespace com.db4o.test
 			//            // BenchMark.Main(null);
 			//
 
-			new com.db4o.db4ounit.common.AllTests().RunSolo();
+			int errorCount=0;
+			errorCount+=new com.db4o.db4ounit.common.AllTests().RunSolo();
 			new AllTests().Run();
+			errorCount+=Tester.errorCount;
+			if(errorCount>0) 
+			{
+				System.Environment.Exit(errorCount);
+			}
 		}
 
 		public AllTests() : base() 
