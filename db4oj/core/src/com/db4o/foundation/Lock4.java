@@ -2,6 +2,9 @@
 
 package com.db4o.foundation;
 
+/**
+ * @sharpen.ignore
+ */
 public class Lock4 {
 
     public Object run(Closure4 closure) throws Exception{
