@@ -120,6 +120,7 @@ public class YapRandomAccessFile extends YapFile {
                         i_file.close();
                         i_file = null;
                         _fileHeader.close();
+                        closeTimerFile();
                     } catch (Exception e) {
                         i_file = null;
                         Exceptions4.throwRuntimeException(11, e);
@@ -237,7 +238,7 @@ public class YapRandomAccessFile extends YapFile {
                     boolean lockFile = Debug.lockFile && configImpl().lockFile()
                         && (!configImpl().isReadOnly());
                     i_file = ioAdapter.open(fileName(), lockFile, 0);
-                    if (needsLockFileThread() && Debug.lockFile) {
+                    if (needsTimerFile()) {
                         i_timerFile = ioAdapter.open(fileName(), false, 0);
                     }
                 } catch (DatabaseFileLockedException de) {
@@ -308,15 +309,22 @@ public class YapRandomAccessFile extends YapFile {
     public void syncFiles() {
         try {
             i_file.sync();
-            if (needsLockFileThread() && Debug.lockFile) {
+            if (i_timerFile != null) {
                 i_timerFile.sync();
             }
         } catch (Exception e) {
         }
     }
 
+    private boolean needsTimerFile() {
+        return needsLockFileThread() && Debug.lockFile;
+    }
+
     public boolean writeAccessTime(int address, int offset, long time) throws IOException {
         synchronized (i_fileLock) {
+            if(i_timerFile == null){
+                return false;
+            }
             i_timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
                 YapReader lockBytes = new YapWriter(i_systemTrans, YapConst.LONG_LENGTH);
@@ -327,11 +335,21 @@ public class YapRandomAccessFile extends YapFile {
                 i_timerFile.write(i_timerBytes);
             }
             if(i_file == null){
-                i_timerFile.close();
+                closeTimerFile();
+                return false;
             }
-            return i_file != null;
+            return true;
         }
     }
+    
+    private void closeTimerFile() throws IOException{
+        if(i_timerFile == null){
+            return;
+        }
+        i_timerFile.close();
+        i_timerFile = null;
+    }
+    
 
     public void writeBytes(YapReader a_bytes, int address, int addressOffset) {
         if (configImpl().isReadOnly()) {
