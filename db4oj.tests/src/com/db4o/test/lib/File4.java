@@ -66,4 +66,8 @@ public class File4 {
 	public static void delete(String fname) {
 		new File(fname).delete();
 	}
+    
+    public static boolean exists(String fname){
+        return new File(fname).exists();
+    }
 }

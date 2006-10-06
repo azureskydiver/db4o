@@ -10,6 +10,10 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase{
     
+    public static void main(String[] arguments) {
+        new SimpleTimeStampIdTestCase().runSolo();
+    }
+    
     public static class STSItem {
     	
         public String _name;
