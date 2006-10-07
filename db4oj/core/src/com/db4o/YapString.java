@@ -315,14 +315,10 @@ public final class YapString extends YapIndependantType {
     }
 
 	public void defragIndexEntry(ReaderPair readers) {
-		YapReader source=readers.source();
-		YapReader target=readers.target();
-    	Slot slot = new Slot(source.readInt(), source.readInt());
-    	if(!isInvalidSlot(slot)) {
-    		slot=new Slot(readers.mapping().mappedID(slot.getAddress()),slot.getLength());
-    	}
-    	target.writeInt(slot.getAddress());
-    	target.writeInt(slot.getLength());
+		// address
+		readers.copyID();
+		// length
+		readers.incrementIntSize();
 	}
 
 }

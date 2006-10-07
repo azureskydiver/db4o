@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.inside.slots.*;
 
 /**
@@ -206,5 +207,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 	}
 
 	public void skipMarshallerInfo(YapReader reader) {
+	}
+
+	public void mapStringIDs(YapClass yc, ObjectHeaderAttributes attributes,
+			YapReader reader, IDMapping mapping, int sourceBaseID,
+			int targetBaseID) {
+		throw new NotImplementedException();
 	}
 }

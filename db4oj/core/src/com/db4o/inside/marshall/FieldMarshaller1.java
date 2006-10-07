@@ -62,15 +62,16 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     	if(yapField.isVirtual()) {
     		return;
     	}
-// TODO defrag field indices if present
-//    	BTree index = yapField.getIndex(null);
-//    	if(index!=null) {
-//    		index.defragIndex(source, target, mapping);
-//    	}
-//    	else {
-//    		source.incrementOffset(YapConst.INT_LENGTH);
-//    		target.incrementOffset(YapConst.INT_LENGTH);
-//    	}
-    	readers.writeInt(0);
+//    	readers.writeInt(0);
+// FIXME PMFD
+    	if(yapField.hasIndex()&&!(yapField.getHandler() instanceof YapString)) {
+        	BTree index = yapField.getIndex(readers.systemTrans());
+    		readers.copyID();
+    		index.defragBTree(readers.context());
+    	}
+    	else {
+    		//readers.incrementIntSize();
+        	readers.writeInt(0);
+    	}
     }
 }
