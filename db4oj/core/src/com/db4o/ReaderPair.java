@@ -102,7 +102,7 @@ public class ReaderPair {
 	}
 	
 	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command) throws CorruptionException {
-		YapReader sourceReader=context.readerByID(DefragContext.SOURCEDB,sourceID);
+		YapReader sourceReader=context.sourceReaderByID(sourceID);
 		int targetID=context.mappedID(sourceID);
 	
 		int targetLength = sourceReader.getLength();
@@ -113,9 +113,7 @@ public class ReaderPair {
 		context.targetWriteBytes(targetPointerReader,targetID);
 		
 		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());
-		
 		command.processCopy(readers);
-	
 		context.targetWriteBytes(readers,targetAddress);
 	}
 }

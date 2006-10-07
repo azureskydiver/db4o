@@ -4,7 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.ix.Indexable4;
+import com.db4o.inside.ix.*;
 
 /**
  * @exclude
