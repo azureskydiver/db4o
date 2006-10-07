@@ -42,7 +42,7 @@ final class YapClassAny extends YapClass {
 		return a_stream.classCollection().fieldExists(a_path);
 	}
 	
-	boolean hasIndex() {
+	public boolean hasIndex() {
 	    return false;
 	}
     

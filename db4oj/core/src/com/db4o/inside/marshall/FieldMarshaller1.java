@@ -59,6 +59,9 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     		ReaderPair readers)
     		throws CorruptionException {
     	super.defrag(yapClass, yapField, sio, readers);
+    	if(yapField.isVirtual()) {
+    		return;
+    	}
 // TODO defrag field indices if present
 //    	BTree index = yapField.getIndex(null);
 //    	if(index!=null) {
