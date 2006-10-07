@@ -22,8 +22,7 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 
 		SimplestPossibleItem object = new SimplestPossibleItem("c1");
 		oc.set(object);
-
-		refresh(oc, object);
+		
 		ObjectInfo objectInfo1 = oc.getObjectInfo(object);
 		long oldVer = objectInfo1.getVersion();
 
@@ -31,7 +30,6 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 		object.setName("c3");
 		oc.set(object);
 
-		refresh(oc, object);
 		ObjectInfo objectInfo2 = oc.getObjectInfo(object);
 		long newVer = objectInfo2.getVersion();
 
@@ -43,12 +41,5 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 
 		Assert.areEqual(objectInfo1.getUUID(), objectInfo2.getUUID());
 		Assert.isTrue(newVer > oldVer);
-	}
-
-	private void refresh(ExtObjectContainer oc, SimplestPossibleItem object) {
-		//TODO Uncomment to pass this test in Client Server
-		//is passing in db4o 5.7
-		
-		//oc.refresh(object, 1);
 	}
 }
