@@ -217,15 +217,7 @@ public class Test extends AllTests {
 
     public static int fileLength() {
         String fileName = clientServer ? FILE_SERVER : FILE_SOLO;
-        try {
-            RandomAccessFile raf = new RandomAccessFile(fileName, "r");
-            raf.getFD().sync();
-            raf.close();
-            return (int) new File(fileName).length();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return 0;
+        return (int) new File(fileName).length();
     }
 
     public static void forEach(Object obj, Visitor4 vis) {
