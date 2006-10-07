@@ -2,9 +2,8 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.Db4o;
 import com.db4o.ObjectSet;
-import com.db4o.config.*;
+import com.db4o.config.Configuration;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;

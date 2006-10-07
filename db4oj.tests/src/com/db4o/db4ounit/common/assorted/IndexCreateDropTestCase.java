@@ -2,14 +2,13 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import java.util.*;
+import java.util.Date;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.query.*;
+import com.db4o.config.ObjectClass;
+import com.db4o.query.Query;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.Assert;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class IndexCreateDropTestCase extends AbstractDb4oTestCase{
     
