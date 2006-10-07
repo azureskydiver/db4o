@@ -776,7 +776,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return ids;
 	}
 
-    boolean hasIndex() {
+    public boolean hasIndex() {
         return i_db4oType == null || i_db4oType.hasClassIndex();
     }
     

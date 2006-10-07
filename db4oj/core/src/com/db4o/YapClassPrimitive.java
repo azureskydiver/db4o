@@ -113,7 +113,7 @@ public class YapClassPrimitive extends YapClass{
           a_bytes.getTransaction().slotFreePointerOnCommit(a_id, a_bytes.getAddress(), a_bytes.getLength());
 	}
     
-	boolean hasIndex() {
+	public boolean hasIndex() {
 	    return false;
 	}
 
