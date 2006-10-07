@@ -156,4 +156,5 @@ public abstract class ObjectMarshaller {
 	public abstract void writeObjectClassID(YapReader reader,int id);
 	
 	public abstract void skipMarshallerInfo(YapReader reader);
+    public abstract void mapStringIDs(YapClass yc, ObjectHeaderAttributes attributes, final YapReader reader,final IDMapping mapping,final int sourceBaseID,final int targetBaseID);
 }

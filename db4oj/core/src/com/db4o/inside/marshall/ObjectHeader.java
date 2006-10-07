@@ -19,7 +19,11 @@ public class ObjectHeader {
     public ObjectHeader(YapStream stream, YapReader reader){
     	this(stream,null,reader);
     }
-    
+
+    public ObjectHeader(YapClass yapClass, YapReader reader){
+    	this(null,yapClass,reader);
+    }
+
     public ObjectHeader(YapWriter writer){
         this(writer.getStream(), writer);
     }

@@ -352,6 +352,37 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		BTreeNode.defragIndex(readers, _keyHandler, _valueHandler);
 	}
 
+	public void defragBTree(final DefragContext context) throws CorruptionException {
+		ReaderPair.processCopy(context,getID(),new SlotCopyHandler() {
+			public void processCopy(ReaderPair readers) throws CorruptionException {
+				defragIndex(readers);
+			}
+		});
+		final CorruptionException[] exc={null};
+		try {
+			context.traverseAllIndexSlots(this, new Visitor4() {
+				public void visit(Object obj) {
+					final int id=((Integer)obj).intValue();
+					try {
+						ReaderPair.processCopy(context, id, new SlotCopyHandler() {
+							public void processCopy(ReaderPair readers) {
+								defragIndexNode(readers);
+							}
+						});
+					} catch (CorruptionException e) {
+						exc[0]=e;
+						throw new RuntimeException();
+					}
+				}
+			});
+		} catch (RuntimeException e) {
+			if(exc[0]!=null) {
+				throw exc[0];
+			}
+			throw e;
+		}
+	}
+
 	public int compareKeys(Object key1, Object key2) {
 		_keyHandler.prepareComparison(key2);
 		return _keyHandler.compareTo(key1);

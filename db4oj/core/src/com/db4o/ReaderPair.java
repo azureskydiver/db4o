@@ -10,15 +10,19 @@ import com.db4o.inside.marshall.*;
 public class ReaderPair {
 	private YapReader _source;
 	private YapReader _target;
-	private IDMapping _mapping;
+	private DefragContext _mapping;
 	private Transaction _systemTrans;
 	
-	public ReaderPair(YapReader source,IDMapping mapping,Transaction systemTrans) {
+	public ReaderPair(YapReader source,DefragContext mapping,Transaction systemTrans) {
 		_source = source;
 		_mapping=mapping;
 		_target = new YapReader(source.getLength());
 		_source.copyTo(_target, 0, 0, _source.getLength());
 		_systemTrans=systemTrans;
+	}
+	
+	public int offset() {
+		return _source._offset;
 	}
 	
 	public void incrementOffset(int numBytes) {
@@ -91,5 +95,27 @@ public class ReaderPair {
 
 	public Transaction systemTrans() {
 		return _systemTrans;
+	}
+
+	public DefragContext context() {
+		return _mapping;
+	}
+	
+	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command) throws CorruptionException {
+		YapReader sourceReader=context.readerByID(DefragContext.SOURCEDB,sourceID);
+		int targetID=context.mappedID(sourceID);
+	
+		int targetLength = sourceReader.getLength();
+		int targetAddress=context.allocateTargetSlot(targetLength);
+		YapReader targetPointerReader=new YapReader(YapConst.POINTER_LENGTH);
+		targetPointerReader.writeInt(targetAddress);
+		targetPointerReader.writeInt(targetLength);
+		context.targetWriteBytes(targetPointerReader,targetID);
+		
+		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());
+		
+		command.processCopy(readers);
+	
+		context.targetWriteBytes(readers,targetAddress);
 	}
 }

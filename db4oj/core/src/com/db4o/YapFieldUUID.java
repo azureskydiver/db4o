@@ -229,5 +229,10 @@ public class YapFieldUUID extends YapFieldVirtual {
         return arr;
 	}
  
-
+	public void defragField(MarshallerFamily mf, ReaderPair readers) {
+		// database id
+		readers.copyID(); 
+		// uuid
+		readers.incrementOffset(YapConst.LONG_LENGTH);
+	}
 }

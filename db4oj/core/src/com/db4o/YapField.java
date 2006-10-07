@@ -914,4 +914,8 @@ public class YapField implements StoredField {
         stream.setDirtyInSystemTransaction(getParentYapClass());
         _index = null;
     }    
+    
+    public void defragField(MarshallerFamily mf,ReaderPair readers) {
+    	getHandler().defrag(mf, readers);
+    }
 }
