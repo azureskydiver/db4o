@@ -309,7 +309,6 @@ public final class YapString extends YapIndependantType {
             if (compare[i] != with[i]) {
                 return with[i] - compare[i];
             }
-            
         }
         return with.length - compare.length;
     }
