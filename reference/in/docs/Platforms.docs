@@ -1,9 +1,89 @@
 .n
 .a Platforms ..
 .1 Platforms ..
-Db4o can be run on a variety of platforms, which have Java or .NET virtual machines. These include ._
-desktop and pocket computers, mobile phones and various embedded devices. However each ._
-platform has its own features, which should be taken into consideration in software development ._
-process. These features will be discussed in the following chapters.
+
+Db4o can be run in a variety of environments, which have Java virtual machine ._
+or .NET CLR. We use a common core code base, which allows automatic ._
+production of db4o builds for the following platforms:
+Java JDK 1.1
+Java JDK 1.2
+Java JDK 1.4
+Java JDK 5
+.NET 1.0
+.NET 1.1
+.NET 1.1 CompactFramework
+.NET 2.0
+.NET 2.0 CompactFramework
+Mono
+
+Db4o has a small database footprint and requires minimum processing resources ._
+thus being an excellent choice for embedded use in smartphones, photocopiers, ._
+car electronics, and packaged software (including real-time monitoring systems). It ._
+also shows good performance and reliability in web and desktop applications.
+You can use db4o on desktop with:
+- Windows (Java, .Net);
+- Linux (Java, Mono).
+
+On mobile and embedded devices with:
+- Symbian (PersonalJava); 
+- Savaje(J2ME CDC); 
+- Zaurus(Personal Java or Java Personal Profile);
+- Windows CE or Windows Mobile (.NET Compact Framework 1.1 and 2.0)
+
+db4o provides the same API for all platforms, however each platform has its own ._
+features, which should be taken into consideration in software development process. ._
+These features will be discussed in the following chapters.
+
+.2 JDK1.1 ..
+The two major limitations of db4o for JDK1.1:
+- no support for storing private fields (reflection in JDK 1.1 can only work on public fields)
+- no support for JDK collections (java.util.list since JDK1.2)
+db4o for Java 1.1 also goes without support for Native Query Optimization. NQ optimization ._
+uses bytecode optimizer library Bloat (http://www.cs.purdue.edu/s3/projects/bloat/), which ._
+is not JDK1.1 compatible.
+
+.2 Before  JDK1.4 ..
+Java JDKs before 1.4 do not provide functionality to lock database files. db4o simulates ._
+locking files by using a timer thread that writes access time to the file. This can be quite ._
+slow. If the system provides some other way to ensure that a file can not be accessed twice, ._
+it can improve performance dramatically to call:
+.c Db4o.configure().lockDatabaseFile(false) ..
+
+
+.2 JDK 1.5 ..
+- Generics support introduced in JDK1.5 makes db4o Native Query syntax much simpler:
+.c List <Pilot> pilots = db.query(new Predicate<Pilot>() {
+public boolean match(Pilot pilot) {
+return pilot.getPoints() == 100;
+}
+}); ..
+
+- db4o for JDK5 also introduces support for replication.
+
+.2 Mobile Java editions ..
+Currently db4o runs on J2ME dialects that support reflection, such as Personal Java, J2ME CDC and ._
+J2ME PersonalProfile. PersonalJava is closely equivalent to Java 1.1.8 regarding the libraries and ._
+features it contains (see JDK1.1 for the list of limitations). Use db4o-x.x-java1.1.jar with PersonalJava.
+J2ME CDC and J2ME PersonalProfile are based on subsets of JDK1.3 or JDK1.4 depending on the version used.
+J2ME CLDC and MIDP are not yet supported. Their support requires:
+-	replacing reflection (not available in CLDC) with a build-time preprocessor 
+-	providing RMS RecordStore based I/O 
+
+
+.2 All .Net ..
+- .NET version of db4o uses Pascal case for method names
+- .NET Reflection mechanism adds assembly name to class definition. If you use db4o ._
+database with 2 applications (client and server) you'll have to move all persistent class ._
+definitions into a shared .dll. Identical classes compiled into different executables/libraries ._
+will be treated as different.
+
+
+.2 .NET 2.0 ..
+You can enjoy simplified syntax for Native Queries with Generics support introduced ._
+in .NET2.0.
+.c IList <Pilot> pilots = db.Query <Pilot> (delegate(Pilot pilot) {
+return pilot.Points == 100;
+}); ..
+
 
 .? java .e Symbian ..  ..?  
