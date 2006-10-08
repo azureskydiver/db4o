@@ -57,8 +57,10 @@ public boolean match(Pilot pilot) {
 return pilot.getPoints() == 100;
 }
 }); ..
-
+- following JDK5 annotations db4o intrduces its own annotations.
+- you can use built-in .l StaticFields  enums .. 
 - db4o for JDK5 also introduces support for replication.
+
 
 .2 Mobile Java editions ..
 Currently db4o runs on J2ME dialects that support reflection, such as Personal Java, J2ME CDC and ._
@@ -76,14 +78,18 @@ J2ME CLDC and MIDP are not yet supported. Their support requires:
 database with 2 applications (client and server) you'll have to move all persistent class ._
 definitions into a shared .dll. Identical classes compiled into different executables/libraries ._
 will be treated as different.
+- .NET attributes can be used for db4o configuration
+- Enumerations are treated as integer types
 
 
 .2 .NET 2.0 ..
-You can enjoy simplified syntax for Native Queries with Generics support introduced ._
+- You can enjoy simplified syntax for Native Queries with Generics support introduced ._
 in .NET2.0.
 .c IList <Pilot> pilots = db.Query <Pilot> (delegate(Pilot pilot) {
 return pilot.Points == 100;
 }); ..
+- db4o for .NET2.0 supports replication.
+
 
 
 .? java .e Symbian ..  ..?  
