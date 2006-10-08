@@ -20,6 +20,7 @@ import com.db4odoc.f1.reflections.ReflectorExample;
 import com.db4odoc.f1.remote.RemoteExample;
 import com.db4odoc.f1.staticfields.StaticFieldExample;
 import com.db4odoc.f1.uuids.UUIDExample;
+import com.db4odoc.f1.serialize.SerializeExample;
 
 
 
@@ -49,5 +50,6 @@ public class Main {
         RefactoringExample.main(args);
         PeekPersistedExample.main(args);
         IdentityExample.main(args);
+    	//SerializeExample.main(args);
     }
 }
