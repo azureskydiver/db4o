@@ -10,7 +10,7 @@ optimized internal comparison algorithms.
 
 If no ._
 optimizer is found in the CLASSPATH or if optimization is turned ._
-off, Native Quer may be executed by instantiating all objects, ._
+off, Native Query may be executed by instantiating all objects, ._
 using  .l Evaluations SODA Evaluations .. . Naturally performance ._
 will not be as good in this case.
 
@@ -49,7 +49,7 @@ The three options are described in the following:
 .b Note: This will not work with JDK1.1. ..
 
 To enable code analysis and optimization of native query expressions ._
-at query query execution time, you just have to add db4o-5.x-nqopt.jar ._
+at query execution time, you just have to add db4o-5.x-nqopt.jar ._
 and bloat-1.x.jar to your CLASSPATH. Optimization can be turned on and off ._
 with the following configuration setting:
 

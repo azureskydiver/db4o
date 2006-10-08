@@ -37,7 +37,7 @@ database. It is recommended to remove such classes ._
 from the database to avoid the overhead for the ._
 maintenance of class indexes.
 Let's look at the following example:
-.c package com.tutorial.f1.chapter31;
+.c package  com.db4odoc.f1.diagnostics;
 
 import java.util.Calendar;
 import java.text.DateFormat;
