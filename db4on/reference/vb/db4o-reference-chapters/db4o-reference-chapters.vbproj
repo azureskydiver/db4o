@@ -112,6 +112,9 @@
     <Compile Include="src\com\db4odoc\f1\remote\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\remote\RemoteExample.vb" />
     <Compile Include="src\com\db4odoc\f1\remote\UpdateServer.vb" />
+    <Compile Include="src\com\db4odoc\f1\serialize\Car.vb" />
+    <Compile Include="src\com\db4odoc\f1\serialize\Pilot.vb" />
+    <Compile Include="src\com\db4odoc\f1\serialize\SerializeExample.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\PilotCategories.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\StaticFieldExample.vb" />
