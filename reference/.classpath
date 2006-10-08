@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
+	<classpathentry kind="lib" path="D:/svntest/reference/lib/xstream-1.2.jar"/>
+	<classpathentry kind="lib" path="D:/svntest/db4obuild/dist/java/db4o-5.7/lib/db4o-5.7-java5.jar"/>
+	<classpathentry kind="lib" path="D:/svntest/db4obuild/dist/java/db4o-5.7/lib/db4o-5.7-nqopt.jar"/>
+	<classpathentry kind="lib" path="D:/svntest/db4obuild/dist/java/db4o-5.7/lib/bloat-1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

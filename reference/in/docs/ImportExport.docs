@@ -1,0 +1,68 @@
+.n
+.a ImportExport ..
+.1 Xml Import/Export ..
+
+One of the most widely used platform independent formats of data exchange today is xml.
+Db4o does not provide any specific API to be used for XML import/export, but with the variety of ._
+XML serialization tools available for Java and .NET (freeware and licensed) this is not really necessary. 
+All that  you need to export your database/query results is:
+1. Retrieve objects from the database.
+2. Serialize them in XML format (using language, or external tools, or your own serializing software).
+3. Save XML stream (to a disc location, into memory, into another database).
+Import process is just the reverse:
+1. Read XML stream
+2. Create an objects from XML
+3. Save objects to db4o
+.? java
+Let's go through a simple example. We will use xstream library (http://xstream.codehaus.org/) for ._
+object serialization, but any other tool capable of serializing objects into XML will do as well.
+First, let's prepare a database:
+.s com.db4odoc.f1.serialize.SerializeExample#setObjects -run ..
+We will save the database to XML file  "formula1.xml":
+.s com.db4odoc.f1.serialize.SerializeExample#exportToXml -run ..
+After the method executes all car objects from the database will be stored in the export file ._
+as an array. Note that child objects (Pilot) are stored as well without any additional settings. ._
+You can check the created XML file to see how it looks like.
+Now we can clean the database and try to recreate it from the XML file:
+.s com.db4odoc.f1.serialize.SerializeExample#importFromXml -run ..
+Easy, isn't it? Obviously there is much more about XML serialization: renaming fields, storing collections, ._
+selective persistence etc. You should be able to find detailed description together with the serialization ._
+library, which you will use.
+
+..?
+
+.? net
+Let's go through a simple example. We will use .NET XmlSerializer. (You can use any other XML serialization ._
+tool, which is able to serialize/deserialize classes).
+First, let's prepare a database:
+.s com.db4odoc.f1.serialize.SerializeExample#setObjects -run ..
+We will save the database to XML file "formula1.xml":
+.s com.db4odoc.f1.serialize.SerializeExample#exportToXml -run ..
+After the method executes all car objects from the database will be stored in the export file as an ._
+array. Note that child objects (Pilot) are stored as well without any additional settings. ._
+You can check the created XML file to see how it looks like.
+Now we can clean the database and try to recreate it from the XML file:
+.s com.db4odoc.f1.serialize.SerializeExample#importFromXml -run ..
+Easy, isn't it? Obviously there is much more about XML serialization: renaming fields, storing collections, ._
+selective persistence etc. You should be able to find detailed description together with the serialization ._
+library that you will use.
+
+..?
+
+.? mono
+Let's go through a simple example. We will use .NET XmlSerializer. (You can use any other XML serialization ._
+tool, which is able to serialize/deserialize classes).
+First, let's prepare a database:
+.s com.db4odoc.f1.serialize.SerializeExample#setObjects -run ..
+We will save the database to XML file "formula1.xml":
+.s com.db4odoc.f1.serialize.SerializeExample#exportToXml -run ..
+After the method executes all car objects from the database will be stored in the export file as an ._
+array. Note that child objects (Pilot) are stored as well without any additional settings. ._
+You can check the created XML file to see how it looks like.
+Now we can clean the database and try to recreate it from the XML file:
+.s com.db4odoc.f1.serialize.SerializeExample#importFromXml -run ..
+Easy, isn't it? Obviously there is much more about XML serialization: renaming fields, storing collections, ._
+selective persistence etc. You should be able to find detailed description together with the serialization ._
+library that you will use.
+
+..?
