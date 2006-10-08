@@ -66,8 +66,11 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
 // FIXME PMFD
     	if(yapField.hasIndex()&&!(yapField.getHandler() instanceof YapString)) {
         	BTree index = yapField.getIndex(readers.systemTrans());
-    		readers.copyID();
-    		index.defragBTree(readers.context());
+    		int targetIndexID=readers.copyID();
+    		if(targetIndexID!=0) {
+//        		System.out.println("DEFRAG INDEX FOR "+yapField.getName());
+    			index.defragBTree(readers.context());
+    		}
     	}
     	else {
     		//readers.incrementIntSize();
