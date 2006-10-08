@@ -672,7 +672,11 @@
 		<mkdir dir="${dir.dist.classes.reference}" />
 		<antcall target="copyjava5" />
 		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.reference}" target="1.5" source="1.5" encoding="UTF-8" />
-		<javac fork="true" srcdir="${dir.j.reference.src}" destdir="${dir.dist.classes.reference}" classpath="${dir.dist.classes.reference}" target="1.5" source="1.5" debug="on" encoding="UTF-8" />
+		<javac fork="true" srcdir="${dir.j.reference.src}" destdir="${dir.dist.classes.reference}" classpath="${dir.dist.classes.reference}" target="1.5" source="1.5" debug="on" encoding="UTF-8" >
+			<classpath>
+					<pathelement path="${dir.j.reference.lib.xstream.jar}"/>
+			</classpath>
+		</javac>
 	</target>
 
 	<target name="compilenreference" depends="compiledllnet">
