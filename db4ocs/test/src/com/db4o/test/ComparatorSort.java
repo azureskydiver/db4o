@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Predicate;
 import com.db4o.query.Query;
@@ -64,8 +65,8 @@ public class ComparatorSort extends ClientServerTestCase {
 		this._name = name;
 	}
 
-	public void configure(ExtObjectContainer oc) {
-		oc.configure().exceptionsOnNotStorable(true);
+	public void configure(Configuration config) {
+		config.exceptionsOnNotStorable(true);
 	}
 
 	public void store(ExtObjectContainer oc) {

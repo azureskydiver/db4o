@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
 
@@ -15,8 +16,8 @@ public class CascadeOnActivate extends ClientServerTestCase {
 
 	public CascadeOnActivate child;
 
-	protected void configure(ExtObjectContainer oc) {
-		oc.configure().objectClass(this).cascadeOnActivate(true);
+	protected void configure(Configuration config) {
+		config.objectClass(this).cascadeOnActivate(true);
 	}
 
 	public void store(ExtObjectContainer oc) {
@@ -40,6 +41,12 @@ public class CascadeOnActivate extends ClientServerTestCase {
 		Assert.isNull(coa3.name);
 		oc.activate(coa, 1);
 		Assert.areEqual("3", coa3.name);
+	}
+
+	public void concIndexed(ExtObjectContainer oc) {
+		oc.configure().objectClass(CascadeOnActivate.class).objectField("name")
+				.indexed(true);
+		conc(oc);
 	}
 
 }

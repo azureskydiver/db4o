@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.persistent.Atom;
 
@@ -13,9 +14,9 @@ public class DualDelete extends ClientServerTestCase {
 
 	public Atom atom;
 
-	public void configure(ExtObjectContainer oc) {
-		oc.configure().objectClass(this).cascadeOnDelete(true);
-		oc.configure().objectClass(this).cascadeOnUpdate(true);
+	public void configure(Configuration config) {
+		config.objectClass(this).cascadeOnDelete(true);
+		config.objectClass(this).cascadeOnUpdate(true);
 	}
 
 	public void store(ExtObjectContainer oc) {

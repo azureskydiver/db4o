@@ -2,47 +2,16 @@
 
 package com.db4o.test;
 
-import java.io.Serializable;
-
 import com.db4o.ObjectSet;
 import com.db4o.config.TSerializable;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
+import com.db4o.test.persistent.ByteArrayHolder;
+import com.db4o.test.persistent.IByteArrayHolder;
+import com.db4o.test.persistent.SerializableByteArrayHolder;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
-
-interface IByteArrayHolder {
-	byte[] getBytes();
-}
-
-class ByteArrayHolder implements IByteArrayHolder {
-
-	byte[] _bytes;
-
-	public ByteArrayHolder(byte[] bytes) {
-		this._bytes = bytes;
-	}
-
-	public byte[] getBytes() {
-		return _bytes;
-	}
-}
-
-class SerializableByteArrayHolder implements Serializable, IByteArrayHolder {
-
-	private static final long serialVersionUID = 1L;
-
-	byte[] _bytes;
-
-	public SerializableByteArrayHolder(byte[] bytes) {
-		this._bytes = bytes;
-	}
-
-	public byte[] getBytes() {
-		return _bytes;
-	}
-}
 
 public class ByteArray extends ClientServerTestCase {
 
@@ -53,17 +22,11 @@ public class ByteArray extends ClientServerTestCase {
 	static final int ARRAY_LENGTH = 1024 * 512;
 
 	public void store(ExtObjectContainer oc) {
-		com.db4o.Db4o.configure()
-				.objectClass(SerializableByteArrayHolder.class).translate(
-						new TSerializable());
-		ExtObjectContainer oc2 = fixture().db();
-		try {
-			for (int i = 0; i < INSTANCES; ++i) {
-				oc2.set(new ByteArrayHolder(createByteArray()));
-				oc2.set(new SerializableByteArrayHolder(createByteArray()));
-			}
-		} finally {
-			oc2.close();
+		oc.configure().objectClass(SerializableByteArrayHolder.class)
+				.translate(new TSerializable());
+		for (int i = 0; i < INSTANCES; ++i) {
+			oc.set(new ByteArrayHolder(createByteArray()));
+			oc.set(new SerializableByteArrayHolder(createByteArray()));
 		}
 	}
 
@@ -71,8 +34,56 @@ public class ByteArray extends ClientServerTestCase {
 		timeQueryLoop(oc, "raw byte array", ByteArrayHolder.class);
 	}
 
+	public void concByteArrayHolderIndexed1(ExtObjectContainer oc) {
+		oc.configure().objectClass(ByteArrayHolder.class).objectField("_bytes")
+				.indexed(true);
+		oc.configure().objectClass(SerializableByteArrayHolder.class)
+				.objectField("_bytes").indexed(true);
+		concByteArrayHolder(oc);
+	}
+
+	public void concByteArrayHolderIndexed2(ExtObjectContainer oc) {
+		oc.configure().objectClass(ByteArrayHolder.class).objectField("_bytes")
+				.indexed(true);
+		oc.configure().objectClass(SerializableByteArrayHolder.class)
+				.objectField("_bytes").indexed(false);
+		concByteArrayHolder(oc);
+	}
+
+	public void concByteArrayHolderIndexed3(ExtObjectContainer oc) {
+		oc.configure().objectClass(ByteArrayHolder.class).objectField("_bytes")
+				.indexed(false);
+		oc.configure().objectClass(SerializableByteArrayHolder.class)
+				.objectField("_bytes").indexed(true);
+		concByteArrayHolder(oc);
+	}
+
 	public void concSerializableByteArrayHolder(ExtObjectContainer oc) {
 		timeQueryLoop(oc, "TSerializable", SerializableByteArrayHolder.class);
+	}
+
+	public void concSerializableByteArrayHolderIndexed1(ExtObjectContainer oc) {
+		oc.configure().objectClass(ByteArrayHolder.class).objectField("_bytes")
+				.indexed(true);
+		oc.configure().objectClass(SerializableByteArrayHolder.class)
+				.objectField("_bytes").indexed(true);
+		concSerializableByteArrayHolder(oc);
+	}
+
+	public void concSerializableByteArrayHolderIndexed2(ExtObjectContainer oc) {
+		oc.configure().objectClass(ByteArrayHolder.class).objectField("_bytes")
+				.indexed(true);
+		oc.configure().objectClass(SerializableByteArrayHolder.class)
+				.objectField("_bytes").indexed(false);
+		concSerializableByteArrayHolder(oc);
+	}
+
+	public void concSerializableByteArrayHolderIndexed3(ExtObjectContainer oc) {
+		oc.configure().objectClass(ByteArrayHolder.class).objectField("_bytes")
+				.indexed(false);
+		oc.configure().objectClass(SerializableByteArrayHolder.class)
+				.objectField("_bytes").indexed(true);
+		concSerializableByteArrayHolder(oc);
 	}
 
 	private void timeQueryLoop(ExtObjectContainer oc, String label,

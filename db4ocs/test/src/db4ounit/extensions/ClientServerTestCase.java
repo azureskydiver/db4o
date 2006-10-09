@@ -2,7 +2,7 @@
 
 package db4ounit.extensions;
 
-import com.db4o.Db4o;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.TestCase;
@@ -11,11 +11,15 @@ import db4ounit.TestLifeCycle;
 public class ClientServerTestCase extends AbstractDb4oTestCase implements
 		TestCase, TestLifeCycle {
 
-	@Override
+	
+	protected void configure(Configuration config) {
+		super.configure(config);
+	}
+
 	public void setUp() throws Exception {
 		Db4oFixture fixture = fixture();
 		fixture.clean();
-		configure(Db4o.cloneConfiguration());
+		configure(fixture().config());
 		fixture.open();
 		ExtObjectContainer oc = fixture.db();
 		try {
@@ -29,15 +33,10 @@ public class ClientServerTestCase extends AbstractDb4oTestCase implements
 
 	public ExtObjectContainer db() {
 		ExtObjectContainer oc = fixture().db();
-		configure(oc);
 		return oc;
 	}
 	
 	protected void store(ExtObjectContainer oc) throws Exception {
 
-	}
-
-	protected void configure(ExtObjectContainer oc) {
-		
 	}
 }

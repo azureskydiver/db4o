@@ -2,7 +2,7 @@
 
 package com.db4o.test;
 
-import com.db4o.Db4o;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.persistent.Atom;
 
@@ -16,9 +16,9 @@ public class CascadeOnUpdate2 extends ClientServerTestCase {
 
 	private Atom child[];
 
-	public void configure(ExtObjectContainer oc) {
-		oc.configure().objectClass(this).cascadeOnUpdate(true);
-		oc.configure().objectClass(Atom.class).cascadeOnUpdate(false);
+	public void configure(Configuration config) {
+		config.objectClass(this).cascadeOnUpdate(true);
+		config.objectClass(Atom.class).cascadeOnUpdate(false);
 	}
 
 	public void store(ExtObjectContainer oc) {
@@ -47,5 +47,15 @@ public class CascadeOnUpdate2 extends ClientServerTestCase {
 			Assert.areEqual(name, cou.child[i].name);
 			Assert.areEqual("storedChild", cou.child[i].child.name);
 		}
+	}
+
+	public void concIndexed(ExtObjectContainer oc, int seq) {
+		oc.configure().objectClass(Atom.class).objectField("name")
+				.indexed(true);
+		conc(oc, seq);
+	}
+
+	public void checkIndexed(ExtObjectContainer oc) {
+		check(oc);
 	}
 }

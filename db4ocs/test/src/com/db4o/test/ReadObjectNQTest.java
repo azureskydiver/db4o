@@ -25,11 +25,7 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 	public void concReadSameObject(ExtObjectContainer oc) throws Exception {
 		int mid = TestConfigure.CONCURRENCY_THREAD_COUNT / 2;
 		final SimpleObject expected = new SimpleObject(testString + mid, mid);
-		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
-			public boolean match(SimpleObject o) {
-				return expected.equals(o);
-			}
-		});
+		List<SimpleObject> result = oc.query(new MyPredicate(expected));
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
 	}
@@ -37,13 +33,22 @@ public class ReadObjectNQTest extends ClientServerTestCase {
 	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
 			throws Exception {
 		final SimpleObject expected = new SimpleObject(testString + seq, seq);
-		List<SimpleObject> result = oc.query(new Predicate<SimpleObject>() {
-			public boolean match(SimpleObject o) {
-				return expected.equals(o);
-			}
-		});
+		List<SimpleObject> result = oc.query(new MyPredicate(expected));
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
+	}
+
+}
+
+class MyPredicate extends Predicate <SimpleObject>{
+	SimpleObject expected;
+
+	MyPredicate(SimpleObject o) {
+		this.expected = o;
+	}
+
+	public boolean match(SimpleObject candidate) {
+		return expected.equals(candidate);
 	}
 
 }

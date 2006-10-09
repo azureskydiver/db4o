@@ -5,6 +5,7 @@ package com.db4o.test;
 import java.util.Hashtable;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.persistent.Atom;
 
@@ -16,10 +17,10 @@ public class CascadeToHashtable extends ClientServerTestCase {
 
 	public Hashtable ht;
 
-	public void configure(ExtObjectContainer oc) {
-		oc.configure().objectClass(this).cascadeOnUpdate(true);
-		oc.configure().objectClass(this).cascadeOnDelete(true);
-		oc.configure().objectClass(Atom.class).cascadeOnDelete(false);
+	public void configure(Configuration config) {
+		config.objectClass(this).cascadeOnUpdate(true);
+		config.objectClass(this).cascadeOnDelete(true);
+		config.objectClass(Atom.class).cascadeOnDelete(false);
 	}
 
 	public void store(ExtObjectContainer oc) {

@@ -62,6 +62,23 @@ public class ArrayNOrder extends ClientServerTestCase {
 		ano.check();
 	}
 
+	public void concIndexed1(ExtObjectContainer oc) {
+		oc.configure().objectClass(ArrayNOrder.class).objectField("o1").indexed(true);
+		oc.configure().objectClass(ArrayNOrder.class).objectField("s1").indexed(true);
+		conc(oc);
+	}
+	public void concIndexed2(ExtObjectContainer oc) {
+		oc.configure().objectClass(ArrayNOrder.class).objectField("o1").indexed(true);
+		oc.configure().objectClass(ArrayNOrder.class).objectField("s1").indexed(false);
+		conc(oc);
+	}
+	
+	public void concIndexed3(ExtObjectContainer oc) {
+		oc.configure().objectClass(ArrayNOrder.class).objectField("o1").indexed(false);
+		oc.configure().objectClass(ArrayNOrder.class).objectField("s1").indexed(true);
+		conc(oc);
+	}
+	
 	public void check() {
 		Assert.areEqual(s1[0][0][0], "000");
 		Assert.areEqual(s1[0][0][1], "001");

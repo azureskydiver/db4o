@@ -14,6 +14,7 @@ public class AllTests extends CSTestSuite {
 	
 	protected Class[] passedTestCases() {
 		return new Class[] {
+				InvalidUUID.class,
 				ArrayNOrder.class,
 				ByteArray.class,
 				CascadeOnActivate.class,
@@ -31,6 +32,11 @@ public class AllTests extends CSTestSuite {
 				DifferentAccessPaths.class,
 				ExtMethods.class,
 				GetAll.class,
+				IndexCreateDrop.class,
+				IndexedByIdentity.class,
+				IndexedUpdatesWithNull.class,
+				InternStrings.class,
+				GreaterOrEqual.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
@@ -53,6 +59,7 @@ public class AllTests extends CSTestSuite {
 				CustomActivationDepth.class,
 				DeleteDeep.class,
 				DualDelete.class,
+				HashtableModifiedUpdateDepth.class,
 		};
 	}
 	
