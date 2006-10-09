@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.extensions.ClientServerTestCase;
@@ -19,9 +20,9 @@ public class CascadeDeleteFalse extends ClientServerTestCase {
 
 	public CascadeDeleteFalseHelper h3;
 
-	protected void configure(ExtObjectContainer oc) {
-		oc.configure().objectClass(this).cascadeOnDelete(true);
-		oc.configure().objectClass(this).objectField("h3").cascadeOnDelete(
+	protected void configure(Configuration config) {
+		config.objectClass(this).cascadeOnDelete(true);
+		config.objectClass(this).objectField("h3").cascadeOnDelete(
 				false);
 	}
 

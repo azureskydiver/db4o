@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.test.config.TestConfigure;
 import com.db4o.test.persistent.SimpleObject;
@@ -25,8 +26,8 @@ public class CascadeDeleteArray extends ClientServerTestCase {
 		oc.set(this);
 	}
 
-	protected void configure(ExtObjectContainer oc){
-		oc.configure().objectClass(this).cascadeOnDelete(true);
+	protected void configure(Configuration config){
+		config.objectClass(this).cascadeOnDelete(true);
 	}
 	
 	public void test() {

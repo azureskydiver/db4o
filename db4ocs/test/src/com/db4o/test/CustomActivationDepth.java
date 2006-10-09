@@ -33,10 +33,6 @@ public class CustomActivationDepth extends ClientServerTestCase {
 
 	CA3[] ca3s;
 
-	public void configure(ExtObjectContainer oc) {
-
-	}
-
 	public void store(ExtObjectContainer oc) {
 		myInt = 7;
 		myString = "seven";

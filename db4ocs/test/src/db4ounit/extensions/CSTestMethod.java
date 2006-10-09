@@ -160,7 +160,9 @@ public class CSTestMethod extends TestMethod {
 		}
 	}
 
-	@Override
+	/* 
+	 * @see db4ounit.TestMethod#getSubject()
+	 */
 	public Db4oTestCase getSubject() {
 		return (Db4oTestCase) super.getSubject();
 	}
