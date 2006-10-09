@@ -19,7 +19,7 @@ public class Iterator4Impl implements Iterator4 {
 		_current = Iterators.NO_ELEMENT;
 	}
 
-	public boolean moveNext(){
+	public boolean moveNext() {
 		if (_next == null) {
 			_current = Iterators.NO_ELEMENT;
 			return false;

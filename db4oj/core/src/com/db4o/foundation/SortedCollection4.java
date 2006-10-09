@@ -40,7 +40,7 @@ public class SortedCollection4 {
 	}
 
 	public Object[] toArray(final Object[] array) {
-		_tree.traverse(new Visitor4() {
+		Tree.traverse(_tree, new Visitor4() {
 			int i = 0;
 			public void visit(Object obj) {
 				array[i++] = ((TreeObject)obj).getObject();

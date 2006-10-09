@@ -5,7 +5,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class IntArrayList {
+public class IntArrayList implements Iterable4 {
     
     static final int INC = 20;
     
@@ -63,5 +63,13 @@ public class IntArrayList {
         }
         return longs;
     }
+
+	public IntIterator4 intIterator() {
+		return new IntIterator4Impl(i_content, i_count);
+	}
+	
+	public Iterator4 iterator() {
+		return intIterator();
+	}
 
 }

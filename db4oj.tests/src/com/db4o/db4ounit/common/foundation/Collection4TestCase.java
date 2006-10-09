@@ -8,29 +8,69 @@ import db4ounit.*;
 
 public class Collection4TestCase implements TestCase {
 	
-	public void testFastIterator() {
-		Collection4 c = new Collection4();
-		
-		String[] expected = new String[] { "1", "2", "3" };		
-		c.addAll(expected);
-		
-		Iterator4 iterator = c.iterator();
-		Assert.isNotNull(iterator);
-		
-		for (int i=expected.length-1; i>=0; --i) {
-			Assert.isTrue(iterator.moveNext());
-			Assert.areEqual(expected[i], iterator.current());
-		}
-		Assert.isFalse(iterator.moveNext());
+	public static void main(String[] args) {
+		new TestRunner(Collection4TestCase.class).run();
 	}
 	
+	public void testCopyConstructor() {
+		final String[] expected = new String[] { "1", "2", "3" };
+		final Collection4 c = newCollection(expected);
+		assertCollection(expected, new Collection4(c));
+	}
+	
+	public void testInvalidIteratorException() {
+		final Collection4 c = newCollection(new String[] { "1", "2" });
+		final Iterator4 i = c.iterator();
+		Assert.isTrue(i.moveNext());
+		c.add("3");
+		Assert.expect(InvalidIteratorException.class, new CodeBlock() {
+			public void run() throws Exception {
+				i.current();
+			}
+		});
+	}
+	
+	public void testRemove() {
+		final Collection4 c = newCollection(new String[] { "1", "2", "3", "4" });
+		c.remove("3");
+		assertCollection(new String[] { "1", "2", "4"} , c);
+		c.remove("4");
+		assertCollection(new String[] { "1", "2" } , c);
+		c.add("5");
+		assertCollection(new String[] { "1", "2", "5" } , c);
+		c.remove("1");
+		assertCollection(new String[] { "2", "5" } , c);
+		c.remove("2");
+		c.remove("5");
+		assertCollection(new String[] {}, c);
+		c.add("6");
+		assertCollection(new String[] { "6" }, c);
+	}
+	
+	private void assertCollection(String[] expected, Collection4 c) {
+		Assert.areEqual(expected.length, c.size());
+		assertIterator(expected, c.strictIterator());
+	}
+
+	public void _testIterator() {
+		String[] expected = new String[] { "1", "2", "3" };
+		Collection4 c = newCollection(expected);		
+		assertIterator(expected, c.iterator());
+	}	
+	
 	public void testStrictIterator() {
-		Collection4 c = new Collection4();
-		
 		String[] expected = new String[] { "1", "2", "3" };		
+		Collection4 c = newCollection(expected);		
+		assertIterator(expected, c.strictIterator());
+	}
+	
+	private Collection4 newCollection(String[] expected) {
+		Collection4 c = new Collection4();		
 		c.addAll(expected);
-		
-		Iterator4 iterator = c.strictIterator();
+		return c;
+	}
+
+	private void assertIterator(String[] expected, Iterator4 iterator) {
 		Assert.isNotNull(iterator);
 		
 		for (int i=0; i<expected.length; ++i) {

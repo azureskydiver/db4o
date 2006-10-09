@@ -32,6 +32,16 @@ public class ClusterQueryResult implements QueryResult{
         }
         _size = size;
     }
+    
+//	public Iterator4 iterator() {
+//		synchronized(_cluster) {
+//			Iterator4[] iterators = new Iterator4[_objectSets.length];
+//			for (int i = 0; i < _objectSets.length; i++) {
+//				iterators[i] = ((Iterable4)_objectSets[i]).iterator();
+//			}
+//			return new CompositeIterator4(iterators);
+//		} 
+//	}
 
     public boolean hasNext() {
         synchronized(_cluster){

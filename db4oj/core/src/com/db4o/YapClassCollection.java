@@ -108,7 +108,7 @@ public final class YapClassCollection extends YapMeta {
             if(! candidate.isInterface()){
                 if (claxx.isAssignableFrom(candidate)) {
                     col.add(yc);
-                    Iterator4 j = col.iterator();
+                    Iterator4 j = col.strictIterator();
                     while (j.moveNext()) {
                         YapClass existing = (YapClass)j.current();
                         if(existing != yc){
@@ -267,17 +267,17 @@ public final class YapClassCollection extends YapMeta {
     }
     
     public YapClassCollectionIterator iterator(){
-        return new YapClassCollectionIterator(this, i_classes._first);
+        return new YapClassCollectionIterator(this, i_classes.iterator());
     } 
 
-    private static class ClassIDIterator extends Iterator4Impl {
+    private static class ClassIDIterator extends MappingIterator {
 
 		public ClassIDIterator(Collection4 classes) {
-			super(classes._first);
+			super(classes.iterator());
 		}
     	
-    	public Object current() {
-    		return new Integer(((YapClass)super.current()).getID());
+    	public Object map(Object current) {
+    		return new Integer(((YapClass)current).getID());
     	}
     }
     

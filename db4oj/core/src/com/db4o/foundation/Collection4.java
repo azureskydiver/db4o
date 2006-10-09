@@ -18,6 +18,8 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 
     /** number of elements collected */
     public int _size;
+
+	private int _version;
     
     public Collection4() {
     }
@@ -39,9 +41,14 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
      * @param element
      */
     public final void add(Object element) {
-        _first = new List4(_first, element);
+        doAdd(element);
+        changed();
+    }
+
+	private void doAdd(Object element) {
+		_first = new List4(_first, element);
         _size++;
-    }    
+	}    
 
     public final void addAll(Object[] elements) {
         if (elements != null) {
@@ -55,7 +62,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
     
     public final void addAll(Collection4 other){
         if (other != null){
-            addAll(other.iterator());
+            addAll(other.strictIterator());
         }
     }
     
@@ -151,7 +158,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
     public final Iterator4 iterator() {
         return _first == null
         	? Iterator4Impl.EMPTY
-            : new Iterator4Impl(_first);
+            : new Collection4Iterator(this, _first);
     }
     
     /**
@@ -175,11 +182,8 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
         while (current != null) {
             if (current._element.equals(a_object)) {
                 _size--;
-                if (previous == null) {
-                    _first = current._next;
-                } else {
-                    previous._next = current._next;
-                }
+                adjustOnRemoval(previous, current);
+                changed();
                 return current._element;
             }
             previous = current;
@@ -187,6 +191,14 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
         }
         return null;
     }
+
+	private void adjustOnRemoval(List4 previous, List4 removed) {
+		if (previous == null) {
+		    _first = removed._next;
+		} else {
+		    previous._next = removed._next;
+		}
+	}
 
     public final int size() {
         return _size;
@@ -229,6 +241,14 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
         }
         sb.append("]");
         return sb.toString();
+    }
+    
+    private void changed() {
+    	++_version;
+    }
+    
+    int version() {
+    	return _version;
     }
 
 }
