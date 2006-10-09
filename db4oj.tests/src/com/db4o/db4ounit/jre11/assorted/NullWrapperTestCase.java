@@ -2,12 +2,11 @@
 
 package com.db4o.db4ounit.jre11.assorted;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.query.*;
+import com.db4o.config.Configuration;
+import com.db4o.query.Query;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.Assert;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 
 public class NullWrapperTestCase extends AbstractDb4oTestCase {
