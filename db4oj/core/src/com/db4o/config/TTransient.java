@@ -6,6 +6,7 @@ import com.db4o.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public class TTransient implements ObjectConstructor {
     

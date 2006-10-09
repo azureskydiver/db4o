@@ -8,6 +8,7 @@ import com.db4o.types.*;
  * base class for database aware collections
  * @exclude 
  * @persistent
+ * @sharpen.ignore
  */
 public abstract class P1Collection extends P1Object implements Db4oCollection{
     

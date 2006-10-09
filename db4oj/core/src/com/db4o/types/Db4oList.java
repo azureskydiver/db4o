@@ -22,7 +22,10 @@ package com.db4o.types;
  * }<br><br>
  * MyClass myObject = new MyClass();<br> 
  * myObject.myList = objectContainer.ext().collections().newLinkedList();
+ * 
  * @see com.db4o.ext.ExtObjectContainer#collections
+ * 
+ * @sharpen.ignore
  */
 public interface Db4oList extends Db4oCollection {
 

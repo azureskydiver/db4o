@@ -2,6 +2,9 @@
 
 package com.db4o.foundation;
 
+/**
+ * @sharpen.ignore
+ */
 public class Coercion4 {
 	public static Object toSByte(Object obj) {
         if(obj instanceof Byte){
