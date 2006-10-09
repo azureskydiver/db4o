@@ -276,7 +276,7 @@ public final class YapClassCollection extends YapMeta {
 			super(classes.iterator());
 		}
     	
-    	public Object map(Object current) {
+    	protected Object map(Object current) {
     		return new Integer(((YapClass)current).getID());
     	}
     }
