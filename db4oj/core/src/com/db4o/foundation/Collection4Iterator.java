@@ -35,6 +35,4 @@ public class Collection4Iterator extends Iterator4Impl {
 	private int currentVersion() {
 		return _collection.version();
 	}
-
-
 }
