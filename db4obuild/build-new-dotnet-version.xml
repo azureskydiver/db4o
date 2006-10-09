@@ -44,6 +44,7 @@
 	</target>
 	
 	<target name="copy-sharpened-files">
+		
 		<copy todir="${target.dir}">
 			<fileset dir="${src.dir}/Db4objects/Db4o">
 				<include name="**/*.cs" />
@@ -72,10 +73,19 @@
 				<arg value="-namespaceMapping" />
 				<arg value="com.db4o" />
 				<arg value="Db4objects.Db4o" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="java" />
+				<arg value="Sharpen" />
 			</args>
 		</sharpen>
 		
-		<delete dir="${dir.src}" />
+		<delete failonerror="false">
+			<fileset dir="${dir.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
 		<antcall target="copy-sharpened-files">
 			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
 			<param name="target.dir" value="${dir.src}" />
