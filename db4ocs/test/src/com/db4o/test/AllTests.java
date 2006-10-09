@@ -31,12 +31,16 @@ public class AllTests extends CSTestSuite {
 				DifferentAccessPaths.class,
 				ExtMethods.class,
 				GetAll.class,
+				HashtableModifiedUpdateDepth.class,
 				IndexCreateDrop.class,
 				IndexedByIdentity.class,
 				IndexedUpdatesWithNull.class,
+				InvalidUUID.class,
 				InternStrings.class,
+				IsStored.class,
 				GreaterOrEqual.class,
 				MultiLevelIndex.class,
+				MultiDelete.class,
 				NestedArrays.class,
 				NullWrapperQueries.class,
 				ObjectSetIDs.class,
@@ -51,9 +55,6 @@ public class AllTests extends CSTestSuite {
 				ReadCollectionNQTest.class,
 				UpdateObjectTest.class,
 				UpdateCollectionTest.class,
-				InvalidUUID.class,
-				IsStored.class,
-				MultiDelete.class,
 				};
 	}
 	
@@ -68,7 +69,6 @@ public class AllTests extends CSTestSuite {
 				CustomActivationDepth.class,
 				DeleteDeep.class,
 				DualDelete.class,
-				HashtableModifiedUpdateDepth.class,
 				Messaging.class,
 		};
 	}
