@@ -31,6 +31,7 @@ public class HashtableModifiedUpdateDepth extends ClientServerTestCase {
 			Hashtable ht1 = (Hashtable) oc.query(Hashtable.class).next();
 			ht1.put("hi", "updated");
 			Hashtable ht2 = (Hashtable) oc.query(Hashtable.class).next();
+			oc.refresh(ht2, Integer.MAX_VALUE);
 			Assert.areEqual("five", ht2.get("hi"));
 		} finally {
 			oc.close();
@@ -51,7 +52,7 @@ public class HashtableModifiedUpdateDepth extends ClientServerTestCase {
 			ht1 = (Hashtable) Db4oUtil.getOne(oc1, Hashtable.class);
 			Assert.areEqual("updated1", ht1.get("hi"));
 			ht2 = (Hashtable) Db4oUtil.getOne(oc2, Hashtable.class);
-			// FIXME: the following assertion fails
+			oc2.refresh(ht2, Integer.MAX_VALUE);
 			Assert.areEqual("five", ht2.get("hi"));
 
 			// oc1 commits
@@ -59,13 +60,14 @@ public class HashtableModifiedUpdateDepth extends ClientServerTestCase {
 			ht1 = (Hashtable) Db4oUtil.getOne(oc1, Hashtable.class);
 			Assert.areEqual("updated1", ht1.get("hi"));
 			ht2 = (Hashtable) Db4oUtil.getOne(oc2, Hashtable.class);
-			// oc1 has committed
+			oc2.refresh(ht2, Integer.MAX_VALUE);
 			Assert.areEqual("updated1", ht2.get("hi"));
 
 			// oc2 sets updated value, but doesn't commit
 			ht2.put("hi", "updated2");
 			oc2.set(ht2);
 			ht1 = (Hashtable) Db4oUtil.getOne(oc1, Hashtable.class);
+			oc1.refresh(ht1, Integer.MAX_VALUE);
 			Assert.areEqual("updated1", ht1.get("hi"));
 			ht2 = (Hashtable) Db4oUtil.getOne(oc2, Hashtable.class);
 			Assert.areEqual("updated2", ht2.get("hi"));
@@ -73,9 +75,9 @@ public class HashtableModifiedUpdateDepth extends ClientServerTestCase {
 			// oc2 commits
 			oc2.commit();
 			ht1 = (Hashtable) Db4oUtil.getOne(oc1, Hashtable.class);
+			oc1.refresh(ht1, Integer.MAX_VALUE);
 			Assert.areEqual("updated2", ht1.get("hi"));
 			ht2 = (Hashtable) Db4oUtil.getOne(oc2, Hashtable.class);
-			// oc1 has committed
 			Assert.areEqual("updated2", ht2.get("hi"));
 		} finally {
 			oc1.close();

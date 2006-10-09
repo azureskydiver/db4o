@@ -1,0 +1,30 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
+package com.db4o.test.mixed;
+
+import db4ounit.extensions.CSTestSuite;
+
+public class AllTests extends CSTestSuite {
+
+	protected Class[] testCases() {
+		return passedTestCases();
+	}
+
+	protected Class[] passedTestCases() {
+		return new Class [] {
+				RollbackUpdate.class,
+				RollbackUpdateCascade.class,
+				RollbackUpdateCascadeIndexed.class,
+		};
+	}
+	
+	protected Class[] failedTestCases() {
+		return new Class [] {
+				RollbackUpdateIndexed.class,
+		};
+	}
+	
+	public static void main(String[] args) {
+		new AllTests().run();
+	}
+}
