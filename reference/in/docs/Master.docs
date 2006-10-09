@@ -17,4 +17,5 @@
 .e MetaInf ..
 .e NQOptimization ..
 .e Utility ..
+.e Annotations ..
 .e Platforms ..
