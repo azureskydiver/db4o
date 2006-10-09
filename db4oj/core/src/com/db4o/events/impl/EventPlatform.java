@@ -9,6 +9,8 @@ import com.db4o.query.Query;
 
 /**
  * Platform dependent code for dispatching events.
+ * 
+ * @sharpen.ignore
  */
 class EventPlatform {
 

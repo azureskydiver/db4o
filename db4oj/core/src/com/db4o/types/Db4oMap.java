@@ -23,6 +23,8 @@ package com.db4o.types;
  * MyClass myObject = new MyClass();<br> 
  * myObject.myMap = objectContainer.ext().collections().newHashMap();
  * @see com.db4o.ext.ExtObjectContainer#collections
+ * 
+ * @sharpen.ignore
  */
 public interface Db4oMap extends Db4oCollection {
 

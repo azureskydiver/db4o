@@ -7,6 +7,9 @@ import com.db4o.foundation.*;
 import com.db4o.inside.diagnostic.*;
 import com.db4o.query.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class NativeQueryHandler {
 	
 	private static final String OPTIMIZER_IMPL_NAME = "com.db4o.nativequery.optimization.Db4oOnTheFlyEnhancer";

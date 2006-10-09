@@ -7,6 +7,7 @@ import com.db4o.query.*;
 
 /**
  * @exclude 
+ * @sharpen.ignore
  */
 public class ObjectSetFacade implements ExtObjectSet{
     

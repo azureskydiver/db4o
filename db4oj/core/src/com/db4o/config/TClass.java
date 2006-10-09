@@ -7,6 +7,8 @@ import com.db4o.reflect.jdk.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
 public class TClass implements ObjectConstructor
 {

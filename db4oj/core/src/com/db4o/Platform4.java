@@ -16,6 +16,7 @@ import com.db4o.types.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public final class Platform4 {
     
