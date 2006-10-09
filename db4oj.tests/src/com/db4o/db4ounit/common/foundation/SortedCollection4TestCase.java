@@ -27,6 +27,11 @@ public class SortedCollection4TestCase implements TestCase {
 		assertCollection(new int[] { 1, 2, 3, 4, 6, 7 }, collection);
 	}
 	
+	public void testToArrayOnEmptyCollection() {
+		final Object[] array = new Object[0];
+		Assert.areSame(array, newSortedCollection().toArray(array));
+	}
+	
 	public void testAddRemove() {
 		final SortedCollection4 collection = newSortedCollection();
 		collection.add(new Integer(3));

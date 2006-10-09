@@ -7,24 +7,20 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class YapClassCollectionIterator extends Iterator4Impl{
+public class YapClassCollectionIterator extends MappingIterator {
     
     private final YapClassCollection i_collection;
     
-    YapClassCollectionIterator(YapClassCollection a_collection, List4 a_first){
-        super(a_first);
+    YapClassCollectionIterator(YapClassCollection a_collection, Iterator4 iterator){
+        super(iterator);
         i_collection = a_collection;
     }
     
-    public boolean moveNext() {
-    	if (super.moveNext()) {
-    		i_collection.readYapClass(currentClass(), null);
-    		return true;
-    	}
-    	return false;
-    }
-    
-    public YapClass currentClass(){
+    public YapClass currentClass() {
         return (YapClass)current();
     }
+    
+	protected Object map(Object current) {
+		return i_collection.readYapClass((YapClass)current, null);
+	}
 }

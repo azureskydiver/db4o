@@ -7,7 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 class Sessions extends Collection4{
-	
+	// FIXME: aggregate Collection4 instead of extending it
 	
 	void forEach(Visitor4 visitor){
 		synchronized(Db4o.lock){

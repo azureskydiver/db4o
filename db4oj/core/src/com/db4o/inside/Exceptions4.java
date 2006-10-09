@@ -27,6 +27,9 @@ public class Exceptions4 {
         throw new Db4oException(Messages.get(code, msg));
     }
     
+    /**
+     * @deprecated Use com.db4o.foundation.NotSupportedException instead
+     */
     public static final void notSupported(){
 		throwRuntimeException(53);
     }

@@ -26,6 +26,10 @@ public final class List4 implements Unversioned
 	 * db4o constructor to be able to store objects of this class
 	 */
 	public List4() {}
+	
+	public List4(Object element) {
+		_element = element;
+	}
 
 	public List4(List4 next, Object element) {
 		_next = next;

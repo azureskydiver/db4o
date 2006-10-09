@@ -513,7 +513,10 @@ public abstract class QQueryBase implements Unversioned {
     }
     
     Iterator4 iterateConstraints(){
-        return i_constraints.iterator();
+    	// clone the collection first to avoid
+    	// InvalidIteratorException as i_constraints might be 
+    	// modified during the execution of callee
+        return new Collection4(i_constraints).iterator();
     }
 
     public Query orderAscending() {
