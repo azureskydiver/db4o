@@ -1438,7 +1438,12 @@
 			</args>
 		</sharpen>
 		
-		<delete dir="${dir.n.test.src}/com/db4o/db4ounit/common" />
+		<delete>
+			<fileset dir="${dir.n.test.src}/com/db4o/db4ounit/common">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
 		
 		<copy todir="${dir.n.test.src}">
 			<fileset dir="${target.dir}/db4oj.testscsharp/src">
