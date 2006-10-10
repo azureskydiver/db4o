@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 
 /**
@@ -56,7 +57,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     }
 
     public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,
-    		ReaderPair readers)
+    		final ReaderPair readers)
     		throws CorruptionException {
     	super.defrag(yapClass, yapField, sio, readers);
     	if(yapField.isVirtual()) {
@@ -68,7 +69,6 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         	BTree index = yapField.getIndex(readers.systemTrans());
     		int targetIndexID=readers.copyID();
     		if(targetIndexID!=0) {
-//        		System.out.println("DEFRAG INDEX FOR "+yapField.getName());
     			index.defragBTree(readers.context());
     		}
     	}
