@@ -163,14 +163,14 @@ namespace Db4objects.Db4o.Inside.Query
 				OnQueryExecution(predicate, QueryExecutionKind.PreOptimized);
 				return q;
 			}
-			
+
 			q.Constrain(predicate.ExtentType());
 
 			try
 			{
 				if (OptimizeNativeQueries())
 				{
-					OptimizeQuery(q, predicate, predicate.GetFilterMethod().MethodInfo);
+					OptimizeQuery(q, predicate, predicate.GetFilterMethod());
 					OnQueryExecution(predicate, QueryExecutionKind.DynamicallyOptimized);
 					return q;
 				}
@@ -179,12 +179,12 @@ namespace Db4objects.Db4o.Inside.Query
 			{
 				OnQueryOptimizationFailure(e);
 			}
-            if (OptimizeNativeQueries()) 
-            {
-                DiagnosticProcessor dp = ((YapStream)_container).i_handlers._diagnosticProcessor;
-                if (dp.Enabled()) dp.NativeQueryUnoptimized(predicate);
+			if (OptimizeNativeQueries())
+			{
+				DiagnosticProcessor dp = ((YapStream)_container).i_handlers._diagnosticProcessor;
+				if (dp.Enabled()) dp.NativeQueryUnoptimized(predicate);
 
-            }
+			}
 			q.Constrain(new Db4objects.Db4o.Inside.Query.PredicateEvaluation(predicate));
 			OnQueryExecution(predicate, QueryExecutionKind.Unoptimized);
 			return q;
