@@ -12,14 +12,16 @@ public class AllTests extends CSTestSuite {
 
 	protected Class[] passedTestCases() {
 		return new Class [] {
-				RollbackUpdate.class,
-				RollbackUpdateCascade.class,
-				RollbackUpdateCascadeIndexed.class,
+				DeleteUpdateIndexed.class,
+//				RollbackUpdate.class,
+//				RollbackUpdateCascade.class,
+//				RollbackUpdateCascadeIndexed.class,
 		};
 	}
 	
 	protected Class[] failedTestCases() {
 		return new Class [] {
+				DeleteUpdate.class,
 				RollbackDelete.class,
 				RollbackDeleteIndexedAll.class,
 				RollbackDeleteIndexedI.class,
