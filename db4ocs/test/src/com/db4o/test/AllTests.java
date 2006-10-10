@@ -66,6 +66,7 @@ public class AllTests extends CSTestSuite {
 				CascadeDeleteFalse.class,
 				CascadeOnSet.class,
 				ClientDisconnect.class,
+				CloseServerBeforeClient.class,
 				CustomActivationDepth.class,
 				DeleteDeep.class,
 				DualDelete.class,
