@@ -267,7 +267,7 @@ public final class YapClassCollection extends YapMeta {
     }
     
     public YapClassCollectionIterator iterator(){
-        return new YapClassCollectionIterator(this, i_classes.iterator());
+        return new YapClassCollectionIterator(this, new ArrayIterator4(i_classes.toArray()));
     } 
 
     private static class ClassIDIterator extends MappingIterator {
