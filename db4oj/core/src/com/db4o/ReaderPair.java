@@ -38,15 +38,16 @@ public class ReaderPair {
 		incrementOffset(times*YapConst.INT_LENGTH);
 	}
 
-	public int copyID(boolean skipEquals) {
+	public int copyID(boolean flipNegative) {
 		int id=_source.readInt();
+		if(flipNegative&&id<0) {
+			id=-id;
+		}
 		int mapped=_mapping.mappedID(id);
-		if(skipEquals&&(id==mapped)) {
-			_target.incrementOffset(YapConst.INT_LENGTH);
+		if(flipNegative&&id<0) {
+			mapped=-mapped;
 		}
-		else {
-			_target.writeInt(mapped);
-		}
+		_target.writeInt(mapped);
 		return mapped;
 	}
 

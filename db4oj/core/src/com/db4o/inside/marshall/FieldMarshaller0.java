@@ -121,7 +121,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         	return;
         }
         // handler ID
-        readers.copyID(true);
+        readers.copyID();
         // skip primitive/array/narray attributes
         readers.incrementOffset(1);
 	}
