@@ -34,15 +34,14 @@ namespace com.db4o.test.acid
 			string lastFileName = file + "0";
 			string rightFileName = file + "R";
 			CopyFile(lastFileName,rightFileName);
-			com.db4o.foundation.Iterator4 syncIter = writes.StrictIterator();
+			com.db4o.foundation.Iterator4 syncIter = writes.Iterator();
 			while (syncIter.MoveNext())
 			{
 				com.db4o.foundation.Collection4 writesBetweenSync = (com.db4o.foundation.Collection4
 				                                                    ) syncIter.Current();
 				j4o.io.RandomAccessFile rightRaf = new j4o.io.RandomAccessFile(rightFileName, "rw"
 					);
-				com.db4o.foundation.Iterator4 singleForwardIter = writesBetweenSync.StrictIterator
-					();
+				com.db4o.foundation.Iterator4 singleForwardIter = writesBetweenSync.Iterator();
 				while (singleForwardIter.MoveNext())
 				{
 					com.db4o.test.acid.CrashSimulatingWrite csw = (com.db4o.test.acid.CrashSimulatingWrite
