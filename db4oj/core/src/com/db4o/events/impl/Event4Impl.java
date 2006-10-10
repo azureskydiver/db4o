@@ -38,7 +38,7 @@ public class Event4Impl implements Event4 {
 			return;
 		}
 		
-		Iterator4 iterator = _listeners.strictIterator();
+		Iterator4 iterator = _listeners.iterator();
 		while (iterator.moveNext()) {
 			((EventListener4)iterator.current()).onEvent(this, args);
 		}

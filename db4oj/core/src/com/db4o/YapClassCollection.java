@@ -108,7 +108,7 @@ public final class YapClassCollection extends YapMeta {
             if(! candidate.isInterface()){
                 if (claxx.isAssignableFrom(candidate)) {
                     col.add(yc);
-                    Iterator4 j = col.strictIterator();
+                    Iterator4 j = new Collection4(col).iterator();
                     while (j.moveNext()) {
                         YapClass existing = (YapClass)j.current();
                         if(existing != yc){

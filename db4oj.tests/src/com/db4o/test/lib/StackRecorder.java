@@ -99,7 +99,7 @@ public class StackRecorder {
     }
 	
 	public static void logAll() {
-		Iterator4 iter=_traces.strictIterator();
+		Iterator4 iter=_traces.iterator();
 		while(iter.moveNext()) {
 			System.out.println(iter.current());
 			if(iter.moveNext()) {

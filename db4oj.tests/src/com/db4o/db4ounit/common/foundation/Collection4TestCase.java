@@ -12,6 +12,18 @@ public class Collection4TestCase implements TestCase {
 		new TestRunner(Collection4TestCase.class).run();
 	}
 	
+	public void testPrepend() {
+		final Collection4 c = new Collection4();
+		c.prepend("foo");
+		assertCollection(new String[] { "foo" }, c);
+		c.add("bar");
+		assertCollection(new String[] { "foo", "bar" }, c);
+		c.prepend("baz");
+		assertCollection(new String[] { "baz", "foo", "bar" }, c);
+		c.prepend("gazonk");
+		assertCollection(new String[] { "gazonk", "baz", "foo", "bar" }, c);
+	}
+	
 	public void testCopyConstructor() {
 		final String[] expected = new String[] { "1", "2", "3" };
 		final Collection4 c = newCollection(expected);
@@ -49,20 +61,14 @@ public class Collection4TestCase implements TestCase {
 	
 	private void assertCollection(String[] expected, Collection4 c) {
 		Assert.areEqual(expected.length, c.size());
-		assertIterator(expected, c.strictIterator());
+		assertIterator(expected, c.iterator());
 	}
 
-	public void _testIterator() {
+	public void testIterator() {
 		String[] expected = new String[] { "1", "2", "3" };
 		Collection4 c = newCollection(expected);		
 		assertIterator(expected, c.iterator());
 	}	
-	
-	public void testStrictIterator() {
-		String[] expected = new String[] { "1", "2", "3" };		
-		Collection4 c = newCollection(expected);		
-		assertIterator(expected, c.strictIterator());
-	}
 	
 	private Collection4 newCollection(String[] expected) {
 		Collection4 c = new Collection4();		
