@@ -63,10 +63,8 @@ public class QConPath extends QConClass {
         if (i_parent == null) {
             return null;
         }
-        
         Object obj = i_field.coerce(a_object);
         if(obj == No4.INSTANCE){
-//        	return null;
         	QConObject falseConstraint = new QConFalse(i_trans, i_parent, i_field);
             morph(removeExisting, falseConstraint, reflectClassForObject(obj));
     		return falseConstraint;
