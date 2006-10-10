@@ -2,11 +2,24 @@
 <project name="Db4objects.Db4o" default="build">
 	<import file="common.xml" />
 	
-	<property name="dir.n.v6" location="${dir.n}/Db4objects.Db4o" />
+	<property name="dir.n.v6" location="../db4o.net/Db4objects.Db4o" />
 	
 	<property name="dir.src" location="${dir.n.v6}/Db4objects.Db4o/" />
 	
-	<target name="build" depends="sharpen-core">
+	<fileset id="db4oj.srcfiles" dir="..">
+		<include name="db4oj/core/src/**/*.java" />
+	</fileset>
+	
+	<target name="check-dependencies">
+		<uptodate
+			property="csharp.uptodate"
+			targetfile="${dir.src}/Transaction.cs">
+			<srcfiles refid="db4oj.srcfiles">
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="build" depends="check-dependencies, sharpen-core">
 		<csc
 			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
 			srcdir="${dir.n.v6}"
@@ -21,9 +34,7 @@
 		<mkdir dir="${dir.sharpen}" />
 		
 		<copy todir="${dir.sharpen}">
-			<fileset dir="..">
-				<include name="db4oj/core/src/**/*.java" />
-			</fileset>
+			<fileset refid="db4oj.srcfiles" />
 		</copy>
 		
 		<!-- shared native query support -->
@@ -57,7 +68,7 @@
 		</copy>
 	</target>	
 
-	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace">
+	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="csharp.uptodate">
 
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
 			<args>
@@ -65,7 +76,7 @@
 				
 				<arg value="-pascalCase+" />
 				<arg value="-nativeTypeSystem" />
-				
+			
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.events.EventArgs" />
 				<arg value="System.EventArgs" />
@@ -91,14 +102,12 @@
 			<param name="target.dir" value="${dir.src}" />
 		</antcall>
 			
-		<!--
 		<updatecsharpproject projectFile="${dir.n.v6}/Db4objects.Db4o.csproj">
-			<sources dir="${dir.n.core}">
+			<sources dir="${dir.n.v6}">
 				<include name="**/*.cs" />
-				<exclude name="src/compact*/**" />
+				<exclude name="native/compact*/**" />
 			</sources>
 		</updatecsharpproject>		
-		-->
 	</target>
 	
 	<target name="init">

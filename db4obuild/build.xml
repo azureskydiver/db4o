@@ -1381,7 +1381,12 @@
 			</args>
 		</sharpen>
 		
-		<delete dir="${dir.n}/Db4oUnit.Extensions/Db4oUnit" />
+		<delete failonerror="false">
+			<fileset dir="${dir.n}/Db4oUnit.Extensions/Db4oUnit">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
 		
 		<copy todir="${dir.n}/Db4oUnit.Extensions/src">
 			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src">
