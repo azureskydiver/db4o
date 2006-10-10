@@ -2,13 +2,11 @@
 
 package db4ounit.extensions.fixtures;
 
-import java.io.*;
+import java.io.File;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.ext.*;
-
-import db4ounit.extensions.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectServer;
+import com.db4o.ext.ExtObjectContainer;
 
 
 public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{
@@ -52,6 +50,10 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     
     protected void doClean() {
         _yap.delete();
+    }
+    
+    protected ObjectServer server() {
+    	return _server;
     }
 
 }
