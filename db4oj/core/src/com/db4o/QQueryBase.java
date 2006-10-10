@@ -53,26 +53,39 @@ public abstract class QQueryBase implements Unversioned {
     }
 
     private void addConstraint(Collection4 col, Object obj) {
+        if(attachToExistingConstraints(col, obj, true)){
+            return;
+        }
+        if(attachToExistingConstraints(col, obj, false)){
+            return;
+        }
+        QConObject newConstraint = new QConObject(i_trans, null, null, obj);
+        addConstraint(newConstraint);
+        col.add(newConstraint);
+    }
+
+    private boolean attachToExistingConstraints(Collection4 col, Object obj, boolean onlyForPaths) {
         boolean found = false;
         Iterator4 j = iterateConstraints();
         while (j.moveNext()) {
             QCon existingConstraint = (QCon)j.current();
             boolean[] removeExisting = { false };
-            QCon newConstraint = existingConstraint.shareParent(obj, removeExisting);
-            if (newConstraint != null) {
-                addConstraint(newConstraint);
-                col.add(newConstraint);
-                if (removeExisting[0]) {
-                    removeConstraint(existingConstraint);
+            if(! onlyForPaths || (existingConstraint instanceof QConPath) ){
+                QCon newConstraint = existingConstraint.shareParent(obj, removeExisting);
+                if (newConstraint != null) {
+                    addConstraint(newConstraint);
+                    col.add(newConstraint);
+                    if (removeExisting[0]) {
+                        removeConstraint(existingConstraint);
+                    }
+                    found = true;
+                    if(! onlyForPaths){
+                        return true;
+                    }
                 }
-                found = true;
             }
         }
-        if (!found) {
-            QConObject newConstraint = new QConObject(i_trans, null, null, obj);
-            addConstraint(newConstraint);
-            col.add(newConstraint);
-        }
+        return found;
     }
 
     /**
