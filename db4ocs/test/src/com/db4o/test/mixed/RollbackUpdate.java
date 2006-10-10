@@ -29,8 +29,8 @@ public class RollbackUpdate extends ClientServerTestCase {
 			Assert.areEqual("hello", o2.getS());
 
 			oc1.rollback();
-			oc2.purge(o2);
 			o2 = (SimpleObject) Db4oUtil.getOne(oc2, SimpleObject.class);
+			oc2.refresh(o2, Integer.MAX_VALUE);
 			Assert.areEqual("hello", o2.getS());
 
 			oc1.commit();
