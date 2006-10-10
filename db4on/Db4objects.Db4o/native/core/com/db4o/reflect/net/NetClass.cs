@@ -6,29 +6,26 @@
 	{
 		private readonly Db4objects.Db4o.Reflect.Reflector _reflector;
 
-		private readonly Sharpen.Lang.Class _clazz;
-
 		private readonly System.Type _type;
 
 		private Db4objects.Db4o.Reflect.ReflectConstructor _constructor;
 
 		private object[] constructorParams;
 
-		public NetClass(Db4objects.Db4o.Reflect.Reflector reflector, Sharpen.Lang.Class clazz)
+		public NetClass(Db4objects.Db4o.Reflect.Reflector reflector, System.Type clazz)
 		{
 			_reflector = reflector;
-			_clazz = clazz;
-			_type = clazz.GetNetType();
+			_type = clazz;
 		}
 
 		public virtual Db4objects.Db4o.Reflect.ReflectClass GetComponentType()
 		{
-			return _reflector.ForClass(_clazz.GetComponentType());
+			return _reflector.ForClass(_type.GetElementType());
 		}
 
 		public virtual Db4objects.Db4o.Reflect.ReflectConstructor[] GetDeclaredConstructors()
 		{
-			Sharpen.Lang.Reflect.Constructor[] constructors = _clazz.GetDeclaredConstructors();
+			System.Reflection.ConstructorInfo[] constructors = _type.GetConstructors();
 			Db4objects.Db4o.Reflect.ReflectConstructor[] reflectors = new Db4objects.Db4o.Reflect.ReflectConstructor
 				[constructors.Length];
 			for (int i = 0; i < constructors.Length; i++)
@@ -42,7 +39,7 @@
 		{
 			try
 			{
-				return new Db4objects.Db4o.Reflect.Net.NetField(_reflector, _clazz.GetDeclaredField(name));
+				return new Db4objects.Db4o.Reflect.Net.NetField(_reflector, _type.GetField(name));
 			}
 			catch (System.Exception e)
 			{
@@ -52,7 +49,7 @@
 
 		public virtual Db4objects.Db4o.Reflect.ReflectField[] GetDeclaredFields()
 		{
-			Sharpen.Lang.Reflect.Field[] fields = _clazz.GetDeclaredFields();
+			System.Reflection.FieldInfo[] fields = Sharpen.Runtime.GetDeclaredFields(_type);
 			Db4objects.Db4o.Reflect.ReflectField[] reflectors = new Db4objects.Db4o.Reflect.ReflectField[fields.Length];
 			for (int i = 0; i < reflectors.Length; i++)
 			{
@@ -67,12 +64,12 @@
 		}
 
 		public virtual Db4objects.Db4o.Reflect.ReflectMethod GetMethod(
-			string methodName, 
+			string methodName,
 			Db4objects.Db4o.Reflect.ReflectClass[] paramClasses)
 		{
 			try
 			{
-				Sharpen.Lang.Reflect.Method method = _clazz.GetMethod(methodName, Db4objects.Db4o.Reflect.Net.NetReflector
+				System.Reflection.MethodInfo method = Sharpen.Runtime.GetDeclaredMethod(_type, methodName, Db4objects.Db4o.Reflect.Net.NetReflector
 					.ToNative(paramClasses));
 				if (method == null)
 				{
@@ -88,22 +85,22 @@
 
 		public virtual string GetName()
 		{
-			return _clazz.GetName();
+			return _type.Name;
 		}
 
 		public virtual Db4objects.Db4o.Reflect.ReflectClass GetSuperclass()
 		{
-			return _reflector.ForClass(_clazz.GetSuperclass());
+			return _reflector.ForClass(_type.BaseType);
 		}
 
 		public virtual bool IsAbstract()
 		{
-			return Sharpen.Lang.Reflect.Modifier.IsAbstract(_clazz.GetModifiers());
+			return _type.IsAbstract;
 		}
 
 		public virtual bool IsArray()
 		{
-			return _clazz.IsArray();
+			return _type.IsArray;
 		}
 
 		public virtual bool IsAssignableFrom(Db4objects.Db4o.Reflect.ReflectClass type)
@@ -112,31 +109,30 @@
 			{
 				return false;
 			}
-			return _clazz.IsAssignableFrom(((Db4objects.Db4o.Reflect.Net.NetClass)type).GetJavaClass(
-				));
+			return _type.IsAssignableFrom(((Db4objects.Db4o.Reflect.Net.NetClass)type).GetNetType());
 		}
 
 		public virtual bool IsInstance(object obj)
 		{
-			return _clazz.IsInstance(obj);
+			return _type.IsInstanceOfType(obj);
 		}
 
 		public virtual bool IsInterface()
 		{
-			return _clazz.IsInterface();
+			return _type.IsInterface;
 		}
 
-		public virtual bool IsCollection() 
+		public virtual bool IsCollection()
 		{
 			return _reflector.IsCollection(this);
 		}
 
 		public virtual bool IsPrimitive()
 		{
-			return _clazz.IsPrimitive();
+			return _type.IsPrimitive;
 		}
-		
-		public virtual bool IsSecondClass() 
+
+		public virtual bool IsSecondClass()
 		{
 			return IsPrimitive();
 		}
@@ -147,7 +143,7 @@
 			{
 				if (_constructor == null)
 				{
-					return _clazz.NewInstance();
+					return System.Activator.CreateInstance(_type);
 				}
 				return _constructor.NewInstance(constructorParams);
 			}
@@ -157,12 +153,7 @@
 			return null;
 		}
 
-		internal virtual Sharpen.Lang.Class GetJavaClass()
-		{
-			return _clazz;
-		}
-
-		public virtual System.Type GetNetType() 
+		public virtual System.Type GetNetType()
 		{
 			return _type;
 		}
@@ -175,7 +166,7 @@
 		public virtual bool SkipConstructor(bool flag)
 		{
 #if !CF_1_0 && !CF_2_0
-			if (flag) 
+			if (flag)
 			{
 				ReflectConstructor constructor = new SerializationConstructor(GetNetType());
 				if (constructor != null)
@@ -201,18 +192,18 @@
 
 		public override string ToString()
 		{
-			return "CClass: " + _clazz.GetName();
+			return "CClass: " + _type;
 		}
 
 		public virtual void UseConstructor(
-			Db4objects.Db4o.Reflect.ReflectConstructor constructor, 
+			Db4objects.Db4o.Reflect.ReflectConstructor constructor,
 			object[] _params)
 		{
 			_constructor = constructor;
 			constructorParams = _params;
 		}
-		
-		public virtual object[] ToArray(object obj) 
+
+		public virtual object[] ToArray(object obj)
 		{
 			// handled in GenericClass
 			return null;

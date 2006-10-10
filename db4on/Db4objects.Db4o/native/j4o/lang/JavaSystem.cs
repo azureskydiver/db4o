@@ -2,7 +2,9 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
+using Sharpen.Lang;
 
 namespace Sharpen
 {
@@ -22,16 +24,38 @@ namespace Sharpen
 			Console.Error;
 #endif
 
-//		public static System.Type GetClassForType(Type forType)
-	//	{
-			//return Class.GetClassForType(forType);
-		//	return forType;
-//		}
+		public static object GetArrayValue(object parent, int index)
+		{
+			return ((System.Array)parent).GetValue(index);
+		}
+
+		private const BindingFlags DeclaredMemberFlags = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 		
-//		public static Class GetClassForObject(object o)
-	//	{
-		//	return Class.GetClassForObject(o);
-//		}
+		public static FieldInfo GetDeclaredField(Type type, string name)
+		{
+			return type.GetField(name, DeclaredMemberFlags);
+		}
+
+		public static FieldInfo[] GetDeclaredFields(Type type)
+		{
+			return type.GetFields(DeclaredMemberFlags);
+		}
+		
+		public static MethodInfo GetDeclaredMethod(Type type, string name, Type[] parameterTypes)
+		{
+			return type.GetMethod(name, DeclaredMemberFlags, null, parameterTypes, null);
+		}
+
+		public static Type[] GetParameterTypes(MethodBase method)
+		{
+			ParameterInfo[] parameters = method.GetParameters();
+			Type[] types = new Type[parameters.Length];
+			for (int i=0; i<types.Length; ++i)
+			{
+				types[i] = parameters[i].ParameterType;
+			}
+			return types;
+		}
 
 		public static long CurrentTimeMillis() 
 		{

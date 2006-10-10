@@ -2,11 +2,11 @@
 {
 	public class NetMethod : Db4objects.Db4o.Reflect.ReflectMethod
 	{
-		private readonly Sharpen.Lang.Reflect.Method method;
+		private readonly System.Reflection.MethodInfo method;
 
 		private readonly Db4objects.Db4o.Reflect.Reflector _reflector;
 
-		public NetMethod(Db4objects.Db4o.Reflect.Reflector reflector, Sharpen.Lang.Reflect.Method method)
+		public NetMethod(Db4objects.Db4o.Reflect.Reflector reflector, System.Reflection.MethodInfo method)
 		{
 			_reflector = reflector;
 			this.method = method;
@@ -14,7 +14,7 @@
 
 		public Db4objects.Db4o.Reflect.ReflectClass GetReturnType() 
 		{
-			return _reflector.ForClass(method.GetReturnType());
+			return _reflector.ForClass(method.ReturnType);
 		}
 
 		public virtual object Invoke(object onObject, object[] parameters)

@@ -487,7 +487,7 @@ namespace Db4objects.Db4o
 		public static void RegisterCollections(GenericReflector reflector)
 		{
 			reflector.RegisterCollectionUpdateDepth(
-				Class.GetClassForType(typeof(IDictionary)),
+				typeof(IDictionary),
 				3);
 		}
 

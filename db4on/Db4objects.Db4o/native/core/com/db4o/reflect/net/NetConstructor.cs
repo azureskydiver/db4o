@@ -6,9 +6,9 @@
 	{
 		private readonly Db4objects.Db4o.Reflect.Reflector reflector;
 
-		private readonly Sharpen.Lang.Reflect.Constructor constructor;
+		private readonly System.Reflection.ConstructorInfo constructor;
 
-		public NetConstructor(Db4objects.Db4o.Reflect.Reflector reflector, Sharpen.Lang.Reflect.Constructor
+		public NetConstructor(Db4objects.Db4o.Reflect.Reflector reflector, System.Reflection.ConstructorInfo
 			 constructor)
 		{
 			this.reflector = reflector;
@@ -17,8 +17,7 @@
 
 		public virtual Db4objects.Db4o.Reflect.ReflectClass[] GetParameterTypes()
 		{
-			return Db4objects.Db4o.Reflect.Net.NetReflector.ToMeta(reflector, constructor.GetParameterTypes
-				());
+			return Db4objects.Db4o.Reflect.Net.NetReflector.ToMeta(reflector, Sharpen.Runtime.GetParameterTypes(constructor));
 		}
 
 		public virtual void SetAccessible()
@@ -30,8 +29,7 @@
 		{
 			try
 			{
-				object obj = constructor.NewInstance(parameters);
-				return obj;
+				return constructor.Invoke(parameters);
 			}
 			catch (System.Exception e)
 			{
