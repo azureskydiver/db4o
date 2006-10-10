@@ -52,7 +52,7 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
         _yap.delete();
     }
     
-    protected ObjectServer server() {
+    public ObjectServer server() {
     	return _server;
     }
 
