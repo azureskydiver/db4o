@@ -20,6 +20,10 @@ public class AllTests extends CSTestSuite {
 	
 	protected Class[] failedTestCases() {
 		return new Class [] {
+				RollbackDelete.class,
+				RollbackDeleteIndexedAll.class,
+				RollbackDeleteIndexedI.class,
+				RollbackDeleteIndexedS.class,
 				RollbackUpdateIndexed.class,
 		};
 	}
