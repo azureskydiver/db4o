@@ -32,7 +32,7 @@ import java.util.List;
 import java.io.IOException;
 
 /**
- * <p>
+ * <p/>
  * Most of the main items related to this connection are in here, this is mainly so that this panel could be embedded in
  * a different top level container (ie: doesn't have to be in MainFrame).
  * </p>
@@ -54,7 +54,7 @@ public class MainPanel extends JPanel {
     private TreeModel classTreeModel;
     private JTree classTree;
     private DatabaseSummaryPanel databaseSummaryPanel;
-    private static final int MAX_TABS = 10;
+    private static final int MAX_TABS = 8;
 
 
     public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec) {
@@ -74,7 +74,7 @@ public class MainPanel extends JPanel {
 
     private Component buildMainPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(buildToolBar(), BorderLayout.NORTH);
+        //panel.add(buildToolBar(), BorderLayout.NORTH);
         panel.add(buildQueryPanel(), BorderLayout.CENTER);
         return panel;
     }
@@ -169,6 +169,14 @@ public class MainPanel extends JPanel {
         getPreferences().setPreference(key, pref);
     }
 
+    public Object getPreferenceForDatabase(String key) {
+        return getPreferences().getPreference(connectionSpec.getFullPath() + "/" + key);
+    }
+    public void setPreferenceForDatabase(String key, Object pref) {
+        getPreferences().setPreference(connectionSpec.getFullPath() + "/" + key, pref);
+    }
+
+
     public Object getPreference(String key) {
         return getPreferences().getPreference(key);
     }
@@ -185,7 +193,7 @@ public class MainPanel extends JPanel {
     }
 
     public void closeObjectContainer() {
-        if(objectContainer != null){
+        if (objectContainer != null) {
             objectContainer.close();
             objectContainer = null;
         }
@@ -210,9 +218,22 @@ public class MainPanel extends JPanel {
         return tabbedPane;
     }
 
+    /**
+     * This makes the initial tabset
+     * @param tabbedPane
+     */
     private void addTabs(JTabbedPane tabbedPane) {
         databaseSummaryPanel = new DatabaseSummaryPanel(connectionSpec, getDatabaseInspector());
         tabbedPane.addTab("Home", databaseSummaryPanel);
+    }
+
+    public void addTab(String name, Component p) {
+        tabbedPane.add(name, p);
+        tabbedPane.setSelectedComponent(p);
+        // todo: remove tabs based on usage time rather than FIFO
+        if (tabbedPane.getTabCount() > MAX_TABS) {
+            tabbedPane.remove(1);
+        }
     }
 
 
@@ -296,22 +317,15 @@ public class MainPanel extends JPanel {
         p.displayResults(query);
     }
 
-    public void addTab(String name, Component p) {
-        tabbedPane.add(name, p);
-        tabbedPane.setSelectedComponent(p);
-        // todo: remove tabs based on usage time rather than FIFO
-        if (tabbedPane.getTabCount() > MAX_TABS) {
-            tabbedPane.remove(1);
-        }
-    }
+
 
     public void showClassSummary(String className) {
         // make sure class summary isn't already there
-        for(int i = 0; i < tabbedPane.getTabCount(); i++){
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             Component c = tabbedPane.getComponentAt(i);
-            if(c instanceof ClassSummaryPanel){
+            if (c instanceof ClassSummaryPanel) {
                 ClassSummaryPanel csp = (ClassSummaryPanel) c;
-                if(csp.getClassName().equals(className)){
+                if (csp.getClassName().equals(className)) {
                     tabbedPane.setSelectedIndex(i);
                     return;
                 }
@@ -320,7 +334,6 @@ public class MainPanel extends JPanel {
         ClassSummaryPanel panel = new ClassSummaryPanel(getObjectContainer(), getDatabaseInspector(), className);
         addTab("Class: " + className, panel);
     }
-
 
 
     private final class OpenFileActionListener implements ActionListener {

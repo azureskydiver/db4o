@@ -16,7 +16,6 @@ public class ObjectTree extends JTree {
     public boolean isPathEditable(TreePath path) {
         ObjectTreeModel model = (ObjectTreeModel) getModel();
         boolean ret = model.isPathEditable(path);
-        System.out.println("Is path editable? " + ret);
         return ret;
     }
 }

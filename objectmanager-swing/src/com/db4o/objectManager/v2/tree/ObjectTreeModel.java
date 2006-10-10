@@ -41,20 +41,20 @@ public class ObjectTreeModel implements TreeModel {
     public Object getChild(Object parent, int index) {
         ObjectTreeNode parentNode = (ObjectTreeNode) parent;
         Object parentObject = parentNode.getObject();
+        ReflectClass reflectClass = reflector.forObject(parentObject);
         if (parentObject.getClass().isArray()) {
             Object[] array = (Object[]) parentObject;
             return new ObjectTreeNode(parentNode, null, array[index]);
-        } else if (parentObject instanceof List) {
+        } else if (reflector.isCollection(reflectClass)) {
             // todo: how to handle other collections?
             List collection = (List) parentObject;
             return new ObjectTreeNode(parentNode, collection.get(index));
         }
         // todo: could try caching all this reflect information if performance is bad
-        ReflectClass reflectClass = reflector.forObject(parentNode.getObject());
         //System.out.println("reflectclass: " + reflectClass);
         ReflectField[] fields = reflectClass.getDeclaredFields();
         fields[index].setAccessible();
-        Object value = fields[index].get(parentNode.getObject());
+        Object value = fields[index].get(parentObject);
         //System.out.println("getChild parent:" + parentNode.getObject().getClass() + " index:" + index + " field:" + fields[index].getName() + " value:" + value);
         return new ObjectTreeNode(parentNode, fields[index], value);
     }
@@ -84,13 +84,16 @@ public class ObjectTreeModel implements TreeModel {
         aNode.setObject(newValue);
         ObjectTreeNode parent = aNode.getParentNode();
         Object p = parent.getObject();
-        //ReflectClass rc = reflector.forObject(p);
         ReflectField rf = aNode.getField();
         rf.setAccessible();
         rf.set(p, newValue);
-        //System.out.println("Set value on field: " + rf.getName() + " " + rf.getFieldType() + " new value: " + rf.get(o));
-        //queryResultsPanel.addObjectToBatch(o);
-        //nodeChanged(aNode);
+        addToBatch(p);
+    }
+
+    private void addToBatch(Object o) {
+        // similar to Object
+        objectContainer.set(o);
+        objectContainer.commit();
     }
 
     public int getIndexOfChild(Object parent, Object child) {
@@ -114,7 +117,7 @@ public class ObjectTreeModel implements TreeModel {
     public boolean isPathEditable(TreePath path) {
         ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
         Class c = aNode.getObject().getClass();
-        System.out.println("class editable: " + c);
+        //System.out.println("class editable: " + c);
         return ReflectHelper2.isEditable(c);
     }
 }

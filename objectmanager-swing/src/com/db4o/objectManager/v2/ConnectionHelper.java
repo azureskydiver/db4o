@@ -21,6 +21,7 @@ public class ConnectionHelper {
     public static ObjectContainer connect(Component frame, Db4oConnectionSpec connectionSpec) throws IOException {
         if(connectionSpec instanceof Db4oFileConnectionSpec){
             try {
+                //Db4o.configure().allowVersionUpdates(true);
                 return Db4o.openFile(connectionSpec.getPath());
             } catch (DatabaseFileLockedException e) {
                 OptionPaneHelper.showErrorMessage(frame, "Database file is locked. Another process must be using it.", "Database File Locked");

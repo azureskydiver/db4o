@@ -9,7 +9,7 @@ import com.db4o.query.Query;
  */
 public class QueryBuilder {
     public static String addClass(String currentText, String className) {
-        return "FROM " + className;
+        return "FROM '" + className + "' ";
     }
 
     public static String addField(String currentText, String className, String fieldName) {

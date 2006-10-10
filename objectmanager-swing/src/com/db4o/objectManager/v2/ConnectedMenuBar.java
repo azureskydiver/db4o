@@ -88,7 +88,15 @@ public class ConnectedMenuBar extends BaseMenuBar {
             }
         });
         menu.add(item);
-        //menu.add(createMenuItem("Exit", 'E'));
+        menu.addSeparator();
+
+        item = createMenuItem("Exit", 'E');
+        item.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);   
+            }
+        });
+        menu.add(item);
 
         return menu;
     }
