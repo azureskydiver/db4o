@@ -24,13 +24,7 @@ public class DashboardMenuBar extends BaseMenuBar{
         this.putClientProperty(Options.HEADER_STYLE_KEY, Boolean.TRUE);
 
         menu = new JMenu("File");
-        menu.add(new JMenuItem("New..."));
-        menu.add(new JMenuItem("Open..."));
-        menu.add(new JMenuItem("Save"));
-        menu.addSeparator();
-        menu.add(new JMenuItem("Print..."));
-        menu.addSeparator();
-
+       
         item = createMenuItem("Create Demo Db");
         item.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -45,6 +39,16 @@ public class DashboardMenuBar extends BaseMenuBar{
             }
         });
         menu.add(item);
+
+        menu.addSeparator();
+        item = createMenuItem("Exit", 'E');
+        item.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        menu.add(item);
+        
         this.add(menu);
 
 

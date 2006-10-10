@@ -86,7 +86,7 @@ final class QueryResultsPanel extends JPanel {
         resultsTable = new JTable();
         resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         JScrollPane scrollpane = new FastScrollPane(resultsTable);
-        ResultsTableSelectionListener listener = new ResultsTableSelectionListener(resultsTable, this);
+        QueryResultsTableSelectionListener listener = new QueryResultsTableSelectionListener(resultsTable, this);
         resultsTable.addMouseListener(listener);
         return scrollpane;
     }
@@ -99,18 +99,25 @@ final class QueryResultsPanel extends JPanel {
      */
     public void displayResults(String query) {
         try {
-            tableModel = new ResultsTableModel(query, this);
+            tableModel = new QueryResultsTableModel(query, this);
             resultsTable.setModel(tableModel);
+            //resultsTable.setA
         } catch (Exception e) {
             // don't display if there was an error
         }
         // todo: should grow columns depending on avg column length
-        TableColumn col = resultsTable.getColumnModel().getColumn(ResultsTableModel.COL_TREE);
-        col.setPreferredWidth(20); // icon cell
+        TableColumn column = resultsTable.getColumnModel().getColumn(QueryResultsTableModel.COL_TREE);
+        column.setPreferredWidth(20); // icon cell
+        for (int i = 1; i < 5; i++) {
+            column = resultsTable.getColumnModel().getColumn(i);
+            column.setPreferredWidth(100);
+        }
     }
 
     /**
      * This method will batch up any changed objects until the user closes this panel, or clicks the Commit/Apply button
+     * 
+     * NOTE: Currently commits immediately
      *
      * @param o
      */
@@ -164,7 +171,7 @@ final class QueryResultsPanel extends JPanel {
             }
         }
         // no more next, so see if we can go back up tree
-        if(iter.hasParent()){
+        if (iter.hasParent()) {
             iter.selectParent();
 
             // continue up a level

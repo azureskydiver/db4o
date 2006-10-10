@@ -36,7 +36,7 @@ public class QueryBarPanel extends JPanel {
         add(new JLabel("Query:"), BorderLayout.WEST);
 
         // have drop down with last X queries
-        queryHistory = (List) mainPanel.getPreference(QUERY_HISTORY);
+        queryHistory = (List) mainPanel.getPreferenceForDatabase(QUERY_HISTORY);
         ComboBoxModel queryListModel = new QueryHistoryComboBoxModel(queryHistory);
         queryList = new JComboBox(queryListModel);
         queryList.addActionListener(new ActionListener() {
@@ -54,7 +54,7 @@ public class QueryBarPanel extends JPanel {
         queryText = new JTextArea(5, 0);
         JScrollPane scrollPane = new JScrollPane(queryText);
         // preload with last query
-        String lastQuery = (String) mainPanel.getPreference(LAST_QUERY);
+        String lastQuery = (String) mainPanel.getPreferenceForDatabase(LAST_QUERY);
         if (lastQuery != null) {
             queryText.setText(lastQuery);
         }
@@ -83,7 +83,7 @@ public class QueryBarPanel extends JPanel {
 
 
     private void addToQueryHistory(String query) {
-        mainPanel.setPreference(LAST_QUERY, query);
+        mainPanel.setPreferenceForDatabase(LAST_QUERY, query);
         List<String> x = queryHistory; // (List) mainPanel.getPreference(QUERY_HISTORY);
         if (x == null) x = new ArrayList();
         // remove any dupe query
@@ -102,7 +102,7 @@ public class QueryBarPanel extends JPanel {
             String s = x.remove(exists);
             x.add(0, s);
         }
-        mainPanel.setPreference(QUERY_HISTORY, x);
+        mainPanel.setPreferenceForDatabase(QUERY_HISTORY, x);
     }
 
     private void setErrorMessage(String message) {

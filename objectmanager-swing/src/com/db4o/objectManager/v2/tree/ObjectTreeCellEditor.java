@@ -1,8 +1,5 @@
 package com.db4o.objectManager.v2.tree;
 
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.DefaultTreeCellEditor;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.*;
 import java.awt.Component;
 
@@ -18,10 +15,8 @@ public class ObjectTreeCellEditor extends DefaultCellEditor {
         super(textField);
         delegate = new EditorDelegate() {
             public void setValue(Object value) {
-                System.out.println("value: " + value + " " + value.getClass());
-                // this is a bit hokey, would be nice to get the ObjectTreeNode passed in here, not the value of the renderer's toString(), maybe make a custom Renderer too
+               // System.out.println("value: " + value + " " + value.getClass());
                 if (value instanceof ObjectTreeNode) {
-                    // this never occurs currently because a String is passed in as the value, not the ObjectTreeNode
                     ObjectTreeNode node = (ObjectTreeNode) value;
                     textField.setText((node.getObject() != null) ? node.getObject().toString() : "");
                 } else {
@@ -46,7 +41,7 @@ public class ObjectTreeCellEditor extends DefaultCellEditor {
 
 
     public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
-        System.out.println("value: " + value + " " + value.getClass());
+        //System.out.println("value: " + value + " " + value.getClass());
         delegate.setValue(value);
         return editorComponent;
         //return super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
