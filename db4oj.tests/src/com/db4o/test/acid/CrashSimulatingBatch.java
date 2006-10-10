@@ -37,7 +37,7 @@ public class CrashSimulatingBatch {
         
         File4.copy(lastFileName, rightFileName);
                 
-        Iterator4 syncIter = writes.strictIterator();
+        Iterator4 syncIter = writes.iterator();
         while(syncIter.moveNext()){
             
             rcount++;
@@ -49,7 +49,7 @@ public class CrashSimulatingBatch {
             }
             
             RandomAccessFile rightRaf = new RandomAccessFile(rightFileName, "rw");
-            Iterator4 singleForwardIter = writesBetweenSync.strictIterator();
+            Iterator4 singleForwardIter = writesBetweenSync.iterator();
             while(singleForwardIter.moveNext()){
                 CrashSimulatingWrite csw = (CrashSimulatingWrite)singleForwardIter.current();
                 csw.write(rightRaf);

@@ -2,7 +2,7 @@
 
 package com.db4o.foundation;
 
-import com.db4o.types.*;
+import com.db4o.types.Unversioned;
 
 /**
  * Fast linked list for all usecases.
@@ -11,24 +11,20 @@ import com.db4o.types.*;
  */
 public class Collection4 implements Iterable4, DeepClone, Unversioned {
 
-	// TODO: encapsulate field access
-
 	/** first element of the linked list */
-	public List4 _first;
-
-	/** number of elements collected */
-	public int _size;
-
-	private int _version;
-
+	private List4 _first;
+	
 	private List4 _last;
 
-	private static final boolean NEW_ORDER = false;
+	/** number of elements collected */
+	private int _size;
+
+	private int _version;		
 
 	public Collection4() {
 	}
 
-	public Collection4(Collection4 other) {
+	public Collection4(Iterable4 other) {
 		addAll(other);
 	}
 
@@ -40,51 +36,56 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 
 	/**
-	 * Adds an element to the beginning of this collection.
+	 * Adds an element to the end of this collection.
 	 * 
 	 * @param element
 	 */
 	public final void add(Object element) {
+		assertNotNull(element);
 		doAdd(element);
+		changed();
+	}	
+	
+	public final void prepend(Object element) {
+		assertNotNull(element);
+		doPrepend(element);
 		changed();
 	}
 
-	private void doAdd(Object element) {
-		if (NEW_ORDER) {
-			if (_last == null) {
-				_first = new List4(element);
-				_last = _first;
-			} else {
-				_last._next = new List4(element);
-				_last = _last._next;
-			}
+	private void doPrepend(Object element) {
+		if (_first == null) {
+			doAdd(element);
 		} else {
 			_first = new List4(_first, element);
+			_size++;
+		}
+	}
+
+	private void doAdd(Object element) {
+		if (_last == null) {
+			_first = new List4(element);
+			_last = _first;
+		} else {
+			_last._next = new List4(element);
+			_last = _last._next;
 		}
 		_size++;
 	}
 
 	public final void addAll(Object[] elements) {
-		if (elements != null) {
-			for (int i = 0; i < elements.length; i++) {
-				if (elements[i] != null) {
-					add(elements[i]);
-				}
-			}
+		assertNotNull(elements);
+		for (int i = 0; i < elements.length; i++) {
+			add(elements[i]);
 		}
 	}
 
-	public final void addAll(Collection4 other) {
-		if (other != null) {
-			if (NEW_ORDER) {
-				addAll(other.iterator());
-			} else {
-				addAll(other.strictIterator());
-			}
-		}
+	public final void addAll(Iterable4 other) {
+		assertNotNull(other);
+		addAll(other.iterator());
 	}
 
 	public final void addAll(Iterator4 iterator) {
+		assertNotNull(iterator);
 		while (iterator.moveNext()) {
 			add(iterator.current());
 		}
@@ -102,6 +103,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 
 	public boolean containsAll(Iterator4 iter) {
+		assertNotNull(iter);
 		while (iter.moveNext()) {
 			if (!contains(iter.current())) {
 				return false;
@@ -114,12 +116,15 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * tests if the object is in the Collection. == comparison.
 	 */
 	public final boolean containsByIdentity(Object element) {
-		List4 current = _first;
-		while (current != null) {
-			if (current._element != null && current._element == element) {
+		if (null == element) {
+			return false;
+		}
+		Iterator4 i = internalIterator();
+		while (i.moveNext()) {
+			Object current = i.current();
+			if (current == element) {
 				return true;
 			}
-			current = current._next;
 		}
 		return false;
 	}
@@ -129,7 +134,8 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * passed object
 	 */
 	public final Object get(Object element) {
-		Iterator4 i = iterator();
+		assertNotNull(element);
+		Iterator4 i = internalIterator();
 		while (i.moveNext()) {
 			Object current = i.current();
 			if (current.equals(element)) {
@@ -142,7 +148,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	public Object deepClone(Object newParent) {
 		Collection4 col = new Collection4();
 		Object element = null;
-		Iterator4 i = this.iterator();
+		Iterator4 i = internalIterator();
 		while (i.moveNext()) {
 			element = i.current();
 			if (element instanceof DeepClone) {
@@ -157,13 +163,13 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	/**
 	 * makes sure the passed object is in the Collection. equals() comparison.
 	 */
-	public final Object ensure(Object a_obj) {
-		Object obj = get(a_obj);
-		if (obj != null) {
-			return obj;
+	public final Object ensure(Object element) {
+		Object existing = get(element);
+		if (existing != null) {
+			return existing;
 		}
-		add(a_obj);
-		return a_obj;
+		add(element);
+		return element;
 	}
 
 	/**
@@ -173,18 +179,9 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * @return
 	 */
 	public final Iterator4 iterator() {
-		return _first == null ? Iterator4Impl.EMPTY : new Collection4Iterator(
-				this, _first);
-	}
-
-	/**
-	 * Iterates through the collection in the correct order (the insertion
-	 * order).
-	 * 
-	 * @return
-	 */
-	public Iterator4 strictIterator() {
-		return new ArrayIterator4(toArray());
+		return _first == null
+			? Iterator4Impl.EMPTY
+			: new Collection4Iterator(this, _first);
 	}
 
 	/**
@@ -208,21 +205,13 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 
 	private void adjustOnRemoval(List4 previous, List4 removed) {
-		if (NEW_ORDER) {
-			if (removed == _first) {
-				_first = removed._next;
-			} else {
-				previous._next = removed._next;
-			}
-			if (removed == _last) {
-				_last = previous;
-			}
+		if (removed == _first) {
+			_first = removed._next;
 		} else {
-			if (previous == null) {
-				_first = removed._next;
-			} else {
-				previous._next = removed._next;
-			}
+			previous._next = removed._next;
+		}
+		if (removed == _last) {
+			_last = previous;
 		}
 	}
 
@@ -236,20 +225,11 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * length.
 	 */
 	public final Object[] toArray(Object[] a_array) {
-		Iterator4 i = iterator();
-		if (NEW_ORDER) {
-			int j = 0;
-			while (i.moveNext()) {
-				a_array[j++] = i.current();
-			}
-		} else {
-			int j = _size;
-			// backwards, since our linked list is the wrong way around
-			while (i.moveNext()) {
-				a_array[--j] = i.current();
-			}
+		int j = 0;
+		Iterator4 i = internalIterator();
+		while (i.moveNext()) {
+			a_array[j++] = i.current();
 		}
-
 		return a_array;
 	}
 
@@ -265,7 +245,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 		}
 		StringBuffer sb = new StringBuffer();
 		sb.append("[");
-		Iterator4 i = strictIterator();
+		Iterator4 i = internalIterator();
 		i.moveNext();
 		sb.append(i.current());
 		while (i.moveNext()) {
@@ -284,4 +264,17 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 		return _version;
 	}
 
+	private void assertNotNull(Object element) {
+		if (element == null) {
+			throw new ArgumentNullException();
+		}
+	}
+	
+	/**
+	 * Leaner iterator for faster iteration (but unprotected against
+	 * concurrent modifications).
+	 */
+	private Iterator4 internalIterator() {
+		return new Iterator4Impl(_first);
+	}
 }

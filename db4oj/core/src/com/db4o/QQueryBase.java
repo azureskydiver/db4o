@@ -94,99 +94,101 @@ public abstract class QQueryBase implements Unversioned {
 	 */
     public Constraint constrain(Object example) {
         synchronized (streamLock()) {
-            ReflectClass claxx = null;
             example = Platform4.getClassForType(example);
             
-            Reflector reflector = i_trans.reflector(); 
-            
-            if(example instanceof ReflectClass){
-            	claxx = (ReflectClass)example;
-            }else{
-            	if(example instanceof Class){
-            		claxx = reflector.forClass((Class)example);
-            	}
-            }
-             
-            if (claxx != null) {
-                
-                if(claxx.equals(stream().i_handlers.ICLASS_OBJECT)){
-                    return null;
-                }
-                
-                Collection4 col = new Collection4();
-                if (claxx.isInterface()) {
-                    Collection4 classes = stream().classCollection().forInterface(claxx);
-                    if (classes.size() == 0) {
-                        QConClass qcc = new QConClass(i_trans, null, null, claxx);
-                        addConstraint(qcc);
-                        return qcc;
-//                        return null;
-                    }
-                    Iterator4 i = classes.iterator();
-                    Constraint constr = null;
-                    while (i.moveNext()) {
-                        YapClass yapClass = (YapClass)i.current();
-                        ReflectClass yapClassClaxx = yapClass.classReflector();
-                        if(yapClassClaxx != null){
-                            if(! yapClassClaxx.isInterface()){
-                                if(constr == null){
-                                    constr = constrain(yapClassClaxx);
-                                }else{
-                                    constr = constr.or(constrain(yapClass.classReflector()));
-                                }
-                            }
-                        }
-                        
-                    }
-                    return constr;
-                }
-
-                Iterator4 constraintsIterator = iterateConstraints();
-                while (constraintsIterator.moveNext()) {
-                    QCon existingConstraint = (QConObject)constraintsIterator.current();
-                    boolean[] removeExisting = { false };
-                    QCon newConstraint =
-                        existingConstraint.shareParentForClass(claxx, removeExisting);
-                    if (newConstraint != null) {
-                        addConstraint(newConstraint);
-                        col.add(newConstraint);
-                        if (removeExisting[0]) {
-                            removeConstraint(existingConstraint);
-                        }
-                    }
-                }
-                if (col.size() == 0) {
-                    QConClass qcc = new QConClass(i_trans, null, null, claxx);
-                    addConstraint(qcc);
-                    return qcc;
-                }
-
-                if (col.size() == 1) {
-                    return firstConstraint(col);
-                }
-                Constraint[] constraintArray = new Constraint[col.size()];
-                col.toArray(constraintArray);
-                return new QConstraints(i_trans, constraintArray);
+            ReflectClass claxx = reflectClassForClass(example);             
+            if (claxx != null) {                
+                return addClassConstraint(claxx);
             }
             
             QConEvaluation eval = Platform4.evaluationCreate(i_trans, example);
 			if (eval != null) {
-                Iterator4 i = iterateConstraints();
-                while (i.moveNext()) {
-                    ((QCon)i.current()).addConstraint(eval);
-                }
-                return null;
+                return addEvaluationToAllConstraints(eval);
             }
+			
             Collection4 constraints = new Collection4();
             addConstraint(constraints, example);
             return toConstraint(constraints);
         }
     }
 
-	private Constraint firstConstraint(Collection4 col) {
-		Iterator4 i = col.iterator();
-		i.moveNext();
-		return (Constraint)i.current();
+	private Constraint addEvaluationToAllConstraints(QConEvaluation eval) {
+		Iterator4 i = iterateConstraints();
+		while (i.moveNext()) {
+		    ((QCon)i.current()).addConstraint(eval);
+		}
+		// FIXME: should return valid Constraint object
+		return null;
+	}
+
+	private Constraint addClassConstraint(ReflectClass claxx) {
+		if(claxx.equals(stream().i_handlers.ICLASS_OBJECT)){
+			// FIXME: should return valid Constraint object
+		    return null;
+		}
+		
+		Collection4 col = new Collection4();
+		if (claxx.isInterface()) {
+		    return addInterfaceConstraint(claxx);
+		}
+
+		Iterator4 constraintsIterator = iterateConstraints();
+		while (constraintsIterator.moveNext()) {
+		    QCon existingConstraint = (QConObject)constraintsIterator.current();
+		    boolean[] removeExisting = { false };
+		    QCon newConstraint =
+		        existingConstraint.shareParentForClass(claxx, removeExisting);
+		    if (newConstraint != null) {
+		        addConstraint(newConstraint);
+		        col.add(newConstraint);
+		        if (removeExisting[0]) {
+		            removeConstraint(existingConstraint);
+		        }
+		    }
+		}
+		if (col.size() == 0) {
+		    QConClass qcc = new QConClass(i_trans, null, null, claxx);
+		    addConstraint(qcc);
+		    return qcc;
+		}
+
+		return toConstraint(col);
+	}
+
+	private Constraint addInterfaceConstraint(ReflectClass claxx) {
+		Collection4 classes = stream().classCollection().forInterface(claxx);
+		if (classes.size() == 0) {
+		    QConClass qcc = new QConClass(i_trans, null, null, claxx);
+		    addConstraint(qcc);
+		    return qcc;
+		}
+		Iterator4 i = classes.iterator();
+		Constraint constr = null;
+		while (i.moveNext()) {
+		    YapClass yapClass = (YapClass)i.current();
+		    ReflectClass yapClassClaxx = yapClass.classReflector();
+		    if(yapClassClaxx != null){
+		        if(! yapClassClaxx.isInterface()){
+		            if(constr == null){
+		                constr = constrain(yapClassClaxx);
+		            }else{
+		                constr = constr.or(constrain(yapClass.classReflector()));
+		            }
+		        }
+		    }
+		    
+		}
+		return constr;
+	}
+
+	private ReflectClass reflectClassForClass(Object example) {		
+		if(example instanceof ReflectClass){
+			return (ReflectClass)example;
+		}
+		if(example instanceof Class) {
+			return i_trans.reflector().forClass((Class)example);
+		}
+		return null;
 	}
 
     public Constraints constraints() {
@@ -318,7 +320,7 @@ public abstract class QQueryBase implements Unversioned {
 		if(i_constraints.size()!=1||_comparator!=null) {
 			return null;
 		}
-		Constraint constr=firstConstraint(); 
+		Constraint constr=singleConstraint(); 
 		if(constr.getClass()!=QConClass.class) {
 			return null;
 		}
@@ -356,12 +358,8 @@ public abstract class QQueryBase implements Unversioned {
 		return resLocal;
 	}
 
-	private Constraint firstConstraint() {
-		Iterator4 iterator = iterateConstraints();
-		if (!iterator.moveNext()) {
-			return null;
-		}
-		return (Constraint)iterator.current();
+	private Constraint singleConstraint() {
+		return (Constraint)i_constraints.singleElement();
 	}
 
     void execute1(final QueryResultImpl result) {
@@ -425,7 +423,7 @@ public abstract class QQueryBase implements Unversioned {
                     QQueryBase q = this;
                     final Collection4 fieldPath = new Collection4();
                     while (q.i_parent != null) {
-                        fieldPath.add(q.i_field);
+                        fieldPath.prepend(q.i_field);
                         q = q.i_parent;
                     }
                     candidates.traverse(new Visitor4() {
@@ -574,7 +572,7 @@ public abstract class QQueryBase implements Unversioned {
 
     Constraint toConstraint(final Collection4 constraints) {       
         if (constraints.size() == 1) {
-        	return firstConstraint();        	
+        	return (Constraint) constraints.singleElement();
         } else if (constraints.size() > 0) {
             Constraint[] constraintArray = new Constraint[constraints.size()];
             constraints.toArray(constraintArray);
@@ -582,8 +580,8 @@ public abstract class QQueryBase implements Unversioned {
         }
         return null;
     }
-
-    protected Object streamLock() {
+    
+	protected Object streamLock() {
         return stream().i_lock;
     }
 

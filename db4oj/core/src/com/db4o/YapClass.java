@@ -101,7 +101,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
             Collection4 members = new Collection4();
 
-            members.addAll(i_fields);
+            if (null != i_fields) {
+            	members.addAll(i_fields);
+            }
             if(generateVersionNumbers()) {
                 if(! hasVersionField()) {
                     members.add(a_stream.i_handlers.i_indexes.i_fieldVersion);

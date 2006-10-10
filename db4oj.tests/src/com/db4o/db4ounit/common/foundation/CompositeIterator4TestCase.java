@@ -14,7 +14,7 @@ public class CompositeIterator4TestCase implements TestCase {
 		iterators.add(IntArrays4.newIterator(new int[] { 4 }));
 		iterators.add(IntArrays4.newIterator(new int[] { 5, 6 }));
 		
-		final CompositeIterator4 iterator = new CompositeIterator4(iterators.strictIterator());
+		final CompositeIterator4 iterator = new CompositeIterator4(iterators.iterator());
 		IteratorAssert.areEqual(IntArrays4.newIterator(new int[] { 1, 2, 3, 4, 5, 6 }), iterator);
 		
 	}
