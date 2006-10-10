@@ -34,6 +34,7 @@ public class ReflectHelper2 {
                 "java.math.",
                 "com.db4o.",
                 "j4o.lang.AssemblyNameHint",
+                "System."
         };
 
         // Get the known classes

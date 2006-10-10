@@ -45,7 +45,8 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
 
     public long getSpaceFree() {
         try {
-            return oc.ext().systemInfo().freespaceSize();
+            return 0;
+            // todo: return oc.ext().systemInfo().freespaceSize();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,7 +84,8 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
 
     public long getSize() {
         try {
-            return oc.ext().systemInfo().totalSize();
+            return 0;
+            // todo: return oc.ext().systemInfo().totalSize(); // not implemented in 5.7
         } catch (Exception e) {
             e.printStackTrace();
         }
