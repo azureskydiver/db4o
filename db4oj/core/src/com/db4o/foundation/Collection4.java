@@ -12,243 +12,276 @@ import com.db4o.types.*;
 public class Collection4 implements Iterable4, DeepClone, Unversioned {
 
 	// TODO: encapsulate field access
-	
-    /** first element of the linked list */
-    public List4 _first;
 
-    /** number of elements collected */
-    public int _size;
+	/** first element of the linked list */
+	public List4 _first;
+
+	/** number of elements collected */
+	public int _size;
 
 	private int _version;
-    
-    public Collection4() {
-    }
-    
-    public Collection4(Collection4 other) {
-    	addAll(other);
-    }
-    
-    public Object singleElement() {
-    	if (size() != 1) {
-    		throw new IllegalStateException();
-    	}
-    	return _first._element;
+
+	private List4 _last;
+
+	private static final boolean NEW_ORDER = false;
+
+	public Collection4() {
 	}
 
-    /**
-     * Adds an element to the beginning of this collection.
-     * 
-     * @param element
-     */
-    public final void add(Object element) {
-        doAdd(element);
-        changed();
-    }
+	public Collection4(Collection4 other) {
+		addAll(other);
+	}
+
+	public Object singleElement() {
+		if (size() != 1) {
+			throw new IllegalStateException();
+		}
+		return _first._element;
+	}
+
+	/**
+	 * Adds an element to the beginning of this collection.
+	 * 
+	 * @param element
+	 */
+	public final void add(Object element) {
+		doAdd(element);
+		changed();
+	}
 
 	private void doAdd(Object element) {
-		_first = new List4(_first, element);
-        _size++;
-	}    
+		if (NEW_ORDER) {
+			if (_last == null) {
+				_first = new List4(element);
+				_last = _first;
+			} else {
+				_last._next = new List4(element);
+				_last = _last._next;
+			}
+		} else {
+			_first = new List4(_first, element);
+		}
+		_size++;
+	}
 
-    public final void addAll(Object[] elements) {
-        if (elements != null) {
-            for (int i = 0; i < elements.length; i++) {
-                if (elements[i] != null) {
-                    add(elements[i]);
-                }
-            }
-        }
-    }
-    
-    public final void addAll(Collection4 other){
-        if (other != null){
-            addAll(other.strictIterator());
-        }
-    }
-    
+	public final void addAll(Object[] elements) {
+		if (elements != null) {
+			for (int i = 0; i < elements.length; i++) {
+				if (elements[i] != null) {
+					add(elements[i]);
+				}
+			}
+		}
+	}
+
+	public final void addAll(Collection4 other) {
+		if (other != null) {
+			if (NEW_ORDER) {
+				addAll(other.iterator());
+			} else {
+				addAll(other.strictIterator());
+			}
+		}
+	}
+
 	public final void addAll(Iterator4 iterator) {
 		while (iterator.moveNext()) {
 			add(iterator.current());
 		}
 	}
 
-    public final void clear() {
-        _first = null;
-        _size = 0;
-    }
+	public final void clear() {
+		_first = null;
+		_last = null;
+		_size = 0;
+		changed();
+	}
 
-    public final boolean contains(Object element) {
-        return get(element) != null;
-    }
-    
-    public boolean containsAll(Iterator4 iter) {
-        while(iter.moveNext()){
-            if(! contains(iter.current())){
-                return false;
-            }
-        }
-        return true;
-    }   
+	public final boolean contains(Object element) {
+		return get(element) != null;
+	}
 
-    /**
-     * tests if the object is in the Collection.
-     * == comparison.
-     */
-    public final boolean containsByIdentity(Object element) {
-        List4 current = _first;
-        while (current != null) {
-            if (current._element != null && current._element == element) {
-                return true;
-            }
-            current = current._next;
-        }
-        return false;
-    }
+	public boolean containsAll(Iterator4 iter) {
+		while (iter.moveNext()) {
+			if (!contains(iter.current())) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    /**
-     * returns the first object found in the Collections
-     * that equals() the passed object
-     */
-    public final Object get(Object element) {
-        Iterator4 i = iterator();
-        while (i.moveNext()) {
-        	Object current = i.current();
-            if (current.equals(element)) {
-                return current;
-            }
-        }
-        return null;
-    }
+	/**
+	 * tests if the object is in the Collection. == comparison.
+	 */
+	public final boolean containsByIdentity(Object element) {
+		List4 current = _first;
+		while (current != null) {
+			if (current._element != null && current._element == element) {
+				return true;
+			}
+			current = current._next;
+		}
+		return false;
+	}
 
-    public Object deepClone(Object newParent) {
-        Collection4 col = new Collection4();
-        Object element = null;
-        Iterator4 i = this.iterator();
-        while (i.moveNext()) {
-            element = i.current();
-            if (element instanceof DeepClone) {
-                col.add(((DeepClone) element).deepClone(newParent));
-            } else {
-                col.add(element);
-            }
-        }
-        return col;
-    }
+	/**
+	 * returns the first object found in the Collections that equals() the
+	 * passed object
+	 */
+	public final Object get(Object element) {
+		Iterator4 i = iterator();
+		while (i.moveNext()) {
+			Object current = i.current();
+			if (current.equals(element)) {
+				return current;
+			}
+		}
+		return null;
+	}
 
-    /**
-     * makes sure the passed object is in the Collection.
-     * equals() comparison.
-     */
-    public final Object ensure(Object a_obj) {
-        Object obj = get(a_obj);
-        if (obj != null) {
-            return obj;
-        }
-        add(a_obj);
-        return a_obj;
-    }
+	public Object deepClone(Object newParent) {
+		Collection4 col = new Collection4();
+		Object element = null;
+		Iterator4 i = this.iterator();
+		while (i.moveNext()) {
+			element = i.current();
+			if (element instanceof DeepClone) {
+				col.add(((DeepClone) element).deepClone(newParent));
+			} else {
+				col.add(element);
+			}
+		}
+		return col;
+	}
 
-    /**
-     * Iterates through the collection in
-     * reversed insertion order which happens
-     * to be the fastest.
-     * 
-     * @return
-     */
-    public final Iterator4 iterator() {
-        return _first == null
-        	? Iterator4Impl.EMPTY
-            : new Collection4Iterator(this, _first);
-    }
-    
-    /**
-     * Iterates through the collection in the correct
-     * order (the insertion order).
-     * 
-     * @return
-     */
-    public Iterator4 strictIterator() {
+	/**
+	 * makes sure the passed object is in the Collection. equals() comparison.
+	 */
+	public final Object ensure(Object a_obj) {
+		Object obj = get(a_obj);
+		if (obj != null) {
+			return obj;
+		}
+		add(a_obj);
+		return a_obj;
+	}
+
+	/**
+	 * Iterates through the collection in reversed insertion order which happens
+	 * to be the fastest.
+	 * 
+	 * @return
+	 */
+	public final Iterator4 iterator() {
+		return _first == null ? Iterator4Impl.EMPTY : new Collection4Iterator(
+				this, _first);
+	}
+
+	/**
+	 * Iterates through the collection in the correct order (the insertion
+	 * order).
+	 * 
+	 * @return
+	 */
+	public Iterator4 strictIterator() {
 		return new ArrayIterator4(toArray());
 	}
 
-    /**
-     * removes an object from the Collection
-     * equals() comparison
-     * returns the removed object or null, if none found
-     */
-    public Object remove(Object a_object) {
-        List4 previous = null;
-        List4 current = _first;
-        while (current != null) {
-            if (current._element.equals(a_object)) {
-                _size--;
-                adjustOnRemoval(previous, current);
-                changed();
-                return current._element;
-            }
-            previous = current;
-            current = current._next;
-        }
-        return null;
-    }
+	/**
+	 * removes an object from the Collection equals() comparison returns the
+	 * removed object or null, if none found
+	 */
+	public Object remove(Object a_object) {
+		List4 previous = null;
+		List4 current = _first;
+		while (current != null) {
+			if (current._element.equals(a_object)) {
+				_size--;
+				adjustOnRemoval(previous, current);
+				changed();
+				return current._element;
+			}
+			previous = current;
+			current = current._next;
+		}
+		return null;
+	}
 
 	private void adjustOnRemoval(List4 previous, List4 removed) {
-		if (previous == null) {
-		    _first = removed._next;
+		if (NEW_ORDER) {
+			if (removed == _first) {
+				_first = removed._next;
+			} else {
+				previous._next = removed._next;
+			}
+			if (removed == _last) {
+				_last = previous;
+			}
 		} else {
-		    previous._next = removed._next;
+			if (previous == null) {
+				_first = removed._next;
+			} else {
+				previous._next = removed._next;
+			}
 		}
 	}
 
-    public final int size() {
-        return _size;
-    }
+	public final int size() {
+		return _size;
+	}
 
-    /**
-     * This is a non reflection implementation for more speed.
-     * In contrast to the JDK behaviour, the passed array has
-     * to be initialized to the right length. 
-     */
-    public final Object[] toArray(Object[] a_array) {
-        int j = _size;
-        Iterator4 i = iterator();
+	/**
+	 * This is a non reflection implementation for more speed. In contrast to
+	 * the JDK behaviour, the passed array has to be initialized to the right
+	 * length.
+	 */
+	public final Object[] toArray(Object[] a_array) {
+		Iterator4 i = iterator();
+		if (NEW_ORDER) {
+			int j = 0;
+			while (i.moveNext()) {
+				a_array[j++] = i.current();
+			}
+		} else {
+			int j = _size;
+			// backwards, since our linked list is the wrong way around
+			while (i.moveNext()) {
+				a_array[--j] = i.current();
+			}
+		}
 
-        // backwards, since our linked list is the wrong way around
-        while (i.moveNext()) {
-            a_array[--j] = i.current();
-        }
-        return a_array;
-    }
-    
-    public final Object[] toArray() {
-    	Object[] array = new Object[_size];
+		return a_array;
+	}
+
+	public final Object[] toArray() {
+		Object[] array = new Object[_size];
 		toArray(array);
 		return array;
-    }
-    
-    public String toString() {
-        if(_size == 0){
-            return "[]";
-        }
-        StringBuffer sb = new StringBuffer();
-        sb.append("[");
-        Iterator4 i = strictIterator();
-        i.moveNext();
-        sb.append(i.current());
-        while(i.moveNext()){
-            sb.append(", ");
-            sb.append(i.current());
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-    
-    private void changed() {
-    	++_version;
-    }
-    
-    int version() {
-    	return _version;
-    }
+	}
+
+	public String toString() {
+		if (_size == 0) {
+			return "[]";
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		Iterator4 i = strictIterator();
+		i.moveNext();
+		sb.append(i.current());
+		while (i.moveNext()) {
+			sb.append(", ");
+			sb.append(i.current());
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+
+	private void changed() {
+		++_version;
+	}
+
+	int version() {
+		return _version;
+	}
 
 }
