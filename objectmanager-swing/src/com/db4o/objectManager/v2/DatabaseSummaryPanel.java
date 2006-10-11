@@ -66,7 +66,7 @@ public class DatabaseSummaryPanel extends JPanel {
 
         builder.append("Size:", new JLabel(databaseInspector.getSize() + " bytes"));
         //builder.append("Used Space: ", new JLabel(databaseInspector.getSpaceUsed() + " bytes"));
-        builder.append("Free Space: ", new JLabel(databaseInspector.getSpaceFree() + " bytes"));
+        //builder.append("Free Space: ", new JLabel(databaseInspector.getSpaceFree() + " bytes"));
         //builder.append("Lost Space: ", new JLabel(databaseInspector.getSpaceLost() + " bytes"));
 
         return builder.getPanel();
