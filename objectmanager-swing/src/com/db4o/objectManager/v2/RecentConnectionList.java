@@ -2,12 +2,14 @@ package com.db4o.objectManager.v2;
 
 import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
+import com.db4o.objectmanager.model.Db4oFileConnectionSpec;
 
 import javax.swing.*;
 import java.awt.Component;
 import java.awt.BorderLayout;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
 
 /**
  * User: treeder
@@ -38,7 +40,23 @@ public class RecentConnectionList extends JPanel {
     private List<Db4oConnectionSpec> getRecentConnectionSpecsFromDb() {
         List<Db4oConnectionSpec> connections = (List<Db4oConnectionSpec>) Preferences.getDefault().getPreference(RECENT_CONNECTIONS);
         if (connections == null) connections = new ArrayList<Db4oConnectionSpec>();
-        return connections;
+		// now clean out connections where the file does not exist
+		int removed = 0;
+		for (int i = 0; i < connections.size(); i++) {
+			Db4oConnectionSpec connectionSpec = connections.get(i);
+			if(connectionSpec instanceof Db4oFileConnectionSpec){
+				File f = new File(connectionSpec.getFullPath());
+				if(!f.exists()){
+					connections.remove(connectionSpec);
+					i--;
+					removed++;
+				}
+			}
+		}
+		if(removed > 0){
+			saveConnections(connections);
+		}
+		return connections;
     }
 
     public void addNewConnectionSpec(Db4oConnectionSpec connectionSpec) {
@@ -51,11 +69,15 @@ public class RecentConnectionList extends JPanel {
         }
         List<Db4oConnectionSpec> connections = getRecentConnectionSpecsFromDb();
         connections.add(connectionSpec);
-        Preferences.getDefault().setPreference(RECENT_CONNECTIONS, connections);
-        listModel.addElement(connectionSpec);
+		saveConnections(connections);
+		listModel.addElement(connectionSpec);
     }
 
-    public Db4oConnectionSpec getSelected() {
+	private void saveConnections(List<Db4oConnectionSpec> connections) {
+		Preferences.getDefault().setPreference(RECENT_CONNECTIONS, connections);
+	}
+
+	public Db4oConnectionSpec getSelected() {
         if (list.getSelectedIndex() != -1) {
             return (Db4oConnectionSpec) listModel.get(list.getSelectedIndex());
         }
