@@ -129,7 +129,6 @@ namespace com.db4o.test
 
 #if NET_2_0 || CF_2_0
 				tests.Add(typeof(net2.Net2GenericContainers));
-				tests.Add(typeof(net2.Net2GenericDictionary));
 				tests.Add(typeof(net2.Net2GenericList));
 	#if !MONO
 				tests.Add(typeof(net2.Net2GenericOtherCollections));
