@@ -2,6 +2,7 @@ package com.db4o.objectManager.v2;
 
 import com.db4o.ObjectContainer;
 import com.db4o.objectManager.v2.custom.BorderedPanel;
+import com.db4o.objectManager.v2.custom.BorderedFormPanel;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.jgoodies.forms.factories.Borders;
 
@@ -34,12 +35,21 @@ public class ClassSummaryPanel extends JPanel {
     private Component buildMain() {
         Box box = new Box(BoxLayout.PAGE_AXIS);
 
-        box.add(buildFieldInfo());
+		box.add(buildClassStats());
+		box.add(buildFieldInfo());
 
         return box;
     }
 
-    private Component buildFieldInfo() {
+    private Component buildClassStats() {
+        BorderedFormPanel builder = new BorderedFormPanel("Class Statistics");
+
+        builder.append("Number of Objects:", new JLabel(databaseInspector.getNumberOfObjectsForClass(className) + ""));
+
+        return builder.getPanel();
+    }
+
+	private Component buildFieldInfo() {
         BorderedPanel builder = new BorderedPanel("Fields");
 
         TableModel classModel = createFieldModel();
