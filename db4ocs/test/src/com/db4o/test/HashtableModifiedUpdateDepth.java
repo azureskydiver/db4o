@@ -31,6 +31,7 @@ public class HashtableModifiedUpdateDepth extends ClientServerTestCase {
 			Hashtable ht1 = (Hashtable) oc.query(Hashtable.class).next();
 			ht1.put("hi", "updated");
 			Hashtable ht2 = (Hashtable) oc.query(Hashtable.class).next();
+			// FIXME: do we have to refresh ? 
 			oc.refresh(ht2, Integer.MAX_VALUE);
 			Assert.areEqual("five", ht2.get("hi"));
 		} finally {

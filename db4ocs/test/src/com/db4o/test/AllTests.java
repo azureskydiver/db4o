@@ -8,6 +8,7 @@ import db4ounit.extensions.Timer;
 public class AllTests extends CSTestSuite {
 
 	protected Class[] testCases() {
+		// return new Class [] { CloseServerBeforeClient.class } ;
 		return passedTestCases();
 		//return failedTestCases();
 	}
@@ -47,12 +48,16 @@ public class AllTests extends CSTestSuite {
 				ParameterizedEvaluation.class,
 				PeekPersisted.class,
 				PersistStaticFieldValues.class,
+				QueryForUnknownField.class,
+				QueryNonExistant.class,
 				ReadObjectQBETest.class,
 				ReadObjectSODATest.class,
 				ReadObjectNQTest.class,
 				ReadCollectionQBETest.class,
 				ReadCollectionSODATest.class,
 				ReadCollectionNQTest.class,
+				Refresh.class,
+				QueryForUnknownField.class,
 				UpdateObjectTest.class,
 				UpdateCollectionTest.class,
 				};
