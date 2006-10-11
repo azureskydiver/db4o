@@ -5,20 +5,20 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class IntIterator4Impl implements IntIterator4 {
+public class ReverseIntIterator4Impl implements IntIterator4 {
 	
 	private final int _count;
 	private int[] _content;
 	private int _current;
 	
-	public IntIterator4Impl(int[] content, int count) {
+	public ReverseIntIterator4Impl(int[] content, int count) {
 		_content = content;
 		_count = count;
-		_current = -1;
+		_current = count;
 	}
 
 	public int currentInt() {
-		if (_current < 0 || _content == null) {
+		if (_content == null || _current == _count) {
 			throw new IllegalStateException();
 		}
 		return _content[_current];
@@ -29,10 +29,11 @@ public class IntIterator4Impl implements IntIterator4 {
 	}
 
 	public boolean moveNext() {
-		if (++_current >= _count) {
-			_content = null;
-			return false;
+		if (_current > 0) {
+			--_current;
+			return true;
 		}
-		return true;
+		_content = null;
+		return false;
 	}
 }

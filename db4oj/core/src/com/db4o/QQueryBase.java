@@ -302,7 +302,6 @@ public abstract class QQueryBase implements Unversioned {
             
 			QueryResult result = classOnlyQuery();
 			if(result != null) {
-                result.reset();
 				return result;
 			}
 	        QueryResultImpl qResult = stream().createQResult(i_trans);
@@ -470,7 +469,7 @@ public abstract class QQueryBase implements Unversioned {
             }
         }
         sort(result);
-        result.reset();
+//        result.reset();
     }
 
 	public CreateCandidateCollectionResult createCandidateCollection() {

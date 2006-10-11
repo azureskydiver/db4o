@@ -9,5 +9,13 @@ package com.db4o;
 public class User implements Internal4{
 	public String name;
 	public String password;
+	
+	public User() {
+	}
+	
+	public User(String name, String password) {
+		this.name = name;
+		this.password = password;
+	}
 }
 

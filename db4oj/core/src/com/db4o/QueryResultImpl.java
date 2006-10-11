@@ -15,6 +15,8 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	boolean i_checkDuplicates;
     
 	final Transaction i_trans;
+	
+//	private final IntArrayList _ids = new IntArrayList();
 
 	QueryResultImpl(Transaction a_trans) {
 		i_trans = a_trans;
@@ -24,15 +26,29 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
         super(initialSize);
         i_trans = trans;
     }
+    
+    public IntIterator4 iterateIDs() {
+    	return intIterator();
+    }
+    
+    public Iterator4 iterator() {
+    	return new MappingIterator(super.iterator()) {
+    		protected Object map(Object current) {
+    			synchronized (streamLock()) {
+    				return activatedObject(((Integer)current).intValue());
+				}
+    		}
+    	};
+    }
 
 	final Object activate(Object obj){
-		YapStream stream = i_trans.stream();
+		YapStream stream = stream();
 		stream.activate1(i_trans, obj, stream.configImpl().activationDepth());
 		return obj;
 	}
     
     private final Object activatedObject(int id){
-        YapStream stream = i_trans.stream();
+        YapStream stream = stream();
         Object ret = stream.getActivatedObjectFromCache(i_trans, id);
         if(ret != null){
             return ret;
@@ -54,51 +70,6 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 
 	final void checkDuplicates(){
 		i_checkDuplicates = true;
-	}
-
-	/* (non-Javadoc)
-     * @see com.db4o.QueryResult#getIDs()
-     */
-	public long[] getIDs() {
-		synchronized (streamLock()) {
-		    return asLong();
-		}
-	}
-
-	/* (non-Javadoc)
-     * @see com.db4o.QueryResult#hasNext()
-     */
-	public boolean hasNext() {
-		synchronized (streamLock()) {
-			return super.hasNext();
-		}
-	}
-
-	/* (non-Javadoc)
-     * @see com.db4o.QueryResult#next()
-     */
-	public Object next() {
-		synchronized (streamLock()) {
-			YapStream stream = i_trans.stream();
-			stream.checkClosed();
-			if (super.hasNext()) {
-                Object obj = activatedObject(nextInt());
-                if(obj != null){
-                    return obj;
-                }
-                return next();
-			}
-			return null;
-		}
-	}
-
-	/* (non-Javadoc)
-     * @see com.db4o.QueryResult#reset()
-     */
-	public void reset() {
-		synchronized (streamLock()) {
-		    super.reset();
-		}
 	}
 
 	public void visit(Object a_tree) {
@@ -127,16 +98,21 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	}
 	
 	public Object streamLock(){
-		return i_trans.stream().i_lock;
+		final YapStream stream = stream();
+		stream.checkClosed();
+		return stream.i_lock;
+	}
+
+	private YapStream stream() {
+		return i_trans.stream();
 	}
 
     public ObjectContainer objectContainer() {
-        return i_trans.stream();
+        return stream();
     }
 
-	public void sort(QueryComparator cmp) {
+	public void sort( QueryComparator cmp) {
 		sort(cmp,0,size()-1);
-		reset();
 	}
 
 	private void sort(QueryComparator cmp,int from,int to) {

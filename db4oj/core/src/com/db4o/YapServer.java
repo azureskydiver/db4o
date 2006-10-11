@@ -9,6 +9,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.inside.*;
+import com.db4o.query.Query;
 
 class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 		YapSocketFakeServer {
@@ -128,20 +129,40 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 	public void grantAccess(String userName, String password) {
 		synchronized (i_yapFile.i_lock) {
 			checkClosed();
-			User user = new User();
-			user.name = userName;
 			i_yapFile.showInternalClasses(true);
-			User existing = (User) i_yapFile.get(user).next();
-			if (existing != null) {
-				existing.password = password;
-				i_yapFile.set(existing);
-			} else {
-				user.password = password;
-				i_yapFile.set(user);
+			try {
+				User existing = getUser(userName);
+				if (existing != null) {
+					setPassword(existing, password);
+				} else {
+					addUser(userName, password);
+				}
+				i_yapFile.commit();
+			} finally {
+				i_yapFile.showInternalClasses(false);
 			}
-			i_yapFile.commit();
-			i_yapFile.showInternalClasses(false);
 		}
+	}
+
+	private void addUser(String userName, String password) {
+		i_yapFile.set(new User(userName, password));
+	}
+
+	private void setPassword(User existing, String password) {
+		existing.password = password;
+		i_yapFile.set(existing);
+	}
+
+	User getUser(String userName) {
+		final ObjectSet result = queryUsers(userName);
+		if (!result.hasNext()) {
+			return null;
+		}
+		return (User) result.next();
+	}
+
+	private ObjectSet queryUsers(String userName) {
+		return i_yapFile.get(new User(userName, null));
 	}
 
 	public ObjectContainer objectContainer() {
@@ -193,15 +214,20 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 	public void revokeAccess(String userName) {
 		synchronized (i_yapFile.i_lock) {
 			i_yapFile.showInternalClasses(true);
-			checkClosed();
-			User user = new User();
-			user.name = userName;
-			ObjectSet set = i_yapFile.get(user);
-			while (set.hasNext()) {
-				i_yapFile.delete(set.next());
+			try {
+				checkClosed();
+				deleteUsers(userName);
+				i_yapFile.commit();
+			} finally {
+				i_yapFile.showInternalClasses(false);
 			}
-			i_yapFile.commit();
-			i_yapFile.showInternalClasses(false);
+		}
+	}
+
+	private void deleteUsers(String userName) {
+		ObjectSet set = queryUsers(userName);
+		while (set.hasNext()) {
+			i_yapFile.delete(set.next());
 		}
 	}
 

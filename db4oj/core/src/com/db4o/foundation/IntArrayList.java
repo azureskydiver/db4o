@@ -10,8 +10,6 @@ public class IntArrayList implements Iterable4 {
     static final int INC = 20;
     
     protected int[] i_content;
-    
-    private int i_current;
     private int i_count;
     
     public IntArrayList(){
@@ -44,18 +42,6 @@ public class IntArrayList implements Iterable4 {
         return i_count;
     }
     
-    public void reset() {
-        i_current = i_count - 1;
-    }
-    
-    public boolean hasNext(){
-        return i_current >= 0;
-    }
-    
-    public int nextInt(){
-        return i_content[i_current --];
-    }
-    
     public long[] asLong(){
         long[] longs = new long[i_count];
         for (int i = 0; i < i_count; i++) {
@@ -65,7 +51,7 @@ public class IntArrayList implements Iterable4 {
     }
 
 	public IntIterator4 intIterator() {
-		return new IntIterator4Impl(i_content, i_count);
+		return new ReverseIntIterator4Impl(i_content, i_count);
 	}
 	
 	public Iterator4 iterator() {

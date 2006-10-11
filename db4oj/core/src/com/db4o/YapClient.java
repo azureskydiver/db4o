@@ -453,7 +453,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return _prefetchedIDs[remainingIDs];
 	}
 
-	int prefetchObjects(QResultClient qResult, Object[] prefetched,
+	int prefetchObjects(IntIterator4 ids, Object[] prefetched,
 			int prefetchCount) {
 
 		int count = 0;
@@ -462,8 +462,11 @@ public class YapClient extends YapStream implements ExtClient {
 		int[] idsToGet = new int[prefetchCount];
 		int[] position = new int[prefetchCount];
 
-		while (qResult.hasNext() && (count < prefetchCount)) {
-			int id = qResult.nextInt();
+		while (count < prefetchCount) {
+			if (!ids.moveNext()) {
+				break;
+			}
+			int id = ids.currentInt();
 			if (id > 0) {
                 Object obj = objectForIDFromCache(id);
                 if(obj != null){
@@ -484,7 +487,7 @@ public class YapClient extends YapStream implements ExtClient {
 			int embeddedMessageCount = message.readInt();
 			for (int i = 0; i < embeddedMessageCount; i++) {
 				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT
-						.clone(qResult.i_trans);
+						.clone(getTransaction());
 				mso._payLoad = message._payLoad.readYapBytes();
 				if (mso._payLoad != null) {
 					mso._payLoad.incrementOffset(YapConst.MESSAGE_LENGTH);
@@ -566,7 +569,7 @@ public class YapClient extends YapStream implements ExtClient {
 		for (int i = 0; i < size; i++) {
 			aRes.add(reader.readInt());
 		}
-		aRes.reset();
+//		aRes.reset();
 	}
 
 	void readThis() {

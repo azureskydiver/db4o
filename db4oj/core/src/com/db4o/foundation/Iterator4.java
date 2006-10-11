@@ -7,5 +7,4 @@ public interface Iterator4 {
 	boolean moveNext();
 
 	Object current();
-
 }

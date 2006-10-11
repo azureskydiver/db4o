@@ -99,7 +99,6 @@ public class AllTestsConfAll extends TestSuite{
 	        Rename.class,
 			SameSizeOnReopen.class,
 	        SerializableTranslator.class,
-			ServerRevokeAccess.class,
 	    	SetDeactivated.class,
 	    	SetSemaphore.class,
 	    	SharedObjectContainer.class,
