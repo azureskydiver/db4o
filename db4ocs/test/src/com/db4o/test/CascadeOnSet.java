@@ -15,40 +15,70 @@ public class CascadeOnSet extends ClientServerTestCase {
 	public String name;
 
 	public CascadeOnSet child;
+	
+	public static CascadeOnSet sameInstance = new CascadeOnSet();
 
-	public void concNoAccidentalDeletes(ExtObjectContainer oc) {
-		noAccidentalDeletes1(oc, true, true);
-		noAccidentalDeletes1(oc, true, false);
-		noAccidentalDeletes1(oc, false, true);
-		noAccidentalDeletes1(oc, false, false);
+	public void conc1(ExtObjectContainer oc) {
+		store(oc, true, true);
+		store(oc, true, false);
+		store(oc, false, true);
+		store(oc, false, false);
 	}
 
-	public void checkNoAccidentalDeletes(ExtObjectContainer oc) {
+	public void check1(ExtObjectContainer oc) {
 		Query query = oc.query();
-		// FIXME: The assertion fails without following constration and running
-		// together with other tests
 		query.constrain(CascadeOnSet.class);
 		query.descend("name").constrain("child.child");
 		ObjectSet os = query.execute();
-		// FIXME: The following assertion fails, os.size() returns randomly 30,31,32
 		Assert.areEqual(TestConfigure.CONCURRENCY_THREAD_COUNT * 4, os.size());
 	}
+	
+	public void conc2(ExtObjectContainer oc) {
+		storeSame(oc, true, true);
+		storeSame(oc, true, false);
+		storeSame(oc, false, true);
+		storeSame(oc, false, false);
+	}
 
-	private void noAccidentalDeletes1(ExtObjectContainer oc,
+	public void check2(ExtObjectContainer oc) {
+		Query query = oc.query();
+		query.constrain(CascadeOnSet.class);
+		query.descend("name").constrain("child.child");
+		ObjectSet os = query.execute();
+		// FIXME: how many do we expect? I'm also confused. :-)
+		Assert.areEqual(1, os.size());
+	}
+
+	private void store(ExtObjectContainer oc,
 			boolean cascadeOnUpdate, boolean cascadeOnDelete) {
 		oc.configure().objectClass(this).cascadeOnUpdate(cascadeOnUpdate);
 		oc.configure().objectClass(this).cascadeOnDelete(cascadeOnDelete);
-
-		name = "father";
-		child = new CascadeOnSet();
-		child.name = "child";
-		child.child = new CascadeOnSet();
-		child.child.name = "child.child";
-		oc.set(this);
+		CascadeOnSet cos = new CascadeOnSet();
+		cos.name = "father";
+		cos.child = new CascadeOnSet();
+		cos.child.name = "child";
+		cos.child.child = new CascadeOnSet();
+		cos.child.child.name = "child.child";
+		oc.set(cos);
 		if (!cascadeOnDelete && !cascadeOnUpdate) {
 			// the only case, where we don't cascade
-			oc.set(child.child);
+			oc.set(cos.child.child);
 		}
-
+	}
+	
+	private void storeSame(ExtObjectContainer oc,
+			boolean cascadeOnUpdate, boolean cascadeOnDelete) {
+		oc.configure().objectClass(this).cascadeOnUpdate(cascadeOnUpdate);
+		oc.configure().objectClass(this).cascadeOnDelete(cascadeOnDelete);
+		sameInstance.name = "father";
+		sameInstance.child = new CascadeOnSet();
+		sameInstance.child.name = "child";
+		sameInstance.child.child = new CascadeOnSet();
+		sameInstance.child.child.name = "child.child";
+		oc.set(sameInstance);
+		if (!cascadeOnDelete && !cascadeOnUpdate) {
+			// the only case, where we don't cascade
+			oc.set(sameInstance.child.child);
+		}
 	}
 }
