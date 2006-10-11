@@ -66,7 +66,6 @@ public class DatabaseInspectorTest extends ObjectManagerTestCase {
         DatabaseInspector inspector = new DatabaseInspectorImpl(oc);
         Assert.areEqual(1, inspector.getNumberOfClasses());
 
-        Assert.areEqual(10, inspector.getNumberOfObjectsForClass(Contact.class));
         Assert.areEqual(10, inspector.getNumberOfObjectsForClass(Contact.class.getName()));
 
         List storedClasses = inspector.getClassesStored();

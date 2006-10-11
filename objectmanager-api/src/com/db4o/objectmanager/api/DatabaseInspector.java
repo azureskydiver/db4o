@@ -28,13 +28,13 @@ public interface DatabaseInspector {
      * @param aClass the type of object
      * @return the number of objects stored of type aClass
      */
-    int getNumberOfObjectsForClass(Class aClass);
+    //int getNumberOfObjectsForClass(Class aClass);
 
     /**
      *
      * @param aClass the fully qualified class name
      * @return the number of objects stored of type aClass
-     * @see #getNumberOfObjectsForClass(Class)
+
      */
     int getNumberOfObjectsForClass(String aClass);
 
