@@ -679,7 +679,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             try {
                 get2(ta, template, res);
             } catch (Throwable t) {
-            	Exceptions4.catchAll(t);
+            	Exceptions4.catchAllExceptDb4oException(t);
                 fatalException(t);
             }
         }

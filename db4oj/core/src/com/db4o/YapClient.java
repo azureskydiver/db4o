@@ -134,33 +134,33 @@ public class YapClient extends YapStream implements ExtClient {
     }
 
 	boolean close2() {
-		if (null != _readerThread && _readerThread.isClosed()) {
-			//throw new Db4oException("Connection is already closed.");
-			return true;
+		if (_readerThread.isClosed()) {
+			return super.close2();
 		}
 		try {
 			Msg.COMMIT_OK.write(this, i_socket);
 			expectedResponse(Msg.OK);
 		} catch (Exception e) {
-			Exceptions4.catchAll(e);
+			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		try {
 			Msg.CLOSE.write(this, i_socket);
 		} catch (Exception e) {
-			Exceptions4.catchAll(e);
+			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		try {
 			if (!_singleThreaded) {
 				_readerThread.close();
 			}
 		} catch (Exception e) {
-			Exceptions4.catchAll(e);
+			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		try {
 			i_socket.close();
 		} catch (Exception e) {
-			Exceptions4.catchAll(e);
+			Exceptions4.catchAllExceptDb4oException(e);
 		}
+		
 		boolean ret = super.close2();
 		if (Debug.fakeServer) {
 			Debug.serverStream.close();
@@ -321,10 +321,9 @@ public class YapClient extends YapStream implements ExtClient {
 				}
 
 				private void throwOnClosed() {
-					// FIXME: Should _readerThread ever be null here?
-					if (_readerThread==null||_readerThread.isClosed()) {
+					if (_readerThread.isClosed()) {
 						_doFinalize=false;
-						Exceptions4.throwRuntimeException(20, name());
+						throw new Db4oException(Messages.get(Messages.CLOSED_OR_OPEN_FAILED));
 					}
 				}
 
@@ -344,7 +343,7 @@ public class YapClient extends YapStream implements ExtClient {
 				}
 			});
 		} catch (Exception ex) {
-			Exceptions4.catchAll(ex);
+			Exceptions4.catchAllExceptDb4oException(ex);
 			return null;
 		}
 	}

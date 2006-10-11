@@ -94,9 +94,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 			i_serverSocket = null;
 			boolean isClosed = i_yapFile == null ? true : i_yapFile.close();
 			synchronized (i_threads) {
-				// FIXME: YapServerThread#close removes the threads from
-				// i_threads, which would cause different version.
-				Iterator4 i = i_threads.iterator();
+				Iterator4 i = new Collection4(i_threads).iterator();
 				while (i.moveNext()) {
 					((YapServerThread) i.current()).close();
 				}
