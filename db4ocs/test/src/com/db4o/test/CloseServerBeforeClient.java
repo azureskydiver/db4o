@@ -11,6 +11,11 @@ import com.db4o.ObjectServer;
 import db4ounit.extensions.ClientServerTestCase;
 
 public class CloseServerBeforeClient extends ClientServerTestCase {
+	
+	public static void main(String[] arguments) {
+		new CloseServerBeforeClient().runClientServer();
+	}
+	
 	public void test() throws Exception {
 		new File("case1207.yap").delete();
 		try {
