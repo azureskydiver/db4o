@@ -3,18 +3,20 @@
 package com.db4o.inside.query;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 
 /**
  * @exclude 
  * @sharpen.ignore
  */
-public class ObjectSetFacade implements ExtObjectSet{
+public class ObjectSetFacade implements ExtObjectSet {
     
-    public final QueryResult _delegate;
+	// TODO: encapsulate field
+    public final StatefulQueryResult _delegate;
     
-    public ObjectSetFacade(QueryResult QueryResult){
-        _delegate = QueryResult;
+    public ObjectSetFacade(QueryResult queryResult){
+        _delegate = new StatefulQueryResult(queryResult);
     }
 
     public Object get(int index) {
@@ -47,6 +49,5 @@ public class ObjectSetFacade implements ExtObjectSet{
 
 	public void sort(QueryComparator cmp) {
 		_delegate.sort(cmp);
-	}
-	
+	}	
 }

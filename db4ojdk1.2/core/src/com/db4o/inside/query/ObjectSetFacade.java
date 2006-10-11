@@ -2,20 +2,19 @@
 
 package com.db4o.inside.query;
 
-import java.util.*;
+import java.util.AbstractList;
 
-import com.db4o.*;
-import com.db4o.ext.*;
+import com.db4o.ext.ExtObjectSet;
 
 /**
  * @exclude 
  */
-public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
+public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
-    public final QueryResult _delegate;
+    public final StatefulQueryResult _delegate;
     
     public ObjectSetFacade(QueryResult qResult){
-        _delegate = qResult;
+        _delegate = new StatefulQueryResult(qResult);
     }
     
     public long[] getIDs() {
@@ -42,34 +41,16 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
         return _delegate.size();
     }
     
-    private Object streamLock(){
-        return _delegate.streamLock();
-    }
-    
-    private ObjectContainer objectContainer(){
-        return _delegate.objectContainer();
-    }
-    
     public boolean contains(Object a_object) {
         return indexOf(a_object) >= 0;
     }
 
     public Object get(int index) {
-        return _delegate.get(reverseIndex(index));
+        return _delegate.get(index);
     }
 
     public int indexOf(Object a_object) {
-        synchronized(streamLock()){
-            int id = (int)objectContainer().ext().getID(a_object);
-            if(id <= 0){
-                return -1;
-            }
-            return reverseIndex(_delegate.indexOf(id));
-        }
-    }
-
-    private int reverseIndex(int idx) {
-        return size()-idx-1;
+    	return _delegate.indexOf(a_object);
     }
     
     public int lastIndexOf(Object a_object) {

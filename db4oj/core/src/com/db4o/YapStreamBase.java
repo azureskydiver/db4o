@@ -9,8 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.MarshallerFamily;
-import com.db4o.inside.query.NativeQueryHandler;
-import com.db4o.inside.query.ObjectSetFacade;
+import com.db4o.inside.query.*;
 import com.db4o.inside.replication.Db4oReplicationReferenceProvider;
 import com.db4o.inside.replication.MigrationConnection;
 import com.db4o.query.Predicate;
@@ -684,7 +683,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
         }
         i_entryCounter--;
-        res.reset();
+//        res.reset();
         return new ObjectSetFacade(res);
     }
 
@@ -696,6 +695,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             q.constrain(template);
             ((QQuery) q).execute1(res);
         }
+    }
+    
+    public QueryResult getAll(Transaction ta) {
+    	final QueryResultImpl qr = new QueryResultImpl(ta);
+    	getAll(ta, qr);
+    	return qr;
     }
 
     abstract void getAll(Transaction ta, QueryResultImpl a_res);

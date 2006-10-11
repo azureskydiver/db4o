@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.inside.query.QueryResult;
 
 /**
  * public for .NET conversion reasons
@@ -405,13 +406,17 @@ public final class YapWriter extends YapReader {
     // turning writing around since our Collection world is the wrong
     // way around
     // TODO: optimize
-    final void writeQueryResult(QueryResultImpl a_qr) {
-        int size = a_qr.size();
+    final void writeQueryResult(QueryResult qr) {
+    	// TODO: save offset, calculate the size after iteration, write back 
+        int size = qr.size();
         writeInt(size);
         _offset += (size - 1) * YapConst.ID_LENGTH;
         int dec = YapConst.ID_LENGTH * 2;
+        
+        IntIterator4 idIterator = qr.iterateIDs();
         for (int i = 0; i < size; i++) {
-            writeInt(a_qr.nextInt());
+        	idIterator.moveNext();
+            writeInt(idIterator.currentInt());
             _offset -= dec;
         }
     }

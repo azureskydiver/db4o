@@ -134,17 +134,17 @@ public final class QCandidates implements Visitor4 {
     	});
     	
     	// Step 4: Add them to our tree again.
-    	final Tree[] newTree = { null };
+    	Tree newTree = null;
     	Iterator4 i = col.iterator();
     	while(i.moveNext()){
     		QCandidate candidate = (QCandidate) i.current();
     		candidate._preceding = null;
     		candidate._subsequent = null;
     		candidate._size = 1;
-    		newTree[0] = Tree.add(newTree[0], candidate);
+    		newTree = Tree.add(newTree, candidate);
     	}
     	
-    	i_root = newTree[0];
+    	i_root = newTree;
     }
 
     void collect(final QCandidates a_candidates) {

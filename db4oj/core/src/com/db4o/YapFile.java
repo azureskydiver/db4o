@@ -254,7 +254,7 @@ public abstract class YapFile extends YapStream {
 				}
 			}
 		}
-        a_res.reset();
+//        a_res.reset();
     }
 
     final int getPointerSlot() {

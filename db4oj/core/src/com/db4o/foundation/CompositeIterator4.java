@@ -31,6 +31,10 @@ public class CompositeIterator4 implements Iterator4 {
 		}
 		return true;
 	}
+	
+	public Iterator4 currentIterator() {
+		return _currentIterator;
+	}
 
 	public Object current() {
 		return _currentIterator.current();

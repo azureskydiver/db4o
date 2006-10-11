@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.inside.query.QueryResult;
 
 /**
  * Messages for Client/Server Communication
@@ -217,7 +218,7 @@ class Msg implements Cloneable {
 		return writer;
 	}
 
-	final void writeQueryResult(Transaction a_trans, QueryResultImpl qr, YapSocket sock) {
+	final void writeQueryResult(Transaction a_trans, QueryResult qr, YapSocket sock) {
 		int size = qr.size();
 		MsgD message = ID_LIST.getWriterForLength(a_trans, YapConst.ID_LENGTH * (size + 1));
 		YapWriter writer = message.getPayLoad();

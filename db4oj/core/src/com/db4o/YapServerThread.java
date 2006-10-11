@@ -180,10 +180,8 @@ final class YapServerThread extends Thread {
             if (Msg.LOGIN.equals(message)) {
                 String userName = ((MsgD) message).readString();
                 String password = ((MsgD) message).readString();
-                User user = new User();
-                user.name = userName;
                 i_mainStream.showInternalClasses(true);
-                User found = (User) i_mainStream.get(user).next();
+                User found = (User) i_server.getUser(userName);
                 i_mainStream.showInternalClasses(false);
                 if (found != null) {
                     if (found.password.equals(password)) {

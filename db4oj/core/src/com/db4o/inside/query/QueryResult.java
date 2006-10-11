@@ -3,23 +3,22 @@
 package com.db4o.inside.query;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 
 /**
  * @exclude
  */
-public interface QueryResult {
+public interface QueryResult extends Iterable4 {
 
     public Object get(int index);
 
-    public long[] getIDs();
-
-    public boolean hasNext();
-
-    public Object next();
-
-    public void reset();
+//    public long[] getIDs();    
     
+    public Iterator4 iterator();
+    
+	public IntIterator4 iterateIDs();
+	
     public int size();
     
     public Object streamLock();

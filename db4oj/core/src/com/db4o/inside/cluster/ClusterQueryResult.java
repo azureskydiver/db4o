@@ -4,6 +4,7 @@ package com.db4o.inside.cluster;
 
 import com.db4o.*;
 import com.db4o.cluster.*;
+import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
@@ -16,7 +17,6 @@ public class ClusterQueryResult implements QueryResult{
     
     private final Cluster _cluster;
     private final ObjectSet[] _objectSets;
-    private int _current;
     private final int[] _sizes;
     private final int _size;
     
@@ -33,54 +33,40 @@ public class ClusterQueryResult implements QueryResult{
         _size = size;
     }
     
-//	public Iterator4 iterator() {
-//		synchronized(_cluster) {
-//			Iterator4[] iterators = new Iterator4[_objectSets.length];
-//			for (int i = 0; i < _objectSets.length; i++) {
-//				iterators[i] = ((Iterable4)_objectSets[i]).iterator();
-//			}
-//			return new CompositeIterator4(iterators);
-//		} 
-//	}
+    public IntIterator4 iterateIDs() {
+		synchronized(_cluster) {
+			final Iterator4[] iterators = new Iterator4[_objectSets.length];
+			for (int i = 0; i < _objectSets.length; i++) {
+				iterators[i] = ((ObjectSetFacade)_objectSets[i])._delegate.iterateIDs();
+			}
+			return new IntIterator4() {
+				private final CompositeIterator4 _delegate = new CompositeIterator4(iterators);
+				
+				public boolean moveNext() {
+					return _delegate.moveNext();
+				}
+			
+				public Object current() {
+					return _delegate.current();
+				}
+			
+				public int currentInt() {
+					return ((IntIterator4)_delegate.currentIterator()).currentInt();
+				}
+			}; 
+		} 
+	}
 
-    public boolean hasNext() {
-        synchronized(_cluster){
-            return hasNextNoSync();
-        }
-    }
     
-    private ObjectSet current(){
-        return _objectSets[_current];
-    }
-    
-    private boolean hasNextNoSync(){
-        if(current().hasNext()){
-            return true;
-        }
-        if(_current >= _objectSets.length-1){
-            return false;
-        }
-        _current ++;
-        return hasNextNoSync();
-    }
-
-    public Object next() {
-        synchronized(_cluster){
-            if(hasNextNoSync()){
-                return current().next();
-            }
-            return null;
-        }
-    }
-
-    public void reset() {
-        synchronized(_cluster){
-            for (int i = 0; i < _objectSets.length; i++) {
-               _objectSets[i].reset(); 
-            }
-            _current = 0;
-        }
-    }
+	public Iterator4 iterator() {
+		synchronized(_cluster) {
+			Iterator4[] iterators = new Iterator4[_objectSets.length];
+			for (int i = 0; i < _objectSets.length; i++) {
+				iterators[i] = ((ObjectSetFacade)_objectSets[i])._delegate.iterator();
+			}
+			return new CompositeIterator4(iterators);
+		} 
+	}
 
     public int size() {
         return _size;
@@ -96,13 +82,8 @@ public class ClusterQueryResult implements QueryResult{
                 index -= _sizes[i];
                 i++;
             }
-            return ((ObjectSetFacade)_objectSets[i])._delegate.get(index); 
+            return ((ObjectSetFacade)_objectSets[i]).get(index); 
         }
-    }
-
-    public long[] getIDs() {
-        Exceptions4.notSupported();
-        return null;
     }
 
     public Object streamLock() {
@@ -110,7 +91,7 @@ public class ClusterQueryResult implements QueryResult{
     }
 
     public ObjectContainer objectContainer() {
-        return _cluster._objectContainers[_current];
+        throw new NotSupportedException();
     }
 
     public int indexOf(int id) {
