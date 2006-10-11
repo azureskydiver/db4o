@@ -44,6 +44,9 @@ namespace com.db4o.test
 
 			int errorCount=0;
 			errorCount+=new com.db4o.db4ounit.common.AllTests().RunSolo();
+#if NET_2_0 || CF_2_0
+			errorCount += new com.db4o.db4ounit.cli2.AllTests().RunSolo();
+#endif
 			new AllTests().Run();
 			errorCount+=Tester.errorCount;
 			if(errorCount>0) 
