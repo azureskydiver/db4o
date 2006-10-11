@@ -11,6 +11,7 @@ import com.db4o.config.*;
  */
 public final class Messages
 {
+	public final static int CLOSED_OR_OPEN_FAILED = 20; 
     public final static int FATAL_MSG_ID=44;
     public final static int NOT_IMPLEMENTED=49;
     public final static int ONLY_FOR_INDEXED_FIELDS=66;
