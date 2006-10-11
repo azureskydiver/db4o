@@ -5,6 +5,13 @@ package db4ounit;
 
 public class ArrayAssert {
 	
+	public static void contains(long[] array, long expected) {
+		if (-1 != indexOf(array, expected)) {
+			return;
+		}
+		Assert.fail("Expecting '" + expected + "'.");
+	}	
+	
 	public static void areEqual(Object[] expected, Object[] actual) {
 		if (expected == actual) return;
 		if (expected == null || actual == null) Assert.areSame(expected, actual);
@@ -47,5 +54,14 @@ public class ArrayAssert {
 	    for (int i = 0; i < expected.length; i++) {
 	        Assert.areEqual(expected[i], actual[i]);
 	    }
+	}
+	
+	private static int indexOf(long[] array, long expected) {
+		for (int i = 0; i < array.length; ++i) {				
+			if (expected == array[i]) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }

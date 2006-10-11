@@ -3,10 +3,10 @@
 package db4ounit.extensions;
 
 import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.ext.*;
-import com.db4o.query.*;
-import com.db4o.reflect.*;
+import com.db4o.config.Configuration;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.query.Query;
+import com.db4o.reflect.Reflector;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
@@ -61,6 +61,17 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected Class[] testCases() {
 		return new Class[] { getClass() };
 	}
+	
+	public int runSoloAndClientServer() {
+		return runSoloAndClientServer(true);
+	}
+
+	private int runSoloAndClientServer(final boolean independentConfig) {
+		return new TestRunner(new TestSuite(new Test[] {
+				soloSuite(independentConfig).build(),
+				clientServerSuite(independentConfig).build(),				
+		})).run();
+	}
 
 	public int runSolo() {
 		return runSolo(true);
@@ -68,9 +79,8 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 
 	public int runSolo(boolean independentConfig) {
 		return new TestRunner(
-					new Db4oTestSuiteBuilder(
-							new Db4oSolo(configSource(independentConfig)), testCases())).run();
-	}
+					soloSuite(independentConfig)).run();
+	}	
 
     public int runClientServer() {
     	return runClientServer(true);
@@ -78,9 +88,18 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 
     public int runClientServer(boolean independentConfig) {
         return new TestRunner(
-                    new Db4oTestSuiteBuilder(
-                            new Db4oSingleClient(configSource(independentConfig)), testCases())).run();
+                    clientServerSuite(independentConfig)).run();
     }
+    
+    private Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
+		return new Db4oTestSuiteBuilder(
+				new Db4oSolo(configSource(independentConfig)), testCases());
+	}
+
+	private Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
+		return new Db4oTestSuiteBuilder(
+		        new Db4oSingleClient(configSource(independentConfig)), testCases());
+	}
 
     private ConfigurationSource configSource(boolean independentConfig) {
         return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
