@@ -30,10 +30,10 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
         return ReflectHelper2.getUserStoredClasses(oc);
     }
 
-    public int getNumberOfObjectsForClass(Class aClass) {
+    /*public int getNumberOfObjectsForClass(Class aClass) {
         List results = oc.query(aClass);
         return results.size();
-    }
+    }*/
 
     public int getNumberOfObjectsForClass(String aClass) {
         ReflectClass reflectClass = oc.ext().reflector().forName(aClass);
