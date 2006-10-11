@@ -13,6 +13,10 @@ import db4ounit.extensions.ClientServerTestCase;
 
 public class ClientDisconnect extends ClientServerTestCase {
 	
+	public static void main(String[] arguments) {
+		new ClientDisconnect().runClientServer();
+	}
+	
 	public void testDisconnect() throws IOException {
 		ExtObjectContainer oc1 = db();
 		ExtObjectContainer oc2 = db();
