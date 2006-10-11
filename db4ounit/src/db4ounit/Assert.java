@@ -126,6 +126,15 @@ public final class Assert {
 	
 	public static void isGreaterOrEqual(long expected, long actual) {
 		if (actual >= expected) return;
-		fail(failureMessage(new Long(expected), new Long(actual), "greater than or equal to ", null));
+		fail(expected, actual, "greater than or equal to ");
+	}
+
+	private static void fail(long expected, long actual, final String operator) {
+		fail(failureMessage(new Long(expected), new Long(actual), operator, null));
+	}
+
+	public static void areNotEqual(long expected, long actual) {
+		if (actual != expected) return;
+		fail(expected, actual, "not equal to ");
 	}
 }
