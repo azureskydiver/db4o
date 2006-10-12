@@ -17,17 +17,16 @@ public class CloseServerBeforeClient extends ClientServerTestCase {
 	}
 	
 	public void test() throws Exception {
-		new File("case1207.yap").delete();
+		new File("csbc.yap").delete();
 		try {
 			ObjectServer server = Db4o.openServer(
 					"CloseServerBeforeClient.yap", 1207);
 			server.grantAccess("db4o", "db4o");
 			ObjectContainer oc = Db4o.openClient("127.0.0.1", 1207, "db4o",
 					"db4o");
-			// FIXME: close server throws exception when oc is not closed
 			server.close();
 		} finally {
-			new File("case1207.yap").delete();
+			new File("csbc.yap").delete();
 		}
 	}
 }
