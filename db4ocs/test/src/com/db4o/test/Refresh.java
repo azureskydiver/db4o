@@ -11,6 +11,10 @@ import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;
 
 public class Refresh extends ClientServerTestCase {
+	
+	public static void main(String[] args) {
+		new Refresh().runClientServer();
+	}
 
 	public String name;
 
@@ -70,10 +74,14 @@ public class Refresh extends ClientServerTestCase {
 			oc2.set(r2);
 			oc2.commit();
 
+			// the next line is failing
 			oc1.refresh(r1, 3);
+			// but the following works
+			//r1 = getByName(oc1, "o21");
 			Assert.areEqual("o21", r1.name);
 			Assert.areEqual("o22", r1.child.name);
 			Assert.areEqual("o23", r1.child.child.name);
+			
 		} finally {
 			oc1.close();
 			oc2.close();
@@ -81,9 +89,13 @@ public class Refresh extends ClientServerTestCase {
 	}
 
 	private Refresh getRoot(ObjectContainer oc) {
+		return getByName(oc, "o1");
+	}
+
+	private Refresh getByName(ObjectContainer oc, final String name) {
 		Query q = oc.query();
 		q.constrain(Refresh.class);
-		q.descend("name").constrain("o1");
+		q.descend("name").constrain(name);
 		ObjectSet objectSet = q.execute();
 		return (Refresh) objectSet.next();
 	}
