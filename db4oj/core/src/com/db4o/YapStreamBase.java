@@ -1862,45 +1862,46 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
      */
     List4 stillTo1(List4 a_still, Tree[] a_just, Object a_object, int a_depth,
         boolean a_forceUnknownDeactivate) {
-        if (a_object != null) {
-            if (a_depth > 0) {
-                YapObject yapObject = i_hcTree.hc_find(a_object);
-                if (yapObject != null) {
-                    int id = yapObject.getID();
-                    if(a_just[0] != null){
-                        if(((TreeInt)a_just[0]).find(id) != null){
-                            return a_still;
-                        }
-                        a_just[0] = a_just[0].add(new TreeInt(id));
-                    }else{
-                        a_just[0] = new TreeInt(id);
-                    }
-                    return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
-                } 
-                final ReflectClass clazz = reflector().forObject(a_object);
-				if (clazz.isArray()) {
-					if (!clazz.getComponentType().isPrimitive()) {
-                        Object[] arr = YapArray.toArray(_this, a_object);
-                        for (int i = 0; i < arr.length; i++) {
-                            a_still = stillTo1(a_still, a_just, arr[i],
-                                a_depth, a_forceUnknownDeactivate);
-                        }
-					}
-                } else {
-                    if (a_object instanceof Entry) {
-                        a_still = stillTo1(a_still, a_just,
-                            ((Entry) a_object).key, a_depth, false);
-                        a_still = stillTo1(a_still, a_just,
-                            ((Entry) a_object).value, a_depth, false);
-                    } else {
-                        if (a_forceUnknownDeactivate) {
-                            // Special handling to deactivate Top-Level unknown objects only.
-                            YapClass yc = getYapClass(reflector().forObject(a_object),
-                                false);
-                            if (yc != null) {
-                                yc.deactivate(i_trans, a_object, a_depth);
-                            }
-                        }
+    	
+        if (a_object == null || a_depth <= 0) {
+        	return a_still;
+        }
+        
+        YapObject yapObject = i_hcTree.hc_find(a_object);
+        if (yapObject != null) {
+            int id = yapObject.getID();
+            if(a_just[0] != null){
+                if(((TreeInt)a_just[0]).find(id) != null){
+                    return a_still;
+                }
+                a_just[0] = a_just[0].add(new TreeInt(id));
+            }else{
+                a_just[0] = new TreeInt(id);
+            }
+            return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
+        } 
+        final ReflectClass clazz = reflector().forObject(a_object);
+		if (clazz.isArray()) {
+			if (!clazz.getComponentType().isPrimitive()) {
+                Object[] arr = YapArray.toArray(_this, a_object);
+                for (int i = 0; i < arr.length; i++) {
+                    a_still = stillTo1(a_still, a_just, arr[i],
+                        a_depth, a_forceUnknownDeactivate);
+                }
+			}
+        } else {
+            if (a_object instanceof Entry) {
+                a_still = stillTo1(a_still, a_just,
+                    ((Entry) a_object).key, a_depth, false);
+                a_still = stillTo1(a_still, a_just,
+                    ((Entry) a_object).value, a_depth, false);
+            } else {
+                if (a_forceUnknownDeactivate) {
+                    // Special handling to deactivate Top-Level unknown objects only.
+                    YapClass yc = getYapClass(reflector().forObject(a_object),
+                        false);
+                    if (yc != null) {
+                        yc.deactivate(i_trans, a_object, a_depth);
                     }
                 }
             }
