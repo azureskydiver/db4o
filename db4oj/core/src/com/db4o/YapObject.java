@@ -50,9 +50,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		if (a_depth > 0) {
 		    YapStream stream = ta.stream();
 		    if(a_refresh){
-				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
-					stream.message("" + getID() + " refresh " + i_yapClass.getName());
-				}
+				logActivation(stream, "refresh");
 		    }else{
 				if (isActive()) {
 					if (a_object != null) {
@@ -65,11 +63,19 @@ public class YapObject extends YapMeta implements ObjectInfo{
 						return;
 					}
 				}
-				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
-					stream.message("" + getID() + " activate " + i_yapClass.getName());
-				}
+				logActivation(stream, "activate");
 		    }
 			read(ta, null, a_object, a_depth, YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
+		}
+	}
+
+	private void logActivation(YapStream stream, String event) {
+		logEvent(stream, event, YapConst.ACTIVATION);
+	}
+
+	private void logEvent(YapStream stream, String event, final int level) {
+		if (stream.configImpl().messageLevel() > level) {
+			stream.message("" + getID() + " " + event + " " + i_yapClass.getName());
 		}
 	}
 
@@ -123,10 +129,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			        ((Db4oTypeImpl)obj).preDeactivate();
 			    }
 			    YapStream stream = a_trans.stream();
-				if (stream.configImpl().messageLevel() > YapConst.ACTIVATION) {
-					stream.message("" + getID() + " deactivate " + i_yapClass.getName());
-				}
-
+				logActivation(stream, "deactivate");
 				setStateDeactivated();
 				i_yapClass.deactivate(a_trans, obj, a_depth);
 			}
@@ -373,10 +376,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 					}
 				}
 				
-				if (a_trans.stream().configImpl().messageLevel() > YapConst.STATE) {
-				    a_trans.stream().message("" + getID() + " update " + i_yapClass.getName());
-				}
-	
+				logEvent(a_trans.stream(), "update", YapConst.STATE);
+				
 				setStateClean();
 	
 				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.stream().i_handlers.arrayType(obj), 0);
