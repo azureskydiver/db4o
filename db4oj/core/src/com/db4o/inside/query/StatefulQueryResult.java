@@ -53,11 +53,11 @@ public class StatefulQueryResult {
 		_delegate.sort(cmp);
 	}
 	
-	public Object streamLock() {
+	private Object streamLock() {
 		return _delegate.streamLock();
 	}
 	
-	public ObjectContainer objectContainer() {
+	private ObjectContainer objectContainer() {
 		return _delegate.objectContainer();
 	}
 	
@@ -71,6 +71,7 @@ public class StatefulQueryResult {
 	    }
 	}
 
+	// TODO: get rid of this
 	private int reverseIndex(int idx) {
 	    return size()-idx-1;
 	}
