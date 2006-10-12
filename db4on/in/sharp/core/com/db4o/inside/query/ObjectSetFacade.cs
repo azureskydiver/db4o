@@ -10,17 +10,17 @@ namespace com.db4o.inside.query
 	/// <exclude />
 	public class ObjectSetFacade : ExtObjectSet, System.Collections.IList
 	{
-		public readonly QueryResult _delegate;
+		public readonly StatefulQueryResult _delegate;
 
         public ObjectSetFacade(QueryResult qr)
 		{
-            _delegate = qr;
+            _delegate = new StatefulQueryResult(qr);
 		}
 
 		#region ObjectSet Members
 		
 		public Object Get(int index) {
-            return _delegate.Get(ReverseIndex(_delegate, index));
+            return _delegate.Get(index);
         }
 
 		public void Sort(com.db4o.query.QueryComparator cmp)
@@ -68,7 +68,7 @@ namespace com.db4o.inside.query
 			return _delegate.ObjectContainer();
 		}
 
-		public QueryResult Delegate_()
+		public StatefulQueryResult Delegate_()
 		{
 			return _delegate;
 		}
@@ -88,7 +88,7 @@ namespace com.db4o.inside.query
 		{
 			get
 			{
-				return _delegate.Get(ReverseIndex(_delegate, index));
+				return _delegate.Get(index);
 			}
 			set
 			{
@@ -125,12 +125,7 @@ namespace com.db4o.inside.query
 		{
 			lock (StreamLock())
 			{
-                int id = (int)ObjectContainer().Ext().GetID(value);
-				if(id <= 0)
-				{
-					return -1;
-				}
-				return ReverseIndex(_delegate, _delegate.IndexOf(id));
+                return _delegate.IndexOf(value);
 			}
 		}
 
@@ -174,7 +169,7 @@ namespace com.db4o.inside.query
                 int s = _delegate.Size();
                 while (i < s)
                 {
-                    array.SetValue(_delegate.Get(ReverseIndex(_delegate, i)), index + i);
+                    array.SetValue(_delegate.Get(i), index + i);
                     i++;
                 }
             }
@@ -194,10 +189,10 @@ namespace com.db4o.inside.query
 
 		class ObjectSetImplEnumerator : System.Collections.IEnumerator
 		{
-			QueryResult _result;
+			StatefulQueryResult _result;
 			int _next = 0;
 			
-			public ObjectSetImplEnumerator(QueryResult result)
+			public ObjectSetImplEnumerator(StatefulQueryResult result)
 			{
 				_result = result;
 			}
@@ -211,7 +206,7 @@ namespace com.db4o.inside.query
 			{
 				get
 				{
-					return _result.Get(ReverseIndex(_result, _next-1));
+					return _result.Get(_next-1);
 				}
 			}
 

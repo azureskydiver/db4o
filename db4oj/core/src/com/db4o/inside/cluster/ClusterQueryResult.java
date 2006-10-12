@@ -15,7 +15,7 @@ import com.db4o.query.*;
  */
 public class ClusterQueryResult implements QueryResult{
     
-    private final Cluster _cluster;
+	private final Cluster _cluster;
     private final ObjectSet[] _objectSets;
     private final int[] _sizes;
     private final int _size;
@@ -33,30 +33,36 @@ public class ClusterQueryResult implements QueryResult{
         _size = size;
     }
     
+    private static final class ClusterQueryResultIntIterator implements IntIterator4 {
+
+		private final CompositeIterator4 _delegate;
+
+		public ClusterQueryResultIntIterator(Iterator4[] iterators) {
+			_delegate = new CompositeIterator4(iterators);
+		}
+
+		public boolean moveNext() {
+			return _delegate.moveNext();
+		}
+
+		public Object current() {
+			return _delegate.current();
+		}
+
+		public int currentInt() {
+			return ((IntIterator4)_delegate.currentIterator()).currentInt();
+		}
+	}
+    
     public IntIterator4 iterateIDs() {
 		synchronized(_cluster) {
 			final Iterator4[] iterators = new Iterator4[_objectSets.length];
 			for (int i = 0; i < _objectSets.length; i++) {
 				iterators[i] = ((ObjectSetFacade)_objectSets[i])._delegate.iterateIDs();
 			}
-			return new IntIterator4() {
-				private final CompositeIterator4 _delegate = new CompositeIterator4(iterators);
-				
-				public boolean moveNext() {
-					return _delegate.moveNext();
-				}
-			
-				public Object current() {
-					return _delegate.current();
-				}
-			
-				public int currentInt() {
-					return ((IntIterator4)_delegate.currentIterator()).currentInt();
-				}
-			}; 
+			return new ClusterQueryResultIntIterator(iterators); 
 		} 
 	}
-
     
 	public Iterator4 iterator() {
 		synchronized(_cluster) {

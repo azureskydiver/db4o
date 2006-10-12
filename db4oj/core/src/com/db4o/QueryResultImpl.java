@@ -31,14 +31,20 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
     	return intIterator();
     }
     
+    // TODO: fix the C# converter and inline this class
+    private class QueryResultImplIterator extends MappingIterator {
+		public QueryResultImplIterator(Iterator4 iterator) {
+			super(iterator);
+		}
+		protected Object map(Object current) {
+			synchronized (streamLock()) {
+				return activatedObject(((Integer)current).intValue());
+			}
+		}
+	};
+    
     public Iterator4 iterator() {
-    	return new MappingIterator(super.iterator()) {
-    		protected Object map(Object current) {
-    			synchronized (streamLock()) {
-    				return activatedObject(((Integer)current).intValue());
-				}
-    		}
-    	};
+    	return new QueryResultImplIterator(super.iterator());
     }
 
 	final Object activate(Object obj){
@@ -115,6 +121,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 		sort(cmp,0,size()-1);
 	}
 
+	// TODO: use Algorithms4.qsort
 	private void sort(QueryComparator cmp,int from,int to) {
 		if(to-from<1) {
 			return;
