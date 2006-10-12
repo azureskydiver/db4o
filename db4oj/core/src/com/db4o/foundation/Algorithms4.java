@@ -8,7 +8,7 @@ package com.db4o.foundation;
  */
 public class Algorithms4 {
 	
-	interface QuickSortable4 {
+	public interface QuickSortable4 {
 		int size();
 		int compare(int leftIndex, int rightIndex);
 		void swap(int leftIndex, int rightIndex);

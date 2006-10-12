@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class QResultClientIterator implements Iterator4 {
+class QResultClientIterator implements Iterator4 {
 	
 	private Object[] _prefetchedObjects;
 	private int _remainingObjects;

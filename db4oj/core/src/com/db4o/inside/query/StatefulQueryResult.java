@@ -3,15 +3,13 @@
 package com.db4o.inside.query;
 
 import com.db4o.ObjectContainer;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.query.*;
+import com.db4o.query.QueryComparator;
 
 /**
  * @exclude 
- * @sharpen.ignore
  */
-public class StatefulQueryResult implements ExtObjectSet{
+public class StatefulQueryResult {
     
     private final QueryResult _delegate;
     private final Iterable4Adaptor _iterable;
@@ -33,10 +31,6 @@ public class StatefulQueryResult implements ExtObjectSet{
         	ids[i++] = iterator.currentInt();
         }
         return ids;
-    }
-
-    public ExtObjectSet ext() {
-        return this;
     }
 
     public boolean hasNext() {
@@ -88,5 +82,4 @@ public class StatefulQueryResult implements ExtObjectSet{
 	public Iterator4 iterator() {
 		return _delegate.iterator();
 	}
-	
 }
