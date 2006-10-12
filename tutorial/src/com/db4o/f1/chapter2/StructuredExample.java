@@ -266,6 +266,10 @@ public class StructuredExample extends Util {
         		return pilot.getName().equals("Michael Schumacher");
         	}
         });
+        if (!result.hasNext()) {
+        	System.out.println("Pilot not found!");
+        	return;
+        }
         Pilot pilot=(Pilot)result.next();
         Car car1=new Car("Ferrari");
         Car car2=new Car("BMW");
