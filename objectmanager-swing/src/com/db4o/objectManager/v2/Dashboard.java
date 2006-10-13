@@ -83,7 +83,8 @@ public class Dashboard {
      */
     private void buildInterface() {
         frame = new JFrame();
-        frame.setJMenuBar(buildMenuBar());
+	 	frame.setIconImage(ResourceManager.createImageIcon("icons/plain/16x16/data.png", "database").getImage());
+		frame.setJMenuBar(buildMenuBar());
         frame.setContentPane(buildContentPane());
         frame.setSize(600, 450);
         frame.setResizable(false);

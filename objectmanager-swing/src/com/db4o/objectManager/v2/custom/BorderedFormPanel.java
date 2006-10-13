@@ -5,7 +5,6 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import javax.swing.*;
 import java.awt.Component;
-import java.awt.BorderLayout;
 
 /**
  * User: treeder
@@ -13,14 +12,14 @@ import java.awt.BorderLayout;
  * Time: 4:45:04 PM
  */
 public class BorderedFormPanel extends BorderedPanel{
-    String columLayout = "left:max(60dlu;pref), 10dlu, 120dlu, 7dlu";
+    String columnLayout = "left:max(60dlu;pref), 10dlu, 120dlu:grow, 7dlu";
     private DefaultFormBuilder builder;
 
     public BorderedFormPanel(String title) {
         super(title);
 
         FormLayout layout = new FormLayout(
-                columLayout, // 1st major colum
+				columnLayout, // 1st major colum
                 "");                                         // add rows dynamically
 
         builder = new DefaultFormBuilder(layout);

@@ -20,6 +20,7 @@ import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -100,32 +101,32 @@ public class MainPanel extends JPanel {
 
 
     private JComponent buildMainLeftPanel() {
-        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.BOTTOM);
+     /*   JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.BOTTOM);
         tabbedPane.putClientProperty(Options.EMBEDDED_TABS_KEY, Boolean.TRUE);
         tabbedPane.addTab("Tree", buildTree());
         tabbedPane.addTab("Help", Factory.createStrippedScrollPane(buildHelp()));
-
-        SimpleInternalFrame sif = new SimpleInternalFrame("Tree View");
-        sif.setPreferredSize(new Dimension(150, 100));
+*/
+        SimpleInternalFrame sif = new SimpleInternalFrame("Stored Classes");
+        sif.setPreferredSize(new Dimension(200, 300));
         sif.setBorder(Borders.DIALOG_BORDER);
-        sif.add(tabbedPane);
+        sif.add(buildTree());
         return sif;
     }
 
 
     private JScrollPane buildTree() {
         classTree = new JTree(createClassTreeModel());
-        classTree.putClientProperty(Options.TREE_LINE_STYLE_KEY,
+		classTree.putClientProperty(Options.TREE_LINE_STYLE_KEY,
                 Options.TREE_LINE_STYLE_NONE_VALUE);
         classTree.setToggleClickCount(2);
-        return new JScrollPane(classTree);
+		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+		renderer.setLeafIcon(ResourceManager.createImageIcon("icons/16x16/element.png"));
+		Icon icon = ResourceManager.createImageIcon("icons/16x16/coffeebean.png");
+		renderer.setOpenIcon(icon);
+		renderer.setClosedIcon(icon);
+		classTree.setCellRenderer(renderer);
+		return new JScrollPane(classTree);
 
-    }
-
-
-    private JComponent buildHelp() {
-        JTextArea area = new JTextArea("\n Some help info could go here.");
-        return area;
     }
 
     private TreeModel createClassTreeModel() {
@@ -150,10 +151,12 @@ public class MainPanel extends JPanel {
                 parent.add(new DefaultMutableTreeNode(field.getName()));
             }
         }
-        classTree.expandRow(0);
-
         addClassTreeListener(new ClassTreeListener(queryBarPanel));
-    }
+		classTree.expandRow(0);
+		classTree.setRootVisible(false);
+		classTree.setShowsRootHandles(true);
+		
+	}
 
 
     public void addClassTreeListener(MouseListener classTreeListener) {
@@ -223,7 +226,7 @@ public class MainPanel extends JPanel {
      * @param tabbedPane
      */
     private void addTabs(JTabbedPane tabbedPane) {
-        databaseSummaryPanel = new DatabaseSummaryPanel(connectionSpec, getDatabaseInspector());
+        databaseSummaryPanel = new DatabaseSummaryPanel(this, connectionSpec, getDatabaseInspector());
         tabbedPane.addTab("Home", databaseSummaryPanel);
     }
 

@@ -20,15 +20,16 @@ public class ClassStatsTableModel extends DefaultTableModel implements TableMode
             /*"Data size",
             "Index size",*/
     };
+	private List<ReflectClass> storedClasses;
 
-    public ClassStatsTableModel(DatabaseInspector databaseInspector) {
+	public ClassStatsTableModel(DatabaseInspector databaseInspector) {
         super(columns, 0);
-        List<ReflectClass> classesStored = databaseInspector.getClassesStored();
-        super.setRowCount(classesStored.size());
+		storedClasses = databaseInspector.getClassesStored();
+		super.setRowCount(storedClasses.size());
         this.databaseInspector = databaseInspector;
         int r=0,c=0;
-        for (int i = 0; i < classesStored.size(); i++) {
-            ReflectClass storedClass = classesStored.get(i);
+        for (int i = 0; i < storedClasses.size(); i++) {
+            ReflectClass storedClass = storedClasses.get(i);
             c=0;
             setValueAt(storedClass.getName(),r,c++);
             setValueAt(databaseInspector.getNumberOfObjectsForClass(storedClass.getName()),r,c++);
@@ -36,7 +37,7 @@ public class ClassStatsTableModel extends DefaultTableModel implements TableMode
             //setValueAt(databaseInspector.getSpaceUsedByClassIndexes(storedClass.getName()), r, c++);
             r++;
         }
-    }
+	}
 
     public String getColumnName(int column) {
         return columns[column];
@@ -53,4 +54,8 @@ public class ClassStatsTableModel extends DefaultTableModel implements TableMode
     public boolean isCellEditable(int row, int column) {
         return false;
     }
+
+	public List<ReflectClass> getStoredClasses() {
+		return storedClasses;
+	}
 }
