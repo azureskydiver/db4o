@@ -58,7 +58,7 @@ public class PeekPersistedExample extends Util {
 		} finally {
 			db.close();
 		}
-		 checkCar();
+		checkCar();
 	}
 	
 	public static void checkCar(){

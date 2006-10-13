@@ -1,6 +1,20 @@
 .n 
 .a Utility ..
-.1 Utility methods ..
+.1 ExtObjectContainer Utility Methods ..
+Db4o provides 2 versions of its interface:
+- ObjectContainer - supplies functionality, which is enough for the most common usage of db4o database;
+- ExtObjectContainer - adds advanced features.
+
+The idea of such separation is:
+- Keep the com.db4o package very small and well readable.
+- Separate vital and optional functionality.
+- Make it easy for other products to implement the basic db4o interface.
+- Show an example of how a lightweight version of db4o could look.
+Every com.db4o.ObjectContainer object is also a com.db4o.ext.ExtObjectContainer. You can cast ._
+it to ExtObjectContainer or you can use #ext() method to get to the advanced features.
+The following chapters review utility methods provided by extended ObjectContainer interface. ._
+Use API documentation for more information on ExtObjectContainer methods.
+
 .2 peekPersisted ..
 Db4o loads each object into reference cache only once in the session, thus ensuring that independently ._
 of the way of retrieving, you will always get a reference to the same object. This concept certainly makes ._
@@ -26,9 +40,27 @@ If you will try to save such object:
 .c objectContainer#set(peekPersistedObject) ..
 you will get a new object in the database.
 
+.2 descend ..
+ExtObjectContainer#descend method allows you to navigate from a persistent object to ._
+it's members without activating or instantiating intermediate objects. 
+.s com.db4odoc.f1.utility.UtilityExample#testDescend ..
+Nevigating in this way can save you resources on activating only the objects you really need.
+
+.2 isActive ..
+ExtObjectContainer#isActive method provides you with means to define if the object is active.
+.s com.db4odoc.f1.utility.UtilityExample#checkActive ..
+This method can be useful in applications with deep object hierarchy if you prefer to use ._
+manual activation.
+
+.2 isStored ..
+ExtObjectContainer#isStored helps you to define if the object is stored in the database. The ._
+following example shows how to use it:
+.s com.db4odoc.f1.utility.UtilityExample#checkStored ..
+
 .2 Full source ..
 .s com.db4odoc.f1.persist.PeekPersistedExample ..
 .s com.db4odoc.f1.persist.Car .. 
 .s com.db4odoc.f1.persist.Change1 ..
 .s com.db4odoc.f1.persist.Change2 ..
-
+.s com.db4odoc.f1.utility.UtilityExample ..
+.s com.db4odoc.f1.utility.SensorPanel ..
