@@ -119,6 +119,8 @@
     <Compile Include="src\com\db4odoc\f1\staticfields\PilotCategories.vb" />
     <Compile Include="src\com\db4odoc\f1\staticfields\StaticFieldExample.vb" />
     <Compile Include="src\com\db4odoc\f1\Util.vb" />
+    <Compile Include="src\com\db4odoc\f1\utility\SensorPanel.vb" />
+    <Compile Include="src\com\db4odoc\f1\utility\UtilityExample.vb" />
     <Compile Include="src\com\db4odoc\f1\uuids\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\uuids\Pilot.vb" />
     <Compile Include="src\com\db4odoc\f1\uuids\UUIDExample.vb" />
