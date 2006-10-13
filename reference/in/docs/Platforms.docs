@@ -49,6 +49,12 @@ slow. If the system provides some other way to ensure that a file can not be acc
 it can improve performance dramatically to call:
 .c Db4o.configure().lockDatabaseFile(false) ..
 
+.2 JDK 1.4 ..
+Db4o can bypass the constructors declared for the class using platform-specific ._
+mechanisms. (For Java, this option is only available on JREs >= 1.4.) This mode ._
+allows reinstantiating objects even when their class doesn't provide a suitable constructor. ._
+For more information see  .l Constructors Constructors chapter ..
+If this option is available in the current runtime environment, it will be the default setting.
 
 .2 JDK 1.5 ..
 - Generics support introduced in JDK1.5 makes db4o Native Query syntax much simpler:
