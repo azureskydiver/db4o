@@ -31,9 +31,9 @@ public class Main {
         ClientServerExample.main(args);
         IndexedExample.main(args);
         DiagnosticExample.testEmpty();
-        DiagnosticExample.testArbitrary();
-        DiagnosticExample.testIndexDiagnostics();
-        DiagnosticExample.testTranslatorDiagnostics();
+        //DiagnosticExample.testArbitrary();   //TODO: JDK5 compatible
+        //DiagnosticExample.testIndexDiagnostics();
+        //DiagnosticExample.testTranslatorDiagnostics();
     	BlobExample.main(args);
     	CollectionExample.main(args);
     	ReflectorExample.main(args);
