@@ -39,7 +39,8 @@ public class QueryBarPanel extends JPanel {
         queryHistory = (List) mainPanel.getPreferenceForDatabase(QUERY_HISTORY);
         ComboBoxModel queryListModel = new QueryHistoryComboBoxModel(queryHistory);
         queryList = new JComboBox(queryListModel);
-        queryList.addActionListener(new ActionListener() {
+		queryList.setRenderer(new QueryHistoryRenderer());
+		queryList.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource();
                 if (cb.getSelectedIndex() > 0) {

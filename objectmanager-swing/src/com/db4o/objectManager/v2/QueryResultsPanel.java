@@ -52,131 +52,133 @@ import java.awt.Dimension;
 import java.awt.Color;
 
 final class QueryResultsPanel extends JPanel {
-    private MainPanel mainPanel;
-    private JTable resultsTable;
-    private TableModel tableModel;
-    private SimpleInternalFrame resultsFrame;
-    private JLabel statusLabel = new JLabel();
+	private MainPanel mainPanel;
+	private JTable resultsTable;
+	private TableModel tableModel;
+	private SimpleInternalFrame resultsFrame;
+	private JLabel statusLabel = new JLabel();
 
-    public QueryResultsPanel(MainPanel mainPanel) {
-        super(new BorderLayout());
-        this.mainPanel = mainPanel;
-        setOpaque(false);
-        setBorder(Borders.DIALOG_BORDER);
-        add(buildTablePanel());
-        add(buildStatusBar(), BorderLayout.SOUTH);
-    }
+	public QueryResultsPanel(MainPanel mainPanel) {
+		super(new BorderLayout());
+		this.mainPanel = mainPanel;
+		setOpaque(false);
+		setBorder(Borders.DIALOG_BORDER);
+		add(buildTablePanel());
+		add(buildStatusBar(), BorderLayout.SOUTH);
+	}
 
-    private JPanel buildStatusBar() {
-        JPanel p = new JPanel();
-        p.add(statusLabel);
-        return p;
-    }
-
-
-    private JComponent buildTablePanel() {
-        Component table = buildResultsTable();
-        resultsFrame = new SimpleInternalFrame("Results");
-        resultsFrame.setPreferredSize(new Dimension(300, 100));
-        resultsFrame.add(table);
-        return resultsFrame;
-    }
-
-    private JScrollPane buildResultsTable() {
-        resultsTable = new JTable();
-        resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        JScrollPane scrollpane = new FastScrollPane(resultsTable);
-        QueryResultsTableSelectionListener listener = new QueryResultsTableSelectionListener(resultsTable, this);
-        resultsTable.addMouseListener(listener);
-        return scrollpane;
-    }
+	private JPanel buildStatusBar() {
+		JPanel p = new JPanel();
+		p.add(statusLabel);
+		return p;
+	}
 
 
-    /**
-     * After a query executes, this will setup the table to display results.
-     *
-     * @param query
-     */
-    public void displayResults(String query) {
-        try {
-            tableModel = new QueryResultsTableModel(query, this);
-            resultsTable.setModel(tableModel);
-            //resultsTable.setA
-        } catch (Exception e) {
-            // don't display if there was an error
-        }
-        // todo: should grow columns depending on avg column length
-        TableColumn column = resultsTable.getColumnModel().getColumn(QueryResultsTableModel.COL_TREE);
-        column.setPreferredWidth(20); // icon cell
-        for (int i = 1; i < 5; i++) {
-            column = resultsTable.getColumnModel().getColumn(i);
-            column.setPreferredWidth(100);
-        }
-    }
+	private JComponent buildTablePanel() {
+		Component table = buildResultsTable();
+		resultsFrame = new SimpleInternalFrame("Results");
+		resultsFrame.setPreferredSize(new Dimension(300, 100));
+		resultsFrame.add(table);
+		return resultsFrame;
+	}
 
-    /**
-     * This method will batch up any changed objects until the user closes this panel, or clicks the Commit/Apply button
-     * 
-     * NOTE: Currently commits immediately
-     *
-     * @param o
-     */
-    public void addObjectToBatch(Object o) {
-        // todo: implement the batch with button
-        mainPanel.getObjectContainer().set(o);
-        mainPanel.getObjectContainer().commit();
-    }
+	private JScrollPane buildResultsTable() {
+		resultsTable = new JTable();
+		resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		JScrollPane scrollpane = new FastScrollPane(resultsTable);
+		QueryResultsTableSelectionListener listener = new QueryResultsTableSelectionListener(resultsTable, this);
+		resultsTable.addMouseListener(listener);
+		return scrollpane;
+	}
 
-    public ObjectContainer getObjectContainer() {
-        return mainPanel.getObjectContainer();
-    }
 
-    public void setStatusMessage(String msg) {
-        statusLabel.setForeground(Color.BLACK);
-        statusLabel.setText(msg);
-    }
+	/**
+	 * After a query executes, this will setup the table to display results.
+	 *
+	 * @param query
+	 */
+	public void displayResults(String query) {
+		try {
+			tableModel = new QueryResultsTableModel(query, this);
+			resultsTable.setModel(tableModel);
+			//resultsTable.setA
+		} catch (Exception e) {
+			// don't display if there was an error
+		}
+		// todo: should grow columns depending on avg column length
+		if (resultsTable.getColumnCount() > 0) {
+			TableColumn column = resultsTable.getColumnModel().getColumn(QueryResultsTableModel.COL_TREE);
+			column.setPreferredWidth(20); // icon cell
+			for (int i = 1; i < resultsTable.getColumnCount(); i++) {
+				column = resultsTable.getColumnModel().getColumn(i);
+				column.setPreferredWidth(100);
+			}
+		}
+	}
 
-    public void setErrorMessage(String s) {
-        statusLabel.setForeground(Color.RED);
-        statusLabel.setText(s);
-    }
+	/**
+	 * This method will batch up any changed objects until the user closes this panel, or clicks the Commit/Apply button
+	 * <p/>
+	 * NOTE: Currently commits immediately
+	 *
+	 * @param o
+	 */
+	public void addObjectToBatch(Object o) {
+		// todo: implement the batch with button
+		mainPanel.getObjectContainer().set(o);
+		mainPanel.getObjectContainer().commit();
+	}
 
-    /**
-     * Will display a tree of the object in a tab.
-     *
-     * @param o object tree to display
-     */
-    public void showObjectTree(Object o) {
-        ObjectTreeNode top = new ObjectTreeNode(null, null, o);
-        //IGraphIterator graphIterator = new ObjectGraphIterator(o, Db4oDatabase.getForObjectContainer(mainPanel.getObjectContainer(), mainPanel.getConnectionSpec()));
-        //createNodes(top, graphIterator);
-        ObjectTreeModel objectTreeModel = new ObjectTreeModel(top, mainPanel.getObjectContainer());
-        ObjectTree tree = new ObjectTree(objectTreeModel);
-        tree.setEditable(true);
-        JTextField tf = new JTextField();
-        DefaultTreeCellEditor editor = new DefaultTreeCellEditor(tree, (DefaultTreeCellRenderer) tree.getCellRenderer(), new ObjectTreeCellEditor(tf));
-        tree.setCellEditor(editor);
-        JScrollPane treeView = new JScrollPane(tree);
-        mainPanel.addTab("Object: " + o, treeView);
-    }
+	public ObjectContainer getObjectContainer() {
+		return mainPanel.getObjectContainer();
+	}
 
-    private void createNodes(DefaultMutableTreeNode top, IGraphIterator iter) {
-        while (iter.hasNext()) {
-            if (iter.nextHasChildren()) {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.selectNextChild());
-                top.add(node);
-            } else {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
-                top.add(node);
-            }
-        }
-        // no more next, so see if we can go back up tree
-        if (iter.hasParent()) {
-            iter.selectParent();
+	public void setStatusMessage(String msg) {
+		statusLabel.setForeground(Color.BLACK);
+		statusLabel.setText(msg);
+	}
 
-            // continue up a level
-            createNodes(new DefaultMutableTreeNode(iter.next()), iter);
-        }
-    }
+	public void setErrorMessage(String s) {
+		statusLabel.setForeground(Color.RED);
+		statusLabel.setText(s);
+	}
+
+	/**
+	 * Will display a tree of the object in a tab.
+	 *
+	 * @param o object tree to display
+	 */
+	public void showObjectTree(Object o) {
+		ObjectTreeNode top = new ObjectTreeNode(null, null, o);
+		//IGraphIterator graphIterator = new ObjectGraphIterator(o, Db4oDatabase.getForObjectContainer(mainPanel.getObjectContainer(), mainPanel.getConnectionSpec()));
+		//createNodes(top, graphIterator);
+		ObjectTreeModel objectTreeModel = new ObjectTreeModel(top, mainPanel.getObjectContainer());
+		ObjectTree tree = new ObjectTree(objectTreeModel);
+		tree.setEditable(true);
+		JTextField tf = new JTextField();
+		DefaultTreeCellEditor editor = new DefaultTreeCellEditor(tree, (DefaultTreeCellRenderer) tree.getCellRenderer(), new ObjectTreeCellEditor(tf));
+		tree.setCellEditor(editor);
+		JScrollPane treeView = new JScrollPane(tree);
+		mainPanel.addTab("Object: " + o, treeView);
+	}
+
+	private void createNodes(DefaultMutableTreeNode top, IGraphIterator iter) {
+		while (iter.hasNext()) {
+			if (iter.nextHasChildren()) {
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.selectNextChild());
+				top.add(node);
+			} else {
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
+				top.add(node);
+			}
+		}
+		// no more next, so see if we can go back up tree
+		if (iter.hasParent()) {
+			iter.selectParent();
+
+			// continue up a level
+			createNodes(new DefaultMutableTreeNode(iter.next()), iter);
+		}
+	}
 
 }

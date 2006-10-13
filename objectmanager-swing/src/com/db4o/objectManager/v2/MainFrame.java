@@ -129,7 +129,7 @@ public class MainFrame extends JFrame implements WindowListener {
         setJMenuBar(new ConnectedMenuBar(this, settings,
                         Dashboard.createHelpActionListener(),
                         Dashboard.createAboutActionListener(this)));
-        setIconImage(ResourceManager.createImageIcon("database2.gif", "database").getImage());
+        setIconImage(ResourceManager.createImageIcon("icons/plain/16x16/data.png", "database").getImage());
 
     }
 

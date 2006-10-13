@@ -24,15 +24,10 @@ public class QueryResultsTableSelectionListener extends MouseAdapter {
     public void mousePressed(MouseEvent e) {
         JTable table = (JTable) e.getSource();
         Point p = e.getPoint();
-        //if (e.getClickCount() == 2) System.out.println("table.isEditing = " + table.isEditing());
         int row = table.rowAtPoint(p);
         int col = table.columnAtPoint(p);
         Object value =  table.getValueAt(row, col);
-        System.out.println(value + " class:" + value.getClass());
         QueryResultsTableModel model = (QueryResultsTableModel) table.getModel();
-        /*Db4oUUID uuid = model.getObjectContainer().ext().getObjectInfo(value).getUUID();
-        System.out.println("object uuid: " + uuid);
-        */
         if(col == QueryResultsTableModel.COL_TREE){
             queryResultsPanel.showObjectTree(model.getRowObject(row));
         }
