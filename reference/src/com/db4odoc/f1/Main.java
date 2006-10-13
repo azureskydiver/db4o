@@ -19,8 +19,8 @@ import com.db4odoc.f1.refactoring.RefactoringExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
 import com.db4odoc.f1.remote.RemoteExample;
 import com.db4odoc.f1.staticfields.StaticFieldExample;
+import com.db4odoc.f1.utility.UtilityExample;
 import com.db4odoc.f1.uuids.UUIDExample;
-import com.db4odoc.f1.serialize.SerializeExample;
 
 
 
@@ -51,5 +51,6 @@ public class Main {
         PeekPersistedExample.main(args);
         IdentityExample.main(args);
     	//SerializeExample.main(args);
+    	UtilityExample.main(args);
     }
 }
