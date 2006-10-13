@@ -459,6 +459,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\utility\SensorPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\utility\UtilityExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\uuids\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
