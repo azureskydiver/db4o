@@ -97,7 +97,7 @@ public class SODABloatMethodBuilder {
 			ComparisonOperand curOp=fieldValue;
 			while(curOp instanceof FieldValue) {
 				FieldValue curField=(FieldValue)curOp;
-				coll.add(curField.fieldName());
+				coll.prepend(curField.fieldName());
 				curOp=curField.parent();
 			}
 			return coll.iterator();
