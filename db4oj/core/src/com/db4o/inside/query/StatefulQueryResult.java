@@ -53,11 +53,11 @@ public class StatefulQueryResult {
 		_delegate.sort(cmp);
 	}
 	
-	private Object streamLock() {
+	Object streamLock() {
 		return _delegate.streamLock();
 	}
 	
-	private ObjectContainer objectContainer() {
+	ObjectContainer objectContainer() {
 		return _delegate.objectContainer();
 	}
 	
