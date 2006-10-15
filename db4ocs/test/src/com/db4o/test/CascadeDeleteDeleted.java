@@ -94,6 +94,7 @@ public class CascadeDeleteDeleted extends ClientServerTestCase {
 		try {
 			Db4oUtil.assertOccurrences(oc, CddMember.class, CDD_MEMBER_COUNT);
 			// ocs[0] deleted all CddMember objects, and committed the change
+			ocs[0].commit();
 			ocs[0].close();
 			// FIXME: following assertion fails
 			Db4oUtil.assertOccurrences(oc, CddMember.class, 0);

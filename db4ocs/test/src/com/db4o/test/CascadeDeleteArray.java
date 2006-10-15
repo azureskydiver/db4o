@@ -46,6 +46,7 @@ public class CascadeDeleteArray extends ClientServerTestCase {
 		try {
 			Db4oUtil.assertOccurrences(oc, SimpleObject.class, TOTAL_COUNT);
 			// ocs[0] deletes all SimpleObject
+			ocs[0].commit();
 			ocs[0].close();
 			// FIXME: the following assertion fails
 			Db4oUtil.assertOccurrences(oc, SimpleObject.class, 0);
