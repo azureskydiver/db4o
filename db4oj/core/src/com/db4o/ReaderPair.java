@@ -7,7 +7,7 @@ import com.db4o.inside.marshall.*;
 /**
  * @exclude
  */
-public class ReaderPair {
+public class ReaderPair implements SlotReader {
 	private YapReader _source;
 	private YapReader _target;
 	private DefragContext _mapping;
@@ -22,9 +22,14 @@ public class ReaderPair {
 	}
 	
 	public int offset() {
-		return _source._offset;
+		return _source.offset();
 	}
-	
+
+	public void offset(int offset) {
+		_source.offset(offset);
+		_target.offset(offset);
+	}
+
 	public void incrementOffset(int numBytes) {
 		_source.incrementOffset(numBytes);
 		_target.incrementOffset(numBytes);
@@ -53,6 +58,11 @@ public class ReaderPair {
 
 	public int copyID() {
 		return copyID(false);
+	}
+	
+	public void readBegin(byte identifier) {
+		_source.readBegin(identifier);
+		_target.readBegin(identifier);
 	}
 	
 	public byte readByte() {
@@ -116,5 +126,21 @@ public class ReaderPair {
 		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());
 		command.processCopy(readers);
 		context.targetWriteBytes(readers,targetAddress);
+	}
+
+	public void append(byte value) {
+		_source.incrementOffset(1);
+		_target.append(value);
+	}
+
+	public long readLong() {
+		long value=_source.readLong();
+		_target.incrementOffset(YapConst.LONG_LENGTH);
+		return value;
+	}
+
+	public void writeLong(long value) {
+		_source.incrementOffset(YapConst.LONG_LENGTH);
+		_target.writeLong(value);
 	}
 }

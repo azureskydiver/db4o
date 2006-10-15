@@ -65,7 +65,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     	}
 //    	readers.writeInt(0);
 // FIXME PMFD
-    	if(yapField.hasIndex()&&!(yapField.getHandler() instanceof YapString)) {
+    	if(yapField.hasIndex()&&canProcessIndex(yapField)) {
         	BTree index = yapField.getIndex(readers.systemTrans());
     		int targetIndexID=readers.copyID();
     		if(targetIndexID!=0) {
@@ -77,4 +77,8 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         	readers.writeInt(0);
     	}
     }
+
+	private boolean canProcessIndex(YapField yapField) {
+		return !(yapField.getHandler() instanceof YapString)&&!(yapField.getHandler() instanceof YapArray);
+	}
 }

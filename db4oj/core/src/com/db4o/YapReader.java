@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
  * 
  * @exclude
  */
-public class YapReader {
+public class YapReader implements SlotReader {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;
@@ -274,4 +274,15 @@ public class YapReader {
         YLong.writeLong(l, this);
     }
 
+	public void incrementIntSize() {
+		incrementOffset(YapConst.INT_LENGTH);
+	}
+
+	public int offset() {
+		return _offset;
+	}
+
+	public void offset(int offset) {
+		_offset=offset;
+	}
 }

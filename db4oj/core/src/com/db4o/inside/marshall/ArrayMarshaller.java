@@ -13,7 +13,12 @@ public abstract class ArrayMarshaller {
     
     public abstract void deleteEmbedded(YapArray arrayHandler, YapWriter reader);
     
-    public abstract TreeInt collectIDs(YapArray arrayHandler, TreeInt tree, YapWriter a_bytes);
+    public final TreeInt collectIDs(YapArray arrayHandler, TreeInt tree, YapWriter reader){
+        Transaction trans = reader.getTransaction();
+        return arrayHandler.collectIDs1(trans, tree, prepareIDReader(trans,reader));
+    }
+
+    public abstract void defragIDs(YapArray arrayHandler,ReaderPair readers);
     
     public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, YapArray handler, Object obj, boolean topLevel);
     
@@ -25,4 +30,5 @@ public abstract class ArrayMarshaller {
     
     public abstract Object writeNew(YapArray arrayHandler, Object obj, boolean topLevel, YapWriter writer);
 
+    protected abstract YapReader prepareIDReader(Transaction trans,YapReader reader);
 }
