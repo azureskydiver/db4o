@@ -320,4 +320,8 @@ public final class YapString extends YapIndependantType {
 		readers.incrementIntSize();
 	}
 
+    public void defrag(MarshallerFamily mf, ReaderPair readers) {
+    	int linkLength = linkLength();
+    	readers.incrementOffset(linkLength);
+    }
 }

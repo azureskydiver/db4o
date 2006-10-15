@@ -67,18 +67,20 @@ public class YapArray extends YapIndependantType {
         return mf._array.collectIDs(this, tree, reader);
     }
     
-    public final TreeInt collectIDs1(Transaction trans, TreeInt tree, YapReader reader){
-        if (reader != null) {
-            if (Deploy.debug) {
-                reader.readBegin(identifier());
-            }
-            int count = elementCount(trans, reader);
-            for (int i = 0; i < count; i++) {
-                tree = (TreeInt)Tree.add(tree, new TreeInt(reader.readInt()));
-            }
-        }
-        return tree;
-    }
+    public final TreeInt collectIDs1(Transaction trans, TreeInt tree,
+			YapReader reader) {
+		if (reader == null) {
+			return tree;
+		}
+		if (Deploy.debug) {
+			reader.readBegin(identifier());
+		}
+		int count = elementCount(trans, reader);
+		for (int i = 0; i < count; i++) {
+			tree = (TreeInt) Tree.add(tree, new TreeInt(reader.readInt()));
+		}
+		return tree;
+	}
     
     public Object comparableObject(Transaction a_trans, Object a_object){
         throw Exceptions4.virtualException();
@@ -127,12 +129,12 @@ public class YapArray extends YapIndependantType {
         }
     }
 
-    public int elementCount(Transaction a_trans, YapReader a_bytes) {
-        int typeOrLength = a_bytes.readInt();
+    public int elementCount(Transaction a_trans, SlotReader reader) {
+        int typeOrLength = reader.readInt();
         if (typeOrLength >= 0) {
             return typeOrLength;
         }
-        return a_bytes.readInt();
+        return reader.readInt();
     }
 
     public final boolean equals(TypeHandler4 a_dataType) {
@@ -462,6 +464,27 @@ public class YapArray extends YapIndependantType {
 
     public boolean supportsIndex() {
         return false;
+    }
+    
+    public final void defrag(MarshallerFamily mf, ReaderPair readers) {
+    	if(!i_isPrimitive) {
+    		mf._array.defragIDs(this, readers);
+    	}
+    }
+
+    public final void defrag1(ReaderPair readers) {
+		if (Deploy.debug) {
+			readers.readBegin(identifier());
+		}
+		int count = elementCount(readers.systemTrans(),readers);
+		for (int i = 0; i < count; i++) {
+			try {
+				readers.copyID();
+			}
+			catch(MappingNotFoundException exc) {
+				System.out.println(exc);
+			}
+		}
     }
 
 	public void defragIndexEntry(ReaderPair readers) {

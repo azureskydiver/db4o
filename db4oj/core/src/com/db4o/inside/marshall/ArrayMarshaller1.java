@@ -28,11 +28,6 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public TreeInt collectIDs(YapArray arrayHandler, TreeInt tree, YapWriter reader){
-        reader._offset = reader.readInt();
-        return arrayHandler.collectIDs1(reader.getTransaction(), tree, reader);
-    }
-    
     public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {
         
         int address = reader.readInt();
@@ -92,8 +87,14 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
         return obj;
     }
+
+    protected YapReader prepareIDReader(Transaction trans,YapReader reader) {
+        reader._offset = reader.readInt();
+        return reader;
+    }
     
-
-
-
+    public void defragIDs(YapArray arrayHandler,ReaderPair readers) {
+        readers.offset(readers.readInt());
+        arrayHandler.defrag1(readers);
+    }
 }
