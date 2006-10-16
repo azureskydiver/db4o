@@ -78,11 +78,12 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		return _nodeSize;
 	}
 
-	public void add(Transaction trans, Object key){
+	public void add(Transaction trans, Object key){	
         add(trans, key, null);
     }
     
     public void add(Transaction trans, Object key, Object value){
+    	keyCantBeNull(key);
         _keyHandler.prepareComparison(key);
         _valueHandler.prepareComparison(value);
         ensureDirty(trans);
@@ -95,6 +96,8 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
 
     public void remove(Transaction trans, Object key){
+    	keyCantBeNull(key);
+    	
         final Iterator4 pointers = search(trans, key).pointers();
         if (!pointers.moveNext()) {
         	return;
@@ -106,6 +109,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
     
     public BTreeRange search(Transaction trans, Object key) {
+    	keyCantBeNull(key);
         
         // TODO: Optimize the following.
         //       Part of the search operates against the same nodes.
@@ -117,7 +121,13 @@ public class BTree extends YapMeta implements TransactionParticipant {
         return start.createIncludingRange(end);
     }
     
-    public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
+    private void keyCantBeNull(Object key) {
+    	if (null == key) {
+    		throw new ArgumentNullException();
+    	}
+	}
+
+	public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
         ensureActive(trans);
         _keyHandler.prepareComparison(key);
         return _root.searchLeaf(trans, target);
