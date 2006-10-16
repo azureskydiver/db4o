@@ -10,16 +10,18 @@ import com.db4o.types.Unversioned;
  * @exclude
  */
 public class Collection4 implements Iterable4, DeepClone, Unversioned {
+	
+	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
 
 	/** first element of the linked list */
-	private List4 _first;
+	public List4 _first;
 	
-	private List4 _last;
+	public List4 _last;
 
 	/** number of elements collected */
-	private int _size;
+	public int _size;
 
-	private int _version;		
+	public int _version;		
 
 	public Collection4() {
 	}
