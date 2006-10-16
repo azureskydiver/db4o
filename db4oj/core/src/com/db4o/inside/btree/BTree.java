@@ -50,8 +50,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		if (null == keyHandler) {
     		throw new ArgumentNullException();
     	}
-		// _nodeSize = treeNodeSize;
-		_nodeSize = 4;
+		_nodeSize = treeNodeSize;
 		
         _halfNodeSize = _nodeSize / 2;
         _nodeSize = _halfNodeSize * 2;
