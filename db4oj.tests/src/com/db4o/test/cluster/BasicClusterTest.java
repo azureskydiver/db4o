@@ -9,6 +9,8 @@ import com.db4o.cluster.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
 
+import db4ounit.Assert;
+
 
 public class BasicClusterTest {
     
@@ -67,7 +69,7 @@ public class BasicClusterTest {
         q.constrain(this.getClass());
         q.descend("_name").constrain(name);
         ObjectSet result=q.execute();
-        Test.ensure(result.size() == expected);
+        Assert.areEqual(expected, result.size());
         while(result.hasNext()) {
         	Test.ensure(result.next() instanceof BasicClusterTest);
         }
