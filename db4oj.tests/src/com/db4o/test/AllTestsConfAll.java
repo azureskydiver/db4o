@@ -102,7 +102,6 @@ public class AllTestsConfAll extends TestSuite{
 	    	SetDeactivated.class,
 	    	SetSemaphore.class,
 	    	SharedObjectContainer.class,
-            SimpleTypeArrayInUntypedVariable.class,
 			SmallerOrEqual.class,
 	    	Soda.class,
 	    	SodaNoDuplicates.class,
@@ -115,8 +114,6 @@ public class AllTestsConfAll extends TestSuite{
 			SwitchingFilesFromClient.class,
 	        TestHashTable.class,
 	        TwoClients.class,
-	        TypedArrayInObject.class,
-	        TypedDerivedArray.class,
             UuidAware.class,
 	        XTEAEncryption.class
         };
