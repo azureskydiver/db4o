@@ -50,7 +50,9 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		if (null == keyHandler) {
     		throw new ArgumentNullException();
     	}
-		_nodeSize = treeNodeSize;
+		// _nodeSize = treeNodeSize;
+		_nodeSize = 4;
+		
         _halfNodeSize = _nodeSize / 2;
         _nodeSize = _halfNodeSize * 2;
 		_cacheHeight = treeCacheHeight;
@@ -124,7 +126,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     public void commit(final Transaction trans){
         
-        final Transaction systemTransAction = trans.systemTransaction();
+        final Transaction systemTransaction = trans.systemTransaction();
         
         Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff != null){
@@ -140,27 +142,19 @@ public class BTree extends YapMeta implements TransactionParticipant {
             }
             _processing = null;
             
-            if(_nodes != null){
-                
-                _nodes.traverse(new Visitor4() {
-                    public void visit(Object obj) {
-                        BTreeNode node = (BTreeNode)((TreeIntObject)obj).getObject();
-                        node.setStateDirty();
-                        node.write(systemTransAction);
-                    }
-                });
-                
-            }
+            writeAllNodes(systemTransaction, true);
             
         }
         
         setStateDirty();
-        write(systemTransAction);
+        write(systemTransaction);
         
         purge();
     }
     
     public void rollback(final Transaction trans){
+    	
+        final Transaction systemTransaction = trans.systemTransaction();
         
         _sizesByTransaction.remove(trans);
         
@@ -174,8 +168,29 @@ public class BTree extends YapMeta implements TransactionParticipant {
         }
         _processing = null;
         
+        writeAllNodes(systemTransaction, false);
+        
+        setStateDirty();
+        write(systemTransaction);
+        
         purge();
     }
+    
+    private void writeAllNodes(final Transaction systemTransaction, final boolean setDirty){
+        if(_nodes == null){
+        	return;
+        }
+    	_nodes.traverse(new Visitor4() {
+            public void visit(Object obj) {
+                BTreeNode node = (BTreeNode)((TreeIntObject)obj).getObject();
+                if(setDirty){
+                	node.setStateDirty();
+                }
+                node.write(systemTransaction);
+            }
+        });
+    }
+    
     
     private void purge(){
         if(_nodes == null){

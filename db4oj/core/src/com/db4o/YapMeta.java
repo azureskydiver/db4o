@@ -101,6 +101,9 @@ public abstract class YapMeta {
 
 
     public void setID(int a_id) {
+    	if(DTrace.enabled){
+    		DTrace.YAPMETA_SET_ID.log(a_id);
+    	}
         i_id = a_id;
     }
 
@@ -133,6 +136,10 @@ public abstract class YapMeta {
         
         if (! writeObjectBegin()) {
             return;
+        }
+        
+        if(DTrace.enabled){
+        	DTrace.YAPMETA_WRITE.log(getID());
         }
             
         YapFile stream = (YapFile)trans.stream();
