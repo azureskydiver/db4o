@@ -11,6 +11,8 @@ import com.db4o.foundation.*;
  * @exclude
  */
 public class QConJoin extends QCon {
+	
+	// FIELDS MUST BE PUBLIC TO BE REFLECTED ON UNDER JDK <= 1.1
 
 	public boolean i_and;
 	public QCon i_constraint1;
