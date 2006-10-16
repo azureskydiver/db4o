@@ -22,7 +22,7 @@ namespace com.db4o.test
 	public class AllTests : AllTestsConfAll, Runnable  
 	{
 
-		public static void Main(String[] args) 
+		public static int Main(String[] args) 
 		{
 			//            Configuration conf = Db4o.Configure();
 			//            conf.MessageLevel(-1);
@@ -41,18 +41,10 @@ namespace com.db4o.test
 			//
 			//            // BenchMark.Main(null);
 			//
-
-			int errorCount=0;
-			errorCount+=new com.db4o.db4ounit.common.AllTests().RunSolo();
-#if NET_2_0 || CF_2_0
-			errorCount += new com.db4o.db4ounit.cli2.AllTests().RunSolo();
-#endif
+			int errorCount = new com.db4o.db4ounit.AllTests().RunSolo();
 			new AllTests().Run();
-			errorCount+=Tester.errorCount;
-			if(errorCount>0) 
-			{
-				System.Environment.Exit(errorCount);
-			}
+			errorCount += Tester.errorCount;
+			return errorCount;
 		}
 
 		public AllTests() : base() 

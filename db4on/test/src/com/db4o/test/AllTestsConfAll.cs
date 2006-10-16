@@ -141,7 +141,6 @@ namespace com.db4o.test
 				tests.Add(typeof(NoInstanceStored));
 				tests.Add(typeof(NoInternalClasses));
 				tests.Add(typeof(ObjectSetIDs));
-				tests.Add(typeof(ObjectSetAsList));
 				tests.Add(typeof(OrClassConstraintInList));
 				tests.Add(typeof(PersistStaticFieldValues));
 

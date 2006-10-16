@@ -58,7 +58,7 @@ namespace com.db4o.test.aliases
 	public class ClassAliasesTestCase
 	{
 		public void TestTypeAlias()
-		{
+		{	
 			ObjectContainer container = Tester.ObjectContainer();
 
 			container.Set(new Person1("Homer Simpson"));
@@ -83,7 +83,9 @@ namespace com.db4o.test.aliases
 
 #if !CF_1_0 && !CF_2_0
 		public void TestAccessingJavaFromDotnet()
-		{
+		{	
+			if (Tester.IsClientServer()) return;
+			
 			if (null == WorkspaceServices.WorkspaceRoot)
 			{
 				Console.WriteLine("'db4obuild' directory not found, skipping java compatibility test.");

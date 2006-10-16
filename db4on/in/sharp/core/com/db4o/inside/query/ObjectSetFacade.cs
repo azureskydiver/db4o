@@ -226,11 +226,6 @@ namespace com.db4o.inside.query
 			return new ObjectSetImplEnumerator(_delegate);
 		}
 		#endregion
-		
-		private static int ReverseIndex(QueryResult result, int idx) 
-		{
-        	return result.Size()-idx-1;
-    	}
 	}
 }
 
