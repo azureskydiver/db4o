@@ -67,7 +67,7 @@ public class StatefulQueryResult {
 	        if(id <= 0){
 	            return -1;
 	        }
-	        return _delegate.indexOf(id);
+	        return reverseIndex(_delegate.indexOf(id));
 	    }
 	}
 
