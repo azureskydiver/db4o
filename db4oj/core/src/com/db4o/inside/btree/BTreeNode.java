@@ -417,6 +417,10 @@ public class BTreeNode extends YapMeta{
         
         pointNextTo(trans, _previousID);
         
+        // FIXME: Freeing the pointer pops up a bug in the slot system.
+        //        Especially when doing rollbacks, the same SlotChange
+        //        in Transaction seems to be reused.
+        
         // trans.systemTransaction().slotFreePointerOnCommit(getID());
         
         _btree.removeNode(this);
