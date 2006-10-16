@@ -138,4 +138,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		query.constrain(clazz);
 		return query;
 	}
+	
+	protected Object retrieveOnlyInstance(Class clazz) {
+		ObjectSet result=newQuery(clazz).execute();
+		Assert.areEqual(1,result.size());
+		return result.next();
+	}
 }
