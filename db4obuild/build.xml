@@ -7,6 +7,8 @@
 
 	dir.workspace=<the workspace folder where all projects reside>
 	file.compiler.jdk1.3=<path to jdk 1.3 java compiler>
+	file.jvm.jdk1.1=<path to jdk 1.1 java vm executable>
+	file.jvm.jdk1.2=<path to jdk 1.2 java vm executable>
 	file.jvm.jdk1.5=<path to jdk 1.5 java vm executable>
 	font.pdf.base=<true type font>
 	dir.compactframework=<path to the 2.0 version of the compact framework, leave empty if not available>
@@ -20,6 +22,8 @@
 	An example:
 	dir.workspace=C:/_db4o/production
 	file.compiler.jdk1.3=C:/jdk1.3.1_12/bin/javac.exe
+	file.jvm.jdk1.1=/usr/java/jdk1.1/bin/java
+	file.jvm.jdk1.2=/usr/java/jdk1.2/bin/java
 	file.jvm.jdk1.5=/usr/java/jdk1.5.0_03.32bit/bin/java
 	font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
 	dir.compactframework=C:/Arquivos de programas/Microsoft Visual Studio 8/SmartDevices/SDK/CompactFramework/2.0/
@@ -611,12 +615,30 @@
 	</target>
 
 	<target name="compiletestsjava" depends="compiledb4ounitjava" description="Compile db4o test sources">
-		<delete dir="${dir.dist.classes.test}" />
-		<mkdir dir="${dir.dist.classes.test}" />
+		<delete dir="${dir.dist.classes.test.jdk1.1}" />
+		<delete dir="${dir.dist.classes.test.jdk1.2}" />
+		<delete dir="${dir.dist.classes.test.jdk1.5}" />
+		<mkdir dir="${dir.dist.classes.test.jdk1.1}" />
+		<mkdir dir="${dir.dist.classes.test.jdk1.2}" />
+		<mkdir dir="${dir.dist.classes.test.jdk1.5}" />
 		<mkdir dir="${dir.dist.classes.test.nq}" />
+		<delete dir="${dir.dist.java.temp.src.test}" />
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
 			<fileset dir="${dir.j.tests.src}">
 				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<javac destdir="${dir.dist.classes.test.jdk1.1}" fork="true" debug="on" target="1.1" source="1.2" encoding="UTF-8">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.1}" />
+				<pathelement path="${file.db4ounit.jar}" />
+			</classpath>
+			<src path="${dir.dist.java.temp.src.test}"/>
+			<src path="${dir.j.tools.src}" />
+		</javac>
+		<copy todir="${dir.dist.classes.test.jdk1.1}" overwrite="true">
+			<fileset dir="${dir.j.tests.src}">
+				<include name="**/*.yap" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
@@ -624,19 +646,39 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
+		<javac destdir="${dir.dist.classes.test.jdk1.2}" fork="true" debug="on" target="1.2" source="1.2" encoding="UTF-8">
+			<classpath>
+				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
+				<dirset dir="${dir.dist.classes.java1.2}" />
+				<pathelement path="${file.db4ounit.jar}" />
+			</classpath>
+			<src path="${dir.dist.java.temp.src.test}"/>
+			<src path="${dir.j.tools.src}" />
+		</javac>
+		<copy todir="${dir.dist.classes.test.jdk1.2}" overwrite="true">
+			<fileset dir="${dir.j.tests.src}">
+				<include name="**/*.yap" />
+			</fileset>
+		</copy>
 		<copy todir="${dir.dist.java.temp.src.test}" overwrite="true">
 			<fileset dir="${dir.j.jdk5.test.src}">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<javac destdir="${dir.dist.classes.test}" fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
+		<javac destdir="${dir.dist.classes.test.jdk1.5}" fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
 			<classpath>
+				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
 				<dirset dir="${dir.dist.classes.java5}" />
 				<pathelement path="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.dist.java.temp.src.test}"/>
 			<src path="${dir.j.tools.src}" />
 		</javac>
+		<copy todir="${dir.dist.classes.test.jdk1.5}" overwrite="true">
+			<fileset dir="${dir.j.tests.src}">
+				<include name="**/*.yap" />
+			</fileset>
+		</copy>
 		<javac destdir="${dir.dist.classes.test.nq}" fork="true" debug="on" target="1.4" source="1.4" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.2}" />
@@ -648,11 +690,6 @@
 			<src path="${dir.j.tools.src}" />
 			<src path="${dir.j.nqopt}/test/src" />
 		</javac>
-		<copy todir="${dir.dist.classes.test}" overwrite="true">
-			<fileset dir="${dir.j.tests.src}">
-				<include name="**/*.yap" />
-			</fileset>
-		</copy>
 	</target>
 
 	<target name="compilejtutorial" depends="compilecorejava" description="Compile Db4o Java tutorial sources">
@@ -808,11 +845,28 @@
 				<include name="test/db4oVersions/**/*" />
 			</fileset>
 		</copy>
-		<java fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="180000">
+		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="true" timeout="180000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.1}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
+				<pathelement path="${file.db4ounit.jar}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="-e" />
+		</java>
+		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="180000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.2}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
+				<pathelement path="${file.db4ounit.jar}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="-e" />
+		</java>
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="180000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
-				<dirset dir="${dir.dist.classes.java1.2}" />
-				<dirset dir="${dir.dist.classes.test}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
@@ -822,7 +876,7 @@
 			<classpath>
 				<pathelement path="${file.db4ounit.jar}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
-				<dirset dir="${dir.dist.classes.test}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
 				<dirset dir="${dir.dist.classes.nqopt}" />
 				<dirset dir="${dir.dist.classes.test.nq}" />
 				<path location="${file.bloat.jar}" />
@@ -830,11 +884,32 @@
 			</classpath>
 			<arg value="-e" />
 		</java>
-		<java fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
+		<echo message="${file.jvm.jdk1.1}" />
+		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="3600000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.1}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
+				<pathelement path="${file.db4ounit.jar}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="*" />
+		</java>
+		<echo message="${file.jvm.jdk1.2}" />
+		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.2}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
+				<pathelement path="${file.db4ounit.jar}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="*" />
+		</java>
+		<echo message="${file.jvm.jdk1.5}" />
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
-				<dirset dir="${dir.dist.classes.java1.2}" />
-				<dirset dir="${dir.dist.classes.test}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
+				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
 			<arg value="*" />
@@ -1363,7 +1438,7 @@
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.dist.classes.java1.1}" />
 			<fileset dir="${dir.dist.classes.db4ounit}" />
-			<fileset dir="${dir.dist.classes.test}" />
+			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
 		</jar>
 
 		<copy todir="${target.dir}/db4ounit.extensions/src">
