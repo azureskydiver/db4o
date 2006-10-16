@@ -23,6 +23,7 @@ public class AllTests extends Db4oTestSuite {
             NakedObjectTestCase.class,
             ReAddCascadedDeleteTestCase.class,
             SimplestPossibleTestCase.class,
+            MultiDeleteTestCase.class,
             NonStaticConfigurationTestCase.class,
             ServerRevokeAccessTestCase.class,
             SystemInfoTestCase.class,
