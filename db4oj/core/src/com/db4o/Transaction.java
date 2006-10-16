@@ -478,6 +478,9 @@ public class Transaction {
     }
     
     private SlotChange produceSlotChange(int id){
+    	if(DTrace.enabled){
+    		DTrace.PRODUCE_SLOT_CHANGE.log(id);
+    	}
         SlotChange slot = new SlotChange(id);
         _slotChanges = Tree.add(_slotChanges, slot);
         return (SlotChange)slot.duplicateOrThis();
@@ -546,6 +549,10 @@ public class Transaction {
     }
 
     public void setPointer(int a_id, int a_address, int a_length) {
+        if(DTrace.enabled){
+            DTrace.SLOT_SET_POINTER.log(a_id);
+            DTrace.SLOT_SET_POINTER.logLength(a_address, a_length);
+        }
         checkSynchronization();
         produceSlotChange(a_id).setPointer(a_address, a_length);
     }
@@ -553,8 +560,8 @@ public class Transaction {
     void slotDelete(int a_id, int a_address, int a_length) {
         checkSynchronization();
         if(DTrace.enabled){
-            DTrace.FREE_ON_COMMIT.log(a_id);
-            DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
+            DTrace.SLOT_DELETE.log(a_id);
+            DTrace.SLOT_DELETE.logLength(a_address, a_length);
         }
         if (a_id == 0) {
             return;
@@ -567,8 +574,8 @@ public class Transaction {
     public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
         checkSynchronization();
         if(DTrace.enabled){
-            DTrace.FREE_ON_COMMIT.log(a_id);
-            DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
+            DTrace.SLOT_FREE_ON_COMMIT.log(a_id);
+            DTrace.SLOT_FREE_ON_COMMIT.logLength(a_address, a_length);
         }
         if (a_id == 0) {
             return;
@@ -579,8 +586,8 @@ public class Transaction {
     void slotFreeOnRollback(int a_id, int a_address, int a_length) {
         checkSynchronization();
         if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(a_id);
-            DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
+            DTrace.SLOT_FREE_ON_ROLLBACK_ID.log(a_id);
+            DTrace.SLOT_FREE_ON_ROLLBACK_ADDRESS.logLength(a_address, a_length);
         }
         produceSlotChange(a_id).freeOnRollback(a_address, a_length);
     }

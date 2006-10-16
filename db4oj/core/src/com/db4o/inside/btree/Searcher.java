@@ -22,6 +22,9 @@ public class Searcher {
     
     
     public Searcher(SearchTarget target, int count){
+    	if(count < 0){
+    		throw new IllegalArgumentException();
+    	}
         _target = target;
         _count = count;
         _cmp = -1;

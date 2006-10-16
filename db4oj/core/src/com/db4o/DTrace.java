@@ -17,20 +17,32 @@ public class DTrace {
     private static final void configure(){
         if(enabled){
         
-            breakOnEvent(15);
+            // breakOnEvent(5);
             
             // addRange(4874);
             
+            
+            
             // addRangeWithEnd(3835808, 3836267);
             
-            addRangeWithLength(19492,149);
+        	addRangeWithLength(774,1);
+            
+//            addRangeWithLength(455404,1);
+//            
+//            addRangeWithLength(455570,1);
+//            
+//            addRangeWithLength(455926,1);
+//
+            
+            // addRangeWithLength(20161,1);
             
             
-            trackEventsWithoutRange();
+            // trackEventsWithoutRange();
             
-            turnAllOffExceptFor(new DTrace[] {FREE_ON_COMMIT, FREE, REREAD_OLD_UUID, WRITE_XBYTES});
+            turnAllOffExceptFor(new DTrace[] {YAPMETA_SET_ID});
             
-            // turnAllOffExceptFor(new DTrace[] {WRITE_POINTER});
+//            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
+//            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});
         }
     }
     
@@ -38,6 +50,8 @@ public class DTrace {
         if(enabled){
             ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
             BIND = new DTrace(true, true, "bind", true);
+            BTREE_NODE_REMOVE = new DTrace(true, true, "btreenode remove", true);
+            BTREE_NODE_COMMIT_OR_ROLLBACK = new DTrace(true, true, "btreenode commit or rollback", true);
             CANDIDATE_READ = new DTrace(true, true, "candidate read", true);
             CLOSE = new DTrace(true, true, "close", true);
             COLLECT_CHILDREN = new DTrace(true, true, "collect children", true);
@@ -61,6 +75,7 @@ public class DTrace {
             IO_COPY = new DTrace(true, true, "io copy", true);
             JUST_SET = new DTrace(true, true, "just set", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
+            PRODUCE_SLOT_CHANGE = new DTrace(true, true, "produce slot change", true);
             QUERY_PROCESS = new DTrace(true, true, "query process", true);
             READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
             READ_BYTES = new DTrace(true, true, "readBytes", true); 
@@ -70,13 +85,19 @@ public class DTrace {
             REGULAR_SEEK = new DTrace(true, true, "regular seek", true);
             REMOVE_FROM_CLASS_INDEX = new DTrace(true, true, "trans removeFromClassIndexTree", true);
             REREAD_OLD_UUID = new DTrace(true, true, "reread old uuid", true);
+        	SLOT_SET_POINTER  = new DTrace(true, true, "slot set pointer", true);
+        	SLOT_DELETE  = new DTrace(true, true, "slot delete", true);
+        	SLOT_FREE_ON_COMMIT  = new DTrace(true, true, "slot free on commit", true);
+        	SLOT_FREE_ON_ROLLBACK_ID = new DTrace(true, true, "slot free on rollback id", true);
+        	SLOT_FREE_ON_ROLLBACK_ADDRESS = new DTrace(true, true, "slot free on rollback address", true);
             TRANS_COMMIT = new DTrace(false, false, "trans commit", false);
             TRANS_DELETE = new DTrace(true, true, "trans delete", true);
             TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
             TRANS_FLUSH = new DTrace(true, true, "trans flush", true);
-            
+            YAPMETA_WRITE = new DTrace(true, true, "yapmeta write", true);
             YAPCLASS_BY_ID = new DTrace(true, true, "yapclass by id", true);
             YAPCLASS_INIT = new DTrace(true, true, "yapclass init", true);
+            YAPMETA_SET_ID = new DTrace(true, true, "yapmeta setid", true);
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
             WRITE_POINTER = new DTrace(true, true, "write pointer", true);
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
@@ -122,6 +143,8 @@ public class DTrace {
     
     public static DTrace ADD_TO_CLASS_INDEX;
     public static DTrace BIND;
+	public static DTrace BTREE_NODE_COMMIT_OR_ROLLBACK;
+	public static DTrace BTREE_NODE_REMOVE;
     public static DTrace CANDIDATE_READ;
     public static DTrace CLOSE;
     public static DTrace COLLECT_CHILDREN;
@@ -145,6 +168,7 @@ public class DTrace {
     public static DTrace IO_COPY;
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
+	public static DTrace PRODUCE_SLOT_CHANGE;
     public static DTrace QUERY_PROCESS;
     public static DTrace READ_ARRAY_WRAPPER;
     public static DTrace READ_BYTES;
@@ -154,19 +178,26 @@ public class DTrace {
     public static DTrace REGULAR_SEEK;
     public static DTrace REMOVE_FROM_CLASS_INDEX;
     public static DTrace REREAD_OLD_UUID;
+	public static DTrace SLOT_SET_POINTER;
+	public static DTrace SLOT_DELETE;
+	public static DTrace SLOT_FREE_ON_COMMIT;
+	public static DTrace SLOT_FREE_ON_ROLLBACK_ID;
+	public static DTrace SLOT_FREE_ON_ROLLBACK_ADDRESS;
     public static DTrace TRANS_COMMIT;
     public static DTrace TRANS_DONT_DELETE;
     public static DTrace TRANS_DELETE;
     public static DTrace TRANS_FLUSH;
     public static DTrace YAPCLASS_BY_ID;
     public static DTrace YAPCLASS_INIT;
+	public static DTrace YAPMETA_SET_ID;
+    public static DTrace YAPMETA_WRITE;
     public static DTrace WRITE_BYTES;
     public static DTrace WRITE_POINTER;
     public static DTrace WRITE_XBYTES;
     public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
     
     public static final Object forInit = init();
-    
+	
     private static DTrace all[];
     private static int current;
     

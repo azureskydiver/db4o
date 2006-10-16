@@ -90,8 +90,8 @@ public class BTreeNode extends YapMeta{
         
         write(trans.systemTransaction());
         
-        firstChild._parentID = getID();
-        secondChild._parentID = getID();
+        firstChild.setParentID(trans, getID());
+        secondChild.setParentID(trans, getID());
     }
     
     public BTree btree() {
@@ -313,6 +313,10 @@ public class BTreeNode extends YapMeta{
     }
     
     void commitOrRollback(Transaction trans, boolean isCommit){
+    	
+    	if(DTrace.enabled){
+    		DTrace.BTREE_NODE_COMMIT_OR_ROLLBACK.log(getID());
+    	}
         
         if(_dead){
             return;
@@ -377,12 +381,16 @@ public class BTreeNode extends YapMeta{
         if(count > 0){
             return false;
         }
-        if(_parentID == 0){
+        if(isRoot()){
             return false;
         }
         free(trans);
         return true;
     }
+
+	private boolean isRoot() {
+		return _btree.root() == this;
+	}
     
     public boolean equals(Object obj) {
         if (this == obj){
@@ -399,7 +407,8 @@ public class BTreeNode extends YapMeta{
         
         _dead = true;
         
-        if(_parentID != 0){
+        if(! isRoot()){
+        	
             BTreeNode parent = _btree.produceNode(_parentID);
             parent.removeChild(trans, this);
         }
@@ -408,7 +417,7 @@ public class BTreeNode extends YapMeta{
         
         pointNextTo(trans, _previousID);
         
-        trans.systemTransaction().slotFreePointerOnCommit(getID());
+        // trans.systemTransaction().slotFreePointerOnCommit(getID());
         
         _btree.removeNode(this);
         
@@ -445,6 +454,7 @@ public class BTreeNode extends YapMeta{
                 return;
             }
         }
+        throw new IllegalStateException("child not found");
     }
     
     private void keyChanged(Transaction trans, BTreeNode child) {
@@ -458,10 +468,11 @@ public class BTreeNode extends YapMeta{
                 return;
             }
         }
+        throw new IllegalStateException("child not found");
     }
     
     private void tellParentAboutChangedKey(Transaction trans){
-        if(_parentID != 0){
+        if(! isRoot()){
             BTreeNode parent = _btree.produceNode(_parentID);
             parent.keyChanged(trans, this);
         }
@@ -556,7 +567,7 @@ public class BTreeNode extends YapMeta{
     private void prepareInsert(int pos){
         if (pos < 0){
         	// FIXME: remove this check
-            throw new IllegalArgumentException("pos");
+            throw new IllegalArgumentException("pos " + pos );
         }
         if(pos > lastIndex()){
             _count ++;
@@ -574,6 +585,9 @@ public class BTreeNode extends YapMeta{
     }
     
     private void remove(int pos){
+    	if(DTrace.enabled){
+    		DTrace.BTREE_NODE_REMOVE.log(getID());
+    	}
         int len = _count - pos;
         _count--;
         System.arraycopy(_keys, pos + 1, _keys, pos, len);
@@ -988,16 +1002,19 @@ public class BTreeNode extends YapMeta{
     private void setParentID(Transaction trans, int id){
         prepareWrite(trans);
         _parentID = id;
+        setStateDirty();
     }
     
     private void setPreviousID(Transaction trans, int id){
         prepareWrite(trans);
         _previousID = id;
+        setStateDirty();
     }
     
     private void setNextID(Transaction trans, int id){
         prepareWrite(trans);
         _nextID = id;
+        setStateDirty();
     }
     
     public void traverseKeys(Transaction trans, Visitor4 visitor){
@@ -1113,7 +1130,7 @@ public class BTreeNode extends YapMeta{
     
     public String toString() {
         if(_count == 0){
-            return "Node not loaded";
+            return "Node " + getID() + " not loaded";
         }
         String str = "\nBTreeNode";
         str += "\nid: " + getID();
