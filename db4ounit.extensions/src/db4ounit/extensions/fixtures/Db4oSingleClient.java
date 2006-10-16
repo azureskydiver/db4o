@@ -2,13 +2,12 @@
 
 package db4ounit.extensions.fixtures;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.ext.*;
+import com.db4o.Db4o;
+import com.db4o.ext.ExtObjectContainer;
 
-import db4ounit.*;
+import db4ounit.TestException;
 
 
 public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
