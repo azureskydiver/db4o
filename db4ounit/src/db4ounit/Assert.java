@@ -114,6 +114,10 @@ public final class Assert {
 	public static void isFalse(boolean condition) {
 		isTrue(!condition);
 	}
+	
+	public static void isFalse(boolean condition, String message) {
+		isTrue(!condition, message);
+	}
 
 	public static void isInstanceOf(Class expectedClass, Object actual) {
 		isTrue(expectedClass.isInstance(actual), failureMessage(expectedClass, actual == null ? null : actual.getClass()));
