@@ -8,6 +8,10 @@ import com.db4o.test.replication.old.*;
 public class AllTestsJdk1_2 extends AllTests{
 	
     public static void main(String[] args) {
+    	if(args!=null&&args.length==1&&args[0].equals("*")) {
+            new AllTestsJdk1_2().runWithException();
+            return;
+    	}
         new AllTestsJdk1_2().run();
     }
     
