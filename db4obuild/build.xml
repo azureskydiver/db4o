@@ -1372,12 +1372,14 @@
 	<target name="compiledb4ounit-net">		
 		<csc srcdir="${dir.n}/Db4oUnit/src"
 			targettype="library"
-			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.dll">
+			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.dll"
+			executable="${csc.executable}">
 		</csc>
 
 		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
 			targettype="library"
-			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.Extensions.dll">
+			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.Extensions.dll"
+			executable="${csc.executable}">
 			<reference dir="${dir.dist.db4ounit.dll}">
 				<include name="Db4oUnit.dll" />
 			</reference>
