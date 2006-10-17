@@ -69,12 +69,16 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
+		return all();
+	}
+
+	private Class[] all() {
 		Set<Class> out = new HashSet<Class>();
 		
 		out.add(TablesCreatorTest.class);
 		out.add(ReplicationConfiguratorTest.class);
 		
-		for (Class c : all())
+		for (Class c : shared())
 			out.add(c);
 		
 		return out.toArray(new Class[]{});

@@ -1,5 +1,11 @@
 package com.db4o.drs.test;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.db4o.drs.test.hibernate.ReplicationConfiguratorTest;
+import com.db4o.drs.test.hibernate.TablesCreatorTest;
+
 import db4ounit.TestRunner;
 
 public class Db4oTests extends DrsTestSuite {
@@ -34,10 +40,21 @@ public class Db4oTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
-		return all();
+		return one();
+	}
+	
+	private Class[] all() {
+		Set<Class> out = new HashSet<Class>();
+		
+		out.add(EnumTest.class);
+		
+		for (Class c : shared())
+			out.add(c);
+		
+		return out.toArray(new Class[]{});
 	}
 
 	protected Class[] one() {
-		return new Class[] { TheSimplest.class, };
+		return new Class[] { EnumTest.class, };
 	}
 }
