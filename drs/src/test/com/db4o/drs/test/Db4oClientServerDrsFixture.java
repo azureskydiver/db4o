@@ -2,64 +2,35 @@
 
 package com.db4o.drs.test;
 
-import java.io.File;
 import java.io.IOException;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
 import com.db4o.drs.db4o.Db4oReplicationProvider;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.io.MemoryIoAdapter;
 
-
-public class Db4oClientServerDrsFixture implements DrsFixture {
-
+public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
 	private static final String HOST = "localhost";
 	private static final String USERNAME = "db4o";
 	private static final String PASSWORD = USERNAME;
 	
-	private String _name;
 	private ObjectServer _server;
-	private ExtObjectContainer _db;
-	private TestableReplicationProviderInside _provider;
 	private int _port;
 	
 	public Db4oClientServerDrsFixture(String name, int port) {
-		_name = name;
+		super(name);
 		_port = port;
 	}
 
-	public TestableReplicationProviderInside provider() {
-		return _provider;
-	}
-	
-	// FIXME: escape _name
-	private String yapFileName() {
-		return "drs_cs_" + _name + ".yap";
-	}
-
-	public void clean() {
-		new File(yapFileName()).delete();
-	}
-
 	public void close(){
-		_db.close();
-		_provider.destroy();
+		super.close();
 		_server.close();
-	}
-
-	public ExtObjectContainer db() {
-		return _db;
 	}
 
 	public void open(){
 		Db4o.configure().messageLevel(-1);
 		
-//		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
-//		Db4o.configure().io(memoryIoAdapter);
-
-		_server = Db4o.openServer(yapFileName(), _port);
+		_server = Db4o.openServer(testFile.getPath(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
 		try {
 			_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
@@ -68,5 +39,4 @@ public class Db4oClientServerDrsFixture implements DrsFixture {
 		}
 		_provider = new Db4oReplicationProvider(_db, _name);
 	}
-
 }

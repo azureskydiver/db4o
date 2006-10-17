@@ -8,22 +8,24 @@ import com.db4o.Db4o;
 import com.db4o.drs.db4o.Db4oReplicationProvider;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.io.MemoryIoAdapter;
-
 
 public class Db4oDrsFixture implements DrsFixture {
-
-	String _name;
-	ExtObjectContainer _db;
-	TestableReplicationProviderInside _provider;
+	static final File RAM_DRIVE = new File("z:");
+	
+	protected String _name;
+	protected ExtObjectContainer _db;
+	protected TestableReplicationProviderInside _provider;
+	protected final File testFile;
 	
 	public Db4oDrsFixture(String name) {
 		_name = name;
-	}
-	
-	// FIXME: escape _name
-	private String yapFileName() {
-		return "drs" + _name + ".yap";
+		
+		if (RAM_DRIVE.exists())
+			testFile = new File(RAM_DRIVE, "drs_cs_" + _name + ".yap");
+		else	
+			testFile = new File("drs_cs_" + _name + ".yap");
+		
+		System.out.println("testFile = " + testFile);
 	}
 	
 	public TestableReplicationProviderInside provider() {
@@ -31,7 +33,7 @@ public class Db4oDrsFixture implements DrsFixture {
 	}
 
 	public void clean() {
-		new File(yapFileName()).delete();
+		testFile.delete();
 	}
 
 	public void close() {
@@ -44,10 +46,11 @@ public class Db4oDrsFixture implements DrsFixture {
 	}
 
 	public void open() {
-//		MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
-//		Db4o.configure().io(memoryIoAdapter);
+		//	Comment out because MemoryIoAdapter has problems on .net 
+		//	MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
+		//	Db4o.configure().io(memoryIoAdapter);
 		
-		_db = Db4o.openFile(new File(yapFileName()).getPath()).ext();
+		_db = Db4o.openFile(testFile.getPath()).ext();
 		_provider = new Db4oReplicationProvider(_db, _name);
 	}
 }
