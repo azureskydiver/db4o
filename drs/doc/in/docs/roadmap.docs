@@ -2,8 +2,7 @@
 .a Roadmap ..
 .0 Roadmap ..
 
-This section describes the features supported in current release and features planned in
-._ upcoming releases.
+This section describes the features supported in current release and features planned in upcoming releases.
 
 .1 Supported Features ..
 - db4o to db4o replication
@@ -32,3 +31,4 @@ This section describes the features supported in current release and features pl
 - RDBMS triggers for updating version number
 - Instant replication
 - Update of UUID generation mechanism, this may break existing data
+- JDK5 enum support

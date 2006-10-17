@@ -15,15 +15,9 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 		return new DrsTestSuiteBuilder(a(), b(), testCases()).build();
 	}
 
-	protected Class[] testCases() {
-		return one();
-	}
+	protected abstract Class[] testCases() ;
 
-	protected Class[] one() {
-		return new Class[] { ReplicationProviderTest.class, };
-	}
-
-	protected Class[] all() {
+	protected Class[] shared() {
 		return new Class[] {
 				// Simple
 				//DO NOT run this - Hibernate does not have mappings InheritanceTest.class,
@@ -48,7 +42,7 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 //
 //				// General
 				CollectionHandlerImplTest.class,  
-				ReplicationTraversalTest.class 
+				ReplicationTraversalTest.class,
 				};
 	}
 }
