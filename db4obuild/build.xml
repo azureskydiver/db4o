@@ -18,6 +18,7 @@
 	file.keystore=<OPTIONAL: keystore location for signjar tasks. if not present, ${user.home}/.keystore is assumed>	
 	mono.mcs.executable=<OPTIONAL: path to mcs executable, overrides ant.properties entry>
 	mono.gmcs.executable=<OPTIONAL: path to gmcs executable, overrides ant.properties entry>
+	path.classpath.jdk1.1=<OPTIONAL: path to classes.zip for JDK1.1>
 	
 	An example:
 	dir.workspace=C:/_db4o/production
@@ -29,6 +30,7 @@
 	dir.compactframework=C:/Arquivos de programas/Microsoft Visual Studio 8/SmartDevices/SDK/CompactFramework/2.0/
 	eclipse.home=c:/Program Files/Eclipse	
 	csc.executable.path.net2=C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+	path.classpath.jdk1.1=d:/java/jdk/jdk1.1.8/lib/classes.zip
 -->
 	<import file="common.xml" />
 
@@ -851,6 +853,7 @@
 				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
+				<path path="${path.classpath.jdk1.1}" />
 			</classpath>
 			<arg value="-e" />
 		</java>
@@ -891,6 +894,7 @@
 				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
+				<path path="${path.classpath.jdk1.1}" />
 			</classpath>
 			<arg value="*" />
 		</java>
