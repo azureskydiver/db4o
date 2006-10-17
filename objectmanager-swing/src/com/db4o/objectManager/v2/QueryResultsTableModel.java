@@ -179,7 +179,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
         if (c == COL_ROW_NUMBER) return Number.class;
         for (int i = 0; i < results.size(); i++) {
             Object o = getValueAt(0, c);
-			System.out.println("class: " + o.getClass());
+			//System.out.println("class: " + o.getClass());
 			if (o != null) return o.getClass();
             // todo: can i get this from the reflector?
         }
