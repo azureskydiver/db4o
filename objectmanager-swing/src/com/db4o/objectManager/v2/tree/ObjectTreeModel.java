@@ -46,7 +46,7 @@ public class ObjectTreeModel implements TreeModel {
             Object[] array = (Object[]) parentObject;
             return new ObjectTreeNode(parentNode, null, array[index]);
         } else if (reflector.isCollection(reflectClass)) {
-            // todo: how to handle other collections?
+            // todo: how to handle maps?
             List collection = (List) parentObject;
             return new ObjectTreeNode(parentNode, collection.get(index));
         }

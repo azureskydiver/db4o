@@ -124,7 +124,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
         }
         int endIndex = row + NUM_IN_WINDOW;
         if (endIndex >= results.size()) endIndex = results.size();
-        System.out.println("Loading window: " + startIndex + " to " + endIndex);
+        //System.out.println("Loading window: " + startIndex + " to " + endIndex);
         for (int i = startIndex; i < endIndex; i++) {
             Result result = (Result) results.get(i);
             resultWindow.add(result);
@@ -144,7 +144,8 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
     public boolean isCellEditable(int row, int col) {
         if (col < extraColumns) return false;
         Class c = getColumnClass(col);
-        return ReflectHelper2.isEditable(c);
+		//System.out.println("iseditable? " + ReflectHelper2.isEditable(c) + " " + c.getName());
+		return ReflectHelper2.isEditable(c);
     }
 
     public void setValueAt(Object value, int row, int col) {
@@ -178,7 +179,8 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
         if (c == COL_ROW_NUMBER) return Number.class;
         for (int i = 0; i < results.size(); i++) {
             Object o = getValueAt(0, c);
-            if (o != null) return o.getClass();
+			System.out.println("class: " + o.getClass());
+			if (o != null) return o.getClass();
             // todo: can i get this from the reflector?
         }
         return super.getColumnClass(c);

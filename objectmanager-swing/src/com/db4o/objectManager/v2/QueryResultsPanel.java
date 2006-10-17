@@ -36,6 +36,7 @@ import com.db4o.objectManager.v2.tree.ObjectTreeModel;
 import com.db4o.objectManager.v2.tree.ObjectTreeNode;
 import com.db4o.objectManager.v2.tree.ObjectTree;
 import com.db4o.objectManager.v2.tree.ObjectTreeCellEditor;
+import com.db4o.objectManager.v2.results.DateRenderer;
 import com.db4o.ObjectContainer;
 import com.db4o.objectmanager.model.IGraphIterator;
 import com.jgoodies.forms.factories.Borders;
@@ -50,6 +51,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Color;
+import java.util.Date;
 
 final class QueryResultsPanel extends JPanel {
 	private MainPanel mainPanel;
@@ -85,6 +87,7 @@ final class QueryResultsPanel extends JPanel {
 	private JScrollPane buildResultsTable() {
 		resultsTable = new JTable();
 		resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		resultsTable.setDefaultRenderer(Date.class, new DateRenderer());
 		JScrollPane scrollpane = new FastScrollPane(resultsTable);
 		QueryResultsTableSelectionListener listener = new QueryResultsTableSelectionListener(resultsTable, this);
 		resultsTable.addMouseListener(listener);
