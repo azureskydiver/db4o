@@ -404,27 +404,15 @@ public class BTreeNode extends YapMeta{
     }
     
     private void free(Transaction trans){
-        
         _dead = true;
-        
         if(! isRoot()){
-        	
             BTreeNode parent = _btree.produceNode(_parentID);
             parent.removeChild(trans, this);
         }
-        
         pointPreviousTo(trans, _nextID);
-        
         pointNextTo(trans, _previousID);
-        
-        // FIXME: Freeing the pointer pops up a bug in the slot system.
-        //        Especially when doing rollbacks, the same SlotChange
-        //        in Transaction seems to be reused.
-        
-        // trans.systemTransaction().slotFreePointerOnCommit(getID());
-        
+        trans.systemTransaction().slotFreePointerOnCommit(getID());
         _btree.removeNode(this);
-        
     }
     
     void holdChildrenAsIDs(){
