@@ -32,6 +32,19 @@ public class CompositeIterator4 implements Iterator4 {
 		return true;
 	}
 	
+	public void reset() {
+		resetIterators();
+		_currentIterator = null;
+		_iterators.reset();
+	}
+
+	private void resetIterators() {
+		_iterators.reset();
+		while (_iterators.moveNext()) {
+			nextIterator(_iterators.current()).reset();
+		}
+	}
+	
 	public Iterator4 currentIterator() {
 		return _currentIterator;
 	}

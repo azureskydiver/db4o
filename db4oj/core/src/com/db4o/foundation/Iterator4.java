@@ -2,9 +2,17 @@
 
 package com.db4o.foundation;
 
+/**
+ * @sharpen.ignore
+ */
 public interface Iterator4 {
 
-	boolean moveNext();
+	public boolean moveNext();
 
-	Object current();
+	/**
+	 * @sharpen.property
+	 */
+	public Object current();
+
+	public void reset();
 }

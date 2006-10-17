@@ -36,4 +36,8 @@ public class ReverseIntIterator4Impl implements IntIterator4 {
 		_content = null;
 		return false;
 	}
+	
+	public void reset() {
+		_current = _count;
+	}
 }

@@ -22,6 +22,10 @@ public abstract class AbstractBTreeRangeIterator implements Iterator4 {
 		_cursor = _cursor.next();
 		return true;		
 	}
+	
+	public void reset() {
+		_cursor = _range.first();
+	}
 
 	protected BTreePointer currentPointer() {
 		if (null == _current) {

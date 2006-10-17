@@ -29,6 +29,11 @@ class QResultClientIterator implements Iterator4 {
 	private Object streamLock() {
 		return _client.streamLock();
 	}
+	
+	public void reset() {
+		_remainingObjects = 0;
+		_ids.reset();
+	}
 
 	public boolean moveNext() {
 		synchronized (streamLock()) {
