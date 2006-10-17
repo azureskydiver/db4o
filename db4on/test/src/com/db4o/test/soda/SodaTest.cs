@@ -1,6 +1,7 @@
 ﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
+using System.Collections;
 using com.db4o.foundation;
 using j4o.lang.reflect;
 using com.db4o;
@@ -161,10 +162,10 @@ namespace com.db4o.test.soda
 			if (failedTestClasses.Size() > 0) 
 			{
 				System.Console.Error.WriteLine("\nFailed test classes:\n");
-				Iterator4 i1 = failedTestClasses.Iterator();
+				IEnumerator i1 = failedTestClasses.GetEnumerator();
 				while (i1.MoveNext()) 
 				{
-					System.Console.Error.WriteLine(j4o.lang.Class.GetClassForObject(i1.Current()).GetName());
+					System.Console.Error.WriteLine(j4o.lang.Class.GetClassForObject(i1.Current).GetName());
 				}
 				System.Console.Error.WriteLine("\n");
 			}

@@ -13,7 +13,7 @@ import com.db4o.query.*;
  * 
  * @exclude
  */
-public class ClusterQueryResult implements QueryResult{
+public class ClusterQueryResult implements QueryResult {
     
 	private final Cluster _cluster;
     private final ObjectSet[] _objectSets;
@@ -47,6 +47,10 @@ public class ClusterQueryResult implements QueryResult{
 
 		public Object current() {
 			return _delegate.current();
+		}
+		
+		public void reset() {
+			_delegate.reset();
 		}
 
 		public int currentInt() {

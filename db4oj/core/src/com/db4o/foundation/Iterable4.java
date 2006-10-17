@@ -2,6 +2,9 @@
 
 package com.db4o.foundation;
 
+/**
+ * @sharpen.ignore
+ */
 public interface Iterable4 {
-	Iterator4 iterator();
+	public Iterator4 iterator();
 }

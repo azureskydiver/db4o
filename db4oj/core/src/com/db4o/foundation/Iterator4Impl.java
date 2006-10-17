@@ -10,12 +10,15 @@ public class Iterator4Impl implements Iterator4 {
 	
     public static final Iterator4 EMPTY = new Iterator4Impl(null);
     
+    private List4 _first;
     private List4 _next;
 	
 	private Object _current;
 
 	public Iterator4Impl(List4 first){
+		_first = first;
 		_next = first;
+		
 		_current = Iterators.NO_ELEMENT;
 	}
 
@@ -34,5 +37,10 @@ public class Iterator4Impl implements Iterator4 {
 			throw new IllegalStateException();
 		}
 		return _current;
+	}
+	
+	public void reset() {
+		_next = _first;
+		_current = Iterators.NO_ELEMENT;
 	}
 }

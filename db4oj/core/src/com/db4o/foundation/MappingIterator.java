@@ -29,6 +29,11 @@ public abstract class MappingIterator implements Iterator4 {
 		_current = map(_iterator.current());
 		return true;
 	}
+	
+	public void reset() {
+		_current = Iterators.NO_ELEMENT;
+		_iterator.reset();
+	}
 
 	public Object current() {
 		if (Iterators.NO_ELEMENT == _current) {

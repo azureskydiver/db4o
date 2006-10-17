@@ -28,7 +28,10 @@ public class ArrayIterator4TestCase implements TestCase {
 		Assert.isFalse(i.moveNext());		
 		Assert.expect(ArrayIndexOutOfBoundsException.class, new CodeBlock(){
 			public void run() throws Exception {
-				i.current();
+				bang(i.current());
+			}
+			
+			public void bang(Object o) {
 			}
 		});
 	}

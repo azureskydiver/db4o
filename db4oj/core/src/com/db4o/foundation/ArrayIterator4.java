@@ -26,6 +26,10 @@ public class ArrayIterator4 implements Iterator4 {
 		return _elements[_next]; 
 	}
 	
+	public void reset() {
+		_next = -1;
+	}
+	
 	private int lastIndex() {
 		return _elements.length - 1;
 	}

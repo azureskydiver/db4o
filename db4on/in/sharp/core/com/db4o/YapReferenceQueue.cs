@@ -1,5 +1,6 @@
 ﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
+using System.Collections;
 using com.db4o.ext;
 using com.db4o.foundation;
 
@@ -18,10 +19,10 @@ namespace com.db4o {
         internal void Poll(ExtObjectContainer objectContainer) {
             List4 remove = null;
             lock(this){
-                Iterator4 i = new Iterator4Impl(list);
+                IEnumerator i = new Iterator4Impl(list);
                 list = null;
                 while(i.MoveNext()){
-                    YapRef yapRef = (YapRef)i.Current();
+                    YapRef yapRef = (YapRef)i.Current;
                     if(yapRef.IsAlive){
                         list = new List4(list, yapRef);
                     }else{
@@ -29,9 +30,9 @@ namespace com.db4o {
                     }
                 }
             }
-            Iterator4 j = new Iterator4Impl(remove);
+			IEnumerator j = new Iterator4Impl(remove);
             while(j.MoveNext() && (!objectContainer.IsClosed())){
-                objectContainer.Purge(j.Current());
+                objectContainer.Purge(j.Current);
             }
         }
     }
