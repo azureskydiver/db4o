@@ -44,6 +44,5 @@ public class ObjectTreeCellEditor extends DefaultCellEditor {
         //System.out.println("value: " + value + " " + value.getClass());
         delegate.setValue(value);
         return editorComponent;
-        //return super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
-    }
+	}
 }
