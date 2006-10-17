@@ -24,8 +24,6 @@ public class Db4oDrsFixture implements DrsFixture {
 			testFile = new File(RAM_DRIVE, "drs_cs_" + _name + ".yap");
 		else	
 			testFile = new File("drs_cs_" + _name + ".yap");
-		
-		System.out.println("testFile = " + testFile);
 	}
 	
 	public TestableReplicationProviderInside provider() {
