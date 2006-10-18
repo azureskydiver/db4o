@@ -8,8 +8,7 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-public class Entry implements Compare, SecondClass
-{
+public class Entry implements Compare, SecondClass {
 	public Object key;
 	public Object value;
 	
