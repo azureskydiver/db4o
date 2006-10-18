@@ -450,12 +450,12 @@
 		<updateAssemblyInfoFiles srcdir="${dir.dist.net.compile}" />
 	</target>
 	
-	<target name="runtestsnet" depends="configure-net1.1, compiletestsnet">
+	<target name="runtestsnet" depends="configure-net1.1, compiletestsnet" description="sharpen and run db4o AllTests for net1.1">
 		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}">
 		</exec>
 	</target>
 	
-	<target name="runtestsnet2" depends="configure-net2, compiletestsnet">
+	<target name="runtestsnet2" depends="configure-net2, compiletestsnet" description="sharpen and run db4o AllTests for net2">
 		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}" failonerror="true" failifexecutionfails="true">
 		</exec>
 	</target>
@@ -558,12 +558,15 @@
 			</reference>
 		</csc>
 	</target>
-
-	<target name="runtestsmono" depends="compiletestsmono">
+	
+	<target name="do-runtestsmono" depends="compiletestsmono">
 		<exec executable="mono" dir="${dir.dist.dll.mono}" failifexecutionfails="true" failonerror="true" timeout="300000">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.mono}/${file.name.exe.tests.mono}" />
 		</exec>
+	</target>
+
+	<target name="runtestsmono" depends="configure-mono2, do-runtestsmono" description="sharpen and run db4o AllTests for mono2">
 	</target>
 	
 	<target name="do-compiledllmono">
@@ -595,7 +598,7 @@
 		</antcall>
 	</target>
 
-	<target name="compiletestsmono">
+	<target name="compiletestsmono" depends="compiledllmono, compiletoolsmono">
 		<antcall target="do-compiletestsmono">
 			<param name="src.dir" location="${dir.n.test.src}" />
 		</antcall>
@@ -1208,19 +1211,25 @@
 		</antcall>
 	</target>
 	
-	<target name="zipmono-pascalcase" depends="init"  description="Zip Mono PascalCase distribution">
+	<target name="configure-mono1.1">
+		<property name="mono.definitions" value="MONO" />
+		<property name="mono.executable" value="${mono.mcs.executable}" />
+		<property name="mono.ndoc.executable" value="mono/1.0/NDocConsole.exe" />
+	</target>
+	
+	<target name="configure-mono2">
+		<property name="mono.definitions" value="MONO;NET_2_0" />
+		<property name="mono.executable" value="${mono.gmcs.executable}" />
+		<property name="mono.ndoc.executable" value="net/2.0/NDocConsole.exe" />
+	</target>
+	
+	<target name="zipmono-pascalcase" depends="init, configure-mono1.1"  description="Zip Mono PascalCase distribution">
 		<antcall target="do-zipmono-pascalcase">
-			<param name="mono.definitions" value="MONO" />
-			<param name="mono.executable" value="${mono.mcs.executable}" />
-			<param name="mono.ndoc.executable" value="mono/1.0/NDocConsole.exe" />
 		</antcall>
 	</target>
 
-	<target name="zipmono2-pascalcase" depends="init"  description="Zip Mono with generics PascalCase distribution">
+	<target name="zipmono2-pascalcase" depends="init, configure-mono2"  description="Zip Mono with generics PascalCase distribution">
 		<antcall target="do-zipmono-pascalcase">
-			<param name="mono.definitions" value="MONO;NET_2_0" />
-			<param name="mono.executable" value="${mono.gmcs.executable}" />
-			<param name="mono.ndoc.executable" value="net/2.0/NDocConsole.exe" />
 		</antcall>
 	</target>
 	
