@@ -285,4 +285,8 @@ public class YapReader implements SlotReader {
 	public void offset(int offset) {
 		_offset=offset;
 	}
+
+	public void copyBytes(byte[] target,int sourceOffset,int targetOffset, int length) {
+		System.arraycopy(_buffer, sourceOffset, target, targetOffset, length);
+	}
 }

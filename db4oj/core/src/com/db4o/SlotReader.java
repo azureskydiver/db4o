@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 public interface SlotReader {
 
 	int offset();
@@ -11,6 +13,7 @@ public interface SlotReader {
 	void incrementIntSize();
 
 	void readBegin(byte identifier);
+	void readEnd();
 
 	byte readByte();
 	void append(byte value);
@@ -20,4 +23,8 @@ public interface SlotReader {
 
 	long readLong();
 	void writeLong(long value);
+
+	public BitMap4 readBitMap(int bitCount);
+	
+	void copyBytes(byte[] target,int sourceOffset,int targetOffset,int length);
 }

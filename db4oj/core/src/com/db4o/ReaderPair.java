@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.inside.marshall.*;
 
 /**
@@ -142,5 +143,20 @@ public class ReaderPair implements SlotReader {
 	public void writeLong(long value) {
 		_source.incrementOffset(YapConst.LONG_LENGTH);
 		_target.writeLong(value);
+	}
+
+	public BitMap4 readBitMap(int bitCount) {
+		BitMap4 value=_source.readBitMap(bitCount);
+		_target.incrementOffset(value.marshalledLength());
+		return value;
+	}
+
+	public void copyBytes(byte[] target, int sourceOffset,int targetOffset, int length) {
+		_source.copyBytes(target, sourceOffset, targetOffset, length);
+	}
+
+	public void readEnd() {
+		_source.readEnd();
+		_target.readEnd();
 	}
 }
