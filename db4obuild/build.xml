@@ -875,7 +875,7 @@
 			</classpath>
 			<arg value="-e" />
 		</java>
-		<java fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="180000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="180000">
 			<classpath>
 				<pathelement path="${file.db4ounit.jar}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
