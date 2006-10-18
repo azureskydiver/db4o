@@ -13,6 +13,10 @@ import db4ounit.extensions.AbstractDb4oTestCase;
  */
 public class ObjectSetTestCase extends AbstractDb4oTestCase {
 	
+	public static void main(String[] args) {
+		new AllTests().runSoloAndClientServer();
+    }
+	
 	public static class Item {
 		public String name;
 		
@@ -30,22 +34,24 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		db().set(new Item("baz"));
 	}
 	
-	public void testObjectsCanBeSeenAfterDelete() {
+	public void testObjectsCantBeSeenAfterDelete() {
 		final Transaction trans1 = newTransaction();
 		final Transaction trans2 = newTransaction();
 		final ObjectSet os = queryItems(trans1);
 		deleteItemAndCommit(trans2, "foo");
-		assertItems(new String[] { "bar", "baz", "foo" }, os);
+		assertItems(new String[] { "bar", "baz" }, os);
 	}
 
 	private void assertItems(String[] expectedNames, ObjectSet actual) {
 		for (int i = 0; i < expectedNames.length; i++) {
+			Assert.isTrue(actual.hasNext());
 			Assert.areEqual(expectedNames[i], ((Item)actual.next()).name);
 		}
+		Assert.isFalse(actual.hasNext());
 	}
 
 	private void deleteItemAndCommit(Transaction trans, String name) {
-		db().delete(queryItem(trans, name));
+		stream().delete(trans, queryItem(trans, name));
 		trans.commit();
 	}
 
