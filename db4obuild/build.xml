@@ -559,14 +559,11 @@
 		</csc>
 	</target>
 	
-	<target name="do-runtestsmono" depends="compiletestsmono">
+	<target name="runtestsmono" depends="configure-mono2, compiletestsmono" description="sharpen and run db4o AllTests for mono2">
 		<exec executable="mono" dir="${dir.dist.dll.mono}" failifexecutionfails="true" failonerror="true" timeout="300000">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.mono}/${file.name.exe.tests.mono}" />
 		</exec>
-	</target>
-
-	<target name="runtestsmono" depends="configure-mono2, do-runtestsmono" description="sharpen and run db4o AllTests for mono2">
 	</target>
 	
 	<target name="do-compiledllmono">
