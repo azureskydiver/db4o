@@ -116,6 +116,16 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected Transaction systemTrans() {
 	    return stream().getSystemTransaction();
 	}
+	
+	protected Query newQuery(Transaction transaction, Class clazz) {
+		final Query query = newQuery(transaction);
+		query.constrain(clazz);
+		return query;
+	}
+	
+	protected Query newQuery(Transaction transaction) {
+		return stream().query(transaction);
+	}
     
     protected Query newQuery(){
         return db().query();

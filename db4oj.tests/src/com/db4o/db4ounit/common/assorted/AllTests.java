@@ -18,8 +18,6 @@ public class AllTests extends Db4oTestSuite {
             DatabaseUnicityTest.class,
             GetByUUIDTestCase.class,
             IndexCreateDropTestCase.class,
-            IndexedQueriesTestCase.class,
-            MultiFieldIndexQueryTestCase.class,
             NakedObjectTestCase.class,
             ReAddCascadedDeleteTestCase.class,
             SimplestPossibleTestCase.class,
@@ -28,7 +26,6 @@ public class AllTests extends Db4oTestSuite {
             ServerRevokeAccessTestCase.class,
             SystemInfoTestCase.class,
             ObjectVersionTest.class,
-            OrderedQueryTestCase.class,
 		};
 	}
 }
