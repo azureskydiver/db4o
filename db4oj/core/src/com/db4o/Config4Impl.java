@@ -37,7 +37,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
 	private final static KeySpec BLOBPATH=new KeySpec(null);
     
-    private final static KeySpec BTREE_NODE_SIZE=new KeySpec(100);
+    private final static KeySpec BTREE_NODE_SIZE=new KeySpec(4096);
     
     private final static KeySpec BTREE_CACHE_HEIGHT=new KeySpec(1);
     
