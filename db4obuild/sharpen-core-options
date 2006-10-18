@@ -1,4 +1,5 @@
 @sharpen-exceptions-mapping
+@sharpen-collections-mapping
 -pascalCase
 -runtimeTypeName j4o.lang.JavaSystem
 -namespaceMapping ^java j4o
@@ -7,7 +8,3 @@
 -propertyMapping java.lang.System.err j4o.lang.JavaSystem.Err
 -typeMapping java.lang.reflect.Array j4o.lang.reflect.JavaArray
 
--typeMapping com.db4o.foundation.Iterable4 System.Collections.IEnumerable
--typeMapping com.db4o.foundation.Iterator4 System.Collections.IEnumerator
--methodMapping com.db4o.foundation.Iterable4.iterator GetEnumerator
--propertyMapping com.db4o.foundation.Iterator4.current Current
