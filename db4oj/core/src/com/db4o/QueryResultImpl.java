@@ -36,6 +36,18 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 		public QueryResultImplIterator(Iterator4 iterator) {
 			super(iterator);
 		}
+		
+		public boolean moveNext() {
+			// skip nulls (deleted objects)
+			if (!super.moveNext()) {
+				return false;
+			}
+			if (null == current()) {
+				return moveNext();
+			}
+			return true;
+		}
+		
 		protected Object map(Object current) {
 			synchronized (streamLock()) {
 				return activatedObject(((Integer)current).intValue());

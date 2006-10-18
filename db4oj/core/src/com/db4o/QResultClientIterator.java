@@ -39,7 +39,7 @@ class QResultClientIterator implements Iterator4 {
 		synchronized (streamLock()) {
 			if (_remainingObjects > 0) {
 				--_remainingObjects;
-				return true;
+				return skipNulls();
 			}
 			
 			prefetch();
@@ -48,12 +48,16 @@ class QResultClientIterator implements Iterator4 {
 			if(_remainingObjects < 0){
 				return false;
 			}
-			// TODO: do we have to skip nulls? really? why?
-//			if(prefetchedCurrent() == null){
-//				return moveNext();
-//			}
-			return true;
+			return skipNulls();
 		}
+	}
+
+	private boolean skipNulls() {
+		// skip nulls (deleted objects)
+		if (prefetchedCurrent() == null){
+			return moveNext();
+		}
+		return true;
 	}
 
 	private void prefetch() {
