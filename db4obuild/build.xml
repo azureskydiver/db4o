@@ -847,7 +847,7 @@
 				<include name="test/db4oVersions/**/*" />
 			</fileset>
 		</copy>
-		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="true" timeout="180000">
+		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="true" timeout="360000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.1}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
@@ -888,7 +888,7 @@
 			<arg value="-e" />
 		</java>
 		<echo message="${file.jvm.jdk1.1}" />
-		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="3600000">
+		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="7200000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.1}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
