@@ -1860,7 +1860,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
      * returns true in case an unknown single object is passed
      * This allows deactivating objects before queries are called.
      */
-    List4 stillTo1(List4 a_still, Tree[] a_just, Object a_object, int a_depth,
+    final List4 stillTo1(List4 a_still, Tree[] a_just, Object a_object, int a_depth,
         boolean a_forceUnknownDeactivate) {
     	
         if (a_object == null || a_depth <= 0) {
