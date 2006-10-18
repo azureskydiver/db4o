@@ -73,9 +73,11 @@
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
 			<args>
 				<arg value="@sharpen-exceptions-mapping" />
+				<arg value="@sharpen-collections-mapping" />
 				
 				<arg value="-pascalCase+" />
 				<arg value="-nativeTypeSystem" />
+				<!--<arg value="-nativeInterfaces" />-->
 			
 				<arg value="-typeMapping" />
 				<arg value="com.db4o.events.EventArgs" />
