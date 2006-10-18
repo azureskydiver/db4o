@@ -23,10 +23,6 @@ public class AtomData {
 		this.name = name;
 	}
 	
-	public int compareTo(Object obj){
-		return 0;
-	}
-	
 	public boolean equals(Object obj){
 		if(obj instanceof AtomData){
 			AtomData other = (AtomData)obj;
