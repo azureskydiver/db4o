@@ -9,13 +9,12 @@ import java.io.FileWriter;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4odoc.f1.Util;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 
-public class SerializeExample extends Util {
-
+public class SerializeExample  {
+	public final static String YAPFILENAME="formula1.yap";
 	public static String XMLFILENAME = "formula1.xml";
 	
 	public static void main(String[] args) {
@@ -23,10 +22,11 @@ public class SerializeExample extends Util {
 		exportToXml();
 		importFromXml();
 	}
+	// end main
 	
 	public static void setObjects(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
 			db.set(car);
@@ -36,13 +36,14 @@ public class SerializeExample extends Util {
 			db.close();
 		}
 	}
+	// end setObjects
 	
 	public static void exportToXml()
 	{
 		XStream xstream = new XStream(new DomDriver());
 		try {
 			FileWriter xmlFile = new FileWriter(XMLFILENAME);
-			ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+			ObjectContainer db = Db4o.openFile(YAPFILENAME);
 			try 
 			{
 				ObjectSet result = db.query(Car.class);
@@ -64,16 +65,17 @@ public class SerializeExample extends Util {
 			System.out.println(ex.getMessage());
 		}
 	}
+	// end exportToXml
 	
 	public static void importFromXml() {
-		new File(Util.YAPFILENAME).delete();
+		new File(YAPFILENAME).delete();
 		XStream xstream = new XStream(new DomDriver());
 		try {
 			FileReader xmlReader = new FileReader(XMLFILENAME);
 			Car[] cars = (Car[]) xstream.fromXML(xmlReader);
 			ObjectContainer db;
 			for (int i = 0; i < cars.length; i++) {
-				db = Db4o.openFile(Util.YAPFILENAME);
+				db = Db4o.openFile(YAPFILENAME);
 				try {
 					Car car = (Car) cars[i];
 					db.set(car);
@@ -81,7 +83,7 @@ public class SerializeExample extends Util {
 					db.close();
 				}
 			}
-			db = Db4o.openFile(Util.YAPFILENAME);
+			db = Db4o.openFile(YAPFILENAME);
 			try {
 				ObjectSet result = db.query(Pilot.class);
 				listResult(result);
@@ -95,6 +97,14 @@ public class SerializeExample extends Util {
 			System.out.println(ex.getMessage());
 		}
 	}
-
+	// end importFromXml
+    
+	public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 	
 }

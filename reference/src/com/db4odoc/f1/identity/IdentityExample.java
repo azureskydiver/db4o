@@ -8,10 +8,9 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
-import com.db4odoc.f1.Util;
 
-public class IdentityExample extends Util {
-
+public class IdentityExample {
+	public final static String YAPFILENAME="formula1.yap";
 
 	public static void main(String[] args) {
 		setObjects();
@@ -22,10 +21,11 @@ public class IdentityExample extends Util {
 		
 		testCopyingWithPurge();
 	}
+	// end main
 
 	public static void setObjects(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
 			db.set(car);
@@ -35,10 +35,11 @@ public class IdentityExample extends Util {
 			db.close();
 		}
 	}
+	// end setObjects
 	
 	public static void checkUniqueness(){
 		setObjects();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			ObjectSet cars = db.query(Car.class);
 			Car car = (Car)cars.get(0);
@@ -50,10 +51,11 @@ public class IdentityExample extends Util {
 			db.close();
 		}
 	}
+	// end checkUniqueness
 	
 	public static void checkReferenceCache(){
 		setObjects();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			ObjectSet pilots = db.query(Pilot.class);
 			Pilot pilot = (Pilot)pilots.get(0);
@@ -66,10 +68,11 @@ public class IdentityExample extends Util {
 			db.close();
 		}
 	}
+	// end checkReferenceCache
 	
 	public static void checkReferenceCacheWithPurge(){
 		setObjects();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			ObjectSet pilots = db.query(Pilot.class);
 			Pilot pilot = (Pilot)pilots.get(0);
@@ -86,10 +89,11 @@ public class IdentityExample extends Util {
 			db.close();
 		}
 	}
+	// end checkReferenceCacheWithPurge
 	
 	public static void testCopyingWithPurge(){
 		setObjects();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			ObjectSet pilots = db.query(Pilot.class);
 			Pilot pilot = (Pilot)pilots.get(0);
@@ -101,10 +105,11 @@ public class IdentityExample extends Util {
 			db.close();
 		}
 	}
+	// end testCopyingWithPurge
 	
 	public static void testBind(){
 		setObjects();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			Query q = db.query();
 			q.constrain(Car.class);
@@ -122,4 +127,13 @@ public class IdentityExample extends Util {
 			db.close();
 		}
 	}
+	// end testBind
+	
+    public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 }

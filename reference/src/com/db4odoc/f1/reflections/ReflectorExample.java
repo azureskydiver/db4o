@@ -15,22 +15,22 @@ import com.db4o.reflect.ReflectConstructor;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.ReflectMethod;
 import com.db4o.reflect.generic.GenericReflector;
-import com.db4odoc.f1.Util;
 import com.db4odoc.f1.evaluations.Car;
 
-public class ReflectorExample extends Util {
-	
+public class ReflectorExample  {
+	public final static String YAPFILENAME="formula1.yap";
 	public static void main(String[] args) throws IOException {
 		setCars();
 		getReflectorInfo();
 		getCars();
 		getCarInfo();
 	}
+	// end main
 	
 	public static void setCars()
 	{
-		 new File(Util.YAPFILENAME).delete();
-		 ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		 new File(YAPFILENAME).delete();
+		 ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			Car car1 = new Car("BMW");
 			db.set(car1);
@@ -46,10 +46,11 @@ public class ReflectorExample extends Util {
 			db.close();
 		}
 	}
+	// end setCars
 	
 	public static void getCars()
 	{
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			GenericReflector reflector = new GenericReflector(null,db.ext().reflector());
 			ReflectClass carClass = reflector.forName(Car.class.getName());
@@ -63,10 +64,11 @@ public class ReflectorExample extends Util {
 			db.close();
 		}
 	}
+	// end getCars
 	
 	public static void getCarInfo()
 	{
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			GenericReflector reflector = new GenericReflector(null,db.ext().reflector());
 			ReflectClass carClass = reflector.forName(Car.class.getName());
@@ -92,9 +94,11 @@ public class ReflectorExample extends Util {
 			db.close();
 		}
 	}
+	// end getCarInfo
+	
 	public static void getReflectorInfo()
 	{
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			System.out.println("Reflector in use: " + db.ext().reflector());
 			System.out.println("Reflector delegate" +db.ext().reflector().getDelegate());
@@ -108,12 +112,13 @@ public class ReflectorExample extends Util {
 			db.close();
 		}
 	}
+	// end getReflectorInfo
 	
 	public static void testReflector()
 	{
 		LoggingReflector logger = new LoggingReflector();
 		Db4o.configure().reflectWith(logger);
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			ReflectClass rc  = db.ext().reflector().forName(Car.class.getName());
 			System.out.println("Reflected class: " + rc);
@@ -121,4 +126,13 @@ public class ReflectorExample extends Util {
 			db.close();
 		}
 	}
+	// end testReflector
+	
+    public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 }

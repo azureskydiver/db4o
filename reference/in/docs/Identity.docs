@@ -74,7 +74,7 @@ for short-lived objects and in controlled situations where no other references e
 Each retrieved or created object is automatically placed into reference system. Of course you ._
 have control over it and can purge or deactivate retrieved objects to prevent ever-growing ._
 memory consumption. However this requires a lot of attention and coding effort. Luckily, this ._
-is not necessary as db4o offers much easier way to manage the memory – WeakReferences. 
+is not necessary as db4o offers much easier way to manage the memory - WeakReferences. 
 Any object is kept in the memory while application has references to it otherwise it becomes ._
 eligible for garbage collection.
 In the default configuration db4o uses weak references and a dedicated thread to clean them ._

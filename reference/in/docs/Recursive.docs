@@ -2,16 +2,11 @@
 .a Recursive ..
 .1 Recursive structures ..
 
-We have already seen how db4o handles object ._
-associations, but our running example is still quite flat and ._
-simple, compared to real-world domain models. In particular we ._
-haven't seen how db4o behaves in the presence of recursive ._
-structures. We will emulate such a structure by replacing our ._
-history list with a linked list implicitely provided by the ._
-SensorReadout class.
+The real-world applications often have to deal with recursive structures. In this chapter ._
+we will review how to use them with db4o. 
 
+An example of recursive structure can be a linked list provided by a class like this:
 .s com.db4odoc.f1.clientserver.SensorReadout ..
-
 Our car only maintains an association to a 'head' sensor readout ._
 now.
 

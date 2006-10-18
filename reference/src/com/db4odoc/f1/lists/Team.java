@@ -4,7 +4,6 @@ package com.db4odoc.f1.lists;
 
 import java.util.List;
 
-import com.db4odoc.f1.evaluations.Pilot;
 
 public class Team {
 	private List pilots;

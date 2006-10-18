@@ -1,14 +1,15 @@
 package com.db4odoc.f1.evaluations;
 
 import com.db4o.*;
-import com.db4odoc.f1.*;
 
-public class TranslatorExample extends Util {
+public class TranslatorExample  {
+	public final static String YAPFILENAME="formula1.yap";
   public static void main(String[] args) {
     tryStoreWithoutCallConstructors();
     tryStoreWithCallConstructors();
     storeWithTranslator();
   }
+  // end main
 
   public static void tryStoreWithoutCallConstructors() {
 		Db4o.configure().exceptionsOnNotStorable(false);
@@ -16,6 +17,7 @@ public class TranslatorExample extends Util {
 	        .callConstructor(false);
 	    tryStoreAndRetrieve();
   }
+  // end tryStoreWithoutCallConstructors
 
   public static void tryStoreWithCallConstructors() {
     Db4o.configure().exceptionsOnNotStorable(true);
@@ -23,12 +25,14 @@ public class TranslatorExample extends Util {
         .callConstructor(true);
     tryStoreAndRetrieve();
   }
+  // end tryStoreWithCallConstructors
 
   public static void storeWithTranslator() {
     Db4o.configure().objectClass(NotStorable.class)
         .translate(new NotStorableTranslator());
     tryStoreAndRetrieve();
   }
+  // end storeWithTranslator
 
   public static void tryStoreAndRetrieve() {
     ObjectContainer db=Db4o.openFile(YAPFILENAME);
@@ -57,4 +61,5 @@ public class TranslatorExample extends Util {
       db.close();
     }
   }
+  // end tryStoreAndRetrieve
 }

@@ -7,22 +7,22 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4odoc.f1.Util;
 import com.db4odoc.f1.activating.SensorPanel;
 
 
-public class UtilityExample extends Util {
-
+public class UtilityExample {
+	public final static String YAPFILENAME="formula1.yap";
 
 	public static void main(String[] args) {
 		testDescend();
 		checkActive();
 		checkStored();
 	}
+	// end main
 
 	public static void storeSensorPanel(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			// create a linked list with length 10
 			SensorPanel list = new SensorPanel().createList(10); 
@@ -32,10 +32,11 @@ public class UtilityExample extends Util {
 			db.close();
 		}
 	}
+	// end storeSensorPanel
 	
 	public static void testDescend(){
 		storeSensorPanel();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			db.ext().configure().activationDepth(1);
 			System.out.println("Object container activation depth = 1");
@@ -48,10 +49,11 @@ public class UtilityExample extends Util {
 			db.close();
 		}
 	}
+	// end testDescend
 	
 	public static void checkActive(){
 		storeSensorPanel();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			db.ext().configure().activationDepth(2);
 			System.out.println("Object container activation depth = 2");
@@ -66,12 +68,13 @@ public class UtilityExample extends Util {
 			db.close();
 		}
 	}
+	// end checkActive
 	
 	public static void checkStored(){
 		// create a linked list with length 10
 		SensorPanel list = new SensorPanel().createList(10);
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			// store all elements with one statement, since all elements are new		
 			db.set(list);
@@ -86,4 +89,5 @@ public class UtilityExample extends Util {
 			db.close();
 		}
 	}
+	// end checkStored
 }

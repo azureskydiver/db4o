@@ -28,6 +28,7 @@ public class StartServer
   public static void main(String[] arguments) {
     new StartServer().runServer();
   } 
+  // end main
   
   /**
    * opens the ObjectServer, and waits forever until close() is called
@@ -59,6 +60,7 @@ public class StartServer
       db4oServer.close();
     }
   }
+  // end runServer
   
   /**
    * messaging callback
@@ -69,6 +71,7 @@ public class StartServer
       close();
     }
   }
+  // end processMessage
   
   /**
    * closes this server.
@@ -79,4 +82,5 @@ public class StartServer
       this.notify();
     }
   }
+  // end close
 }

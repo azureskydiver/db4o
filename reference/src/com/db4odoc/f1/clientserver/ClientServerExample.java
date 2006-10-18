@@ -2,19 +2,19 @@ package com.db4odoc.f1.clientserver;
 
 import java.io.*;
 import com.db4o.*;
-import com.db4odoc.f1.*;
 
 
-public class ClientServerExample extends Util {
+public class ClientServerExample  {
     private final static int PORT=0xdb40;
     private final static String USER="user";
     private final static String PASSWORD="password";
+    public final static String YAPFILENAME="formula1.yap";
     
     public static void main(String[] args) throws IOException {
-        new File(Util.YAPFILENAME).delete();
+        new File(YAPFILENAME).delete();
         accessLocalServer();
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(YAPFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(YAPFILENAME);
         try {
             setFirstCar(db);
             setSecondCar(db);
@@ -23,7 +23,7 @@ public class ClientServerExample extends Util {
             db.close();
         }
         configureDb4o();
-        ObjectServer server=Db4o.openServer(Util.YAPFILENAME,0);
+        ObjectServer server=Db4o.openServer(YAPFILENAME,0);
         try {
             queryLocalServer(server);
             demonstrateLocalReadCommitted(server);
@@ -33,7 +33,7 @@ public class ClientServerExample extends Util {
             server.close();
         }
         accessRemoteServer();
-        server=Db4o.openServer(Util.YAPFILENAME,PORT);
+        server=Db4o.openServer(YAPFILENAME,PORT);
         server.grantAccess(USER,PASSWORD);
         try {
             queryRemoteServer(PORT,USER,PASSWORD);
@@ -44,13 +44,15 @@ public class ClientServerExample extends Util {
             server.close();
         }
     }
-        
+    // end main
+    
     public static void setFirstCar(ObjectContainer db) {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
         Car car=new Car("BMW");
         car.setPilot(pilot);
         db.set(car);
     }
+    // end setFirstCar
 
     public static void setSecondCar(ObjectContainer db) {
         Pilot pilot=new Pilot("Michael Schumacher",100);
@@ -58,9 +60,10 @@ public class ClientServerExample extends Util {
         car.setPilot(pilot);
         db.set(car);
     }
+    // end setSecondCar
 
     public static void accessLocalServer() {
-        ObjectServer server=Db4o.openServer(Util.YAPFILENAME,0);
+        ObjectServer server=Db4o.openServer(YAPFILENAME,0);
         try {
             ObjectContainer client=server.openClient();
             // Do something with this client, or open more clients
@@ -70,16 +73,19 @@ public class ClientServerExample extends Util {
             server.close();
         }
     }
+    // end accessLocalServer
 
     public static void queryLocalServer(ObjectServer server) {
         ObjectContainer client=server.openClient();
         listResult(client.get(new Car(null)));
         client.close();
     }
+    // end queryLocalServer
 
     public static void configureDb4o() {
         Db4o.configure().objectClass(Car.class).updateDepth(3);
     }
+    // end configureDb4o
     
     public static void demonstrateLocalReadCommitted(ObjectServer server) {
         ObjectContainer client1=server.openClient();
@@ -97,6 +103,7 @@ public class ClientServerExample extends Util {
         client1.close();
         client2.close();
     }
+    // end demonstrateLocalReadCommitted
 
     public static void demonstrateLocalRollback(ObjectServer server) {
         ObjectContainer client1=server.openClient();
@@ -114,9 +121,10 @@ public class ClientServerExample extends Util {
         client1.close();
         client2.close();
     }
+    // end demonstrateLocalRollback
 
     public static void accessRemoteServer() throws IOException {
-        ObjectServer server=Db4o.openServer(Util.YAPFILENAME,PORT);
+        ObjectServer server=Db4o.openServer(YAPFILENAME,PORT);
         server.grantAccess(USER,PASSWORD);
         try {
             ObjectContainer client=Db4o.openClient("localhost",PORT,USER,PASSWORD);
@@ -127,12 +135,14 @@ public class ClientServerExample extends Util {
             server.close();
         }
     }
+    // end accessRemoteServer
 
     public static void queryRemoteServer(int port,String user,String password) throws IOException {
         ObjectContainer client=Db4o.openClient("localhost",port,user,password);
         listResult(client.get(new Car(null)));
         client.close();
     }
+    // end queryRemoteServer
 
     public static void demonstrateRemoteReadCommitted(int port,String user,String password) throws IOException {
         ObjectContainer client1=Db4o.openClient("localhost",port,user,password);
@@ -150,6 +160,7 @@ public class ClientServerExample extends Util {
         client1.close();
         client2.close();
     }
+    // end demonstrateRemoteReadCommitted
 
     public static void demonstrateRemoteRollback(int port,String user,String password) throws IOException {
         ObjectContainer client1=Db4o.openClient("localhost",port,user,password);
@@ -167,4 +178,23 @@ public class ClientServerExample extends Util {
         client1.close();
         client2.close();
     }
+    // end demonstrateRemoteRollback
+    
+    public static void listRefreshedResult(ObjectContainer container,ObjectSet result,int depth) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            Object obj = result.next();
+            container.ext().refresh(obj, depth);
+            System.out.println(obj);
+        }
+    }
+    // end listRefreshedResult
+    
+    public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 }

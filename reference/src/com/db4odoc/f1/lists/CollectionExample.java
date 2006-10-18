@@ -8,21 +8,21 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
-import com.db4odoc.f1.Util;
-import com.db4odoc.f1.evaluations.Pilot;
 import java.util.List;
 
 
-public class CollectionExample extends Util {
+public class CollectionExample {
+	public final static String YAPFILENAME="formula1.yap";
 
 	public static void main(String[] args) {
 		setTeam();
 		updateTeam();
 	}
+	// end main
 	
 	public static void setTeam(){
-		 new File(Util.YAPFILENAME).delete();
-		  ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		 new File(YAPFILENAME).delete();
+		  ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		   try {
 			   Team ferrariTeam = new Team();
 			   ferrariTeam.setName("Ferrari");
@@ -40,9 +40,10 @@ public class CollectionExample extends Util {
 		      db.close();
 		    } 
 	}
+	// end setTeam
 
 	public static void updateTeam(){
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		 try {
 			 Query query =db.query(); 
 			 query.constrain(Team.class);
@@ -63,5 +64,13 @@ public class CollectionExample extends Util {
 			db.close();
 		} 
 	}
+	// end updateTeam
 	
+    public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 }

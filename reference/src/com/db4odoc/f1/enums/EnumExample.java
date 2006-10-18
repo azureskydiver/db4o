@@ -2,16 +2,17 @@
 
 package com.db4odoc.f1.enums;
 
+import java.awt.Color;
 import java.io.File;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
-import com.db4odoc.f1.Util;
 
 
-public class EnumExample extends Util {
+public class EnumExample {
+	public final static String YAPFILENAME="formula1.yap";
 	public static void main(String[] args) {
         setPilots();
         checkPilots();
@@ -20,13 +21,25 @@ public class EnumExample extends Util {
         checkPilots();
         deleteQualification();
         updateQualification();
-  
-	}
+  }
+	// end main
 	
-    
+	public static void setCar(){
+		new File(YAPFILENAME).delete();
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		try {
+			Car car = new Car();
+			car.color = Color.GREEN;
+			db.set(car);
+		} finally {
+			db.close();
+		}
+	}
+	// end setCar
+	
 	public static void setPilots(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			db.set(new Pilot("Michael Schumacher",Qualification.WINNER));
 			db.set(new Pilot("Rubens Barrichello",Qualification.PROFESSIONAL));
@@ -34,9 +47,10 @@ public class EnumExample extends Util {
 			db.close();
 		}
 	}
+	// end setPilots
 	
 	public static void checkPilots(){
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 	        ObjectSet result = db.query(Pilot.class);
 	        System.out.println("Saved pilots: " + result.size());
@@ -54,10 +68,11 @@ public class EnumExample extends Util {
 			db.close();
 		}
     }
+	// end checkPilots
 	
 	public static void updateQualification(){
 		System.out.println("Updating WINNER qualification constant");
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			Query query = db.query();
 			query.constrain(Qualification.class);
@@ -73,11 +88,12 @@ public class EnumExample extends Util {
 		}
 		printQualification();
     }
+	// end updateQualification
 	
 	public static void deletePilots(){
 		System.out.println("Qualification enum before delete Pilots");
 		printQualification();
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		db.ext().configure() .objectClass(Pilot.class).objectField("qualification").cascadeOnDelete(true);
 
 		try {
@@ -92,9 +108,10 @@ public class EnumExample extends Util {
 		System.out.println("Qualification enum after delete Pilots");
 		printQualification();
     }
+	// end deletePilots
 	
 	public static void printQualification(){
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		try {
 			ObjectSet  result = db.query(Qualification.class);
 			System.out.println("results: " + result.size());
@@ -106,10 +123,11 @@ public class EnumExample extends Util {
 			db.close();
 		}
 	}
+	// end printQualification
 	
 	public static void deleteQualification(){
 		System.out.println("Explicit delete of Qualification enum");
-		ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
 		db.ext().configure() .objectClass(Qualification.class).cascadeOnDelete(true);
 		try {
 			ObjectSet  result = db.query(Qualification.class);
@@ -122,4 +140,5 @@ public class EnumExample extends Util {
 		}
 		printQualification();
     }
+	// end deleteQualification
 }
