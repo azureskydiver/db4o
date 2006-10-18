@@ -40,4 +40,5 @@ public class StopServer implements ServerConfiguration {
       objectContainer.close();
     }
   }
+  // end main
 }

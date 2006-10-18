@@ -4,13 +4,13 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.query.*;
-import com.db4odoc.f1.*;
 
 
-public class EvaluationExample extends Util {
+public class EvaluationExample {
+	public final static String YAPFILENAME="formula1.yap";
   public static void main(String[] args) {
-    new File(Util.YAPFILENAME).delete();
-    ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+    new File(YAPFILENAME).delete();
+    ObjectContainer db=Db4o.openFile(YAPFILENAME);
     try {
       storeCars(db);
       queryWithEvaluation(db);
@@ -19,6 +19,7 @@ public class EvaluationExample extends Util {
       db.close();
     }
   }
+  // end main
 	
   public static void storeCars(ObjectContainer db) {
     Pilot pilot1=new Pilot("Michael Schumacher",100);
@@ -33,12 +34,22 @@ public class EvaluationExample extends Util {
     car2.snapshot();
     db.set(car2);
   }
+  // end storeCars
 	
   public static void queryWithEvaluation(ObjectContainer db) {
     Query query=db.query();
     query.constrain(Car.class);
     query.constrain(new EvenHistoryEvaluation());
     ObjectSet result=query.execute();
-    Util.listResult(result);
+    listResult(result);
   }
+  // end queryWithEvaluation
+  
+  public static void listResult(ObjectSet result) {
+      System.out.println(result.size());
+      while(result.hasNext()) {
+          System.out.println(result.next());
+      }
+  }
+  // end listResult
 }

@@ -23,6 +23,7 @@ public class SymbianTest {
 		getObjects();
 		getObjectsSymbian();
 	}
+	// end main
 	
 	public static void setObjects(){
 		System.out.println("\nSetting objects using RandomAccessFileAdapter");
@@ -39,6 +40,7 @@ public class SymbianTest {
 			System.out.println("Exception accessing file: " + ex.getMessage());
 		}
 	}
+	// end setObjects
 
 	public static void setObjectsSymbian(){
 		System.out.println("\nSetting objects using SymbianIoAdapter");
@@ -55,6 +57,7 @@ public class SymbianTest {
 			System.out.println("Exception accessing file: " + ex.getMessage());
 		}
 	}
+	// end setObjectsSymbian
 
 	public static void getObjects(){
 		System.out.println("\nRetrieving objects using RandomAccessFileAdapter");
@@ -71,6 +74,7 @@ public class SymbianTest {
 			System.out.println("Exception accessing file: " + ex.getMessage());
 		}
 	}
+	// end getObjects
 	
 	public static void getObjectsSymbian(){
 		System.out.println("\nRetrieving objects using SymbianIoAdapter");
@@ -87,6 +91,6 @@ public class SymbianTest {
 			System.out.println("Exception accessing file: " + ex.getMessage());
 		}
 	}
-
+	// end getObjectsSymbian
 }
 

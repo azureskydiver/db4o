@@ -14,17 +14,17 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.query.Query;
-import com.db4odoc.f1.Util;
 
 
-public class UUIDExample extends Util {
-
+public class UUIDExample {
+	public final static String YAPFILENAME="formula1.yap";
 
 	public static void main(String[] args) {
 		testChangeIdentity();
 		setObjects();
 		testGenerateUUID();
 	}
+	// end main
 	
 	private static String printSignature(byte[] signature){
 		String str = "";
@@ -33,10 +33,11 @@ public class UUIDExample extends Util {
 	     }
 	     return str;
 	} 
+	// end printSignature
 	
 	public static void testChangeIdentity(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		Db4oDatabase db;
 		byte[] oldSignature;
 		byte[] newSignature;
@@ -48,7 +49,7 @@ public class UUIDExample extends Util {
         } finally {
         	oc.close();
         }        
-        oc = Db4o.openFile(Util.YAPFILENAME);
+        oc = Db4o.openFile(YAPFILENAME);
         try {
 	        db = oc.ext().identity();
 	        newSignature = db.getSignature();
@@ -71,11 +72,12 @@ public class UUIDExample extends Util {
         	System.out.println("Database signatures are different");
         }
 	}
+	// end testChangeIdentity
 
 	public static void setObjects(){
 		Db4o.configure().objectClass(Pilot.class).generateUUIDs(true);
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
 			oc.set(car);
@@ -83,8 +85,10 @@ public class UUIDExample extends Util {
 			oc.close();
 		}
 	}
+	// end setObjects
+	
 	public static void testGenerateUUID(){
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		try {
 			Query query = oc.query();
 			query.constrain(Car.class);
@@ -109,4 +113,5 @@ public class UUIDExample extends Util {
         	oc.close();
         }        
 	}
+	// end testGenerateUUID
 }

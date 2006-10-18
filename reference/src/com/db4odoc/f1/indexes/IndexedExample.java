@@ -6,10 +6,10 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
-import com.db4odoc.f1.Util;
 
 
-public class IndexedExample extends Util {
+public class IndexedExample {
+	public final static String YAPFILENAME="formula1.yap";
 	public static void main(String[] args){
 		IndexedExample.fillUpDB();
         IndexedExample.noIndex();
@@ -17,9 +17,10 @@ public class IndexedExample extends Util {
         IndexedExample.pilotIndex();
         IndexedExample.pointsIndex();
 	}
+	// end main
 	
     public static void noIndex() {
-    	ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+    	ObjectContainer db=Db4o.openFile(YAPFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);
@@ -37,10 +38,11 @@ public class IndexedExample extends Util {
             db.close();
         }
     }
+    // end noIndex
     
     public static void fillUpDB(){
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(YAPFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(YAPFILENAME);
         try {
         	for (int i=0; i<10000;i++){
     			AddCar(db,i);
@@ -50,11 +52,12 @@ public class IndexedExample extends Util {
             db.close();
         }
     }
+    // end fillUpDB
   
     public static void pilotIndex() {
     	Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(true);
     	Db4o.configure().objectClass(Pilot.class).objectField("points").indexed(false);
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(YAPFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);
@@ -72,11 +75,12 @@ public class IndexedExample extends Util {
             db.close();
         }
     }
+    // end pilotIndex
    
     public static void pointsIndex() {
     	Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(false);
     	Db4o.configure().objectClass(Pilot.class).objectField("points").indexed(true);
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(YAPFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);
@@ -94,12 +98,13 @@ public class IndexedExample extends Util {
             db.close();
         }
     }
+    // end pointsIndex
     
     
     public static void fullIndex() {
     	Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(true);
     	Db4o.configure().objectClass(Pilot.class).objectField("points").indexed(true);
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(YAPFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);
@@ -117,6 +122,7 @@ public class IndexedExample extends Util {
             db.close();
         }
     }
+    // end fullIndex
 
     
     private static void AddCar(ObjectContainer db, int points)
@@ -125,6 +131,14 @@ public class IndexedExample extends Util {
 		car.setPilot(new Pilot("Tester", points));
 		db.set(car);
 	}
+    // end AddCar
     
+    public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
     
 }

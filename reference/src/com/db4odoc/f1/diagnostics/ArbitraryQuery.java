@@ -4,7 +4,7 @@ import com.db4o.query.Predicate;
 import com.db4odoc.f1.evaluations.Pilot;
 
 public class ArbitraryQuery extends Predicate{    
-    private int[] points;
+    public int[] points;
     
     public ArbitraryQuery(int[] points) {
         this.points=points;

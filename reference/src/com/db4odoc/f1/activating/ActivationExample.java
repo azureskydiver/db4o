@@ -8,13 +8,13 @@ import java.util.List;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4odoc.f1.Util;
 import com.db4o.P2LinkedList;
 
 
 
-public class ActivationExample extends Util {
-	
+public class ActivationExample {
+	public final static String YAPFILENAME="formula1.yap";
+	 
 	public static void main(String[] args){
 		testActivationDefault();
 		testActivationConfig();
@@ -25,10 +25,11 @@ public class ActivationExample extends Util {
 		testCollectionDef();
 		testCollectionActivation();
 	}
+	//	end main
 	
 	public static void storeSensorPanel(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			// create a linked list with length 10
 			SensorPanel list = new SensorPanel().createList(10); 
@@ -38,10 +39,11 @@ public class ActivationExample extends Util {
 			db.close();
 		}
 	}
+	// end storeSensorPanel
 	
 	public static void testActivationConfig(){
 		storeSensorPanel();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			db.ext().configure().activationDepth(1);
 			System.out.println("Object container activation depth = 1");
@@ -59,10 +61,11 @@ public class ActivationExample extends Util {
 			db.close();
 		}
 	}
+	// end testActivationConfig
 
 	public static void testActivationDefault(){
 		storeSensorPanel();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			System.out.println("Default activation depth");
 			ObjectSet result = db.get(new SensorPanel(1));
@@ -79,10 +82,11 @@ public class ActivationExample extends Util {
 			db.close();
 		}
 	}
+	// end testActivationDefault
 	
 	public static void testCascadeActivate(){
 		storeSensorPanel();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		db.ext().configure().objectClass(SensorPanel.class).cascadeOnActivate(true);
 		try {
 			System.out.println("Cascade activation");
@@ -100,6 +104,7 @@ public class ActivationExample extends Util {
 			db.close();
 		}
 	}
+	// end testCascadeActivate
 	
 	public static void testMinActivate(){
 		storeSensorPanel();
@@ -107,7 +112,7 @@ public class ActivationExample extends Util {
 		// the system ensures that every instantiated List object will have it's 
 		// members set to a depth of 1
 		Db4o.configure().objectClass(SensorPanel.class).minimumActivationDepth(1);
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			System.out.println("Minimum activation depth = 1");
 			ObjectSet result = db.get(new SensorPanel(1));
@@ -125,6 +130,7 @@ public class ActivationExample extends Util {
 			Db4o.configure().objectClass(SensorPanel.class).minimumActivationDepth(0);
 		}
 	}
+	// end testMinActivate
 		
 	public static void testMaxActivate() {
 		storeSensorPanel();
@@ -132,7 +138,7 @@ public class ActivationExample extends Util {
 		// further down the hierarchy
 		Db4o.configure().objectClass(SensorPanel.class).maximumActivationDepth(2);
 
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			System.out.println("Maximum activation depth = 2 (default = 5)");
 			ObjectSet result = db.get(new SensorPanel(1));
@@ -149,12 +155,12 @@ public class ActivationExample extends Util {
 			db.close();
 			Db4o.configure().objectClass(SensorPanel.class).maximumActivationDepth(Integer.MAX_VALUE);
 		}
-		
 	}
+	// end testMaxActivate
 	
 	public static void testActivateDeactivate(){
 		storeSensorPanel();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		db.ext().configure().activationDepth(0);
 		try {
 			System.out.println("Object container activation depth = 0" );
@@ -189,6 +195,7 @@ public class ActivationExample extends Util {
 			db.close();
 		}
 	}
+	// end testActivateDeactivate
 	
 	public static void testActivated(SensorPanel sensor){
 		SensorPanel next = sensor;
@@ -197,10 +204,11 @@ public class ActivationExample extends Util {
 			System.out.println(next);
 		} while (next != null);
 	}
+	// end testActivated
 	
 	public static void storeCollection(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		try {
 			List list = db.ext().collections().newLinkedList(); 
 			for (int i =0; i < 10; i++){
@@ -212,10 +220,11 @@ public class ActivationExample extends Util {
 			db.close();
 		}
 	}
+	// end storeCollection
 	
 	public static void testCollectionDef(){
 		storeCollection();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		db.ext().configure().activationDepth(5);
 		try {
 			ObjectSet result = db.get(List.class);
@@ -229,10 +238,11 @@ public class ActivationExample extends Util {
 			db.close();
 		} 
 	}
+	// end testCollectionDef
 	
 	public static void testCollectionActivation(){
 		storeCollection();
-		ObjectContainer db = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer db = Db4o.openFile(YAPFILENAME);
 		db.ext().configure().activationDepth(5);
 		try {
 			ObjectSet result = db.get(List.class);
@@ -247,5 +257,14 @@ public class ActivationExample extends Util {
 			db.close();
 		} 
 	}
+	// end testCollectionActivation
+	
+    public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 
 }

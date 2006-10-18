@@ -8,19 +8,19 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
-import com.db4odoc.f1.Util;
 
-public class MetaInfExample extends Util {
-
+public class MetaInfExample {
+	public final static String YAPFILENAME="formula1.yap";
 	public static void main(String[] args) {
 		setObjects();
 		getMetaObjects();
 		getMetaObjectsInfo();
 	}
+	// end main
 
 	public static void setObjects(){
-		new File(Util.YAPFILENAME).delete();
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		new File(YAPFILENAME).delete();
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
 			oc.set(car);
@@ -30,9 +30,10 @@ public class MetaInfExample extends Util {
 			oc.close();
 		}
 	}
+	// end setObjects
 	
 	public static void getMetaObjects(){
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		try {
 			System.out.println("Retrieve meta information for class: ");
 			StoredClass sc = oc.ext().storedClass(Car.class.getName());
@@ -47,9 +48,10 @@ public class MetaInfExample extends Util {
 			oc.close();
 		}
 	}
+	// end getMetaObjects
 	
 	public static void getMetaObjectsInfo(){
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		try {
 			System.out.println("Retrieve meta information for field: ");
 			StoredClass sc = oc.ext().storedClass(Car.class.getName());
@@ -65,4 +67,5 @@ public class MetaInfExample extends Util {
 			oc.close();
 		}
 	}
+	// end getMetaObjectsInfo
 }

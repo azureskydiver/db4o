@@ -2,21 +2,21 @@ package com.db4odoc.f1.clientserver;
 
 import java.io.*;
 import com.db4o.*;
-import com.db4odoc.f1.*;
 
 
-public class TransactionExample extends Util {
+public class TransactionExample {
+	public final static String YAPFILENAME="formula1.yap";
     public static void main(String[] args) {
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(YAPFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(YAPFILENAME);
         try {
             storeCarCommit(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(YAPFILENAME);
             listAllCars(db);
             storeCarRollback(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(YAPFILENAME);
             listAllCars(db);
             carSnapshotRollback(db);
             carSnapshotRollbackRefresh(db);
@@ -25,6 +25,7 @@ public class TransactionExample extends Util {
             db.close();
         }
     }
+    // end main
     
     public static void storeCarCommit(ObjectContainer db) {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
@@ -33,11 +34,13 @@ public class TransactionExample extends Util {
         db.set(car);
         db.commit();
     }
+    // end storeCarCommit
 
     public static void listAllCars(ObjectContainer db) {
         ObjectSet result=db.get(Car.class);
         listResult(result);
     }
+    // end listAllCars
     
     public static void storeCarRollback(ObjectContainer db) {
         Pilot pilot=new Pilot("Michael Schumacher",100);
@@ -46,6 +49,7 @@ public class TransactionExample extends Util {
         db.set(car);
         db.rollback();
     }
+    // end storeCarRollback
 
     public static void carSnapshotRollback(ObjectContainer db) {
         ObjectSet result=db.get(new Car("BMW"));
@@ -55,6 +59,7 @@ public class TransactionExample extends Util {
         db.rollback();
         System.out.println(car);
     }
+    // end carSnapshotRollback
 
     public static void carSnapshotRollbackRefresh(ObjectContainer db) {
         ObjectSet result=db.get(new Car("BMW"));
@@ -65,4 +70,13 @@ public class TransactionExample extends Util {
         db.ext().refresh(car,Integer.MAX_VALUE);
         System.out.println(car);
     }
+    // end carSnapshotRollbackRefresh
+    
+    public static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 }

@@ -8,22 +8,22 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
 import com.db4o.query.Query;
-import com.db4odoc.f1.Util;
 
 
-public class RefactoringExample extends Util {
-
+public class RefactoringExample {
+	public final static String YAPFILENAME="formula1.yap";
 	public static void main(String[] args) {
 
 	}
 
 	public static void reopenDB(){
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		oc.close();
 	}
+	// end reopenDB
 	
 	public static void transferValues(){
-		ObjectContainer oc = Db4o.openFile(Util.YAPFILENAME);
+		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		try {
 			StoredClass sc = oc.ext().storedClass("com.db4odoc.f1.refactoring.oldclasses.Pilot");
 			System.out.println("Stored class:  "+ sc.toString());
@@ -44,5 +44,5 @@ public class RefactoringExample extends Util {
 			oc.close();
 		}
 	}
-
+	// end transferValues
 }
