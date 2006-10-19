@@ -7,7 +7,7 @@ import com.db4o.ObjectSet;
 import com.db4o.ReplicationRecord;
 import com.db4o.Transaction;
 import com.db4o.TreeInt;
-import com.db4o.YapClient;
+import com.db4o.cs.YapClient;
 import com.db4o.YapStream;
 import com.db4o.config.Configuration;
 import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
