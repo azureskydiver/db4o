@@ -2052,7 +2052,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     public abstract long[] getIDsForClass(Transaction trans, YapClass clazz);
     
-	public abstract QueryResult classOnlyQuery(YapClass clazz);
+	public abstract QueryResult classOnlyQuery(Transaction trans, YapClass clazz);
 	
 	public abstract QueryResult executeQuery(QQuery query);
 

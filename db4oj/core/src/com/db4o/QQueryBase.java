@@ -2,10 +2,8 @@
 
 package com.db4o;
 
-// import com.db4o.cs.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.callbacks.Callbacks;
-import com.db4o.inside.classindex.ClassIndexStrategy;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
@@ -327,7 +325,7 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
 		
-		QueryResult queryResult = stream().classOnlyQuery(clazz);
+		QueryResult queryResult = stream().classOnlyQuery(i_trans, clazz);
 		if(queryResult == null){
 			return null;
 		}
