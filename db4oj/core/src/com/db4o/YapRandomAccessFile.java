@@ -96,7 +96,7 @@ public class YapRandomAccessFile extends YapFile {
         return (byte) i_file.blockSize();
     }
 
-    public boolean close2() {
+    protected boolean close2() {
         boolean stopSession = true;
         synchronized (Global4.lock) {
             stopSession = i_session.closeInstance();

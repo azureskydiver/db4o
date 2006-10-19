@@ -389,7 +389,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
             configuredReflector.setParent(reflector);
 		}
 		if(! reflector.hasTransaction() && i_stream != null){
-			reflector.setTransaction(i_stream.i_systemTrans);
+			reflector.setTransaction(i_stream.getSystemTransaction());
 		}
 		return reflector;
 	}
