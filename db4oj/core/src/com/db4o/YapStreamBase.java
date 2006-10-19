@@ -374,10 +374,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract long currentVersion();
     
-    protected boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
+    public boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
         return a_yapClass.init(_this, a_superYapClass, a_class);
     }
-
 
     /**
      * allows special handling for all Db4oType objects.
@@ -917,7 +916,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return _classCollection.getYapClass(a_id);
     }
     
-    protected Object objectForIDFromCache(int id){
+    public Object objectForIDFromCache(int id){
         YapObject yo = getYapObject(id);
         if (yo == null) {
             return null;

@@ -44,7 +44,7 @@ public class YapMemoryFile extends YapFile {
         // do nothing
     }
 
-    public boolean close2() {
+    protected boolean close2() {
         i_entryCounter++;
         if (Deploy.debug) {
             write(true);

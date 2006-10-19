@@ -136,7 +136,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
         return (byte)_blockSize;
     }
 
-    public boolean close2() {
+    protected boolean close2() {
 		if (_readerThread.isClosed()) {
 			return super.close2();
 		}
@@ -210,7 +210,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return new TransactionClient(this, parentTransaction);
 	}
 
-	protected boolean createYapClass(YapClass a_yapClass, ReflectClass a_class,
+	public boolean createYapClass(YapClass a_yapClass, ReflectClass a_class,
 			YapClass a_superYapClass) {
 		writeMsg(Msg.CREATE_CLASS.getWriterForString(i_systemTrans, a_class
 				.getName()));

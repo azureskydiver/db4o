@@ -116,7 +116,7 @@ public class MsgD extends Msg{
 	    return _payLoad.readLong();
 	}
 
-	public final Msg readPayLoad(Transaction a_trans, YapSocket sock, YapReader reader)
+	final Msg readPayLoad(Transaction a_trans, YapSocket sock, YapReader reader)
 		throws IOException {
 		int length = reader.readInt();
 		

@@ -62,7 +62,7 @@ public abstract class YapFile extends YapStream {
         _blockEndAddress = blocksFor(address);
     }
     
-    public boolean close2() {
+    protected boolean close2() {
         boolean ret = super.close2();
         i_dirty = null;
         return ret;
