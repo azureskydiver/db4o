@@ -24,14 +24,21 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 	
 	protected TestSuite fromClasses(Class[] classes) {		
-		TestSuite[] suites = new TestSuite[classes.length];
+		Vector suites=new Vector(classes.length);
 		for (int i = 0; i < classes.length; i++) {
-			suites[i] = fromClass(classes[i]);
+			TestSuite suite=fromClass(classes[i]);
+			if(suite.getTests().length>0) {
+				suites.add(suite);
+			}
 		}
-		return new TestSuite(suites);
+		return new TestSuite((TestSuite[])suites.toArray(new TestSuite[suites.size()]));
 	}
 	
 	protected TestSuite fromClass(Class clazz) {
+		if(!isApplicable(clazz)) {
+			TestPlatform.emitWarning("IGNORED: " + clazz.getName());
+			return new TestSuite(new Test[0]);
+		}
 		if(TestSuiteBuilder.class.isAssignableFrom(clazz)) {
 			return ((TestSuiteBuilder)newInstance(clazz)).build();
 		}
@@ -44,6 +51,10 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		return fromMethods(clazz);
 	}
 
+	protected boolean isApplicable(Class clazz) {
+		return true;
+	}
+	
 	private TestSuite fromMethods(Class clazz) {
 		Vector tests = new Vector();
 		Method[] methods = clazz.getMethods();

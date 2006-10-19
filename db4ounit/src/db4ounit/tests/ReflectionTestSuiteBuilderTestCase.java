@@ -20,5 +20,23 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 			}
 		});
 	}
+	
+	public static class Accepted implements TestCase {
+		public void test() {
+		}
+	}
 
+	public static class NotAccepted implements TestCase {
+		public void test() {
+		}
+	}
+
+	public void testNotAcceptedFixture() {
+		ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(new Class[]{Accepted.class,NotAccepted.class}) {
+			protected boolean isApplicable(Class clazz) {
+				return clazz!=NotAccepted.class;
+			}
+		};
+		Assert.areEqual(1,builder.build().getTests().length);
+	}
 }

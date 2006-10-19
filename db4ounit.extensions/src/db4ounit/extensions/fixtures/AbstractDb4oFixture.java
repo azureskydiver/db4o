@@ -31,6 +31,10 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 		doClean();
 		resetConfig();
 	}
+	
+	public boolean accept(Class clazz) {
+		return true;
+	}
 
 	protected abstract void doClean();	
 	
