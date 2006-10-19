@@ -7,9 +7,10 @@ import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.inside.btree.*;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.*;
 
 
-public class BTreeSearchTestCase extends AbstractDb4oTestCase {
+public class BTreeSearchTestCase extends AbstractDb4oTestCase implements NotForDefragSolo {
     
     public static void main(String[] arguments) {
         new BTreeSearchTestCase().runSolo();

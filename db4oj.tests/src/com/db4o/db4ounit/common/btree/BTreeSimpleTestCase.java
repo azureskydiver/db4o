@@ -8,9 +8,10 @@ import com.db4o.inside.btree.*;
 
 import db4ounit.*;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.*;
 
 
-public class BTreeSimpleTestCase extends AbstractDb4oTestCase {
+public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements NotForDefragSolo {
 	
 	int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
     
