@@ -467,7 +467,7 @@ public class YapArray extends YapIndependantType {
     }
     
     public final void defrag(MarshallerFamily mf, ReaderPair readers) {
-    	if(!i_isPrimitive) {
+    	if(!(i_handler.isSecondClass()==YapConst.YES)) {
     		mf._array.defragIDs(this, readers);
     	}
     }
