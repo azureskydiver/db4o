@@ -4,7 +4,7 @@ package com.db4o.test;
 
 import java.io.IOException;
 
-import com.db4o.YapClient;
+import com.db4o.cs.YapClient;
 import com.db4o.ext.Db4oException;
 import com.db4o.ext.ExtObjectContainer;
 
