@@ -1,0 +1,6 @@
+@sharpen-new-core-mapping
+
+-typeMapping java.io.Writer System.IO.TextWriter				
+-typeMapping java.io.StringWriter System.IO.StringWriter
+
+-namespaceMapping db4ounit Db4oUnit

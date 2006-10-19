@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<project name="Db4objects.Db4o" default="build">
+	<import file="common.xml" />
+	
+	<property name="dir.n.v6" location="../db4o.net" />	
+	<property name="dir.n.v6.core" location="../db4o.net/Db4objects.Db4o" />	
+	<property name="dir.n.v6.core.src" location="${dir.n.v6.core}/Db4objects.Db4o/" />	
+	<property name="dir.n.v6.tools" location="${dir.n.v6}/Db4objects.Db4o.Tools/" />
+	
+	<fileset id="db4oj.srcfiles" dir="..">
+		<include name="db4oj/core/src/**/*.java" />
+	</fileset>
+	
+	<target name="check-dependencies">
+		<uptodate
+			property="csharp.uptodate"
+			targetfile="${dir.n.v6.core.src}/Transaction.cs">
+			<srcfiles refid="db4oj.srcfiles">
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="build" depends="build-core, build-tools, build-tests">
+	</target>
+		
+	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
+	</target>
+		
+	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit"> 
+		<csc
+			destfile="${dir.dist.dll}/Db4oUnit.Extensions.dll"
+			targettype="library"
+			srcdir="${dir.n.v6}/Db4oUnit.Extensions">
+			<reference dir="${dir.dist.dll}">
+				<include name="Db4oUnit.dll" />
+				<include name="Db4objects.Db4o.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="build-db4ounit" depends="sharpen-db4ounit">
+	</target>
+	
+	<target name="build-tools" depends="build-core">
+		<csc
+			destfile="${dir.dist.dll}/Db4objects.Db4o.Tools.dll"
+			targettype="library">
+			
+			<src refid="tools.sources" />
+			
+			<reference dir="${dir.dist.dll}">
+				<include name="Db4objects.Db4o.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="build-core" depends="check-dependencies, sharpen">
+		<csc
+			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
+			srcdir="${dir.n.v6.core}"
+			targettype="library">
+			<include name="**/*.cs" />
+			<exclude name="native/compact/*.cs" />
+		</csc>
+	</target>
+	
+	<target name="sharpen-tools">
+		<fileset id="tools.sources" dir="${dir.n.v6.tools}">
+			<include name="**/*.cs" />
+			<exclude name="Libs/**/AssemblyInfo.cs" />
+			<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
+			<exclude name="Libs/Cecil.FlowAnalysis/codegen/**/*.*" />
+			<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
+		</fileset>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-compact.csdproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-compact-2005.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-2005.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+	</target>
+	
+	<target name="sharpen" depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions">
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="init">
+		<delete dir="${dir.sharpen}" />
+		<mkdir dir="${dir.sharpen}" />
+		
+		<copy todir="${dir.sharpen}">
+			<fileset refid="db4oj.srcfiles" />
+		</copy>
+		
+		<!-- shared native query support -->
+		<copy todir="${dir.sharpen}/db4oj">
+			<fileset dir="../db4onqopt">
+				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+			<fileset dir="${dir.n.in.java}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="copy-sharpened-files">
+		
+		<copy todir="${target.dir}">
+			<fileset dir="${src.dir}/Db4objects/Db4o">
+				<include name="**/*.cs" />
+				<exclude name="JDK_*.cs" />
+				<exclude name="JDKReflect*.cs" />
+				<exclude name="Handlers/*.*" />
+				<exclude name="Reflect/Jdk/**/*.*" />
+				<exclude name="Reflect/Self/*.*" />
+			</fileset>
+		</copy>
+	</target>	
+
+	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="csharp.uptodate">
+
+		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
+			<args>
+				<arg value="@sharpen-new-core-mapping" />
+			</args>
+		</sharpen>
+		
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.core.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<antcall target="copy-sharpened-files">
+			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
+			<param name="target.dir" value="${dir.n.v6.core.src}" />
+		</antcall>
+			
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o.csproj">
+			<sources dir="${dir.n.v6.core}">
+				<include name="**/*.cs" />
+				<exclude name="native/compact*/**" />
+			</sources>
+		</updatecsharpproject>		
+	</target>
+	
+	<target name="sharpen-db4ounit">
+		<ant antfile="build-new-db4ounit.xml" target="buildnet" inheritall="false">
+		</ant>
+	</target>
+	
+	<target name="compiletestsjava">
+		<ant antfile="build.xml" target="compiletestsjava" />
+	</target>
+		
+	<target name="sharpen-db4ounit-extensions" depends="compiletestsjava, install-javatocsharp-plugin">		
+		
+		<property name="target.dir" value="${dir.sharpen}" />
+		
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<mkdir dir="${target.dir}/lib" />
+		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
+		<jar destfile="${dependencies.jar}">			
+			<fileset dir="${dir.dist.classes.java1.1}" />
+			<fileset dir="${dir.dist.classes.db4ounit}" />
+			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
+		</jar>
+
+		<copy todir="${target.dir}/db4ounit.extensions/src">
+			<fileset dir="${dir.db4ounit.extensions.src}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		
+		<sharpen workspace="${target.dir}" resource="db4ounit.extensions/src">
+			<args>
+				<arg value="-cp" />
+				<arg path="${dependencies.jar}" />
+				<arg value="@sharpen-db4ounit-options" />
+				<arg value="@sharpen-new-core-mapping" />
+			</args>
+		</sharpen>
+		
+		<property name="dir.n.v6.extensions" location="${dir.n.v6}/Db4oUnit.Extensions" />
+		
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.extensions}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		
+		<copy todir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
+			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src">
+				<include name="Db4oUnit/**/*.cs" />
+			</fileset>
+		</copy>
+		
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions.csproj">
+			<sources dir="${dir.n.v6.extensions}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
+			<sources dir="${dir.n.v6.extensions}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+	</target>		
+	
+	<target name="init">
+	</target>
+</project>
