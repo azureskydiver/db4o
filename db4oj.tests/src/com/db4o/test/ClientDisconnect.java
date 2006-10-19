@@ -5,6 +5,7 @@ package com.db4o.test;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.cs.*;
 import com.db4o.ext.*;
 
 public class ClientDisconnect {
