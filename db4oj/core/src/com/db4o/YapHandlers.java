@@ -60,7 +60,7 @@ public final class YapHandlers {
     public final DiagnosticProcessor      _diagnosticProcessor;
     
     
-    boolean                 i_encrypt;
+    public boolean                 i_encrypt;
     byte[]                  i_encryptor;
     int                     i_lastEncryptorByte;
     
@@ -73,7 +73,7 @@ public final class YapHandlers {
     ReflectClass ICLASS_UNVERSIONED;
     ReflectClass ICLASS_OBJECT;
     ReflectClass ICLASS_OBJECTCONTAINER;
-	ReflectClass ICLASS_STATICCLASS;
+	public ReflectClass ICLASS_STATICCLASS;
 	ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
 

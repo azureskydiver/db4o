@@ -9,7 +9,7 @@ import com.db4o.query.*;
 /**
  * @exclude
  */
-class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
+public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
     
 	Tree i_candidates;
 	boolean i_checkDuplicates;
@@ -18,11 +18,11 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	
 //	private final IntArrayList _ids = new IntArrayList();
 
-	QueryResultImpl(Transaction a_trans) {
+	public QueryResultImpl(Transaction a_trans) {
 		i_trans = a_trans;
 	}
     
-    QueryResultImpl(Transaction trans, int initialSize){
+    protected QueryResultImpl(Transaction trans, int initialSize){
         super(initialSize);
         i_trans = trans;
     }
@@ -59,7 +59,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
     	return new QueryResultImplIterator(super.iterator());
     }
 
-	final Object activate(Object obj){
+	public final Object activate(Object obj){
 		YapStream stream = stream();
 		stream.activate1(i_trans, obj, stream.configImpl().activationDepth());
 		return obj;
@@ -121,7 +121,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 		return stream.i_lock;
 	}
 
-	private YapStream stream() {
+	public YapStream stream() {
 		return i_trans.stream();
 	}
 

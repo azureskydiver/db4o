@@ -5,12 +5,13 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 class Sessions extends Collection4{
 	// FIXME: aggregate Collection4 instead of extending it
 	
 	void forEach(Visitor4 visitor){
-		synchronized(Db4o.lock){
+		synchronized(Global4.lock){
 			Iterator4 i = iterator();
 			while(i.moveNext()){
 				visitor.visit(i.current());
@@ -20,7 +21,7 @@ class Sessions extends Collection4{
 
 	ObjectContainer open(Configuration config,String databaseFileName) {
 		
-		synchronized(Db4o.lock){
+		synchronized(Global4.lock){
 			ObjectContainer oc = null;
 			Session newSession = new Session(databaseFileName);
 	
@@ -64,7 +65,7 @@ class Sessions extends Collection4{
 	}
 	
 	public Object remove(Object obj){
-		synchronized(Db4o.lock){
+		synchronized(Global4.lock){
 			return super.remove(obj);
 		}
 	}

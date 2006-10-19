@@ -27,7 +27,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 		// do nothing
 	}
 	
-	void initialize1(Configuration config){
+	protected void initialize1(Configuration config){
 	    i_handlers = i_parent.i_handlers;
         _classCollection = i_parent.classCollection();
 		i_config = i_parent.configImpl();
@@ -133,7 +133,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 		return false; // overridden to do nothing in YapObjectCarrier
 	}
     
-	void write(boolean shuttingDown) {
+	public void write(boolean shuttingDown) {
 		checkNeededUpdates();
 		writeDirty();
 		getTransaction().commit();

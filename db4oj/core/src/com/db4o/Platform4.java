@@ -524,7 +524,7 @@ public final class Platform4 {
         jdk().pollReferenceQueue((YapStream) a_stream, a_referenceQueue);
     }
 
-    static void postOpen(ObjectContainer a_oc) {
+    public static void postOpen(ObjectContainer a_oc) {
         // do nothing 
      }
     

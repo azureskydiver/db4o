@@ -51,7 +51,7 @@ public final class YapWriter extends YapReader {
         i_address = a_address;
     }
 
-    YapWriter(YapWriter parent, YapWriter[] previousRead, int previousCount) {
+    public YapWriter(YapWriter parent, YapWriter[] previousRead, int previousCount) {
         previousRead[previousCount++] = this;
         int parentID = parent.readInt();
         i_length = parent.readInt();
@@ -80,12 +80,12 @@ public final class YapWriter extends YapReader {
     //		}
     //	}
 
-    void addEmbedded(YapWriter a_bytes) {
+    public void addEmbedded(YapWriter a_bytes) {
         i_embedded = Tree.add(i_embedded, new TreeIntObject(a_bytes.getID(), a_bytes));
     }
 
 
-    int appendTo(final YapReader a_bytes, int a_id) {
+    public int appendTo(final YapReader a_bytes, int a_id) {
         a_id++;
         a_bytes.writeInt(i_length);
         a_bytes.writeInt(i_id);
@@ -116,7 +116,7 @@ public final class YapWriter extends YapReader {
         }
     }
 
-    int embeddedCount() {
+    public int embeddedCount() {
         final int[] count = { 0 };
         forEachEmbedded(new VisitorYapBytes() {
             public void visit(YapWriter a_bytes) {
@@ -126,7 +126,7 @@ public final class YapWriter extends YapReader {
         return count[0];
     }
 
-    int embeddedLength() {
+    public int embeddedLength() {
         final int[] length = { 0 };
         forEachEmbedded(new VisitorYapBytes() {
             public void visit(YapWriter a_bytes) {
@@ -205,7 +205,7 @@ public final class YapWriter extends YapReader {
         stream().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
-    final boolean read(YapSocket sock) throws IOException {
+    public final boolean read(YapSocket sock) throws IOException {
         int offset = 0;
         int length = i_length;
         while (length > 0) {
@@ -239,7 +239,7 @@ public final class YapWriter extends YapReader {
         return bytes;
     }
 
-    final YapWriter readYapBytes() {
+    public final YapWriter readYapBytes() {
         int length = readInt();
         if (length == 0) {
             return null;
@@ -250,7 +250,7 @@ public final class YapWriter extends YapReader {
         return yb;
     }
 
-    void removeFirstBytes(int aLength) {
+    public void removeFirstBytes(int aLength) {
         i_length -= aLength;
         byte[] temp = new byte[i_length];
         System.arraycopy(_buffer, aLength, temp, 0, i_length);
@@ -261,7 +261,7 @@ public final class YapWriter extends YapReader {
         }
     }
 
-    void address(int a_address) {
+    public void address(int a_address) {
         i_address = a_address;
     }
 
@@ -277,7 +277,7 @@ public final class YapWriter extends YapReader {
         i_instantionDepth = a_depth;
     }
 
-    void setTransaction(Transaction aTrans) {
+    public void setTransaction(Transaction aTrans) {
         i_trans = aTrans;
     }
 
@@ -289,7 +289,7 @@ public final class YapWriter extends YapReader {
         i_trans.slotDelete(i_id, i_address, i_length);
     }
     
-    void trim4(int a_offset, int a_length) {
+    public void trim4(int a_offset, int a_length) {
         byte[] temp = new byte[a_length];
         System.arraycopy(_buffer, a_offset, temp, 0, a_length);
         _buffer = temp;
@@ -301,7 +301,7 @@ public final class YapWriter extends YapReader {
         _offset = 0;
     }
 
-    void useSlot(int a_adress, int a_length) {
+    public void useSlot(int a_adress, int a_length) {
         i_address = a_adress;
         _offset = 0;
         if (a_length > _buffer.length) {
@@ -322,7 +322,7 @@ public final class YapWriter extends YapReader {
         write(file(), i_address, _addressOffset);
     }
 
-    void writeEmbedded() {
+    public void writeEmbedded() {
         final YapWriter finalThis = this;
         forEachEmbedded(new VisitorYapBytes() {
             public void visit(YapWriter a_bytes) {
@@ -406,7 +406,7 @@ public final class YapWriter extends YapReader {
     // turning writing around since our Collection world is the wrong
     // way around
     // TODO: optimize
-    final void writeQueryResult(QueryResult qr) {
+    public final void writeQueryResult(QueryResult qr) {
     	// TODO: save offset, calculate the size after iteration, write back 
         int size = qr.size();
         writeInt(size);

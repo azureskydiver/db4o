@@ -33,7 +33,7 @@ public final class YapClassCollection extends YapMeta {
 		_classInits = new PendingClassInits(_systemTransaction);
     }
 
-    void addYapClass(YapClass yapClass) {
+    public void addYapClass(YapClass yapClass) {
         stream().setDirtyInSystemTransaction(this);
         i_classes.add(yapClass);
         if(yapClass.stateUnread()){
@@ -337,7 +337,7 @@ public final class YapClassCollection extends YapMeta {
         });
     }
 
-    YapClass readYapClass(YapClass yapClass, ReflectClass a_class) {
+    public YapClass readYapClass(YapClass yapClass, ReflectClass a_class) {
         if (yapClass != null  && ! yapClass.stateUnread()) {
             return yapClass;
         }
@@ -357,7 +357,7 @@ public final class YapClassCollection extends YapMeta {
         return yapClass;
     }
 
-    void refreshClasses() {
+    public void refreshClasses() {
         YapClassCollection rereader = new YapClassCollection(_systemTransaction);
         rereader.i_id = i_id;
         rereader.read(stream().getSystemTransaction());

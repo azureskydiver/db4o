@@ -44,7 +44,7 @@ public class YapMemoryFile extends YapFile {
         // do nothing
     }
 
-    boolean close2() {
+    public boolean close2() {
         i_entryCounter++;
         if (Deploy.debug) {
             write(true);
@@ -105,7 +105,7 @@ public class YapMemoryFile extends YapFile {
         }
     }
 
-    void readBytes(byte[] a_bytes, int a_address, int a_length) {
+    public void readBytes(byte[] a_bytes, int a_address, int a_length) {
         try {
             System.arraycopy(i_memoryFile.getBytes(), a_address, a_bytes, 0, a_length);
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class YapMemoryFile extends YapFile {
         }
     }
     
-    void readBytes(byte[] bytes, int address, int addressOffset, int length){
+    public void readBytes(byte[] bytes, int address, int addressOffset, int length){
         readBytes(bytes, address + addressOffset, length);
     }
 

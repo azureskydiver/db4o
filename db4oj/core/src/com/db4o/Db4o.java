@@ -5,9 +5,11 @@ package  com.db4o;
 import java.io.IOException;
 
 import com.db4o.config.Configuration;
+import com.db4o.cs.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.YapSocketReal;
+import com.db4o.inside.*;
 import com.db4o.reflect.Reflector;
 
 /**
@@ -21,10 +23,12 @@ import com.db4o.reflect.Reflector;
  * @see ExtDb4o ExtDb4o for extended functionality.
  */
 public class Db4o {
+	
 	static final Config4Impl i_config = new Config4Impl();
 	private static Sessions i_sessions = new Sessions();
-	static final Object lock = initialize();
-
+	
+	private static final Object initializer = initialize();
+	
 	private static final Object initialize(){
 		Platform4.getDefaultConfiguration(i_config);
 		return new Object();
@@ -85,7 +89,7 @@ public class Db4o {
 
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
 			throws IOException {
-		synchronized(Db4o.lock){
+		synchronized(Global4.lock){
 			return new YapClient(config,new YapSocketReal(hostName, port), user, password, true);
 		}
 }
@@ -112,13 +116,13 @@ public class Db4o {
 	}
 
 	public static final ObjectContainer openFile(Configuration config,String databaseFileName) throws DatabaseFileLockedException {
-		synchronized(Db4o.lock){
+		synchronized(Global4.lock){
 			return i_sessions.open(config,databaseFileName);
 		}
 	}
 
 	protected static final ObjectContainer openMemoryFile1(Configuration config,MemoryFile memoryFile) {
-		synchronized(Db4o.lock){
+		synchronized(Global4.lock){
 			if(memoryFile == null){
 				memoryFile = new MemoryFile();
 			}
@@ -167,7 +171,7 @@ public class Db4o {
 	}
 
 	public static final ObjectServer openServer(Configuration config,String databaseFileName, int port) throws DatabaseFileLockedException {
-		synchronized(Db4o.lock){
+		synchronized(Global4.lock){
 			YapFile stream = (YapFile)openFile(config,databaseFileName);
             if(stream == null){
                 return null;

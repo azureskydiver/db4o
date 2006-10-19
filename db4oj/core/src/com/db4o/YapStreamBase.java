@@ -58,7 +58,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     private Tree            i_justPeeked;
     private Tree            i_justSet;
 
-    final Object            i_lock;
+    public final Object            i_lock;
 
     // currently used to resolve self-linking concurrency problems
     // in cylic links, stores only YapClass objects
@@ -83,10 +83,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     // used for YapClass and YapClassCollection
     // may be parent or equal to i_trans
-    Transaction             i_systemTrans;
+    protected Transaction             i_systemTrans;
 
     // used for Objects
-    Transaction             i_trans;
+    protected Transaction             i_trans;
 
     private boolean         i_instantiating;
 
@@ -259,7 +259,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return true;
     }
 
-    final void checkClosed() {
+    public final void checkClosed() {
         if (_classCollection == null) {
             Exceptions4.throwRuntimeException(20, toString());
         }
@@ -286,7 +286,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     public boolean close() {
-        synchronized (Db4o.lock) {
+        synchronized (Global4.lock) {
             synchronized (i_lock) {
                 boolean ret = close1();
                 return ret;
@@ -308,7 +308,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return closeResult;
     }
 
-    boolean close2() {
+    protected boolean close2() {
     	stopSession();
         i_hcTree = null;
         i_idTree = null;
@@ -341,7 +341,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
     }
 
-    abstract void commit1();
+    public abstract void commit1();
 
     public Configuration configure() {
         return configImpl();
@@ -353,9 +353,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     public abstract int converterVersion();
 
-    abstract QueryResultImpl createQResult(Transaction a_ta);
+    public abstract QueryResultImpl createQResult(Transaction a_ta);
 
-    void createStringIO(byte encoding) {
+    protected void createStringIO(byte encoding) {
     	setStringIo(YapStringIO.forEncoding(encoding));
     }
 
@@ -374,7 +374,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract long currentVersion();
     
-    boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
+    protected boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
         return a_yapClass.init(_this, a_superYapClass, a_class);
     }
 
@@ -535,7 +535,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 		yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
 	}
 	
-    abstract boolean delete5(Transaction ta, YapObject yapObject, int a_cascade, boolean userCall);
+    public abstract boolean delete5(Transaction ta, YapObject yapObject, int a_cascade, boolean userCall);
     
     public Object descend(Object obj, String[] path){
         synchronized (i_lock) {
@@ -617,7 +617,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     void failedToShutDown() {
-        synchronized (Db4o.lock) {
+        synchronized (Global4.lock) {
             if (_classCollection != null) {
                 if (i_entryCounter == 0) {
                     Messages.logErr(configImpl(), 50, toString(), null);
@@ -670,13 +670,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     ObjectSetFacade get1(Transaction ta, Object template) {
         ta = checkTransaction(ta);
-        QueryResultImpl res = createQResult(ta);
+        QueryResult res = null;
         i_entryCounter++;
         if (Deploy.debug) {
-            get2(ta, template, res);
+            res = get2(ta, template);
         } else {
             try {
-                get2(ta, template, res);
+                res = get2(ta, template);
             } catch (Throwable t) {
             	Exceptions4.catchAllExceptDb4oException(t);
                 fatalException(t);
@@ -687,23 +687,16 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return new ObjectSetFacade(res);
     }
 
-    private final void get2(Transaction ta, Object template, QueryResultImpl res) {
+    private final QueryResult get2(Transaction ta, Object template) {
         if (template == null || template.getClass() == YapConst.CLASS_OBJECT) {
-            getAll(ta, res);
-        } else {
-            Query q = query(ta);
-            q.constrain(template);
-            ((QQuery) q).execute1(res);
-        }
+            return getAll(ta);
+        } 
+        Query q = query(ta);
+        q.constrain(template);
+        return executeQuery((QQuery)q);
     }
     
-    public QueryResult getAll(Transaction ta) {
-    	final QueryResultImpl qr = new QueryResultImpl(ta);
-    	getAll(ta, qr);
-    	return qr;
-    }
-
-    abstract void getAll(Transaction ta, QueryResultImpl a_res);
+    public abstract QueryResult getAll(Transaction ta);
 
     public Object getByID(long id) {
         synchronized (i_lock) {
@@ -804,7 +797,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
     }
 
-    final Object[] getObjectAndYapObjectByID(Transaction ta, int a_id) {
+    public final Object[] getObjectAndYapObjectByID(Transaction ta, int a_id) {
         Object[] arr = new Object[2];
         if (a_id > 0) {
             YapObject yo = getYapObject(a_id);
@@ -924,7 +917,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return _classCollection.getYapClass(a_id);
     }
     
-    Object objectForIDFromCache(int id){
+    protected Object objectForIDFromCache(int id){
         YapObject yo = getYapObject(id);
         if (yo == null) {
             return null;
@@ -1020,7 +1013,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_idTree = i_idTree.id_remove(a_id);
     }
 
-    void initialize0() {
+    protected void initialize0() {
         initialize0b();
         i_stillToSet = null;
         i_justActivated = new Tree[1];
@@ -1036,7 +1029,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_justDeactivated = new Tree[1];
     }
 
-    void initialize1(Configuration config) {
+    protected void initialize1(Configuration config) {
 
         i_config = initializeConfig(config);
         i_handlers = new YapHandlers(_this, configImpl().encoding(), configImpl().reflector());
@@ -1084,7 +1077,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_references.startTimer();
     }
 
-    void initialize3() {
+    protected void initialize3() {
         i_showInternalClasses = 100000;
         initialize4NObjectCarrier();
         i_showInternalClasses = 0;
@@ -1194,7 +1187,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return i_lock;
     }
 
-    final void logMsg(int code, String msg) {
+    public final void logMsg(int code, String msg) {
         Messages.logMsg(configImpl(), code, msg);
     }
 
@@ -1202,7 +1195,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return true;
     }
 
-    YapWriter marshall(Transaction ta, Object obj) {
+    protected YapWriter marshall(Transaction ta, Object obj) {
         // TODO: How about reuse of the MemoryFile here?
         int[] id = { 0};
         byte[] bytes = marshall(obj, id);
@@ -1369,9 +1362,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void raiseVersion(long a_minimumVersion);
 
-    abstract void readBytes(byte[] a_bytes, int a_address, int a_length);
+    public abstract void readBytes(byte[] a_bytes, int a_address, int a_length);
 
-    abstract void readBytes(byte[] bytes, int address, int addressOffset, int length);
+    public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length);
 
     public final YapReader readReaderByAddress(int a_address, int a_length) {
         if (a_address > 0) {
@@ -1445,7 +1438,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
     }
 
-    abstract void releaseSemaphores(Transaction ta);
+    public abstract void releaseSemaphores(Transaction ta);
 
     void rename(Config4Impl config) {
         boolean renamedOne = false;
@@ -1550,7 +1543,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
     }
 
-    abstract void rollback1();
+    public abstract void rollback1();
 
     public void send(Object obj) {
         // TODO: implement
@@ -1656,7 +1649,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         
     }
     
-    void checkStillToSet() {
+    public void checkStillToSet() {
         List4 postponedStillToSet = null;
         while (i_stillToSet != null) {
             Iterator4 i = new Iterator4Impl(i_stillToSet);
@@ -1982,7 +1975,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     public abstract SystemInfo systemInfo();
 
-    Object unmarshall(YapWriter yapBytes) {
+    public Object unmarshall(YapWriter yapBytes) {
         return unmarshall(yapBytes._buffer, yapBytes.getID());
     }
 
@@ -2001,15 +1994,15 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     	}
     }
 
-    abstract void write(boolean shuttingDown);
+    public abstract void write(boolean shuttingDown);
 
-    abstract void writeDirty();
+    public abstract void writeDirty();
 
     public abstract void writeEmbedded(YapWriter a_parent, YapWriter a_child);
 
     public abstract void writeNew(YapClass a_yapClass, YapWriter aWriter);
 
-    abstract void writeTransactionPointer(int a_address);
+    public abstract void writeTransactionPointer(int a_address);
 
     public abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
 
@@ -2057,4 +2050,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public YapClassCollection classCollection() {
         return _classCollection;
     }
+    
+    public abstract long[] getIDsForClass(Transaction trans, YapClass clazz);
+    
+	public abstract QueryResult classOnlyQuery(YapClass clazz);
+	
+	public abstract QueryResult executeQuery(QQuery query);
+
+
 }

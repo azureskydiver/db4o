@@ -3,11 +3,11 @@
 package com.db4o;
 
 
-class DeleteInfo extends TreeInt{
+public class DeleteInfo extends TreeInt{
     
-    boolean _delete;
+    public boolean _delete;
     int _cascade;
-    YapObject _reference;
+    public YapObject _reference;
 
     public DeleteInfo(int id, YapObject reference, boolean delete, int cascade) {
         super(id);

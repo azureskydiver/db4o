@@ -13,6 +13,7 @@ import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.inside.convert.*;
 import com.db4o.inside.freespace.*;
+import com.db4o.inside.query.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
 
@@ -61,13 +62,13 @@ public abstract class YapFile extends YapStream {
         _blockEndAddress = blocksFor(address);
     }
     
-    boolean close2() {
+    public boolean close2() {
         boolean ret = super.close2();
         i_dirty = null;
         return ret;
     }
 
-    void commit1() {
+    public void commit1() {
         checkClosed();
         i_entryCounter++;
         try {
@@ -135,11 +136,11 @@ public abstract class YapFile extends YapStream {
         return new BTree(i_trans, id, new YInt(this));
     }
 
-    final QueryResultImpl createQResult(Transaction a_ta) {
+    public final QueryResultImpl createQResult(Transaction a_ta) {
         return new QueryResultImpl(a_ta);
     }
 
-    final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
+    public final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
         int id = yo.getID();
         YapWriter reader = readWriterByID(ta, id);
         if (reader != null) {
@@ -228,7 +229,9 @@ public abstract class YapFile extends YapStream {
         
     }
 
-    void getAll(Transaction ta, final QueryResultImpl a_res) {
+    public QueryResult getAll(Transaction ta) {
+    	
+    	final QueryResultImpl queryResult = new QueryResultImpl(ta);
 
         // duplicates because of inheritance hierarchies
         final Tree[] duplicates = new Tree[1];
@@ -247,7 +250,7 @@ public abstract class YapFile extends YapStream {
 							TreeInt newNode = new TreeInt(id);
 							duplicates[0] = Tree.add(duplicates[0], newNode);
 							if (newNode.size() != 0) {
-								a_res.add(id);
+								queryResult.add(id);
 							}
 						}
 					});
@@ -255,6 +258,8 @@ public abstract class YapFile extends YapStream {
 			}
 		}
 //        a_res.reset();
+        
+        return queryResult;
     }
 
     final int getPointerSlot() {
@@ -381,11 +386,11 @@ public abstract class YapFile extends YapStream {
         return getPointerSlot();
     }
 
-    void prefetchedIDConsumed(int a_id) {
+    public void prefetchedIDConsumed(int a_id) {
         i_prefetchedIDs = i_prefetchedIDs.removeLike(new TreeIntObject(a_id));
     }
 
-    int prefetchID() {
+    public int prefetchID() {
         int id = getPointerSlot();
         i_prefetchedIDs = Tree.add(i_prefetchedIDs, new TreeInt(id));
         return id;
@@ -553,7 +558,7 @@ public abstract class YapFile extends YapStream {
         releaseSemaphore(checkTransaction(null), name);
     }
 
-    void releaseSemaphore(Transaction ta, String name) {
+    public void releaseSemaphore(Transaction ta, String name) {
         if (i_semaphores != null) {
             synchronized (i_semaphores) {
                 if (i_semaphores != null && ta == i_semaphores.get(name)) {
@@ -564,7 +569,7 @@ public abstract class YapFile extends YapStream {
         }
     }
 
-    void releaseSemaphores(Transaction ta) {
+    public void releaseSemaphores(Transaction ta) {
         if (i_semaphores != null) {
             final Hashtable4 semaphores = i_semaphores;
             synchronized (semaphores) {
@@ -578,7 +583,7 @@ public abstract class YapFile extends YapStream {
         }
     }
 
-    final void rollback1() {
+    public final void rollback1() {
         checkClosed();
         i_entryCounter++;
         getTransaction().rollback();
@@ -594,7 +599,7 @@ public abstract class YapFile extends YapStream {
         return setSemaphore(checkTransaction(null), name, timeout);
     }
 
-    boolean setSemaphore(Transaction ta, String name, int timeout) {
+    public boolean setSemaphore(Transaction ta, String name, int timeout) {
         if (name == null) {
             throw new NullPointerException();
         }
@@ -641,7 +646,7 @@ public abstract class YapFile extends YapStream {
         }
     }
 
-    void setServer(boolean flag) {
+    public void setServer(boolean flag) {
         i_isServer = flag;
     }
 
@@ -654,7 +659,7 @@ public abstract class YapFile extends YapStream {
         return fileName();
     }
 
-    void write(boolean shuttingDown) {
+    public void write(boolean shuttingDown) {
 
         // This will also commit the System Transaction,
         // since it is the parent or the same object.
@@ -669,7 +674,7 @@ public abstract class YapFile extends YapStream {
 
     public abstract void writeBytes(YapReader a_Bytes, int address, int addressOffset);
 
-    final void writeDirty() {        
+    public final void writeDirty() {        
         writeCachedDirty();
         writeVariableHeader();
     }
@@ -752,7 +757,7 @@ public abstract class YapFile extends YapStream {
         return bytes;
     }
 
-    final void writeTransactionPointer(int address) {
+    public final void writeTransactionPointer(int address) {
         _fileHeader.writeTransactionPointer(getSystemTransaction(), address);
     }
     
@@ -791,6 +796,42 @@ public abstract class YapFile extends YapStream {
 
     public SystemData systemData() {
         return _systemData;
+    }
+    
+    public long[] getIDsForClass(Transaction trans, YapClass clazz){
+		final IntArrayList ids = new IntArrayList();
+        clazz.index().traverseAll(trans, new Visitor4() {
+        	public void visit(Object obj) {
+        		ids.add(((Integer)obj).intValue());
+        	}
+        });        
+        return ids.asLong();
+    }
+    
+    public QueryResult classOnlyQuery(YapClass clazz){
+        if (!clazz.hasIndex()) {
+        	
+        	// TODO: If the class does not have an index, we won't be
+        	//       able to get objects for it, so why not return an
+        	//       empty QueryResult here, to signal that no further
+        	//       processing needs to take place?
+			return null;
+		}
+		
+		final QueryResultImpl resLocal = new QueryResultImpl(i_trans);
+		final ClassIndexStrategy index = clazz.index();
+		index.traverseAll(i_trans, new Visitor4() {
+			public void visit(Object a_object) {
+				resLocal.add(((Integer)a_object).intValue());
+			}
+		});
+		return resLocal;
+    }
+    
+    public QueryResult executeQuery(QQuery query){
+    	QueryResultImpl queryResult = createQResult(query.getTransaction());
+    	query.executeLocal(queryResult);
+    	return queryResult;
     }
 
 }

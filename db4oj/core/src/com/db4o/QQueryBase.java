@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+// import com.db4o.cs.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.classindex.ClassIndexStrategy;
@@ -292,21 +293,15 @@ public abstract class QQueryBase implements Unversioned {
     public QueryResult getQueryResult() {
     	synchronized (streamLock()) {
             
-            YapStream stream = stream();
-            
             if(i_constraints.size() == 0){
-                QueryResultImpl res = stream.createQResult(i_trans);
-                stream.getAll(i_trans, res);
-                return res;
+                return stream().getAll(i_trans);
             }
             
 			QueryResult result = classOnlyQuery();
 			if(result != null) {
 				return result;
 			}
-	        QueryResultImpl qResult = stream().createQResult(i_trans);
-	        execute1(qResult);
-	        return qResult;
+	        return stream().executeQuery(_this);
         }
     }
 
@@ -331,45 +326,21 @@ public abstract class QQueryBase implements Unversioned {
 		if(clazzconstr.hasChildren() || clazz.isArray()) {
 			return null;
 		}
-        
-        if (stream().isClient()) {
-            long[] ids = clazz.getIDs(i_trans); 
-            QResultClient resClient = new QResultClient(i_trans, ids.length);
-            for (int i = 0; i < ids.length; i++) {
-                resClient.add((int)ids[i]);
-            }
-            sort(resClient);
-            return resClient;
-        }
-        
-        if (!clazz.hasIndex()) {
+		
+		QueryResult queryResult = stream().classOnlyQuery(clazz);
+		if(queryResult == null){
 			return null;
 		}
+		sort(queryResult);
 		
-		final QueryResultImpl resLocal = new QueryResultImpl(i_trans);
-		final ClassIndexStrategy index = clazz.index();
-		index.traverseAll(i_trans, new Visitor4() {
-			public void visit(Object a_object) {
-				resLocal.add(((Integer)a_object).intValue());
-			}
-		});
-		sort(resLocal);
-		return resLocal;
+		return queryResult;
+        
 	}
 
 	private Constraint singleConstraint() {
 		return (Constraint)i_constraints.singleElement();
 	}
 
-    void execute1(final QueryResultImpl result) {
-        if (stream().isClient()) {
-            marshall();
-            ((YapClient)stream()).queryExecute(_this, result);
-        } else {
-            executeLocal(result);
-        }
-    }
-    
     public static class CreateCandidateCollectionResult {
     	public final boolean checkDuplicates;
         public final boolean topLevel;
@@ -382,7 +353,7 @@ public abstract class QQueryBase implements Unversioned {
 		}
     }
 
-    void executeLocal(final QueryResultImpl result) {
+    public void executeLocal(final QueryResultImpl result) {
         
 		CreateCandidateCollectionResult r = createCandidateCollection();
         
@@ -550,7 +521,7 @@ public abstract class QQueryBase implements Unversioned {
         }
     }
 
-    void marshall() {
+    public void marshall() {
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
             ((QCon)i.current()).getRoot().marshall();
@@ -561,7 +532,7 @@ public abstract class QQueryBase implements Unversioned {
         i_constraints.remove(a_constraint);
     }
 
-    void unmarshall(final Transaction a_trans) {
+    public void unmarshall(final Transaction a_trans) {
         i_trans = a_trans;
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
@@ -589,7 +560,7 @@ public abstract class QQueryBase implements Unversioned {
 		return _this;
 	}
 	
-	private void sort(QueryResultImpl result) {
+	private void sort(QueryResult result) {
         if(_comparator!=null) {
         	result.sort(_comparator);
         }

@@ -29,7 +29,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
     public YapObject(){
     }
 	
-	YapObject(int a_id) {
+	public YapObject(int a_id) {
 		i_id = a_id;
 	}
 
@@ -242,7 +242,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return a_object;
 	}
 
-	final Object readPrefetch(YapStream a_stream, YapWriter a_reader) {
+	public final Object readPrefetch(YapStream a_stream, YapWriter a_reader) {
 
 		Object readObject = null;
 		if (beginProcessing()) {
