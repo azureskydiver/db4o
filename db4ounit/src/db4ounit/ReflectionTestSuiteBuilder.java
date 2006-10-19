@@ -1,7 +1,7 @@
 package db4ounit;
 
 import java.lang.reflect.*;
-import java.util.Vector;
+import java.util.*;
 
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
@@ -24,14 +24,21 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 	
 	protected TestSuite fromClasses(Class[] classes) {		
-		Vector suites=new Vector(classes.length);
+		Vector suitesColl=new Vector(classes.length);
 		for (int i = 0; i < classes.length; i++) {
 			TestSuite suite=fromClass(classes[i]);
 			if(suite.getTests().length>0) {
-				suites.add(suite);
+				suitesColl.add(suite);
 			}
 		}
-		return new TestSuite((TestSuite[])suites.toArray(new TestSuite[suites.size()]));
+		TestSuite[] suites=new TestSuite[suitesColl.size()];
+		int idx=0;
+		Enumeration iter=suitesColl.elements();
+		while(iter.hasMoreElements()) {
+			suites[idx]=(TestSuite)iter.nextElement();
+			idx++;
+		}
+		return new TestSuite(suites);
 	}
 	
 	protected TestSuite fromClass(Class clazz) {

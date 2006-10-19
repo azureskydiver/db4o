@@ -2,20 +2,22 @@
 
 package db4ounit.extensions.tests;
 
-import java.util.*;
-
-import com.db4o.*;
-
-import db4ounit.Assert;
-import db4ounit.TestCase;
-import db4ounit.TestMethod;
-import db4ounit.TestRunner;
-import db4ounit.TestSuite;
+import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
-import db4ounit.tests.FrameworkTestCase;
+import db4ounit.tests.*;
 
 public class AllTests implements TestCase {
+	private final class ExcludingInMemoryFixture extends Db4oInMemory {
+		public ExcludingInMemoryFixture(ConfigurationSource source) {
+			super(source);
+		}
+
+		public boolean accept(Class clazz) {
+			return !OptOutFromTestFixture.class.isAssignableFrom(clazz);
+		}
+	}
+
 	public static void main(String[] args) {
 		new TestRunner(AllTests.class).run();
 	}
@@ -33,11 +35,7 @@ public class AllTests implements TestCase {
 	}
 
 	public void testSelectiveFixture() {
-		Db4oFixture fixture=new Db4oInMemory(new IndependentConfigurationSource()) {
-			public boolean accept(Class clazz) {
-				return !OptOutFromTestFixture.class.isAssignableFrom(clazz);
-			}
-		};
+		Db4oFixture fixture=new ExcludingInMemoryFixture(new IndependentConfigurationSource());
 		TestSuite suite = new Db4oTestSuiteBuilder(fixture, new Class[]{AcceptedTestCase.class,NotAcceptedTestCase.class}).build();
 		Assert.areEqual(1,suite.getTests().length);
 		FrameworkTestCase.runTestAndExpect(suite,0);
