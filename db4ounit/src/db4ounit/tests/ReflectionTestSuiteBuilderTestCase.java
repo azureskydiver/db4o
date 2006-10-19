@@ -7,6 +7,17 @@ import db4ounit.TestCase;
 
 public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 	
+	private final static class ExcludingReflectionTestSuiteBuilder extends
+			ReflectionTestSuiteBuilder {
+		public ExcludingReflectionTestSuiteBuilder(Class[] classes) {
+			super(classes);
+		}
+
+		protected boolean isApplicable(Class clazz) {
+			return clazz!=NotAccepted.class;
+		}
+	}
+
 	public static class NonTestFixture {
 	}
 	
@@ -32,11 +43,7 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 	}
 
 	public void testNotAcceptedFixture() {
-		ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(new Class[]{Accepted.class,NotAccepted.class}) {
-			protected boolean isApplicable(Class clazz) {
-				return clazz!=NotAccepted.class;
-			}
-		};
+		ReflectionTestSuiteBuilder builder = new ExcludingReflectionTestSuiteBuilder(new Class[]{Accepted.class,NotAccepted.class});
 		Assert.areEqual(1,builder.build().getTests().length);
 	}
 }
