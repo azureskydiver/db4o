@@ -153,4 +153,21 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return obj;
     }
 
+	public void defrag(ReaderPair readers) {
+        int payLoadOffSet = readers.readInt();
+        if(payLoadOffSet == 0){
+            return;
+        }
+        int linkOffSet = readers.offset();
+        readers.offset(payLoadOffSet);
+        
+        int yapClassID = readers.copyIDAndRetrieveMapping(false).orig();
+        
+        YapClass yc = readers.context().yapClass(yapClassID);
+        if(yc != null){
+            yc.defrag(_family, readers);
+        }
+        
+        readers.offset(linkOffSet);
+	}
 }

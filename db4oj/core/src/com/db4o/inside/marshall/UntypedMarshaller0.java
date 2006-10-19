@@ -93,7 +93,7 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
         return new Integer(id);
     }
 
-    
-
-
+	public void defrag(ReaderPair readers) {
+		// TODO
+	}
 }
