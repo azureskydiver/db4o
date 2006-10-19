@@ -1,7 +1,7 @@
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.YapClient;
 import com.db4o.config.Configuration;
+import com.db4o.cs.*;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.ext.ObjectInfo;
 
