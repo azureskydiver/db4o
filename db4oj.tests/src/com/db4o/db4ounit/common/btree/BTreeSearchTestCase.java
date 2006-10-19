@@ -10,7 +10,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
 
 
-public class BTreeSearchTestCase extends AbstractDb4oTestCase implements NotForDefragSolo {
+public class BTreeSearchTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
     
     public static void main(String[] arguments) {
         new BTreeSearchTestCase().runSolo();

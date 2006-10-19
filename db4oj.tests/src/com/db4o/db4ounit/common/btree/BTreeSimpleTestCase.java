@@ -11,7 +11,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
 
 
-public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements NotForDefragSolo {
+public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
 	int[] _keys = {3, 234, 55, 87, 2, 1, 101, 59, 70, 300, 288};
     
