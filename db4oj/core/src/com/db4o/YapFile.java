@@ -808,7 +808,7 @@ public abstract class YapFile extends YapStream {
         return ids.asLong();
     }
     
-    public QueryResult classOnlyQuery(YapClass clazz){
+    public QueryResult classOnlyQuery(Transaction trans, YapClass clazz){
         if (!clazz.hasIndex()) {
         	
         	// TODO: If the class does not have an index, we won't be
@@ -818,9 +818,9 @@ public abstract class YapFile extends YapStream {
 			return null;
 		}
 		
-		final QueryResultImpl resLocal = new QueryResultImpl(i_trans);
+		final QueryResultImpl resLocal = createQResult(trans);
 		final ClassIndexStrategy index = clazz.index();
-		index.traverseAll(i_trans, new Visitor4() {
+		index.traverseAll(trans, new Visitor4() {
 			public void visit(Object a_object) {
 				resLocal.add(((Integer)a_object).intValue());
 			}

@@ -759,9 +759,9 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     	return ids;
     }
     
-    public QueryResult classOnlyQuery(YapClass clazz){
-        long[] ids = clazz.getIDs(i_trans); 
-        QResultClient resClient = new QResultClient(i_trans, ids.length);
+    public QueryResult classOnlyQuery(Transaction trans, YapClass clazz){
+        long[] ids = clazz.getIDs(trans); 
+        QResultClient resClient = new QResultClient(trans, ids.length);
         for (int i = 0; i < ids.length; i++) {
             resClient.add((int)ids[i]);
         }
