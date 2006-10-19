@@ -62,10 +62,10 @@ public final class YapConst
 
 	public static final int	POINTER_LENGTH		= (INT_LENGTH * 2) +  ADDED_LENGTH;
 	
-	static final int	MESSAGE_LENGTH 		= INT_LENGTH * 2 + 1;
+	public static final int	MESSAGE_LENGTH 		= INT_LENGTH * 2 + 1;
 	
-	static final byte   SYSTEM_TRANS        = (byte)'s';
-	static final byte   USER_TRANS          = (byte)'u';
+	public static final byte   SYSTEM_TRANS        = (byte)'s';
+	public static final byte   USER_TRANS          = (byte)'u';
 	
 	// debug constants
 	static final byte XBYTE = (byte)'X';
@@ -124,7 +124,7 @@ public final class YapConst
 	static Class CLASS_STATICCLASS;
     static Class CLASS_TRANSIENTCLASS;
     
-	static final String EMBEDDED_CLIENT_USER = "embedded client";
+	public static final String EMBEDDED_CLIENT_USER = "embedded client";
 	
 	// bits in YapMeta.i_state
 	// and reuse in other classes 
@@ -150,7 +150,7 @@ public final class YapConst
     public static final int NEW = 1;
 
     
-	static final YapStringIOUnicode stringIO = new YapStringIOUnicode();
+	public static final YapStringIOUnicode stringIO = new YapStringIOUnicode();
 	
 	private static final Object init(){
         CLASS_OBJECT = new Object().getClass();

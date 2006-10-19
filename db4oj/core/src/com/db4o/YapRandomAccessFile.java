@@ -96,9 +96,9 @@ public class YapRandomAccessFile extends YapFile {
         return (byte) i_file.blockSize();
     }
 
-    boolean close2() {
+    public boolean close2() {
         boolean stopSession = true;
-        synchronized (Db4o.lock) {
+        synchronized (Global4.lock) {
             stopSession = i_session.closeInstance();
             if (stopSession) {
                 freePrefetchedPointers();
@@ -132,7 +132,7 @@ public class YapRandomAccessFile extends YapFile {
         return stopSession;
     }
     
-    void commit1() {
+    public void commit1() {
         ensureLastSlotWritten();
         super.commit1();
     }
@@ -267,11 +267,11 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    void readBytes(byte[] bytes, int address, int length) {
+    public void readBytes(byte[] bytes, int address, int length) {
         readBytes(bytes, address, 0, length);
     }
 
-    void readBytes(byte[] bytes, int address, int addressOffset, int length) {
+    public void readBytes(byte[] bytes, int address, int addressOffset, int length) {
         
         if (DTrace.enabled) {
             DTrace.READ_BYTES.logLength(address + addressOffset, length);

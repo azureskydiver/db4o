@@ -11,7 +11,7 @@ public final class YapStringIOUnicode extends YapStringIO{
         return 2;
     }
     
-	byte encodingByte(){
+    public byte encodingByte(){
 		return YapConst.UNICODE;
 	}
 	

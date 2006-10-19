@@ -42,7 +42,7 @@ public class Transaction {
     // TODO: join _dirtyBTree and _enlistedIndices
     private final Collection4 _participants = new Collection4(); 
 
-    Transaction(YapStream a_stream, Transaction a_parent) {
+    public Transaction(YapStream a_stream, Transaction a_parent) {
         i_stream = a_stream;
         i_file = (a_stream instanceof YapFile) ? (YapFile) a_stream : null;
         i_parentTransaction = a_parent;
@@ -77,7 +77,7 @@ public class Transaction {
         
     }
 
-    void beginEndSet() {
+    public void beginEndSet() {
         checkSynchronization();
         if (i_delete != null) {
             final boolean[] foundOne = { false};
@@ -146,7 +146,7 @@ public class Transaction {
         }
 	}
 
-    void close(boolean a_rollbackOnClose) {
+    public void close(boolean a_rollbackOnClose) {
         try {
             if (stream() != null) {
                 checkSynchronization();
@@ -285,7 +285,7 @@ public class Transaction {
         clearAll();
     }
     
-    void commitTransactionListeners() {
+    protected void commitTransactionListeners() {
         checkSynchronization();
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(i_transactionListeners);
@@ -320,7 +320,7 @@ public class Transaction {
         return slotSetPointerCount[0];
     }
 
-    void delete(YapObject a_yo, int a_cascade) {
+    public void delete(YapObject a_yo, int a_cascade) {
         checkSynchronization();
         int id = a_yo.getID();
         if(DTrace.enabled){
@@ -339,7 +339,7 @@ public class Transaction {
         }
     }
     
-    void dontDelete(int classID, int a_id) {
+    public void dontDelete(int classID, int a_id) {
         checkSynchronization();
         if(DTrace.enabled){
             DTrace.TRANS_DONT_DELETE.log(a_id);
@@ -460,7 +460,7 @@ public class Transaction {
         return new Slot(address, length);
     }
 
-    boolean isDeleted(int a_id) {
+    public boolean isDeleted(int a_id) {
         checkSynchronization();
         SlotChange slot = findSlotChange(a_id);
         if (slot != null) {
@@ -472,7 +472,7 @@ public class Transaction {
         return false;
     }
     
-    Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
+    public Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
         return stream().getFieldUUID().objectAndYapObjectBySignature(this, a_uuid, a_signature);
     }
@@ -486,7 +486,7 @@ public class Transaction {
         return (SlotChange)slot.duplicateOrThis();
     }
     
-    Reflector reflector(){
+    public Reflector reflector(){
     	return stream().reflector();
     }
 
@@ -533,7 +533,7 @@ public class Transaction {
 		}
 	}
 
-	void rollBackTransactionListeners() {
+	protected void rollBackTransactionListeners() {
         checkSynchronization();
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(i_transactionListeners);
@@ -722,7 +722,7 @@ public class Transaction {
         return ret;
     }
     
-    void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
+    public void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
         checkSynchronization();
         if(Tree.find(i_writtenUpdateDeletedMembers, new TreeInt(a_id)) != null){
             return;
@@ -777,5 +777,9 @@ public class Transaction {
         }
         return null;
     }
+
+	public Transaction parentTransaction() {
+		return i_parentTransaction;
+	}
 
 }

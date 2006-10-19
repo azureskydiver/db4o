@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.cs.*;
 import com.db4o.foundation.*;
 
 /**
@@ -32,18 +33,13 @@ public abstract class Debug extends Debug4 {
 
     public static final boolean fakeServer = false;
     
-    static final boolean messages = false;
+    public static final boolean messages = false;
 
     public static final boolean nio = true;
     
     public static final boolean lockFile = true;
 
-    static YapFile serverStream;
-    static YapClient clientStream;
-    static Queue4 clientMessageQueue;
-    static Lock4 clientMessageQueueLock;
-    
-    public static void expect(boolean cond){
+	public static void expect(boolean cond){
         if(! cond){
             throw new RuntimeException("Should never happen");
         }

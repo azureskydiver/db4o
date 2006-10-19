@@ -15,12 +15,12 @@ import com.db4o.types.*;
  */
 public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 
-    final static int COPYBUFFER_LENGTH=4096;
+    public final static int COPYBUFFER_LENGTH=4096;
     
     public String fileName;
     public String i_ext;
     private transient File i_file;
-    private transient MsgBlob i_getStatusFrom;
+    private transient BlobStatus i_getStatusFrom;
     public int i_length;
     private transient double i_status = Status.UNUSED;
     private transient YapStream i_stream;
@@ -72,11 +72,11 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         return bi;
     }
 
-    FileInputStream getClientInputStream() throws Exception {
+    public FileInputStream getClientInputStream() throws Exception {
         return new FileInputStream(i_file);
     }
 
-    FileOutputStream getClientOutputStream() throws Exception {
+    public FileOutputStream getClientOutputStream() throws Exception {
         return new FileOutputStream(i_file);
     }
 
@@ -84,7 +84,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         return fileName;
     }
 
-    int getLength() {
+    public int getLength() {
         return i_length;
     }
 
@@ -100,7 +100,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         return i_status;
     }
 
-    void getStatusFrom(MsgBlob from) {
+    public void getStatusFrom(BlobStatus from) {
         i_getStatusFrom = from;
     }
 
@@ -116,15 +116,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         checkExt(file);
         if (i_stream.isClient()) {
             i_file = file;
-            MsgBlob msg = null;
-            synchronized (i_stream.lock()) {
-                i_stream.set(this);
-                int id = (int) i_stream.getID(this);
-                msg = (MsgBlob) Msg.WRITE_BLOB.getWriterForInt(i_trans, id);
-                msg._blob = this;
-                i_status = Status.QUEUED;
-            }
-            ((YapClient) i_stream).processBlobMessage(msg);
+            ((BlobTransport)i_stream).readBlobFrom(i_trans, this, file);
         } else {
             readLocal(file);
         }
@@ -153,7 +145,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         // do nothing
     }
 
-    File serverFile(String promptName, boolean writeToServer) throws IOException {
+    public File serverFile(String promptName, boolean writeToServer) throws IOException {
         synchronized (i_stream.i_lock) {
             i_stream.activate1(i_trans, this, 2);
         }
@@ -204,7 +196,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         return path;
     }
 
-    void setStatus(double status) {
+    public void setStatus(double status) {
         i_status = status;
     }
 
@@ -224,11 +216,8 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         }
         if (i_stream.isClient()) {
             i_file = file;
-            MsgBlob msg =
-                (MsgBlob) Msg.READ_BLOB.getWriterForInt(i_trans, (int) i_stream.getID(this));
-            msg._blob = this;
             i_status = Status.QUEUED;
-            ((YapClient) i_stream).processBlobMessage(msg);
+            ((BlobTransport)i_stream).writeBlobTo(i_trans, this, file);
         } else {
             writeLocal(file);
         }

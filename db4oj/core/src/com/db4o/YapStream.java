@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.inside.query.*;
 
 
 /**
@@ -12,7 +13,8 @@ import com.db4o.ext.*;
  * @sharpen.ignore
  */
 public abstract class YapStream extends YapStreamBase implements ExtObjectContainer {
-	YapStream(Configuration config,YapStream a_parent) {
+	
+	public YapStream(Configuration config,YapStream a_parent) {
 		super(config,a_parent);
 	}
 }

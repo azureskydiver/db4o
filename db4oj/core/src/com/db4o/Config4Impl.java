@@ -654,11 +654,11 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsBoolean(ENCRYPT);
 	}
 
-	Hashtable4 exceptionalClasses() {
+	public Hashtable4 exceptionalClasses() {
 		return (Hashtable4)_config.get(EXCEPTIONAL_CLASSES);
 	}
 
-	boolean exceptionsOnNotStorable() {
+	public boolean exceptionsOnNotStorable() {
 		return _config.getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
 	}
 
@@ -682,7 +682,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsBoolean(INTERN_STRINGS);
 	}
 	
-	void isServer(boolean flag){
+	public void isServer(boolean flag){
 		_config.put(IS_SERVER,flag);
 	}
 
@@ -698,7 +698,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsInt(MESSAGE_LEVEL);
 	}
 
-	MessageRecipient messageRecipient() {
+	public MessageRecipient messageRecipient() {
 		return (MessageRecipient)_config.get(MESSAGE_RECIPIENT);
 	}
 
@@ -742,7 +742,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsInt(RESERVED_STORAGE_SPACE);
 	}
 
-	boolean singleThreadedClient() {
+	public boolean singleThreadedClient() {
 		return _config.getAsBoolean(SINGLE_THREADED_CLIENT);
 	}
 
@@ -750,15 +750,15 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsBoolean(TEST_CONSTRUCTORS);
 	}
 
-	int timeoutClientSocket() {
+	public int timeoutClientSocket() {
 		return _config.getAsInt(TIMEOUT_CLIENT_SOCKET);
 	}
 
-	int timeoutPingClients() {
+	public int timeoutPingClients() {
 		return _config.getAsInt(TIMEOUT_PING_CLIENTS);
 	}
 
-	int timeoutServerSocket() {
+	public int timeoutServerSocket() {
 		return _config.getAsInt(TIMEOUT_SERVER_SOCKET);
 	}
 

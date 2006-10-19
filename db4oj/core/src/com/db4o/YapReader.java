@@ -102,7 +102,7 @@ public class YapReader implements SlotReader {
 		return _buffer[_offset++];
 	}
 	
-	byte[] readBytes(int a_length){
+	public byte[] readBytes(int a_length){
 	    byte[] bytes = new byte[a_length];
 		readBytes(bytes);
 	    return bytes;

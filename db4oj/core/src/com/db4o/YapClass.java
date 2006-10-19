@@ -79,7 +79,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    final void addFieldIndices(YapWriter a_writer, Slot oldSlot) {
+    public final void addFieldIndices(YapWriter a_writer, Slot oldSlot) {
         if(hasIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(i_stream, this, a_writer);
             oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, oldSlot);
@@ -742,41 +742,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
     public long[] getIDs(Transaction trans) {
-    	
         if (! stateOK()) {
             return new long[0];
         }        
         if (! hasIndex()) {
             return new long[0];
         }        
-        if (trans.stream().isClient()) {        	
-            return getClientIDs(trans);
-        }
-
-        return getIndexIDs(trans);
+        return trans.stream().getIDsForClass(trans, this);
     }
-
-	private long[] getIndexIDs(Transaction trans) {
-		final IntArrayList ids = new IntArrayList();
-        _index.traverseAll(trans, new Visitor4() {
-        	public void visit(Object obj) {
-        		ids.add(((Integer)obj).intValue());
-        	}
-        });        
-        return ids.asLong();
-	}
-
-	private long[] getClientIDs(Transaction trans) {
-		YapClient stream = (YapClient)trans.stream();
-		stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, getID()));
-		YapReader reader = stream.expectedByteResponse(Msg.ID_LIST);
-		int size = reader.readInt();
-		final long[] ids = new long[size];
-		for (int i = 0; i < size; i++) {
-		    ids[i] = reader.readInt();
-		}
-		return ids;
-	}
 
     public boolean hasIndex() {
         return i_db4oType == null || i_db4oType.hasClassIndex();
@@ -1417,7 +1390,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return null;
     }
 
-    final byte[] readName1(Transaction trans, YapReader reader) {
+    public final byte[] readName1(Transaction trans, YapReader reader) {
         i_reader = reader;
         
         try {

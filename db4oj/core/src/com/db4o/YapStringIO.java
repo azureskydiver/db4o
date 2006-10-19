@@ -13,7 +13,7 @@ public class YapStringIO {
         return 1;
     }
     
-    byte encodingByte(){
+    public byte encodingByte(){
 		return YapConst.ISO8859;
 	}
     
