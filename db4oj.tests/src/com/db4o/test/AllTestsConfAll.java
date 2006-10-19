@@ -26,7 +26,6 @@ public class AllTestsConfAll extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-	    	ArrayNOrder.class,
 	    	Backup.class,
             BasicClusterTest.class,
 	    	BindFileSize.class,
@@ -73,7 +72,6 @@ public class AllTestsConfAll extends TestSuite{
 	        Isolation.class,
 			Messaging.class,
             MultiLevelIndex.class,
-            NestedArrays.class,
             NeverAnObjectStored.class,
 			NoInstanceStored.class,
 	        NoInternalClasses.class,
