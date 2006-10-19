@@ -2,5 +2,5 @@
 
 package db4ounit.extensions.fixtures;
 
-public interface NotForDefragSolo extends OptOutFromTestFixture {
+public interface OptOutDefragSolo extends OptOutFromTestFixture {
 }
