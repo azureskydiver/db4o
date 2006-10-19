@@ -28,6 +28,10 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
         _fixture = fixture;
     }
 
+    protected boolean isApplicable(Class clazz) {
+    	return _fixture.accept(clazz);
+    }
+    
 	protected Object newInstance(Class clazz) {
 		Object instance = super.newInstance(clazz);
 		if (instance instanceof AbstractDb4oTestCase) {

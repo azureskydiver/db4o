@@ -2,6 +2,8 @@
 
 package db4ounit.extensions.tests;
 
+import java.util.*;
+
 import com.db4o.*;
 
 import db4ounit.Assert;
@@ -28,6 +30,17 @@ public class AllTests implements TestCase {
 		MultipleDb4oTestCase.resetConfigureCalls();
 		FrameworkTestCase.runTestAndExpect(new Db4oTestSuiteBuilder(new Db4oInMemory(new IndependentConfigurationSource()), MultipleDb4oTestCase.class).build(), 2, false);
 		Assert.areEqual(2,MultipleDb4oTestCase.configureCalls());
+	}
+
+	public void testSelectiveFixture() {
+		Db4oFixture fixture=new Db4oInMemory(new IndependentConfigurationSource()) {
+			public boolean accept(Class clazz) {
+				return !OptOutFromTestFixture.class.isAssignableFrom(clazz);
+			}
+		};
+		TestSuite suite = new Db4oTestSuiteBuilder(fixture, new Class[]{AcceptedTestCase.class,NotAcceptedTestCase.class}).build();
+		Assert.areEqual(1,suite.getTests().length);
+		FrameworkTestCase.runTestAndExpect(suite,0);
 	}
 	
 	private void assertSimpleDb4o(Db4oFixture fixture) {

@@ -18,4 +18,6 @@ public interface Db4oFixture {
 	ExtObjectContainer db();
 	
 	Configuration config();
+	
+	boolean accept(Class clazz);
 }
