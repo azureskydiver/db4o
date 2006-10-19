@@ -14,7 +14,8 @@ import com.db4o.query.*;
  * @sharpen.partial
  */
 public abstract class YapStream extends YapStreamBase implements ExtObjectContainer {
-	YapStream(Configuration config,YapStream a_parent) {
+	
+	public YapStream(Configuration config,YapStream a_parent) {
 		super(config,a_parent);
 	}
 	
