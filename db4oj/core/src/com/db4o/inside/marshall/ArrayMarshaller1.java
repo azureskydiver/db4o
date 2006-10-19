@@ -95,6 +95,6 @@ class ArrayMarshaller1 extends ArrayMarshaller{
     
     public void defragIDs(YapArray arrayHandler,ReaderPair readers) {
         readers.offset(readers.readInt());
-        arrayHandler.defrag1(readers);
+        arrayHandler.defrag1(_family,readers);
     }
 }

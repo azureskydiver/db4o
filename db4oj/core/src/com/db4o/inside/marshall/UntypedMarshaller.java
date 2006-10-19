@@ -24,6 +24,6 @@ public abstract class UntypedMarshaller {
     public abstract Object readQuery(Transaction trans, YapReader reader, boolean toArray) throws CorruptionException;
 
     public abstract QCandidate readSubCandidate(YapReader reader, QCandidates candidates, boolean withIndirection);
-    
 
+	public abstract void defrag(ReaderPair readers);
 }

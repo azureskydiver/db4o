@@ -297,37 +297,57 @@ public class YapArray extends YapIndependantType {
     
     final int readElementsAndClass(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz){
         int elements = a_bytes.readInt();
-        clazz[0] = i_handler.classReflector();
         if (elements < 0) {
-            
-            // TODO: Here is a low-frequency mistake, extremely unlikely.
-            // If YapClass-ID == 99999 by accident then we will get ignore.
-            
-            if(elements != YapConst.IGNORE_ID){
-                boolean primitive = false;
-                if(!Deploy.csharp){
-                    if(elements < YapConst.PRIMITIVE){
-                        primitive = true;
-                        elements -= YapConst.PRIMITIVE;
-                    }
-                }
-                YapClass yc = a_trans.stream().getYapClass(- elements);
-                if (yc != null) {
-                    if(primitive){
-                    	clazz[0] = yc.primitiveClassReflector();
-                    }else{
-                        clazz[0] = yc.classReflector();
-                    }
-                }
-            }
+            clazz[0]=reflectClassFromElementsEntry(a_trans, elements);
             elements = a_bytes.readInt();
+        }
+        else {
+    		clazz[0]=i_handler.classReflector();
         }
         if(Debug.exceedsMaximumArrayEntries(elements, i_isPrimitive)){
             return 0;
         }
         return elements;
     }
+
+    private int mapElementsEntry(int orig,IDMapping mapping) {
+    	if(orig>=0||orig==YapConst.IGNORE_ID) {
+    		return orig;
+    	}
+    	boolean primitive=!Deploy.csharp&&orig<YapConst.PRIMITIVE;
+    	if(primitive) {
+    		orig-=YapConst.PRIMITIVE;
+    	}
+    	int origID=-orig;
+    	int mappedID=mapping.mappedID(origID);
+    	int mapped=-mappedID;
+    	if(primitive) {
+    		mapped+=YapConst.PRIMITIVE;
+    	}
+    	return mapped;
+    }
     
+	private ReflectClass reflectClassFromElementsEntry(Transaction a_trans,int elements) {
+
+		// TODO: Here is a low-frequency mistake, extremely unlikely.
+		// If YapClass-ID == 99999 by accident then we will get ignore.
+		
+		if(elements != YapConst.IGNORE_ID){
+		    boolean primitive = false;
+		    if(!Deploy.csharp){
+		        if(elements < YapConst.PRIMITIVE){
+		            primitive = true;
+		            elements -= YapConst.PRIMITIVE;
+		        }
+		    }
+		    int classID = - elements;
+			YapClass yc = a_trans.stream().getYapClass(classID);
+		    if (yc != null) {
+		        return (primitive ? yc.primitiveClassReflector() : yc.classReflector());
+		    }
+		}
+		return i_handler.classReflector();
+	}
     
     static Object[] toArray(YapStream a_stream, Object a_object) {
         if (a_object != null) {
@@ -472,18 +492,19 @@ public class YapArray extends YapIndependantType {
     	}
     }
 
-    public final void defrag1(ReaderPair readers) {
+    public final void defrag1(MarshallerFamily mf,ReaderPair readers) {
 		if (Deploy.debug) {
 			readers.readBegin(identifier());
 		}
-		int count = elementCount(readers.systemTrans(),readers);
-		for (int i = 0; i < count; i++) {
-			try {
-				readers.copyID();
-			}
-			catch(MappingNotFoundException exc) {
-				System.out.println(exc);
-			}
+
+        int elements = readers.source().readInt();
+        readers.target().writeInt(mapElementsEntry(elements,readers.mapping()));
+        if (elements < 0) {
+            elements = readers.readInt();
+        }
+
+		for (int i = 0; i < elements; i++) {
+			i_handler.defrag(mf,readers);
 		}
     }
 

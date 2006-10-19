@@ -44,8 +44,21 @@ public class ReaderPair implements SlotReader {
 		incrementOffset(times*YapConst.INT_LENGTH);
 	}
 
+	public int copyID() {
+		return copyID(false);
+	}
+
 	public int copyID(boolean flipNegative) {
 		int id=_source.readInt();
+		return internalCopyID(flipNegative, id);
+	}
+
+	public MappedIDPair copyIDAndRetrieveMapping(boolean flipNegative) {
+		int id=_source.readInt();
+		return new MappedIDPair(id,internalCopyID(flipNegative, id));
+	}
+
+	private int internalCopyID(boolean flipNegative, int id) {
 		if(flipNegative&&id<0) {
 			id=-id;
 		}
@@ -55,10 +68,6 @@ public class ReaderPair implements SlotReader {
 		}
 		_target.writeInt(mapped);
 		return mapped;
-	}
-
-	public int copyID() {
-		return copyID(false);
 	}
 	
 	public void readBegin(byte identifier) {

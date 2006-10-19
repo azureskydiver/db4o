@@ -20,4 +20,6 @@ public interface DefragContext extends IDMapping {
 	void targetWriteBytes(ReaderPair readers, int targetAddress);
 
 	void traverseAllIndexSlots(BTree tree, Visitor4 visitor4);	
+	
+	YapClass yapClass(int id);
 }
