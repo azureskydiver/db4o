@@ -2,9 +2,11 @@
 <project name="Db4objects.Db4o" default="build">
 	<import file="common.xml" />
 	
-	<property name="dir.n.v6" location="../db4o.net/Db4objects.Db4o" />
+	<property name="dir.n.v6" location="../db4o.net" />
 	
-	<property name="dir.src" location="${dir.n.v6}/Db4objects.Db4o/" />
+	<property name="dir.n.v6.core" location="../db4o.net/Db4objects.Db4o" />
+	
+	<property name="dir.n.v6.core.src" location="${dir.n.v6.core}/Db4objects.Db4o/" />
 	
 	<fileset id="db4oj.srcfiles" dir="..">
 		<include name="db4oj/core/src/**/*.java" />
@@ -13,7 +15,7 @@
 	<target name="check-dependencies">
 		<uptodate
 			property="csharp.uptodate"
-			targetfile="${dir.src}/Transaction.cs">
+			targetfile="${dir.n.v6.core.src}/Transaction.cs">
 			<srcfiles refid="db4oj.srcfiles">
 			</srcfiles>
 		</uptodate>
@@ -22,7 +24,7 @@
 	<target name="build" depends="check-dependencies, sharpen">
 		<csc
 			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
-			srcdir="${dir.n.v6}"
+			srcdir="${dir.n.v6.core}"
 			targettype="library">
 			<include name="**/*.cs" />
 			<exclude name="native/compact/*.cs" />
@@ -80,18 +82,18 @@
 		</sharpen>
 		
 		<delete failonerror="false">
-			<fileset dir="${dir.src}">
+			<fileset dir="${dir.n.v6.core.src}">
 				<include name="**/*.cs" />
 				<exclude name="**/.svn/**" />
 			</fileset>
 		</delete>
 		<antcall target="copy-sharpened-files">
 			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
-			<param name="target.dir" value="${dir.src}" />
+			<param name="target.dir" value="${dir.n.v6.core.src}" />
 		</antcall>
 			
-		<updatecsharpproject projectFile="${dir.n.v6}/Db4objects.Db4o.csproj">
-			<sources dir="${dir.n.v6}">
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o.csproj">
+			<sources dir="${dir.n.v6.core}">
 				<include name="**/*.cs" />
 				<exclude name="native/compact*/**" />
 			</sources>
@@ -137,27 +139,29 @@
 			</args>
 		</sharpen>
 		
+		<property name="dir.n.v6.extensions" location="${dir.n.v6}/Db4oUnit.Extensions" />
+		
 		<delete failonerror="false">
-			<fileset dir="${dir.n.v6}/Db4oUnit.Extensions/Db4oUnit">
+			<fileset dir="${dir.n.v6.extensions}">
 				<include name="**/*.cs" />
 				<exclude name="**/.svn/**" />
 			</fileset>
 		</delete>
 		
-		<copy todir="${dir.n.v6}/Db4oUnit.Extensions/Db4oUnit.Extensions">
+		<copy todir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
 			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src">
 				<include name="Db4oUnit/**/*.cs" />
 			</fileset>
 		</copy>
 		
-		<updatecsharpproject projectFile="${dir.n.v6}/Db4oUnit.Extensions/Db4oUnit.Extensions.csproj">
-			<sources dir="${dir.n.v6}/Db4oUnit.Extensions">
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions.csproj">
+			<sources dir="${dir.n.v6.extensions}">
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectFile="${dir.n.v6}/Db4oUnit.Extensions/Db4oUnit.Extensions-2005.csproj">
-			<sources dir="${dir.n}/Db4oUnit.Extensions">
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
+			<sources dir="${dir.n.v6.extensions}">
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
