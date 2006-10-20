@@ -75,15 +75,13 @@ public final class YapArrayN extends YapArray {
         return ret[0];
     }
     
-    public final void defrag1(MarshallerFamily mf,ReaderPair readers) {
-        int elements = readElementsDefrag(readers);        
+    protected int readElementsDefrag(ReaderPair readers) {
+        int elements = super.readElementsDefrag(readers);        
         int totalElements=0;
         for (int i = 0; i < elements; i++) {
             totalElements+=readers.readInt();
         }
-		for (int i = 0; i < totalElements; i++) {
-			i_handler.defrag(mf,readers);
-		}
+        return totalElements;
     }
     
     public final void read1Candidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
