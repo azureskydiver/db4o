@@ -78,6 +78,6 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     }
 
 	private boolean canProcessIndex(YapField yapField) {
-		return !(yapField.getHandler() instanceof YapString)&&!(yapField.getHandler() instanceof YapArray);
+		return !(yapField.getHandler() instanceof YapString);
 	}
 }

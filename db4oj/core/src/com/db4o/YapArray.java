@@ -2,7 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.foundation.Tree;
+import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
@@ -493,17 +493,19 @@ public class YapArray extends YapIndependantType {
     }
 
     public void defrag1(MarshallerFamily mf,ReaderPair readers) {
-		int elements = readElementsDefrag(readers);
-
-		for (int i = 0; i < elements; i++) {
-			i_handler.defrag(mf,readers);
-		}
-    }
-
-	protected int readElementsDefrag(ReaderPair readers) {
 		if (Deploy.debug) {
 			readers.readBegin(identifier());
 		}
+		int elements = readElementsDefrag(readers);
+		for (int i = 0; i < elements; i++) {
+			i_handler.defrag(mf,readers);
+		}
+        if (Deploy.debug) {
+            readers.readEnd();
+        }
+    }
+
+	protected int readElementsDefrag(ReaderPair readers) {
         int elements = readers.source().readInt();
         readers.target().writeInt(mapElementsEntry(elements,readers.mapping()));
         if (elements < 0) {
