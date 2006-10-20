@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
+public class IdListQueryResult extends IntArrayList implements Visitor4, QueryResult {
     
 	private Tree i_candidates;
 	private boolean i_checkDuplicates;
@@ -21,11 +21,11 @@ public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResu
 	
 //	private final IntArrayList _ids = new IntArrayList();
 
-	public QueryResultImpl(Transaction a_trans) {
+	public IdListQueryResult(Transaction a_trans) {
 		i_trans = a_trans;
 	}
     
-    protected QueryResultImpl(Transaction trans, int initialSize){
+    protected IdListQueryResult(Transaction trans, int initialSize){
         super(initialSize);
         i_trans = trans;
     }

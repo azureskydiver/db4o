@@ -203,7 +203,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final QueryResult newQueryResult(Transaction a_ta) {
-		return new QResultClient(a_ta);
+		return new ClientQueryResult(a_ta);
 	}
 
 	final public Transaction newTransaction(Transaction parentTransaction) {
@@ -753,7 +753,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     
     public QueryResult classOnlyQuery(Transaction trans, YapClass clazz){
         long[] ids = clazz.getIDs(trans); 
-        QResultClient resClient = new QResultClient(trans, ids.length);
+        ClientQueryResult resClient = new ClientQueryResult(trans, ids.length);
         for (int i = 0; i < ids.length; i++) {
             resClient.add((int)ids[i]);
         }

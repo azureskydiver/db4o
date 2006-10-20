@@ -351,7 +351,7 @@ public abstract class QQueryBase implements Unversioned {
 		}
     }
 
-    public void executeLocal(final QueryResultImpl result) {
+    public void executeLocal(final IdListQueryResult result) {
         
 		CreateCandidateCollectionResult r = createCandidateCollection();
         

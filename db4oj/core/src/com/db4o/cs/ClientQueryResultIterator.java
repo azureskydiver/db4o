@@ -7,15 +7,15 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-class QResultClientIterator implements Iterator4 {
+class ClientQueryResultIterator implements Iterator4 {
 	
 	private Object[] _prefetchedObjects;
 	private int _remainingObjects;
 	private int _prefetchRight;
-	private final QResultClient _client;
+	private final ClientQueryResult _client;
 	private final IntIterator4 _ids;
 	
-	public QResultClientIterator(QResultClient client) {
+	public ClientQueryResultIterator(ClientQueryResult client) {
 		_client = client;
 		_ids = client.iterateIDs();
 	}

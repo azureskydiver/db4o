@@ -135,7 +135,7 @@ public abstract class YapFile extends YapStream {
     }
 
     public final QueryResult newQueryResult(Transaction a_ta) {
-        return new QueryResultImpl(a_ta);
+        return new IdListQueryResult(a_ta);
     }
 
     public final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
