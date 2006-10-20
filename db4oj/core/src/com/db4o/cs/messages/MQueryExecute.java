@@ -4,30 +4,43 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.foundation.network.YapSocket;
+import com.db4o.inside.query.*;
 
 public final class MQueryExecute extends MsgObject {
+	
 	public boolean processMessageAtServer(YapSocket sock) {
-		Transaction trans = getTransaction();
-		YapStream stream = getStream();
-		QueryResultImpl qr = new QueryResultImpl(trans);
-		this.unmarshall();
+		unmarshall();
+        writeQueryResult(execute(), sock);
+		return true;
+	}
 
-		synchronized (stream.i_lock) {
+	private QueryResult execute() {
+		
+		synchronized (streamLock()) {
             
             // TODO: The following used to run outside of the
             // synchronisation block for better performance but
             // produced inconsistent results, cause unknown.
+			
+			Transaction trans = getTransaction();
+			YapStream stream = getStream();
 
             QQuery query = (QQuery) stream.unmarshall(_payLoad);
+            query.unmarshall(trans);
             
-            query.unmarshall(getTransaction());
-			try {
-				query.executeLocal(qr);
-			} catch (Exception e) {
-				qr = new QueryResultImpl(getTransaction());
-			}
+			return executeFully(trans, stream, query);
+			
 		}
-        writeQueryResult(getTransaction(), qr, sock);
-		return true;
 	}
+
+	private QueryResult executeFully(Transaction trans, YapStream stream, QQuery query) {
+		try {
+			QueryResultImpl qr = stream.createQResult(trans);
+			query.executeLocal(qr);
+			return qr;
+		} catch (Exception e) {
+			return stream.createQResult(trans); 
+		}
+	}
+	
 }

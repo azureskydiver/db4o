@@ -13,8 +13,6 @@ public interface QueryResult extends Iterable4 {
 
     public Object get(int index);
 
-//    public long[] getIDs();    
-    
 	public IntIterator4 iterateIDs();
 	
     public int size();
