@@ -733,7 +733,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return null;
     }
     
-    final Object getActivatedObjectFromCache(Transaction ta, int id){
+    public final Object getActivatedObjectFromCache(Transaction ta, int id){
         Object obj = objectForIDFromCache(id);
         if(obj == null){
             return null;
@@ -742,7 +742,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return obj;
     }
     
-    final Object readActivatedObjectNotInCache(Transaction ta, int id){
+    public final Object readActivatedObjectNotInCache(Transaction ta, int id){
         Object obj = null;
         beginEndActivation();
         try {
