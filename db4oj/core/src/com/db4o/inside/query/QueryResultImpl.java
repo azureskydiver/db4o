@@ -1,9 +1,9 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.query;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.query.*;
 import com.db4o.query.*;
 
 /**
@@ -86,7 +86,7 @@ public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResu
         }
     }
 
-	final void checkDuplicates(){
+	public final void checkDuplicates(){
 		i_checkDuplicates = true;
 	}
 
@@ -97,7 +97,7 @@ public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResu
 		}
 	}
 	
-	void addKeyCheckDuplicates(int a_key){
+	public void addKeyCheckDuplicates(int a_key){
 	    if(i_checkDuplicates){
 	        TreeInt newNode = new TreeInt(a_key);
 	        i_candidates = Tree.add(i_candidates, newNode);

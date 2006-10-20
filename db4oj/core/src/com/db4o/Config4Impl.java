@@ -136,7 +136,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 	private YapStream        i_stream;                                                   
 
 
-    int activationDepth() {
+    public int activationDepth() {
     	return _config.getAsInt(ACTIVATION_DEPTH);
     }
 
