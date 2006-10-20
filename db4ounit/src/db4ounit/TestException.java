@@ -2,6 +2,9 @@ package db4ounit;
 
 import java.io.PrintWriter;
 
+/**
+ * @sharpen.ignore
+ */
 public class TestException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;

@@ -3,6 +3,9 @@ package db4ounit;
 import java.io.*;
 import java.lang.reflect.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class TestPlatform {
 	public static void printStackTrace(Writer writer, Throwable t) {
 		java.io.PrintWriter printWriter = new java.io.PrintWriter(writer);

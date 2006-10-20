@@ -1,7 +1,7 @@
 package db4ounit;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.Vector;
 
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
@@ -24,21 +24,14 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 	
 	protected TestSuite fromClasses(Class[] classes) {		
-		Vector suitesColl=new Vector(classes.length);
+		Vector suites = new Vector(classes.length);
 		for (int i = 0; i < classes.length; i++) {
-			TestSuite suite=fromClass(classes[i]);
-			if(suite.getTests().length>0) {
-				suitesColl.add(suite);
+			TestSuite suite = fromClass(classes[i]);
+			if (suite.getTests().length>0) {
+				suites.add(suite);
 			}
 		}
-		TestSuite[] suites=new TestSuite[suitesColl.size()];
-		int idx=0;
-		Enumeration iter=suitesColl.elements();
-		while(iter.hasMoreElements()) {
-			suites[idx]=(TestSuite)iter.nextElement();
-			idx++;
-		}
-		return new TestSuite(suites);
+		return new TestSuite(toTestArray(suites));
 	}
 	
 	protected TestSuite fromClass(Class clazz) {
@@ -59,7 +52,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 
 	protected boolean isApplicable(Class clazz) {
-		return true;
+		return clazz != null; // just removing the 'parameter not used' warning
 	}
 	
 	private TestSuite fromMethods(Class clazz) {
@@ -74,7 +67,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 			}
 			tests.addElement(createTest(instance, method));
 		}		
-		return new TestSuite(clazz.getName(), toArray(tests));
+		return new TestSuite(clazz.getName(), toTestArray(tests));
 	}
 	
 	private void emitWarningOnIgnoredTestMethod(Object subject, Method method) {
@@ -99,7 +92,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		return s.toUpperCase().startsWith(prefix.toUpperCase());
 	}
 	
-	private static Test[] toArray(Vector tests) {
+	private static Test[] toTestArray(Vector tests) {
 		Test[] array = new Test[tests.size()];
 		tests.copyInto(array);
 		return array;
