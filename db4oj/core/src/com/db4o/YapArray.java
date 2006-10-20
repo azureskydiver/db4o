@@ -310,7 +310,7 @@ public class YapArray extends YapIndependantType {
         return elements;
     }
 
-    private int mapElementsEntry(int orig,IDMapping mapping) {
+   final protected int mapElementsEntry(int orig,IDMapping mapping) {
     	if(orig>=0||orig==YapConst.IGNORE_ID) {
     		return orig;
     	}
@@ -492,24 +492,27 @@ public class YapArray extends YapIndependantType {
     	}
     }
 
-    public final void defrag1(MarshallerFamily mf,ReaderPair readers) {
-		if (Deploy.debug) {
-			readers.readBegin(identifier());
-		}
-
-        int elements = readers.source().readInt();
-        readers.target().writeInt(mapElementsEntry(elements,readers.mapping()));
-        if (elements < 0) {
-            elements = readers.readInt();
-        }
+    public void defrag1(MarshallerFamily mf,ReaderPair readers) {
+		int elements = readElementsDefrag(readers);
 
 		for (int i = 0; i < elements; i++) {
 			i_handler.defrag(mf,readers);
 		}
     }
 
+	protected int readElementsDefrag(ReaderPair readers) {
+		if (Deploy.debug) {
+			readers.readBegin(identifier());
+		}
+        int elements = readers.source().readInt();
+        readers.target().writeInt(mapElementsEntry(elements,readers.mapping()));
+        if (elements < 0) {
+            elements = readers.readInt();
+        }
+		return elements;
+	}
+
 	public void defragIndexEntry(ReaderPair readers) {
-        // TODO: implement
         throw Exceptions4.virtualException();
 	}
 
