@@ -20,10 +20,28 @@
 		</uptodate>
 	</target>
 	
+	<target name="run-tests" depends="build-tests" description="builds and runs all tests">
+		<exec executable="mono">
+			<arg value="--debug" />
+			<arg file="${dir.dist.dll}/Db4objects.Db4o.Tests.exe" />
+		</exec>
+	</target>
+	
 	<target name="build" depends="build-core, build-tools, build-tests">
 	</target>
 		
 	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
+		<csc
+			destfile="${dir.dist.dll}/Db4objects.Db4o.Tests.exe"
+			targettype="exe"
+			srcdir="${dir.n.v6}/Db4objects.Db4o.Tests"
+			mainclass="Db4objects.Db4o.Tests.AllTests">
+			<reference dir="${dir.dist.dll}">
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4oUnit.dll" />
+				<include name="Db4oUnit.Extensions.dll" />
+			</reference>
+		</csc>
 	</target>
 		
 	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit"> 
@@ -90,7 +108,7 @@
 		</updatecsharpproject>
 	</target>
 	
-	<target name="sharpen" depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions">
+	<target name="sharpen" depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests">
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
@@ -225,6 +243,79 @@
 			</sources>
 		</updatecsharpproject>
 	</target>		
+	
+	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">
+		
+		<property name="target.dir" location="${dir.sharpen}" />
+		
+		<copy todir="${target.dir}/db4oj.tests/src">
+			<fileset dir="${dir.j.tests.src}">
+				<include name="**/db4ounit/common/**/*.java" />
+			</fileset>
+		</copy>
+		
+		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
+			<args>
+				<arg value="-cp" />
+				<arg path="${dependencies.jar}" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="com.db4o.db4ounit" />
+				<arg value="Db4objects.Db4o.Tests" />
+				
+				<arg value="-typeMapping" />
+				<arg value="com.db4o.test.lib.File4" />
+				<arg value="System.IO.File" />
+				
+				<arg value="@sharpen-db4ounit-options" />
+				<arg value="@sharpen-new-core-mapping" />
+			</args>
+		</sharpen>
+		
+		<property name="dir.n.v6.tests" location="${dir.n.v6}/Db4objects.Db4o.Tests" />
+		<property name="dir.n.v6.tests.src" location="${dir.n.v6.tests}/Db4objects.Db4o.Tests" />
+		
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.tests.src}/Common">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		
+		<copy todir="${dir.n.v6.tests.src}">
+			<fileset dir="${target.dir}/db4oj.testscsharp/src/Db4objects/Db4o/Tests">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-compact.csdproj">
+			<sources dir="${dir.n.v6.tests}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact-2005/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-compact-2005.csproj">
+			<sources dir="${dir.n.v6.tests}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2005.csproj">
+			<sources dir="${dir.n.v6.tests}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact*/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests.csproj">
+			<sources dir="${dir.n.v6.tests}">
+				<include name="**/*.cs" />
+				<exclude name="**/compact*/**" />
+			</sources>
+		</updatecsharpproject>
+	</target>
 	
 	<target name="init">
 	</target>
