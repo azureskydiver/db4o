@@ -2,7 +2,7 @@
 
 package com.db4o.inside.query;
 
-import com.db4o.ObjectContainer;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.query.QueryComparator;
 
@@ -53,17 +53,17 @@ public class StatefulQueryResult {
 		_delegate.sort(cmp);
 	}
 	
-	Object streamLock() {
-		return _delegate.streamLock();
+	private Object streamLock() {
+		return objectContainer().lock();
 	}
 	
-	ObjectContainer objectContainer() {
+	ExtObjectContainer objectContainer() {
 		return _delegate.objectContainer();
 	}
 	
 	public int indexOf(Object a_object) {	
 		synchronized(streamLock()){
-	        int id = (int)objectContainer().ext().getID(a_object);
+	        int id = (int)objectContainer().getID(a_object);
 	        if(id <= 0){
 	            return -1;
 	        }

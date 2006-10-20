@@ -10,12 +10,10 @@ import com.db4o.foundation.*;
 import com.db4o.header.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
-import com.db4o.inside.classindex.*;
 import com.db4o.inside.convert.*;
 import com.db4o.inside.freespace.*;
 import com.db4o.inside.query.*;
 import com.db4o.inside.slots.*;
-import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -136,7 +134,7 @@ public abstract class YapFile extends YapStream {
         return new BTree(i_trans, id, new YInt(this));
     }
 
-    public final QueryResultImpl createQResult(Transaction a_ta) {
+    public final QueryResult newQueryResult(Transaction a_ta) {
         return new QueryResultImpl(a_ta);
     }
 
@@ -230,35 +228,8 @@ public abstract class YapFile extends YapStream {
     }
 
     public QueryResult getAll(Transaction ta) {
-    	
-    	final QueryResultImpl queryResult = createQResult(ta);
-
-        // duplicates because of inheritance hierarchies
-        final Tree[] duplicates = new Tree[1];
-
-        YapClassCollectionIterator i = classCollection().iterator();
-        while (i.moveNext()) {
-			final YapClass yapClass = i.currentClass();
-			if (yapClass.getName() != null) {
-				ReflectClass claxx = yapClass.classReflector();
-				if (claxx == null
-						|| !(i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
-					final ClassIndexStrategy index = yapClass.index();
-					index.traverseAll(ta, new Visitor4() {
-						public void visit(Object obj) {
-							int id = ((Integer)obj).intValue();
-							TreeInt newNode = new TreeInt(id);
-							duplicates[0] = Tree.add(duplicates[0], newNode);
-							if (newNode.size() != 0) {
-								queryResult.add(id);
-							}
-						}
-					});
-				}
-			}
-		}
-//        a_res.reset();
-        
+    	final QueryResult queryResult = newQueryResult(ta);
+    	queryResult.loadFromClassIndexes(classCollection().iterator());
         return queryResult;
     }
 
@@ -818,19 +789,14 @@ public abstract class YapFile extends YapStream {
 			return null;
 		}
 		
-		final QueryResultImpl resLocal = createQResult(trans);
-		final ClassIndexStrategy index = clazz.index();
-		index.traverseAll(trans, new Visitor4() {
-			public void visit(Object a_object) {
-				resLocal.add(((Integer)a_object).intValue());
-			}
-		});
-		return resLocal;
+		final QueryResult queryResult = newQueryResult(trans);
+		queryResult.loadFromClassIndex(clazz);
+		return queryResult;
     }
     
     public QueryResult executeQuery(QQuery query){
-    	QueryResultImpl queryResult = createQResult(query.getTransaction());
-    	query.executeLocal(queryResult);
+    	QueryResult queryResult = newQueryResult(query.getTransaction());
+    	queryResult.loadFromQuery(query);
     	return queryResult;
     }
 
