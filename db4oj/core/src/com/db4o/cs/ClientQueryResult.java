@@ -9,17 +9,17 @@ import com.db4o.inside.query.*;
 /**
  * @exclude
  */
-public class QResultClient extends QueryResultImpl {
+public class ClientQueryResult extends IdListQueryResult {
 
-	public QResultClient(Transaction ta) {
+	public ClientQueryResult(Transaction ta) {
 		super(ta);
 	}
     
-    public QResultClient(Transaction ta, int initialSize) {
+    public ClientQueryResult(Transaction ta, int initialSize) {
         super(ta, initialSize);
     }
     
     public Iterator4 iterator() {
-    	return new QResultClientIterator(this);
+    	return new ClientQueryResultIterator(this);
     }	
 }
