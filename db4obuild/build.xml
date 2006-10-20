@@ -918,6 +918,15 @@
 			</classpath>
 			<arg value="*" />
 		</java>
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsLegacy" failonerror="true" timeout="3600000">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java5}" />
+				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
+				<pathelement path="${file.db4ounit.jar}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="*" />
+		</java>
 	</target>
 
 	<target name="zipjavasrc" depends="javadoc,compilecorejava,compiletestsjava">
