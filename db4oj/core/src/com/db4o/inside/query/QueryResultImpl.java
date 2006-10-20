@@ -3,8 +3,11 @@
 package com.db4o.inside.query;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -118,14 +121,14 @@ public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResu
 	public Object streamLock(){
 		final YapStream stream = stream();
 		stream.checkClosed();
-		return stream.i_lock;
+		return stream.lock();
 	}
 
 	public YapStream stream() {
 		return i_trans.stream();
 	}
 
-    public ObjectContainer objectContainer() {
+    public ExtObjectContainer objectContainer() {
         return stream();
     }
 
@@ -162,4 +165,54 @@ public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResu
 			i_content[right]=swap;
 		}
 	}
+
+	public void loadFromClassIndex(YapClass clazz) {
+		final ClassIndexStrategy index = clazz.index();
+		index.traverseAll(i_trans, new Visitor4() {
+			public void visit(Object a_object) {
+				add(((Integer)a_object).intValue());
+			}
+		});
+	}
+
+	public void loadFromQuery(QQuery query) {
+		query.executeLocal(this);
+	}
+	
+	public void loadFromClassIndexes(YapClassCollectionIterator iter){
+		
+        // duplicates because of inheritance hierarchies
+        final Tree[] duplicates = new Tree[1];
+
+        while (iter.moveNext()) {
+			final YapClass yapClass = iter.currentClass();
+			if (yapClass.getName() != null) {
+				ReflectClass claxx = yapClass.classReflector();
+				if (claxx == null
+						|| !(stream().i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
+					final ClassIndexStrategy index = yapClass.index();
+					index.traverseAll(i_trans, new Visitor4() {
+						public void visit(Object obj) {
+							int id = ((Integer)obj).intValue();
+							TreeInt newNode = new TreeInt(id);
+							duplicates[0] = Tree.add(duplicates[0], newNode);
+							if (newNode.size() != 0) {
+								add(id);
+							}
+						}
+					});
+				}
+			}
+		}
+		
+	}
+
+	public void loadFromIdReader(YapReader reader) {
+		int size = reader.readInt();
+		for (int i = 0; i < size; i++) {
+			add(reader.readInt());
+		}
+	}
+
+	
 }

@@ -4,8 +4,8 @@ package com.db4o.inside.cluster;
 
 import com.db4o.*;
 import com.db4o.cluster.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
 
@@ -100,17 +100,32 @@ public class ClusterQueryResult implements QueryResult {
         return _cluster;
     }
 
-    public ObjectContainer objectContainer() {
+    public ExtObjectContainer objectContainer() {
         throw new NotSupportedException();
     }
 
     public int indexOf(int id) {
-        Exceptions4.notSupported();
-        return 0;
+    	throw new NotSupportedException();
     }
 
 	public void sort(QueryComparator cmp) {
-        Exceptions4.notSupported();
+		throw new NotSupportedException();
+	}
+
+	public void loadFromClassIndex(YapClass clazz) {
+        throw new NotSupportedException();
+	}
+
+	public void loadFromQuery(QQuery query) {
+		throw new NotSupportedException();
+	}
+
+	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
+		throw new NotSupportedException();
+	}
+
+	public void loadFromIdReader(YapReader reader) {
+		throw new NotSupportedException();
 	}
 }
 

@@ -7,21 +7,22 @@ import com.db4o.foundation.network.YapSocket;
 import com.db4o.inside.query.QueryResult;
 
 public final class MGetAll extends Msg {
+	
 	public final boolean processMessageAtServer(YapSocket sock) {
-		YapStream stream = getStream();
-		writeQueryResult(getAll(stream), sock);
+		writeQueryResult(getAll(), sock);
 		return true;
 	}
 
-	private QueryResult getAll(YapStream stream) {
-		QueryResult qr;
-		synchronized (stream.i_lock) {
+	private QueryResult getAll() {
+		synchronized (streamLock()) {
 			try {
-				qr = stream.getAll(getTransaction());
+				return getStream().getAll(getTransaction());
 			} catch (Exception e) {
-				qr = stream.createQResult(getTransaction());
+				if(Debug.atHome){
+					e.printStackTrace();
+				}
 			}
+			return getStream().newQueryResult(getTransaction());
 		}
-		return qr;
 	}
 }

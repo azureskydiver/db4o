@@ -35,11 +35,11 @@ public final class MQueryExecute extends MsgObject {
 
 	private QueryResult executeFully(Transaction trans, YapStream stream, QQuery query) {
 		try {
-			QueryResultImpl qr = stream.createQResult(trans);
-			query.executeLocal(qr);
+			QueryResult qr = stream.newQueryResult(trans);
+			qr.loadFromQuery(query);
 			return qr;
 		} catch (Exception e) {
-			return stream.createQResult(trans); 
+			return stream.newQueryResult(trans); 
 		}
 	}
 	

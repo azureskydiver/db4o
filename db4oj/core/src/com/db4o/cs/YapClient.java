@@ -202,7 +202,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return sock;
 	}
 
-	public final QueryResultImpl createQResult(Transaction a_ta) {
+	public final QueryResult newQueryResult(Transaction a_ta) {
 		return new QResultClient(a_ta);
 	}
 
@@ -294,7 +294,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 
 	public QueryResult getAll(Transaction ta) {
 		writeMsg(Msg.GET_ALL);
-		QueryResultImpl queryResult = createQResult(ta);
+		QueryResult queryResult = newQueryResult(ta);
 		readResult(queryResult);
 		return queryResult;
 	}
@@ -562,13 +562,11 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return readWriterByID(a_ta, a_id);
 	}
 
-	private void readResult(QueryResultImpl aRes) {
+	private void readResult(QueryResult queryResult) {
 		YapReader reader = expectedByteResponse(Msg.ID_LIST);
-		int size = reader.readInt();
-		for (int i = 0; i < size; i++) {
-			aRes.add(reader.readInt());
-		}
-//		aRes.reset();
+		queryResult.loadFromIdReader(reader);
+		
+//		queryResult.reset();
 	}
 
 	void readThis() {
@@ -764,7 +762,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     
     public QueryResult executeQuery(QQuery query){
     	Transaction trans = query.getTransaction();
-    	QueryResultImpl result = createQResult(trans);
+    	QueryResult result = newQueryResult(trans);
         query.marshall();
 		writeMsg(Msg.QUERY_EXECUTE.getWriter(marshall(trans,query)));
 		readResult(result);
