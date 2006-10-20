@@ -231,7 +231,7 @@ public abstract class YapFile extends YapStream {
 
     public QueryResult getAll(Transaction ta) {
     	
-    	final QueryResultImpl queryResult = new QueryResultImpl(ta);
+    	final QueryResultImpl queryResult = createQResult(ta);
 
         // duplicates because of inheritance hierarchies
         final Tree[] duplicates = new Tree[1];

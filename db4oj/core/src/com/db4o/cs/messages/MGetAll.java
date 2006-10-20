@@ -9,7 +9,7 @@ import com.db4o.inside.query.QueryResult;
 public final class MGetAll extends Msg {
 	public final boolean processMessageAtServer(YapSocket sock) {
 		YapStream stream = getStream();
-		this.writeQueryResult(getTransaction(), getAll(stream), sock);
+		writeQueryResult(getAll(stream), sock);
 		return true;
 	}
 
@@ -19,7 +19,7 @@ public final class MGetAll extends Msg {
 			try {
 				qr = stream.getAll(getTransaction());
 			} catch (Exception e) {
-				qr = new QueryResultImpl(getTransaction());
+				qr = stream.createQResult(getTransaction());
 			}
 		}
 		return qr;

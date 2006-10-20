@@ -522,12 +522,6 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		}
 	}
 
-	public final void queryExecute(QQuery a_query, QueryResultImpl a_res) {
-		writeMsg(Msg.QUERY_EXECUTE.getWriter(marshall(a_query.getTransaction(),
-				a_query)));
-		readResult(a_res);
-	}
-
 	public void raiseVersion(long a_minimumVersion) {
 		writeMsg(Msg.RAISE_VERSION.getWriterForLong(i_trans, a_minimumVersion));
 	}
@@ -769,9 +763,11 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     }
     
     public QueryResult executeQuery(QQuery query){
-    	QueryResultImpl result = createQResult(query.getTransaction());
+    	Transaction trans = query.getTransaction();
+    	QueryResultImpl result = createQResult(trans);
         query.marshall();
-        queryExecute(query, result);
+		writeMsg(Msg.QUERY_EXECUTE.getWriter(marshall(trans,query)));
+		readResult(result);
         return result;
     }
 

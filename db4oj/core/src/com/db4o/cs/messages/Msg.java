@@ -128,6 +128,10 @@ public class Msg implements Cloneable {
 	YapStream getStream(){
 	    return getTransaction().stream();
 	}
+	
+	protected Object streamLock(){
+		return getStream().lock();
+	}
 
 	/**
 	 * server side execution
@@ -225,11 +229,12 @@ public class Msg implements Cloneable {
 		return writer;
 	}
 
-	final void writeQueryResult(Transaction a_trans, QueryResult qr, YapSocket sock) {
+	final void writeQueryResult(QueryResult qr, YapSocket sock) {
+		Transaction trans = getTransaction();
 		int size = qr.size();
-		MsgD message = ID_LIST.getWriterForLength(a_trans, YapConst.ID_LENGTH * (size + 1));
+		MsgD message = ID_LIST.getWriterForLength(trans, YapConst.ID_LENGTH * (size + 1));
 		YapWriter writer = message.payLoad();
 		writer.writeQueryResult(qr);
-		message.write(a_trans.stream(), sock);
+		message.write(getStream(), sock);
 	}
 }

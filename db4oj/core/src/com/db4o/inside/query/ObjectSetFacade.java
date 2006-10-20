@@ -3,7 +3,6 @@
 package com.db4o.inside.query;
 
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.query.*;
 
 /**

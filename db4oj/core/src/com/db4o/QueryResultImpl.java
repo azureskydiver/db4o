@@ -11,10 +11,10 @@ import com.db4o.query.*;
  */
 public class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
     
-	Tree i_candidates;
-	boolean i_checkDuplicates;
+	private Tree i_candidates;
+	private boolean i_checkDuplicates;
     
-	final Transaction i_trans;
+	private final Transaction i_trans;
 	
 //	private final IntArrayList _ids = new IntArrayList();
 
