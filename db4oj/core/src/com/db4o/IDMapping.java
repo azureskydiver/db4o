@@ -2,8 +2,9 @@
 
 package com.db4o;
 
-
 /**
+ * A mapping from yap file source IDs/addresses to target IDs/addresses, used for defragmenting.
+ * 
  * @exclude
  */
 public interface IDMapping {
