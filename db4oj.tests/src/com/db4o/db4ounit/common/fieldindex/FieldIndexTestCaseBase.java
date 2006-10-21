@@ -13,26 +13,15 @@ public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase {
 	}
 
 	protected void configure(Configuration config) {
-		index(config,FieldIndexItem.class, "foo");
+		indexField(config,FieldIndexItem.class, "foo");
 	}
 
-	protected void index(Configuration config,final Class clazz, final String fieldName) {
-		config
-	    .objectClass(clazz)
-	    .objectField(fieldName)
-	    .indexed(true);
-	}
-	
 	protected abstract void store();
 	
 	protected void storeItems(final int[] foos) {
 		for (int i = 0; i < foos.length; i++) {
 			store(new FieldIndexItem(foos[i]));
 	    }
-	}
-
-	protected void store(Object item) {
-		db().set(item);
 	}
 
 	protected Query createQuery(final int id) {
