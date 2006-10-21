@@ -2,6 +2,7 @@
 
 package com.db4odoc.f1.staticfields;
 
+import java.awt.Color;
 import java.io.File;
 
 import com.db4o.Db4o;
@@ -27,7 +28,19 @@ public class StaticFieldExample {
 	}
 	// end main
 	
-    
+	public static void setCar(){
+		new File(YAPFILENAME).delete();
+		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		try {
+			Car car = new Car();
+			car.color = Color.GREEN;
+			db.set(car);
+		} finally {
+			db.close();
+		}
+	}
+	// end setCar
+	
 	public static void setPilotsSimple(){
 		System.out.println("In the default setting, static constants are not continously stored and updated.");
 		new File(YAPFILENAME).delete();

@@ -57,8 +57,8 @@ query.
 This is absolutely undesirable in most situations, so ._
 db4o provides a mechanism to give the client fine-grained control ._
 over how much he wants to pull out of the database when asking for ._
-an object. This mechanism is called  .i activation depth .. and works ._
-quite similar to our familiar update depth.
+an object. This mechanism is called   .i activation depth .. and works ._
+quite similar to update depth.
 
 The default activation depth for any object is 5, so our example above ._
 runs into nulls after traversing 5 references.
@@ -71,7 +71,7 @@ the database just as needed.
 
 Note that 'cut' references may also influence the behavior of your ._
 objects: In this case the length of the list is calculated dynamically, ._
-and therefor constrained by activation depth.
+and therefore constrained by activation depth.
 
 Instead of dynamically activating subgraph elements, you can configure ._
 activation depth statically, too. We can tell our SensorReadout class ._

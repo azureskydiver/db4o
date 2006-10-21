@@ -24,18 +24,7 @@ public class EnumExample {
   }
 	// end main
 	
-	public static void setCar(){
-		new File(YAPFILENAME).delete();
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
-		try {
-			Car car = new Car();
-			car.color = Color.GREEN;
-			db.set(car);
-		} finally {
-			db.close();
-		}
-	}
-	// end setCar
+	
 	
 	public static void setPilots(){
 		new File(YAPFILENAME).delete();
