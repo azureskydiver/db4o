@@ -66,15 +66,7 @@ namespace com.db4o.inside.query
 
 		public int IndexOf(T value)
 		{
-			lock (this.SyncRoot)
-			{
-				int id = (int)_delegate.ObjectContainer().Ext().GetID(value);
-				if (id <= 0)
-				{
-					return -1;
-				}
-				return _delegate.IndexOf(id);
-			}
+			return _delegate.IndexOf(value);
 		}
 
 		public void Add(T value)
