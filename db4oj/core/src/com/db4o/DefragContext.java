@@ -24,4 +24,8 @@ public interface DefragContext extends IDMapping {
 	void traverseAllIndexSlots(BTree tree, Visitor4 visitor4);	
 	
 	YapClass yapClass(int id);
+
+	YapWriter sourceWriterByID(int sourceID);
+	
+	int lenientMappedID(int id);
 }

@@ -222,7 +222,4 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 
 	public void defragIndex(ReaderPair readers) {
 	}
-
-	public void defragIndexNode(ReaderPair readers) {
-	}
 }

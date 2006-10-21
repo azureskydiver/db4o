@@ -45,20 +45,20 @@ public class ReaderPair implements SlotReader {
 	}
 
 	public int copyID() {
-		return copyID(false);
+		return copyID(false,false);
 	}
 
-	public int copyID(boolean flipNegative) {
+	public int copyID(boolean flipNegative,boolean lenient) {
 		int id=_source.readInt();
-		return internalCopyID(flipNegative, id);
+		return internalCopyID(flipNegative, lenient, id);
 	}
 
-	public MappedIDPair copyIDAndRetrieveMapping(boolean flipNegative) {
+	public MappedIDPair copyIDAndRetrieveMapping() {
 		int id=_source.readInt();
-		return new MappedIDPair(id,internalCopyID(flipNegative, id));
+		return new MappedIDPair(id,internalCopyID(false, false, id));
 	}
 
-	private int internalCopyID(boolean flipNegative, int id) {
+	private int internalCopyID(boolean flipNegative, boolean lenient, int id) {
 		if(flipNegative&&id<0) {
 			id=-id;
 		}
@@ -121,13 +121,26 @@ public class ReaderPair implements SlotReader {
 	public DefragContext context() {
 		return _mapping;
 	}
-	
+
 	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command) throws CorruptionException {
-		YapReader sourceReader=context.sourceReaderByID(sourceID);
+		processCopy(context, sourceID, command, false);
+	}
+
+	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException {
+		YapReader sourceReader=(
+				registerAddressMapping 
+					? context.sourceWriterByID(sourceID) 
+					: context.sourceReaderByID(sourceID));
 		int targetID=context.mappedID(sourceID);
 	
 		int targetLength = sourceReader.getLength();
 		int targetAddress=context.allocateTargetSlot(targetLength);
+		
+		if(registerAddressMapping) {
+			int sourceAddress=((YapWriter)sourceReader).getAddress();
+			context.mapIDs(sourceAddress, targetAddress);
+		}
+		
 		YapReader targetPointerReader=new YapReader(YapConst.POINTER_LENGTH);
 		targetPointerReader.writeInt(targetAddress);
 		targetPointerReader.writeInt(targetLength);

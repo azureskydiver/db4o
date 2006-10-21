@@ -315,7 +315,7 @@ public final class YapString extends YapIndependantType {
 
 	public void defragIndexEntry(ReaderPair readers) {
 		// address
-		readers.copyID();
+		readers.copyID(false,true);
 		// length
 		readers.incrementIntSize();
 	}

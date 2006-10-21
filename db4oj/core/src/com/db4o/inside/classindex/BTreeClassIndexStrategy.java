@@ -102,8 +102,4 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void defragIndex(ReaderPair readers) {
 		_btreeIndex.defragIndex(readers);
 	}
-
-	public void defragIndexNode(ReaderPair readers) {
-		_btreeIndex.defragIndexNode(readers);
-	}
 }
