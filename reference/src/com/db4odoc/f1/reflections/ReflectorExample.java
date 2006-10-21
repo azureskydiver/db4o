@@ -15,7 +15,6 @@ import com.db4o.reflect.ReflectConstructor;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.ReflectMethod;
 import com.db4o.reflect.generic.GenericReflector;
-import com.db4odoc.f1.evaluations.Car;
 
 public class ReflectorExample  {
 	public final static String YAPFILENAME="formula1.yap";
