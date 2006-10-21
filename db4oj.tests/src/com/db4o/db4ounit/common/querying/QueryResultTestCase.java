@@ -14,13 +14,9 @@ import com.db4o.query.*;
 import db4ounit.extensions.*;
 
 
-public class QueryResultTestCase extends AbstractDb4oTestCase {
+public abstract class QueryResultTestCase extends AbstractDb4oTestCase {
 	
-	public static void main(String[] args) {
-		new QueryResultTestCase().runSolo();
-	}
-	
-	private static final int[] VALUES = new int[] { 1 , 7, 9, 5, 6 };
+	private static final int[] VALUES = new int[] { 1 , 5, 6 , 7, 9};
 	
 	private final int [] ids = new int[VALUES.length];
 	
@@ -29,9 +25,29 @@ public class QueryResultTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testClassQuery(){
-		Query q = newItemQuery();
-		QueryResult queryResult = stream().executeQuery((QQuery)q);
+		Query query = newItemQuery();
+		QueryResult queryResult = executeQuery(query); 
 		assertIDs(queryResult, ids);
+	}
+	
+	public void testIndexedFieldQuery(){
+		Query query = newItemQuery();
+		query.descend("foo").constrain(new Integer(6)).smaller();
+		QueryResult queryResult = executeQuery(query);
+		assertIDs(queryResult, new int[] {ids[0], ids[1] });
+	}
+	
+	public void testNonIndexedFieldQuery(){
+		Query query = newItemQuery();
+		query.descend("bar").constrain(new Integer(6)).smaller();
+		QueryResult queryResult = executeQuery(query);
+		assertIDs(queryResult, new int[] {ids[0], ids[1] });
+	}
+
+	private QueryResult executeQuery(Query query) {
+		QueryResult queryResult = newQueryResult();
+		queryResult.loadFromQuery((QQuery)query);
+		return queryResult;
 	}
 	
 	private void assertIDs(QueryResult queryResult, int[] expectedIDs){
@@ -42,7 +58,6 @@ public class QueryResultTestCase extends AbstractDb4oTestCase {
 		}
 		expectingVisitor.assertExpectations();
 	}
-	
 	
 	protected Query newItemQuery() {
 		return newQuery(Item.class);
@@ -64,14 +79,21 @@ public class QueryResultTestCase extends AbstractDb4oTestCase {
 		
 		public int foo;
 		
+		public int bar;
+		
 		public Item() {
 			
 		}
 		
 		public Item(int foo_) {
 			foo = foo_;
+			bar = foo;
 		}
 		
 	}
+	
+	protected abstract QueryResult newQueryResult();
+	
+	
 	
 }
