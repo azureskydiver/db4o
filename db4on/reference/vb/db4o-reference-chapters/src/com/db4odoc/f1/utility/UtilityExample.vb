@@ -6,15 +6,18 @@ Imports com.db4o
 
 Namespace com.db4odoc.f1.utility
     Public Class UtilityExample
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+
+        Public Shared Sub Main(ByVal args() As String)
             TestDescend()
             CheckActive()
             CheckStored()
         End Sub
+        ' end Main
 
         Public Shared Sub StoreSensorPanel()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 ' create a linked list with length 10
                 Dim list As SensorPanel = New SensorPanel().CreateList(10)
@@ -24,10 +27,11 @@ Namespace com.db4odoc.f1.utility
                 db.Close()
             End Try
         End Sub
+        ' end StoreSensorPanel
 
         Public Shared Sub TestDescend()
             StoreSensorPanel()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 db.Ext().Configure().ActivationDepth(1)
                 System.Console.WriteLine("Object container activation depth = 1")
@@ -41,10 +45,11 @@ Namespace com.db4odoc.f1.utility
                 db.Close()
             End Try
         End Sub
+        ' end TestDescend
 
         Public Shared Sub CheckActive()
             StoreSensorPanel()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 db.Ext().Configure().ActivationDepth(2)
                 System.Console.WriteLine("Object container activation depth = 2")
@@ -59,12 +64,13 @@ Namespace com.db4odoc.f1.utility
                 db.Close()
             End Try
         End Sub
+        ' end CheckActive
 
         Public Shared Sub CheckStored()
             ' create a linked list with length 10
             Dim list As SensorPanel = New SensorPanel().CreateList(10)
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 ' store all elements with one statement, since all elements are new		
                 db.Set(list)
@@ -79,5 +85,6 @@ Namespace com.db4odoc.f1.utility
                 db.Close()
             End Try
         End Sub
+        ' end CheckStored
     End Class
 End Namespace

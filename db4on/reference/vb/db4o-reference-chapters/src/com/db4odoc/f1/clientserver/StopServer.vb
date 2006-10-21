@@ -32,6 +32,6 @@ Namespace com.db4odoc.f1.clientserver
                 objectContainer.Close()
             End If
         End Sub
-
+        'end Main
     End Class
 End Namespace

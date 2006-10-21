@@ -7,22 +7,23 @@ using com.db4o;
 
 namespace com.db4odoc.f1.serialize
 {
-	public class SerializeExample: Util
+	public class SerializeExample
 	{
 		public readonly static string XmlFileName = "formula1.xml";
+		public readonly static string YapFileName = "formula1.yap";
 
-
-		public static void main(String[] args) 
+		public static void Main(String[] args) 
 		{
 			SetObjects();
 			ExportToXml();
 			ImportFromXml();
 		}
+		// end Main
 
 		public static void SetObjects()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
@@ -35,12 +36,13 @@ namespace com.db4odoc.f1.serialize
 				db.Close();
 			}
 		}
+		// end SetObjects
 
 		public static void ExportToXml()
 		{
 			XmlSerializer carSerializer = new XmlSerializer(typeof(Car[]));
 			StreamWriter xmlWriter = new StreamWriter(XmlFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(typeof(Car));
@@ -58,17 +60,18 @@ namespace com.db4odoc.f1.serialize
 				db.Close();
 			}
 		}
+		// end ExportToXml
 
 		public static void ImportFromXml()
 		{
-			File.Delete(Util.YapFileName);
+			File.Delete(YapFileName);
 			XmlSerializer carSerializer = new XmlSerializer(typeof(Car[]));
 			FileStream xmlFileStream = new FileStream(XmlFileName, FileMode.Open);
 			Car[] cars = (Car[])carSerializer.Deserialize(xmlFileStream);
 			ObjectContainer db;
 			for (int i = 0; i < cars.Length; i++)
 			{
-				db = Db4o.OpenFile(Util.YapFileName);
+				db = Db4o.OpenFile(YapFileName);
 				try 
 				{
 					Car car = (Car)cars[i];
@@ -79,7 +82,7 @@ namespace com.db4odoc.f1.serialize
 					db.Close();
 				}
 			}
-			db = Db4o.OpenFile(Util.YapFileName);
+			db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(typeof(Pilot));
@@ -92,5 +95,16 @@ namespace com.db4odoc.f1.serialize
 				db.Close();
 			}
 		}
+		// end ImportFromXml
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

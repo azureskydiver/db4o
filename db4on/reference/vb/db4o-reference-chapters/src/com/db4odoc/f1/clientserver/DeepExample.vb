@@ -3,31 +3,32 @@ Imports System.IO
 Imports com.db4o
 Namespace com.db4odoc.f1.clientserver
     Public Class DeepExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
         Public Shared Sub Main(ByVal args As String())
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 StoreCar(db)
                 db.Close()
                 SetCascadeOnUpdate()
-                db = Db4oFactory.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(YapFileName)
                 TakeManySnapshots(db)
                 db.Close()
-                db = Db4oFactory.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(YapFileName)
                 RetrieveAllSnapshots(db)
                 db.Close()
-                db = Db4oFactory.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(YapFileName)
                 RetrieveSnapshotsSequentially(db)
                 RetrieveSnapshotsSequentiallyImproved(db)
                 db.Close()
                 SetActivationDepth()
-                db = Db4oFactory.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(YapFileName)
                 RetrieveSnapshotsSequentially(db)
             Finally
                 db.Close()
             End Try
         End Sub
+        ' end Main
 
         Public Shared Sub StoreCar(ByVal db As ObjectContainer)
             Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
@@ -35,10 +36,12 @@ Namespace com.db4odoc.f1.clientserver
             car.Pilot = pilot
             db.[Set](car)
         End Sub
+        ' end StoreCar
 
         Public Shared Sub SetCascadeOnUpdate()
             Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
         End Sub
+        ' end SetCascadeOnUpdate
 
         Public Shared Sub TakeManySnapshots(ByVal db As ObjectContainer)
             Dim result As ObjectSet = db.[Get](GetType(Car))
@@ -50,6 +53,7 @@ Namespace com.db4odoc.f1.clientserver
             End While
             db.[Set](car)
         End Sub
+        ' end TakeManySnapshots
 
         Public Shared Sub RetrieveAllSnapshots(ByVal db As ObjectContainer)
             Dim result As ObjectSet = db.[Get](GetType(SensorReadout))
@@ -57,6 +61,7 @@ Namespace com.db4odoc.f1.clientserver
                 Console.WriteLine(result.[Next]())
             End While
         End Sub
+        ' end RetrieveAllSnapshots
 
         Public Shared Sub RetrieveSnapshotsSequentially(ByVal db As ObjectContainer)
             Dim result As ObjectSet = db.[Get](GetType(Car))
@@ -67,6 +72,7 @@ Namespace com.db4odoc.f1.clientserver
                 readout = readout.[Next]
             End While
         End Sub
+        ' end RetrieveSnapshotsSequentially
 
         Public Shared Sub RetrieveSnapshotsSequentiallyImproved(ByVal db As ObjectContainer)
             Dim result As ObjectSet = db.[Get](GetType(Car))
@@ -78,10 +84,11 @@ Namespace com.db4odoc.f1.clientserver
                 readout = readout.[Next]
             End While
         End Sub
+        ' end RetrieveSnapshotsSequentiallyImproved
 
         Public Shared Sub SetActivationDepth()
             Db4oFactory.Configure().ObjectClass(GetType(TemperatureSensorReadout)).CascadeOnActivate(True)
         End Sub
-
+        ' end SetActivationDepth
     End Class
 End Namespace

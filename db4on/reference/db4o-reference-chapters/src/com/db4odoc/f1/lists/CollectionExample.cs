@@ -8,18 +8,21 @@ using com.db4odoc.f1.evaluations;
 
 namespace com.db4odoc.f1.lists
 {
-	public class CollectionExample: Util
+	public class CollectionExample
 	{
+		public readonly static string YapFileName = "formula1.yap";
+
 		public static void Main(string[] args)
 		{
 			SetTeam();
 			UpdateTeam();
 		}
+		// end Main
 
 		public static void SetTeam()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Team ferrariTeam = new Team();
@@ -40,10 +43,11 @@ namespace com.db4odoc.f1.lists
 				db.Close();
 			} 
 		}
+		// end SetTeam
 
 		public static void UpdateTeam()
 		{
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Query query =db.Query(); 
@@ -68,5 +72,16 @@ namespace com.db4odoc.f1.lists
 				db.Close();
 			} 
 		}
+		// end UpdateTeam
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

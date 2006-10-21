@@ -6,9 +6,11 @@ using com.db4o.query;
 
 namespace com.db4odoc.f1.identity
 {
-	public class IdentityExample: Util
+	public class IdentityExample
 	{
-		public static void main(String[] args) 
+		public readonly static string YapFileName = "formula1.yap";
+
+		public static void Main(String[] args) 
 		{
 			CheckUniqueness();
 			CheckReferenceCache();
@@ -17,11 +19,12 @@ namespace com.db4odoc.f1.identity
 		
 			TestCopyingWithPurge();
 		}
+		// end Main
 
 		public static void SetObjects()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
@@ -34,11 +37,12 @@ namespace com.db4odoc.f1.identity
 				db.Close();
 			}
 		}
+		// end SetObjects
 	
 		public static void CheckUniqueness()
 		{
 			SetObjects();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet cars = db.Get(typeof(Car));
@@ -53,11 +57,12 @@ namespace com.db4odoc.f1.identity
 				db.Close();
 			}
 		}
+		// end CheckUniqueness
 	
 		public static void CheckReferenceCache()
 		{
 			SetObjects();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet pilots = db.Get(typeof(Pilot));
@@ -73,11 +78,12 @@ namespace com.db4odoc.f1.identity
 				db.Close();
 			}
 		}
+		// end CheckReferenceCache
 	
 		public static void CheckReferenceCacheWithPurge()
 		{
 			SetObjects();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet pilots = db.Get(typeof(Pilot));
@@ -98,11 +104,12 @@ namespace com.db4odoc.f1.identity
 				db.Close();
 			}
 		}
+		// end CheckReferenceCacheWithPurge
 	
 		public static void TestCopyingWithPurge()
 		{
 			SetObjects();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet pilots = db.Get(typeof(Pilot));
@@ -117,11 +124,12 @@ namespace com.db4odoc.f1.identity
 				db.Close();
 			}
 		}
+		// end TestCopyingWithPurge
 	
 		public static void TestBind()
 		{
 			SetObjects();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Query q = db.Query();
@@ -142,5 +150,16 @@ namespace com.db4odoc.f1.identity
 				db.Close();
 			}
 		}
+		// end TestBind
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

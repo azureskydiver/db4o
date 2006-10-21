@@ -5,21 +5,23 @@ using com.db4odoc.f1;
 
 namespace com.db4odoc.f1.clientserver
 {
-    public class TransactionExample : Util
+    public class TransactionExample 
     {
+		public readonly static string YapFileName = "formula1.yap";
+
         public static void Main(string[] args)
         {
-            File.Delete(Util.YapFileName);
-            ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+            File.Delete(YapFileName);
+            ObjectContainer db=Db4o.OpenFile(YapFileName);
             try
             {
                 StoreCarCommit(db);
                 db.Close();
-                db = Db4o.OpenFile(Util.YapFileName);
+                db = Db4o.OpenFile(YapFileName);
                 ListAllCars(db);
                 StoreCarRollback(db);
                 db.Close();
-                db = Db4o.OpenFile(Util.YapFileName);
+                db = Db4o.OpenFile(YapFileName);
                 ListAllCars(db);
                 CarSnapshotRollback(db);
                 CarSnapshotRollbackRefresh(db);
@@ -29,6 +31,7 @@ namespace com.db4odoc.f1.clientserver
                 db.Close();
             }
         }
+		// end Main
         
         public static void StoreCarCommit(ObjectContainer db)
         {
@@ -38,12 +41,14 @@ namespace com.db4odoc.f1.clientserver
             db.Set(car);
             db.Commit();
         }
+		// end StoreCarCommit
     
         public static void ListAllCars(ObjectContainer db)
         {
             ObjectSet result = db.Get(typeof(Car));
             ListResult(result);
         }
+		// end ListAllCars
         
         public static void StoreCarRollback(ObjectContainer db)
         {
@@ -53,6 +58,7 @@ namespace com.db4odoc.f1.clientserver
             db.Set(car);
             db.Rollback();
         }
+		// end StoreCarRollback
     
         public static void CarSnapshotRollback(ObjectContainer db)
         {
@@ -63,6 +69,7 @@ namespace com.db4odoc.f1.clientserver
             db.Rollback();
             Console.WriteLine(car);
         }
+		// end CarSnapshotRollback
     
         public static void CarSnapshotRollbackRefresh(ObjectContainer db)
         {
@@ -74,5 +81,16 @@ namespace com.db4odoc.f1.clientserver
             db.Ext().Refresh(car, int.MaxValue);
             Console.WriteLine(car);
         }
+		// end CarSnapshotRollbackRefresh
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
     }
 }

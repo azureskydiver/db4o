@@ -10,9 +10,11 @@ using com.db4o.types;
 namespace com.db4odoc.f1.activating
 {
 
-	public class ActivationExample: Util
+	public class ActivationExample
 	{
-		public static void main(string[] args)
+		public readonly static string YapFileName = "formula1.yap";
+
+		public static void Main(string[] args)
 		{
 			TestActivationDefault();
 			TestActivationConfig();
@@ -23,11 +25,12 @@ namespace com.db4odoc.f1.activating
 			TestCollectionDef();
 			TestCollectionActivation();
 		}
+		// end Main
 	
 		public static void StoreSensorPanel()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				// create a linked list with length 10
@@ -40,11 +43,12 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			}
 		}
+		// end StoreSensorPanel
 	
 		public static void TestActivationConfig()
 		{
 			StoreSensorPanel();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				db.Ext().Configure().ActivationDepth(1);
@@ -67,11 +71,12 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			}
 		}
+		// end TestActivationConfig
 
 		public static void TestActivationDefault()
 		{
 			StoreSensorPanel();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Console.WriteLine("Default activation depth");
@@ -93,11 +98,12 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			}
 		}
+		// end TestActivationDefault
 	
 		public static void TestCascadeActivate()
 		{
 			StoreSensorPanel();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			db.Ext().Configure().ObjectClass(typeof(SensorPanel)).CascadeOnActivate(true);
 			try 
 			{
@@ -120,6 +126,7 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			}
 		}
+		// end TestCascadeActivate
 	
 		public static void TestMinActivate()
 		{
@@ -128,7 +135,7 @@ namespace com.db4odoc.f1.activating
 			// the system ensures that every instantiated List object will have it's 
 			// members set to a depth of 1
 			Db4o.Configure().ObjectClass(typeof(SensorPanel)).MinimumActivationDepth(1);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Console.WriteLine("Minimum activation depth = 1");
@@ -151,6 +158,7 @@ namespace com.db4odoc.f1.activating
 				Db4o.Configure().ObjectClass(typeof(SensorPanel)).MinimumActivationDepth(0);
 			}
 		}
+		// end TestMinActivate
 		
 		public static void TestMaxActivate() 
 		{
@@ -159,7 +167,7 @@ namespace com.db4odoc.f1.activating
 			// further down the hierarchy
 			Db4o.Configure().ObjectClass(typeof(SensorPanel)).MaximumActivationDepth(2);
 
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Console.WriteLine("Maximum activation depth = 2 (default = 5)");
@@ -183,11 +191,12 @@ namespace com.db4odoc.f1.activating
 			}
 		
 		}
+		// end TestMaxActivate
 	
 		public static void TestActivateDeactivate()
 		{
 			StoreSensorPanel();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			db.Ext().Configure().ActivationDepth(0);
 			try 
 			{
@@ -225,6 +234,7 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			}
 		}
+		// end TestActivateDeactivate
 	
 		public static void TestActivated(SensorPanel sensor)
 		{
@@ -235,11 +245,12 @@ namespace com.db4odoc.f1.activating
 				Console.WriteLine(next);
 			} while (next != null);
 		}
+		// end TestActivated
 	
 		public static void StoreCollection()
 		{
-			File.Delete(Util.YapFileName);    
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);    
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				IList list = db.Ext().Collections().NewLinkedList(); 
@@ -255,11 +266,12 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			}
 		}
+		// end StoreCollection
 	
 		public static void TestCollectionDef()
 		{
 			StoreCollection();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			db.Ext().Configure().ActivationDepth(5);
 			try 
 			{
@@ -276,12 +288,13 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			} 
 		}
+		// end TestCollectionDef
 	
 
 		public static void TestCollectionActivation()
 		{
 			StoreCollection();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			db.Ext().Configure().ActivationDepth(0);
 			try 
 			{
@@ -301,6 +314,16 @@ namespace com.db4odoc.f1.activating
 				db.Close();
 			} 
 		}
+		// end TestCollectionActivation
 		
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

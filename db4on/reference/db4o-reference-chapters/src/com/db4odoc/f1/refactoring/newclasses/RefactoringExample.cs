@@ -7,27 +7,28 @@ using com.db4o.ext;
 
 namespace com.db4odoc.f1.refactoring.newclasses
 {
-	public class RefactoringExample: Util
+	public class RefactoringExample
 	{
+		public readonly static string YapFileName = "formula1.yap";
 	
-		public static void main(string[] args) 
+		public static void Main(string[] args) 
 		{
 			ReopenDB();
 			TransferValues();
 		}
+		// end Main
 
 		public static void ReopenDB()
 		{
 			Db4o.Configure().DetectSchemaChanges(false);
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			oc.Close();
 		}
+		// end ReopenDB
 
-
-		
 		public static void TransferValues()
 		{
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				StoredClass sc = oc.Ext().StoredClass(typeof(Pilot));
@@ -50,5 +51,6 @@ namespace com.db4odoc.f1.refactoring.newclasses
 				oc.Close();
 			}
 		}
+		// end TransferValues
 	}
 }

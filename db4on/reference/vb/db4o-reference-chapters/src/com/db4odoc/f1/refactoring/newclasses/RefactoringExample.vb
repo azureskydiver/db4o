@@ -7,23 +7,23 @@ Imports com.db4o.ext
 
 Namespace com.db4odoc.f1.refactoring.Newclasses
     Public Class RefactoringExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared Sub Main(ByVal args() As String)
             ReopenDB()
             TransferValues()
         End Sub
+        ' end Main
 
         Public Shared Sub ReopenDB()
             Db4o.Configure().DetectSchemaChanges(False)
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             oc.Close()
         End Sub
-
-
+        ' end ReopenDB
 
         Public Shared Sub TransferValues()
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim sc As StoredClass = oc.Ext().StoredClass(GetType(Pilot))
                 System.Console.WriteLine("Stored class:  " + sc.GetName())
@@ -43,5 +43,6 @@ Namespace com.db4odoc.f1.refactoring.Newclasses
                 oc.Close()
             End Try
         End Sub
+        ' end TransferValues
     End Class
 End Namespace

@@ -6,19 +6,22 @@ using com.db4o.ext;
 
 namespace com.db4odoc.f1.metainf
 {
-	public class MetaInfExample: Util 
+	public class MetaInfExample 
 	{
-		public static void main(String[] args) 
+		public readonly static string YapFileName = "formula1.yap";
+
+		public static void Main(String[] args) 
 		{
 			SetObjects();
 			GetMetaObjects();
 			GetMetaObjectsInfo();
 		}
+		// end Main
 
 		public static void SetObjects()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
@@ -31,10 +34,11 @@ namespace com.db4odoc.f1.metainf
 				oc.Close();
 			}
 		}
+		// end SetObjects
 		
 		public static void GetMetaObjects()
 		{
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				System.Console.WriteLine("Retrieve meta information for class: ");
@@ -53,10 +57,11 @@ namespace com.db4odoc.f1.metainf
 				oc.Close();
 			}
 		}
+		// end GetMetaObjects
 		
 		public static void GetMetaObjectsInfo()
 		{
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				System.Console.WriteLine("Retrieve meta information for field: ");
@@ -76,5 +81,6 @@ namespace com.db4odoc.f1.metainf
 				oc.Close();
 			}
 		}
+		// end GetMetaObjectsInfo
 	}
 }

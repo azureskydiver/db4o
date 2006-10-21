@@ -8,14 +8,17 @@ using com.db4o.foundation;
 
 namespace com.db4odoc.f1.uuids
 {
-	public class UUIDExample: Util
+	public class UUIDExample
 	{
-		public static void main(String[] args) 
+		public readonly static string YapFileName = "formula1.yap";
+
+		public static void Main(String[] args) 
 		{
 			TestChangeIdentity();
 			SetObjects();
 			TestGenerateUUID();
 		}
+		// end Main
 	
 		private static string PrintSignature(byte[] Signature)
 		{
@@ -26,11 +29,12 @@ namespace com.db4odoc.f1.uuids
 			}
 			return str;
 		}
+		// end PrintSignature
 
 		public static void TestChangeIdentity()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			Db4oDatabase db;
 			byte[] oldSignature;
 			byte[] newSignature;
@@ -45,7 +49,7 @@ namespace com.db4odoc.f1.uuids
 			{
 				oc.Close();
 			}        
-			oc = Db4o.OpenFile(Util.YapFileName);
+			oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				db = oc.Ext().Identity();
@@ -76,12 +80,13 @@ namespace com.db4odoc.f1.uuids
 				Console.WriteLine("Database signatures are different");
 			}
 		}
+		// end TestChangeIdentity
 
 		public static void SetObjects()
 		{
 			Db4o.Configure().ObjectClass(typeof(Pilot)).GenerateUUIDs(true);
-			File.Delete(Util.YapFileName);
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
@@ -92,9 +97,11 @@ namespace com.db4odoc.f1.uuids
 				oc.Close();
 			}
 		}
+		// end SetObjects
+
 		public static void TestGenerateUUID()
 		{
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Query query = oc.Query();
@@ -122,5 +129,6 @@ namespace com.db4odoc.f1.uuids
 				oc.Close();
 			}        
 		}
+		// end TestGenerateUUID
 	}
 }

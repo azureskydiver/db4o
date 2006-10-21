@@ -3,15 +3,18 @@ using System.IO;
 using com.db4odoc.f1;
 using com.db4o;
 using com.db4o.query;
+using System.Drawing;
 
 namespace com.db4odoc.f1.staticfields
 {
-	public class StaticFieldExample : Util
+	public class StaticFieldExample
 	{
+		public readonly static string YapFileName = "formula1.yap";
+
 		public StaticFieldExample()
 		{
 		}
-		public static void main(String[] args) 
+		public static void Main(String[] args) 
 		{
 			SetPilotsSimple();
 			CheckPilots();
@@ -22,15 +25,30 @@ namespace com.db4odoc.f1.staticfields
 			UpdatePilotCategories();
 			CheckPilots();
 			DeleteTest();
-
 		}
-	
-    
+		// end Main
+
+		public static void SetCar()
+		{
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
+			try 
+			{
+				Car car = new Car();
+				car._color = Color.Green;
+				db.Set(car);
+			} 
+			finally 
+			{
+				db.Close();
+			}
+		}
+		// end SetCar
+
 		public static void SetPilotsSimple()
 		{
 			Console.WriteLine("In the default setting, static constants are not continously stored and updated.");
-			File.Delete(Util.YapFileName);
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try 
 			{
 				db.Set(new Pilot("Michael Schumacher",PilotCategories.WINNER));
@@ -41,13 +59,14 @@ namespace com.db4odoc.f1.staticfields
 				db.Close();
 			}
 		}
+		// end SetPilotsSimple
 	
 		public static void SetPilotsStatic()
 		{
 			Console.WriteLine("The feature can be turned on for individual classes.");
 			Db4o.Configure().ObjectClass(typeof(PilotCategories)).PersistStaticFieldValues();
-			File.Delete(Util.YapFileName);
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try 
 			{
 				db.Set(new Pilot("Michael Schumacher",PilotCategories.WINNER));
@@ -58,10 +77,11 @@ namespace com.db4odoc.f1.staticfields
 				db.Close();
 			}
 		}
+		// end SetPilotsStatic
 	
 		public static void CheckPilots()
 		{
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(typeof(Pilot));
@@ -87,11 +107,12 @@ namespace com.db4odoc.f1.staticfields
 				db.Close();
 			}
 		}
+		// end CheckPilots
 	
 		public static void UpdatePilots()
 		{
 			Console.WriteLine("Updating PilotCategory in pilot reference:");
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(typeof(Pilot));
@@ -113,11 +134,12 @@ namespace com.db4odoc.f1.staticfields
 			}
 			PrintCategories();
 		}
+		// end UpdatePilots
 	
 		public static void UpdatePilotCategories()
 		{
 			Console.WriteLine("Updating PilotCategories explicitly:");
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(typeof(PilotCategories));
@@ -137,10 +159,11 @@ namespace com.db4odoc.f1.staticfields
 			}
 			PrintCategories();
 		}
+		// end UpdatePilotCategories
 	
 		public static void DeleteTest()
 		{
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			db.Ext().Configure().ObjectClass(typeof(Pilot)).CascadeOnDelete(true);
 			try 
 			{
@@ -165,10 +188,11 @@ namespace com.db4odoc.f1.staticfields
 				db.Close();
 			}
 		}
+		// end DeleteTest
 	
 		public static void PrintCategories()
 		{
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet  result = db.Get(typeof(PilotCategories));
@@ -184,11 +208,12 @@ namespace com.db4odoc.f1.staticfields
 				db.Close();
 			}
 		}
+		// end PrintCategories
 	
 		public static void DeletePilotCategories()
 		{
 			PrintCategories();
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet  result = db.Get(typeof(PilotCategories));
@@ -204,5 +229,6 @@ namespace com.db4odoc.f1.staticfields
 			}
 			PrintCategories();
 		}
+		// end DeletePilotCategories
 	}
 }

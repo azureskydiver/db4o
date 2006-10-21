@@ -5,10 +5,12 @@ using com.db4o.query;
 
 namespace com.db4odoc.f1.indexes
 {	
-	public class IndexedExample: Util {
-		
-		public static void noIndex() {
-    		ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+	public class IndexedExample
+	{
+		public readonly static string YapFileName = "formula1.yap";	
+
+		public static void NoIndex() {
+    		ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
     			Query query = db.Query();
 				query.Constrain(typeof(Car));
@@ -26,10 +28,11 @@ namespace com.db4odoc.f1.indexes
 				db.Close();
 			}
 		}
+		// end NoIndex
 	    
-		public static void fillUpDB(){
-			File.Delete(Util.YapFileName);
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+		public static void FillUpDB(){
+			File.Delete(YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
         		for (int i=0; i<10000;i++){
     				AddCar(db,i);
@@ -39,11 +42,12 @@ namespace com.db4odoc.f1.indexes
 				db.Close();
 			}
 		}
+		// end FillUpDB
 	  
-		public static void pilotIndex() {
+		public static void PilotIndex() {
     		Db4o.Configure().ObjectClass(typeof(Car)).ObjectField("_pilot").Indexed(true);
     		Db4o.Configure().ObjectClass(typeof(Pilot)).ObjectField("_points").Indexed(false);
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
     			Query query = db.Query();
 				query.Constrain(typeof(Car));
@@ -61,11 +65,12 @@ namespace com.db4odoc.f1.indexes
 				db.Close();
 			}
 		}
+		// end PilotIndex
 	   
-		public static void pointsIndex() {
+		public static void PointsIndex() {
     		Db4o.Configure().ObjectClass(typeof(Car)).ObjectField("_pilot").Indexed(false);
     		Db4o.Configure().ObjectClass(typeof(Pilot)).ObjectField("_points").Indexed(true);
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
     			Query query = db.Query();
 				query.Constrain(typeof(Car));
@@ -83,12 +88,12 @@ namespace com.db4odoc.f1.indexes
 				db.Close();
 			}
 		}
+	    // end PointsIndex
 	    
-	    
-		public static void fullIndex() {
+		public static void FullIndex() {
     		Db4o.Configure().ObjectClass(typeof(Car)).ObjectField("_pilot").Indexed(true);
     		Db4o.Configure().ObjectClass(typeof(Pilot)).ObjectField("_points").Indexed(true);
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
     			Query query = db.Query();
 				query.Constrain(typeof(Car));
@@ -106,7 +111,7 @@ namespace com.db4odoc.f1.indexes
 				db.Close();
 			}
 		}
-
+		// end FullIndex
 	    
 		private static void AddCar(ObjectContainer db, int points)
 		{
@@ -114,7 +119,16 @@ namespace com.db4odoc.f1.indexes
 			car.Pilot= new Pilot("Tester", points);
 			db.Set(car);
 		}
+		// end AddCar
 	    
-	    
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

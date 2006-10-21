@@ -11,24 +11,27 @@ using System.IO;
 
 namespace com.db4odoc.f1.reflections
 {
-	public class ReflectorExample: Util
+	public class ReflectorExample
 	{
+		public readonly static string YapFileName = "formula1.yap";
+
 		public ReflectorExample()
 		{
 		}
 
-		public void main()
+		public void Main()
 		{
-			setCars();
-			getReflectorInfo();
-			getCars();
-			getCarInfo();
+			SetCars();
+			GetReflectorInfo();
+			GetCars();
+			GetCarInfo();
 		}
+		// end Main
 
-		public void setCars()
+		public void SetCars()
 		{
-			File.Delete(Util.YapFileName);     
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);     
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Car car1 = new Car("BMW");
@@ -47,10 +50,11 @@ namespace com.db4odoc.f1.reflections
 				db.Close();
 			}
 		}
+		// end SetCars
 		
-		public  void getCars()
+		public  void GetCars()
 		{
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Query query = db.Query();
@@ -68,10 +72,11 @@ namespace com.db4odoc.f1.reflections
 				db.Close();
 			}
 		}
+		// end GetCars
 		
-		public  void getCarInfo()
+		public  void GetCarInfo()
 		{
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(new Car("BMW"));
@@ -106,9 +111,11 @@ namespace com.db4odoc.f1.reflections
 				db.Close();
 			}
 		}
-		public  void getReflectorInfo()
+		// end GetCarInfo
+
+		public  void GetReflectorInfo()
 		{
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Console.WriteLine("Reflector in use: " + db.Ext().Reflector());
@@ -126,12 +133,13 @@ namespace com.db4odoc.f1.reflections
 				db.Close();
 			}
 		}
+		// end GetReflectorInfo
 		
-		public  void testReflector()
+		public  void TestReflector()
 		{
 			LoggingReflector logger = new LoggingReflector();
 			Db4o.Configure().ReflectWith(logger);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Car car = new Car("BMW");
@@ -143,5 +151,16 @@ namespace com.db4odoc.f1.reflections
 				db.Close();
 			}
 		}
+		// end TestReflector
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

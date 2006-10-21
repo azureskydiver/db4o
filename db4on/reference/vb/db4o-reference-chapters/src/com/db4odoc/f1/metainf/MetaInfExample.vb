@@ -6,17 +6,20 @@ Imports com.db4o
 Imports com.db4o.ext
 
 Namespace com.db4odoc.f1.metainf
+
     Public Class MetaInfExample
-        Inherits Util
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+
+        Public Shared Sub Main(ByVal args() As String)
             SetObjects()
             GetMetaObjects()
             GetMetaObjectsInfo()
         End Sub
+        ' end Main
 
         Public Shared Sub SetObjects()
-            File.Delete(Util.YapFileName)
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 oc.Set(car)
@@ -26,9 +29,10 @@ Namespace com.db4odoc.f1.metainf
                 oc.Close()
             End Try
         End Sub
+        ' end SetObjects
 
         Public Shared Sub GetMetaObjects()
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 System.Console.WriteLine("Retrieve meta information for class: ")
                 Dim sc As StoredClass = oc.Ext().StoredClass(GetType(Car))
@@ -44,9 +48,10 @@ Namespace com.db4odoc.f1.metainf
                 oc.Close()
             End Try
         End Sub
+        ' end GetMetaObjects
 
         Public Shared Sub GetMetaObjectsInfo()
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 System.Console.WriteLine("Retrieve meta information for field: ")
                 Dim sc As StoredClass = oc.Ext().StoredClass(GetType(Car))
@@ -63,5 +68,6 @@ Namespace com.db4odoc.f1.metainf
                 oc.Close()
             End Try
         End Sub
+        ' end GetMetaObjectsInfo
     End Class
 End Namespace

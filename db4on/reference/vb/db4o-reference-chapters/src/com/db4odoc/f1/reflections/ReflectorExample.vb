@@ -11,22 +11,23 @@ Imports System.IO
 
 Namespace com.db4odoc.f1.reflections
     Public Class ReflectorExample
-        Inherits com.db4odoc.f1.Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
         
         Public Sub New()
 
         End Sub
 
-        Public Sub main()
+        Public Sub Main()
             setCars()
             getReflectorInfo()
             getCars()
             getCarInfo()
         End Sub
+        ' end Main
 
-        Public Sub setCars()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+        Public Sub SetCars()
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
@@ -42,9 +43,10 @@ Namespace com.db4odoc.f1.reflections
                 db.Close()
             End Try
         End Sub
+        ' end SetCars
 
-        Public Sub getCars()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+        Public Sub GetCars()
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim query As Query = db.Query()
                 query.Constrain(GetType(Car))
@@ -58,9 +60,10 @@ Namespace com.db4odoc.f1.reflections
                 db.Close()
             End Try
         End Sub
+        ' end GetCars
 
-        Public Sub getCarInfo()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+        Public Sub GetCarInfo()
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(New Car("BMW"))
                 If result.Size() < 1 Then
@@ -93,10 +96,11 @@ Namespace com.db4odoc.f1.reflections
                 db.Close()
             End Try
         End Sub
+        ' end GetCarInfo
 
-        Public Sub getReflectorInfo()
+        Public Sub GetReflectorInfo()
 
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim ref As Reflector
                 ref = db.Ext().Reflector()
@@ -116,11 +120,12 @@ Namespace com.db4odoc.f1.reflections
                 db.Close()
             End Try
         End Sub
+        ' end GetReflectorInfo
 
-        Public Sub testReflector()
+        Public Sub TestReflector()
             Dim logger As LoggingReflector = New LoggingReflector()
             Db4o.Configure().ReflectWith(logger)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW")
                 Dim rc As ReflectClass
@@ -130,6 +135,16 @@ Namespace com.db4odoc.f1.reflections
                 db.Close()
             End Try
         End Sub
+        ' end TestReflector
+
+        Public Shared Sub ListResult(ByVal result As ObjectSet)
+            Console.WriteLine(result.Count)
+            For Each item As Object In result
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListResult
+
     End Class
 End Namespace
 

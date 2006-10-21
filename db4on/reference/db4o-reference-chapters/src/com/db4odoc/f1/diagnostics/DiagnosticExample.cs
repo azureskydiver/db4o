@@ -3,18 +3,19 @@
 using com.db4o;
 using com.db4o.query;
 using com.db4o.diagnostic;
-using com.db4odoc.f1.evaluations;
 using System;
 using System.IO;
 
 namespace com.db4odoc.f1.diagnostics
 {
-	public class DiagnosticExample : Util
+	public class DiagnosticExample 
 	{
+		public readonly static string YapFileName = "formula1.yap";
+
 		 public static void TestEmpty() {
     		Db4o.Configure().Diagnostic().AddListener(new DiagnosticToConsole());
-			File.Delete(Util.YapFileName);    
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);    
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
         		SetEmptyObject(db);
 			}
@@ -22,16 +23,18 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end TestEmpty
 	    
 		private static void SetEmptyObject(ObjectContainer db){
     		Empty empty = new Empty();
 			db.Set(empty);
 		}
+		// end SetEmptyObject
 	    	
 		public static void TestArbitrary() {
     		Db4o.Configure().Diagnostic().AddListener(new DiagnosticToConsole());
-    		File.Delete(Util.YapFileName);    
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+    		File.Delete(YapFileName);    
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
         		Pilot pilot = new Pilot("Rubens Barrichello",99);
         		db.Set(pilot);
@@ -41,19 +44,21 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end TestArbitrary
 		
 		private static void QueryPilot(ObjectContainer db){
     		int[]  i = new int[]{19,100};
     		ObjectSet result = db.Query(new ArbitraryQuery(i));
     		ListResult(result);
 		}
+		// end QueryPilot
 
 		public static void TestIndexDiagnostics() {
     		Db4o.Configure().Diagnostic().RemoveAllListeners();
     		Db4o.Configure().Diagnostic().AddListener(new IndexDiagListener());
     		Db4o.Configure().UpdateDepth(3);
-			File.Delete(Util.YapFileName);    
-			ObjectContainer db=Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);    
+			ObjectContainer db=Db4o.OpenFile(YapFileName);
 			try {
         		Pilot pilot1 = new Pilot("Rubens Barrichello",99);
         		db.Set(pilot1);
@@ -71,6 +76,7 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end TestIndexDiagnostics
 	     
 		public static void TestTranslatorDiagnostics() {
     		StoreTranslatedCars();
@@ -79,12 +85,13 @@ namespace com.db4odoc.f1.diagnostics
     		RetrieveTranslatedCarsNQUnopt();
     		RetrieveTranslatedCarsSODAEv();
 		}
+		// end TestTranslatorDiagnostics
 	    
 		public static void StoreTranslatedCars() {
     		Db4o.Configure().ExceptionsOnNotStorable(true);
     		Db4o.Configure().ObjectClass(typeof(Car)).Translate(new CarTranslator());
     		Db4o.Configure().ObjectClass(typeof(Car)).CallConstructor(true);
-    		File.Delete(Util.YapFileName);    
+    		File.Delete(YapFileName);    
 			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try {
 				Car car1 = new Car("BMW");
@@ -100,6 +107,7 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end StoreTranslatedCars
 
 		public static void RetrieveTranslatedCars() {
     		Db4o.Configure().Diagnostic().RemoveAllListeners();
@@ -117,6 +125,7 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end RetrieveTranslatedCars
 
 		public static void RetrieveTranslatedCarsNQ() {
     		Db4o.Configure().Diagnostic().RemoveAllListeners();
@@ -132,6 +141,7 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end RetrieveTranslatedCarsNQ
 	    
 		public static void RetrieveTranslatedCarsNQUnopt() {
     		Db4o.Configure().OptimizeNativeQueries(false);
@@ -149,6 +159,7 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end RetrieveTranslatedCarsNQUnopt
 
 		public static void RetrieveTranslatedCarsSODAEv() {
     		Db4o.Configure().Diagnostic().RemoveAllListeners();
@@ -167,5 +178,16 @@ namespace com.db4odoc.f1.diagnostics
 				db.Close();
 			}
 		}
+		// end RetrieveTranslatedCarsSODAEv
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

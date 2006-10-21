@@ -4,12 +4,19 @@ Imports com.db4o
 
 Namespace com.db4odoc.f1.clientserver
     Public Class ClientServerExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+
+        Public Shared ReadOnly ServerPort As Integer = 56128
+
+        Public Shared ReadOnly ServerUser As String = "user"
+
+        Public Shared ReadOnly ServerPassword As String = "password"
+
         Public Shared Sub Main(ByVal args As String())
-            File.Delete(Util.YapFileName)
+            File.Delete(YapFileName)
             AccessLocalServer()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 SetFirstCar(db)
                 SetSecondCar(db)
@@ -17,7 +24,7 @@ Namespace com.db4odoc.f1.clientserver
                 db.Close()
             End Try
             ConfigureDb4o()
-            Dim server As ObjectServer = Db4oFactory.OpenServer(Util.YapFileName, 0)
+            Dim server As ObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
             Try
                 QueryLocalServer(server)
                 DemonstrateLocalReadCommitted(server)
@@ -26,7 +33,7 @@ Namespace com.db4odoc.f1.clientserver
                 server.Close()
             End Try
             AccessRemoteServer()
-            server = Db4oFactory.OpenServer(Util.YapFileName, ServerPort)
+            server = Db4oFactory.OpenServer(YapFileName, ServerPort)
             server.GrantAccess(ServerUser, ServerPassword)
             Try
                 QueryRemoteServer(ServerPort, ServerUser, ServerPassword)
@@ -36,6 +43,7 @@ Namespace com.db4odoc.f1.clientserver
                 server.Close()
             End Try
         End Sub
+        ' end Main
 
         Public Shared Sub SetFirstCar(ByVal db As ObjectContainer)
             Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
@@ -43,6 +51,7 @@ Namespace com.db4odoc.f1.clientserver
             car.Pilot = pilot
             db.[Set](car)
         End Sub
+        ' end SetFirstCar
 
         Public Shared Sub SetSecondCar(ByVal db As ObjectContainer)
             Dim pilot As Pilot = New Pilot("Michael Schumacher", 100)
@@ -50,9 +59,10 @@ Namespace com.db4odoc.f1.clientserver
             car.Pilot = pilot
             db.[Set](car)
         End Sub
+        ' end SetSecondCar
 
         Public Shared Sub AccessLocalServer()
-            Dim server As ObjectServer = Db4oFactory.OpenServer(Util.YapFileName, 0)
+            Dim server As ObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
             Try
                 Dim client As ObjectContainer = server.OpenClient()
                 ' Do something with this client, or open more clients
@@ -61,16 +71,19 @@ Namespace com.db4odoc.f1.clientserver
                 server.Close()
             End Try
         End Sub
+        ' end AccessLocalServer
 
         Public Shared Sub QueryLocalServer(ByVal server As ObjectServer)
             Dim client As ObjectContainer = server.OpenClient()
             ListResult(client.[Get](New Car(Nothing)))
             client.Close()
         End Sub
+        ' end QueryLocalServer
 
         Public Shared Sub ConfigureDb4o()
             Db4oFactory.Configure().ObjectClass(GetType(Car)).UpdateDepth(3)
         End Sub
+        ' end ConfigureDb4o
 
         Public Shared Sub DemonstrateLocalReadCommitted(ByVal server As ObjectServer)
             Dim client1 As ObjectContainer = server.OpenClient()
@@ -88,6 +101,7 @@ Namespace com.db4odoc.f1.clientserver
             client1.Close()
             client2.Close()
         End Sub
+        ' end DemonstrateLocalReadCommitted
 
         Public Shared Sub DemonstrateLocalRollback(ByVal server As ObjectServer)
             Dim client1 As ObjectContainer = server.OpenClient()
@@ -105,9 +119,10 @@ Namespace com.db4odoc.f1.clientserver
             client1.Close()
             client2.Close()
         End Sub
+        ' end DemonstrateLocalRollback
 
         Public Shared Sub AccessRemoteServer()
-            Dim server As ObjectServer = Db4oFactory.OpenServer(Util.YapFileName, ServerPort)
+            Dim server As ObjectServer = Db4oFactory.OpenServer(YapFileName, ServerPort)
             server.GrantAccess(ServerUser, ServerPassword)
             Try
                 Dim client As ObjectContainer = Db4oFactory.OpenClient("localhost", ServerPort, ServerUser, ServerPassword)
@@ -117,12 +132,14 @@ Namespace com.db4odoc.f1.clientserver
                 server.Close()
             End Try
         End Sub
+        ' end AccessRemoteServer
 
         Public Shared Sub QueryRemoteServer(ByVal port As Integer, ByVal user As String, ByVal password As String)
             Dim client As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
             ListResult(client.[Get](New Car(Nothing)))
             client.Close()
         End Sub
+        ' end QueryRemoteServer
 
         Public Shared Sub DemonstrateRemoteReadCommitted(ByVal port As Integer, ByVal user As String, ByVal password As String)
             Dim client1 As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
@@ -140,6 +157,7 @@ Namespace com.db4odoc.f1.clientserver
             client1.Close()
             client2.Close()
         End Sub
+        ' end DemonstrateRemoteReadCommitted
 
         Public Shared Sub DemonstrateRemoteRollback(ByVal port As Integer, ByVal user As String, ByVal password As String)
             Dim client1 As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
@@ -157,6 +175,24 @@ Namespace com.db4odoc.f1.clientserver
             client1.Close()
             client2.Close()
         End Sub
+        ' end DemonstrateRemoteRollback
+
+        Public Shared Sub ListResult(ByVal result As ObjectSet)
+            Console.WriteLine(result.Count)
+            For Each item As Object In result
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListResult
+
+        Public Shared Sub ListRefreshedResult(ByVal container As ObjectContainer, ByVal items As ObjectSet, ByVal depth As Integer)
+            Console.WriteLine(items.Count)
+            For Each item As Object In items
+                container.Ext().Refresh(item, depth)
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListRefreshedResult
 
     End Class
 End Namespace

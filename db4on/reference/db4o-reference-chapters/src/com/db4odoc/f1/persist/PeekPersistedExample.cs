@@ -6,17 +6,20 @@ using com.db4o;
 
 namespace com.db4odoc.f1.persist
 {
-	public class PeekPersistedExample: Util
+	public class PeekPersistedExample
 	{
-		public static void main(String[] args) 
+		public readonly static string YapFileName = "formula1.yap";
+
+		public static void Main(String[] args) 
 		{
 			MeasureCarTemperature();
 		}
+		// end Main
 		
 		public static void SetObjects()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Car car = new Car("BMW");
@@ -27,11 +30,12 @@ namespace com.db4odoc.f1.persist
 				db.Close();
 			}
 		}
+		// end SetObjects
 
 		public static void MeasureCarTemperature()
 		{
 			SetObjects();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(typeof(Car));
@@ -63,10 +67,11 @@ namespace com.db4odoc.f1.persist
 			}
 			ÑheckCar();
 		}
+		// end MeasureCarTemperature
 	
 		public static void ÑheckCar()
 		{
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = db.Get(typeof(Car));
@@ -77,5 +82,16 @@ namespace com.db4odoc.f1.persist
 				db.Close();
 			}
 		}
+		// end ÑheckCar
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }
