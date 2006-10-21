@@ -41,6 +41,11 @@ public class ArrayNOrderTestCase extends AbstractDb4oTestCase {
         db().set(new Data(strArr,objArr));
     }
 
+    /**
+     * Ignore this test on .net for now
+     * 
+     * @sharpen.rename _Test
+     */
     public void test() {
     	Data data = (Data)retrieveOnlyInstance(Data.class);
     	check(data);
