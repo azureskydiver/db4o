@@ -96,7 +96,7 @@ namespace com.db4o.test.nativequeries
 
 			public int Compare(Cat x, Cat y)
 			{
-				return y.name.CompareTo(x.name);
+				return x.name.CompareTo(y.name);
 			}
 		}
 
@@ -108,17 +108,9 @@ namespace com.db4o.test.nativequeries
 
 		public void TestGenericComparison()
 		{
-			System.Collections.Generic.IList<Cat> result = Tester.ObjectContainer().Query<Cat>(delegate(Cat candidate)
-																								   {
-																									   return true;
-																								   },
-																								delegate(Cat x, Cat y)
-																								{
-																									return
-																										y.name.
-																											CompareTo
-																											(x.name);
-																								});
+			System.Collections.Generic.IList<Cat> result = Tester.ObjectContainer().Query<Cat>(
+				delegate(Cat candidate) { return true; },
+				delegate(Cat x, Cat y) { return x.name.CompareTo(y.name); });
 			AssertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
 		}
 
