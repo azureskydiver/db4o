@@ -6,6 +6,8 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 
 /**
+ * Encapsulates services involving source and target database files during defragmenting.
+ * 
  * @exclude
  */
 public interface DefragContext extends IDMapping {
