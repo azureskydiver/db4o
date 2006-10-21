@@ -91,7 +91,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
 	public void defragIndexEntry(ReaderPair readers) {
-		readers.copyID(true);
+		readers.copyID(true,false);
         _valueHandler.defragIndexEntry(readers);
 	}
 }

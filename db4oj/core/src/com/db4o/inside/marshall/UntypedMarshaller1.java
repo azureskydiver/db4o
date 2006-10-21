@@ -161,7 +161,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         int linkOffSet = readers.offset();
         readers.offset(payLoadOffSet);
         
-        int yapClassID = readers.copyIDAndRetrieveMapping(false).orig();
+        int yapClassID = readers.copyIDAndRetrieveMapping().orig();
         
         YapClass yc = readers.context().yapClass(yapClassID);
         if(yc != null){

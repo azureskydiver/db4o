@@ -28,5 +28,4 @@ public interface ClassIndexStrategy {
 	void defragReference(YapClass yapClass,ReaderPair readers,int classIndexID);
 	int id();
 	void defragIndex(ReaderPair readers);
-	void defragIndexNode(ReaderPair readers);
 }
