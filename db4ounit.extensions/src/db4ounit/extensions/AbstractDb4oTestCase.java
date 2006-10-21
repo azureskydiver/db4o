@@ -154,4 +154,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		Assert.areEqual(1,result.size());
 		return result.next();
 	}
+	
+	protected final void store(Object obj) {
+		db().set(obj);
+	}
+
 }
