@@ -134,8 +134,8 @@ public abstract class YapFile extends YapStream {
         return new BTree(i_trans, id, new YInt(this));
     }
 
-    public final QueryResult newQueryResult(Transaction a_ta) {
-        return new IdListQueryResult(a_ta);
+    public final QueryResult newQueryResult(Transaction trans) {
+    	return new IdListQueryResult(trans);
     }
 
     public final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {

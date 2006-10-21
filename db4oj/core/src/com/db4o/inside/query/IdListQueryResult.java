@@ -14,20 +14,19 @@ import com.db4o.reflect.*;
  */
 public class IdListQueryResult extends IntArrayList implements Visitor4, QueryResult {
     
-	private Tree i_candidates;
-	private boolean i_checkDuplicates;
-    
-	private final Transaction i_trans;
+	private final Transaction _transaction;
 	
-//	private final IntArrayList _ids = new IntArrayList();
-
+	private Tree _candidates;
+	
+	private boolean _checkDuplicates;
+    
 	public IdListQueryResult(Transaction a_trans) {
-		i_trans = a_trans;
+		_transaction = a_trans;
 	}
     
     protected IdListQueryResult(Transaction trans, int initialSize){
         super(initialSize);
-        i_trans = trans;
+        _transaction = trans;
     }
     
     public IntIterator4 iterateIDs() {
@@ -64,17 +63,17 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 
 	public final Object activate(Object obj){
 		YapStream stream = stream();
-		stream.activate1(i_trans, obj, stream.configImpl().activationDepth());
+		stream.activate1(_transaction, obj, stream.configImpl().activationDepth());
 		return obj;
 	}
     
     private final Object activatedObject(int id){
         YapStream stream = stream();
-        Object ret = stream.getActivatedObjectFromCache(i_trans, id);
+        Object ret = stream.getActivatedObjectFromCache(_transaction, id);
         if(ret != null){
             return ret;
         }
-        return stream.readActivatedObjectNotInCache(i_trans, id);
+        return stream.readActivatedObjectNotInCache(_transaction, id);
     }
     
     /* (non-Javadoc)
@@ -90,7 +89,7 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
     }
 
 	public final void checkDuplicates(){
-		i_checkDuplicates = true;
+		_checkDuplicates = true;
 	}
 
 	public void visit(Object a_tree) {
@@ -101,9 +100,9 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 	}
 	
 	public void addKeyCheckDuplicates(int a_key){
-	    if(i_checkDuplicates){
+	    if(_checkDuplicates){
 	        TreeInt newNode = new TreeInt(a_key);
-	        i_candidates = Tree.add(i_candidates, newNode);
+	        _candidates = Tree.add(_candidates, newNode);
 	        if(newNode._size == 0){
 	            return;
 	        }
@@ -125,7 +124,7 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 	}
 
 	public YapStream stream() {
-		return i_trans.stream();
+		return _transaction.stream();
 	}
 
     public ExtObjectContainer objectContainer() {
@@ -168,7 +167,7 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 
 	public void loadFromClassIndex(YapClass clazz) {
 		final ClassIndexStrategy index = clazz.index();
-		index.traverseAll(i_trans, new Visitor4() {
+		index.traverseAll(_transaction, new Visitor4() {
 			public void visit(Object a_object) {
 				add(((Integer)a_object).intValue());
 			}
@@ -191,7 +190,7 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 				if (claxx == null
 						|| !(stream().i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
 					final ClassIndexStrategy index = yapClass.index();
-					index.traverseAll(i_trans, new Visitor4() {
+					index.traverseAll(_transaction, new Visitor4() {
 						public void visit(Object obj) {
 							int id = ((Integer)obj).intValue();
 							TreeInt newNode = new TreeInt(id);
