@@ -4,29 +4,31 @@ using com.db4o;
 
 namespace com.db4odoc.f1.clientserver
 {
-	public class DeepExample : Util
+	public class DeepExample
     {
+		public readonly static string YapFileName = "formula1.yap";
+
         public static void Main(string[] args)
         {
-            File.Delete(Util.YapFileName);
-            ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+            File.Delete(YapFileName);
+            ObjectContainer db = Db4o.OpenFile(YapFileName);
             try
             {
                 StoreCar(db);
                 db.Close();
                 SetCascadeOnUpdate();
-                db = Db4o.OpenFile(Util.YapFileName);
+                db = Db4o.OpenFile(YapFileName);
                 TakeManySnapshots(db);
                 db.Close();
-                db = Db4o.OpenFile(Util.YapFileName);
+                db = Db4o.OpenFile(YapFileName);
                 RetrieveAllSnapshots(db);
                 db.Close();
-                db = Db4o.OpenFile(Util.YapFileName);
+                db = Db4o.OpenFile(YapFileName);
                 RetrieveSnapshotsSequentially(db);
                 RetrieveSnapshotsSequentiallyImproved(db);
                 db.Close();
                 SetActivationDepth();
-                db = Db4o.OpenFile(Util.YapFileName);
+                db = Db4o.OpenFile(YapFileName);
                 RetrieveSnapshotsSequentially(db);
             }
             finally
@@ -34,6 +36,7 @@ namespace com.db4odoc.f1.clientserver
                 db.Close();
             }
         }
+		// end Main
         
         public static void StoreCar(ObjectContainer db)
         {
@@ -42,11 +45,13 @@ namespace com.db4odoc.f1.clientserver
             car.Pilot = pilot;
             db.Set(car);
         }
+		// end StoreCar
         
         public static void SetCascadeOnUpdate()
         {
             Db4o.Configure().ObjectClass(typeof(Car)).CascadeOnUpdate(true);
         }
+		// end SetCascadeOnUpdate
         
         public static void TakeManySnapshots(ObjectContainer db)
         {
@@ -58,6 +63,7 @@ namespace com.db4odoc.f1.clientserver
             }
             db.Set(car);
         }
+		// end TakeManySnapshots
         
         public static void RetrieveAllSnapshots(ObjectContainer db)
         {
@@ -67,6 +73,7 @@ namespace com.db4odoc.f1.clientserver
                 Console.WriteLine(result.Next());
             }
         }
+		// end RetrieveAllSnapshots
         
         public static void RetrieveSnapshotsSequentially(ObjectContainer db)
         {
@@ -79,6 +86,7 @@ namespace com.db4odoc.f1.clientserver
                 readout = readout.Next;
             }
         }
+		// end RetrieveSnapshotsSequentially
         
         public static void RetrieveSnapshotsSequentiallyImproved(ObjectContainer db)
         {
@@ -92,12 +100,13 @@ namespace com.db4odoc.f1.clientserver
                 readout = readout.Next;
             }
         }
+		// end RetrieveSnapshotsSequentiallyImproved
         
         public static void SetActivationDepth()
         {
             Db4o.Configure().ObjectClass(typeof(TemperatureSensorReadout))
                 .CascadeOnActivate(true);
         }
-        
+		// end SetActivationDepth        
     }
 }

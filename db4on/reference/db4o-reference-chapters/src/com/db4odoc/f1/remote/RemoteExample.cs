@@ -6,22 +6,23 @@ using com.db4o.messaging;
 
 namespace com.db4odoc.f1.remote 
 {
-	public class RemoteExample : Util 
+	public class RemoteExample 
 	{
+		public readonly static string YapFileName = "formula1.yap";
 
-		public static void main(string[] args) 
+		public static void Main(string[] args) 
 		{
 			SetObjects();
 			UpdateCars();
 			SetObjects();
 			UpdateCarsWithMessage();
-	
 		}
+		// end Main
 
 		public static void SetObjects()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				for (int i = 0; i < 5; i++) 
@@ -37,13 +38,13 @@ namespace com.db4odoc.f1.remote
 			}
 			CheckCars();
 		}
-	
+		// end SetObjects
 	
 		public static void UpdateCars()
 		{
 			// triggering mass updates with a singleton
 			// complete server-side execution
-			ObjectServer server=Db4o.OpenServer(Util.YapFileName,0);
+			ObjectServer server=Db4o.OpenServer(YapFileName,0);
 			try 
 			{
 				ObjectContainer client=server.OpenClient();
@@ -59,10 +60,11 @@ namespace com.db4odoc.f1.remote
 			}
 			CheckCars();
 		}
+		// end UpdateCars
 	
 		private static void CheckCars()
 		{
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Query q = db.Query();
@@ -75,10 +77,11 @@ namespace com.db4odoc.f1.remote
 				db.Close();
 			}
 		}
+		// end CheckCars
 	
 		public static void UpdateCarsWithMessage() 
 		{
-			ObjectServer server=Db4o.OpenServer(Util.YapFileName,0);
+			ObjectServer server=Db4o.OpenServer(YapFileName,0);
 			// create message handler on the server
 			server.Ext().Configure().SetMessageRecipient(
 				new UpdateMessageRecipient());
@@ -96,7 +99,20 @@ namespace com.db4odoc.f1.remote
 			}
 			CheckCars();
 		}
+		// end UpdateCarsWithMessage
+
+		public static void ListResult(ObjectSet result)
+		{
+			System.Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				System.Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
+
+
 	public class UpdateEvaluation : Evaluation
 	{ 
 
@@ -116,7 +132,9 @@ namespace com.db4odoc.f1.remote
 			}
 			objectContainer.Commit();
 		}
+		// end Evaluate
 	}
+
 	public class UpdateMessageRecipient: MessageRecipient
 	{
 		public void ProcessMessage(ObjectContainer objectContainer,object message) 
@@ -136,5 +154,6 @@ namespace com.db4odoc.f1.remote
 				objectContainer.Commit();
 			}
 		}
+		// end ProcessMessage
 	}
 }

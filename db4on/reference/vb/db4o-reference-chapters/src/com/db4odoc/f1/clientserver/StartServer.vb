@@ -29,6 +29,7 @@ Namespace com.db4odoc.f1.clientserver
             Dim server As New StartServer
             server.RunServer()
         End Sub
+        ' end Main
 
         ''' <summary>
         ''' opens the ObjectServer, and waits forever until Close() is called
@@ -52,6 +53,7 @@ Namespace com.db4odoc.f1.clientserver
                 db4oServer.Close()
             End SyncLock
         End Sub
+        ' end RunServer
 
         ''' <summary>
         ''' messaging callback
@@ -62,6 +64,7 @@ Namespace com.db4odoc.f1.clientserver
                 Close()
             End If
         End Sub
+        ' end ProcessMessage
 
         ''' <summary>
         ''' closes this server.
@@ -72,6 +75,6 @@ Namespace com.db4odoc.f1.clientserver
                 Monitor.PulseAll(Me)
             End SyncLock
         End Sub
-
+        ' end Close
     End Class
 End Namespace

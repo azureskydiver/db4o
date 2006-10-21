@@ -4,10 +4,11 @@ Imports com.db4o
 
 Namespace com.db4odoc.f1.evaluations
     Public Class EvaluationExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+
         Public Shared Sub Main(ByVal args As String())
-            File.Delete(Util.YapFileName)
-            Dim db As Global.com.db4o.ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As Global.com.db4o.ObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 StoreCars(db)
                 QueryWithEvaluation(db)
@@ -15,6 +16,7 @@ Namespace com.db4odoc.f1.evaluations
                 db.Close()
             End Try
         End Sub
+        ' end Main
 
         Public Shared Sub StoreCars(ByVal db As ObjectContainer)
             Dim pilot1 As evaluations.Pilot = New evaluations.Pilot("Michael Schumacher", 100)
@@ -29,6 +31,7 @@ Namespace com.db4odoc.f1.evaluations
             car2.Snapshot()
             db.[Set](car2)
         End Sub
+        ' end StoreCars
 
         Public Shared Sub QueryWithEvaluation(ByVal db As ObjectContainer)
             Dim query As Query = db.Query()
@@ -37,6 +40,6 @@ Namespace com.db4odoc.f1.evaluations
             Dim result As ObjectSet = query.Execute()
             Util.ListResult(result)
         End Sub
-
+        ' end QueryWithEvaluation
     End Class
 End Namespace

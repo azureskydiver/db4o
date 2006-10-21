@@ -6,14 +6,16 @@ Imports com.db4o
 
 Namespace com.db4odoc.f1.persist
     Public Class PeekPersistedExample
-        Inherits Util
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+
+        Public Shared Sub Main(ByVal args() As String)
             MeasureCarTemperature()
         End Sub
+        ' end Main
 
         Public Shared Sub SetObjects()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW")
                 db.Set(car)
@@ -21,10 +23,11 @@ Namespace com.db4odoc.f1.persist
                 db.Close()
             End Try
         End Sub
+        ' end SetObjects
 
         Public Shared Sub MeasureCarTemperature()
             SetObjects()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(Car))
                 If result.Size() > 0 Then
@@ -52,9 +55,10 @@ Namespace com.db4odoc.f1.persist
             End Try
             ÑheckCar()
         End Sub
+        ' end MeasureCarTemperature
 
         Public Shared Sub ÑheckCar()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(Car))
                 ListResult(result)
@@ -62,6 +66,15 @@ Namespace com.db4odoc.f1.persist
                 db.Close()
             End Try
         End Sub
+        ' end ÑheckCar
+
+        Public Shared Sub ListResult(ByVal result As ObjectSet)
+            Console.WriteLine(result.Count)
+            For Each item As Object In result
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListResult
     End Class
 End Namespace
 

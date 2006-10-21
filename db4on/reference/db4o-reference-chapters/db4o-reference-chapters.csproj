@@ -84,6 +84,11 @@
                     AssemblyName = "db4o"
                     HintPath = "..\..\core\obj\Debug\db4o.dll"
                 />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -100,6 +105,11 @@
                 />
                 <File
                     RelPath = "src\com\db4odoc\f1\activating\SensorPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\attributes\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -179,6 +189,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\constructors\C1.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\constructors\C2.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\constructors\C3.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\constructors\C4.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\debugging\DebugExample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -189,7 +219,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\diagnostics\Car.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\diagnostics\CarEvaluation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\diagnostics\CarTranslator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -214,7 +254,52 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\diagnostics\Pilot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\diagnostics\SensorReadout.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\diagnostics\TranslatorDiagListener.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\enums\Door.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\enums\DoorState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\enums\DoorStateInit.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\enums\DoorStateReal.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\enums\DoorStateUninit.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\enums\EnumExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\enums\EnumSODAExample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -329,6 +414,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\messaging\MessagingExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\messaging\MyClientServerMessage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\metainf\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -429,6 +524,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4odoc\f1\semaphores\ConnectedUser.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\semaphores\LimitLogins.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\semaphores\LockManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\semaphores\Singleton.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4odoc\f1\serialize\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -440,6 +555,11 @@
                 />
                 <File
                     RelPath = "src\com\db4odoc\f1\serialize\SerializeExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4odoc\f1\staticfields\Car.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

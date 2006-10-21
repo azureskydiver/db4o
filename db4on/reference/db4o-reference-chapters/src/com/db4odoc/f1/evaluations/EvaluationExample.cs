@@ -4,12 +4,14 @@ using com.db4o.query;
 
 namespace com.db4odoc.f1.evaluations
 {
-	public class EvaluationExample : Util
+	public class EvaluationExample 
 	{
+		public readonly static string YapFileName = "formula1.yap";
+
 		public static void Main(string[] args)
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try
 			{
 				StoreCars(db);
@@ -20,6 +22,7 @@ namespace com.db4odoc.f1.evaluations
 				db.Close();
 			}
 		}
+		// end Main
 
 		public static void StoreCars(ObjectContainer db)
 		{
@@ -35,6 +38,7 @@ namespace com.db4odoc.f1.evaluations
 			car2.Snapshot();
 			db.Set(car2);
 		}
+		// end StoreCars
 
 		public static void QueryWithEvaluation(ObjectContainer db)
 		{
@@ -42,7 +46,18 @@ namespace com.db4odoc.f1.evaluations
 			query.Constrain(typeof (Car));
 			query.Constrain(new EvenHistoryEvaluation());
 			ObjectSet result = query.Execute();
-			Util.ListResult(result);
+			ListResult(result);
 		}
+		// end QueryWithEvaluation
+
+		public static void ListResult(ObjectSet result)
+		{
+			System.Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				System.Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

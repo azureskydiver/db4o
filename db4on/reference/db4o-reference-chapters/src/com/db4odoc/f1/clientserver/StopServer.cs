@@ -43,5 +43,6 @@ namespace com.db4odoc.f1.clientserver
                 objectContainer.Close();
             }
         }
+		// end Main
     }
 }

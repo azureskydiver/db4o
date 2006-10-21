@@ -30,6 +30,7 @@ namespace com.db4odoc.f1.clientserver
         {
             new StartServer().RunServer();
         } 
+		// end Main
 
         /// <summary>
         /// opens the ObjectServer, and waits forever until Close() is called
@@ -60,6 +61,7 @@ namespace com.db4odoc.f1.clientserver
                 db4oServer.Close();
             }
         }
+		// end RunServer
 
         /// <summary>
         /// messaging callback
@@ -72,6 +74,7 @@ namespace com.db4odoc.f1.clientserver
                 Close();
             }
         }
+		// end ProcessMessage
 
         /// <summary>
         /// closes this server.
@@ -84,5 +87,6 @@ namespace com.db4odoc.f1.clientserver
                 Monitor.PulseAll(this);
             }
         }
+		// end Close
     }
 }

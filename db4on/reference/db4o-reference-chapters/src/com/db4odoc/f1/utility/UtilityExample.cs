@@ -8,17 +8,20 @@ namespace com.db4odoc.f1.utility
 {
 	public class UtilityExample
 	{
-		public static void main(String[] args) 
+		public readonly static string YapFileName = "formula1.yap";
+
+		public static void Main(String[] args) 
 		{
 			TestDescend();
 			CheckActive();
 			CheckStored();
 		}
+		// end Main
 
 		public static void StoreSensorPanel()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				// create a linked list with length 10
@@ -31,11 +34,12 @@ namespace com.db4odoc.f1.utility
 				db.Close();
 			}
 		}
+		// end StoreSensorPanel
 	
 		public static void TestDescend()
 		{
 			StoreSensorPanel();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				db.Ext().Configure().ActivationDepth(1);
@@ -51,11 +55,12 @@ namespace com.db4odoc.f1.utility
 				db.Close();
 			}
 		}
+		// end TestDescend
 	
 		public static void CheckActive()
 		{
 			StoreSensorPanel();
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				db.Ext().Configure().ActivationDepth(2);
@@ -74,13 +79,14 @@ namespace com.db4odoc.f1.utility
 				db.Close();
 			}
 		}
+		// end CheckActive
 	
 		public static void CheckStored()
 		{
 			// create a linked list with length 10
 			SensorPanel list = new SensorPanel().CreateList(10);
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				// store all elements with one statement, since all elements are new		
@@ -98,5 +104,6 @@ namespace com.db4odoc.f1.utility
 				db.Close();
 			}
 		}
+		// end CheckStored
 	}
 }

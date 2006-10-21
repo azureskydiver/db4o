@@ -8,16 +8,17 @@ Imports com.db4o.query
 Namespace com.db4odoc.f1.blobs
 
     Public Class BlobExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
         Public Shared Sub Main(ByVal args() As String)
             StoreCars()
             RetrieveCars()
         End Sub
+        ' end Main
 
         Public Shared Sub StoreCars()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car1 As Car = New Car("Ferrari")
                 db.Set(car1)
@@ -29,6 +30,7 @@ Namespace com.db4odoc.f1.blobs
                 db.Close()
             End Try
         End Sub
+        ' end StoreCars
 
         Public Shared Sub StoreImage(ByVal car As Car)
             Dim img As CarImage = car.CarImage
@@ -38,9 +40,10 @@ Namespace com.db4odoc.f1.blobs
                 Console.WriteLine(ex.Message)
             End Try
         End Sub
+        ' end StoreImage
 
         Public Shared Sub RetrieveCars()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim query As Query = db.Query()
                 query.Constrain(GetType(Car))
@@ -50,6 +53,7 @@ Namespace com.db4odoc.f1.blobs
                 db.Close()
             End Try
         End Sub
+        ' end RetrieveCars
 
         Private Shared Sub GetImages(ByVal result As ObjectSet)
             While result.hasNext()
@@ -63,6 +67,7 @@ Namespace com.db4odoc.f1.blobs
                 End Try
             End While
         End Sub
+        ' end GetImages
     End Class
 End Namespace
 

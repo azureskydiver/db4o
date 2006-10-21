@@ -7,26 +7,29 @@ using com.db4o.ext;
 
 namespace com.db4odoc.f1.clientserver
 {
-	public class ExtClientExample: Util
+	public class ExtClientExample
 	{
+		public readonly static string YapFileName = "formula1.yap";
+
 		public readonly static string ExtFileName ="formula1e.yap";
 	
-		public static void main(String[] args) 
+		public static void Main(String[] args) 
 		{
 			SwitchExtClients();
 		}
+		// end Main
 
 		public static void SwitchExtClients() 
 		{
-			File.Delete(Util.YapFileName);
+			File.Delete(YapFileName);
 			File.Delete(ExtFileName);
-			ObjectServer server=Db4o.OpenServer(Util.YapFileName,0);
+			ObjectServer server=Db4o.OpenServer(YapFileName,0);
 			try 
 			{
 				ObjectContainer client=server.OpenClient();
 				Car car = new Car("BMW");
 				client.Set(car);
-				System.Console.WriteLine("Objects in the main database file:");
+				System.Console.WriteLine("Objects in the Main database file:");
 				RetrieveAll(client);
 			
 				System.Console.WriteLine("Switching to additional database:");
@@ -45,5 +48,23 @@ namespace com.db4odoc.f1.clientserver
 				server.Close();
 			}
 		}
+		// end SwitchExtClients
+
+		public static void RetrieveAll(ObjectContainer db) 
+		{
+			ObjectSet result = db.Get(typeof(Object));
+			ListResult(result);
+		}
+		// end RetrieveAll
+
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

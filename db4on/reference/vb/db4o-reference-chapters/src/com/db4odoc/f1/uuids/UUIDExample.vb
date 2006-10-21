@@ -9,13 +9,14 @@ Imports com.db4o.ext
 
 Namespace com.db4odoc.f1.uuids
     Public Class UUIDExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared Sub Main(ByVal args() As String)
             TestChangeIdentity()
             SetObjects()
             TestGenerateUUID()
         End Sub
+        ' end Main
 
         Private Shared Function PrintSignature(ByVal Signature() As Byte) As String
             Dim str As String = ""
@@ -25,11 +26,12 @@ Namespace com.db4odoc.f1.uuids
             Next
             Return str
         End Function
+        ' end PrintSignature
 
         Public Shared Sub TestChangeIdentity()
 
-            File.Delete(Util.YapFileName)
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Dim db As Db4oDatabase
             Dim oldSignature() As Byte
             Dim NewSignature() As Byte
@@ -42,7 +44,7 @@ Namespace com.db4odoc.f1.uuids
             Finally
                 oc.Close()
             End Try
-            oc = Db4o.OpenFile(Util.YapFileName)
+            oc = Db4o.OpenFile(YapFileName)
             Try
                 db = oc.Ext().Identity()
                 NewSignature = db.GetSignature()
@@ -67,11 +69,12 @@ Namespace com.db4odoc.f1.uuids
                 Console.WriteLine("Database signatures are different")
             End If
         End Sub
+        ' end TestChangeIdentity
 
         Public Shared Sub SetObjects()
             Db4o.Configure().ObjectClass(GetType(Pilot)).GenerateUUIDs(True)
-            File.Delete(Util.YapFileName)
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 oc.Set(car)
@@ -79,9 +82,10 @@ Namespace com.db4odoc.f1.uuids
                 oc.Close()
             End Try
         End Sub
+        ' end SetObjects
 
         Public Shared Sub TestGenerateUUID()
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim query As Query = oc.Query()
                 query.Constrain(GetType(car))
@@ -116,6 +120,6 @@ Namespace com.db4odoc.f1.uuids
                 oc.Close()
             End Try
         End Sub
-
+        ' end TestGenerateUUID
     End Class
 End Namespace

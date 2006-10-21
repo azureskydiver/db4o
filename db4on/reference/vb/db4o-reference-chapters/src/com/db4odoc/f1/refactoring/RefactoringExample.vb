@@ -6,9 +6,9 @@ Imports com.db4o.query
 
 Namespace com.db4odoc.f1.refactoring
     Public Class RefactoringExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared Sub Main(ByVal args() As String)
             System.Console.WriteLine("Correct sequence of actions: ")
             SetObjects()
             CheckDB()
@@ -23,10 +23,11 @@ Namespace com.db4odoc.f1.refactoring
             ' 			ChangeClass()
             ' 			RetrievePilotNew()*/
         End Sub
+        ' end Main
 
         Public Shared Sub SetObjects()
-            File.Delete(Util.YapFileName)
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Rubens Barrichello")
                 oc.Set(pilot)
@@ -36,8 +37,10 @@ Namespace com.db4odoc.f1.refactoring
                 oc.Close()
             End Try
         End Sub
+        ' end SetObjects
+
         Public Shared Sub CheckDB()
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = oc.Get(GetType(Pilot))
                 Dim i As Integer
@@ -49,9 +52,10 @@ Namespace com.db4odoc.f1.refactoring
                 oc.Close()
             End Try
         End Sub
+        ' end CheckDB
 
         Public Shared Sub SetNewObjects()
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim pilot As PilotNew = New PilotNew("Rubens Barrichello", 99)
                 oc.Set(pilot)
@@ -61,17 +65,18 @@ Namespace com.db4odoc.f1.refactoring
                 oc.Close()
             End Try
         End Sub
-
+        ' end SetNewObjects
 
         Public Shared Sub ChangeClass()
             Db4o.Configure().ObjectClass(GetType(Pilot)).Rename("com.db4odoc.f1.refactoring.PilotNew,db4o-reference-chapters")
             Db4o.Configure().ObjectClass(GetType(PilotNew)).ObjectField("_name").Rename("_identity")
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             oc.Close()
         End Sub
+        ' end ChangeClass
 
         Public Shared Sub RetrievePilotNew()
-            Dim oc As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim q As Query = oc.Query()
                 q.Constrain(GetType(PilotNew))
@@ -85,6 +90,7 @@ Namespace com.db4odoc.f1.refactoring
                 oc.Close()
             End Try
         End Sub
+        ' end RetrievePilotNew
     End Class
 End Namespace
 

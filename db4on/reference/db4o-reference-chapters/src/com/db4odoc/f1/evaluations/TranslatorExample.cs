@@ -5,14 +5,17 @@ using com.db4odoc.f1;
 
 namespace com.db4odoc.f1.evaluations
 {
-	public class TranslatorExample : Util
+	public class TranslatorExample 
     {
+		public readonly static string YapFileName = "formula1.yap";
+
         public static void Main(string[] args)
         {
             TryStoreWithCallConstructors();
             TryStoreWithoutCallConstructors();
             StoreWithTranslator();
         }
+		// end Main
         
         public static void TryStoreWithCallConstructors()
         {
@@ -21,6 +24,7 @@ namespace com.db4odoc.f1.evaluations
                 .CallConstructor(true);
             TryStoreAndRetrieve();
         }
+		// end TryStoreWithCallConstructors
         
         public static void TryStoreWithoutCallConstructors()
         {
@@ -32,6 +36,7 @@ namespace com.db4odoc.f1.evaluations
             // how nasty it can be
             //TryStoreAndRetrieve();
         }
+		// end TryStoreWithoutCallConstructors
         
         public static void StoreWithTranslator()
         {
@@ -41,10 +46,11 @@ namespace com.db4odoc.f1.evaluations
             Db4o.Configure().ObjectClass(typeof(CultureInfo))
                 .Translate(null);
         }
+		// end StoreWithTranslator
         
         public static void TryStoreAndRetrieve()
         {
-            ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+            ObjectContainer db = Db4o.OpenFile(YapFileName);
             try
             {
                 string[] champs = new string[] { "Ayrton Senna", "Nelson Piquet" };
@@ -61,7 +67,7 @@ namespace com.db4odoc.f1.evaluations
             {
                 db.Close();
             }
-            db = Db4o.OpenFile(Util.YapFileName);
+            db = Db4o.OpenFile(YapFileName);
             try
             {
                 ObjectSet result = db.Get(typeof(LocalizedItemList));
@@ -77,5 +83,6 @@ namespace com.db4odoc.f1.evaluations
                 db.Close();
             }
         }
+		// end TryStoreAndRetrieve
     }
 }

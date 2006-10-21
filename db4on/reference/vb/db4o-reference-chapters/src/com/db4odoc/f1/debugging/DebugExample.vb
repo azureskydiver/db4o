@@ -6,15 +6,17 @@ Imports com.db4o.query
 
 Namespace com.db4odoc.f1.debugging
     Public Class DebugExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+
         Public Shared Sub Main(ByVal args() As String)
             SetCars()
         End Sub
+        ' end Main
 
         Public Shared Sub SetCars()
             Db4o.Configure().MessageLevel(3)
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
@@ -30,7 +32,15 @@ Namespace com.db4odoc.f1.debugging
             End Try
             Db4o.Configure().MessageLevel(0)
         End Sub
+        ' end SetCars
 
+        Public Shared Sub ListResult(ByVal result As ObjectSet)
+            Console.WriteLine(result.Count)
+            For Each item As Object In result
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListResult
     End Class
 End Namespace
 

@@ -3,15 +3,16 @@ Imports System
 Imports System.IO
 Imports com.db4o
 Imports com.db4o.query
+Imports System.Drawing
 
 Namespace com.db4odoc.f1.staticfields
     Public Class StaticFieldExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
         Public Sub New()
         End Sub
 
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared Sub Main(ByVal args() As String)
             SetPilotsSimple()
             CheckPilots()
 
@@ -23,12 +24,24 @@ Namespace com.db4odoc.f1.staticfields
             DeleteTest()
 
         End Sub
+        ' end Main
 
+        Public Shared Sub SetCar()
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
+            Try
+                Dim car As Car = New Car()
+                car._color = Color.Green
+                db.Set(car)
+            Finally
+                db.Close()
+            End Try
+        End Sub
+        ' end SetCar
 
         Public Shared Sub SetPilotsSimple()
             Console.WriteLine("In the default setting, static constants are not continously stored and updated.")
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 db.Set(New Pilot("Michael Schumacher", PilotCategories.WINNER))
                 db.Set(New Pilot("Rubens Barrichello", PilotCategories.TALENTED))
@@ -36,12 +49,13 @@ Namespace com.db4odoc.f1.staticfields
                 db.Close()
             End Try
         End Sub
+        ' end SetPilotsSimple
 
         Public Shared Sub SetPilotsStatic()
             Console.WriteLine("The feature can be turned on for individual classes.")
             Db4o.Configure().ObjectClass(GetType(PilotCategories)).PersistStaticFieldValues()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 db.Set(New Pilot("Michael Schumacher", PilotCategories.WINNER))
                 db.Set(New Pilot("Rubens Barrichello", PilotCategories.TALENTED))
@@ -49,9 +63,10 @@ Namespace com.db4odoc.f1.staticfields
                 db.Close()
             End Try
         End Sub
+        ' end SetPilotsStatic
 
         Public Shared Sub CheckPilots()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(Pilot))
                 Dim x As Integer
@@ -69,10 +84,11 @@ Namespace com.db4odoc.f1.staticfields
                 db.Close()
             End Try
         End Sub
+        ' end CheckPilots
 
         Public Shared Sub UpdatePilots()
             Console.WriteLine("Updating PilotCategory in pilot reference:")
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(Pilot))
                 Dim x As Integer
@@ -90,10 +106,11 @@ Namespace com.db4odoc.f1.staticfields
             End Try
             PrintCategories()
         End Sub
+        ' end UpdatePilots
 
         Public Shared Sub UpdatePilotCategories()
             Console.WriteLine("Updating PilotCategories explicitly:")
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(PilotCategories))
                 Dim x As Integer
@@ -109,9 +126,10 @@ Namespace com.db4odoc.f1.staticfields
             End Try
             PrintCategories()
         End Sub
+        ' end UpdatePilotCategories
 
         Public Shared Sub DeleteTest()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             db.Ext().Configure().ObjectClass(GetType(Pilot)).CascadeOnDelete(True)
             Try
                 Console.WriteLine("Deleting Pilots :")
@@ -132,9 +150,10 @@ Namespace com.db4odoc.f1.staticfields
                 db.Close()
             End Try
         End Sub
+        ' end DeleteTest
 
         Public Shared Sub PrintCategories()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(PilotCategories))
                 Console.WriteLine("Stored categories: " + (result.Count).ToString())
@@ -147,10 +166,11 @@ Namespace com.db4odoc.f1.staticfields
                 db.Close()
             End Try
         End Sub
+        ' end PrintCategories
 
         Public Shared Sub DeletePilotCategories()
             PrintCategories()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(PilotCategories))
                 Dim x As Integer
@@ -163,5 +183,6 @@ Namespace com.db4odoc.f1.staticfields
             End Try
             PrintCategories()
         End Sub
+        ' end DeletePilotCategories
     End Class
 End Namespace

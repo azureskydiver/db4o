@@ -6,10 +6,11 @@ using com.db4o.query;
 
 namespace com.db4odoc.f1.refactoring
 {
-	public class RefactoringExample: Util
+	public class RefactoringExample
 	{
+		public readonly static string YapFileName = "formula1.yap";
 	
-		public static void main(string[] args) 
+		public static void Main(string[] args) 
 		{
 			System.Console.WriteLine("Correct sequence of actions: ");
 			SetObjects();
@@ -25,11 +26,12 @@ namespace com.db4odoc.f1.refactoring
 			ChangeClass();
 			RetrievePilotNew();*/
 		}
+		// end Main
 
 		public static void SetObjects()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Pilot pilot = new Pilot("Rubens Barrichello");
@@ -42,9 +44,11 @@ namespace com.db4odoc.f1.refactoring
 				oc.Close();
 			}
 		}
+		// end SetObjects
+
 		public static void CheckDB()
 		{
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result = oc.Get(typeof(Pilot));
@@ -59,10 +63,11 @@ namespace com.db4odoc.f1.refactoring
 				oc.Close();
 			}
 		}
+		// end CheckDB
 
 		public static void SetNewObjects()
 		{
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				PilotNew pilot = new PilotNew("Rubens Barrichello",99);
@@ -75,19 +80,20 @@ namespace com.db4odoc.f1.refactoring
 				oc.Close();
 			}
 		}
-	
+		// end SetNewObjects
 
 		public static void ChangeClass()
 		{
 			Db4o.Configure().ObjectClass(typeof(Pilot)).Rename("com.db4odoc.f1.refactoring.PilotNew, db4o-reference-chapters");
 			Db4o.Configure().ObjectClass(typeof(PilotNew)).ObjectField("_name").Rename("_identity");
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			oc.Close();
 		}
+		// end ChangeClass
 	
 		public static void RetrievePilotNew()
 		{
-			ObjectContainer oc = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer oc = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Query q = oc.Query();
@@ -104,5 +110,6 @@ namespace com.db4odoc.f1.refactoring
 				oc.Close();
 			}
 		}
+		// end RetrievePilotNew
 	}
 }

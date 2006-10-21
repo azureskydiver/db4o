@@ -4,21 +4,21 @@ Imports System.IO
 
 Imports com.db4o
 Imports com.db4o.query
-Imports com.db4odoc.f1.evaluations
 
 Namespace com.db4odoc.f1.lists
 
     Public Class CollectionExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
         Public Shared Sub Main(ByVal args() As String)
             SetTeam()
             SetTeam()
         End Sub
+        ' end Main
 
         Public Shared Sub SetTeam()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim ferrariTeam As Team = New Team()
                 ferrariTeam.Name = "Ferrari"
@@ -36,10 +36,11 @@ Namespace com.db4odoc.f1.lists
                 db.Close()
             End Try
         End Sub
+        ' end SetTeam
 
 
         Public Shared Sub UpdateTeam()
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim query As Query = db.Query()
                 query.Constrain(GetType(Team))
@@ -60,6 +61,15 @@ Namespace com.db4odoc.f1.lists
                 db.Close()
             End Try
         End Sub
+        ' end UpdateTeam
+
+        Public Shared Sub ListResult(ByVal result As ObjectSet)
+            Console.WriteLine(result.Count)
+            For Each item As Object In result
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListResult
     End Class
 End Namespace
 

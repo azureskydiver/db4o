@@ -8,22 +8,24 @@ using com.db4o.query;
 
 namespace com.db4odoc.f1.ios 
 {
-
-	public class IOExample:Util 
-	{
 	
-		public static void main(string[] args) 
+	public class IOExample
+	{
+		public readonly static string YapFileName = "formula1.yap";
+
+		public static void Main(string[] args) 
 		{
 			SetObjects();
 			GetObjectsInMem();
 			GetObjects();
 			TestLoggingAdapter();
 		}
+		// end Main
 	
 		public static void SetObjects()
 		{
-			File.Delete(Util.YapFileName);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			File.Delete(YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Pilot pilot = new Pilot("Rubens Barrichello");
@@ -34,6 +36,7 @@ namespace com.db4odoc.f1.ios
 				db.Close();
 			}
 		}
+		// end SetObjects
 	
 		public static void GetObjectsInMem()
 		{
@@ -41,13 +44,13 @@ namespace com.db4odoc.f1.ios
 			MemoryIoAdapter adapter = new MemoryIoAdapter();
 			try 
 			{
-				j4o.io.RandomAccessFile raf = new j4o.io.RandomAccessFile(Util.YapFileName,"r"); 
+				j4o.io.RandomAccessFile raf = new j4o.io.RandomAccessFile(YapFileName,"r"); 
 				adapter.GrowBy(100);
 			
 				int len = (int)raf.Length();
 				byte[] b = new byte[len];
 				raf.Read(b,0,len);
-				adapter.Put(Util.YapFileName, b);
+				adapter.Put(YapFileName, b);
 				raf.Close();
 			} 
 			catch (Exception ex)
@@ -56,7 +59,7 @@ namespace com.db4odoc.f1.ios
 			}
 		
 			Db4o.Configure().Io(adapter);
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result=db.Get(typeof(Pilot));
@@ -71,10 +74,10 @@ namespace com.db4odoc.f1.ios
 				db.Close();
 			}
 			System.Console.WriteLine("Writing the database back to disc");
-			byte[] dbstream = adapter.Get(Util.YapFileName);
+			byte[] dbstream = adapter.Get(YapFileName);
 			try 
 			{
-				j4o.io.RandomAccessFile file = new j4o.io.RandomAccessFile(Util.YapFileName,"rw");
+				j4o.io.RandomAccessFile file = new j4o.io.RandomAccessFile(YapFileName,"rw");
 				file.Write(dbstream);
 				file.Close();
 			} 
@@ -83,11 +86,12 @@ namespace com.db4odoc.f1.ios
 				System.Console.WriteLine("Exception: " + ioex.Message);
 			}
 		}
+		// end GetObjectsInMem
 	
 		public static void GetObjects()
 		{
 			Db4o.Configure().Io(new RandomAccessFileAdapter());
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result=db.Get(typeof(Pilot));
@@ -99,11 +103,12 @@ namespace com.db4odoc.f1.ios
 				db.Close();
 			}
 		}
+		// end GetObjects
 
 		public static void TestLoggingAdapter()
 		{
 			Db4o.Configure().Io(new LoggingAdapter());
-			ObjectContainer db = Db4o.OpenFile(Util.YapFileName);
+			ObjectContainer db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				Pilot pilot = new Pilot("Michael Schumacher");
@@ -115,7 +120,7 @@ namespace com.db4odoc.f1.ios
 				db.Close();
 			}
 	
-			db = Db4o.OpenFile(Util.YapFileName);
+			db = Db4o.OpenFile(YapFileName);
 			try 
 			{
 				ObjectSet result=db.Get(typeof(Pilot));
@@ -127,6 +132,16 @@ namespace com.db4odoc.f1.ios
 			}
 			Db4o.Configure().Io(new RandomAccessFileAdapter());
 		}
-
+		// end TestLoggingAdapter
+	
+		public static void ListResult(ObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 	}
 }

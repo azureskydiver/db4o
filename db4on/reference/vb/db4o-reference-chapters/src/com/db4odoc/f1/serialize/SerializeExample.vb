@@ -8,19 +8,20 @@ Imports com.db4o
 
 Namespace com.db4odoc.f1.serialize
     Public Class SerializeExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
         Public Shared ReadOnly XmlFileName As String = "formula1.xml"
 
 
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared Sub Main(ByVal args() As String)
             SetObjects()
             ExportToXml()
             ImportFromXml()
         End Sub
+        ' end Main
 
         Public Shared Sub SetObjects()
-            File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            File.Delete(YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 db.Set(car)
@@ -30,11 +31,12 @@ Namespace com.db4odoc.f1.serialize
                 db.Close()
             End Try
         End Sub
+        ' end SetObjects
 
         Public Shared Sub ExportToXml()
             Dim carSerializer As XmlSerializer = New XmlSerializer(GetType(Car()))
             Dim xmlWriter As StreamWriter = New StreamWriter(XmlFileName)
-            Dim db As ObjectContainer = Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(Car))
                 Dim cars() As Car = New Car(result.Size()) {}
@@ -49,16 +51,17 @@ Namespace com.db4odoc.f1.serialize
                 db.Close()
             End Try
         End Sub
+        ' end ExportToXml
 
         Public Shared Sub ImportFromXml()
-            File.Delete(Util.YapFileName)
+            File.Delete(YapFileName)
             Dim carSerializer As XmlSerializer = New XmlSerializer(GetType(Car()))
             Dim xmlFileStream As FileStream = New FileStream(XmlFileName, FileMode.Open)
             Dim cars() As Car = CType(carSerializer.Deserialize(xmlFileStream), Car())
             Dim db As ObjectContainer
             Dim i As Integer
             For i = 0 To cars.Length - 1 Step i + 1
-                db = Db4o.OpenFile(Util.YapFileName)
+                db = Db4o.OpenFile(YapFileName)
                 Try
                     Dim car As Car = CType(cars(i), Car)
                     db.Set(car)
@@ -66,7 +69,7 @@ Namespace com.db4odoc.f1.serialize
                     db.Close()
                 End Try
             Next
-            db = Db4o.OpenFile(Util.YapFileName)
+            db = Db4o.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.Get(GetType(Pilot))
                 ListResult(result)
@@ -76,7 +79,15 @@ Namespace com.db4odoc.f1.serialize
                 db.Close()
             End Try
         End Sub
+        ' end ImportFromXml
 
+        Public Shared Sub ListResult(ByVal result As ObjectSet)
+            Console.WriteLine(result.Count)
+            For Each item As Object In result
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListResult
     End Class
 End Namespace
 

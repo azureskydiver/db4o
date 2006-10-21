@@ -7,22 +7,23 @@ Imports com.db4o.ext
 
 Namespace com.db4odoc.f1.clientserver
     Public Class ExtClientExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
         Public Shared ReadOnly ExtFileName As String = "formula1e.yap"
 
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared Sub Main(ByVal args() As String)
             SwitchExtClients()
         End Sub
+        ' end Main
 
         Public Shared Sub SwitchExtClients()
-            File.Delete(Util.YapFileName)
+            File.Delete(YapFileName)
             File.Delete(ExtFileName)
-            Dim server As ObjectServer = Db4o.OpenServer(Util.YapFileName, 0)
+            Dim server As ObjectServer = Db4o.OpenServer(YapFileName, 0)
             Try
                 Dim client As ObjectContainer = server.OpenClient()
                 Dim car As Car = New Car("BMW")
                 client.Set(car)
-                System.Console.WriteLine("Objects in the main database file:")
+                System.Console.WriteLine("Objects in the Main database file:")
                 RetrieveAll(client)
 
                 System.Console.WriteLine("Switching to additional database:")
@@ -39,11 +40,13 @@ Namespace com.db4odoc.f1.clientserver
                 server.Close()
             End Try
         End Sub
+        ' end SwitchExtClients
 
         Public Shared Sub RetrieveAll(ByVal db As ObjectContainer)
             Dim result As ObjectSet = db.Get(GetType(Car))
             ListResult(result)
         End Sub
+        ' end RetrieveAll
 
         Public Shared Sub DeleteAll(ByVal db As ObjectContainer)
             Dim result As ObjectSet = db.Get(GetType(Car))
@@ -52,5 +55,14 @@ Namespace com.db4odoc.f1.clientserver
                 db.Delete(item)
             Next
         End Sub
+        ' end DeleteAll
+
+        Public Shared Sub ListResult(ByVal result As ObjectSet)
+            Console.WriteLine(result.Count)
+            For Each item As Object In result
+                Console.WriteLine(item)
+            Next
+        End Sub
+        ' end ListResult
     End Class
 End Namespace

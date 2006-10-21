@@ -4,18 +4,21 @@ Imports com.db4o
 
 Namespace com.db4odoc.f1.evaluations
     Public Class TranslatorExample
-        Inherits Util
+        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+
         Public Shared Sub Main(ByVal args As String())
             TryStoreWithCallConstructors()
             TryStoreWithoutCallConstructors()
             StoreWithTranslator()
         End Sub
+        ' end Main
 
         Public Shared Sub TryStoreWithCallConstructors()
             Db4oFactory.Configure().ExceptionsOnNotStorable(True)
             Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).CallConstructor(True)
             TryStoreAndRetrieve()
         End Sub
+        ' end TryStoreWithCallConstructors
 
         Public Shared Sub TryStoreWithoutCallConstructors()
             Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).CallConstructor(False)
@@ -25,15 +28,17 @@ Namespace com.db4odoc.f1.evaluations
             ' how nasty it can be
             'TryStoreAndRetrieve();
         End Sub
+        ' end TryStoreWithoutCallConstructors
 
         Public Shared Sub StoreWithTranslator()
             Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).Translate(New CultureInfoTranslator())
             TryStoreAndRetrieve()
             Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).Translate(Nothing)
         End Sub
+        ' end StoreWithTranslator
 
         Public Shared Sub TryStoreAndRetrieve()
-            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim champs As String() = New String() {"Ayrton Senna", "Nelson Piquet"}
                 Dim LocalizedItemList As LocalizedItemList = New LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs)
@@ -45,7 +50,7 @@ Namespace com.db4odoc.f1.evaluations
             Finally
                 db.Close()
             End Try
-            db = Db4oFactory.OpenFile(Util.YapFileName)
+            db = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As ObjectSet = db.[Get](GetType(LocalizedItemList))
                 While result.HasNext()
@@ -57,6 +62,6 @@ Namespace com.db4odoc.f1.evaluations
                 db.Close()
             End Try
         End Sub
-
+        ' end TryStoreAndRetrieve
     End Class
 End Namespace
