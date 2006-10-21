@@ -23,9 +23,9 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 
 	protected void configure(Configuration config) {
 		super.configure(config);
-		index(config,ComplexFieldIndexItem.class, "foo");
-		index(config,ComplexFieldIndexItem.class, "bar");
-		index(config,ComplexFieldIndexItem.class, "child");
+		indexField(config,ComplexFieldIndexItem.class, "foo");
+		indexField(config,ComplexFieldIndexItem.class, "bar");
+		indexField(config,ComplexFieldIndexItem.class, "child");
 	}
 
 	protected Query createComplexItemQuery() {
