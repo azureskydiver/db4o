@@ -51,9 +51,10 @@ public class StatefulQueryResult {
 
 	public void sort(QueryComparator cmp) {
 		_delegate.sort(cmp);
-	}
-	
-	private Object streamLock() {
+	}	
+		
+	Object streamLock() {
+		// used on the .net version
 		return objectContainer().lock();
 	}
 	
