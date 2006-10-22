@@ -72,5 +72,5 @@ public abstract class YapIndependantType implements TypeHandler4 {
     public abstract Object readIndexEntry(YapReader a_reader);
     public abstract void writeIndexEntry(YapReader a_writer, Object a_object);
     
-    public abstract void defrag(MarshallerFamily mf, ReaderPair readers);
+    public abstract void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
 }

@@ -76,6 +76,11 @@ public class StringMarshaller1 extends StringMarshaller{
         return reader.readPayloadReader(payLoadOffSet, length);
     }
 
+	public void defrag(SlotReader reader) {
+		reader.incrementIntSize();
+		reader.incrementIntSize();
+	}
+
 
 
 }

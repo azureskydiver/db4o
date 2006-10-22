@@ -109,7 +109,10 @@ final class YapClassAny extends YapClass {
         return mf._untyped.writeNew(obj, restoreLinkeOffset, writer);
     }
 
-    public void defrag(MarshallerFamily mf, ReaderPair readers) {
+    public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
+        if(mf._untyped.useNormalClassRead()){
+            super.defrag(mf,readers, redirect);
+        }
     	mf._untyped.defrag(readers);
     }
 }

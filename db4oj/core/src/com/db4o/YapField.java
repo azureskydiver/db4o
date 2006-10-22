@@ -916,6 +916,6 @@ public class YapField implements StoredField {
     }    
     
     public void defragField(MarshallerFamily mf,ReaderPair readers) {
-    	getHandler().defrag(mf, readers);
+    	getHandler().defrag(mf, readers, true);
     }
 }

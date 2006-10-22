@@ -486,7 +486,7 @@ public class YapArray extends YapIndependantType {
         return false;
     }
     
-    public final void defrag(MarshallerFamily mf, ReaderPair readers) {
+    public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
     	if(!(i_handler.isSecondClass()==YapConst.YES)) {
     		mf._array.defragIDs(this, readers);
     	}
@@ -498,7 +498,7 @@ public class YapArray extends YapIndependantType {
 		}
 		int elements = readElementsDefrag(readers);
 		for (int i = 0; i < elements; i++) {
-			i_handler.defrag(mf,readers);
+			i_handler.defrag(mf,readers, true);
 		}
         if (Deploy.debug) {
             readers.readEnd();

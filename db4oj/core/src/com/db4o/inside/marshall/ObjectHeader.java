@@ -48,14 +48,13 @@ public class ObjectHeader {
         _headerAttributes = readAttributes(_marshallerFamily,reader);
     }
 
-    public static ObjectHeader defrag(YapClass yapClass,ReaderPair readers) {
+    public static ObjectHeader defrag(ReaderPair readers) {
     	YapReader source = readers.source();
     	YapReader target = readers.target();
-		ObjectHeader header=new ObjectHeader(null,yapClass,source);
-    	int newID =readers.mapping().mappedID(yapClass.getID());
+		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().stream(),null,source);
+    	int newID =readers.mapping().mappedID(header.yapClass().getID());
 		header._marshallerFamily._object.writeObjectClassID(target,newID);		
 		header._marshallerFamily._object.skipMarshallerInfo(target);
-		// TODO defrag for attributes
 		readAttributes(header._marshallerFamily, target);
     	return header;
     }		
