@@ -86,5 +86,5 @@ public interface TypeHandler4 extends Indexable4
 
     QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection);
 
-	void defrag(MarshallerFamily mf, ReaderPair readers);
+	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
 }

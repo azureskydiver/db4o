@@ -95,6 +95,6 @@ public abstract class StringMarshaller {
             reader.writeEnd();
         }
     }
-    
 
+	public abstract void defrag(SlotReader reader);
 }

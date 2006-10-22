@@ -165,7 +165,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         YapClass yc = readers.context().yapClass(yapClassID);
         if(yc != null){
-            yc.defrag(_family, readers);
+            yc.defrag(_family, readers, false);
         }
         
         readers.offset(linkOffSet);

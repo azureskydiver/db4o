@@ -1842,12 +1842,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
     }
 
-    public void defragObject(ReaderPair readers) {
-    	ObjectHeader header=ObjectHeader.defrag(this,readers);
-    	header._marshallerFamily._object.defragFields(this,header,readers);
+    public static void defragObject(ReaderPair readers) {
+    	ObjectHeader header=ObjectHeader.defrag(readers);
+    	header._marshallerFamily._object.defragFields(header.yapClass(),header,readers);
     }	
 
-	public void defrag(MarshallerFamily mf, ReaderPair readers) {
+	public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
 		readers.copyID();
 		int restLength = (linkLength()-YapConst.INT_LENGTH);
 		readers.incrementOffset(restLength);

@@ -44,4 +44,7 @@ public class StringMarshaller0 extends StringMarshaller {
     public YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
         return reader.readEmbeddedObject(stream.getTransaction());
     }
+
+	public void defrag(SlotReader reader) {
+	}
 }
