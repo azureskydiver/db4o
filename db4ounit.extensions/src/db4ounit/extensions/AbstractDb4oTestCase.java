@@ -33,19 +33,26 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
     	_fixture.reopen();
     }
 	
-	public void setUp() throws Exception {
+	public final void setUp() throws Exception {
         _fixture.clean();
 		configure(_fixture.config());
 		_fixture.open();
+        db4oSetupBeforeStore();
 		store();
         _fixture.close();
         _fixture.open();
+        db4oSetupAfterStore();
 	}
 	
-	public void tearDown() throws Exception {
+	public final void tearDown() throws Exception {
+		db4oCustomTearDown();
 		_fixture.close();
         _fixture.clean();
 	}
+	
+	protected void db4oSetupBeforeStore() throws Exception {}
+	protected void db4oSetupAfterStore() throws Exception {}
+	protected void db4oCustomTearDown() throws Exception {}
 
 	protected void configure(Configuration config) {}
 	

@@ -2,47 +2,28 @@
 
 package db4ounit.extensions;
 
-import com.db4o.ObjectServer;
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.*;
+import com.db4o.ext.*;
 
-import db4ounit.TestCase;
-import db4ounit.TestLifeCycle;
-import db4ounit.extensions.fixtures.AbstractClientServerDb4oFixture;
+import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 public class ClientServerTestCase extends AbstractDb4oTestCase implements
 		TestCase, TestLifeCycle {
 
-	
-	protected void configure(Configuration config) {
-		super.configure(config);
+	public ObjectServer server() {
+		return ((AbstractClientServerDb4oFixture)fixture()).server();
 	}
 
-	public void setUp() throws Exception {
-		Db4oFixture fixture = fixture();
-		fixture.clean();
-		configure(fixture().config());
-		fixture.open();
-		ExtObjectContainer oc = fixture.db();
+	protected final void store() throws Exception {
+		ExtObjectContainer oc = fixture().db();
 		try {
 			store(oc);
 		} finally {
 			oc.close();
 		}
-		fixture().close();
-		fixture().open();
-	}
-
-	public ExtObjectContainer db() {
-		ExtObjectContainer oc = fixture().db();
-		return oc;
-	}
-	
-	public ObjectServer server() {
-		return ((AbstractClientServerDb4oFixture)fixture()).server();
 	}
 	
 	protected void store(ExtObjectContainer oc) throws Exception {
-
 	}
 }

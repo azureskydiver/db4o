@@ -23,8 +23,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	
 	private EventRecorder _recorder;
 	
-	public void setUp() throws Exception {
-		super.setUp();
+	protected void db4oSetupBeforeStore() throws Exception {
 		_recorder = new EventRecorder();
 	}	
 	

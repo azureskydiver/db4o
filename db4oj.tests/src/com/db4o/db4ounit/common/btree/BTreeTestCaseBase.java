@@ -14,8 +14,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 
 	protected BTree _btree;
 	
-	public void setUp() throws Exception {
-		super.setUp();
+	protected void db4oSetupAfterStore() throws Exception {
 		_btree = newBTree();
 	}
 

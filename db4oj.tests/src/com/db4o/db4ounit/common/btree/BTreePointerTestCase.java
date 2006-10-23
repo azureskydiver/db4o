@@ -21,8 +21,8 @@ public class BTreePointerTestCase extends BTreeTestCaseBase {
 			-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 7, 9
 	};
 	
-	public void setUp() throws Exception {
-		super.setUp();		
+	protected void db4oSetupAfterStore() throws Exception {
+		super.db4oSetupAfterStore();
 		add(keys);		
 		commit();
 	}
