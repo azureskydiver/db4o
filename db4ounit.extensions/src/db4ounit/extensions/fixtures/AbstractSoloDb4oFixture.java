@@ -6,6 +6,8 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 
+import db4ounit.Assert;
+
 public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 
 	private ExtObjectContainer _db;
@@ -15,12 +17,15 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 	}
 	
 	public final void open() {
+		Assert.isNull(_db);
 		_db=createDatabase(config()).ext();
 	}
 	
 	public void close() throws Exception {
-		_db.close();
-		_db = null;
+		if (null != _db) {
+			_db.close();
+			_db = null;
+		}
 	}
 
 	public ExtObjectContainer db() {
