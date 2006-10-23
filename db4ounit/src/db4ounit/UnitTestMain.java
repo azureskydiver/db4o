@@ -1,5 +1,8 @@
 package db4ounit;
 
+/**
+ * @sharpen.ignore
+ */
 public class UnitTestMain {
 	public static void main(String[] args) throws Exception {
 		Class[] classes=new Class[args.length];
