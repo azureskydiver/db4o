@@ -59,6 +59,15 @@ namespace com.db4o
 			}
 		}
 
+        internal static bool IsDb4oClass(string className)
+        {
+            if (className.IndexOf("com.db4o.test") == 0)
+            {
+                return false;
+            }
+            return className.IndexOf("com.db4o") == 0;
+        }
+
 		internal static JDK Jdk()
 		{
             throw new NotSupportedException();

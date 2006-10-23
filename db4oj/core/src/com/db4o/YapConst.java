@@ -154,35 +154,23 @@ public final class YapConst
 	
 	private static final Object init(){
         CLASS_OBJECT = new Object().getClass();
-        CLASS_COMPARE = db4oClass("config.Compare");
-        CLASS_DB4OTYPE = db4oClass("types.Db4oType"); 
-        CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl");
-        CLASS_INTERNAL = db4oClass("Internal4");
-        CLASS_UNVERSIONED = db4oClass("types.Unversioned");
+        CLASS_COMPARE = com.db4o.config.Compare.class;
+        CLASS_DB4OTYPE = com.db4o.types.Db4oType.class; 
+        CLASS_DB4OTYPEIMPL = Db4oTypeImpl.class;
+        CLASS_INTERNAL = Internal4.class;
+        CLASS_UNVERSIONED = com.db4o.types.Unversioned.class;
         CLASS_METACLASS = new MetaClass().getClass();
         CLASS_METAFIELD = new MetaField().getClass();
         CLASS_METAINDEX = new MetaIndex().getClass();
-        CLASS_OBJECTCONTAINER = db4oClass("ObjectContainer");
+        CLASS_OBJECTCONTAINER = ObjectContainer.class;
         CLASS_REPLICATIONRECORD = new ReplicationRecord().getClass();
         CLASS_STATICFIELD = new StaticField().getClass();
         CLASS_STATICCLASS = new StaticClass().getClass();
-        CLASS_TRANSIENTCLASS = db4oClass("types.TransientClass");
+        CLASS_TRANSIENTCLASS = com.db4o.types.TransientClass.class;
 		
 	    return null;
 	}
-	
-	private static final Class db4oClass(String name){
-        return classForName("com.db4o." + name);
-	}
     
-    private static final Class classForName(String name){
-        try{
-            return Class.forName(name);
-        }catch(Exception e){
-        }
-        return null;
-    }
-	
 	// system classes that need to get loaded first
 	static final Class[] ESSENTIAL_CLASSES = {
 	// MetaClass should load the other two Meta

@@ -639,4 +639,10 @@ public final class Platform4 {
 		return false;
 	}
 
+	public static boolean isDb4oClass(String className) {
+		if (className.indexOf("com.db4o.test") == 0) {
+            return false;
+        }
+		return className.indexOf("com.db4o") == 0;
+	}
 }
