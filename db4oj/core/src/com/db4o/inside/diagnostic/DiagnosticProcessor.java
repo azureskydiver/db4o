@@ -70,11 +70,7 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     }
     
     private boolean isDb4oClass(YapClass yc){
-        String name = yc.getName();
-        if(name.indexOf("com.db4o.test") == 0){
-            return false;
-        }
-        return name.indexOf("com.db4o.") == 0;
+        return Platform4.isDb4oClass(yc.getName());
     }
 
     public void loadedFromClassIndex(YapClass yc) {

@@ -451,7 +451,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             }
         }
         if (a_class == null) {
-            if(a_name == null || a_name.indexOf("com.db4o") != 0){
+            if(a_name == null || !Platform4.isDb4oClass(a_name)){
                 if(errMessages){
                     a_stream.logMsg(23, a_name);
                 }
@@ -476,8 +476,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return false;
         
     }
-    
-    public void deactivate(Transaction a_trans, Object a_object, int a_depth) {
+
+	public void deactivate(Transaction a_trans, Object a_object, int a_depth) {
         if(objectCanDeactivate(a_trans.stream(), a_object)){
             deactivate1(a_trans, a_object, a_depth);
             objectOnDeactivate(a_trans.stream(), a_object);
