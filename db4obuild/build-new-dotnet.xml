@@ -7,6 +7,10 @@
 	<property name="dir.n.v6.core.src" location="${dir.n.v6.core}/Db4objects.Db4o/" />	
 	<property name="dir.n.v6.tools" location="${dir.n.v6}/Db4objects.Db4o.Tools/" />
 	
+	<condition property="mono" value="1">
+		<os family="unix" />
+	</condition>
+	
 	<fileset id="db4oj.srcfiles" dir="..">
 		<include name="db4oj/core/src/**/*.java" />
 	</fileset>
@@ -20,7 +24,15 @@
 		</uptodate>
 	</target>
 	
-	<target name="run-tests" depends="build-tests" description="builds and runs all tests">
+	<target name="run-tests" depends="run-tests-mono, run-tests-net" description="builds and runs all tests">
+	</target>
+	
+	<target name="run-tests-net" depends="build-tests" unless="mono">
+		<exec executable="${dir.dist.dll}/Db4objects.Db4o.Tests.exe">
+		</exec>
+	</target>
+	
+	<target name="run-tests-mono" depends="build-tests" if="mono">
 		<exec executable="mono">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.Tests.exe" />
@@ -169,7 +181,7 @@
 			<param name="target.dir" value="${dir.n.v6.core.src}" />
 		</antcall>
 			
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o.csproj">
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
 			<sources dir="${dir.n.v6.core}">
 				<include name="**/*.cs" />
 				<exclude name="native/compact*/**" />
