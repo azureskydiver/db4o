@@ -162,7 +162,7 @@ final class QueryResultsPanel extends JPanel {
 		DefaultTreeCellEditor editor = new DefaultTreeCellEditor(tree, (DefaultTreeCellRenderer) tree.getCellRenderer(), new ObjectTreeCellEditor(tf));
 		tree.setCellEditor(editor);
 		JScrollPane treeView = new JScrollPane(tree);
-		mainPanel.addTab("Object: " + o, treeView);
+		mainPanel.addTab(TabType.objectTree, "Object: " + o, treeView);
 	}
 
 	private void createNodes(DefaultMutableTreeNode top, IGraphIterator iter) {

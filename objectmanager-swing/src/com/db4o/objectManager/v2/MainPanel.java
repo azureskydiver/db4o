@@ -1,6 +1,5 @@
 package com.db4o.objectManager.v2;
 
-import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -227,15 +226,19 @@ public class MainPanel extends JPanel {
      */
     private void addTabs(JTabbedPane tabbedPane) {
         databaseSummaryPanel = new DatabaseSummaryPanel(this, connectionSpec, getDatabaseInspector());
-        tabbedPane.addTab("Home", databaseSummaryPanel);
+        tabbedPane.addTab("Home", createTabIcon("home.png"), databaseSummaryPanel);
     }
 
-    public void addTab(String name, Component p) {
-        tabbedPane.add(name, p);
+	private Icon createTabIcon(String iconImg) {
+		return ResourceManager.createImageIcon("icons/16x16/" + iconImg);
+	}
+
+	public void addTab(TabType tabType, String name, Component p) {
+        tabbedPane.addTab(name, createTabIcon(tabType.icon()), p);
         tabbedPane.setSelectedComponent(p);
         // todo: remove tabs based on usage time rather than FIFO
         if (tabbedPane.getTabCount() > MAX_TABS) {
-            tabbedPane.remove(1);
+            tabbedPane.remove(1); // 1 so that Home tab always stays
         }
     }
 
@@ -316,7 +319,7 @@ public class MainPanel extends JPanel {
 
     public void displayResults(String query) {
         QueryResultsPanel p = new QueryResultsPanel(this);
-        addTab("Query " + (++queryCounter), p);
+        addTab(TabType.query, "Query " + (++queryCounter), p);
         p.displayResults(query);
     }
 
@@ -335,7 +338,7 @@ public class MainPanel extends JPanel {
             }
         }
         ClassSummaryPanel panel = new ClassSummaryPanel(getObjectContainer(), getDatabaseInspector(), className);
-        addTab("Class: " + className, panel);
+        addTab(TabType.classSummary, "Class: " + className, panel);
     }
 
 
