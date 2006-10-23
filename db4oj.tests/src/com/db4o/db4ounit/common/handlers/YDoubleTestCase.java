@@ -14,8 +14,7 @@ public class YDoubleTestCase extends AbstractDb4oTestCase {
 	
 	private TypeHandler4 _handler;
 	
-	public void setUp() throws Exception {
-		super.setUp();
+	protected void db4oSetupBeforeStore() throws Exception {
 		_handler = new YDouble(stream());
 	}
 	

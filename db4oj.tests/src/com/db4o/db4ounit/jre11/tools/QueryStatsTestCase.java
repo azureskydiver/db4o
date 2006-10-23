@@ -38,17 +38,13 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	public void setUp() throws Exception {
-		super.setUp();
+	protected void db4oSetupAfterStore() throws Exception {
 		_stats = new QueryStats();		
 		_stats.connect(db());
 	}
 
-	public void tearDown() throws Exception {
-		
+	protected void db4oCustomTearDown() throws Exception {
 		_stats.disconnect();
-		
-		super.tearDown();
 	}
 
 	public void testActivationCount() {

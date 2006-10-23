@@ -10,8 +10,8 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		new BTreeRangeTestCase().runSolo();
 	}
 	
-	public void setUp() throws Exception {
-		super.setUp();		
+	protected void db4oSetupAfterStore() throws Exception {
+		super.db4oSetupAfterStore();
 		add(new int[] { 3, 7, 4, 9 });
 	}
     
