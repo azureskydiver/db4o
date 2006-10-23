@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.regex.Matcher;
 
+@SuppressWarnings("serial")
 public class FileHead extends File {
     
     private final FileHeadAntTask task;

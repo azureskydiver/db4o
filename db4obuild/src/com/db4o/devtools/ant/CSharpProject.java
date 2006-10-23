@@ -1,8 +1,8 @@
 package com.db4o.devtools.ant;
 
-import java.io.File;
+import java.io.*;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.*;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -14,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.*;
 
 public abstract class CSharpProject {
 	
@@ -25,7 +26,7 @@ public abstract class CSharpProject {
 	 * @throws Exception
 	 */
 	public static CSharpProject load(File projectFile) throws Exception {
-		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(projectFile);
+		Document document = loadXML(projectFile);
 		
 		String fname = projectFile.getName();
 		if (fname.endsWith(".mdp")) {
@@ -43,6 +44,11 @@ public abstract class CSharpProject {
 		return new CSharp2003Project(document);
 	}
 
+	private static Document loadXML(File projectFile) throws SAXException,
+			IOException, ParserConfigurationException {
+		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(projectFile);
+	}
+	
 	private Document _document;
 	private Element _files;
 	
