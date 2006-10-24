@@ -7,14 +7,17 @@ namespace com.db4o.db4ounit
 {
 	class Db4oUnitPlatform
 	{
-		public static ReflectClass GetReflectClass(GenericReflector reflector, Type clazz)
+		public static ReflectClass GetReflectClass(Reflector reflector, Type clazz)
 		{
 			return reflector.ForClass(j4o.lang.Class.GetClassForType(clazz));
 		}
 
-		public static FieldInfo[] GetDeclaredFields(Type clazz)
-		{
-			return clazz.GetFields(BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.DeclaredOnly);
-		}
+	    public static bool IsStoreableField(FieldInfo a_field)
+	    {
+	        if (a_field.IsStatic) return false;
+            if (j4o.lang.reflect.Field.IsTransient(a_field)) return false;
+	        if (a_field.Name.Contains("$")) return false;
+	        return true;
+	    }
 	}
 }

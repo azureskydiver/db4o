@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 
 namespace j4o.lang 
@@ -150,5 +151,32 @@ namespace j4o.lang
 		{
 			// do nothing
 		}
+
+	    public static object GetArrayValue(object array, int i)
+	    {
+	        return ((Array)array).GetValue(i);
+	    }
+	    
+	    public static int GetArrayLength(object array)
+	    {
+            return ((Array) array).Length;
+	    }
+
+	    public static void SetArrayValue(object array, int index, object value)
+	    {
+	        ((Array)array).SetValue(value, index);
+	    }
+
+        private const BindingFlags DeclaredMemberFlags = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+
+        public static FieldInfo GetDeclaredField(Type type, string name)
+        {
+            return type.GetField(name, DeclaredMemberFlags);
+        }
+
+        public static FieldInfo[] GetDeclaredFields(Type type)
+        {
+            return type.GetFields(DeclaredMemberFlags);
+        }
 	}
 }
