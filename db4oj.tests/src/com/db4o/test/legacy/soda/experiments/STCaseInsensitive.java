@@ -5,7 +5,6 @@ package com.db4o.test.legacy.soda.experiments;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.soda.*;
-import com.db4o.test.soda.experiments.*;
 
 public class STCaseInsensitive implements STClass {
 
