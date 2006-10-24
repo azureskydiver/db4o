@@ -15,7 +15,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public abstract class QueryResultTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+public abstract class QueryResultTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
 	
 	private static final int[] VALUES = new int[] { 1 , 5, 6 , 7, 9};
 	
@@ -26,23 +26,31 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	}
 	
 	public void testClassQuery(){
-		Query query = newItemQuery();
-		QueryResult queryResult = executeQuery(query); 
-		assertIDs(queryResult, ids);
+		assertIDs(classOnlyQuery(), ids);
 	}
 	
-	public void testIndexedFieldQuery(){
+	public void _testIndexedFieldQuery(){
 		Query query = newItemQuery();
 		query.descend("foo").constrain(new Integer(6)).smaller();
 		QueryResult queryResult = executeQuery(query);
 		assertIDs(queryResult, new int[] {ids[0], ids[1] });
 	}
 	
-	public void testNonIndexedFieldQuery(){
+	public void _testNonIndexedFieldQuery(){
 		Query query = newItemQuery();
 		query.descend("bar").constrain(new Integer(6)).smaller();
 		QueryResult queryResult = executeQuery(query);
 		assertIDs(queryResult, new int[] {ids[0], ids[1] });
+	}
+	
+	private QueryResult classOnlyQuery() {
+		QueryResult queryResult = newQueryResult();
+		queryResult.loadFromClassIndex(yapClass());
+		return queryResult;
+	}
+
+	private YapClass yapClass() {
+		return stream().getYapClass(reflector().forClass(Item.class), false);
 	}
 
 	private QueryResult executeQuery(Query query) {

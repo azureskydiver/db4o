@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.querying;
 import com.db4o.inside.query.*;
 
 
-public class LazyQueryResultTestCase extends QueryResultTestCase{
+public class LazyQueryResultTestCase extends QueryResultTestCase {
 
 	public static void main(String[] args) {
 		new LazyQueryResultTestCase().runSolo();
