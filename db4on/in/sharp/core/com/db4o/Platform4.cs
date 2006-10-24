@@ -413,6 +413,11 @@ namespace com.db4o
             }
             return socket.IsConnected();
         }
+	    
+	    public static bool IsSimple(System.Type type)
+	    {
+            return IsSimple(Class.GetClassForType(type));
+	    }
 
 		public static bool IsSimple(Class a_class)
 		{
