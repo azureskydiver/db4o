@@ -7,8 +7,6 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
 	private Class[] _classes;
 	
-	private Class[]	_optOut;
-
 	public ReflectionTestSuiteBuilder(Class clazz) {
 		if (null == clazz) throw new IllegalArgumentException("clazz");
 		_classes = new Class[] { clazz };
@@ -19,12 +17,6 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		_classes = classes;
 	}
 	
-	public ReflectionTestSuiteBuilder(Class[] classes, Class[] optOut) {
-		if (null == classes) throw new IllegalArgumentException("classes");
-		_classes = classes;
-		_optOut = optOut;
-	}
-
 	public TestSuite build() {
 		return (1 == _classes.length)
 			? fromClass(_classes[0])
@@ -35,10 +27,8 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		Vector suites = new Vector(classes.length);
 		for (int i = 0; i < classes.length; i++) {
 			TestSuite suite = fromClass(classes[i]);
-			if(suite != null){
-				if (suite.getTests().length>0) {
-					suites.add(suite);
-				}
+			if (suite.getTests().length>0) {
+				suites.add(suite);
 			}
 		}
 		return new TestSuite(toTestArray(suites));
@@ -57,13 +47,6 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		}
 		if (!(TestCase.class.isAssignableFrom(clazz))) {
 			throw new IllegalArgumentException("" + clazz + " is not marked as " + TestCase.class);
-		}
-		if(_optOut != null){
-			for (int i = 0; i < _optOut.length; i++) {
-				if(_optOut[i].isAssignableFrom(clazz)){
-					return null;
-				}
-			}
 		}
 		return fromMethods(clazz);
 	}
