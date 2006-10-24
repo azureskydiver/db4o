@@ -24,10 +24,18 @@ public abstract class SodaBaseTestCase extends AbstractDb4oTestCase {
 	protected abstract Object[] createData();
 
     protected void expect(Query query, int[] indices) {
-    	Object[] data=new Object[indices.length];
+        SodaTestUtil.expect(query, collectCandidates(indices), false);
+    }
+
+    protected void expectOrdered(Query query, int[] indices) {
+        SodaTestUtil.expectOrdered(query, collectCandidates(indices));
+    }
+
+	private Object[] collectCandidates(int[] indices) {
+		Object[] data=new Object[indices.length];
     	for (int idx = 0; idx < indices.length; idx++) {
 			data[idx]=_array[indices[idx]];
 		}
-        SodaTestUtil.expect(query, data, false);
-    }
+		return data;
+	}
 }

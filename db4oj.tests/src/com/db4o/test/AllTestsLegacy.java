@@ -32,6 +32,7 @@ public class AllTestsLegacy extends AllTests {
         		MultiDelete.class,
         		NestedArrays.class,
         		SimpleTypeArrayInUntypedVariable.class,
+    	    	Soda.class,
         		TypedArrayInObject.class,
         		TypedDerivedArray.class,
         };

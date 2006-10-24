@@ -16,6 +16,8 @@ public class AllTests extends Db4oTestSuite {
 			com.db4o.db4ounit.jre11.assorted.AllTests.class,
             com.db4o.db4ounit.jre11.btree.AllTests.class,
             com.db4o.db4ounit.jre11.events.AllTests.class,
+            // TODO hash table tests broken
+            // com.db4o.db4ounit.jre11.soda.AllTests.class,
 			com.db4o.db4ounit.jre11.tools.AllTests.class,
 		};
 	}
