@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -38,25 +39,57 @@ public class LazyQueryResult implements QueryResult {
 		return new IntIterator4Adaptor(_iterable.iterator());
 	}
 	
-	public void loadFromClassIndex(YapClass clazz) {
+	public void loadFromClassIndex(final YapClass clazz) {
+		_iterable = new Iterable4() {
+			public Iterator4 iterator() {
+				return classIndexIterator(clazz);
+			}
+		};
+	}
+
+	public BTree classIndexBTree(YapClass clazz) {
 		ClassIndexStrategy index = clazz.index();
 		if(! (index instanceof BTreeClassIndexStrategy)){
 			throw new IllegalStateException();
 		}
-		final BTree btree = ((BTreeClassIndexStrategy)index).btree();
-		_iterable = new Iterable4() {
-			public Iterator4 iterator() {
-				return  btree.asRange(transaction()).keys();
-			}
-		};
+		return ((BTreeClassIndexStrategy)index).btree();
+	}
+	
+	public Iterator4 classIndexIterator(YapClass clazz) {
+		return classIndexBTree(clazz).asRange(transaction()).keys();
 	}
 	
 	public Transaction transaction(){
 		return _transaction;
 	}
 
-	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
-		throw new NotImplementedException();
+	public void loadFromClassIndexes(final YapClassCollectionIterator classCollectionIterator) {
+		_iterable = new Iterable4() {
+			public Iterator4 iterator() {
+				return new CompositeIterator4(
+					new MappingIterator(classCollectionIterator) {
+						protected Object map(Object current) {
+							final YapClass yapClass = (YapClass)current;
+							if(skipClass(yapClass)){
+								return MappingIterator.SKIP;
+							}
+							return classIndexIterator(yapClass);
+						}
+					}
+				);
+			}
+		};
+	}
+	
+	public boolean skipClass(YapClass yapClass){
+		if (yapClass.getName() == null) {
+			return true;
+		}
+		ReflectClass claxx = yapClass.classReflector();
+		if (stream().i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)){
+			return true; 
+		}
+		return false;
 	}
 
 	public void loadFromIdReader(YapReader reader) {
