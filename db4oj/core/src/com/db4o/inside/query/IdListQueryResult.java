@@ -33,32 +33,18 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
     	return intIterator();
     }
     
-    // TODO: fix the C# converter and inline this class
-    private class QueryResultImplIterator extends MappingIterator {
-		public QueryResultImplIterator(Iterator4 iterator) {
-			super(iterator);
-		}
-		
-		public boolean moveNext() {
-			// skip nulls (deleted objects)
-			if (!super.moveNext()) {
-				return false;
-			}
-			if (null == current()) {
-				return moveNext();
-			}
-			return true;
-		}
-		
-		protected Object map(Object current) {
-			synchronized (streamLock()) {
-				return activatedObject(((Integer)current).intValue());
-			}
-		}
-	};
-    
     public Iterator4 iterator() {
-    	return new QueryResultImplIterator(super.iterator());
+    	return new MappingIterator(super.iterator()){
+    		protected Object map(Object current) {
+    			synchronized (streamLock()) {
+    				Object obj = activatedObject(((Integer)current).intValue());
+    				if(obj == null){
+    					return MappingIterator.SKIP;
+    				}
+    				return obj; 
+    			}
+    		}
+    	};
     }
 
 	public final Object activate(Object obj){
@@ -67,7 +53,7 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 		return obj;
 	}
     
-    private final Object activatedObject(int id){
+    public final Object activatedObject(int id){
         YapStream stream = stream();
         Object ret = stream.getActivatedObjectFromCache(_transaction, id);
         if(ret != null){
