@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.soda.*;
-import com.db4o.test.soda.experiments.*;
 
 public class STIdentityEvaluation implements STClass1{
     
