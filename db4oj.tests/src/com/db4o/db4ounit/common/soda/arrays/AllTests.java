@@ -2,9 +2,7 @@
 
 package com.db4o.db4ounit.common.soda.arrays;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.Db4oTestSuite;
 
 public class AllTests extends Db4oTestSuite {
 
@@ -21,7 +19,7 @@ public class AllTests extends Db4oTestSuite {
 	}
 	
 	public static void main(String[] args) {
-		new TestRunner(new Db4oTestSuiteBuilder(new Db4oSolo(),AllTests.class)).run();
+		new AllTests().runSolo();
 	}
 
 }
