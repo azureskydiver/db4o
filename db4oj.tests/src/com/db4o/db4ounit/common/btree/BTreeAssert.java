@@ -22,7 +22,7 @@ public class BTreeAssert {
 	}
 	
 	private static ExpectingVisitor createSortedExpectingVisitor(int[] keys) {
-		return new ExpectingVisitor(IntArrays4.toObjectArray(keys), true);
+		return new ExpectingVisitor(IntArrays4.toObjectArray(keys), true, false);
 	}
 
 	public static void traverseKeys(BTreeRange result, Visitor4 visitor) {

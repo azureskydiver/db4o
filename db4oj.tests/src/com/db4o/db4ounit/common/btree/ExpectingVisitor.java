@@ -17,6 +17,8 @@ public class ExpectingVisitor implements Visitor4{
     
     private final Collection4 _unexpected = new Collection4();
     
+    private boolean _ignoreUnexpected;
+    
     private int _cursor;
     
     private static final Object FOUND = new Object() {
@@ -25,13 +27,14 @@ public class ExpectingVisitor implements Visitor4{
     	}
     };
     
-    public ExpectingVisitor(Object[] results, boolean obeyOrder){
+    public ExpectingVisitor(Object[] results, boolean obeyOrder, boolean ignoreUnexpected){
         _expected = results;
         _obeyOrder = obeyOrder;
+        _ignoreUnexpected = ignoreUnexpected;
     }
     
     public ExpectingVisitor(Object[] results){
-        this(results, false);
+        this(results, false, false);
     }
     
     public ExpectingVisitor(Object singleObject){
@@ -59,6 +62,9 @@ public class ExpectingVisitor implements Visitor4{
     }
 
 	private void unexpected(Object obj) {
+		if(_ignoreUnexpected){
+			return;
+		}
 		_unexpected.add(obj);
         ods("Unexpected: " + obj);
 	}
@@ -95,5 +101,6 @@ public class ExpectingVisitor implements Visitor4{
         for (int i = 0; i < _expected.length; i++) {
             Assert.areSame(FOUND, _expected[i]);
         }
-    }    
+    }
+    
 }
