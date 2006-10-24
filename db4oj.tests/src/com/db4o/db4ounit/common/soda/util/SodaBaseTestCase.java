@@ -14,7 +14,7 @@ public abstract class SodaBaseTestCase extends AbstractDb4oTestCase {
 		_array=createData();
 	}
 
-	public void store() {
+	protected void store() {
 		Object[] data=createData();
 		for (int idx = 0; idx < data.length; idx++) {
 			db().set(data[idx]);
