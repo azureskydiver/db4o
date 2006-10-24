@@ -439,5 +439,10 @@ public class BTree extends YapMeta implements TransactionParticipant {
         });
 		return allNodeIDs.iterator();
 	}
+	
+	public BTreeRange asRange(Transaction trans){
+		return new BTreeRangeSingle(trans, this, firstPointer(trans), null);
+	}
+	
 }
 
