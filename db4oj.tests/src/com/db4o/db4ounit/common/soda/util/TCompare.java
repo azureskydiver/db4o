@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.db4ounit.Db4oUnitPlatform;
 
 public class TCompare {
 
@@ -54,7 +55,7 @@ public class TCompare {
 
         Field fields[] = clazz.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
-            if (storeableField(clazz, fields[i])) {
+            if (Db4oUnitPlatform.isStoreableField(fields[i])) {
                 Platform4.setAccessible(fields[i]);
                 try {
                     path = a_path + fields[i].getName() + ":";
@@ -194,12 +195,6 @@ public class TCompare {
             elements *= a_dim[i];
         }
         return elements;
-    }
-
-    public static boolean storeableField(Class a_class, Field a_field) {
-        return (!Modifier.isStatic(a_field.getModifiers()))
-            && (!Modifier.isTransient(a_field.getModifiers())
-                & !(a_field.getName().indexOf("$") > -1));
     }
 
     private TCompare() {}
