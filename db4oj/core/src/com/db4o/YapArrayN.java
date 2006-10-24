@@ -76,12 +76,12 @@ public final class YapArrayN extends YapArray {
     }
     
     protected int readElementsDefrag(ReaderPair readers) {
-        int elements = super.readElementsDefrag(readers);        
-        int totalElements=0;
-        for (int i = 0; i < elements; i++) {
-            totalElements+=readers.readInt();
-        }
-        return totalElements;
+    	int numDimensions=super.readElementsDefrag(readers);        
+    	int [] dimensions=new int[numDimensions];
+	    for (int i = 0; i < numDimensions; i++) {
+	    	dimensions[i]=readers.readInt();
+	    }
+	    return elementCount(dimensions);
     }
     
     public final void read1Candidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
