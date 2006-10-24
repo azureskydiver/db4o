@@ -12,6 +12,7 @@ import com.db4o.query.*;
  * @exclude
  */
 public class QQuery extends QQueryBase implements Query {
+	
     QQuery(Transaction a_trans, QQuery a_parent, String a_field) {
     	super(a_trans,a_parent,a_field);
     }
