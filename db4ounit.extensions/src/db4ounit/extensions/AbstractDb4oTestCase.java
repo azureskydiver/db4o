@@ -105,7 +105,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 
 	private Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-		        new Db4oSingleClient(configSource(independentConfig)), testCases());
+		        new Db4oSingleClient(configSource(independentConfig)), 
+		        testCases(),
+		        new Class[] {OptOutCS.class});
 	}
 
     private ConfigurationSource configSource(boolean independentConfig) {
