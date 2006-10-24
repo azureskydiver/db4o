@@ -19,28 +19,38 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	
 	private static final int[] VALUES = new int[] { 1 , 5, 6 , 7, 9};
 	
-	private final int [] ids = new int[VALUES.length];
+	private final int [] itemIds = new int[VALUES.length];
+	
+	private int idForGetAll;
+	
 	
 	protected void configure(Configuration config) {
 		indexField(config, Item.class, "foo");
 	}
 	
 	public void testClassQuery(){
-		assertIDs(classOnlyQuery(), ids);
+		assertIDs(classOnlyQuery(), itemIds);
+	}
+	
+	public void testGetAll(){
+		QueryResult queryResult = newQueryResult();
+		queryResult.loadFromClassIndexes(stream().classCollection().iterator());
+		int[] ids = IntArrays4.concat(itemIds, new int[] {idForGetAll});
+		assertIDs(queryResult, ids, true);
 	}
 	
 	public void _testIndexedFieldQuery(){
 		Query query = newItemQuery();
 		query.descend("foo").constrain(new Integer(6)).smaller();
 		QueryResult queryResult = executeQuery(query);
-		assertIDs(queryResult, new int[] {ids[0], ids[1] });
+		assertIDs(queryResult, new int[] {itemIds[0], itemIds[1] });
 	}
 	
 	public void _testNonIndexedFieldQuery(){
 		Query query = newItemQuery();
 		query.descend("bar").constrain(new Integer(6)).smaller();
 		QueryResult queryResult = executeQuery(query);
-		assertIDs(queryResult, new int[] {ids[0], ids[1] });
+		assertIDs(queryResult, new int[] {itemIds[0], itemIds[1] });
 	}
 	
 	private QueryResult classOnlyQuery() {
@@ -60,7 +70,11 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	}
 	
 	private void assertIDs(QueryResult queryResult, int[] expectedIDs){
-		ExpectingVisitor expectingVisitor = new ExpectingVisitor(IntArrays4.toObjectArray(expectedIDs));
+		assertIDs(queryResult, expectedIDs, false);
+	}
+	
+	private void assertIDs(QueryResult queryResult, int[] expectedIDs, boolean ignoreUnexpected){
+		ExpectingVisitor expectingVisitor = new ExpectingVisitor(IntArrays4.toObjectArray(expectedIDs), false, ignoreUnexpected);
 		IntIterator4 i = queryResult.iterateIDs();
 		while(i.moveNext()){
 			expectingVisitor.visit(new Integer(i.currentInt()));
@@ -74,17 +88,20 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 
 	protected void store() throws Exception {
 		storeItems(VALUES);
+		ItemForGetAll ifga = new ItemForGetAll();
+		store(ifga);
+		idForGetAll = (int)db().getID(ifga);
 	}
 	
 	protected void storeItems(final int[] foos) {
 		for (int i = 0; i < foos.length; i++) {
 			Item item = new Item(foos[i]); 
 			store(item);
-			ids[i] = (int)db().getID(item);
+			itemIds[i] = (int)db().getID(item);
 	    }
 	}
 	
-	public static class Item{
+	public static class Item {
 		
 		public int foo;
 		
@@ -101,8 +118,10 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 		
 	}
 	
+	public static class ItemForGetAll {
+		
+	}
+	
 	protected abstract QueryResult newQueryResult();
-	
-	
 	
 }
