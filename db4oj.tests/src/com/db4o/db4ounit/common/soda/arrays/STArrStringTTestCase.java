@@ -7,7 +7,7 @@ import com.db4o.query.*;
 
 public class STArrStringTTestCase extends SodaBaseTestCase {
 	
-	public class Data {
+	public static class Data {
 		public String[] _strArr;
 
 		public Data(String[] arr) {
