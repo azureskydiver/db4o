@@ -21,7 +21,7 @@ public class Test extends AllTests {
     public static boolean clientServer = true;
     static boolean runServer = true;
     static int errorCount = 0;
-    static int assertionCount = 0;
+    public static int assertionCount = 0;
     static int run;
     
     static MemoryFile memoryFile;
