@@ -46,7 +46,7 @@ public class LazyQueryResult implements QueryResult {
 		final BTree btree = ((BTreeClassIndexStrategy)index).btree();
 		_iterable = new Iterable4() {
 			public Iterator4 iterator() {
-				return new BTreeRangeSingle(transaction(), btree, btree.firstPointer(transaction()), null).keys();
+				return  btree.asRange(transaction()).keys();
 			}
 		};
 	}
