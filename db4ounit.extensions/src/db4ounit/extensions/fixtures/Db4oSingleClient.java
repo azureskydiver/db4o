@@ -40,6 +40,13 @@ public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
             throw new TestException(e);
         }
     }
+    
+	public boolean accept(Class clazz) {
+		if((OptOutCS.class.isAssignableFrom(clazz))){
+			return false;
+		}
+		return true;
+	}
 
     public ExtObjectContainer db() {
         return _objectContainer;
