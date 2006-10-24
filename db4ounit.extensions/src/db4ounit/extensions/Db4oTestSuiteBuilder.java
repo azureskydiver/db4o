@@ -23,6 +23,11 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
         setFixture(fixture);
     }
     
+    public Db4oTestSuiteBuilder(Db4oFixture fixture, Class[] classes, Class[] optOut) {     
+        super(classes, optOut);
+        setFixture(fixture);
+    }
+    
     private void setFixture(Db4oFixture fixture){
         if (null == fixture) throw new ArgumentNullException("fixture");     
         _fixture = fixture;
