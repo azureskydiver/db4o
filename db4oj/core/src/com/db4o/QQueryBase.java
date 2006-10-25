@@ -354,30 +354,31 @@ public abstract class QQueryBase implements Unversioned {
     
     public Iterator4 executeLazy(){
     	
-		CreateCandidateCollectionResult r = createCandidateCollection();
+		final CreateCandidateCollectionResult r = createCandidateCollection();
 		
         // final boolean topLevel = r.topLevel;
         
-        final boolean checkDuplicates = r.checkDuplicates;
-        
-        final List4 candidateCollection = r.candidateCollection;
         if (Debug.queries) {
         	logConstraints();
         }
         
-		return new MappingIterator(new CompositeIterator4(
-        	new MappingIterator(new Iterator4Impl(candidateCollection)){
-				protected Object map(Object current) {
-					QCandidates candidates = (QCandidates)current;
-					return candidates.executeLazy();
-				}
-    	})){
-			
-			private TreeInt ids = new TreeInt(0);
+        Iterator4 candidateCollection = new Iterator4Impl(r.candidateCollection);
+        
+        MappingIterator executeCandidates = new MappingIterator(candidateCollection){
+			protected Object map(Object current) {
+				return ((QCandidates)current).executeLazy();
+			}
+        };
+        
+        CompositeIterator4 executeAllCandidates = new CompositeIterator4(executeCandidates);
+        
+        MappingIterator checkDuplicates = new MappingIterator(executeAllCandidates) {
+        	
+        	private TreeInt ids = new TreeInt(0);
 		
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
-				if(checkDuplicates){
+				if(r.checkDuplicates){
 					if(ids.find(id) != null){
 						return MappingIterator.SKIP;
 					}
@@ -387,6 +388,8 @@ public abstract class QQueryBase implements Unversioned {
 			}
 		
 		};
+		
+		return checkDuplicates;
     }
     
 
