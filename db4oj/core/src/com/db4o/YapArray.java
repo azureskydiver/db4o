@@ -181,10 +181,15 @@ public class YapArray extends YapIndependantType {
     public int objectLength(Object obj) {
         return ownLength(obj) + (_reflectArray.getLength(obj) * i_handler.linkLength());
     }
+
     
     public int ownLength(Object obj){
-        return YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH * 2;
+        return ownLength();
     }
+
+	private int ownLength() {
+		return YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH * 2;
+	}
     
 	public void prepareComparison(Transaction a_trans, Object obj) {
 	    prepareComparison(obj);
@@ -489,6 +494,9 @@ public class YapArray extends YapIndependantType {
     public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
     	if(!(i_handler.isSecondClass()==YapConst.YES)) {
     		mf._array.defragIDs(this, readers);
+    	}
+    	else {
+    		readers.incrementOffset(ownLength());
     	}
     }
 
