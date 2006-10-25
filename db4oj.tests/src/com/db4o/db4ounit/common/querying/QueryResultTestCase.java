@@ -39,14 +39,14 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 		assertIDs(queryResult, ids, true);
 	}
 	
-	public void _testIndexedFieldQuery(){
+	public void testIndexedFieldQuery(){
 		Query query = newItemQuery();
 		query.descend("foo").constrain(new Integer(6)).smaller();
 		QueryResult queryResult = executeQuery(query);
 		assertIDs(queryResult, new int[] {itemIds[0], itemIds[1] });
 	}
 	
-	public void _testNonIndexedFieldQuery(){
+	public void testNonIndexedFieldQuery(){
 		Query query = newItemQuery();
 		query.descend("bar").constrain(new Integer(6)).smaller();
 		QueryResult queryResult = executeQuery(query);
