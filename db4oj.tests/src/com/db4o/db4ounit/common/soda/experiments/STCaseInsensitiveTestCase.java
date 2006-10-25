@@ -16,7 +16,7 @@ public class STCaseInsensitiveTestCase extends com.db4o.db4ounit.common.soda.uti
 		this.str = str;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STCaseInsensitiveTestCase("Hihoho"),
 			new STCaseInsensitiveTestCase("Hello"),

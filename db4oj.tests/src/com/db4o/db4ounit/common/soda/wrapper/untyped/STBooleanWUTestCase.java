@@ -17,7 +17,7 @@ public class STBooleanWUTestCase extends com.db4o.db4ounit.common.soda.util.Soda
 		i_boolean = new Boolean(a_boolean);
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STBooleanWUTestCase(false),
 			new STBooleanWUTestCase(true),

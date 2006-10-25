@@ -15,7 +15,7 @@ public class STDoubleWUTestCase extends com.db4o.db4ounit.common.soda.util.SodaB
 		i_double = new Double(a_double);
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STDoubleWUTestCase(0),
 			new STDoubleWUTestCase(0),

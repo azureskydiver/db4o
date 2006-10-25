@@ -46,7 +46,7 @@ public class STInnerClassesTestCase extends com.db4o.db4ounit.common.soda.util.S
 	{
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]
 			{
 				new Parent(new FirstClass("Example")),

@@ -16,7 +16,7 @@ public class STIntegerWUTestCase extends com.db4o.db4ounit.common.soda.util.Soda
 		i_int = new Integer(a_int);
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STIntegerWUTestCase(0),
 			new STIntegerWUTestCase(1),

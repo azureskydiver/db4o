@@ -15,7 +15,7 @@ public class STArrStringUNTestCase extends com.db4o.db4ounit.common.soda.util.So
 		strArr = arr;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		STArrStringUNTestCase[] arr = new STArrStringUNTestCase[5];
 		
 		arr[0] = new STArrStringUNTestCase();

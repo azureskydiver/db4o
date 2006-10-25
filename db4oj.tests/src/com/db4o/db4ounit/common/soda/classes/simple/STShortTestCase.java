@@ -18,7 +18,7 @@ public class STShortTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 		i_short = a_short;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STShortTestCase((short)0),
 			new STShortTestCase((short)1),

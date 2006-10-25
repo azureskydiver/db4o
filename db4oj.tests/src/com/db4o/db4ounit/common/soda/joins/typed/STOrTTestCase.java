@@ -21,7 +21,7 @@ public class STOrTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 		return "STOr: int:" + orInt + " str:" + orString;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STOrTTestCase(0, "hi"),
 			new STOrTTestCase(5, null),

@@ -16,7 +16,7 @@ public class STHashtableDTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		return h;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			vec(new Object[] { new Integer(5778), new Integer(5779)}), 
 			vec(new Object[] { new Integer(5778), new Integer(5789)}),

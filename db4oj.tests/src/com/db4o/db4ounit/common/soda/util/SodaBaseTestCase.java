@@ -21,7 +21,7 @@ public abstract class SodaBaseTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	protected abstract Object[] createData();
+	public abstract Object[] createData();
 
     protected void expect(Query query, int[] indices) {
         SodaTestUtil.expect(query, collectCandidates(indices), false);

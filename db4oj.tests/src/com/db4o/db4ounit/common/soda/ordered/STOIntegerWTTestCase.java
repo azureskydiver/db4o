@@ -15,7 +15,7 @@ public class STOIntegerWTTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		i_int = new Integer(a_int);
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STOIntegerWTTestCase(1001),
 			new STOIntegerWTTestCase(99),

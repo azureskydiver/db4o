@@ -25,7 +25,7 @@ public class STHashtableEUTestCase extends com.db4o.db4ounit.common.soda.util.So
 		col = eh;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STHashtableEUTestCase(),
 			new STHashtableEUTestCase(new Object[0]),

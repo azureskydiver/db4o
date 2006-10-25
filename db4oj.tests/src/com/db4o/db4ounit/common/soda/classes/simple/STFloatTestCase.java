@@ -15,7 +15,7 @@ public class STFloatTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 		i_float = a_float;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STFloatTestCase(Float.MIN_VALUE),
 			new STFloatTestCase((float) 0.0000123),

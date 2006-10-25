@@ -24,7 +24,7 @@ public class STStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBas
 		return str;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STStringTestCase(null),
 			new STStringTestCase("aaa"),

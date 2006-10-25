@@ -20,7 +20,7 @@ public class STHashtableTTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		}
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STHashtableTTestCase(),
 			new STHashtableTTestCase(new Object[0]),

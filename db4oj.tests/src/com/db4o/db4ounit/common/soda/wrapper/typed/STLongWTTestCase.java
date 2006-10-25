@@ -15,7 +15,7 @@ public class STLongWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBas
 		i_long = new Long(a_long);
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STLongWTTestCase(Long.MIN_VALUE),
 			new STLongWTTestCase(- 1),
