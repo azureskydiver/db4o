@@ -5,7 +5,6 @@ package com.db4o.test.legacy.soda.classes.simple;
 import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 public class STByte implements STClass1{
 	

@@ -5,7 +5,6 @@ package com.db4o.test.legacy.soda.joins.untyped;
 import java.util.*;
 
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 public class STAndBooleanDate {
 	

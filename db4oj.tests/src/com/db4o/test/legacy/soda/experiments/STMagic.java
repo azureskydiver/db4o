@@ -11,7 +11,6 @@ import com.db4o.test.legacy.soda.arrays.typed.*;
 import com.db4o.test.legacy.soda.classes.simple.*;
 import com.db4o.test.legacy.soda.classes.typedhierarchy.*;
 import com.db4o.test.legacy.soda.wrapper.untyped.*;
-import com.db4o.test.soda.*;
 
 
 // dependant on the previous run of some other test classes
