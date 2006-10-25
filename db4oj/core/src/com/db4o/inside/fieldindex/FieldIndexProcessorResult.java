@@ -1,6 +1,5 @@
-/**
- * 
- */
+/* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.inside.fieldindex;
 
 import com.db4o.*;
@@ -24,8 +23,24 @@ public class FieldIndexProcessorResult {
 	}
 	
 	public TreeInt toTreeInt(){
-		return _indexedNode.toTreeInt();
+		if(foundMatch()){
+			return _indexedNode.toTreeInt();
+		}
+		return null;
 	}
+	
+	public boolean foundMatch(){
+		return foundIndex() && ! noMatch();
+	}
+	
+	public boolean foundIndex(){
+		return this != NO_INDEX_FOUND;
+	}
+	
+	public boolean noMatch(){
+		return this == FOUND_INDEX_BUT_NO_MATCH;
+	}
+	
 	
 	
 }

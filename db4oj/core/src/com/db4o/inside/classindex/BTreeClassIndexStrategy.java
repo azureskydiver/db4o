@@ -102,4 +102,19 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void defragIndex(ReaderPair readers) {
 		_btreeIndex.defragIndex(readers);
 	}
+	
+	public static BTree btree(YapClass clazz) {
+		ClassIndexStrategy index = clazz.index();
+		if(! (index instanceof BTreeClassIndexStrategy)){
+			throw new IllegalStateException();
+		}
+		return ((BTreeClassIndexStrategy)index).btree();
+	}
+	
+	public static Iterator4 iterate(YapClass clazz, Transaction trans) {
+		return btree(clazz).asRange(trans).keys();
+	}
+	
+	
+	
 }
