@@ -6,13 +6,14 @@ import java.util.*;
 import com.db4o.query.*;
 
 
+
 public class STHashtableEUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase {
 	
 	public static class ExtendHashtable extends Hashtable{
 		
 	}
 	
-	public Object col;
+	Object col;
 
 	public STHashtableEUTestCase() {
 	}

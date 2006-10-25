@@ -6,6 +6,7 @@ import java.util.*;
 import com.db4o.query.*;
 
 
+
 public class STHashtableDTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase {
 	
 	protected Hashtable vec(Object[] objects){
