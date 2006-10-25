@@ -60,7 +60,7 @@ public class STInnerClassesTestCase extends com.db4o.db4ounit.common.soda.util.S
 	public void testNothing()
 	{
 		Query q = newQuery();
-		Query q2 = q.descend("child");
+		q.descend("child");
 		
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expect(q, _array);
 		//SodaTest.log(q);

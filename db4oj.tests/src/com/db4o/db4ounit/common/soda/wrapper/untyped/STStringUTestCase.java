@@ -32,7 +32,7 @@ public class STStringUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 
 	public void testNotEquals() {
 		Query q = newQuery();
-		Constraint c = q.constrain(_array[2]);
+		q.constrain(_array[2]);
 		q.descend("str").constraints().not();
 		
 		expect(q, new int[] { 0, 1, 3 });
@@ -47,14 +47,14 @@ public class STStringUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 
 	public void testContains() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase("od"));
+		q.constrain(new STStringUTestCase("od"));
 		q.descend("str").constraints().contains();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STStringUTestCase("dod"));
 	}
 
 	public void testNotContains() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase("od"));
+		q.constrain(new STStringUTestCase("od"));
 		q.descend("str").constraints().contains().not();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expect(
 			q,
@@ -63,31 +63,31 @@ public class STStringUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 
 	public void testLike() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase("do"));
+		q.constrain(new STStringUTestCase("do"));
 		q.descend("str").constraints().like();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STStringUTestCase("dod"));
 		q = newQuery();
-		c = q.constrain(new STStringUTestCase("od"));
+		q.constrain(new STStringUTestCase("od"));
 		q.descend("str").constraints().like();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q,_array[3]);
 	}
 
 	public void testNotLike() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase("aaa"));
+		q.constrain(new STStringUTestCase("aaa"));
 		q.descend("str").constraints().like().not();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expect(
 			q,
 			new Object[] { new STStringUTestCase(null), new STStringUTestCase("bbb"), new STStringUTestCase("dod")});
 		q = newQuery();
-		c = q.constrain(new STStringUTestCase("xxx"));
+		q.constrain(new STStringUTestCase("xxx"));
 		q.descend("str").constraints().like();
 		expect(q, new int[] {});
 	}
 
 	public void testIdentity() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase("aaa"));
+		q.constrain(new STStringUTestCase("aaa"));
 		ObjectSet set = q.execute();
 		STStringUTestCase identityConstraint = (STStringUTestCase) set.next();
 		identityConstraint.str = "hihs";
@@ -99,7 +99,7 @@ public class STStringUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 
 	public void testNotIdentity() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase("aaa"));
+		q.constrain(new STStringUTestCase("aaa"));
 		ObjectSet set = q.execute();
 		STStringUTestCase identityConstraint = (STStringUTestCase) set.next();
 		identityConstraint.str = null;
@@ -113,14 +113,14 @@ public class STStringUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 
 	public void testNull() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase(null));
+		q.constrain(new STStringUTestCase(null));
 		q.descend("str").constrain(null);
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STStringUTestCase(null));
 	}
 
 	public void testNotNull() {
 		Query q = newQuery();
-		Constraint c = q.constrain(new STStringUTestCase(null));
+		q.constrain(new STStringUTestCase(null));
 		q.descend("str").constrain(null).not();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expect(
 			q,

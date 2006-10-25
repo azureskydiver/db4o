@@ -41,14 +41,14 @@ public class STShortWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	public void testNotEquals(){
 		Query q = newQuery();
 		
-		Constraint c = q.constrain(_array[0]);
+		q.constrain(_array[0]);
 		q.descend(DESCENDANT).constraints().not();
 		expect(q, new int[] {1, 2, 3});
 	}
 	
 	public void testGreater(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)9));
+		q.constrain(new STShortWTTestCase((short)9));
 		q.descend(DESCENDANT).constraints().greater();
 		
 		expect(q, new int[] {2, 3});
@@ -56,14 +56,14 @@ public class STShortWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testSmaller(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)1));
+		q.constrain(new STShortWTTestCase((short)1));
 		q.descend(DESCENDANT).constraints().smaller();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, _array[0]);
 	}
 	
 	public void testContains(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)9));
+		q.constrain(new STShortWTTestCase((short)9));
 		q.descend(DESCENDANT).constraints().contains();
 		
 		expect(q, new int[] {2, 3});
@@ -71,7 +71,7 @@ public class STShortWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testNotContains(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)0));
+		q.constrain(new STShortWTTestCase((short)0));
 		q.descend(DESCENDANT).constraints().contains().not();
 		
 		expect(q, new int[] {1, 2});
@@ -79,18 +79,18 @@ public class STShortWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testLike(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)90));
+		q.constrain(new STShortWTTestCase((short)90));
 		q.descend(DESCENDANT).constraints().like();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, _array[3]);
 		q = newQuery();
-		c = q.constrain(new STShortWTTestCase((short)10));
+		q.constrain(new STShortWTTestCase((short)10));
 		q.descend(DESCENDANT).constraints().like();
 		expect(q, new int[] {});
 	}
 	
 	public void testNotLike(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)1));
+		q.constrain(new STShortWTTestCase((short)1));
 		q.descend(DESCENDANT).constraints().like().not();
 		
 		expect(q, new int[] {0, 2, 3});
@@ -98,7 +98,7 @@ public class STShortWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testIdentity(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)1));
+		q.constrain(new STShortWTTestCase((short)1));
 		ObjectSet set = q.execute();
 		STShortWTTestCase identityConstraint = (STShortWTTestCase)set.next();
 		identityConstraint.i_short = new Short((short)9999);
@@ -110,7 +110,7 @@ public class STShortWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testNotIdentity(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STShortWTTestCase((short)1));
+		q.constrain(new STShortWTTestCase((short)1));
 		ObjectSet set = q.execute();
 		STShortWTTestCase identityConstraint = (STShortWTTestCase)set.next();
 		identityConstraint.i_short = new Short((short)9080);
