@@ -161,14 +161,24 @@ public final class QCandidates implements Visitor4 {
         if(DTrace.enabled){
             DTrace.QUERY_PROCESS.log();
         }
-        boolean foundIndex = processFieldIndexes();
-        if(!foundIndex){
-            loadFromClassIndex();
+        final FieldIndexProcessorResult result = processFieldIndexes();
+        if(result.foundIndex()){
+        	i_root = result.toQCandidate(this);
+        }else{
+        	loadFromClassIndex();
         }
         evaluate();
     }
     
     public Iterator4 executeLazy(){
+    	
+    	final FieldIndexProcessorResult result = processFieldIndexes();
+    	
+    	if(result.noMatch()){
+    		return Iterator4Impl.EMPTY;
+    	}
+    	
+    	
     	
     	
     	
@@ -180,20 +190,11 @@ public final class QCandidates implements Visitor4 {
 		return i_yapClass.indexEntryCount(i_trans);
 	}
 
-	private boolean processFieldIndexes() {
+	private FieldIndexProcessorResult processFieldIndexes() {
 		if(i_constraints == null){
-			return false;
+			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
-		FieldIndexProcessor processor = new FieldIndexProcessor(this);
-		final FieldIndexProcessorResult result = processor.run();
-		if (result == FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH) {
-			return true;
-		}
-		if (result == FieldIndexProcessorResult.NO_INDEX_FOUND) {
-			return false;
-		}
-		i_root = result.toQCandidate(this);
-		return true;
+		return new FieldIndexProcessor(this).run();
 	}
 
     void evaluate() {

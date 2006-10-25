@@ -29,7 +29,7 @@ public class ClassMarshaller0 extends ClassMarshaller{
     }
 
     private BTree btree(YapClass clazz) {
-        return ((BTreeClassIndexStrategy) clazz.index()).btree();
+        return BTreeClassIndexStrategy.btree(clazz);
     }
 
     private int validIndexId(int indexID) {

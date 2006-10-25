@@ -46,17 +46,9 @@ public class LazyQueryResult implements QueryResult {
 			}
 		};
 	}
-
-	public BTree classIndexBTree(YapClass clazz) {
-		ClassIndexStrategy index = clazz.index();
-		if(! (index instanceof BTreeClassIndexStrategy)){
-			throw new IllegalStateException();
-		}
-		return ((BTreeClassIndexStrategy)index).btree();
-	}
 	
 	public Iterator4 classIndexIterator(YapClass clazz) {
-		return classIndexBTree(clazz).asRange(transaction()).keys();
+		return BTreeClassIndexStrategy.iterate(clazz, transaction());
 	}
 	
 	public Transaction transaction(){
