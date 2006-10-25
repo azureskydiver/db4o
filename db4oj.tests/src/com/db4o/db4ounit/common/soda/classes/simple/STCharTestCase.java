@@ -40,14 +40,14 @@ public class STCharTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 	public void testNotEquals(){
 		Query q = newQuery();
 		
-		Constraint c = q.constrain(_array[0]);
+		q.constrain(_array[0]);
 		q.descend(DESCENDANT).constrain(new Character((char)0)).not();
 		expect(q, new int[] {1, 2, 3});
 	}
 	
 	public void testGreater(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STCharTestCase((char)9));
+		q.constrain(new STCharTestCase((char)9));
 		q.descend(DESCENDANT).constraints().greater();
 		
 		expect(q, new int[] {2, 3});
@@ -55,14 +55,14 @@ public class STCharTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 	
 	public void testSmaller(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STCharTestCase((char)1));
+		q.constrain(new STCharTestCase((char)1));
 		q.descend(DESCENDANT).constraints().smaller();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, _array[0]);
 	}
 	
 	public void testIdentity(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STCharTestCase((char)1));
+		q.constrain(new STCharTestCase((char)1));
 		ObjectSet set = q.execute();
 		STCharTestCase identityConstraint = (STCharTestCase)set.next();
 		identityConstraint.i_char = 9999;
@@ -74,7 +74,7 @@ public class STCharTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 	
 	public void testNotIdentity(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STCharTestCase((char)1));
+		q.constrain(new STCharTestCase((char)1));
 		ObjectSet set = q.execute();
 		STCharTestCase identityConstraint = (STCharTestCase)set.next();
 		identityConstraint.i_char = 9080;

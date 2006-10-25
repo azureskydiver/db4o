@@ -38,14 +38,14 @@ public class STIntegerTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	public void testNotEquals(){
 		Query q = newQuery();
 		
-		Constraint c = q.constrain(_array[0]);
+		q.constrain(_array[0]);
 		q.descend("i_int").constrain(new Integer(0)).not();
 		expect(q, new int[] {1, 2, 3});
 	}
 	
 	public void testGreater(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(9));
+		q.constrain(new STIntegerTestCase(9));
 		q.descend("i_int").constraints().greater();
 		
 		expect(q, new int[] {2, 3});
@@ -53,14 +53,14 @@ public class STIntegerTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testSmaller(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(1));
+		q.constrain(new STIntegerTestCase(1));
 		q.descend("i_int").constraints().smaller();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, _array[0]);
 	}
 	
 	public void testContains(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(9));
+		q.constrain(new STIntegerTestCase(9));
 		q.descend("i_int").constraints().contains();
 		
 		expect(q, new int[] {2, 3});
@@ -68,7 +68,7 @@ public class STIntegerTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testNotContains(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(0));
+		q.constrain(new STIntegerTestCase(0));
 		q.descend("i_int").constrain(new Integer(0)).contains().not();
 		
 		expect(q, new int[] {1, 2});
@@ -76,18 +76,18 @@ public class STIntegerTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testLike(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(90));
+		q.constrain(new STIntegerTestCase(90));
 		q.descend("i_int").constraints().like();
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STIntegerTestCase(909));
 		q = newQuery();
-		c = q.constrain(new STIntegerTestCase(10));
+		q.constrain(new STIntegerTestCase(10));
 		q.descend("i_int").constraints().like();
 		expect(q, new int[] {});
 	}
 	
 	public void testNotLike(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(1));
+		q.constrain(new STIntegerTestCase(1));
 		q.descend("i_int").constraints().like().not();
 		
 		expect(q, new int[] {0, 2, 3});
@@ -95,7 +95,7 @@ public class STIntegerTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testIdentity(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(1));
+		q.constrain(new STIntegerTestCase(1));
 		ObjectSet set = q.execute();
 		STIntegerTestCase identityConstraint = (STIntegerTestCase)set.next();
 		identityConstraint.i_int = 9999;
@@ -107,7 +107,7 @@ public class STIntegerTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 	
 	public void testNotIdentity(){
 		Query q = newQuery();
-		Constraint c = q.constrain(new STIntegerTestCase(1));
+		q.constrain(new STIntegerTestCase(1));
 		ObjectSet set = q.execute();
 		STIntegerTestCase identityConstraint = (STIntegerTestCase)set.next();
 		identityConstraint.i_int = 9080;
