@@ -12,6 +12,28 @@ public class Collection4TestCase implements TestCase {
 		new TestRunner(Collection4TestCase.class).run();
 	}
 	
+	public void testNulls(){
+		final Collection4 c = new Collection4();
+		c.add("one");
+		assertNotContainsNull(c);
+		c.add(null);
+		assertContainsNull(c);
+		assertCollection(new String[] { "one", null }, c);
+		c.prepend(null);
+		assertCollection(new String[] { null, "one", null }, c);
+		c.prepend("zero");
+		c.add("two");
+		assertCollection(new String[] {"zero", null, "one", null , "two"}, c);
+		assertContainsNull(c);
+		c.remove(null);
+		assertCollection(new String[] { "zero", "one", null , "two"}, c);
+		c.remove(null);
+		assertNotContainsNull(c);
+		assertCollection(new String[] { "zero", "one", "two"}, c);
+		c.remove(null);
+		assertCollection(new String[] { "zero", "one", "two"}, c);
+	}
+	
 	public void testPrepend() {
 		final Collection4 c = new Collection4();
 		c.prepend("foo");
@@ -62,6 +84,24 @@ public class Collection4TestCase implements TestCase {
 	private void assertCollection(String[] expected, Collection4 c) {
 		Assert.areEqual(expected.length, c.size());
 		assertIterator(expected, c.iterator());
+	}
+	
+	private void assertContainsNull(Collection4 c) {
+		Assert.isTrue(c.contains(null));
+		Assert.isNull(c.get(null));
+		int size = c.size();
+		c.ensure(null);
+		Assert.areEqual(size, c.size());
+	}
+	
+	private void assertNotContainsNull(Collection4 c) {
+		Assert.isFalse(c.contains(null));
+		Assert.isNull(c.get(null));
+		int size = c.size();
+		c.ensure(null);
+		Assert.areEqual(size + 1, c.size());
+		c.remove(null);
+		Assert.areEqual(size, c.size());
 	}
 
 	public void testIterator() {
