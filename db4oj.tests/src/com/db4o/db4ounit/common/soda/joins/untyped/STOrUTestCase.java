@@ -29,7 +29,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 		return "STOr: int:" + orInt + " str:" + orString;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STOrUTestCase(new Integer(0), "hi"),
 			new STOrUTestCase(5, null),

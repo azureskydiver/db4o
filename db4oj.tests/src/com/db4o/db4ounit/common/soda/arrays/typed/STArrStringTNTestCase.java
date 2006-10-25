@@ -15,7 +15,7 @@ public class STArrStringTNTestCase extends com.db4o.db4ounit.common.soda.util.So
 		strArr = arr;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		STArrStringTNTestCase[] arr = new STArrStringTNTestCase[5];
 		
 		arr[0] = new STArrStringTNTestCase();

@@ -29,7 +29,7 @@ public class STUH1TestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 		foo1 = str;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STUH1TestCase(),
 			new STUH1TestCase("str1"),

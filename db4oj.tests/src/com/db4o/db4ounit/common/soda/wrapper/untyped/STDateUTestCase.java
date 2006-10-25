@@ -17,7 +17,7 @@ public class STDateUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 		i_date = a_date;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STDateUTestCase(null),
 			new STDateUTestCase(new Date(4000)),

@@ -26,7 +26,7 @@ public class STRTH1TestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 		foo1 = str;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		
 		STRTH1TestCase[] objects = {
 			new STRTH1TestCase(),

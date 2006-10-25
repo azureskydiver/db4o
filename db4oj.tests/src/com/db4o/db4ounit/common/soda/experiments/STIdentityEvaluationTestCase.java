@@ -7,7 +7,7 @@ import com.db4o.query.*;
 
 public class STIdentityEvaluationTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase{
     
-    protected Object[] createData() {
+    public Object[] createData() {
         
         Helper helperA = new Helper("aaa");
         

@@ -15,7 +15,7 @@ public class STArrIntegerUTestCase extends com.db4o.db4ounit.common.soda.util.So
 		intArr = arr;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STArrIntegerUTestCase(),
 			new STArrIntegerUTestCase(new Object[0]),

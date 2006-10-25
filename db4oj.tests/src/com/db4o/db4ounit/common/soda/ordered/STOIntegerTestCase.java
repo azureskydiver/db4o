@@ -19,7 +19,7 @@ public class STOIntegerTestCase extends com.db4o.db4ounit.common.soda.util.SodaB
 		return "STInteger: " + i_int;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STOIntegerTestCase(1001),
 			new STOIntegerTestCase(99),

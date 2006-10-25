@@ -10,7 +10,7 @@ public class STSDFT1TestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 	public STSDFT1TestCase(){
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STSDFT1TestCase(),
 			new STSDFT2(),

@@ -15,7 +15,7 @@ public class STOStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
         this.foo = str;
     }
 
-    protected Object[] createData() {
+    public Object[] createData() {
         return new Object[] {
             new STOStringTestCase(null),
             new STOStringTestCase("bbb"),

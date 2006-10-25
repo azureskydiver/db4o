@@ -15,7 +15,7 @@ public class STArrMixedNTestCase extends com.db4o.db4ounit.common.soda.util.Soda
 		this.arr = arr;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		STArrMixedNTestCase[] arrMixed = new STArrMixedNTestCase[5];
 		
 		arrMixed[0] = new STArrMixedNTestCase();

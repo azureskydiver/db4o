@@ -15,7 +15,7 @@ public class STArrIntegerTNTestCase extends com.db4o.db4ounit.common.soda.util.S
 		intArr = arr;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		STArrIntegerTNTestCase[] arr = new STArrIntegerTNTestCase[5];
 		
 		arr[0] = new STArrIntegerTNTestCase();

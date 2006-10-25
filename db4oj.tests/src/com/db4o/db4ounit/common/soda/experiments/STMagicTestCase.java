@@ -5,11 +5,10 @@ package com.db4o.db4ounit.common.soda.experiments;
 // import java.util.regex.*;
 
 import com.db4o.db4ounit.common.soda.*;
-import com.db4o.db4ounit.common.soda.classes.typedhierarchy.STTH3;
+import com.db4o.db4ounit.common.soda.classes.simple.*;
+import com.db4o.db4ounit.common.soda.classes.typedhierarchy.*;
+import com.db4o.db4ounit.common.soda.wrapper.untyped.*;
 import com.db4o.query.*;
-import com.db4o.test.legacy.soda.classes.simple.*;
-import com.db4o.test.legacy.soda.classes.typedhierarchy.*;
-import com.db4o.test.legacy.soda.wrapper.untyped.*;
 
 
 
@@ -38,7 +37,7 @@ public class STMagicTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 		return str;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] { new STMagicTestCase("aaa"), new STMagicTestCase("aaax")};
 	}
 
@@ -53,7 +52,7 @@ public class STMagicTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 		q.descend("str").constrain("aaa");
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expect(
 			q,
-			new Object[] { new STMagicTestCase("aaa"), new STString("aaa"), new STStringU("aaa")});
+			new Object[] { new STMagicTestCase("aaa"), new STStringTestCase("aaa"), new STStringUTestCase("aaa")});
 	}
 
 	/**
@@ -63,9 +62,9 @@ public class STMagicTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 	 */
 	public void testMultiClass() {
 		Query q = newQuery();
-		q.constrain(STDouble.class).or(q.constrain(STString.class));
-		Object[] stDoubles = new STDouble().store();
-		Object[] stStrings = new STString().store();
+		q.constrain(STDoubleTestCase.class).or(q.constrain(STStringTestCase.class));
+		Object[] stDoubles = new STDoubleTestCase().createData();
+		Object[] stStrings = new STStringTestCase().createData();
 		Object[] res = new Object[stDoubles.length + stStrings.length];
 		System.arraycopy(stDoubles, 0, res, 0, stDoubles.length);
 		System.arraycopy(stStrings, 0, res, stDoubles.length, stStrings.length);
@@ -79,7 +78,7 @@ public class STMagicTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 	 */
 	public void testExecuteAnyNode() {
 		Query q = newQuery();
-		q.constrain(new STTH1().store()[5]);
+		q.constrain(new STTH1TestCase().createData()[5]);
 		q = q.descend("h2").descend("h3");
 		//	We only get one STTH3 here, because the query is
 		//	constrained by the STTH2 with the "str2" member.
@@ -121,7 +120,7 @@ public class STMagicTestCase extends com.db4o.db4ounit.common.soda.util.SodaBase
 				candidate.include(sti.returnSomething().equals("aaa"));
 			}
 		});
-		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expect(q, new Object[] { new STMagicTestCase("aaa"), new STString("aaa")});
+		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expect(q, new Object[] { new STMagicTestCase("aaa"), new STStringTestCase("aaa")});
 	}
 	
 

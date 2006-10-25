@@ -15,7 +15,7 @@ public class STNullOnPathTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		this.bool = bool;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STNullOnPathTestCase(new Boolean(false))
 			};

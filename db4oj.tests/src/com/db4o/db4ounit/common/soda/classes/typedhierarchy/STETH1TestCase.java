@@ -16,7 +16,7 @@ public class STETH1TestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 		foo1 = str;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STETH1TestCase(),
 			new STETH1TestCase("str1"),

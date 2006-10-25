@@ -19,7 +19,7 @@ public class STCharWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBas
 		i_char = new Character(a_char);
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STCharWTTestCase((char)0),
 			new STCharWTTestCase((char)1),

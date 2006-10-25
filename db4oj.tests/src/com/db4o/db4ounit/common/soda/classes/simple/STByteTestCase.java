@@ -19,7 +19,7 @@ public class STByteTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 		i_byte = a_byte;
 	}
 	
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[]{
 			new STByteTestCase((byte)0),
 			new STByteTestCase((byte)1),

@@ -16,7 +16,7 @@ public class STStringUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
 		this.str = str;
 	}
 
-	protected Object[] createData() {
+	public Object[] createData() {
 		return new Object[] {
 			new STStringUTestCase(null),
 			new STStringUTestCase("aaa"),

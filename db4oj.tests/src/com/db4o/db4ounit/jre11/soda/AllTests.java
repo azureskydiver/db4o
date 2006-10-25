@@ -12,9 +12,9 @@ public class AllTests  extends Db4oTestSuite {
 				STHashtableDTestCase.class,
 				STHashtableEDTestCase.class,
 				STHashtableETTestCase.class,
-				STHashtableEUTestCase.class,
-				STHashtableTTestCase.class,
-				STHashtableUTestCase.class,
+//				STHashtableEUTestCase.class,
+//				STHashtableTTestCase.class,
+//				STHashtableUTestCase.class,
 		};
 	}
 
