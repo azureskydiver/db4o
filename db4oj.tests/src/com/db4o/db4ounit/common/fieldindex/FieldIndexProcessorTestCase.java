@@ -174,7 +174,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 	
 	private void assertCantOptimize(Query query) {
 		final FieldIndexProcessorResult result = executeProcessor(query);
-		Assert.isNull(result.found);
+		Assert.areSame(FieldIndexProcessorResult.NO_INDEX_FOUND,  result);
 	}
 
 	public void testIndexSelection() {		
@@ -288,9 +288,8 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 			Assert.areSame(FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH, result);
 			return;
 		}
-		Assert.isNotNull(result.found);
 				 
-		assertTreeInt(expectedIds, result.found);
+		assertTreeInt(expectedIds, result.toTreeInt());
 	}
 
 	private FieldIndexProcessorResult executeProcessor(final Query query) {
