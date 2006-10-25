@@ -18,6 +18,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 			SetCollectionOnUpdateTestCase.class,
 			SimpleMapTestCase.class,
 			com.db4o.db4ounit.jre12.fieldindex.AllTests.class,
+			com.db4o.db4ounit.jre12.soda.AllTests.class,
 		};
 	}
 }
