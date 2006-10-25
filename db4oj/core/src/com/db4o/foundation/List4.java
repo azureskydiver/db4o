@@ -35,6 +35,13 @@ public final class List4 implements Unversioned
 		_next = next;
 		_element = element;
 	}
+
+	boolean holds(Object obj) {
+		if(obj == null){
+			return _element == null;
+		}
+		return obj.equals(_element);
+	}
 	
 
 	
