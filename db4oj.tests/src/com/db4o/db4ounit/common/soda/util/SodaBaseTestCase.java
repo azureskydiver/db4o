@@ -8,7 +8,7 @@ import db4ounit.extensions.*;
 
 public abstract class SodaBaseTestCase extends AbstractDb4oTestCase {
 
-	protected Object[] _array;
+	protected transient Object[] _array;
 
 	protected void db4oSetupBeforeStore() throws Exception {
 		_array=createData();
