@@ -21,7 +21,7 @@ public class FieldIndexProcessor {
 			if (null == resolved) {
 				return FieldIndexProcessorResult.NO_INDEX_FOUND;
 			}
-			return new FieldIndexProcessorResult(resolved.toTreeInt());
+			return new FieldIndexProcessorResult(resolved);
 		}
 		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
 	}

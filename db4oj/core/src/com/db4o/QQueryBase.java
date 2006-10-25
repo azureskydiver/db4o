@@ -351,6 +351,45 @@ public abstract class QQueryBase implements Unversioned {
 		}
     }
 
+    
+    public Iterator4 executeLazy(){
+    	
+		CreateCandidateCollectionResult r = createCandidateCollection();
+		
+        // final boolean topLevel = r.topLevel;
+        
+        final boolean checkDuplicates = r.checkDuplicates;
+        
+        final List4 candidateCollection = r.candidateCollection;
+        if (Debug.queries) {
+        	logConstraints();
+        }
+        
+		return new MappingIterator(new CompositeIterator4(
+        	new MappingIterator(new Iterator4Impl(candidateCollection)){
+				protected Object map(Object current) {
+					QCandidates candidates = (QCandidates)current;
+					return candidates.executeLazy();
+				}
+    	})){
+			
+			private TreeInt ids = new TreeInt(0);
+		
+			protected Object map(Object current) {
+				int id = ((Integer)current).intValue();
+				if(checkDuplicates){
+					if(ids.find(id) != null){
+						return MappingIterator.SKIP;
+					}
+					ids = (TreeInt)ids.add(new TreeInt(id));
+				}
+				return current;
+			}
+		
+		};
+    }
+    
+
     public void executeLocal(final IdListQueryResult result) {
         
 		CreateCandidateCollectionResult r = createCandidateCollection();
@@ -360,10 +399,7 @@ public abstract class QQueryBase implements Unversioned {
         List4 candidateCollection = r.candidateCollection;
         
         if (Debug.queries) {
-        	Iterator4 i = iterateConstraints();
-            while (i.moveNext()) {
-                ((QCon)i.current()).log("");
-            }
+        	logConstraints();
         }
         
         if (candidateCollection != null) {
@@ -440,6 +476,15 @@ public abstract class QQueryBase implements Unversioned {
         sort(result);
 //        result.reset();
     }
+
+	private void logConstraints() {
+		if (Debug.queries) {
+			Iterator4 i = iterateConstraints();
+			while (i.moveNext()) {
+			    ((QCon)i.current()).log("");
+			}
+		}
+	}
 
 	public CreateCandidateCollectionResult createCandidateCollection() {
 		boolean checkDuplicates = false;

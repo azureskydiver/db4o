@@ -167,6 +167,14 @@ public final class QCandidates implements Visitor4 {
         }
         evaluate();
     }
+    
+    public Iterator4 executeLazy(){
+    	
+    	
+    	
+    	return null;
+    }
+    
 
 	public int classIndexEntryCount() {
 		return i_yapClass.indexEntryCount(i_trans);
@@ -184,7 +192,7 @@ public final class QCandidates implements Visitor4 {
 		if (result == FieldIndexProcessorResult.NO_INDEX_FOUND) {
 			return false;
 		}
-		i_root = TreeInt.toQCandidate(result.found, this);
+		i_root = result.toQCandidate(this);
 		return true;
 	}
 
