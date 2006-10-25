@@ -38,8 +38,6 @@ public interface ReflectArray {
         int a_flatElement,
         Object a_shaped,
         int[] a_dimensions,
-        int a_currentDimension);
-
-	
+        int a_currentDimension);	
 }
 
