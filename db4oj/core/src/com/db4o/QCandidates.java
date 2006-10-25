@@ -3,7 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.classindex.ClassIndexStrategy;
+import com.db4o.inside.classindex.*;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
 import com.db4o.inside.fieldindex.*;
 
@@ -178,11 +178,23 @@ public final class QCandidates implements Visitor4 {
     		return Iterator4Impl.EMPTY;
     	}
     	
+    	Iterator4 idIterator = result.foundIndex() ? 
+    		result.iterateIDs() :  
+    		BTreeClassIndexStrategy.iterate(i_yapClass, i_trans);
     	
-    	
-    	
-    	
-    	return null;
+    	return new MappingIterator(idIterator) {
+		
+			protected Object map(Object current) {
+				int id = ((Integer)current).intValue();
+				QCandidate candidate = new QCandidate(QCandidates.this, null, id, true); 
+				i_root = candidate; 
+				evaluate();
+				if(! candidate.include()){
+					return MappingIterator.SKIP;
+				}
+				return current;
+			}
+		};
     }
     
 

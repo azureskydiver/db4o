@@ -4,6 +4,7 @@ package com.db4o.inside.fieldindex;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.btree.*;
 
 public class FieldIndexProcessorResult {
 	
@@ -41,6 +42,13 @@ public class FieldIndexProcessorResult {
 		return this == FOUND_INDEX_BUT_NO_MATCH;
 	}
 	
-	
+	public Iterator4 iterateIDs(){
+		return new MappingIterator(_indexedNode.iterator()) {
+			protected Object map(Object current) {
+			    FieldIndexKey composite = (FieldIndexKey)current;
+				return new Integer(composite.parentID());
+			}
+		};
+	}
 	
 }
