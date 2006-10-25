@@ -41,6 +41,9 @@
 	
 	<target name="build" depends="build-core, build-tools, build-tests">
 	</target>
+	
+	<target name="rebuild" depends="clean, build">
+	</target>
 		
 	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
 		<csc
@@ -330,5 +333,15 @@
 	</target>
 	
 	<target name="init">
+		<mkdir dir="${dir.dist.dll}" />
 	</target>
+	
+	<target name="clean" description="Delete all generated files">
+		<delete failonerror="false" includeemptydirs="true" description="Removing all generated files">
+			<fileset dir="${dir.dist}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
 </project>
