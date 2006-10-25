@@ -184,6 +184,7 @@ public class ReaderPair implements SlotReader {
 
     public int preparePayloadRead() {
         int newPayLoadOffset = readInt();
+        readInt();
         int linkOffSet = offset();
         offset(newPayLoadOffset);
         return linkOffSet;
