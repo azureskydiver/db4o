@@ -4,7 +4,6 @@ package com.db4o.test.legacy.soda.classes.typedhierarchy;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 /** SDFT: Same descendant field typed*/
 public class STSDFT1 implements STClass{

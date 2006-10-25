@@ -4,7 +4,6 @@ package com.db4o.test.legacy.soda.joins.typed;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 public class STOrT implements STClass {
 

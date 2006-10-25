@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.legacy.soda.arrays.typed.*;
-import com.db4o.test.soda.*;
 
 
 public class STString implements STClass1, STInterface {

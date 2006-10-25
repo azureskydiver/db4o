@@ -5,7 +5,6 @@ package com.db4o.test.legacy.soda.ordered;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 public class STOIntegerWT implements STClass{
 	

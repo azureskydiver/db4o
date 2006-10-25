@@ -4,7 +4,6 @@ package com.db4o.test.legacy.soda.classes.typedhierarchy;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 /** ETH: Extends Typed Hierarchy */
 public class STETH1 implements STClass{

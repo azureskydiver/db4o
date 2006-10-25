@@ -5,7 +5,6 @@ package com.db4o.test.legacy.soda.wrapper.untyped;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 public class STBooleanWU implements STClass1{
 	

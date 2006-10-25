@@ -5,7 +5,6 @@ package com.db4o.test.legacy.soda.wrapper.typed;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 public class STDoubleWT implements STClass{
 	

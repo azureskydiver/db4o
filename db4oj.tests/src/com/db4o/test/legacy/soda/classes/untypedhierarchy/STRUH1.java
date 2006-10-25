@@ -4,7 +4,6 @@ package com.db4o.test.legacy.soda.classes.untypedhierarchy;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 /** RUH: RoundTrip Untyped Hierarchy */
 public class STRUH1 implements STClass{

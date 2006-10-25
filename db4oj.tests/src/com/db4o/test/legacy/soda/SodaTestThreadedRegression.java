@@ -8,7 +8,6 @@ import com.db4o.query.*;
 import com.db4o.test.legacy.soda.classes.simple.*;
 import com.db4o.test.legacy.soda.engines.db4o.*;
 import com.db4o.test.legacy.soda.wrapper.untyped.*;
-import com.db4o.test.soda.*;
 
 public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 	
