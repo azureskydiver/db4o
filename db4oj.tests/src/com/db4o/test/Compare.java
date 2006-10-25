@@ -21,6 +21,13 @@ public class Compare {
 		}
 		return false;
 	}
+	
+	static boolean isPrimitiveOrPrimitiveWrapper(Class clazz){
+		if(clazz.isPrimitive()){
+			return true;
+		}
+		return Platform4.isSimple(clazz);
+	}
 
 	static Object normalizeNArray(Object a_object) {
 		if (Array.getLength(a_object) > 0) {
@@ -44,6 +51,8 @@ public class Compare {
 		if (!Regression.DEACTIVATE) {
 			a_con.activate(a_With, 1);
 		}
+		
+		
 
 		if (a_list == null) {
 			a_list = new Collection4();
@@ -63,26 +72,35 @@ public class Compare {
 					a_path = a_With.getClass().getName() + ":";
 			}
 		String path = a_path;
-		if (a_Compare == null)
+		if (a_Compare == null){
 			if (a_With == null) {
 				return;
-			} else {
-				Regression.addError("1==null:" + path);
-				return;
-			}
+			} 
+			Regression.addError("1==null:" + path);
+			return;
+		}
 		if (a_With == null) {
 			Regression.addError("2==null:" + path);
 			return;
 		}
-		Class l_Class = a_Compare.getClass();
-		if (!l_Class.isInstance(a_With)) {
+		Class compareClass = a_Compare.getClass();
+		if (!compareClass.isInstance(a_With)) {
 			Regression.addError(
-				"class!=:" + path + l_Class.getName() + ":" + a_With.getClass().getName());
+				"class!=:" + path + compareClass.getName() + ":" + a_With.getClass().getName());
 			return;
 		}
-		Field l_Fields[] = l_Class.getDeclaredFields();
+		if(isPrimitiveOrPrimitiveWrapper(compareClass)){
+			if(a_Compare.equals(a_With)){
+				return;
+			}
+			Regression.addError(
+				"class!=:" + path + compareClass.getName() + ":" + a_With.getClass().getName());
+			return;
+		}
+		
+		Field l_Fields[] = compareClass.getDeclaredFields();
 		for (int i = 0; i < l_Fields.length; i++) {
-			if (storeableField(l_Class, l_Fields[i])) {
+			if (storeableField(compareClass, l_Fields[i])) {
 				Platform4.setAccessible(l_Fields[i]);
 				try {
 					path = a_path + l_Fields[i].getName() + ":";
@@ -104,8 +122,10 @@ public class Compare {
 							if (l_len != Array.getLength(l_With)) {
 								Regression.addError("arraylen!=:" + path);
 							} else {
+								Class fieldClass = l_Fields[i].getType().getComponentType();
 								boolean l_persistentArray =
-									hasPublicConstructor(l_Fields[i].getType().getComponentType());
+									hasPublicConstructor(fieldClass) ||
+									isPrimitiveOrPrimitiveWrapper(fieldClass);
 								for (int j = 0; j < l_len; j++) {
 									Object l_ElementCompare = Array.get(l_Compare, j);
 									Object l_ElementWith = Array.get(l_With, j);
