@@ -96,8 +96,12 @@ public class LazyQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 
-	public void loadFromQuery(QQuery query) {
-		throw new NotImplementedException();
+	public void loadFromQuery(final QQuery query) {
+		_iterable = new Iterable4(){
+			public Iterator4 iterator() {
+				return query.executeLazy();
+			}
+		};
 	}
 
 	public YapStream stream() {
