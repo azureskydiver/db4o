@@ -21,7 +21,9 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	/** number of elements collected */
 	public int _size;
 
-	public int _version;		
+	public int _version;
+	
+	private static final Object NOT_FOUND = new Object();
 
 	public Collection4() {
 	}
@@ -43,13 +45,11 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * @param element
 	 */
 	public final void add(Object element) {
-		assertNotNull(element);
 		doAdd(element);
 		changed();
 	}	
 	
 	public final void prepend(Object element) {
-		assertNotNull(element);
 		doPrepend(element);
 		changed();
 	}
@@ -101,7 +101,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 
 	public final boolean contains(Object element) {
-		return get(element) != null;
+		return getInternal(element) != NOT_FOUND;
 	}
 
 	public boolean containsAll(Iterator4 iter) {
@@ -136,15 +136,35 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * passed object
 	 */
 	public final Object get(Object element) {
-		assertNotNull(element);
+		Object obj = getInternal(element);
+		if(obj == NOT_FOUND){
+			return null;
+		}
+		return obj;
+	}
+	
+	private final Object getInternal(Object element){
+		if(element == null){
+			return containsNull() ? null : NOT_FOUND;
+		}
 		Iterator4 i = internalIterator();
 		while (i.moveNext()) {
 			Object current = i.current();
-			if (current.equals(element)) {
+			if (element.equals(current)) {
 				return current;
 			}
 		}
-		return null;
+		return NOT_FOUND;
+	}
+	
+	private final boolean containsNull(){
+		Iterator4 i = internalIterator();
+		while (i.moveNext()) {
+			if(i.current() == null){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Object deepClone(Object newParent) {
@@ -166,12 +186,12 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * makes sure the passed object is in the Collection. equals() comparison.
 	 */
 	public final Object ensure(Object element) {
-		Object existing = get(element);
-		if (existing != null) {
-			return existing;
+		Object existing = getInternal(element);
+		if(existing == NOT_FOUND){
+			add(element);
+			return element;
 		}
-		add(element);
-		return element;
+		return existing;
 	}
 
 	/**
@@ -194,7 +214,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 		List4 previous = null;
 		List4 current = _first;
 		while (current != null) {
-			if (current._element.equals(a_object)) {
+			if (current.holds(a_object)) {
 				_size--;
 				adjustOnRemoval(previous, current);
 				changed();
