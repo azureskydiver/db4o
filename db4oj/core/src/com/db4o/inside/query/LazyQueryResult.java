@@ -5,7 +5,6 @@ package com.db4o.inside.query;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;

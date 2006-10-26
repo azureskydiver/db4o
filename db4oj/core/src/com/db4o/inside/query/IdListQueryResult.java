@@ -12,29 +12,31 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class IdListQueryResult extends IntArrayList implements Visitor4, QueryResult {
+public class IdListQueryResult implements Visitor4, QueryResult {
     
 	private final Transaction _transaction;
 	
 	private Tree _candidates;
 	
 	private boolean _checkDuplicates;
-    
-	public IdListQueryResult(Transaction a_trans) {
-		_transaction = a_trans;
-	}
+	
+	private final IntArrayList _ids;
     
     protected IdListQueryResult(Transaction trans, int initialSize){
-        super(initialSize);
+        _ids = new IntArrayList(initialSize);
         _transaction = trans;
     }
     
+	public IdListQueryResult(Transaction trans) {
+		this(trans, 0);
+	}
+    
     public IntIterator4 iterateIDs() {
-    	return intIterator();
+    	return _ids.intIterator();
     }
     
     public Iterator4 iterator() {
-    	return new MappingIterator(super.iterator()){
+    	return new MappingIterator(_ids.iterator()){
     		protected Object map(Object current) {
     			synchronized (streamLock()) {
     				Object obj = activatedObject(((Integer)current).intValue());
@@ -70,7 +72,7 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
             if (index < 0 || index >= size()) {
                 throw new IndexOutOfBoundsException();
             }
-            return activatedObject(i_content[index]);
+            return activatedObject(_ids.get(index));
         }
     }
 
@@ -144,11 +146,7 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 	}
 
 	private void swap(int left, int right) {
-		if(left!=right) {
-			int swap=i_content[left];
-			i_content[left]=i_content[right];
-			i_content[right]=swap;
-		}
+		_ids.swap(left, right);
 	}
 
 	public void loadFromClassIndex(YapClass clazz) {
@@ -197,6 +195,18 @@ public class IdListQueryResult extends IntArrayList implements Visitor4, QueryRe
 		for (int i = 0; i < size; i++) {
 			add(reader.readInt());
 		}
+	}
+	
+	public void add(int id){
+		_ids.add(id);
+	}
+
+	public int indexOf(int id) {
+		return _ids.indexOf(id);
+	}
+
+	public int size() {
+		return _ids.size();
 	}
 
 	
