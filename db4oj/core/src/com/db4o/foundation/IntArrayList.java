@@ -57,5 +57,19 @@ public class IntArrayList implements Iterable4 {
 	public Iterator4 iterator() {
 		return intIterator();
 	}
+	
+	public int get(int index) {
+		return i_content[index];
+	}
+	
+	public void swap(int left, int right) {
+		if(left!=right) {
+			int swap=i_content[left];
+			i_content[left]=i_content[right];
+			i_content[right]=swap;
+		}
+	}
+
+
 
 }
