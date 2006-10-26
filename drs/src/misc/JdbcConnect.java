@@ -1,44 +1,38 @@
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 
 public class JdbcConnect {
 	public static void main(String[] args) {
 		Connection conn = null;
 
 		try {
-			String userName = "db4o";
-			String password = "db4o";
-			String url = "jdbc:oracle:thin:@192.168.1.176:1521:XE";
-			Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
-			conn = DriverManager.getConnection(url, userName, password);
+			conn = mssql();
 			System.out.println("Database connection established");
-
-			final DatabaseMetaData metaData = conn.getMetaData();
-			final ResultSet col = metaData.getColumns(null, null, "ABC", "A");
-			while (col.next()) {
-				final String TYPE_NAME = col.getString("TYPE_NAME");
-				System.out.println("TYPE_NAME = " + TYPE_NAME);
-
-				final String COLUMN_SIZE = col.getString("COLUMN_SIZE");
-				System.out.println("COLUMN_SIZE = " + COLUMN_SIZE);
-
-				final String DATA_TYPE = col.getString("DATA_TYPE");
-				System.out.println("DATA_TYPE = " + DATA_TYPE);
-			}
-		}
-		catch (Exception e) {
+			conn.close();
+			System.out.println("Database connection terminated");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		finally {
-			if (conn != null) {
-				try {
-					conn.close();
-					System.out.println("Database connection terminated");
-				}
-				catch (Exception e) { /* ignore close errors */ }
-			}
-		}
+	}
+
+	static Connection oracle() throws Exception {
+		Connection conn;
+		String userName = "db4o";
+		String password = "db4o";
+		String url = "jdbc:oracle:thin:@192.168.1.176:1521:XE";
+		Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
+		conn = DriverManager.getConnection(url, userName, password);
+		return conn;
+	}
+
+	static Connection mssql() throws Exception {
+		Connection conn;
+		String userName = "db4o";
+		String password = "db4o";
+		String url = "jdbc:sqlserver://192.168.1.176:1089;databaseName=drs";
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
+				.newInstance();
+		conn = DriverManager.getConnection(url, userName, password);
+		return conn;
 	}
 }
