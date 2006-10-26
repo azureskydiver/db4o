@@ -1,29 +1,29 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.db4ounit.common.soda.classes.simple;
+package com.db4o.db4ounit.jre11.soda.wrapper.untyped;
 import java.util.*;
 
 import com.db4o.query.*;
 
 
-public class STDateTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase{
+public class STDateUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase{
 	
-	public Date i_date;
+	public Object i_date;
 	
-	public STDateTestCase(){
+	public STDateUTestCase(){
 	}
 	
-	private STDateTestCase(Date a_date){
+	private STDateUTestCase(Date a_date){
 		i_date = a_date;
 	}
 	
 	public Object[] createData() {
 		return new Object[]{
-			new STDateTestCase(null),
-			new STDateTestCase(new Date(4000)),
-			new STDateTestCase(new Date(5000)),
-			new STDateTestCase(new Date(6000)),
-			new STDateTestCase(new Date(7000)),
+			new STDateUTestCase(null),
+			new STDateUTestCase(new Date(4000)),
+			new STDateUTestCase(new Date(5000)),
+			new STDateUTestCase(new Date(6000)),
+			new STDateUTestCase(new Date(7000)),
 		};
 	}
 	
@@ -49,15 +49,6 @@ public class STDateTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 		expect(q, new int[] {1, 2, 3});
 	}
 	
-	public void testGreaterOrEqual(){
-	    Query q = newQuery();
-	    q.constrain(_array[2]);
-	    q.descend("i_date").constraints().greater().equal();
-	    
-	    expect(q, new int[] {2, 3, 4});
-	    
-	}
-	
 	public void testNotGreaterOrEqual(){
 		Query q = newQuery();
 		q.constrain(_array[3]);
@@ -68,14 +59,14 @@ public class STDateTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 	
 	public void testNull(){
 		Query q = newQuery();
-		q.constrain(new STDateTestCase());
+		q.constrain(new STDateUTestCase());
 		q.descend("i_date").constrain(null);
-		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STDateTestCase(null));
+		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STDateUTestCase(null));
 	}
 	
 	public void testNotNull(){
 		Query q = newQuery();
-		q.constrain(new STDateTestCase());
+		q.constrain(new STDateUTestCase());
 		q.descend("i_date").constrain(null).not();
 		
 		expect(q, new int[] {1, 2, 3, 4});

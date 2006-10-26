@@ -2,7 +2,9 @@
 
 package com.db4o.db4ounit.jre11.soda;
 
+import com.db4o.db4ounit.jre11.soda.classes.simple.STDateTestCase;
 import com.db4o.db4ounit.jre11.soda.wrapper.typed.*;
+import com.db4o.db4ounit.jre11.soda.wrapper.untyped.STDateUTestCase;
 
 import db4ounit.extensions.Db4oTestSuite;
 
@@ -14,6 +16,8 @@ public class AllTests extends Db4oTestSuite {
 			STBooleanWTTestCase.class,
 			STByteWTTestCase.class,
 			STCharWTTestCase.class,
+			STDateTestCase.class,
+			STDateUTestCase.class,
 			STDoubleWTTestCase.class,
 			STFloatWTTestCase.class,
 			STIntegerWTTestCase.class,
