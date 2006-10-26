@@ -8,15 +8,15 @@ public class JdbcConnect {
 		Connection conn = null;
 
 		try {
-			String userName = "testa";
-			String password = "testa";
-			String url = "jdbc:oracle:thin:@localhost:1521:step";
+			String userName = "db4o";
+			String password = "db4o";
+			String url = "jdbc:oracle:thin:@192.168.1.176:1521:XE";
 			Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
 			conn = DriverManager.getConnection(url, userName, password);
 			System.out.println("Database connection established");
 
 			final DatabaseMetaData metaData = conn.getMetaData();
-			final ResultSet col = metaData.getColumns(null, null, "LISTCONTENT", "DRS_VERSION");
+			final ResultSet col = metaData.getColumns(null, null, "ABC", "A");
 			while (col.next()) {
 				final String TYPE_NAME = col.getString("TYPE_NAME");
 				System.out.println("TYPE_NAME = " + TYPE_NAME);
