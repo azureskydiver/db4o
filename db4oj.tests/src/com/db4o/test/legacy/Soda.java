@@ -5,7 +5,6 @@ package com.db4o.test.legacy;
 import com.db4o.test.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.legacy.soda.engines.db4o.*;
-import com.db4o.test.soda.*;
 
 public class Soda {
 	

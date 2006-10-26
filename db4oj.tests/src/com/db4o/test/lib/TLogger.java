@@ -8,7 +8,6 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.test.legacy.soda.*;
-import com.db4o.test.soda.*;
 
 public class TLogger {
 	private static int maximumDepth = Integer.MAX_VALUE;
