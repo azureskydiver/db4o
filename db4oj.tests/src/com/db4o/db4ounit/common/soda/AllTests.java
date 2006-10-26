@@ -8,7 +8,6 @@ import com.db4o.db4ounit.common.soda.classes.untypedhierarchy.*;
 import com.db4o.db4ounit.common.soda.joins.typed.STOrTTestCase;
 import com.db4o.db4ounit.common.soda.joins.untyped.STOrUTestCase;
 import com.db4o.db4ounit.common.soda.ordered.*;
-import com.db4o.db4ounit.common.soda.wrapper.typed.*;
 import com.db4o.db4ounit.common.soda.wrapper.untyped.*;
 
 import db4ounit.extensions.Db4oTestSuite;
@@ -18,29 +17,22 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[]{
 				com.db4o.db4ounit.common.soda.arrays.AllTests.class,
-				STBooleanTestCase.class,
-				STBooleanWTTestCase.class,
+				STBooleanTestCase.class,				
 				STBooleanWUTestCase.class,
 				STByteTestCase.class,
-				STByteWTTestCase.class,
 				STByteWUTestCase.class,
 				STCharTestCase.class,
-				STCharWTTestCase.class,
 				STCharWUTestCase.class,
 				STDateTestCase.class,
 				STDateUTestCase.class,
 				STDoubleTestCase.class,
-				STDoubleWTTestCase.class,
 				STDoubleWUTestCase.class,
 				STETH1TestCase.class,
 				STFloatTestCase.class,
-				STFloatWTTestCase.class,
 				STFloatWUTestCase.class,
 				STIntegerTestCase.class,
-				STIntegerWTTestCase.class,
 				STIntegerWUTestCase.class,
 				STLongTestCase.class,
-				STLongWTTestCase.class,
 				STLongWUTestCase.class,
 				STOrTTestCase.class,
 				STOrUTestCase.class,
@@ -50,7 +42,6 @@ public class AllTests extends Db4oTestSuite {
 				STRTH1TestCase.class,
 				STSDFT1TestCase.class,
 				STShortTestCase.class,
-				STShortWTTestCase.class,
 				STShortWUTestCase.class,
 				STStringUTestCase.class,
 				STRUH1TestCase.class,
