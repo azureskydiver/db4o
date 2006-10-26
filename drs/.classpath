@@ -25,5 +25,10 @@
 	<classpathentry kind="lib" path="lib/jta.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
 	<classpathentry kind="lib" path="lib/xerces-2.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/doctor/ant.jar"/>
+	<classpathentry kind="lib" path="lib/mssql/sqljdbc.jar"/>
+	<classpathentry kind="lib" path="lib/doctor/doctor.jar"/>
+	<classpathentry kind="lib" path="lib/doctor/iText.jar"/>
+	<classpathentry kind="lib" path="lib/doctor/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
