@@ -13,9 +13,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	}
 
 	private STOrUTestCase(int a_int, String a_string) {
-		if(a_int != 0){
-			orInt = new Integer(a_int);
-		}
+		orInt = new Integer(a_int);
 		orString = a_string;
 	}
 	
@@ -31,7 +29,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 
 	public Object[] createData() {
 		return new Object[] {
-			new STOrUTestCase(new Integer(0), "hi"),
+			new STOrUTestCase(0, "hi"),
 			new STOrUTestCase(5, null),
 			new STOrUTestCase(1000, "joho"),
 			new STOrUTestCase(30000, "osoo"),
@@ -82,7 +80,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 
 	public void testAndOrAnd() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase(null, null));
 		(
 			q.descend("orInt").constrain(new Integer(5)).and(
 			q.descend("orString").constrain(null))
@@ -96,7 +94,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testOrAndOr() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase(null, null));
 		(
 			q.descend("orInt").constrain(new Integer(5)).or(
 			q.descend("orString").constrain(null))
@@ -109,7 +107,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testOrOrAnd() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			q.descend("orInt").constrain(new Integer(Integer.MAX_VALUE - 1)).or(
 			q.descend("orString").constrain("joho"))
@@ -123,7 +121,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testMultiOrAnd(){
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			(
 				q.descend("orInt").constrain(new Integer(Integer.MAX_VALUE - 1)).or(
@@ -186,7 +184,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 
 	public void testNotAndOrAnd() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			q.descend("orInt").constrain(new Integer(5)).and(
 			q.descend("orString").constrain(null))
@@ -200,7 +198,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testNotOrAndOr() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			q.descend("orInt").constrain(new Integer(5)).or(
 			q.descend("orString").constrain(null))
@@ -214,7 +212,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testNotOrOrAnd() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			q.descend("orInt").constrain(new Integer(Integer.MAX_VALUE - 1)).or(
 			q.descend("orString").constrain("joho"))
@@ -228,7 +226,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testNotMultiOrAnd(){
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			(
 				q.descend("orInt").constrain(new Integer(Integer.MAX_VALUE - 1)).or(
@@ -252,7 +250,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testOrNotAndOr() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			q.descend("orInt").constrain(new Integer(Integer.MAX_VALUE - 1)).or(
 			q.descend("orString").constrain("joho"))
@@ -266,7 +264,7 @@ public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTe
 	
 	public void testAndNotAndAnd() {
 		Query q = newQuery();
-		q.constrain(new STOrUTestCase(0, null));
+		q.constrain(new STOrUTestCase());
 		(
 			q.descend("orInt").constrain(new Integer(Integer.MAX_VALUE - 1)).and(
 			q.descend("orString").constrain(null))

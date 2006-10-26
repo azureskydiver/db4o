@@ -28,6 +28,9 @@ public class STOIntegerWTTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		};
 	}
 	
+	/**
+	 * @sharpen.ignore test case not applicable to .net
+	 */
 	public void testAscending() {
 		Query q = newQuery();
 		q.constrain(STOIntegerWTTestCase.class);
