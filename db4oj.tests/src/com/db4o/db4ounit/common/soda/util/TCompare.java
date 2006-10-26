@@ -12,21 +12,10 @@ import com.db4o.db4ounit.Db4oUnitPlatform;
 public class TCompare {
 
     public static boolean isEqual(Object a_compare, Object a_with) {
-        return isEqual(a_compare, a_with, null, null);
+        return isEqual(a_compare, a_with, null, new Stack());
     }
 
-    public static boolean isEqual(Object a_compare, Object a_with, String a_path, Stack a_stack) {
-        if (a_path == null || a_path.length() < 1) {
-            if (a_compare != null) {
-                a_path = a_compare.getClass().getName() + ":";
-            } else {
-                if (a_with != null) {
-                    a_path = a_with.getClass().getName() + ":";
-                }
-            }
-        }
-
-        String path = a_path;
+    private static boolean isEqual(Object a_compare, Object a_with, String a_path, Stack a_stack) {        
 
         if (a_compare == null) {
             return a_with == null;
@@ -43,89 +32,34 @@ public class TCompare {
             return a_compare.equals(a_with);
         }
 
-        if (a_stack == null) {
-            a_stack = new Stack();
-        }
-
         // takes care of repeating calls to the same object
         if (a_stack.contains(a_compare)) {
             return true;
         }
         a_stack.push(a_compare);
+        
+        if (a_compare.getClass().isArray()) {
+        	return areArraysEqual(normalizeNArray(a_compare), normalizeNArray(a_with), a_path, a_stack);
+        }
+        
+        if (hasPublicConstructor(a_compare.getClass())) {        
+        	return areFieldsEqual(a_compare, a_with, a_path, a_stack);
+        }
+        return a_compare.equals(a_with);
+    }
 
-        Field fields[] = clazz.getDeclaredFields();
+	private static boolean areFieldsEqual(final Object a_compare, final Object a_with,
+			final String a_path, final Stack a_stack) {
+		String path = getPath(a_compare, a_with, a_path);
+        Field fields[] = a_compare.getClass().getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
-            if (Db4oUnitPlatform.isStoreableField(fields[i])) {
-                Platform4.setAccessible(fields[i]);
+            Field field = fields[i];
+			if (Db4oUnitPlatform.isStoreableField(field)) {
+                Platform4.setAccessible(field);
                 try {
-                    path = a_path + fields[i].getName() + ":";
-                    Object compare = fields[i].get(a_compare);
-                    Object with = fields[i].get(a_with);
-                    if (compare == null) {
-                        if (with != null) {
-                            return false;
-                        }
-                    } else if (with == null) {
-                        return false;
-                    } else {
-                        if (compare.getClass().isArray()) {
-                            if (!with.getClass().isArray()) {
-                                return false;
-                            } else {
-                                compare = normalizeNArray(compare);
-                                with = normalizeNArray(with);
-                                int len = Array.getLength(compare);
-                                if (len != Array.getLength(with)) {
-                                    return false;
-                                } else {
-                                    for (int j = 0; j < len; j++) {
-                                        Object elementCompare = Array.get(compare, j);
-                                        Object elementWith = Array.get(with, j);
-                                        //										if (l_persistentArray)
-                                        if (!isEqual(elementCompare, elementWith, path, a_stack)) {
-                                            return false;
-                                        } else if (elementCompare == null) {
-                                            if (elementWith != null) {
-                                                return false;
-                                            }
-                                        } else if (elementWith == null) {
-                                            return false;
-                                        } else {
-                                            Class elementCompareClass = elementCompare.getClass();
-                                            if (elementCompareClass != elementWith.getClass()) {
-                                                return false;
-                                            }
-                                            if (hasPublicConstructor(elementCompareClass)) {
-                                                if (!isEqual(elementCompare,
-                                                    elementWith,
-                                                    path,
-                                                    a_stack)) {
-                                                    return false;
-
-                                                }
-                                            } else if (!elementCompare.equals(elementWith)) {
-                                                return false;
-                                            }
-                                        }
-
-                                    }
-
-                                }
-                            }
-                        } else if (hasPublicConstructor(fields[i].getType())) {
-                            if (!isEqual(compare, with, path, a_stack)) {
-                                return false;
-                            }
-                        } else {
-                            if (!compare.equals(with)) {
-                                return false;
-                            }
-                        }
+                    if (!isFieldEqual(field, a_compare, a_with, path, a_stack)) {
+                    	return false;
                     }
-                } catch (IllegalAccessException ex) {
-                    // probably JDK 1
-                    // never mind this field
-                    return true;
                 } catch (Exception e) {
                     System.err.println("TCompare failure executing path:" + path);
                     e.printStackTrace();
@@ -134,7 +68,54 @@ public class TCompare {
             }
         }
         return true;
-    }
+	}
+
+	private static boolean isFieldEqual(Field field, final Object a_compare,
+			final Object a_with, String path, final Stack a_stack) {
+		Object compare = getFieldValue(field, a_compare);
+		Object with = getFieldValue(field, a_with);
+		return isEqual(compare, with, path + field.getName() + ":", a_stack);
+	}
+
+	private static Object getFieldValue(Field field, final Object obj) {
+		try {
+			return field.get(obj);
+		} catch (IllegalAccessException ex) {
+            // probably JDK 1
+            // never mind this field
+            return null;
+		}
+	}
+
+	private static boolean areArraysEqual(Object compare, Object with,
+			String path, Stack a_stack) {
+		int len = Array.getLength(compare);
+		if (len != Array.getLength(with)) {
+		    return false;
+		} else {
+		    for (int j = 0; j < len; j++) {
+		        Object elementCompare = Array.get(compare, j);
+		        Object elementWith = Array.get(with, j);
+		        if (!isEqual(elementCompare, elementWith, path, a_stack)) {
+		            return false;
+		        }
+		    }
+		}
+		return true;
+	}
+
+	private static String getPath(Object a_compare, Object a_with, String a_path) {
+		if (a_path != null && a_path.length() > 0) {
+			return a_path;
+		}
+        if (a_compare != null) {
+            return a_compare.getClass().getName() + ":";
+        }
+        if (a_with != null) {
+        	return a_with.getClass().getName() + ":";
+        }
+		return a_path;
+	}
 
     static boolean hasPublicConstructor(Class a_class) {
         if (a_class != String.class) {
