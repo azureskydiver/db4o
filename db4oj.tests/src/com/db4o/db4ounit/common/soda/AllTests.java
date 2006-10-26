@@ -23,8 +23,6 @@ public class AllTests extends Db4oTestSuite {
 				STByteWUTestCase.class,
 				STCharTestCase.class,
 				STCharWUTestCase.class,
-				STDateTestCase.class,
-				STDateUTestCase.class,
 				STDoubleTestCase.class,
 				STDoubleWUTestCase.class,
 				STETH1TestCase.class,
