@@ -1,8 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.db4ounit.common.soda.wrapper.typed;
-import com.db4o.query.*;
 
+import com.db4o.query.*;
 
 public class STBooleanWTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase{
 	
@@ -40,8 +40,11 @@ public class STBooleanWTTestCase extends com.db4o.db4ounit.common.soda.util.Soda
 		q.descend(DESCENDANT).constrain(new Boolean(false));
 		
 		expect(q, new int[] {0, 2, 3});
-	}
+	}	
 	
+	/**
+	 * @sharpen.ignore does not make sense in .net
+	 */
 	public void testNull(){
 		Query q = newQuery();
 		q.constrain(new STBooleanWTTestCase());
@@ -50,6 +53,9 @@ public class STBooleanWTTestCase extends com.db4o.db4ounit.common.soda.util.Soda
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STBooleanWTTestCase());
 	}
 	
+	/**
+	 * @sharpen.ignore does not make sense in .net
+	 */
 	public void testNullOrTrue(){
 		Query q = newQuery();
 		q.constrain(new STBooleanWTTestCase());
@@ -59,6 +65,9 @@ public class STBooleanWTTestCase extends com.db4o.db4ounit.common.soda.util.Soda
 		expect(q, new int[] {1, 4});
 	}
 	
+	/**
+	 * @sharpen.ignore does not make sense in .net
+	 */
 	public void testNotNullAndFalse(){
 		Query q = newQuery();
 		q.constrain(new STBooleanWTTestCase());
