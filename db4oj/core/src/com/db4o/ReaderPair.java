@@ -62,7 +62,7 @@ public class ReaderPair implements SlotReader {
 		if(flipNegative&&id<0) {
 			id=-id;
 		}
-		int mapped=_mapping.mappedID(id);
+		int mapped=_mapping.mappedID(id,lenient);
 		if(flipNegative&&id<0) {
 			mapped=-mapped;
 		}

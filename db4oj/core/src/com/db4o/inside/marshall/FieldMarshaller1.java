@@ -62,8 +62,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     	if(yapField.isVirtual()) {
     		return;
     	}
-// FIXME PMFD
-    	if(yapField.hasIndex()&&!idsAreLenient(yapField)) {
+    	if(yapField.hasIndex()) {
         	BTree index = yapField.getIndex(readers.systemTrans());
     		int targetIndexID=readers.copyID();
     		if(targetIndexID!=0) {
@@ -71,12 +70,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     		}
     	}
     	else {
-    		//readers.incrementIntSize();
         	readers.writeInt(0);
     	}
     }
-
-	private boolean idsAreLenient(YapField yapField) {
-		return (yapField.getHandler() instanceof YapString);
-	}
 }

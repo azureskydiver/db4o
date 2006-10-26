@@ -39,4 +39,8 @@ public class Slot {
         return _address ^ _length;
     }
     
+    public String toString() {
+    	return "[A:"+_address+",L:"+_length+"]";
+    }
+    
 }
