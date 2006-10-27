@@ -13,5 +13,5 @@ public interface IDMapping {
 	 * @throws MappingNotFoundException if the given id does not refer to a system handler or the empty reference (0) and if no mapping is found
 	 */
 	int mappedID(int oldID) throws MappingNotFoundException;
-	void mapIDs(int oldID,int newID);
+	void mapIDs(int oldID,int newID, boolean isClassID);
 }

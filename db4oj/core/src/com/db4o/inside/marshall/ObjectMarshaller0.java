@@ -208,10 +208,4 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 
 	public void skipMarshallerInfo(YapReader reader) {
 	}
-
-	public void mapStringIDs(YapClass yc, ObjectHeaderAttributes attributes,
-			YapReader reader, IDMapping mapping, int sourceBaseID,
-			int targetBaseID) {
-		throw new NotImplementedException();
-	}
 }
