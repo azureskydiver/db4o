@@ -3,11 +3,15 @@ package com.db4o.db4ounit.jre11.events;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
+import com.db4o.foundation.*;
+import com.db4o.inside.btree.*;
+import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
+
 
 public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	
@@ -23,6 +27,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testPreventMiddleObjectDeletion() throws Exception {
+		
 		Assert.areEqual(3, queryItems().size());
 		
 		eventRegistry().deleting().addListener(new EventListener4() {
@@ -45,9 +50,16 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 
         Item a = queryItem("A");
 		Assert.isNotNull(a);		
+
+		assertIndexCount(3);
+
 		db().delete(a);
-		
+
 		reopen();
+		
+        a = queryItem("A");
+		Assert.isNull(a);		
+		assertIndexCount(1);
 		
 		ObjectSet found = queryItems();
 		Assert.areEqual(1, found.size());
@@ -83,9 +95,30 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	private Item queryItem(final String id) {
 		Query q = createItemQuery();
 		q.descend("id").constrain(id);
-		return (Item)q.execute().next();
+		ObjectSet result = q.execute();
+		return result.hasNext() ? (Item)result.next() : null;
 	}
 	
+	private void assertIndexCount(int expectedCount) {
+		final int[] sum={0};
+		Visitor4 visitor = new Visitor4() {
+			public void visit(Object obj) {
+				sum[0]++;
+			}
+		};
+		btree().traverseKeys(trans(),visitor);
+		Assert.areEqual(expectedCount,sum[0]);
+	}
+
+	private BTree btree() {
+		return BTreeClassIndexStrategy.btree(yapClass());
+	}
+
+	private YapClass yapClass() {
+		YapClass clazz = stream().getYapClass(reflector().forClass(Item.class), false);
+		return clazz;
+	}
+
 	public static void main(String[] args) {
 		new TestRunner(
 				new Db4oTestSuiteBuilder(

@@ -138,7 +138,7 @@ public class ReaderPair implements SlotReader {
 		
 		if(registerAddressMapping) {
 			int sourceAddress=((YapWriter)sourceReader).getAddress();
-			context.mapIDs(sourceAddress, targetAddress);
+			context.mapIDs(sourceAddress, targetAddress, false);
 		}
 		
 		YapReader targetPointerReader=new YapReader(YapConst.POINTER_LENGTH);

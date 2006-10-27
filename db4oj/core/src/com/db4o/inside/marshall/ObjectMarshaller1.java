@@ -43,23 +43,6 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		return ret[0];
     }
 
-    public void mapStringIDs(YapClass yc, ObjectHeaderAttributes attributes, final YapReader reader,final IDMapping mapping,final int sourceBaseID,final int targetBaseID) {
-		TraverseFieldCommand command = new TraverseFieldCommand() {
-			public void processField(YapField field, boolean isNull, YapClass containingClass) {
-				if(isNull) {
-					return;
-				}
-		        if (field.hasIndex()&&(field.getHandler() instanceof YapString)) {
-		        	int sourceID=sourceBaseID+reader._offset;
-		        	int targetID=targetBaseID+reader._offset;
-		        	mapping.mapIDs(sourceID,targetID);
-		        } 
-		        field.incrementOffset(reader);
-			}
-		};
-		traverseFields(yc, reader, attributes, command);
-    }
-
     public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, int type, final boolean isUpdate){
         TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
