@@ -11,6 +11,10 @@ import com.db4o.inside.btree.*;
  * @exclude
  */
 public interface DefragContext extends IDMapping {
+	
+	YapReader sourceReaderByAddress(int address,int length);
+	YapReader targetReaderByAddress(int address,int length);
+
 	YapReader sourceReaderByID(int sourceID);
 
 	int allocateTargetSlot(int targetLength);

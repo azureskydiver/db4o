@@ -40,7 +40,14 @@ public class ExpectingVisitor implements Visitor4{
     public ExpectingVisitor(Object singleObject){
         this(new Object[] { singleObject });
     }
-    
+
+    /**
+     * Expect empty
+     */
+    public ExpectingVisitor(){
+        this(new Object[0]);
+    }
+
     public void visit(Object obj) {
         if(_obeyOrder){
             visitOrdered(obj);

@@ -23,7 +23,7 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 	
 	public void close() throws Exception {
 		if (null != _db) {
-			_db.close();
+			Assert.isTrue(db().close());
 			_db = null;
 		}
 	}
