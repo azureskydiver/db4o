@@ -7,7 +7,8 @@ import org.eclipse.jdt.launching.*;
 import db4otesteclipse.*;
 
 public class UnitTestTypeSpec implements TestTypeSpec {
-	private static final String TESTLAUNCHER_NAME = "db4ounit.UnitTestMain";
+	private static final String PLAIN_TESTLAUNCHER_NAME = "db4ounit.UnitTestMain";
+	private static final String DB4O_TESTLAUNCHER_NAME = "db4ounit.db4o.Db4oUnitTestMain";
 	private static final String TESTINTERFACE_NAME = "db4ounit.TestCase";
 	
 	public boolean acceptTestType(IType type) throws JavaModelException {
@@ -34,7 +35,7 @@ public class UnitTestTypeSpec implements TestTypeSpec {
 			ILaunchConfigurationWorkingCopy workingCopy) {
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-				TESTLAUNCHER_NAME);
+				PLAIN_TESTLAUNCHER_NAME);
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, typeList);
 	}

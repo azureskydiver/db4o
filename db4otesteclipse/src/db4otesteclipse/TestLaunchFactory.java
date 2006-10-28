@@ -60,7 +60,7 @@ public class TestLaunchFactory {
 	}
 
 	private ILaunchConfigurationWorkingCopy createLaunchConfig(IJavaProject javaProject,ILaunchConfigurationType launchType,String name) throws CoreException {
-		ILaunchConfigurationWorkingCopy workingCopy = launchType.newInstance(javaProject.getProject(),name);
+		ILaunchConfigurationWorkingCopy workingCopy = launchType.newInstance(null,name);
 		return workingCopy;
 	}
 
