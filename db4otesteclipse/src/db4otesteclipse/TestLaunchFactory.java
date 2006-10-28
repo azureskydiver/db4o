@@ -65,8 +65,8 @@ public class TestLaunchFactory {
 	}
 
 	private void configureLaunchConfig(IJavaProject javaProject, List testTypes, ILaunchConfigurationWorkingCopy workingCopy) throws CoreException {
-		spec.configureSpecific(parameterString(testTypes), workingCopy);
 		IRuntimeClasspathEntry projectClasspath=JavaRuntime.newDefaultProjectClasspathEntry(javaProject);
+		spec.configureSpecific(workingCopy, testTypes, parameterString(testTypes));
 		List classPath=new ArrayList();
 		classPath.add(projectClasspath.getMemento());
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classPath);
