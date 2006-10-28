@@ -1,5 +1,7 @@
 package db4otesteclipse.regression;
 
+import java.util.*;
+
 import org.eclipse.debug.core.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.*;
@@ -52,13 +54,13 @@ public class RegressionTestTypeSpec implements TestTypeSpec {
 		return true;
 	}
 
-	public void configureSpecific(String typeList,
-			ILaunchConfigurationWorkingCopy workingCopy) {
+	public void configureSpecific(ILaunchConfigurationWorkingCopy workingCopy,
+			List testTypes, String typeArgsList) {
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				TESTCLASS_NAME);
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "-"
-						+ mode + " " + typeList);
+						+ mode + " " + typeArgsList);
 	}
 }
