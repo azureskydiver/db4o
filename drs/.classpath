@@ -7,7 +7,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
-	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-3.1.12-bin.jar"/>
 	<classpathentry kind="lib" path="lib/oracle/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/asm.jar"/>
@@ -30,5 +29,6 @@
 	<classpathentry kind="lib" path="lib/doctor/junit.jar"/>
 	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql/postgresql-8.1-407.jdbc3.jar"/>
+	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-5.0.4-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
