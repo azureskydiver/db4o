@@ -177,5 +177,13 @@ public class BTreeRangeSingle implements BTreeRange {
 			throw new IllegalArgumentException();
 		}
 		return rangeImpl;
-	}		
+	}
+
+	public BTreePointer lastPointer() {
+		if(_end == null){
+			return btree().lastPointer(transaction());
+		}
+		return _end.previous();
+	}
+
 }

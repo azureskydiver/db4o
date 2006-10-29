@@ -100,6 +100,29 @@ public class BTreePointer{
         return new BTreePointer(transaction(), nextReader, nextNode, newIndex);
     }
     
+	public BTreePointer previous() {
+		int indexInMyNode = index() - 1;
+		while(indexInMyNode >= 0){
+			if(node().indexIsValid(transaction(), indexInMyNode)){
+				return new BTreePointer(transaction(), nodeReader(), node(), indexInMyNode);
+			}
+			indexInMyNode --;
+		}
+		int newIndex = -1;
+		BTreeNode previousNode = node();
+		YapReader previousReader = null;
+		while(newIndex == -1){
+			previousNode = previousNode.previousNode();
+			if(previousNode == null){
+				return null;
+			}
+			previousReader = previousNode.prepareRead(transaction());
+			newIndex = previousNode.lastKeyIndex(transaction());
+		}
+		return new BTreePointer(transaction(), previousReader, previousNode, newIndex);
+	}    
+
+    
     public boolean equals(Object obj) {
         if(this == obj){
             return true;
