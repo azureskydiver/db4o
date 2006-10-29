@@ -11,17 +11,19 @@ namespace com.db4odoc.f1.selpersist
 	{
 		public readonly static string YapFileName = "formula1.yap";
 
-		public static void main(string[] args)
+		public static void Main(string[] args)
 		{
 			ConfigureTransient();
 			SaveObjects();
 			RetrieveObjects();
 		}
+		// end main
 
 		public static void ConfigureTransient()
 		{
 			Db4o.Configure().MarkTransient("com.db4odoc.f1.selpersist.FieldTransient");
 		}
+		// end ConfigureTransient
 
 		public static void SaveObjects()
 		{
@@ -39,6 +41,7 @@ namespace com.db4odoc.f1.selpersist
 				oc.Close();
 			}
 		}
+		// end SaveObjects
 
 		public static void RetrieveObjects()
 		{
@@ -55,6 +58,7 @@ namespace com.db4odoc.f1.selpersist
 				oc.Close();
 			}
 		}
+		// end RetrieveObjects
 
 		
 		public static void ListResult(IList result)
@@ -63,5 +67,6 @@ namespace com.db4odoc.f1.selpersist
 			for(int x = 0; x < result.Count; x++)
 				Console.WriteLine(result[x]);
 		}
+		// end ListResult
 	}
 }

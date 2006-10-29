@@ -9,15 +9,17 @@ Namespace com.db4odoc.f1.selpersist
     Public Class MarkTransientExample
         Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
-        Public Shared Sub main(ByVal args() As String)
+        Public Shared Sub Main(ByVal args() As String)
             ConfigureTransient()
             SaveObjects()
             RetrieveObjects()
         End Sub
+        ' end Main
 
         Public Shared Sub ConfigureTransient()
             Db4o.Configure().MarkTransient("com.db4odoc.f1.selpersist.FieldTransient")
         End Sub
+        ' end ConfigureTransient
 
         Public Shared Sub SaveObjects()
             File.Delete(YapFileName)
@@ -31,6 +33,7 @@ Namespace com.db4odoc.f1.selpersist
                 oc.Close()
             End Try
         End Sub
+        ' end SaveObjects
 
         Public Shared Sub RetrieveObjects()
             Dim oc As ObjectContainer = Db4o.OpenFile(YapFileName)
@@ -43,7 +46,7 @@ Namespace com.db4odoc.f1.selpersist
                 oc.Close()
             End Try
         End Sub
-
+		' end RetrieveObjects
 
         Public Shared Sub ListResult(ByVal result As IList)
             Console.WriteLine(result.Count)
@@ -52,6 +55,7 @@ Namespace com.db4odoc.f1.selpersist
                 Console.WriteLine(result(x))
             Next
         End Sub
+        ' end ListResult
     End Class
 End Namespace
 
