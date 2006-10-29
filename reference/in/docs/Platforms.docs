@@ -35,9 +35,10 @@ features, which should be taken into consideration in software development proce
 These features will be discussed in the following chapters.
 
 .2 JDK1.1 ..
-The two major limitations of db4o for JDK1.1:
+The major limitations of db4o for JDK1.1:
 - no support for storing private fields (reflection in JDK 1.1 can only work on public fields)
 - no support for JDK collections (java.util.list since JDK1.2)
+- no support for weak references
 db4o for Java 1.1 also goes without support for Native Query Optimization. NQ optimization ._
 uses bytecode optimizer library Bloat (http://www.cs.purdue.edu/s3/projects/bloat/), which ._
 is not JDK1.1 compatible.
