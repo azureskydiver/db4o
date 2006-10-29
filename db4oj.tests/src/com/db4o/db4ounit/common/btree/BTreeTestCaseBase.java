@@ -11,6 +11,8 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 
 
 public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
+	
+	protected static final int	BTREE_NODE_SIZE	= 4;
 
 	protected BTree _btree;
 	
@@ -19,7 +21,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 	}
 
 	protected BTree newBTree() {
-		return BTreeAssert.createIntKeyBTree(stream(), 0);
+		return BTreeAssert.createIntKeyBTree(stream(), 0, BTREE_NODE_SIZE);
 	}
 	
 	protected BTreeRange range(int lower, int upper) {
@@ -96,5 +98,9 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 	
 	protected void assertSingleElement(final Transaction trans, final int element) {
 		BTreeAssert.assertSingleElement(trans, _btree, new Integer(element));
+	}
+
+	protected void assertPointerKey(int key, BTreePointer pointer) {
+		Assert.areEqual(new Integer(key), pointer.key());
 	}
 }
