@@ -17,6 +17,7 @@ public class MarkTransientExample {
 		saveObjects();
 		retrieveObjects();
 	}
+	// end main
 
 	public static void saveObjects(){
 		new File(YAPFILENAME).delete();
@@ -31,6 +32,7 @@ public class MarkTransientExample {
 			oc.close();
 		}
 	}
+	// end saveObjects
 
 	public static void retrieveObjects()
 	{
@@ -45,6 +47,7 @@ public class MarkTransientExample {
 			oc.close();
 		}
 	}
+	// end retrieveObjects
 
 	public static void listResult(ObjectSet result)
 	{
@@ -52,5 +55,5 @@ public class MarkTransientExample {
 		for(int x = 0; x < result.size(); x++)
 			System.out.println(result.get(x));
 	}
-
+	// end listResult
 }
