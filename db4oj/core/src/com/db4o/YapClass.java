@@ -600,6 +600,49 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         
         return count;
     }
+    
+    private static class YapFieldIterator implements Iterator4 {
+    	private final YapClass _initialClazz;
+    	private YapClass _curClazz;
+    	private int _curIdx;
+    	
+    	public YapFieldIterator(YapClass clazz) {
+    		_initialClazz=clazz;
+    		reset();
+    	}
+    	
+		public Object current() {
+			return _curClazz.i_fields[_curIdx];
+		}
+
+		public boolean moveNext() {
+			if(_curClazz==null) {
+				_curClazz=_initialClazz;
+				_curIdx=0;
+			}
+			else {
+				_curIdx++;
+			}
+			while(_curClazz!=null&&!indexInRange()) {
+				_curClazz=_curClazz.i_ancestor;
+				_curIdx=0;
+			}
+			return _curClazz!=null&&indexInRange();
+		}
+
+		public void reset() {
+    		_curClazz=null;
+    		_curIdx=-1;
+		}
+
+		private boolean indexInRange() {
+			return _curIdx<_curClazz.i_fields.length;
+		}
+	}
+    
+	public Iterator4 fields() {
+		return new YapFieldIterator(this);
+	}
 
     // Scrolls offset in passed reader to the offset the passed field should
     // be read at.
