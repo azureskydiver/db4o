@@ -18,4 +18,5 @@
 .e NQOptimization ..
 .e Utility ..
 .e Annotations ..
+.e SelPersistence ..
 .e Platforms ..
