@@ -14,6 +14,19 @@ public class BTreeRangeTestCase extends BTreeTestCaseBase {
 		super.db4oSetupAfterStore();
 		add(new int[] { 3, 7, 4, 9 });
 	}
+	
+	public void testLastPointer(){
+		assertLastPointer(8, 7);
+		assertLastPointer(11, 9);
+		assertLastPointer(4, 3);
+	}
+
+	private void assertLastPointer(final int searchValue, final int expectedValue) {
+		BTreeRange single = search(searchValue);
+		BTreeRange smallerRange = single.smaller();
+		BTreePointer lastPointer = smallerRange.lastPointer();
+		Assert.areEqual(new Integer(expectedValue), lastPointer.key());
+	}
     
     public void testSize(){
         assertSize(4, range(3,9));

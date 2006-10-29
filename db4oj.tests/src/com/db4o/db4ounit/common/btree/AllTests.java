@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
         
         return new Class[] {
             BTreeAddRemoveTestCase.class,
+            BTreeNodeTestCase.class,
             BTreeFreeTestCase.class,
             BTreePointerTestCase.class,
             BTreeRangeTestCase.class,

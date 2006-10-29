@@ -11,6 +11,8 @@ import db4ounit.extensions.fixtures.*;
 
 
 public class BTreeSearchTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+	
+	protected static final int	BTREE_NODE_SIZE	= 4;
     
     public static void main(String[] arguments) {
         new BTreeSearchTestCase().runSolo();
@@ -25,7 +27,7 @@ public class BTreeSearchTestCase extends AbstractDb4oTestCase implements OptOutD
     }
     
     private void cycleIntKeys(int[] values) throws Exception{
-        BTree btree = BTreeAssert.createIntKeyBTree(stream(), 0);
+        BTree btree = BTreeAssert.createIntKeyBTree(stream(), 0, BTREE_NODE_SIZE);
         for (int i = 0; i < 5; i++) {
             btree = cycleIntKeys(btree, values);    
         }
@@ -45,7 +47,7 @@ public class BTreeSearchTestCase extends AbstractDb4oTestCase implements OptOutD
         
         reopen();
         
-        btree = BTreeAssert.createIntKeyBTree(stream(), id);
+        btree = BTreeAssert.createIntKeyBTree(stream(), id, BTREE_NODE_SIZE);
         
         expectKeysSearch(trans(), btree, values);
         

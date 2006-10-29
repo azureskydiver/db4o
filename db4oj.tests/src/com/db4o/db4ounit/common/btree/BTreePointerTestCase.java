@@ -26,7 +26,18 @@ public class BTreePointerTestCase extends BTreeTestCaseBase {
 		add(keys);		
 		commit();
 	}
-		
+	
+	public void testLastPointer(){
+		BTreePointer pointer = _btree.lastPointer(trans());
+		assertPointerKey(9, pointer);
+	}
+	
+	public void testPrevious(){
+		BTreePointer pointer = getPointerForKey(3);
+		BTreePointer previousPointer = pointer.previous();
+		assertPointerKey(2, previousPointer);
+	}
+
 	public void testNextOperatesInReadMode() {				
 		BTreePointer pointer = _btree.firstPointer(trans());		
 		assertReadModePointerIteration(keys, pointer);
@@ -68,7 +79,7 @@ public class BTreePointerTestCase extends BTreeTestCaseBase {
 	}
 
 	private BTree newBTreeWithNoNodeCaching() {
-		return BTreeAssert.createIntKeyBTree(stream(), 0, 0);
+		return BTreeAssert.createIntKeyBTree(stream(), 0, 0, BTREE_NODE_SIZE);
 	}
 
 }

@@ -1,11 +1,25 @@
 package com.db4o.db4ounit.common.btree;
 
 import com.db4o.Transaction;
-import com.db4o.inside.btree.BTreeRange;
+import com.db4o.inside.btree.*;
 
 import db4ounit.Assert;
 
 public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
+	
+	public void testFirstPointerMultiTransactional(){
+		int count = BTREE_NODE_SIZE + 1;
+		for (int i = 0; i < count; i++) {
+			add(count + i + 1);
+		}
+		int smallest = count + 1;
+		Transaction trans = newTransaction();
+		for (int i = 0; i < count; i++) {
+			add(trans, i);	
+		}
+		final BTreePointer firstPointer = _btree.firstPointer(trans());
+		assertPointerKey(smallest, firstPointer);
+	}
 	
 	public void testSingleRemoveAdd() {
 		
