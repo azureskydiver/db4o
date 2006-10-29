@@ -1,0 +1,47 @@
+.n
+.a SelPersistence ..
+.1 Selective Persistence ..
+
+Sometimes your persistent classes may have fields, which are useless or even undesirable ._
+to store. References to classes, which objects are constructed at runtime, can be an example.
+How to avoid saving these fields to db4o?
+.? java
+You can use the  .i transient ..  keyword to indicate that a field is not part of the persistent ._
+state of an object: 
+.s com.db4odoc.f1.selpersist.Test ..
+The following example demonstrates the effect of transient keyword on db4o:
+.s com.db4odoc.f1.selpersist.MarkTransientExample#saveObjects -out ..
+.s com.db4odoc.f1.selpersist.MarkTransientExample#retrieveObjects ..
+..?
+
+.? net
+There are different ways:
+- You can use the [com.db4o.Transient] attribute to indicate that a field is not part of the ._
+persistent state of an object.
+- You can use any built-in .NET attribute (NonSerialized for example) or define your own ._
+attribute class and mark it transient for db4o:
+.c Db4o.Configure().MarkTransient("Namespace.AttributeClass"); ..
+Both methods will give you equal results:
+.s com.db4odoc.f1.selpersist.Test ..
+.s com.db4odoc.f1.selpersist.FieldTransient ..
+.s com.db4odoc.f1.selpersist.TestCustomized ..
+Let's now check the results:
+.s com.db4odoc.f1.selpersist.MarkTransientExample#saveObjects -out ..
+.s com.db4odoc.f1.selpersist.MarkTransientExample#retrieveObjects ..
+..?
+
+.? mono
+There are different ways:
+- You can use the [com.db4o.Transient] attribute to indicate that a field is not part of the ._
+persistent state of an object.
+- You can use any built-in .NET attribute (NonSerialized for example) or define your own ._
+attribute class and mark it transient for db4o:
+Db4o.Configure().MarkTransient("Namespace.AttributeClass");
+Both methods will give you equal results:
+.s com.db4odoc.f1.selpersist.Test ..
+.s com.db4odoc.f1.selpersist.FieldTransient ..
+.s com.db4odoc.f1.selpersist.TestCustomized ..
+Let's now check the results:
+.s com.db4odoc.f1.selpersist.MarkTransientExample#saveObjects -out ..
+.s com.db4odoc.f1.selpersist.MarkTransientExample#retrieveObjects ..
+..?
