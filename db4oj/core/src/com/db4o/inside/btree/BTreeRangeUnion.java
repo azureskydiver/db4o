@@ -110,4 +110,8 @@ public class BTreeRangeUnion implements BTreeRange {
 	public Iterator4 ranges() {
 		return new ArrayIterator4(_ranges);
 	}
+
+	public BTreePointer lastPointer() {
+		throw new NotImplementedException();
+	}
 }

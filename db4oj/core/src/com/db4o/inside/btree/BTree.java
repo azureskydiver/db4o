@@ -352,6 +352,14 @@ public class BTree extends YapMeta implements TransactionParticipant {
 		return _root.firstPointer(trans);
 	}
 	
+	public BTreePointer lastPointer(Transaction trans) {
+		ensureActive(trans);
+		if (null == _root) {
+			return null;
+		}
+		return _root.lastPointer(trans);
+	}
+	
 	public BTree debugLoadFully(Transaction trans) {
 		ensureActive(trans);
 		_root.debugLoadFully(trans);
@@ -443,6 +451,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
 	public BTreeRange asRange(Transaction trans){
 		return new BTreeRangeSingle(trans, this, firstPointer(trans), null);
 	}
+
 	
 }
 

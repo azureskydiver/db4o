@@ -35,4 +35,6 @@ public interface BTreeRange {
 	public boolean isEmpty();
 	
 	public void accept(BTreeRangeVisitor visitor);
+
+	public BTreePointer lastPointer();
 }

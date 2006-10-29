@@ -529,6 +529,15 @@ public class BTreeNode extends YapMeta{
     	return -1;
     }
     
+	public int lastKeyIndex(Transaction trans) {
+    	for (int ix = _count - 1; ix >= 0; ix--) {
+            if(indexIsValid(trans, ix)){
+                return ix;
+            }
+    	}
+    	return -1;
+	}
+    
     public boolean indexIsValid(Transaction trans, int index){
         if(!canWrite()){
             return true;
@@ -953,7 +962,7 @@ public class BTreeNode extends YapMeta{
 		if (_isLeaf) {
             int index = firstKeyIndex(trans);
             if(index == -1){
-                return null;
+            	return null;
             }
 			return new BTreePointer(trans, reader, this, index);
 		}
@@ -961,6 +970,24 @@ public class BTreeNode extends YapMeta{
             BTreePointer childFirstPointer = child(reader, i).firstPointer(trans);
             if(childFirstPointer != null){
                 return childFirstPointer;
+            }
+        }
+		return null;
+	}
+	
+	public BTreePointer lastPointer(Transaction trans) {
+        YapReader reader = prepareRead(trans);
+		if (_isLeaf) {
+            int index = lastKeyIndex(trans);
+            if(index == -1){
+            	return null;
+            }
+			return new BTreePointer(trans, reader, this, index);
+		}
+        for (int i = _count - 1; i >= 0; i--) {
+            BTreePointer childLastPointer = child(reader, i).lastPointer(trans);
+            if(childLastPointer != null){
+                return childLastPointer;
             }
         }
 		return null;
