@@ -130,6 +130,10 @@
     <Compile Include="src\com\db4odoc\f1\remote\Car.vb" />
     <Compile Include="src\com\db4odoc\f1\remote\RemoteExample.vb" />
     <Compile Include="src\com\db4odoc\f1\remote\UpdateServer.vb" />
+    <Compile Include="src\com\db4odoc\f1\selpersist\FieldTransient.vb" />
+    <Compile Include="src\com\db4odoc\f1\selpersist\MarkTransientExample.vb" />
+    <Compile Include="src\com\db4odoc\f1\selpersist\Test.vb" />
+    <Compile Include="src\com\db4odoc\f1\selpersist\TestCustomized.vb" />
     <Compile Include="src\com\db4odoc\f1\semaphores\ConnectedUser.vb" />
     <Compile Include="src\com\db4odoc\f1\semaphores\LimitLogins.vb" />
     <Compile Include="src\com\db4odoc\f1\semaphores\LockManager.vb" />
