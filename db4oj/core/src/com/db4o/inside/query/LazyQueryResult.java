@@ -3,7 +3,6 @@
 package com.db4o.inside.query;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
@@ -13,14 +12,12 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class LazyQueryResult implements QueryResult {
-	
-	private final Transaction _transaction;
+public class LazyQueryResult extends AbstractQueryResult {
 	
 	private Iterable4 _iterable;
 	
 	public LazyQueryResult(Transaction trans) {
-		_transaction = trans;
+		super(trans);
 	}
 
 	public Object get(int index) {
@@ -50,10 +47,6 @@ public class LazyQueryResult implements QueryResult {
 		return BTreeClassIndexStrategy.iterate(clazz, transaction());
 	}
 	
-	public Transaction transaction(){
-		return _transaction;
-	}
-
 	public void loadFromClassIndexes(final YapClassCollectionIterator classCollectionIterator) {
 		_iterable = new Iterable4() {
 			public Iterator4 iterator() {
@@ -95,14 +88,6 @@ public class LazyQueryResult implements QueryResult {
 		};
 	}
 
-	public YapStream stream() {
-		return _transaction.stream();
-	}
-
-    public ExtObjectContainer objectContainer() {
-        return stream();
-    }
-
 	public int size() {
 		throw new NotImplementedException();
 	}
@@ -110,9 +95,25 @@ public class LazyQueryResult implements QueryResult {
 	public void sort(QueryComparator cmp) {
 		throw new NotImplementedException();
 	}
-
-	public Iterator4 iterator() {
-		throw new NotImplementedException();
-	}
+	
+    protected AbstractQueryResult supportSize(){
+    	return toIdTree();
+    }
+    
+    protected AbstractQueryResult supportSort(){
+    	return toIdList();
+    }
+    
+    protected AbstractQueryResult supportElementAccess(){
+    	return toIdList();
+    }
+    
+    protected int knownSize(){
+    	return 0;
+    }
+    
+    protected AbstractQueryResult toIdList(){
+    	return toIdTree().toIdList();
+    }
 
 }
