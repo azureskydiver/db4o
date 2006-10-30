@@ -39,7 +39,6 @@ public class DefragContextImpl implements DefragContext {
 	private final YapFile _sourceDb;
 	private final YapFile _targetDb;
 	private final BTreeIDMapping _mapping;
-	private Tree _seen;
 
 	public DefragContextImpl(String sourceFileName,String targetFileName,String mappingFileName) {
 		Db4o.configure().flushFileBuffers(false);
@@ -48,7 +47,6 @@ public class DefragContextImpl implements DefragContext {
 		Db4o.configure().readOnly(false);
 		_targetDb = freshYapFile(targetFileName);
 		_mapping=new BTreeIDMapping(mappingFileName);
-		_seen=null;
 	}
 	
 	static YapFile freshYapFile(String fileName) {
@@ -87,8 +85,8 @@ public class DefragContextImpl implements DefragContext {
 		return _mapping.mappedID(oldID,lenient);
 	}
 
-	public void mapIDs(int oldID,int newID, boolean isClassID) {
-		_mapping.mapIDs(oldID,newID);
+	public void mapIDs(int oldID,int newID, boolean isClassID, boolean seen) {
+		_mapping.mapIDs(oldID,newID, seen);
 		if(isClassID) {
 			_mapping.mapClassIDs(oldID,newID);
 		}
@@ -177,15 +175,6 @@ public class DefragContextImpl implements DefragContext {
 
 	private Hashtable4 _classIndices=new Hashtable4(16);
 
-	public static final boolean COPY_INDICES=true;
-
-	public void addClassID(YapClass yapClass,long id) {
-		if(yapClass.hasIndex()&&!DefragContextImpl.COPY_INDICES) {
-			ClassIndexStrategy classIndex = classIndex(yapClass);
-			classIndex.add(_targetDb.getTransaction(), (int)id);
-		}
-	}
-
 	public int classIndexID(YapClass yapClass) {
 		return classIndex(yapClass).id();
 	}
@@ -259,17 +248,14 @@ public class DefragContextImpl implements DefragContext {
 	}
 	
 	public void registerSeen(int id) {
-		//_mapping.registerSeen(id);
-		_seen=Tree.add(_seen,new TreeInt(id));
+		_mapping.registerSeen(id);
 	}
 
 	public boolean hasSeen(int id) {
-		//return _mapping.hasSeen(id);
-		return _seen!=null&&_seen.find(new TreeInt(id))!=null;
+		return _mapping.hasSeen(id);
 	}
 	
 	public void clearSeen() {
-		//_mapping.clearSeen();
-		_seen=null;
+		_mapping.clearSeen();
 	}
 }

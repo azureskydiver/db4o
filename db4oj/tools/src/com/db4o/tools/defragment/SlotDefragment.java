@@ -10,7 +10,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 
-public class PMFD {
+public class SlotDefragment {
 	
 	public static void defrag(String sourceFileName, String targetFile,
 			String mappingFile) throws IOException {
@@ -94,12 +94,11 @@ public class PMFD {
 		context.traverseAll(curClass, new Visitor4() {
 			public void visit(Object obj) {
 				int id = ((Integer)obj).intValue();
-				if(context.hasSeen(id)) {
+				if(command.hasSeen(context,id)) {
 					return;
 				}
 				try {
 					command.processObjectSlot(context,curClass,id, withStringIndex);
-					context.registerSeen(id);
 				} catch (CorruptionException e) {
 					e.printStackTrace();
 				}
@@ -125,7 +124,7 @@ public class PMFD {
 		int targetClassIndexID=0;
 		if(curClass.hasIndex()) {
 			sourceClassIndexID = curClass.index().id();
-			targetClassIndexID=(DefragContextImpl.COPY_INDICES ? context.mappedID(sourceClassIndexID,-1) : context.classIndexID(curClass) );
+			targetClassIndexID=context.mappedID(sourceClassIndexID,-1);
 		}
 		command.processClass(context,curClass,curClass.getID(),targetClassIndexID);
 	}
@@ -133,7 +132,7 @@ public class PMFD {
 	private static void processClassIndex(final DefragContextImpl context,
 			final YapClass curClass, final PassCommand command)
 			throws CorruptionException {
-		if(curClass.hasIndex()&&DefragContextImpl.COPY_INDICES) {
+		if(curClass.hasIndex()) {
 			BTreeClassIndexStrategy indexStrategy=(BTreeClassIndexStrategy) curClass.index();
 			final BTree btree=indexStrategy.btree();
 			command.processBTree(context,btree);

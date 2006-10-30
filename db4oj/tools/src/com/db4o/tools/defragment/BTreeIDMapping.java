@@ -8,25 +8,19 @@ import com.db4o.inside.btree.*;
 
 class BTreeIDMapping {
 		private YapFile _mappingDb;
-		private BTree _seenBTree;
 		private BTree _idTree;
 
 		public BTreeIDMapping(String fileName) {
 			_mappingDb = DefragContextImpl.freshYapFile(fileName);
-			_idTree=new BTree(_mappingDb.getTransaction(),0,new MappedIDPairHandler(_mappingDb));
-			_seenBTree=newSeenBTree();
+			_idTree=new BTree(trans(),0,new MappedIDPairHandler(_mappingDb));
 		}
 
-		private BTree newSeenBTree() {
-			return new BTree(_mappingDb.getTransaction(),0,new YInt(_mappingDb));
-		}
-		
 		public Integer mappedID(int oldID,boolean lenient) {
 			Integer classID=(Integer)_classIDs.get(oldID);
 			if(classID!=null) {
 				return classID;
 			}
-			BTreeRange range=_idTree.search(_mappingDb.getTransaction(),new MappedIDPair(oldID,0));
+			BTreeRange range=_idTree.search(trans(),new MappedIDPair(oldID,0));
 			MappedIDPair mappedIDs=null;
 			Iterator4 pointers=range.pointers();
 			if(pointers.moveNext()) {
@@ -56,31 +50,35 @@ class BTreeIDMapping {
 			return value;
 		}
 
-		public void mapIDs(int oldID,int newID) {
-			_idTree.add(_mappingDb.getTransaction(), new MappedIDPair(oldID,newID));
+		public void mapIDs(int oldID,int newID, boolean seen) {
+			_idTree.add(trans(), new MappedIDPair(oldID,newID,seen));
 		}
 
 		public void registerSeen(int id) {
-			Transaction trans = _mappingDb.getTransaction();
-			_seenBTree.add(trans, new Integer(id));
+			idMapping(id).seen(true);
 		}
 
 		private MappedIDPair idMapping(int id) {
-			BTreeRange range=_idTree.search(_mappingDb.getTransaction(),new MappedIDPair(id,-1));
+			BTreeRange range=_idTree.search(trans(),new MappedIDPair(id,-1));
 			Iterator4 pointers=range.pointers();
-			pointers.moveNext();
-			MappedIDPair mappedIDs=(MappedIDPair)pointers.current();
+			if(!pointers.moveNext()) {
+				return null;
+			}
+			MappedIDPair mappedIDs=(MappedIDPair)((BTreePointer)pointers.current()).key();
 			return mappedIDs;
 		}
 		
 		public boolean hasSeen(int id) {
 			MappedIDPair mappedIDs = idMapping(id);
-			return mappedIDs.seen();
+			return mappedIDs!=null&&mappedIDs.seen();
 		}
 		
 		public void clearSeen() {
-			_seenBTree.dispose(_mappingDb.getTransaction());
-			_seenBTree=newSeenBTree();
+			_idTree.traverseKeys(trans(), new Visitor4() {
+				public void visit(Object obj) {
+					((MappedIDPair)obj).seen(false);
+				}
+			});
 		}
 
 		public void close() {
@@ -91,5 +89,9 @@ class BTreeIDMapping {
 		
 		public void mapClassIDs(int oldID, int newID) {
 			_classIDs.put(oldID,new Integer(newID));
+		}
+		
+		private Transaction trans() {
+			return _mappingDb.getSystemTransaction();
 		}
 	}

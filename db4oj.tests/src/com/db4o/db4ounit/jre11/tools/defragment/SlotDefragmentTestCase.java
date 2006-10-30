@@ -12,7 +12,7 @@ import com.db4o.tools.defragment.*;
 
 import db4ounit.*;
 
-public class PMFDTestCase implements TestLifeCycle {
+public class SlotDefragmentTestCase implements TestLifeCycle {
 	private final static String SOURCEFILE = "original.yap";
 	private final static String TARGETFILE = "copied.yap";
 	private final static String MAPPINGFILE = "mapping.yap";
@@ -20,7 +20,7 @@ public class PMFDTestCase implements TestLifeCycle {
 	private static final int NUM_ENTRIES = 5;
 
 	public static void main(String[] args) {
-		new TestRunner(new ReflectionTestSuiteBuilder(PMFDTestCase.class)).run();
+		new TestRunner(new ReflectionTestSuiteBuilder(SlotDefragmentTestCase.class)).run();
 	}
 	
 	public void setUp() throws Exception {
@@ -34,7 +34,7 @@ public class PMFDTestCase implements TestLifeCycle {
 
 	public void testDefrag() throws IOException {
 		long start=System.currentTimeMillis();
-		PMFD.defrag(SOURCEFILE,TARGETFILE,MAPPINGFILE);
+		SlotDefragment.defrag(SOURCEFILE,TARGETFILE,MAPPINGFILE);
 		System.out.println("TIME "+(System.currentTimeMillis()-start)+" ms");
 		checkCopied();
 	}
