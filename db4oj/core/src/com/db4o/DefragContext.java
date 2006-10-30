@@ -32,4 +32,6 @@ public interface DefragContext extends IDMapping {
 	YapWriter sourceWriterByID(int sourceID);
 	
 	int mappedID(int id,boolean lenient);
+
+	void registerSeen(int id);
 }

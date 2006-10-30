@@ -28,12 +28,11 @@ final class SecondPassCommand implements PassCommand {
 	}
 
 	public void processObjectSlot(DefragContextImpl context, final YapClass yapClass, int id, boolean registerAddresses) throws CorruptionException {
-		context.addClassID(yapClass,context.mappedID(id));
 		ReaderPair.processCopy(context, id, new SlotCopyHandler() {
 			public void processCopy(ReaderPair readers) {
 				YapClass.defragObject(readers);
 			}
-		},registerAddresses);
+		},registerAddresses, true);
 	}
 
 	public void processClassCollection(DefragContextImpl context) throws CorruptionException {
@@ -49,5 +48,9 @@ final class SecondPassCommand implements PassCommand {
 	}
 
 	public void flush(DefragContextImpl context) {
+	}
+	
+	public boolean hasSeen(DefragContextImpl context,int id) {
+		return context.hasSeen(id);
 	}
 }

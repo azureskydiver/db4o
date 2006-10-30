@@ -32,8 +32,8 @@ public class MappedIDPair {
 		return _seen;
 	}
 	
-	public void markAsSeen() {
-		_seen=true;
+	public void seen(boolean seen) {
+		_seen=seen;
 	}
 	
 	public String toString() {

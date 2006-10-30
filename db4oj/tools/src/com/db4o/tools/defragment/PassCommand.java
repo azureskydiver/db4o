@@ -14,4 +14,5 @@ interface PassCommand {
 	void processClassCollection(DefragContextImpl context) throws CorruptionException;
 	void processBTree(DefragContextImpl context, BTree btree) throws CorruptionException;
 	void flush(DefragContextImpl context);
+	boolean hasSeen(DefragContextImpl context,int id);
 }

@@ -24,7 +24,7 @@ public class Db4oDefragSolo extends Db4oSolo {
 					String mappingFile = getAbsolutePath()+".mapping";
 					new File(defragFile).delete();
 					new File(mappingFile).delete();
-					PMFD.defrag(getAbsolutePath(), defragFile, mappingFile);
+					SlotDefragment.defrag(getAbsolutePath(), defragFile, mappingFile);
 					File4.copy(defragFile,getAbsolutePath());
 				} catch (IOException e) {
 					e.printStackTrace();
