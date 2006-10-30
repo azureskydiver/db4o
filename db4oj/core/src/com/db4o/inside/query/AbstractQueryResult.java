@@ -54,6 +54,9 @@ public abstract class AbstractQueryResult implements QueryResult {
     public Iterator4 iterator() {
     	return new MappingIterator(iterateIDs()){
     		protected Object map(Object current) {
+    			if(current == null){
+    				return MappingIterator.SKIP;
+    			}
     			synchronized (streamLock()) {
     				Object obj = activatedObject(((Integer)current).intValue());
     				if(obj == null){
