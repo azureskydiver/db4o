@@ -6,6 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
 import com.db4o.inside.fieldindex.*;
+import com.db4o.inside.marshall.*;
 
 /**
  * Holds the tree of {@link QCandidate} objects and the list of {@link QCon} during query evaluation.
@@ -20,7 +21,7 @@ public final class QCandidates implements Visitor4 {
     public final Transaction i_trans;
 
     // root of the QCandidate tree
-    private Tree i_root;
+    public Tree i_root;
 
     // collection of all constraints
     private List4 i_constraints;
@@ -170,7 +171,7 @@ public final class QCandidates implements Visitor4 {
         evaluate();
     }
     
-    public Iterator4 executeLazy(){
+    public Iterator4 executeLazy(Collection4 executionPath){
     	
     	final FieldIndexProcessorResult result = processFieldIndexes();
     	
@@ -178,11 +179,12 @@ public final class QCandidates implements Visitor4 {
     		return Iterator4Impl.EMPTY;
     	}
     	
-    	Iterator4 idIterator = result.foundIndex() ? 
+    	Iterator4 indexIterator = result.foundIndex() ? 
     		result.iterateIDs() :  
     		BTreeClassIndexStrategy.iterate(i_yapClass, i_trans);
+    		
     	
-    	return new MappingIterator(idIterator) {
+    	Iterator4 singleObjectQueryIterator  = new MappingIterator(indexIterator) {
 		
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
@@ -195,8 +197,55 @@ public final class QCandidates implements Visitor4 {
 				return current;
 			}
 		};
+		
+		return mapIdsToExecutionPath(singleObjectQueryIterator, executionPath);
     }
+
+	private Iterator4 mapIdsToExecutionPath(Iterator4 singleObjectQueryIterator, Collection4 executionPath) {
+		
+		if(executionPath == null){
+			return singleObjectQueryIterator;
+		}
+		
+		Iterator4 res = singleObjectQueryIterator;
+		
+		Iterator4 executionPathIterator = executionPath.iterator();
+		while(executionPathIterator.moveNext()){
+			
+			final String fieldName = (String) executionPathIterator.current();
+			
+			Iterator4 mapIdToFieldIdsIterator = new MappingIterator(res){
+				
+				protected Object map(Object current) {
+					int id = ((Integer)current).intValue();
+                    YapWriter reader = stream().readWriterByID(i_trans, id);
+                    if (reader == null) {
+                    	return MappingIterator.SKIP;
+                    }
+                    	
+                    ObjectHeader oh = new ObjectHeader(stream(), reader);
+                    
+                    Tree idTree = oh.yapClass().collectFieldIDs(
+                            oh._marshallerFamily,
+                            oh._headerAttributes,
+                            null,
+                            reader,
+                            fieldName);
+
+					return new TreeKeyIterator(idTree);
+				}
+				
+			};
+			
+			res = new CompositeIterator4(mapIdToFieldIdsIterator);
+			
+		}
+		return res;
+	}
     
+	public YapStream stream() {
+		return i_trans.stream();
+	}
 
 	public int classIndexEntryCount() {
 		return i_yapClass.indexEntryCount(i_trans);

@@ -356,17 +356,20 @@ public abstract class QQueryBase implements Unversioned {
     	
 		final CreateCandidateCollectionResult r = createCandidateCollection();
 		
-        // final boolean topLevel = r.topLevel;
+        final boolean topLevel = r.topLevel;
+        
         
         if (Debug.queries) {
         	logConstraints();
         }
         
+        final Collection4 executionPath = topLevel ? null : fieldPathFromTop();
+        
         Iterator4 candidateCollection = new Iterator4Impl(r.candidateCollection);
         
         MappingIterator executeCandidates = new MappingIterator(candidateCollection){
 			protected Object map(Object current) {
-				return ((QCandidates)current).executeLazy();
+				return ((QCandidates)current).executeLazy(executionPath);
 			}
         };
         
@@ -386,10 +389,11 @@ public abstract class QQueryBase implements Unversioned {
 				}
 				return current;
 			}
-		
+
 		};
 		
 		return checkDuplicates;
+		
     }
     
 
@@ -406,6 +410,8 @@ public abstract class QQueryBase implements Unversioned {
         }
         
         if (candidateCollection != null) {
+        	
+        	final Collection4 executionPath = topLevel ? null : fieldPathFromTop();
 
         	Iterator4 i = new Iterator4Impl(candidateCollection);
             while (i.moveNext()) {
@@ -428,18 +434,13 @@ public abstract class QQueryBase implements Unversioned {
                     candidates.traverse(result);
                 } else {
                     QQueryBase q = this;
-                    final Collection4 fieldPath = new Collection4();
-                    while (q.i_parent != null) {
-                        fieldPath.prepend(q.i_field);
-                        q = q.i_parent;
-                    }
                     candidates.traverse(new Visitor4() {
                         public void visit(Object a_object) {
                             QCandidate candidate = (QCandidate)a_object;
                             if (candidate.include()) {
                                 TreeInt ids = new TreeInt(candidate._key);
                                 final TreeInt[] idsNew = new TreeInt[1];
-                                Iterator4 itPath = fieldPath.iterator();
+                                Iterator4 itPath = executionPath.iterator();
                                 while (itPath.moveNext()) {
                                     idsNew[0] = null;
                                     final String fieldName = (String) (itPath.current());
@@ -478,6 +479,16 @@ public abstract class QQueryBase implements Unversioned {
         }
         sort(result);
 //        result.reset();
+    }
+    
+    private Collection4 fieldPathFromTop(){
+        QQueryBase q = this;
+        final Collection4 fieldPath = new Collection4();
+        while (q.i_parent != null) {
+            fieldPath.prepend(q.i_field);
+            q = q.i_parent;
+        }
+        return fieldPath;
     }
 
 	private void logConstraints() {
@@ -616,4 +627,14 @@ public abstract class QQueryBase implements Unversioned {
 	private static QQuery cast(QQueryBase obj) {
 		return (QQuery)obj;
 	}
+	
+	public boolean requiresSort() {
+		return _comparator != null;
+	}
+	
+	public QueryComparator comparator() {
+		return _comparator;
+	}
+
+
 }

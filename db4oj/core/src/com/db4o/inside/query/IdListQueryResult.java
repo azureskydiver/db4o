@@ -3,7 +3,6 @@
 package com.db4o.inside.query;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
@@ -12,10 +11,8 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class IdListQueryResult implements Visitor4, QueryResult {
+public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
     
-	private final Transaction _transaction;
-	
 	private Tree _candidates;
 	
 	private boolean _checkDuplicates;
@@ -23,8 +20,8 @@ public class IdListQueryResult implements Visitor4, QueryResult {
 	private final IntArrayList _ids;
     
     protected IdListQueryResult(Transaction trans, int initialSize){
+    	super(trans);
         _ids = new IntArrayList(initialSize);
-        _transaction = trans;
     }
     
 	public IdListQueryResult(Transaction trans) {
@@ -34,39 +31,7 @@ public class IdListQueryResult implements Visitor4, QueryResult {
     public IntIterator4 iterateIDs() {
     	return _ids.intIterator();
     }
-    
-    public Iterator4 iterator() {
-    	return new MappingIterator(_ids.iterator()){
-    		protected Object map(Object current) {
-    			synchronized (streamLock()) {
-    				Object obj = activatedObject(((Integer)current).intValue());
-    				if(obj == null){
-    					return MappingIterator.SKIP;
-    				}
-    				return obj; 
-    			}
-    		}
-    	};
-    }
 
-	public final Object activate(Object obj){
-		YapStream stream = stream();
-		stream.activate1(_transaction, obj, stream.configImpl().activationDepth());
-		return obj;
-	}
-    
-    public final Object activatedObject(int id){
-        YapStream stream = stream();
-        Object ret = stream.getActivatedObjectFromCache(_transaction, id);
-        if(ret != null){
-            return ret;
-        }
-        return stream.readActivatedObjectNotInCache(_transaction, id);
-    }
-    
-    /* (non-Javadoc)
-     * @see com.db4o.QueryResult#get(int)
-     */
     public Object get(int index) {
         synchronized (streamLock()) {
             if (index < 0 || index >= size()) {
@@ -105,20 +70,6 @@ public class IdListQueryResult implements Visitor4, QueryResult {
 	    
 	}
 	
-	public Object streamLock(){
-		final YapStream stream = stream();
-		stream.checkClosed();
-		return stream.lock();
-	}
-
-	public YapStream stream() {
-		return _transaction.stream();
-	}
-
-    public ExtObjectContainer objectContainer() {
-        return stream();
-    }
-
 	public void sort( QueryComparator cmp) {
 		sort(cmp,0,size()-1);
 	}
