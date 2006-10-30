@@ -737,5 +737,18 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     public QE evaluator() {
         return i_evaluator;
-    }	
+    }
+
+	public boolean requiresSort() {
+		if (i_orderID != 0) {
+			return true;
+		}
+		Iterator4 i = iterateChildren();
+		while(i.moveNext()){
+			if(((QCon)i.current()).requiresSort()){
+				return true;
+			}
+		}
+		return false;
+	}	
 }
