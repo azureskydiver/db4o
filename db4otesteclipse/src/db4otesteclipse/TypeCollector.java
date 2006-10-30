@@ -24,7 +24,7 @@ public class TypeCollector {
 		List sorted=new ArrayList(testTypes);
 		Collections.sort(sorted,new Comparator() {
 			public int compare(Object a, Object b) {
-				return ((IType)a).getFullyQualifiedName().compareTo(((IType)b).getFullyQualifiedName());
+				return ((IMember)a).getElementName().compareTo(((IMember)b).getElementName());
 			}
 		});
 		return sorted;
@@ -41,6 +41,10 @@ public class TypeCollector {
 		}
 		if(selected instanceof IPackageFragment) {
 			addTestTypes(testTypes, (IPackageFragment)selected);
+			return;
+		}
+		if(selected instanceof IMethod) {
+			addTestType(testTypes, (IMethod)selected);
 			return;
 		}
 	}
@@ -62,6 +66,12 @@ public class TypeCollector {
 	private void addTestType(Set testTypes, IType type) throws CoreException {
 		if(predicate.acceptTestType(type)) {
 			testTypes.add(type);
+		}
+	}
+
+	private void addTestType(Set testTypes, IMethod method) throws CoreException {
+		if(predicate.acceptTestMethod(method)) {
+			testTypes.add(method);
 		}
 	}
 }

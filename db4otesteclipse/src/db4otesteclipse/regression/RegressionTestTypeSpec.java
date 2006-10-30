@@ -2,6 +2,7 @@ package db4otesteclipse.regression;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.*;
@@ -62,5 +63,9 @@ public class RegressionTestTypeSpec implements TestTypeSpec {
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "-"
 						+ mode + " " + typeArgsList);
+	}
+
+	public boolean acceptTestMethod(IMethod method) throws CoreException {
+		return false;
 	}
 }

@@ -54,7 +54,7 @@ public class TestLaunchFactory {
 	private List namesForTestTypes(List testTypes) {
 		List names=new ArrayList(testTypes.size());
 		for (Iterator iter = testTypes.iterator(); iter.hasNext();) {
-			names.add(((IType)iter.next()).getFullyQualifiedName());
+			names.add(((IMember)iter.next()).getElementName());
 		}
 		return names;
 	}
@@ -77,7 +77,7 @@ public class TestLaunchFactory {
 	private IJavaProject containerForTypes(List testTypes) {
 		IJavaProject container=null;
 		for (Iterator testTypeIter = testTypes.iterator(); testTypeIter.hasNext();) {
-			IType type = (IType) testTypeIter.next();
+			IMember type = (IMember) testTypeIter.next();
 			IJavaProject curContainer = type.getJavaProject();
 			if(container!=null) {
 				if(!container.equals(curContainer)) {
@@ -96,18 +96,26 @@ public class TestLaunchFactory {
 		boolean firstRun = true;
 		for (Iterator testTypeIter = testTypes.iterator(); testTypeIter
 				.hasNext(); firstRun = false) {
-			IType type = (IType) testTypeIter.next();
+			IMember type = (IMember) testTypeIter.next();
 			if (!firstRun) {
 				buf.append(' ');
 			}
-			buf.append(type.getFullyQualifiedName());
+			if(type instanceof IType) {
+				buf.append(((IType)type).getFullyQualifiedName());
+			}
+			if(type instanceof IMethod) {
+				IMethod method = ((IMethod)type);
+				buf.append(method.getDeclaringType().getFullyQualifiedName())
+					.append('#')
+					.append(method.getElementName());
+			}
 		}
 		return buf.toString();
 	}
 	
 
 	private String nameForTestTypes(List testTypes) {
-		String name=((IType)testTypes.iterator().next()).getFullyQualifiedName();
+		String name=((IMember)testTypes.iterator().next()).getElementName();
 		if(testTypes.size()>1) {
 			name+=",...["+testTypes.size()+"]";
 		}
