@@ -29,7 +29,13 @@ public class MassUpdates {
                 objectContainer.commit();
             }
         });
-        q.execute();
+        
+        // Lazy queries require iterating through the ObjectSet,
+        // otherwise the evaluations won't be triggered.
+        ObjectSet objectSet = q.execute();
+        while(objectSet.hasNext()){
+        	objectSet.next();
+        }
         
         check("update1");
         
@@ -52,7 +58,10 @@ public class MassUpdates {
                 objectContainer.commit();
             }
         });
-        q.execute();
+        objectSet = q.execute();
+        while(objectSet.hasNext()){
+        	objectSet.next();
+        }
         
         check("update2");
     }
