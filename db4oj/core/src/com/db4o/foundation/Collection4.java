@@ -31,6 +31,10 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	public Collection4(Iterable4 other) {
 		addAll(other);
 	}
+	
+	public Collection4(Iterator4 iterator) {
+		addAll(iterator);
+	}
 
 	public Object singleElement() {
 		if (size() != 1) {
@@ -100,7 +104,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 		changed();
 	}
 
-	public final boolean contains(Object element) {
+	public final boolean contains(Object element) {		
 		return getInternal(element) != NOT_FOUND;
 	}
 
@@ -118,9 +122,6 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * tests if the object is in the Collection. == comparison.
 	 */
 	public final boolean containsByIdentity(Object element) {
-		if (null == element) {
-			return false;
-		}
 		Iterator4 i = internalIterator();
 		while (i.moveNext()) {
 			Object current = i.current();
@@ -144,7 +145,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 	
 	private final Object getInternal(Object element){
-		if(element == null){
+		if (element == null) {
 			return containsNull() ? null : NOT_FOUND;
 		}
 		Iterator4 i = internalIterator();
@@ -158,13 +159,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 	
 	private final boolean containsNull(){
-		Iterator4 i = internalIterator();
-		while (i.moveNext()) {
-			if(i.current() == null){
-				return true;
-			}
-		}
-		return false;
+		return containsByIdentity(null);
 	}
 
 	public Object deepClone(Object newParent) {
@@ -239,6 +234,10 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 
 	public final int size() {
 		return _size;
+	}
+	
+	public final boolean isEmpty() {
+		return _size == 0;
 	}
 
 	/**
