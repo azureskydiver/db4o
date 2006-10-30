@@ -2,6 +2,7 @@ package db4otesteclipse.unit;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.*;
@@ -23,7 +24,14 @@ public class UnitTestTypeSpec implements TestTypeSpec {
 		return implementsTest(type, PLAIN_TESTINTERFACE_NAME);
 	}
 
-	private boolean implementsTest(IType type, String typeName) throws JavaModelException {
+	private boolean implementsTest(IMember member, String typeName) throws JavaModelException {
+		IType type=null;
+		if(member instanceof IMethod) {
+			type=((IMethod)member).getDeclaringType();
+		}
+		else {
+			type=(IType)member;
+		}
 		ITypeHierarchy hierarchy=type.newSupertypeHierarchy(null);
 		IType[] interfaces=hierarchy.getAllInterfaces();
 		for (int idx = 0; idx < interfaces.length; idx++) {
@@ -46,11 +54,15 @@ public class UnitTestTypeSpec implements TestTypeSpec {
 
 	private boolean needsDb4oExtensions(List testTypes) throws JavaModelException {
 		for (Iterator typeIter = testTypes.iterator(); typeIter.hasNext();) {
-			IType type = (IType) typeIter.next();
+			IMember type = (IMember) typeIter.next();
 			if(implementsTest(type,DB4O_TESTINTERFACE_NAME)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public boolean acceptTestMethod(IMethod method) throws CoreException {
+		return acceptTestType(method.getDeclaringType())&&method.getElementName().startsWith("test");
 	}
 }

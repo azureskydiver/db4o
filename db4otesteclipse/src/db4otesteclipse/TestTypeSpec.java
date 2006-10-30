@@ -9,4 +9,5 @@ import org.eclipse.jdt.core.*;
 public interface TestTypeSpec {
 	void configureSpecific(ILaunchConfigurationWorkingCopy workingCopy, List testTypes, String typeArgsList) throws CoreException;
 	boolean acceptTestType(IType type) throws CoreException;
+	boolean acceptTestMethod(IMethod method) throws CoreException;
 }

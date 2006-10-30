@@ -135,6 +135,22 @@
             <separator name="db4otesteclipse.menu.pf.addition"/>
          </menu>
       </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="db4otesteclipse.runtestmenu.unit.method"
+            objectClass="org.eclipse.jdt.core.IMethod">
+         <action
+               class="db4otesteclipse.unit.RunUnitTestAction"
+               icon="d.gif"
+               id="db4otesteclipse.runtestmenu.unit.method.action"
+               label="Run db4o unit test method"
+               menubarPath="db4otesteclipse.menu.type/db4otesteclipse.menu.type.addition"/>
+         <menu
+               id="db4otesteclipse.menu.type"
+               label="Run db4o test...">
+            <separator name="db4otesteclipse.menu.type.addition"/>
+         </menu>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
