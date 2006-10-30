@@ -130,7 +130,6 @@ public final class QCandidates implements Visitor4 {
     		public void visit(Object a_object) {
     			QCandidate candidate = (QCandidate) a_object;
     			col.add(candidate);
-    			
     		}
     	});
     	

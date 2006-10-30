@@ -629,7 +629,17 @@ public abstract class QQueryBase implements Unversioned {
 	}
 	
 	public boolean requiresSort() {
-		return _comparator != null;
+		if (_comparator != null){
+			return true;
+		}
+		Iterator4 i = iterateConstraints();
+		while(i.moveNext()){
+			QCon qCon = (QCon) i.current();
+			if(qCon.requiresSort()){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public QueryComparator comparator() {

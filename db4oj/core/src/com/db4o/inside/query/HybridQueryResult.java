@@ -46,10 +46,10 @@ public class HybridQueryResult extends AbstractQueryResult {
 	}
 
 	public void loadFromQuery(QQuery query) {
-		_delegate.loadFromQuery(query);
 		if(query.requiresSort()){
-			sort(query.comparator());
+			_delegate = new IdListQueryResult(transaction());
 		}
+		_delegate.loadFromQuery(query);
 	}
 
 	public int size() {
