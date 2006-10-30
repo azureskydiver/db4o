@@ -48,7 +48,7 @@ public class ObjectSetAsList {
 		ObjectSet result=query.execute();
 		Test.ensureEquals(3,result.size());
 		for(int i=0;i<3;i++) {
-			Test.ensure(result.next()==result.get(i));
+			Test.ensure(result.get(i) == result.next());
 		}
 		Test.ensure(!result.hasNext());
 	}
