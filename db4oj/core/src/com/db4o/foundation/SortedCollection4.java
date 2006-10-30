@@ -22,7 +22,7 @@ public class SortedCollection4 {
 		if (1 != size()) {
 			throw new IllegalStateException();
 		}
-		return ((TreeObject)_tree).getObject();
+		return _tree.key();
 	}
 	
 	public void addAll(Iterator4 iterator) {		
@@ -43,7 +43,7 @@ public class SortedCollection4 {
 		Tree.traverse(_tree, new Visitor4() {
 			int i = 0;
 			public void visit(Object obj) {
-				array[i++] = ((TreeObject)obj).getObject();
+				array[i++] = ((TreeObject)obj).key();
 			}
 		});
 		return array;
@@ -53,21 +53,4 @@ public class SortedCollection4 {
 		return Tree.size(_tree);
 	}
 	
-	static class TreeObject extends Tree {
-		private Object _object;
-		private Comparison4 _function;
-
-		public TreeObject(Object object, Comparison4 function) {
-			_object = object;
-			_function = function;
-		}
-
-		public int compare(Tree tree) {
-			return _function.compare(_object, ((TreeObject)tree).getObject());
-		}
-
-		public Object getObject() {
-			return _object;
-		}
-	}	
 }

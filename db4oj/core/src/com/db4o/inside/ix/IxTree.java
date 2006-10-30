@@ -169,4 +169,8 @@ public abstract class IxTree extends Tree implements Visitor4{
     	ixTree._nodes=_nodes;
     	return ixTree;
     }
+    
+    public Object key(){
+    	throw new NotImplementedException();
+    }
 }

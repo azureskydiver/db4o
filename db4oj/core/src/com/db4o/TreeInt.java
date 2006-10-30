@@ -144,5 +144,10 @@ public class TreeInt extends Tree implements ReadWriteable {
 		}
 		return YapConst.INT_LENGTH + (size() * ownLength());
 	}
+	
+    public Object key(){
+    	return new Integer(_key);
+    }
+
 
 }
