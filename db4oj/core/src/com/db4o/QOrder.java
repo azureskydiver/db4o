@@ -2,7 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.foundation.Tree;
+import com.db4o.foundation.*;
 
 /**
  * @exclude
@@ -32,5 +32,10 @@ class QOrder extends Tree{
 		super.shallowCloneInternal(order);
 		return order;
 	}
+	
+    public Object key(){
+    	throw new NotImplementedException();
+    }
+
 }
 

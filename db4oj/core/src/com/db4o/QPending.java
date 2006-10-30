@@ -2,7 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.foundation.Tree;
+import com.db4o.foundation.*;
 
 /**
  * @exclude
@@ -40,5 +40,10 @@ class QPending extends Tree{
 		super.shallowCloneInternal(pending);
 		return pending;
 	}
+	
+    public Object key(){
+    	throw new NotImplementedException();
+    }
+
 }
 

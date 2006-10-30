@@ -440,4 +440,6 @@ public abstract class Tree implements ShallowClone {
 	public Object shallowClone() {
 		throw new com.db4o.foundation.NotImplementedException();
 	}
+	
+	public abstract Object key();
 }

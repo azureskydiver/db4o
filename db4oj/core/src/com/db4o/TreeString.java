@@ -30,5 +30,9 @@ public class TreeString extends Tree {
 				.compare(YapConst.stringIO.write(((TreeString) a_to)._key),
 						YapConst.stringIO.write(_key));
 	}
+	
+    public Object key(){
+    	return _key;
+    }
 
 }
