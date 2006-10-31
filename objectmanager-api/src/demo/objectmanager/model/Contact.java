@@ -2,6 +2,7 @@ package demo.objectmanager.model;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * User: treeder
@@ -16,9 +17,10 @@ public class Contact {
     private List emailAddresses;
     private Note note;
     private List friends;
+	private Date created;
+	private double income;
 
-
-    public Integer getId() {
+	public Integer getId() {
         return id;
     }
 
@@ -88,4 +90,20 @@ public class Contact {
     public String toString() {
         return "Contact: id=" + id + " name=" + name + " age=" + age;
     }
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public double getIncome() {
+		return income;
+	}
+
+	public void setIncome(double income) {
+		this.income = income;
+	}
 }
