@@ -286,10 +286,6 @@
 				<arg value="com.db4o.db4ounit" />
 				<arg value="Db4objects.Db4o.Tests" />
 				
-				<arg value="-typeMapping" />
-				<arg value="com.db4o.test.lib.File4" />
-				<arg value="System.IO.File" />
-				
 				<arg value="@sharpen-db4ounit-options" />
 				<arg value="@sharpen-new-core-mapping" />
 			</args>
