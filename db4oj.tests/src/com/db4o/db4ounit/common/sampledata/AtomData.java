@@ -23,6 +23,10 @@ public class AtomData {
 		this.name = name;
 	}
 	
+	public int hashCode() {
+		return this.name != null ? this.name.hashCode() : 0;
+	}
+	
 	public boolean equals(Object obj){
 		if(obj instanceof AtomData){
 			AtomData other = (AtomData)obj;
