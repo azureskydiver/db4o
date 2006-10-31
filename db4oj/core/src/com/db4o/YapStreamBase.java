@@ -959,7 +959,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return configImpl().lockFile();
     }
 
-    boolean hasShutDownHook() {
+    protected boolean hasShutDownHook() {
         return configImpl().automaticShutDown();
     }
 

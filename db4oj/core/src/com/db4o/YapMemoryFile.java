@@ -84,7 +84,7 @@ public class YapMemoryFile extends YapFile {
         return "Memory File";
     }
 
-    boolean hasShutDownHook() {
+    protected boolean hasShutDownHook() {
         return false;
     }
 
