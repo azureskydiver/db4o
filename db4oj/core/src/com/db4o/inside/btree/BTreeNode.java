@@ -960,13 +960,13 @@ public class BTreeNode extends YapMeta{
 	BTreePointer firstPointer(Transaction trans) {
         YapReader reader = prepareRead(trans);
 		if (_isLeaf) {
-            int index = firstKeyIndex(trans);
-            if(index == -1){
-            	return null;
-            }
-			return new BTreePointer(trans, reader, this, index);
+            return leafFirstPointer(trans, reader);
 		}
-        for (int i = 0; i < _count; i++) {
+        return branchFirstPointer(trans, reader);
+	}
+
+	private BTreePointer branchFirstPointer(Transaction trans, YapReader reader) {
+		for (int i = 0; i < _count; i++) {
             BTreePointer childFirstPointer = child(reader, i).firstPointer(trans);
             if(childFirstPointer != null){
                 return childFirstPointer;
@@ -974,23 +974,39 @@ public class BTreeNode extends YapMeta{
         }
 		return null;
 	}
+
+	private BTreePointer leafFirstPointer(Transaction trans, YapReader reader) {
+		int index = firstKeyIndex(trans);
+		if(index == -1){
+			return null;
+		}
+		return new BTreePointer(trans, reader, this, index);
+	}
 	
 	public BTreePointer lastPointer(Transaction trans) {
         YapReader reader = prepareRead(trans);
 		if (_isLeaf) {
-            int index = lastKeyIndex(trans);
-            if(index == -1){
-            	return null;
-            }
-			return new BTreePointer(trans, reader, this, index);
+            return leafLastPointer(trans, reader);
 		}
-        for (int i = _count - 1; i >= 0; i--) {
+        return branchLastPointer(trans, reader);
+	}
+
+	private BTreePointer branchLastPointer(Transaction trans, YapReader reader) {
+		for (int i = _count - 1; i >= 0; i--) {
             BTreePointer childLastPointer = child(reader, i).lastPointer(trans);
             if(childLastPointer != null){
                 return childLastPointer;
             }
         }
 		return null;
+	}
+
+	private BTreePointer leafLastPointer(Transaction trans, YapReader reader) {
+		int index = lastKeyIndex(trans);
+		if(index == -1){
+			return null;
+		}
+		return new BTreePointer(trans, reader, this, index);
 	}
     
     void purge(){
