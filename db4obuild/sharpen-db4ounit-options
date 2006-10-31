@@ -4,3 +4,7 @@
 -namespaceMapping ^db4ounit.extensions.fixtures Db4oUnit.Extensions.Fixtures
 -namespaceMapping ^db4ounit.extensions Db4oUnit.Extensions
 -namespaceMapping ^db4ounit Db4oUnit
+
+-typeMapping com.db4o.db4ounit.util.Path4 System.IO.Path
+-methodMapping com.db4o.db4ounit.util.File4.mkdirs System.IO.Directory.CreateDirectory
+-methodMapping com.db4o.db4ounit.util.File4.exists System.IO.File.Exists
