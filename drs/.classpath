@@ -30,5 +30,7 @@
 	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql/postgresql-8.1-407.jdbc3.jar"/>
 	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-5.0.4-bin.jar"/>
+	<classpathentry kind="lib" path="lib/db2/db2jcc.jar"/>
+	<classpathentry kind="lib" path="lib/db2/db2jcc_license_cu.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
