@@ -9,6 +9,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
+import com.db4o.inside.mapping.*;
 
 /**
  * @exclude
