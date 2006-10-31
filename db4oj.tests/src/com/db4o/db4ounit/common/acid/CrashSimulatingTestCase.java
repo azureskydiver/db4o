@@ -1,42 +1,42 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.acid;
+package com.db4o.db4ounit.common.acid;
 
-import java.io.*;
+import java.io.IOException;
 
 import com.db4o.*;
-import com.db4o.io.*;
-import com.db4o.test.*;
-import com.db4o.test.lib.*;
+import com.db4o.db4ounit.common.assorted.SimplestPossibleItem;
+import com.db4o.db4ounit.util.*;
+import com.db4o.io.RandomAccessFileAdapter;
+
+import db4ounit.*;
+import db4ounit.extensions.fixtures.OptOutCS;
 
 
-public class CrashSimulatingTest {
-    
+public class CrashSimulatingTestCase implements TestCase, OptOutCS {	
     
     public String _name;
     
-    public CrashSimulatingTest _next;
+    public CrashSimulatingTestCase _next;
     
-    private static final String PATH = "TEMP/crashSimulate";
-    private static final String FILE = PATH + "/cs";
+    private static final String PATH = Path4.combine(Path4.getTempPath(), "crashSimulate");
+    private static final String FILE = Path4.combine(PATH, "cs");
     
     static final boolean LOG = false;
     
     
-    public CrashSimulatingTest() {
+    public CrashSimulatingTestCase() {
     }
     
-    public CrashSimulatingTest(CrashSimulatingTest next_, String name) {
+    public CrashSimulatingTestCase(CrashSimulatingTestCase next_, String name) {
         _next = next_;
         _name = name;
     }
     
     public void test() throws IOException{
     	
-    	if (Test.isClientServer()) return;
-        
-        new File(FILE).delete();
-        new File(PATH).mkdirs();
+    	File4.delete(FILE);
+    	File4.mkdirs(PATH);
         
         createFile();
         
@@ -45,15 +45,15 @@ public class CrashSimulatingTest {
 
         ObjectContainer oc = Db4o.openFile(FILE);
         
-        ObjectSet objectSet = oc.get(new CrashSimulatingTest(null, "three"));
+        ObjectSet objectSet = oc.get(new CrashSimulatingTestCase(null, "three"));
         oc.delete(objectSet.next());
         
-        oc.set(new CrashSimulatingTest(null, "four"));
-        oc.set(new CrashSimulatingTest(null, "five"));
-        oc.set(new CrashSimulatingTest(null, "six"));
-        oc.set(new CrashSimulatingTest(null, "seven"));
-        oc.set(new CrashSimulatingTest(null, "eight"));
-        oc.set(new CrashSimulatingTest(null, "nine"));
+        oc.set(new CrashSimulatingTestCase(null, "four"));
+        oc.set(new CrashSimulatingTestCase(null, "five"));
+        oc.set(new CrashSimulatingTestCase(null, "six"));
+        oc.set(new CrashSimulatingTestCase(null, "seven"));
+        oc.set(new CrashSimulatingTestCase(null, "eight"));
+        oc.set(new CrashSimulatingTestCase(null, "nine"));
         
         
         oc.commit();
@@ -66,12 +66,10 @@ public class CrashSimulatingTest {
         checkFiles("R", adapterFactory.batch.numSyncs());
         checkFiles("W", count);
                 
-        System.out.println("Total versions: " + count);
-        
-        
+        System.out.println("Total versions: " + count);        
     }
-    
-    private void checkFiles(String infix,int count) {
+
+	private void checkFiles(String infix,int count) {
         for (int i = 1; i <= count; i++) {
             if(LOG){
                 System.out.println("Checking " + infix + i);
@@ -79,9 +77,7 @@ public class CrashSimulatingTest {
             String fileName = FILE + infix + i;
             ObjectContainer oc = Db4o.openFile(fileName);
             if(! stateBeforeCommit(oc)){
-                if(! stateAfterCommit(oc)){
-                    Test.error();
-                }
+                Assert.isTrue(stateAfterCommit(oc));
             }
             oc.close();
         }
@@ -96,12 +92,12 @@ public class CrashSimulatingTest {
     }
     
     private boolean expect(ObjectContainer oc, String[] names){
-        ObjectSet objectSet = oc.query(CrashSimulatingTest.class);
+        ObjectSet objectSet = oc.query(CrashSimulatingTestCase.class);
         if(objectSet.size()!=names.length) {
             return false;
         }
         while(objectSet.hasNext()){
-            CrashSimulatingTest cst = (CrashSimulatingTest)objectSet.next();
+            CrashSimulatingTestCase cst = (CrashSimulatingTestCase)objectSet.next();
             boolean found = false;
             for (int i = 0; i < names.length; i++) {
                 if(cst._name.equals(names[i])){
@@ -125,16 +121,16 @@ public class CrashSimulatingTest {
     private void createFile(){
         ObjectContainer oc = Db4o.openFile(FILE);
         for (int i = 0; i < 10; i++) {
-            oc.set(new SimplestPossible("delme"));
+            oc.set(new SimplestPossibleItem("delme"));
         }
-        CrashSimulatingTest one = new CrashSimulatingTest(null, "one");
-        CrashSimulatingTest two = new CrashSimulatingTest(one, "two");
-        CrashSimulatingTest three = new CrashSimulatingTest(one, "three");
+        CrashSimulatingTestCase one = new CrashSimulatingTestCase(null, "one");
+        CrashSimulatingTestCase two = new CrashSimulatingTestCase(one, "two");
+        CrashSimulatingTestCase three = new CrashSimulatingTestCase(one, "three");
         oc.set(one);
         oc.set(two);
         oc.set(three);
         oc.commit();
-        ObjectSet objectSet = oc.query(SimplestPossible.class);
+        ObjectSet objectSet = oc.query(SimplestPossibleItem.class);
         while(objectSet.hasNext()){
             oc.delete(objectSet.next());
         }

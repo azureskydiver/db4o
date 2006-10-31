@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.lib;
+package com.db4o.db4ounit.util;
 
 import java.io.*;
 
@@ -51,23 +51,21 @@ public class File4 {
 		String[] files = source.list();
 		if (files != null) {
 		    for (int i = 0; i < files.length; i++) {
-		        copy(assemble(source.getAbsolutePath(), files[i]),
-		        	assemble(target.getAbsolutePath(), files[i]));
+		        copy(Path4.combine(source.getAbsolutePath(), files[i]),
+		        	Path4.combine(target.getAbsolutePath(), files[i]));
 		    }
 		}
 	}
 	
-    private static String assemble(String pathName, String fileName) {
-        return String4._right(pathName, java.io.File.separator)
-            ? pathName + fileName
-            : pathName + java.io.File.separator + fileName;
-    }
-
-	public static void delete(String fname) {
+    public static void delete(String fname) {
 		new File(fname).delete();
 	}
     
     public static boolean exists(String fname){
         return new File(fname).exists();
     }
+
+	public static void mkdirs(String path) {
+		new File(path).mkdirs();
+	}
 }

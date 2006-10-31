@@ -3,8 +3,7 @@
 package com.db4o.test.fileheader;
 
 import com.db4o.test.*;
-import com.db4o.test.acid.*;
-import com.db4o.test.replication.old.*;
+import com.db4o.test.replication.old.R0to4Runner;
 
 
 public class FileHeaderTestSuite extends TestSuite{
@@ -12,7 +11,6 @@ public class FileHeaderTestSuite extends TestSuite{
     @Override
     public Class[] tests() {
         return new Class[] {
-            CrashSimulatingTest.class,
             R0to4Runner.class,
             SimplestPossible.class,
             UpdatingDb4oVersions.class
