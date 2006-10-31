@@ -30,7 +30,7 @@ public final class Assert {
 	}
 	
 	public static void isNull(Object reference) {
-		isNull(reference, "Expected reference to be null, but was '" + reference + "'");
+		isNull(reference, failureMessage("null", reference));
 	}
 
 	public static void isNull(Object reference,String message) {
