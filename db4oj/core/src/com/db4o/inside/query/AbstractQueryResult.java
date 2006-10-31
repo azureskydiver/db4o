@@ -68,15 +68,15 @@ public abstract class AbstractQueryResult implements QueryResult {
     	};
     }
     
-    protected AbstractQueryResult supportSize(){
+    public AbstractQueryResult supportSize(){
     	return this;
     }
     
-    protected AbstractQueryResult supportSort(){
+    public AbstractQueryResult supportSort(){
     	return this;
     }
     
-    protected AbstractQueryResult supportElementAccess(){
+    public AbstractQueryResult supportElementAccess(){
     	return this;
     }
     
@@ -84,7 +84,7 @@ public abstract class AbstractQueryResult implements QueryResult {
     	return size();
     }
     
-    protected AbstractQueryResult toIdList(){
+    public AbstractQueryResult toIdList(){
     	IdListQueryResult res = new IdListQueryResult(transaction(), knownSize());
     	IntIterator4 i = iterateIDs();
     	while(i.moveNext()){

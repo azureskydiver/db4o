@@ -96,15 +96,15 @@ public class LazyQueryResult extends AbstractQueryResult {
 		throw new NotImplementedException();
 	}
 	
-    protected AbstractQueryResult supportSize(){
+    public AbstractQueryResult supportSize(){
     	return toIdTree();
     }
     
-    protected AbstractQueryResult supportSort(){
+    public AbstractQueryResult supportSort(){
     	return toIdList();
     }
     
-    protected AbstractQueryResult supportElementAccess(){
+    public AbstractQueryResult supportElementAccess(){
     	return toIdList();
     }
     
@@ -112,7 +112,7 @@ public class LazyQueryResult extends AbstractQueryResult {
     	return 0;
     }
     
-    protected AbstractQueryResult toIdList(){
+    public AbstractQueryResult toIdList(){
     	return toIdTree().toIdList();
     }
 

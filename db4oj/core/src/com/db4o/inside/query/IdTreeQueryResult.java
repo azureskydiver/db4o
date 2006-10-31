@@ -65,11 +65,11 @@ public class IdTreeQueryResult extends AbstractQueryResult{
 		throw new NotImplementedException();
 	}
 	
-    protected AbstractQueryResult supportSort(){
+    public AbstractQueryResult supportSort(){
     	return toIdList();
     }
     
-    protected AbstractQueryResult supportElementAccess(){
+    public AbstractQueryResult supportElementAccess(){
     	return toIdList();
     }
 
