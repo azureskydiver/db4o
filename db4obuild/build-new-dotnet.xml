@@ -24,7 +24,11 @@
 		</uptodate>
 	</target>
 	
-	<target name="run-tests" depends="run-tests-mono, run-tests-net" description="builds and runs all tests">
+	<target name="configure-net2">
+		<property name="csharp.definitions" value="NET_2_0" />
+	</target>
+	
+	<target name="run-tests" depends="configure-net2, run-tests-mono, run-tests-net" description="builds and runs all tests">
 	</target>
 	
 	<target name="run-tests-net" depends="build-tests" unless="mono">
@@ -39,7 +43,7 @@
 		</exec>
 	</target>
 	
-	<target name="build" depends="build-core, build-tools, build-tests">
+	<target name="build" depends="configure-net2, build-core, build-tools, build-tests">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -50,7 +54,8 @@
 			destfile="${dir.dist.dll}/Db4objects.Db4o.Tests.exe"
 			targettype="exe"
 			srcdir="${dir.n.v6}/Db4objects.Db4o.Tests"
-			mainclass="Db4objects.Db4o.Tests.AllTests">
+			mainclass="Db4objects.Db4o.Tests.AllTests"
+			definitions="${csharp.definitions}">
 			<reference dir="${dir.dist.dll}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4oUnit.dll" />
@@ -77,7 +82,8 @@
 	<target name="build-tools" depends="build-core">
 		<csc
 			destfile="${dir.dist.dll}/Db4objects.Db4o.Tools.dll"
-			targettype="library">
+			targettype="library"
+			definitions="${csharp.definitions}">
 			
 			<src refid="tools.sources" />
 			
@@ -91,7 +97,8 @@
 		<csc
 			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
 			srcdir="${dir.n.v6.core}"
-			targettype="library">
+			targettype="library"
+			definitions="${csharp.definitions}">
 			<include name="**/*.cs" />
 			<exclude name="native/compact/*.cs" />
 		</csc>
