@@ -23,7 +23,7 @@ public class Stack4 {
 	
 	public Object pop() {
 		if(_tail == null){
-			return null;
+			throw new IllegalStateException();
 		}
 		Object res = _tail._element;
 		_tail = _tail._next;

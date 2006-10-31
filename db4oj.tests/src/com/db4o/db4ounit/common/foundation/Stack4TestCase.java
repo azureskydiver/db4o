@@ -14,9 +14,8 @@ public class Stack4TestCase implements TestCase {
 	}
 	
 	public void testPushPop(){
-		Stack4 stack = new Stack4();
-		Assert.isNull(stack.peek());
-		Assert.isNull(stack.pop());
+		final Stack4 stack = new Stack4();
+		assertEmpty(stack);
 		stack.push("a");
 		stack.push("b");
 		stack.push("c");
@@ -26,8 +25,16 @@ public class Stack4TestCase implements TestCase {
 		Assert.areEqual("b", stack.pop());
 		Assert.areEqual("a", stack.peek());
 		Assert.areEqual("a", stack.pop());
+		assertEmpty(stack);
+	}
+
+	private void assertEmpty(final Stack4 stack) {
 		Assert.isNull(stack.peek());
-		Assert.isNull(stack.pop());
+		Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() throws Exception {
+				stack.pop();
+			}
+		});
 	}
 
 }
