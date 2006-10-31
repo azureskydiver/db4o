@@ -58,6 +58,7 @@
 			definitions="${csharp.definitions}">
 			<reference dir="${dir.dist.dll}">
 				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4objects.Db4o.Tools.dll" />
 				<include name="Db4oUnit.dll" />
 				<include name="Db4oUnit.Extensions.dll" />
 			</reference>
