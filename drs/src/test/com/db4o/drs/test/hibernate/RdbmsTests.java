@@ -25,7 +25,8 @@ public class RdbmsTests extends DrsTestSuite {
 //		new RdbmsTests().runOracledb4oCS();
 //		new RdbmsTests().runMySQLdb4oCS();
 //		new RdbmsTests().runPostgreSQLdb4oCS();
-		new RdbmsTests().runMsSqldb4oCS();
+		//new RdbmsTests().runMsSqldb4oCS();
+		new RdbmsTests().runDb2db4oCS();
 	}
 
 	public void runHsqlHsql() {
@@ -62,6 +63,12 @@ public class RdbmsTests extends DrsTestSuite {
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
+	
+	public void runDb2db4oCS() {
+		new TestRunner(new DrsTestSuiteBuilder(new Db2Fixture("Db2"),
+				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
+				.run();
+	}
 
 	protected Class[] testCases() {
 		return all();
@@ -80,8 +87,9 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 
 	protected Class[] one() {
-		return new Class[] { ReplicationFeaturesMain.class,
-		// TheSimplest.class
+		return new Class[] {
+				MapTest.class,
+		 //TheSimplest.class
 		};
 	}
 }

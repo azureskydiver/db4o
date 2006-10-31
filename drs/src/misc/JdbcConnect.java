@@ -6,7 +6,7 @@ public class JdbcConnect {
 		Connection conn = null;
 
 		try {
-			conn = mssql();
+			conn = db2();
 			System.out.println("Database connection established");
 			conn.close();
 			System.out.println("Database connection terminated");
@@ -32,6 +32,16 @@ public class JdbcConnect {
 		String url = "jdbc:sqlserver://192.168.1.176:1089;databaseName=drs";
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
 				.newInstance();
+		conn = DriverManager.getConnection(url, userName, password);
+		return conn;
+	}
+
+	static Connection db2() throws Exception {
+		Connection conn;
+		String userName = "db4o";
+		String password = "db4o";
+		String url = "jdbc:db2://192.168.1.176:50000/db4o";
+		Class.forName("com.ibm.db2.jcc.DB2Driver").newInstance();
 		conn = DriverManager.getConnection(url, userName, password);
 		return conn;
 	}
