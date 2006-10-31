@@ -256,7 +256,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return true;
 	}
 
-	boolean detectSchemaChanges() {
+	protected boolean detectSchemaChanges() {
 		return false;
 	}
 
