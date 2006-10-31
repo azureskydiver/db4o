@@ -19,7 +19,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	
 	private final IntArrayList _ids;
     
-    protected IdListQueryResult(Transaction trans, int initialSize){
+    public IdListQueryResult(Transaction trans, int initialSize){
     	super(trans);
         _ids = new IntArrayList(initialSize);
     }
