@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-5.0.4-bin.jar"/>
 	<classpathentry kind="lib" path="lib/db2/db2jcc.jar"/>
 	<classpathentry kind="lib" path="lib/db2/db2jcc_license_cu.jar"/>
+	<classpathentry kind="lib" path="lib/derby/derby.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
