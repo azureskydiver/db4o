@@ -594,7 +594,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return descend1(trans, child, subPath);
     }
 
-    protected boolean detectSchemaChanges() {
+    public boolean detectSchemaChanges() {
         // overriden in YapClient
         return configImpl().detectSchemaChanges();
     }
