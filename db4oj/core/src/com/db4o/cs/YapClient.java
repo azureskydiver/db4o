@@ -394,7 +394,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return false;
 	}
 
-	boolean hasShutDownHook() {
+	protected boolean hasShutDownHook() {
 		return false;
 	}
 
