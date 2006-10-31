@@ -26,6 +26,10 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		public Item(String name) {
 			this.name = name;
 		}
+		
+		public String toString() {
+			return "Item(\"" + name + "\")";
+		}
 	}
 	
 	protected void store() throws Exception {
@@ -40,6 +44,15 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		final ObjectSet os = queryItems(trans1);
 		deleteItemAndCommit(trans2, "foo");
 		assertItems(new String[] { "bar", "baz" }, os);
+	}
+	
+	public void _testAccessOrder() {
+		ObjectSet result = newQuery(Item.class).execute();
+		for (int i=0; i<result.size(); ++i) {
+			Assert.isTrue(result.hasNext());
+			Assert.areSame(result.ext().get(i), result.next());
+		}
+		Assert.isFalse(result.hasNext());
 	}
 
 	private void assertItems(String[] expectedNames, ObjectSet actual) {
