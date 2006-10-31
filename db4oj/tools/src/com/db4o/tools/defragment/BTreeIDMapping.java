@@ -5,6 +5,8 @@ package com.db4o.tools.defragment;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
+import com.db4o.inside.ix.*;
+import com.db4o.inside.mapping.*;
 
 class BTreeIDMapping {
 		private YapFile _mappingDb;
@@ -12,7 +14,9 @@ class BTreeIDMapping {
 
 		public BTreeIDMapping(String fileName) {
 			_mappingDb = DefragContextImpl.freshYapFile(fileName);
-			_idTree=new BTree(trans(),0,new MappedIDPairHandler(_mappingDb));
+			Indexable4 handler = 
+				new MappedIDPairHandler(_mappingDb);
+			_idTree=new BTree(trans(),0,handler);
 		}
 
 		public Integer mappedID(int oldID,boolean lenient) {

@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.mapping;
 
 /**
  * A mapping from yap file source IDs/addresses to target IDs/addresses, used for defragmenting.

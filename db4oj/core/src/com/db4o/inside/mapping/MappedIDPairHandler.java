@@ -1,7 +1,8 @@
 /* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.mapping;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 
@@ -39,7 +40,7 @@ public class MappedIDPairHandler implements Indexable4 {
 	public void writeIndexEntry(YapReader reader, Object obj) {
 		MappedIDPair mappedIDs=(MappedIDPair)obj;
 		_origHandler.writeIndexEntry(reader, new Integer(mappedIDs.orig()));
-		_origHandler.writeIndexEntry(reader, new Integer(mappedIDs.mapped()));
+		_mappedHandler.writeIndexEntry(reader, new Integer(mappedIDs.mapped()));
 		_seenHandler.writeIndexEntry(reader,(mappedIDs.seen() ? Boolean.TRUE : Boolean.FALSE));
 	}
 

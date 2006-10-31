@@ -94,6 +94,7 @@ public class SlotDefragment {
 		context.traverseAll(curClass, new Visitor4() {
 			public void visit(Object obj) {
 				int id = ((Integer)obj).intValue();
+				// TODO cache mapped pair and pass target id into processObjectSlot()
 				if(command.hasSeen(context,id)) {
 					return;
 				}
