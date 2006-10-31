@@ -6,8 +6,8 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.util.File4;
 import com.db4o.test.Test;
-import com.db4o.test.lib.File4;
 
 public class ClassAliasesTestCase {
 

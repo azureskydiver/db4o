@@ -3,7 +3,7 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.*;
-import com.db4o.test.lib.*;
+import com.db4o.db4ounit.util.File4;
 
 import db4ounit.*;
 

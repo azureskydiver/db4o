@@ -1,11 +1,11 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.acid;
+package com.db4o.db4ounit.common.acid;
 
 import java.io.*;
 
+import com.db4o.db4ounit.util.File4;
 import com.db4o.foundation.*;
-import com.db4o.test.lib.*;
 
 
 public class CrashSimulatingBatch {
@@ -44,7 +44,7 @@ public class CrashSimulatingBatch {
             
             Collection4 writesBetweenSync = (Collection4)syncIter.current();
             
-            if(CrashSimulatingTest.LOG){
+            if(CrashSimulatingTestCase.LOG){
                 System.out.println("Writing file " + rightFileName + rcount );
             }
             
@@ -54,7 +54,7 @@ public class CrashSimulatingBatch {
                 CrashSimulatingWrite csw = (CrashSimulatingWrite)singleForwardIter.current();
                 csw.write(rightRaf);
                 
-                if(CrashSimulatingTest.LOG){
+                if(CrashSimulatingTestCase.LOG){
                     System.out.println(csw);
                 }
                 
@@ -75,13 +75,8 @@ public class CrashSimulatingBatch {
             }
             File4.copy(rightFileName, rightFileName+rcount);
             lastFileName = rightFileName;
-            
-            
         }
         return count;
     }
-    
-    
-    
 
 }
