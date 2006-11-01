@@ -46,12 +46,13 @@
     <target name="dist" depends="compile"
             description="generate the distribution">
         <property name="db4o.version" value="db4o-5.7-java5.jar"/>
-        
-        <!-- Create the distribution directory -->
+
         <mkdir dir="${dist}/lib"/>
 
-        <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-        <copy todir="${dist}/lib">
+		<buildnumber/>
+		<copy file="build.number" todir="${build}/com/db4o/objectManager/v2"></copy>
+
+		<copy todir="${dist}/lib">
             <fileset dir="${lib}"/>
         </copy>
         <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}">
@@ -103,7 +104,8 @@
     </target>
 
     <target name="zip" depends="dist">
-        <zip destfile="objectmanager-2.0.zip"
+
+		<zip destfile="objectmanager-2.0.zip"
              basedir="${dist}"
                 />
     </target>

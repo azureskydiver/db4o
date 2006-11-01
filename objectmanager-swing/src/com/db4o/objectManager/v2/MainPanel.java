@@ -226,7 +226,7 @@ public class MainPanel extends JPanel {
      */
     private void addTabs(JTabbedPane tabbedPane) {
         databaseSummaryPanel = new DatabaseSummaryPanel(this, connectionSpec, getDatabaseInspector());
-        tabbedPane.addTab("Home", createTabIcon("home.png"), databaseSummaryPanel);
+        tabbedPane.addTab("Home", createTabIcon(TabType.home.icon()), databaseSummaryPanel);
     }
 
 	private Icon createTabIcon(String iconImg) {
