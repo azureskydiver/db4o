@@ -64,7 +64,7 @@ public boolean match(Pilot pilot) {
 return pilot.getPoints() == 100;
 }
 }); ..
-- following JDK5 annotations db4o intrduces its own annotations.
+- following JDK5 annotations db4o introduces its own annotations.
 - you can use built-in .l StaticFields  enums .. 
 - db4o for JDK5 also introduces support for replication.
 
