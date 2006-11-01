@@ -6,7 +6,8 @@
     <property name="src" location="src"/>
     <property name="lib" location="lib"/>
     <property name="build" location="classes/production"/>
-    <property name="dist" location="dist"/>
+	<property name="dist.base" location="dist"/>
+	<property name="dist" location="${dist.base}/objectmanager-2.0"/>
     <property name="webstart" value="webstart"/>
     <property name="dist-webstart" value="dist-webstart"/>
 
@@ -106,15 +107,15 @@
     <target name="zip" depends="dist">
 
 		<zip destfile="objectmanager-2.0.zip"
-             basedir="${dist}"
-                />
+             basedir="${dist.base}"
+				/>
     </target>
 
     <target name="clean"
             description="clean up">
         <!-- Delete the ${build} and ${dist} directory trees -->
         <delete dir="${build}"/>
-        <delete dir="${dist}"/>
+        <delete dir="${dist.base}"/>
         <delete dir="${dist-webstart}"/>
     </target>
 </project>
