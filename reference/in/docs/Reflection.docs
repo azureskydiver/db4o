@@ -2,23 +2,24 @@
 .1 db4o Reflection API ..
 .a Reflection .. 
 
-Reflection API gives your code access to internal information for classes loaded into the JVM. It allows ._
-you to work with classes defined in runtime and not in code.
-Reflection works with metadata - data that describes other data. In the case of reflection metadata ._
-is the description of classes and objects within the JVM, including their fields, methods and ._
-constructors. It allows the programmer to select target classes in runtime, create new objects, ._
-call their methods and operate with the fields.
-These features make reflection especially useful for creating libraries that work with objects in ._
-very general ways. For example, reflection is often used in frameworks that persist objects to ._
-databases, XML, or other external formats.
-For more information about reflection see Java Reflection API.
+Reflection API gives your code access to internal information for classes loaded into the ._
+VM(Java) / common runtime (.NET). It allows you to work with classes defined in runtime ._
+and not in code.
+Reflection works with metadata - data that describes other data. In the case of reflection ._
+metadata is the description of classes and objects within the JVM or .NET assembly, ._
+including their fields, methods and constructors. It allows the programmer to select target ._
+classes in runtime, create new objects, call their methods and operate with the fields.
+These features make reflection especially useful for creating libraries that work with objects ._
+in very general ways. For example, reflection is often used in frameworks that persist objects ._
+to databases, XML, or other external formats.
+For more information about reflection see Java or .NET Reflection API.
 
 .2 GenericReflector ..
 
 Db4o uses reflection internally for persisting and instantiating user objects. Reflection helps db4o to ._
 manage classes in a general way while saving. It also makes possible instantiation of user objects ._
-using class name saved in the database file and class information from the JVM. However db4o reflection ._
-API can also work on generic objects when the JVM class information is not available.
+using class name saved in the database file and class information from the JVM or .NET assembly. However db4o reflection ._
+API can also work on generic objects when the class information is not available.
 Db4o uses GenericReflector as a wrapper around specific reflector (delegate). GenericReflector is ._
 set when an ObjectContainer is opened. All subsequent reflector calls are routed through this ._
 interface. 
