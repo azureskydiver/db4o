@@ -32,11 +32,13 @@
 					Value="[INSTALLDIR]"
 					Execute="firstSequence" />
 		
+		<!--
 		<CustomAction Id="Launch_Tutorial"				
 				FileKey="doc.tutorial.db4o_tutorial.exe"
 				ExeCommand=""
 				Execute="firstSequence"
 				Return="asyncNoWait" />
+		-->
 				
 		<CustomAction Id="RegisterHelp"
 				FileKey="doc.api.H2Reg.exe"
@@ -341,7 +343,9 @@
 			<Dialog Id="ExitDialog" Width="370" Height="270" Title="[ProductName]" NoMinimize="yes">
 				<Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Finish]">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
+					<!--
 					<Publish Event="DoAction" Value="Launch_Tutorial">(NOT Installed) AND (1 = LAUNCHTUTORIAL)</Publish>
+					-->
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="[Button_Cancel]" />
 				<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" FixedSize="yes" TabSkip="no" Text="dialog.bmp" />
