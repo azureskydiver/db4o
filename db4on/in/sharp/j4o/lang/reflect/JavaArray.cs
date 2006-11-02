@@ -13,5 +13,9 @@ namespace j4o.lang.reflect {
         public static Object Get(object array, int index) {
             return ((Array)array).GetValue(index);
         }
+
+        public static void Set(object array, int index, object obj) {
+            ((Array)array).SetValue(obj,index);
+        }
     }
 }
