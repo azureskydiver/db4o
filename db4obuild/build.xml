@@ -1444,6 +1444,7 @@
 	
 	<target name="sharpen-db4ounit">
 		<ant antfile="build-db4ounit.xml" target="buildnet" inheritall="false">
+				<property name="csc.executable" value="${csc.executable}" />
 		</ant>
 	</target>
 	
