@@ -90,6 +90,7 @@
 				</fileset>
 			</classpath>
 		</java>
+		<move file="doc/out/doctor.pdf" tofile="doc/out/dRS-tutorial.pdf"/>
 	</target>
 
 	<target name="doctordrsnet" depends="">
