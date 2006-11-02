@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
 final class TransactionClient extends Transaction {
 
     private final YapClient i_client;
-    protected Tree i_yapObjectsToGc; 
+    private Tree i_yapObjectsToGc; 
     
 
     TransactionClient(YapClient a_stream, Transaction a_parent) {
