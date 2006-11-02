@@ -17,7 +17,7 @@ public final class YapClassCollection extends YapMeta {
     
     private final Transaction _systemTransaction;
 
-    protected Hashtable4 i_yapClassByBytes;
+    private Hashtable4 i_yapClassByBytes;
     private Hashtable4 i_yapClassByClass;
     private Hashtable4 i_yapClassByID;
     
@@ -225,7 +225,7 @@ public final class YapClassCollection extends YapMeta {
         return 0;
     }
 
-	protected byte[] getNameBytes(String name) {		
+	private byte[] getNameBytes(String name) {		
 		return asBytes(resolveAlias(name));
 	}
 
@@ -455,7 +455,7 @@ public final class YapClassCollection extends YapMeta {
 		}
 	}
 
-    protected YapStream stream() {
+    private YapStream stream() {
         return _systemTransaction.stream();
     }
     
