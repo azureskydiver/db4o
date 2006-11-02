@@ -47,7 +47,8 @@
 		<property name="assembly" location="${dir.dist.dll}/${projectName}.dll" />		
 		<csc outputfile="${assembly}"
 			targettype="library"
-			srcdir="${db4ounit.net.src.dir}">
+			srcdir="${db4ounit.net.src.dir}"
+			debug="true">
 		</csc>
 	</target>
 	
@@ -79,7 +80,7 @@
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}.csproj">
+		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-2003.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		

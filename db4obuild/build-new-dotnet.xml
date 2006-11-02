@@ -24,7 +24,17 @@
 		</uptodate>
 	</target>
 	
-	<target name="configure-net2">
+	<target name="configure-mono" if="mono">
+		<echo>Configuring mono build.</echo>
+		
+		<property name="csharp.definitions" value="MONO,NET_2_0" />
+		<property name="csc.executable" value="gmcs" />
+
+	</target>
+	
+	<target name="configure-net2" unless="mono">
+		<echo>Configuring .net 2 build.</echo>
+		
 		<property name="csharp.definitions" value="NET_2_0" />
 		<property name="csc.executable" value="csc" />
 	
@@ -33,7 +43,11 @@
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
-	<target name="run-tests" depends="configure-net2, run-tests-mono, run-tests-net" description="builds and runs all tests">
+	<target name="configure" depends="configure-net2, configure-mono">
+		<property name="debug" value="true" />
+	</target>
+	
+	<target name="run-tests" depends="configure, run-tests-mono, run-tests-net" description="builds and runs all tests">
 	</target>
 	
 	<target name="run-tests-net" depends="build-tests" unless="mono">
@@ -48,7 +62,7 @@
 		</exec>
 	</target>
 	
-	<target name="package" depends="configure-net2" description="Builds the complete set of .net 2 distros">
+	<target name="package" depends="build" description="Builds the complete set of .net 2 distros">
 
 		<mkdir dir="${dir.dist.net.build}" />
 	
@@ -89,7 +103,7 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="configure-net2, build-core, build-tools, build-tests">
+	<target name="build" depends="configure, build-core, build-tools, build-tests">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -101,7 +115,10 @@
 			targettype="exe"
 			srcdir="${dir.n.v6}/Db4objects.Db4o.Tests"
 			mainclass="Db4objects.Db4o.Tests.AllTests"
-			definitions="${csharp.definitions}">
+			definitions="${csharp.definitions}"
+			debug="true"
+			executable="${csc.executable}"
+			extraoptions="-r:System.Drawing">
 			<reference dir="${dir.dist.dll}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4objects.Db4o.Tools.dll" />
@@ -115,7 +132,9 @@
 		<csc
 			destfile="${dir.dist.dll}/Db4oUnit.Extensions.dll"
 			targettype="library"
-			srcdir="${dir.n.v6}/Db4oUnit.Extensions">
+			srcdir="${dir.n.v6}/Db4oUnit.Extensions"
+			debug="true"
+			executable="${csc.executable}">
 			<reference dir="${dir.dist.dll}">
 				<include name="Db4oUnit.dll" />
 				<include name="Db4objects.Db4o.dll" />
@@ -130,7 +149,9 @@
 		<csc
 			destfile="${dir.dist.dll}/Db4objects.Db4o.Tools.dll"
 			targettype="library"
-			definitions="${csharp.definitions}">
+			definitions="${csharp.definitions}"
+			executable="${csc.executable}"
+			debug="${debug}">
 			
 			<src refid="tools.sources" />
 			
@@ -145,7 +166,9 @@
 			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
 			srcdir="${dir.n.v6.core}"
 			targettype="library"
-			definitions="${csharp.definitions}">
+			definitions="${csharp.definitions}"
+			executable="${csc.executable}"
+			debug="${debug}">
 			<include name="**/*.cs" />
 			<exclude name="native/compact/*.cs" />
 		</csc>
@@ -177,7 +200,9 @@
 		</updatecsharpproject>
 	</target>
 	
-	<target name="sharpen" depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests">
+	<target name="sharpen"
+		depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
+		unless="csharp.uptodate">
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
@@ -236,12 +261,18 @@
 			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
 			<param name="target.dir" value="${dir.n.v6.core.src}" />
 		</antcall>
+		
+		<fileset id="core.net.files" dir="${dir.n.v6.core}">
+			<include name="**/*.cs" />
+			<exclude name="native/compact*/**" />
+		</fileset>
 			
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
-			<sources dir="${dir.n.v6.core}">
-				<include name="**/*.cs" />
-				<exclude name="native/compact*/**" />
-			</sources>
+			<sources refid="core.net.files" />
+		</updatecsharpproject>		
+		
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2003.csproj">
+			<sources refid="core.net.files" />
 		</updatecsharpproject>
 
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2003.csproj">
@@ -250,10 +281,12 @@
 				<exclude name="native/compact*/**" />
 			</sources>
 		</updatecsharpproject>
+
 	</target>
 	
 	<target name="sharpen-db4ounit">
 		<ant antfile="build-new-db4ounit.xml" target="buildnet" inheritall="false">
+			<property name="csc.executable" value="${csc.executable}" />
 		</ant>
 	</target>
 	
