@@ -26,6 +26,11 @@
 	
 	<target name="configure-net2">
 		<property name="csharp.definitions" value="NET_2_0" />
+		<property name="csc.executable" value="csc" />
+	
+		<property name="installer.package.suffix" value="net2" />
+		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
 	<target name="run-tests" depends="configure-net2, run-tests-mono, run-tests-net" description="builds and runs all tests">
@@ -41,6 +46,47 @@
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.Tests.exe" />
 		</exec>
+	</target>
+	
+	<target name="package" depends="configure-net2" description="Builds the complete set of .net 2 distros">
+
+		<mkdir dir="${dir.dist.net.build}" />
+	
+		<copy todir="${dir.dist.net.build}">
+			<fileset dir="../db4o.net">
+				<include name="**/*.cs" />
+				<include name="**/*.csproj" />
+				<include name="**/*.csdproj" />
+				<include name="**/*.sln" />
+				<include name="**/*.txt" />
+			</fileset>
+		</copy>
+	
+		<mkdir dir="${dir.dist.net.build}/doc/api" />			
+		<copy todir="${dir.dist.net.build}/doc/api">
+			<!--
+			<fileset dir="${dir.dist}/ndoc">
+				<include name="db4o.chm" />
+				<include name="db4o.HxS" />
+				<include name="db4oCollection.*" />
+				<include name="db4oCollection.h2reg.ini" />
+			</fileset>
+			-->
+			<fileset dir="lib/h2reg">
+				<include name="*.exe" />
+				<include name="*.ini" />
+			</fileset>
+		</copy>
+	
+		<zip destfile="${dir.dist}/${db4o.file}${installer.package.suffix}.zip">
+			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
+		</zip>
+			
+		<ant antfile="build-net-installer.xml">
+			<property name="installer.package.guid" value="${installer.package.guid}" />
+			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
+			<property name="target.framework.version" value="${target.framework.version}" />
+		</ant>
 	</target>
 	
 	<target name="build" depends="configure-net2, build-core, build-tools, build-tests">
@@ -141,8 +187,7 @@
 		<copy todir="${dir.sharpen}">
 			<fileset refid="db4oj.srcfiles" />
 		</copy>
-		
-		<!-- shared native query support -->
+
 		<copy todir="${dir.sharpen}/db4oj">
 			<fileset dir="../db4onqopt">
 				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
