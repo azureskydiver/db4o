@@ -2,20 +2,22 @@
 
 package com.db4o.db4ounit.common.btree;
 
-
 import com.db4o.Transaction;
-import com.db4o.inside.btree.*;
+import com.db4o.inside.btree.BTree;
+import com.db4o.inside.btree.BTreePointer;
+import com.db4o.inside.btree.BTreeRange;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.OptOutCS;
 
+public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase implements
+		OptOutCS {
 
-public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
-	
-	protected static final int	BTREE_NODE_SIZE	= 4;
+	protected static final int BTREE_NODE_SIZE = 4;
 
 	protected BTree _btree;
-	
+
 	protected void db4oSetupAfterStore() throws Exception {
 		_btree = newBTree();
 	}
@@ -23,7 +25,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 	protected BTree newBTree() {
 		return BTreeAssert.createIntKeyBTree(stream(), 0, BTREE_NODE_SIZE);
 	}
-	
+
 	protected BTreeRange range(int lower, int upper) {
 		final BTreeRange lowerRange = search(lower);
 		final BTreeRange upperRange = search(upper);
@@ -35,7 +37,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 	}
 
 	protected void add(int[] keys) {
-		for (int i=0; i<keys.length; ++i) {
+		for (int i = 0; i < keys.length; ++i) {
 			add(keys[i]);
 		}
 	}
@@ -47,7 +49,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 	protected void commit(Transaction trans) {
 		_btree.commit(trans);
 	}
-	
+
 	protected void commit() {
 		commit(trans());
 	}
@@ -75,7 +77,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 	protected void remove(final int element) {
 		remove(trans(), element);
 	}
-	
+
 	protected void remove(final Transaction trans, final int element) {
 		_btree.remove(trans, new Integer(element));
 	}
@@ -95,8 +97,9 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase{
 	protected void assertSingleElement(final int element) {
 		assertSingleElement(trans(), element);
 	}
-	
-	protected void assertSingleElement(final Transaction trans, final int element) {
+
+	protected void assertSingleElement(final Transaction trans,
+			final int element) {
 		BTreeAssert.assertSingleElement(trans, _btree, new Integer(element));
 	}
 

@@ -8,37 +8,38 @@ import com.db4o.ext.Db4oDatabase;
 import db4ounit.Assert;
 import db4ounit.ArrayAssert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.OptOutCS;
 
-public class IdentityTestCase extends AbstractDb4oTestCase {
-    
-    public static void main(String[] arguments) {
-        new IdentityTestCase().runSolo();
-    }
-    
-    public void testIdentityPreserved() throws Exception {
-        
-        Db4oDatabase ident = db().identity();
-        
-        reopen();
-        
-        Db4oDatabase ident2 = db().identity();
-        
-        Assert.isNotNull(ident);
-        Assert.areEqual(ident, ident2);
-    }
-    
-    public void testGenerateIdentity() throws Exception {
-        
-        byte[] oldSignature = db().identity().getSignature();
+public class IdentityTestCase extends AbstractDb4oTestCase implements OptOutCS {
 
-        generateNewIdentity();
-        
-        reopen();
-        
-        ArrayAssert.areNotEqual(oldSignature, db().identity().getSignature());
-    }
+	public static void main(String[] arguments) {
+		new IdentityTestCase().runSolo();
+	}
+
+	public void testIdentityPreserved() throws Exception {
+
+		Db4oDatabase ident = db().identity();
+
+		reopen();
+
+		Db4oDatabase ident2 = db().identity();
+
+		Assert.isNotNull(ident);
+		Assert.areEqual(ident, ident2);
+	}
+
+	public void testGenerateIdentity() throws Exception {
+
+		byte[] oldSignature = db().identity().getSignature();
+
+		generateNewIdentity();
+
+		reopen();
+
+		ArrayAssert.areNotEqual(oldSignature, db().identity().getSignature());
+	}
 
 	private void generateNewIdentity() {
-		((YapFile)db()).generateNewIdentity();
+		((YapFile) db()).generateNewIdentity();
 	}
 }
