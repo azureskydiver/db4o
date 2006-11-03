@@ -27,7 +27,7 @@ namespace com.db4o
 		{
 		}
 
-		internal YapObject(int a_id)
+		public YapObject(int a_id)
 		{
 			i_id = a_id;
 		}
@@ -57,10 +57,7 @@ namespace com.db4o
 				com.db4o.YapStream stream = ta.Stream();
 				if (a_refresh)
 				{
-					if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.ACTIVATION)
-					{
-						stream.Message("" + GetID() + " refresh " + i_yapClass.GetName());
-					}
+					LogActivation(stream, "refresh");
 				}
 				else
 				{
@@ -79,13 +76,24 @@ namespace com.db4o
 							return;
 						}
 					}
-					if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.ACTIVATION)
-					{
-						stream.Message("" + GetID() + " activate " + i_yapClass.GetName());
-					}
+					LogActivation(stream, "activate");
 				}
 				Read(ta, null, a_object, a_depth, com.db4o.YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY, 
 					false);
+			}
+		}
+
+		private void LogActivation(com.db4o.YapStream stream, string @event)
+		{
+			LogEvent(stream, @event, com.db4o.YapConst.ACTIVATION);
+		}
+
+		private void LogEvent(com.db4o.YapStream stream, string @event, int level)
+		{
+			if (stream.ConfigImpl().MessageLevel() > level)
+			{
+				stream.Message(string.Empty + GetID() + " " + @event + " " + i_yapClass.GetName()
+					);
 			}
 		}
 
@@ -142,10 +150,7 @@ namespace com.db4o
 						((com.db4o.Db4oTypeImpl)obj).PreDeactivate();
 					}
 					com.db4o.YapStream stream = a_trans.Stream();
-					if (stream.ConfigImpl().MessageLevel() > com.db4o.YapConst.ACTIVATION)
-					{
-						stream.Message("" + GetID() + " deactivate " + i_yapClass.GetName());
-					}
+					LogActivation(stream, "deactivate");
 					SetStateDeactivated();
 					i_yapClass.Deactivate(a_trans, obj, a_depth);
 				}
@@ -260,7 +265,7 @@ namespace com.db4o
 			return a_object;
 		}
 
-		internal object ReadPrefetch(com.db4o.YapStream a_stream, com.db4o.YapWriter a_reader
+		public object ReadPrefetch(com.db4o.YapStream a_stream, com.db4o.YapWriter a_reader
 			)
 		{
 			object readObject = null;
@@ -382,10 +387,7 @@ namespace com.db4o
 						EndProcessing();
 						return;
 					}
-					if (a_trans.Stream().ConfigImpl().MessageLevel() > com.db4o.YapConst.STATE)
-					{
-						a_trans.Stream().Message("" + GetID() + " update " + i_yapClass.GetName());
-					}
+					LogEvent(a_trans.Stream(), "update", com.db4o.YapConst.STATE);
 					SetStateClean();
 					a_trans.WriteUpdateDeleteMembers(GetID(), i_yapClass, a_trans.Stream().i_handlers
 						.ArrayType(obj), 0);
@@ -928,12 +930,12 @@ namespace com.db4o
 				}
 				else
 				{
-					string objToString = "";
+					string objToString = string.Empty;
 					try
 					{
 						objToString = obj.ToString();
 					}
-					catch (System.Exception e)
+					catch
 					{
 					}
 					com.db4o.reflect.ReflectClass claxx = GetYapClass().Reflector().ForObject(obj);
@@ -941,7 +943,7 @@ namespace com.db4o
 				}
 				return str;
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 			return "Exception in YapObject analyzer";

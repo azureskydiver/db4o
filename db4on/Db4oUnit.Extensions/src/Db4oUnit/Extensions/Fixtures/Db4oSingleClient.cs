@@ -4,11 +4,18 @@ namespace Db4oUnit.Extensions.Fixtures
 	{
 		private com.db4o.ext.ExtObjectContainer _objectContainer;
 
-		public Db4oSingleClient(string fileName, int port) : base(fileName, port)
+		public Db4oSingleClient(Db4oUnit.Extensions.Fixtures.ConfigurationSource config, 
+			string fileName, int port) : base(config, fileName, port)
 		{
 		}
 
-		public Db4oSingleClient() : base()
+		public Db4oSingleClient(Db4oUnit.Extensions.Fixtures.ConfigurationSource config) : 
+			base(config)
+		{
+		}
+
+		public Db4oSingleClient() : this(new Db4oUnit.Extensions.Fixtures.IndependentConfigurationSource
+			())
 		{
 		}
 
@@ -23,13 +30,23 @@ namespace Db4oUnit.Extensions.Fixtures
 			base.Open();
 			try
 			{
-				_objectContainer = com.db4o.Db4o.OpenClient(HOST, PORT, USERNAME, PASSWORD).Ext();
+				_objectContainer = com.db4o.Db4o.OpenClient(Config(), HOST, PORT, USERNAME, PASSWORD
+					).Ext();
 			}
 			catch (System.IO.IOException e)
 			{
 				j4o.lang.JavaSystem.PrintStackTrace(e);
 				throw new Db4oUnit.TestException(e);
 			}
+		}
+
+		public override bool Accept(System.Type clazz)
+		{
+			if ((typeof(Db4oUnit.Extensions.Fixtures.OptOutCS).IsAssignableFrom(clazz)))
+			{
+				return false;
+			}
+			return true;
 		}
 
 		public override com.db4o.ext.ExtObjectContainer Db()

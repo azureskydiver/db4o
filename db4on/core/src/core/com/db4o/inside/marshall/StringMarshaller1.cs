@@ -55,7 +55,7 @@ namespace com.db4o.inside.marshall
 			return bytes;
 		}
 
-		public override com.db4o.YapWriter ReadIndexEntry(com.db4o.YapWriter parentSlot)
+		public override com.db4o.YapReader ReadIndexEntry(com.db4o.YapWriter parentSlot)
 		{
 			int payLoadOffSet = parentSlot.ReadInt();
 			int length = parentSlot.ReadInt();
@@ -76,6 +76,12 @@ namespace com.db4o.inside.marshall
 				return null;
 			}
 			return reader.ReadPayloadReader(payLoadOffSet, length);
+		}
+
+		public override void Defrag(com.db4o.SlotReader reader)
+		{
+			reader.IncrementIntSize();
+			reader.IncrementIntSize();
 		}
 	}
 }

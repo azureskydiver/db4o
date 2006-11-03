@@ -56,7 +56,7 @@ namespace com.db4o.inside.ix
 		{
 			return base.ToString();
 			com.db4o.YapReader fileReader = new com.db4o.YapReader(SlotLength());
-			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			sb.Append("IxFileRange");
 			VisitAll(new _AnonymousInnerClass59(this, sb));
 			return sb.ToString();
@@ -64,7 +64,8 @@ namespace com.db4o.inside.ix
 
 		private sealed class _AnonymousInnerClass59 : com.db4o.foundation.IntObjectVisitor
 		{
-			public _AnonymousInnerClass59(IxFileRange _enclosing, j4o.lang.StringBuffer sb)
+			public _AnonymousInnerClass59(IxFileRange _enclosing, System.Text.StringBuilder sb
+				)
 			{
 				this._enclosing = _enclosing;
 				this.sb = sb;
@@ -80,7 +81,7 @@ namespace com.db4o.inside.ix
 
 			private readonly IxFileRange _enclosing;
 
-			private readonly j4o.lang.StringBuffer sb;
+			private readonly System.Text.StringBuilder sb;
 		}
 
 		public override void Visit(object obj)

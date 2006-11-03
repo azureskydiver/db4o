@@ -19,7 +19,7 @@ namespace com.db4o
 			bool isnew = (oldSlot == null);
 			int offset = writer._offset;
 			int db4oDatabaseIdentityID = writer.ReadInt();
-			long uuid = com.db4o.YLong.ReadLong(writer);
+			long uuid = writer.ReadLong();
 			writer._offset = offset;
 			com.db4o.YapFile yf = (com.db4o.YapFile)writer.GetStream();
 			if ((uuid == 0 || db4oDatabaseIdentityID == 0) && writer.GetID() > 0 && !isnew)
@@ -38,7 +38,7 @@ namespace com.db4o
 				uuid = yf.GenerateTimeStampId();
 			}
 			writer.WriteInt(db4oDatabaseIdentityID);
-			com.db4o.YLong.WriteLong(uuid, writer);
+			writer.WriteLong(uuid);
 			if (isnew)
 			{
 				AddIndexEntry(writer, uuid);
@@ -76,8 +76,8 @@ namespace com.db4o
 			{
 				return null;
 			}
-			return new com.db4o.YapFieldUUID.DatabaseIdentityIDAndUUID(reader.ReadInt(), com.db4o.YLong
-				.ReadLong(reader));
+			return new com.db4o.YapFieldUUID.DatabaseIdentityIDAndUUID(reader.ReadInt(), reader
+				.ReadLong());
 		}
 
 		public override void Delete(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
@@ -89,7 +89,7 @@ namespace com.db4o
 				return;
 			}
 			a_bytes.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
-			long longPart = com.db4o.YLong.ReadLong(a_bytes);
+			long longPart = a_bytes.ReadLong();
 			if (longPart > 0)
 			{
 				com.db4o.YapStream stream = a_bytes.GetStream();
@@ -135,7 +135,8 @@ namespace com.db4o
 			{
 				return;
 			}
-			com.db4o.inside.SystemData sd = SystemData(transaction);
+			com.db4o.YapFile file = ((com.db4o.YapFile)transaction.Stream());
+			com.db4o.inside.SystemData sd = file.SystemData();
 			if (sd == null)
 			{
 				return;
@@ -143,13 +144,9 @@ namespace com.db4o
 			InitIndex(transaction, sd.UuidIndexId());
 			if (sd.UuidIndexId() == 0)
 			{
-				sd.UuidIndexCreated(base.GetIndex(transaction).GetID());
+				sd.UuidIndexId(base.GetIndex(transaction).GetID());
+				file.GetFileHeader().WriteVariablePart(file, 1);
 			}
-		}
-
-		private com.db4o.inside.SystemData SystemData(com.db4o.Transaction transaction)
-		{
-			return ((com.db4o.YapFile)transaction.Stream()).SystemData();
 		}
 
 		internal override void Instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
@@ -165,7 +162,7 @@ namespace com.db4o
 				stream.Activate2(a_trans, db, 2);
 			}
 			a_yapObject.i_virtualAttributes.i_database = db;
-			a_yapObject.i_virtualAttributes.i_uuid = com.db4o.YLong.ReadLong(a_bytes);
+			a_yapObject.i_virtualAttributes.i_uuid = a_bytes.ReadLong();
 			stream.ShowInternalClasses(false);
 		}
 
@@ -222,7 +219,7 @@ namespace com.db4o
 			a_bytes.WriteInt(dbID);
 			if (attr != null)
 			{
-				com.db4o.YLong.WriteLong(attr.i_uuid, a_bytes);
+				a_bytes.WriteLong(attr.i_uuid);
 				if (indexEntry)
 				{
 					AddIndexEntry(a_bytes, attr.i_uuid);
@@ -230,25 +227,25 @@ namespace com.db4o
 			}
 			else
 			{
-				com.db4o.YLong.WriteLong(0, a_bytes);
+				a_bytes.WriteLong(0);
 			}
 		}
 
-		internal override void MarshallIgnore(com.db4o.YapWriter writer)
+		internal override void MarshallIgnore(com.db4o.YapReader writer)
 		{
 			writer.WriteInt(0);
-			com.db4o.YLong.WriteLong(0, writer);
+			writer.WriteLong(0);
 		}
 
 		public virtual object[] ObjectAndYapObjectBySignature(com.db4o.Transaction transaction
 			, long longPart, byte[] signature)
 		{
 			com.db4o.inside.btree.BTreeRange range = Search(transaction, longPart);
-			com.db4o.foundation.Iterator4 keys = range.Keys();
+			System.Collections.IEnumerator keys = range.Keys();
 			while (keys.MoveNext())
 			{
 				com.db4o.inside.btree.FieldIndexKey current = (com.db4o.inside.btree.FieldIndexKey
-					)keys.Current();
+					)keys.Current;
 				object[] objectAndYapObject = GetObjectAndYapObjectByID(transaction, current.ParentID
 					(), signature);
 				if (null != objectAndYapObject)
@@ -275,6 +272,13 @@ namespace com.db4o
 				return null;
 			}
 			return arr;
+		}
+
+		public override void DefragField(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers)
+		{
+			readers.CopyID();
+			readers.IncrementOffset(com.db4o.YapConst.LONG_LENGTH);
 		}
 	}
 }

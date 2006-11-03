@@ -55,6 +55,8 @@ namespace com.db4o
 
 		public const byte BTREE_NODE = (byte)'B';
 
+		public const byte HEADER = (byte)'H';
+
 		internal const int IDENTIFIER_LENGTH = (com.db4o.Deploy.debug && com.db4o.Deploy.
 			identifiers) ? 1 : 0;
 
@@ -65,7 +67,7 @@ namespace com.db4o
 
 		public const int LEADING_LENGTH = IDENTIFIER_LENGTH + BRACKETS_BYTES;
 
-		internal const int ADDED_LENGTH = IDENTIFIER_LENGTH + BRACKETS_LENGTH;
+		public const int ADDED_LENGTH = IDENTIFIER_LENGTH + BRACKETS_LENGTH;
 
 		internal const int SHORT_BYTES = 2;
 
@@ -83,7 +85,7 @@ namespace com.db4o
 
 		public const int ID_LENGTH = INT_LENGTH;
 
-		internal const int LONG_LENGTH = LONG_BYTES + ADDED_LENGTH;
+		public const int LONG_LENGTH = LONG_BYTES + ADDED_LENGTH;
 
 		internal const int WRITE_LOOP = (INTEGER_BYTES - 1) * 8;
 
@@ -91,11 +93,11 @@ namespace com.db4o
 
 		public const int POINTER_LENGTH = (INT_LENGTH * 2) + ADDED_LENGTH;
 
-		internal const int MESSAGE_LENGTH = INT_LENGTH * 2 + 1;
+		public const int MESSAGE_LENGTH = INT_LENGTH * 2 + 1;
 
-		internal const byte SYSTEM_TRANS = (byte)'s';
+		public const byte SYSTEM_TRANS = (byte)'s';
 
-		internal const byte USER_TRANS = (byte)'u';
+		public const byte USER_TRANS = (byte)'u';
 
 		internal const byte XBYTE = (byte)'X';
 
@@ -127,7 +129,7 @@ namespace com.db4o
 
 		internal const byte UNICODE = (byte)2;
 
-		internal const int LOCK_TIME_INTERVAL = 1000;
+		public const int LOCK_TIME_INTERVAL = 1000;
 
 		internal static readonly int SERVER_SOCKET_TIMEOUT = com.db4o.Debug.longTimeOuts ? 
 			1000000 : 5000;
@@ -171,7 +173,7 @@ namespace com.db4o
 
 		internal static j4o.lang.Class CLASS_TRANSIENTCLASS;
 
-		internal static readonly string EMBEDDED_CLIENT_USER = "embedded client";
+		public static readonly string EMBEDDED_CLIENT_USER = "embedded client";
 
 		internal const int CLEAN = 0;
 
@@ -205,43 +207,34 @@ namespace com.db4o
 
 		public const int NEW = 1;
 
-		internal static readonly com.db4o.YapStringIOUnicode stringIO = new com.db4o.YapStringIOUnicode
+		public static readonly com.db4o.YapStringIOUnicode stringIO = new com.db4o.YapStringIOUnicode
 			();
 
 		private static object Init()
 		{
-			CLASS_OBJECT = j4o.lang.Class.GetClassForObject(new object());
-			CLASS_COMPARE = Db4oClass("config.Compare");
-			CLASS_DB4OTYPE = Db4oClass("types.Db4oType");
-			CLASS_DB4OTYPEIMPL = Db4oClass("Db4oTypeImpl");
-			CLASS_INTERNAL = Db4oClass("Internal4");
-			CLASS_UNVERSIONED = Db4oClass("types.Unversioned");
-			CLASS_METACLASS = j4o.lang.Class.GetClassForObject(new com.db4o.MetaClass());
-			CLASS_METAFIELD = j4o.lang.Class.GetClassForObject(new com.db4o.MetaField());
-			CLASS_METAINDEX = j4o.lang.Class.GetClassForObject(new com.db4o.MetaIndex());
-			CLASS_OBJECTCONTAINER = Db4oClass("ObjectContainer");
-			CLASS_REPLICATIONRECORD = j4o.lang.Class.GetClassForObject(new com.db4o.ReplicationRecord
+			CLASS_OBJECT = j4o.lang.JavaSystem.GetClassForObject(new object());
+			CLASS_COMPARE = j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.config.Compare)
+				);
+			CLASS_DB4OTYPE = j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.types.Db4oType)
+				);
+			CLASS_DB4OTYPEIMPL = j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.Db4oTypeImpl)
+				);
+			CLASS_INTERNAL = j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.Internal4));
+			CLASS_UNVERSIONED = j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.types.Unversioned)
+				);
+			CLASS_METACLASS = j4o.lang.JavaSystem.GetClassForObject(new com.db4o.MetaClass());
+			CLASS_METAFIELD = j4o.lang.JavaSystem.GetClassForObject(new com.db4o.MetaField());
+			CLASS_METAINDEX = j4o.lang.JavaSystem.GetClassForObject(new com.db4o.MetaIndex());
+			CLASS_OBJECTCONTAINER = j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.ObjectContainer)
+				);
+			CLASS_REPLICATIONRECORD = j4o.lang.JavaSystem.GetClassForObject(new com.db4o.ReplicationRecord
 				());
-			CLASS_STATICFIELD = j4o.lang.Class.GetClassForObject(new com.db4o.StaticField());
-			CLASS_STATICCLASS = j4o.lang.Class.GetClassForObject(new com.db4o.StaticClass());
-			CLASS_TRANSIENTCLASS = Db4oClass("types.TransientClass");
-			return null;
-		}
-
-		private static j4o.lang.Class Db4oClass(string name)
-		{
-			return ClassForName("com.db4o." + name);
-		}
-
-		private static j4o.lang.Class ClassForName(string name)
-		{
-			try
-			{
-				return j4o.lang.Class.ForName(name);
-			}
-			catch (System.Exception e)
-			{
-			}
+			CLASS_STATICFIELD = j4o.lang.JavaSystem.GetClassForObject(new com.db4o.StaticField
+				());
+			CLASS_STATICCLASS = j4o.lang.JavaSystem.GetClassForObject(new com.db4o.StaticClass
+				());
+			CLASS_TRANSIENTCLASS = j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.types.TransientClass)
+				);
 			return null;
 		}
 

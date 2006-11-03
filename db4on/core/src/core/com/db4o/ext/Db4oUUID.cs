@@ -55,7 +55,7 @@ namespace com.db4o.ext
 			{
 				return true;
 			}
-			if (o == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
+			if (o == null || j4o.lang.JavaSystem.GetClassForObject(this) != j4o.lang.JavaSystem.GetClassForObject
 				(o))
 			{
 				return false;
@@ -91,7 +91,7 @@ namespace com.db4o.ext
 		public override string ToString()
 		{
 			return base.ToString();
-			string sig = "";
+			string sig = string.Empty;
 			for (int i = 0; i < signaturePart.Length; i++)
 			{
 				sig += signaturePart[i] + " ";

@@ -1,17 +1,17 @@
 namespace com.db4o.foundation
 {
-	public class CompositeIterator4 : com.db4o.foundation.Iterator4
+	public class CompositeIterator4 : System.Collections.IEnumerator
 	{
-		private readonly com.db4o.foundation.Iterator4 _iterators;
+		private readonly System.Collections.IEnumerator _iterators;
 
-		private com.db4o.foundation.Iterator4 _currentIterator;
+		private System.Collections.IEnumerator _currentIterator;
 
-		public CompositeIterator4(com.db4o.foundation.Iterator4[] iterators) : this(new com.db4o.foundation.ArrayIterator4
-			(iterators))
+		public CompositeIterator4(System.Collections.IEnumerator[] iterators) : this(new 
+			com.db4o.foundation.ArrayIterator4(iterators))
 		{
 		}
 
-		public CompositeIterator4(com.db4o.foundation.Iterator4 iterators)
+		public CompositeIterator4(System.Collections.IEnumerator iterators)
 		{
 			if (null == iterators)
 			{
@@ -28,7 +28,7 @@ namespace com.db4o.foundation
 				{
 					return false;
 				}
-				_currentIterator = NextIterator(_iterators.Current());
+				_currentIterator = NextIterator(_iterators.Current);
 			}
 			if (!_currentIterator.MoveNext())
 			{
@@ -38,14 +38,38 @@ namespace com.db4o.foundation
 			return true;
 		}
 
-		public virtual object Current()
+		public virtual void Reset()
 		{
-			return _currentIterator.Current();
+			ResetIterators();
+			_currentIterator = null;
+			_iterators.Reset();
 		}
 
-		protected virtual com.db4o.foundation.Iterator4 NextIterator(object current)
+		private void ResetIterators()
 		{
-			return (com.db4o.foundation.Iterator4)current;
+			_iterators.Reset();
+			while (_iterators.MoveNext())
+			{
+				NextIterator(_iterators.Current).Reset();
+			}
+		}
+
+		public virtual System.Collections.IEnumerator CurrentIterator()
+		{
+			return _currentIterator;
+		}
+
+		public virtual object Current
+		{
+			get
+			{
+				return _currentIterator.Current;
+			}
+		}
+
+		protected virtual System.Collections.IEnumerator NextIterator(object current)
+		{
+			return (System.Collections.IEnumerator)current;
 		}
 	}
 }

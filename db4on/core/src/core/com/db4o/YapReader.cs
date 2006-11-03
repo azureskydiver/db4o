@@ -3,7 +3,7 @@ namespace com.db4o
 	/// <summary>public for .NET conversion reasons.</summary>
 	/// <remarks>public for .NET conversion reasons.</remarks>
 	/// <exclude></exclude>
-	public class YapReader
+	public class YapReader : com.db4o.SlotReader
 	{
 		public byte[] _buffer;
 
@@ -28,7 +28,7 @@ namespace com.db4o
 			_buffer[_offset++] = a_byte;
 		}
 
-		internal virtual void Append(byte[] a_bytes)
+		public virtual void Append(byte[] a_bytes)
 		{
 			System.Array.Copy(a_bytes, 0, _buffer, _offset, a_bytes.Length);
 			_offset += a_bytes.Length;
@@ -57,6 +57,12 @@ namespace com.db4o
 				}
 			}
 			return false;
+		}
+
+		public virtual void CopyTo(com.db4o.YapReader to, int fromOffset, int toOffset, int
+			 length)
+		{
+			System.Array.Copy(_buffer, fromOffset, to._buffer, toOffset, length);
 		}
 
 		public virtual int GetLength()
@@ -95,7 +101,7 @@ namespace com.db4o
 			return _buffer[_offset++];
 		}
 
-		internal virtual byte[] ReadBytes(int a_length)
+		public virtual byte[] ReadBytes(int a_length)
 		{
 			byte[] bytes = new byte[a_length];
 			ReadBytes(bytes);
@@ -126,7 +132,7 @@ namespace com.db4o
 			{
 				if (ReadByte() != com.db4o.YapConst.YAPEND)
 				{
-					throw new j4o.lang.RuntimeException("YapBytes.readEnd() YAPEND expected");
+					throw new System.Exception("YapBytes.readEnd() YAPEND expected");
 				}
 			}
 		}
@@ -136,6 +142,11 @@ namespace com.db4o
 			int o = (_offset += 4) - 1;
 			return (_buffer[o] & 255) | (_buffer[--o] & 255) << 8 | (_buffer[--o] & 255) << 16
 				 | _buffer[--o] << 24;
+		}
+
+		public virtual long ReadLong()
+		{
+			return com.db4o.YLong.ReadLong(this);
 		}
 
 		public virtual com.db4o.YapReader ReadPayloadReader(int offset, int length)
@@ -154,7 +165,7 @@ namespace com.db4o
 		{
 			try
 			{
-				string str = "";
+				string str = string.Empty;
 				for (int i = 0; i < _buffer.Length; i++)
 				{
 					if (i > 0)
@@ -172,7 +183,7 @@ namespace com.db4o
 					j4o.lang.JavaSystem.PrintStackTrace(e);
 				}
 			}
-			return "";
+			return string.Empty;
 		}
 
 		public virtual void WriteBegin(byte a_identifier)
@@ -248,10 +259,30 @@ namespace com.db4o
 			trans.Stream().i_handlers.i_stringHandler.WriteShort(a_string, this);
 		}
 
-		public virtual void CopyTo(com.db4o.YapReader to, int fromOffset, int toOffset, int
-			 length)
+		public virtual void WriteLong(long l)
 		{
-			System.Array.Copy(_buffer, fromOffset, to._buffer, toOffset, length);
+			com.db4o.YLong.WriteLong(l, this);
+		}
+
+		public virtual void IncrementIntSize()
+		{
+			IncrementOffset(com.db4o.YapConst.INT_LENGTH);
+		}
+
+		public virtual int Offset()
+		{
+			return _offset;
+		}
+
+		public virtual void Offset(int offset)
+		{
+			_offset = offset;
+		}
+
+		public virtual void CopyBytes(byte[] target, int sourceOffset, int targetOffset, 
+			int length)
+		{
+			System.Array.Copy(_buffer, sourceOffset, target, targetOffset, length);
 		}
 	}
 }

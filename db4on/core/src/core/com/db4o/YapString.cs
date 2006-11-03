@@ -84,7 +84,7 @@ namespace com.db4o
 				return com.db4o.inside.marshall.StringMarshaller.ReadShort(_stream, (com.db4o.YapReader
 					)indexEntry);
 			}
-			catch (com.db4o.CorruptionException e)
+			catch (com.db4o.CorruptionException)
 			{
 			}
 			return null;
@@ -144,7 +144,7 @@ namespace com.db4o
 					return new com.db4o.QCandidate(candidates, obj, 0, true);
 				}
 			}
-			catch (com.db4o.CorruptionException e)
+			catch (com.db4o.CorruptionException)
 			{
 			}
 			return null;
@@ -170,11 +170,16 @@ namespace com.db4o
 		{
 			com.db4o.inside.slots.Slot s = new com.db4o.inside.slots.Slot(reader.ReadInt(), reader
 				.ReadInt());
-			if (s._address == s._length)
+			if (IsInvalidSlot(s))
 			{
 				return null;
 			}
 			return s;
+		}
+
+		private bool IsInvalidSlot(com.db4o.inside.slots.Slot slot)
+		{
+			return (slot._address == 0) && (slot._length == 0);
 		}
 
 		public override object ReadQuery(com.db4o.Transaction a_trans, com.db4o.inside.marshall.MarshallerFamily
@@ -374,6 +379,25 @@ namespace com.db4o
 				}
 			}
 			return with.Length - compare.Length;
+		}
+
+		public override void DefragIndexEntry(com.db4o.ReaderPair readers)
+		{
+			readers.CopyID(false, true);
+			readers.IncrementIntSize();
+		}
+
+		public override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers, bool redirect)
+		{
+			if (!redirect)
+			{
+				readers.IncrementOffset(LinkLength());
+			}
+			else
+			{
+				mf._string.Defrag(readers);
+			}
 		}
 	}
 }

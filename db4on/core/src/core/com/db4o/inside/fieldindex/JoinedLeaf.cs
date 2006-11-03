@@ -30,7 +30,7 @@ namespace com.db4o.inside.fieldindex
 			return _range;
 		}
 
-		public virtual com.db4o.foundation.Iterator4 Iterator()
+		public virtual System.Collections.IEnumerator GetEnumerator()
 		{
 			return _range.Keys();
 		}

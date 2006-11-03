@@ -7,10 +7,10 @@ namespace com.db4o.db4ounit.common.assorted
 			new com.db4o.db4ounit.common.assorted.GetByUUIDTestCase().RunSolo();
 		}
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
-			com.db4o.Db4o.Configure().ObjectClass(typeof(com.db4o.db4ounit.common.assorted.UUIDTestItem
-				)).GenerateUUIDs(true);
+			config.ObjectClass(typeof(com.db4o.db4ounit.common.assorted.UUIDTestItem)).GenerateUUIDs
+				(true);
 		}
 
 		protected override void Store()

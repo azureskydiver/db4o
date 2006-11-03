@@ -10,7 +10,7 @@ namespace com.db4o
 			return 1;
 		}
 
-		internal virtual byte EncodingByte()
+		public virtual byte EncodingByte()
 		{
 			return com.db4o.YapConst.ISO8859;
 		}

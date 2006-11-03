@@ -77,11 +77,11 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		private void AssertSingleOrNode(com.db4o.query.Query query)
 		{
-			com.db4o.foundation.Iterator4 nodes = CreateProcessor(query).CollectIndexedNodes(
-				);
+			System.Collections.IEnumerator nodes = CreateProcessor(query).CollectIndexedNodes
+				();
 			Db4oUnit.Assert.IsTrue(nodes.MoveNext());
 			com.db4o.inside.fieldindex.OrIndexedLeaf node = (com.db4o.inside.fieldindex.OrIndexedLeaf
-				)nodes.Current();
+				)nodes.Current;
 			Db4oUnit.Assert.IsNotNull(node);
 			Db4oUnit.Assert.IsFalse(nodes.MoveNext());
 		}

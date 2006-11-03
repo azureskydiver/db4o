@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections;
+using System.IO;
+using System.Text;
 using com.db4o.config;
 using com.db4o.config.attributes;
 using com.db4o.ext;
@@ -56,6 +58,15 @@ namespace com.db4o
 				oldAssemblies[i] = stringIO.Write(oldAssemblyNames[i]);
 			}
 		}
+
+        internal static bool IsDb4oClass(string className)
+        {
+            if (className.IndexOf("com.db4o.test") == 0)
+            {
+                return false;
+            }
+            return className.IndexOf("com.db4o") == 0;
+        }
 
 		internal static JDK Jdk()
 		{
@@ -402,6 +413,11 @@ namespace com.db4o
             }
             return socket.IsConnected();
         }
+	    
+	    public static bool IsSimple(System.Type type)
+	    {
+            return IsSimple(Class.GetClassForType(type));
+	    }
 
 		public static bool IsSimple(Class a_class)
 		{
@@ -635,6 +651,6 @@ namespace com.db4o
 		                                        	Class.GetClassForType(typeof(Int16)),
 		                                        	Class.GetClassForType(typeof(String)),
 		                                        	Class.GetClassForType(typeof(Date))
-		                                        };
+		                                        };	
 	}
 }

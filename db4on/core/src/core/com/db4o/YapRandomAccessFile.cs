@@ -29,7 +29,7 @@ namespace com.db4o
 				catch (com.db4o.ext.DatabaseFileLockedException e)
 				{
 					StopSession();
-					throw e;
+					throw;
 				}
 				Initialize3();
 			}
@@ -49,7 +49,7 @@ namespace com.db4o
 					i_backupFile = ConfigImpl().IoAdapter().Open(path, true, i_file.GetLength());
 					i_backupFile.BlockSize(BlockSize());
 				}
-				catch (System.Exception e)
+				catch
 				{
 					i_backupFile = null;
 					com.db4o.inside.Exceptions4.ThrowRuntimeException(12, path);
@@ -76,7 +76,7 @@ namespace com.db4o
 				{
 					j4o.lang.Thread.Sleep(1);
 				}
-				catch (System.Exception e)
+				catch
 				{
 				}
 			}
@@ -101,10 +101,10 @@ namespace com.db4o
 			return (byte)i_file.BlockSize();
 		}
 
-		internal override bool Close2()
+		protected override bool Close2()
 		{
 			bool stopSession = true;
-			lock (com.db4o.Db4o.Lock)
+			lock (com.db4o.inside.Global4.Lock)
 			{
 				stopSession = i_session.CloseInstance();
 				if (stopSession)
@@ -128,15 +128,8 @@ namespace com.db4o
 						{
 							i_file.Close();
 							i_file = null;
-							if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
-							{
-								com.db4o.YapWriter lockBytes = new com.db4o.YapWriter(i_systemTrans, com.db4o.YapConst
-									.LONG_LENGTH);
-								com.db4o.YLong.WriteLong(0, lockBytes);
-								_fileHeader.SeekForTimeLock(i_timerFile);
-								i_timerFile.Write(lockBytes._buffer);
-								i_timerFile.Close();
-							}
+							_fileHeader.Close();
+							CloseTimerFile();
 						}
 						catch (System.Exception e)
 						{
@@ -150,7 +143,7 @@ namespace com.db4o
 			return stopSession;
 		}
 
-		internal override void Commit1()
+		public override void Commit1()
 		{
 			EnsureLastSlotWritten();
 			base.Commit1();
@@ -202,7 +195,7 @@ namespace com.db4o
 						if (checkXBytes[i] != com.db4o.YapConst.XBYTE)
 						{
 							string msg = "XByte corruption adress:" + a_newAddress + " length:" + a_length;
-							throw new j4o.lang.RuntimeException(msg);
+							throw new System.Exception(msg);
 						}
 					}
 				}
@@ -220,14 +213,14 @@ namespace com.db4o
 			{
 				i_file.Close();
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 			try
 			{
 				com.db4o.Db4o.SessionStopped(i_session);
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 			i_file = null;
@@ -239,9 +232,9 @@ namespace com.db4o
 			{
 				return i_file.GetLength();
 			}
-			catch (System.Exception e)
+			catch
 			{
-				throw new j4o.lang.RuntimeException();
+				throw new System.Exception();
 			}
 		}
 
@@ -269,14 +262,14 @@ namespace com.db4o
 						bool lockFile = com.db4o.Debug.lockFile && ConfigImpl().LockFile() && (!ConfigImpl
 							().IsReadOnly());
 						i_file = ioAdapter.Open(FileName(), lockFile, 0);
-						if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
+						if (NeedsTimerFile())
 						{
 							i_timerFile = ioAdapter.Open(FileName(), false, 0);
 						}
 					}
 					catch (com.db4o.ext.DatabaseFileLockedException de)
 					{
-						throw de;
+						throw;
 					}
 					catch (System.Exception e)
 					{
@@ -308,17 +301,17 @@ namespace com.db4o
 				{
 					i_references.StopTimer();
 				}
-				throw exc;
+				throw;
 			}
 		}
 
-		internal override void ReadBytes(byte[] bytes, int address, int length)
+		public override void ReadBytes(byte[] bytes, int address, int length)
 		{
 			ReadBytes(bytes, address, 0, length);
 		}
 
-		internal override void ReadBytes(byte[] bytes, int address, int addressOffset, int
-			 length)
+		public override void ReadBytes(byte[] bytes, int address, int addressOffset, int 
+			length)
 		{
 			try
 			{
@@ -327,7 +320,7 @@ namespace com.db4o
 			}
 			catch (System.IO.IOException ioex)
 			{
-				throw new j4o.lang.RuntimeException();
+				throw new System.Exception();
 			}
 		}
 
@@ -346,38 +339,49 @@ namespace com.db4o
 			try
 			{
 				i_file.Sync();
-				if (NeedsLockFileThread() && com.db4o.Debug.lockFile)
+				if (i_timerFile != null)
 				{
 					i_timerFile.Sync();
 				}
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 		}
 
-		internal override bool WriteAccessTime()
+		private bool NeedsTimerFile()
 		{
-			if (!NeedsLockFileThread())
-			{
-				return true;
-			}
+			return NeedsLockFileThread() && com.db4o.Debug.lockFile;
+		}
+
+		public override bool WriteAccessTime(int address, int offset, long time)
+		{
 			lock (i_fileLock)
 			{
+				if (i_timerFile == null)
+				{
+					return false;
+				}
+				i_timerFile.BlockSeek(address, offset);
+				com.db4o.YLong.WriteLong(time, i_timerBytes);
+				i_timerFile.Write(i_timerBytes);
 				if (i_file == null)
 				{
+					CloseTimerFile();
 					return false;
 				}
-				if (_fileHeader == null)
-				{
-					return false;
-				}
-				long lockTime = j4o.lang.JavaSystem.CurrentTimeMillis();
-				com.db4o.YLong.WriteLong(lockTime, i_timerBytes);
-				_fileHeader.SeekForTimeLock(i_timerFile);
-				i_timerFile.Write(i_timerBytes);
+				return true;
 			}
-			return true;
+		}
+
+		private void CloseTimerFile()
+		{
+			if (i_timerFile == null)
+			{
+				return;
+			}
+			i_timerFile.Close();
+			i_timerFile = null;
 		}
 
 		public override void WriteBytes(com.db4o.YapReader a_bytes, int address, int addressOffset

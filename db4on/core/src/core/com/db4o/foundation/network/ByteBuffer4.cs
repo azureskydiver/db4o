@@ -87,9 +87,9 @@ namespace com.db4o.foundation.network
 			}
 			catch (System.IO.IOException iex)
 			{
-				throw iex;
+				throw;
 			}
-			catch (System.Exception bex)
+			catch
 			{
 			}
 			return -1;
@@ -123,9 +123,9 @@ namespace com.db4o.foundation.network
 			}
 			catch (System.IO.IOException iex)
 			{
-				throw iex;
+				throw;
 			}
-			catch (System.Exception bex)
+			catch
 			{
 			}
 			return -1;
@@ -180,7 +180,7 @@ namespace com.db4o.foundation.network
 				{
 					i_lock.Snooze(i_timeout);
 				}
-				catch (System.Exception e)
+				catch
 				{
 					throw new System.IO.IOException(com.db4o.Messages.Get(55));
 				}
@@ -202,7 +202,7 @@ namespace com.db4o.foundation.network
 			{
 				i_lock.Run(new _AnonymousInnerClass138(this, len, bytes, off));
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 		}
@@ -243,7 +243,7 @@ namespace com.db4o.foundation.network
 			{
 				i_lock.Run(new _AnonymousInnerClass156(this, i));
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 		}

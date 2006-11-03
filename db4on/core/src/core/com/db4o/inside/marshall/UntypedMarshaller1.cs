@@ -136,5 +136,23 @@ namespace com.db4o.inside.marshall
 			}
 			return obj;
 		}
+
+		public override void Defrag(com.db4o.ReaderPair readers)
+		{
+			int payLoadOffSet = readers.ReadInt();
+			if (payLoadOffSet == 0)
+			{
+				return;
+			}
+			int linkOffSet = readers.Offset();
+			readers.Offset(payLoadOffSet);
+			int yapClassID = readers.CopyIDAndRetrieveMapping().Orig();
+			com.db4o.YapClass yc = readers.Context().YapClass(yapClassID);
+			if (yc != null)
+			{
+				yc.Defrag(_family, readers, false);
+			}
+			readers.Offset(linkOffSet);
+		}
 	}
 }

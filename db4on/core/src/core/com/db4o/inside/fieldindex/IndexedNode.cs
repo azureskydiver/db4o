@@ -1,6 +1,6 @@
 namespace com.db4o.inside.fieldindex
 {
-	public interface IndexedNode : com.db4o.foundation.Iterable4
+	public interface IndexedNode : System.Collections.IEnumerable
 	{
 		bool IsResolved();
 

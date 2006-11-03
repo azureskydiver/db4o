@@ -12,11 +12,11 @@ namespace com.db4o.db4ounit.common.btree
 		public virtual void Test()
 		{
 			Add(VALUES);
-			com.db4o.foundation.Iterator4 allSlotIDs = _btree.AllNodeIds(SystemTrans());
+			System.Collections.IEnumerator allSlotIDs = _btree.AllNodeIds(SystemTrans());
 			com.db4o.foundation.Collection4 allSlots = new com.db4o.foundation.Collection4();
 			while (allSlotIDs.MoveNext())
 			{
-				int slotID = (int)allSlotIDs.Current();
+				int slotID = (int)allSlotIDs.Current;
 				com.db4o.inside.slots.Slot slot = Trans().GetCurrentSlotOfID(slotID);
 				allSlots.Add(slot);
 			}
@@ -27,7 +27,7 @@ namespace com.db4o.db4ounit.common.btree
 				(yapFile, new _AnonymousInnerClass40(this, freedSlots)));
 			_btree.Free(SystemTrans());
 			SystemTrans().Commit();
-			Db4oUnit.Assert.IsTrue(freedSlots.ContainsAll(allSlots.Iterator()));
+			Db4oUnit.Assert.IsTrue(freedSlots.ContainsAll(allSlots.GetEnumerator()));
 		}
 
 		private sealed class _AnonymousInnerClass40 : com.db4o.db4ounit.common.btree.SlotListener

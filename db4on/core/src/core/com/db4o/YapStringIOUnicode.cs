@@ -8,7 +8,7 @@ namespace com.db4o
 			return 2;
 		}
 
-		internal override byte EncodingByte()
+		public override byte EncodingByte()
 		{
 			return com.db4o.YapConst.UNICODE;
 		}

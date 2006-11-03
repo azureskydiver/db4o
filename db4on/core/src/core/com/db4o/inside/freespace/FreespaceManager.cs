@@ -31,6 +31,12 @@ namespace com.db4o.inside.freespace
 		}
 
 		public static com.db4o.inside.freespace.FreespaceManager CreateNew(com.db4o.YapFile
+			 file)
+		{
+			return CreateNew(file, file.SystemData().FreespaceSystem());
+		}
+
+		public static com.db4o.inside.freespace.FreespaceManager CreateNew(com.db4o.YapFile
 			 file, byte systemType)
 		{
 			systemType = CheckType(systemType);
@@ -107,5 +113,23 @@ namespace com.db4o.inside.freespace
 		public abstract byte SystemType();
 
 		public abstract int Write(bool shuttingDown);
+
+		public virtual bool RequiresMigration(byte configuredSystem, byte readSystem)
+		{
+			return (configuredSystem != 0 || readSystem == FM_LEGACY_RAM) && (SystemType() !=
+				 configuredSystem);
+		}
+
+		public virtual com.db4o.inside.freespace.FreespaceManager Migrate(com.db4o.YapFile
+			 file, byte toSystemType)
+		{
+			com.db4o.inside.freespace.FreespaceManager newFM = CreateNew(file, toSystemType);
+			newFM.Start(file.NewFreespaceSlot(toSystemType));
+			Migrate(newFM);
+			FreeSelf();
+			newFM.BeginCommit();
+			newFM.EndCommit();
+			return newFM;
+		}
 	}
 }

@@ -6,18 +6,21 @@ namespace com.db4o.db4ounit.common.fieldindex
 		{
 		}
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
-			base.Configure();
-			Index(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem), "foo");
-			Index(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem), "bar");
-			Index(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem), "child");
+			base.Configure(config);
+			IndexField(config, typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, "foo");
+			IndexField(config, typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, "bar");
+			IndexField(config, typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, "child");
 		}
 
 		protected virtual com.db4o.query.Query CreateComplexItemQuery()
 		{
-			return CreateQuery(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem
-				));
+			return CreateQuery(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				);
 		}
 
 		protected virtual com.db4o.inside.fieldindex.IndexedNode SelectBestIndex(com.db4o.query.Query
@@ -74,8 +77,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		private com.db4o.inside.btree.BTree ComplexItemIndex(string fieldName)
 		{
-			return FieldIndexBTree(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem
-				), fieldName);
+			return FieldIndexBTree(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, fieldName);
 		}
 
 		protected virtual int[] MapToObjectIds(com.db4o.query.Query itemQuery, int[] foos
@@ -134,13 +137,13 @@ namespace com.db4o.db4ounit.common.fieldindex
 		{
 			com.db4o.db4ounit.common.btree.ExpectingVisitor visitor = com.db4o.db4ounit.common.btree.BTreeAssert
 				.CreateExpectingVisitor(expectedValues);
-			treeInt.Traverse(new _AnonymousInnerClass117(this, visitor));
+			treeInt.Traverse(new _AnonymousInnerClass118(this, visitor));
 			visitor.AssertExpectations();
 		}
 
-		private sealed class _AnonymousInnerClass117 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass118 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass117(FieldIndexProcessorTestCaseBase _enclosing, com.db4o.db4ounit.common.btree.ExpectingVisitor
+			public _AnonymousInnerClass118(FieldIndexProcessorTestCaseBase _enclosing, com.db4o.db4ounit.common.btree.ExpectingVisitor
 				 visitor)
 			{
 				this._enclosing = _enclosing;

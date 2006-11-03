@@ -7,8 +7,6 @@ namespace com.db4o.inside.cluster
 
 		private readonly com.db4o.ObjectSet[] _objectSets;
 
-		private int _current;
-
 		private readonly int[] _sizes;
 
 		private readonly int _size;
@@ -29,54 +27,68 @@ namespace com.db4o.inside.cluster
 			_size = size;
 		}
 
-		public virtual bool HasNext()
+		private sealed class ClusterQueryResultIntIterator : com.db4o.foundation.IntIterator4
 		{
-			lock (_cluster)
-			{
-				return HasNextNoSync();
-			}
-		}
+			private readonly com.db4o.foundation.CompositeIterator4 _delegate;
 
-		private com.db4o.ObjectSet Current()
-		{
-			return _objectSets[_current];
-		}
-
-		private bool HasNextNoSync()
-		{
-			if (Current().HasNext())
+			public ClusterQueryResultIntIterator(System.Collections.IEnumerator[] iterators)
 			{
-				return true;
+				_delegate = new com.db4o.foundation.CompositeIterator4(iterators);
 			}
-			if (_current >= _objectSets.Length - 1)
-			{
-				return false;
-			}
-			_current++;
-			return HasNextNoSync();
-		}
 
-		public virtual object Next()
-		{
-			lock (_cluster)
+			public bool MoveNext()
 			{
-				if (HasNextNoSync())
+				return _delegate.MoveNext();
+			}
+
+			public object Current
+			{
+				get
 				{
-					return Current().Next();
+					return _delegate.Current;
 				}
-				return null;
+			}
+
+			public void Reset()
+			{
+				_delegate.Reset();
+			}
+
+			public int CurrentInt()
+			{
+				return ((com.db4o.foundation.IntIterator4)_delegate.CurrentIterator()).CurrentInt
+					();
 			}
 		}
 
-		public virtual void Reset()
+		public virtual com.db4o.foundation.IntIterator4 IterateIDs()
 		{
 			lock (_cluster)
 			{
+				System.Collections.IEnumerator[] iterators = new System.Collections.IEnumerator[_objectSets
+					.Length];
 				for (int i = 0; i < _objectSets.Length; i++)
 				{
-					_objectSets[i].Reset();
+					iterators[i] = ((com.db4o.inside.query.ObjectSetFacade)_objectSets[i])._delegate.
+						IterateIDs();
 				}
-				_current = 0;
+				return new com.db4o.inside.cluster.ClusterQueryResult.ClusterQueryResultIntIterator
+					(iterators);
+			}
+		}
+
+		public virtual System.Collections.IEnumerator GetEnumerator()
+		{
+			lock (_cluster)
+			{
+				System.Collections.IEnumerator[] iterators = new System.Collections.IEnumerator[_objectSets
+					.Length];
+				for (int i = 0; i < _objectSets.Length; i++)
+				{
+					iterators[i] = ((com.db4o.inside.query.ObjectSetFacade)_objectSets[i])._delegate.
+						Iterator();
+				}
+				return new com.db4o.foundation.CompositeIterator4(iterators);
 			}
 		}
 
@@ -99,15 +111,8 @@ namespace com.db4o.inside.cluster
 					index -= _sizes[i];
 					i++;
 				}
-				return ((com.db4o.inside.query.ObjectSetFacade)_objectSets[i])._delegate.Get(index
-					);
+				return ((com.db4o.inside.query.ObjectSetFacade)_objectSets[i]).Get(index);
 			}
-		}
-
-		public virtual long[] GetIDs()
-		{
-			com.db4o.inside.Exceptions4.NotSupported();
-			return null;
 		}
 
 		public virtual object StreamLock()
@@ -115,20 +120,40 @@ namespace com.db4o.inside.cluster
 			return _cluster;
 		}
 
-		public virtual com.db4o.ObjectContainer ObjectContainer()
+		public virtual com.db4o.ext.ExtObjectContainer ObjectContainer()
 		{
-			return _cluster._objectContainers[_current];
+			throw new System.NotSupportedException();
 		}
 
 		public virtual int IndexOf(int id)
 		{
-			com.db4o.inside.Exceptions4.NotSupported();
-			return 0;
+			throw new System.NotSupportedException();
 		}
 
 		public virtual void Sort(com.db4o.query.QueryComparator cmp)
 		{
-			com.db4o.inside.Exceptions4.NotSupported();
+			throw new System.NotSupportedException();
+		}
+
+		public virtual void LoadFromClassIndex(com.db4o.YapClass clazz)
+		{
+			throw new System.NotSupportedException();
+		}
+
+		public virtual void LoadFromQuery(com.db4o.QQuery query)
+		{
+			throw new System.NotSupportedException();
+		}
+
+		public virtual void LoadFromClassIndexes(com.db4o.YapClassCollectionIterator iterator
+			)
+		{
+			throw new System.NotSupportedException();
+		}
+
+		public virtual void LoadFromIdReader(com.db4o.YapReader reader)
+		{
+			throw new System.NotSupportedException();
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace com.db4o.inside.marshall
 					j4o.lang.JavaSystem.PrintStackTrace(e);
 				}
 			}
-			return "";
+			return string.Empty;
 		}
 
 		public virtual string ReadFromParentSlot(com.db4o.YapStream stream, com.db4o.YapReader
@@ -52,7 +52,7 @@ namespace com.db4o.inside.marshall
 			return Read(stream, ReadSlotFromParentSlot(stream, reader));
 		}
 
-		public abstract com.db4o.YapWriter ReadIndexEntry(com.db4o.YapWriter parentSlot);
+		public abstract com.db4o.YapReader ReadIndexEntry(com.db4o.YapWriter parentSlot);
 
 		public static string ReadShort(com.db4o.YapStream stream, com.db4o.YapReader bytes
 			)
@@ -73,7 +73,7 @@ namespace com.db4o.inside.marshall
 				string str = io.Read(bytes, length);
 				return str;
 			}
-			return "";
+			return string.Empty;
 		}
 
 		public abstract com.db4o.YapReader ReadSlotFromParentSlot(com.db4o.YapStream stream
@@ -94,5 +94,7 @@ namespace com.db4o.inside.marshall
 			reader.WriteInt(length);
 			stream.StringIO().Write(reader, str);
 		}
+
+		public abstract void Defrag(com.db4o.SlotReader reader);
 	}
 }

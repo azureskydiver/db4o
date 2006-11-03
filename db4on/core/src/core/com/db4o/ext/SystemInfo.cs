@@ -27,5 +27,10 @@ namespace com.db4o.ext
 		/// </remarks>
 		/// <returns>the freespace size in the database in bytes.</returns>
 		long FreespaceSize();
+
+		/// <summary>Returns the total size of the database on disk.</summary>
+		/// <remarks>Returns the total size of the database on disk.</remarks>
+		/// <returns>total size of database on disk</returns>
+		long TotalSize();
 	}
 }

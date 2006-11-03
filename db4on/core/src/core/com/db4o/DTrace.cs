@@ -53,6 +53,10 @@ namespace com.db4o
 
 		public static com.db4o.DTrace BIND;
 
+		public static com.db4o.DTrace BTREE_NODE_COMMIT_OR_ROLLBACK;
+
+		public static com.db4o.DTrace BTREE_NODE_REMOVE;
+
 		public static com.db4o.DTrace CANDIDATE_READ;
 
 		public static com.db4o.DTrace CLOSE;
@@ -99,6 +103,8 @@ namespace com.db4o
 
 		public static com.db4o.DTrace NEW_INSTANCE;
 
+		public static com.db4o.DTrace PRODUCE_SLOT_CHANGE;
+
 		public static com.db4o.DTrace QUERY_PROCESS;
 
 		public static com.db4o.DTrace READ_ARRAY_WRAPPER;
@@ -117,6 +123,16 @@ namespace com.db4o
 
 		public static com.db4o.DTrace REREAD_OLD_UUID;
 
+		public static com.db4o.DTrace SLOT_SET_POINTER;
+
+		public static com.db4o.DTrace SLOT_DELETE;
+
+		public static com.db4o.DTrace SLOT_FREE_ON_COMMIT;
+
+		public static com.db4o.DTrace SLOT_FREE_ON_ROLLBACK_ID;
+
+		public static com.db4o.DTrace SLOT_FREE_ON_ROLLBACK_ADDRESS;
+
 		public static com.db4o.DTrace TRANS_COMMIT;
 
 		public static com.db4o.DTrace TRANS_DONT_DELETE;
@@ -128,6 +144,10 @@ namespace com.db4o
 		public static com.db4o.DTrace YAPCLASS_BY_ID;
 
 		public static com.db4o.DTrace YAPCLASS_INIT;
+
+		public static com.db4o.DTrace YAPMETA_SET_ID;
+
+		public static com.db4o.DTrace YAPMETA_WRITE;
 
 		public static com.db4o.DTrace WRITE_BYTES;
 

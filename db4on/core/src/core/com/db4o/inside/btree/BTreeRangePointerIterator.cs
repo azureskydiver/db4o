@@ -7,9 +7,12 @@ namespace com.db4o.inside.btree
 		{
 		}
 
-		public override object Current()
+		public override object Current
 		{
-			return CurrentPointer();
+			get
+			{
+				return CurrentPointer();
+			}
 		}
 	}
 }

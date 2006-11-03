@@ -28,9 +28,13 @@ namespace com.db4o.test
             q.Constrain(typeof(MaxByEvaluation));
             q.Descend("val").Constrain(new EvalCallbackForMax());
             ObjectSet objectSet = q.Execute();
-            Tester.Ensure(objectSet.Size() == 1);
-            MaxByEvaluation mbe = (MaxByEvaluation)objectSet.Next();
-            Tester.Ensure(mbe.val == MAX);
+            while (objectSet.HasNext())
+            {
+                objectSet.Next();
+            }
+            Tester.EnsureEquals(1, objectSet.Size());
+            MaxByEvaluation mbe = (MaxByEvaluation) objectSet[0];
+            Tester.EnsureEquals(MAX, mbe.val);
         }
     }
 

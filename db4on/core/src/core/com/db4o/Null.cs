@@ -64,5 +64,9 @@ namespace com.db4o
 		public virtual void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object)
 		{
 		}
+
+		public virtual void DefragIndexEntry(com.db4o.ReaderPair readers)
+		{
+		}
 	}
 }

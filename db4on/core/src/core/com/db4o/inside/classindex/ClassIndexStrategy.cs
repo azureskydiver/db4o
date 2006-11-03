@@ -26,14 +26,13 @@ namespace com.db4o.inside.classindex
 
 		void DontDelete(com.db4o.Transaction transaction, int id);
 
-		com.db4o.foundation.Iterator4 AllSlotIDs(com.db4o.Transaction trans);
+		System.Collections.IEnumerator AllSlotIDs(com.db4o.Transaction trans);
 
-		void DefragReference(com.db4o.YapClass yapClass, com.db4o.YapReader source, com.db4o.YapReader
-			 target, com.db4o.IDMapping mapping, int classIndexID);
+		void DefragReference(com.db4o.YapClass yapClass, com.db4o.ReaderPair readers, int
+			 classIndexID);
 
 		int Id();
 
-		void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping
-			 mapping);
+		void DefragIndex(com.db4o.ReaderPair readers);
 	}
 }

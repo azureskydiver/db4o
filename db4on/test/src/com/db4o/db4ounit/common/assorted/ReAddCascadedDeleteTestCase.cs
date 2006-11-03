@@ -30,10 +30,10 @@ namespace com.db4o.db4ounit.common.assorted
 			}
 		}
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
-			com.db4o.Db4o.Configure().ObjectClass(typeof(com.db4o.db4ounit.common.assorted.ReAddCascadedDeleteTestCase.Item
-				)).CascadeOnDelete(true);
+			config.ObjectClass(typeof(com.db4o.db4ounit.common.assorted.ReAddCascadedDeleteTestCase.Item)
+				).CascadeOnDelete(true);
 		}
 
 		protected override void Store()

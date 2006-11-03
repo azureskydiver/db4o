@@ -1,13 +1,11 @@
 namespace com.db4o.foundation
 {
 	/// <exclude></exclude>
-	public class IntArrayList
+	public class IntArrayList : System.Collections.IEnumerable
 	{
 		internal const int INC = 20;
 
 		protected int[] i_content;
-
-		private int i_current;
 
 		private int i_count;
 
@@ -48,21 +46,6 @@ namespace com.db4o.foundation
 			return i_count;
 		}
 
-		public virtual void Reset()
-		{
-			i_current = i_count - 1;
-		}
-
-		public virtual bool HasNext()
-		{
-			return i_current >= 0;
-		}
-
-		public virtual int NextInt()
-		{
-			return i_content[i_current--];
-		}
-
 		public virtual long[] AsLong()
 		{
 			long[] longs = new long[i_count];
@@ -71,6 +54,31 @@ namespace com.db4o.foundation
 				longs[i] = i_content[i];
 			}
 			return longs;
+		}
+
+		public virtual com.db4o.foundation.IntIterator4 IntIterator()
+		{
+			return new com.db4o.foundation.ReverseIntIterator4Impl(i_content, i_count);
+		}
+
+		public virtual System.Collections.IEnumerator GetEnumerator()
+		{
+			return IntIterator();
+		}
+
+		public virtual int Get(int index)
+		{
+			return i_content[index];
+		}
+
+		public virtual void Swap(int left, int right)
+		{
+			if (left != right)
+			{
+				int swap = i_content[left];
+				i_content[left] = i_content[right];
+				i_content[right] = swap;
+			}
 		}
 	}
 }

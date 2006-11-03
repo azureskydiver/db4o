@@ -27,7 +27,7 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(char));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(char));
 		}
 
 		internal override object PrimitiveNull()

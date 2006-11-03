@@ -44,8 +44,8 @@ namespace com.db4o
 
 		public override bool Equals(object obj)
 		{
-			return j4o.lang.Class.GetClassForObject(obj) == j4o.lang.Class.GetClassForObject(
-				this);
+			return j4o.lang.JavaSystem.GetClassForObject(obj) == j4o.lang.JavaSystem.GetClassForObject
+				(this);
 		}
 
 		internal virtual bool Not(bool res)

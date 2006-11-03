@@ -20,7 +20,7 @@ namespace com.db4o.nativequery.optimization
 		{
 			operand.Parent().Accept(this);
 			j4o.lang.Class clazz = ((operand.Parent() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
-				) ? (j4o.lang.Class)_value : j4o.lang.Class.GetClassForObject(_value));
+				) ? (j4o.lang.Class)_value : j4o.lang.JavaSystem.GetClassForObject(_value));
 			try
 			{
 				j4o.lang.reflect.Field field = com.db4o.nativequery.optimization.ReflectUtil.FieldFor
@@ -175,9 +175,9 @@ namespace com.db4o.nativequery.optimization
 				operand.Args()[paramIdx].Accept(this);
 				@params[paramIdx] = _value;
 			}
-			j4o.lang.Class clazz = j4o.lang.Class.GetClassForObject(receiver);
+			j4o.lang.Class clazz = j4o.lang.JavaSystem.GetClassForObject(receiver);
 			if (operand.Parent().Root() is com.db4o.nativequery.expr.cmp.field.StaticFieldRoot
-				 && clazz.Equals(j4o.lang.Class.GetClassForType(typeof(j4o.lang.Class))))
+				 && clazz.Equals(j4o.lang.JavaSystem.GetClassForType(typeof(j4o.lang.Class))))
 			{
 				clazz = (j4o.lang.Class)receiver;
 			}

@@ -27,7 +27,7 @@ namespace com.db4o.query
 	/// to the server in a db4o MemoryFile. In this case final variables can
 	/// not be restored.
 	/// </remarks>
-	public interface Evaluation : j4o.io.Serializable
+	public interface Evaluation
 	{
 		/// <summary>
 		/// callback method during

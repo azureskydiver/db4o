@@ -4,11 +4,12 @@ namespace com.db4o.db4ounit.common.header
 	{
 		public virtual void TestChangingUuidSettings()
 		{
-			com.db4o.Db4o.Configure().GenerateUUIDs(0);
+			Fixture().Config().GenerateUUIDs(0);
 			Reopen();
 			Db4oUnit.Assert.AreEqual(0, GenerateUUIDs());
 			Db().Configure().GenerateUUIDs(-1);
 			Db4oUnit.Assert.AreEqual(-1, GenerateUUIDs());
+			Fixture().Config().GenerateUUIDs(0);
 			Reopen();
 			Db4oUnit.Assert.AreEqual(0, GenerateUUIDs());
 		}

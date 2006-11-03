@@ -22,6 +22,11 @@ namespace com.db4o.db4ounit.common.btree
 		{
 		}
 
+		public override int EntryCount()
+		{
+			return 0;
+		}
+
 		public override void Free(int address, int length)
 		{
 			_listener.OnFree(new com.db4o.inside.slots.Slot(address, length));
@@ -29,6 +34,11 @@ namespace com.db4o.db4ounit.common.btree
 
 		public override void FreeSelf()
 		{
+		}
+
+		public override int FreeSize()
+		{
+			return 0;
 		}
 
 		public override int GetSlot(int length)

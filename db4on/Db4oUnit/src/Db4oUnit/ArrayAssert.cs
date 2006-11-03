@@ -2,6 +2,15 @@ namespace Db4oUnit
 {
 	public class ArrayAssert
 	{
+		public static void Contains(long[] array, long expected)
+		{
+			if (-1 != IndexOf(array, expected))
+			{
+				return;
+			}
+			Db4oUnit.Assert.Fail("Expecting '" + expected + "'.");
+		}
+
 		public static void AreEqual(object[] expected, object[] actual)
 		{
 			if (expected == actual)
@@ -81,6 +90,18 @@ namespace Db4oUnit
 			{
 				Db4oUnit.Assert.AreEqual(expected[i], actual[i]);
 			}
+		}
+
+		private static int IndexOf(long[] array, long expected)
+		{
+			for (int i = 0; i < array.Length; ++i)
+			{
+				if (expected == array[i])
+				{
+					return i;
+				}
+			}
+			return -1;
 		}
 	}
 }

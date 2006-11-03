@@ -17,5 +17,10 @@ namespace com.db4o.db4ounit.common.assorted
 		{
 			return name;
 		}
+
+		public virtual void SetName(string name)
+		{
+			this.name = name;
+		}
 	}
 }

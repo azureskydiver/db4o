@@ -2,13 +2,6 @@ namespace com.db4o.inside.marshall
 {
 	internal class ArrayMarshaller0 : com.db4o.inside.marshall.ArrayMarshaller
 	{
-		public override com.db4o.TreeInt CollectIDs(com.db4o.YapArray arrayHandler, com.db4o.TreeInt
-			 tree, com.db4o.YapWriter reader)
-		{
-			com.db4o.Transaction trans = reader.GetTransaction();
-			return arrayHandler.CollectIDs1(trans, tree, reader.ReadEmbeddedObject(trans));
-		}
-
 		public override void DeleteEmbedded(com.db4o.YapArray arrayHandler, com.db4o.YapWriter
 			 reader)
 		{
@@ -97,6 +90,17 @@ namespace com.db4o.inside.marshall
 			}
 			object array = arrayHandler.Read1Query(trans, _family, bytes);
 			return array;
+		}
+
+		protected override com.db4o.YapReader PrepareIDReader(com.db4o.Transaction trans, 
+			com.db4o.YapReader reader)
+		{
+			return reader.ReadEmbeddedObject(trans);
+		}
+
+		public override void DefragIDs(com.db4o.YapArray arrayHandler, com.db4o.ReaderPair
+			 readers)
+		{
 		}
 	}
 }

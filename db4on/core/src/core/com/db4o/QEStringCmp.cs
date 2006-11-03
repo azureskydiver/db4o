@@ -3,11 +3,11 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class QEStringCmp : com.db4o.QEAbstract
 	{
-		private bool caseSensitive;
+		public bool caseSensitive;
 
 		public QEStringCmp(bool caseSensitive_)
 		{
-			this.caseSensitive = caseSensitive_;
+			caseSensitive = caseSensitive_;
 		}
 
 		internal override bool Evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate

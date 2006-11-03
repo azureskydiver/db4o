@@ -26,7 +26,7 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(long));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(long));
 		}
 
 		public override int LinkLength()
@@ -44,7 +44,7 @@ namespace com.db4o
 			return ReadLong(a_bytes);
 		}
 
-		internal static long ReadLong(com.db4o.YapReader a_bytes)
+		public static long ReadLong(com.db4o.YapReader a_bytes)
 		{
 			long l_return = 0;
 			for (int i = 0; i < com.db4o.YapConst.LONG_BYTES; i++)
@@ -60,7 +60,7 @@ namespace com.db4o
 			WriteLong(((long)a_object), a_bytes);
 		}
 
-		internal static void WriteLong(long a_long, com.db4o.YapReader a_bytes)
+		public static void WriteLong(long a_long, com.db4o.YapReader a_bytes)
 		{
 			for (int i = 0; i < com.db4o.YapConst.LONG_BYTES; i++)
 			{

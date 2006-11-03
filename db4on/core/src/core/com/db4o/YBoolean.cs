@@ -1,6 +1,6 @@
 namespace com.db4o
 {
-	internal sealed class YBoolean : com.db4o.YapJavaClass
+	public sealed class YBoolean : com.db4o.YapJavaClass
 	{
 		internal const int LENGTH = 1 + com.db4o.YapConst.ADDED_LENGTH;
 
@@ -31,7 +31,7 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(bool));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(bool));
 		}
 
 		internal override object PrimitiveNull()

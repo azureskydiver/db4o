@@ -48,7 +48,7 @@ namespace com.db4o.inside.marshall
 			{
 				id = a_bytes[0].ReadInt();
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 			a_bytes[0]._offset = offset;
@@ -93,6 +93,10 @@ namespace com.db4o.inside.marshall
 				.GetUpdateDepth(), true);
 			a_bytes.WriteInt(id);
 			return id;
+		}
+
+		public override void Defrag(com.db4o.ReaderPair readers)
+		{
 		}
 	}
 }

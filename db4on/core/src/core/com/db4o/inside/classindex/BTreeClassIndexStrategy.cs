@@ -108,13 +108,11 @@ namespace com.db4o.inside.classindex
 		{
 		}
 
-		public override void DefragReference(com.db4o.YapClass yapClass, com.db4o.YapReader
-			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping, int classIndexID
-			)
+		public override void DefragReference(com.db4o.YapClass yapClass, com.db4o.ReaderPair
+			 readers, int classIndexID)
 		{
-			source.ReadInt();
 			int newID = -classIndexID;
-			target.WriteInt(newID);
+			readers.WriteInt(newID);
 		}
 
 		public override int Id()
@@ -122,16 +120,31 @@ namespace com.db4o.inside.classindex
 			return _btreeIndex.GetID();
 		}
 
-		public override com.db4o.foundation.Iterator4 AllSlotIDs(com.db4o.Transaction trans
+		public override System.Collections.IEnumerator AllSlotIDs(com.db4o.Transaction trans
 			)
 		{
 			return _btreeIndex.AllNodeIds(trans);
 		}
 
-		public override void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target
-			, com.db4o.IDMapping mapping)
+		public override void DefragIndex(com.db4o.ReaderPair readers)
 		{
-			_btreeIndex.DefragIndex(source, target, mapping);
+			_btreeIndex.DefragIndex(readers);
+		}
+
+		public static com.db4o.inside.btree.BTree Btree(com.db4o.YapClass clazz)
+		{
+			com.db4o.inside.classindex.ClassIndexStrategy index = clazz.Index();
+			if (!(index is com.db4o.inside.classindex.BTreeClassIndexStrategy))
+			{
+				throw new System.InvalidOperationException();
+			}
+			return ((com.db4o.inside.classindex.BTreeClassIndexStrategy)index).Btree();
+		}
+
+		public static System.Collections.IEnumerator Iterate(com.db4o.YapClass clazz, com.db4o.Transaction
+			 trans)
+		{
+			return Btree(clazz).AsRange(trans).Keys();
 		}
 	}
 }

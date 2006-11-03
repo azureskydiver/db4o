@@ -7,11 +7,11 @@ namespace com.db4o.db4ounit.common.fieldindex
 			new com.db4o.db4ounit.common.fieldindex.FieldIndexProcessorTestCase().RunSolo();
 		}
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
-			base.Configure();
-			IndexField(typeof(com.db4o.db4ounit.common.fieldindex.NonIndexedFieldIndexItem), 
-				"indexed");
+			base.Configure(config);
+			IndexField(config, typeof(com.db4o.db4ounit.common.fieldindex.NonIndexedFieldIndexItem)
+				, "indexed");
 		}
 
 		protected override void Store()
@@ -28,8 +28,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 				)query.Execute().Next();
 			query = CreateComplexItemQuery();
 			query.Descend("child").Constrain(item).Identity();
-			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem
-				), new int[] { 4 }, query);
+			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, new int[] { 4 }, query);
 		}
 
 		public virtual void TestSingleIndexNotSmaller()
@@ -154,8 +154,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 			com.db4o.query.Constraint c2 = query.Descend("child").Descend("foo").Constrain(4)
 				.Greater();
 			c1.Or(c2);
-			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem
-				), new int[] { 4, 9 }, query);
+			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, new int[] { 4, 9 }, query);
 		}
 
 		public virtual void _testOrOnDifferentFields()
@@ -164,14 +164,14 @@ namespace com.db4o.db4ounit.common.fieldindex
 			com.db4o.query.Constraint c1 = query.Descend("foo").Constrain(3);
 			com.db4o.query.Constraint c2 = query.Descend("bar").Constrain(8);
 			c1.Or(c2);
-			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem
-				), new int[] { 3, 7, 9 }, query);
+			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, new int[] { 3, 7, 9 }, query);
 		}
 
 		public virtual void TestCantOptimizeOrInvolvingNonIndexedField()
 		{
-			com.db4o.query.Query query = CreateQuery(typeof(com.db4o.db4ounit.common.fieldindex.NonIndexedFieldIndexItem
-				));
+			com.db4o.query.Query query = CreateQuery(typeof(com.db4o.db4ounit.common.fieldindex.NonIndexedFieldIndexItem)
+				);
 			com.db4o.query.Constraint c1 = query.Descend("indexed").Constrain(1);
 			com.db4o.query.Constraint c2 = query.Descend("foo").Constrain(2);
 			c1.Or(c2);
@@ -190,8 +190,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		public virtual void TestCantOptimizeJoinOnNonIndexedFields()
 		{
-			com.db4o.query.Query query = CreateQuery(typeof(com.db4o.db4ounit.common.fieldindex.NonIndexedFieldIndexItem
-				));
+			com.db4o.query.Query query = CreateQuery(typeof(com.db4o.db4ounit.common.fieldindex.NonIndexedFieldIndexItem)
+				);
 			com.db4o.query.Constraint c1 = query.Descend("foo").Constrain(1);
 			com.db4o.query.Constraint c2 = query.Descend("foo").Constrain(2);
 			c1.Or(c2);
@@ -202,7 +202,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 		{
 			com.db4o.inside.fieldindex.FieldIndexProcessorResult result = ExecuteProcessor(query
 				);
-			Db4oUnit.Assert.IsNull(result.found);
+			Db4oUnit.Assert.AreSame(com.db4o.inside.fieldindex.FieldIndexProcessorResult.NO_INDEX_FOUND
+				, result);
 		}
 
 		public virtual void TestIndexSelection()
@@ -228,16 +229,16 @@ namespace com.db4o.db4ounit.common.fieldindex
 		{
 			com.db4o.query.Query query = CreateComplexItemQuery();
 			query.Descend("child").Descend("foo").Constrain(3);
-			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem
-				), new int[] { 4 }, query);
+			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, new int[] { 4 }, query);
 		}
 
 		public virtual void TestTripleDescendingOnQuery()
 		{
 			com.db4o.query.Query query = CreateComplexItemQuery();
 			query.Descend("child").Descend("child").Descend("foo").Constrain(3);
-			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem
-				), new int[] { 7 }, query);
+			AssertExpectedFoos(typeof(com.db4o.db4ounit.common.fieldindex.ComplexFieldIndexItem)
+				, new int[] { 7 }, query);
 		}
 
 		public virtual void TestMultiTransactionSmallerWithCommit()
@@ -328,8 +329,7 @@ namespace com.db4o.db4ounit.common.fieldindex
 					, result);
 				return;
 			}
-			Db4oUnit.Assert.IsNotNull(result.found);
-			AssertTreeInt(expectedIds, result.found);
+			AssertTreeInt(expectedIds, result.ToTreeInt());
 		}
 
 		private com.db4o.inside.fieldindex.FieldIndexProcessorResult ExecuteProcessor(com.db4o.query.Query

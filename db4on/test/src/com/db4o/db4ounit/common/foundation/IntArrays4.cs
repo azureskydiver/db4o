@@ -49,7 +49,7 @@ namespace com.db4o.db4ounit.common.foundation
 			return ret;
 		}
 
-		public static com.db4o.foundation.Iterator4 NewIterator(int[] values)
+		public static System.Collections.IEnumerator NewIterator(int[] values)
 		{
 			return new com.db4o.foundation.ArrayIterator4(ToObjectArray(values));
 		}

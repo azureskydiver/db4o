@@ -11,9 +11,9 @@ namespace com.db4o.inside.btree
 		/// this range.
 		/// </remarks>
 		/// <returns>an Iterator4 over BTreePointer value</returns>
-		com.db4o.foundation.Iterator4 Pointers();
+		System.Collections.IEnumerator Pointers();
 
-		com.db4o.foundation.Iterator4 Keys();
+		System.Collections.IEnumerator Keys();
 
 		int Size();
 
@@ -36,5 +36,7 @@ namespace com.db4o.inside.btree
 		bool IsEmpty();
 
 		void Accept(com.db4o.inside.btree.BTreeRangeVisitor visitor);
+
+		com.db4o.inside.btree.BTreePointer LastPointer();
 	}
 }

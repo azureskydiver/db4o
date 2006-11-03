@@ -149,7 +149,7 @@ namespace com.db4o
 
 		public override string ToString()
 		{
-			return "" + _key;
+			return string.Empty + _key;
 		}
 
 		protected override com.db4o.foundation.Tree ShallowCloneInternal(com.db4o.foundation.Tree
@@ -202,6 +202,11 @@ namespace com.db4o
 			private readonly TreeInt _enclosing;
 
 			private readonly int[] length;
+		}
+
+		public override object Key()
+		{
+			return _key;
 		}
 	}
 }

@@ -126,24 +126,19 @@ namespace com.db4o.inside.marshall
 		}
 
 		public virtual void Defrag(com.db4o.YapClass yapClass, com.db4o.YapStringIO sio, 
-			com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping mapping
-			, int classIndexID)
+			com.db4o.ReaderPair readers, int classIndexID)
 		{
-			ReadName(sio, source);
-			ReadName(sio, target);
-			ReadMetaClassID(source);
-			int metaClassNewId = 0;
-			target.WriteInt(metaClassNewId);
-			int ancestorOldID = source.ReadInt();
-			int ancestorNewId = mapping.MappedID(ancestorOldID);
-			target.WriteInt(ancestorNewId);
-			yapClass.Index().DefragReference(yapClass, source, target, mapping, classIndexID);
-			source.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
-			target.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
+			ReadName(sio, readers.Source());
+			ReadName(sio, readers.Target());
+			int metaClassID = 0;
+			readers.WriteInt(metaClassID);
+			readers.CopyID();
+			readers.WriteInt(classIndexID);
+			readers.IncrementIntSize();
 			com.db4o.YapField[] fields = yapClass.i_fields;
 			for (int fieldIdx = 0; fieldIdx < fields.Length; fieldIdx++)
 			{
-				_family._field.Defrag(yapClass, fields[fieldIdx], sio, source, target, mapping);
+				_family._field.Defrag(yapClass, fields[fieldIdx], sio, readers);
 			}
 		}
 	}

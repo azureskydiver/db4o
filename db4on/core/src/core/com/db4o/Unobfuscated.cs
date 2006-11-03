@@ -14,9 +14,9 @@ namespace com.db4o
 		public static byte[] GenerateSignature()
 		{
 			com.db4o.YapWriter writer = new com.db4o.YapWriter(null, 300);
-			com.db4o.YLong.WriteLong(j4o.lang.JavaSystem.CurrentTimeMillis(), writer);
-			com.db4o.YLong.WriteLong(RandomLong(), writer);
-			com.db4o.YLong.WriteLong(RandomLong() + 1, writer);
+			writer.WriteLong(j4o.lang.JavaSystem.CurrentTimeMillis());
+			writer.WriteLong(RandomLong());
+			writer.WriteLong(RandomLong() + 1);
 			return writer.GetWrittenBytes();
 		}
 

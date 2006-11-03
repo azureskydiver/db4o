@@ -17,6 +17,10 @@ namespace com.db4o.inside.btree
 
 		public Searcher(com.db4o.inside.btree.SearchTarget target, int count)
 		{
+			if (count < 0)
+			{
+				throw new System.ArgumentException();
+			}
 			_target = target;
 			_count = count;
 			_cmp = -1;

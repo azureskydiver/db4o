@@ -195,7 +195,7 @@ namespace com.db4o.reflect.generic
 			}
 			if (_delegate == null)
 			{
-				return _reflector.ForClass(j4o.lang.Class.GetClassForType(typeof(object)));
+				return _reflector.ForClass(j4o.lang.JavaSystem.GetClassForType(typeof(object)));
 			}
 			com.db4o.reflect.ReflectClass delegateSuperclass = _delegate.GetSuperclass();
 			if (delegateSuperclass != null)

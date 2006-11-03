@@ -14,6 +14,11 @@ namespace com.db4o.inside.marshall
 		{
 		}
 
+		public ObjectHeader(com.db4o.YapClass yapClass, com.db4o.YapReader reader) : this
+			(null, yapClass, reader)
+		{
+		}
+
 		public ObjectHeader(com.db4o.YapWriter writer) : this(writer.GetStream(), writer)
 		{
 		}
@@ -28,13 +33,14 @@ namespace com.db4o.inside.marshall
 			_headerAttributes = ReadAttributes(_marshallerFamily, reader);
 		}
 
-		public static com.db4o.inside.marshall.ObjectHeader Defrag(com.db4o.YapClass yapClass
-			, com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping mapping
+		public static com.db4o.inside.marshall.ObjectHeader Defrag(com.db4o.ReaderPair readers
 			)
 		{
+			com.db4o.YapReader source = readers.Source();
+			com.db4o.YapReader target = readers.Target();
 			com.db4o.inside.marshall.ObjectHeader header = new com.db4o.inside.marshall.ObjectHeader
-				(null, yapClass, source);
-			int newID = mapping.MappedID(yapClass.GetID());
+				(readers.Context().SystemTrans().Stream(), null, source);
+			int newID = readers.Mapping().MappedID(header.YapClass().GetID());
 			header._marshallerFamily._object.WriteObjectClassID(target, newID);
 			header._marshallerFamily._object.SkipMarshallerInfo(target);
 			ReadAttributes(header._marshallerFamily, target);

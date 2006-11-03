@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace com.db4o.foundation
 {
-    internal class Lock4
+    public class Lock4
     {
         private volatile Thread lockedByThread;
 

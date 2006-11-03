@@ -74,8 +74,8 @@ namespace com.db4o.inside.btree
 			_keys[1] = secondChild._keys[0];
 			_children[1] = secondChild;
 			Write(trans.SystemTransaction());
-			firstChild._parentID = GetID();
-			secondChild._parentID = GetID();
+			firstChild.SetParentID(trans, GetID());
+			secondChild.SetParentID(trans, GetID());
 		}
 
 		public virtual com.db4o.inside.btree.BTree Btree()
@@ -404,12 +404,17 @@ namespace com.db4o.inside.btree
 			{
 				return false;
 			}
-			if (_parentID == 0)
+			if (IsRoot())
 			{
 				return false;
 			}
 			Free(trans);
 			return true;
+		}
+
+		private bool IsRoot()
+		{
+			return _btree.Root() == this;
 		}
 
 		public override bool Equals(object obj)
@@ -429,7 +434,7 @@ namespace com.db4o.inside.btree
 		private void Free(com.db4o.Transaction trans)
 		{
 			_dead = true;
-			if (_parentID != 0)
+			if (!IsRoot())
 			{
 				com.db4o.inside.btree.BTreeNode parent = _btree.ProduceNode(_parentID);
 				parent.RemoveChild(trans, this);
@@ -481,6 +486,7 @@ namespace com.db4o.inside.btree
 					return;
 				}
 			}
+			throw new System.InvalidOperationException("child not found");
 		}
 
 		private void KeyChanged(com.db4o.Transaction trans, com.db4o.inside.btree.BTreeNode
@@ -498,11 +504,12 @@ namespace com.db4o.inside.btree
 					return;
 				}
 			}
+			throw new System.InvalidOperationException("child not found");
 		}
 
 		private void TellParentAboutChangedKey(com.db4o.Transaction trans)
 		{
-			if (_parentID != 0)
+			if (!IsRoot())
 			{
 				com.db4o.inside.btree.BTreeNode parent = _btree.ProduceNode(_parentID);
 				parent.KeyChanged(trans, this);
@@ -586,6 +593,18 @@ namespace com.db4o.inside.btree
 			return -1;
 		}
 
+		public virtual int LastKeyIndex(com.db4o.Transaction trans)
+		{
+			for (int ix = _count - 1; ix >= 0; ix--)
+			{
+				if (IndexIsValid(trans, ix))
+				{
+					return ix;
+				}
+			}
+			return -1;
+		}
+
 		public virtual bool IndexIsValid(com.db4o.Transaction trans, int index)
 		{
 			if (!CanWrite())
@@ -624,7 +643,7 @@ namespace com.db4o.inside.btree
 		{
 			if (pos < 0)
 			{
-				throw new System.ArgumentException("pos");
+				throw new System.ArgumentException("pos " + pos);
 			}
 			if (pos > LastIndex())
 			{
@@ -1073,13 +1092,14 @@ namespace com.db4o.inside.btree
 			com.db4o.YapReader reader = PrepareRead(trans);
 			if (_isLeaf)
 			{
-				int index = FirstKeyIndex(trans);
-				if (index == -1)
-				{
-					return null;
-				}
-				return new com.db4o.inside.btree.BTreePointer(trans, reader, this, index);
+				return LeafFirstPointer(trans, reader);
 			}
+			return BranchFirstPointer(trans, reader);
+		}
+
+		private com.db4o.inside.btree.BTreePointer BranchFirstPointer(com.db4o.Transaction
+			 trans, com.db4o.YapReader reader)
+		{
 			for (int i = 0; i < _count; i++)
 			{
 				com.db4o.inside.btree.BTreePointer childFirstPointer = Child(reader, i).FirstPointer
@@ -1090,6 +1110,54 @@ namespace com.db4o.inside.btree
 				}
 			}
 			return null;
+		}
+
+		private com.db4o.inside.btree.BTreePointer LeafFirstPointer(com.db4o.Transaction 
+			trans, com.db4o.YapReader reader)
+		{
+			int index = FirstKeyIndex(trans);
+			if (index == -1)
+			{
+				return null;
+			}
+			return new com.db4o.inside.btree.BTreePointer(trans, reader, this, index);
+		}
+
+		public virtual com.db4o.inside.btree.BTreePointer LastPointer(com.db4o.Transaction
+			 trans)
+		{
+			com.db4o.YapReader reader = PrepareRead(trans);
+			if (_isLeaf)
+			{
+				return LeafLastPointer(trans, reader);
+			}
+			return BranchLastPointer(trans, reader);
+		}
+
+		private com.db4o.inside.btree.BTreePointer BranchLastPointer(com.db4o.Transaction
+			 trans, com.db4o.YapReader reader)
+		{
+			for (int i = _count - 1; i >= 0; i--)
+			{
+				com.db4o.inside.btree.BTreePointer childLastPointer = Child(reader, i).LastPointer
+					(trans);
+				if (childLastPointer != null)
+				{
+					return childLastPointer;
+				}
+			}
+			return null;
+		}
+
+		private com.db4o.inside.btree.BTreePointer LeafLastPointer(com.db4o.Transaction trans
+			, com.db4o.YapReader reader)
+		{
+			int index = LastKeyIndex(trans);
+			if (index == -1)
+			{
+				return null;
+			}
+			return new com.db4o.inside.btree.BTreePointer(trans, reader, this, index);
 		}
 
 		internal virtual void Purge()
@@ -1124,18 +1192,21 @@ namespace com.db4o.inside.btree
 		{
 			PrepareWrite(trans);
 			_parentID = id;
+			SetStateDirty();
 		}
 
 		private void SetPreviousID(com.db4o.Transaction trans, int id)
 		{
 			PrepareWrite(trans);
 			_previousID = id;
+			SetStateDirty();
 		}
 
 		private void SetNextID(com.db4o.Transaction trans, int id)
 		{
 			PrepareWrite(trans);
 			_nextID = id;
+			SetStateDirty();
 		}
 
 		public virtual void TraverseKeys(com.db4o.Transaction trans, com.db4o.foundation.Visitor4
@@ -1284,7 +1355,7 @@ namespace com.db4o.inside.btree
 		{
 			if (_count == 0)
 			{
-				return "Node not loaded";
+				return "Node " + GetID() + " not loaded";
 			}
 			string str = "\nBTreeNode";
 			str += "\nid: " + GetID();
@@ -1331,44 +1402,31 @@ namespace com.db4o.inside.btree
 			}
 		}
 
-		public static void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target
-			, com.db4o.IDMapping mapping, com.db4o.inside.ix.Indexable4 keyHandler)
+		public static void DefragIndex(com.db4o.ReaderPair readers, com.db4o.inside.ix.Indexable4
+			 keyHandler, com.db4o.inside.ix.Indexable4 valueHandler)
 		{
-			int count = source.ReadInt();
-			int targetCount = target.ReadInt();
-			if (count != targetCount)
-			{
-				throw new j4o.lang.RuntimeException("Expected target count " + count + ", was " +
-					 targetCount);
-			}
-			byte leafByte = source.ReadByte();
-			byte targetLeafByte = target.ReadByte();
-			if (leafByte != targetLeafByte)
-			{
-				throw new j4o.lang.RuntimeException("Expected target leaf " + leafByte + ", was "
-					 + targetLeafByte);
-			}
+			int count = readers.ReadInt();
+			byte leafByte = readers.ReadByte();
 			bool isLeaf = (leafByte == 1);
-			MapID(source, target, mapping);
-			MapID(source, target, mapping);
-			MapID(source, target, mapping);
+			bool handlesValues = (valueHandler != null) && isLeaf;
+			readers.CopyID();
+			readers.CopyID();
+			readers.CopyID();
 			for (int i = 0; i < count; i++)
 			{
-				int curKey = (int)keyHandler.ReadIndexEntry(source);
-				keyHandler.WriteIndexEntry(target, curKey);
-				if (!isLeaf)
+				keyHandler.DefragIndexEntry(readers);
+				if (handlesValues)
 				{
-					MapID(source, target, mapping);
+					valueHandler.DefragIndexEntry(readers);
+				}
+				else
+				{
+					if (!isLeaf)
+					{
+						readers.CopyID();
+					}
 				}
 			}
-		}
-
-		private static void MapID(com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping
-			 mapping)
-		{
-			int oldParentID = source.ReadInt();
-			int newParentID = mapping.MappedID(oldParentID);
-			target.WriteInt(newParentID);
 		}
 
 		public virtual bool IsLeaf()

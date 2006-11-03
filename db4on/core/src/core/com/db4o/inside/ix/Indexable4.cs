@@ -10,5 +10,7 @@ namespace com.db4o.inside.ix
 		object ReadIndexEntry(com.db4o.YapReader a_reader);
 
 		void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object);
+
+		void DefragIndexEntry(com.db4o.ReaderPair readers);
 	}
 }

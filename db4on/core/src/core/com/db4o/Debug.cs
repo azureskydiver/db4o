@@ -27,25 +27,17 @@ namespace com.db4o
 
 		public const bool fakeServer = false;
 
-		internal const bool messages = false;
+		public const bool messages = false;
 
 		public const bool nio = true;
 
-		internal const bool lockFile = true;
-
-		internal static com.db4o.YapFile serverStream;
-
-		internal static com.db4o.YapClient clientStream;
-
-		internal static com.db4o.foundation.Queue4 clientMessageQueue;
-
-		internal static com.db4o.foundation.Lock4 clientMessageQueueLock;
+		public const bool lockFile = true;
 
 		public static void Expect(bool cond)
 		{
 			if (!cond)
 			{
-				throw new j4o.lang.RuntimeException("Should never happen");
+				throw new System.Exception("Should never happen");
 			}
 		}
 

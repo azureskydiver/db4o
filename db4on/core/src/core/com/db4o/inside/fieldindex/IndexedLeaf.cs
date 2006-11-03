@@ -44,7 +44,7 @@ namespace com.db4o.inside.fieldindex
 			return _range.Size();
 		}
 
-		public override com.db4o.foundation.Iterator4 Iterator()
+		public override System.Collections.IEnumerator GetEnumerator()
 		{
 			return _range.Keys();
 		}

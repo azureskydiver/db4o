@@ -26,12 +26,17 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(int));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(int));
 		}
 
 		public override int LinkLength()
 		{
 			return com.db4o.YapConst.INT_LENGTH;
+		}
+
+		public static int Max(int x, int y)
+		{
+			return (x < y) ? y : x;
 		}
 
 		internal override object PrimitiveNull()
@@ -41,7 +46,7 @@ namespace com.db4o
 
 		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			return ReadInt(a_bytes);
+			return a_bytes.ReadInt();
 		}
 
 		internal static int ReadInt(com.db4o.YapReader a_bytes)
@@ -109,6 +114,11 @@ namespace com.db4o
 		internal override bool IsSmaller1(object obj)
 		{
 			return obj is int && Val(obj) < i_compareTo;
+		}
+
+		public override void DefragIndexEntry(com.db4o.ReaderPair readers)
+		{
+			readers.CopyID();
 		}
 	}
 }

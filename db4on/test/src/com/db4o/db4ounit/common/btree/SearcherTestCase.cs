@@ -27,7 +27,7 @@ namespace com.db4o.db4ounit.common.btree
 			for (int i = 0; i < searches.Length; i++)
 			{
 				int res = Search(evenValues, searches[i]);
-				System.Console.Out.WriteLine(res);
+				j4o.lang.JavaSystem.Out.WriteLine(res);
 			}
 		}
 

@@ -60,7 +60,7 @@ namespace com.db4o.ext
 			{
 				return true;
 			}
-			if (obj == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
+			if (obj == null || j4o.lang.JavaSystem.GetClassForObject(this) != j4o.lang.JavaSystem.GetClassForObject
 				(obj))
 			{
 				return false;
@@ -124,7 +124,7 @@ namespace com.db4o.ext
 					return i_signature[i] < peer.i_signature[i];
 				}
 			}
-			throw new j4o.lang.RuntimeException();
+			throw new System.Exception();
 		}
 
 		/// <summary>make sure this Db4oDatabase is stored.</summary>
@@ -176,7 +176,7 @@ namespace com.db4o.ext
 		{
 			com.db4o.YapStream stream = trans.Stream();
 			com.db4o.query.Query q = stream.Query(trans);
-			q.Constrain(j4o.lang.Class.GetClassForObject(this));
+			q.Constrain(j4o.lang.JavaSystem.GetClassForObject(this));
 			if (constrainByUUID)
 			{
 				q.Descend(CREATIONTIME_FIELD).Constrain(i_uuid);

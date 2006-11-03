@@ -1,26 +1,26 @@
 namespace com.db4o.inside.query
 {
 	/// <exclude></exclude>
-	public interface QueryResult
+	public interface QueryResult : System.Collections.IEnumerable
 	{
 		object Get(int index);
 
-		long[] GetIDs();
-
-		bool HasNext();
-
-		object Next();
-
-		void Reset();
+		com.db4o.foundation.IntIterator4 IterateIDs();
 
 		int Size();
 
-		object StreamLock();
-
-		com.db4o.ObjectContainer ObjectContainer();
+		com.db4o.ext.ExtObjectContainer ObjectContainer();
 
 		int IndexOf(int id);
 
 		void Sort(com.db4o.query.QueryComparator cmp);
+
+		void LoadFromClassIndex(com.db4o.YapClass clazz);
+
+		void LoadFromQuery(com.db4o.QQuery query);
+
+		void LoadFromClassIndexes(com.db4o.YapClassCollectionIterator iterator);
+
+		void LoadFromIdReader(com.db4o.YapReader reader);
 	}
 }

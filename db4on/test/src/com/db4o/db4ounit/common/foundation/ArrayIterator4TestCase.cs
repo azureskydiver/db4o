@@ -12,9 +12,9 @@ namespace com.db4o.db4ounit.common.foundation
 			com.db4o.foundation.ArrayIterator4 i = new com.db4o.foundation.ArrayIterator4(new 
 				object[] { "foo", "bar" });
 			Db4oUnit.Assert.IsTrue(i.MoveNext());
-			Db4oUnit.Assert.AreEqual("foo", i.Current());
+			Db4oUnit.Assert.AreEqual("foo", i.Current);
 			Db4oUnit.Assert.IsTrue(i.MoveNext());
-			Db4oUnit.Assert.AreEqual("bar", i.Current());
+			Db4oUnit.Assert.AreEqual("bar", i.Current);
 			AssertExhausted(i);
 		}
 
@@ -36,7 +36,7 @@ namespace com.db4o.db4ounit.common.foundation
 
 			public void Run()
 			{
-				i.Current();
+				j4o.lang.JavaSystem.Out.WriteLine(i.Current);
 			}
 
 			private readonly ArrayIterator4TestCase _enclosing;

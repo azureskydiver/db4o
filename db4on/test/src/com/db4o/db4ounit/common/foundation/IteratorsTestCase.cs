@@ -7,7 +7,7 @@ namespace com.db4o.db4ounit.common.foundation
 		{
 			int[] array = new int[] { 1, 2, 3 };
 			com.db4o.foundation.Collection4 args = new com.db4o.foundation.Collection4();
-			com.db4o.foundation.Iterator4 iterator = com.db4o.foundation.Iterators.Map(com.db4o.db4ounit.common.foundation.IntArrays4
+			System.Collections.IEnumerator iterator = com.db4o.foundation.Iterators.Map(com.db4o.db4ounit.common.foundation.IntArrays4
 				.NewIterator(array), new _AnonymousInnerClass19(this, args));
 			Db4oUnit.Assert.IsNotNull(iterator);
 			Db4oUnit.Assert.AreEqual(0, args.Size());
@@ -15,7 +15,7 @@ namespace com.db4o.db4ounit.common.foundation
 			{
 				Db4oUnit.Assert.IsTrue(iterator.MoveNext());
 				Db4oUnit.Assert.AreEqual(i + 1, args.Size());
-				Db4oUnit.Assert.AreEqual(array[i] * 2, iterator.Current());
+				Db4oUnit.Assert.AreEqual(array[i] * 2, iterator.Current);
 			}
 		}
 

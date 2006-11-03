@@ -561,7 +561,9 @@ namespace com.db4o.foundation
 
 		public virtual object ShallowClone()
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
+
+		public abstract object Key();
 	}
 }

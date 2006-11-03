@@ -15,10 +15,10 @@ namespace com.db4o
 		public override bool Identity()
 		{
 			bool ret = false;
-			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
+			System.Collections.IEnumerator i = i_evaluators.GetEnumerator();
 			while (i.MoveNext())
 			{
-				if (((com.db4o.QE)i.Current()).Identity())
+				if (((com.db4o.QE)i.Current).Identity())
 				{
 					ret = true;
 				}
@@ -38,10 +38,10 @@ namespace com.db4o
 		internal override bool Evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
 			 a_candidate, object a_value)
 		{
-			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
+			System.Collections.IEnumerator i = i_evaluators.GetEnumerator();
 			while (i.MoveNext())
 			{
-				if (((com.db4o.QE)i.Current()).Evaluate(a_constraint, a_candidate, a_value))
+				if (((com.db4o.QE)i.Current).Evaluate(a_constraint, a_candidate, a_value))
 				{
 					return true;
 				}
@@ -51,19 +51,19 @@ namespace com.db4o
 
 		public override void IndexBitMap(bool[] bits)
 		{
-			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
+			System.Collections.IEnumerator i = i_evaluators.GetEnumerator();
 			while (i.MoveNext())
 			{
-				((com.db4o.QE)i.Current()).IndexBitMap(bits);
+				((com.db4o.QE)i.Current).IndexBitMap(bits);
 			}
 		}
 
 		public override bool SupportsIndex()
 		{
-			com.db4o.foundation.Iterator4 i = i_evaluators.Iterator();
+			System.Collections.IEnumerator i = i_evaluators.GetEnumerator();
 			while (i.MoveNext())
 			{
-				if (!((com.db4o.QE)i.Current()).SupportsIndex())
+				if (!((com.db4o.QE)i.Current).SupportsIndex())
 				{
 					return false;
 				}

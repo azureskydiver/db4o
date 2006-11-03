@@ -70,14 +70,15 @@ namespace com.db4o
 		public com.db4o.TreeInt CollectIDs1(com.db4o.Transaction trans, com.db4o.TreeInt 
 			tree, com.db4o.YapReader reader)
 		{
-			if (reader != null)
+			if (reader == null)
 			{
-				int count = ElementCount(trans, reader);
-				for (int i = 0; i < count; i++)
-				{
-					tree = (com.db4o.TreeInt)com.db4o.foundation.Tree.Add(tree, new com.db4o.TreeInt(
-						reader.ReadInt()));
-				}
+				return tree;
+			}
+			int count = ElementCount(trans, reader);
+			for (int i = 0; i < count; i++)
+			{
+				tree = (com.db4o.TreeInt)com.db4o.foundation.Tree.Add(tree, new com.db4o.TreeInt(
+					reader.ReadInt()));
 			}
 			return tree;
 		}
@@ -106,7 +107,7 @@ namespace com.db4o
 			if (address > 0)
 			{
 				com.db4o.Transaction trans = a_bytes.GetTransaction();
-				com.db4o.YapWriter bytes = a_bytes.GetStream().ReadWriterByAddress(trans, address
+				com.db4o.YapReader bytes = a_bytes.GetStream().ReadWriterByAddress(trans, address
 					, length);
 				if (bytes != null)
 				{
@@ -121,15 +122,15 @@ namespace com.db4o
 			}
 		}
 
-		public virtual int ElementCount(com.db4o.Transaction a_trans, com.db4o.YapReader 
-			a_bytes)
+		public virtual int ElementCount(com.db4o.Transaction a_trans, com.db4o.SlotReader
+			 reader)
 		{
-			int typeOrLength = a_bytes.ReadInt();
+			int typeOrLength = reader.ReadInt();
 			if (typeOrLength >= 0)
 			{
 				return typeOrLength;
 			}
-			return a_bytes.ReadInt();
+			return reader.ReadInt();
 		}
 
 		public sealed override bool Equals(com.db4o.TypeHandler4 a_dataType)
@@ -193,6 +194,11 @@ namespace com.db4o
 		}
 
 		public virtual int OwnLength(object obj)
+		{
+			return OwnLength();
+		}
+
+		private int OwnLength()
 		{
 			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.INT_LENGTH * 2;
 		}
@@ -312,32 +318,58 @@ namespace com.db4o
 			 a_bytes, com.db4o.reflect.ReflectClass[] clazz)
 		{
 			int elements = a_bytes.ReadInt();
-			clazz[0] = i_handler.ClassReflector();
 			if (elements < 0)
 			{
-				if (elements != com.db4o.YapConst.IGNORE_ID)
-				{
-					bool primitive = false;
-					com.db4o.YapClass yc = a_trans.Stream().GetYapClass(-elements);
-					if (yc != null)
-					{
-						if (primitive)
-						{
-							clazz[0] = yc.PrimitiveClassReflector();
-						}
-						else
-						{
-							clazz[0] = yc.ClassReflector();
-						}
-					}
-				}
+				clazz[0] = ReflectClassFromElementsEntry(a_trans, elements);
 				elements = a_bytes.ReadInt();
+			}
+			else
+			{
+				clazz[0] = i_handler.ClassReflector();
 			}
 			if (com.db4o.Debug.ExceedsMaximumArrayEntries(elements, i_isPrimitive))
 			{
 				return 0;
 			}
 			return elements;
+		}
+
+		protected int MapElementsEntry(int orig, com.db4o.inside.mapping.IDMapping mapping
+			)
+		{
+			if (orig >= 0 || orig == com.db4o.YapConst.IGNORE_ID)
+			{
+				return orig;
+			}
+			bool primitive = !com.db4o.Deploy.csharp && orig < com.db4o.YapConst.PRIMITIVE;
+			if (primitive)
+			{
+				orig -= com.db4o.YapConst.PRIMITIVE;
+			}
+			int origID = -orig;
+			int mappedID = mapping.MappedID(origID);
+			int mapped = -mappedID;
+			if (primitive)
+			{
+				mapped += com.db4o.YapConst.PRIMITIVE;
+			}
+			return mapped;
+		}
+
+		private com.db4o.reflect.ReflectClass ReflectClassFromElementsEntry(com.db4o.Transaction
+			 a_trans, int elements)
+		{
+			if (elements != com.db4o.YapConst.IGNORE_ID)
+			{
+				bool primitive = false;
+				int classID = -elements;
+				com.db4o.YapClass yc = a_trans.Stream().GetYapClass(classID);
+				if (yc != null)
+				{
+					return (primitive ? yc.PrimitiveClassReflector() : yc.ClassReflector());
+				}
+			}
+			return i_handler.ClassReflector();
 		}
 
 		internal static object[] ToArray(com.db4o.YapStream a_stream, object a_object)
@@ -483,6 +515,45 @@ namespace com.db4o
 		public override bool SupportsIndex()
 		{
 			return false;
+		}
+
+		public sealed override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, 
+			com.db4o.ReaderPair readers, bool redirect)
+		{
+			if (!(i_handler.IsSecondClass() == com.db4o.YapConst.YES))
+			{
+				mf._array.DefragIDs(this, readers);
+			}
+			else
+			{
+				readers.IncrementOffset(OwnLength());
+			}
+		}
+
+		public virtual void Defrag1(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers)
+		{
+			int elements = ReadElementsDefrag(readers);
+			for (int i = 0; i < elements; i++)
+			{
+				i_handler.Defrag(mf, readers, true);
+			}
+		}
+
+		protected virtual int ReadElementsDefrag(com.db4o.ReaderPair readers)
+		{
+			int elements = readers.Source().ReadInt();
+			readers.Target().WriteInt(MapElementsEntry(elements, readers.Mapping()));
+			if (elements < 0)
+			{
+				elements = readers.ReadInt();
+			}
+			return elements;
+		}
+
+		public override void DefragIndexEntry(com.db4o.ReaderPair readers)
+		{
+			throw com.db4o.inside.Exceptions4.VirtualException();
 		}
 	}
 }

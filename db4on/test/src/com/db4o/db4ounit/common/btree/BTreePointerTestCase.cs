@@ -11,11 +11,24 @@ namespace com.db4o.db4ounit.common.btree
 		private readonly int[] keys = new int[] { -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 7, 9
 			 };
 
-		public override void SetUp()
+		protected override void Db4oSetupAfterStore()
 		{
-			base.SetUp();
+			base.Db4oSetupAfterStore();
 			Add(keys);
 			Commit();
+		}
+
+		public virtual void TestLastPointer()
+		{
+			com.db4o.inside.btree.BTreePointer pointer = _btree.LastPointer(Trans());
+			AssertPointerKey(9, pointer);
+		}
+
+		public virtual void TestPrevious()
+		{
+			com.db4o.inside.btree.BTreePointer pointer = GetPointerForKey(3);
+			com.db4o.inside.btree.BTreePointer previousPointer = pointer.Previous();
+			AssertPointerKey(2, previousPointer);
 		}
 
 		public virtual void TestNextOperatesInReadMode()
@@ -33,10 +46,10 @@ namespace com.db4o.db4ounit.common.btree
 		private com.db4o.inside.btree.BTreePointer GetPointerForKey(int key)
 		{
 			com.db4o.inside.btree.BTreeRange range = Search(key);
-			com.db4o.foundation.Iterator4 pointers = range.Pointers();
+			System.Collections.IEnumerator pointers = range.Pointers();
 			Db4oUnit.Assert.IsTrue(pointers.MoveNext());
 			com.db4o.inside.btree.BTreePointer pointer = (com.db4o.inside.btree.BTreePointer)
-				pointers.Current();
+				pointers.Current;
 			return pointer;
 		}
 
@@ -69,7 +82,7 @@ namespace com.db4o.db4ounit.common.btree
 		private com.db4o.inside.btree.BTree NewBTreeWithNoNodeCaching()
 		{
 			return com.db4o.db4ounit.common.btree.BTreeAssert.CreateIntKeyBTree(Stream(), 0, 
-				0);
+				0, BTREE_NODE_SIZE);
 		}
 	}
 }

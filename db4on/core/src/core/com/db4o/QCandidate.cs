@@ -101,7 +101,6 @@ namespace com.db4o
 			{
 				return false;
 			}
-			com.db4o.QCandidate candidate = null;
 			if (_yapField != null)
 			{
 				com.db4o.TypeHandler4 handler = _yapField.GetHandler();
@@ -114,10 +113,10 @@ namespace com.db4o
 					{
 						int offset = arrayBytes[0]._offset;
 						bool outerRes = true;
-						com.db4o.foundation.Iterator4 i = a_candidates.IterateConstraints();
+						System.Collections.IEnumerator i = a_candidates.IterateConstraints();
 						while (i.MoveNext())
 						{
-							com.db4o.QCon qcon = (com.db4o.QCon)i.Current();
+							com.db4o.QCon qcon = (com.db4o.QCon)i.Current;
 							com.db4o.QField qf = qcon.GetField();
 							if (qf == null || qf.i_name.Equals(_yapField.GetName()))
 							{
@@ -137,14 +136,14 @@ namespace com.db4o
 								candidates.Evaluate();
 								com.db4o.foundation.Tree[] pending = new com.db4o.foundation.Tree[1];
 								bool[] innerRes = { isNot };
-								candidates.Traverse(new _AnonymousInnerClass173(this, innerRes, isNot, pending));
+								candidates.Traverse(new _AnonymousInnerClass171(this, innerRes, isNot, pending));
 								if (isNot)
 								{
 									qcon.Not();
 								}
 								if (pending[0] != null)
 								{
-									pending[0].Traverse(new _AnonymousInnerClass242(this));
+									pending[0].Traverse(new _AnonymousInnerClass240(this));
 								}
 								if (!innerRes[0])
 								{
@@ -167,14 +166,11 @@ namespace com.db4o
 			{
 				return false;
 			}
+			_yapClass.FindOffset(_bytes, _yapField);
+			com.db4o.QCandidate candidate = ReadSubCandidate(a_candidates);
 			if (candidate == null)
 			{
-				_yapClass.FindOffset(_bytes, _yapField);
-				candidate = ReadSubCandidate(a_candidates);
-				if (candidate == null)
-				{
-					return false;
-				}
+				return false;
 			}
 			if (a_candidates.i_yapClass != null && a_candidates.i_yapClass.IsStrongTyped())
 			{
@@ -203,9 +199,9 @@ namespace com.db4o
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass173 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass171 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass173(QCandidate _enclosing, bool[] innerRes, bool isNot
+			public _AnonymousInnerClass171(QCandidate _enclosing, bool[] innerRes, bool isNot
 				, com.db4o.foundation.Tree[] pending)
 			{
 				this._enclosing = _enclosing;
@@ -223,13 +219,13 @@ namespace com.db4o
 				}
 				if (cand._pendingJoins != null)
 				{
-					cand._pendingJoins.Traverse(new _AnonymousInnerClass186(this, pending));
+					cand._pendingJoins.Traverse(new _AnonymousInnerClass184(this, pending));
 				}
 			}
 
-			private sealed class _AnonymousInnerClass186 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass184 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass186(_AnonymousInnerClass173 _enclosing, com.db4o.foundation.Tree[]
+				public _AnonymousInnerClass184(_AnonymousInnerClass171 _enclosing, com.db4o.foundation.Tree[]
 					 pending)
 				{
 					this._enclosing = _enclosing;
@@ -255,7 +251,7 @@ namespace com.db4o
 					}
 				}
 
-				private readonly _AnonymousInnerClass173 _enclosing;
+				private readonly _AnonymousInnerClass171 _enclosing;
 
 				private readonly com.db4o.foundation.Tree[] pending;
 			}
@@ -269,9 +265,9 @@ namespace com.db4o
 			private readonly com.db4o.foundation.Tree[] pending;
 		}
 
-		private sealed class _AnonymousInnerClass242 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass240 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass242(QCandidate _enclosing)
+			public _AnonymousInnerClass240(QCandidate _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -289,12 +285,12 @@ namespace com.db4o
 			_include = false;
 			if (_dependants != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(_dependants
+				System.Collections.IEnumerator i = new com.db4o.foundation.Iterator4Impl(_dependants
 					);
 				_dependants = null;
 				while (i.MoveNext())
 				{
-					((com.db4o.QCandidate)i.Current()).DoNotInclude();
+					((com.db4o.QCandidate)i.Current).DoNotInclude();
 				}
 			}
 		}
@@ -436,7 +432,7 @@ namespace com.db4o
 				}
 				if (yc != null)
 				{
-					if (_member != null && j4o.lang.Class.GetClassForObject(_member).IsArray())
+					if (_member != null && j4o.lang.JavaSystem.GetClassForObject(_member).IsArray())
 					{
 						com.db4o.TypeHandler4 ydt = (com.db4o.TypeHandler4)yc.PrepareComparison(a_constraint
 							);
@@ -490,7 +486,7 @@ namespace com.db4o
 					subCandidate = _yapField.i_handler.ReadSubCandidate(_marshallerFamily, _bytes, candidateCollection
 						, false);
 				}
-				catch (System.Exception e)
+				catch
 				{
 					return null;
 				}
@@ -627,7 +623,7 @@ namespace com.db4o
 					{
 						_member = _yapField.ReadQuery(GetTransaction(), _marshallerFamily, _bytes);
 					}
-					catch (com.db4o.CorruptionException ce)
+					catch (com.db4o.CorruptionException)
 					{
 						_member = null;
 					}

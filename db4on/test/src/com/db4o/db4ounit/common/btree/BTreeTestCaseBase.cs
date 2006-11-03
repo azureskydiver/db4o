@@ -2,17 +2,19 @@ namespace com.db4o.db4ounit.common.btree
 {
 	public abstract class BTreeTestCaseBase : Db4oUnit.Extensions.AbstractDb4oTestCase
 	{
+		protected const int BTREE_NODE_SIZE = 4;
+
 		protected com.db4o.inside.btree.BTree _btree;
 
-		public override void SetUp()
+		protected override void Db4oSetupAfterStore()
 		{
-			base.SetUp();
 			_btree = NewBTree();
 		}
 
 		protected virtual com.db4o.inside.btree.BTree NewBTree()
 		{
-			return com.db4o.db4ounit.common.btree.BTreeAssert.CreateIntKeyBTree(Stream(), 0);
+			return com.db4o.db4ounit.common.btree.BTreeAssert.CreateIntKeyBTree(Stream(), 0, 
+				BTREE_NODE_SIZE);
 		}
 
 		protected virtual com.db4o.inside.btree.BTreeRange Range(int lower, int upper)
@@ -112,6 +114,12 @@ namespace com.db4o.db4ounit.common.btree
 		{
 			com.db4o.db4ounit.common.btree.BTreeAssert.AssertSingleElement(trans, _btree, element
 				);
+		}
+
+		protected virtual void AssertPointerKey(int key, com.db4o.inside.btree.BTreePointer
+			 pointer)
+		{
+			Db4oUnit.Assert.AreEqual(key, pointer.Key());
 		}
 	}
 }

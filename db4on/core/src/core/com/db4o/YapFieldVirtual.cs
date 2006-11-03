@@ -154,7 +154,7 @@ namespace com.db4o
 		internal abstract void Marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
 			 a_bytes, bool a_migrating, bool a_new);
 
-		internal abstract void MarshallIgnore(com.db4o.YapWriter writer);
+		internal abstract void MarshallIgnore(com.db4o.YapReader writer);
 
 		public override void ReadVirtualAttribute(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader, com.db4o.YapObject a_yapObject)

@@ -29,7 +29,7 @@ namespace com.db4o
 		private readonly com.db4o.foundation.Collection4 _participants = new com.db4o.foundation.Collection4
 			();
 
-		internal Transaction(com.db4o.YapStream a_stream, com.db4o.Transaction a_parent)
+		public Transaction(com.db4o.YapStream a_stream, com.db4o.Transaction a_parent)
 		{
 			i_stream = a_stream;
 			i_file = (a_stream is com.db4o.YapFile) ? (com.db4o.YapFile)a_stream : null;
@@ -53,7 +53,7 @@ namespace com.db4o
 				);
 		}
 
-		private void AppendSlotChanges(com.db4o.YapWriter writer)
+		private void AppendSlotChanges(com.db4o.YapReader writer)
 		{
 			if (i_parentTransaction != null)
 			{
@@ -65,7 +65,7 @@ namespace com.db4o
 
 		private sealed class _AnonymousInnerClass72 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass72(Transaction _enclosing, com.db4o.YapWriter writer)
+			public _AnonymousInnerClass72(Transaction _enclosing, com.db4o.YapReader writer)
 			{
 				this._enclosing = _enclosing;
 				this.writer = writer;
@@ -78,10 +78,10 @@ namespace com.db4o
 
 			private readonly Transaction _enclosing;
 
-			private readonly com.db4o.YapWriter writer;
+			private readonly com.db4o.YapReader writer;
 		}
 
-		internal virtual void BeginEndSet()
+		public virtual void BeginEndSet()
 		{
 			CheckSynchronization();
 			if (i_delete != null)
@@ -174,14 +174,14 @@ namespace com.db4o
 
 		private void DisposeParticipants()
 		{
-			com.db4o.foundation.Iterator4 iterator = _participants.Iterator();
+			System.Collections.IEnumerator iterator = _participants.GetEnumerator();
 			while (iterator.MoveNext())
 			{
-				((com.db4o.TransactionParticipant)iterator.Current()).Dispose(this);
+				((com.db4o.TransactionParticipant)iterator.Current).Dispose(this);
 			}
 		}
 
-		internal virtual void Close(bool a_rollbackOnClose)
+		public virtual void Close(bool a_rollbackOnClose)
 		{
 			try
 			{
@@ -262,11 +262,11 @@ namespace com.db4o
 			}
 			if (i_dirtyFieldIndexes != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_dirtyFieldIndexes
+				System.Collections.IEnumerator i = new com.db4o.foundation.Iterator4Impl(i_dirtyFieldIndexes
 					);
 				while (i.MoveNext())
 				{
-					((com.db4o.inside.ix.IndexTransaction)i.Current()).Commit();
+					((com.db4o.inside.ix.IndexTransaction)i.Current).Commit();
 				}
 			}
 		}
@@ -277,10 +277,10 @@ namespace com.db4o
 			{
 				i_parentTransaction.Commit5Participants();
 			}
-			com.db4o.foundation.Iterator4 iterator = _participants.Iterator();
+			System.Collections.IEnumerator iterator = _participants.GetEnumerator();
 			while (iterator.MoveNext())
 			{
-				((com.db4o.TransactionParticipant)iterator.Current()).Commit(this);
+				((com.db4o.TransactionParticipant)iterator.Current).Commit(this);
 			}
 		}
 
@@ -319,16 +319,16 @@ namespace com.db4o
 			ClearAll();
 		}
 
-		internal virtual void CommitTransactionListeners()
+		protected virtual void CommitTransactionListeners()
 		{
 			CheckSynchronization();
 			if (i_transactionListeners != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_transactionListeners
+				System.Collections.IEnumerator i = new com.db4o.foundation.Iterator4Impl(i_transactionListeners
 					);
 				while (i.MoveNext())
 				{
-					((com.db4o.TransactionListener)i.Current()).PreCommit();
+					((com.db4o.TransactionListener)i.Current).PreCommit();
 				}
 				i_transactionListeners = null;
 			}
@@ -371,7 +371,7 @@ namespace com.db4o
 			private readonly int[] slotSetPointerCount;
 		}
 
-		internal virtual void Delete(com.db4o.YapObject a_yo, int a_cascade)
+		public virtual void Delete(com.db4o.YapObject a_yo, int a_cascade)
 		{
 			CheckSynchronization();
 			int id = a_yo.GetID();
@@ -390,7 +390,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void DontDelete(int classID, int a_id)
+		public virtual void DontDelete(int classID, int a_id)
 		{
 			CheckSynchronization();
 			com.db4o.DeleteInfo info = (com.db4o.DeleteInfo)com.db4o.TreeInt.Find(i_delete, a_id
@@ -533,7 +533,7 @@ namespace com.db4o
 			return new com.db4o.inside.slots.Slot(address, length);
 		}
 
-		internal virtual bool IsDeleted(int a_id)
+		public virtual bool IsDeleted(int a_id)
 		{
 			CheckSynchronization();
 			com.db4o.inside.slots.SlotChange slot = FindSlotChange(a_id);
@@ -548,7 +548,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual object[] ObjectAndYapObjectBySignature(long a_uuid, byte[] a_signature
+		public virtual object[] ObjectAndYapObjectBySignature(long a_uuid, byte[] a_signature
 			)
 		{
 			CheckSynchronization();
@@ -563,7 +563,7 @@ namespace com.db4o
 			return (com.db4o.inside.slots.SlotChange)slot.DuplicateOrThis();
 		}
 
-		internal virtual com.db4o.reflect.Reflector Reflector()
+		public virtual com.db4o.reflect.Reflector Reflector()
 		{
 			return Stream().Reflector();
 		}
@@ -585,13 +585,13 @@ namespace com.db4o
 		{
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass509(this));
+				_slotChanges.Traverse(new _AnonymousInnerClass512(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass509 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass512 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass509(Transaction _enclosing)
+			public _AnonymousInnerClass512(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -608,34 +608,34 @@ namespace com.db4o
 		{
 			if (i_dirtyFieldIndexes != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_dirtyFieldIndexes
+				System.Collections.IEnumerator i = new com.db4o.foundation.Iterator4Impl(i_dirtyFieldIndexes
 					);
 				while (i.MoveNext())
 				{
-					((com.db4o.inside.ix.IndexTransaction)i.Current()).Rollback();
+					((com.db4o.inside.ix.IndexTransaction)i.Current).Rollback();
 				}
 			}
 		}
 
 		private void RollbackParticipants()
 		{
-			com.db4o.foundation.Iterator4 iterator = _participants.Iterator();
+			System.Collections.IEnumerator iterator = _participants.GetEnumerator();
 			while (iterator.MoveNext())
 			{
-				((com.db4o.TransactionParticipant)iterator.Current()).Rollback(this);
+				((com.db4o.TransactionParticipant)iterator.Current).Rollback(this);
 			}
 		}
 
-		internal virtual void RollBackTransactionListeners()
+		protected virtual void RollBackTransactionListeners()
 		{
 			CheckSynchronization();
 			if (i_transactionListeners != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_transactionListeners
+				System.Collections.IEnumerator i = new com.db4o.foundation.Iterator4Impl(i_transactionListeners
 					);
 				while (i.MoveNext())
 				{
-					((com.db4o.TransactionListener)i.Current()).PostRollback();
+					((com.db4o.TransactionListener)i.Current).PostRollback();
 				}
 				i_transactionListeners = null;
 			}
@@ -792,15 +792,15 @@ namespace com.db4o
 			}
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass707(this));
+				_slotChanges.Traverse(new _AnonymousInnerClass714(this));
 				ret = true;
 			}
 			return ret;
 		}
 
-		private sealed class _AnonymousInnerClass707 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass714 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass707(Transaction _enclosing)
+			public _AnonymousInnerClass714(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -813,8 +813,8 @@ namespace com.db4o
 			private readonly Transaction _enclosing;
 		}
 
-		internal virtual void WriteUpdateDeleteMembers(int a_id, com.db4o.YapClass a_yc, 
-			int a_type, int a_cascade)
+		public virtual void WriteUpdateDeleteMembers(int a_id, com.db4o.YapClass a_yc, int
+			 a_type, int a_cascade)
 		{
 			CheckSynchronization();
 			if (com.db4o.foundation.Tree.Find(i_writtenUpdateDeletedMembers, new com.db4o.TreeInt
@@ -866,6 +866,25 @@ namespace com.db4o
 			{
 				_participants.Add(participant);
 			}
+		}
+
+		public static com.db4o.Transaction ReadInterruptedTransaction(com.db4o.YapFile file
+			, com.db4o.YapReader reader)
+		{
+			int transactionID1 = reader.ReadInt();
+			int transactionID2 = reader.ReadInt();
+			if ((transactionID1 > 0) && (transactionID1 == transactionID2))
+			{
+				com.db4o.Transaction transaction = file.NewTransaction(null);
+				transaction.SetAddress(transactionID1);
+				return transaction;
+			}
+			return null;
+		}
+
+		public virtual com.db4o.Transaction ParentTransaction()
+		{
+			return i_parentTransaction;
 		}
 	}
 }

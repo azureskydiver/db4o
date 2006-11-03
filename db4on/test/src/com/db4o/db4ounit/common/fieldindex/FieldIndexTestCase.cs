@@ -9,6 +9,11 @@ namespace com.db4o.db4ounit.common.fieldindex
 			new com.db4o.db4ounit.common.fieldindex.FieldIndexTestCase().RunSolo();
 		}
 
+		protected override void Configure(com.db4o.config.Configuration config)
+		{
+			base.Configure(config);
+		}
+
 		protected override void Store()
 		{
 			StoreItems(FOOS);
@@ -55,7 +60,7 @@ namespace com.db4o.db4ounit.common.fieldindex
 						.Occurences(values, values[i]));
 					com.db4o.inside.btree.BTreeRange range = FieldIndexKeySearch(Trans(), btree, values
 						[i]);
-					com.db4o.db4ounit.common.btree.BTreeAssert.TraverseKeys(range, new _AnonymousInnerClass58
+					com.db4o.db4ounit.common.btree.BTreeAssert.TraverseKeys(range, new _AnonymousInnerClass63
 						(this, expectingVisitor));
 					expectingVisitor.AssertExpectations();
 					lastValue = values[i];
@@ -63,9 +68,9 @@ namespace com.db4o.db4ounit.common.fieldindex
 			}
 		}
 
-		private sealed class _AnonymousInnerClass58 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass63 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass58(FieldIndexTestCase _enclosing, com.db4o.db4ounit.common.btree.ExpectingVisitor
+			public _AnonymousInnerClass63(FieldIndexTestCase _enclosing, com.db4o.db4ounit.common.btree.ExpectingVisitor
 				 expectingVisitor)
 			{
 				this._enclosing = _enclosing;

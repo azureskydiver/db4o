@@ -86,31 +86,27 @@ namespace com.db4o
 
 		public abstract int OwnLength();
 
-		public virtual void Read(com.db4o.Transaction a_trans)
+		public virtual void Read(com.db4o.Transaction trans)
 		{
 			try
 			{
 				if (BeginProcessing())
 				{
-					com.db4o.YapReader reader = a_trans.Stream().ReadReaderByID(a_trans, GetID());
+					com.db4o.YapReader reader = trans.Stream().ReadReaderByID(trans, GetID());
 					if (reader != null)
 					{
-						ReadThis(a_trans, reader);
+						ReadThis(trans, reader);
 						SetStateOnRead(reader);
 					}
 					EndProcessing();
 				}
-			}
-			catch (com.db4o.LongJumpOutException ljoe)
-			{
-				throw ljoe;
 			}
 			catch (System.Exception t)
 			{
 			}
 		}
 
-		public abstract void ReadThis(com.db4o.Transaction a_trans, com.db4o.YapReader a_reader
+		public abstract void ReadThis(com.db4o.Transaction trans, com.db4o.YapReader reader
 			);
 
 		public virtual void SetID(int a_id)
@@ -147,28 +143,28 @@ namespace com.db4o
 			}
 		}
 
-		public void Write(com.db4o.Transaction a_trans)
+		public void Write(com.db4o.Transaction trans)
 		{
 			if (!WriteObjectBegin())
 			{
 				return;
 			}
-			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.Stream();
+			com.db4o.YapFile stream = (com.db4o.YapFile)trans.Stream();
 			int address = 0;
 			int length = OwnLength();
 			com.db4o.YapReader writer = new com.db4o.YapReader(length);
 			if (IsNew())
 			{
-				com.db4o.inside.slots.Pointer4 ptr = stream.NewSlot(a_trans, length);
+				com.db4o.inside.slots.Pointer4 ptr = stream.NewSlot(trans, length);
 				SetID(ptr._id);
 				address = ptr._address;
 			}
 			else
 			{
 				address = stream.GetSlot(length);
-				a_trans.SlotFreeOnRollbackCommitSetPointer(i_id, address, length);
+				trans.SlotFreeOnRollbackCommitSetPointer(i_id, address, length);
 			}
-			WriteThis(a_trans, writer);
+			WriteThis(trans, writer);
 			writer.WriteEncrypt(stream, address, 0);
 			if (IsActive())
 			{
@@ -186,14 +182,14 @@ namespace com.db4o
 			return false;
 		}
 
-		public virtual void WriteOwnID(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+		public virtual void WriteOwnID(com.db4o.Transaction trans, com.db4o.YapReader writer
 			)
 		{
 			Write(trans);
-			a_writer.WriteInt(GetID());
+			writer.WriteInt(GetID());
 		}
 
-		public abstract void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+		public abstract void WriteThis(com.db4o.Transaction trans, com.db4o.YapReader writer
 			);
 	}
 }

@@ -1,6 +1,6 @@
 namespace com.db4o.inside.btree
 {
-	public abstract class AbstractBTreeRangeIterator : com.db4o.foundation.Iterator4
+	public abstract class AbstractBTreeRangeIterator : System.Collections.IEnumerator
 	{
 		private readonly com.db4o.inside.btree.BTreeRangeSingle _range;
 
@@ -26,6 +26,11 @@ namespace com.db4o.inside.btree
 			return true;
 		}
 
+		public virtual void Reset()
+		{
+			_cursor = _range.First();
+		}
+
 		protected virtual com.db4o.inside.btree.BTreePointer CurrentPointer()
 		{
 			if (null == _current)
@@ -48,6 +53,9 @@ namespace com.db4o.inside.btree
 			return _range.End().Equals(cursor);
 		}
 
-		public abstract object Current();
+		public abstract object Current
+		{
+			get;
+		}
 	}
 }

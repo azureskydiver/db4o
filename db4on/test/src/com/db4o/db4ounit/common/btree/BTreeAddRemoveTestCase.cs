@@ -2,6 +2,23 @@ namespace com.db4o.db4ounit.common.btree
 {
 	public class BTreeAddRemoveTestCase : com.db4o.db4ounit.common.btree.BTreeTestCaseBase
 	{
+		public virtual void TestFirstPointerMultiTransactional()
+		{
+			int count = BTREE_NODE_SIZE + 1;
+			for (int i = 0; i < count; i++)
+			{
+				Add(count + i + 1);
+			}
+			int smallest = count + 1;
+			com.db4o.Transaction trans = NewTransaction();
+			for (int i = 0; i < count; i++)
+			{
+				Add(trans, i);
+			}
+			com.db4o.inside.btree.BTreePointer firstPointer = _btree.FirstPointer(Trans());
+			AssertPointerKey(smallest, firstPointer);
+		}
+
 		public virtual void TestSingleRemoveAdd()
 		{
 			int element = 1;

@@ -28,7 +28,7 @@ namespace com.db4o
 
 		private static com.db4o.Sessions i_sessions = new com.db4o.Sessions();
 
-		internal static readonly object Lock = Initialize();
+		private static readonly object initializer = Initialize();
 
 		private static object Initialize()
 		{
@@ -40,9 +40,9 @@ namespace com.db4o
 		/// 	</summary>
 		/// <remarks>prints the version name of this db4o version to <code>System.out</code>.
 		/// 	</remarks>
-		public static void Main(string args)
+		public static void Main(string[] args)
 		{
-			System.Console.Out.WriteLine(Version());
+			j4o.lang.JavaSystem.Out.WriteLine(Version());
 		}
 
 		/// <summary>
@@ -112,9 +112,16 @@ namespace com.db4o
 		public static com.db4o.ObjectContainer OpenClient(string hostName, int port, string
 			 user, string password)
 		{
-			lock (com.db4o.Db4o.Lock)
+			return OpenClient(com.db4o.Db4o.CloneConfiguration(), hostName, port, user, password
+				);
+		}
+
+		public static com.db4o.ObjectContainer OpenClient(com.db4o.config.Configuration config
+			, string hostName, int port, string user, string password)
+		{
+			lock (com.db4o.inside.Global4.Lock)
 			{
-				return new com.db4o.YapClient(com.db4o.Db4o.CloneConfiguration(), new com.db4o.foundation.network.YapSocketReal
+				return new com.db4o.cs.YapClient(config, new com.db4o.foundation.network.YapSocketReal
 					(hostName, port), user, password, true);
 			}
 		}
@@ -153,7 +160,7 @@ namespace com.db4o
 		public static com.db4o.ObjectContainer OpenFile(com.db4o.config.Configuration config
 			, string databaseFileName)
 		{
-			lock (com.db4o.Db4o.Lock)
+			lock (com.db4o.inside.Global4.Lock)
 			{
 				return i_sessions.Open(config, databaseFileName);
 			}
@@ -162,7 +169,7 @@ namespace com.db4o
 		protected static com.db4o.ObjectContainer OpenMemoryFile1(com.db4o.config.Configuration
 			 config, com.db4o.ext.MemoryFile memoryFile)
 		{
-			lock (com.db4o.Db4o.Lock)
+			lock (com.db4o.inside.Global4.Lock)
 			{
 				if (memoryFile == null)
 				{
@@ -178,11 +185,8 @@ namespace com.db4o
 					com.db4o.Messages.LogErr(i_config, 4, "Memory File", t);
 					return null;
 				}
-				if (oc != null)
-				{
-					com.db4o.Platform4.PostOpen(oc);
-					com.db4o.Messages.LogMsg(i_config, 5, "Memory File");
-				}
+				com.db4o.Platform4.PostOpen(oc);
+				com.db4o.Messages.LogMsg(i_config, 5, "Memory File");
 				return oc;
 			}
 		}
@@ -218,16 +222,22 @@ namespace com.db4o
 		/// 	</seealso>
 		public static com.db4o.ObjectServer OpenServer(string databaseFileName, int port)
 		{
-			lock (com.db4o.Db4o.Lock)
+			return OpenServer(CloneConfiguration(), databaseFileName, port);
+		}
+
+		public static com.db4o.ObjectServer OpenServer(com.db4o.config.Configuration config
+			, string databaseFileName, int port)
+		{
+			lock (com.db4o.inside.Global4.Lock)
 			{
-				com.db4o.YapFile stream = (com.db4o.YapFile)OpenFile(databaseFileName);
+				com.db4o.YapFile stream = (com.db4o.YapFile)OpenFile(config, databaseFileName);
 				if (stream == null)
 				{
 					return null;
 				}
 				lock (stream.Lock())
 				{
-					return new com.db4o.YapServer(stream, port);
+					return new com.db4o.cs.YapServer(stream, port);
 				}
 			}
 		}

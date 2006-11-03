@@ -1,7 +1,9 @@
 namespace com.db4o.db4ounit.common.btree
 {
-	public class BTreeSearchTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase
+	public class BTreeSearchTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase, Db4oUnit.Extensions.Fixtures.OptOutDefragSolo
 	{
+		protected const int BTREE_NODE_SIZE = 4;
+
 		public static void Main(string[] arguments)
 		{
 			new com.db4o.db4ounit.common.btree.BTreeSearchTestCase().RunSolo();
@@ -19,7 +21,7 @@ namespace com.db4o.db4ounit.common.btree
 		private void CycleIntKeys(int[] values)
 		{
 			com.db4o.inside.btree.BTree btree = com.db4o.db4ounit.common.btree.BTreeAssert.CreateIntKeyBTree
-				(Stream(), 0);
+				(Stream(), 0, BTREE_NODE_SIZE);
 			for (int i = 0; i < 5; i++)
 			{
 				btree = CycleIntKeys(btree, values);
@@ -39,7 +41,7 @@ namespace com.db4o.db4ounit.common.btree
 			Stream().Commit();
 			Reopen();
 			btree = com.db4o.db4ounit.common.btree.BTreeAssert.CreateIntKeyBTree(Stream(), id
-				);
+				, BTREE_NODE_SIZE);
 			ExpectKeysSearch(Trans(), btree, values);
 			for (int i = 0; i < values.Length; i++)
 			{

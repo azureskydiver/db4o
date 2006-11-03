@@ -1,6 +1,6 @@
 namespace Db4oUnit.Extensions.Fixtures
 {
-	public class Db4oInMemory : Db4oUnit.Extensions.Fixtures.AbstractDb4oFixture
+	public class Db4oInMemory : Db4oUnit.Extensions.Fixtures.AbstractSoloDb4oFixture
 	{
 		public Db4oInMemory() : base(new Db4oUnit.Extensions.Fixtures.IndependentConfigurationSource
 			())

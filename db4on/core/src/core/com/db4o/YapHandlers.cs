@@ -52,7 +52,7 @@ namespace com.db4o
 
 		public readonly com.db4o.inside.diagnostic.DiagnosticProcessor _diagnosticProcessor;
 
-		internal bool i_encrypt;
+		public bool i_encrypt;
 
 		internal byte[] i_encryptor;
 
@@ -74,7 +74,7 @@ namespace com.db4o
 
 		internal com.db4o.reflect.ReflectClass ICLASS_OBJECTCONTAINER;
 
-		internal com.db4o.reflect.ReflectClass ICLASS_STATICCLASS;
+		public com.db4o.reflect.ReflectClass ICLASS_STATICCLASS;
 
 		internal com.db4o.reflect.ReflectClass ICLASS_STRING;
 
@@ -398,8 +398,8 @@ namespace com.db4o
 			ICLASS_OBJECTCONTAINER = reflector.ForClass(com.db4o.YapConst.CLASS_OBJECTCONTAINER
 				);
 			ICLASS_STATICCLASS = reflector.ForClass(com.db4o.YapConst.CLASS_STATICCLASS);
-			ICLASS_STRING = reflector.ForClass(j4o.lang.Class.GetClassForType(typeof(string))
-				);
+			ICLASS_STRING = reflector.ForClass(j4o.lang.JavaSystem.GetClassForType(typeof(string)
+				));
 			ICLASS_TRANSIENTCLASS = reflector.ForClass(com.db4o.YapConst.CLASS_TRANSIENTCLASS
 				);
 			com.db4o.Platform4.RegisterCollections(reflector);

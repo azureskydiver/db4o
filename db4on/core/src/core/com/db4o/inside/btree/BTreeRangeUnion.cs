@@ -64,23 +64,23 @@ namespace com.db4o.inside.btree
 
 		public virtual com.db4o.inside.btree.BTreeRange ExtendToFirst()
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual com.db4o.inside.btree.BTreeRange ExtendToLast()
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual com.db4o.inside.btree.BTreeRange ExtendToLastOf(com.db4o.inside.btree.BTreeRange
 			 upperRange)
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual com.db4o.inside.btree.BTreeRange Greater()
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual com.db4o.inside.btree.BTreeRange Intersect(com.db4o.inside.btree.BTreeRange
@@ -94,7 +94,7 @@ namespace com.db4o.inside.btree
 				range);
 		}
 
-		public virtual com.db4o.foundation.Iterator4 Pointers()
+		public virtual System.Collections.IEnumerator Pointers()
 		{
 			return com.db4o.foundation.Iterators.Concat(com.db4o.foundation.Iterators.Map(_ranges
 				, new _AnonymousInnerClass76(this)));
@@ -115,7 +115,7 @@ namespace com.db4o.inside.btree
 			private readonly BTreeRangeUnion _enclosing;
 		}
 
-		public virtual com.db4o.foundation.Iterator4 Keys()
+		public virtual System.Collections.IEnumerator Keys()
 		{
 			return com.db4o.foundation.Iterators.Concat(com.db4o.foundation.Iterators.Map(_ranges
 				, new _AnonymousInnerClass84(this)));
@@ -148,7 +148,7 @@ namespace com.db4o.inside.btree
 
 		public virtual com.db4o.inside.btree.BTreeRange Smaller()
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual com.db4o.inside.btree.BTreeRange Union(com.db4o.inside.btree.BTreeRange
@@ -162,9 +162,14 @@ namespace com.db4o.inside.btree
 				);
 		}
 
-		public virtual com.db4o.foundation.Iterator4 Ranges()
+		public virtual System.Collections.IEnumerator Ranges()
 		{
 			return new com.db4o.foundation.ArrayIterator4(_ranges);
+		}
+
+		public virtual com.db4o.inside.btree.BTreePointer LastPointer()
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

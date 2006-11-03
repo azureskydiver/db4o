@@ -45,7 +45,7 @@ namespace com.db4o
 			return null;
 		}
 
-		public virtual bool ReadArray(object array, com.db4o.YapWriter reader)
+		public virtual bool ReadArray(object array, com.db4o.YapReader reader)
 		{
 			return false;
 		}
@@ -56,7 +56,7 @@ namespace com.db4o
 			return Read(mf, a_writer, true);
 		}
 
-		public virtual bool WriteArray(object array, com.db4o.YapWriter reader)
+		public virtual bool WriteArray(object array, com.db4o.YapReader reader)
 		{
 			return false;
 		}
@@ -79,15 +79,15 @@ namespace com.db4o
 		public abstract void WriteIndexEntry(com.db4o.YapReader a_writer, object a_object
 			);
 
-		public void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
-			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
-		{
-			int linkLength = LinkLength();
-			source._offset += linkLength;
-			target._offset += linkLength;
-		}
+		public abstract void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers, bool redirect);
 
 		public abstract object Current();
+
+		public abstract void DefragIndexEntry(com.db4o.ReaderPair arg1);
+
+		public abstract void CalculateLengths(com.db4o.Transaction arg1, com.db4o.inside.marshall.ObjectHeaderAttributes
+			 arg2, bool arg3, object arg4, bool arg5);
 
 		public abstract bool CanHold(com.db4o.reflect.ReflectClass arg1);
 
@@ -96,43 +96,40 @@ namespace com.db4o
 
 		public abstract com.db4o.reflect.ReflectClass ClassReflector();
 
+		public abstract bool Equals(com.db4o.TypeHandler4 arg1);
+
 		public abstract int GetID();
 
-		public abstract bool Equals(com.db4o.TypeHandler4 arg1);
+		public abstract int GetTypeID();
+
+		public abstract com.db4o.YapClass GetYapClass(com.db4o.YapStream arg1);
+
+		public abstract object IndexEntryToObject(com.db4o.Transaction arg1, object arg2);
 
 		public abstract bool IndexNullHandling();
 
 		public abstract int IsSecondClass();
-
-		public abstract void CalculateLengths(com.db4o.Transaction arg1, com.db4o.inside.marshall.ObjectHeaderAttributes
-			 arg2, bool arg3, object arg4, bool arg5);
-
-		public abstract object IndexEntryToObject(com.db4o.Transaction arg1, object arg2);
 
 		public abstract void PrepareComparison(com.db4o.Transaction arg1, object arg2);
 
 		public abstract object Read(com.db4o.inside.marshall.MarshallerFamily arg1, com.db4o.YapWriter
 			 arg2, bool arg3);
 
+		public abstract com.db4o.TypeHandler4 ReadArrayHandler(com.db4o.Transaction arg1, 
+			com.db4o.inside.marshall.MarshallerFamily arg2, com.db4o.YapReader[] arg3);
+
+		public abstract void ReadCandidates(com.db4o.inside.marshall.MarshallerFamily arg1
+			, com.db4o.YapReader arg2, com.db4o.QCandidates arg3);
+
 		public abstract object ReadQuery(com.db4o.Transaction arg1, com.db4o.inside.marshall.MarshallerFamily
 			 arg2, bool arg3, com.db4o.YapReader arg4, bool arg5);
+
+		public abstract com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily
+			 arg1, com.db4o.YapReader arg2, com.db4o.QCandidates arg3, bool arg4);
 
 		public abstract bool SupportsIndex();
 
 		public abstract object WriteNew(com.db4o.inside.marshall.MarshallerFamily arg1, object
 			 arg2, bool arg3, com.db4o.YapWriter arg4, bool arg5, bool arg6);
-
-		public abstract int GetTypeID();
-
-		public abstract com.db4o.YapClass GetYapClass(com.db4o.YapStream arg1);
-
-		public abstract void ReadCandidates(com.db4o.inside.marshall.MarshallerFamily arg1
-			, com.db4o.YapReader arg2, com.db4o.QCandidates arg3);
-
-		public abstract com.db4o.TypeHandler4 ReadArrayHandler(com.db4o.Transaction arg1, 
-			com.db4o.inside.marshall.MarshallerFamily arg2, com.db4o.YapReader[] arg3);
-
-		public abstract com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily
-			 arg1, com.db4o.YapReader arg2, com.db4o.QCandidates arg3, bool arg4);
 	}
 }

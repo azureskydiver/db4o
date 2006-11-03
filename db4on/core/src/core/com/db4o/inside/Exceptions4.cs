@@ -25,12 +25,13 @@ namespace com.db4o.inside
 			throw new com.db4o.ext.Db4oException(com.db4o.Messages.Get(code, msg));
 		}
 
+		/// <deprecated>Use com.db4o.foundation.NotSupportedException instead</deprecated>
 		public static void NotSupported()
 		{
 			ThrowRuntimeException(53);
 		}
 
-		public static void CatchAll(System.Exception exc)
+		public static void CatchAllExceptDb4oException(System.Exception exc)
 		{
 			if (exc is com.db4o.ext.Db4oException)
 			{
@@ -38,19 +39,19 @@ namespace com.db4o.inside
 			}
 		}
 
-		public static j4o.lang.RuntimeException ShouldNeverBeCalled()
+		public static System.Exception ShouldNeverBeCalled()
 		{
-			throw new j4o.lang.RuntimeException();
+			throw new System.Exception();
 		}
 
-		public static j4o.lang.RuntimeException ShouldNeverHappen()
+		public static System.Exception ShouldNeverHappen()
 		{
-			throw new j4o.lang.RuntimeException();
+			throw new System.Exception();
 		}
 
-		public static j4o.lang.RuntimeException VirtualException()
+		public static System.Exception VirtualException()
 		{
-			throw new j4o.lang.RuntimeException();
+			throw new System.Exception();
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace com.db4o
 			(null);
 
 		private static readonly com.db4o.foundation.KeySpec BTREE_NODE_SIZE = new com.db4o.foundation.KeySpec
-			(100);
+			(4096);
 
 		private static readonly com.db4o.foundation.KeySpec BTREE_CACHE_HEIGHT = new com.db4o.foundation.KeySpec
 			(1);
@@ -157,7 +157,7 @@ namespace com.db4o
 
 		private com.db4o.YapStream i_stream;
 
-		internal int ActivationDepth()
+		public int ActivationDepth()
 		{
 			return _config.GetAsInt(ACTIVATION_DEPTH);
 		}
@@ -285,7 +285,7 @@ namespace com.db4o
 		internal System.IO.TextWriter ErrStream()
 		{
 			System.IO.TextWriter outStream = OutStreamOrNull();
-			return outStream == null ? System.Console.Error : outStream;
+			return outStream == null ? j4o.lang.JavaSystem.Err : outStream;
 		}
 
 		public void ExceptionsOnNotStorable(bool flag)
@@ -353,7 +353,7 @@ namespace com.db4o
 			_config.Put(MESSAGE_LEVEL, level);
 			if (OutStream() == null)
 			{
-				SetOut(System.Console.Out);
+				SetOut(j4o.lang.JavaSystem.Out);
 			}
 		}
 
@@ -401,7 +401,7 @@ namespace com.db4o
 		internal System.IO.TextWriter OutStream()
 		{
 			System.IO.TextWriter outStream = OutStreamOrNull();
-			return outStream == null ? System.Console.Out : outStream;
+			return outStream == null ? j4o.lang.JavaSystem.Out : outStream;
 		}
 
 		public void Password(string pw)
@@ -436,7 +436,7 @@ namespace com.db4o
 			}
 			if (!reflector.HasTransaction() && i_stream != null)
 			{
-				reflector.SetTransaction(i_stream.i_systemTrans);
+				reflector.SetTransaction(i_stream.GetSystemTransaction());
 			}
 			return reflector;
 		}
@@ -671,10 +671,10 @@ namespace com.db4o
 			{
 				return runtimeType;
 			}
-			com.db4o.foundation.Iterator4 i = configuredAliases.Iterator();
+			System.Collections.IEnumerator i = configuredAliases.GetEnumerator();
 			while (i.MoveNext())
 			{
-				string resolved = ((com.db4o.config.Alias)i.Current()).Resolve(runtimeType);
+				string resolved = ((com.db4o.config.Alias)i.Current).Resolve(runtimeType);
 				if (null != resolved)
 				{
 					return resolved;
@@ -786,12 +786,12 @@ namespace com.db4o
 			return _config.GetAsBoolean(ENCRYPT);
 		}
 
-		internal com.db4o.foundation.Hashtable4 ExceptionalClasses()
+		public com.db4o.foundation.Hashtable4 ExceptionalClasses()
 		{
 			return (com.db4o.foundation.Hashtable4)_config.Get(EXCEPTIONAL_CLASSES);
 		}
 
-		internal bool ExceptionsOnNotStorable()
+		public bool ExceptionsOnNotStorable()
 		{
 			return _config.GetAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
 		}
@@ -821,7 +821,7 @@ namespace com.db4o
 			return _config.GetAsBoolean(INTERN_STRINGS);
 		}
 
-		internal void IsServer(bool flag)
+		public void IsServer(bool flag)
 		{
 			_config.Put(IS_SERVER, flag);
 		}
@@ -841,7 +841,7 @@ namespace com.db4o
 			return _config.GetAsInt(MESSAGE_LEVEL);
 		}
 
-		internal com.db4o.messaging.MessageRecipient MessageRecipient()
+		public com.db4o.messaging.MessageRecipient MessageRecipient()
 		{
 			return (com.db4o.messaging.MessageRecipient)_config.Get(MESSAGE_RECIPIENT);
 		}
@@ -896,7 +896,7 @@ namespace com.db4o
 			return _config.GetAsInt(RESERVED_STORAGE_SPACE);
 		}
 
-		internal bool SingleThreadedClient()
+		public bool SingleThreadedClient()
 		{
 			return _config.GetAsBoolean(SINGLE_THREADED_CLIENT);
 		}
@@ -906,17 +906,17 @@ namespace com.db4o
 			return _config.GetAsBoolean(TEST_CONSTRUCTORS);
 		}
 
-		internal int TimeoutClientSocket()
+		public int TimeoutClientSocket()
 		{
 			return _config.GetAsInt(TIMEOUT_CLIENT_SOCKET);
 		}
 
-		internal int TimeoutPingClients()
+		public int TimeoutPingClients()
 		{
 			return _config.GetAsInt(TIMEOUT_PING_CLIENTS);
 		}
 
-		internal int TimeoutServerSocket()
+		public int TimeoutServerSocket()
 		{
 			return _config.GetAsInt(TIMEOUT_SERVER_SOCKET);
 		}

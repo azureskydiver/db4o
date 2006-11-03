@@ -25,16 +25,16 @@ namespace com.db4o.db4ounit.common.btree
 			(int[] keys)
 		{
 			return new com.db4o.db4ounit.common.btree.ExpectingVisitor(com.db4o.db4ounit.common.foundation.IntArrays4
-				.ToObjectArray(keys), true);
+				.ToObjectArray(keys), true, false);
 		}
 
 		public static void TraverseKeys(com.db4o.inside.btree.BTreeRange result, com.db4o.foundation.Visitor4
 			 visitor)
 		{
-			com.db4o.foundation.Iterator4 i = result.Keys();
+			System.Collections.IEnumerator i = result.Keys();
 			while (i.MoveNext())
 			{
-				visitor.Visit(i.Current());
+				visitor.Visit(i.Current);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace com.db4o.db4ounit.common.btree
 
 			public void Visit(object obj)
 			{
-				System.Console.Out.WriteLine(obj);
+				j4o.lang.JavaSystem.Out.WriteLine(obj);
 			}
 		}
 
@@ -104,17 +104,17 @@ namespace com.db4o.db4ounit.common.btree
 		}
 
 		public static com.db4o.inside.btree.BTree CreateIntKeyBTree(com.db4o.YapStream stream
-			, int id)
+			, int id, int nodeSize)
 		{
 			return new com.db4o.inside.btree.BTree(stream.GetSystemTransaction(), id, new com.db4o.YInt
-				(stream), null, 7, stream.ConfigImpl().BTreeCacheHeight());
+				(stream), null, nodeSize, stream.ConfigImpl().BTreeCacheHeight());
 		}
 
 		public static com.db4o.inside.btree.BTree CreateIntKeyBTree(com.db4o.YapStream stream
-			, int id, int treeCacheHeight)
+			, int id, int treeCacheHeight, int nodeSize)
 		{
 			return new com.db4o.inside.btree.BTree(stream.GetSystemTransaction(), id, new com.db4o.YInt
-				(stream), null, 7, treeCacheHeight);
+				(stream), null, nodeSize, treeCacheHeight);
 		}
 
 		public static void AssertSingleElement(com.db4o.Transaction trans, com.db4o.inside.btree.BTree

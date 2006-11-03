@@ -19,7 +19,7 @@ namespace com.db4o
 			{
 				((j4o.util.Date)a_to).SetTime(((j4o.util.Date)a_from).GetTime());
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 		}
@@ -60,7 +60,7 @@ namespace com.db4o
 			{
 				a_object = new j4o.util.Date(0);
 			}
-			WriteLong(((j4o.util.Date)a_object).GetTime(), a_bytes);
+			a_bytes.WriteLong(((j4o.util.Date)a_object).GetTime());
 		}
 
 		public override object Current1()

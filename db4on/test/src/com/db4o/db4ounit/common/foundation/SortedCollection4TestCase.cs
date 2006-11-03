@@ -28,6 +28,12 @@ namespace com.db4o.db4ounit.common.foundation
 			AssertCollection(new int[] { 1, 2, 3, 4, 6, 7 }, collection);
 		}
 
+		public virtual void TestToArrayOnEmptyCollection()
+		{
+			object[] array = new object[0];
+			Db4oUnit.Assert.AreSame(array, NewSortedCollection().ToArray(array));
+		}
+
 		public virtual void TestAddRemove()
 		{
 			com.db4o.foundation.SortedCollection4 collection = NewSortedCollection();
