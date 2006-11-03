@@ -8,18 +8,12 @@ package com.db4o.foundation;
  */
 public class Algorithms4 {
 	
-	public interface QuickSortable4 {
-		int size();
-		int compare(int leftIndex, int rightIndex);
-		void swap(int leftIndex, int rightIndex);
-	}
-	
 	public static void qsort(QuickSortable4 sortable) {
 		qsort(sortable, 0, sortable.size()-1);
 	}
 
-	private static void qsort(QuickSortable4 sortable, int from, int to) {
-		if (to-from<1) {
+	public static void qsort(QuickSortable4 sortable, int from, int to) {
+		if (to-from < 1) {
 			return;
 		}
 		int pivot = to;
