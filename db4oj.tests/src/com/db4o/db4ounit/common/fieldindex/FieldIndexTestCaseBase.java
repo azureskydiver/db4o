@@ -5,23 +5,25 @@ import com.db4o.config.*;
 import com.db4o.query.Query;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.OptOutCS;
 
-public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase {
+public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase
+		implements OptOutCS {
 
 	public FieldIndexTestCaseBase() {
 		super();
 	}
 
 	protected void configure(Configuration config) {
-		indexField(config,FieldIndexItem.class, "foo");
+		indexField(config, FieldIndexItem.class, "foo");
 	}
 
 	protected abstract void store();
-	
+
 	protected void storeItems(final int[] foos) {
 		for (int i = 0; i < foos.length; i++) {
 			store(new FieldIndexItem(foos[i]));
-	    }
+		}
 	}
 
 	protected Query createQuery(final int id) {
@@ -33,7 +35,7 @@ public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase {
 	protected Query createItemQuery() {
 		return createQuery(FieldIndexItem.class);
 	}
-	
+
 	protected Query createQuery(Class clazz) {
 		return createQuery(trans(), clazz);
 	}
