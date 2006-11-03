@@ -1,7 +1,8 @@
 ﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
-using j4o.lang;
+using System.Text;
+
 namespace com.db4o.test {
 
    public class BindFileSize {
@@ -12,7 +13,7 @@ namespace com.db4o.test {
       }
       
       public BindFileSize(int Length) : base() {
-         StringBuffer sb1 = new StringBuffer();
+         StringBuilder sb1 = new StringBuilder();
          for (int i1 = 0; i1 < Length; i1++) {
             sb1.Append("g");
          }
