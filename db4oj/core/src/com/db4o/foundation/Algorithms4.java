@@ -20,10 +20,10 @@ public class Algorithms4 {
 		int left = from;
 		int right = to;
 		while (left<right) {
-			while (left<right && sortable.compare(pivot,left)<0) {
+			while (left<right && sortable.compare(left,pivot)<0) {
 				left++;
 			}
-			while(left<right && sortable.compare(pivot,right)>=0) {
+			while(left<right && sortable.compare(right,pivot)>=0) {
 				right--;
 			}
 			swap(sortable, left, right);
