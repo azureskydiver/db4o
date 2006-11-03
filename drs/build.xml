@@ -1,5 +1,15 @@
 <project name="dRS" default="dist" basedir=".">
 	<description>dRS build file</description>
+	<!--
+		To execute the "dist" target, which is to build the dRS release, 
+		you need to create a "drs.machine.properties" with this line:
+		
+	    font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
+	    
+	    OR wherever the location of the font is if you are on Linux
+	-->	
+	<property file="drs.machine.properties" />
+	
 	<property file="ant.properties" />
 
 	<path id="class.path" description="universal classpath for all targets">
@@ -85,7 +95,7 @@
 		
 		<java classname="com.yetac.doctor.Doctor">
 			<!--TODO ${basedir} is needed for db4occ to run correctly-->
-			<arg line="${basedir}/${dir.doc} ${env.SystemRoot}/Fonts/VERDANA.TTF" />
+			<arg line="${basedir}/${dir.doc} ${font.pdf.base}" />
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
