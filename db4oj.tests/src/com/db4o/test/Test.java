@@ -5,6 +5,7 @@ package com.db4o.test;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
