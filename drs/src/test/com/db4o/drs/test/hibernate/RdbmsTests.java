@@ -21,13 +21,13 @@ public class RdbmsTests extends DrsTestSuite {
 		 */
 
 //		new RdbmsTests().runHsqlHsql();
-//		new RdbmsTests().runHsqldb4oCS();
+		new RdbmsTests().runHsqldb4oCS();
 //		new RdbmsTests().runOracledb4oCS();
 //		new RdbmsTests().runMySQLdb4oCS();
 //		new RdbmsTests().runPostgreSQLdb4oCS();
 		//new RdbmsTests().runMsSqldb4oCS();
 //		new RdbmsTests().runDb2db4oCS();
-		new RdbmsTests().runDerbydb4oCS();
+		//new RdbmsTests().runDerbydb4oCS();
 	}
 
 	public void runHsqlHsql() {
@@ -78,7 +78,7 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 
 	protected Class[] testCases() {
-		return one();
+		return all();
 	}
 
 	private Class[] all() {
