@@ -4,6 +4,7 @@ package com.db4o.test;
 
 import com.db4o.test.cluster.*;
 import com.db4o.test.collections.*;
+import com.db4o.test.legacy.*;
 import com.db4o.test.reflect.*;
 
 public class Jdk1_2TestSuite extends TestSuite{
@@ -14,9 +15,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             CascadeToHashMap.class,
             ClusterQueryImplementsList.class,
             CollectionActivation.class,
-            Db4oLinkedList.class,
-            Db4oHashMap.class,
-            Db4oHashMapDeletedKey.class,
             DeleteRemovedMapElements.class,
             DiscreteArrayInMap.class,
             ExtendsHashMap.class,
