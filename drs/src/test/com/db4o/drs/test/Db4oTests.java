@@ -11,9 +11,9 @@ import db4ounit.TestRunner;
 public class Db4oTests extends DrsTestSuite {
 	public static void main(String[] args) {
 		new Db4oTests().rundb4oCS();
-		new Db4oTests().runCSdb4o();
-		new Db4oTests().runCSCS();
-		new Db4oTests().runDb4oDb4o();
+//		new Db4oTests().runCSdb4o();
+//		new Db4oTests().runCSCS();
+//		new Db4oTests().runDb4oDb4o();
 	}
 
 	public void runDb4oDb4o() {
@@ -40,7 +40,7 @@ public class Db4oTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
-		return one();
+		return all();
 	}
 	
 	private Class[] all() {
@@ -55,6 +55,6 @@ public class Db4oTests extends DrsTestSuite {
 	}
 
 	protected Class[] one() {
-		return new Class[] { EnumTest.class, };
+		return new Class[] { MapTest.class, };
 	}
 }

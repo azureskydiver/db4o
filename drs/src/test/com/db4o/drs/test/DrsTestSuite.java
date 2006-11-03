@@ -38,7 +38,7 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 //
 //				// Complex
 				R0to4Runner.class, 	
-				//ReplicationFeaturesMain.class,
+				ReplicationFeaturesMain.class,
 //
 //				// General
 				CollectionHandlerImplTest.class,  

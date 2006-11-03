@@ -1,4 +1,4 @@
-<project name="drs" default="dist" basedir=".">
+<project name="dRS" default="dist" basedir=".">
 	<description>dRS build file</description>
 	<property file="ant.properties" />
 
@@ -110,14 +110,12 @@
 
 	<target name="dist" depends="build-all, javadoc, doctor, javadoc">
 		<property name="zipbasedir" value="drs-${drs.version.dotted}" />
-		<property name="zipquickstartbasedir" value="drs-${drs.version.dotted}QuickStart" />
+		
 		<zip destfile="${file.drs.zip}">
 			<zipfileset dir="." prefix="${zipbasedir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
 
 			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.txt" />
 			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc" />
-			
-			<zipfileset dir="../drsquickstarts/src" prefix="${zipquickstartbasedir}/src" excludes="misc" />
 
 			<zipfileset dir="doc/out" prefix="${zipbasedir}/doc/tutorial" />
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
@@ -127,7 +125,10 @@
 			<zipfileset file="${file.drs.test.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.jar}" />
 			
 		</zip>
+		
+		<!--unzip the dist, rename it to "unzipped" for cruisecontol to run tests-->
 		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}" />
+		<move file="${drs.dir.dist}/dRS-${drs.version.dotted}" tofile="${drs.dir.dist}/unzipped"/> 
 	</target>
 
 	<target name="copyLog4j">
