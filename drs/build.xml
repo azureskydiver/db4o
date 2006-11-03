@@ -78,9 +78,10 @@
 	</target>
 
 	<target name="doctor" depends="">
+		<property environment="env" />
 		<delete dir="doc/out" />
 		<java classname="com.yetac.doctor.Doctor">
-			<arg line="doc C:/WINDOWS/Fonts/VERDANA.TTF" />
+			<arg line="${dir.doc} ${env.SystemRoot}/Fonts/VERDANA.TTF" />
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
