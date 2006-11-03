@@ -30,7 +30,7 @@ namespace com.db4o.test
 				tests.Add(typeof(aliases.ClassAliasesTestCase));
 #endif
 
-				tests.Add(typeof(ArrayNOrder)); 
+				//tests.Add(typeof(ArrayNOrder)); 
 				tests.Add(typeof(BackReferences));
 #if NET || NET_2_0 || MONO
 				tests.Add(typeof(BasicClusterTest));
@@ -59,7 +59,6 @@ namespace com.db4o.test
 				tests.Add(typeof(config.attributes.IndexedWithAttributeByIdentity));
 				
 				tests.Add(typeof(Cs));
-				tests.Add(typeof(CsArrays));
 #if !MONO
 #if NET || NET_2_0
 				tests.Add(typeof(CsAppDomains));
