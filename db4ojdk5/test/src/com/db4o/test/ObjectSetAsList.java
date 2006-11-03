@@ -15,8 +15,8 @@ public class ObjectSetAsList {
     public ObjectSetAsList(){
     }
     
-    public ObjectSetAsList(String name){
-        this.name = name;
+    public ObjectSetAsList(String name_){
+        name = name_;
     }
     
     public void store(){
