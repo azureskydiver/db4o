@@ -8,10 +8,13 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
+import com.db4o.test.lib.*;
 import com.db4o.tools.*;
+import com.db4o.tools.defragment.*;
 
 public class Test extends AllTests {
-    
+	
+	private static final boolean USE_NEW_DEFRAGMENT = false;
     
     private static ObjectServer objectServer;
     private static ExtObjectContainer oc;
@@ -95,12 +98,33 @@ public class Test extends AllTests {
         }
         try {
             if(MEMORY_FILE){
-                new File(fileName).delete();
+            	File4.delete(fileName);
                 RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
                 raf.write(memoryFileContent);
                 raf.close();
             }
-            new Defragment().run(fileName, true);
+            
+            if(USE_NEW_DEFRAGMENT){
+	            
+	            String targetFile = fileName + ".defr";
+	            String mappingFile = fileName + ".dmap";
+	            
+	            File4.delete(targetFile);
+	            File4.delete(mappingFile);
+	            
+	            SlotDefragment.defrag(fileName, targetFile, mappingFile);
+	            
+	            File4.delete(fileName);
+	            File4.copy(targetFile, fileName);
+	            
+	            File4.delete(targetFile);
+	            File4.delete(mappingFile);
+            } else {
+            	
+            	new Defragment().run(fileName, true);
+            	
+            }
+            
             if(MEMORY_FILE){
                 RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
                 memoryFileContent = new byte[(int)raf.length()];
