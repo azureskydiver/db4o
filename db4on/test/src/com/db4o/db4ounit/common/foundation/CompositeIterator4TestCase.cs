@@ -4,6 +4,25 @@ namespace com.db4o.db4ounit.common.foundation
 	{
 		public virtual void TestWithEmptyIterators()
 		{
+			AssertIterator(NewIterator());
+		}
+
+		public virtual void TestReset()
+		{
+			com.db4o.foundation.CompositeIterator4 iterator = NewIterator();
+			AssertIterator(iterator);
+			iterator.Reset();
+			AssertIterator(iterator);
+		}
+
+		private void AssertIterator(com.db4o.foundation.CompositeIterator4 iterator)
+		{
+			com.db4o.db4ounit.common.foundation.IteratorAssert.AreEqual(com.db4o.db4ounit.common.foundation.IntArrays4
+				.NewIterator(new int[] { 1, 2, 3, 4, 5, 6 }), iterator);
+		}
+
+		private com.db4o.foundation.CompositeIterator4 NewIterator()
+		{
 			com.db4o.foundation.Collection4 iterators = new com.db4o.foundation.Collection4();
 			iterators.Add(com.db4o.db4ounit.common.foundation.IntArrays4.NewIterator(new int[
 				] { 1, 2, 3 }));
@@ -14,9 +33,8 @@ namespace com.db4o.db4ounit.common.foundation
 			iterators.Add(com.db4o.db4ounit.common.foundation.IntArrays4.NewIterator(new int[
 				] { 5, 6 }));
 			com.db4o.foundation.CompositeIterator4 iterator = new com.db4o.foundation.CompositeIterator4
-				(iterators.StrictIterator());
-			com.db4o.db4ounit.common.foundation.IteratorAssert.AreEqual(com.db4o.db4ounit.common.foundation.IntArrays4
-				.NewIterator(new int[] { 1, 2, 3, 4, 5, 6 }), iterator);
+				(iterators.GetEnumerator());
+			return iterator;
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(float));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(float));
 		}
 
 		internal override object PrimitiveNull()
@@ -35,7 +35,7 @@ namespace com.db4o
 
 		internal override object Read1(com.db4o.YapReader a_bytes)
 		{
-			return j4o.lang.JavaSystem.IntBitsToFloat(ReadInt(a_bytes));
+			return j4o.lang.JavaSystem.IntBitsToFloat(a_bytes.ReadInt());
 		}
 
 		public override void Write(object a_object, com.db4o.YapReader a_bytes)

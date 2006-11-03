@@ -75,13 +75,14 @@ namespace com.db4o.query
 	/// instances that are not to be included, the match method should return
 	/// false.<br /><br />
 	/// </remarks>
-	public abstract class Predicate : j4o.io.Serializable
+	[System.Serializable]
+	public abstract class Predicate
 	{
 		/// <summary>public for implementation reasons, please ignore.</summary>
 		/// <remarks>public for implementation reasons, please ignore.</remarks>
 		public static readonly string PREDICATEMETHOD_NAME = "match";
 
-		internal static readonly j4o.lang.Class OBJECT_CLASS = j4o.lang.Class.GetClassForType
+		internal static readonly j4o.lang.Class OBJECT_CLASS = j4o.lang.JavaSystem.GetClassForType
 			(typeof(object));
 
 		private j4o.lang.Class _extentType;
@@ -104,7 +105,7 @@ namespace com.db4o.query
 			{
 				return cachedFilterMethod;
 			}
-			j4o.lang.reflect.Method[] methods = j4o.lang.Class.GetClassForObject(this).GetMethods
+			j4o.lang.reflect.Method[] methods = j4o.lang.JavaSystem.GetClassForObject(this).GetMethods
 				();
 			j4o.lang.reflect.Method untypedMethod = null;
 			for (int methodIdx = 0; methodIdx < methods.Length; methodIdx++)
@@ -158,7 +159,7 @@ namespace com.db4o.query
 				object ret = filterMethod.Invoke(this, new object[] { candidate });
 				return ((bool)ret);
 			}
-			catch (System.Exception e)
+			catch
 			{
 				return false;
 			}

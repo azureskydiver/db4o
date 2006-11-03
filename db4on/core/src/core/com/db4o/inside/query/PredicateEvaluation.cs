@@ -1,6 +1,7 @@
 namespace com.db4o.inside.query
 {
 	/// <exclude></exclude>
+	[System.Serializable]
 	public class PredicateEvaluation : com.db4o.query.Evaluation
 	{
 		public com.db4o.query.Predicate _predicate;

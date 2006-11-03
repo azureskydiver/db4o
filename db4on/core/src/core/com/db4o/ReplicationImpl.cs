@@ -315,10 +315,6 @@ namespace com.db4o
 						referenceB = (com.db4o.YapObject)arr[1];
 						objectB = arr[0];
 					}
-					else
-					{
-						sourceReference = null;
-					}
 					attB = referenceB.VirtualAttributes(_transB);
 				}
 				if (attA == null || attB == null)

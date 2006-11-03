@@ -32,7 +32,7 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(byte));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(byte));
 		}
 
 		internal override object PrimitiveNull()
@@ -51,7 +51,7 @@ namespace com.db4o
 			a_bytes.Append(((byte)a_object));
 		}
 
-		public override bool ReadArray(object array, com.db4o.YapWriter reader)
+		public override bool ReadArray(object array, com.db4o.YapReader reader)
 		{
 			if (array is byte[])
 			{
@@ -61,7 +61,7 @@ namespace com.db4o
 			return false;
 		}
 
-		public override bool WriteArray(object array, com.db4o.YapWriter writer)
+		public override bool WriteArray(object array, com.db4o.YapReader writer)
 		{
 			if (array is byte[])
 			{

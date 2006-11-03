@@ -3,6 +3,8 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public sealed class Messages
 	{
+		public const int CLOSED_OR_OPEN_FAILED = 20;
+
 		public const int FATAL_MSG_ID = 44;
 
 		public const int NOT_IMPLEMENTED = 49;
@@ -46,8 +48,8 @@ namespace com.db4o
 		{
 			if (i_messages == null)
 			{
-				i_messages = new string[] { "", "blocksize should be between 1 and 127", "% close request"
-					, "% closed", "Exception opening %", "% opened O.K.", "Class %: Instantiation failed. \n Check custom ObjectConstructor code."
+				i_messages = new string[] { string.Empty, "blocksize should be between 1 and 127"
+					, "% close request", "% closed", "Exception opening %", "% opened O.K.", "Class %: Instantiation failed. \n Check custom ObjectConstructor code."
 					, "Class %: Instantiation failed.\n Add a constructor for use with db4o, ideally with zero arguments."
 					, "renaming %", "rename not possible. % already exists", "rename failed", "File close failed."
 					, "File % not available for readwrite access.", "File read access failed.", "File not found: % Creating new file"

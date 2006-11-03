@@ -15,7 +15,6 @@ namespace com.db4o.inside.marshall
 		int MarshalledLength(com.db4o.YapStream stream, com.db4o.YapField field);
 
 		void Defrag(com.db4o.YapClass yapClass, com.db4o.YapField yapField, com.db4o.YapStringIO
-			 sio, com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping mapping
-			);
+			 sio, com.db4o.ReaderPair readers);
 	}
 }

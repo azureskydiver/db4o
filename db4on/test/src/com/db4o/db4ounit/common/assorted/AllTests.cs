@@ -9,13 +9,14 @@ namespace com.db4o.db4ounit.common.assorted
 
 		protected override System.Type[] TestCases()
 		{
-			return new System.Type[] { typeof(com.db4o.db4ounit.common.assorted.BackupStressTestCase
-				), typeof(com.db4o.db4ounit.common.assorted.MultiFieldIndexQueryTestCase), typeof(
-				com.db4o.db4ounit.common.assorted.GetByUUIDTestCase), typeof(com.db4o.db4ounit.common.assorted.IndexCreateDropTestCase
-				), typeof(com.db4o.db4ounit.common.assorted.IndexedQueriesTestCase), typeof(com.db4o.db4ounit.common.assorted.NakedObjectTestCase
-				), typeof(com.db4o.db4ounit.common.assorted.ReAddCascadedDeleteTestCase), typeof(
-				com.db4o.db4ounit.common.assorted.SimplestPossibleTestCase), typeof(com.db4o.db4ounit.common.assorted.DatabaseUnicityTest
-				) };
+			return new System.Type[] { typeof(com.db4o.db4ounit.common.assorted.BackupStressTestCase)
+				, typeof(com.db4o.db4ounit.common.assorted.CloseUnlocksFileTestCase), typeof(com.db4o.db4ounit.common.assorted.DatabaseUnicityTest)
+				, typeof(com.db4o.db4ounit.common.assorted.GetByUUIDTestCase), typeof(com.db4o.db4ounit.common.assorted.IndexCreateDropTestCase)
+				, typeof(com.db4o.db4ounit.common.assorted.NakedObjectTestCase), typeof(com.db4o.db4ounit.common.assorted.ReAddCascadedDeleteTestCase)
+				, typeof(com.db4o.db4ounit.common.assorted.SimplestPossibleTestCase), typeof(com.db4o.db4ounit.common.assorted.MultiDeleteTestCase)
+				, typeof(com.db4o.db4ounit.common.assorted.NonStaticConfigurationTestCase), typeof(com.db4o.db4ounit.common.assorted.ServerRevokeAccessTestCase)
+				, typeof(com.db4o.db4ounit.common.assorted.SystemInfoTestCase), typeof(com.db4o.db4ounit.common.assorted.ObjectVersionTest)
+				, typeof(com.db4o.db4ounit.common.assorted.YapClassTestCase) };
 		}
 	}
 }

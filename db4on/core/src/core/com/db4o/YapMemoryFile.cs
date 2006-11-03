@@ -42,7 +42,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override bool Close2()
+		protected override bool Close2()
 		{
 			i_entryCounter++;
 			try
@@ -89,7 +89,7 @@ namespace com.db4o
 			return "Memory File";
 		}
 
-		internal override bool HasShutDownHook()
+		protected override bool HasShutDownHook()
 		{
 			return false;
 		}
@@ -116,7 +116,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override void ReadBytes(byte[] a_bytes, int a_address, int a_length)
+		public override void ReadBytes(byte[] a_bytes, int a_address, int a_length)
 		{
 			try
 			{
@@ -128,8 +128,8 @@ namespace com.db4o
 			}
 		}
 
-		internal override void ReadBytes(byte[] bytes, int address, int addressOffset, int
-			 length)
+		public override void ReadBytes(byte[] bytes, int address, int addressOffset, int 
+			length)
 		{
 			ReadBytes(bytes, address + addressOffset, length);
 		}
@@ -138,7 +138,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override bool WriteAccessTime()
+		public override bool WriteAccessTime(int address, int offset, long time)
 		{
 			return true;
 		}

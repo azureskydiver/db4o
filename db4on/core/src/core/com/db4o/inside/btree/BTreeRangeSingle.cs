@@ -61,7 +61,7 @@ namespace com.db4o.inside.btree
 				return 0;
 			}
 			int size = 0;
-			com.db4o.foundation.Iterator4 i = Keys();
+			System.Collections.IEnumerator i = Keys();
 			while (i.MoveNext())
 			{
 				++size;
@@ -69,12 +69,12 @@ namespace com.db4o.inside.btree
 			return size;
 		}
 
-		public virtual com.db4o.foundation.Iterator4 Pointers()
+		public virtual System.Collections.IEnumerator Pointers()
 		{
 			return new com.db4o.inside.btree.BTreeRangePointerIterator(this);
 		}
 
-		public virtual com.db4o.foundation.Iterator4 Keys()
+		public virtual System.Collections.IEnumerator Keys()
 		{
 			return new com.db4o.inside.btree.BTreeRangeKeyIterator(this);
 		}
@@ -202,6 +202,15 @@ namespace com.db4o.inside.btree
 				throw new System.ArgumentException();
 			}
 			return rangeImpl;
+		}
+
+		public virtual com.db4o.inside.btree.BTreePointer LastPointer()
+		{
+			if (_end == null)
+			{
+				return Btree().LastPointer(Transaction());
+			}
+			return _end.Previous();
 		}
 	}
 }

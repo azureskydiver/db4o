@@ -54,5 +54,10 @@ namespace com.db4o.ext
 		/// </remarks>
 		/// <param name="visitor">the visitor to be called with each index value.</param>
 		void TraverseValues(com.db4o.foundation.Visitor4 visitor);
+
+		/// <summary>Returns whether this field has an index or not.</summary>
+		/// <remarks>Returns whether this field has an index or not.</remarks>
+		/// <returns>true if this field has an index.</returns>
+		bool HasIndex();
 	}
 }

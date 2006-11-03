@@ -208,5 +208,10 @@ namespace com.db4o.inside.ix
 			ixTree._nodes = _nodes;
 			return ixTree;
 		}
+
+		public override object Key()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

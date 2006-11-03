@@ -45,8 +45,8 @@ namespace com.db4o
 			i_address = a_address;
 		}
 
-		internal YapWriter(com.db4o.YapWriter parent, com.db4o.YapWriter[] previousRead, 
-			int previousCount)
+		public YapWriter(com.db4o.YapWriter parent, com.db4o.YapWriter[] previousRead, int
+			 previousCount)
 		{
 			previousRead[previousCount++] = this;
 			int parentID = parent.ReadInt();
@@ -64,13 +64,13 @@ namespace com.db4o
 			}
 		}
 
-		internal void AddEmbedded(com.db4o.YapWriter a_bytes)
+		public void AddEmbedded(com.db4o.YapWriter a_bytes)
 		{
 			i_embedded = com.db4o.foundation.Tree.Add(i_embedded, new com.db4o.TreeIntObject(
 				a_bytes.GetID(), a_bytes));
 		}
 
-		internal int AppendTo(com.db4o.YapWriter a_bytes, int a_id)
+		public int AppendTo(com.db4o.YapReader a_bytes, int a_id)
 		{
 			a_id++;
 			a_bytes.WriteInt(i_length);
@@ -79,13 +79,13 @@ namespace com.db4o
 			a_bytes.Append(_buffer);
 			int[] newID = { a_id };
 			int myID = a_id;
-			ForEachEmbedded(new _AnonymousInnerClass95(this, a_bytes, myID, newID));
+			ForEachEmbedded(new _AnonymousInnerClass96(this, a_bytes, myID, newID));
 			return newID[0];
 		}
 
-		private sealed class _AnonymousInnerClass95 : com.db4o.VisitorYapBytes
+		private sealed class _AnonymousInnerClass96 : com.db4o.VisitorYapBytes
 		{
-			public _AnonymousInnerClass95(YapWriter _enclosing, com.db4o.YapWriter a_bytes, int
+			public _AnonymousInnerClass96(YapWriter _enclosing, com.db4o.YapReader a_bytes, int
 				 myID, int[] newID)
 			{
 				this._enclosing = _enclosing;
@@ -102,7 +102,7 @@ namespace com.db4o
 
 			private readonly YapWriter _enclosing;
 
-			private readonly com.db4o.YapWriter a_bytes;
+			private readonly com.db4o.YapReader a_bytes;
 
 			private readonly int myID;
 
@@ -118,16 +118,16 @@ namespace com.db4o
 		{
 		}
 
-		internal int EmbeddedCount()
+		public int EmbeddedCount()
 		{
 			int[] count = { 0 };
-			ForEachEmbedded(new _AnonymousInnerClass120(this, count));
+			ForEachEmbedded(new _AnonymousInnerClass121(this, count));
 			return count[0];
 		}
 
-		private sealed class _AnonymousInnerClass120 : com.db4o.VisitorYapBytes
+		private sealed class _AnonymousInnerClass121 : com.db4o.VisitorYapBytes
 		{
-			public _AnonymousInnerClass120(YapWriter _enclosing, int[] count)
+			public _AnonymousInnerClass121(YapWriter _enclosing, int[] count)
 			{
 				this._enclosing = _enclosing;
 				this.count = count;
@@ -143,16 +143,16 @@ namespace com.db4o
 			private readonly int[] count;
 		}
 
-		internal int EmbeddedLength()
+		public int EmbeddedLength()
 		{
 			int[] length = { 0 };
-			ForEachEmbedded(new _AnonymousInnerClass130(this, length));
+			ForEachEmbedded(new _AnonymousInnerClass131(this, length));
 			return length[0];
 		}
 
-		private sealed class _AnonymousInnerClass130 : com.db4o.VisitorYapBytes
+		private sealed class _AnonymousInnerClass131 : com.db4o.VisitorYapBytes
 		{
-			public _AnonymousInnerClass130(YapWriter _enclosing, int[] length)
+			public _AnonymousInnerClass131(YapWriter _enclosing, int[] length)
 			{
 				this._enclosing = _enclosing;
 				this.length = length;
@@ -172,13 +172,13 @@ namespace com.db4o
 		{
 			if (i_embedded != null)
 			{
-				i_embedded.Traverse(new _AnonymousInnerClass140(this, a_visitor));
+				i_embedded.Traverse(new _AnonymousInnerClass141(this, a_visitor));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass140 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass141 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass140(YapWriter _enclosing, com.db4o.VisitorYapBytes a_visitor
+			public _AnonymousInnerClass141(YapWriter _enclosing, com.db4o.VisitorYapBytes a_visitor
 				)
 			{
 				this._enclosing = _enclosing;
@@ -267,7 +267,7 @@ namespace com.db4o
 			Stream().ReadBytes(_buffer, i_address, _addressOffset, i_length);
 		}
 
-		internal bool Read(com.db4o.foundation.network.YapSocket sock)
+		public bool Read(com.db4o.foundation.network.YapSocket sock)
 		{
 			int offset = 0;
 			int length = i_length;
@@ -310,7 +310,7 @@ namespace com.db4o
 			return bytes;
 		}
 
-		internal com.db4o.YapWriter ReadYapBytes()
+		public com.db4o.YapWriter ReadYapBytes()
 		{
 			int length = ReadInt();
 			if (length == 0)
@@ -323,7 +323,7 @@ namespace com.db4o
 			return yb;
 		}
 
-		internal void RemoveFirstBytes(int aLength)
+		public void RemoveFirstBytes(int aLength)
 		{
 			i_length -= aLength;
 			byte[] temp = new byte[i_length];
@@ -336,7 +336,7 @@ namespace com.db4o
 			}
 		}
 
-		internal void Address(int a_address)
+		public void Address(int a_address)
 		{
 			i_address = a_address;
 		}
@@ -356,7 +356,7 @@ namespace com.db4o
 			i_instantionDepth = a_depth;
 		}
 
-		internal void SetTransaction(com.db4o.Transaction aTrans)
+		public void SetTransaction(com.db4o.Transaction aTrans)
 		{
 			i_trans = aTrans;
 		}
@@ -371,7 +371,7 @@ namespace com.db4o
 			i_trans.SlotDelete(i_id, i_address, i_length);
 		}
 
-		internal void Trim4(int a_offset, int a_length)
+		public void Trim4(int a_offset, int a_length)
 		{
 			byte[] temp = new byte[a_length];
 			System.Array.Copy(_buffer, a_offset, temp, 0, a_length);
@@ -385,7 +385,7 @@ namespace com.db4o
 			_offset = 0;
 		}
 
-		internal void UseSlot(int a_adress, int a_length)
+		public void UseSlot(int a_adress, int a_length)
 		{
 			i_address = a_adress;
 			_offset = 0;
@@ -407,16 +407,16 @@ namespace com.db4o
 			Write(File(), i_address, _addressOffset);
 		}
 
-		internal void WriteEmbedded()
+		public void WriteEmbedded()
 		{
 			com.db4o.YapWriter finalThis = this;
-			ForEachEmbedded(new _AnonymousInnerClass326(this, finalThis));
+			ForEachEmbedded(new _AnonymousInnerClass327(this, finalThis));
 			i_embedded = null;
 		}
 
-		private sealed class _AnonymousInnerClass326 : com.db4o.VisitorYapBytes
+		private sealed class _AnonymousInnerClass327 : com.db4o.VisitorYapBytes
 		{
-			public _AnonymousInnerClass326(YapWriter _enclosing, com.db4o.YapWriter finalThis
+			public _AnonymousInnerClass327(YapWriter _enclosing, com.db4o.YapWriter finalThis
 				)
 			{
 				this._enclosing = _enclosing;
@@ -478,7 +478,7 @@ namespace com.db4o
 			return linkOffset;
 		}
 
-		public com.db4o.YapWriter ReadPayloadWriter(int offset, int length)
+		public com.db4o.YapReader ReadPayloadWriter(int offset, int length)
 		{
 			com.db4o.YapWriter payLoad = new com.db4o.YapWriter(i_trans, 0, length);
 			System.Array.Copy(_buffer, offset, payLoad._buffer, 0, length);
@@ -494,15 +494,17 @@ namespace com.db4o
 			toWriter._addressOffset = _addressOffset;
 		}
 
-		internal void WriteQueryResult(com.db4o.QueryResultImpl a_qr)
+		public void WriteQueryResult(com.db4o.inside.query.QueryResult qr)
 		{
-			int size = a_qr.Size();
+			int size = qr.Size();
 			WriteInt(size);
 			_offset += (size - 1) * com.db4o.YapConst.ID_LENGTH;
 			int dec = com.db4o.YapConst.ID_LENGTH * 2;
+			com.db4o.foundation.IntIterator4 idIterator = qr.IterateIDs();
 			for (int i = 0; i < size; i++)
 			{
-				WriteInt(a_qr.NextInt());
+				idIterator.MoveNext();
+				WriteInt(idIterator.CurrentInt());
 				_offset -= dec;
 			}
 		}
@@ -528,6 +530,14 @@ namespace com.db4o
 		{
 			return base.ToString();
 			return "id " + i_id + " adr " + i_address + " len " + i_length;
+		}
+
+		public void NoXByteCheck()
+		{
+			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
+			{
+				SetID(com.db4o.YapConst.IGNORE_ID);
+			}
 		}
 	}
 }

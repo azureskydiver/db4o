@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyVersion("5.5.1")]
+[assembly: AssemblyVersion("5.7.001")]
 
 [assembly: Mono.Author("Jean Baptiste Evain")]
 [assembly: Mono.Author("Rodrigo B. de Oliveira")]

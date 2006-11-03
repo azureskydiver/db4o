@@ -14,10 +14,24 @@ namespace com.db4o.foundation
 		{
 		}
 
+		public List4(object element)
+		{
+			_element = element;
+		}
+
 		public List4(com.db4o.foundation.List4 next, object element)
 		{
 			_next = next;
 			_element = element;
+		}
+
+		internal bool Holds(object obj)
+		{
+			if (obj == null)
+			{
+				return _element == null;
+			}
+			return obj.Equals(_element);
 		}
 	}
 }

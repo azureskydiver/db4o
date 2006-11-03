@@ -32,7 +32,7 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(short));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(short));
 		}
 
 		internal override object PrimitiveNull()

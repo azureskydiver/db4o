@@ -6,14 +6,10 @@ namespace com.db4o.db4ounit.common.fieldindex
 		{
 		}
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
-			Index(typeof(com.db4o.db4ounit.common.fieldindex.FieldIndexItem), "foo");
-		}
-
-		protected virtual void Index(System.Type clazz, string fieldName)
-		{
-			com.db4o.Db4o.Configure().ObjectClass(clazz).ObjectField(fieldName).Indexed(true);
+			IndexField(config, typeof(com.db4o.db4ounit.common.fieldindex.FieldIndexItem), "foo"
+				);
 		}
 
 		protected abstract override void Store();
@@ -24,11 +20,6 @@ namespace com.db4o.db4ounit.common.fieldindex
 			{
 				Store(new com.db4o.db4ounit.common.fieldindex.FieldIndexItem(foos[i]));
 			}
-		}
-
-		protected virtual void Store(object item)
-		{
-			Db().Set(item);
 		}
 
 		protected virtual com.db4o.query.Query CreateQuery(int id)

@@ -1,10 +1,12 @@
 namespace com.db4o.foundation
 {
 	/// <exclude></exclude>
-	public class Iterator4Impl : com.db4o.foundation.Iterator4
+	public class Iterator4Impl : System.Collections.IEnumerator
 	{
-		public static readonly com.db4o.foundation.Iterator4 EMPTY = new com.db4o.foundation.Iterator4Impl
+		public static readonly System.Collections.IEnumerator EMPTY = new com.db4o.foundation.Iterator4Impl
 			(null);
+
+		private com.db4o.foundation.List4 _first;
 
 		private com.db4o.foundation.List4 _next;
 
@@ -12,6 +14,7 @@ namespace com.db4o.foundation
 
 		public Iterator4Impl(com.db4o.foundation.List4 first)
 		{
+			_first = first;
 			_next = first;
 			_current = com.db4o.foundation.Iterators.NO_ELEMENT;
 		}
@@ -28,13 +31,22 @@ namespace com.db4o.foundation
 			return true;
 		}
 
-		public virtual object Current()
+		public virtual object Current
 		{
-			if (com.db4o.foundation.Iterators.NO_ELEMENT == _current)
+			get
 			{
-				throw new System.InvalidOperationException();
+				if (com.db4o.foundation.Iterators.NO_ELEMENT == _current)
+				{
+					throw new System.InvalidOperationException();
+				}
+				return _current;
 			}
-			return _current;
+		}
+
+		public virtual void Reset()
+		{
+			_next = _first;
+			_current = com.db4o.foundation.Iterators.NO_ELEMENT;
 		}
 	}
 }

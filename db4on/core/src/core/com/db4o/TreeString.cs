@@ -28,5 +28,10 @@ namespace com.db4o
 			return com.db4o.YapString.Compare(com.db4o.YapConst.stringIO.Write(((com.db4o.TreeString
 				)a_to)._key), com.db4o.YapConst.stringIO.Write(_key));
 		}
+
+		public override object Key()
+		{
+			return _key;
+		}
 	}
 }

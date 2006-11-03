@@ -22,5 +22,7 @@ namespace com.db4o.inside.marshall
 
 		public abstract com.db4o.QCandidate ReadSubCandidate(com.db4o.YapReader reader, com.db4o.QCandidates
 			 candidates, bool withIndirection);
+
+		public abstract void Defrag(com.db4o.ReaderPair readers);
 	}
 }

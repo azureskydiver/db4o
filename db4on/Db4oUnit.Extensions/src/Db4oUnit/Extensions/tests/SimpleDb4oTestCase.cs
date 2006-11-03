@@ -28,8 +28,8 @@ namespace Db4oUnit.Extensions.tests
 		{
 			Db4oUnit.Assert.IsTrue(EverythingCalledBefore(2));
 			_everythingCalled[2] = true;
-			Db4oUnit.Assert.AreEqual(1, Fixture().Db().Get(typeof(Db4oUnit.Extensions.tests.SimpleDb4oTestCase.Data
-				)).Size());
+			Db4oUnit.Assert.AreEqual(1, Fixture().Db().Get(typeof(Db4oUnit.Extensions.tests.SimpleDb4oTestCase.Data)
+				).Size());
 		}
 
 		public virtual bool EverythingCalled()

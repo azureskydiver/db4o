@@ -84,11 +84,11 @@ namespace com.db4o.reflect.generic
 
 		public virtual int CollectionUpdateDepth(com.db4o.reflect.ReflectClass candidate)
 		{
-			com.db4o.foundation.Iterator4 i = _collectionUpdateDepths.Iterator();
+			System.Collections.IEnumerator i = _collectionUpdateDepths.GetEnumerator();
 			while (i.MoveNext())
 			{
 				com.db4o.reflect.generic.CollectionUpdateDepthEntry entry = (com.db4o.reflect.generic.CollectionUpdateDepthEntry
-					)i.Current();
+					)i.Current;
 				if (entry._predicate.Match(candidate))
 				{
 					return entry._depth;
@@ -195,10 +195,10 @@ namespace com.db4o.reflect.generic
 
 		public virtual bool IsCollection(com.db4o.reflect.ReflectClass candidate)
 		{
-			com.db4o.foundation.Iterator4 i = _collectionPredicates.Iterator();
+			System.Collections.IEnumerator i = _collectionPredicates.GetEnumerator();
 			while (i.MoveNext())
 			{
-				if (((com.db4o.reflect.ReflectClassPredicate)i.Current()).Match(candidate))
+				if (((com.db4o.reflect.ReflectClassPredicate)i.Current).Match(candidate))
 				{
 					return true;
 				}
@@ -272,11 +272,11 @@ namespace com.db4o.reflect.generic
 		{
 			ReadAll();
 			com.db4o.foundation.Collection4 classes = new com.db4o.foundation.Collection4();
-			com.db4o.foundation.Iterator4 i = _classes.Iterator();
+			System.Collections.IEnumerator i = _classes.GetEnumerator();
 			while (i.MoveNext())
 			{
 				com.db4o.reflect.generic.GenericClass clazz = (com.db4o.reflect.generic.GenericClass
-					)i.Current();
+					)i.Current;
 				if (!_stream.i_handlers.ICLASS_INTERNAL.IsAssignableFrom(clazz))
 				{
 					if (!clazz.IsSecondClass())
@@ -291,25 +291,25 @@ namespace com.db4o.reflect.generic
 			com.db4o.reflect.ReflectClass[] ret = new com.db4o.reflect.ReflectClass[classes.Size
 				()];
 			int j = 0;
-			i = classes.Iterator();
+			i = classes.GetEnumerator();
 			while (i.MoveNext())
 			{
-				ret[j++] = (com.db4o.reflect.ReflectClass)i.Current();
+				ret[j++] = (com.db4o.reflect.ReflectClass)i.Current;
 			}
 			return ret;
 		}
 
 		private void ReadAll()
 		{
-			for (com.db4o.foundation.Iterator4 idIter = _stream.ClassCollection().Ids(); idIter
+			for (System.Collections.IEnumerator idIter = _stream.ClassCollection().Ids(); idIter
 				.MoveNext(); )
 			{
-				EnsureClassAvailability(((int)idIter.Current()));
+				EnsureClassAvailability(((int)idIter.Current));
 			}
-			for (com.db4o.foundation.Iterator4 idIter = _stream.ClassCollection().Ids(); idIter
+			for (System.Collections.IEnumerator idIter = _stream.ClassCollection().Ids(); idIter
 				.MoveNext(); )
 			{
-				EnsureClassRead(((int)idIter.Current()));
+				EnsureClassRead(((int)idIter.Current));
 			}
 		}
 
@@ -320,10 +320,10 @@ namespace com.db4o.reflect.generic
 			{
 				com.db4o.foundation.Collection4 pending = _pendingClasses;
 				_pendingClasses = new com.db4o.foundation.Collection4();
-				com.db4o.foundation.Iterator4 i = pending.Iterator();
+				System.Collections.IEnumerator i = pending.GetEnumerator();
 				while (i.MoveNext())
 				{
-					EnsureClassRead(((int)i.Current()));
+					EnsureClassRead(((int)i.Current));
 				}
 			}
 			return ret;
@@ -341,7 +341,7 @@ namespace com.db4o.reflect.generic
 			{
 				return ret;
 			}
-			com.db4o.YapWriter classreader = _stream.ReadWriterByID(_trans, id);
+			com.db4o.YapReader classreader = _stream.ReadWriterByID(_trans, id);
 			com.db4o.inside.marshall.ClassMarshaller marshaller = MarshallerFamily()._class;
 			com.db4o.inside.marshall.RawClassSpec spec = marshaller.ReadSpec(_trans, classreader
 				);
@@ -372,7 +372,7 @@ namespace com.db4o.reflect.generic
 		{
 			com.db4o.reflect.generic.GenericClass clazz = (com.db4o.reflect.generic.GenericClass
 				)_classByID.Get(id);
-			com.db4o.YapWriter classreader = _stream.ReadWriterByID(_trans, id);
+			com.db4o.YapReader classreader = _stream.ReadWriterByID(_trans, id);
 			com.db4o.inside.marshall.ClassMarshaller classMarshaller = MarshallerFamily()._class;
 			com.db4o.inside.marshall.RawClassSpec classInfo = classMarshaller.ReadSpec(_trans
 				, classreader);
@@ -403,14 +403,14 @@ namespace com.db4o.reflect.generic
 				{
 					case com.db4o.YapHandlers.ANY_ID:
 					{
-						fieldClass = (com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.Class.GetClassForType
+						fieldClass = (com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.JavaSystem.GetClassForType
 							(typeof(object)));
 						break;
 					}
 
 					case com.db4o.YapHandlers.ANY_ARRAY_ID:
 					{
-						fieldClass = ((com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.Class.GetClassForType
+						fieldClass = ((com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.JavaSystem.GetClassForType
 							(typeof(object)))).ArrayClass();
 						break;
 					}

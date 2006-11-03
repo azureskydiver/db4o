@@ -12,7 +12,8 @@ namespace com.db4o.ext
 	/// <see cref="com.db4o.ext.Db4oException.Cause">com.db4o.ext.Db4oException.Cause</see>
 	/// .
 	/// </remarks>
-	public class Db4oException : j4o.lang.RuntimeException
+	[System.Serializable]
+	public class Db4oException : System.Exception
 	{
 		private System.Exception _cause;
 

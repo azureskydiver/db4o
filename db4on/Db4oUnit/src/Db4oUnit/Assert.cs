@@ -46,7 +46,7 @@ namespace Db4oUnit
 
 		public static void IsNull(object reference)
 		{
-			IsNull(reference, "Expected reference to be null, but was " + reference);
+			IsNull(reference, FailureMessage("null", reference));
 		}
 
 		public static void IsNull(object reference, string message)
@@ -81,11 +81,7 @@ namespace Db4oUnit
 
 		public static void AreEqual(int expected, int actual)
 		{
-			if (expected == actual)
-			{
-				return;
-			}
-			Fail(FailureMessage(expected, actual));
+			AreEqual(expected, actual, null);
 		}
 
 		public static void AreEqual(int expected, int actual, string message)
@@ -94,7 +90,7 @@ namespace Db4oUnit
 			{
 				return;
 			}
-			Fail(message);
+			Fail(FailureMessage(expected, actual, message));
 		}
 
 		public static void AreEqual(double expected, double actual)
@@ -115,13 +111,18 @@ namespace Db4oUnit
 			Fail(FailureMessage(expected, actual));
 		}
 
-		public static void AreEqual(object expected, object actual)
+		public static void AreEqual(object expected, object actual, string message)
 		{
 			if (ObjectsAreEqual(expected, actual))
 			{
 				return;
 			}
-			Fail(FailureMessage(expected, actual));
+			Fail(FailureMessage(expected, actual, message));
+		}
+
+		public static void AreEqual(object expected, object actual)
+		{
+			AreEqual(expected, actual, null);
 		}
 
 		public static void AreSame(object expected, object actual)
@@ -144,7 +145,20 @@ namespace Db4oUnit
 
 		private static string FailureMessage(object expected, object actual)
 		{
-			return "Expected '" + expected + "' but was '" + actual + "'";
+			return FailureMessage(expected, actual, null);
+		}
+
+		private static string FailureMessage(object expected, object actual, string customMessage
+			)
+		{
+			return FailureMessage(expected, actual, string.Empty, customMessage);
+		}
+
+		private static string FailureMessage(object expected, object actual, string cmpOper
+			, string customMessage)
+		{
+			return (customMessage == null ? string.Empty : customMessage + ": ") + "Expected "
+				 + cmpOper + "'" + expected + "' but was '" + actual + "'";
 		}
 
 		private static bool ObjectsAreEqual(object expected, object actual)
@@ -158,10 +172,47 @@ namespace Db4oUnit
 			IsTrue(!condition);
 		}
 
+		public static void IsFalse(bool condition, string message)
+		{
+			IsTrue(!condition, message);
+		}
+
 		public static void IsInstanceOf(System.Type expectedClass, object actual)
 		{
 			IsTrue(expectedClass.IsInstanceOfType(actual), FailureMessage(expectedClass, actual
 				 == null ? null : actual.GetType()));
+		}
+
+		public static void IsGreater(long expected, long actual)
+		{
+			if (actual > expected)
+			{
+				return;
+			}
+			Fail(FailureMessage(expected, actual, "greater than ", null));
+		}
+
+		public static void IsGreaterOrEqual(long expected, long actual)
+		{
+			if (actual >= expected)
+			{
+				return;
+			}
+			Fail(expected, actual, "greater than or equal to ");
+		}
+
+		private static void Fail(long expected, long actual, string @operator)
+		{
+			Fail(FailureMessage(expected, actual, @operator, null));
+		}
+
+		public static void AreNotEqual(long expected, long actual)
+		{
+			if (actual != expected)
+			{
+				return;
+			}
+			Fail(expected, actual, "not equal to ");
 		}
 	}
 }

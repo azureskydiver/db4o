@@ -36,8 +36,8 @@ namespace com.db4o.db4ounit.common.assorted
 
 		public virtual void SetUp()
 		{
-			com.db4o.Db4o.Configure().ObjectClass(typeof(com.db4o.db4ounit.common.assorted.BackupStressItem
-				)).ObjectField("_iteration").Indexed(true);
+			com.db4o.Db4o.Configure().ObjectClass(typeof(com.db4o.db4ounit.common.assorted.BackupStressItem)
+				).ObjectField("_iteration").Indexed(true);
 		}
 
 		public virtual void TearDown()
@@ -62,7 +62,7 @@ namespace com.db4o.db4ounit.common.assorted
 		{
 			if (!runOnOldJDK && IsOldJDK())
 			{
-				System.Console.Out.WriteLine("BackupStressTest is too slow for regression testing on Java JDKs < 1.4"
+				j4o.lang.JavaSystem.Out.WriteLine("BackupStressTest is too slow for regression testing on Java JDKs < 1.4"
 					);
 				return;
 			}
@@ -179,7 +179,7 @@ namespace com.db4o.db4ounit.common.assorted
 				}
 				Stdout("Backup OK");
 			}
-			System.Console.Out.WriteLine("BackupStressTest " + _backups + " files OK.");
+			j4o.lang.JavaSystem.Out.WriteLine("BackupStressTest " + _backups + " files OK.");
 			for (int i = 1; i <= _backups; i++)
 			{
 				DeleteFile(BackupFile(i));
@@ -200,14 +200,14 @@ namespace com.db4o.db4ounit.common.assorted
 
 		private string BackupFile(int count)
 		{
-			return "" + count + FILE;
+			return string.Empty + count + FILE;
 		}
 
 		private void Stdout(string @string)
 		{
 			if (verbose)
 			{
-				System.Console.Out.WriteLine(@string);
+				j4o.lang.JavaSystem.Out.WriteLine(@string);
 			}
 		}
 	}

@@ -11,7 +11,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class BlobImpl : com.db4o.types.Blob, j4o.lang.Cloneable, com.db4o.Db4oTypeImpl
 	{
-		internal const int COPYBUFFER_LENGTH = 4096;
+		public const int COPYBUFFER_LENGTH = 4096;
 
 		public string fileName;
 
@@ -21,7 +21,7 @@ namespace com.db4o
 		private j4o.io.File i_file;
 
 		[com.db4o.Transient]
-		private com.db4o.MsgBlob i_getStatusFrom;
+		private com.db4o.BlobStatus i_getStatusFrom;
 
 		public int i_length;
 
@@ -53,7 +53,7 @@ namespace com.db4o
 				i_ext = j4o.lang.JavaSystem.Substring(name, pos);
 				return j4o.lang.JavaSystem.Substring(name, 0, pos);
 			}
-			i_ext = "";
+			i_ext = string.Empty;
 			return name;
 		}
 
@@ -83,19 +83,19 @@ namespace com.db4o
 				bi = (com.db4o.BlobImpl)this.MemberwiseClone();
 				bi.SetTrans(a_trans);
 			}
-			catch (j4o.lang.CloneNotSupportedException e)
+			catch (j4o.lang.CloneNotSupportedException)
 			{
 				return null;
 			}
 			return bi;
 		}
 
-		internal virtual j4o.io.FileInputStream GetClientInputStream()
+		public virtual j4o.io.FileInputStream GetClientInputStream()
 		{
 			return new j4o.io.FileInputStream(i_file);
 		}
 
-		internal virtual j4o.io.FileOutputStream GetClientOutputStream()
+		public virtual j4o.io.FileOutputStream GetClientOutputStream()
 		{
 			return new j4o.io.FileOutputStream(i_file);
 		}
@@ -105,7 +105,7 @@ namespace com.db4o
 			return fileName;
 		}
 
-		internal virtual int GetLength()
+		public virtual int GetLength()
 		{
 			return i_length;
 		}
@@ -126,7 +126,7 @@ namespace com.db4o
 			return i_status;
 		}
 
-		internal virtual void GetStatusFrom(com.db4o.MsgBlob from)
+		public virtual void GetStatusFrom(com.db4o.BlobStatus from)
 		{
 			i_getStatusFrom = from;
 		}
@@ -148,16 +148,7 @@ namespace com.db4o
 			if (i_stream.IsClient())
 			{
 				i_file = file;
-				com.db4o.MsgBlob msg = null;
-				lock (i_stream.Lock())
-				{
-					i_stream.Set(this);
-					int id = (int)i_stream.GetID(this);
-					msg = (com.db4o.MsgBlob)com.db4o.Msg.WRITE_BLOB.GetWriterForInt(i_trans, id);
-					msg._blob = this;
-					i_status = com.db4o.ext.Status.QUEUED;
-				}
-				((com.db4o.YapClient)i_stream).ProcessBlobMessage(msg);
+				((com.db4o.BlobTransport)i_stream).ReadBlobFrom(i_trans, this, file);
 			}
 			else
 			{
@@ -193,7 +184,7 @@ namespace com.db4o
 		{
 		}
 
-		internal virtual j4o.io.File ServerFile(string promptName, bool writeToServer)
+		public virtual j4o.io.File ServerFile(string promptName, bool writeToServer)
 		{
 			lock (i_stream.i_lock)
 			{
@@ -260,7 +251,7 @@ namespace com.db4o
 			return path;
 		}
 
-		internal virtual void SetStatus(double status)
+		public virtual void SetStatus(double status)
 		{
 			i_status = status;
 		}
@@ -286,11 +277,8 @@ namespace com.db4o
 			if (i_stream.IsClient())
 			{
 				i_file = file;
-				com.db4o.MsgBlob msg = (com.db4o.MsgBlob)com.db4o.Msg.READ_BLOB.GetWriterForInt(i_trans
-					, (int)i_stream.GetID(this));
-				msg._blob = this;
 				i_status = com.db4o.ext.Status.QUEUED;
-				((com.db4o.YapClient)i_stream).ProcessBlobMessage(msg);
+				((com.db4o.BlobTransport)i_stream).WriteBlobTo(i_trans, this, file);
 			}
 			else
 			{

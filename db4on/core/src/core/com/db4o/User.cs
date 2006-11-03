@@ -7,5 +7,15 @@ namespace com.db4o
 		public string name;
 
 		public string password;
+
+		public User()
+		{
+		}
+
+		public User(string name, string password)
+		{
+			this.name = name;
+			this.password = password;
+		}
 	}
 }

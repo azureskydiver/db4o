@@ -46,7 +46,7 @@ namespace com.db4o.nativequery.expr
 			{
 				return true;
 			}
-			if (other == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
+			if (other == null || j4o.lang.JavaSystem.GetClassForObject(this) != j4o.lang.JavaSystem.GetClassForObject
 				(other))
 			{
 				return false;

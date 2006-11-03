@@ -26,7 +26,7 @@ namespace com.db4o.nativequery.expr.cmp
 			{
 				return true;
 			}
-			if (obj == null || j4o.lang.Class.GetClassForObject(this) != j4o.lang.Class.GetClassForObject
+			if (obj == null || j4o.lang.JavaSystem.GetClassForObject(this) != j4o.lang.JavaSystem.GetClassForObject
 				(obj))
 			{
 				return false;

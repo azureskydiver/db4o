@@ -23,32 +23,32 @@ namespace com.db4o.foundation
 			{
 				throw new System.InvalidOperationException();
 			}
-			return ((com.db4o.foundation.SortedCollection4.TreeObject)_tree).GetObject();
+			return _tree.Key();
 		}
 
-		public virtual void AddAll(com.db4o.foundation.Iterator4 iterator)
+		public virtual void AddAll(System.Collections.IEnumerator iterator)
 		{
 			while (iterator.MoveNext())
 			{
-				Add(iterator.Current());
+				Add(iterator.Current);
 			}
 		}
 
 		public virtual void Add(object element)
 		{
-			_tree = com.db4o.foundation.Tree.Add(_tree, new com.db4o.foundation.SortedCollection4.TreeObject
-				(element, _comparison));
+			_tree = com.db4o.foundation.Tree.Add(_tree, new com.db4o.foundation.TreeObject(element
+				, _comparison));
 		}
 
 		public virtual void Remove(object element)
 		{
-			_tree = com.db4o.foundation.Tree.RemoveLike(_tree, new com.db4o.foundation.SortedCollection4.TreeObject
+			_tree = com.db4o.foundation.Tree.RemoveLike(_tree, new com.db4o.foundation.TreeObject
 				(element, _comparison));
 		}
 
 		public virtual object[] ToArray(object[] array)
 		{
-			_tree.Traverse(new _AnonymousInnerClass43(this, array));
+			com.db4o.foundation.Tree.Traverse(_tree, new _AnonymousInnerClass43(this, array));
 			return array;
 		}
 
@@ -64,8 +64,7 @@ namespace com.db4o.foundation
 
 			public void Visit(object obj)
 			{
-				array[this.i++] = ((com.db4o.foundation.SortedCollection4.TreeObject)obj).GetObject
-					();
+				array[this.i++] = ((com.db4o.foundation.TreeObject)obj).Key();
 			}
 
 			private readonly SortedCollection4 _enclosing;
@@ -76,30 +75,6 @@ namespace com.db4o.foundation
 		public virtual int Size()
 		{
 			return com.db4o.foundation.Tree.Size(_tree);
-		}
-
-		internal class TreeObject : com.db4o.foundation.Tree
-		{
-			private object _object;
-
-			private com.db4o.foundation.Comparison4 _function;
-
-			public TreeObject(object @object, com.db4o.foundation.Comparison4 function)
-			{
-				_object = @object;
-				_function = function;
-			}
-
-			public override int Compare(com.db4o.foundation.Tree tree)
-			{
-				return _function.Compare(_object, ((com.db4o.foundation.SortedCollection4.TreeObject
-					)tree).GetObject());
-			}
-
-			public virtual object GetObject()
-			{
-				return _object;
-			}
 		}
 	}
 }

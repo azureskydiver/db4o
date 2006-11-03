@@ -62,5 +62,28 @@ namespace com.db4o.inside.marshall
 			int BTREE_ID = com.db4o.YapConst.ID_LENGTH;
 			return len + BTREE_ID;
 		}
+
+		public override void Defrag(com.db4o.YapClass yapClass, com.db4o.YapField yapField
+			, com.db4o.YapStringIO sio, com.db4o.ReaderPair readers)
+		{
+			base.Defrag(yapClass, yapField, sio, readers);
+			if (yapField.IsVirtual())
+			{
+				return;
+			}
+			if (yapField.HasIndex())
+			{
+				com.db4o.inside.btree.BTree index = yapField.GetIndex(readers.SystemTrans());
+				int targetIndexID = readers.CopyID();
+				if (targetIndexID != 0)
+				{
+					index.DefragBTree(readers.Context());
+				}
+			}
+			else
+			{
+				readers.WriteInt(0);
+			}
+		}
 	}
 }

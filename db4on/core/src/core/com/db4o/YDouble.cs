@@ -26,7 +26,7 @@ namespace com.db4o
 
 		protected override j4o.lang.Class PrimitiveJavaClass()
 		{
-			return j4o.lang.Class.GetClassForType(typeof(double));
+			return j4o.lang.JavaSystem.GetClassForType(typeof(double));
 		}
 
 		internal override object PrimitiveNull()
@@ -41,7 +41,7 @@ namespace com.db4o
 
 		public override void Write(object a_object, com.db4o.YapReader a_bytes)
 		{
-			WriteLong(com.db4o.Platform4.DoubleToLong(((double)a_object)), a_bytes);
+			a_bytes.WriteLong(com.db4o.Platform4.DoubleToLong(((double)a_object)));
 		}
 
 		private double i_compareToDouble;

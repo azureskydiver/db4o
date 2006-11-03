@@ -5,9 +5,8 @@ namespace com.db4o.db4ounit.common.handlers
 	{
 		private com.db4o.TypeHandler4 _handler;
 
-		public override void SetUp()
+		protected override void Db4oSetupBeforeStore()
 		{
-			base.SetUp();
 			_handler = new com.db4o.YDouble(Stream());
 		}
 

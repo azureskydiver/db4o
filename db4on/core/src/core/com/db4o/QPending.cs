@@ -40,5 +40,10 @@ namespace com.db4o
 			base.ShallowCloneInternal(pending);
 			return pending;
 		}
+
+		public override object Key()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

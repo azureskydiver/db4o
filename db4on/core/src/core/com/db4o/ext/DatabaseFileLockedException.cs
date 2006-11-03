@@ -9,7 +9,8 @@ namespace com.db4o.ext
 	/// if the database file is locked by another process.
 	/// </remarks>
 	/// <seealso cref="com.db4o.Db4o.OpenFile">com.db4o.Db4o.OpenFile</seealso>
-	public class DatabaseFileLockedException : j4o.lang.RuntimeException
+	[System.Serializable]
+	public class DatabaseFileLockedException : System.Exception
 	{
 	}
 }

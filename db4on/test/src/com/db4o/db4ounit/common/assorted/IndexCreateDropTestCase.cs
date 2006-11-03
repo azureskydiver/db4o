@@ -17,8 +17,8 @@ namespace com.db4o.db4ounit.common.assorted
 				_date = date_;
 			}
 
-			public IndexCreateDropItem(int int_) : this(int_, int_ == 0 ? null : "" + int_, int_
-				 == 0 ? null : new j4o.util.Date(int_))
+			public IndexCreateDropItem(int int_) : this(int_, int_ == 0 ? null : string.Empty
+				 + int_, int_ == 0 ? null : new j4o.util.Date(int_))
 			{
 			}
 		}
@@ -56,8 +56,8 @@ namespace com.db4o.db4ounit.common.assorted
 
 		private void Indexed(bool flag)
 		{
-			com.db4o.config.ObjectClass oc = com.db4o.Db4o.Configure().ObjectClass(typeof(com.db4o.db4ounit.common.assorted.IndexCreateDropTestCase.IndexCreateDropItem
-				));
+			com.db4o.config.ObjectClass oc = Fixture().Config().ObjectClass(typeof(com.db4o.db4ounit.common.assorted.IndexCreateDropTestCase.IndexCreateDropItem)
+				);
 			oc.ObjectField("_int").Indexed(flag);
 			oc.ObjectField("_string").Indexed(flag);
 			oc.ObjectField("_date").Indexed(flag);
@@ -66,8 +66,8 @@ namespace com.db4o.db4ounit.common.assorted
 		protected override com.db4o.query.Query NewQuery()
 		{
 			com.db4o.query.Query q = base.NewQuery();
-			q.Constrain(typeof(com.db4o.db4ounit.common.assorted.IndexCreateDropTestCase.IndexCreateDropItem
-				));
+			q.Constrain(typeof(com.db4o.db4ounit.common.assorted.IndexCreateDropTestCase.IndexCreateDropItem)
+				);
 			return q;
 		}
 

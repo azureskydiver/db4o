@@ -186,11 +186,10 @@ namespace com.db4o.inside.ix
 				com.db4o.inside.ix.IxFileRange newFileRange = CreateGlobalFileRange();
 				if (_indexTransactions != null)
 				{
-					com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
+					System.Collections.IEnumerator i = _indexTransactions.GetEnumerator();
 					while (i.MoveNext())
 					{
-						com.db4o.inside.ix.IndexTransaction ft = (com.db4o.inside.ix.IndexTransaction)i.Current
-							();
+						com.db4o.inside.ix.IndexTransaction ft = (com.db4o.inside.ix.IndexTransaction)i.Current;
 						com.db4o.foundation.Tree clonedTree = newFileRange;
 						if (clonedTree != null)
 						{
@@ -205,10 +204,10 @@ namespace com.db4o.inside.ix
 			}
 			else
 			{
-				com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
+				System.Collections.IEnumerator i = _indexTransactions.GetEnumerator();
 				while (i.MoveNext())
 				{
-					((com.db4o.inside.ix.IndexTransaction)i.Current()).Merge(ixTrans);
+					((com.db4o.inside.ix.IndexTransaction)i.Current).Merge(ixTrans);
 				}
 			}
 		}
@@ -272,7 +271,7 @@ namespace com.db4o.inside.ix
 		public override string ToString()
 		{
 			return base.ToString();
-			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			sb.Append("IxField  " + j4o.lang.JavaSystem.IdentityHashCode(this));
 			if (_globalIndexTransaction != null)
 			{
@@ -285,11 +284,11 @@ namespace com.db4o.inside.ix
 			}
 			if (_indexTransactions != null)
 			{
-				com.db4o.foundation.Iterator4 i = _indexTransactions.Iterator();
+				System.Collections.IEnumerator i = _indexTransactions.GetEnumerator();
 				while (i.MoveNext())
 				{
 					sb.Append("\n");
-					sb.Append(i.Current().ToString());
+					sb.Append(i.Current.ToString());
 				}
 			}
 			return sb.ToString();

@@ -10,8 +10,8 @@ namespace com.db4o.db4ounit.common.header
 		protected override System.Type[] TestCases()
 		{
 			return new System.Type[] { typeof(com.db4o.db4ounit.common.header.OldHeaderTest), 
-				typeof(com.db4o.db4ounit.common.header.ConfigurationSettingsTestCase), typeof(com.db4o.db4ounit.common.header.IdentityTestCase
-				), typeof(com.db4o.db4ounit.common.header.SimpleTimeStampIdTestCase) };
+				typeof(com.db4o.db4ounit.common.header.ConfigurationSettingsTestCase), typeof(com.db4o.db4ounit.common.header.IdentityTestCase)
+				, typeof(com.db4o.db4ounit.common.header.SimpleTimeStampIdTestCase) };
 		}
 	}
 }

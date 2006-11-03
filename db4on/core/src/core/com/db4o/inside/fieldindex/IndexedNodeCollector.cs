@@ -13,9 +13,9 @@ namespace com.db4o.inside.fieldindex
 			CollectIndexedNodes(candidates);
 		}
 
-		public virtual com.db4o.foundation.Iterator4 GetNodes()
+		public virtual System.Collections.IEnumerator GetNodes()
 		{
-			return _nodes.Iterator();
+			return _nodes.GetEnumerator();
 		}
 
 		private void CollectIndexedNodes(com.db4o.QCandidates candidates)
@@ -48,17 +48,17 @@ namespace com.db4o.inside.fieldindex
 		private com.db4o.inside.fieldindex.OrIndexedLeaf FindJoinOnSameFieldAtSameLevel(com.db4o.inside.fieldindex.OrIndexedLeaf
 			 join)
 		{
-			com.db4o.foundation.Iterator4 i = _nodes.Iterator();
+			System.Collections.IEnumerator i = _nodes.GetEnumerator();
 			while (i.MoveNext())
 			{
-				if (i.Current() == join)
+				if (i.Current == join)
 				{
 					continue;
 				}
-				if (i.Current() is com.db4o.inside.fieldindex.OrIndexedLeaf)
+				if (i.Current is com.db4o.inside.fieldindex.OrIndexedLeaf)
 				{
 					com.db4o.inside.fieldindex.OrIndexedLeaf current = (com.db4o.inside.fieldindex.OrIndexedLeaf
-						)i.Current();
+						)i.Current;
 					if (current.GetIndex() == join.GetIndex() && ParentConstraint(current) == ParentConstraint
 						(join))
 					{
@@ -74,11 +74,11 @@ namespace com.db4o.inside.fieldindex
 			return node.GetConstraint().Parent();
 		}
 
-		private void CollectIndexedNodes(com.db4o.foundation.Iterator4 qcons)
+		private void CollectIndexedNodes(System.Collections.IEnumerator qcons)
 		{
 			while (qcons.MoveNext())
 			{
-				com.db4o.QCon qcon = (com.db4o.QCon)qcons.Current();
+				com.db4o.QCon qcon = (com.db4o.QCon)qcons.Current;
 				if (IsCached(qcon))
 				{
 					continue;
@@ -144,12 +144,12 @@ namespace com.db4o.inside.fieldindex
 
 		private bool AllHaveSamePath(com.db4o.foundation.Collection4 leaves)
 		{
-			com.db4o.foundation.Iterator4 i = leaves.Iterator();
+			System.Collections.IEnumerator i = leaves.GetEnumerator();
 			i.MoveNext();
-			com.db4o.QCon first = (com.db4o.QCon)i.Current();
+			com.db4o.QCon first = (com.db4o.QCon)i.Current;
 			while (i.MoveNext())
 			{
-				if (!HaveSamePath(first, (com.db4o.QCon)i.Current()))
+				if (!HaveSamePath(first, (com.db4o.QCon)i.Current))
 				{
 					return false;
 				}
@@ -185,10 +185,10 @@ namespace com.db4o.inside.fieldindex
 		private void CollectLeaves(com.db4o.foundation.Collection4 leaves, com.db4o.foundation.Collection4
 			 joins)
 		{
-			com.db4o.foundation.Iterator4 i = joins.Iterator();
+			System.Collections.IEnumerator i = joins.GetEnumerator();
 			while (i.MoveNext())
 			{
-				com.db4o.QConJoin join = ((com.db4o.QConJoin)i.Current());
+				com.db4o.QConJoin join = ((com.db4o.QConJoin)i.Current);
 				CollectLeavesFromJoin(leaves, join);
 			}
 		}
@@ -224,10 +224,10 @@ namespace com.db4o.inside.fieldindex
 
 		private bool AllCanBeSearchedByIndex(com.db4o.foundation.Collection4 leaves)
 		{
-			com.db4o.foundation.Iterator4 i = leaves.Iterator();
+			System.Collections.IEnumerator i = leaves.GetEnumerator();
 			while (i.MoveNext())
 			{
-				com.db4o.QCon leaf = ((com.db4o.QCon)i.Current());
+				com.db4o.QCon leaf = ((com.db4o.QCon)i.Current);
 				if (!leaf.CanLoadByIndex())
 				{
 					return false;
@@ -239,14 +239,14 @@ namespace com.db4o.inside.fieldindex
 		private void CollectImplicitlyAndingJoins(com.db4o.foundation.Collection4 joins, 
 			com.db4o.QConObject constraintWithJoins)
 		{
-			com.db4o.foundation.Iterator4 i = joins.Iterator();
+			System.Collections.IEnumerator i = joins.GetEnumerator();
 			i.MoveNext();
 			com.db4o.inside.fieldindex.IndexedNodeWithRange last = NodeForConstraint((com.db4o.QCon
-				)i.Current());
+				)i.Current);
 			while (i.MoveNext())
 			{
 				com.db4o.inside.fieldindex.IndexedNodeWithRange node = NodeForConstraint((com.db4o.QCon
-					)i.Current());
+					)i.Current);
 				last = new com.db4o.inside.fieldindex.AndIndexedLeaf(constraintWithJoins, node, last
 					);
 				_nodes.Add(last);
@@ -264,10 +264,10 @@ namespace com.db4o.inside.fieldindex
 		private void CollectTopLevelJoins(com.db4o.foundation.Collection4 joins, com.db4o.QCon
 			 constraintWithJoins)
 		{
-			com.db4o.foundation.Iterator4 i = constraintWithJoins.i_joins.Iterator();
+			System.Collections.IEnumerator i = constraintWithJoins.i_joins.GetEnumerator();
 			while (i.MoveNext())
 			{
-				com.db4o.QConJoin join = (com.db4o.QConJoin)i.Current();
+				com.db4o.QConJoin join = (com.db4o.QConJoin)i.Current;
 				if (!join.HasJoins())
 				{
 					if (!joins.ContainsByIdentity(join))
@@ -331,13 +331,13 @@ namespace com.db4o.inside.fieldindex
 		private com.db4o.inside.fieldindex.IndexedLeaf FindLeafOnSameField(com.db4o.QConObject
 			 conObject)
 		{
-			com.db4o.foundation.Iterator4 i = _nodes.Iterator();
+			System.Collections.IEnumerator i = _nodes.GetEnumerator();
 			while (i.MoveNext())
 			{
-				if (i.Current() is com.db4o.inside.fieldindex.IndexedLeaf)
+				if (i.Current is com.db4o.inside.fieldindex.IndexedLeaf)
 				{
 					com.db4o.inside.fieldindex.IndexedLeaf leaf = (com.db4o.inside.fieldindex.IndexedLeaf
-						)i.Current();
+						)i.Current;
 					if (conObject.OnSameFieldAs(leaf.Constraint()))
 					{
 						return leaf;

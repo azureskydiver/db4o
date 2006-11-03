@@ -2,6 +2,11 @@ namespace com.db4o.db4ounit.common.header
 {
 	public class IdentityTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase
 	{
+		public static void Main(string[] arguments)
+		{
+			new com.db4o.db4ounit.common.header.IdentityTestCase().RunSolo();
+		}
+
 		public virtual void TestIdentityPreserved()
 		{
 			com.db4o.ext.Db4oDatabase ident = Db().Identity();
@@ -14,9 +19,14 @@ namespace com.db4o.db4ounit.common.header
 		public virtual void TestGenerateIdentity()
 		{
 			byte[] oldSignature = Db().Identity().GetSignature();
-			((com.db4o.YapFile)Db()).GenerateNewIdentity();
+			GenerateNewIdentity();
 			Reopen();
 			Db4oUnit.ArrayAssert.AreNotEqual(oldSignature, Db().Identity().GetSignature());
+		}
+
+		private void GenerateNewIdentity()
+		{
+			((com.db4o.YapFile)Db()).GenerateNewIdentity();
 		}
 	}
 }

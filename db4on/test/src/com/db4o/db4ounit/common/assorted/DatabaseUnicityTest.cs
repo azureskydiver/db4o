@@ -15,7 +15,7 @@ namespace com.db4o.db4ounit.common.assorted
 			{
 				com.db4o.ext.Db4oDatabase d4b = (com.db4o.ext.Db4oDatabase)objectSet.Next();
 				Db4oUnit.Assert.IsFalse(ht.ContainsKey(d4b.i_signature));
-				ht.Put(d4b.i_signature, "");
+				ht.Put(d4b.i_signature, string.Empty);
 			}
 			yapStream.ShowInternalClasses(false);
 			oc.Close();

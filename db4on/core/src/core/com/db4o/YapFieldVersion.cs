@@ -12,7 +12,7 @@ namespace com.db4o
 			com.db4o.YapClass yapClass, com.db4o.YapWriter writer, com.db4o.inside.slots.Slot
 			 oldSlot)
 		{
-			com.db4o.YLong.WriteLong(writer.GetStream().GenerateTimeStampId(), writer);
+			writer.WriteLong(writer.GetStream().GenerateTimeStampId());
 		}
 
 		public override void Delete(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapWriter
@@ -24,7 +24,7 @@ namespace com.db4o
 		internal override void Instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
 			 a_yapObject, com.db4o.YapReader a_bytes)
 		{
-			a_yapObject.i_virtualAttributes.i_version = com.db4o.YLong.ReadLong(a_bytes);
+			a_yapObject.i_virtualAttributes.i_version = a_bytes.ReadLong();
 		}
 
 		internal override void Marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
@@ -37,11 +37,11 @@ namespace com.db4o
 			}
 			if (a_yapObject.i_virtualAttributes == null)
 			{
-				com.db4o.YLong.WriteLong(0, a_bytes);
+				a_bytes.WriteLong(0);
 			}
 			else
 			{
-				com.db4o.YLong.WriteLong(a_yapObject.i_virtualAttributes.i_version, a_bytes);
+				a_bytes.WriteLong(a_yapObject.i_virtualAttributes.i_version);
 			}
 		}
 
@@ -50,9 +50,9 @@ namespace com.db4o
 			return com.db4o.YapConst.LONG_LENGTH;
 		}
 
-		internal override void MarshallIgnore(com.db4o.YapWriter writer)
+		internal override void MarshallIgnore(com.db4o.YapReader writer)
 		{
-			com.db4o.YLong.WriteLong(0, writer);
+			writer.WriteLong(0);
 		}
 	}
 }

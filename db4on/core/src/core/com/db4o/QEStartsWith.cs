@@ -3,7 +3,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class QEStartsWith : com.db4o.QEStringCmp
 	{
-		public QEStartsWith(bool caseSensitive) : base(caseSensitive)
+		public QEStartsWith(bool caseSensitive_) : base(caseSensitive_)
 		{
 		}
 

@@ -10,7 +10,8 @@ namespace com.db4o.ext
 	/// </remarks>
 	/// <seealso cref="com.db4o.config.Configuration.ExceptionsOnNotStorable">com.db4o.config.Configuration.ExceptionsOnNotStorable
 	/// 	</seealso>
-	public class ObjectNotStorableException : j4o.lang.RuntimeException
+	[System.Serializable]
+	public class ObjectNotStorableException : System.Exception
 	{
 		public ObjectNotStorableException(com.db4o.reflect.ReflectClass a_class) : base(com.db4o.Messages
 			.Get(a_class.IsPrimitive() ? 59 : 45, a_class.GetName()))

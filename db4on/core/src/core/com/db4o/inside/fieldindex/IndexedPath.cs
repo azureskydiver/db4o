@@ -48,9 +48,10 @@ namespace com.db4o.inside.fieldindex
 			_next = next;
 		}
 
-		public override com.db4o.foundation.Iterator4 Iterator()
+		public override System.Collections.IEnumerator GetEnumerator()
 		{
-			return new com.db4o.inside.fieldindex.IndexedPathIterator(this, _next.Iterator());
+			return new com.db4o.inside.fieldindex.IndexedPathIterator(this, _next.GetEnumerator
+				());
 		}
 
 		public override int ResultSize()

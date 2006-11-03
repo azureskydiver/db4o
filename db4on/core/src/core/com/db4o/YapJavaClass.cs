@@ -107,7 +107,7 @@ namespace com.db4o
 
 		internal abstract object PrimitiveNull();
 
-		public virtual bool ReadArray(object array, com.db4o.YapWriter reader)
+		public virtual bool ReadArray(object array, com.db4o.YapReader reader)
 		{
 			return false;
 		}
@@ -149,7 +149,7 @@ namespace com.db4o
 					return new com.db4o.QCandidate(candidates, obj, 0, true);
 				}
 			}
-			catch (com.db4o.CorruptionException e)
+			catch (com.db4o.CorruptionException)
 			{
 			}
 			return null;
@@ -161,7 +161,7 @@ namespace com.db4o
 			{
 				return Read1(a_reader);
 			}
-			catch (com.db4o.CorruptionException e)
+			catch (com.db4o.CorruptionException)
 			{
 			}
 			return null;
@@ -179,8 +179,8 @@ namespace com.db4o
 			{
 				return _classReflector;
 			}
-			_classReflector = _stream.Reflector().ForClass(j4o.lang.Class.GetClassForObject(DefaultValue
-				()));
+			_classReflector = _stream.Reflector().ForClass(j4o.lang.JavaSystem.GetClassForObject
+				(DefaultValue()));
 			j4o.lang.Class clazz = PrimitiveJavaClass();
 			if (clazz != null)
 			{
@@ -202,7 +202,7 @@ namespace com.db4o
 
 		public abstract void Write(object a_object, com.db4o.YapReader a_bytes);
 
-		public virtual bool WriteArray(object array, com.db4o.YapWriter reader)
+		public virtual bool WriteArray(object array, com.db4o.YapReader reader)
 		{
 			return false;
 		}
@@ -313,12 +313,24 @@ namespace com.db4o
 
 		public abstract int LinkLength();
 
-		public void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
-			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
+		public void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers, bool redirect)
 		{
 			int linkLength = LinkLength();
-			source.IncrementOffset(linkLength);
-			target.IncrementOffset(linkLength);
+			readers.IncrementOffset(linkLength);
+		}
+
+		public virtual void DefragIndexEntry(com.db4o.ReaderPair readers)
+		{
+			try
+			{
+				Read1(readers.Source());
+				Read1(readers.Target());
+			}
+			catch (com.db4o.CorruptionException)
+			{
+				com.db4o.inside.Exceptions4.VirtualException();
+			}
 		}
 
 		public abstract int GetID();

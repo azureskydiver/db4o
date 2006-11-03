@@ -18,7 +18,7 @@ namespace com.db4o.inside.convert
 
 		public static bool Convert(com.db4o.inside.convert.ConversionStage stage)
 		{
-			if (!NeedsConversion(stage.Header()))
+			if (!NeedsConversion(stage.SystemData()))
 			{
 				return false;
 			}
@@ -29,9 +29,9 @@ namespace com.db4o.inside.convert
 			return _converter.RunConversions(stage);
 		}
 
-		private static bool NeedsConversion(com.db4o.header.FileHeader0 fileHeader)
+		private static bool NeedsConversion(com.db4o.inside.SystemData systemData)
 		{
-			return fileHeader.ConverterVersion() < VERSION;
+			return systemData.ConverterVersion() < VERSION;
 		}
 
 		public virtual void Register(int idx, com.db4o.inside.convert.Conversion conversion
@@ -46,12 +46,12 @@ namespace com.db4o.inside.convert
 
 		public virtual bool RunConversions(com.db4o.inside.convert.ConversionStage stage)
 		{
-			com.db4o.header.FileHeader0 fileHeader = stage.Header();
-			if (!NeedsConversion(stage.Header()))
+			com.db4o.inside.SystemData systemData = stage.SystemData();
+			if (!NeedsConversion(systemData))
 			{
 				return false;
 			}
-			for (int i = fileHeader.ConverterVersion(); i <= VERSION; i++)
+			for (int i = systemData.ConverterVersion(); i <= VERSION; i++)
 			{
 				com.db4o.inside.convert.Conversion conversion = (com.db4o.inside.convert.Conversion
 					)_conversions.Get(i);

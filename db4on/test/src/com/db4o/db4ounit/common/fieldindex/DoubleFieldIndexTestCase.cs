@@ -22,10 +22,10 @@ namespace com.db4o.db4ounit.common.fieldindex
 			}
 		}
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
-			IndexField(typeof(com.db4o.db4ounit.common.fieldindex.DoubleFieldIndexTestCase.Item
-				), "value");
+			IndexField(config, typeof(com.db4o.db4ounit.common.fieldindex.DoubleFieldIndexTestCase.Item)
+				, "value");
 		}
 
 		protected override void Store()
@@ -40,16 +40,16 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		public virtual void TestEqual()
 		{
-			com.db4o.query.Query query = NewQuery(typeof(com.db4o.db4ounit.common.fieldindex.DoubleFieldIndexTestCase.Item
-				));
+			com.db4o.query.Query query = NewQuery(typeof(com.db4o.db4ounit.common.fieldindex.DoubleFieldIndexTestCase.Item)
+				);
 			query.Descend("value").Constrain(1.1);
 			AssertItems(new double[] { 1.1 }, query.Execute());
 		}
 
 		public virtual void TestGreater()
 		{
-			com.db4o.query.Query query = NewQuery(typeof(com.db4o.db4ounit.common.fieldindex.DoubleFieldIndexTestCase.Item
-				));
+			com.db4o.query.Query query = NewQuery(typeof(com.db4o.db4ounit.common.fieldindex.DoubleFieldIndexTestCase.Item)
+				);
 			com.db4o.query.Query descend = query.Descend("value");
 			descend.Constrain(System.Convert.ToDouble(1)).Greater();
 			descend.OrderAscending();

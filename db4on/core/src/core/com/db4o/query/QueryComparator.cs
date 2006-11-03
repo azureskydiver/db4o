@@ -8,7 +8,7 @@ namespace com.db4o.query
 	/// Comparator for sorting queries on JDKs where
 	/// java.util.Comparator is not available.
 	/// </remarks>
-	public interface QueryComparator : j4o.io.Serializable
+	public interface QueryComparator
 	{
 		/// <summary>Implement to compare two arguments for sorting.</summary>
 		/// <remarks>

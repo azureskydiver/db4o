@@ -70,12 +70,7 @@ namespace com.db4o.inside.diagnostic
 
 		private bool IsDb4oClass(com.db4o.YapClass yc)
 		{
-			string name = yc.GetName();
-			if (name.IndexOf("com.db4o.test") == 0)
-			{
-				return false;
-			}
-			return name.IndexOf("com.db4o.") == 0;
+			return com.db4o.Platform4.IsDb4oClass(yc.GetName());
 		}
 
 		public virtual void LoadedFromClassIndex(com.db4o.YapClass yc)
@@ -105,10 +100,10 @@ namespace com.db4o.inside.diagnostic
 			{
 				return;
 			}
-			com.db4o.foundation.Iterator4 i = _listeners.Iterator();
+			System.Collections.IEnumerator i = _listeners.GetEnumerator();
 			while (i.MoveNext())
 			{
-				((com.db4o.diagnostic.DiagnosticListener)i.Current()).OnDiagnostic(d);
+				((com.db4o.diagnostic.DiagnosticListener)i.Current).OnDiagnostic(d);
 			}
 		}
 

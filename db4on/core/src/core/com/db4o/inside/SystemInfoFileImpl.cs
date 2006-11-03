@@ -39,5 +39,10 @@ namespace com.db4o.inside
 			long blockedSize = FreespaceManager().FreeSize();
 			return blockSize * blockedSize;
 		}
+
+		public virtual long TotalSize()
+		{
+			return _file.FileLength();
+		}
 	}
 }

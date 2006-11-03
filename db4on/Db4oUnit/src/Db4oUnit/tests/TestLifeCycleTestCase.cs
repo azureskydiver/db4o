@@ -4,8 +4,8 @@ namespace Db4oUnit.tests
 	{
 		public virtual void TestLifeCycle()
 		{
-			Db4oUnit.TestSuite suite = new Db4oUnit.ReflectionTestSuiteBuilder(typeof(Db4oUnit.tests.RunsLifeCycle
-				)).Build();
+			Db4oUnit.TestSuite suite = new Db4oUnit.ReflectionTestSuiteBuilder(typeof(Db4oUnit.tests.RunsLifeCycle)
+				).Build();
 			Db4oUnit.tests.FrameworkTestCase.RunTestAndExpect(suite, 1);
 			Db4oUnit.Assert.IsTrue(GetTestSubject(suite).TearDownCalled());
 		}

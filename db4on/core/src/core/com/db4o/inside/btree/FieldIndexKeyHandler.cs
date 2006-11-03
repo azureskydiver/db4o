@@ -17,7 +17,7 @@ namespace com.db4o.inside.btree
 		public virtual object ComparableObject(com.db4o.Transaction trans, object indexEntry
 			)
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual int LinkLength()
@@ -27,7 +27,7 @@ namespace com.db4o.inside.btree
 
 		public virtual object ReadIndexEntry(com.db4o.YapReader a_reader)
 		{
-			int parentID = ((int)_parentIdHandler.ReadIndexEntry(a_reader));
+			int parentID = ReadParentID(a_reader);
 			object objPart = _valueHandler.ReadIndexEntry(a_reader);
 			if (parentID < 0)
 			{
@@ -35,6 +35,11 @@ namespace com.db4o.inside.btree
 				parentID = -parentID;
 			}
 			return new com.db4o.inside.btree.FieldIndexKey(parentID, objPart);
+		}
+
+		private int ReadParentID(com.db4o.YapReader a_reader)
+		{
+			return ((int)_parentIdHandler.ReadIndexEntry(a_reader));
 		}
 
 		public virtual void WriteIndexEntry(com.db4o.YapReader writer, object obj)
@@ -78,23 +83,29 @@ namespace com.db4o.inside.btree
 
 		public virtual bool IsEqual(object obj)
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual bool IsGreater(object obj)
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual bool IsSmaller(object obj)
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public virtual object Current()
 		{
 			return new com.db4o.inside.btree.FieldIndexKey(_parentIdHandler.CurrentInt(), _valueHandler
 				.Current());
+		}
+
+		public virtual void DefragIndexEntry(com.db4o.ReaderPair readers)
+		{
+			readers.CopyID(true, false);
+			_valueHandler.DefragIndexEntry(readers);
 		}
 	}
 }

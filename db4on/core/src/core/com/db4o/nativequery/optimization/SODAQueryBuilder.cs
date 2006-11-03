@@ -43,10 +43,10 @@ namespace com.db4o.nativequery.optimization
 				)
 			{
 				com.db4o.query.Query subQuery = _query;
-				com.db4o.foundation.Iterator4 fieldNameIterator = FieldNames(expression.Left());
+				System.Collections.IEnumerator fieldNameIterator = FieldNames(expression.Left());
 				while (fieldNameIterator.MoveNext())
 				{
-					subQuery = subQuery.Descend((string)fieldNameIterator.Current());
+					subQuery = subQuery.Descend((string)fieldNameIterator.Current);
 				}
 				com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor visitor = new 
 					com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor(_predicate);
@@ -90,8 +90,7 @@ namespace com.db4o.nativequery.optimization
 									}
 									else
 									{
-										throw new j4o.lang.RuntimeException("Can't handle constraint: " + expression.Op()
-											);
+										throw new System.Exception("Can't handle constraint: " + expression.Op());
 									}
 								}
 							}
@@ -106,7 +105,7 @@ namespace com.db4o.nativequery.optimization
 				_constraint.Not();
 			}
 
-			private com.db4o.foundation.Iterator4 FieldNames(com.db4o.nativequery.expr.cmp.FieldValue
+			private System.Collections.IEnumerator FieldNames(com.db4o.nativequery.expr.cmp.FieldValue
 				 fieldValue)
 			{
 				com.db4o.foundation.Collection4 coll = new com.db4o.foundation.Collection4();
@@ -115,10 +114,10 @@ namespace com.db4o.nativequery.optimization
 				{
 					com.db4o.nativequery.expr.cmp.FieldValue curField = (com.db4o.nativequery.expr.cmp.FieldValue
 						)curOp;
-					coll.Add(curField.FieldName());
+					coll.Prepend(curField.FieldName());
 					curOp = curField.Parent();
 				}
-				return coll.Iterator();
+				return coll.GetEnumerator();
 			}
 		}
 

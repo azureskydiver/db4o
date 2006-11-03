@@ -22,10 +22,10 @@ namespace com.db4o.db4ounit.common.fieldindex
 			}
 		}
 
-		protected override void Configure()
+		protected override void Configure(com.db4o.config.Configuration config)
 		{
-			IndexField(typeof(com.db4o.db4ounit.common.fieldindex.StringIndexTestCase.Item), 
-				"name");
+			IndexField(config, typeof(com.db4o.db4ounit.common.fieldindex.StringIndexTestCase.Item)
+				, "name");
 		}
 
 		public virtual void TestNotEquals()
@@ -34,8 +34,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 			Add("bar");
 			Add("baz");
 			Add(null);
-			com.db4o.query.Query query = NewQuery(typeof(com.db4o.db4ounit.common.fieldindex.StringIndexTestCase.Item
-				));
+			com.db4o.query.Query query = NewQuery(typeof(com.db4o.db4ounit.common.fieldindex.StringIndexTestCase.Item)
+				);
 			query.Descend("name").Constrain("bar").Not();
 			AssertItems(new string[] { "foo", "baz", null }, query.Execute());
 		}
@@ -123,12 +123,12 @@ namespace com.db4o.db4ounit.common.fieldindex
 			com.db4o.YapRandomAccessFile file = ((com.db4o.YapRandomAccessFile)Db());
 			com.db4o.inside.freespace.FreespaceManagerRam fm = (com.db4o.inside.freespace.FreespaceManagerRam
 				)file.FreespaceManager();
-			fm.TraverseFreeSlots(new _AnonymousInnerClass132(this, file));
+			fm.TraverseFreeSlots(new _AnonymousInnerClass133(this, file));
 		}
 
-		private sealed class _AnonymousInnerClass132 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass133 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass132(StringIndexTestCase _enclosing, com.db4o.YapRandomAccessFile
+			public _AnonymousInnerClass133(StringIndexTestCase _enclosing, com.db4o.YapRandomAccessFile
 				 file)
 			{
 				this._enclosing = _enclosing;
@@ -215,8 +215,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 			)
 		{
 			com.db4o.query.Query query = Stream().Query(transaction);
-			query.Constrain(typeof(com.db4o.db4ounit.common.fieldindex.StringIndexTestCase.Item
-				));
+			query.Constrain(typeof(com.db4o.db4ounit.common.fieldindex.StringIndexTestCase.Item)
+				);
 			query.Descend("name").Constrain(itemName);
 			return query;
 		}

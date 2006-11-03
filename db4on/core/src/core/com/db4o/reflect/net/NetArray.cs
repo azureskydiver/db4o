@@ -2,12 +2,71 @@
 
 namespace com.db4o.reflect.net
 {
+    public class NetArray : com.db4o.reflect.core.AbstractReflectArray
+    {
+        public NetArray(Reflector reflector)
+            : base(reflector)
+        {
+        }
+
+        private static Type GetNetType(ReflectClass clazz)
+        {
+            return ((NetClass)clazz).GetNetType();
+        }
+
+        public override object NewInstance(ReflectClass componentType, int[] dimensions)
+        {
+            Type type = GetNetType(componentType);
+            return UnfoldArrayCreation(GetArrayType(type, dimensions.Length - 1), dimensions, 0);
+        }
+
+        private object UnfoldArrayCreation(Type type, int[] dimensions, int dimensionIndex)
+        {
+            int length = dimensions[dimensionIndex];
+            Array array = Array.CreateInstance(type, length);
+            if (dimensionIndex == dimensions.Length - 1)
+            {
+                return array;
+            }
+            for (int i = 0; i < length; ++i)
+            {
+                object value = UnfoldArrayCreation(type.GetElementType(), dimensions, dimensionIndex + 1);
+                array.SetValue(value, i);
+            }
+            return array;
+        }
+
+        private System.Type GetArrayType(Type type, int dimensions)
+        {
+            Type arrayType = MakeArrayType(type);
+            for (int i = 1; i < dimensions; ++i)
+            {
+                arrayType = MakeArrayType(arrayType);
+            }
+            return arrayType;
+        }
+
+        private Type MakeArrayType(Type type)
+        {
+#if NET_2_0
+            return type.MakeArrayType();
+#else
+            return type.Module.GetType(type.FullName + "[]");
+#endif
+        }
+
+        public override object NewInstance(ReflectClass componentType, int length)
+        {
+            return System.Array.CreateInstance(GetNetType(componentType), length);
+        }
+    }
+
 	/// <remarks>Reflection implementation for Array to map to .NET reflection.</remarks>
-	public class NetArray : com.db4o.reflect.ReflectArray
+	public class _NetArray : com.db4o.reflect.ReflectArray
 	{
 		private readonly com.db4o.reflect.Reflector _reflector;
 
-		internal NetArray(com.db4o.reflect.Reflector reflector)
+		internal _NetArray(com.db4o.reflect.Reflector reflector)
 		{
 			_reflector = reflector;
 		}

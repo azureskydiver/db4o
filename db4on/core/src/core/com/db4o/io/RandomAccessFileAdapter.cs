@@ -30,7 +30,7 @@ namespace com.db4o.io
 			{
 				com.db4o.Platform4.UnlockFile(_delegate);
 			}
-			catch (System.Exception e)
+			catch
 			{
 			}
 			_delegate.Close();

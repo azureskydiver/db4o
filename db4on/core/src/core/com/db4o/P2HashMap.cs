@@ -378,10 +378,10 @@ namespace com.db4o
 					i_entries = new P1HashElement[col.Size()];
 				}
 				int j = 0;
-				Iterator4 it = col.Iterator();
+				IEnumerator it = col.GetEnumerator();
 				while (it.MoveNext())
 				{
-					i_entries[j++] = (P1HashElement)it.Current();
+					i_entries[j++] = (P1HashElement)it.Current;
 				}
 				Store(2);
 			}

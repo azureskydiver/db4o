@@ -15,7 +15,7 @@ namespace com.db4o.nativequery.optimization
 					com.db4o.Platform4.SetAccessible(method);
 					return method;
 				}
-				catch (System.Exception e)
+				catch
 				{
 				}
 				curclazz = curclazz.GetSuperclass();
@@ -34,7 +34,7 @@ namespace com.db4o.nativequery.optimization
 					com.db4o.Platform4.SetAccessible(field);
 					return field;
 				}
-				catch (System.Exception e)
+				catch
 				{
 				}
 				curclazz = curclazz.GetSuperclass();

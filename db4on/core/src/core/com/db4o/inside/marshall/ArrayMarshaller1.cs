@@ -29,13 +29,6 @@ namespace com.db4o.inside.marshall
 			}
 		}
 
-		public override com.db4o.TreeInt CollectIDs(com.db4o.YapArray arrayHandler, com.db4o.TreeInt
-			 tree, com.db4o.YapWriter reader)
-		{
-			reader._offset = reader.ReadInt();
-			return arrayHandler.CollectIDs1(reader.GetTransaction(), tree, reader);
-		}
-
 		public override void DeleteEmbedded(com.db4o.YapArray arrayHandler, com.db4o.YapWriter
 			 reader)
 		{
@@ -102,6 +95,21 @@ namespace com.db4o.inside.marshall
 				writer._offset = linkOffset;
 			}
 			return obj;
+		}
+
+		protected override com.db4o.YapReader PrepareIDReader(com.db4o.Transaction trans, 
+			com.db4o.YapReader reader)
+		{
+			reader._offset = reader.ReadInt();
+			return reader;
+		}
+
+		public override void DefragIDs(com.db4o.YapArray arrayHandler, com.db4o.ReaderPair
+			 readers)
+		{
+			int offset = readers.PreparePayloadRead();
+			arrayHandler.Defrag1(_family, readers);
+			readers.Offset(offset);
 		}
 	}
 }

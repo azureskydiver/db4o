@@ -138,7 +138,7 @@ namespace com.db4o
 			{
 				return a_candidate.Evaluate(this, i_evaluator);
 			}
-			catch (System.Exception e)
+			catch
 			{
 				return false;
 			}
@@ -150,10 +150,10 @@ namespace com.db4o
 			if (i_field.IsSimple())
 			{
 				bool hasEvaluation = false;
-				com.db4o.foundation.Iterator4 i = IterateChildren();
+				System.Collections.IEnumerator i = IterateChildren();
 				while (i.MoveNext())
 				{
-					if (i.Current() is com.db4o.QConEvaluation)
+					if (i.Current is com.db4o.QConEvaluation)
 					{
 						hasEvaluation = true;
 						break;
@@ -162,10 +162,10 @@ namespace com.db4o
 				if (hasEvaluation)
 				{
 					a_candidates.Traverse(i_field);
-					com.db4o.foundation.Iterator4 j = IterateChildren();
+					System.Collections.IEnumerator j = IterateChildren();
 					while (j.MoveNext())
 					{
-						((com.db4o.QCon)j.Current()).EvaluateEvaluationsExec(a_candidates, false);
+						((com.db4o.QCon)j.Current).EvaluateEvaluationsExec(a_candidates, false);
 					}
 				}
 			}
@@ -286,7 +286,7 @@ namespace com.db4o
 
 		internal override string LogObject()
 		{
-			return "";
+			return string.Empty;
 		}
 
 		internal override void Marshall()

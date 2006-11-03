@@ -291,7 +291,7 @@ namespace com.db4o.inside.classindex
 			private readonly com.db4o.foundation.Visitor4 command;
 		}
 
-		private int IdFromValue(object value)
+		public virtual int IdFromValue(object value)
 		{
 			return ((com.db4o.TreeInt)value)._key;
 		}
@@ -332,9 +332,8 @@ namespace com.db4o.inside.classindex
 		{
 		}
 
-		public override void DefragReference(com.db4o.YapClass yapClass, com.db4o.YapReader
-			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping, int classIndexID
-			)
+		public override void DefragReference(com.db4o.YapClass yapClass, com.db4o.ReaderPair
+			 readers, int classIndexID)
 		{
 		}
 
@@ -343,14 +342,13 @@ namespace com.db4o.inside.classindex
 			return _index.GetID();
 		}
 
-		public override com.db4o.foundation.Iterator4 AllSlotIDs(com.db4o.Transaction trans
+		public override System.Collections.IEnumerator AllSlotIDs(com.db4o.Transaction trans
 			)
 		{
-			throw new com.db4o.foundation.NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
-		public override void DefragIndex(com.db4o.YapReader source, com.db4o.YapReader target
-			, com.db4o.IDMapping mapping)
+		public override void DefragIndex(com.db4o.ReaderPair readers)
 		{
 		}
 	}

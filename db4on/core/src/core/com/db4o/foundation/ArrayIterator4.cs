@@ -1,6 +1,6 @@
 namespace com.db4o.foundation
 {
-	public class ArrayIterator4 : com.db4o.foundation.Iterator4
+	public class ArrayIterator4 : System.Collections.IEnumerator
 	{
 		internal object[] _elements;
 
@@ -23,9 +23,17 @@ namespace com.db4o.foundation
 			return false;
 		}
 
-		public virtual object Current()
+		public virtual object Current
 		{
-			return _elements[_next];
+			get
+			{
+				return _elements[_next];
+			}
+		}
+
+		public virtual void Reset()
+		{
+			_next = -1;
 		}
 
 		private int LastIndex()

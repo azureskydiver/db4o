@@ -7,10 +7,11 @@ namespace com.db4o
 		public virtual void Run()
 		{
 			dontRemove = true;
-			com.db4o.foundation.Iterator4 i = Iterator();
+			com.db4o.foundation.Collection4 copy = new com.db4o.foundation.Collection4(this);
+			System.Collections.IEnumerator i = copy.GetEnumerator();
 			while (i.MoveNext())
 			{
-				((com.db4o.YapStream)i.Current()).FailedToShutDown();
+				((com.db4o.YapStream)i.Current).FailedToShutDown();
 			}
 		}
 	}

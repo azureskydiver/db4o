@@ -51,11 +51,11 @@ namespace com.db4o.inside.fieldindex
 		public static com.db4o.TreeInt AddToTree(com.db4o.TreeInt tree, com.db4o.inside.fieldindex.IndexedNode
 			 node)
 		{
-			com.db4o.foundation.Iterator4 i = node.Iterator();
+			System.Collections.IEnumerator i = node.GetEnumerator();
 			while (i.MoveNext())
 			{
 				com.db4o.inside.btree.FieldIndexKey composite = (com.db4o.inside.btree.FieldIndexKey
-					)i.Current();
+					)i.Current;
 				tree = (com.db4o.TreeInt)com.db4o.foundation.Tree.Add(tree, new com.db4o.TreeInt(
 					composite.ParentID()));
 			}
@@ -76,7 +76,7 @@ namespace com.db4o.inside.fieldindex
 			return Constraint().Transaction();
 		}
 
-		public abstract com.db4o.foundation.Iterator4 Iterator();
+		public abstract System.Collections.IEnumerator GetEnumerator();
 
 		public abstract int ResultSize();
 	}

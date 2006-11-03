@@ -73,7 +73,7 @@ namespace com.db4o
 		com.db4o.YapClass GetYapClass(com.db4o.YapStream a_stream);
 
 		/// <summary>performance optimized read (only used for byte[] so far)</summary>
-		bool ReadArray(object array, com.db4o.YapWriter reader);
+		bool ReadArray(object array, com.db4o.YapReader reader);
 
 		void ReadCandidates(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
 			 reader, com.db4o.QCandidates candidates);
@@ -82,13 +82,13 @@ namespace com.db4o
 			 mf, com.db4o.YapReader[] a_bytes);
 
 		/// <summary>performance optimized write (only used for byte[] so far)</summary>
-		bool WriteArray(object array, com.db4o.YapWriter reader);
+		bool WriteArray(object array, com.db4o.YapReader reader);
 
 		com.db4o.QCandidate ReadSubCandidate(com.db4o.inside.marshall.MarshallerFamily mf
 			, com.db4o.YapReader reader, com.db4o.QCandidates candidates, bool withIndirection
 			);
 
-		void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader source
-			, com.db4o.YapReader target, com.db4o.IDMapping mapping);
+		void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair readers
+			, bool redirect);
 	}
 }

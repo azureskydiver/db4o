@@ -3,7 +3,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class QEContains : com.db4o.QEStringCmp
 	{
-		public QEContains(bool caseSensitive) : base(caseSensitive)
+		public QEContains(bool caseSensitive_) : base(caseSensitive_)
 		{
 		}
 

@@ -144,7 +144,7 @@ namespace com.db4o.inside.ix
 		public override string ToString()
 		{
 			return base.ToString();
-			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			sb.Append("IxFieldTransaction ");
 			sb.Append(j4o.lang.JavaSystem.IdentityHashCode(this));
 			if (i_root == null)
@@ -160,7 +160,7 @@ namespace com.db4o.inside.ix
 
 		private sealed class _AnonymousInnerClass124 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass124(IndexTransaction _enclosing, j4o.lang.StringBuffer
+			public _AnonymousInnerClass124(IndexTransaction _enclosing, System.Text.StringBuilder
 				 sb)
 			{
 				this._enclosing = _enclosing;
@@ -175,7 +175,7 @@ namespace com.db4o.inside.ix
 
 			private readonly IndexTransaction _enclosing;
 
-			private readonly j4o.lang.StringBuffer sb;
+			private readonly System.Text.StringBuilder sb;
 		}
 	}
 }

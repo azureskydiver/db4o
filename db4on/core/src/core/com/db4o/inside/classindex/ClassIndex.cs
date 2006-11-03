@@ -47,10 +47,6 @@ namespace com.db4o.inside.classindex
 			int length = com.db4o.YapConst.INT_LENGTH;
 			com.db4o.YapReader reader = new com.db4o.YapReader(length);
 			reader.ReadEncrypt(ta.Stream(), slot._address);
-			if (reader == null)
-			{
-				return 0;
-			}
 			return reader.ReadInt();
 		}
 

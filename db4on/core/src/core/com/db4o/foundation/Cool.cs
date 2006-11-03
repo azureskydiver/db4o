@@ -13,7 +13,7 @@ namespace com.db4o.foundation
 			{
 				j4o.lang.Thread.Sleep(millis);
 			}
-			catch (System.Exception ignored)
+			catch
 			{
 			}
 		}

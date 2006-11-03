@@ -106,7 +106,7 @@ namespace com.db4o
 				.GetLength());
 		}
 
-		internal override bool HasIndex()
+		public override bool HasIndex()
 		{
 			return false;
 		}
@@ -121,7 +121,7 @@ namespace com.db4o
 				{
 					a_object = i_handler.Read(mf, a_bytes, true);
 				}
-				catch (com.db4o.CorruptionException ce)
+				catch (com.db4o.CorruptionException)
 				{
 					return null;
 				}
@@ -139,7 +139,7 @@ namespace com.db4o
 			{
 				return i_handler.Read(mf, a_bytes, true);
 			}
-			catch (com.db4o.CorruptionException ce)
+			catch (com.db4o.CorruptionException)
 			{
 				return null;
 			}
@@ -154,9 +154,8 @@ namespace com.db4o
 			{
 				obj = i_handler.Read(mf, a_bytes, true);
 			}
-			catch (com.db4o.CorruptionException ce)
+			catch (com.db4o.CorruptionException)
 			{
-				obj = null;
 			}
 			if (obj != null)
 			{
@@ -267,16 +266,16 @@ namespace com.db4o
 			return "Wraps " + i_handler.ToString() + " in YapClassPrimitive";
 		}
 
-		public override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
-			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
+		public override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers, bool redirect)
 		{
 			if (mf._primitive.UseNormalClassRead())
 			{
-				base.Defrag(mf, source, target, mapping);
+				base.Defrag(mf, readers, redirect);
 			}
 			else
 			{
-				i_handler.Defrag(mf, source, target, mapping);
+				i_handler.Defrag(mf, readers, false);
 			}
 		}
 	}

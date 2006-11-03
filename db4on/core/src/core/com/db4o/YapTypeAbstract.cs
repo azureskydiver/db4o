@@ -15,13 +15,13 @@ namespace com.db4o
 
 		public virtual string DotNetClassName()
 		{
-			string className = j4o.lang.Class.GetClassForObject(this).GetName();
+			string className = j4o.lang.JavaSystem.GetClassForObject(this).GetName();
 			int pos = className.IndexOf(".Net");
 			if (pos >= 0)
 			{
 				return "System." + j4o.lang.JavaSystem.Substring(className, pos + 4) + ", mscorlib";
 			}
-			return j4o.lang.Class.GetClassForObject(DefaultValue()).GetName();
+			return j4o.lang.JavaSystem.GetClassForObject(DefaultValue()).GetName();
 		}
 
 		public abstract bool IsEqual(object compare, object with);

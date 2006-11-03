@@ -162,7 +162,7 @@ namespace com.db4o.inside.marshall
 				}
 				if (!isNull)
 				{
-					reader.IncrementOffset(curField.LinkLength());
+					curField.IncrementOffset(reader);
 				}
 			}
 
@@ -207,7 +207,7 @@ namespace com.db4o.inside.marshall
 				{
 					field.Instantiate(this._enclosing._family, yapObject, onObject, writer);
 				}
-				catch (com.db4o.CorruptionException e)
+				catch (com.db4o.CorruptionException)
 				{
 					this.Cancel();
 				}
@@ -378,30 +378,26 @@ namespace com.db4o.inside.marshall
 		}
 
 		public override void DefragFields(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeader
-			 header, com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping
-			 mapping)
+			 header, com.db4o.ReaderPair readers)
 		{
 			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass200
-				(this, target, source, mapping);
-			TraverseFields(yc, source, header._headerAttributes, command);
+				(this, readers);
+			TraverseFields(yc, null, header._headerAttributes, command);
 		}
 
 		private sealed class _AnonymousInnerClass200 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass200(ObjectMarshaller1 _enclosing, com.db4o.YapReader target
-				, com.db4o.YapReader source, com.db4o.IDMapping mapping)
+			public _AnonymousInnerClass200(ObjectMarshaller1 _enclosing, com.db4o.ReaderPair 
+				readers)
 			{
 				this._enclosing = _enclosing;
-				this.target = target;
-				this.source = source;
-				this.mapping = mapping;
+				this.readers = readers;
 			}
 
 			public override int FieldCount(com.db4o.YapClass yapClass, com.db4o.YapReader reader
 				)
 			{
-				target.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
-				return source.ReadInt();
+				return readers.ReadInt();
 			}
 
 			public override void ProcessField(com.db4o.YapField field, bool isNull, com.db4o.YapClass
@@ -409,17 +405,13 @@ namespace com.db4o.inside.marshall
 			{
 				if (!isNull)
 				{
-					field.GetHandler().Defrag(this._enclosing._family, source, target, mapping);
+					field.DefragField(this._enclosing._family, readers);
 				}
 			}
 
 			private readonly ObjectMarshaller1 _enclosing;
 
-			private readonly com.db4o.YapReader target;
-
-			private readonly com.db4o.YapReader source;
-
-			private readonly com.db4o.IDMapping mapping;
+			private readonly com.db4o.ReaderPair readers;
 		}
 
 		public override void WriteObjectClassID(com.db4o.YapReader reader, int id)

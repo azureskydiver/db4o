@@ -5,8 +5,7 @@ namespace com.db4o.inside.convert
 	{
 		public sealed class ClassCollectionAvailableStage : com.db4o.inside.convert.ConversionStage
 		{
-			public ClassCollectionAvailableStage(com.db4o.YapFile file, com.db4o.header.FileHeader0
-				 header) : base(file, header)
+			public ClassCollectionAvailableStage(com.db4o.YapFile file) : base(file)
 			{
 			}
 
@@ -18,8 +17,7 @@ namespace com.db4o.inside.convert
 
 		public sealed class SystemUpStage : com.db4o.inside.convert.ConversionStage
 		{
-			public SystemUpStage(com.db4o.YapFile file, com.db4o.header.FileHeader0 header) : 
-				base(file, header)
+			public SystemUpStage(com.db4o.YapFile file) : base(file)
 			{
 			}
 
@@ -31,13 +29,9 @@ namespace com.db4o.inside.convert
 
 		private com.db4o.YapFile _file;
 
-		private com.db4o.header.FileHeader0 _header;
-
-		protected ConversionStage(com.db4o.YapFile file, com.db4o.header.FileHeader0 header
-			)
+		protected ConversionStage(com.db4o.YapFile file)
 		{
 			_file = file;
-			_header = header;
 		}
 
 		public virtual com.db4o.YapFile File()
@@ -45,9 +39,9 @@ namespace com.db4o.inside.convert
 			return _file;
 		}
 
-		public virtual com.db4o.header.FileHeader0 Header()
+		public virtual com.db4o.inside.SystemData SystemData()
 		{
-			return _header;
+			return _file.SystemData();
 		}
 
 		public abstract void Accept(com.db4o.inside.convert.Conversion conversion);

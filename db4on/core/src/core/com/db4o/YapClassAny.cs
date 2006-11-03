@@ -40,7 +40,7 @@ namespace com.db4o
 			return a_stream.ClassCollection().FieldExists(a_path);
 		}
 
-		internal override bool HasIndex()
+		public override bool HasIndex()
 		{
 			return false;
 		}
@@ -134,12 +134,14 @@ namespace com.db4o
 			return mf._untyped.WriteNew(obj, restoreLinkeOffset, writer);
 		}
 
-		public override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.YapReader
-			 source, com.db4o.YapReader target, com.db4o.IDMapping mapping)
+		public override void Defrag(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers, bool redirect)
 		{
-			int linkLength = LinkLength();
-			source.IncrementOffset(linkLength);
-			target.IncrementOffset(linkLength);
+			if (mf._untyped.UseNormalClassRead())
+			{
+				base.Defrag(mf, readers, redirect);
+			}
+			mf._untyped.Defrag(readers);
 		}
 	}
 }

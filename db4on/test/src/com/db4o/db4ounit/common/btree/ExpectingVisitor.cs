@@ -11,11 +11,13 @@ namespace com.db4o.db4ounit.common.btree
 		private readonly com.db4o.foundation.Collection4 _unexpected = new com.db4o.foundation.Collection4
 			();
 
+		private bool _ignoreUnexpected;
+
 		private int _cursor;
 
-		private sealed class _AnonymousInnerClass22 : object
+		private sealed class _AnonymousInnerClass24 : object
 		{
-			public _AnonymousInnerClass22()
+			public _AnonymousInnerClass24()
 			{
 			}
 
@@ -25,20 +27,25 @@ namespace com.db4o.db4ounit.common.btree
 			}
 		}
 
-		private static readonly object FOUND = new _AnonymousInnerClass22();
+		private static readonly object FOUND = new _AnonymousInnerClass24();
 
-		public ExpectingVisitor(object[] results, bool obeyOrder)
+		public ExpectingVisitor(object[] results, bool obeyOrder, bool ignoreUnexpected)
 		{
 			_expected = results;
 			_obeyOrder = obeyOrder;
+			_ignoreUnexpected = ignoreUnexpected;
 		}
 
-		public ExpectingVisitor(object[] results) : this(results, false)
+		public ExpectingVisitor(object[] results) : this(results, false, false)
 		{
 		}
 
 		public ExpectingVisitor(object singleObject) : this(new object[] { singleObject }
 			)
+		{
+		}
+
+		public ExpectingVisitor() : this(new object[0])
 		{
 		}
 
@@ -71,6 +78,10 @@ namespace com.db4o.db4ounit.common.btree
 
 		private void Unexpected(object obj)
 		{
+			if (_ignoreUnexpected)
+			{
+				return;
+			}
 			_unexpected.Add(obj);
 			Ods("Unexpected: " + obj);
 		}

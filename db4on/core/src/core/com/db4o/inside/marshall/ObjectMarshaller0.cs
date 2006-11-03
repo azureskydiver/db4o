@@ -6,14 +6,14 @@ namespace com.db4o.inside.marshall
 		public override void AddFieldIndices(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
 			 attributes, com.db4o.YapWriter writer, com.db4o.inside.slots.Slot oldSlot)
 		{
-			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass14
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass15
 				(this, yc, writer, oldSlot);
 			TraverseFields(yc, writer, attributes, command);
 		}
 
-		private sealed class _AnonymousInnerClass14 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		private sealed class _AnonymousInnerClass15 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass14(ObjectMarshaller0 _enclosing, com.db4o.YapClass yc, 
+			public _AnonymousInnerClass15(ObjectMarshaller0 _enclosing, com.db4o.YapClass yc, 
 				com.db4o.YapWriter writer, com.db4o.inside.slots.Slot oldSlot)
 			{
 				this._enclosing = _enclosing;
@@ -42,15 +42,15 @@ namespace com.db4o.inside.marshall
 			 writer, string name)
 		{
 			com.db4o.TreeInt[] ret = { tree };
-			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass24
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass25
 				(this, name, ret, writer);
 			TraverseFields(yc, writer, attributes, command);
 			return ret[0];
 		}
 
-		private sealed class _AnonymousInnerClass24 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		private sealed class _AnonymousInnerClass25 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass24(ObjectMarshaller0 _enclosing, string name, com.db4o.TreeInt[]
+			public _AnonymousInnerClass25(ObjectMarshaller0 _enclosing, string name, com.db4o.TreeInt[]
 				 ret, com.db4o.YapWriter writer)
 			{
 				this._enclosing = _enclosing;
@@ -84,14 +84,14 @@ namespace com.db4o.inside.marshall
 		public override void DeleteMembers(com.db4o.YapClass yc, com.db4o.inside.marshall.ObjectHeaderAttributes
 			 attributes, com.db4o.YapWriter writer, int type, bool isUpdate)
 		{
-			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass38
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass39
 				(this, writer, isUpdate);
 			TraverseFields(yc, writer, attributes, command);
 		}
 
-		private sealed class _AnonymousInnerClass38 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		private sealed class _AnonymousInnerClass39 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass38(ObjectMarshaller0 _enclosing, com.db4o.YapWriter writer
+			public _AnonymousInnerClass39(ObjectMarshaller0 _enclosing, com.db4o.YapWriter writer
 				, bool isUpdate)
 			{
 				this._enclosing = _enclosing;
@@ -116,15 +116,15 @@ namespace com.db4o.inside.marshall
 			 attributes, com.db4o.YapReader writer, com.db4o.YapField field)
 		{
 			bool[] ret = { false };
-			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass48
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass49
 				(this, field, ret, writer);
 			TraverseFields(yc, writer, attributes, command);
 			return ret[0];
 		}
 
-		private sealed class _AnonymousInnerClass48 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		private sealed class _AnonymousInnerClass49 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass48(ObjectMarshaller0 _enclosing, com.db4o.YapField field
+			public _AnonymousInnerClass49(ObjectMarshaller0 _enclosing, com.db4o.YapField field
 				, bool[] ret, com.db4o.YapReader writer)
 			{
 				this._enclosing = _enclosing;
@@ -163,14 +163,14 @@ namespace com.db4o.inside.marshall
 			 attributes, com.db4o.YapObject yapObject, object onObject, com.db4o.YapWriter writer
 			)
 		{
-			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass67
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass68
 				(this, yapObject, onObject, writer);
 			TraverseFields(yc, writer, attributes, command);
 		}
 
-		private sealed class _AnonymousInnerClass67 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		private sealed class _AnonymousInnerClass68 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass67(ObjectMarshaller0 _enclosing, com.db4o.YapObject yapObject
+			public _AnonymousInnerClass68(ObjectMarshaller0 _enclosing, com.db4o.YapObject yapObject
 				, object onObject, com.db4o.YapWriter writer)
 			{
 				this._enclosing = _enclosing;
@@ -186,7 +186,7 @@ namespace com.db4o.inside.marshall
 				{
 					field.Instantiate(this._enclosing._family, yapObject, onObject, writer);
 				}
-				catch (com.db4o.CorruptionException e)
+				catch (com.db4o.CorruptionException)
 				{
 					this.Cancel();
 				}
@@ -234,14 +234,14 @@ namespace com.db4o.inside.marshall
 		{
 			com.db4o.Config4Class config = yapClass.ConfigOrAncestorConfig();
 			com.db4o.Transaction trans = writer.GetTransaction();
-			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass107
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass108
 				(this, writer, trans, @object, yapObject, config, isNew);
 			TraverseFields(yapClass, writer, ReadHeaderAttributes(writer), command);
 		}
 
-		private sealed class _AnonymousInnerClass107 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		private sealed class _AnonymousInnerClass108 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass107(ObjectMarshaller0 _enclosing, com.db4o.YapWriter writer
+			public _AnonymousInnerClass108(ObjectMarshaller0 _enclosing, com.db4o.YapWriter writer
 				, com.db4o.Transaction trans, object @object, com.db4o.YapObject yapObject, com.db4o.Config4Class
 				 config, bool isNew)
 			{
@@ -354,14 +354,14 @@ namespace com.db4o.inside.marshall
 			 yc, com.db4o.YapObject yo, com.db4o.inside.marshall.ObjectHeaderAttributes attributes
 			, com.db4o.YapReader reader)
 		{
-			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass189
+			com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand command = new _AnonymousInnerClass190
 				(this, trans, reader, yo);
 			TraverseFields(yc, reader, attributes, command);
 		}
 
-		private sealed class _AnonymousInnerClass189 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
+		private sealed class _AnonymousInnerClass190 : com.db4o.inside.marshall.ObjectMarshaller.TraverseFieldCommand
 		{
-			public _AnonymousInnerClass189(ObjectMarshaller0 _enclosing, com.db4o.Transaction
+			public _AnonymousInnerClass190(ObjectMarshaller0 _enclosing, com.db4o.Transaction
 				 trans, com.db4o.YapReader reader, com.db4o.YapObject yo)
 			{
 				this._enclosing = _enclosing;
@@ -392,8 +392,7 @@ namespace com.db4o.inside.marshall
 		}
 
 		public override void DefragFields(com.db4o.YapClass yapClass, com.db4o.inside.marshall.ObjectHeader
-			 header, com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping
-			 mapping)
+			 header, com.db4o.ReaderPair readers)
 		{
 		}
 

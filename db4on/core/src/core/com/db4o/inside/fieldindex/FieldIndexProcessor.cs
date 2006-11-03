@@ -23,8 +23,7 @@ namespace com.db4o.inside.fieldindex
 				{
 					return com.db4o.inside.fieldindex.FieldIndexProcessorResult.NO_INDEX_FOUND;
 				}
-				return new com.db4o.inside.fieldindex.FieldIndexProcessorResult(resolved.ToTreeInt
-					());
+				return new com.db4o.inside.fieldindex.FieldIndexProcessorResult(resolved);
 			}
 			return com.db4o.inside.fieldindex.FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
 		}
@@ -45,17 +44,17 @@ namespace com.db4o.inside.fieldindex
 
 		public virtual com.db4o.inside.fieldindex.IndexedNode SelectBestIndex()
 		{
-			com.db4o.foundation.Iterator4 i = CollectIndexedNodes();
+			System.Collections.IEnumerator i = CollectIndexedNodes();
 			if (!i.MoveNext())
 			{
 				return null;
 			}
 			com.db4o.inside.fieldindex.IndexedNode best = (com.db4o.inside.fieldindex.IndexedNode
-				)i.Current();
+				)i.Current;
 			while (i.MoveNext())
 			{
 				com.db4o.inside.fieldindex.IndexedNode leaf = (com.db4o.inside.fieldindex.IndexedNode
-					)i.Current();
+					)i.Current;
 				if (leaf.ResultSize() < best.ResultSize())
 				{
 					best = leaf;
@@ -64,7 +63,7 @@ namespace com.db4o.inside.fieldindex
 			return best;
 		}
 
-		public virtual com.db4o.foundation.Iterator4 CollectIndexedNodes()
+		public virtual System.Collections.IEnumerator CollectIndexedNodes()
 		{
 			return new com.db4o.inside.fieldindex.IndexedNodeCollector(_candidates).GetNodes(
 				);

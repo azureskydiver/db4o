@@ -21,7 +21,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override void Initialize1(com.db4o.config.Configuration config)
+		protected override void Initialize1(com.db4o.config.Configuration config)
 		{
 			i_handlers = i_parent.i_handlers;
 			_classCollection = i_parent.ClassCollection();
@@ -139,7 +139,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal override void Write(bool shuttingDown)
+		public override void Write(bool shuttingDown)
 		{
 			CheckNeededUpdates();
 			WriteDirty();

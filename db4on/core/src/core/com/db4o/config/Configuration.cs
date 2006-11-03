@@ -475,6 +475,7 @@ namespace com.db4o.config
 		/// Level 1 - open and close messages<br />
 		/// Level 2 - messages for new, update and delete<br />
 		/// Level 3 - messages for activate and deactivate<br /><br />
+		/// When using client-server and the level is set to 0, the server will override this and set it to 1.  To get around this you can set the level to -1.  This has the effect of not returning any messages.<br /><br />
 		/// </remarks>
 		/// <param name="level">integer from 0 to 3</param>
 		/// <seealso cref="com.db4o.config.Configuration.SetOut">com.db4o.config.Configuration.SetOut

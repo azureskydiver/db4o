@@ -1,6 +1,6 @@
 namespace Db4oUnit.Extensions.Fixtures
 {
-	public abstract class AbstractFileBasedDb4oFixture : Db4oUnit.Extensions.Fixtures.AbstractDb4oFixture
+	public abstract class AbstractFileBasedDb4oFixture : Db4oUnit.Extensions.Fixtures.AbstractSoloDb4oFixture
 	{
 		private readonly j4o.io.File _yap;
 

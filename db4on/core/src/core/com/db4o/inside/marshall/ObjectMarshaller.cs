@@ -125,8 +125,7 @@ namespace com.db4o.inside.marshall
 			, com.db4o.YapReader reader);
 
 		public abstract void DefragFields(com.db4o.YapClass yapClass, com.db4o.inside.marshall.ObjectHeader
-			 header, com.db4o.YapReader source, com.db4o.YapReader target, com.db4o.IDMapping
-			 mapping);
+			 header, com.db4o.ReaderPair readers);
 
 		public abstract void WriteObjectClassID(com.db4o.YapReader reader, int id);
 

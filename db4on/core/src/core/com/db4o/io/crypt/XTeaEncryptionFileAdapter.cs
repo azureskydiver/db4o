@@ -160,10 +160,10 @@ namespace com.db4o.io.crypt
 
 		private void Log(string msg, byte[] buf)
 		{
-			System.Console.Out.WriteLine("\n " + msg);
+			j4o.lang.JavaSystem.Out.WriteLine("\n " + msg);
 			for (int idx = 0; idx < buf.Length; idx++)
 			{
-				System.Console.Out.Write(buf[idx] + " ");
+				j4o.lang.JavaSystem.Out.Write(buf[idx] + " ");
 			}
 		}
 	}

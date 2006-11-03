@@ -17,11 +17,11 @@ namespace com.db4o.inside.btree.algebra
 		{
 			com.db4o.foundation.SortedCollection4 collection = NewBTreeRangeSingleCollection(
 				);
-			com.db4o.foundation.Iterator4 ranges = union1.Ranges();
+			System.Collections.IEnumerator ranges = union1.Ranges();
 			while (ranges.MoveNext())
 			{
 				com.db4o.inside.btree.BTreeRangeSingle current = (com.db4o.inside.btree.BTreeRangeSingle
-					)ranges.Current();
+					)ranges.Current;
 				CollectIntersections(collection, union2, current);
 			}
 			return ToRange(collection);
@@ -31,11 +31,11 @@ namespace com.db4o.inside.btree.algebra
 			, com.db4o.inside.btree.BTreeRangeUnion union, com.db4o.inside.btree.BTreeRangeSingle
 			 single)
 		{
-			com.db4o.foundation.Iterator4 ranges = union.Ranges();
+			System.Collections.IEnumerator ranges = union.Ranges();
 			while (ranges.MoveNext())
 			{
 				com.db4o.inside.btree.BTreeRangeSingle current = (com.db4o.inside.btree.BTreeRangeSingle
-					)ranges.Current();
+					)ranges.Current;
 				if (single.Overlaps(current))
 				{
 					collection.Add(single.Intersect(current));
@@ -56,11 +56,11 @@ namespace com.db4o.inside.btree.algebra
 		public static com.db4o.inside.btree.BTreeRange Union(com.db4o.inside.btree.BTreeRangeUnion
 			 union1, com.db4o.inside.btree.BTreeRangeUnion union2)
 		{
-			com.db4o.foundation.Iterator4 ranges = union1.Ranges();
+			System.Collections.IEnumerator ranges = union1.Ranges();
 			com.db4o.inside.btree.BTreeRange merged = union2;
 			while (ranges.MoveNext())
 			{
-				merged = merged.Union((com.db4o.inside.btree.BTreeRange)ranges.Current());
+				merged = merged.Union((com.db4o.inside.btree.BTreeRange)ranges.Current);
 			}
 			return merged;
 		}
@@ -75,11 +75,11 @@ namespace com.db4o.inside.btree.algebra
 			com.db4o.foundation.SortedCollection4 sorted = NewBTreeRangeSingleCollection();
 			sorted.Add(single);
 			com.db4o.inside.btree.BTreeRangeSingle range = single;
-			com.db4o.foundation.Iterator4 ranges = union.Ranges();
+			System.Collections.IEnumerator ranges = union.Ranges();
 			while (ranges.MoveNext())
 			{
 				com.db4o.inside.btree.BTreeRangeSingle current = (com.db4o.inside.btree.BTreeRangeSingle
-					)ranges.Current();
+					)ranges.Current;
 				if (CanBeMerged(current, range))
 				{
 					sorted.Remove(range);

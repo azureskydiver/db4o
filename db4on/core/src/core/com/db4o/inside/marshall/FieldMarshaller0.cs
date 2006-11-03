@@ -26,7 +26,7 @@ namespace com.db4o.inside.marshall
 			{
 				name = com.db4o.inside.marshall.StringMarshaller.ReadShort(stream, reader);
 			}
-			catch (com.db4o.CorruptionException ce)
+			catch (com.db4o.CorruptionException)
 			{
 				return null;
 			}
@@ -116,27 +116,15 @@ namespace com.db4o.inside.marshall
 		}
 
 		public virtual void Defrag(com.db4o.YapClass yapClass, com.db4o.YapField yapField
-			, com.db4o.YapStringIO sio, com.db4o.YapReader source, com.db4o.YapReader target
-			, com.db4o.IDMapping mapping)
+			, com.db4o.YapStringIO sio, com.db4o.ReaderPair readers)
 		{
-			com.db4o.inside.marshall.StringMarshaller.ReadShort(sio, false, source);
-			com.db4o.inside.marshall.StringMarshaller.ReadShort(sio, false, target);
+			readers.ReadShortString(sio);
 			if (yapField.IsVirtual())
 			{
 				return;
 			}
-			int oldHandlerID = source.ReadInt();
-			int newHandlerID = mapping.MappedID(oldHandlerID);
-			if (oldHandlerID != newHandlerID)
-			{
-				target.WriteInt(newHandlerID);
-			}
-			else
-			{
-				target.IncrementOffset(com.db4o.YapConst.INT_LENGTH);
-			}
-			source.IncrementOffset(1);
-			target.IncrementOffset(1);
+			readers.CopyID();
+			readers.IncrementOffset(1);
 		}
 	}
 }

@@ -17,8 +17,7 @@ namespace com.db4o
 			return flat;
 		}
 
-		public sealed override int ElementCount(com.db4o.Transaction a_trans, com.db4o.YapReader
-			 a_bytes)
+		public int ElementCount(com.db4o.Transaction a_trans, com.db4o.YapReader a_bytes)
 		{
 			return ElementCount(ReadDimensions(a_trans, a_bytes, new com.db4o.reflect.ReflectClass
 				[1]));
@@ -68,6 +67,17 @@ namespace com.db4o
 				_reflectArray.Shape(objects, 0, ret[0], dim, 0);
 			}
 			return ret[0];
+		}
+
+		protected override int ReadElementsDefrag(com.db4o.ReaderPair readers)
+		{
+			int numDimensions = base.ReadElementsDefrag(readers);
+			int[] dimensions = new int[numDimensions];
+			for (int i = 0; i < numDimensions; i++)
+			{
+				dimensions[i] = readers.ReadInt();
+			}
+			return ElementCount(dimensions);
 		}
 
 		public sealed override void Read1Candidates(com.db4o.inside.marshall.MarshallerFamily
@@ -161,7 +171,7 @@ namespace com.db4o
 			{
 				return _reflectArray.Get(a_array, a_position);
 			}
-			catch (System.Exception e)
+			catch
 			{
 				return null;
 			}

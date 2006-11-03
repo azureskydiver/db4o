@@ -7,10 +7,25 @@ namespace com.db4o.db4ounit.common.btree
 			new com.db4o.db4ounit.common.btree.BTreeRangeTestCase().RunSolo();
 		}
 
-		public override void SetUp()
+		protected override void Db4oSetupAfterStore()
 		{
-			base.SetUp();
+			base.Db4oSetupAfterStore();
 			Add(new int[] { 3, 7, 4, 9 });
+		}
+
+		public virtual void TestLastPointer()
+		{
+			AssertLastPointer(8, 7);
+			AssertLastPointer(11, 9);
+			AssertLastPointer(4, 3);
+		}
+
+		private void AssertLastPointer(int searchValue, int expectedValue)
+		{
+			com.db4o.inside.btree.BTreeRange single = Search(searchValue);
+			com.db4o.inside.btree.BTreeRange smallerRange = single.Smaller();
+			com.db4o.inside.btree.BTreePointer lastPointer = smallerRange.LastPointer();
+			Db4oUnit.Assert.AreEqual(expectedValue, lastPointer.Key());
 		}
 
 		public virtual void TestSize()

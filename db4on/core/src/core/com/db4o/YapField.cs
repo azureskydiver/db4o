@@ -47,7 +47,7 @@ namespace com.db4o
 			a_translator)
 		{
 			i_yapClass = a_yapClass;
-			Init(a_yapClass, j4o.lang.Class.GetClassForObject(a_translator).GetName());
+			Init(a_yapClass, j4o.lang.JavaSystem.GetClassForObject(a_translator).GetName());
 			i_state = AVAILABLE;
 			com.db4o.YapStream stream = GetStream();
 			i_handler = stream.i_handlers.HandlerForClass(stream, stream.Reflector().ForClass
@@ -115,7 +115,7 @@ namespace com.db4o
 			{
 				return i_handler.ReadIndexEntry(mf, writer);
 			}
-			catch (com.db4o.CorruptionException e)
+			catch (com.db4o.CorruptionException)
 			{
 			}
 			return null;
@@ -232,7 +232,7 @@ namespace com.db4o
 						i_handler.CascadeActivation(a_trans, cascadeTo, a_depth, a_activate);
 					}
 				}
-				catch (System.Exception e)
+				catch
 				{
 				}
 			}
@@ -258,10 +258,10 @@ namespace com.db4o
 			{
 				com.db4o.foundation.Collection4 objs = com.db4o.Platform4.FlattenCollection(a_trans
 					.Stream(), obj);
-				com.db4o.foundation.Iterator4 j = objs.Iterator();
+				System.Collections.IEnumerator j = objs.GetEnumerator();
 				while (j.MoveNext())
 				{
-					obj = j.Current();
+					obj = j.Current;
 					if (obj != null)
 					{
 						if (i_isPrimitive)
@@ -356,7 +356,7 @@ namespace com.db4o
 					i_javaField.Set(a_onObject, null);
 				}
 			}
-			catch (System.Exception t)
+			catch
 			{
 			}
 		}
@@ -499,7 +499,7 @@ namespace com.db4o
 				{
 					return i_javaField.Get(a_OnObject);
 				}
-				catch (System.Exception t)
+				catch
 				{
 				}
 			}
@@ -611,7 +611,7 @@ namespace com.db4o
 			{
 				toSet = Read(mf, a_bytes);
 			}
-			catch (System.Exception e)
+			catch
 			{
 				throw new com.db4o.CorruptionException();
 			}
@@ -905,7 +905,7 @@ namespace com.db4o
 
 		public override string ToString()
 		{
-			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			if (i_yapClass != null)
 			{
 				sb.Append(i_yapClass.GetName());
@@ -930,7 +930,7 @@ namespace com.db4o
 				{
 					obj = Read(mf, writer);
 				}
-				catch (System.Exception e)
+				catch
 				{
 				}
 				if (obj == null)
@@ -1068,6 +1068,12 @@ namespace com.db4o
 			_index.Free(systemTrans);
 			stream.SetDirtyInSystemTransaction(GetParentYapClass());
 			_index = null;
+		}
+
+		public virtual void DefragField(com.db4o.inside.marshall.MarshallerFamily mf, com.db4o.ReaderPair
+			 readers)
+		{
+			GetHandler().Defrag(mf, readers, true);
 		}
 	}
 }

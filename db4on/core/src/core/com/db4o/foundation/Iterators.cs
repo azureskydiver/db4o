@@ -7,19 +7,19 @@ namespace com.db4o.foundation
 	{
 		internal static readonly object NO_ELEMENT = new object();
 
-		public static com.db4o.foundation.Iterator4 Concat(com.db4o.foundation.Iterator4 
-			iterators)
+		public static System.Collections.IEnumerator Concat(System.Collections.IEnumerator
+			 iterators)
 		{
 			return new com.db4o.foundation.CompositeIterator4(iterators);
 		}
 
-		public static com.db4o.foundation.Iterator4 Map(com.db4o.foundation.Iterator4 iterator
+		public static System.Collections.IEnumerator Map(System.Collections.IEnumerator iterator
 			, com.db4o.foundation.Function4 function)
 		{
 			return new com.db4o.foundation.FunctionApplicationIterator(iterator, function);
 		}
 
-		public static com.db4o.foundation.Iterator4 Map(object[] array, com.db4o.foundation.Function4
+		public static System.Collections.IEnumerator Map(object[] array, com.db4o.foundation.Function4
 			 function)
 		{
 			return Map(new com.db4o.foundation.ArrayIterator4(array), function);

@@ -31,7 +31,7 @@ namespace com.db4o
 			reader.ReadInt();
 		}
 
-		public virtual void Write(com.db4o.YapWriter writer)
+		public virtual void Write(com.db4o.YapReader writer)
 		{
 			writer.WriteInt(indexAddress);
 			writer.WriteInt(indexEntries);
