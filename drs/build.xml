@@ -78,10 +78,14 @@
 	</target>
 
 	<target name="doctor" depends="">
+		<!--TODO Use the Doctor Ant Task-->
+		
 		<property environment="env" />
-		<delete dir="doc/out" />
+		<delete dir="${dir.doc}/out" />
+		
 		<java classname="com.yetac.doctor.Doctor">
-			<arg line="${dir.doc} ${env.SystemRoot}/Fonts/VERDANA.TTF" />
+			<!--TODO ${basedir} is needed for db4occ to run correctly-->
+			<arg line="${basedir}/${dir.doc} ${env.SystemRoot}/Fonts/VERDANA.TTF" />
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -91,7 +95,7 @@
 				</fileset>
 			</classpath>
 		</java>
-		<move file="doc/out/doctor.pdf" tofile="doc/out/dRS-tutorial.pdf"/>
+		<move file="${dir.doc}/out/doctor.pdf" tofile="${dir.doc}/out/dRS-tutorial.pdf"/>
 	</target>
 
 	<target name="doctordrsnet" depends="">
