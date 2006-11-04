@@ -11,7 +11,7 @@ public class IdListQueryResultTestCase extends QueryResultTestCase {
 		new IdListQueryResultTestCase().runSolo();
 	}
 
-	protected QueryResult newQueryResult() {
+	protected AbstractQueryResult newQueryResult() {
 		return new IdListQueryResult(trans());
 	}
 

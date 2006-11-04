@@ -33,7 +33,7 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	}
 	
 	public void testGetAll(){
-		QueryResult queryResult = newQueryResult();
+		AbstractQueryResult queryResult = newQueryResult();
 		queryResult.loadFromClassIndexes(stream().classCollection().iterator());
 		int[] ids = IntArrays4.concat(itemIds, new int[] {idForGetAll});
 		assertIDs(queryResult, ids, true);
@@ -54,7 +54,7 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	}
 	
 	private QueryResult classOnlyQuery() {
-		QueryResult queryResult = newQueryResult();
+		AbstractQueryResult queryResult = newQueryResult();
 		queryResult.loadFromClassIndex(yapClass());
 		return queryResult;
 	}
@@ -64,7 +64,7 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	}
 
 	private QueryResult executeQuery(Query query) {
-		QueryResult queryResult = newQueryResult();
+		AbstractQueryResult queryResult = newQueryResult();
 		queryResult.loadFromQuery((QQuery)query);
 		return queryResult;
 	}
@@ -122,6 +122,6 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 		
 	}
 	
-	protected abstract QueryResult newQueryResult();
+	protected abstract AbstractQueryResult newQueryResult();
 	
 }
