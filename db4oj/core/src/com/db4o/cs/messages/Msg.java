@@ -8,7 +8,6 @@ import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
-import com.db4o.inside.query.QueryResult;
 
 /**
  * Messages for Client/Server Communication
@@ -49,7 +48,6 @@ public class Msg implements Cloneable {
 	public static final Msg PING = new Msg("PING");
 	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
 	public static final MsgObject QUERY_EXECUTE = new MQueryExecute();
-	public static final MsgObject QUERY_EXECUTE_LAZY = new MQueryExecute();
 	public static final MsgD QUERY_RESULT = new MsgD("QUERY_RESULT");
 	public static final MsgD RAISE_VERSION = new MsgD("RAISE_VERSION");
 	public static final MsgBlob READ_BLOB = new MReadBlob();

@@ -4,33 +4,25 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
-import com.db4o.foundation.network.*;
 import com.db4o.inside.query.*;
-
 
 public abstract class MsgQuery extends MsgObject {
 	
 	private static int nextID;
 	
-	private int _queryResultId;
-	
-	private AbstractQueryResult _queryResult; 
-	
-	final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread) {
+	protected final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread) {
 		
-		_queryResult = queryResult;
+		int queryResultId = 0;
 		
-		Transaction trans = getTransaction();
-		YapStream stream = getStream();
-		
-		if(stream.config().lazyQueries()){
-			_queryResultId = generateID();
+		if(getStream().config().lazyQueries()){
+			queryResultId = generateID();
+			serverThread.mapQueryResultToID(queryResult, queryResultId);
 		}
 		
 		int size = queryResult.size();
-		MsgD message = QUERY_RESULT.getWriterForLength(trans, YapConst.ID_LENGTH * (size + 2));
+		MsgD message = QUERY_RESULT.getWriterForLength(getTransaction(), YapConst.ID_LENGTH * (size + 2));
 		YapWriter writer = message.payLoad();
-		writer.writeInt(_queryResultId);
+		writer.writeInt(queryResultId);
 		writer.writeQueryResult(queryResult);
 		serverThread.write(message);
 	}
@@ -42,15 +34,5 @@ public abstract class MsgQuery extends MsgObject {
 		}
 		return nextID;
 	}
-	
-	public int queryResultID(){
-		return _queryResultId;
-	}
-	
-	public AbstractQueryResult queryResult(){
-		return _queryResult;
-	}
-	
-	
 
 }

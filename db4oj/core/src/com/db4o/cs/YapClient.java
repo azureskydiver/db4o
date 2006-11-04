@@ -142,13 +142,13 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 			return super.close2();
 		}
 		try {
-			Msg.COMMIT_OK.write(this, i_socket);
+			writeMsg(Msg.COMMIT_OK);
 			expectedResponse(Msg.OK);
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		try {
-			Msg.CLOSE.write(this, i_socket);
+			writeMsg(Msg.CLOSE);
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
