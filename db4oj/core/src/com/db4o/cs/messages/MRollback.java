@@ -5,8 +5,10 @@ package com.db4o.cs.messages;
 import com.db4o.cs.*;
 
 public final class MRollback extends Msg {
+	
 	public final boolean processAtServer(YapServerThread serverThread) {
-		this.getTransaction().rollback();
+		transaction().rollback();
 		return true;
 	}
+	
 }

@@ -6,11 +6,12 @@ import com.db4o.*;
 import com.db4o.cs.*;
 
 public final class MWriteNew extends MsgObject {
+	
 	public final boolean processAtServer(YapServerThread serverThread) {
         int yapClassId = _payLoad.readInt();
-        YapFile stream = (YapFile)getStream();
+        YapFile stream = (YapFile)stream();
         unmarshall(YapConst.INT_LENGTH);
-        synchronized (stream.i_lock) {
+        synchronized (streamLock()) {
             YapClass yc = yapClassId == 0 ? null : stream.getYapClass(yapClassId);
             _payLoad.writeEmbedded();
             stream.prefetchedIDConsumed(_payLoad.getID());
@@ -19,7 +20,7 @@ public final class MWriteNew extends MsgObject {
                 yc.addFieldIndices(_payLoad,null);
             }
             stream.writeNew(yc, _payLoad);
-            getTransaction().writePointer(
+            transaction().writePointer(
                 _payLoad.getID(),
                 _payLoad.getAddress(),
                 _payLoad.getLength());

@@ -8,7 +8,7 @@ import com.db4o.cs.*;
 public final class MReleaseSemaphore extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		String name = readString();
-		((YapFile)getStream()).releaseSemaphore(getTransaction(),name);
+		((YapFile)stream()).releaseSemaphore(transaction(),name);
 		return true;
 	}
 }

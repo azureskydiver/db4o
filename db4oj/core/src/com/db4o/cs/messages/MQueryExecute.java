@@ -21,25 +21,22 @@ public final class MQueryExecute extends MsgQuery {
             // TODO: The following used to run outside of the
             // synchronisation block for better performance but
             // produced inconsistent results, cause unknown.
-			
-			Transaction trans = getTransaction();
-			YapStream stream = getStream();
 
-            QQuery query = (QQuery) stream.unmarshall(_payLoad);
-            query.unmarshall(trans);
+            QQuery query = (QQuery) stream().unmarshall(_payLoad);
+            query.unmarshall(transaction());
             
-			return executeFully(trans, stream, query);
+			return executeFully(query);
 			
 		}
 	}
 
-	private AbstractQueryResult executeFully(Transaction trans, YapStream stream, QQuery query) {
+	private AbstractQueryResult executeFully(QQuery query) {
 		try {
-			AbstractQueryResult qr = stream.newQueryResult(trans);
+			AbstractQueryResult qr = newQueryResult();
 			qr.loadFromQuery(query);
 			return qr;
 		} catch (Exception e) {
-			return stream.newQueryResult(trans); 
+			return newQueryResult(); 
 		}
 	}
 	

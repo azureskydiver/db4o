@@ -6,31 +6,30 @@ import com.db4o.*;
 import com.db4o.cs.*;
 
 public final class MReadBytes extends MsgD {
+	
 	public final YapReader getByteLoad() {
-		int address = this._payLoad.readInt();
-		int length = this._payLoad.getLength() - (YapConst.INT_LENGTH);
-		this._payLoad.removeFirstBytes(YapConst.INT_LENGTH);
-		this._payLoad.useSlot(address, length);
+		int address = _payLoad.readInt();
+		int length = _payLoad.getLength() - (YapConst.INT_LENGTH);
+		_payLoad.removeFirstBytes(YapConst.INT_LENGTH);
+		_payLoad.useSlot(address, length);
 		return this._payLoad;
 	}
 
 	public final MsgD getWriter(YapWriter bytes) {
-		MsgD message =
-			this.getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.INT_LENGTH);
+		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.INT_LENGTH);
 		message._payLoad.writeInt(bytes.getAddress());
 		message._payLoad.append(bytes._buffer);
 		return message;
 	}
 	
 	public final boolean processAtServer(YapServerThread serverThread) {
-	    YapStream stream = getStream();
-		int address = this.readInt();
-		int length = this.readInt();
-		synchronized (stream.i_lock) {
+		int address = readInt();
+		int length = readInt();
+		synchronized (streamLock()) {
 			YapWriter bytes =
-				new YapWriter(this.getTransaction(), address, length);
+				new YapWriter(this.transaction(), address, length);
 			try {
-				stream.readBytes(bytes._buffer, address, length);
+				stream().readBytes(bytes._buffer, address, length);
 				serverThread.write(getWriter(bytes));
 			} catch (Exception e) {
 				// TODO: not nicely handled on the client side yet

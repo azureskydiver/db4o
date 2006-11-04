@@ -14,7 +14,7 @@ import com.db4o.foundation.network.YapSocket;
 
 public class MReadBlob extends MsgBlob {
 	public void processClient(YapSocket sock) throws IOException {
-        Msg message = Msg.readMessage(getTransaction(), sock);
+        Msg message = Msg.readMessage(transaction(), sock);
         if (message.equals(Msg.LENGTH)) {
             try {
                 _currentByte = 0;
@@ -22,7 +22,7 @@ public class MReadBlob extends MsgBlob {
                 _blob.getStatusFrom(this);
                 _blob.setStatus(Status.PROCESSING);
                 copy(sock,this._blob.getClientOutputStream(),_length,true);
-                message = Msg.readMessage(getTransaction(), sock);
+                message = Msg.readMessage(transaction(), sock);
                 if (message.equals(Msg.OK)) {
                     this._blob.setStatus(Status.COMPLETED);
                 } else {
@@ -36,15 +36,15 @@ public class MReadBlob extends MsgBlob {
 
     }
     public boolean processAtServer(YapServerThread serverThread) {
-        YapStream stream = getStream();
+        YapStream stream = stream();
         try {
             BlobImpl blobImpl = this.serverGetBlobImpl();
             if (blobImpl != null) {
-                blobImpl.setTrans(getTransaction());
+                blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, false);
                 int length = (int) file.length();
                 YapSocket sock = serverThread.socket();
-                Msg.LENGTH.getWriterForInt(getTransaction(), length).write(stream, sock);
+                Msg.LENGTH.getWriterForInt(transaction(), length).write(stream, sock);
                 FileInputStream fin = new FileInputStream(file);
                 copy(fin,sock,false);
                 sock.flush();

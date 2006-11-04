@@ -2,16 +2,15 @@
 
 package com.db4o.cs.messages;
 
-import com.db4o.*;
 import com.db4o.cs.*;
 
 public final class MWriteUpdateDeleteMembers extends MsgD {
+	
 	public final boolean processAtServer(YapServerThread serverThread) {
-	    YapStream stream = getStream();
-		synchronized (stream.i_lock) {
-			this.getTransaction().writeUpdateDeleteMembers(
+		synchronized (streamLock()) {
+			transaction().writeUpdateDeleteMembers(
 			    readInt(),
-				stream.getYapClass(readInt()),
+				stream().getYapClass(readInt()),
 				readInt(),
 				readInt()
                 );

@@ -9,13 +9,13 @@ import com.db4o.reflect.ReflectClass;
 public final class MCreateClass extends MsgD {
 
 	public final boolean processAtServer(YapServerThread serverThread) {
-        YapStream stream = getStream();
+        YapStream stream = stream();
         Transaction trans = stream.getSystemTransaction();
         YapWriter returnBytes = new YapWriter(trans, 0);
         try{
             ReflectClass claxx = trans.reflector().forName(readString());
             if (claxx != null) {
-                synchronized (stream.i_lock) {
+                synchronized (streamLock()) {
                     try {
                         YapClass yapClass = stream.getYapClass(claxx, true);
                         if (yapClass != null) {

@@ -6,17 +6,16 @@ import com.db4o.*;
 import com.db4o.cs.*;
 
 public final class MReadObject extends MsgD {
+	
 	public final boolean processAtServer(YapServerThread serverThread) {
 		YapWriter bytes = null;
 
 		// readObjectByID may fail in certain cases
 		// we should look for the cause at some time in the future
-		
-		YapStream stream = getStream();
 
-		synchronized (stream.i_lock) {
+		synchronized (streamLock()) {
 			try {
-				bytes = stream.readWriterByID(this.getTransaction(), this._payLoad.readInt());
+				bytes = stream().readWriterByID(transaction(), _payLoad.readInt());
 			} catch (Exception e) {
 				if (Deploy.debug) {
 					System.out.println("MsD.ReadObject:: readObjectByID failed");
@@ -24,7 +23,7 @@ public final class MReadObject extends MsgD {
 			}
 		}
 		if (bytes == null) {
-			bytes = new YapWriter(this.getTransaction(), 0, 0);
+			bytes = new YapWriter(transaction(), 0, 0);
 		}
 		serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(bytes));
 		return true;

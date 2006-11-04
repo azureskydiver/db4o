@@ -6,33 +6,29 @@ import com.db4o.*;
 import com.db4o.cs.*;
 
 public final class MReadMultipleObjects extends MsgD {
+	
 	public final boolean processAtServer(YapServerThread serverThread) {
-
 		int size = readInt();
 		MsgD[] ret = new MsgD[size];
 		int length = (1 + size) * YapConst.INT_LENGTH;
-		YapStream stream = getStream();
-
-		YapWriter bytes = null;		
-		synchronized (stream.i_lock) {
+		synchronized (streamLock()) {
 			for (int i = 0; i < size; i++) {
 				int id = this._payLoad.readInt();
 				try {
-					bytes =
-						stream.readWriterByID(
-							getTransaction(),
-							id);
+					YapWriter bytes = stream().readWriterByID(transaction(),id);
+					if(bytes != null){
+						ret[i] = Msg.OBJECT_TO_CLIENT.getWriter(bytes);
+						length += ret[i]._payLoad.getLength();
+					}
 				} catch (Exception e) {
-					bytes = null;
-				}
-				if(bytes != null){
-					ret[i] = Msg.OBJECT_TO_CLIENT.getWriter(bytes);
-					length += ret[i]._payLoad.getLength();
+					if(Debug.atHome){
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 		
-		MsgD multibytes = Msg.READ_MULTIPLE_OBJECTS.getWriterForLength(getTransaction(), length);
+		MsgD multibytes = Msg.READ_MULTIPLE_OBJECTS.getWriterForLength(transaction(), length);
 		multibytes.writeInt(size);
 		for (int i = 0; i < size; i++) {
 			if(ret[i] == null){

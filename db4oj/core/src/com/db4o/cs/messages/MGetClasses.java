@@ -7,14 +7,14 @@ import com.db4o.cs.*;
 
 public final class MGetClasses extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
-	    YapStream stream = getStream();
-		synchronized (stream.i_lock) {
+	    YapStream stream = stream();
+		synchronized (streamLock()) {
 			try {
 
 				// Since every new Client reads the class
 				// collection from the file, we have to 
 				// make sure, it has been written.
-				stream.classCollection().write(getTransaction());
+				stream.classCollection().write(transaction());
 
 			} catch (Exception e) {
 				if (Deploy.debug) {
@@ -22,7 +22,7 @@ public final class MGetClasses extends MsgD {
 				}
 			}
 		}
-		MsgD message = Msg.GET_CLASSES.getWriterForLength(getTransaction(), YapConst.INT_LENGTH + 1);
+		MsgD message = Msg.GET_CLASSES.getWriterForLength(transaction(), YapConst.INT_LENGTH + 1);
 		YapReader writer = message.payLoad();
 		writer.writeInt(stream.classCollection().getID());
 		writer.append(stream.stringIO().encodingByte());

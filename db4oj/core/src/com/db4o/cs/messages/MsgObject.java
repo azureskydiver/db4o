@@ -53,7 +53,7 @@ public class MsgObject extends MsgD {
 	}
 
 	public final YapWriter unmarshall(int addLengthBeforeFirst) {
-		_payLoad.setTransaction(getTransaction());
+		_payLoad.setTransaction(transaction());
 		int embeddedCount = _payLoad.readInt();
 		int length = _payLoad.readInt();
 		if (length == 0) {

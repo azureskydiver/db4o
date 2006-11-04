@@ -14,8 +14,9 @@ import com.db4o.foundation.network.YapSocket;
 
 
 public class MWriteBlob extends MsgBlob {
+	
 	public void processClient(YapSocket sock) throws IOException {
-        Msg message = Msg.readMessage(getTransaction(), sock);
+        Msg message = Msg.readMessage(transaction(), sock);
         if (message.equals(Msg.OK)) {
             try {
                 _currentByte = 0;
@@ -25,8 +26,8 @@ public class MWriteBlob extends MsgBlob {
                 FileInputStream inBlob = this._blob.getClientInputStream();
                 copy(inBlob,sock,true);
                 sock.flush();
-                YapStream stream = getStream();
-                message = Msg.readMessage(getTransaction(), sock);
+                YapStream stream = stream();
+                message = Msg.readMessage(transaction(), sock);
                 if (message.equals(Msg.OK)) {
 
                     // make sure to load the filename to i_blob
@@ -47,10 +48,10 @@ public class MWriteBlob extends MsgBlob {
 
 	public boolean processAtServer(YapServerThread serverThread) {
         try {
-            YapStream stream = getStream();
+            YapStream stream = stream();
             BlobImpl blobImpl = this.serverGetBlobImpl();
             if (blobImpl != null) {
-                blobImpl.setTrans(getTransaction());
+                blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, true);
                 YapSocket sock = serverThread.socket();
                 Msg.OK.write(stream, sock);

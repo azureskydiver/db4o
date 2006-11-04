@@ -13,11 +13,10 @@ final class MClassNameForID extends MsgD{
     public final boolean processAtServer(YapServerThread serverThread) {
         int id = _payLoad.readInt();
         String name = "";
-        YapStream stream = getStream();
         // FIXME: CS access through method
-        synchronized (stream.i_lock) {
+        synchronized (streamLock()) {
             try {
-                YapClass yapClass = stream.getYapClass(id);
+                YapClass yapClass = stream().getYapClass(id);
                 if(yapClass != null){
                     name = yapClass.getName();
                 }
@@ -28,7 +27,7 @@ final class MClassNameForID extends MsgD{
                 }
             }
         }
-        serverThread.write(Msg.CLASS_NAME_FOR_ID.getWriterForString(getTransaction(), name));
+        serverThread.write(Msg.CLASS_NAME_FOR_ID.getWriterForString(transaction(), name));
         return true;
     }
 }
