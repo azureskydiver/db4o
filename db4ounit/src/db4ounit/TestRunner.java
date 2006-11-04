@@ -26,7 +26,9 @@ public class TestRunner {
 		if (null == suite) return 1;
 		
 		TestResult result = new TestResult();
+		result.runStarted();
 		suite.run(result);
+		result.runFinished();
 		report(result);
 		return result.failures().size();
 	}
