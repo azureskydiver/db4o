@@ -83,10 +83,6 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
 	private final static KeySpec MESSAGE_RECIPIENT=new KeySpec(null);
     
-	// TODO: who uses this at all?
-//	private final static KeySpec MESSAGE_SENDER=new KeySpec(null);
-//    private MessageSender    i_messageSender;
-    
 	private final static KeySpec OPTIMIZE_NQ=new KeySpec(true);
     
 	private final static KeySpec OUTSTREAM=new KeySpec(null);
@@ -96,7 +92,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 	private static final KeySpec PREFETCH_ID_COUNT = new KeySpec(10);
 
 	private static final KeySpec PREFETCH_OBJECT_COUNT = new KeySpec(10);
-    
+	
 	private final static KeySpec READ_AS=new KeySpec(new Hashtable4(16));
     
 	private final static KeySpec READ_ONLY=new KeySpec(false);
@@ -781,4 +777,6 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 	public boolean lazyQueries() {
 		return false;
 	}
+	
+
 }

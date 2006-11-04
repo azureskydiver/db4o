@@ -123,16 +123,20 @@ public class Msg implements Cloneable {
 		return _name;
 	}
 
-	Transaction getTransaction() {
+	protected Transaction transaction() {
 		return _trans;
 	}
 	
-	YapStream getStream(){
-	    return getTransaction().stream();
+	protected YapStream stream(){
+	    return transaction().stream();
 	}
 	
 	protected Object streamLock(){
-		return getStream().lock();
+		return stream().lock();
+	}
+	
+	protected Config4Impl config(){
+		return stream().config();
 	}
 
 	/**
@@ -228,7 +232,7 @@ public class Msg implements Cloneable {
 	}
 
 	public YapWriter payLoad() {
-		YapWriter writer = new YapWriter(getTransaction(), YapConst.MESSAGE_LENGTH);
+		YapWriter writer = new YapWriter(transaction(), YapConst.MESSAGE_LENGTH);
 		writer.writeInt(_msgID);
 		return writer;
 	}

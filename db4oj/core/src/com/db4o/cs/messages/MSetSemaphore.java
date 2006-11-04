@@ -6,11 +6,12 @@ import com.db4o.*;
 import com.db4o.cs.*;
 
 public final class MSetSemaphore extends MsgD {
+	
 	public final boolean processAtServer(YapServerThread serverThread) {
 		int timeout = readInt();
 		String name = readString();
-		YapFile stream = (YapFile)getStream();
-		boolean res = stream.setSemaphore(getTransaction(), name, timeout);
+		YapFile stream = (YapFile)stream();
+		boolean res = stream.setSemaphore(transaction(), name, timeout);
 		if(res){
 			serverThread.write(Msg.SUCCESS);
 		}else{

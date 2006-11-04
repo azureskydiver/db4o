@@ -6,7 +6,7 @@ import com.db4o.cs.*;
 
 public final class MCommitOK extends Msg {
 	public final boolean processAtServer(YapServerThread serverThread) {
-        getTransaction().commit();
+        transaction().commit();
         serverThread.write(Msg.OK);
         return true;
     }

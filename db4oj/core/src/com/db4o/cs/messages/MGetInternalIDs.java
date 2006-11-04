@@ -9,16 +9,15 @@ public final class MGetInternalIDs extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		YapReader bytes = this.getByteLoad();
 		long[] ids;
-		YapStream stream = getStream();
-		synchronized (stream.i_lock) {
+		synchronized (streamLock()) {
 			try {
-				ids = stream.getYapClass(bytes.readInt()).getIDs(getTransaction());
+				ids = stream().getYapClass(bytes.readInt()).getIDs(transaction());
 			} catch (Exception e) {
 				ids = new long[0];
 			}
 		}
 		int size = ids.length;
-		MsgD message = Msg.ID_LIST.getWriterForLength(getTransaction(), YapConst.ID_LENGTH * (size + 1));
+		MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), YapConst.ID_LENGTH * (size + 1));
 		YapReader writer = message.payLoad();
 		writer.writeInt(size);
 		for (int i = 0; i < size; i++) {

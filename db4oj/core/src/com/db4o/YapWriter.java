@@ -403,22 +403,6 @@ public final class YapWriter extends YapReader {
         toWriter._addressOffset = _addressOffset;
     }
 
-    public final void writeQueryResult(QueryResult qr) {
-    	int savedOffset = _offset; 
-        writeInt(0);
-        int size = 0;
-        IntIterator4 idIterator = qr.iterateIDs();
-        while(idIterator.moveNext()){
-        	int id = idIterator.currentInt();
-            writeInt(id);
-            size ++;
-        }
-        int secondSavedOffset = _offset;
-        _offset = savedOffset;
-        writeInt(size);
-        _offset = secondSavedOffset;
-    }
-
     void writeShortString(String a_string) {
         writeShortString(i_trans, a_string);
     }

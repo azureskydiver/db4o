@@ -16,13 +16,13 @@ public final class MGetAll extends MsgQuery {
 	private AbstractQueryResult getAll() {
 		synchronized (streamLock()) {
 			try {
-				return getStream().getAll(getTransaction());
+				return stream().getAll(transaction());
 			} catch (Exception e) {
 				if(Debug.atHome){
 					e.printStackTrace();
 				}
 			}
-			return getStream().newQueryResult(getTransaction());
+			return newQueryResult();
 		}
 	}
 }

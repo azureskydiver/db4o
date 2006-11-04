@@ -14,9 +14,8 @@ public class MObjectByUuid extends MsgD {
 		long uuid = readLong();
 		byte[] signature = readBytes();
 		int id = 0;
-		YapStream stream = getStream();
-		Transaction trans = getTransaction();
-		synchronized (stream.i_lock) {
+		Transaction trans = transaction();
+		synchronized (streamLock()) {
 			try {
 			    Object[] arr = trans.objectAndYapObjectBySignature(uuid, signature);
 			    if(arr[1] != null){

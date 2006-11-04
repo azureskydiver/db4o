@@ -7,16 +7,15 @@ import com.db4o.cs.*;
 
 public final class MPrefetchIDs extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
-		YapFile stream = (YapFile) getStream();
 		int prefetchIDCount = readInt();
 		MsgD reply =
 			Msg.ID_LIST.getWriterForLength(
-				getTransaction(),
+				transaction(),
 				YapConst.INT_LENGTH * prefetchIDCount);
 
-		synchronized (stream.i_lock) {
+		synchronized (streamLock()) {
 			for (int i = 0; i < prefetchIDCount; i++) {
-				reply.writeInt(stream.prefetchID());
+				reply.writeInt(((YapFile)stream()).prefetchID());
 			}
 		}
 		serverThread.write(reply);
