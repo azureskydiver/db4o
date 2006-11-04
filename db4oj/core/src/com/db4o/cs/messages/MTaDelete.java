@@ -3,13 +3,13 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 /**
  * 
  */
 public class MTaDelete extends MsgD {
-	public final boolean processMessageAtServer(YapSocket in) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 	    int id = _payLoad.readInt();
 	    int cascade = _payLoad.readInt();
 	    Transaction trans = getTransaction();

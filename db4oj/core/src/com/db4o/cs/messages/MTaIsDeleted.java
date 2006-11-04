@@ -2,16 +2,14 @@
 
 package com.db4o.cs.messages;
 
-import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MTaIsDeleted extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
-	    YapStream stream = getStream();
-		synchronized (stream.i_lock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
+		synchronized (streamLock()) {
 			boolean isDeleted = getTransaction().isDeleted(this.readInt());
 			int ret = isDeleted ? 1 : 0;
-			Msg.TA_IS_DELETED.getWriterForInt(getTransaction(), ret).write(stream, sock);
+			serverThread.write(Msg.TA_IS_DELETED.getWriterForInt(getTransaction(), ret));
 		}
 		return true;
 	}

@@ -3,11 +3,11 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 import com.db4o.inside.slots.*;
 
 public final class MWriteUpdate extends MsgObject {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 	    int yapClassId = _payLoad.readInt();
 	    YapFile stream = (YapFile)getStream();
 	    unmarshall(YapConst.INT_LENGTH);

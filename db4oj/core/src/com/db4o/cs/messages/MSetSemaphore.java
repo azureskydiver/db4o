@@ -3,18 +3,18 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MSetSemaphore extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 		int timeout = readInt();
 		String name = readString();
 		YapFile stream = (YapFile)getStream();
 		boolean res = stream.setSemaphore(getTransaction(), name, timeout);
 		if(res){
-			Msg.SUCCESS.write(stream, sock);
+			serverThread.write(Msg.SUCCESS);
 		}else{
-			Msg.FAILED.write(stream, sock);
+			serverThread.write(Msg.FAILED);
 		}
 		return true;
 	}

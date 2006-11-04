@@ -3,10 +3,10 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MReadMultipleObjects extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 
 		int size = readInt();
 		MsgD[] ret = new MsgD[size];
@@ -42,7 +42,7 @@ public final class MReadMultipleObjects extends MsgD {
 				multibytes._payLoad.append(ret[i]._payLoad._buffer);
 			}
 		}
-		multibytes.write(stream, sock);
+		serverThread.write(multibytes);
 		return true;
 	}
 }

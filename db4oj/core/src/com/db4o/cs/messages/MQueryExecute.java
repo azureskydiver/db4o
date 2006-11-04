@@ -3,14 +3,14 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 import com.db4o.inside.query.*;
 
 public final class MQueryExecute extends MsgQuery {
 	
-	public boolean processMessageAtServer(YapSocket sock) {
+	public boolean processAtServer(YapServerThread serverThread) {
 		unmarshall();
-        writeQueryResult(execute(), sock);
+        writeQueryResult(execute(), serverThread);
 		return true;
 	}
 

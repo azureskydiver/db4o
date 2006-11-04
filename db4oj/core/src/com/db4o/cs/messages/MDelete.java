@@ -3,10 +3,10 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MDelete extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 		YapReader bytes = this.getByteLoad();
 		YapStream stream = getStream();
 		synchronized (stream.i_lock) {

@@ -2,12 +2,12 @@
 
 package com.db4o.cs.messages;
 
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MCommitOK extends Msg {
-	public final boolean processMessageAtServer(YapSocket in) {
+	public final boolean processAtServer(YapServerThread serverThread) {
         getTransaction().commit();
-        Msg.OK.write(getStream(), in);
+        serverThread.write(Msg.OK);
         return true;
     }
 }

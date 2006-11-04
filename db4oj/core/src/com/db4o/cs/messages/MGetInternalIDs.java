@@ -3,10 +3,10 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MGetInternalIDs extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 		YapReader bytes = this.getByteLoad();
 		long[] ids;
 		YapStream stream = getStream();
@@ -24,7 +24,7 @@ public final class MGetInternalIDs extends MsgD {
 		for (int i = 0; i < size; i++) {
 			writer.writeInt((int) ids[i]);
 		}
-		message.write(stream, sock);
+		serverThread.write(message);
 		return true;
 	}
 }

@@ -3,10 +3,10 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MPrefetchIDs extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 		YapFile stream = (YapFile) getStream();
 		int prefetchIDCount = readInt();
 		MsgD reply =
@@ -19,7 +19,7 @@ public final class MPrefetchIDs extends MsgD {
 				reply.writeInt(stream.prefetchID());
 			}
 		}
-		reply.write(stream, sock);
+		serverThread.write(reply);
 		return true;
 	}
 }
