@@ -33,6 +33,22 @@
 		<property name="csc.tests.extraoptions" value="-r:System.Drawing" />
 
 	</target>
+
+	<target name="configure-net1" unless="mono">
+		<echo>Configuring .net 1 build.</echo>
+		
+		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
+		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
+	
+		<property name="csharp.definitions" value="" />
+		<property name="csharp.definitions.cf" value="" />		
+		<property name="dir.dll.cf" value="${dir.compactframework}v1.0/WindowsCE/" />	
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net1" />
+		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
+	</target>
 	
 	<target name="configure-net2" unless="mono">
 		<echo>Configuring .net 2 build.</echo>
@@ -110,7 +126,13 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="configure, build-core, build-tools, build-tests">
+	<target name="build" depends="configure, build-all">
+	</target>
+	
+	<target name="build-net1" depends="configure-net1, build-all">
+	</target>
+	
+	<target name="build-all" depends="build-core, build-tools, build-tests">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">

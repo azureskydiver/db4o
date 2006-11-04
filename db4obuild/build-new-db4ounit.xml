@@ -48,6 +48,7 @@
 		<csc outputfile="${assembly}"
 			targettype="library"
 			srcdir="${db4ounit.net.src.dir}"
+			executable="${csc.executable}"
 			debug="true">
 		</csc>
 	</target>
