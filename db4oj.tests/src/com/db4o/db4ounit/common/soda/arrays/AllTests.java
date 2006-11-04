@@ -31,9 +31,4 @@ public class AllTests extends Db4oTestSuite {
 				STArrIntegerWUONTestCase.class,
 		};
 	}
-	
-	static int main(String[] args) {
-		return new AllTests().runSolo();
-	}
-
 }

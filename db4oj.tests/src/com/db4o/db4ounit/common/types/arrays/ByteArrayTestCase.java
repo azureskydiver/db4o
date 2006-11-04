@@ -74,7 +74,7 @@ public class ByteArrayTestCase extends AbstractDb4oTestCase {
 
 		while (os.hasNext()) {
 			Assert.areEqual(ARRAY_LENGTH, ((IByteArrayHolder) os.next())
-					.getBytes().length);
+					.getBytes().length, label);
 		}
 	}
 	
