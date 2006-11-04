@@ -29,14 +29,21 @@
 		
 		<property name="csharp.definitions" value="MONO,NET_2_0" />
 		<property name="csc.executable" value="gmcs" />
+	
+		<property name="csc.tests.extraoptions" value="-r:System.Drawing" />
 
 	</target>
 	
 	<target name="configure-net2" unless="mono">
 		<echo>Configuring .net 2 build.</echo>
 		
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
+	
 		<property name="csharp.definitions" value="NET_2_0" />
-		<property name="csc.executable" value="csc" />
+		<property name="csharp.definitions.cf" value="CF_2_0" />		
+		<property name="dir.dll.cf" value="${dir.compactframework}v2.0/WindowsCE/" />	
+		<property name="csc.tests.extraoptions" value="" />
 	
 		<property name="installer.package.suffix" value="net2" />
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
@@ -108,7 +115,7 @@
 	
 	<target name="rebuild" depends="clean, build">
 	</target>
-		
+	
 	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
 		<csc
 			destfile="${dir.dist.dll}/Db4objects.Db4o.Tests.exe"
@@ -118,7 +125,7 @@
 			definitions="${csharp.definitions}"
 			debug="true"
 			executable="${csc.executable}"
-			extraoptions="-r:System.Drawing">
+			extraoptions="${csc.tests.extraoptions}">
 			<reference dir="${dir.dist.dll}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4objects.Db4o.Tools.dll" />
