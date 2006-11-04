@@ -45,6 +45,20 @@ public class ReaderPair implements SlotReader {
 		incrementOffset(times*YapConst.INT_LENGTH);
 	}
 
+	public int copyUnindexedID() {
+		int orig=_source.readInt();
+		int mapped=-1;
+		try {
+			mapped=_mapping.mappedID(orig);
+		} catch (MappingNotFoundException exc) {
+			mapped=_mapping.allocateTargetSlot(YapConst.POINTER_LENGTH);
+			_mapping.mapIDs(orig,mapped,false,false);
+			_mapping.registerUnindexed(orig);
+		}
+		_target.writeInt(mapped);
+		return mapped;
+	}
+
 	public int copyID() {
 		return copyID(false,false);
 	}

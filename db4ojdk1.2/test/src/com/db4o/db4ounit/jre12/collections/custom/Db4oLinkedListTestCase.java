@@ -32,9 +32,13 @@ public class Db4oLinkedListTestCase extends AbstractDb4oTestCase {
 	    List i_subList;
     }
     
+    private List createList() {
+    	return db().collections().newLinkedList();
+    }
+    
     protected void store(){
     	Data data=new Data();
-        data.i_list = db().collections().newLinkedList();
+        data.i_list = createList();
         setDefaultValues(data);
         data.i_helper = helper(10);
         store(data);
@@ -43,7 +47,7 @@ public class Db4oLinkedListTestCase extends AbstractDb4oTestCase {
     private Db4oLinkedListHelper helper(int a_depth){
         if(a_depth > 0){
             Db4oLinkedListHelper helper = new Db4oLinkedListHelper();
-            helper.i_childList = db().collections().newLinkedList();
+            helper.i_childList = createList();
             helper.i_childList.add("hi");
             helper.i_child = helper(a_depth - 1);
             return helper;
@@ -94,7 +98,7 @@ public class Db4oLinkedListTestCase extends AbstractDb4oTestCase {
         if(onOriginal){
 	        Query q = newQuery();
 	        Data template = new Data();
-	        template.i_list = db().collections().newLinkedList();
+	        template.i_list = createList();
 	        template.i_list.add(new AtomData("cool"));
 	        q.constrain(template);
 	        ObjectSet qResult = q.execute();
