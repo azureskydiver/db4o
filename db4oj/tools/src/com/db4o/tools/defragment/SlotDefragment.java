@@ -14,7 +14,6 @@ public class SlotDefragment {
 	
 	public static void defrag(String sourceFileName, String targetFile,
 			String mappingFile) throws IOException {
-		//System.out.println("DEFRAG");
 		DefragContextImpl context=new DefragContextImpl(sourceFileName,targetFile,mappingFile);
 		int newClassCollectionID=0;
 		int targetIdentityID=0;
@@ -22,7 +21,7 @@ public class SlotDefragment {
 		try {
 			firstPass(context);
 			secondPass(context);
-			//checkCopies(context);
+			defragUnindexed(context);
 			newClassCollectionID=context.mappedID(context.sourceClassCollectionID());
 			int sourceIdentityID=context.databaseIdentityID(DefragContextImpl.SOURCEDB);
 			targetIdentityID=context.mappedID(sourceIdentityID);
@@ -36,6 +35,22 @@ public class SlotDefragment {
 			context.close();
 		}
 		setIdentity(targetFile, targetIdentityID,targetUuidIndexID);
+	}
+
+	private static void defragUnindexed(DefragContextImpl context) throws CorruptionException {
+		Iterator4 unindexedIDs=context.unindexedIDs();
+		while(unindexedIDs.moveNext()) {
+			final int origID=((Integer)unindexedIDs.current()).intValue();
+			if(context.hasSeen(origID)) {
+				continue;
+			}
+			ReaderPair.processCopy(context, origID, new SlotCopyHandler() {
+				public void processCopy(ReaderPair readers) throws CorruptionException {
+					YapClass.defragObject(readers);
+				}
+				
+			}, false, true);
+		}
 	}
 
 	private static void setIdentity(String targetFile, int targetIdentityID, int targetUuidIndexID) {
