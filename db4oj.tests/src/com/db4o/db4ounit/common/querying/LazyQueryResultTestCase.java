@@ -11,7 +11,7 @@ public class LazyQueryResultTestCase extends QueryResultTestCase {
 		new LazyQueryResultTestCase().runSolo();
 	}
 
-	protected QueryResult newQueryResult() {
+	protected AbstractQueryResult newQueryResult() {
 		return new LazyQueryResult(trans());
 	}
 

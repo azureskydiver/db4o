@@ -23,8 +23,8 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		public Item() {			
 		}
 		
-		public Item(String name) {
-			this.name = name;
+		public Item(String name_) {
+			name = name_;
 		}
 		
 		public String toString() {
@@ -46,9 +46,9 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		assertItems(new String[] { "bar", "baz" }, os);
 	}
 	
-	public void _testAccessOrder() {
+	public void testAccessOrder() {
 		ObjectSet result = newQuery(Item.class).execute();
-		for (int i=0; i<result.size(); ++i) {
+		for (int i=0; i < result.size(); ++i) {
 			Assert.isTrue(result.hasNext());
 			Assert.areSame(result.ext().get(i), result.next());
 		}

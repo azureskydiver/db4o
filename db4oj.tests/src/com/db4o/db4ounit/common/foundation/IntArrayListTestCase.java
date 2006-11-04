@@ -11,7 +11,7 @@ import db4ounit.*;
  */
 public class IntArrayListTestCase implements TestCase {
 	
-	public void testIteratorGoesBackwards() {
+	public void testIteratorGoesForwards() {
 		IntArrayList list = new IntArrayList();
 		assertIterator(new int[] {}, list.intIterator());
 		
@@ -19,7 +19,7 @@ public class IntArrayListTestCase implements TestCase {
 		assertIterator(new int[] { 1 }, list.intIterator());		
 		
 		list.add(2);
-		assertIterator(new int[] { 2, 1 }, list.intIterator());
+		assertIterator(new int[] { 1, 2 }, list.intIterator());
 	}
 
 	private void assertIterator(int[] expected, IntIterator4 iterator) {
@@ -30,5 +30,5 @@ public class IntArrayListTestCase implements TestCase {
 		}
 		Assert.isFalse(iterator.moveNext());
 	}
-
+	
 }
