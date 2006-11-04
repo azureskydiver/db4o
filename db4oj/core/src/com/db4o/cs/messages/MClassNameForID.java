@@ -3,14 +3,14 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 
 /**
  * get the classname for an internal ID
  */
 final class MClassNameForID extends MsgD{
-    public final boolean processMessageAtServer(YapSocket sock) {
+    public final boolean processAtServer(YapServerThread serverThread) {
         int id = _payLoad.readInt();
         String name = "";
         YapStream stream = getStream();
@@ -28,7 +28,7 @@ final class MClassNameForID extends MsgD{
                 }
             }
         }
-        Msg.CLASS_NAME_FOR_ID.getWriterForString(getTransaction(), name).write(stream, sock);
+        serverThread.write(Msg.CLASS_NAME_FOR_ID.getWriterForString(getTransaction(), name));
         return true;
     }
 }

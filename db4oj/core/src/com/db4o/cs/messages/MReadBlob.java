@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import com.db4o.*;
+import com.db4o.cs.*;
 import com.db4o.ext.Status;
 import com.db4o.foundation.network.YapSocket;
 
@@ -34,7 +35,7 @@ public class MReadBlob extends MsgBlob {
         }
 
     }
-    public boolean processMessageAtServer(YapSocket sock) {
+    public boolean processAtServer(YapServerThread serverThread) {
         YapStream stream = getStream();
         try {
             BlobImpl blobImpl = this.serverGetBlobImpl();
@@ -42,6 +43,7 @@ public class MReadBlob extends MsgBlob {
                 blobImpl.setTrans(getTransaction());
                 File file = blobImpl.serverFile(null, false);
                 int length = (int) file.length();
+                YapSocket sock = serverThread.socket();
                 Msg.LENGTH.getWriterForInt(getTransaction(), length).write(stream, sock);
                 FileInputStream fin = new FileInputStream(file);
                 copy(fin,sock,false);
@@ -49,7 +51,7 @@ public class MReadBlob extends MsgBlob {
                 Msg.OK.write(stream, sock);
             }
         } catch (Exception e) {
-            Msg.ERROR.write(stream, sock);
+        	serverThread.write(Msg.ERROR);
         }
         return true;
     }

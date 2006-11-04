@@ -6,9 +6,11 @@ import java.io.IOException;
 
 import com.db4o.*;
 import com.db4o.cs.messages.*;
+import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.inside.query.*;
 
-final class YapServerThread extends Thread {
+public final class YapServerThread extends Thread {
 
     private String i_clientName;
 
@@ -27,6 +29,8 @@ final class YapServerThread extends Thread {
     private YapSocket i_socket;
     private YapFile i_substituteStream;
     private Transaction i_substituteTrans;
+    
+    private Hashtable4 _queryResults;
     
     private Config4Impl i_config;
 
@@ -68,7 +72,7 @@ final class YapServerThread extends Thread {
         closeSubstituteStream();
         try {
             if (i_sendCloseMessage) {
-                Msg.CLOSE.write(i_mainStream, i_socket);
+                write(Msg.CLOSE);
             }
         } catch (Exception e) {
             if (Debug.atHome) {
@@ -156,7 +160,7 @@ final class YapServerThread extends Thread {
                     break;
                 }
                 if (null == i_socket) break;
-                Msg.PING.write(getStream(), i_socket);
+                write(Msg.PING);
                 i_pingAttempts++;
             }
         }
@@ -183,7 +187,7 @@ final class YapServerThread extends Thread {
                 String userName = ((MsgD) message).readString();
                 String password = ((MsgD) message).readString();
                 i_mainStream.showInternalClasses(true);
-                User found = (User) i_server.getUser(userName);
+                User found = i_server.getUser(userName);
                 i_mainStream.showInternalClasses(false);
                 if (found != null) {
                     if (found.password.equals(password)) {
@@ -191,22 +195,22 @@ final class YapServerThread extends Thread {
                         i_mainStream.logMsg(32, i_clientName);
                         int blockSize = i_mainStream.blockSize();
                         int encrypt = i_mainStream.i_handlers.i_encrypt ? 1 : 0;
-                        Msg.LOGIN_OK.getWriterForInts(getTransaction(), new int[] {blockSize, encrypt}).write(i_mainStream, i_socket);
+                        write(Msg.LOGIN_OK.getWriterForInts(getTransaction(), new int[] {blockSize, encrypt}));
                         i_loggedin= true;
                         setName("db4o server socket for client " + i_clientName);
                     } else {
-                        Msg.FAILED.write(i_mainStream, i_socket);
+                        write(Msg.FAILED);
                         return false;
                     }
                 } else {
-                    Msg.FAILED.write(i_mainStream, i_socket);
+                    write(Msg.FAILED);
                     return false;
                 }
             }
             return true;
         }
         
-        if (message.processMessageAtServer(i_socket)) {
+        if (message.processAtServer(this)) {
             return true;
         }
         
@@ -214,8 +218,20 @@ final class YapServerThread extends Thread {
             Msg.OK.write(getStream(), i_socket);
             return true;
         }
+        
+        if(Msg.QUERY_EXECUTE_LAZY.equals(message)){
+        	mapQueryResultToID((MsgQuery)message);
+        	return true;
+        }
+        
+        if(Msg.OBJECTSET_FINALIZED.equals(message)){
+        	int queryResultID = ((MsgD) message).readInt();
+        	queryResultFinalized(queryResultID);
+        	return true;
+        }
+        
         if (Msg.CLOSE.equals(message)) {
-            Msg.CLOSE.write(getStream(), i_socket);
+        	write(Msg.CLOSE);
             getTransaction().commit();
             i_sendCloseMessage = false;
             getStream().logMsg(34, i_clientName);
@@ -232,7 +248,7 @@ final class YapServerThread extends Thread {
             synchronized(getStream()){
                 ver = getStream().currentVersion();
             }
-            Msg.ID_LIST.getWriterForLong(getTransaction(), ver).write(getStream(), i_socket);
+            write(Msg.ID_LIST.getWriterForLong(getTransaction(), ver));
             return true;
         }
         
@@ -267,10 +283,24 @@ final class YapServerThread extends Thread {
         
         return true;
     }
-    
-    
 
-    private void switchToFile(Msg message) {
+    private void queryResultFinalized(int queryResultID) {
+    	_queryResults.remove(queryResultID);
+	}
+
+	private void mapQueryResultToID(MsgQuery queryMessage) {
+    	int queryResultID = queryMessage.queryResultID();
+    	if(queryResultID <= 0){
+    		return;
+    	}
+    	AbstractQueryResult queryResult = queryMessage.queryResult();
+    	if(_queryResults == null){
+    		_queryResults = new Hashtable4();
+    	}
+    	_queryResults.put(queryResultID, queryResult);
+	}
+
+	private void switchToFile(Msg message) {
         synchronized (i_mainStream.i_lock) {
             String fileName = ((MsgD) message).readString();
             try {
@@ -278,14 +308,14 @@ final class YapServerThread extends Thread {
                 i_substituteStream = (YapFile) Db4o.openFile(fileName);
                 i_substituteTrans = i_substituteStream.newTransaction();
                 i_substituteStream.configImpl().setMessageRecipient(i_mainStream.configImpl().messageRecipient());
-                Msg.OK.write(getStream(), i_socket);
+                write(Msg.OK);
             } catch (Exception e) {
                 if (Debug.atHome) {
                     System.out.println("Msg.SWITCH_TO_FILE failed.");
                     e.printStackTrace();
                 }
                 closeSubstituteStream();
-                Msg.ERROR.write(getStream(), i_socket);
+                write(Msg.ERROR);
             }
         }
     }
@@ -293,7 +323,7 @@ final class YapServerThread extends Thread {
     private void switchToMainFile() {
         synchronized (i_mainStream.i_lock) {
             closeSubstituteStream();
-            Msg.OK.write(getStream(), i_socket);
+            write(Msg.OK);
         }
     }
 
@@ -312,7 +342,15 @@ final class YapServerThread extends Thread {
     }
     
     private void respondInt(int response){
-        Msg.ID_LIST.getWriterForInt(getTransaction(), response).write(getStream(),i_socket);
+    	write(Msg.ID_LIST.getWriterForInt(getTransaction(), response));
+    }
+    
+    public void write(Msg msg){
+    	msg.write(getStream(), i_socket);
+    }
+    
+    public YapSocket socket(){
+    	return i_socket;
     }
     
     

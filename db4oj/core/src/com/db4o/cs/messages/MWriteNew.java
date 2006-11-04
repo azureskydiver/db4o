@@ -3,10 +3,10 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MWriteNew extends MsgObject {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
         int yapClassId = _payLoad.readInt();
         YapFile stream = (YapFile)getStream();
         unmarshall(YapConst.INT_LENGTH);

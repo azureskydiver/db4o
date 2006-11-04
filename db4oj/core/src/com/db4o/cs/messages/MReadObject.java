@@ -3,10 +3,10 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MReadObject extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 		YapWriter bytes = null;
 
 		// readObjectByID may fail in certain cases
@@ -26,7 +26,7 @@ public final class MReadObject extends MsgD {
 		if (bytes == null) {
 			bytes = new YapWriter(this.getTransaction(), 0, 0);
 		}
-		Msg.OBJECT_TO_CLIENT.getWriter(bytes).write(stream, sock);
+		serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(bytes));
 		return true;
 	}
 }

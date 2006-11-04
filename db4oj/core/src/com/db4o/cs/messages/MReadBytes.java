@@ -3,7 +3,7 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MReadBytes extends MsgD {
 	public final YapReader getByteLoad() {
@@ -22,7 +22,7 @@ public final class MReadBytes extends MsgD {
 		return message;
 	}
 	
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 	    YapStream stream = getStream();
 		int address = this.readInt();
 		int length = this.readInt();
@@ -31,10 +31,10 @@ public final class MReadBytes extends MsgD {
 				new YapWriter(this.getTransaction(), address, length);
 			try {
 				stream.readBytes(bytes._buffer, address, length);
-				getWriter(bytes).write(stream, sock);
+				serverThread.write(getWriter(bytes));
 			} catch (Exception e) {
 				// TODO: not nicely handled on the client side yet
-				Msg.NULL.write(stream, sock);
+				serverThread.write(Msg.NULL);
 			}
 		}
 		return true;

@@ -3,10 +3,10 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MGetClasses extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 	    YapStream stream = getStream();
 		synchronized (stream.i_lock) {
 			try {
@@ -26,7 +26,7 @@ public final class MGetClasses extends MsgD {
 		YapReader writer = message.payLoad();
 		writer.writeInt(stream.classCollection().getID());
 		writer.append(stream.stringIO().encodingByte());
-		message.write(stream, sock);
+		serverThread.write(message);
 		return true;
 	}
 }

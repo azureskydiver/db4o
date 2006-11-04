@@ -3,14 +3,14 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 
 /**
  * 
  */
 public class MObjectByUuid extends MsgD {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 		long uuid = readLong();
 		byte[] signature = readBytes();
 		int id = 0;
@@ -29,7 +29,7 @@ public class MObjectByUuid extends MsgD {
 			    }
 			}
 		}
-		Msg.OBJECT_BY_UUID.getWriterForInt(trans, id).write(stream,sock); 
+		serverThread.write(Msg.OBJECT_BY_UUID.getWriterForInt(trans, id));
 		return true;
 	}
 }

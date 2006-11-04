@@ -3,6 +3,7 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
+import com.db4o.cs.*;
 import com.db4o.foundation.network.*;
 import com.db4o.inside.query.*;
 
@@ -13,9 +14,11 @@ public abstract class MsgQuery extends MsgObject {
 	
 	private int _queryResultId;
 	
-	protected AbstractQueryResult _queryResult; 
+	private AbstractQueryResult _queryResult; 
 	
-	final void writeQueryResult(AbstractQueryResult queryResult, YapSocket sock) {
+	final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread) {
+		
+		_queryResult = queryResult;
 		
 		Transaction trans = getTransaction();
 		YapStream stream = getStream();
@@ -29,7 +32,7 @@ public abstract class MsgQuery extends MsgObject {
 		YapWriter writer = message.payLoad();
 		writer.writeInt(_queryResultId);
 		writer.writeQueryResult(queryResult);
-		message.write(getStream(), sock);
+		serverThread.write(message);
 	}
 	
 	private static synchronized int generateID(){
@@ -39,5 +42,15 @@ public abstract class MsgQuery extends MsgObject {
 		}
 		return nextID;
 	}
+	
+	public int queryResultID(){
+		return _queryResultId;
+	}
+	
+	public AbstractQueryResult queryResult(){
+		return _queryResult;
+	}
+	
+	
 
 }

@@ -3,12 +3,12 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 import com.db4o.reflect.ReflectClass;
 
 public final class MCreateClass extends MsgD {
 
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
         YapStream stream = getStream();
         Transaction trans = stream.getSystemTransaction();
         YapWriter returnBytes = new YapWriter(trans, 0);
@@ -24,7 +24,7 @@ public final class MCreateClass extends MsgD {
                             yapClass.write(trans);
                             trans.commit();
                             returnBytes = stream.readWriterByID(trans, yapClass.getID());
-                            Msg.OBJECT_TO_CLIENT.getWriter(returnBytes).write(stream, sock);
+                            serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
                             return true;
     
                         } 
@@ -43,7 +43,7 @@ public final class MCreateClass extends MsgD {
                 System.out.println("MCreateClass failed");
             }
         }
-        Msg.FAILED.write(stream, sock);
+        serverThread.write(Msg.FAILED);
         return true;
     }
 }

@@ -2,10 +2,10 @@
 
 package com.db4o.cs.messages;
 
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.cs.*;
 
 public final class MRollback extends Msg {
-	public final boolean processMessageAtServer(YapSocket sock) {
+	public final boolean processAtServer(YapServerThread serverThread) {
 		this.getTransaction().rollback();
 		return true;
 	}

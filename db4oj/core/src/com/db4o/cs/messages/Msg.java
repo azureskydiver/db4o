@@ -44,6 +44,7 @@ public class Msg implements Cloneable {
 	public static final MsgD OBJECT_BY_UUID = new MObjectByUuid();
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();
 	public static final MsgD OBJECTSET_FINALIZED = new MsgD("OBJECTSET_FINALIZED");
+	public static final MsgD OBJECTSET_SIZE = new MsgD("OBJECTSET_SIZE");
 	public static final Msg OK = new Msg("OK");
 	public static final Msg PING = new Msg("PING");
 	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
@@ -138,8 +139,9 @@ public class Msg implements Cloneable {
 
 	/**
 	 * server side execution
+	 * @param serverThread TODO
 	 */
-	public boolean processMessageAtServer(YapSocket socket) {
+	public boolean processAtServer(YapServerThread serverThread) {
 		// default: do nothing
 		return false; // since not processed
 	}
@@ -203,7 +205,7 @@ public class Msg implements Cloneable {
                     
                 }
 			} else {
-				processMessageAtServer(null);
+				processAtServer(null);
 			}
 		} else {
 			synchronized (sock) {

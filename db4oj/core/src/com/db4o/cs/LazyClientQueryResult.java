@@ -14,14 +14,18 @@ import com.db4o.query.*;
  */
 public class LazyClientQueryResult extends AbstractQueryResult{
 	
+	private static final int SIZE_NOT_SET = -1;
+	
 	private final YapClient _client;
 	
-	private final int _id;
+	private final int _proxyID;
+	
+	private int _size = SIZE_NOT_SET;
 
 	public LazyClientQueryResult(Transaction trans, YapClient client, int id) {
 		super(trans);
 		_client = client;
-		_id = id;
+		_proxyID = id;
 	}
 
 	public Object get(int index) {
@@ -39,38 +43,37 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 		return null;
 	}
 
-	public void loadFromClassIndex(YapClass clazz) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void loadFromIdReader(YapReader reader) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void loadFromQuery(QQuery query) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(_size == SIZE_NOT_SET){
+			_client.writeMsg(Msg.OBJECTSET_SIZE.getWriterForInt(_transaction, _proxyID));
+			_size = ((MsgD)_client.expectedResponse(Msg.OBJECTSET_SIZE)).readInt();
+		}
+		return _size;
 	}
 
 	public void sort(QueryComparator cmp) {
-		// TODO Auto-generated method stub
-		
+		throw new NotImplementedException();		
 	}
 	
 	protected void finalize() throws Throwable {
-		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _id));
+		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _proxyID));
+	}
+	
+	public void loadFromClassIndex(YapClass clazz) {
+		throw new NotImplementedException();
+	}
+
+	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
+		throw new NotImplementedException();
+	}
+
+	public void loadFromIdReader(YapReader reader) {
+		throw new NotImplementedException();
+	}
+
+	public void loadFromQuery(QQuery query) {
+		throw new NotImplementedException();
 	}
 
 }
