@@ -7,8 +7,9 @@ import com.db4o.db4ounit.common.btree.ExpectingVisitor;
 import com.db4o.inside.classindex.ClassIndexStrategy;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.*;
 
-public class ClassIndexTestCase extends AbstractDb4oTestCase {
+public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
 	public static class Item {
 		public String name;

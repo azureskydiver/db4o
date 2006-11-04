@@ -39,7 +39,6 @@ public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 		for(int i=0;i<4;i++) {
 			Item item = new Item(i,String.valueOf(3-i)); 
 			store(item);
-			/*int id = (int)*/db().getID(item);
 		}
 	}
 	

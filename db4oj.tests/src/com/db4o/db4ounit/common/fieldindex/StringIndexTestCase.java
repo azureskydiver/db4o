@@ -12,11 +12,12 @@ import com.db4o.query.Query;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class StringIndexTestCase extends AbstractDb4oTestCase {
+public class StringIndexTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
 	public static void main(String[] args) {
 		new StringIndexTestCase().runSolo();

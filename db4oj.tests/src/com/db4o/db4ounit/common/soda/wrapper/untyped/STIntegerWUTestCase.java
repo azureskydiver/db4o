@@ -1,11 +1,13 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.db4ounit.common.soda.wrapper.untyped;
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.query.*;
 
 
-public class STIntegerWUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase{
+public class STIntegerWUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase implements Serializable{
 	
 	public Object i_int;
 	
