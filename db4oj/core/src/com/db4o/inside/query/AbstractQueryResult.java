@@ -96,5 +96,13 @@ public abstract class AbstractQueryResult implements QueryResult {
     protected AbstractQueryResult toIdTree(){
     	return new IdTreeQueryResult(transaction(), this);
     }
+    
+	public abstract void loadFromClassIndex(YapClass clazz);
+
+	public abstract void loadFromQuery(QQuery query);
+
+	public abstract void loadFromClassIndexes(YapClassCollectionIterator iterator);
+
+	public abstract void loadFromIdReader(YapReader reader);
 
 }

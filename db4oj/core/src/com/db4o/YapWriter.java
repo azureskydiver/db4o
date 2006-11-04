@@ -403,22 +403,20 @@ public final class YapWriter extends YapReader {
         toWriter._addressOffset = _addressOffset;
     }
 
-    // turning writing around since our Collection world is the wrong
-    // way around
-    // TODO: optimize
     public final void writeQueryResult(QueryResult qr) {
-    	// TODO: save offset, calculate the size after iteration, write back 
-        int size = qr.size();
-        writeInt(size);
-        _offset += (size - 1) * YapConst.ID_LENGTH;
-        int dec = YapConst.ID_LENGTH * 2;
-        
+    	int savedOffset = _offset; 
+        writeInt(0);
+        int size = 0;
         IntIterator4 idIterator = qr.iterateIDs();
-        for (int i = 0; i < size; i++) {
-        	idIterator.moveNext();
-            writeInt(idIterator.currentInt());
-            _offset -= dec;
+        while(idIterator.moveNext()){
+        	int id = idIterator.currentInt();
+            writeInt(id);
+            size ++;
         }
+        int secondSavedOffset = _offset;
+        _offset = savedOffset;
+        writeInt(size);
+        _offset = secondSavedOffset;
     }
 
     void writeShortString(String a_string) {

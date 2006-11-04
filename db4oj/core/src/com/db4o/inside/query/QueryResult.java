@@ -2,7 +2,6 @@
 
 package com.db4o.inside.query;
 
-import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
@@ -24,11 +23,4 @@ public interface QueryResult extends Iterable4 {
 
 	public void sort(QueryComparator cmp);
 
-	public void loadFromClassIndex(YapClass clazz);
-
-	public void loadFromQuery(QQuery query);
-
-	public void loadFromClassIndexes(YapClassCollectionIterator iterator);
-
-	public void loadFromIdReader(YapReader reader);
 }

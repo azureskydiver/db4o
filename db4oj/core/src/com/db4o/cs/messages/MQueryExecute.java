@@ -6,7 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.network.YapSocket;
 import com.db4o.inside.query.*;
 
-public final class MQueryExecute extends MsgObject {
+public final class MQueryExecute extends MsgQuery {
 	
 	public boolean processMessageAtServer(YapSocket sock) {
 		unmarshall();
@@ -14,7 +14,7 @@ public final class MQueryExecute extends MsgObject {
 		return true;
 	}
 
-	private QueryResult execute() {
+	private AbstractQueryResult execute() {
 		
 		synchronized (streamLock()) {
             
@@ -33,9 +33,9 @@ public final class MQueryExecute extends MsgObject {
 		}
 	}
 
-	private QueryResult executeFully(Transaction trans, YapStream stream, QQuery query) {
+	private AbstractQueryResult executeFully(Transaction trans, YapStream stream, QQuery query) {
 		try {
-			QueryResult qr = stream.newQueryResult(trans);
+			AbstractQueryResult qr = stream.newQueryResult(trans);
 			qr.loadFromQuery(query);
 			return qr;
 		} catch (Exception e) {

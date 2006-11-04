@@ -31,7 +31,7 @@ public class Msg implements Cloneable {
 	public static final MsgD DELETE = new MDelete();
 	public static final Msg ERROR = new Msg("ERROR");
 	public static final Msg FAILED = new Msg("FAILED");
-	public static final Msg GET_ALL = new MGetAll();
+	public static final MsgD GET_ALL = new MGetAll();
 	public static final MsgD GET_CLASSES = new MGetClasses();
 	public static final MsgD GET_INTERNAL_IDS = new MGetInternalIDs();
 	public static final Msg GET_THREAD_ID = new Msg("GET_THREAD_ID");
@@ -43,10 +43,13 @@ public class Msg implements Cloneable {
 	public static final Msg NULL = new Msg("NULL");
 	public static final MsgD OBJECT_BY_UUID = new MObjectByUuid();
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();
+	public static final MsgD OBJECTSET_FINALIZED = new MsgD("OBJECTSET_FINALIZED");
 	public static final Msg OK = new Msg("OK");
 	public static final Msg PING = new Msg("PING");
 	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
 	public static final MsgObject QUERY_EXECUTE = new MQueryExecute();
+	public static final MsgObject QUERY_EXECUTE_LAZY = new MQueryExecute();
+	public static final MsgD QUERY_RESULT = new MsgD("QUERY_RESULT");
 	public static final MsgD RAISE_VERSION = new MsgD("RAISE_VERSION");
 	public static final MsgBlob READ_BLOB = new MReadBlob();
 	public static final MsgD READ_BYTES = new MReadBytes();
@@ -173,6 +176,7 @@ public class Msg implements Cloneable {
 	final public String toString() {
 		return getName();
 	}
+	
 
 	public final void write(YapStream stream, YapSocket sock) {
 		if (Debug.fakeServer) {
@@ -229,12 +233,4 @@ public class Msg implements Cloneable {
 		return writer;
 	}
 
-	final void writeQueryResult(QueryResult qr, YapSocket sock) {
-		Transaction trans = getTransaction();
-		int size = qr.size();
-		MsgD message = ID_LIST.getWriterForLength(trans, YapConst.ID_LENGTH * (size + 1));
-		YapWriter writer = message.payLoad();
-		writer.writeQueryResult(qr);
-		message.write(getStream(), sock);
-	}
 }

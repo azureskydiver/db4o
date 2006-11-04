@@ -433,7 +433,6 @@ public abstract class QQueryBase implements Unversioned {
                 if (topLevel) {
                     candidates.traverse(result);
                 } else {
-                    QQueryBase q = this;
                     candidates.traverse(new Visitor4() {
                         public void visit(Object a_object) {
                             QCandidate candidate = (QCandidate)a_object;

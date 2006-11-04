@@ -17,7 +17,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	
 	private boolean _checkDuplicates;
 	
-	private final IntArrayList _ids;
+	public final IntArrayList _ids;
     
     public IdListQueryResult(Transaction trans, int initialSize){
     	super(trans);
@@ -60,46 +60,23 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	            return;
 	        }
 	    }
-	    
-	    // TODO: It would be more efficient to hold TreeInts
-	    // here only but it won't work, in case an ordering
-	    // is applied. Modify to hold a tree here, in case
-	    // there is no ordering.
-	    
 	    add(a_key);
-	    
 	}
 	
-	public void sort( QueryComparator cmp) {
-		sort(cmp,0,size()-1);
-	}
-
-	// TODO: use Algorithms4.qsort
-	private void sort(QueryComparator cmp,int from,int to) {
-		if(to-from<1) {
-			return;
-		}
-		Object pivot=get(to);
-		int left=from;
-		int right=to;
-		while(left<right) {
-			while(left<right&&cmp.compare(pivot,get(left))<0) {
-				left++;
+	public void sort(final QueryComparator cmp) {
+		Algorithms4.qsort(new QuickSortable4() {
+			public void swap(int leftIndex, int rightIndex) {
+				_ids.swap(leftIndex, rightIndex);
 			}
-			while(left<right&&cmp.compare(pivot,get(right))>=0) {
-				right--;
+			public int size() {
+				return IdListQueryResult.this.size();
 			}
-			swap(left, right);
-		}
-		swap(to, right);
-		sort(cmp,from,right-1);
-		sort(cmp,right+1,to);
+			public int compare(int leftIndex, int rightIndex) {
+				return cmp.compare(get(leftIndex), get(rightIndex));
+			}
+		});
 	}
-
-	private void swap(int left, int right) {
-		_ids.swap(left, right);
-	}
-
+	
 	public void loadFromClassIndex(YapClass clazz) {
 		final ClassIndexStrategy index = clazz.index();
 		index.traverseAll(_transaction, new Visitor4() {
@@ -159,6 +136,5 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	public int size() {
 		return _ids.size();
 	}
-
 	
 }

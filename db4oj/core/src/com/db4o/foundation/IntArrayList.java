@@ -10,6 +10,7 @@ public class IntArrayList implements Iterable4 {
     static final int INC = 20;
     
     protected int[] i_content;
+    
     private int i_count;
     
     public IntArrayList(){
@@ -51,7 +52,7 @@ public class IntArrayList implements Iterable4 {
     }
 
 	public IntIterator4 intIterator() {
-		return new ReverseIntIterator4Impl(i_content, i_count);
+		return new IntIterator4Impl(i_content, i_count);
 	}
 	
 	public Iterator4 iterator() {
@@ -69,7 +70,5 @@ public class IntArrayList implements Iterable4 {
 			i_content[right]=swap;
 		}
 	}
-
-
 
 }

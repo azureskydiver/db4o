@@ -14,9 +14,13 @@ public class HybridQueryResult extends AbstractQueryResult {
 	
 	private AbstractQueryResult _delegate;
 	
-	public HybridQueryResult(Transaction transaction) {
+	public HybridQueryResult(Transaction transaction, AbstractQueryResult delegate_) {
 		super(transaction);
-		_delegate = new LazyQueryResult(transaction);
+		_delegate = delegate_;
+	}
+	
+	public HybridQueryResult(Transaction transaction) {
+		this(transaction, new LazyQueryResult(transaction));
 	}
 
 	public Object get(int index) {

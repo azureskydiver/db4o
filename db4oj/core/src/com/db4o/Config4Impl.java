@@ -777,4 +777,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 	IoAdapter ioAdapter() {
 		return (IoAdapter)_config.get(IOADAPTER);
 	}
+	
+	public boolean lazyQueries() {
+		return false;
+	}
 }

@@ -134,7 +134,10 @@ public abstract class YapFile extends YapStream {
         return new BTree(i_trans, id, new YInt(this));
     }
 
-    public final QueryResult newQueryResult(Transaction trans) {
+    public final AbstractQueryResult newQueryResult(Transaction trans) {
+    	if(config().lazyQueries()){
+    		return new HybridQueryResult(trans);
+    	}
     	return new IdListQueryResult(trans);
     }
 
@@ -227,8 +230,8 @@ public abstract class YapFile extends YapStream {
         
     }
 
-    public QueryResult getAll(Transaction ta) {
-    	final QueryResult queryResult = newQueryResult(ta);
+    public AbstractQueryResult getAll(Transaction ta) {
+    	final AbstractQueryResult queryResult = newQueryResult(ta);
     	queryResult.loadFromClassIndexes(classCollection().iterator());
         return queryResult;
     }
@@ -789,13 +792,13 @@ public abstract class YapFile extends YapStream {
 			return null;
 		}
 		
-		final QueryResult queryResult = newQueryResult(trans);
+		final AbstractQueryResult queryResult = newQueryResult(trans);
 		queryResult.loadFromClassIndex(clazz);
 		return queryResult;
     }
     
     public QueryResult executeQuery(QQuery query){
-    	QueryResult queryResult = newQueryResult(query.getTransaction());
+    	AbstractQueryResult queryResult = newQueryResult(query.getTransaction());
     	queryResult.loadFromQuery(query);
     	return queryResult;
     }

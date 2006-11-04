@@ -353,7 +353,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     public abstract int converterVersion();
 
-    public abstract QueryResult newQueryResult(Transaction trans);
+    public abstract AbstractQueryResult newQueryResult(Transaction trans);
 
     protected void createStringIO(byte encoding) {
     	setStringIo(YapStringIO.forEncoding(encoding));
@@ -695,7 +695,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return executeQuery((QQuery)q);
     }
     
-    public abstract QueryResult getAll(Transaction ta);
+    public abstract AbstractQueryResult getAll(Transaction ta);
 
     public Object getByID(long id) {
         synchronized (i_lock) {
