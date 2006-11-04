@@ -215,13 +215,8 @@ public final class YapServerThread extends Thread {
         }
         
         if (Msg.PING.equals(message)) {
-            Msg.OK.write(getStream(), i_socket);
+        	writeOK();
             return true;
-        }
-        
-        if(Msg.QUERY_EXECUTE_LAZY.equals(message)){
-        	mapQueryResultToID((MsgQuery)message);
-        	return true;
         }
         
         if(Msg.OBJECTSET_FINALIZED.equals(message)){
@@ -284,16 +279,15 @@ public final class YapServerThread extends Thread {
         return true;
     }
 
-    private void queryResultFinalized(int queryResultID) {
+    private void writeOK() {
+    	write(Msg.OK);
+	}
+
+	private void queryResultFinalized(int queryResultID) {
     	_queryResults.remove(queryResultID);
 	}
 
-	private void mapQueryResultToID(MsgQuery queryMessage) {
-    	int queryResultID = queryMessage.queryResultID();
-    	if(queryResultID <= 0){
-    		return;
-    	}
-    	AbstractQueryResult queryResult = queryMessage.queryResult();
+	public void mapQueryResultToID(AbstractQueryResult queryResult, int queryResultID) {
     	if(_queryResults == null){
     		_queryResults = new Hashtable4();
     	}
@@ -308,7 +302,7 @@ public final class YapServerThread extends Thread {
                 i_substituteStream = (YapFile) Db4o.openFile(fileName);
                 i_substituteTrans = i_substituteStream.newTransaction();
                 i_substituteStream.configImpl().setMessageRecipient(i_mainStream.configImpl().messageRecipient());
-                write(Msg.OK);
+                writeOK();
             } catch (Exception e) {
                 if (Debug.atHome) {
                     System.out.println("Msg.SWITCH_TO_FILE failed.");
@@ -323,7 +317,7 @@ public final class YapServerThread extends Thread {
     private void switchToMainFile() {
         synchronized (i_mainStream.i_lock) {
             closeSubstituteStream();
-            write(Msg.OK);
+            writeOK();
         }
     }
 
