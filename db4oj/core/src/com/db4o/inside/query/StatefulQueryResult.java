@@ -20,7 +20,7 @@ public class StatefulQueryResult {
     }
 
     public Object get(int index) {
-        return _delegate.get(reverseIndex(index));
+        return _delegate.get(index);
     }
     
     public long[] getIDs() {
@@ -68,13 +68,8 @@ public class StatefulQueryResult {
 	        if(id <= 0){
 	            return -1;
 	        }
-	        return reverseIndex(_delegate.indexOf(id));
+	        return _delegate.indexOf(id);
 	    }
-	}
-
-	// TODO: get rid of this
-	private int reverseIndex(int idx) {
-	    return size()-idx-1;
 	}
 
 	public Iterator4 iterateIDs() {

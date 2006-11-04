@@ -6,11 +6,12 @@ import com.db4o.*;
 
 
 public class MsgObject extends MsgD {
+	
 	private static final int LENGTH_FOR_ALL = YapConst.ID_LENGTH + (YapConst.INT_LENGTH * 3);
 	private static final int LENGTH_FOR_FIRST = LENGTH_FOR_ALL;
 	
-	int _id;
-	int _address;
+	private int _id;
+	private int _address;
 	
 	MsgD getWriter(YapWriter bytes, int[] prependInts) {
 		int lengthNeeded = bytes.getLength() + LENGTH_FOR_FIRST;

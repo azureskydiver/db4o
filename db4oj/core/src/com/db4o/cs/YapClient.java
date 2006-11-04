@@ -19,6 +19,7 @@ import com.db4o.reflect.*;
  * @exclude
  */
 public class YapClient extends YapStream implements ExtClient, BlobTransport {
+	
 	final Object blobLock = new Object();
 
 	private YapClientBlobThread blobThread;
@@ -180,7 +181,8 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     }
 	
 	YapSocket createParalellSocket() throws IOException {
-		Msg.GET_THREAD_ID.write(this, i_socket);
+		writeMsg(Msg.GET_THREAD_ID);
+		
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
 
 		YapSocket sock = i_socket.openParalellSocket();
@@ -202,8 +204,8 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return sock;
 	}
 
-	public final QueryResult newQueryResult(Transaction a_ta) {
-		return new ClientQueryResult(a_ta);
+	public AbstractQueryResult newQueryResult(Transaction trans) {
+		throw new IllegalStateException();
 	}
 
 	final public Transaction newTransaction(Transaction parentTransaction) {
@@ -292,11 +294,9 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return null;
 	}
 
-	public QueryResult getAll(Transaction ta) {
-		writeMsg(Msg.GET_ALL);
-		QueryResult queryResult = newQueryResult(ta);
-		readResult(queryResult);
-		return queryResult;
+	public AbstractQueryResult getAll(Transaction trans) {
+		writeMsg(Msg.GET_ALL.getWriter(trans));
+		return readQueryResult(trans);
 	}
 
 	/**
@@ -562,11 +562,17 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return readWriterByID(a_ta, a_id);
 	}
 
-	private void readResult(QueryResult queryResult) {
-		YapReader reader = expectedByteResponse(Msg.ID_LIST);
+	private AbstractQueryResult readQueryResult(Transaction trans) {
+		AbstractQueryResult queryResult = null;
+		YapReader reader = expectedByteResponse(Msg.QUERY_RESULT);
+		int queryID = reader.readInt();
+		if(queryID > 0){
+			queryResult = new HybridQueryResult(trans, new LazyClientQueryResult(trans, this, queryID));
+		}else{
+			queryResult = new IdListQueryResult(trans);
+		}
 		queryResult.loadFromIdReader(reader);
-		
-//		queryResult.reset();
+		return queryResult;
 	}
 
 	void readThis() {
@@ -762,11 +768,9 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     
     public QueryResult executeQuery(QQuery query){
     	Transaction trans = query.getTransaction();
-    	QueryResult result = newQueryResult(trans);
         query.marshall();
 		writeMsg(Msg.QUERY_EXECUTE.getWriter(marshall(trans,query)));
-		readResult(result);
-        return result;
+		return readQueryResult(trans);
     }
 
 

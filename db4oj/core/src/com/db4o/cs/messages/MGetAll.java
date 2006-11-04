@@ -4,16 +4,16 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.foundation.network.YapSocket;
-import com.db4o.inside.query.QueryResult;
+import com.db4o.inside.query.*;
 
-public final class MGetAll extends Msg {
+public final class MGetAll extends MsgQuery {
 	
 	public final boolean processMessageAtServer(YapSocket sock) {
 		writeQueryResult(getAll(), sock);
 		return true;
 	}
 
-	private QueryResult getAll() {
+	private AbstractQueryResult getAll() {
 		synchronized (streamLock()) {
 			try {
 				return getStream().getAll(getTransaction());
