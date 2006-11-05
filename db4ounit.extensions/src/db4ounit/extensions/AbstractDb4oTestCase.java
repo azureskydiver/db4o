@@ -39,6 +39,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		_fixture.open();
         db4oSetupBeforeStore();
 		store();
+		_fixture.db().commit();
         _fixture.close();
         _fixture.open();
         db4oSetupAfterStore();
