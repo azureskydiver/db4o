@@ -67,7 +67,9 @@ Let's look, how it works.
 
 First, BLOB storage should be defined:
 
-.c Db4o.configure().setBlobPath(storageFolder); ..
+.? java  .c Db4o.configure().setBlobPath(storageFolder); ..   ..?
+.? net  .c Db4o.Configure().SetBlobPath(storageFolder); ..   ..?
+.? mono  .c Db4o.Configure().SetBlobPath(storageFolder); ..   ..?
 
 where storageFolder is a String value representing local or server path to store BLOBs. If that value is ._
 not defined, db4o will use the default folder "blobs" in user directory.
@@ -85,7 +87,9 @@ and outFolder ( "blobs\out\") will be the place for images, retrieved from the d
 
 readFile method allows blob to be read from the specified location into db4o storage:
 
-.c Blob#readFrom( File ); ..
+.? java   .c Blob#readFrom( File ); ..   ..?
+.? net   .c Blob#ReadFrom( File ); ..   ..?
+.? mono   .c Blob#ReadFrom( File ); ..   ..?
 
 As reading is done in a dedicated thread, you can use Blob#getStatus() in a loop to create a progress window.
 

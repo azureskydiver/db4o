@@ -1,12 +1,12 @@
 .n
 .a Symbian .. 
-.2 Symbian OS ..
+.1 Symbian OS ..
 Symbian OS is the global industry standard operating system for smartphones. You can find more ._
 information about it at the  .l http://www.symbian.com/   Symbian website ..   .
 UIQ (formerly known as User Interface Quartz) is a software platform based upon Symbian OS. ._
 UIQ-based devices support Java thus enabling you to use db4o. 
 
-.3 Setting up programming environment ..
+.2 Setting up programming environment ..
 Db4o  was tested for compatibility with UIQ 2.1 SDK. You can download the SDK from:
 .l http://developer.sonyericsson.com/site/global/docstools/symbian/p_symbian.jsp ..
 
@@ -53,7 +53,7 @@ SET _epoc_drive_j=%SYMB_EPOC32%\java\
 .. 
 
 
-.3 Programming specifics ..
+.2 Programming specifics ..
 Tested version of Symbian JDK has problems with IO:
 - seek() cannot move beyond the current file length;
 - under certain (rare) conditions, calls to RandomAccessFile.length() seems to garble up the following reads.

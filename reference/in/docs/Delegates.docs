@@ -1,0 +1,27 @@
+.n
+.a Delegates ..
+.1 Delegates and Events ..
+
+Db4o rules for delegate fields are very straightforward: ._
+.b delegates are simply not stored. ..
+
+Events and delegates are generally used for binding user interface elements ._
+and domain models together. The Db4o team felt that not storing ._
+delegate fields by default was more appropriate than opening ._
+what could potentially be a very nasty can of worms ._
+(just think of a text box bound to a Customer.Changed event).
+
+After careful thought we can easily add delegate persistence to our ._
+domain model by either installing translators for the delegate types ._
+of interest or reconnecting the necessary objects upon activation ._
+using callbacks.
+
+For details see the specific chapters on ._
+.l Translators .. ._
+and ._
+.l Callbacks .. .
+
+
+
+
+

@@ -1,10 +1,16 @@
+.e GettingStarted ..
+.e Concepts ..
+.e PlatformImpl ..
+.e AdvancedType ..
+.e ConfTuneTest ..
 .e Advanced ..
 .e CSPart ..
-.e Special ..
-.e Performance ..
-.e InterDB ..
 .e ObjectManager ..
-.e Appendix ..
+.e Replication ..
+
+.e License ..
+.e Contact ..
+
 
 
 

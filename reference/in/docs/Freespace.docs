@@ -1,6 +1,6 @@
 .n
 .a Freespace ..
-.1 Freespace ..
+.1 Freespace Management System ..
 
 .2 Freespace concept ..
 
@@ -51,9 +51,13 @@ implementation uses more slots and more sophisticated processing).
 
 db4o comes with two freespace systems, one holds all freespace information in RAM, the other uses the ._
 internal indexing architecture. You can configure db4o to use either of the two by calling ._
-.c Db4o.configure().freespace().UseRamSystem()  ..
+.? java  .c Db4o.configure().freespace().useRamSystem()  ..   ..?
+.? net  .c Db4o.Configure().Freespace().UseRamSystem()  ..   ..?
+.? mono  .c Db4o.Configure().Freespace().UseRamSystem()  ..   ..?
 or
-.c Db4o.configure().freespace().UseIndexSystem() ..
+.? java   .c Db4o.configure().freespace().useIndexSystem() ..  ..?
+.? net  .c Db4o.Configure().Freespace().UseIndexSystem() ..  ..?
+.? mono  .c Db4o.Configure().Freespace().UseIndexSystem() ..  ..?
 This call should be made before you open the database for the first time
 By default db4o uses  .b RAM freespace management system .. . The information about free slots is loaded into ._
 memory on opening a database file and discarded on closing it. This system is quite fast, but it has its downside:
@@ -107,7 +111,9 @@ Public interface FreespaceConfiguration provides methods to select freespace sys
 (  .i useIndexSystem() , useRamSystem() .. ) as described before. See API documentation for more information.
 
 Another FreespaceConfiguration method 
-.c void discardSmallerThan(int byteCount)  .. 
+.? java  .c void discardSmallerThan(int byteCount)  ..   ..?
+.? net  .c void DiscardSmallerThan(int byteCount)  ..   ..?
+.? mono  .c void DiscardSmallerThan(int byteCount)  ..   ..?
 configures the minimum size of free space slots in the database file that are to be reused. FreespaceManager ._
 keeps 2 lists of all 'freed' space that can be reused (sorted by address and by size). In some cases ._
 (numerous updates, deletes) these lists can grow large, causing extra RAM consumption and performance loss ._
@@ -119,5 +125,7 @@ set to bigger value.
 By default byteCount = 0, which means that all 'freed' space is reused.
 
 Another configuration setting that can be used with frequently defragmented systems 
-.c Db4o.configure().automaticShutDown(false);  .. 
+.? java  .c Db4o.configure().automaticShutDown(false);  ..   ..?
+.? net  .c Db4o.Configure().AutomaticShutDown(false);  ..   ..?
+.? mono  .c Db4o.Configure().AutomaticShutDown(false);  ..   ..?
 Detailed description of this method can be found in  .l Tuning Tuning  ..  chapter of the Reference documentation.

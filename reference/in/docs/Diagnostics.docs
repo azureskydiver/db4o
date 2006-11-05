@@ -241,9 +241,9 @@ public class NewCarModel  extends Predicate {
 } ..
 .s com.db4odoc.f1.diagnostics.DiagnosticExample#retrieveTranslatedCarsNQ ..
 
-We did not get any results and the diagnostic message points out, ._
-that the query is not correct in our case. Let's follow the ._
-diagnostic advice and try unoptimized NQ and evaluations.
+Diagnostic message should point out, ._
+that the query is not correct in our case. In order to correct it let's  ._
+try unoptimized NQ and evaluations.
 .s com.db4odoc.f1.diagnostics.DiagnosticExample#retrieveTranslatedCarsNQUnopt ..
 
 We will use simple evaluation to check our cars:

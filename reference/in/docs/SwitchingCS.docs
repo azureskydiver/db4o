@@ -1,6 +1,6 @@
 .n
 .a SwitchingCS ..
-.1 Switching database files in C/S mode  ..
+.1 Switching Database Files In C/S Mode  ..
 
 ExtClient is an extended interface, which can be used to access database from the client side. ExtClient object can be simply cast from the ObjectContainer, returned by openClient method:
 1) Within the same VM:

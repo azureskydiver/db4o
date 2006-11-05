@@ -1,6 +1,6 @@
 .n
 .a Remote ..
-.1 Remote code execution ..
+.1 Remote Code Execution ..
 
 Sometimes you will need your client to update many objects in a similar way on the server. The ._
 solution that is sought in this case is to give a server a criteria for selecting objects and ._

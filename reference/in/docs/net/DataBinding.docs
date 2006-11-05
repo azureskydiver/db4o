@@ -239,8 +239,5 @@ namespace CSDataBinding
 ..c
 
 There are also some good tutorials on the .net on the use of Forms data binding [1], unfortunately most of them are focused only on binding controls to relational databases.
-We - the software development community - still suffer from database atrophy[2] after all.
-We - the db4o team along with the object oriented community - are working to change that so we can finally move on to the next level.
 
 [1] http://samples.gotdotnet.com/quickstart/winforms/doc/winformsdata.aspx
-[2] http://www.people4objects.org/Klaus/2005/01/database-atrophy.html

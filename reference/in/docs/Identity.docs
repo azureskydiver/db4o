@@ -52,7 +52,9 @@ without any necessity to traverse values.
 .2 Binding objects ..
  Db4o adds additional flexibility to its reference system allowing the user to re-associate an ._
  object with its stored instance or to replace an object in database:
-.c ExtObjectContainer#bind(object,id) .. 
+.? java   .c ExtObjectContainer#bind(object,id) ..   ..?
+.? net   .c ExtObjectContainer#Bind(object,id) ..   ..?
+.? mono   .c ExtObjectContainer#Bind(object,id) ..   ..?
 Typical usecases could be:
 -  .l StaticFields  enums and static fields .. 
 - working on objects disconnected from the database

@@ -1,181 +1,118 @@
 .n
 .a ObjectManager ..
 .0 Object Manager ..
-The db4o Object Manager is a GUI tool to browse and query the contents of any ._
-db4o database file. Object Manager currently provides the ._
-following features:
-- Open either a local database file or a db4o database server
-- Browse objects in a database
-- Query for objects using a simple graphical query by example.
+
+The db4o Object Manager is a GUI tool to browse and query the contents of any db4o ._
+database file. Object Manager currently provides the following features:
+
+- Powerful ad-hoc queries
+- Efficient handling of large data sets
+- Table view for quick scrolling through large data sets
+- Tree view for drilling down through an object graph
+-  Access to internal database information including stored classes, data size and indexes  
+- Management functions including Backup and Defragment 
 
 .1 Installation ..
 
-Object Manager has to be downloaded separately from ._
-the main db4o distributions. Please visit the  .l http://www.db4o.com/community/ontheroad/downloadcenter/ db4o Download Center ..  ._
-and choose the installation appropriate for your system. The following distributions ._
-are currently available:
-- db4o ObjectManager for Windows IKVM (Java VM included)
-- db4o ObjectManager for Windows no Java VM
-- db4o ObjectManager for Linux
+Object Manager has to be downloaded separately from the main db4o distributions. ._
+Please visit the db4o Download Center and choose the installation appropriate for ._
+the version of db4o you are using. Object Manager runs on Windows, Linux and Mac OS X. 
 
 Once you have downloaded the appropriate Object Manager build, create a folder ._
-called Object Manager in any location of your choice and unpack the downloaded ._
-zip file there.
+called Object Manager in any location of your choice and unpack the downloaded zip file there.
 
-.2 Running ..
+The following instructions explain how to start Object Manager in different ._
+environments. It is assumed that you already have a Sun Java Virtual Machine 1.5 ._
+or later installed and that your PATH variable lists the directory containing the ._
+java binary. This should be set when you've first installed the Java Runtime Environment.
 
-.3 Windows IKVM ..
-Object Manager for Windows IKVM includes the open-source IKVM Java virtual ._
-machine in the download.  Simply double-click the objectmanager.bat file ._
-to start Object Manager.
+.b Windows ..  
 
-.3 Windows no Java VM ..
-This build assumes that your computer already has a Sun Java Virtual Machine ._
-version 1.3 or later installed and that your operating system path already ._
-lists the directory containing your java.exe file.  If this is true, you ._
-can simply double-click the objectmanager.bat file to start Object Manager. ._
-Otherwise, you will need to edit objectmanager.bat and specify the full ._
-path and file name for your java.exe file on the first line.
+From Windows Explorer: Double-click the objectmanager.jar
 
-.3 Linux ..
-This build assumes that your computer already has a Sun Java Virtual Machine ._
-version 1.3 or later installed and that your PATH variable already lists the ._
-directory containing the java binary.  If this is not the case, you will
-need to edit the objectmanager.sh file and specify the full path and file name ._
-of the Java binary on the "export VMEXE" line".  Since the zip archive does ._
-not preserve the executable permissions for objectmanager.sh, you will need
-to 'chmod +x objectmanager.sh'.  Once this is complete, running objectmanager.sh ._
-will start Object Manager.
+From Command Line: Run "java -jar objectmanager.jar"
 
-.3 Mac OS X ..
-Currently there is no dedicated ObjectManager build for Mac OS X. To prepare ._
-the Linux or Windows NoVM build to run on OS X, you'll have to copy the ._
-respective native SWT files from an OS X Eclipse install to ObjectManager's ._
-lib directory. This list might look like this (but may vary depending on the ._
-Eclipse/SWT version):
+.b Linux ..
 
-- java_swt
-- libswt-carbon-xxxx.jnilib
-- libswt-pi-carbon-xxxx.jnilib
-- libswt-webkit-carbon-xxxx.jnilib
-- swt-pi.jar
-- swt.jar
+From UI: Double click the objectmanager.jar
 
-The startup script has to be modified to include the correct library path and ._
-the OS X specific jars on the classpath. If ObjectManager seems to hang on startup, ._
-you may also have to provide the VM parameter '-XstartOnFirstThread'.
+From Command Line: Run "java -jar objectmanager.jar"
 
 .1 Object Manager Tour ..
 
-Upon opening, the Object Manager will look like the following:
+Upon starting Object Manager, you will see the Connection Manager:
+.g om.jpg ..
+At this point, you can either:
 
-.g bare_objectmanager.gif ..
+    * Open a db4o database file
+    * Open a connection to a db4o database server
 
-At this point, you can either
-- Open a db4o database file
-- Open a connection to a db4o database server
+In order to open a db4o database file, simply click Browse and choose the db4o ._
+database file to open, then click Connect.
 
-In order to open a db4o database file, simply choose "File | Open..." and ._
-choose the db4o database file to open.
+If you just want to try ObjectManager, you can create a demo database by ._
+clicking File -> Create Demo Db. This will create and open a database for you to use.
 
-In order to open a connection to a db4o database server, choose  ._
-"File | Connect to server...", then enter a host name, port number, ._
-username, and password into the resulting dialog box.
+.2 Stored Classes Tree ..  
 
-When the database is open, the Object Manager will list all classes ._
-stored in the database in the left-hand tree pane.  Expanding a tree ._
-item will show instances of objects in the class, then fields within the ._
-instance, etc.  The right-hand pane will show the next level of detail ._
-for the item that is currently selected in the tree.
+Once you click connect, the main ObjectManager window will open. All of the classes ._
+that have been stored will be displayed on the left in a tree:
+.g StoredClasses.jpg ..
 
-For example, loading the formula1 database created by chapter 4 of this ._
-tutorial produces the following:
+.2 Querying for objects ..  
 
-.g objectmanager_f1c4.gif ..
+To view the objects stored in your db4o database, you must query for it.  The query editor ._
+is at the top of the main window and looks like this:
+.g query.jpg ..
 
-.2 Generic reflector versus the JDK reflector ..
+To quickly see all of the objects of a certain class, just double click the class name in the ._
+stored classes tree. This will automatically build your query for you, and you just have to ._
+click the Submit button to the right of the query text area.
 
-You will notice in the screen shot that all objects have (G) in front of them. ._
-This is because the Object Manager does not know the correct classpath in order ._
-to load the actual Java classes that these objects represent, so it is ._
-displaying them generically (using the generic reflector).
+.2 Query Language ..
 
-The Object Manager can display some data types more naturally if it has the ._
-class definitions available, so it provides a way to extend its classpath ._
-at runtime so that it can find the Java or .NET class definitions.  This ._
-is done through the preferences dialog, accessed through "File | Preferences..."
+The Object Manager query language, Sql4o, is based on the SQL query language, so ._
+if you know SQL, you should have no problems with Sql4o.
 
-Let's add the classpath of the db4o chapter 4 tutorial classes:
-- Choose "File | Preferences..."
-- Select the "Classpath" page of the preferences dialog box
-- Choose the "Add directory..."
-- Select the directory you have selected as your output directory for compiling ._
-the db4o tutorial files and click OK.
+Syntax:
 
-(You can add a Jar or zip file similarly.)
+.c [SELECT select_expr, ...]
+FROM object_type
+    [WHERE where_condition]  ..  
 
-Your preferences dialog should look something like the following when you are done:
+For example, to query all Contacts in the Demo Db:
 
-.g objectmanager_preferences.gif ..
+.c  FROM demo.objectmanager.model.Contact ..  
 
-Click OK to close the Preferences dialog box.  Now your tree will be refreshed, ._
-and you will notice that all of the (G)'s are gone.  All of your ._
-preference settings, including your preferred classpath, are stored in a ._
-db4o database called ._
-\.objectmanager.yap in your home directory.
+To query all contacts with age > 50.
 
-.2 Querying for objects ..
+.c FROM demo.objectmanager.model.Contact where age > 50 ..
 
-You may now want to query your object database for objects based on some ._
-criteria.  This will work using either the generic or the JDK reflector.
+.2 Query Results ..
 
-You can open a query editor using any of the following methods:
-- Double-click a class name in the tree view.
-- Click the query button at the right side of the tool bar.
-- Choose "File | Query..." from the menu.
+After executing a query, you will see the query results in table:
+.g table.jpg ..
+From this table, you can edit all primitive fields, Dates, and Strings by double clicking on a cell.
 
-If you choose either of the latter two options, you will then be presented ._
-with a dialog box allowing you to choose a class to query.  Select a class and ._
-click OK to proceed.  Your new query will open in a new tab.
+You can also open an object up in a tree view so that you can descend further into the object:
+.g tree.jpg ..
+You can also edit fields from this view.
 
-Let's query for Car objects in our formula1.yap file.  Open a query editor ._
-using your favorite of the methods listed above.  By default it will look ._
-like the following:
+.2 Database Management ..
 
-.g objectmanager_query.gif ..
+There are currently two management features available:
 
-You may now query for a model name, or you can descend on the "pilot" field ._
-by clicking the button next to the pilot field to expand the query editor to ._
-include a Pilot object.  If you accidentally expand a class that you didn't ._
-intend to expand, that isn't a problem.  Just leave all of the fields blank ._
-and they will be ignored.
+- Backup
+- Defragment 
 
-At this point, you can query for any combination of field values simply by ._
-filling appropriate values into each field.  You can change the constraint ._
-type using the combo boxes next to each field.  And you can run the query ._
-using the green "run" button at the top-left of the tool bar.
+Backup will ask you for a location to store the backup, once that is chosen, the backup ._
+copy of your database will be created.
 
-.1 Known bugs and limitations ..
+Defragment will execute the db4o defragment process on your database.
 
-The following are known bugs and limitations in Object Manager and their ._
-workarounds:
-- Object Manager currently operates in read-only mode only.
-- If a database includes fields that have been renamed, Object Manager correctly ._
-browses both the old and new versions of the fields.  However, queries on fields ._
-that have been refactored will randomly select the old or the new version of the ._
-field.  The workaround is to browse a backup or defragmented database.
-- The Generic Reflector still has trouble expanding certain types of objects. ._
-Currently, we recommend running Object Manager with all classes available at ._
-all times by using the Classpath preference page to set an appropriate classpath.
+You can access database management functions from the Manage menu
+Known bugs and limitations
 
-If something goes wrong when using Object Manager, there almost certainly will ._
-be detailed error messages in the Object Manager log file.  This file is named ._
-\.objectmanager.log and is stored in your user's home directory.  ._
-If you post a question on the db4o newsgroups concerning a crash or failure ._
-in Object Manager, please also attach a copy of your Object Manager log file, ._
-so that we can efficiently diagnose the problem.  This file is overwritten ._
-each time you run Object Manager, so please make a copy of it after an error ._
-occurs so that this diagnostic information is not lost.
-
+Please see the ObjectManager wiki page for the latest information on ObjectManager.
 
 

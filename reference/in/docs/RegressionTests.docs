@@ -29,7 +29,7 @@ the tests() method  :
             SimplestPossible.class,
     	};
     }
-.. ..?
+..  ..?
 .? net 
 .c internal Type[] TESTS
 		{
@@ -40,7 +40,7 @@ the tests() method  :
 				return (Type[]) tests.ToArray(typeof (Type));
 			}
 		}
-.. ..?
+..  ..?
 .? mono 
 .c internal Type[] TESTS
 		{
@@ -49,9 +49,9 @@ the tests() method  :
 				ArrayList tests = new ArrayList();
 				tests.Add(typeof(SimplestPossible));
 				return (Type[]) tests.ToArray(typeof (Type));
-			}
+			}                                                           
 		}
-.. ..?
+..  ..?
 You can specify command-line parameters to modify test-suite behaviour:
 1) "*"        -  results with an Exception if some of the tests fail.
 2) "-solo" - the tests are run in stand-alone mode
@@ -60,7 +60,7 @@ You can specify command-line parameters to modify test-suite behaviour:
 By default the tests are run in full mode.
 Other configuration parameters are found in AllTestsConfAll or AllTestsConfSingle classes ._
 and can be modified in code.
-.? java Test .. .? net Tester .. .? mono Tester .. class provides you with the special API which ._
+.? java Test   ..?   .? net Tester  ..?  .? mono Tester  ..?  class provides you with the special API which ._
 you can use to write your own test cases. The API provides methods:
 -	results validation (ensure, ensureEquals, ensureOccurrences),;
 -	messages output (error, log, logAll, statistics)

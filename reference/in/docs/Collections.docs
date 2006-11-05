@@ -1,17 +1,18 @@
-.n
 .a Collections ..
 .1 Collections handling ..
 
 .l Translators Translators chapter  ..   of the documentation explains why translators are necessary to ._
 store and retrieve some types of classes. Db4o uses translators internally to manage storing and ._
 retrieving of collections.
-.? net Under the hood, when collection object is stored to the database it is translated with TList or TDictionary translator  ..?
-.? java Collections were first implemented in JDK 1.2. Before that Vector implementation was used to store ._
+.? net  Under the hood, when collection object is stored to the database it is translated with TList or TDictionary translator  ..?
+.? mono  Under the hood, when collection object is stored to the database it 
+is translated with TList or TDictionary translator  ..?
+.? java  Collections were first implemented in JDK 1.2. Before that Vector implementation was used to store  ._
 growable arrays of objects. Under the hood, when collection object is stored to the database different ._
 actions are taken for different versions of java:
 1)	before JDK1.2: collection class is translated with TVector class;
 2)	after: collection is translated with TCollection, TMap, THashtable translators.
- ..?
+  ..?
 In fact, the functionality of those translators is pretty much the same. On storing collection is ._
 transferred to an array of objects ( Object[] ) and that array gets stored to the database file. 
 
@@ -35,9 +36,15 @@ a collection, as the whole collection should be instantiated to access any of it
 
 Db4o provides its own built-in collection implementation to improve performance and decrease memory ._
 consumption:
-.c ObjectContainer.Ext().Collections.NewLinkedList();
+.? java  .c ObjectContainer.ext().collections.newLinkedList();
+ObjectContainer.ext().collections.newHashMap();
+ObjectContainer.ext().collections.newIdentityHashMap(); ..   ..?
+.? net  .c ObjectContainer.Ext().Collections.NewLinkedList();
 ObjectContainer.Ext().Collections.NewHashMap();
-ObjectContainer.Ext().Collections.NewIdentityHashMap(); ..
+ObjectContainer.Ext().Collections.NewIdentityHashMap(); ..   ..?
+.? mono  .c ObjectContainer.Ext().Collections.NewLinkedList();
+ObjectContainer.Ext().Collections.NewHashMap();
+ObjectContainer.Ext().Collections.NewIdentityHashMap(); ..   ..?
 The LinkedList implementation only holds the first and the last elements in RAM, all the other objects are ._
 loaded on demand. Apparently, this implementation provides good performance for sequential ._
 traversal, but it is still quite inefficient for random selection/update. 

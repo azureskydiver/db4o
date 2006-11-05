@@ -71,7 +71,7 @@ The approach to solving classloader problems (not only for db4o, but generally) 
 -	identify the classes/libs db4o needs to know 
 -	identify the classloader hierarchy of your application context 
 -	use the most generic classloader that knows all needed classes, either directly or indirectly via delegation
-See also: .l Classloader Classloader issues ..  
+.? java   See also: .l Classloader Classloader issues ..   ..?
 
 #exceptionsOnNotStorable(true) will also help you to identify classes that db4o cannot persist.
 

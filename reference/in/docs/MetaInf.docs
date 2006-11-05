@@ -1,6 +1,6 @@
 .n
 .a MetaInf ..
-.1 db4o meta-information ..
+.1 db4o Meta-Information ..
 
 .2 Accessing db4o meta-information ..
 Db4o provides an access to the database meta-information through its extended ._
@@ -10,12 +10,16 @@ fields. To access their meta-information db4o provides special interfaces:
 - StoredClass
 - StoredField
 The following ExtObjectContainer methods give you access to the StoredClass.
-.c ExtObjectContainer#storedClass(clazz) ..
+.? java  .c ExtObjectContainer#storedClass(ClassName) ..  ..?
+.? net  .c ExtObjectContainer#StoredClass(ClassName) ..  ..?
+.? mono  .c ExtObjectContainer#StoredClass(ClassName) ..  ..?
 returns StoredClass for the specified clazz, which can be specified as:
 - a fully qualified classname;
 - a Class object;
 - any object to be used as a template.
-.c ExtObjectContainer#storedClasses() ..
+.? java  .c ExtObjectContainer#storedClasses() ..  ..?
+.? net  .c ExtObjectContainer#StoredClasses() ..  ..?
+.? mono  .c ExtObjectContainer#StoredClasses() ..  ..?
 returns an array of all StoredClass meta-information objects.
 .s com.db4odoc.f1.metainf.MetaInfExample#setObjects -out ..
 .s com.db4odoc.f1.metainf.MetaInfExample#getMetaObjects ..
@@ -25,12 +29,18 @@ Let's look closer at the class meta-information interfaces.
 They look quite similar to reflection API, but unlike reflection there is no information ._
 about methods and constructors.
 You can only use StoredClass to get the class's fields:
-.c StoredClass#getStoredFields() ..
+.? java  .c StoredClass#getStoredFields() ..  ..?
+.? net  .c StoredClass#GetStoredFields() ..  ..?
+.? mono  .c StoredClass#GetStoredFields() ..  ..?
 returns all stored fields of this stored class.
-.c StoredClass#storedField(name, type) ..
+.? java  .c StoredClass#storedField(name, type) ..  ..?
+.? net   .c StoredClass#StoredField(name, type) ..  ..?
+.? mono   .c StoredClass#StoredField(name, type) ..  ..?
 returns an existing stored field of this stored class.
 You can also use this interface to explore classes hierarchy.
-.c StoredClass#getParentStoredClass ..
+.? java  .c StoredClass#getParentStoredClass ..  ..?
+.? net  .c StoredClass#GetParentStoredClass ..  ..?
+.? mono  .c StoredClass#GetParentStoredClass ..  ..?
 returns the parent of the class.
 
 StoredField interface gives you access to various meta-field information, such as ._

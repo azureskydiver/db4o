@@ -2,21 +2,12 @@
 .a Advanced ..
 .0 Advanced db4o Techniques ..
 
-.e Recursive ..
-.e Activation ..
-.e Evaluations ..
-.e Constructors ..
-.e Translators ..
-.e Collections ..
-.e Identity ..
-.e IDs ..
-.e StaticFields ..
-.e Callbacks ..
-.e Classloader ..
-.e Reflection ..
-.e MetaInf ..
-.e NQOptimization ..
-.e Utility ..
 .e Annotations ..
-.e SelPersistence ..
-.e Platforms ..
+.e Utility ..
+.e Callbacks ..
+.e Translators ..
+.e ios ..
+.e Evaluations ..
+.e DataBinding ..
+.e Encryption ..
+
