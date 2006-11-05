@@ -34,7 +34,7 @@ public abstract class MsgQuery extends MsgObject {
     	writer.writeIDs(idIterator, maxCount);
         
         if(queryResultId > 0){
-			serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator, maxCount), queryResultId);
+			serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator), queryResultId);
         }
         
 		serverThread.write(message);

@@ -25,7 +25,7 @@ public class LazyClientIdIterator implements IntIterator4{
 		_queryResult = queryResult;
 		_batchSize = batchSize;
 		_ids = new int[batchSize];
-		reset();
+		_current = -1;
 	}
 
 	public int currentInt() {
@@ -69,6 +69,5 @@ public class LazyClientIdIterator implements IntIterator4{
 		}
 		_available = -1;
 	}
-	
 
 }
