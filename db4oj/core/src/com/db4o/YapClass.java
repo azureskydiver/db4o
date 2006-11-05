@@ -706,9 +706,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         if(_internal){
             return false;
         }
-        if( ! (i_stream instanceof YapFile) ){
-            return false;
-        }
         return true; 
     }
     
