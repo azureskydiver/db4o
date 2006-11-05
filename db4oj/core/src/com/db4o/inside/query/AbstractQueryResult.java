@@ -19,8 +19,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 
 	public final Object activate(Object obj) {
-		YapStream stream = stream();
-		stream.activate1(_transaction, obj, stream.configImpl().activationDepth());
+		stream().activate1(_transaction, obj, config().activationDepth());
 		return obj;
 	}
 
@@ -104,5 +103,9 @@ public abstract class AbstractQueryResult implements QueryResult {
 	public abstract void loadFromClassIndexes(YapClassCollectionIterator iterator);
 
 	public abstract void loadFromIdReader(YapReader reader);
+	
+	public Config4Impl config(){
+		return stream().config();
+	}
 
 }

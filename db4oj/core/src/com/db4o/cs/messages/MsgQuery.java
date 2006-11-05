@@ -16,38 +16,32 @@ public abstract class MsgQuery extends MsgObject {
 	protected final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread) {
 		
 		int queryResultId = 0;
-		int transferSize = 0;
+		int maxCount = 0;
 		
 		if(config().lazyQueries()){
 			queryResultId = generateID();
-			serverThread.mapQueryResultToID(queryResult, queryResultId);
-			transferSize = config().prefetchObjectCount();  
+			maxCount = config().prefetchObjectCount();  
 		} else{
-			transferSize = queryResult.size();
+			maxCount = queryResult.size();
 		}
 		
-		int bufferLength = YapConst.INT_LENGTH * (transferSize + ID_AND_SIZE);
-		
-		MsgD message = QUERY_RESULT.getWriterForLength(transaction(), bufferLength);
+		MsgD message = QUERY_RESULT.getWriterForLength(transaction(), bufferLength(maxCount));
 		YapWriter writer = message.payLoad();
 		writer.writeInt(queryResultId);
 		
-    	int savedOffset = writer._offset; 
-        writer.writeInt(0);
-        int actualsize = 0;
         IntIterator4 idIterator = queryResult.iterateIDs();
-        while(idIterator.moveNext()){
-            writer.writeInt(idIterator.currentInt());
-            actualsize ++;
-            if(actualsize >= transferSize){
-            	break;
-            }
+        
+    	writer.writeIDs(idIterator, maxCount);
+        
+        if(queryResultId > 0){
+			serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator, maxCount), queryResultId);
         }
-        int secondSavedOffset = writer._offset;
-        writer._offset = savedOffset;
-        writer.writeInt(actualsize);
-        writer._offset = secondSavedOffset;
+        
 		serverThread.write(message);
+	}
+
+	private int bufferLength(int maxCount) {
+		return YapConst.INT_LENGTH * (maxCount + ID_AND_SIZE);
 	}
 	
 	private static synchronized int generateID(){

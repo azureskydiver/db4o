@@ -287,11 +287,15 @@ public final class YapServerThread extends Thread {
     	_queryResults.remove(queryResultID);
 	}
 
-	public void mapQueryResultToID(AbstractQueryResult queryResult, int queryResultID) {
+	public void mapQueryResultToID(LazyClientObjectSetStub stub, int queryResultID) {
     	if(_queryResults == null){
     		_queryResults = new Hashtable4();
     	}
-    	_queryResults.put(queryResultID, queryResult);
+    	_queryResults.put(queryResultID, stub);
+	}
+	
+	public LazyClientObjectSetStub queryResultForID(int queryResultID){
+		return (LazyClientObjectSetStub) _queryResults.get(queryResultID);
 	}
 
 	private void switchToFile(Msg message) {

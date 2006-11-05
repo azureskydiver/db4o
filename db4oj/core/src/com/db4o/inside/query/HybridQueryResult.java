@@ -36,6 +36,10 @@ public class HybridQueryResult extends AbstractQueryResult {
 	public IntIterator4 iterateIDs() {
 		return _delegate.iterateIDs();
 	}
+	
+	public Iterator4 iterator() {
+		return _delegate.iterator();
+	}
 
 	public void loadFromClassIndex(YapClass clazz) {
 		_delegate.loadFromClassIndex(clazz);

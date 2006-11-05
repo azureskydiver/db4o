@@ -1,0 +1,30 @@
+/* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.cs.messages;
+
+import com.db4o.*;
+import com.db4o.cs.*;
+import com.db4o.foundation.*;
+
+
+/**
+ * @exclude
+ */
+public class MObjectSetFetch extends MObjectSet {
+	
+	public boolean processAtServer(YapServerThread serverThread) {
+		int queryResultID = readInt();
+		int fetchSize = readInt();
+		IntIterator4 idIterator = stub(serverThread, queryResultID).idIterator();
+		MsgD message = ID_LIST.getWriterForLength(transaction(), bufferLength(fetchSize));
+		YapWriter writer = message.payLoad();
+    	writer.writeIDs(idIterator, fetchSize);
+		serverThread.write(message);
+		return true;
+	}
+
+	private int bufferLength(int fetchSize) {
+		return YapConst.INT_LENGTH * (fetchSize + 1);
+	}
+
+}

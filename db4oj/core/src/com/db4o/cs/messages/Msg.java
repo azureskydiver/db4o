@@ -42,8 +42,10 @@ public class Msg implements Cloneable {
 	public static final Msg NULL = new Msg("NULL");
 	public static final MsgD OBJECT_BY_UUID = new MObjectByUuid();
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();
+	public static final MsgD OBJECTSET_FETCH = new MObjectSetFetch();
 	public static final MsgD OBJECTSET_FINALIZED = new MsgD("OBJECTSET_FINALIZED");
-	public static final MsgD OBJECTSET_SIZE = new MsgD("OBJECTSET_SIZE");
+	public static final MsgD OBJECTSET_RESET = new MObjectSetReset();
+	public static final MsgD OBJECTSET_SIZE = new MObjectSetSize();
 	public static final Msg OK = new Msg("OK");
 	public static final Msg PING = new Msg("PING");
 	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
@@ -70,6 +72,7 @@ public class Msg implements Cloneable {
 	public static final MWriteNew WRITE_NEW = new MWriteNew();
 	public static final MsgObject WRITE_UPDATE = new MWriteUpdate();
 	public static final MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
+	
 
 	Msg() {
 		_msgID = _idGenerator++;

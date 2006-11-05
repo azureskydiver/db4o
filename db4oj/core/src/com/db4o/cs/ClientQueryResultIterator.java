@@ -3,6 +3,7 @@
 package com.db4o.cs;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.query.*;
 
 /**
  * @exclude
@@ -12,10 +13,10 @@ class ClientQueryResultIterator implements Iterator4 {
 	private Object[] _prefetchedObjects;
 	private int _remainingObjects;
 	private int _prefetchRight;
-	private final ClientQueryResult _client;
+	private final AbstractQueryResult _client;
 	private final IntIterator4 _ids;
 	
-	public ClientQueryResultIterator(ClientQueryResult client) {
+	public ClientQueryResultIterator(AbstractQueryResult client) {
 		_client = client;
 		_ids = client.iterateIDs();
 	}
