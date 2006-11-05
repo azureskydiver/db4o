@@ -15,9 +15,9 @@ public class CallbackCanDelete {
     
     }
 
-    public CallbackCanDelete(String _name, CallbackCanDelete _next) {
-        this._name = _name;
-        this._next = _next;
+    public CallbackCanDelete(String name_, CallbackCanDelete next_) {
+        _name = name_;
+        _next = next_;
     }
     
     public void storeOne(){
