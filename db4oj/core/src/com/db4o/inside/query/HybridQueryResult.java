@@ -27,6 +27,11 @@ public class HybridQueryResult extends AbstractQueryResult {
 		_delegate = _delegate.supportElementAccess();
 		return _delegate.get(index);
 	}
+	
+	public int getId(int index) {
+		_delegate = _delegate.supportElementAccess();
+		return _delegate.getId(index);
+	}
 
 	public int indexOf(int id) {
 		_delegate = _delegate.supportElementAccess();
@@ -69,5 +74,6 @@ public class HybridQueryResult extends AbstractQueryResult {
 		_delegate = _delegate.supportSort();
 		_delegate.sort(cmp);
 	}
+
 
 }

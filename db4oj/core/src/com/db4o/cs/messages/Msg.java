@@ -44,6 +44,8 @@ public class Msg implements Cloneable {
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();
 	public static final MsgD OBJECTSET_FETCH = new MObjectSetFetch();
 	public static final MsgD OBJECTSET_FINALIZED = new MsgD("OBJECTSET_FINALIZED");
+	public static final MsgD OBJECTSET_GET_ID = new MObjectSetGetId();
+	public static final MsgD OBJECTSET_INDEXOF = new MObjectSetIndexOf();
 	public static final MsgD OBJECTSET_RESET = new MObjectSetReset();
 	public static final MsgD OBJECTSET_SIZE = new MObjectSetSize();
 	public static final Msg OK = new Msg("OK");
@@ -72,6 +74,7 @@ public class Msg implements Cloneable {
 	public static final MWriteNew WRITE_NEW = new MWriteNew();
 	public static final MsgObject WRITE_UPDATE = new MWriteUpdate();
 	public static final MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
+	
 	
 
 	Msg() {

@@ -21,10 +21,10 @@ public class LazyClientIdIterator implements IntIterator4{
 	
 	private int _available;
 	
-	public LazyClientIdIterator(LazyClientQueryResult queryResult, int batchSize){
+	public LazyClientIdIterator(LazyClientQueryResult queryResult){
 		_queryResult = queryResult;
-		_batchSize = batchSize;
-		_ids = new int[batchSize];
+		_batchSize = queryResult.config().prefetchObjectCount();
+		_ids = new int[_batchSize];
 		_current = -1;
 	}
 
@@ -44,7 +44,7 @@ public class LazyClientIdIterator implements IntIterator4{
 			return false;
 		}
 		if(_available == 0){
-			_queryResult.fetchIDs(this, _batchSize);
+			_queryResult.fetchIDs(_batchSize);
 			_current = 0;
 			return (_available > 0);
 		}

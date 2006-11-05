@@ -34,12 +34,16 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 
     public Object get(int index) {
         synchronized (streamLock()) {
-            if (index < 0 || index >= size()) {
-                throw new IndexOutOfBoundsException();
-            }
-            return activatedObject(_ids.get(index));
+            return activatedObject(getId(index));
         }
     }
+    
+	public int getId(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
+		return _ids.get(index);
+	}
 
 	public final void checkDuplicates(){
 		_checkDuplicates = true;
@@ -136,5 +140,6 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	public int size() {
 		return _ids.size();
 	}
+
 	
 }

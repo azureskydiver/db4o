@@ -23,6 +23,10 @@ public class LazyQueryResult extends AbstractQueryResult {
 	public Object get(int index) {
 		throw new NotImplementedException();
 	}
+	
+	public int getId(int index) {
+		throw new NotImplementedException();
+	}
 
 	public int indexOf(int id) {
 		throw new NotImplementedException();
