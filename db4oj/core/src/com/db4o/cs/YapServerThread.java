@@ -2,13 +2,11 @@
 
 package com.db4o.cs;
 
-import java.io.IOException;
-
+import java.io.*;
 import com.db4o.*;
 import com.db4o.cs.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
-import com.db4o.inside.query.*;
 
 public final class YapServerThread extends Thread {
 

@@ -27,11 +27,8 @@ public class Db4o {
 	static final Config4Impl i_config = new Config4Impl();
 	private static Sessions i_sessions = new Sessions();
 	
-	private static final Object initializer = initialize();
-	
-	private static final Object initialize(){
+	static {
 		Platform4.getDefaultConfiguration(i_config);
-		return new Object();
 	}
 
     /**

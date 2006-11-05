@@ -6,7 +6,6 @@ import java.io.*;
 
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
-import com.db4o.inside.query.QueryResult;
 
 /**
  * public for .NET conversion reasons
