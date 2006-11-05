@@ -3,11 +3,10 @@
 package com.db4o.inside.cluster;
 
 import com.db4o.cluster.*;
-import com.db4o.inside.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 
 /**
- * 
  * @exclude
  */
 public class ClusterConstraint implements Constraint{
@@ -133,8 +132,6 @@ public class ClusterConstraint implements Constraint{
     }
 
     public Object getObject() {
-        Exceptions4.notSupported();
-        return null;
+        throw new NotSupportedException();
     }
-
 }

@@ -3,8 +3,7 @@
 package com.db4o.inside.fieldindex;
 
 import com.db4o.*;
-import com.db4o.foundation.Iterator4;
-import com.db4o.inside.Exceptions4;
+import com.db4o.foundation.*;
 
 public class IndexedPath extends IndexedNodeBase {
 	
@@ -43,7 +42,6 @@ public class IndexedPath extends IndexedNodeBase {
 	}
 
 	public int resultSize() {
-		Exceptions4.notSupported();
-		return 0;
+		throw new NotSupportedException();
 	}
 }

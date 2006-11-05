@@ -4,15 +4,14 @@ package com.db4o.inside.cluster;
 
 import com.db4o.*;
 import com.db4o.cluster.*;
-import com.db4o.inside.*;
+import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
 
 /**
- * 
  * @exclude
  */
-public class ClusterQuery implements Query{
+public class ClusterQuery implements Query {
     
     private final Cluster _cluster;
     private final Query[] _queries;
@@ -59,17 +58,14 @@ public class ClusterQuery implements Query{
     }
 
     public Query orderAscending() {
-        Exceptions4.notSupported();
-        return this;
+        throw new NotSupportedException();
     }
 
     public Query orderDescending() {
-        Exceptions4.notSupported();        
-        return this;
+        throw new NotSupportedException();
     }
 
 	public Query sortBy(QueryComparator comparator) {
-        Exceptions4.notSupported();        
-        return this;
+        throw new NotSupportedException();
 	}
 }
