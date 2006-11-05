@@ -1,0 +1,34 @@
+.a ObjectContainer ..
+.1 ObjectContainer Interfaces ..
+
+Db4o gives you a simple and straightforward interface to object persistence - ._
+ObjectContainer. This interface gives you all the basic functionality to work with ._
+persistent objects. Normally you can save a new or updated object of any class using
+.c ObjectContainer#set(object) ..
+Deletion is done with the following method:
+.c ObjectContainer#delete(object) ..
+Through ObjectContainer#get and ObjectContainer#query you get access ._
+to objects retrieval functionality.
+The characteristic features of ObjectContainer are:
+- An ObjectContainer can either be a database in a single-user mode or a client ._
+connection to a db4o server.
+- Every ObjectContainer owns one transaction. All work is transactional. When you open ._
+an ObjectContainer, you are in a transaction, when you commit() or rollback(), the next ._
+transaction is started immediately.
+- Every ObjectContainer maintains it's own references to stored and instantiated ._
+objects. In doing so, it manages object identities, and is able to achieve a high level ._
+of performance.
+- ObjectContainers are intended to be kept open as long as you work against them. When ._
+you close an ObjectContainer, all database references to objects in RAM will be ._
+discarded.
+Basically ObjectContainer supplies functionality, which is enough for the most common ._
+usage of db4o database. Additional features are provided by an interface ._
+extending ObjectContainer - ExtObjectContainer.
+
+The idea of splitting basic and advanced functionality between 2 interfaces is: 
+- Keep the com.db4o package very small and well readable.
+- Separate vital and optional functionality.
+- Make it easy for other products to implement the basic db4o interface.
+- Show an example of how a lightweight version of db4o could look.
+Every com.db4o.ObjectContainer object is also a com.db4o.ext.ExtObjectContainer. You ._
+can cast it to ExtObjectContainer or you can use #ext() method to get to the advanced features.
