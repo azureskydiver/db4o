@@ -22,22 +22,32 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	
 	private int _size = SIZE_NOT_SET;
 	
-	private LazyClientIdIterator _iterator;
+	private final LazyClientIdIterator _iterator;
 
 	public LazyClientQueryResult(Transaction trans, YapClient client, int queryResultID) {
 		super(trans);
 		_client = client;
 		_queryResultID = queryResultID;
+		_iterator = new LazyClientIdIterator(this);
 	}
 
 	public Object get(int index) {
-		// TODO Auto-generated method stub
-		return null;
+        synchronized (streamLock()) {
+            return activatedObject(getId(index));
+        }
+	}
+	
+	public int getId(int index) {
+		return askServer(Msg.OBJECTSET_GET_ID, index);
 	}
 
 	public int indexOf(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return askServer(Msg.OBJECTSET_INDEXOF, id);
+	}
+	
+	private int askServer(MsgD message, int param){
+		_client.writeMsg(message.getWriterForInts(_transaction, new int[]{_queryResultID, param}));
+		return ((MsgD)_client.expectedResponse(message)).readInt();
 	}
 
 	public IntIterator4 iterateIDs() {
@@ -73,9 +83,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 
 	public void loadFromIdReader(YapReader reader) {
-		int batchSize = reader.readInt(); 
-		_iterator = new LazyClientIdIterator(this, batchSize);
-		_iterator.loadFromIdReader(reader, batchSize);
+		_iterator.loadFromIdReader(reader, reader.readInt());
 	}
 
 	public void loadFromQuery(QQuery query) {
@@ -86,11 +94,10 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 		_client.writeMsg(Msg.OBJECTSET_RESET.getWriterForInt(_transaction, _queryResultID));
 	}
 
-	public void fetchIDs(LazyClientIdIterator iterator, int batchSize) {
-		int[] ints = new int[]{_queryResultID, batchSize };
-		_client.writeMsg(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, ints));
+	public void fetchIDs(int batchSize) {
+		_client.writeMsg(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, new int[]{_queryResultID, batchSize }));
 		YapReader reader = _client.expectedByteResponse(Msg.ID_LIST);
-		_iterator.loadFromIdReader(reader, reader.readInt());
+		loadFromIdReader(reader);
 	}
 
 }

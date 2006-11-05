@@ -108,4 +108,6 @@ public abstract class AbstractQueryResult implements QueryResult {
 		return stream().config();
 	}
 
+	public abstract int getId(int index);
+
 }
