@@ -149,8 +149,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 	}
 
 	private ReflectClass getReflectClass(String className) {
-		ObjectContainer db = fixture().db();
-		StoredClass[] storedClasses = db.ext().storedClasses();
+		StoredClass[] storedClasses = fixture().db().storedClasses();
 		for (int i = 0; i < storedClasses.length; i++) {
 			if (storedClasses[i].getName().equals(className)) {
 				return ((YapClass) storedClasses[i]).classReflector();
