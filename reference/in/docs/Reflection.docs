@@ -62,13 +62,15 @@ By default db4o uses JdkReflector(Java) or NetReflector (.NET) as a GenericRefle
 
 However, the programmer can instruct db4o to use a specially designed reflection implementation:
 
-.c Db4o.configure().reflectWith(reflector) ..
+.? java  .c Db4o.configure().reflectWith(reflector) ..   ..?
+.? net  .c Db4o.Configure().ReflectWith(reflector) ..   ..?
+.? mono  .c Db4o.Configure().ReflectWith(reflector) ..   ..?
 
 where reflector is one of the available reflectors or your own reflector implementation. 
 At present db4o comes with SelfReflector, which was designed for environments, which do not ._
-have built-in support for reflections (J2ME for example). In this implementation all the classes’ ._
+have built-in support for reflections (J2ME for example). In this implementation all the classes' ._
 information is stored in special registry. User classes should implement self_get and self_set ._
-methods to be registered individually and become “known” to SelfReflector. 
+methods to be registered individually and become "known" to SelfReflector. 
 
 Specific reflectors can be written for special usecases. 
 Let's look how to create a reflector. Remember that db4o relies on reflector to read the database, ._

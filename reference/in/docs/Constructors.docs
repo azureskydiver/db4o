@@ -1,6 +1,6 @@
 .n
 .a Constructors ..
-.1 Constructors ..
+.1 Objects Instantiation  ..
 
 Sometimes you may find that db4o refuses to store instances of certain ._
 classes, or appears to store them, but delivers incomplete instances ._
@@ -8,7 +8,7 @@ on queries. To understand the problem and the alternative solutions ._
 at hand, we'll have to take a look at the way db4o "instantiates" ._
 objects when retrieving them from the database.
 
-.2 Instantiating objects ..
+.2 Creating objects ..
 
 Db4o currently knows three ways of creating and populating an object ._
 from the database. The approach to be used can be configured globally ._
@@ -43,24 +43,43 @@ to specify in detail how instances of a class should be stored and ._
 reinstantiated by implementing the Translator interface and registering ._
 this implementation for the offending class.
 
-We'll cover translators in detail in the  .l Translators next chapter ..l .
+Translators in detail in the  .l Translators Translators chapter ..l .
 
 .2 Configuration ..
 
 The instantiation mode can be configured globally or on a per class ._
 basis.
-
+.? java  
 .c
 Db4o.configure().callConstructors(true);
-..c
+..c  ..?
+
+.? net  
+.c
+Db4o.Configure().CallConstructors(true);
+..c  ..?
+
+.? mono  
+.c
+Db4o.Configure().CallConstructors(true);
+..c  ..?
 
 This will configure db4o to use constructors to reinstantiate any object ._
 from the database. (The default is .i false ..i).
-
+.? java  
 .c
 Db4o.configure().objectClass(Foo.class).callConstructor(true);
-..c
+..c   ..?
 
+.? net  
+.c
+Db4o.Configure().ObjectClass(typeof(Foo)).CallConstructor(true);
+..c   ..?
+
+.? mono  
+.c
+Db4o.Configure().ObjectClass(typeof(Foo)).CallConstructor(true);
+..c   ..?
 This will configure db4o to use constructor calls for this class and ._
 all its subclasses.
 
@@ -80,73 +99,17 @@ seem to lose members during storage, check the involved classes ._
 shown in the following section.
 
 .2 Examples ..
-
-.c class C1 {
-  private String s;
-
-  private C1(String s) {
-    this.s=s;
-  }
-
-  public String toString() {
-    return s;
-  }
-}
-..c
+.s com.db4odoc.f1.constructors.C1 ..
+	
 The above class is fine for use with and without callConstructors set.
-
-
-.c class C2 {
-  private transient String x;
-  private String s;
-
-  private C2(String s) {
-    this.s=s;
-    this.x="x";
-  }
-
-  public String toString() {
-    return s+x.length();
-  }
-}
-..c
+.s com.db4odoc.f1.constructors.C2 ..
 The above C2 class needs to have callConstructors set to true. Otherwise, since ._
 transient members are not stored and the constructor code is not ._
 executed, toString() will potentially run into a NullPointerException on x.length().
-
-
-.c class C3 {
-  private String s;
-  private int i;
-
-  private C3(String s) {
-    this.s=s;
-    this.i=s.length();
-  }
-
-  public String toString() {
-    return s+i;
-  }
-}
-..c
+.s com.db4odoc.f1.constructors.C3 ..
 The above C3 class needs to have callConstructors set to false (the default), ._
 since the (only) constructor will throw a NullPointerException when ._
 called with a null value.
-
-
-.c class C4 {
-  private String s;
-  private transient int i;
-
-  private C4(String s) {
-    this.s=s;
-    this.i=s.length();
-  }
-
-  public String toString() {
-    return s+i;
-  }
-}
-..c
+.s com.db4odoc.f1.constructors.C4 ..
 This class cannot be cleanly reinstantiated by db4o: Both approaches ._
 will fail, so one has to resort to configuring a translator.

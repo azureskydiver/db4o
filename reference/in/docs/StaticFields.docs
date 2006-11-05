@@ -39,7 +39,9 @@ access problems.
 By default db4o does not persist static fields. Normally this is not necessary as static ._
 values are set for a class, not for an object. However you can set up db4o to store static fields ._
 if you need to implement constant or enumeration:
-.c Db4o.configure().objectClass("ClassName").persistStaticFieldValues() ..
+.? java  .c Db4o.configure().objectClass(Foo.class).persistStaticFieldValues() ..  ..?
+.? net  .c Db4o.Configure().ObjectClass(typeof(Foo)).PersistStaticFieldValues() ..  ..?
+.? mono  .c Db4o.Configure().ObjectClass(typeof(Foo)).PersistStaticFieldValues() ..  ..?
 Do not use this option unnecessarily, as it will slow down the process of opening database files ._
 and the stored objects will occupy space in the database file.
 This option does not have any affect on primitive types (int, boolean, etc). Use their object alternatives ._
@@ -74,3 +76,5 @@ object, or directly from the database:
 .s com.db4odoc.f1.staticfields.StaticFieldExample#deleteTest ..
 
 .? java .e JavaEnums ..  ..?
+.? net .e NetEnums ..  ..?
+.? mono .e NetEnums ..  ..?

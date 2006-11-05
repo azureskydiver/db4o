@@ -1,18 +1,7 @@
 .n 
 .a Utility ..
 .1 ExtObjectContainer Utility Methods ..
-Db4o provides 2 versions of its interface:
-- ObjectContainer - supplies functionality, which is enough for the most common usage of db4o database;
-- ExtObjectContainer - adds advanced features.
-
-The idea of such separation is:
-- Keep the com.db4o package very small and well readable.
-- Separate vital and optional functionality.
-- Make it easy for other products to implement the basic db4o interface.
-- Show an example of how a lightweight version of db4o could look.
-Every com.db4o.ObjectContainer object is also a com.db4o.ext.ExtObjectContainer. You can cast ._
-it to ExtObjectContainer or you can use #ext() method to get to the advanced features.
-The following chapters review utility methods provided by extended ObjectContainer interface. ._
+The following paragraphs review some of the utility methods provided by extended ObjectContainer interface. ._
 Use API documentation for more information on ExtObjectContainer methods.
 
 .2 peekPersisted ..

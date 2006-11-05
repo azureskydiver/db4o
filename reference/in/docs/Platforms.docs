@@ -1,6 +1,5 @@
-.n
 .a Platforms ..
-.1 Platforms ..
+.1 db4o Platforms ..
 
 Db4o can be run in a variety of environments, which have Java virtual machine ._
 or .NET CLR. We use a common core code base, which allows automatic ._
@@ -97,6 +96,9 @@ return pilot.Points == 100;
 }); ..
 - db4o for .NET2.0 supports replication.
 
+.2 .NET CF 2.0   ..
+Due to some platform limitations CompactFramework 2.0 users, which use the more ._
+convenient delegate based Native Query syntax and want their queries to be optimized, ._
+are required to run the Db4oAdmin.exe command line utility on their assemblies ._
+prior to deploying them. 
 
-
-.? java .e Symbian ..  ..?  

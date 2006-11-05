@@ -10,6 +10,6 @@ common db4o programming questions.
 
 If you are a beginner with db4o we recommend you to start with ._
 the Tutorial. This reference uses an approach, which assumes that ._
-the reader has a basic understanding of db4o programming. Each ._
+the reader has a basic understanding of db4o concepts. Each ._
 chapter starts with brief introduction followed by detailed ._
 reference information including lots of meaningful examples.

@@ -59,7 +59,7 @@ value for your system.
 A complete example can be found in the /src/instrumentation/Db4oAdmin.Example ._
 directory of this distribution.
 
-.2 Build Time Optimization for Native Queries
+.2 Build Time Optimization for Native Queries ..
 
 Db4oAdmin.exe can also be used to pre optimize the Native Queries in a ._
 given assembly. This makes it possible to deploy an application without ._

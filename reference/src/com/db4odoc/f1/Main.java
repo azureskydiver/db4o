@@ -18,6 +18,8 @@ import com.db4odoc.f1.persist.PeekPersistedExample;
 import com.db4odoc.f1.refactoring.RefactoringExample;
 import com.db4odoc.f1.reflections.ReflectorExample;
 import com.db4odoc.f1.remote.RemoteExample;
+import com.db4odoc.f1.selpersist.MarkTransientExample;
+import com.db4odoc.f1.serialize.SerializeExample;
 import com.db4odoc.f1.staticfields.StaticFieldExample;
 import com.db4odoc.f1.utility.UtilityExample;
 import com.db4odoc.f1.uuids.UUIDExample;
@@ -30,10 +32,7 @@ public class Main {
         TransactionExample.main(args);
         ClientServerExample.main(args);
         IndexedExample.main(args);
-        DiagnosticExample.testEmpty();
-        //DiagnosticExample.testArbitrary();   //TODO: JDK5 compatible
-        //DiagnosticExample.testIndexDiagnostics();
-        //DiagnosticExample.testTranslatorDiagnostics();
+        DiagnosticExample.main(args); 
     	BlobExample.main(args);
     	CollectionExample.main(args);
     	ReflectorExample.main(args);
@@ -50,7 +49,8 @@ public class Main {
         RefactoringExample.main(args);
         PeekPersistedExample.main(args);
         IdentityExample.main(args);
-    	//SerializeExample.main(args);
+    	SerializeExample.main(args);
     	UtilityExample.main(args);
+    	MarkTransientExample.main(args);
     }
 }

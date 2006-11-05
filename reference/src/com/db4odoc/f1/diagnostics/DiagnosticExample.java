@@ -11,6 +11,14 @@ import com.db4o.diagnostic.*;
 
 public class DiagnosticExample{
 	public final static String YAPFILENAME="formula1.yap";
+	
+	public static void main(String[] args){
+		testEmpty();
+        testArbitrary();  
+        testIndexDiagnostics();
+        testTranslatorDiagnostics();
+	}
+	// end main
     public static void testEmpty() {
     	Db4o.configure().diagnostic().addListener(new DiagnosticToConsole());
         new File(YAPFILENAME).delete();
