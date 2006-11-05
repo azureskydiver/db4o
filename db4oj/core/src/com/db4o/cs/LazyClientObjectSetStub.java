@@ -15,12 +15,9 @@ public class LazyClientObjectSetStub {
 	
 	private IntIterator4 _idIterator;
 	
-	private final int _transferSize;
-	
-	public LazyClientObjectSetStub(AbstractQueryResult queryResult, IntIterator4 idIterator, int transferSize) {
+	public LazyClientObjectSetStub(AbstractQueryResult queryResult, IntIterator4 idIterator) {
 		_queryResult = queryResult;
 		_idIterator = idIterator;
-		_transferSize = transferSize;
 	}
 	
 	public IntIterator4 idIterator(){
@@ -34,6 +31,5 @@ public class LazyClientObjectSetStub {
 	public void reset(){
 		_idIterator = _queryResult.iterateIDs();
 	}
-	
 
 }
