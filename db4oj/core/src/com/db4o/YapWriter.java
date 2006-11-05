@@ -429,5 +429,23 @@ public final class YapWriter extends YapReader {
             setID(YapConst.IGNORE_ID);
         }
     }
+    
+	public void writeIDs(IntIterator4 idIterator, int maxCount ) {
+		int savedOffset = _offset; 
+        writeInt(0);
+        int actualCount = 0;
+        while(idIterator.moveNext()){
+            writeInt(idIterator.currentInt());
+            actualCount ++;
+            if(actualCount >= maxCount){
+            	break;
+            }
+        }
+        int secondSavedOffset = _offset;
+        _offset = savedOffset;
+        writeInt(actualCount);
+        _offset = secondSavedOffset;
+	}
+    
 
 }

@@ -567,7 +567,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		YapReader reader = expectedByteResponse(Msg.QUERY_RESULT);
 		int queryResultID = reader.readInt();
 		if(queryResultID > 0){
-			queryResult = new HybridQueryResult(trans, new LazyClientQueryResult(trans, this, queryResultID));
+			queryResult = new LazyClientQueryResult(trans, this, queryResultID);
 		}else{
 			queryResult = new IdListQueryResult(trans);
 		}

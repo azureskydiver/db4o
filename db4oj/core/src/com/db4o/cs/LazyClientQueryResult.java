@@ -18,14 +18,16 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	
 	private final YapClient _client;
 	
-	private final int _proxyID;
+	private final int _queryResultID;
 	
 	private int _size = SIZE_NOT_SET;
+	
+	private LazyClientIdIterator _iterator;
 
-	public LazyClientQueryResult(Transaction trans, YapClient client, int id) {
+	public LazyClientQueryResult(Transaction trans, YapClient client, int queryResultID) {
 		super(trans);
 		_client = client;
-		_proxyID = id;
+		_queryResultID = queryResultID;
 	}
 
 	public Object get(int index) {
@@ -39,14 +41,16 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 
 	public IntIterator4 iterateIDs() {
-		// TODO Auto-generated method stub
-		return null;
+		return _iterator;
 	}
-
+	
+	public Iterator4 iterator() {
+		return new ClientQueryResultIterator(this);
+	}
 
 	public int size() {
 		if(_size == SIZE_NOT_SET){
-			_client.writeMsg(Msg.OBJECTSET_SIZE.getWriterForInt(_transaction, _proxyID));
+			_client.writeMsg(Msg.OBJECTSET_SIZE.getWriterForInt(_transaction, _queryResultID));
 			_size = ((MsgD)_client.expectedResponse(Msg.OBJECTSET_SIZE)).readInt();
 		}
 		return _size;
@@ -57,7 +61,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 	
 	protected void finalize() throws Throwable {
-		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _proxyID));
+		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _queryResultID));
 	}
 	
 	public void loadFromClassIndex(YapClass clazz) {
@@ -69,11 +73,24 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 
 	public void loadFromIdReader(YapReader reader) {
-		throw new NotImplementedException();
+		int batchSize = reader.readInt(); 
+		_iterator = new LazyClientIdIterator(this, batchSize);
+		_iterator.loadFromIdReader(reader, batchSize);
 	}
 
 	public void loadFromQuery(QQuery query) {
 		throw new NotImplementedException();
+	}
+
+	public void reset() {
+		_client.writeMsg(Msg.OBJECTSET_RESET.getWriterForInt(_transaction, _queryResultID));
+	}
+
+	public void fetchIDs(LazyClientIdIterator iterator, int batchSize) {
+		int[] ints = new int[]{_queryResultID, batchSize };
+		_client.writeMsg(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, ints));
+		YapReader reader = _client.expectedByteResponse(Msg.ID_LIST);
+		_iterator.loadFromIdReader(reader, reader.readInt());
 	}
 
 }
