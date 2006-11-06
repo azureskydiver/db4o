@@ -24,14 +24,13 @@ public abstract class MappingIterator implements Iterator4 {
 	protected abstract Object map(final Object current);
 
 	public boolean moveNext() {
-		if (!_iterator.moveNext()) {
-			_current = Iterators.NO_ELEMENT;
-			return false;
-		}
-		_current = map(_iterator.current());
-		if(_current == SKIP){
-			return moveNext();
-		}
+		do {
+			if (!_iterator.moveNext()) {
+				_current = Iterators.NO_ELEMENT;
+				return false;
+			}
+			_current = map(_iterator.current());
+		} while(_current == SKIP);
 		return true;
 	}
 	
