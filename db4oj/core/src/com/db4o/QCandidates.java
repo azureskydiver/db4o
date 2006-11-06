@@ -172,16 +172,7 @@ public final class QCandidates implements Visitor4 {
     
     public Iterator4 executeLazy(Collection4 executionPath){
     	
-    	final FieldIndexProcessorResult result = processFieldIndexes();
-    	
-    	if(result.noMatch()){
-    		return Iterator4Impl.EMPTY;
-    	}
-    	
-    	Iterator4 indexIterator = result.foundIndex() ? 
-    		result.iterateIDs() :  
-    		BTreeClassIndexStrategy.iterate(i_yapClass, i_trans);
-    		
+    	Iterator4 indexIterator = iterateIndex(processFieldIndexes());
     	
     	Iterator4 singleObjectQueryIterator  = new MappingIterator(indexIterator) {
 		
@@ -198,6 +189,19 @@ public final class QCandidates implements Visitor4 {
 		};
 		
 		return mapIdsToExecutionPath(singleObjectQueryIterator, executionPath);
+    }
+    
+    private Iterator4 iterateIndex (FieldIndexProcessorResult result ){
+    	if(result.noMatch()){
+    		return Iterator4Impl.EMPTY;
+    	}
+    	if(result.foundIndex()){
+    		return result.iterateIDs();
+    	}
+    	if(i_yapClass.isPrimitive()){
+    		return Iterator4Impl.EMPTY;
+    	}
+    	return BTreeClassIndexStrategy.iterate(i_yapClass, i_trans);
     }
 
 	private Iterator4 mapIdsToExecutionPath(Iterator4 singleObjectQueryIterator, Collection4 executionPath) {
