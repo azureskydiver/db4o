@@ -85,13 +85,13 @@
 		</exec>
 	</target>
 	
-	<target name="package" depends="clean, build, meta-package" description="Builds the complete set of .net 2 distros">
+	<target name="package" depends="clean, build, ndoc, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
-	<target name="package-net1" depends="clean, build-net1, meta-package" description="Builds the complete set of .net 1 distros">
+	<target name="package-net1" depends="clean, build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
 	</target>
 	
-	<target name="meta-package" depends="ndoc">
+	<target name="meta-package">
 
 		<mkdir dir="${dir.dist.net.build}" />
 	
@@ -478,6 +478,35 @@
 			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-IncludeFavorites=True" />			
+		</exec>
+	</target>
+	
+	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
+		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
+			<arg value="${dir.dist.dll}/Db4objects.Db4o.dll" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-documenter=VS.NET 2003" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-BuildSeparateIndexFile=false" />
+			<arg value="-CollectionNamespace=com.db4o" />
+			<arg value="-CreateFullTextIndex=true" />
+			<arg value="-GenerateCollectionFiles=true" />
+			<arg value="-HtmlHelpName=db4o" />
+			<arg value="-IncludeDefaultStopWordList=true" />
+			<arg value="-LinkToSdkDocVersion=1.1" />
+			<arg value="-PlugInNamespace=ms.vscc" />
+			<arg value="-RegisterTitleWithNamespace=true" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-IncludeFavorites=True" />
+			<!--
+            <property name="Preliminary" value="True" />
+            <property name="CleanIntermediates" value="True" />
+            -->
 		</exec>
 	</target>
 	
