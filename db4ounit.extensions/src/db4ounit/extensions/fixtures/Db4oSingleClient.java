@@ -62,4 +62,8 @@ public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 		return _objectContainer;
 	}
 
+	public String getLabel() {
+		return "C/S SINGLE-CLIENT";
+	}
+
 }

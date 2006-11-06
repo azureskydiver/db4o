@@ -28,4 +28,8 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
     protected void doClean() {
     	_memoryFile = null;
     }
+
+	public String getLabel() {
+		return "IN-MEMORY";
+	}
 }

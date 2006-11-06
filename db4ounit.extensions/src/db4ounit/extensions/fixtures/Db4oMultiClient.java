@@ -28,4 +28,8 @@ public class Db4oMultiClient extends AbstractClientServerDb4oFixture{
             throw new TestException(e);
         }
     }
+
+	public String getLabel() {
+		return "C/S MULTI-CLIENT";
+	}
 }

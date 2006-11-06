@@ -8,18 +8,31 @@ import java.lang.reflect.Method;
  */
 public class TestMethod implements Test {
 	
-	public static String createLabel(Object subject, Method method) {
-		return subject.getClass().getName() + "." + method.getName();
+	public interface LabelProvider {
+		String getLabel(TestMethod method);
 	}
 	
-	private Object _subject;
-	private Method _method;
-
+	public static LabelProvider DEFAULT_LABEL_PROVIDER = new LabelProvider() {
+		public String getLabel(TestMethod method) {
+			return method.getSubject().getClass().getName() + "." + method.getMethod().getName();
+		}
+	};
+	
+	private final Object _subject;
+	private final Method _method;
+	private final LabelProvider _labelProvider;
+	
 	public TestMethod(Object instance, Method method) {
+		this(instance, method, DEFAULT_LABEL_PROVIDER);
+	}
+
+	public TestMethod(Object instance, Method method, LabelProvider labelProvider) {
 		if (null == instance) throw new IllegalArgumentException("instance");
-		if (null == method) throw new IllegalArgumentException("method");		
+		if (null == method) throw new IllegalArgumentException("method");	
+		if (null == labelProvider) throw new IllegalArgumentException("labelProvider");
 		_subject = instance;
 		_method = method;
+		_labelProvider = labelProvider;
 	}
 	
 	public Object getSubject() {
@@ -31,11 +44,11 @@ public class TestMethod implements Test {
 	}
 
 	public String getLabel() {
-		return createLabel(_subject, _method);
+		return _labelProvider.getLabel(this);
 	}
 
 	public void run(TestResult result) {
-		result.testStarted(/*this*/);
+		result.testStarted(this);
 		try {
 			setUp();
 			invoke();

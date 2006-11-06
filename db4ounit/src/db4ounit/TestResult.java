@@ -11,9 +11,22 @@ public class TestResult extends Printable {
 	private int _testCount = 0;
 	
 	private final StopWatch _watch = new StopWatch();
+
+	private final boolean _printLabels;
 	
-	public void testStarted(/*Test test*/) {
+	public TestResult(boolean printLabels) {
+		_printLabels = printLabels;
+	}
+	
+	public TestResult() {
+		this(false);
+	}
+
+	public void testStarted(Test test) {		
 		++_testCount;
+		if (_printLabels) {
+			System.out.println(test.getLabel());
+		}
 	}
 	
 	public void testFailed(Test test, Throwable failure) {

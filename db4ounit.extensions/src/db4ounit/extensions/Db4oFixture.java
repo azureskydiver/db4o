@@ -6,6 +6,8 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 
 public interface Db4oFixture {
+	
+	String getLabel();
     
 	void open() throws Exception;
     

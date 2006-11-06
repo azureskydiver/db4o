@@ -5,7 +5,7 @@ import java.io.Writer;
 
 public class TestRunner {
 	
-	TestSuiteBuilder _suiteBuilder;
+	private TestSuiteBuilder _suiteBuilder;
 	
 	public TestRunner(TestSuite suite) {
 		if (null == suite) throw new IllegalArgumentException("suite");
@@ -19,13 +19,17 @@ public class TestRunner {
 	
 	public TestRunner(Class clazz) {
 		this(new ReflectionTestSuiteBuilder(clazz));
-	}
+	}	
 
 	public int run() {
+		return run(true);
+	}
+
+	private int run(boolean printLabels) {
 		TestSuite suite = buildTestSuite();
 		if (null == suite) return 1;
 		
-		TestResult result = new TestResult();
+		TestResult result = new TestResult(printLabels);
 		result.runStarted();
 		suite.run(result);
 		result.runFinished();
