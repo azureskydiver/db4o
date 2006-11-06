@@ -85,7 +85,13 @@
 		</exec>
 	</target>
 	
-	<target name="package" depends="build" description="Builds the complete set of .net 2 distros">
+	<target name="package" depends="build, meta-package" description="Builds the complete set of .net 2 distros">
+	</target>
+	
+	<target name="package-net1" depends="build-net1, meta-package" description="Builds the complete set of .net 1 distros">
+	</target>
+	
+	<target name="meta-package">
 
 		<mkdir dir="${dir.dist.net.build}" />
 	
