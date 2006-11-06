@@ -1210,6 +1210,9 @@ public class BTreeNode extends YapMeta{
 	}
 
 	public static void defragIndex(ReaderPair readers,Indexable4 keyHandler,Indexable4 valueHandler) {
+        if (Deploy.debug) {
+            readers.readBegin(YapConst.BTREE_NODE);
+        }
 		// count
 		int count=readers.readInt();
 		// leafByte
@@ -1230,6 +1233,9 @@ public class BTreeNode extends YapMeta{
                 	readers.copyID();
                 }
             }
+        }
+        if (Deploy.debug) {
+            readers.readEnd();
         }
 	}
 

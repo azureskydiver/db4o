@@ -497,7 +497,7 @@ public class YapArray extends YapIndependantType {
     		mf._array.defragIDs(this, readers);
     	}
     	else {
-    		readers.incrementOffset(ownLength());
+    		readers.incrementOffset(linkLength());
     	}
     }
 

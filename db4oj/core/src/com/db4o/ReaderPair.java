@@ -157,8 +157,14 @@ public class ReaderPair implements SlotReader {
 		}
 		
 		YapReader targetPointerReader=new YapReader(YapConst.POINTER_LENGTH);
+		if(Deploy.debug) {
+			targetPointerReader.writeBegin(YapConst.YAPPOINTER);
+		}
 		targetPointerReader.writeInt(targetAddress);
 		targetPointerReader.writeInt(targetLength);
+		if(Deploy.debug) {
+			targetPointerReader.writeEnd();
+		}
 		context.targetWriteBytes(targetPointerReader,targetID);
 		
 		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());

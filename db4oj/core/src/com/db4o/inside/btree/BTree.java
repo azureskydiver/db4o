@@ -373,12 +373,18 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
 
 	public void defragIndex(ReaderPair readers) {
+        if (Deploy.debug) {
+            readers.readBegin(YapConst.BTREE);
+        }
 		// skip version
 		readers.incrementOffset(1);
         // skip size, node size
 		readers.incrementIntSize(2);
         // root ID
 		readers.copyID();
+        if (Deploy.debug) {
+            readers.readEnd();
+        }
 	}
 
 	public void defragIndexNode(ReaderPair readers) {
