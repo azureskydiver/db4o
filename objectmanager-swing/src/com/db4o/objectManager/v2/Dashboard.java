@@ -90,7 +90,7 @@ public class Dashboard {
 		frame.setIconImage(ResourceManager.createImageIcon("icons/plain/16x16/data.png", "database").getImage());
 		frame.setJMenuBar(buildMenuBar());
 		frame.setContentPane(buildContentPane());
-		frame.setSize(600, 450);
+		frame.setSize(600, 462);
 		frame.setResizable(false);
 		locateOnScreen(frame);
 		frame.setTitle("ObjectManager 2.0");
@@ -203,6 +203,16 @@ public class Dashboard {
 			}
 		});
 		builder.append(browse);
+		builder.nextLine();
+		JButton openButton = new JButton("Open");
+		openButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				connectAndOpenFrame();
+			}
+		});
+		builder.append("", openButton);
+
+
 		builder.nextLine();
 		builder.appendSeparator("Remote");
 
