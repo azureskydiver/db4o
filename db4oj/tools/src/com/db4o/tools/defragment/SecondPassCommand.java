@@ -14,9 +14,6 @@ import com.db4o.inside.btree.*;
 final class SecondPassCommand implements PassCommand {
 
 	public void processClass(DefragContextImpl context, final YapClass yapClass, int id,final int classIndexID) throws CorruptionException {
-		if(!yapClass.hasIndex()) {
-			return;
-		}
 		if(context.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
