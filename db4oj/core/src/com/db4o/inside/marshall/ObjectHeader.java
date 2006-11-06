@@ -53,6 +53,9 @@ public class ObjectHeader {
     	YapReader target = readers.target();
 		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().stream(),null,source);
     	int newID =readers.mapping().mappedID(header.yapClass().getID());
+        if (Deploy.debug) {
+            target.readBegin(YapConst.YAPOBJECT);
+        }
 		header._marshallerFamily._object.writeObjectClassID(target,newID);		
 		header._marshallerFamily._object.skipMarshallerInfo(target);
 		readAttributes(header._marshallerFamily, target);

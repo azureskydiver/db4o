@@ -449,10 +449,16 @@ public final class YapClassCollection extends YapMeta {
 	}
 
 	public static void defrag(ReaderPair readers) {
+        if (Deploy.debug) {
+            readers.readBegin(YapConst.YAPCLASSCOLLECTION);
+        }
 		int numClasses=readers.readInt();
 		for(int classIdx=0;classIdx<numClasses;classIdx++) {
 			readers.copyID();
 		}
+        if (Deploy.debug) {
+            readers.readEnd();
+        }
 	}
 
     private YapStream stream() {

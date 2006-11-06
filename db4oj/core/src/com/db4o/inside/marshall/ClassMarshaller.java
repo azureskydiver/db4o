@@ -136,7 +136,7 @@ public abstract class ClassMarshaller {
 		// ancestor ID
 		readers.copyID();
 
-		readers.writeInt(classIndexID);
+		readers.writeInt(indexIDForWriting(classIndexID));
 		
 		// field length
 		readers.incrementIntSize();

@@ -86,7 +86,7 @@ public class YapReader implements SlotReader {
 			if (Deploy.identifiers) {
 				byte readB = readByte();
 				if (readB != a_identifier) {
-					throw new RuntimeException("YapBytes.readBegin() wrong identifier");
+					throw new RuntimeException("YapBytes.readBegin() wrong identifier: "+(char)readB);
 				}
 			}
 		}
