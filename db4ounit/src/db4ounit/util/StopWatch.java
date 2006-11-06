@@ -2,6 +2,9 @@
 
 package db4ounit.util;
 
+/**
+ * @sharpen.ignore
+ */
 public class StopWatch {
 	
 	private long _started;
@@ -24,6 +27,10 @@ public class StopWatch {
 	}
 	
 	public String toString() {
-		return elapsed() + "ms";
+		long total = elapsed();
+		if (total > 1000) {
+			return total/1000.0 + "s";
+		}
+		return total + "ms";
 	}
 }

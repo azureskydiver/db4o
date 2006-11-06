@@ -36,7 +36,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
 	protected TestSuite fromClass(Class clazz) {
 		if(!isApplicable(clazz)) {
-			TestPlatform.emitWarning("IGNORED: " + clazz.getName());
+			TestPlatform.emitWarning("DISABLED: " + clazz.getName());
 			return new TestSuite(new Test[0]);
 		}
 		if(TestSuiteBuilder.class.isAssignableFrom(clazz)) {
@@ -74,7 +74,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		if (!startsWithIgnoreCase(method.getName(), "_test")) {
 			return;
 		}
-		TestPlatform.emitWarning("IGNORED: " + TestMethod.createLabel(subject, method));
+		TestPlatform.emitWarning("IGNORED: " + createTest(subject, method).getLabel());
 	}
 
 	protected boolean isTestMethod(Method method) {
