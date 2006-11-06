@@ -1,15 +1,15 @@
 <namespaces>
-	<namespace name="com.db4o">Core package.</namespace>
-	<namespace name="com.db4o.config">Configuration package.</namespace>
-	<namespace name="com.db4o.io">Input/Output abstraction layer.</namespace>
-	<namespace name="com.db4o.io.crypt">Cryptographic IO support.</namespace>
-	<namespace name="com.db4o.query">Query package.</namespace>
-	<namespace name="com.db4o.ext">Advanced API package.</namespace>
-	<namespace name="com.db4o.messaging">Messaging package.</namespace>
-	<namespace name="com.db4o.reflect">Reflection support package.</namespace>
-	<namespace name="com.db4o.reflect.generic">Generic reflection support (makes it possible to query database files when the original classes are not available).</namespace>
-	<namespace name="com.db4o.replication">Replication support package</namespace>
-	<namespace name="com.db4o.tools">Tools package.</namespace>
-	<namespace name="com.db4o.types">Types package.</namespace>
+	<namespace name="Db4objects.Db4o">Core package.</namespace>
+	<namespace name="Db4objects.Db4o.Config">Configuration package.</namespace>
+	<namespace name="Db4objects.Db4o.IO">Input/Output abstraction layer.</namespace>
+	<namespace name="Db4objects.Db4o.IO.Crypt">Cryptographic IO support.</namespace>
+	<namespace name="Db4objects.Db4o.Query">Query package.</namespace>
+	<namespace name="Db4objects.Db4o.Ext">Advanced API package.</namespace>
+	<namespace name="Db4objects.Db4o.Messaging">Messaging package.</namespace>
+	<namespace name="Db4objects.Db4o.Reflect">Reflection support package.</namespace>
+	<namespace name="Db4objects.Db4o.Reflect.Generic">Generic reflection support (makes it possible to query database files when the original classes are not available).</namespace>
+	<namespace name="Db4objects.Db4o.Replication">Replication support package</namespace>
+	<namespace name="Db4objects.Db4o.Tools">Tools package.</namespace>
+	<namespace name="Db4objects.Db4o.Types">Types package.</namespace>
 </namespaces>
 
