@@ -49,7 +49,7 @@ public class SlotDefragment {
 					YapClass.defragObject(readers);
 				}
 				
-			}, false, true);
+			}, true, true);
 		}
 	}
 

@@ -10,6 +10,33 @@ package com.db4o.foundation;
  * @exclude
  */
 public class Queue4 {
+	private final class Queue4Iterator implements Iterator4 {
+		private boolean _active=false;
+		private List4 _current=null;
+		
+		public Object current() {
+			return _current._element;
+		}
+
+		public boolean moveNext() {
+			if(!_active) {
+				_current=_last;
+				_active=true;
+			}
+			else {
+				if(_current!=null) {
+					_current=_current._next;
+				}
+			}
+			return _current!=null;
+		}
+
+		public void reset() {
+			_current=null;
+			_active=false;
+		}
+	}
+
 	private List4 _first;
 	private List4 _last;
 	
@@ -38,5 +65,9 @@ public class Queue4 {
     public final boolean hasNext(){
         return _last != null;
     }
+
+	public Iterator4 iterator() {
+		return new Queue4Iterator();
+	}
     
 }

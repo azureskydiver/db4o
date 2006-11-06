@@ -260,13 +260,13 @@ public class DefragContextImpl implements DefragContext {
 		_mapping.clearSeen();
 	}
 
-	private TreeInt _unindexed;
+	private Queue4 _unindexed=new Queue4();
 	
 	public void registerUnindexed(int id) {
-		_unindexed=TreeInt.add(_unindexed,id);
+		_unindexed.add(new Integer(id));
 	}
 
 	public Iterator4 unindexedIDs() {
-		return new TreeKeyIterator(_unindexed);
+		return _unindexed.iterator();
 	}
 }
