@@ -107,6 +107,10 @@ public class DTrace {
         }
         return null;
     }
+    
+    private static void trackEventsWithoutRange() {
+        _trackEventsWithoutRange = true;
+    }
 
     private DTrace(boolean enabled_, boolean break_, String tag_, boolean log_){
         if(enabled){
@@ -334,7 +338,6 @@ public class DTrace {
         }
     }
     
-    /*
     private static void breakOnEvent(long eventNr){
         if(enabled){
             if(_breakEventNrs == null){
@@ -344,7 +347,7 @@ public class DTrace {
             _breakEventCount ++;
         }
     }
-    */   
+    
     
     private String formatInt(long i, int len){
         if(enabled){
@@ -384,6 +387,11 @@ public class DTrace {
                 }
             }
         }
+    }
+    
+    public static void noWarnings(){
+    	breakOnEvent(0);
+    	trackEventsWithoutRange();
     }
     
 }
