@@ -19,6 +19,7 @@ public class Contact {
     private List friends;
 	private Date created;
 	private double income;
+	private Date birthDate;
 
 	public Integer getId() {
         return id;
@@ -105,5 +106,13 @@ public class Contact {
 
 	public void setIncome(double income) {
 		this.income = income;
+	}
+
+	public Date getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
 	}
 }

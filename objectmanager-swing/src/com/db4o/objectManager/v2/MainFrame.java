@@ -34,9 +34,10 @@ public class MainFrame extends JFrame implements WindowListener {
                     ? new Dimension(650, 510)
                     : new Dimension(730, 560);
 
+	private static String WINDOW_TITLE = "ObjectManager 2.0";
 
-    
-    /**
+
+	/**
      * Describes optional settings of the JGoodies Looks.
      */
     private final Settings settings;
@@ -48,7 +49,8 @@ public class MainFrame extends JFrame implements WindowListener {
      * and builds the content.
      */
     protected MainFrame(Settings settings, Db4oConnectionSpec connectionSpec) {
-        this.settings = settings;
+		super(WINDOW_TITLE + " - " + connectionSpec.getPath());
+		this.settings = settings;
         this.connectionSpec = connectionSpec;
         configureUI();
         build();
@@ -125,7 +127,7 @@ public class MainFrame extends JFrame implements WindowListener {
      */
     private void build() {
         setContentPane(buildContentPane());
-        setTitle(getWindowTitle());
+        //setTitle(getWindowTitle());
         setJMenuBar(new ConnectedMenuBar(this, settings,
                         Dashboard.createHelpActionListener(),
                         Dashboard.createAboutActionListener(this)));
@@ -144,10 +146,6 @@ public class MainFrame extends JFrame implements WindowListener {
         return mainPanel;
     }
 
-
-    protected String getWindowTitle() {
-        return "ObjectManager 2.0";
-    }
 
     /**
      * Locates the given component on the screen's center.

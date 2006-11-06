@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Calendar;
 
 /**
  * User: treeder
@@ -27,7 +28,8 @@ public class DemoPopulator {
         ObjectContainer db = getDb();
         int ageCounter = 0;
         List<Contact> last10 = new ArrayList<Contact>();
-        for(int i = 0; i < NUMBER_TO_MAKE; i++){
+		Calendar birthCal = Calendar.getInstance();
+		for(int i = 0; i < NUMBER_TO_MAKE; i++){
             Contact c = new Contact();
             c.setId(new Integer(i));
             c.setName("Contact " + i);
@@ -38,6 +40,8 @@ public class DemoPopulator {
 			Date now = new Date();
 			c.setCreated(now);
 			c.setIncome(i * 1000.01);
+			c.setBirthDate(birthCal.getTime());
+			birthCal.add(Calendar.DAY_OF_YEAR, -1);
 			addAddresses(c);
             addEmails(c);
             addFriends(c, last10);
