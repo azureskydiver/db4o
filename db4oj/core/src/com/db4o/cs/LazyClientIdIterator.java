@@ -45,6 +45,7 @@ public class LazyClientIdIterator implements IntIterator4{
 		}
 		if(_available == 0){
 			_queryResult.fetchIDs(_batchSize);
+			_available --;
 			_current = 0;
 			return (_available > 0);
 		}
