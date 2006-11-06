@@ -85,13 +85,13 @@
 		</exec>
 	</target>
 	
-	<target name="package" depends="build, meta-package" description="Builds the complete set of .net 2 distros">
+	<target name="package" depends="clean, build, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
-	<target name="package-net1" depends="build-net1, meta-package" description="Builds the complete set of .net 1 distros">
+	<target name="package-net1" depends="clean, build-net1, meta-package" description="Builds the complete set of .net 1 distros">
 	</target>
 	
-	<target name="meta-package">
+	<target name="meta-package" depends="ndoc">
 
 		<mkdir dir="${dir.dist.net.build}" />
 	
@@ -102,19 +102,18 @@
 				<include name="**/*.csdproj" />
 				<include name="**/*.sln" />
 				<include name="**/*.txt" />
+				<exclude name="**/obj/**" />	
 			</fileset>
 		</copy>
 	
 		<mkdir dir="${dir.dist.net.build}/doc/api" />			
 		<copy todir="${dir.dist.net.build}/doc/api">
-			<!--
 			<fileset dir="${dir.dist}/ndoc">
 				<include name="db4o.chm" />
 				<include name="db4o.HxS" />
 				<include name="db4oCollection.*" />
 				<include name="db4oCollection.h2reg.ini" />
 			</fileset>
-			-->
 			<fileset dir="lib/h2reg">
 				<include name="*.exe" />
 				<include name="*.ini" />
@@ -199,6 +198,7 @@
 	<target name="build-core" depends="check-dependencies, sharpen">
 		<csc
 			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
+			docfile="${dir.dist.dll}/Db4objects.Db4o.xml"
 			srcdir="${dir.n.v6.core}"
 			targettype="library"
 			definitions="${csharp.definitions}"
@@ -454,6 +454,31 @@
 				<exclude name="**/compact*/**" />
 			</sources>
 		</updatecsharpproject>
+	</target>
+	
+	<target name="preparendoc">
+		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />		
+		<property name="ndoc.home" location="lib/ndoc" />
+				
+		<delete dir="${dir.dist.ndoc}" />
+		<mkdir dir="${dir.dist.ndoc}" />
+	</target>
+	
+	<target name="ndoc" depends="preparendoc" description="Build public .net docs">		
+		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
+			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
+			<arg value="-documenter=MSDN 2003" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-HtmlHelpName=db4o" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-IncludeFavorites=True" />			
+		</exec>
 	</target>
 	
 	<target name="init">
