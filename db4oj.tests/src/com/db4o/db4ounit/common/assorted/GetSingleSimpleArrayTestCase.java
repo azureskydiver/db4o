@@ -8,7 +8,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class GetSingleSimpleArray extends AbstractDb4oTestCase{
+public class GetSingleSimpleArrayTestCase extends AbstractDb4oTestCase{
 	
 	public void test(){
         final ObjectSet result=db().get(new double[]{0.6,0.4});
