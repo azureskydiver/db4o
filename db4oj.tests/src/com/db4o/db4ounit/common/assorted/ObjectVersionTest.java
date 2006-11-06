@@ -1,9 +1,7 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.config.Configuration;
-import com.db4o.cs.*;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.ObjectInfo;
+import com.db4o.ext.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -17,10 +15,8 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 
 	public void test() {
 		final ExtObjectContainer oc = this.db();
-		String msg = oc instanceof YapClient ? "running in C/S" : "Solo mode";
-		System.out.println(msg);
-
 		SimplestPossibleItem object = new SimplestPossibleItem("c1");
+		
 		oc.set(object);
 		
 		ObjectInfo objectInfo1 = oc.getObjectInfo(object);
