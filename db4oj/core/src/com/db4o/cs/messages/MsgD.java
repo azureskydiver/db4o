@@ -54,8 +54,19 @@ public class MsgD extends Msg{
 	public final MsgD getWriter(Transaction a_trans){
 		return getWriterForLength(a_trans, 0);
 	}
+	
+	public final MsgD getWriterForBoolean(Transaction a_trans, boolean val){
+		MsgD message = getWriterForLength(a_trans, 1);
+		message.writeBoolean(val);
+		return message;
+	}
 
-    public final MsgD getWriterForInts(Transaction a_trans, int[] ints) {
+    private void writeBoolean(boolean val) {
+    	byte b = val ? (byte)1 : (byte)0;
+    	_payLoad.append(b);
+	}
+
+	public final MsgD getWriterForInts(Transaction a_trans, int[] ints) {
         MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH * ints.length);
         for (int i = 0; i < ints.length; i++) {
             message.writeInt(ints[i]);
@@ -114,6 +125,10 @@ public class MsgD extends Msg{
 	
 	public final long readLong(){
 	    return _payLoad.readLong();
+	}
+	
+	public final boolean readBoolean() {
+		return _payLoad.readByte() != 0;
 	}
 
 	final Msg readPayLoad(Transaction a_trans, YapSocket sock, YapReader reader)

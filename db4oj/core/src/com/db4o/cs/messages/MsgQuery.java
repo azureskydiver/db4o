@@ -13,12 +13,12 @@ public abstract class MsgQuery extends MsgObject {
 	
 	private static int nextID;
 	
-	protected final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread) {
+	protected final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread, boolean lazy) {
 		
 		int queryResultId = 0;
 		int maxCount = 0;
 		
-		if(config().lazyQueries()){
+		if(lazy){
 			queryResultId = generateID();
 			maxCount = config().prefetchObjectCount();  
 		} else{
@@ -52,8 +52,8 @@ public abstract class MsgQuery extends MsgObject {
 		return nextID;
 	}
 	
-	protected AbstractQueryResult newQueryResult(){
-		return stream().newQueryResult(transaction());
+	protected AbstractQueryResult newQueryResult(boolean lazy){
+		return stream().newQueryResult(transaction(), lazy);
 	}
 
 }

@@ -353,7 +353,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     public abstract int converterVersion();
 
-    public abstract AbstractQueryResult newQueryResult(Transaction trans);
+    public abstract AbstractQueryResult newQueryResult(Transaction trans, boolean lazy);
 
     protected void createStringIO(byte encoding) {
     	setStringIo(YapStringIO.forEncoding(encoding));

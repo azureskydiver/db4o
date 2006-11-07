@@ -77,6 +77,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
 	private final static KeySpec IS_SERVER=new KeySpec(false);
     
+	private final static KeySpec LAZY_QUERY_EVALUATION=new KeySpec(false);
+	
 	private final static KeySpec LOCK_FILE=new KeySpec(true);
     
 	private final static KeySpec MESSAGE_LEVEL=new KeySpec(YapConst.NONE);
@@ -774,9 +776,12 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return (IoAdapter)_config.get(IOADAPTER);
 	}
 	
-	public boolean lazyQueries() {
-		return false;
+	public boolean lazyQueryEvaluation() {
+		return _config.getAsBoolean(LAZY_QUERY_EVALUATION);
 	}
 	
+	public void lazyQueryEvaluation(boolean flag) {
+		_config.put(LAZY_QUERY_EVALUATION,flag);
+	}
 
 }

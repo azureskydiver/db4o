@@ -8,9 +8,11 @@ import com.db4o.inside.query.*;
 
 public final class MQueryExecute extends MsgQuery {
 	
+	private boolean _lazy = false;
+	
 	public boolean processAtServer(YapServerThread serverThread) {
 		unmarshall();
-        writeQueryResult(execute(), serverThread);
+        writeQueryResult(execute(), serverThread, _lazy);
 		return true;
 	}
 
@@ -24,6 +26,7 @@ public final class MQueryExecute extends MsgQuery {
 
             QQuery query = (QQuery) stream().unmarshall(_payLoad);
             query.unmarshall(transaction());
+            _lazy = query.isLazy();
             
 			return executeFully(query);
 			
@@ -32,11 +35,11 @@ public final class MQueryExecute extends MsgQuery {
 
 	private AbstractQueryResult executeFully(QQuery query) {
 		try {
-			AbstractQueryResult qr = newQueryResult();
+			AbstractQueryResult qr = newQueryResult(query.isLazy());
 			qr.loadFromQuery(query);
 			return qr;
 		} catch (Exception e) {
-			return newQueryResult(); 
+			return newQueryResult(false); 
 		}
 	}
 	
