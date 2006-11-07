@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
             CloseUnlocksFileTestCase.class,
             ComparatorSortTestCase.class,
             DatabaseUnicityTest.class,
+            DescendToNullFieldTestCase.class,
             GetByUUIDTestCase.class,
             GetSingleSimpleArrayTestCase.class,
             IndexCreateDropTestCase.class,
