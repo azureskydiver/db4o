@@ -3,9 +3,6 @@ package com.db4o.drs.test;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.db4o.drs.test.hibernate.ReplicationConfiguratorTest;
-import com.db4o.drs.test.hibernate.TablesCreatorTest;
-
 import db4ounit.TestRunner;
 
 public class Db4oTests extends DrsTestSuite {
