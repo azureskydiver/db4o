@@ -10,11 +10,11 @@ class Order implements Orderable {
 	public int compareTo(Object obj) {
 		if(obj instanceof Order){
 			Order other = (Order)obj;
-			int res = i_major - other.i_major;
+			int res = other.i_major - i_major;
 			if(res != 0){
 				return res;
 			}
-			return i_minor - other.i_minor;
+			return other.i_minor - i_minor;
 		}
 		return 1;
 	}
