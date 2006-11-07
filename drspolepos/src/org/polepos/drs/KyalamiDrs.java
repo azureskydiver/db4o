@@ -7,6 +7,7 @@ import org.polepos.circuits.kyalami.*;
 import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.test.*;
 import com.db4o.test.replication.*;
 
 public class KyalamiDrs extends DrsDriver implements KyalamiDriver {
