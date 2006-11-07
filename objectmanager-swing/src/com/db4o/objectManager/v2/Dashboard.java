@@ -27,7 +27,7 @@ public class Dashboard {
 
 	private static final String COPYRIGHT =
 			"\u00a9 2006 db4objects Inc. All Rights Reserved.";
-	public static final String VERSION = "2.0";
+	public static final String VERSION = "6.0";
 
 
 	private JFrame frame;
@@ -38,6 +38,7 @@ public class Dashboard {
 	private Settings settings;
 	private JTextField hostTextField;
 	private JTextField portTextField;
+	private static final String TITLE = "ObjectManager " + VERSION;
 
 
 	/**
@@ -93,7 +94,7 @@ public class Dashboard {
 		frame.setSize(600, 462);
 		frame.setResizable(false);
 		locateOnScreen(frame);
-		frame.setTitle("ObjectManager 2.0");
+		frame.setTitle(TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}

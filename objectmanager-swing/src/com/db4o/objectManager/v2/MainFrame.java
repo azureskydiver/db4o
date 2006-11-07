@@ -34,7 +34,7 @@ public class MainFrame extends JFrame implements WindowListener {
                     ? new Dimension(650, 510)
                     : new Dimension(730, 560);
 
-	private static String WINDOW_TITLE = "ObjectManager 2.0";
+	private static String WINDOW_TITLE = "ObjectManager 6.0";
 
 
 	/**
