@@ -71,7 +71,8 @@ public class DefragContextImpl implements DefragContext {
 	public int mappedID(int id,boolean lenient) throws MappingNotFoundException {
 		Integer mapped=internalMappedID(id,lenient);
 		if(mapped==null) {
-			throw new MappingNotFoundException(id);
+			System.err.println("No mapping found for ID "+id);
+			return 0;
 		}
 		return mapped.intValue();
 	}
