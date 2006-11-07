@@ -26,14 +26,18 @@ public abstract class QQueryBase implements Unversioned {
     private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
     transient Transaction i_trans;
+    
     public Collection4 i_constraints = new Collection4();
 
     public QQuery i_parent;
+    
     public String i_field;
+    
+    public boolean _lazy;
 
     public QueryComparator _comparator;
     
-    private final QQuery _this;
+    private transient final QQuery _this;
     
     protected QQueryBase() {
         // C/S only
@@ -644,6 +648,13 @@ public abstract class QQueryBase implements Unversioned {
 	public QueryComparator comparator() {
 		return _comparator;
 	}
-
+	
+	public boolean isLazy(){
+		return _lazy;
+	}
+	
+	public void setLazy(boolean flag){
+		_lazy = flag;
+	}
 
 }

@@ -19,5 +19,6 @@ public class QQuery extends QQueryBase implements Query {
 
     public QQuery() {
         // C/S only
+    	super();
     }
 }

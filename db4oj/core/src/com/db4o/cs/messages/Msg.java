@@ -132,6 +132,10 @@ public class Msg implements Cloneable {
 		return _trans;
 	}
 	
+	protected YapFile file(){
+		return (YapFile)stream();
+	}
+	
 	protected YapStream stream(){
 	    return transaction().stream();
 	}

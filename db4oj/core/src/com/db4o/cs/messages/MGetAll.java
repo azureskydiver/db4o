@@ -9,20 +9,21 @@ import com.db4o.inside.query.*;
 public final class MGetAll extends MsgQuery {
 	
 	public final boolean processAtServer(YapServerThread serverThread) {
-		writeQueryResult(getAll(), serverThread);
+		boolean lazy = readBoolean();
+		writeQueryResult(getAll(lazy), serverThread, lazy);
 		return true;
 	}
 
-	private AbstractQueryResult getAll() {
+	private AbstractQueryResult getAll(boolean lazy) {
 		synchronized (streamLock()) {
 			try {
-				return stream().getAll(transaction());
+				return file().getAll(transaction(), lazy);
 			} catch (Exception e) {
 				if(Debug.atHome){
 					e.printStackTrace();
 				}
 			}
-			return newQueryResult();
+			return newQueryResult(false);
 		}
 	}
 }

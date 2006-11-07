@@ -133,9 +133,13 @@ public abstract class YapFile extends YapStream {
     public final BTree createBTreeClassIndex(int id){
         return new BTree(i_trans, id, new YInt(this));
     }
-
+    
     public final AbstractQueryResult newQueryResult(Transaction trans) {
-    	if(config().lazyQueries()){
+    	return newQueryResult(trans, config().lazyQueryEvaluation());
+    }
+
+    public final AbstractQueryResult newQueryResult(Transaction trans, boolean lazy) {
+    	if(lazy){
     		return new HybridQueryResult(trans);
     	}
     	return new IdListQueryResult(trans);
@@ -230,8 +234,12 @@ public abstract class YapFile extends YapStream {
         
     }
 
-    public AbstractQueryResult getAll(Transaction ta) {
-    	final AbstractQueryResult queryResult = newQueryResult(ta);
+    public AbstractQueryResult getAll(Transaction trans) {
+        return getAll(trans, config().lazyQueryEvaluation());
+    }
+    
+    public AbstractQueryResult getAll(Transaction trans, boolean lazy) {
+    	final AbstractQueryResult queryResult = newQueryResult(trans, lazy);
     	queryResult.loadFromClassIndexes(classCollection().iterator());
         return queryResult;
     }

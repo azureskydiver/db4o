@@ -4,9 +4,11 @@ package com.db4o.config;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.diagnostic.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
+import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 /**
@@ -428,6 +430,32 @@ public interface Configuration {
      * @see #setOut
      */
     public void messageLevel(int level);
+    
+    /**
+     * turns lazy query evaluation on and off.
+     * <br><br>The db4o query processor can run in two modes:<br>
+     * - <b>normal</b> mode<br>
+     * - <b>lazy</b> mode<br><br>
+     * In <b>normal</b> mode, a query will be fully evaluated when {@link Query#execute()} 
+     * is called. The complete {@link ObjectSet} of all matching IDs is
+     * generated immediately.<br><br>
+     * In <b>lazy</b> mode, the {@link Query#execute()} call will only create an Iterator
+     * against the best index found. Further query processing will happen when the
+     * user application iterates through the resulting {@link ObjectSet}.<br><br>
+     * Advantages of using normal mode:<br>
+     * - The {@link ObjectSet} will be a snapshot of results at a given point in time.<br>
+     * - Iterating through the entire resulting {@link ObjectSet} will be slightly faster.<br><br>
+     * Advantages of using lazy mode:<br>
+     * - The call to {@link Query#execute()} will return very fast. First results can be
+     * made available to the application before the query is fully processed.<br>
+     * - A query will consume less memory because no intermediate ID representation has
+     * to be created.<br><br>
+     * Some calls against a lazy {@link ObjectSet} will require the query to be evaluated fully.
+     * For instance {@link ObjectSet#size()} is such a costly call.
+     * <br><br>
+     * In the default setting queries will be run evaluated in <b>normal</b> mode. 
+     */
+    public void lazyQueryEvaluation(boolean flag);
 
     /**
      * can be used to turn the database file locking thread off. 
