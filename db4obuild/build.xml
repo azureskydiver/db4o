@@ -450,14 +450,21 @@
 		<updateAssemblyInfoFiles srcdir="${dir.dist.net.compile}" />
 	</target>
 	
-	<target name="runtestsnet" depends="configure-net1.1, compiletestsnet" description="sharpen and run db4o AllTests for net1.1">
+	<target name="old-runtestsnet" depends="configure-net1.1, compiletestsnet" description="sharpen and run db4o AllTests for net1.1">
 		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}">
 		</exec>
 	</target>
 	
-	<target name="runtestsnet2" depends="configure-net2, compiletestsnet" description="sharpen and run db4o AllTests for net2">
+	<target name="runtestsnet">
+	</target>
+	
+	<target name="old-runtestsnet2" depends="configure-net2, compiletestsnet" description="sharpen and run db4o AllTests for net2">
 		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}" failonerror="true" failifexecutionfails="true">
 		</exec>
+	</target>
+	
+	<target name="runtestsnet2">
+		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
 	
 	<target name="compile-db4ounit-libs">
@@ -559,11 +566,15 @@
 		</csc>
 	</target>
 	
-	<target name="runtestsmono" depends="configure-mono2, compiletestsmono" description="sharpen and run db4o AllTests for mono2">
+	<target name="old-runtestsmono" depends="configure-mono2, compiletestsmono" description="sharpen and run db4o AllTests for mono2">
 		<exec executable="mono" dir="${dir.dist.dll.mono}" failifexecutionfails="true" failonerror="true" timeout="300000">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.mono}/${file.name.exe.tests.mono}" />
 		</exec>
+	</target>
+	
+	<target name="runtestsmono">
+		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
 	
 	<target name="do-compiledllmono">
@@ -1669,13 +1680,23 @@
 
 	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
-	<target name="buildnet" depends="zipnet" description="Full PascalCase NET build" />
+	<target name="old-buildnet" depends="zipnet" description="Full PascalCase NET build" />
 	
-	<target name="buildnet2" depends="zipnet2" description="Full PascalCase NET 2.0 build" />
+	<target name="buildnet">
+		<ant antfile="build-dotnet.xml" target="build-net1" />
+	</target>
 	
-	<target name="buildmono" depends="zipmono-pascalcase" description="Full Mono build (now PascalCase)" />
+	<target name="old-buildnet2" depends="zipnet2" description="Full PascalCase NET 2.0 build" />
 	
-	<target name="buildmono2" depends="zipmono2-pascalcase" description="Full Mono build with generics (now PascalCase)" />
+	<target name="buildnet2">
+		<ant antfile="build-dotnet.xml" target="build" />
+	</target>	
+	
+	<target name="old-buildmono2" depends="zipmono2-pascalcase" description="Full Mono build with generics (now PascalCase)" />
+	
+	<target name="buildmono2">
+		<ant antfile="build-dotnet.xml" target="build" />
+	</target>
 
 	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	
