@@ -14,7 +14,7 @@ public class TestPlatform {
 	}
 
 	public static Writer getStdOut() {
-		return new PrintWriter(System.out);
+		return new PrintWriter(System.err);
 	}
 	
 	public static boolean isStatic(Method method) {
