@@ -25,8 +25,13 @@ public class TestResult extends Printable {
 	public void testStarted(Test test) {		
 		++_testCount;
 		if (_printLabels) {
-			System.out.println(test.getLabel());
+			println(test.getLabel());
 		}
+	}
+
+	private void println(String label) {
+		System.out.println(label);
+		System.out.flush();
 	}
 	
 	public void testFailed(Test test, Throwable failure) {
