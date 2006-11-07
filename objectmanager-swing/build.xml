@@ -2,16 +2,20 @@
     <description>
         ObjectManager build file
     </description>
-    <!-- set global properties for this build -->
-    <property name="src" location="src"/>
+	<!-- set the appropriate db4o jar -->
+	<property name="db4o.version" value="db4o-5.7-java5.jar"/>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src"/>
     <property name="lib" location="lib"/>
     <property name="build" location="classes/production"/>
 	<property name="dist.base" location="dist"/>
-	<property name="dist" location="${dist.base}/objectmanager-2.0"/>
+	<property name="dist" location="${dist.base}/objectmanager-6.0"/>
     <property name="webstart" value="webstart"/>
     <property name="dist-webstart" value="dist-webstart"/>
 
-    <path id="class.path">
+
+	<path id="class.path">
         <fileset dir="${lib}">
             <include name="**/*.jar"/>
         </fileset>
@@ -46,7 +50,6 @@
 
     <target name="dist" depends="compile"
             description="generate the distribution">
-        <property name="db4o.version" value="db4o-5.7-java5.jar"/>
 
         <mkdir dir="${dist}/lib"/>
 
@@ -106,7 +109,7 @@
 
     <target name="zip" depends="dist">
 
-		<zip destfile="objectmanager-2.0.zip"
+		<zip destfile="objectmanager-6.0.zip"
              basedir="${dist.base}"
 				/>
     </target>
