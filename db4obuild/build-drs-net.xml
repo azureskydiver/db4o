@@ -39,14 +39,16 @@
 	</target>
 
 	<target name="build-drs" depends="update-csharp-projects">
-		
+		<echo message="AAA ${drs.net.bin.dir} ${file.name.dll.db4ounit}"/>
 		<property name="drs.dll" location="${drs.net.bin.dir}/drs.dll" />
 		
 		<csc outputfile="${drs.dll}"
+			executable="${csc.executable}"
 			targettype="library"
 			srcdir="${drs.net.src.dir}">
 			<reference dir="${drs.net.bin.dir}">
 				<include name="${file.name.dll}" />
+				<include name="${file.name.dll.db4ounit}" />
 			</reference>
 		</csc>
 	</target>
@@ -54,6 +56,7 @@
 	<target name="create-jar-for-dependencies">
 		<mkdir dir="${drs.conversion.workspace.dir}/lib" />
 		<property name="dependencies.jar" location="${drs.conversion.workspace.dir}/lib/dependencies.jar" />
+		<!--TODO FIXME -remove the /bin Eclipse dependencies-->
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.workspace}/db4oj/bin/">								
 			</fileset>
@@ -90,25 +93,7 @@
 				<arg value="-srcfolder" />
 				<arg value="test" />
 				
-				<arg value="-pascalCase" />
-			
-				<arg value="-nativeTypeSystem" />
-				
-				<arg value="-methodMapping" />
-				<arg value="com.db4o.reflect.Reflector.forClass" />
-				<arg value="com.db4o.drs.inside.ReplicationPlatform.ForType" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="^db4ounit.extensions.fixtures" />
-				<arg value="Db4oUnit.Extensions.Fixtures" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="^db4ounit.extensions" />
-				<arg value="Db4oUnit.Extensions" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="^db4ounit" />
-				<arg value="Db4oUnit" />
+				<arg value="@sharpen-new-core-mapping" />
 			</args>
 		</sharpen>
 	</target>
@@ -168,7 +153,7 @@
 		<copy todir="${drs.net.src.dir}">
 			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src">
 				<include name="**/*.cs" />
-				<exclude name="**/test/**" />
+				<exclude name="**/Test/**" />
 			</fileset>
 		</copy>
 
@@ -188,7 +173,7 @@
 	<target name="update-drs.tests-project" depends="sharpen-drs">
 		<copy todir="${drs.net.dir}/drs.tests/src">
 			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src">
-				<include name="**/test/**" />
+				<include name="**/Test/**" />
 			</fileset>
 		</copy>
 
@@ -303,6 +288,9 @@
 
 	<target name="select-dotnet-assembly" unless="mono">
 		<property name="db4o.dll" value="${file.dll.net}" />
+		<property name="db4ounit.dll" value="${file.dll.net.db4ounit}" />
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 	</target>
 			
 	<target name="select-mono-assembly" if="mono">	
@@ -316,7 +304,10 @@
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
 		<copy file="${db4o.dll}" todir="${drs.net.bin.dir}" />
+		<copy file="${db4ounit.dll}" todir="${drs.net.bin.dir}" />
+		
 		<copy file="${db4o.dll}" todir="${drsqs.net.bin.dir}" />
+		<copy file="${db4ounit.dll}" todir="${drsqs.net.bin.dir}" />
 		<mkdir dir="${drsqs.net.dir}" />
 		<mkdir dir="${drsqs.net.bin.dir}" />
 	</target>
