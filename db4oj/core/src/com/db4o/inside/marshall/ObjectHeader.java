@@ -40,10 +40,16 @@ public class ObjectHeader {
         _yapClass=(yc!=null ? yc : stream.getYapClass(classID));
 
         if (Deploy.debug) {
-            int ycID = _yapClass.getID();
-            if (classID != ycID) {
-                System.out.println("ObjectHeader::init YapClass does not match. Expected ID: " + ycID + " Read ID: " + classID);
-            }
+        	// This check has been added to cope with defragment in debug mode: SlotDefragment#setIdentity()
+        	// will trigger calling this constructor with a source db yap class and a target db stream,
+        	// thus _yapClass==null. There may be a better solution, since this call is just meant to
+        	// skip the object header.
+        	if(_yapClass!=null) {
+	        	int ycID = _yapClass.getID();
+		        if (classID != ycID) {
+		        	System.out.println("ObjectHeader::init YapClass does not match. Expected ID: " + ycID + " Read ID: " + classID);
+		        }
+        	}
         }
         _headerAttributes = readAttributes(_marshallerFamily,reader);
     }
