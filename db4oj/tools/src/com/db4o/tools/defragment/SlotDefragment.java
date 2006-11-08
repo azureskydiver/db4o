@@ -11,10 +11,15 @@ import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 
 public class SlotDefragment {
-	
+
 	public static void defrag(String sourceFileName, String targetFile,
 			String mappingFile) throws IOException {
-		DefragContextImpl context=new DefragContextImpl(sourceFileName,targetFile,mappingFile);
+		defrag(sourceFileName,targetFile,mappingFile,new NullListener());
+	}
+
+	public static void defrag(String sourceFileName, String targetFile,
+			String mappingFile, DefragmentListener listener) throws IOException {
+		DefragContextImpl context=new DefragContextImpl(sourceFileName,targetFile,mappingFile,listener);
 		int newClassCollectionID=0;
 		int targetIdentityID=0;
 		int targetUuidIndexID=0;
@@ -152,6 +157,11 @@ public class SlotDefragment {
 			BTreeClassIndexStrategy indexStrategy=(BTreeClassIndexStrategy) curClass.index();
 			final BTree btree=indexStrategy.btree();
 			command.processBTree(context,btree);
+		}
+	}
+	
+	private static class NullListener implements DefragmentListener {
+		public void notifyDefragmentInfo(DefragmentInfo info) {
 		}
 	}
 }
