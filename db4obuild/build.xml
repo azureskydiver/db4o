@@ -165,10 +165,7 @@
 		</delete>
 		<antcall target="copyjava1.1" />
 	
-		<!--remove source="1.1" and target="1.1" if javac 1.1 fails-->
 		<javac compiler="classic"
-			source="1.1" 
-			target="1.1"
 			fork="yes"
 			executable="${file.compiler.jdk1.3}"
 			srcdir="${dir.dist.java.temp.src.core}"
