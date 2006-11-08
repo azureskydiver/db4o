@@ -2,6 +2,8 @@
 
 package com.db4o.drs.db4o;
 
+import java.util.Iterator;
+
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ReplicationRecord;
@@ -329,7 +331,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	public void deleteAllInstances(Class clazz) {
 		Query q = _stream.query();
 		q.constrain(clazz);
-		ObjectSet objectSet = q.execute();
+		Iterator objectSet = q.execute().iterator();
 		while (objectSet.hasNext()) delete(objectSet.next());
 	}
 

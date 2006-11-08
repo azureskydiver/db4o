@@ -39,7 +39,6 @@
 	</target>
 
 	<target name="build-drs" depends="update-csharp-projects">
-		<echo message="AAA ${drs.net.bin.dir} ${file.name.dll.db4ounit}"/>
 		<property name="drs.dll" location="${drs.net.bin.dir}/drs.dll" />
 		
 		<csc outputfile="${drs.dll}"
@@ -294,7 +293,9 @@
 	</target>
 			
 	<target name="select-mono-assembly" if="mono">	
-		<property name="db4o.dll" value="${file.dll.mono}" />
+		<property name="db4o.dll" value="${file.dll.net}" />
+		<property name="db4ounit.dll" value="${file.dll.net.db4ounit}" />
+		<property name="csc.executable" value="gmcs" />
 	</target>
 	
 	<target name="select-db4o-assembly" depends="select-mono-assembly, select-dotnet-assembly">
