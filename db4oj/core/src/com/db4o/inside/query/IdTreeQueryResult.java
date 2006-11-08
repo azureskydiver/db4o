@@ -4,8 +4,6 @@ package com.db4o.inside.query;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.query.*;
-
 
 /**
  * @exclude
@@ -26,36 +24,8 @@ public class IdTreeQueryResult extends AbstractQueryResult{
 		}
 	}
 	
-	public Object get(int index) {
-		throw new NotImplementedException();
-	}
-	
-	public int getId(int index) {
-		throw new NotImplementedException();
-	}
-
-	public int indexOf(int id) {
-		throw new NotImplementedException();
-	}
-
 	public IntIterator4 iterateIDs() {
 		return new IntIterator4Adaptor(new TreeKeyIterator(_ids));
-	}
-
-	public void loadFromClassIndex(YapClass clazz) {
-		throw new NotImplementedException();
-	}
-
-	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
-		throw new NotImplementedException();
-	}
-
-	public void loadFromIdReader(YapReader reader) {
-		throw new NotImplementedException();
-	}
-
-	public void loadFromQuery(QQuery query) {
-		throw new NotImplementedException();
 	}
 
 	public int size() {
@@ -65,10 +35,6 @@ public class IdTreeQueryResult extends AbstractQueryResult{
 		return _ids.size();
 	}
 
-	public void sort(QueryComparator cmp) {
-		throw new NotImplementedException();
-	}
-	
     public AbstractQueryResult supportSort(){
     	return toIdList();
     }
@@ -76,6 +42,5 @@ public class IdTreeQueryResult extends AbstractQueryResult{
     public AbstractQueryResult supportElementAccess(){
     	return toIdList();
     }
-
-
+    
 }

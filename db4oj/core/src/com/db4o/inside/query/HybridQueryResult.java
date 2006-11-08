@@ -3,6 +3,7 @@
 package com.db4o.inside.query;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
 
@@ -14,13 +15,16 @@ public class HybridQueryResult extends AbstractQueryResult {
 	
 	private AbstractQueryResult _delegate;
 	
-	public HybridQueryResult(Transaction transaction, AbstractQueryResult delegate_) {
+	private final QueryEvaluationMode _mode;
+	
+	public HybridQueryResult(Transaction transaction, AbstractQueryResult delegate_, QueryEvaluationMode mode) {
 		super(transaction);
 		_delegate = delegate_;
+		_mode = mode;
 	}
 	
-	public HybridQueryResult(Transaction transaction) {
-		this(transaction, new LazyQueryResult(transaction));
+	public HybridQueryResult(Transaction transaction, QueryEvaluationMode mode) {
+		this(transaction, new LazyQueryResult(transaction), mode);
 	}
 
 	public Object get(int index) {
@@ -48,14 +52,17 @@ public class HybridQueryResult extends AbstractQueryResult {
 
 	public void loadFromClassIndex(YapClass clazz) {
 		_delegate.loadFromClassIndex(clazz);
+		createIndexSnapshotIfModeRequires();
 	}
 
 	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
 		_delegate.loadFromClassIndexes(iterator);
+		createIndexSnapshotIfModeRequires();
 	}
 
 	public void loadFromIdReader(YapReader reader) {
 		_delegate.loadFromIdReader(reader);
+		createIndexSnapshotIfModeRequires();
 	}
 
 	public void loadFromQuery(QQuery query) {
@@ -63,6 +70,7 @@ public class HybridQueryResult extends AbstractQueryResult {
 			_delegate = new IdListQueryResult(transaction());
 		}
 		_delegate.loadFromQuery(query);
+		createIndexSnapshotIfModeRequires();
 	}
 
 	public int size() {
@@ -74,6 +82,16 @@ public class HybridQueryResult extends AbstractQueryResult {
 		_delegate = _delegate.supportSort();
 		_delegate.sort(cmp);
 	}
-
+	
+	public AbstractQueryResult createIndexSnapshot(){
+		createIndexSnapshotIfModeRequires();
+		return this;
+	}
+	
+	private void createIndexSnapshotIfModeRequires(){
+		if(_mode == QueryEvaluationMode.SNAPSHOT){
+			_delegate = _delegate.createIndexSnapshot();
+		}
+	}
 
 }

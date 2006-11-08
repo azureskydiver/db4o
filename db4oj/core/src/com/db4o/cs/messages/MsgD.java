@@ -55,17 +55,6 @@ public class MsgD extends Msg{
 		return getWriterForLength(a_trans, 0);
 	}
 	
-	public final MsgD getWriterForBoolean(Transaction a_trans, boolean val){
-		MsgD message = getWriterForLength(a_trans, 1);
-		message.writeBoolean(val);
-		return message;
-	}
-
-    private void writeBoolean(boolean val) {
-    	byte b = val ? (byte)1 : (byte)0;
-    	_payLoad.append(b);
-	}
-
 	public final MsgD getWriterForInts(Transaction a_trans, int[] ints) {
         MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH * ints.length);
         for (int i = 0; i < ints.length; i++) {

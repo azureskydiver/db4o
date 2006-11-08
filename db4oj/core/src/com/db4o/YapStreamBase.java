@@ -2,8 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.config.Configuration;
-import com.db4o.config.Entry;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
@@ -353,7 +352,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     public abstract int converterVersion();
 
-    public abstract AbstractQueryResult newQueryResult(Transaction trans, boolean lazy);
+    public abstract AbstractQueryResult newQueryResult(Transaction trans, QueryEvaluationMode mode);
 
     protected void createStringIO(byte encoding) {
     	setStringIo(YapStringIO.forEncoding(encoding));

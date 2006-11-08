@@ -5,6 +5,7 @@ package com.db4o.inside.query;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.query.*;
 
 
 /**
@@ -96,18 +97,48 @@ public abstract class AbstractQueryResult implements QueryResult {
     	return new IdTreeQueryResult(transaction(), this);
     }
     
-	public abstract void loadFromClassIndex(YapClass clazz);
-
-	public abstract void loadFromQuery(QQuery query);
-
-	public abstract void loadFromClassIndexes(YapClassCollectionIterator iterator);
-
-	public abstract void loadFromIdReader(YapReader reader);
-	
 	public Config4Impl config(){
 		return stream().config();
 	}
 
-	public abstract int getId(int index);
+	public int size() {
+		throw new NotImplementedException();
+	}
+
+	public void sort(QueryComparator cmp) {
+		throw new NotImplementedException();
+	}
+
+	public Object get(int index) {
+		throw new NotImplementedException();
+	}
+	
+	public int getId(int index) {
+		throw new NotImplementedException();
+	}
+
+	public int indexOf(int id) {
+		throw new NotImplementedException();
+	}
+
+	public void loadFromClassIndex(YapClass clazz) {
+		throw new NotImplementedException();
+	}
+
+	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
+		throw new NotImplementedException();
+	}
+
+	public void loadFromIdReader(YapReader reader) {
+		throw new NotImplementedException();
+	}
+
+	public void loadFromQuery(QQuery query) {
+		throw new NotImplementedException();
+	}
+	
+	public AbstractQueryResult createIndexSnapshot(){
+		return this;
+	}
 
 }

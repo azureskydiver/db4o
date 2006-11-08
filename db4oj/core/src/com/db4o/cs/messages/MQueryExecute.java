@@ -3,16 +3,17 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.cs.*;
 import com.db4o.inside.query.*;
 
 public final class MQueryExecute extends MsgQuery {
 	
-	private boolean _lazy = false;
+	private QueryEvaluationMode _evaluationMode;
 	
 	public boolean processAtServer(YapServerThread serverThread) {
 		unmarshall();
-        writeQueryResult(execute(), serverThread, _lazy);
+        writeQueryResult(execute(), serverThread, _evaluationMode);
 		return true;
 	}
 
@@ -26,7 +27,8 @@ public final class MQueryExecute extends MsgQuery {
 
             QQuery query = (QQuery) stream().unmarshall(_payLoad);
             query.unmarshall(transaction());
-            _lazy = query.isLazy();
+            
+            _evaluationMode = query.evaluationMode();
             
 			return executeFully(query);
 			
@@ -35,11 +37,11 @@ public final class MQueryExecute extends MsgQuery {
 
 	private AbstractQueryResult executeFully(QQuery query) {
 		try {
-			AbstractQueryResult qr = newQueryResult(query.isLazy());
+			AbstractQueryResult qr = newQueryResult(query.evaluationMode());
 			qr.loadFromQuery(query);
 			return qr;
 		} catch (Exception e) {
-			return newQueryResult(false); 
+			return newQueryResult(query.evaluationMode()); 
 		}
 	}
 	

@@ -4,7 +4,7 @@ package com.db4o.config;
 
 /**
  * interface to configure the freespace system to be used.
- * All methods should be called before opening database files.
+ * <br><br>All methods should be called before opening database files.
  * If db4o is instructed to exchange the system 
  * ( {@link #useIndexSystem()} , {@link #useRamSystem()} )
  * this will happen on opening the database file.<br><br>

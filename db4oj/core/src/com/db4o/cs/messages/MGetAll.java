@@ -3,27 +3,29 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.cs.*;
 import com.db4o.inside.query.*;
 
 public final class MGetAll extends MsgQuery {
 	
 	public final boolean processAtServer(YapServerThread serverThread) {
-		boolean lazy = readBoolean();
-		writeQueryResult(getAll(lazy), serverThread, lazy);
+		QueryEvaluationMode evaluationMode = QueryEvaluationMode.fromInt(readInt());
+		writeQueryResult(getAll(evaluationMode), serverThread, evaluationMode);
 		return true;
 	}
 
-	private AbstractQueryResult getAll(boolean lazy) {
+	private AbstractQueryResult getAll(QueryEvaluationMode mode) {
 		synchronized (streamLock()) {
 			try {
-				return file().getAll(transaction(), lazy);
+				return file().getAll(transaction(), mode);
 			} catch (Exception e) {
 				if(Debug.atHome){
 					e.printStackTrace();
 				}
 			}
-			return newQueryResult(false);
+			return newQueryResult(mode);
 		}
 	}
+	
 }

@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.*;
@@ -33,8 +34,10 @@ public abstract class QQueryBase implements Unversioned {
     
     public String i_field;
     
-    public boolean _lazy;
-
+    private transient QueryEvaluationMode _evaluationMode;
+    
+    public int _evaluationModeAsInt;
+    
     public QueryComparator _comparator;
     
     private transient final QQuery _this;
@@ -580,24 +583,26 @@ public abstract class QQueryBase implements Unversioned {
             ((QCon)i.current()).setOrdering(ordering);
         }
     }
-
+    
     public void marshall() {
+    	_evaluationModeAsInt = _evaluationMode.asInt();
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
             ((QCon)i.current()).getRoot().marshall();
         }
     }
 
-    void removeConstraint(QCon a_constraint) {
-        i_constraints.remove(a_constraint);
-    }
-
     public void unmarshall(final Transaction a_trans) {
+    	_evaluationMode = QueryEvaluationMode.fromInt(_evaluationModeAsInt);
         i_trans = a_trans;
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
             ((QCon)i.current()).unmarshall(a_trans);
         }
+    }
+
+    void removeConstraint(QCon a_constraint) {
+        i_constraints.remove(a_constraint);
     }
 
     Constraint toConstraint(final Collection4 constraints) {       
@@ -649,12 +654,12 @@ public abstract class QQueryBase implements Unversioned {
 		return _comparator;
 	}
 	
-	public boolean isLazy(){
-		return _lazy;
+	public QueryEvaluationMode evaluationMode(){
+		return _evaluationMode;
 	}
 	
-	public void setLazy(boolean flag){
-		_lazy = flag;
+	public void evaluationMode(QueryEvaluationMode mode){
+		_evaluationMode = mode;
 	}
 
 }
