@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.common.soda.util;
 
-
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -12,10 +11,10 @@ import com.db4o.db4ounit.Db4oUnitPlatform;
 public class TCompare {
 
     public static boolean isEqual(Object a_compare, Object a_with) {
-        return isEqual(a_compare, a_with, null, new Stack());
+        return isEqual(a_compare, a_with, null, new ArrayList());
     }
 
-    private static boolean isEqual(Object a_compare, Object a_with, String a_path, Stack a_stack) {        
+    private static boolean isEqual(Object a_compare, Object a_with, String a_path, List a_list) {        
 
         if (a_compare == null) {
             return a_with == null;
@@ -33,23 +32,23 @@ public class TCompare {
         }
 
         // takes care of repeating calls to the same object
-        if (a_stack.contains(a_compare)) {
+        if (a_list.contains(a_compare)) {
             return true;
         }
-        a_stack.push(a_compare);
+        a_list.add(a_compare);
         
         if (a_compare.getClass().isArray()) {
-        	return areArraysEqual(normalizeNArray(a_compare), normalizeNArray(a_with), a_path, a_stack);
+        	return areArraysEqual(normalizeNArray(a_compare), normalizeNArray(a_with), a_path, a_list);
         }
         
         if (hasPublicConstructor(a_compare.getClass())) {        
-        	return areFieldsEqual(a_compare, a_with, a_path, a_stack);
+        	return areFieldsEqual(a_compare, a_with, a_path, a_list);
         }
         return a_compare.equals(a_with);
     }
 
 	private static boolean areFieldsEqual(final Object a_compare, final Object a_with,
-			final String a_path, final Stack a_stack) {
+			final String a_path, final List a_list) {
 		String path = getPath(a_compare, a_with, a_path);
         Field fields[] = a_compare.getClass().getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
@@ -57,7 +56,7 @@ public class TCompare {
 			if (Db4oUnitPlatform.isStoreableField(field)) {
                 Platform4.setAccessible(field);
                 try {
-                    if (!isFieldEqual(field, a_compare, a_with, path, a_stack)) {
+                    if (!isFieldEqual(field, a_compare, a_with, path, a_list)) {
                     	return false;
                     }
                 } catch (Exception e) {
@@ -71,10 +70,10 @@ public class TCompare {
 	}
 
 	private static boolean isFieldEqual(Field field, final Object a_compare,
-			final Object a_with, String path, final Stack a_stack) {
+			final Object a_with, String path, final List a_list) {
 		Object compare = getFieldValue(field, a_compare);
 		Object with = getFieldValue(field, a_with);
-		return isEqual(compare, with, path + field.getName() + ":", a_stack);
+		return isEqual(compare, with, path + field.getName() + ":", a_list);
 	}
 
 	private static Object getFieldValue(Field field, final Object obj) {
@@ -88,7 +87,7 @@ public class TCompare {
 	}
 
 	private static boolean areArraysEqual(Object compare, Object with,
-			String path, Stack a_stack) {
+			String path, List a_list) {
 		int len = Array.getLength(compare);
 		if (len != Array.getLength(with)) {
 		    return false;
@@ -96,7 +95,7 @@ public class TCompare {
 		    for (int j = 0; j < len; j++) {
 		        Object elementCompare = Array.get(compare, j);
 		        Object elementWith = Array.get(with, j);
-		        if (!isEqual(elementCompare, elementWith, path, a_stack)) {
+		        if (!isEqual(elementCompare, elementWith, path, a_list)) {
 		            return false;
 		        }
 		    }
