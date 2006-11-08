@@ -1,4 +1,4 @@
-namespace com.db4o.drs.test
+namespace Db4objects.Db4o.Drs.Test
 {
     public abstract class DrsTestCase : Db4oUnit.TestCase, Db4oUnit.TestLifeCycle
     {
@@ -22,9 +22,9 @@ namespace com.db4o.drs.test
                                          typeof(Replicated)};
         }
 
-        private com.db4o.drs.test.DrsFixture _a;
+        private Db4objects.Db4o.Drs.Test.DrsFixture _a;
 
-        private com.db4o.drs.test.DrsFixture _b;
+        private Db4objects.Db4o.Drs.Test.DrsFixture _b;
 
         public virtual void SetUp()
         {
@@ -63,8 +63,8 @@ namespace com.db4o.drs.test
 
         protected virtual void Configure()
         {
-            com.db4o.Db4o.Configure().GenerateUUIDs(int.MaxValue);
-            com.db4o.Db4o.Configure().GenerateVersionNumbers(int.MaxValue);
+            Db4objects.Db4o.Db4o.Configure().GenerateUUIDs(int.MaxValue);
+            Db4objects.Db4o.Db4o.Configure().GenerateVersionNumbers(int.MaxValue);
         }
 
         protected virtual void Reopen()
@@ -91,43 +91,43 @@ namespace com.db4o.drs.test
             _b.Close();
         }
 
-        public virtual void A(com.db4o.drs.test.DrsFixture fixture)
+        public virtual void A(Db4objects.Db4o.Drs.Test.DrsFixture fixture)
         {
             _a = fixture;
         }
 
-        public virtual void B(com.db4o.drs.test.DrsFixture fixture)
+        public virtual void B(Db4objects.Db4o.Drs.Test.DrsFixture fixture)
         {
             _b = fixture;
         }
 
-        public virtual com.db4o.drs.test.DrsFixture A()
+        public virtual Db4objects.Db4o.Drs.Test.DrsFixture A()
         {
             return _a;
         }
 
-        public virtual com.db4o.drs.test.DrsFixture B()
+        public virtual Db4objects.Db4o.Drs.Test.DrsFixture B()
         {
             return _b;
         }
 
-        protected virtual void EnsureOneInstance(com.db4o.drs.inside.TestableReplicationProviderInside
+        protected virtual void EnsureOneInstance(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside
              provider, System.Type clazz)
         {
             EnsureInstanceCount(provider, clazz, 1);
         }
 
-        protected virtual void EnsureInstanceCount(com.db4o.drs.inside.TestableReplicationProviderInside
+        protected virtual void EnsureInstanceCount(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside
              provider, System.Type clazz, int count)
         {
-            com.db4o.ObjectSet objectSet = provider.GetStoredObjects(clazz);
+            Db4objects.Db4o.ObjectSet objectSet = provider.GetStoredObjects(clazz);
             Db4oUnit.Assert.AreEqual(count, objectSet.Size());
         }
 
-        protected virtual object GetOneInstance(com.db4o.drs.inside.TestableReplicationProviderInside
+        protected virtual object GetOneInstance(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside
              provider, System.Type clazz)
         {
-            com.db4o.ObjectSet objectSet = provider.GetStoredObjects(clazz);
+            Db4objects.Db4o.ObjectSet objectSet = provider.GetStoredObjects(clazz);
             if (1 != objectSet.Size())
             {
                 throw new j4o.lang.RuntimeException("Found more than one instance of + " + clazz
@@ -136,12 +136,12 @@ namespace com.db4o.drs.test
             return objectSet.Next();
         }
 
-        protected virtual void ReplicateAll(com.db4o.drs.inside.TestableReplicationProviderInside
-             providerFrom, com.db4o.drs.inside.TestableReplicationProviderInside providerTo)
+        protected virtual void ReplicateAll(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside
+             providerFrom, Db4objects.Db4o.Drsinside.TestableReplicationProviderInside providerTo)
         {
-            com.db4o.drs.ReplicationSession replication = com.db4o.drs.Replication.Begin(providerFrom
+            Db4objects.Db4o.DrsReplicationSession replication = Db4objects.Db4o.DrsReplication.Begin(providerFrom
                 , providerTo);
-            com.db4o.ObjectSet allObjects = providerFrom.ObjectsChangedSinceLastReplication();
+            Db4objects.Db4o.ObjectSet allObjects = providerFrom.ObjectsChangedSinceLastReplication();
             if (!allObjects.HasNext())
             {
                 throw new j4o.lang.RuntimeException("Can't find any objects to replicate");
@@ -154,13 +154,13 @@ namespace com.db4o.drs.test
             replication.Commit();
         }
 
-        protected virtual void ReplicateAll(com.db4o.drs.inside.TestableReplicationProviderInside
-             from, com.db4o.drs.inside.TestableReplicationProviderInside to, com.db4o.drs.ReplicationEventListener
+        protected virtual void ReplicateAll(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside
+             from, Db4objects.Db4o.Drsinside.TestableReplicationProviderInside to, Db4objects.Db4o.DrsReplicationEventListener
              listener)
         {
-            com.db4o.drs.ReplicationSession replication = com.db4o.drs.Replication.Begin(from
+            Db4objects.Db4o.DrsReplicationSession replication = Db4objects.Db4o.DrsReplication.Begin(from
                 , to, listener);
-            com.db4o.ObjectSet allObjects = from.ObjectsChangedSinceLastReplication();
+            Db4objects.Db4o.ObjectSet allObjects = from.ObjectsChangedSinceLastReplication();
             while (allObjects.HasNext())
             {
                 object changed = allObjects.Next();
@@ -180,13 +180,13 @@ namespace com.db4o.drs.test
             B().Provider().Commit();
         }
 
-        protected virtual void ReplicateClass(com.db4o.drs.inside.TestableReplicationProviderInside
-             providerA, com.db4o.drs.inside.TestableReplicationProviderInside providerB, System.Type
+        protected virtual void ReplicateClass(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside
+             providerA, Db4objects.Db4o.Drsinside.TestableReplicationProviderInside providerB, System.Type
              clazz)
         {
-            com.db4o.drs.ReplicationSession replication = com.db4o.drs.Replication.Begin(providerA
+            Db4objects.Db4o.DrsReplicationSession replication = Db4objects.Db4o.DrsReplication.Begin(providerA
                 , providerB);
-            com.db4o.ObjectSet allObjects = providerA.ObjectsChangedSinceLastReplication(clazz
+            Db4objects.Db4o.ObjectSet allObjects = providerA.ObjectsChangedSinceLastReplication(clazz
                 );
             while (allObjects.HasNext())
             {

@@ -1,13 +1,13 @@
-namespace com.db4o.drs.test
+namespace Db4objects.Db4o.Drs.Test
 {
-    public class ReplicationTraversalTest : com.db4o.drs.test.DrsTestCase
+    public class ReplicationTraversalTest : Db4objects.Db4o.Drs.Test.DrsTestCase
     {
 
         public virtual void Test()
         {
-            com.db4o.drs.test.Replicated obj1 = new com.db4o.drs.test.Replicated("1");
-            com.db4o.drs.test.Replicated obj2 = new com.db4o.drs.test.Replicated("2");
-            com.db4o.drs.test.Replicated obj3 = new com.db4o.drs.test.Replicated("3");
+            Db4objects.Db4o.Drs.Test.Replicated obj1 = new Db4objects.Db4o.Drs.Test.Replicated("1");
+            Db4objects.Db4o.Drs.Test.Replicated obj2 = new Db4objects.Db4o.Drs.Test.Replicated("2");
+            Db4objects.Db4o.Drs.Test.Replicated obj3 = new Db4objects.Db4o.Drs.Test.Replicated("3");
             obj1.SetLink(obj2);
             obj2.SetLink(obj3);
             obj3.SetLink(obj1);
@@ -18,7 +18,7 @@ namespace com.db4o.drs.test
             EnsureContains(A().Provider(), obj3);
         }
 
-        protected virtual void EnsureContains(com.db4o.drs.inside.TestableReplicationProviderInside provider, Replicated obj)
+        protected virtual void EnsureContains(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside provider, Replicated obj)
         {
             ObjectSet objectSet = provider.GetStoredObjects(typeof(Replicated));
             Db4oUnit.Assert.IsTrue(objectSet.Contains(obj));

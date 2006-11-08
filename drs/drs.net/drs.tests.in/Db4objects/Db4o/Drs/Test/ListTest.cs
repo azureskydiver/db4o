@@ -1,6 +1,6 @@
-namespace com.db4o.drs.test
+namespace Db4objects.Db4o.Drs.Test
 {
-    public class ListTest : com.db4o.drs.test.DrsTestCase
+    public class ListTest : Db4objects.Db4o.Drs.Test.DrsTestCase
     {
         public virtual void Test()
         {
@@ -19,9 +19,9 @@ namespace com.db4o.drs.test
 
         private void StoreListToProviderA()
         {
-            com.db4o.drs.test.ListHolder lh = CreateHolder();
-            com.db4o.drs.test.ListContent lc1 = new com.db4o.drs.test.ListContent("c1");
-            com.db4o.drs.test.ListContent lc2 = new com.db4o.drs.test.ListContent("c2");
+            Db4objects.Db4o.Drs.Test.ListHolder lh = CreateHolder();
+            Db4objects.Db4o.Drs.Test.ListContent lc1 = new Db4objects.Db4o.Drs.Test.ListContent("c1");
+            Db4objects.Db4o.Drs.Test.ListContent lc2 = new Db4objects.Db4o.Drs.Test.ListContent("c2");
             lh.Add(lc1);
             lh.Add(lc2);
             A().Provider().StoreNew(lh);
@@ -29,9 +29,9 @@ namespace com.db4o.drs.test
             EnsureContent(A().Provider(), new string[] { "h1" }, new string[] { "c1", "c2" });
         }
 
-        protected virtual com.db4o.drs.test.ListHolder CreateHolder()
+        protected virtual Db4objects.Db4o.Drs.Test.ListHolder CreateHolder()
         {
-            com.db4o.drs.test.ListHolder lh = new com.db4o.drs.test.ListHolder("h1");
+            Db4objects.Db4o.Drs.Test.ListHolder lh = new Db4objects.Db4o.Drs.Test.ListHolder("h1");
             lh.SetList(new System.Collections.ArrayList());
             return lh;
         }
@@ -45,10 +45,10 @@ namespace com.db4o.drs.test
 
         private void ModifyInProviderB()
         {
-            com.db4o.drs.test.ListHolder lh = (com.db4o.drs.test.ListHolder)GetOneInstance(B().Provider(), typeof(com.db4o.drs.test.ListHolder));
+            Db4objects.Db4o.Drs.Test.ListHolder lh = (Db4objects.Db4o.Drs.Test.ListHolder)GetOneInstance(B().Provider(), typeof(Db4objects.Db4o.Drs.Test.ListHolder));
             lh.SetName("h2");
-            com.db4o.drs.test.ListContent lc1 = (com.db4o.drs.test.ListContent)lh.GetList()[0];//.Get(0);
-            com.db4o.drs.test.ListContent lc2 = (com.db4o.drs.test.ListContent)lh.GetList()[1];//.Get(1);
+            Db4objects.Db4o.Drs.Test.ListContent lc1 = (Db4objects.Db4o.Drs.Test.ListContent)lh.GetList()[0];//.Get(0);
+            Db4objects.Db4o.Drs.Test.ListContent lc2 = (Db4objects.Db4o.Drs.Test.ListContent)lh.GetList()[1];//.Get(1);
             lc1.SetName("co1");
             lc2.SetName("co2");
             B().Provider().Update(lc1);
@@ -71,10 +71,10 @@ namespace com.db4o.drs.test
 
         private void AddElementInProviderA()
         {
-            com.db4o.drs.test.ListHolder lh = (com.db4o.drs.test.ListHolder)GetOneInstance(A(
-                ).Provider(), typeof(com.db4o.drs.test.ListHolder));
+            Db4objects.Db4o.Drs.Test.ListHolder lh = (Db4objects.Db4o.Drs.Test.ListHolder)GetOneInstance(A(
+                ).Provider(), typeof(Db4objects.Db4o.Drs.Test.ListHolder));
             lh.SetName("h3");
-            com.db4o.drs.test.ListContent lc3 = new com.db4o.drs.test.ListContent("co3");
+            Db4objects.Db4o.Drs.Test.ListContent lc3 = new Db4objects.Db4o.Drs.Test.ListContent("co3");
             A().Provider().StoreNew(lc3);
             lh.GetList().Add(lc3);
             A().Provider().Update(lh.GetList());
@@ -86,7 +86,7 @@ namespace com.db4o.drs.test
 
         private void ReplicateHolderStep3()
         {
-            ReplicateClass(A().Provider(), B().Provider(), typeof(com.db4o.drs.test.ListHolder
+            ReplicateClass(A().Provider(), B().Provider(), typeof(Db4objects.Db4o.Drs.Test.ListHolder
                 ));
             EnsureContent(A().Provider(), new string[] { "h3" }, new string[] { "co1", "co2", 
 				"co3" });
@@ -94,22 +94,22 @@ namespace com.db4o.drs.test
 				"co3" });
         }
 
-        private void EnsureContent(com.db4o.drs.inside.TestableReplicationProviderInside
+        private void EnsureContent(Db4objects.Db4o.Drsinside.TestableReplicationProviderInside
             provider, string[] holderNames, string[] contentNames)
         {
             int holderCount = holderNames.Length;
-            EnsureInstanceCount(provider, typeof(com.db4o.drs.test.ListHolder), holderCount);
+            EnsureInstanceCount(provider, typeof(Db4objects.Db4o.Drs.Test.ListHolder), holderCount);
             int i = 0;
-            com.db4o.ObjectSet objectSet = provider.GetStoredObjects(typeof(com.db4o.drs.test.ListHolder
+            Db4objects.Db4o.ObjectSet objectSet = provider.GetStoredObjects(typeof(Db4objects.Db4o.Drs.Test.ListHolder
                 ));
             while (objectSet.HasNext())
             {
-                com.db4o.drs.test.ListHolder lh = (com.db4o.drs.test.ListHolder)objectSet.Next();
+                Db4objects.Db4o.Drs.Test.ListHolder lh = (Db4objects.Db4o.Drs.Test.ListHolder)objectSet.Next();
                 Db4oUnit.Assert.AreEqual(holderNames[i], lh.GetName());
                 System.Collections.IList list = lh.GetList();
                 for (int j = 0; j < contentNames.Length; j++)
                 {
-                    com.db4o.drs.test.ListContent lc = (com.db4o.drs.test.ListContent)list[j];//.Get(j);
+                    Db4objects.Db4o.Drs.Test.ListContent lc = (Db4objects.Db4o.Drs.Test.ListContent)list[j];//.Get(j);
                     string name = lc.GetName();
                     Db4oUnit.Assert.AreEqual(contentNames[j], name);
                 }

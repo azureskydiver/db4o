@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace com.db4o.drs.test
+namespace Db4objects.Db4o.Drs.Test
 {
     public class CollectionHolder
     {
