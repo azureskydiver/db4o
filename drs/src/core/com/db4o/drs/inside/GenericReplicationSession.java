@@ -1,5 +1,7 @@
 package com.db4o.drs.inside;
 
+import java.util.Iterator;
+
 import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.ReplicationProvider;
@@ -131,7 +133,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	private void replicateDeletions(Class extent, ReplicationProviderInside provider) {
 		_isReplicatingOnlyDeletions = true;
 		try {
-			ObjectSet instances = provider.getStoredObjects(extent);
+			Iterator instances = provider.getStoredObjects(extent).iterator();
 			while (instances.hasNext()) replicate(instances.next());
 		} finally {
 			_isReplicatingOnlyDeletions = false;
