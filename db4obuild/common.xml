@@ -111,7 +111,7 @@
 	
 	<target name="install-javatocsharp-plugin">
 			
-		<property name="javatocsharp.core.dir" location="../javatocsharp.core" />
+		<property name="javatocsharp.core.dir" location="../javatocsharp/javatocsharp.core" />
 		
 		<mkdir dir="${javatocsharp.core.dir}/bin" />
 		
