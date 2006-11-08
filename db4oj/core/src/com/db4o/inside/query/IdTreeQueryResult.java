@@ -10,18 +10,11 @@ import com.db4o.foundation.*;
  */
 public class IdTreeQueryResult extends AbstractQueryResult{
 	
-	private TreeInt _ids;
+	private Tree _ids;
 
-	public IdTreeQueryResult(Transaction transaction, QueryResult queryResult) {
+	public IdTreeQueryResult(Transaction transaction, IntIterator4 ids) {
 		super(transaction);
-		IntIterator4 i = queryResult.iterateIDs();
-		if(! i.moveNext()){
-			return;
-		}
-		_ids = new TreeInt(i.currentInt());
-		while(i.moveNext()){
-			_ids = (TreeInt) _ids.add(new TreeInt(i.currentInt()));
-		}
+		_ids = TreeInt.addAll(null, ids);
 	}
 	
 	public IntIterator4 iterateIDs() {

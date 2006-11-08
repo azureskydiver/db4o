@@ -15,16 +15,19 @@ public class HybridQueryResult extends AbstractQueryResult {
 	
 	private AbstractQueryResult _delegate;
 	
-	private final QueryEvaluationMode _mode;
-	
-	public HybridQueryResult(Transaction transaction, AbstractQueryResult delegate_, QueryEvaluationMode mode) {
+	public HybridQueryResult(Transaction transaction, QueryEvaluationMode mode) {
 		super(transaction);
-		_delegate = delegate_;
-		_mode = mode;
+		_delegate = forMode(transaction, mode);
 	}
 	
-	public HybridQueryResult(Transaction transaction, QueryEvaluationMode mode) {
-		this(transaction, new LazyQueryResult(transaction), mode);
+	private static AbstractQueryResult forMode(Transaction transaction, QueryEvaluationMode mode){
+		if(mode == QueryEvaluationMode.LAZY){
+			return new LazyQueryResult(transaction); 
+		}
+		if(mode == QueryEvaluationMode.SNAPSHOT){
+			return new SnapShotQueryResult(transaction); 
+		}
+		return new IdListQueryResult(transaction);
 	}
 
 	public Object get(int index) {
@@ -52,17 +55,14 @@ public class HybridQueryResult extends AbstractQueryResult {
 
 	public void loadFromClassIndex(YapClass clazz) {
 		_delegate.loadFromClassIndex(clazz);
-		createIndexSnapshotIfModeRequires();
 	}
 
 	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
 		_delegate.loadFromClassIndexes(iterator);
-		createIndexSnapshotIfModeRequires();
 	}
 
 	public void loadFromIdReader(YapReader reader) {
 		_delegate.loadFromIdReader(reader);
-		createIndexSnapshotIfModeRequires();
 	}
 
 	public void loadFromQuery(QQuery query) {
@@ -70,7 +70,6 @@ public class HybridQueryResult extends AbstractQueryResult {
 			_delegate = new IdListQueryResult(transaction());
 		}
 		_delegate.loadFromQuery(query);
-		createIndexSnapshotIfModeRequires();
 	}
 
 	public int size() {
@@ -81,17 +80,6 @@ public class HybridQueryResult extends AbstractQueryResult {
 	public void sort(QueryComparator cmp) {
 		_delegate = _delegate.supportSort();
 		_delegate.sort(cmp);
-	}
-	
-	public AbstractQueryResult createIndexSnapshot(){
-		createIndexSnapshotIfModeRequires();
-		return this;
-	}
-	
-	private void createIndexSnapshotIfModeRequires(){
-		if(_mode == QueryEvaluationMode.SNAPSHOT){
-			_delegate = _delegate.createIndexSnapshot();
-		}
 	}
 
 }

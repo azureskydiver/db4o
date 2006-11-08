@@ -18,6 +18,18 @@ public class TreeInt extends Tree implements ReadWriteable {
 	public static TreeInt removeLike(TreeInt tree, int value) {
 		return (TreeInt) Tree.removeLike(tree, new TreeInt(value));
 	}
+	
+	public static Tree addAll(Tree tree, IntIterator4 iter){
+		if(! iter.moveNext()){
+			return tree;
+		}
+		TreeInt firstAdded = new TreeInt(iter.currentInt());
+		tree = Tree.add(tree, firstAdded);
+		while(iter.moveNext()){
+			tree = tree.add( new TreeInt(iter.currentInt()));
+		}
+		return tree;
+	}
 
 	public int _key;
 

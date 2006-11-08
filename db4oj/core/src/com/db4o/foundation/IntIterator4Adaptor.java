@@ -13,6 +13,10 @@ public class IntIterator4Adaptor implements IntIterator4{
 	public IntIterator4Adaptor(Iterator4 iterator) {
 		_iterator = iterator;
 	}
+	
+	public IntIterator4Adaptor(Iterable4 iterable){
+		this(iterable.iterator());
+	}
 
 	public int currentInt() {
 		return ((Integer)current()).intValue();

@@ -18,7 +18,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	public AbstractQueryResult(Transaction transaction) {
 		_transaction = transaction;
 	}
-
+	
 	public final Object activate(Object obj) {
 		stream().activate1(_transaction, obj, config().activationDepth());
 		return obj;
@@ -94,7 +94,7 @@ public abstract class AbstractQueryResult implements QueryResult {
     }
     
     protected AbstractQueryResult toIdTree(){
-    	return new IdTreeQueryResult(transaction(), this);
+    	return new IdTreeQueryResult(transaction(), iterateIDs());
     }
     
 	public Config4Impl config(){
@@ -135,10 +135,6 @@ public abstract class AbstractQueryResult implements QueryResult {
 
 	public void loadFromQuery(QQuery query) {
 		throw new NotImplementedException();
-	}
-	
-	public AbstractQueryResult createIndexSnapshot(){
-		return this;
 	}
 
 }

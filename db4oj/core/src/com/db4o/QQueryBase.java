@@ -357,20 +357,36 @@ public abstract class QQueryBase implements Unversioned {
     		checkDuplicates = checkDuplicates_;
 		}
     }
-
+    
+    public Iterator4 executeSnapshot(){
+    	
+		final CreateCandidateCollectionResult r = createCandidateCollection();
+		
+        final Collection4 executionPath = executionPath(r);
+        
+        Iterator4 candidatesIterator = new Iterator4Impl(r.candidateCollection);
+        
+        Collection4 snapshots = new Collection4();
+        while(candidatesIterator.moveNext()){
+        	QCandidates candidates = (QCandidates) candidatesIterator.current(); 
+        	snapshots.add( candidates.executeSnapshot(executionPath));
+        }
+        
+        Iterator4 snapshotsIterator = snapshots.iterator();
+        final CompositeIterator4 resultingIDs = new CompositeIterator4(snapshotsIterator);
+        
+        if(!r.checkDuplicates){
+        	return resultingIDs;
+        }
+        
+		return checkDuplicates(resultingIDs);
+    }
     
     public Iterator4 executeLazy(){
     	
 		final CreateCandidateCollectionResult r = createCandidateCollection();
 		
-        final boolean topLevel = r.topLevel;
-        
-        
-        if (Debug.queries) {
-        	logConstraints();
-        }
-        
-        final Collection4 executionPath = topLevel ? null : fieldPathFromTop();
+        final Collection4 executionPath = executionPath(r);
         
         Iterator4 candidateCollection = new Iterator4Impl(r.candidateCollection);
         
@@ -380,29 +396,33 @@ public abstract class QQueryBase implements Unversioned {
 			}
         };
         
-        CompositeIterator4 executeAllCandidates = new CompositeIterator4(executeCandidates);
+        CompositeIterator4 resultingIDs = new CompositeIterator4(executeCandidates);
         
-        MappingIterator checkDuplicates = new MappingIterator(executeAllCandidates) {
-        	
+        if(!r.checkDuplicates){
+        	return resultingIDs;
+        }
+        
+		return checkDuplicates(resultingIDs);
+    }
+
+	private MappingIterator checkDuplicates(CompositeIterator4 executeAllCandidates) {
+		return new MappingIterator(executeAllCandidates) {
         	private TreeInt ids = new TreeInt(0);
-		
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
-				if(r.checkDuplicates){
-					if(ids.find(id) != null){
-						return MappingIterator.SKIP;
-					}
-					ids = (TreeInt)ids.add(new TreeInt(id));
+				if(ids.find(id) != null){
+					return MappingIterator.SKIP;
 				}
+				ids = (TreeInt)ids.add(new TreeInt(id));
 				return current;
 			}
 
 		};
-		
-		return checkDuplicates;
-		
-    }
-    
+	}
+
+	private Collection4 executionPath(final CreateCandidateCollectionResult r) {
+		return r.topLevel ? null : fieldPathFromTop();
+	}
 
     public void executeLocal(final IdListQueryResult result) {
         
