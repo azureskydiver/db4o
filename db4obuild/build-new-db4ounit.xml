@@ -85,10 +85,6 @@
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-compact-2005.csproj">
-			<sources refid="db4ounit.files" />
-		</updatecsharpproject>
-		
 		<updateAssemblyInfoFiles srcdir="${db4ounit.net.src.dir}" />
 	</target>
 	
