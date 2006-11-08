@@ -1,7 +1,7 @@
 using System;
-using com.db4o.reflect;
+using Db4objects.Db4o.Reflect;
 
-namespace com.db4o.drs.inside
+namespace Db4objects.Db4o.Drs.Inside
 {
 	/// <summary>
 	/// Platform dependent code goes here to minimize manually
@@ -9,7 +9,7 @@ namespace com.db4o.drs.inside
 	/// </summary>
 	public class ReplicationPlatform
 	{
-        public static void CopyCollectionState(object original, object destination, com.db4o.drs.inside.CounterpartFinder
+        public static void CopyCollectionState(object original, object destination, Db4objects.Db4o.Drs.Inside.ICounterpartFinder
 			 counterpartFinder)
 		{
 			System.Collections.IList originalCollection = (System.Collections.IList
@@ -34,11 +34,6 @@ namespace com.db4o.drs.inside
 				return new System.Collections.ArrayList(original.Count);
 			}
 			return null;
-		}
-
-		public static ReflectClass ForType(Reflector reflector, Type type)
-		{
-			return reflector.ForClass(j4o.lang.Class.GetClassForType(type));
 		}
 	}
 }

@@ -1,4 +1,4 @@
-namespace com.db4o.drs.foundation
+namespace Db4objects.Db4o.Drs.Foundation
 {
 	public class ObjectSetCollection4Facade : ObjectSetAbstractFacade
 	{
