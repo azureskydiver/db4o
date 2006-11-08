@@ -170,12 +170,16 @@ public final class QCandidates implements Visitor4 {
         evaluate();
     }
     
-    public Iterator4 executeLazy(Collection4 executionPath){
-    	
-    	Iterator4 indexIterator = iterateIndex(processFieldIndexes());
-    	
-    	Iterator4 singleObjectQueryIterator  = new MappingIterator(indexIterator) {
-		
+    public Iterator4 executeSnapshot(Collection4 executionPath){
+    	IntIterator4 indexIterator = new IntIterator4Adaptor(iterateIndex(processFieldIndexes()));
+    	Tree idRoot = TreeInt.addAll(null, indexIterator);
+    	Iterator4 snapshotIterator = new TreeKeyIterator(idRoot);
+    	Iterator4 singleObjectQueryIterator  = singleObjectSodaProcessor(snapshotIterator);
+		return mapIdsToExecutionPath(singleObjectQueryIterator, executionPath);
+    }
+    
+    private Iterator4 singleObjectSodaProcessor(Iterator4 indexIterator){
+    	return new MappingIterator(indexIterator) {
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
 				QCandidate candidate = new QCandidate(QCandidates.this, null, id, true); 
@@ -187,7 +191,11 @@ public final class QCandidates implements Visitor4 {
 				return current;
 			}
 		};
-		
+    }
+    
+    public Iterator4 executeLazy(Collection4 executionPath){
+    	Iterator4 indexIterator = iterateIndex(processFieldIndexes());
+    	Iterator4 singleObjectQueryIterator  = singleObjectSodaProcessor(indexIterator);
 		return mapIdsToExecutionPath(singleObjectQueryIterator, executionPath);
     }
     
