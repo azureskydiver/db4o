@@ -40,8 +40,10 @@ public class DefragContextImpl implements DefragContext {
 	private final YapFile _sourceDb;
 	private final YapFile _targetDb;
 	private final BTreeIDMapping _mapping;
+	private DefragmentListener _listener;
 
-	public DefragContextImpl(String sourceFileName,String targetFileName,String mappingFileName) {
+	public DefragContextImpl(String sourceFileName,String targetFileName,String mappingFileName,DefragmentListener listener) {
+		_listener=listener;
 		Db4o.configure().flushFileBuffers(false);
 		Db4o.configure().readOnly(true);
 		_sourceDb=(YapFile)Db4o.openFile(sourceFileName).ext();
@@ -71,7 +73,7 @@ public class DefragContextImpl implements DefragContext {
 	public int mappedID(int id,boolean lenient) throws MappingNotFoundException {
 		Integer mapped=internalMappedID(id,lenient);
 		if(mapped==null) {
-			System.err.println("No mapping found for ID "+id);
+			_listener.notifyDefragmentInfo(new DefragmentInfo("No mapping found for ID "+id));
 			return 0;
 		}
 		return mapped.intValue();
