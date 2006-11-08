@@ -48,6 +48,9 @@ public class ByteArrayTestCase extends AbstractDb4oTestCase {
 	static final int INSTANCES = 2;
 	static final int ARRAY_LENGTH = 1024*512;
 	
+	/**
+	 * @sharpen.if !CF_1_0 && !CF_2_0
+	 */
 	protected void configure(Configuration config) {
 		config.objectClass(SerializableByteArrayHolder.class).translate(new TSerializable());		
 	}
