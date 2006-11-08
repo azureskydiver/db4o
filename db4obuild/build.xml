@@ -1694,7 +1694,6 @@
 	
 	<target name="buildnet2">
 		<ant antfile="build-dotnet.xml" target="build" />
-		<!--<ant antfile="build-drs-net.xml" target="rebuild" />-->
 	</target>	
 	
 	<target name="old-buildmono2" depends="zipmono2-pascalcase" description="Full Mono build with generics (now PascalCase)" />
