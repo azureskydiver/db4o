@@ -6,6 +6,7 @@ import java.io.Writer;
 import db4ounit.util.StopWatch;
 
 public class TestResult extends Printable {
+
 	private TestFailureCollection _failures = new TestFailureCollection();
 	
 	private int _testCount = 0;
@@ -22,16 +23,11 @@ public class TestResult extends Printable {
 		this(false);
 	}
 
-	public void testStarted(Test test) {		
+	public void testStarted(Test test) throws IOException {		
 		++_testCount;
 		if (_printLabels) {
-			println(test.getLabel());
+			TestPlatform.getStdOut().write(test.getLabel() + "\n");
 		}
-	}
-
-	private void println(String label) {
-		System.out.println(label);
-		System.out.flush();
 	}
 	
 	public void testFailed(Test test, Throwable failure) {

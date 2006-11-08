@@ -218,11 +218,11 @@
 			<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
 		</fileset>
 		
-		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-compact-2003.csdproj">
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2003.csdproj">
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-compact-2005.csproj">
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2005.csproj">
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
 		
@@ -299,7 +299,6 @@
 		
 		<fileset id="core.net.files" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
-			<exclude name="native/compact*/**" />
 		</fileset>
 			
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
@@ -310,11 +309,12 @@
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
 
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2003.csproj">
-			<sources dir="${dir.n.v6.core}">
-				<include name="**/*.cs" />
-				<exclude name="native/compact*/**" />
-			</sources>
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2003.csdproj">
+			<sources refid="core.net.files" />
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
+			<sources refid="core.net.files" />
 		</updatecsharpproject>
 
 	</target>
@@ -385,6 +385,18 @@
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
+
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2003.csdproj">
+			<sources dir="${dir.n.v6.extensions}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2005.csproj">
+			<sources dir="${dir.n.v6.extensions}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
 	</target>		
 	
 	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">
@@ -427,31 +439,27 @@
 			</fileset>
 		</copy>
 
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-compact-2003.csdproj">
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2003.csdproj">
 			<sources dir="${dir.n.v6.tests}">
 				<include name="**/*.cs" />
-				<exclude name="**/compact-2005/**" />
 			</sources>
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-compact-2005.csproj">
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.csproj">
 			<sources dir="${dir.n.v6.tests}">
 				<include name="**/*.cs" />
-				<exclude name="**/compact/**" />
 			</sources>
 		</updatecsharpproject>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2005.csproj">
 			<sources dir="${dir.n.v6.tests}">
 				<include name="**/*.cs" />
-				<exclude name="**/compact*/**" />
 			</sources>
 		</updatecsharpproject>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2003.csproj">
 			<sources dir="${dir.n.v6.tests}">
 				<include name="**/*.cs" />
-				<exclude name="**/compact*/**" />
 			</sources>
 		</updatecsharpproject>
 	</target>

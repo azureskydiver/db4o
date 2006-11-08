@@ -48,8 +48,8 @@ public class TestMethod implements Test {
 	}
 
 	public void run(TestResult result) {
-		result.testStarted(this);
 		try {
+			result.testStarted(this);
 			setUp();
 			invoke();
 		} catch (InvocationTargetException e) {
