@@ -29,20 +29,20 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				SimpleParentChild.class,
 //
 //				// Collection
-				MapTest.class, // TODO : Convert to .NET
-				ArrayReplicationTest.class,// TODO : Convert to .NET
+				//MapTest.class, // TODO : Convert to .NET
+				//ArrayReplicationTest.class,// TODO : Convert to .NET
 				ListTest.class, 
 				Db4oListTest.class, 
-				SingleTypeCollectionReplicationTest.class,
-				MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
+				//SingleTypeCollectionReplicationTest.class,
+				//MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
 //
 //				// Complex
 				R0to4Runner.class, 	
 				ReplicationFeaturesMain.class,
 //
 //				// General
-				CollectionHandlerImplTest.class,  
-				ReplicationTraversalTest.class,
+				//CollectionHandlerImplTest.class,  
+				//ReplicationTraversalTest.class,
 				};
 	}
 }

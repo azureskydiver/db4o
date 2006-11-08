@@ -37,21 +37,10 @@ public class Db4oTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
-		return all();
-	}
-	
-	private Class[] all() {
-		Set<Class> out = new HashSet<Class>();
-		
-		out.add(EnumTest.class);
-		
-		for (Class c : shared())
-			out.add(c);
-		
-		return out.toArray(new Class[]{});
+		return shared();
 	}
 
 	protected Class[] one() {
-		return new Class[] { MapTest.class, };
+		return new Class[] { TheSimplest.class, };
 	}
 }
