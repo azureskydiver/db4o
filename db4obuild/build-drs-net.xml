@@ -93,7 +93,7 @@
 				<arg value="-srcfolder" />
 				<arg value="test" />
 				
-				<arg value="@sharpen-new-core-mapping" />
+				<arg value="@sharpen-dRS-options" />
 			</args>
 		</sharpen>
 	</target>

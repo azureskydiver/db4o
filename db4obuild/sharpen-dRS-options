@@ -1,0 +1,3 @@
+@sharpen-new-core-mapping
+
+-namespaceMapping com.db4o.drs Db4objects.Drs
