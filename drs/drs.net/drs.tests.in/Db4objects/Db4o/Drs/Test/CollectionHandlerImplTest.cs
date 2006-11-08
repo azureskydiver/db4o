@@ -1,13 +1,13 @@
 using System.Collections;
 
-namespace com.db4o.drs.test
+namespace Db4objects.Db4o.Drs.Test
 {
-    public class CollectionHandlerImplTest : com.db4o.drs.test.DrsTestCase
+    public class CollectionHandlerImplTest : Db4objects.Db4o.Drs.Test.DrsTestCase
     {
-        private com.db4o.reflect.Reflector _reflector = com.db4o.drs.inside.ReplicationReflector
+        private Db4objects.Db4o.reflect.Reflector _reflector = Db4objects.Db4o.Drsinside.ReplicationReflector
             .GetInstance().Reflector();
 
-        private com.db4o.drs.inside.CollectionHandlerImpl _collectionHandler = new com.db4o.drs.inside.CollectionHandlerImpl
+        private Db4objects.Db4o.Drsinside.CollectionHandlerImpl _collectionHandler = new Db4objects.Db4o.Drsinside.CollectionHandlerImpl
             ();
 
         public CollectionHandlerImplTest()

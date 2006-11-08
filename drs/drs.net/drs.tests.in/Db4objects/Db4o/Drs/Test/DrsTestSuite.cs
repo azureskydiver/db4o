@@ -1,11 +1,11 @@
-namespace com.db4o.drs.test
+namespace Db4objects.Db4o.Drs.Test
 {
     /// <exclude></exclude>
-    public abstract class DrsTestSuite : com.db4o.drs.test.DrsTestCase, Db4oUnit.TestSuiteBuilder
+    public abstract class DrsTestSuite : Db4objects.Db4o.Drs.Test.DrsTestCase, Db4oUnit.TestSuiteBuilder
     {
         public virtual Db4oUnit.TestSuite Build()
         {
-            return new com.db4o.drs.test.DrsTestSuiteBuilder(A(), B(), TestCases()).Build();
+            return new Db4objects.Db4o.Drs.Test.DrsTestSuiteBuilder(A(), B(), TestCases()).Build();
         }
 
         protected virtual System.Type[] TestCases()

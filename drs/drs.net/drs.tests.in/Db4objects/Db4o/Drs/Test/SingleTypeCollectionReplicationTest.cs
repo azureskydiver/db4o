@@ -1,25 +1,25 @@
-namespace com.db4o.drs.test
+namespace Db4objects.Db4o.Drs.Test
 {
-    public class SingleTypeCollectionReplicationTest : com.db4o.drs.test.DrsTestCase
+    public class SingleTypeCollectionReplicationTest : Db4objects.Db4o.Drs.Test.DrsTestCase
     {
         protected virtual void ActualTest()
         {
-            com.db4o.drs.test.CollectionHolder h1 = new com.db4o.drs.test.CollectionHolder();
+            Db4objects.Db4o.Drs.Test.CollectionHolder h1 = new Db4objects.Db4o.Drs.Test.CollectionHolder();
             h1.ht["1"] = "One";
             h1.set["2"] = "two";
             h1.list.Add("three");
             A().Provider().StoreNew(h1);
             A().Provider().Commit();
-            com.db4o.drs.ReplicationSession replication = new com.db4o.drs.inside.GenericReplicationSession(A().Provider(), B().Provider());
-            com.db4o.ObjectSet objectSet = A().Provider().ObjectsChangedSinceLastReplication();
+            Db4objects.Db4o.DrsReplicationSession replication = new Db4objects.Db4o.Drs.Inside.GenericReplicationSession(A().Provider(), B().Provider());
+            Db4objects.Db4o.ObjectSet objectSet = A().Provider().ObjectsChangedSinceLastReplication();
             while (objectSet.HasNext())
             {
                 replication.Replicate(objectSet.Next());
             }
             replication.Commit();
-            com.db4o.ObjectSet it = B().Provider().GetStoredObjects(typeof(com.db4o.drs.test.CollectionHolder));
+            Db4objects.Db4o.ObjectSet it = B().Provider().GetStoredObjects(typeof(Db4objects.Db4o.Drs.Test.CollectionHolder));
             Db4oUnit.Assert.IsTrue(it.HasNext());
-            com.db4o.drs.test.CollectionHolder replica = (com.db4o.drs.test.CollectionHolder)it.Next();
+            Db4objects.Db4o.Drs.Test.CollectionHolder replica = (Db4objects.Db4o.Drs.Test.CollectionHolder)it.Next();
             Db4oUnit.Assert.AreEqual("One", replica.ht["1"]);
             Db4oUnit.Assert.IsTrue(replica.set.Contains("2"));
             Db4oUnit.Assert.AreEqual("three", replica.list[0]);
