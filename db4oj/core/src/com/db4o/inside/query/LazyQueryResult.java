@@ -5,7 +5,6 @@ package com.db4o.inside.query;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.classindex.*;
-import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 
@@ -18,18 +17,6 @@ public class LazyQueryResult extends AbstractQueryResult {
 	
 	public LazyQueryResult(Transaction trans) {
 		super(trans);
-	}
-
-	public Object get(int index) {
-		throw new NotImplementedException();
-	}
-	
-	public int getId(int index) {
-		throw new NotImplementedException();
-	}
-
-	public int indexOf(int id) {
-		throw new NotImplementedException();
 	}
 
 	public IntIterator4 iterateIDs() {
@@ -80,10 +67,6 @@ public class LazyQueryResult extends AbstractQueryResult {
 		return false;
 	}
 
-	public void loadFromIdReader(YapReader reader) {
-		throw new NotImplementedException();
-	}
-
 	public void loadFromQuery(final QQuery query) {
 		_iterable = new Iterable4(){
 			public Iterator4 iterator() {
@@ -92,14 +75,6 @@ public class LazyQueryResult extends AbstractQueryResult {
 		};
 	}
 
-	public int size() {
-		throw new NotImplementedException();
-	}
-
-	public void sort(QueryComparator cmp) {
-		throw new NotImplementedException();
-	}
-	
     public AbstractQueryResult supportSize(){
     	return toIdTree();
     }
@@ -119,5 +94,9 @@ public class LazyQueryResult extends AbstractQueryResult {
     public AbstractQueryResult toIdList(){
     	return toIdTree().toIdList();
     }
+
+	public AbstractQueryResult createIndexSnapshot() {
+		return toIdTree();
+	}
 
 }

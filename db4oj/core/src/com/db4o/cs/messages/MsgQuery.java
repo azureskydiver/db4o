@@ -3,6 +3,7 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.cs.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
@@ -13,12 +14,12 @@ public abstract class MsgQuery extends MsgObject {
 	
 	private static int nextID;
 	
-	protected final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread, boolean lazy) {
+	protected final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread, QueryEvaluationMode evaluationMode) {
 		
 		int queryResultId = 0;
 		int maxCount = 0;
 		
-		if(lazy){
+		if(evaluationMode == QueryEvaluationMode.IMMEDIATE){
 			queryResultId = generateID();
 			maxCount = config().prefetchObjectCount();  
 		} else{
@@ -52,8 +53,8 @@ public abstract class MsgQuery extends MsgObject {
 		return nextID;
 	}
 	
-	protected AbstractQueryResult newQueryResult(boolean lazy){
-		return stream().newQueryResult(transaction(), lazy);
+	protected AbstractQueryResult newQueryResult(QueryEvaluationMode mode){
+		return stream().newQueryResult(transaction(), mode);
 	}
 
 }

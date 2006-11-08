@@ -135,14 +135,14 @@ public abstract class YapFile extends YapStream {
     }
     
     public final AbstractQueryResult newQueryResult(Transaction trans) {
-    	return newQueryResult(trans, config().lazyQueryEvaluation());
+    	return newQueryResult(trans, config().queryEvaluationMode());
     }
 
-    public final AbstractQueryResult newQueryResult(Transaction trans, boolean lazy) {
-    	if(lazy){
-    		return new HybridQueryResult(trans);
+    public final AbstractQueryResult newQueryResult(Transaction trans, QueryEvaluationMode mode) {
+    	if(mode == QueryEvaluationMode.IMMEDIATE){
+        	return new IdListQueryResult(trans);
     	}
-    	return new IdListQueryResult(trans);
+    	return new HybridQueryResult(trans, mode);
     }
 
     public final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
@@ -235,11 +235,11 @@ public abstract class YapFile extends YapStream {
     }
 
     public AbstractQueryResult getAll(Transaction trans) {
-        return getAll(trans, config().lazyQueryEvaluation());
+        return getAll(trans, config().queryEvaluationMode());
     }
     
-    public AbstractQueryResult getAll(Transaction trans, boolean lazy) {
-    	final AbstractQueryResult queryResult = newQueryResult(trans, lazy);
+    public AbstractQueryResult getAll(Transaction trans, QueryEvaluationMode mode) {
+    	final AbstractQueryResult queryResult = newQueryResult(trans, mode);
     	queryResult.loadFromClassIndexes(classCollection().iterator());
         return queryResult;
     }

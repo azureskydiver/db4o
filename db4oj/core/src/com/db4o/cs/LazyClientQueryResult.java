@@ -66,28 +66,12 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 		return _size;
 	}
 
-	public void sort(QueryComparator cmp) {
-		throw new NotImplementedException();		
-	}
-	
 	protected void finalize() throws Throwable {
 		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _queryResultID));
 	}
 	
-	public void loadFromClassIndex(YapClass clazz) {
-		throw new NotImplementedException();
-	}
-
-	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
-		throw new NotImplementedException();
-	}
-
 	public void loadFromIdReader(YapReader reader) {
 		_iterator.loadFromIdReader(reader, reader.readInt());
-	}
-
-	public void loadFromQuery(QQuery query) {
-		throw new NotImplementedException();
 	}
 
 	public void reset() {
@@ -99,5 +83,6 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 		YapReader reader = _client.expectedByteResponse(Msg.ID_LIST);
 		loadFromIdReader(reader);
 	}
+	
 
 }

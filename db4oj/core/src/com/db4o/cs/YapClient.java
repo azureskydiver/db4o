@@ -204,7 +204,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return sock;
 	}
 
-	public AbstractQueryResult newQueryResult(Transaction trans, boolean lazy) {
+	public AbstractQueryResult newQueryResult(Transaction trans, QueryEvaluationMode mode) {
 		throw new IllegalStateException();
 	}
 
@@ -295,7 +295,8 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public AbstractQueryResult getAll(Transaction trans) {
-		writeMsg(Msg.GET_ALL.getWriterForBoolean(trans, config().lazyQueryEvaluation()));
+		int mode = config().queryEvaluationMode().asInt();
+		writeMsg(Msg.GET_ALL.getWriterForInt(trans, mode));
 		return readQueryResult(trans);
 	}
 
@@ -768,11 +769,12 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     
     public QueryResult executeQuery(QQuery query){
     	Transaction trans = query.getTransaction();
-    	query.setLazy(config().lazyQueryEvaluation());
+    	query.evaluationMode(config().queryEvaluationMode());
         query.marshall();
 		writeMsg(Msg.QUERY_EXECUTE.getWriter(marshall(trans,query)));
 		return readQueryResult(trans);
     }
+
 
 
 }

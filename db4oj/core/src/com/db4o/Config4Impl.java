@@ -22,7 +22,7 @@ import com.db4o.reflect.generic.*;
  */
 public final class Config4Impl
 
-implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
+implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, QueryConfiguration {
     
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
@@ -72,12 +72,14 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 	private final static KeySpec GENERATE_UUIDS=new KeySpec(0);
     
 	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
+	
+	private final static KeySpec INDEX_SNAPSHOTS=new KeySpec(false);
     
 	private final static KeySpec INTERN_STRINGS=new KeySpec(false);
     
 	private final static KeySpec IS_SERVER=new KeySpec(false);
     
-	private final static KeySpec LAZY_QUERY_EVALUATION=new KeySpec(false);
+	private final static KeySpec QUERY_EVALUATION_MODE=new KeySpec(QueryEvaluationMode.IMMEDIATE);
 	
 	private final static KeySpec LOCK_FILE=new KeySpec(true);
     
@@ -776,12 +778,16 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return (IoAdapter)_config.get(IOADAPTER);
 	}
 	
-	public boolean lazyQueryEvaluation() {
-		return _config.getAsBoolean(LAZY_QUERY_EVALUATION);
+	public QueryConfiguration queries() {
+		return this;
+	}
+
+	public void evaluationMode(QueryEvaluationMode mode) {
+		_config.put(QUERY_EVALUATION_MODE, mode);
 	}
 	
-	public void lazyQueryEvaluation(boolean flag) {
-		_config.put(LAZY_QUERY_EVALUATION,flag);
+	public QueryEvaluationMode queryEvaluationMode() {
+		return (QueryEvaluationMode)_config.get(QUERY_EVALUATION_MODE);
 	}
 
 }
