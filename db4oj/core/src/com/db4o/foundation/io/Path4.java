@@ -2,7 +2,9 @@
 
 package com.db4o.foundation.io;
 
-
+/**
+ * @sharpen.ignore
+ */
 public class Path4 {
 	public static String combine(String parent, String child) {		
 		return parent.endsWith(java.io.File.separator)

@@ -4,6 +4,9 @@ package com.db4o.foundation.io;
 
 import java.io.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class File4 {
 
 	public static boolean rename(String oldPath,String newPath) {
