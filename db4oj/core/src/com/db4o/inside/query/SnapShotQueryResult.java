@@ -24,8 +24,8 @@ public class SnapShotQueryResult extends AbstractLateQueryResult {
 	}
 	
 	public void loadFromQuery(final QQuery query) {
+		final Iterator4 _iterator = query.executeSnapshot();
 		_iterable = new Iterable4() {
-			final Iterator4 _iterator = query.executeSnapshot();
 			public Iterator4 iterator() {
 				_iterator.reset();
 				return _iterator;
