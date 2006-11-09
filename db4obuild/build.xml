@@ -457,6 +457,7 @@
 	</target>
 	
 	<target name="runtestsnet">
+		<ant antfile="build-dotnet.xml" target="run-tests-net1" />
 	</target>
 	
 	<target name="old-runtestsnet2" depends="configure-net2, compiletestsnet" description="sharpen and run db4o AllTests for net2">

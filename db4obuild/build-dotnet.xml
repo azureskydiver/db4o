@@ -70,7 +70,10 @@
 		<property name="debug" value="true" />
 	</target>
 	
-	<target name="run-tests" depends="configure, run-tests-mono, run-tests-net" description="builds and runs all tests">
+	<target name="run-tests" depends="configure, run-tests-mono, run-tests-net">
+	</target>
+		
+	<target name="run-tests-net1" depends="configure-net1, run-tests-net">
 	</target>
 	
 	<target name="run-tests-net" depends="build-tests" unless="mono">
