@@ -2,10 +2,15 @@
 
 package com.db4o.tools.defragment;
 
+/**
+ * Listener for defragmentation process messages.
+ */
 public interface DefragmentListener {
 	/**
-	 * This method will be called when the defragment process encounters an invalid
-	 * ID. This probably just indicates a 'dangling reference'
+	 * This method will be called when the defragment process encounters 
+	 * file layout anomalies during the defragmentation process. 
+	 * 
+	 * @param info The message from the defragmentation process.
 	 */
 	void notifyDefragmentInfo(DefragmentInfo info);
 }
