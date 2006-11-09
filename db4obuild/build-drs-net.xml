@@ -103,14 +103,7 @@
 				<arg value="-cp" />
 				<arg value="${qsdependencies.jar}" />
 				
-				<arg value="-pascalcase" />
-			
-				<arg value="-nativeTypeSystem" />
-				
-				<arg value="-methodMapping" />
-				<arg value="com.db4o.reflect.Reflector.forClass" />
-				<arg value="com.db4o.drs.inside.ReplicationPlatform.ForType" />
-				
+				<arg value="@sharpen-dRS-options" />				
 			</args>
 		</sharpen>
 	</target>
@@ -200,14 +193,15 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-
+	
+	<!--
 		<copy todir="${drsqs.net.src.dir}" overwrite="true">
 			<fileset dir="${drsqs.net.in.dir}">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
 		
-<!--		<updatecsharpproject projectfile="${drsqs.net.dir}/drs/drs.csproj">
+		<updatecsharpproject projectfile="${drsqs.net.dir}/drs/drs.csproj">
 			<sources dir="${drs.net.dir}/drs">
 				<include name="**/*.cs" />
 			</sources>
