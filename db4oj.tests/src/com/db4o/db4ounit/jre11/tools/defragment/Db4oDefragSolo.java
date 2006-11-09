@@ -17,19 +17,18 @@ public class Db4oDefragSolo extends Db4oSolo {
 		}
 
 		protected ObjectContainer createDatabase(Configuration config) {
-			File file=new File(getAbsolutePath());
-			if(file.exists()) {
+			File origFile=new File(getAbsolutePath());
+			if(origFile.exists()) {
 				try {
-					String defragFile = getAbsolutePath()+".defrag";
+					String backupFile = getAbsolutePath()+".defrag";
 					String mappingFile = getAbsolutePath()+".mapping";
-					new File(defragFile).delete();
+					new File(backupFile).delete();
 					new File(mappingFile).delete();
-					SlotDefragment.defrag(getAbsolutePath(), defragFile, mappingFile, new DefragmentListener() {
+					SlotDefragment.defrag(getAbsolutePath(), backupFile, mappingFile, new DefragmentListener() {
 						public void notifyDefragmentInfo(DefragmentInfo info) {
 							System.err.println(info);
 						}
 					});
-					File4.copy(defragFile,getAbsolutePath());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
