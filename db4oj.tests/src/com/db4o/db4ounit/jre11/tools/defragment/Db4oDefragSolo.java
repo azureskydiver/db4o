@@ -6,8 +6,8 @@ import java.io.*;
 
 import com.db4o.ObjectContainer;
 import com.db4o.config.Configuration;
-import com.db4o.db4ounit.util.File4;
-import com.db4o.tools.defragment.SlotDefragment;
+import com.db4o.foundation.io.*;
+import com.db4o.tools.defragment.*;
 
 import db4ounit.extensions.fixtures.*;
 
@@ -24,7 +24,11 @@ public class Db4oDefragSolo extends Db4oSolo {
 					String mappingFile = getAbsolutePath()+".mapping";
 					new File(defragFile).delete();
 					new File(mappingFile).delete();
-					SlotDefragment.defrag(getAbsolutePath(), defragFile, mappingFile);
+					SlotDefragment.defrag(getAbsolutePath(), defragFile, mappingFile, new DefragmentListener() {
+						public void notifyDefragmentInfo(DefragmentInfo info) {
+							System.err.println(info);
+						}
+					});
 					File4.copy(defragFile,getAbsolutePath());
 				} catch (IOException e) {
 					e.printStackTrace();

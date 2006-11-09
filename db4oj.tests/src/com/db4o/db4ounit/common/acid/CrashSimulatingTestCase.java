@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.db4ounit.common.assorted.SimplestPossibleItem;
 import com.db4o.db4ounit.util.*;
+import com.db4o.foundation.io.*;
 import com.db4o.io.RandomAccessFileAdapter;
 
 import db4ounit.*;
