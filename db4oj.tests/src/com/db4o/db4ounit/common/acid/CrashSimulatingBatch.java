@@ -4,8 +4,8 @@ package com.db4o.db4ounit.common.acid;
 
 import java.io.*;
 
-import com.db4o.db4ounit.util.File4;
 import com.db4o.foundation.*;
+import com.db4o.foundation.io.*;
 
 
 public class CrashSimulatingBatch {

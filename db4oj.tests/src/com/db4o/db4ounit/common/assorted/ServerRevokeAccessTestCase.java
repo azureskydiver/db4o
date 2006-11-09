@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.assorted;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.db4ounit.util.File4;
+import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 
