@@ -24,6 +24,7 @@ public class AllTestsJdk1_2Legacy extends AllTestsLegacy {
 			            Db4oLinkedList.class,
 			            Db4oHashMap.class,
 			            Db4oHashMapDeletedKey.class,
+			            PCollectionReferencedTwice.class,
 				};
 			}
     	});
