@@ -38,4 +38,8 @@ final class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 	public final int size() {
 		return _delegate.size();
 	}
+	
+	public Iterator iterator() {
+		return _itor;
+	}
 }
