@@ -42,7 +42,7 @@
 	
 		<property name="csharp.definitions" value="" />
 		<property name="csharp.definitions.cf" value="" />		
-		<property name="dir.dll.cf" value="${dir.compactframework}v1.0/WindowsCE/" />	
+		<property name="dir.dll.cf" location="${dir.compactframework}v1.0/WindowsCE/" />	
 		<property name="csc.tests.extraoptions" value="" />
 	
 		<property name="installer.package.suffix" value="net1" />
