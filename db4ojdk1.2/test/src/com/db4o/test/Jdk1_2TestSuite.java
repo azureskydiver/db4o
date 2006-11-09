@@ -28,7 +28,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             ObjectSetAsList.class,
             ObjectSetAsIterator.class,
             OrClassConstraintInList.class,
-            PCollectionReferencedTwice.class,
             PrimitivesInCollection.class,
             QueryForList.class,
             Reflection.class,

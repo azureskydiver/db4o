@@ -10,6 +10,7 @@ public class AllTests extends Db4oTestSuite {
 				Db4oHashMapTestCase.class,
 				Db4oHashMapDeletedKeyTestCase.class,
 				Db4oLinkedListTestCase.class,
+				PCollectionReferencedTwiceTestCase.class,
 		};
 	}
 }
