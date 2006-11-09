@@ -6,6 +6,10 @@ import java.io.*;
 
 public class File4 {
 
+	public static boolean rename(String oldPath,String newPath,boolean force) {
+		return new java.io.File(oldPath).renameTo(new File(newPath));
+	}
+	
     public static void copy(String source, String target) {
         try {
         	java.io.File sourceFile = new java.io.File(source);
