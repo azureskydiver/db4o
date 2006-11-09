@@ -2,6 +2,15 @@
 
 package com.db4o.tools.defragment;
 
+/**
+ * A message from the defragmentation process. This is a stub only
+ * and will be refined.
+ * 
+ * Currently instances of these class will only be created and sent
+ * to registered listeners when invalid IDs are encountered during
+ * the defragmentation process. These probably are harmless and the
+ * result of a user-initiated delete operation.
+ */
 public class DefragmentInfo {
 	private String _msg;
 
