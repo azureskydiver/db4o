@@ -6,7 +6,7 @@ import java.io.*;
 
 public class File4 {
 
-	public static boolean rename(String oldPath,String newPath,boolean force) {
+	public static boolean rename(String oldPath,String newPath) {
 		return new java.io.File(oldPath).renameTo(new File(newPath));
 	}
 	
