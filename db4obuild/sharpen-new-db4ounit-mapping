@@ -1,4 +1,3 @@
 @sharpen-new-core-mapping
 
 -namespaceMapping db4ounit Db4oUnit
--propertyMapping java.lang.System.currentTimeMillis System.Environment.TickCount
