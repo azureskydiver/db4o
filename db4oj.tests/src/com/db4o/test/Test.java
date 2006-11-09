@@ -15,7 +15,7 @@ import com.db4o.tools.defragment.*;
 
 public class Test extends AllTests {
 	
-	private static final boolean USE_NEW_DEFRAGMENT = false;
+	private static final boolean USE_NEW_DEFRAGMENT = true;
     
     private static ObjectServer objectServer;
     private static ExtObjectContainer oc;
@@ -114,12 +114,6 @@ public class Test extends AllTests {
 	            File4.delete(mappingFile);
 	            
 	            SlotDefragment.defrag(fileName, targetFile, mappingFile);
-	            
-	            File4.delete(fileName);
-	            File4.copy(targetFile, fileName);
-	            
-	            File4.delete(targetFile);
-	            File4.delete(mappingFile);
             } else {
             	
             	new Defragment().run(fileName, true);
