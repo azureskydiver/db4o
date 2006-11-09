@@ -7,19 +7,48 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.io.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 
+/**
+ * Slotwise defragment for yap files.
+ */
 public class SlotDefragment {
 
-	public static void defrag(String sourceFileName, String targetFile,
-			String mappingFile) throws IOException {
-		defrag(sourceFileName,targetFile,mappingFile,new NullListener());
+	/**
+	 * Renames the file at origPath to backupPath and then builds a defragmented
+	 * version of the file in the original place.
+	 * 
+	 * @param origPath The path to the file to be defragmented. Must exist and must be
+	 *         a valid yap file.
+	 * @param backupPath The path to the backup of the original file. No file should
+	 *         exist at this position, otherwise it will be OVERWRITTEN!
+	 * @param mappingPath The path for an intermediate mapping file used internally.
+	 *         No file should exist at this position, otherwise it will be DELETED!
+	 */
+	public static void defrag(String origPath, String backupPath,
+			String mappingPath) throws IOException {
+		defrag(origPath,backupPath,mappingPath,new NullListener());
 	}
 
-	public static void defrag(String sourceFileName, String targetFile,
-			String mappingFile, DefragmentListener listener) throws IOException {
-		DefragContextImpl context=new DefragContextImpl(sourceFileName,targetFile,mappingFile,listener);
+	/**
+	 * Renames the file at origPath to backupPath and then builds a defragmented
+	 * version of the file in the original place.
+	 * 
+	 * @param origPath The path to the file to be defragmented. Must exist and must be
+	 *         a valid yap file.
+	 * @param backupPath The path to the backup of the original file. No file should
+	 *         exist at this position, otherwise it will be OVERWRITTEN!
+	 * @param mappingPath The path for an intermediate mapping file used internally.
+	 *         No file should exist at this position, otherwise it will be DELETED!
+	 * @param listener A listener for status notifications during the defragmentation
+	 *         process.
+	 */
+	public static void defrag(String origPath, String backupPath,
+			String mappingPath, DefragmentListener listener) throws IOException {
+		File4.rename(origPath, backupPath);
+		DefragContextImpl context=new DefragContextImpl(backupPath,origPath,mappingPath,listener);
 		int newClassCollectionID=0;
 		int targetIdentityID=0;
 		int targetUuidIndexID=0;
@@ -39,7 +68,7 @@ public class SlotDefragment {
 		finally {
 			context.close();
 		}
-		setIdentity(targetFile, targetIdentityID,targetUuidIndexID);
+		setIdentity(origPath, targetIdentityID,targetUuidIndexID);
 	}
 
 	private static void defragUnindexed(DefragContextImpl context) throws CorruptionException {
