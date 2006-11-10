@@ -72,6 +72,10 @@ public class DemoPopulator {
                 last10.remove(10);
             }
         }
+		
+		db.set(Collections.forDemo());
+		db.set(Inheritance.forDemo());
+		
         db.commit();
         db.close();
     }
