@@ -870,7 +870,6 @@
 				<path path="${path.classpath.full}" />
 				<path path="${path.classpath.jdk1.1}" />
 			</classpath>
-			<arg value="-e" />
 		</java>
 		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="1200000">
 			<classpath>
@@ -879,7 +878,6 @@
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="-e" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="720000">
 			<classpath>
@@ -888,7 +886,6 @@
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="-e" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="320000">
 			<classpath>
@@ -900,7 +897,6 @@
 				<path location="${file.bloat.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="-e" />
 		</java>
 		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="1200000">
 			<classpath>
@@ -937,7 +933,6 @@
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="-e" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsLegacy" failonerror="true" timeout="3600000">
 			<classpath>
