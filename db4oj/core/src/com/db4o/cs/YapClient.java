@@ -138,7 +138,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     }
 
     protected boolean close2() {
-		if (_readerThread.isClosed()) {
+		if (_readerThread == null || _readerThread.isClosed()) {
 			return super.close2();
 		}
 		try {
