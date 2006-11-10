@@ -15,7 +15,7 @@ import com.db4o.tools.defragment.*;
 
 public class Test extends AllTests {
 	
-	private static final boolean USE_NEW_DEFRAGMENT = true;
+	private static final boolean USE_NEW_DEFRAGMENT = false;
     
     private static ObjectServer objectServer;
     private static ExtObjectContainer oc;
