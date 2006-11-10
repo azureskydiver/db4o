@@ -7,8 +7,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.db4ounit.util.*;
 import com.db4o.foundation.io.*;
 
-import db4ounit.Assert;
-import db4ounit.TestCase;
+import db4ounit.*;
 
 public class OldHeaderTest implements TestCase {
     
@@ -17,6 +16,11 @@ public class OldHeaderTest implements TestCase {
     private static final String DB_FILE = WorkspaceServices.workspacePath("db4oj.tests/test/db4oVersions/db4o_5.5.2.yap");   
     
     public void test() {
+    	
+    	if(! File4.exists(ORIGINAL_FILE)){
+    		TestPlatform.emitWarning(ORIGINAL_FILE + " does not exist. Can not run " + getClass().getName());
+    		return;
+    	}
         
     	File4.copy(ORIGINAL_FILE, DB_FILE);
         
