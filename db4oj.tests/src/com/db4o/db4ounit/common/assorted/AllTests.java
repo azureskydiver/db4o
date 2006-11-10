@@ -26,6 +26,7 @@ public class AllTests extends Db4oTestSuite {
             SimplestPossibleTestCase.class,
             MultiDeleteTestCase.class,
             NonStaticConfigurationTestCase.class,
+            PersistStaticFieldValuesTestCase.class,
             ServerRevokeAccessTestCase.class,
             SystemInfoTestCase.class,
             ObjectVersionTest.class,

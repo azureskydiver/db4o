@@ -1,8 +1,9 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test;
+package com.db4o.test.legacy;
 
 import com.db4o.*;
+import com.db4o.test.*;
 
 public class PersistStaticFieldValues {
     
@@ -18,7 +19,7 @@ public class PersistStaticFieldValues {
     public void configure() {
         Db4o
             .configure()
-            .objectClass("com.db4o.test.PersistStaticFieldValues")
+            .objectClass(this)
             .persistStaticFieldValues();
     }
     

@@ -31,6 +31,7 @@ public class AllTestsLegacy extends AllTests {
         		GetByUUID.class,
         		MultiDelete.class,
         		NestedArrays.class,
+        		PersistStaticFieldValues.class,
         		SimpleTypeArrayInUntypedVariable.class,
     	    	Soda.class,
         		TypedArrayInObject.class,
