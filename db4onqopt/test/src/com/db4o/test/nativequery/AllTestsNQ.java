@@ -33,9 +33,6 @@ public class AllTestsNQ {
 					db4oTests,
 				}
 		);
-		int ret=new TestRunner(allTests).run();
-		if(ret!=0) {
-			throw new RuntimeException(ret+" tests failed");
-		}
+		System.exit(new TestRunner(allTests).run());
 	}
 }
