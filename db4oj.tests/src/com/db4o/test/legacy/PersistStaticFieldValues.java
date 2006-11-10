@@ -19,7 +19,7 @@ public class PersistStaticFieldValues {
     public void configure() {
         Db4o
             .configure()
-            .objectClass(this)
+            .objectClass(PersistStaticFieldValues.class)
             .persistStaticFieldValues();
     }
     
