@@ -608,7 +608,7 @@
 		</antcall>
 	</target>
 
-	<target name="compiletestsmono" depends="compiledllmono, compiletoolsmono">
+	<target name="compiletestsmono" >
 		<antcall target="do-compiletestsmono">
 			<param name="src.dir" location="${dir.n.test.src}" />
 		</antcall>
@@ -694,7 +694,9 @@
 				<include name="**/*.yap" />
 			</fileset>
 		</copy>
-		<javac destdir="${dir.dist.classes.test.nq}" fork="true" debug="on" target="1.4" source="1.4" encoding="UTF-8">
+		<javac
+			destdir="${dir.dist.classes.test.nq}"
+			fork="true" debug="on" target="1.4" source="1.4" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.nqopt}" />
@@ -1245,6 +1247,7 @@
 	<target name="configure-mono2">
 		<property name="mono.definitions" value="MONO;NET_2_0" />
 		<property name="mono.executable" value="${mono.gmcs.executable}" />
+		<property name="csc.executable" value="${mono.gmcs.executable}" />
 		<property name="mono.ndoc.executable" value="net/2.0/NDocConsole.exe" />
 	</target>
 	
@@ -1463,7 +1466,7 @@
 	
 	<target name="sharpen-db4ounit">
 		<ant antfile="build-db4ounit.xml" target="buildnet" inheritall="false">
-				<property name="csc.executable" value="${csc.executable}" />
+			<property name="csc.executable" value="${csc.executable}" />
 		</ant>
 	</target>
 	

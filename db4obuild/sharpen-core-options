@@ -1,5 +1,6 @@
 @sharpen-exceptions-mapping
 @sharpen-collections-mapping
+@sharpen-io-mapping
 -pascalCase
 -runtimeTypeName j4o.lang.JavaSystem
 -namespaceMapping ^java j4o
