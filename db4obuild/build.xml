@@ -930,7 +930,7 @@
 			</classpath>
 			<arg value="*" />
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.tools.defrag.RunTestsDefrag" failonerror="true" timeout="1440000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.tools.defrag.RunTestsDefrag" failonerror="true" timeout="2000000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
