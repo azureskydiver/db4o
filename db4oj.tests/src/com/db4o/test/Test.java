@@ -107,8 +107,8 @@ public class Test extends AllTests {
             
             if(USE_NEW_DEFRAGMENT){
 	            
-	            String targetFile = fileName + ".defr";
-	            String mappingFile = fileName + ".dmap";
+	            String targetFile = fileName + ".defrag.backup";
+	            String mappingFile = fileName + ".defrag.mapping";
 	            
 	            File4.delete(targetFile);
 	            File4.delete(mappingFile);
