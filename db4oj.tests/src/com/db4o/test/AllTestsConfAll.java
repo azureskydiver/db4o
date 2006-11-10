@@ -7,7 +7,6 @@ import com.db4o.test.conjunctions.*;
 import com.db4o.test.constraints.*;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.java.*;
-import com.db4o.test.legacy.soda.*;
 import com.db4o.test.nativequery.*;
 import com.db4o.test.performance.*;
 import com.db4o.test.soda.*;
@@ -81,7 +80,6 @@ public class AllTestsConfAll extends TestSuite{
 			ObjectSetIDs.class,
 			ParameterizedEvaluation.class,
             PeekPersisted.class,
-	        PersistStaticFieldValues.class,
             
             // disabled because it fails due to fix
             // See comments in: YapClass.deleteEmbedded1()
