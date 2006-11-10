@@ -5,6 +5,7 @@ package com.db4o.tools.defragment;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
@@ -44,17 +45,17 @@ public class DefragContextImpl implements DefragContext {
 
 	public DefragContextImpl(String sourceFileName,String targetFileName,String mappingFileName,DefragmentListener listener) {
 		_listener=listener;
-		Db4o.configure().flushFileBuffers(false);
-		Db4o.configure().readOnly(true);
-		_sourceDb=(YapFile)Db4o.openFile(sourceFileName).ext();
-		Db4o.configure().readOnly(false);
+		Configuration sourceConfig=Db4o.newConfiguration();
+		sourceConfig.flushFileBuffers(false);
+		sourceConfig.readOnly(true);
+		_sourceDb=(YapFile)Db4o.openFile(sourceConfig,sourceFileName).ext();
 		_targetDb = freshYapFile(targetFileName);
 		_mapping=new BTreeIDMapping(mappingFileName);
 	}
 	
 	static YapFile freshYapFile(String fileName) {
 		new File(fileName).delete();
-		return (YapFile)Db4o.openFile(fileName).ext();
+		return (YapFile)Db4o.openFile(Db4o.newConfiguration(),fileName).ext();
 	}
 	
 	public int mappedID(int oldID,int defaultID) {
