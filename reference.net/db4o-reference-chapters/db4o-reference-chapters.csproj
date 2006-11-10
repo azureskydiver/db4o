@@ -1,0 +1,453 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{575B2796-1C95-4910-B698-D5E5B2906FCB}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>db4o-reference-chapters</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>db4o_reference_chapters</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\bin\bin\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Db4objects.Db4o, Version=5.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\install\db4o-6.0\Db4objects.Db4o.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\com\db4odoc\activating\ActivationExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\activating\SensorPanel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\attributes\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\blobs\BlobExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\blobs\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\blobs\CarImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\ClientServerExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\DeepExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\ExtClientExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\PressureSensorReadout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\SensorReadout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\ServerConfiguration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\StartServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\StopServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\TemperatureSensorReadout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\clientserver\TransactionExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\constructors\C1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\constructors\C2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\constructors\C3.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\constructors\C4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\debugging\Car.cs" />
+    <Compile Include="src\com\db4odoc\debugging\DebugExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\ArbitraryQuery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\CarEvaluation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\CarTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\DiagnosticExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\Empty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\IndexDiagListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\NewCarModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\SensorReadout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\diagnostics\TranslatorDiagListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\enums\Door.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\enums\DoorState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\enums\DoorStateInit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\enums\DoorStateReal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\enums\DoorStateUninit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\enums\EnumExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\enums\EnumSODAExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\CarTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\CultureInfoTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\EvaluationExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\EvenHistoryEvaluation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\LocalizedItemList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\SensorReadout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\evaluations\TranslatorExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\identity\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\identity\IdentityExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\identity\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\indexes\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\indexes\IndexedExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\indexes\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\ios\IOExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\ios\LoggingAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\ios\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\lists\CollectionExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\lists\CollectionFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\lists\Pilot.cs" />
+    <Compile Include="src\com\db4odoc\lists\Team.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\lists\VerboseList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\messaging\MessagingExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\messaging\MyClientServerMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\metainfo\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\metainfo\MetaInfoExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\metainfo\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\persist\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\persist\Change1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\persist\Change2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\persist\PeekPersistedExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\queries\ArbitraryQuery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\queries\ComplexQuery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\queries\NQExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\queries\PersistentExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\queries\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\queries\PilotHundredPoints.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\queries\QueryExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\refactoring\newclasses\Identity.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\refactoring\newclasses\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\refactoring\newclasses\RefactoringExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\refactoring\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\refactoring\PilotNew.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\refactoring\RefactoringExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\reflections\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\reflections\LoggingArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\reflections\LoggingReflector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\reflections\ReflectorExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\remote\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\remote\RemoteExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\remote\UpdateServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\selectivepersistence\FieldTransient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\selectivepersistence\MarkTransientExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\selectivepersistence\Test.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\selectivepersistence\TestCustomized.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\semaphores\ConnectedUser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\semaphores\LimitLogins.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\semaphores\LockManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\semaphores\Singleton.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\serializing\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\serializing\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\serializing\SerializeExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\staticfields\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\staticfields\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\staticfields\PilotCategories.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\staticfields\StaticFieldExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\structured\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\structured\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\structured\StructuredExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\f1\Util.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\utility\SensorPanel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\utility\UtilityExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\uuids\Car.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\uuids\Pilot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\com\db4odoc\uuids\UUIDExample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
