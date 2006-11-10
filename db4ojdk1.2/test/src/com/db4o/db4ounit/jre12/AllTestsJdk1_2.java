@@ -7,7 +7,7 @@ import db4ounit.extensions.*;
 public class AllTestsJdk1_2 extends Db4oTestSuite {
 
 	public static void main(String[] args) {
-		new AllTestsJdk1_2().runSolo();
+		System.exit(new AllTestsJdk1_2().runSolo());
     }
 
 	protected Class[] testCases() {
