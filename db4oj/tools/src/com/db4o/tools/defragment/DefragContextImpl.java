@@ -11,6 +11,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.inside.mapping.*;
+import com.db4o.inside.slots.*;
 
 /**
  * @exclude
@@ -22,6 +23,10 @@ public class DefragContextImpl implements DefragContext {
 		}
 		
 		abstract YapFile db(DefragContextImpl context);
+
+		Transaction transaction(DefragContextImpl context) {
+			return db(context).getSystemTransaction();
+		}
 	}
 	
 	public final static DbSelector SOURCEDB=new DbSelector() {
@@ -38,10 +43,12 @@ public class DefragContextImpl implements DefragContext {
 
 	private static final long CLASSCOLLECTION_POINTER_ADDRESS = 2+2*YapConst.INT_LENGTH;
 	
-	private final YapFile _sourceDb;
+	public final YapFile _sourceDb;
 	private final YapFile _targetDb;
 	private final BTreeIDMapping _mapping;
 	private DefragmentListener _listener;
+	private Queue4 _unindexed=new Queue4();
+	
 
 	public DefragContextImpl(String sourceFileName,String targetFileName,String mappingFileName,DefragmentListener listener) {
 		_listener=listener;
@@ -104,12 +111,13 @@ public class DefragContextImpl implements DefragContext {
 	}
 	
 	public YapReader readerByID(DbSelector selector,int id) {
-		YapFile db = selector.db(this);
-		return db.readReaderByID(db.getTransaction(), id);
+		Slot slot=readPointer(selector, id);
+		return readerByAddress(selector,slot._address,slot._length);
 	}
 
 	public YapWriter sourceWriterByID(int id) {
-		return _sourceDb.readWriterByID(_sourceDb.getTransaction(), id);
+		Slot slot=readPointer(SOURCEDB, id);
+		return _sourceDb.readWriterByAddress(SOURCEDB.transaction(this),slot._address,slot._length);
 	}
 
 	public YapReader sourceReaderByAddress(int address,int length) {
@@ -125,7 +133,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public YapWriter targetWriterByAddress(int address,int length) {
-		return _targetDb.readWriterByAddress(_targetDb.getTransaction(),address,length);
+		return _targetDb.readWriterByAddress(TARGETDB.transaction(this),address,length);
 	}
 	
 	public int allocateTargetSlot(int length) {
@@ -185,18 +193,18 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public void traverseAll(YapClass yapClass,Visitor4 command) {
-		yapClass.index().traverseAll(_sourceDb.getTransaction(), command);
+		yapClass.index().traverseAll(SOURCEDB.transaction(this), command);
 	}
 	
 	public void traverseAllIndexSlots(YapClass yapClass,Visitor4 command) {
-		Iterator4 slotIDIter=yapClass.index().allSlotIDs(_sourceDb.getTransaction());
+		Iterator4 slotIDIter=yapClass.index().allSlotIDs(SOURCEDB.transaction(this));
 		while(slotIDIter.moveNext()) {
 			command.visit(slotIDIter.current());
 		}
 	}
 
 	public void traverseAllIndexSlots(BTree btree,Visitor4 command) {
-		Iterator4 slotIDIter=btree.allNodeIds(_sourceDb.getTransaction());
+		Iterator4 slotIDIter=btree.allNodeIds(SOURCEDB.transaction(this));
 		while(slotIDIter.moveNext()) {
 			command.visit(slotIDIter.current());
 		}
@@ -204,7 +212,7 @@ public class DefragContextImpl implements DefragContext {
 
 	public int databaseIdentityID(DbSelector selector) {
 		YapFile db = selector.db(this);
-		return db.identity().getID(db.getSystemTransaction());
+		return db.identity().getID(selector.transaction(this));
 	}
 	
 	private ClassIndexStrategy classIndex(YapClass yapClass) {
@@ -218,7 +226,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public Transaction systemTrans() {
-		return _sourceDb.getSystemTransaction();
+		return SOURCEDB.transaction(this);
 	}
 
 	public void copyIdentity() {
@@ -264,8 +272,6 @@ public class DefragContextImpl implements DefragContext {
 		_mapping.clearSeen();
 	}
 
-	private Queue4 _unindexed=new Queue4();
-	
 	public void registerUnindexed(int id) {
 		_unindexed.add(new Integer(id));
 	}
@@ -273,4 +279,12 @@ public class DefragContextImpl implements DefragContext {
 	public Iterator4 unindexedIDs() {
 		return _unindexed.iterator();
 	}
+
+	private Slot readPointer(DbSelector selector,int id) {
+		YapReader reader=readerByAddress(selector, id, YapConst.POINTER_LENGTH);
+		int address=reader.readInt();
+		int length=reader.readInt();
+		return new Slot(address,length);
+	}
+	
 }

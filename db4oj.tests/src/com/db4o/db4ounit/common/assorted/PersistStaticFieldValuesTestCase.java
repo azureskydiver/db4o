@@ -8,7 +8,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo /* FIXME */ {
+public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase {
     public static class Data {
         public static final PsfvHelper ONE = new PsfvHelper();
         public static final PsfvHelper TWO = new PsfvHelper();
