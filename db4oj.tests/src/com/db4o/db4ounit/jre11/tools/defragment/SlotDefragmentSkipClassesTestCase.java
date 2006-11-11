@@ -35,7 +35,7 @@ public class SlotDefragmentSkipClassesTestCase implements TestCase {
 		assertDataClassKnown(true);
 
 		defragConfig = new DefragmentConfig(FILENAME);
-		defragConfig.yapClassFilter(new AvailableClassFilter(getClass().getClassLoader()));
+		defragConfig.yapClassFilter(new AvailableClassFilter());
 		SlotDefragment.defrag(defragConfig);
 		assertDataClassKnown(true);
 
