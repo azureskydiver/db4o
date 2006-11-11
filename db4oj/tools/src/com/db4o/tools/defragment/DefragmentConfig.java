@@ -42,7 +42,8 @@ public class DefragmentConfig {
 	 * @param origPath The path to the file to be defragmented. Must exist and must be
 	 *         a valid yap file.
 	 * @param backupPath The path to the backup of the original file. No file should
-	 *         exist at this position, otherwise it will be OVERWRITTEN!
+	 *         exist at this position, otherwise it will be OVERWRITTEN if forceBackupDelete()
+	 *         is set to true!
 	 */
 	public DefragmentConfig(String origPath, String backupPath) {
 		this(origPath,backupPath,origPath+"."+MAPPING_SUFFIX);
@@ -55,7 +56,8 @@ public class DefragmentConfig {
 	 * @param origPath The path to the file to be defragmented. Must exist and must be
 	 *         a valid yap file.
 	 * @param backupPath The path to the backup of the original file. No file should
-	 *         exist at this position, otherwise it will be OVERWRITTEN!
+	 *         exist at this position, otherwise it will be OVERWRITTEN if forceBackupDelete()
+	 *         is set to true!
 	 * @param mappingPath The path for an intermediate mapping file used internally.
 	 *         No file should exist at this position, otherwise it will be DELETED!
 	 */

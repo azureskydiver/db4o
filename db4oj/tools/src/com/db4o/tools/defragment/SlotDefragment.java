@@ -21,6 +21,7 @@ public class SlotDefragment {
 	 * path and then builds a defragmented version of the file in the original place.
 	 * 
 	 * @param config The configuration for this defragmentation run.
+	 * @throws IOException if the original file cannot be moved to the backup location
 	 */
 	public static void defrag(DefragmentConfig config) throws IOException {
 		defrag(config,new NullListener());
@@ -33,8 +34,16 @@ public class SlotDefragment {
 	 * @param config The configuration for this defragmentation run.
 	 * @param listener A listener for status notifications during the defragmentation
 	 *         process.
+	 * @throws IOException if the original file cannot be moved to the backup location
 	 */
 	public static void defrag(DefragmentConfig config, DefragmentListener listener) throws IOException {
+		File backupFile=new File(config.backupPath());
+		if(backupFile.exists()) {
+			if(!config.forceBackupDelete()) {
+				throw new IOException("Could not use '"+config.backupPath()+"' as backup path - file exists.");
+			}
+			backupFile.delete();
+		}
 		File4.rename(config.origPath(), config.backupPath());
 		DefragContextImpl context=new DefragContextImpl(config,listener);
 		int newClassCollectionID=0;
