@@ -24,12 +24,12 @@ class BTreeIDMapping {
 		}
 
 		public Integer mappedID(int oldID,boolean lenient) {
+			if(_cache.orig() == oldID){
+				return new Integer(_cache.mapped());
+			}
 			Integer classID=(Integer)_classIDs.get(oldID);
 			if(classID!=null) {
 				return classID;
-			}
-			if(_cache.orig() == oldID){
-				return new Integer(_cache.mapped());
 			}
 			BTreeRange range=_idTree.search(trans(),new MappedIDPair(oldID,0));
 			Iterator4 pointers=range.pointers();
@@ -59,7 +59,8 @@ class BTreeIDMapping {
 		}
 
 		public void mapIDs(int oldID,int newID, boolean seen) {
-			_idTree.add(trans(), new MappedIDPair(oldID,newID,seen));
+			_cache = new MappedIDPair(oldID,newID,seen);
+			_idTree.add(trans(), _cache);
 		}
 
 		public void registerSeen(int id) {

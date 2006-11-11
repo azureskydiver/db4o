@@ -16,7 +16,7 @@ import com.db4o.inside.ix.*;
  * 
  * @exclude
  */
-public class BTreeNode extends YapMeta{
+public final class BTreeNode extends YapMeta{
     
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (YapConst.INT_LENGTH * 4) + 1; 
  
@@ -217,7 +217,7 @@ public class BTreeNode extends YapMeta{
 	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, YapReader reader, int index){
         
         if(index >= 0){
-            if(!compareInReadModeEquals(reader, index)){
+            if(!compareEquals(reader, index)){
                 return null;
             }
             if(index > 0){
@@ -245,7 +245,10 @@ public class BTreeNode extends YapMeta{
         return createMatchingSearchResult(trans, reader, index);
     }
 
-	private boolean compareInReadModeEquals(final YapReader reader, int index) {		
+	private boolean compareEquals(final YapReader reader, int index) {
+		if(canWrite()){
+			return compareInWriteMode(index) == 0;
+		}
 		return compareInReadMode(reader, index) == 0;
 	}
 
@@ -484,22 +487,11 @@ public class BTreeNode extends YapMeta{
         return false;
     }
     
-    private void compare(Searcher s, YapReader reader){
-        if(canWrite()){
-            s.resultIs( compareInWriteMode(s.cursor()));
-        }else{
-            s.resultIs( compareInReadMode(reader, s.cursor()));
-        }
-    }
-    
     private int compareInWriteMode(int index){
         return keyHandler().compareTo(key(index));
     }
     
     private int compareInReadMode(YapReader reader, int index){
-    	if (canWrite()) {
-    		return compareInWriteMode(index);
-    	}
         seekKey(reader, index);
         return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
     }
@@ -566,10 +558,6 @@ public class BTreeNode extends YapMeta{
     }
     
     private void prepareInsert(int pos){
-        if (pos < 0){
-        	// FIXME: remove this check
-            throw new IllegalArgumentException("pos " + pos );
-        }
         if(pos > lastIndex()){
             _count ++;
             return;
@@ -860,8 +848,14 @@ public class BTreeNode extends YapMeta{
     
     private Searcher search(YapReader reader, SearchTarget target){
         Searcher s = new Searcher(target, _count);
-        while(s.incomplete()){
-            compare(s, reader);
+        if(canWrite()){
+            while(s.incomplete()){
+            	s.resultIs( compareInWriteMode(s.cursor()));
+            }
+        }else{
+            while(s.incomplete()){
+            	s.resultIs( compareInReadMode(reader, s.cursor()));
+            }
         }
         return s;
     }
