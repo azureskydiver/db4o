@@ -1,0 +1,188 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <StartupObject>db4o_reference_chapters.Program</StartupObject>
+    <RootNamespace>db4o_reference_chapters</RootNamespace>
+    <AssemblyName>db4o-reference-chapters</AssemblyName>
+    <MyType>Console</MyType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>true</IncrementalBuild>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>_MyType="Windows"</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>false</IncrementalBuild>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>_MyType="Windows"</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activating\ActivationExample.vb" />
+    <Compile Include="Activating\SensorPanel.vb" />
+    <Compile Include="Attributes\Car.vb" />
+    <Compile Include="Blobs\BlobExample.vb" />
+    <Compile Include="Blobs\Car.vb" />
+    <Compile Include="Blobs\CarImage.vb" />
+    <Compile Include="Clientserver\Car.vb" />
+    <Compile Include="Clientserver\ClientServerExample.vb" />
+    <Compile Include="Clientserver\DeepExample.vb" />
+    <Compile Include="Clientserver\ExtClientExample.vb" />
+    <Compile Include="Clientserver\Pilot.vb" />
+    <Compile Include="Clientserver\PressureSensorReadout.vb" />
+    <Compile Include="Clientserver\SensorReadout.vb" />
+    <Compile Include="Clientserver\ServerConfiguration.vb" />
+    <Compile Include="Clientserver\StartServer.vb" />
+    <Compile Include="Clientserver\StopServer.vb" />
+    <Compile Include="Clientserver\TemperatureSensorReadout.vb" />
+    <Compile Include="Clientserver\TransactionExample.vb" />
+    <Compile Include="Constructors\C1.vb" />
+    <Compile Include="Constructors\C2.vb" />
+    <Compile Include="Constructors\C3.vb" />
+    <Compile Include="Constructors\C4.vb" />
+    <Compile Include="Debugging\Car.vb" />
+    <Compile Include="Debugging\DebugExample.vb" />
+    <Compile Include="Diagnostics\ArbitraryQuery.vb" />
+    <Compile Include="Diagnostics\Car.vb" />
+    <Compile Include="Diagnostics\CarEvaluation.vb" />
+    <Compile Include="Diagnostics\CarTranslator.vb" />
+    <Compile Include="Diagnostics\DiagnosticExample.vb" />
+    <Compile Include="Diagnostics\Empty.vb" />
+    <Compile Include="Diagnostics\IndexDiagListener.vb" />
+    <Compile Include="Diagnostics\NewCarModel.vb" />
+    <Compile Include="Diagnostics\Pilot.vb" />
+    <Compile Include="Diagnostics\SensorReadout.vb" />
+    <Compile Include="Diagnostics\TranslatorDiagListener.vb" />
+    <Compile Include="Enums\Door.vb" />
+    <Compile Include="Enums\DoorState.vb" />
+    <Compile Include="Enums\DoorStateInit.vb" />
+    <Compile Include="Enums\DoorStateReal.vb" />
+    <Compile Include="Enums\DoorStateUninit.vb" />
+    <Compile Include="Enums\EnumExample.vb" />
+    <Compile Include="Enums\EnumSODAExample.vb" />
+    <Compile Include="Evaluations\Car.vb" />
+    <Compile Include="Evaluations\CarTranslator.vb" />
+    <Compile Include="Evaluations\CultureInfoTranslator.vb" />
+    <Compile Include="Evaluations\EvaluationExample.vb" />
+    <Compile Include="Evaluations\EvenHistoryEvaluation.vb" />
+    <Compile Include="Evaluations\LocalizedItemList.vb" />
+    <Compile Include="Evaluations\Pilot.vb" />
+    <Compile Include="Evaluations\SensorReadout.vb" />
+    <Compile Include="Evaluations\TranslatorExample.vb" />
+    <Compile Include="Identity\Car.vb" />
+    <Compile Include="Identity\IdentityExample.vb" />
+    <Compile Include="Identity\Pilot.vb" />
+    <Compile Include="Indexes\Car.vb" />
+    <Compile Include="Indexes\IndexedExample.vb" />
+    <Compile Include="Indexes\Pilot.vb" />
+    <Compile Include="IOs\IOExample.vb" />
+    <Compile Include="IOs\LoggingAdapter.vb" />
+    <Compile Include="IOs\Pilot.vb" />
+    <Compile Include="Lists\CollectionExample.vb" />
+    <Compile Include="Lists\CollectionFactory.vb" />
+    <Compile Include="Lists\Pilot.vb" />
+    <Compile Include="Lists\Team.vb" />
+    <Compile Include="Lists\VerboseList.vb" />
+    <Compile Include="Messaging\MessagingExample.vb" />
+    <Compile Include="Messaging\MyClientServerMessage.vb" />
+    <Compile Include="Metainfo\Car.vb" />
+    <Compile Include="Metainfo\MetaInfoExample.vb" />
+    <Compile Include="Metainfo\Pilot.vb" />
+    <Compile Include="Persist\Car.vb" />
+    <Compile Include="Persist\Change1.vb" />
+    <Compile Include="Persist\Change2.vb" />
+    <Compile Include="Persist\PeekPersistedExample.vb" />
+    <Compile Include="Queries\ArbitraryQuery.vb" />
+    <Compile Include="Queries\ComplexQuery.vb" />
+    <Compile Include="Queries\NQExample.vb" />
+    <Compile Include="Queries\PersistentExample.vb" />
+    <Compile Include="Queries\Pilot.vb" />
+    <Compile Include="Queries\PilotHundredPoints.vb" />
+    <Compile Include="Queries\QueryExample.vb" />
+    <Compile Include="Refactoring\newclasses\Identity.vb" />
+    <Compile Include="Refactoring\newclasses\Pilot.vb" />
+    <Compile Include="Refactoring\newclasses\RefactoringExample.vb" />
+    <Compile Include="Refactoring\Pilot.vb" />
+    <Compile Include="Refactoring\PilotNew.vb" />
+    <Compile Include="Refactoring\RefactoringExample.vb" />
+    <Compile Include="Reflections\Car.vb" />
+    <Compile Include="Reflections\LoggingArray.vb" />
+    <Compile Include="Reflections\LoggingReflector.vb" />
+    <Compile Include="Reflections\ReflectorExample.vb" />
+    <Compile Include="Remote\Car.vb" />
+    <Compile Include="Remote\RemoteExample.vb" />
+    <Compile Include="Remote\UpdateServer.vb" />
+    <Compile Include="SelectivePersistence\FieldTransient.vb" />
+    <Compile Include="SelectivePersistence\MarkTransientExample.vb" />
+    <Compile Include="SelectivePersistence\Test.vb" />
+    <Compile Include="SelectivePersistence\TestCustomized.vb" />
+    <Compile Include="Semaphores\ConnectedUser.vb" />
+    <Compile Include="Semaphores\LimitLogins.vb" />
+    <Compile Include="Semaphores\LockManager.vb" />
+    <Compile Include="Semaphores\Singleton.vb" />
+    <Compile Include="Serializing\Car.vb" />
+    <Compile Include="Serializing\Pilot.vb" />
+    <Compile Include="Serializing\SerializeExample.vb" />
+    <Compile Include="StaticFields\Car.vb" />
+    <Compile Include="StaticFields\Pilot.vb" />
+    <Compile Include="StaticFields\PilotCategories.vb" />
+    <Compile Include="StaticFields\StaticFieldExample.vb" />
+    <Compile Include="Structured\Car.vb" />
+    <Compile Include="Structured\Pilot.vb" />
+    <Compile Include="Structured\StructuredExample.vb" />
+    <Compile Include="Utility\SensorPanel.vb" />
+    <Compile Include="Utility\UtilityExample.vb" />
+    <Compile Include="UUIDs\Car.vb" />
+    <Compile Include="UUIDs\Pilot.vb" />
+    <Compile Include="UUIDs\UUIDExample.vb" />
+    <Compile Include="Program.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
+      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
+      <Name>Db4objects.Db4o-2005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="My Project\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>
