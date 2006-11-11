@@ -20,7 +20,6 @@ public class Searcher {
     
     private final int _count;
     
-    
     public Searcher(SearchTarget target, int count){
     	if(count < 0){
     		throw new IllegalArgumentException();
@@ -37,9 +36,8 @@ public class Searcher {
         adjustCursor();
     }
     
-    private void adjustBounds(int cmp){
-        _cmp = cmp;
-        if(cmp > 0){
+    private void adjustBounds(){
+        if(_cmp > 0){
             _upper = _cursor - 1;
             if (_upper < _lower) {
                 _upper = _lower;
@@ -47,7 +45,7 @@ public class Searcher {
             return;
         }
         
-        if (cmp < 0) {
+        if (_cmp < 0) {
             if(_lower == _cursor && _lower < _upper){
                 _lower++;
             }else{
@@ -121,7 +119,8 @@ public class Searcher {
     }
 
     public void resultIs(int cmp){
-        adjustBounds(cmp);
+        _cmp = cmp;
+        adjustBounds();
         adjustCursor();
     }
 

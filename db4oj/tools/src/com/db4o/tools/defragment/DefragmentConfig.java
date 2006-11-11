@@ -3,6 +3,7 @@
 package com.db4o.tools.defragment;
 
 import com.db4o.*;
+import com.db4o.config.*;
 
 /**
  * Configuration for a defragmentation run.
@@ -10,6 +11,8 @@ import com.db4o.*;
  * @see SlotDefragment
  */
 public class DefragmentConfig {
+	
+	public static final boolean DEBUG = false;
 	
 	public final static String BACKUP_SUFFIX="backup";
 	public final static String MAPPING_SUFFIX="mapping";
@@ -102,4 +105,11 @@ public class DefragmentConfig {
 	}
 	
 	private final static YapClassFilter NULLFILTER=new NullFilter();
+	
+	public static Configuration db4oConfig(){
+		Configuration config = Db4o.newConfiguration();
+		config.weakReferences(false);
+		return config;
+	}
+	
 }

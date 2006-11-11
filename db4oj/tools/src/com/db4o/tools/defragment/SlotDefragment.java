@@ -136,7 +136,7 @@ public class SlotDefragment {
 	}
 
 	private static void setIdentity(String targetFile, int targetIdentityID, int targetUuidIndexID) {
-		YapFile targetDB=(YapFile)Db4o.openFile(Db4o.newConfiguration(),targetFile);
+		YapFile targetDB=(YapFile)Db4o.openFile(DefragmentConfig.db4oConfig(),targetFile);
 		try {
 			Db4oDatabase identity=(Db4oDatabase)targetDB.getByID(targetIdentityID);
 			targetDB.setIdentity(identity);
