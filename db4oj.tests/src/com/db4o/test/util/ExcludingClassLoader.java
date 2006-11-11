@@ -6,9 +6,9 @@ import java.net.*;
 import java.util.*;
 
 public class ExcludingClassLoader extends URLClassLoader {
-	private List excludedNames;
+	private Vector excludedNames;
 	
-	public ExcludingClassLoader(ClassLoader parent,List excludedNames) {
+	public ExcludingClassLoader(ClassLoader parent,Vector excludedNames) {
 		super(new URL[]{},parent);
 		this.excludedNames=excludedNames;
 	}
@@ -23,7 +23,7 @@ public class ExcludingClassLoader extends URLClassLoader {
 	public static void main(String[] args) throws Exception {
 		ClassLoader parent=ExcludingClassLoader.class.getClassLoader();
 		String excName=ExcludingClassLoader.class.getName();
-		List excluded=new ArrayList();
+		Vector excluded=new Vector();
 		ClassLoader incLoader=new ExcludingClassLoader(parent,excluded);
 		System.out.println(incLoader.loadClass(excName));
 		excluded.add(excName);

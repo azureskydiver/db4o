@@ -113,7 +113,7 @@ public class Test extends AllTests {
 	            File4.delete(targetFile);
 	            File4.delete(mappingFile);
 	            
-	            SlotDefragment.defrag(fileName, targetFile, mappingFile);
+	            SlotDefragment.defrag(new DefragmentConfig(fileName, targetFile, mappingFile));
             } else {
             	
             	new Defragment().run(fileName, true);

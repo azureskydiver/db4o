@@ -50,14 +50,14 @@ public class DefragContextImpl implements DefragContext {
 	private Queue4 _unindexed=new Queue4();
 	
 
-	public DefragContextImpl(String sourceFileName,String targetFileName,String mappingFileName,DefragmentListener listener) {
+	public DefragContextImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
 		_listener=listener;
 		Configuration sourceConfig=Db4o.newConfiguration();
 		sourceConfig.flushFileBuffers(false);
 		sourceConfig.readOnly(true);
-		_sourceDb=(YapFile)Db4o.openFile(sourceConfig,sourceFileName).ext();
-		_targetDb = freshYapFile(targetFileName);
-		_mapping=new BTreeIDMapping(mappingFileName);
+		_sourceDb=(YapFile)Db4o.openFile(sourceConfig,defragConfig.backupPath()).ext();
+		_targetDb = freshYapFile(defragConfig.origPath());
+		_mapping=new BTreeIDMapping(defragConfig.mappingPath());
 	}
 	
 	static YapFile freshYapFile(String fileName) {
