@@ -45,10 +45,10 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 	}
 
 	public void testNoForceDelete() throws Exception {
-		SlotDefragment.defrag(defragConfig(false));
+		SlotDefragment.defrag(FILENAME,BACKUPFILENAME);
 		Assert.expect(IOException.class, new CodeBlock() {
 			public void run() throws Exception {
-				SlotDefragment.defrag(defragConfig(false));
+				SlotDefragment.defrag(FILENAME,BACKUPFILENAME);
 			}
 		});
 	}	

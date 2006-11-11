@@ -13,8 +13,59 @@ import com.db4o.inside.classindex.*;
 
 /**
  * Slotwise defragment for yap files.
+ * 
+ * Db4o structures storage inside the yap file as free and occupied slots,
+ * very much like a file system - and just like a file system it can be
+ * fragmented.
+ * 
+ * The simplest way to defragment a yap file:
+ * 
+ * SlotDefragment.defrag("sample.yap");
+ * 
+ * This will move the file to "sample.yap.backup", then create a defragmented
+ * version of this file in the original position, using a temporary file
+ * "sample.yap.mapping". If the backup file already exists, this will throw
+ * an exception and no action will be taken.
+ * 
+ * For more detailed configuration of the defragmentation process, provide
+ * a DefragmentConfig instance:
+ * 
+ * DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap","sample.map");
+ * config.forceBackupDelete(true);
+ * config.yapClassFilter(new AvailableClassFilter());
+ * SlotDefragment.defrag(config);
+ * 
+ * This will move the file to "sample.bap", then create a defragmented
+ * version of this file in the original position, using a temporary file
+ * "sample.map". If the backup file already exists, it will be deleted.
+ * The defragmentation process will skip all classes that have instances
+ * stored within the yap file, but that are not available on the class path
+ * (through the current classloader).
  */
 public class SlotDefragment {
+
+	/**
+	 * Renames the file at the given original path to a backup
+	 * file and then builds a defragmented version of the file in the original place.
+	 * 
+	 * @param origPath The path to the file to be defragmented.
+	 * @throws IOException if the original file cannot be moved to the backup location
+	 */
+	public static void defrag(String origPath) throws IOException {
+		defrag(new DefragmentConfig(origPath),new NullListener());
+	}
+
+	/**
+	 * Renames the file at the given original path to the given backup
+	 * file and then builds a defragmented version of the file in the original place.
+	 * 
+	 * @param origPath The path to the file to be defragmented.
+	 * @param backupPath The path to the backup file to be created.
+	 * @throws IOException if the original file cannot be moved to the backup location
+	 */
+	public static void defrag(String origPath,String backupPath) throws IOException {
+		defrag(new DefragmentConfig(origPath,backupPath),new NullListener());
+	}
 
 	/**
 	 * Renames the file at the configured original path to the configured backup
