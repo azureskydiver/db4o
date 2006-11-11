@@ -18,6 +18,7 @@ Tuning suggestions:
 - use single key plus handler instead of values -done- (+++)
 - only map addresses for objects whose class is covered by a string index -partially done- (++)
 - batch pointer allocation in first pass -done- (o)
-- merge id and seen trees - but seen has to be updated per pass...
+- merge id and seen trees - but seen has to be updated per pass... -done- (o)
 - increase node size?
 - pre-sort classes and use object header class id entry to decide 'seen'?
+- alternatively: remove 'seen' by sorting out subclasses like the 'old' defragment?

@@ -17,44 +17,32 @@ import com.db4o.inside.classindex.*;
 public class SlotDefragment {
 
 	/**
-	 * Renames the file at origPath to backupPath and then builds a defragmented
-	 * version of the file in the original place.
+	 * Renames the file at the configured original path to the configured backup
+	 * path and then builds a defragmented version of the file in the original place.
 	 * 
-	 * @param origPath The path to the file to be defragmented. Must exist and must be
-	 *         a valid yap file.
-	 * @param backupPath The path to the backup of the original file. No file should
-	 *         exist at this position, otherwise it will be OVERWRITTEN!
-	 * @param mappingPath The path for an intermediate mapping file used internally.
-	 *         No file should exist at this position, otherwise it will be DELETED!
+	 * @param config The configuration for this defragmentation run.
 	 */
-	public static void defrag(String origPath, String backupPath,
-			String mappingPath) throws IOException {
-		defrag(origPath,backupPath,mappingPath,new NullListener());
+	public static void defrag(DefragmentConfig config) throws IOException {
+		defrag(config,new NullListener());
 	}
 
 	/**
-	 * Renames the file at origPath to backupPath and then builds a defragmented
-	 * version of the file in the original place.
+	 * Renames the file at the configured original path to the configured backup
+	 * path and then builds a defragmented version of the file in the original place.
 	 * 
-	 * @param origPath The path to the file to be defragmented. Must exist and must be
-	 *         a valid yap file.
-	 * @param backupPath The path to the backup of the original file. No file should
-	 *         exist at this position, otherwise it will be OVERWRITTEN!
-	 * @param mappingPath The path for an intermediate mapping file used internally.
-	 *         No file should exist at this position, otherwise it will be DELETED!
+	 * @param config The configuration for this defragmentation run.
 	 * @param listener A listener for status notifications during the defragmentation
 	 *         process.
 	 */
-	public static void defrag(String origPath, String backupPath,
-			String mappingPath, DefragmentListener listener) throws IOException {
-		File4.rename(origPath, backupPath);
-		DefragContextImpl context=new DefragContextImpl(backupPath,origPath,mappingPath,listener);
+	public static void defrag(DefragmentConfig config, DefragmentListener listener) throws IOException {
+		File4.rename(config.origPath(), config.backupPath());
+		DefragContextImpl context=new DefragContextImpl(config,listener);
 		int newClassCollectionID=0;
 		int targetIdentityID=0;
 		int targetUuidIndexID=0;
 		try {
-			firstPass(context);
-			secondPass(context);
+			firstPass(context,config);
+			secondPass(context,config);
 			defragUnindexed(context);
 			newClassCollectionID=context.mappedID(context.sourceClassCollectionID());
 			int sourceIdentityID=context.databaseIdentityID(DefragContextImpl.SOURCEDB);
@@ -68,7 +56,7 @@ public class SlotDefragment {
 		finally {
 			context.close();
 		}
-		setIdentity(origPath, targetIdentityID,targetUuidIndexID);
+		setIdentity(config.origPath(), targetIdentityID,targetUuidIndexID);
 	}
 
 	private static void defragUnindexed(DefragContextImpl context) throws CorruptionException {
@@ -99,22 +87,26 @@ public class SlotDefragment {
 		}
 	}
 
-	private static void firstPass(DefragContextImpl context) throws CorruptionException {
+	private static void firstPass(DefragContextImpl context,DefragmentConfig config) throws CorruptionException {
 		//System.out.println("FIRST");
-		pass(context,new FirstPassCommand());
+		pass(context,config,new FirstPassCommand());
 	}
 
-	private static void secondPass(final DefragContextImpl context) throws CorruptionException {
+	private static void secondPass(final DefragContextImpl context,DefragmentConfig config) throws CorruptionException {
 		//System.out.println("SECOND");
-		pass(context,new SecondPassCommand());
+		pass(context,config,new SecondPassCommand());
 	}		
 
-	private static void pass(DefragContextImpl context,PassCommand command) throws CorruptionException {
+	private static void pass(DefragContextImpl context,DefragmentConfig config,PassCommand command) throws CorruptionException {
 		context.clearSeen();
 		command.processClassCollection(context);
 		StoredClass[] classes=context.storedClasses(DefragContextImpl.SOURCEDB);
 		for (int classIdx = 0; classIdx < classes.length; classIdx++) {
-			processYapClass(context, (YapClass)classes[classIdx],command);
+			YapClass yapClass = (YapClass)classes[classIdx];
+			if(!config.yapClassFilter().accept(yapClass)) {
+				continue;
+			}
+			processYapClass(context, yapClass,command);
 			command.flush(context);
 		}
 		BTree uuidIndex=context.sourceUuidIndex();
@@ -123,7 +115,7 @@ public class SlotDefragment {
 		}
 		command.flush(context);
 		context.targetCommit();
-	}		
+	}
 
 	// TODO order of class index/object slot processing is crucial:
 	// - object slots before field indices (object slots register addresses for use by string indices)

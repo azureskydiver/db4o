@@ -13,6 +13,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			QueryStatsTestCase.class,
+			com.db4o.db4ounit.jre11.tools.defragment.AllTests.class,
 		};
 	}
 }

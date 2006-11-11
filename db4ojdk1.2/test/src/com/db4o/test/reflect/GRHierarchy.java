@@ -5,12 +5,11 @@ package com.db4o.test.reflect;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.db4ounit.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
-import com.db4o.test.AllTests;
+import com.db4o.test.*;
 import com.db4o.test.Test;
 import com.db4o.test.util.*;
 
@@ -66,7 +65,7 @@ public class GRHierarchy {
 		if(Test.clientServer) {
 			return;
 		}
-		List excluded=new ArrayList();
+		Vector excluded=new Vector();
 		excluded.add(A.class.getName());
 		excluded.add(B.class.getName());
 		excluded.add(A1.class.getName());

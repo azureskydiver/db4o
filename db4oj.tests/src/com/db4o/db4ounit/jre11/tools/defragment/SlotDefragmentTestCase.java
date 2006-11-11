@@ -34,7 +34,7 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 
 	public void testDefrag() throws IOException {
 		long start=System.currentTimeMillis();
-		SlotDefragment.defrag(SOURCEFILE,TARGETFILE,MAPPINGFILE);
+		SlotDefragment.defrag(new DefragmentConfig(SOURCEFILE,TARGETFILE,MAPPINGFILE));
 		System.out.println("TIME "+(System.currentTimeMillis()-start)+" ms");
 		checkCopied();
 	}
