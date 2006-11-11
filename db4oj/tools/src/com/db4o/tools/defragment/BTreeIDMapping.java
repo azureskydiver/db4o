@@ -9,8 +9,12 @@ import com.db4o.inside.ix.*;
 import com.db4o.inside.mapping.*;
 
 class BTreeIDMapping {
+	
 		private YapFile _mappingDb;
+		
 		private BTree _idTree;
+		
+		private MappedIDPair _cache = new MappedIDPair(0, 0);
 
 		public BTreeIDMapping(String fileName) {
 			_mappingDb = DefragContextImpl.freshYapFile(fileName);
@@ -24,15 +28,15 @@ class BTreeIDMapping {
 			if(classID!=null) {
 				return classID;
 			}
+			if(_cache.orig() == oldID){
+				return new Integer(_cache.mapped());
+			}
 			BTreeRange range=_idTree.search(trans(),new MappedIDPair(oldID,0));
-			MappedIDPair mappedIDs=null;
 			Iterator4 pointers=range.pointers();
 			if(pointers.moveNext()) {
 				BTreePointer pointer=(BTreePointer)pointers.current();
-				mappedIDs=(MappedIDPair)pointer.key();
-			}
-			if(mappedIDs!=null) {
-				return new Integer(mappedIDs.mapped());
+				_cache=(MappedIDPair)pointer.key();
+				return new Integer(_cache.mapped());
 			}
 			if(lenient) {
 				return mapLenient(oldID,range);
@@ -63,13 +67,16 @@ class BTreeIDMapping {
 		}
 
 		private MappedIDPair idMapping(int id) {
+			if(_cache.orig() == id){
+				return _cache;
+			}
 			BTreeRange range=_idTree.search(trans(),new MappedIDPair(id,-1));
 			Iterator4 pointers=range.pointers();
 			if(!pointers.moveNext()) {
 				return null;
 			}
-			MappedIDPair mappedIDs=(MappedIDPair)((BTreePointer)pointers.current()).key();
-			return mappedIDs;
+			_cache=(MappedIDPair)((BTreePointer)pointers.current()).key();
+			return _cache;
 		}
 		
 		public boolean hasSeen(int id) {
