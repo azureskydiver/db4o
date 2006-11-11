@@ -628,15 +628,17 @@ public class BTreeNode extends YapMeta{
     }
     
     private BTreePatch keyPatch(int index){
-        if( _keys[index] instanceof BTreePatch){
-            return (BTreePatch)_keys[index];
+    	Object obj = _keys[index]; 
+        if( obj instanceof BTreePatch){
+            return (BTreePatch)obj;
         }
         return null;
     }
     
     private BTreePatch keyPatch(Transaction trans, int index){
-        if( _keys[index] instanceof BTreePatch){
-            return ((BTreePatch)_keys[index]).forTransaction(trans);
+    	Object obj = _keys[index];
+        if( obj instanceof BTreePatch){
+            return ((BTreePatch)obj).forTransaction(trans);
         }
         return null;
     }

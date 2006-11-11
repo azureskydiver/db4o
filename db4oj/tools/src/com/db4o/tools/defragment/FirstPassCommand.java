@@ -16,7 +16,7 @@ final class FirstPassCommand implements PassCommand {
 
 	private TreeInt _ids;
 	
-	private void process(DefragContextImpl context, int objectID, boolean isClassID) {
+	void process(DefragContextImpl context, int objectID, boolean isClassID) {
 		if(batchFull()) {
 			flush(context);
 		}
@@ -69,11 +69,15 @@ final class FirstPassCommand implements PassCommand {
 				objectID=-objectID;
 				isClassID=true;
 			}
-			int mappedID = context.mappedID(objectID, -1);
-			// seen object ids don't come by here anymore - any other candidates?
-			if(mappedID>=0) {
-				throw new IllegalStateException();
+			
+			if(DefragmentConfig.DEBUG){
+				int mappedID = context.mappedID(objectID, -1);
+				// seen object ids don't come by here anymore - any other candidates?
+				if(mappedID>=0) {
+					throw new IllegalStateException();
+				}
 			}
+			
 			context.mapIDs(objectID,pointerAddress, isClassID, true);
 			pointerAddress+=YapConst.POINTER_LENGTH;
 		}

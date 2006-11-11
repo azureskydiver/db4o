@@ -45,12 +45,7 @@ public class MappedIDPairHandler implements Indexable4 {
 	}
 
 	public int compareTo(Object obj) {
-    	if (null == obj) {
-    		throw new ArgumentNullException();
-    	}
-        MappedIDPair mappedIDs = (MappedIDPair)obj;
-        int result = _origHandler.compareTo(mappedIDs.orig());
-		return result;
+        return _origHandler.compareTo(((MappedIDPair)obj).orig());
 	}
 
 	public Object current() {
