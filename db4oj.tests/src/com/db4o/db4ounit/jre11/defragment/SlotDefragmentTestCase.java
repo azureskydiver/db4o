@@ -27,12 +27,12 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 	
 	public void testSkipsClass() throws Exception {
 		DefragmentConfig defragConfig = defragConfig(true);
-		SlotDefragment.defrag(defragConfig);
+		Defragment.defrag(defragConfig);
 		assertDataClassKnown(true);
 
 		defragConfig = defragConfig(true);
 		defragConfig.storedClassFilter(new AvailableClassFilter());
-		SlotDefragment.defrag(defragConfig);
+		Defragment.defrag(defragConfig);
 		assertDataClassKnown(true);
 
 		defragConfig = defragConfig(true);
@@ -40,15 +40,15 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 		excluded.add(Data.class.getName());
 		ExcludingClassLoader loader=new ExcludingClassLoader(getClass().getClassLoader(),excluded);
 		defragConfig.storedClassFilter(new AvailableClassFilter(loader));
-		SlotDefragment.defrag(defragConfig);
+		Defragment.defrag(defragConfig);
 		assertDataClassKnown(false);
 	}
 
 	public void testNoForceDelete() throws Exception {
-		SlotDefragment.defrag(FILENAME,BACKUPFILENAME);
+		Defragment.defrag(FILENAME,BACKUPFILENAME);
 		Assert.expect(IOException.class, new CodeBlock() {
 			public void run() throws Exception {
-				SlotDefragment.defrag(FILENAME,BACKUPFILENAME);
+				Defragment.defrag(FILENAME,BACKUPFILENAME);
 			}
 		});
 	}	

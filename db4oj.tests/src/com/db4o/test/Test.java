@@ -112,10 +112,10 @@ public class Test extends AllTests {
 	            File4.delete(targetFile);
 	            File4.delete(mappingFile);
 	            
-	            SlotDefragment.defrag(new DefragmentConfig(fileName, targetFile, mappingFile));
+	            com.db4o.defragment.Defragment.defrag(new DefragmentConfig(fileName, targetFile, mappingFile));
             } else {
             	
-            	new Defragment().run(fileName, true);
+            	new com.db4o.tools.Defragment().run(fileName, true);
             	
             }
             

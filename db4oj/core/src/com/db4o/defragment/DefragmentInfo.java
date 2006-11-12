@@ -11,7 +11,7 @@ package com.db4o.defragment;
  * the defragmentation process. These probably are harmless and the
  * result of a user-initiated delete operation.
  * 
- * @see SlotDefragment
+ * @see Defragment
  */
 public class DefragmentInfo {
 	private String _msg;
