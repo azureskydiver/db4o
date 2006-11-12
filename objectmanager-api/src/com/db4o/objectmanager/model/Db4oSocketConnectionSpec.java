@@ -37,7 +37,11 @@ public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 		}
 	}
 
-    public String toString() {
+	public boolean isRemote() {
+		return true;
+	}
+
+	public String toString() {
         return getPath();
     }
 

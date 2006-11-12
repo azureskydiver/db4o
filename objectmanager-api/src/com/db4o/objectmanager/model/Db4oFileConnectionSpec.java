@@ -20,7 +20,11 @@ public class Db4oFileConnectionSpec extends Db4oConnectionSpec {
 		return Db4o.openFile(filePath);
 	}
 
-    public String toString() {
+	public boolean isRemote() {
+		return false;
+	}
+
+	public String toString() {
         return getFullPath();
     }
 
