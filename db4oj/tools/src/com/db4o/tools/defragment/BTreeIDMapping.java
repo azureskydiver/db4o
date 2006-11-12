@@ -11,7 +11,7 @@ import com.db4o.inside.mapping.*;
 /**
  * @exclude
  */
-class BTreeIDMapping {
+class BTreeIDMapping extends AbstractIDMapping{
 	
 		private YapFile _mappingDb;
 		
@@ -30,7 +30,7 @@ class BTreeIDMapping {
 			if(_cache.orig() == oldID){
 				return new Integer(_cache.mapped());
 			}
-			Integer classID=(Integer)_classIDs.get(oldID);
+			Integer classID=mappedClassID(oldID);
 			if(classID!=null) {
 				return classID;
 			}
@@ -48,20 +48,16 @@ class BTreeIDMapping {
 		}
 
 		private Integer mapLenient(int oldID, BTreeRange range) {
-			Integer value=null;
-			MappedIDPair mappedIDs=null;
 			range=range.smaller();
 			BTreePointer pointer=range.lastPointer();
-			if(pointer!=null) {
-				mappedIDs=(MappedIDPair) pointer.key();
+			if(pointer==null) {
+				return null;
 			}
-			if(mappedIDs!=null) {
-				value=new Integer(mappedIDs.mapped()+(oldID-mappedIDs.orig()));
-			}
-			return value;
+			MappedIDPair mappedIDs = (MappedIDPair) pointer.key();
+			return new Integer(mappedIDs.mapped()+(oldID-mappedIDs.orig()));
 		}
 
-		public void mapIDs(int oldID,int newID, boolean seen) {
+		public void mapIDs(int oldID,int newID) {
 			_cache = new MappedIDPair(oldID,newID);
 			_idTree.add(trans(), _cache);
 		}
@@ -70,12 +66,6 @@ class BTreeIDMapping {
 			_mappingDb.close();
 		}
 
-		private Hashtable4 _classIDs=new Hashtable4();
-		
-		public void mapClassIDs(int oldID, int newID) {
-			_classIDs.put(oldID,new Integer(newID));
-		}
-		
 		private Transaction trans() {
 			return _mappingDb.getSystemTransaction();
 		}
