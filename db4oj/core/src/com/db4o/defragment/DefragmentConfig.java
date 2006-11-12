@@ -9,7 +9,7 @@ import com.db4o.ext.*;
 /**
  * Configuration for a defragmentation run.
  * 
- * @see SlotDefragment
+ * @see Defragment
  */
 public class DefragmentConfig {
 	
