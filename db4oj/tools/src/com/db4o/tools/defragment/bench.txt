@@ -1,16 +1,17 @@
 todo2006/FastDefragment timings
 
-                    NETBEANS  ECLIPSE
-OLD DEFRAGMENT       33174ms  59060ms
+                    NETBEANS  ECLIPSE  WINDOWS
+OLD DEFRAGMENT       33174ms  59060ms  42360ms
 INITIAL               9152ms  12532ms
-CLASS ID CACHING      9663ms  11588ms (ObjectHeader#defrag(): 13,2% -> 1,5%)
+CLASS ID CACHING      9663ms  11588ms           (ObjectHeader#defrag(): 13,2% -> 1,5%)
 BTREE#LAST                    11467ms
 SINGLE KEY                     8401ms
-FIELD-INDEXED ONLY    7517ms   6905ms (First pass now up from 24% to 30%)
+FIELD-INDEXED ONLY    7517ms   6905ms           (First pass now up from 24% to 30%)
 BATCH POINTER ALLOC            7130ms
 REMOVE FP DOUBLE CHECK         7078ms
-MERGE ID/SEEN TREE    8146ms   8587ms (seen was in-memory so far)
-CARL'S CHANGES                 7017ms
+MERGE ID/SEEN TREE    8146ms   8587ms           (seen was in-memory so far)
+CARL'S CHANGES                 7017ms  11141ms
+'TOPLEVEL' OBJ SLOTS ONLY      6935ms
 
 Tuning suggestions:
 - cache class ids separately -done- (+)
