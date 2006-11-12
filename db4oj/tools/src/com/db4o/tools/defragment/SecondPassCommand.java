@@ -10,6 +10,8 @@ import com.db4o.inside.btree.*;
  * content slots from source to target and triggers ID remapping therein by calling the
  * appropriate yap/marshaller defrag() implementations. During the process, the actual address
  * mappings for the content slots are registered for use with string indices.
+ * 
+ * @exclude
  */
 final class SecondPassCommand implements PassCommand {
 

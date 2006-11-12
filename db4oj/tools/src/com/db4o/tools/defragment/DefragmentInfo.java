@@ -10,6 +10,8 @@ package com.db4o.tools.defragment;
  * to registered listeners when invalid IDs are encountered during
  * the defragmentation process. These probably are harmless and the
  * result of a user-initiated delete operation.
+ * 
+ * @see SlotDefragment
  */
 public class DefragmentInfo {
 	private String _msg;

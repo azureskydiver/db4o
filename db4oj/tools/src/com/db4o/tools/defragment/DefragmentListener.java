@@ -4,6 +4,8 @@ package com.db4o.tools.defragment;
 
 /**
  * Listener for defragmentation process messages.
+ * 
+ * @see SlotDefragment
  */
 public interface DefragmentListener {
 	/**
