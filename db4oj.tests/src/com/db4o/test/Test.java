@@ -5,12 +5,12 @@ package com.db4o.test;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.query.*;
 import com.db4o.tools.*;
-import com.db4o.tools.defragment.*;
 
 public class Test extends AllTests {
 	
