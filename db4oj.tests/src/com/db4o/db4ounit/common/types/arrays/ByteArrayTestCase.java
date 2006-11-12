@@ -62,10 +62,16 @@ public class ByteArrayTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
+	/**
+	 * @sharpen.if !CF_1_0 && !CF_2_0
+	 */
 	public void testByteArrayHolder() throws Exception {
 		timeQueryLoop("raw byte array", ByteArrayHolder.class);
 	}
 	
+	/**
+	 * @sharpen.if !CF_1_0 && !CF_2_0
+	 */
 	public void testSerializableByteArrayHolder() throws Exception {
 		timeQueryLoop("TSerializable", SerializableByteArrayHolder.class);
 	}
