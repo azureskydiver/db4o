@@ -5,6 +5,7 @@ package db4ounit.extensions;
 import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
+import com.db4o.foundation.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.Reflector;
 
@@ -164,8 +165,29 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return result.next();
 	}
 	
+	protected int countOccurences(Class clazz) {
+		ObjectSet result = newQuery(clazz).execute();
+		return result.size();
+	}
+	
+	protected void foreach(Class clazz, Visitor4 visitor) {
+        ExtObjectContainer oc = db();
+        oc.deactivate(clazz, Integer.MAX_VALUE);
+        ObjectSet set = newQuery(clazz).execute();
+        while (set.hasNext()) {
+            visitor.visit(set.next());
+        }
+	}
+	
+	protected void deleteAll(Class clazz) {
+		foreach(clazz, new Visitor4() {
+			public void visit(Object obj) {
+				db().delete(obj);
+			}
+		});
+	}
+	
 	protected final void store(Object obj) {
 		db().set(obj);
 	}
-
 }
