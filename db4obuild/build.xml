@@ -833,6 +833,7 @@
 		<antcall target="copyjava5" />
 		<javadoc classpath="" access="public" windowtitle="db4o - database for objects - documentation" header="db4o ${db4o.version.dotted}" destdir="${dir.dist.doc.api}">
 			<fileset dir="${dir.dist.java.temp.src.core}" includes="com/db4o/**/*.java">
+				<exclude name="com/db4o/cs/**/*.java" />
 				<exclude name="com/db4o/inside/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
 				<not>
