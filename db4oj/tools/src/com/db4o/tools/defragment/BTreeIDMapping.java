@@ -59,38 +59,8 @@ class BTreeIDMapping {
 		}
 
 		public void mapIDs(int oldID,int newID, boolean seen) {
-			_cache = new MappedIDPair(oldID,newID,seen);
+			_cache = new MappedIDPair(oldID,newID);
 			_idTree.add(trans(), _cache);
-		}
-
-		public void registerSeen(int id) {
-			idMapping(id).seen(true);
-		}
-
-		private MappedIDPair idMapping(int id) {
-			if(_cache.orig() == id){
-				return _cache;
-			}
-			BTreeRange range=_idTree.search(trans(),new MappedIDPair(id,-1));
-			Iterator4 pointers=range.pointers();
-			if(!pointers.moveNext()) {
-				return null;
-			}
-			_cache=(MappedIDPair)((BTreePointer)pointers.current()).key();
-			return _cache;
-		}
-		
-		public boolean hasSeen(int id) {
-			MappedIDPair mappedIDs = idMapping(id);
-			return mappedIDs!=null&&mappedIDs.seen();
-		}
-		
-		public void clearSeen() {
-			_idTree.traverseKeys(trans(), new Visitor4() {
-				public void visit(Object obj) {
-					((MappedIDPair)obj).seen(false);
-				}
-			});
 		}
 
 		public void close() {

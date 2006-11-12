@@ -83,8 +83,4 @@ final class FirstPassCommand implements PassCommand {
 		}
 		_ids=null;
 	}
-
-	public boolean hasSeen(DefragContextImpl context,int id) {
-		return (_ids!=null&&_ids.find(new TreeInt(id))!=null)||context.hasSeen(id);
-	}
 }

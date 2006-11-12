@@ -12,6 +12,7 @@ REMOVE FP DOUBLE CHECK         7078ms
 MERGE ID/SEEN TREE    8146ms   8587ms           (seen was in-memory so far)
 CARL'S CHANGES                 7017ms  11141ms
 'TOPLEVEL' OBJ SLOTS ONLY      6935ms
+DROP SEEN                      6105ms
 
 Tuning suggestions:
 - cache class ids separately -done- (+)
@@ -22,4 +23,4 @@ Tuning suggestions:
 - merge id and seen trees - but seen has to be updated per pass... -done- (o)
 - increase node size?
 - pre-sort classes and use object header class id entry to decide 'seen'?
-- alternatively: remove 'seen' by sorting out subclasses like the 'old' defragment?
+  alternatively: remove 'seen' by sorting out subclasses like the 'old' defragment? -done- (+)

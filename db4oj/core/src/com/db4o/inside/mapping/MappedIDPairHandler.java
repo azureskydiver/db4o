@@ -10,12 +10,10 @@ public class MappedIDPairHandler implements Indexable4 {
 
 	private final YInt _origHandler;
 	private final YInt _mappedHandler;
-	private final YBoolean _seenHandler;
 	
 	public MappedIDPairHandler(YapStream stream) {
 		_origHandler=new YInt(stream);
 		_mappedHandler=new YInt(stream);
-		_seenHandler=new YBoolean(stream);
 	}
 
 	public Object comparableObject(Transaction trans, Object indexEntry) {
@@ -27,21 +25,19 @@ public class MappedIDPairHandler implements Indexable4 {
 	}
 
 	public int linkLength() {
-		return _origHandler.linkLength()+_mappedHandler.linkLength()+_seenHandler.linkLength();
+		return _origHandler.linkLength()+_mappedHandler.linkLength();
 	}
 
 	public Object readIndexEntry(YapReader reader) {
 		int origID=readID(reader);
 		int mappedID=readID(reader);
-		boolean seen=readSeen(reader);
-        return new MappedIDPair(origID,mappedID,seen);
+        return new MappedIDPair(origID,mappedID);
 	}
 
 	public void writeIndexEntry(YapReader reader, Object obj) {
 		MappedIDPair mappedIDs=(MappedIDPair)obj;
 		_origHandler.writeIndexEntry(reader, new Integer(mappedIDs.orig()));
 		_mappedHandler.writeIndexEntry(reader, new Integer(mappedIDs.mapped()));
-		_seenHandler.writeIndexEntry(reader,(mappedIDs.seen() ? Boolean.TRUE : Boolean.FALSE));
 	}
 
 	public int compareTo(Object obj) {
@@ -49,7 +45,7 @@ public class MappedIDPairHandler implements Indexable4 {
 	}
 
 	public Object current() {
-		return new MappedIDPair(_origHandler.currentInt(),_mappedHandler.currentInt(),((Boolean)_seenHandler.current()).booleanValue());
+		return new MappedIDPair(_origHandler.currentInt(),_mappedHandler.currentInt());
 	}
 
 	public boolean isEqual(Object obj) {
@@ -68,15 +64,10 @@ public class MappedIDPairHandler implements Indexable4 {
         MappedIDPair mappedIDs = (MappedIDPair)obj;
         _origHandler.prepareComparison(mappedIDs.orig());
         _mappedHandler.prepareComparison(mappedIDs.mapped());
-        _seenHandler.prepareComparison((mappedIDs.seen() ? Boolean.TRUE : Boolean.FALSE));
         return this;
 	}
 	
 	private int readID(YapReader a_reader) {
 		return ((Integer)_origHandler.readIndexEntry(a_reader)).intValue();
-	}
-
-	private boolean readSeen(YapReader a_reader) {
-		return ((Boolean)_seenHandler.readIndexEntry(a_reader)).booleanValue();
 	}
 }

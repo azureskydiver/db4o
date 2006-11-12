@@ -29,7 +29,7 @@ final class SecondPassCommand implements PassCommand {
 			public void processCopy(ReaderPair readers) {
 				YapClass.defragObject(readers);
 			}
-		},registerAddresses, true);
+		},registerAddresses);
 	}
 
 	public void processClassCollection(DefragContextImpl context) throws CorruptionException {
@@ -45,9 +45,5 @@ final class SecondPassCommand implements PassCommand {
 	}
 
 	public void flush(DefragContextImpl context) {
-	}
-	
-	public boolean hasSeen(DefragContextImpl context,int id) {
-		return context.hasSeen(id);
 	}
 }
