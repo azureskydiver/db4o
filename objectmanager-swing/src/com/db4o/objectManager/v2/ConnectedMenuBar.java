@@ -22,7 +22,9 @@ public class ConnectedMenuBar extends BaseMenuBar {
         frame = mainFrame;
 
         add(buildFileMenu());
-        add(buildManageMenu());
+		if(!frame.getConnectionSpec().isRemote()){
+			add(buildManageMenu());
+		}
         add(buildHelpMenu(helpActionListener, aboutActionListener));
     }
 

@@ -97,4 +97,6 @@ public abstract class Db4oConnectionSpec {
 	public abstract String getFullPath();
 	public abstract String getPath();
 	protected abstract ObjectContainer connectInternal();
+
+	public abstract boolean isRemote();
 }
