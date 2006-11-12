@@ -16,7 +16,10 @@ public class ServerRevokeAccessTestCase implements TestCase {
 	static final int SERVER_PORT = 0xdb42;
 	
 	static final String SERVER_HOSTNAME = "localhost";
-	
+
+	/**
+	 * @sharpen.if !CF_1_0 && !CF_2_0
+	 */
 	public void test() throws IOException {
 		File4.delete(FILE);		
 		ObjectServer server = Db4o.openServer(FILE, SERVER_PORT);
