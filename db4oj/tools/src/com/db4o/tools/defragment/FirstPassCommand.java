@@ -10,6 +10,8 @@ import com.db4o.inside.btree.*;
  * First step in the defragmenting process: Allocates pointer slots in the target file for
  * each ID (but doesn't fill them in, yet) and registers the mapping from source pointer address
  * to target pointer address.
+ * 
+ * @exclude
  */
 final class FirstPassCommand implements PassCommand {
 	private final static int ID_BATCH_SIZE=4096;

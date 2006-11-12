@@ -12,7 +12,7 @@ REMOVE FP DOUBLE CHECK         7078ms
 MERGE ID/SEEN TREE    8146ms   8587ms           (seen was in-memory so far)
 CARL'S CHANGES                 7017ms  11141ms
 'TOPLEVEL' OBJ SLOTS ONLY      6935ms
-DROP SEEN                      6105ms
+DROP SEEN                      6105ms   9594ms
 
 Tuning suggestions:
 - cache class ids separately -done- (+)

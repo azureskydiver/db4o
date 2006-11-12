@@ -7,6 +7,8 @@ import com.db4o.inside.btree.*;
 
 /**
  * Implements one step in the defragmenting process.
+ * 
+ * @exclude
  */
 interface PassCommand {
 	void processObjectSlot(DefragContextImpl context,YapClass yapClass,int id, boolean registerAddresses) throws CorruptionException;

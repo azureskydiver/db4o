@@ -6,6 +6,9 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 
+/**
+ * @exclude
+ */
 public class MappedIDPairHandler implements Indexable4 {
 
 	private final YInt _origHandler;
