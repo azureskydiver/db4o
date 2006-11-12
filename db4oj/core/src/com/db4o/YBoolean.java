@@ -2,7 +2,9 @@
 
 package com.db4o;
 
-
+/**
+ * @exclude
+ */
 public final class YBoolean extends YapJavaClass
 {
 
