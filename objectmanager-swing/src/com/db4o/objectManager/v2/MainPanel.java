@@ -144,7 +144,7 @@ public class MainPanel extends JPanel {
             ReflectClass storedClass = classesStored.get(i);
             parent = new DefaultMutableTreeNode(storedClass.getName());
             root.add(parent);
-            ReflectField[] fields = ReflectHelper.getDeclaredFields(storedClass);
+            ReflectField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(storedClass);
             for (int j = 0; j < fields.length; j++) {
                 ReflectField field = fields[j];
                 parent.add(new DefaultMutableTreeNode(field.getName()));

@@ -7,6 +7,7 @@ import demo.objectmanager.model.DemoPopulator;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Cursor;
 
 /**
  * User: treeder
@@ -29,10 +30,12 @@ public class DashboardMenuBar extends BaseMenuBar{
         item.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    DemoPopulator demoPopulator = new DemoPopulator();
+					dashboard.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					DemoPopulator demoPopulator = new DemoPopulator();
                     demoPopulator.start();
                     dashboard.connectTo(demoPopulator.getDataFile());
-                } catch(Exception ex){
+					dashboard.getFrame().setCursor(null);
+				} catch(Exception ex){
                     ex.printStackTrace();
                     dashboard.showError("Error creating model database! " + ex.getMessage());
                 }
