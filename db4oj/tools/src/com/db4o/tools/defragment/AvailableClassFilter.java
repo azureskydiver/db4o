@@ -2,13 +2,13 @@
 
 package com.db4o.tools.defragment;
 
-import com.db4o.*;
+import com.db4o.ext.*;
 
 /**
  * Filter that accepts only YapClass instances whose corresponding Java class is
  * currently known.
  */
-public class AvailableClassFilter implements YapClassFilter {
+public class AvailableClassFilter implements StoredClassFilter {
 	private ClassLoader _loader;
 
 	/**
@@ -32,12 +32,12 @@ public class AvailableClassFilter implements YapClassFilter {
 	 * Will accept only classes whose corresponding platform class is known
 	 * to the configured classloader.
 	 * 
-	 * @param yapClass The YapClass instance to be checked
+	 * @param storedClass The YapClass instance to be checked
 	 * @return true if the corresponding platform class is known to the configured classloader, false otherwise
 	 */
-	public boolean accept(YapClass yapClass) {
+	public boolean accept(StoredClass storedClass) {
 		try {
-			_loader.loadClass(yapClass.getName());
+			_loader.loadClass(storedClass.getName());
 			return true;
 		} catch (ClassNotFoundException exc) {
 			return false;

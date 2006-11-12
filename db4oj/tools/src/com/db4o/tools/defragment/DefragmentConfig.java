@@ -4,6 +4,7 @@ package com.db4o.tools.defragment;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 
 /**
  * Configuration for a defragmentation run.
@@ -21,7 +22,7 @@ public class DefragmentConfig {
 	private String _backupPath;
 	private String _mappingPath;
 	
-	private YapClassFilter _yapClassFilter=null;
+	private StoredClassFilter _storedClassFilter=null;
 	private boolean _forceBackupDelete=false;
 
 	/**
@@ -82,12 +83,12 @@ public class DefragmentConfig {
 		return _mappingPath;
 	}
 	
-	public YapClassFilter yapClassFilter() {
-		return (_yapClassFilter==null ? NULLFILTER : _yapClassFilter);
+	public StoredClassFilter storedClassFilter() {
+		return (_storedClassFilter==null ? NULLFILTER : _storedClassFilter);
 	}
 	
-	public void yapClassFilter(YapClassFilter yapClassFilter) {
-		_yapClassFilter=yapClassFilter;
+	public void storedClassFilter(StoredClassFilter storedClassFilter) {
+		_storedClassFilter=storedClassFilter;
 	}
 
 	public boolean forceBackupDelete() {
@@ -98,13 +99,13 @@ public class DefragmentConfig {
 		_forceBackupDelete=forceBackupDelete;
 	}
 	
-	private static class NullFilter implements YapClassFilter {
-		public boolean accept(YapClass yapClass) {
+	private static class NullFilter implements StoredClassFilter {
+		public boolean accept(StoredClass storedClass) {
 			return true;
 		}
 	}
 	
-	private final static YapClassFilter NULLFILTER=new NullFilter();
+	private final static StoredClassFilter NULLFILTER=new NullFilter();
 	
 	public static Configuration db4oConfig(){
 		Configuration config = Db4o.newConfiguration();

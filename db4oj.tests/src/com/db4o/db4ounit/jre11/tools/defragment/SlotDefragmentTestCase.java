@@ -31,7 +31,7 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 		assertDataClassKnown(true);
 
 		defragConfig = defragConfig(true);
-		defragConfig.yapClassFilter(new AvailableClassFilter());
+		defragConfig.storedClassFilter(new AvailableClassFilter());
 		SlotDefragment.defrag(defragConfig);
 		assertDataClassKnown(true);
 
@@ -39,7 +39,7 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 		Vector excluded=new Vector();
 		excluded.add(Data.class.getName());
 		ExcludingClassLoader loader=new ExcludingClassLoader(getClass().getClassLoader(),excluded);
-		defragConfig.yapClassFilter(new AvailableClassFilter(loader));
+		defragConfig.storedClassFilter(new AvailableClassFilter(loader));
 		SlotDefragment.defrag(defragConfig);
 		assertDataClassKnown(false);
 	}

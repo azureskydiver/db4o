@@ -163,7 +163,7 @@ public class SlotDefragment {
 		StoredClass[] classes=context.storedClasses(DefragContextImpl.SOURCEDB);
 		for (int classIdx = 0; classIdx < classes.length; classIdx++) {
 			YapClass yapClass = (YapClass)classes[classIdx];
-			if(!config.yapClassFilter().accept(yapClass)) {
+			if(!config.storedClassFilter().accept(yapClass)) {
 				continue;
 			}
 			processYapClass(context, yapClass,command);
