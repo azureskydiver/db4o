@@ -190,7 +190,6 @@ public class SlotDefragment {
 	private static void processObjectsForYapClass(
 			final DefragContextImpl context, final YapClass curClass,
 			final PassCommand command) {
-		// TODO: check for string indices specifically, not field indices in general
 		final boolean withStringIndex=withFieldIndex(curClass);
 		context.traverseAll(curClass, new Visitor4() {
 			public void visit(Object obj) {
@@ -212,7 +211,7 @@ public class SlotDefragment {
 		Iterator4 fieldIter=clazz.fields();
 		while(fieldIter.moveNext()) {
 			YapField curField=(YapField)fieldIter.current();
-			if(curField.hasIndex()) {
+			if(curField.hasIndex()&&(curField.getHandler() instanceof YapString)) {
 				return true;
 			}
 		}

@@ -4,9 +4,8 @@ package com.db4o.db4ounit.jre11.tools.defragment;
 
 import java.io.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
-import com.db4o.foundation.io.*;
+import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.tools.defragment.*;
 
 import db4ounit.extensions.fixtures.*;
