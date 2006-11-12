@@ -13,6 +13,7 @@ MERGE ID/SEEN TREE    8146ms   8587ms           (seen was in-memory so far)
 CARL'S CHANGES                 7017ms  11141ms
 'TOPLEVEL' OBJ SLOTS ONLY      6935ms
 DROP SEEN             6603ms   6105ms   9594ms
+IN-MEMORY (OPT.)               4746ms   7265ms
 
 Tuning suggestions:
 - cache class ids separately -done- (+)
