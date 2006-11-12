@@ -4,6 +4,9 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 
+/**
+ * @exclude
+ */
 public interface SlotReader {
 
 	int offset();

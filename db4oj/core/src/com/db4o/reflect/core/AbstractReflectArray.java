@@ -6,6 +6,9 @@ import java.lang.reflect.Array;
 
 import com.db4o.reflect.*;
 
+/**
+ * @exclude
+ */
 public abstract class AbstractReflectArray implements ReflectArray {
 	
 	protected final Reflector _reflector;

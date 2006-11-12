@@ -2,7 +2,9 @@
 
 package com.db4o;
 
-
+/**
+ * @exclude
+ */
 public class DeleteInfo extends TreeInt{
     
     public boolean _delete;
