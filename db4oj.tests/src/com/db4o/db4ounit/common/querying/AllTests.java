@@ -18,6 +18,14 @@ public class AllTests extends Db4oTestSuite {
             MultiFieldIndexQueryTestCase.class,
             ObjectSetTestCase.class,
             OrderedQueryTestCase.class,
+	    	CascadedDeleteUpdate.class,
+			CascadeDeleteArray.class,
+            CascadeDeleteDeleted.class,
+			CascadeDeleteFalse.class,
+	    	CascadeOnActivate.class,
+	        CascadeOnDelete.class,
+	        CascadeOnUpdate.class,
+	        CascadeToArray.class,
 		};
 	}
 }
