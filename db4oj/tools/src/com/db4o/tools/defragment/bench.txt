@@ -10,13 +10,13 @@ FIELD-INDEXED ONLY    7517ms   6905ms (First pass now up from 24% to 30%)
 BATCH POINTER ALLOC            7130ms
 REMOVE FP DOUBLE CHECK         7078ms
 MERGE ID/SEEN TREE    8146ms   8587ms (seen was in-memory so far)
-
+CARL'S CHANGES                 7017ms
 
 Tuning suggestions:
 - cache class ids separately -done- (+)
 - optimize BTreeRange#lastPointer() -done- (+)
 - use single key plus handler instead of values -done- (+++)
-- only map addresses for objects whose class is covered by a string index -partially done- (++)
+- only map addresses for objects whose class is covered by a string index -done- (++)
 - batch pointer allocation in first pass -done- (o)
 - merge id and seen trees - but seen has to be updated per pass... -done- (o)
 - increase node size?
