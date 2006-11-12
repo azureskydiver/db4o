@@ -44,7 +44,7 @@ public class DefragContextImpl implements DefragContext {
 	private static final long CLASSCOLLECTION_POINTER_ADDRESS = 2+2*YapConst.INT_LENGTH;
 	
 	public final YapFile _sourceDb;
-	private final YapFile _targetDb;
+	final YapFile _targetDb;
 	private final DefragmentContextIDMapping _mapping;
 	private DefragmentListener _listener;
 	private Queue4 _unindexed=new Queue4();
@@ -68,33 +68,36 @@ public class DefragContextImpl implements DefragContext {
 	}
 	
 	public int mappedID(int oldID,int defaultID) {
-		Integer mapped=internalMappedID(oldID,false);
-		return (mapped!=null ? mapped.intValue() : defaultID);
+		int mapped=internalMappedID(oldID,false);
+		return (mapped!=0 ? mapped : defaultID);
 	}
 
 	public int mappedID(int oldID) throws MappingNotFoundException {
-		Integer mapped=internalMappedID(oldID,false);
-		if(mapped==null) {
+		int mapped=internalMappedID(oldID,false);
+		if(mapped==0) {
 			throw new MappingNotFoundException(oldID);
 		}
-		return mapped.intValue();
+		return mapped;
 	}
 
 	public int mappedID(int id,boolean lenient) throws MappingNotFoundException {
-		Integer mapped=internalMappedID(id,lenient);
-		if(mapped==null) {
+		if(id == 0){
+			return 0;
+		}
+		int mapped = internalMappedID(id,lenient);
+		if(mapped==0) {
 			_listener.notifyDefragmentInfo(new DefragmentInfo("No mapping found for ID "+id));
 			return 0;
 		}
-		return mapped.intValue();
+		return mapped;
 	}
 
-	private Integer internalMappedID(int oldID,boolean lenient) throws MappingNotFoundException {
+	private int internalMappedID(int oldID,boolean lenient) throws MappingNotFoundException {
 		if(oldID==0) {
-			return new Integer(0);
+			return 0;
 		}
 		if(_sourceDb.handlers().isSystemHandler(oldID)) {
-			return new Integer(oldID);
+			return oldID;
 		}
 		return _mapping.mappedID(oldID,lenient);
 	}

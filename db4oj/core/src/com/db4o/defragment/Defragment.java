@@ -278,7 +278,7 @@ public class Defragment {
 		}
 	}
 
-	private static class NullListener implements DefragmentListener {
+	static class NullListener implements DefragmentListener {
 		public void notifyDefragmentInfo(DefragmentInfo info) {
 		}
 	}

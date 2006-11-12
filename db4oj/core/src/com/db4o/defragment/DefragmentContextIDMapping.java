@@ -7,7 +7,7 @@ package com.db4o.defragment;
  */
 interface DefragmentContextIDMapping {
 
-	Integer mappedID(int oldID, boolean lenient);
+	int mappedID(int oldID, boolean lenient);
 
 	void mapIDs(int oldID, int newID);
 

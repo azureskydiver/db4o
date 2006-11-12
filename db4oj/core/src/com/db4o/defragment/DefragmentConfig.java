@@ -99,7 +99,7 @@ public class DefragmentConfig {
 		_forceBackupDelete=forceBackupDelete;
 	}
 	
-	private static class NullFilter implements StoredClassFilter {
+	static class NullFilter implements StoredClassFilter {
 		public boolean accept(StoredClass storedClass) {
 			return true;
 		}

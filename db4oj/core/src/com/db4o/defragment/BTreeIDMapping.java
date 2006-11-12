@@ -26,12 +26,12 @@ class BTreeIDMapping extends AbstractIDMapping{
 			_idTree=new BTree(trans(),0,handler);
 		}
 
-		public Integer mappedID(int oldID,boolean lenient) {
+		public int mappedID(int oldID,boolean lenient) {
 			if(_cache.orig() == oldID){
-				return new Integer(_cache.mapped());
+				return _cache.mapped();
 			}
-			Integer classID=mappedClassID(oldID);
-			if(classID!=null) {
+			int classID=mappedClassID(oldID);
+			if(classID != 0) {
 				return classID;
 			}
 			BTreeRange range=_idTree.search(trans(),new MappedIDPair(oldID,0));
@@ -39,22 +39,22 @@ class BTreeIDMapping extends AbstractIDMapping{
 			if(pointers.moveNext()) {
 				BTreePointer pointer=(BTreePointer)pointers.current();
 				_cache=(MappedIDPair)pointer.key();
-				return new Integer(_cache.mapped());
+				return _cache.mapped();
 			}
 			if(lenient) {
 				return mapLenient(oldID,range);
 			}
-			return null;
+			return 0;
 		}
 
-		private Integer mapLenient(int oldID, BTreeRange range) {
+		private int mapLenient(int oldID, BTreeRange range) {
 			range=range.smaller();
 			BTreePointer pointer=range.lastPointer();
 			if(pointer==null) {
-				return null;
+				return 0;
 			}
 			MappedIDPair mappedIDs = (MappedIDPair) pointer.key();
-			return new Integer(mappedIDs.mapped()+(oldID-mappedIDs.orig()));
+			return mappedIDs.mapped()+(oldID-mappedIDs.orig());
 		}
 
 		public void mapIDs(int oldID,int newID) {
