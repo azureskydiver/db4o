@@ -183,8 +183,21 @@ public class SlotDefragment {
 	//   reproducable with SelectiveCascadingDeleteTestCase and ObjectSetTestCase - investigate.
 	private static void processYapClass(final DefragContextImpl context, final YapClass curClass, final PassCommand command) throws CorruptionException {
 		processClassIndex(context, curClass, command);
-		processObjectsForYapClass(context, curClass, command);
+		if(!parentHasIndex(curClass)) {
+			processObjectsForYapClass(context, curClass, command);
+		}
 		processYapClassAndFieldIndices(context, curClass, command);
+	}
+
+	private static boolean parentHasIndex(YapClass curClass) {
+		YapClass parentClass=curClass.i_ancestor;
+		while(parentClass!=null) {
+			if(parentClass.hasIndex()) {
+				return true;
+			}
+			parentClass=parentClass.i_ancestor;
+		}
+		return false;
 	}
 
 	private static void processObjectsForYapClass(

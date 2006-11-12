@@ -194,6 +194,9 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public void traverseAll(YapClass yapClass,Visitor4 command) {
+		if(!yapClass.hasIndex()) {
+			return;
+		}
 		yapClass.index().traverseAll(SOURCEDB.transaction(this), command);
 	}
 	
