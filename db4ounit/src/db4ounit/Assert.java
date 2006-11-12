@@ -141,4 +141,9 @@ public final class Assert {
 		if (actual != expected) return;
 		fail(expected, actual, "not equal to ");
 	}
+
+	public static void areNotEqual(Object notExpected, Object actual) {
+		if (!objectsAreEqual(notExpected, actual)) return;
+		fail("Expecting not '" + notExpected + "'");
+	}
 }
