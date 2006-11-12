@@ -12,8 +12,12 @@ abstract class AbstractIDMapping implements DefragmentContextIDMapping {
 
 	private Hashtable4	_classIDs = new Hashtable4();
 
-	protected Integer mappedClassID(int origID) {
-		return (Integer)_classIDs.get(origID);
+	protected int mappedClassID(int origID) {
+		Object obj = _classIDs.get(origID);
+		if(obj == null){
+			return 0;
+		}
+		return ((Integer)obj).intValue();
 	}
 
 	public void mapClassIDs(int oldID, int newID) {

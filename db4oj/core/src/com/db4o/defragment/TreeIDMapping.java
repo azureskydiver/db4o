@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class TreeIDMapping extends AbstractIDMapping {
+class TreeIDMapping extends AbstractIDMapping {
 	
 	private Tree _tree;
 	
@@ -20,24 +20,24 @@ public class TreeIDMapping extends AbstractIDMapping {
 		_tree = Tree.add(_tree, new TreeIntObject(oldID, new Integer(newID)));
 	}
 
-	public Integer mappedID(int oldID, boolean lenient) {
-		Integer classID=mappedClassID(oldID);
-		if(classID!=null) {
+	public int mappedID(int oldID, boolean lenient) {
+		int classID = mappedClassID(oldID);
+		if(classID != 0) {
 			return classID;
 		}
 		TreeIntObject res = (TreeIntObject) TreeInt.find(_tree, oldID);
 		if(res != null){
-			return (Integer)res._object;
+			return ((Integer)res._object).intValue();
 		}
 		if(lenient){
 			TreeIntObject nextSmaller = (TreeIntObject) Tree.findSmaller(_tree, new TreeInt(oldID));
 			if(nextSmaller != null){
 				int baseOldID = nextSmaller._key;
 				int baseNewID = ((Integer)nextSmaller._object).intValue();
-				return new Integer(baseNewID + oldID - baseOldID); 
+				return baseNewID + oldID - baseOldID; 
 			}
 		}
-		return null;
+		return 0;
 	}
 	
 
