@@ -1,8 +1,10 @@
 /* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre5.tools.defrag;
+package com.db4o.db4ounit.jre5.defrag;
 
-import com.db4o.db4ounit.jre11.tools.defragment.*;
+import com.db4o.db4ounit.common.assorted.*;
+import com.db4o.db4ounit.jre11.defragment.*;
+import com.db4o.db4ounit.jre12.collections.custom.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -14,6 +16,7 @@ public class RunTestsDefrag {
 			com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5.class;
 //			PCollectionReferencedTwiceTestCase.class;
 //			PersistStaticFieldValuesTestCase.class;
+//			Db4oLinkedListTestCase.class;
 		System.exit(new TestRunner(
 				new Db4oTestSuiteBuilder(
 						new Db4oDefragSolo(new IndependentConfigurationSource()), clazz)).run());

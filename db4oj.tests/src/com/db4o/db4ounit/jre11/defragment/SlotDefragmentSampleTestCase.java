@@ -1,14 +1,14 @@
 /* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre11.tools.defragment;
+package com.db4o.db4ounit.jre11.defragment;
 
 import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
-import com.db4o.tools.defragment.*;
 
 import db4ounit.*;
 
