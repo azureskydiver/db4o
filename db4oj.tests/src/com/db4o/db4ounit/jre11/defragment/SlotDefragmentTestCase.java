@@ -18,13 +18,17 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 	public final static String BACKUPFILENAME=FILENAME+".backup";
 	
 	public static class Data {
+		
 		public int _id;
 
-		public Data(int _id) {
-			this._id = _id;
+		public Data(int id) {
+			_id = id;
 		}
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public void testSkipsClass() throws Exception {
 		DefragmentConfig defragConfig = defragConfig(true);
 		Defragment.defrag(defragConfig);
