@@ -84,8 +84,7 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
 
     public long getSize() {
         try {
-            return 0;
-            // todo: return oc.ext().systemInfo().totalSize(); // not implemented in 5.7
+            return oc.ext().systemInfo().totalSize();
         } catch (Exception e) {
             e.printStackTrace();
         }

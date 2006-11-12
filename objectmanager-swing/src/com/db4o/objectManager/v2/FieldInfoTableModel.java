@@ -22,7 +22,7 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
     static String columns[] = new String[]{
             "Name",
             "Type",
-           // "Indexed?",
+            "Indexed?",
     };
     private StoredClass storedClass;
 
@@ -43,7 +43,7 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
             c=0;
             setValueAt(field.getName(),r,c++);
             setValueAt(field.getStoredType(),r,c++);
-            //setValueAt(false, r, c++);// todo: field.hasIndex(),r,c++); this method is not available in 5.7, put this back in when next version ships
+            setValueAt(false, r, c++);
             r++;
         }
     }

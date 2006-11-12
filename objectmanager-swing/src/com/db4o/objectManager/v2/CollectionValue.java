@@ -9,7 +9,6 @@ public class CollectionValue {
     private String text;
 
     public CollectionValue(String text) {
-
         this.text = text;
     }
 

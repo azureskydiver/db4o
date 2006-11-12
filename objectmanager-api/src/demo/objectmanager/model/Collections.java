@@ -9,7 +9,7 @@ import java.util.*;
  * @exclude
  */
 public class Collections {
-	
+
 	public static class Item implements Comparable{
 		
 		public String name;
@@ -59,6 +59,9 @@ public class Collections {
 	public HashMap hashMap;
 	
 	public TreeMap treeMap;
+
+	public Item[] array;
+
 	
 	public Collections(){
 		
@@ -77,6 +80,8 @@ public class Collections {
 		map = new HashMap();
 		hashMap = new HashMap();
 		treeMap = new TreeMap();
+
+		array = new Item[2];
 		
 		fillList(list);
 		fillList(arrayList);
@@ -85,8 +90,15 @@ public class Collections {
 		fillMap(map);
 		fillMap(hashMap);
 		fillMap(treeMap);
+
+		fillArray(array);
 	}
-	
+
+	private void fillArray(Item[] array) {
+		array[0] = new Item("one");
+		array[1] = new Item("two");
+	}
+
 	private void fillList(List list){
 		list.add("one");
 		list.add(new Item("two"));

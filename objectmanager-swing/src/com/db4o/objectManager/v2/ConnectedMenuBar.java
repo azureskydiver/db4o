@@ -60,7 +60,7 @@ public class ConnectedMenuBar extends BaseMenuBar {
                 if (result == JOptionPane.YES_OPTION) {
                     frame.closeObjectContainer();
                     try {
-                        new Defragment().run(frame.getConnectionSpec().getFullPath(), true);
+                        new Defragment().run(frame.getConnectionSpec().getFullPath(), true); // todo: replace with new defrag when it's ready
                         OptionPaneHelper.showSuccessDialog(frame, "Defragment was successful!", "Defragment Complete");
                         // todo: progress bar
                     } catch (Exception e1) {

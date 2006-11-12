@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.w3c.dom.css.CSS2Properties;
+
 /**
  * User: treeder
  * Date: Aug 8, 2006
@@ -161,6 +163,18 @@ public class Dashboard {
 				}
 			}
 		});
+		recentConnectionList.getList().addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+					Db4oConnectionSpec connectionSpec = recentConnectionList.getSelected();
+					if (connectionSpec != null) {
+						showInForm(connectionSpec);
+						connectAndOpenFrame();
+					}
+				}
+			}
+
+		});
 
 		JLabel welcome2 = new JLabel("New Connection");
 		welcome2.setFont(Fonts.WINDOWS_VISTA_96DPI_LARGE);//new Font("Verdana", Font.PLAIN, 30));
@@ -258,6 +272,7 @@ public class Dashboard {
 	}
 
 	private void connectAndOpenFrame() {
+		frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Db4oConnectionSpec connectionSpec = null;
 		if (fileTextField.getText().length() > 0) {
 			// then open file connection
@@ -291,8 +306,7 @@ public class Dashboard {
 
 			}
 		});
-
-
+		frame.setCursor(null);
 	}
 
 	private void clearForm() {
@@ -351,6 +365,10 @@ public class Dashboard {
 
 	public static ActionListener createAboutActionListener(Component frame) {
 		return new AboutActionListener(frame);
+	}
+
+	public Frame getFrame() {
+		return frame;
 	}
 
 	private static final class AboutActionListener implements ActionListener {

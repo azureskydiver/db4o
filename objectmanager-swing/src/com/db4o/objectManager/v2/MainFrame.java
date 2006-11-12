@@ -21,7 +21,6 @@ import com.db4o.ObjectContainer;
 /**
  * Main frame for a particular connection.
  *
- * todo: save resize dimensions in prefs (addComponentListener to this frame)
  *
  * User: treeder
  * Date: Aug 8, 2006
