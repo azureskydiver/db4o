@@ -52,7 +52,7 @@ public class ReaderPair implements SlotReader {
 			mapped=_mapping.mappedID(orig);
 		} catch (MappingNotFoundException exc) {
 			mapped=_mapping.allocateTargetSlot(YapConst.POINTER_LENGTH);
-			_mapping.mapIDs(orig,mapped,false,false);
+			_mapping.mapIDs(orig,mapped, false);
 			_mapping.registerUnindexed(orig);
 		}
 		_target.writeInt(mapped);
@@ -153,7 +153,7 @@ public class ReaderPair implements SlotReader {
 		
 		if(registerAddressMapping) {
 			int sourceAddress=((YapWriter)sourceReader).getAddress();
-			context.mapIDs(sourceAddress, targetAddress, false, false);
+			context.mapIDs(sourceAddress, targetAddress, false);
 		}
 		
 		YapReader targetPointerReader=new YapReader(YapConst.POINTER_LENGTH);

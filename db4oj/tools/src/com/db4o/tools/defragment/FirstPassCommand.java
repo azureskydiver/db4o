@@ -80,7 +80,7 @@ final class FirstPassCommand implements PassCommand {
 				}
 			}
 			
-			context.mapIDs(objectID,pointerAddress, isClassID, true);
+			context.mapIDs(objectID,pointerAddress, isClassID);
 			pointerAddress+=YapConst.POINTER_LENGTH;
 		}
 		_ids=null;
