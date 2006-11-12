@@ -264,18 +264,6 @@ public class DefragContextImpl implements DefragContext {
 		return _sourceDb.getYapClass(id);
 	}
 	
-	public void registerSeen(int id) {
-		_mapping.registerSeen(id);
-	}
-
-	public boolean hasSeen(int id) {
-		return _mapping.hasSeen(id);
-	}
-	
-	public void clearSeen() {
-		_mapping.clearSeen();
-	}
-
 	public void registerUnindexed(int id) {
 		_unindexed.add(new Integer(id));
 	}

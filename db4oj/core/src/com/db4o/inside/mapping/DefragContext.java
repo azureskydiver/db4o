@@ -34,8 +34,6 @@ public interface DefragContext extends IDMapping {
 	
 	int mappedID(int id,boolean lenient);
 
-	void registerSeen(int id);
-
 	void registerUnindexed(int id);
 	
 	Iterator4 unindexedIDs();

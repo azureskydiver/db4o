@@ -123,15 +123,12 @@ public class SlotDefragment {
 		Iterator4 unindexedIDs=context.unindexedIDs();
 		while(unindexedIDs.moveNext()) {
 			final int origID=((Integer)unindexedIDs.current()).intValue();
-			if(context.hasSeen(origID)) {
-				continue;
-			}
 			ReaderPair.processCopy(context, origID, new SlotCopyHandler() {
 				public void processCopy(ReaderPair readers) throws CorruptionException {
 					YapClass.defragObject(readers);
 				}
 				
-			}, true, true);
+			}, true);
 		}
 	}
 
@@ -158,7 +155,6 @@ public class SlotDefragment {
 	}		
 
 	private static void pass(DefragContextImpl context,DefragmentConfig config,PassCommand command) throws CorruptionException {
-		context.clearSeen();
 		command.processClassCollection(context);
 		StoredClass[] classes=context.storedClasses(DefragContextImpl.SOURCEDB);
 		for (int classIdx = 0; classIdx < classes.length; classIdx++) {
@@ -207,10 +203,6 @@ public class SlotDefragment {
 		context.traverseAll(curClass, new Visitor4() {
 			public void visit(Object obj) {
 				int id = ((Integer)obj).intValue();
-				// TODO cache mapped pair and pass target id into processObjectSlot()
-				if(command.hasSeen(context,id)) {
-					return;
-				}
 				try {
 					command.processObjectSlot(context,curClass,id, withStringIndex);
 				} catch (CorruptionException e) {

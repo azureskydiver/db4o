@@ -8,16 +8,10 @@ package com.db4o.inside.mapping;
 public class MappedIDPair {
 	private int _orig;
 	private int _mapped;
-	private boolean _seen;
 
 	public MappedIDPair(int orig, int mapped) {
-		this(orig,mapped,false);
-	}
-
-	public MappedIDPair(int orig, int mapped,boolean seen) {
-		_orig = orig;
-		_mapped = mapped;
-		_seen=seen;
+		_orig=orig;
+		_mapped=mapped;
 	}
 
 	public int orig() {
@@ -28,15 +22,7 @@ public class MappedIDPair {
 		return _mapped;
 	}
 	
-	public boolean seen() {
-		return _seen;
-	}
-	
-	public void seen(boolean seen) {
-		_seen=seen;
-	}
-	
 	public String toString() {
-		return _orig+"->"+_mapped+"("+_seen+")";
+		return _orig+"->"+_mapped;
 	}
 }

@@ -138,10 +138,10 @@ public class ReaderPair implements SlotReader {
 	}
 
 	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command) throws CorruptionException {
-		processCopy(context, sourceID, command, false, false);
+		processCopy(context, sourceID, command, false);
 	}
 
-	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, boolean registerSeen) throws CorruptionException {
+	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException {
 		YapReader sourceReader=(
 				registerAddressMapping 
 					? context.sourceWriterByID(sourceID) 
@@ -170,9 +170,6 @@ public class ReaderPair implements SlotReader {
 		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());
 		command.processCopy(readers);
 		context.targetWriteBytes(readers,targetAddress);
-		if(registerSeen) {
-			context.registerSeen(sourceID);
-		}
 	}
 
 	public void append(byte value) {
