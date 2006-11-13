@@ -127,6 +127,9 @@
 	<target name="configure-net1" unless="mono">
 		<echo>Configuring .net 1 build.</echo>
 		
+		<!-- don't build Db4oAdmin for .net 1.1 -->
+		<property name="skip.admin" value="true" />
+		
 		<property name="target.framework.version" value="1.1" />
 		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
 		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
@@ -351,7 +354,7 @@
 		</csc-all>		
 	</target>
 	
-	<target name="build-admin" depends="build-tools">
+	<target name="build-admin" depends="build-tools" unless="skip.admin">
 		<csc outputfile="${dir.dist.dll.net}/Db4oAdmin.exe"
 			targettype="exe"
 			debug="true"
