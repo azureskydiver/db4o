@@ -12,27 +12,27 @@ import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 
 /**
- * Slotwise defragment for yap files.
+ * defragments database files.
  * 
- * Db4o structures storage inside the yap file as free and occupied slots, very
- * much like a file system - and just like a file system it can be fragmented.
+ * <br><br>db4o structures storage inside database files as free and occupied slots, very
+ * much like a file system - and just like a file system it can be fragmented.<br><br>
  * 
- * The simplest way to defragment a yap file:
+ * The simplest way to defragment a database file:<br><br>
  * 
- * Defragment.defrag("sample.yap");
+ * <code>Defragment.defrag("sample.yap");</code><br><br>
  * 
  * This will move the file to "sample.yap.backup", then create a defragmented
  * version of this file in the original position, using a temporary file
  * "sample.yap.mapping". If the backup file already exists, this will throw an
- * exception and no action will be taken.
+ * exception and no action will be taken.<br><br>
  * 
  * For more detailed configuration of the defragmentation process, provide a
- * DefragmentConfig instance:
+ * DefragmentConfig instance:<br><br>
  * 
- * DefragmentConfig config=new
- * DefragmentConfig("sample.yap","sample.bap","sample.map");
- * config.forceBackupDelete(true); config.yapClassFilter(new
- * AvailableClassFilter()); Defragment.defrag(config);
+ * <code>DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap","sample.map");<br>
+ * config.forceBackupDelete(true);<br> 
+ * config.yapClassFilter(new AvailableClassFilter());<br> 
+ * Defragment.defrag(config);</code><br><br>
  * 
  * This will move the file to "sample.bap", then create a defragmented version
  * of this file in the original position, using a temporary file "sample.map".
