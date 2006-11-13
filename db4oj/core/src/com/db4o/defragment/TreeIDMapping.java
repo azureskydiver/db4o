@@ -7,15 +7,14 @@ import com.db4o.foundation.*;
 
 
 /**
- * @exclude
+ * In-memory mapping for IDs during a defragmentation run.
+ * 
+ * @see Defragment
  */
-class TreeIDMapping extends AbstractIDMapping {
+class TreeIDMapping extends AbstractContextIDMapping {
 	
 	private Tree _tree;
 	
-	public void close() {
-	}
-
 	public void mapIDs(int oldID, int newID) {
 		_tree = Tree.add(_tree, new TreeIntObject(oldID, new Integer(newID)));
 	}
@@ -39,6 +38,10 @@ class TreeIDMapping extends AbstractIDMapping {
 		}
 		return 0;
 	}
-	
 
+	public void open() {
+	}
+	
+	public void close() {
+	}
 }

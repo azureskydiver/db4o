@@ -61,14 +61,16 @@ public class Test extends AllTests {
 
     public static void close() {
 		if (null != oc) {
-	        while (!oc.close());
+	        while (!oc.close()) {
+	        }
 			oc = null;
 		}
 		if(memoryFile != null) {
             memoryFileContent = memoryFile.getBytes();
         }
         if(_replica != null){
-            while(!_replica.close());
+            while(!_replica.close()) {
+            }
             _replica = null;
         }
     }
@@ -105,14 +107,10 @@ public class Test extends AllTests {
             }
             
             if(USE_NEW_DEFRAGMENT){
-	            
 	            String targetFile = fileName + ".defrag.backup";
-	            String mappingFile = fileName + ".defrag.mapping";
-	            
-	            File4.delete(targetFile);
-	            File4.delete(mappingFile);
-	            
-	            com.db4o.defragment.Defragment.defrag(new DefragmentConfig(fileName, targetFile, mappingFile));
+	            DefragmentConfig defragConfig = new DefragmentConfig(fileName, targetFile);
+	            defragConfig.forceBackupDelete(true);
+				com.db4o.defragment.Defragment.defrag(defragConfig);
             } else {
             	
             	new com.db4o.tools.Defragment().run(fileName, true);
@@ -165,7 +163,8 @@ public class Test extends AllTests {
 
 	public static void end() {
         if (oc != null) {
-            while (!oc.close());
+            while (!oc.close()) {
+            }
         }
         if (objectServer != null) {
             Cool.sleepIgnoringInterruption(1000);

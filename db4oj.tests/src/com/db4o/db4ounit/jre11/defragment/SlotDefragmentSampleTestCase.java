@@ -15,7 +15,6 @@ import db4ounit.*;
 public class SlotDefragmentSampleTestCase implements TestLifeCycle {
 	private final static String SOURCEFILE = "original.yap";
 	private final static String TARGETFILE = "copied.yap";
-	private final static String MAPPINGFILE = "mapping.yap";
 
 	private static final int NUM_ENTRIES = 5;
 
@@ -25,7 +24,6 @@ public class SlotDefragmentSampleTestCase implements TestLifeCycle {
 	
 	public void setUp() throws Exception {
 		createSource(SOURCEFILE);
-		deleteFile(MAPPINGFILE);
 		deleteFile(TARGETFILE);
 	}
 
@@ -34,7 +32,7 @@ public class SlotDefragmentSampleTestCase implements TestLifeCycle {
 
 	public void testDefrag() throws IOException {
 		long start=System.currentTimeMillis();
-		Defragment.defrag(new DefragmentConfig(SOURCEFILE,TARGETFILE,MAPPINGFILE));
+		Defragment.defrag(new DefragmentConfig(SOURCEFILE,TARGETFILE));
 		System.out.println("TIME "+(System.currentTimeMillis()-start)+" ms");
 		checkCopied();
 	}

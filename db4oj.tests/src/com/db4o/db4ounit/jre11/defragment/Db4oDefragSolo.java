@@ -20,10 +20,9 @@ public class Db4oDefragSolo extends Db4oSolo {
 			if(origFile.exists()) {
 				try {
 					String backupFile = getAbsolutePath()+".defrag.backup";
-					String mappingFile = getAbsolutePath()+".defrag.mapping";
-					new File(backupFile).delete();
-					new File(mappingFile).delete();
-					Defragment.defrag(new DefragmentConfig(getAbsolutePath(), backupFile, mappingFile), new DefragmentListener() {
+					DefragmentConfig defragConfig = new DefragmentConfig(getAbsolutePath(), backupFile);
+					defragConfig.forceBackupDelete(true);
+					Defragment.defrag(defragConfig, new DefragmentListener() {
 						public void notifyDefragmentInfo(DefragmentInfo info) {
 							System.err.println(info);
 						}

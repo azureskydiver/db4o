@@ -16,11 +16,10 @@ public class DefragmentConfig {
 	public static final boolean DEBUG = false;
 	
 	public final static String BACKUP_SUFFIX="backup";
-	public final static String MAPPING_SUFFIX="mapping";
 	
 	private String _origPath;
 	private String _backupPath;
-	private String _mappingPath;
+	private ContextIDMapping _mapping;
 	
 	private StoredClassFilter _storedClassFilter=null;
 	private boolean _forceBackupDelete=false;
@@ -39,8 +38,7 @@ public class DefragmentConfig {
 	}
 
 	/**
-	 * Creates a configuration for a defragmentation run. The mapping file path
-	 * is generated from the original path by appending the default suffix.
+	 * Creates a configuration for a defragmentation run with in-memory mapping.
 	 * All properties other than the provided paths are set to FALSE by default.
 	 * 
 	 * @param origPath The path to the file to be defragmented. Must exist and must be
@@ -50,7 +48,7 @@ public class DefragmentConfig {
 	 *         is set to true!
 	 */
 	public DefragmentConfig(String origPath, String backupPath) {
-		this(origPath,backupPath,origPath+"."+MAPPING_SUFFIX);
+		this(origPath,backupPath,new TreeIDMapping());
 	}
 
 	/**
@@ -62,13 +60,12 @@ public class DefragmentConfig {
 	 * @param backupPath The path to the backup of the original file. No file should
 	 *         exist at this position, otherwise it will be OVERWRITTEN if forceBackupDelete()
 	 *         is set to true!
-	 * @param mappingPath The path for an intermediate mapping file used internally.
-	 *         No file should exist at this position, otherwise it will be DELETED!
+	 * @param mapping The intermediate mapping used internally.
 	 */
-	public DefragmentConfig(String origPath, String backupPath,String mappingPath) {
+	public DefragmentConfig(String origPath, String backupPath,ContextIDMapping mapping) {
 		_origPath = origPath;
 		_backupPath = backupPath;
-		_mappingPath = mappingPath;
+		_mapping = mapping;
 	}
 
 	public String origPath() {
@@ -79,8 +76,8 @@ public class DefragmentConfig {
 		return _backupPath;
 	}
 
-	public String mappingPath() {
-		return _mappingPath;
+	public ContextIDMapping mapping() {
+		return _mapping;
 	}
 	
 	public StoredClassFilter storedClassFilter() {

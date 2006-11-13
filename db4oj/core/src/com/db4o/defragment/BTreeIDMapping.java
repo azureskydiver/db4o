@@ -9,64 +9,78 @@ import com.db4o.inside.ix.*;
 import com.db4o.inside.mapping.*;
 
 /**
- * @exclude
+ * BTree mapping for IDs during a defragmentation run.
+ * 
+ * @see Defragment
  */
-class BTreeIDMapping extends AbstractIDMapping{
-	
-		private YapFile _mappingDb;
-		
-		private BTree _idTree;
-		
-		private MappedIDPair _cache = new MappedIDPair(0, 0);
+class BTreeIDMapping extends AbstractContextIDMapping {
 
-		public BTreeIDMapping(String fileName) {
-			_mappingDb = DefragContextImpl.freshYapFile(fileName);
-			Indexable4 handler = 
-				new MappedIDPairHandler(_mappingDb);
-			_idTree=new BTree(trans(),0,handler);
+	private String _fileName;
+
+	private YapFile _mappingDb;
+
+	private BTree _idTree;
+
+	private MappedIDPair _cache = new MappedIDPair(0, 0);
+
+	/**
+	 * Will maintain the ID mapping as a BTree in the file with the given path.
+	 * If a file exists in this location, it will be DELETED.
+	 * 
+	 * @param fileName The location where the BTree file should be created.
+	 */
+	public BTreeIDMapping(String fileName) {
+		_fileName = fileName;
+	}
+
+	public int mappedID(int oldID, boolean lenient) {
+		if (_cache.orig() == oldID) {
+			return _cache.mapped();
 		}
+		int classID = mappedClassID(oldID);
+		if (classID != 0) {
+			return classID;
+		}
+		BTreeRange range = _idTree.search(trans(), new MappedIDPair(oldID, 0));
+		Iterator4 pointers = range.pointers();
+		if (pointers.moveNext()) {
+			BTreePointer pointer = (BTreePointer) pointers.current();
+			_cache = (MappedIDPair) pointer.key();
+			return _cache.mapped();
+		}
+		if (lenient) {
+			return mapLenient(oldID, range);
+		}
+		return 0;
+	}
 
-		public int mappedID(int oldID,boolean lenient) {
-			if(_cache.orig() == oldID){
-				return _cache.mapped();
-			}
-			int classID=mappedClassID(oldID);
-			if(classID != 0) {
-				return classID;
-			}
-			BTreeRange range=_idTree.search(trans(),new MappedIDPair(oldID,0));
-			Iterator4 pointers=range.pointers();
-			if(pointers.moveNext()) {
-				BTreePointer pointer=(BTreePointer)pointers.current();
-				_cache=(MappedIDPair)pointer.key();
-				return _cache.mapped();
-			}
-			if(lenient) {
-				return mapLenient(oldID,range);
-			}
+	private int mapLenient(int oldID, BTreeRange range) {
+		range = range.smaller();
+		BTreePointer pointer = range.lastPointer();
+		if (pointer == null) {
 			return 0;
 		}
-
-		private int mapLenient(int oldID, BTreeRange range) {
-			range=range.smaller();
-			BTreePointer pointer=range.lastPointer();
-			if(pointer==null) {
-				return 0;
-			}
-			MappedIDPair mappedIDs = (MappedIDPair) pointer.key();
-			return mappedIDs.mapped()+(oldID-mappedIDs.orig());
-		}
-
-		public void mapIDs(int oldID,int newID) {
-			_cache = new MappedIDPair(oldID,newID);
-			_idTree.add(trans(), _cache);
-		}
-
-		public void close() {
-			_mappingDb.close();
-		}
-
-		private Transaction trans() {
-			return _mappingDb.getSystemTransaction();
-		}
+		MappedIDPair mappedIDs = (MappedIDPair) pointer.key();
+		return mappedIDs.mapped() + (oldID - mappedIDs.orig());
 	}
+
+	public void mapIDs(int oldID, int newID) {
+		_cache = new MappedIDPair(oldID, newID);
+		_idTree.add(trans(), _cache);
+	}
+
+	public void open() {
+		_mappingDb = DefragContextImpl.freshYapFile(_fileName);
+		Indexable4 handler = new MappedIDPairHandler(_mappingDb);
+		_idTree = new BTree(trans(), 0, handler);
+	}
+
+	public void close() {
+		_mappingDb.close();
+	}
+
+	private Transaction trans() {
+		return _mappingDb.getSystemTransaction();
+	}
+
+}
