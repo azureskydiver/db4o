@@ -1,0 +1,46 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Activation strategies</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Activation strategies</h1><p></p>
+<p><span class="java">Java: Db4o.configure().activationDepth(activationDepth)</span></p>
+<p><span class="net">.NET: Db4oFactory.Configure().ActivationDepth(activationDepth)</span></p>
+<p><i>Advantage</i><br>
+Db4o default activation depth is 5. This setting gives you control over activation depth&nbsp;level depending on your application requirements.<i>&nbsp;</i></p>
+<p><i>Effect</i><br>
+The two extremes:<br>
+- activationDepth = maximum integer value - will pop the whole object graph into the memory&nbsp;on every retrieved object. Can be a reasonable solution for shallow objects' design. No&nbsp;need to bother about manual activation;<br>
+- activationDepth = 0 - will reduce memory consumption to the lowest level though&nbsp;leaving all the activation logic for your code.<br>
+<br>
+<i>Alternate strategies</i><br>
+If your object is not fully activated due to the default configuration settings you can activate it manually:</p>
+<p><span class="java">Java: ObjectContainer#activate(object,depth) </span><br></p>
+<p><span class="net">.NET: ObjectContainer#Activate(object,depth) </span></p><p>or use specific object settings:</p>
+<span class="java">Java: <br>
+<p>Db4o.configure().objectClass("yourClass").minimumActivationDepth(minimumDepth) </p>
+<p>Db4o.configure().objectClass("yourClass").maximumActivationDepth(maximumDepth) </p>
+<p>Db4o.configure().objectClass("yourClass").cascadeOnActivate (bool) </p>
+<p>Db4o.configure().objectClass("yourClass").objectField("field").cascadeOnActivate(bool) <br>
+</p></span>
+<span class="net">.NET: <br>
+<p>Db4o.Configure().ObjectClass("yourClass").MinimumActivationDepth(minimumDepth) </p>
+<p>Db4oFactory.Configure().ObjectClass("yourClass").MaximumActivationDepth(maximumDepth) </p>
+<p>Db4oFactory.Configure().ObjectClass("yourClass").CascadeOnActivate (bool) </p>
+<p>Db4oFactory.Configure().ObjectClass("yourClass").ObjectField("field").CascadeOnActivate(bool) <br>
+</p></span>
+For more information on activation strategies see <a href="../../Db4o_Concepts/Activation/Activation.html" class="wikiLink">Activation chapter</a>&nbsp;.<br>
+<br><style>
+.java{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-12T14:41:22 by Tetyana.
+				</div>
+  </body>
+</html>

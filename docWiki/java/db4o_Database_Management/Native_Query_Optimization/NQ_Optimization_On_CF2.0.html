@@ -1,0 +1,52 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>NQ Optimization On CF2.0</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>NQ Optimization On CF2.0</h1>
+<span class="net">
+<p>Due to some platform limitations, CompactFramework 2.0 users using the&nbsp;more 
+convenient delegate based Native Query syntax that want their queries&nbsp;to be 
+optimized are required to run the Db4oAdmin.exe&nbsp;command line utility on their 
+assemblies&nbsp;prior to deploying them. <br>
+<br>
+The utility which can be found in 
+the /bin folder of this distribution is required&nbsp;because the CompactFramework 
+API does not expose any of the delegate metadata&nbsp;needed by the Native Query 
+optimizer. The tool works by augmenting the bytecode&nbsp;with the necessary delegate 
+metadata and replacing ObjectContainer#Query&nbsp;invocations with 
+invocations to a lower level&nbsp;method that makes use of the additional 
+information.<br>
+<br>
+The tool can be easily integrated inside Visual Studio.NET 
+2005 as a Post Build tool&nbsp;by following the simple steps below:<br>
+<br>
+- Right 
+click the project you want to enable Native Query optimization for<br>
+- 
+Select<b>'Properties'</b><br>
+- In the Properties Page select the<b>'Build 
+Events'</b>tab<br>
+- In the<b>'Post-build event command line'</b>text box insert 
+the following text&nbsp;<b>"/bin/Db4oAdmin.exe 
+-cf2-delegates $(TargetPath)"</b>&nbsp;without the quotes and replacing 
+to the correct&nbsp;value for your system.<br>
+<br>
+A 
+complete example can be found in the Db4oAdmin.Example&nbsp;directory of the distribution.<br>
+&nbsp;</p>
+</span>
+<style>
+.net{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-12T15:03:01 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Query By Example</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query By Example</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>&nbsp;</p><p>When using <i>Query By Example</i>&nbsp;(QBE) you provide db4o with a&nbsp;template 
+object. db4o will return all of the objects which match all&nbsp;non-default field 
+values. This is done via reflecting all of the fields&nbsp;and building a query 
+expression where all non-default-value fields are&nbsp;combined with AND expressions. 
+Here's a simple example:</p><p><span class="java"><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">PersistentExample.java: <span class="fscMemberName">retrievePilotByName</span></span></div><div class="fscCode"><pre ID="QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Open_Text').style.display='none'; document.getElementById('QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Closed_Image').style.display='inline'; document.getElementById('QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Closed_Text').style.display='inline';"/><img id="QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Closed_Text').style.display='none'; document.getElementById('QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Open_Image').style.display='inline'; document.getElementById('QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrievePilotByName(ObjectContainer db) </span><span id="QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QueriesJavaZipsPersistentExampleJava_PersistentExampleJava_retrievePilotByName_407_65_59_189_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        Pilot proto</span><span style="color: #000000;">=</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Michael Schumacher</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">,</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        ObjectSet result</span><span style="color: #000000;">=</span><span style="color: #000000;">db.get(proto);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        listResult(result);
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div></span></p><p><span class="cs"><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">PersistentExample.cs: <span class="fscMemberName">RetrievePilotByName</span></span></div><div class="fscCode"><pre ID="QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> RetrievePilotByName(IObjectContainer db)
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img id="QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Open_Text').style.display='none'; document.getElementById('QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Closed_Image').style.display='inline'; document.getElementById('QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Closed_Text').style.display='inline';"/><img id="QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Closed_Text').style.display='none'; document.getElementById('QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Open_Image').style.display='inline'; document.getElementById('QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Open_Text').style.display='inline';"/>    </span><span id="QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QueriesCSZipsPersistentExampleCs_PersistentExampleCs_RetrievePilotByName_503_61_62_181_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Pilot proto </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Michael Schumacher</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      IObjectSet result </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.Get(proto);
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      ListResult(result);
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div></span></p><p><span class="vb"><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">PersistentExample.vb: <span class="fscMemberName">RetrievePilotByName</span></span></div><div class="fscCode"><pre ID="QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Open_Text').style.display='none'; document.getElementById('QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Closed_Image').style.display='inline'; document.getElementById('QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Closed_Text').style.display='inline';"/><img id="QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Closed_Text').style.display='none'; document.getElementById('QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Open_Image').style.display='inline'; document.getElementById('QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Open_Text').style.display='inline';"/><span style="color: #0000FF;">Public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Shared</span><span style="color: #000000;"> </span><span id="QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub RetrievePilotByName()</span><span id="QueriesVBZipsPersistentExampleVb_PersistentExampleVb_RetrievePilotByName_595_61_14_237_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> RetrievePilotByName(</span><span style="color: #0000FF;">ByVal</span><span style="color: #000000;"> db </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectContainer)
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> proto </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> Pilot </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">New</span><span style="color: #000000;"> Pilot(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Michael Schumacher</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, </span><span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> result </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectSet </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.[</span><span style="color: #0000FF;">Get</span><span style="color: #000000;">](proto)
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            ListResult(result)
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        </span><span style="color: #0000FF;">End Sub</span></span></div></pre></div></div></span><br><br>Querying 
+this way has some obvious limitations:<br>- db4o must reflect all members of 
+your example object.<br>- You cannot perform advanced query expressions. (AND, 
+OR, NOT, etc.)<br>- You cannot constrain on values like 0 (integers), "" (empty 
+strings),&nbsp;or nulls (reference types) because they would be interpreted as 
+unconstrained.<br>- You need to be able to create objects without initialized 
+fields.&nbsp;That means you can not initialize fields where they are declared.&nbsp;You 
+can not enforce contracts that objects of a class are only&nbsp;allowed in a 
+well-defined initialized state.<br>- You need a constructor to create objects 
+without initialized fields.<br><br>To get around all of these constraints, db4o 
+provides the Native Query (NQ) system.<br></p><style>
+.cs{display:none;}
+.vb{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2006-11-11T17:09:29 by Tetyana.
+				</div>
+  </body>
+</html>

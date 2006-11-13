@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Turning Off Weak References</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Turning Off Weak References</h1><p>&nbsp;</p>
+<p><span class="java">Java: Db4o.configure().weakReferences(false) </span><br></p>
+<p><span class="net">.NET: Db4oFactory.Configure().WeakReferences(false) </span><br></p>
+<br>
+<i>Advantage</i><br>
+will configure db4o to use hard direct references instead of weak references to control instantiated and stored objects.<br>
+<br>
+<i>Effect</i><br>
+A db4o database keeps a reference to all persistent objects that are currently held in RAM, whether they were stored to the database in this session or instantiated from the database in this session. This is how db4o can "know" than an object is to be updated: Any "known" object must be an update, any "unknown" object will be stored as "new". (Note that the reference system will only be in place as long as an ObjectContainer is open. Closing and reopening an ObjectContainer will clean the references system of the ObjectContainer and all objects in RAM will be treated as "new" afterwards.) In the default configuration db4o uses weak references and a dedicated thread to clean them up after objects have been garbage collected by the VM. Weak references need extra ressources and the cleanup thread will have a considerable impact on performance since it has to be synchronized with the normal operations within the ObjectContainer. Turning off weak references will improve speed. <br>
+The downside: To prevent memory consumption from growing consistantly, the application has to take care of removing unused objects from the db4o reference system by itself. This can be done by calling
+<p><span class="java">Java: ExtObjectContainer.purge(object) </span><br></p>
+<p><span class="net">.NET: IExtObjectContainer.Purge(object) </span><br></p>
+<p>
+<br>
+<i>Alternate Strategies</i></p>
+<p><span class="java">Java: ExtObjectContainer.purge(object)</span><br></p>
+<p><span class="net">.NET: IExtObjectContainer.Purge(object)</span><br></p>
+can also be called in normal weak reference operation mode to remove an object from the reference cache. This will help to keep the reference tree as small as possible. After calling #purge(object) an object will be unknown to the ObjectContainer so this feature is also suitable for batch inserts. <br>
+<br><style>
+.net{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2006-11-12T14:58:53 by Tetyana.
+				</div>
+  </body>
+</html>

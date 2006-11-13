@@ -1,0 +1,36 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Calling constructors</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Calling constructors</h1><p></p>
+<p><span class="java">Java: Db4o.configure().callConstructors(true)</span></p>
+<p><span class="net">.NET: Db4oFactory.Configure().CallConstructors(true)</span></p>
+<p><i>Advantage</i><br>
+will configure db4o to use constructors to instantiate&nbsp;objects.<br>
+<br>
+<i>Effect</i><br>
+On VMs where this is supported (Sun Java VM &gt; 1.4, .NET, Mono)&nbsp;db4o tries to create instances of objects without calling&nbsp;a constructor. On Java VMs db4o is using reflection for this feature&nbsp;so this may be considerably slower than using a constructor. For&nbsp;the best performance on Java it is recommended to add a public&nbsp;zero-parameter constructor to every persistent class and to turn&nbsp;constructors on. Benchmarks on .NET have shown that the default<br>
+setting ( #callConstructors(false) ) is faster.<br>
+<br>
+<i>Alternate Strategies</i><br>
+Constructors can also be turned on for individual classes only with</p>
+<p><span class="java">Java: Db4o.configure().objectClass(Foo.class).callConstructor(true) </span><br>
+</p>
+<p><span class="net">.NET: Db4oFactory.Configure().ObjectClass(typeof(Foo)).CallConstructor(true) </span><br>
+</p>
+There are some classes (e.g. java.util.Calendar) that require a constructor&nbsp;to be called to work. Further details can be found in the&nbsp;<a href="../../Db4o_Concepts/Object_Construction/Object_Construction.html" class="wikiLink">Constructors</a>&nbsp; chapter<br>
+<br><style>
+.java{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2006-11-12T14:43:01 by Tetyana.
+				</div>
+  </body>
+</html>
