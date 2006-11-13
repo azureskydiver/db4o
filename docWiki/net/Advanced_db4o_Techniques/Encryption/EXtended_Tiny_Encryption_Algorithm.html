@@ -1,0 +1,62 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>EXtended Tiny Encryption Algorithm</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>EXtended Tiny Encryption Algorithm</h1><p>&nbsp;</p>
+
+<p>The first included encryption algorithm is XTEA (eXtended Tiny Encryption Algorithm). We have choosen XTEA because this block cipher operates on a 64-bit block size with a 128-bit key. This is an extremely tiny but very fast (with cycles less than 32 rounds) encryption algorithm. It is supposed to be as secure as DES or IDEA. Since cryptography is beyond the scope of this tutorial you can find further information about XTEA here:<br>
+<br>
+<a href="http://en.wikipedia.org/wiki/XTEA" target="_blank">http://en.wikipedia.org/wiki/XTEA</a><br>
+    <br>
+In order to encipher your data just perform the following steps:<br>
+<br>
+1)    Ensure you have downloaded at least db4o Version 5.1. This is the first version which includes the XTeaEncryptionFileAdapter (the encryption IoAdapter plug-in for db4o file IO that realizes XTEA).<br>
+<br>
+2)    Configure db4o to add this encryption mechanism:</p>
+
+<p><span class="java">Java: Db4o.configure ().io(new XTeaEncryptionFileAdapter("password")); </span><br>
+</p>
+
+<p><span class="net">.NET: Db4o.Configure ().Io(new XTeaEncryptionFileAdapter("password")); </span><br>
+</p>
+This is the simplest way to add the encryption adapter. But the XTEAEncryptionFileAdapter can also wrap other custom IoAdapters to use:
+<p><span class="java">Java: Db4o.configure ().io(new XTeaEncryptionFileAdapter(new myIoAdapter(),"password")); </span><br>
+</p>
+
+<p><span class="net">.NET: Db4o.Configure ().Io(new XTeaEncryptionFileAdapter(new myIoAdapter(),"password")); </span><br>
+</p>
+
+3)    Choose your own password and number of cycles. The security of XTEA can be enhanced by increasing the number of iterations. There are four possible values: <br>
+- 8 rounds guarantee highest speed of db4o and lowest security (iterations = XTEA.ITERATIONS8).<br>
+- 16 rounds assure high speed of db4o and sufficient security in the same time (iterations = XTEA.ITERATIONS16).<br>
+- 32 rounds are ample for most applications, this is the default value (iterations = XTEA.ITERATIONS32).<br>
+- 64 rounds achieve the best security but db4o will be about 20 per cent slower then without encryption (iterations = XTEA.ITERATIONS64).
+<p><span class="java">Java: Db4o.configure ().io(new XTeaEncryptionFileAdapter( "password", iterations) ); </span><br>
+</p>
+
+<p><span class="net">.NET: Db4o.Configure ().Io(new XTeaEncryptionFileAdapter( "password", iterations) ); </span><br>
+</p>
+
+Or, if you wish to use your own IoAdapter:
+<p><span class="java">Java: Db4o.configure ().io(new XTeaEncryptionFileAdapter(new myIoAdapter(), "password", iterations) ); </span><br></p>
+<p><span class="net">.NET: Db4o.Configure ().Io(new XTeaEncryptionFileAdapter(new myIoAdapter(), "password", iterations) ); </span><br></p>
+Keep in mind that all configurations must be set before opening the ObjectContainer.<br>
+<br>
+Note that there are some limitations you should keep in mind:<br>
+There is no possibility of changing the password on an existing file. You will not be able to access your data if you lose the password. Thus please keep your key! And make sure that you always use the same password when subsequently opening your encrypted files. You can, however open a new file with a different password and <a href="../../Db4o_Replication_System_dRS/Db4o_Replication_System_dRS.html" class="wikiLink">replicate</a> (or <a href="../../Db4o_Database_Management/Maintenance/Defragment.html" class="wikiLink">defragment</a>) your objects from one database to the other.<br>
+<br>
+Feel free to use XTeaEncryptionFileAdapter for your own purposes. You may modify the class XTEA (which implement the XTEA encryption algorithm) and KeyGenerator (for key generation), and replace them with other algorithms if you like. Feel free to post your own IoAdapters to the db4o Community Forum <a href="http://developer.db4o.com/forums/">http://developer.db4o.com/forums/</a><br><style>
+.java{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (12) was last Modified 2006-11-12T09:51:52 by Tetyana.
+				</div>
+  </body>
+</html>

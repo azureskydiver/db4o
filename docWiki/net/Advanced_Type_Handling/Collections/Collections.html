@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Collections</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collections</h1><p></p><p><a href="http://developer.db4o.com/DocsWiki/view.aspx/Reference/Mastering_db4o/Translators" target="_blank" title="Translators chapter">Translators chapter </a>&nbsp;&nbsp;of the documentation explains why translators are necessary to&nbsp;store and retrieve some types of classes. Db4o uses translators internally to manage storing and&nbsp;retrieving of collections.<br><br>Collections were first implemented in JDK 1.2. Before that Vector implementation was used to store&nbsp;growable arrays of objects. Under the hood, when collection object is stored to the database different&nbsp;actions are taken for different versions of java:<br>1)&nbsp;&nbsp;&nbsp;&nbsp;before JDK1.2: collection class is translated with TVector class;<br>2)&nbsp;&nbsp;&nbsp;&nbsp;after: collection is translated with TCollection, TMap, THashtable translators.<br><br>In fact, the functionality of those translators is pretty much the same. On storing collection is&nbsp;transferred to an array of objects ( Object[] ) and that array gets stored to the database file. <br><br>Map&nbsp;&nbsp;(HashTable and SortedList for .NET) objects are stores as an array of objects of special type:<br></p><table cellpadding="3" cellspacing="0"><tr><td class="lg"><b>&nbsp;public class Entry<br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;public Object key;<br>&nbsp;&nbsp;&nbsp;&nbsp;public Object value;<br>&nbsp;&nbsp;&nbsp;&nbsp;. . .<br>}</b> </td></tr></table><br><br><i>OnInstantiate</i>&nbsp;method of collections' translators creates a new instance of respective collection or&nbsp;map and restores its values from the saved object array.<br><br>It is easy to see that such implementation is not very efficient for searches/updates of a certain value in&nbsp;a collection, as the whole collection should be instantiated to access any of its elements.</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-11T14:57:06 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Automatic refactoring</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Automatic refactoring</h1><p>&nbsp;</p><p>In simplest cases db4o handles schema changes automatically:<br />- If you <strong>add</strong> a new field, db4o automatically starts storing the new data. Older instances of your stored class (from before the field was added) are still loaded, but the new field is set to its default value, or null. <br />- If you <strong>remove</strong> a field, db4o ignores the stored value when activating instances of your class. The stored value is not  removed from the database until the next Defragment, and is still accessible via the StoredClass/StoredField API.<br />- If you <strong>add an interface</strong> to be implemented by your stored classes, db4o automatically starts using it and you are able to retrieve your saved data using new interface.<br /></p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2006-10-20T20:15:54 by Tetyana.
+				</div>
+  </body>
+</html>

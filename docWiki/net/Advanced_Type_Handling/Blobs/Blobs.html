@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Blobs</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Blobs</h1><p>&nbsp;</p><p>In some cases user has to deal with large binary objects (BLOBs) such as images, video, music, which should be stored in a structured way, and retrieved/queried easily. There are several challenges associated with this task:<br><br>-    storage location;<br>-    loading into RAM;<br>-    querying interface;<br>-    objects' modification;<br>-    information backup;<br>-    client/server processing.<br><br>Db4o provides you with a flexibility of using 2 different solutions for this case:<br>1) com.db4o.types.Blob<br>2) byte[] arrays stored inside the database file<br><br><br>These two solutions' main features in comparison are represented below:<br><br><b>com.db4o.types.Blob</b><br><br>1)    every Blob gets it's own file <br>2)    C/S communication runs asynchronous in separate thread <br>3)    special code is necessary to store and load <br>4)    no concerns about activation depth <br><br><br><b>byte[] array</b><br><br>1)    data in the same file <br>2)    C/S communication runs in the normal communication thread <br>3)    transparent handling without special concerns <br>4)    control over activation depth may be necessary<br><br><br>Storing data in a byte[] array works just as storing usual objects, but this method is not always applicable/desirable. First of all, the size of the db4o file can grow over the limit (256 GB) due to the BLOB data added. Secondly, object activation and client/server transferring logic can be an additional load for your application.<br><br></p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2006-11-11T14:51:58 by Tetyana.
+				</div>
+  </body>
+</html>

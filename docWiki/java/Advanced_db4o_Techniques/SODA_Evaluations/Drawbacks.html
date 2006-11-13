@@ -1,0 +1,18 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Drawbacks</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Drawbacks</h1><p></p><p>While evaluations offer you another degree of freedom for assembling queries,&nbsp;they come at a certain cost: As you may already have noticed from the example,&nbsp;evaluations work on the fully instantiated objects, while 'normal' queries&nbsp;peek into the database file directly. So there's a certain performance penalty&nbsp;for the object instantiation, which is wasted if the object is not included&nbsp;into the candidate set.<br /><br /><br />Another restriction is that, while 'normal' queries can bypass encapsulation and&nbsp;access candidates' private members directly, evaluations are bound to use their&nbsp;external API, just as in the language itself.<br /><br /><br /><br /><span class="java">One last hint for Java users: Evaluations are expected to be serializable for client/server&nbsp;operation. So be careful when implementing them as (anonymous) inner classes&nbsp;and keep in mind that those will carry an implicit reference to their surrounding&nbsp;class and everything that belongs to it. Best practice is to always implement&nbsp;evaluations as normal top level or static inner classes.</span><br /></p><style>
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-05T07:40:43 by Tetyana.
+				</div>
+  </body>
+</html>

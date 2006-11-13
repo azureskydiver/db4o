@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Defragmentation Role</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Defragmentation Role</h1><p></p><p>So we have a reliable freespace manager, which will keep the database file size to the minimum. But do we&nbsp;still need to bother about defragmentation?<br /><br />Yes, we do for several reasons:<br /><br />- When the object is deleted, its space in the database is marked as 'freed'. But 8 bytes of its internal ID stay&nbsp;behind. Defragment cleans all this up by writing all objects to a completely new database file. The resulting&nbsp;file will be smaller and faster.<br />- Within the database file quite a lot of space is used for transactional processing. Objects are always written&nbsp;to a new slot when they are modified, while their 'old' space is marked as free. Adjacent free slots will be&nbsp;merged on the fly, but free and used slots won't be clustered together unless defragmentation is run. <br /></p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-10-26T14:17:53 by Tetyana.
+				</div>
+  </body>
+</html>

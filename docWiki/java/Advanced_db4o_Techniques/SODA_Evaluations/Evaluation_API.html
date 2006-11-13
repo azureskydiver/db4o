@@ -1,0 +1,39 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Evaluation API</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Evaluation API</h1>
+<p></p>
+<p>The evaluation API consists of two interfaces, <em>Evaluation</em>&nbsp;and <em>Candidate</em>&nbsp;.&nbsp;Evaluation implementations are implemented by the user and injected into a query.&nbsp;During a query, they will be called from db4o with a candidate instance&nbsp;in order to decide whether to include it into the current (sub-)result.<br />
+<br />
+<br />
+The Evaluation interface contains a single method only:</p>
+<p><span class="java">Java: public void evaluate(Candidate candidate) </span><br /></p>
+<p><span class="net">.NET: public void Evaluate(Candidate candidate) </span><br /></p>
+This will be called by db4o to check whether the object encapsulated by this&nbsp;candidate should be included into the current candidate set.<br />
+<br />
+<br />
+The Candidate interface provides three methods:
+<p><span class="java">Java: <br />public Object getObject()<br />
+public void include(boolean flag)<br />
+public ObjectContainer objectContainer() <br />
+</span></p>
+<p><span class="net">.NET: <br />public Object GetObject()<br />
+public void Include(bool flag)<br />
+public ObjectContainer ObjectContainer() <br />
+</span></p>
+An Evaluation implementation may call getObject() to retrieve the actual object&nbsp;instance to be evaluated, it may call include() to instruct db4o whether or not&nbsp;to include this object in the current candidate set, and finally it may access&nbsp;the current database directly by calling objectContainer().<br /><style>
+.net{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-04T20:13:09 by Tetyana.
+				</div>
+  </body>
+</html>
