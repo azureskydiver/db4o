@@ -15,10 +15,6 @@ class TreeIDMapping extends AbstractContextIDMapping {
 	
 	private Tree _tree;
 	
-	public void mapIDs(int oldID, int newID) {
-		_tree = Tree.add(_tree, new TreeIntObject(oldID, new Integer(newID)));
-	}
-
 	public int mappedID(int oldID, boolean lenient) {
 		int classID = mappedClassID(oldID);
 		if(classID != 0) {
@@ -43,5 +39,9 @@ class TreeIDMapping extends AbstractContextIDMapping {
 	}
 	
 	public void close() {
+	}
+
+	protected void mapNonClassIDs(int origID, int mappedID) {
+		_tree = Tree.add(_tree, new TreeIntObject(origID, new Integer(mappedID)));
 	}
 }

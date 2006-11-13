@@ -103,10 +103,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public void mapIDs(int oldID,int newID, boolean isClassID) {
-		_mapping.mapIDs(oldID,newID);
-		if(isClassID) {
-			_mapping.mapClassIDs(oldID,newID);
-		}
+		_mapping.mapIDs(oldID,newID, isClassID);
 	}
 
 	public void close() {

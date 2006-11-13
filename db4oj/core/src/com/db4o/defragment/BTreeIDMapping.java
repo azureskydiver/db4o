@@ -64,8 +64,8 @@ class BTreeIDMapping extends AbstractContextIDMapping {
 		return mappedIDs.mapped() + (oldID - mappedIDs.orig());
 	}
 
-	public void mapIDs(int oldID, int newID) {
-		_cache = new MappedIDPair(oldID, newID);
+	protected void mapNonClassIDs(int origID, int mappedID) {
+		_cache = new MappedIDPair(origID, mappedID);
 		_idTree.add(trans(), _cache);
 	}
 
@@ -82,5 +82,4 @@ class BTreeIDMapping extends AbstractContextIDMapping {
 	private Transaction trans() {
 		return _mappingDb.getSystemTransaction();
 	}
-
 }
