@@ -3,7 +3,7 @@
 package com.db4o.db4ounit.jre5.defrag;
 
 import com.db4o.db4ounit.common.assorted.*;
-import com.db4o.db4ounit.jre11.defragment.*;
+import com.db4o.db4ounit.common.defragment.*;
 import com.db4o.db4ounit.jre12.collections.custom.*;
 
 import db4ounit.*;
