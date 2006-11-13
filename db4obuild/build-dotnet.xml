@@ -201,6 +201,22 @@
 				<include name="**/*.csdproj" />
 				<include name="**/*.sln" />
 				<include name="**/*.txt" />
+				
+				<include name="db4objects.snk" />
+				
+				<include name="include.mk" />
+				<include name="**/Makefile" />				
+				
+				<!-- Mono.Cecil and family files -->
+				<include name="**/configure" />
+				<include name="**/*.in" />
+				<include name="**/*.sources" />				
+				<include name="**/AUTHORS" />
+				<include name="**/README" />
+				<include name="**/ChangeLog" />
+				<include name="**/*.build" />
+				<include name="**/*.inc" />
+				
 				<exclude name="**/obj/**" />	
 			</fileset>
 		</copy>
