@@ -11,9 +11,9 @@ import com.db4o.foundation.*;
 import com.db4o.types.*;
 
 /**
- * defragments a database file.
- * <br><br><b>This class is not part of db4o.jar!</b><br>
- * It is delivered as sourcecode in the
+ * old Deframent source code, now replaced by the built-in functionality in com.db4o.defragment.Defragment.
+ * <br><br><b>This class is deprecated. Please use {@link com.db4o.defragment.Defragment}.</b><br>
+ * This class is delivered as sourcecode in the
  * path ../com/db4o/tools/<br><br> <b>Prerequites:</b><br> - The database file may not be
  * in use.<br> - All stored classes need to be available.<br> - If you use yor own special
  * Db4o translators, they need to be installed before starting Defragment.<br><br>
@@ -37,6 +37,7 @@ import com.db4o.types.*;
  * Db4o#restoreConfiguration() in the sourcecode of
  * com.db4o.tools.Defragment.java for the exact changed parameters that
  * may need to be restored.
+ * @deprecated Please use com.db4o.defragment.Defragment 
  */
 public class Defragment {
     
