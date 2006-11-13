@@ -2,7 +2,10 @@
 
 using System;
 using System.Threading;
+
 namespace com.db4o.foundation {
+
+#if !CF_1_0 && !CF_2_0
 
     public class Lock4 {
     
@@ -20,4 +23,5 @@ namespace com.db4o.foundation {
             Monitor.Wait(this, (int)timeout);
         }
     }
+#endif
 }
