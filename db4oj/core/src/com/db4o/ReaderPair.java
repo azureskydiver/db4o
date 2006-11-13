@@ -9,7 +9,7 @@ import com.db4o.inside.marshall.*;
 /**
  * @exclude
  */
-public class ReaderPair implements SlotReader {
+public final class ReaderPair implements SlotReader {
 	private YapReader _source;
 	private YapReader _target;
 	private DefragContext _mapping;
@@ -38,11 +38,7 @@ public class ReaderPair implements SlotReader {
 	}
 
 	public void incrementIntSize() {
-		incrementIntSize(1);
-	}
-
-	public void incrementIntSize(int times) {
-		incrementOffset(times*YapConst.INT_LENGTH);
+		incrementOffset(YapConst.INT_LENGTH);
 	}
 
 	public int copyUnindexedID() {
