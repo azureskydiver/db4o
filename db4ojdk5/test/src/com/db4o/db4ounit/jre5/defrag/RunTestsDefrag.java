@@ -2,23 +2,16 @@
 
 package com.db4o.db4ounit.jre5.defrag;
 
-import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.db4ounit.common.defragment.*;
-import com.db4o.db4ounit.jre12.collections.custom.*;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
+	
+	@Override
+	public Class testSuite() {
+		return com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5.class;
+	}
 
-public class RunTestsDefrag {
 	public static void main(String[] args) {
-		Class clazz = 
-			com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5.class;
-//			PCollectionReferencedTwiceTestCase.class;
-//			PersistStaticFieldValuesTestCase.class;
-//			Db4oLinkedListTestCase.class;
-		System.exit(new TestRunner(
-				new Db4oTestSuiteBuilder(
-						new Db4oDefragSolo(new IndependentConfigurationSource()), clazz)).run());
+		System.exit(new AllTests().runSolo());
 	}
 }
