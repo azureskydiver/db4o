@@ -14,6 +14,7 @@ CARL'S CHANGES                 7017ms  11141ms
 'TOPLEVEL' OBJ SLOTS ONLY      6935ms
 DROP SEEN             6603ms   6105ms   9594ms
 IN-MEMORY (OPT.)               4746ms   7265ms
+BATCH OFFSET INC               4500ms
 
 Tuning suggestions:
 - cache class ids separately -done- (+)
