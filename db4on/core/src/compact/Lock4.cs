@@ -5,6 +5,7 @@ using System.Threading;
 
 namespace com.db4o.foundation
 {
+#if CF_1_0 || CF_2_0
     public class Lock4
     {
         private volatile Thread lockedByThread;
@@ -120,4 +121,5 @@ namespace com.db4o.foundation
             }
         }
     }
+#endif
 }

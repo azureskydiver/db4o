@@ -2,14 +2,16 @@
 
 using System;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 using j4o.lang;
 using com.db4o.config;
 
 namespace com.db4o.config
 {
+#if !CF_1_0 && !CF_2_0
+	using System.Runtime.Serialization;
+	using System.Runtime.Serialization.Formatters.Binary;
+
 	/// <summary>
 	/// translator for types that are marked with the Serializable attribute.
 	/// The Serializable translator is provided to allow persisting objects that
@@ -45,5 +47,6 @@ namespace com.db4o.config
 		}
 
 	}
+#endif
 }
 

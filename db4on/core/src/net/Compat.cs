@@ -2,8 +2,10 @@
 
 namespace com.db4o
 {
+#if !CF_1_0 && !CF_2_0
 	/// <exclude />
 	public class Compat
 	{	
 	}
+#endif
 }
