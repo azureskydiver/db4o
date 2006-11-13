@@ -986,7 +986,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
         
         for (int i = 0; i < i_fields.length; i++) {
-            i_fields[i].initConfigOnUp(systemTrans);
+            YapField curField = i_fields[i];
+            String fieldName = curField.getName();
+			if(!curField.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
+            	curField.initIndex(this,fieldName);
+            }
+			curField.initConfigOnUp(systemTrans);
         }
     }
 
