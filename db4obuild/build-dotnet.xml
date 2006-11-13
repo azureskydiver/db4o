@@ -655,7 +655,28 @@
 		<mkdir dir="${dir.dist.ndoc}" />
 	</target>
 	
-	<target name="ndoc" depends="preparendoc" description="Build public .net docs">		
+	<target name="ndoc" depends="preparendoc, ndoc-mono, ndoc-net" description="Build public .net docs">
+	</target>
+	
+	<target name="ndoc-mono" if="mono">
+		<exec executable="mono" failonerror="true">
+			<arg file="${ndoc.home}/bin/mono/1.0/NDocConsole.exe" />
+			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-documenter=MSDN" />
+			<arg value="-OutputTarget=Web" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-CleanIntermediates=True" />
+		</exec>
+	</target>
+		
+	<target name="ndoc-net" unless="mono">
 		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
 			<arg value="-documenter=MSDN 2003" />
