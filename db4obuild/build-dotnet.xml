@@ -299,11 +299,8 @@
 			</compact-args>
 		</csc-all>
 	</target>
-	
-	<!--
+		
 	<target name="build-core" depends="init, check-dependencies, sharpen">
-	-->
-	<target name="build-core" depends="init, check-dependencies">
 	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
