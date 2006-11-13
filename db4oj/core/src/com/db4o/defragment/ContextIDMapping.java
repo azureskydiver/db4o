@@ -7,7 +7,7 @@ package com.db4o.defragment;
  * 
  * @see Defragment
  */
-interface ContextIDMapping {
+public interface ContextIDMapping {
 
 	/**
 	 * Returns a previously registered mapping ID for the given ID if it exists.
