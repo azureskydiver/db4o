@@ -5,8 +5,8 @@ package com.db4o.defragment;
 import com.db4o.ext.*;
 
 /**
- * Filter that accepts only YapClass instances whose corresponding Java class is
- * currently known.
+ * Filter that accepts only StoredClass instances whose corresponding Java
+ * class is currently known.
  * @sharpen.ignore
  */
 public class AvailableClassFilter implements StoredClassFilter {
