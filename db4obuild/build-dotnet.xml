@@ -183,10 +183,10 @@
 		</exec>
 	</target>
 	
-	<target name="package" depends="clean, build, ndoc, meta-package" description="Builds the complete set of .net 2 distros">
+	<target name="package" depends="build, ndoc, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
-	<target name="package-net1" depends="clean, build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
+	<target name="package-net1" depends="build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
 	</target>
 	
 	<target name="meta-package" depends="build-zip, build-net-installer">
