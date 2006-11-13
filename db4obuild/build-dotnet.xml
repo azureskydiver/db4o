@@ -196,8 +196,9 @@
 	<target name="prepare-package-structure">
 
 		<mkdir dir="${dir.dist.net.build}" />
+		<mkdir dir="${dir.dist.net.build}/src" />
 	
-		<copy todir="${dir.dist.net.build}">
+		<copy todir="${dir.dist.net.build}/src">
 			<fileset dir="../db4o.net">
 				<include name="**/*.cs" />
 				<include name="**/*.csproj" />
