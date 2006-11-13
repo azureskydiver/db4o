@@ -31,22 +31,31 @@ public class ObjectTreeNode {
 	}
 
 	public String toString() {
-		String ret;
-		if (field != null) {
-			ret = field.getName() + ": ";
-		} else ret = "";
-		if (ob == null) ret += ob;
-		else if (ob.getClass().isArray()) {
-			Object[] array = (Object[]) ob;
-			ret += "Array[" + array.length + "]";
-		} else if (ob instanceof Collection) {
-			Collection collection = (Collection) ob;
-			ret += "Collection[" + collection.size() + "]";
-		} else if (ob instanceof Map) {
-			Map map = (Map) ob;
-			ret += "Map[" + map.size() + "]";
-		} else {
-			ret += ob;
+		String ret = "";
+		try {
+			if (field != null) {
+				ret = field.getName() + ": ";
+			} else ret = "";
+			if (ob == null) ret += ob;
+			else if (ob.getClass().isArray()) {
+				/*
+				wow, this is strange, this occurs on next line, that's why i surrounded with catch all
+				Exception in thread "AWT-EventQueue-0" java.lang.ClassCastException: [B
+				at com.db4o.objectManager.v2.tree.ObjectTreeNode.toString(ObjectTreeNode.java:40)
+				 */
+				Object[] array = (Object[]) ob;
+				ret += "Array[" + array.length + "]";
+			} else if (ob instanceof Collection) {
+				Collection collection = (Collection) ob;
+				ret += "Collection[" + collection.size() + "]";
+			} else if (ob instanceof Map) {
+				Map map = (Map) ob;
+				ret += "Map[" + map.size() + "]";
+			} else {
+				ret += ob;
+			}
+		} catch (Exception e) {
+			ret = ob.toString();
 		}
 		return ret;
 

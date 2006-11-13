@@ -30,12 +30,12 @@ public class BaseMenuBar extends JMenuBar {
         JMenu menu = createMenu("Help", 'H');
 
         JMenuItem item;
+
         item = createMenuItem("Help Contents", ResourceManager.createImageIcon("help.gif"), 'H');
         if (helpActionListener != null) {
             item.addActionListener(helpActionListener);
         }
         menu.add(item);
-
 
         menu.addSeparator();
         item = createMenuItem("About", 'a');
