@@ -1,36 +1,45 @@
 package com.db4o.devtools.ant;
 
 import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.tools.ant.types.FileSet;
 
-public class UpdateAssemblyInfoTask extends AbstractMultiFileSetTask {
+public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 
-	String _version;
+	private String _version;
+	
+	private File _keyFile;
+	
+	private String _configuration;
+	
+	public File getKeyFile() {
+		return _keyFile;
+	}
+	
+	public void setKeyFile(File keyFile) {
+		_keyFile = keyFile;
+	}
 	
 	public void setVersion(String version) {
 		_version = version;
 	}
 	
-	public FileSet createFileSet() {
-		return newFileSet();
+	public void setConfiguration(String configuration) {
+		_configuration = configuration;
 	}
-
+	
 	@Override
-	protected void workOn(File file) throws Exception {
-		String contents = IO.readAll(file);		
+	protected String updateAttributes(String contents) {
 		contents = updateAttribute(contents, "AssemblyVersion", _version);
 		contents = updateAttribute(contents, "AssemblyProduct", AssemblyInfo.PRODUCT);
 		contents = updateAttribute(contents, "AssemblyCompany", AssemblyInfo.COMPANY);
-		contents = updateAttribute(contents, "AssemblyCopyright", AssemblyInfo.COPYRIGHT); 
-		IO.writeAll(file, contents);
+		contents = updateAttribute(contents, "AssemblyCopyright", AssemblyInfo.COPYRIGHT);
+		if (null != _keyFile) {
+			contents = updateAttribute(contents, "AssemblyKeyFile", _keyFile.getAbsolutePath().replace('\\', '/'));
+		}
+		if (null != _configuration) {
+			contents = updateAttribute(contents, "AssemblyConfiguration", _configuration);
+			contents = updateAttribute(contents, "AssemblyDescription", "db4o " + _version + " (" + _configuration + ")");
+		}
+		return contents;
 	}
-
-	private String updateAttribute(String contents, String attributeName, String value) {
-		Pattern pattern = Pattern.compile(attributeName + "\\((.+)\\)");
-		Matcher matcher = pattern.matcher(contents);
-		return matcher.replaceFirst(attributeName + "(\"" + value + "\")");
-	}	
 }

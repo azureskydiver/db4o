@@ -44,7 +44,7 @@
 	</target>
 		
 	<target name="buildnet" depends="update-csharp-projects">		
-		<property name="assembly" location="${dir.dist.dll}/${projectName}.dll" />		
+		<property name="assembly" location="${dir.dist.dll.net}/${projectName}.dll" />		
 		<csc outputfile="${assembly}"
 			targettype="library"
 			srcdir="${db4ounit.net.src.dir}"
