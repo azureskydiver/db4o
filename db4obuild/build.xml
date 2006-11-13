@@ -52,8 +52,10 @@
 		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
 		<loadfile property="content.copyrightheader" srcfile="${file.copyrightheader}" encoding="iso-8859-1" />
 		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}" />
+		<!--
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}"/>
 		<versioninfo path="${dir.n.core.src}/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
+		-->
 		<property name="file.compiler.jdk1.3.args.optional" value="" />
 	</target>
 
