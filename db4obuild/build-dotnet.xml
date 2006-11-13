@@ -130,8 +130,8 @@
 		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
 		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
 	
-		<property name="csharp.definitions" value="" />
-		<property name="csharp.definitions.cf" value="" />		
+		<property name="csharp.definitions" value="NET_1_1" />
+		<property name="csharp.definitions.cf" value="CF_1_0" />		
 		<property name="dir.dll.cf" location="${dir.compactframework}v1.0/WindowsCE/" />	
 		<property name="csc.tests.extraoptions" value="" />
 	
@@ -185,7 +185,11 @@
 	<target name="package-net1" depends="clean, build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
 	</target>
 	
-	<target name="meta-package">
+	<target name="meta-package" depends="build-zip, build-net-installer">
+	
+	</target>
+	
+	<target name="prepare-package-structure">
 
 		<mkdir dir="${dir.dist.net.build}" />
 	
@@ -223,11 +227,18 @@
 				<include name="*.ini" />
 			</fileset>
 		</copy>
+		
+	</target>
+	
+	<target name="build-zip" depends="prepare-package-structure">
 	
 		<zip destfile="${dir.dist}/${db4o.file}${installer.package.suffix}.zip">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
-		</zip>
-			
+		</zip>			
+		
+	</target>
+	
+	<target name="build-net-installer" depends="prepare-package-structure" unless="mono">
 		<ant antfile="build-net-installer.xml">
 			<property name="installer.package.guid" value="${installer.package.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
