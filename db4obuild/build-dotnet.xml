@@ -314,10 +314,7 @@
 		</csc-all>
 	</target>
 	
-	<!--
 	<target name="build-core" depends="init, check-dependencies, sharpen">
-	-->
-	<target name="build-core" depends="init, check-dependencies">
 	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
@@ -341,12 +338,9 @@
 				<include name="*.dll" />
 			</reference>
 		</csc>
-	</target>
+	</target>	
 	
-	<!--
 	<target name="build-legacy" depends="init, sharpen-legacy">
-	-->
-	<target name="build-legacy" depends="init">
 		<fileset
 			id="legacy.core.sources"
 			dir="${dir.n.core}">
