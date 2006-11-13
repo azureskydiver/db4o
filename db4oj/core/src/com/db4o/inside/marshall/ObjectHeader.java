@@ -8,7 +8,7 @@ import com.db4o.*;
 /**
  * @exclude
  */
-public class ObjectHeader {
+public final class ObjectHeader {
     
     private final YapClass _yapClass;
     

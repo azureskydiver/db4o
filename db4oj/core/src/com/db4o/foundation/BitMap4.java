@@ -6,7 +6,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class BitMap4 {
+public final class BitMap4 {
     
     private final byte[] _bits;
     
