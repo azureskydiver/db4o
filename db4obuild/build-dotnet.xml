@@ -15,6 +15,108 @@
 		<include name="db4oj/core/src/**/*.java" />
 	</fileset>
 	
+	<macrodef name="reset-dir">
+		<attribute name="dir" />
+		<sequential>
+			<delete dir="@{dir}" />
+			<mkdir dir="@{dir}" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="csc-prepare">
+		<attribute name="sources" description="sources fileset id" />
+		<attribute name="configuration" />
+		<sequential>
+			<reset-dir dir="${dir.dist.net.compile}" />
+			<copy todir="${dir.dist.net.compile}">
+				<fileset refid="@{sources}" />
+			</copy>
+			<updateAssemblyInfo
+					keyfile="${filename.keyfile}"
+					version="${db4o.version.full}"
+					configuration="@{configuration} ${target.framework.version}">
+				<fileset dir="${dir.dist.net.compile}">
+					<include name="**/AssemblyInfo.cs" />
+				</fileset>
+			</updateAssemblyInfo>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="csc-all">
+		<attribute name="assemblyName" />		
+		<attribute name="sources" description="sources fileset id" />
+		
+		<attribute name="netOutputDir" default="${dir.dist.dll.net}" />
+		<attribute name="netConfiguration" default=".NET" />
+		
+		<attribute name="compactOutputDir" default="${dir.dist.dll.compact}" />
+		<attribute name="compactConfiguration" default=".NET CompactFramework" />
+		
+		<element name="references" optional="yes" />
+		<element name="compact-args" optional="yes" />
+		
+		<sequential>
+			<mkdir dir="@{netOutputDir}" />
+			<mkdir dir="@{compactOutputDir}" />
+			
+			<csc-prepare
+				sources="@{sources}"
+				configuration="@{netConfiguration}" />
+				
+			<csc
+				destfile="@{netOutputDir}/@{assemblyName}.dll"
+				docfile="@{netOutputDir}/@{assemblyName}.xml"
+				targettype="library"
+				definitions="${csharp.definitions}"
+				executable="${csc.executable}"
+				debug="${debug}"
+				optimize="true"
+				srcdir="${dir.dist.net.compile}">
+				
+				<include name="**/*.cs" />
+				
+				<references />
+			</csc>
+	
+			<csc-compact
+				destfile="@{compactOutputDir}/@{assemblyName}.dll"
+				sources="core.sources"
+				configuration="@{compactConfiguration}">
+				<args>
+					<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
+					<compact-args />
+				</args>
+			</csc-compact>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="csc-compact">
+		<attribute name="destfile" />		
+		<attribute name="sources" description="sources fileset id" />
+		<attribute name="configuration" default=".NET CompactFramework" />
+		<element name="args" optional="yes" />
+		<sequential>	
+		
+			<csc-prepare sources="@{sources}" configuration="@{configuration}" />
+			
+			<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
+				<arg value="/optimize" />
+				<arg value="/debug-" />
+				<arg value="/define:${csharp.definitions.cf}" />
+				<arg value="/out:@{destfile}" />
+				<arg value="/target:library" />
+				<arg value="/warn:1" />
+				<arg value="/noconfig" />
+				<arg value="/nostdlib" />
+				<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
+				<arg value="/r:${dir.dll.cf}/System.dll" />
+				<args />
+				<arg value="/recurse:*.cs" />
+			</exec>
+			
+		</sequential>
+	</macrodef>
+	
 	<target name="check-dependencies">
 		<uptodate
 			property="csharp.uptodate"
@@ -27,6 +129,7 @@
 	<target name="configure-mono" if="mono">
 		<echo>Configuring mono build.</echo>
 		
+		<property name="target.framework.version" value="2.0" />
 		<property name="csharp.definitions" value="MONO,NET_2_0" />
 		<property name="csc.executable" value="gmcs" />
 	
@@ -37,6 +140,7 @@
 	<target name="configure-net1" unless="mono">
 		<echo>Configuring .net 1 build.</echo>
 		
+		<property name="target.framework.version" value="1.1" />
 		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
 		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
 	
@@ -53,12 +157,13 @@
 	<target name="configure-net2" unless="mono">
 		<echo>Configuring .net 2 build.</echo>
 		
+		<property name="target.framework.version" value="2.0" />
 		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
 		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 	
 		<property name="csharp.definitions" value="NET_2_0" />
 		<property name="csharp.definitions.cf" value="CF_2_0" />		
-		<property name="dir.dll.cf" value="${dir.compactframework}v2.0/WindowsCE/" />	
+		<property name="dir.dll.cf" location="${dir.compactframework}v2.0/WindowsCE/" />	
 		<property name="csc.tests.extraoptions" value="" />
 	
 		<property name="installer.package.suffix" value="net2" />
@@ -70,21 +175,21 @@
 		<property name="debug" value="true" />
 	</target>
 	
-	<target name="run-tests" depends="configure, run-tests-mono, run-tests-net">
+	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
 		
 	<target name="run-tests-net1" depends="configure-net1, run-tests-net">
 	</target>
 	
 	<target name="run-tests-net" depends="build-tests" unless="mono">
-		<exec executable="${dir.dist.dll}/Db4objects.Db4o.Tests.exe">
+		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe">
 		</exec>
 	</target>
 	
 	<target name="run-tests-mono" depends="build-tests" if="mono">
 		<exec executable="mono">
 			<arg value="--debug" />
-			<arg file="${dir.dist.dll}/Db4objects.Db4o.Tests.exe" />
+			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" />
 		</exec>
 	</target>
 	
@@ -106,6 +211,16 @@
 				<include name="**/*.sln" />
 				<include name="**/*.txt" />
 				<exclude name="**/obj/**" />	
+			</fileset>
+		</copy>
+	
+		<copy todir="${dir.dist.net.build}/bin/net-${target.framework.version}">
+			<fileset dir="${dir.dist.dll}">
+				<include name="**/*.dll" />
+				<include name="**/*.exe" />
+				<include name="**/*.xml" />
+				<exclude name="**/*Tests*" />
+				<exclude name="**/*Db4oUnit*" />
 			</fileset>
 		</copy>
 	
@@ -134,13 +249,13 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="configure, build-all">
+	<target name="build" depends="init, configure, build-all">
 	</target>
 	
 	<target name="build-net1" depends="configure-net1, build-all">
 	</target>
 	
-	<target name="build-all" depends="build-core, build-tools, build-tests">
+	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-legacy">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -148,7 +263,7 @@
 	
 	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
 		<csc
-			destfile="${dir.dist.dll}/Db4objects.Db4o.Tests.exe"
+			destfile="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe"
 			targettype="exe"
 			srcdir="${dir.n.v6}/Db4objects.Db4o.Tests"
 			mainclass="Db4objects.Db4o.Tests.AllTests"
@@ -156,7 +271,7 @@
 			debug="true"
 			executable="${csc.executable}"
 			extraoptions="${csc.tests.extraoptions}">
-			<reference dir="${dir.dist.dll}">
+			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4objects.Db4o.Tools.dll" />
 				<include name="Db4oUnit.dll" />
@@ -167,12 +282,12 @@
 		
 	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit"> 
 		<csc
-			destfile="${dir.dist.dll}/Db4oUnit.Extensions.dll"
+			destfile="${dir.dist.dll.net}/Db4oUnit.Extensions.dll"
 			targettype="library"
 			srcdir="${dir.n.v6}/Db4oUnit.Extensions"
 			debug="true"
 			executable="${csc.executable}">
-			<reference dir="${dir.dist.dll}">
+			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4oUnit.dll" />
 				<include name="Db4objects.Db4o.dll" />
 			</reference>
@@ -183,33 +298,78 @@
 	</target>
 	
 	<target name="build-tools" depends="build-core">
-		<csc
-			destfile="${dir.dist.dll}/Db4objects.Db4o.Tools.dll"
-			targettype="library"
-			definitions="${csharp.definitions}"
-			executable="${csc.executable}"
-			debug="${debug}">
+		<csc-all
+			assemblyName="Db4objects.Db4o.Tools"
+			sources="tools.sources">			
 			
-			<src refid="tools.sources" />
+			<references>
+				<reference dir="${dir.dist.dll.net}">
+					<include name="Db4objects.Db4o.dll" />
+				</reference>
+			</references>
 			
-			<reference dir="${dir.dist.dll}">
-				<include name="Db4objects.Db4o.dll" />
+			<compact-args>
+				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
+			</compact-args>
+		</csc-all>
+	</target>
+	
+	<!--
+	<target name="build-core" depends="init, check-dependencies, sharpen">
+	-->
+	<target name="build-core" depends="init, check-dependencies">
+	
+		<fileset id="core.sources" dir="${dir.n.v6.core}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+		<csc-all
+				assemblyName="Db4objects.Db4o"
+				sources="core.sources">
+		</csc-all>		
+	</target>
+	
+	<target name="build-admin" depends="build-tools">
+		<csc outputfile="${dir.dist.dll.net}/Db4oAdmin.exe"
+			targettype="exe"
+			debug="true"
+			executable="${csc.executable}">
+			<src dir="${dir.n.v6}/Db4oAdmin/Db4oAdmin">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${dir.dist.dll.net}">
+				<include name="*.dll" />
 			</reference>
 		</csc>
 	</target>
 	
-	<target name="build-core" depends="check-dependencies, sharpen">
-		<csc
-			destfile="${dir.dist.dll}/Db4objects.Db4o.dll"
-			docfile="${dir.dist.dll}/Db4objects.Db4o.xml"
-			srcdir="${dir.n.v6.core}"
-			targettype="library"
-			definitions="${csharp.definitions}"
-			executable="${csc.executable}"
-			debug="${debug}">
+	<!--
+	<target name="build-legacy" depends="init, sharpen-legacy">
+	-->
+	<target name="build-legacy" depends="init">
+		<fileset
+			id="legacy.core.sources"
+			dir="${dir.n.core}">
+			
 			<include name="**/*.cs" />
-			<exclude name="native/compact/*.cs" />
-		</csc>
+			
+		</fileset>
+		
+		<csc-all
+				assemblyName="db4o"
+				sources="legacy.core.sources"
+				
+				netOutputDir="${dir.dist.dll.legacy.net}"
+				netConfiguration="Legacy .NET"
+				
+				compactOutputDir="${dir.dist.dll.legacy.compact}"
+				compactConfiguration="Legacy CompactFramework">
+		</csc-all>
+	</target>
+	
+	<target name="sharpen-legacy">
+		<ant antfile="build.xml" target="sharpen-core">
+		</ant>
 	</target>
 	
 	<target name="sharpen-tools">
@@ -244,8 +404,7 @@
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
-		<delete dir="${dir.sharpen}" />
-		<mkdir dir="${dir.sharpen}" />
+		<reset-dir dir="${dir.sharpen}" />
 		
 		<copy todir="${dir.sharpen}">
 			<fileset refid="db4oj.srcfiles" />
@@ -365,15 +524,15 @@
 		<property name="dir.n.v6.extensions" location="${dir.n.v6}/Db4oUnit.Extensions" />
 		
 		<delete failonerror="false">
-			<fileset dir="${dir.n.v6.extensions}">
+			<fileset dir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
 				<include name="**/*.cs" />
 				<exclude name="**/.svn/**" />
 			</fileset>
 		</delete>
 		
 		<copy todir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
-			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src">
-				<include name="Db4oUnit/**/*.cs" />
+			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src/Db4oUnit/Extensions">
+				<include name="**/*.cs" />
 			</fileset>
 		</copy>
 		
@@ -477,7 +636,7 @@
 	
 	<target name="ndoc" depends="preparendoc" description="Build public .net docs">		
 		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
-			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
+			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
 			<arg value="-documenter=MSDN 2003" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
@@ -494,7 +653,7 @@
 	
 	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
 		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
-			<arg value="${dir.dist.dll}/Db4objects.Db4o.dll" />
+			<arg value="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-documenter=VS.NET 2003" />
 			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
@@ -522,7 +681,8 @@
 	</target>
 	
 	<target name="init">
-		<mkdir dir="${dir.dist.dll}" />
+		<mkdir dir="${dir.dist.dll.net}" />
+		<mkdir dir="${dir.dist.dll.compact}" />
 	</target>
 	
 	<target name="clean" description="Delete all generated files">
