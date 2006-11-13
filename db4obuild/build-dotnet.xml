@@ -23,6 +23,31 @@
 		</sequential>
 	</macrodef>
 	
+	<macrodef name="copy-bin">
+		<attribute name="srcdir" />
+		<attribute name="name" />
+		<sequential>
+			<copy todir="${dir.dist.net.build}/bin/@{name}">
+				<fileset dir="@{srcdir}">
+					<include name="*.dll" />
+					<include name="*.exe" />
+					<include name="*.xml" />
+					<exclude name="*Tests*" />
+					<exclude name="*Db4oUnit*" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="copy-bin-set">
+		<attribute name="prefix" default="" />
+		<attribute name="srcdir" />
+		<sequential>
+			<copy-bin srcdir="@{srcdir}" name="@{prefix}net-${target.framework.version}" />
+			<copy-bin srcdir="@{srcdir}/compact" name="@{prefix}compact-${target.framework.version}" />
+		</sequential>
+	</macrodef>
+	
 	<macrodef name="prepare-assemblyInfo">
 		<attribute name="configuration" />
 		<sequential>
@@ -225,15 +250,18 @@
 			</fileset>
 		</copy>
 	
-		<copy todir="${dir.dist.net.build}/bin/net-${target.framework.version}">
-			<fileset dir="${dir.dist.dll}">
-				<include name="**/*.dll" />
-				<include name="**/*.exe" />
-				<include name="**/*.xml" />
-				<exclude name="**/*Tests*" />
-				<exclude name="**/*Db4oUnit*" />
-			</fileset>
-		</copy>
+		<!--
+			
+			/bin/compact-2.0/
+			/bin/legacy-compact-2.0/
+			/bin/legacy-net-2.0/
+			/bin/net-2.0/
+			
+			
+		-->
+		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
+		<copy-bin-set prefix="" srcdir="${dir.dist.dll}"  />
+		<copy-bin-set prefix="legacy-" srcdir="${dir.dist.dll}/legacy" />
 	
 		<mkdir dir="${dir.dist.net.build}/doc/api" />
 		
