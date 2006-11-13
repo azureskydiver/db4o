@@ -2,20 +2,17 @@
 .1 API Overview ..
 Do not forget the API documentation while reading through this ._
 tutorial. It provides an organized view of the API, looking from a ._
-.? java package ..?  .? net namespace ..?  .? mono namespace ..?  ._
-perspective and you may find related functionality to the theme you ._
-are currently reading up on.
+java package perspective and you may find related functionality to ._
+the theme you are currently reading up on.
 
-For starters, the ._
-.? java packages ..?  .? net namespace ..?  .? mono namespace ..?  ._
-com.db4o and com.db4o.query are all that you need to worry about.
+For starters, the java packages com.db4o and com.db4o.query are all ._
+that you need to worry about.
 
 .b com.db4o ..
 
-The com.db4o  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  ._
-contains almost all of the functionality you will commonly ._
-need when using db4o. Two objects of note are com.db4o.Db4o, and the ._
-com.db4o.ObjectContainer interface.
+The com.db4o java package contains almost all of the functionality ._
+you will commonly need when using db4o. Two objects of note are ._
+com.db4o.Db4o, and the com.db4o.ObjectContainer interface.
 
 The com.db4o.Db4o factory is your starting point. Static methods in ._
 this class ._
@@ -39,8 +36,8 @@ to objects in RAM will be discarded.
 .b com.db4o.ext ..
 
 In case you wonder why you only see very few methods in an ObjectContainer, ._
-here is why: The db4o interface is supplied in two steps in two  .? java packages ..?  ._
-.? net namespaces ..?  .? mono namespaces ..? , com.db4o and com.db4o.ext ._
+here is why: The db4o interface is supplied in two steps in two java ._
+packages, com.db4o and com.db4o.ext ._
 for the following reasons:
 - It's easier to get started, because the important methods are emphasized.
 - It will be easier for other products to copy the basic db4o interface.
@@ -52,13 +49,13 @@ the advanced features.
 
 .b com.db4o.config ..
 
-The com.db4o.config  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  ._
+The com.db4o.config java package ._
 contains types and classes necessary to configure db4o. The objects and interfaces ._
 within are discussed in the  .l Configuration Configuration ..  section.
 
 .b com.db4o.query ..
 
-The com.db4o.query  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  contains ._
-the Predicate class to construct  .l NativeQueries Native Queries .. . The Native Query ._
+The com.db4o.query java package contains ._
+the Predicate class to construct  .l Query Native Queries .. . The Native Query ._
 interface is the primary db4o querying interface and should be preferred over ._
-the  .l SODAQueryAPI Query API .. . 
+the Soda Query API. 

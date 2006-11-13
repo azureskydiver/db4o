@@ -14,13 +14,5 @@ The standard db4o engine for the Mono environment.
 To use db4o in a development project, you only need to add ._
 the above db4o.dll file to your project references.
 
-Here is how to do this if you are using MonoDevelop:
-- Right-click on "References" in the Solution Tab
-- choose "Edit References"
-- select the ".NET Assembly" tab and then "Browse"
-- select /usr/lib/db4o/db4o.dll
-- click "Open"
-- click "OK"
-
 .< ObjectManagerIntro ..
 .< APIOverview ..

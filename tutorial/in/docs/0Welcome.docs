@@ -2,15 +2,15 @@
 
 .b db4o is the native Java, .NET and Mono open source object database. ..
 
-This documentation and tutorial is intended to get you started ._
-with db4o and to be a reliable companion while you develop with db4o. ._ 
+This tutorial is intended to get you started with db4o. ._ 
 
 Before you start, please make sure that you have downloaded the latest ._
 db4o distribution from the  .l http://www.db4o.com db4objects website .. .
 
 You are invited to join the db4o community in the public ._
-.l http://forums.db4o.com/forums/ db4o forums ..  to ask for help at any time. You may also ._
-find the  .l http://www.db4o.com/community/ontheroad/solutionlibrary/ db4o knowledgebase .. ._
+.l http://developer.db4o.com/forums/default.aspx db4o forums ..  to ask ._
+for help at any time. You may also ._
+find the  .l http://developer.db4o.com/docs/kb.aspx db4o knowledgebase .. ._
 helpful for keyword searches.
 
 .b Java, .NET and Mono ..

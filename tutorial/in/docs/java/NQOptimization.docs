@@ -68,7 +68,7 @@ Ant build.
 
 To instrument all predicate classes in directory 'orig' whose package ._
 name starts with 'my.package' and store the modified files below ._
-directory 'instrumented', ensure that db4o-5.0-nqopt.jar and bloat-1.0.jar ._
+directory 'instrumented', ensure that db4o-6.0-nqopt.jar and bloat-1.0.jar ._
 are in your CLASSPATH and use code like the following:
 
 .c new com.db4o.nativequery.main.Db4oFileEnhancer().enhance(
@@ -76,7 +76,7 @@ are in your CLASSPATH and use code like the following:
     "instrumented",     // target directory
     new String[]{       // class path
       "lib/my_application.jar",
-      "lib/db4o-5.0-java1.x.jar"
+      "lib/db4o-6.0-java1.x.jar"
     },
     "my.package"        // optional package prefix
   ); ..c
@@ -89,10 +89,10 @@ An equivalent Ant target might look like this:
 .c <taskdef name="db4ooptimize" 
          classname="com.db4o.nativequery.main.Db4oFileEnhancerAntTask">
   <classpath>
-    <path path="lib/db4o-5.0-java1.x.jar" />
-    <path path="lib/db4o-5.0-nqopt.jar" />
+    <path path="lib/db4o-6.0-java1.x.jar" />
+    <path path="lib/db4o-6.0-nqopt.jar" />
     <path path="lib/bloat-1.0.jar" />
-    <path path="lib/db4o-5.0-java1.x.jar" />
+    <path path="lib/db4o-6.0-java1.x.jar" />
   </classpath>
 </taskdef>
 
@@ -103,7 +103,7 @@ An equivalent Ant target might look like this:
       packagefilter="my.package">
     <classpath>
       <path location="lib/my_application.jar" />
-      <path path="lib/db4o-5.0-java1.x.jar" />
+      <path path="lib/db4o-6.0-java1.x.jar" />
     </classpath>
   </db4oenhance>
 </target> ..c
@@ -118,7 +118,7 @@ without modification.
 If classes of an existing application are to be instrumented when they ._
 are loaded, a special ClassLoader needs to be used to run your application, ._
 com.db4o.nativequery.main.Db4oEnhancingClassLoader. Again ._
-db4o-5.0-nqopt.jar and bloat-1.0.jar need to be in the CLASSPATH. 
+db4o-6.0-nqopt.jar and bloat-1.0.jar need to be in the CLASSPATH. 
 
 All the native query code of your application would need to run in this ._
 ClassLoader. If we assume that you have a static starting method "goNative" ._

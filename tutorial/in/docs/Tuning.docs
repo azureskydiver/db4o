@@ -130,7 +130,7 @@ Constructors can also be turned on for individual classes only with
 .c Db4o.configure().objectClass(Foo.class).callConstructor(true); ..
 There are some classes (e.g. java.util.Calendar) that require a constructor ._
 to be called to work. Further details can be found in the ._
-.l Constructors chapter on Constructors .. . 
+chapter on Constructors. 
 
 
 .1 Turning Off Weak References ..
@@ -334,8 +334,8 @@ internally uses.
 
 .i Alternate Strategies ..
 It can also be very efficient to use multiple ObjectContainers instead of ._
-one big one. Objects can be freely moved, copied and  .l Replication replicated ..  between ._
-Objectcontainers.
+one big one. Objects can be freely moved, copied and replicated between ._
+ObjectContainers.
 
 
 
@@ -355,8 +355,6 @@ following order.
 2)	the database file is switched into "in-commit" mode;
 3)	the pointers are actually modified in the database file;
 4)	the database file is switched to "not-in-commit" mode.
-
-.g trnflow.jpg ..
 
 The Configuration.FlushFileBuffers(true) setting ensures that ._
 after each stage of commit process all the buffered data ._
