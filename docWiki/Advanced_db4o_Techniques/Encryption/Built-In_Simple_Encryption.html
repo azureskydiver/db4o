@@ -1,0 +1,30 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Built-In Simple Encryption</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Built-In Simple Encryption</h1>
+<p>&nbsp;</p>
+<p>(This functionality is depricated)&nbsp;</p>
+<p>The other encryption methods built-into db4o, is called simple encryption. To use it, the following two methods have to be called, before a database file is created:</p>
+<p><span class="java">Java: <br />
+Db4o.configure().encrypt(true); <br />
+Db4o.configure().password("yourEncryptionPasswordHere");</span></p>
+<p><span class="net">.NET: <br />
+Db4o.Configure().Encrypt(true); <br />
+Db4o.Configure().Password("yourEncryptionPasswordHere");</span></p>
+<p>The security standard of the built-in encryption functionality is not very high, not much more advanced than "substract 5 from every byte". This is great for systems with limited resources, or where the encryption needs to be done as quickly as possible.<br />
+</p><style>
+.net{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-04T20:21:59 by Tetyana.
+				</div>
+  </body>
+</html>

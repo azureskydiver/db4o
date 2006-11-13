@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Special Cases</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Special Cases</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Servlet container">Servlet container</a></li><li><a href ="#Eclipse">Eclipse</a></li><li><a href ="#Running Without Classes">Running Without Classes</a></li></ul></li></ul></div></div></div><p>&nbsp;</p><p>In your average standalone program you'll probably never have to face these&nbsp;problems, but there are standard framework classics that'll force you to think about&nbsp;these issues.</p><a name="Servlet container"></a><h4>Servlet container</h4><p><span>In a typical servlet container, there will be one or more classloader responsible&nbsp;for internal container classes and shared libraries, and one dedicated classloader&nbsp;per deployed web application. If you deploy db4o within your web application, there&nbsp;should be no problem at all. When used as a shared library db4o has to be configured&nbsp;to use the dedicated web application classloader. This can be done by assigning the&nbsp;classloader of a class that's present in the web application only, or by using the&nbsp;context classloader, since all servlet container implementations we are aware of&nbsp;will set it accordingly.<br /><br />You will find more detailed information on classloader handling in Tomcat, the&nbsp;reference servlet container implementation, here:<br /><br /><a href="http://jakarta.apache.org/tomcat/tomcat-4.1-doc/class-loader-howto.html" target="_blank">http://jakarta.apache.org/tomcat/tomcat-4.1-doc/class-loader-howto.html</a></span><br /></p><a name="Eclipse"></a><h4>Eclipse</h4><p><span>Eclipse uses the system classloader to retrieve its core classes. There is one&nbsp;dedicated classloader per plugin, and the classloader delegation tree will&nbsp;resemble the plugin dependency tree. The context classloader will&nbsp;usually be the system classloader that knows nothing about db4o and your&nbsp;business classes. So the best candidate is the classloader for one of your&nbsp;domain classes within the plugin.<br /></span></p><a name="Running Without Classes"></a><h4><span>Running Without Classes</span></h4><p><span><span>Recently db4o has started to learn to cope with missing class definitions.&nbsp;This is a by-product of the work on our <a href="http://www.db4objects.net/om/" target="_blank"><font color="#555555">object manager application</font></a>. However,&nbsp;this feature is still quite restricted (read-only mode, etc.), incomplete and&nbsp;is under heavy development. If you like to play with this feature and help&nbsp;us with your feedback to enhance it, you are welcome, but we strongly recommend&nbsp;not to try to use this for production code of any kind.</span></span></p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-10-26T12:15:05 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Object Container</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Object Container</h1><p>&nbsp;</p><p>Db4o gives you a simple and straightforward interface to object persistence - ObjectContainer. In .NET versions a conventional name IObjectContainer is used. <br></p><p> ObjectContainer is your db4o database.&nbsp;</p><p><span class="java">Java: ObjectContainer container = Db4o.openFile(filename)</span>&nbsp;</p><p><span class="cs">c#: ObjectContainer container = Db4o.OpenFile(filename)</span> </p><p><span class="vb">VB: Dim container As ObjectContainer = Db4o.OpenFile(filename)</span>  <br></p><p>filename is the path to the file, in which you want to store your objects.&nbsp; Normally you should open an ObjectContainer when the application starts and close it, when the session is finished to persist the changes to a physical storage location.</p><p><span class="java">Java: container.close()</span>&nbsp;</p><p><span class="cs">c#:&nbsp; container.Close()</span> </p><p><span class="vb">VB: container.Close()</span>  <br>
+</p><p>ObjectContainer interface gives you all the basic functionality to work with persistent objects. Normally you can save a ew or updated object of any class using bjectContainer#set(object)<br>Deletion is done with the following method:</p><p><span class="java">Java: container.delete(object) </span></p><p><span class="cs">c#: container.Delete(object) </span></p><p><span class="vb">VB: container.Delete(object) </span></p><p>Through ObjectContainer#get and ObjectContainer#query you get access to objects retrieval<br>functionality.<br>The characteristic features of ObjectContainer are:<br>- An ObjectContainer can either be a database in a single-user mode or a client connection to a db4o<br>server.<br>- Every ObjectContainer owns one transaction. All work is transactional. When you open an<br>ObjectContainer, you are in a transaction, when you commit() or rollback(), the next transaction is<br>started immediately.<br>- Every ObjectContainer maintains it's own references to stored and instantiated objects. In doing so, it<br>manages object identities, and is able to achieve a high level of performance.<br>- ObjectContainers are intended to be kept open as long as you work against them. When you close an<br>ObjectContainer, all database references to objects in RAM will be discarded.<br>Basically ObjectContainer supplies functionality, which is enough for the most common usage of db4o<br>database. Additional features are provided by an interface extending ObjectContainer -<br>ExtObjectContainer.<br>The idea of splitting basic and advanced functionality between 2 interfaces is:<br>- Keep the com.db4o package very small and well readable.<br>- Separate vital and optional functionality.<br>- Make it easy for other products to implement the basic db4o interface.<br>- Show an example of how a lightweight version of db4o could look.<br>Every com.db4o.ObjectContainer object is also a com.db4o.ext.ExtObjectContainer. You can cast it to ExtObjectContainer or you can use #ext() method to get to the advanced features.
+
+</p><style>
+.cs{display:none;}
+.vb{display:none;}
+</style>
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-12T13:23:21 by Tetyana.
+				</div>
+  </body>
+</html>
