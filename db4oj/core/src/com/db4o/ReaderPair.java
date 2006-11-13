@@ -56,7 +56,14 @@ public final class ReaderPair implements SlotReader {
 	}
 
 	public int copyID() {
-		return copyID(false,false);
+		// This code is slightly redundant. 
+		// The profiler shows it's a hotspot.
+		// The following would be non-redudant. 
+		// return copy(false, false);
+		
+		int mapped=_mapping.mappedID(_source.readInt(),false);
+		_target.writeInt(mapped);
+		return mapped;
 	}
 
 	public int copyID(boolean flipNegative,boolean lenient) {
