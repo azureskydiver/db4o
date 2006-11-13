@@ -118,6 +118,7 @@
 		<property name="target.framework.version" value="2.0" />
 		<property name="csharp.definitions" value="MONO,NET_2_0" />
 		<property name="csc.executable" value="gmcs" />
+		<property name="installer.package.suffix" value="mono2" />
 	
 		<property name="csc.tests.extraoptions" value="-r:System.Drawing" />
 
@@ -661,7 +662,7 @@
 	<target name="ndoc-mono" if="mono">
 		<!--
 		<exec executable="mono" failonerror="true">
-			<arg file="${ndoc.home}/bin/mono/1.0/NDocConsole.exe" />
+			<arg file="${ndoc.home}/bin/mono/2.0/NDocConsole.exe" />
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-documenter=MSDN" />
