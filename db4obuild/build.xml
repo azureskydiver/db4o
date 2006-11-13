@@ -1692,13 +1692,13 @@
 	<target name="old-buildnet" depends="zipnet" description="Full PascalCase NET build" />
 	
 	<target name="buildnet">
-		<ant antfile="build-dotnet.xml" target="build-net1" />
+		<ant antfile="build-dotnet.xml" target="package-net1" />
 	</target>
 	
 	<target name="old-buildnet2" depends="zipnet2" description="Full PascalCase NET 2.0 build" />
 	
 	<target name="buildnet2">
-		<ant antfile="build-dotnet.xml" target="build" />
+		<ant antfile="build-dotnet.xml" target="package" />
 	</target>	
 	
 	<target name="old-buildmono2" depends="zipmono2-pascalcase" description="Full Mono build with generics (now PascalCase)" />
