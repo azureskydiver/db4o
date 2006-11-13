@@ -14,6 +14,10 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     private static final byte BTREE_VERSION = (byte)1;
     
+    private static final int DEFRAGMENT_INCREMENT_OFFSET = 
+    	1  // version byte
+    + YapConst.INT_LENGTH * 2;  // size, node size  
+    
     final Indexable4 _keyHandler;
     
     final Indexable4 _valueHandler;
@@ -376,11 +380,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
         if (Deploy.debug) {
             readers.readBegin(YapConst.BTREE);
         }
-		// skip version
-		readers.incrementOffset(1);
-        // skip size, node size
-		readers.incrementIntSize(2);
-        // root ID
+		readers.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 		readers.copyID();
         if (Deploy.debug) {
             readers.readEnd();
