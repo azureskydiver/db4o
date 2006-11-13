@@ -23,18 +23,13 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="csc-prepare">
-		<attribute name="sources" description="sources fileset id" />
+	<macrodef name="prepare-assemblyInfo">
 		<attribute name="configuration" />
 		<sequential>
-			<reset-dir dir="${dir.dist.net.compile}" />
-			<copy todir="${dir.dist.net.compile}">
-				<fileset refid="@{sources}" />
-			</copy>
 			<updateAssemblyInfo
-					keyfile="${filename.keyfile}"
-					version="${db4o.version.full}"
-					configuration="@{configuration} ${target.framework.version}">
+				keyfile="${filename.keyfile}"
+				version="${db4o.version.full}"
+				configuration="@{configuration} ${target.framework.version}">
 				<fileset dir="${dir.dist.net.compile}">
 					<include name="**/AssemblyInfo.cs" />
 				</fileset>
@@ -59,9 +54,11 @@
 			<mkdir dir="@{netOutputDir}" />
 			<mkdir dir="@{compactOutputDir}" />
 			
-			<csc-prepare
-				sources="@{sources}"
-				configuration="@{netConfiguration}" />
+			<reset-dir dir="${dir.dist.net.compile}" />
+			<copy todir="${dir.dist.net.compile}">
+				<fileset refid="@{sources}" />
+			</copy>			
+			<prepare-assemblyInfo configuration="@{netConfiguration}" />
 				
 			<csc
 				destfile="@{netOutputDir}/@{assemblyName}.dll"
@@ -77,43 +74,24 @@
 				
 				<references />
 			</csc>
-	
-			<csc-compact
-				destfile="@{compactOutputDir}/@{assemblyName}.dll"
-				sources="core.sources"
-				configuration="@{compactConfiguration}">
-				<args>
-					<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
-					<compact-args />
-				</args>
-			</csc-compact>
-		</sequential>
-	</macrodef>
-	
-	<macrodef name="csc-compact">
-		<attribute name="destfile" />		
-		<attribute name="sources" description="sources fileset id" />
-		<attribute name="configuration" default=".NET CompactFramework" />
-		<element name="args" optional="yes" />
-		<sequential>	
-		
-			<csc-prepare sources="@{sources}" configuration="@{configuration}" />
+			
+			<prepare-assemblyInfo configuration="@{compactConfiguration}" />
 			
 			<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
 				<arg value="/optimize" />
 				<arg value="/debug-" />
 				<arg value="/define:${csharp.definitions.cf}" />
-				<arg value="/out:@{destfile}" />
+				<arg value="/out:@{compactOutputDir}/@{assemblyName}.dll" />
 				<arg value="/target:library" />
 				<arg value="/warn:1" />
 				<arg value="/noconfig" />
 				<arg value="/nostdlib" />
 				<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
 				<arg value="/r:${dir.dll.cf}/System.dll" />
-				<args />
+				<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
+				<compact-args />
 				<arg value="/recurse:*.cs" />
 			</exec>
-			
 		</sequential>
 	</macrodef>
 	
@@ -343,10 +321,8 @@
 	<target name="build-legacy" depends="init, sharpen-legacy">
 		<fileset
 			id="legacy.core.sources"
-			dir="${dir.n.core}">
-			
-			<include name="**/*.cs" />
-			
+			dir="${dir.n.core}">			
+			<include name="**/*.cs" />			
 		</fileset>
 		
 		<csc-all
@@ -359,6 +335,38 @@
 				compactOutputDir="${dir.dist.dll.legacy.compact}"
 				compactConfiguration="Legacy CompactFramework">
 		</csc-all>
+		
+		<fileset
+			id="legacy.tools.sources"
+			dir="${dir.n.tools}">			
+			<include name="**/*.cs" />
+			<exclude name="compact*/**" />
+			<exclude name="**/templates/**" />
+			<exclude name="**/Cecil.FlowAnalysis.Tests/**" />
+			<exclude name="**/Cecil.FlowAnalysis/AssemblyInfo.cs" />
+			<exclude name="**/Mono.Cecil/AssemblyInfo.cs" />
+		</fileset>
+		
+		<csc-all
+			assemblyName="Db4oTools"
+			sources="legacy.tools.sources"
+			netOutputDir="${dir.dist.dll.legacy.net}"
+			netConfiguration="Legacy .NET"
+				
+			compactOutputDir="${dir.dist.dll.legacy.compact}"
+			compactConfiguration="Legacy CompactFramework">			
+			
+			<references>
+				<reference dir="${dir.dist.dll.legacy.net}">
+					<include name="db4o.dll" />
+				</reference>
+			</references>
+			
+			<compact-args>
+				<arg value="/r:${dir.dist.dll.legacy.compact}/db4o.dll" />
+			</compact-args>
+		</csc-all>		
+		
 	</target>
 	
 	<target name="sharpen-legacy">
