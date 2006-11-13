@@ -40,11 +40,11 @@
 	</macrodef>
 	
 	<macrodef name="copy-bin-set">
-		<attribute name="prefix" default="" />
+		<attribute name="suffix" default="" />
 		<attribute name="srcdir" />
 		<sequential>
-			<copy-bin srcdir="@{srcdir}" name="@{prefix}net-${target.framework.version}" />
-			<copy-bin srcdir="@{srcdir}/compact" name="@{prefix}compact-${target.framework.version}" />
+			<copy-bin srcdir="@{srcdir}" name="net-${target.framework.version}@{suffix}" />
+			<copy-bin srcdir="@{srcdir}/compact" name="compact-${target.framework.version}@{suffix}" />
 		</sequential>
 	</macrodef>
 	
@@ -253,15 +253,14 @@
 		<!--
 			
 			/bin/compact-2.0/
-			/bin/legacy-compact-2.0/
-			/bin/legacy-net-2.0/
+			/bin/compact-2.0-legacy/
 			/bin/net-2.0/
-			
+			/bin/net-2.0-legacy/
 			
 		-->
 		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
-		<copy-bin-set prefix="" srcdir="${dir.dist.dll}"  />
-		<copy-bin-set prefix="legacy-" srcdir="${dir.dist.dll}/legacy" />
+		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
+		<copy-bin-set suffix="-legacy" srcdir="${dir.dist.dll}/legacy" />
 	
 		<mkdir dir="${dir.dist.net.build}/doc/api" />
 		
