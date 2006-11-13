@@ -7,7 +7,7 @@
 	<property name="dir.n.v6.core.src" location="${dir.n.v6.core}/Db4objects.Db4o/" />	
 	<property name="dir.n.v6.tools" location="${dir.n.v6}/Db4objects.Db4o.Tools/" />
 	
-	<condition property="mono" value="1">
+	<condition property="mono" value="true">
 		<os family="unix" />
 	</condition>
 	
@@ -75,23 +75,31 @@
 				<references />
 			</csc>
 			
-			<prepare-assemblyInfo configuration="@{compactConfiguration}" />
-			
-			<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
-				<arg value="/optimize" />
-				<arg value="/debug-" />
-				<arg value="/define:${csharp.definitions.cf}" />
-				<arg value="/out:@{compactOutputDir}/@{assemblyName}.dll" />
-				<arg value="/target:library" />
-				<arg value="/warn:1" />
-				<arg value="/noconfig" />
-				<arg value="/nostdlib" />
-				<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
-				<arg value="/r:${dir.dll.cf}/System.dll" />
-				<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
-				<compact-args />
-				<arg value="/recurse:*.cs" />
-			</exec>
+			<if>
+			<equals arg1="${mono}" arg2="true" />
+			<then>
+				<echo>skipping CompactFramework build</echo>
+			</then>
+			<else>
+				<prepare-assemblyInfo configuration="@{compactConfiguration}" />
+				
+				<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
+					<arg value="/optimize" />
+					<arg value="/debug-" />
+					<arg value="/define:${csharp.definitions.cf}" />
+					<arg value="/out:@{compactOutputDir}/@{assemblyName}.dll" />
+					<arg value="/target:library" />
+					<arg value="/warn:1" />
+					<arg value="/noconfig" />
+					<arg value="/nostdlib" />
+					<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
+					<arg value="/r:${dir.dll.cf}/System.dll" />
+					<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
+					<compact-args />
+					<arg value="/recurse:*.cs" />
+				</exec>
+			</else>
+			</if>
 		</sequential>
 	</macrodef>
 	
@@ -292,7 +300,10 @@
 		</csc-all>
 	</target>
 	
+	<!--
 	<target name="build-core" depends="init, check-dependencies, sharpen">
+	-->
+	<target name="build-core" depends="init, check-dependencies">
 	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
