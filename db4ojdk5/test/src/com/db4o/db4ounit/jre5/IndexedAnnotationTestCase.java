@@ -27,13 +27,19 @@ public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	@Override
-	protected void store() throws Exception {
+	public void testIndexed() throws Exception {
+		storeData();
+		assertIndexed();
+		reopen();
+		assertIndexed();
+	}
+
+	private void storeData() {
 		db().set(new DataAnnotated(42));
 		db().set(new DataNotAnnotated(43));
 	}
-	
-	public void testIndexed() {
+
+	private void assertIndexed() {
 		assertIndexed(DataNotAnnotated.class,false);
 		assertIndexed(DataAnnotated.class,true);
 	}

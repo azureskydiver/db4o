@@ -506,6 +506,10 @@ public class YapField implements StoredField {
         return i_yapClass.getStream();
     }
     
+    public boolean hasConfig() {
+    	return i_config!=null;
+    }
+    
     public boolean hasIndex() {
         // alive needs to be checked by all callers: Done
         return _index != null;
@@ -518,7 +522,11 @@ public class YapField implements StoredField {
     public final void init(YapClass a_yapClass, String a_name) {
         i_yapClass = a_yapClass;
         i_name = a_name;
-        if (a_yapClass.i_config != null) {
+        initIndex(a_yapClass, a_name);
+    }
+
+	final void initIndex(YapClass a_yapClass, String a_name) {
+		if (a_yapClass.i_config != null) {
             i_config = a_yapClass.i_config.configField(a_name);
             if (Debug.configureAllFields) {
                 if (i_config == null) {
@@ -527,7 +535,7 @@ public class YapField implements StoredField {
                 }
             }
         }
-    }
+	}
     
     public void init(int handlerID, boolean isPrimitive, boolean isArray, boolean isNArray) {
         i_handlerID = handlerID;
