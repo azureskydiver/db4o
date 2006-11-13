@@ -54,7 +54,6 @@ public class DashboardMenuBar extends BaseMenuBar{
         
         this.add(menu);
 
-
         menu = buildHelpMenu(helpActionListener, aboutActionListener);
         menu.addSeparator();
         item = new JMenuItem("Exception Log");

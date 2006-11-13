@@ -113,18 +113,19 @@ public class Dashboard {
 	}
 
 	/**
-	 * Builds and answers the menu bar.
+	 * Builds and returns the menu bar.
 	 */
 	private JMenuBar buildMenuBar() {
 		DashboardMenuBar dashboardMenuBar = new DashboardMenuBar(this,
 				settings,
-				createHelpActionListener(),
+				createHelpActionListener(frame),
 				createAboutActionListener(frame));
 		return dashboardMenuBar;
 	}
 
 	/**
-	 * Builds and answers the content pane.
+	 * Builds and returns the content pane.
+	 * @return the main content pane component
 	 */
 	private JComponent buildContentPane() {
 		JPanel panel = new JPanel(new BorderLayout());
@@ -358,9 +359,10 @@ public class Dashboard {
 
 	/**
 	 * Creates and answers an ActionListener that opens the help viewer.
+	 * @param mainFrame
 	 */
-	public static ActionListener createHelpActionListener() {
-		return null;
+	public static ActionListener createHelpActionListener(Component frame) {
+		return new HelpActionListener(frame);
 	}
 
 	public static ActionListener createAboutActionListener(Component frame) {
@@ -403,6 +405,24 @@ public class Dashboard {
 			return null;
 		}
 	}
+
+	private static final class HelpActionListener implements ActionListener {
+		private Component frame;
+
+		public HelpActionListener(Component frame) {
+
+			this.frame = frame;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(
+					frame,
+					// todo: make this linkable, need to figure out how to launch a browser
+					"Please visit our online help at: \n" +
+							"http://developer.db4o.com/DocsWiki/view.aspx/Reference/Object_Manager_For_db4o/Installation");
+		}
+	}
+
 
 
 }

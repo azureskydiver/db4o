@@ -4,6 +4,8 @@ import com.db4o.ObjectContainer;
 import com.db4o.objectManager.v2.tree.ObjectTreeNode;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 import com.db4o.reflect.generic.GenericReflector;
+import com.db4o.reflect.generic.GenericObject;
+import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.spaceprogram.db4o.sql.ReflectHelper;
@@ -94,12 +96,22 @@ public class ObjectTreeModel implements TreeModel {
 
 	public boolean isLeaf(Object node) {
 		if (node == null || ((ObjectTreeNode) node).getObject() == null) return true;
-		return ReflectHelper2.isEditable(((ObjectTreeNode) node).getObject().getClass());
+		Object nodeObject = ((ObjectTreeNode) node).getObject();
+		if(nodeObject instanceof GenericObject){
+			GenericObject go = (GenericObject) nodeObject;
+			ReflectClass gclass = reflector.forObject(nodeObject);
+			System.out.println("GENOB: " + go + " class:" + gclass.getName());
+			if(gclass.getName().contains("System.DateTime")){
+				// todo: move this into isEditable
+				return true;
+			}
+		}
+		return ReflectHelper2.isEditable(nodeObject.getClass());
 	}
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
-		//System.out.println("new value: " + newValue + " " + newValue.getClass());
+		System.out.println("new value: " + newValue + " " + newValue.getClass());
 		aNode.setObject(newValue);
 		ObjectTreeNode parent = aNode.getParentNode();
 		Object p = parent.getObject();
@@ -135,6 +147,8 @@ public class ObjectTreeModel implements TreeModel {
 	 */
 	public boolean isPathEditable(TreePath path) {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
+		// todo: should check the expect class type if this is null so you can edit null values
+		if(aNode.getObject() == null) return false;
 		Class c = aNode.getObject().getClass();
 		//System.out.println("class editable: " + c);
 		return ReflectHelper2.isEditable(c);

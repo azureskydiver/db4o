@@ -1,6 +1,7 @@
 package com.db4o.objectmanager.api.helpers;
 
 import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.generic.GenericObject;
 import com.db4o.ext.StoredClass;
 import com.db4o.ObjectContainer;
 
@@ -86,6 +87,6 @@ public class ReflectHelper2 {
      * @return
      */
     public static boolean isEditable(Class c) {
-        return c.isPrimitive() || String.class.isAssignableFrom(c) || Number.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
+		return c.isPrimitive() || String.class.isAssignableFrom(c) || Number.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
     }
 }
