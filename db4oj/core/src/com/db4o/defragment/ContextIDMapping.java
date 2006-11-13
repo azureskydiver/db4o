@@ -3,14 +3,18 @@
 package com.db4o.defragment;
 
 /**
- * @exclude
+ * The ID mapping used internally during a defragmentation run.
+ * 
+ * @see Defragment
  */
-interface DefragmentContextIDMapping {
+interface ContextIDMapping {
 
 	int mappedID(int oldID, boolean lenient);
 
 	void mapIDs(int oldID, int newID);
 
+	void open();
+	
 	void close();
 
 	void mapClassIDs(int oldID, int newID);

@@ -6,9 +6,9 @@ import com.db4o.foundation.*;
 
 
 /**
- * @exclude
+ * Base class for defragment ID mappings.
  */
-abstract class AbstractIDMapping implements DefragmentContextIDMapping {
+abstract class AbstractContextIDMapping implements ContextIDMapping {
 
 	private Hashtable4	_classIDs = new Hashtable4();
 

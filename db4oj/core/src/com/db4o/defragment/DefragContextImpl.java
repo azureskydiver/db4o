@@ -45,7 +45,7 @@ public class DefragContextImpl implements DefragContext {
 	
 	public final YapFile _sourceDb;
 	final YapFile _targetDb;
-	private final DefragmentContextIDMapping _mapping;
+	private final ContextIDMapping _mapping;
 	private DefragmentListener _listener;
 	private Queue4 _unindexed=new Queue4();
 	
@@ -58,8 +58,8 @@ public class DefragContextImpl implements DefragContext {
 		sourceConfig.readOnly(true);
 		_sourceDb=(YapFile)Db4o.openFile(sourceConfig,defragConfig.backupPath()).ext();
 		_targetDb = freshYapFile(defragConfig.origPath());
-		// _mapping=new BTreeIDMapping(defragConfig.mappingPath());
-		_mapping=new TreeIDMapping();
+		_mapping=defragConfig.mapping();
+		_mapping.open();
 	}
 	
 	static YapFile freshYapFile(String fileName) {
