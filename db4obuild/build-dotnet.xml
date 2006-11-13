@@ -660,7 +660,6 @@
 	</target>
 	
 	<target name="ndoc-mono" if="mono">
-		<!--
 		<exec executable="mono" failonerror="true">
 			<arg file="${ndoc.home}/bin/mono/2.0/NDocConsole.exe" />
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
@@ -676,7 +675,6 @@
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-CleanIntermediates=True" />
 		</exec>
-		-->
 	</target>
 		
 	<target name="ndoc-net" unless="mono">
