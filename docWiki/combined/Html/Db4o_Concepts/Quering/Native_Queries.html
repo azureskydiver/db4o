@@ -1,0 +1,126 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Queries</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Concept">Concept</a></li><li><a href ="#Principle">Principle</a></li><li><a href ="#Simple Example">Simple Example</a></li><li><a href ="#Advanced Example">Advanced Example</a></li><li><a href ="#Arbitrary Code">Arbitrary Code</a></li><li><a href ="#Native Query Performance">Native Query Performance</a></li></ul></li></ul></div></div></div>
+<p></p>
+
+<p>Wouldn't it be nice to pose queries in the programming language that you are 
+using? Wouldn't it be nice if all your query code was 100% typesafe, 100% 
+compile-time checked and 100% refactorable? Wouldn't it be nice if the full 
+power of object-orientation could be used by calling methods from within 
+queries? Enter Native Queries. </p>
+
+<p>Native queries are the main db4o query 
+interface and they are the recommended way to query databases from your 
+application. Because native queries simply use the semantics of your programming 
+language, they are perfectly standardized and a safe choice for the 
+future.</p>
+<p>Native Queries are available for all platforms supported by 
+db4o.</p>
+<a name="Concept"></a><h2>Concept</h2>
+<p>The concept of native queries is taken from the following two papers:<br><br></p>
+<ul>
+<li><a href="http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf" target="_blank">Cook/Rosenberger, Native Queries for Persistent Objects, A Design 
+White Paper</a></li>
+<li><a href="http://www.cs.utexas.edu/~wcook/papers/SafeQuery05/SafeQueryFinal.pdf" target="_blank">Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely 
+Executable Queries</a></li>
+</ul>
+<a name="Principle"></a><h2>Principle</h2>
+<p>Native Queries provide the ability to run one or more lines of code against all 
+instances of a class. Native query expressions should return true to mark 
+specific instances as part of the result set. db4o will attempt to optimize 
+native query expressions and run them against indexes and without instantiating 
+actual objects, where this is possible.</p>
+<a name="Simple Example"></a><h2>Simple Example</h2>
+<p>Let's look at how a simple native query will look like in some of the 
+programming languages and dialects that db4o supports:</p>
+
+
+
+
+
+
+
+<p>A side note on the above syntax:</p>
+
+<p>For all dialects without support for 
+generics, Native Queries work by convention. A class that extends 
+the Predicate class is expected to have a boolean #match() or #Match() 
+method with one parameter to describe the class extent:</p>
+
+
+
+
+
+
+
+<p>When using native 
+queries, don't forget that modern integrated development environments (IDEs) can 
+do all the typing work around the native query expression for you, if you 
+use templates and autocompletion.</p>
+
+
+<a name="Advanced Example"></a><h2>Advanced Example</h2>
+<p>For complex queries, the native syntax is very precise and quick to write. Let's 
+compare to a SODA query that finds all pilots with a given name or a score 
+within a given range:</p>
+
+
+
+
+
+ </p>
+
+<p>Here is how the same query will look like with native query syntax, fully 
+accessible to autocompletion, refactoring and other IDE features, fully checked 
+at compile time:</p>
+
+
+
+  </p>
+<a name="Arbitrary Code"></a><h2>Arbitrary Code</h2>
+<p>Basically that's all there is to know about native queries to be able to use 
+them efficiently. In principle you can run arbitrary code as native queries, you 
+just have to be very careful with side effects - especially those that might 
+affect persistent objects.</p>
+
+<p>Let's run an example that involves some more 
+of the language features available.</p>
+
+
+
+
+
+ </p>
+<a name="Native Query Performance"></a><h2>Native Query Performance</h2>
+<p>One drawback of native queries has to be pointed out: Under the hood db4o tries 
+to analyze native queries to convert them to SODA. This is not possible for all 
+queries. For some queries it is very difficult to analyze the flowgraph. In this 
+case db4o will have to instantiate some of the persistent objects to actually 
+run the native query code. db4o will try to analyze parts of native query 
+expressions to keep object instantiation to the minimum.</p>
+
+<p>The development 
+of the native query optimization processor will be an ongoing process in a close 
+dialog with the db4o community. Feel free to contribute your results and your 
+needs by providing feedback to our <a href="http://developer.db4o.com/forums" target="_blank">db4o forums</a>.</p>
+
+<p>The current state of the query optimization 
+process is detailed in the chapter on <a href="../../Db4o_Database_Management/Native_Query_Optimization/Native_Query_Optimization.html" class="wikiLink">Native Query 
+Optimization</a></p>
+
+<p>With the current implementation, all above examples will 
+run optimized, except for the "Arbitrary Code" example - we are working on 
+it.</p></div>
+    </div>
+    <div id="footer">
+					This revision (11) was last Modified 2006-11-14T09:50:12 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Debug Messaging System</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Debug Messaging System</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>&nbsp;</p>
+<p>Db4o messaging system is a special tool, which makes db4o functionality more transparent to the user.&nbsp;It can be used:<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;in debugging session - to find out where the problem can reside;<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;for learning - to watch, what does db4o actually do with the objects.<br>
+<br>
+In order to activate messaging before opening a database file use:</p>
+
+<span class="net">.NET: Db4oFactory.Configure().MessageLevel(level)</span>
+<p>where <i>level</i>&nbsp;can be:<br>
+level = 0: no messages;<br>
+level &gt; 0: normal messages;<br>
+level &gt; 1: state messages (new object, object update, delete);<br>
+level &gt; 2: activation messages (object activated, deactivated).<br>
+<br>
+In order to set up a convenient output stream for the messages, call:</p>
+<br></p>
+<span class="net">.NET: Db4oFactory.Configure().SetOut(outStream) </span><br></p>
+<p><br>
+<i>outStream = System.out</i>&nbsp;will set up your system to print messages to console.<br>
+<br>
+#messageLevel(level) also can be set after a database has been opened:</p>
+<br></p>
+<span class="net">.NET: IObjectContainer#Ext().Configure().MessageLevel(level) </span><p>The same applies for #setOut().<br>
+<br>
+Let's use the simplest example to see all types of debug messages:</p>
+
+<span class="cs"><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">DebugExample.cs: <span class="fscMemberName">SetCars</span></span></div><div class="fscCode"><pre ID="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> SetCars()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Open_Text').style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Closed_Image').style.display='inline'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Closed_Text').style.display='inline';"/><img id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Closed_Text').style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Open_Image').style.display='inline'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Open_Text').style.display='inline';"/>    </span><span id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_31_529_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Db4oFactory.Configure().MessageLevel(</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      File.Delete(YapFileName);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      IObjectContainer db</span><span style="color: #000000;">=</span><span style="color: #000000;">Db4oFactory.OpenFile(YapFileName);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> 
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Open_Text').style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Closed_Image').style.display='inline'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Closed_Text').style.display='inline';"/><img id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Closed_Text').style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Open_Image').style.display='inline'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Open_Text').style.display='inline';"/>      </span><span id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_175_442_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        Car car1 </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Car(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">BMW</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.Set(car1);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        Car car2 </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Car(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Ferrari</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.Set(car2);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.Deactivate(car1,</span><span style="color: #800080;">2</span><span style="color: #000000;">);
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        IQuery query </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.Query();
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query.Constrain(</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Car));
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        IObjectSet results </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.Execute();
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        ListResult(results);
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>      }</span></span><span style="color: #000000;"> 
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> 
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Open_Text').style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Closed_Image').style.display='inline'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Closed_Text').style.display='inline';"/><img id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Closed_Text').style.display='none'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Open_Image').style.display='inline'; document.getElementById('DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Open_Text').style.display='inline';"/>      </span><span id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DebuggingCSZipsDebugExampleCs_DebugExampleCs_SetCars_1337_46_459_481_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.Close();
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>      }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Db4oFactory.Configure().MessageLevel(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div></span>
+<span class="vb"><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">DebugExample.vb: <span class="fscMemberName">SetCars</span></span></div><div class="fscCode"><pre ID="DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Open_Text').style.display='none'; document.getElementById('DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Closed_Image').style.display='inline'; document.getElementById('DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Closed_Text').style.display='inline';"/><img id="DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Closed_Text').style.display='none'; document.getElementById('DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Open_Image').style.display='inline'; document.getElementById('DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Open_Text').style.display='inline';"/><span style="color: #0000FF;">Public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Shared</span><span style="color: #000000;"> </span><span id="DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub SetCars()</span><span id="DebuggingVBZipsDebugExampleVb_DebugExampleVb_SetCars_1409_46_14_732_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> SetCars()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Db4oFactory.Configure().MessageLevel(</span><span style="color: #800080;">3</span><span style="color: #000000;">)
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            File.Delete(YapFileName)
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> db </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectContainer </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oFactory.OpenFile(YapFileName)
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Try</span><span style="color: #000000;">
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> car1 </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> Car </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">New</span><span style="color: #000000;"> Car(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">BMW</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">)
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                db.Set(car1)
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> car2 </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> Car </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">New</span><span style="color: #000000;"> Car(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Ferrari</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">)
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                db.Set(car2)
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                db.Deactivate(car1, </span><span style="color: #800080;">2</span><span style="color: #000000;">)
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> query </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IQuery </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.Query()
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                query.Constrain(</span><span style="color: #0000FF;">GetType</span><span style="color: #000000;">(Car))
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> results </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectSet </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.Execute()
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                ListResult(results)
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Finally</span><span style="color: #000000;">
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                db.Close()
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">End</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Try</span><span style="color: #000000;">
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Db4oFactory.Configure().MessageLevel(</span><span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        </span><span style="color: #0000FF;">End Sub</span></span></div></pre></div></div></span> <br>
+</p>
+<p>Output looks quite messy, but allows you to follow the whole process. For debugging purposes messaging&nbsp;system provides a timestamp and internal ID information for each object (first number in state and activate&nbsp;messages).<br>
+<br>
+<br>
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-12T14:33:07 by Tetyana.
+				</div>
+  </body>
+</html>

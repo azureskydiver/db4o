@@ -1,0 +1,53 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Creating your own reflector</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Creating your own reflector</h1>
+<p></p>
+
+<p>By default db4o uses JdkReflector(Java) or NetReflector (.NET) as a GenericReflector delegate.</p>
+<p>
+However, the programmer can instruct db4o to use a specially designed reflection implementation:</p>
+
+
+
+
+
+
+<p>where reflector is one of the available reflectors or your own reflector implementation. </p>
+<p>
+At present db4o comes with SelfReflector, which was designed for environments, which do not have built-in support for reflections (J2ME for example). In this implementation all the classes' information is stored in special registry. User classes should implement self_get and self_set methods to be registered individually and become "known" to SelfReflector. </p>
+<p>
+Specific reflectors can be written for special usecases. </p>
+<p>Let's look how to create a reflector. Remember that db4o relies on reflector to read the database, so errors in reflector may prevent your database from opening.</p>
+<p>To keep things simple we will write a LoggingReflector, its only difference from standard reflector is that information about loaded classes is outputted to console. All reflectors used by db4o should implement com.db4o.reflect.Reflector interface.</p>
+
+
+
+
+
+ 
+</p>
+
+<p>It is easy to see that this reflector provides the same functionality as JdkReflector or NetReflector extended by console output. The following simple test will show how it works:</p>
+
+
+
+
+
+ </p>
+
+<p>The output can help you to track all the loaded classes. </p>
+<p>
+Reflection is a powerful tool, which plays a fundamental role in db4o. Understanding reflection will help you to understand the whole db4o functionality in detail. </p></div>
+    </div>
+    <div id="footer">
+					This revision (10) was last Modified 2006-11-13T19:24:37 by Tetyana.
+				</div>
+  </body>
+</html>

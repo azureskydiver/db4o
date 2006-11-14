@@ -1,0 +1,45 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Increasing The Maximum Database File Size</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Increasing The Maximum Database File Size</h1> 
+<span class="java">Java: <br>Db4o.configure().blockSize(newBlockSize);<br><span id="ctl00_ctl00_bcr_topicView___TopicBody">Defragment.defrag("sample.yap")</span></span>
+
+<i>Advantage</i><br>
+Increasing the block size from the default of 1 to a higher value permits&nbsp;you to store more data in a db4o database.<br>
+<br>
+<i>Effect</i><br>
+By
+default db4o databases can have a maximum size of 2GB. By
+increasing&nbsp;the block size that db4o should internally use, the upper
+limit for&nbsp;database files sizes can be raised to multiples of 2GB. Any
+value&nbsp;between 1 byte (2GB) to 127 bytes (254GB) can be chosen as the
+block&nbsp;size.<br>
+<br>
+Because of possible padding for objects that are not
+exact multiples in&nbsp;length of the block size, database files will
+naturally tend to be&nbsp;bigger if a higher value is chosen. Because of
+less file access cache&nbsp;hits a higher value will also have a negative
+effect on performance.<br>
+<br>
+A very good choice for this value is 8
+bytes, because that corresponds&nbsp;to the slot length of the pointers
+(address + length) that db4o&nbsp;internally uses.<br>
+<br>
+<i>Alternate Strategies</i><br>
+It
+can also be very efficient to use multiple ObjectContainers instead
+of&nbsp;one big one. Objects can be freely moved, copied
+and&nbsp;<a href="../../Db4o_Replication_System_dRS/Db4o_Replication_System_dRS.html" class="wikiLink">replicated</a>&nbsp;between&nbsp;Objectcontainers.<br>
+<br></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-12T19:29:36 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Blobs</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Blobs</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Blob">Blob</a></li><li><a href ="#byte[] array">byte[] array</a></li></ul></li></ul></div></div></div>
+<p></p>
+
+<p>In some cases user has to deal with large binary objects (BLOBs) such as images, video, music, which should be stored in a structured way, and retrieved/queried easily. There are several challenges associated with this task:</p>
+
+<ul>
+<li>storage location;</li>
+
+<li>loading into RAM;</li>
+
+<li>querying interface;</li>
+
+<li>objects' modification;</li>
+
+<li>information backup;</li>
+
+<li>client/server processing.</li>
+</ul>
+
+<p>Db4o provides you with a flexibility of using 2 different solutions for this case:</p>
+
+<ol>
+<li>Blob (Java package: com.db4o.types.Blob, .NET namespace: Db4oTypes.IBlob)<br></li>
+
+<li>byte[] arrays stored inside the database file</li>
+</ol>
+
+<p>These two solutions' main features in comparison are represented below:</p>
+<a name="Blob"></a><h2>Blob</h2>
+
+<ol>
+<li>every Blob gets it's own file</li>
+
+<li>C/S communication runs asynchronous in separate thread </li>
+
+<li>special code is necessary to store and load </li>
+
+<li>no concerns about activation depth </li>
+</ol>
+
+<a name="byte[] array"></a><h2>byte[] array</h2>
+<ol>
+<li>data in the same file </li>
+
+<li>C/S communication runs in the normal communication thread </li>
+
+<li>transparent handling without special concerns </li>
+
+<li>control over activation depth may be necessary</li>
+</ol>
+
+<p>Storing data in a byte[] array works just as storing usual objects, but this method is not always applicable/desirable. First of all, the size of the db4o file can grow over the limit (256 GB) due to the BLOB data added. Secondly, object activation and client/server transferring logic can be an additional load for your application.</p></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2006-11-13T16:31:42 by Tetyana.
+				</div>
+  </body>
+</html>

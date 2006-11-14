@@ -1,0 +1,45 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Global Activation Settings</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Global Activation Settings</h1>
+<p></p>
+
+
+
+
+
+ </p>
+
+<p>configures global activation depth, which will be used for all objects instead of the default value. This method should be called before opening a database file.</p>
+
+ </p>
+
+
+
+ </p>
+
+<p>has a similar effect, but the setting will be applied to the specific ObjectContainer and can be changed for the open database file.</p>
+
+ </p>
+
+ </p>
+
+
+
+<p>By configuring db4o you can have full control over activation behavior. The two extremes: </p>
+<ul>
+<li>using an activationDepth of Integer.MAX_VALUE lets you forget about manual activation, but does not give you the best performance and memory footprint; </li>
+<li>using an activationDepth of 0 and activating and deactivating all objects manually keeps memory consumption extremely low, but needs more coding and attention.</li>
+</ul></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2006-11-14T07:11:20 by Tetyana.
+				</div>
+  </body>
+</html>

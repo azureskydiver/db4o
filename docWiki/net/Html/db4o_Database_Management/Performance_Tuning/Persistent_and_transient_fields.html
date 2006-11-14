@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Persistent and transient fields</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Persistent and transient fields</h1><p></p><p>Do not create fields that you don't need for persistence<i>&nbsp;</i></p><p><i>Advantage</i></p><p>Storing only needed information will help to keep your database footprint as small as possible.<i>&nbsp;</i></p><p><i>Effect</i></p><p>If your persistent class contains fields that do not need to be stored you should mark&nbsp;them as transient to prevent them from being stored:<br></p><span class="net">.NET:<br>public class NotStorable {<br>&nbsp;&nbsp;[Transient] private int length;<br>. . . <br>}</span><p>You can use <a href="../../Advanced_db4o_techniques/Callbacks.html" class="wikiLink">Callbacks</a> or <a href="../../Advanced_db4o_techniques/Translators/Translators.html" class="wikiLink">Translators</a> to set transient fields on retrieval.<br>Also avoid storing classes having only transient information - their indexes' maintenance&nbsp;will produce unnecessary performance overhead.</p><p><i>Alternate strategies</i></p><p>In some cases you may want to persist class meta-information without the actual&nbsp;object data. The example can be database singleton for <a href="../../Client-Server/Remote_code_execution/Remote_Code_Execution.html" class="wikiLink">remote code execution</a></p></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2006-11-12T14:57:54 by Tetyana.
+				</div>
+  </body>
+</html>

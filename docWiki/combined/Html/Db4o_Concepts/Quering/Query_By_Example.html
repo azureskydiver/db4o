@@ -1,0 +1,43 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Query By Example</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query By Example</h1><p></p>
+<p>When using <i>Query By Example</i>(QBE) you provide db4o with a template 
+object. db4o will return all of the objects which match all non-default field 
+values. This is done via reflecting all of the fields and building a query 
+expression where all non-default-value fields are combined with AND expressions. 
+Here's a simple example:</p>
+
+
+
+<p>Querying 
+this way has some obvious limitations:</p>
+<ul>
+<li>db4o must reflect all members of 
+your example object.</li>
+<li>You cannot perform advanced query expressions. (AND, 
+OR, NOT, etc.)</li>
+<li>You cannot constrain on values like 0 (integers), "" (empty 
+strings), or nulls (reference types) because they would be interpreted as 
+unconstrained.</li>
+<li>You need to be able to create objects without initialized 
+fields. That means you can not initialize fields where they are declared. You 
+can not enforce contracts that objects of a class are only allowed in a 
+well-defined initialized state.</li>
+<li>You need a constructor to create objects 
+without initialized fields.</li>
+</ul>
+<p>To get around all of these constraints, db4o 
+provides the Native Query (NQ) system.</p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-14T09:57:01 by Tetyana.
+				</div>
+  </body>
+</html>

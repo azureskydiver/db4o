@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Inheritance hierarchies</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Inheritance hierarchies</h1><p>&nbsp;</p><p>Do not create inheritance hierarchies, if you don't need them. <br /><em>Advantage</em><br />Avoiding inheritance hierarchies will help you to get better performance as only actual classes will be kept in the class index and in the database.<br /><em>Effect</em><br />Every class in the hierarchy requires db4o to maintain a class index. It is also true for abstract classes and interfaces since db4o has to be able to run a query against them.<br /><em>Alternate strategies</em><br />Class hierarchies and interfaces may be valuable for your application design. You can also use interface/superclass to query for implementations/subclasses.<br /><br /></p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2006-10-26T14:35:01 by Tetyana.
+				</div>
+  </body>
+</html>

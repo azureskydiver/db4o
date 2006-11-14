@@ -1,0 +1,148 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>SODA Query API</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>SODA Query API</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Simple Queries">Simple Queries</a></li><li><a href ="#Advanced Queries">Advanced Queries</a></li></ul></li></ul></div></div></div>
+<p></p>
+
+<p>The SODA query API is db4o's low level querying API, allowing direct access to 
+nodes of query graphs. Since SODA uses strings to identify fields, it is neither 
+perfectly typesafe nor compile-time checked and it also is quite verbose to 
+write.</p>
+
+<p>For most applications <a href="Native_Queries.html" class="wikiLink">Native Queries</a> will be the 
+better querying interface.</p>
+
+<p>However there can be applications where 
+dynamic generation of queries is required, that's why SODA is explained here.</p>
+<a name="Simple Queries"></a><h2>Simple Queries</h2>
+<p>Let's see how our familiar QBE queries are expressed with SODA. A new Query 
+object is created through the #query() method of the ObjectContainer and we can 
+add Constraint instances to it. To find all Pilot instances, we constrain 
+the query with the Pilot class object.</p>
+
+
+
+ </p>
+
+
+
+<p>Basically, we are exchanging our 'real' prototype for a meta description of the 
+objects we'd like to hunt down: a <b>query graph</b> made up of query nodes and 
+constraints. A query node is a placeholder for a candidate object, a constraint 
+decides whether to add or exclude candidates from the result.</p>
+
+<p>Our first 
+simple graph looks like this.</p>
+
+<p><img src="graph1.gif"/></p>
+
+<p>We're just asking any candidate object (here: any object in the database) to be 
+of type Pilot to aggregate our result.</p>
+
+<p>To retrieve a pilot by name, we 
+have to further constrain the candidate pilots by descending to their name field 
+and constraining this with the respective candidate String.</p>
+
+
+
+ </p>
+
+
+
+<p>What does 'descend' mean here? Well, just as we did in our 'real' prototypes, we 
+can attach constraints to child members of our candidates.</p>
+
+<p><img src="graph2.gif"/></p>
+
+<p>So a candidate needs to be of type Pilot and have a member named 'name'that is 
+equal to the given String to be accepted for the result.</p>
+
+<p>Note that the 
+class constraint is not required: If we left it out, we would query for all 
+objects that contain a 'name' member with the given value. In most cases this 
+will not be the desired behavior, though.</p>
+
+<p>Finding a pilot by exact points 
+is analogous.We just have to cross the Java primitive/object divide.</p>
+
+
+
+ </p>
+
+
+<a name="Advanced Queries"></a><h2>Advanced Queries</h2>
+<p>There are occasions when we don't want to query for exact field values, 
+but rather for value ranges, objects not containing given member values, etc. 
+This functionality is provided by the Constraint API.</p>
+
+<p>First, let's negate 
+a query to find all pilots who are not Michael Schumacher:</p>
+
+
+
+ </p>
+
+
+
+<p>Where there is negation, the other boolean operators can't be too far. </p>
+
+
+
+ </p>
+
+
+
+
+
+
+ </p>
+
+
+
+
+<p>We can also constrain to a comparison with a given value.</p>
+
+
+
+
+ </p>
+
+
+
+
+<p>The query API also allows to query for field default values. </p>
+
+
+
+
+ </p>
+
+
+
+
+<p>It is also possible to have db4o sort the results.</p>
+
+
+
+
+ </p>
+
+
+
+
+<p>All these techniques can be combined arbitrarily, of course. Please try it out. 
+There still may be cases left where the predefined query API constraints may not 
+be sufficient - don't worry, you can always let db4o run any arbitrary code that 
+you provide in an Evaluation. Evaluations will be discussed in a <a href="../../Advanced_db4o_Techniques/SODA_Evaluations/SODA_Evaluations.html" class="wikiLink">Evaluations chapter</a>.<br></p></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2006-11-14T10:05:34 by Tetyana.
+				</div>
+  </body>
+</html>
