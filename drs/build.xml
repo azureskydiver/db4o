@@ -121,6 +121,7 @@
 				</fileset>
 			</classpath>
 		</java>
+		<move file="drs.net/doc/out/doctor.pdf" tofile="drs.net/doc/out/dRS-tutorial.pdf"/>
 	</target>
 
 	<target name="dist" depends="build-all, javadoc, doctor, javadoc">

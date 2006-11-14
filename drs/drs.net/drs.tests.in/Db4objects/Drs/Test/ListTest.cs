@@ -94,13 +94,13 @@ namespace Db4objects.Drs.Test
 				"co3" });
         }
 
-        private void EnsureContent(Db4objects.Drs.Inside.TestableReplicationProviderInside
+        private void EnsureContent(Db4objects.Drs.Inside.ITestableReplicationProviderInside
             provider, string[] holderNames, string[] contentNames)
         {
             int holderCount = holderNames.Length;
             EnsureInstanceCount(provider, typeof(Db4objects.Drs.Test.ListHolder), holderCount);
             int i = 0;
-            Db4objects.Db4o.ObjectSet objectSet = provider.GetStoredObjects(typeof(Db4objects.Drs.Test.ListHolder
+            Db4objects.Db4o.IObjectSet objectSet = provider.GetStoredObjects(typeof(Db4objects.Drs.Test.ListHolder
                 ));
             while (objectSet.HasNext())
             {

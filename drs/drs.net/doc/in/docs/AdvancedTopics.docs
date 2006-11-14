@@ -10,9 +10,9 @@ You only want to replicate the root object but not the list. ._
 What you can do is to make use of the event system of dRS.NET to stop traversal at the list.
 Here is how:
 
-First, you need to implement the ReplicationEventListener interface and pass it to Replication. .._
+First, you need to implement the IReplicationEventListener interface and pass it to Replication. .._
 
-Please refer to the ReplicationEventTest inthe drs.tests project to see how .._
+Please refer to the ReplicationEventTest in the Db4objects.Drs.Test project to see how .._
 this is done.
 ..
 
@@ -21,7 +21,7 @@ The event system of dRS.NET can also be used to resolve conflicts. When there is
 You can choose to override the result with either the object from provider A, provider B or null. ._
 If you choose null, then the object will not be replicated. .._
 
-Please refer to the ReplicationEventTest in the drs.tests project to see how .._
+Please refer to the ReplicationEventTest in the Db4objects.Drs.Test project to see how .._
 this is done.
 ..
 
@@ -31,12 +31,12 @@ In addition to replicating changed/new objects, dRS.NET is able to replicate del
 When an object is deleted since last replication in provider A and you would like to replicate this changes ._
 to provider B, you can make use of the dRS.NET to handle that.
 
-You could replicate  deletions as follow:
+You could replicate deletions as follow:
 
-.c replication.replicateDeletions(Car.class); ..
+.c replication.ReplicateDeletions(Car.class); ..
 
 dRS.NET traverses every Car object in both providers. For instance, if a deletion is found in one provider, ._
-the deletion will be replicated to the other provider. During the traversal, ReplicationEvent will be generated ._
+the deletion will be replicated to the other provider. During the traversal, IReplicationEvent will be generated ._
 as usual, you can listen to them. By default, the deletion will prevail. You can choose the counterpart of ._
 the deleted object to prevail if required. 
 
