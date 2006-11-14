@@ -10,14 +10,14 @@ namespace Db4objects.Drs.Test
             h1.list.Add("three");
             A().Provider().StoreNew(h1);
             A().Provider().Commit();
-            Db4objects.Db4o.DrsReplicationSession replication = new Db4objects.Drs.Inside.GenericReplicationSession(A().Provider(), B().Provider());
-            Db4objects.Db4o.ObjectSet objectSet = A().Provider().ObjectsChangedSinceLastReplication();
+            Db4objects.Drs.IReplicationSession replication = new Db4objects.Drs.Inside.GenericReplicationSession(A().Provider(), B().Provider());
+            Db4objects.Db4o.IObjectSet objectSet = A().Provider().ObjectsChangedSinceLastReplication();
             while (objectSet.HasNext())
             {
                 replication.Replicate(objectSet.Next());
             }
             replication.Commit();
-            Db4objects.Db4o.ObjectSet it = B().Provider().GetStoredObjects(typeof(Db4objects.Drs.Test.CollectionHolder));
+            Db4objects.Db4o.IObjectSet it = B().Provider().GetStoredObjects(typeof(Db4objects.Drs.Test.CollectionHolder));
             Db4oUnit.Assert.IsTrue(it.HasNext());
             Db4objects.Drs.Test.CollectionHolder replica = (Db4objects.Drs.Test.CollectionHolder)it.Next();
             Db4oUnit.Assert.AreEqual("One", replica.ht["1"]);

@@ -63,8 +63,8 @@ namespace Db4objects.Drs.Test
 
         protected virtual void Configure()
         {
-            Db4objects.Db4o.Db4o.Configure().GenerateUUIDs(int.MaxValue);
-            Db4objects.Db4o.Db4o.Configure().GenerateVersionNumbers(int.MaxValue);
+            Db4objects.Db4o.Db4oFactory.Configure().GenerateUUIDs(int.MaxValue);
+            Db4objects.Db4o.Db4oFactory.Configure().GenerateVersionNumbers(int.MaxValue);
         }
 
         protected virtual void Reopen()

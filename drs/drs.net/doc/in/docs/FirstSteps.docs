@@ -13,25 +13,25 @@ When replicating objects to and from a db4o database, we need to enable UUIDs an
 chapter on  .l db4oReplication db4o replication ..  explains more about these settings. We need to call these settings ._
 before opening our database.
 .c //Replication requires UUIDs and VersionNumbers
-Db4o.Configure().GenerateUUIDs(int.MaxValue);
-Db4o.Configure().GenerateVersionNumbers(int.MaxValue); ..
+Db4oFactory.Configure().GenerateUUIDs(int.MaxValue);
+Db4oFactory.Configure().GenerateVersionNumbers(int.MaxValue); ..
 Open the source db4o database
-.c ObjectContainer handheld = Db4o.OpenFile("handheld.yap"); ..
+.c IObjectContainer handheld = Db4oFactory.OpenFile("handheld.yap"); ..
 And let's store an object or two:
 .c handheld.Set(new Pilot("Scott Felton", 200));
 handheld.Set(new Pilot("Frank Green", 120)); ..
 Great. Now we need our destination database:
 .c //Open the destination db4o database
-ObjectContainer desktop = Db4o.OpenFile("desktop.yap"); ..
+IObjectContainer desktop = Db4oFactory.OpenFile("desktop.yap"); ..
 Now, it's about time we start replicating some data. Let's set up our replication process to replicate some data from ._
 our handheld, to our desktop:
-.c ReplicationSession replication = Replication.Begin(handheld, desktop); ..
-The ReplicationSession object contains all the functionality that the replication system ._
+.c IReplicationSession replication = Replication.Begin(handheld, desktop); ..
+The IReplicationSession object contains all the functionality that the replication system ._
 requires to be able to comprehensively replicate modified data from one database to another.
 
-Now that we've got the ReplicationSession set up and ready, let's get to the meat of this process:
+Now that we've got the IReplicationSession set up and ready, let's get to the meat of this process:
 .c //Query for objects changed from db4o
-ObjectSet changed = replication.ProviderA().ObjectsChangedSinceLastReplication();
+IObjectSet changed = replication.ProviderA().ObjectsChangedSinceLastReplication();
 
 //Iterate changed objects, replicate them
 while (changed.HasNext())
@@ -49,7 +49,7 @@ are safely commited in case of any failures.
 .1 Bi-Directional Replication ..
 Our previous example copied all new or modified objects from our handheld device to our desktop ._
 database. What if we want to go the other way? Well, we only have to add one more loop:
-.c ObjectSet changed = replication.ProviderB().ObjectsChangedSinceLastReplication();
+.c IObjectSet changed = replication.ProviderB().ObjectsChangedSinceLastReplication();
 
 while(changed.HasNext())
 	replication.Replicate(changed.Next()); ..
@@ -61,7 +61,7 @@ the two are now both in sync with each other. Congratulations, you've now syncro
 .1 Selective Replication ..
 What if our handheld dosn't have enough memory to store a complete set of all of our data objects? ._
 Well, then we should check our objects before replicating them by modifing the while loop:
-.c ObjectSet changed = replication.ProviderB().ObjectsChangedSinceLastReplication();
+.c IObjectSet changed = replication.ProviderB().ObjectsChangedSinceLastReplication();
 
 while (changed.HasNext()){
 	Pilot p = (Pilot)changed.Next();

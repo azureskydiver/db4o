@@ -18,9 +18,9 @@ namespace Db4objects.Drs.Test
             EnsureContains(A().Provider(), obj3);
         }
 
-        protected virtual void EnsureContains(Db4objects.Drs.Inside.TestableReplicationProviderInside provider, Replicated obj)
+        protected virtual void EnsureContains(Db4objects.Drs.Inside.ITestableReplicationProviderInside provider, Replicated obj)
         {
-            ObjectSet objectSet = provider.GetStoredObjects(typeof(Replicated));
+            Db4objects.Db4o.IObjectSet objectSet = provider.GetStoredObjects(typeof(Replicated));
             Db4oUnit.Assert.IsTrue(objectSet.Contains(obj));
         }
     }
