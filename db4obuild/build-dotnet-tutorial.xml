@@ -16,7 +16,18 @@
 		<os family="unix" />
 	</condition>
 	
-	<target name="update-doc" depends="build">
+	<target name="update-doc" depends="update-doc-mono, update-doc-net">
+	</target>
+	
+	<target name="update-doc-mono" if="mono">
+		<copy todir="${dir.dist.net.build.tutorial}">
+			<fileset dir="${dir.j.tutorial.out.net}">
+				<include name="**/**" />
+			</fileset>
+		</copy>.
+	</target>
+	
+	<target name="update-doc-net" depends="build" unless="mono">
 		<copy todir="${dir.n.tutorial.bin}">
 			<fileset dir="${dir.j.tutorial.out.net}">
 				<include name="**/**" />

@@ -218,7 +218,23 @@
 	
 	</target>
 	
-	<target name="prepare-package-structure">
+	<target name="prepare-package-structure" depends="package-sources, package-binaries, package-docs">
+	
+		<copy todir="${dir.dist.net.build}">			
+			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
+			<fileset dir="${dir.config}" includes="README.txt" />
+		</copy>
+		
+		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
+			<sources dir="${dir.dist.net.build.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/Libs/**" />
+			</sources>
+		</filehead>
+		
+	</target>
+	
+	<target name="package-sources">
 
 		<mkdir dir="${dir.dist.net.build}" />
 		<mkdir dir="${dir.dist.net.build}/src" />
@@ -255,7 +271,9 @@
 				<exclude name="**/obj/**" />	
 			</fileset>
 		</copy>
+	</target>
 	
+	<target name="package-binaries">
 		<!--
 			
 			/bin/compact-2.0/
@@ -268,6 +286,9 @@
 		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
 		<copy-bin-set suffix="-legacy" srcdir="${dir.dist.dll}/legacy" />
 		
+	</target>
+	
+	<target name="package-tutorial">
 		<copy todir="${dir.dist.net.build.tutorial}">
 			<fileset dir="${dir.n.tutorial.bin}">
 				<include name="**/**" />
@@ -282,42 +303,45 @@
 			</fileset>
 		</copy>
 		-->
-
-		<copy todir="${dir.dist.net.build}">			
-			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
-			<fileset dir="${dir.config}" includes="README.txt" />
-		</copy>
-		
-		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
-			<sources dir="${dir.dist.net.build.src}">
-				<include name="**/*.cs" />
-				<exclude name="**/Libs/**" />
-			</sources>
-		</filehead>
+	</target>
 	
+	<target name="package-api" depends="package-api-net, package-api-mono">
+	</target>
+	
+	<target name="package-api-net" unless="mono">
+		<mkdir dir="${dir.dist.net.build}/doc/api" />
+		<copy todir="${dir.dist.net.build}/doc/api">
+			<fileset dir="${dir.dist.ndoc}">
+				<include name="db4o.chm" />
+				<include name="db4o.HxS" />
+				<include name="db4oCollection.*" />
+				<include name="db4oCollection.h2reg.ini" />
+			</fileset>
+			<fileset dir="lib/h2reg">
+				<include name="*.exe" />
+				<include name="*.ini" />
+			</fileset>
+		</copy>		
+	</target>
+	
+	<target name="package-api-mono" if="mono">
 		<mkdir dir="${dir.dist.net.build}/doc/api" />		
-		<if>
-			<equals arg1="${mono}" arg2="true" />
-			<then>		
-				<copy todir="${dir.dist.net.build}/doc/api">
-					<fileset dir="${dir.dist.ndoc}" includes="**/**" />
-				</copy>
-			</then>
-			<else>
-				<copy todir="${dir.dist.net.build}/doc/api">
-					<fileset dir="${dir.dist}/ndoc">
-						<include name="db4o.chm" />
-						<include name="db4o.HxS" />
-						<include name="db4oCollection.*" />
-						<include name="db4oCollection.h2reg.ini" />
-					</fileset>
-					<fileset dir="lib/h2reg">
-						<include name="*.exe" />
-						<include name="*.ini" />
-					</fileset>
-				</copy>
-			</else>
-		</if>
+		<copy todir="${dir.dist.net.build}/doc/api">
+			<fileset dir="${dir.dist.ndoc}" includes="**/**" />
+		</copy>
+	</target>
+	
+	<target name="package-docs" depends="package-tutorial, package-api, package-reference">
+	</target>
+	
+	<target name="package-reference">
+	
+		<mkdir dir="${dir.dist.net.build}/doc/reference" />
+		<copy todir="${dir.dist.net.build}/doc/reference">
+			<fileset dir="../docWiki/net/">
+				<include name="**/**" />
+			</fileset>
+		</copy>
 		
 	</target>
 	
