@@ -1056,6 +1056,14 @@
 			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
 			<fileset dir="${dir.config}" includes="README.txt" />
 		</copy>
+		
+		<mkdir dir="${dir.dist.java.build}/doc/reference" />
+		<copy todir="${dir.dist.java.build}/doc/reference">
+			<fileset dir="../docWiki/java">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+		
 		<zip destfile="${file.dist.java}">
 			<fileset dir="${dir.dist.java}" includes="${folder.build}/**" />
 		</zip>
