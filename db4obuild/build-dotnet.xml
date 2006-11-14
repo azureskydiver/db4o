@@ -231,6 +231,12 @@
 				<include name="**/*.sln" />
 				<include name="**/*.txt" />
 				
+				<!-- tutorial files -->
+				<include name="**/*.resources" />
+				<include name="**/*.resx" />
+				<include name="**/*.ico" />
+				<include name="**/*.PNG" />
+				
 				<include name="db4objects.snk" />
 				
 				<include name="include.mk" />
