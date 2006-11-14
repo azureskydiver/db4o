@@ -93,6 +93,7 @@
 				executable="${csc.executable}"
 				debug="${debug}"
 				optimize="true"
+				warnlevel="0"
 				srcdir="${dir.dist.net.compile}">
 				
 				<include name="**/*.cs" />
@@ -114,7 +115,7 @@
 					<arg value="/define:${csharp.definitions.cf}" />
 					<arg value="/out:@{compactOutputDir}/@{assemblyName}.dll" />
 					<arg value="/target:library" />
-					<arg value="/warn:1" />
+					<arg value="/warn:0" />
 					<arg value="/noconfig" />
 					<arg value="/nostdlib" />
 					<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
