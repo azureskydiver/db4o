@@ -4,6 +4,7 @@
 
 	<property name="drs.dir" location="${dir.workspace}/drs" />
 	<property name="drs.dll" location="${drs.dir}/drs.net/bin/drs.dll" />
+	<property name="drs.test.dll" location="${drs.dir}/drs.net/bin/drs.test.dll" />
 	<property name="drs.src.dir" location="${drs.dir}/src" />
 	<property name="drs.net.dir" location="${drs.dir}/drs.net" />
 	<property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />	
@@ -46,10 +47,22 @@
 			targettype="library"
 			srcdir="${drs.net.src.dir}">
 			<reference dir="${drs.net.bin.dir}">
+				
 				<include name="${file.name.dll}" />
 				<include name="${file.name.dll.db4ounit}" />
 			</reference>
 		</csc>
+	
+		<csc outputfile="${drs.test.dll}"
+				executable="${csc.executable}"
+				targettype="library"
+				srcdir="${drs.net.dir}/drs.tests/src">
+				<reference dir="${drs.net.bin.dir}">
+					<include name="drs.dll" />
+					<include name="${file.name.dll}" />
+					<include name="${file.name.dll.db4ounit}" />
+				</reference>
+			</csc>
 	</target>
 	
 	<target name="create-jar-for-dependencies">
@@ -108,7 +121,7 @@
 		</sharpen>
 	</target>
 
-	<target name="test" depends="update-csharp-projects">
+	<target name="test.notinuse" depends="update-csharp-projects">
 		
 		<csc srcdir="${dir.n}/Db4oUnit/src"
 			targettype="library"
@@ -169,11 +182,13 @@
 			</fileset>
 		</copy>
 
+		<!---->
 		<copy todir="${drs.net.dir}/drs.tests/src" overwrite="true">
 			<fileset dir="${drs.net.tests.in.dir}">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
+		<!---->
 
 		<updatecsharpproject projectfile="${drs.net.dir}/drs.tests/drs.tests.csproj">
 			<sources dir="${drs.net.dir}/drs.tests">
@@ -200,12 +215,12 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-		
-		<updatecsharpproject projectfile="${drsqs.net.dir}/drs/drs.csproj">
-			<sources dir="${drs.net.dir}/drs">
+	 -->	
+		<updatecsharpproject projectfile="${drsqs.net.dir}/quickstarts/drsquickstarts.csproj">
+			<sources dir="${drsqs.net.dir}/quickstarts">
 				<include name="**/*.cs" />
 			</sources>
-		</updatecsharpproject> -->
+		</updatecsharpproject>
 	</target>
 
 	<target name="update-csharp-projects" depends="update-drs-project, update-drs.tests-project">				
@@ -260,13 +275,14 @@
 				<include name="test/**/test/Replicated.java" />				
 				<include name="test/**/test/Person.java" />				
 				<include name="test/**/test/Student.java" />				
-				<include name="test/**/test/InheritanceTest.java" />				
+		
 				<include name="test/**/test/CollectionHolder.java" />
 				<include name="test/**/test/MapHolder.java" />
 				<include name="test/**/test/MapContent.java" />				
 				
 				<exclude name="**/hibernate/**" />
-				<exclude name="**/VectorFlattener.java" />
+				<exclude name="**/CollectionHandlerImplTest.java" />
+				<exclude name="**/ReplicationTraversalTest.java" />
 			</fileset>
 		</copy>
 	</target>
