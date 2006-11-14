@@ -1,0 +1,58 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>StoredClass and StoredField interfaces</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>StoredClass and StoredField interfaces</h1>
+<p></p>
+<p>(IStoredClass and IStoredField in .NET)</p>
+
+<p>Let's look closer at the class meta-information interfaces.</p>
+<p>They look quite similar to reflection API, but unlike reflection there is no information about methods and constructors.</p>
+<p>You can only use StoredClass to get the class's fields:</p>
+
+
+
+
+
+
+
+<p>
+returns all stored fields of this stored class.</p>
+
+
+
+
+
+
+
+<p>
+returns an existing stored field of this stored class.</p>
+<p>You can also use this interface to explore classes hierarchy.</p>
+
+
+
+
+
+
+
+<p>returns the parent of the class.</p>
+<p>
+StoredField interface gives you access to various meta-field information, such as field name, field type. It also provides some helpful methods for manipulating fields accepting their object as a variable (see db4o API for more information).</p>
+
+ </p>
+
+
+
+
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2006-11-13T19:13:16 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Debug Messaging System</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Debug Messaging System</h1><p>&nbsp;</p>
+<p>Db4o messaging system is a special tool, which makes db4o functionality more transparent to the user.&nbsp;It can be used:<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;in debugging session - to find out where the problem can reside;<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;for learning - to watch, what does db4o actually do with the objects.<br>
+<br>
+In order to activate messaging before opening a database file use:</p>
+
+
+<p>where <i>level</i>&nbsp;can be:<br>
+level = 0: no messages;<br>
+level &gt; 0: normal messages;<br>
+level &gt; 1: state messages (new object, object update, delete);<br>
+level &gt; 2: activation messages (object activated, deactivated).<br>
+<br>
+In order to set up a convenient output stream for the messages, call:</p>
+<br></p>
+<br></p>
+<p><br>
+<i>outStream = System.out</i>&nbsp;will set up your system to print messages to console.<br>
+<br>
+#messageLevel(level) also can be set after a database has been opened:</p>
+<br></p>
+<p>The same applies for #setOut().<br>
+<br>
+Let's use the simplest example to see all types of debug messages:</p>
+
+
+ <br>
+</p>
+<p>Output looks quite messy, but allows you to follow the whole process. For debugging purposes messaging&nbsp;system provides a timestamp and internal ID information for each object (first number in state and activate&nbsp;messages).<br>
+<br>
+<br>
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-12T14:33:07 by Tetyana.
+				</div>
+  </body>
+</html>

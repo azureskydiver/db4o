@@ -1,0 +1,48 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Fast collections</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Fast collections</h1>
+<p></p>
+<p>Db4o's solution for the best collection performance and lowest memory consumption is to implement them directly on top of BTrees without an intermediate "stored-object-db4o" layer (P1Object, P1Collection, P2LinkedList). </p>
+<p>This task is still under development, but already it makes sense to be ready to switch to the new fast collections seamlessly.</p>
+<p>Current recommendation for collection usage with db4o is:</p>
+<ul>
+<li>Declare members of persistent classes as interface (java.util.List / System.Collections.IList).</li>
+<li>Create central factory method to implement concrete collection (can be switched to fast collection implementation easily).</li>
+</ul>
+<p>Please, avoid the following realizations, which will make the switching more difficult:</p>
+<ul>
+<li>Declaring concrete implementations as fields in persistent classes</li>
+<li>Deriving from JDK collection classes</li>
+<li>Using third-party non-standard collections</li>
+</ul>
+<p>Let's look at application design, which will allow you to upgrade your application to fast collections with the least effort.</p>
+<p>In our example we will save a list of pilots as members of one team. To make it simple let's use the following factory class to get the proper list implementation:</p>
+
+
+
+<p>The concrete class returned by the CollectionFactory can be changed to any other collection implementation (fast collection) with the minimum coding effort.</p>
+<p>We will use the following class as a team of pilots:</p>
+
+
+ </p>
+<p>Let's try to store our team:</p>
+
+
+ </p>
+<p>If we want to update one of the pilots, we will have to retrieve the whole collection:
+
+ </p>
+<p>The idea of the new fast collection implementation is to allow select/update of collection elements without an intermediate "stored-object-db4o" layer. This will allow random activation and fast querying, thus providing a considerable performance improvement especially on big collections holding deep object graphs.</p></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-13T18:51:54 by Tetyana.
+				</div>
+  </body>
+</html>

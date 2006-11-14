@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>DescendIntoTranslator</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>DescendIntoTranslator</h1><p></p><p>Translator API provides a special way of storing and retrieving objects. In fact the actual class is not stored in the database. Instead the information from that class is stored in a primitive object (object array) and the class is recreated during instantiation or activation.</p><p>Let's look how queries handle translated classes. Diagnostics system will help us to see, what is going on.</p><p>In our example class Car is configured to be saved and retrieved with CarTranslator class. CarTranslator saves only car model information appending it with the production date.</p> <br /></p><p>Let's clean our database and store 2 cars:</p> <br /></p><p>We can check the contents of our database with the following method:</p> <br /></p><p>TranslatorDiagListener is implemented to help us filter only those diagnostic messages, that concern translated classes (filtering diagnostics messages is explained in <a href="Diagnostic_Messages_Filter.html" class="wikiLink">Diagnostic Messages Filter</a> chapter).</p><p>We did not get any diagnostic messages here and the result shows the stored cars with extended model values.</p><p>To test Native Queries we will use the predicate, which retrieves only cars, produced in year 2002:</p> <br /></p> <br /></p><p>A diagnostic message should appear pointing out, that the query is not correct in our case. Let's try&nbsp; to correct it using unoptimized NQ and evaluations.</p> <br /></p><p>We will use simple evaluation to check our cars:</p> <br /></p> <br /></p><p>In both cases we the results are correct. Native Query optimization cannot be used with the translated&nbsp;classes, because the actual values of the translated fields are only known after instantiation and activation. That also means that translated classes can have a considerable impact on database performance and should be used with care.</p></div>
+    </div>
+    <div id="footer">
+					This revision (12) was last Modified 2006-11-05T12:52:22 by Tetyana.
+				</div>
+  </body>
+</html>

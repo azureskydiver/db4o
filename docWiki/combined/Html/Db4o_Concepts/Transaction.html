@@ -1,0 +1,38 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Transaction</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Transaction</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Commit And Rollback">Commit And Rollback</a></li><li><a href ="#Refresh Live Objects">Refresh Live Objects</a></li></ul></li></ul></div></div></div><P></P>
+<P>All work within db4o ObjectContainer is transactional. A transaction is implicitly started when you open a container, and the current transaction is implicitly committed when you close it again.</P>
+<a name="Commit And Rollback"></a><H2>Commit And Rollback</H2>
+<P>You may choose to make a commit explicit or you may leave it for the <code>#close()</code> call:</P>
+
+ </P>
+ </P>
+<P>Before transaction is commited all the modifications to a database are written to a temporary memory storage. Commit (explicit or implicit) writes the modifications to the disk.</P>
+<P>Please, remember to always commit or close your ObjectContainer when the work is done, to make sure that the data is saved to the permanent storage.</P>
+<P>If you do not want to save changes to the database, you can call rollback, resetting the&nbsp;state of our database to the last commit point.</P>
+
+
+
+<a name="Refresh Live Objects"></a><H2>Refresh Live Objects</H2>
+<P>There is one thing that you should remember when rolling back: the <code>#rollback()</code> method will cancel the modifications, but it won't change back the state of the objects in your reference cache.</P>
+
+ </P>
+
+<P>You have to explicitly refresh your live objects when their state might become different from the state in the database:</P>
+
+ </P>
+
+<P>The <code>#refresh()</code> method might be also helpful when the changes to the database are done&nbsp;from different threads. See <a href="../Client-Server/Client-Server.html" class="wikiLink">Client-Server</a> for more information.</P></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-14T02:41:59 by Eric Falsken.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Using Messaging API For Remote Code Execution</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using Messaging API For Remote Code Execution</h1>
+<p>&nbsp;</p>
+<p>Messaging API gives you an easy and powerful tool for remote code execution. The short overview of the&nbsp;API is in <a href="../Messaging.html" class="wikiLink">Messaging chapter</a>. <br />
+All you will need to do is to define specific message class or classes (should be shared between&nbsp;client and server).<br />
+The client side can issue&nbsp;&nbsp;messages using:</p>
+<br /></p>
+<br /></p>
+<br /></p>
+<p>The server side should register a message listener:</p>
+ <br /></p>
+ <br /></p>
+ <br /></p>
+Message recipient should define a response to the different messages received in
+<br /></p>
+<br /></p>
+<br /></p>
+method. ObjectContainer parameter gives full control over the database.<br />
+Let's reset our database and try updating using special UpdateServer message.
+
+
+ <br />
+</p>
+
+
+ <br />
+</p>
+<p>You can also put some information in the message being sent (UpdateServer class).<br />
+The advantage of this method is that having predefined message types you can make any changes to&nbsp;the handling code only on the server side. In the situations with many distributed clients it can really&nbsp;save you lots of time on support.<br />
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2006-11-04T20:46:44 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Refactoring API</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Refactoring API</h1>
+<p></p>
+
+<p>Db4o provides special API which can help you to move classes between packages (Java)/namespaces(.NET), rename classes or fields:</p>
+
+
+
+
+
+
+
+<p>
+The safe order of actions for rename calls is:</p>
+
+<ol>
+<li>Backup you database and aaplication </li>
+<li>Close all open objectContainers if any </li>
+<li>Rename classes or fields or copy classes to the new package/namespace in your application. (Do not remove old classes yet).</li>
+<li>Issue ObjectClass#rename and objectField#rename calls without having an ObjectContainer open.</li>
+<li>Open database file and close it again without actually working with it.</li>
+<li>Remove old classes (if applicable).</li>
+</ol>
+
+
+<p>After that you will only see the new classes/fields in ObjectManager, the old ones will be gone.</p>
+
+<p>Let's look how it works on an example. We will use initial class Pilot:</p>
+
+
+
+
+
+ 
+</p>
+
+<p>and change it to the new class PilotNew renaming field and changing package/namespace at the same time:</p>
+
+
+
+
+
+ </p>
+
+<p>First let's create a database and fill it with some values:</p>
+
+
+
+
+
+ </p>
+
+
+
+
+
+ 
+</p>
+
+<p>We already have PilotNew class so we can go on with renaming:</p>
+
+
+
+
+
+
+
+<p>Now the data for the old Pilot class should be transferred to the new PilotNew class, and "name" field data should be stored in "identity" field.</p>
+<p>To make our check more complicated let's add some data for our new class:</p>
+
+
+
+
+
+ 
+</p>
+
+<p>We can check what is stored in the database now:</p>
+
+
+
+
+
+ 
+</p>
+
+<p>There is one thing to remember. The rename feature is intended to rename a class from one name to the other. Internally this will rename the meta-information. If you will try to rename class to the name that is already stored in the database, the renaming will fail, because the name is reserved. In our example it will happen if setNewObjects method will be called before changeClass.
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (10) was last Modified 2006-11-13T19:48:53 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ExceptionsOnNotStorable</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ExceptionsOnNotStorable</h1><p>&nbsp;</p>
+<p>There is another setting that can be of great value in debug process:</p>
+<span class="java">Java: Db4o.configure().exceptionsOnNotStorable (true) </span><br>
+</p>
+<br>
+</p>
+In some environments (especially those that provide plugin mechanics or perform some kind of class&nbsp;reloading) you may encounter strange problems due to classloader issues. These environments include&nbsp;servlet containers, Eclipse plugins, reloading JUnit test runners, etc. <br>
+<br>
+In most of those cases db4o will fail quietly (i.e. will not deliver any results on queries), unless you have&nbsp;configured #exceptionsOnNotStorable(true) - then you may see messages related to not being able to store&nbsp;db4o internal classes or set db4o internal translators, etc. <br>
+<br>
+Db4o uses the context classloader by default. This is an appropriate choice in most situations, but it's not&nbsp;really reliable, since the concrete context classloader depends on the environment you're running in.&nbsp;Therefore you can explicitly specify the classloader to be used for db4o operation by calling
+<span class="java">Java: Db4o.configure()reflectWith(new JdkReflector(classLoader)) </span><br>
+</p>
+<br>
+</p>
+Basically you just have to find out the appropriate classloader and configure db4o accordingly. The right&nbsp;choice depends on the specific classloader hierarchy of your application context. Two examples:<br>
+<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;In servlet containers, there usually should be no problem, since most containers automatically set&nbsp;the context classloader to the webapp classloader. So it shouldn't matter, whether the db4o.jar resides&nbsp;in your webapp's WEB_INF/lib (where it will be loaded by the appropriate classloader itself, anyway) or&nbsp;in one of the shared lib folders (where the classloader responsible for loading db4o will not be able to see&nbsp;webapp specific classes). <br>
+<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;In Eclipse, the context classloader is the system classloader, which is agnostic of plugin-specific&nbsp;classes. You'll have to configure db4o to use your plugin's classloader, e.g.&nbsp;MyPlugin.class.getClassLoader(). (If the db4o.jar resides in your plugin, you'll get the same effect by&nbsp;just using Db4o.class.getClassLoader()). <br>
+<br>
+The approach to solving classloader problems (not only for db4o, but generally) is: <br>
+-&nbsp;&nbsp;&nbsp;&nbsp;identify the classes/libs db4o needs to know <br>
+-&nbsp;&nbsp;&nbsp;&nbsp;identify the classloader hierarchy of your application context <br>
+-&nbsp;&nbsp;&nbsp;&nbsp;use the most generic classloader that knows all needed classes, either directly or indirectly via delegation<br>
+See also:<a href="../../Platform_Implementations/Classloader_Issues/Classloader_issues.html" class="wikiLink">Classloader issues</a>&nbsp;<br>
+<br>
+#exceptionsOnNotStorable(true) will also help you to identify classes that db4o cannot persist.<br>
+<br>
+db4o needs a constructor that it can use to create user objects. Ideally this is a zero-parameter constructor (declared public for&nbsp;Java JDK versions prior to JDK 1.2). If db4o does not find a zero-parameter constructor, it iterates&nbsp;through all other constructors and internally attempts to create an instance of an object by passing&nbsp;appropriate null parameters. If this is successful with any of the present constructors, this constructor is used. <br>
+There are classes that do not have usable constructors. java.net.URL is an example from the&nbsp;Java JDK. In this case you have the following options: <br>
+-&nbsp;&nbsp;&nbsp;&nbsp;add a zero-parameter constructor specifically for db4o; <br>
+-&nbsp;&nbsp;&nbsp;&nbsp;derive from the class and add a zero-parameter constructor; <br>
+-&nbsp;&nbsp;&nbsp;&nbsp;add a custom translator. <br>
+If you need to quickly implement a solution for one of the JDK classes, and querying members is not an&nbsp;issue, you may choose to use the built-in serializable translator. Here is an example, how this is done for&nbsp;java.net.URL:
+<span class="java">Java: Db4o.configure().objectClass("java.net.URL").translate(new com.db4o.config.TSerializable()); </span><br></p>
+<br></p>
+The above code needs to be executed every time before the db4o engine is started.&nbsp;See also:<a href="../../Db4o_Concepts/Object_Construction/Object_Construction.html" class="wikiLink">Constructors</a>&nbsp;, <a href="../../Advanced_db4o_Techniques/Translators/Translators.html" class="wikiLink">Translators</a>.<br>
+<br>
+Another db4o system, which can give you a valuable feedback about db4o functioning in your&nbsp;application is <a href="../Diagnostics/Diagnostics.html" class="wikiLink">Diagnostics</a>.<br></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-12T14:35:36 by Tetyana.
+				</div>
+  </body>
+</html>

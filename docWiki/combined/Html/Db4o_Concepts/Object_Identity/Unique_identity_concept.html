@@ -1,0 +1,45 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unique identity concept</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Unique identity concept</h1>
+<p></p>
+<p>Db4o uses the concept of uniqueness of each object in reference cache. If an object is accessed by multiple queries or through multiple navigation access paths, db4o will always return the one single object, helping you to put your object graph together exactly the same way as it was when it was stored, without having to use IDs. You can simply use '==' to check the identity of two database objects.</p>
+
+
+
+<p>How does db4o realize such behavior? Each object is loaded into reference cache only once in the session: db4o will return a new object only if it is not present in the cache yet, otherwise it will give you a reference to the object already in cache. This helps db4o to distinguish between objects that are to be updated and those ones that are to be created. All "known" objects are the subjects of update whereas "unknown" should be created. (Note that the reference system will only be in place as long as an ObjectContainer is open. Closing and reopening an ObjectContainer will clean the references system of the ObjectContainer and all objects in RAM will be treated as "new" afterwards.). </p>
+
+
+ </p>
+<p>In the example <i>pilot</i>object is retrieved from the database (placed into cache) andchanged, but not saved. The following retrieval uses pilot's name to retrieve the object from the database, but that object was already instantiated, so its cached (and modified) instance is actually returned.</p>
+<p>Such behavior can be sometimes undesirable - you may expect to get object as it saved in the database instead of its modified instance in cache. One of the ways to do that is to use <a href="../../Advanced_db4o_Techniques/Utility_Methods/PeekPersisted.html" class="wikiLink">ExtObjectContainer#peekPersisted(object)</a>&nbsp;method, which will give you a disconnected copy of a database object.</p>
+<p>Another way is to purge objects from the cache before re-retrieving them.</p>
+<p>You can use the following methods:</p>
+<ul>
+<li>ExtObjectContainer#isCached(object) shows if the object is present in reference cache</li>
+<li>ExtObjectContainer#purge(object) removes the object from the cache.</li>
+</ul>
+<p>Let's look at our previous example extended with these methods:</p>
+
+
+ </p>
+<p>Now the second retrieval re-instantiates Pilot object from the database.</p>
+<p>An object removed with ExtObjectContainer#purge(object) becomes "unknown" to the ObjectContainer, so this method may also be used to create multiple copies of objects:</p>
+
+
+
+<p>Each reference in db4o works directly with the object. As only one instance of the object exists in cache there is no problem with object locks.</p>
+<p>You can see an example of another concept used in JDO system <a href="http://access1.sun.com/jdo/">http://access1.sun.com/jdo/</a> </p>
+<p>Actually db4o reference is a pointer to the object in the database file. It means that the size of the database does not effect query time: the object is retrieved from the known position without any necessity to traverse values.</p></div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2006-11-14T08:58:05 by Tetyana.
+				</div>
+  </body>
+</html>

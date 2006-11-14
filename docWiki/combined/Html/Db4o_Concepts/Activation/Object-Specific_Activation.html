@@ -1,0 +1,77 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Object-Specific Activation</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Object-Specific Activation</h1>
+<p></p>
+
+<p>You can tune up activation settings for specific classes with the following methods:</p>
+
+
+
+
+
+
+
+<p>Cascading the activation depth to member fields, the depth value is reduced by one for the field. If the depth exceeds the maximumDepth specified for the class of the object, it is reduced to the maximumDepth. If the depth value is lower than the minimumDepth it is raised to the minimumDepth.<br> </p>
+
+ </p>
+
+ </p>
+
+ </p>
+
+ </p>
+
+ </p>
+
+<p>You can set up automatic activation for specific objects or fields:<br></p>
+
+
+
+
+
+
+
+<p>Cascade activation will retrieve the whole object graph, starting from the specified object(field). This setting can lead to increased memory consumption. </p>
+
+ </p>
+
+ </p>
+
+ </p>
+
+<p>An alternative to cascade activation can be manual activation of objects:<br></p>
+
+
+
+
+
+
+
+<p>Manual deactivation may be used to save memory: </p>
+
+
+
+
+
+
+
+<p>These 2 methods give you an excellent control over object activation, but they obviously need more attention from the application side.</p>
+
+ </p>
+
+ </p>
+
+ <br></p></div>
+    </div>
+    <div id="footer">
+					This revision (10) was last Modified 2006-11-14T07:26:51 by Tetyana.
+				</div>
+  </body>
+</html>

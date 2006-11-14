@@ -1,0 +1,45 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Updating Structured Objects</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Updating Structured Objects</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Update Depth">Update Depth</a></li></ul></li></ul></div></div></div>
+<P>To update structured objects in db4o, you simply call set() on them again.</P>
+
+ </P>
+
+<P>Let's modify the pilot, too.</P>
+
+ </P>
+
+<P>Nice and easy, isn't it? But there is something that is not obvious in this example.&nbsp;Let's see what happens if we split this&nbsp;task in two separate db4o sessions: In the first we modify our&nbsp;pilot and update his car:</P>
+
+ </P>
+
+<P>And in the second, we'll double-check our modification:</P>
+
+ </P>
+
+<P>If you will execute this code you will see that Pilot's points are not changed&nbsp;What's happening here and what can we do to fix it?</P>
+<a name="Update Depth"></a><H2>Update Depth</H2>
+<P>Imagine a complex object with many members that have many members themselves.&nbsp;When updating this object, db4o would have to update all its children,&nbsp;grandchildren, etc. This poses a severe performance penalty and will&nbsp;not be necessary in most cases - sometimes, however, it will.<BR><BR>So, in our previous update example, we were modifying the Pilot child of a Car&nbsp;object. When we saved the change, we told db4o to save our Car object and assumed&nbsp;that the modified Pilot would be updated. But we were modifying and saving in the&nbsp;same manner as we were in the first update sample, so why did it work before? The&nbsp;first time we made the modification, db4o never actually had to retreive the modified&nbsp;Pilot&nbsp;it returned the same one that was still in memory that we modified, but&nbsp;it never actually updated the database. Restarting the application would show that the value was unchanged.<BR><BR>To be able to handle this dilemma as flexible as possible, db4o introduces&nbsp;the concept of update depth to control how deep an object's member tree will&nbsp;be traversed on update. The default update depth for all objects is 0, meaning&nbsp;that only primitive and String members will be updated, but changes in object&nbsp;members will not be reflected.<BR><BR>db4o provides means to control update depth with very fine granularity.&nbsp;For our current problem we'll advise db4o to update the full graph for&nbsp;Car objects by setting cascadeOnUpdate() for this class accordingly.<BR><BR>
+ </P>
+
+&nbsp; </P>
+ </P>
+
+&nbsp; </P>
+ </P>
+
+<P>You can also achieve expected results using:<BR>1.ExtObjectContainer#set(object, depth) to update exact amount of referenced fields<BR>2. Use Db4o.configure().objectClass(clazz).updateDepth(depth) setting&nbsp;to define sufficient update depth for a specific object<BR>3. Use global setting for all the persisted objects:</P><PRE></PRE><PRE> </PRE><PRE>&nbsp; <BR></PRE>
+<P>However global updateDepth is not flexible enough for real-world objects having different&nbsp;depth of reference structures. <BR><BR>Note that container configuration must be set before the container is opened.</P></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-13T02:53:55 by Eric Falsken.
+				</div>
+  </body>
+</html>

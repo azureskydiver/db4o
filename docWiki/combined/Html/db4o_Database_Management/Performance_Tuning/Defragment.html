@@ -1,0 +1,27 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Defragment</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Defragment</h1><p></p>
+<br></p>
+<br></p>
+<i>Advantage</i><br>
+It is recommended to run Defragment frequently to reduce the database file size and to remove unused fields and freespace slots.<br>
+<br>
+<i>Effect</i><br>
+db4o does not discard fields from the database file that are no longer being used. Within the database file quite a lot of space is used for transactional processing. Objects are always written to a new slot when they are modified. Deleted objects continue to occupy 8 bytes until the next Defragment run. Defragment cleans all this up by writing all objects to a completely new database file. The resulting file will be smaller and faster.<br>
+<br>
+<i>Alternate Strategies</i><br>
+Instead of deleting objects it can be an option to mark objects as deleted with a "deleted" boolean field and to clean them out (by not copying them to the new database file) during the Defragment run. Two advantages: (1) Deleted objects can be restored. (2) In case there are multiple references to a deleted object, none of them would point to null. To clean out objects during the Defragment run, the Defragment source code would have to be modified. com.db4o.tools.Defragment is <b>only supplied as source code</b> to encourage embedding maintenance tasks.<br>
+<br></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-12T14:44:50 by Tetyana.
+				</div>
+  </body>
+</html>
