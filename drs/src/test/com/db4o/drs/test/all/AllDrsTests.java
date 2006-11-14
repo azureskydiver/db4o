@@ -10,8 +10,7 @@ import com.db4o.drs.test.hibernate.RdbmsTests;
  */
 public class AllDrsTests {
 	public static void main(String[] args) {
-		//Db4oTests.main(args);
-		
+		Db4oTests.main(args);		
 		RdbmsTests.main(args);
 	}
 }
