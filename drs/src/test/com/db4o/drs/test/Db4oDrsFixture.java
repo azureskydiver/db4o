@@ -21,7 +21,7 @@ public class Db4oDrsFixture implements DrsFixture {
 		_name = name;
 		
 		if (RAM_DRIVE.exists())
-			testFile = new File(RAM_DRIVE, "drs_cs_" + _name + ".yap");
+			testFile = new File(RAM_DRIVE.getPath() + "drs_cs_" + _name + ".yap");
 		else	
 			testFile = new File("drs_cs_" + _name + ".yap");
 	}

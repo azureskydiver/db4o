@@ -34,10 +34,10 @@ public class Db4oTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
-		return shared();
+		return one();
 	}
 
 	protected Class[] one() {
-		return new Class[] { TheSimplest.class, };
+		return new Class[] { ReplicationProviderTest.class, };
 	}
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test;
 
+import java.util.Iterator;
+
 import com.db4o.ObjectSet;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
@@ -87,7 +89,7 @@ public class TheSimplest extends DrsTestCase {
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
 		//System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB);
-		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
+		Iterator allObjects = providerA.objectsChangedSinceLastReplication(clazz).iterator();
 		while (allObjects.hasNext()) {
 			final Object obj = allObjects.next();
 			//System.out.println("obj = " + obj);
