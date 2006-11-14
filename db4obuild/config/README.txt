@@ -13,7 +13,7 @@ the interactive HTML tutorial:
 
 If you are working with db4o for .NET, it is recommended to run
 the tutorial program:
-./doc/tutorial/db4o-X.x-tutorial.exe
+./doc/tutorial/Db4objects.Db4o.Tutorial.exe
 
 The PDF tutorial will work best for fulltext search:
 ./doc/tutorial/db4o-X.x-tutorial.pdf
