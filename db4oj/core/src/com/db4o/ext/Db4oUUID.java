@@ -20,8 +20,8 @@ public class Db4oUUID {
 	/**
 	 * constructs a Db4oUUID from a long part and a signature part
 	 *
-	 * @param longPart      the long part
-	 * @param signaturePart the signature part
+	 * @param longPart_      the long part
+	 * @param signaturePart_ the signature part
 	 */
 	public Db4oUUID(long longPart_, byte[] signaturePart_) {
 		longPart = longPart_;
