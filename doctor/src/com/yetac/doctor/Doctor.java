@@ -8,15 +8,11 @@ import java.util.*;
 import org.apache.tools.ant.*;
 
 import com.yetac.doctor.applet.*;
+import com.yetac.doctor.cmd.*;
 import com.yetac.doctor.workers.*;
 
 public class Doctor extends Task {
-	
-	public final static String DEFAULT_PACKAGE_PATH="com/db4o/f1";
-    
-	public Doctor() {
-	}
-	
+
     public static void main(String[] args){
         
         if(args == null || args.length == 0){
@@ -89,7 +85,7 @@ public class Doctor extends Task {
     private String workspace;
     
     private String inputSource;
-    private String packagePath;
+    private String sourcePathResolverName;
     private boolean upperCaseDirectoryNames;
     
     private String sourceExtension;
@@ -261,15 +257,15 @@ public class Doctor extends Task {
         return "C:\\WINDOWS\\Fonts\\VERDANA.TTF";
     }
 
-    public void setPackagePath(String path){
-        packagePath = path;
+    public void setSourcePathResolver(String sourcePathResolverName){
+    	this.sourcePathResolverName = sourcePathResolverName;
     }
     
-    public String getPackagePath(){
-        if(packagePath != null){
-            return packagePath;
-        }
-        return DEFAULT_PACKAGE_PATH;
+    public SourcePathResolver getSourcePathResolver() throws Exception {
+    	if(sourcePathResolverName!=null) {
+    		return (SourcePathResolver) Class.forName(sourcePathResolverName).newInstance();
+    	}
+    	return SourcePathResolver.IDENTITY;
     }
 
     public void setUpperCaseDirectoryNames(boolean upperCaseDirectoryNames){
