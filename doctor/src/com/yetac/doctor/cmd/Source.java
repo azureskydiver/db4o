@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.yetac.doctor.*;
 import com.yetac.doctor.writers.DocsWriter;
 
 public class Source extends Command{
@@ -52,6 +53,13 @@ public class Source extends Command{
     public File getFile(){
         String path = getClassName();
         path = path.replaceAll("\\.", "/");
+        String packagePath=source.files.task.getPackagePath();
+        if(!Doctor.DEFAULT_PACKAGE_PATH.equals(packagePath)) {
+        	path=path.replaceAll(Doctor.DEFAULT_PACKAGE_PATH,packagePath);
+        }
+        if(source.files.task.getUpperCaseDirectoryNames()) {
+            path = path.replaceAll("chapter", "Chapter");
+        }
         path = source.files.task.getInputSource() + "/" +  path + source.files.task.getSourceExtension();
         return new File(path);
     }
