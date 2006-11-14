@@ -1,7 +1,7 @@
 namespace Db4objects.Drs.Test
 {
     /// <exclude></exclude>
-    public abstract class DrsTestSuite : Db4objects.Drs.Test.DrsTestCase, Db4oUnit.TestSuiteBuilder
+    public abstract class DrsTestSuite : Db4objects.Drs.Test.DrsTestCase, Db4oUnit.ITestSuiteBuilder
     {
         public virtual Db4oUnit.TestSuite Build()
         {
@@ -11,11 +11,6 @@ namespace Db4objects.Drs.Test
         protected virtual System.Type[] TestCases()
         {
             return All();
-        }
-
-        protected virtual System.Type[] One()
-        {
-            return new System.Type[] { typeof(TheSimplest) };
         }
 
         protected virtual System.Type[] All()
@@ -32,8 +27,7 @@ namespace Db4objects.Drs.Test
                                        typeof(R0to4Runner),
                                        typeof(ReplicationFeaturesMain),
                                        typeof(CollectionHandlerImplTest),
-                                       typeof(ReplicationTraversalTest),
-                                       typeof(InheritanceTest)
+                                       typeof(ReplicationTraversalTest)
             };
         }
     }

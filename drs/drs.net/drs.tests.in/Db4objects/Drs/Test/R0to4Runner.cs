@@ -17,17 +17,17 @@ namespace Db4objects.Drs.Test
             Delete(B().Provider());
         }
 
-        protected virtual void Delete(Db4objects.Drs.Inside.TestableReplicationProviderInside
+        protected virtual void Delete(Db4objects.Drs.Inside.ITestableReplicationProviderInside
              provider)
         {
             IDictionary toDelete = new Hashtable();
 
             //			j4o.util.Set toDelete = new j4o.util.HashSet();
-            Db4objects.Db4o.ObjectSet rr = provider.GetStoredObjects(typeof(Db4objects.Drs.Test.R0));
+            Db4objects.Db4o.IObjectSet rr = provider.GetStoredObjects(typeof(Db4objects.Drs.Test.R0));
             while (rr.HasNext())
             {
                 object o = rr.Next();
-                Db4objects.Db4o.reflect.ReflectClass claxx = Db4objects.Drs.Inside.ReplicationReflector.GetInstance
+                Db4objects.Db4o.Reflect.IReflectClass claxx = Db4objects.Drs.Inside.ReplicationReflector.GetInstance
                     ().Reflector().ForObject(o);
                 SetFieldsToNull(o, claxx);
                 toDelete.Add(o.ToString(), o);
@@ -41,14 +41,14 @@ namespace Db4objects.Drs.Test
             provider.Commit();
         }
 
-        private void CompareR4(Db4objects.Drs.Inside.TestableReplicationProviderInside a, Db4objects.Drs.Inside.TestableReplicationProviderInside
+        private void CompareR4(Db4objects.Drs.Inside.ITestableReplicationProviderInside a, Db4objects.Drs.Inside.ITestableReplicationProviderInside
              b, bool isSameExpected)
         {
-            Db4objects.Db4o.ObjectSet it = a.GetStoredObjects(typeof(Db4objects.Drs.Test.R4));
+            Db4objects.Db4o.IObjectSet it = a.GetStoredObjects(typeof(Db4objects.Drs.Test.R4));
             while (it.HasNext())
             {
                 string name = ((Db4objects.Drs.Test.R4)it.Next()).name;
-                Db4objects.Db4o.ObjectSet it2 = b.GetStoredObjects(typeof(Db4objects.Drs.Test.R4));
+                Db4objects.Db4o.IObjectSet it2 = b.GetStoredObjects(typeof(Db4objects.Drs.Test.R4));
                 bool found = false;
                 while (it2.HasNext())
                 {
@@ -62,13 +62,13 @@ namespace Db4objects.Drs.Test
             }
         }
 
-        private void CopyAllToB(Db4objects.Drs.Inside.TestableReplicationProviderInside peerA
-            , Db4objects.Drs.Inside.TestableReplicationProviderInside peerB)
+        private void CopyAllToB(Db4objects.Drs.Inside.ITestableReplicationProviderInside peerA
+            , Db4objects.Drs.Inside.ITestableReplicationProviderInside peerB)
         {
             Db4oUnit.Assert.IsTrue(ReplicateAll(peerA, peerB, false) == LINKERS * 5);
         }
 
-        private void EnsureCount(Db4objects.Drs.Inside.TestableReplicationProviderInside provider
+        private void EnsureCount(Db4objects.Drs.Inside.ITestableReplicationProviderInside provider
             , int linkers)
         {
             EnsureCount(provider, typeof(Db4objects.Drs.Test.R0), linkers * 5);
@@ -78,10 +78,10 @@ namespace Db4objects.Drs.Test
             EnsureCount(provider, typeof(Db4objects.Drs.Test.R4), linkers * 1);
         }
 
-        private void EnsureCount(Db4objects.Drs.Inside.TestableReplicationProviderInside provider
+        private void EnsureCount(Db4objects.Drs.Inside.ITestableReplicationProviderInside provider
             , System.Type clazz, int count)
         {
-            Db4objects.Db4o.ObjectSet instances = provider.GetStoredObjects(clazz);
+            Db4objects.Db4o.IObjectSet instances = provider.GetStoredObjects(clazz);
             int i = count;
             while (instances.HasNext())
             {
@@ -91,20 +91,20 @@ namespace Db4objects.Drs.Test
             Db4oUnit.Assert.IsTrue(i == 0);
         }
 
-        private void EnsureR4Different(Db4objects.Drs.Inside.TestableReplicationProviderInside
-             peerA, Db4objects.Drs.Inside.TestableReplicationProviderInside peerB)
+        private void EnsureR4Different(Db4objects.Drs.Inside.ITestableReplicationProviderInside
+             peerA, Db4objects.Drs.Inside.ITestableReplicationProviderInside peerB)
         {
             CompareR4(peerB, peerA, false);
         }
 
-        private void EnsureR4Same(Db4objects.Drs.Inside.TestableReplicationProviderInside peerA
-            , Db4objects.Drs.Inside.TestableReplicationProviderInside peerB)
+        private void EnsureR4Same(Db4objects.Drs.Inside.ITestableReplicationProviderInside peerA
+            , Db4objects.Drs.Inside.ITestableReplicationProviderInside peerB)
         {
             CompareR4(peerB, peerA, true);
             CompareR4(peerA, peerB, true);
         }
 
-        private void Init(Db4objects.Drs.Inside.TestableReplicationProviderInside peerA)
+        private void Init(Db4objects.Drs.Inside.ITestableReplicationProviderInside peerA)
         {
             Db4objects.Drs.Test.R0Linker lCircles = new Db4objects.Drs.Test.R0Linker();
             lCircles.SetNames("circles");
@@ -125,10 +125,10 @@ namespace Db4objects.Drs.Test
             peerA.Commit();
         }
 
-        private void ModifyR4(Db4objects.Drs.Inside.TestableReplicationProviderInside provider
+        private void ModifyR4(Db4objects.Drs.Inside.ITestableReplicationProviderInside provider
             )
         {
-            Db4objects.Db4o.ObjectSet it = provider.GetStoredObjects(typeof(Db4objects.Drs.Test.R4));
+            Db4objects.Db4o.IObjectSet it = provider.GetStoredObjects(typeof(Db4objects.Drs.Test.R4));
             while (it.HasNext())
             {
                 Db4objects.Drs.Test.R4 r4 = (Db4objects.Drs.Test.R4)it.Next();
@@ -138,19 +138,19 @@ namespace Db4objects.Drs.Test
             provider.Commit();
         }
 
-        private int Replicate(Db4objects.Drs.Inside.TestableReplicationProviderInside peerA
-            , Db4objects.Drs.Inside.TestableReplicationProviderInside peerB)
+        private int Replicate(Db4objects.Drs.Inside.ITestableReplicationProviderInside peerA
+            , Db4objects.Drs.Inside.ITestableReplicationProviderInside peerB)
         {
             return ReplicateAll(peerA, peerB, true);
         }
 
-        private int ReplicateAll(Db4objects.Drs.Inside.TestableReplicationProviderInside peerA
-            , Db4objects.Drs.Inside.TestableReplicationProviderInside peerB, bool modifiedOnly
+        private int ReplicateAll(Db4objects.Drs.Inside.ITestableReplicationProviderInside peerA
+            , Db4objects.Drs.Inside.ITestableReplicationProviderInside peerB, bool modifiedOnly
             )
         {
-            Db4objects.Db4o.DrsReplicationSession replication = Db4objects.Db4o.DrsReplication.Begin(peerA
+            Db4objects.Drs.IReplicationSession replication = Db4objects.Drs.Replication.Begin(peerA
                 , peerB);
-            Db4objects.Db4o.ObjectSet it = modifiedOnly ? peerA.ObjectsChangedSinceLastReplication(typeof(
+            Db4objects.Db4o.IObjectSet it = modifiedOnly ? peerA.ObjectsChangedSinceLastReplication(typeof(
                 Db4objects.Drs.Test.R0)) : peerA.GetStoredObjects(typeof(Db4objects.Drs.Test.R0));
             int replicated = 0;
             while (it.HasNext())
@@ -165,26 +165,26 @@ namespace Db4objects.Drs.Test
             return replicated;
         }
 
-        private void ReplicateNoneModified(Db4objects.Drs.Inside.TestableReplicationProviderInside
-             peerA, Db4objects.Drs.Inside.TestableReplicationProviderInside peerB)
+        private void ReplicateNoneModified(Db4objects.Drs.Inside.ITestableReplicationProviderInside
+             peerA, Db4objects.Drs.Inside.ITestableReplicationProviderInside peerB)
         {
             Db4oUnit.Assert.IsTrue(Replicate(peerA, peerB) == 0);
         }
 
-        private void ReplicateR4(Db4objects.Drs.Inside.TestableReplicationProviderInside peerA
-            , Db4objects.Drs.Inside.TestableReplicationProviderInside peerB)
+        private void ReplicateR4(Db4objects.Drs.Inside.ITestableReplicationProviderInside peerA
+            , Db4objects.Drs.Inside.ITestableReplicationProviderInside peerB)
         {
             int replicatedObjectsCount = ReplicateAll(peerA, peerB, true);
             Db4oUnit.Assert.IsTrue(replicatedObjectsCount == LINKERS);
         }
 
-        private void SetFieldsToNull(object _object, Db4objects.Db4o.reflect.ReflectClass claxx)
+        private void SetFieldsToNull(object _object, Db4objects.Db4o.Reflect.IReflectClass claxx)
         {
-            Db4objects.Db4o.reflect.ReflectField[] fields;
+            Db4objects.Db4o.Reflect.IReflectField[] fields;
             fields = claxx.GetDeclaredFields();
             for (int i = 0; i < fields.Length; i++)
             {
-                Db4objects.Db4o.reflect.ReflectField field = fields[i];
+                Db4objects.Db4o.Reflect.IReflectField field = fields[i];
                 if (field.IsStatic())
                 {
                     continue;
@@ -196,7 +196,7 @@ namespace Db4objects.Drs.Test
                 field.SetAccessible();
                 field.Set(_object, null);
             }
-            Db4objects.Db4o.reflect.ReflectClass superclass = claxx.GetSuperclass();
+            Db4objects.Db4o.Reflect.IReflectClass superclass = claxx.GetSuperclass();
             if (superclass == null)
             {
                 return;
