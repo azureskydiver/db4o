@@ -220,10 +220,25 @@
 	
 	<target name="prepare-package-structure" depends="package-sources, package-binaries, package-docs">
 	
-		<copy todir="${dir.dist.net.build}">			
-			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
-			<fileset dir="${dir.config}" includes="README.txt" />
-		</copy>
+		<if>
+			<equals arg1="mono" arg2="true" />
+			<then>
+				<copy todir="${dir.dist.net.build}">			
+					<fileset dir="${dir.config}">
+						<include name="db4o.license.txt" />
+						<include name="README.txt" />
+					</fileset>
+				</copy>
+			</then>
+			<else>
+				<copy todir="${dir.dist.net.build}">			
+					<fileset dir="${dir.config}">
+						<include name="db4o.license.windows.txt" />
+						<include name="README.windows.txt" />
+					</fileset>
+				</copy>
+			</else>
+		</if>
 		
 		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
 			<sources dir="${dir.dist.net.build.src}">
