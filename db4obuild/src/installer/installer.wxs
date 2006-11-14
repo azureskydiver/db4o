@@ -31,14 +31,12 @@
 					Property="TARGETDIR"
 					Value="[INSTALLDIR]"
 					Execute="firstSequence" />
-		
-		<!--
+
 		<CustomAction Id="Launch_Tutorial"				
-				FileKey="doc.tutorial.db4o_tutorial.exe"
+				FileKey="doc.tutorial.Db4objects.Db4o.Tutorial.exe"
 				ExeCommand=""
 				Execute="firstSequence"
 				Return="asyncNoWait" />
-		-->
 				
 		<CustomAction Id="RegisterHelp"
 				FileKey="doc.api.H2Reg.exe"
@@ -74,17 +72,15 @@
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="db4objectsMenuFolder" Name="db4o" LongName="db4objects">
 					<Directory Id="TargetMenuFolder" Name="db4o" LongName="db4o @db4o.version.dotted@">
-						<!--
 						<Component Id="Shortcuts" Guid="6D25106C-C6A6-410F-91A5-E2515FD8896C">
 							<Shortcut Id="TutorialShortcut"
 								Directory="TargetMenuFolder"
 								Name="db4otut"
-								LongName="db4o tutorial"
+								LongName="Db4o Tutorial"
 								Show="normal"
 								WorkingDirectory="TARGETDIR"
-								Target="[#doc.tutorial.db4o_tutorial.exe]" />
+								Target="[#doc.tutorial.Db4objects.Db4o.Tutorial.exe]" />
 						</Component>
-						-->
 					</Directory>
 				</Directory>
 			</Directory>
@@ -342,10 +338,8 @@
 			
 			<Dialog Id="ExitDialog" Width="370" Height="270" Title="[ProductName]" NoMinimize="yes">
 				<Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Finish]">
-					<Publish Event="EndDialog" Value="Return">1</Publish>
-					<!--
+					<Publish Event="EndDialog" Value="Return">1</Publish>					
 					<Publish Event="DoAction" Value="Launch_Tutorial">(NOT Installed) AND (1 = LAUNCHTUTORIAL)</Publish>
-					-->
 				</Control>
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="[Button_Cancel]" />
 				<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" FixedSize="yes" TabSkip="no" Text="dialog.bmp" />

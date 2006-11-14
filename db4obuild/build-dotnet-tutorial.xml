@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<project name="db4o-tutorial" default="update-doc">
+	
+	<property file="machine.properties" />
+	<property file="ant.properties" />		
+	
+	<property name="csc.executable" value="csc" />
+
+	<property name="dir.n.v6.tutorial" location="../db4o.net/Db4oTutorial" />	
+	
+	<property name="project.name" value="Db4objects.Db4o.Tutorial" />
+	<property name="exe.name" value="${project.name}.exe" />	
+	<property name="base.project.dir" value="${dir.n.v6.tutorial}/${project.name}" />
+	
+	<target name="update-doc" depends="build">
+		<copy todir="${dir.n.tutorial.bin}">
+			<fileset dir="${dir.j.tutorial.out.net}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="build" depends="init">
+		<csc targetType="library"
+			destFile="${dir.n.tutorial.bin}/bin/${project.name}.Chapters.dll"
+			srcdir="${base.project.dir}.Chapters"
+			executable="${csc.executable}">
+			
+			<include name="**/*.cs" />
+			
+			<reference dir="${dir.n.tutorial.bin}/bin">			
+				<include name="${file.name.dll}" />
+			</reference>
+		</csc>
+		
+		<csc targetType="winexe"
+			destFile="${dir.n.tutorial.bin}/${exe.name}"
+			win32icon="${base.project.dir}/Resources/db4o.ico"
+			srcdir="${base.project.dir}"
+			executable="${csc.executable}">
+			
+			<include name="**/*.cs" />
+			
+			<resource
+				file="${base.project.dir}/${project.name}.WebBrowserViewControl.resources" embed="true" />
+				
+			<resource
+				file="${base.project.dir}/${project.name}.TutorialOutlineViewControl.resources" embed="true" />			
+			
+			<reference dir="${dir.n.tutorial.bin}/bin">
+				<include name="${file.name.dll}" />
+				<include name="${project.name}.Chapters.dll" />
+				<include name="WeifenLuo.WinFormsUI.dll" />
+				<include name="AxSHDocVw.dll" />
+				<include name="SHDocVw.dll" />
+				<include name="System.Windows.Forms.dll" />
+			</reference>			
+		</csc>
+		
+		<copy tofile="${dir.n.tutorial.bin}/${exe.name}.config" file="${base.project.dir}/App.config" />
+
+	</target>
+		
+	<target name="run" depends="update-doc">
+		<exec dir="${dir.n.tutorial.bin}" executable="${dir.n.tutorial.bin}/${exe.name}">
+		</exec>
+	</target>
+
+	<target name="init">
+		<mkdir dir="${dir.n.tutorial.bin}" />
+		<mkdir dir="${dir.n.tutorial.bin}/bin" />
+		<copy todir="${dir.n.tutorial.bin}/bin">
+			<fileset dir="${dir.dist.dll.net}">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.n.tutorial.bin}/bin">
+			<fileset dir="${dir.n.v6.tutorial}/Libs">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${dir.n.tutorial.bin}" />
+	</target>
+</project>

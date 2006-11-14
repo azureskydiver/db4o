@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
 <WixBuilderParameters>
 	<Shortcuts>
-	
-		<!--
+		
 		<WixShortcut>
-			<Path>doc/tutorial/db4o-tutorial.exe</Path>
-			<Name>db4o tutorial</Name>
+			<Path>doc/tutorial/Db4objects.Db4o.Tutorial.exe</Path>
+			<Name>Db4o Tutorial</Name>
 		</WixShortcut>
+		
 		
 		<WixShortcut>
 			<Path>doc/api/db4o.chm</Path>
-			<Name>db4o API</Name>
+			<Name>Db4o API</Name>
 		</WixShortcut>
-		-->
 		
 		<!--		
 		<WixShortcut>
