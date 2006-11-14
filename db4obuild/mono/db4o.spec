@@ -25,7 +25,7 @@ echo %{buildroot}
 echo $RPM_BUILD_ROOT
 
 %build
-make buildtest
+make buildall
 
 %install
 make install
