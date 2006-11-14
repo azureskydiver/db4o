@@ -24,7 +24,7 @@
 			<fileset dir="${dir.j.tutorial.out.net}">
 				<include name="**/**" />
 			</fileset>
-		</copy>
+		</copy>.
 	</target>
 	
 	<target name="update-doc-net" depends="build" unless="mono">
