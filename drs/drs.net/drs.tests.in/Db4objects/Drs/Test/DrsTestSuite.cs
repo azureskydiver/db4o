@@ -10,10 +10,10 @@ namespace Db4objects.Drs.Test
 
         protected virtual System.Type[] TestCases()
         {
-            return All();
+            return Shared();
         }
 
-        protected virtual System.Type[] All()
+        protected virtual System.Type[] Shared()
         {
             return new System.Type[] { typeof(TheSimplest),
 			                           typeof(ReplicationEventTest), 
