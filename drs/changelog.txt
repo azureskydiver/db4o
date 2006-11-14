@@ -1,4 +1,8 @@
-Changes from dRS 1.1 to dRS 1.2
+Changes from dRS 1.2 dev to dRS 1.2 prod.
+=======================
+* Upgrade to Hibernate 3.2
+
+Changes from dRS 1.1 to dRS 1.2 dev.
 =======================
 * db4o-db4o replication on .net
 * Upgraded to db4o v5.7
