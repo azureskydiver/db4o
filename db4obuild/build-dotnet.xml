@@ -240,6 +240,7 @@
 			</else>
 		</if>
 		
+		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />		
 		<filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
 			<sources dir="${dir.dist.net.build.src}">
 				<include name="**/*.cs" />
