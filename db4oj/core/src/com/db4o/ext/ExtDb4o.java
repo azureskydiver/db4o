@@ -7,6 +7,8 @@ import com.db4o.config.*;
 
 /**
  * extended factory class with static methods to open special db4o sessions.
+ * 
+ * @sharpen.rename ExtDb4oFactory
  */
 public final class ExtDb4o extends Db4o {
    /**

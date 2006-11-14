@@ -21,6 +21,8 @@ import com.db4o.reflect.Reflector;
  * - provide access to the global configuration context {@link #configure()} <br>
  * - print the version number of this db4o version {@link #main(String[])} 
  * @see ExtDb4o ExtDb4o for extended functionality.
+ * 
+ * @sharpen.rename Db4oFactory
  */
 public class Db4o {
 	
