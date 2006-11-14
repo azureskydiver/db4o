@@ -20,10 +20,6 @@
 	
 	<target name="init">
 		<tstamp />
-		<mkdir dir="${dir.bin}" />
-		<!-- copy file="${file.dist.db4o.dll}"
-		      todir="${dir.bin}"
-		      overwrite="true" / -->
 	</target>
 
 	<target name="prepareRPM">
@@ -44,12 +40,9 @@
 		<filter token="gpguser" value="${gpg.user}"/>
 
 		<copy todir="${dir.mono.zip}/${db4o.name.short}">
-			<fileset dir="${dir.dist.mono}">				
-				<include name="dll/**" />
+			<fileset dir="${dir.dist.net.build}">				
 				<include name="doc/**/**" />
 				<include name="src/**/**" />
-				<include name="legacy/**/**" />
-				<include name="*.txt" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.mono.zip}/${db4o.name.short}" filtering="true">
