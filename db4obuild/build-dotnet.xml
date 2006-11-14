@@ -225,17 +225,17 @@
 			<equals arg1="${mono}" arg2="true" />
 			<then>
 				<copy todir="${dir.dist.net.build}">			
-					<fileset dir="${dir.config}">
-						<include name="db4o.license.txt" />
-						<include name="README.txt" />
+					<fileset dir="${dir.config}/mono">
+						<include name="COPYING" />
+						<include name="README" />
 					</fileset>
 				</copy>
 			</then>
 			<else>
 				<copy todir="${dir.dist.net.build}">			
-					<fileset dir="${dir.config}">
-						<include name="db4o.license.windows.txt" />
-						<include name="README.windows.txt" />
+					<fileset dir="${dir.config}/net">
+						<include name="db4o.license.txt" />
+						<include name="README.txt" />
 					</fileset>
 				</copy>
 			</else>
