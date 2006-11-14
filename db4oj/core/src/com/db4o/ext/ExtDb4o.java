@@ -10,7 +10,7 @@ import com.db4o.config.*;
  * 
  * @sharpen.rename ExtDb4oFactory
  */
-public final class ExtDb4o extends Db4o {
+public class ExtDb4o extends Db4o {
    /**
      * opens an {@link ObjectContainer} for in-memory use .
 	 * <br><br>In-memory ObjectContainers are useful for maximum performance
