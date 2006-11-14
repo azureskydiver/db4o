@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test;
 
+import java.util.Iterator;
+
 import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.*;
@@ -36,7 +38,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	private void replicateQueryingFrom(ReplicationSession replication, ReplicationProvider origin, ReplicationProvider other) {
 		ReplicationConflictException exception = null;
 
-		ObjectSet changes = origin.objectsChangedSinceLastReplication();
+		Iterator changes = origin.objectsChangedSinceLastReplication().iterator();
 		while (changes.hasNext()) {
 			Object changed = changes.next();
 			try {
@@ -111,7 +113,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 
 	private void checkEmpty(TestableReplicationProviderInside provider) {
-		if (provider.getStoredObjects(Replicated.class).hasNext())
+		if (provider.getStoredObjects(Replicated.class).iterator().hasNext())
 			throw new RuntimeException(provider.getName() + " is not empty");
 	}
 
@@ -256,8 +258,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 
 	private Replicated find(TestableReplicationProviderInside container, String name) {
-		ObjectSet storedObjects = 
-			container.getStoredObjects(Replicated.class);
+		Iterator storedObjects = container.getStoredObjects(Replicated.class).iterator();
 
 		int resultCount = 0;
 		Replicated result = null;

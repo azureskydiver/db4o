@@ -67,7 +67,7 @@ public class ReplicationEventTest extends DrsTestCase {
 	}
 
 	private void ensureNotExist(TestableReplicationProviderInside provider, Class type) {
-		Assert.isTrue(! provider.getStoredObjects(type).hasNext());
+		Assert.isTrue(! provider.getStoredObjects(type).iterator().hasNext());
 	}
 
 	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {

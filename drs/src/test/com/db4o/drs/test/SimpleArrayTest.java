@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test;
 
+import java.util.Iterator;
+
 import com.db4o.ObjectSet;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
 
@@ -101,8 +103,9 @@ public class SimpleArrayTest extends DrsTestCase {
 
 		int i = 0;
 		ObjectSet objectSet = provider.getStoredObjects(SimpleArrayHolder.class);
-		while (objectSet.hasNext()) {
-			SimpleArrayHolder lh = (SimpleArrayHolder) objectSet.next();
+		Iterator iterator = objectSet.iterator();
+		while (iterator.hasNext()) {
+			SimpleArrayHolder lh = (SimpleArrayHolder) iterator.next();
 			Assert.areEqual(holderNames[i], lh.getName());
 			//Test.ensure(holderNames[i].equals(lh.getName()));
 
