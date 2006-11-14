@@ -4,7 +4,7 @@ namespace Db4objects.Drs.Test
 {
     public class CollectionHandlerImplTest : Db4objects.Drs.Test.DrsTestCase
     {
-        private Db4objects.Db4o.reflect.Reflector _reflector = Db4objects.Db4o.Drs.Inside.ReplicationReflector
+        private Db4objects.Db4o.Reflect.IReflector _reflector = Db4objects.Drs.Inside.ReplicationReflector
             .GetInstance().Reflector();
 
         private Db4objects.Drs.Inside.CollectionHandlerImpl _collectionHandler = new Db4objects.Drs.Inside.CollectionHandlerImpl
