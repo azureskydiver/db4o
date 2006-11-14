@@ -261,9 +261,35 @@
 		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
 		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
 		<copy-bin-set suffix="-legacy" srcdir="${dir.dist.dll}/legacy" />
-	
-		<mkdir dir="${dir.dist.net.build}/doc/api" />
 		
+		<copy todir="${dir.dist.net.build.tutorial}">
+			<fileset dir="${dir.n.tutorial.bin}">
+				<include name="**/**" />
+				<exclude name="**/*.pdb" />
+			</fileset>
+		</copy>
+		
+		<!--
+		<copy todir="${dir.dist.net.build.tutorial}/vb">
+			<fileset dir="${dir.j.tutorial.out.vb}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+		-->
+
+		<copy todir="${dir.dist.net.build}">			
+			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
+			<fileset dir="${dir.config}" includes="README.txt" />
+		</copy>
+		
+		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
+			<sources dir="${dir.dist.net.build.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/Libs/**" />
+			</sources>
+		</filehead>
+	
+		<mkdir dir="${dir.dist.net.build}/doc/api" />		
 		<if>
 			<equals arg1="${mono}" arg2="true" />
 			<then>		
@@ -311,7 +337,7 @@
 	<target name="build-net1" depends="configure-net1, build-all">
 	</target>
 	
-	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-legacy">
+	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial, build-legacy">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -394,7 +420,12 @@
 				<include name="*.dll" />
 			</reference>
 		</csc>
-	</target>	
+	</target>
+
+	<target name="build-tutorial" depends="build-tools" unless="skip.tutorial">
+		<ant antfile="build-dotnet-tutorial.xml">
+		</ant>
+	</target>
 	
 	<target name="build-legacy" depends="init, sharpen-legacy">
 		<fileset
