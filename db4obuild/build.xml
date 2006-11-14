@@ -1703,8 +1703,8 @@
 	
 	<target name="old-buildmono2" depends="zipmono2-pascalcase" description="Full Mono build with generics (now PascalCase)" />
 	
-	<target name="buildmono2">
-		<ant antfile="build-dotnet.xml" target="build" />
+	<target name="buildmono2" depends="clean, buildjava">
+		<ant antfile="build-dotnet.xml" target="package" />
 	</target>
 
 	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />

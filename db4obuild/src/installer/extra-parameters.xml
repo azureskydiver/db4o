@@ -7,6 +7,12 @@
 			<Name>Db4o Tutorial</Name>
 		</WixShortcut>
 		
+		<!--
+		<WixShortcut>
+			<Path>doc/reference/default.htm</Path>
+			<Name>Db4o Reference</Name>
+		</WixShortcut>
+		-->
 		
 		<WixShortcut>
 			<Path>doc/api/db4o.chm</Path>
