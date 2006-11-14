@@ -240,7 +240,7 @@
 			</else>
 		</if>
 		
-		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
+		<filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
 			<sources dir="${dir.dist.net.build.src}">
 				<include name="**/*.cs" />
 				<exclude name="**/Libs/**" />
