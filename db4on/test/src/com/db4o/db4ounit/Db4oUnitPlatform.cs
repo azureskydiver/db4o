@@ -16,7 +16,7 @@ namespace com.db4o.db4ounit
 	    {
 	        if (a_field.IsStatic) return false;
             if (j4o.lang.reflect.Field.IsTransient(a_field)) return false;
-	        if (a_field.Name.Contains("$")) return false;
+	        if (a_field.Name.IndexOf("$") != -1) return false;
 	        return true;
 	    }
 	}
