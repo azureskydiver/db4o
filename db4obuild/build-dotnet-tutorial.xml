@@ -12,6 +12,10 @@
 	<property name="exe.name" value="${project.name}.exe" />	
 	<property name="base.project.dir" value="${dir.n.v6.tutorial}/${project.name}" />
 	
+	<condition property="mono" value="true">
+		<os family="unix" />
+	</condition>
+	
 	<target name="update-doc" depends="build">
 		<copy todir="${dir.n.tutorial.bin}">
 			<fileset dir="${dir.j.tutorial.out.net}">
@@ -20,7 +24,7 @@
 		</copy>
 	</target>
 	
-	<target name="build" depends="init">
+	<target name="build" depends="init" unless="mono">
 		<csc targetType="library"
 			destFile="${dir.n.tutorial.bin}/bin/${project.name}.Chapters.dll"
 			srcdir="${base.project.dir}.Chapters"
