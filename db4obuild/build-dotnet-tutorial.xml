@@ -21,7 +21,7 @@
 	
 	<target name="update-doc-mono" if="mono">
 		<copy todir="${dir.dist.net.build.tutorial}">
-			<fileset dir="${dir.j.tutorial.out.net}">
+			<fileset dir="${dir.j.tutorial.out.mono}">
 				<include name="**/**" />
 			</fileset>
 		</copy>
