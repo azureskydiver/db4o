@@ -221,7 +221,7 @@
 	<target name="prepare-package-structure" depends="package-sources, package-binaries, package-docs">
 	
 		<if>
-			<equals arg1="mono" arg2="true" />
+			<equals arg1="${mono}" arg2="true" />
 			<then>
 				<copy todir="${dir.dist.net.build}">			
 					<fileset dir="${dir.config}">
