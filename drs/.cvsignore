@@ -4,4 +4,4 @@ test
 build
 dist
 temp
-machine.properties
+*machine.properties
