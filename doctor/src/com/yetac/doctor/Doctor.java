@@ -11,9 +11,10 @@ import com.yetac.doctor.applet.*;
 import com.yetac.doctor.workers.*;
 
 public class Doctor extends Task {
+	
+	public final static String DEFAULT_PACKAGE_PATH="com/db4o/f1";
     
 	public Doctor() {
-		System.out.println("*** CREATED DOCTOR TASK");
 	}
 	
     public static void main(String[] args){
@@ -88,6 +89,8 @@ public class Doctor extends Task {
     private String workspace;
     
     private String inputSource;
+    private String packagePath;
+    private boolean upperCaseDirectoryNames;
     
     private String sourceExtension;
     
@@ -257,7 +260,26 @@ public class Doctor extends Task {
         }
         return "C:\\WINDOWS\\Fonts\\VERDANA.TTF";
     }
+
+    public void setPackagePath(String path){
+        packagePath = path;
+    }
     
+    public String getPackagePath(){
+        if(packagePath != null){
+            return packagePath;
+        }
+        return DEFAULT_PACKAGE_PATH;
+    }
+
+    public void setUpperCaseDirectoryNames(boolean upperCaseDirectoryNames){
+        this.upperCaseDirectoryNames=upperCaseDirectoryNames;
+    }
+    
+    public boolean getUpperCaseDirectoryNames(){
+        return upperCaseDirectoryNames;
+    }
+
     public String author(){
         return "db4objects Inc.";
     }
