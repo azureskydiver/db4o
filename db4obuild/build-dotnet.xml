@@ -422,7 +422,7 @@
 		</csc>
 	</target>
 
-	<target name="build-tutorial" depends="build-tools" unless="skip.tutorial">
+	<target name="build-tutorial" depends="build-tools">
 		<ant antfile="build-dotnet-tutorial.xml">
 		</ant>
 	</target>
