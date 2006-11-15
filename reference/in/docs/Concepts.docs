@@ -3,6 +3,10 @@
 .0 db4o Concepts ..
 
 .e ObjectContainer ..
+.e Persistent ..
+.e Query ..
+.e Structured ..
+.e Transactions ..
 .e Activation ..
 .e Constructors ..
 .e Identity ..
