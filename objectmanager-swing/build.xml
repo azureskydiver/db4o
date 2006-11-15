@@ -3,12 +3,13 @@
         ObjectManager build file
     </description>
 	<!-- set the appropriate db4o jar -->
-	<property name="db4o.version" value="db4o-5.7-java5.jar"/>
+	<property name="db4o.version" value="db4o-6.0-java5.jar"/>
 
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
     <property name="lib" location="lib"/>
     <property name="build" location="classes/production"/>
+    <property name="docs" location="docs"/>
 	<property name="dist.base" location="dist"/>
 	<property name="dist" location="${dist.base}/objectmanager-6.0"/>
     <property name="webstart" value="webstart"/>
@@ -67,7 +68,11 @@
             </manifest>
         </jar>
 
-    </target>
+		<copy todir="${dist}/docs">
+            <fileset dir="${docs}"/>
+        </copy>
+
+	</target>
     <target name="dist-webstart" depends="dist">
 
         <property name="wslib" value="${dist-webstart}/lib"/>
