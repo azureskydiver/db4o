@@ -23,7 +23,7 @@ Namespace Db4objects.Db4odoc.SelectivePersistence
 
         Public Shared Sub SaveObjects()
             File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim test As Test = New Test("Transient string", "Persistent string")
                 oc.Set(test)
@@ -36,7 +36,7 @@ Namespace Db4objects.Db4odoc.SelectivePersistence
         ' end SaveObjects
 
         Public Shared Sub RetrieveObjects()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = oc.Query()
                 query.Constrain(GetType(Object))

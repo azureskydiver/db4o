@@ -27,7 +27,7 @@ Namespace Db4objects.Db4odoc.Refactoring
 
         Public Shared Sub SetObjects()
             File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Rubens Barrichello")
                 oc.Set(pilot)
@@ -40,7 +40,7 @@ Namespace Db4objects.Db4odoc.Refactoring
         ' end SetObjects
 
         Public Shared Sub CheckDB()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = oc.Get(GetType(Pilot))
                 Dim i As Integer
@@ -55,7 +55,7 @@ Namespace Db4objects.Db4odoc.Refactoring
         ' end CheckDB
 
         Public Shared Sub SetNewObjects()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim pilot As PilotNew = New PilotNew("Rubens Barrichello", 99)
                 oc.Set(pilot)
@@ -68,15 +68,15 @@ Namespace Db4objects.Db4odoc.Refactoring
         ' end SetNewObjects
 
         Public Shared Sub ChangeClass()
-            Db4o.Configure().ObjectClass(GetType(Pilot)).Rename("com.db4odoc.f1.refactoring.PilotNew,db4o-reference-chapters")
-            Db4o.Configure().ObjectClass(GetType(PilotNew)).ObjectField("_name").Rename("_identity")
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).Rename("com.db4odoc.f1.refactoring.PilotNew,db4o-reference-chapters")
+            Db4oFactory.Configure().ObjectClass(GetType(PilotNew)).ObjectField("_name").Rename("_identity")
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             oc.Close()
         End Sub
         ' end ChangeClass
 
         Public Shared Sub RetrievePilotNew()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim q As IQuery = oc.Query()
                 q.Constrain(GetType(PilotNew))

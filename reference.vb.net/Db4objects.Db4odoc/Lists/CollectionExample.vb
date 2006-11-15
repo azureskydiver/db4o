@@ -18,7 +18,7 @@ Namespace Db4objects.Db4odoc.Lists
 
         Public Shared Sub SetTeam()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim ferrariTeam As Team = New Team()
                 ferrariTeam.Name = "Ferrari"
@@ -40,7 +40,7 @@ Namespace Db4objects.Db4odoc.Lists
 
 
         Public Shared Sub UpdateTeam()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Team))
@@ -49,7 +49,7 @@ Namespace Db4objects.Db4odoc.Lists
                 If result.HasNext() Then
                     Dim ferrariTeam As Team = CType(result.Next(), Team)
 
-                    Dim pilot As evaluations.Pilot = New evaluations.Pilot("David Schumacher", 100)
+                    Dim pilot As Evaluations.Pilot = New Evaluations.Pilot("David Schumacher", 100)
                     ferrariTeam.UpdatePilot(1, pilot)
 
                     db.Set(ferrariTeam)

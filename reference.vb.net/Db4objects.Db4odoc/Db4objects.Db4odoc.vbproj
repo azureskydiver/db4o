@@ -138,6 +138,8 @@
     <Compile Include="Remote\Car.vb" />
     <Compile Include="Remote\RemoteExample.vb" />
     <Compile Include="Remote\UpdateServer.vb" />
+    <Compile Include="Replication\Pilot.vb" />
+    <Compile Include="Replication\ReplicationExample.vb" />
     <Compile Include="SelectivePersistence\FieldTransient.vb" />
     <Compile Include="SelectivePersistence\MarkTransientExample.vb" />
     <Compile Include="SelectivePersistence\Test.vb" />
@@ -167,6 +169,10 @@
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\svntest2\drs\drs.csproj">
+      <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
+      <Name>drs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>

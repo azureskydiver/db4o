@@ -27,7 +27,7 @@ Namespace Db4objects.Db4odoc.Reflections
 
         Public Shared Sub SetCars()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
@@ -46,7 +46,7 @@ Namespace Db4objects.Db4odoc.Reflections
         ' end SetCars
 
         Public Shared Sub GetCars()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -63,7 +63,7 @@ Namespace Db4objects.Db4odoc.Reflections
         ' end GetCars
 
         Public Shared Sub GetCarInfo()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(New Car("BMW"))
                 If result.Size() < 1 Then
@@ -101,7 +101,7 @@ Namespace Db4objects.Db4odoc.Reflections
 
         Public Shared Sub GetReflectorInfo()
 
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim ref As IReflector
                 ref = db.Ext().Reflector()
@@ -125,8 +125,8 @@ Namespace Db4objects.Db4odoc.Reflections
 
         Public Shared Sub TestReflector()
             Dim logger As LoggingReflector = New LoggingReflector()
-            Db4o.Configure().ReflectWith(logger)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Db4oFactory.Configure().ReflectWith(logger)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW")
                 Dim rc As IReflectClass

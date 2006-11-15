@@ -11,7 +11,7 @@ Namespace Db4objects.Db4odoc.ClientServer
     ''' StopServer. The StartServer instance is used as a MessageRecipient 
     ''' and reacts to receiving an instance of a StopServer object.
     ''' Note that all user classes need to be present on the server side
-    ''' and that all possible Db4o.Configure() calls to alter the db4o
+    ''' and that all possible Db4oFactory.Configure() calls to alter the db4o
     ''' configuration need to be executed on the client and on the server.
     ''' </summary>
     Public Class StartServer

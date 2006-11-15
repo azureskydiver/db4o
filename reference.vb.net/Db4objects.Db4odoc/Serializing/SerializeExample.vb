@@ -21,7 +21,7 @@ Namespace Db4objects.Db4odoc.Serializing
 
         Public Shared Sub SetObjects()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 db.Set(car)
@@ -36,7 +36,7 @@ Namespace Db4objects.Db4odoc.Serializing
         Public Shared Sub ExportToXml()
             Dim carSerializer As XmlSerializer = New XmlSerializer(GetType(Car()))
             Dim xmlWriter As StreamWriter = New StreamWriter(XmlFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Car))
                 Dim cars() As Car = New Car(result.Size()) {}
@@ -61,7 +61,7 @@ Namespace Db4objects.Db4odoc.Serializing
             Dim db As IObjectContainer
             Dim i As Integer
             For i = 0 To cars.Length - 1 Step i + 1
-                db = Db4o.OpenFile(YapFileName)
+                db = Db4oFactory.OpenFile(YapFileName)
                 Try
                     Dim car As Car = CType(cars(i), Car)
                     db.Set(car)
@@ -69,7 +69,7 @@ Namespace Db4objects.Db4odoc.Serializing
                     db.Close()
                 End Try
             Next
-            db = Db4o.OpenFile(YapFileName)
+            db = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Pilot))
                 ListResult(result)

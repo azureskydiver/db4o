@@ -34,7 +34,7 @@ Namespace com.db4odoc.f1.semaphores
         ' make sure to call this on the server before opening the database
         ' to improve querying speed 
         Public Shared Sub Configure()
-            Dim objectClass As IObjectClass = Db4o.Configure().ObjectClass(GetType(ConnectedUser))
+            Dim objectClass As IObjectClass = Db4oFactory.Configure().ObjectClass(GetType(ConnectedUser))
             objectClass.ObjectField("userName").Indexed(True)
             objectClass.ObjectField("ipAddress").Indexed(True)
         End Sub

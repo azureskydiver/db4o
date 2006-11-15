@@ -18,7 +18,7 @@ Namespace Db4objects.Db4odoc.ClientServer
         Public Shared Sub SwitchExtClients()
             File.Delete(YapFileName)
             File.Delete(ExtFileName)
-            Dim server As IObjectServer = Db4o.OpenServer(YapFileName, 0)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
             Try
                 Dim client As IObjectContainer = server.OpenClient()
                 Dim car As Car = New Car("BMW")

@@ -21,7 +21,7 @@ Namespace Db4objects.Db4odoc.IOs
 
         Public Shared Sub SetObjects()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Rubens Barrichello")
                 db.Set(pilot)
@@ -47,8 +47,8 @@ Namespace Db4objects.Db4odoc.IOs
                 System.Console.WriteLine("Exception: " + ex.Message)
             End Try
 
-            Db4o.Configure().Io(adapter)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Db4oFactory.Configure().Io(adapter)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Pilot))
                 System.Console.WriteLine("Read stored results through memory file")
@@ -72,8 +72,8 @@ Namespace Db4objects.Db4odoc.IOs
         ' end GetObjectsInMem
 
         Public Shared Sub GetObjects()
-            Db4o.Configure().Io(New RandomAccessFileAdapter())
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Db4oFactory.Configure().Io(New RandomAccessFileAdapter())
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Pilot))
                 System.Console.WriteLine("Read stored results through disc file")
@@ -85,8 +85,8 @@ Namespace Db4objects.Db4odoc.IOs
         ' end GetObjects
 
         Public Shared Sub TestLoggingAdapter()
-            Db4o.Configure().Io(New LoggingAdapter())
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Db4oFactory.Configure().Io(New LoggingAdapter())
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Michael Schumacher")
                 db.Set(pilot)
@@ -95,14 +95,14 @@ Namespace Db4objects.Db4odoc.IOs
                 db.Close()
             End Try
 
-            db = Db4o.OpenFile(YapFileName)
+            db = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Pilot))
                 ListResult(result)
             Finally
                 db.Close()
             End Try
-            Db4o.Configure().Io(New RandomAccessFileAdapter())
+            Db4oFactory.Configure().Io(New RandomAccessFileAdapter())
         End Sub
         ' end TestLoggingAdapter
 
