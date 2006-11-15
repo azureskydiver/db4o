@@ -17,7 +17,7 @@ Namespace Db4objects.Db4odoc.Utility
 
         Public Shared Sub StoreSensorPanel()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 ' create a linked list with length 10
                 Dim list As SensorPanel = New SensorPanel().CreateList(10)
@@ -31,7 +31,7 @@ Namespace Db4objects.Db4odoc.Utility
 
         Public Shared Sub TestDescend()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 db.Ext().Configure().ActivationDepth(1)
                 System.Console.WriteLine("Object container activation depth = 1")
@@ -49,7 +49,7 @@ Namespace Db4objects.Db4odoc.Utility
 
         Public Shared Sub CheckActive()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 db.Ext().Configure().ActivationDepth(2)
                 System.Console.WriteLine("Object container activation depth = 2")
@@ -70,7 +70,7 @@ Namespace Db4objects.Db4odoc.Utility
             ' create a linked list with length 10
             Dim list As SensorPanel = New SensorPanel().CreateList(10)
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 ' store all elements with one statement, since all elements are new		
                 db.Set(list)

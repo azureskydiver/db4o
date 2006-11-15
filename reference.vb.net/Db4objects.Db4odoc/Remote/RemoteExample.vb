@@ -18,7 +18,7 @@ Namespace Db4objects.Db4odoc.Remote
 
         Public Shared Sub SetObjects()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim i As Integer
                 For i = 0 To 5 - 1 Step i + 1
@@ -37,7 +37,7 @@ Namespace Db4objects.Db4odoc.Remote
         Public Shared Sub UpdateCars()
             ' triggering mass updates with a singleton
             ' complete server-side execution
-            Dim server As IObjectServer = Db4o.OpenServer(YapFileName, 0)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
             Try
                 Dim client As IObjectContainer = server.OpenClient()
                 Dim q As IQuery = client.Query()
@@ -53,7 +53,7 @@ Namespace Db4objects.Db4odoc.Remote
         ' end UpdateCars
 
         Private Shared Sub CheckCars()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim q As IQuery = db.Query()
                 q.Constrain(GetType(Car))
@@ -66,7 +66,7 @@ Namespace Db4objects.Db4odoc.Remote
         ' end CheckCars
 
         Public Shared Sub UpdateCarsWithMessage()
-            Dim server As IObjectServer = Db4o.OpenServer(YapFileName, 0)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
             ' create message handler on the server
             server.Ext().Configure().SetMessageRecipient(New UpdateMessageRecipient())
             Try

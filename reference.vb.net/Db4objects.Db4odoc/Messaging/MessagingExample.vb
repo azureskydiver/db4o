@@ -10,7 +10,7 @@ Namespace Db4objects.Db4odoc.Messaging
         Public Shared ReadOnly YapFileName As String = "formula1.yap"
 
         Public Shared Sub ConfigureServer()
-            Dim objectServer As IObjectServer = Db4o.OpenServer(YapFileName, 0)
+            Dim objectServer As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
             objectServer.Ext().Configure().SetMessageRecipient(New SimpleMessageRecipient())
             Try
                 Dim clientObjectContainer As IObjectContainer = objectServer.OpenClient()

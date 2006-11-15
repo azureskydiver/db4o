@@ -15,7 +15,7 @@ Namespace Db4objects.Db4odoc.Persist
 
         Public Shared Sub SetObjects()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW")
                 db.Set(car)
@@ -27,7 +27,7 @@ Namespace Db4objects.Db4odoc.Persist
 
         Public Shared Sub MeasureCarTemperature()
             SetObjects()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Car))
                 If result.Size() > 0 Then
@@ -58,7 +58,7 @@ Namespace Db4objects.Db4odoc.Persist
         ' end MeasureCarTemperature
 
         Public Shared Sub ÑheckCar()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Car))
                 ListResult(result)

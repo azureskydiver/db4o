@@ -17,7 +17,7 @@ Namespace Db4objects.Db4odoc.Blobs
 
         Public Shared Sub StoreCars()
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car1 As Car = New Car("Ferrari")
                 db.Set(car1)
@@ -42,7 +42,7 @@ Namespace Db4objects.Db4odoc.Blobs
         ' end StoreImage
 
         Public Shared Sub RetrieveCars()
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))

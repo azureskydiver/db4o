@@ -49,8 +49,8 @@ Namespace Db4objects.Db4odoc.Indexes
         ' end FillUpDB
 
         Public Shared Sub PilotIndex()
-            Db4o.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
-            Db4o.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(False)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(False)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = db.Query()
@@ -70,8 +70,8 @@ Namespace Db4objects.Db4odoc.Indexes
         ' end PilotIndex
 
         Public Shared Sub PointsIndex()
-            Db4o.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(False)
-            Db4o.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(False)
+            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = db.Query()
@@ -92,8 +92,8 @@ Namespace Db4objects.Db4odoc.Indexes
 
 
         Public Shared Sub FullIndex()
-            Db4o.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
-            Db4o.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = db.Query()

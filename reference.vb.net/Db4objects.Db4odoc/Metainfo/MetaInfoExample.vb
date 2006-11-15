@@ -19,7 +19,7 @@ Namespace Db4objects.Db4odoc.MetaInfo
 
         Public Shared Sub SetObjects()
             File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 oc.Set(car)
@@ -32,7 +32,7 @@ Namespace Db4objects.Db4odoc.MetaInfo
         ' end SetObjects
 
         Public Shared Sub GetMetaObjects()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 System.Console.WriteLine("Retrieve meta information for class: ")
                 Dim sc As IStoredClass = oc.Ext().StoredClass(GetType(Car))
@@ -51,7 +51,7 @@ Namespace Db4objects.Db4odoc.MetaInfo
         ' end GetMetaObjects
 
         Public Shared Sub GetMetaObjectsInfo()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 System.Console.WriteLine("Retrieve meta information for field: ")
                 Dim sc As IStoredClass = oc.Ext().StoredClass(GetType(Car))

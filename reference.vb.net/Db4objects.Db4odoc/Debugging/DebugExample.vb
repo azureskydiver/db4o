@@ -16,7 +16,7 @@ Namespace Db4objects.Db4odoc.Debugging
         Public Shared Sub SetCars()
             Db4oFactory.Configure().MessageLevel(3)
             File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
@@ -30,7 +30,7 @@ Namespace Db4objects.Db4odoc.Debugging
             Finally
                 db.Close()
             End Try
-            Db4o.Configure().MessageLevel(0)
+            Db4oFactory.Configure().MessageLevel(0)
         End Sub
         ' end SetCars
 

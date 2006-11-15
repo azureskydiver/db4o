@@ -17,14 +17,14 @@ Namespace Db4objects.Db4odoc.Refactoring.Newclasses
         ' end Main
 
         Public Shared Sub ReopenDB()
-            Db4o.Configure().DetectSchemaChanges(False)
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Db4oFactory.Configure().DetectSchemaChanges(False)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             oc.Close()
         End Sub
         ' end ReopenDB
 
         Public Shared Sub TransferValues()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim sc As IStoredClass = oc.Ext().StoredClass(GetType(Pilot))
                 System.Console.WriteLine("Stored class:  " + sc.GetName())

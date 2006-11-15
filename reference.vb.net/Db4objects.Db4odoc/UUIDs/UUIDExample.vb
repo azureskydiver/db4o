@@ -32,7 +32,7 @@ Namespace Db4objects.Db4odoc.UUIDs
         Public Shared Sub TestChangeIdentity()
 
             File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Dim db As Db4oDatabase
             Dim oldSignature() As Byte
             Dim NewSignature() As Byte
@@ -45,7 +45,7 @@ Namespace Db4objects.Db4odoc.UUIDs
             Finally
                 oc.Close()
             End Try
-            oc = Db4o.OpenFile(YapFileName)
+            oc = Db4oFactory.OpenFile(YapFileName)
             Try
                 db = oc.Ext().Identity()
                 NewSignature = db.GetSignature()
@@ -73,9 +73,9 @@ Namespace Db4objects.Db4odoc.UUIDs
         ' end TestChangeIdentity
 
         Public Shared Sub SetObjects()
-            Db4o.Configure().ObjectClass(GetType(Pilot)).GenerateUUIDs(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).GenerateUUIDs(True)
             File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 oc.Set(car)
@@ -86,7 +86,7 @@ Namespace Db4objects.Db4odoc.UUIDs
         ' end SetObjects
 
         Public Shared Sub TestGenerateUUID()
-            Dim oc As IObjectContainer = Db4o.OpenFile(YapFileName)
+            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim query As IQuery = oc.Query()
                 query.Constrain(GetType(car))
