@@ -30,7 +30,7 @@ public class ReplicationExample {
 	public static void configureForExisting(){
 		Db4o.configure().objectClass(Pilot.class).enableReplication(true); 
 		try {
-			com.db4o.tools.defragment.Defragment.defrag("sample.yap");
+			com.db4o.defragment.Defragment.defrag("sample.yap");
 		} catch (IOException ex){
 			System.out .println(ex.toString());
 		}
