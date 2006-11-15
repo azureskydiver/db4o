@@ -6,6 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/drs"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
