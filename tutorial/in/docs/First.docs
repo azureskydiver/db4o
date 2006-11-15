@@ -16,10 +16,11 @@ Notice that this class does not contain any db4o-related code.
 
 .1 Opening the database ..
 
-To access a db4o database file or create a new one, call Db4o.openFile(), ._
-providing the path to your file as the parameter, to obtain an ObjectContainer ._
+To access a db4o database file or create a new one, call ._
+.? java Db4o.openFile() .. .? net Db4oFactory.OpenFile() .. .? mono Db4oFactory.OpenFile() .. and ._
+provide the path to your database file as the parameter, to obtain an ObjectContainer ._
 instance. ObjectContainer represents "The Database", and will be your primary ._
-interface to db4o. Closing the container with the #.close() method will close the ._
+interface to db4o. Closing the container with the #close() method will close the ._
 database file and release all resources associated with it.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#accessDb4o -run ..
@@ -70,7 +71,7 @@ For  .? java JDK 5 ..? .? net .NET 2.0 ..?  there also is a generics shortcut, u
 query method:
 
 .? java .c List <Pilot> pilots = db.query(Pilot.class); ..c ..?
-.? net .c IList <Pilot> pilots = db.query<Pilot>(typeof(Pilot)); ..c ..?
+.? net .c IList <Pilot> pilots = db.Query<Pilot>(typeof(Pilot)); ..c ..?
 
 To query for a pilot by name:
 

@@ -26,7 +26,7 @@ IObjectContainer: This is your db4o database.
 a client connection to a db4o server.
 - Every IObjectContainer owns one transaction. All work is transactional. ._
 When you open an IObjectContainer, you are in a transaction, when you ._
-commit() or rollback(), the next transaction is started immediately.
+Commit() or Rollback(), the next transaction is started immediately.
 - Every IObjectContainer maintains it's own references to stored and ._
 instantiated objects. In doing so, it manages object identities, and ._
 is able to achieve a high level of performance.
