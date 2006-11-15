@@ -4,7 +4,8 @@
 	<classpathentry kind="lib" path="lib/xstream-1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/drs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
