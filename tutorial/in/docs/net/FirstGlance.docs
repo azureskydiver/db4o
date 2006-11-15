@@ -5,22 +5,27 @@ let's get you familiar with some basics.
 .1 The db4o engine... ..
 The db4o object database engine consists of one single DLL. ._
 This is all that you need to program against. The versions ._
-supplied with the distribution can be found in /db4o-6.0/dll/.
+supplied with the distribution can be found in /db4o-6.0/bin/.
 
-db4o is available in two seperate distributions for Microsoft .NET. ._
-One distribution is for the .NET Framework 1.0/1.1 and the other is ._
-for the .NET Framework 2.0. Be sure to use the correct one for your ._
-project environment.
+db4o is available in multiple distributions for Microsoft .NET. ._
+One downloadable distribution is for the .NET Framework 1.0/1.1 ._
+and the other is for the .NET Framework 2.0. Be sure to download ._
+and use the correct one for your project environment.
 
-.b /db4o-6.0/dll/net/db4o.dll ..
-is the standard db4o engine for the .NET framework.
+.b /db4o-6.0/bin/net-1.1/Db4objects.Db4o.dll ..
+is the standard db4o engine for the .NET 1.1 framework.
 
-.b /db4o-6.0/dll/compact/db4o.dll ..
-is built for the .NET CompactFramework.
+.b /db4o-6.0/bin/compact-1.1/Db4objects.Db4o.dll ..
+is built for the .NET 1.1 CompactFramework.
+
+.b /db4o-6.0/bin/net-2.0/Db4objects.Db4o.dll ..
+is the standard db4o engine for the .NET 2.0 framework.
+
+.b /db4o-6.0/bin/compact-2.0/Db4objects.Db4o.dll ..
+is built for the .NET 2.0 CompactFramework.
 
 .1 Installation ..
 To use db4o in a development project, you only need to add one ._
-of the above db4o.dll files to your project references.
+of the above Db4objects.Db4o.dll files to your project references.
 
-.< ObjectManagerIntro ..
 .< APIOverview ..
