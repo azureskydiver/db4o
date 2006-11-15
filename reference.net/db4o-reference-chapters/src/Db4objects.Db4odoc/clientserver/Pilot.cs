@@ -1,4 +1,4 @@
-namespace Db4objects.Db4odoc.Clientserver
+namespace Db4objects.Db4odoc.ClientServer
 {
     public class Pilot
     {

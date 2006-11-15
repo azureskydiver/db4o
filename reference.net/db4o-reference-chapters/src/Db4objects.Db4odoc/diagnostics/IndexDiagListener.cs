@@ -11,8 +11,8 @@ namespace Db4objects.Db4odoc.Diagnostics
 		override public void OnDiagnostic(Db4objects.Db4o.Diagnostic.IDiagnostic d) 
 		{
             if (d.GetType().Equals(typeof(Db4objects.Db4o.Diagnostic.LoadedFromClassIndex)))
-			{
-				System.Diagnostics.Trace.WriteLine(d.ToString());
+            {
+				System.Console.WriteLine(d.ToString());
 			}
 		}
 	}

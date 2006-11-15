@@ -3,7 +3,7 @@ using System.Threading;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Messaging;
 
-namespace Db4objects.Db4odoc.Clientserver
+namespace Db4objects.Db4odoc.ClientServer
 {
     /// <summary>
     /// starts a db4o server with the settings from ServerConfiguration. 

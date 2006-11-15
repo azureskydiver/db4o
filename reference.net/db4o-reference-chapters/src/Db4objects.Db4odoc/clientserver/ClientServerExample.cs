@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Db4objects.Db4o;
 
-namespace Db4objects.Db4odoc.Clientserver
+namespace Db4objects.Db4odoc.ClientServer
 {
 	public class ClientServerExample
 	{

@@ -1,6 +1,6 @@
 /* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
-
 using System;
+using Sharpen.Lang ;
 
 namespace Db4objects.Db4odoc.Reflections
 {
@@ -29,17 +29,19 @@ namespace Db4objects.Db4odoc.Reflections
 
 		public virtual Db4objects.Db4o.Reflect.IReflectClass ForName(string className)
 		{
+            System.Type clazz = null;
 			try
-			{
-                System.Type clazz = System.Type.GetType(className);
-                Db4objects.Db4o.Reflect.IReflectClass rc = ForClass(clazz);
-				Console.WriteLine("ForName: " + clazz+" -> "+(rc== null ? "" : rc.GetName()));    
-				return rc;
-			}
-            catch (System.TypeLoadException e)
-			{
-				return null;
-			}
+            {
+                clazz = TypeReference.FromString(className).Resolve();
+            }
+            catch (System.Exception)
+            {
+            }
+            Db4objects.Db4o.Reflect.IReflectClass rc = clazz == null
+                ? null
+                : new Db4objects.Db4o.Reflect.Net.NetClass(_parent, clazz);
+            Console.WriteLine("ForName: " + clazz + " -> " + (rc == null ? "" : rc.GetName()));
+            return rc;
 		}
 
         public virtual Db4objects.Db4o.Reflect.IReflectClass ForObject(object a_object)
@@ -53,9 +55,20 @@ namespace Db4objects.Db4odoc.Reflections
 			return rc;
 		}
 
-        public virtual bool IsCollection(Db4objects.Db4o.Reflect.IReflectClass claxx)
+        public virtual bool IsCollection(Db4objects.Db4o.Reflect.IReflectClass candidate)
 		{
-			return false;
+            bool result = false;
+            if (candidate.IsArray())
+            {
+                result = false;
+            }
+            if (typeof(System.Collections.ICollection).IsAssignableFrom(
+                ((Db4objects.Db4o.Reflect.Net.NetClass)candidate).GetNetType()))
+            {
+                result = true;
+            }
+            Console.WriteLine("Type " + candidate.GetName () + " is Collection " + result);
+            return result;
 		}
 
 		public virtual object DeepClone(object context)
