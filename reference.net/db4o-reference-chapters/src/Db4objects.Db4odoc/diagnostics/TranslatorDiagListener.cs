@@ -12,7 +12,7 @@ namespace Db4objects.Db4odoc.Diagnostics
 		{
             if (d.GetType().Equals(typeof(Db4objects.Db4o.Diagnostic.DescendIntoTranslator)))
 			{
-				System.Diagnostics.Trace.WriteLine(d.ToString());
+				System.Console.WriteLine(d.ToString());
 			}
 		}
 	}

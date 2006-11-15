@@ -1,4 +1,4 @@
-namespace Db4objects.Db4odoc.Clientserver
+namespace Db4objects.Db4odoc.ClientServer
 {
     /// <summary>
     /// Configuration used for StartServer and StopServer.

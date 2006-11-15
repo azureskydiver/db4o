@@ -137,7 +137,7 @@ namespace Db4objects.Db4odoc.Reflections
 		}
 		// end GetReflectorInfo
 		
-		public  void TestReflector()
+		public static  void TestReflector()
 		{
 			LoggingReflector logger = new LoggingReflector();
 			Db4oFactory.Configure().ReflectWith(logger);

@@ -1,6 +1,6 @@
 using System;
 
-namespace Db4objects.Db4odoc.Clientserver
+namespace Db4objects.Db4odoc.ClientServer
 {   
     public class TemperatureSensorReadout : SensorReadout
     {

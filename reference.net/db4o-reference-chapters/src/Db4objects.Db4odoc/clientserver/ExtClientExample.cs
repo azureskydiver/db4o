@@ -4,7 +4,7 @@ using System.IO;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 
-namespace Db4objects.Db4odoc.Clientserver
+namespace Db4objects.Db4odoc.ClientServer
 {
 	public class ExtClientExample
 	{

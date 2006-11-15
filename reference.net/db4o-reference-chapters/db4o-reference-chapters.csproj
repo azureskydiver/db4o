@@ -10,25 +10,24 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>db4o-reference-chapters</AssemblyName>
+    <AssemblyName>Db4objects.Db4odoc</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
-    <OutputType>Library</OutputType>
-    <RootNamespace>db4o_reference_chapters</RootNamespace>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Db4objects.Db4odoc.ExamplesRunner</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\bin\bin\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -158,6 +157,7 @@
     <Compile Include="src\Db4objects.Db4odoc\debugging\DebugExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Defragmentation\DefragmentExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\diagnostics\ArbitraryQuery.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -239,6 +239,7 @@
     <Compile Include="src\Db4objects.Db4odoc\evaluations\TranslatorExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\ExamplesRunner.cs" />
     <Compile Include="src\Db4objects.Db4odoc\identity\Car.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -366,6 +367,8 @@
     <Compile Include="src\Db4objects.Db4odoc\remote\UpdateServer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\replication\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\replication\ReplicationExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\FieldTransient.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -437,6 +440,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\svntest2\drs\drs.csproj">
+      <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
+      <Name>drs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
