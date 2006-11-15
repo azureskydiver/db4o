@@ -724,6 +724,7 @@
 		</ant>
 	</target>
 
+	<!-- unused, code depends on dRS -->
 	<target name="compilejreference" depends="compilecorejava" description="Compile Db4o Java reference sources">
 		<mkdir dir="${dir.dist.classes.reference}" />
 		<antcall target="copyjava5" />
@@ -1691,7 +1692,7 @@
 		
 	</target>
 	
-	<target name="doctor" depends="init, compilecorejava, compilejtutorial, compilejreference" description="Run all doctor tasks">
+	<target name="doctor" depends="init, compilecorejava, compilejtutorial" description="Run all doctor tasks">
 		<ant antfile="run-doctor.xml" />
 	</target>
 
