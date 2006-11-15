@@ -32,10 +32,12 @@
 			<fileset dir="${dir.dist.classes.tutorial}" includes="com/db4o/f1/**/*.class" />
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.tutorial.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+<!--
 		<jar destfile="${file.reference.jar}">
 			<fileset dir="${dir.dist.classes.reference}" includes="com/db4odoc/f1/**/*.class" />
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.reference.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+-->
 		<copy todir="${dir.dist.doctor}" overwrite="true">
 			<fileset file="${file.nqopt.jar}" />
 			<fileset file="${file.bloat.jar}" />
