@@ -9,22 +9,7 @@ import java.util.regex.Pattern;
 
 import com.yetac.doctor.Configuration;
 import com.yetac.doctor.applet.ExampleRunner;
-import com.yetac.doctor.cmd.Anchor;
-import com.yetac.doctor.cmd.Bold;
-import com.yetac.doctor.cmd.Center;
-import com.yetac.doctor.cmd.Command;
-import com.yetac.doctor.cmd.Comment;
-import com.yetac.doctor.cmd.Embed;
-import com.yetac.doctor.cmd.Graphic;
-import com.yetac.doctor.cmd.IgnoreCR;
-import com.yetac.doctor.cmd.Left;
-import com.yetac.doctor.cmd.Link;
-import com.yetac.doctor.cmd.NewPage;
-import com.yetac.doctor.cmd.Outline;
-import com.yetac.doctor.cmd.Right;
-import com.yetac.doctor.cmd.Source;
-import com.yetac.doctor.cmd.Text;
-import com.yetac.doctor.cmd.Variable;
+import com.yetac.doctor.cmd.*;
 import com.yetac.doctor.workers.DocsFile;
 import com.yetac.doctor.workers.Files;
 
@@ -159,6 +144,10 @@ public abstract class AbstractWriter extends Configuration implements
 
     public void write(Source command) throws Exception {
     }
+    
+    public void write(Xamine command) throws Exception{
+        write(command.text);
+    }
 
     public abstract void write(String str);
 
@@ -212,7 +201,7 @@ public abstract class AbstractWriter extends Configuration implements
         }
         
         String code = src.substring(startidx, endidx);
-        return formatMethod(methodName, code, full);
+        return formatMethod(methodName, code, full, true);
 	}
 
 
@@ -249,12 +238,13 @@ public abstract class AbstractWriter extends Configuration implements
         if(full) {
             methodsrc.append("}");
         }        
-        return formatMethod(methodName, methodsrc.toString(), full);
+        return formatMethod(methodName, methodsrc.toString(), full, false);
 	}
 
-	private String formatMethod(String methodName, String code, boolean full) {
+	private String formatMethod(String methodName, String code, boolean full, boolean vb) {
+		String commented = vb ? "' " : "// " ;
 		int depth=((full ? 1 : 2)+(files.task.variableIsTrue("net") ? 1 : 0))*4;
-		String result=(full ? "" : "["+methodName+"]\n\n")+code.trim();
+		String result=(full ? "" : commented + methodName+"\n\n")+code.trim();
         result=result.replaceAll("^\\s*","");
         result=result.replaceAll("\\t","    ");
         result=result.replaceAll("\\n {"+depth+"}","\n");

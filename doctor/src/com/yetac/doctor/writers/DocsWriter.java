@@ -54,6 +54,8 @@ public interface DocsWriter {
     public void write(Text command) throws Exception;
 
     public void write(Variable command) throws Exception;
+    
+    public void write(Xamine command) throws Exception;
 
     public void end();
 
