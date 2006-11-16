@@ -31,7 +31,7 @@ The transaction level in db4o is  .i read committed ..  . However, each ._
 client container maintains its own weak reference cache of already known ._
 objects. To make all changes committed by other clients immediately, we ._
 have to explicitly refresh known objects from the server. We will delegate ._
-this task to a specialized version of our listResult() method.
+this task to a specialized version of our .x listResult() .. method.
 
 .s com.db4o.f1.Util#listRefreshedResult +{} -run ..
 
@@ -89,17 +89,17 @@ to tell the server to do something.  The server may need to be signalled ._
 to perform a defragment or it may need to be signalled to shut itself ._
 down gracefully.
 
-This is configured by calling setMessageRecipient(), passing the object ._
+This is configured by calling .x setMessageRecipient() .. , passing the object ._
 that will process client-initiated messages.
 
 .s com.db4o.f1.chapter5.StartServer#run -run +{} ..s
 
-The message is received and processed by a processMessage() method:
+The message is received and processed by a .x processMessage() .. method:
 
 .s com.db4o.f1.chapter5.StartServer#processMessage -run +{} ..s
 
 Db4o allows a client to send an arbitrary signal or message to a server ._
-by sending a plain Java object to the server.  The server will receive ._
+by sending a plain object to the server.  The server will receive ._
 a callback message, including the object that came from the client. ._
 The server can interpret this message however it wants.
 
@@ -128,16 +128,16 @@ And last but not least, the client that stops the server.
 
 That's it, folks. No, of course it isn't. There's much more to db4o ._
 we haven't covered yet: schema evolution, custom persistence for your classes, ._
-writing your own query objects, etc. The following, more loosely coupled ._
-chapters will look into more advanced db4o features.
-
-This tutorial is work in progress. We will successively add chapters and ._
-incorporate feedback from the community into the existing chapters.
+writing your own query objects, etc. A much more thorough documentation is ._
+provided in the reference that you should have also received with the ._
+download.
 
 We hope that this tutorial has helped to get you started with db4o. How ._
 should you continue now?
 
-- Browse the remaining chapters.
+- You could browse the remaining chapters. They are a selection of themes ._
+from the reference that very frequently come up as questions in ._
+our .l http://forums.db4o.com/forums/ .. .
 
 - .i (Interactive version only) .. While this tutorial is basically sequential in ._
 nature, try to switch back and forth between the chapters and execute the ._
@@ -150,8 +150,8 @@ in full source code. Feel free to experiment with it.
 
 - I you're stuck, see if the FAQ can solve your problem, browse the information ._
 on our  .l http://www.db4o.com/ web site .. , check if your problem is submitted ._
-to  .l http://www.db4odev.com/bugzilla Bugzilla ..  or visit our forums at ._
-.l http://forums.db4o.com/forums/ .. .
+to  .l http://tracker.db4o.com/jira/secure/Dashboard.jspa Jira ..  or visit our ._
+forums at .l http://forums.db4o.com/forums/ .. .
 
 
 .1 Full source ..

@@ -2,22 +2,25 @@
 
 .b db4o is the native Java, .NET and Mono open source object database. ..
 
-This tutorial is intended to get you started with db4o. ._ 
-
-Before you start, please make sure that you have downloaded the latest ._
+This tutorial was written to get you started with db4o as quickly ._
+as possible. Before you start, please make sure that you have ._
+downloaded the latest ._
 db4o distribution from the  .l http://www.db4o.com db4objects website .. .
 
+.b developer.db4o.com ..
 You are invited to join the db4o community in the public ._
 .l http://developer.db4o.com/forums/default.aspx db4o forums ..  to ask ._
-for help at any time. You may also ._
-find the  .l http://developer.db4o.com/docs/kb.aspx db4o knowledgebase .. ._
-helpful for keyword searches.
+for help at any time. Please also try out ._
+the keyword search functionality on the  .l http://developer.db4o.com/docs/kb.aspx db4o knowledgebase .. .
 
-.b Java, .NET and Mono ..
-db4o is available for Java, for .NET and for Mono. This tutorial was ._
-written for  .? java Java ..?  .? net .NET ..?  .? mono Mono ..? . The structure of the ._
-other distributions may be considerably different, so please use the tutorial for ._
-the version that you plan to experiment with first. 
+.b Links ..
+Here are some further links on developer.db4o.com that ._
+you may find useful:
+.l http://files.db4o.com All Downloads ..
+.l http://developer.db4o.com/blogs/product_news/default.aspx Release Note Blog ..
+.l http://developer.db4o.com/Docs/SourceCodeAccess.aspx SVN Access ..
+.l http://developer.db4o.com/ProjectSpaces/view.aspx/ProjectSpaces Design Wiki ..
+.l http://developer.db4o.com/ProjectSpaces/default.aspx Community Projects ..
 
 .n
 .< DownloadContents ..

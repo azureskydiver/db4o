@@ -18,7 +18,7 @@ Db4o.configure().objectClass(Foo.class).objectField("bar").indexed(true); ..
 If the configuration is set in this way, an index on the Foo#bar field ._
 will be created (if not present already) the next time you open an
 ObjectContainer/ObjectServer and you use the Foo class the first time
-in your applcation.
+in your application.
 
 Contrary to all other  .l Configuration configuration calls ..  indexes ._
 - once created - will remain in a database even if the index configuration ._
@@ -43,7 +43,3 @@ for a fixed amount of objects (~10,000).
 
 (1) will be faster.
 (2) will keep memory consumption lower.
-
-.b Further reading ..
-To improve performance even further, consider reading about some of the ._
-.l Tuning ..  options discussed elsewhere in this tutorial.

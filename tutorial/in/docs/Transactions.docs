@@ -41,11 +41,10 @@ may have participated in a rollback transaction.
 
 .s com.db4o.f1.chapter5.TransactionExample#carSnapshotRollbackRefresh ..
 
-What is this ExtObjectContainer construct good for? Well, it provides some functionality ._
+What is this .x ExtObjectContainer .. construct good for? Well, it provides some functionality ._
 that is in itself stable, but the API may still be subject to change. As soon ._
 as we are confident that no more changes will occur,  .i ext ..  functionality ._
-will be transferred to the common ObjectContainer API. We will cover ._
-extended functionality in more detail in a later chapter.
+will be transferred to the common .x ObjectContainer .. API. 
 
 Finally, we clean up again.
 
