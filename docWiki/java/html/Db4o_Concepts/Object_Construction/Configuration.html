@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Configuration</h1>
+<p></p>
+
+<p>The instantiation mode can be configured globally or on a per class basis.</p>
+
+<span class="java"></p>
+<p>Java:<code>Db4o.configure().callConstructors(true)</code></p>
+<p></span> </p>
+
+ </p>
+
+<p>
+This will configure db4o to use constructors to reinstantiate any object from the database. (The default is <i>false</i>).</p>
+
+<span class="java"></p>
+<p>Java: <code>Db4o.configure().objectClass(Foo.class).callConstructor(true)</code></p>
+<p></span>
+
+
+
+<p>
+This will configure db4o to use constructor calls for this class and all its subclasses.</p></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-14T08:28:32 by Tetyana.
+				</div>
+  </body>
+</html>

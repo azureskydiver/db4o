@@ -1,0 +1,38 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>No lock file thread</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>No lock file thread</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+<p></p>
+
+
+
+<span class="net"></p>
+<p>.NET: <code>Db4oFactory.Configure().LockDatabaseFile(false)</code></p>
+<p></span>
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>
+will prevent the creation of a lock file thread on Java platforms without NIO (&lt; JDK 1.4.1).
+</p>
+<a name="Effect"></a><h2>Effect</h2>
+<p>
+If file locking is not available on the system, db4o will regularily write a timestamp lock information to the database file, to prevent other VM sessions from accessing the database file at the same time. Uncontrolled concurrent access would inevitably lead to corruption of the database file. If the application ensures that it can not be started multiple times against the database file, db4o file locking may not be necessary.</p>
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+<p>
+Database files can safely be opened from multiple sessions in readonly mode. Use:</p>
+
+
+<span class="net"></p>
+<p>.NET: <code>Db4oFactory.Configure().ReadOnly(true)</code></p>
+<p></span></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-15T08:50:28 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>The Translator API</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>The Translator API</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#ObjectTranslator">ObjectTranslator</a></li><li><a href ="#ObjectConstructor">ObjectConstructor</a></li></ul></li></ul></div></div></div><p></p>
+
+<p>So how do we get our object into the database, now that everything seems to fail? Db4o provides a way to specify a custom way of storing and retrieving objects through the ObjectTranslator and ObjectConstructor interfaces.</p>
+<a name="ObjectTranslator"></a><h2>ObjectTranslator</h2>
+<p>The ObjectTranslator API looks like this:</p>
+
+
+<span class="net"></p>
+<p>.NET:</p>
+<p><code>public Object OnStore(ObjectContainer container,Object applicationObject);</p><p>public void OnActivate(IObjectContainer container,object applicationObject,object storedObject);</p><p>public Type StoredClass()</code></p>
+<p></span>
+<p>The usage is quite simple: When a translator is configured for a class, db4o will call its onStore method with a reference to the database and the instance to be stored as a parameter and will store the object returned. This object's type has to be primitive from a db4o point of view and it has to match the type specification returned by storedClass().</p>
+<p>
+On retrieval, db4o will create a blank object of the target class (using the configured instantiation method) and then pass it on to onActivate() along with the stored object to be set up accordingly.
+</p>
+<a name="ObjectConstructor"></a><h2>ObjectConstructor</h2>
+<p>However, this will only work if the application object's class provides sufficient setters to recreate its state from the information contained in the stored object, which is not the case for our example class.</p>
+<p>
+For these cases db4o provides an extension to the ObjectTranslator interface, ObjectConstructor, which declares one additional method:</p>
+
+
+
+<span class="net"></p>
+<p>.NET: <code>public Object OnInstantiate(IObjectContainer container,object storedObject);</code></p>
+<p></span>
+<p>If db4o detects a configured translator to be an ObjectConstructor implementation, it will pass the stored class instance to the onInstantiate() method and use the result as a blank application object to be processed by onActivate().</p>
+<p>
+Note that, while in general configured translators are applied to subclasses, too, ObjectConstructor application object instantiation will not be used for subclasses (which wouldn't make much sense, anyway), so ObjectConstructors have to be configured for the concrete classes.
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2006-11-13T16:07:28 by Tetyana.
+				</div>
+  </body>
+</html>
