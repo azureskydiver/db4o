@@ -42,8 +42,8 @@ import com.funambol.framework.engine.source.SyncSource;
 import com.funambol.framework.engine.source.SyncSourceInfo;
 import com.funambol.framework.engine.source.SyncSourceException;
 import com.funambol.framework.engine.SyncItemImpl;
-import com.funambol.framework.filter.FilterClause;
 import com.funambol.framework.logging.Sync4jLogger;
+import com.funambol.framework.engine.source.SyncContext;
 
 /**
  * This class implements a <i>SyncSource</i> that supports db4o databases.
@@ -95,23 +95,29 @@ public class Db4oSyncSource extends Db4oSyncSourceBase implements SyncSource, Se
     
   }  
 
-  public void beginSync(Principal principal, int syncMode, FilterClause filter)
-      throws SyncSourceException{
+  public void beginSync(SyncContext syncContext)
+		throws SyncSourceException{
+	_log.info(String.format("Db4oSyncSource#beginSync(%1$s, %2$d, %3$s); ",
+			new Object[]{
+				syncContext.getPrincipal(), 
+				new Integer(syncContext.getSyncMode()), 
+				syncContext.getFilterClause()}));
 
-    _log.info(String.format("Db4oSyncSource#beginSync(%1$s, %2$d, %3$s); ",
-        new Object[]{principal, new Integer(syncMode), filter}));
-    
-    try{
-      
-      super.beginSync(false);
-    
-    }
-    catch (Sync4jException e){
-    
-      translateException(e);
-    
-    }
-    
+	try{
+  
+		super.beginSync(false);
+
+	}
+	catch (Sync4jException e){
+
+		translateException(e);
+
+	}
+
+  }
+  
+  public void commitSync() throws SyncSourceException{
+	  
   }
 
   public void endSync() throws SyncSourceException{

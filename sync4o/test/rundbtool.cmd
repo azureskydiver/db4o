@@ -1,1 +1,1 @@
-java -cp cookbook.jar;db4o-5.3-java1.2.jar com.db4o.sync4o.test.DataGenerator %1 %2 %3 %4 %5
+java -cp cookbook.jar;db4o-5.5-java1.2.jar com.db4o.sync4o.test.DataGenerator %1 %2 %3 %4 %5
