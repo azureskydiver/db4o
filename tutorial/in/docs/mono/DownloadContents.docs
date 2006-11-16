@@ -9,12 +9,6 @@ you will find the following directory structure on your machine:
 
 .g mono-rpm-dir.gif ..
 
-
-.n
-.b db4o-6.0-mono.tar.gz ..
-
-.g mono-tarball-dir.gif ..
-
 Please take a look at all the supplied documentation formats to choose ._
 the one that works best for you:
 .a APIDocumentation ..
@@ -33,7 +27,7 @@ The tutorial in HTML format. The Java and .NET db4o ._
 distributions also provide the HTML documentation with live ._
 execution capabilities.
 
-.b /usr/share/doc/packages/db4o/tutorial/db4o-5.x-tutorial.pdf .. 
+.b /usr/share/doc/packages/db4o/tutorial/db4o-6.x-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
 search capabilities.
 
