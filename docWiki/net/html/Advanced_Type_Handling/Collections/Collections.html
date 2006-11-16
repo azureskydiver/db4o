@@ -1,0 +1,31 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Collections</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collections</h1><P></P>
+<P><A title="Translators chapter" href="http://developer.db4o.com/DocsWiki/view.aspx/Reference/Mastering_db4o/Translators" target=_blank>Translators chapter </A>of the documentation explains why translators are necessary to store and retrieve some types of classes. Db4o uses translators internally to manage storing and retrieving of collections.</P>
+<P>Java collections were first implemented in JDK 1.2. Before that Vector implementation was used to store growable arrays of objects. Under the hood, when collection object is stored to the database different actions are taken for different versions of java:</P>
+<OL>
+<LI>before JDK1.2: collection class is translated with TVector class;</LI>
+<LI>after: collection is translated with TCollection, TMap, THashtable translators.</LI></OL>
+<P>In fact, the functionality of those translators is pretty much the same. On storing collection is transferred to an array of objects ( Object[] ) and that array gets stored to the database file. </P>
+<P>Map (Java), HashTable and SortedList for .NET objects are stores as an array of objects of special type:</P>
+<P><code>public class Entry<BR>{<BR>public Object key;<BR>public Object value;<BR>. . .<BR>}</code>&nbsp;</P>
+<P><I>OnInstantiate</I> method of collections' translators creates a new instance of respective collection or map and restores its values from the saved object array.</P>
+<P>It is easy to see that such implementation is not very efficient for searches/updates of a certain value in a collection, as the whole collection should be instantiated to access any of its elements.</P>
+<P><div class="topicList">More Reading:<ul>
+<li><p><a href="Built-in_db4o_collections.html" class="wikiLink">Built-in db4o collections</a></p></li>
+<li><p><a href="Fast_collections.html" class="wikiLink">Fast collections</a></p></li>
+</ul></div>
+</P></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-14T18:44:24 by Eric Falsken.
+				</div>
+  </body>
+</html>

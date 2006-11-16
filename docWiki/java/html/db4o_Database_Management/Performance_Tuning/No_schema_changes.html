@@ -1,0 +1,42 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>No schema changes</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>No schema changes</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+<p></p>
+
+<span class="java"></p>
+
+<p>Java: <code>Db4o.configure().detectSchemaChanges(false)</code></p>
+
+<p></span>
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>
+will prevent db4o from analysing the class structure upon opening a database file.</p>
+<a name="Effect"></a><h2>Effect</h2>
+<p>
+Upon system startup, db4o will use reflection to scan the structure of all persistent classes. This process can take some time, if a large number of classes are present in the database file. For the best possible startup performance on "warm" database files (all classes already analyzed in a previous startup), this feature can be turned off.</p>
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+<p>
+Instead of using one database file to store a huge and complex class structure, a system may be more flexible and faster, if multiple database files are used. In a client/server setup, database files can also be switched from the client side with</p>
+
+<span class="java"></p>
+
+<p>Java: <code>((ExtClient)objectContainer).switchToFile(databaseFile)</code></p>
+
+<p></span>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2006-11-15T08:53:49 by Tetyana.
+				</div>
+  </body>
+</html>
