@@ -25,34 +25,39 @@ The generated files will be found in the /sync4o/dist/ folder.
 2. Server Installation
 ----------------------
 Please refer to the Funambol documentation for comprehensive details on installing
-the Funambol Server and a server module.
+the Funambol Server and a server module. For this example we used the bundle
+funambol-3.0a.exe available in the download section of Funambol's website.
 
 The Funambol Server we have been using required the following:
 
-(a) Copy sync4o-3.0.1.s4j from 
+(a) First of all start the server (make sure the Funambol sever icon in the tray 
+turns green).
+Then copy sync4o-3.0.1.s4j from 
 /sync4o/dist/
 to 
 /FunambolServer/ds-server/modules
 
 
 (b) Edit the file
-/FunambolServer/ds-server/modules/install.properties
+/FunambolServer/ds-server/install.properties
 
-Add 'sync4o-3.0.1/lib/sync4o-3.0.1.jar' to the comma-separated list of the property 
-'modules-to-install' at the end of the file.
+Add 'sync4o-3.0.1' to the comma-separated list of the property 
+'modules-to-install' at the end of the file (don't forget the comma).
 
 
-(c) From the 
+(c)From the 
 /FunambolServer/ds-server/ directory 
 call
 /FunambolServer/ds-server/bin/install-modules.cmd 
-to reinstall the modules.
+to reinstall the modules:
 
 On a windows machine with the default installation issuing the following two
 commands will work:
 > cd C:\Program Files\Funambol\ds-server
-> "c:\Program Files\Funambol\ds-server\bin\install-modules" tomcat50
+> .\bin\install-modules tomcat50
 
+When prompted whether to recreate the database for module sync4o-3.0.1 answer
+yes (y) (you should get a "build sucessful" message).
 
 
 3. Create a sample server database
@@ -97,8 +102,8 @@ customer.jar JAR file.
 to the Tomcat common/lib directory. On our installation this was located at:
 /FunambolServer/tools/tomcat/common/lib
 
-(b) Start the Funambol Server. Launch the Funambol administration tool and
-log in.
+(b) Restart the Funambol Server (you should get a green tray icon again). 
+Launch the Funambol administration tool and log in.
 
 (c) Create a new SyncSource.
 Within the Funambal Admin Tool, navigate the management tree for the server

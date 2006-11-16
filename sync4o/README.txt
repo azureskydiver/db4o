@@ -3,6 +3,7 @@ GETTING STARTED
 This is the Sync4o connector for Funambol. It allows the Funambol synchronization
 server and clients to be used with the db4o object database.
 
+
 Licensing
 ---------
 Sync4o is released under the GNU Public License (GPL) Version 2. Please see the 
@@ -66,7 +67,8 @@ for the configuration and operation of Sync4o within the Funambol framework.
 
 Version Requirements
 --------------------
-Sync4o has been designed and built against Funambol 3.0 beta 1 and db4o 5.3. 
+Sync4o has been originally designed and built against Funambol 3.0 beta 1 and db4o 5.3
+and has recently been updated to work with the GA release of Funambol 3.0 and db4o 5.5.
 It will not work with earlier releases of db4o, though it should work with later 
 releases without problem. It is not likely to work with either earlier or later 
 releases of Funambol, as the SyncSource API that sync4o uses is under active 
@@ -95,3 +97,6 @@ http://www.db4objects.com
 
 sync4o may be used under the GNU General Public License, GPL.
 You should have received a copy of the GPL with the download.
+
+Original author of this software is Neil Macintosh <neil.macintosh@gmail.com>
+Adaptation to the GA release of Funambol 3.0 done by German Viscuso <germanviscuso@gmail.com>

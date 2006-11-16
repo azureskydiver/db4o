@@ -429,7 +429,7 @@ public class Db4oSyncSourceConfigPanel extends SourceManagementPanel implements
     final Db4oSyncSource source = new Db4oSyncSource();
     Db4oSyncSourceConfigPanel p = new Db4oSyncSourceConfigPanel();
     p.setManagementObject(new SyncSourceManagementObject(source, null, null,
-        null));
+        null, null));
     p.updateForm();
     p.setOpaque(true); // content panes must be opaque
     frame.setContentPane(p);
