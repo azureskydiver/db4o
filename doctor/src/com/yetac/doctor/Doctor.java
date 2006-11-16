@@ -470,4 +470,8 @@ public class Doctor extends Task {
             return name;
         }
     }
+    
+    public boolean isMonoOrDotNet(){
+    	return (variableIsTrue("net") || variableIsTrue("mono"));
+    }
 }
