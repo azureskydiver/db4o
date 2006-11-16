@@ -16,22 +16,22 @@ Notice that this class does not contain any db4o-related code.
 
 .1 Opening the database ..
 
-To access a db4o database file or create a new one, call ._
-.? java Db4o.openFile() .. .? net Db4oFactory.OpenFile() .. .? mono Db4oFactory.OpenFile() .. and ._
-provide the path to your database file as the parameter, to obtain an ObjectContainer ._
-instance. ObjectContainer represents "The Database", and will be your primary ._
-interface to db4o. Closing the container with the #close() method will close the ._
+To access a db4o database file or create a new one, call .x Db4o.openFile() .. and ._
+provide the path to your database file as the parameter, to obtain ._
+an .x ObjectContainer .. instance. .x ObjectContainer .. represents "The Database", ._
+and will be your primary ._
+interface to db4o. Closing the .x ObjectContainer .. with the .x #close() .. method will close the ._
 database file and release all resources associated with it.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#accessDb4o -run ..
 
 For the following examples we will assume that our environment takes care ._
-of opening and closing the ObjectContainer automagically, and stores the ._
+of opening and closing the .x ObjectContainer .. automagically, and stores the ._
 reference in a variable named 'db'.
 
 .1 Storing objects ..
 
-To store an object, we simply call set() on our database, passing ._
+To store an object, we simply call .x set() .. on our database, passing ._
 any object as a parameter.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#storeFirstPilot ..
@@ -51,8 +51,8 @@ db4o querying interface.
 When using Query-By-Example, you create a prototypical object for db4o to use as an example of what ._
 you wish to retrieve. db4o will retrieve all objects of the given type that contain the ._
 same (non-default) field values as the example. The results will be returned as an ._
-ObjectSet instance. We will use a convenience method 'listResult' to display the contents ._
-of our results:
+.x ObjectSet .. instance. We will use a convenience method .x #listResult() .. to display the contents ._
+of our result .x ObjectSet .. :
 
 .s com.db4o.f1.Util#listResult +{} -run ..
 
@@ -86,12 +86,12 @@ Of course there's much more to db4o queries. They will be covered in more depth 
 
 .1 Updating objects ..
 
-Updating objects is just as easy as storing them. In fact, you use the same set() method to update ._
-your objects: just call set() again after modifying any object.
+Updating objects is just as easy as storing them. In fact, you use the same .x set() .. method to update ._
+your objects: just call .x set() .. again after modifying any object.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#updatePilot ..
 
-Notice that we query for the object first. This is an importaint point. When you call set() to modify a ._
+Notice that we query for the object first. This is an importaint point. When you call .x set() .. to modify a ._
 stored object, if the object is not 'known' (having been previously stored or retrieved during the current session), ._
 db4o will insert a new object. db4o does this because it does not automatically match up objects to be ._
 stored, with objects previously stored. It assumes you are inserting a second object which happens to have ._
@@ -102,7 +102,7 @@ examples above and run them again.
 
 .1 Deleting objects ..
 
-Objects are removed from the database using the delete() method.
+Objects are removed from the database using the .x delete() .. method.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#deleteFirstPilotByName ..
 

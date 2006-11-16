@@ -19,7 +19,7 @@ The reference documentation is a complete compilation for ._
 experienced db4o users. It is maintained ._
 .l http://developer.db4o.com/DocsWiki/view.aspx/Docs online .. .
 
-.b db4o-6.0/doc/tutorial/db4o-tutorial.exe .. 
+.b db4o-6.0/doc/tutorial/Db4objects.Db4o.Tutorial.exe .. 
 This is the interactive tutorial application for .NET. Examples can ._
 be run "live" against a db4o database from within the application.
 

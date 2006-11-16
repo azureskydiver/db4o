@@ -86,8 +86,8 @@ End Class ..c
 A side note on the above syntax:
 For all dialects without support for generics, Native Queries ._
 work by convention. A class that extends the ._
-com.db4o.Predicate class is expected to have a boolean ._
-#match() or #Match() method with one parameter to describe the ._
+com.db4o.Predicate class is expected to have a ._
+boolean .x #match() .. method with one parameter to describe the ._
 class extent:
 
 .? java .c boolean match(Pilot candidate); ..c  ..?  ._
@@ -97,6 +97,7 @@ When using native queries, don't forget that modern integrated ._
 development environments (IDEs) can do all the typing ._
 work around the native query expression for you, if you use ._
 templates and autocompletion.
+
 
 Here is how to configure a Native Query template with Eclipse 3.1:
 From the menu, choose Window + Preferences + Java + Editor + Templates + New

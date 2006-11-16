@@ -10,7 +10,7 @@ a vehicle.
 
 .1 Storing structured objects ..
 
-To store a car with its pilot, we just call set() on our top level object, ._
+To store a car with its pilot, we just call .x set() .. on our top level object, ._
 the car. The pilot will be stored implicitly.
 
 .s com.db4o.f1.chapter2.StructuredExample#storeFirstCar -out ..
@@ -56,7 +56,7 @@ with a specific name:
 .? net Using .NET 2.0 syntax this is a lot simpler:
 
 .b C# .NET 2.0 ..
-.c [retrieveCarsByPilotNameNative]
+.c // retrieveCarsByPilotNameNative
 string pilotName = "Rubens Barrichello";
 List<Car> results = db.Query<Car>(delegate(Car car) {
     return car.Pilot.Name == pilotName; });
@@ -89,7 +89,7 @@ by a Car, where the Car model is 'Ferrari'":
 
 .1 Updating structured objects ..
 
-To update structured objects in db4o, we simply call set() on them again.
+To update structured objects in db4o, we simply call .x set() .. on them again.
 
 .s com.db4o.f1.chapter2.StructuredExample#updateCar ..
 
@@ -153,7 +153,7 @@ chapter.
 
 .1 Deleting structured objects ..
 
-As we have already seen, we call delete() on objects to get rid of them.
+As we have already seen, we call .x delete() .. on objects to get rid of them.
 
 .s com.db4o.f1.chapter2.StructuredExample#deleteFlat ..
 
@@ -174,7 +174,7 @@ right. Let's configure db4o to delete a car's pilot, too, when the car is delete
 .s com.db4o.f1.chapter2.StructuredExample#deleteDeepPart1 -out ..
 .s com.db4o.f1.chapter2.StructuredExample#deleteDeepPart2 ..
 
-Again: Note that all configuration must take place before the ObjectContainer is opened.
+Again: Note that all configuration must take place before the .x ObjectContainer .. is opened.
 
 Let's have a look at our pilots again.
 

@@ -4,7 +4,7 @@
 
 db4o provides a wide range of configuration methods to request ._
 special behaviour. For a complete list of all available methods ._
-see the API documentation for the com.db4o.config package/namespace.
+see the API documentation for the com.db4o.config package.
 
 Some hints around using configuration calls:
 
@@ -45,8 +45,6 @@ have to take place, before a database is created, before the ._
 first #openXXX() call. Some examples:
 .c Configuration conf = Db4o.configure();
 conf.blockSize(8);
-conf.encrypt(true);
-conf.password("yourEncryptionPasswordHere");
 conf.unicode(false); ..
 
 Configuration settings are  .b not ..  stored in db4o database files. ._
@@ -57,9 +55,3 @@ same global configuration on the server and on the client. To ._
 set this up nicely it makes sense to create one application class ._
 with one method that does all the db4o configuration and to deploy ._
 this class both to the server and to all clients.
-
-.b Further reading ..
-Some configuration switches are discussed in more detail in the following ._
-chapters:
-- .l Tuning ..
-- .l Indexes ..

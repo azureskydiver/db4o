@@ -82,15 +82,15 @@ Instead of dynamically activating subgraph elements, you can configure ._
 activation depth statically, too. We can tell our SensorReadout class ._
 objects to cascade activation automatically, for example.
 
-.s com.db4o.f1.chapter5.DeepExample#setActivationDepth ..
+.s com.db4o.f1.chapter5.DeepExample#setActivationDepth -out ..
 
 .s com.db4o.f1.chapter5.DeepExample#retrieveSnapshotsSequentially ..
 
 You have to be very careful, though. Activation issues are tricky. Db4o ._
 provides a wide range of configuration features to control activation ._
-depth at a very fine-grained level. You'll find those triggers in ._
-com.db4o.config.Configuration and the associated ObjectClass and ._
-ObjectField classes.
+depth at a very fine-grained level. You'll find those triggers ._
+in .x com.db4o.config.Configuration .. and the ._
+associated .x ObjectClass .. and .x ObjectField .. classes.
 
 Don't forget to clean up the database.
 

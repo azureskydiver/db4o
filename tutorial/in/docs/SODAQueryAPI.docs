@@ -16,7 +16,7 @@ is required, that's why SODA is explained here.
 .2 Simple queries ..
 
 Let's see how our familiar QBE queries are expressed with SODA. A new Query object ._
-is created through the #query() method of the ObjectContainer and we can add ._
+is created through the .x #query() .. method of the ObjectContainer and we can add ._
 Constraint instances to it. To find all Pilot instances, we constrain the ._
 query with the Pilot class object.
 
