@@ -1,6 +1,5 @@
 Sync4o Cookbook
 ---------------
-
 This file contains steps that should enable you to see Sync4o "in action"
 within the Funambol framework - working with a sample class and both the client
 and server SyncSources to synchronize data between a client and server database
@@ -11,11 +10,10 @@ We will use the com.example.Customer class included with sync4o
 
 1. Building Sync4o
 ------------------
-
-To build the connector, please use the Apache Ant script (build.xml) provided. 
+To build the connector, please use the Apache Ant script (build.xml) provided.
 
 The "pack" target will build all relevant source files and create a Funambol 
-server module (sync4o-3.0.1.s4j) and a .zip file sync4o-client-3.0.1.zip) 
+server module (sync4o-3.0.1.s4j) and a .zip file (sync4o-client-3.0.1.zip) 
 containing the .jar files necessary to build a Funambol client program that 
 uses sync4o.
 
@@ -42,7 +40,7 @@ to
 /FunambolServer/ds-server/install.properties
 
 Add 'sync4o-3.0.1' to the comma-separated list of the property 
-'modules-to-install' at the end of the file (don't forget the comma).
+'modules-to-install' at the end of the file (don't forget to add the comma).
 
 
 (c)From the 
@@ -90,7 +88,6 @@ contained in the database:
 
 4. Server Configuration
 ----------------------------
-
 The Funambol Server (and Sync4o server SyncSource that runs within it) must
 have access to the class that will be stored in a db4o database. In our
 cookbook example this is the com.example.Customer class, stored in the
@@ -137,8 +134,8 @@ primary key field, the class should then be labelled as
 
 (e) Press the 'Add' button at the very bottom of the UI (you may need to
 scroll down) to store the newly configured SyncSource instance. It should
-now be displayed in the treeview of the AdminTool as a leaf underneath the
-'Db4o SyncSource' node.
+now be displayed in the treeview of the AdminTool as a leaf called 'Cookbook'
+underneath the 'Db4o SyncSource' node.
 
 The Funambol Server is now ready to synchronize the test database.
 
@@ -198,6 +195,11 @@ As the client database does not exist yet, this will
 result in the creation of the client database and its population with the
 contents of the server database (in this case a single Customer record with
 id 1).
+
+You should get a 'Synchronization Done' message in the end. If you just get a
+'Modification Done' message make sure your firewall is not blocking alerts 
+sent to the server. If this was the case you can safely run 'runclient' again 
+once the firewall is fixed or turned off.
 
 To verify that the client and server have synchronized successfully, use the
 rundbtool script to view the contents of each database, using commands like:
