@@ -16,10 +16,14 @@ import java.util.List;
  * Time: 11:49:54 AM
  */
 public class DatabaseInspectorImpl implements DatabaseInspector {
+	
     private ObjectContainer oc;
+    
+    private final InsideDb4o inside;
 
     public DatabaseInspectorImpl(ObjectContainer oc) {
         this.oc = oc;
+        inside = new InsideDb4o(oc);
     }
 
     public int getNumberOfClasses() {
@@ -36,11 +40,7 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
     }*/
 
     public int getNumberOfObjectsForClass(String aClass) {
-        ReflectClass reflectClass = oc.ext().reflector().forName(aClass);
-        Query q = oc.query();
-        q.constrain(reflectClass);
-        List results = q.execute();
-        return results.size();
+    	return inside.getNumberOfObjectsForClass(aClass);
     }
 
     public long getSpaceFree() {
