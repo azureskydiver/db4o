@@ -24,6 +24,13 @@ public class InsideDb4o {
 	 * This should go into StoredClass.
 	 */
 	public int getNumberOfObjectsForClass(String name) {
+		
+		if(_stream.isClient()){
+			// no efficient way to do this for now.
+			// A dedicated method would have to be sent.
+			return 0;
+		}
+		
 		try{
 			return index(yapClass(name)).size(trans());
 		}catch (Exception e){
