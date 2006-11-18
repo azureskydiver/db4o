@@ -4,6 +4,7 @@ package com.db4o.inside.query;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -17,7 +18,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	
 	private boolean _checkDuplicates;
 	
-	public final IntArrayList _ids;
+	public IntArrayList _ids;
     
     public IdListQueryResult(Transaction trans, int initialSize){
     	super(trans);
@@ -83,6 +84,10 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	
 	public void loadFromClassIndex(YapClass clazz) {
 		final ClassIndexStrategy index = clazz.index();
+		if(index instanceof BTreeClassIndexStrategy){
+			BTree btree = ((BTreeClassIndexStrategy)index).btree();
+			_ids = new IntArrayList(btree.size(transaction()));
+		}
 		index.traverseAll(_transaction, new Visitor4() {
 			public void visit(Object a_object) {
 				add(((Integer)a_object).intValue());
@@ -140,6 +145,5 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	public int size() {
 		return _ids.size();
 	}
-
 	
 }
