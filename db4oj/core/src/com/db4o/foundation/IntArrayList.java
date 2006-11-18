@@ -22,6 +22,9 @@ public class IntArrayList implements Iterable4 {
     public void add(int a_value){
         if(i_count >= i_content.length){
         	int inc = i_content.length / 2;
+        	if(inc < 10){
+        		inc = 10;
+        	}
             int[] temp = new int[i_content.length + inc];
             System.arraycopy(i_content, 0, temp, 0, i_content.length);
             i_content = temp;
