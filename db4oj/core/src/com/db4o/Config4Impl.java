@@ -388,7 +388,9 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
             _config.put(REFLECTOR,reflector);
             configuredReflector.setParent(reflector);
 		}
-		if(! reflector.hasTransaction() && i_stream != null){
+		// FIXME: hasTransaction check has been removed to quickfix COR-288.
+		// implement better, more generic solution as described in Jira comment
+		if(/* ! reflector.hasTransaction() && */i_stream != null){
 			reflector.setTransaction(i_stream.getSystemTransaction());
 		}
 		return reflector;
