@@ -83,8 +83,6 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 	
 	private final static KeySpec LOCK_FILE=new KeySpec(true);
     
-	private final static KeySpec MESSAGE_LEVEL=new KeySpec(YapConst.NONE);
-    
 	private final static KeySpec MESSAGE_RECIPIENT=new KeySpec(null);
     
 	private final static KeySpec OPTIMIZE_NQ=new KeySpec(true);
@@ -98,8 +96,6 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 	private static final KeySpec PREFETCH_OBJECT_COUNT = new KeySpec(10);
 	
 	private final static KeySpec READ_AS=new KeySpec(new Hashtable4(16));
-    
-	private final static KeySpec READ_ONLY=new KeySpec(false);
     
 	private final static KeySpec CONFIGURED_REFLECTOR=new KeySpec(null);
     
@@ -133,7 +129,12 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 	private final static KeySpec ALIASES=new KeySpec(null);
 
 	//  is null in the global configuration until deepClone is called
-	private YapStream        i_stream;                                                   
+	private YapStream        i_stream;
+	
+	// The following are very frequently being asked for, so they show up in the profiler. 
+	// Let's keep it out of the Hashtable.
+	private int _messageLevel;
+	private boolean	_readOnly;
 
 
     public int activationDepth() {
@@ -223,6 +224,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
     public Object deepClone(Object param) {
         Config4Impl ret = new Config4Impl();
         ret._config=(KeySpecHashtable4)_config.deepClone(this);
+        ret._messageLevel = _messageLevel;
+        ret._readOnly = _readOnly;
         return ret;
     }
     
@@ -320,7 +323,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
     }
 
     public void messageLevel(int level) {
-    	_config.put(MESSAGE_LEVEL,level);
+    	_messageLevel = level;
         if (outStream() == null) {
             setOut(System.out);
         }
@@ -373,7 +376,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 
     public void readOnly(boolean flag) {
         globalSettingOnly();
-        _config.put(READ_ONLY,flag);
+        _readOnly = flag;
     }
 
 	GenericReflector reflector() {
@@ -697,7 +700,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 	}
 
 	int messageLevel() {
-		return _config.getAsInt(MESSAGE_LEVEL);
+		return _messageLevel;
 	}
 
 	public MessageRecipient messageRecipient() {
@@ -733,7 +736,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 	}
 
 	boolean isReadOnly() {
-		return _config.getAsBoolean(READ_ONLY);
+		return _readOnly;
 	}
 
 	Collection4 rename() {

@@ -592,11 +592,11 @@ public final class BTreeNode extends YapMeta{
     }
     
     Object key(int index){
-        BTreePatch patch = keyPatch(index);
-        if(patch == null){
-            return _keys[index];
+    	Object obj = _keys[index]; 
+        if( obj instanceof BTreePatch){
+            return ((BTreePatch)obj).getObject();
         }
-        return patch.getObject();
+        return obj;
     }
     
     Object key(Transaction trans, YapReader reader, int index){

@@ -74,9 +74,11 @@ public final class EventDispatcher {
 					if (null == method) {
 						method = classReflector.getMethod(toPascalCase(events[i]), parameterClasses);
 					}
-					methods[i] = method;
-					if(dispatcher == null){
-						dispatcher = new EventDispatcher(methods);
+					if( method != null){
+						methods[i] = method;
+						if(dispatcher == null){
+							dispatcher = new EventDispatcher(methods);
+						}
 					}
 				}catch(Throwable t){}
 			}
