@@ -1050,6 +1050,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 	private Config4Impl initializeConfig(Configuration config) {
 		Config4Impl impl=((Config4Impl)config);
 		impl.stream(_this);
+		impl.reflector().setTransaction(getSystemTransaction());
 		return impl;
 	}
 
