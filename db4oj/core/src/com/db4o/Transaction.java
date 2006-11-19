@@ -76,56 +76,73 @@ public class Transaction {
         });
         
     }
+    
+    private boolean noObjectsToDelete(){
+    	final boolean[] none = { true };
+        i_delete.traverse(new Visitor4() {
+            public void visit(Object a_object) {
+                DeleteInfo info  = (DeleteInfo)a_object;
+                if(info._delete){
+                	none[0] = false;
+                }
+            }
+        });
+        return none[0];
+    }
 
     public void beginEndSet() {
-        checkSynchronization();
-        if (i_delete != null) {
-            final boolean[] foundOne = { false};
-            final Transaction finalThis = this;
-            do {
-                foundOne[0] = false;
-                Tree delete = i_delete;
-                i_delete = null;
-                
-                
-                delete.traverse(new Visitor4() {
-                    public void visit(Object a_object) {
-                        DeleteInfo info  = (DeleteInfo)a_object;
-                        if(! info._delete){
-                            i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
-                        }
-                    }
-                });
+    	
+    	if (i_delete == null || noObjectsToDelete()) {
+    		i_delete = null;
+    		i_writtenUpdateDeletedMembers = null;
+    		return;
+    	}
+    	
+        final boolean[] foundOne = { false };
 
-                
-                delete.traverse(new Visitor4() {
-                    public void visit(Object a_object) {
-                        DeleteInfo info  = (DeleteInfo)a_object;
-                        if(info._delete){
-                            foundOne[0] = true;
-                            Object obj = null;
-                            if(info._reference != null){
-                                obj = info._reference.getObject();
-                            }
-                            if(obj == null){
-                                
-                                // This means the object was gc'd.
-                                
-                                // Let's try to read it again, but this may fail in CS mode
-                                // if another transaction has deleted it. We are taking care
-                                // of possible nulls in #delete4().
-                                
-                                Object[] arr  = finalThis.stream().getObjectAndYapObjectByID(finalThis, info._key);
-                                obj = arr[0];
-                                info._reference = (YapObject)arr[1]; 
-                            }
-                            stream().delete4(finalThis,info._reference ,info._cascade, false);
-                        }
+        do {
+            foundOne[0] = false;
+            
+            Tree delete = i_delete;
+            i_delete = null;
+            
+            delete.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    DeleteInfo info  = (DeleteInfo)a_object;
+                    if(! info._delete){
                         i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
                     }
-                });
-            } while (foundOne[0]);
-        }
+                }
+            });
+            
+            delete.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    DeleteInfo info  = (DeleteInfo)a_object;
+                    if(info._delete){
+                        foundOne[0] = true;
+                        Object obj = null;
+                        if(info._reference != null){
+                            obj = info._reference.getObject();
+                        }
+                        if(obj == null){
+                            
+                            // This means the object was gc'd.
+                            
+                            // Let's try to read it again, but this may fail in CS mode
+                            // if another transaction has deleted it. We are taking care
+                            // of possible nulls in #delete4().
+                            
+                            Object[] arr  = stream().getObjectAndYapObjectByID(Transaction.this, info._key);
+                            obj = arr[0];
+                            info._reference = (YapObject)arr[1]; 
+                        }
+                        stream().delete4(Transaction.this,info._reference ,info._cascade, false);
+                    }
+                    i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
+                }
+            });
+        }while (foundOne[0]);
+            
         i_delete = null;
         i_writtenUpdateDeletedMembers = null;
     }
@@ -753,7 +770,7 @@ public class Transaction {
         slotFreeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
     }
 
-    public YapStream stream() {
+    public final YapStream stream() {
         return i_stream;
     }
 

@@ -581,10 +581,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
     public final boolean dispatchEvent(YapStream stream, Object obj, int message) {
-        if (_eventDispatcher != null && stream.dispatchsEvents()) {
-        	return _eventDispatcher.dispatch(stream, obj, message);
-        }
-        return true;
+    	if(_eventDispatcher == null || ! stream.dispatchsEvents()){
+    		return true;
+    	}
+        return _eventDispatcher.dispatch(stream, obj, message);
     }
     
     public final boolean equals(TypeHandler4 a_dataType) {

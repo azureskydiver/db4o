@@ -103,7 +103,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
             YapStream stream = a_trans.stream();
 			stream.writeNew(i_yapClass, writer);
 
-            Object obj = getObject();
+            Object obj = i_object;
 			objectOnNew(stream, obj);
 			
             if(! i_yapClass.isPrimitive()){
