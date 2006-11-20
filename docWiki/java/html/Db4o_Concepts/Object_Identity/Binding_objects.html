@@ -1,0 +1,94 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Binding objects</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Binding objects</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p></p>
+
+<p>Db4o adds additional flexibility to its reference system allowing the user to re-associate an object with its stored instance or to replace an object in database:</p>
+
+<span class="java"></p>
+<p>Java:  <code>ExtObjectContainer#bind(object,id)</code></p>
+<p></span>
+</p>
+
+
+</p>
+
+
+</p>
+
+<p>Typical usecases could be:</p>
+<ul>
+<li><a href="../../Advanced_Type_Handling/Static_Fields_And_Enums/Static_Fields_And_Enums.html" class="wikiLink">enums and static fields</a></li>
+<li>working on objects disconnected from the database</li>
+<li>refactoring</li>
+</ul>
+<p>
+The following requirements should be met:</p>
+<ul>
+<li>The ID needs to be a valid internal object ID, previously retrieved with ExtObjectContainer#getID(object)</li>
+<li>The object parameter needs to be of the same class as the stored object.</li>
+</ul>
+<p>
+Calling ExtObjectContainer#bind(object,id) does not have any impact on persisted objects. It only attaches the new object to the database identity. ObjectContainer#set(object) should be used to persist the change.</p>
+<p>Let's look how it works in practice. </p>
+
+<span class="java"></p>
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">IdentityExample.java: <span class="fscMemberName">testBind</span></span></div><div class="fscCode"><pre ID="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Open_Text').style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Closed_Image').style.display='inline'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Closed_Text').style.display='inline';"/><img id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Closed_Text').style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Open_Image').style.display='inline'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> testBind()</span><span id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_29_518_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    setObjects();
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer db </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(Util.YAPFILENAME);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Open_Text').style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Closed_Image').style.display='inline'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Closed_Text').style.display='inline';"/><img id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Closed_Text').style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Open_Image').style.display='inline'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_109_486_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Query q </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.query();
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      q.constrain(Car.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      q.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">model</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Ferrari</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      ObjectSet result </span><span style="color: #000000;">=</span><span style="color: #000000;"> q.execute();
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Car car1 </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Car)result.get(</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">long</span><span style="color: #000000;"> IdCar1 </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.ext().getID(car1);
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Car car2 </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Car(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">BMW</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">, </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Rubens Barrichello</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">));
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.ext().bind(car2,IdCar1);
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.set(car2);
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      result </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.query(Car.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      listResult(result);
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Open_Text').style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Closed_Image').style.display='inline'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Closed_Text').style.display='inline';"/><img id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Closed_Text').style.display='none'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Open_Image').style.display='inline'; document.getElementById('IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IdentityJavaZipsIdentityExampleJava_IdentityExampleJava_testBind_1094_60_495_515_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.close();
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+<p></span>
+
+
+
+
+
+<p>So this method gives you control over internal object storage. But its usage is potentially dangerous and normally should be avoided. Use ExtObjectContainer#bind(object,id) only for short-lived objects and in controlled situations where no other references exist.</p></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2006-11-14T08:51:11 by Tetyana.
+				</div>
+  </body>
+</html>

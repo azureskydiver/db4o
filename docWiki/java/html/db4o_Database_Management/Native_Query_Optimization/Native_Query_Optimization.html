@@ -1,0 +1,69 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Query Optimization</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Query Optimization</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#NQ Optimization For Java">NQ Optimization For Java</a></li></ul></li></ul></div></div></div><p></p>
+
+<p>Native Queries will run out of the box in any environment. If an optimizer is present in the CLASSPATH and if optimisation is turned on, Native Queries will be converted to SODA queries where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.</p>
+
+<p>If no optimizer is found in the CLASSPATH or if optimization is turned off, Native Query may be executed by instantiating all objects, using <a href="../../Advanced_db4o_Techniques/SODA_Evaluations/SODA_Evaluations.html" class="wikiLink">SODA Evaluations</a>. Naturally performance will not be as good in this case.</p>
+
+<span class="java"></p>
+<a name="NQ Optimization For Java"></a><h2>NQ Optimization For Java</h2>
+<p>The Native Query optimizer is still under development to eventually "understand" all Java constructs. Current optimization supports the following constructs well:</p>
+
+<ul>
+<li>
+compile-time constants</li>
+<li>simple member access</li>
+<li>primitive comparisons</li>
+<li>#equals() on primitive wrappers and Strings</li>
+<li>#contains()/#startsWith()/#endsWith() for Strings</li>
+<li>arithmetic expressions</li>
+<li>boolean expressions</li>
+<li>static field access</li>
+<li>array access for static/predicate fields</li>
+<li>arbitrary method calls on static/predicate fields (without candidate based params)</li>
+<li>candidate methods composed of the above</li>
+<li>chained combinations of the above<br>
+</li>
+</ul>
+
+<p>This list will constantly grow with the latest versions of db4o.</p>
+
+<p>
+Note that the current implementation doesn't support polymorphism and multiline methods yet.</p>
+
+<p>
+db4o for Java supplies three different possibilities to run optimized native queries, optimization at</p>
+
+<ol>
+<li><a href="Optimization_at_Query_Execution_Time.html" class="wikiLink">query execution time</a></li>
+<li><a href="Instrumenting_Class_Files.html" class="wikiLink">deployment time</a></li>
+<li><a href="Instrumenting_Classes_At_Load_Time.html" class="wikiLink">class loading time</a></li>
+</ol>
+
+
+
+<p></span>
+
+<p><div class="topicList">More Reading:<ul>
+<li><p><a href="Optimization_at_Query_Execution_Time.html" class="wikiLink">Optimization at Query Execution Time</a></p></li>
+<li><p><a href="Instrumenting_Class_Files.html" class="wikiLink">Instrumenting Class Files</a></p></li>
+<li><p><a href="Instrumenting_Classes_At_Load_Time.html" class="wikiLink">Instrumenting Classes At Load Time</a></p></li>
+<li><p><a href="NQ_Optimization_On_CF2.0.html" class="wikiLink">NQ Optimization On CF2.0</a></p></li>
+<li><p><a href="Build-time_Optimization_For_.NET.html" class="wikiLink">Build-time Optimization For .NET</a></p></li>
+<li><p><a href="Monitoring_Optimization.html" class="wikiLink">Monitoring Optimization</a></p></li>
+</ul></div>
+ <br></p></div>
+    </div>
+    <div id="footer">
+					This revision (9) was last Modified 2006-11-15T11:55:58 by Tetyana.
+				</div>
+  </body>
+</html>
