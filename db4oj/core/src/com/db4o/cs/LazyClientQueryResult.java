@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.cs.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
-import com.db4o.query.*;
 
 
 /**
