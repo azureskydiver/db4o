@@ -11,5 +11,6 @@
 	<namespace name="Db4objects.Db4o.Replication">Replication support package</namespace>
 	<namespace name="Db4objects.Db4o.Tools">Tools package.</namespace>
 	<namespace name="Db4objects.Db4o.Types">Types package.</namespace>
+	<namespace name="Db4objects.Db4o.Defragment">Database file defragmentation utilities.</namespace>
 </namespaces>
 
