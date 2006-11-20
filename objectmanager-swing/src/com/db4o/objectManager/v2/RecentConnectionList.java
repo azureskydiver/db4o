@@ -61,14 +61,21 @@ public class RecentConnectionList extends JPanel {
 
     public void addNewConnectionSpec(Db4oConnectionSpec connectionSpec) {
         // make sure it's not already here
-        for (int i = 0; i < listModel.getSize(); i++) {
+		List<Db4oConnectionSpec> connections = getRecentConnectionSpecsFromDb();
+		for (int i = 0; i < listModel.getSize(); i++) {
             Db4oConnectionSpec spec = (Db4oConnectionSpec) listModel.get(i);
             if (spec.getPath().equals(connectionSpec.getPath())) {
-                return;
+				// move to top of list
+				listModel.remove(i);
+				listModel.add(0, spec);
+				list.setSelectedIndex(0);
+				connections.remove(spec);
+				connections.add(0, spec);
+				saveConnections(connections);
+				return;
             }
         }
-        List<Db4oConnectionSpec> connections = getRecentConnectionSpecsFromDb();
-        connections.add(connectionSpec);
+        connections.add(0, connectionSpec);
 		saveConnections(connections);
 		listModel.addElement(connectionSpec);
     }
