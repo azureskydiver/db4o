@@ -318,7 +318,7 @@ public final class YapWriter extends YapReader {
         if (Debug.xbytes) {
             debugCheckBytes();
         }
-        write(file(), i_address, _addressOffset);
+        file().writeBytes(this, i_address, _addressOffset);
     }
 
     public void writeEmbedded() {

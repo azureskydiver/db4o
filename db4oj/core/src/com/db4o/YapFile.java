@@ -131,7 +131,7 @@ public abstract class YapFile extends YapStream {
     }
     
     public final BTree createBTreeClassIndex(int id){
-        return new BTree(i_trans, id, new YInt(this));
+        return new BTree(i_trans, id, new PrimitiveIntHandler(this));
     }
     
     public final AbstractQueryResult newQueryResult(Transaction trans) {

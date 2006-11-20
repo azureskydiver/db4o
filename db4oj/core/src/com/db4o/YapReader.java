@@ -27,7 +27,7 @@ public class YapReader implements SlotReader {
 		_offset = offset;
 	}
 	
-    public void append(byte a_byte) {
+    public final void append(byte a_byte) {
         _buffer[_offset++] = a_byte;
     }
 
@@ -198,19 +198,15 @@ public class YapReader implements SlotReader {
         }
     }
     
-    public void writeBitMap(BitMap4 nullBitMap) {
+    public final void writeBitMap(BitMap4 nullBitMap) {
         nullBitMap.writeTo(_buffer, _offset);
         _offset += nullBitMap.marshalledLength();
     }
     
-    public void writeEncrypt(YapFile file, int address, int addressOffset) {
+    public final void writeEncrypt(YapFile file, int address, int addressOffset) {
         file.i_handlers.encrypt(this);
-        write(file, address, addressOffset);
-        file.i_handlers.decrypt(this);
-    }
-    
-    public void write(YapFile file, int address, int addressOffset) {
         file.writeBytes(this, address, addressOffset);
+        file.i_handlers.decrypt(this);
     }
     
     public void writeEnd() {

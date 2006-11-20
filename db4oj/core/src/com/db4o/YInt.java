@@ -99,7 +99,7 @@ public class YInt extends YapJavaClass {
 
     private int i_compareTo;
 
-    private int val(Object obj) {
+    protected final int val(Object obj) {
         return ((Integer) obj).intValue();
     }
     
