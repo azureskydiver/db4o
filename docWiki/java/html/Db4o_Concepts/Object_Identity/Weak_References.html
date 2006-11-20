@@ -1,0 +1,20 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Weak References</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Weak References</h1>
+<p></p>
+<p>Each retrieved or created object is automatically placed into reference system. Of course you have control over it and can purge or deactivate retrieved objects to prevent ever-growing memory consumption. However this requires a lot of attention and coding effort. Luckily, this is not necessary as db4o offers much easier way to manage the memory - WeakReferences. </p>
+<p>Any object is kept in the memory while application has references to it otherwise it becomes eligible for garbage collection.</p>
+<p>In the default configuration db4o uses weak references and a dedicated thread to clean them up after objects have been garbage collected by the VM. Weak references need extra resources and the cleanup thread will have a considerable impact on performance since it has to be synchronized with the normal operations within the ObjectContainer. </p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-14T09:00:22 by Tetyana.
+				</div>
+  </body>
+</html>

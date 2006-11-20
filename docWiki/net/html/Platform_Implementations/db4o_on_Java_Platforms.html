@@ -1,0 +1,50 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>db4o on Java Platforms</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>db4o on Java Platforms</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#All Java">All Java</a></li><li><a href ="#JDK1.1">JDK1.1</a></li><li><a href ="#Before JDK1.4">Before JDK1.4</a></li><li><a href ="#JDK 1.4">JDK 1.4</a></li><li><a href ="#JDK 1.5">JDK 1.5</a></li><li><a href ="#Mobile Java editions">Mobile Java editions</a></li></ul></li></ul></div></div></div><P></P>
+<a name="All Java"></a><H2>All Java</H2>
+<UL>
+<LI>root package is com.db4o</LI></UL>
+<a name="JDK1.1"></a><H2>JDK1.1</H2>
+<P>The major limitations of db4o for JDK1.1:</P>
+<UL>
+<LI>
+<P>no support for storing private fields (reflection in JDK 1.1 can only work on public fields) </P></LI></UL>
+<UL>
+<LI>
+<P>no support for JDK collections (java.util.list since JDK1.2) </P></LI></UL>
+<UL>
+<LI>
+<P>no support for weak references</P></LI></UL>db4o for Java 1.1 also goes without support for Native Query Optimization. NQ optimization uses bytecode optimizer library Bloat (http://www.cs.purdue.edu/s3/projects/bloat/), which is not JDK1.1 compatible. 
+<a name="Before JDK1.4"></a><H2>Before JDK1.4</H2>
+<P>Java JDKs before 1.4 do not provide functionality to lock database files. db4o simulates locking files by using a timer thread that writes access time to the file. This can be quite slow. If the system provides some other way to ensure that a file can not be accessed twice, it can improve performance dramatically to call:</P>
+<P><code>Db4o.configure().lockDatabaseFile(false)</code></P>
+<a name="JDK 1.4"></a><H2>JDK 1.4</H2>
+<P>Db4o can bypass the constructors declared for the class using platform-specific mechanisms. (For Java, this option is only available on JREs &gt;= 1.4.) This mode allows reinstantiating objects even when their class doesn't provide a suitable constructor. For more information see <a href="../Db4o_Concepts/Object_Construction/Object_Construction.html" class="wikiLink">Constructors chapter</a></P>
+<P>If this option is available in the current runtime environment, it will be the default setting.</P>
+<a name="JDK 1.5"></a><H2>JDK 1.5</H2>
+<UL>
+<LI>Generics support introduced in JDK1.5 makes db4o Native Query syntax much simpler:<BR><code>List &lt;Pilot&gt; pilots = db.query(new Predicate &lt;Pilot&gt;() {<BR>public boolean match(Pilot pilot) {<BR>return pilot.getPoints() == 100;}});</code></LI>
+<LI>following JDK5 annotations db4o introduces its own annotations.</LI>
+<LI>you can use built-in enums</LI>
+<LI>db4o for JDK5 also has replication support.</LI></UL>
+<a name="Mobile Java editions"></a><H2>Mobile Java editions</H2>
+<P>Currently db4o runs on J2ME dialects that support reflection, such as Personal Java, J2ME CDC and J2ME PersonalProfile. PersonalJava is closely equivalent to Java 1.1.8 regarding the libraries and&nbsp;features it contains (see JDK1.1 for the list of limitations). Use db4o-x.x-java1.1.jar with PersonalJava.</P>
+<P>J2ME CDC and J2ME PersonalProfile are based on subsets of JDK1.3 or JDK1.4 depending on the version used.</P>
+<P>J2ME CLDC and MIDP are not yet supported. Their support requires:</P>
+<UL>
+<LI>replacing reflection (not available in CLDC) with a build-time preprocessor</LI></UL>
+<UL>
+<LI>providing RMS RecordStore based I/O</LI></UL></div>
+    </div>
+    <div id="footer">
+					This revision (10) was last Modified 2006-11-13T21:51:21 by Eric Falsken.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>FlushFileBuffers</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>FlushFileBuffers</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+<p></p>
+
+
+
+<span class="net"></p>
+<p>.NET: <code>Db4oFactory.Configure().FlushFileBuffers(false)</code></p>
+<p></span>
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>Setting FlushFileBuffers to false can considerably improve the performance saving time on physical disk access.</p>
+
+<a name="Effect"></a><h2>Effect</h2>
+<p>FlushFileBuffers setting is provided to ensure correct transaction flow in cases of hardware, power or operating system failures.</p>
+<p>ACID transaction is ensured when disc writes are fulfilled in the following order.</p>
+
+<ol>
+<li>a list of "pointers that are to be modified" is written to the database file;</li>
+<li>the database file is switched into "in-commit" mode;</li>
+<li>the pointers are actually modified in the database file;</li>
+<li>the database file is switched to "not-in-commit" mode.
+</li>
+</ol>
+<p><img src="trnflow.jpg"/></p>
+
+<p>The Configuration.FlushFileBuffers(true) setting ensures that after each stage of commit process all the buffered data is written to the database file. The write process is comparatively slow and can have a strong impact on performance. </p>
+<p>
+Setting FlushFileBuffers(false) reduces the time spent on transaction commit. From the other side this setting can be potentially dangerous on systems using in-memory file caching. The buffer cache is usually used to improve writing performance. Instead of carrying out all wriimmediately, the kernel stores data temporally in the buffer cache, waiting to see if it is possible to group several writes together. Cached file changes can also be reversed. For example, if the same place in a file was changed several times it is enough to write only the final change. </p>
+<p>
+In case of transaction commit such cache management means that transaction data may be lost. Lets consider the case when crash occurs on stage 2-4 and list of "pointers to be modified" is still in cache (completely or partly). After the database file is reopened the commit will be restarted using the list of pointers that is supposed to be written to disc. But in fact we do not know, whether the list was written to disc completely or part of it was still in cache and lost during restart, - so the database can be corrupted. </p>
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+<p>
+On operating systems that cache file access, this configuration has to be set to true to ensure each step of transaction being written in order.</p>
+
+
+
+<span class="net"></p>
+<p>.NET: <code>Db4oFactory.Configure().FlushFileBuffers(true)</code></p>
+<p></span>
+<p>Otherwise file caching can be switched off in OS settings.</p></div>
+    </div>
+    <div id="footer">
+					This revision (11) was last Modified 2006-11-15T08:37:14 by Tetyana.
+				</div>
+  </body>
+</html>
