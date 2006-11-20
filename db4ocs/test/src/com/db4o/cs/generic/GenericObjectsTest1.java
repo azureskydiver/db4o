@@ -4,9 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.db4o.ObjectContainer;
-import com.db4o.YapClass;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -41,8 +39,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		ExtObjectContainer oc = fixture().db();
 		// now check to see if person was saved
 		ReflectClass rc = getReflectClass(oc, PERSON_CLASSNAME);
-		System.out.println("rc:" + rc); // todo: this is null, class isn't being
-		// stored on set()
+		Assert.isNotNull(rc);
 		Query q = oc.query();
 		q.constrain(rc);
 		List results = q.execute();
@@ -94,8 +91,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		// insertPersons(oc, 1);
 		Db4oUtil.dump(oc);
 		ReflectClass rc = getReflectClass(oc, PERSON_CLASSNAME);
-		System.out.println("rc:" + rc); // todo: this is null so it's not being
-		// set in the
+		Assert.isNotNull(rc);
 		Query q = oc.query();
 		q.constrain(rc);
 		List results = q.execute();
@@ -117,7 +113,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		ExtObjectContainer oc = fixture().db();
 		initGenericObjects();
 		ReflectClass rc = getReflectClass(oc, PERSON_CLASSNAME);
-
+		Assert.isNotNull(rc);
 		// now query to make sure there are none left
 		Query q = oc.query();
 		q.constrain(rc);
@@ -130,7 +126,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		ExtObjectContainer oc = fixture().db();
 		initGenericObjects();
 		ReflectClass rc = getReflectClass(oc, PERSON_CLASSNAME);
-		System.out.println("rc:" + rc);
+		Assert.isNotNull(rc);
 		Query q = oc.query();
 		q.constrain(rc);
 		List results = q.execute();
@@ -148,19 +144,8 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		Assert.isTrue(results.size() == 0);
 	}
 
-//	private ReflectClass getReflectClass1(ExtObjectContainer oc,
-//			String className) {
-//		StoredClass[] storedClasses = fixture().db().storedClasses();
-//		for (int i = 0; i < storedClasses.length; i++) {
-//			if (storedClasses[i].getName().equals(className)) {
-//				return ((YapClass) storedClasses[i]).classReflector();
-//			}
-//		}
-//		return null;
-//	}
-
 	private ReflectClass getReflectClass(ExtObjectContainer oc, String className) {
-		// FIXME: GenericReflector#knownClasses returns NullPointerException.
+		// FIXME: If GenericReflector#knownClasses is not called, the test will fail.
 		ReflectClass[] classes = oc.reflector().knownClasses();
 		for (int i = 0; i < classes.length; i++) {
 			System.out.println("known classes = " + classes[i]);
