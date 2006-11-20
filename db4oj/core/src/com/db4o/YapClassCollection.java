@@ -396,23 +396,32 @@ public final class YapClassCollection extends YapMeta {
     }
     
     public StoredClass[] storedClasses() {
-        Collection4 classes = new Collection4();
-        Iterator4 i = i_classes.iterator();
-        while (i.moveNext()) {
-            YapClass yc = (YapClass)i.current();
-            readYapClass(yc, null);
-            if(yc.classReflector() == null){
-                yc.forceRead();
-            }
-            classes.add(yc);
-        }
-        
-        applyReadAs();
-        
-        StoredClass[] sclasses = new StoredClass[classes.size()];
-        classes.toArray(sclasses);
-        return sclasses;
-    }
+		Collection4 classes = null;
+		boolean redo = true;
+		while (redo) {
+			classes = new Collection4();
+			redo = false;
+			Iterator4 i = i_classes.iterator();
+			while (i.moveNext()) {
+				YapClass yc = (YapClass) i.current();
+				if (yc.stateUnread()) {
+					readYapClass(yc, null);
+					if (yc.classReflector() == null) {
+						yc.forceRead();
+					}
+					redo = true;
+					break;
+				}
+				classes.add(yc);
+			}
+		}
+
+		applyReadAs();
+
+		StoredClass[] sclasses = new StoredClass[classes.size()];
+		classes.toArray(sclasses);
+		return sclasses;
+	}
     
     public void writeAllClasses(){
         StoredClass[] storedClasses = storedClasses();
