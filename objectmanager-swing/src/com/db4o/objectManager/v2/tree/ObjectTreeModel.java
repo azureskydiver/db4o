@@ -2,6 +2,7 @@ package com.db4o.objectManager.v2.tree;
 
 import com.db4o.ObjectContainer;
 import com.db4o.objectManager.v2.tree.ObjectTreeNode;
+import com.db4o.objectManager.v2.util.Log;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 import com.db4o.reflect.generic.GenericReflector;
 import com.db4o.reflect.generic.GenericObject;
@@ -9,6 +10,7 @@ import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.spaceprogram.db4o.sql.ReflectHelper;
+import com.spaceprogram.db4o.sql.Converter;
 
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -97,11 +99,11 @@ public class ObjectTreeModel implements TreeModel {
 	public boolean isLeaf(Object node) {
 		if (node == null || ((ObjectTreeNode) node).getObject() == null) return true;
 		Object nodeObject = ((ObjectTreeNode) node).getObject();
-		if(nodeObject instanceof GenericObject){
+		if (nodeObject instanceof GenericObject) {
 			GenericObject go = (GenericObject) nodeObject;
 			ReflectClass gclass = reflector.forObject(nodeObject);
-			System.out.println("GENOB: " + go + " class:" + gclass.getName());
-			if(gclass.getName().contains("System.DateTime")){
+			//System.out.println("GENOB: " + go + " class:" + gclass.getName());
+			if (gclass.getName().contains("System.DateTime")) {
 				// todo: move this into isEditable
 				return true;
 			}
@@ -111,14 +113,21 @@ public class ObjectTreeModel implements TreeModel {
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
-		System.out.println("new value: " + newValue + " " + newValue.getClass());
-		aNode.setObject(newValue);
-		ObjectTreeNode parent = aNode.getParentNode();
-		Object p = parent.getObject();
-		ReflectField rf = aNode.getField();
-		rf.setAccessible();
-		rf.set(p, newValue);
-		addToBatch(p);
+		//System.out.println("new value: " + newValue + " " + newValue.getClass() + " old ob: " + aNode.getObject() + " " + aNode.getObject().getClass());
+		try {
+			Object newOb = Converter.convertFromString(aNode.getObject().getClass(), (String) newValue);
+			ObjectTreeNode parent = aNode.getParentNode();
+			Object p = parent.getObject();
+			ReflectField rf = aNode.getField();
+			rf.setAccessible();
+			rf.set(p, newOb);
+			addToBatch(p);
+			aNode.setObject(newOb);
+		} catch (Exception e) {
+			//e.printStackTrace();
+			Log.addException(e);
+		}
+
 	}
 
 	private void addToBatch(Object o) {
@@ -148,7 +157,7 @@ public class ObjectTreeModel implements TreeModel {
 	public boolean isPathEditable(TreePath path) {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
 		// todo: should check the expect class type if this is null so you can edit null values
-		if(aNode.getObject() == null) return false;
+		if (aNode.getObject() == null) return false;
 		Class c = aNode.getObject().getClass();
 		//System.out.println("class editable: " + c);
 		return ReflectHelper2.isEditable(c);
