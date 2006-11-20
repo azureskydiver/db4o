@@ -93,7 +93,7 @@
 		<property environment="env" />
 		<delete dir="${dir.doc}/out" />
 		
-		<java classname="com.yetac.doctor.Doctor">
+		<java fork="true" classname="com.yetac.doctor.Doctor">
 			<!--TODO ${basedir} is needed for db4occ to run correctly-->
 			<arg line="${basedir}/${dir.doc} ${font.pdf.base}" />
 			<classpath>
@@ -110,7 +110,7 @@
 
 	<target name="doctordrsnet" depends="">
 		<delete dir="drs.net/doc/out" />
-		<java classname="com.yetac.doctor.Doctor">
+		<java fork="true" classname="com.yetac.doctor.Doctor">
 			<arg line="drs.net/doc C:/WINDOWS/Fonts/VERDANA.TTF" />
 			<classpath>
 				<fileset dir="lib">
@@ -153,13 +153,13 @@
 	</target>
 
 	<target name="run-example" depends="init, copyLog4j">
-		<java classname="f1.stepbystep.StepByStepExample">
+		<java fork="true" classname="f1.stepbystep.StepByStepExample">
 			<classpath refid="class.path" />
 		</java>
 	</target>
 	
 	<target name="run-regression" depends="init, copyLog4j">
-		<java classname="com.db4o.drs.test.all.AllDrsTests">
+		<java fork="true" classname="com.db4o.drs.test.all.AllDrsTests">
 			<classpath refid="class.path" />
 		</java>
 	</target>
