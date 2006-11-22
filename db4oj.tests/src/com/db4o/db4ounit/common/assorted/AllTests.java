@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
 
@@ -27,7 +27,6 @@ public class AllTests extends Db4oTestSuite {
             ReAddCascadedDeleteTestCase.class,
             SimplestPossibleTestCase.class,
             MultiDeleteTestCase.class,
-            NonStaticConfigurationTestCase.class,
             PersistStaticFieldValuesTestCase.class,
             PersistTypeTestCase.class,
             ServerRevokeAccessTestCase.class,

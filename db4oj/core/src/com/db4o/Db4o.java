@@ -55,7 +55,9 @@ public class Db4o {
 	}
 	
 	public static Configuration newConfiguration() {
-		return new Config4Impl();
+		Config4Impl config = new Config4Impl();
+		Platform4.getDefaultConfiguration(config);
+		return config;
 	}
 
 	public static Configuration cloneConfiguration() {
