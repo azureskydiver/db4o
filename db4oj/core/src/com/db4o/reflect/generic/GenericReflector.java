@@ -163,7 +163,27 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public ReflectClass forObject(Object obj) {
         if (obj instanceof GenericObject){
-            return ((GenericObject)obj)._class;
+        	GenericClass claxx = ((GenericObject)obj)._class;
+        	if(claxx == null){
+        		throw new IllegalStateException(); 
+        	}
+        	String name = claxx.getName();
+        	if(name == null){
+        		throw new IllegalStateException();
+        	}
+        	GenericClass existingClass = (GenericClass) _classByName.get(name);
+        	if(existingClass == null){
+        		_classByName.put(name, claxx);
+        		return claxx;
+        	}
+        	// TODO: Using .equals() here would be more consistent with 
+        	//       the equals() method in GenericClass.
+        	if(existingClass != claxx){
+        		
+        		throw new IllegalStateException();
+        	}
+        	
+            return claxx;
         }
         return _delegate.forObject(obj);
     }

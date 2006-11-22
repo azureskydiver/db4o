@@ -338,19 +338,20 @@ public final class YapClassCollection extends YapMeta {
     }
 
     public YapClass readYapClass(YapClass yapClass, ReflectClass a_class) {
-        if (yapClass != null  && ! yapClass.stateUnread()) {
+    	if(yapClass == null){
+    		return null;
+    	}
+        if (! yapClass.stateUnread()) {
             return yapClass;
         }
         i_yapClassCreationDepth++;
-        if (yapClass != null  && yapClass.stateUnread()) {
-            yapClass.createConfigAndConstructor(i_yapClassByBytes, stream(), a_class);
-            ReflectClass claxx = yapClass.classReflector();
-            if(claxx != null){
-                i_yapClassByClass.put(claxx, yapClass);
-                yapClass.readThis();
-                yapClass.checkChanges();
-                i_initYapClassesOnUp.add(yapClass);
-            }
+        yapClass.createConfigAndConstructor(i_yapClassByBytes, stream(), a_class);
+        ReflectClass claxx = yapClass.classReflector();
+        if(claxx != null){
+            i_yapClassByClass.put(claxx, yapClass);
+            yapClass.readThis();
+            yapClass.checkChanges();
+            i_initYapClassesOnUp.add(yapClass);
         }
         i_yapClassCreationDepth--;
         initYapClassesOnUp();
