@@ -88,6 +88,42 @@ public final class YapClassCollection extends YapMeta {
         return ret;
     }
 
+	public static void defrag(ReaderPair readers) {
+        if (Deploy.debug) {
+            readers.readBegin(YapConst.YAPCLASSCOLLECTION);
+        }
+		int numClasses=readers.readInt();
+		for(int classIdx=0;classIdx<numClasses;classIdx++) {
+			readers.copyID();
+		}
+        if (Deploy.debug) {
+            readers.readEnd();
+        }
+	}
+
+	private void ensureAllClassesRead() {
+		boolean allClassesRead=false;
+    	while(!allClassesRead) {
+	    	Collection4 unreadClasses=new Collection4();
+			int numClasses=i_classes.size();
+	        Iterator4 classIter = i_classes.iterator();
+	        while(classIter.moveNext()) {
+	        	YapClass yapClass=(YapClass)classIter.current();
+	        	if(yapClass.stateUnread()) {
+	        		unreadClasses.add(yapClass);
+	        	}
+	        }
+	        Iterator4 unreadIter=unreadClasses.iterator();
+	        while(unreadIter.moveNext()) {
+	        	YapClass yapClass=(YapClass)unreadIter.current();
+	        	readYapClass(yapClass,null);
+	            if(yapClass.classReflector() == null){
+	            	yapClass.forceRead();
+	            }
+	        }
+	        allClassesRead=(i_classes.size()==numClasses);
+    	}
+	}
 
     boolean fieldExists(String a_field) {
         YapClassCollectionIterator i = iterator();
@@ -397,33 +433,12 @@ public final class YapClassCollection extends YapMeta {
     }
     
     public StoredClass[] storedClasses() {
-		Collection4 classes = null;
-		boolean redo = true;
-		while (redo) {
-			classes = new Collection4();
-			redo = false;
-			Iterator4 i = i_classes.iterator();
-			while (i.moveNext()) {
-				YapClass yc = (YapClass) i.current();
-				if (yc.stateUnread()) {
-					readYapClass(yc, null);
-					if (yc.classReflector() == null) {
-						yc.forceRead();
-					}
-					redo = true;
-					break;
-				}
-				classes.add(yc);
-			}
-		}
+    	ensureAllClassesRead();
+        StoredClass[] sclasses = new StoredClass[i_classes.size()];
+        i_classes.toArray(sclasses);
+        return sclasses;
+    }
 
-		applyReadAs();
-
-		StoredClass[] sclasses = new StoredClass[classes.size()];
-		classes.toArray(sclasses);
-		return sclasses;
-	}
-    
     public void writeAllClasses(){
         StoredClass[] storedClasses = storedClasses();
         for (int i = 0; i < storedClasses.length; i++) {
@@ -456,19 +471,6 @@ public final class YapClassCollection extends YapMeta {
 			str += yc.getID() + " " + yc + "\r\n";
 		}
 		return str;
-	}
-
-	public static void defrag(ReaderPair readers) {
-        if (Deploy.debug) {
-            readers.readBegin(YapConst.YAPCLASSCOLLECTION);
-        }
-		int numClasses=readers.readInt();
-		for(int classIdx=0;classIdx<numClasses;classIdx++) {
-			readers.copyID();
-		}
-        if (Deploy.debug) {
-            readers.readEnd();
-        }
 	}
 
     private YapStream stream() {

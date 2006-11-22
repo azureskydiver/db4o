@@ -14,6 +14,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 		return new Class[] {
 			com.db4o.db4ounit.jre11.AllTests.class,
 			SimpleMapTestCase.class,
+			com.db4o.db4ounit.jre12.assorted.AllTests.class,
 			com.db4o.db4ounit.jre12.fieldindex.AllTests.class,
 			com.db4o.db4ounit.jre12.soda.AllTests.class,
 			com.db4o.db4ounit.jre12.collections.AllTests.class,
