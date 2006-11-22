@@ -61,7 +61,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
     
 	private final static KeySpec ENCRYPT=new KeySpec(false);
     
-	private final static KeySpec EXCEPTIONAL_CLASSES=new KeySpec(new Hashtable4(16));
+	private final static KeySpec EXCEPTIONAL_CLASSES=new KeySpec(null);
     
 	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE=new KeySpec(false);
     
@@ -660,7 +660,12 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 	}
 
 	public Hashtable4 exceptionalClasses() {
-		return (Hashtable4)_config.get(EXCEPTIONAL_CLASSES);
+		Hashtable4 exceptionalClasses = (Hashtable4)_config.get(EXCEPTIONAL_CLASSES);
+		if(exceptionalClasses==null) {
+			exceptionalClasses=new Hashtable4(16);
+			_config.put(EXCEPTIONAL_CLASSES,exceptionalClasses);
+		}
+		return exceptionalClasses;
 	}
 
 	public boolean exceptionsOnNotStorable() {

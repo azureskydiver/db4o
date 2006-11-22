@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.assorted;
+package com.db4o.db4ounit.common.config;
 
 import java.io.*;
 
@@ -20,7 +20,7 @@ public class NonStaticConfigurationTestCase implements TestCase {
 	}
 	
 	private static final String FILENAME = "nonstaticcfg.yap";
-
+	
 	public void testOpenWithNonStaticConfiguration() {
 		new File(FILENAME).delete();
 		Configuration cfg=Db4o.newConfiguration();
@@ -42,5 +42,15 @@ public class NonStaticConfigurationTestCase implements TestCase {
 			db.close();
 		}
 	}
-	
+
+	public void testIndependentObjectConfigs() {
+		Configuration config=Db4o.newConfiguration();
+		ObjectClass objectConfig = config.objectClass(Data.class);
+		objectConfig.translate(new TSerializable());
+		Configuration otherConfig=Db4o.newConfiguration();
+		Assert.areNotSame(config,otherConfig);
+		Config4Class otherObjectConfig = (Config4Class)otherConfig.objectClass(Data.class);
+		Assert.areNotSame(objectConfig,otherObjectConfig);
+		Assert.isNull(otherObjectConfig.getTranslator());
+	}
 }
