@@ -6,6 +6,7 @@
 	<property name="dir.n.v6.core" location="../db4o.net/Db4objects.Db4o" />	
 	<property name="dir.n.v6.core.src" location="${dir.n.v6.core}/Db4objects.Db4o/" />	
 	<property name="dir.n.v6.tools" location="${dir.n.v6}/Db4objects.Db4o.Tools/" />
+	<property name="dir.n.v6.libs" location="${dir.n.v6}/Libs/" />
 	
 	<condition property="mono" value="true">
 		<os family="unix" />
@@ -130,6 +131,16 @@
 	</macrodef>
 	
 	<target name="check-dependencies">
+		<copy todir="${dir.dist.dll.net}">
+			<fileset dir="${dir.libs.net}">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.dll.compact}">
+			<fileset dir="${dir.libs.cf}">
+				<include name="*.*" />
+			</fileset>
+		</copy>
 		<uptodate
 			property="csharp.uptodate"
 			targetfile="${dir.n.v6.core.src}/Transaction.cs">
@@ -161,8 +172,10 @@
 		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
 	
 		<property name="csharp.definitions" value="NET_1_1" />
-		<property name="csharp.definitions.cf" value="CF_1_0" />		
-		<property name="dir.dll.cf" location="${dir.compactframework}v1.0/WindowsCE/" />	
+		<property name="csharp.definitions.cf" value="CF_1_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-1.1" />
+		<property name="dir.dll.cf" location="${dir.compactframework}v1.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-1.0" />
 		<property name="csc.tests.extraoptions" value="" />
 	
 		<property name="installer.package.suffix" value="net1" />
@@ -179,7 +192,9 @@
 	
 		<property name="csharp.definitions" value="NET_2_0" />
 		<property name="csharp.definitions.cf" value="CF_2_0" />		
-		<property name="dir.dll.cf" location="${dir.compactframework}v2.0/WindowsCE/" />	
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="dir.dll.cf" location="${dir.compactframework}v2.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-2.0" />
 		<property name="csc.tests.extraoptions" value="" />
 	
 		<property name="installer.package.suffix" value="net2" />
@@ -263,6 +278,8 @@
 				<include name="**/*.csdproj" />
 				<include name="**/*.sln" />
 				<include name="**/*.txt" />
+				
+				<include name="Libs/**/*" />
 				
 				<!-- tutorial files -->
 				<include name="**/*.resources" />
@@ -434,11 +451,15 @@
 			<references>
 				<reference dir="${dir.dist.dll.net}">
 					<include name="Db4objects.Db4o.dll" />
+					<include name="Mono.Cecil.dll" />
+					<include name="Cecil.FlowAnalysis.dll" />
 				</reference>
 			</references>
 			
 			<compact-args>
 				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
+				<arg value="/r:${dir.dist.dll.compact}/Mono.Cecil.dll" />
+				<arg value="/r:${dir.dist.dll.compact}/Cecil.FlowAnalysis.dll" />
 			</compact-args>
 		</csc-all>
 	</target>
