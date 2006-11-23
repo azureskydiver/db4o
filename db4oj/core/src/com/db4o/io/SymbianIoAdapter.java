@@ -19,6 +19,7 @@ import java.io.*;
  * TODO:<br> 
  * - BasicClusterTest C/S fails (in AllTests context only)
  * 
+ * @sharpen.ignore
  */
 public class SymbianIoAdapter extends RandomAccessFileAdapter {
     private byte[] _seekBytes=new byte[500];
