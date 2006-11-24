@@ -123,6 +123,7 @@ public final class YapClassCollection extends YapMeta {
 	        }
 	        allClassesRead=(i_classes.size()==numClasses);
     	}
+		applyReadAs();
 	}
 
     boolean fieldExists(String a_field) {
