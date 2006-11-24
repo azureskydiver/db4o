@@ -268,16 +268,12 @@ public final class Platform4 {
 			translateCollection(config, "Vector", "TVector", false);
         }
         netReadAsJava(config, "ext.Db4oDatabase");
-        netReadAsJava(config, "MetaClass");
-        netReadAsJava(config, "MetaField");
-        netReadAsJava(config, "MetaIndex");
         netReadAsJava(config, "P1Object");
         netReadAsJava(config, "P1Collection");
         netReadAsJava(config, "P1HashElement");
         netReadAsJava(config, "P1ListElement");
         netReadAsJava(config, "P2HashMap");
         netReadAsJava(config, "P2LinkedList");
-        netReadAsJava(config, "PBootRecord");
         netReadAsJava(config, "StaticClass");
         netReadAsJava(config, "StaticField");
     }
