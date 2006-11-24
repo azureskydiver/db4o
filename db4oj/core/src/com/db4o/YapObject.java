@@ -13,11 +13,11 @@ import com.db4o.reflect.*;
  */
 public class YapObject extends YapMeta implements ObjectInfo{
     
-	private YapClass i_yapClass;
-	Object i_object;
-	VirtualAttributes i_virtualAttributes;
+	private YapClass _class;
+	private Object _object;
+	private VirtualAttributes _virtualAttributes;
 
-	protected YapObject id_preceding;
+	private YapObject id_preceding;
 	private YapObject id_subsequent;
 	private int id_size;
 
@@ -25,6 +25,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	private YapObject hc_subsequent;
 	private int hc_size;
 	private int hc_code; // redundant hashCode
+	
     
     public YapObject(){
     }
@@ -34,7 +35,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	}
 
 	YapObject(YapClass a_yapClass, int a_id) {
-		i_yapClass = a_yapClass;
+		_class = a_yapClass;
 		i_id = a_id;
 	}
 	
@@ -55,10 +56,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				if (isActive()) {
 					if (a_object != null) {
 						if (a_depth > 1) {
-					        if (i_yapClass.i_config != null) {
-					            a_depth = i_yapClass.i_config.adjustActivationDepth(a_depth);
+					        if (_class.i_config != null) {
+					            a_depth = _class.i_config.adjustActivationDepth(a_depth);
 					        }
-							i_yapClass.activateFields(ta, a_object, a_depth);
+							_class.activateFields(ta, a_object, a_depth);
 						}
 						return;
 					}
@@ -75,12 +76,12 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 	private void logEvent(YapStream stream, String event, final int level) {
 		if (stream.configImpl().messageLevel() > level) {
-			stream.message("" + getID() + " " + event + " " + i_yapClass.getName());
+			stream.message("" + getID() + " " + event + " " + _class.getName());
 		}
 	}
 
 	final void addToIDTree(YapStream a_stream) {
-		if (!(i_yapClass instanceof YapClassPrimitive)) {
+		if (!(_class instanceof YapClassPrimitive)) {
 			a_stream.idTreeAdd(this);
 		}
 	}
@@ -88,7 +89,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	/** return false if class not completely initialized, otherwise true **/
 	boolean continueSet(Transaction a_trans, int a_updateDepth) {
 		if (bitIsTrue(YapConst.CONTINUE)) {
-		    if(! i_yapClass.stateOKAndAncestors()){
+		    if(! _class.stateOKAndAncestors()){
 		        return false;
 		    }
             
@@ -101,13 +102,13 @@ public class YapObject extends YapMeta implements ObjectInfo{
             YapWriter writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
 
             YapStream stream = a_trans.stream();
-			stream.writeNew(i_yapClass, writer);
+			stream.writeNew(_class, writer);
 
-            Object obj = i_object;
+            Object obj = _object;
 			objectOnNew(stream, obj);
 			
-            if(! i_yapClass.isPrimitive()){
-                i_object = stream.i_references.createYapRef(this, obj);
+            if(! _class.isPrimitive()){
+                _object = stream.i_references.createYapRef(this, obj);
             }
 			
 			setStateClean();
@@ -118,7 +119,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 	private void objectOnNew(YapStream stream, Object obj) {
 		stream.callbacks().objectOnNew(obj);
-		i_yapClass.dispatchEvent(stream, obj, EventDispatcher.NEW);
+		_class.dispatchEvent(stream, obj, EventDispatcher.NEW);
 	}
 
 	void deactivate(Transaction a_trans, int a_depth) {
@@ -131,7 +132,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			    YapStream stream = a_trans.stream();
 				logActivation(stream, "deactivate");
 				setStateDeactivated();
-				i_yapClass.deactivate(a_trans, obj, a_depth);
+				_class.deactivate(a_trans, obj, a_depth);
 			}
 		}
 	}
@@ -139,19 +140,23 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	public byte getIdentifier() {
 		return YapConst.YAPOBJECT;
 	}
-
+	
 	public Object getObject() {
 		if (Platform4.hasWeakReferences()) {
-			return Platform4.getYapRefObject(i_object);
+			return Platform4.getYapRefObject(_object);
 		}
-		return i_object;
+		return _object;
+	}
+	
+	public Object getObjectReference(){
+		return _object;
 	}
     
     public YapStream getStream(){
-        if(i_yapClass == null){
+        if(_class == null){
             return null;
         }
-        return i_yapClass.getStream();
+        return _class.getStream();
     }
     
     // this method will only work client-side or on
@@ -183,13 +188,20 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 
 	public YapClass getYapClass() {
-		return i_yapClass;
+		return _class;
 	}
 
 	public int ownLength() {
         throw Exceptions4.shouldNeverBeCalled();
 	}
-
+	
+	public VirtualAttributes produceVirtualAttributes() {
+		if(_virtualAttributes == null){
+			_virtualAttributes = new VirtualAttributes();
+		}
+		return _virtualAttributes;
+	}
+	
 	final Object read(
 		Transaction ta,
 		YapWriter a_reader,
@@ -212,9 +224,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
                 
                 ObjectHeader header = new ObjectHeader(stream, a_reader);
 			    
-				i_yapClass = header.yapClass();
+				_class = header.yapClass();
 
-				if (i_yapClass == null) {
+				if (_class == null) {
 					return null;
 				}
                 
@@ -231,9 +243,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				a_reader.setUpdateDepth(addToIDTree);
 				
 				if(addToIDTree == YapConst.TRANSIENT){
-				    a_object = i_yapClass.instantiateTransient(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader);
+				    a_object = _class.instantiateTransient(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader);
 				}else{
-				    a_object = i_yapClass.instantiate(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
+				    a_object = _class.instantiate(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
 				}
 				
 			}
@@ -249,9 +261,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
             
             ObjectHeader header = new ObjectHeader(a_stream, a_reader);
 
-			i_yapClass = header.yapClass();
+			_class = header.yapClass();
 
-			if (i_yapClass == null) {
+			if (_class == null) {
 				return null;
 			}
 
@@ -264,9 +276,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			// that are carried around in a_bytes.
 			//
 			// TODO: optimize  
-			a_reader.setInstantiationDepth(i_yapClass.configOrAncestorConfig() == null ? 1 : 0);
+			a_reader.setInstantiationDepth(_class.configOrAncestorConfig() == null ? 1 : 0);
 
-			readObject = i_yapClass.instantiate(this, getObject(), header._marshallerFamily, header._headerAttributes, a_reader, true);
+			readObject = _class.instantiate(this, getObject(), header._marshallerFamily, header._headerAttributes, a_reader, true);
 			
 			endProcessing();
 		}
@@ -282,17 +294,17 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 	void setObjectWeak(YapStream a_stream, Object a_object) {
 		if (a_stream.i_references._weak) {
-			if(i_object != null){
-				Platform4.killYapRef(i_object);
+			if(_object != null){
+				Platform4.killYapRef(_object);
 			}
-			i_object = Platform4.createYapRef(a_stream.i_references._queue, this, a_object);
+			_object = Platform4.createYapRef(a_stream.i_references._queue, this, a_object);
 		} else {
-			i_object = a_object;
+			_object = a_object;
 		}
 	}
 
 	public void setObject(Object a_object) {
-		i_object = a_object;
+		_object = a_object;
 	}
 
 	/** return true for complex objects to instruct YapStream to add to lookup trees
@@ -300,12 +312,12 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	 */ 
 	boolean store(Transaction a_trans, YapClass a_yapClass, Object a_object){
 		
-		i_object = a_object;
+		_object = a_object;
 		writeObjectBegin();
 		
 		YapStream stream = a_trans.stream();
 
-		i_yapClass = a_yapClass;
+		_class = a_yapClass;
 
         setID(stream.newUserObject());
 
@@ -317,27 +329,31 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return true;
 	}
 	
+	public VirtualAttributes virtualAttributes(){
+		return _virtualAttributes;
+	}
+	
 	public VirtualAttributes virtualAttributes(Transaction a_trans){
         if(a_trans == null){
-            return i_virtualAttributes;
+            return _virtualAttributes;
         }
-	    if(i_virtualAttributes == null){ 
-            if(i_yapClass.hasVirtualAttributes()){
-                i_virtualAttributes = new VirtualAttributes();
-                i_yapClass.readVirtualAttributes(a_trans, this);
+	    if(_virtualAttributes == null){ 
+            if(_class.hasVirtualAttributes()){
+                _virtualAttributes = new VirtualAttributes();
+                _class.readVirtualAttributes(a_trans, this);
             }
 	    }else{
-            if(! i_virtualAttributes.suppliesUUID()){
-                if(i_yapClass.hasVirtualAttributes()){
-                    i_yapClass.readVirtualAttributes(a_trans, this);
+            if(! _virtualAttributes.suppliesUUID()){
+                if(_class.hasVirtualAttributes()){
+                    _class.readVirtualAttributes(a_trans, this);
                 }
             }
         }
-	    return i_virtualAttributes;
+	    return _virtualAttributes;
 	}
     
     public void setVirtualAttributes(VirtualAttributes at){
-        i_virtualAttributes = at;
+        _virtualAttributes = at;
     }
 
 	public void writeThis(Transaction trans, YapReader a_writer) {
@@ -369,7 +385,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 							"Object passed to set() with valid YapObject. YapObject had no ID.");
 						throw new RuntimeException();
 					}
-					if (i_yapClass == null) {
+					if (_class == null) {
 						System.out.println(
 							"Object passed to set() with valid YapObject. YapObject has no valid yapClass.");
 						throw new RuntimeException();
@@ -380,7 +396,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				
 				setStateClean();
 	
-				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.stream().i_handlers.arrayType(obj), 0);
+				a_trans.writeUpdateDeleteMembers(getID(), _class, a_trans.stream().i_handlers.arrayType(obj), 0);
                 
                 MarshallerFamily.current()._object.marshallUpdate(a_trans, a_updatedepth, this, obj);
 				
@@ -392,7 +408,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 	private boolean objectCanUpdate(YapStream stream, Object obj) {
 		return stream.callbacks().objectCanUpdate(obj)
-			&& i_yapClass.dispatchEvent(stream, obj, EventDispatcher.CAN_UPDATE);
+			&& _class.dispatchEvent(stream, obj, EventDispatcher.CAN_UPDATE);
 	}
 
 	/***** HCTREE *****/
@@ -744,8 +760,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	    try{
 		    int id = getID();
 		    String str = "YapObject\nID=" + id;
-		    if(i_yapClass != null){
-		        YapStream stream = i_yapClass.getStream();
+		    if(_class != null){
+		        YapStream stream = _class.getStream();
 		        if(stream != null && id > 0){
 		            YapWriter writer = stream.readWriterByID(stream.getTransaction(), id);
 		            if(writer != null){
@@ -753,7 +769,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		            }
                     ObjectHeader oh = new ObjectHeader(stream, writer);
 		            YapClass yc = oh.yapClass();
-		            if(yc != i_yapClass){
+		            if(yc != _class){
 		                str += "\nYapClass corruption";
 		            }else{
 		                str += yc.toString(oh._marshallerFamily, writer, this, 0, 5);
@@ -778,6 +794,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	    }
 	    return "Exception in YapObject analyzer";
 	}
+
 
     
 }

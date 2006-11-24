@@ -65,9 +65,7 @@ public abstract class YapFieldVirtual extends YapField {
 
     public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
         throws CorruptionException {
-        if (a_yapObject.i_virtualAttributes == null) {
-            a_yapObject.i_virtualAttributes = new VirtualAttributes();
-        }
+    	a_yapObject.produceVirtualAttributes();
         instantiate1(a_bytes.getTransaction(), a_yapObject, a_bytes);
     }
 
@@ -103,7 +101,7 @@ public abstract class YapFieldVirtual extends YapField {
                 // old replication code 
 
                 migrating = true;
-                if (a_yapObject.i_virtualAttributes == null) {
+                if (a_yapObject.virtualAttributes() == null) {
                     Object obj = a_yapObject.getObject();
                     YapObject migrateYapObject = null;
                     MigrationConnection mgc = handlers.i_migration;
@@ -113,15 +111,13 @@ public abstract class YapFieldVirtual extends YapField {
                             migrateYapObject = mgc.peer(stream).getYapObject(obj);
                         }
                     }
-                    if (migrateYapObject != null
-                        && migrateYapObject.i_virtualAttributes != null
-                        && migrateYapObject.i_virtualAttributes.i_database != null) {
-                        migrating = true;
-                        a_yapObject.i_virtualAttributes = (VirtualAttributes)migrateYapObject.i_virtualAttributes
-                            .shallowClone();
-                        if(migrateYapObject.i_virtualAttributes.i_database != null){
-                            migrateYapObject.i_virtualAttributes.i_database.bind(trans);
-                        }
+                    if (migrateYapObject != null){
+                    	VirtualAttributes migrateAttributes = migrateYapObject.virtualAttributes();
+                    	if(migrateAttributes != null && migrateAttributes.i_database != null){
+	                        migrating = true;
+	                        a_yapObject.setVirtualAttributes((VirtualAttributes)migrateAttributes.shallowClone());
+                            migrateAttributes.i_database.bind(trans);
+                    	}
                     }
                 }
             }else {
@@ -133,10 +129,7 @@ public abstract class YapFieldVirtual extends YapField {
                 Db4oReplicationReference ref = provider.referenceFor(parentObject); 
                 if(ref != null){
                     migrating = true;
-                    if(a_yapObject.i_virtualAttributes == null){
-                        a_yapObject.i_virtualAttributes = new VirtualAttributes();
-                    }
-                    VirtualAttributes va = a_yapObject.i_virtualAttributes;
+                    VirtualAttributes va = a_yapObject.produceVirtualAttributes();
                     va.i_version = ref.version();
                     va.i_uuid = ref.longPart();
                     va.i_database = ref.signaturePart();
@@ -144,8 +137,8 @@ public abstract class YapFieldVirtual extends YapField {
             }
         }
         
-        if (a_yapObject.i_virtualAttributes == null) {
-            a_yapObject.i_virtualAttributes = new VirtualAttributes();
+        if (a_yapObject.virtualAttributes() == null) {
+        	a_yapObject.produceVirtualAttributes();
             migrating = false;
         }
 	    marshall1(a_yapObject, a_bytes, migrating, a_new);
