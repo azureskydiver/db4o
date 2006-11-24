@@ -11,6 +11,7 @@ import com.db4o.types.*;
  * Transfer of blobs to and from the db4o system,
  * if users use the Blob Db4oType.
  * 
+ * @moveto com.db4o.inside.blobs
  * @exclude
  */
 public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {

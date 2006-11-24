@@ -5,6 +5,8 @@ package com.db4o;
 
 /**
  * @exclude
+ * 
+ * @moveto com.db4o.inside.blobs
  */
 public interface BlobStatus {
 	
