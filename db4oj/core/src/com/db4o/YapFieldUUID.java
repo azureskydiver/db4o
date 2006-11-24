@@ -141,8 +141,9 @@ public class YapFieldUUID extends YapFieldVirtual {
         if(db != null && db.i_signature == null){
             stream.activate2(a_trans, db, 2);
         }
-        a_yapObject.i_virtualAttributes.i_database = db; 
-        a_yapObject.i_virtualAttributes.i_uuid = a_bytes.readLong();
+        VirtualAttributes va = a_yapObject.virtualAttributes();
+        va.i_database = db; 
+        va.i_uuid = a_bytes.readLong();
         stream.showInternalClasses(false);
     }
 
@@ -155,7 +156,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         Transaction trans = a_bytes.getTransaction();
         boolean indexEntry = a_new && stream.maintainsIndices();
         int dbID = 0;
-		VirtualAttributes attr = a_yapObject.i_virtualAttributes;
+		VirtualAttributes attr = a_yapObject.virtualAttributes();
 		
 		boolean linkToDatabase = ! a_migrating;
 		if(attr != null && attr.i_database == null) {

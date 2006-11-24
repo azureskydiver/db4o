@@ -2019,7 +2019,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject
         yo.setID(-1);
-        Platform4.killYapRef(yo.i_object);
+        Platform4.killYapRef(yo.getObjectReference());
     }
     
     // cheat emulating '(YapStream)this'

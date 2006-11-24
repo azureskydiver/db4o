@@ -26,18 +26,19 @@ class YapFieldVersion extends YapFieldVirtual {
     }
 
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
-        a_yapObject.i_virtualAttributes.i_version = a_bytes.readLong();
+        a_yapObject.virtualAttributes().i_version = a_bytes.readLong();
     }
 
     void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
         YapStream stream = a_bytes.getStream().i_parent;
-        if (!a_migrating) {
-            a_yapObject.i_virtualAttributes.i_version = stream.generateTimeStampId();
+        VirtualAttributes va = a_yapObject.virtualAttributes();
+        if (! a_migrating) {
+            va.i_version = stream.generateTimeStampId();
         }
-        if(a_yapObject.i_virtualAttributes == null){
+        if(va == null){
             a_bytes.writeLong(0);
         }else{
-            a_bytes.writeLong(a_yapObject.i_virtualAttributes.i_version);
+            a_bytes.writeLong(va.i_version);
         }
     }
 
