@@ -9,6 +9,7 @@ import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
 /**
+ * @renameto ObjectReference
  * @exclude
  */
 public class YapObject extends YapMeta implements ObjectInfo{
