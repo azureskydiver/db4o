@@ -76,9 +76,6 @@
 			<fileset dir="${dir.j.tutorial.out.mono}">
 				<include name="**/*" />
 			</fileset>
-			<fileset dir="${dir.j.reference.out.java}">
-				<include name="**/*" />
-			</fileset>
 			<fileset dir="${dir.n.core.src}">
 				<include name="**/*.cs" />
 			</fileset>
@@ -724,24 +721,6 @@
 		</ant>
 	</target>
 
-	<!-- unused, code depends on dRS -->
-	<target name="compilejreference" depends="compilecorejava" description="Compile Db4o Java reference sources">
-		<mkdir dir="${dir.dist.classes.reference}" />
-		<antcall target="copyjava5" />
-		<javac fork="true" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.reference}" target="1.5" source="1.5" encoding="UTF-8" />
-		<javac fork="true" srcdir="${dir.j.reference.src}" destdir="${dir.dist.classes.reference}" classpath="${dir.dist.classes.reference}" target="1.5" source="1.5" debug="on" encoding="UTF-8" >
-			<classpath>
-					<pathelement path="${dir.j.reference.lib.xstream.jar}"/>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="compilenreference" depends="compiledllnet">
-		<ant dir="${dir.n.reference}">
-			<property name="csc.executable" value="${csc.executable}" />
-		</ant>
-	</target>
-	
 	<target name="preparendoc">
 		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />		
 		<property name="ndoc.home" location="lib/ndoc" />
