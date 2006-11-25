@@ -166,7 +166,7 @@ public class ConnectionForm {
 		}
 	}
 
-	private void connectAndOpenFrame(Db4oConnectionSpec connectionSpec) {
+	public void connectAndOpenFrame(Db4oConnectionSpec connectionSpec) {
 		working();
 
 		// connect before opening frame to make sure all is good

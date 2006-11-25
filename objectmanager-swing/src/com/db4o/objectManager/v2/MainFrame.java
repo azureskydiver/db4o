@@ -211,4 +211,5 @@ public class MainFrame extends JFrame implements WindowListener {
 		mainPanel.getObjectContainer().close();
 		dispose();
 	}
+
 }

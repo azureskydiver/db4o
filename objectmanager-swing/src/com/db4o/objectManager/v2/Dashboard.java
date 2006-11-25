@@ -2,11 +2,16 @@ package com.db4o.objectManager.v2;
 
 import com.jgoodies.looks.*;
 import com.db4o.objectManager.v2.custom.BackgroundPanel;
+import com.db4o.objectManager.v2.custom.ProgressDialog;
 import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
+import com.db4o.objectManager.v2.uiHelper.SwingWorker;
+import com.db4o.objectManager.v2.maint.DefragTask;
 import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ObjectContainer;
+import com.db4o.defragment.DefragmentConfig;
+import com.db4o.defragment.Defragment;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,10 +37,11 @@ public class Dashboard {
 	private static final String TITLE = "ObjectManager " + VERSION;
 
 	private JFrame frame;
-	
+
 	private Settings settings;
 	private ConnectionForm connectionForm;
 	private static Map openMap = new HashMap();
+	private static Dashboard instance;
 
 
 	/**
@@ -49,12 +55,12 @@ public class Dashboard {
 			OptionPaneHelper.showErrorMessage(null, "Another instance of ObjectManager is currently open. Only one instance can be open at a time. " +
 					"You can connect to multiple databases through the same instance.", "Error Opening Database");
 			return;
-			
-		} catch(Exception e){
+
+		} catch (Exception e) {
 			OptionPaneHelper.showErrorMessage(null, "An error occurred while opening ObjectManager settings: " + e.getMessage(), "Error Opening Database");
 			return;
 		}
-		Dashboard instance = new Dashboard();
+		instance = new Dashboard();
 		instance.configureUI();
 		instance.buildInterface();
 	}
@@ -133,6 +139,7 @@ public class Dashboard {
 
 	/**
 	 * Builds and returns the content pane.
+	 *
 	 * @return the main content pane component
 	 */
 	private JComponent buildContentPane() {
@@ -164,9 +171,6 @@ public class Dashboard {
 		return panel;
 	}
 
-
-
-
 	// Helper Code ********************************************************
 
 	/**
@@ -195,6 +199,7 @@ public class Dashboard {
 
 	/**
 	 * Creates and answers an ActionListener that opens the help viewer.
+	 *
 	 * @param frame
 	 */
 	public static ActionListener createHelpActionListener(Component frame) {
@@ -231,11 +236,62 @@ public class Dashboard {
 
 	/**
 	 * This will put all the open connections in a map so they can be handled from here for closing and such.
+	 *
 	 * @param connectionSpec
 	 * @param oc
 	 */
 	public void addOpenConnection(Db4oConnectionSpec connectionSpec, ObjectContainer oc) {
 		openMap.put(connectionSpec.getFullPath(), oc);
+	}
+
+	public static void open(Db4oConnectionSpec connectionSpec) {
+		instance.connectionForm.connectAndOpenFrame(connectionSpec);
+	}
+
+	/**
+	 * Will run defragment on a database.
+	 * todo: get more feedback from the defrag process so can show progress to user.
+	 *
+	 * @param connectionSpec
+	 */
+	public static void defragment(final Db4oConnectionSpec connectionSpec) {
+		try {
+			final ProgressDialog pd = new ProgressDialog(instance.frame, "Defragment", true);
+			pd.setIndeterminate(true);
+			pd.setStringPainted(true);
+			pd.setString("Defragging Database...");
+			// kick off defrag thread
+			final SwingWorker worker = new SwingWorker() {
+				boolean successful = true;
+
+				public Object construct() {
+					try {
+						return new DefragTask(connectionSpec);
+					} catch (Exception e1) {
+						successful = false;
+						OptionPaneHelper.showErrorMessage(instance.frame, "Error occurred during defragment: " + "\n\n" + e1.getMessage(), "Error During Defragment");
+						e1.printStackTrace();
+					}
+					return null;
+				}
+
+				public void finished() {
+					super.finished();
+					pd.dispose();
+					if (successful) {
+						OptionPaneHelper.showSuccessDialog(instance.frame, "Defragment was successful!", "Defragment Complete");
+					}
+					// reopen frame
+					Dashboard.open(connectionSpec);
+				}
+			};
+			worker.start();
+			pd.setVisible(true);
+
+		} catch (Exception e1) {
+			OptionPaneHelper.showErrorMessage(instance.frame, e1.toString() + "\n\n" + e1.getMessage(), "Error During Defragment");
+			e1.printStackTrace();
+		}
 	}
 
 
@@ -288,7 +344,6 @@ public class Dashboard {
 							"http://developer.db4o.com/DocsWiki/view.aspx/Reference/Object_Manager_For_db4o/Installation");
 		}
 	}
-
 
 
 }
