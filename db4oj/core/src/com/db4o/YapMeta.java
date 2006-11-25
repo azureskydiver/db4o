@@ -7,8 +7,23 @@ import com.db4o.inside.slots.*;
 
 /**
  * @exclude
+ * 
+ * @renameto com.db4o.inside.PersistentBase
  */
 public abstract class YapMeta {
+
+	/**
+	 * @moveto new com.db4o.inside.Persistent interface
+	 * all four of the following abstract methods  
+	 */
+	public abstract byte getIdentifier();
+	
+	public abstract int ownLength();
+	
+	public abstract void readThis(Transaction trans, YapReader reader);
+	
+	public abstract void writeThis(Transaction trans, YapReader writer);
+
     
     protected int i_id; // UID and address of pointer to the object in our file
 
@@ -53,8 +68,6 @@ public abstract class YapMeta {
         return i_id;
     }
 
-    public abstract byte getIdentifier();
-
     public final boolean isActive() {
         return bitIsTrue(YapConst.ACTIVE);
     }
@@ -74,8 +87,6 @@ public abstract class YapMeta {
     final void notCachedDirty() {
         bitFalse(YapConst.CACHED_DIRTY);
     }
-
-    public abstract int ownLength();
 
     public void read(Transaction trans) {
         try {
@@ -97,9 +108,6 @@ public abstract class YapMeta {
         }
     }
     
-    public abstract void readThis(Transaction trans, YapReader reader);
-
-
     public void setID(int a_id) {
     	if(DTrace.enabled){
     		DTrace.YAPMETA_SET_ID.log(a_id);
@@ -191,6 +199,5 @@ public abstract class YapMeta {
         writer.writeInt(getID());
     }
 
-    public abstract void writeThis(Transaction trans, YapReader writer);
 
 }
