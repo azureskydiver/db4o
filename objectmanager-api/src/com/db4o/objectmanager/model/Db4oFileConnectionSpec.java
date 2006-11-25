@@ -16,10 +16,10 @@ public class Db4oFileConnectionSpec extends Db4oConnectionSpec {
 		return filePath;
 	}
 
-	protected ObjectContainer connectInternal() {
+	/*protected ObjectContainer connectInternal() {
 		return Db4o.openFile(filePath);
 	}
-
+*/
 	public boolean isRemote() {
 		return false;
 	}

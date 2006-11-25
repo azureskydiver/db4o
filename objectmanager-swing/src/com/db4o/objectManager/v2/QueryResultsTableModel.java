@@ -188,7 +188,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			Object o = getValueAt(0, c);
 			//System.out.println("class: " + o.getClass());
 			if (o != null) return o.getClass();
-			// todo: can i get this from the reflector?
+			// todo: should i get this from the reflector?
 		}
 		return super.getColumnClass(c);
 	}
