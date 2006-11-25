@@ -62,18 +62,8 @@ public class ConnectedMenuBar extends BaseMenuBar {
 						"This operation will shutdown the currently running database and reopen after the operation completes.\n" +
 						"Please be aware of the side effects of running defragment. See db4o manual.");
 				if (result == JOptionPane.YES_OPTION) {
-					frame.closeObjectContainer();
-					try {
-						/*DefragmentConfig config = new DefragmentConfig(frame.getConnectionSpec().getFullPath());
-						config.forceBackupDelete(true);
-						Defragment.defrag(config);
-						OptionPaneHelper.showSuccessDialog(frame, "Defragment was successful!", "Defragment Complete");*/
-						OptionPaneHelper.showErrorMessage(frame, "Defrag broken", "Error during Defragment");
-						// todo: progress bar
-					} catch (Exception e1) {
-						OptionPaneHelper.showErrorMessage(frame, e1.toString() + "\n\n" + e1.getMessage(), "Error during Defragment");
-						e1.printStackTrace();
-					}
+					frame.close();
+					Dashboard.defragment(frame.getConnectionSpec());
 				}
 			}
 		});
