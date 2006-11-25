@@ -120,7 +120,7 @@ public class Db4oReplicationReferenceImpl extends YapObject implements Replicati
 		return virtualAttributes().i_uuid;
 	}
 
-	private VirtualAttributes virtualAttributes() {
+	public VirtualAttributes virtualAttributes() {
 		return virtualAttributes(null);
 	}
 
