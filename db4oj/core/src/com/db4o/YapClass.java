@@ -93,16 +93,16 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
 
         if (a_stream.detectSchemaChanges()) {
-            Iterator4 m;
-            boolean found;
             boolean dirty = isDirty();
-            YapField field;
-            TypeHandler4 wrapper;
 
             Collection4 members = new Collection4();
 
             if (null != i_fields) {
             	members.addAll(i_fields);
+            	if(i_fields.length==1&&i_fields[0] instanceof YapFieldTranslator) {
+            		setStateOK();
+            		return;
+            	}
             }
             if(generateVersionNumbers()) {
                 if(! hasVersionField()) {
@@ -116,35 +116,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                     dirty = true;
                 }
             }
-            ReflectField[] fields = classReflector().getDeclaredFields();
-            for (int i = 0; i < fields.length; i++) {
-                if (storeField(fields[i])) {
-                    wrapper = a_stream.i_handlers.handlerForClass(a_stream, fields[i].getFieldType());
-                    if (wrapper == null) {
-                        continue;
-                    }
-                    field = new YapField(this, fields[i], wrapper);
-
-                    found = false;
-                    m = members.iterator();
-                    while (m.moveNext()) {
-                        if (((YapField)m.current()).equals(field)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (found) {
-                        continue;
-                    }
-
-                    // this has no effect on YapClients
-                    dirty = true;
-                    // we need a local dirty flag to tell us to reconstruct
-                    // i_fields
-
-                    members.add(field);
-                }
-            }
+            dirty = collectReflectFields(a_stream, members) | dirty;
             if (dirty) {
                 i_stream.setDirtyInSystemTransaction(this);
                 i_fields = new YapField[members.size()];
@@ -170,6 +142,40 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
         setStateOK();
     }
+
+	private boolean collectReflectFields(YapStream stream, Collection4 collectedFields) {
+		boolean dirty=false;
+		ReflectField[] fields = classReflector().getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+		    if (storeField(fields[i])) {
+		        TypeHandler4 wrapper = stream.i_handlers.handlerForClass(stream, fields[i].getFieldType());
+		        if (wrapper == null) {
+		            continue;
+		        }
+		        YapField field = new YapField(this, fields[i], wrapper);
+
+		        boolean found = false;
+		        Iterator4 m = collectedFields.iterator();
+		        while (m.moveNext()) {
+		            if (((YapField)m.current()).equals(field)) {
+		                found = true;
+		                break;
+		            }
+		        }
+		        if (found) {
+		            continue;
+		        }
+
+		        // this has no effect on YapClients
+		        dirty = true;
+		        // we need a local dirty flag to tell us to reconstruct
+		        // i_fields
+
+		        collectedFields.add(field);
+		    }
+		}
+		return dirty;
+	}
 
     private boolean addTranslatorFields(YapStream a_stream) {
         
