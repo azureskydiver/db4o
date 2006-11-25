@@ -33,7 +33,7 @@ public class DashboardMenuBar extends BaseMenuBar{
 					dashboard.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					DemoPopulator demoPopulator = new DemoPopulator();
                     demoPopulator.start();
-                    dashboard.connectTo(demoPopulator.getDataFile());
+                    dashboard.connectToFile(demoPopulator.getDataFile());
 					dashboard.getFrame().setCursor(null);
 				} catch(Exception ex){
                     ex.printStackTrace();

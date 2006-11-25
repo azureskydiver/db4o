@@ -1,24 +1,23 @@
 package com.db4o.objectManager.v2;
 
 import com.jgoodies.looks.*;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
 import com.db4o.objectManager.v2.custom.BackgroundPanel;
-import com.db4o.objectmanager.model.Db4oFileConnectionSpec;
-import com.db4o.objectmanager.model.Db4oConnectionSpec;
-import com.db4o.objectmanager.model.Db4oSocketConnectionSpec;
+import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
 import com.db4o.objectmanager.api.prefs.Preferences;
+import com.db4o.objectmanager.model.Db4oConnectionSpec;
+import com.db4o.ext.DatabaseFileLockedException;
+import com.db4o.ObjectContainer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
-
-import org.w3c.dom.css.CSS2Properties;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * User: treeder
@@ -30,23 +29,31 @@ public class Dashboard {
 	private static final String COPYRIGHT =
 			"\u00a9 2006 db4objects Inc. All Rights Reserved.";
 	public static final String VERSION = "6.0.003";
-
+	private static final String TITLE = "ObjectManager " + VERSION;
 
 	private JFrame frame;
-	private JTextField fileTextField;
-	private RecentConnectionList recentConnectionList;
-	private JTextField usernameTextField;
-	private JTextField passwordTextField;
+	
 	private Settings settings;
-	private JTextField hostTextField;
-	private JTextField portTextField;
-	private static final String TITLE = "ObjectManager " + VERSION;
+	private ConnectionForm connectionForm;
+	private static Map openMap = new HashMap();
 
 
 	/**
 	 * Configures the UI, then builds and opens the UI.
 	 */
 	public static void main(String[] args) {
+		// try to open preferences file right away so we can show message and exit
+		try {
+			Preferences pref = Preferences.getDefault();
+		} catch (DatabaseFileLockedException e) {
+			OptionPaneHelper.showErrorMessage(null, "Another instance of ObjectManager is currently open. Only one instance can be open at a time. " +
+					"You can connect to multiple databases through the same instance.", "Error Opening Database");
+			return;
+			
+		} catch(Exception e){
+			OptionPaneHelper.showErrorMessage(null, "An error occurred while opening ObjectManager settings: " + e.getMessage(), "Error Opening Database");
+			return;
+		}
 		Dashboard instance = new Dashboard();
 		instance.configureUI();
 		instance.buildInterface();
@@ -97,6 +104,7 @@ public class Dashboard {
 		frame.setResizable(false);
 		locateOnScreen(frame);
 		frame.setTitle(TITLE);
+		frame.addWindowListener(new DashboardWindowListener(this));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
@@ -146,119 +154,9 @@ public class Dashboard {
 		// gradient background
 		BackgroundPanel backgroundPanel = new BackgroundPanel();
 
-		// add welcome message
-		JLabel welcome = new JLabel("Recent Connections");
-		welcome.setFont(Fonts.WINDOWS_VISTA_96DPI_LARGE);//new Font("Verdana", Font.PLAIN, 30));
-		welcome.setForeground(Color.white);
-		welcome.setVerticalAlignment(JLabel.TOP);
 
-		recentConnectionList = new RecentConnectionList();
-		recentConnectionList.getList().addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				Db4oConnectionSpec connectionSpec = recentConnectionList.getSelected();
-				if (connectionSpec != null) {
-					showInForm(connectionSpec);
-					if (e.getClickCount() == 2) {
-						connectAndOpenFrame();
-					}
-				}
-			}
-		});
-		recentConnectionList.getList().addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-					Db4oConnectionSpec connectionSpec = recentConnectionList.getSelected();
-					if (connectionSpec != null) {
-						showInForm(connectionSpec);
-						connectAndOpenFrame();
-					}
-				}
-			}
-
-		});
-
-		JLabel welcome2 = new JLabel("New Connection");
-		welcome2.setFont(Fonts.WINDOWS_VISTA_96DPI_LARGE);//new Font("Verdana", Font.PLAIN, 30));
-		welcome2.setForeground(Color.white);
-
-		FormLayout layout = new FormLayout(
-				"right:max(40dlu;pref), 3dlu, 120dlu, 7dlu," // 1st major colum
-						+ "right:max(40dlu;pref), 3dlu, 80dlu",		// 2nd major column
-				"");										 // add rows dynamically
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-		builder.setDefaultDialogBorder();
-
-		// builder.appendSeparator("Flange");
-
-		builder.append(welcome);
-
-		builder.nextLine();
-		builder.append("", recentConnectionList, 3);
-
-		builder.nextLine();
-		builder.append(welcome2);
-		builder.nextLine();
-		//builder.append("");
-		builder.appendSeparator("Local");
-		fileTextField = new JTextField();
-		builder.append("File:", fileTextField);
-		final JFileChooser fc = new JFileChooser();
-		final Button browse = new Button("Browse");
-		browse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//Handle open button action.
-				if (e.getSource() == browse) {
-					int returnVal = fc.showOpenDialog(frame);
-					if (returnVal == JFileChooser.APPROVE_OPTION) {
-						File file = fc.getSelectedFile();
-						fileTextField.setText(file.getAbsolutePath());
-					} else {
-
-					}
-				}
-			}
-		});
-		builder.append(browse);
-		builder.nextLine();
-		JButton openButton = new JButton("Open");
-		openButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				connectAndOpenFrame();
-			}
-		});
-		builder.append("", openButton);
-
-
-		builder.nextLine();
-		builder.appendSeparator("Remote");
-
-		//builder.append("");
-		hostTextField = new JTextField();
-		builder.append("Host:", hostTextField);
-		portTextField = new JTextField();
-		portTextField.setColumns(5);
-		// todo: validate port to ensure this is an integer - portTextField.addActionListener();
-		builder.append("Port:", portTextField);
-		builder.nextLine();
-		usernameTextField = new JTextField();
-		builder.append("Username:", usernameTextField);
-		builder.nextLine();
-		//builder.append("");
-		passwordTextField = new JTextField();
-		builder.append("Password:", passwordTextField);
-		builder.nextLine();
-		//builder.append("");
-		JButton connectButton = new JButton("Connect");
-		connectButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				connectAndOpenFrame();
-			}
-		});
-		builder.append("", connectButton);
-
-		JPanel panel2 = builder.getPanel();
-		panel2.setOpaque(false);
-		backgroundPanel.add(panel2);
+		connectionForm = new ConnectionForm(this);
+		backgroundPanel.add(connectionForm.getPanel());
 
 		// add to main panel
 		panel.add(backgroundPanel, BorderLayout.CENTER);
@@ -267,69 +165,7 @@ public class Dashboard {
 	}
 
 
-	public void connectTo(String dataFile) {
-		fileTextField.setText(dataFile);
-		connectAndOpenFrame();
-	}
 
-	private void connectAndOpenFrame() {
-		frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		Db4oConnectionSpec connectionSpec = null;
-		if (fileTextField.getText().length() > 0) {
-			// then open file connection
-			connectionSpec = new Db4oFileConnectionSpec(fileTextField.getText(), false);
-		} else if (hostTextField.getText().length() > 0) {
-			connectionSpec = new Db4oSocketConnectionSpec(hostTextField.getText(), Integer.parseInt(portTextField.getText()), usernameTextField.getText(), passwordTextField.getText(), false);
-		}
-		recentConnectionList.addNewConnectionSpec(connectionSpec);
-		clearForm();
-		Dimension frameSize = (Dimension) Preferences.getDefault().getPreference(Preferences.FRAME_SIZE);
-		Point frameLocation = (Point) Preferences.getDefault().getPreference(Preferences.FRAME_LOCATION);
-		// todo: connect here first, then open frame if successful
-		MainFrame instance = MainFrame.createDefaultFrame(frameSize, frameLocation, connectionSpec);
-
-		instance.addComponentListener(new ComponentListener() {
-			public void componentResized(ComponentEvent e) {
-				// save size in prefs
-				Preferences.getDefault().setPreference(Preferences.FRAME_SIZE, e.getComponent().getSize());
-			}
-
-			public void componentMoved(ComponentEvent e) {
-				// save location in prefs
-				Preferences.getDefault().setPreference(Preferences.FRAME_LOCATION, e.getComponent().getLocation());
-			}
-
-			public void componentShown(ComponentEvent e) {
-
-			}
-
-			public void componentHidden(ComponentEvent e) {
-
-			}
-		});
-		frame.setCursor(null);
-	}
-
-	private void clearForm() {
-		fileTextField.setText("");
-		usernameTextField.setText("");
-		passwordTextField.setText("");
-		portTextField.setText("");
-		hostTextField.setText("");
-	}
-
-	private void showInForm(Db4oConnectionSpec connectionSpec) {
-		clearForm();
-		if (connectionSpec instanceof Db4oFileConnectionSpec) {
-			fileTextField.setText(connectionSpec.getPath());
-		} else if (connectionSpec instanceof Db4oSocketConnectionSpec) {
-			Db4oSocketConnectionSpec spec = (Db4oSocketConnectionSpec) connectionSpec;
-			hostTextField.setText(spec.getHost());
-			portTextField.setText(spec.getPort() + "");
-			usernameTextField.setText(spec.getUser());
-			passwordTextField.setText(spec.getPassword());
-		}
-	}
 
 	// Helper Code ********************************************************
 
@@ -372,6 +208,36 @@ public class Dashboard {
 	public Frame getFrame() {
 		return frame;
 	}
+
+	public void connectToFile(String dataFile) {
+		connectionForm.connectToFile(dataFile);
+	}
+
+	public static void close() {
+		Iterator keys = openMap.keySet().iterator();
+		while (keys.hasNext()) {
+			Object key = keys.next();
+			ObjectContainer oc = (ObjectContainer) openMap.get(key);
+			oc.close();
+		}
+		openMap.clear(); // just in case we don't actually shutdown at this point
+		Preferences.close();
+	}
+
+	public static void exit() {
+		close();
+		System.exit(0);
+	}
+
+	/**
+	 * This will put all the open connections in a map so they can be handled from here for closing and such.
+	 * @param connectionSpec
+	 * @param oc
+	 */
+	public void addOpenConnection(Db4oConnectionSpec connectionSpec, ObjectContainer oc) {
+		openMap.put(connectionSpec.getFullPath(), oc);
+	}
+
 
 	private static final class AboutActionListener implements ActionListener {
 		private Component frame;

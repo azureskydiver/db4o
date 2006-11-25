@@ -57,12 +57,13 @@ public class MainPanel extends JPanel {
     private static final int MAX_TABS = 8;
 
 
-    public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec) {
+    public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec, ObjectContainer oc) {
         super(new BorderLayout());
         this.mainFrame = mainFrame;
         this.settings = settings;
         this.connectionSpec = connectionSpec;
-        build();
+		this.objectContainer = oc;
+		build();
         initClassTree();
         mainFrame.addKeyListener(new ShortcutsListener());
 
@@ -184,13 +185,6 @@ public class MainPanel extends JPanel {
     }
 
     ObjectContainer getObjectContainer() {
-        if (objectContainer == null) {
-            try {
-                objectContainer = ConnectionHelper.connect(this, connectionSpec);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         return objectContainer;
     }
 

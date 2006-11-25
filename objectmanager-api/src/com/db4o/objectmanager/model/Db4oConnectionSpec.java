@@ -38,7 +38,7 @@ public abstract class Db4oConnectionSpec {
 		this.readOnly=readOnly;
 	}
 	
-	public ObjectContainer connect() {
+	/*public ObjectContainer connect() {
         int activationDepth = ActivationPreferences.getDefault().getInitialActivationDepth();
         String[] classpath = ClasspathPreferences.getDefault().classPath();
 		Db4o.configure().readOnly(readOnly);
@@ -66,8 +66,8 @@ public abstract class Db4oConnectionSpec {
 
 		return connectInternal();
 	}
-
-	private Reflector createReflector(String[] classpath) {
+*/
+/*	private Reflector createReflector(String[] classpath) {
 		List urllist=new ArrayList(classpath.length);
 		for (int idx = 0; idx < classpath.length; idx++) {
 			URL cururl=path2URL(classpath[idx]);
@@ -78,9 +78,9 @@ public abstract class Db4oConnectionSpec {
 		URL[] urls=(URL[])urllist.toArray(new URL[urllist.size()]);
 		URLClassLoader classloader=new URLClassLoader(urls);
 		return new JdkReflector(classloader);
-	}
+	}*/
 	
-	private URL path2URL(String filePath) {
+	/*private URL path2URL(String filePath) {
 		File file=new File(filePath);
 		if(!file.exists()) {
 			logger.warning("Could not find classpath entry: "+filePath);
@@ -92,11 +92,11 @@ public abstract class Db4oConnectionSpec {
 			logger.log(Level.SEVERE, "Could not convert classpath entry to URL: "+file.getAbsolutePath(), exc);
 			return null;
 		}
-	}
+	}*/
 	
 	public abstract String getFullPath();
 	public abstract String getPath();
-	protected abstract ObjectContainer connectInternal();
+	//protected abstract ObjectContainer connectInternal();
 
 	public abstract boolean isRemote();
 }

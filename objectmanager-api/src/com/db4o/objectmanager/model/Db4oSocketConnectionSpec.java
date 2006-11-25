@@ -28,14 +28,14 @@ public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 		return "db4o://" + host + ":" + port;
 	}
 
-	protected ObjectContainer connectInternal() {
+	/*protected ObjectContainer connectInternal() {
 		try {
 			return Db4o.openClient(host, port, user, password);
 		} catch (IOException exc) {
 			logger.log(Level.SEVERE, "Could not connect to: "+ getPath()+" as user "+user, exc);
 			return null;
 		}
-	}
+	}*/
 
 	public boolean isRemote() {
 		return true;

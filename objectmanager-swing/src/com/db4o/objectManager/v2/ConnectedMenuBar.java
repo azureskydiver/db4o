@@ -91,7 +91,7 @@ public class ConnectedMenuBar extends BaseMenuBar {
 		item = createMenuItem("Close", 'C', KeyStroke.getKeyStroke("ctrl F4"));
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				frame.close();
 
 			}
 		});
@@ -101,7 +101,7 @@ public class ConnectedMenuBar extends BaseMenuBar {
 		item = createMenuItem("Exit", 'E');
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				frame.exit();
 			}
 		});
 		menu.add(item);

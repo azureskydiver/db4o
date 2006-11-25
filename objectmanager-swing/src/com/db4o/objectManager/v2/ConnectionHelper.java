@@ -10,6 +10,8 @@ import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ext.Db4oException;
 
 import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.awt.Component;
 
 /**
@@ -21,8 +23,13 @@ public class ConnectionHelper {
     public static ObjectContainer connect(Component frame, Db4oConnectionSpec connectionSpec) throws IOException {
         if(connectionSpec instanceof Db4oFileConnectionSpec){
             try {
-                //Db4o.configure().allowVersionUpdates(true);
-                return Db4o.openFile(connectionSpec.getPath());
+				// make sure file exists before opening
+				File f = new File(connectionSpec.getFullPath());
+				if(!f.exists() || f.isDirectory()){
+					throw new FileNotFoundException("File not found: " + f.getAbsolutePath());
+				}
+				//Db4o.configure().allowVersionUpdates(true);
+                return Db4o.openFile(connectionSpec.getFullPath());
             } catch (DatabaseFileLockedException e) {
                 OptionPaneHelper.showErrorMessage(frame, "Database file is locked. Another process must be using it.", "Database File Locked");
             } catch (Db4oException e){
