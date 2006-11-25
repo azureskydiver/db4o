@@ -33,7 +33,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 	private int extraColumns = 2; // for row counter
 	private static final int COL_ROW_NUMBER = 1;
 	static final int COL_TREE = 0;
-	private Icon treeIcon = ResourceManager.createImageIcon("icons/16x16/text_tree.png", "View Object Graph");
+	private Icon treeIcon = ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + "text_tree.png", "View Object Graph");
 
 	public QueryResultsTableModel(String query, QueryResultsPanel queryResultsPanel) throws Exception {
 		this.query = query;

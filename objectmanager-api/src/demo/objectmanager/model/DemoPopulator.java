@@ -17,9 +17,10 @@ import java.util.Calendar;
 public class DemoPopulator {
     private ObjectContainer db;
     private static final String DB_FILE = "demo.db";
-    private static final int NUMBER_TO_MAKE = 5000;
+    private static final int NUMBER_TO_MAKE = 10000;
+	private static int idGen;
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
         DemoPopulator p = new DemoPopulator();
         p.start();
     }
@@ -31,7 +32,7 @@ public class DemoPopulator {
 		Calendar birthCal = Calendar.getInstance();
 		for(int i = 0; i < NUMBER_TO_MAKE; i++){
             Contact c = new Contact();
-            c.setId(new Integer(i));
+            c.setId(nextId());
             c.setName("Contact " + i);
             c.setAge(++ageCounter);
             if(ageCounter >= 100){
@@ -41,6 +42,7 @@ public class DemoPopulator {
 			c.setCreated(now);
 			c.setIncome(i * 1000.01);
 			c.setBirthDate(birthCal.getTime());
+			c.setGender(i % 2 == 0 ? 'm' : 'f');
 			birthCal.add(Calendar.DAY_OF_YEAR, -1);
 			addAddresses(c);
             addEmails(c);
@@ -71,7 +73,10 @@ public class DemoPopulator {
             if(last10.size() > 10){
                 last10.remove(10);
             }
-        }
+			if(i % 1000 == 0){
+				db.commit();
+			}
+		}
 		
 		db.set(Collections.forDemo());
 		db.set(Inheritance.forDemo());
@@ -80,7 +85,11 @@ public class DemoPopulator {
         db.close();
     }
 
-    private void addFriends(Contact c, List<Contact> last10) {
+	private Integer nextId() {
+		return new Integer(++idGen);
+	}
+
+	private void addFriends(Contact c, List<Contact> last10) {
         c.setFriends(last10);
     }
 
@@ -106,9 +115,9 @@ public class DemoPopulator {
     }
 
     private void addAddresses(Contact c) {
-        for(int i = 0; i < 5; i++){
-            c.addAddress(new Address(c, i + " street", "San Francisco", "CA", "90210"));
-        }
+        for(int i = 0; i < 5; i++) {
+			c.addAddress(new Address(nextId(), c, i + " street", "San Francisco", "CA", "90210", (i == 0), new Boolean((i == 2))));
+		}
     }
 
 

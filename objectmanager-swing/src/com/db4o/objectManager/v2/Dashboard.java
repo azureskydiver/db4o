@@ -29,7 +29,7 @@ public class Dashboard {
 
 	private static final String COPYRIGHT =
 			"\u00a9 2006 db4objects Inc. All Rights Reserved.";
-	public static final String VERSION = "6.0";
+	public static final String VERSION = "6.0.003";
 
 
 	private JFrame frame;
@@ -90,7 +90,7 @@ public class Dashboard {
 	 */
 	private void buildInterface() {
 		frame = new JFrame();
-		frame.setIconImage(ResourceManager.createImageIcon("icons/plain/16x16/data.png", "database").getImage());
+		frame.setIconImage(ResourceManager.createImageIcon(ResourceManager.ICONS_PLAIN_16X16 + "data.png", "database").getImage());
 		frame.setJMenuBar(buildMenuBar());
 		frame.setContentPane(buildContentPane());
 		frame.setSize(600, 462);
@@ -359,7 +359,7 @@ public class Dashboard {
 
 	/**
 	 * Creates and answers an ActionListener that opens the help viewer.
-	 * @param mainFrame
+	 * @param frame
 	 */
 	public static ActionListener createHelpActionListener(Component frame) {
 		return new HelpActionListener(frame);
