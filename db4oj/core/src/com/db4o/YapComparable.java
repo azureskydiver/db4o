@@ -4,6 +4,8 @@ package com.db4o;
 
 /**
  * @exclude
+ * 
+ * @renameto com.db4o.inside.Comparable4 
  */
 public interface YapComparable {
 	
