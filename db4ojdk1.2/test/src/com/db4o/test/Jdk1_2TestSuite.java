@@ -23,7 +23,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             HashMapClearUnsaved.class,
             JdkComparatorSort.class,
             KeepCollectionContent.class,
-            MassUpdates.class,
             MultipleEvaluationGetObjectCalls.class,
             ObjectSetAsList.class,
             ObjectSetAsIterator.class,
