@@ -52,7 +52,7 @@ public class DefragContextImpl implements DefragContext {
 
 	public DefragContextImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
 		_listener=listener;
-		Configuration sourceConfig=Db4o.newConfiguration();
+		Configuration sourceConfig=defragConfig.db4oConfig();
 		sourceConfig.weakReferences(false);
 		sourceConfig.flushFileBuffers(false);
 		sourceConfig.readOnly(true);
@@ -64,7 +64,7 @@ public class DefragContextImpl implements DefragContext {
 	
 	static YapFile freshYapFile(String fileName) {
 		new File(fileName).delete();
-		return (YapFile)Db4o.openFile(DefragmentConfig.db4oConfig(),fileName).ext();
+		return (YapFile)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(),fileName).ext();
 	}
 	
 	public int mappedID(int oldID,int defaultID) {

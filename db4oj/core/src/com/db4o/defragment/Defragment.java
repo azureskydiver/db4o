@@ -99,8 +99,7 @@ public class Defragment {
 	 * @throws IOException
 	 *             if the original file cannot be moved to the backup location
 	 */
-	public static void defrag(DefragmentConfig config,
-			DefragmentListener listener) throws IOException {
+	public static void defrag(DefragmentConfig config, DefragmentListener listener) throws IOException {
 		File backupFile = new File(config.backupPath());
 		if (backupFile.exists()) {
 			if (!config.forceBackupDelete()) {
@@ -152,7 +151,7 @@ public class Defragment {
 	private static void setIdentity(String targetFile, int targetIdentityID,
 			int targetUuidIndexID) {
 		YapFile targetDB = (YapFile) Db4o.openFile(DefragmentConfig
-				.db4oConfig(), targetFile);
+				.vanillaDb4oConfig(), targetFile);
 		try {
 			Db4oDatabase identity = (Db4oDatabase) targetDB
 					.getByID(targetIdentityID);

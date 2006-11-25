@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
+import com.db4o.foundation.*;
 
 import db4ounit.extensions.fixtures.*;
 
@@ -22,6 +23,9 @@ public class Db4oDefragSolo extends Db4oSolo {
 					String backupFile = getAbsolutePath()+".defrag.backup";
 					DefragmentConfig defragConfig = new DefragmentConfig(getAbsolutePath(), backupFile);
 					defragConfig.forceBackupDelete(true);
+					// FIXME Cloning is ugly - wrap original in Decorator within DefragContext instead?
+					Configuration clonedConfig=(Configuration)((DeepClone)config).deepClone(null);
+					defragConfig.db4oConfig(clonedConfig);
 					Defragment.defrag(defragConfig, new DefragmentListener() {
 						public void notifyDefragmentInfo(DefragmentInfo info) {
 							System.err.println(info);

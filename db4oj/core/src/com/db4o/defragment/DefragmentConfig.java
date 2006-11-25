@@ -20,6 +20,7 @@ public class DefragmentConfig {
 	private String _origPath;
 	private String _backupPath;
 	private ContextIDMapping _mapping;
+	private Configuration _config;
 	
 	private StoredClassFilter _storedClassFilter=null;
 	private boolean _forceBackupDelete=false;
@@ -95,6 +96,17 @@ public class DefragmentConfig {
 	public void forceBackupDelete(boolean forceBackupDelete) {
 		_forceBackupDelete=forceBackupDelete;
 	}
+
+	public Configuration db4oConfig() {
+		if(_config==null) {
+			_config=vanillaDb4oConfig();
+		}
+		return _config;
+	}
+	
+	public void db4oConfig(Configuration config) {
+		_config=config;
+	}
 	
 	static class NullFilter implements StoredClassFilter {
 		public boolean accept(StoredClass storedClass) {
@@ -104,7 +116,7 @@ public class DefragmentConfig {
 	
 	private final static StoredClassFilter NULLFILTER=new NullFilter();
 	
-	public static Configuration db4oConfig(){
+	public static Configuration vanillaDb4oConfig(){
 		Configuration config = Db4o.newConfiguration();
 		config.weakReferences(false);
 		return config;
