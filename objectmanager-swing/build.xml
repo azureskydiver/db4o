@@ -10,6 +10,7 @@
     <property name="lib" location="lib"/>
     <property name="build" location="classes/production"/>
     <property name="docs" location="docs"/>
+	<property name="launch" location="launch"/>
 	<property name="dist.base" location="dist"/>
 	<property name="dist" location="${dist.base}/objectmanager-6.0"/>
     <property name="webstart" value="webstart"/>
@@ -37,7 +38,8 @@
              inheritAll="false"/>
         <copy file="../objectmanager-api/dist/lib/objectmanager-api.jar" todir="./lib/"/>
         <!-- Compile the java code from ${src} into ${build} -->
-        <javac srcdir="${src}" destdir="${build}">
+        <javac srcdir="${src}" destdir="${build}"
+				debug="true" >
             <classpath refid="class.path"/>
         </javac>
         <copy todir="${build}" filtering="false">
@@ -70,6 +72,10 @@
 
 		<copy todir="${dist}/docs">
             <fileset dir="${docs}"/>
+        </copy>
+
+		<copy todir="${dist}">
+            <fileset dir="${launch}"/>
         </copy>
 
 	</target>
@@ -112,7 +118,7 @@
 
     </target>
 
-    <target name="zip" depends="dist">
+    <target name="zip" depends="dist" description="Create the distribution zip file.">
 
 		<zip destfile="objectmanager-6.0.zip"
              basedir="${dist.base}"

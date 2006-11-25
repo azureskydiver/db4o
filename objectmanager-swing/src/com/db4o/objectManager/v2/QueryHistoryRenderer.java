@@ -11,7 +11,7 @@ import java.awt.Component;
 public class QueryHistoryRenderer extends JLabel implements ListCellRenderer {
 
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-		this.setIcon(ResourceManager.createImageIcon("icons/16x16/history.png"));
+		this.setIcon(ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + "history.png"));
 		this.setText(value.toString());
 		return this;
 	}

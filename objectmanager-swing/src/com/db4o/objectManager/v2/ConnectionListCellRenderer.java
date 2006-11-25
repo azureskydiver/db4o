@@ -51,7 +51,7 @@ public class ConnectionListCellRenderer extends JPanel implements ListCellRender
             user = " ";
         }
         pathLabel.setText(host);
-        imageLabel.setIcon(ResourceManager.createImageIcon("icons/16x16/" + imgIcon));
+        imageLabel.setIcon(ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + imgIcon));
         if (isSelected) {
             adjustColors(list.getSelectionBackground(),
                     list.getSelectionForeground(), this, imageLabel, pathLabel);

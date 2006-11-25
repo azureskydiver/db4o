@@ -20,6 +20,7 @@ public class Contact {
 	private Date created;
 	private double income;
 	private Date birthDate;
+	private char gender;
 
 	public Integer getId() {
         return id;
@@ -114,5 +115,13 @@ public class Contact {
 
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
+	}
+
+	public char getGender() {
+		return gender;
+	}
+
+	public void setGender(char gender) {
+		this.gender = gender;
 	}
 }

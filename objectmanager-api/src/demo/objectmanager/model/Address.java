@@ -7,25 +7,40 @@ package demo.objectmanager.model;
  * Time: 9:52:35 AM
  */
 public class Address {
-    Contact contact; // bi-directional
+	private Integer id;
+	Contact contact; // bi-directional
     String street;
     String city;
     String state;
     String zip;
+	boolean primary;
+	Boolean workAddress;
 
 
-    public Address() {
+	public Address() {
     }
 
-    public Address(Contact c, String street, String city, String state, String zip) {
-        contact = c;
-        this.street = street;
-        this.city = city;
-        this.state = state;
-        this.zip = zip;
-    }
+    public Address(Integer id, Contact c, String street, String city, String state, String zip, boolean primary, Boolean workAddress) {
+		this.id = id;
+		contact = c;
+		this.street = street;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.primary = primary;
+		this.workAddress = workAddress;
+	}
 
-    public Contact getContact() {
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Contact getContact() {
         return contact;
     }
 
@@ -64,5 +79,21 @@ public class Address {
     public void setZip(String zip) {
         this.zip = zip;
     }
+
+	public boolean isPrimary() {
+		return primary;
+	}
+
+	public void setPrimary(boolean primary) {
+		this.primary = primary;
+	}
+
+	public Boolean getWorkAddress() {
+		return workAddress;
+	}
+
+	public void setWorkAddress(Boolean workAddress) {
+		this.workAddress = workAddress;
+	}
 }
 

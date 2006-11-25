@@ -16,7 +16,7 @@ import java.text.Collator;
  *
  * User: treeder
  * Date: Aug 21, 2006
- * Time: 7:02:15 PM
+ * Time: 7:02:15 PMd
  */
 public class ReflectHelper2 {
 
@@ -29,14 +29,14 @@ public class ReflectHelper2 {
      */
     public static List getUserStoredClasses(ObjectContainer container) {
         String[] ignore = new String[]{
-                // todo: decide which should be filtered for sure
                 "java.lang.",
                 "java.util.",
                 "java.math.",
                 "com.db4o.",
                 "j4o.lang.AssemblyNameHint",
-                "System."
-        };
+                "System.",
+				"Db4objects.Db4o",
+		};
 
         // Get the known classes
         ReflectClass[] knownClasses = container.ext().knownClasses();
@@ -87,6 +87,11 @@ public class ReflectHelper2 {
      * @return
      */
     public static boolean isEditable(Class c) {
-		return c.isPrimitive() || String.class.isAssignableFrom(c) || Number.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
-    }
+		return c.isPrimitive()
+				|| String.class.isAssignableFrom(c)
+				|| Number.class.isAssignableFrom(c) 
+				|| Date.class.isAssignableFrom(c)
+				|| Boolean.class.isAssignableFrom(c)
+				|| Character.class.isAssignableFrom(c);
+	}
 }

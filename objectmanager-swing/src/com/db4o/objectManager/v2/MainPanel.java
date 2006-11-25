@@ -119,8 +119,8 @@ public class MainPanel extends JPanel {
                 Options.TREE_LINE_STYLE_NONE_VALUE);
         classTree.setToggleClickCount(2);
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-		renderer.setLeafIcon(ResourceManager.createImageIcon("icons/16x16/element.png"));
-		Icon icon = ResourceManager.createImageIcon("icons/16x16/coffeebean.png");
+		renderer.setLeafIcon(ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + "element.png"));
+		Icon icon = ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + "coffeebean.png");
 		renderer.setOpenIcon(icon);
 		renderer.setClosedIcon(icon);
 		classTree.setCellRenderer(renderer);
@@ -230,7 +230,7 @@ public class MainPanel extends JPanel {
     }
 
 	private Icon createTabIcon(String iconImg) {
-		return ResourceManager.createImageIcon("icons/16x16/" + iconImg);
+		return ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + iconImg);
 	}
 
 	public void addTab(TabType tabType, String name, Component p) {

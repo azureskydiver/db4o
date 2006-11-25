@@ -8,7 +8,11 @@ import javax.swing.*;
  * Time: 6:14:49 PM
  */
 public class ResourceManager {
-    public static ImageIcon createImageIcon(String filename, String description) {
+	public static final String ICONS_16X16 = "icons/16x16/";
+	public static final String ICONS_PLAIN_16X16 = "icons/plain/16x16/";
+	public static final String ICONS_32X32 = "icons/32x32/";
+
+	public static ImageIcon createImageIcon(String filename, String description) {
         java.net.URL imgURL = Dashboard.class.getResource("resources/images/" + filename);
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
