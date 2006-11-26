@@ -12,12 +12,6 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			IdListQueryResultTestCase.class,
-            IndexedQueriesTestCase.class,
-            LazyQueryResultTestCase.class,
-            MultiFieldIndexQueryTestCase.class,
-            ObjectSetTestCase.class,
-            OrderedQueryTestCase.class,
 	    	CascadedDeleteUpdate.class,
 			CascadeDeleteArray.class,
             CascadeDeleteDeleted.class,
@@ -26,6 +20,12 @@ public class AllTests extends Db4oTestSuite {
 	        CascadeOnDelete.class,
 	        CascadeOnUpdate.class,
 	        CascadeToArray.class,
+			IdListQueryResultTestCase.class,
+            IndexedQueriesTestCase.class,
+            LazyQueryResultTestCase.class,
+            MultiFieldIndexQueryTestCase.class,
+            ObjectSetTestCase.class,
+            OrderedQueryTestCase.class,
 		};
 	}
 }
