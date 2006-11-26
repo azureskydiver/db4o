@@ -77,31 +77,14 @@ public class Transaction {
         
     }
     
-    private boolean noObjectsToDelete(){
-    	final boolean[] none = { true };
-        i_delete.traverse(new Visitor4() {
-            public void visit(Object a_object) {
-                DeleteInfo info  = (DeleteInfo)a_object;
-                if(info._delete){
-                	none[0] = false;
-                }
-            }
-        });
-        return none[0];
-    }
-
     public void beginEndSet() {
     	
-    	if (i_delete == null || noObjectsToDelete()) {
-    		i_delete = null;
+    	if (i_delete == null) {
     		i_writtenUpdateDeletedMembers = null;
     		return;
     	}
-    	
-        final boolean[] foundOne = { false };
 
-        do {
-            foundOne[0] = false;
+        while(i_delete != null) {
             
             Tree delete = i_delete;
             i_delete = null;
@@ -109,42 +92,27 @@ public class Transaction {
             delete.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     DeleteInfo info  = (DeleteInfo)a_object;
-                    if(! info._delete){
-                        i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
+                    Object obj = null;
+                    if(info._reference != null){
+                        obj = info._reference.getObject();
                     }
+                    if(obj == null){
+                        
+                        // This means the object was gc'd.
+                        
+                        // Let's try to read it again, but this may fail in CS mode
+                        // if another transaction has deleted it. We are taking care
+                        // of possible nulls in #delete4().
+                        
+                        Object[] arr  = stream().getObjectAndYapObjectByID(Transaction.this, info._key);
+                        obj = arr[0];
+                        info._reference = (YapObject)arr[1];
+                        info._reference.flagForDelete(i_stream.topLevelCallId());
+                    }
+                    stream().delete3(Transaction.this,info._reference ,info._cascade, false);
                 }
             });
-            
-            delete.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    DeleteInfo info  = (DeleteInfo)a_object;
-                    if(info._delete){
-                        foundOne[0] = true;
-                        Object obj = null;
-                        if(info._reference != null){
-                            obj = info._reference.getObject();
-                        }
-                        if(obj == null){
-                            
-                            // This means the object was gc'd.
-                            
-                            // Let's try to read it again, but this may fail in CS mode
-                            // if another transaction has deleted it. We are taking care
-                            // of possible nulls in #delete4().
-                            
-                            Object[] arr  = stream().getObjectAndYapObjectByID(Transaction.this, info._key);
-                            obj = arr[0];
-                            info._reference = (YapObject)arr[1];
-                            info._reference.flagForDelete(i_stream.topLevelCallId());
-                        }
-                        stream().delete3(Transaction.this,info._reference ,info._cascade, false);
-                    }
-                    i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
-                }
-            });
-        }while (foundOne[0]);
-            
-        i_delete = null;
+        }
         i_writtenUpdateDeletedMembers = null;
     }
     
@@ -337,7 +305,7 @@ public class Transaction {
         return slotSetPointerCount[0];
     }
 
-    public void delete(YapObject ref, int a_cascade) {
+    public void delete(YapObject ref, int cascade) {
         checkSynchronization();
         
         if(! i_stream.flagForDelete(ref)){
@@ -345,43 +313,34 @@ public class Transaction {
         }
         
         int id = ref.getID();
+        if(isDeleted(id)){
+        	return;
+        }
+        
         if(DTrace.enabled){
             DTrace.TRANS_DELETE.log(id);
         }
         
         DeleteInfo info = (DeleteInfo) TreeInt.find(i_delete, id);
         if(info == null){
-            info = new DeleteInfo(id, ref, true, a_cascade);
+            info = new DeleteInfo(id, ref, cascade);
             i_delete = Tree.add(i_delete, info);
             return;
         }
         info._reference = ref;
-        if(a_cascade > info._cascade){
-            info._cascade = a_cascade;
+        if(cascade > info._cascade){
+            info._cascade = cascade;
         }
     }
     
-    public void dontDelete(int classID, int a_id) {
-        checkSynchronization();
+    public void dontDelete(int a_id) {
         if(DTrace.enabled){
             DTrace.TRANS_DONT_DELETE.log(a_id);
         }
-        DeleteInfo info = (DeleteInfo) TreeInt.find(i_delete, a_id);
-        if(info == null){
-            i_delete = Tree.add(i_delete, new DeleteInfo(a_id, null, false, 0));
-        }else{
-            info._delete = false;
+        if(i_delete == null){
+        	return;
         }
-        YapClass yc = stream().getYapClass(classID);
-        dontDeleteAllAncestors(yc, a_id);
-    }
-    
-    void dontDeleteAllAncestors(YapClass yapClass, int objectID){
-        if(yapClass == null){
-            return;
-        }
-        yapClass.index().dontDelete(this, objectID);
-        dontDeleteAllAncestors(yapClass.i_ancestor, objectID);
+        i_delete = TreeInt.removeLike((TreeInt)i_delete, a_id);
     }
     
     void dontRemoveFromClassIndex(int a_yapClassID, int a_id) {
@@ -756,7 +715,7 @@ public class Transaction {
         YapWriter objectBytes = stream().readWriterByID(this, a_id);
         if(objectBytes == null){
             if (a_yc.hasIndex()) {
-                dontRemoveFromClassIndex(a_yc.getID(), a_id);
+                 dontRemoveFromClassIndex(a_yc.getID(), a_id);
             }
             return;
         }

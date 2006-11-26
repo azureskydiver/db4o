@@ -12,12 +12,7 @@ package com.db4o;
 public class MetaField implements Internal4{
 	
 	public String name;
+	
 	public MetaIndex index;
 	
-	public MetaField(){
-	}
-	
-	public MetaField(String name_){
-		name = name_;
-	}
 }

@@ -1723,66 +1723,43 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             return 0;
         }
         
-        boolean dontDelete = true;
         if (yapObject == null) {
             if (!objectCanNew(yc, a_object)) {
                 return 0;
             }
             yapObject = new YapObject(0);
-            if(yapObject.store(a_trans, yc, a_object)){
-				idTreeAdd(yapObject);
-				hcTreeAdd(yapObject);
-				if(a_object instanceof Db4oTypeImpl){
-				    ((Db4oTypeImpl)a_object).setTrans(a_trans);
-				}
-				if (configImpl().messageLevel() > YapConst.STATE) {
-					message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
-				}
-                
-                if(a_checkJustSet && canUpdate()){
-                    if(! yapObject.getYapClass().isPrimitive()){
-                        flagAsHandled(yapObject);
-                        a_checkJustSet = false;
-                    }
-                }
-                
-				stillToSet(a_trans, yapObject, a_updateDepth);
-            }
+            yapObject.store(a_trans, yc, a_object);
+			idTreeAdd(yapObject);
+			hcTreeAdd(yapObject);
+			if(a_object instanceof Db4oTypeImpl){
+			    ((Db4oTypeImpl)a_object).setTrans(a_trans);
+			}
+			if (configImpl().messageLevel() > YapConst.STATE) {
+				message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
+			}
+			
+			flagAsHandled(yapObject);
+			stillToSet(a_trans, yapObject, a_updateDepth);
 
         } else {
             if (canUpdate()) {
-                int oid = yapObject.getID();
                 if(a_checkJustSet){
-                    if(oid > 0 && handledInCurrentTopLevelCall(yapObject)){
-                        return oid;
+                    if( (! yapObject.isNew())  && handledInCurrentTopLevelCall(yapObject)){
+                        return yapObject.getID();
                     }
                 }
-                boolean doUpdate = (a_updateDepth == YapConst.UNSPECIFIED) || (a_updateDepth > 0);
-                if (doUpdate) {
-                    dontDelete = false;
-                    a_trans.dontDelete(yapObject.getYapClass().getID(), oid);
-                    if(a_checkJustSet){
-                        a_checkJustSet = false;
-                        flagAsHandled(yapObject);
-                    }
+                if (updateDepthSufficient(a_updateDepth)) {
+                    flagAsHandled(yapObject);
                     yapObject.writeUpdate(a_trans, a_updateDepth);
                 }
             }
         }
         checkNeededUpdates();
-        int id = yapObject.getID();
-        if(a_checkJustSet && canUpdate()){
-            if(! yapObject.getYapClass().isPrimitive()){
-                flagAsHandled(yapObject);
-            }
-        }
-        if(dontDelete){
-            
-            // TODO: do we want primitive types added here?
-            
-            a_trans.dontDelete(yapObject.getYapClass().getID(), id);
-        }
-        return id;
+        return yapObject.getID();
+    }
+    
+    private final boolean updateDepthSufficient(int updateDepth){
+    	return (updateDepth == YapConst.UNSPECIFIED) || (updateDepth > 0);
     }
 
     private final boolean isPlainObjectOrPrimitive(YapClass yc) {

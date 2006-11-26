@@ -76,7 +76,7 @@ public abstract class YapMeta {
         return bitIsTrue(YapConst.ACTIVE) && (!bitIsTrue(YapConst.CLEAN));
     }
     
-    public boolean isNew(){
+    public final boolean isNew(){
         return i_id == 0;
     }
 

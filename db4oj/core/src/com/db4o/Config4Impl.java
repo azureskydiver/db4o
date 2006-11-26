@@ -73,8 +73,6 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
     
 	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
 	
-	private final static KeySpec INDEX_SNAPSHOTS=new KeySpec(false);
-    
 	private final static KeySpec INTERN_STRINGS=new KeySpec(false);
     
 	private final static KeySpec IS_SERVER=new KeySpec(false);
@@ -193,8 +191,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 
                 boolean skip = false;
 
-                Class[] ignore = new Class[] { MetaClass.class,
-                    MetaField.class, MetaIndex.class, P1HashElement.class,
+                Class[] ignore = new Class[] { P1HashElement.class,
                     P1ListElement.class, P1Object.class, P1Collection.class,
 
                     // XXX You may need the following for indexing tests. 

@@ -65,7 +65,6 @@ public class Msg implements Cloneable {
 	public static final Msg SWITCH_TO_MAIN_FILE = new Msg("SWITCH_M");
 	public static final Msg TA_BEGIN_END_SET = new MTaBeginEndSet();
 	public static final MsgD TA_DELETE = new MTaDelete();
-	public static final MsgD TA_DONT_DELETE = new MTaDontDelete();
 	public static final MsgD TA_IS_DELETED = new MTaIsDeleted();
 	public static final MsgD USER_MESSAGE = new MUserMessage();
 	public static final MsgD USE_TRANSACTION = new MUseTransaction();

@@ -114,9 +114,6 @@ public final class YapConst
     static Class CLASS_DB4OTYPEIMPL;
     static Class CLASS_INTERNAL;
     static Class CLASS_UNVERSIONED;
-    static Class CLASS_METACLASS;
-    static Class CLASS_METAFIELD;
-	static Class CLASS_METAINDEX;
     public static Class CLASS_OBJECT;
     static Class CLASS_OBJECTCONTAINER;
     static Class CLASS_REPLICATIONRECORD; 
@@ -159,9 +156,6 @@ public final class YapConst
         CLASS_DB4OTYPEIMPL = Db4oTypeImpl.class;
         CLASS_INTERNAL = Internal4.class;
         CLASS_UNVERSIONED = com.db4o.types.Unversioned.class;
-        CLASS_METACLASS = new MetaClass().getClass();
-        CLASS_METAFIELD = new MetaField().getClass();
-        CLASS_METAINDEX = new MetaIndex().getClass();
         CLASS_OBJECTCONTAINER = ObjectContainer.class;
         CLASS_REPLICATIONRECORD = new ReplicationRecord().getClass();
         CLASS_STATICFIELD = new StaticField().getClass();
@@ -173,17 +167,10 @@ public final class YapConst
     
 	// system classes that need to get loaded first
 	static final Class[] ESSENTIAL_CLASSES = {
-	// MetaClass should load the other two Meta
 	// StaticClass should load Staticfield
 	
 	// TODO: remove unnecessary
 	
-	// TODO: improved approach would use interface to autodetect
-	
-	
-	    CLASS_METAINDEX,
-	    CLASS_METAFIELD,
-        CLASS_METACLASS,
         CLASS_STATICFIELD,
         CLASS_STATICCLASS
     };

@@ -22,7 +22,7 @@ final class TransactionClient extends Transaction {
             i_delete.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     DeleteInfo info = (DeleteInfo) a_object;
-                    if (info._delete && info._reference != null) {
+                    if (info._reference != null) {
                         i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info._key, info._reference));
                     }
                 }
@@ -50,11 +50,6 @@ final class TransactionClient extends Transaction {
     public void delete(YapObject a_yo, int a_cascade) {
         super.delete(a_yo, a_cascade);
         i_client.writeMsg(Msg.TA_DELETE.getWriterForInts(this, new int[] {a_yo.getID(), a_cascade}));
-    }
-
-    public void dontDelete(int classID, int a_id) {
-        super.dontDelete(classID, a_id);
-        i_client.writeMsg(Msg.TA_DONT_DELETE.getWriterForInts(this, new int[]{classID, a_id}));
     }
 
     public boolean isDeleted(int a_id) {

@@ -309,26 +309,18 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		_object = a_object;
 	}
 
-	/** return true for complex objects to instruct YapStream to add to lookup trees
-	 * and to perform delayed storage through call to continueset further up the stack.
-	 */ 
-	boolean store(Transaction a_trans, YapClass a_yapClass, Object a_object){
+	final void store(Transaction trans, YapClass yapClass, Object obj){
+		_object = obj;
+		_class = yapClass;
 		
-		_object = a_object;
 		writeObjectBegin();
-		
-		YapStream stream = a_trans.stream();
 
-		_class = a_yapClass;
-
-        setID(stream.newUserObject());
+        setID(trans.stream().newUserObject());
 
         // will be ended in continueset()
         beginProcessing();
 
         bitTrue(YapConst.CONTINUE);
-    
-		return true;
 	}
 	
 	public void flagForDelete(int callId){
