@@ -11,7 +11,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new ReAddCascadedDeleteTestCase().runSolo();
+		new ReAddCascadedDeleteTestCase().runClientServer();
 	}
     
     public static class Item {
