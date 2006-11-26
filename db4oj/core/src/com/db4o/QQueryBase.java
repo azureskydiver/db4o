@@ -284,25 +284,25 @@ public abstract class QQueryBase implements Unversioned {
     }
 
     public ObjectSet execute() {
-    	synchronized (streamLock()) {
-			Callbacks callbacks = stream().callbacks();
-			callbacks.onQueryStarted(cast(this));
-			QueryResult qr = internalExecute();
-		    callbacks.onQueryFinished(cast(this));
-			return new ObjectSetFacade(qr);
-    	}
-    }
-    
-    private QueryResult internalExecute(){
-        if(i_constraints.size() == 0){
-            return stream().getAll(i_trans);
-        }
-		QueryResult result = classOnlyQuery();
-		if(result != null) {
-			return result;
-		}
-        return stream().executeQuery(_this);
-    }
+		Callbacks callbacks = stream().callbacks();
+		callbacks.onQueryStarted(cast(this));
+	    QueryResult qresult = getQueryResult();
+	    callbacks.onQueryFinished(cast(this));
+		return new ObjectSetFacade(qresult);
+	}
+
+	public QueryResult getQueryResult() {
+		synchronized (streamLock()) {
+	        if(i_constraints.size() == 0){
+	            return stream().getAll(i_trans);
+	        }
+			QueryResult result = classOnlyQuery();
+			if(result != null) {
+				return result;
+			}
+	        return stream().executeQuery(_this);
+	    }
+	}
 
 	protected YapStream stream() {
 		return i_trans.stream();
