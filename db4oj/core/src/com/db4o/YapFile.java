@@ -67,14 +67,11 @@ public abstract class YapFile extends YapStream {
     }
 
     public void commit1() {
-        checkClosed();
-        i_entryCounter++;
         try {
             write(false);
         } catch (Throwable t) {
             fatalException(t);
         }
-        i_entryCounter--;
     }
 
     void configureNewFile() throws IOException{
@@ -230,8 +227,9 @@ public abstract class YapFile extends YapStream {
     }
     
     public void generateNewIdentity(){
-        setIdentity(Db4oDatabase.generate());
-        
+    	synchronized(i_lock){
+    		setIdentity(Db4oDatabase.generate());
+    	}
     }
 
     public AbstractQueryResult getAll(Transaction trans) {
@@ -566,10 +564,7 @@ public abstract class YapFile extends YapStream {
     }
 
     public final void rollback1() {
-        checkClosed();
-        i_entryCounter++;
         getTransaction().rollback();
-        i_entryCounter--;
     }
 
     public final void setDirtyInSystemTransaction(YapMeta a_object) {

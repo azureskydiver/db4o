@@ -601,7 +601,6 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 
 	private void reReadAll(Configuration config) {
 		remainingIDs = 0;
-		initialize0();
 		initialize1(config);
 		initializeTransactions();
 		readThis();

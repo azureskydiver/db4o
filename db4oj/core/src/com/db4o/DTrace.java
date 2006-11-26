@@ -25,7 +25,8 @@ public class DTrace {
             
             // addRangeWithEnd(3835808, 3836267);
             
-        	addRangeWithLength(774,1);
+//        	 addRangeWithLength(6539,1);
+        	addRangeWithLength(17673,1);
             
 //            addRangeWithLength(455404,1);
 //            
@@ -37,11 +38,13 @@ public class DTrace {
             // addRangeWithLength(20161,1);
             
             
-            // trackEventsWithoutRange();
+            trackEventsWithoutRange();
             
-            turnAllOffExceptFor(new DTrace[] {YAPMETA_SET_ID});
-            
-//            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
+//            turnAllOffExceptFor(new DTrace[] {YAPMETA_SET_ID});
+        	
+          turnAllOffExceptFor(new DTrace[] {BEGIN_TOP_LEVEL_CALL, END_TOP_LEVEL_CALL});
+        	
+//          turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
 //            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});
         }
     }
@@ -49,6 +52,7 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
+            BEGIN_TOP_LEVEL_CALL = new DTrace(true, true, "begin top level call", true);
             BIND = new DTrace(true, true, "bind", true);
             BTREE_NODE_REMOVE = new DTrace(true, true, "btreenode remove", true);
             BTREE_NODE_COMMIT_OR_ROLLBACK = new DTrace(true, true, "btreenode commit or rollback", true);
@@ -60,6 +64,7 @@ public class DTrace {
             CREATE_CANDIDATE = new DTrace(true, true, "create candidate", true);
             DELETE = new DTrace(true, true, "delete", true);
             DONOTINCLUDE = new DTrace(true, true, "donotinclude", true);
+            END_TOP_LEVEL_CALL = new DTrace(true, true, "end top level call", true);
             EVALUATE_SELF = new DTrace(true, true, "evaluate self", true);
             FREE = new DTrace(true, true, "free", true);
             FILE_FREE = new DTrace(true, true, "fileFree", true);
@@ -142,6 +147,7 @@ public class DTrace {
 
     
     public static DTrace ADD_TO_CLASS_INDEX;
+	public static DTrace BEGIN_TOP_LEVEL_CALL;
     public static DTrace BIND;
 	public static DTrace BTREE_NODE_COMMIT_OR_ROLLBACK;
 	public static DTrace BTREE_NODE_REMOVE;
@@ -153,6 +159,7 @@ public class DTrace {
     public static DTrace CREATE_CANDIDATE;
     public static DTrace DELETE;
     public static DTrace DONOTINCLUDE;
+	public static DTrace END_TOP_LEVEL_CALL;
     public static DTrace EVALUATE_SELF;
     public static DTrace FILE_FREE;
     public static DTrace FREE;

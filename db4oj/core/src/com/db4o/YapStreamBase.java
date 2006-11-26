@@ -42,20 +42,15 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     // the Configuration context for this ObjectContainer
     protected Config4Impl             i_config;
 
-    // Increments and decrements for outside calls into YapStream
-    // A value > 0 signals that the engine crashed with an uncaught exception.
-    // and prevents the finalizer.
-    protected int           i_entryCounter;
+    // Counts the number of toplevel calls into YapStream
+    private int           _stackDepth;
 
     // Tree of all YapObject references, sorted by IdentityHashCode
     private YapObject       i_hcTree;
 
     // Tree of all YapObject references, sorted by ID
     private YapObject       i_idTree;
-    private Tree[]          i_justActivated;
-    private Tree[]          i_justDeactivated;
     private Tree            i_justPeeked;
-    private Tree            i_justSet;
 
     public final Object            i_lock;
 
@@ -109,19 +104,22 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 	private Callbacks _callbacks = new com.db4o.inside.callbacks.NullCallbacks();
     
     protected final PersistentTimeStampIdGenerator _timeStampIdGenerator = new PersistentTimeStampIdGenerator();
+    
+    private int _topLevelCallId;
+    
+    private IntIdGenerator _topLevelCallIdGenerator = new IntIdGenerator();
 
     protected YapStreamBase(Configuration config,YapStream a_parent) {
     	_this = cast(this);
         i_parent = a_parent == null ? _this : a_parent;
         i_lock = a_parent == null ? new Object() : a_parent.i_lock;
-        initialize0();
         initializeTransactions();
         initialize1(config);
     }
 
     public void activate(Object a_activate, int a_depth) {
         synchronized (i_lock) {
-            activate1(null, a_activate, a_depth);
+        	activate1(null, a_activate, a_depth);
         }
     }
 
@@ -130,35 +128,24 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     public final void activate1(Transaction ta, Object a_activate, int a_depth) {
-        ta = checkTransaction(ta);
-        beginEndActivation();
-        activate2(ta, a_activate, a_depth);
-        beginEndActivation();
+        activate2(checkTransaction(ta), a_activate, a_depth);
     }
 
-    final void beginEndActivation() {
-        i_justActivated[0] = null;
-    }
-    
     final void beginEndSet(Transaction ta){
-        i_justSet = null;
         if(ta != null){
             ta.beginEndSet();
         }
     }
-
-    /**
-     * internal call interface, does not reset i_justActivated
-     */
     final void activate2(Transaction ta, Object a_activate, int a_depth) {
-        i_entryCounter++;
+    	beginTopLevelCall();
         try {
             stillToActivate(a_activate, a_depth);
             activate3CheckStill(ta);
         } catch (Throwable t) {
             fatalException(t);
-        }
-        i_entryCounter--;
+    	}finally{
+    		endTopLevelCall();
+    	}
     }
     
     final void activate3CheckStill(Transaction ta){
@@ -336,7 +323,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             if(DTrace.enabled){
                 DTrace.COMMIT.log();
             }
-            commit1();
+            beginTopLevelCall();
+            try{
+            	commit1();
+            }finally{
+            	endTopLevelCall();
+            }
         }
     }
 
@@ -399,24 +391,18 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public void deactivate(Object a_deactivate, int a_depth) {
         synchronized (i_lock) {
-            deactivate1(a_deactivate, a_depth);
+        	beginTopLevelCall();
+        	try{
+        		deactivate1(a_deactivate, a_depth);
+        	}catch (Throwable t) {
+        		fatalException(t);
+        	}finally{
+        		endTopLevelCall();
+        	}
         }
     }
 
-    final void deactivate1(Object a_deactivate, int a_depth) {
-        checkClosed();
-        i_entryCounter++;
-        try {
-            i_justDeactivated[0] = null;
-            deactivate2(a_deactivate, a_depth);
-            i_justDeactivated[0] = null;
-        } catch (Throwable t) {
-            fatalException(t);
-        }
-        i_entryCounter--;
-    }
-
-    private final void deactivate2(Object a_activate, int a_depth) {
+    private final void deactivate1(Object a_activate, int a_depth) {
         stillToDeactivate(a_activate, a_depth, true);
         while (i_stillToDeactivate != null) {
             Iterator4 i = new Iterator4Impl(i_stillToDeactivate);
@@ -446,7 +432,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public final Transaction delete1(Transaction ta, Object a_object, boolean userCall) {
         ta = checkTransaction(ta);
         if (a_object != null) {
-            i_entryCounter++;
             if (Deploy.debug) {
                 delete2(ta, a_object, userCall);
             } else {
@@ -456,7 +441,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     fatalException(t);
                 }
             }
-            i_entryCounter--;
         }
         return ta;
     }
@@ -616,16 +600,20 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     void failedToShutDown() {
         synchronized (Global4.lock) {
-            if (_classCollection != null) {
-                if (i_entryCounter == 0) {
-                    Messages.logErr(configImpl(), 50, toString(), null);
-                    while (!close()) {
-                    }
-                } else {
-                    emergencyClose();
-                    if (i_entryCounter > 0) {
-                        Messages.logErr(configImpl(), 24, null, null);
-                    }
+            if (_classCollection == null) {
+            	return;
+            }
+            if(i_amDuringFatalExit){
+            	return;
+            }
+            if (_stackDepth == 0) {
+                Messages.logErr(configImpl(), 50, toString(), null);
+                while (!close()) {
+                }
+            } else {
+                emergencyClose();
+                if (_stackDepth > 0) {
+                    Messages.logErr(configImpl(), 24, null, null);
                 }
             }
         }
@@ -660,16 +648,15 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_references.pollReferenceQueue();
     }
 
-    public ObjectSet get(Object template) {
-        synchronized (i_lock) {
-            return get1(null, template);
-        }
-    }
+	public ObjectSet get(Object template) {
+	    synchronized (i_lock) {
+	    	return get1(null, template);
+	    }
+	}
 
     ObjectSetFacade get1(Transaction ta, Object template) {
         ta = checkTransaction(ta);
         QueryResult res = null;
-        i_entryCounter++;
         if (Deploy.debug) {
             res = get2(ta, template);
         } else {
@@ -680,8 +667,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 fatalException(t);
             }
         }
-        i_entryCounter--;
-//        res.reset();
         return new ObjectSetFacade(res);
     }
 
@@ -743,16 +728,17 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     public final Object readActivatedObjectNotInCache(Transaction ta, int id){
         Object obj = null;
-        beginEndActivation();
+    	beginTopLevelCall();
         try {
             obj = new YapObject(id).read(ta, null, null, configImpl().activationDepth(),YapConst.ADD_TO_ID_TREE, true);
         } catch (Throwable t) {
             if (Debug.atHome) {
                 t.printStackTrace();
             }
+        } finally{
+        	endTopLevelCall();
         }
         activate3CheckStill(ta);
-        beginEndActivation();
         return obj;
     }
     
@@ -1011,22 +997,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_idTree = i_idTree.id_remove(a_id);
     }
 
-    protected void initialize0() {
-        initialize0b();
-        i_stillToSet = null;
-        i_justActivated = new Tree[1];
-    }
-
-    void initialize0b() {
-
-        // this method allows overriding in YapObjectCarrier
-
-        // TODO: lightweight YapObjectCarrier by moving all
-        // variables that are not needed there to a delegate
-
-        i_justDeactivated = new Tree[1];
-    }
-
     protected void initialize1(Configuration config) {
 
         i_config = initializeConfig(config);
@@ -1250,22 +1220,26 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract int newUserObject();
 
-    public Object peekPersisted(Object a_object, int a_depth,
-        boolean a_committed) {
+    public Object peekPersisted(Object obj, int depth, boolean committed) {
+    	
+    	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
+    	
         synchronized (i_lock) {
-            checkClosed();
-            i_entryCounter++;
-            i_justPeeked = null;
-            Transaction ta = a_committed ? i_systemTrans
-                : checkTransaction(null);
-            Object cloned = null;
-            YapObject yo = getYapObject(a_object);
-            if (yo != null) {
-                cloned = peekPersisted1(ta, yo.getID(), a_depth);
+            beginTopLevelCall();
+            try{
+                i_justPeeked = null;
+                Transaction ta = committed ? i_systemTrans
+                    : checkTransaction(null);
+                Object cloned = null;
+                YapObject yo = getYapObject(obj);
+                if (yo != null) {
+                    cloned = peekPersisted1(ta, yo.getID(), depth);
+                }
+                i_justPeeked = null;
+                return cloned;
+            }finally{
+                endTopLevelCall();
             }
-            i_justPeeked = null;
-            i_entryCounter--;
-            return cloned;
         }
     }
 
@@ -1353,10 +1327,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     public final Query query(Transaction ta) {
-    	i_entryCounter++;
-        Query q = new QQuery(checkTransaction(ta), null, null);
-        i_entryCounter--;
-        return q;
+        return new QQuery(checkTransaction(ta), null, null);
     }
 
     public abstract void raiseVersion(long a_minimumVersion);
@@ -1426,17 +1397,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void releaseSemaphore(String name);
     
-    void rememberJustSet(int id){
-        if(DTrace.enabled){
-            DTrace.JUST_SET.log(id);
-        }
-        if(i_justSet == null){
-            i_justSet = new TreeInt(id);
-        }else{
-            i_justSet = i_justSet.add(new TreeInt(id));
-        }
+    void markHandledInCurrentTopLevelCall(YapObject ref){
+    	ref.topLevelCall(_topLevelCallId);
     }
-
+    
     public abstract void releaseSemaphores(Transaction ta);
 
     void rename(Config4Impl config) {
@@ -1522,14 +1486,15 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
         
         YapObject reference = getYapObject(obj);
-        if(reference != null){
-            int id = reference.getID();
-            if(id > 0 && (TreeInt.find(i_justSet, id) != null)){
-                return id;
-            }
+        if(reference != null  && handledInCurrentTopLevelCall(reference)){
+        	return reference.getID();
         }
         
         return i_handlers.i_replication.tryToHandle(_this, obj);        
+    }
+    
+    private boolean handledInCurrentTopLevelCall(YapObject ref){
+    	return ref.lastTopLevelCallId() == _topLevelCallId;
     }
 
     void reserve(int byteCount) {
@@ -1538,7 +1503,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public void rollback() {
         synchronized (i_lock) {
-            rollback1();
+        	rollback1();
         }
     }
 
@@ -1575,14 +1540,19 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     public final int setInternal(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
-        int id = oldReplicationHandles(a_object); 
-        if (id != 0){
-            if(id < 0){
-                return 0;
-            }
-            return id;
-        }
-        return setAfterReplication(ta, a_object, a_depth, a_checkJustSet);
+    	beginTopLevelCall();
+    	try{
+	        int id = oldReplicationHandles(a_object); 
+	        if (id != 0){
+	            if(id < 0){
+	                return 0;
+	            }
+	            return id;
+	        }
+	        return setAfterReplication(ta, a_object, a_depth, a_checkJustSet);
+    	}finally{
+    		endTopLevelCall();
+    	}
     }
     
     final int setAfterReplication(Transaction ta, Object obj, int depth,  boolean checkJust) {
@@ -1594,30 +1564,21 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
         }
         
-        int id;
-        
-        i_entryCounter++;
-        
         if (Deploy.debug) {
-            id = set2(ta, obj, depth, checkJust);
-        } else {
-            try {
-                id = set2(ta, obj, depth, checkJust);
-            } catch (ObjectNotStorableException e) {
-                i_entryCounter--;
-                throw e;
-            } catch (Db4oException exc) {
-                id = 0;
-                throw exc;
-            } catch (Throwable t) {
-                id = 0;
-                fatalException(t);
-            }
+            return set2(ta, obj, depth, checkJust);
         }
         
-        i_entryCounter--;
+        try {
+            return set2(ta, obj, depth, checkJust);
+        } catch (ObjectNotStorableException e) {
+            throw e;
+        } catch (Db4oException exc) {
+            throw exc;
+        } catch (Throwable t) {
+            fatalException(t);
+            return 0;
+        }
         
-        return id;
     }
     
     public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
@@ -1645,7 +1606,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
         
         return id;
-        
     }
     
     public void checkStillToSet() {
@@ -1759,7 +1719,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 
                 if(a_checkJustSet && canUpdate()){
                     if(! yapObject.getYapClass().isPrimitive()){
-                        rememberJustSet(yapObject.getID());
+                        markHandledInCurrentTopLevelCall(yapObject);
                         a_checkJustSet = false;
                     }
                 }
@@ -1771,7 +1731,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             if (canUpdate()) {
                 int oid = yapObject.getID();
                 if(a_checkJustSet){
-                    if(oid > 0 && (TreeInt.find(i_justSet, oid) != null)){
+                    if(oid > 0 && handledInCurrentTopLevelCall(yapObject)){
                         return oid;
                     }
                 }
@@ -1781,7 +1741,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     a_trans.dontDelete(yapObject.getYapClass().getID(), oid);
                     if(a_checkJustSet){
                         a_checkJustSet = false;
-                        rememberJustSet(oid);
+                        markHandledInCurrentTopLevelCall(yapObject);
                     }
                     yapObject.writeUpdate(a_trans, a_updateDepth);
                 }
@@ -1791,7 +1751,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         int id = yapObject.getID();
         if(a_checkJustSet && canUpdate()){
             if(! yapObject.getYapClass().isPrimitive()){
-                rememberJustSet(id);
+                markHandledInCurrentTopLevelCall(yapObject);
             }
         }
         if(dontDelete){
@@ -1841,7 +1801,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     private final boolean stackIsSmall(){
-        return i_entryCounter < YapConst.MAX_STACK_DEPTH;
+        return _stackDepth < YapConst.MAX_STACK_DEPTH;
     }
 
     boolean stateMessages() {
@@ -1852,7 +1812,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
      * returns true in case an unknown single object is passed
      * This allows deactivating objects before queries are called.
      */
-    final List4 stillTo1(List4 a_still, Tree[] a_just, Object a_object, int a_depth,
+    final List4 stillTo1(List4 a_still, Object a_object, int a_depth,
         boolean a_forceUnknownDeactivate) {
     	
         if (a_object == null || a_depth <= 0) {
@@ -1861,15 +1821,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         
         YapObject yapObject = i_hcTree.hc_find(a_object);
         if (yapObject != null) {
-            int id = yapObject.getID();
-            if(a_just[0] != null){
-                if(((TreeInt)a_just[0]).find(id) != null){
-                    return a_still;
-                }
-                a_just[0] = a_just[0].add(new TreeInt(id));
-            }else{
-                a_just[0] = new TreeInt(id);
-            }
+        	if(handledInCurrentTopLevelCall(yapObject)){
+        		return a_still;
+        	}
+        	markHandledInCurrentTopLevelCall(yapObject);
             return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
         } 
         final ReflectClass clazz = reflector().forObject(a_object);
@@ -1877,16 +1832,14 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 			if (!clazz.getComponentType().isPrimitive()) {
                 Object[] arr = YapArray.toArray(_this, a_object);
                 for (int i = 0; i < arr.length; i++) {
-                    a_still = stillTo1(a_still, a_just, arr[i],
+                    a_still = stillTo1(a_still, arr[i],
                         a_depth, a_forceUnknownDeactivate);
                 }
 			}
         } else {
             if (a_object instanceof Entry) {
-                a_still = stillTo1(a_still, a_just,
-                    ((Entry) a_object).key, a_depth, false);
-                a_still = stillTo1(a_still, a_just,
-                    ((Entry) a_object).value, a_depth, false);
+                a_still = stillTo1(a_still, ((Entry) a_object).key, a_depth, false);
+                a_still = stillTo1(a_still, ((Entry) a_object).value, a_depth, false);
             } else {
                 if (a_forceUnknownDeactivate) {
                     // Special handling to deactivate Top-Level unknown objects only.
@@ -1910,8 +1863,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         //			Class clazz = a_object.getClass();
         //			if(! clazz.isPrimitive()){
 
-        i_stillToActivate = stillTo1(i_stillToActivate, i_justActivated,
-            a_object, a_depth, false);
+        i_stillToActivate = stillTo1(i_stillToActivate, a_object, a_depth, false);
 
         //			}
         //		}
@@ -1919,8 +1871,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     void stillToDeactivate(Object a_object, int a_depth,
         boolean a_forceUnknownDeactivate) {
-        i_stillToDeactivate = stillTo1(i_stillToDeactivate, i_justDeactivated,
-            a_object, a_depth, a_forceUnknownDeactivate);
+        i_stillToDeactivate = stillTo1(i_stillToDeactivate, a_object, a_depth, a_forceUnknownDeactivate);
     }
 
     void stillToSet(Transaction a_trans, YapObject a_yapObject, int a_updateDepth) {
@@ -1973,6 +1924,45 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     public abstract SystemInfo systemInfo();
+    
+    public final void beginTopLevelCall(){
+    	if(DTrace.enabled){
+    		DTrace.BEGIN_TOP_LEVEL_CALL.log();
+    	}
+    	checkClosed();
+    	generateCallIDOnTopLevel();
+    	_stackDepth++;
+    }
+    
+    public final void endTopLevelCall(){
+    	if(DTrace.enabled){
+    		DTrace.END_TOP_LEVEL_CALL.log();
+    	}
+    	_stackDepth--;
+    	generateCallIDOnTopLevel();
+    }
+    
+    private final void generateCallIDOnTopLevel(){
+    	if(_stackDepth == 0){
+    		_topLevelCallId = _topLevelCallIdGenerator.next();
+    	}
+    }
+    
+    public int stackDepth(){
+    	return _stackDepth;
+    }
+    
+    public void stackDepth(int depth){
+    	_stackDepth = depth;
+    }
+    
+    public int topLevelCallId(){
+    	return _topLevelCallId;
+    }
+    
+    public void topLevelCallId(int id){
+    	_topLevelCallId = id;
+    }
 
     public Object unmarshall(YapWriter yapBytes) {
         return unmarshall(yapBytes._buffer, yapBytes.getID());
@@ -2012,9 +2002,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
         hcTreeRemove(yo);
         idTreeRemove(yo.getID());
-        if(i_justActivated!=null&&i_justActivated[0]!=null) {
-        	i_justActivated[0] = i_justActivated[0].removeLike(new TreeInt(yo.getID()));
-        }
 
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject
@@ -2055,6 +2042,5 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 	public abstract QueryResult classOnlyQuery(Transaction trans, YapClass clazz);
 	
 	public abstract QueryResult executeQuery(QQuery query);
-
 
 }

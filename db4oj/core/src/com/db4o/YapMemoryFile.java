@@ -45,7 +45,6 @@ public class YapMemoryFile extends YapFile {
     }
 
     protected boolean close2() {
-        i_entryCounter++;
         if (Deploy.debug) {
             write(true);
         } else {
@@ -56,7 +55,6 @@ public class YapMemoryFile extends YapFile {
             }
         }
         super.close2();
-        i_entryCounter--;
         if (i_closed == false) {
             byte[] temp = new byte[i_length];
             System.arraycopy(i_memoryFile.getBytes(), 0, temp, 0, i_length);

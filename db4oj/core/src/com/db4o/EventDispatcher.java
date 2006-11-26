@@ -41,12 +41,20 @@ public final class EventDispatcher {
 	boolean dispatch(YapStream stream, Object obj, int eventID){
 		if(methods[eventID] != null){
 			Object[] parameters = new Object[]{stream};
+			int stackDepth = stream.stackDepth();
+			int topLevelCallId = stream.topLevelCallId();
+			stream.stackDepth(0);
 			try{
 				Object res = methods[eventID].invoke(obj,parameters);
 				if(res != null && res instanceof Boolean){
 				    return ((Boolean)res).booleanValue();
 				}
 			}catch(Throwable t){
+				// TODO: Exceptions in callbacks should be wrapped and thrown up.
+				
+			} finally {
+				stream.stackDepth(stackDepth);
+				stream.topLevelCallId(topLevelCallId);
 			}
 		}
 		return true;

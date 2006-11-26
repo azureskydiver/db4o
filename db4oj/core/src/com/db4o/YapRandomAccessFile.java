@@ -102,7 +102,6 @@ public class YapRandomAccessFile extends YapFile {
             stopSession = i_session.closeInstance();
             if (stopSession) {
                 freePrefetchedPointers();
-                i_entryCounter++;
                 if (Deploy.debug) {
                     write(true);
                 } else {
@@ -113,7 +112,6 @@ public class YapRandomAccessFile extends YapFile {
                     }
                 }
                 super.close2();
-                i_entryCounter--;
                 Db4o.sessionStopped(i_session);
                 synchronized (i_fileLock) {
                     try {

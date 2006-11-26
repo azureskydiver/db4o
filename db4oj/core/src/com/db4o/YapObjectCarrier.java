@@ -23,10 +23,6 @@ public class YapObjectCarrier extends YapMemoryFile {
 	    super(config,a_callingStream, memoryFile);
 	}
 	
-	void initialize0b(){
-		// do nothing
-	}
-	
 	protected void initialize1(Configuration config){
 	    i_handlers = i_parent.i_handlers;
         _classCollection = i_parent.classCollection();

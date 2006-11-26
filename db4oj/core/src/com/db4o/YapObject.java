@@ -27,6 +27,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	private int hc_size;
 	private int hc_code; // redundant hashCode
 	
+	private int _lastTopLevelCallId;
     
     public YapObject(){
     }
@@ -70,6 +71,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			read(ta, null, a_object, a_depth, YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
 		}
 	}
+	
+	public int lastTopLevelCallId(){
+		return _lastTopLevelCallId;
+	}
 
 	private void logActivation(YapStream stream, String event) {
 		logEvent(stream, event, YapConst.ACTIVATION);
@@ -86,7 +91,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			a_stream.idTreeAdd(this);
 		}
 	}
-
+	
 	/** return false if class not completely initialized, otherwise true **/
 	boolean continueSet(Transaction a_trans, int a_updateDepth) {
 		if (bitIsTrue(YapConst.CONTINUE)) {
@@ -328,6 +333,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
         bitTrue(YapConst.CONTINUE);
     
 		return true;
+	}
+	
+	public void topLevelCall(int callId){
+		_lastTopLevelCallId = callId;
 	}
 	
 	public VirtualAttributes virtualAttributes(){
@@ -795,6 +804,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	    }
 	    return "Exception in YapObject analyzer";
 	}
+	
 
 
     
