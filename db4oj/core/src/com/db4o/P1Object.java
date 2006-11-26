@@ -79,7 +79,7 @@ public class P1Object implements Db4oTypeImpl{
             i_yapObject = stream().getYapObject(this);
         }
         if(validYapObject()){
-            stream().delete3(i_trans,i_yapObject,this, 0, false);
+            stream().delete2(i_trans,i_yapObject,this, 0, false);
         }
     }
     
