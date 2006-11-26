@@ -2,6 +2,7 @@
 
 package db4ounit.extensions;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 
@@ -17,9 +18,12 @@ public interface Db4oFixture {
     
     void clean();
     
+	YapFile fileSession();
+	
 	ExtObjectContainer db();
 	
 	Configuration config();
 	
 	boolean accept(Class clazz);
+
 }
