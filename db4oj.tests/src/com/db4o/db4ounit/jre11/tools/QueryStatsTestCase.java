@@ -10,9 +10,7 @@ import com.db4o.query.Query;
 import com.db4o.tools.QueryStats;
 
 import db4ounit.Assert;
-import db4ounit.TestRunner;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.Db4oSolo;
 
 public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	
@@ -84,9 +82,6 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static void main(String[] args) {
-		new TestRunner(
-				new Db4oTestSuiteBuilder(
-						new Db4oSolo(),
-						QueryStatsTestCase.class)).run();
+		new QueryStatsTestCase().runClientServer();
 	}
 }

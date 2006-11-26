@@ -21,16 +21,15 @@ public class CascadedDeleteUpdate extends AbstractDb4oTestCase {
 	}
 	
 	public static void main(String[] arguments) {
-		// new CascadedDeleteUpdate().runSolo();
+//		new CascadedDeleteUpdate().runSolo();
 		new CascadedDeleteUpdate().runClientServer();
 	}
 	
 	protected void configure(Configuration config) {
 		config.objectClass(ParentItem.class).cascadeOnDelete(true);
-		config.objectClass(ChildItem.class).cascadeOnDelete(true);
 	}
 	
-	protected void store() {
+	public void store() {
 		ParentItem parentItem1 = new ParentItem();
 		ParentItem parentItem2 = new ParentItem();
 		
@@ -41,18 +40,29 @@ public class CascadedDeleteUpdate extends AbstractDb4oTestCase {
 		parentItem2.child = child;
 		
 		db().set(parentItem1);
-		db().set(parentItem2);
-		db().set(parentItem1);
-		db().set(parentItem2);
 	}
 	
-	public void test(){
-		Query q = newQuery();
-		q.constrain(ParentItem.class);
+	public void testAllObjectStored() throws Exception{
+		assertAllObjectStored();
+	}
+	
+	public void testUpdate() throws Exception{
+		Query q = newQuery(ParentItem.class);
 		ObjectSet objectSet = q.execute();
-		
+		while(objectSet.hasNext()){
+			db().set(objectSet.next());
+		}
+		db().commit();
+		assertAllObjectStored();
+	}
+	
+	private void assertAllObjectStored() throws Exception{
+		reopen();
+		Query q = newQuery(ParentItem.class);
+		ObjectSet objectSet = q.execute();
 		while(objectSet.hasNext()){
 			ParentItem parentItem = (ParentItem) objectSet.next();
+			db().refresh(parentItem, 3);
 			Assert.isNotNull(parentItem.child);
 		}
 	}

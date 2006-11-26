@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
+public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase implements OptOutCS {
 	
 	protected void configure(Configuration config) {
 		enableCascadeOnDelete(config);
@@ -54,6 +54,8 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 		assertIndexCount(3);
 
 		db().delete(a);
+		
+		db().commit();
 
 		reopen();
 		
@@ -85,7 +87,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	}
 
 	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
+		return EventRegistryFactory.forObjectContainer(fileSession());
 	}
 
 	private void enableCascadeOnDelete(Configuration config) {
@@ -106,7 +108,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 				sum[0]++;
 			}
 		};
-		btree().traverseKeys(trans(),visitor);
+		btree().traverseKeys(fileSession().getSystemTransaction(),visitor);
 		Assert.areEqual(expectedCount,sum[0]);
 	}
 
@@ -115,14 +117,11 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	}
 
 	private YapClass yapClass() {
-		YapClass clazz = stream().getYapClass(reflector().forClass(Item.class), false);
+		YapClass clazz = fileSession().getYapClass(reflector().forClass(Item.class), false);
 		return clazz;
 	}
 
 	public static void main(String[] args) {
-		new TestRunner(
-				new Db4oTestSuiteBuilder(
-						new Db4oSolo(),
-						SelectiveCascadingDeleteTestCase.class)).run();
+		new SelectiveCascadingDeleteTestCase().runSolo();
 	}
 }
