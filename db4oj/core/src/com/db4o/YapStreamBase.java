@@ -105,7 +105,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     protected final PersistentTimeStampIdGenerator _timeStampIdGenerator = new PersistentTimeStampIdGenerator();
     
-    private int _topLevelCallId;
+    private int _topLevelCallId = 1;
     
     private IntIdGenerator _topLevelCallIdGenerator = new IntIdGenerator();
 
@@ -434,75 +434,88 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (obj == null) {
         	return;
         }
-        YapObject yo = getYapObject(obj);
-        if(yo == null){
+        YapObject ref = getYapObject(obj);
+        if(ref == null){
         	return;
         }
         
         if (Deploy.debug) {
-            delete2(trans, yo, obj, 0, userCall);
-        } else {
-            try {
-            	delete2(trans, yo, obj, 0, userCall);
-            } catch (Throwable t) {
-                fatalException(t);
-            }
+            delete2(trans, ref, obj, 0, userCall);
+            return;
+        } 
+        
+        try {
+        	delete2(trans, ref, obj, 0, userCall);
+        } catch (Throwable t) {
+            fatalException(t);
         }
     }
     
-    final void delete2(Transaction ta, YapObject yo, Object a_object,  int a_cascade, boolean userCall) {
+    final void delete2(Transaction trans, YapObject ref, Object obj, int cascade, boolean userCall) {
         
-        // This check is performed twice, here and in delete4, intentionally.
-        if(breakDeleteForEnum(yo, userCall)){
+        // This check is performed twice, here and in delete3, intentionally.
+        if(breakDeleteForEnum(ref, userCall)){
             return;
         }
         
-        if(a_object instanceof SecondClass){
-            delete3(ta, yo, a_cascade, userCall);
-        }else{
-            ta.delete(yo, a_cascade);
+        if(obj instanceof SecondClass){
+        	if(! flagForDelete(ref)){
+        		return;
+        	}
+            delete3(trans, ref, cascade, userCall);
+            return;
         }
+        
+        trans.delete(ref, cascade);
     }
 
-    final void delete3(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
-        // The passed YapObject can be null, when calling from Transaction.
-        if(yo != null){
-            if (yo.beginProcessing()) {
+    final void delete3(Transaction trans, YapObject ref, int cascade, boolean userCall) {
+    	
+        // The passed reference can be null, when calling from Transaction.
+        if(ref == null  || ! ref.beginProcessing()){
+        	return;
+        }
                 
-                // This check is performed twice, here and in delete3, intentionally.
-                if(breakDeleteForEnum(yo, userCall)){
-                    return;
-                }
-                
-                YapClass yc = yo.getYapClass();
-                Object obj = yo.getObject();
-                
-                // We have to end processing temporarily here, otherwise the can delete callback
-                // can't do anything at all with this object.
-                
-                yo.endProcessing();
-                
-                if (!objectCanDelete(yc, obj)) {
-                    return;
-                }
-                
-                yo.beginProcessing();
+        // This check is performed twice, here and in delete2, intentionally.
+        if(breakDeleteForEnum(ref, userCall)){
+            return;
+        }
+        
+        if(! ref.isFlaggedForDelete()){
+        	return;
+        }
+        
+        YapClass yc = ref.getYapClass();
+        Object obj = ref.getObject();
+        
+        // We have to end processing temporarily here, otherwise the can delete callback
+        // can't do anything at all with this object.
+        
+        ref.endProcessing();
+        
+        if (!objectCanDelete(yc, obj)) {
+            return;
+        }
+        
+        // repetitive, the object can have been touched by an action in the callback.
+        if(! ref.isFlaggedForDelete()){
+        	return;
+        }
+        
+        ref.beginProcessing();
 
-                if(DTrace.enabled){
-                    DTrace.DELETE.log(yo.getID());
-                }
-                
-                
-                if(delete4(ta, yo, a_cascade, userCall)){
-                	objectOnDelete(yc, obj);
-                    if (configImpl().messageLevel() > YapConst.STATE) {
-                        message("" + yo.getID() + " delete " + yo.getYapClass().getName());
-                    }
-                }
-                
-                yo.endProcessing();
+        if(DTrace.enabled){
+            DTrace.DELETE.log(ref.getID());
+        }
+        
+        if(delete4(trans, ref, cascade, userCall)){
+        	objectOnDelete(yc, obj);
+            if (configImpl().messageLevel() > YapConst.STATE) {
+                message("" + ref.getID() + " delete " + ref.getYapClass().getName());
             }
         }
+        
+        ref.endProcessing();
     }
     
 	private boolean objectCanDelete(YapClass yc, Object obj) {
@@ -1395,8 +1408,19 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void releaseSemaphore(String name);
     
-    void markHandledInCurrentTopLevelCall(YapObject ref){
-    	ref.topLevelCall(_topLevelCallId);
+    void flagAsHandled(YapObject ref){
+    	ref.flagAsHandled(_topLevelCallId);
+    }
+    
+    boolean flagForDelete(YapObject ref){
+    	if(ref == null){
+    		return false;
+    	}
+    	if(handledInCurrentTopLevelCall(ref)){
+    		return false;
+    	}
+    	ref.flagForDelete(_topLevelCallId);
+    	return true;
     }
     
     public abstract void releaseSemaphores(Transaction ta);
@@ -1491,8 +1515,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return i_handlers.i_replication.tryToHandle(_this, obj);        
     }
     
-    private boolean handledInCurrentTopLevelCall(YapObject ref){
-    	return ref.lastTopLevelCallId() == _topLevelCallId;
+    public final boolean handledInCurrentTopLevelCall(YapObject ref){
+    	return ref.isFlaggedAsHandled(_topLevelCallId);
     }
 
     void reserve(int byteCount) {
@@ -1717,7 +1741,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 
                 if(a_checkJustSet && canUpdate()){
                     if(! yapObject.getYapClass().isPrimitive()){
-                        markHandledInCurrentTopLevelCall(yapObject);
+                        flagAsHandled(yapObject);
                         a_checkJustSet = false;
                     }
                 }
@@ -1739,7 +1763,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     a_trans.dontDelete(yapObject.getYapClass().getID(), oid);
                     if(a_checkJustSet){
                         a_checkJustSet = false;
-                        markHandledInCurrentTopLevelCall(yapObject);
+                        flagAsHandled(yapObject);
                     }
                     yapObject.writeUpdate(a_trans, a_updateDepth);
                 }
@@ -1749,7 +1773,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         int id = yapObject.getID();
         if(a_checkJustSet && canUpdate()){
             if(! yapObject.getYapClass().isPrimitive()){
-                markHandledInCurrentTopLevelCall(yapObject);
+                flagAsHandled(yapObject);
             }
         }
         if(dontDelete){
@@ -1822,7 +1846,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         	if(handledInCurrentTopLevelCall(yapObject)){
         		return a_still;
         	}
-        	markHandledInCurrentTopLevelCall(yapObject);
+        	flagAsHandled(yapObject);
             return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
         } 
         final ReflectClass clazz = reflector().forObject(a_object);

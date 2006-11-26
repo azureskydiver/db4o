@@ -337,20 +337,25 @@ public class Transaction {
         return slotSetPointerCount[0];
     }
 
-    public void delete(YapObject a_yo, int a_cascade) {
+    public void delete(YapObject ref, int a_cascade) {
         checkSynchronization();
-        int id = a_yo.getID();
+        
+        if(! i_stream.flagForDelete(ref)){
+        	return;
+        }
+        
+        int id = ref.getID();
         if(DTrace.enabled){
             DTrace.TRANS_DELETE.log(id);
         }
         
         DeleteInfo info = (DeleteInfo) TreeInt.find(i_delete, id);
         if(info == null){
-            info = new DeleteInfo(id, a_yo, true, a_cascade);
+            info = new DeleteInfo(id, ref, true, a_cascade);
             i_delete = Tree.add(i_delete, info);
             return;
         }
-        info._reference = a_yo;
+        info._reference = ref;
         if(a_cascade > info._cascade){
             info._cascade = a_cascade;
         }
