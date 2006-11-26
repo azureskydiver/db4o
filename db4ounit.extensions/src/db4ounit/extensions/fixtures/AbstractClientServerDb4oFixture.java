@@ -4,8 +4,7 @@ package db4ounit.extensions.fixtures;
 
 import java.io.File;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectServer;
+import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
 
 
@@ -55,5 +54,9 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     public ObjectServer server() {
     	return _server;
     }
+    
+	public YapFile fileSession() {
+		return (YapFile)_server.ext().objectContainer();
+	}
 
 }

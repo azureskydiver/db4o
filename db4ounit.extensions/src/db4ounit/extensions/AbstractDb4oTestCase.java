@@ -118,6 +118,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected YapStream stream() {
 	    return (YapStream) db();
 	}
+	
+	protected YapFile fileSession() {
+		return fixture().fileSession();
+	}
 
 	protected Transaction trans() {
 	    return stream().getTransaction();
