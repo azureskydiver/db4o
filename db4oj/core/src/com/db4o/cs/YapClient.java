@@ -251,10 +251,8 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return ((MsgD) expectedResponse(Msg.ID_LIST)).readLong();
 	}
 
-	public final boolean delete5(Transaction ta, YapObject yo, int a_cascade,
-			boolean userCall) {
-		writeMsg(Msg.DELETE.getWriterForInts(i_trans, new int[] { yo.getID(),
-				userCall ? 1 : 0 }));
+	public final boolean delete4(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
+		writeMsg(Msg.DELETE.getWriterForInts(i_trans, new int[] { yo.getID(), userCall ? 1 : 0 }));
 		return true;
 	}
 

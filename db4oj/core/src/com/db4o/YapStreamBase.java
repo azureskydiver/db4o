@@ -422,37 +422,35 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         delete(null, a_object);
     }
     
-    public void delete(Transaction trans, Object a_object) {
+    public void delete(Transaction trans, Object obj) {
         synchronized (i_lock) {
-            Transaction ta = delete1(trans, a_object, true);
-            ta.beginEndSet();
+        	trans = checkTransaction(trans);
+            delete1(trans, obj, true);
+            trans.beginEndSet();
         }
     }
 
-    public final Transaction delete1(Transaction ta, Object a_object, boolean userCall) {
-        ta = checkTransaction(ta);
-        if (a_object != null) {
-            if (Deploy.debug) {
-                delete2(ta, a_object, userCall);
-            } else {
-                try {
-                    delete2(ta, a_object, userCall);
-                } catch (Throwable t) {
-                    fatalException(t);
-                }
+    public final void delete1(Transaction trans, Object obj, boolean userCall) {
+        if (obj == null) {
+        	return;
+        }
+        YapObject yo = getYapObject(obj);
+        if(yo == null){
+        	return;
+        }
+        
+        if (Deploy.debug) {
+            delete2(trans, yo, obj, 0, userCall);
+        } else {
+            try {
+            	delete2(trans, yo, obj, 0, userCall);
+            } catch (Throwable t) {
+                fatalException(t);
             }
-        }
-        return ta;
-    }
-
-    private final void delete2(Transaction ta, Object a_object, boolean userCall) {
-        YapObject yo = getYapObject(a_object);
-        if (yo != null) {
-            delete3(ta, yo, a_object, 0, userCall);
         }
     }
     
-    final void delete3(Transaction ta, YapObject yo, Object a_object,  int a_cascade, boolean userCall) {
+    final void delete2(Transaction ta, YapObject yo, Object a_object,  int a_cascade, boolean userCall) {
         
         // This check is performed twice, here and in delete4, intentionally.
         if(breakDeleteForEnum(yo, userCall)){
@@ -460,13 +458,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         }
         
         if(a_object instanceof SecondClass){
-            delete4(ta, yo, a_cascade, userCall);
+            delete3(ta, yo, a_cascade, userCall);
         }else{
             ta.delete(yo, a_cascade);
         }
     }
 
-    final void delete4(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
+    final void delete3(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
         // The passed YapObject can be null, when calling from Transaction.
         if(yo != null){
             if (yo.beginProcessing()) {
@@ -495,7 +493,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 }
                 
                 
-                if(delete5(ta, yo, a_cascade, userCall)){
+                if(delete4(ta, yo, a_cascade, userCall)){
                 	objectOnDelete(yc, obj);
                     if (configImpl().messageLevel() > YapConst.STATE) {
                         message("" + yo.getID() + " delete " + yo.getYapClass().getName());
@@ -517,7 +515,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 		yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
 	}
 	
-    public abstract boolean delete5(Transaction ta, YapObject yapObject, int a_cascade, boolean userCall);
+    public abstract boolean delete4(Transaction ta, YapObject yapObject, int a_cascade, boolean userCall);
     
     public Object descend(Object obj, String[] path){
         synchronized (i_lock) {
