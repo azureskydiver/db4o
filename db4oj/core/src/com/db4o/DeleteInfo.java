@@ -7,18 +7,16 @@ package com.db4o;
  */
 public class DeleteInfo extends TreeInt{
     
-    public boolean _delete;
     int _cascade;
     public YapObject _reference;
 
-    public DeleteInfo(int id, YapObject reference, boolean delete, int cascade) {
+    public DeleteInfo(int id, YapObject reference, int cascade) {
         super(id);
         _reference = reference;
-        _delete = delete;
         _cascade = cascade;
     }
     public Object shallowClone() {
-    	DeleteInfo deleteinfo= new DeleteInfo(0,_reference, _delete, _cascade);
+    	DeleteInfo deleteinfo= new DeleteInfo(0,_reference,  _cascade);
     	return shallowCloneInternal(deleteinfo);
     }
     

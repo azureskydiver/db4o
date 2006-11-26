@@ -16,32 +16,5 @@ public class MetaClass implements Internal4{
     
     /** persistent field, don't touch */
 	public MetaField[] fields;
-	
-	public MetaClass(){
-	}
-	
-	public MetaClass(String name_){
-		name = name_;
-	}
-	
-	MetaField ensureField(Transaction trans, String a_name){
-		if(fields != null){
-			for (int i = 0; i < fields.length; i++) {
-				if(fields[i].name.equals(a_name)){
-					return fields[i];
-				}
-            }
-            MetaField[] temp = new MetaField[fields.length + 1];
-            System.arraycopy(fields, 0, temp, 0, fields.length);
-            fields = temp;
-		}else{
-			fields = new MetaField[1];
-		}
-		MetaField newMetaField = new MetaField(a_name);
-		fields[fields.length - 1] = newMetaField;
-		trans.stream().setInternal(trans, newMetaField, YapConst.UNSPECIFIED, false);
-		trans.stream().setInternal(trans, this, YapConst.UNSPECIFIED, false);
-		return newMetaField;
-	}
 
 }

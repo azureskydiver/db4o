@@ -30,8 +30,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 
 	private final static KeySpec MAXIMUM_ACTIVATION_DEPTH=new KeySpec(0);
 
-	private final static KeySpec METACLASS=new KeySpec(null);
-
 	private final static KeySpec MINIMUM_ACTIVATION_DEPTH=new KeySpec(0);
 
 	private final static KeySpec PERSIST_STATIC_FIELD_VALUES=new KeySpec(false);
@@ -268,10 +266,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 
 	void maintainMetaClass(boolean flag){
 		_config.put(MAINTAIN_METACLASS,flag);
-	}
-
-	MetaClass metaClass() {
-		return (MetaClass)_config.get(METACLASS);
 	}
 
 	boolean staticFieldValuesArePersisted() {
