@@ -2,15 +2,21 @@
 
 package com.db4o.db4ounit.jre11.events;
 
+import com.db4o.*;
 import com.db4o.events.Event4;
 import com.db4o.events.EventRegistry;
 import com.db4o.events.EventRegistryFactory;
 import com.db4o.events.ObjectEventArgs;
 
 import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
+	
+	public static void main(String[] arguments) {
+		new GlobalLifecycleEventsTestCase().runClientServer();
+	}
 	
 	public static final class Item {
 
@@ -46,14 +52,14 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testCancelDeleting() {
-		listenToEvent(eventRegistry().deleting());
+		listenToEvent(eventRegistryForDelete().deleting());
 		
 		_recorder.cancel(true);
 		
 		Item item = storeItem();
 		db().delete(item);
 		
-		assertSingleObjectEventArgs(eventRegistry().deleting(), item);
+		assertSingleObjectEventArgs(eventRegistryForDelete().deleting(), item);
 		
 		Assert.areSame(item, db().get(Item.class).next());
 	}	
@@ -96,7 +102,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testDeleting() {
-		assertDeletionEvent(eventRegistry().deleting());
+		assertDeletionEvent(eventRegistryForDelete().deleting());
 	}
 	
 	public void testUpdating() {
@@ -113,7 +119,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testDeleted() {
-		assertDeletionEvent(eventRegistry().deleted());
+		assertDeletionEvent(eventRegistryForDelete().deleted());
 	}
 	
 	public void testCreated() {
@@ -182,6 +188,16 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		
 		Assert.areSame(item, db().get(Item.class).next());
 	}
+	
+	private EventRegistry eventRegistryForDelete() {
+		Db4oFixture fixture = fixture();
+		if(fixture instanceof AbstractClientServerDb4oFixture){
+			ObjectServer server = ((AbstractClientServerDb4oFixture)fixture).server();
+			ObjectContainer oc = server.ext().objectContainer();
+			return EventRegistryFactory.forObjectContainer(oc);
+		}
+		return EventRegistryFactory.forObjectContainer(db());
+	}
 
 	private EventRegistry eventRegistry() {
 		return EventRegistryFactory.forObjectContainer(db());
@@ -201,4 +217,5 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		db().set(item);
 		return item;
 	}
+	
 }
