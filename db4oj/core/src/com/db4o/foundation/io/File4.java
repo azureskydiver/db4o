@@ -56,7 +56,7 @@ public class File4 {
 		rafOut.close();
 	}
 
-	private static void copyDirectory(File source, File target) throws IOException {
+	private static void copyDirectory(File source, File target) {
 		String[] files = source.list();
 		if (files != null) {
 		    for (int i = 0; i < files.length; i++) {
