@@ -190,13 +190,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	}
 	
 	private EventRegistry eventRegistryForDelete() {
-		Db4oFixture fixture = fixture();
-		if(fixture instanceof AbstractClientServerDb4oFixture){
-			ObjectServer server = ((AbstractClientServerDb4oFixture)fixture).server();
-			ObjectContainer oc = server.ext().objectContainer();
-			return EventRegistryFactory.forObjectContainer(oc);
-		}
-		return EventRegistryFactory.forObjectContainer(db());
+		return EventRegistryFactory.forObjectContainer(fileSession());
 	}
 
 	private EventRegistry eventRegistry() {
