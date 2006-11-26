@@ -29,7 +29,7 @@ public class CascadedDeleteUpdate extends AbstractDb4oTestCase {
 		config.objectClass(ParentItem.class).cascadeOnDelete(true);
 	}
 	
-	public void store() {
+	protected void store() {
 		ParentItem parentItem1 = new ParentItem();
 		ParentItem parentItem2 = new ParentItem();
 		
