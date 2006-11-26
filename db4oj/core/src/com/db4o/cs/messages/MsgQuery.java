@@ -20,10 +20,10 @@ public abstract class MsgQuery extends MsgObject {
 		int maxCount = 0;
 		
 		if(evaluationMode == QueryEvaluationMode.IMMEDIATE){
+			maxCount = queryResult.size();
+		} else{
 			queryResultId = generateID();
 			maxCount = config().prefetchObjectCount();  
-		} else{
-			maxCount = queryResult.size();
 		}
 		
 		MsgD message = QUERY_RESULT.getWriterForLength(transaction(), bufferLength(maxCount));
