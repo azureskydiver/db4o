@@ -134,7 +134,8 @@ public class Transaction {
                             
                             Object[] arr  = stream().getObjectAndYapObjectByID(Transaction.this, info._key);
                             obj = arr[0];
-                            info._reference = (YapObject)arr[1]; 
+                            info._reference = (YapObject)arr[1];
+                            info._reference.flagForDelete(i_stream.topLevelCallId());
                         }
                         stream().delete3(Transaction.this,info._reference ,info._cascade, false);
                     }
@@ -147,7 +148,6 @@ public class Transaction {
         i_writtenUpdateDeletedMembers = null;
     }
     
-
     private final void clearAll() {
         _slotChanges = null;
         i_dirtyFieldIndexes = null;
