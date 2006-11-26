@@ -10,43 +10,51 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class CascadedDeleteUpdate extends AbstractDb4oTestCase {
+	
+	public static class ParentItem {
+		public Object child;
+	}
 
-	public static class CduHelper {
-		Object parent1;
-		Object parent2;
+	public static class ChildItem {
+		public Object parent1;
+		public Object parent2;
 	}
 	
-	public Object child;
+	public static void main(String[] arguments) {
+		// new CascadedDeleteUpdate().runSolo();
+		new CascadedDeleteUpdate().runClientServer();
+	}
 	
 	protected void configure(Configuration config) {
-		config.objectClass(this).cascadeOnDelete(true);
-		config.objectClass(CduHelper.class).cascadeOnDelete(true);
+		config.objectClass(ParentItem.class).cascadeOnDelete(true);
+		config.objectClass(ChildItem.class).cascadeOnDelete(true);
 	}
 	
 	protected void store() {
-		CascadedDeleteUpdate cdu1 = new CascadedDeleteUpdate();
-		CascadedDeleteUpdate cdu2 = new CascadedDeleteUpdate();
+		ParentItem parentItem1 = new ParentItem();
+		ParentItem parentItem2 = new ParentItem();
 		
-		CduHelper helper = new CduHelper();
-		helper.parent1 = cdu1;
-		helper.parent2 = cdu2;
-		cdu1.child = helper; 
-		cdu2.child = helper;
+		ChildItem child = new ChildItem();
+		child.parent1 = parentItem1;
+		child.parent2 = parentItem2;
+		parentItem1.child = child; 
+		parentItem2.child = child;
 		
-		db().set(cdu1);
-		db().set(cdu2);
-		db().set(cdu1);
-		db().set(cdu2);
+		db().set(parentItem1);
+		db().set(parentItem2);
+		db().set(parentItem1);
+		db().set(parentItem2);
 	}
 	
 	public void test(){
 		Query q = newQuery();
-		q.constrain(this.getClass());
+		q.constrain(ParentItem.class);
 		ObjectSet objectSet = q.execute();
 		
 		while(objectSet.hasNext()){
-			CascadedDeleteUpdate cdu = (CascadedDeleteUpdate) objectSet.next();
-			Assert.isNotNull(cdu.child);
+			ParentItem parentItem = (ParentItem) objectSet.next();
+			Assert.isNotNull(parentItem.child);
 		}
 	}
+	
 }
