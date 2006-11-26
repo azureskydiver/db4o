@@ -8,7 +8,7 @@ package com.db4o.foundation;
  */
 public class IntIdGenerator {
 	
-	private int _current;
+	private int _current = 1;
 	
 	public int next(){
 		_current ++;

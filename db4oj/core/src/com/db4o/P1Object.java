@@ -220,7 +220,7 @@ public class P1Object implements Db4oTypeImpl{
     void updateInternal(int depth){
         if(validYapObject()){
             i_yapObject.writeUpdate(i_trans, depth);
-            stream().markHandledInCurrentTopLevelCall(i_yapObject);
+            stream().flagAsHandled(i_yapObject);
             stream().checkStillToSet();
         }
     }

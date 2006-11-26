@@ -72,10 +72,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		}
 	}
 	
-	public int lastTopLevelCallId(){
-		return _lastTopLevelCallId;
-	}
-
 	private void logActivation(YapStream stream, String event) {
 		logEvent(stream, event, YapConst.ACTIVATION);
 	}
@@ -335,8 +331,20 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return true;
 	}
 	
-	public void topLevelCall(int callId){
+	public void flagForDelete(int callId){
+		_lastTopLevelCallId = - callId;
+	}
+	
+	public boolean isFlaggedForDelete(){
+		return _lastTopLevelCallId < 0;
+	}
+	
+	public void flagAsHandled(int callId){
 		_lastTopLevelCallId = callId;
+	}
+	
+	public final boolean isFlaggedAsHandled(int callID){
+		return _lastTopLevelCallId == callID;
 	}
 	
 	public VirtualAttributes virtualAttributes(){
