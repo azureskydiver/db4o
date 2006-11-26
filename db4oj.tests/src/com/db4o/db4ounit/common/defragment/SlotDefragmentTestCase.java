@@ -6,17 +6,18 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
+import com.db4o.query.*;
 import com.db4o.test.util.*;
 
 import db4ounit.*;
 
 public class SlotDefragmentTestCase implements TestLifeCycle {
 
-	public final static String FILENAME="defrag.yap";
-	public final static String BACKUPFILENAME=FILENAME+".backup";
-	
+	private static final String FIELDNAME = "_id";
+
 	public static class Data {
 		
 		public int _id;
@@ -25,6 +26,8 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 			_id = id;
 		}
 	}
+
+	private static final int VALUE = 42;
 	
 	/**
 	 * @sharpen.ignore
@@ -48,38 +51,59 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 		assertDataClassKnown(false);
 	}
 
+	public void _testPrimitiveIndex() throws Exception {
+		forceIndex();
+		Defragment.defrag(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
+		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentConstants.FILENAME);
+		Query query=db.query();
+		query.constrain(Data.class);
+		query.descend(FIELDNAME).constrain(new Integer(VALUE));
+		ObjectSet result=query.execute();
+		Assert.areEqual(1,result.size());
+		db.close();
+	}
+
 	public void testNoForceDelete() throws Exception {
-		Defragment.defrag(FILENAME,BACKUPFILENAME);
+		Defragment.defrag(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
 		Assert.expect(IOException.class, new CodeBlock() {
 			public void run() throws Exception {
-				Defragment.defrag(FILENAME,BACKUPFILENAME);
+				Defragment.defrag(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
 			}
 		});
 	}	
 
 	public void setUp() throws Exception {
-		new File(FILENAME).delete();
-		new File(BACKUPFILENAME).delete();
-		createFile(FILENAME);
+		new File(SlotDefragmentConstants.FILENAME).delete();
+		new File(SlotDefragmentConstants.BACKUPFILENAME).delete();
+		createFile(SlotDefragmentConstants.FILENAME);
 	}
 
 	public void tearDown() throws Exception {
 	}
 
 	private DefragmentConfig defragConfig(boolean forceBackupDelete) {
-		DefragmentConfig defragConfig = new DefragmentConfig(FILENAME,BACKUPFILENAME);
+		DefragmentConfig defragConfig = new DefragmentConfig(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
 		defragConfig.forceBackupDelete(forceBackupDelete);
 		return defragConfig;
 	}
 
 	private void createFile(String fileName) {
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),fileName);
-		db.set(new Data(42));
+		Configuration config = Db4o.newConfiguration();
+		ObjectContainer db=Db4o.openFile(config,fileName);
+		db.set(new Data(VALUE));
+		db.close();
+	}
+
+	private void forceIndex() {
+		Configuration config=Db4o.newConfiguration();
+		config.objectClass(Data.class).objectField(FIELDNAME).indexed(true);
+		ObjectContainer db=Db4o.openFile(config,SlotDefragmentConstants.FILENAME);
+		Assert.isTrue(db.ext().storedClass(Data.class).storedField("_id",Integer.TYPE).hasIndex());
 		db.close();
 	}
 
 	private void assertDataClassKnown(boolean expected) {
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),FILENAME);
+		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentConstants.FILENAME);
 		try {
 			StoredClass storedClass=db.ext().storedClass(Data.class);
 			if(expected) {
