@@ -136,11 +136,18 @@
 				<include name="*.*" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.dist.dll.compact}">
-			<fileset dir="${dir.libs.cf}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
+		<if>
+			<not>
+				<equals arg1="${mono}" arg2="true" />
+			</not>
+			<then>
+				<copy todir="${dir.dist.dll.compact}">
+					<fileset dir="${dir.libs.cf}">
+						<include name="*.*" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
 		<uptodate
 			property="csharp.uptodate"
 			targetfile="${dir.n.v6.core.src}/Transaction.cs">
@@ -154,6 +161,7 @@
 		
 		<property name="target.framework.version" value="2.0" />
 		<property name="csharp.definitions" value="MONO,NET_2_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
 		<property name="csc.executable" value="gmcs" />
 		<property name="installer.package.suffix" value="mono2" />
 	
