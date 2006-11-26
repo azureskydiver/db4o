@@ -207,7 +207,7 @@ public class QConObject extends QCon {
 
     int getObjectID() {
         if (i_objectID == 0) {
-            i_objectID = i_trans.stream().getID1(i_trans, i_object);
+            i_objectID = i_trans.stream().getID1(i_object);
             if (i_objectID == 0) {
                 i_objectID = -1;
             }

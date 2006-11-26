@@ -1713,7 +1713,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                                     if (oldFields[j].value != null
                                         && value != null
                                         && oldFields[j].value.getClass() == value.getClass()) {
-                                        long id = stream.getID1(trans, oldFields[j].value);
+                                        long id = stream.getID1(oldFields[j].value);
                                         if (id > 0) {
                                             if (oldFields[j].value != value) {
                                                 
