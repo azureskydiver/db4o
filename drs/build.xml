@@ -144,7 +144,7 @@
 		
 		<!--unzip the dist, rename it to "unzipped" for cruisecontol to run tests-->
 		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}" />
-		<move file="${drs.dir.dist}/dRS-${drs.version.dotted}" tofile="${drs.dir.dist}/unzipped"/> 
+		<move file="${drs.dir.dist}/${zipbasedir}" tofile="${drs.dir.dist}/unzipped"/> 
 	</target>
 
 	<target name="copyLog4j">
