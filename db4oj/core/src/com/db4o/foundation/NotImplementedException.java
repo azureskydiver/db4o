@@ -16,13 +16,4 @@ public class NotImplementedException extends RuntimeException {
         super(msg);
     }
 
-	public NotImplementedException(Object o) {
-		this();
-	}
-	
-	public NotImplementedException(int i) {
-		this();
-	}
-	
-    
 }
