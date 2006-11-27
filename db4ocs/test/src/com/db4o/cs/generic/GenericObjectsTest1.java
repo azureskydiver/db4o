@@ -19,6 +19,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.Db4oTestSuiteBuilder;
 import db4ounit.extensions.Db4oUtil;
 import db4ounit.extensions.fixtures.Db4oSolo;
+import model.Person;
 
 /**
  * 
@@ -33,9 +34,10 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 				GenericObjectsTest1.class)).run();
 	}
 
-	public void testCreate() {
+	public void testCreate() throws Exception {
 
 		initGenericObjects();
+		//fixture().reopen();
 		ExtObjectContainer oc = fixture().db();
 		// now check to see if person was saved
 		ReflectClass rc = getReflectClass(oc, PERSON_CLASSNAME);
@@ -147,9 +149,9 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 	private ReflectClass getReflectClass(ExtObjectContainer oc, String className) {
 		// FIXME: If GenericReflector#knownClasses is not called, the test will fail.
 		ReflectClass[] classes = oc.reflector().knownClasses();
-		for (int i = 0; i < classes.length; i++) {
+		/*for (int i = 0; i < classes.length; i++) {
 			System.out.println("known classes = " + classes[i]);
-		}
+		}*/
 		return oc.reflector().forName(className);
 	}
 }

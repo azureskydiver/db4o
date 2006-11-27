@@ -1,6 +1,7 @@
 package com.db4o.cs.server;
 
 import com.db4o.ObjectContainer;
+import com.db4o.cs.common.ClassMetaData;
 
 import java.util.Map;
 
@@ -18,4 +19,8 @@ public interface Context {
 	int getClientId();
 
 	ObjectContainer getObjectContainer();
+
+	void addClassMetaData(ClassMetaData classMetaData);
+
+	ClassMetaData getClassMetaData(String className);
 }

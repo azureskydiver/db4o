@@ -18,11 +18,11 @@ public class DeleteOperationHandler implements OperationHandler {
 	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
 		long objectId = oin.readLong();
 		ObjectContainer oc = session.getObjectContainer(context);
-		getObjectById(objectId);
-		//oc.delete();
+		Object o = getObjectById(oc, objectId);
+		oc.delete(o);
 	}
 
-	private void getObjectById(long objectId) {
-		
+	private Object getObjectById(ObjectContainer oc, long objectId) {
+		return oc.ext().getByID(objectId);
 	}
 }

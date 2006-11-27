@@ -4,8 +4,10 @@ import com.db4o.cs.server.protocol.Protocol;
 import com.db4o.cs.server.protocol.OperationHandler;
 import com.db4o.cs.server.Context;
 import com.db4o.cs.server.Session;
+import com.db4o.cs.common.Operations;
 
 import java.io.*;
+import java.net.SocketException;
 
 /**
  * This is based on the protocol design at http://docs.google.com/View?docid=adb3xqft39h9_30c42mn6
@@ -19,7 +21,6 @@ public class ObjectStreamProtocol implements Protocol {
 	private Session session;
 
 	public ObjectStreamProtocol(Context context, Session session) {
-
 		this.context = context;
 		this.session = session;
 	}
@@ -30,8 +31,9 @@ public class ObjectStreamProtocol implements Protocol {
 		try {
 			readHeaders(oin);
 			// now loop for operation
-			String operation;
-			while ((operation = (String) oin.readObject()) != null) {
+			byte operation;
+			while (true) {
+				operation = oin.readByte();
 				//System.out.println("operation received: " + operation);
 				OperationHandler opHandler = getOperationHandler(operation);
 				if (opHandler == null) {
@@ -46,32 +48,34 @@ public class ObjectStreamProtocol implements Protocol {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new IOException(e.getMessage());
+		}  catch (SocketException e) {
+			System.out.println("Socket exception. closing. " + e.getMessage());
 		}
 
 
 	}
 
-	private OperationHandler getOperationHandler(String operation) {
-		if (operation.equals("login")) {
+	public OperationHandler getOperationHandler(byte operation) {
+		if (operation == Operations.LOGIN) {
 			return new LoginOperationHandler();
-		} else if (operation.equals("set")) {
+		} else if (operation == Operations.SET) {
 			return new SetOperationHandler();
-		} else if (operation.equals("query")) {
+		} else if (operation == Operations.QUERY) {
 			return new QueryOperationHandler();
-		} else if (operation.equals("commit")) {
+		} else if (operation == Operations.COMMIT) {
 			return new CommitOperationHandler();
-		} else if (operation.equals("delete")) {
+		} else if (operation == Operations.DELETE) {
 			return new DeleteOperationHandler();
-		} else if (operation.equals("close")) {
+		} else if (operation == Operations.CLOSE) {
 			return new CloseOperationHandler();
 		}
 		return null;
 	}
 
 	private void readHeaders(ObjectInputStream oin) throws IOException, ClassNotFoundException {
-		System.out.println("reading headers");
+		//System.out.println("reading headers");
 		// first piece is the protocol version as a String
-		String version = (String) oin.readObject();
-		System.out.println("version:" + version);
+		String version = oin.readUTF();
+		//System.out.println("version:" + version);
 	}
 }

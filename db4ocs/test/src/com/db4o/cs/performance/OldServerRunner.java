@@ -12,7 +12,7 @@ import java.io.File;
  */
 public class OldServerRunner {
 	private ObjectServer server;
-	public static final int PORT = 3255;
+	public static final int PORT = OldVsNew.PORT;
 	private static final String DB_FILE = "test.old.db4o";
 
 	public static void main(String[] args) {

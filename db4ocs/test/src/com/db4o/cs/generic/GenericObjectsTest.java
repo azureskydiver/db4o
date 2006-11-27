@@ -1,10 +1,8 @@
 package com.db4o.cs.generic;
 
-import db4ounit.extensions.Db4oTestCase;
 import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.Db4oTestSuiteBuilder;
 import db4ounit.extensions.Db4oUtil;
-import db4ounit.extensions.fixtures.Db4oInMemory;
 import db4ounit.extensions.fixtures.Db4oSolo;
 import db4ounit.TestRunner;
 import db4ounit.Assert;
@@ -12,7 +10,6 @@ import com.db4o.ext.ExtObjectContainer;
 import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.generic.GenericReflector;
 import com.db4o.reflect.generic.GenericField;
-import com.db4o.reflect.generic.GenericObject;
 import com.db4o.reflect.jdk.JdkReflector;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.ReflectClass;
@@ -21,6 +18,8 @@ import com.db4o.ObjectContainer;
 
 import java.util.Date;
 import java.util.List;
+
+import model.Person;
 
 /**
  * User: treeder

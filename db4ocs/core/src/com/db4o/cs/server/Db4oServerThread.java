@@ -2,6 +2,7 @@ package com.db4o.cs.server;
 
 import com.db4o.cs.server.protocol.objectStream.ObjectStreamProtocol;
 import com.db4o.cs.server.protocol.Protocol;
+import com.db4o.cs.server.protocol.protocol1.Protocol1;
 
 import java.io.*;
 import java.net.Socket;
@@ -22,7 +23,7 @@ public class Db4oServerThread extends Thread {
 	}
 
 	public void run() {
-		System.out.println("Connection accepted.");
+		//System.out.println("Connection accepted.");
 		try {
 			OutputStream out = //new BufferedOutputStream(
 					socket.getOutputStream();
@@ -32,7 +33,8 @@ public class Db4oServerThread extends Thread {
 			Session session = new DefaultSession();
 
 			try {
-				Protocol protocol = new ObjectStreamProtocol(context, session);
+				Protocol protocol = //new ObjectStreamProtocol(context, session);
+						new Protocol1(context, session);
 				protocol.handle(in, out);
 			} catch (IOException e) {
 				e.printStackTrace();

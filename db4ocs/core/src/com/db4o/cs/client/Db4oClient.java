@@ -1,11 +1,19 @@
 package com.db4o.cs.client;
 
 import com.db4o.cs.client.protocol.ClientProtocol;
-import com.db4o.cs.client.protocol.objectStream.ObjectStreamProtocolClient;
+import com.db4o.cs.client.protocol.protocol1.Protocol1Client;
+import com.db4o.cs.client.query.ClientQuery;
+import com.db4o.cs.common.ObjectContainer2;
+import com.db4o.ObjectSet;
+import com.db4o.query.Query;
+import com.db4o.query.Predicate;
+import com.db4o.query.QueryComparator;
+import com.db4o.ext.ExtObjectContainer;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.*;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -13,7 +21,7 @@ import java.util.List;
  * Date: Oct 31, 2006
  * Time: 12:19:41 AM
  */
-public class Db4oClient {
+public class Db4oClient implements ObjectContainer2 {
 	public static int DEFAULT_PORT = 3246;
 
 	private String host;
@@ -29,7 +37,12 @@ public class Db4oClient {
 	private InputStream in;
 
 	public Db4oClient(String host) {
+		this(host, DEFAULT_PORT);
+	}
+
+	public Db4oClient(String host, int port) {
 		this.host = host;
+		this.port = port;
 	}
 
 	/**
@@ -38,7 +51,7 @@ public class Db4oClient {
 	 * @throws IOException
 	 */
 	public void connect() throws IOException {
-		System.out.println("connecting...");
+		//System.out.println("connecting...");
 		if (host == null) {
 			throw new UnknownHostException("Host not specified.  Please call setHost(String) to set.");
 		}
@@ -48,7 +61,8 @@ public class Db4oClient {
 		out = socket.getOutputStream();
 		in = socket.getInputStream();
 
-		protocol = new ObjectStreamProtocolClient(out, in);
+		protocol = //new ObjectStreamProtocolClient(out, in);
+				new Protocol1Client(out, in);
 		protocol.writeHeaders();
 	}
 
@@ -60,7 +74,7 @@ public class Db4oClient {
 	 * @param password
 	 */
 	public boolean login(String username, String password) throws IOException {
-		System.out.println("Logging in...");
+		//System.out.println("Logging in...");
 		return protocol.login(username, password);
 	}
 
@@ -69,8 +83,12 @@ public class Db4oClient {
 	 * @param o object to persist
 	 * @throws IOException
 	 */
-	public void set(Object o) throws IOException {
-		protocol.set(o);
+	public void set(Object o) {
+		try {
+			protocol.set(o);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -78,24 +96,38 @@ public class Db4oClient {
 	 *
 	 * @throws IOException
 	 */
-	public void commit() throws IOException {
-		protocol.commit();
+	public void commit() {
+		try {
+			protocol.commit();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	public List query(Class aClass) throws IOException, ClassNotFoundException {
-		return protocol.query(aClass);
+	public void deactivate(Object obj, int depth) {
+
 	}
+
+	public void activate(Object obj, int depth) {
+
+	}
+
 	/**
 	 * Close the connection. No further operations will succeed.
 	 *
 	 * @throws IOException
 	 */
-	public void close() throws IOException {
+	public boolean close() {
 		commit(); // to keep the same as current behaviour
-		protocol.close();
-		out.close();
-		in.close();
-		socket.close();
+		try {
+			protocol.close();
+			out.close();
+			in.close();
+			socket.close();
+			return true;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
@@ -115,5 +147,59 @@ public class Db4oClient {
 		this.port = port;
 	}
 
+
+	public void delete(Object o) {
+		try {
+			protocol.delete(o);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public ExtObjectContainer ext() {
+		throw new UnsupportedOperationException("Not yet...");
+	}
+
+	public Query query() {
+		return new ClientQuery(this);
+	}
+
+	public <TargetType> ObjectSet<TargetType> query(Predicate<TargetType> predicate, Comparator<TargetType> comparator) {
+		throw new UnsupportedOperationException("Not yet...");
+	}
+
+	public void rollback() {
+
+	}
+
+
+	public ObjectSet query(Class aClass) {
+		try {
+			return new ObjectSetListWrapper(protocol.query(aClass));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public ObjectSet query(Predicate predicate, QueryComparator comparator) {
+		throw new UnsupportedOperationException("Not yet...");
+	}
+
+	public ObjectSet query(Predicate predicate) {
+		throw new UnsupportedOperationException("Not yet...");
+	}
+
+	public ObjectSet get(Object template) {
+		throw new UnsupportedOperationException("Not yet...");
+	}
+
+	/**
+	 * This should be added to ObjectContainer interface
+	 * @param query
+	 * @return
+	 */
+	public List execute(Query query) throws IOException, ClassNotFoundException {
+		return protocol.execute(query);
+	}
 
 }
