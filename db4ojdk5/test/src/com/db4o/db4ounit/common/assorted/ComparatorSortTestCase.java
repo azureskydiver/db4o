@@ -1,27 +1,31 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test;
+package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.*;
+import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.query.*;
 
-public class ComparatorSort {
+import db4ounit.Assert;
+import db4ounit.extensions.AbstractDb4oTestCase;
+
+public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 	public static class AscendingIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort)first)._id-((ComparatorSort)second)._id;
+			return ((Item)first)._id-((Item)second)._id;
 		}
 	}
 
 	public static class DescendingIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort)second)._id-((ComparatorSort)first)._id;
+			return ((Item)second)._id-((Item)first)._id;
 		}
 	}
 
 	public static class OddEvenIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			int idA=((ComparatorSort)first)._id;
-			int idB=((ComparatorSort)second)._id;
+			int idA=((Item)first)._id;
+			int idB=((Item)second)._id;
 			int modA=idA%2;
 			int modB=idB%2;
 			if(modA!=modB) {
@@ -33,35 +37,37 @@ public class ComparatorSort {
 
 	public static class AscendingNameComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort)first)._name.compareTo(((ComparatorSort)second)._name);
+			return ((Item)first)._name.compareTo(((Item)second)._name);
 		}
 	}
 
-	public static class SmallerThanThreePredicate extends Predicate<ComparatorSort> {
-		public boolean match(ComparatorSort candidate) {
+	public static class SmallerThanThreePredicate extends Predicate<Item> {
+		public boolean match(Item candidate) {
 			return candidate._id<3;
 		}
 	}
 	
-	public int _id;
-	public String _name;
+	public static class Item {
+		public int _id;
+		public String _name;
 	
-	public ComparatorSort() {
-		this(0,null);
+		public Item() {
+			this(0,null);
+		}
+		
+		public Item(int id, String name) {
+			this._id = id;
+			this._name = name;
+		}
 	}
 	
-	public ComparatorSort(int id, String name) {
-		this._id = id;
-		this._name = name;
-	}
-
-	public void configure() {
-		Db4o.configure().exceptionsOnNotStorable(true);
+	protected void configure(Configuration config) {	
+		config.exceptionsOnNotStorable(true);
 	}
 	
-	public void store() {
+	protected void store() {
 		for(int i=0;i<4;i++) {
-			Test.store(new ComparatorSort(i,String.valueOf(3-i)));
+			store(new Item(i,String.valueOf(3-i)));
 		}
 	}
 	
@@ -70,14 +76,13 @@ public class ComparatorSort {
 	}
 
 	public void testByIdAscendingConstrained() {
-		Query query=Test.query();
-		query.constrain(getClass());
+		Query query=newItemQuery();
 		query.descend("_id").constrain(new Integer(3)).smaller();
 		assertIdOrder(query,new AscendingIdComparator(),new int[]{0,1,2});
 	}
 
 	public void testByIdAscendingNQ() {
-		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new AscendingIdComparator());
+		ObjectSet result=db().query(new SmallerThanThreePredicate(),new AscendingIdComparator());
 		assertIdOrder(result,new int[]{0,1,2});
 	}
 
@@ -86,14 +91,13 @@ public class ComparatorSort {
 	}
 
 	public void testByIdDescendingConstrained() {
-		Query query=Test.query();
-		query.constrain(getClass());
+		Query query=newItemQuery();
 		query.descend("_id").constrain(new Integer(3)).smaller();
 		assertIdOrder(query,new DescendingIdComparator(),new int[]{2,1,0});
 	}
 
 	public void testByIdDescendingNQ() {
-		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new DescendingIdComparator());
+		ObjectSet result=db().query(new SmallerThanThreePredicate(),new DescendingIdComparator());
 		assertIdOrder(result,new int[]{2,1,0});
 	}
 
@@ -102,14 +106,13 @@ public class ComparatorSort {
 	}
 
 	public void testByIdOddEvenConstrained() {
-		Query query=Test.query();
-		query.constrain(getClass());
+		Query query=newItemQuery();
 		query.descend("_id").constrain(new Integer(3)).smaller();
 		assertIdOrder(query,new OddEvenIdComparator(),new int[]{0,2,1});
 	}
 
 	public void testByIdOddEvenNQ() {
-		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new OddEvenIdComparator());
+		ObjectSet result=db().query(new SmallerThanThreePredicate(),new OddEvenIdComparator());
 		assertIdOrder(result,new int[]{0,2,1});
 	}
 
@@ -118,21 +121,23 @@ public class ComparatorSort {
 	}
 
 	public void testByNameAscendingConstrained() {
-		Query query=Test.query();
-		query.constrain(getClass());
+		Query query=newItemQuery();
 		query.descend("_id").constrain(new Integer(3)).smaller();
 		assertIdOrder(query,new AscendingNameComparator(),new int[]{2,1,0});
 	}
 	
 	public void testByNameAscendingNQ() {
-		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new AscendingNameComparator());
+		ObjectSet result=db().query(new SmallerThanThreePredicate(),new AscendingNameComparator());
 		assertIdOrder(result,new int[]{2,1,0});
 	}
 
 	private void assertIdOrder(QueryComparator comparator,int[] ids) {
-		Query query=Test.query();
-		query.constrain(getClass());
+		Query query=newItemQuery();
 		assertIdOrder(query,comparator,ids);
+	}
+
+	private Query newItemQuery() {
+		return newQuery(Item.class);
 	}
 
 	private void assertIdOrder(Query query,QueryComparator comparator,int[] ids) {
@@ -142,14 +147,9 @@ public class ComparatorSort {
 	}
 
 	private void assertIdOrder(ObjectSet result,int[] ids) {
-		Test.ensureEquals(ids.length,result.size());
+		Assert.areEqual(ids.length,result.size());
 		for (int idx = 0; idx < ids.length; idx++) {
-			Test.ensureEquals(ids[idx], ((ComparatorSort)result.next())._id);
+			Assert.areEqual(ids[idx], ((Item)result.next())._id);
 		}
-	}
-	
-	
-	public static void main(String[] args) {
-		Test.run(ComparatorSort.class);
 	}
 }
