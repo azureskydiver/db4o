@@ -27,13 +27,13 @@ public class SystemInfoTestCase extends AbstractDb4oTestCase{
     }
     
     public void testDefaultFreespaceInfo(){
-        assertFreespaceInfo(db().systemInfo());
+        assertFreespaceInfo(fileSession().systemInfo());
     }
     
     public void testIndexBasedFreespaceInfo() throws Exception{
         Db4o.configure().freespace().useIndexSystem();
         reopen();
-        assertFreespaceInfo(db().systemInfo());
+        assertFreespaceInfo(fileSession().systemInfo());
     }
     
     private void assertFreespaceInfo(SystemInfo info){
