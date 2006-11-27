@@ -314,7 +314,7 @@ public class Transaction {
 	        }
         }
         
-        if(isDeleted(id)){
+        if(slotChangeIsFlaggedDeleted(id)){
         	return false;
         }
         
@@ -442,17 +442,20 @@ public class Transaction {
             | _pointerBuffer[4] << 24;
         return new Slot(address, length);
     }
-
-    public boolean isDeleted(int a_id) {
-        checkSynchronization();
-        SlotChange slot = findSlotChange(a_id);
+    
+    private boolean slotChangeIsFlaggedDeleted(int id){
+        SlotChange slot = findSlotChange(id);
         if (slot != null) {
             return slot.isDeleted();
         }
         if (i_parentTransaction != null) {
-            return i_parentTransaction.isDeleted(a_id);
+            return i_parentTransaction.slotChangeIsFlaggedDeleted(id);
         }
         return false;
+    }
+
+    public boolean isDeleted(int id) {
+    	return slotChangeIsFlaggedDeleted(id);
     }
     
     public Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
