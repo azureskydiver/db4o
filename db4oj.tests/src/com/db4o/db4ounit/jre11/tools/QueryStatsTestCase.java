@@ -38,7 +38,7 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	
 	protected void db4oSetupAfterStore() throws Exception {
 		_stats = new QueryStats();		
-		_stats.connect(db());
+		_stats.connect(fileSession());
 	}
 
 	protected void db4oCustomTearDown() throws Exception {
@@ -78,7 +78,7 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	}	
 	
 	private Event4 queryStartedEvent() {
-		return EventRegistryFactory.forObjectContainer(db()).queryStarted();
+		return EventRegistryFactory.forObjectContainer(fileSession()).queryStarted();
 	}
 
 	public static void main(String[] args) {
