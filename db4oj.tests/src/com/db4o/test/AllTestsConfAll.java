@@ -35,7 +35,6 @@ public class AllTestsConfAll extends TestSuite{
 	        CaseInsensitive.class,
 	        Circular1.class,
 	        Circular2.class,
-	    	ComparatorSort.class,
 	        // takes too long in JDK1.1 setup due to locking timeout
             // CrashSimulatingTest.class,
 	        CreateIndexInherited.class,
