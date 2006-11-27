@@ -47,9 +47,12 @@ final class TransactionClient extends Transaction {
         i_client.writeMsg(Msg.COMMIT);
     }
 
-    public void delete(YapObject a_yo, int a_cascade) {
-        super.delete(a_yo, a_cascade);
-        i_client.writeMsg(Msg.TA_DELETE.getWriterForInts(this, new int[] {a_yo.getID(), a_cascade}));
+    public boolean delete(YapObject ref, int id, int cascade) {
+        if (! super.delete(ref, id, cascade)){
+        	return false;
+        }
+        i_client.writeMsg(Msg.TA_DELETE.getWriterForInts(this, new int[] {id, cascade}));
+        return true;
     }
 
     public boolean isDeleted(int a_id) {

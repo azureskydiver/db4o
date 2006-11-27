@@ -12,8 +12,7 @@ public class MTaDelete extends MsgD {
 	    int cascade = _payLoad.readInt();
 	    Transaction trans = transaction();
 	    synchronized (streamLock()) {
-	        Object[] arr = stream().getObjectAndYapObjectByID(trans, id);
-	        trans.delete((YapObject)arr[1], cascade);
+	        trans.delete(null, id, cascade);
 	        return true;
 	    }
 	}
