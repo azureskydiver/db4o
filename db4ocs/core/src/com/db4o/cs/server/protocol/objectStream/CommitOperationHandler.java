@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class CommitOperationHandler implements OperationHandler {
 	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
-		System.out.println("committing");
+		//System.out.println("committing");
 		session.getObjectContainer(context).commit();
 	}
 }

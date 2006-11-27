@@ -18,6 +18,7 @@ public class SetOperationHandler extends ObjectOperationHandlerBase implements O
 	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
 		long objectId = oin.readLong();
 		Object o = oin.readObject();
+		//System.out.println("setOp: " + o);
 		//System.out.println("object received, id:" + objectId + " containing:" + o);
 		ObjectContainer oc = session.getObjectContainer(context);
 		if (objectId > 0) { // todo: check for a character first 'c' or 's' rather than the long, as in spec doc

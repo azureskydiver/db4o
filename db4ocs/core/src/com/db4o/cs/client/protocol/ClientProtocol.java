@@ -1,5 +1,7 @@
 package com.db4o.cs.client.protocol;
 
+import com.db4o.query.Query;
+
 import java.io.OutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,4 +28,8 @@ public interface ClientProtocol {
 	List query(Class aClass) throws IOException, ClassNotFoundException;
 
 	void close() throws IOException;
+
+	void delete(Object o) throws IOException;
+
+	List execute(Query query) throws IOException, ClassNotFoundException;
 }

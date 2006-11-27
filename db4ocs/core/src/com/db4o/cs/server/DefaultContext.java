@@ -3,6 +3,7 @@ package com.db4o.cs.server;
 import com.db4o.ObjectContainer;
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
+import com.db4o.cs.common.ClassMetaData;
 import com.db4o.query.Query;
 
 import java.util.Map;
@@ -18,8 +19,20 @@ import java.util.Iterator;
 public class DefaultContext implements Context {
 
 	private Map accessMap = new HashMap();
+	private Map classMap = new HashMap();
 	private int clientIdCounter;
 	private ObjectServer server;
+	private String file;
+	private int port;
+
+	public DefaultContext(String file, int port) {
+
+		this.file = file;
+		this.port = port;
+
+		// startup db4o server
+		getObjectServer();
+	}
 
 	public Map getAccessMap() {
 		return accessMap;
@@ -34,6 +47,15 @@ public class DefaultContext implements Context {
 		//dump(ret);
 		return ret;
 	}
+
+	public void addClassMetaData(ClassMetaData classMetaData) {
+		classMap.put(classMetaData.getClassName(), classMetaData);
+	}
+
+	public ClassMetaData getClassMetaData(String className) {
+		return (ClassMetaData) classMap.get(className);
+	}
+
 	public static int dump(ObjectContainer oc) {
 		System.out.println("DUMPING: " + oc.ext().identity());
 		Query q = oc.query();
@@ -50,8 +72,9 @@ public class DefaultContext implements Context {
 
 	private synchronized ObjectServer getObjectServer() {
 		if (server == null) {
-			server = Db4o.openServer(Db4oServer.DEFAULT_FILE, Db4oServer.DEFAULT_PORT + 1);
-			server.grantAccess("test", "test"); // here so can connect with ObjectManager
+			System.out.println("starting objectserver on " + (port+1));
+			server = Db4o.openServer(file, port+1); // opening on non-zero port so can connect with ObjectManager while running
+			server.grantAccess("test", "test");
 		}
 		return server;
 	}

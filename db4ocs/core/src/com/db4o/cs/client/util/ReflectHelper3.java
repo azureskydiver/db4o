@@ -1,0 +1,47 @@
+package com.db4o.cs.client.util;
+
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.lang.reflect.Field;
+
+/**
+ * User: treeder
+ * Date: Nov 26, 2006
+ * Time: 12:13:45 PM
+ */
+public class ReflectHelper3 {
+	// todo: getDeclaredFieldsInHeirarchy should exclude overridden fields in super classes		
+	public static List<Field> getDeclaredFieldsInHeirarchy(Class aClass) {
+		List ret = getDeclaredFields(aClass);
+		Class parent = aClass.getSuperclass();
+		if (parent != null) {
+			ret.addAll(getDeclaredFieldsInHeirarchy(parent));
+		}
+		return ret;
+	}
+
+	public static List<Field> getDeclaredFields(Class aClass) {
+		List<Field> ret = new ArrayList();
+		Field[] fields = aClass.getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			Field field = fields[i];
+			ret.add(field);
+		}
+		return ret;
+	}
+
+	public static Field getDeclaredFieldInHeirarchy(Class reflectClass, String field) throws NoSuchFieldException {
+		Field rf = reflectClass.getDeclaredField(field);
+		if (rf == null) {
+			// check up heirarchy
+			Class parent = reflectClass.getSuperclass();
+			if (parent != null) {
+				return getDeclaredFieldInHeirarchy(parent, field);
+			}
+		}
+		return rf;
+	}
+}

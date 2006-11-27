@@ -1,4 +1,4 @@
-package com.db4o.cs.generic;
+package model;
 
 import java.io.Serializable;
 
@@ -10,7 +10,26 @@ import java.io.Serializable;
 public class Person implements Serializable {
 	private int index;
 	private String name;
+	private Person friend;
+	private Car car;
 
+	public Person(String name) {
+
+		this.name = name;
+	}
+
+	public Person() {
+
+	}
+
+
+	public Person getFriend() {
+		return friend;
+	}
+
+	public void setFriend(Person friend) {
+		this.friend = friend;
+	}
 
 	public int getIndex() {
 		return index;
@@ -31,5 +50,9 @@ public class Person implements Serializable {
 
 	public String toString() {
 		return index + " " + name + " - " + super.toString();
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
 	}
 }

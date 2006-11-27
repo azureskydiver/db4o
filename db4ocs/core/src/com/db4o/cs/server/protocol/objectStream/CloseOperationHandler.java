@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class CloseOperationHandler implements OperationHandler {
 	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
-		System.out.println("closing connection");
+		//System.out.println("closing connection");
 		session.getObjectContainer(context).close();
 	}
 }
