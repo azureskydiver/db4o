@@ -7,6 +7,18 @@ package com.db4o.foundation;
  * @exclude
  */
 public abstract class Tree implements ShallowClone , DeepClone{
+	
+	public static final class ByRef {
+		
+		public ByRef() {			
+		}
+		
+		public ByRef(Tree initialValue) {
+			value = initialValue;
+		}
+
+		public Tree value;
+	}
     
 	public Tree _preceding;
 	public int _size = 1;

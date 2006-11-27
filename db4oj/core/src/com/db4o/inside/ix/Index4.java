@@ -192,7 +192,7 @@ public class Index4 {
                     if (clonedTree != null) {
                         clonedTree = (Tree)clonedTree.deepClone(ft);
                     }
-                    final Tree[] tree = { clonedTree};
+                    final Tree.ByRef tree = new Tree.ByRef(clonedTree);
                     ft.getRoot().traverseFromLeaves((new Visitor4() {
                         
                         public void visit(Object a_object) {
@@ -200,12 +200,12 @@ public class Index4 {
                             if (ixTree._version == ft.i_version) {
                                 if (!(ixTree instanceof IxFileRange)) {
                                     ixTree.beginMerge();
-                                    tree[0] = Tree.add(tree[0], ixTree);
+                                    tree.value = Tree.add(tree.value, ixTree);
                                 }
                             }
                         }
                     }));
-                    ft.setRoot(tree[0]);
+                    ft.setRoot(tree.value);
                 }
             }
             

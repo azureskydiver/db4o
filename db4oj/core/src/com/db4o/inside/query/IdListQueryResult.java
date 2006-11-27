@@ -102,7 +102,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	public void loadFromClassIndexes(YapClassCollectionIterator iter){
 		
         // duplicates because of inheritance hierarchies
-        final Tree[] duplicates = new Tree[1];
+        final Tree.ByRef duplicates = new Tree.ByRef();
 
         while (iter.moveNext()) {
 			final YapClass yapClass = iter.currentClass();
@@ -115,7 +115,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 						public void visit(Object obj) {
 							int id = ((Integer)obj).intValue();
 							TreeInt newNode = new TreeInt(id);
-							duplicates[0] = Tree.add(duplicates[0], newNode);
+							duplicates.value = Tree.add(duplicates.value, newNode);
 							if (newNode.size() != 0) {
 								add(id);
 							}
