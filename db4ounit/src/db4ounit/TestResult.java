@@ -12,11 +12,11 @@ public class TestResult extends Printable {
 	private int _testCount = 0;
 	
 	private final StopWatch _watch = new StopWatch();
-
-	private final boolean _printLabels;
+	
+	private final Writer _stdout;
 	
 	public TestResult(boolean printLabels) {
-		_printLabels = printLabels;
+		_stdout = printLabels ? TestPlatform.getStdOut() : null;
 	}
 	
 	public TestResult() {
@@ -25,8 +25,13 @@ public class TestResult extends Printable {
 
 	public void testStarted(Test test) throws IOException {		
 		++_testCount;
-		if (_printLabels) {
-			TestPlatform.getStdOut().write(test.getLabel() + "\n");
+		printLabel(test.getLabel());
+	}
+
+	private void printLabel(String label) throws IOException {
+		if (null != _stdout) {
+			_stdout.write(label + "\n");
+			_stdout.flush();
 		}
 	}
 	
