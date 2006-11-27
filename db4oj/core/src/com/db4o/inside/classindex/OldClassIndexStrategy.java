@@ -146,19 +146,19 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
         	return null;
         }
         
-        final Tree[] tree = new Tree[] { Tree.deepClone(ci.getRoot(), null) };		
+        final Tree.ByRef tree = new Tree.ByRef(Tree.deepClone(ci.getRoot(), null));		
 		TransactionState context = getState(transaction);
 		context.traverseAdded(new Visitor4() {
 		    public void visit(Object obj) {
-				tree[0] = Tree.add(tree[0], new TreeInt(idFromValue(obj)));
+				tree.value = Tree.add(tree.value, new TreeInt(idFromValue(obj)));
 		    }
 		});
 		context.traverseRemoved(new Visitor4() {
 		    public void visit(Object obj) {
-				tree[0] = Tree.removeLike(tree[0], (TreeInt) obj);
+				tree.value = Tree.removeLike(tree.value, (TreeInt) obj);
 		    }
 		});
-		return tree[0];
+		return tree.value;
 	}
 
 	protected void internalRemove(Transaction transaction, int id) {

@@ -205,17 +205,17 @@ public class FreespaceManagerRam extends FreespaceManager {
 
         _freeBySize = new TreeReader(reader, new FreeSlotNode(0), true).read();
 
-        final Tree[] addressTree = new Tree[1];
+        final Tree.ByRef addressTree = new Tree.ByRef();
         if (_freeBySize != null) {
             _freeBySize.traverse(new Visitor4() {
 
                 public void visit(Object a_object) {
                     FreeSlotNode node = ((FreeSlotNode) a_object)._peer;
-                    addressTree[0] = Tree.add(addressTree[0], node);
+                    addressTree.value = Tree.add(addressTree.value, node);
                 }
             });
         }
-        _freeByAddress = addressTree[0];
+        _freeByAddress = addressTree.value;
         
         if(! Debug.freespace){
           _file.free(freeSlotsID, YapConst.POINTER_LENGTH);

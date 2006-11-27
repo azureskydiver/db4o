@@ -53,9 +53,7 @@ public class Statistics {
 		Tree unavailable = new TreeString(REMOVE);
 		Tree noConstructor = new TreeString(REMOVE);
 
-		final TreeInt[] ids = { new TreeInt(0)};
 		// one element too many, substract one in the end
-
 		StoredClass[] internalClasses = con.ext().storedClasses();
 		for (int i = 0; i < internalClasses.length; i++) {
 			try {
@@ -91,6 +89,8 @@ public class Statistics {
 
 		printHeader("CLASSES");
 		System.out.println("Number of objects per class:");
+		
+		final Tree.ByRef ids = new Tree.ByRef(new TreeInt(0));
 
 		if (internalClasses.length > 0) {
 			Tree all = new TreeStringObject(internalClasses[0].getName(), internalClasses[0]);
@@ -104,8 +104,8 @@ public class Statistics {
 					TreeStringObject node = (TreeStringObject) obj;
 					long[] newIDs = ((StoredClass)node._object).getIDs();
 					for (int j = 0; j < newIDs.length; j++) {
-						if (ids[0].find(new TreeInt((int) newIDs[j])) == null) {
-							ids[0] = (TreeInt) ids[0].add(new TreeInt((int) newIDs[j]));
+						if (ids.value.find(new TreeInt((int) newIDs[j])) == null) {
+							ids.value = (TreeInt) ids.value.add(new TreeInt((int) newIDs[j]));
 						}
 					}
 					System.out.println(node._key + ": " + newIDs.length);
@@ -123,7 +123,7 @@ public class Statistics {
 		if (noConstructor != null) {
 			System.out.println("Classes without public constructors: " + noConstructor.size());
 		}
-		System.out.println("Total number of objects: " + (ids[0].size() - 1));
+		System.out.println("Total number of objects: " + (ids.value.size() - 1));
 	}
 	
 	private void printHeader(String str){

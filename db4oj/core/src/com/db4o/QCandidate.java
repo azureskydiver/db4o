@@ -162,7 +162,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							candidates.evaluate();
 
-							final Tree[] pending = new Tree[1];
+							final Tree.ByRef pending = new Tree.ByRef();
 							final boolean[] innerRes = { isNot };
 							candidates.traverse(new Visitor4() {
 								public void visit(Object obj) {
@@ -194,7 +194,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 																.changeConstraint();
 														QPending oldPending = (QPending) Tree
 																.find(
-																		pending[0],
+																		pending.value,
 																		newPending);
 														if (oldPending != null) {
 
@@ -214,9 +214,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 															}
 
 														} else {
-															pending[0] = Tree
+															pending.value = Tree
 																	.add(
-																			pending[0],
+																			pending.value,
 																			newPending);
 														}
 													}
@@ -232,8 +232,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							// In case we had pending subresults, we
 							// need to communicate
 							// them up to our root.
-							if (pending[0] != null) {
-								pending[0].traverse(new Visitor4() {
+							if (pending.value != null) {
+								pending.value.traverse(new Visitor4() {
 									public void visit(Object a_object) {
 										getRoot().evaluate((QPending) a_object);
 									}
