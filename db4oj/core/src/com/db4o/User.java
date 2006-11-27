@@ -13,9 +13,9 @@ public class User implements Internal4{
 	public User() {
 	}
 	
-	public User(String name, String password) {
-		this.name = name;
-		this.password = password;
+	public User(String name_, String password_) {
+		name = name_;
+		password = password_;
 	}
 }
 

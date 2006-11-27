@@ -262,7 +262,7 @@ public final class YapClassCollection extends YapMeta {
         return 0;
     }
 
-	private byte[] getNameBytes(String name) {		
+	byte[] getNameBytes(String name) {		
 		return asBytes(resolveAlias(name));
 	}
 
@@ -353,6 +353,10 @@ public final class YapClassCollection extends YapMeta {
         
     }
     
+    Hashtable4 classByBytes(){
+    	return i_yapClassByBytes;
+    }
+    
     private void applyReadAs(){
         final Hashtable4 readAs = stream().configImpl().readAs(); 
         readAs.forEachKey(new Visitor4() {
@@ -361,13 +365,13 @@ public final class YapClassCollection extends YapMeta {
                 byte[] dbbytes = getNameBytes(dbName);
                 String useName = (String)readAs.get(dbName);
                 byte[] useBytes = getNameBytes(useName);
-                if(i_yapClassByBytes.get(useBytes) == null){
-                    YapClass yc = (YapClass)i_yapClassByBytes.get(dbbytes);
+                if(classByBytes().get(useBytes) == null){
+                    YapClass yc = (YapClass)classByBytes().get(dbbytes);
                     if(yc != null){
                         yc.i_nameBytes = useBytes;
                         yc.setConfig(stream().configImpl().configClass(dbName));
-                        i_yapClassByBytes.put(dbbytes, null);
-                        i_yapClassByBytes.put(useBytes, yc);
+                        classByBytes().put(dbbytes, null);
+                        classByBytes().put(useBytes, yc);
                     }
                 }
             }
@@ -474,7 +478,7 @@ public final class YapClassCollection extends YapMeta {
 		return str;
 	}
 
-    private YapStream stream() {
+    YapStream stream() {
         return _systemTransaction.stream();
     }
     
