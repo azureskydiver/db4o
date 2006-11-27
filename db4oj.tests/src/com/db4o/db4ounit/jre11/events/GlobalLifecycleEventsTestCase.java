@@ -2,15 +2,10 @@
 
 package com.db4o.db4ounit.jre11.events;
 
-import com.db4o.*;
-import com.db4o.events.Event4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
-import com.db4o.events.ObjectEventArgs;
+import com.db4o.events.*;
 
 import db4ounit.Assert;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	
