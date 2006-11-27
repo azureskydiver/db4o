@@ -305,16 +305,17 @@ public class Transaction {
         return slotSetPointerCount[0];
     }
 
-    public void delete(YapObject ref, int cascade) {
+    public boolean delete(YapObject ref, int id, int cascade) {
         checkSynchronization();
         
-        if(! i_stream.flagForDelete(ref)){
-        	return;
+        if(ref != null){
+	        if(! i_stream.flagForDelete(ref)){
+	        	return false;
+	        }
         }
         
-        int id = ref.getID();
         if(isDeleted(id)){
-        	return;
+        	return false;
         }
         
         if(DTrace.enabled){
@@ -325,12 +326,13 @@ public class Transaction {
         if(info == null){
             info = new DeleteInfo(id, ref, cascade);
             i_delete = Tree.add(i_delete, info);
-            return;
+            return true;
         }
         info._reference = ref;
         if(cascade > info._cascade){
             info._cascade = cascade;
         }
+        return true;
     }
     
     public void dontDelete(int a_id) {

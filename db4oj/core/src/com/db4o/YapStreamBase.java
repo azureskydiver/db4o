@@ -466,7 +466,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             return;
         }
         
-        trans.delete(ref, cascade);
+        trans.delete(ref, ref.getID(), cascade);
     }
 
     final void delete3(Transaction trans, YapObject ref, int cascade, boolean userCall) {
