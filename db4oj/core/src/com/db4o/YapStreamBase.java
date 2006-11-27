@@ -975,13 +975,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_hcTree = i_hcTree.hc_add(ref);
     }
 
-    final void hcTreeRemove(YapObject a_yo) {
-        if(Debug.checkSychronization){
-            i_lock.notify();
-        }
-        i_hcTree = i_hcTree.hc_remove(a_yo);
-    }
-
     final void idTreeAdd(YapObject a_yo) {
         if(Debug.checkSychronization){
             i_lock.notify();
@@ -996,16 +989,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
         }
         i_idTree = i_idTree.id_add(a_yo);
-    }
-
-    final void idTreeRemove(int a_id) {
-        if(Debug.checkSychronization){
-            i_lock.notify();
-        }
-        if(DTrace.enabled){
-            DTrace.ID_TREE_REMOVE.log(a_id);
-        }
-        i_idTree = i_idTree.id_remove(a_id);
     }
 
     protected void initialize1(Configuration config) {
@@ -1540,19 +1523,19 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         set(a_object, YapConst.UNSPECIFIED);
     }
     
-    public final void set(Transaction trans, Object a_object) {
-    	set(trans, a_object, YapConst.UNSPECIFIED);
+    public final void set(Transaction trans, Object obj) {
+    	set(trans, obj, YapConst.UNSPECIFIED);
     }    
     
-    public final void set(Object a_object, int a_depth) {
-        set(i_trans, a_object, a_depth);
+    public final void set(Object obj, int depth) {
+        set(i_trans, obj, depth);
     }
 
-	public void set(final Transaction trans, Object a_object, int a_depth) {
+	public void set(Transaction trans, Object obj, int depth) {
 		synchronized (i_lock) {
             checkClosed();
 			beginEndSet(trans);
-            setInternal(trans, a_object, a_depth, true);
+            setInternal(trans, obj, depth, true);
             beginEndSet(trans);
         }
 	}
@@ -1698,7 +1681,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                     return 0;
                 }
                 
-                // The following may return a yapObject if the object is held
+                // The following may return a reference if the object is held
                 // in a static variable somewhere ( often: Enums) that gets
                 // stored or associated on initialization of the YapClass.
                 
@@ -1886,20 +1869,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     public StoredClass storedClass(Object clazz) {
         synchronized (i_lock) {
             checkClosed();
-            return storedClass1(clazz);
-        }
-    }
-
-    YapClass storedClass1(Object clazz) {
-        try {
-            
             ReflectClass claxx = configImpl().reflectorFor(clazz);
-            if (claxx != null) {
-                return getYapClass(claxx, false);
+            if (claxx == null) {
+            	return null;
             }
-        } catch (Exception e) {
+            return getYapClass(claxx, false);
         }
-        return null;
     }
 
     public StoredClass[] storedClasses() {
@@ -1985,18 +1960,18 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
 
-    public final void removeReference(YapObject yo) {
+    public final void removeReference(YapObject ref) {
         if(DTrace.enabled){
-            DTrace.REFERENCE_REMOVED.log(yo.getID());
+            DTrace.REFERENCE_REMOVED.log(ref.getID());
         }
 
-        hcTreeRemove(yo);
-        idTreeRemove(yo.getID());
-
+        i_hcTree = i_hcTree.hc_remove(ref);
+        i_idTree = i_idTree.id_remove(ref.getID());
+        
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject
-        yo.setID(-1);
-        Platform4.killYapRef(yo.getObjectReference());
+        ref.setID(-1);
+        Platform4.killYapRef(ref.getObjectReference());
     }
     
     // cheat emulating '(YapStream)this'

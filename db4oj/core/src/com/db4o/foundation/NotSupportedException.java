@@ -16,4 +16,8 @@ public class NotSupportedException extends RuntimeException {
         super(msg);
     }
     
+	public NotSupportedException(Object o) {
+		this();
+	}
+    
 }
