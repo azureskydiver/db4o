@@ -114,7 +114,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 	
 	public int getId(int i) {
-		throw new NotImplementedException(i);
+		throw new NotImplementedException();
 	}
 
 	public int indexOf(int id) {
@@ -122,19 +122,19 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 
 	public void loadFromClassIndex(YapClass c) {
-		throw new NotImplementedException(c);
+		throw new NotImplementedException();
 	}
 
 	public void loadFromClassIndexes(YapClassCollectionIterator i) {
-		throw new NotImplementedException(i);
+		throw new NotImplementedException();
 	}
 
 	public void loadFromIdReader(YapReader r) {
-		throw new NotImplementedException(r);
+		throw new NotImplementedException();
 	}
 
 	public void loadFromQuery(QQuery q) {
-		throw new NotImplementedException(q);
+		throw new NotImplementedException();
 	}
 
 }

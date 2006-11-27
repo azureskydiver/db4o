@@ -113,19 +113,19 @@ public class ClusterQueryResult implements QueryResult {
 	}
 
 	public void loadFromClassIndex(YapClass c) {
-        throw new NotSupportedException(c);
+        throw new NotSupportedException();
 	}
 
 	public void loadFromQuery(QQuery q) {
-		throw new NotSupportedException(q);
+		throw new NotSupportedException();
 	}
 
 	public void loadFromClassIndexes(YapClassCollectionIterator i) {
-		throw new NotSupportedException(i);
+		throw new NotSupportedException();
 	}
 
 	public void loadFromIdReader(YapReader r) {
-		throw new NotSupportedException(r);
+		throw new NotSupportedException();
 	}
 }
 
