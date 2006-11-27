@@ -190,7 +190,7 @@ public class Index4 {
                     final IndexTransaction ft = (IndexTransaction) i.current();
                     Tree clonedTree = newFileRange;
                     if (clonedTree != null) {
-                        clonedTree = clonedTree.deepClone(ft);
+                        clonedTree = (Tree)clonedTree.deepClone(ft);
                     }
                     final Tree[] tree = { clonedTree};
                     ft.getRoot().traverseFromLeaves((new Visitor4() {

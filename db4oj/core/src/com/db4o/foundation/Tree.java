@@ -6,7 +6,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public abstract class Tree implements ShallowClone {
+public abstract class Tree implements ShallowClone , DeepClone{
     
 	public Tree _preceding;
 	public int _size = 1;
@@ -128,7 +128,7 @@ public abstract class Tree implements ShallowClone {
 		if(a_tree == null){
 			return null;
 		}
-		Tree newNode = a_tree.deepClone(a_param);
+		Tree newNode = (Tree)a_tree.deepClone(a_param);
 		newNode._size = a_tree._size;
 		newNode._preceding = Tree.deepClone(a_tree._preceding, a_param); 
 		newNode._subsequent = Tree.deepClone(a_tree._subsequent, a_param); 
@@ -136,8 +136,8 @@ public abstract class Tree implements ShallowClone {
 	}
 	
 	
-	public Tree deepClone(Object a_param){
-        return (Tree)this.shallowClone();
+	public Object deepClone(Object a_param){
+        return shallowClone();
 	}
 	
 	public boolean duplicates(){
