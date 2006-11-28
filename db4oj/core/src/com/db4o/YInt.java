@@ -136,6 +136,6 @@ public class YInt extends YapJavaClass {
     }
 
     public void defragIndexEntry(ReaderPair readers) {
-    	readers.copyID();
+    	readers.incrementIntSize();
     }
 }

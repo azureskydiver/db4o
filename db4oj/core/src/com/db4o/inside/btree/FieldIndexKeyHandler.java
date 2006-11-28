@@ -17,7 +17,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     private final YInt _parentIdHandler;
     
     public FieldIndexKeyHandler(YapStream stream, Indexable4 delegate_) {
-        _parentIdHandler = new YInt(stream);
+        _parentIdHandler = new IDHandler(stream);
         _valueHandler = delegate_;
     }
 
@@ -91,7 +91,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
 	public void defragIndexEntry(ReaderPair readers) {
-		readers.copyID(true,false);
+		_parentIdHandler.defragIndexEntry(readers);
         _valueHandler.defragIndexEntry(readers);
 	}
 }
