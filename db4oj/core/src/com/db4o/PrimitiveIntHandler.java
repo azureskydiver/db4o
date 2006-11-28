@@ -8,7 +8,7 @@ package com.db4o;
  * and by doing the comparison with a substraction
  * @exclude
  */
-public final class PrimitiveIntHandler extends YInt{
+public class PrimitiveIntHandler extends YInt{
 	
 	public PrimitiveIntHandler(YapStream stream) {
 		super(stream);
