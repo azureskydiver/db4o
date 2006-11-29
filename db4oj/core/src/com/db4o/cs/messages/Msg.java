@@ -50,6 +50,7 @@ public class Msg implements Cloneable {
 	public static final Msg OK = new Msg("OK");
 	public static final Msg PING = new Msg("PING");
 	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
+	public static final Msg PROCESS_DELETES = new MProcessDeletes();
 	public static final MsgObject QUERY_EXECUTE = new MQueryExecute();
 	public static final MsgD QUERY_RESULT = new MsgD("QUERY_RESULT");
 	public static final MsgD RAISE_VERSION = new MsgD("RAISE_VERSION");
@@ -63,7 +64,6 @@ public class Msg implements Cloneable {
 	public static final Msg SUCCESS = new Msg("SUCCESS");
 	public static final MsgD SWITCH_TO_FILE = new MsgD("SWITCH_F");
 	public static final Msg SWITCH_TO_MAIN_FILE = new Msg("SWITCH_M");
-	public static final Msg TA_BEGIN_END_SET = new MTaBeginEndSet();
 	public static final MsgD TA_DELETE = new MTaDelete();
 	public static final MsgD TA_IS_DELETED = new MTaIsDeleted();
 	public static final MsgD USER_MESSAGE = new MUserMessage();
@@ -72,7 +72,6 @@ public class Msg implements Cloneable {
 	public static final MWriteNew WRITE_NEW = new MWriteNew();
 	public static final MsgObject WRITE_UPDATE = new MWriteUpdate();
 	public static final MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
-	
 	
 
 	Msg() {

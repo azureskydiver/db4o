@@ -131,11 +131,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         activate2(checkTransaction(ta), a_activate, a_depth);
     }
 
-    final void beginEndSet(Transaction ta){
-        if(ta != null){
-            ta.beginEndSet();
-        }
-    }
     final void activate2(Transaction ta, Object a_activate, int a_depth) {
     	beginTopLevelCall();
         try {
@@ -426,7 +421,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         synchronized (i_lock) {
         	trans = checkTransaction(trans);
             delete1(trans, obj, true);
-            trans.beginEndSet();
+            trans.processDeletes();
         }
     }
 
@@ -1533,10 +1528,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
 	public void set(Transaction trans, Object obj, int depth) {
 		synchronized (i_lock) {
-            checkClosed();
-			beginEndSet(trans);
             setInternal(trans, obj, depth, true);
-            beginEndSet(trans);
         }
 	}
     
@@ -1545,7 +1537,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     public final int setInternal(Transaction trans, Object obj, int depth,  boolean checkJustSet) {
-    	beginTopLevelCall();
+    	beginTopLevelSet();
     	try{
 	        int id = oldReplicationHandles(obj); 
 	        if (id != 0){
@@ -1556,7 +1548,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 	        }
 	        return setAfterReplication(trans, obj, depth, checkJustSet);
     	}finally{
-    		endTopLevelCall();
+    		endTopLevelSet(trans);
     	}
     }
     
@@ -1899,12 +1891,23 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     	_stackDepth++;
     }
     
+    public final void beginTopLevelSet(){
+    	beginTopLevelCall();
+    }
+    
     public final void endTopLevelCall(){
     	if(DTrace.enabled){
     		DTrace.END_TOP_LEVEL_CALL.log();
     	}
     	_stackDepth--;
     	generateCallIDOnTopLevel();
+    }
+    
+    public final void endTopLevelSet(Transaction trans){
+    	endTopLevelCall();
+    	if(_stackDepth == 0){
+    		trans.processDeletes();
+    	}
     }
     
     private final void generateCallIDOnTopLevel(){

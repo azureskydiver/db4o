@@ -20,9 +20,7 @@ public class Transaction {
     
     private final byte[]          _pointerBuffer = new byte[YapConst.POINTER_LENGTH];
 
-    // contains TreeIntObject nodes
-    // if TreeIntObject#i_object is null then this means DONT delete.
-    // Otherwise TreeIntObject#i_object contains the YapObject
+    // contains DeleteInfo nodes
     public Tree          i_delete;  // public for .NET conversion
 
     private List4           i_dirtyFieldIndexes;
@@ -77,45 +75,6 @@ public class Transaction {
         
     }
     
-    public void beginEndSet() {
-    	
-    	if (i_delete == null) {
-    		i_writtenUpdateDeletedMembers = null;
-    		return;
-    	}
-
-        while(i_delete != null) {
-            
-            Tree delete = i_delete;
-            i_delete = null;
-            
-            delete.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    DeleteInfo info  = (DeleteInfo)a_object;
-                    Object obj = null;
-                    if(info._reference != null){
-                        obj = info._reference.getObject();
-                    }
-                    if(obj == null){
-                        
-                        // This means the object was gc'd.
-                        
-                        // Let's try to read it again, but this may fail in CS mode
-                        // if another transaction has deleted it. We are taking care
-                        // of possible nulls in #delete4().
-                        
-                        Object[] arr  = stream().getObjectAndYapObjectByID(Transaction.this, info._key);
-                        obj = arr[0];
-                        info._reference = (YapObject)arr[1];
-                        info._reference.flagForDelete(stream().topLevelCallId());
-                    }
-                    stream().delete3(Transaction.this,info._reference ,info._cascade, false);
-                }
-            });
-        }
-        i_writtenUpdateDeletedMembers = null;
-    }
-    
     private final void clearAll() {
         _slotChanges = null;
         i_dirtyFieldIndexes = null;
@@ -168,8 +127,6 @@ public class Transaction {
             DTrace.TRANS_COMMIT.logInfo( "server == " + stream().isServer() + ", systemtrans == " +  systemTrans);
         }
         
-        commit1BeginEndSet();
-        
         commit2Listeners();
         
         commit3Stream();
@@ -187,13 +144,6 @@ public class Transaction {
         commit7ClearAll();
     }
     
-    private void commit1BeginEndSet(){
-        if (i_parentTransaction != null) {
-            i_parentTransaction.commit1BeginEndSet();
-        } 
-        beginEndSet();
-    }
-    
     private void commit2Listeners(){
         if (i_parentTransaction != null) {
             i_parentTransaction.commit2Listeners();
@@ -201,13 +151,11 @@ public class Transaction {
         commitTransactionListeners();
     }
     
-    
     private void commit3Stream(){
         stream().checkNeededUpdates();
         stream().writeDirty();
         stream().classCollection().write(stream().getSystemTransaction());
     }
-    
     
     private void commit4FieldIndexes(){
         if(i_parentTransaction != null){
@@ -463,7 +411,45 @@ public class Transaction {
         return stream().getFieldUUID().objectAndYapObjectBySignature(this, a_uuid, a_signature);
     }
     
-    private SlotChange produceSlotChange(int id){
+	public void processDeletes() {
+    	if (i_delete == null) {
+    		i_writtenUpdateDeletedMembers = null;
+    		return;
+    	}
+
+        while(i_delete != null) {
+            
+            Tree delete = i_delete;
+            i_delete = null;
+            
+            delete.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    DeleteInfo info  = (DeleteInfo)a_object;
+                    Object obj = null;
+                    if(info._reference != null){
+                        obj = info._reference.getObject();
+                    }
+                    if(obj == null){
+                        
+                        // This means the object was gc'd.
+                        
+                        // Let's try to read it again, but this may fail in CS mode
+                        // if another transaction has deleted it. We are taking care
+                        // of possible nulls in #delete4().
+                        
+                        Object[] arr  = stream().getObjectAndYapObjectByID(Transaction.this, info._key);
+                        obj = arr[0];
+                        info._reference = (YapObject)arr[1];
+                        info._reference.flagForDelete(stream().topLevelCallId());
+                    }
+                    stream().delete3(Transaction.this,info._reference ,info._cascade, false);
+                }
+            });
+        }
+        i_writtenUpdateDeletedMembers = null;
+    }
+    
+	private SlotChange produceSlotChange(int id){
     	if(DTrace.enabled){
     		DTrace.PRODUCE_SLOT_CHANGE.log(id);
     	}
@@ -478,8 +464,6 @@ public class Transaction {
 
     public void rollback() {
         synchronized (stream().i_lock) {
-            
-            beginEndSet();
             
             rollbackParticipants();
             

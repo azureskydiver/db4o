@@ -201,14 +201,12 @@ public class P1Object implements Db4oTypeImpl{
     
     void update(int depth){
         if(validYapObject()){
-            stream().beginEndSet(i_trans);
-            stream().beginTopLevelCall();
+            stream().beginTopLevelSet();
             try{
 	            i_yapObject.writeUpdate(i_trans, depth);
 	            stream().checkStillToSet();
-	            stream().beginEndSet(i_trans);
             } finally{
-            	stream().endTopLevelCall();
+            	stream().endTopLevelSet(i_trans);
             }
         }
     }

@@ -9,30 +9,14 @@ import com.db4o.foundation.*;
 final class TransactionClient extends Transaction {
 
     private final YapClient i_client;
-    private Tree i_yapObjectsToGc; 
     
-
+    private Tree i_yapObjectsToGc;
+    
     TransactionClient(YapClient a_stream, Transaction a_parent) {
         super(a_stream, a_parent);
         i_client = a_stream;
     }
-
-    public void beginEndSet() {
-        if (i_delete != null) {
-            i_delete.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    DeleteInfo info = (DeleteInfo) a_object;
-                    if (info._reference != null) {
-                        i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info._key, info._reference));
-                    }
-                }
-            });
-        }
-        i_delete = null;
-        i_writtenUpdateDeletedMembers = null;
-        i_client.writeMsg(Msg.TA_BEGIN_END_SET);
-    }
-
+    
     public void commit() {
         commitTransactionListeners();
         if(i_yapObjectsToGc != null){
@@ -80,6 +64,23 @@ final class TransactionClient extends Transaction {
             return stream().getObjectAndYapObjectByID(this, id);
         }
         return new Object[2];
+    }
+    
+    
+    public void processDeletes() {
+        if (i_delete != null) {
+            i_delete.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    DeleteInfo info = (DeleteInfo) a_object;
+                    if (info._reference != null) {
+                        i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info._key, info._reference));
+                    }
+                }
+            });
+        }
+        i_delete = null;
+        i_writtenUpdateDeletedMembers = null;
+        i_client.writeMsg(Msg.PROCESS_DELETES);
     }
     
     public void rollback() {
