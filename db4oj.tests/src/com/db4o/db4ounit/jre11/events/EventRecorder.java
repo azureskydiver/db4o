@@ -11,7 +11,7 @@ public class EventRecorder implements EventListener4 {
 	private final Vector _events = new Vector();
 	private boolean _cancel;
 	
-	public synchronized void onEvent(Event4 e, EventArgs args) {
+	public  void onEvent(Event4 e, EventArgs args) {
 		if (_cancel && args instanceof CancellableEventArgs) {
 			((CancellableEventArgs)args).cancel();
 		}

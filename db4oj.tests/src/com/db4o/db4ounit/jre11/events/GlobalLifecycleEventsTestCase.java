@@ -77,17 +77,8 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		}
 		
 		Item expectedItem = isClientServer() ? queryServerItem(item) : item;
-		
-		if (isClientServer()) {
-			// server needs some time to dispatch the events asynchronously
-			// let's wait some time on the _recorder
-			synchronized (_recorder) {
-				db().delete(item);
-				_recorder.wait(100);
-			}
-		} else {
-			db().delete(item);
-		}
+		db().delete(item);
+		sync();
 		
 		assertSingleObjectEventArgs(event, expectedItem);
 		
@@ -239,7 +230,15 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		Item item = new Item(1);
 		db().set(item);
 		db().commit();
+		sync();
 		return item;
+	}
+
+	private void sync() {
+		if (!isClientServer()) return;
+		final String name = "___";
+		db().setSemaphore(name, 0);
+		db().releaseSemaphore(name);
 	}
 	
 }
