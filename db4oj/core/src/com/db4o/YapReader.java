@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
  * public for .NET conversion reasons.
  * 
  * @exclude
+ * @renameto Buffer
  */
 public class YapReader implements SlotReader {
 	
