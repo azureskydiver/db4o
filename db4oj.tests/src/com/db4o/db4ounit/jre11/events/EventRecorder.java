@@ -8,14 +8,15 @@ import com.db4o.events.*;
 
 public class EventRecorder implements EventListener4 {
 	
-	final Vector _events = new Vector();
+	private final Vector _events = new Vector();
 	private boolean _cancel;
 	
-	public void onEvent(Event4 e, EventArgs args) {
+	public synchronized void onEvent(Event4 e, EventArgs args) {
 		if (_cancel && args instanceof CancellableEventArgs) {
 			((CancellableEventArgs)args).cancel();
 		}
 		_events.addElement(new EventRecord(e, args));
+		notifyAll();
 	}
 
 	public int size() {

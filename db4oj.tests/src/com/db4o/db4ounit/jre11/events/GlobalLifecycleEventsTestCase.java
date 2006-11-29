@@ -6,6 +6,7 @@ import com.db4o.events.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.AbstractClientServerDb4oFixture;
 
 public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	
@@ -19,6 +20,15 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 
 		public Item(int id_) {
 			id = id_;
+		}
+		
+		public boolean equals(Object obj) {
+			if (!(obj instanceof Item)) return false;
+			return ((Item)obj).id == id;
+		} 
+		
+		public String toString() {
+			return "Item(" + id + ")";
 		}
 	}
 	
@@ -46,17 +56,50 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(1, item.id);
 	}
 	
-	public void testCancelDeleting() {
-		listenToEvent(eventRegistryForDelete().deleting());
-		
-		_recorder.cancel(true);
+	public void testDeleting() throws Exception {
+		assertDeletionEvent(eventRegistryForDelete().deleting());
+	}
+	
+	public void testDeleted() throws Exception {
+		assertDeletionEvent(eventRegistryForDelete().deleted());
+	}
+	
+	private void assertDeletionEvent(Event4 event4) throws Exception {
+		assertDeletionEvent(event4, false);
+	}
+
+	private void assertDeletionEvent(Event4 event, boolean cancel) throws Exception {
+		listenToEvent(event);
 		
 		Item item = storeItem();
-		db().delete(item);
+		if (cancel) {
+			_recorder.cancel(true);
+		}
 		
-		assertSingleObjectEventArgs(eventRegistryForDelete().deleting(), item);
+		Item expectedItem = isClientServer() ? queryServerItem(item) : item;
 		
-		Assert.areSame(item, db().get(Item.class).next());
+		if (isClientServer()) {
+			// server needs some time to dispatch the events asynchronously
+			// let's wait some time on the _recorder
+			synchronized (_recorder) {
+				db().delete(item);
+				_recorder.wait(100);
+			}
+		} else {
+			db().delete(item);
+		}
+		
+		assertSingleObjectEventArgs(event, expectedItem);
+		
+		if (cancel) {
+			Assert.areSame(item, db().get(Item.class).next());
+		} else {
+			Assert.areEqual(0, db().get(Item.class).size());
+		}
+	}
+	
+	public void testCancelDeleting() throws Exception {
+		assertDeletionEvent(eventRegistryForDelete().deleting(), true);
 	}	
 	
 	public void testCancelCreating() {	
@@ -96,10 +139,6 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		assertDeactivationEvent(eventRegistry().deactivating());
 	}
 	
-	public void testDeleting() {
-		assertDeletionEvent(eventRegistryForDelete().deleting());
-	}
-	
 	public void testUpdating() {
 		assertUpdateEvent(eventRegistry().updating());
 	}
@@ -111,10 +150,6 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 
 	public void testDeactivated() throws Exception {
 		assertDeactivationEvent(eventRegistry().deactivated());
-	}
-	
-	public void testDeleted() {
-		assertDeletionEvent(eventRegistryForDelete().deleted());
 	}
 	
 	public void testCreated() {
@@ -154,22 +189,21 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(0, item.id);
 	}
 	
-	private void assertDeletionEvent(Event4 event) {
-		listenToEvent(event);
-		
-		Item item = storeItem();
-		db().delete(item);
-		
-		assertSingleObjectEventArgs(event, item);
-		
-		Assert.areEqual(0, db().get(Item.class).size());
+	private Item queryServerItem(Item item) {
+		return (Item)fileSession().get(item).next();
 	}
-	
+
 	private void assertSingleObjectEventArgs(Event4 expectedEvent, Item expectedItem) {
 		Assert.areEqual(1, _recorder.size());
 		EventRecord record = _recorder.get(0);
 		Assert.areSame(expectedEvent, record.e);
-		Assert.areSame(expectedItem, ((ObjectEventArgs)record.args).object());
+		
+		final Object actual = ((ObjectEventArgs)record.args).object();
+		Assert.areSame(expectedItem, actual);
+	}
+
+	private boolean isClientServer() {
+		return fixture() instanceof AbstractClientServerDb4oFixture;
 	}
 	
 	private void assertUpdateEvent(Event4 event) {
@@ -204,6 +238,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	private Item storeItem() {
 		Item item = new Item(1);
 		db().set(item);
+		db().commit();
 		return item;
 	}
 	
