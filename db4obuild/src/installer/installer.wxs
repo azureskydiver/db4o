@@ -64,8 +64,10 @@
 		
 		<DirectoryRef Id="TARGETDIR">
 					
-			<Directory Id="WindowsVolume" Name="WV">
-				<Directory Id="INSTALLDIR" Name="db4o-@db4o.version.dotted@">
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="PFiles.Db4objects" Name="Db4obje~" LongName="Db4objects">
+					<Directory Id="INSTALLDIR" Name="db4o-@db4o.version.dotted@">
+					</Directory>
 				</Directory>
 			</Directory>
 				
