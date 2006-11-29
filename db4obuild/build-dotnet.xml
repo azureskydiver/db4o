@@ -395,7 +395,7 @@
 		
 	</target>
 	
-	<target name="build-net-installer" depends="prepare-package-structure" unless="mono">
+	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
 		<ant antfile="build-net-installer.xml">
 			<property name="installer.package.guid" value="${installer.package.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
