@@ -2,10 +2,9 @@
 
 package com.db4o.db4ounit.jre5.defrag;
 
-import com.db4o.db4ounit.common.defragment.*;
-import com.db4o.db4ounit.common.types.arrays.*;
+import com.db4o.db4ounit.common.defragment.AbstractDb4oDefragTestCase;
 
-import db4ounit.extensions.*;
+import db4ounit.extensions.Db4oTestSuite;
 
 public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 	

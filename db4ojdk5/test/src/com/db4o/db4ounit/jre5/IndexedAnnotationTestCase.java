@@ -17,6 +17,10 @@ public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 		public DataAnnotated(int id) {
 			this._id = id;
 		}
+		
+		public String toString() {
+			return "DataAnnotated(" + _id + ")";
+		}
 	}
 
 	private static class DataNotAnnotated {
@@ -24,6 +28,10 @@ public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 
 		public DataNotAnnotated(int id) {
 			this._id = id;
+		}
+		
+		public String toString() {
+			return "DataNotAnnotated(" + _id + ")";
 		}
 	}
 
