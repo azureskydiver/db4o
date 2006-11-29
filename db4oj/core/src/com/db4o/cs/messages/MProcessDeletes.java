@@ -5,11 +5,11 @@ package com.db4o.cs.messages;
 import com.db4o.cs.*;
 
 
-public class MTaBeginEndSet extends Msg {
+public class MProcessDeletes extends Msg {
 	
 	public final boolean processAtServer(YapServerThread serverThread) {
 	    synchronized (streamLock()) {
-	        transaction().beginEndSet();
+	        transaction().processDeletes();
 	        return true;
 	    }
 	}
