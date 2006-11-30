@@ -3,18 +3,17 @@
 package com.db4o.cs;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 
+import com.db4o.foundation.Hashtable4;
 import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.generic.GenericField;
 import com.db4o.reflect.generic.GenericReflector;
 
 public class ClassMetaHelper {
 	
-	private Map classMetaTable = new HashMap();
+	private Hashtable4 _classMetaTable = new Hashtable4();
 
-	private Map genericClassTable = new HashMap();
+	private Hashtable4 _genericClassTable = new Hashtable4();
 
 	public ClassMeta getClassMeta(Class claxx) {
 		ClassMeta classMeta = null;
@@ -70,11 +69,11 @@ public class ClassMetaHelper {
 	}
 
 	private ClassMeta lookupClassMeta(String className) {
-		return (ClassMeta) classMetaTable.get(className);
+		return (ClassMeta) _classMetaTable.get(className);
 	}
 
 	private void registerClassMeta(String className, ClassMeta classMeta) {
-		classMetaTable.put(className, classMeta);
+		_classMetaTable.put(className, classMeta);
 	}
 
 	public GenericClass classMetaToGenericClass(GenericReflector reflector,
@@ -120,11 +119,11 @@ public class ClassMetaHelper {
 	}
 
 	private GenericClass lookupGenericClass(String className) {
-		return (GenericClass) genericClassTable.get(className);
+		return (GenericClass) _genericClassTable.get(className);
 	}
 
 	private void registerGenericClass(String className, GenericClass classMeta) {
-		genericClassTable.put(className, classMeta);
+		_genericClassTable.put(className, classMeta);
 	}
 
 }

@@ -3,18 +3,23 @@
 package com.db4o.cs;
 
 public class FieldMeta {
-	private String fieldName;
-	private ClassMeta fieldClass;
+	private String _fieldName;
+
+	private ClassMeta _fieldClass;
+
 	public ClassMeta getFieldClass() {
-		return fieldClass;
+		return _fieldClass;
 	}
+
 	public void setFieldClass(ClassMeta fieldClass) {
-		this.fieldClass = fieldClass;
+		this._fieldClass = fieldClass;
 	}
+
 	public String getFieldName() {
-		return fieldName;
+		return _fieldName;
 	}
+
 	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+		this._fieldName = fieldName;
 	}
 }
