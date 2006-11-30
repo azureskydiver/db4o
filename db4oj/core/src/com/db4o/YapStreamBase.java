@@ -2,13 +2,34 @@
 
 package com.db4o;
 
-import com.db4o.config.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.inside.*;
+import com.db4o.config.Configuration;
+import com.db4o.config.Entry;
+import com.db4o.config.QueryEvaluationMode;
+import com.db4o.cs.ClassMetaHelper;
+import com.db4o.ext.Db4oDatabase;
+import com.db4o.ext.Db4oException;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.ext.MemoryFile;
+import com.db4o.ext.ObjectInfo;
+import com.db4o.ext.ObjectNotStorableException;
+import com.db4o.ext.StoredClass;
+import com.db4o.ext.SystemInfo;
+import com.db4o.foundation.IntIdGenerator;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Iterator4Impl;
+import com.db4o.foundation.List4;
+import com.db4o.foundation.PersistentTimeStampIdGenerator;
+import com.db4o.foundation.Tree;
+import com.db4o.foundation.Visitor4;
+import com.db4o.inside.Exceptions4;
+import com.db4o.inside.Global4;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.MarshallerFamily;
-import com.db4o.inside.query.*;
+import com.db4o.inside.query.AbstractQueryResult;
+import com.db4o.inside.query.NativeQueryHandler;
+import com.db4o.inside.query.ObjectSetFacade;
+import com.db4o.inside.query.QueryResult;
 import com.db4o.inside.replication.Db4oReplicationReferenceProvider;
 import com.db4o.inside.replication.MigrationConnection;
 import com.db4o.query.Predicate;
@@ -38,6 +59,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     // Collection of all classes
     // if (i_classCollection == null) the engine is down.
     protected YapClassCollection      _classCollection;
+    
+    protected ClassMetaHelper _classMetaHelper = new ClassMetaHelper();
 
     // the Configuration context for this ObjectContainer
     protected Config4Impl             i_config;
@@ -2003,6 +2026,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public YapClassCollection classCollection() {
         return _classCollection;
+    }
+    
+    public ClassMetaHelper getClassMetaHelper() {
+    	return _classMetaHelper;
     }
     
     public abstract long[] getIDsForClass(Transaction trans, YapClass clazz);

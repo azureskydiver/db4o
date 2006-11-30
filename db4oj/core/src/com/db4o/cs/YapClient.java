@@ -220,6 +220,13 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		if (resp == null) {
 			return false;
 		}
+		
+		if (resp.equals(Msg.FAILED)) {
+			// if the class can not be created on the server, send class meta to the server.
+			sendClassMeta(a_class);
+			resp = getResponse();
+		}
+		
 		if (resp.equals(Msg.FAILED)) {
 			if (configImpl().exceptionsOnNotStorable()) {
 				throw new ObjectNotStorableException(a_class);
@@ -246,6 +253,18 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return true;
 	}
 
+	private void sendClassMeta(ReflectClass reflectClass) {
+		try {
+			// TODO: az: how to get java.lang.Class from ReflectClass? 
+			String name = reflectClass.getName();
+			Class claxx = Class.forName(name);
+			ClassMeta classMeta = _classMetaHelper.getClassMeta(claxx);
+			writeMsg(Msg.CLASS_META.getWriter(marshall(i_systemTrans, classMeta)));
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
+	}
+	
 	public long currentVersion() {
 		writeMsg(Msg.CURRENT_VERSION);
 		return ((MsgD) expectedResponse(Msg.ID_LIST)).readLong();
