@@ -6,20 +6,20 @@ public class FieldMeta {
 	private String _fieldName;
 
 	private ClassMeta _fieldClass;
+	
+	public FieldMeta() {
+	}
+
+	public FieldMeta(String fieldName, ClassMeta fieldClass) {
+		_fieldName = fieldName;
+		_fieldClass = fieldClass;
+	}
 
 	public ClassMeta getFieldClass() {
 		return _fieldClass;
 	}
 
-	public void setFieldClass(ClassMeta fieldClass) {
-		this._fieldClass = fieldClass;
-	}
-
 	public String getFieldName() {
 		return _fieldName;
-	}
-
-	public void setFieldName(String fieldName) {
-		this._fieldName = fieldName;
 	}
 }

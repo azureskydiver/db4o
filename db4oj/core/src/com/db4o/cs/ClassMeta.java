@@ -3,6 +3,15 @@
 package com.db4o.cs;
 
 public class ClassMeta {
+	
+	public static ClassMeta newSystemClass(String className) {
+		return new ClassMeta(className, true);
+	}
+	
+	public static ClassMeta newUserClass(String className) {
+		return new ClassMeta(className, false);
+	}
+	
 	private String _className;
 
 	private boolean _isSystemClass;
@@ -14,7 +23,7 @@ public class ClassMeta {
 	public ClassMeta() {
 	}
 	
-	public ClassMeta(String className, boolean systemClass) {
+	private ClassMeta(String className, boolean systemClass) {
 		_className = className;
 		_isSystemClass = systemClass;
 	}
@@ -42,5 +51,4 @@ public class ClassMeta {
 	public boolean isSystemClass() {
 		return _isSystemClass;
 	}
-
 }
