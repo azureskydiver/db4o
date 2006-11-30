@@ -3,7 +3,7 @@
 package com.db4o.db4ounit.common.staging;
 
 import com.db4o.config.*;
-import com.db4o.test.lib.*;
+import com.db4o.db4ounit.util.Strings;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
