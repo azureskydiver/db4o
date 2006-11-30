@@ -8,5 +8,5 @@
 -propertyMapping java.lang.System.out j4o.lang.JavaSystem.Out
 -propertyMapping java.lang.System.err j4o.lang.JavaSystem.Err
 -typeMapping java.lang.reflect.Array j4o.lang.reflect.JavaArray
--propertyMapping java.lang.reflect.Field.getType getFieldType
+-methodMapping java.lang.reflect.Field.getType getFieldType
 
