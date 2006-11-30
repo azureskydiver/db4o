@@ -19,23 +19,24 @@ public class ClassMetaHelper {
 		
 		String className = claxx.getName();
 		if (isSystemClass(className)) {
-			return new ClassMeta(className, true);
+			return ClassMeta.newSystemClass(className);
 		}
 
-		// look up from metaClass table.
-		ClassMeta classMeta = lookupClassMeta(className);
-		if (classMeta != null) {
-			return classMeta;
+		ClassMeta existing = lookupClassMeta(className);
+		if (existing != null) {
+			return existing;
 		}
 
-		// set classMeta for user-defined class
-		classMeta = new ClassMeta(className, false);
+		return newUserClassMeta(claxx);
+	}
+
+	private ClassMeta newUserClassMeta(Class claxx) {
+		
+		ClassMeta classMeta = ClassMeta.newUserClass(claxx.getName());
 		classMeta.setSuperClass(mapSuperclass(claxx));
-
-		// register classMeta
-		registerClassMeta(className, classMeta);
-
-		// set fields
+		
+		registerClassMeta(claxx.getName(), classMeta);
+		
 		classMeta.setFields(mapFields(claxx.getDeclaredFields()));
 		return classMeta;
 	}
@@ -51,12 +52,8 @@ public class ClassMetaHelper {
 	private FieldMeta[] mapFields(Field[] fields) {
 		FieldMeta[] fieldsMeta = new FieldMeta[fields.length];
 		for (int i = 0; i < fields.length; ++i) {
-			Class fieldClass = fields[i].getType();
-			String fieldName = fields[i].getName();
-			ClassMeta fieldClassMeta = getClassMeta(fieldClass);
-			fieldsMeta[i] = new FieldMeta();
-			fieldsMeta[i].setFieldName(fieldName);
-			fieldsMeta[i].setFieldClass(fieldClassMeta);
+			final Field field = fields[i];
+			fieldsMeta[i] = new FieldMeta(field.getName(), getClassMeta(field.getType()));
 		}
 		return fieldsMeta;
 	}
