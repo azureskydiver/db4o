@@ -10,6 +10,14 @@ public class ClassMeta {
 	private ClassMeta _superClass;
 
 	private FieldMeta[] _fields;
+	
+	public ClassMeta() {
+	}
+	
+	public ClassMeta(String className, boolean systemClass) {
+		_className = className;
+		_isSystemClass = systemClass;
+	}
 
 	public FieldMeta[] getFields() {
 		return _fields;
@@ -29,14 +37,6 @@ public class ClassMeta {
 
 	public String getClassName() {
 		return _className;
-	}
-
-	public void setClassName(String className) {
-		this._className = className;
-	}
-
-	public void setSystemClass(boolean isSystemClass) {
-		this._isSystemClass = isSystemClass;
 	}
 
 	public boolean isSystemClass() {

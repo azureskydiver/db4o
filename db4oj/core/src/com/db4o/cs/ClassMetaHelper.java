@@ -16,40 +16,39 @@ public class ClassMetaHelper {
 	private Hashtable4 _genericClassTable = new Hashtable4();
 
 	public ClassMeta getClassMeta(Class claxx) {
-		ClassMeta classMeta = null;
+		
 		String className = claxx.getName();
-
 		if (isSystemClass(className)) {
-			classMeta = new ClassMeta();
-			classMeta.setClassName(className);
-			classMeta.setSystemClass(true);
-			return classMeta;
+			return new ClassMeta(className, true);
 		}
 
 		// look up from metaClass table.
-		classMeta = lookupClassMeta(className);
+		ClassMeta classMeta = lookupClassMeta(className);
 		if (classMeta != null) {
 			return classMeta;
 		}
 
-		// get ClassMeta for superclass
-		ClassMeta superClassMeta = null;
-		Class superClass = claxx.getSuperclass();
-		if (superClass != null && superClass != Object.class) {
-			superClassMeta = getClassMeta(superClass);
-		}
-
 		// set classMeta for user-defined class
-		classMeta = new ClassMeta();
-		classMeta.setSuperClass(superClassMeta);
-		classMeta.setClassName(className);
-		classMeta.setSystemClass(false);
+		classMeta = new ClassMeta(className, false);
+		classMeta.setSuperClass(mapSuperclass(claxx));
 
 		// register classMeta
 		registerClassMeta(className, classMeta);
 
 		// set fields
-		Field[] fields = claxx.getDeclaredFields();
+		classMeta.setFields(mapFields(claxx.getDeclaredFields()));
+		return classMeta;
+	}
+
+	private ClassMeta mapSuperclass(Class claxx) {
+		Class superClass = claxx.getSuperclass();
+		if (superClass != null && superClass != Object.class) {
+			return getClassMeta(superClass);
+		}
+		return null;
+	}
+
+	private FieldMeta[] mapFields(Field[] fields) {
 		FieldMeta[] fieldsMeta = new FieldMeta[fields.length];
 		for (int i = 0; i < fields.length; ++i) {
 			Class fieldClass = fields[i].getType();
@@ -59,9 +58,7 @@ public class ClassMetaHelper {
 			fieldsMeta[i].setFieldName(fieldName);
 			fieldsMeta[i].setFieldClass(fieldClassMeta);
 		}
-
-		classMeta.setFields(fieldsMeta);
-		return classMeta;
+		return fieldsMeta;
 	}
 
 	private static boolean isSystemClass(String className) {
