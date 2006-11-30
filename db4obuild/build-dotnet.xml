@@ -761,14 +761,8 @@
 		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
 			<args>
 				<arg value="-cp" />
-				<arg path="${dependencies.jar}" />
-				
-				<arg value="-namespaceMapping" />
-				<arg value="com.db4o.db4ounit" />
-				<arg value="Db4objects.Db4o.Tests" />
-				
-				<arg value="@sharpen-db4ounit-options" />
-				<arg value="@sharpen-new-core-mapping" />
+				<arg path="${dependencies.jar}" />	
+				<arg value="@sharpen-tests-options" />
 			</args>
 		</sharpen>
 		

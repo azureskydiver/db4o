@@ -1,0 +1,5 @@
+-methodMapping com.db4o.db4ounit.util.Strings.replace Replace
+-namespaceMapping com.db4o.db4ounit Db4objects.Db4o.Tests
+
+@sharpen-db4ounit-options
+@sharpen-new-core-mapping
