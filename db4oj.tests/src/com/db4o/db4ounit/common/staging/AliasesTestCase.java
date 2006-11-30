@@ -44,7 +44,7 @@ public class AliasesTestCase extends AbstractDb4oTestCase {
 		new AliasesTestCase().runSolo();
 	}
 	
-	public void store(){
+	protected void store(){
 		ABar bar = new ABar();
 		bar.foo = "foo";
 		bar.bar = "bar";
