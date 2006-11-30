@@ -3,34 +3,44 @@
 package com.db4o.cs;
 
 public class ClassMeta {
-	private String className;
-	private boolean isSystemClass;
-	private ClassMeta superClass;
-	private FieldMeta [] fields;
-	
+	private String _className;
+
+	private boolean _isSystemClass;
+
+	private ClassMeta _superClass;
+
+	private FieldMeta[] _fields;
+
 	public FieldMeta[] getFields() {
-		return fields;
+		return _fields;
 	}
+
 	public void setFields(FieldMeta[] fields) {
-		this.fields = fields;
+		this._fields = fields;
 	}
+
 	public ClassMeta getSuperClass() {
-		return superClass;
+		return _superClass;
 	}
+
 	public void setSuperClass(ClassMeta superClass) {
-		this.superClass = superClass;
+		this._superClass = superClass;
 	}
+
 	public String getClassName() {
-		return className;
+		return _className;
 	}
+
 	public void setClassName(String className) {
-		this.className = className;
+		this._className = className;
 	}
+
 	public void setSystemClass(boolean isSystemClass) {
-		this.isSystemClass = isSystemClass;
+		this._isSystemClass = isSystemClass;
 	}
+
 	public boolean isSystemClass() {
-		return isSystemClass;
+		return _isSystemClass;
 	}
-	
+
 }
