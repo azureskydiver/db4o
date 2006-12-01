@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.db4ounit.common.assorted.SimplestPossibleItem;
 import com.db4o.foundation.io.*;
 import com.db4o.io.RandomAccessFileAdapter;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.OptOutCS;
@@ -38,11 +39,13 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     	File4.delete(FILE);
     	File4.mkdirs(PATH);
         
+        Db4o.configure().bTreeNodeSize(4);
+
         createFile();
         
         CrashSimulatingIoAdapter adapterFactory = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
         Db4o.configure().io(adapterFactory);
-
+        
         ObjectContainer oc = Db4o.openFile(FILE);
         
         ObjectSet objectSet = oc.get(new CrashSimulatingTestCase(null, "three"));
@@ -54,9 +57,26 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         oc.set(new CrashSimulatingTestCase(null, "seven"));
         oc.set(new CrashSimulatingTestCase(null, "eight"));
         oc.set(new CrashSimulatingTestCase(null, "nine"));
-        
+        oc.set(new CrashSimulatingTestCase(null, "10"));
+        oc.set(new CrashSimulatingTestCase(null, "11"));
+        oc.set(new CrashSimulatingTestCase(null, "12"));
+        oc.set(new CrashSimulatingTestCase(null, "13"));
+        oc.set(new CrashSimulatingTestCase(null, "14"));
         
         oc.commit();
+        
+        Query q = oc.query();
+        q.constrain(CrashSimulatingTestCase.class);
+        objectSet = q.execute();
+        while(objectSet.hasNext()){
+        	CrashSimulatingTestCase cst = (CrashSimulatingTestCase) objectSet.next();
+            if( !  (cst._name.equals("10") || cst._name.equals("13")) ){
+                oc.delete(cst);
+            }
+        }
+        
+        oc.commit();
+
         oc.close();
 
         Db4o.configure().io(new RandomAccessFileAdapter());
@@ -76,8 +96,11 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
             }
             String fileName = FILE + infix + i;
             ObjectContainer oc = Db4o.openFile(fileName);
+            
             if(! stateBeforeCommit(oc)){
-                Assert.isTrue(stateAfterCommit(oc));
+                if(! stateAfterFirstCommit(oc)){
+                    Assert.isTrue(stateAfterSecondCommit(oc));
+                }
             }
             oc.close();
         }
@@ -87,8 +110,12 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         return expect(oc, new String[] {"one", "two", "three"});
     }
     
-    private boolean stateAfterCommit (ObjectContainer oc){
-        return expect(oc, new String[] {"one", "two", "four", "five", "six", "seven", "eight", "nine"});
+    private boolean stateAfterFirstCommit (ObjectContainer oc){
+        return expect(oc, new String[] {"one", "two", "four", "five", "six", "seven", "eight", "nine", "10", "11", "12", "13", "14" });
+    }
+    
+    private boolean stateAfterSecondCommit (ObjectContainer oc){
+        return expect(oc, new String[] {"10", "13"});
     }
     
     private boolean expect(ObjectContainer oc, String[] names){
@@ -138,12 +165,8 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         File4.copy(FILE, FILE + "0");
     }
     
-    
-    
-  public String toString() {
-	return _name+" -> "+_next;
-}  
-    
-    
-
+	public String toString() {
+		return _name+" -> "+_next;
+	}
+	
 }
