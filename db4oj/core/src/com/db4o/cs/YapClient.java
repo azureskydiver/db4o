@@ -254,15 +254,8 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	private void sendClassMeta(ReflectClass reflectClass) {
-		try {
-			// TODO: az: how to get java.lang.Class from ReflectClass? 
-			String name = reflectClass.getName();
-			Class claxx = Class.forName(name);
-			ClassMeta classMeta = _classMetaHelper.getClassMeta(claxx);
-			writeMsg(Msg.CLASS_META.getWriter(marshall(i_systemTrans, classMeta)));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} 
+		ClassMeta classMeta = _classMetaHelper.getClassMeta(reflectClass);
+		writeMsg(Msg.CLASS_META.getWriter(marshall(i_systemTrans, classMeta)));
 	}
 	
 	public long currentVersion() {

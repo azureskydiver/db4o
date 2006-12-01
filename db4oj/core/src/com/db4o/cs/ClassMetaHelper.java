@@ -2,21 +2,21 @@
 
 package com.db4o.cs;
 
-import java.lang.reflect.Field;
-
 import com.db4o.foundation.Hashtable4;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.generic.GenericField;
 import com.db4o.reflect.generic.GenericReflector;
 
 public class ClassMetaHelper {
-	
+
 	private Hashtable4 _classMetaTable = new Hashtable4();
 
 	private Hashtable4 _genericClassTable = new Hashtable4();
 
-	public ClassMeta getClassMeta(Class claxx) {
-		
+	public ClassMeta getClassMeta(ReflectClass claxx) {
+
 		String className = claxx.getName();
 		if (isSystemClass(className)) {
 			return ClassMeta.newSystemClass(className);
@@ -30,35 +30,41 @@ public class ClassMetaHelper {
 		return newUserClassMeta(claxx);
 	}
 
-	private ClassMeta newUserClassMeta(Class claxx) {
-		
+	private ClassMeta newUserClassMeta(ReflectClass claxx) {
+
 		ClassMeta classMeta = ClassMeta.newUserClass(claxx.getName());
 		classMeta.setSuperClass(mapSuperclass(claxx));
-		
+
 		registerClassMeta(claxx.getName(), classMeta);
-		
+
 		classMeta.setFields(mapFields(claxx.getDeclaredFields()));
 		return classMeta;
 	}
 
-	private ClassMeta mapSuperclass(Class claxx) {
-		Class superClass = claxx.getSuperclass();
-		if (superClass != null && superClass != Object.class) {
+	private ClassMeta mapSuperclass(ReflectClass claxx) {
+		ReflectClass superClass = claxx.getSuperclass();
+		if (superClass != null) {
 			return getClassMeta(superClass);
 		}
 		return null;
 	}
 
-	private FieldMeta[] mapFields(Field[] fields) {
+	private FieldMeta[] mapFields(ReflectField[] fields) {
 		FieldMeta[] fieldsMeta = new FieldMeta[fields.length];
 		for (int i = 0; i < fields.length; ++i) {
-			final Field field = fields[i];
-			fieldsMeta[i] = new FieldMeta(field.getName(), getClassMeta(field.getType()));
+			final ReflectField field = fields[i];
+			fieldsMeta[i] = new FieldMeta(field.getName(), getClassMeta(field
+					.getFieldType()));
 		}
 		return fieldsMeta;
 	}
 
 	private static boolean isSystemClass(String className) {
+		// TODO: We should send the whole class meta if we'd like to support
+		// java and .net communication (We have this request in our user forum
+		// http://developer.db4o.com/forums/thread/31504.aspx). If we only want
+		// to support java & .net platform separately, then this method should
+		// be moved to Platform4.
 		return className.startsWith("java");
 	}
 
@@ -92,9 +98,10 @@ public class ClassMetaHelper {
 					genericSuperClass);
 		}
 
-		genericClass = new GenericClass(reflector, null,className, genericSuperClass);
+		genericClass = new GenericClass(reflector, null, className,
+				genericSuperClass);
 		registerGenericClass(className, genericClass);
-		
+
 		FieldMeta[] fields = classMeta.getFields();
 		GenericField[] genericFields = new GenericField[fields.length];
 
@@ -103,11 +110,11 @@ public class ClassMetaHelper {
 			String fieldName = fields[i].getFieldName();
 			GenericClass genericFieldClass = classMetaToGenericClass(reflector,
 					fieldClassMeta);
-			// TODO: needs to handle Array, NArray
+			// TODO: needs to handle primitive, Array, NArray
 			genericFields[i] = new GenericField(fieldName, genericFieldClass,
 					false, false, false);
 		}
-		
+
 		genericClass.initFields(genericFields);
 		return genericClass;
 	}
