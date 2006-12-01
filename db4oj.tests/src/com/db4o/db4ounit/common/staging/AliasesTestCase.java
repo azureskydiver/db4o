@@ -21,19 +21,19 @@ public class AliasesTestCase extends AbstractDb4oTestCase {
 		
 	}
 	
-	public static class ABar extends AFoo{
+	public static class ABar extends AFoo {
 		
 		public String bar;
 		
 	}
 	
-	public static class BFoo{
+	public static class BFoo {
 		
 		public String foo;
 		
 	}
 	
-	public static class BBar extends AFoo{
+	public static class BBar extends BFoo {
 		
 		public String bar;
 		
@@ -48,6 +48,7 @@ public class AliasesTestCase extends AbstractDb4oTestCase {
 		ABar bar = new ABar();
 		bar.foo = "foo";
 		bar.bar = "bar";
+		store(bar);
 	}
 	
 	private WildcardAlias createAlias(){
@@ -57,11 +58,18 @@ public class AliasesTestCase extends AbstractDb4oTestCase {
 		return new WildcardAlias(storedPattern, runtimePattern);
 	}
 	
-	public void test(){
+	public void test() throws Exception{
 		db().configure().addAlias(createAlias());
+		reopen();
+		debug();
+		
 		BBar bar = (BBar) retrieveOnlyInstance(BBar.class);
 		Assert.areEqual("foo", bar.foo);
 		Assert.areEqual("bar", bar.bar);
+	}
+	
+	private void debug(){
+		System.out.println(stream().classCollection().toString());
 	}
 
 }
