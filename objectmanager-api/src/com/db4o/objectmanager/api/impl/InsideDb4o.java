@@ -44,7 +44,7 @@ public class InsideDb4o {
     }
     
     private YapClass yapClass(String name){
-    	return stream().getYapClass(reflectClass(name), false);
+    	return stream().getYapClass(reflectClass(name));
     }
     
     private ReflectClass reflectClass(String name){
