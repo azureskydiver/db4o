@@ -388,7 +388,7 @@ public class YapArray extends YapIndependantType {
         if(primitive){
             claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
         }
-        YapClass yc = stream.getYapClass(claxx, true);
+        YapClass yc = stream.produceYapClass(claxx);
         if (yc != null) {
             yapClassID = yc.getID();
         }

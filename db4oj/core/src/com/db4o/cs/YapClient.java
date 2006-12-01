@@ -394,7 +394,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		if (className != null && className.length() > 0) {
 			ReflectClass claxx = reflector().forName(className);
 			if (claxx != null) {
-				return getYapClass(claxx, true);
+				return produceYapClass(claxx);
 			}
 			// TODO inform client class not present
 		}

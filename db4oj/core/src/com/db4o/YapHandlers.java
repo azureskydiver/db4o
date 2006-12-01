@@ -336,7 +336,7 @@ public final class YapHandlers {
         if (yc != null) {
             return ((YapClassPrimitive) yc).i_handler;
         }
-        return a_stream.getYapClass(a_class, true);
+        return a_stream.produceYapClass(a_class);
     }
     
     private void initClassReflectors(GenericReflector reflector){

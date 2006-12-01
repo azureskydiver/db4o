@@ -21,7 +21,7 @@ public class MClassMeta extends MsgObject {
 				Transaction trans = stream.getSystemTransaction();
 				YapWriter returnBytes = new YapWriter(trans, 0);
 
-				YapClass yapClass = stream.getYapClass(genericClass, true);
+				YapClass yapClass = stream.produceYapClass(genericClass);
 				if (yapClass != null) {
 					stream.checkStillToSet();
 					yapClass.setStateDirty();

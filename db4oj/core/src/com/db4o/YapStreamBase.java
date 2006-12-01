@@ -227,7 +227,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     final void bind2(YapObject a_yapObject, Object obj){
         int id = a_yapObject.getID();
         removeReference(a_yapObject);
-        a_yapObject = new YapObject(getYapClass(reflector().forObject(obj), false),
+        a_yapObject = new YapObject(getYapClass(reflector().forObject(obj)),
             id);
         a_yapObject.setObjectWeak(_this, obj);
         a_yapObject.setStateDirty();
@@ -867,27 +867,29 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return i_trans;
     }
     
-    // FIXME: REFLECTOR an IClass could also hold a reference to
-    // a YapClass so we would improve considerably on lookup
-    // performance here.
-	// TODO: Instead of using a parameter to denote create, use
-	//       two methods with different names
-    public final YapClass getYapClass(ReflectClass a_class, boolean a_create) {
-        
-        if (a_class == null) {
-            return null;
+    public final YapClass getYapClass(ReflectClass claxx){
+    	if(cantGetYapClass(claxx)){
+    		return null;
+    	}
+        YapClass yc = i_handlers.getYapClassStatic(claxx);
+        if (yc != null) {
+            return yc;
         }
-        
-        if ((!showInternalClasses())
-            && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
-            return null;
-        }
-        YapClass yc = i_handlers.getYapClassStatic(a_class);
+        return _classCollection.getYapClass(claxx);
+    }
+    
+    // TODO: Some ReflectClass implementations could hold a 
+    // reference to YapClass to improve lookup performance here.
+    public final YapClass produceYapClass(ReflectClass claxx) {
+    	if(cantGetYapClass(claxx)){
+    		return null;
+    	}
+        YapClass yc = i_handlers.getYapClassStatic(claxx);
         if (yc != null) {
             return yc;
         }
         
-        return _classCollection.getYapClass(a_class, a_create);
+        return _classCollection.produceYapClass(claxx);
     }
     
     /**
@@ -900,21 +902,26 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
      * In this call we only return active YapClasses, initialization
      * is not done on purpose
      */
-    final YapClass getActiveYapClass(ReflectClass a_class) {
-        if (a_class == null) {
-            return null;
-        }
-        if ((!showInternalClasses())
-            && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
-            return null;
-        }
-        YapClass yc = i_handlers.getYapClassStatic(a_class);
+    final YapClass getActiveYapClass(ReflectClass claxx) {
+    	if(cantGetYapClass(claxx)){
+    		return null;
+    	}
+        YapClass yc = i_handlers.getYapClassStatic(claxx);
         if (yc != null) {
             return yc;
         }
-        return _classCollection.getActiveYapClass(a_class);
+        return _classCollection.getActiveYapClass(claxx);
     }
     
+    private final boolean cantGetYapClass(ReflectClass claxx){
+        if (claxx == null) {
+            return true;
+        }
+        if ((!showInternalClasses()) && i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
+            return true;
+        }
+        return false;
+    }
 
     public YapClass getYapClass(int a_id) {
     	if(DTrace.enabled){
@@ -1075,7 +1082,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     void initializeEssentialClasses(){
         for (int i = 0; i < YapConst.ESSENTIAL_CLASSES.length; i++) {
-            getYapClass(reflector().forClass(YapConst.ESSENTIAL_CLASSES[i]), true);    
+            produceYapClass(reflector().forClass(YapConst.ESSENTIAL_CLASSES[i]));    
         }
     }
 
@@ -1190,7 +1197,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         MemoryFile memoryFile = new MemoryFile();
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
-        getYapClass(reflector().forObject(obj), true);
+        produceYapClass(reflector().forObject(obj));
         YapObjectCarrier carrier = new YapObjectCarrier(config(),_this, memoryFile);
         carrier.i_showInternalClasses = i_showInternalClasses;
         carrier.set(obj);
@@ -1690,7 +1697,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             yc = getActiveYapClass(claxx);
             
             if (yc == null) {
-                yc = getYapClass(claxx, true);
+                yc = produceYapClass(claxx);
                 if ( yc == null){
                     notStorable(claxx, obj);
                     return 0;
@@ -1831,8 +1838,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             } else {
                 if (forceUnknownDeactivate) {
                     // Special handling to deactivate Top-Level unknown objects only.
-                    YapClass yc = getYapClass(reflector().forObject(obj),
-                        false);
+                    YapClass yc = getYapClass(reflector().forObject(obj));
                     if (yc != null) {
                         yc.deactivate(i_trans, obj, depth);
                     }
@@ -1888,7 +1894,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             if (claxx == null) {
             	return null;
             }
-            return getYapClass(claxx, false);
+            return getYapClass(claxx);
         }
     }
 

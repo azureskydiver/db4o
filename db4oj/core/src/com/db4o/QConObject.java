@@ -70,13 +70,12 @@ public class QConObject extends QCon {
             
         } else {
             i_yapClass = a_trans.stream()
-                .getYapClass(a_trans.reflector().forObject(a_object), true);
+                .produceYapClass(a_trans.reflector().forObject(a_object));
             if (i_yapClass != null) {
                 i_object = i_yapClass.getComparableObject(a_object);
                 if (a_object != i_object) {
                     i_attributeProvider = i_yapClass.i_config.queryAttributeProvider();
-                    i_yapClass = a_trans.stream().getYapClass(a_trans.reflector().forObject(i_object)
-                        , true);
+                    i_yapClass = a_trans.stream().produceYapClass(a_trans.reflector().forObject(i_object));
                 }
                 if (i_yapClass != null) {
                     i_yapClass.collectConstraints(a_trans, this, i_object,

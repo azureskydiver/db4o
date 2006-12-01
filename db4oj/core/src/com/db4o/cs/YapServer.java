@@ -32,13 +32,13 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 		config.callbacks(false);
 		config.isServer(true);
 
-		a_yapFile.getYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS, true);
+		a_yapFile.produceYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS);
 
 		// make sure all configured YapClasses are up in the repository
 		config.exceptionalClasses().forEachValue(new Visitor4() {
 			public void visit(Object a_object) {
-				a_yapFile.getYapClass(a_yapFile.reflector().forName(
-						((Config4Class) a_object).getName()), true);
+				a_yapFile.produceYapClass(a_yapFile.reflector().forName(
+						((Config4Class) a_object).getName()));
 			}
 		});
 

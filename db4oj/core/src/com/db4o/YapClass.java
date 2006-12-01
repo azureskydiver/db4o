@@ -685,7 +685,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         if (reflectClass != null && reflectClass.getSuperclass() == null && obj != null) {
         	throw new ObjectNotStorableException(obj.toString());
         }
-		return trans.stream().getYapClass(reflectClass, allowCreation);
+        if(allowCreation){
+        	return trans.stream().produceYapClass(reflectClass);
+        }
+        return trans.stream().getYapClass(reflectClass);
     }
     
     public boolean generateUUIDs() {
@@ -1657,7 +1660,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     public StoredField storedField(String a_name, Object a_type) {
         synchronized(i_stream.i_lock){
             
-            YapClass yc = i_stream.getYapClass(i_stream.configImpl().reflectorFor(a_type), false); 
+            YapClass yc = i_stream.getYapClass(i_stream.configImpl().reflectorFor(a_type)); 
     		
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {
