@@ -34,8 +34,11 @@ public final class Platform4 {
     static Thread shutDownThread;
     
     static final String ACCESSIBLEOBJECT = "java.lang.reflect.AccessibleObject";
-    static final String REFLECTIONFACTORY = "sun.reflect.ReflectionFactory";
     static final String GETCONSTRUCTOR = "newConstructorForSerialization";
+    static final String REFERENCEQUEUE = "java.lang.ref.ReferenceQueue"; 
+    static final String REFLECTIONFACTORY = "sun.reflect.ReflectionFactory";
+    static final String RUNFINALIZERSONEXIT = "runFinalizersOnExit";
+    
     static final String UTIL = "java.util.";
     static final String DB4O_PACKAGE = "com.db4o.";
     static final String DB4O_CONFIG = DB4O_PACKAGE + "config.";
@@ -45,7 +48,19 @@ public final class Platform4 {
     // static private int cCreateNewFile;
     static private int weakReferenceCheck;
     
-    private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
+    private static final Class[] SIMPLE_CLASSES = {
+		Integer.class,
+		Long.class,
+		Float.class,
+		Boolean.class,
+		Double.class,
+		Byte.class,
+		Character.class,
+		Short.class,
+		String.class,
+		java.util.Date.class
+	};
+
 
     static final void addShutDownHook(Object a_stream, Object a_lock) {
         synchronized (a_lock) {
@@ -326,7 +341,7 @@ public final class Platform4 {
                     shutDownHookCheck = YapConst.YES;
                     return true;
                 } 
-                JavaOnly.runFinalizersOnExit();
+                JDKReflect.invoke(System.class, RUNFINALIZERSONEXIT, new Class[] {boolean.class}, new Object[]{new Boolean(true)});
             }
             shutDownHookCheck = YapConst.NO;
         }
@@ -340,7 +355,7 @@ public final class Platform4 {
         if (weakReferenceCheck == YapConst.UNCHECKED) {
             if (!Deploy.csharp) {
                 if (classIsAvailable(ACCESSIBLEOBJECT)
-                    && classIsAvailable("java.lang.ref.ReferenceQueue")
+                    && classIsAvailable(REFERENCEQUEUE)
                     && jdk().ver() >= 2) {
                     weakReferenceCheck = YapConst.YES;
                     return true;
@@ -441,7 +456,10 @@ public final class Platform4 {
             // link standard translators, so they won't get deleted
             // by deployment
             
-            JavaOnly.link();
+            new TClass();
+            new TVector();
+            new THashtable();
+            new TNull();
         }
     }
 
