@@ -100,7 +100,7 @@ public class QField implements Visitor4, Unversioned{
 		if(obj == null){
 			return Null.INSTANCE;
 		}
-		YapClass yc = i_trans.stream().getYapClass(i_trans.reflector().forObject(obj), true);
+		YapClass yc = i_trans.stream().produceYapClass(i_trans.reflector().forObject(obj));
 		YapField yf = yc.getYapField(i_name);
 		if(yf != null){
 			return yf.prepareComparison(obj);

@@ -80,7 +80,7 @@ public final class YapClassCollection extends YapMeta {
         ReflectClass superClass = a_class.getSuperclass();
         YapClass superYapClass = null;
         if (superClass != null && ! superClass.equals(stream().i_handlers.ICLASS_OBJECT)) {
-            superYapClass = getYapClass(superClass, true);
+            superYapClass = produceYapClass(superClass);
         }
         boolean ret = stream().createYapClass(a_yapClass, a_class, superYapClass);
         i_yapClassCreationDepth--;
@@ -172,17 +172,22 @@ public final class YapClassCollection extends YapMeta {
     YapClass getActiveYapClass(ReflectClass a_class) {
         return (YapClass)i_yapClassByClass.get(a_class);
     }
-
-    YapClass getYapClass(ReflectClass a_class, boolean a_create) {
-    	
+    
+    YapClass getYapClass (ReflectClass a_class) {
     	YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
-        
-        if (yapClass == null) {        	        	
-            yapClass = (YapClass)i_yapClassByBytes.remove(getNameBytes(a_class.getName()));
-            readYapClass(yapClass, a_class);
+        if (yapClass != null) {
+        	return yapClass;
         }
+        yapClass = (YapClass)i_yapClassByBytes.remove(getNameBytes(a_class.getName()));
+        readYapClass(yapClass, a_class);
+        return yapClass;
+    }
 
-        if (yapClass != null || (!a_create)) {
+    YapClass produceYapClass(ReflectClass a_class) {
+    	
+    	YapClass yapClass = getYapClass(a_class);
+    	
+        if (yapClass != null ) {
             return yapClass;
         }
         
@@ -469,11 +474,11 @@ public final class YapClassCollection extends YapMeta {
         if(! Debug4.prettyToStrings){
             return super.toString();
         }
-		String str = "";
+		String str = "Active:\n";
 		Iterator4 i = i_classes.iterator();
 		while(i.moveNext()){
 			YapClass yc = (YapClass)i.current();
-			str += yc.getID() + " " + yc + "\r\n";
+			str += yc.getID() + " " + yc + "\n";
 		}
 		return str;
 	}
