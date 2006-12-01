@@ -44,7 +44,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     private EventDispatcher _eventDispatcher;
     
     private boolean _internal;
+    
     private boolean _unversioned;
+    
+	// for indexing purposes.
+    // TODO: check race conditions, upon multiple calls against the same class
+    private int i_lastID;
+    
     
     boolean isInternal() {
     	return _internal;
@@ -54,10 +60,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return new BTreeClassIndexStrategy(this);
 	}
 
-	// for indexing purposes.
-    // TODO: check race conditions, upon multiple calls against the same class
-    private int i_lastID;
-    
     YapClass(YapStream stream, ReflectClass reflector){
     	i_stream = stream;
         _reflector = reflector;
@@ -1217,7 +1219,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         if(i_name == null){
             return "";
         }
-        return i_name;
+        return i_stream.configImpl().resolveAliasRuntimeName(i_name);
     }
     
     final boolean callConstructor() {
@@ -1903,7 +1905,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         if (Deploy.debug) {
             readers.readEnd();
         }
-
     }	
 
 	public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
