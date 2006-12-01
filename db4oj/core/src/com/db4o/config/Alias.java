@@ -53,8 +53,14 @@ package com.db4o.config;
 public interface Alias {
     
     /**
-     * return the translated name or null if not handled. 
+     * return the stored name for a runtime name or null if not handled. 
      */
-	public String resolve(String runtimeType);
+	public String resolveRuntimeName(String runtimeTypeName);
+	
+    /**
+     * return the runtime name for a stored name or null if not handled. 
+     */
+	public String resolveStoredName(String storedTypeName);
+	
 
 }

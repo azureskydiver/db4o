@@ -1499,7 +1499,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         ReflectClass a_class) {
         if (a_class == null) {
             if (i_nameBytes != null) {
-                i_name = a_stream.stringIO().read(i_nameBytes);
+            	String name = a_stream.stringIO().read(i_nameBytes);
+            	i_name = a_stream.configImpl().resolveAliasStoredName(name);
             }
         } else {
             i_name = a_class.getName();

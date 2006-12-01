@@ -24,12 +24,21 @@ public class TypeAlias implements Alias {
 	}
 
 	/**
-     * checking if both names are equal. 
+     * returns the stored type name if the alias was written for the passed runtime type name  
 	 */
-    public String resolve(String runtimeType) {
-		return _runtimeType.equals(runtimeType)
+    public String resolveRuntimeName(String runtimeTypeName) {
+		return _runtimeType.equals(runtimeTypeName)
 			? _storedType
 			: null;
+	}
+    
+	/**
+     * returns the runtime type name if the alias was written for the passed stored type name  
+	 */
+	public String resolveStoredName(String storedTypeName) {
+		return _storedType.equals(storedTypeName)
+		? _runtimeType
+		: null;
 	}
 
 }
