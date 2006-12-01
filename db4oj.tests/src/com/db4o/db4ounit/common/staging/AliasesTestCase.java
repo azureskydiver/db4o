@@ -9,36 +9,25 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-/**
- * @exclude
- */
 public class AliasesTestCase extends AbstractDb4oTestCase {
 	
+	private static int id;
 	
 	public static class AFoo{
-		
 		public String foo;
-		
 	}
 	
 	public static class ABar extends AFoo {
-		
 		public String bar;
-		
 	}
 	
 	public static class BFoo {
-		
 		public String foo;
-		
 	}
 	
 	public static class BBar extends BFoo {
-		
 		public String bar;
-		
 	}
-	
 
 	public static void main(String[] args) {
 		new AliasesTestCase().runSolo();
@@ -49,6 +38,35 @@ public class AliasesTestCase extends AbstractDb4oTestCase {
 		bar.foo = "foo";
 		bar.bar = "bar";
 		store(bar);
+		id = (int)db().getID(bar);
+	}
+	
+	public void testAccessByChildClass() throws Exception{
+		addAlias();
+		BBar bar = (BBar) retrieveOnlyInstance(BBar.class);
+		assertInstanceOK(bar);
+	}
+	
+	public void testAccessByParentClass() throws Exception{
+		addAlias();
+		BBar bar = (BBar) retrieveOnlyInstance(BFoo.class);
+		assertInstanceOK(bar);
+	}
+	
+	public void testAccessById(){
+		addAlias();
+		BBar bar = (BBar) db().getByID(id);
+		db().activate(bar, 2);
+		assertInstanceOK(bar);
+	}
+	
+	private void assertInstanceOK (BBar bar) {
+		Assert.areEqual("foo", bar.foo);
+		Assert.areEqual("bar", bar.bar);
+	}
+	
+	private void addAlias(){
+		db().configure().addAlias(createAlias());	
 	}
 	
 	private WildcardAlias createAlias(){
@@ -56,20 +74,6 @@ public class AliasesTestCase extends AbstractDb4oTestCase {
 		String storedPattern = Strings.replace(className, "ABar", "A*");
 		String runtimePattern = Strings.replace(className, "ABar", "B*");
 		return new WildcardAlias(storedPattern, runtimePattern);
-	}
-	
-	public void test() throws Exception{
-		db().configure().addAlias(createAlias());
-		reopen();
-		debug();
-		
-		BBar bar = (BBar) retrieveOnlyInstance(BBar.class);
-		Assert.areEqual("foo", bar.foo);
-		Assert.areEqual("bar", bar.bar);
-	}
-	
-	private void debug(){
-		System.out.println(stream().classCollection().toString());
 	}
 
 }
