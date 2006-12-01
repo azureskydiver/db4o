@@ -555,18 +555,40 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
     	aliases().remove(alias);
     }
     
-    public String resolveAlias(String runtimeType) {
+    public String resolveAliasRuntimeName(String runtimeType) {
 
     	Collection4 configuredAliases=aliases();
-    	if (null == configuredAliases) return runtimeType;
+    	if (null == configuredAliases) {
+    		return runtimeType;
+    	}
     	
     	Iterator4 i = configuredAliases.iterator();
     	while (i.moveNext()) {
-    		String resolved = ((Alias)i.current()).resolve(runtimeType);
-    		if (null != resolved) return resolved; 
+    		String resolved = ((Alias)i.current()).resolveRuntimeName(runtimeType);
+    		if (null != resolved){
+    			return resolved; 
+    		}
     	}
     	
     	return runtimeType;
+    }
+    
+    public String resolveAliasStoredName(String storedType) {
+
+    	Collection4 configuredAliases=aliases();
+    	if (null == configuredAliases){
+    		return storedType;
+    	}
+    	
+    	Iterator4 i = configuredAliases.iterator();
+    	while (i.moveNext()) {
+    		String resolved = ((Alias)i.current()).resolveStoredName(storedType);
+    		if (null != resolved){
+    			return resolved; 
+    		}
+    	}
+    	
+    	return storedType;
     }
     
     ReflectClass reflectorFor(Object clazz) {

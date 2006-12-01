@@ -34,10 +34,21 @@ public class WildcardAlias implements Alias {
     /**
      * resolving is done through simple pattern matching  
      */
-	public String resolve(String runtimeType) {
-		String match = _runtimePattern.matches(runtimeType);
+	public String resolveRuntimeName(String runtimeTypeName) {
+		String match = _runtimePattern.matches(runtimeTypeName);
 		return match != null
 			? _storedPattern.inject(match)
+			: null;
+	}
+
+    /**
+     * resolving is done through simple pattern matching  
+     */
+	
+	public String resolveStoredName(String storedTypeName) {
+		String match = _storedPattern.matches(storedTypeName);
+		return match != null
+			? _runtimePattern.inject(match)
 			: null;
 	}
 	

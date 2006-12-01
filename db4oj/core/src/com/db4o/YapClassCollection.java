@@ -238,10 +238,10 @@ public final class YapClassCollection extends YapMeta {
         return yapClass;
     }    
     
-	YapClass getYapClass(int a_id) {
-        return readYapClass((YapClass)i_yapClassByID.get(a_id), null);
+	YapClass getYapClass(int id) {
+        return readYapClass((YapClass)i_yapClassByID.get(id), null);
     }
-
+	
     public YapClass getYapClass(String a_name) {
         YapClass yapClass = (YapClass)i_yapClassByBytes.remove(getNameBytes(a_name));
         readYapClass(yapClass, null);
@@ -268,11 +268,11 @@ public final class YapClassCollection extends YapMeta {
     }
 
 	byte[] getNameBytes(String name) {		
-		return asBytes(resolveAlias(name));
+		return asBytes(resolveAliasRuntimeName(name));
 	}
 
-	private String resolveAlias(String name) {
-		return stream().configImpl().resolveAlias(name);
+	private String resolveAliasRuntimeName(String name) {
+		return stream().configImpl().resolveAliasRuntimeName(name);
 	}
 
     void initOnUp(Transaction systemTrans) {

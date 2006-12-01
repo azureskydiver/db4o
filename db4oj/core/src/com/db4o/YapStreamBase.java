@@ -923,18 +923,18 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return false;
     }
 
-    public YapClass getYapClass(int a_id) {
+    public YapClass getYapClass(int id) {
     	if(DTrace.enabled){
-    		DTrace.YAPCLASS_BY_ID.log(a_id);
+    		DTrace.YAPCLASS_BY_ID.log(id);
     	}
-        if (a_id == 0) {
+        if (id == 0) {
             return null;
         }
-        YapClass yc = i_handlers.getYapClassStatic(a_id);
+        YapClass yc = i_handlers.getYapClassStatic(id);
         if (yc != null) {
             return yc;
         }
-        return _classCollection.getYapClass(a_id);
+        return _classCollection.getYapClass(id);
     }
     
     public Object objectForIDFromCache(int id){
