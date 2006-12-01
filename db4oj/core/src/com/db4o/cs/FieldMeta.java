@@ -3,9 +3,10 @@
 package com.db4o.cs;
 
 public class FieldMeta {
-	private String _fieldName;
+	
+	public String _fieldName;
 
-	private ClassMeta _fieldClass;
+	public ClassMeta _fieldClass;
 	
 	public FieldMeta() {
 	}

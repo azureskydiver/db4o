@@ -12,13 +12,13 @@ public class ClassMeta {
 		return new ClassMeta(className, false);
 	}
 	
-	private String _className;
+	public String _className;
 
-	private boolean _isSystemClass;
+	public boolean _isSystemClass;
 
-	private ClassMeta _superClass;
+	public ClassMeta _superClass;
 
-	private FieldMeta[] _fields;
+	public FieldMeta[] _fields;
 	
 	public ClassMeta() {
 	}
