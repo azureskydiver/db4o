@@ -63,11 +63,16 @@ class JDKReflect extends JDK {
         return false;
     }
     
+    public static Object invoke (Class clazz, String methodName, Class[] paramClasses, Object[] params){
+        return invoke(clazz.getName(), methodName, paramClasses, params, null);
+    }
+    
+    
     /**
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
      */
-    protected Object invoke (Object obj, String methodName, Class[] paramClasses, Object[] params){
+    public static Object invoke (Object obj, String methodName, Class[] paramClasses, Object[] params){
         return invoke(obj.getClass().getName(), methodName, paramClasses, params, obj );
     }
     
@@ -75,7 +80,7 @@ class JDKReflect extends JDK {
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
      */
-    protected Object invoke (String className, String methodName, Class[] paramClasses, Object[] params, Object onObject){
+    public static Object invoke (String className, String methodName, Class[] paramClasses, Object[] params, Object onObject){
         try {
                 Method method = getMethod(className, methodName, paramClasses);
                 return method.invoke(onObject, params);
@@ -90,7 +95,7 @@ class JDKReflect extends JDK {
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
      */
-    protected Method getMethod(String className, String methodName, Class[] paramClasses) {
+    public static Method getMethod(String className, String methodName, Class[] paramClasses) {
         try {
             Class clazz = Class.forName(className);
             Method method = clazz.getMethod(methodName, paramClasses);
