@@ -13,6 +13,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			AliasesTestCase.class,
             BackupStressTestCase.class,
             CanUpdateFalseRefreshTestCase.class,
             ChangeIdentity.class,
