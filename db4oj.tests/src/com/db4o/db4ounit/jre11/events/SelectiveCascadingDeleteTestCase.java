@@ -117,7 +117,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase imple
 	}
 
 	private YapClass yapClass() {
-		YapClass clazz = fileSession().getYapClass(reflector().forClass(Item.class), false);
+		YapClass clazz = fileSession().getYapClass(reflector().forClass(Item.class));
 		return clazz;
 	}
 
