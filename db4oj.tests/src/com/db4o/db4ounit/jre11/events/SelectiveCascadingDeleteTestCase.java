@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
 	protected void configure(Configuration config) {
 		enableCascadeOnDelete(config);
@@ -77,12 +77,6 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase imple
 	private Query createItemQuery() {
 		Query q = db().query();
 		q.constrain(Item.class);
-		q.sortBy(new QueryComparator() {
-			public int compare(Object first, Object second) {
-				return ((Item)first).id.compareTo(((Item)second).id);
-			}
-			private static final long serialVersionUID = 1L;
-		});
 		return q;
 	}
 
