@@ -25,7 +25,7 @@ public class YapClassTestCase extends AbstractDb4oTestCase {
 	
 	public void testFieldIterator() {		
 		Collection4 expectedNames=new Collection4(new ArrayIterator4(new String[]{"_id","_name","_age"}));
-		YapClass clazz=stream().getYapClass(reflector().forClass(SubClazz.class),false);
+		YapClass clazz=stream().getYapClass(reflector().forClass(SubClazz.class));
 		Iterator4 fieldIter=clazz.fields();
 		while(fieldIter.moveNext()) {
 			YapField curField=(YapField)fieldIter.current();
