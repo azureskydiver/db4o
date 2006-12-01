@@ -117,7 +117,8 @@ public final class Messages
                         "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}",
                         "Old database file format detected. To allow automatic updates call Db4o.configure().allowVersionUpdates(true).", // 65
                         "This functionality is only available for indexed fields.", // 66
-                        "This functionality is not supported for db4o clients in Client/Server mode." // 67
+                        "This functionality is not supported for db4o clients in Client/Server mode.", // 67
+                        "Invalid address: %", // 68
 		                };
 		        }else{
 		            i_messages = new String[0];

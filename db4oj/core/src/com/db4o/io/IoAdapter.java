@@ -117,6 +117,8 @@ public abstract class IoAdapter {
 
     /**
      * reads a buffer at the seeked address 
+     * 
+     * @return the number of bytes read and returned
      */
 	public int read(byte[] buffer) throws IOException {
 		return read(buffer,buffer.length);		

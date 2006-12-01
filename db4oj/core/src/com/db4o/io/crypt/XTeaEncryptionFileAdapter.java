@@ -186,7 +186,7 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 			log("4. after dencrypt/read->", pb);
 		}
 		seek(origPos + length);
-		return readResult;
+		return length;
 	}
 
 	/**
