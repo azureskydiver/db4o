@@ -277,7 +277,10 @@ public class YapRandomAccessFile extends YapFile {
 
         try{
             i_file.blockSeek(address, addressOffset);
-            i_file.read(bytes, length);
+            int bytesRead=i_file.read(bytes, length);
+            if(bytesRead!=length) {
+            	Exceptions4.throwRuntimeException(68, address+"/"+addressOffset);
+            }
         }catch(IOException ioex){
             
             // We need to catch here and throw a runtime exception

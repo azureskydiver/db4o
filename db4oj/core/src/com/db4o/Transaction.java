@@ -381,7 +381,15 @@ public class Transaction {
             i_pointerIo.readEnd();
             return new Slot(debugAddress, debugLength);
         }
-        i_file.readBytes(_pointerBuffer, id, YapConst.POINTER_LENGTH);
+        // FIXME: This shouldn't be silently swallowed. Currently this situation can occur for
+        // a class collection in a new yap file that already has its ID assigned but hasn't been
+        // written yet. Should be fixed in the YapClassCollection logic.
+        try {
+        	i_file.readBytes(_pointerBuffer, id, YapConst.POINTER_LENGTH);
+        }
+        catch(RuntimeException exc) {
+        	return null;
+        }
         int address = (_pointerBuffer[3] & 255)
             | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
             | _pointerBuffer[0] << 24;
@@ -565,6 +573,9 @@ public class Transaction {
     void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
         
         Slot slot = getCurrentSlotOfID(a_id);
+        if(slot==null) {
+        	return;
+        }
         
         checkSynchronization();
         
