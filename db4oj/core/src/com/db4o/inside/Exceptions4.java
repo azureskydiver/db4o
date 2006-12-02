@@ -23,7 +23,13 @@ public class Exceptions4 {
     }
 
     public static final void throwRuntimeException (int code, String msg, Throwable cause) {
-    	Messages.logErr(Db4o.configure(), code,msg, cause);
+    	throwRuntimeException(code, msg, cause, true);
+    }
+
+    public static final void throwRuntimeException (int code, String msg, Throwable cause,boolean doLog) {
+    	if(doLog) {
+    		Messages.logErr(Db4o.configure(), code,msg, cause);
+    	}
         throw new Db4oException(Messages.get(code, msg));
     }
     
