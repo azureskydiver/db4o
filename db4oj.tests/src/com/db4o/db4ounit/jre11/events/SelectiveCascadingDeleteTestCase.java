@@ -10,10 +10,9 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 
-public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	
 	protected void configure(Configuration config) {
 		enableCascadeOnDelete(config);
@@ -34,16 +33,17 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase imple
 			public void onEvent(Event4 e, EventArgs args) {
 				CancellableObjectEventArgs a = (CancellableObjectEventArgs)args;
 				Item item = ((Item)a.object());
+				fileSession().activate(item, 1);
                 if (item.id.equals("B")) {
 					// cancel deletion of this item
 					a.cancel();
 					
 					// restart from the child
-                    SelectiveCascadingDeleteTestCase.this.db().delete(item.child);
+					fileSession().delete(item.child);
 					
 					// and disconnect it
 					item.child = null;
-                    SelectiveCascadingDeleteTestCase.this.db().set(item);
+					fileSession().set(item);
 				}
 			}
 		});
@@ -116,6 +116,6 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase imple
 	}
 
 	public static void main(String[] args) {
-		new SelectiveCascadingDeleteTestCase().runSolo();
+		new SelectiveCascadingDeleteTestCase().runClientServer();
 	}
 }
