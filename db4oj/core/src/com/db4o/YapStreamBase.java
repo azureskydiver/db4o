@@ -515,11 +515,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             return;
         }
         
-        // repetitive, the object can have been touched by an action in the callback.
-        if(! ref.isFlaggedForDelete()){
-        	return;
-        }
-        
         ref.beginProcessing();
 
         if(DTrace.enabled){
