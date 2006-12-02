@@ -279,7 +279,7 @@ public class YapRandomAccessFile extends YapFile {
             i_file.blockSeek(address, addressOffset);
             int bytesRead=i_file.read(bytes, length);
             if(bytesRead!=length) {
-            	Exceptions4.throwRuntimeException(68, address+"/"+addressOffset);
+            	Exceptions4.throwRuntimeException(68, address+"/"+addressOffset,null,false);
             }
         }catch(IOException ioex){
             
