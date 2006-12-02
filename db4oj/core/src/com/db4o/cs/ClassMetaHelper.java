@@ -94,8 +94,6 @@ public class ClassMetaHelper {
 		if (superClassMeta != null) {
 			genericSuperClass = classMetaToGenericClass(reflector,
 					superClassMeta);
-			registerGenericClass(superClassMeta.getClassName(),
-					genericSuperClass);
 		}
 
 		genericClass = new GenericClass(reflector, null, className,
@@ -111,6 +109,8 @@ public class ClassMetaHelper {
 			GenericClass genericFieldClass = classMetaToGenericClass(reflector,
 					fieldClassMeta);
 			// TODO: needs to handle primitive, Array, NArray
+			// az: But tests show that current code works well with primitive,
+			// Array, NArray
 			genericFields[i] = new GenericField(fieldName, genericFieldClass,
 					false, false, false);
 		}
