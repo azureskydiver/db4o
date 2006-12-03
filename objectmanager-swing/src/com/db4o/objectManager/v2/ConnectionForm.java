@@ -174,8 +174,7 @@ public class ConnectionForm {
 		try {
 			oc = ConnectionHelper.connect(dashboard.getFrame(), connectionSpec);
 		} catch (Exception ex) {
-			// if fails to open, show message and stop
-			OptionPaneHelper.showErrorMessage(dashboard.getFrame(), "Could not open database! " + ex.getMessage(), "Error Opening Database");
+			// if fails to open, stop, message already shown
 			stopWorking();
 			return;
 		}

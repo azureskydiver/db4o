@@ -1,6 +1,7 @@
 package com.db4o.objectmanager.api.helpers;
 
 import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 import com.db4o.reflect.generic.GenericObject;
 import com.db4o.ext.StoredClass;
 import com.db4o.ObjectContainer;
@@ -39,13 +40,15 @@ public class ReflectHelper2 {
 		};
 
         // Get the known classes
-        ReflectClass[] knownClasses = container.ext().knownClasses();
+        StoredClass[] knownClasses = container.ext().storedClasses();
+		Reflector reflector = container.ext().reflector();
 
-        // Filter them
+		// Filter them
         List filteredList = new ArrayList();
         for (int i = 0; i < knownClasses.length; i++) {
-            ReflectClass knownClass = knownClasses[i];
-            if (knownClass.isArray() || knownClass.isPrimitive()) {
+            StoredClass sc = knownClasses[i];
+			ReflectClass knownClass = reflector.forName(sc.getName());
+			if (knownClass.isArray() || knownClass.isPrimitive()) {
                 continue;
             }
             boolean take = true;
@@ -56,10 +59,6 @@ public class ReflectHelper2 {
                 }
             }
             if(! take){
-                continue;
-            }
-            StoredClass sc = container.ext().storedClass(knownClass.getName());
-            if(sc == null){
                 continue;
             }
             filteredList.add(knownClass);

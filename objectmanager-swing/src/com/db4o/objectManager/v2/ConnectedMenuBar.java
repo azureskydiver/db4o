@@ -45,7 +45,7 @@ public class ConnectedMenuBar extends BaseMenuBar {
 				if (response == JFileChooser.APPROVE_OPTION) {
 					File f = fileChooser.getSelectedFile();
 					try {
-						frame.getObjectContainer().ext().backup(f.getAbsolutePath());
+						frame.getObjectContainer().ext().backup(f.getAbsolutePath()); // todo: change this to use UISession.getObjectContainer
 						OptionPaneHelper.showSuccessDialog(frame, "Backup completed successfully.", "Backup Successful");
 					} catch (IOException e1) {
 						e1.printStackTrace();

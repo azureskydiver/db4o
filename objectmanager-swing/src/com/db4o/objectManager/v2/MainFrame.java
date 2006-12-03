@@ -42,7 +42,6 @@ public class MainFrame extends JFrame implements WindowListener {
 	 */
 	private final Settings settings;
 	private Db4oConnectionSpec connectionSpec;
-	private ObjectContainer oc;
 	private MainPanel mainPanel;
 
 	/**
@@ -53,9 +52,8 @@ public class MainFrame extends JFrame implements WindowListener {
 		super(WINDOW_TITLE + " - " + connectionSpec.getPath());
 		this.settings = settings;
 		this.connectionSpec = connectionSpec;
-		this.oc = oc;
 		configureUI();
-		build();
+		build(oc);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		addWindowListener(this);
 	}
@@ -124,9 +122,10 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	/**
 	 * Builds the <code>DemoFrame</code> using Options from the Launcher.
+	 * @param oc
 	 */
-	private void build() {
-		setContentPane(buildContentPane());
+	private void build(ObjectContainer oc) {
+		setContentPane(buildContentPane(oc));
 		//setTitle(getWindowTitle());
 		setJMenuBar(new ConnectedMenuBar(this, settings,
 				Dashboard.createHelpActionListener(this),
@@ -138,8 +137,9 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	/**
 	 * Builds and answers the content.
+	 * @param oc
 	 */
-	private JComponent buildContentPane() {
+	private JComponent buildContentPane(ObjectContainer oc) {
 		mainPanel = new MainPanel(this, settings, connectionSpec, oc);
 		return mainPanel;
 	}
@@ -208,7 +208,7 @@ public class MainFrame extends JFrame implements WindowListener {
 	}
 
 	public void close() {
-		mainPanel.getObjectContainer().close();
+		mainPanel.closeObjectContainer();
 		dispose();
 	}
 
