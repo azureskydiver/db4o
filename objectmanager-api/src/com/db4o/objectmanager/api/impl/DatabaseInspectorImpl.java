@@ -86,7 +86,8 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
         try {
             return oc.ext().systemInfo().totalSize();
         } catch (Exception e) {
-            e.printStackTrace();
+			System.err.println("Could not get database size!");
+			//e.printStackTrace();
         }
         return 0;
     }

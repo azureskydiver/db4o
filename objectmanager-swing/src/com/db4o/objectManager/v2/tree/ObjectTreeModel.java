@@ -3,12 +3,14 @@ package com.db4o.objectManager.v2.tree;
 import com.db4o.ObjectContainer;
 import com.db4o.objectManager.v2.tree.ObjectTreeNode;
 import com.db4o.objectManager.v2.util.Log;
+import com.db4o.objectManager.v2.UISession;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 import com.db4o.reflect.generic.GenericReflector;
 import com.db4o.reflect.generic.GenericObject;
 import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.Reflector;
 import com.spaceprogram.db4o.sql.ReflectHelper;
 import com.spaceprogram.db4o.sql.Converter;
 
@@ -26,16 +28,15 @@ import java.util.Map;
  * Time: 10:52:27 AM
  */
 public class ObjectTreeModel implements TreeModel {
-	private ObjectContainer objectContainer;
-	private GenericReflector reflector;
 	private ObjectTreeNode root;
+	private UISession session;
 	protected EventListenerList listenerList = new EventListenerList();
 
 
-	public ObjectTreeModel(ObjectTreeNode top, ObjectContainer objectContainer) {
+	public ObjectTreeModel(ObjectTreeNode top, UISession session) {
 		this.root = top;
-		this.objectContainer = objectContainer;
-		this.reflector = objectContainer.ext().reflector();
+		this.session = session;
+
 
 	}
 
@@ -46,6 +47,7 @@ public class ObjectTreeModel implements TreeModel {
 	public Object getChild(Object parent, int index) {
 		ObjectTreeNode parentNode = (ObjectTreeNode) parent;
 		Object parentObject = parentNode.getObject();
+		Reflector reflector = session.getObjectContainer().ext().reflector();
 		ReflectClass reflectClass = reflector.forObject(parentObject);
 		if (parentObject.getClass().isArray()) {
 			Object[] array = (Object[]) parentObject;
@@ -91,12 +93,14 @@ public class ObjectTreeModel implements TreeModel {
 		} else if (parentNode.getObject() instanceof MapEntry) {
 			return 2;
 		}
+		Reflector reflector = session.getObjectContainer().ext().reflector();
 		ReflectClass reflectClass = reflector.forObject(parentNode.getObject());
 		ReflectField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(reflectClass);
 		return fields.length;
 	}
 
 	public boolean isLeaf(Object node) {
+		Reflector reflector = session.getObjectContainer().ext().reflector();
 		if (node == null || ((ObjectTreeNode) node).getObject() == null) return true;
 		Object nodeObject = ((ObjectTreeNode) node).getObject();
 		if (nodeObject instanceof GenericObject) {
@@ -132,8 +136,8 @@ public class ObjectTreeModel implements TreeModel {
 
 	private void addToBatch(Object o) {
 		// similar to Object
-		objectContainer.set(o);
-		objectContainer.commit();
+		session.getObjectContainer().set(o);
+		session.getObjectContainer().commit();
 	}
 
 	public int getIndexOfChild(Object parent, Object child) {

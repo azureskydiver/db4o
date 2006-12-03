@@ -54,15 +54,15 @@ import java.awt.Color;
 import java.util.Date;
 
 final class QueryResultsPanel extends JPanel {
-	private MainPanel mainPanel;
 	private JTable resultsTable;
 	private TableModel tableModel;
 	private SimpleInternalFrame resultsFrame;
 	private JLabel statusLabel = new JLabel();
+	private UISession session;
 
-	public QueryResultsPanel(MainPanel mainPanel) {
+	public QueryResultsPanel(UISession session) {
 		super(new BorderLayout());
-		this.mainPanel = mainPanel;
+		this.session = session;
 		setOpaque(false);
 		setBorder(Borders.DIALOG_BORDER);
 		add(buildTablePanel());
@@ -127,13 +127,13 @@ final class QueryResultsPanel extends JPanel {
 	 * @param o
 	 */
 	public void addObjectToBatch(Object o) {
-		// todo: implement the batch with button
-		mainPanel.getObjectContainer().set(o);
-		mainPanel.getObjectContainer().commit();
+		// todo: implement the batch apply button
+		session.getObjectContainer().set(o);
+		session.getObjectContainer().commit();
 	}
 
 	public ObjectContainer getObjectContainer() {
-		return mainPanel.getObjectContainer();
+		return session.getObjectContainer();
 	}
 
 	public void setStatusMessage(String msg) {
@@ -155,14 +155,14 @@ final class QueryResultsPanel extends JPanel {
 		ObjectTreeNode top = new ObjectTreeNode(null, null, o);
 		//IGraphIterator graphIterator = new ObjectGraphIterator(o, Db4oDatabase.getForObjectContainer(mainPanel.getObjectContainer(), mainPanel.getConnectionSpec()));
 		//createNodes(top, graphIterator);
-		ObjectTreeModel objectTreeModel = new ObjectTreeModel(top, mainPanel.getObjectContainer());
+		ObjectTreeModel objectTreeModel = new ObjectTreeModel(top, session);
 		ObjectTree tree = new ObjectTree(objectTreeModel);
 		tree.setEditable(true);
 		JTextField tf = new JTextField();
 		DefaultTreeCellEditor editor = new DefaultTreeCellEditor(tree, (DefaultTreeCellRenderer) tree.getCellRenderer(), new ObjectTreeCellEditor(tf));
 		tree.setCellEditor(editor);
 		JScrollPane treeView = new JScrollPane(tree);
-		mainPanel.addTab(TabType.objectTree, "Object: " + o, treeView);
+		session.addTab(TabType.objectTree, "Object: " + o, treeView);
 	}
 
 	private void createNodes(DefaultMutableTreeNode top, IGraphIterator iter) {

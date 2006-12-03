@@ -5,6 +5,7 @@ import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.objectManager.v2.uif_lite.component.Factory;
 import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
+import com.db4o.objectManager.v2.util.Log;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.objectmanager.api.impl.DatabaseInspectorImpl;
 import com.db4o.objectmanager.api.prefs.Preferences;
@@ -40,7 +41,7 @@ import java.io.IOException;
  * Date: Aug 18, 2006
  * Time: 1:12:30 PM
  */
-public class MainPanel extends JPanel {
+public class MainPanel extends JPanel implements UISession {
     private MainFrame mainFrame;
     private Settings settings;
     private ObjectContainer objectContainer;
@@ -51,7 +52,7 @@ public class MainPanel extends JPanel {
     private JTabbedPane tabbedPane;
     private int queryCounter;
 
-    private TreeModel classTreeModel;
+    //private TreeModel classTreeModel;
     private JTree classTree;
     private DatabaseSummaryPanel databaseSummaryPanel;
     private static final int MAX_TABS = 8;
@@ -131,17 +132,19 @@ public class MainPanel extends JPanel {
 
     private TreeModel createClassTreeModel() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Stored Classes");
-        classTreeModel = new DefaultTreeModel(root);
+        TreeModel classTreeModel = new DefaultTreeModel(root);
         return classTreeModel;
     }
 
     public void initClassTree() {
-        DefaultMutableTreeNode root = (DefaultMutableTreeNode) classTreeModel.getRoot();
-        DefaultMutableTreeNode parent;
+
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) classTree.getModel().getRoot();
+		DefaultMutableTreeNode parent;
 
         DatabaseInspector inspector = getDatabaseInspector();
         List<ReflectClass> classesStored = inspector.getClassesStored();
-        for (int i = 0; i < classesStored.size(); i++) {
+		System.out.println("classes stored: " + classesStored);
+		for (int i = 0; i < classesStored.size(); i++) {
             ReflectClass storedClass = classesStored.get(i);
             parent = new DefaultMutableTreeNode(storedClass.getName());
             root.add(parent);
@@ -152,10 +155,10 @@ public class MainPanel extends JPanel {
             }
         }
         addClassTreeListener(new ClassTreeListener(queryBarPanel));
+		classTree.setRootVisible(true); // have to do this for some reason, when reopen is called and this is repopulated, it won't show anything unless this is called first
 		classTree.expandRow(0);
 		classTree.setRootVisible(false);
 		classTree.setShowsRootHandles(true);
-		
 	}
 
 
@@ -184,7 +187,7 @@ public class MainPanel extends JPanel {
         return getPreferences().getPreference(key);
     }
 
-    ObjectContainer getObjectContainer() {
+    public ObjectContainer getObjectContainer() {
         return objectContainer;
     }
 
@@ -331,12 +334,40 @@ public class MainPanel extends JPanel {
                 }
             }
         }
-        ClassSummaryPanel panel = new ClassSummaryPanel(getObjectContainer(), getDatabaseInspector(), className);
+        ClassSummaryPanel panel = new ClassSummaryPanel(this, getDatabaseInspector(), className);
         addTab(TabType.classSummary, "Class: " + className, panel);
     }
 
+	public void reopen() {
+		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            Component c = tabbedPane.getComponentAt(i);
+            if (c instanceof QueryResultsPanel) {
+				tabbedPane.remove(c);
+				i--;
+			}
+		}
+		objectContainer.close();
+		databaseInspector = null;
+		try {
+			System.out.println("reconnecting...");
+			objectContainer = ConnectionHelper.connect(mainFrame, connectionSpec);
+			System.out.println("connected.");
+		} catch (Exception e) {
+			Log.addException(e);
+			e.printStackTrace();
+			// close the window, something went bad
+			mainFrame.close();
+			return;
+		}
+		// reset class tree
+		TreeModel treeModel = createClassTreeModel();
+		classTree.setModel(treeModel);
+		initClassTree();
 
-    private final class OpenFileActionListener implements ActionListener {
+	}
+
+
+	private final class OpenFileActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             new JFileChooser().showOpenDialog(MainPanel.this);
         }
