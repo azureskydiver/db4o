@@ -1,0 +1,34 @@
+.n
+.a Persistent ..
+.1 Simple Persistence ..
+
+db4o makes your work with persistent objects very simple and straightforward. ._
+The only #set(object) method is used for both saving and modification of any ._
+object that exists in your model.
+
+.s com.db4odoc.f1.queries.QueryExample#storePilot ..
+
+.s com.db4odoc.f1.queries.QueryExample#updatePilotWrong ..
+.s com.db4odoc.f1.queries.QueryExample#updatePilot ..
+
+Deletion is just as easy:
+
+.s com.db4odoc.f1.queries.QueryExample#deletePilot ..
+
+The objects are identified by their references in an application cache. You do not ._
+need to implement any additional identification systems (like primary keys in RDBMS). ._
+See  .l Identity Identity chapter  ..   for details. The uniqueness of an object is defined ._
+only by its reference, if you will create 2 objects of the same class with exactly the same ._
+fields and save them to db4o - you will get 2 objects in your database. As you can see ._
+from the examples an object instance should be retrieved from the database before ._
+updating or deleting or you can use the newly created object if it was stored in the ._
+same session. Creating new instance identical to the object in the database and ._
+saving it will create a new object in the database.
+Db4o does all the "dirty" work of objects transition between your classes and persistent ._
+state using  .l Reflection  Reflection ..  . No mappings or additional coding is needed from ._
+your side. If you will need to change your application model for the next version ._
+you will also be surprised with the simplicity: all the changes are done in one ._
+place - your code, and the most common operations are done completely automatically ._
+(see .l RefactoringAndSchemaEvolution  Refactoring And Schema Evolution  ..  chapter ._
+for details).
+
