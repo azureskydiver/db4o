@@ -23,12 +23,12 @@ Namespace com.db4odoc.f1.semaphores
 
         Public Function Lock(ByVal obj As Object) As Boolean
             Dim id As Long = _objectContainer.GetID(obj)
-            Return _objectContainer.SetSemaphore(SEMAPHORE_NAME + id, WAIT_FOR_AVAILABILITY)
+            Return _objectContainer.SetSemaphore(SEMAPHORE_NAME + id.ToString(), WAIT_FOR_AVAILABILITY)
         End Function
 
         Public Sub Unlock(ByVal obj As Object)
             Dim id As Long = _objectContainer.GetID(obj)
-            _objectContainer.ReleaseSemaphore(SEMAPHORE_NAME + id)
+            _objectContainer.ReleaseSemaphore(SEMAPHORE_NAME + id.ToString())
         End Sub
     End Class
 

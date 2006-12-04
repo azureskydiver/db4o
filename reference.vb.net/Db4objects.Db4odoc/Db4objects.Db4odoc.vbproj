@@ -68,6 +68,7 @@
     <Compile Include="Constructors\C4.vb" />
     <Compile Include="Debugging\Car.vb" />
     <Compile Include="Debugging\DebugExample.vb" />
+    <Compile Include="Defragmentation\DefragmentExample.vb" />
     <Compile Include="Diagnostics\ArbitraryQuery.vb" />
     <Compile Include="Diagnostics\Car.vb" />
     <Compile Include="Diagnostics\CarEvaluation.vb" />
@@ -125,6 +126,8 @@
     <Compile Include="Queries\Pilot.vb" />
     <Compile Include="Queries\PilotHundredPoints.vb" />
     <Compile Include="Queries\QueryExample.vb" />
+    <Compile Include="Querymode\Pilot.vb" />
+    <Compile Include="Querymode\QueryModesExample.vb" />
     <Compile Include="Refactoring\newclasses\Identity.vb" />
     <Compile Include="Refactoring\newclasses\Pilot.vb" />
     <Compile Include="Refactoring\newclasses\RefactoringExample.vb" />
@@ -164,9 +167,6 @@
     <Compile Include="UUIDs\Pilot.vb" />
     <Compile Include="UUIDs\UUIDExample.vb" />
     <Compile Include="Program.vb" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\svntest2\drs\drs.csproj">
