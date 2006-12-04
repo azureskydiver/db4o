@@ -53,8 +53,11 @@ public class ClassMetaHelper {
 		FieldMeta[] fieldsMeta = new FieldMeta[fields.length];
 		for (int i = 0; i < fields.length; ++i) {
 			final ReflectField field = fields[i];
-			fieldsMeta[i] = new FieldMeta(field.getName(), getClassMeta(field
-					.getFieldType()));
+			boolean isArray = field.getFieldType().isArray();
+			ReflectClass fieldClass = isArray ? field.getFieldType().getComponentType() : field.getFieldType();
+			boolean isPrimitive = fieldClass.isPrimitive();
+			// TODO: need to handle NArray, currently it ignores NArray and alway sets NArray flag false.
+			fieldsMeta[i] = new FieldMeta(field.getName(), getClassMeta(fieldClass), isPrimitive, isArray, false);
 		}
 		return fieldsMeta;
 	}
@@ -108,11 +111,8 @@ public class ClassMetaHelper {
 			String fieldName = fields[i].getFieldName();
 			GenericClass genericFieldClass = classMetaToGenericClass(reflector,
 					fieldClassMeta);
-			// TODO: needs to handle primitive, Array, NArray
-			// az: But tests show that current code works well with primitive,
-			// Array, NArray
 			genericFields[i] = new GenericField(fieldName, genericFieldClass,
-					false, false, false);
+					fields[i]._isPrimitive, fields[i]._isArray, fields[i]._isNArray);
 		}
 
 		genericClass.initFields(genericFields);
