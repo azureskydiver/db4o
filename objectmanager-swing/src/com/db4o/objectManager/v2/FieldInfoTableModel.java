@@ -2,6 +2,7 @@ package com.db4o.objectManager.v2;
 
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.ObjectContainer;
+import com.db4o.Db4o;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
 
@@ -24,6 +25,7 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 			"Indexed?",
 	};
 	private boolean editMode;
+	private boolean working;
 
 
 	public FieldInfoTableModel(UISession session, String className) {
@@ -42,15 +44,35 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 			c = 0;
 			setValueAt(field.getName(), r, c++);
 			setValueAt(field.getStoredType(), r, c++);
-			setValueAt(false, r, c++);
+			setValueAt(new Boolean(field.hasIndex()), r, c++);
 			r++;
 		}
 		addTableModelListener(this);
 	}
 
+
+	public Class getColumnClass(int column) {
+		if(column == 2){
+			return Boolean.class;
+		}
+		return super.getColumnClass(column);
+	}
+
+	/**
+	 * Unfortunately, none of this schema evolution stuff works in c/s mode.
+	 * @param row
+	 * @param column
+	 * @return
+	 */
 	public boolean isCellEditable(int row, int column) {
-		if (editMode && column == 0) {
-			return true;
+		if (!working && editMode) {
+			if (column == 0) {
+				// name
+				return true;
+			} else if (column == 2) {
+				// indexes
+				return true;
+			}
 		}
 		return false;
 	}
@@ -60,18 +82,30 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 	}
 
 	public void tableChanged(TableModelEvent e) {
-		System.out.println("table changed");
+		working = true; // just so it will only do one thing at a time
 		int row = e.getFirstRow();
 		int column = e.getColumn();
 		TableModel model = (TableModel) e.getSource();
 		Object aValue = model.getValueAt(row, column);
-		if (aValue instanceof String) {
+		if (column == 1) {
+			if (aValue instanceof String) {
+				StoredClass storedClass = session.getObjectContainer().ext().storedClass(className);
+				StoredField[] fields = storedClass.getStoredFields();
+				renameField(fields[row], (String) aValue);
+			} else {
+				System.err.println("Invalid type for renaming!!! Report bug at http://tracker.db4o.com/jira");
+			}
+		} else if (column == 2) {
+			System.out.println("aValue: " + aValue);
+			Boolean b = (Boolean) aValue;
+			// for indexes, we'll have to reopen the objectcontainer and turn on the index before opening
 			StoredClass storedClass = session.getObjectContainer().ext().storedClass(className);
 			StoredField[] fields = storedClass.getStoredFields();
-			renameField(fields[row], (String) aValue);
-		} else {
-			System.err.println("Invalid type for renaming!!! Report bug at http://tracker.db4o.com/jira");
+			StoredField field = fields[row];
+			Db4o.configure().objectClass(storedClass.getName()).objectField(field.getName()).indexed(b.booleanValue());
+			session.reopen();
 		}
+		working = false;
 	}
 
 	public void setValueAt(Object aValue, int row, int column) {
@@ -85,7 +119,6 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 	 * @param newName
 	 */
 	private void renameField(StoredField field, String newName) {
-		System.out.println("Renaming field: " + field.getName() + " to " + newName);
 		field.rename(newName);
 		session.getObjectContainer().commit();
 		// need to reopen ObjectContainer here to make it stick

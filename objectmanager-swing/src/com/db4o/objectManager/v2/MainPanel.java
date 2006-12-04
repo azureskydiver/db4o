@@ -143,7 +143,6 @@ public class MainPanel extends JPanel implements UISession {
 
         DatabaseInspector inspector = getDatabaseInspector();
         List<ReflectClass> classesStored = inspector.getClassesStored();
-		System.out.println("classes stored: " + classesStored);
 		for (int i = 0; i < classesStored.size(); i++) {
             ReflectClass storedClass = classesStored.get(i);
             parent = new DefaultMutableTreeNode(storedClass.getName());
@@ -239,8 +238,12 @@ public class MainPanel extends JPanel implements UISession {
         }
     }
 
+	public boolean isLocal() {
+		return !connectionSpec.isRemote();
+	}
 
-    private Component buildToolBar() {
+
+	private Component buildToolBar() {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(true);
         toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
