@@ -27,7 +27,7 @@
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -328,6 +328,8 @@
     <Compile Include="src\Db4objects.Db4odoc\queries\QueryExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\querymode\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\querymode\QueryModesExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\refactoring\newclasses\Identity.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -443,6 +445,10 @@
     <ProjectReference Include="..\..\..\svntest2\drs\drs.csproj">
       <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
       <Name>drs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj">
+      <Project>{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}</Project>
+      <Name>Db4objects.Db4o.Tools-2005</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
