@@ -1,0 +1,187 @@
+.n
+.a NativeQueries ..
+.2 Native Queries ..
+
+Wouldn't it be nice to pose queries in the programming ._
+language that you are using? Wouldn't it be nice if all your query code was ._
+100% typesafe, 100% compile-time checked and 100% refactorable? Wouldn't ._
+it be nice if the full power of object-orientation could be used ._
+by calling methods from within queries? Enter Native Queries. 
+
+Native queries are the main db4o query interface and they are the ._
+recommended way to query databases from your application. Because native ._
+queries simply use the semantics of your programming language, they are ._
+perfectly standardized and a safe choice for the future.
+
+Native Queries are available for all platforms supported by db4o.
+
+.3 Concept ..
+The concept of native queries is taken from the following two papers:
+
+-  .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
+-  .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
+
+.3 Principle ..
+Native Queries provide the ability to run one or more lines ._
+of code against all instances of a class. Native query expressions should ._
+return true to mark specific instances as part of the result set. ._
+db4o will attempt to optimize native query expressions and run them against indexes ._
+and without instantiating actual objects, where this is possible.
+
+.3 Simple Example ..
+Let's look at how a simple native query ._
+will look like in some of the programming languages and dialects that db4o ._
+supports:
+
+.b C# .NET 2.0 ..
+.c IList <Pilot> pilots = db.Query <Pilot> (delegate(Pilot pilot) {
+    return pilot.Points == 100;
+}); ..c 
+
+.b Java JDK 5 ..
+.c List <Pilot> pilots = db.query(new Predicate<Pilot>() {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() == 100;
+    }
+}); ..c
+
+.b Java JDK 1.2 to 1.4 ..
+.c List pilots = db.query(new Predicate() {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() == 100;
+    }
+}); ..c
+
+.b Java JDK 1.1 ..
+.c ObjectSet pilots = db.query(new PilotHundredPoints());
+
+public static class PilotHundredPoints extends Predicate {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() == 100;
+    }
+} ..c
+
+.b C# .NET 1.1 ..
+.c IList pilots = db.Query(new PilotHundredPoints());
+
+public class PilotHundredPoints : Predicate {
+    public boolean Match(Pilot pilot) {
+        return pilot.Points == 100;
+    }
+} ..c
+
+.b VB .NET 1.1 ..
+.c Dim pilots As IList = db.Query(new PilotHundredPoints())
+
+Public Class PilotHundredPoints 
+	Inherits Predicate
+    Public Function Match (pilot As Pilot) as Boolean
+        If pilot.Points = 100 Then 
+            Return True 
+        Else 
+            Return False
+    End Function
+End Class ..c
+
+A side note on the above syntax:
+For all dialects without support for generics, Native Queries ._
+work by convention. A class that extends the ._
+com.db4o.Predicate class is expected to have a boolean ._
+#match() or #Match() method with one parameter to describe the ._
+class extent:
+
+.? java .c boolean match(Pilot candidate); ..c  ..?  ._
+.? net .c bool Match(Pilot candidate); ..c   ..?
+.? mono .c bool Match(Pilot candidate); ..c   ..?
+
+When using native queries, don't forget that modern integrated ._
+development environments (IDEs) can do all the typing ._
+work around the native query expression for you, if you use ._
+templates and autocompletion.
+
+Here is how to configure a Native Query template with Eclipse 3.1:
+From the menu, choose Window + Preferences + Java + Editor + Templates + New
+As the name type "nq". Make sure that "java" is selected as the ._
+context on the right. Paste the following into the pattern ._
+field:
+
+.c List <${extent}> list = db.query(new Predicate <${extent}> () {
+    public boolean match(${extent} candidate){
+        return true; 
+    }
+}); ..
+
+Now you can create a native query with three keys: n + q + Control-Space.
+Similar features are available in most modern IDEs.
+
+.3 Advanced Example ..
+For complex queries, the native syntax is very precise and quick ._
+to write. Let's compare to a SODA query that finds all pilots ._
+with a given name or a score within a ._
+given range:
+
+.s com.db4odoc.f1.queries.NQExample#storePilots -out ..
+
+.s com.db4odoc.f1.queries.NQExample#retrieveComplexSODA ..
+
+Here is how the same query will look like with native query ._
+syntax, ._
+fully accessible to autocompletion, refactoring and other IDE ._
+features, fully checked at compile time:
+
+.b C# .NET 2.0 ..
+.c IList <Pilot> result = db.Query<Pilot> (delegate(Pilot pilot) {
+    return pilot.Points > 99
+        && pilot.Points < 199
+        || pilot.Name == "Rubens Barrichello";
+}); ..c 
+
+.b Java JDK 5 ..
+.c List <Pilot> result = db.query(new Predicate<Pilot>() {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() > 99
+            && pilot.getPoints() < 199
+            || pilot.getName().equals("Rubens Barrichello");
+   }
+}); ..c
+
+.3 Arbitrary Code ..
+Basically that's all there is to know about native queries to be able ._
+to use them efficiently. In principle ._
+you can run arbitrary code as native queries, you just have to be ._
+very careful with side effects - especially those that might affect ._
+persistent objects.
+
+Let's run an example that involves some more of the language features ._
+available.
+.? net .s com.db4odoc.f1.queries.ArbitraryQuery ..s  ..?
+.? java .s com.db4odoc.f1.queries.NQExample#retrieveArbitraryCodeNQ ..s  ..?
+
+.3 Native Query Performance ..
+One drawback of native queries has to be pointed out: ._
+Under the hood db4o tries to analyze native queries to ._
+convert them to SODA. This is not possible for all queries. ._
+For some queries it is very difficult to analyze the flowgraph. In ._
+this case db4o will have to instantiate some of the persistent objects ._
+to actually run the native query code. db4o will try to ._
+analyze parts of native query expressions to keep object instantiation ._
+to the minimum.
+
+The development of the native query optimization processor will ._
+be an ongoing process in a close dialog with the db4o community. ._
+Feel free to contribute your results and your needs by providing ._
+feedback to our  .l http://forums.db4o.com/ db4o forums .. .
+.? java The current state of the query optimization process is detailed ._
+in the chapter on  .l NQOptimization Native Query Optimization ..l. ..?
+
+With the current implementation, all above examples will run ._
+optimized, except for the "Arbitrary Code" example - we are working on it.
+
+.3 Full source ..
+
+.s com.db4odoc.f1.queries.NQExample ..
+
+.? net
+.s com.db4odoc.f1.queries.ComplexQuery ..
+.s com.db4odoc.f1.queries.ArbitraryQuery ..
+..?

@@ -1,0 +1,28 @@
+.n
+.a Query ..
+.1 Querying ..
+
+db4o supplies three querying systems, Query-By-Example (QBE) ._
+Native Queries (NQ), and the SODA API. 
+
+Query-By-Example (QBE) is appropriate as a quick start for users ._
+who are still acclimating to storing and retrieving objects with db4o, ._
+but they are quite restrictive in functionality.
+
+Native Queries (NQ) are the main db4o query interface, recommended ._
+for general use.
+
+SODA is the underlying internal API. It is provided for backward ._
+compatibility and it can be useful for dynamic generation ._
+of queries, where NQ are too strongly typed. There may be queries ._
+that will execute faster in SODA style, so it can be used to tune applications.
+
+Of course you can mix these strategies as needed.
+
+
+.< QBE ..
+
+.< SODAQueryAPI ..
+
+.< NativeQueries ..
+
