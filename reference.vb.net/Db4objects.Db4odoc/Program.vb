@@ -28,6 +28,7 @@ Module Program
         Db4objects.Db4odoc.Serializing.SerializeExample.Main(args)
         Db4objects.Db4odoc.Utility.UtilityExample.Main(args)
         Db4objects.Db4odoc.SelectivePersistence.MarkTransientExample.Main(args)
+        Db4objects.Db4odoc.Querymode.QueryModesExample.Main(args)
     End Sub
 
 End Module

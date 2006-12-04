@@ -21,7 +21,7 @@ Namespace com.db4odoc.f1.semaphores
 
             Dim objectContainer As IObjectContainer
             Try
-                objectContainer = Db4o.OpenClient(HOST, PORT, USER, PASSWORD)
+                objectContainer = Db4oFactory.OpenClient(HOST, PORT, USER, PASSWORD)
             Catch e As IOException
                 Return Nothing
             End Try
@@ -30,7 +30,7 @@ Namespace com.db4odoc.f1.semaphores
 
             Dim i As Integer
             For i = 0 To MAXIMUM_USERS - 1 Step i + 1
-                If objectContainer.Ext().SetSemaphore("max_user_check_" + i, 0) Then
+                If objectContainer.Ext().SetSemaphore("max_user_check_" + i.ToString(), 0) Then
                     allowedToLogin = True
                     Exit For
                 End If

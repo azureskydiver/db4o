@@ -45,7 +45,7 @@ Namespace Db4objects.Db4odoc.ClientServer
                 db4oServer.Ext().Configure().SetMessageRecipient(Me)
                 Try
                     If Not [stop] Then
-                        ' wait forever for Notify() from Close()
+                        ' wait forever until Close will change stop variable
                         Monitor.Wait(Me)
                     End If
                 Catch e As Exception
