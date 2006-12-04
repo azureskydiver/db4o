@@ -66,27 +66,29 @@ public class ClassSummaryPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(table);
 		verticalPanel.add(scrollPane);
 
-		editButton = new Button("Edit");
-		editButton.setActionCommand(EDIT);
-		editButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(e.getActionCommand().equals(EDIT)){
-					editButton.setActionCommand(STOP_EDIT);
-					editButton.setForeground(new Color(0x009933)); // dark green
-					editButton.setFont(editButton.getFont().deriveFont(Font.BOLD));
-					editButton.setLabel("Stop Editing");
-					classModel.setEditMode(true);
+		if (session.isLocal()) {
+			editButton = new Button("Edit");
+			editButton.setActionCommand(EDIT);
+			editButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (e.getActionCommand().equals(EDIT)) {
+						editButton.setActionCommand(STOP_EDIT);
+						editButton.setForeground(new Color(0x009933)); // dark green
+						editButton.setFont(editButton.getFont().deriveFont(Font.BOLD));
+						editButton.setLabel("Stop Editing");
+						classModel.setEditMode(true);
 
-				} else {
-					classModel.setEditMode(false);
-					editButton.setForeground(Color.BLACK);
-					editButton.setFont(editButton.getFont().deriveFont(Font.PLAIN));
-					editButton.setLabel("Edit");
-					editButton.setActionCommand(EDIT);
+					} else {
+						classModel.setEditMode(false);
+						editButton.setForeground(Color.BLACK);
+						editButton.setFont(editButton.getFont().deriveFont(Font.PLAIN));
+						editButton.setLabel("Edit");
+						editButton.setActionCommand(EDIT);
+					}
 				}
-			}
-		});
-		verticalPanel.add(editButton);
+			});
+			verticalPanel.add(editButton);
+		}
 
 		builder.add(verticalPanel);
 

@@ -25,4 +25,6 @@ public interface UISession {
 	ObjectContainer getObjectContainer();
 
 	void addTab(TabType objectTree, String label, Component component);
+
+	boolean isLocal();
 }

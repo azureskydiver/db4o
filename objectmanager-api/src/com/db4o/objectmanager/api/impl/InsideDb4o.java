@@ -28,6 +28,7 @@ public class InsideDb4o {
 		if(_stream.isClient()){
 			// no efficient way to do this for now.
 			// A dedicated method would have to be sent.
+			// todo: run it the old way with .size() in a separate thread and update the size info when done
 			return 0;
 		}
 		
