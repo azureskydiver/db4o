@@ -50,7 +50,7 @@ namespace Db4objects.Db4odoc.ClientServer
                 {
                     if (! stop)
                     {
-                        // wait forever for Notify() from Close()
+                        // wait forever until Close will change stop variable
                         Monitor.Wait(this);   
                     }
                 }
