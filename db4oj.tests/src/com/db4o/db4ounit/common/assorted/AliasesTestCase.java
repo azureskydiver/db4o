@@ -7,9 +7,10 @@ import com.db4o.db4ounit.util.Strings;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class AliasesTestCase extends AbstractDb4oTestCase {
+public class AliasesTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
 	public static void main(String[] args) {
 		new AliasesTestCase().runSolo();
