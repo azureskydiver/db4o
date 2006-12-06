@@ -2,6 +2,7 @@ package com.db4odoc;
 
 import com.db4odoc.activating.ActivationExample;
 import com.db4odoc.blobs.BlobExample;
+import com.db4odoc.callbacks.CallbacksExample;
 import com.db4odoc.clientserver.ClientServerExample;
 import com.db4odoc.clientserver.DeepExample;
 import com.db4odoc.clientserver.ExtClientExample;
@@ -52,5 +53,6 @@ public class Main {
     	SerializeExample.main(args);
     	UtilityExample.main(args);
     	MarkTransientExample.main(args);
+    	CallbacksExample.main(args);
     }
 }
