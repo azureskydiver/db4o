@@ -105,6 +105,9 @@
     <Compile Include="src\Db4objects.Db4odoc\blobs\CarImage.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Callbacks\CallbacksExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Callbacks\Car.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Callbacks\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\clientserver\Car.cs">
       <SubType>Code</SubType>
     </Compile>
