@@ -50,6 +50,9 @@
     <Compile Include="Blobs\BlobExample.vb" />
     <Compile Include="Blobs\Car.vb" />
     <Compile Include="Blobs\CarImage.vb" />
+    <Compile Include="Callbacks\CallbacksExample.vb" />
+    <Compile Include="Callbacks\Car.vb" />
+    <Compile Include="Callbacks\Pilot.vb" />
     <Compile Include="Clientserver\Car.vb" />
     <Compile Include="Clientserver\ClientServerExample.vb" />
     <Compile Include="Clientserver\DeepExample.vb" />
