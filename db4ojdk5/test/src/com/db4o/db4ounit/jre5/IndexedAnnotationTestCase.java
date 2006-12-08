@@ -53,8 +53,12 @@ public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 	}
 	
 	private void assertIndexed(Class clazz,boolean expected) {
-		StoredClass storedClass=db().storedClass(clazz);
+		StoredClass storedClass=fileSession().storedClass(clazz);
 		StoredField storedField=storedClass.storedField("_id",Integer.TYPE);
 		Assert.areEqual(expected,storedField.hasIndex());
+	}
+	
+	public static void main(String[] args) {
+		new IndexedAnnotationTestCase().runSoloAndClientServer();
 	}
 }
