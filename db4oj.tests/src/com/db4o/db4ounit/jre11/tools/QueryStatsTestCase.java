@@ -12,7 +12,7 @@ import com.db4o.tools.QueryStats;
 import db4ounit.Assert;
 import db4ounit.extensions.*;
 
-public class QueryStatsTestCase extends AbstractDb4oTestCase {
+public class QueryStatsTestCase extends AbstractDb4oTestCase {	
 	
 	public static class Item {
 	}
@@ -38,7 +38,7 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	
 	protected void db4oSetupAfterStore() throws Exception {
 		_stats = new QueryStats();		
-		_stats.connect(fileSession());
+		_stats.connect(db());
 	}
 
 	protected void db4oCustomTearDown() throws Exception {
@@ -51,12 +51,16 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 		q.constrain(Item.class);
 		
 		ObjectSet result = q.execute();
-		
-		Assert.areEqual(0, _stats.activationCount());		
-		result.next();		
-		Assert.areEqual(1, _stats.activationCount());
+		Assert.areEqual(0, _stats.activationCount());
 		result.next();
-		Assert.areEqual(2, _stats.activationCount());
+		
+		if (isClientServer()) {
+			Assert.areEqual(10, _stats.activationCount());
+		} else {
+			Assert.areEqual(1, _stats.activationCount());
+			result.next();
+			Assert.areEqual(2, _stats.activationCount());
+		}
 	}
 
 	public void testExecutionTime() {
@@ -82,6 +86,6 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static void main(String[] args) {
-		new QueryStatsTestCase().runClientServer();
+		new QueryStatsTestCase().runSoloAndClientServer();
 	}
 }
