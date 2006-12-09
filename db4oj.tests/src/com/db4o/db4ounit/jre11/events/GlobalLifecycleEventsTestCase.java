@@ -6,7 +6,6 @@ import com.db4o.events.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.AbstractClientServerDb4oFixture;
 
 public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	
@@ -191,11 +190,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 		
 		final Object actual = ((ObjectEventArgs)record.args).object();
 		Assert.areSame(expectedItem, actual);
-	}
-
-	private boolean isClientServer() {
-		return fixture() instanceof AbstractClientServerDb4oFixture;
-	}
+	}	
 	
 	private void assertUpdateEvent(Event4 event) {
 		listenToEvent(event);

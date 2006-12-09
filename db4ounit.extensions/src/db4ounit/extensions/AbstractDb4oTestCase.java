@@ -29,6 +29,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	public Db4oFixture fixture() {
 		return _fixture;
 	}
+	
+	public boolean isClientServer() {
+		return fixture() instanceof AbstractClientServerDb4oFixture;
+	}
     
     protected void reopen() throws Exception{
     	_fixture.reopen();
