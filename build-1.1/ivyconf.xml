@@ -1,0 +1,13 @@
+<ivyconf>
+	<conf defaultCache="${ivy.cache.dir}" defaultResolver="libraries"/>
+	<resolvers>
+		<filesystem name="projects">
+			<artifact pattern="${repository.dir}/[module]/[artifact]-[revision].[ext]" />
+			<ivy pattern="${repository.dir}/[module]/[artifact]-[revision].xml" />
+		</filesystem>
+		<ivyrep name="libraries" />
+	</resolvers>
+	<modules>
+		<module organisation="db4o" name=".*" resolver="projects"/>
+	</modules>
+</ivyconf>

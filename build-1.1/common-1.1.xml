@@ -1,47 +1,14 @@
 <project name="common-1.1" basedir="." default="">
-	<property file="common-1.1.properties" />
-	<path id="emptyClassPath"/>
-	<macrodef name="buildjar" description="javac, copy xml files in src then jar">
-		<attribute name="srcDir" />
-		<attribute name="classPathRefId" default="emptyClassPath"/>
-		<attribute name="include" default="**/*.xml"/>
-		<attribute name="exclude" default=""/>
-		<attribute name="jarPath" />
-		
-		<attribute name="compiler" default="modern"/>
-		<attribute name="fork" default="no"/>
-		<attribute name="executable"/>
-		
-		<attribute name="compilerArg"  default=""/>
-		
-		<sequential>
-			<property name="temp.dir" value="${defaultTempDir}" />
-			
-			<delete dir="${temp.dir}" failonerror="true"/>
-			<mkdir dir="${temp.dir}" />
-
-			<javac 
-				srcdir="@{srcDir}" 
-				destdir="${temp.dir}"
-				compiler="@{compiler}"
-				fork="@{fork}"
-				executable="@{executable}"
-			>
-				<classpath refid="@{classPathRefId}" />
-				<compilerarg line="@{compilerArg}"/>
-			</javac>
-			
-			<copy todir="${temp.dir}">
-				<fileset dir="@{srcDir}">
-					<exclude name="@{exclude}" />
-					<include name="@{include}" />
-				</fileset>
-			</copy>
-			
-			<jar jarfile="@{jarPath}" basedir="${temp.dir}" />
-			
-			<delete dir="${temp.dir}" failonerror="true"/>
-		</sequential>
 	
-	</macrodef>
+	<!--
+		This file is imported by other build file, 
+		the following <dirname> line ensure the properties are loaded correctly
+	-->
+	<dirname property="imported.basedir" file="${ant.file.common-1.1}"/>
+	
+  <property file="${imported.basedir}/machine.properties"/>
+	<property file="${imported.basedir}/common-1.1.properties" />
+	
+	<import file="ivyTaskDef.xml"/>
+	<import file="buildJarMacro.xml"/>
 </project>

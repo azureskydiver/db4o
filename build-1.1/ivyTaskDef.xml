@@ -1,0 +1,6 @@
+<project name="ivyTaskDef" basedir="." default="">
+	<path id="ivy.lib.path">
+  	<fileset dir="${common.build.dir}/lib" includes="*.jar"/>
+  </path>
+  <taskdef resource="fr/jayasoft/ivy/ant/antlib.xml" uri="antlib:fr.jayasoft.ivy.ant" classpathref="ivy.lib.path"/>
+</project>

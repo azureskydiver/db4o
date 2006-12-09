@@ -1,0 +1,27 @@
+<project name="build-1.1" basedir="." default="jar" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+	<import file="common-1.1.xml" />
+	
+	<target name="buildlist" depends="" description="obtain a filelist of files ordered according to ivy dependency information from the least dependent to the most one"> 
+    <ivy:buildlist reference="build-path">
+      <fileset dir="../db4oj" includes="build-1.1.xml"/>
+    </ivy:buildlist>
+  </target>
+  
+  <target name="jar" depends="buildlist" description="compile, jar and publish all projects in the right order">
+    <subant target="publish-jar" buildpathref="build-path" />
+  </target>
+	
+  <target name="init" depends="">
+		<tstamp />
+		<mkdir dir="${ivy.cache.dir}" />
+		<mkdir dir="${repository.dir}" />
+	</target>
+	
+    <target name="clean" depends="buildlist" description="--> clean the project">
+    	<delete dir="${ivy.cache.dir}" failonerror="true"/>
+    	<delete dir="${repository.dir}" failonerror="true"/>
+    
+    	<subant target="clean" buildpathref="build-path" />
+    </target>
+</project>
