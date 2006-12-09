@@ -18,7 +18,7 @@ final class TransactionClient extends Transaction {
     }
     
     public void commit() {
-        commitTransactionListeners();
+    	commitTransactionListeners();
         if(i_yapObjectsToGc != null){
             i_yapObjectsToGc.traverse(new Visitor4() {
                 public void visit(Object a_object) {
@@ -98,4 +98,7 @@ final class TransactionClient extends Transaction {
             a_cascade
         }));
     }
+
+	public void setPointer(int a_id, int a_address, int a_length) {
+	}
 }

@@ -12,13 +12,13 @@ import com.db4o.reflect.Reflector;
 /**
  * @exclude
  */
-public class Transaction {
+public abstract class Transaction {
 
-    private Tree            _slotChanges;
+//    private Tree            _slotChanges;
 
-    private int             i_address;                                  // only used to pass address to Thread
+    protected int             i_address;                                  // only used to pass address to Thread
     
-    private final byte[]          _pointerBuffer = new byte[YapConst.POINTER_LENGTH];
+    protected final byte[]          _pointerBuffer = new byte[YapConst.POINTER_LENGTH];
 
     // contains DeleteInfo nodes
     public Tree          i_delete;  // public for .NET conversion
@@ -29,7 +29,7 @@ public class Transaction {
 
     final Transaction       i_parentTransaction;
 
-    private final YapWriter i_pointerIo;    
+    protected final YapWriter i_pointerIo;    
 
     private final YapStream         i_stream;
     
@@ -61,22 +61,7 @@ public class Transaction {
         i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
     
-    private void appendSlotChanges(final YapReader writer){
-        
-        if(i_parentTransaction != null){
-            i_parentTransaction.appendSlotChanges(writer);
-        }
-        
-        Tree.traverse(_slotChanges, new Visitor4() {
-            public void visit(Object obj) {
-                ((TreeInt)obj).write(writer);
-            }
-        });
-        
-    }
-    
-    private final void clearAll() {
-        _slotChanges = null;
+    protected void clearAll() {
         i_dirtyFieldIndexes = null;
         i_transactionListeners = null;
         disposeParticipants();
@@ -144,7 +129,13 @@ public class Transaction {
         commit7ClearAll();
     }
     
-    private void commit2Listeners(){
+    protected void freeOnCommit() {
+	}
+
+	protected void commit6WriteChanges() {
+	}
+
+	private void commit2Listeners(){
         if (i_parentTransaction != null) {
             i_parentTransaction.commit2Listeners();
         } 
@@ -180,36 +171,7 @@ public class Transaction {
 		}
     }
 
-	private void commit6WriteChanges() {
-        checkSynchronization();
-            
-        final int slotSetPointerCount = countSlotChanges();
-        
-        if (slotSetPointerCount > 0) {
-            int length = (((slotSetPointerCount * 3) + 2) * YapConst.INT_LENGTH);
-            int address = i_file.getSlot(length);
-            final YapWriter bytes = new YapWriter(this, address, length);
-            bytes.writeInt(length);
-            bytes.writeInt(slotSetPointerCount);
-            
-            appendSlotChanges(bytes);
-            
-            bytes.write();
-            flushFile();
-            
-            stream().writeTransactionPointer(address);
-            flushFile();
-            
-            if(writeSlots()){
-                flushFile();
-            }
-            
-            stream().writeTransactionPointer(0);
-            flushFile();
-            
-            i_file.free(address, length);
-        }
-    }
+	
     
     private void commit7ClearAll(){
         if(i_parentTransaction != null){
@@ -227,31 +189,9 @@ public class Transaction {
             }
             i_transactionListeners = null;
         }
-    }
+    }   
     
-    private int countSlotChanges(){
-        
-        int count = 0;
-        
-        if(i_parentTransaction != null){
-            count += i_parentTransaction.countSlotChanges();
-        }
-        
-        final int slotSetPointerCount[]  = {count};
-        
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    SlotChange slot = (SlotChange)obj;
-                    if(slot.isSetPointer()){
-                        slotSetPointerCount[0] ++;
-                    }
-                }
-            });
-        }
-        
-        return slotSetPointerCount[0];
-    }
+    public abstract boolean isDeleted(int id);
 
     public boolean delete(YapObject ref, int id, int cascade) {
         checkSynchronization();
@@ -262,7 +202,7 @@ public class Transaction {
 	        }
         }
         
-        if(slotChangeIsFlaggedDeleted(id)){
+        if(isDeleted(id)){
         	return false;
         }
         
@@ -299,120 +239,7 @@ public class Transaction {
         checkSynchronization();
         YapClass yapClass = stream().getYapClass(a_yapClassID);
         yapClass.index().add(this, a_id);
-    }
-    
-    private final SlotChange findSlotChange(int a_id) {
-        checkSynchronization();
-        return (SlotChange)TreeInt.find(_slotChanges, a_id);
-    }
-
-    private void flushFile(){
-        if(DTrace.enabled){
-            DTrace.TRANS_FLUSH.log();
-        }
-        if(i_file.configImpl().flushFileBuffers()){
-            i_file.syncFiles();
-        }
-    }
-
-    private final void freeOnCommit() {
-        checkSynchronization();
-        if(i_parentTransaction != null){
-            i_parentTransaction.freeOnCommit();
-        }
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    ((SlotChange)obj).freeDuringCommit(i_file);
-                }
-            });
-        }
-    }
-
-    public Slot getCurrentSlotOfID(int id) {
-        checkSynchronization();
-        if (id == 0) {
-            return null;
-        }
-        SlotChange change = findSlotChange(id);
-        if (change != null) {
-            if(change.isSetPointer()){
-                return change.newSlot();
-            }
-        }
-        
-        if (i_parentTransaction != null) {
-            Slot parentSlot = i_parentTransaction.getCurrentSlotOfID(id); 
-            if (parentSlot != null) {
-                return parentSlot;
-            }
-        }
-        return readCommittedSlotOfID(id);
-    }
-    
-    public Slot getCommittedSlotOfID(int id){
-        if (id == 0) {
-            return null;
-        }
-        SlotChange change = findSlotChange(id);
-        if (change != null) {
-            Slot slot = change.oldSlot();
-            if(slot != null){
-                return slot;
-            }
-        }
-        
-        if (i_parentTransaction != null) {
-            Slot parentSlot = i_parentTransaction.getCommittedSlotOfID(id); 
-            if (parentSlot != null) {
-                return parentSlot;
-            }
-        }
-        return readCommittedSlotOfID(id);
-    }
-
-    private Slot readCommittedSlotOfID(int id) {
-        if (Deploy.debug) {
-            i_pointerIo.useSlot(id);
-            i_pointerIo.read();
-            i_pointerIo.readBegin(YapConst.YAPPOINTER);
-            int debugAddress = i_pointerIo.readInt();
-            int debugLength = i_pointerIo.readInt();
-            i_pointerIo.readEnd();
-            return new Slot(debugAddress, debugLength);
-        }
-        // FIXME: This shouldn't be silently swallowed. Currently this situation can occur for
-        // a class collection in a new yap file that already has its ID assigned but hasn't been
-        // written yet. Should be fixed in the YapClassCollection logic.
-        try {
-        	i_file.readBytes(_pointerBuffer, id, YapConst.POINTER_LENGTH);
-        }
-        catch(RuntimeException exc) {
-        	return null;
-        }
-        int address = (_pointerBuffer[3] & 255)
-            | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
-            | _pointerBuffer[0] << 24;
-        int length = (_pointerBuffer[7] & 255)
-            | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer[5] & 255) << 16
-            | _pointerBuffer[4] << 24;
-        return new Slot(address, length);
-    }
-    
-    private boolean slotChangeIsFlaggedDeleted(int id){
-        SlotChange slot = findSlotChange(id);
-        if (slot != null) {
-            return slot.isDeleted();
-        }
-        if (i_parentTransaction != null) {
-            return i_parentTransaction.slotChangeIsFlaggedDeleted(id);
-        }
-        return false;
-    }
-
-    public boolean isDeleted(int id) {
-    	return slotChangeIsFlaggedDeleted(id);
-    }
+    }    
     
     public Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
@@ -457,15 +284,7 @@ public class Transaction {
         i_writtenUpdateDeletedMembers = null;
     }
     
-	private SlotChange produceSlotChange(int id){
-    	if(DTrace.enabled){
-    		DTrace.PRODUCE_SLOT_CHANGE.log(id);
-    	}
-        SlotChange slot = new SlotChange(id);
-        _slotChanges = Tree.add(_slotChanges, slot);
-        return (SlotChange)slot.duplicateOrThis();
-    }
-    
+	
     public Reflector reflector(){
     	return stream().reflector();
     }
@@ -485,14 +304,7 @@ public class Transaction {
         }
     }
 
-	private void rollbackSlotChanges() {
-		if(_slotChanges != null){
-		    _slotChanges.traverse(new Visitor4() {
-		        public void visit(Object a_object) {
-		            ((SlotChange)a_object).rollback(i_file);
-		        }
-		    });
-		}
+	protected void rollbackSlotChanges() {
 	}
 
 	private void rollbackFieldIndexes() {
@@ -526,97 +338,27 @@ public class Transaction {
         i_address = a_address;
     }
 
-    public void setPointer(int a_id, int a_address, int a_length) {
-        if(DTrace.enabled){
-            DTrace.SLOT_SET_POINTER.log(a_id);
-            DTrace.SLOT_SET_POINTER.logLength(a_address, a_length);
-        }
-        checkSynchronization();
-        produceSlotChange(a_id).setPointer(a_address, a_length);
-    }
-
+    public abstract void setPointer(int a_id, int a_address, int a_length);
+    
     void slotDelete(int a_id, int a_address, int a_length) {
-        checkSynchronization();
-        if(DTrace.enabled){
-            DTrace.SLOT_DELETE.log(a_id);
-            DTrace.SLOT_DELETE.logLength(a_address, a_length);
-        }
-        if (a_id == 0) {
-            return;
-        }
-        SlotChange slot = produceSlotChange(a_id);
-        slot.freeOnCommit(i_file, new Slot(a_address, a_length));
-        slot.setPointer(0, 0);
     }
 
     public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
-        checkSynchronization();
-        if(DTrace.enabled){
-            DTrace.SLOT_FREE_ON_COMMIT.log(a_id);
-            DTrace.SLOT_FREE_ON_COMMIT.logLength(a_address, a_length);
-        }
-        if (a_id == 0) {
-            return;
-        }
-        produceSlotChange(a_id).freeOnCommit(i_file, new Slot(a_address, a_length));
     }
 
     void slotFreeOnRollback(int a_id, int a_address, int a_length) {
-        checkSynchronization();
-        if(DTrace.enabled){
-            DTrace.SLOT_FREE_ON_ROLLBACK_ID.log(a_id);
-            DTrace.SLOT_FREE_ON_ROLLBACK_ADDRESS.logLength(a_address, a_length);
-        }
-        produceSlotChange(a_id).freeOnRollback(a_address, a_length);
     }
 
     void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
-        
-        Slot slot = getCurrentSlotOfID(a_id);
-        if(slot==null) {
-        	return;
-        }
-        
-        checkSynchronization();
-        
-        if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(a_id);
-            DTrace.FREE_ON_ROLLBACK.logLength(newAddress, newLength);
-            DTrace.FREE_ON_COMMIT.log(a_id);
-            DTrace.FREE_ON_COMMIT.logLength(slot._address, slot._length);
-        }
-        
-        SlotChange change = produceSlotChange(a_id);
-        change.freeOnRollbackSetPointer(newAddress, newLength);
-        change.freeOnCommit(i_file, slot);
     }
 
     void slotFreeOnRollbackSetPointer(int a_id, int a_address, int a_length) {
-        checkSynchronization();
-        if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(a_id);
-            DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
-        }
-        produceSlotChange(a_id).freeOnRollbackSetPointer(a_address, a_length);
     }
     
     public void slotFreePointerOnCommit(int a_id) {
-        checkSynchronization();
-        Slot slot = getCurrentSlotOfID(a_id);
-        if(slot == null){
-            return;
-        }
-        
-        // FIXME: From looking at this it should call slotFreePointerOnCommit
-        //        Write a test case and check.
-        
-        slotFreeOnCommit(a_id, slot._address, slot._length);
     }
     
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
-        checkSynchronization();
-        slotFreeOnCommit(a_address, a_address, a_length);
-        slotFreeOnCommit(a_id, a_id, YapConst.POINTER_LENGTH);
     }
 
     boolean supportsVirtualFields(){
@@ -632,30 +374,8 @@ public class Transaction {
 
     public String toString() {
         return stream().toString();
-    }    
-
-    void writeOld() {
-        synchronized (stream().i_lock) {
-            i_pointerIo.useSlot(i_address);
-            i_pointerIo.read();
-            int length = i_pointerIo.readInt();
-            if (length > 0) {
-                YapWriter bytes = new YapWriter(this, i_address, length);
-                bytes.read();
-                bytes.incrementOffset(YapConst.INT_LENGTH);
-                _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
-                if(writeSlots()){
-                    flushFile();
-                }
-                stream().writeTransactionPointer(0);
-                flushFile();
-                freeOnCommit();
-            } else {
-                stream().writeTransactionPointer(0);
-                flushFile();
-            }
-        }
     }
+    
 
     public void writePointer(int a_id, int a_address, int a_length) {
         if(DTrace.enabled){
@@ -678,30 +398,6 @@ public class Transaction {
         i_pointerIo.write();
     }
     
-    
-    private boolean writeSlots() {
-        
-        checkSynchronization();
-        
-        boolean ret = false;
-        
-        if(i_parentTransaction != null){
-            if(i_parentTransaction.writeSlots()){
-                ret = true;
-            }
-        }
-        
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    ((SlotChange)a_object).writePointer(Transaction.this);
-                }
-            });
-            ret = true;
-        }
-        
-        return ret;
-    }
     
     public void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
         checkSynchronization();

@@ -373,9 +373,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_trans = newTransaction();
     }
 
-	public Transaction newTransaction(Transaction parentTransaction) {
-		return new Transaction(_this, parentTransaction);
-	}
+	public abstract Transaction newTransaction(Transaction parentTransaction);
 	
 	public Transaction newTransaction() {
 		return newTransaction(i_systemTrans);

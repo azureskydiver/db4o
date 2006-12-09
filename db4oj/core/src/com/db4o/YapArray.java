@@ -110,24 +110,24 @@ public class YapArray extends YapIndependantType {
         }
         
         
-        if (address > 0) {
-            Transaction trans = a_bytes.getTransaction();
-            YapReader bytes =
-                a_bytes.getStream().readWriterByAddress(trans, address, length);
-            if (bytes != null) {
-                if (Deploy.debug) {
-                    bytes.readBegin(identifier());
-                }
-                for (int i = elementCount(trans, bytes); i > 0; i--) {
-                    int id = bytes.readInt();
-                    Slot slot = trans.getCurrentSlotOfID(id);
-                    
-					a_classPrimitive.free(trans, id, slot._address,slot._length);
-                }
-            }
-            
-            trans.slotFreeOnCommit(address, address, length);
-        }
+//        if (address > 0) {
+//            Transaction trans = a_bytes.getTransaction();
+//            YapReader bytes =
+//                a_bytes.getStream().readWriterByAddress(trans, address, length);
+//            if (bytes != null) {
+//                if (Deploy.debug) {
+//                    bytes.readBegin(identifier());
+//                }
+//                for (int i = elementCount(trans, bytes); i > 0; i--) {
+//                    int id = bytes.readInt();
+//                    Slot slot = trans.getCurrentSlotOfID(id);
+//                    
+//					a_classPrimitive.free(trans, id, slot._address,slot._length);
+//                }
+//            }
+//            
+//            trans.slotFreeOnCommit(address, address, length);
+//        }
     }
 
     public int elementCount(Transaction a_trans, SlotReader reader) {

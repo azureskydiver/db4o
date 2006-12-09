@@ -44,6 +44,10 @@ public abstract class YapFile extends YapStream {
     YapFile(Configuration config,YapStream a_parent) {
         super(config,a_parent);
     }
+    
+    public Transaction newTransaction(Transaction parentTransaction) {
+		return new YapFileTransaction(this, parentTransaction);
+	}
 
     public FreespaceManager freespaceManager() {
 		return _freespaceManager;
@@ -420,7 +424,7 @@ public abstract class YapFile extends YapStream {
         }
         
         try {
-            Slot slot = a_ta.getCurrentSlotOfID(a_id);
+            Slot slot = ((YapFileTransaction)a_ta).getCurrentSlotOfID(a_id);
             if (slot == null) {
                 return null;
             }
@@ -501,7 +505,7 @@ public abstract class YapFile extends YapStream {
         
         writeHeader(false);
         
-        Transaction trans = _fileHeader.interruptedTransaction();
+        YapFileTransaction trans = (YapFileTransaction) _fileHeader.interruptedTransaction();
         
         if (trans != null) {
             if (!configImpl().commitRecoveryDisabled()) {
