@@ -37,7 +37,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 	public void testCreate() throws Exception {
 
 		initGenericObjects();
-		//fixture().reopen();
+		// fixture().reopen();
 		ExtObjectContainer oc = fixture().db();
 		// now check to see if person was saved
 		ReflectClass rc = getReflectClass(oc, PERSON_CLASSNAME);
@@ -54,11 +54,13 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		GenericClass personClass = initGenericClass();
 		ReflectField surname = personClass.getDeclaredField("surname");
 		ReflectField birthdate = personClass.getDeclaredField("birthdate");
-
+		ReflectField nArray = personClass.getDeclaredField("nArray");
 		Object person = personClass.newInstance();
 		surname.set(person, "John");
+		int[][] arrayData = new int[2][2];
+		nArray.set(person, arrayData); 
+		// FIXME: nArray doesn't work
 		birthdate.set(person, new Date());
-		// todo: this doesn't work
 		fixture().db().set(person);
 		fixture().db().commit();
 		return person;
@@ -83,7 +85,9 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 						false, false, false),
 				new GenericField("birthdate", reflector.forClass(Date.class),
 						false, false, false),
-				new GenericField("bestFriend", personClass, false, false, false) };
+				new GenericField("bestFriend", personClass, false, false, false),
+				new GenericField("nArray", reflector.forClass(int[][].class),
+						true, true, true) };
 	}
 
 	public void testUpdate() {
@@ -147,11 +151,13 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 	}
 
 	private ReflectClass getReflectClass(ExtObjectContainer oc, String className) {
-		// FIXME: If GenericReflector#knownClasses is not called, the test will fail.
+		// FIXME: If GenericReflector#knownClasses is not called, the test will
+		// fail.
 		ReflectClass[] classes = oc.reflector().knownClasses();
-		/*for (int i = 0; i < classes.length; i++) {
-			System.out.println("known classes = " + classes[i]);
-		}*/
+		/*
+		 * for (int i = 0; i < classes.length; i++) { System.out.println("known
+		 * classes = " + classes[i]); }
+		 */
 		return oc.reflector().forName(className);
 	}
 }
