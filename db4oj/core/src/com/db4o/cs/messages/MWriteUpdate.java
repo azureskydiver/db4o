@@ -17,7 +17,7 @@ public final class MWriteUpdate extends MsgObject {
 			_payLoad.writeEmbedded();
 			int id = _payLoad.getID();
 			transaction().dontDelete(id);
-            Slot oldSlot = _trans.getCommittedSlotOfID(id);
+            Slot oldSlot = ((YapFileTransaction)_trans).getCommittedSlotOfID(id);
             stream.getSlotForUpdate(_payLoad);
 			yc.addFieldIndices(_payLoad, oldSlot);
             _payLoad.writeEncrypt();

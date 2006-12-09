@@ -47,7 +47,7 @@ import com.db4o.inside.slots.Slot;
         if(isActive() || isNew()){
             return Tree.size(i_root);
         }
-        Slot slot = ta.getCurrentSlotOfID(getID());
+        Slot slot = ((YapFileTransaction)ta).getCurrentSlotOfID(getID());
         int length = YapConst.INT_LENGTH;
         if(Deploy.debug){
             length += YapConst.LEADING_LENGTH;

@@ -27,7 +27,7 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         
         while(allSlotIDs.moveNext()){
             Integer slotID = (Integer)allSlotIDs.current();
-            Slot slot = trans().getCurrentSlotOfID(slotID.intValue());
+            Slot slot = fileTransaction().getCurrentSlotOfID(slotID.intValue());
             allSlots.add(slot);
         }
         
@@ -50,5 +50,9 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         Assert.isTrue(freedSlots.containsAll(allSlots.iterator()));
         
     }
+
+	private YapFileTransaction fileTransaction() {
+		return ((YapFileTransaction)trans());
+	}
 
 }

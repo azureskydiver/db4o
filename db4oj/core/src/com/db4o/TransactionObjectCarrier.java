@@ -5,7 +5,7 @@ package com.db4o;
 /**
  * TODO: Check if all time-consuming stuff is overridden! 
  */
-class TransactionObjectCarrier extends Transaction{
+class TransactionObjectCarrier extends YapFileTransaction{
 	
 	TransactionObjectCarrier(YapStream a_stream, Transaction a_parent) {
 		super(a_stream, a_parent);
