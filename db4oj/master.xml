@@ -1,6 +1,0 @@
-<project name="clean" default="publish-all">    
-	<property name="bona" value="master" />
-  <target name="publish-all" depends="" description="">
-  	<ant antfile="build-1.1.xml"  />
-  </target>
-</project>
