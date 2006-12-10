@@ -1,15 +1,21 @@
 <project name="buildJarMacro" basedir="." default="">
 	<path id="emptyClassPath"/>
 	<macrodef name="buildjar" description="javac, copy xml files in src then jar">
-		<attribute name="srcDir" />
+		<attribute name="srcDir"/>
+		<attribute name="jarPath"/>
+		
 		<attribute name="classPathRefId" default="emptyClassPath"/>
 		<attribute name="include" default="**/*.xml"/>
 		<attribute name="exclude" default=""/>
-		<attribute name="jarPath" />
 		
 		<attribute name="compiler" default="modern"/>
 		<attribute name="fork" default="no"/>
 		<attribute name="executable"/>
+		
+		<attribute name="debug" default="off"/>
+		<attribute name="target" default="1.5"/>
+		<attribute name="source" default="1.5"/>
+		<attribute name="encoding" default="UTF-8"/>
 		
 		<attribute name="compilerArg"  default=""/>
 		
@@ -25,6 +31,10 @@
 				compiler="@{compiler}"
 				fork="@{fork}"
 				executable="@{executable}"
+				debug="@{debug}"
+				target="@{target}"
+				source="@{source}"
+				encoding="@{encoding}"				
 			>
 				<classpath refid="@{classPathRefId}" />
 				<compilerarg line="@{compilerArg}"/>
