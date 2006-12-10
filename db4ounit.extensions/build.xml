@@ -1,0 +1,57 @@
+<project name="db4ounit" basedir="." default="jar"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<import file="../build-1.1/common-1.1.xml"/>
+	<property file="build.properties" />
+	
+	<!--
+	TODO 
+	filehead
+		-->
+		
+	<path id="lib.path.id">
+        <fileset dir="${libDir}" />
+	</path>
+	
+	<target name="clean">
+		<delete dir="${libDir}" failonerror="true"/>
+  	<delete dir="${artifactDir}" failonerror="true"/>     
+	</target>
+	
+	<target name="init" depends="clean">
+		<tstamp />
+		<mkdir dir="${artifactDir}" />
+	</target>
+	
+	<target name="jar" depends="init, resolve">
+		<delete dir="${defaultTempDir}" failonerror="true"/>
+		<mkdir dir="${defaultTempDir}" />
+		
+		<javac destdir="${defaultTempDir}" classpathref="lib.path.id" fork="true" debug="on" target="1.1" source="1.2" encoding="UTF-8">
+			<src path="${dir.db4ounit.src}"/>
+			<src path="${dir.db4ounit.extensions.src}" />
+		</javac>
+		
+		<jar destfile="${jarPath}">
+			<fileset dir="${defaultTempDir}" />
+		</jar>
+		
+		<delete dir="${defaultTempDir}" failonerror="true"/>
+	</target>
+	
+	 <target name="configure" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+   </target>
+   
+   <target name="resolve" depends="configure">
+        <ivy:retrieve />
+    </target>
+    
+    <target name="publish-jar" depends="resolve, jar">
+        <property name="revision" value="${db4o.version.dotted}"/>
+        <delete file="${artifactDir}/ivy.xml"/>
+		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
+			resolver="projects"
+			pubrevision="${revision}" 
+			status="release"
+		/>
+    </target>
+</project>
