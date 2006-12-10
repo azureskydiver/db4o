@@ -4,8 +4,10 @@
 	
 	<target name="buildlist" depends="" description="obtain a filelist of files ordered according to ivy dependency information from the least dependent to the most one"> 
     <ivy:buildlist reference="build-path">
-      <fileset dir="../db4ounit.extensions" includes="build.xml"/>
-      <fileset dir="../db4oj" includes="build-1.1.xml"/>
+      <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
+      <fileset dir="../db4oj"								includes="build-1.1.xml"/>
+      <fileset dir="../db4ojdk1.2"					includes="build-1.1.xml"/>
+      <fileset dir="../db4ojdk5"						includes="build-1.1.xml"/>
     </ivy:buildlist>
   </target>
   

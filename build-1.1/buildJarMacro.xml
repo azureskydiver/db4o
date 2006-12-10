@@ -10,7 +10,7 @@
 		
 		<attribute name="compiler" default="modern"/>
 		<attribute name="fork" default="no"/>
-		<attribute name="executable"/>
+		<attribute name="executable"  default="javac"/>
 		
 		<attribute name="debug" default="off"/>
 		<attribute name="target" default="1.5"/>

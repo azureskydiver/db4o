@@ -1,0 +1,39 @@
+<project name="copyDb4ojMacro" basedir="." default="">
+	
+	<macrodef name="copyjava1.1" description="copy java1.1 to a specified directory"> 
+		<attribute name="destDir"/>
+		<sequential>
+			<delete dir="@{destDir}" failonerror="true"/>
+			<mkdir dir="@{destDir}" />
+			<copy todir="@{destDir}" overwrite="true">
+				<fileset dir="${dir.j.core.src}">
+					<include name="**/*.java" />
+				</fileset>
+			</copy>		
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="copyjava1.2" description="Prepare java1.2 sources"> 
+		<attribute name="destDir"/>
+		<sequential>
+			<copyjava1.1 destDir="@{destDir}" />	
+			<copy todir="@{destDir}" overwrite="true">
+				<fileset dir="${dir.j.jdk1.2.core.src}">
+					<include name="**/*.java" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="copyjava5" description="Prepare java5 sources"> 
+		<attribute name="destDir"/>
+		<sequential>
+			<copyjava1.2 destDir="@{destDir}" />	
+			<copy todir="@{destDir}" overwrite="true">
+				<fileset dir="${dir.j.jdk5.core.src}">
+					<include name="**/*.java" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+</project>

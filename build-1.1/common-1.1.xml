@@ -11,4 +11,5 @@
 	
 	<import file="ivyTaskDef.xml"/>
 	<import file="buildJarMacro.xml"/>
+	<import file="copyDb4ojMacro.xml"/>
 </project>
