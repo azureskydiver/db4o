@@ -1,0 +1,6 @@
+<ivy-module version="1.0">
+    <info organisation="db4o" module="db4ounit"/>
+    <dependencies>
+        <dependency name="db4o-java1.1" rev="latest.integration" />
+    </dependencies>
+</ivy-module>
