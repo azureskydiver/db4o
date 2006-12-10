@@ -15,14 +15,13 @@
 		<echo message="${defaultTempDir}"/>
 	</target>
 	
-	<target name="init" >
-		<tstamp />
-		<delete dir="${artifactDir}" failonerror="true"/>
-		<mkdir dir="${artifactDir}" />
-	</target>
-	
 	<target name="clean">
   	<delete dir="${artifactDir}" failonerror="true"/>     
+	</target>
+	
+	<target name="init" depends="clean">
+		<tstamp />
+		<mkdir dir="${artifactDir}" />
 	</target>
 	
 	<target name="jar" depends="init">
