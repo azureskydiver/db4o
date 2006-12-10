@@ -3,7 +3,6 @@
 	<import file="../build-1.1/common-1.1.xml"/>
 	
 	<property file="build-1.1.properties" />
-	<property file="machine-1.1.properties" />
 	
 	<!--
 	TODO 
@@ -32,6 +31,8 @@
 			jarPath="${coreJarPath}" 
 			fork="yes"
 			executable="${file.compiler.jdk1.3}"
+			target="1.1"
+			source="1.1"
 			compilerarg = "${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}"
 		/>
 	</target>
