@@ -38,6 +38,6 @@ public class Db4oTests extends DrsTestSuite {
 	}
 
 	protected Class[] one() {
-		return new Class[] { ReplicationProviderTest.class, };
+		return new Class[] { ByteArrayTest.class, };
 	}
 }
