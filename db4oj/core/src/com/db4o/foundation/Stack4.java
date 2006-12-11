@@ -29,5 +29,9 @@ public class Stack4 {
 		_tail = _tail._next;
 		return res;
 	}
+
+	public boolean isEmpty() {
+		return _tail==null;
+	}
 	
 }

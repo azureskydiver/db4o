@@ -10,14 +10,18 @@ public class Algorithms4TestCase implements TestCase {
 	
 	public static class QuickSortableIntArray implements QuickSortable4{
 		
-		int[] ints = new int[]{ 3 , 5, 2 , 1, 4 };
+		private int[] ints;
+		
+		public QuickSortableIntArray(int[] ints) {
+			this.ints = ints;
+		}
 
 		public int compare(int leftIndex, int rightIndex) {
 			return ints[leftIndex] - ints[rightIndex]; 
 		}
 
 		public int size() {
-			return 5;
+			return ints.length;
 		}
 
 		public void swap(int leftIndex, int rightIndex) {
@@ -33,8 +37,21 @@ public class Algorithms4TestCase implements TestCase {
 		}
 	}
 	
-	public void testQSort(){
-		QuickSortableIntArray sample = new QuickSortableIntArray();
+	public void testUnsorted(){
+		int[] ints = new int[]{ 3 , 5, 2 , 1, 4 };
+		assertQSort(ints);
+	}
+
+	public void testStackUsage(){
+		int[] ints = new int[50000];
+		for(int i=0;i<ints.length;i++) {
+			ints[i]=i+1;
+		}
+		assertQSort(ints);
+	}
+
+	private void assertQSort(int[] ints) {
+		QuickSortableIntArray sample = new QuickSortableIntArray(ints);
 		Algorithms4.qsort(sample);
 		sample.assertSorted();
 	}
