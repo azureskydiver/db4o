@@ -1,0 +1,69 @@
+<project name="dRS" basedir="." default="jar"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	
+	<import file="../build-1.1/common-1.1.xml"/>
+	
+	<property file="build-1.1.properties" />
+	
+	<!--
+	TODO 
+	filehead
+	
+	<property name="bona" value="tempClassesDir" />
+		-->
+	
+	<path id="compile.core.class.path" description="">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="clean">
+  	<delete dir="${artifactDir}" failonerror="true"/>
+  	
+  	<!--
+  		TODO - After old build is obsolete
+  			- Remove db4o-6.0-db4ounit.jar and db4o-6.0-java5.jar from /lib
+  			- Remove this <delete>
+  	-->
+  	<delete>
+				<fileset dir="lib">
+					<include name="db4o*.jar"/>
+				</fileset>
+		</delete>
+	</target>
+	
+	<target name="init" depends="clean">
+		<tstamp />
+		<mkdir dir="${artifactDir}" />
+	</target>
+	
+	<target name="jar" depends="init">
+		<buildjar 
+			srcDir="${coreSrcDir}"
+			jarPath="${coreJarPath}" 
+			classPathRefId="compile.core.class.path"
+			
+			fork="yes"			
+			target="1.5"
+			source="1.5"
+		/>
+	</target>
+	
+	 <target name="configure" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+   </target>
+   
+   <target name="resolve" depends="configure">
+        <ivy:retrieve/>
+   </target>
+    
+    <target name="publish-jar" depends="resolve, jar">
+        <property name="revision" value="${db4o.version.dotted}"/>
+        <delete file="${artifactDir}/ivy.xml"/>
+		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
+			resolver="projects"
+			pubrevision="${revision}" 
+			status="release"
+		/>
+    </target>
+</project>

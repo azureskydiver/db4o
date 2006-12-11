@@ -1,0 +1,10 @@
+<ivy-module version="1.0">
+    <info organisation="db4o" module="dRS"/>
+    <publications>
+        	<artifact name="dRS-core" type="jar"/>
+    </publications>
+    <dependencies>
+        <dependency name="db4o-java5" rev="latest.integration" />
+        <dependency name="db4ounit" rev="latest.integration" transitive="false" />
+    </dependencies>
+</ivy-module>
