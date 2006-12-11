@@ -19,6 +19,7 @@ public class Stack4TestCase implements TestCase {
 		stack.push("a");
 		stack.push("b");
 		stack.push("c");
+		Assert.isFalse(stack.isEmpty());
 		Assert.areEqual("c", stack.peek());
 		Assert.areEqual("c", stack.peek());
 		Assert.areEqual("c", stack.pop());
@@ -29,6 +30,7 @@ public class Stack4TestCase implements TestCase {
 	}
 
 	private void assertEmpty(final Stack4 stack) {
+		Assert.isTrue(stack.isEmpty());
 		Assert.isNull(stack.peek());
 		Assert.expect(IllegalStateException.class, new CodeBlock() {
 			public void run() throws Exception {
