@@ -940,7 +940,7 @@
 			<fileset dir="${dir.j}">
 				<include name=".project" />
 				<include name=".classpath" />
-				<include name="build.xml" />
+				<!-- include name="build.xml" / -->
 				<include name="**/src/**/*.java" />
 			</fileset>
 		</copy>
@@ -963,7 +963,7 @@
 			<fileset dir="${dir.j.jdk1.2}">
 				<include name=".project" />
 				<include name=".classpath" />
-				<include name="build.xml" />
+				<!-- include name="build.xml" / -->
 				<include name="**/src/**/*.java" />
 				<include name="**/src/**/*.yap" />
 			</fileset>
@@ -972,7 +972,7 @@
 			<fileset dir="${dir.j.jdk5}">
 				<include name=".project" />
 				<include name=".classpath" />
-				<include name="build.xml" />
+				<!-- include name="build.xml" / -->
 				<include name="**/src/**/*.java" />
 				<include name="**/src/**/*.yap" />
 			</fileset>
@@ -989,7 +989,7 @@
 			<fileset dir="${dir.j.nqopt}">
 				<include name=".project" />
 				<include name=".classpath" />
-				<include name="build.xml" />
+				<!-- include name="build.xml" / -->
 				<include name="**/src/**/*.java" />
 			</fileset>
 		</copy>
