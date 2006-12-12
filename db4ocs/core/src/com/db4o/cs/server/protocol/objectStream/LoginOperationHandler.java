@@ -15,23 +15,21 @@ import java.io.IOException;
  * Time: 12:14:48 AM
  */
 public class LoginOperationHandler implements OperationHandler {
-	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
+	public Object handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
 		String username = (String) oin.readObject();
 		String password = (String) oin.readObject();
 		//System.out.println("username:" + username + " password:" + password);
 		String passToCompare = (String) context.getAccessMap().get(username);
-		//System.out.println("passToCompare:" + passToCompare);
-		if(passToCompare != null && passToCompare.equals(password)){
-			//System.out.println("writing response");
+		boolean ok = false;
+		if (passToCompare != null && passToCompare.equals(password)) {
+			ok = true;
 			oout.writeBoolean(true);
 			oout.writeInt(context.getClientId());
 		} else {
-			// failed
-			//System.out.println("writing response 2");
 			oout.writeBoolean(false);
-			oout.writeInt(0);	
+			oout.writeInt(0);
 		}
 		oout.flush();
-
+		return ok;
 	}
 }

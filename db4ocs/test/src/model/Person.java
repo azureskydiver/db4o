@@ -8,20 +8,17 @@ import java.io.Serializable;
  * Time: 10:40:09 PM
  */
 public class Person implements Serializable {
-	private int index;
+	private int id;
 	private String name;
 	private Person friend;
 	private Car car;
 
-	public Person(String name) {
+	public Person() {
+	}
 
+	public Person(String name) {
 		this.name = name;
 	}
-
-	public Person() {
-
-	}
-
 
 	public Person getFriend() {
 		return friend;
@@ -31,12 +28,12 @@ public class Person implements Serializable {
 		this.friend = friend;
 	}
 
-	public int getIndex() {
-		return index;
+	public int getId() {
+		return id;
 	}
 
-	public void setIndex(int index) {
-		this.index = index;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -49,7 +46,7 @@ public class Person implements Serializable {
 
 
 	public String toString() {
-		return index + " " + name + " - " + super.toString();
+		return "[" + id + "] " + name + " - " + super.toString();
 	}
 
 	public void setCar(Car car) {

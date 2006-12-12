@@ -4,8 +4,9 @@ import com.db4o.cs.server.protocol.OperationHandler;
 import com.db4o.cs.server.Context;
 import com.db4o.cs.server.Session;
 import com.db4o.cs.client.query.ClientQuery;
+import com.db4o.cs.common.util.Log;
+import com.db4o.cs.common.util.StopWatch;
 import com.db4o.ObjectContainer;
-import com.db4o.reflect.ReflectClass;
 import com.db4o.query.Query;
 import com.db4o.query.Constraint;
 
@@ -22,10 +23,13 @@ import java.util.Map;
  * Time: 1:30:47 PM
  */
 public class QueryOperationHandler implements OperationHandler {
-	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
+    public static StopWatch stopWatchQuery = new StopWatch(); // NOTE: this is only good for single threaded tests
+
+    public Object handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
 		ClientQuery query = (ClientQuery) oin.readObject();
 		//System.out.println("getting objects for query: " + query);
-		ObjectContainer oc = session.getObjectContainer(context);
+        stopWatchQuery.start();
+        ObjectContainer oc = session.getObjectContainer();
 		Query q = oc.query();
 		// now apply all the constraints
 		applyConstraints(oc, q, query);
@@ -34,7 +38,8 @@ public class QueryOperationHandler implements OperationHandler {
 		q.constrain(className);
 		System.out.println("cons");*/
 		List results = q.execute();
-		//System.out.println("result size: " + results.size());
+        stopWatchQuery.stop();
+        Log.print("result size: " + results.size());
 		oout.writeInt(results.size());
 		for (Iterator iterator = results.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
@@ -45,6 +50,7 @@ public class QueryOperationHandler implements OperationHandler {
 			oout.writeObject(o);
 		}
 		oout.flush();
+		return results.size();
 	}
 
 	private void applyConstraints(ObjectContainer oc, Query q, ClientQuery query) {

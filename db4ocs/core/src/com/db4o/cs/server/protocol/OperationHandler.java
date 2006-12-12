@@ -13,5 +13,5 @@ import java.io.IOException;
  * Time: 12:13:08 AM
  */
 public interface OperationHandler {
-	void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException;
+	Object handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException;
 }

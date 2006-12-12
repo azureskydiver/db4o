@@ -3,8 +3,7 @@ package com.db4o.cs.client.util;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.lang.reflect.Field;
 
 /**
@@ -43,5 +42,28 @@ public class ReflectHelper3 {
 			}
 		}
 		return rf;
+	}
+	 /**
+     * <p>
+     * Equivalent to isLeaf, isEditable, isSortaPrimitive... ;)
+     * </p>
+     * @param c
+     * @return
+     */
+    public static boolean isSecondClass(Class c) {
+		return c.isPrimitive()
+				|| String.class.isAssignableFrom(c)
+				|| Number.class.isAssignableFrom(c)
+				|| Date.class.isAssignableFrom(c)
+				|| Boolean.class.isAssignableFrom(c)
+				|| Character.class.isAssignableFrom(c);
+	}
+
+	public static boolean isCollection(Class c) {
+		return Collection.class.isAssignableFrom(c);
+	}
+
+	public static boolean isMap(Class c) {
+		return Map.class.isAssignableFrom(c);
 	}
 }

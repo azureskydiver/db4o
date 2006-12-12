@@ -5,6 +5,7 @@ import com.db4o.cs.server.Context;
 import com.db4o.cs.server.Session;
 import com.db4o.cs.common.ClassMetaData;
 import com.db4o.cs.common.FieldMetaData;
+import com.db4o.cs.common.util.Log;
 import com.db4o.cs.server.ClassMetaDataServer;
 import com.db4o.cs.server.util.GenericObjectHelper;
 import com.db4o.ObjectContainer;
@@ -23,17 +24,17 @@ import java.util.List;
  * Time: 12:32:58 PM
  */
 public class ClassMetaDataOperationHandler implements OperationHandler {
-	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
+	public Object handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
 		String className = oin.readUTF();
 		short fieldCount = oin.readShort();
 
 		ClassMetaDataServer classMetaData = new ClassMetaDataServer();
-		//System.out.println("got class metadata: " + className);
+		Log.print("got class metadata: " + className);
 		classMetaData.setClassName(className);
 		for(int i = 0; i < fieldCount; i++){
 			String fieldName = oin.readUTF();
 			String fieldClass = oin.readUTF();
-			//System.out.println("field:" + fieldName + " type:" + fieldClass);
+			Log.print("got metafield:" + fieldName + " type:" + fieldClass);
 			FieldMetaData fmd = new FieldMetaData();
 			fmd.setFieldName(fieldName);
 			fmd.setClassName(fieldClass);
@@ -42,13 +43,13 @@ public class ClassMetaDataOperationHandler implements OperationHandler {
 
 		// check if already cached. Still need to swallow the stream bytes above so that's why the check is here.
 		ClassMetaData cached = context.getClassMetaData(className);
-		if(cached != null) return;
+		if(cached != null) return null;
 
 		// todo: evolve classes
 
 		// cache all the Reflection stuff we'll need later, save some milliseconds
 		// get ReflectClass for the object
-		ObjectContainer oc = session.getObjectContainer(context);
+		ObjectContainer oc = session.getObjectContainer();
 		ReflectClass genericClass = oc.ext().reflector().forName(className);
 		if(genericClass == null){
 			genericClass = GenericObjectHelper.createGenericClass(classMetaData);
@@ -68,5 +69,6 @@ public class ClassMetaDataOperationHandler implements OperationHandler {
 		}
 
 		context.addClassMetaData(classMetaData);
+		return null;
 	}
 }

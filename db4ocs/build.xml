@@ -1,0 +1,75 @@
+<project name="db4ocs" default="dist" basedir=".">
+    <description>
+        db4ocs build file
+    </description>
+
+	<!-- set the appropriate db4o jar -->
+	<property name="db4o.version" value="db4o-6.0-java5.jar"/>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="core/src"/>
+    <property name="lib" location="lib"/>
+    <property name="build" location="classes/production"/>
+    <property name="docs" location="docs"/>
+	<property name="dist.base" location="dist"/>
+	<property name="dist" location="${dist.base}/db4ocs"/>
+	<property name="db4obuilds" location="../db4obuild/dist/java/lib"/>
+
+
+	<path id="class.path">
+		<fileset dir="${db4obuilds}">
+            <include name="${db4o.version}"/>
+        </fileset>
+		<fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="compile" depends="init"
+            description="compile the source ">
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}"
+				debug="true" >
+            <classpath refid="class.path"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile"
+            description="generate the distribution">
+
+		<!-- should build two different jars at some point, one server, one client -->
+
+		<mkdir dir="${dist}/lib"/>
+
+		<copy todir="${dist}/lib">
+            <fileset dir="${lib}"/>
+			<fileset file="${db4obuilds}/${db4o.version}"/>
+		</copy>
+        <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}">
+            <!--<manifest>
+                <attribute name="Class-Path" value="lib/${db4o.version}"/>
+                <attribute name="Main-Class" value="com.db4o.cs...."/>
+            </manifest>-->
+        </jar>
+
+	</target>
+
+    <target name="zip" depends="dist" description="Create the distribution zip file.">
+		<zip destfile="db4ocs.zip"
+             basedir="${dist.base}"/>
+    </target>
+
+    <target name="clean"
+            description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <delete dir="${dist.base}"/>
+    </target>
+</project>

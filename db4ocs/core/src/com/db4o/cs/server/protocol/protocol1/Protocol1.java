@@ -5,6 +5,7 @@ import com.db4o.cs.server.protocol.OperationHandler;
 import com.db4o.cs.server.protocol.objectStream.ObjectStreamProtocol;
 import com.db4o.cs.server.Context;
 import com.db4o.cs.server.Session;
+import com.db4o.cs.server.DefaultSession;
 import com.db4o.cs.common.Operations;
 
 /**
@@ -16,6 +17,7 @@ public class Protocol1 extends ObjectStreamProtocol implements Protocol {
 
 	public Protocol1(Context context, Session session) {
 		super(context, session);
+		session.setProtocol(this);
 	}
 
 
@@ -30,4 +32,6 @@ public class Protocol1 extends ObjectStreamProtocol implements Protocol {
 
 		return super.getOperationHandler(operation);
 	}
+
+
 }

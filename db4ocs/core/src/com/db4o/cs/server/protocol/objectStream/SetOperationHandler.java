@@ -15,17 +15,18 @@ import java.io.IOException;
  * Time: 1:14:51 AM
  */
 public class SetOperationHandler extends ObjectOperationHandlerBase implements OperationHandler {
-	public void handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
+	public Object handle(Context context, Session session, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException {
 		long objectId = oin.readLong();
 		Object o = oin.readObject();
 		//System.out.println("setOp: " + o);
 		//System.out.println("object received, id:" + objectId + " containing:" + o);
-		ObjectContainer oc = session.getObjectContainer(context);
+		ObjectContainer oc = session.getObjectContainer();
 		if (objectId > 0) { // todo: check for a character first 'c' or 's' rather than the long, as in spec doc
 			oc.ext().bind(o, objectId);
 			oc.set(o);
 		} else {
 			oc.set(o);
 		}
+		return objectId;
 	}
 }

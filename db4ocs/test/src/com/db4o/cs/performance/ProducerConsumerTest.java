@@ -24,24 +24,24 @@ import java.io.Serializable;
  * <br/>
  * Old:<br/>
 run 1:
- produced 140 items, avg duration: 6595.878571428571<br/>
+produced 140 items, avg duration: 6595.878571428571<br/>
 consumed 140 items, avg duration: 6669.971428571429<br/>
- run 2:<br/>
- produced 140 items, avg duration: 2716.614285714286<br/>
+run 2:<br/>
+produced 140 items, avg duration: 2716.614285714286<br/>
 consumed 140 items, avg duration: 2824.9785714285713<br/>
- run 3:<br/>
- produced 140 items, avg duration: 2325.0857142857144<br/>
+run 3:<br/>
+produced 140 items, avg duration: 2325.0857142857144<br/>
 consumed 140 items, avg duration: 2441.15<br/>
- <br/>
- New objectStream protocol: <br/>
+<br/>
+New objectStream protocol: <br/>
 produced 140 items, avg duration: 9.471428571428572<br/>
 consumed 140 items, avg duration: 2379.114285714286<br/>
 <br/>
 New protocol1:<br/>
 run 1:<br/>
- produced 140 items, avg duration: 8.6<br/>
+produced 140 items, avg duration: 8.6<br/>
 consumed 140 items, avg duration: 1438.642857142857<br/>
- run 2 with cached ReflectClass and ReflectField (expected results since this test opens a new connection for every set):<br/>
+run 2 with cached ReflectClass and ReflectField (expected results since this test opens a new connection for every set):<br/>
 produced 140 items, avg duration: 8.692857142857143<br/>
 consumed 140 items, avg duration: 1456.8857142857144<br/>
 
@@ -65,9 +65,9 @@ public class ProducerConsumerTest extends OldVsNew {
 	public static void main(String[] args) {
 		System.out.println("running helloworld");
 		try {
-			thread(new HelloWorldServer(args), true);
+			/*thread(new HelloWorldServer(args), true);
 			Thread.sleep(1000);
-
+*/
 			thread(new HelloWorldProducer(), false);
 			thread(new HelloWorldProducer(), false);
 			Thread.sleep(1000);
@@ -106,8 +106,8 @@ public class ProducerConsumerTest extends OldVsNew {
 			while(monitor.stillGoing()){
 				Thread.sleep(10000);
 			}
-			System.out.println("produced " + produced + " items, avg duration: " + (1.0 * totalProducedDuration / produced));
-			System.out.println("consumed " + consumed + " items, avg duration: " + (1.0 * totalConsumedDuration / consumed));
+			System.out.println("produced " + produced + " items, total duration: " + totalProducedDuration + ", avg duration: " + (1.0 * totalProducedDuration / produced));
+			System.out.println("consumed " + consumed + " items, total duration: " + totalConsumedDuration + ", avg duration: " + (1.0 * totalConsumedDuration / consumed));
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();

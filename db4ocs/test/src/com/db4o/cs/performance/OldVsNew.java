@@ -17,9 +17,11 @@ import java.io.File;
 public class OldVsNew {
 	private static final int MODE_OLD = 1;
 	private static final int MODE_NEW = 2;
-	public static int mode = MODE_OLD; // change to switch between old and new mode
+	public static int mode = MODE_NEW; // change to switch between old and new mode
 
-	private static final String HOST = "localhost";
+	private static final String HOST =
+//			 "localhost";
+			"192.168.0.100";
 	public static final int PORT = 11445;
 	private static final String USER = "test";
 	private static final String PASS = "test";
@@ -28,6 +30,7 @@ public class OldVsNew {
 
 	protected static ObjectContainer openConnection() throws IOException {
 		ObjectContainer oc;
+		//long start = System.currentTimeMillis();
 		if (mode == MODE_OLD) {
 			oc = Db4o.openClient(HOST, PORT, USER, PASS);
 		} else {
@@ -35,7 +38,14 @@ public class OldVsNew {
 			client.connect();
 			oc = client;
 		}
+		//long end = System.currentTimeMillis();
+		//long duration = end - start;
+		//System.out.println("open duration [" + getModeAsString(mode) + "]: " + duration);
 		return oc;
+	}
+
+	private static String getModeAsString(int mode) {
+		return mode == MODE_OLD ? "OLD" : "NEW";
 	}
 
 	protected static ObjectServer openServer() throws IOException {
@@ -48,7 +58,7 @@ public class OldVsNew {
 	public static ObjectServer getObjectServerForFilename(String yapfilename, int port, boolean forceDelete) throws IOException {
 		File parentDir = new File(YAP_DIR);
 		File dbfile = new File(parentDir, yapfilename);
-		if(forceDelete && dbfile.exists()){
+		if (forceDelete && dbfile.exists()) {
 			System.out.println("deleting old db");
 			dbfile.delete();
 		}
