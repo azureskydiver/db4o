@@ -11,6 +11,9 @@ public interface Operations {
 	byte LOGIN = 5;
 	byte CLASS_METADATA = 11;
 	byte SET = 51;
+	byte SET_END = 52;
+	byte BATCH = 54;
+	byte BULK = 55; // single Update/Query combo sent
 	byte QUERY = 61;
 	byte COMMIT = 71;
 	byte DELETE = 81;

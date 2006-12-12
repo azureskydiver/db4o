@@ -16,4 +16,6 @@ public interface Protocol {
 	 * @param out
 	 */
 	void handle(InputStream in, OutputStream out) throws IOException;
+
+	Object handle(byte operation, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException;
 }

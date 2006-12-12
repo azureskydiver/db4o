@@ -30,9 +30,8 @@ public class Db4oServerThread extends Thread {
 			InputStream in = //new BufferedInputStream(
 					 socket.getInputStream();
 
-			Session session = new DefaultSession();
-
 			try {
+				Session session = new DefaultSession(context);
 				Protocol protocol = //new ObjectStreamProtocol(context, session);
 						new Protocol1(context, session);
 				protocol.handle(in, out);

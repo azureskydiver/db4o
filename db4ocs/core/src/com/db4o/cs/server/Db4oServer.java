@@ -17,6 +17,7 @@ import java.net.ServerSocket;
 public class Db4oServer implements ObjectServer {
 	public static final String DEFAULT_FILE = "test.db4o";
 	public static int DEFAULT_PORT = 3246; // can you guess what this is?
+	
 
 	DefaultContext context;
 	private ServerSocket serverSocket;

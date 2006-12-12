@@ -2,7 +2,9 @@ package com.db4o.cs.client;
 
 import com.db4o.cs.client.protocol.ClientProtocol;
 import com.db4o.cs.client.protocol.protocol1.Protocol1Client;
+import com.db4o.cs.client.protocol.protocol1.ObjectMarshaller;
 import com.db4o.cs.client.query.ClientQuery;
+import com.db4o.cs.client.batch.UpdateSet;
 import com.db4o.cs.common.ObjectContainer2;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
@@ -29,7 +31,7 @@ public class Db4oClient implements ObjectContainer2 {
 
 	Socket socket = null;
 	/*
-	When the streams were referenced here and in the Protocol, it was hanging on new ObjectStreamProtocolClient(in, out) call.  strange.
+	When the streams were referenced here and in the Protocol, it was hanging on new BaseClientProtocol(in, out) call.  strange.
 	OutputStream out = null;
 	InputStream in = null;*/
 	private ClientProtocol protocol;
@@ -61,7 +63,7 @@ public class Db4oClient implements ObjectContainer2 {
 		out = socket.getOutputStream();
 		in = socket.getInputStream();
 
-		protocol = //new ObjectStreamProtocolClient(out, in);
+		protocol = //new BaseClientProtocol(out, in);
 				new Protocol1Client(out, in);
 		protocol.writeHeaders();
 	}
@@ -80,6 +82,7 @@ public class Db4oClient implements ObjectContainer2 {
 
 	/**
 	 * Persist an object.
+	 *
 	 * @param o object to persist
 	 * @throws IOException
 	 */
@@ -121,12 +124,27 @@ public class Db4oClient implements ObjectContainer2 {
 		commit(); // to keep the same as current behaviour
 		try {
 			protocol.close();
+			pause();
 			out.close();
 			in.close();
 			socket.close();
+			System.out.println("writeObjectStopWatch count: " + ObjectMarshaller.stopWatchWriteObject.count() + " duration: " + ObjectMarshaller.stopWatchWriteObject.totalDuration() + " average: " + ObjectMarshaller.stopWatchWriteObject.average());
+			ObjectMarshaller.stopWatchWriteObject.reset();
+			System.out.println("gettingIdStopWatch count: " + Protocol1Client.stopWatchForSet.count() + " duration: " + Protocol1Client.stopWatchForSet.totalDuration() + " average: " + Protocol1Client.stopWatchForSet.average());
+			Protocol1Client.stopWatchForSet.reset();
 			return true;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+
+	}
+
+	private void pause() {
+		// for testing purposes
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -195,6 +213,7 @@ public class Db4oClient implements ObjectContainer2 {
 
 	/**
 	 * This should be added to ObjectContainer interface
+	 *
 	 * @param query
 	 * @return
 	 */
@@ -202,4 +221,11 @@ public class Db4oClient implements ObjectContainer2 {
 		return protocol.execute(query);
 	}
 
+	public void batch(UpdateSet updateSet, Query query) {
+		try {
+			protocol.batch(updateSet, query);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -1,6 +1,12 @@
 package com.db4o.cs.server;
 
 import com.db4o.ObjectContainer;
+import com.db4o.cs.server.protocol.protocol1.Protocol1;
+import com.db4o.cs.server.protocol.Protocol;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
 
 /**
  * This is specific to a single client connection.
@@ -12,9 +18,15 @@ import com.db4o.ObjectContainer;
 public interface Session {
 	/**
 	 *
-	 * @param context todo: decide of context should be part os session, ie: session.getContext() instead of passing it in here.
 	 * @return
 	 */
-	ObjectContainer getObjectContainer(Context context);
+	ObjectContainer getObjectContainer();
 
+	Object handle(byte operation, ObjectInputStream oin, ObjectOutputStream oout) throws IOException, ClassNotFoundException;
+
+	void setProtocol(Protocol protocol);
+
+	boolean close();
+
+	boolean isClosed();
 }

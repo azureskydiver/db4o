@@ -4,6 +4,7 @@ import com.db4o.cs.common.FieldMetaData;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.reflect.Field;
 
 /**
  * todo: move to /common
@@ -32,7 +33,7 @@ public class ClassMetaData {
 		return fields.size();
 	}
 
-	public List getFields() {
+	public List<FieldMetaData> getFields() {
 		return fields;
 	}
 
@@ -43,5 +44,9 @@ public class ClassMetaData {
 
 	public List getReflectionFields() {
 		return reflectionFields;
+	}
+
+	public void addReflectionField(Field field) {
+		reflectionFields.add(field);
 	}
 }

@@ -1,6 +1,7 @@
 package com.db4o.cs.client.protocol;
 
 import com.db4o.query.Query;
+import com.db4o.cs.client.batch.UpdateSet;
 
 import java.io.OutputStream;
 import java.io.IOException;
@@ -32,4 +33,6 @@ public interface ClientProtocol {
 	void delete(Object o) throws IOException;
 
 	List execute(Query query) throws IOException, ClassNotFoundException;
+
+	void batch(UpdateSet updateSet, Query query) throws IOException;
 }
