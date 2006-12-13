@@ -483,6 +483,8 @@ public abstract class YapFile extends YapStream {
         
         Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this));
         
+        readHeaderVariablePart();
+        
         _freespaceManager = FreespaceManager.createNew(this, _systemData.freespaceSystem());
         _freespaceManager.read(_systemData.freespaceID());
        
@@ -496,8 +498,6 @@ public abstract class YapFile extends YapStream {
         if(Debug.freespace){
             _fmChecker.start(0);
         }
-        
-        readHeaderVariablePart();
         
         if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
         	FreespaceManager oldFreespaceManager = _freespaceManager;

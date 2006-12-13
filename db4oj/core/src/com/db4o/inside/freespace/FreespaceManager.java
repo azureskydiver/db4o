@@ -36,11 +36,11 @@ public abstract class FreespaceManager {
     public static FreespaceManager createNew(YapFile file, byte systemType){
         systemType = checkType(systemType);
         switch(systemType){
-            case FM_LEGACY_RAM:
-            case FM_RAM:
-                return new FreespaceManagerRam(file);
+        	case FM_IX:
+        		return new FreespaceManagerIx(file);
             default:
-                return new FreespaceManagerIx(file);
+                return new FreespaceManagerRam(file);
+                
         }
     }
     
