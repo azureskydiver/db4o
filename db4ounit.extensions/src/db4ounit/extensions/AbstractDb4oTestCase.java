@@ -7,7 +7,7 @@ import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.foundation.*;
 import com.db4o.query.Query;
-import com.db4o.reflect.Reflector;
+import com.db4o.reflect.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
@@ -197,5 +197,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	
 	protected final void store(Object obj) {
 		db().set(obj);
+	}
+
+	protected ReflectClass reflectClass(Class clazz) {
+		return reflector().forClass(clazz);
 	}
 }
