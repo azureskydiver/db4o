@@ -31,6 +31,8 @@ public abstract class FreespaceManager {
         return createNew(file, file.systemData().freespaceSystem());
     }
     
+	public abstract void onNew(YapFile file);
+    
     public static FreespaceManager createNew(YapFile file, byte systemType){
         systemType = checkType(systemType);
         switch(systemType){

@@ -103,6 +103,7 @@ public abstract class YapFile extends YapStream {
         
         _fileHeader.initNew(this);
         
+        _freespaceManager.onNew(this);
         _freespaceManager.start(_systemData.freespaceAddress());
         
         if(Debug.freespace  && Debug.freespaceChecker){
