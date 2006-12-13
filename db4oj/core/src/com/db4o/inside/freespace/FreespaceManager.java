@@ -104,14 +104,11 @@ public abstract class FreespaceManager {
         return (configuredSystem != 0 || readSystem == FM_LEGACY_RAM ) && (systemType() != configuredSystem);
     }
 
-    public FreespaceManager migrate(YapFile file,  byte toSystemType) {
-        FreespaceManager newFM = createNew(file, toSystemType);
-        newFM.start(file.newFreespaceSlot(toSystemType));
-        migrate(newFM);
-        freeSelf();
-        newFM.beginCommit();
-        newFM.endCommit();
-        return newFM;
+    public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {
+    	oldFM.migrate(newFM);
+    	oldFM.freeSelf();
+    	newFM.beginCommit();
+    	newFM.endCommit();
     }
     
 }

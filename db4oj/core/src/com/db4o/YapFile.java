@@ -500,7 +500,10 @@ public abstract class YapFile extends YapStream {
         readHeaderVariablePart();
         
         if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
-            _freespaceManager = _freespaceManager.migrate(this, configImpl().freespaceSystem());
+        	FreespaceManager oldFreespaceManager = _freespaceManager;
+        	_freespaceManager = FreespaceManager.createNew(this, _systemData.freespaceSystem());
+        	_freespaceManager.start(newFreespaceSlot(_systemData.freespaceSystem()));
+        	FreespaceManager.migrate(oldFreespaceManager, _freespaceManager);
             _fileHeader.writeVariablePart(this, 1);
         }
         
