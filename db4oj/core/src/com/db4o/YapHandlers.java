@@ -321,16 +321,15 @@ public final class YapHandlers {
         return null;
     }
 
-    /**
-     * Interfaces are handled by the ANY handler.
-     */
+    // TODO: Interfaces should be handled by the ANY handler but we
+    // need to write the code to migrate from the old field handler to the new
     public final TypeHandler4 handlerForClass(YapStream a_stream, ReflectClass a_class) {
         if(a_class == null){
             return null;
         }
-        if (a_class.isInterface()) {
-        	return anyObject();
-        }
+//        if (a_class.isInterface()) {
+//        	return anyObject();
+//        }
         if (a_class.isArray()) {
             return handlerForClass(a_stream, a_class.getComponentType());
         }
