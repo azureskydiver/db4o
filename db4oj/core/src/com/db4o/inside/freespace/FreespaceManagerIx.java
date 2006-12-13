@@ -199,6 +199,10 @@ public class FreespaceManagerIx extends FreespaceManager{
         });
     }
     
+	public void onNew(YapFile file) {
+		file.ensureFreespaceSlot();
+	}
+    
     public void read(int freespaceID) {
         // this is done in start(), nothing to do here
     }
@@ -240,7 +244,7 @@ public class FreespaceManagerIx extends FreespaceManager{
     }
 
     public int write(boolean shuttingDown) {
-        return 0;  // no special ID, FreespaceIX information is stored in YapConfigBlock 
+        return 0;  // no special ID, FreespaceIX information is stored in fileheader variable part 
     }
 
     private void writeXBytes(int address, int length){
@@ -253,7 +257,5 @@ public class FreespaceManagerIx extends FreespaceManager{
             }
         }
     }
-
-
 
 }

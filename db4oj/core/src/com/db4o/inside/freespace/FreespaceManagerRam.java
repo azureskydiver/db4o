@@ -189,6 +189,10 @@ public class FreespaceManagerRam extends FreespaceManager {
         }
     }
     
+    public void onNew(YapFile file) {
+		// do nothing
+	}
+    
     public void read(int freeSlotsID) {
         if (freeSlotsID <= 0){
             return;
