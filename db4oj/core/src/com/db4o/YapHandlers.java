@@ -157,12 +157,12 @@ public final class YapHandlers {
         }
 
         i_anyArray = new YapClassPrimitive(a_stream, new YapArray(_masterStream,
-            i_handlers[ANY_INDEX], false));
+            anyObject(), false));
         i_anyArray.setID(ANY_ARRAY_ID);
         i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
         i_anyArrayN = new YapClassPrimitive(a_stream, new YapArrayN(_masterStream,
-            i_handlers[ANY_INDEX], false));
+            anyObject(), false));
         i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
     }
@@ -322,12 +322,14 @@ public final class YapHandlers {
     }
 
     /**
-     * Can't return ANY class for interfaces, since that would kill the
-     * translators built into the architecture.
+     * Interfaces are handled by the ANY handler.
      */
-    final TypeHandler4 handlerForClass(YapStream a_stream, ReflectClass a_class) {
+    public final TypeHandler4 handlerForClass(YapStream a_stream, ReflectClass a_class) {
         if(a_class == null){
             return null;
+        }
+        if (a_class.isInterface()) {
+        	return anyObject();
         }
         if (a_class.isArray()) {
             return handlerForClass(a_stream, a_class.getComponentType());
@@ -338,6 +340,10 @@ public final class YapHandlers {
         }
         return a_stream.produceYapClass(a_class);
     }
+
+	private TypeHandler4 anyObject() {
+		return i_handlers[ANY_INDEX];
+	}
     
     private void initClassReflectors(GenericReflector reflector){
 		ICLASS_COMPARE = reflector.forClass(YapConst.CLASS_COMPARE);
