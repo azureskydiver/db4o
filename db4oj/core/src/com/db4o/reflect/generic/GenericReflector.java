@@ -163,30 +163,34 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public ReflectClass forObject(Object obj) {
         if (obj instanceof GenericObject){
-        	GenericClass claxx = ((GenericObject)obj)._class;
-        	if(claxx == null){
-        		throw new IllegalStateException(); 
-        	}
-        	String name = claxx.getName();
-        	if(name == null){
-        		throw new IllegalStateException();
-        	}
-        	GenericClass existingClass = (GenericClass) _classByName.get(name);
-        	if(existingClass == null){
-        		_classByName.put(name, claxx);
-        		return claxx;
-        	}
-        	// TODO: Using .equals() here would be more consistent with 
-        	//       the equals() method in GenericClass.
-        	if(existingClass != claxx){
-        		
-        		throw new IllegalStateException();
-        	}
-        	
-            return claxx;
+			return forGenericObject((GenericObject)obj);
         }
         return _delegate.forObject(obj);
     }
+
+	private ReflectClass forGenericObject(final GenericObject genericObject) {
+		GenericClass claxx = genericObject._class;
+		if(claxx == null){
+			throw new IllegalStateException(); 
+		}
+		String name = claxx.getName();
+		if(name == null){
+			throw new IllegalStateException();
+		}
+		GenericClass existingClass = (GenericClass) _classByName.get(name);
+		if(existingClass == null){
+			_classByName.put(name, claxx);
+			return claxx;
+		}
+		// TODO: Using .equals() here would be more consistent with 
+		//       the equals() method in GenericClass.
+		if(existingClass != claxx){
+			
+			throw new IllegalStateException();
+		}
+		
+		return claxx;
+	}
     
     public Reflector getDelegate(){
         return _delegate;
@@ -240,11 +244,15 @@ public class GenericReflector implements Reflector, DeepClone {
     	}
     }
     
-	public ReflectClass[] knownClasses(){
+	public ReflectClass[] knownClasses() {
 		readAll();
         
         Collection4 classes = new Collection4();
-		
+		collectKnownClasses(classes);
+		return (ReflectClass[])classes.toArray(new ReflectClass[classes.size()]);
+	}
+
+	private void collectKnownClasses(Collection4 classes) {
 		Iterator4 i = _classes.iterator();
 		while(i.moveNext()){
             GenericClass clazz = (GenericClass)i.current();
@@ -256,14 +264,6 @@ public class GenericReflector implements Reflector, DeepClone {
                 }
             }
 		}
-        
-        ReflectClass[] ret = new ReflectClass[classes.size()];
-        int j = 0;
-        i = classes.iterator();
-        while(i.moveNext()){
-            ret[j++] = (ReflectClass)i.current();
-        }
-        return ret;
 	}
 	
 	private void readAll(){
