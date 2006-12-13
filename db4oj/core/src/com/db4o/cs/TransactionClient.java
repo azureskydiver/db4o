@@ -19,7 +19,18 @@ final class TransactionClient extends Transaction {
     
     public void commit() {
     	commitTransactionListeners();
-        if(i_yapObjectsToGc != null){
+        clearAll();
+        i_client.writeMsg(Msg.COMMIT);
+        
+    }
+    
+    protected void clearAll() {
+    	removeYapObjectReferences();
+    	super.clearAll();
+    }
+
+	private void removeYapObjectReferences() {
+		if(i_yapObjectsToGc != null){
             i_yapObjectsToGc.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     YapObject yo = (YapObject)((TreeIntObject) a_object)._object;
@@ -28,8 +39,7 @@ final class TransactionClient extends Transaction {
             });
         }
         i_yapObjectsToGc = null;
-        i_client.writeMsg(Msg.COMMIT);
-    }
+	}
 
     public boolean delete(YapObject ref, int id, int cascade) {
         if (! super.delete(ref, id, cascade)){
@@ -86,6 +96,7 @@ final class TransactionClient extends Transaction {
     public void rollback() {
         i_yapObjectsToGc = null;
         rollBackTransactionListeners();
+        clearAll();
     }
 
     public void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type,
