@@ -3,18 +3,14 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.ix.*;
+import com.db4o.inside.ix.IndexTransaction;
 import com.db4o.inside.marshall.ObjectHeader;
-import com.db4o.inside.slots.Slot;
-import com.db4o.inside.slots.SlotChange;
 import com.db4o.reflect.Reflector;
 
 /**
  * @exclude
  */
 public abstract class Transaction {
-
-//    private Tree            _slotChanges;
 
     protected int             i_address;                                  // only used to pass address to Thread
     
@@ -134,13 +130,28 @@ public abstract class Transaction {
 
 	protected void commit6WriteChanges() {
 	}
+	
+	private void commit7ClearAll(){
+        commit7ParentClearAll();
+        clearAll();
+    }
+
+	private void commit7ParentClearAll() {
+		if(i_parentTransaction != null){
+            i_parentTransaction.commit7ClearAll();
+        }
+	}
 
 	private void commit2Listeners(){
-        if (i_parentTransaction != null) {
-            i_parentTransaction.commit2Listeners();
-        } 
+        commit2ParentListeners(); 
         commitTransactionListeners();
     }
+
+	private void commit2ParentListeners() {
+		if (i_parentTransaction != null) {
+            i_parentTransaction.commit2Listeners();
+        }
+	}
     
     private void commit3Stream(){
         stream().checkNeededUpdates();
@@ -169,15 +180,6 @@ public abstract class Transaction {
 		while (iterator.moveNext()) {
 			((TransactionParticipant)iterator.current()).commit(this);
 		}
-    }
-
-	
-    
-    private void commit7ClearAll(){
-        if(i_parentTransaction != null){
-            i_parentTransaction.commit7ClearAll();
-        }
-        clearAll();
     }
     
     protected void commitTransactionListeners() {
