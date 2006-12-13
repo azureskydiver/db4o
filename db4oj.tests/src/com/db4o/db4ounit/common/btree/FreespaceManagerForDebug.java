@@ -52,6 +52,10 @@ public class FreespaceManagerForDebug extends FreespaceManager {
 
     }
 
+	public void onNew(YapFile file) {
+		
+	}
+	
     public void read(int freeSlotsID) {
 
     }
