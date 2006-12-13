@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.YapHandlers;
+import com.db4o.*;
 import com.db4o.reflect.ReflectClass;
 
 import db4ounit.Assert;
@@ -15,10 +15,17 @@ public class YapHandlersTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void testInterfaceHandlerIsSameAsObjectHandler() {
-		final YapHandlers handlers = stream().handlers();
 		Assert.areSame(
-				handlers.handlerForClass(stream(), reflectClass(Object.class)),
-				handlers.handlerForClass(stream(), reflectClass(FooInterface.class)));
+				handlerForClass(Object.class),
+				handlerForClass(FooInterface.class));
+	}
+
+	private TypeHandler4 handlerForClass(Class clazz) {
+		return handlers().handlerForClass(stream(), reflectClass(clazz));
+	}
+
+	private YapHandlers handlers() {
+		return stream().handlers();
 	}
 
 	private ReflectClass reflectClass(Class clazz) {
