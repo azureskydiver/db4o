@@ -11,10 +11,10 @@ import com.db4o.db4ounit.Db4oUnitPlatform;
 public class TCompare {
 
     public static boolean isEqual(Object a_compare, Object a_with) {
-        return isEqual(a_compare, a_with, null, new ArrayList());
+        return isEqual(a_compare, a_with, null, new Vector());
     }
 
-    private static boolean isEqual(Object a_compare, Object a_with, String a_path, List a_list) {        
+    private static boolean isEqual(Object a_compare, Object a_with, String a_path, Vector a_list) {        
 
         if (a_compare == null) {
             return a_with == null;
@@ -35,7 +35,7 @@ public class TCompare {
         if (a_list.contains(a_compare)) {
             return true;
         }
-        a_list.add(a_compare);
+        a_list.addElement(a_compare);
         
         if (a_compare.getClass().isArray()) {
         	return areArraysEqual(normalizeNArray(a_compare), normalizeNArray(a_with), a_path, a_list);
@@ -48,7 +48,7 @@ public class TCompare {
     }
 
 	private static boolean areFieldsEqual(final Object a_compare, final Object a_with,
-			final String a_path, final List a_list) {
+			final String a_path, final Vector a_list) {
 		String path = getPath(a_compare, a_with, a_path);
         Field fields[] = a_compare.getClass().getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
@@ -70,7 +70,7 @@ public class TCompare {
 	}
 
 	private static boolean isFieldEqual(Field field, final Object a_compare,
-			final Object a_with, String path, final List a_list) {
+			final Object a_with, String path, final Vector a_list) {
 		Object compare = getFieldValue(field, a_compare);
 		Object with = getFieldValue(field, a_with);
 		return isEqual(compare, with, path + field.getName() + ":", a_list);
@@ -87,7 +87,7 @@ public class TCompare {
 	}
 
 	private static boolean areArraysEqual(Object compare, Object with,
-			String path, List a_list) {
+			String path, Vector a_list) {
 		int len = Array.getLength(compare);
 		if (len != Array.getLength(with)) {
 		    return false;
