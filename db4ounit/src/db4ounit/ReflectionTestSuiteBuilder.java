@@ -28,7 +28,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		for (int i = 0; i < classes.length; i++) {
 			TestSuite suite = fromClass(classes[i]);
 			if (suite.getTests().length>0) {
-				suites.add(suite);
+				suites.addElement(suite);
 			}
 		}
 		return new TestSuite(toTestArray(suites));
