@@ -3,7 +3,7 @@ Imports System
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Ext
 
-Namespace com.db4odoc.f1.semaphores
+Namespace Db4objects.Db4odoc.Semaphores
     ' 	*
     ' 	 * This class demonstrates a very rudimentary implementation
     ' 	 * of virtual "locks" on objects with db4o. All code that is

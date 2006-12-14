@@ -68,7 +68,7 @@ Namespace Db4objects.Db4odoc.Refactoring
         ' end SetNewObjects
 
         Public Shared Sub ChangeClass()
-            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).Rename("com.db4odoc.f1.refactoring.PilotNew,db4o-reference-chapters")
+            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).Rename("Db4objects.Db4odoc.Refactoring.PilotNew, Db4objects.Db4odoc")
             Db4oFactory.Configure().ObjectClass(GetType(PilotNew)).ObjectField("_name").Rename("_identity")
             Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             oc.Close()

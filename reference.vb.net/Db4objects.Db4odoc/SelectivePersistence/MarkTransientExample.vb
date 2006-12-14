@@ -17,7 +17,7 @@ Namespace Db4objects.Db4odoc.SelectivePersistence
         ' end Main
 
         Public Shared Sub ConfigureTransient()
-            Db4oFactory.Configure().MarkTransient("com.db4odoc.f1.selpersist.FieldTransient")
+            Db4oFactory.Configure().MarkTransient("Db4objects.Db4odoc.SelectivePersistence.FieldTransient")
         End Sub
         ' end ConfigureTransient
 

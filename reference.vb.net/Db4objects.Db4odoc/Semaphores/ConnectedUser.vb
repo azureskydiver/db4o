@@ -7,7 +7,7 @@ Imports Db4objects.Db4o.Ext
 Imports Db4objects.Db4o.Query
 
 
-Namespace com.db4odoc.f1.semaphores
+Namespace Db4objects.Db4odoc.Semaphores
     ' 	
     ' 	  This class demonstrates how semaphores can be used 
     ' 	  to rule  race conditions when providing exact and

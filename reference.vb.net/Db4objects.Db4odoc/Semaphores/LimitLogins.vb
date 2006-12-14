@@ -3,7 +3,7 @@ Imports System
 Imports System.IO
 Imports Db4objects.Db4o
 
-Namespace com.db4odoc.f1.semaphores
+Namespace Db4objects.Db4odoc.Semaphores
     ' 	
     ' 	 This class demonstrates the use of semaphores to limit the
     ' 	 number of logins to a server.
