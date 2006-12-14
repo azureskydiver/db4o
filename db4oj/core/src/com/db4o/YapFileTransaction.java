@@ -5,7 +5,9 @@ package com.db4o;
 import com.db4o.foundation.*;
 import com.db4o.inside.slots.*;
 
-
+/**
+ * @exclude
+ */
 public class YapFileTransaction extends Transaction {
 	
 	private Tree _slotChanges;
