@@ -84,7 +84,7 @@ namespace Db4objects.Db4odoc.Refactoring
 
 		public static void ChangeClass()
 		{
-			Db4oFactory.Configure().ObjectClass(typeof(Pilot)).Rename("com.db4odoc.f1.refactoring.PilotNew, db4o-reference-chapters");
+			Db4oFactory.Configure().ObjectClass(typeof(Pilot)).Rename("Db4objects.Db4odoc.Refactoring.PilotNew, db4o-reference-chapters");
 			Db4oFactory.Configure().ObjectClass(typeof(PilotNew)).ObjectField("_name").Rename("_identity");
 			IObjectContainer oc = Db4oFactory.OpenFile(YapFileName);
 			oc.Close();
