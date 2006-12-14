@@ -4,7 +4,7 @@ Imports System.IO
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Query
 
-Namespace com.db4odoc.f1.structured
+Namespace Db4objects.Db4odoc.Structured
     Public Class StructuredExample
         Public Shared ReadOnly YapFileName As String = "formula1.yap"
 

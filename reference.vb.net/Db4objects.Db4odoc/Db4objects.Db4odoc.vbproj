@@ -6,9 +6,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>db4o_reference_chapters.Program</StartupObject>
-    <RootNamespace>db4o_reference_chapters</RootNamespace>
-    <AssemblyName>db4o-reference-chapters</AssemblyName>
+    <StartupObject>Program</StartupObject>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>Db4objects.Db4odoc</AssemblyName>
     <MyType>Console</MyType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -46,6 +47,11 @@
   <ItemGroup>
     <Compile Include="Activating\ActivationExample.vb" />
     <Compile Include="Activating\SensorPanel.vb" />
+    <Compile Include="Aliases\AliasExample.vb" />
+    <Compile Include="Aliases\NewAlias\Pilot.vb" />
+    <Compile Include="Aliases\Driver.vb" />
+    <Compile Include="Aliases\InterLanguageExample.vb" />
+    <Compile Include="Aliases\Pilot.vb" />
     <Compile Include="Attributes\Car.vb" />
     <Compile Include="Blobs\BlobExample.vb" />
     <Compile Include="Blobs\Car.vb" />

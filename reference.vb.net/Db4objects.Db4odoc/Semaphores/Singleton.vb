@@ -3,7 +3,7 @@ Imports System
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Query
 
-Namespace com.db4odoc.f1.semaphores
+Namespace Db4objects.Db4odoc.Semaphores
     ' This class	demonstrates the use	of a	semaphore to ensure that only
     ' one instance of a	certain	class is stored to an IObjectContainer.
     ' 
