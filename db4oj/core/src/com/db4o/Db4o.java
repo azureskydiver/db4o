@@ -54,17 +54,31 @@ public class Db4o {
 		return i_config;
 	}
 	
+	/**
+	 * Creates a fresh {@link Configuration Configuration} instance.
+	 * 
+	 * @return a fresh, independent configuration with all options set to their default values
+	 */
 	public static Configuration newConfiguration() {
 		Config4Impl config = new Config4Impl();
 		Platform4.getDefaultConfiguration(config);
 		return config;
 	}
 
+	/**
+	 * Creates a clone of the global db4o {@link Configuration Configuration}.
+	 * 
+	 * @return a fresh configuration with all option values set to the values
+	 * currently configured for the global db4o configuration context
+	 */
 	public static Configuration cloneConfiguration() {
 		return (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(null);
 	}
 
     /**
+     * Operates just like {@link Db4o#openClient(Configuration, String, int, String, String)}, but uses
+     * the global db4o {@link Configuration Configuration} context.
+     * 
      * opens an {@link ObjectContainer ObjectContainer}
 	 * client and connects it to the specified named server and port.
 	 * <br><br>
@@ -88,14 +102,37 @@ public class Db4o {
 		return openClient(Db4o.cloneConfiguration(),hostName,port,user,password);
 	}
 
+    /**
+     * opens an {@link ObjectContainer ObjectContainer}
+	 * client and connects it to the specified named server and port.
+	 * <br><br>
+	 * The server needs to
+	 * {@link ObjectServer#grantAccess allow access} for the specified user and password.
+	 * <br><br>
+	 * A client {@link ObjectContainer ObjectContainer} can be cast to 
+	 * {@link ExtClient ExtClient} to use extended
+	 * {@link ExtObjectContainer ExtObjectContainer} 
+	 * and {@link ExtClient ExtClient} methods.
+	 * <br><br>
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+     * @param hostName the host name
+     * @param port the port the server is using
+     * @param user the user name
+     * @param password the user password
+	 * @return an open {@link ObjectContainer ObjectContainer}
+     * @see ObjectServer#grantAccess
+	 */
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
 			throws IOException {
 		synchronized(Global4.lock){
 			return new YapClient(config,new YapSocketReal(hostName, port), user, password, true);
 		}
-}
+	}
 
     /**
+     * Operates just like {@link Db4o#openFile(Configuration, String)}, but uses
+     * the global db4o {@link Configuration Configuration} context.
+     * 
      * opens an {@link ObjectContainer ObjectContainer}
 	 * on the specified database file for local use.
 	 * <br><br>Subsidiary calls with the same database file name will return the same
@@ -116,6 +153,24 @@ public class Db4o {
 		return openFile(cloneConfiguration(),databaseFileName);
 	}
 
+    /**
+     * opens an {@link ObjectContainer ObjectContainer}
+	 * on the specified database file for local use.
+	 * <br><br>Subsidiary calls with the same database file name will return the same
+	 * {@link ObjectContainer ObjectContainer} object.<br><br>
+	 * Every call to <code>openFile()</code> requires a corresponding
+ 	 * {@link ObjectContainer#close ObjectContainer.close}.<br><br>
+ 	 * Database files can only be accessed for readwrite access from one process 
+ 	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
+ 	 * internal mechanism to lock the database file for other processes. 
+     * <br><br>
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+     * @param databaseFileName an absolute or relative path to the database file
+	 * @return an open {@link ObjectContainer ObjectContainer}
+     * @see Configuration#readOnly
+     * @see Configuration#encrypt
+     * @see Configuration#password
+	 */
 	public static final ObjectContainer openFile(Configuration config,String databaseFileName) throws DatabaseFileLockedException {
 		synchronized(Global4.lock){
 			return i_sessions.open(config,databaseFileName);
@@ -151,7 +206,10 @@ public class Db4o {
 	}
 	
 	
-	 /**
+	/**
+     * Operates just like {@link Db4o#openServer(Configuration, String, int)}, but uses
+     * the global db4o {@link Configuration Configuration} context.
+     * 
      * opens an {@link ObjectServer ObjectServer}
 	 * on the specified database file and port.
      * <br><br>
@@ -171,6 +229,23 @@ public class Db4o {
 		return openServer(cloneConfiguration(),databaseFileName,port);
 	}
 
+	/**
+     * opens an {@link ObjectServer ObjectServer}
+	 * on the specified database file and port.
+     * <br><br>
+     * If the server does not need to listen on a port because it will only be used
+     * in embedded mode with {@link ObjectServer#openClient}, specify '0' as the
+     * port number.
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+     * @param databaseFileName an absolute or relative path to the database file
+     * @param port the port to be used, or 0, if the server should not open a port,
+     * because it will only be used with {@link ObjectServer#openClient()}
+	 * @return an {@link ObjectServer ObjectServer} listening
+	 * on the specified port.
+     * @see Configuration#readOnly
+     * @see Configuration#encrypt
+     * @see Configuration#password
+	 */
 	public static final ObjectServer openServer(Configuration config,String databaseFileName, int port) throws DatabaseFileLockedException {
 		synchronized(Global4.lock){
 			YapFile stream = (YapFile)openFile(config,databaseFileName);
