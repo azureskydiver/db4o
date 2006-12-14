@@ -143,9 +143,9 @@ public final class YapServerThread extends Thread {
                 if(! i_socket.isConnected()){
                     break;
                 }
-//                if (Deploy.debug) {
+                if (Deploy.debug) {
                     e.printStackTrace();
-//                }
+                }
                 i_nullMessages++;
             }
             
