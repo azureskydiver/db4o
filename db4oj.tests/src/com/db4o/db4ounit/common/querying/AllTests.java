@@ -20,6 +20,7 @@ public class AllTests extends Db4oTestSuite {
 	        CascadeOnDelete.class,
 	        CascadeOnUpdate.class,
 	        CascadeToArray.class,
+	        ConjunctiveQbETestCase.class,
 			IdListQueryResultTestCase.class,
             IndexedQueriesTestCase.class,
             LazyQueryResultTestCase.class,
