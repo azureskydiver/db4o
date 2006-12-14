@@ -177,7 +177,7 @@ public final class YapConst
 	
     public static final String VIRTUAL_FIELD_PREFIX = "v4o";
     
-    public static final int MAX_STACK_DEPTH = 100;
+    public static final int MAX_STACK_DEPTH = 20;
 
 
 }
