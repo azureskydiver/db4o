@@ -93,6 +93,11 @@
     <Compile Include="src\Db4objects.Db4odoc\activating\SensorPanel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Aliases\AliasExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Aliases\Driver.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Aliases\InterLanguageExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Aliases\NewAlias\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Aliases\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\attributes\Car.cs">
       <SubType>Code</SubType>
     </Compile>

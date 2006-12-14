@@ -21,7 +21,7 @@ namespace Db4objects.Db4odoc.SelectivePersistence
 
 		public static void ConfigureTransient()
 		{
-			Db4oFactory.Configure().MarkTransient("com.db4odoc.f1.selpersist.FieldTransient");
+			Db4oFactory.Configure().MarkTransient("Db4objects.Db4odoc.SelectivePersistence.FieldTransient");
 		}
 		// end ConfigureTransient
 
