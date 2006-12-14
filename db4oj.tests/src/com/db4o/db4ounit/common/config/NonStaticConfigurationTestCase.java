@@ -46,7 +46,7 @@ public class NonStaticConfigurationTestCase implements TestCase {
 	public void testIndependentObjectConfigs() {
 		Configuration config=Db4o.newConfiguration();
 		ObjectClass objectConfig = config.objectClass(Data.class);
-		objectConfig.translate(new TSerializable());
+		objectConfig.translate(new TNull());
 		Configuration otherConfig=Db4o.newConfiguration();
 		Assert.areNotSame(config,otherConfig);
 		Config4Class otherObjectConfig = (Config4Class)otherConfig.objectClass(Data.class);
