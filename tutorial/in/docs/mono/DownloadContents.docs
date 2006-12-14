@@ -20,7 +20,7 @@ documentation occasionaly.
 .b /usr/share/doc/package/db4o/reference/index.html ..
 The reference documentation is a complete compilation for ._
 experienced db4o users. It is maintained ._
-.l http://developer.db4o.com/DocsWiki/view.aspx/Docs online .. .
+.l http://developer.db4o.com/Resources/view.aspx/Reference online .. .
 
 .b /usr/share/doc/packages/db4o/tutorial/index.html ..
 The tutorial in HTML format. The Java and .NET db4o ._
