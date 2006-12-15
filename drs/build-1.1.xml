@@ -9,16 +9,16 @@
 	filehead
 	
 	<property name="bona" value="tempClassesDir" />
-		-->
-	
-	<path id="compile.core.class.path" description="">
-		<fileset dir="lib">
-			<include name="*.jar" />
-		</fileset>
+		-->	
+	<path id="compile.class.path">
+		<fileset dir="lib" 						includes="*.jar"/>
+		<fileset dir="${artifactDir}" includes="*.jar"/>
+		<fileset dir="${ivy.lib.dir}" includes="*.jar"/>
 	</path>
 	
 	<target name="clean">
   	<delete dir="${artifactDir}" failonerror="true"/>
+  	<delete dir="${ivy.lib.dir}" failonerror="true"/>
   	
   	<!--
   		TODO - After old build is obsolete
@@ -32,21 +32,9 @@
 		</delete>
 	</target>
 	
-	<target name="init" depends="clean">
+	<target name="init" depends="">
 		<tstamp />
 		<mkdir dir="${artifactDir}" />
-	</target>
-	
-	<target name="jar" depends="init">
-		<buildjar 
-			srcDir="${coreSrcDir}"
-			jarPath="${coreJarPath}" 
-			classPathRefId="compile.core.class.path"
-			
-			fork="yes"			
-			target="1.5"
-			source="1.5"
-		/>
 	</target>
 	
 	 <target name="configure" depends="init">
@@ -56,14 +44,33 @@
    <target name="resolve" depends="configure">
         <ivy:retrieve/>
    </target>
-    
-    <target name="publish-jar" depends="resolve, jar">
-        <property name="revision" value="${db4o.version.dotted}"/>
-        <delete file="${artifactDir}/ivy.xml"/>
-		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
-			resolver="projects"
-			pubrevision="${revision}" 
-			status="release"
-		/>
-    </target>
+   
+   <target name="publish-jar" depends="clean, resolve">
+    	<antcall target="jar-core" />
+			<antcall target="jar-test" />
+			<antcall target="jar-tutorial" />
+			
+      <property name="revision" value="${db4o.version.dotted}"/>
+      <delete file="${artifactDir}/ivy.xml"/>
+			<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
+				resolver="projects"
+				pubrevision="${revision}" 
+				status="release"
+			/>
+	</target>
+	
+	<target name="jar-core" description="This task does not work standalone">
+		<buildjar srcDir="${coreSrcDir}" jarPath="${coreJarPath}" classPathRefId="compile.class.path"
+			fork="yes" target="1.5" source="1.5" />
+	</target>
+	
+	<target name="jar-test" description="This task does not work standalone">
+		<buildjar srcDir="${testSrcDir}" jarPath="${testJarPath}" classPathRefId="compile.class.path" 			
+			fork="yes" target="1.5" source="1.5" />
+	</target>
+	
+	<target name="jar-tutorial" description="This task does not work standalone">
+		<buildjar srcDir="${tutorialSrcDir}" jarPath="${tutorialJarPath}" classPathRefId="compile.class.path" 			
+			fork="yes" target="1.5" source="1.5" />
+	</target> 
 </project>
