@@ -22,9 +22,7 @@
 	</target>
 	
 	<target name="jar" depends="init, resolve">
-		<copySrcDir srcDir="${dir.j.tests.src}"	destDir="${tempSrcDir}" includes="**/*.java"/>
-		<copySrcDir srcDir="${dir.j.tests.src}"	destDir="${tempSrcDir}" includes="**/*.yap"/>
-		<copySrcDir srcDir="${dir.j.tools.src}"	destDir="${tempSrcDir}" />
+		<copyjavatest1.1 destDir="${tempSrcDir}"/>
 		
 		<buildjar 
 			srcDir="${tempSrcDir}"
