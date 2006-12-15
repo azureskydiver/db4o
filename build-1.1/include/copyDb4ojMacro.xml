@@ -1,27 +1,22 @@
 <project name="copyDb4ojMacro" basedir="." default="">
 	
-	<macrodef name="copyjava1.1" description="copy java1.1 to a specified directory"> 
+	<macrodef name="copySrcDir" description="copy .java from one dir to another"> 
+		<attribute name="srcDir"/>
 		<attribute name="destDir"/>
+		<attribute name="includes" default="**/*.java" description="comma- or space-separated list of patterns of files that must be included; all files are included when omitted."/>
+		<attribute name="overwrite" default="true"/>
 		<sequential>
-			<delete dir="@{destDir}" failonerror="true"/>
-			<mkdir dir="@{destDir}" />
-			<copy todir="@{destDir}" overwrite="true">
-				<fileset dir="${dir.j.core.src}">
-					<include name="**/*.java" />
-				</fileset>
-			</copy>		
+			<copy todir="@{destDir}" overwrite="@{overwrite}">
+				<fileset dir="@{srcDir}" includes="@{includes}"/>
+			</copy>
 		</sequential>
 	</macrodef>
 	
 	<macrodef name="copyjava1.2" description="Prepare java1.2 sources"> 
 		<attribute name="destDir"/>
 		<sequential>
-			<copyjava1.1 destDir="@{destDir}" />	
-			<copy todir="@{destDir}" overwrite="true">
-				<fileset dir="${dir.j.jdk1.2.core.src}">
-					<include name="**/*.java" />
-				</fileset>
-			</copy>
+			<copySrcDir srcDir="${dir.j.core.src}"				destDir="@{destDir}" />
+			<copySrcDir srcDir="${dir.j.jdk1.2.core.src}"	destDir="@{destDir}" />
 		</sequential>
 	</macrodef>
 	
@@ -29,11 +24,15 @@
 		<attribute name="destDir"/>
 		<sequential>
 			<copyjava1.2 destDir="@{destDir}" />	
-			<copy todir="@{destDir}" overwrite="true">
-				<fileset dir="${dir.j.jdk5.core.src}">
-					<include name="**/*.java" />
-				</fileset>
-			</copy>
+			<copySrcDir srcDir="${dir.j.jdk5.core.src}" destDir="@{destDir}" />
 		</sequential>
 	</macrodef>
+	
+	<macrodef name="copyjavatest1.1" description="copy db4oj java 1.1 test to a specified directory"> 
+		<attribute name="destDir"/>
+		<sequential>
+			<copySrcDir srcDir="${dir.j.tests.src}"			destDir="@{destDir}" />
+			<copySrcDir srcDir="dir.j.jdk1.2.test.src"	destDir="@{destDir}" />
+		</sequential>
+	</macrodef>	
 </project>
