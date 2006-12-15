@@ -9,7 +9,7 @@
   <property file="${imported.basedir}/machine.properties"/>
 	<property file="${imported.basedir}/common-1.1.properties" />
 	
-	<import file="ivyTaskDef.xml"/>
-	<import file="buildJarMacro.xml"/>
-	<import file="copyDb4ojMacro.xml"/>
+	<import file="include/ivyTaskDef.xml"/>
+	<import file="include/buildJarMacro.xml"/>
+	<import file="include/copyDb4ojMacro.xml"/>
 </project>
