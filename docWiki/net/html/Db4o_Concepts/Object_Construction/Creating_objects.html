@@ -1,0 +1,24 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Creating objects</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Creating objects</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Using a constructor">Using a constructor</a></li><li><a href ="#Bypassing the constructor">Bypassing the constructor</a></li><li><a href ="#Using a translator">Using a translator</a></li></ul></li></ul></div></div></div>
+<p></p>
+<p>Db4o currently knows three ways of creating and populating an object from the database. The approach to be used can be configured globally and on a per-class basis.</p>
+<a name="Using a constructor"></a><h2>Using a constructor</h2>
+<p>The most obvious way is to call an appropriate constructor. Db4o does;<i>not</i>require a public or no-args constructor. It can use any constructor that accepts default (null/0) values for all of its arguments without throwing an exception. Db4o will test all available constructors on the class (including private ones) until it finds a suitable one.<br><br>What if no such constructor exists?</p>
+<a name="Bypassing the constructor"></a><h2>Bypassing the constructor</h2>
+<p>Db4o can also bypass the constructors declared for this class using platform-specific mechanisms. (For Java, this option is only available on JREs &gt;= 1.4.) This mode allows reinstantiating objects whose class doesn't provide a suitable constructor, However, it will (silently) break classes that rely on the constructor to be executed, for example in order to populate transient members.<br><br><i>If this option is available in the current runtime environment, it will be the default setting.</i></p>
+<a name="Using a translator"></a><h2>Using a translator</h2>
+<p>If none of the two approaches above is suitable, db4o provides a way to specify in detail how instances of a class should be stored and reinstantiated by implementing the Translator interface and registering this implementation for the offending class. <a href="../../Advanced_db4o_Techniques/Translators/Translators.html" class="wikiLink">Translators chapter</a> cover this topic in detail.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-14T08:32:38 by Tetyana.
+				</div>
+  </body>
+</html>
