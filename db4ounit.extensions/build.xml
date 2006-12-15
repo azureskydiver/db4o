@@ -22,19 +22,18 @@
 	</target>
 	
 	<target name="jar" depends="init, resolve">
-		<delete dir="${defaultTempDir}" failonerror="true"/>
-		<mkdir dir="${defaultTempDir}" />
+		<copySrcDir srcDir="${dir.db4ounit.src}"						destDir="${tempSrcDir}" />
+		<copySrcDir srcDir="${dir.db4ounit.extensions.src}"	destDir="${tempSrcDir}" />
 		
-		<javac destdir="${defaultTempDir}" classpathref="lib.path.id" fork="true" debug="on" target="1.1" source="1.2" encoding="UTF-8">
-			<src path="${dir.db4ounit.src}"/>
-			<src path="${dir.db4ounit.extensions.src}" />
-		</javac>
-		
-		<jar destfile="${jarPath}">
-			<fileset dir="${defaultTempDir}" />
-		</jar>
-		
-		<delete dir="${defaultTempDir}" failonerror="true"/>
+		<buildjar 
+			srcDir="${tempSrcDir}"
+			jarPath="${jarPath}" 
+			fork="yes"
+			classPathRefId="lib.path.id"
+			target="1.1"
+			source="1.1"
+		/>
+		<delete dir="${tempSrcDir}" failonerror="true"/>
 	</target>
 	
 	 <target name="configure" depends="init">
