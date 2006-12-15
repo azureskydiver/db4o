@@ -1,0 +1,54 @@
+<project name="db4o-test-java5" basedir="." default="jar"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	
+	<import file="../../build-1.1/common-1.1.xml"/>
+	
+	<property name="tempSrcDir" value="tempSrcDir126559595"/>
+	<property name="libDir" value="${basedir}/lib"/>
+	<property name="artifactDir" value="${basedir}/artifact"/>
+	<property name="jarPath" value="${artifactDir}/${ant.project.name}.jar"/>
+	
+	<path id="lib.path.id">
+        <fileset dir="${libDir}" />
+	</path>
+	
+	<target name="clean">
+		<delete dir="${libDir}" failonerror="true"/>
+  	<delete dir="${artifactDir}" failonerror="true"/>     
+	</target>
+	
+	<target name="init" depends="clean">
+		<tstamp />
+		<mkdir dir="${artifactDir}" />
+	</target>
+	
+	<target name="jar" depends="init, resolve">
+		<copyjavatest5 destDir="${tempSrcDir}"/>
+		<buildjar 
+			srcDir="${tempSrcDir}"
+			jarPath="${jarPath}" 
+			fork="yes"
+			classPathRefId="lib.path.id"
+			target="1.5"
+			source="1.5"
+		/>
+		<delete dir="${tempSrcDir}" failonerror="true"/>
+	</target>
+	
+	 <target name="configure" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+   </target>
+   
+   <target name="resolve" depends="configure">
+        <ivy:retrieve />
+    </target>
+    
+    <target name="publish-jar" depends="resolve, jar">
+        <property name="revision" value="${db4o.version.dotted}"/>
+        <delete file="${artifactDir}/ivy.xml"/>
+		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
+			resolver="projects"
+			pubrevision="${revision}" 
+			status="release"
+		/>
+    </target>
+</project>
