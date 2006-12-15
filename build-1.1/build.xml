@@ -15,8 +15,13 @@
     </ivy:buildlist>
   </target>
   
-  <target name="jar" depends="clean, buildlist" description="compile, jar and publish all projects in the right order">
+  <target name="jar" depends="buildlist" description="compile, jar and publish all projects in the right order">
+  	<antcall target="clean-subprojects" />
+  	<antcall target="clean-repo" />
+  	
     <subant target="publish-jar" buildpathref="build-path" />
+    
+    <antcall target="clean-subprojects" />
   </target>
 	
   <target name="init" depends="">
@@ -25,10 +30,17 @@
 		<mkdir dir="${repository.dir}" />
 	</target>
 	
-    <target name="clean" depends="buildlist" description="--> clean the project">
+	<target name="clean" depends="buildlist" description="--> clean sub-project">    
+    <antcall target="clean-subprojects" />
+  	<antcall target="clean-repo" />
+  </target>
+		
+	<target name="clean-repo" description="--> clean the repo and cache">
     	<delete dir="${ivy.cache.dir}" failonerror="true"/>
     	<delete dir="${repository.dir}" failonerror="true"/>
-    
+  </target>
+	
+  <target name="clean-subprojects" depends="buildlist" description="--> clean sub-project">    
     	<subant target="clean" buildpathref="build-path" />
-    </target>
+  </target>
 </project>
