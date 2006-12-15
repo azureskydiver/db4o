@@ -36,11 +36,19 @@
 		</sequential>
 	</macrodef>	
 	
-	<macrodef name="copyjavatest1.2" description="copy db4oj java 1.1 test to a specified directory"> 
+	<macrodef name="copyjavatest1.2" description="copy db4oj java 1.2 test to a specified directory"> 
 		<attribute name="destDir"/>
 		<sequential>
 			<copyjavatest1.1 destDir="@{destDir}"/>
 			<copySrcDir srcDir="${dir.j.jdk1.2.test.src}"	destDir="@{destDir}" includes="**/*.java, **/*.yap"/>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="copyjavatest5" description="copy db4oj java 5 test to a specified directory"> 
+		<attribute name="destDir"/>
+		<sequential>
+			<copyjavatest1.2 destDir="@{destDir}"/>
+			<copySrcDir srcDir="${dir.j.jdk5.test.src}"	destDir="@{destDir}" includes="**/*.java, **/*.yap"/>
 		</sequential>
 	</macrodef>
 </project>

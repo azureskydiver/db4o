@@ -11,6 +11,7 @@
       <fileset dir="../drs"									includes="build-1.1.xml"/>
       <fileset dir="../db4oj.tests"					includes="build.xml"/>
       <fileset dir="../db4ojdk1.2/test"			includes="build.xml"/>
+      <fileset dir="../db4ojdk5/test"				includes="build.xml"/>
     </ivy:buildlist>
   </target>
   
