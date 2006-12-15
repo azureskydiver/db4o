@@ -403,7 +403,7 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="init, configure, build-all">
+	<target name="build" depends="configure, build-all">
 	</target>
 	
 	<target name="build-net1" depends="configure-net1, build-all">
@@ -854,7 +854,7 @@
 	</target>
 	
 	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
-		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
+		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
 			<arg value="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-documenter=VS.NET 2003" />
