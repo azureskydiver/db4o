@@ -5,12 +5,12 @@
 	<property file="build.properties" />
 	
 	<path id="lib.path.id">
-        <fileset dir="${libDir}" />
+        <fileset dir="${ivy.lib.dir}" includes="*.jar"/>
 	</path>
 	
 	<target name="clean">
-		<delete dir="${libDir}" failonerror="true"/>
   	<delete dir="${artifactDir}" failonerror="true"/>     
+  	<delete dir="${ivy.lib.dir}" failonerror="true"/>
 	</target>
 	
 	<target name="init" depends="clean">
