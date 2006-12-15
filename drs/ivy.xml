@@ -1,10 +1,17 @@
 <ivy-module version="1.0">
     <info organisation="db4o" module="dRS"/>
+    <configurations>
+    	<conf name="core"  description="Provides API and implementation of dRS"/>
+    	<conf name="test" extends="core" visibility="private" description="for testing dRS"/>
+    	<conf name="tutorial" extends="core" visibility="private" description="Tutorial code of dRS"/>
+    </configurations>
     <publications>
-        	<artifact name="dRS-core" type="jar"/>
+        	<artifact name="dRS-core"			conf="core"/>
+        	<artifact name="dRS-test"			conf="test"/>
+        	<artifact name="dRS-tutorial" conf="tutorial"/>
     </publications>
     <dependencies>
         <dependency name="db4o-java5" rev="latest.integration" />
-        <dependency name="db4ounit" rev="latest.integration" transitive="false" />
+        <dependency name="db4ounit" rev="latest.integration" transitive="false" conf="test->default"/>
     </dependencies>
 </ivy-module>
