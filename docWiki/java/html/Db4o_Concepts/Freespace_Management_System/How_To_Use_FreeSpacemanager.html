@@ -1,0 +1,45 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>How To Use FreeSpacemanager</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>How To Use FreeSpacemanager</h1><p></p>
+
+<p>There are several configuration options that can help you to tune up your freespacemanager to achieve the best performance and reliability of your system. All methods should be called before opening database files.</p>
+<p>
+Public interface FreespaceConfiguration provides methods to select freespace system ( <i>useIndexSystem() , useRamSystem()</i>) as described before. See API documentation for more information.</p>
+<p>
+Another FreespaceConfiguration method</p>
+
+<span class="java"></p>
+<p>Java: <code>void discardSmallerThan(int byteCount) </code></p>
+<p></span>
+
+
+
+
+
+<p>configures the minimum size of free space slots in the database file that are to be reused. FreespaceManager keeps 2 lists of all 'freed' space that can be reused (sorted by address and by size). In some cases (numerous updates, deletes) these lists can grow large, causing extra RAM consumption and performance loss for maintenance. With this method you can specify an upper bound for the byte slot size to discard from Freespace manager list. It is not recommended to specify a value of byteCount &gt; 100 as freespace re-usage will become less efficient and the database file will grow faster. However, if defragment can be run frequently, it will also reclaim lost space and decrease the database file to the minimum size. Therefore byteCount may be set to bigger value.</p>
+<p>By default byteCount = 0, which means that all 'freed' space is reused.</p>
+<p>
+Another configuration setting that can be used with frequently defragmented systems</p>
+
+<span class="java"></p>
+<p>Java: <code>Db4o.configure().automaticShutDown(false);</code></p>
+<p></span>
+
+
+
+
+<p>
+Detailed description of this method can be found in <a href="../../Db4o_Database_Management/Performance_Tuning/No_Shutdown_Thread.html" class="wikiLink">Tuning</a> chapter of the Reference documentation.</p></div>
+    </div>
+    <div id="footer">
+					This revision (11) was last Modified 2006-11-14T07:40:38 by Tetyana.
+				</div>
+  </body>
+</html>

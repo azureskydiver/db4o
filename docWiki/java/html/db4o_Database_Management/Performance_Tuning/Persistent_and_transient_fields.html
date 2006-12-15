@@ -1,0 +1,30 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Persistent and transient fields</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Persistent and transient fields</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate strategies">Alternate strategies</a></li></ul></li></ul></div></div></div>
+<p></p>
+<p>Do not create fields that you don't need for persistence</p>
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>Storing only needed information will help to keep your database footprint as small as possible.</p>
+<a name="Effect"></a><h2>Effect</h2>
+<p>If your persistent class contains fields that do not need to be stored you should mark them as transient to prevent them from being stored:</p>
+<span class="java"></p>
+<p>Java: <br><code>public class NotStorable {<br>&nbsp;&nbsp;private transient int length;<br>. . . <br>}</code></p>
+<p></span>
+
+<p>You can use <a href="../../Advanced_db4o_techniques/Callbacks.html" class="wikiLink">Callbacks</a> or <a href="../../Advanced_db4o_techniques/Translators/Translators.html" class="wikiLink">Translators</a> to set transient fields on retrieval.</p>
+<p>Also avoid storing classes having only transient information - their indexes' maintenance will produce unnecessary performance overhead.</p>
+<a name="Alternate strategies"></a><h2>Alternate strategies</h2>
+<p>In some cases you may want to persist class meta-information without the actual object data. The example can be database singleton for <a href="../../Client-Server/Remote_code_execution/Remote_Code_Execution.html" class="wikiLink">remote code execution</a></p></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-15T09:02:14 by Tetyana.
+				</div>
+  </body>
+</html>

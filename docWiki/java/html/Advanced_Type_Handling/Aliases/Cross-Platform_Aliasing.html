@@ -1,0 +1,64 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Cross-Platform Aliasing</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Cross-Platform Aliasing</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p></p>
+<p>One of the most valuable aliases usecases is working with persistent
+Java classes from a .NET application and vice versa. You can use both TypeAlias
+and WildcardAlias depending on how many classes you need to access.</p>
+
+<p>For example, Pilot objects are saved to a database from a Java
+application:</p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">InterLanguageExample.java: <span class="fscMemberName">saveObjects</span></span></div><div class="fscCode"><pre ID="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Open_Text').style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Closed_Image').style.display='inline'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Closed_Text').style.display='inline';"/><img id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Closed_Text').style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Open_Image').style.display='inline'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> saveObjects()</span><span id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_32_299_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> File(YAPFILENAME ).delete();
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer db </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(YAPFILENAME);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Open_Text').style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Closed_Image').style.display='inline'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Closed_Text').style.display='inline';"/><img id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Closed_Text').style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Open_Image').style.display='inline'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_126_267_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Pilot pilot </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">David Barrichello</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">,</span><span style="color: #000000;">99</span><span style="color: #000000;">);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.set(pilot);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      pilot </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Michael Schumacher</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">,</span><span style="color: #000000;">100</span><span style="color: #000000;">);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.set(pilot);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Open_Text').style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Closed_Image').style.display='inline'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Closed_Text').style.display='inline';"/><img id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Closed_Text').style.display='none'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Open_Image').style.display='inline'; document.getElementById('AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="AliasesJavaZipsInterLanguageExampleJava_InterLanguageExampleJava_saveObjects_325_67_276_296_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.close();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<p>In order to read the saved objects successfully from a .NET application
+we will need to define an alias, containing namespace and assembly information:</p>
+Now the objects are accessible from the .NET application:
+
+
+
+<p>One thing to remember: field names in class definitions in Java and .NET
+should be exactly the same.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-12-14T12:13:00 by Tetyana.
+				</div>
+  </body>
+</html>
