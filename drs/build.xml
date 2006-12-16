@@ -61,19 +61,19 @@
 		</sequential>
 	</macrodef>
 
-	<target name="build-core" depends="init" description="jar the core src of drs">
+	<target name="build-core" depends="" description="jar the core src of drs">
 		<buildjar srcdir="${drs.dir.src.core}" classpathrefid="class.path" jar="${file.drs.core.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
-	<target name="build-example" depends="build-core" description="jar the example src of drs">
+	<target name="build-example" depends="" description="jar the example src of drs">
 		<buildjar srcdir="${drs.dir.src.tutorial}" classpathrefid="class.path" jar="${file.drs.tutorial.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
-	<target name="build-regression" depends="build-core" description="jar the test src of drs">
+	<target name="build-regression" depends="" description="jar the test src of drs">
 		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
-	<target name="build-all" depends="clean">
+	<target name="build-all" depends="clean, init">
 		<antcall target="build-core" />
 		<antcall target="build-example" />
 		<antcall target="build-regression" />

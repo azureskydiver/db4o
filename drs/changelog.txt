@@ -1,3 +1,6 @@
+Changes from dRS 1.2 dev to dRS 6.0.101
+=======================
+
 Changes from dRS 1.2 dev to dRS 1.2 prod.
 =======================
 * Upgrade to Hibernate 3.2
