@@ -25,4 +25,7 @@ public interface ReflectField {
 	
 	public void setAccessible();  //TODO Refactoring suggestion: Let the set(onObject, value) method take care of this.
 	
+	public ReflectClass indexType();
+	
+	public Object indexEntry(Object orig);
 }

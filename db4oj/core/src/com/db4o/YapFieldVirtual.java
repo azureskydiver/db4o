@@ -2,12 +2,17 @@
 
 package com.db4o;
 
+import com.db4o.QQueryBase.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.replication.*;
 import com.db4o.inside.slots.*;
 
 /**
+ * TODO: refactor for symmetric inheritance - don't inherit from YapField and override,
+ * instead extract an abstract superclass from YapField and let both YapField and this class implement
+ * 
  * @exclude
  */
 public abstract class YapFieldVirtual extends YapField {
@@ -161,4 +166,11 @@ public abstract class YapFieldVirtual extends YapField {
         return true;
     }
 
+    protected Object indexEntryFor(Object indexEntry) {
+    	return indexEntry;
+    }
+    
+    protected Indexable4 indexHandler(YapStream stream) {
+    	return i_handler;
+    }
 }

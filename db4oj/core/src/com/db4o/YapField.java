@@ -7,6 +7,7 @@ import com.db4o.ext.StoredField;
 import com.db4o.foundation.*;
 import com.db4o.inside.Exceptions4;
 import com.db4o.inside.btree.*;
+import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
@@ -58,7 +59,7 @@ public class YapField implements StoredField {
 
     YapField(YapClass a_yapClass, ObjectTranslator a_translator) {
         // for YapFieldTranslator only
-        i_yapClass = a_yapClass;
+    	this(a_yapClass);
         init(a_yapClass, a_translator.getClass().getName());
         i_state = AVAILABLE;
         YapStream stream =getStream(); 
@@ -67,6 +68,7 @@ public class YapField implements StoredField {
     }
 
     YapField(YapClass a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
+    	this(a_yapClass);
         init(a_yapClass, a_field.getName());
         i_javaField = a_field;
         i_javaField.setAccessible();
@@ -108,9 +110,17 @@ public class YapField implements StoredField {
         if(index == null){
             return;
         }
-        
-        index.add(trans, new FieldIndexKey(parentID,  indexEntry));
+        index.add(trans, createFieldIndexKey(parentID, indexEntry));
     }
+
+	private FieldIndexKey createFieldIndexKey(int parentID, Object indexEntry) {
+		Object convertedIndexEntry = indexEntryFor(indexEntry);
+		return new FieldIndexKey(parentID,  convertedIndexEntry);
+	}
+
+	protected Object indexEntryFor(Object indexEntry) {
+		return i_javaField.indexEntry(indexEntry);
+	}
     
     public boolean canUseNullBitmap(){
         return true;
@@ -133,7 +143,7 @@ public class YapField implements StoredField {
         if(_index == null){
             return;
         }
-        _index.remove(trans, new FieldIndexKey(parentID,  indexEntry));
+        _index.remove(trans, createFieldIndexKey(parentID,  indexEntry));
     }
 
     public boolean alive() {
@@ -845,11 +855,35 @@ public class YapField implements StoredField {
         _index = newBTree(systemTrans, id);
     }
 
-	protected BTree newBTree(Transaction systemTrans, final int id) {
-		return new BTree(systemTrans, id, new FieldIndexKeyHandler(systemTrans.stream(), i_handler));
+	protected final BTree newBTree(Transaction systemTrans, final int id) {
+		YapStream stream = systemTrans.stream();
+		Indexable4 indexHandler = indexHandler(stream);
+		if(indexHandler==null) {
+			if(Debug.atHome) {
+				System.err.println("Could not create index for "+this+": No index handler found");
+			}
+			return null;
+		}
+		return new BTree(systemTrans, id, new FieldIndexKeyHandler(stream, indexHandler));
+	}
+
+	protected Indexable4 indexHandler(YapStream stream) {
+		ReflectClass indexType =null;
+		if(i_javaField!=null) {
+			indexType=i_javaField.indexType();
+		}
+		Indexable4 indexHandler = stream.i_handlers.handlerForClass(stream,indexType);
+		if(Debug.indexAllFields) {
+			// check for legacy case with uninitialized MetaIndex on old headers
+			if(indexHandler==null) {
+				indexHandler=i_handler;
+				System.err.println("No index handler found for "+this);
+			}
+		}
+		return indexHandler;
 	}
     
-    public BTree getIndex(Transaction transaction){
+	public BTree getIndex(Transaction transaction){
         return _index;
     }
 
@@ -876,8 +910,8 @@ public class YapField implements StoredField {
 		return searchBound(transaction, 0, value);
 	}
 
-	private BTreeNodeSearchResult searchBound(Transaction transaction, int bound, Object keyPart) {
-	    return getIndex(transaction).searchLeaf(transaction, new FieldIndexKey(bound, keyPart), SearchTarget.LOWEST);
+	private BTreeNodeSearchResult searchBound(Transaction transaction, int parentID, Object keyPart) {
+	    return getIndex(transaction).searchLeaf(transaction, createFieldIndexKey(parentID, keyPart), SearchTarget.LOWEST);
 	}
 
 	public boolean rebuildIndexForClass(YapFile stream, YapClass yapClass) {

@@ -18,7 +18,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     	1  // version byte
     + YapConst.INT_LENGTH * 2;  // size, node size  
     
-    final Indexable4 _keyHandler;
+    private final Indexable4 _keyHandler;
     
     final Indexable4 _valueHandler;
     
@@ -131,6 +131,10 @@ public class BTree extends YapMeta implements TransactionParticipant {
     		throw new ArgumentNullException();
     	}
 	}
+    
+    public Indexable4 keyHandler() {
+    	return _keyHandler;
+    }
 
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
         ensureActive(trans);

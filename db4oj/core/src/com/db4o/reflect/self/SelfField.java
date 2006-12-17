@@ -62,4 +62,12 @@ public class SelfField implements ReflectField {
 	public void setAccessible() {
 	}
 
+	public Object indexEntry(Object orig) {
+		return orig;
+	}
+
+	public ReflectClass indexType() {
+		return getFieldType();
+	}
+
 }

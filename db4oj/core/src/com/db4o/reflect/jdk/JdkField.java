@@ -62,4 +62,12 @@ public class JdkField implements ReflectField {
 //            }
         }
     }
+
+	public Object indexEntry(Object orig) {
+		return orig;
+	}
+
+	public ReflectClass indexType() {
+		return getFieldType();
+	}
 }

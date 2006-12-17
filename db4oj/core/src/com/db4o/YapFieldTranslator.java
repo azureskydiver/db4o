@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 
 final class YapFieldTranslator extends YapField
@@ -59,5 +60,13 @@ final class YapFieldTranslator extends YapField
 		try{
 			i_translator.onActivate(a_stream, a_onObject, toSet);
 		}catch(Throwable t){}
+	}
+	
+	protected Object indexEntryFor(Object indexEntry) {
+		return indexEntry;
+	}
+	
+	protected Indexable4 indexHandler(YapStream stream) {
+		return i_handler;
 	}
 }

@@ -55,6 +55,10 @@ public class FieldIndexKeyHandler implements Indexable4{
         _valueHandler.writeIndexEntry(writer, composite.value());
     }
     
+    public Indexable4 valueHandler() {
+    	return _valueHandler;
+    }
+    
     public YapComparable prepareComparison(Object obj) {
         FieldIndexKey composite = (FieldIndexKey)obj;
         _valueHandler.prepareComparison(composite.value());
