@@ -1,0 +1,16 @@
+<ivy-module version="1.0">
+    <info organisation="db4o" module="db4o-nqopt"/>
+    <configurations>
+    	<conf name="core"  description="Provides API and implementation of db4o-nqopt"/>
+    	<conf name="test" extends="core" visibility="private" description="for testing db4o-nqopt"/>
+    </configurations>
+    <publications>
+    	<artifact name="db4o-nqopt"				conf="core"/>
+      <artifact name="db4o-nqopt-test"	conf="test"/>
+    </publications>
+    <dependencies>
+        <dependency name="db4o-java1.2" rev="latest.integration" />
+        <dependency name="db4ounit" 	rev="latest.integration" transitive="false" conf="test->default"/>
+        <dependency name="db4o-tools" rev="latest.integration" transitive="false" conf="test->default"/>
+    </dependencies>
+</ivy-module>
