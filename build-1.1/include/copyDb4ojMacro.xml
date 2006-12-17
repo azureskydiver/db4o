@@ -32,7 +32,6 @@
 		<attribute name="destDir"/>
 		<sequential>
 			<copySrcDir srcDir="${dir.j.tests.src}"	destDir="@{destDir}" includes="**/*.java, **/*.yap"/>
-			<copySrcDir srcDir="${dir.j.tools.src}"	destDir="@{destDir}" />
 		</sequential>
 	</macrodef>	
 	
