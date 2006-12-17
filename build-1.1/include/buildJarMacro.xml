@@ -4,6 +4,8 @@
 		<attribute name="srcDir"/>
 		<attribute name="jarPath"/>
 		
+		<attribute name="compileExcludes" default=""/>
+		
 		<attribute name="classPathRefId" default="emptyClassPath"/>
 		<attribute name="include" default="**/*.xml"/>
 		<attribute name="exclude" default=""/>
@@ -34,7 +36,8 @@
 				debug="@{debug}"
 				target="@{target}"
 				source="@{source}"
-				encoding="@{encoding}"				
+				encoding="@{encoding}"		
+				excludes="@{compileExcludes}"		
 			>
 				<classpath refid="@{classPathRefId}" />
 				<compilerarg line="@{compilerArg}"/>
