@@ -164,6 +164,29 @@ public class ClientServerTest extends AbstractDb4oTestCase {
 		persistHierarchy(client, 5);
 		client.close();
 	}
+	
+	public void testGetIDAndGetByID() throws IOException {
+		Db4oClient client = new Db4oClient("localhost", Db4oServerForTesting.PORT);
+		client.connect();
+		client.login("test", "test");
+		// now save objects
+		Person p = new Person();
+		p.setId(0);
+		p.setName("name");
+		p.setFriend(new Person("friend0"));
+		p.setCar(new Car("car"));
+		client.set(p);
+		long id = client.getID(p);
+		System.out.println("id = " + id);
+		Assert.isGreater(0, id);
+		client.close();
+		
+		Db4oClient client2 = new Db4oClient("localhost", Db4oServerForTesting.PORT);
+		client2.connect();
+		client2.login("test", "test");
+		Person person = (Person) client2.getByID(id);
+		Assert.areEqual("name", person.getName());
+	}
 
 	public void xxtestBatchUpdate() throws IOException {
 		Db4oClient client = new Db4oClient("localhost", Db4oServerForTesting.PORT);

@@ -73,7 +73,7 @@ public class ObjectStreamProtocol implements Protocol {
 					if (session.isClosed()) {
 						running = false;
 					} else {
-						if (Config.BLOCKING) {
+						if (Config.BLOCKING && ret != null) {
 							oout.writeObject(ret);
 							oout.flush();
 						}
@@ -113,6 +113,8 @@ public class ObjectStreamProtocol implements Protocol {
 			return new DeleteOperationHandler();
 		} else if (operation == Operations.CLOSE) {
 			return new CloseOperationHandler();
+		} else if (operation == Operations.GETBYID) {
+			return new GetByIDOperationHandler();
 		}
 		return null;
 	}

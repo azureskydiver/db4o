@@ -1,12 +1,10 @@
 package com.db4o.cs.client.protocol;
 
-import com.db4o.query.Query;
-import com.db4o.cs.client.batch.UpdateSet;
-
-import java.io.OutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
+
+import com.db4o.cs.client.batch.UpdateSet;
+import com.db4o.query.Query;
 
 /**
  * User: treeder
@@ -35,4 +33,9 @@ public interface ClientProtocol {
 	List execute(Query query) throws IOException, ClassNotFoundException;
 
 	void batch(UpdateSet updateSet, Query query) throws IOException;
+	
+	long getID(Object obj) throws IOException;
+	
+	Object getByID(long id) throws IOException;
+
 }

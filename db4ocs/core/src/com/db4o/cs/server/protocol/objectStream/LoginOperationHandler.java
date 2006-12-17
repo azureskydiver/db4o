@@ -21,15 +21,14 @@ public class LoginOperationHandler implements OperationHandler {
 		//System.out.println("username:" + username + " password:" + password);
 		String passToCompare = (String) context.getAccessMap().get(username);
 		boolean ok = false;
+		int clientID = 0;
 		if (passToCompare != null && passToCompare.equals(password)) {
 			ok = true;
-			oout.writeBoolean(true);
-			oout.writeInt(context.getClientId());
-		} else {
-			oout.writeBoolean(false);
-			oout.writeInt(0);
-		}
+			clientID = context.getClientId();
+		} 
+		oout.writeBoolean(ok);
+		oout.writeInt(clientID);
 		oout.flush();
-		return ok;
+		return null;
 	}
 }
