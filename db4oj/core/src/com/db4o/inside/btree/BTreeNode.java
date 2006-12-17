@@ -632,7 +632,7 @@ public final class BTreeNode extends YapMeta{
     }
     
     private Indexable4 keyHandler(){
-        return _btree._keyHandler;
+        return _btree.keyHandler();
     }
     
     void markAsCached(int height){

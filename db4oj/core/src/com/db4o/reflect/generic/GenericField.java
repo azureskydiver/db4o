@@ -81,4 +81,12 @@ public class GenericField implements ReflectField, DeepClone{
     void setIndex(int index) {
         _index = index;
     }
+
+	public Object indexEntry(Object orig) {
+		return orig;
+	}
+
+	public ReflectClass indexType() {
+		return getFieldType();
+	}
 }
