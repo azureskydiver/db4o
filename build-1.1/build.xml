@@ -1,20 +1,9 @@
 <project name="build-1.1" basedir="." default="all" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="common-1.1.xml" />
-	  
-  <target name="dRS"> 
-    <ivy:buildlist reference="drsBuildPath">
-    	 <fileset dir="../db4oj"							includes="build-1.1.xml"/>
-      <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
-      <fileset dir="../db4ojdk5"						includes="build-1.1.xml"/>
-      <fileset dir="../drs"									includes="build-1.1.xml"/>
-    </ivy:buildlist>
-    <subant target="clean" buildpathref="drsBuildPath" />
-    <subant target="publish-jar" buildpathref="drsBuildPath" />
-    <subant target="clean" buildpathref="drsBuildPath" />
-  </target>
   
-  <target name="om"> 
-    <ivy:buildlist reference="omBuildPath">
+  <target name="all">
+  	<antcall target="clean" />
+  	<ivy:buildlist reference="buildPath">
       <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
       <fileset dir="../db4oj"								includes="build-1.1.xml"/>
       <fileset dir="../db4ojdk1.2"					includes="build-1.1.xml"/>
@@ -23,17 +12,18 @@
       <fileset dir="../db4oj.tests"					includes="build.xml"/>
       <fileset dir="../db4ojdk1.2/test"			includes="build.xml"/>
       <fileset dir="../db4ojdk5/test"				includes="build.xml"/>
+      <fileset dir="../db4oj/tools"				includes="build.xml"/>
     </ivy:buildlist>
-    <subant target="clean" buildpathref="omBuildPath" />
-    <subant target="publish-jar" buildpathref="omBuildPath" />
-    <subant target="clean" buildpathref="omBuildPath" />
+    
+    <subant target="clean"				buildpathref="buildPath" />
+    <subant target="publish-jar"	buildpathref="buildPath" />
+    <subant target="clean"				buildpathref="buildPath" />
+  	
+    <echo message="Produced all jars and dlls at ${repository.dir}. Zips are at ${dist}"/>
   </target>
   
-  <target name="all">
-  	<antcall target="clean" />
-  	<antcall target="dRS" />
-  	<antcall target="om" />
-    <echo message="Produced all jars and dlls at ${repository.dir}. Zips are at ${dist}"/>
+  <target name="dRS" depends="all">
+  	<ant antfile="build-1.1.xml" dir="../drs" target="publish-jar" inheritAll="false" inheritRefs="false"/>
   </target>
 	
   <target name="init" depends="">
