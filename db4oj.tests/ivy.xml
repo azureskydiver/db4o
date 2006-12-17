@@ -3,5 +3,6 @@
     <dependencies>
         <dependency name="db4ounit" rev="latest.integration" />
         <dependency name="db4o-java1.1" rev="latest.integration" />
+        <dependency name="db4o-tools" rev="latest.integration" />
     </dependencies>
 </ivy-module>
