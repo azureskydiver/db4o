@@ -1,18 +1,25 @@
 package com.db4o.cs.client.protocol.objectStream;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import com.db4o.cs.client.batch.UpdateSet;
 import com.db4o.cs.client.protocol.ClientProtocol;
 import com.db4o.cs.client.query.ClientQuery;
-import com.db4o.cs.client.batch.UpdateSet;
-import com.db4o.cs.common.Operations;
 import com.db4o.cs.common.Config;
+import com.db4o.cs.common.Operations;
 import com.db4o.cs.common.util.Log;
 import com.db4o.query.Query;
-
-import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * User: treeder
@@ -62,11 +69,11 @@ public abstract class BaseClientProtocol implements ClientProtocol {
 		} else {
 			sendSet(o);
 			if (Config.BLOCKING) {
-				Object ret = null;
+				Long clientID = null;
 				try {
-					ret = oin.readObject();
-					Log.print("ret: " + ret);
-					//System.out.println("ret: " + ret);
+					clientID = (Long) oin.readObject();
+					setIdForObject(o, clientID.longValue());
+					//Log.print("ret: " + ret);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 					throw new RuntimeException("ClassNotFoundException! ", e);
@@ -126,18 +133,48 @@ public abstract class BaseClientProtocol implements ClientProtocol {
 		}
 	}
 
-	protected Long getIdForObject(Object o) {
-		Long id = (Long) idMap.get(o.hashCode());
-		if (id == null) {
-			id = UNSAVED_ID;
+	public long getID(Object o) throws IOException {
+		Long id = getIdForObject(o);
+		if (id == UNSAVED_ID && Config.BATCH_UNTIL_COMMIT) {
+			// send all pending changes
+			try {
+				sendDeletesBatch();
+				sendSetsBatch();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				throw new RuntimeException("ClassNotFoundException! ", e);
+			}
+			id = getIdForObject(o).longValue();
 		}
 		return id;
 	}
-
-	protected void setIdForObject(Object o, long newId) {
-		idMap.put(o.hashCode(), new Long(newId));
+	
+	protected Long getIdForObject(Object o) {
+//		Long id = (Long) idMap.get(o.hashCode());
+//		if (id == null) {
+//			id = UNSAVED_ID;
+//		}
+		Set entrySet = idMap.entrySet();
+		Iterator iter = entrySet.iterator();
+		Entry entry;
+		while(iter.hasNext()) {
+			entry = (Entry)iter.next();
+			if(entry.getValue() == o) {
+				return (Long)entry.getKey();
+			}
+		}
+		return UNSAVED_ID;
 	}
 
+	protected void setIdForObject(Object o, long newId) {
+		// idMap.put(o.hashCode(), new Long(newId));
+		idMap.put(new Long(newId), o);
+	}
+	
+	protected Object getObjectByID(long id) {
+		return idMap.get(new Long(id));
+	}
+	
 	/**
 	 * This delete will just send the object id back to save on traffic
 	 *
@@ -218,6 +255,16 @@ public abstract class BaseClientProtocol implements ClientProtocol {
 		}
 		oout.writeByte(Operations.COMMIT);
 		oout.flush();
+		if(Config.BLOCKING) {
+			try {
+				Object ret = oin.readObject();
+				if(ret == Boolean.FALSE) {
+					throw new IOException("server fails to commit the data");
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 
@@ -230,4 +277,22 @@ public abstract class BaseClientProtocol implements ClientProtocol {
 	public Map getIdMap() {
 		return idMap;
 	}
+	
+	public Object getByID(long id) throws IOException {
+		Object obj = getObjectByID(id);
+		if (obj == null) {
+			oout.writeByte(Operations.GETBYID);
+			oout.writeLong(id);
+			oout.flush();
+			try {
+				obj = oin.readObject();
+				setIdForObject(obj, id);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return obj;
+	}
+	
 }

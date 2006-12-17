@@ -18,4 +18,5 @@ public interface Operations {
 	byte COMMIT = 71;
 	byte DELETE = 81;
 	byte CLOSE = 127;
+	byte GETBYID = 62;
 }
