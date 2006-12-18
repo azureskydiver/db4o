@@ -286,6 +286,7 @@ public abstract class BaseClientProtocol implements ClientProtocol {
 			oout.flush();
 			try {
 				obj = oin.readObject();
+				// FIXME: need to copy this obj to existing reference if there's any.
 				setIdForObject(obj, id);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
