@@ -66,5 +66,15 @@
 			{
 			}
 		}
+		
+		public object IndexEntry(object orig)
+		{
+			return orig;
+		}
+		
+		public ReflectClass IndexType()
+		{
+			return GetFieldType();
+		}
 	}
 }
