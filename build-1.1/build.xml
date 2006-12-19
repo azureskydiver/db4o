@@ -14,13 +14,14 @@
       <fileset dir="../db4ojdk5/test"				includes="build.xml"/>
       <fileset dir="../db4oj/tools"					includes="build.xml"/>
       <fileset dir="../db4onqopt"						includes="build.xml"/>
+      <fileset dir="db4ojavadist"						includes="build.xml"/>
     </ivy:buildlist>
     
     <subant target="clean"				buildpathref="buildPath" />
     <subant target="publish-jar"	buildpathref="buildPath" />
     <subant target="clean"				buildpathref="buildPath" />
   	
-    <echo message="Produced all jars and dlls at ${repository.dir}. Zips are at ${dist}"/>
+    <echo message="Produced jars, dlls and zips at ${repository.dir}."/>
   </target>
   
   <target name="dRS" depends="all">

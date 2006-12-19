@@ -1,0 +1,16 @@
+<ivy-module version="1.0">
+    <info organisation="db4o" module="db4ojavadist"/>
+    <configurations>
+    	<conf name="bin" description="builds db4o bin"/>
+    </configurations>
+    <publications>
+        	<artifact name="db4o-java-bin" ext="zip" conf="bin" />
+    </publications>
+    <dependencies>
+    		<dependency name="db4o-java1.1" rev="latest.integration" />
+    		<dependency name="db4o-java1.2" rev="latest.integration" />
+        <dependency name="db4o-java5" rev="latest.integration" />
+        <dependency name="db4o-nqopt" rev="latest.integration" />
+        <dependency name="db4ounit" rev="latest.integration" transitive="false"/>
+    </dependencies>
+</ivy-module>
