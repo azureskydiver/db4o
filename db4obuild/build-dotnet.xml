@@ -403,7 +403,7 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="configure, build-all">
+	<target name="build" depends="init, configure, build-all">
 	</target>
 	
 	<target name="build-net1" depends="configure-net1, build-all">
