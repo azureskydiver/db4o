@@ -1,0 +1,48 @@
+<project name="db4ojavadist" basedir="." default="publish-jar"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	
+	<import file="../common-1.1.xml"/>
+	
+	<property file="build.properties" />
+	
+	<target name="clean">
+  	<delete dir="${artifactDir}"	failonerror="true"/>
+  	<delete dir="${ivy.lib.dir}"	failonerror="true"/>
+	</target>
+	
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${artifactDir}" />
+	</target>
+	
+	 <target name="configure" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+   </target>
+   
+   <target name="resolve" depends="configure">
+        <ivy:retrieve/>
+   </target>
+   
+   <target name="publish-jar" depends="clean, resolve">
+    	<antcall target="bin" />
+			
+      <property name="revision" value="${db4o.version.dotted}"/>
+      <delete file="${artifactDir}/ivy.xml"/>
+			<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
+				resolver="projects"
+				pubrevision="${revision}" 
+				status="release"
+			/>
+	</target>
+   
+   <target name="bin" depends="">
+   	<copy todir="${ivy.lib.dir}">
+			<fileset dir="${db4oNqOptLibDir}" includes="bloat*, ant*, 3rdpartylibs.txt"/>
+		</copy>
+   
+   	<property name="zipbasedir" value="db4o-java-bin" />
+		
+		<zip destfile="${binZipPath}">
+			<zipfileset dir="${ivy.lib.dir}" prefix="${zipbasedir}/lib"/>			
+		</zip>
+	</target>  
+</project>
