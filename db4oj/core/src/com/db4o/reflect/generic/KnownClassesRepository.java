@@ -140,10 +140,10 @@ public class KnownClassesRepository {
             // need to take care of special handlers here
             switch (handlerID){
                 case YapHandlers.ANY_ID:
-                    fieldClass = _stream.reflector().forName(Object.class.getName());
+                    fieldClass = _stream.reflector().forClass(Object.class);
                     break;
                 case YapHandlers.ANY_ARRAY_ID:
-                    fieldClass = _builder.arrayClass(_stream.reflector().forName(Object.class.getName()));
+                    fieldClass = _builder.arrayClass(_stream.reflector().forClass(Object.class));
                     break;
                 default:
                 	fieldClass=forID(handlerID);
