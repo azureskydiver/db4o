@@ -36,6 +36,9 @@ public class KnownClassesRepository {
     }
 
     public ReflectClass forID(int id) {
+    	if(_stream.handlers().isSystemHandler(id)) {
+    		return _stream.handlerByID(id).classReflector();
+    	}
 		ensureClassAvailability(id);
         return lookupByID(id);        
     }
