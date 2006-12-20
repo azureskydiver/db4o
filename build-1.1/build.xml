@@ -5,6 +5,8 @@
   	<antcall target="clean" />
   	<ivy:buildlist reference="buildPath">
       <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
+      <fileset dir="../db4oj/tools"					includes="build.xml"/>
+      
       <fileset dir="../db4oj"								includes="build-1.1.xml"/>
       <fileset dir="../db4ojdk1.2"					includes="build-1.1.xml"/>
       <fileset dir="../db4ojdk5"						includes="build-1.1.xml"/>
@@ -12,20 +14,20 @@
       <fileset dir="../db4oj.tests"					includes="build.xml"/>
       <fileset dir="../db4ojdk1.2/test"			includes="build.xml"/>
       <fileset dir="../db4ojdk5/test"				includes="build.xml"/>
-      <fileset dir="../db4oj/tools"					includes="build.xml"/>
+      
       <fileset dir="../db4onqopt"						includes="build.xml"/>
       <fileset dir="db4o-java"							includes="build.xml"/>
     </ivy:buildlist>
     
     <subant target="clean"				buildpathref="buildPath" />
-    <subant target="publish-jar"	buildpathref="buildPath" />
+    <subant target="publish"			buildpathref="buildPath" />
     <subant target="clean"				buildpathref="buildPath" />
   	
     <echo message="Produced jars, dlls and zips at ${repository.dir}."/>
   </target>
   
   <target name="dRS" depends="all">
-  	<ant antfile="build-1.1.xml" dir="../drs" target="publish-jar" inheritAll="false" inheritRefs="false"/>
+  	<ant antfile="build-1.1.xml" dir="../drs" target="publish" inheritAll="false" inheritRefs="false"/>
   </target>
 	
   <target name="init" depends="">
