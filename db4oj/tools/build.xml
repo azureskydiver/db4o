@@ -1,22 +1,21 @@
 <project name="db4o-tools" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	
 	<import file="../../build-1.1/common-1.1.xml"/>
-	
-	<property name="artifactDir" value="${basedir}/artifact"/>
-	<property name="jarPath" value="${artifactDir}/${ant.project.name}.jar"/>
+
+	<property name="jarPath" value="${defaultArtifactDir}/${ant.project.name}.jar"/>
 	
 	<path id="lib.path.id">
         <fileset dir="${ivy.lib.dir}" includes="*.jar"/>
 	</path>
 	
 	<target name="clean">
-  	<delete dir="${artifactDir}" failonerror="true"/>     
+  	<cleanIvyDir/>     
   	<delete dir="${ivy.lib.dir}" failonerror="true"/>
 	</target>
 	
 	<target name="init" depends="clean">
 		<tstamp />
-		<mkdir dir="${artifactDir}" />
+		<initIvyDir/>
 	</target>
 	
 	<target name="jar" depends="resolve">
@@ -45,12 +44,6 @@
     </target>
     
     <target name="publish" depends="jar">
-        <property name="revision" value="${db4o.version.dotted}"/>
-        <delete file="${artifactDir}/ivy.xml"/>
-		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
-			resolver="projects"
-			pubrevision="${revision}" 
-			status="release"
-		/>
+    	<publishToIvy/>
     </target>
 </project>

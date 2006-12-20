@@ -16,12 +16,12 @@
 	</target>
 	
 	<target name="clean">
-  	<delete dir="${artifactDir}" failonerror="true"/>     
+  	<cleanIvyDir/>
 	</target>
 	
-	<target name="init" depends="clean">
+	<target name="init">
 		<tstamp />
-		<mkdir dir="${artifactDir}" />
+		<initIvyDir/>
 	</target>
 	
 	<target name="jar" depends="init">
@@ -49,12 +49,6 @@
     </target>
     
     <target name="publish" depends="resolve, jar">
-        <property name="revision" value="${db4o.version.dotted}"/>
-        <delete file="${artifactDir}/ivy.xml"/>
-		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
-			resolver="projects"
-			pubrevision="${revision}" 
-			status="release"
-		/>
+    	<publishToIvy/>
     </target>
 </project>
