@@ -3,21 +3,19 @@
 	<import file="../../build-1.1/common-1.1.xml"/>
 	
 	<property name="tempSrcDir" value="tempSrcDir126559595"/>
-	<property name="artifactDir" value="${basedir}/artifact"/>
-	<property name="jarPath" value="${artifactDir}/${ant.project.name}.jar"/>
+	<property name="jarPath" value="${defaultArtifactDir}/${ant.project.name}.jar"/>
 	
 	<path id="lib.path.id">
         <fileset dir="${ivy.lib.dir}" includes="*.jar"/>
 	</path>
 	
 	<target name="clean">
-  	<delete dir="${artifactDir}" failonerror="true"/>     
-  	<delete dir="${ivy.lib.dir}" failonerror="true"/>
+  	<cleanIvyDir/>
 	</target>
 	
 	<target name="init" depends="clean">
 		<tstamp />
-		<mkdir dir="${artifactDir}" />
+		<initIvyDir/>
 	</target>
 	
 	<target name="jar" depends="init, resolve">
@@ -41,13 +39,7 @@
         <ivy:retrieve />
     </target>
     
-    <target name="publish" depends="resolve, jar">
-        <property name="revision" value="${db4o.version.dotted}"/>
-        <delete file="${artifactDir}/ivy.xml"/>
-		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
-			resolver="projects"
-			pubrevision="${revision}" 
-			status="release"
-		/>
+    <target name="publish" depends="resolve, jar"> 
+    	<publishToIvy/>
     </target>
 </project>
