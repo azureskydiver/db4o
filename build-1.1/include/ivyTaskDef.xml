@@ -5,7 +5,7 @@
   <taskdef resource="fr/jayasoft/ivy/ant/antlib.xml" uri="antlib:fr.jayasoft.ivy.ant" classpathref="ivy.lib.path"/>
   
   <macrodef name="publishToIvy" description="">
-		<attribute name="artifactsPattern"/>
+		<attribute name="artifactsPattern" default="${artifactsPattern}"/>
 		
 		<sequential>
 			<delete file="${defaultArtifactDir}/ivy.xml"/>
@@ -15,6 +15,19 @@
 				resolver="projects"				
 				status="release"
 			/>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="cleanIvyDir" description="">
+		<sequential>
+			<delete dir="${defaultArtifactDir}"	failonerror="true"/>
+			<delete dir="${ivy.lib.dir}" failonerror="true"/>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="initIvyDir" description="">
+		<sequential>
+			<mkdir dir="${defaultArtifactDir}" />
 		</sequential>
 	</macrodef>
 </project>

@@ -21,7 +21,7 @@
     
     <subant target="clean"				buildpathref="buildPath" />
     <subant target="publish"			buildpathref="buildPath" />
-    <!--<subant target="clean"				buildpathref="buildPath" />-->
+    <subant target="clean"				buildpathref="buildPath" />
   	
     <echo message="Produced jars, dlls and zips at ${repository.dir}."/>
   </target>
