@@ -1,10 +1,7 @@
 <ivy-module version="1.0">
-    <info organisation="db4o" module="db4ojavadist"/>
-    <configurations>
-    	<conf name="bin" description="builds db4o bin"/>
-    </configurations>
+    <info organisation="db4o" module="${ant.project.name}"/>
     <publications>
-        	<artifact name="db4o-java-bin" ext="zip" conf="bin" />
+        	<artifact name="${ant.project.name}" ext="zip"/>
     </publications>
     <dependencies>
     		<dependency name="db4o-java1.1" rev="latest.integration" />

@@ -14,7 +14,7 @@
       <fileset dir="../db4ojdk5/test"				includes="build.xml"/>
       <fileset dir="../db4oj/tools"					includes="build.xml"/>
       <fileset dir="../db4onqopt"						includes="build.xml"/>
-      <fileset dir="db4ojavadist"						includes="build.xml"/>
+      <fileset dir="db4o-java"							includes="build.xml"/>
     </ivy:buildlist>
     
     <subant target="clean"				buildpathref="buildPath" />
