@@ -12,18 +12,17 @@
 		-->	
 	<path id="compile.class.path">
 		<fileset dir="lib" 						includes="*.jar"/>
-		<fileset dir="${artifactDir}" includes="*.jar"/>
+		<fileset dir="${defaultArtifactDir}" includes="*.jar"/>
 		<fileset dir="${ivy.lib.dir}" includes="*.jar"/>
 	</path>
 	
 	<target name="clean">
-  	<delete dir="${artifactDir}" failonerror="true"/>
-  	<delete dir="${ivy.lib.dir}" failonerror="true"/>
+  	<cleanIvyDir/>
 	</target>
 	
-	<target name="init" depends="">
+	<target name="init" depends="clean">
 		<tstamp />
-		<mkdir dir="${artifactDir}" />
+		<initIvyDir/>
 	</target>
 	
 	 <target name="configure" depends="init">
@@ -38,13 +37,7 @@
     	<antcall target="jar-core" />
 			<antcall target="jar-test" />
 			
-      <property name="revision" value="${db4o.version.dotted}"/>
-      <delete file="${artifactDir}/ivy.xml"/>
-			<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
-				resolver="projects"
-				pubrevision="${revision}" 
-				status="release"
-			/>
+      <publishToIvy/>
 	</target>
 	
 	<target name="jar-core" description="This task does not work standalone">
