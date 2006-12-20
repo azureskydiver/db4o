@@ -1,4 +1,4 @@
-<project name="db4o-test-java1.2" basedir="." default="jar"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="db4o-test-java1.2" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	
 	<import file="../../build-1.1/common-1.1.xml"/>
 	
@@ -39,7 +39,7 @@
         <ivy:retrieve />
     </target>
     
-    <target name="publish-jar" depends="resolve, jar">
+    <target name="publish" depends="resolve, jar">
         <property name="revision" value="${db4o.version.dotted}"/>
         <delete file="${artifactDir}/ivy.xml"/>
 		<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
