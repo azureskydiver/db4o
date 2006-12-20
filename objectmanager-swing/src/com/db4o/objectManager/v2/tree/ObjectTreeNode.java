@@ -4,6 +4,7 @@ import com.db4o.reflect.ReflectField;
 
 import java.util.Collection;
 import java.util.Map;
+import java.lang.reflect.Array;
 
 /**
  * User: treeder
@@ -13,6 +14,7 @@ import java.util.Map;
 public class ObjectTreeNode {
 	private ObjectTreeNode parentNode;
 	private ReflectField field;
+	private int index = -1;
 	private Object ob;
 
 	public ObjectTreeNode(ObjectTreeNode parentNode, ReflectField field, Object ob) {
@@ -21,9 +23,21 @@ public class ObjectTreeNode {
 		this.ob = ob;
 	}
 
-	public ObjectTreeNode(ObjectTreeNode parentNode, Object o) {
+	/*public ObjectTreeNode(ObjectTreeNode parentNode, Object ob) {
 		this.parentNode = parentNode;
-		this.ob = o;
+		this.ob = ob;
+	}*/
+
+	/**
+	 * Use this constructor for collections and arrays.
+	 * @param parentNode
+	 * @param index
+	 * @param ob
+	 */
+	public ObjectTreeNode(ObjectTreeNode parentNode, int index, Object ob) {
+		this.parentNode = parentNode;
+		this.index = index;
+		this.ob = ob;
 	}
 
 	public Object getObject() {
@@ -43,8 +57,8 @@ public class ObjectTreeNode {
 				Exception in thread "AWT-EventQueue-0" java.lang.ClassCastException: [B
 				at com.db4o.objectManager.v2.tree.ObjectTreeNode.toString(ObjectTreeNode.java:40)
 				 */
-				Object[] array = (Object[]) ob;
-				ret += "Array[" + array.length + "]";
+				//Object[] array = (Object[]) ob;
+				ret += "Array[" + Array.getLength(ob) + "]";
 			} else if (ob instanceof Collection) {
 				Collection collection = (Collection) ob;
 				ret += "Collection[" + collection.size() + "]";
@@ -71,5 +85,9 @@ public class ObjectTreeNode {
 
 	public ReflectField getField() {
 		return field;
+	}
+
+	public int getIndex() {
+		return index;
 	}
 }

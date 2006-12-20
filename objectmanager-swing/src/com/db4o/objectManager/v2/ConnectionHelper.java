@@ -21,6 +21,7 @@ import java.awt.Component;
  */
 public class ConnectionHelper {
 	public static ObjectContainer connect(Component frame, Db4oConnectionSpec connectionSpec) throws Exception {
+		configureDb4o();
 		if (connectionSpec instanceof Db4oFileConnectionSpec) {
 			try {
 				// make sure file exists before opening
@@ -28,7 +29,6 @@ public class ConnectionHelper {
 				if (!f.exists() || f.isDirectory()) {
 					throw new FileNotFoundException("File not found: " + f.getAbsolutePath());
 				}
-				//Db4o.configure().allowVersionUpdates(true);
 				return Db4o.openFile(connectionSpec.getFullPath());
 			} catch (DatabaseFileLockedException e) {
 				OptionPaneHelper.showErrorMessage(frame, "Database file is locked. Another process must be using it.", "Database File Locked");
@@ -50,5 +50,12 @@ public class ConnectionHelper {
 			return Db4o.openClient(spec.getHost(), spec.getPort(), spec.getUser(), spec.getPassword());
 		}
 		return null;
+	}
+
+	private static void configureDb4o() {
+		//Db4o.configure().allowVersionUpdates(true);
+		//Db4o.configure().readOnly(readOnly);
+		Db4o.configure().activationDepth(10);
+		Db4o.configure().updateDepth(10);
 	}
 }

@@ -10,15 +10,16 @@ import com.db4o.ObjectContainer;
  * Time: 3:28:43 PM
  */
 public class ObjectManagerTestCase implements TestCase, TestLifeCycle {
-    public void setUp() throws Exception {
+	public void setUp() throws Exception {
 
-    }
+	}
 
-    public void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
-    }
-    ObjectContainer getDb() {
-           return null;
-       }
-    
+	}
+
+	ObjectContainer getDb() {
+		return null;
+	}
+
 }
