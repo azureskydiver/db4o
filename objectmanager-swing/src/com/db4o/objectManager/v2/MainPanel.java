@@ -352,9 +352,7 @@ public class MainPanel extends JPanel implements UISession {
 		objectContainer.close();
 		databaseInspector = null;
 		try {
-			System.out.println("reconnecting...");
-			objectContainer = ConnectionHelper.connect(mainFrame, connectionSpec);
-			System.out.println("connected.");
+			objectContainer = ConnectionHelper.connect(mainFrame, connectionSpec);	
 		} catch (Exception e) {
 			Log.addException(e);
 			e.printStackTrace();

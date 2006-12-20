@@ -92,8 +92,7 @@ public class MainFrame extends JFrame implements WindowListener {
 
 		// Global options
 		Options.setTabIconsEnabled(settings.isTabIconsEnabled());
-		UIManager.put(Options.POPUP_DROP_SHADOW_ENABLED_KEY,
-				settings.isPopupDropShadowEnabled());
+		UIManager.put(Options.POPUP_DROP_SHADOW_ENABLED_KEY, settings.isPopupDropShadowEnabled());
 
 		// Swing Settings
 		LookAndFeel selectedLaf = settings.getSelectedLookAndFeel();
@@ -105,6 +104,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		} else if (selectedLaf.getClass() == MetalLookAndFeel.class) {
 			MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
 		}
+	
 
 		// Work around caching in MetalRadioButtonUI
 		JRadioButton radio = new JRadioButton();

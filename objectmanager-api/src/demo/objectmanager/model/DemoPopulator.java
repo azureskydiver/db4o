@@ -93,7 +93,7 @@ public class DemoPopulator {
         c.setFriends(last10);
     }
 
-    public String getDataFile() {
+    public static String getDataFile() {
         return DB_FILE;
     }
 

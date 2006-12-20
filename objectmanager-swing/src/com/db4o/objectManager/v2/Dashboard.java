@@ -6,6 +6,7 @@ import com.db4o.objectManager.v2.custom.ProgressDialog;
 import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
 import com.db4o.objectManager.v2.uiHelper.SwingWorker;
 import com.db4o.objectManager.v2.maint.DefragTask;
+import com.db4o.objectManager.v2.util.Log;
 import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.db4o.ext.DatabaseFileLockedException;
@@ -33,7 +34,7 @@ public class Dashboard {
 
 	private static final String COPYRIGHT =
 			"\u00a9 2006 db4objects Inc. All Rights Reserved.";
-	public static final String VERSION = "6.0.003";
+	public static final String VERSION = "6.0";
 	private static final String TITLE = "ObjectManager " + VERSION;
 
 	private JFrame frame;
@@ -210,7 +211,7 @@ public class Dashboard {
 		return new AboutActionListener(frame);
 	}
 
-	public Frame getFrame() {
+	public JFrame getFrame() {
 		return frame;
 	}
 
@@ -271,6 +272,7 @@ public class Dashboard {
 						successful = false;
 						OptionPaneHelper.showErrorMessage(instance.frame, "Error occurred during defragment: " + "\n\n" + e1.getMessage(), "Error During Defragment");
 						e1.printStackTrace();
+						Log.addException(e1);
 					}
 					return null;
 				}

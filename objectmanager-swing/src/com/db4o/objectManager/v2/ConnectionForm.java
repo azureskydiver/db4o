@@ -166,6 +166,7 @@ public class ConnectionForm {
 		}
 	}
 
+	// todo: move this method into Dashboard
 	public void connectAndOpenFrame(Db4oConnectionSpec connectionSpec) {
 		working();
 
@@ -185,26 +186,8 @@ public class ConnectionForm {
 		Point frameLocation = (Point) Preferences.getDefault().getPreference(Preferences.FRAME_LOCATION);
 
 		MainFrame instance = MainFrame.createDefaultFrame(frameSize, frameLocation, connectionSpec, oc);
-
-		instance.addComponentListener(new ComponentListener() {
-			public void componentResized(ComponentEvent e) {
-				// save size in prefs
-				Preferences.getDefault().setPreference(Preferences.FRAME_SIZE, e.getComponent().getSize());
-			}
-
-			public void componentMoved(ComponentEvent e) {
-				// save location in prefs
-				Preferences.getDefault().setPreference(Preferences.FRAME_LOCATION, e.getComponent().getLocation());
-			}
-
-			public void componentShown(ComponentEvent e) {
-
-			}
-
-			public void componentHidden(ComponentEvent e) {
-
-			}
-		});
+		instance.addComponentListener(new WindowPrefsListener(instance));
+		
 		dashboard.addOpenConnection(connectionSpec, oc);
 		stopWorking();
 	}

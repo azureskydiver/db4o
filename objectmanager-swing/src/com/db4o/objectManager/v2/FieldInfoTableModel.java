@@ -1,6 +1,7 @@
 package com.db4o.objectManager.v2;
 
 import com.db4o.objectmanager.api.DatabaseInspector;
+import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 import com.db4o.ObjectContainer;
 import com.db4o.Db4o;
 import com.db4o.ext.StoredClass;
@@ -35,24 +36,40 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 		this.className = className;
 
 		// not storing these as class fields so that if reopen is called, this stuff won't be disconnected.
-		StoredClass storedClass = session.getObjectContainer().ext().storedClass(className);
-		StoredField[] fields = storedClass.getStoredFields();
+		StoredField[] fields = getStoredFields(className);
 		super.setRowCount(fields.length);
 		int r = 0, c = 0;
 		for (int i = 0; i < fields.length; i++) {
 			StoredField field = fields[i];
 			c = 0;
+			System.out.println("field " + field.getName() + ", storedType: " + field.getStoredType() + "  " + field);
 			setValueAt(field.getName(), r, c++);
-			setValueAt(field.getStoredType(), r, c++);
-			setValueAt(new Boolean(field.hasIndex()), r, c++);
+			// getStoredType returns null for primitive arrays.... hmmmm
+			if (field.getStoredType() != null) {
+				setValueAt(field.getStoredType().getName(), r, c++);
+				// 	if not primitive or second class, then don't even show checkbox
+				if (!(field.getStoredType().isCollection() && field.getStoredType().isArray())) {
+					setValueAt(new Boolean(field.hasIndex()), r, c++);
+				} else {
+					setValueAt(null, r, c++);
+				}
+			} else {
+				
+			}
 			r++;
 		}
 		addTableModelListener(this);
 	}
 
+	private StoredField[] getStoredFields(String className) {
+		StoredClass storedClass = session.getObjectContainer().ext().storedClass(className);
+		StoredField[] fields = storedClass.getStoredFields(); // todo: this is a problem if you're refactored classes that are available to OM, since it will use the available class, not the renamed stuff
+		return fields;
+	}
+
 
 	public Class getColumnClass(int column) {
-		if(column == 2){
+		if (column == 2) {
 			return Boolean.class;
 		}
 		return super.getColumnClass(column);
@@ -60,6 +77,7 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 
 	/**
 	 * Unfortunately, none of this schema evolution stuff works in c/s mode.
+	 *
 	 * @param row
 	 * @param column
 	 * @return
@@ -69,8 +87,7 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 			if (column == 0) {
 				// name
 				return true;
-			} else if (column == 2) {
-				// indexes
+			} else if (column == 2 && ReflectHelper2.isIndexable(getStoredFields(className)[row])) { // indexes
 				return true;
 			}
 		}
@@ -87,22 +104,20 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 		int column = e.getColumn();
 		TableModel model = (TableModel) e.getSource();
 		Object aValue = model.getValueAt(row, column);
-		if (column == 1) {
+		if (column == 0) {
 			if (aValue instanceof String) {
-				StoredClass storedClass = session.getObjectContainer().ext().storedClass(className);
-				StoredField[] fields = storedClass.getStoredFields();
+				StoredField[] fields = getStoredFields(className);
 				renameField(fields[row], (String) aValue);
 			} else {
 				System.err.println("Invalid type for renaming!!! Report bug at http://tracker.db4o.com/jira");
 			}
+			session.reopen();
 		} else if (column == 2) {
-			System.out.println("aValue: " + aValue);
 			Boolean b = (Boolean) aValue;
 			// for indexes, we'll have to reopen the objectcontainer and turn on the index before opening
-			StoredClass storedClass = session.getObjectContainer().ext().storedClass(className);
-			StoredField[] fields = storedClass.getStoredFields();
+			StoredField[] fields = getStoredFields(className);
 			StoredField field = fields[row];
-			Db4o.configure().objectClass(storedClass.getName()).objectField(field.getName()).indexed(b.booleanValue());
+			Db4o.configure().objectClass(className).objectField(field.getName()).indexed(b.booleanValue());
 			session.reopen();
 		}
 		working = false;

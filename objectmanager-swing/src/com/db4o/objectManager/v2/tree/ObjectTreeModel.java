@@ -18,9 +18,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.EventListenerList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.lang.reflect.Array;
 
 /**
  * User: treeder
@@ -49,41 +48,56 @@ public class ObjectTreeModel implements TreeModel {
 		Object parentObject = parentNode.getObject();
 		Reflector reflector = session.getObjectContainer().ext().reflector();
 		ReflectClass reflectClass = reflector.forObject(parentObject);
-		if (parentObject.getClass().isArray()) {
-			Object[] array = (Object[]) parentObject;
-			return new ObjectTreeNode(parentNode, null, array[index]);
+		if (reflectClass.isArray()) {
+			/*if (ReflectHelper2.isPrimitiveArray(parentObject)) {
+				return new ObjectTreeNode(parentNode, null, Array.get(parentObject, index));
+			} else {
+				Object[] array = (Object[]) parentObject;*/
+			return new ObjectTreeNode(parentNode, index, Array.get(parentObject, index));
+			//}
 		} else if (reflector.isCollection(reflectClass)) {
 			// reflector.isCollection returns true for Maps too I guess
 			if (parentObject instanceof Map) {
 				Map map = (Map) parentObject;
-				Object[] arr = map.entrySet().toArray(); // todo: this will be poor performance, should do something else
-				return new ObjectTreeNode(parentNode, new MapEntry((Map.Entry) arr[index]));
+				Object[] arr = map.entrySet().toArray(); // todo: this may be poor performance, should do something else
+				return new ObjectTreeNode(parentNode, index, new MapEntry((Map.Entry) arr[index]));
 			} else {
-				List collection = (List) parentObject;
-				return new ObjectTreeNode(parentNode, collection.get(index));
+				Collection collection = (Collection) parentObject;
+				int i = 0;
+				Object toUse = null;
+				for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
+					Object o = iterator.next();
+					if (i == index) {
+						toUse = o;
+						break;
+					}
+					i++;
+				}
+				return new ObjectTreeNode(parentNode, index, toUse);
 			}
 		} else if (parentObject instanceof MapEntry) {
 			MapEntry entry = (MapEntry) parentObject;
 			if (index == 0) {
-				return new ObjectTreeNode(parentNode, entry.getEntry().getKey());
+				return new ObjectTreeNode(parentNode, index, entry.getEntry().getKey());
 			} else {
-				return new ObjectTreeNode(parentNode, entry.getEntry().getValue());
+				return new ObjectTreeNode(parentNode, index, entry.getEntry().getValue());
 			}
+		} else {
+			// todo: could try caching all this reflect information if performance is bad
+			//System.out.println("reflectclass: " + reflectClass);
+			ReflectField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(reflectClass);
+			fields[index].setAccessible();
+			Object value = fields[index].get(parentObject);
+			//System.out.println("getChild parent:" + parentNode.getObject().getClass() + " index:" + index + " field:" + fields[index].getName() + " value:" + value);
+			return new ObjectTreeNode(parentNode, fields[index], value);
 		}
-		// todo: could try caching all this reflect information if performance is bad
-		//System.out.println("reflectclass: " + reflectClass);
-		ReflectField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(reflectClass);
-		fields[index].setAccessible();
-		Object value = fields[index].get(parentObject);
-		//System.out.println("getChild parent:" + parentNode.getObject().getClass() + " index:" + index + " field:" + fields[index].getName() + " value:" + value);
-		return new ObjectTreeNode(parentNode, fields[index], value);
 	}
 
 	public int getChildCount(Object parent) {
 		ObjectTreeNode parentNode = (ObjectTreeNode) parent;
 		if (parentNode.getObject().getClass().isArray()) {
-			Object[] array = (Object[]) parentNode.getObject();
-			return array.length;
+			//Object[] array = (Object[]) parentNode.getObject();
+			return Array.getLength(parentNode.getObject());
 		} else if (parentNode.getObject() instanceof Collection) {
 			Collection collection = (Collection) parentNode.getObject();
 			return collection.size();
@@ -119,16 +133,66 @@ public class ObjectTreeModel implements TreeModel {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
 		//System.out.println("new value: " + newValue + " " + newValue.getClass() + " old ob: " + aNode.getObject() + " " + aNode.getObject().getClass());
 		try {
+			Object oldOb = aNode.getObject();
 			Object newOb = Converter.convertFromString(aNode.getObject().getClass(), (String) newValue);
-			ObjectTreeNode parent = aNode.getParentNode();
-			Object p = parent.getObject();
-			ReflectField rf = aNode.getField();
-			rf.setAccessible();
-			rf.set(p, newOb);
-			addToBatch(p);
+		//	System.out.println("converted class: " + newOb.getClass() + ", value: " + newOb);
+			ObjectTreeNode parentNode = aNode.getParentNode();
+			int index = aNode.getIndex();
+			Object parentObject = parentNode.getObject();
+			ObjectTreeNode superParentNode = parentNode.getParentNode(); // if a collection, then we'll want to store the parent of the collection.
+			Reflector reflector = session.getObjectContainer().ext().reflector();
+			ReflectClass reflectClass = reflector.forObject(parentObject);
+			boolean storeSuper = false;
+			if (reflectClass.isArray()) {
+				Array.set(parentObject, index, newOb);
+				storeSuper = true;
+			} else if (reflector.isCollection(reflectClass)) {
+				// reflector.isCollection returns true for Maps too I guess
+				if (parentObject instanceof Map) {
+					Map map = (Map) parentObject;
+					MapEntry mapEntry = (MapEntry) aNode.getObject();
+					map.put(mapEntry.getEntry().getKey(), newOb);
+				} else if (parentObject instanceof List) {
+					List collection = (List) parentObject;
+					collection.set(index, newOb);
+				} else if (parentObject instanceof Set) {
+					// set has no guarantee of ordering, so need to remove old, then add
+					Set collection = (Set) parentObject;
+					collection.add(newOb);
+				} else if (parentObject instanceof Queue) {
+					// this may not be expected behaviour since it will place the changed object at the end of the Queue, not at the index
+					Queue q = (Queue) parentObject;
+					System.out.println("removed from queue? " + q.remove(oldOb));
+					q.add(newOb);
+				}
+				storeSuper = true;
+			} else if (parentObject instanceof MapEntry) {
+				System.out.println("mapentry???");
+				MapEntry entry = (MapEntry) parentObject;
+				if (index == 0) {
+					Map superMap = (Map) superParentNode.getObject();
+					superMap.remove(entry.getEntry().getKey());
+					superMap.put(newOb, entry.getEntry().getValue());
+				} else {
+					Map superMap = (Map) superParentNode.getObject();
+					superMap.remove(entry.getEntry().getKey()); // removing just in case
+					superMap.put(entry.getEntry().getKey(), newOb);
+				}
+				superParentNode = superParentNode.getParentNode(); // since we've injected an extra layer with the MapEntry
+				storeSuper = true;
+			} else {
+				ReflectField rf = aNode.getField();
+				rf.setAccessible();
+				rf.set(parentObject, newOb);
+			}
+			if (storeSuper) {
+				addToBatch(superParentNode.getObject());
+			} else {
+				addToBatch(parentObject);
+			}
 			aNode.setObject(newOb);
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			Log.addException(e);
 		}
 

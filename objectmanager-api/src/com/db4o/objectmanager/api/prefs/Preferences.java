@@ -147,9 +147,13 @@ public class Preferences {
 	}*/
 
 	public void setPreference(String key, Object preference) {
+		long start = System.currentTimeMillis();
 		preferenceStore.put(key, preference);
         commit();
-    }
+		long end = System.currentTimeMillis();
+		long duration = end - start;
+		//System.out.println("Time to set preferences: " + duration);
+	}
 
 	/**
 	 * Method getPreference. Return the preference object associated with a
