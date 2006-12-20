@@ -1,6 +1,20 @@
-<project name="ivyTaskDef" basedir="." default="">
+<project name="ivyTaskDef" basedir="." default=""  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<path id="ivy.lib.path">
   	<fileset dir="${common.build.dir}/lib" includes="*.jar"/>
   </path>
   <taskdef resource="fr/jayasoft/ivy/ant/antlib.xml" uri="antlib:fr.jayasoft.ivy.ant" classpathref="ivy.lib.path"/>
+  
+  <macrodef name="publishToIvy" description="">
+		<attribute name="artifactsPattern"/>
+		
+		<sequential>
+			<delete file="${defaultArtifactDir}/ivy.xml"/>
+			<ivy:publish 
+				artifactspattern="@{artifactsPattern}" 
+				pubrevision="${db4o.version.dotted}" 
+				resolver="projects"				
+				status="release"
+			/>
+		</sequential>
+	</macrodef>
 </project>

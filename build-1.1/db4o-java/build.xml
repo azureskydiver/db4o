@@ -5,13 +5,13 @@
 	<property file="build.properties" />
 	
 	<target name="clean">
-  	<delete dir="${artifactDir}"	failonerror="true"/>
+  	<delete dir="${defaultArtifactDir}"	failonerror="true"/>
   	<delete dir="${ivy.lib.dir}"	failonerror="true"/>
 	</target>
 	
 	<target name="init">
 		<tstamp />
-		<mkdir dir="${artifactDir}" />
+		<mkdir dir="${defaultArtifactDir}" />
 	</target>
 	
 	 <target name="configure" depends="init">
@@ -24,14 +24,7 @@
    
    <target name="publish" depends="clean, resolve">
     	<antcall target="bin" />
-			
-      <property name="revision" value="${db4o.version.dotted}"/>
-      <delete file="${artifactDir}/ivy.xml"/>
-			<ivy:publish artifactspattern="${artifactDir}/[artifact].[ext]" 
-				resolver="projects"
-				pubrevision="${revision}" 
-				status="release"
-			/>
+     	<publishToIvy artifactsPattern="${artifactsPattern}"/>
 	</target>
    
    <target name="bin" depends="">
@@ -40,8 +33,7 @@
 		</copy>
    
    	<property name="zipbasedir" value="${ant.project.name}" />
-		
-		<zip destfile="${binZipPath}">
+		<zip destfile="${zipPath}">
 			<zipfileset dir="${ivy.lib.dir}" prefix="${zipbasedir}/lib"/>			
 		</zip>
 	</target>  
