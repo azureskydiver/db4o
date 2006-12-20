@@ -1,14 +1,14 @@
 <ivy-module version="1.0">
-    <info organisation="db4o" module="dRS"/>
+    <info organisation="db4o" module="${ant.project.name}"/>
     <configurations>
     	<conf name="core"  description="Provides API and implementation of dRS"/>
     	<conf name="test" extends="core" visibility="private" description="for testing dRS"/>
     	<conf name="tutorial" extends="core" visibility="private" description="Tutorial code of dRS"/>
     </configurations>
     <publications>
-        	<artifact name="dRS-core"			conf="core"/>
-        	<artifact name="dRS-test"			conf="test"/>
-        	<artifact name="dRS-tutorial" conf="tutorial"/>
+        	<artifact name="${ant.project.name}"			conf="core"/>
+        	<artifact name="${ant.project.name}-test"			conf="test"/>
+        	<artifact name="${ant.project.name}-tutorial" conf="tutorial"/>
     </publications>
     <dependencies>
         <dependency name="db4o-java5" rev="latest.integration" />
