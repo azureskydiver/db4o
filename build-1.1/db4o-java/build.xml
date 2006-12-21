@@ -21,19 +21,103 @@
         <ivy:retrieve/>
    </target>
    
-   <target name="publish" depends="clean, resolve">
-    	<antcall target="bin" />
-     	<publishToIvy/>
+  <target name="publish" depends="clean, resolve">
+    <antcall target="bin" />
+    <antcall target="src" />
+    	
+  	<property name="zipbasedir" value="${ant.project.name}" />
+		<zip destfile="${zipPath}">
+			<zipfileset dir="${ivy.lib.dir}" prefix="${zipbasedir}/lib"/>	
+			<zipfileset file="${tempSrcZipPath}" prefix="${zipbasedir}"/>		
+		</zip>
+		
+		<delete file="${tempSrcZipPath}"/>
+		
+    <publishToIvy/>
 	</target>
    
    <target name="bin" depends="">
    	<copy todir="${ivy.lib.dir}">
 			<fileset dir="${dir.j.nqopt}/lib" includes="bloat*, ant*, 3rdpartylibs.txt"/>
 		</copy>
-   
-   	<property name="zipbasedir" value="${ant.project.name}" />
-		<zip destfile="${zipPath}">
-			<zipfileset dir="${ivy.lib.dir}" prefix="${zipbasedir}/lib"/>			
-		</zip>
 	</target>  
+	
+	<target name="src" depends="">
+		<mkdir dir="${tempSrcDir}"/>
+    	<copy todir="${tempSrcDir}/db4ounit">
+			<fileset dir="${dir.db4ounit}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${tempSrcDir}/db4oj">
+			<fileset dir="${dir.j}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${tempSrcDir}/db4ounit.extensions">
+			<fileset dir="${dir.db4ounit.extensions}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${tempSrcDir}/db4oj.tests">
+			<fileset dir="${dir.j.tests}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**/*.java" />
+				<include name="src/**/*.yap" />
+			</fileset>
+		</copy>
+		<copy todir="${tempSrcDir}/db4ojdk1.2">
+			<fileset dir="${dir.j.jdk1.2}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+				<include name="**/src/**/*.yap" />
+			</fileset>
+		</copy>
+		<copy todir="${tempSrcDir}/db4ojdk5">
+			<fileset dir="${dir.j.jdk5}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+				<include name="**/src/**/*.yap" />
+			</fileset>
+		</copy>
+		<copy todir="${tempSrcDir}/bloat">
+			<fileset dir="${dir.bloat}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**" />
+				<exclude name="**/CVS/**" />
+			</fileset>
+		</copy>
+		<copy todir="${tempSrcDir}/db4onqopt">
+			<fileset dir="${dir.j.nqopt}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${tempSrcZipPath}">
+			<zipfileset dir="${tempSrcDir}"/>			
+		</zip>
+		<!--
+		<filehead beforePattern="package" header="${content.gplheader}" >
+			<sources dir="${tempSrcDir}">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
+		-->
+		
+		<delete dir="${tempSrcDir}" failonerror="true"/>
+		
+		
+	</target>
 </project>
