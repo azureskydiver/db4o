@@ -2,10 +2,17 @@
 
 package com.db4o;
 
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
+import com.db4o.ext.StoredClass;
+import com.db4o.foundation.ArrayIterator4;
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Debug4;
+import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.MappingIterator;
+import com.db4o.foundation.Queue4;
+import com.db4o.foundation.Visitor4;
 import com.db4o.inside.SystemData;
-import com.db4o.reflect.*;
+import com.db4o.reflect.ReflectClass;
 
 /**
  * @exclude
@@ -341,24 +348,32 @@ public final class YapClassCollection extends YapMeta {
     }
 
     public final void readThis(Transaction a_trans, YapReader a_reader) {
-        int classCount = a_reader.readInt();
+		int classCount = a_reader.readInt();
 
-        initTables(classCount);
+		initTables(classCount);
 
-        for (int i = classCount; i > 0; i--) {
-            YapClass yapClass = new YapClass(stream(), null);
-            int id = a_reader.readInt();
-            yapClass.setID(id);
-            i_classes.add(yapClass);
-            i_yapClassByID.put(id, yapClass);
-            i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);
-        }
-        
-        applyReadAs();
-        
-    }
-    
-    Hashtable4 classByBytes(){
+		YapStream stream = stream();
+		int[] ids = new int[classCount];
+
+		for (int i = 0; i < classCount; ++i) {
+			ids[i] = a_reader.readInt();
+		}
+		YapWriter[] yapWriters = stream.readWritersByIDs(a_trans, ids);
+
+		for (int i = 0; i < classCount; ++i) {
+			YapClass yapClass = new YapClass(stream, null);
+			yapClass.setID(ids[i]);
+			i_classes.add(yapClass);
+			i_yapClassByID.put(ids[i], yapClass);
+			byte[] name = yapClass.readName1(a_trans, yapWriters[i]);
+			i_yapClassByBytes.put(name, yapClass);
+		}
+
+		applyReadAs();
+
+	}
+
+	Hashtable4 classByBytes(){
     	return i_yapClassByBytes;
     }
     
