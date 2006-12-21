@@ -568,6 +568,30 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		}
 	}
 
+	public final YapWriter[] readWritersByIDs(Transaction a_ta, int[] ids) {
+		try {
+			writeMsg(Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length));
+			MsgD message = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
+			int count = message.readInt();
+			YapWriter[] yapWriters = new YapWriter[count];
+			for (int i = 0; i < count; i++) {
+				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.clone(getTransaction());
+				mso.payLoad(message.payLoad().readYapBytes());
+				if (mso.payLoad() != null) {
+					mso.payLoad().incrementOffset(YapConst.MESSAGE_LENGTH);
+					yapWriters[i] = mso.unmarshall(YapConst.MESSAGE_LENGTH);
+					yapWriters[i].setTransaction(a_ta);
+				}
+			}
+			return yapWriters;
+		} catch (Exception e) {
+			if(Debug.atHome) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	public final YapReader readReaderByID(Transaction a_ta, int a_id) {
 		// TODO: read lightweight reader instead
 		return readWriterByID(a_ta, a_id);

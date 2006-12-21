@@ -1440,13 +1440,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
     byte[] readName(Transaction a_trans) {
         i_reader = a_trans.stream().readReaderByID(a_trans, getID());
-        if (i_reader != null) {
-            return readName1(a_trans, i_reader);
-        }
-        return null;
+        return readName1(a_trans, i_reader);
     }
 
     public final byte[] readName1(Transaction trans, YapReader reader) {
+    	if (reader == null) 
+    		return null;
+    	
         i_reader = reader;
         
         try {

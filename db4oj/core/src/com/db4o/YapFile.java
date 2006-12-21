@@ -410,6 +410,14 @@ public abstract class YapFile extends YapStream {
     public YapWriter readWriterByID(Transaction a_ta, int a_id) {
         return (YapWriter)readReaderOrWriterByID(a_ta, a_id, false);    
     }
+    
+    public YapWriter[] readWritersByIDs(Transaction a_ta, int ids[]) {
+		YapWriter[] yapWriters = new YapWriter[ids.length];
+		for (int i = 0; i < ids.length; ++i) {
+			yapWriters[i] = (YapWriter)readReaderOrWriterByID(a_ta, ids[i], false);
+		}
+		return yapWriters;
+	}
 
     public YapReader readReaderByID(Transaction a_ta, int a_id) {
         return readReaderOrWriterByID(a_ta, a_id, true);
