@@ -34,4 +34,16 @@ public class Arrays4 {
 		}
 		return true;
 	}
+
+	public static boolean containsInstanceOf(Object[] array, Class klass) {
+		if (array == null) {
+			return false;
+		}
+		for (int i=0; i<array.length; ++i) {
+			if (klass.isInstance(array[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

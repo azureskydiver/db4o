@@ -245,7 +245,7 @@ public abstract class Transaction {
     
     public Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
-        return stream().getFieldUUID().objectAndYapObjectBySignature(this, a_uuid, a_signature);
+        return stream().getUUIDIndex().objectAndYapObjectBySignature(this, a_uuid, a_signature);
     }
     
 	public void processDeletes() {

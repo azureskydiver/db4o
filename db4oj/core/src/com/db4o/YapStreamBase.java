@@ -2021,8 +2021,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return i_config;
     }
     
-	public YapFieldUUID getFieldUUID() {
+	public YapFieldUUID getUUIDIndex() {
 		return i_handlers.i_indexes.i_fieldUUID;
+	}
+	
+	public YapFieldVersion getVersionIndex() {
+		return i_handlers.i_indexes.i_fieldVersion;
 	}
 
     public YapClassCollection classCollection() {
