@@ -31,7 +31,5 @@
 	<classpathentry kind="lib" path="lib/db2/db2jcc.jar"/>
 	<classpathentry kind="lib" path="lib/db2/db2jcc_license_cu.jar"/>
 	<classpathentry kind="lib" path="lib/derby/derby.jar"/>
-	<classpathentry kind="lib" path="lib/db4o-6.0-db4ounit.jar"/>
-	<classpathentry kind="lib" path="lib/db4o-6.0-java5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
