@@ -108,13 +108,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             }
             if(generateVersionNumbers()) {
                 if(! hasVersionField()) {
-                    members.add(a_stream.i_handlers.i_indexes.i_fieldVersion);
+                    members.add(a_stream.getVersionIndex());
                     dirty = true;
                 }
             }
             if(generateUUIDs()) {
                 if(! hasUUIDField()) {
-                    members.add(a_stream.i_handlers.i_indexes.i_fieldUUID);
+                    members.add(a_stream.getUUIDIndex());
                     dirty = true;
                 }
             }
@@ -224,11 +224,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             // We don't want to have a null field, so let's add the version
             // number, if we have a UUID, even if it's not needed.
             
-            i_fields[1] = a_stream.i_handlers.i_indexes.i_fieldVersion;
+            i_fields[1] = a_stream.getVersionIndex();
         }
         
         if(uuids){
-            i_fields[2] = a_stream.i_handlers.i_indexes.i_fieldUUID;
+            i_fields[2] = a_stream.getUUIDIndex();
         }
         
     	setStateOK();
@@ -627,8 +627,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 			if(_curClazz==null) {
 				_curClazz=_initialClazz;
 				_curIdx=0;
-			}
-			else {
+			} else {
 				_curIdx++;
 			}
 			while(_curClazz!=null&&!indexInRange()) {
@@ -817,14 +816,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         if(ancestorHasUUIDField()){
             return true;
         }
-        if(i_fields != null) {
-            for (int i = 0; i < i_fields.length; i++) {
-                if(i_fields[i] instanceof YapFieldUUID) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return Arrays4.containsInstanceOf(i_fields, YapFieldUUID.class);
     }
     
     private boolean ancestorHasVersionField(){
@@ -838,14 +830,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         if(ancestorHasVersionField()){
             return true;
         }
-        if(i_fields != null) {
-            for (int i = 0; i < i_fields.length; i++) {
-                if(i_fields[i] instanceof YapFieldVersion) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return Arrays4.containsInstanceOf(i_fields, YapFieldVersion.class);
     }
 
     public ClassIndexStrategy index() {

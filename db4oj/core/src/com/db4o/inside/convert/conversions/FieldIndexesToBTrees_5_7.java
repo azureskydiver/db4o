@@ -22,7 +22,7 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
     }
 	
     private void rebuildUUIDIndex(YapFile file) {
-		final YapFieldUUID uuid = file.getFieldUUID();
+		final YapFieldUUID uuid = file.getUUIDIndex();
 		final YapClassCollectionIterator i = file.classCollection().iterator();
 		while (i.moveNext()) {
 			final YapClass clazz = i.currentClass();

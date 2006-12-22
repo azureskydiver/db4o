@@ -7,9 +7,9 @@ import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
 
 /**
- * 
+ * @exclude
  */
-class YapFieldVersion extends YapFieldVirtual {
+public class YapFieldVersion extends YapFieldVirtual {
 
     YapFieldVersion(YapStream stream) {
         super();
