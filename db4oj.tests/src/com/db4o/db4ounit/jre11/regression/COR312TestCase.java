@@ -38,7 +38,7 @@ public class COR312TestCase implements TestCase, TestLifeCycle {
 	
 	private static final String REGULAR = "REGULAR";
 	
-	private static final Date REGULAR_DATE = new Date(106, 11, 23);
+	private static final Date REGULAR_DATE = new Date(1166839200000L);
 	
 	public void testDateFieldValuesAreReadCorrectly() {
 		assertItemDate(REGULAR_DATE, REGULAR);
