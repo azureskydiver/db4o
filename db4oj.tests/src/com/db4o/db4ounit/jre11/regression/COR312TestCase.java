@@ -36,13 +36,30 @@ public class COR312TestCase implements TestCase, TestLifeCycle {
 	
 	private static final Date REGULAR_DATE = new Date(106, 11, 23);
 	
-	public void _testDateFieldValues() {
-		assertDateField(REGULAR_DATE, REGULAR);
-		assertDateField(MAX_VALUE_DATE, MAX_VALUE);
-		assertDateField(null, NULL);
+	public void _testDateFieldValuesAreReadCorrectly() {
+		assertItemDate(REGULAR_DATE, REGULAR);
+		assertItemDate(MAX_VALUE_DATE, MAX_VALUE);
+		assertItemDate(null, NULL);
+	}
+	
+	public void testDateFieldValueCanBeUpdated() {
+		final Date newDate = new Date(28, 5, 14);
+		updateItemDate(NULL, REGULAR_DATE);
+		updateItemDate(REGULAR, newDate);
+		updateItemDate(MAX_VALUE, null);
+		
+		assertItemDate(null, MAX_VALUE);
+		assertItemDate(REGULAR_DATE, NULL);
+		assertItemDate(newDate, REGULAR);		
 	}
 
-	private void assertDateField(final Date expectedValue, final String itemName) {
+	private void updateItemDate(String itemName, Date newDate) {
+		final Item item = getItem(itemName);
+		item.date = newDate;
+		_container.set(item);
+	}
+
+	private void assertItemDate(final Date expectedValue, final String itemName) {
 		Assert.areEqual(expectedValue, getItemDate(itemName), itemName);
 	}
 	
