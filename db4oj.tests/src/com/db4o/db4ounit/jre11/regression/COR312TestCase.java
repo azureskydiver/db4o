@@ -28,17 +28,22 @@ public class COR312TestCase implements TestCase, TestLifeCycle {
 	
 	private static final String NULL = "NULL";
 	
+	private static final String MIN_VALUE = "MIN_VALUE";
+	
+	private static final Date MIN_VALUE_DATE = new Date(0);
+	
 	private static final String MAX_VALUE = "MAX_VALUE";
 	
-	private static final Date MAX_VALUE_DATE = new Date(Long.MAX_VALUE);
+	private static final Date MAX_VALUE_DATE = new Date(Long.MAX_VALUE - 1);
 	
 	private static final String REGULAR = "REGULAR";
 	
 	private static final Date REGULAR_DATE = new Date(106, 11, 23);
 	
-	public void _testDateFieldValuesAreReadCorrectly() {
+	public void testDateFieldValuesAreReadCorrectly() {
 		assertItemDate(REGULAR_DATE, REGULAR);
 		assertItemDate(MAX_VALUE_DATE, MAX_VALUE);
+		assertItemDate(MIN_VALUE_DATE, MIN_VALUE);
 		assertItemDate(null, NULL);
 	}
 	
@@ -104,6 +109,7 @@ public class COR312TestCase implements TestCase, TestLifeCycle {
 //		try {
 //			container.set(new Item(NULL, null));
 //			container.set(new Item(MAX_VALUE, MAX_VALUE_DATE));
+//			container.set(new Item(MIN_VALUE, MIN_VALUE_DATE));
 //			container.set(new Item(REGULAR, REGULAR_DATE));
 //		} finally {
 //			container.close();
