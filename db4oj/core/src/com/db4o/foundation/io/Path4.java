@@ -2,6 +2,8 @@
 
 package com.db4o.foundation.io;
 
+import java.io.File;
+
 /**
  * @sharpen.ignore
  */
@@ -14,5 +16,9 @@ public class Path4 {
 	
 	public static String getTempPath() {
 		return System.getProperty("java.io.tmpdir");
+	}
+	
+	public static String buildTempPath(String fname) {
+		return new File(getTempPath(), fname).getAbsolutePath();
 	}
 }

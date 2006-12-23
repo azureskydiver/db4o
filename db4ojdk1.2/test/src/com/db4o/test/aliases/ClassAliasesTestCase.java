@@ -86,12 +86,8 @@ public class ClassAliasesTestCase {
 	}
 
 	private String buildTempPath(String fname) {
-		return new File(getTempPath(), fname).getAbsolutePath();
-	}
-
-	private String getTempPath() {
-		return System.getProperty("java.io.tmpdir");
-	}
+		return Path4.buildTempPath(fname);
+	}	
 
 	private void generateDotnetData() throws IOException {
 		new File(getDotnetDataFilePath()).delete();
