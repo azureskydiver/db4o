@@ -180,7 +180,7 @@ public class QConObject extends QCon {
     }
 
     void evaluateSimpleExec(QCandidates a_candidates) {
-        if (i_orderID != 0 || !i_loadedFromIndex) {
+        if (hasOrdering() || !i_loadedFromIndex) {
             if (i_field.isSimple() || isNullConstraint()) {
                 a_candidates.traverse(i_field);
                 prepareComparison(i_field);
@@ -351,7 +351,7 @@ public class QConObject extends QCon {
         if (!processed) {
             res = evaluate(qc);
         }
-        if (i_orderID != 0 && res && qc.fieldIsAvailable()) {
+        if (hasOrdering() && res && qc.fieldIsAvailable()) {
             Object cmp = qc.value();
             if (cmp != null && i_field != null) {
                 YapComparable comparatorBackup = i_comparator;
