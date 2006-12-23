@@ -118,9 +118,4 @@ public class MarshallerFamily {
         }
         return result;
     }
-    
-    public int converterVersion() {
-    	return _converterVersion;
-    }
-
 }

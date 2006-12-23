@@ -49,24 +49,9 @@ final class YDate extends YLong
 		return null;
 	}
 	
-	Object read1(YapReader a_bytes){
-		return new Date(readLong(a_bytes));
-	}
-	
 	public Object read(MarshallerFamily mf, YapWriter writer, boolean redirect)
 			throws CorruptionException {
-		if (mf.converterVersion() == 0) {
-			return readOldVersion(writer);
-		}
-		return super.read(mf, writer, redirect);
-	}
-	
-	private Object readOldVersion(YapWriter a_bytes) {
-		final long longValue = readLong(a_bytes);
-		if (longValue == Long.MAX_VALUE) {
-			return null;
-		}
-		return new Date(longValue);
+		return mf._primitive.readDate(writer);
 	}
 
 	public void write(Object a_object, YapReader a_bytes){

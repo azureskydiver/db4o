@@ -2,6 +2,8 @@
 
 package com.db4o.inside.marshall;
 
+import java.util.Date;
+
 import com.db4o.*;
 
 
@@ -12,6 +14,8 @@ public abstract class PrimitiveMarshaller {
     public abstract boolean useNormalClassRead();
     
     public abstract int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, YapWriter parentWriter, boolean withIndirection, boolean restoreLinkOffset);
+    
+    public abstract Date readDate(YapReader bytes);
     
     protected final int objectLength(TypeHandler4 handler){
         return handler.linkLength() + YapConst.OBJECT_LENGTH + YapConst.ID_LENGTH;
