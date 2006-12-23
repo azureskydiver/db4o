@@ -42,7 +42,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     // positive indicates ascending, negative indicates descending
     // value indicates ID supplied by ID generator.
     // lower IDs are applied first
-    public int i_orderID = 0;
+    private int i_orderID = 0;
 
     // the parent of this constraint or null, if this is a root
     public QCon i_parent;
@@ -623,6 +623,10 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     void setOrdering(int a_ordering) {
         i_orderID = a_ordering;
+    }
+    
+    public int ordering() {
+    	return i_orderID;
     }
 
     void setParent(QCon a_newParent) {

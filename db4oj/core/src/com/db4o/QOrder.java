@@ -19,12 +19,12 @@ class QOrder extends Tree{
 
 	public int compare(Tree a_to) {
 		if(_constraint.i_comparator.isSmaller(_candidate.value())){
-			return _constraint.i_orderID;	
+			return _constraint.ordering();	
 		}
 		if(_constraint.i_comparator.isEqual(_candidate.value())){
 			return 0;	
 		}
-		return - _constraint.i_orderID;	
+		return - _constraint.ordering();	
 	}
 
 	public Object shallowClone() {
