@@ -364,6 +364,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		}
 		return _yapClass.classReflector();
 	}
+	
+	boolean fieldIsAvailable(){
+		return classReflector() != null;
+	}
 
 	// / ***<Candidate interface code>***
 
