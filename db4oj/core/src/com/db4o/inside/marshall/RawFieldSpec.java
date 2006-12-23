@@ -64,4 +64,8 @@ public class RawFieldSpec {
 	void indexID(int indexID) {
 		_indexID=indexID;
 	}
+	
+	public String toString() {
+		return "RawFieldSpec(" + name() + ")"; 
+	}
 }
