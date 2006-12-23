@@ -91,7 +91,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     void applyOrdering() {
-        if (i_orderID != 0) {
+        if (hasOrdering()) {
             QCon root = getRoot();
             root.i_candidates.applyOrdering(i_candidates.i_ordered, i_orderID);
         }
@@ -740,7 +740,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
 	public boolean requiresSort() {
-		if (i_orderID != 0) {
+		if (hasOrdering()) {
 			return true;
 		}
 		Iterator4 i = iterateChildren();
@@ -750,5 +750,9 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 			}
 		}
 		return false;
+	}
+
+	protected boolean hasOrdering() {
+		return i_orderID != 0;
 	}	
 }

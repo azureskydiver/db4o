@@ -56,7 +56,7 @@ public class QConClass extends QConObject{
 		// Compare interface.
 		// 
 		if(i_evaluator.isDefault()){
-			if(i_orderID == 0 && ! hasJoins()){
+			if(! hasOrdering() && ! hasJoins()){
 				if(i_yapClass != null  && i_candidates.i_yapClass != null){
 					if(i_yapClass.getHigherHierarchy(i_candidates.i_yapClass) == i_yapClass){
 						return;
