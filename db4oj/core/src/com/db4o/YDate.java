@@ -5,12 +5,11 @@ package com.db4o;
 import java.util.*;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.marshall.MarshallerFamily;
+import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
 
-final class YDate extends YLong
-{
+final class YDate extends YLong {
 	
 	private static final Date PROTO = new Date(0);
     
@@ -52,6 +51,14 @@ final class YDate extends YLong
 	public Object read(MarshallerFamily mf, YapWriter writer, boolean redirect)
 			throws CorruptionException {
 		return mf._primitive.readDate(writer);
+	}
+	
+	Object read1(YapReader a_bytes) {
+		return primitiveMarshaller().readDate(a_bytes);
+	}
+
+	private PrimitiveMarshaller primitiveMarshaller() {
+		return MarshallerFamily.current()._primitive;
 	}
 
 	public void write(Object a_object, YapReader a_bytes){

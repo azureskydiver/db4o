@@ -53,9 +53,12 @@ public class COR312TestCase implements TestCase, TestLifeCycle {
 		updateItemDate(REGULAR, newDate);
 		updateItemDate(MAX_VALUE, null);
 		
-		assertItemDate(null, MAX_VALUE);
-		assertItemDate(REGULAR_DATE, NULL);
-		assertItemDate(newDate, REGULAR);		
+		for (int i=0; i<2; ++i) {
+			assertItemDate(null, MAX_VALUE);
+			assertItemDate(REGULAR_DATE, NULL);
+			assertItemDate(newDate, REGULAR);
+			reopen();
+		}
 	}
 
 	private void updateItemDate(String itemName, Date newDate) {
@@ -80,15 +83,34 @@ public class COR312TestCase implements TestCase, TestLifeCycle {
 	}
 
 	private ObjectContainer _container;
+	private String _databaseFile;
 	
 	public void setUp() throws Exception {
-		String fname = Path4.buildTempPath("cor312.yap");
-		File4.copy(WorkspaceServices.workspacePath("db4oj.tests/test/regression/cor312.yap"), fname);
 		Db4o.configure().allowVersionUpdates(true);
-		_container = Db4o.openFile(fname);
+		prepareDatabaseFile();
+		open();
+	}
+
+	private void prepareDatabaseFile() {
+		_databaseFile = Path4.buildTempPath("cor312.yap");
+		File4.copy(WorkspaceServices.workspacePath("db4oj.tests/test/regression/cor312.yap"), _databaseFile);
+	}
+	
+	private void reopen() {
+		close();
+		open();
+	}
+
+	private void open() {
+		_container = Db4o.openFile(_databaseFile);
 	}
 
 	public void tearDown() throws Exception {
+		close();
+		Db4o.configure().allowVersionUpdates(false);
+	}
+
+	private void close() {
 		if (null != _container) {
 			_container.close();
 			_container = null;
