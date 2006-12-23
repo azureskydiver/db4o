@@ -2,6 +2,8 @@
 
 package com.db4o.inside.marshall;
 
+import java.util.Date;
+
 import com.db4o.*;
 
 
@@ -47,6 +49,14 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         
         return id;
     }
+    
+    public Date readDate(YapReader a_bytes) {
+		final long longValue = YLong.readLong(a_bytes);
+		if (longValue == Long.MAX_VALUE) {
+			return null;
+		}
+		return new Date(longValue);
+	}
 
 
 }
