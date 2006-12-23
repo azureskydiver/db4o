@@ -32,7 +32,7 @@ public class QConPath extends QConClass {
 	}
 	
 	boolean evaluate(QCandidate a_candidate) {
-		if (a_candidate.classReflector() == null) {
+		if (! a_candidate.fieldIsAvailable()) {
 			visitOnNull(a_candidate.getRoot());
 		}
 		return true;

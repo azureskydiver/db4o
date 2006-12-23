@@ -351,7 +351,7 @@ public class QConObject extends QCon {
         if (!processed) {
             res = evaluate(qc);
         }
-        if (i_orderID != 0 && res) {
+        if (i_orderID != 0 && res && qc.fieldIsAvailable()) {
             Object cmp = qc.value();
             if (cmp != null && i_field != null) {
                 YapComparable comparatorBackup = i_comparator;

@@ -118,5 +118,12 @@ public class QField implements Visitor4, Unversioned{
 	public void visit(Object obj) {
 		((QCandidate) obj).useField(this);
 	}
+	
+	public String toString() {
+		if(i_yapField != null){
+			return "QField " + i_yapField.toString();
+		}
+		return super.toString();
+	}
 }
 
