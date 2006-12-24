@@ -1,0 +1,16 @@
+<project name="build-build-1.1" basedir="." default="update">
+	<!--
+		Function of this file: Update the jars in build-1.1/lib of db4o build ant tasks and doctor
+	
+		Execute this build file ONLY when db4o build ant tasks or doctor has been changed
+	
+	-->
+	
+	<property name="db4oDevToolsPath" value="../db4obuild/build-1.1/"/>
+	<target name="update" description="">
+		<ant dir="${db4oDevToolsPath}"/>
+    <copy todir="lib">
+				<fileset dir="${db4oDevToolsPath}/artifact"/>
+		</copy>
+  </target>
+</project>

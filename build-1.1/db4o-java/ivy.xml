@@ -3,7 +3,7 @@
     <publications>
         	<artifact name="${ant.project.name}" ext="zip"/>
     </publications>
-    <dependencies>
+    <dependencies>   			
     		<dependency name="db4o-java1.1" rev="latest.integration" />
     		<dependency name="db4o-java1.2" rev="latest.integration" />
         <dependency name="db4o-java5" rev="latest.integration" />
