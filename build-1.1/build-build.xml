@@ -6,11 +6,18 @@
 	
 	-->
 	
-	<property name="db4oDevToolsPath" value="../db4obuild/build-1.1/"/>
+	<property name="db4oDevToolsPath" value="../db4obuild/build-1.1"/>
+	<property name="doctorPath" value="../doctor"/>
+	
 	<target name="update" description="">
 		<ant dir="${db4oDevToolsPath}"/>
     <copy todir="lib">
 				<fileset dir="${db4oDevToolsPath}/artifact"/>
+		</copy>
+		
+		<ant dir="${doctorPath}" antfile="build-1.1.xml"/>
+    <copy todir="lib">
+				<fileset dir="${doctorPath}/artifact"/>
 		</copy>
   </target>
 </project>

@@ -1,0 +1,6 @@
+<project name="doctorTaskDef" basedir="." default="">	
+	<path id="doctor.lib.path">
+  	<fileset dir="${common.build.dir}/lib" includes="*.jar"/>
+  </path>
+  <taskdef resource="com/yetac/doctor/antlib.xml" classpathref="doctor.lib.path"/>
+</project>

@@ -13,6 +13,7 @@
 	<import file="include/buildJarMacro.xml"/>
 	<import file="include/copyDb4ojMacro.xml"/>
 	<import file="include/db4oDevToolsTaskDef.xml"/>	
+	<import file="include/doctorTaskDef.xml"/>
 	
 	<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
 </project>

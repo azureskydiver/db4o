@@ -26,13 +26,15 @@
   <target name="publish" depends="clean, resolve">
     <antcall target="bin" />
     <antcall target="src" />
-    <antcall target="doc" />
+    <antcall target="reference" />
+    <antcall target="javadoc" />
     	
   	<property name="zipbasedir" value="${ant.project.name}" />
 		<zip destfile="${zipPath}">
 			<zipfileset dir="${ivy.lib.dir}" prefix="${zipbasedir}/lib"/>	
 			<zipfileset file="${tempSrcZipPath}" prefix="${zipbasedir}"/>		
 			<zipfileset dir="doc/reference" prefix="${zipbasedir}/doc/reference"/>	
+			<zipfileset dir="doc/api" prefix="${zipbasedir}/doc/api"/>	
 		</zip>
 		
     <publishToIvy/>
@@ -40,11 +42,45 @@
     <antcall target="clean" />
 	</target>
    
-  <target name="doc" depends="">
+  <target name="reference" depends="">
 		<mkdir dir="doc/reference" />
 		<copy todir="doc/reference">
 			<fileset dir="../../docWiki/java"/>
 		</copy>
+	</target>  
+	
+	<target name="javadoc" depends="">
+		<copyjava5 destDir="${defaultTempDir}" />
+		<mkdir dir="doc/api" />
+		<javadoc 
+			classpath="" access="public" windowtitle="db4o - database for objects - documentation" 
+			header="db4o ${db4o.version.dotted}" destdir="doc/api">
+			<fileset dir="${defaultTempDir}" includes="com/db4o/**/*.java">
+				<exclude name="com/db4o/cs/**/*.java" />
+				<exclude name="com/db4o/inside/**/*.java" />
+				<exclude name="com/db4o/foundation/**/*.java" />
+				<not>
+					<contains text="* @exclude" />
+				</not>
+			</fileset>
+			<fileset dir="${dir.j.tools.src}" includes="com/db4o/**/*.java">
+				<not>
+					<contains text="* @exclude" />
+				</not>
+			</fileset>
+			<group title="Core Engine" packages="com.db4o" />
+			<group title="Query Functionality" packages="com.db4o.query" />
+			<group title="Configuration Features" packages="com.db4o.config" />
+			<group title="Extended Functionality" packages="com.db4o.ext" />
+			<group title="Messaging" packages="com.db4o.messaging" />
+			<group title="Reflection" packages="com.db4o.reflect" />
+			<group title="Tools" packages="com.db4o.tools" />
+			<group title="Types" packages="com.db4o.types" />
+		</javadoc>
+		
+		<copy file="${javadoc.stylesheet}" todir="doc/api" overwrite="true" />
+		
+		<delete dir="${defaultTempDir}" failonerror="true"/>
 	</target>  
    
    <target name="bin" depends="">
