@@ -6,8 +6,7 @@
   	<ivy:buildlist reference="buildPath">
       <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
       <fileset dir="../db4oj/tools"					includes="build.xml"/>
-      <fileset dir="../doctor"							includes="build-1.1.xml"/>
-      
+
       <fileset dir="../db4oj"								includes="build-1.1.xml"/>
       <fileset dir="../db4ojdk1.2"					includes="build-1.1.xml"/>
       <fileset dir="../db4ojdk5"						includes="build-1.1.xml"/>

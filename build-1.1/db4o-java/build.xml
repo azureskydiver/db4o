@@ -6,6 +6,8 @@
 	
 	<target name="clean">
   	<cleanIvyDir/>
+  	<delete dir="doc" failonerror="true"/>
+  	<delete file="${tempSrcZipPath}" failonerror="true"/>
 	</target>
 	
 	<target name="init">
@@ -24,17 +26,26 @@
   <target name="publish" depends="clean, resolve">
     <antcall target="bin" />
     <antcall target="src" />
+    <antcall target="doc" />
     	
   	<property name="zipbasedir" value="${ant.project.name}" />
 		<zip destfile="${zipPath}">
 			<zipfileset dir="${ivy.lib.dir}" prefix="${zipbasedir}/lib"/>	
 			<zipfileset file="${tempSrcZipPath}" prefix="${zipbasedir}"/>		
+			<zipfileset dir="doc/reference" prefix="${zipbasedir}/doc/reference"/>	
 		</zip>
 		
-		<delete file="${tempSrcZipPath}"/>
-		
     <publishToIvy/>
+    
+    <antcall target="clean" />
 	</target>
+   
+  <target name="doc" depends="">
+		<mkdir dir="doc/reference" />
+		<copy todir="doc/reference">
+			<fileset dir="../../docWiki/java"/>
+		</copy>
+	</target>  
    
    <target name="bin" depends="">
    	<copy todir="${ivy.lib.dir}">
@@ -105,19 +116,17 @@
 			</fileset>
 		</copy>
 		
-		<zip destfile="${tempSrcZipPath}">
-			<zipfileset dir="${tempSrcDir}"/>			
-		</zip>
-		<!--
+		<echo message="inserting GPL header..."/>
 		<filehead beforePattern="package" header="${content.gplheader}" >
 			<sources dir="${tempSrcDir}">
 				<include name="**/*.java" />
 			</sources>
 		</filehead>
-		-->
+		
+		<zip destfile="${tempSrcZipPath}">
+			<zipfileset dir="${tempSrcDir}"/>			
+		</zip>
 		
 		<delete dir="${tempSrcDir}" failonerror="true"/>
-		
-		
 	</target>
 </project>
