@@ -26,7 +26,7 @@ namespace Db4objects.Db4odoc.Replication
         public static void ConfigureForExisting()
         {
             Db4oFactory.Configure().ObjectClass(typeof(Pilot)).EnableReplication(true);
-            Db4objects.Db4o .Defragment.Defragment.Defrag(DtFileName);
+            Db4objects.Db4o.Defragment.Defragment.Defrag(DtFileName);
         }
         // end configureForExisting
 

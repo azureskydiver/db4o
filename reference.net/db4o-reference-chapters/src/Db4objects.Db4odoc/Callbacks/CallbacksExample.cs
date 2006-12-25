@@ -77,7 +77,7 @@ namespace Db4objects.Db4odoc.Callbacks
             {
                 Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
                 container.Set(car);
-                car = new Car("Ferrari", new Pilot("Finn Kimi Raikkonen"));
+                car = new Car("Ferrari", new Pilot("Kimi Raikkonen"));
                 container.Set(car);
             }
             finally

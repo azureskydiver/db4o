@@ -49,7 +49,7 @@ namespace Db4objects.Db4odoc.Aliases
             {
                 Driver driver = new Driver("David Barrichello", 99);
                 db.Set(driver);
-                driver = new Driver("Finn Kimi Raikkonen", 100);
+                driver = new Driver("Kimi Raikkonen", 100);
                 db.Set(driver);
             }
             finally
@@ -67,7 +67,7 @@ namespace Db4objects.Db4odoc.Aliases
             {
                 Pilot pilot = new Pilot("David Barrichello", 99);
                 db.Set(pilot);
-                pilot = new Pilot("Finn Kimi Raikkonen", 100);
+                pilot = new Pilot("Kimi Raikkonen", 100);
                 db.Set(pilot);
             }
             finally

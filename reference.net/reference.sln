@@ -4,9 +4,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-reference-chapters", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2005", "..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj", "{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drs", "..\..\svntest2\drs\drs.csproj", "{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o.Tools-2005", "..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj", "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Drs", "..\..\install\dRS-6.0\Db4objects.Drs-6.0\Db4objects.Drs\Db4objects.Drs.csproj", "{F00EE21B-A68A-46D7-97CC-634C7628308B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,14 +22,14 @@ Global
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F00EE21B-A68A-46D7-97CC-634C7628308B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F00EE21B-A68A-46D7-97CC-634C7628308B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F00EE21B-A68A-46D7-97CC-634C7628308B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F00EE21B-A68A-46D7-97CC-634C7628308B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

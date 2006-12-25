@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.ExamplesRunner</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Concurrency.ConcurrencyExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -149,6 +149,10 @@
     <Compile Include="src\Db4objects.Db4odoc\clientserver\TransactionExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Concurrency\ConcurrencyExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Concurrency\OptimisticThread.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Concurrency\PessimisticThread.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Concurrency\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\constructors\C1.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -315,25 +319,25 @@
     <Compile Include="src\Db4objects.Db4odoc\persist\PeekPersistedExample.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\queries\ArbitraryQuery.cs">
+    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\ArbitraryQuery.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\queries\ComplexQuery.cs">
+    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\ComplexQuery.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\queries\NQExample.cs">
+    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\NQExample.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\queries\PersistentExample.cs">
+    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\PersistentExample.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\queries\Pilot.cs">
+    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\Pilot.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\queries\PilotHundredPoints.cs">
+    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\PilotHundredPoints.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\queries\QueryExample.cs">
+    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\QueryExample.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\Db4objects.Db4odoc\querymode\Pilot.cs" />
@@ -450,9 +454,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\svntest2\drs\drs.csproj">
-      <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
-      <Name>drs</Name>
+    <ProjectReference Include="..\..\..\install\dRS-6.0\Db4objects.Drs-6.0\Db4objects.Drs\Db4objects.Drs.csproj">
+      <Project>{F00EE21B-A68A-46D7-97CC-634C7628308B}</Project>
+      <Name>Db4objects.Drs</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj">
       <Project>{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}</Project>
