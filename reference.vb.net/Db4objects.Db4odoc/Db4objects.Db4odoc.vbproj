@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Program</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Concurrency.ConcurrencyExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -71,6 +71,10 @@
     <Compile Include="Clientserver\StopServer.vb" />
     <Compile Include="Clientserver\TemperatureSensorReadout.vb" />
     <Compile Include="Clientserver\TransactionExample.vb" />
+    <Compile Include="Concurrency\ConcurrencyExample.vb" />
+    <Compile Include="Concurrency\OptimisticThread.vb" />
+    <Compile Include="Concurrency\PessimisticThread.vb" />
+    <Compile Include="Concurrency\Pilot.vb" />
     <Compile Include="Constructors\C1.vb" />
     <Compile Include="Constructors\C2.vb" />
     <Compile Include="Constructors\C3.vb" />
@@ -178,13 +182,13 @@
     <Compile Include="Program.vb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\svntest2\drs\drs.csproj">
-      <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
-      <Name>drs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\drs.net\Db4objects.Drs.csproj">
+      <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
+      <Name>Db4objects.Drs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

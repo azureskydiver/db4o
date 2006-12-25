@@ -42,7 +42,7 @@ Namespace Db4objects.Db4odoc.Aliases
             Try
                 Dim driver As Driver = New Driver("David Barrichello", 99)
                 db.Set(driver)
-                driver = New Driver("Finn Kimi Raikkonen", 100)
+                driver = New Driver("Kimi Raikkonen", 100)
                 db.Set(driver)
             Finally
                 db.Close()
@@ -56,7 +56,7 @@ Namespace Db4objects.Db4odoc.Aliases
             Try
                 Dim pilot As Pilot = New Pilot("David Barrichello", 99)
                 db.Set(pilot)
-                pilot = New Pilot("Finn Kimi Raikkonen", 100)
+                pilot = New Pilot("Kimi Raikkonen", 100)
                 db.Set(pilot)
             Finally
                 db.Close()
