@@ -88,7 +88,7 @@ public class Collections {
 		hashMap = new HashMap();
 		treeMap = new TreeMap();
 		set = new HashSet();
-		queue = new ArrayDeque();
+		queue = new LinkedList();
 
 		array = new Item[2];
 		primitiveArrayBoolean = new boolean[10];
