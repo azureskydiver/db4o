@@ -62,7 +62,7 @@ Namespace Db4objects.Db4odoc.Callbacks
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 container.Set(car)
-                car = New Car("Ferrari", New Pilot("Finn Kimi Raikkonen"))
+                car = New Car("Ferrari", New Pilot("Kimi Raikkonen"))
                 container.Set(car)
             Finally
                 CloseContainer()
