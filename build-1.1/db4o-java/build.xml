@@ -90,67 +90,21 @@
 	</target>  
 	
 	<target name="src" depends="">
+		<property name="includes" value=".project, .classpath, **/src/**, **/src/**/*.yap"/>
+		
 		<mkdir dir="${tempSrcDir}"/>
-    	<copy todir="${tempSrcDir}/db4ounit">
-			<fileset dir="${dir.db4ounit}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="src/**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${tempSrcDir}/db4oj">
-			<fileset dir="${dir.j}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${tempSrcDir}/db4ounit.extensions">
-			<fileset dir="${dir.db4ounit.extensions}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="src/**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${tempSrcDir}/db4oj.tests">
-			<fileset dir="${dir.j.tests}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="src/**/*.java" />
-				<include name="src/**/*.yap" />
-			</fileset>
-		</copy>
-		<copy todir="${tempSrcDir}/db4ojdk1.2">
-			<fileset dir="${dir.j.jdk1.2}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-				<include name="**/src/**/*.yap" />
-			</fileset>
-		</copy>
-		<copy todir="${tempSrcDir}/db4ojdk5">
-			<fileset dir="${dir.j.jdk5}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-				<include name="**/src/**/*.yap" />
-			</fileset>
-		</copy>
-		<copy todir="${tempSrcDir}/bloat">
-			<fileset dir="${dir.bloat}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="src/**" />
-				<exclude name="**/CVS/**" />
-			</fileset>
-		</copy>
-		<copy todir="${tempSrcDir}/db4onqopt">
-			<fileset dir="${dir.j.nqopt}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-			</fileset>
-		</copy>
+		
+		<copySrcDir srcDir="${dir.j}" 				destDir="${tempSrcDir}/db4oj" 			includes="${includes}"/>
+		<copySrcDir srcDir="${dir.j.jdk1.2}" 	destDir="${tempSrcDir}/db4ojdk1.2" 	includes="${includes}"/>
+		<copySrcDir srcDir="${dir.j.jdk5}" 		destDir="${tempSrcDir}/db4ojdk5" 		includes="${includes}"/>
+		
+		<copySrcDir srcDir="${dir.j.tests}" 	destDir="${tempSrcDir}/db4oj.tests" includes="${includes}"/>
+		<copySrcDir srcDir="${dir.j.nqopt}" 	destDir="${tempSrcDir}/db4onqopt" 	includes="${includes}"/>
+		
+		<copySrcDir srcDir="${dir.bloat}" 		destDir="${tempSrcDir}/bloat" 			includes="${includes}"/>
+		
+		<copySrcDir srcDir="${dir.db4ounit}"	destDir="${tempSrcDir}/db4ounit"		includes="${includes}"/>
+		<copySrcDir srcDir="${dir.db4ounit.extensions}"	destDir="${tempSrcDir}/db4ounit.extensions"	includes="${includes}"/>
 		
 		<echo message="inserting GPL header..."/>
 		<filehead beforePattern="package" header="${content.gplheader}" >
