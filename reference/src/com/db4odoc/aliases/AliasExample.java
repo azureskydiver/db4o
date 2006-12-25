@@ -49,7 +49,7 @@ public class AliasExample {
 		try {
 			Driver driver = new Driver("David Barrichello",99);
 			db.set(driver);
-			driver = new Driver("Finn Kimi Raikkonen",100);
+			driver = new Driver("Kimi Raikkonen",100);
 			db.set(driver);
 		} finally {
 			db.close();
@@ -63,7 +63,7 @@ public class AliasExample {
 		try {
 			Pilot pilot = new Pilot("David Barrichello",99);
 			db.set(pilot);
-			pilot = new Pilot("Finn Kimi Raikkonen",100);
+			pilot = new Pilot("Kimi Raikkonen",100);
 			db.set(pilot);
 		} finally {
 			db.close();

@@ -58,7 +58,7 @@ public class CallbacksExample {
 		try {
 			Car car = new Car("BMW",new Pilot("Rubens Barrichello"));
 			db.set(car);
-			car = new Car("Ferrari",new Pilot("Finn Kimi Raikkonen"));
+			car = new Car("Ferrari",new Pilot("Kimi Raikkonen"));
 			db.set(car);
 		} finally {
 			db.close();
