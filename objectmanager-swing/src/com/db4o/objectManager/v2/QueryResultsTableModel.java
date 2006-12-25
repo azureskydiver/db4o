@@ -110,8 +110,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 				}
 			}
 			if(rc.isArray()){
-				Object[] arr = (Object[]) ret;
-				return new CollectionValue("Array: " + arr.length + " items");
+				return new CollectionValue("Array: " + reflector.array().getLength(ret) + " items");				
 			}
 		} catch (Sql4oException e) {
 			queryResultsPanel.setErrorMessage("Error occurred: " + e.getMessage());

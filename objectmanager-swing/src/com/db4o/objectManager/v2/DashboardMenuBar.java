@@ -4,11 +4,9 @@ import com.jgoodies.looks.Options;
 import com.db4o.objectManager.v2.util.Log;
 import com.db4o.objectManager.v2.custom.ProgressDialog;
 import com.db4o.objectManager.v2.uiHelper.*;
-import com.db4o.objectManager.v2.maint.DefragTask;
 import demo.objectmanager.model.DemoPopulator;
 
 import javax.swing.*;
-import javax.swing.SwingWorker;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Cursor;
