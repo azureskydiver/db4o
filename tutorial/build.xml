@@ -1,0 +1,46 @@
+<project name="f1-signed" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<import file="../build-1.1/common-1.1.xml"/>
+
+	<property name="jarPath" value="${defaultArtifactDir}/${ant.project.name}.jar"/>
+	
+	<path id="lib.path.id">
+        <fileset dir="${ivy.lib.dir}" includes="*.jar"/>
+	</path>
+	
+	<target name="clean">
+  	<cleanIvyDir/>
+	</target>
+	
+	<target name="init">
+		<tstamp />
+		<initIvyDir/>
+	</target>
+	
+	<target name="jar" depends="init, resolve">
+		<buildjar 
+			srcDir="src"
+			jarPath="${jarPath}" 
+			classPathRefId="lib.path.id"
+			target="1.3"
+			source="1.3"
+			compileIncludes="com/db4o/f1/**/*.java"
+		/>
+		
+	</target>
+	
+	<target name="sign-jar" depends="jar">
+		<db4oSignJar jar="${jarPath}"/>
+	</target>
+	
+	 <target name="configure" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+   </target>
+   
+   <target name="resolve" depends="configure">
+        <ivy:retrieve />
+    </target>
+    
+    <target name="publish" depends="resolve, sign-jar">
+        <publishToIvy/>
+    </target>
+</project>
