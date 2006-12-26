@@ -142,7 +142,7 @@ public class MsgD extends Msg{
 	    _payLoad.append(aBytes);
 	}
 
-	final void writeInt(int aInt) {
+	public final void writeInt(int aInt) {
 		_payLoad.writeInt(aInt);
 	}
 	

@@ -73,7 +73,7 @@ public class Msg implements Cloneable {
 	public static final MWriteNew WRITE_NEW = new MWriteNew();
 	public static final MsgObject WRITE_UPDATE = new MWriteUpdate();
 	public static final MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
-	
+	public static final MWriteBatchedObjects WRITE_BATCHED_OBJECTS = new MWriteBatchedObjects();
 
 	Msg() {
 		_msgID = _idGenerator++;
@@ -83,6 +83,10 @@ public class Msg implements Cloneable {
 	Msg(String aName) {
 		this();
 		_name = aName;
+	}
+	
+	public static Msg getMessage(int id) {
+		return _messages[id];
 	}
 	
 	public final Msg clone(Transaction a_trans) {

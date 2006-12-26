@@ -10,7 +10,7 @@ public final class MWriteNew extends MsgObject {
 	public final boolean processAtServer(YapServerThread serverThread) {
         int yapClassId = _payLoad.readInt();
         YapFile stream = (YapFile)stream();
-        unmarshall(YapConst.INT_LENGTH);
+        unmarshall(_payLoad._offset);
         synchronized (streamLock()) {
             YapClass yc = yapClassId == 0 ? null : stream.getYapClass(yapClassId);
             _payLoad.writeEmbedded();
