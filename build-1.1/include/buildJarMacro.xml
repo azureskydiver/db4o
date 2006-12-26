@@ -4,6 +4,7 @@
 		<attribute name="srcDir"/>
 		<attribute name="jarPath"/>
 		
+		<attribute name="compileIncludes" default="**"/>
 		<attribute name="compileExcludes" default=""/>
 		
 		<attribute name="classPathRefId" default="emptyClassPath"/>
@@ -36,7 +37,8 @@
 				debug="@{debug}"
 				target="@{target}"
 				source="@{source}"
-				encoding="@{encoding}"		
+				encoding="@{encoding}"	
+				includes="@{compileIncludes}"		
 				excludes="@{compileExcludes}"		
 			>
 				<classpath refid="@{classPathRefId}" />

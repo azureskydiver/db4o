@@ -1,0 +1,14 @@
+<project name="signJarMacro" basedir="." default="">
+	<macrodef name="db4oSignJar" description="sign jar">
+		<attribute name="jar"/>
+		
+		<attribute name="keystore"		default="${signjar.keystore}"/>
+		<attribute name="alias"				default="${signjar.alias}"/>
+		<attribute name="keypass"			default="${signjar.keypass}"/>
+		<attribute name="storepass"		default="${signjar.storepass}"/>
+		
+		<sequential>
+			<signjar keystore="@{keystore}" jar="@{jar}" alias="@{alias}" keypass="@{keypass}" storepass="@{storepass}" />			
+		</sequential>
+	</macrodef>
+</project>
