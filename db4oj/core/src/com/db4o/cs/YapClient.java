@@ -49,7 +49,11 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	protected boolean _doFinalize=true;
     
     private int _blockSize = 1;
+
+    // TODO: batch mode will be configured in configuration api.
+	boolean _batchFlag = false;
     
+	private Collection4 _batchedObjects = new Collection4();
 
 	private YapClient(Configuration config) {
 		super(config,null);
@@ -141,6 +145,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		if (_readerThread == null || _readerThread.isClosed()) {
 			return super.close2();
 		}
+		writeBatchedObjects();
 		try {
 			writeMsg(Msg.COMMIT_OK);
 			expectedResponse(Msg.OK);
@@ -173,6 +178,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final void commit1() {
+		writeBatchedObjects();
 		i_trans.commit();
 	}
     
@@ -305,6 +311,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public AbstractQueryResult getAll(Transaction trans) {
+		writeBatchedObjects();
 		int mode = config().queryEvaluationMode().asInt();
 		writeMsg(Msg.GET_ALL.getWriterForInt(trans, mode));
 		return readQueryResult(trans);
@@ -554,6 +561,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final YapWriter readWriterByID(Transaction a_ta, int a_id) {
+		writeBatchedObjects();
 		try {
 			writeMsg(Msg.READ_OBJECT.getWriterForInt(a_ta, a_id));
 			YapWriter bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT))
@@ -569,6 +577,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final YapWriter[] readWritersByIDs(Transaction a_ta, int[] ids) {
+		writeBatchedObjects();
 		try {
 			writeMsg(Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length));
 			MsgD message = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
@@ -641,6 +650,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final void rollback1() {
+		clearBatchedObjects();
 		writeMsg(Msg.ROLLBACK);
 		i_trans.rollback();
 	}
@@ -720,7 +730,12 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
-		writeMsg(Msg.WRITE_NEW.getWriter(a_yapClass, aWriter));
+		MsgD msg = Msg.WRITE_NEW.getWriter(a_yapClass, aWriter);
+		if (_batchFlag) {
+			addToBatch(msg);
+		} else {
+			writeMsg(msg);
+		}
 	}
     
 	public final void writeTransactionPointer(int a_address) {
@@ -728,6 +743,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
+		writeBatchedObjects();
 		writeMsg(Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes));
 	}
 
@@ -781,6 +797,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     }
     
     public long[] getIDsForClass(Transaction trans, YapClass clazz){
+    	writeBatchedObjects();
     	writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, clazz.getID()));
     	YapReader reader = expectedByteResponse(Msg.ID_LIST);
     	int size = reader.readInt();
@@ -801,6 +818,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     }
     
     public QueryResult executeQuery(QQuery query){
+		writeBatchedObjects();
     	Transaction trans = query.getTransaction();
     	query.evaluationMode(config().queryEvaluationMode());
         query.marshall();
@@ -808,6 +826,40 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return readQueryResult(trans);
     }
 
+    public final void writeBatchedObjects() {
+		if (!_batchFlag || _batchedObjects.isEmpty()) {
+			return;
+		}
+		int size = _batchedObjects.size();
 
+		Object[] newObjects = _batchedObjects.toArray();
+		int length = (1 + size) * YapConst.INT_LENGTH;
+		for (int i = 0; i < size; i++) {
+				length += ((Msg) newObjects[i]).payLoad().getLength();
+		}
+		Msg msg;
+		MsgD multibytes = Msg.WRITE_BATCHED_OBJECTS.getWriterForLength(
+				getTransaction(), length);
+		multibytes.writeInt(size);
+		for (int i = 0; i < size; i++) {
+			msg = (Msg) newObjects[i];
+			if (msg == null) {
+				multibytes.writeInt(0);
+			} else {
+				multibytes.writeInt(msg.payLoad().getLength());
+				multibytes.payLoad().append(msg.payLoad()._buffer);
+			}
+		}
+		writeMsg(multibytes);
+		clearBatchedObjects();
+	}
+
+	public void addToBatch(Msg msg) {
+		_batchedObjects.add(msg);
+	}
+
+	private void clearBatchedObjects() {
+		_batchedObjects.clear();
+	}
 
 }

@@ -45,6 +45,7 @@ final class TransactionClient extends Transaction {
         if (! super.delete(ref, id, cascade)){
         	return false;
         }
+        i_client.writeBatchedObjects();
         i_client.writeMsg(Msg.TA_DELETE.getWriterForInts(this, new int[] {id, cascade}));
         return true;
     }
@@ -90,7 +91,11 @@ final class TransactionClient extends Transaction {
         }
         i_delete = null;
         i_writtenUpdateDeletedMembers = null;
-        i_client.writeMsg(Msg.PROCESS_DELETES);
+		if(i_client._batchFlag) {
+			i_client.addToBatch(Msg.PROCESS_DELETES);
+		} else {
+			i_client.writeMsg(Msg.PROCESS_DELETES);
+		}
     }
     
     public void rollback() {
@@ -101,6 +106,7 @@ final class TransactionClient extends Transaction {
 
     public void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type,
         int a_cascade) {
+    	i_client.writeBatchedObjects();
         i_client.writeMsg(Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
             new int[]{
             a_id,
