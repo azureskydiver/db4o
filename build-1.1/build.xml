@@ -3,9 +3,7 @@
   
   <target name="all">
   	<antcall target="clean" />
-  	<ivy:buildlist reference="buildPath">
-  	
-      <fileset dir="../doctor"							includes="build-signed-jar.xml"/>
+  	<ivy:buildlist reference="buildPath">      
       <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
       <fileset dir="../db4oj/tools"					includes="build.xml"/>
 
@@ -18,6 +16,9 @@
       <fileset dir="../db4ojdk5/test"				includes="build.xml"/>
       
       <fileset dir="../db4onqopt"						includes="build.xml"/>
+      <fileset dir="../doctor"							includes="build-1.1-dynamic.xml"/>
+      <fileset dir="../tutorial"						includes="build.xml"/>
+      
       <fileset dir="db4o-java"							includes="build.xml"/>
     </ivy:buildlist>
     

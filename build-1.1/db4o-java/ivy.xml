@@ -3,6 +3,7 @@
     <configurations>
     	<conf name="lib"/>
     	<conf name="tutorial"/>
+    	<conf name="doctor"/>
     </configurations>
     <publications>
         	<artifact name="${ant.project.name}" ext="zip"/>
@@ -18,6 +19,11 @@
       <dependency name="db4o-java5" 	rev="latest.integration" transitive="false" conf="lib->default"/>
       <dependency name="db4ounit" 		rev="latest.integration" transitive="false" conf="lib->default"/>
         
-      <dependency name="doctor-applet-signed" rev="latest.integration" transitive="false" conf="tutorial->default"/>
+      <dependency name="doctor" 				rev="latest.integration" transitive="false" conf="tutorial->signed"/>
+      <dependency name="f1-signed" 			rev="latest.integration" transitive="false" conf="tutorial->default"/>
+      <dependency name="db4o-nqopt" 		rev="latest.integration" transitive="false" conf="tutorial->signed"/>
+      <dependency name="db4o-java1.2" 	rev="latest.integration" transitive="false" conf="tutorial->signed"/>
+      
+       <dependency name="doctor" 				rev="latest.integration" transitive="false" conf="doctor->default"/>
     </dependencies>
 </ivy-module>

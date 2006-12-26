@@ -34,15 +34,14 @@
 		<zip destfile="${zipPath}">
 			<zipfileset dir="${ivy.lib.dir}/lib" prefix="${zipbasedir}/lib"/>	
 			<zipfileset file="${tempSrcZipPath}" prefix="${zipbasedir}"/>		
-			<zipfileset dir="doc/reference" prefix="${zipbasedir}/doc/reference"/>	
-			<zipfileset dir="doc/api" prefix="${zipbasedir}/doc/api"/>
+			<zipfileset dir="doc" prefix="${zipbasedir}/doc"/>
 			
 			<zipfileset file="${dir.j}/db4o.license.txt" prefix="${zipbasedir}"/>
 			<zipfileset file="README.txt" prefix="${zipbasedir}"/>
 		</zip>
 		
     <publishToIvy/>
-    
+   
     <antcall target="clean" />
 	</target>
    
@@ -125,6 +124,35 @@
 	</target>
 	
 	<target name="tutorial" depends="">
-   	
+		<path id="javaDoctor.lib.path">
+	  	<fileset dir="${ivy.lib.dir}/tutorial" includes="*.jar"/>
+	  	<fileset dir="${ivy.lib.dir}/doctor" includes="*.jar"/>
+	  </path>
+	  <taskdef name="javaDoctor" classname="com.yetac.doctor.Doctor" classpathref="javaDoctor.lib.path"/>
+	  
+  	<mkdir dir="doc/tutorial/docs" />
+  	<copy todir="doc/tutorial/docs">
+			<fileset dir="${ivy.lib.dir}/tutorial"/>
+		</copy>
+			
+		<javaDoctor 
+			name="f1" 
+			home="${dir.j.tutorial}" 
+			interactive="true" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.j.tutorial.src}/" 
+			sourceextension="java" 
+			outputfile="${db4o.file}tutorial" 
+			outputpath="${basedir}/doc/tutorial" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="doctor-applet-signed.jar, db4o-java1.2-signed.jar, f1-signed.jar" 
+			outlineimage="db4objects.gif" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="true" />
+			<variable name="net" boolean="false" />
+			<variable name="mono" boolean="false" />
+			<ignoreinputfolder name="net" />
+			<ignoreinputfolder name="mono" />
+		</javaDoctor>
 	</target>  
 </project>
