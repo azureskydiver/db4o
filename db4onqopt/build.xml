@@ -37,6 +37,12 @@
     	<antcall target="jar-core" />
 			<antcall target="jar-test" />
 			
+			<copy file="${coreJarPath}" tofile="${signedJarPath}"/>
+			<db4oSignJar jar="${signedJarPath}"/>
+			
+			<copy file="lib/bloat-1.0.jar" tofile="${signedBloatJarPath}"/>			
+			<db4oSignJar jar="${signedBloatJarPath}"/>
+			
       <publishToIvy/>
 	</target>
 	

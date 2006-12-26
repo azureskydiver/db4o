@@ -2,14 +2,20 @@
     <info organisation="db4o" module="${ant.project.name}"/>
     <configurations>
     	<conf name="core"  description="Provides API and implementation of db4o-nqopt"/>
-    	<conf name="test" extends="core" visibility="private" description="for testing db4o-nqopt"/>
+    	<conf name="test" extends="core"  description="for testing db4o-nqopt"/>
+    	
+    	<conf name="signed"/>
     </configurations>
     <publications>
     	<artifact name="${ant.project.name}"				conf="core"/>
       <artifact name="${ant.project.name}-test"		conf="test"/>
+   
+   		<artifact name="${ant.project.name}-signed"	conf="signed"/>
+      <artifact name="bloat-signed"								conf="signed"/>
+      
     </publications>
     <dependencies>
-        <dependency name="db4o-java1.2" rev="latest.integration" />
+        <dependency name="db4o-java1.2" rev="latest.integration" conf="core->default"/>
         <dependency name="db4ounit" 	rev="latest.integration" transitive="false" conf="test->default"/>
         <dependency name="db4o-tools" rev="latest.integration" transitive="false" conf="test->default"/>
     </dependencies>
