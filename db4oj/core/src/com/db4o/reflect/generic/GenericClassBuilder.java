@@ -23,12 +23,12 @@ public class GenericClassBuilder implements ReflectClassBuilder {
 	}
 
 	public ReflectField createField(
-			String fieldName, 
-			ReflectClass fieldType,
+			ReflectClass parentType, 
+			String fieldName,
+			ReflectClass fieldType, 
 			boolean isVirtual, 
-			boolean isPrimitive, 
-			boolean isArray,
-			boolean isNArray) {
+			boolean isPrimitive,
+			boolean isArray, boolean isNArray) {
         if (isVirtual) {
             return new GenericVirtualField(fieldName);
         }   
