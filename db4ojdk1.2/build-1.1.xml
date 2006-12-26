@@ -46,6 +46,9 @@
     </target>
     
     <target name="publish" depends="resolve, jar">
-       <publishToIvy/>
+    	<copy file="${coreJarPath}" tofile="${signedJarPath}"/>
+			<db4oSignJar jar="${signedJarPath}"/>
+			
+      <publishToIvy/>
     </target>
 </project>
