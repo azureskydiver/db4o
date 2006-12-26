@@ -1,3 +1,11 @@
 <ivy-module version="1.0">
     <info organisation="db4o" module="${ant.project.name}"/>
+    <configurations>
+    	<conf name="default"/>
+    	<conf name="signed"/>
+    </configurations>
+    <publications>
+    	<artifact name="${ant.project.name}" conf="default"/>
+   		<artifact name="${ant.project.name}-signed"	conf="signed"/>
+    </publications>
 </ivy-module>
