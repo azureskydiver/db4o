@@ -153,7 +153,7 @@ public class KnownClassesRepository {
                 	fieldClass=_stream.reflector().forName(fieldClass.getName());
             }
     	    		    
-			fields[i]=_builder.createField(fieldName, fieldClass, fieldInfo.isVirtual(), fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
+			fields[i]=_builder.createField(clazz, fieldName, fieldClass, fieldInfo.isVirtual(), fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
 		}
 		_builder.initFields(clazz, fields);
 	}
