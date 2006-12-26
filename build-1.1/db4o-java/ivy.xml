@@ -1,13 +1,23 @@
 <ivy-module version="1.0">
     <info organisation="db4o" module="${ant.project.name}"/>
+    <configurations>
+    	<conf name="lib"/>
+    	<conf name="tutorial"/>
+    </configurations>
     <publications>
         	<artifact name="${ant.project.name}" ext="zip"/>
     </publications>
-    <dependencies>   			
-    		<dependency name="db4o-java1.1" rev="latest.integration" />
-    		<dependency name="db4o-java1.2" rev="latest.integration" />
-        <dependency name="db4o-java5" rev="latest.integration" />
-        <dependency name="db4o-nqopt" rev="latest.integration" />
-        <dependency name="db4ounit" rev="latest.integration" transitive="false"/>
+    <dependencies>   
+    	<!--
+    		conf="lib->core" means:
+    		The "lib" conf of this module depends on the "core" conf of "db4o-nqopt"
+    	--> 		 
+    	<dependency name="db4o-nqopt" 	rev="latest.integration" transitive="false" conf="lib->core"/> 
+    	<dependency name="db4o-java1.1" rev="latest.integration" transitive="false" conf="lib->default"/>
+    	<dependency name="db4o-java1.2" rev="latest.integration" transitive="false" conf="lib->default"/>
+      <dependency name="db4o-java5" 	rev="latest.integration" transitive="false" conf="lib->default"/>
+      <dependency name="db4ounit" 		rev="latest.integration" transitive="false" conf="lib->default"/>
+        
+      <dependency name="doctor-applet-signed" rev="latest.integration" transitive="false" conf="tutorial->default"/>
     </dependencies>
 </ivy-module>

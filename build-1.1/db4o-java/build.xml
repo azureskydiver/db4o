@@ -10,7 +10,7 @@
   	<delete file="${tempSrcZipPath}" failonerror="true"/>
 	</target>
 	
-	<target name="init">
+	<target name="init" depends="">
 		<tstamp />
 		<initIvyDir/>
 	</target>
@@ -20,11 +20,11 @@
    </target>
    
    <target name="resolve" depends="configure">
-        <ivy:retrieve/>
+   	<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]"/>
    </target>
    
   <target name="publish" depends="clean, resolve">
-    <antcall target="bin" />
+    <antcall target="lib" />
     <antcall target="src" />
     <antcall target="reference" />
     <antcall target="javadoc" />
@@ -32,7 +32,7 @@
     	
   	<property name="zipbasedir" value="${ant.project.name}" />
 		<zip destfile="${zipPath}">
-			<zipfileset dir="${ivy.lib.dir}" prefix="${zipbasedir}/lib"/>	
+			<zipfileset dir="${ivy.lib.dir}/lib" prefix="${zipbasedir}/lib"/>	
 			<zipfileset file="${tempSrcZipPath}" prefix="${zipbasedir}"/>		
 			<zipfileset dir="doc/reference" prefix="${zipbasedir}/doc/reference"/>	
 			<zipfileset dir="doc/api" prefix="${zipbasedir}/doc/api"/>
@@ -87,8 +87,8 @@
 		<delete dir="${defaultTempDir}" failonerror="true"/>
 	</target>  
    
-  <target name="bin" depends="resolve">
-   	<copy todir="${ivy.lib.dir}">
+  <target name="lib" depends="">
+   	<copy todir="${ivy.lib.dir}/lib">
 			<fileset dir="${dir.j.nqopt}/lib" includes="bloat*, ant*, 3rdpartylibs.txt"/>
 		</copy>
 	</target>  
@@ -124,7 +124,7 @@
 		<delete dir="${tempSrcDir}" failonerror="true"/>
 	</target>
 	
-	<target name="tutorial" depends="resolve">
+	<target name="tutorial" depends="">
    	
 	</target>  
 </project>
