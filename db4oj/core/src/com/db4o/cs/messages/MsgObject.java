@@ -74,10 +74,6 @@ public class MsgObject extends MsgD {
 		return _payLoad;
 	}
 
-	public void payLoad(YapWriter writer) {
-		_payLoad = writer;
-	}
-
 	public int getId() {
 		return _id;
 	}

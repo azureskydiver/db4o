@@ -12,7 +12,7 @@ public final class MQueryExecute extends MsgQuery {
 	private QueryEvaluationMode _evaluationMode;
 	
 	public boolean processAtServer(YapServerThread serverThread) {
-		unmarshall();
+		unmarshall(_payLoad._offset);
         writeQueryResult(execute(), serverThread, _evaluationMode);
 		return true;
 	}

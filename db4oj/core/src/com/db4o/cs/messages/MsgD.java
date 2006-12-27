@@ -38,6 +38,10 @@ public class MsgD extends Msg{
 		return _payLoad;
 	}
 	
+	public void payLoad(YapWriter writer) {
+		_payLoad = writer;
+	}
+	
 	public final MsgD getWriterForLength(Transaction a_trans, int length) {
 		MsgD message = (MsgD)clone(a_trans);
 		message._payLoad = new YapWriter(a_trans, length + YapConst.MESSAGE_LENGTH);

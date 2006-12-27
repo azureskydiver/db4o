@@ -16,17 +16,19 @@ public class MWriteBatchedObjects extends MsgD {
 			int messageId = writer.readInt();
 			Msg message = Msg.getMessage(messageId);
 			Msg clonedMessage = message.clone(ta);
-			if (clonedMessage instanceof MsgObject) {
-				MsgObject mso = (MsgObject) clonedMessage;
+			if (clonedMessage instanceof MsgD) {
+				MsgD mso = (MsgD) clonedMessage;
 				mso.payLoad(writer);
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(YapConst.MESSAGE_LENGTH - YapConst.INT_LENGTH);
 					mso.payLoad().setTransaction(ta);
 					mso.processAtServer(serverThread);
 				}
-			} // TODO: MsgD handling will be added if there's any in batched messages.
-			else {
-				 clonedMessage.processAtServer(serverThread);
+			} else { // Msg
+				 if(clonedMessage.processAtServer(serverThread)) {
+					 return true;
+				 }
+				 serverThread.processSpecialMsg(clonedMessage);
 			}
 		}
 		return true;
