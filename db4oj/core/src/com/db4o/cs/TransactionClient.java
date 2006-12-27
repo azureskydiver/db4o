@@ -20,8 +20,7 @@ final class TransactionClient extends Transaction {
     public void commit() {
     	commitTransactionListeners();
         clearAll();
-        i_client.writeMsg(Msg.COMMIT);
-        
+        i_client.writeMsg(Msg.COMMIT, true); 
     }
     
     protected void clearAll() {
@@ -45,8 +44,8 @@ final class TransactionClient extends Transaction {
         if (! super.delete(ref, id, cascade)){
         	return false;
         }
-        i_client.writeBatchedObjects();
-        i_client.writeMsg(Msg.TA_DELETE.getWriterForInts(this, new int[] {id, cascade}));
+        MsgD msg = Msg.TA_DELETE.getWriterForInts(this, new int[] {id, cascade});
+        i_client.writeMsg(msg, false);
         return true;
     }
 
@@ -57,8 +56,8 @@ final class TransactionClient extends Transaction {
         // transaction.
 
         // We need a better strategy for C/S concurrency behaviour.
-        
-        i_client.writeMsg(Msg.TA_IS_DELETED.getWriterForInt(this, a_id));
+        MsgD msg = Msg.TA_IS_DELETED.getWriterForInt(this, a_id);
+		i_client.writeMsg(msg, true);
         int res = i_client.expectedByteResponse(Msg.TA_IS_DELETED).readInt();
         return res == 1;
     }
@@ -91,11 +90,7 @@ final class TransactionClient extends Transaction {
         }
         i_delete = null;
         i_writtenUpdateDeletedMembers = null;
-		if(i_client._batchFlag) {
-			i_client.addToBatch(Msg.PROCESS_DELETES);
-		} else {
-			i_client.writeMsg(Msg.PROCESS_DELETES);
-		}
+		i_client.writeMsg(Msg.PROCESS_DELETES, false);
     }
     
     public void rollback() {
@@ -106,14 +101,9 @@ final class TransactionClient extends Transaction {
 
     public void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type,
         int a_cascade) {
-    	i_client.writeBatchedObjects();
-        i_client.writeMsg(Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
-            new int[]{
-            a_id,
-            a_yc.getID(),
-            a_type,
-            a_cascade
-        }));
+    	MsgD msg = Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
+				new int[] { a_id, a_yc.getID(), a_type, a_cascade });
+		i_client.writeMsg(msg, false);
     }
 
 	public void setPointer(int a_id, int a_address, int a_length) {

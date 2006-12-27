@@ -212,7 +212,17 @@ public final class YapServerThread extends Thread {
             return true;
         }
         
-        if (Msg.PING.equals(message)) {
+        processSpecialMsg(message);
+        
+        return true;
+    }
+
+    // Process speical messages.
+	// TODO: will we use different class to differiate these messages like
+	// MCommit, MRollback so that processSpeicalMsg method is not necessary at
+	// all. All process code should be at processAtServer method.
+	public boolean processSpecialMsg(Msg message) {
+		if (Msg.PING.equals(message)) {
         	writeOK();
             return true;
         }
@@ -273,9 +283,8 @@ public final class YapServerThread extends Thread {
             useTransaction(message);
             return true;
         }
-        
         return true;
-    }
+	}
 
     private void writeOK() {
     	write(Msg.OK);
