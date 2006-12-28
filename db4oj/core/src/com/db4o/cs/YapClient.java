@@ -49,9 +49,6 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	protected boolean _doFinalize=true;
     
     private int _blockSize = 1;
-
-    // TODO: batch mode will be configured in configuration api.
-	boolean _batchFlag = false;
     
 	private Collection4 _batchedObjects = new Collection4();
 
@@ -653,7 +650,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final void rollback1() {
-		if (_batchFlag) {
+		if (i_config.batchMessages()) {
 			clearBatchedObjects();
 		} 
 		writeMsg(Msg.ROLLBACK, true);
@@ -737,10 +734,10 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 	
 	final void writeMsg(Msg a_message, boolean flush) {
-		if(_batchFlag) {
+		if(i_config.batchMessages()) {
 			if(flush && _batchedObjects.isEmpty()) {
 				// if there's nothing batched, just send this message directly
-				a_message.write(this, i_socket);
+				writeMsg(a_message);
 			} else {
 				addToBatch(a_message);
 				if(flush) {
@@ -748,7 +745,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 				}
 			}
 		} else {
-			a_message.write(this, i_socket);
+			writeMsg(a_message);
 		}
 	}
 
@@ -846,7 +843,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     }
 
     public final void writeBatchedObjects() {
-		if (!_batchFlag || _batchedObjects.isEmpty()) {
+		if (_batchedObjects.isEmpty()) {
 			return;
 		}
 		int size = _batchedObjects.size();
@@ -873,11 +870,11 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		clearBatchedObjects();
 	}
 
-	public void addToBatch(Msg msg) {
+	public final void addToBatch(Msg msg) {
 		_batchedObjects.add(msg);
 	}
 
-	private void clearBatchedObjects() {
+	private final void clearBatchedObjects() {
 		_batchedObjects.clear();
 	}
 
