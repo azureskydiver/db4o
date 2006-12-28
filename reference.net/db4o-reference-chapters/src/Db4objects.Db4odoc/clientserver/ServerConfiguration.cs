@@ -20,7 +20,7 @@ namespace Db4objects.Db4odoc.ClientServer
         /// <summary>
         /// the port to be used by the server.
         /// </summary>
-        public const int PORT = 4488;
+        public const int PORT = 0xdb40;
 
         /// <summary>
         /// the user name for access control.
