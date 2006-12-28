@@ -1,4 +1,4 @@
-package com.db4odoc.f1.clientserver;
+package com.db4odoc.clientserver;
 
 import java.io.*;
 import com.db4o.*;
