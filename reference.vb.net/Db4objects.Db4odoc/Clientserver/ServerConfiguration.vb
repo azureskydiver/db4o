@@ -18,7 +18,7 @@ Namespace Db4objects.Db4odoc.ClientServer
         ''' <summary>
         ''' the port to be used by the server.
         ''' </summary>
-        Public Const PORT As Integer = 4488
+        Public Const PORT As Integer = &HDB40
 
         ''' <summary>
         ''' the user name for access control.
