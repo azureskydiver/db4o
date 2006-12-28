@@ -20,9 +20,9 @@ import com.db4o.reflect.generic.*;
  * 
  * @exclude
  */
-public final class Config4Impl
-
-implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, QueryConfiguration {
+public final class Config4Impl implements Configuration, DeepClone,
+		MessageSender, FreespaceConfiguration, QueryConfiguration,
+		ClientServerConfiguration {
     
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
@@ -125,6 +125,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
     	//= new NIOFileAdapter(512,3);
     
 	private final static KeySpec ALIASES=new KeySpec(null);
+	
+	private final static KeySpec BATCH_MESSAGES=new KeySpec(false);
 
 	//  is null in the global configuration until deepClone is called
 	private YapStream        i_stream;
@@ -819,4 +821,15 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration, Quer
 		return (QueryEvaluationMode)_config.get(QUERY_EVALUATION_MODE);
 	}
 
+	public ClientServerConfiguration clientServer() {
+		return this;
+	}
+
+	public void batchMessages(boolean flag) {
+		_config.put(BATCH_MESSAGES, flag);
+	}
+	
+	public boolean batchMessages() {
+		return _config.getAsBoolean(BATCH_MESSAGES);
+	}
 }

@@ -25,10 +25,10 @@ public class MWriteBatchedObjects extends MsgD {
 					mso.processAtServer(serverThread);
 				}
 			} else { // Msg
-				 if(clonedMessage.processAtServer(serverThread)) {
-					 return true;
+				 if(!clonedMessage.processAtServer(serverThread)) {
+					 // if the message is not processed in Msg.processAtServer
+					 serverThread.processSpecialMsg(clonedMessage);
 				 }
-				 serverThread.processSpecialMsg(clonedMessage);
 			}
 		}
 		return true;
