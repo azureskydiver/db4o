@@ -20,8 +20,8 @@ public class Messaging extends ClientServerTestCase {
 	TestMessageRecipient recipient1 = new TestMessageRecipient();
 
 	public void conc(ExtObjectContainer oc, int seq) {
-		server().ext().configure().setMessageRecipient(recipient1);
-		MessageSender sender = oc.configure().getMessageSender();
+		server().ext().configure().clientServer().setMessageRecipient(recipient1);
+		MessageSender sender = oc.configure().clientServer().getMessageSender();
 		this.messageString = MSG;
 		// FIXME: it throws NPE sometimes
 		sender.send(new Data(seq));
