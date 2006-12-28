@@ -19,7 +19,7 @@ public class FulltextIndex implements MessageRecipient{
     private List indexEntries;
     
     public void configure(){
-        Db4o.configure().setMessageRecipient(new FulltextIndex());
+        Db4o.configure().clientServer().setMessageRecipient(new FulltextIndex());
         Db4o.configure().objectClass(FullTextIndexEntry.class).objectField("text").indexed(true);
     }
     
@@ -53,7 +53,7 @@ public class FulltextIndex implements MessageRecipient{
     public void objectOnUpdate(ObjectContainer objectContainer){
         ensureServerMessageRecipient();
         if(objectContainer instanceof ExtClient){
-            MessageSender sender = objectContainer.ext().configure().getMessageSender();
+            MessageSender sender = objectContainer.ext().configure().clientServer().getMessageSender();
             sender.send(new IDMessage(objectContainer.ext().getID(this)));
         }else{
             updateIndex(objectContainer);
@@ -105,7 +105,7 @@ public class FulltextIndex implements MessageRecipient{
     private void ensureServerMessageRecipient(){
         ObjectServer server = Test.server();
         if(server != null){
-            server.ext().configure().setMessageRecipient(new FulltextIndex());
+            server.ext().configure().clientServer().setMessageRecipient(new FulltextIndex());
         }
     }
     
