@@ -1,4 +1,4 @@
-package com.db4odoc.f1.clientserver;
+package com.db4odoc.clientserver;
 
 /**
  * Configuration used for {@link StartServer} and {@link StopServer}.
@@ -20,7 +20,7 @@ public interface ServerConfiguration {
   /**
    * the port to be used by the server.
    */
-  public int    PORT = 4488;
+  public int    PORT = 0xdb40;
   
   /**
    * the user name for access control.

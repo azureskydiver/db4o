@@ -1,4 +1,4 @@
-package com.db4odoc.f1.clientserver;
+package com.db4odoc.clientserver;
 
 import com.db4o.*;
 import com.db4o.messaging.*;
