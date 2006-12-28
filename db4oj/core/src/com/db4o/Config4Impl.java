@@ -73,8 +73,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
 	
-	private final static KeySpec INTERN_STRINGS=new KeySpec(false);
-    
 	private final static KeySpec IS_SERVER=new KeySpec(false);
     
 	private final static KeySpec QUERY_EVALUATION_MODE=new KeySpec(QueryEvaluationMode.IMMEDIATE);
@@ -132,10 +130,10 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private YapStream        i_stream;
 	
 	// The following are very frequently being asked for, so they show up in the profiler. 
-	// Let's keep it out of the Hashtable.
+	// Let's keep them out of the Hashtable.
+	private boolean _internStrings;
 	private int _messageLevel;
 	private boolean	_readOnly;
-
 
     public int activationDepth() {
     	return _config.getAsInt(ACTIVATION_DEPTH);
@@ -223,6 +221,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     public Object deepClone(Object param) {
         Config4Impl ret = new Config4Impl();
         ret._config=(KeySpecHashtable4)_config.deepClone(this);
+        ret._internStrings = _internStrings;
         ret._messageLevel = _messageLevel;
         ret._readOnly = _readOnly;
         return ret;
@@ -305,7 +304,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     public void internStrings(boolean doIntern) {
-    	_config.put(INTERN_STRINGS,doIntern);
+    	_internStrings = doIntern;
     }
     
     public void io(IoAdapter adapter){
@@ -710,7 +709,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public boolean internStrings() {
-		return _config.getAsBoolean(INTERN_STRINGS);
+		return _internStrings;
 	}
 	
 	public void isServer(boolean flag){
