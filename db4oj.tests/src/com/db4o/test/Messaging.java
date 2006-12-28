@@ -17,9 +17,9 @@ public class Messaging implements MessageRecipient{
 		
 		if(Test.isClientServer()){
 			
-			Test.server().ext().configure().setMessageRecipient(this);
+			Test.server().ext().configure().clientServer().setMessageRecipient(this);
             
-			MessageSender sender = Test.objectContainer().configure().getMessageSender();
+			MessageSender sender = Test.objectContainer().configure().clientServer().getMessageSender();
 			this.messageString = MSG; 
 			sender.send(this);
 			
