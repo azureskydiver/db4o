@@ -22,8 +22,8 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 
 	public void testTypedObjectIndex() throws Exception {
 		SlotDefragmentFixture.forceIndex();
-		Defragment.defrag(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentConstants.FILENAME);
+		Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
+		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
 		Query query=db.query();
 		query.constrain(SlotDefragmentFixture.Data.class);
 		query.descend(SlotDefragmentFixture.TYPEDOBJECT_FIELDNAME).descend(SlotDefragmentFixture.PRIMITIVE_FIELDNAME).constrain(new Integer(SlotDefragmentFixture.VALUE));
@@ -33,18 +33,18 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 	}
 
 	public void testNoForceDelete() throws Exception {
-		Defragment.defrag(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
+		Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
 		Assert.expect(IOException.class, new CodeBlock() {
 			public void run() throws Exception {
-				Defragment.defrag(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
+				Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
 			}
 		});
 	}	
 
 	public void setUp() throws Exception {
-		new File(SlotDefragmentConstants.FILENAME).delete();
-		new File(SlotDefragmentConstants.BACKUPFILENAME).delete();
-		SlotDefragmentFixture.createFile(SlotDefragmentConstants.FILENAME);
+		new File(SlotDefragmentTestConstants.FILENAME).delete();
+		new File(SlotDefragmentTestConstants.BACKUPFILENAME).delete();
+		SlotDefragmentFixture.createFile(SlotDefragmentTestConstants.FILENAME);
 	}
 
 	public void tearDown() throws Exception {
