@@ -34,7 +34,7 @@ public class SlotDefragmentFixture {
 	public static final int VALUE = 42;
 
 	public static DefragmentConfig defragConfig(boolean forceBackupDelete) {
-		DefragmentConfig defragConfig = new DefragmentConfig(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
+		DefragmentConfig defragConfig = new DefragmentConfig(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
 		defragConfig.forceBackupDelete(forceBackupDelete);
 		return defragConfig;
 	}
@@ -55,7 +55,7 @@ public class SlotDefragmentFixture {
 		config.objectClass(Data.class).objectField(PRIMITIVE_FIELDNAME).indexed(true);
 		config.objectClass(Data.class).objectField(WRAPPER_FIELDNAME).indexed(true);
 		config.objectClass(Data.class).objectField(TYPEDOBJECT_FIELDNAME).indexed(true);
-		ObjectContainer db=Db4o.openFile(config,SlotDefragmentConstants.FILENAME);
+		ObjectContainer db=Db4o.openFile(config,SlotDefragmentTestConstants.FILENAME);
 		Assert.isTrue(db.ext().storedClass(Data.class).storedField(PRIMITIVE_FIELDNAME,Integer.TYPE).hasIndex());
 		Assert.isTrue(db.ext().storedClass(Data.class).storedField(WRAPPER_FIELDNAME,Integer.class).hasIndex());
 		Assert.isTrue(db.ext().storedClass(Data.class).storedField(TYPEDOBJECT_FIELDNAME,Data.class).hasIndex());
@@ -64,8 +64,8 @@ public class SlotDefragmentFixture {
 
 	public static void assertIndex(String fieldName) throws IOException {
 		forceIndex();
-		Defragment.defrag(SlotDefragmentConstants.FILENAME,SlotDefragmentConstants.BACKUPFILENAME);
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentConstants.FILENAME);
+		Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
+		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
 		Query query=db.query();
 		query.constrain(Data.class);
 		query.descend(fieldName).constrain(new Integer(VALUE));
@@ -75,7 +75,7 @@ public class SlotDefragmentFixture {
 	}
 
 	public static void assertDataClassKnown(boolean expected) {
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentConstants.FILENAME);
+		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
 		try {
 			StoredClass storedClass=db.ext().storedClass(Data.class);
 			if(expected) {
