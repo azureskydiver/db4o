@@ -51,6 +51,10 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     private int _blockSize = 1;
     
 	private Collection4 _batchedObjects = new Collection4();
+	
+	// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
+	// used for to write the number of messages.
+	private int _batchedQueueLength = YapConst.INT_LENGTH;
 
 	private YapClient(Configuration config) {
 		super(config,null);
@@ -743,7 +747,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 				writeMsg(a_message);
 			} else {
 				addToBatch(a_message);
-				if(flush) {
+				if(flush || _batchedQueueLength > i_config.maxBatchQueueSize()) {
 					writeBatchedObjects();
 				}
 			}
@@ -849,19 +853,14 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		if (_batchedObjects.isEmpty()) {
 			return;
 		}
-		int size = _batchedObjects.size();
 
-		Object[] newObjects = _batchedObjects.toArray();
-		int length = (1 + size) * YapConst.INT_LENGTH;
-		for (int i = 0; i < size; i++) {
-				length += ((Msg) newObjects[i]).payLoad().getLength();
-		}
 		Msg msg;
 		MsgD multibytes = Msg.WRITE_BATCHED_OBJECTS.getWriterForLength(
-				getTransaction(), length);
-		multibytes.writeInt(size);
-		for (int i = 0; i < size; i++) {
-			msg = (Msg) newObjects[i];
+				getTransaction(), _batchedQueueLength);
+		multibytes.writeInt(_batchedObjects.size());
+		Iterator4 iter = _batchedObjects.iterator();
+		while(iter.moveNext()) {
+			msg = (Msg) iter.current();
 			if (msg == null) {
 				multibytes.writeInt(0);
 			} else {
@@ -875,10 +874,15 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 
 	public final void addToBatch(Msg msg) {
 		_batchedObjects.add(msg);
+		// the first INT_LENGTH is for buffer.length, and then buffer content.
+		_batchedQueueLength += YapConst.INT_LENGTH + msg.payLoad().getLength();
 	}
 
 	private final void clearBatchedObjects() {
 		_batchedObjects.clear();
+		// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
+		// used for to write the number of messages.
+		_batchedQueueLength = YapConst.INT_LENGTH;
 	}
 
 }

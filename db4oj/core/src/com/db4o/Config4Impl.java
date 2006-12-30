@@ -125,6 +125,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec ALIASES=new KeySpec(null);
 	
 	private final static KeySpec BATCH_MESSAGES=new KeySpec(false);
+	
+	private static final KeySpec MAX_BATCH_QUEUE_SIZE = new KeySpec(Integer.MAX_VALUE);
 
 	//  is null in the global configuration until deepClone is called
 	private YapStream        i_stream;
@@ -830,5 +832,13 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	public boolean batchMessages() {
 		return _config.getAsBoolean(BATCH_MESSAGES);
+	}
+	
+	public void maxBatchQueueSize(int maxSize) {
+		_config.put(MAX_BATCH_QUEUE_SIZE, maxSize);
+	}
+
+	public int maxBatchQueueSize() {
+		return _config.getAsInt(MAX_BATCH_QUEUE_SIZE);
 	}
 }
