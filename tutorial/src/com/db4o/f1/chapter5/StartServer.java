@@ -40,7 +40,7 @@ public class StartServer
       
       // Using the messaging functionality to redirect all
       // messages to this.processMessage
-      db4oServer.ext().configure().setMessageRecipient(this);
+      db4oServer.ext().configure().clientServer().setMessageRecipient(this);
       
       // to identify the thread in a debugger
       Thread.currentThread().setName(this.getClass().getName());
