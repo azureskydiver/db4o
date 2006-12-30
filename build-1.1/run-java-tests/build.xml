@@ -1,0 +1,59 @@
+<project name="run-java-tests" basedir="." default="run-tests"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	
+	<import file="../common-1.1.xml"/>
+	
+	<property file="build.properties" />
+	
+	<target name="clean">
+  	<cleanIvyDir/>
+	</target>
+	
+	<target name="init" depends="">
+		<tstamp />
+		<initIvyDir/>
+	</target>
+	
+	 <target name="configure" depends="init">
+   	<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+   </target>
+   
+   <target name="resolve" depends="configure">
+   	<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]"/>
+   </target>
+  
+  <target name="run-tests" depends="clean, resolve">
+  	<antcall target="1.1"/>  
+  	
+	</target>
+	
+	<target name="1.1">
+		<echo message="Running db4o JDK 1.1 tests..."/>
+		<path id="1.1.path">
+	  	<fileset dir="${ivy.lib.dir}/1.1" includes="*.jar"/>
+	  </path>
+	  
+	  <copySrcDir srcDir="${dir.j.tests}" destDir="db4oj.tests" includes="test/**/*.yap"/>
+	  <runJvmTests className="com.db4o.db4ounit.jre11.AllTests" classPathRefId="1.1.path" jvm="${file.jvm.jdk1.1}"/>
+	  <delete dir="db4oj.tests" failonerror="true"/>
+	</target>
+	
+	<macrodef name="runJvmTests" description="Run some Java tests">
+		<attribute name="jvm"/> 
+		<attribute name="classPathRefId"/>
+		<attribute name="className"/>
+		<attribute name="timeOut" default="1200000"/>
+		<sequential>
+			<delete dir="${runDir}" failonerror="true"/>
+  		<copy todir="${runDir}">
+				<fileset dir="${dir.j.jdk1.2}/test/db4oVersions"/>
+			</copy>
+			
+			<java 
+				jvm="@{jvm}" classname="@{className}" 
+				classpathref="@{classPathRefId}" timeout="@{timeOut}"
+				dir="${runDir}" fork="true" failonerror="true" 
+			/>
+			<delete dir="${runDir}" failonerror="true"/>
+		</sequential>
+	</macrodef>
+</project>

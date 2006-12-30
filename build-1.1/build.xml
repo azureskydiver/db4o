@@ -1,7 +1,7 @@
-<project name="build-1.1" basedir="." default="all" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="build-1.1" basedir="." default="dist" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="common-1.1.xml" />
   
-  <target name="all">
+  <target name="dist">
   	<antcall target="clean" />
   	<ivy:buildlist reference="buildPath">      
       <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
@@ -29,8 +29,8 @@
     <echo message="Produced jars, dlls and zips at ${repository.dir}."/>
   </target>
   
-  <target name="dRS" depends="all">
-  	<ant antfile="build-1.1.xml" dir="../drs" target="publish" inheritAll="false" inheritRefs="false"/>
+  <target name="run-tests" depends="">
+  	<ant antfile="build.xml" dir="run-java-tests" target="run-tests" inheritAll="false" inheritRefs="false"/>
   </target>
 	
   <target name="init" depends="">
@@ -42,5 +42,9 @@
 	<target name="clean" description="--> clean the repo and cache">
     	<delete dir="${ivy.cache.dir}" failonerror="true"/>
     	<delete dir="${repository.dir}" failonerror="true"/>
+  </target>
+  
+  <target name="graph" depends="">
+  	<ivy:repreport xml="false" dot="true" />
   </target>
 </project>
