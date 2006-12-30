@@ -94,5 +94,14 @@ public interface ClientServerConfiguration {
 	 *            true for batching messages.
 	 */
 	public void batchMessages(boolean flag);
+	
+	/**
+	 * Configures the maximum memory buffer size for batched message. If the
+	 * size of batched messages is greater than <code>maxSize</code>, batched
+	 * messages will be sent to server.
+	 * 
+	 * @param maxSize
+	 */
+	public void maxBatchQueueSize(int maxSize);
 
 }
