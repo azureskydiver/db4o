@@ -2,8 +2,14 @@
     <info organisation="db4o" module="${ant.project.name}"/>
     <configurations>
     	<conf name="1.1"/>
+    	<conf name="1.2"/>
+    	<conf name="5"/>
+    	<conf name="nq"/>
     </configurations>
     <dependencies>
     	<dependency name="db4o-test-java1.1" rev="latest.integration" conf="1.1->default"/>
+    	<dependency name="db4o-test-java1.2" rev="latest.integration" conf="1.2->default"/>
+    	<dependency name="db4o-test-java5"	 rev="latest.integration" conf="5->default"/>
+    	<dependency name="db4o-nqopt"				 rev="latest.integration" conf="nq->test"/>
     </dependencies>
 </ivy-module>
