@@ -1,0 +1,9 @@
+<ivy-module version="1.0">
+    <info organisation="db4o" module="${ant.project.name}"/>
+    <configurations>
+    	<conf name="1.1"/>
+    </configurations>
+    <dependencies>
+    	<dependency name="db4o-test-java1.1" rev="latest.integration" conf="1.1->default"/>
+    </dependencies>
+</ivy-module>
