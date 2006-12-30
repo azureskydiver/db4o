@@ -2,7 +2,7 @@
     <info organisation="db4o" module="${ant.project.name}"/>
     <dependencies>
         <dependency name="db4ounit" rev="latest.integration" transitive="false" />
-        <dependency name="db4o-java1.2" rev="latest.integration" />
+        <dependency name="db4o-java1.2" rev="latest.integration" conf="*->default"/>
         <dependency name="db4o-tools" rev="latest.integration" transitive="false" />
     </dependencies>
 </ivy-module>
