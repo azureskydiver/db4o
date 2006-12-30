@@ -18,3 +18,7 @@ db4o devtools and doctor are required by dBS. They are already built and package
 -Open a console
 -Type ant -f build-build.xml
 -The updated jars of db4o devtools and doctor will be placed in /lib
+
+Using dBS as Production
+=======================
+- Turn "failonerror" to "true" in the <java> task of macrodef <runJvmTests> in run-java-tests/build.xml

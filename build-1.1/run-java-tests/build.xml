@@ -22,38 +22,56 @@
    </target>
   
   <target name="run-tests" depends="clean, resolve">
-  	<antcall target="1.1"/>  
+  	<runJvmTests testsName="db4o 1.1" className="com.db4o.db4ounit.jre11.AllTests" 							classPathLibDir="${ivy.lib.dir}/1.1" 	jvm="${file.jvm.jdk1.1}"/>
+  	<runJvmTests testsName="db4o 1.2" className="com.db4o.db4ounit.jre12.AllTestsJdk1_2"				classPathLibDir="${ivy.lib.dir}/1.2" 	jvm="${file.jvm.jdk1.2}"/>
+  	<runJvmTests testsName="db4o 5" 	className="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5"		classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
+  	<runJvmTests testsName="db4o NQ x JVM 5" 	className="com.db4o.test.nativequery.AllTestsNQ"	classPathLibDir="${ivy.lib.dir}/nq" 	jvm="${file.jvm.jdk1.5}"/>
+  	<runJvmTests testsName="db4o Defrag x JVM 5"	className="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag"	classPathLibDir="${ivy.lib.dir}/5" 	jvm="${file.jvm.jdk1.5}"/>
   	
-	</target>
+  	<!--runWithException()-->
+  	<runJvmTests testsName="db4o 1.1 runWithException()" 	arg="*" className="com.db4o.test.AllTests"				classPathLibDir="${ivy.lib.dir}/1.1" 	jvm="${file.jvm.jdk1.1}"/>
+  	<runJvmTests testsName="db4o 1.2 runWithException()" 	arg="*" className="com.db4o.test.AllTestsJdk1_2"	classPathLibDir="${ivy.lib.dir}/1.2" 	jvm="${file.jvm.jdk1.2}"/>
+  	<runJvmTests testsName="db4o 5 runWithException()" 		arg="*" className="com.db4o.test.AllTestsJdk5"		classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
+  	<runJvmTests testsName="db4o Legacy x JVM 5 " 				arg="*" className="com.db4o.test.AllTestsLegacy"	classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
+  </target>
 	
-	<target name="1.1">
-		<echo message="Running db4o JDK 1.1 tests..."/>
-		<path id="1.1.path">
-	  	<fileset dir="${ivy.lib.dir}/1.1" includes="*.jar"/>
-	  </path>
-	  
-	  <copySrcDir srcDir="${dir.j.tests}" destDir="db4oj.tests" includes="test/**/*.yap"/>
-	  <runJvmTests className="com.db4o.db4ounit.jre11.AllTests" classPathRefId="1.1.path" jvm="${file.jvm.jdk1.1}"/>
-	  <delete dir="db4oj.tests" failonerror="true"/>
-	</target>
-	
+	<!-- TODO WARNING
+		turn failonerror to true when Production!!! 
+	-->
 	<macrodef name="runJvmTests" description="Run some Java tests">
+		<attribute name="testsName"/> 
 		<attribute name="jvm"/> 
-		<attribute name="classPathRefId"/>
+		<attribute name="classPathLibDir"/>
 		<attribute name="className"/>
-		<attribute name="timeOut" default="1200000"/>
+		<attribute name="timeOut" default="3600000"/>
+		<attribute name="arg" default=""/> 
 		<sequential>
+			<echo message="Running @{testsName} tests..."/> 
+			<path id="temp.path">
+	  		<fileset dir="@{classPathLibDir}" includes="*.jar"/>
+	  	</path>
 			<delete dir="${runDir}" failonerror="true"/>
   		<copy todir="${runDir}">
 				<fileset dir="${dir.j.jdk1.2}/test/db4oVersions"/>
 			</copy>
+			<copy todir="${runDir}">
+				<fileset dir="${dir.j.tests}/test/db4oVersions"/>
+			</copy>
+			
+			<copySrcDir srcDir="${dir.j.tests}" destDir="db4oj.tests" includes="test/**/*.yap"/>
 			
 			<java 
 				jvm="@{jvm}" classname="@{className}" 
-				classpathref="@{classPathRefId}" timeout="@{timeOut}"
-				dir="${runDir}" fork="true" failonerror="true" 
-			/>
-			<delete dir="${runDir}" failonerror="true"/>
+				classpathref="temp.path" timeout="@{timeOut}"
+				dir="${runDir}" fork="true" failonerror="false" 
+			> 
+				<arg value="@{arg}" />
+			</java>
+			
+			<delete dir="db4oj.tests" failonerror="true"/>
+			<delete dir="${runDir}" failonerror="true"/>			
+			
+			<!--<input message="@{testsName} tests done. Press Enter to continue..."/>-->
 		</sequential>
 	</macrodef>
 </project>

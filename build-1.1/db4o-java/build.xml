@@ -88,8 +88,16 @@
    
   <target name="lib" depends="">
    	<copy todir="${ivy.lib.dir}/lib">
-			<fileset dir="${dir.j.nqopt}/lib" includes="bloat*, ant*, 3rdpartylibs.txt"/>
-		</copy>
+			<fileset dir="${dir.j.nqopt}/lib" includes="*.txt"/>
+		</copy>		
+		
+		<move todir="${ivy.lib.dir}/lib">
+	    <fileset dir="${ivy.lib.dir}/lib">
+	       <include name="*.jar"/>
+	       <exclude name="ant.jar"/>
+	    </fileset>
+    	<mapper type="glob" from="*.jar" to="*-${db4o.version.dotted}.jar"/>
+  </move>
 	</target>  
 	
 	<target name="src" depends="">
