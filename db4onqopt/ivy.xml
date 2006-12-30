@@ -8,6 +8,9 @@
     </configurations>
     <publications>
     	<artifact name="${ant.project.name}"				conf="core"/>
+    	<artifact name="ant"												conf="core"/>
+    	<artifact name="bloat"											conf="core"/>
+    	
       <artifact name="${ant.project.name}-test"		conf="test"/>
    
    		<artifact name="${ant.project.name}-signed"	conf="signed"/>
