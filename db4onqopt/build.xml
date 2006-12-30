@@ -37,6 +37,9 @@
     	<antcall target="jar-core" />
 			<antcall target="jar-test" />
 			
+			<copy file="lib/ant.jar" 			 tofile="${defaultArtifactDir}/ant.jar"/>
+			<copy file="lib/bloat-1.0.jar" tofile="${defaultArtifactDir}/bloat.jar"/>
+			
 			<copy file="${coreJarPath}" tofile="${signedJarPath}"/>
 			<db4oSignJar jar="${signedJarPath}"/>
 			
