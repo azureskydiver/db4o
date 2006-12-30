@@ -38,6 +38,15 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
 	}	
 	
 	public void testActivating() throws Exception {
+		// FIXME: It fails in c/s mode. The objects are activated twice during
+		// readPrefetch.
+		// The first place is in YapObject#readPrefetch:
+		// a_reader.setInstantiationDepth(_class.configOrAncestorConfig() ==
+		// null ? 1 : 0);
+		// The second place is in ClientQueryResultIterator#current():
+		// return _client.activate(prefetchedCurrent());
+		// Therefore, activating event listener is notified twice. The test is
+		// good, and the implementation code should be FIXED.
 		storeAndReopen();
 		assertActivationEvent(eventRegistry().activating());
 	}
