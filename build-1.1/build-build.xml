@@ -15,9 +15,11 @@
 				<fileset dir="${db4oDevToolsPath}/artifact"/>
 		</copy>
 		
+		<!-- does not pre-compile doctor anymore because it is now compiled JIT 
 		<ant dir="${doctorPath}" antfile="build-1.1.xml"/>
     <copy todir="lib">
 				<fileset dir="${doctorPath}/artifact"/>
 		</copy>
+		-->
   </target>
 </project>
