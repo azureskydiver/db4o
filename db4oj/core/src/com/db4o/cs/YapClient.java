@@ -387,6 +387,9 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public YapClass getYapClass(int a_id) {
+		if(a_id == 0) {
+			return null;
+		}
 		YapClass yc = super.getYapClass(a_id);
 		if (yc != null) {
 			return yc;
