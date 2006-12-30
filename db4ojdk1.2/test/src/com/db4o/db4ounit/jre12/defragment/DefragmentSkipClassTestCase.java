@@ -37,9 +37,9 @@ public class DefragmentSkipClassTestCase implements TestLifeCycle {
 	}
 
 	public void setUp() throws Exception {
-		new File(SlotDefragmentConstants.FILENAME).delete();
-		new File(SlotDefragmentConstants.BACKUPFILENAME).delete();
-		SlotDefragmentFixture.createFile(SlotDefragmentConstants.FILENAME);
+		new File(SlotDefragmentTestConstants.FILENAME).delete();
+		new File(SlotDefragmentTestConstants.BACKUPFILENAME).delete();
+		SlotDefragmentFixture.createFile(SlotDefragmentTestConstants.FILENAME);
 	}
 
 	public void tearDown() throws Exception {
