@@ -85,6 +85,21 @@ public interface ClientServerConfiguration {
 	 * @see #singleThreadedClient
 	 */
 	public void timeoutPingClients(int milliseconds);
+	
+	/**
+     * configures the client messaging system to be single threaded 
+     * or multithreaded.
+     * <br><br>Recommended settings:<br>
+     * - <code>true</code> for low ressource systems.<br>
+     * - <code>false</code> for best asynchronous performance and fast
+     * GUI response.
+     * <br><br>Default value:<br>
+     * - .NET Compactframework: <code>true</code><br>
+     * - all other plaforms: <code>false</code><br><br>
+     * @param flag the desired setting
+     */
+    public void singleThreadedClient(boolean flag);
+
 
 	/**
 	 * Configures to batch messages between client and server. By default, batch

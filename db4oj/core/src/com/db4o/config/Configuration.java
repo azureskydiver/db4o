@@ -591,20 +591,6 @@ public interface Configuration {
     public void setOut(PrintStream outStream);
     
     /**
-     * configures the client messaging system to be single threaded 
-     * or multithreaded.
-     * <br><br>Recommended settings:<br>
-     * - <code>true</code> for low ressource systems.<br>
-     * - <code>false</code> for best asynchronous performance and fast
-     * GUI response.
-     * <br><br>Default value:<br>
-     * - .NET Compactframework: <code>true</code><br>
-     * - all other plaforms: <code>false</code><br><br>
-     * @param flag the desired setting
-     */
-    public void singleThreadedClient(boolean flag);
-
-    /**
      * tuning feature: configures whether db4o should try to instantiate one instance
      * of each persistent class on system startup.
      * <br><br>In a production environment this setting can be set to <code>false</code>,
