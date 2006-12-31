@@ -10,6 +10,7 @@ public class AllTests extends Db4oTestSuite {
         
         return new Class[] {
             SlotDefragmentVectorTestCase.class,
+            SlotDefragmentVectorUUIDTestCase.class,
 		};
     }
 }
