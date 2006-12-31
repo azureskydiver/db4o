@@ -7,7 +7,7 @@ import com.db4o.YapConst;
 import com.db4o.YapWriter;
 import com.db4o.cs.YapServerThread;
 
-public class MWriteBatchedObjects extends MsgD {
+public class MWriteBatchedMessages extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		int count = readInt();
 		Transaction ta = transaction();

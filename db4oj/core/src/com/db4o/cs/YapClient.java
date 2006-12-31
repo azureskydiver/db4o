@@ -50,7 +50,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     
     private int _blockSize = 1;
     
-	private Collection4 _batchedObjects = new Collection4();
+	private Collection4 _batchedMessages = new Collection4();
 	
 	// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
 	// used for to write the number of messages.
@@ -742,13 +742,13 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	
 	final void writeMsg(Msg a_message, boolean flush) {
 		if(i_config.batchMessages()) {
-			if(flush && _batchedObjects.isEmpty()) {
+			if(flush && _batchedMessages.isEmpty()) {
 				// if there's nothing batched, just send this message directly
 				writeMsg(a_message);
 			} else {
 				addToBatch(a_message);
 				if(flush || _batchedQueueLength > i_config.maxBatchQueueSize()) {
-					writeBatchedObjects();
+					writeBatchedMessages();
 				}
 			}
 		} else {
@@ -849,16 +849,16 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return readQueryResult(trans);
     }
 
-    public final void writeBatchedObjects() {
-		if (_batchedObjects.isEmpty()) {
+    public final void writeBatchedMessages() {
+		if (_batchedMessages.isEmpty()) {
 			return;
 		}
 
 		Msg msg;
-		MsgD multibytes = Msg.WRITE_BATCHED_OBJECTS.getWriterForLength(
+		MsgD multibytes = Msg.WRITE_BATCHED_MESSAGES.getWriterForLength(
 				getTransaction(), _batchedQueueLength);
-		multibytes.writeInt(_batchedObjects.size());
-		Iterator4 iter = _batchedObjects.iterator();
+		multibytes.writeInt(_batchedMessages.size());
+		Iterator4 iter = _batchedMessages.iterator();
 		while(iter.moveNext()) {
 			msg = (Msg) iter.current();
 			if (msg == null) {
@@ -873,13 +873,13 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	public final void addToBatch(Msg msg) {
-		_batchedObjects.add(msg);
+		_batchedMessages.add(msg);
 		// the first INT_LENGTH is for buffer.length, and then buffer content.
 		_batchedQueueLength += YapConst.INT_LENGTH + msg.payLoad().getLength();
 	}
 
 	private final void clearBatchedObjects() {
-		_batchedObjects.clear();
+		_batchedMessages.clear();
 		// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
 		// used for to write the number of messages.
 		_batchedQueueLength = YapConst.INT_LENGTH;
