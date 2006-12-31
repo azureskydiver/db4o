@@ -62,7 +62,7 @@ public class SimplePerformanceBenchmark {
         config.weakReferences(false);
         config.io(new MemoryIoAdapter());
         config.flushFileBuffers(false);
-        config.singleThreadedClient(true);
+        config.clientServer().singleThreadedClient(true);
     }
     
     private void store(){
