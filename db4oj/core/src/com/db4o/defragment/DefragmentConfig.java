@@ -69,34 +69,61 @@ public class DefragmentConfig {
 		_mapping = mapping;
 	}
 
+	/**
+	 * @return The path to the file to be defragmented.
+	 */
 	public String origPath() {
 		return _origPath;
 	}
 
+	/**
+	 * @return The path to the backup of the original file.
+	 */
 	public String backupPath() {
 		return _backupPath;
 	}
 
+	/**
+	 * @return The intermediate mapping used internally. For internal use only.
+	 */
 	public ContextIDMapping mapping() {
 		return _mapping;
 	}
 	
+	/**
+	 * @return The {@link StoredClassFilter} used to select stored class extents to
+	 * be included into the defragmented file.
+	 */
 	public StoredClassFilter storedClassFilter() {
 		return (_storedClassFilter==null ? NULLFILTER : _storedClassFilter);
 	}
 	
+	/**
+	 * @param storedClassFilter The {@link StoredClassFilter} used to select stored class extents to
+	 * be included into the defragmented file.
+	 */
 	public void storedClassFilter(StoredClassFilter storedClassFilter) {
 		_storedClassFilter=storedClassFilter;
 	}
 
+	/**
+	 * @return true, if an existing backup file should be deleted, false otherwise.
+	 */
 	public boolean forceBackupDelete() {
 		return _forceBackupDelete;
 	}
 	
+	/**
+	 * @param forceBackupDelete true, if an existing backup file should be deleted, false otherwise.
+	 */
 	public void forceBackupDelete(boolean forceBackupDelete) {
 		_forceBackupDelete=forceBackupDelete;
 	}
 
+	/**
+	 * @return The db4o {@link com.db4o.config.Configuration Configuration} to be applied
+	 * during the defragment process.
+	 */
 	public Configuration db4oConfig() {
 		if(_config==null) {
 			_config=vanillaDb4oConfig();
@@ -104,11 +131,15 @@ public class DefragmentConfig {
 		return _config;
 	}
 	
+	/**
+	 * @param config The db4o {@link com.db4o.config.Configuration Configuration} to be applied
+	 * during the defragment process.
+	 */
 	public void db4oConfig(Configuration config) {
 		_config=config;
 	}
 	
-	static class NullFilter implements StoredClassFilter {
+	private static class NullFilter implements StoredClassFilter {
 		public boolean accept(StoredClass storedClass) {
 			return true;
 		}

@@ -32,6 +32,7 @@ import com.db4o.inside.classindex.*;
  * <code>DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap","sample.map");<br>
  * config.forceBackupDelete(true);<br> 
  * config.yapClassFilter(new AvailableClassFilter());<br> 
+ * config.db4oConfig(db4oConfig);<br>
  * Defragment.defrag(config);</code><br><br>
  * 
  * This will move the file to "sample.bap", then create a defragmented version
@@ -39,7 +40,12 @@ import com.db4o.inside.classindex.*;
  * If the backup file already exists, it will be deleted. The defragmentation
  * process will skip all classes that have instances stored within the yap file,
  * but that are not available on the class path (through the current
- * classloader).
+ * classloader). Custom db4o configuration options are read from the
+ * {@link com.db4o.config.Configuration Configuration} passed as db4oConfig.
+ * 
+ * <strong>Note:</strong> For some specific, non-default configuration settings like
+ * UUID generation, etc., you <strong>must</strong> pass an appropriate db4o configuration,
+ * just like you'd use it within your application for normal database operation.
  */
 public class Defragment {
 
