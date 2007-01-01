@@ -45,7 +45,7 @@ namespace Db4objects.Db4odoc.ClientServer
                 
                 // Using the messaging functionality to redirect all
                 // messages to this.processMessage
-                db4oServer.Ext().Configure().SetMessageRecipient(this);
+                db4oServer.Ext().Configure().ClientServer().SetMessageRecipient(this);
                 try
                 {
                     if (! stop)
