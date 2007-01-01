@@ -20,7 +20,7 @@
    </target>
    
    <target name="resolve" depends="configure">
-   	<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]"/>
+   	<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]"/>
    </target>
    
   <target name="publish" depends="clean, resolve">
@@ -91,13 +91,16 @@
 			<fileset dir="${dir.j.nqopt}/lib" includes="*.txt"/>
 		</copy>		
 		
-		<move todir="${ivy.lib.dir}/lib">
+		<!--<renameJar srcJarDir="${ivy.lib.dir}/lib" excludes="ant.jar"/>-->
+		
+		<!--<move todir="${ivy.lib.dir}/lib">
 	    <fileset dir="${ivy.lib.dir}/lib">
 	       <include name="*.jar"/>
 	       <exclude name="ant.jar"/>
 	    </fileset>
     	<mapper type="glob" from="*.jar" to="*-${db4o.version.dotted}.jar"/>
-  </move>
+  	</move>
+  	-->
 	</target>  
 	
 	<target name="src" depends="">
