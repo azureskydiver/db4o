@@ -1,0 +1,20 @@
+<project name="renameJarMacro" basedir="." default="">
+	<macrodef name="renameJar" description="rename jars to carry the current ${db4o.version.dotted} version number">
+		<attribute name="srcJarDir"/>
+		<attribute name="destJarDir"	default="@{srcJarDir}"/>
+		<attribute name="includes"		default="*.jar"/>
+		<attribute name="excludes"		default=""/>
+		<attribute name="ext"					default="jar"/>
+		<attribute name="ver"					default="${db4o.version.dotted}"/>
+		
+		<sequential>
+			<move todir="@{destJarDir}">
+	    	<fileset dir="@{srcJarDir}"
+	    		includes="@{includes}"
+	    		excludes="@{excludes}"
+	    	/>
+    		<mapper type="glob" from="*.@{ext}" to="*-@{ver}.@{ext}"/>
+  		</move>
+		</sequential>
+	</macrodef>
+</project>

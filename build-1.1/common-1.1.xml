@@ -14,6 +14,7 @@
 	<import file="include/copyDb4ojMacro.xml"/>
 	<import file="include/db4oDevToolsTaskDef.xml"/>
 	<import file="include/signJarMacro.xml"/>
+	<import file="include/renameJarMacro.xml"/>
 	
 	<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
 </project>

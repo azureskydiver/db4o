@@ -22,6 +22,7 @@
    </target>
   
   <target name="run-tests" depends="clean, resolve">
+  	<!-- db4o java tests -->
   	<runJvmTests testsName="db4o 1.1" className="com.db4o.db4ounit.jre11.AllTests" 							classPathLibDir="${ivy.lib.dir}/1.1" 	jvm="${file.jvm.jdk1.1}"/>
   	<runJvmTests testsName="db4o 1.2" className="com.db4o.db4ounit.jre12.AllTestsJdk1_2"				classPathLibDir="${ivy.lib.dir}/1.2" 	jvm="${file.jvm.jdk1.2}"/>
   	<runJvmTests testsName="db4o 5" 	className="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5"		classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
@@ -33,11 +34,10 @@
   	<runJvmTests testsName="db4o 1.2 runWithException()" 	arg="*" className="com.db4o.test.AllTestsJdk1_2"	classPathLibDir="${ivy.lib.dir}/1.2" 	jvm="${file.jvm.jdk1.2}"/>
   	<runJvmTests testsName="db4o 5 runWithException()" 		arg="*" className="com.db4o.test.AllTestsJdk5"		classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
   	<runJvmTests testsName="db4o Legacy x JVM 5 " 				arg="*" className="com.db4o.test.AllTestsLegacy"	classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
+  
+  	<!-- dRS java tests -->
   </target>
 	
-	<!-- TODO WARNING
-		turn failonerror to true when Production!!! 
-	-->
 	<macrodef name="runJvmTests" description="Run some Java tests">
 		<attribute name="testsName"/> 
 		<attribute name="jvm"/> 
@@ -64,7 +64,9 @@
 				jvm="@{jvm}" classname="@{className}" 
 				classpathref="temp.path" timeout="@{timeOut}"
 				dir="${runDir}" fork="true" failonerror="false" 
-			> 
+			> <!-- TODO WARNING
+						turn failonerror to true when Production!!! 
+				-->
 				<arg value="@{arg}" />
 			</java>
 			
