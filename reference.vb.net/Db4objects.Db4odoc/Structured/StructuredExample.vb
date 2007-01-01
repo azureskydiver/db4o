@@ -137,8 +137,9 @@ Namespace Db4objects.Db4odoc.Structured
             Public Function Match(ByVal candidate As Car) As Boolean
                 Return candidate.Pilot.Name = _pilotName
             End Function
-
         End Class
+        ' end RetrieveCarsByPilotNamePredicate
+
         Public Shared Sub RetrieveCarsByPilotNameNative(ByVal db As IObjectContainer)
             Dim pilotName As String = "Rubens Barrichello"
             Dim results As IObjectSet = db.Query(New RetrieveCarsByPilotNamePredicate(pilotName))
