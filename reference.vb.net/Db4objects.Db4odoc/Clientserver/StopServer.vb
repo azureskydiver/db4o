@@ -26,7 +26,7 @@ Namespace Db4objects.Db4odoc.ClientServer
             End Try
             If Not objectContainer Is Nothing Then
                 ' get the messageSender for the IObjectContainer 
-                Dim messageSender As IMessageSender = objectContainer.Ext().Configure().GetMessageSender()
+                Dim messageSender As IMessageSender = objectContainer.Ext().Configure().ClientServer().GetMessageSender()
                 ' send an instance of a StopServer object
                 messageSender.Send(New StopServer())
                 ' close the IObjectContainer 

@@ -68,11 +68,11 @@ Namespace Db4objects.Db4odoc.Remote
         Public Shared Sub UpdateCarsWithMessage()
             Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
             ' create message handler on the server
-            server.Ext().Configure().SetMessageRecipient(New UpdateMessageRecipient())
+            server.Ext().Configure().ClientServer.SetMessageRecipient(New UpdateMessageRecipient())
             Try
                 Dim client As IObjectContainer = server.OpenClient()
                 ' send message object to the server
-                Dim sender As IMessageSender = client.Ext().Configure().GetMessageSender()
+                Dim sender As IMessageSender = client.Ext().Configure().ClientServer().GetMessageSender()
                 sender.Send(New UpdateServer())
                 client.Close()
             Finally

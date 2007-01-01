@@ -42,7 +42,7 @@ Namespace Db4objects.Db4odoc.ClientServer
                 db4oServer.GrantAccess(User, PASS)
                 ' Using the messaging functionality to redirect all
                 ' messages to this.processMessage
-                db4oServer.Ext().Configure().SetMessageRecipient(Me)
+                db4oServer.Ext().Configure().ClientServer().SetMessageRecipient(Me)
                 Try
                     If Not [stop] Then
                         ' wait forever until Close will change stop variable
