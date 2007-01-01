@@ -13,7 +13,7 @@ public class MessagingExample {
 	
 	public static void configureServer() {
 		ObjectServer objectServer = Db4o.openServer(YAPFILENAME, 0);
-		objectServer.ext().configure().setMessageRecipient(
+		objectServer.ext().configure().clientServer().setMessageRecipient(
 				new MessageRecipient() {
 					public void processMessage(ObjectContainer objectContainer,
 							Object message) {
@@ -24,8 +24,7 @@ public class MessagingExample {
 		try {
 			ObjectContainer clientObjectContainer = objectServer.openClient();
 			// Here is what we would do on the client to send the message
-			MessageSender sender = clientObjectContainer.ext().configure()
-					.getMessageSender();
+			MessageSender sender = clientObjectContainer.ext().configure().clientServer().getMessageSender();
 
 			sender.send(new MyClientServerMessage("Hello from client."));
 			clientObjectContainer.close();

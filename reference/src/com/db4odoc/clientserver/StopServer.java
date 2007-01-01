@@ -31,7 +31,7 @@ public class StopServer implements ServerConfiguration {
     
       // get the messageSender for the ObjectContainer 
       MessageSender messageSender = objectContainer.ext()
-          .configure().getMessageSender();
+          .configure().clientServer().getMessageSender();
       
       // send an instance of a StopServer object
       messageSender.send(new StopServer());
