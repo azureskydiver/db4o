@@ -1,4 +1,13 @@
 <project name="dRS" default="dist" basedir=".">
+	<!--
+	
+	Jan 1, 2007
+	
+	This build file is obsoleted, please use build-1.1.bat
+	
+	Albert
+	
+	-->
 	<description>dRS build file</description>
 	<!--
 		To execute the "dist" target, which is to build the dRS release, 

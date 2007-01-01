@@ -1,23 +1,18 @@
 <project name="dRS" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
-	
-	<import file="../build-1.1/common-1.1.xml"/>
-	
+	<import file="../build-1.1/common-1.1.xml"/>	
 	<property file="build-1.1.properties" />
 	
-	<!--
-	TODO 
-	filehead
-	
-	<property name="bona" value="tempClassesDir" />
-		-->	
 	<path id="compile.class.path">
-		<fileset dir="lib" 						includes="*.jar"/>
-		<fileset dir="${defaultArtifactDir}" includes="*.jar"/>
-		<fileset dir="${ivy.lib.dir}" includes="*.jar"/>
+		<fileset dir="lib" 										includes="*.jar"/>
+		<fileset dir="${defaultArtifactDir}"	includes="*.jar"/>
+		<fileset dir="${ivy.lib.dir}"					includes="*.jar"/>
 	</path>
 	
 	<target name="clean">
   	<cleanIvyDir/>
+  	<delete dir="doc/out"			failonerror="true"/>
+  	<delete dir="${tempApi}"	failonerror="true"/>
+  	<delete dir="${tempJar}"	failonerror="true"/>
   	
   	<!--
   		TODO - After old build is obsolete
@@ -34,6 +29,7 @@
 	<target name="init" depends="">
 		<tstamp />
 		<initIvyDir/>
+		<mkdir dir="${tempApi}"/>
 	</target>
 	
 	 <target name="configure" depends="init">
@@ -48,7 +44,7 @@
     	<antcall target="jar-core" />
 			<antcall target="jar-test" />
 			<antcall target="jar-tutorial" />
-			
+			<antcall target="zip"/>
 			<publishToIvy/>
 	</target>
 	
@@ -66,4 +62,43 @@
 		<buildjar srcDir="${tutorialSrcDir}" jarPath="${tutorialJarPath}" classPathRefId="compile.class.path" 			
 			fork="yes" target="1.5" source="1.5" />
 	</target> 
+	
+	<target name="zip" depends="doctor, javadoc" description="This task does not work standalone">
+		<copy	todir="${tempJar}">
+		 <fileset dir="${defaultArtifactDir}"/>
+  	</copy>
+		<renameJar srcJarDir="${tempJar}"/>
+		
+		<zip destfile="${zipPath}">
+			<zipfileset dir="${ivy.lib.dir}" prefix="${zipDir}/lib"/>
+			<zipfileset dir="${tempJar}" prefix="${zipDir}/lib"/>
+			<zipfileset dir="." prefix="${zipDir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
+			<zipfileset dir="lib" prefix="${zipDir}/lib" includes="*.jar, *.txt" />
+			<zipfileset dir="src" prefix="${zipDir}/src" excludes="misc" />			
+			<zipfileset dir="doc/out" prefix="${zipDir}/doc/tutorial" />		
+			<zipfileset dir="${tempApi}" prefix="${zipDir}/doc/api" />
+		</zip>	
+	</target>
+	
+	<target name="doctor">
+		<!-- 
+			Use the pre-compiled doctor.jar, but don't worry about that.
+			We are going to obsolete doctor very soon, right?
+		-->
+		<java fork="true" classname="com.yetac.doctor.Doctor" classpathref="compile.class.path">
+			<arg line="${basedir}/doc ${font.pdf.base}" />
+			<classpath>
+				<fileset dir="lib/doctor" includes="*.jar"/>
+			</classpath>
+		</java>
+		<move file="doc/out/doctor.pdf" tofile="doc/out/dRS-tutorial.pdf"/>
+	</target>
+	
+	<target name="javadoc">
+		<javadoc destdir="${tempApi}" author="true" version="true" use="true" windowtitle="dRS" classpathref="compile.class.path">
+			<fileset dir="src/core" defaultexcludes="yes">
+				<include name="com/db4o/drs/**/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
 </project>
