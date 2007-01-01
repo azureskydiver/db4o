@@ -2,12 +2,6 @@
 	<import file="../build-1.1/common-1.1.xml"/>	
 	<property file="build-1.1.properties" />
 	
-	<path id="compile.class.path">
-		<fileset dir="lib" 										includes="*.jar"/>
-		<fileset dir="${defaultArtifactDir}"	includes="*.jar"/>
-		<fileset dir="${ivy.lib.dir}"					includes="*.jar"/>
-	</path>
-	
 	<target name="clean">
   	<cleanIvyDir/>
   	<delete dir="doc/out"			failonerror="true"/>
@@ -40,30 +34,45 @@
         <ivy:retrieve/>
    </target>
    
-   <target name="publish" depends="clean, resolve">
-    	<antcall target="jar-core" />
-			<antcall target="jar-test" />
-			<antcall target="jar-tutorial" />
-			<antcall target="zip"/>
+   <target name="publish" depends="zip">
 			<publishToIvy/>
 	</target>
 	
-	<target name="jar-core" description="This task does not work standalone">
-		<buildjar srcDir="${coreSrcDir}" jarPath="${coreJarPath}" classPathRefId="compile.class.path"
-			fork="yes" target="1.5" source="1.5" />
+	<target name="run-tests" description="Run jar beforehand if you run this target manually">
+		<jar destfile="${defaultArtifactDir}/log4j.xml.jar">
+    	<fileset file="src/core/log4j.xml"/>
+  	</jar>
+		<path id="tests.class.path">
+				<fileset dir="lib" 										includes="*.jar"/>
+				<fileset dir="${defaultArtifactDir}"	includes="*.jar"/>
+				<fileset dir="${ivy.lib.dir}"					includes="*.jar"/>
+		</path>	 
+		<java fork="true" classname="com.db4o.drs.test.all.AllDrsTests">
+			<classpath refid="tests.class.path" />
+		</java>	
+  </target>
+	
+	<macrodef name="dRSjar">
+		<attribute name="srcDir"/> 
+		<attribute name="jarPath"/> 
+		<sequential>
+			<path id="compile.class.path">
+				<fileset dir="lib" 										includes="*.jar"/>
+				<fileset dir="${defaultArtifactDir}"	includes="*.jar"/>
+				<fileset dir="${ivy.lib.dir}"					includes="*.jar"/>
+			</path>
+			<buildjar srcDir="@{srcDir}" jarPath="@{jarPath}" classPathRefId="compile.class.path" 			
+				fork="yes" target="1.5" source="1.5" />
+		</sequential>
+	</macrodef>
+	
+	<target name="jar" depends="clean, resolve">
+		<dRSjar srcDir="${coreSrcDir}" 			jarPath="${coreJarPath}"/>
+		<dRSjar srcDir="${testSrcDir}" 			jarPath="${testJarPath}"/>
+		<dRSjar srcDir="${tutorialSrcDir}" 	jarPath="${tutorialJarPath}"/>
 	</target>
 	
-	<target name="jar-test" description="This task does not work standalone">
-		<buildjar srcDir="${testSrcDir}" jarPath="${testJarPath}" classPathRefId="compile.class.path" 			
-			fork="yes" target="1.5" source="1.5" />
-	</target>
-	
-	<target name="jar-tutorial" description="This task does not work standalone">
-		<buildjar srcDir="${tutorialSrcDir}" jarPath="${tutorialJarPath}" classPathRefId="compile.class.path" 			
-			fork="yes" target="1.5" source="1.5" />
-	</target> 
-	
-	<target name="zip" depends="doctor, javadoc" description="This task does not work standalone">
+	<target name="zip" depends="jar, doctor, javadoc" description="This task does not work standalone">
 		<copy	todir="${tempJar}">
 		 <fileset dir="${defaultArtifactDir}"/>
   	</copy>
@@ -100,5 +109,5 @@
 				<include name="com/db4o/drs/**/*.java" />
 			</fileset>
 		</javadoc>
-	</target>
+	</target>	
 </project>
