@@ -12,13 +12,12 @@ namespace Db4objects.Db4odoc.Messaging
 		public static void ConfigureServer() 
 		{
 			IObjectServer objectServer = Db4oFactory.OpenServer(YapFileName, 0);
-			objectServer.Ext().Configure().SetMessageRecipient(new SimpleMessageRecipient());
+            objectServer.Ext().Configure().ClientServer().SetMessageRecipient(new SimpleMessageRecipient());
 			try 
 			{
 				IObjectContainer clientObjectContainer = objectServer.OpenClient();
 				// Here is what we would do on the client to send the message
-				IMessageSender sender = clientObjectContainer.Ext().Configure()
-					.GetMessageSender();
+				IMessageSender sender = clientObjectContainer.Ext().Configure().ClientServer().GetMessageSender();
 
 				sender.Send(new MyClientServerMessage("Hello from client."));
 				clientObjectContainer.Close();

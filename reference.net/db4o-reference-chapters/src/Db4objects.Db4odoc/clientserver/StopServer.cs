@@ -34,7 +34,7 @@ namespace Db4objects.Db4odoc.ClientServer
             {
                 // get the messageSender for the IObjectContainer 
                 IMessageSender messageSender = objectContainer.Ext()
-                    .Configure().GetMessageSender();
+                    .Configure().ClientServer().GetMessageSender();
 
                 // send an instance of a StopServer object
                 messageSender.Send(new StopServer());

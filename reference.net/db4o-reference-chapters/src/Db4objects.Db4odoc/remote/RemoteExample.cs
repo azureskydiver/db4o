@@ -83,13 +83,13 @@ namespace Db4objects.Db4odoc.Remote
 		{
 			IObjectServer server=Db4oFactory.OpenServer(YapFileName,0);
 			// create message handler on the server
-			server.Ext().Configure().SetMessageRecipient(
+			server.Ext().Configure().ClientServer().SetMessageRecipient(
 				new UpdateMessageRecipient());
 			try 
 			{
 				IObjectContainer client=server.OpenClient();
 				// send message object to the server
-				IMessageSender sender =	client.Ext().Configure().GetMessageSender();
+                IMessageSender sender = client.Ext().Configure().ClientServer().GetMessageSender();
 				sender.Send(new UpdateServer());
 				client.Close();
 			}
