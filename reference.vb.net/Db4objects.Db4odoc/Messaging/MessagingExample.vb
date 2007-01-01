@@ -11,7 +11,7 @@ Namespace Db4objects.Db4odoc.Messaging
 
         Public Shared Sub ConfigureServer()
             Dim objectServer As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
-            objectServer.Ext().Configure().SetMessageRecipient(New SimpleMessageRecipient())
+            objectServer.Ext().Configure().ClientServer.SetMessageRecipient(New SimpleMessageRecipient())
             Try
                 Dim clientObjectContainer As IObjectContainer = objectServer.OpenClient()
                 ' Here is what we would do on the client to send the message
