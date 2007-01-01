@@ -6,6 +6,7 @@
 	
 	<target name="clean">
   	<cleanIvyDir/>
+  	<delete dir="${runDir}" failonerror="true"/>
 	</target>
 	
 	<target name="init" depends="">
@@ -35,7 +36,6 @@
   	<runJvmTests testsName="db4o 5 runWithException()" 		arg="*" className="com.db4o.test.AllTestsJdk5"		classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
   	<runJvmTests testsName="db4o Legacy x JVM 5 " 				arg="*" className="com.db4o.test.AllTestsLegacy"	classPathLibDir="${ivy.lib.dir}/5" 		jvm="${file.jvm.jdk1.5}"/>
   
-  	<!-- dRS java tests -->
   </target>
 	
 	<macrodef name="runJvmTests" description="Run some Java tests">
