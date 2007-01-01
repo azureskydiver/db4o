@@ -93,7 +93,7 @@ public class RemoteExample  {
 		ObjectServer server = Db4o.openServer(YAPFILENAME, 0);
 		server.ext().configure().messageLevel(0);
 		// create message handler on the server
-		server.ext().configure().setMessageRecipient(new MessageRecipient() {
+		server.ext().configure().clientServer().setMessageRecipient(new MessageRecipient() {
 			public void processMessage(ObjectContainer objectContainer,
 					Object message) {
 				// message type defines the code to be executed
@@ -113,7 +113,7 @@ public class RemoteExample  {
 		try {
 			ObjectContainer client = server.openClient();
 			// send message object to the server
-			MessageSender sender = client.ext().configure().getMessageSender();
+			MessageSender sender = client.ext().configure().clientServer().getMessageSender();
 			sender.send(new UpdateServer());
 			client.close();
 		} finally {
