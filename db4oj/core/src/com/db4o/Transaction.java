@@ -204,10 +204,6 @@ public abstract class Transaction {
 	        }
         }
         
-        if(isDeleted(id)){
-        	return false;
-        }
-        
         if(DTrace.enabled){
             DTrace.TRANS_DELETE.log(id);
         }
@@ -248,44 +244,7 @@ public abstract class Transaction {
         return stream().getUUIDIndex().objectAndYapObjectBySignature(this, a_uuid, a_signature);
     }
     
-	public void processDeletes() {
-    	if (i_delete == null) {
-    		i_writtenUpdateDeletedMembers = null;
-    		return;
-    	}
-
-        while(i_delete != null) {
-            
-            Tree delete = i_delete;
-            i_delete = null;
-            
-            delete.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    DeleteInfo info  = (DeleteInfo)a_object;
-                    Object obj = null;
-                    if(info._reference != null){
-                        obj = info._reference.getObject();
-                    }
-                    if(obj == null){
-                        
-                        // This means the object was gc'd.
-                        
-                        // Let's try to read it again, but this may fail in CS mode
-                        // if another transaction has deleted it. We are taking care
-                        // of possible nulls in #delete4().
-                        
-                        Object[] arr  = stream().getObjectAndYapObjectByID(Transaction.this, info._key);
-                        obj = arr[0];
-                        info._reference = (YapObject)arr[1];
-                        info._reference.flagForDelete(stream().topLevelCallId());
-                    }
-                    stream().delete3(Transaction.this,info._reference ,info._cascade, false);
-                }
-            });
-        }
-        i_writtenUpdateDeletedMembers = null;
-    }
-    
+	public abstract void processDeletes();    
 	
     public Reflector reflector(){
     	return stream().reflector();
