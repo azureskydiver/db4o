@@ -39,7 +39,8 @@
         <copy file="../objectmanager-api/dist/lib/objectmanager-api.jar" todir="./lib/"/>
         <!-- Compile the java code from ${src} into ${build} -->
         <javac srcdir="${src}" destdir="${build}"
-				debug="true" >
+				debug="true" 
+				source="1.5" target="1.5">
             <classpath refid="class.path"/>
         </javac>
         <copy todir="${build}" filtering="false">
