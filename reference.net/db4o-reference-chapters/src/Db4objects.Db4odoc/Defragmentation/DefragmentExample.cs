@@ -1,7 +1,7 @@
 using System;
 using Db4objects.Db4o.Defragment;
 
-namespace Db4objects.Db4odoc.src.Db4objects.Db4odoc.Defragmentation
+namespace Db4objects.Db4odoc.Defragmentation
 {
     class DefragmentExample
     {
