@@ -1,0 +1,10 @@
+-------------------------------------------------
+db4o Replication System for .Net (Drs)
+-------------------------------------------------
+
+Compatibility
+-------------------------------------------------
+Drs is compatible with the following products:
+
+.Net	-	v2.0 or later
+Db4o	-	v6
