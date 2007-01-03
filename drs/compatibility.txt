@@ -1,0 +1,18 @@
+----------------------------------
+db4o Replication System (dRS)
+----------------------------------
+
+Compatibility
+----------------------------------
+dRS is compatible with the following products:
+
+JVM				-	v1.5, 6 or later
+db4o			-	v6
+Hibernate	-	v3.2 (Bundled in this distribution zip)
+
+dRS is tested to work with the following RDBMS:
+Oracle		-	10g or later
+MySQL			-	v5 or later
+PostgreSQL-	v8.1 or later
+MS SQL		- v2000 or later
+HSQLDB		-	v1.8 or later
