@@ -42,13 +42,13 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 		for (int i = 0; i < fields.length; i++) {
 			StoredField field = fields[i];
 			c = 0;
-			System.out.println("field " + field.getName() + ", storedType: " + field.getStoredType() + "  " + field);
+			//System.out.println("field " + field.getName() + ", storedType: " + field.getStoredType() + "  " + field);
 			setValueAt(field.getName(), r, c++);
 			// getStoredType returns null for primitive arrays.... hmmmm
 			if (field.getStoredType() != null) {
 				setValueAt(field.getStoredType().getName(), r, c++);
 				// 	if not primitive or second class, then don't even show checkbox
-				if (!(field.getStoredType().isCollection() && field.getStoredType().isArray())) {
+				if (!(field.getStoredType().isCollection() || field.getStoredType().isArray())) {
 					setValueAt(new Boolean(field.hasIndex()), r, c++);
 				} else {
 					setValueAt(null, r, c++);
