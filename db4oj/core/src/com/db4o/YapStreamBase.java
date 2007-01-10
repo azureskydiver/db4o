@@ -231,8 +231,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             id);
         a_yapObject.setObjectWeak(_this, obj);
         a_yapObject.setStateDirty();
-        idTreeAdd(a_yapObject);
-        hcTreeAdd(a_yapObject);
+        addToReferenceSystem(a_yapObject);
     }
     
     public byte blockSize() {
@@ -1721,8 +1720,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
             ref = new YapObject();
             ref.store(trans, yc, obj);
-			idTreeAdd(ref);
-			hcTreeAdd(ref);
+			addToReferenceSystem(ref);
 			if(obj instanceof Db4oTypeImpl){
 			    ((Db4oTypeImpl)obj).setTrans(trans);
 			}
@@ -1749,6 +1747,11 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         checkNeededUpdates();
         return ref.getID();
     }
+
+	private void addToReferenceSystem(YapObject ref) {
+		idTreeAdd(ref);
+		hcTreeAdd(ref);
+	}
     
     private final boolean updateDepthSufficient(int updateDepth){
     	return (updateDepth == YapConst.UNSPECIFIED) || (updateDepth > 0);
