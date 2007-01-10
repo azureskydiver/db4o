@@ -1,6 +1,0 @@
-.a RegressionTestsRun ..
-.2 Running the regression tests ..
-
-You can find regression tests in the distribution package:
-\src\test\
-All you need to do is open the proper version project from your Visual Studio, compile and run.
