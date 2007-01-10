@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4odoc.f1.defragmentation;
+package com.db4odoc.defragmentation;
 
 
 public class DefragmentExample {

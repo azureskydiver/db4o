@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4odoc.f1.annotations;
+package com.db4odoc.annotations;
 
 import com.db4o.config.annotations.Indexed;
 
