@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4odoc.f1.semaphores;
+package com.db4odoc.semaphores;
 
 import com.db4o.*;
 import com.db4o.query.*;

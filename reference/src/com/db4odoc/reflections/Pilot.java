@@ -1,4 +1,4 @@
-package com.db4odoc.f1.reflections;
+package com.db4odoc.reflections;
 
 public class Pilot {
     private String name;

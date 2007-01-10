@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4odoc.f1.identity;
+package com.db4odoc.identity;
 
 public class Car {
     private String model;

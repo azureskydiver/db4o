@@ -1,4 +1,4 @@
-package com.db4odoc.f1.lists;
+package com.db4odoc.lists;
 
 public class Pilot {
     private String name;

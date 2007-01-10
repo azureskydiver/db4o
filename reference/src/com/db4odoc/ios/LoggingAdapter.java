@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4odoc.f1.ios;
+package com.db4odoc.ios;
 
 import java.io.File;
 import java.io.IOException;

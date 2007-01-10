@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4odoc.f1.enums;
+package com.db4odoc.enums;
 
 import java.awt.Color;
 import java.io.File;
