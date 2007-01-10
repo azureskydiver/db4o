@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.Concurrency.ConcurrencyExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Callbacks.AutoIncExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -110,9 +110,13 @@
     <Compile Include="src\Db4objects.Db4odoc\blobs\CarImage.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Callbacks\AutoIncExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\CallbacksExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\Car.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Callbacks\CountedObject.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Callbacks\IncrementedId.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Callbacks\TestObject.cs" />
     <Compile Include="src\Db4objects.Db4odoc\clientserver\Car.cs">
       <SubType>Code</SubType>
     </Compile>
