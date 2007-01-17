@@ -27,7 +27,7 @@ public class FinalFieldTestCase extends AbstractDb4oTestCase {
 		db().set(new Item(42, "jb"));
 	}
 	
-	public void testFinalField() {
+	public void _testFinalField() {
 		Item i = (Item)retrieveOnlyInstance(Item.class);
 		Assert.areEqual(42, i.i);
 		Assert.areEqual(42, i.fi);
