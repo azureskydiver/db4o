@@ -1536,7 +1536,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         throw Exceptions4.virtualException();
     }
 
-    void refresh() {
+    public void refresh() {
         if (!stateUnread()) {
             createConstructor(i_stream, i_name);
             bitFalse(YapConst.CHECKED_CHANGES);
