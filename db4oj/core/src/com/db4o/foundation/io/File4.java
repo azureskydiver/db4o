@@ -40,16 +40,14 @@ public class File4 {
 
 		RandomAccessFile rafIn = new RandomAccessFile(source.getAbsolutePath(), "r");
 		RandomAccessFile rafOut = new RandomAccessFile(target.getAbsolutePath(), "rw");
-		long len = rafIn.length();
-		byte[] bytes = new byte[bufferSize];
+		final long len = rafIn.length();
+		final byte[] bytes = new byte[bufferSize];
 
-		while (len > 0) {
-		    len -= bufferSize;
-		    if (len < 0) {
-		        bytes = new byte[(int) (len + bufferSize)];
-		    }
-		    rafIn.read(bytes);
-		    rafOut.write(bytes);
+		long totalRead=0;
+		while (totalRead<len) {
+		    int numRead=rafIn.read(bytes,0,bufferSize);
+		    rafOut.write(bytes,0,numRead);
+		    totalRead+=numRead;
 		}
 
 		rafIn.close();

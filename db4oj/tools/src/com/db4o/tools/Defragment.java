@@ -8,6 +8,7 @@ import java.lang.reflect.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.io.*;
 import com.db4o.types.*;
 
 /**
@@ -99,7 +100,7 @@ public class Defragment {
 		File file = new File(filename);
 		if (file.exists()) {
 			boolean canRun = true;
-			ExtFile backupTest = new ExtFile(file.getAbsolutePath() + ".bak");
+			File backupTest = new File(file.getAbsolutePath() + ".bak");
 			if (backupTest.exists()) {
 				if (forceBackupDelete) {
 					backupTest.delete();
@@ -127,7 +128,7 @@ public class Defragment {
 					e.printStackTrace();
 					try {
 						new File(filename).delete();
-						backupTest.copy(filename);
+						File4.copy(backupTest.getAbsolutePath(), filename);
 					} catch (Exception ex) {
 						System.out.println("Restore failed.");
 						System.out.println("Please use the backup file:");
@@ -255,41 +256,6 @@ public class Defragment {
 				}
 			} catch (Throwable t) {
 				classes[i] = null;
-			}
-		}
-	}
-
-	private class ExtFile extends File {
-
-		public ExtFile(String path) {
-			super(path);
-		}
-
-		public ExtFile copy(String toPath) throws Exception {
-			try {
-				new ExtFile(toPath).mkdirs();
-				new ExtFile(toPath).delete();
-				final int bufferSize = 64000;
-
-				RandomAccessFile rafIn = new RandomAccessFile(getAbsolutePath(), "r");
-				RandomAccessFile rafOut = new RandomAccessFile(toPath, "rw");
-				long len = rafIn.length();
-				byte[] bytes = new byte[bufferSize];
-
-				while (len > 0) {
-					len -= bufferSize;
-					if (len < 0) {
-						bytes = new byte[(int) (len + bufferSize)];
-					}
-					rafIn.read(bytes);
-					rafOut.write(bytes);
-				}
-				rafIn.close();
-				rafOut.close();
-				return new ExtFile(toPath);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw e;
 			}
 		}
 	}
