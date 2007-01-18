@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.Callbacks.AutoIncExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Debugging.DebugExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -321,27 +321,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\Db4objects.Db4odoc\persist\PeekPersistedExample.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\ArbitraryQuery.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\ComplexQuery.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\NQExample.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\PersistentExample.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\Pilot.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\PilotHundredPoints.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\reflections\queries\QueryExample.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\Db4objects.Db4odoc\querymode\Pilot.cs" />
