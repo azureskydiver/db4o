@@ -403,7 +403,6 @@ public class YapFileTransaction extends Transaction {
 
 						Object[] arr = stream().getObjectAndYapObjectByID(
 								YapFileTransaction.this, info._key);
-						obj = arr[0];
 						info._reference = (YapObject) arr[1];
 						info._reference
 								.flagForDelete(stream().topLevelCallId());

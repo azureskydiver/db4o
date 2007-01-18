@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * Index root holder for a field and a transaction.
@@ -21,7 +22,19 @@ public class IndexTransaction implements Visitor4{
 	    i_index = a_index;
 	}
 	
-	public boolean equals(Object obj) {
+	/**
+	 * Will raise an exception if argument class doesn't match this class - violates equals() contract in favor of failing fast.
+	 */
+	public boolean equals(Object obj){
+		if(this==obj) {
+			return true;
+		}
+		if(null==obj) {
+			return false;
+		}
+		if(getClass()!=obj.getClass()) {
+			Exceptions4.shouldNeverHappen();
+		}
 		return i_trans == ((IndexTransaction)obj).i_trans;
     }
     

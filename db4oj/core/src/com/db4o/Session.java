@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 final class Session
 {
 	final String			i_fileName;
@@ -20,8 +22,20 @@ final class Session
 		return i_openCount < 0;
 	}
 	
-	public boolean equals(Object a_object){
-		return i_fileName.equals(((Session)a_object).i_fileName);
+	/**
+	 * Will raise an exception if argument class doesn't match this class - violates equals() contract in favor of failing fast.
+	 */
+	public boolean equals(Object obj){
+		if(this==obj) {
+			return true;
+		}
+		if(null==obj) {
+			return false;
+		}
+		if(getClass()!=obj.getClass()) {
+			Exceptions4.shouldNeverHappen();
+		}
+		return i_fileName.equals(((Session)obj).i_fileName);
 	}
 	
 	String fileName(){

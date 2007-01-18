@@ -26,7 +26,7 @@ public abstract class QEStringCmp extends QEAbstract {
 		    }
 			return compareStrings(candidate,constraint);
 		}
-		return a_constraint.i_object.equals(null);
+		return a_constraint.i_object==null;
 	}
 	
 	public boolean supportsIndex(){
