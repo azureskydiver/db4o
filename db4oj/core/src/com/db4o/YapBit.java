@@ -14,16 +14,16 @@ public final class YapBit{
 	}
 	
 	public void set(boolean a_bit){
-		i_value = i_value * 2;
+		i_value <<= 1;
 		if(a_bit){
-			i_value ++;
+			i_value|=1;
 		}
 	}
 	
 	public boolean get(){
-		double cmp = (double)i_value / 2;
-		i_value = i_value / 2;
-		return (cmp != i_value);
+		boolean ret=((i_value&1)!=0);
+		i_value >>= 1;
+		return ret;
 	}
 	
 	public byte getByte(){

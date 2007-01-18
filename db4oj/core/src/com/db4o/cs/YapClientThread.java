@@ -56,16 +56,10 @@ class YapClientThread extends Thread{
 					close();
 					return;
 				}
-                if(i_stream == null){
-                    return;
-                }
 				if(Msg.PING.equals(message)){
 				    i_stream.writeMsg(Msg.OK);
 				}else if(Msg.CLOSE.equals(message)){
 					i_stream.logMsg(35, i_stream.toString());
-                    if(i_stream == null){
-                        return;
-                    }
                     
                     // TODO: There was a strange notify call here,
                     // possibly to accelerate shutting down.

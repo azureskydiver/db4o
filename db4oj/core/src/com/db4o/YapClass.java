@@ -1766,14 +1766,17 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
     public String toString() {
-        if(i_name == null  && i_nameBytes != null){
-            YapStringIO stringIO = 
-                i_stream == null ? 
-                    YapConst.stringIO 
-                  : i_stream.stringIO();
-            return stringIO.read(i_nameBytes);
+    	if(i_name!=null) {
+    		return i_name;
+    	}
+        if(i_nameBytes==null){
+            return "*CLASS NAME UNKNOWN*";
         }
-        return i_name;
+	    YapStringIO stringIO = 
+	    	i_stream == null ? 
+	    			YapConst.stringIO 
+	    			: i_stream.stringIO();
+	    return stringIO.read(i_nameBytes);
     }
     
     public boolean writeArray(Object array, YapReader reader) {

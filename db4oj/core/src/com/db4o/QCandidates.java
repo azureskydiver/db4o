@@ -392,7 +392,7 @@ public final class QCandidates implements Visitor4 {
         if (i_field != null) {
             QField qf = a_constraint.getField();
             if (qf != null) {
-                if (i_field.i_name != qf.i_name) {
+                if (i_field.i_name!=null&&!i_field.i_name.equals(qf.i_name)) {
                     return false;
                 }
             }

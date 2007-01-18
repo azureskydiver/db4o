@@ -15,7 +15,7 @@ public abstract class Debug extends Debug4 {
 
     public static final boolean atHome = false;
 
-    public static boolean longTimeOuts = false;
+    public static final boolean longTimeOuts = false;
 
     public static final boolean freespace = Deploy.debug ? true :false;
     

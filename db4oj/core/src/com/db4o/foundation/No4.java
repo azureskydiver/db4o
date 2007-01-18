@@ -5,6 +5,6 @@ package com.db4o.foundation;
 
 public class No4 {
     
-    public static No4 INSTANCE = new No4();
+    public final static No4 INSTANCE = new No4();
     
 }

@@ -564,18 +564,18 @@ public final class Platform4 {
             if (hasShutDownHook()) {
                 if (shutDownRunnable != null) {
                     shutDownRunnable.remove(a_stream);
-                }
-                if (shutDownRunnable.size() == 0) {
-                    if (!shutDownRunnable.dontRemove) {
-                        try {
-                            jdk().removeShutdownHook(shutDownThread);
-                        } catch (Exception e) {
-                            // this is safer than attempting perfect
-                            // synchronisation
+                    if (shutDownRunnable.size() == 0) {
+                        if (!shutDownRunnable.dontRemove) {
+                            try {
+                                jdk().removeShutdownHook(shutDownThread);
+                            } catch (Exception e) {
+                                // this is safer than attempting perfect
+                                // synchronisation
+                            }
                         }
+                        shutDownThread = null;
+                        shutDownRunnable = null;
                     }
-                    shutDownThread = null;
-                    shutDownRunnable = null;
                 }
             }
         }
