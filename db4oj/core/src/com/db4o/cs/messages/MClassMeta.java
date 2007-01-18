@@ -17,7 +17,6 @@ public class MClassMeta extends MsgObject {
 			if (genericClass != null) {
 				synchronized (streamLock()) {
 					Transaction trans = stream.getSystemTransaction();
-					YapWriter returnBytes = new YapWriter(trans, 0);
 	
 					YapClass yapClass = stream.produceYapClass(genericClass);
 					if (yapClass != null) {
@@ -25,7 +24,7 @@ public class MClassMeta extends MsgObject {
 						yapClass.setStateDirty();
 						yapClass.write(trans);
 						trans.commit();
-						returnBytes = stream
+						YapWriter returnBytes = stream
 								.readWriterByID(trans, yapClass.getID());
 						serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
 						return true;

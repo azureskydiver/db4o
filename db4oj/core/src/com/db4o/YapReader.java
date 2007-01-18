@@ -230,7 +230,7 @@ public class YapReader implements SlotReader {
                 b[--o] = (byte)a_int;
                 b[--o] = (byte) (a_int >>= 8);
                 b[--o] = (byte) (a_int >>= 8);
-                b[--o] = (byte) (a_int >>= 8);
+                b[--o] = (byte) (a_int >> 8);
                 
 //            } else {
 //                for (; ii >= 0; ii -= 8) {

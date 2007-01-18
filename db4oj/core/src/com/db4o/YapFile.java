@@ -596,11 +596,9 @@ public abstract class YapFile extends YapStream {
         if (name == null) {
             throw new NullPointerException();
         }
-        if (i_semaphores == null) {
-            synchronized (i_lock) {
-                if (i_semaphores == null) {
-                    i_semaphores = new Hashtable4(10);
-                }
+        synchronized (i_lock) {
+        	if (i_semaphores == null) {
+            	i_semaphores = new Hashtable4(10);
             }
         }
         synchronized (i_semaphores) {

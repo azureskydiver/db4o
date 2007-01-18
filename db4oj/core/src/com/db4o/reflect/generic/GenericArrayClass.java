@@ -26,7 +26,7 @@ public class GenericArrayClass extends GenericClass {
         if (!(candidate instanceof GenericArray)) {
             return false;
         }
-        return isAssignableFrom(((GenericObject)candidate)._class);
+        return isAssignableFrom(((GenericArray)candidate)._clazz);
     }
     
     public boolean equals(Object obj) {

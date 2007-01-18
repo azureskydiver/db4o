@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.foundation.KeySpec;
 import com.db4o.foundation.KeySpecHashtable4;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -60,8 +61,20 @@ public abstract class Config4Abstract {
 	}
 	
 	abstract String className();
-	
+
+	/**
+	 * Will raise an exception if argument class doesn't match this class - violates equals() contract in favor of failing fast.
+	 */
 	public boolean equals(Object obj){
+		if(this==obj) {
+			return true;
+		}
+		if(null==obj) {
+			return false;
+		}
+		if(getClass()!=obj.getClass()) {
+			Exceptions4.shouldNeverHappen();
+		}
 		return getName().equals(((Config4Abstract)obj).getName());
 	}
 
