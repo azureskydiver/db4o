@@ -14,12 +14,15 @@ namespace Db4objects.Db4odoc.Debugging
 		public static void Main(string[] args) 
 		{
 			SetCars();
+            SetCarsWithFileOutput();
 		}
 		// end Main
 
 		public static void SetCars()
 		{
+            // Set the debug message levet to the maximum
 			Db4oFactory.Configure().MessageLevel(3);
+            // Do some db4o operations
 			File.Delete(YapFileName);
 			IObjectContainer db=Db4oFactory.OpenFile(YapFileName);
 			try 
@@ -41,6 +44,41 @@ namespace Db4objects.Db4odoc.Debugging
 			Db4oFactory.Configure().MessageLevel(0);
 		}
 		// end SetCars
+
+        public static void SetCarsWithFileOutput()
+        {
+            // Create StreamWriter for a file
+            FileInfo f = new FileInfo("Debug.txt");
+            StreamWriter debugWriter = f.CreateText();
+
+            // Redirect debug output to the specified writer
+            Db4oFactory.Configure().SetOut(debugWriter);
+
+            // Set the debug message levet to the maximum
+            Db4oFactory.Configure().MessageLevel(3);
+            // Do some db4o operations
+            File.Delete(YapFileName);
+            IObjectContainer db = Db4oFactory.OpenFile(YapFileName);
+            try
+            {
+                Car car1 = new Car("BMW");
+                db.Set(car1);
+                Car car2 = new Car("Ferrari");
+                db.Set(car2);
+                db.Deactivate(car1, 2);
+                IQuery query = db.Query();
+                query.Constrain(typeof(Car));
+                IObjectSet results = query.Execute();
+                ListResult(results);
+            }
+            finally
+            {
+                db.Close();
+                debugWriter.Close();
+            }
+            Db4oFactory.Configure().MessageLevel(0);
+        }
+        // end SetCarsWithFileOutput
 
 		public static void ListResult(IObjectSet result)
 		{
