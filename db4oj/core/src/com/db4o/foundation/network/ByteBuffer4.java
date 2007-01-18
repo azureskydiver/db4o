@@ -13,7 +13,7 @@ import com.db4o.foundation.*;
  */
 class ByteBuffer4 {
 
-    private final int DISCARD_BUFFER_SIZE = 500;
+    private final static int DISCARD_BUFFER_SIZE = 500;
     protected byte[] i_cache;
     private boolean i_closed = false;
     protected int i_readOffset;

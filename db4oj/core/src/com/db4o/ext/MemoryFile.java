@@ -15,7 +15,7 @@ package com.db4o.ext;
 public class MemoryFile {
 
 	private byte[] i_bytes;
-	private final int INITIAL_SIZE_AND_INC = 10000;
+	private final static int INITIAL_SIZE_AND_INC = 10000;
 	private int i_initialSize = INITIAL_SIZE_AND_INC;
 	private int i_incrementSizeBy = INITIAL_SIZE_AND_INC;
 	
