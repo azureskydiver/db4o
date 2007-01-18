@@ -38,7 +38,7 @@ public class QE implements Unversioned {
 	}
 	
 	public boolean equals(Object obj){
-		return obj.getClass() == this.getClass();
+		return obj!=null&&obj.getClass() == this.getClass();
 	}
 	
 	// overridden in QENot 

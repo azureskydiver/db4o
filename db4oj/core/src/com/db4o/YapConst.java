@@ -114,7 +114,7 @@ public final class YapConst
     static Class CLASS_DB4OTYPEIMPL;
     static Class CLASS_INTERNAL;
     static Class CLASS_UNVERSIONED;
-    public static Class CLASS_OBJECT;
+    static Class CLASS_OBJECT;
     static Class CLASS_OBJECTCONTAINER;
     static Class CLASS_REPLICATIONRECORD; 
 	static Class CLASS_STATICFIELD;

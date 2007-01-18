@@ -9,7 +9,7 @@ import com.db4o.foundation.Tree;
  * @exclude
  */
 public final class FreeSlotNode extends TreeInt {
-	public static int sizeLimit;
+	static int sizeLimit;
 
 	FreeSlotNode _peer;
 

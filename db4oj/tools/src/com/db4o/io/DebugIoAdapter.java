@@ -9,7 +9,7 @@ import java.io.*;
  */  
 public class DebugIoAdapter extends VanillaIoAdapter{
     
-    public static int counter;
+    static int counter;
     
     private static final int[] RANGE_OF_INTEREST = new int[] {0, 20};
     

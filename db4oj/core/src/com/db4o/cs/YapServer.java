@@ -23,6 +23,8 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 
 	private YapFile i_yapFile;
 
+	private final Object _lock=new Object();
+	
 	public YapServer(final YapFile a_yapFile, int a_port) {
 		a_yapFile.setServer(true);
 		i_name = "db4o ServerSocket  FILE: " + a_yapFile.toString() + "  PORT:"
@@ -54,9 +56,9 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 			// TODO: Carl, shouldn't this be a daemon?
 			// Not sure Klaus, let's discuss.
 
-			synchronized (this) {
+			synchronized (_lock) {
 				try {
-					wait(1000);
+					_lock.wait(1000);
 					// Give the thread some time to get up.
 					// We will get notified.
 				} catch (Exception e) {
@@ -234,8 +236,8 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 	public void run() {
 		Thread.currentThread().setName(i_name);
 		i_yapFile.logMsg(31, "" + i_serverSocket.getLocalPort());
-		synchronized (this) {
-			this.notify();
+		synchronized (_lock) {
+			_lock.notifyAll();
 		}
 		while (i_serverSocket != null) {
 			try {
