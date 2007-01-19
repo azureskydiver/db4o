@@ -26,10 +26,6 @@ public class Null implements Indexable4{
         return null;
     }
     
-	public boolean equals(Object obj){
-		return obj == null;
-	}
-	
 	public boolean isEqual(Object obj) {
 		return obj == null;
 	}

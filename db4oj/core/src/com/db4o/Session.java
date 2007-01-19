@@ -38,6 +38,10 @@ final class Session
 		return i_fileName.equals(((Session)obj).i_fileName);
 	}
 	
+	public int hashCode() {
+		return i_fileName.hashCode();
+	}
+	
 	String fileName(){
 		return i_fileName;
 	}
