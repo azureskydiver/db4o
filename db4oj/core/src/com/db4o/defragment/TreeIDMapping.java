@@ -11,7 +11,7 @@ import com.db4o.foundation.*;
  * 
  * @see Defragment
  */
-class TreeIDMapping extends AbstractContextIDMapping {
+public class TreeIDMapping extends AbstractContextIDMapping {
 	
 	private Tree _tree;
 	
