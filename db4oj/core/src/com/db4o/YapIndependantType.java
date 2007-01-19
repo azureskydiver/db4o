@@ -45,7 +45,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
         return YapConst.INT_LENGTH + YapConst.ID_LENGTH;
     }
     
-	public final ReflectClass primitiveClassReflector(){
+	public ReflectClass primitiveClassReflector(){
 		return null;
 	}
     
