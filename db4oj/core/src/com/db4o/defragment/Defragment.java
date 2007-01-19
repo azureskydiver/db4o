@@ -125,10 +125,10 @@ public class Defragment {
 			defragUnindexed(context);
 			newClassCollectionID = context.mappedID(context
 					.sourceClassCollectionID());
+			context.targetClassCollectionID(newClassCollectionID);
 			int sourceIdentityID = context
 					.databaseIdentityID(DefragContextImpl.SOURCEDB);
-			targetIdentityID = context.mappedID(sourceIdentityID);
-			context.targetClassCollectionID(newClassCollectionID);
+			targetIdentityID = context.mappedID(sourceIdentityID,0);
 			targetUuidIndexID = context
 					.mappedID(context.sourceUuidIndexID(), 0);
 		} catch (CorruptionException exc) {
@@ -136,7 +136,12 @@ public class Defragment {
 		} finally {
 			context.close();
 		}
-		setIdentity(config.origPath(), targetIdentityID, targetUuidIndexID);
+		if(targetIdentityID>0) {
+			setIdentity(config.origPath(), targetIdentityID, targetUuidIndexID);
+		}
+		else {
+			listener.notifyDefragmentInfo(new DefragmentInfo("No database identity found in original file."));
+		}
 	}
 
 	private static void defragUnindexed(DefragContextImpl context)
