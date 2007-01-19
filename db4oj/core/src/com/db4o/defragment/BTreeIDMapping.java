@@ -13,7 +13,7 @@ import com.db4o.inside.mapping.*;
  * 
  * @see Defragment
  */
-class BTreeIDMapping extends AbstractContextIDMapping {
+public class BTreeIDMapping extends AbstractContextIDMapping {
 
 	private String _fileName;
 
