@@ -139,6 +139,10 @@ public class BTreePointer{
         return node().equals(other.node());
     }	
     
+    public int hashCode() {
+    	return node().hashCode();
+    }
+    
     public String toString() {
         return "BTreePointer(index=" + index() + ", node=" + node() + ")";      
     }

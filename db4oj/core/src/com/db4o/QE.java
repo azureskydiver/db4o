@@ -41,6 +41,10 @@ public class QE implements Unversioned {
 		return obj!=null&&obj.getClass() == this.getClass();
 	}
 	
+	public int hashCode() {
+		return getClass().hashCode();
+	}
+	
 	// overridden in QENot 
 	boolean not(boolean res){
 		return res;

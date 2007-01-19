@@ -37,6 +37,10 @@ public class IndexTransaction implements Visitor4{
 		}
 		return i_trans == ((IndexTransaction)obj).i_trans;
     }
+	
+	public int hashCode() {
+		return i_trans.hashCode();
+	}
     
     /**
      */

@@ -406,6 +406,10 @@ public final class BTreeNode extends YapMeta{
         return getID() == other.getID();
     }
     
+    public int hashCode() {
+    	return getID();
+    }
+    
     private void free(Transaction trans){
         _dead = true;
         if(! isRoot()){

@@ -86,6 +86,10 @@ public class Db4oDatabase implements Db4oType, Internal4{
 		return Arrays4.areEqual(other.i_signature, this.i_signature);
     }
 
+    public int hashCode() {
+    	return i_signature.hashCode();
+    }
+    
 	/**
 	 * gets the db4o ID, and may cache it for performance reasons.
 	 * 

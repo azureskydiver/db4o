@@ -78,6 +78,10 @@ public abstract class Config4Abstract {
 		return getName().equals(((Config4Abstract)obj).getName());
 	}
 
+	public int hashCode() {
+		return getName().hashCode();
+	}
+	
 	public String getName(){
 		return _config.getAsString(NAME);
 	}

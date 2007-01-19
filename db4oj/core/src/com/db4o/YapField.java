@@ -402,6 +402,10 @@ public class YapField implements StoredField {
         return false;
     }
 
+    public int hashCode() {
+    	return i_name.hashCode();
+    }
+    
     public Object get(Object a_onObject) {
         if (i_yapClass != null) {
             YapStream stream = i_yapClass.getStream();

@@ -110,6 +110,9 @@ public class Msg implements Cloneable {
 	    return _msgID == ((Msg) obj)._msgID;
 	}
 	
+	public int hashCode() {
+		return _msgID;
+	}
 
 	void fakePayLoad(Transaction a_trans) {
 	    _trans = a_trans;
