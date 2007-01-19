@@ -29,14 +29,14 @@ import com.db4o.inside.classindex.*;
  * For more detailed configuration of the defragmentation process, provide a
  * DefragmentConfig instance:<br><br>
  * 
- * <code>DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap",new TreeIDMapping("sample.map"));<br>
+ * <code>DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap",new BTreeIDMapping("sample.map"));<br>
  *	config.forceBackupDelete(true);<br>
  *	config.storedClassFilter(new AvailableClassFilter());<br>
  * config.db4oConfig(db4oConfig);<br>
  * Defragment.defrag(config);</code><br><br>
  * 
  * This will move the file to "sample.bap", then create a defragmented version
- * of this file in the original position, using a temporary file "sample.map".
+ * of this file in the original position, using a temporary file "sample.map" for BTree mapping.
  * If the backup file already exists, it will be deleted. The defragmentation
  * process will skip all classes that have instances stored within the yap file,
  * but that are not available on the class path (through the current
