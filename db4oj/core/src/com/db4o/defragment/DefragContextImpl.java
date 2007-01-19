@@ -217,7 +217,11 @@ public class DefragContextImpl implements DefragContext {
 
 	public int databaseIdentityID(DbSelector selector) {
 		YapFile db = selector.db(this);
-		return db.identity().getID(selector.transaction(this));
+		Db4oDatabase identity = db.identity();
+		if(identity==null) {
+			return 0;
+		}
+		return identity.getID(selector.transaction(this));
 	}
 	
 	private ClassIndexStrategy classIndex(YapClass yapClass) {
