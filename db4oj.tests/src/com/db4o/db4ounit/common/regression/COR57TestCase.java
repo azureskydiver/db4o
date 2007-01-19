@@ -64,16 +64,16 @@ public class COR57TestCase extends AbstractDb4oTestCase {
 		 } 
 	}
 	
-	public void _testQBE() {
-		assertQBE(3, new Base("1"));
+	public void testQBE() {
+		assertQBE(1, new BaseExtExt("1"));		
 		assertQBE(2, new BaseExt("1"));
-		assertQBE(1, new BaseExtExt("1"));
+		assertQBE(3, new Base("1"));
 	}
 	
-	public void _testSODA() {
-		assertSODA(3, new Base("1"));
-		assertSODA(2, new BaseExt("1"));
+	public void testSODA() {
 		assertSODA(1, new BaseExtExt("1"));
+		assertSODA(2, new BaseExt("1"));
+		assertSODA(3, new Base("1"));		
 	}
 	
 	private void assertSODA(int expectedCount, final Base template) {

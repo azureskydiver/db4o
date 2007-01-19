@@ -158,11 +158,13 @@ public class QConObject extends QCon {
         if (i_yapClass != null) {
             if (!(i_yapClass instanceof YapClassPrimitive)) {
                 if (!i_evaluator.identity()) {
-                    if (i_yapClass == i_candidates.i_yapClass) {
-                        if (i_evaluator.isDefault() && (! hasJoins())) {
-                            return;
-                        }
-                    }
+//                	TODO: consider another strategy to avoid reevaluating the class constraint when
+//                	the candidate collection is loaded from the class index
+//                    if (i_yapClass == i_candidates.i_yapClass) {
+//                        if (i_evaluator.isDefault() && (! hasJoins())) {
+//                            return;
+//                        }
+//                    }
                     i_selfComparison = true;
                 }
                 i_comparator = i_yapClass.prepareComparison(i_object);
