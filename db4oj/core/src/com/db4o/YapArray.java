@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.mapping.*;
@@ -196,6 +197,10 @@ public class YapArray extends YapIndependantType {
 	    prepareComparison(obj);
 	}
 
+	public ReflectClass primitiveClassReflector() {
+		return i_handler.primitiveClassReflector();
+	}
+	
     public final Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
         return mf._array.read(this, a_bytes);
     }
