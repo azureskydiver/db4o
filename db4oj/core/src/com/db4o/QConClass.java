@@ -54,16 +54,18 @@ public class QConClass extends QConObject{
 		// No instantiation of objects, if not necessary.
 		// Does not handle the special comparison of the
 		// Compare interface.
-		// 
-		if(i_evaluator.isDefault()){
-			if(! hasOrdering() && ! hasJoins()){
-				if(i_yapClass != null  && i_candidates.i_yapClass != null){
-					if(i_yapClass.getHigherHierarchy(i_candidates.i_yapClass) == i_yapClass){
-						return;
-					}
-				}
-			}
-		}
+		//
+//		TODO: consider another strategy for not reevaluating when result set was loaded from
+// 		the class index
+//		if(i_evaluator.isDefault()){
+//			if(! hasOrdering() && ! hasJoins()){
+//				if(i_yapClass != null  && i_candidates.i_yapClass != null){
+//					if(i_yapClass.getHigherHierarchy(i_candidates.i_yapClass) == i_yapClass){
+//						return;
+//					}
+//				}
+//			}
+//		}
 		i_candidates.filter(this);
 	}
 	
