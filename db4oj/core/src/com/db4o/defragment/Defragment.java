@@ -29,9 +29,9 @@ import com.db4o.inside.classindex.*;
  * For more detailed configuration of the defragmentation process, provide a
  * DefragmentConfig instance:<br><br>
  * 
- * <code>DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap","sample.map");<br>
- * config.forceBackupDelete(true);<br> 
- * config.yapClassFilter(new AvailableClassFilter());<br> 
+ * <code>DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap",new TreeIDMapping("sample.map"));<br>
+ *	config.forceBackupDelete(true);<br>
+ *	config.storedClassFilter(new AvailableClassFilter());<br>
  * config.db4oConfig(db4oConfig);<br>
  * Defragment.defrag(config);</code><br><br>
  * 
