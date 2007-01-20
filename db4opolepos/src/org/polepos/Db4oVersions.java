@@ -44,17 +44,61 @@ public class Db4oVersions {
         String workSpacePath = guessWorkSpace();
         
         String jar45 = "db4o-4.5-java1.4.jar";
+        String jar50 = "db4o-5.0-java5.jar";
         String jar52 = "db4o-5.2-java5.jar";
         String jar55 = "db4o-5.5-java5.jar";
         String jar57 = "db4o-5.7-java5.jar";
+        String jar60 = "db4o-6.0-java5.jar";
+        String jar603 = "db4o-6.003-java5.jar";
+        String jar604 = "db4o-6.004-java5.jar";
 
         
         return new Team[]{
-            workspaceTeam(workSpacePath),
-            db4oTeam(workSpacePath, jar45, new int[]{} ),
-            db4oTeam(workSpacePath, jar52, new int[]{} ),
-            db4oTeam(workSpacePath, jar55, new int[]{} ),
-            db4oTeam(workSpacePath, jar57, new int[]{} ),
+            // workspaceTeam(workSpacePath),
+        	
+//        	db4oTeam(workSpacePath, jar57, null),
+        	
+//            db4oTeam(workSpacePath, jar60, null),
+        	
+        	
+            db4oTeam(workSpacePath, jar604, null),
+            db4oTeam(workSpacePath, jar603, null),
+            db4oTeam(workSpacePath, jar60, null),
+            
+            db4oTeam(workSpacePath, jar604, new int[]{Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+            db4oTeam(workSpacePath, jar603, new int[]{Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+            db4oTeam(workSpacePath, jar60, new int[]{Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+        	
+            
+//            db4oTeam(workSpacePath, jar45, null),
+//            
+//            db4oTeam(workSpacePath, jar45, new int[]{Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+//            
+//            
+//            db4oTeam(workSpacePath, jar57, null),
+//            
+//            db4oTeam(workSpacePath, jar45, new int[]{Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+//            
+//            db4oTeam(workSpacePath, jar603, null),
+//
+//            db4oTeam(workSpacePath, jar603, new int[]{Db4oOptions.SNAPSHOT_QUERIES} ),
+//        	
+//            db4oTeam(workSpacePath, jar603, new int[]{Db4oOptions.LAZY_QUERIES} ),
+//            
+//            db4oTeam(workSpacePath, jar603, new int[]{Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+//            
+//            db4oTeam(workSpacePath, jar603, new int[]{Db4oOptions.SNAPSHOT_QUERIES, Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+//        	
+//            db4oTeam(workSpacePath, jar603, new int[]{Db4oOptions.LAZY_QUERIES, Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP} ),
+            
+        	
+//            db4oTeam(workSpacePath, null, new int[]{Db4oOptions.LAZY_QUERIES} ),
+
+//            db4oTeam(workSpacePath, jar45, new int[]{} ),
+//            db4oTeam(workSpacePath, jar50, new int[]{} ),
+//            db4oTeam(workSpacePath, jar57, new int[]{} ),
+//            db4oTeam(workSpacePath, jar55, new int[]{} ),
+//            db4oTeam(workSpacePath, jar57, new int[]{} ),
         };
     }
     

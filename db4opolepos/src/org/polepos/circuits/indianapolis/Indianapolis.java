@@ -21,6 +21,9 @@ package org.polepos.circuits.indianapolis;
 
 import org.polepos.framework.*;
 
+import com.db4o.*;
+import com.db4o.query.*;
+
 
 public class Indianapolis extends Circuit {
 
@@ -36,18 +39,27 @@ public class Indianapolis extends Circuit {
 
     @Override
     protected void addLaps() {
+    	
         add(new Lap("write", false, false));
+        
 //        add(new Lap("write"));
+        
         add(new Lap("queryRange"));
         add(new Lap("query5Links"));
         add(new Lap("queryPreferShortPath"));
         add(new Lap("queryOr"));
         add(new Lap("queryOrRange"));
         add(new Lap("queryNotGreater"));
-        add(new Lap("queryNotRange"));
-        add(new Lap("queryOrTwoLevels"));
+        
+//        add(new Lap("queryNotRange"));
+//        add(new Lap("queryOrTwoLevels"));
 //        add(new Lap("queryBigRangeFound"));
-        add(new Lap("queryByChildIdentity"));
+//        add(new Lap("queryByChildIdentity"));
+        
+        add(new Lap("getSingleRandomObject"));
+        add(new Lap("getOneFromBigRangeQuery"));
+        add(new Lap("getOneFromOrTwoLevelsQuery"));
+        
         add(new Lap("addSingleObjectAndCommit"));
     }
 

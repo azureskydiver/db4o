@@ -134,22 +134,14 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     public void queryOrTwoLevels(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = newIndianapolisListQuery();
-            Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(2)).smaller();
-            Constraint c2 = q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload - 2)).greater();
-            c1.or(c2);
-            doQuery(q);
+            doQuery(twoLevelsOrQuery());
         }
     }
     
     public void queryBigRangeFound(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
-            Query q = newIndianapolisListQuery();
-            Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(1)).greater();
-            Constraint c2 = q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload)).smaller();
-            c1.or(c2);
-            doQuery(q);
+            doQuery(bigRangeQuery());
         }
     }
     
@@ -165,6 +157,44 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
             q.descend(fieldNext()).constrain(il).identity();
             doQuery(q);
         }
+    }
+    
+    public void getSingleRandomObject(){
+    	getOne(newIndianapolisListQuery());
+    }
+    
+    public void getOneFromBigRangeQuery(){
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            getOne(bigRangeQuery());
+        }
+    }
+    
+    public void getOneFromOrTwoLevelsQuery(){
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+        	getOne(twoLevelsOrQuery());
+        }
+    }
+    
+    private Query twoLevelsOrQuery(){
+        Query q = newIndianapolisListQuery();
+        Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(2)).smaller();
+        Constraint c2 = q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload - 2)).greater();
+        c1.or(c2);
+        return q;
+    }
+    
+    private Query bigRangeQuery(){
+        Query q = newIndianapolisListQuery();
+        Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(1)).greater();
+        Constraint c2 = q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload)).smaller();
+        c1.or(c2);
+        return q;
+    }
+    
+    private void getOne(Query q){
+    	IndianapolisList il = (IndianapolisList) q.execute().next();
     }
     
     public void addSingleObjectAndCommit(){
