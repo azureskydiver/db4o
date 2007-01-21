@@ -16,14 +16,14 @@ public class Db4oWithDb4oExample {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer source = Db4o.openFile("source.yap");
+		ObjectContainer handheld = Db4o.openFile("handheld.yap");
 
-		source.set(pilot1);
-		source.set(pilot2);
+		handheld.set(pilot1);
+		handheld.set(pilot2);
 
-		ObjectContainer destination = Db4o.openFile("destination.yap");
+		ObjectContainer desktop = Db4o.openFile("desktop.yap");
 
-		ReplicationSession session = Replication.begin(source, destination);
+		ReplicationSession session = Replication.begin(handheld, desktop);
 
 		ObjectSet changedInA = session.providerA().objectsChangedSinceLastReplication();
 		while (changedInA.hasNext())
@@ -36,11 +36,11 @@ public class Db4oWithDb4oExample {
 		session.commit();
 		session.close();
 
-		source.close();
-		destination.close();
+		handheld.close();
+		desktop.close();
 
-		new File("source.yap").delete();
-		new File("destination.yap").delete();
+		new File("handheld.yap").delete();
+		new File("desktop.yap").delete();
 	}
 }
 

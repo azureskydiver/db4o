@@ -18,13 +18,13 @@ public class Db4oWithHibernateExample {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer source = Db4o.openFile("source.yap");
+		ObjectContainer handheld = Db4o.openFile("handheld.yap");
 
-		source.set(pilot1);
-		source.set(pilot2);
+		handheld.set(pilot1);
+		handheld.set(pilot2);
 
 		Configuration cfg = new Configuration().configure("f1/firststeps/hibernate.cfg.xml");
-		ReplicationSession session = HibernateReplication.begin(source, cfg);
+		ReplicationSession session = HibernateReplication.begin(handheld, cfg);
 
 		ObjectSet changedInA = session.providerA().objectsChangedSinceLastReplication();
 		while (changedInA.hasNext())
@@ -37,8 +37,8 @@ public class Db4oWithHibernateExample {
 		session.commit();
 		session.close();
 
-		source.close();
+		handheld.close();
 
-		new File("source.yap").delete();
+		new File("handheld.yap").delete();
 	}
 }
