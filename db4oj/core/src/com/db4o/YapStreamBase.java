@@ -493,10 +493,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 
         // This check is performed twice, here and in delete2, intentionally.
         if(breakDeleteForEnum(ref, userCall)){
+        	ref.endProcessing();
             return;
         }
         
         if(! ref.isFlaggedForDelete()){
+        	ref.endProcessing();
         	return;
         }
         
