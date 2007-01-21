@@ -1,10 +1,20 @@
 .n
 .a FirstSteps ..
 .0 First Steps ..
+This section helps you to get started with dRS quickly. The complete source is available at ._
+/dRS/src/tutorial/f1/firststeps .
+
 To get started as simply as possible, we are going to reuse the Pilot class from the db4o tutorial.
 .c public class Pilot {
 	String name;
 	int points;
+
+	public Pilot() {}
+	
+	public Pilot(String name, int points) {
+		this.name = name;
+		this.points = points;
+	}
 } ..
 .1 Simple Replication ..
 First, we will also use db4o to db4o replication, as it is the simplest and requires the least initial setup.
@@ -18,8 +28,8 @@ Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE); ..
 Open the source db4o database
 .c ObjectContainer handheld = Db4o.openFile("handheld.yap"); ..
 And let's store an object or two:
-.c source.set(new Pilot("Scott Felton", 200));
-source.set(new Pilot("Frank Green", 120)); ..
+.c handheld.set(new Pilot("Scott Felton", 200));
+handheld.set(new Pilot("Frank Green", 120)); ..
 Great. Now we need our destination database:
 .c //Open the destination db4o database
 ObjectContainer desktop = Db4o.openFile("desktop.yap"); ..
@@ -100,7 +110,7 @@ with the Hibernate config xml file:
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Specify all your data entity classes here -->
-        <mapping resource="f1/chapter4_1/Pilot.hbm.xml"/>
+        <mapping resource="f1/firststeps/Pilot.hbm.xml"/>
     </session-factory>
 </hibernate-configuration> ..
 Wow, look at all that stuff. At first it looks like a lot, but uppon closer inspection, ._
