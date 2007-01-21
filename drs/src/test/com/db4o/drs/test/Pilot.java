@@ -10,7 +10,7 @@ public class Pilot {
 	public Pilot() {
 	}
 
-	Pilot(String name, int age) {
+	public Pilot(String name, int age) {
 		this._name = name;
 		this._age = age;
 	}
