@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="src/test"/>
 	<classpathentry kind="src" path="src/tutorial"/>
 	<classpathentry kind="src" path="src/misc"/>
+	<classpathentry kind="src" path="src/jira"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>

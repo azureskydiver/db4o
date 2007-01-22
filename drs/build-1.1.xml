@@ -83,7 +83,7 @@
 			<zipfileset dir="${tempJar}" prefix="${zipDir}/lib"/>
 			<zipfileset dir="." prefix="${zipDir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
 			<zipfileset dir="lib" prefix="${zipDir}/lib" includes="*.jar, *.txt" />
-			<zipfileset dir="src" prefix="${zipDir}/src" excludes="misc" />			
+			<zipfileset dir="src" prefix="${zipDir}/src" excludes="misc, jira" />			
 			<zipfileset dir="doc/out" prefix="${zipDir}/doc/tutorial" />		
 			<zipfileset dir="${tempApi}" prefix="${zipDir}/doc/api" />
 		</zip>	
