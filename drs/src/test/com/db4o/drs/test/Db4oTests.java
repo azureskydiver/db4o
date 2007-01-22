@@ -1,5 +1,7 @@
 package com.db4o.drs.test;
 
+import com.db4o.drs.test.hibernate.ThreeProviders;
+
 import db4ounit.TestRunner;
 
 public class Db4oTests extends DrsTestSuite {
@@ -34,10 +36,10 @@ public class Db4oTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
-		return one();
+		return shared();
 	}
 
 	protected Class[] one() {
-		return new Class[] { ByteArrayTest.class, };
+		return new Class[] { ThreeProviders.class, };
 	}
 }

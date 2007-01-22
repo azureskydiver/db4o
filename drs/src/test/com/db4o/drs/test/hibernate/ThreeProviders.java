@@ -11,6 +11,10 @@ import com.db4o.drs.test.Pilot;
 
 public class ThreeProviders extends DrsTestCase {
 	public void test() {
+		Pilot pilot1 = new Pilot("Scott Felton", 200);
+		a().provider().storeNew(pilot1);
+		a().provider().commit();
+		
 		replicateAll(a().provider(), b().provider());
 
 		Configuration hibernate = HibernateUtil.createNewDbConfig();
@@ -23,16 +27,9 @@ public class ThreeProviders extends DrsTestCase {
 		
 		while (changed.hasNext()) {
 			Object obj = changed.next();
-			System.out.println(obj);
 			session.replicate(obj);
 		}
 
 		session.commit();
-		session.close();
-	}
-
-	protected void store() {
-		Pilot pilot1 = new Pilot("Scott Felton", 200);
-		a().provider().storeNew(pilot1);
 	}
 }

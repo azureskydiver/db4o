@@ -61,7 +61,14 @@ public abstract class RdbmsFixture implements DrsFixture {
 	}
 	
 	public void close() {
+		if (_provider==null)
+			throw new RuntimeException(
+					"Fixture is not yet openned or has already been closed. " +
+					"It maybe caused by a replicationSession.close() call in test. " +
+					"You should never call replicationSession.close()");
+		
 		_provider.destroy();
+		_provider=null;
 	}
 
 	public TestableReplicationProviderInside provider() {
