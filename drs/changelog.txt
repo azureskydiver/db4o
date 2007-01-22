@@ -1,6 +1,7 @@
 Changes from dRS 6.0.101 to dRS 6.0.200
 =======================
 * DRS-32
+* dRS.zip built using a new build system, build-1.1
 
 Changes from dRS 1.2 dev to dRS 6.0.101
 =======================
