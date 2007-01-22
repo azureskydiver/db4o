@@ -12,7 +12,7 @@ import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
 public class HsqlMemoryFixture extends RdbmsFixture {
 	private static final String HSQL_CFG_XML = "com/db4o/drs/test/hibernate/Hsql.cfg.xml";
 	private static final String JDBC_URL_HEAD = "jdbc:hsqldb:mem:unique_";
-	private static int jdbcUrlCounter = 0;
+	private static int jdbcUrlCounter = 100000;
 		
 	public HsqlMemoryFixture(String name) {
 		super(name);
@@ -40,7 +40,8 @@ public class HsqlMemoryFixture extends RdbmsFixture {
 
 	public void open()  {
 		config = createConfig().configure(HSQL_CFG_XML);
-		dbUrl = JDBC_URL_HEAD + jdbcUrlCounter++;
+		jdbcUrlCounter =jdbcUrlCounter+1;
+		dbUrl = JDBC_URL_HEAD + jdbcUrlCounter;
 		_provider = new HibernateReplicationProviderImpl(config.setProperty(Environment.URL, dbUrl), _name);
 	}
 }
