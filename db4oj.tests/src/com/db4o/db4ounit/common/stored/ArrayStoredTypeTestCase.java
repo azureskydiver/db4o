@@ -44,6 +44,17 @@ public class ArrayStoredTypeTestCase extends AbstractDb4oTestCase {
 	private void assertStoredType(StoredClass clazz, String fieldName,
 			Class type) {
 		StoredField field = clazz.storedField(fieldName,null);
-		Assert.areEqual(type.getName(),field.getStoredType().getName());
+		
+		Assert.areEqual(
+				type.getName(),
+				// getName() also contains the assembly name in .net
+				// so we better remove it for comparison
+				simpleName(field.getStoredType().getName()));
+	}
+
+	private String simpleName(String name) {
+		int index = name.indexOf(',');
+		if (index < 0) return name;
+		return name.substring(0, index);
 	}
 }
