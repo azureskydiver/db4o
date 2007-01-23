@@ -1,0 +1,89 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Customizing The Debug Message Output</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Customizing The Debug Message Output</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p><a href="Debug_Messaging_System.html" class="wikiLink changedTopic">Debug Messaging System</a><sup class="changedTopic" title="Modified 01-18-2007, 07:21 PM">updated</sup> topic explains how to activate the debug messages in your
+application. However the default console output has very limited possibilities
+and can only be used effectively in console applications. To use debug
+messaging system in any environment db4o gives you an API to
+redirect debug output to another stream:</p><span class="java">&nbsp;</p><p>Java:&nbsp;</p>
+
+<p><code>Configuration.setOut(java.io.PrintStream)</code></p><p></span><p>An example below
+shows how to create and use a log file for debug messages:</p><span class="java"></p><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">DebugExample.java: <span class="fscMemberName">setCarsWithFileOutput</span></span></div><div class="fscCode"><pre ID="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> setCarsWithFileOutput() </span><span style="color: #0000FF;">throws</span><span style="color: #000000;"> FileNotFoundException
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Open_Text').style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Closed_Image').style.display='inline'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Closed_Text').style.display='inline';"/><img id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Closed_Text').style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Open_Image').style.display='inline'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Open_Text').style.display='inline';"/>  </span><span id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_73_901_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Create StreamWriter for a file</span><span style="color: #008000;">
+</span><span style="color: #008080;">04</span><span style="color: #008000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    FileOutputStream fos </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> FileOutputStream(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Debug.txt</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    PrintStream debugWriter </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> PrintStream(fos);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Redirect debug output to the specified writer</span><span style="color: #008000;">
+</span><span style="color: #008080;">08</span><span style="color: #008000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">        Db4o.configure().setOut(debugWriter);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set the debug message levet to the maximum</span><span style="color: #008000;">
+</span><span style="color: #008080;">11</span><span style="color: #008000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    Db4o.configure().messageLevel(</span><span style="color: #000000;">3</span><span style="color: #000000;">);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>     </span><span style="color: #008000;">//</span><span style="color: #008000;"> Do some db4o operations</span><span style="color: #008000;">
+</span><span style="color: #008080;">14</span><span style="color: #008000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">     </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> File(YAPFILENAME).delete();
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>     ObjectContainer db</span><span style="color: #000000;">=</span><span style="color: #000000;">Db4o.openFile(YAPFILENAME);
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Open_Text').style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Closed_Image').style.display='inline'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Closed_Text').style.display='inline';"/><img id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Closed_Text').style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Open_Image').style.display='inline'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_556_809_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Car car1 </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Car(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">BMW</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.set(car1);
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Car car2 </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Car(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Ferrari</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.set(car2);
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.deactivate(car1,</span><span style="color: #000000;">2</span><span style="color: #000000;">);
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Query query </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.query();
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      query.constrain(Car.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      ObjectSet results </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.execute();
+</span><span style="color: #008080;">25</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      listResult(results);
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Open_Text').style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Closed_Image').style.display='inline'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Closed_Text').style.display='inline';"/><img id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Closed_Text').style.display='none'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Open_Image').style.display='inline'; document.getElementById('DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DebuggingJava.ZipsDebugExample.Java_DebugExample.Java_SetCarsWithFileOutput_575_71_818_862_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.close();
+</span><span style="color: #008080;">28</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      debugWriter.close();
+</span><span style="color: #008080;">29</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">30</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Db4o.configure().messageLevel(</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">31</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div><p></span>
+<p>Using a log file
+for debug messages has several advantages:</p>
+
+<ul><li>debug information
+is available after the application has terminated;</li><li>console output is
+not polluted with debug messages;</li><li>debug information
+from the clients can be available on the server.</li></ul>
+
+
+
+
+
+<p>You can always
+switch back to the default setting using:</p><span class="java"></p><p>Java:&nbsp;</p>
+
+<p><code>Configuration.setOut(System.out)</code></p><p></span></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-01-18T19:21:03 by Tetyana.
+				</div>
+  </body>
+</html>

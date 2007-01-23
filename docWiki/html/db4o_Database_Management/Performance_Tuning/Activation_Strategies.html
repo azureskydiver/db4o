@@ -1,0 +1,41 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Activation strategies</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Activation strategies</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate strategies">Alternate strategies</a></li></ul></li></ul></div></div></div>
+<span class="java"></p>
+<p><code>Java: Db4o.configure().activationDepth(activationDepth)</code></p>
+<p></span>
+
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>Db4o default activation depth is 5. This setting gives you control over activation depth level depending on your application requirements.</p>
+<a name="Effect"></a><h2>Effect</h2>
+<p>The two extremes:</p>
+<ul>
+<li>activationDepth = maximum integer value - will pop the whole object graph into the memory on every retrieved object. Can be a reasonable solution for shallow objects' design. No need to bother about manual activation;</li>
+<li>activationDepth = 0 - will reduce memory consumption to the lowest level though leaving all the activation logic for your code.</li></ul>
+
+<a name="Alternate strategies"></a><h2>Alternate strategies</h2>
+<p>If your object is not fully activated due to the default configuration settings you can activate it manually:</p>
+<span class="java"></p>
+<p>Java: <code>ObjectContainer#activate(object,depth)</code></p>
+<p></span>
+
+<p>or use specific object settings:</p>
+<span class="java"></p>
+<p>Java:</p>
+<p><code>Db4o.configure().objectClass("yourClass").minimumActivationDepth(minimumDepth)<br>Db4o.configure().objectClass("yourClass").maximumActivationDepth(maximumDepth)<br>Db4o.configure().objectClass("yourClass").cascadeOnActivate (bool)<br>Db4o.configure().objectClass("yourClass").objectField("field").cascadeOnActivate(bool)</code></p>
+<p></span>
+
+<p>For more information on activation strategies see <a href="../../Db4o_Concepts/Activation.html" class="wikiLink">Activation chapter</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2007-01-01T09:56:29 by Tetyana.
+				</div>
+  </body>
+</html>

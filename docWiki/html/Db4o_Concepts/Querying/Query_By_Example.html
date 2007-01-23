@@ -1,0 +1,69 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Query By Example</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query By Example</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+<p>When using <i>Query By Example</i>(QBE) you provide db4o with a template 
+object. db4o will return all of the objects which match all non-default field 
+values. This is done via reflecting all of the fields and building a query 
+expression where all non-default-value fields are combined with AND expressions. 
+Here's a simple example:</p>
+<span class="java"></p>
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">PersistentExample.java: <span class="fscMemberName">retrievePilotByName</span></span></div><div class="fscCode"><pre ID="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Open_Text').style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Closed_Image').style.display='inline'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Closed_Text').style.display='inline';"/><img id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Closed_Text').style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Open_Image').style.display='inline'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrievePilotByName(ObjectContainer db) </span><span id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_59_189_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        Pilot proto</span><span style="color: #000000;">=</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Michael Schumacher</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">,</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        ObjectSet result</span><span style="color: #000000;">=</span><span style="color: #000000;">db.get(proto);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        listResult(result);
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+<p></span>
+
+
+<p>Querying 
+this way has some obvious limitations:</p>
+<ul>
+<li>db4o must reflect all members of 
+your example object.</li>
+<li>You cannot perform advanced query expressions. (AND, 
+OR, NOT, etc.)</li>
+<li>You cannot constrain on values like 0 (integers), "" (empty 
+strings), or nulls (reference types) because they would be interpreted as 
+unconstrained.</li>
+<li>You need to be able to create objects without initialized 
+fields. That means you can not initialize fields where they are declared. You 
+can not enforce contracts that objects of a class are only allowed in a 
+well-defined initialized state.</li>
+<li>You need a constructor to create objects 
+without initialized fields.</li>
+</ul>
+<p>To get around all of these constraints, db4o 
+provides the Native Query (NQ) system.</p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-11-14T09:57:01 by Tetyana.
+				</div>
+  </body>
+</html>

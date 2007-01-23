@@ -1,0 +1,46 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Blobs</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Blobs</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Blob">Blob</a></li><li><a href ="#byte[] array">byte[] array</a></li></ul></li></ul></div></div></div>
+<P>In some cases user has to deal with large binary objects (BLOBs) such as images, video, music, which should be stored in a structured way, and retrieved/queried easily. There are several challenges associated with this task:</P>
+<UL>
+<LI>storage location;</LI>
+<LI>loading into RAM;</LI>
+<LI>querying interface;</LI>
+<LI>objects' modification;</LI>
+<LI>information backup;</LI>
+<LI>client/server processing.</LI></UL>
+<P>Db4o provides you with a flexibility of using 2 different solutions for this case:</P>
+<OL>
+<LI>Blob (Java package: com.db4o.types.Blob, .NET namespace: Db4oTypes.IBlob)<BR></LI>
+<LI>byte[] arrays stored inside the database file</LI></OL>
+<P>These two solutions' main features in comparison are represented below:</P>
+<a name="Blob"></a><H2>Blob</H2>
+<OL>
+<LI>every Blob gets it's own file</LI>
+<LI>C/S communication runs asynchronous in separate thread </LI>
+<LI>special code is necessary to store and load </LI>
+<LI>no concerns about activation depth </LI></OL>
+<a name="byte[] array"></a><H2>byte[] array</H2>
+<OL>
+<LI>data in the same file </LI>
+<LI>C/S communication runs in the normal communication thread </LI>
+<LI>transparent handling without special concerns </LI>
+<LI>control over activation depth may be necessary</LI></OL>
+<P>Storing data in a byte[] array works just as storing usual objects, but this method is not always applicable/desirable. First of all, the size of the db4o file can grow over the limit (256 GB) due to the BLOB data added. Secondly, object activation and client/server transferring logic can be an additional load for your application.</P>
+<P><div class="childTopicList">More Reading:<ul>
+<li><p><a href="Blobs/Db4o_Blob_Implementation.html" class="wikiLink">Db4o Blob Implementation</a></p></li>
+</ul></div>
+</P></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-14T18:45:12 by Eric Falsken.
+				</div>
+  </body>
+</html>

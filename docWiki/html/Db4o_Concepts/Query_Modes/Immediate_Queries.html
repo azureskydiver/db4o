@@ -1,0 +1,145 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Immediate Queries</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Immediate Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Immediate Mode Pros And Cons">Immediate Mode Pros And Cons</a></li></ul></li></ul></div></div></div><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>This is the default query mode:
+the whole query result is evaluated upon query execution and object IDs list is
+produced as a result. </p>
+
+<span class="java"></p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryModesExample.java: <span class="fscMemberName">testImmediateQueries</span></span></div><div class="fscCode"><pre ID="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Open_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Closed_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Closed_Text').style.display='inline';"/><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Closed_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Open_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> testImmediateQueries() </span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_42_696_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Testing query performance on 10000 pilot objects in Immediate mode</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      fillUpDB(</span><span style="color: #000000;">10000</span><span style="color: #000000;">);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      ObjectContainer db </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(YAPFILENAME);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Open_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Closed_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Closed_Text').style.display='inline';"/><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Closed_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Open_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Open_Text').style.display='inline';"/>      </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_224_655_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.ext().configure().queries().evaluationMode(QueryEvaluationMode.IMMEDIATE);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        QueryStats stats </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> QueryStats();       
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        stats.connect(db);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        Query query </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.query();
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query.constrain(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">points</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #000000;">99</span><span style="color: #000000;">).greater();
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query.execute();
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #0000FF;">long</span><span style="color: #000000;"> executionTime </span><span style="color: #000000;">=</span><span style="color: #000000;"> stats.executionTime();
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Query execution time: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> executionTime);
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Open_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Closed_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Closed_Text').style.display='inline';"/><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Closed_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Open_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Open_Text').style.display='inline';"/>      }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateQueries_174_75_664_690_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.close();
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>      }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+<p></span>
+
+
+
+
+
+
+<p>Obviously object evaluation
+takes some time and in a case of big resultsets you will have to wait for a long
+time before the first result will be returned. This is especially unpleasant in
+a client-server setup, when query processing can block the server for seconds or even minutes.</p>
+
+<p>This mode makes the whole
+objects result set available at once - ID list is built based on the committed
+state in the database. As soon as a result is delivered it won't be changed
+neither by changes in current transaction neither by committed changes from
+another transactions. </p>
+
+<p>Note, that resultset contains
+only references to objects, you were querying for, which means that if an
+object field has changed by the time of the actual object retrieval from the
+object set - you will get the new field value:</p>
+
+<span class="java"></p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryModesExample.java: <span class="fscMemberName">testImmediateChanged</span></span></div><div class="fscCode"><pre ID="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Open_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Closed_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Closed_Text').style.display='inline';"/><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Closed_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Open_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> testImmediateChanged() </span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_42_807_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Testing immediate mode with field changes</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      fillUpDB(</span><span style="color: #000000;">10</span><span style="color: #000000;">);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      ObjectContainer db </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(YAPFILENAME);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Open_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Closed_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Closed_Text').style.display='inline';"/><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Closed_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Open_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Open_Text').style.display='inline';"/>      </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_196_766_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.ext().configure().queries().evaluationMode(QueryEvaluationMode.IMMEDIATE);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        Query query1 </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.query();
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query1.constrain(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query1.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">points</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #000000;">5</span><span style="color: #000000;">).smaller();
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        ObjectSet result1 </span><span style="color: #000000;">=</span><span style="color: #000000;"> query1.execute();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #008000;">//</span><span style="color: #008000;"> change field</span><span style="color: #008000;">
+</span><span style="color: #008080;">13</span><span style="color: #008000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">        Query query2 </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.query();
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query2.constrain(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        query2.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">points</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #000000;">2</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        ObjectSet result2 </span><span style="color: #000000;">=</span><span style="color: #000000;"> query2.execute();
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        Pilot pilot2 </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Pilot)result2.get(</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        pilot2.addPoints(</span><span style="color: #000000;">22</span><span style="color: #000000;">);
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.set(pilot2);
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        listResult(result1);
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Open_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Closed_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Closed_Text').style.display='inline';"/><img id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Closed_Text').style.display='none'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Open_Image').style.display='inline'; document.getElementById('QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Open_Text').style.display='inline';"/>      }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QuerymodeJava.ZipsQueryModesExample.Java_QueryModesExample.Java_TestImmediateChanged_1136_75_775_801_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        db.close();
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>      }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+<p></span>
+
+
+
+
+
+<a name="Immediate Mode Pros And Cons"></a><h2>Immediate Mode Pros And Cons</h2>
+
+<p>Pros:</p>
+
+<ul>
+<li>If the query is intended to iterate through the entire resulting ObjectSet, <a href="http://developer.db4o.com/Resources/edit.aspx/Reference/Db4o_Concepts/Query_Modes/svntestdb4obuilddistjavadb4o-6.0docapicomdb4oObjectSet.html" title="interface in com.db4o"><code></code></a>this mode will be slightly faster than the
+others.</li>
+
+<li>The query will process without intermediate
+side effects from changed objects (by the caller or by other transactions).</li>
+</ul>
+
+
+<p>Cons:</p>
+
+<ul>
+<li>Query processing can block the server for a long time.</li>
+
+<li>In comparison to the other modes it will take longest until the first
+results are returned.</li>
+
+<li>The ObjectSet will require a considerate amount of memory to hold the
+IDs of all found objects.</li>
+</ul></div>
+    </div>
+    <div id="footer">
+					This revision (10) was last Modified 2006-12-04T13:21:56 by Tetyana.
+				</div>
+  </body>
+</html>
