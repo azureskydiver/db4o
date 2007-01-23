@@ -1,0 +1,40 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>No callbacks</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>No callbacks</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+
+
+
+<span class="net"></p>
+<p>.NET: <code>Db4oFactory.Configure().Callbacks(false)</code></p>
+<p></span>
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>will prevent db4o from looking for callback methods in all persistent classes on system startup.</p>
+<a name="Effect"></a><h2>Effect</h2>
+<p>
+Upon
+system startup, db4o will scan all persistent classes for methods with
+the same signature as the methods defined in
+com.db4o.ext.ObjectCallbacks, even if the interface is not implemented.
+db4o uses reflection to do so and on constrained environments this can
+consume quite a bit of time. If callback methods are not used by the
+application, callbacks can be turned off safely.</p>
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+<p>
+Class configuration features are a good alternative to callbacks. The most recommended mechanism to cascade updates is:</p>
+
+<span class="net"></p>
+<p>.NET: <code>Db4oFactory.Configure().ObjectClass("yourNamespace.yourClass").CascadeOnUpdate(true)</code></p>
+<p></span></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-15T08:47:54 by Tetyana.
+				</div>
+  </body>
+</html>

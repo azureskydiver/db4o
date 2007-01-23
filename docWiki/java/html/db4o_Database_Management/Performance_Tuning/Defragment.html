@@ -1,0 +1,36 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Defragment</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Defragment</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+
+
+<span class="java"></p>
+<p>Java: <code>Defragment.defrag("sample.yap")</code></p>
+<p></span>
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>It is recommended to run Defragment frequently to reduce the database file size and to remove unused fields and freespace slots.</p>
+
+<a name="Effect"></a><h2>Effect</h2>
+<p>db4o does not discard fields from the database file that are no longer being used. Within the database file quite a lot of space is used for transactional processing. Objects are always written to a new slot when they are modified. Deleted objects continue to occupy 8 bytes until the next Defragment run. Defragment cleans all this up by writing all objects to a completely new database file. The resulting file will be smaller and faster.</p>
+
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+<p>
+Instead of deleting objects it can be an option to mark objects as deleted with a "deleted" boolean field and to clean them out (by not copying them to the new database file) during the Defragment run. Two advantages: </p>
+<ol>
+<li>Deleted objects can be restored. </li>
+<li>In case there are multiple references to a deleted object, none of them would point to null. </li>
+</ol></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2006-11-15T08:11:35 by Tetyana.
+				</div>
+  </body>
+</html>

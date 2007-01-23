@@ -1,0 +1,73 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Indexing</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Indexing</h1>
+
+
+<p>db4o allows to index fields to provide maximum querying performance. To request an index to be created, you would issue the following API method call in your global  <a href="Configuration.html" class="wikiLink">db4o configuration method</a> db4o configuration method before you open an ObjectContainer/ObjectServer:</p>
+
+<p>
+// assuming</p>
+
+<p><code>class Foo{<br>
+&nbsp;&nbsp;&nbsp;&nbsp; String bar;<br>
+}</code></p>
+
+<p>
+
+
+<span class="net"></p>
+
+<p>.NET: <code>Db4oFactory.Configure().ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(true);
+</code></p>
+
+<p></span>
+<p>
+If the configuration is set in this way, an index on the Foo#bar field will be created (if not present already) the next time you open an ObjectContainer/ObjectServer and you use the Foo class the first time in your applcation.
+</p><p>
+Contrary to all other <a href="Configuration.html" class="wikiLink">configuration calls</a> indexes - once created - will remain in a database even if the index configuration call is not issued before opening an ObjectContainer/ObjectServer. </p>
+
+<p>
+To drop an index you would also issue a configuration call in your db4o configuration method:</p>
+
+
+</p>
+
+<span class="net"></p>
+
+<p>.NET: <code>Db4oFactory.Configure().ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(false);</code></p>
+
+<p></span>
+<p>Actually dropping the index will take place the next time the respective class is used.db4o will tell you when it creates and drops indexes, if you choose a message level of 1 or higher:</p>
+
+<span class="net"></p>
+
+<p>.NET: <code>Db4oFactory.Configure().MessageLevel(1);</code></p>
+
+<p></span>
+<p>For creating and dropping indexes on large amounts of objects there are two possible strategies:</p>
+
+<ol>
+<li>Import all objects with indexing off, configure the index and reopen the ObjectContainer/ObjectServer.</li>
+
+<li>Import all objects with indexing turned on and commit regularly for a fixed amount of objects (~10,000).</li>
+</ol>
+
+<ol>
+<li>will be faster.</li>
+
+<li>will keep memory consumption lower.</li>
+</ol>
+<p>For more information see <a href="Performance_Tuning/Enable_Field_Indexes.html" class="wikiLink">Enable Field Indexes</a> chapter.</p></div>
+    </div>
+    <div id="footer">
+					This revision (11) was last Modified 2006-11-14T12:24:59 by Tetyana.
+				</div>
+  </body>
+</html>
