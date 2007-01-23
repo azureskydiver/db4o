@@ -1,0 +1,35 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Configuration</h1><p><font color="#990000">This topic applies to Java version only</font>  <br></p>
+
+<p>Db4o can be configured to use a user-defined classloader.</p>
+
+
+
+<p>Java: <code>Db4o.configure().reflectWith(new JdkReflector(classloader)) </code></p>This line will configure db4o to use the provided classloader. Note that, as with most db4o configuration options, this configuration will have to occur before the respective database has been opened.
+<p>The usual ways of getting a classloader reference are:</p>
+
+<ul>
+<li>Using the classloader the class containing the currently executed code was loaded from. (<i>this.getClass().getClassLoader()</i>)</li>
+
+<li>Using the classloader db4o was loaded from. (<i>Db4o.class.getClassLoader()</i>)</li>
+
+<li>Using the classloader your domain classes were loaded from. (<i>SomeDomainClass.class.getClassLoader()</i>)</li>
+
+<li>Using the context classloader that may have been arbitrarily set by the execution environment. (<i>Thread.currentThread().getContextClassLoader()</i>).</li>
+</ul>
+
+<p>To choose the right classloader to use, you have to be aware of the classloader hierarchy of your specific execution environment. As a rule of thumb, one should configure db4o to use a classloader as deep/specialized in the tree as possible. In the above example this would be the classloader of the plugin db4o is supposed to work with.</p></div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2006-12-04T07:40:16 by Tetyana.
+				</div>
+  </body>
+</html>

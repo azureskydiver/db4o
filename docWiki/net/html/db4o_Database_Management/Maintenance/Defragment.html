@@ -1,0 +1,107 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Defragment</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Defragment</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>Db4o database file is structured as sets of free and occupied slots, very much like a file system - and just like a file system it can be fragmented, resulting in a file that is larger than it needs to be.</p>
+
+<p>Defragment tool helps to fix this problem, creating a new database file and copying all objects from the current database file to the new database file. All indexes are recreated. The resulting database file will be smaller and faster. It is recommended to apply defragmentation on a regular basis to achieve better performance.</p>
+
+<p>The simplest way to defragment a yap file would be:</p>
+
+
+
+<span class="cs"></p>
+
+<p>c#: <code>Db4objects.Db4o.Defragment.Defragment.Defrag(filename)</code></p>
+
+<p></span>
+
+<span class="vb"></p>
+
+<p>VB:<code>Db4objects.Db4o.Defragment.Defragment.Defrag(filename)</code></p>
+
+<p></span>
+
+<p>The file must not be opened by another process during defragmentation!</p>
+
+<p>This will move the file <i>sample.yap</i> to <i>sample.yap.backup</i>, then create a defragmented version of this file in the original position, using a temporary file <i>sample.yap.mapping</i>. If the backup file already exists, this will throw an IOException and no action will be taken.</p><p>Please note that the defragment process relies on database configuration information. If you're setting non-standard configuration options for your database from your application, please make sure you pass an equivalent configuration into the defragmentation process as described below.</p>
+
+<p><i>DefragmentConfig </i>gives you a more fine-grained control over the defragmentation process. This class provides the following API:</p>
+
+<ul>
+<li><i>DefragmentConfig(String origPath, String backupPath,String mappingPath)</i><br>The constructor takes the path to the original file (which is also the location where the defragmented file will be located), the path to the backup of the fragmented version of the file, and the path where the temporary mapping file should be created.</li><li><i>db4oConfig(com.db4o.config.Configuration config)</i><br>The db4o configuration passed in will be used to look up settings that influence low-level file layout details, like UUID settings, etc. If your application uses non-standard configuration settings, you should always pass in a configuration  just like you use it within your application itself. If you're still using the 'global' configuration approach via <i>Db4o.configure()</i>, you can obtain a faithful copy of the global configuration for use with defragment afterwards by calling <i>Db4o.cloneConfiguration()</i>. However,&nbsp; the non-static approach  (i.e. obtain a fresh configuration instance via <i>Db4o.newConfiguration()</i> and modify it as needed) is recommended in general.<br></li>
+
+<li><i>storedClassFilter(</i><i>com.db4o.defragment.</i><i>StoredClassFilter storedClassFilter)</i><br>Sets a filter that may skip specific StoredClasses during the defragmentation process (as well as their instances, associated indices, etc.) For example, <i>com.db4o.defragment.AvailableClassFilter</i> will exclude all classes from defragmentation that are not available on the classpath anymore.</li>
+
+<li><i>forceBackupDelete(boolean forceBackupDelete)</i><br>If set to true, will delete any existing file at the backup location before moving the original file. If set to false, an IOException will be thrown and no action will be taken if a file already exists in the backup location.</li>
+</ul>
+ </p><span class="cs"></p>
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">DefragmentExample.cs: <span class="fscMemberName">RunDefragment</span></span></div><div class="fscCode"><pre ID="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> RunDefragment()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Open_Text').style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Closed_Image').style.display='inline'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Closed_Text').style.display='inline';"/><img id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Closed_Text').style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Open_Image').style.display='inline'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Open_Text').style.display='inline';"/>        </span><span id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_43_511_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            DefragmentConfig config </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> DefragmentConfig(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">sample.yap</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">sample.bap</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            config.ForceBackupDelete(</span><span style="color: #0000FF;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            config.Db4oConfig(CreateDb4oConfiguration());
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            config.StoredClassFilter(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> AvailableTypeFilter());
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">try</span><span style="color: #000000;">
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Open_Text').style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Closed_Image').style.display='inline'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Closed_Text').style.display='inline';"/><img id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Closed_Text').style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Open_Image').style.display='inline'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Open_Text').style.display='inline';"/>            </span><span id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_328_386_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                Defragment.Defrag(config);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">catch</span><span style="color: #000000;"> (Exception ex)
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Open_Text').style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Closed_Image').style.display='inline'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Closed_Text').style.display='inline';"/><img id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Closed_Text').style.display='none'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Open_Image').style.display='inline'; document.getElementById('DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Open_Text').style.display='inline';"/>            </span><span id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="DefragmentationCS.ZipsDefragmentExample.Cs_DefragmentExample.Cs_RunDefragment_3535_70_432_501_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                System.Console.WriteLine(ex.Message);
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div><p></span><span class="vb"></p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">DefragmentExample.vb: <span class="fscMemberName">RunDefragment</span></span></div><div class="fscCode"><pre ID="DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Open_Text').style.display='none'; document.getElementById('DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Closed_Image').style.display='inline'; document.getElementById('DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Closed_Text').style.display='inline';"/><img id="DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Closed_Text').style.display='none'; document.getElementById('DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Open_Image').style.display='inline'; document.getElementById('DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Open_Text').style.display='inline';"/><span style="color: #0000FF;">Public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Shared</span><span style="color: #000000;"> </span><span id="DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub RunDefragment()</span><span id="DefragmentationVB.ZipsDefragmentExample.Vb_DefragmentExample.Vb_RunDefragment_3640_70_14_479_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> RunDefragment()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> config </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> DefragmentConfig </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">New</span><span style="color: #000000;"> DefragmentConfig(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">sample.yap</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">sample.bap</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">)
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            config.ForceBackupDelete(</span><span style="color: #0000FF;">True</span><span style="color: #000000;">)
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            config.Db4oConfiguration(CreateDb4oConfiguration())
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            config.StoredClassFilter(</span><span style="color: #0000FF;">New</span><span style="color: #000000;"> AvailableTypeFilter())
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Try</span><span style="color: #000000;">
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                Defragment.Defrag(config)
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Catch</span><span style="color: #000000;"> ex </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> Exception
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                System.Console.WriteLine(ex.Message)
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">End</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Try</span><span style="color: #000000;">
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        </span><span style="color: #0000FF;">End Sub</span></span></div></pre></div></div>
+<p></span>This will move the file <i>sample.yap</i> to <i>sample.bap</i>, then create a defragmented version of this file in the original position. If the backup file already exists, it will be deleted.
+
+<p>The defragmentation process will skip all classes that have instances stored within the yap file, but that are not available on the class path (through the current classloader) anymore.</p>
+<p><br></p></div>
+    </div>
+    <div id="footer">
+					This revision (20) was last Modified 2007-01-02T15:44:22 by Patrick Roemer.
+				</div>
+  </body>
+</html>

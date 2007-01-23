@@ -1,0 +1,53 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Query Optimization</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Query Optimization</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#NQ Optimization for .NET">NQ Optimization for .NET</a></li></ul></li></ul></div></div></div>
+
+<p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to SODA where this is possible, allowing db4o to use indexes and optimized internal
+comparison algorithms.Otherwise Native Query may be executed by instantiating all objects,
+using <a href="../Advanced_Db4o_Techniques/SODA_Evaluations.html" class="wikiLink">SODA
+Evaluations</a>. Naturally performance will not be as good in this case.</p>
+
+<span class="net"></p>
+<a name="NQ Optimization for .NET"></a><h2>NQ Optimization for .NET</h2><p>Native Query optimizer for .NET is supplied in <span id="ctl00_ctl00_bcr_topicView___TopicBody"><span class="net">Db4obects.Db4o.Tools.dll. This assembly must be available in your project for successful NQ optimization.<br></span></span></p>
+<p>The Native Query optimizer is still under development to eventually "understand" 
+all valid C# constructs. Current optimization supports the following constructs 
+well:</p>
+
+<ul>
+<li>compile-time constants</li>
+<li>simple member access</li>
+<li>primitive 
+comparisons</li>
+<li>equality operator</li>
+<li>#Contains()/#StartsWith()/#EndsWith() 
+for Strings</li>
+<li>boolean expressions</li>
+<li>arbitrary method calls (including 
+property accessors) on predicate fields (without any arguments)</li>
+<li>candidate 
+methods composed of the above</li>
+<li>chained combinations of the above<br>
+</li>
+</ul>
+
+<p>This 
+list will constantly grow with the latest versions of db4o.</p>
+
+<p>
+Note that the 
+current implementation doesn't support polymorphism yet.</p><p>The specifics of Compact Framework platform are explained in <a href="Native_Query_Optimization/NQ_Optimization_On_CF2.0.html" class="wikiLink">NQ Optimization On CF2.0</a>. </p><p>An  alternative optimization practice can be found in <a href="Native_Query_Optimization/Build-Time_Optimization_For_.NET.html" class="wikiLink changedTopic">Build-time Optimization For .NET</a><sup class="changedTopic" title="Modified 8 hours, 48 minutes ago">updated</sup> article.<br></p>
+
+<p></span><p>For more information on NQ optimization see <a href="Native_Query_Optimization/Monitoring_Optimization.html" class="wikiLink">Monitoring Optimization</a>.<br></p></div>
+    </div>
+    <div id="footer">
+					This revision (14) was last Modified 2007-01-23T09:19:58 by Tetyana.
+				</div>
+  </body>
+</html>

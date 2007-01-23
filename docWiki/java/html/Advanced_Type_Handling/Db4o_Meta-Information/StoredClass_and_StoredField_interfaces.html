@@ -1,0 +1,102 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>StoredClass and StoredField interfaces</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>StoredClass and StoredField interfaces</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>(IStoredClass and IStoredField in .NET)</p>
+
+<p>Let's look closer at the class meta-information interfaces.</p>
+<p>They look quite similar to reflection API, but unlike reflection there is no information about methods and constructors.</p>
+<p>You can only use StoredClass to get the class's fields:</p>
+
+<span class="java"></p>
+<p>Java:<code> StoredClass#getStoredFields()</code> </p>
+<p></span>
+
+
+
+
+
+<p>
+returns all stored fields of this stored class.</p>
+
+<span class="java"></p>
+<p>Java: <code>StoredClass#storedField(name, type) </code></p>
+<p></span>
+
+
+
+
+
+<p>
+returns an existing stored field of this stored class.</p>
+<p>You can also use this interface to explore classes hierarchy.</p>
+
+<span class="java"></p>
+<p>Java: <code>StoredClass#getParentStoredClass </code></p>
+<p></span>
+
+
+
+
+
+<p>returns the parent of the class.</p>
+<p>
+StoredField interface gives you access to various meta-field information, such as field name, field type. It also provides some helpful methods for manipulating fields accepting their object as a variable (see db4o API for more information).</p>
+
+<span class="java"></p>
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">MetaInfExample.java: <span class="fscMemberName">getMetaObjectsInfo</span></span></div><div class="fscCode"><pre ID="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Open_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Closed_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Closed_Text').style.display='inline';"/><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Closed_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Open_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> getMetaObjectsInfo()</span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_39_670_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer oc </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(Util.YAPFILENAME);
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Open_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Closed_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Closed_Text').style.display='inline';"/><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Closed_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Open_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_103_638_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Retrieve meta information for field: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      StoredClass sc </span><span style="color: #000000;">=</span><span style="color: #000000;"> oc.ext().storedClass(Car.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">.getName());
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      StoredField sf </span><span style="color: #000000;">=</span><span style="color: #000000;"> sc.storedField(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">pilot</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">,Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Field info:  </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;"> sf.getName()</span><span style="color: #000000;">+</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">/</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;">sf.getStoredType()</span><span style="color: #000000;">+</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">/isArray=</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;">sf.isArray());
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Retrieve all fields: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      StoredField sfields[] </span><span style="color: #000000;">=</span><span style="color: #000000;"> sc.getStoredFields();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Open_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Closed_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Closed_Text').style.display='inline';"/><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Closed_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Open_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Open_Text').style.display='inline';"/>      </span><span style="color: #0000FF;">for</span><span style="color: #000000;"> (</span><span style="color: #0000FF;">int</span><span style="color: #000000;"> i</span><span style="color: #000000;">=</span><span style="color: #000000;">0</span><span style="color: #000000;">; i</span><span style="color: #000000;">&lt;</span><span style="color: #000000;"> sfields.length; i</span><span style="color: #000000;">++</span><span style="color: #000000;">)</span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_532_634_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Stored field:  </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;"> sfields[i].getName()</span><span style="color: #000000;">+</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">/</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;">sfields[i].getStoredType());
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>      }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Open_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Closed_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Closed_Text').style.display='inline';"/><img id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Closed_Text').style.display='none'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Open_Image').style.display='inline'; document.getElementById('MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="MetainfJava.ZipsMetaInfExample.Java_MetaInfExample.Java_GetMetaObjectsInfo_1158_68_647_667_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      oc.close();
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+<p></span> </p>
+
+
+
+
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2006-11-13T19:13:16 by Tetyana.
+				</div>
+  </body>
+</html>

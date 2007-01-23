@@ -1,0 +1,55 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>B-Tree tuning</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>B-Tree tuning</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li></ul></li></ul></div></div></div>
+
+
+<p>Db4o uses special B-tree indexes for increased query performance and reduced memory consumption (the feature was introduced since version 5.4 for class indexes and since 5.7 for field indexes).</p>
+
+<a name="Advantage"></a><h2>Advantage</h2>
+<p>
+B-trees are optimized for scenarios when part or all of a data set is on secondary storage such as a hard disk, since disk accesses are extremely expensive operations. B-trees minimize the number of disk accesses required to find data by traversing a sorted tree structure and only need a single disk access per level of the tree. </p>
+<p>In order to use B-tree capabilities for field indexes you will simply need to define indexed fields in your classes:</p>
+
+<span class="java"></p>
+<p>Java: <code>Db4o.configure().objectClass(Foo.class).objectField("field").indexed(true)</code></p>
+<p></span>
+
+
+
+<a name="Effect"></a><h2>Effect</h2>
+<p>The caching behaviour of the B-trees can be configured with the following two switches:
+</p><span class="java"></p>
+<p>Java: <code>Db4o.configure().bTreeCacheHeight(height)</code></p>
+<p></span>
+
+
+configures the size of BTree nodes in indexes.
+<span class="java"></p>
+<p>Java: <code>Db4o.configure().bTreeNodeSize(size)</code></p>
+<p></span>
+
+
+<p>configures caching of B-tree nodes. Clean B-tree nodes will be unloaded on #commit and #rollback unless they are configured as cached here.</p>
+<p>Higher values for the cache height will get you better performance at more RAM consumption.</p>
+<p>With the node size you can fine-tune exactly how many reads the B-tree will need to get to leaf nodes. Lower values will allow a lower memory footprint and more efficient reading and writing of small slots. Higher values will reduce the overall number of read and write operations and allow better performance at the cost of more RAM use.</p>
+<p>If you raise the number of elements per node and/or the cache depth, you will use more RAM but achieve higher performance. In principle, if you set the node size to a very high value and cache the first node, you should get exactly the same behavior as with the old class indexes. </p>
+<p>For now the default settings are 1 for the height of the cache and 100 for the size of the nodes.</p>
+<p>When testing B-tree you should remember that B-trees only really start to give you performance advantages with larger numbers of objects. With object counts of 1,000 or 10,000 the old flat index is highly efficient because everything is kept in memory. Using tests with more than 100,000 objects you will really see things degrade with:</p>
+<ul>
+<li>
+performance, because of a full purge called each time on commit</li>
+<li>memory consumption, because the index will be reloaded completely immediately when the next object is added.</li>
+</ul></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2006-11-15T08:04:23 by Tetyana.
+				</div>
+  </body>
+</html>

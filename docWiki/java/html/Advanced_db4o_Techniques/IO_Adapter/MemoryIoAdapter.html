@@ -1,0 +1,219 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>MemoryIoAdapter</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>MemoryIoAdapter</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>One of the built-in db4o IoAdapters is MemoryIoAdapter. This adapter keeps the whole database&nbsp;in RAM instead of a hard-drive. Obviously such in-memory database has both advantages and disadvantages:</p>
+
+<p>Pros:</p>
+
+<ul>
+<li>
+it is a lot faster, as no disc access is necessary.</li>
+</ul>
+
+<p>
+Cons:</p>
+
+<ul>
+<li>
+it only works, if the database fits into RAM;</li>
+</ul>
+
+<ul>
+<li>
+all the data can be lost in case of a system failure.</li>
+</ul>
+
+<p>You can achieve the best results combining the usage of MemoryIoAdapter with the normal file adapter. Let's look, how MemoryIoAdapter should be used in your application.</p>
+
+<p>First of all MemoryIoAdapter should be configured. The API gives you control over memory consumption with</p>
+
+<span class="java"></p>
+
+<p>Java:<code> MemoryIoAdapter#growBy(length) </code></p>
+
+<p></span>
+
+
+
+
+
+<p>method. Length defines the amount of bytes in memory that should be allocated, when no more free slots are found within the allocated file. Large value (100,000) will assure the best performance; small value (100) will keep the memory consumption at the lowest level. The default setting is 10,000.</p>
+
+<p>MemoryIoAdaptor supplies methods to exchange data with the database from the filesystem.</p>
+
+<span class="java"></p>
+
+<p>Java: <code>MemoryIoAdapter#put(filename, byte[]) </code></p>
+
+<p></span>
+
+
+
+
+
+<p>This method allows you to put the contents of the stored database file (byte[]) into the memory database. </p>
+
+<p>The opposite method:</p>
+
+<span class="java"></p>
+
+<p>Java: <code>MemoryIoAdapter#get(filename)</code> </p>
+
+<p></span>
+
+
+
+
+
+<p>returns the updated byte[] array of the database in memory, which can be saved to disc as a normal database file.</p>
+
+<p>The filename can be used for all further access (#openFile, #openServer methods) like normal file name. Make sure that you close the database file on the disc after reading its contents into memory and writing it back.</p>
+
+<p>The configured adapter should be assigned as db4o IO system:</p>
+
+<span class="java"></p>
+
+<p>Java: <code> Db4o.configure().io(MemoryIoAdapter) </code></p>
+
+<p> </span>
+
+
+
+
+Let's create sample database on the disc:
+<span class="java"></p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">IOExample.java: <span class="fscMemberName">setObjects</span></span></div><div class="fscCode"><pre ID="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> setObjects()</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_31_239_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> File(Util.YAPFILENAME).delete();
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer db </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(Util.YAPFILENAME);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_134_207_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Pilot pilot </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Rubens Barrichello</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.set(pilot);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_SetObjects_2283_51_216_236_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.close();
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<p></span>
+
+
+
+
+
+<p>Now we can read the database into the memory file and work in the memory using MemoryIoAdapter:</p>
+
+<span class="java"></p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">IOExample.java: <span class="fscMemberName">getObjectsInMem</span></span></div><div class="fscCode"><pre ID="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> getObjectsInMem()</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_36_1251_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Setting up in-memory database</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    MemoryIoAdapter adapter </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> MemoryIoAdapter();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_150_390_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      RandomAccessFile raf </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> RandomAccessFile(Util.YAPFILENAME,</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">r</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">); 
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      adapter.growBy(</span><span style="color: #000000;">100</span><span style="color: #000000;">);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">int</span><span style="color: #000000;"> len </span><span style="color: #000000;">=</span><span style="color: #000000;"> (</span><span style="color: #0000FF;">int</span><span style="color: #000000;">)raf.length();
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">byte</span><span style="color: #000000;">[] b </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> </span><span style="color: #0000FF;">byte</span><span style="color: #000000;">[len];
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      raf.read(b,</span><span style="color: #000000;">0</span><span style="color: #000000;">,len);
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      adapter.put(Util.YAPFILENAME, b);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      raf.close();
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">catch</span><span style="color: #000000;"> (Exception ex)</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_411_472_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Exception: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> ex.getMessage());
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Db4o.configure().io(adapter);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer db </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(Util.YAPFILENAME);
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_570_839_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>       ObjectSet result</span><span style="color: #000000;">=</span><span style="color: #000000;">db.get(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>       System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Read stored results through memory file</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>         listResult(result);
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>         Pilot pilotNew </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Michael Schumacher</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>         db.set(pilotNew);
+</span><span style="color: #008080;">25</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>         System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">New pilot added</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_848_868_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.close();
+</span><span style="color: #008080;">28</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">29</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Writing the database back to disc</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">30</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">byte</span><span style="color: #000000;">[] dbstream </span><span style="color: #000000;">=</span><span style="color: #000000;"> adapter.get(Util.YAPFILENAME);
+</span><span style="color: #008080;">31</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_985_1104_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">32</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      RandomAccessFile file </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> RandomAccessFile(Util.YAPFILENAME,</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">rw</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">33</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      file.write(dbstream);
+</span><span style="color: #008080;">34</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      file.close();
+</span><span style="color: #008080;">35</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">catch</span><span style="color: #000000;"> (IOException ioex) </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjectsInMem_2493_56_1130_1193_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">36</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Exception: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> ioex.getMessage());
+</span><span style="color: #008080;">37</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;"> 
+</span><span style="color: #008080;">38</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Db4o.configure().io(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> RandomAccessFileAdapter());
+</span><span style="color: #008080;">39</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<p></span>
+
+
+
+
+
+<p>Well, the changes are made and written to the disc. Let's check, if all the data are in place.&nbsp;We will need to switch back to the normal RandomAccessFileAdapter:</p>
+
+<span class="java"></p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">IOExample.java: <span class="fscMemberName">getObjects</span></span></div><div class="fscCode"><pre ID="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> getObjects()</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_31_320_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Db4o.configure().io(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> RandomAccessFileAdapter());
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer db </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(Util.YAPFILENAME);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_149_288_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>       ObjectSet result</span><span style="color: #000000;">=</span><span style="color: #000000;">db.get(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>       System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Read stored results through disc file</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>         listResult(result);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Open_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Closed_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Closed_Text').style.display='inline';"/><img id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Closed_Text').style.display='none'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Open_Image').style.display='inline'; document.getElementById('IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="IosJava.ZipsIOExample.Java_IOExample.Java_GetObjects_2779_51_297_317_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      db.close();
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<p></span>
+
+
+
+
+
+<p>So, switching between disc and memory database is quite easy. It can be used to&nbsp;increase performance on certain operations. More flexibility can be reached writing&nbsp;your own IoAdapter implementation.</p></div>
+    </div>
+    <div id="footer">
+					This revision (12) was last Modified 2006-11-13T14:51:09 by Tetyana.
+				</div>
+  </body>
+</html>
