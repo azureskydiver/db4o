@@ -1,0 +1,39 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Query Statistics</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query Statistics</h1><p><font color="#cc0000">This topic applies to Java version only</font>&nbsp;</p><p>QueryStarted and
+QueryFinished events can be used to gather various statistics about query
+execution.</p>
+
+<p>For example you can use queryStarted() and queryFinished() events to calculate query
+time, and activated() event to count objects activated in a query.</p>
+
+<span class="java"></p>
+
+<p>Java version provides an example of query events usage in QueryStats class from tools package.</p>
+
+<p>In
+order to use QueryStats:</p>
+
+<ol><li>Connect a QueryStats object
+     to the ObjectContainer</li><p><code>QueryStats
+stats = new QueryStats();</code></p><p><code>stats.connect(db);</code></p><li>Execute your query</li><p><code>ObjectSet
+result = q.execute();</code></p><li>Get the metrics from the
+     QueryStats object</li><p><code>long
+executionTime = stats.executionTime();</code></p><p><code>int
+activationCount = stats.activationCount();</code></p><li>After the work is done you
+     can disconnect QueryStats from the ObjectContainer</li><p><code>stats.disconnect();</code></p></ol>
+
+<p></span></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-01-02T16:21:47 by Tetyana.
+				</div>
+  </body>
+</html>
