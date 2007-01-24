@@ -755,6 +755,7 @@
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.tests.src}">
 				<include name="**/db4ounit/common/**/*.java" />
+				<include name="**/db4ounit/util/**/*.java" />
 			</fileset>
 		</copy>
 		
