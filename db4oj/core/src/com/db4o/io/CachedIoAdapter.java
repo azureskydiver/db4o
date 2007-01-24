@@ -9,11 +9,11 @@ import java.io.IOException;
  */
 public class CachedIoAdapter extends IoAdapter {
 
-	public Page head;
+	private Page _head;
 
-	public Page tail;
+	private Page _tail;
 
-	public long _position;
+	private long _position;
 
 	private int _pageSize = 1024;
 
@@ -71,9 +71,9 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private void initCache() {
-		head = new Page(_pageSize);
-		head.prev = null;
-		Page page = head;
+		_head = new Page(_pageSize);
+		_head.prev = null;
+		Page page = _head;
 		Page next = null;
 		for (int i = 0; i < _pageCount - 1; ++i) {
 			next = new Page(_pageSize);
@@ -81,7 +81,7 @@ public class CachedIoAdapter extends IoAdapter {
 			next.prev = page;
 			page = next;
 		}
-		tail = next;
+		_tail = next;
 	}
 
 	public int read(byte[] buffer, int length) throws IOException {
@@ -146,15 +146,15 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private Page getFreePage() throws IOException {
-		if (!tail.isFree()) {
-			flushPage(tail);
+		if (!_tail.isFree()) {
+			flushPage(_tail);
 			// _posPageMap.remove(new Long(tail.startPosition / PAGE_SIZE));
 		}
-		return tail;
+		return _tail;
 	}
 
 	private Page getPageFromCache(long pos) throws IOException {
-		Page page = head;
+		Page page = _head;
 		while (page != null) {
 			if (page.contains(pos)) {
 				return page;
@@ -167,14 +167,14 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private void flushAllPages() throws IOException {
-		Page node = head;
+		Page node = _head;
 		while (node != null) {
 			flushPage(node);
 			node = node.next;
 		}
 	}
 
-	public void flushPage(Page page) throws IOException {
+	private void flushPage(Page page) throws IOException {
 		if (!page.dirty) {
 			return;
 		}
@@ -183,7 +183,7 @@ public class CachedIoAdapter extends IoAdapter {
 		return;
 	}
 
-	public void loadPage(Page page, long pos) throws IOException {
+	private void loadPage(Page page, long pos) throws IOException {
 		page.startPosition = pos - pos % _pageSize;
 		ioSeek(page.startPosition);
 		int readCount = _io.read(page.buffer);
@@ -194,24 +194,24 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private void movePageToHead(Page page) {
-		if (page == head) {
+		if (page == _head) {
 			return;
 		}
-		if (page == tail) {
-			Page tempTail = tail.prev;
+		if (page == _tail) {
+			Page tempTail = _tail.prev;
 			tempTail.next = null;
-			tail.next = head;
-			tail.prev = null;
-			head.prev = page;
-			head = tail;
-			tail = tempTail;
+			_tail.next = _head;
+			_tail.prev = null;
+			_head.prev = page;
+			_head = _tail;
+			_tail = tempTail;
 		} else {
 			page.prev.next = page.next;
 			page.next.prev = page.prev;
-			page.next = head;
-			head.prev = page;
+			page.next = _head;
+			_head.prev = page;
 			page.prev = null;
-			head = page;
+			_head = page;
 		}
 	}
 
@@ -242,7 +242,7 @@ public class CachedIoAdapter extends IoAdapter {
 
 		public int size;
 
-		private boolean dirty;
+		public boolean dirty;
 
 		Page prev;
 
