@@ -11,7 +11,7 @@ public class AllTests implements TestSuiteBuilder {
 
 	public TestSuite build() {
 		return new ReflectionTestSuiteBuilder(new Class[] {
-				CachedIoAdaptorTest.class
+				IoAdapterTest.class
 			}).build();	
 	}
 
