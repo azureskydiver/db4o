@@ -11,9 +11,9 @@ import db4ounit.*;
 
 public class OldHeaderTest implements TestCase {
     
-    private static final String ORIGINAL_FILE = WorkspaceServices.workspacePath("db4oj.tests/test/db4oVersions/db4o_5.5.2");
+    private static final String ORIGINAL_FILE = WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2");
     
-    private static final String DB_FILE = WorkspaceServices.workspacePath("db4oj.tests/test/db4oVersions/db4o_5.5.2.yap");   
+    private static final String DB_FILE = WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2.yap");   
     
     public void test() {
     	

@@ -9,11 +9,13 @@ import com.db4o.config.*;
 /**
  * @exclude
  */
-public final class Messages
-{
-	public final static int CLOSED_OR_OPEN_FAILED = 20; 
+public final class Messages {
+	
+	public final static int INCOMPATIBLE_FORMAT=17;
+	public final static int CLOSED_OR_OPEN_FAILED=20; 
     public final static int FATAL_MSG_ID=44;
     public final static int NOT_IMPLEMENTED=49;
+    public final static int OLD_DATABASE_FORMAT=65;
     public final static int ONLY_FOR_INDEXED_FIELDS=66;
     public final static int CLIENT_SERVER_UNSUPPORTED=67;
 	

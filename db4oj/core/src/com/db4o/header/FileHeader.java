@@ -30,7 +30,7 @@ public abstract class FileHeader {
         YapReader reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){
-            Exceptions4.throwRuntimeException(17);
+            Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT);
         } else {
         	header.readFixedPart(file, reader);
         }

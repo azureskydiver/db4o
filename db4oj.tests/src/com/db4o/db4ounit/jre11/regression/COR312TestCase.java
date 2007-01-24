@@ -5,8 +5,8 @@ package com.db4o.db4ounit.jre11.regression;
 import java.util.Date;
 
 import com.db4o.*;
-import com.db4o.db4ounit.util.WorkspaceServices;
-import com.db4o.foundation.io.*;
+import com.db4o.db4ounit.util.*;
+import com.db4o.foundation.io.File4;
 import com.db4o.query.Query;
 
 import db4ounit.*;
@@ -92,8 +92,8 @@ public class COR312TestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void prepareDatabaseFile() {
-		_databaseFile = Path4.buildTempPath("cor312.yap");
-		File4.copy(WorkspaceServices.workspacePath("db4oj.tests/test/regression/cor312.yap"), _databaseFile);
+		_databaseFile = IOServices.buildTempPath("cor312.yap");
+		File4.copy(WorkspaceServices.workspaceTestFilePath("regression/cor312.yap"), _databaseFile);
 	}
 	
 	private void reopen() {

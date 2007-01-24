@@ -2,9 +2,11 @@
 
 package com.db4o.foundation.io;
 
-import java.io.File;
 
 /**
+ * IMPORTANT: Keep the interface of this class compatible with .NET System.IO.Path otherwise
+ * bad things will happen to you.
+ * 
  * @sharpen.ignore
  */
 public class Path4 {
@@ -16,9 +18,5 @@ public class Path4 {
 	
 	public static String getTempPath() {
 		return System.getProperty("java.io.tmpdir");
-	}
-	
-	public static String buildTempPath(String fname) {
-		return new File(getTempPath(), fname).getAbsolutePath();
 	}
 }

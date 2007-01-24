@@ -6,7 +6,8 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.foundation.io.*;
+import com.db4o.db4ounit.util.IOServices;
+import com.db4o.foundation.io.File4;
 import com.db4o.test.Test;
 
 public class ClassAliasesTestCase {
@@ -86,7 +87,7 @@ public class ClassAliasesTestCase {
 	}
 
 	private String buildTempPath(String fname) {
-		return Path4.buildTempPath(fname);
+		return IOServices.buildTempPath(fname);
 	}	
 
 	private void generateDotnetData() throws IOException {

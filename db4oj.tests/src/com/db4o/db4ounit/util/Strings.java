@@ -2,8 +2,11 @@
 
 package com.db4o.db4ounit.util;
 
-public class Strings
-{
+/**
+ * @sharpen.ignore
+ */
+public class Strings {
+	
 	private static final char DATESEPARATOR = '-';
 	private static final char TIMESEPARATOR = ':';
 	private static final char DATETIMESEPARATOR = ' ';
