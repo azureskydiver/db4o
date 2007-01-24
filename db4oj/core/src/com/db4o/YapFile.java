@@ -475,7 +475,9 @@ public abstract class YapFile extends YapStream {
         
     }
     
-    
+    protected boolean doFinalize() {
+    	return _fileHeader != null;
+    }
 
     void readThis() throws IOException {
         

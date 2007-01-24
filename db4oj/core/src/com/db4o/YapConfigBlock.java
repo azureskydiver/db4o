@@ -140,7 +140,7 @@ public final class YapConfigBlock {
 		}
 		int oldLength = reader.readInt();
 		if(oldLength > LENGTH  || oldLength < MINIMUM_LENGTH){
-			Exceptions4.throwRuntimeException(17);
+			Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT);
 		}
         if(oldLength != LENGTH){
         	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in
@@ -149,7 +149,7 @@ public final class YapConfigBlock {
             	if(_stream.configImpl().automaticShutDown()) {
             		Platform4.removeShutDownHook(_stream, _stream.i_lock);
             	}
-                Exceptions4.throwRuntimeException(65);
+                throw new OldFormatException();
             }
         }
         
