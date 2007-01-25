@@ -35,7 +35,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     byte[] i_nameBytes;
     private YapReader i_reader;
 
-    private Db4oTypeImpl i_db4oType;
+    private boolean _classIndexed;
     
     private ReflectClass _reflector;
     private boolean _isEnum;
@@ -64,6 +64,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     	i_stream = stream;
         _reflector = reflector;
         _index = createIndexStrategy();
+        _classIndexed = true;
     }
     
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
@@ -327,7 +328,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
     
-    public void checkDb4oType() {
+    public void checkType() {
         ReflectClass claxx = classReflector();
         if (claxx == null){
             return;
@@ -337,13 +338,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
         if (i_stream.i_handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx)) {
             _unversioned = true;
-        }
+        }        
         if (i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
-            try {
-                i_db4oType = (Db4oTypeImpl)claxx.newInstance();
-            } catch (Exception e) {
-            }
-        }
+			_classIndexed = ((Db4oTypeImpl) claxx.newInstance()).hasClassIndex();
+		} else if(i_config != null){
+			_classIndexed = i_config.indexed();
+		}
     }
 
     public void checkUpdateDepth(YapWriter a_bytes) {
@@ -802,7 +802,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
     public boolean hasIndex() {
-        return i_db4oType == null || i_db4oType.hasClassIndex();
+        return _classIndexed;
     }
     
     private boolean ancestorHasUUIDField(){
@@ -954,7 +954,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             return false;
         }
         
-        checkDb4oType();
+        checkType();
         if (allowsQueries()) {
             _index.initialize(a_stream);
         }

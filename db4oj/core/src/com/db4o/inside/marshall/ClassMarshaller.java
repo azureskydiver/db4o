@@ -85,7 +85,7 @@ public abstract class ClassMarshaller {
             clazz.createConstructor(stream, clazz.classReflector(), clazz.getName(), true);
         }
         
-        clazz.checkDb4oType();
+        clazz.checkType();
         
         readIndex(stream, clazz, reader);
         

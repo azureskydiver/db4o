@@ -139,6 +139,21 @@ public interface ObjectClass {
      * @param setting
      */
     public void generateVersionNumbers(boolean setting);
+
+    /**
+     * turns the class index on or off.
+     * <br><br>db4o maintains an index for each class to be able to 
+     * deliver all instances of a class in a query. If the class 
+     * index is never needed, it can be turned off with this method
+     * to improve the performance to create and delete objects of 
+     * a class.
+     * <br><br>Common cases where a class index is not needed:<br>
+     * - The application always works with subclasses or superclasses.<br>
+     * - There are convenient field indexes that will always find instances
+     * of a class.<br>
+     * - The application always works with IDs. 
+     */
+    public void indexed(boolean flag);
     
 
     /**
