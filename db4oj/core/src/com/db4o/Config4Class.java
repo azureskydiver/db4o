@@ -15,6 +15,8 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     private final Config4Impl _configImpl;
 
 	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(0);
+	
+	private final static KeySpec CLASS_INDEXED = new KeySpec(true);
 
 	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
 
@@ -153,6 +155,14 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         translate(translator);
         return translator;
     }
+    
+	public void indexed(boolean flag) {
+		_config.put(CLASS_INDEXED, flag);
+	}
+	
+	public boolean indexed() {
+		return _config.getAsBoolean(CLASS_INDEXED);
+	}
 
     Object instantiate(YapStream a_stream, Object a_toTranslate) {
         return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate(a_stream,
