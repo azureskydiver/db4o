@@ -24,16 +24,17 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 	private String query;
 	private QueryResultsPanel queryResultsPanel;
 
-	List topResults = new ArrayList();
-	List resultWindow = new ArrayList();
 	private static final int NUM_IN_TOP = 100;
 	private static final int NUM_IN_WINDOW = 100;
+	public static final int COL_TREE = 0;
+	private static final int COL_ROW_NUMBER = 1;
+	private Icon treeIcon = ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + "text_tree.png", "View Object Graph");
+	private int extraColumns = 2; // for row counter
+
+	List topResults = new ArrayList();
+	List resultWindow = new ArrayList();
 	private int windowStartIndex = -1;
 	private int windowEndIndex = -1;
-	private int extraColumns = 2; // for row counter
-	private static final int COL_ROW_NUMBER = 1;
-	static final int COL_TREE = 0;
-	private Icon treeIcon = ResourceManager.createImageIcon(ResourceManager.ICONS_16X16 + "text_tree.png", "View Object Graph");
 
 	public QueryResultsTableModel(String query, QueryResultsPanel queryResultsPanel) throws Exception {
 		this.query = query;
@@ -68,6 +69,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 	}
 
 	public int getColumnCount() {
+		//System.out.println("fields in ob: " + results.getMetaData().getColumnCount());
 		return results.getMetaData().getColumnCount() + extraColumns;
 	}
 
@@ -95,10 +97,10 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			Reflector reflector = queryResultsPanel.getObjectContainer().ext().reflector();
 			ReflectClass rc = reflector.forObject(ret);
 			/*if(rc.getName().contains("Collection")){
-						todo: waiting for this fix: http://tracker.db4o.com/jira/browse/COR-245
-						// .NET collections are not working properly
-							System.out.println("class: " + rc + " is col: " + rc.isCollection() + " " + reflector.isCollection(rc));
-						}*/
+			todo: waiting for this fix: http://tracker.db4o.com/jira/browse/COR-245
+			// .NET collections are not working properly
+				System.out.println("class: " + rc + " is col: " + rc.isCollection() + " " + reflector.isCollection(rc));
+			}*/
 			if (reflector.isCollection(rc)) {
 				// reflector.isCollection returns true for Maps too I guess
 				if (ret instanceof Map) {
@@ -112,10 +114,10 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			if(rc.isArray()){
 				return new CollectionValue("Array: " + reflector.array().getLength(ret) + " items");				
 			}
-		} catch (Sql4oException e) {
+		} catch (Exception e) {
 			queryResultsPanel.setErrorMessage("Error occurred: " + e.getMessage());
+			Log.addException(e);
 		}
-
 		return ret;
 	}
 
