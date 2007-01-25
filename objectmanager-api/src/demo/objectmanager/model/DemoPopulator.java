@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
+import java.math.BigDecimal;
 
 /**
  * User: treeder
@@ -15,9 +16,12 @@ import java.util.Calendar;
  * Time: 11:59:28 AM
  */
 public class DemoPopulator {
-    private ObjectContainer db;
-    private static final String DB_FILE = "demo.db";
-    private static final int NUMBER_TO_MAKE = 10000;
+	/** Filename for demo database */
+	private static final String DB_FILE = "demo.db";
+	/** Number of top level objects to make */
+	private static final int NUMBER_TO_MAKE = 1000;
+
+	private ObjectContainer db;
 	private static int idGen;
 
 	public static void main(String[] args) {
@@ -44,6 +48,7 @@ public class DemoPopulator {
 			c.setBirthDate(birthCal.getTime());
 			c.setGender(i % 2 == 0 ? 'm' : 'f');
 			birthCal.add(Calendar.DAY_OF_YEAR, -1);
+			c.setArbitraryObject(getArbitraryObject(i));
 			addAddresses(c);
             addEmails(c);
             addFriends(c, last10);
@@ -79,11 +84,30 @@ public class DemoPopulator {
 		}
 		
 		db.set(Collections.forDemo());
-		db.set(Inheritance.forDemo());
+		Inheritance.forDemo(db);
 		
         db.commit();
         db.close();
     }
+
+	public static Object getArbitraryObject(int i) {
+		int mod = i % 6;
+		switch(mod){
+			case 0:
+				return new String("arbitrary string");
+			case 1:
+				return new Integer(123);
+			case 2:
+				return new BigDecimal("123.456");
+			case 3:
+				return new Double(123.456);
+			case 4:
+				return new Date();
+			case 5:
+				return new Boolean(true);
+		}
+		return null;
+	}
 
 	private Integer nextId() {
 		return new Integer(++idGen);
