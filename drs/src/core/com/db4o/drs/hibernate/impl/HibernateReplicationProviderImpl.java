@@ -163,8 +163,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		for (Object o : col)
 			delete(o);
 	}
-
+	
 	public final synchronized void destroy() {
+		if (!_alive)
+			throw new RuntimeException("Provider has already been destroyed.");
+		
 		_alive = false;
 
 		_session.close();
@@ -485,7 +488,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	Uuid translate(Db4oUUID du) {
 		Uuid uuid = new Uuid();
 		uuid.setCreated(du.getLongPart());
-		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
+		uuid.setProvider(produceProviderSignature(du.getSignaturePart()));
 		return uuid;
 	}
 
@@ -544,15 +547,31 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return out;
 	}
 
-	private ProviderSignature getProviderSignature(byte[] signaturePart) {
+	/**
+	 * Get the ProviderSignature of the given signaturePart.
+	 * If not found, generate a ProviderSignature for the given signaturePart on the fly.
+	 * @param signaturePart
+	 * @return
+	 */
+	private ProviderSignature produceProviderSignature(byte[] signaturePart) {
 		final List exisitingSigs = getSession().createCriteria(ProviderSignature.class)
 				.add(Restrictions.eq(ProviderSignature.Fields.SIG, signaturePart))
 				.list();
-		if (exisitingSigs.size() == 1)
+		if (exisitingSigs.size() == 1) 
+		{
 			return (ProviderSignature) exisitingSigs.get(0);
-		else if (exisitingSigs.size() == 0) return null;
+		}
+		else if (exisitingSigs.size() == 0) 
+		{
+			ProviderSignature alienProvider = new PeerSignature(signaturePart);
+			getSession().save(alienProvider);
+			getSession().flush();
+			return alienProvider;
+		} 
 		else
-			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
+		{
+			throw new RuntimeException("This condition should never be reachable.It is impossible to have more than two records for one sig.");
+		}
 	}
 
 	private boolean isReplicationActive() {
