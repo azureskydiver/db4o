@@ -2,8 +2,9 @@
     <description>
         ObjectManager build file
     </description>
-	<!-- set the appropriate db4o jar -->
-	<property name="db4o.version" value="db4o-6.0-java5.jar"/>
+	<!-- set the appropriate db4o jar file to use -->
+	<property name="db4o.version" value="db4o-6.1-java5.jar"/>
+	<property name="dist.version" value="objectmanager-6.1"/>
 
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
@@ -12,7 +13,7 @@
     <property name="docs" location="docs"/>
 	<property name="launch" location="launch"/>
 	<property name="dist.base" location="dist"/>
-	<property name="dist" location="${dist.base}/objectmanager-6.0"/>
+	<property name="dist" location="${dist.base}/${dist.version}"/>
     <property name="webstart" value="webstart"/>
     <property name="dist-webstart" value="dist-webstart"/>
 
@@ -32,18 +33,24 @@
 
     <target name="compile" depends="init"
             description="compile the source ">
-        <ant antfile="../objectmanager-api/build.xml"
+		<!-- build dependencies -->
+		<ant antfile="../objectmanager-api/build.xml"
              dir="../objectmanager-api"
              target="dist"
              inheritAll="false"/>
-        <copy file="../objectmanager-api/dist/lib/objectmanager-api.jar" todir="./lib/"/>
-        <!-- Compile the java code from ${src} into ${build} -->
+		<!-- copy dependencies -->
+		<copy  todir="./lib/">
+			<fileset dir="../objectmanager-api/lib/"/>
+		</copy>
+		<copy file="../objectmanager-api/dist/lib/objectmanager-api.jar" todir="./lib/"/>
+        <!-- Compile from ${src} into ${build} -->
         <javac srcdir="${src}" destdir="${build}"
 				debug="true" 
 				source="1.5" target="1.5">
             <classpath refid="class.path"/>
         </javac>
-        <copy todir="${build}" filtering="false">
+		<!-- copy resources -->
+		<copy todir="${build}" filtering="false">
             <fileset dir="${src}">
                 <include name="**/*.gif"/>
                 <include name="**/*.jpg"/>
@@ -121,7 +128,7 @@
 
     <target name="zip" depends="dist" description="Create the distribution zip file.">
 
-		<zip destfile="objectmanager-6.0.zip"
+		<zip destfile="${dist.version}.zip"
              basedir="${dist.base}"
 				/>
     </target>
