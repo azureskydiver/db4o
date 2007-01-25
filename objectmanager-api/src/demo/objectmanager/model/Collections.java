@@ -57,8 +57,8 @@ public class Collections {
 	public ArrayList arrayList;
 
 	public Vector vector;
-	private Set set;
-	private Queue queue;
+	public Set set;
+	public Queue queue;
 	public Map map;
 	public HashMap hashMap;
 
@@ -68,6 +68,7 @@ public class Collections {
 
 	public boolean[] primitiveArrayBoolean;
 	public double[] primitiveArrayDouble;
+	public Object[] objectArray;
 
 
 	public Collections() {
@@ -93,6 +94,7 @@ public class Collections {
 		array = new Item[2];
 		primitiveArrayBoolean = new boolean[10];
 		primitiveArrayDouble = new double[10];
+		objectArray = new Object[20];
 
 		fillList(list);
 		fillList(arrayList);
@@ -108,6 +110,14 @@ public class Collections {
 
 		fillPrimitiveBooleanArray(primitiveArrayBoolean);
 		fillPrimitiveDoubleArray(primitiveArrayDouble);
+
+		fillObjectArray(objectArray);
+	}
+
+	private void fillObjectArray(Object[] objectArray) {
+		for (int i = 0; i < objectArray.length; i++) {
+			objectArray[i] = DemoPopulator.getArbitraryObject(i);
+		}
 	}
 
 	private void fillQueue(Queue queue) {

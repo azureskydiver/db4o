@@ -21,6 +21,7 @@ public class Contact {
 	private double income;
 	private Date birthDate;
 	private char gender;
+	private Object arbitraryObject;
 
 	public Integer getId() {
         return id;
@@ -123,5 +124,13 @@ public class Contact {
 
 	public void setGender(char gender) {
 		this.gender = gender;
+	}
+
+	public Object getArbitraryObject() {
+		return arbitraryObject;
+	}
+
+	public void setArbitraryObject(Object arbitraryObject) {
+		this.arbitraryObject = arbitraryObject;
 	}
 }
