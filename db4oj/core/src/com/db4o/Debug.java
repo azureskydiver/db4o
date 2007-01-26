@@ -17,9 +17,9 @@ public abstract class Debug extends Debug4 {
 
     public static final boolean longTimeOuts = false;
 
-    public static final boolean freespace = Deploy.debug ? true :false;
+    public static final boolean freespace = Deploy.debug;
     
-    public static final boolean xbytes = freespace ? true : false;
+    public static final boolean xbytes = freespace;
     
     public static final boolean freespaceChecker = false;
     
