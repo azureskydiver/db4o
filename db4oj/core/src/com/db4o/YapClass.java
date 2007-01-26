@@ -340,7 +340,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             _unversioned = true;
         }        
         if (i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
-			_classIndexed = ((Db4oTypeImpl) claxx.newInstance()).hasClassIndex();
+        	Db4oTypeImpl db4oTypeImpl = (Db4oTypeImpl) claxx.newInstance();
+        	_classIndexed = (db4oTypeImpl == null || db4oTypeImpl.hasClassIndex());
 		} else if(i_config != null){
 			_classIndexed = i_config.indexed();
 		}
