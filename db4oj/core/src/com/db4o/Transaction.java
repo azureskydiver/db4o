@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.IndexTransaction;
 import com.db4o.inside.marshall.ObjectHeader;
+import com.db4o.inside.slots.Slot;
 import com.db4o.reflect.Reflector;
 
 /**
@@ -359,37 +360,7 @@ public abstract class Transaction {
         i_pointerIo.write();
     }
     
-    
-    public void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
-        checkSynchronization();
-        if(Tree.find(i_writtenUpdateDeletedMembers, new TreeInt(a_id)) != null){
-            return;
-        }
-        if(DTrace.enabled){
-            DTrace.WRITE_UPDATE_DELETE_MEMBERS.log(a_id);
-        }
-        i_writtenUpdateDeletedMembers = Tree.add(i_writtenUpdateDeletedMembers, new TreeInt(a_id));
-        YapWriter objectBytes = stream().readWriterByID(this, a_id);
-        if(objectBytes == null){
-            if (a_yc.hasIndex()) {
-                 dontRemoveFromClassIndex(a_yc.getID(), a_id);
-            }
-            return;
-        }
-        
-        ObjectHeader oh = new ObjectHeader(stream(), a_yc, objectBytes);
-        
-        DeleteInfo info = (DeleteInfo)TreeInt.find(i_delete, a_id);
-        if(info != null){
-            if(info._cascade > a_cascade){
-                a_cascade = info._cascade;
-            }
-        }
-        
-        objectBytes.setCascadeDeletes(a_cascade);
-        a_yc.deleteMembers(oh._marshallerFamily, oh._headerAttributes, objectBytes, a_type, true);
-        slotFreeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
-    }
+    public abstract void writeUpdateDeleteMembers(int id, YapClass clazz, int typeInfo, int cascade);
 
     public final YapStream stream() {
         return i_stream;

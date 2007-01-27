@@ -66,7 +66,7 @@ public abstract class Tree implements ShallowClone , DeepClone{
 	            return balance();
 	        }
 	    }else{
-	        a_new.isDuplicateOf(this);
+	        a_new.onAttemptToAddDuplicate(this);
 	    }
 	    return this;
 	}
@@ -74,16 +74,22 @@ public abstract class Tree implements ShallowClone , DeepClone{
     
     /**
      * On adding a node to a tree, if it already exists, and if
-     * Tree#duplicates() returns false, #isDuplicateOf() will be
-     * called. The added node can then be asked for the node that
-     * prevails in the tree using #duplicateOrThis(). This mechanism
-     * allows doing find() and add() in one run.
+     * Tree#duplicates() returns false, #onAttemptToAddDuplicate() 
+     * will be called and the existing node will be stored in
+     * this._preceding.
+     * This node node can then be asked for the node that prevails 
+     * in the tree on adding, using the #addedOrExisting() method. 
+     * This mechanism allows doing find() and add() in one run.
      */
-    public Tree duplicateOrThis(){
-        if(_size == 0){
-            return _preceding;
+    public Tree addedOrExisting(){
+        if(wasAddedToTree()){
+        	return this;
         }
-        return this;
+        return _preceding;
+    }
+    
+    public boolean wasAddedToTree(){
+    	return _size != 0;
     }
 	
 	public final Tree balance(){
@@ -235,7 +241,7 @@ public abstract class Tree implements ShallowClone , DeepClone{
         return _preceding.first();
     }
     
-	public void isDuplicateOf(Tree a_tree){
+	public void onAttemptToAddDuplicate(Tree a_tree){
 		_size = 0;
         _preceding = a_tree;
 	}

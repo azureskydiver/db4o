@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.marshall.ObjectHeader;
 import com.db4o.inside.slots.*;
 
 /**
@@ -34,7 +35,6 @@ public class YapFileTransaction extends Transaction {
 	public boolean isDeleted(int id) {
     	return slotChangeIsFlaggedDeleted(id);
     }
-
 	
 	protected void commit6WriteChanges() {
         checkSynchronization();
@@ -106,7 +106,7 @@ public class YapFileTransaction extends Transaction {
     	}
         SlotChange slot = new SlotChange(id);
         _slotChanges = Tree.add(_slotChanges, slot);
-        return (SlotChange)slot.duplicateOrThis();
+        return (SlotChange)slot.addedOrExisting();
     }
     
     
@@ -294,6 +294,13 @@ public class YapFileTransaction extends Transaction {
         slot.freeOnCommit(i_file, new Slot(a_address, a_length));
         slot.setPointer(0, 0);
     }
+	
+    private void slotFreeOnCommit(int id, Slot slot){
+    	if(slot == null){
+    		return;
+    	}
+    	slotFreeOnCommit(id, slot.getAddress(), slot.getLength());    	
+    }
 
     public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
         checkSynchronization();
@@ -414,5 +421,46 @@ public class YapFileTransaction extends Transaction {
 		}
 		i_writtenUpdateDeletedMembers = null;
 	}
+
+    public void writeUpdateDeleteMembers(int id, YapClass clazz, int typeInfo, int cascade) {
+
+    	checkSynchronization();
+    	
+        if(DTrace.enabled){
+            DTrace.WRITE_UPDATE_DELETE_MEMBERS.log(id);
+        }
+        
+        TreeInt newNode = new TreeInt(id);
+        i_writtenUpdateDeletedMembers = Tree.add(i_writtenUpdateDeletedMembers, newNode);
+        if(! newNode.wasAddedToTree()){
+        	return;
+        }
+        
+        if(clazz.canUpdateFast()){
+        	slotFreeOnCommit(id, getCurrentSlotOfID(id));
+        	return;
+        }
+        
+        YapWriter objectBytes = stream().readWriterByID(this, id);
+        if(objectBytes == null){
+            if (clazz.hasIndex()) {
+                 dontRemoveFromClassIndex(clazz.getID(), id);
+            }
+            return;
+        }
+        
+        ObjectHeader oh = new ObjectHeader(stream(), clazz, objectBytes);
+        
+        DeleteInfo info = (DeleteInfo)TreeInt.find(i_delete, id);
+        if(info != null){
+            if(info._cascade > cascade){
+                cascade = info._cascade;
+            }
+        }
+        
+        objectBytes.setCascadeDeletes(cascade);
+        clazz.deleteMembers(oh._marshallerFamily, oh._headerAttributes, objectBytes, typeInfo, true);
+        slotFreeOnCommit(id, new Slot(objectBytes.getAddress(), objectBytes.getLength()));
+    }
 
 }
