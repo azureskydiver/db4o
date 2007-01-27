@@ -269,7 +269,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     BTreeNode produceNode(int id){
         TreeIntObject addtio = new TreeIntObject(id);
         _nodes = (TreeIntObject)Tree.add(_nodes, addtio);
-        TreeIntObject tio = (TreeIntObject)addtio.duplicateOrThis();
+        TreeIntObject tio = (TreeIntObject)addtio.addedOrExisting();
         BTreeNode node = (BTreeNode)tio.getObject();
         if(node == null){
             node = new BTreeNode(id, this);

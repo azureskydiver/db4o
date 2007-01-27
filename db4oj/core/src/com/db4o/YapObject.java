@@ -406,10 +406,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				
 				setStateClean();
 
-				if (!canFastUpdate()) {
-					a_trans.writeUpdateDeleteMembers(getID(), _class, a_trans
-							.stream().i_handlers.arrayType(obj), 0);
-				}
+				a_trans.writeUpdateDeleteMembers(getID(), _class, a_trans
+						.stream().i_handlers.arrayType(obj), 0);
                 
                 MarshallerFamily.current()._object.marshallUpdate(a_trans, a_updatedepth, this, obj);
 				
@@ -417,19 +415,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		        endProcessing();
 		    }
 		}
-	}
-
-	private boolean canFastUpdate() {
-		if(_class.i_config != null && _class.i_config.cascadeOnDelete() == YapConst.YES) {
-			return false;
-		}
-		YapField[] fields = _class.i_fields;
-		for(int i = 0; i < fields.length; ++i) {
-			if(fields[i].hasIndex()) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private boolean objectCanUpdate(YapStream stream, Object obj) {

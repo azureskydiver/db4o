@@ -426,7 +426,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		_include = flag;
 	}
 
-	public void isDuplicateOf(Tree a_tree) {
+	public void onAttemptToAddDuplicate(Tree a_tree) {
 		_size = 0;
 		_root = (QCandidate) a_tree;
 	}

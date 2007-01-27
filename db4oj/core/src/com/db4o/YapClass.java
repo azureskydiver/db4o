@@ -51,8 +51,31 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     // TODO: check race conditions, upon multiple calls against the same class
     private int i_lastID;
     
+    private int _canUpdateFast;
     
-    boolean isInternal() {
+    public final boolean canUpdateFast(){
+    	if(_canUpdateFast == YapConst.UNCHECKED){
+        	_canUpdateFast =  checkCanUpdateFast() ? YapConst.YES : YapConst.NO;
+    	}
+    	return _canUpdateFast == YapConst.YES;
+    }
+    
+    private final boolean checkCanUpdateFast() {
+    	if(i_ancestor != null && ! i_ancestor.canUpdateFast()){
+    		return false;
+    	}
+		if(i_config != null && i_config.cascadeOnDelete() == YapConst.YES) {
+			return false;
+		}
+		for(int i = 0; i < i_fields.length; ++i) {
+			if(i_fields[i].hasIndex()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	boolean isInternal() {
     	return _internal;
     }
 
