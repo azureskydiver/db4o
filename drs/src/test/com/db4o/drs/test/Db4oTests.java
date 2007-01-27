@@ -1,6 +1,6 @@
 package com.db4o.drs.test;
 
-import com.db4o.drs.test.hibernate.ThreeProviders;
+import com.db4o.drs.test.hibernate.RoundRobinWithManyProviders;
 
 import db4ounit.TestRunner;
 
@@ -36,10 +36,10 @@ public class Db4oTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
-		return shared();
+		return one();
 	}
 
 	protected Class[] one() {
-		return new Class[] { ThreeProviders.class, };
+		return new Class[] { RoundRobinWithManyProviders.class, };
 	}
 }
