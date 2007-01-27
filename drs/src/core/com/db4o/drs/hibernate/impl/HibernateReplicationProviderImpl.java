@@ -366,23 +366,39 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		if (exisitingSigs.size() == 1) {
 			_peerSignature = (PeerSignature) exisitingSigs.get(0);
-			_replicationRecord = (Record) getSession()
-				.createCriteria(Record.class)
-				.createCriteria(Record.Fields.PEER_SIGNATURE)
-				.add(Restrictions.eq(ProviderSignature.Fields.ID, _peerSignature.getId())).list().get(0);
+			List existingRecords = getSession()
+							.createCriteria(Record.class)
+							.createCriteria(Record.Fields.PEER_SIGNATURE)
+							.add(Restrictions.eq(ProviderSignature.Fields.ID, _peerSignature.getId())).list();
+			
+			if (existingRecords.size()==1)	//This peer X replicated with this provider before 
+				_replicationRecord = (Record) existingRecords.get(0);
+			else if (existingRecords.size()==0)	//
+				/*
+				 * This peer X never replicated with this provider, 
+				 * but objects from this peer X was replicated thru another provider, 
+				 * .e.g. X->another provider->this provider
+				 */
+				createNewRecord();
+			else
+				throw new RuntimeException("This state is never reachable.");
 		} else if (exisitingSigs.size() == 0) {
 			_peerSignature = new PeerSignature(peerSigBytes);
 			getSession().save(_peerSignature);
 			getSession().flush();
 
-			_replicationRecord = new Record();
-			_replicationRecord.setPeerSignature(_peerSignature);
+			createNewRecord();
 		} else
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
 
 		_generator.setMinimumNext(Util.getMaxReplicationRecordVersion(_session));
 
 		_inReplication = true;
+	}
+
+	private void createNewRecord() {
+		_replicationRecord = new Record();
+		_replicationRecord.setPeerSignature(_peerSignature);
 	}
 
 	public final void storeNew(Object object) {

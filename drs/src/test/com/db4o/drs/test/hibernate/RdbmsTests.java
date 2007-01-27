@@ -79,7 +79,7 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 
 	protected Class[] testCases() {
-		return all();
+		return one();
 	}
 
 	private Class[] all() {
@@ -96,7 +96,7 @@ public class RdbmsTests extends DrsTestSuite {
 
 	protected Class[] one() {
 		return new Class[] {
-		ThreeProviders.class,
+		RoundRobinWithManyProviders.class,
 		 //TheSimplest.class
 		};
 	}
