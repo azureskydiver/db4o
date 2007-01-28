@@ -12,36 +12,32 @@ import com.db4o.inside.*;
  * @exclude
  */
 public class YapMemoryFile extends YapFile {
-    
-    private boolean i_closed = false;
-    final MemoryFile i_memoryFile;
-    private int i_length = 0;
 
-    protected YapMemoryFile(Configuration config,YapStream a_parent, MemoryFile memoryFile) {
-        super(config,a_parent);
-        this.i_memoryFile = memoryFile;
-        try {
-            open();
-        } catch (Exception e) {
-            Exceptions4.throwRuntimeException(22, e);
-        }
-        initialize3();
-    }
+	private boolean _closed = false;
+	private final MemoryFile _memoryFile;
+	private int _length = 0;
 
-    YapMemoryFile(Configuration config,MemoryFile memoryFile) {
+	protected YapMemoryFile(Configuration config, YapStream parent, MemoryFile memoryFile) {
+		super(config, parent);
+		_memoryFile = memoryFile;
+		try {
+			open();
+		} catch (Exception e) {
+			Exceptions4.throwRuntimeException(22, e);
+		}
+		initialize3();
+	}
+
+    YapMemoryFile(Configuration config, MemoryFile memoryFile) {
         this(config, null, memoryFile);
     }
     
-    public void backup(String path)throws IOException{
+    public void backup(String path) throws IOException{
         Exceptions4.throwRuntimeException(60);
     }
     
     public void blockSize(int size){
         // do nothing, blocksize is always 1
-    }
-
-    void checkDemoHop() {
-        // do nothing
     }
 
     protected boolean close2() {
@@ -55,27 +51,29 @@ public class YapMemoryFile extends YapFile {
             }
         }
         super.close2();
-        if (i_closed == false) {
-            byte[] temp = new byte[i_length];
-            System.arraycopy(i_memoryFile.getBytes(), 0, temp, 0, i_length);
-            i_memoryFile.setBytes(temp);
+        if (!_closed) {
+            byte[] temp = new byte[_length];
+            System.arraycopy(_memoryFile.getBytes(), 0, temp, 0, _length);
+            _memoryFile.setBytes(temp);
         }
-        i_closed = true;
+        _closed = true;
         return true;
     }
 
-    public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
-        byte[] bytes = memoryFileBytes(newAddress + newAddressOffset + length);
-        System.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, newAddress + newAddressOffset, length);
-    }
+	public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
+		int fullNewAddress = newAddress + newAddressOffset;
+		ensureMemoryFileSize(fullNewAddress + length);
+		byte[] bytes = _memoryFile.getBytes();
+		System.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, fullNewAddress, length);
+	}
 
-    void emergencyClose() {
+	void emergencyClose() {
         super.emergencyClose();
-        i_closed = true;
+        _closed = true;
     }
 
     public long fileLength() {
-        return i_length;
+        return _length;
     }
 
     String fileName() {
@@ -91,29 +89,29 @@ public class YapMemoryFile extends YapFile {
     }
 
     private void open() throws IOException {
-        byte[] bytes = i_memoryFile.getBytes();
+        byte[] bytes = _memoryFile.getBytes();
         if (bytes == null || bytes.length == 0) {
-            i_memoryFile.setBytes(new byte[i_memoryFile.getInitialSize()]);
+            _memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);
             configureNewFile();
             write(false);
             writeHeader(false);
         } else {
-            i_length = bytes.length;
+            _length = bytes.length;
             readThis();
         }
     }
 
-    public void readBytes(byte[] a_bytes, int a_address, int a_length) {
-        try {
-            System.arraycopy(i_memoryFile.getBytes(), a_address, a_bytes, 0, a_length);
-        } catch (Exception e) {
-            Exceptions4.throwRuntimeException(13, e);
-        }
-    }
-    
-    public void readBytes(byte[] bytes, int address, int addressOffset, int length){
-        readBytes(bytes, address + addressOffset, length);
-    }
+	public void readBytes(byte[] bytes, int address, int length) {
+		try {
+			System.arraycopy(_memoryFile.getBytes(), address, bytes, 0, length);
+		} catch (Exception e) {
+			Exceptions4.throwRuntimeException(13, e);
+		}
+	}
+
+	public void readBytes(byte[] bytes, int address, int addressOffset, int length){
+		readBytes(bytes, address + addressOffset, length);
+	}
 
     public void syncFiles() {
     }
@@ -122,32 +120,34 @@ public class YapMemoryFile extends YapFile {
         return true;
     }
 
-    public void writeBytes(YapReader a_bytes, int address, int addressOffset) {
-        int fullAddress = address + addressOffset;
-        int length = a_bytes.getLength(); 
-        System.arraycopy(a_bytes._buffer, 0, memoryFileBytes(fullAddress + length), fullAddress , length);
-    }
+	public void writeBytes(YapReader bytes, int address, int addressOffset) {
+		int fullAddress = address + addressOffset;
+		int length = bytes.getLength();
+		ensureMemoryFileSize(fullAddress + length);   
+		System.arraycopy(bytes._buffer, 0, _memoryFile.getBytes(), fullAddress , length);
+	}
 
-    private byte[] memoryFileBytes(int a_lastByte) {
-        byte[] bytes = i_memoryFile.getBytes();
-        if (a_lastByte > i_length) {
-            if (a_lastByte > bytes.length) {
-                int increase = a_lastByte - bytes.length;
-                if (increase < i_memoryFile.getIncrementSizeBy()) {
-                    increase = i_memoryFile.getIncrementSizeBy();
-                }
-                byte[] temp = new byte[bytes.length + increase];
-                System.arraycopy(bytes, 0, temp, 0, bytes.length);
-                i_memoryFile.setBytes(temp);
-                bytes = temp;
-            }
-            i_length = a_lastByte;
-        }
-        return bytes;
-    }
-    
+    private void ensureMemoryFileSize(int last) {
+		if (last < _length) return;
+		
+		byte[] bytes = _memoryFile.getBytes();
+		if (last < bytes.length) {
+			_length = last;
+			return;
+		}
+
+		int increment = _memoryFile.getIncrementSizeBy();
+		while (last > increment) {
+			increment <<= 1;
+		}
+		
+		byte[] newBytes = new byte[bytes.length + increment];
+		System.arraycopy(bytes, 0, newBytes, 0, bytes.length);
+		_memoryFile.setBytes(newBytes);
+		_length = newBytes.length;
+		bytes = null; // hey, GC, kick me hard!
+	}
+
     public void debugWriteXBytes(int a_address, int a_length) {
-        // do nothing
     }
-
 }
