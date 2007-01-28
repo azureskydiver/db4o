@@ -36,10 +36,6 @@ public class YInt extends YapJavaClass {
     public int linkLength() {
         return YapConst.INT_LENGTH;
     }
-    
-    public static int max(int x, int y){ 
-        return (x < y) ? y : x;
-    }
 
     Object primitiveNull() {
         return i_primitive;
