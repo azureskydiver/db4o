@@ -115,14 +115,14 @@ public class CachedIoAdapter extends IoAdapter {
 		while (startAddress < endAddress) {
 			page = getPage(startAddress);
 			writtenLength = (int) (_pageSize - startAddress % _pageSize);
-			writtenLength = Util.min(writtenLength, length);
+			writtenLength = Math.min(writtenLength, length);
 			page.write(buffer, bufferOffset, startAddress, writtenLength);
 			movePageToHead(page);
 			startAddress += writtenLength;
 			bufferOffset += writtenLength;
 		}
 		_position = endAddress;
-		_fileLength = Util.max(page.startPosition + _pageSize, _fileLength);
+		_fileLength = Math.max(page.startPosition + _pageSize, _fileLength);
 	}
 
 	public void sync() throws IOException {
@@ -228,7 +228,7 @@ public class CachedIoAdapter extends IoAdapter {
 	public void seek(long pos) throws IOException {
 		_position = pos;
 		long endAddress = pos - pos % _pageSize + _pageSize;
-		_fileLength = Util.max(_fileLength, endAddress);
+		_fileLength = Math.max(_fileLength, endAddress);
 	}
 
 	private void ioSeek(long pos) throws IOException {
@@ -261,7 +261,7 @@ public class CachedIoAdapter extends IoAdapter {
 				int length) {
 			int bufferOffset = (int) (startPosition - this.startPosition);
 			int bufferRemaining = out.length - outOffset;
-			int readLength = Util.min(bufferRemaining, length);
+			int readLength = Math.min(bufferRemaining, length);
 			System.arraycopy(buffer, bufferOffset, out, outOffset, readLength);
 		}
 
@@ -269,7 +269,7 @@ public class CachedIoAdapter extends IoAdapter {
 				int length) {
 			int bufferOffset = (int) (startPosition - this.startPosition);
 			int dataLength = data.length - dataOffset;
-			int writeLength = Util.min(dataLength, length);
+			int writeLength = Math.min(dataLength, length);
 			System.arraycopy(data, dataOffset, buffer, bufferOffset,
 					writeLength);
 			dirty = true;
@@ -287,15 +287,4 @@ public class CachedIoAdapter extends IoAdapter {
 			return startPosition == -1;
 		}
 	}
-
-	static class Util {
-		public static int min(int a, int b) {
-			return a < b ? a : b;
-		}
-
-		public static long max(long a, long b) {
-			return a > b ? a : b;
-		}
-	}
-
 }
