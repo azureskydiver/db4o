@@ -21,7 +21,7 @@ public abstract class FileHeader {
     private static int readerLength(){
         int length = AVAILABLE_FILE_HEADERS[0].length();
         for (int i = 1; i < AVAILABLE_FILE_HEADERS.length; i++) {
-            length = YInt.max(length, AVAILABLE_FILE_HEADERS[i].length());
+            length = Math.max(length, AVAILABLE_FILE_HEADERS[i].length());
         }
         return length;
     }
