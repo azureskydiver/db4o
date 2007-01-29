@@ -21,7 +21,10 @@ public class Db4oDefragSolo extends Db4oSolo {
 			if(origFile.exists()) {
 				try {
 					String backupFile = getAbsolutePath()+".defrag.backup";
-					DefragmentConfig defragConfig = new DefragmentConfig(getAbsolutePath(), backupFile);
+					ContextIDMapping mapping=
+						new TreeIDMapping();
+						//new BTreeIDMapping(getAbsolutePath()+".defrag.mapping",4096,1,1000);
+					DefragmentConfig defragConfig = new DefragmentConfig(getAbsolutePath(), backupFile, mapping);
 					defragConfig.forceBackupDelete(true);
 					// FIXME Cloning is ugly - wrap original in Decorator within DefragContext instead?
 					Configuration clonedConfig=(Configuration)((DeepClone)config).deepClone(null);
