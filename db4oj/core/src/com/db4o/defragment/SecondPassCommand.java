@@ -15,7 +15,16 @@ import com.db4o.inside.btree.*;
  */
 final class SecondPassCommand implements PassCommand {
 
-	public void processClass(DefragContextImpl context, final YapClass yapClass, int id,final int classIndexID) throws CorruptionException {
+	private final int _objectCommitFrequency;
+	private int _objectCount=0;
+	
+	
+	
+	public SecondPassCommand(int objectCommitFrequency) {
+		_objectCommitFrequency = objectCommitFrequency;
+	}
+
+	public void processClass(final DefragContextImpl context, final YapClass yapClass, int id,final int classIndexID) throws CorruptionException {
 		if(context.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
@@ -26,10 +35,17 @@ final class SecondPassCommand implements PassCommand {
 		});
 	}
 
-	public void processObjectSlot(DefragContextImpl context, final YapClass yapClass, int id, boolean registerAddresses) throws CorruptionException {
+	public void processObjectSlot(final DefragContextImpl context, final YapClass yapClass, int id, boolean registerAddresses) throws CorruptionException {
 		ReaderPair.processCopy(context, id, new SlotCopyHandler() {
 			public void processCopy(ReaderPair readers) {
 				YapClass.defragObject(readers);
+				if(_objectCommitFrequency>0) {
+					_objectCount++;
+					if(_objectCount==_objectCommitFrequency) {
+						context.targetCommit();
+						_objectCount=0;
+					}
+				}
 			}
 		},registerAddresses);
 	}

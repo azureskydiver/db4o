@@ -24,6 +24,8 @@ public class DefragmentConfig {
 	
 	private StoredClassFilter _storedClassFilter=null;
 	private boolean _forceBackupDelete=false;
+	
+	private int _objectCommitFrequency;
 
 	/**
 	 * Creates a configuration for a defragmentation run. The backup and mapping
@@ -137,6 +139,14 @@ public class DefragmentConfig {
 	 */
 	public void db4oConfig(Configuration config) {
 		_config=config;
+	}
+	
+	public int objectCommitFrequency() {
+		return _objectCommitFrequency;
+	}
+
+	public void objectCommitFrequency(int objectCommitFrequency) {
+		_objectCommitFrequency=objectCommitFrequency;
 	}
 	
 	private static class NullFilter implements StoredClassFilter {
