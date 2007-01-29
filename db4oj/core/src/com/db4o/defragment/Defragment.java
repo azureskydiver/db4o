@@ -182,7 +182,7 @@ public class Defragment {
 	private static void secondPass(final DefragContextImpl context,
 			DefragmentConfig config) throws CorruptionException {
 		// System.out.println("SECOND");
-		pass(context, config, new SecondPassCommand());
+		pass(context, config, new SecondPassCommand(config.objectCommitFrequency()));
 	}
 
 	private static void pass(DefragContextImpl context,
@@ -198,6 +198,9 @@ public class Defragment {
 			}
 			processYapClass(context, yapClass, command);
 			command.flush(context);
+			if(config.objectCommitFrequency()>0) {
+				context.targetCommit();
+			}
 		}
 		BTree uuidIndex = context.sourceUuidIndex();
 		if (uuidIndex != null) {
