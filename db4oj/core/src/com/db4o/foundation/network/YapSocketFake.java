@@ -35,8 +35,13 @@ public class YapSocketFake implements YapSocket {
             _affiliate = null;
             temp.close();
         }
-        _affiliate = null;
+        closeSocket();
     }
+
+	private void closeSocket() {
+        _downloadBuffer.close();
+        _uploadBuffer.close();
+	}
 
     public void flush() {
         // do nothing
