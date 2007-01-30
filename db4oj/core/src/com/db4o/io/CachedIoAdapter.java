@@ -5,7 +5,11 @@ package com.db4o.io;
 import java.io.IOException;
 
 /**
- * IO adapter for random access files.
+ * CachedIoAdapter is an IOAdapter for random access files, which caches data for IO access.
+ * Its functionality is similar to OS cache.<br>
+ * Example:<br>
+ * <code>delegateAdapter = new RandomAccessFileAdapter();</code><br>
+ * <code>Db4o.configure().io(new CachedIoAdapter(delegateAdapter));</code><br>
  */
 public class CachedIoAdapter extends IoAdapter {
 
@@ -31,16 +35,47 @@ public class CachedIoAdapter extends IoAdapter {
 
 	// private Hashtable4 _posPageMap = new Hashtable4(PAGE_COUNT);
 
+	/**
+	 * Creates an instance of CachedIoAdapter with the default 
+	 * page size and page count.  
+	 * @param IoAdapter
+	 *                               delegate IO adapter (RandomAccessFileAdapter by default)
+	 */
 	public CachedIoAdapter(IoAdapter ioAdapter) {
 		this(ioAdapter, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_COUNT);
 	}
 
+	/**
+	 * Creates an instance of CachedIoAdapter with a custom
+	 * page size and page count.<br>
+	 *  @param IoAdapter
+	 *                               delegate IO adapter (RandomAccessFileAdapter by default)
+	 *  @param pageSize 
+	 *                               cache page size
+	 *  @param pageCount
+	 *                               allocated amount of pages  
+	 */
 	public CachedIoAdapter(IoAdapter ioAdapter, int pageSize, int pageCount) {
 		_io = ioAdapter;
 		_pageSize = pageSize;
 		_pageCount = pageCount;
 	}
 
+	/**
+	 * Creates an instance of CachedIoAdapter with extended parameters.<br>
+	 *  @param path
+	 *                              database file path
+	 *  @param lockFile
+	 *                              determines if the file should be locked 
+	 *  @param initialLength
+	 *                              initial file length, new writes will start from this point
+	 *  @param IoAdapter 
+	 *                              delegate IO adapter (RandomAccessFileAdapter by default)
+	 *  @param pageSize
+	 *                              cache page size
+	 *  @param pageCount
+	 *                              allocated amount of pages 
+	 */
 	public CachedIoAdapter(String path, boolean lockFile, long initialLength,
 			IoAdapter io, int pageSize, int pageCount) throws IOException {
 		_io = io;
@@ -55,16 +90,35 @@ public class CachedIoAdapter extends IoAdapter {
 		_fileLength = _io.getLength();
 	}
 
+	/**
+	 * Creates and returns a new CachedIoAdapter <br>
+	 *  @param path
+	 *                              database file path
+	 *  @param lockFile
+	 *                              determines if the file should be locked 
+	 *  @param initialLength
+	 *                              initial file length, new writes will start from this point
+	 */
 	public IoAdapter open(String path, boolean lockFile, long initialLength)
 			throws IOException {
 		return new CachedIoAdapter(path, lockFile, initialLength, _io,
 				_pageSize, _pageCount);
 	}
 
+	/**
+	 * Deletes the database file
+	 * @param path
+	 *                              file path
+	 */
 	public void delete(String path) {
 		_io.delete(path);
 	}
 
+	/**
+	 * Checks if the file exists
+	 * @param path
+	 *                              file path
+	 */
 	public boolean exists(String path) {
 		return _io.exists(path);
 	}
@@ -88,6 +142,14 @@ public class CachedIoAdapter extends IoAdapter {
 		_tail = next;
 	}
 
+	/**
+	 * Reads the file into the buffer using pages from cache. 
+	 * If the next page is not cached it will be read from the file.
+	 * @param buffer
+	 *                              destination buffer
+	 * @param length
+	 *                              how many bytes to read
+	 */
 	public int read(byte[] buffer, int length) throws IOException {
 		long startAddress = _position;
 		long endAddress = startAddress + length;
@@ -106,6 +168,13 @@ public class CachedIoAdapter extends IoAdapter {
 		return length;
 	}
 
+	/**
+	 * Writes the buffer to cache using pages
+	 * @param buffer
+	 *                              source buffer
+	 * @param length
+	 *                              how many bytes to write
+	 */
 	public void write(byte[] buffer, int length) throws IOException {
 		long startAddress = _position;
 		long endAddress = startAddress + length;
@@ -125,15 +194,24 @@ public class CachedIoAdapter extends IoAdapter {
 		_fileLength = Math.max(page.startPosition + _pageSize, _fileLength);
 	}
 
+	/**
+	 * Flushes cache to a physical storage
+	 */
 	public void sync() throws IOException {
 		flushAllPages();
 		_io.sync();
 	}
 
+	/**
+	 * Returns the file length
+	 */
 	public long getLength() throws IOException {
 		return _fileLength;
 	}
 
+	/**
+	 * Flushes and closes the file
+	 */
 	public void close() throws IOException {
 		flushAllPages();
 		_io.close();
@@ -225,6 +303,11 @@ public class CachedIoAdapter extends IoAdapter {
 		page.dirty = false;
 	}
 
+	/**
+	 * Moves the pointer to the specified file position
+	 * @param pos
+	 *                              position within the file								 
+	 */
 	public void seek(long pos) throws IOException {
 		_position = pos;
 		long endAddress = pos - pos % _pageSize + _pageSize;
