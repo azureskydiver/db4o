@@ -176,6 +176,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 	}
 
 	public ObjectContainer openClient(Configuration config) {
+		checkClosed();
 		try {
 			YapClient client = new YapClient(config, openClientSocket(),
 					YapConst.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "",
