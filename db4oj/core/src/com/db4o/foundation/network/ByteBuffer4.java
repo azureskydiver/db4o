@@ -117,16 +117,15 @@ class ByteBuffer4 {
 
     protected void waitForAvailable() throws IOException {
         while (available() == 0) {
+        	if (i_closed) {
+                throw new IOException(Messages.get(35));
+            }
             try {
                 i_lock.snooze(i_timeout);
             } catch (Exception e) {
                 throw new IOException(Messages.get(55));
             }
         }
-        if (i_closed) {
-            throw new IOException(Messages.get(35));
-        }
-
     }
 
     public void write(byte[] bytes) {
