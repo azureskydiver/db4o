@@ -747,7 +747,13 @@
 		</exec>
 	</target>
 	
-	<target name="ndoc" depends="preparendoc" description="Build public .net docs">		
+	<!-- for debugging purposes only -->
+	<target name="ndoc-net2" depends="configure-net2, realndoc" />
+	
+	<target name="ndoc" depends="preparendoc">
+	</target>
+	
+	<target name="realndoc" depends="preparendoc" description="Build public .net docs">		
 		<exec executable="${ndoc.home}/bin/net/${target.framework.version}/NDocConsole.exe">
 			<arg value="${file.dll.net}" />
 			<arg value="-documenter=MSDN 2003" />
