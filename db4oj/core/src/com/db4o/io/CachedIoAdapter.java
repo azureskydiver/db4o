@@ -157,8 +157,10 @@ public class CachedIoAdapter extends IoAdapter {
 		int readLength;
 		int bufferOffset = 0;
 		while (startAddress < endAddress) {
-			page = getPage(startAddress);
+			page = getPage(startAddress, true);
 			readLength = (int) (_pageSize - startAddress % _pageSize);
+			readLength = Math.min(buffer.length - bufferOffset, readLength);
+			readLength = Math.min(length, readLength);
 			page.read(buffer, bufferOffset, startAddress, readLength);
 			movePageToHead(page);
 			startAddress += readLength;
@@ -182,9 +184,13 @@ public class CachedIoAdapter extends IoAdapter {
 		int writtenLength;
 		int bufferOffset = 0;
 		while (startAddress < endAddress) {
-			page = getPage(startAddress);
 			writtenLength = (int) (_pageSize - startAddress % _pageSize);
 			writtenLength = Math.min(writtenLength, length);
+			writtenLength = Math.min(buffer.length - bufferOffset, writtenLength);
+			// writtenLength == pageSize means it doesn't need to reload the
+			// page from disk since the whole page will be written immediately.
+			boolean load = writtenLength != _pageSize;
+			page = getPage(startAddress, load);
 			page.write(buffer, bufferOffset, startAddress, writtenLength);
 			movePageToHead(page);
 			startAddress += writtenLength;
@@ -217,12 +223,16 @@ public class CachedIoAdapter extends IoAdapter {
 		_io.close();
 	}
 
-	private Page getPage(long startAddress) throws IOException {
+	private Page getPage(long startAddress, boolean load) throws IOException {
 		Page page;
 		page = getPageFromCache(startAddress);
 		if (page == null) {
 			page = getFreePage();
-			loadPage(page, startAddress);
+			if (load) {
+				loadPage(page, startAddress);
+			} else {
+				page.startPosition = startAddress;
+			}
 		}
 		return page;
 	}
@@ -343,18 +353,13 @@ public class CachedIoAdapter extends IoAdapter {
 		public void read(byte[] out, int outOffset, long startPosition,
 				int length) {
 			int bufferOffset = (int) (startPosition - this.startPosition);
-			int bufferRemaining = out.length - outOffset;
-			int readLength = Math.min(bufferRemaining, length);
-			System.arraycopy(buffer, bufferOffset, out, outOffset, readLength);
+			System.arraycopy(buffer, bufferOffset, out, outOffset, length);
 		}
 
 		public void write(byte[] data, int dataOffset, long startPosition,
 				int length) {
 			int bufferOffset = (int) (startPosition - this.startPosition);
-			int dataLength = data.length - dataOffset;
-			int writeLength = Math.min(dataLength, length);
-			System.arraycopy(data, dataOffset, buffer, bufferOffset,
-					writeLength);
+			System.arraycopy(data, dataOffset, buffer, bufferOffset, length);
 			dirty = true;
 		}
 
