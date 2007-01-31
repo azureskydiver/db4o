@@ -1048,6 +1048,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                 // Field length is always 1
                 try {
                     a_object = i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));
+                    // when there's a ObjectConstructor configured for a type
+					// the type is marshalled through a lone virtual field
+					// of type YapFieldTranslator which takes care of everything
+                    doFields = false;  
                 } catch (Exception e) {
                     Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
                     return null;
