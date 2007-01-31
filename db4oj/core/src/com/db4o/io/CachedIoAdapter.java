@@ -132,7 +132,7 @@ public class CachedIoAdapter extends IoAdapter {
 		_head = new Page(_pageSize);
 		_head.prev = null;
 		Page page = _head;
-		Page next = null;
+		Page next = _head;
 		for (int i = 0; i < _pageCount - 1; ++i) {
 			next = new Page(_pageSize);
 			page.next = next;
