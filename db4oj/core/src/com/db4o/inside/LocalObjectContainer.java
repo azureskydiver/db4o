@@ -9,7 +9,6 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
-import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.convert.*;
 import com.db4o.inside.freespace.*;
@@ -20,7 +19,7 @@ import com.db4o.inside.slots.*;
 /**
  * @exclude
  */
-public abstract class YapFile extends YapStream {
+public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     protected FileHeader       _fileHeader;
     
@@ -43,7 +42,7 @@ public abstract class YapFile extends YapStream {
     
     private SystemData          _systemData;
         
-    YapFile(Configuration config,YapStream a_parent) {
+    LocalObjectContainer(Configuration config,ObjectContainerBase a_parent) {
         super(config,a_parent);
     }
     

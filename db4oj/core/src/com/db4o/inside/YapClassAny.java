@@ -14,7 +14,7 @@ import com.db4o.reflect.*;
  */
 final class YapClassAny extends YapClass {
     
-	public YapClassAny(YapStream stream){
+	public YapClassAny(ObjectContainerBase stream){
 		super(stream, stream.i_handlers.ICLASS_OBJECT);
 	}
 
@@ -41,7 +41,7 @@ final class YapClassAny extends YapClass {
 		return 11;
 	}
 
-	public boolean hasField(YapStream a_stream, String a_path) {
+	public boolean hasField(ObjectContainerBase a_stream, String a_path) {
 		return a_stream.classCollection().fieldExists(a_path);
 	}
 	

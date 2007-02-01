@@ -84,7 +84,7 @@ import com.db4o.inside.slots.Slot;
 		i_root = TreeInt.removeLike(i_root, a_id);
 	}
 
-    void setDirty(YapStream a_stream) {
+    void setDirty(ObjectContainerBase a_stream) {
     	// TODO: get rid of the setDirty call
         a_stream.setDirtyInSystemTransaction(this);
     }

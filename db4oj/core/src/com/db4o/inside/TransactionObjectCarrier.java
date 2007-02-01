@@ -8,7 +8,7 @@ package com.db4o.inside;
  */
 class TransactionObjectCarrier extends YapFileTransaction{
 	
-	TransactionObjectCarrier(YapStream a_stream, Transaction a_parent) {
+	TransactionObjectCarrier(ObjectContainerBase a_stream, Transaction a_parent) {
 		super(a_stream, a_parent);
 	}
 	

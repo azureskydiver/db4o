@@ -100,7 +100,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	private void checkInstanceOfCompare() {
 		if (_member instanceof Compare) {
 			_member = ((Compare) _member).compare();
-			YapFile stream = getStream();
+			LocalObjectContainer stream = getStream();
 			_yapClass = stream.getYapClass(stream.reflector().forObject(_member));
 			_key = (int) stream.getID(_member);
             setBytes(stream.readReaderByID(getTransaction(), _key));
@@ -393,7 +393,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return _root == null ? this : _root;
 	}
 
-	private YapFile getStream() {
+	private LocalObjectContainer getStream() {
 		return getTransaction().i_file;
 	}
 
@@ -438,7 +438,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return getTransaction().reflector().forObject(_member);
 	}
 
-	YapComparable prepareComparison(YapStream a_stream, Object a_constraint) {
+	YapComparable prepareComparison(ObjectContainerBase a_stream, Object a_constraint) {
 		if (_yapField != null) {
 			return _yapField.prepareComparison(a_constraint);
 		}
@@ -534,7 +534,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 				_bytes._offset = 0;
                 
-                YapStream stream = getStream();
+                ObjectContainerBase stream = getStream();
                 ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
 				_yapClass = objectHeader.yapClass();
                 

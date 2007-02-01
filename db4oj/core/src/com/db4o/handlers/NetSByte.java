@@ -10,7 +10,7 @@ import com.db4o.inside.*;
  */
 public class NetSByte extends NetSimpleTypeHandler{
 
-	public NetSByte(YapStream stream) {
+	public NetSByte(ObjectContainerBase stream) {
 		super(stream, 20, 1);
 	}
 	

@@ -9,7 +9,7 @@ import com.db4o.inside.*;
 public final class MDelete extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		Buffer bytes = this.getByteLoad();
-		YapStream stream = stream();
+		ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
 			Object obj = stream.getByID1(transaction(), bytes.readInt());
             boolean userCall = bytes.readInt() == 1;

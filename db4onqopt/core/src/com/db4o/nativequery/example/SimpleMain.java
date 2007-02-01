@@ -8,7 +8,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.inside.*;
-import com.db4o.inside.YapStream;
+import com.db4o.inside.ObjectContainerBase;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
 
@@ -47,7 +47,7 @@ public class SimpleMain {
 							||candidate.getSize()<1;
 				}
 			};
-			((YapStream)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+			((ObjectContainerBase)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
 				public void notifyQueryExecuted(NQOptimizationInfo info) {
 					System.err.println(info.message());
 				}

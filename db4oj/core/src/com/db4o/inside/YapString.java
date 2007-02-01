@@ -20,7 +20,7 @@ public final class YapString extends YapIndependantType {
     
     public YapStringIO i_stringIo; 
     
-    public YapString(YapStream stream, YapStringIO stringIO) {
+    public YapString(ObjectContainerBase stream, YapStringIO stringIO) {
         super(stream);
         i_stringIo = stringIO;
     }
@@ -74,7 +74,7 @@ public final class YapString extends YapIndependantType {
         return YapConst.YAPSTRING;
     }
 
-    public YapClass getYapClass(YapStream a_stream) {
+    public YapClass getYapClass(ObjectContainerBase a_stream) {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
     

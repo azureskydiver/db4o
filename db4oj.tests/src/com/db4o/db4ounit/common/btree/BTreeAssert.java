@@ -74,11 +74,11 @@ public class BTreeAssert {
 		visitor.assertExpectations();
 	}
 
-	public static BTree createIntKeyBTree(final YapStream stream, int id, int nodeSize) {
+	public static BTree createIntKeyBTree(final ObjectContainerBase stream, int id, int nodeSize) {
 		return new BTree(stream.getSystemTransaction(), id, new YInt(stream), null, nodeSize, stream.configImpl().bTreeCacheHeight());
 	}
 	
-	public static BTree createIntKeyBTree(final YapStream stream, int id, int treeCacheHeight, int nodeSize) {
+	public static BTree createIntKeyBTree(final ObjectContainerBase stream, int id, int treeCacheHeight, int nodeSize) {
 		return new BTree(stream.getSystemTransaction(), id, new YInt(stream), null, nodeSize, treeCacheHeight);
 	}
 

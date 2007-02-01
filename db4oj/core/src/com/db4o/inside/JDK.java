@@ -24,7 +24,7 @@ public class JDK {
 		return null;
 	}
 	
-	Db4oCollections collections(YapStream session){
+	Db4oCollections collections(ObjectContainerBase session){
 	    return null;
 	}
     
@@ -115,7 +115,7 @@ public class JDK {
     	return false;
     }
 
-	void pollReferenceQueue(YapStream session, Object referenceQueue) {
+	void pollReferenceQueue(ObjectContainerBase session, Object referenceQueue) {
 		
 	}
 	

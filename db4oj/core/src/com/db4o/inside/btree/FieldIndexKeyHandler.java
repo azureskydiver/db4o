@@ -17,7 +17,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     
     private final YInt _parentIdHandler;
     
-    public FieldIndexKeyHandler(YapStream stream, Indexable4 delegate_) {
+    public FieldIndexKeyHandler(ObjectContainerBase stream, Indexable4 delegate_) {
         _parentIdHandler = new IDHandler(stream);
         _valueHandler = delegate_;
     }

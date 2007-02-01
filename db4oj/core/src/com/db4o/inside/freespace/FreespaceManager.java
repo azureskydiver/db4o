@@ -7,7 +7,7 @@ import com.db4o.inside.*;
 
 public abstract class FreespaceManager {
     
-    final YapFile     _file;
+    final LocalObjectContainer     _file;
 
     public static final byte FM_DEFAULT = 0;
     public static final byte FM_LEGACY_RAM = 1;
@@ -17,7 +17,7 @@ public abstract class FreespaceManager {
     
     private static final int INTS_IN_SLOT = 12;
     
-    public FreespaceManager(YapFile file){
+    public FreespaceManager(LocalObjectContainer file){
         _file = file;
     }
 
@@ -28,13 +28,13 @@ public abstract class FreespaceManager {
         return systemType;
     }
     
-    public static FreespaceManager createNew(YapFile file){
+    public static FreespaceManager createNew(LocalObjectContainer file){
         return createNew(file, file.systemData().freespaceSystem());
     }
     
-	public abstract void onNew(YapFile file);
+	public abstract void onNew(LocalObjectContainer file);
     
-    public static FreespaceManager createNew(YapFile file, byte systemType){
+    public static FreespaceManager createNew(LocalObjectContainer file, byte systemType){
         systemType = checkType(systemType);
         switch(systemType){
         	case FM_IX:
@@ -45,13 +45,13 @@ public abstract class FreespaceManager {
         }
     }
     
-    public static int initSlot(YapFile file){
+    public static int initSlot(LocalObjectContainer file){
         int address = file.getSlot(slotLength());
         slotEntryToZeroes(file, address);
         return address;
     }
     
-    static void slotEntryToZeroes(YapFile file, int address){
+    static void slotEntryToZeroes(LocalObjectContainer file, int address){
         StatefulBuffer writer = new StatefulBuffer(file.getSystemTransaction(), address, slotLength());
         for (int i = 0; i < INTS_IN_SLOT; i++) {
             writer.writeInt(0);

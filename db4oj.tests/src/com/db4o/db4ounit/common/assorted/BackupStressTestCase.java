@@ -165,7 +165,7 @@ public class BackupStressTestCase implements TestLifeCycle {
 	}
     
     private boolean isOldJDK(){
-        YapStream stream = (YapStream)_objectContainer;
+        ObjectContainerBase stream = (ObjectContainerBase)_objectContainer;
         return stream.needsLockFileThread();
     }
     

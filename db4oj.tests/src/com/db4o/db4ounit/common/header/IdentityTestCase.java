@@ -40,6 +40,6 @@ public class IdentityTestCase extends AbstractDb4oTestCase implements OptOutCS {
 	}
 
 	private void generateNewIdentity() {
-		((YapFile) db()).generateNewIdentity();
+		((LocalObjectContainer) db()).generateNewIdentity();
 	}
 }

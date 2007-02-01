@@ -11,13 +11,13 @@ import com.db4o.inside.*;
  */
 public class MigrationConnection {
     
-    public final YapStream _peerA;
-    public final YapStream _peerB;
+    public final ObjectContainerBase _peerA;
+    public final ObjectContainerBase _peerB;
 
     private final Hashtable4 _referenceMap;
     private final Hashtable4 _identityMap;
 
-    public MigrationConnection(YapStream peerA, YapStream peerB) {
+    public MigrationConnection(ObjectContainerBase peerA, ObjectContainerBase peerB) {
         _referenceMap = new Hashtable4();
         _identityMap = new Hashtable4();
         _peerA = peerA;
@@ -62,7 +62,7 @@ public class MigrationConnection {
         _peerB.migrateFrom(null);
     }
     
-    public YapStream peer(YapStream stream){
+    public ObjectContainerBase peer(ObjectContainerBase stream){
         if(_peerA == stream){
             return _peerB;
         }

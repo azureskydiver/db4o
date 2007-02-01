@@ -23,13 +23,13 @@ public abstract class Transaction {
 
     private List4           i_dirtyFieldIndexes;
     
-    public final YapFile           i_file;
+    public final LocalObjectContainer           i_file;
 
     final Transaction       i_parentTransaction;
 
     protected final StatefulBuffer i_pointerIo;    
 
-    private final YapStream         i_stream;
+    private final ObjectContainerBase         i_stream;
     
     private List4           i_transactionListeners;
     
@@ -38,9 +38,9 @@ public abstract class Transaction {
     // TODO: join _dirtyBTree and _enlistedIndices
     private final Collection4 _participants = new Collection4(); 
 
-    public Transaction(YapStream a_stream, Transaction a_parent) {
+    public Transaction(ObjectContainerBase a_stream, Transaction a_parent) {
         i_stream = a_stream;
-        i_file = (a_stream instanceof YapFile) ? (YapFile) a_stream : null;
+        i_file = (a_stream instanceof LocalObjectContainer) ? (LocalObjectContainer) a_stream : null;
         i_parentTransaction = a_parent;
         i_pointerIo = new StatefulBuffer(this, YapConst.POINTER_LENGTH);
     }
@@ -363,7 +363,7 @@ public abstract class Transaction {
     
     public abstract void writeUpdateDeleteMembers(int id, YapClass clazz, int typeInfo, int cascade);
 
-    public final YapStream stream() {
+    public final ObjectContainerBase stream() {
         return i_stream;
     }
 
@@ -377,7 +377,7 @@ public abstract class Transaction {
 		}
 	}
     
-    public static Transaction readInterruptedTransaction(YapFile file, Buffer reader) {
+    public static Transaction readInterruptedTransaction(LocalObjectContainer file, Buffer reader) {
         int transactionID1 = reader.readInt();
         int transactionID2 = reader.readInt();
         if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){

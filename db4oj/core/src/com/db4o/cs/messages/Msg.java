@@ -139,11 +139,11 @@ public class Msg implements Cloneable {
 		return _trans;
 	}
 	
-	protected YapFile file(){
-		return (YapFile)stream();
+	protected LocalObjectContainer file(){
+		return (LocalObjectContainer)stream();
 	}
 	
-	protected YapStream stream(){
+	protected ObjectContainerBase stream(){
 	    return transaction().stream();
 	}
 	
@@ -198,9 +198,9 @@ public class Msg implements Cloneable {
 	}
 	
 
-	public final void write(YapStream stream, YapSocket sock) {
+	public final void write(ObjectContainerBase stream, YapSocket sock) {
 		if (Debug.fakeServer) {
-		    YapStream i_stream = null;
+		    ObjectContainerBase i_stream = null;
 			if (stream == DebugCS.serverStream) {
 				i_stream = DebugCS.clientStream;
 			} else {

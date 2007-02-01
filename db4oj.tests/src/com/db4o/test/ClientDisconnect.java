@@ -14,7 +14,7 @@ public class ClientDisconnect {
 			return;
 		}
 		ExtClient client=(ExtClient)Test.objectContainer();
-		((YapClient)client).socket().close();
+		((ClientObjectContainer)client).socket().close();
 		try {
 			client.get(null);
 			Test.error("expected exception on get after close");

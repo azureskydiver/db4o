@@ -23,7 +23,7 @@ public class NetDecimal extends NetSimpleTypeHandler{
     
 	private static final BigDecimal TEN = new BigDecimal("10"); 
 
-	public NetDecimal(YapStream stream) {
+	public NetDecimal(ObjectContainerBase stream) {
 		super(stream, 21, 16);
 	}
 	

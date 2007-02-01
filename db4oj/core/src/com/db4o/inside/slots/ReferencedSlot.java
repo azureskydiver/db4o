@@ -30,7 +30,7 @@ public class ReferencedSlot extends TreeInt {
 		_slot = slot;
 	}
 
-	public Tree free(YapFile file, Tree treeRoot, Slot slot) {
+	public Tree free(LocalObjectContainer file, Tree treeRoot, Slot slot) {
 		file.free(_slot._address, _slot._length);
 		if (removeReferenceIsLast()) {
 			return treeRoot.removeNode(this);

@@ -10,7 +10,7 @@ import com.db4o.inside.*;
  */
 public class NetUShort extends NetSimpleTypeHandler{
 
-	public NetUShort(YapStream stream) {
+	public NetUShort(ObjectContainerBase stream) {
 		super(stream, 24, 2);
 	}
 	

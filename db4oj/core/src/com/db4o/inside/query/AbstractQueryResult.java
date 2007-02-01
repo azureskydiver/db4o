@@ -26,7 +26,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 
 	public final Object activatedObject(int id) {
-	    YapStream stream = stream();
+	    ObjectContainerBase stream = stream();
 	    Object ret = stream.getActivatedObjectFromCache(_transaction, id);
 	    if(ret != null){
 	        return ret;
@@ -35,12 +35,12 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 
 	public Object streamLock() {
-		final YapStream stream = stream();
+		final ObjectContainerBase stream = stream();
 		stream.checkClosed();
 		return stream.lock();
 	}
 
-	public YapStream stream() {
+	public ObjectContainerBase stream() {
 		return _transaction.stream();
 	}
 	

@@ -15,7 +15,7 @@ public class ChangeIdentity extends AbstractDb4oTestCase implements OptOutCS {
 
         byte[] oldSignature = db().identity().getSignature();
 
-        ((YapFile)db()).generateNewIdentity();
+        ((LocalObjectContainer)db()).generateNewIdentity();
         
         reopen();
         

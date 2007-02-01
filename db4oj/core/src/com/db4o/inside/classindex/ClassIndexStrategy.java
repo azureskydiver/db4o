@@ -10,8 +10,8 @@ import com.db4o.inside.*;
  * @exclude
  */
 public interface ClassIndexStrategy {	
-	void initialize(YapStream stream);
-	void read(YapStream stream, int indexID);
+	void initialize(ObjectContainerBase stream);
+	void read(ObjectContainerBase stream, int indexID);
 	int write(Transaction transaction);
 	void add(Transaction transaction, int id);
 	void remove(Transaction transaction, int id);

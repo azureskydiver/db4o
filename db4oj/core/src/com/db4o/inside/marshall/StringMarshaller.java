@@ -19,7 +19,7 @@ public abstract class StringMarshaller {
     
     public abstract Object writeNew(Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean redirect);
     
-    public final String read(YapStream stream, Buffer reader) throws CorruptionException {
+    public final String read(ObjectContainerBase stream, Buffer reader) throws CorruptionException {
         if (reader == null) {
             return null;
         }
@@ -33,7 +33,7 @@ public abstract class StringMarshaller {
         return ret;
     }
     
-    public String readFromOwnSlot(YapStream stream, Buffer reader){
+    public String readFromOwnSlot(ObjectContainerBase stream, Buffer reader){
         try {
             return read(stream, reader);
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public abstract class StringMarshaller {
         return "";
     }
     
-    public String readFromParentSlot(YapStream stream, Buffer reader, boolean redirect) throws CorruptionException {
+    public String readFromParentSlot(ObjectContainerBase stream, Buffer reader, boolean redirect) throws CorruptionException {
         if(! redirect){
             return read(stream, reader);
         }
@@ -53,7 +53,7 @@ public abstract class StringMarshaller {
     
     public abstract Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException;
     
-    public static String readShort(YapStream stream, Buffer bytes) throws CorruptionException {
+    public static String readShort(ObjectContainerBase stream, Buffer bytes) throws CorruptionException {
     	return readShort(stream.stringIO(),stream.configImpl().internStrings(),bytes);
     }
 
@@ -77,15 +77,15 @@ public abstract class StringMarshaller {
     // TODO: Instead of working with YapReader objects to transport
     // string buffers, we should consider to have a specific string
     // buffer class, that allows comparisons and carries it's encoding.
-    public abstract Buffer readSlotFromParentSlot(YapStream stream, Buffer reader) throws CorruptionException;
+    public abstract Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException;
 
-    public static Buffer writeShort(YapStream stream, String str){
+    public static Buffer writeShort(ObjectContainerBase stream, String str){
         Buffer reader = new Buffer(stream.stringIO().length(str));
         writeShort(stream, str, reader);
         return reader;
     }
     
-    public static void writeShort(YapStream stream, String str, Buffer reader){
+    public static void writeShort(ObjectContainerBase stream, String str, Buffer reader){
         int length = str.length();
         if (Deploy.debug) {
             reader.writeBegin(YapConst.YAPSTRING);

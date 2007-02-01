@@ -89,7 +89,7 @@ class IxFileRange extends IxTree{
     }
 
     public int write(Indexable4 a_handler, StatefulBuffer a_writer) {
-        YapFile yf = (YapFile)a_writer.getStream();
+        LocalObjectContainer yf = (LocalObjectContainer)a_writer.getStream();
         int length = _entries * slotLength();
         yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset(), length);
         a_writer.moveForward(length);
@@ -97,7 +97,7 @@ class IxFileRange extends IxTree{
     }
     
     public void visitAll(IntObjectVisitor visitor) {
-        YapFile yf = stream();
+        LocalObjectContainer yf = stream();
         Transaction transaction = trans();
         Buffer fileReader = new Buffer(slotLength());
         for (int i = 0; i < _entries; i++) {

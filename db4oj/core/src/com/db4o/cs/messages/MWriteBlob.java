@@ -27,7 +27,7 @@ public class MWriteBlob extends MsgBlob {
                 FileInputStream inBlob = this._blob.getClientInputStream();
                 copy(inBlob,sock,true);
                 sock.flush();
-                YapStream stream = stream();
+                ObjectContainerBase stream = stream();
                 message = Msg.readMessage(transaction(), sock);
                 if (message.equals(Msg.OK)) {
 
@@ -49,7 +49,7 @@ public class MWriteBlob extends MsgBlob {
 
 	public boolean processAtServer(YapServerThread serverThread) {
         try {
-            YapStream stream = stream();
+            ObjectContainerBase stream = stream();
             BlobImpl blobImpl = this.serverGetBlobImpl();
             if (blobImpl != null) {
                 blobImpl.setTrans(transaction());

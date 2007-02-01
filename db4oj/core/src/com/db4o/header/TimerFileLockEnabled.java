@@ -15,7 +15,7 @@ import com.db4o.inside.*;
  */
 public class TimerFileLockEnabled extends TimerFileLock{
     
-    private final YapFile _file;
+    private final LocalObjectContainer _file;
     
     private int _headerLockOffset = 2 + YapConst.INT_LENGTH; 
     
@@ -30,7 +30,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     private boolean _closed = false;
     
     
-    public TimerFileLockEnabled(YapFile file) {
+    public TimerFileLockEnabled(LocalObjectContainer file) {
         _file = file;
         _opentime = uniqueOpenTime();
     }

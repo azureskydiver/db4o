@@ -27,7 +27,7 @@ class JDK_1_2 extends JDKReflect {
 	    obj = new TTreeSet();
 	}
 
-    Db4oCollections collections(YapStream a_stream){
+    Db4oCollections collections(ObjectContainerBase a_stream){
         return new P2Collections(a_stream);
     }
 
@@ -88,7 +88,7 @@ class JDK_1_2 extends JDKReflect {
 		}
 	}
 
-    void pollReferenceQueue(YapStream a_stream, Object a_referenceQueue) {
+    void pollReferenceQueue(ObjectContainerBase a_stream, Object a_referenceQueue) {
         if (a_referenceQueue != null) {
             YapReferenceQueue yrq = (YapReferenceQueue) a_referenceQueue;
             YapRef ref;

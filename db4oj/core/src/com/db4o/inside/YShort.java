@@ -15,7 +15,7 @@ final class YShort extends YapJavaClass
 	
 	private static final Short i_primitive = new Short((short)0);
 	
-    public YShort(YapStream stream) {
+    public YShort(ObjectContainerBase stream) {
         super(stream);
     }
     

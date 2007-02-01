@@ -37,7 +37,7 @@ public class NetDateTime extends NetSimpleTypeHandler{
     // ratio from .net ticks (100ns) to java ms
     private static final long TICKS_TO_MS_RATIO = 10000;
 
-	public NetDateTime(YapStream stream) {
+	public NetDateTime(ObjectContainerBase stream) {
 		super(stream, 25, 8);
 	}
 	

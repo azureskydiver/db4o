@@ -354,7 +354,7 @@ public final class YapClassCollection extends YapMeta {
 
 		initTables(classCount);
 
-		YapStream stream = stream();
+		ObjectContainerBase stream = stream();
 		int[] ids = new int[classCount];
 
 		for (int i = 0; i < classCount; ++i) {
@@ -500,7 +500,7 @@ public final class YapClassCollection extends YapMeta {
 		return str;
 	}
 
-    YapStream stream() {
+    ObjectContainerBase stream() {
         return _systemTransaction.stream();
     }
     

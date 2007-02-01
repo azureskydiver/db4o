@@ -13,7 +13,7 @@ import com.db4o.inside.slots.*;
  */
 public class YapFieldVersion extends YapFieldVirtual {
 
-    YapFieldVersion(YapStream stream) {
+    YapFieldVersion(ObjectContainerBase stream) {
         super();
         i_name = VirtualField.VERSION;
         i_handler = new YLong(stream);
@@ -32,7 +32,7 @@ public class YapFieldVersion extends YapFieldVirtual {
     }
 
     void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
-        YapStream stream = a_bytes.getStream().i_parent;
+        ObjectContainerBase stream = a_bytes.getStream().i_parent;
         VirtualAttributes va = a_yapObject.virtualAttributes();
         if (! a_migrating) {
             va.i_version = stream.generateTimeStampId();

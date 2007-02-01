@@ -8,7 +8,7 @@ package com.db4o.inside;
  */
 public class IDHandler extends PrimitiveIntHandler {
 
-	public IDHandler(YapStream stream) {
+	public IDHandler(ObjectContainerBase stream) {
 		super(stream);
 	}
 

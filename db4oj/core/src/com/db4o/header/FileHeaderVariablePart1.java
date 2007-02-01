@@ -61,7 +61,7 @@ public class FileHeaderVariablePart1 extends YapMeta{
     }
     
     private void readIdentity(Transaction trans, int identityID) {
-        YapFile file = trans.i_file;
+        LocalObjectContainer file = trans.i_file;
         Db4oDatabase identity = (Db4oDatabase) file.getByID1(trans, identityID);
         file.activate1(trans, identity, 2);
         _systemData.identity(identity);

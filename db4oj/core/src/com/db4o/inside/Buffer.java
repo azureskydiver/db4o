@@ -74,7 +74,7 @@ public class Buffer implements SlotReader {
      * @param a_stream
      * @param a_address
      */
-    public void read(YapStream a_stream, int a_address, int addressOffset){
+    public void read(ObjectContainerBase a_stream, int a_address, int addressOffset){
         a_stream.readBytes(_buffer, a_address, addressOffset, getLength());
     }
 	
@@ -120,7 +120,7 @@ public class Buffer implements SlotReader {
 		return a_trans.stream().readReaderByAddress(readInt(), readInt());
 	}
 	
-	public void readEncrypt(YapStream a_stream, int a_address) {
+	public void readEncrypt(ObjectContainerBase a_stream, int a_address) {
 		a_stream.readBytes(_buffer, a_address, getLength());
 		a_stream.i_handlers.decrypt(this);
 	}
@@ -205,7 +205,7 @@ public class Buffer implements SlotReader {
         _offset += nullBitMap.marshalledLength();
     }
     
-    public final void writeEncrypt(YapFile file, int address, int addressOffset) {
+    public final void writeEncrypt(LocalObjectContainer file, int address, int addressOffset) {
         file.i_handlers.encrypt(this);
         file.writeBytes(this, address, addressOffset);
         file.i_handlers.decrypt(this);

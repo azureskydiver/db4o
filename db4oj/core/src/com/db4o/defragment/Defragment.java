@@ -162,7 +162,7 @@ public class Defragment {
 
 	private static void setIdentity(String targetFile, int targetIdentityID,
 			int targetUuidIndexID) {
-		YapFile targetDB = (YapFile) Db4o.openFile(DefragmentConfig
+		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(DefragmentConfig
 				.vanillaDb4oConfig(), targetFile);
 		try {
 			Db4oDatabase identity = (Db4oDatabase) targetDB

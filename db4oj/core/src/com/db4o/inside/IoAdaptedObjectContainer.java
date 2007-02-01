@@ -14,7 +14,7 @@ import com.db4o.io.*;
 /**
  * @exclude
  */
-public class YapRandomAccessFile extends YapFile {
+public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     private Session            i_session;
 
@@ -25,7 +25,7 @@ public class YapRandomAccessFile extends YapFile {
 
     private Object             i_fileLock;
 
-    YapRandomAccessFile(Configuration config,Session a_session) throws Exception {
+    IoAdaptedObjectContainer(Configuration config,Session a_session) throws Exception {
         super(config,null);
         synchronized (i_lock) {
             i_fileLock = new Object();

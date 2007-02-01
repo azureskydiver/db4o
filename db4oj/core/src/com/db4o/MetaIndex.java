@@ -47,7 +47,7 @@ public class MetaIndex implements Internal4{
         writer.writeInt(patchLength);
     }
     
-    public void free(YapFile file){
+    public void free(LocalObjectContainer file){
         file.free(indexAddress, indexLength);        
         indexAddress = 0;
         indexLength = 0;

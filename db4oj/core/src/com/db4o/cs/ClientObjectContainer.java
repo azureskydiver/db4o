@@ -18,7 +18,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class YapClient extends YapStream implements ExtClient, BlobTransport {
+public class ClientObjectContainer extends ObjectContainerBase implements ExtClient, BlobTransport {
 	
 	final Object blobLock = new Object();
 
@@ -56,19 +56,19 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	// used for to write the number of messages.
 	private int _batchedQueueLength = YapConst.INT_LENGTH;
 
-	private YapClient(Configuration config) {
+	private ClientObjectContainer(Configuration config) {
 		super(config,null);
 	}
 
 	/**
 	 * Single-Threaded Client-Server Debug Mode
 	 */
-	public YapClient(String fakeServerFile) {
+	public ClientObjectContainer(String fakeServerFile) {
 		this(Db4o.cloneConfiguration());
 		synchronized (lock()) {
 			_singleThreaded = configImpl().singleThreadedClient();
 			if (Debug.fakeServer) {
-				DebugCS.serverStream = (YapFile) Db4o.openFile(fakeServerFile);
+				DebugCS.serverStream = (LocalObjectContainer) Db4o.openFile(fakeServerFile);
 				DebugCS.clientStream = this;
 				DebugCS.clientMessageQueue = messageQueue;
 				DebugCS.clientMessageQueueLock = messageQueueLock;
@@ -82,7 +82,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		}
 	}
 
-	public YapClient(Configuration config,YapSocket socket, String user, String password_, boolean login)
+	public ClientObjectContainer(Configuration config,YapSocket socket, String user, String password_, boolean login)
 			throws IOException {
 		this(config);
 		synchronized (lock()) {

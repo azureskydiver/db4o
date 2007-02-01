@@ -16,7 +16,7 @@ public final class MPrefetchIDs extends MsgD {
 
 		synchronized (streamLock()) {
 			for (int i = 0; i < prefetchIDCount; i++) {
-				reply.writeInt(((YapFile)stream()).prefetchID());
+				reply.writeInt(((LocalObjectContainer)stream()).prefetchID());
 			}
 		}
 		serverThread.write(reply);

@@ -16,7 +16,7 @@ public abstract class NetSimpleTypeHandler extends YapTypeAbstract implements Ge
 	private final int _typeID;
 	private final int _byteCount;
 	
-	public NetSimpleTypeHandler(YapStream stream, int typeID, int byteCount) {
+	public NetSimpleTypeHandler(ObjectContainerBase stream, int typeID, int byteCount) {
         super(stream);
         _name = dotNetClassName();
         _typeID = typeID;

@@ -11,5 +11,5 @@ import com.db4o.ext.*;
  * 
  * @exclude
  */
-public interface YapStreamSpec extends ExtObjectContainer {
+public interface ObjectContainerSpec extends ExtObjectContainer {
 }

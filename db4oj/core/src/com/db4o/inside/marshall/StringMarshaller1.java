@@ -34,7 +34,7 @@ public class StringMarshaller1 extends StringMarshaller{
     
     public Object writeNew(Object obj, boolean topLevel, StatefulBuffer writer, boolean redirect) {
         
-        YapStream stream = writer.getStream();
+        ObjectContainerBase stream = writer.getStream();
         String str = (String) obj;
         
         if(! redirect){
@@ -70,7 +70,7 @@ public class StringMarshaller1 extends StringMarshaller{
         return parentSlot.readPayloadWriter(payLoadOffSet, length);
     }
     
-    public Buffer readSlotFromParentSlot(YapStream stream, Buffer reader) throws CorruptionException {
+    public Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException {
         int payLoadOffSet = reader.readInt();
         int length = reader.readInt();
         if(payLoadOffSet == 0){

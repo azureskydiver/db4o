@@ -9,7 +9,7 @@ import com.db4o.inside.*;
 public final class MReleaseSemaphore extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		String name = readString();
-		((YapFile)stream()).releaseSemaphore(transaction(),name);
+		((LocalObjectContainer)stream()).releaseSemaphore(transaction(),name);
 		return true;
 	}
 }

@@ -4,7 +4,7 @@ package com.db4o.test;
 
 import java.io.IOException;
 
-import com.db4o.cs.YapClient;
+import com.db4o.cs.ClientObjectContainer;
 import com.db4o.ext.Db4oException;
 import com.db4o.ext.ExtObjectContainer;
 
@@ -21,8 +21,8 @@ public class ClientDisconnect extends ClientServerTestCase {
 		ExtObjectContainer oc1 = db();
 		ExtObjectContainer oc2 = db();
 		try {
-			YapClient client1 = (YapClient) oc1;
-			YapClient client2 = (YapClient) oc2;
+			ClientObjectContainer client1 = (ClientObjectContainer) oc1;
+			ClientObjectContainer client2 = (ClientObjectContainer) oc2;
 			client1.socket().close();
 			Assert.isFalse(oc1.isClosed());
 			try {
@@ -44,7 +44,7 @@ public class ClientDisconnect extends ClientServerTestCase {
 	}
 
 	public void concDelete(ExtObjectContainer oc, int seq) throws Exception {
-		YapClient client = (YapClient) oc;
+		ClientObjectContainer client = (ClientObjectContainer) oc;
 		try {
 			if (seq % 2 == 0) {
 				// ok to get something

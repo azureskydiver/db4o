@@ -10,7 +10,7 @@ import com.db4o.reflect.*;
 
 public class KnownClassesRepository {
 	
-	private YapStream _stream;
+	private ObjectContainerBase _stream;
 	private Transaction _trans;
 
     private ReflectClassBuilder _builder;

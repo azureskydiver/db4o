@@ -19,7 +19,7 @@ public class YapArray extends YapIndependantType {
     public final boolean i_isPrimitive;
     public final ReflectArray _reflectArray;
 
-    public YapArray(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
+    public YapArray(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
         i_handler = a_handler;
         i_isPrimitive = a_isPrimitive;
@@ -156,7 +156,7 @@ public class YapArray extends YapIndependantType {
         return i_handler.getTypeID();
     }
 
-    public YapClass getYapClass(YapStream a_stream) {
+    public YapClass getYapClass(ObjectContainerBase a_stream) {
         return i_handler.getYapClass(a_stream);
     }
 
@@ -360,7 +360,7 @@ public class YapArray extends YapIndependantType {
 		return i_handler.classReflector();
 	}
     
-    static Object[] toArray(YapStream a_stream, Object a_object) {
+    static Object[] toArray(ObjectContainerBase a_stream, Object a_object) {
         if (a_object != null) {
         	ReflectClass claxx = a_stream.reflector().forObject(a_object);
             if (claxx.isArray()) {
@@ -389,7 +389,7 @@ public class YapArray extends YapIndependantType {
                 primitive = true;
             }
         }
-        YapStream stream = a_bytes.getStream();
+        ObjectContainerBase stream = a_bytes.getStream();
         if(primitive){
             claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
         }

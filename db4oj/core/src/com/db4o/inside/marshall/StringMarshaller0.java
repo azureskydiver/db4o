@@ -22,7 +22,7 @@ public class StringMarshaller0 extends StringMarshaller {
             return null;
         }
         
-        YapStream stream = a_bytes.getStream();
+        ObjectContainerBase stream = a_bytes.getStream();
         String str = (String) a_object;
         int length = stream.stringIO().length(str);
         
@@ -42,7 +42,7 @@ public class StringMarshaller0 extends StringMarshaller {
         return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
     
-    public Buffer readSlotFromParentSlot(YapStream stream, Buffer reader) throws CorruptionException {
+    public Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException {
         return reader.readEmbeddedObject(stream.getTransaction());
     }
 

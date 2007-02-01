@@ -10,7 +10,7 @@ import com.db4o.reflect.generic.GenericClass;
 
 public class MClassMeta extends MsgObject {
 	public boolean processAtServer(YapServerThread serverThread) {
-		YapStream stream = stream();
+		ObjectContainerBase stream = stream();
 		unmarshall();
 		try{
 			ClassInfo classMeta = (ClassInfo) stream().unmarshall(_payLoad);

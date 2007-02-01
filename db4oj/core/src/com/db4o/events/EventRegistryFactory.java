@@ -22,7 +22,7 @@ public class EventRegistryFactory {
 			throw new ArgumentNullException("container");
 		}
 		
-		YapStream stream = ((YapStream)container);
+		ObjectContainerBase stream = ((ObjectContainerBase)container);
 		Callbacks callbacks = stream.callbacks();
 		if (callbacks instanceof EventRegistry) {
 			return (EventRegistry)callbacks;

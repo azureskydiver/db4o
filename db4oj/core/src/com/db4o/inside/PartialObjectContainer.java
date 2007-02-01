@@ -53,7 +53,7 @@ import com.db4o.types.TransientClass;
  * @exclude
  * @sharpen.partial
  */
-public abstract class YapStreamBase implements TransientClass, Internal4, YapStreamSpec {
+public abstract class PartialObjectContainer implements TransientClass, Internal4, ObjectContainerSpec {
 
     private boolean         i_amDuringFatalExit   = false;
 
@@ -84,7 +84,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     //  the parent ObjectContainer for YapObjectCarrier or this for all
     //  others. Allows identifying the responsible Objectcontainer for IDs
-    final YapStream         i_parent;
+    final ObjectContainerBase         i_parent;
 
     //  allowed adding refresh with little code changes.
     boolean                 i_refreshInsteadOfActivate;
@@ -123,7 +123,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
 	private NativeQueryHandler _nativeQueryHandler;
     
-	private final YapStream _this;
+	private final ObjectContainerBase _this;
 
 	private Callbacks _callbacks = new com.db4o.inside.callbacks.NullCallbacks();
     
@@ -133,7 +133,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     
     private IntIdGenerator _topLevelCallIdGenerator = new IntIdGenerator();
 
-    protected YapStreamBase(Configuration config,YapStream a_parent) {
+    protected PartialObjectContainer(Configuration config,ObjectContainerBase a_parent) {
     	_this = cast(this);
         i_parent = a_parent == null ? _this : a_parent;
         i_lock = a_parent == null ? new Object() : a_parent.i_lock;
@@ -1193,7 +1193,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
         produceYapClass(reflector().forObject(obj));
-        YapObjectCarrier carrier = new YapObjectCarrier(config(),_this, memoryFile);
+        TransportObjectContainer carrier = new TransportObjectContainer(config(),_this, memoryFile);
         carrier.i_showInternalClasses = i_showInternalClasses;
         carrier.set(obj);
         id[0] = (int) carrier.getID(obj);
@@ -1216,10 +1216,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
             i_handlers.i_migration = null;
         }else{
-            YapStream peer = (YapStream)objectContainer;
+            ObjectContainerBase peer = (ObjectContainerBase)objectContainer;
             _replicationCallState = YapConst.OLD;
             peer._replicationCallState = YapConst.OLD;
-            i_handlers.i_migration = new MigrationConnection(_this, (YapStream)objectContainer);
+            i_handlers.i_migration = new MigrationConnection(_this, (ObjectContainerBase)objectContainer);
             peer.i_handlers.i_migration = i_handlers.i_migration;
         }
     }
@@ -1968,7 +1968,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     Object unmarshall(byte[] bytes, int id) {
         MemoryFile memoryFile = new MemoryFile(bytes);
-        YapObjectCarrier carrier = new YapObjectCarrier(configure(),_this, memoryFile);
+        TransportObjectContainer carrier = new TransportObjectContainer(configure(),_this, memoryFile);
         Object obj = carrier.getByID(id);
         carrier.activate(obj, Integer.MAX_VALUE);
         carrier.close();
@@ -2008,8 +2008,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
     // cheat emulating '(YapStream)this'
-    private static YapStream cast(YapStreamBase obj) {
-    	return (YapStream)obj;
+    private static ObjectContainerBase cast(PartialObjectContainer obj) {
+    	return (ObjectContainerBase)obj;
     }
     
     public Callbacks callbacks() {

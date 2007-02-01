@@ -4,7 +4,7 @@ package com.db4o.objectmanager.api.impl;
 
 import com.db4o.*;
 import com.db4o.inside.*;
-import com.db4o.inside.YapStream;
+import com.db4o.inside.ObjectContainerBase;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.reflect.*;
@@ -16,10 +16,10 @@ import com.db4o.reflect.*;
  */
 public class InsideDb4o {
 	
-	private final YapStream _stream;
+	private final ObjectContainerBase _stream;
 	
 	public InsideDb4o(ObjectContainer oc){
-		_stream = (YapStream)oc;
+		_stream = (ObjectContainerBase)oc;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class InsideDb4o {
 		return 0;
 	}
     
-    private YapStream stream(){
+    private ObjectContainerBase stream(){
     	return _stream;
     }
     

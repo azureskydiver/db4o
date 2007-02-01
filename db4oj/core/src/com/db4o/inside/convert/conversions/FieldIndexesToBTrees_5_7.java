@@ -22,7 +22,7 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
     	freeOldUUIDMetaIndex(stage.file());
     }
 	
-    private void rebuildUUIDIndex(YapFile file) {
+    private void rebuildUUIDIndex(LocalObjectContainer file) {
 		final YapFieldUUID uuid = file.getUUIDIndex();
 		final YapClassCollectionIterator i = file.classCollection().iterator();
 		while (i.moveNext()) {
@@ -33,7 +33,7 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
 		}
 	}
 
-	private void freeOldUUIDMetaIndex(YapFile file) {
+	private void freeOldUUIDMetaIndex(LocalObjectContainer file) {
         FileHeader fh = file.getFileHeader();
         if(! (fh instanceof FileHeader0)){
             return;

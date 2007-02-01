@@ -60,7 +60,7 @@ class PendingClassInits {
 		}
 	}
 
-    private YapStream stream() {
+    private ObjectContainerBase stream() {
         return _systemTransaction.stream();
     }
 	

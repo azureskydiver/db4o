@@ -26,7 +26,7 @@ public abstract class FileHeader {
         return length;
     }
 
-    public static FileHeader readFixedPart(YapFile file) throws IOException{
+    public static FileHeader readFixedPart(LocalObjectContainer file) throws IOException{
         Buffer reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){
@@ -37,13 +37,13 @@ public abstract class FileHeader {
         return header;
     }
 
-	private static Buffer prepareFileHeaderReader(YapFile file) {
+	private static Buffer prepareFileHeaderReader(LocalObjectContainer file) {
 		Buffer reader = new Buffer(readerLength()); 
         reader.read(file, 0, 0);
 		return reader;
 	}
 
-	private static FileHeader detectFileHeader(YapFile file, Buffer reader) {
+	private static FileHeader detectFileHeader(LocalObjectContainer file, Buffer reader) {
         for (int i = 0; i < AVAILABLE_FILE_HEADERS.length; i++) {
             reader.seek(0);
             FileHeader result = AVAILABLE_FILE_HEADERS[i].newOnSignatureMatch(file, reader);
@@ -56,21 +56,21 @@ public abstract class FileHeader {
 
     public abstract void close() throws IOException;
 
-    public abstract void initNew(YapFile file) throws IOException;
+    public abstract void initNew(LocalObjectContainer file) throws IOException;
 
     public abstract Transaction interruptedTransaction();
 
     public abstract int length();
     
-    protected abstract FileHeader newOnSignatureMatch(YapFile file, Buffer reader);
+    protected abstract FileHeader newOnSignatureMatch(LocalObjectContainer file, Buffer reader);
     
     protected long timeToWrite(long time, boolean shuttingDown) {
         return shuttingDown ? 0 : time;
     }
 
-    protected abstract void readFixedPart(YapFile file, Buffer reader) throws IOException;
+    protected abstract void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException;
 
-    public abstract void readVariablePart(YapFile file);
+    public abstract void readVariablePart(LocalObjectContainer file);
     
     protected boolean signatureMatches(Buffer reader, byte[] signature, byte version){
         for (int i = 0; i < signature.length; i++) {
@@ -83,7 +83,7 @@ public abstract class FileHeader {
     
     // TODO: freespaceID should not be passed here, it should be taken from SystemData
     public abstract void writeFixedPart(
-        YapFile file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID);
+        LocalObjectContainer file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID);
     
     public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionAddress);
 
@@ -98,9 +98,9 @@ public abstract class FileHeader {
         bytes.write();
     }
     
-    public abstract void writeVariablePart(YapFile file, int part);
+    public abstract void writeVariablePart(LocalObjectContainer file, int part);
 
-    protected void readClassCollectionAndFreeSpace(YapFile file, Buffer reader) {
+    protected void readClassCollectionAndFreeSpace(LocalObjectContainer file, Buffer reader) {
         SystemData systemData = file.systemData();
         systemData.classCollectionID(reader.readInt());
         systemData.freespaceID(reader.readInt());

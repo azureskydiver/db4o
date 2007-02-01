@@ -9,11 +9,11 @@ import com.db4o.inside.*;
 
 final class TransactionClient extends Transaction {
 
-    private final YapClient i_client;
+    private final ClientObjectContainer i_client;
     
     private Tree i_yapObjectsToGc;
     
-    TransactionClient(YapClient a_stream, Transaction a_parent) {
+    TransactionClient(ClientObjectContainer a_stream, Transaction a_parent) {
         super(a_stream, a_parent);
         i_client = a_stream;
     }

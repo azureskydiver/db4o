@@ -110,8 +110,8 @@ public class P1Object implements Db4oTypeImpl{
 	
     protected Object replicate(Transaction fromTrans, Transaction toTrans) {
         
-        YapStream fromStream = fromTrans.stream();
-        YapStream toStream = toTrans.stream();
+        ObjectContainerBase fromStream = fromTrans.stream();
+        ObjectContainerBase toStream = toTrans.stream();
         
         MigrationConnection mgc = fromStream.i_handlers.migrationConnection();
         
@@ -227,7 +227,7 @@ public class P1Object implements Db4oTypeImpl{
         return (i_trans != null) && (i_yapObject != null) && (i_yapObject.getID() > 0);
     }
     
-    private YapStream stream(){
+    private ObjectContainerBase stream(){
     	return i_trans.stream();
     }
     

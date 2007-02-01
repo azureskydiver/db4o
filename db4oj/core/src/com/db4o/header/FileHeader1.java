@@ -51,20 +51,20 @@ public class FileHeader1 extends FileHeader {
         _timerFileLock.close();
     }
 
-    public void initNew(YapFile file) throws IOException {
+    public void initNew(LocalObjectContainer file) throws IOException {
         commonTasksForNewAndRead(file);
         _variablePart = new FileHeaderVariablePart1(0, file.systemData());
         writeVariablePart(file, 0);
     }
     
-    protected FileHeader newOnSignatureMatch(YapFile file, Buffer reader) {
+    protected FileHeader newOnSignatureMatch(LocalObjectContainer file, Buffer reader) {
         if(signatureMatches(reader, SIGNATURE, VERSION)){
             return new FileHeader1();
         }
         return null;
     }
 
-    private void newTimerFileLock(YapFile file) {
+    private void newTimerFileLock(LocalObjectContainer file) {
         _timerFileLock = TimerFileLock.forFile(file);
     }
 
@@ -76,7 +76,7 @@ public class FileHeader1 extends FileHeader {
         return LENGTH;
     }
 
-    protected void readFixedPart(YapFile file, Buffer reader) throws IOException {
+    protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException {
         commonTasksForNewAndRead(file);
         reader.seek(TRANSACTION_POINTER_OFFSET);
         _interruptedTransaction = Transaction.readInterruptedTransaction(file, reader);
@@ -85,17 +85,17 @@ public class FileHeader1 extends FileHeader {
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
     }
     
-    private void commonTasksForNewAndRead(YapFile file){
+    private void commonTasksForNewAndRead(LocalObjectContainer file){
         newTimerFileLock(file);
         file.i_handlers.oldEncryptionOff();
     }
     
-    public void readVariablePart(YapFile file) {
+    public void readVariablePart(LocalObjectContainer file) {
         _variablePart.read(file.getSystemTransaction());
     }
     
     public void writeFixedPart(
-        YapFile file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
+        LocalObjectContainer file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
         writer.append(SIGNATURE);
         writer.append(VERSION);
         writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
@@ -115,7 +115,7 @@ public class FileHeader1 extends FileHeader {
         writeTransactionPointer(systemTransaction, transactionAddress, 0, TRANSACTION_POINTER_OFFSET);
     }
 
-    public void writeVariablePart(YapFile file, int part) {
+    public void writeVariablePart(LocalObjectContainer file, int part) {
     	_variablePart.setStateDirty();
         _variablePart.write(file.getSystemTransaction());
     }

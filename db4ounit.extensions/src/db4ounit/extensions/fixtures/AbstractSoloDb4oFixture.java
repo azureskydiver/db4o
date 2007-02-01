@@ -35,8 +35,8 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 	
 	protected abstract ObjectContainer createDatabase(Configuration config);
 	
-	public YapFile fileSession() {
-		return (YapFile)_db;
+	public LocalObjectContainer fileSession() {
+		return (LocalObjectContainer)_db;
 	}
 
 }

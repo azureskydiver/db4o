@@ -15,7 +15,7 @@ public final class YapServerThread extends Thread {
 
     private boolean i_loggedin;
     private long i_lastClientMessage;
-    private final YapFile i_mainStream;
+    private final LocalObjectContainer i_mainStream;
 
     private Transaction i_mainTrans;
     private int i_pingAttempts = 0;
@@ -26,7 +26,7 @@ public final class YapServerThread extends Thread {
     private final YapServer i_server;
 
     private YapSocket i_socket;
-    private YapFile i_substituteStream;
+    private LocalObjectContainer i_substituteStream;
     private Transaction i_substituteTrans;
     
     private Hashtable4 _queryResults;
@@ -37,7 +37,7 @@ public final class YapServerThread extends Thread {
 
     YapServerThread(
         YapServer aServer,
-        YapFile aStream,
+        LocalObjectContainer aStream,
         YapSocket aSocket,
         int aThreadID,
         boolean loggedIn)
@@ -117,7 +117,7 @@ public final class YapServerThread extends Thread {
         }
     }
 
-    private final YapFile getStream() {
+    private final LocalObjectContainer getStream() {
         if (i_substituteStream != null) {
             return i_substituteStream;
         }
@@ -258,7 +258,7 @@ public final class YapServerThread extends Thread {
         
         if (Msg.RAISE_VERSION.equals(message)) {
             long minimumVersion = ((MsgD)message).readLong();
-            YapStream stream = getStream();
+            ObjectContainerBase stream = getStream();
             synchronized(stream){
                 stream.raiseVersion(minimumVersion);
             }
@@ -311,7 +311,7 @@ public final class YapServerThread extends Thread {
             String fileName = ((MsgD) message).readString();
             try {
                 closeSubstituteStream();
-                i_substituteStream = (YapFile) Db4o.openFile(fileName);
+                i_substituteStream = (LocalObjectContainer) Db4o.openFile(fileName);
                 i_substituteTrans = i_substituteStream.newTransaction();
                 i_substituteStream.configImpl().setMessageRecipient(i_mainStream.configImpl().messageRecipient());
                 writeOK();

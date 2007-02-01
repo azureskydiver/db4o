@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 class FreespaceIxLength extends FreespaceIx{
     
-    FreespaceIxLength(YapFile file, MetaIndex metaIndex){
+    FreespaceIxLength(LocalObjectContainer file, MetaIndex metaIndex){
         super(file, metaIndex);
     }
 

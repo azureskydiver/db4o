@@ -22,7 +22,7 @@ public class BTreeNullKeyTestCase extends BTreeTestCaseBase {
 	}
 
 	public void testMultipleNullFieldIndexKeys() {
-		YapStream stream=trans().stream();
+		ObjectContainerBase stream=trans().stream();
 		FieldIndexKeyHandler keyHandler = new FieldIndexKeyHandler(stream,new YInt(stream));
 		BTree btree=new BTree(trans(), 0, keyHandler, null, 7, stream.configImpl().bTreeCacheHeight());
 		

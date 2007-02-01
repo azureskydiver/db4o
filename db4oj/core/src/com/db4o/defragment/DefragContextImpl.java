@@ -23,7 +23,7 @@ public class DefragContextImpl implements DefragContext {
 		DbSelector() {
 		}
 		
-		abstract YapFile db(DefragContextImpl context);
+		abstract LocalObjectContainer db(DefragContextImpl context);
 
 		Transaction transaction(DefragContextImpl context) {
 			return db(context).getSystemTransaction();
@@ -31,21 +31,21 @@ public class DefragContextImpl implements DefragContext {
 	}
 	
 	public final static DbSelector SOURCEDB=new DbSelector() {
-		YapFile db(DefragContextImpl context) {
+		LocalObjectContainer db(DefragContextImpl context) {
 			return context._sourceDb;
 		}
 	};
 
 	public final static DbSelector TARGETDB=new DbSelector() {
-		YapFile db(DefragContextImpl context) {
+		LocalObjectContainer db(DefragContextImpl context) {
 			return context._targetDb;
 		}
 	};
 
 	private static final long CLASSCOLLECTION_POINTER_ADDRESS = 2+2*YapConst.INT_LENGTH;
 	
-	public final YapFile _sourceDb;
-	final YapFile _targetDb;
+	public final LocalObjectContainer _sourceDb;
+	final LocalObjectContainer _targetDb;
 	private final ContextIDMapping _mapping;
 	private DefragmentListener _listener;
 	private Queue4 _unindexed=new Queue4();
@@ -57,15 +57,15 @@ public class DefragContextImpl implements DefragContext {
 		sourceConfig.weakReferences(false);
 		sourceConfig.flushFileBuffers(false);
 		sourceConfig.readOnly(true);
-		_sourceDb=(YapFile)Db4o.openFile(sourceConfig,defragConfig.backupPath()).ext();
+		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.backupPath()).ext();
 		_targetDb = freshYapFile(defragConfig.origPath());
 		_mapping=defragConfig.mapping();
 		_mapping.open();
 	}
 	
-	static YapFile freshYapFile(String fileName) {
+	static LocalObjectContainer freshYapFile(String fileName) {
 		new File(fileName).delete();
-		return (YapFile)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(),fileName).ext();
+		return (LocalObjectContainer)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(),fileName).ext();
 	}
 	
 	public int mappedID(int oldID,int defaultID) {
@@ -152,7 +152,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public StoredClass[] storedClasses(DbSelector selector) {
-		YapFile db = selector.db(this);
+		LocalObjectContainer db = selector.db(this);
 		db.showInternalClasses(true);
 		StoredClass[] classes=db.storedClasses();
 		return classes;
@@ -217,7 +217,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public int databaseIdentityID(DbSelector selector) {
-		YapFile db = selector.db(this);
+		LocalObjectContainer db = selector.db(this);
 		Db4oDatabase identity = db.identity();
 		if(identity==null) {
 			return 0;

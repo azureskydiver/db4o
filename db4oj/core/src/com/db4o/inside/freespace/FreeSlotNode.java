@@ -74,7 +74,7 @@ public final class FreeSlotNode extends TreeInt {
 			if (Deploy.debug) {
 				if (a_reader instanceof StatefulBuffer) {
 					Transaction trans = ((StatefulBuffer) a_reader).getTransaction();
-					if (trans.stream() instanceof YapRandomAccessFile) {
+					if (trans.stream() instanceof IoAdaptedObjectContainer) {
 						StatefulBuffer checker = trans.stream().getWriter(trans,
 								node._peer._key, node._key);
 						checker.read();

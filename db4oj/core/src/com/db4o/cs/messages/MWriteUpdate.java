@@ -11,7 +11,7 @@ public final class MWriteUpdate extends MsgObject {
 	
 	public final boolean processAtServer(YapServerThread serverThread) {
 	    int yapClassId = _payLoad.readInt();
-	    YapFile stream = (YapFile)stream();
+	    LocalObjectContainer stream = (LocalObjectContainer)stream();
 	    unmarshall(_payLoad._offset);
 	    synchronized(streamLock()){
 	        YapClass yc = stream.getYapClass(yapClassId);

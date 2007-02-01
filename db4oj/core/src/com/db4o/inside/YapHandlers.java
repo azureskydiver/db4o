@@ -17,7 +17,7 @@ import com.db4o.types.*;
  */
 public final class YapHandlers {
 	
-	private final YapStream _masterStream;  // this is master YapStream and not valid
+	private final ObjectContainerBase _masterStream;  // this is master YapStream and not valid
 	                                   // for YapObjectCarrier
 
     private static final Db4oTypeImpl[]   i_db4oTypes     = { new BlobImpl()};
@@ -80,7 +80,7 @@ public final class YapHandlers {
 	ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
 
-    YapHandlers(final YapStream a_stream, byte stringEncoding, GenericReflector reflector) {
+    YapHandlers(final ObjectContainerBase a_stream, byte stringEncoding, GenericReflector reflector) {
     	
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
@@ -326,7 +326,7 @@ public final class YapHandlers {
 
     // TODO: Interfaces should be handled by the ANY handler but we
     // need to write the code to migrate from the old field handler to the new
-    public final TypeHandler4 handlerForClass(YapStream a_stream, ReflectClass a_class) {
+    public final TypeHandler4 handlerForClass(ObjectContainerBase a_stream, ReflectClass a_class) {
         if(a_class == null){
             return null;
         }

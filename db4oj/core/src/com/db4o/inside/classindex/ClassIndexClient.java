@@ -27,7 +27,7 @@ final class ClassIndexClient extends ClassIndex {
 		// do nothing
 	}
 	
-	void setDirty(YapStream a_stream) {
+	void setDirty(ObjectContainerBase a_stream) {
 		// do nothing
 	}
 

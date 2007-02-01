@@ -15,7 +15,7 @@ public final class YDouble extends YLong
 {
     private static final Double i_primitive = new Double(0);
     
-    public YDouble(YapStream stream) {
+    public YDouble(ObjectContainerBase stream) {
         super(stream);
     }
     

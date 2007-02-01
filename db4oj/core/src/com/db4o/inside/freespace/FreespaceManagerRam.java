@@ -16,7 +16,7 @@ public class FreespaceManagerRam extends FreespaceManager {
     
     private Tree _freeBySize;
     
-    public FreespaceManagerRam(YapFile file){
+    public FreespaceManagerRam(LocalObjectContainer file){
         super(file);
     }
     
@@ -190,7 +190,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         }
     }
     
-    public void onNew(YapFile file) {
+    public void onNew(LocalObjectContainer file) {
 		// do nothing
 	}
     

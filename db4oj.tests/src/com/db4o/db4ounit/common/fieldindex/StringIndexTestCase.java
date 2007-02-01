@@ -130,7 +130,7 @@ public class StringIndexTestCase extends AbstractDb4oTestCase implements OptOutC
     }
     
     private void grafittiFreeSpace() {
-    	final YapRandomAccessFile file = ((YapRandomAccessFile)db());
+    	final IoAdaptedObjectContainer file = ((IoAdaptedObjectContainer)db());
 		final FreespaceManagerRam fm = (FreespaceManagerRam) file.freespaceManager();
     	fm.traverseFreeSlots(new Visitor4() {
 			public void visit(Object obj) {

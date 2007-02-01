@@ -16,7 +16,7 @@ public class DatabaseUnicityTest extends AbstractDb4oTestCase  {
 	public void test() {
         Hashtable4 ht = new Hashtable4();
         ExtObjectContainer oc = db();
-        YapStream yapStream = ((YapStream) oc);
+        ObjectContainerBase yapStream = ((ObjectContainerBase) oc);
         yapStream.showInternalClasses(true);
         Query q = db().query();
         q.constrain(Db4oDatabase.class);

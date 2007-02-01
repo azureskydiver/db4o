@@ -10,7 +10,7 @@ import com.db4o.inside.*;
  */
 public class NetUInt extends NetSimpleTypeHandler{
 
-	public NetUInt(YapStream stream) {
+	public NetUInt(ObjectContainerBase stream) {
 		super(stream, 22, 4);
 	}
 	

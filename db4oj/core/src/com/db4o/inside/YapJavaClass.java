@@ -14,13 +14,13 @@ import com.db4o.reflect.*;
  */
 public abstract class YapJavaClass implements TypeHandler4 {
     
-    protected final YapStream _stream;
+    protected final ObjectContainerBase _stream;
     
     protected ReflectClass _classReflector;
     
     private ReflectClass _primitiveClassReflector;
     
-    public YapJavaClass(YapStream stream) {
+    public YapJavaClass(ObjectContainerBase stream) {
         _stream = stream;
     }
 
@@ -61,7 +61,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return YapConst.TYPE_SIMPLE;
     }
 
-    public YapClass getYapClass(YapStream a_stream) {
+    public YapClass getYapClass(ObjectContainerBase a_stream) {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
 

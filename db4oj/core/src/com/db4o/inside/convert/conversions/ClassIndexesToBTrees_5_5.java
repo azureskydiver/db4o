@@ -16,7 +16,7 @@ public class ClassIndexesToBTrees_5_5 extends Conversion {
     
     public static final int VERSION = 5;
 
-    public void convert(YapFile yapFile, int classIndexId, BTree bTree){
+    public void convert(LocalObjectContainer yapFile, int classIndexId, BTree bTree){
         Transaction trans = yapFile.getSystemTransaction();
         Buffer reader = yapFile.readReaderByID(trans, classIndexId);
         if(reader == null){

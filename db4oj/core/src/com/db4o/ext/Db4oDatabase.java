@@ -39,7 +39,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
     /**
      * cached ObjectContainer for getting the own ID.
      */
-    private transient YapStream i_stream;
+    private transient ObjectContainerBase i_stream;
     
     /**
      * cached ID, only valid in combination with i_objectContainer
@@ -97,7 +97,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
 	 * @return the db4o ID for the ObjectContainer
 	 */
     public int getID(Transaction trans) {
-        YapStream stream = trans.stream();
+        ObjectContainerBase stream = trans.stream();
         if(stream != i_stream) {
             i_stream = stream;
             i_id = bind(trans);
@@ -159,7 +159,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
      * make sure this Db4oDatabase is stored. Return the ID.  
      */
     public int bind(Transaction trans){
-        YapStream stream = trans.stream();
+        ObjectContainerBase stream = trans.stream();
         Db4oDatabase stored = (Db4oDatabase)stream.db4oTypeStored(trans,this);
         if (stored == null) {
             stream.showInternalClasses(true);
@@ -198,7 +198,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
     }
     
     private Db4oDatabase query(Transaction trans, boolean constrainByUUID){
-        YapStream stream = trans.stream();
+        ObjectContainerBase stream = trans.stream();
         Query q = stream.query(trans);
         q.constrain(getClass());
         if(constrainByUUID){

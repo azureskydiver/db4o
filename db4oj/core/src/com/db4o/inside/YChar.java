@@ -13,7 +13,7 @@ final class YChar extends YapJavaClass {
 	
 	private static final Character i_primitive = new Character((char)0);
 	
-    public YChar(YapStream stream) {
+    public YChar(ObjectContainerBase stream) {
         super(stream);
     }
     

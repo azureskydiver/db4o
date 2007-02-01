@@ -18,7 +18,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     
     private static final int LINK_LENGTH = YapConst.LONG_LENGTH + YapConst.ID_LENGTH;
 
-    YapFieldUUID(YapStream stream) {
+    YapFieldUUID(ObjectContainerBase stream) {
         super();
         i_name = YapConst.VIRTUAL_FIELD_PREFIX + "uuid";
         i_handler = new YLong(stream);
@@ -33,7 +33,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         long uuid = writer.readLong();
         writer._offset = offset;
         
-        YapFile yf = (YapFile)writer.getStream();
+        LocalObjectContainer yf = (LocalObjectContainer)writer.getStream();
         
         if( (uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0 && ! isnew){
         	DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(yf, yapClass, oldSlot, false);            
@@ -66,7 +66,7 @@ public class YapFieldUUID extends YapFieldVirtual {
 		}
     }
 
-	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(YapStream stream, YapClass yapClass, Slot oldSlot, boolean checkClass) {
+	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, YapClass yapClass, Slot oldSlot, boolean checkClass) {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.getAddress(), oldSlot.getLength());
         }
@@ -91,7 +91,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         a_bytes.incrementOffset(YapConst.INT_LENGTH);
         long longPart = a_bytes.readLong();
         if(longPart > 0){
-            YapStream stream = a_bytes.getStream();
+            ObjectContainerBase stream = a_bytes.getStream();
             if (stream.maintainsIndices()){
                 removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), new Long(longPart));
             }
@@ -107,7 +107,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     	return super.getIndex(transaction);
     }
     
-    protected void rebuildIndexForObject(YapFile stream, YapClass yapClass, int objectId) {
+    protected void rebuildIndexForObject(LocalObjectContainer stream, YapClass yapClass, int objectId) {
     	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((YapFileTransaction)stream.getSystemTransaction()).getCurrentSlotOfID(objectId), true);
     	if (null == data) {
     		return;
@@ -122,7 +122,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     	if (null != super.getIndex(transaction)) {
     		return;    		
     	}
-        YapFile file = ((YapFile)transaction.stream());
+        LocalObjectContainer file = ((LocalObjectContainer)transaction.stream());
         SystemData sd = file.systemData();
         if(sd == null){
             // too early, in new file, try again later.
@@ -137,7 +137,7 @@ public class YapFieldUUID extends YapFieldVirtual {
 
     void instantiate1(Transaction a_trans, ObjectReference a_yapObject, Buffer a_bytes) {
         int dbID = a_bytes.readInt();
-        YapStream stream = a_trans.stream();
+        ObjectContainerBase stream = a_trans.stream();
         stream.showInternalClasses(true);
         Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
         if(db != null && db.i_signature == null){
@@ -154,7 +154,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     }
     
     void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
-        YapStream stream = a_bytes.getStream();
+        ObjectContainerBase stream = a_bytes.getStream();
         Transaction trans = a_bytes.getTransaction();
         boolean indexEntry = a_new && stream.maintainsIndices();
         int dbID = 0;
@@ -174,7 +174,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     	            attr.i_database = db;
                     
                     // TODO: Should be check for ! client instead of instanceof
-    	            if (stream instanceof YapFile){
+    	            if (stream instanceof LocalObjectContainer){
     					attr.i_uuid = stream.generateTimeStampId();
     	                indexEntry = true;
     	            }

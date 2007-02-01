@@ -15,7 +15,7 @@ import com.db4o.reflect.*;
 public final class YapArrayN extends YapArray {
 	
 	
-    public YapArrayN(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
+    public YapArrayN(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream, a_handler, a_isPrimitive);
     }
 

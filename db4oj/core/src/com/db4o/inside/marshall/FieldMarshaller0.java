@@ -10,7 +10,7 @@ import com.db4o.inside.*;
  */
 public class FieldMarshaller0 implements FieldMarshaller {
 
-    public int marshalledLength(YapStream stream, YapField field) {
+    public int marshalledLength(ObjectContainerBase stream, YapField field) {
         int len = stream.stringIO().shortLength(field.getName());
         if(field.needsArrayAndPrimitiveInfo()){
             len += 1;
@@ -21,7 +21,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         return len;
     }
     
-    public RawFieldSpec readSpec(YapStream stream, Buffer reader) {
+    public RawFieldSpec readSpec(ObjectContainerBase stream, Buffer reader) {
         
         String name = null;
         
@@ -46,12 +46,12 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
     
-    public final YapField read(YapStream stream, YapField field, Buffer reader) {
+    public final YapField read(ObjectContainerBase stream, YapField field, Buffer reader) {
     	RawFieldSpec spec=readSpec(stream, reader);
     	return fromSpec(spec, stream, field);
     }
     
-    protected YapField fromSpec(RawFieldSpec spec,YapStream stream, YapField field) {
+    protected YapField fromSpec(RawFieldSpec spec,ObjectContainerBase stream, YapField field) {
     	if(spec==null) {
     		return field;
     	}

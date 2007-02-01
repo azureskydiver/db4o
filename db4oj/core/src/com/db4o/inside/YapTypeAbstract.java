@@ -11,7 +11,7 @@ import com.db4o.inside.*;
  */
 public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
     
-	public YapTypeAbstract(YapStream stream) {
+	public YapTypeAbstract(ObjectContainerBase stream) {
         super(stream);
     }
 

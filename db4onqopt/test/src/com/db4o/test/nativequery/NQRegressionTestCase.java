@@ -6,7 +6,7 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.inside.*;
-import com.db4o.inside.YapStream;
+import com.db4o.inside.ObjectContainerBase;
 import com.db4o.inside.query.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
@@ -631,7 +631,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 				run++;
 			}
 		};
-		((YapStream)db).getNativeQueryHandler().addListener(listener);
+		((ObjectContainerBase)db).getNativeQueryHandler().addListener(listener);
 		db.ext().configure().optimizeNativeQueries(false);
 		ObjectSet raw=db.query(predicate);
 		db.ext().configure().optimizeNativeQueries(true);
@@ -680,7 +680,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 				exc.printStackTrace();
 			}
 		}
-		((YapStream)db).getNativeQueryHandler().clearListeners();
+		((ObjectContainerBase)db).getNativeQueryHandler().clearListeners();
 		db.ext().configure().optimizeNativeQueries(true);
 	}
 }

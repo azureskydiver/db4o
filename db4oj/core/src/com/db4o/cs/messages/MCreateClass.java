@@ -10,7 +10,7 @@ import com.db4o.reflect.ReflectClass;
 public final class MCreateClass extends MsgD {
 
 	public final boolean processAtServer(YapServerThread serverThread) {
-        YapStream stream = stream();
+        ObjectContainerBase stream = stream();
         Transaction trans = stream.getSystemTransaction();
         try{
             ReflectClass claxx = trans.reflector().forName(readString());

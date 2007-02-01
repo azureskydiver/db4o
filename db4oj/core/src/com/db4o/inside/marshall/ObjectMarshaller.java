@@ -123,7 +123,7 @@ public abstract class ObjectMarshaller {
         
         YapClass yc = yo.getYapClass();
         
-        YapStream stream = trans.stream();
+        ObjectContainerBase stream = trans.stream();
         stream.writeUpdate(yc, writer);
         if (yo.isActive()) {
             yo.setStateClean();
@@ -132,7 +132,7 @@ public abstract class ObjectMarshaller {
         objectOnUpdate(yc, stream, obj);
     }
 
-	private void objectOnUpdate(YapClass yc, YapStream stream, Object obj) {
+	private void objectOnUpdate(YapClass yc, ObjectContainerBase stream, Object obj) {
 		stream.callbacks().objectOnUpdate(obj);
 		yc.dispatchEvent(stream, obj, EventDispatcher.UPDATE);
 	}

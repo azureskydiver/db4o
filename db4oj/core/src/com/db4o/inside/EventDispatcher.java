@@ -39,7 +39,7 @@ public final class EventDispatcher {
 		methods = methods_;
 	}
 	
-	boolean dispatch(YapStream stream, Object obj, int eventID){
+	boolean dispatch(ObjectContainerBase stream, Object obj, int eventID){
 		if(methods[eventID] != null){
 			Object[] parameters = new Object[]{stream};
 			int stackDepth = stream.stackDepth();
@@ -61,7 +61,7 @@ public final class EventDispatcher {
 		return true;
 	}
 	
-	static EventDispatcher forClass(YapStream a_stream, ReflectClass classReflector){
+	static EventDispatcher forClass(ObjectContainerBase a_stream, ReflectClass classReflector){
         
         if(a_stream == null || classReflector == null){
             return null;

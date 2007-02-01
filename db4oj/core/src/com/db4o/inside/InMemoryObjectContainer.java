@@ -13,13 +13,13 @@ import com.db4o.inside.*;
 /**
  * @exclude
  */
-public class YapMemoryFile extends YapFile {
+public class InMemoryObjectContainer extends LocalObjectContainer {
 
 	private boolean _closed = false;
 	private final MemoryFile _memoryFile;
 	private int _length = 0;
 
-	protected YapMemoryFile(Configuration config, YapStream parent, MemoryFile memoryFile) {
+	protected InMemoryObjectContainer(Configuration config, ObjectContainerBase parent, MemoryFile memoryFile) {
 		super(config, parent);
 		_memoryFile = memoryFile;
 		try {
@@ -30,7 +30,7 @@ public class YapMemoryFile extends YapFile {
 		initialize3();
 	}
 
-    public YapMemoryFile(Configuration config, MemoryFile memoryFile) {
+    public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile) {
         this(config, null, memoryFile);
     }
     

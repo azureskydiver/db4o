@@ -16,7 +16,7 @@ public class YapClassPrimitive extends YapClass{
     
     public final TypeHandler4 i_handler;
     
-    YapClassPrimitive(YapStream a_stream, TypeHandler4 a_handler) {
+    YapClassPrimitive(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
     	super(a_stream, a_handler.classReflector());
         i_fields = YapField.EMPTY_ARRAY;
         i_handler = a_handler;
@@ -28,7 +28,7 @@ public class YapClassPrimitive extends YapClass{
     }
 
 
-    final void addToIndex(YapFile a_stream, Transaction a_trans, int a_id) {
+    final void addToIndex(LocalObjectContainer a_stream, Transaction a_trans, int a_id) {
         // Override
         // Primitive Indices will be created later.
     }

@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 final class Session
 {
 	final String			i_fileName;
-	YapStream				i_stream;
+	ObjectContainerBase				i_stream;
 	private int				i_openCount;
 	
 	Session(String a_fileName){
@@ -47,7 +47,7 @@ final class Session
 		return i_fileName;
 	}
 	
-	YapStream subSequentOpen(){
+	ObjectContainerBase subSequentOpen(){
 		if( i_stream.isClosed()){
 			return null;
 		}

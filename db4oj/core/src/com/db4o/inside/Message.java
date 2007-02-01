@@ -11,7 +11,7 @@ final class Message
 {
 	final PrintStream stream;
 
-	Message(YapStream a_stream, String msg){
+	Message(ObjectContainerBase a_stream, String msg){
 		stream = a_stream.configImpl().outStream();
 		print(msg, true);
 	}

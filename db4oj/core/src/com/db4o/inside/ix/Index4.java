@@ -76,7 +76,7 @@ public class Index4 {
     }
     
     private void doFree(int[] addressLength){
-        YapFile yf = file();
+        LocalObjectContainer yf = file();
         for(int i = 0; i < addressLength.length; i += 2){
             yf.free(addressLength[i], addressLength[i + 1]);
         }
@@ -267,7 +267,7 @@ public class Index4 {
         return _globalIndexTransaction.i_trans;
     }
     
-    private YapFile file(){
+    private LocalObjectContainer file(){
         return trans().i_file;
     }
     

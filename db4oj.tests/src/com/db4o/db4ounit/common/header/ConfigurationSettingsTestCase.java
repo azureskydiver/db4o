@@ -33,6 +33,6 @@ public class ConfigurationSettingsTestCase extends AbstractDb4oTestCase
 	}
 
 	private int generateUUIDs() {
-		return ((YapFile) db()).config().generateUUIDs();
+		return ((LocalObjectContainer) db()).config().generateUUIDs();
 	}
 }

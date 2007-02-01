@@ -45,7 +45,7 @@ public class UUIDExample {
 	        db = oc.ext().identity();
 	        oldSignature = db.getSignature();
 	        System.out.println("oldSignature: " + printSignature(oldSignature));	
-	        ((YapFile)oc).generateNewIdentity();
+	        ((LocalObjectContainer)oc).generateNewIdentity();
         } finally {
         	oc.close();
         }        

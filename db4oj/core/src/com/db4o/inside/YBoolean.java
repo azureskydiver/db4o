@@ -19,7 +19,7 @@ public final class YBoolean extends YapJavaClass
 	
 	private static final Boolean i_primitive = new Boolean(false);
 	
-    public YBoolean(YapStream stream) {
+    public YBoolean(ObjectContainerBase stream) {
         super(stream);
     }
     
