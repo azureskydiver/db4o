@@ -21,7 +21,7 @@ import com.db4o.reflect.jdk.JdkReflector;
  * package and class name are hard-referenced in JavaOnly#jdk()
  * 
  * TODO: may need to use this on instead of JDK on .NET. Check!
- * 
+ * @sharpen.ignore
  */
 class JDKReflect extends JDK {
     Class constructorClass(){
