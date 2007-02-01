@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 
 /**
@@ -14,7 +15,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return ! field.isVirtual();
     }
 
-    public void write(Transaction trans, YapClass clazz, YapField field, YapReader writer) {
+    public void write(Transaction trans, YapClass clazz, YapField field, Buffer writer) {
         super.write(trans, clazz, field, writer);
         if(! hasBTreeIndex(field)){
             return;
@@ -22,7 +23,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         writer.writeIDOf(trans, field.getIndex(trans));
     }
 
-    public RawFieldSpec readSpec(YapStream stream, YapReader reader) {
+    public RawFieldSpec readSpec(YapStream stream, Buffer reader) {
     	RawFieldSpec spec=super.readSpec(stream, reader);
     	if(spec==null) {
     		return null;

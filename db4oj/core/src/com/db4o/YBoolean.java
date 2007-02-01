@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 /**
  * @exclude
  */
@@ -39,7 +41,7 @@ public final class YBoolean extends YapJavaClass
 		return i_primitive;
 	}
 
-	Object read1(YapReader a_bytes){
+	Object read1(Buffer a_bytes){
 		if (Deploy.debug){
 			a_bytes.readBegin(YapConst.YAPBOOLEAN);
 		}
@@ -58,7 +60,7 @@ public final class YBoolean extends YapJavaClass
 		return null;
 	}
 	
-	public void write(Object a_object, YapReader a_bytes){
+	public void write(Object a_object, Buffer a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPBOOLEAN);
 		}

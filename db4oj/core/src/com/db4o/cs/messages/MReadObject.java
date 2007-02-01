@@ -4,11 +4,12 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 
 public final class MReadObject extends MsgD {
 	
 	public final boolean processAtServer(YapServerThread serverThread) {
-		YapWriter bytes = null;
+		StatefulBuffer bytes = null;
 
 		// readObjectByID may fail in certain cases
 		// we should look for the cause at some time in the future
@@ -23,7 +24,7 @@ public final class MReadObject extends MsgD {
 			}
 		}
 		if (bytes == null) {
-			bytes = new YapWriter(transaction(), 0, 0);
+			bytes = new StatefulBuffer(transaction(), 0, 0);
 		}
 		serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(bytes));
 		return true;

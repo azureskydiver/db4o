@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.ObjectHeader;
 import com.db4o.inside.slots.*;
 
@@ -44,7 +45,7 @@ public class YapFileTransaction extends Transaction {
         if (slotSetPointerCount > 0) {
             int length = (((slotSetPointerCount * 3) + 2) * YapConst.INT_LENGTH);
             int address = i_file.getSlot(length);
-            final YapWriter bytes = new YapWriter(this, address, length);
+            final StatefulBuffer bytes = new StatefulBuffer(this, address, length);
             bytes.writeInt(length);
             bytes.writeInt(slotSetPointerCount);
             
@@ -236,7 +237,7 @@ public class YapFileTransaction extends Transaction {
             i_pointerIo.read();
             int length = i_pointerIo.readInt();
             if (length > 0) {
-                YapWriter bytes = new YapWriter(this, i_address, length);
+                StatefulBuffer bytes = new StatefulBuffer(this, i_address, length);
                 bytes.read();
                 bytes.incrementOffset(YapConst.INT_LENGTH);
                 _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
@@ -267,7 +268,7 @@ public class YapFileTransaction extends Transaction {
         }
     }
 	
-	private void appendSlotChanges(final YapReader writer){
+	private void appendSlotChanges(final Buffer writer){
         
         if(i_parentTransaction != null){
             parentFileTransaction().appendSlotChanges(writer);
@@ -281,7 +282,7 @@ public class YapFileTransaction extends Transaction {
         
     }
 	
-	void slotDelete(int a_id, int a_address, int a_length) {
+	public void slotDelete(int a_id, int a_address, int a_length) {
         checkSynchronization();
         if(DTrace.enabled){
             DTrace.SLOT_DELETE.log(a_id);
@@ -441,7 +442,7 @@ public class YapFileTransaction extends Transaction {
         	return;
         }
         
-        YapWriter objectBytes = stream().readWriterByID(this, id);
+        StatefulBuffer objectBytes = stream().readWriterByID(this, id);
         if(objectBytes == null){
             if (clazz.hasIndex()) {
                  dontRemoveFromClassIndex(clazz.getID(), id);

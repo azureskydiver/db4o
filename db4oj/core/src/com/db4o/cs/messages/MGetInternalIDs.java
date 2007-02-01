@@ -4,10 +4,11 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 
 public final class MGetInternalIDs extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
-		YapReader bytes = this.getByteLoad();
+		Buffer bytes = this.getByteLoad();
 		long[] ids;
 		synchronized (streamLock()) {
 			try {
@@ -18,7 +19,7 @@ public final class MGetInternalIDs extends MsgD {
 		}
 		int size = ids.length;
 		MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), YapConst.ID_LENGTH * (size + 1));
-		YapReader writer = message.payLoad();
+		Buffer writer = message.payLoad();
 		writer.writeInt(size);
 		for (int i = 0; i < size; i++) {
 			writer.writeInt((int) ids[i]);

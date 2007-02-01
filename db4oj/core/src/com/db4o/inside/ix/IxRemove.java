@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
 
 /**
@@ -40,7 +41,7 @@ public class IxRemove extends IxPatch {
         // do nothing
     }
 
-    public int write(Indexable4 a_handler, YapWriter a_writer) {
+    public int write(Indexable4 a_handler, StatefulBuffer a_writer) {
         // do nothing
         return 0;
     }

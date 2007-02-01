@@ -33,7 +33,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     protected final YapStream i_stream;
 
     byte[] i_nameBytes;
-    private YapReader i_reader;
+    private Buffer i_reader;
 
     private boolean _classIndexed;
     
@@ -105,7 +105,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    public final void addFieldIndices(YapWriter a_writer, Slot oldSlot) {
+    public final void addFieldIndices(StatefulBuffer a_writer, Slot oldSlot) {
         if(hasIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(i_stream, this, a_writer);
             oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, oldSlot);
@@ -370,7 +370,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		}
     }
 
-    public void checkUpdateDepth(YapWriter a_bytes) {
+    public void checkUpdateDepth(StatefulBuffer a_bytes) {
         int depth = a_bytes.getUpdateDepth();
         Config4Class config = configOrAncestorConfig();
         if (depth == YapConst.UNSPECIFIED) {
@@ -426,7 +426,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
     
-    final TreeInt collectFieldIDs(MarshallerFamily mf, ObjectHeaderAttributes attributes, TreeInt tree, YapWriter a_bytes, String name) {
+    final TreeInt collectFieldIDs(MarshallerFamily mf, ObjectHeaderAttributes attributes, TreeInt tree, StatefulBuffer a_bytes, String name) {
         return mf._object.collectFieldIDs(tree, this, attributes, a_bytes, name);
     }
 
@@ -536,17 +536,17 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    final void delete(YapWriter a_bytes, Object a_object) {
+    final void delete(StatefulBuffer a_bytes, Object a_object) {
         ObjectHeader oh = new ObjectHeader(i_stream, this, a_bytes);
         delete1(oh._marshallerFamily, oh._headerAttributes, a_bytes, a_object);
     }
 
-    private final void delete1(MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, Object a_object) {
+    private final void delete1(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, Object a_object) {
         removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
         deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().stream().i_handlers.arrayType(a_object), false);
     }
 
-    public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
         if (a_bytes.cascadeDeletes() > 0) {
             int id = a_bytes.readInt();
             if (id > 0) {
@@ -557,7 +557,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    public void deleteEmbedded1(MarshallerFamily mf, YapWriter a_bytes, int a_id) {
+    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) {
         if (a_bytes.cascadeDeletes() > 0) {
         	
         	YapStream stream = a_bytes.getStream();
@@ -579,7 +579,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate) {
+    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
         try{
 	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.cascadeOnDelete() == YapConst.YES)) {
@@ -681,7 +681,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 	// returns null if not successful or if the field value at this offset is null
     // returns MarshallerFamily from the object header if it is successful and
     //         if the value at this offset is not null
-    final MarshallerFamily findOffset(YapReader a_bytes, YapField a_field) {
+    final MarshallerFamily findOffset(Buffer a_bytes, YapField a_field) {
         if (a_bytes == null) {
             return null;
         }
@@ -951,7 +951,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
       return classReflector().isCollection();
     }
 
-    void incrementFieldsOffset1(YapReader a_bytes) {
+    void incrementFieldsOffset1(Buffer a_bytes) {
         int length = Debug.atHome ? readFieldCountSodaAtHome(a_bytes) : readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             i_fields[i].incrementOffset(a_bytes);
@@ -1023,7 +1023,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         storeStaticFieldValues(systemTrans, false);
     }
 
-	Object instantiate(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter buffer, boolean a_addToIDTree) {
+	Object instantiate(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean a_addToIDTree) {
         
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1075,7 +1075,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return obj;
     }
 	
-	private Object instantiateObject(YapWriter a_bytes, MarshallerFamily mf) {
+	private Object instantiateObject(StatefulBuffer a_bytes, MarshallerFamily mf) {
 		Object instance = null;
 		if (configInstantiates()) {
 			instance = instantiateFromConfig(a_bytes.getStream(), a_bytes, mf);            	
@@ -1104,7 +1104,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		}
 	}
 
-	private Object instantiateFromConfig(YapStream stream, YapWriter a_bytes, MarshallerFamily mf) {
+	private Object instantiateFromConfig(YapStream stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
 		int bytesOffset = a_bytes._offset;
 		a_bytes.incrementOffset(YapConst.INT_LENGTH);
 		// Field length is always 1
@@ -1118,7 +1118,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		}
 	}
 
-	private void adjustInstantiationDepth(YapWriter a_bytes) {
+	private void adjustInstantiationDepth(StatefulBuffer a_bytes) {
 		if (i_config != null) {
             a_bytes.setInstantiationDepth(
                 i_config.adjustActivationDepth(a_bytes.getInstantiationDepth()));
@@ -1151,7 +1151,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 			&& dispatchEvent(stream, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
-    Object instantiateTransient(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter buffer) {
+    Object instantiateTransient(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer) {
 
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1165,7 +1165,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return obj;
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, YapWriter a_bytes) {
+    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         mf._object.instantiateFields(this, attributes, a_yapObject, a_onObject, a_bytes);
     }
 
@@ -1274,7 +1274,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         //       indexes here
     }
 
-    public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
         try {
             int id = a_bytes.readInt();
             int depth = a_bytes.getInstantiationDepth() - 1;
@@ -1338,7 +1338,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return null;
     }
     
-    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException{
         try {
             return a_trans.stream().getByID2(a_trans, a_reader.readInt());
         } catch (Exception e) {
@@ -1349,17 +1349,17 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return null;
     }
 
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         if (isArray()) {
             return this;
         }
         return null;
     }
 
-    public TypeHandler4 readArrayHandler1(YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler1(Buffer[] a_bytes) {
         if(DTrace.enabled){
-            if(a_bytes[0] instanceof YapWriter){
-                DTrace.READ_ARRAY_WRAPPER.log(((YapWriter)a_bytes[0]).getID());
+            if(a_bytes[0] instanceof StatefulBuffer){
+                DTrace.READ_ARRAY_WRAPPER.log(((StatefulBuffer)a_bytes[0]).getID());
             }
         }
         if (isArray()) {
@@ -1375,7 +1375,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return null;
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         int id = reader.readInt();
         if(id == 0){
             return null;
@@ -1383,7 +1383,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return new QCandidate(candidates, null, id, true);
     } 
 
-    public void readCandidates(MarshallerFamily mf, final YapReader a_bytes, final QCandidates a_candidates) {
+    public void readCandidates(MarshallerFamily mf, final Buffer a_bytes, final QCandidates a_candidates) {
         int id = 0;
 
         int offset = a_bytes._offset;
@@ -1409,7 +1409,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    public final int readFieldCount(YapReader a_bytes) {
+    public final int readFieldCount(Buffer a_bytes) {
         int count = a_bytes.readInt();
         if (count > i_fields.length) {
             if (Debug.atHome) {
@@ -1427,7 +1427,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return count;
     }
 
-    public int readFieldCountSodaAtHome(YapReader a_bytes) {
+    public int readFieldCountSodaAtHome(Buffer a_bytes) {
         if (Debug.atHome) {
             int count = a_bytes.readInt();
             if (count > i_fields.length) {
@@ -1438,11 +1438,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return 0;
     }
 
-    public Object readIndexEntry(YapReader a_reader) {
+    public Object readIndexEntry(Buffer a_reader) {
         return new Integer(a_reader.readInt());
     }
     
-    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
         return readIndexEntry(a_writer);
     }
 
@@ -1451,7 +1451,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return readName1(a_trans, i_reader);
     }
 
-    public final byte[] readName1(Transaction trans, YapReader reader) {
+    public final byte[] readName1(Transaction trans, Buffer reader) {
     	if (reader == null) 
     		return null;
     	
@@ -1481,7 +1481,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     void readVirtualAttributes(Transaction a_trans, YapObject a_yapObject) {
         int id = a_yapObject.getID();
         YapStream stream = a_trans.stream();
-        YapReader reader = stream.readReaderByID(a_trans, id);
+        Buffer reader = stream.readReaderByID(a_trans, id);
         ObjectHeader oh = new ObjectHeader(stream, this, reader);
         oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
     }
@@ -1551,11 +1551,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         bitFalse(YapConst.READING);
     }	
 
-    public boolean readArray(Object array, YapReader reader) {
+    public boolean readArray(Object array, Buffer reader) {
         return false;
     }
 
-    public void readThis(Transaction a_trans, YapReader a_reader) {
+    public void readThis(Transaction a_trans, Buffer a_reader) {
         throw Exceptions4.virtualException();
     }
 
@@ -1802,7 +1802,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 	    return stringIO.read(i_nameBytes);
     }
     
-    public boolean writeArray(Object array, YapReader reader) {
+    public boolean writeArray(Object array, Buffer reader) {
         return false;
     }
 
@@ -1813,7 +1813,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return super.writeObjectBegin();
     }
 
-    public void writeIndexEntry(YapReader a_writer, Object a_object) {
+    public void writeIndexEntry(Buffer a_writer, Object a_object) {
         
         if(a_object == null){
             a_writer.writeInt(0);
@@ -1823,7 +1823,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         if (a_object == null) {
             a_bytes.writeInt(0);
             return new Integer(0);
@@ -1838,7 +1838,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return new Integer(id);
     }
 
-    public final void writeThis(Transaction trans, YapReader writer) {
+    public final void writeThis(Transaction trans, Buffer writer) {
         MarshallerFamily.current()._class.write(trans, this, writer);
     }
 
@@ -1897,7 +1897,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return false;
     }
 
-    public String toString(MarshallerFamily mf, YapWriter writer, YapObject yapObject, int depth, int maxDepth)  {
+    public String toString(MarshallerFamily mf, StatefulBuffer writer, YapObject yapObject, int depth, int maxDepth)  {
         int length = readFieldCount(writer);
         String str = "";
         for (int i = 0; i < length; i++) {
@@ -1934,7 +1934,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		mf._class.defrag(this,i_stream.stringIO(), readers, classIndexID);
 	}
 
-    public static YapClass readClass(YapStream stream, YapReader reader) {
+    public static YapClass readClass(YapStream stream, Buffer reader) {
         ObjectHeader oh = new ObjectHeader(stream, reader);
         return oh.yapClass();
     }

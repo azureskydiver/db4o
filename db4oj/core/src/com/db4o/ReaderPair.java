@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.mapping.*;
 import com.db4o.inside.marshall.*;
 
@@ -10,15 +11,15 @@ import com.db4o.inside.marshall.*;
  * @exclude
  */
 public final class ReaderPair implements SlotReader {
-	private YapReader _source;
-	private YapReader _target;
+	private Buffer _source;
+	private Buffer _target;
 	private DefragContext _mapping;
 	private Transaction _systemTrans;
 	
-	public ReaderPair(YapReader source,DefragContext mapping,Transaction systemTrans) {
+	public ReaderPair(Buffer source,DefragContext mapping,Transaction systemTrans) {
 		_source = source;
 		_mapping=mapping;
-		_target = new YapReader(source.getLength());
+		_target = new Buffer(source.getLength());
 		_source.copyTo(_target, 0, 0, _source.getLength());
 		_systemTrans=systemTrans;
 	}
@@ -120,11 +121,11 @@ public final class ReaderPair implements SlotReader {
 		return value;
 	}
 	
-	public YapReader source() {
+	public Buffer source() {
 		return _source;
 	}
 
-	public YapReader target() {
+	public Buffer target() {
 		return _target;
 	}
 	
@@ -145,7 +146,7 @@ public final class ReaderPair implements SlotReader {
 	}
 
 	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException {
-		YapReader sourceReader=(
+		Buffer sourceReader=(
 				registerAddressMapping 
 					? context.sourceWriterByID(sourceID) 
 					: context.sourceReaderByID(sourceID));
@@ -155,11 +156,11 @@ public final class ReaderPair implements SlotReader {
 		int targetAddress=context.allocateTargetSlot(targetLength);
 		
 		if(registerAddressMapping) {
-			int sourceAddress=((YapWriter)sourceReader).getAddress();
+			int sourceAddress=((StatefulBuffer)sourceReader).getAddress();
 			context.mapIDs(sourceAddress, targetAddress, false);
 		}
 		
-		YapReader targetPointerReader=new YapReader(YapConst.POINTER_LENGTH);
+		Buffer targetPointerReader=new Buffer(YapConst.POINTER_LENGTH);
 		if(Deploy.debug) {
 			targetPointerReader.writeBegin(YapConst.YAPPOINTER);
 		}

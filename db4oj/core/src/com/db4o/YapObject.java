@@ -101,7 +101,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
             
 			bitFalse(YapConst.CONTINUE);
             
-            YapWriter writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
+            StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
 
             YapStream stream = a_trans.stream();
 			stream.writeNew(_class, writer);
@@ -206,7 +206,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	
 	final Object read(
 		Transaction ta,
-		YapWriter a_reader,
+		StatefulBuffer a_reader,
 		Object a_object,
 		int a_instantiationDepth,
 		int addToIDTree,
@@ -256,7 +256,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return a_object;
 	}
 
-	public final Object readPrefetch(YapStream a_stream, YapWriter a_reader) {
+	public final Object readPrefetch(YapStream a_stream, StatefulBuffer a_reader) {
 
 		Object readObject = null;
 		if (beginProcessing()) {
@@ -287,7 +287,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return readObject;
 	}
 
-	public final void readThis(Transaction a_trans, YapReader a_bytes) {
+	public final void readThis(Transaction a_trans, Buffer a_bytes) {
 		if (Deploy.debug) {
 			System.out.println(
 				"YapObject.readThis should never be called. All handling takes place in read");
@@ -366,7 +366,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
         _virtualAttributes = at;
     }
 
-	public void writeThis(Transaction trans, YapReader a_writer) {
+	public void writeThis(Transaction trans, Buffer a_writer) {
 		if (Deploy.debug) {
 			System.out.println("YapObject.writeThis should never be called.");
 		}
@@ -774,7 +774,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		    if(_class != null){
 		        YapStream stream = _class.getStream();
 		        if(stream != null && id > 0){
-		            YapWriter writer = stream.readWriterByID(stream.getTransaction(), id);
+		            StatefulBuffer writer = stream.readWriterByID(stream.getTransaction(), id);
 		            if(writer != null){
 		                str += "\nAddress=" + writer.getAddress();
 		            }

@@ -1,11 +1,13 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.inside.*;
 
 /**
  * public for .NET conversion reasons
@@ -15,7 +17,7 @@ import com.db4o.foundation.network.*;
  * 
  * @exclude
  */
-public final class YapWriter extends YapReader {
+public final class StatefulBuffer extends Buffer {
     
 
     private int i_address;
@@ -39,18 +41,18 @@ public final class YapWriter extends YapReader {
     public int _payloadOffset;
     
 
-    public YapWriter(Transaction a_trans, int a_initialBufferSize) {
+    public StatefulBuffer(Transaction a_trans, int a_initialBufferSize) {
         i_trans = a_trans;
         i_length = a_initialBufferSize;
         _buffer = new byte[i_length];
     }
 
-    public YapWriter(Transaction a_trans, int a_address, int a_initialBufferSize) {
+    public StatefulBuffer(Transaction a_trans, int a_address, int a_initialBufferSize) {
         this(a_trans, a_initialBufferSize);
         i_address = a_address;
     }
 
-    public YapWriter(YapWriter parent, YapWriter[] previousRead, int previousCount) {
+    public StatefulBuffer(StatefulBuffer parent, StatefulBuffer[] previousRead, int previousCount) {
         previousRead[previousCount++] = this;
         int parentID = parent.readInt();
         i_length = parent.readInt();
@@ -62,7 +64,7 @@ public final class YapWriter extends YapReader {
         System.arraycopy(parent._buffer, parent._offset, _buffer, 0, i_length);
         parent._offset += i_length;
         if (previousCount < previousRead.length) {
-            new YapWriter(parent, previousRead, previousCount);
+            new StatefulBuffer(parent, previousRead, previousCount);
         }
     }
 
@@ -79,12 +81,12 @@ public final class YapWriter extends YapReader {
     //		}
     //	}
 
-    public void addEmbedded(YapWriter a_bytes) {
+    public void addEmbedded(StatefulBuffer a_bytes) {
         i_embedded = Tree.add(i_embedded, new TreeIntObject(a_bytes.getID(), a_bytes));
     }
 
 
-    public int appendTo(final YapReader a_bytes, int a_id) {
+    public int appendTo(final Buffer a_bytes, int a_id) {
         a_id++;
         a_bytes.writeInt(i_length);
         a_bytes.writeInt(i_id);
@@ -93,7 +95,7 @@ public final class YapWriter extends YapReader {
         final int[] newID = { a_id };
         final int myID = a_id;
         forEachEmbedded(new VisitorYapBytes() {
-            public void visit(YapWriter a_embedded) {
+            public void visit(StatefulBuffer a_embedded) {
                 a_bytes.writeInt(myID);
                 newID[0] = a_embedded.appendTo(a_bytes, newID[0]);
             }
@@ -118,7 +120,7 @@ public final class YapWriter extends YapReader {
     public int embeddedCount() {
         final int[] count = { 0 };
         forEachEmbedded(new VisitorYapBytes() {
-            public void visit(YapWriter a_bytes) {
+            public void visit(StatefulBuffer a_bytes) {
                 count[0] += 1 + a_bytes.embeddedCount();
             }
         });
@@ -128,7 +130,7 @@ public final class YapWriter extends YapReader {
     public int embeddedLength() {
         final int[] length = { 0 };
         forEachEmbedded(new VisitorYapBytes() {
-            public void visit(YapWriter a_bytes) {
+            public void visit(StatefulBuffer a_bytes) {
                 length[0] += a_bytes.getLength() + a_bytes.embeddedLength();
             }
         });
@@ -139,7 +141,7 @@ public final class YapWriter extends YapReader {
         if (i_embedded != null) {
             i_embedded.traverse(new Visitor4() {
                 public void visit(Object a_object) {
-                    a_visitor.visit((YapWriter) ((TreeIntObject)a_object)._object);
+                    a_visitor.visit((StatefulBuffer) ((TreeIntObject)a_object)._object);
                 }
             });
         }
@@ -185,7 +187,7 @@ public final class YapWriter extends YapReader {
         return i_updateDepth;
     }
     
-    byte[] getWrittenBytes(){
+    public byte[] getWrittenBytes(){
         byte[] bytes = new byte[_offset];
         System.arraycopy(_buffer, 0, bytes, 0, _offset);
         return bytes;
@@ -218,13 +220,13 @@ public final class YapWriter extends YapReader {
 		return true;
     }
 
-    public final YapWriter readEmbeddedObject() {
+    public final StatefulBuffer readEmbeddedObject() {
         int id = readInt();
         int length = readInt();
-        YapWriter bytes = null;
+        StatefulBuffer bytes = null;
         Tree tio = TreeInt.find(i_embedded, id);
         if (tio != null) {
-            bytes = (YapWriter) ((TreeIntObject)tio)._object; 
+            bytes = (StatefulBuffer) ((TreeIntObject)tio)._object; 
         }else{
             bytes = stream().readWriterByAddress(i_trans, id, length);
             if (bytes != null) {
@@ -238,12 +240,12 @@ public final class YapWriter extends YapReader {
         return bytes;
     }
 
-    public final YapWriter readYapBytes() {
+    public final StatefulBuffer readYapBytes() {
         int length = readInt();
         if (length == 0) {
             return null;
         }
-        YapWriter yb = new YapWriter(i_trans, length);
+        StatefulBuffer yb = new StatefulBuffer(i_trans, length);
         System.arraycopy(_buffer, _offset, yb._buffer, 0, length);
         _offset += length;
         return yb;
@@ -295,7 +297,7 @@ public final class YapWriter extends YapReader {
         i_length = a_length;
     }
 
-    void useSlot(int a_adress) {
+    public void useSlot(int a_adress) {
         i_address = a_adress;
         _offset = 0;
     }
@@ -322,9 +324,9 @@ public final class YapWriter extends YapReader {
     }
 
     public void writeEmbedded() {
-        final YapWriter finalThis = this;
+        final StatefulBuffer finalThis = this;
         forEachEmbedded(new VisitorYapBytes() {
-            public void visit(YapWriter a_bytes) {
+            public void visit(StatefulBuffer a_bytes) {
                 a_bytes.writeEmbedded();
                 stream().writeEmbedded(finalThis, a_bytes);
             }
@@ -354,7 +356,7 @@ public final class YapWriter extends YapReader {
     /* Only used for Strings, topLevel therefore means aligning blocksize, so
      * index will be possible.
      */
-    public void writePayload(YapWriter payLoad, boolean topLevel){
+    public void writePayload(StatefulBuffer payLoad, boolean topLevel){
         checkMinimumPayLoadOffsetAndWritePointerAndLength(payLoad.getLength(), topLevel);
         System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);
         transferPayLoadAddress(payLoad, _payloadOffset);
@@ -388,14 +390,14 @@ public final class YapWriter extends YapReader {
         return linkOffset;
     }
     
-    public YapReader readPayloadWriter(int offset, int length){
-        YapWriter payLoad = new YapWriter(i_trans, 0, length);
+    public Buffer readPayloadWriter(int offset, int length){
+        StatefulBuffer payLoad = new StatefulBuffer(i_trans, 0, length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
         transferPayLoadAddress(payLoad, offset);
         return payLoad;
     }
 
-    private void transferPayLoadAddress(YapWriter toWriter, int offset) {
+    private void transferPayLoadAddress(StatefulBuffer toWriter, int offset) {
         int blockedOffset = offset / stream().blockSize();
         toWriter.i_address = i_address + blockedOffset;
         toWriter.i_id = toWriter.i_address;

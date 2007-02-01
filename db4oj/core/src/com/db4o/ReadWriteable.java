@@ -2,9 +2,11 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 /**
  * @exclude
  */
 public interface ReadWriteable extends Readable{
-	public void write(YapReader a_writer);
+	public void write(Buffer a_writer);
 }

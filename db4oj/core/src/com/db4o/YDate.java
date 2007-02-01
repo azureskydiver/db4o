@@ -5,6 +5,7 @@ package com.db4o;
 import java.util.*;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
@@ -48,12 +49,12 @@ final class YDate extends YLong {
 		return null;
 	}
 	
-	public Object read(MarshallerFamily mf, YapWriter writer, boolean redirect)
+	public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect)
 			throws CorruptionException {
 		return mf._primitive.readDate(writer);
 	}
 	
-	Object read1(YapReader a_bytes) {
+	Object read1(Buffer a_bytes) {
 		return primitiveMarshaller().readDate(a_bytes);
 	}
 
@@ -61,7 +62,7 @@ final class YDate extends YLong {
 		return MarshallerFamily.current()._primitive;
 	}
 
-	public void write(Object a_object, YapReader a_bytes){
+	public void write(Object a_object, Buffer a_bytes){
         // TODO: This is a temporary fix to prevent exceptions with
         // Marshaller.LEGACY.  
         if(a_object == null){

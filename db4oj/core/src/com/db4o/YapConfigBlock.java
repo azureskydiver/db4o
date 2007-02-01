@@ -109,7 +109,7 @@ public final class YapConfigBlock {
         if(_stream.configImpl().encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new YapStringIO().write(fullpwd);
-                YapReader encwriter=new YapWriter(_stream.getTransaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
+                Buffer encwriter=new StatefulBuffer(_stream.getTransaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
                 encwriter.append(pwdbytes);
                 encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
                 _stream.i_handlers.decrypt(encwriter);
@@ -132,7 +132,7 @@ public final class YapConfigBlock {
 	private void read(int address) {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
-		YapWriter reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
+		StatefulBuffer reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
 		try{
 			_stream.readBytes(reader._buffer, _address, LENGTH);
 		}catch(Exception e){
@@ -252,7 +252,7 @@ public final class YapConfigBlock {
         timerFileLock().checkHeaderLock();
         addressChanged(_stream.getSlot(LENGTH));
         
-		YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address,LENGTH);
+		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), _address,LENGTH);
 		YInt.writeInt(LENGTH, writer);
         for (int i = 0; i < 2; i++) {
             writer.writeLong(timerFileLock().openTime());
@@ -279,7 +279,7 @@ public final class YapConfigBlock {
 	
 	private void writePointer() {
         timerFileLock().checkHeaderLock();
-		YapWriter writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.ID_LENGTH);
+		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.ID_LENGTH);
 		writer.moveForward(2);
 		YInt.writeInt(_address, writer);
         writer.noXByteCheck();

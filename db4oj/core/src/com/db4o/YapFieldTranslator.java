@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 
@@ -40,7 +41,7 @@ final class YapFieldTranslator extends YapField
 		return getOn(a_trans, a_OnObject);
 	}
 
-	public void instantiate(MarshallerFamily mf,  YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) throws CorruptionException{
+	public void instantiate(MarshallerFamily mf,  YapObject a_yapObject, Object a_onObject, StatefulBuffer a_bytes) throws CorruptionException{
 		Object toSet = read(mf, a_bytes);
 
 		// Activation of members is necessary on purpose here.

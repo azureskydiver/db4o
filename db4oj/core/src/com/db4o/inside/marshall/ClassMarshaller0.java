@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.inside.convert.conversions.*;
@@ -13,7 +14,7 @@ import com.db4o.inside.convert.conversions.*;
  */
 public class ClassMarshaller0 extends ClassMarshaller{
     
-    protected void readIndex(YapStream stream, YapClass clazz, YapReader reader) {
+    protected void readIndex(YapStream stream, YapClass clazz, Buffer reader) {
         int indexID = reader.readInt();
         if(! stream.maintainsIndices() || ! (stream instanceof YapFile)){
             return;

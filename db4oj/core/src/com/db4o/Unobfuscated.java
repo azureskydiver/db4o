@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude 
@@ -19,7 +20,7 @@ public class Unobfuscated {
 	public static byte[] generateSignature() {
 	    // TODO: We could add part of the file name to improve 
 	    //       signature security.
-	    YapWriter writer = new YapWriter(null, 300);
+	    StatefulBuffer writer = new StatefulBuffer(null, 300);
 	    if(! Deploy.csharp) {
 		    try {
 	            new YapStringIO().write(writer, java.net.InetAddress.getLocalHost().getHostName());

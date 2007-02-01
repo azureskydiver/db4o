@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -39,11 +40,11 @@ final class YShort extends YapJavaClass
 		return i_primitive;
 	}
 	
-	Object read1(YapReader a_bytes){
+	Object read1(Buffer a_bytes){
 		return new Short(readShort(a_bytes));
 	}
 	
-	static final short readShort(YapReader a_bytes){
+	static final short readShort(Buffer a_bytes){
 		int ret = 0;
 		if (Deploy.debug){
 			a_bytes.readBegin(YapConst.YAPSHORT);
@@ -57,11 +58,11 @@ final class YShort extends YapJavaClass
 		return (short)ret;
 	}
 
-	public void write(Object a_object, YapReader a_bytes){
+	public void write(Object a_object, Buffer a_bytes){
 	    writeShort(((Short)a_object).shortValue(), a_bytes);
 	}
 	
-	static final void writeShort(int a_short, YapReader a_bytes){
+	static final void writeShort(int a_short, Buffer a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPSHORT);
 		}

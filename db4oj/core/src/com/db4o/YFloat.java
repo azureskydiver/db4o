@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -34,11 +35,11 @@ final class YFloat extends YInt {
 		return i_primitive;
 	}
 
-	Object read1(YapReader a_bytes) {
+	Object read1(Buffer a_bytes) {
 		return new Float(Float.intBitsToFloat(a_bytes.readInt()));
 	}
 
-	public void write(Object a_object, YapReader a_bytes) {
+	public void write(Object a_object, Buffer a_bytes) {
 		writeInt(
 			Float.floatToIntBits(((Float) a_object).floatValue()),
 			a_bytes);

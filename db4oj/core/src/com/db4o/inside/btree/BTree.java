@@ -4,6 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.mapping.*;
 
@@ -300,7 +301,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
         }
     }
 
-    public void readThis(Transaction a_trans, YapReader a_reader) {
+    public void readThis(Transaction a_trans, Buffer a_reader) {
         a_reader.incrementOffset(1);  // first byte is version, for possible future format changes
         _size = a_reader.readInt();
         _nodeSize = a_reader.readInt();
@@ -308,7 +309,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
         _root = produceNode(a_reader.readInt());
     }
     
-    public void writeThis(Transaction trans, YapReader a_writer) {
+    public void writeThis(Transaction trans, Buffer a_writer) {
         a_writer.append(BTREE_VERSION);
         a_writer.writeInt(_size);
         a_writer.writeInt(nodeSize());

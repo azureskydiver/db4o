@@ -3,6 +3,7 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 public class MsgObject extends MsgD {
@@ -13,7 +14,7 @@ public class MsgObject extends MsgD {
 	private int _id;
 	private int _address;
 	
-	MsgD getWriter(YapWriter bytes, int[] prependInts) {
+	MsgD getWriter(StatefulBuffer bytes, int[] prependInts) {
 		int lengthNeeded = bytes.getLength() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
 			lengthNeeded += (prependInts.length * YapConst.INT_LENGTH);
@@ -33,26 +34,26 @@ public class MsgObject extends MsgD {
 		return message;
 	}
 
-	public MsgD getWriter(YapWriter bytes) {
+	public MsgD getWriter(StatefulBuffer bytes) {
 		return getWriter(bytes, null);
 	}
 	
-	public MsgD getWriter(YapClass a_yapClass, YapWriter bytes) {
+	public MsgD getWriter(YapClass a_yapClass, StatefulBuffer bytes) {
         if(a_yapClass == null){
             return getWriter(bytes, new int[]{0});
         }
 		return getWriter(bytes, new int[]{ a_yapClass.getID()});
 	}
 	
-	public MsgD getWriter(YapClass a_yapClass, int a_param, YapWriter bytes) {
+	public MsgD getWriter(YapClass a_yapClass, int a_param, StatefulBuffer bytes) {
 		return getWriter(bytes, new int[]{ a_yapClass.getID(), a_param});
 	}
 	
-	public final YapWriter unmarshall() {
+	public final StatefulBuffer unmarshall() {
 		return unmarshall(0);
 	}
 
-	public final YapWriter unmarshall(int addLengthBeforeFirst) {
+	public final StatefulBuffer unmarshall(int addLengthBeforeFirst) {
 		_payLoad.setTransaction(transaction());
 		int embeddedCount = _payLoad.readInt();
 		int length = _payLoad.readInt();
@@ -65,9 +66,9 @@ public class MsgObject extends MsgD {
 			_payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
 		}else{
 			_payLoad._offset += length;
-			YapWriter[] embedded = new YapWriter[embeddedCount + 1];
+			StatefulBuffer[] embedded = new StatefulBuffer[embeddedCount + 1];
 			embedded[0] = _payLoad;
-			new YapWriter(_payLoad, embedded, 1);  // this line cascades and adds all embedded YapBytes 
+			new StatefulBuffer(_payLoad, embedded, 1);  // this line cascades and adds all embedded YapBytes 
 			_payLoad.trim4(LENGTH_FOR_FIRST + addLengthBeforeFirst, length);
 		}
 		_payLoad.useSlot(_id, _address, length);

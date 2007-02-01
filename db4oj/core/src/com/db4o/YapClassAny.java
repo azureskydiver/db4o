@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
@@ -30,7 +31,7 @@ final class YapClassAny extends YapClass {
 		}
 	}
     
-	public void deleteEmbedded(MarshallerFamily mf, YapWriter reader) {
+	public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer reader) {
         mf._untyped.deleteEmbedded(reader);
 	}
 	
@@ -76,25 +77,25 @@ final class YapClassAny extends YapClass {
         yc.calculateLengths(trans, header, false, obj, false);
     }
     
-    public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
         if(mf._untyped.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);
         }
         return mf._untyped.read(a_bytes);
     }
 
-	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
+	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         return mf._untyped.readArrayHandler(a_trans, a_bytes);
 	}
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, YapReader reader, boolean toArray) throws CorruptionException{
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException{
         if(mf._untyped.useNormalClassRead()){
             return super.readQuery(trans, mf, withRedirection, reader, toArray);
         }
         return mf._untyped.readQuery(trans, reader, toArray);
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         if(mf._untyped.useNormalClassRead()){
             return super.readSubCandidate(mf, reader, candidates, withIndirection);
         }
@@ -105,7 +106,7 @@ final class YapClassAny extends YapClass {
         return false;
     }
     
-    public Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, YapWriter writer, boolean withIndirection, boolean restoreLinkeOffset) {
+    public Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, StatefulBuffer writer, boolean withIndirection, boolean restoreLinkeOffset) {
         return mf._untyped.writeNew(obj, restoreLinkeOffset, writer);
     }
 

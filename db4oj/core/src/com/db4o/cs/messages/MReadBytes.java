@@ -4,10 +4,11 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 
 public final class MReadBytes extends MsgD {
 	
-	public final YapReader getByteLoad() {
+	public final Buffer getByteLoad() {
 		int address = _payLoad.readInt();
 		int length = _payLoad.getLength() - (YapConst.INT_LENGTH);
 		_payLoad.removeFirstBytes(YapConst.INT_LENGTH);
@@ -15,7 +16,7 @@ public final class MReadBytes extends MsgD {
 		return this._payLoad;
 	}
 
-	public final MsgD getWriter(YapWriter bytes) {
+	public final MsgD getWriter(StatefulBuffer bytes) {
 		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.INT_LENGTH);
 		message._payLoad.writeInt(bytes.getAddress());
 		message._payLoad.append(bytes._buffer);
@@ -26,8 +27,8 @@ public final class MReadBytes extends MsgD {
 		int address = readInt();
 		int length = readInt();
 		synchronized (streamLock()) {
-			YapWriter bytes =
-				new YapWriter(this.transaction(), address, length);
+			StatefulBuffer bytes =
+				new StatefulBuffer(this.transaction(), address, length);
 			try {
 				stream().readBytes(bytes._buffer, address, length);
 				serverThread.write(getWriter(bytes));

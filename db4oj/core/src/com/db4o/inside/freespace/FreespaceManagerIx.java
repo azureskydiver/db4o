@@ -4,6 +4,7 @@ package com.db4o.inside.freespace;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 
 
@@ -56,7 +57,7 @@ public class FreespaceManagerIx extends FreespaceManager{
 
         _addressIx._index.commitFreeSpace(_lengthIx._index);
         
-        YapWriter writer = new YapWriter(_file.getSystemTransaction(), _slotAddress, slotLength());
+        StatefulBuffer writer = new StatefulBuffer(_file.getSystemTransaction(), _slotAddress, slotLength());
         _addressIx._index._metaIndex.write(writer);
         _lengthIx._index._metaIndex.write(writer);
         if (Debug.xbytes) {
@@ -223,7 +224,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         MetaIndex miAddress = new MetaIndex();
         MetaIndex miLength = new MetaIndex();
         
-        YapReader reader = new YapReader(slotLength());
+        Buffer reader = new Buffer(slotLength());
         reader.read(_file, slotAddress, 0);
         miAddress.read(reader);
         miLength.read(reader);

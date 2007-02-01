@@ -5,6 +5,7 @@ package com.db4o.inside.marshall;
 import java.util.Date;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
@@ -13,7 +14,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         return true;
     }
     
-    public int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, YapWriter parentWriter, boolean withIndirection, boolean restoreLinkOffset){
+    public int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, StatefulBuffer parentWriter, boolean withIndirection, boolean restoreLinkOffset){
         
         int id = 0;
         
@@ -30,7 +31,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             }
             trans.setPointer(id, address, length);
             
-            YapWriter writer = new YapWriter(trans, length);
+            StatefulBuffer writer = new StatefulBuffer(trans, length);
             writer.useSlot(id, address, length);
             if (Deploy.debug) {
                 writer.writeBegin(YapConst.YAPOBJECT);
@@ -50,7 +51,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         return id;
     }
     
-    public Date readDate(YapReader a_bytes) {
+    public Date readDate(Buffer a_bytes) {
 		final long longValue = YLong.readLong(a_bytes);
 		if (longValue == Long.MAX_VALUE) {
 			return null;

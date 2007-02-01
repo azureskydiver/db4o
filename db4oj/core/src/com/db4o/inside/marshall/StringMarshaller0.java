@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 public class StringMarshaller0 extends StringMarshaller {
@@ -15,7 +16,7 @@ public class StringMarshaller0 extends StringMarshaller {
         // do nothing
     }
     
-    public Object writeNew(Object a_object, boolean topLevel, YapWriter a_bytes, boolean redirect) {
+    public Object writeNew(Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean redirect) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
             return null;
@@ -25,7 +26,7 @@ public class StringMarshaller0 extends StringMarshaller {
         String str = (String) a_object;
         int length = stream.stringIO().length(str);
         
-        YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
+        StatefulBuffer bytes = new StatefulBuffer(a_bytes.getTransaction(), length);
         
         writeShort(stream, str, bytes);
         
@@ -37,11 +38,11 @@ public class StringMarshaller0 extends StringMarshaller {
         return bytes;
     }
     
-    public YapReader readIndexEntry(YapWriter parentSlot) throws CorruptionException{
+    public Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException{
         return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
     
-    public YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
+    public Buffer readSlotFromParentSlot(YapStream stream, Buffer reader) throws CorruptionException {
         return reader.readEmbeddedObject(stream.getTransaction());
     }
 

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 /**
  * The index record that is written to the database file.
  * Don't obfuscate.
@@ -25,7 +27,7 @@ public class MetaIndex implements Internal4{
 	private final int patchEntries = 0;
 	private final int patchLength = 0;
     
-    public void read(YapReader reader){
+    public void read(Buffer reader){
         indexAddress = reader.readInt();
         indexEntries = reader.readInt();
         indexLength = reader.readInt();
@@ -36,7 +38,7 @@ public class MetaIndex implements Internal4{
         /*patchLength = */reader.readInt();
     }
     
-    public void write(YapReader writer){
+    public void write(Buffer writer){
         writer.writeInt(indexAddress);
         writer.writeInt(indexEntries);
         writer.writeInt(indexLength);

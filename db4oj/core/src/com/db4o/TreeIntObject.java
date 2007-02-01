@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.Tree;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -38,7 +39,7 @@ public class TreeIntObject extends TreeInt {
         _object = obj;
     }
 
-	public Object read(YapReader a_bytes) {
+	public Object read(Buffer a_bytes) {
 		int key = a_bytes.readInt();
 		Object obj = null;
 		if (_object instanceof TreeInt) {
@@ -49,7 +50,7 @@ public class TreeIntObject extends TreeInt {
 		return new TreeIntObject(key, obj);
 	}
 
-	public void write(YapReader a_writer) {
+	public void write(Buffer a_writer) {
 		a_writer.writeInt(_key);
 		if (_object == null) {
 			a_writer.writeInt(0);

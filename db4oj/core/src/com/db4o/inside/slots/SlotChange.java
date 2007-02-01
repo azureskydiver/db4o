@@ -3,6 +3,7 @@
 package com.db4o.inside.slots;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -115,7 +116,7 @@ public class SlotChange extends TreeInt {
         return _shared.slot();
     }
 
-	public Object read(YapReader reader) {
+	public Object read(Buffer reader) {
 		SlotChange change = new SlotChange(reader.readInt());
 		change._newSlot = new Slot(reader.readInt(), reader.readInt());
 		change.doSetPointer();
@@ -140,7 +141,7 @@ public class SlotChange extends TreeInt {
 		_newSlot = new Slot(address, length);
 	}
 
-	public void write(YapReader writer) {
+	public void write(Buffer writer) {
 		if (isSetPointer()) {
 			writer.writeInt(_key);
 			writer.writeInt(_newSlot._address);

@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.inside.mapping.*;
@@ -112,29 +113,29 @@ public class DefragContextImpl implements DefragContext {
 		_mapping.close();
 	}
 	
-	public YapReader readerByID(DbSelector selector,int id) {
+	public Buffer readerByID(DbSelector selector,int id) {
 		Slot slot=readPointer(selector, id);
 		return readerByAddress(selector,slot._address,slot._length);
 	}
 
-	public YapWriter sourceWriterByID(int id) {
+	public StatefulBuffer sourceWriterByID(int id) {
 		Slot slot=readPointer(SOURCEDB, id);
 		return _sourceDb.readWriterByAddress(SOURCEDB.transaction(this),slot._address,slot._length);
 	}
 
-	public YapReader sourceReaderByAddress(int address,int length) {
+	public Buffer sourceReaderByAddress(int address,int length) {
 		return readerByAddress(SOURCEDB, address, length);
 	}
 
-	public YapReader targetReaderByAddress(int address,int length) {
+	public Buffer targetReaderByAddress(int address,int length) {
 		return readerByAddress(TARGETDB, address, length);
 	}
 
-	public YapReader readerByAddress(DbSelector selector,int address,int length) {
+	public Buffer readerByAddress(DbSelector selector,int address,int length) {
 		return selector.db(this).readReaderByAddress(address,length);
 	}
 
-	public YapWriter targetWriterByAddress(int address,int length) {
+	public StatefulBuffer targetWriterByAddress(int address,int length) {
 		return _targetDb.readWriterByAddress(TARGETDB.transaction(this),address,length);
 	}
 	
@@ -146,7 +147,7 @@ public class DefragContextImpl implements DefragContext {
 		readers.write(_targetDb,address);
 	}
 
-	public void targetWriteBytes(YapReader reader,int address) {
+	public void targetWriteBytes(Buffer reader,int address) {
 		_targetDb.writeBytes(reader,address,0);
 	}
 
@@ -176,7 +177,7 @@ public class DefragContextImpl implements DefragContext {
 	public static void targetClassCollectionID(String file,int id) throws IOException {
 		RandomAccessFile raf=new RandomAccessFile(file,"rw");
 		try {
-			YapReader reader=new YapReader(YapConst.INT_LENGTH);
+			Buffer reader=new Buffer(YapConst.INT_LENGTH);
 
 			raf.seek(CLASSCOLLECTION_POINTER_ADDRESS);			
 			reader._offset=0;
@@ -246,7 +247,7 @@ public class DefragContextImpl implements DefragContext {
 		_targetDb.systemData().classCollectionID(newClassCollectionID);
 	}
 
-	public YapReader sourceReaderByID(int sourceID) {
+	public Buffer sourceReaderByID(int sourceID) {
 		return readerByID(SOURCEDB,sourceID);
 	}
 	
@@ -278,7 +279,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	private Slot readPointer(DbSelector selector,int id) {
-		YapReader reader=readerByAddress(selector, id, YapConst.POINTER_LENGTH);
+		Buffer reader=readerByAddress(selector, id, YapConst.POINTER_LENGTH);
 		int address=reader.readInt();
 		int length=reader.readInt();
 		return new Slot(address,length);

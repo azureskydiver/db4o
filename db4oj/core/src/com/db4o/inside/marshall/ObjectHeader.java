@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 /**
@@ -16,19 +17,19 @@ public final class ObjectHeader {
     
     public final ObjectHeaderAttributes _headerAttributes;
     
-    public ObjectHeader(YapStream stream, YapReader reader){
+    public ObjectHeader(YapStream stream, Buffer reader){
     	this(stream,null,reader);
     }
 
-    public ObjectHeader(YapClass yapClass, YapReader reader){
+    public ObjectHeader(YapClass yapClass, Buffer reader){
     	this(null,yapClass,reader);
     }
 
-    public ObjectHeader(YapWriter writer){
+    public ObjectHeader(StatefulBuffer writer){
         this(writer.getStream(), writer);
     }
     
-    public ObjectHeader(YapStream stream, YapClass yc, YapReader reader){
+    public ObjectHeader(YapStream stream, YapClass yc, Buffer reader){
         if (Deploy.debug) {
             reader.readBegin(YapConst.YAPOBJECT);
         }
@@ -55,8 +56,8 @@ public final class ObjectHeader {
     }
 
     public static ObjectHeader defrag(ReaderPair readers) {
-    	YapReader source = readers.source();
-    	YapReader target = readers.target();
+    	Buffer source = readers.source();
+    	Buffer target = readers.target();
 		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().stream(),null,source);
     	int newID =readers.mapping().mappedID(header.yapClass().getID());
         if (Deploy.debug) {
@@ -72,7 +73,7 @@ public final class ObjectHeader {
         return _marshallerFamily._object;
     }
 
-	private MarshallerFamily readMarshallerFamily(YapReader reader, int classID) {
+	private MarshallerFamily readMarshallerFamily(Buffer reader, int classID) {
 		boolean marshallerAware=marshallerAware(classID);
         byte marshallerVersion=0;
         if(marshallerAware) {
@@ -82,7 +83,7 @@ public final class ObjectHeader {
 		return marshallerFamily;
 	}
     
-    private static ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,YapReader reader) {
+    private static ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,Buffer reader) {
     	return marshallerFamily._object.readHeaderAttributes(reader);
     }
 

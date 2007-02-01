@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
@@ -48,7 +49,7 @@ public class YapClassPrimitive extends YapClass{
     	return i_handler.classReflector();
     }
     
-    public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
         if(mf._primitive.useNormalClassRead()){
             super.deleteEmbedded(mf, a_bytes);
             return;
@@ -59,7 +60,7 @@ public class YapClassPrimitive extends YapClass{
     }
 
     
-    public void deleteEmbedded1(MarshallerFamily mf, YapWriter a_bytes, int a_id) {
+    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) {
         
         if(i_handler instanceof YapArray){
             YapArray ya = (YapArray)i_handler;
@@ -97,7 +98,7 @@ public class YapClassPrimitive extends YapClass{
 			
     }
 
-    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, int a_type, boolean isUpdate) {
+    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
         if (a_type == YapConst.TYPE_ARRAY) {
             new YapArray(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         } else if (a_type == YapConst.TYPE_NARRAY) {
@@ -109,7 +110,7 @@ public class YapClassPrimitive extends YapClass{
         a_trans.slotFreePointerOnCommit(a_id, a_address, a_length);
 	}
 	
-	final void free(YapWriter a_bytes, int a_id) {
+	final void free(StatefulBuffer a_bytes, int a_id) {
           a_bytes.getTransaction().slotFreePointerOnCommit(a_id, a_bytes.getAddress(), a_bytes.getLength());
 	}
     
@@ -117,7 +118,7 @@ public class YapClassPrimitive extends YapClass{
 	    return false;
 	}
 
-    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, boolean a_addToIDTree) {
+    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, boolean a_addToIDTree) {
         if (a_object == null) {
             try {
                 a_object = i_handler.read(mf, a_bytes, true);
@@ -130,7 +131,7 @@ public class YapClassPrimitive extends YapClass{
         return a_object;
     }
     
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes) {
+    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         try {
             return i_handler.read(mf, a_bytes, true);
         } catch (CorruptionException ce) {
@@ -138,7 +139,7 @@ public class YapClassPrimitive extends YapClass{
         }
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes) {
+    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         Object obj = null;
         try {
             obj = i_handler.read(mf, a_bytes, true);
@@ -179,21 +180,21 @@ public class YapClassPrimitive extends YapClass{
         return i_handler.primitiveClassReflector();
     }
     
-    public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
         if(mf._primitive.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);
         }
         return i_handler.read(mf, a_bytes, false);
     }
 
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         if (isArray()) {
             return i_handler;
         }
         return null;
     }
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, YapReader reader, boolean toArray) throws CorruptionException{
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException{
         if(mf._primitive.useNormalClassRead()){
             return super.readQuery(trans, mf, withRedirection, reader, toArray);
         }
@@ -201,7 +202,7 @@ public class YapClassPrimitive extends YapClass{
     }
 
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         return i_handler.readSubCandidate(mf, reader, candidates, withIndirection);
     } 
 
@@ -217,7 +218,7 @@ public class YapClassPrimitive extends YapClass{
         return false;
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         mf._primitive.writeNew(a_bytes.getTransaction(), this, a_object, topLevel, a_bytes, withIndirection, restoreLinkOffset);
         return a_object;
     }

@@ -4,6 +4,7 @@ package com.db4o.inside.freespace;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
 
 
@@ -200,7 +201,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         if(discardLimit() == Integer.MAX_VALUE){
             return;
         }
-        YapWriter reader = _file.readWriterByID(trans(), freeSlotsID);
+        StatefulBuffer reader = _file.readWriterByID(trans(), freeSlotsID);
         if (reader == null) {
             return;
         }
@@ -248,7 +249,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         
         Pointer4 ptr = _file.newSlot(trans(), length); 
         freeBySizeID = ptr._id;
-        YapWriter sdwriter = new YapWriter(trans(), length);
+        StatefulBuffer sdwriter = new StatefulBuffer(trans(), length);
         sdwriter.useSlot(freeBySizeID, ptr._address, length);
         TreeInt.write(sdwriter, (TreeInt)_freeBySize);
         sdwriter.writeEncrypt();

@@ -6,13 +6,14 @@ import java.io.IOException;
 
 import com.db4o.*;
 import com.db4o.foundation.network.YapSocket;
+import com.db4o.inside.*;
 
 /**
  * Messages with Data for Client/Server Communication
  */
 public class MsgD extends Msg{
 
-	YapWriter _payLoad;
+	StatefulBuffer _payLoad;
 
 	MsgD() {
 		super();
@@ -30,21 +31,21 @@ public class MsgD extends Msg{
 		}
 	}
 
-	public YapReader getByteLoad() {
+	public Buffer getByteLoad() {
 		return _payLoad;
 	}
 
-	public final YapWriter payLoad() {
+	public final StatefulBuffer payLoad() {
 		return _payLoad;
 	}
 	
-	public void payLoad(YapWriter writer) {
+	public void payLoad(StatefulBuffer writer) {
 		_payLoad = writer;
 	}
 	
 	public final MsgD getWriterForLength(Transaction a_trans, int length) {
 		MsgD message = (MsgD)clone(a_trans);
-		message._payLoad = new YapWriter(a_trans, length + YapConst.MESSAGE_LENGTH);
+		message._payLoad = new StatefulBuffer(a_trans, length + YapConst.MESSAGE_LENGTH);
 		message.writeInt(_msgID);
 		message.writeInt(length);
 		if(a_trans.parentTransaction() == null){
@@ -102,7 +103,7 @@ public class MsgD extends Msg{
 		return message;
 	}
 
-	public MsgD getWriter(YapWriter bytes) {
+	public MsgD getWriter(StatefulBuffer bytes) {
 		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength());
 		message._payLoad.append(bytes._buffer);
 		return message;
@@ -124,14 +125,14 @@ public class MsgD extends Msg{
 		return _payLoad.readByte() != 0;
 	}
 
-	final Msg readPayLoad(Transaction a_trans, YapSocket sock, YapReader reader)
+	final Msg readPayLoad(Transaction a_trans, YapSocket sock, Buffer reader)
 		throws IOException {
 		int length = reader.readInt();
 		
 		a_trans = checkParentTransaction(a_trans, reader);
 		
 		final MsgD command = (MsgD)clone(a_trans);
-		command._payLoad = new YapWriter(a_trans, length);
+		command._payLoad = new StatefulBuffer(a_trans, length);
 		command._payLoad.read(sock);
 		return command;
 	}

@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 
 class YapFieldNull extends YapField{
@@ -14,11 +15,11 @@ class YapFieldNull extends YapField{
 		return Null.INSTANCE;
 	}
 	
-	Object read(MarshallerFamily mf,  YapWriter a_bytes) {
+	Object read(MarshallerFamily mf,  StatefulBuffer a_bytes) {
 		return null;
 	}
 	
-	Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader) throws CorruptionException {
+	Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException {
 		return null;
 	}
 }

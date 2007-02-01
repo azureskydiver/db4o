@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.IndexTransaction;
 import com.db4o.inside.marshall.ObjectHeader;
 import com.db4o.inside.slots.Slot;
@@ -26,7 +27,7 @@ public abstract class Transaction {
 
     final Transaction       i_parentTransaction;
 
-    protected final YapWriter i_pointerIo;    
+    protected final StatefulBuffer i_pointerIo;    
 
     private final YapStream         i_stream;
     
@@ -41,7 +42,7 @@ public abstract class Transaction {
         i_stream = a_stream;
         i_file = (a_stream instanceof YapFile) ? (YapFile) a_stream : null;
         i_parentTransaction = a_parent;
-        i_pointerIo = new YapWriter(this, YapConst.POINTER_LENGTH);
+        i_pointerIo = new StatefulBuffer(this, YapConst.POINTER_LENGTH);
     }
 
     public void addDirtyFieldIndex(IndexTransaction a_xft) {
@@ -302,7 +303,7 @@ public abstract class Transaction {
 
     public abstract void setPointer(int a_id, int a_address, int a_length);
     
-    void slotDelete(int a_id, int a_address, int a_length) {
+    public void slotDelete(int a_id, int a_address, int a_length) {
     }
 
     public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
@@ -376,7 +377,7 @@ public abstract class Transaction {
 		}
 	}
     
-    public static Transaction readInterruptedTransaction(YapFile file, YapReader reader) {
+    public static Transaction readInterruptedTransaction(YapFile file, Buffer reader) {
         int transactionID1 = reader.readInt();
         int transactionID2 = reader.readInt();
         if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){

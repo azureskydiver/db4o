@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -21,7 +22,7 @@ public class YDoubleTestCase extends AbstractDb4oTestCase {
 	public void testMarshalling() {
 		final Double expected = new Double(1.1);
 		
-		YapReader buffer = new YapReader(_handler.linkLength());		
+		Buffer buffer = new Buffer(_handler.linkLength());		
 		_handler.writeIndexEntry(buffer, expected);
 		
 		buffer.seek(0);

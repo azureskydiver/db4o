@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.Tree;
+import com.db4o.inside.*;
 
 
 /**
@@ -21,7 +22,7 @@ class IxFileRangeReader {
     private int               _upper;
     private int               _cursor;
 
-    private final YapReader   _reader;
+    private final Buffer   _reader;
 
     final int                 _slotLength;
 
@@ -31,7 +32,7 @@ class IxFileRangeReader {
         _handler = handler;
         _linkLegth = handler.linkLength();
         _slotLength = _linkLegth + YapConst.INT_LENGTH;
-        _reader = new YapReader(_slotLength);
+        _reader = new Buffer(_slotLength);
     }
 
     Tree add(IxFileRange fileRange, final Tree newTree) {

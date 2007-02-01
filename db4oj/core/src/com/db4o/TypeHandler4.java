@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
@@ -23,7 +24,7 @@ public interface TypeHandler4 extends Indexable4
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);
 	
-	void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes);
+	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes);
 	
 	int getID();
 	
@@ -56,15 +57,15 @@ public interface TypeHandler4 extends Indexable4
 	
 	ReflectClass primitiveClassReflector();
 	
-	Object read(MarshallerFamily mf, YapWriter writer, boolean redirect) throws CorruptionException;
+	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException;
     
-	Object readIndexEntry(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
+	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException;
 	
-	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, YapReader reader, boolean toArray) throws CorruptionException;
+	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException;
 	
 	boolean supportsIndex();
 	
-    Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset);
+    Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset);
 	
 	public int getTypeID ();
 	
@@ -73,18 +74,18 @@ public interface TypeHandler4 extends Indexable4
     /**
      * performance optimized read (only used for byte[] so far) 
      */
-    boolean readArray(Object array, YapReader reader);
+    boolean readArray(Object array, Buffer reader);
 	
-	void readCandidates(MarshallerFamily mf, YapReader reader, QCandidates candidates);
+	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates);
 	
-	TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes);
+	TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes);
 	
     /**
      * performance optimized write (only used for byte[] so far) 
      */
-    boolean writeArray(Object array, YapReader reader);
+    boolean writeArray(Object array, Buffer reader);
 
-    QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection);
+    QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
 }

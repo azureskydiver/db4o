@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 public class StringMarshaller1 extends StringMarshaller{
@@ -31,7 +32,7 @@ public class StringMarshaller1 extends StringMarshaller{
         header.addPayLoadLength(trans.stream().stringIO().length((String)obj));
     }
     
-    public Object writeNew(Object obj, boolean topLevel, YapWriter writer, boolean redirect) {
+    public Object writeNew(Object obj, boolean topLevel, StatefulBuffer writer, boolean redirect) {
         
         YapStream stream = writer.getStream();
         String str = (String) obj;
@@ -53,14 +54,14 @@ public class StringMarshaller1 extends StringMarshaller{
         
         int length = stream.stringIO().length(str);
         
-        YapWriter bytes = new YapWriter(writer.getTransaction(), length);
+        StatefulBuffer bytes = new StatefulBuffer(writer.getTransaction(), length);
         writeShort(stream, str, bytes);
         
         writer.writePayload(bytes, topLevel);
         return bytes;
     }
     
-    public YapReader readIndexEntry(YapWriter parentSlot) throws CorruptionException{
+    public Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException{
         int payLoadOffSet = parentSlot.readInt();
         int length = parentSlot.readInt();
         if(payLoadOffSet == 0){
@@ -69,7 +70,7 @@ public class StringMarshaller1 extends StringMarshaller{
         return parentSlot.readPayloadWriter(payLoadOffSet, length);
     }
     
-    public YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
+    public Buffer readSlotFromParentSlot(YapStream stream, Buffer reader) throws CorruptionException {
         int payLoadOffSet = reader.readInt();
         int length = reader.readInt();
         if(payLoadOffSet == 0){

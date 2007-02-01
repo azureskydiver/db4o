@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.Slot;
 import com.db4o.reflect.*;
@@ -42,14 +43,14 @@ public final class YapString extends YapIndependantType {
         if(a_object == null){
             return null;
         }
-        if(a_object instanceof YapReader){
+        if(a_object instanceof Buffer){
             return a_object;    
         }
         Slot s = (Slot) a_object;
         return a_trans.stream().readReaderByAddress(s._address, s._length);
     }
     
-    public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes){
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes){
         
         int address = a_bytes.readInt();
         int length = a_bytes.readInt();
@@ -77,7 +78,7 @@ public final class YapString extends YapIndependantType {
     
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
         try {
-            return StringMarshaller.readShort(_stream, (YapReader)indexEntry);
+            return StringMarshaller.readShort(_stream, (Buffer)indexEntry);
         } catch (CorruptionException e) {
             
         }
@@ -96,20 +97,20 @@ public final class YapString extends YapIndependantType {
         MarshallerFamily.current()._string.calculateLengths(trans, header, topLevel, obj, withIndirection);
     }
 
-    public Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException {
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException {
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }
     
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         // virtual and do nothing
         return null;
     }
 
-    public void readCandidates(MarshallerFamily mf, YapReader a_bytes, QCandidates a_candidates) {
+    public void readCandidates(MarshallerFamily mf, Buffer a_bytes, QCandidates a_candidates) {
         // do nothing
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         try {
             Object obj = null;
             if(withIndirection){
@@ -130,7 +131,7 @@ public final class YapString extends YapIndependantType {
      * This readIndexEntry method reads from the parent slot.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      */
-    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
         return mf._string.readIndexEntry(a_writer);
     }
 
@@ -138,7 +139,7 @@ public final class YapString extends YapIndependantType {
      * This readIndexEntry method reads from the actual index in the file.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      */
-    public Object readIndexEntry(YapReader reader) {
+    public Object readIndexEntry(Buffer reader) {
     	Slot s = new Slot(reader.readInt(), reader.readInt());
     	if (isInvalidSlot(s))
     		return null;
@@ -150,11 +151,11 @@ public final class YapString extends YapIndependantType {
 		return (slot._address == 0) && (slot._length == 0);
 	}
     
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException{
         if(! withRedirection){
             return mf._string.read(a_trans.stream(), a_reader);
         }
-	    YapReader reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
+	    Buffer reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
 	    if(a_toArray) {
 	        if(reader != null) {
                 return mf._string.readFromOwnSlot(a_trans.stream(), reader);
@@ -171,14 +172,14 @@ public final class YapString extends YapIndependantType {
         return true;
     }
 
-    public void writeIndexEntry(YapReader writer, Object entry) {
+    public void writeIndexEntry(Buffer writer, Object entry) {
         if(entry == null){
             writer.writeInt(0);
             writer.writeInt(0);
             return;
         }
-         if(entry instanceof YapWriter){
-             YapWriter entryAsWriter = (YapWriter)entry;
+         if(entry instanceof StatefulBuffer){
+             StatefulBuffer entryAsWriter = (StatefulBuffer)entry;
              writer.writeInt(entryAsWriter.getAddress());
              writer.writeInt(entryAsWriter.getLength());
              return;
@@ -192,11 +193,11 @@ public final class YapString extends YapIndependantType {
          throw new IllegalArgumentException();
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
         return mf._string.writeNew(a_object, topLevel, a_bytes, withIndirection);
     }
 
-    final void writeShort(String a_string, YapReader a_bytes) {
+    public final void writeShort(String a_string, Buffer a_bytes) {
         if (a_string == null) {
             a_bytes.writeInt(0);
         } else {
@@ -212,11 +213,11 @@ public final class YapString extends YapIndependantType {
 
     // Comparison_______________________
 
-    private YapReader i_compareTo;
+    private Buffer i_compareTo;
 
-    private YapReader val(Object obj) {
-        if(obj instanceof YapReader) {
-            return (YapReader)obj;
+    private Buffer val(Object obj) {
+        if(obj instanceof Buffer) {
+            return (Buffer)obj;
         }
         if(obj instanceof String) {
             return StringMarshaller.writeShort(_stream, (String)obj);
@@ -229,7 +230,7 @@ public final class YapString extends YapIndependantType {
     }
     
 	public void prepareComparison(Transaction a_trans, Object obj) {
-	    i_compareTo = (YapReader)obj;    
+	    i_compareTo = (Buffer)obj;    
 	}
 
     public YapComparable prepareComparison(Object obj) {
@@ -285,7 +286,7 @@ public final class YapString extends YapIndependantType {
      *
      * TODO: You will need collators here for different languages.  
      */
-    final int compare(YapReader a_compare, YapReader a_with) {
+    final int compare(Buffer a_compare, Buffer a_with) {
         if (a_compare == null) {
             if (a_with == null) {
                 return 0;

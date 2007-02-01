@@ -3,11 +3,12 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 class ArrayMarshaller0  extends ArrayMarshaller{
     
-    public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {
+    public void deleteEmbedded(YapArray arrayHandler, StatefulBuffer reader) {
         int address = reader.readInt();
         int length = reader.readInt();
         if (address <= 0) {
@@ -15,7 +16,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         }
         Transaction trans = reader.getTransaction();
         if (reader.cascadeDeletes() > 0 && arrayHandler.i_handler instanceof YapClass) {
-            YapWriter bytes =
+            StatefulBuffer bytes =
                 reader.getStream().readWriterByAddress(
                     trans,
                     address,
@@ -37,13 +38,13 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         // do nothing
     }
     
-    public Object writeNew(YapArray arrayHandler, Object a_object, boolean topLevel, YapWriter a_bytes) {
+    public Object writeNew(YapArray arrayHandler, Object a_object, boolean topLevel, StatefulBuffer a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
             return null;
         }
         int length = arrayHandler.objectLength(a_object);
-        YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
+        StatefulBuffer bytes = new StatefulBuffer(a_bytes.getTransaction(), length);
         bytes.setUpdateDepth(a_bytes.getUpdateDepth());
         arrayHandler.writeNew1(a_object, bytes);
         bytes.setID(a_bytes._offset);
@@ -53,16 +54,16 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return a_object;
     }
     
-    public Object read(YapArray arrayHandler,  YapWriter a_bytes) throws CorruptionException{
-        YapWriter bytes = a_bytes.readEmbeddedObject();
+    public Object read(YapArray arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException{
+        StatefulBuffer bytes = a_bytes.readEmbeddedObject();
         if (bytes == null) {
             return null;
         }
         return arrayHandler.read1(_family, bytes);
     }
     
-    public void readCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates) {
-        YapReader bytes = reader.readEmbeddedObject(candidates.i_trans);
+    public void readCandidates(YapArray arrayHandler, Buffer reader, QCandidates candidates) {
+        Buffer bytes = reader.readEmbeddedObject(candidates.i_trans);
         if (bytes == null) {
             return;
         }
@@ -76,8 +77,8 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     }
 
     
-    public final Object readQuery(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException{
-        YapReader bytes = reader.readEmbeddedObject(trans);
+    public final Object readQuery(YapArray arrayHandler, Transaction trans, Buffer reader) throws CorruptionException{
+        Buffer bytes = reader.readEmbeddedObject(trans);
         if (bytes == null) {
             return null;
         }
@@ -85,7 +86,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return array;
     }
     
-    protected YapReader prepareIDReader(Transaction trans,YapReader reader) {
+    protected Buffer prepareIDReader(Transaction trans,Buffer reader) {
     	return reader.readEmbeddedObject(trans);
     }
     

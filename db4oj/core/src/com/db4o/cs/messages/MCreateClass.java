@@ -4,6 +4,7 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 public final class MCreateClass extends MsgD {
@@ -22,7 +23,7 @@ public final class MCreateClass extends MsgD {
                             yapClass.setStateDirty();
                             yapClass.write(trans);
                             trans.commit();
-                            YapWriter returnBytes = stream.readWriterByID(trans, yapClass.getID());
+                            StatefulBuffer returnBytes = stream.readWriterByID(trans, yapClass.getID());
                             serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
                             return true;
     

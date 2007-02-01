@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -20,7 +21,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         return len;
     }
     
-    public RawFieldSpec readSpec(YapStream stream, YapReader reader) {
+    public RawFieldSpec readSpec(YapStream stream, Buffer reader) {
         
         String name = null;
         
@@ -45,7 +46,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
     
-    public final YapField read(YapStream stream, YapField field, YapReader reader) {
+    public final YapField read(YapStream stream, YapField field, Buffer reader) {
     	RawFieldSpec spec=readSpec(stream, reader);
     	return fromSpec(spec, stream, field);
     }
@@ -73,7 +74,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-    public void write(Transaction trans, YapClass clazz, YapField field, YapReader writer) {
+    public void write(Transaction trans, YapClass clazz, YapField field, Buffer writer) {
         
         field.alive();
         

@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.query.*;
@@ -468,7 +469,7 @@ public abstract class QQueryBase implements Unversioned {
                                         ids.traverse(new Visitor4() {
                                             public void visit(Object treeInt) {
                                                 int id = ((TreeInt)treeInt)._key;
-                                                YapWriter reader =
+                                                StatefulBuffer reader =
                                                     stream.readWriterByID(i_trans, id);
                                                 if (reader != null) {
                                                     ObjectHeader oh = new ObjectHeader(stream, reader);

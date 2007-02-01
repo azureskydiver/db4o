@@ -4,6 +4,7 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 
 public final class MGetClasses extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
@@ -23,7 +24,7 @@ public final class MGetClasses extends MsgD {
 			}
 		}
 		MsgD message = Msg.GET_CLASSES.getWriterForLength(transaction(), YapConst.INT_LENGTH + 1);
-		YapReader writer = message.payLoad();
+		Buffer writer = message.payLoad();
 		writer.writeInt(stream.classCollection().getID());
 		writer.append(stream.stringIO().encodingByte());
 		serverThread.write(message);

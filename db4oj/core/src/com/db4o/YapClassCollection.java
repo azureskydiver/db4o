@@ -11,7 +11,7 @@ import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.MappingIterator;
 import com.db4o.foundation.Queue4;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.SystemData;
+import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 /**
@@ -347,7 +347,7 @@ public final class YapClassCollection extends YapMeta {
         }
     }
 
-    public final void readThis(Transaction a_trans, YapReader a_reader) {
+    public final void readThis(Transaction a_trans, Buffer a_reader) {
 		int classCount = a_reader.readInt();
 
 		initTables(classCount);
@@ -358,7 +358,7 @@ public final class YapClassCollection extends YapMeta {
 		for (int i = 0; i < classCount; ++i) {
 			ids[i] = a_reader.readInt();
 		}
-		YapWriter[] yapWriters = stream.readWritersByIDs(a_trans, ids);
+		StatefulBuffer[] yapWriters = stream.readWritersByIDs(a_trans, ids);
 
 		for (int i = 0; i < classCount; ++i) {
 			YapClass yapClass = new YapClass(stream, null);
@@ -477,7 +477,7 @@ public final class YapClassCollection extends YapMeta {
         }
     }
 
-    public void writeThis(Transaction trans, YapReader a_writer) {
+    public void writeThis(Transaction trans, Buffer a_writer) {
         a_writer.writeInt(i_classes.size());
         Iterator4 i = i_classes.iterator();
         while (i.moveNext()) {

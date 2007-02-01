@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.cs.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 
 public abstract class MsgQuery extends MsgObject {
@@ -27,7 +28,7 @@ public abstract class MsgQuery extends MsgObject {
 		}
 		
 		MsgD message = QUERY_RESULT.getWriterForLength(transaction(), bufferLength(maxCount));
-		YapWriter writer = message.payLoad();
+		StatefulBuffer writer = message.payLoad();
 		writer.writeInt(queryResultId);
 		
         IntIterator4 idIterator = queryResult.iterateIDs();

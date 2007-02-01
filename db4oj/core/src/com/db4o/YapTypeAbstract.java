@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 /**
  * @exclude
  */
@@ -67,7 +69,7 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 
     public abstract Object read(byte[] bytes, int offset);
     
-    Object read1(YapReader a_bytes) throws CorruptionException {
+    Object read1(Buffer a_bytes) throws CorruptionException {
 		int offset = a_bytes._offset;
 		Object ret = read(a_bytes._buffer, a_bytes._offset);
 		a_bytes._offset = offset + linkLength();
@@ -78,7 +80,7 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
     
     public abstract void write(Object obj, byte[] bytes, int offset);
 
-    public void write(Object a_object, YapReader a_bytes) {
+    public void write(Object a_object, Buffer a_bytes) {
         int offset = a_bytes._offset;
         if(a_object != null){
             write(a_object, a_bytes._buffer, a_bytes._offset);

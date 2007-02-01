@@ -4,15 +4,15 @@ package com.db4o.cs.messages;
 
 import com.db4o.Transaction;
 import com.db4o.YapConst;
-import com.db4o.YapWriter;
 import com.db4o.cs.YapServerThread;
+import com.db4o.inside.*;
 
 public class MWriteBatchedMessages extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		int count = readInt();
 		Transaction ta = transaction();
 		for (int i = 0; i < count; i++) {
-			YapWriter writer = _payLoad.readYapBytes();
+			StatefulBuffer writer = _payLoad.readYapBytes();
 			int messageId = writer.readInt();
 			Msg message = Msg.getMessage(messageId);
 			Msg clonedMessage = message.clone(ta);

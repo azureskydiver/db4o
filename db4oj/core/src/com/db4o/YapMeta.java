@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
 
 /**
@@ -20,9 +21,9 @@ public abstract class YapMeta {
 	
 	public abstract int ownLength();
 	
-	public abstract void readThis(Transaction trans, YapReader reader);
+	public abstract void readThis(Transaction trans, Buffer reader);
 	
-	public abstract void writeThis(Transaction trans, YapReader writer);
+	public abstract void writeThis(Transaction trans, Buffer writer);
 
     
     protected int i_id; // UID and address of pointer to the object in our file
@@ -91,7 +92,7 @@ public abstract class YapMeta {
     public void read(Transaction trans) {
         try {
             if (beginProcessing()) {
-                YapReader reader = trans.stream().readReaderByID(trans, getID());
+                Buffer reader = trans.stream().readReaderByID(trans, getID());
                 if (reader != null) {
                     if (Deploy.debug) {
                         reader.readBegin(getIdentifier());
@@ -129,7 +130,7 @@ public abstract class YapMeta {
         bitFalse(YapConst.CLEAN);
     }
 
-    void setStateOnRead(YapReader reader) {
+    void setStateOnRead(Buffer reader) {
         if (Deploy.debug) {
             reader.readEnd();
         }
@@ -155,7 +156,7 @@ public abstract class YapMeta {
         int address = 0;
         int length = ownLength();
         
-        YapReader writer = new YapReader(length);
+        Buffer writer = new Buffer(length);
         
         if(isNew()){
             Pointer4 ptr = stream.newSlot(trans, length);
@@ -194,7 +195,7 @@ public abstract class YapMeta {
         return false;
     }
 
-    public void writeOwnID(Transaction trans, YapReader writer) {
+    public void writeOwnID(Transaction trans, Buffer writer) {
         write(trans);
         writer.writeInt(getID());
     }

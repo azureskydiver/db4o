@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -20,7 +21,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	// db4o ID is stored in i_key;
 
 	// db4o byte stream storing the object
-	YapReader _bytes;
+	Buffer _bytes;
 
 	final QCandidates _candidates;
 
@@ -121,7 +122,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			TypeHandler4 handler = _yapField.getHandler();
 			if (handler != null) {
 
-				final YapReader[] arrayBytes = { _bytes };
+				final Buffer[] arrayBytes = { _bytes };
                 
 				final TypeHandler4 arrayHandler = handler.readArrayHandler(
 						getTransaction(), _marshallerFamily, arrayBytes);
@@ -377,8 +378,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	public Object getObject() {
 		Object obj = value(true);
-		if (obj instanceof YapReader) {
-			YapReader reader = (YapReader) obj;
+		if (obj instanceof Buffer) {
+			Buffer reader = (Buffer) obj;
 			int offset = reader._offset;
             obj = _marshallerFamily._string.readFromOwnSlot(getStream(), reader); 
 			reader._offset = offset;
@@ -626,7 +627,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return _member;
 	}
     
-    void setBytes(YapReader bytes){
+    void setBytes(Buffer bytes){
         _bytes = bytes;
     }
 }

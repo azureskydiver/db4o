@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.*;
 
 /**
@@ -36,11 +37,11 @@ public final class YDouble extends YLong
 		return i_primitive;
 	}
 	
-	Object read1(YapReader a_bytes){
+	Object read1(Buffer a_bytes){
 		return new Double(Platform4.longToDouble(readLong(a_bytes)));
 	}
 	
-	public void write(Object a_object, YapReader a_bytes){
+	public void write(Object a_object, Buffer a_bytes){
 		a_bytes.writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()));
 	}
 	

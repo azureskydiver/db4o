@@ -32,7 +32,7 @@ public final class YapConst
 	static final byte	YAPSHORT			= (byte)'s';
 	static final byte	YAPCHAR				= (byte)'c';
 	static final byte	YAPFLOAT			= (byte)'f';
-	static final byte	YAPEND				= (byte)'}';
+	public static final byte	YAPEND				= (byte)'}';
 	static final byte	YAPNULL				= (byte)'0';
     public static final byte   BTREE               = (byte)'T';               
     public static final byte   BTREE_NODE          = (byte)'B';               

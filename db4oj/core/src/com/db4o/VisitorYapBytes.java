@@ -2,6 +2,8 @@
 
 package com.db4o;
 
-interface VisitorYapBytes {
-	void visit(YapWriter a_bytes);
+import com.db4o.inside.*;
+
+public interface VisitorYapBytes {
+	void visit(StatefulBuffer a_bytes);
 }

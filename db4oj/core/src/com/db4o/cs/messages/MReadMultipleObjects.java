@@ -4,6 +4,7 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 
 public final class MReadMultipleObjects extends MsgD {
 	
@@ -15,7 +16,7 @@ public final class MReadMultipleObjects extends MsgD {
 			for (int i = 0; i < size; i++) {
 				int id = this._payLoad.readInt();
 				try {
-					YapWriter bytes = stream().readWriterByID(transaction(),id);
+					StatefulBuffer bytes = stream().readWriterByID(transaction(),id);
 					if(bytes != null){
 						ret[i] = Msg.OBJECT_TO_CLIENT.getWriter(bytes);
 						length += ret[i]._payLoad.getLength();

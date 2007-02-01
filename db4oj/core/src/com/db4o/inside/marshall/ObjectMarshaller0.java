@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
 
 /**
@@ -10,7 +11,7 @@ import com.db4o.inside.slots.*;
  */
 class ObjectMarshaller0 extends ObjectMarshaller {
     
-    public void addFieldIndices(final YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final Slot oldSlot) {
+    public void addFieldIndices(final YapClass yc, ObjectHeaderAttributes attributes, final StatefulBuffer writer, final Slot oldSlot) {
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 	            field.addFieldIndex(_family, yc, writer, oldSlot);
@@ -19,7 +20,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yc, writer, attributes, command);
     }
     
-    public TreeInt collectFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, final String name) {
+    public TreeInt collectFieldIDs(TreeInt tree, YapClass yc, ObjectHeaderAttributes attributes, final StatefulBuffer writer, final String name) {
     	final TreeInt[] ret={tree};
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
@@ -34,7 +35,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return ret[0];
     }
     
-    public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, final YapWriter writer, int type, final boolean isUpdate){
+    public void deleteMembers(YapClass yc, ObjectHeaderAttributes attributes, final StatefulBuffer writer, int type, final boolean isUpdate){
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 	            field.delete(_family, writer, isUpdate);
@@ -43,7 +44,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yc, writer, attributes, command);
     }
     
-    public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, final YapReader writer, final YapField field) {
+    public boolean findOffset(YapClass yc, ObjectHeaderAttributes attributes, final Buffer writer, final YapField field) {
     	final boolean[] ret={false};
     	TraverseFieldCommand command=new TraverseFieldCommand() {
     		public void processField(YapField curField, boolean isNull, YapClass containingClass) {
@@ -63,7 +64,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return YapConst.OBJECT_LENGTH + YapConst.ID_LENGTH;
     }
     
-    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final YapObject yapObject, final Object onObject, final YapWriter writer) {
+    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final YapObject yapObject, final Object onObject, final StatefulBuffer writer) {
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
                 try {
@@ -93,7 +94,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return yf.linkLength();
     }
     
-    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, YapWriter writer, boolean a_new) {
+    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, StatefulBuffer writer, boolean a_new) {
         marshallDeclaredFields(yapClass, a_yapObject, a_object, writer, a_new);
         if (Deploy.debug) {
             writer.writeEnd();
@@ -101,11 +102,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
     }
     
-    private void marshallDeclaredFields(YapClass yapClass, final YapObject yapObject, final Object object, final YapWriter writer, final boolean isNew) {
+    private void marshallDeclaredFields(YapClass yapClass, final YapObject yapObject, final Object object, final StatefulBuffer writer, final boolean isNew) {
         final Config4Class config = yapClass.configOrAncestorConfig();
         final Transaction trans=writer.getTransaction();
     	TraverseFieldCommand command=new TraverseFieldCommand() {
-    		public int fieldCount(YapClass yc, YapReader reader) {
+    		public int fieldCount(YapClass yc, Buffer reader) {
     	        writer.writeInt(yc.i_fields.length);
     	        return yc.i_fields.length;
     		}
@@ -125,9 +126,9 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return 0;
     }
 
-    public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
+    public StatefulBuffer marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
-        YapWriter writer = createWriterForNew(a_trans, yo, a_updateDepth, objectLength(yo));
+        StatefulBuffer writer = createWriterForNew(a_trans, yo, a_updateDepth, objectLength(yo));
         
         YapClass yc = yo.getYapClass();
         Object obj = yo.getObject();
@@ -153,7 +154,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         Object obj
         ) {
         
-        YapWriter writer = createWriterForUpdate(trans,updateDepth, yapObject.getID(), 0, objectLength(yapObject));
+        StatefulBuffer writer = createWriterForUpdate(trans,updateDepth, yapObject.getID(), 0, objectLength(yapObject));
         
         YapClass yapClass = yapObject.getYapClass();
         
@@ -169,11 +170,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return headerLength() + linkLength(yo.getYapClass(), yo);
     }
 
-    public ObjectHeaderAttributes readHeaderAttributes(YapReader reader) {
+    public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
         return null;
     }
 
-    public Object readIndexEntry(YapClass yc, ObjectHeaderAttributes attributes, YapField yf, YapWriter reader) {
+    public Object readIndexEntry(YapClass yc, ObjectHeaderAttributes attributes, YapField yf, StatefulBuffer reader) {
         if(yc == null){
             return null;
         }
@@ -185,7 +186,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return yf.readIndexEntry(_family, reader);
     }
     
-    public void readVirtualAttributes(final Transaction trans,  YapClass yc, final YapObject yo, ObjectHeaderAttributes attributes, final YapReader reader){
+    public void readVirtualAttributes(final Transaction trans,  YapClass yc, final YapObject yo, ObjectHeaderAttributes attributes, final Buffer reader){
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 	            field.readVirtualAttribute(trans, reader, yo);
@@ -201,10 +202,10 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 	public void defragFields(YapClass yapClass,ObjectHeader header, ReaderPair readers) {
 	}
 
-	public void writeObjectClassID(YapReader reader, int id) {
+	public void writeObjectClassID(Buffer reader, int id) {
 		reader.writeInt(id);
 	}
 
-	public void skipMarshallerInfo(YapReader reader) {
+	public void skipMarshallerInfo(Buffer reader) {
 	}
 }

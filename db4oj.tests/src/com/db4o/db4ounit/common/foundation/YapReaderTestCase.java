@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.common.foundation;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 import db4ounit.*;
 
@@ -9,11 +10,11 @@ public class YapReaderTestCase implements TestCase {
 	private static final int READERLENGTH = 64;
 
 	public void testCopy() {
-		YapReader from=new YapReader(READERLENGTH);
+		Buffer from=new Buffer(READERLENGTH);
 		for(int i=0;i<READERLENGTH;i++) {
 			from.append((byte)i);
 		}
-		YapReader to=new YapReader(READERLENGTH-1);
+		Buffer to=new Buffer(READERLENGTH-1);
 		from.copyTo(to,1,2,10);
 		
 		Assert.areEqual(0,to.readByte());

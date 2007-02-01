@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 /**
@@ -10,11 +11,11 @@ import com.db4o.*;
  */
 public interface FieldMarshaller {
 
-    void write(Transaction trans, YapClass clazz, YapField field, YapReader writer);
+    void write(Transaction trans, YapClass clazz, YapField field, Buffer writer);
 
-    RawFieldSpec readSpec(YapStream stream,YapReader reader);
+    RawFieldSpec readSpec(YapStream stream,Buffer reader);
     
-    YapField read(YapStream stream, YapField field, YapReader reader);
+    YapField read(YapStream stream, YapField field, Buffer reader);
 
     int marshalledLength(YapStream stream, YapField field);
 

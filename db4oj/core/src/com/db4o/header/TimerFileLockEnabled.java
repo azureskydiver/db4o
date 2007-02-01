@@ -36,7 +36,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
     
     public void checkHeaderLock() {
-        YapWriter reader = headerLockIO();
+        StatefulBuffer reader = headerLockIO();
         reader.read();
         if(reader.readInt() != (int)_opentime ){
             throw new DatabaseFileLockedException();
@@ -45,7 +45,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
     
     public void checkOpenTime() {
-        YapWriter reader = openTimeIO();
+        StatefulBuffer reader = openTimeIO();
         if(reader == null){
             return;
         }
@@ -61,14 +61,14 @@ public class TimerFileLockEnabled extends TimerFileLock{
         _closed = true;
     }
     
-    private YapWriter getWriter(int address, int offset, int length) {
-        YapWriter writer = _file.getWriter(_file.getTransaction(), address, length);
+    private StatefulBuffer getWriter(int address, int offset, int length) {
+        StatefulBuffer writer = _file.getWriter(_file.getTransaction(), address, length);
         writer.moveForward(offset);
         return writer; 
     }
     
-    private YapWriter headerLockIO(){
-        YapWriter writer = getWriter(0, _headerLockOffset, YapConst.INT_LENGTH);
+    private StatefulBuffer headerLockIO(){
+        StatefulBuffer writer = getWriter(0, _headerLockOffset, YapConst.INT_LENGTH);
         if (Debug.xbytes) {
             writer.setID(YapConst.IGNORE_ID);
         }
@@ -83,11 +83,11 @@ public class TimerFileLockEnabled extends TimerFileLock{
         return _opentime;
     }
 
-    private YapWriter openTimeIO(){
+    private StatefulBuffer openTimeIO(){
         if(_baseAddress == 0){
             return null;
         }
-        YapWriter writer = getWriter(_baseAddress,  _openTimeOffset, YapConst.LONG_LENGTH);
+        StatefulBuffer writer = getWriter(_baseAddress,  _openTimeOffset, YapConst.LONG_LENGTH);
         if (Debug.xbytes) {
             writer.setID(YapConst.IGNORE_ID);
         }
@@ -138,13 +138,13 @@ public class TimerFileLockEnabled extends TimerFileLock{
 
 
     public void writeHeaderLock(){
-        YapWriter writer = headerLockIO();
+        StatefulBuffer writer = headerLockIO();
         writer.writeInt((int)_opentime);
         writer.write();
     }
 
     public void writeOpenTime() {
-        YapWriter writer = openTimeIO();
+        StatefulBuffer writer = openTimeIO();
         if(writer== null){
             return;
         }

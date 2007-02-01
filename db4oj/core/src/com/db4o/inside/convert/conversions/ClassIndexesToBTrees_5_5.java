@@ -3,6 +3,7 @@
 package com.db4o.inside.convert.conversions;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.convert.*;
 import com.db4o.inside.convert.ConversionStage.*;
@@ -17,7 +18,7 @@ public class ClassIndexesToBTrees_5_5 extends Conversion {
 
     public void convert(YapFile yapFile, int classIndexId, BTree bTree){
         Transaction trans = yapFile.getSystemTransaction();
-        YapReader reader = yapFile.readReaderByID(trans, classIndexId);
+        Buffer reader = yapFile.readReaderByID(trans, classIndexId);
         if(reader == null){
             return;
         }
