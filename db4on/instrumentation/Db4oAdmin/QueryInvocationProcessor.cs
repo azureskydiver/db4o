@@ -2,6 +2,7 @@
 using System;
 using System.Reflection;
 using com.db4o;
+using com.db4o.inside;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -26,7 +27,7 @@ namespace Db4oAdmin
 		public QueryInvocationProcessor(InstrumentationContext context)
 		{
 			_context = context;
-			_YapStream = context.Import(typeof(YapStream));
+			_YapStream = context.Import(typeof(ObjectContainerBase));
 			_System_Predicate = context.Import(typeof(System.Predicate<>));
 			_System_Object = context.Import(typeof(object));
 			_System_Void = context.Import(typeof(void));

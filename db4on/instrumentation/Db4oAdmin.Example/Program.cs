@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using com.db4o;
+using com.db4o.inside;
 
 namespace Db4oShell.Example
 {
@@ -36,7 +37,7 @@ namespace Db4oShell.Example
 			
 			using (ObjectContainer container = Db4o.OpenFile(dataFile))
 			{
-				((YapStream)container).GetNativeQueryHandler().QueryExecution += new com.db4o.inside.query.QueryExecutionHandler(Program_QueryExecution);
+				((ObjectContainerBase)container).GetNativeQueryHandler().QueryExecution += new com.db4o.inside.query.QueryExecutionHandler(Program_QueryExecution);
 				container.Set(new Item("Foo"));
 				container.Set(new Item("Bar"));
 				

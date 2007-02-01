@@ -4,7 +4,7 @@ using System.Collections;
 using com.db4o.ext;
 using com.db4o.foundation;
 
-namespace com.db4o {
+namespace com.db4o.inside {
 
     internal class YapReferenceQueue{
 

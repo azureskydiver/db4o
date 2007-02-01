@@ -8,6 +8,7 @@ namespace Db4oTools {
 
 	using com.db4o;
 	using com.db4o.ext;
+	using com.db4o.inside;
 	using com.db4o.foundation;
 
     /**
