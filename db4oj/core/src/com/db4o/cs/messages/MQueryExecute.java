@@ -5,6 +5,7 @@ package com.db4o.cs.messages;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 
 public final class MQueryExecute extends MsgQuery {

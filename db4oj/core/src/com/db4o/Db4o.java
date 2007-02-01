@@ -27,7 +27,6 @@ import com.db4o.reflect.Reflector;
 public class Db4o {
 	
 	static final Config4Impl i_config = new Config4Impl();
-	private static Sessions i_sessions = new Sessions();
 	
 	static {
 		Platform4.getDefaultConfiguration(i_config);
@@ -173,7 +172,7 @@ public class Db4o {
 	 */
 	public static final ObjectContainer openFile(Configuration config,String databaseFileName) throws DatabaseFileLockedException {
 		synchronized(Global4.lock){
-			return i_sessions.open(config,databaseFileName);
+			return Sessions.open(config,databaseFileName);
 		}
 	}
 
@@ -262,13 +261,6 @@ public class Db4o {
 		return i_config.reflector();
 	}
 	
-	static void forEachSession(Visitor4 visitor){
-		i_sessions.forEach(visitor);
-	}
-
-	static void sessionStopped(Session a_session){
-		i_sessions.remove(a_session);
-	}
 	
 	/**
      * returns the version name of the used db4o version.

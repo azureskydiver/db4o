@@ -3,6 +3,7 @@
 package com.db4o.inside.freespace;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 class FreespaceIxLength extends FreespaceIx{

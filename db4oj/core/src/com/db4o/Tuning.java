@@ -13,5 +13,5 @@ public class Tuning {
      */
     public static final boolean symbianSeek = false;
     
-    static final boolean readableMessages = true;
+    public static final boolean readableMessages = true;
 }

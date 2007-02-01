@@ -3,6 +3,7 @@
 package com.db4o.test.types;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 import com.db4o.test.*;
 
 public class MasterMonster extends RTest

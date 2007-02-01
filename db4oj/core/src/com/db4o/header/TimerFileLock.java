@@ -5,6 +5,7 @@ package com.db4o.header;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 /**

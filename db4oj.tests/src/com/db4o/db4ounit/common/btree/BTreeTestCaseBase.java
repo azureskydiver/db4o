@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.Transaction;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.btree.BTreePointer;
 import com.db4o.inside.btree.BTreeRange;

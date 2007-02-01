@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.db4o.Config4Class;
 import com.db4o.config.Configuration;
 import com.db4o.config.annotations.CalledConstructor;
 import com.db4o.config.annotations.GeneratedUUIDs;
@@ -17,6 +16,7 @@ import com.db4o.config.annotations.Indexed;
 import com.db4o.config.annotations.PersistedStaticFieldValues;
 import com.db4o.config.annotations.StoredTransientFields;
 import com.db4o.config.annotations.UpdatedDepth;
+import com.db4o.inside.*;
 
 /**
  * sets db4o configurations accordingly annotations

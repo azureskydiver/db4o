@@ -4,11 +4,11 @@ import com.db4o.query.Query;
 import com.db4o.query.Constraint;
 import com.db4o.query.Constraints;
 import com.db4o.query.QueryComparator;
-import com.db4o.QQuery;
 import com.db4o.ObjectSet;
 import com.db4o.cs.client.ClientConstraint;
 import com.db4o.cs.client.Db4oClient;
 import com.db4o.cs.client.ObjectSetListWrapper;
+import com.db4o.inside.*;
 
 import java.util.*;
 import java.io.Serializable;

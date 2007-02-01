@@ -3,6 +3,7 @@
 package com.db4o.handlers;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude

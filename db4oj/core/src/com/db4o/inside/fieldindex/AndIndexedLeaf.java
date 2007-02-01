@@ -3,6 +3,7 @@
 package com.db4o.inside.fieldindex;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 public class AndIndexedLeaf extends JoinedLeaf {
 

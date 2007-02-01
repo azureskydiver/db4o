@@ -1,8 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 package com.db4o.inside.btree;
 
-import com.db4o.Transaction;
 import com.db4o.foundation.No4;
+import com.db4o.inside.*;
 
 /**
  * @exclude

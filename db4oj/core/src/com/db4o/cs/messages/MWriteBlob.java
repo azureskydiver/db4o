@@ -11,6 +11,7 @@ import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.ext.Status;
 import com.db4o.foundation.network.YapSocket;
+import com.db4o.inside.*;
 
 
 public class MWriteBlob extends MsgBlob {

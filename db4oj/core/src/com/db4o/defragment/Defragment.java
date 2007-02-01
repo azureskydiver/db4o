@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 

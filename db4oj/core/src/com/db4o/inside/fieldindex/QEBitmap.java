@@ -2,7 +2,7 @@
 
 package com.db4o.inside.fieldindex;
 
-import com.db4o.QE;
+import com.db4o.inside.*;
 
 class QEBitmap {
 	public static QEBitmap forQE(QE qe) {

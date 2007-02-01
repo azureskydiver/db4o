@@ -2,8 +2,8 @@
 
 package com.db4o.db4ounit.common.header;
 
-import com.db4o.YapFile;
 import com.db4o.ext.Db4oDatabase;
+import com.db4o.inside.*;
 
 import db4ounit.Assert;
 import db4ounit.ArrayAssert;

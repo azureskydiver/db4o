@@ -5,6 +5,7 @@ package com.db4o.io;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * IO adapter for random access files.

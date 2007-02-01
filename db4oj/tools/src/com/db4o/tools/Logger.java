@@ -8,6 +8,7 @@ import java.lang.reflect.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * Logger class to log and analyse objects in RAM.

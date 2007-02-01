@@ -5,6 +5,7 @@ package com.db4o.tools;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * prints statistics about a database file to System.out.

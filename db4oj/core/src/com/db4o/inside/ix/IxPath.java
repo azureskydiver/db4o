@@ -2,8 +2,8 @@
 
 package com.db4o.inside.ix;
 
-import com.db4o.QE;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
 
 /**

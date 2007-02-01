@@ -3,6 +3,7 @@
 package com.db4o.inside.classindex;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude

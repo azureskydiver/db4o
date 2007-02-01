@@ -4,6 +4,7 @@ package com.db4o.inside.replication;
 
 import com.db4o.*;
 import com.db4o.foundation.Hashtable4;
+import com.db4o.inside.*;
 
 /**
  * @exclude

@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.querying;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;

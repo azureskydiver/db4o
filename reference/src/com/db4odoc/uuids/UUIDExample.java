@@ -8,11 +8,11 @@ import java.util.Date;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.YapFile;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.TimeStampIdGenerator;
+import com.db4o.inside.*;
 import com.db4o.query.Query;
 
 

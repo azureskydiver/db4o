@@ -5,6 +5,7 @@ package com.db4o.handlers;
 import java.math.*;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude

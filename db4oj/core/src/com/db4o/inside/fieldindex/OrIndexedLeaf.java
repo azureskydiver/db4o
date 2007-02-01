@@ -2,7 +2,7 @@
 
 package com.db4o.inside.fieldindex;
 
-import com.db4o.QCon;
+import com.db4o.inside.*;
 
 public class OrIndexedLeaf extends JoinedLeaf {
 	

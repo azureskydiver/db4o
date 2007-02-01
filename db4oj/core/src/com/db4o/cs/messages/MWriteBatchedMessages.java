@@ -2,8 +2,6 @@
 
 package com.db4o.cs.messages;
 
-import com.db4o.Transaction;
-import com.db4o.YapConst;
 import com.db4o.cs.YapServerThread;
 import com.db4o.inside.*;
 

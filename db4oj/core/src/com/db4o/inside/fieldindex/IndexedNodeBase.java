@@ -4,6 +4,7 @@ package com.db4o.inside.fieldindex;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 
 public abstract class IndexedNodeBase  implements IndexedNode {

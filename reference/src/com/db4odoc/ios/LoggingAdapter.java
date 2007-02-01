@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 
 import com.db4o.DTrace;
-import com.db4o.Platform4;
+import com.db4o.inside.*;
 import com.db4o.io.IoAdapter;
 
 public class LoggingAdapter extends IoAdapter {

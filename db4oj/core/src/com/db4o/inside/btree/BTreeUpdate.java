@@ -5,8 +5,8 @@ package com.db4o.inside.btree;
 /**
  * @exclude
  */
-import com.db4o.Transaction;
 import com.db4o.foundation.No4;
+import com.db4o.inside.*;
 
 public abstract class BTreeUpdate extends BTreePatch {
 

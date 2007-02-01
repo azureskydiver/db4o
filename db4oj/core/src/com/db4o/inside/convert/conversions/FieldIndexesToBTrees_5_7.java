@@ -4,6 +4,7 @@ package com.db4o.inside.convert.conversions;
 
 import com.db4o.*;
 import com.db4o.header.*;
+import com.db4o.inside.*;
 import com.db4o.inside.convert.Conversion;
 import com.db4o.inside.convert.ConversionStage.*;
 

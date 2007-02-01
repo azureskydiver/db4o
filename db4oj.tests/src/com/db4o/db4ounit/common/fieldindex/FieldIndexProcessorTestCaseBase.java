@@ -1,11 +1,12 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
-import com.db4o.QQueryBase.CreateCandidateCollectionResult;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.foundation.Visitor4;
+import com.db4o.inside.*;
+import com.db4o.inside.QQueryBase.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.classindex.BTreeClassIndexStrategy;
 import com.db4o.inside.fieldindex.*;

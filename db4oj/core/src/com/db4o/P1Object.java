@@ -113,7 +113,7 @@ public class P1Object implements Db4oTypeImpl{
         YapStream fromStream = fromTrans.stream();
         YapStream toStream = toTrans.stream();
         
-        MigrationConnection mgc = fromStream.i_handlers.i_migration;
+        MigrationConnection mgc = fromStream.i_handlers.migrationConnection();
         
         synchronized(fromStream.lock()){
             
