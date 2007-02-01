@@ -3,11 +3,11 @@
 using System;
 using j4o.lang;
 
-namespace com.db4o {
+namespace com.db4o.inside {
 
     abstract internal class YapTypeStruct : YapTypeAbstract {
 
-        public YapTypeStruct(com.db4o.YapStream stream) : base(stream) {
+        public YapTypeStruct(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
         }
 
         public override bool IsEqual(Object compare, Object with){

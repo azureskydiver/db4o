@@ -2,7 +2,7 @@
 
 using System;
 
-namespace com.db4o 
+namespace com.db4o.inside
 {
 	internal class YapRef : WeakReference
 	{

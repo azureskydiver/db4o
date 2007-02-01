@@ -1,4 +1,4 @@
-﻿namespace com.db4o
+﻿namespace com.db4o.inside
 {
 	using System;
 	using com.db4o.inside.query;
@@ -7,9 +7,9 @@
 	/// <summary>
 	/// </summary>
 	/// <exclude />
-	public abstract class YapStream : com.db4o.YapStreamBase, ObjectContainer, ExtObjectContainer
+	public abstract class ObjectContainerBase : com.db4o.inside.PartialObjectContainer, ObjectContainer, ExtObjectContainer
 	{
-		internal YapStream(com.db4o.config.Configuration config, com.db4o.YapStream a_parent)
+		internal ObjectContainerBase(com.db4o.config.Configuration config, com.db4o.inside.ObjectContainerBase a_parent)
 			: base(config, a_parent)
 		{
 		}
