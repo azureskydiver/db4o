@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 public class Compare {
 

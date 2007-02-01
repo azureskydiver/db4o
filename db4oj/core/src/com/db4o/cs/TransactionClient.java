@@ -5,6 +5,7 @@ package com.db4o.cs;
 import com.db4o.*;
 import com.db4o.cs.messages.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 final class TransactionClient extends Transaction {
 

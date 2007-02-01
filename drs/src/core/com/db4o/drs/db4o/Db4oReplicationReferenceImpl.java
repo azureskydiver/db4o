@@ -2,14 +2,12 @@
 
 package com.db4o.drs.db4o;
 
-import com.db4o.Transaction;
-import com.db4o.VirtualAttributes;
-import com.db4o.YapObject;
 import com.db4o.drs.inside.ReplicationReference;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.Visitor4;
+import com.db4o.inside.*;
 import com.db4o.inside.replication.Db4oReplicationReference;
 
 /**

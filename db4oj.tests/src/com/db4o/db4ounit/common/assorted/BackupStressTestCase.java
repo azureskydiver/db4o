@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.assorted;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 import com.db4o.query.*;
 
 import db4ounit.*;

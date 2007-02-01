@@ -2,7 +2,7 @@
 
 package com.db4o.drs.hibernate.metadata;
 
-import com.db4o.Unobfuscated;
+import com.db4o.inside.*;
 
 /**
  * Serves as the identifier of a HibernateReplicationProvider. 

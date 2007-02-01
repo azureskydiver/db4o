@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.header;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

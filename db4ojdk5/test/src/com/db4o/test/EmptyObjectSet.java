@@ -3,6 +3,8 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.inside.*;
+import com.db4o.inside.YapStream;
 
 
 public class EmptyObjectSet {

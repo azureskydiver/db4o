@@ -2,7 +2,7 @@
 
 package com.db4o.inside.btree;
 
-import com.db4o.Transaction;
+import com.db4o.inside.*;
 
 /**
  * @exclude

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.inside.*;
 import com.db4o.inside.replication.*;
 import com.db4o.query.*;
 import com.db4o.replication.*;
@@ -54,13 +55,13 @@ public class ReplicationImpl implements ReplicationProcess {
 
 				MigrationConnection mgc = new MigrationConnection(_peerA, _peerB);
 
-				_peerA.i_handlers.i_migration = mgc;
-				_peerA.i_handlers.i_replication = this;
-				_peerA._replicationCallState = YapConst.OLD;
+				_peerA.i_handlers.migrationConnection(mgc);
+				_peerA.i_handlers.replication(this);
+				_peerA.replicationCallState(YapConst.OLD);
 
-				_peerB.i_handlers.i_migration = mgc;
-				_peerB.i_handlers.i_replication = this;
-                _peerB._replicationCallState = YapConst.OLD;
+				_peerB.i_handlers.migrationConnection(mgc);
+				_peerB.i_handlers.replication(this);
+                _peerB.replicationCallState(YapConst.OLD);
 
 				_conflictHandler = conflictHandler;
 
@@ -115,13 +116,13 @@ public class ReplicationImpl implements ReplicationProcess {
 
 	private void endReplication() {
         
-		_peerA._replicationCallState = YapConst.NONE;
-        _peerA.i_handlers.i_migration = null;
-		_peerA.i_handlers.i_replication = null;
+		_peerA.replicationCallState(YapConst.NONE);
+        _peerA.i_handlers.migrationConnection(null);
+		_peerA.i_handlers.replication(null);
         
-        _peerA._replicationCallState = YapConst.NONE;
-        _peerB.i_handlers.i_migration = null;
-		_peerB.i_handlers.i_replication = null;
+        _peerA.replicationCallState(YapConst.NONE);
+        _peerB.i_handlers.migrationConnection(null);
+		_peerB.i_handlers.replication(null);
 	}
     
     private int idInCaller(YapStream caller, YapObject referenceA, YapObject referenceB){
@@ -240,7 +241,7 @@ public class ReplicationImpl implements ReplicationProcess {
      * if #set() should stop processing because of a direction 
      * setting.
 	 */
-	int tryToHandle(YapStream caller, Object obj) {
+	public int tryToHandle(YapStream caller, Object obj) {
         
         int notProcessed = 0;
         YapStream other = null;

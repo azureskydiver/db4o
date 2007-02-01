@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.Transaction;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 
 import db4ounit.Assert;

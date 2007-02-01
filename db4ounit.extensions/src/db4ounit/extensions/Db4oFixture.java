@@ -5,6 +5,7 @@ package db4ounit.extensions;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.inside.*;
 
 public interface Db4oFixture {
 	

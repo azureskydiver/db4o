@@ -2,16 +2,18 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+import com.db4o.inside.YapStream;
 import com.db4o.types.*;
 
 /**
  * @persistent
  */
-class P2Collections implements Db4oCollections{
+public class P2Collections implements Db4oCollections{
     
     final YapStream i_stream;
     
-    P2Collections(YapStream a_stream){
+    public P2Collections(YapStream a_stream){
         i_stream = a_stream;
     }
 

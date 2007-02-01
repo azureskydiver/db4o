@@ -2,7 +2,7 @@
 
 package com.db4o.ext;
 
-import com.db4o.Messages;
+import com.db4o.inside.*;
 
 /**
  * An old file was detected and could not be open.

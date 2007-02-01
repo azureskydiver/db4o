@@ -4,6 +4,7 @@ package com.db4o.inside.slots;
 
 import com.db4o.*;
 import com.db4o.foundation.Tree;
+import com.db4o.inside.*;
 
 /**
  * @exclude

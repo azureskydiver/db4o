@@ -3,6 +3,7 @@ package com.db4o.db4ounit.jre11.btree;
 import com.db4o.*;
 import com.db4o.db4ounit.common.btree.*;
 import com.db4o.foundation.ArgumentNullException;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 
 import db4ounit.*;

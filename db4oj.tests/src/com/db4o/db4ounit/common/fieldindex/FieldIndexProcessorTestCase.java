@@ -4,6 +4,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.BTreeAssert;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.fieldindex.*;
 import com.db4o.query.*;

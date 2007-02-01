@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.inside.*;
+import com.db4o.inside.YapStream;
 import com.db4o.query.*;
 import com.db4o.replication.*;
 import com.db4o.test.*;

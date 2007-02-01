@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 public class YapSocketReal implements YapSocket {
 

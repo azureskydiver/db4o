@@ -3,6 +3,8 @@
 package com.db4o.objectmanager.api.impl;
 
 import com.db4o.*;
+import com.db4o.inside.*;
+import com.db4o.inside.YapStream;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.reflect.*;

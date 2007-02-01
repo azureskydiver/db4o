@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.ExpectingVisitor;
 import com.db4o.foundation.Visitor4;
+import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
 import com.db4o.inside.slots.Slot;
 import com.db4o.query.Query;

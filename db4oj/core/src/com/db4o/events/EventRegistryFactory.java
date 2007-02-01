@@ -3,9 +3,9 @@
 package com.db4o.events;
 
 import com.db4o.ObjectContainer;
-import com.db4o.YapStream;
 import com.db4o.events.impl.EventRegistryImpl;
 import com.db4o.foundation.ArgumentNullException;
+import com.db4o.inside.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.callbacks.NullCallbacks;
 

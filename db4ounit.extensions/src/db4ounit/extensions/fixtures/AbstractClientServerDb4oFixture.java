@@ -6,6 +6,7 @@ import java.io.File;
 
 import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
+import com.db4o.inside.*;
 
 
 public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{

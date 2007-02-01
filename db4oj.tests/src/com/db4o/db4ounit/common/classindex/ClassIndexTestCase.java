@@ -2,8 +2,8 @@
 
 package com.db4o.db4ounit.common.classindex;
 
-import com.db4o.YapClass;
 import com.db4o.db4ounit.common.btree.ExpectingVisitor;
+import com.db4o.inside.*;
 import com.db4o.inside.classindex.ClassIndexStrategy;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
