@@ -27,7 +27,7 @@ public abstract class FileHeader {
     }
 
     public static FileHeader readFixedPart(YapFile file) throws IOException{
-        YapReader reader = prepareFileHeaderReader(file);
+        Buffer reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){
             Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT);
@@ -37,13 +37,13 @@ public abstract class FileHeader {
         return header;
     }
 
-	private static YapReader prepareFileHeaderReader(YapFile file) {
-		YapReader reader = new YapReader(readerLength()); 
+	private static Buffer prepareFileHeaderReader(YapFile file) {
+		Buffer reader = new Buffer(readerLength()); 
         reader.read(file, 0, 0);
 		return reader;
 	}
 
-	private static FileHeader detectFileHeader(YapFile file, YapReader reader) {
+	private static FileHeader detectFileHeader(YapFile file, Buffer reader) {
         for (int i = 0; i < AVAILABLE_FILE_HEADERS.length; i++) {
             reader.seek(0);
             FileHeader result = AVAILABLE_FILE_HEADERS[i].newOnSignatureMatch(file, reader);
@@ -62,17 +62,17 @@ public abstract class FileHeader {
 
     public abstract int length();
     
-    protected abstract FileHeader newOnSignatureMatch(YapFile file, YapReader reader);
+    protected abstract FileHeader newOnSignatureMatch(YapFile file, Buffer reader);
     
     protected long timeToWrite(long time, boolean shuttingDown) {
         return shuttingDown ? 0 : time;
     }
 
-    protected abstract void readFixedPart(YapFile file, YapReader reader) throws IOException;
+    protected abstract void readFixedPart(YapFile file, Buffer reader) throws IOException;
 
     public abstract void readVariablePart(YapFile file);
     
-    protected boolean signatureMatches(YapReader reader, byte[] signature, byte version){
+    protected boolean signatureMatches(Buffer reader, byte[] signature, byte version){
         for (int i = 0; i < signature.length; i++) {
             if(reader.readByte() != signature[i]){
                 return false;
@@ -83,12 +83,12 @@ public abstract class FileHeader {
     
     // TODO: freespaceID should not be passed here, it should be taken from SystemData
     public abstract void writeFixedPart(
-        YapFile file, boolean shuttingDown, YapWriter writer, int blockSize, int freespaceID);
+        YapFile file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID);
     
     public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionAddress);
 
     protected void writeTransactionPointer(Transaction systemTransaction, int transactionAddress, final int address, final int offset) {
-        YapWriter bytes = new YapWriter(systemTransaction, address, YapConst.INT_LENGTH * 2);
+        StatefulBuffer bytes = new StatefulBuffer(systemTransaction, address, YapConst.INT_LENGTH * 2);
         bytes.moveForward(offset);
         bytes.writeInt(transactionAddress);
         bytes.writeInt(transactionAddress);
@@ -100,7 +100,7 @@ public abstract class FileHeader {
     
     public abstract void writeVariablePart(YapFile file, int part);
 
-    protected void readClassCollectionAndFreeSpace(YapFile file, YapReader reader) {
+    protected void readClassCollectionAndFreeSpace(YapFile file, Buffer reader) {
         SystemData systemData = file.systemData();
         systemData.classCollectionID(reader.readInt());
         systemData.freespaceID(reader.readInt());

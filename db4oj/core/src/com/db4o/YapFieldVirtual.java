@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.QQueryBase.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.replication.*;
@@ -21,7 +22,7 @@ public abstract class YapFieldVirtual extends YapField {
         super(null);
     }
     
-    public abstract void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter a_writer, Slot oldSlot);
+    public abstract void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer a_writer, Slot oldSlot);
     
     public boolean alive() {
         return true;
@@ -52,7 +53,7 @@ public abstract class YapFieldVirtual extends YapField {
         // do nothing
     }
     
-    public abstract void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate);
+    public abstract void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate);
     
     public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling
@@ -68,13 +69,13 @@ public abstract class YapFieldVirtual extends YapField {
         return false;
     }
 
-    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
+    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, StatefulBuffer a_bytes)
         throws CorruptionException {
     	a_yapObject.produceVirtualAttributes();
         instantiate1(a_bytes.getTransaction(), a_yapObject, a_bytes);
     }
 
-    abstract void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes);
+    abstract void instantiate1(Transaction a_trans, YapObject a_yapObject, Buffer a_bytes);
     
     public void loadHandler(YapStream a_stream){
     	// do nothing
@@ -84,11 +85,11 @@ public abstract class YapFieldVirtual extends YapField {
             YapObject a_yapObject, 
             Object a_object,
             MarshallerFamily mf, 
-            YapWriter a_bytes,
+            StatefulBuffer a_bytes,
             Config4Class a_config, 
             boolean a_new) {
         
-        Transaction trans = a_bytes.i_trans;
+        Transaction trans = a_bytes.getTransaction();
         
         if(! trans.supportsVirtualFields()){
             marshallIgnore(a_bytes);
@@ -149,12 +150,12 @@ public abstract class YapFieldVirtual extends YapField {
 	    marshall1(a_yapObject, a_bytes, migrating, a_new);
     }
 
-    abstract void marshall1(YapObject a_yapObject, YapWriter a_bytes,
+    abstract void marshall1(YapObject a_yapObject, StatefulBuffer a_bytes,
         boolean a_migrating, boolean a_new);
     
-    abstract void marshallIgnore(YapReader writer);
+    abstract void marshallIgnore(Buffer writer);
     
-    public void readVirtualAttribute(Transaction a_trans, YapReader a_reader, YapObject a_yapObject) {
+    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, YapObject a_yapObject) {
         if(! a_trans.supportsVirtualFields()){
             a_reader.incrementOffset(linkLength());
             return;

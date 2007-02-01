@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
@@ -23,7 +24,7 @@ public final class YapArrayN extends YapArray {
         return flat;
     }
 
-    public final int elementCount(Transaction a_trans, YapReader a_bytes) {
+    public final int elementCount(Transaction a_trans, Buffer a_bytes) {
         return elementCount(readDimensions(a_trans, a_bytes, new ReflectClass[1]));
     }
 
@@ -52,7 +53,7 @@ public final class YapArrayN extends YapArray {
             + (YapConst.INT_LENGTH * (2 + dim.length));
     }
 
-    public final Object read1(MarshallerFamily mf, YapWriter reader) throws CorruptionException {
+    public final Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException {
         
         if (Deploy.debug) {
             reader.readBegin(identifier());
@@ -84,7 +85,7 @@ public final class YapArrayN extends YapArray {
 	    return elementCount(dimensions);
     }
     
-    public final void read1Candidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
+    public final void read1Candidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) {
         if(Deploy.debug){
             reader.readBegin(identifier());
         }
@@ -106,7 +107,7 @@ public final class YapArrayN extends YapArray {
         }
     }
     
-	public final Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_bytes) throws CorruptionException {
+	public final Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_bytes) throws CorruptionException {
         
         if(Deploy.debug){
             a_bytes.readBegin(identifier());
@@ -129,7 +130,7 @@ public final class YapArrayN extends YapArray {
 		return ret[0];
 	}
 
-    private int[] read1Create(Transaction a_trans, YapReader a_bytes, Object[] obj) {
+    private int[] read1Create(Transaction a_trans, Buffer a_bytes, Object[] obj) {
 		ReflectClass[] clazz = new ReflectClass[1];
 		int[] dim = readDimensions(a_trans, a_bytes, clazz);
         if (i_isPrimitive) {
@@ -142,7 +143,7 @@ public final class YapArrayN extends YapArray {
         return dim;
     }
 
-    private final int[] readDimensions(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz) {
+    private final int[] readDimensions(Transaction a_trans, Buffer a_bytes, ReflectClass[] clazz) {
         int[] dim = new int[readElementsAndClass(a_trans, a_bytes, clazz)];
         for (int i = 0; i < dim.length; i++) {
             dim[i] = a_bytes.readInt();
@@ -150,7 +151,7 @@ public final class YapArrayN extends YapArray {
         return dim;
     }
 
-    public final void writeNew1(Object obj, YapWriter writer) {
+    public final void writeNew1(Object obj, StatefulBuffer writer) {
         
         if (Deploy.debug) {
             writer.writeBegin(identifier());

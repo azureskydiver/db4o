@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.inside.diagnostic.DiagnosticProcessor;
 import com.db4o.inside.fieldindex.*;
@@ -229,7 +230,7 @@ public final class QCandidates implements Visitor4 {
 				
 				protected Object map(Object current) {
 					int id = ((Integer)current).intValue();
-                    YapWriter reader = stream().readWriterByID(i_trans, id);
+                    StatefulBuffer reader = stream().readWriterByID(i_trans, id);
                     if (reader == null) {
                     	return MappingIterator.SKIP;
                     }

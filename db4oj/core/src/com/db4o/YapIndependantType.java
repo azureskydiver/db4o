@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
@@ -29,7 +30,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
 		// do nothing
 	}
     
-    public abstract void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes);
+    public abstract void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes);
     
     public boolean hasFixedLength(){
         return false;
@@ -49,15 +50,15 @@ public abstract class YapIndependantType implements TypeHandler4 {
 		return null;
 	}
     
-    public boolean readArray(Object array, YapReader reader) {
+    public boolean readArray(Object array, Buffer reader) {
         return false;
     }
 	
-    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
         return read(mf, a_writer, true);
     }
 	
-    public boolean writeArray(Object array, YapReader reader) {
+    public boolean writeArray(Object array, Buffer reader) {
         return false;
     }
     
@@ -69,8 +70,8 @@ public abstract class YapIndependantType implements TypeHandler4 {
     public abstract boolean isSmaller(Object obj);
     
     public abstract Object comparableObject(Transaction trans, Object indexEntry);
-    public abstract Object readIndexEntry(YapReader a_reader);
-    public abstract void writeIndexEntry(YapReader a_writer, Object a_object);
+    public abstract Object readIndexEntry(Buffer a_reader);
+    public abstract void writeIndexEntry(Buffer a_writer, Object a_object);
     
     public abstract void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
 }

@@ -4,6 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -42,9 +43,9 @@ public class BTreePointer{
 
 	private final Transaction _transaction;
 
-	private final YapReader _nodeReader;
+	private final Buffer _nodeReader;
    
-    public BTreePointer(Transaction transaction, YapReader nodeReader, BTreeNode node, int index) {
+    public BTreePointer(Transaction transaction, Buffer nodeReader, BTreeNode node, int index) {
     	if(transaction == null || node == null){
             throw new ArgumentNullException();
         }
@@ -74,7 +75,7 @@ public class BTreePointer{
 		return node().value(nodeReader(), index());
 	}
 	
-	private YapReader nodeReader() {
+	private Buffer nodeReader() {
 		return _nodeReader;
 	}
     
@@ -88,7 +89,7 @@ public class BTreePointer{
         }
         int newIndex = -1;
         BTreeNode nextNode = node();
-        YapReader nextReader = null;
+        Buffer nextReader = null;
         while(newIndex == -1){
             nextNode = nextNode.nextNode();
             if(nextNode == null){
@@ -110,7 +111,7 @@ public class BTreePointer{
 		}
 		int newIndex = -1;
 		BTreeNode previousNode = node();
-		YapReader previousReader = null;
+		Buffer previousReader = null;
 		while(newIndex == -1){
 			previousNode = previousNode.previousNode();
 			if(previousNode == null){

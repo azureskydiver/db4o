@@ -4,6 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.ArgumentNullException;
+import com.db4o.inside.*;
 
 
 /**
@@ -29,11 +30,11 @@ public class BTreeNodeSearchResult {
         _foundMatch = foundMatch;
     }
 
-    BTreeNodeSearchResult(Transaction trans, YapReader nodeReader, BTree btree, BTreeNode node, int cursor, boolean foundMatch) {
+    BTreeNodeSearchResult(Transaction trans, Buffer nodeReader, BTree btree, BTreeNode node, int cursor, boolean foundMatch) {
         this(trans, btree, pointerOrNull(trans, nodeReader, node, cursor), foundMatch);
     }
 
-    BTreeNodeSearchResult(Transaction trans, YapReader nodeReader, BTree btree, Searcher searcher, BTreeNode node) {
+    BTreeNodeSearchResult(Transaction trans, Buffer nodeReader, BTree btree, Searcher searcher, BTreeNode node) {
         this(trans,
         	btree,
             nextPointerIf(pointerOrNull(trans, nodeReader, node, searcher.cursor()), searcher.isGreater()),
@@ -50,7 +51,7 @@ public class BTreeNodeSearchResult {
         return pointer;
     }
     
-    private static BTreePointer pointerOrNull(Transaction trans, YapReader nodeReader, BTreeNode node, int cursor) {
+    private static BTreePointer pointerOrNull(Transaction trans, Buffer nodeReader, BTreeNode node, int cursor) {
         return node == null ? null : new BTreePointer(trans, nodeReader, node, cursor);
     }
     

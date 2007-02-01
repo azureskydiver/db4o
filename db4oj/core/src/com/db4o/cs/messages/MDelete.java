@@ -4,10 +4,11 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.*;
+import com.db4o.inside.*;
 
 public final class MDelete extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
-		YapReader bytes = this.getByteLoad();
+		Buffer bytes = this.getByteLoad();
 		YapStream stream = stream();
 		synchronized (streamLock()) {
 			Object obj = stream.getByID1(transaction(), bytes.readInt());

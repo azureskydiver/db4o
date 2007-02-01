@@ -302,7 +302,7 @@ public class YapRandomAccessFile extends YapFile {
     void reserve(int byteCount) {
         synchronized (i_lock) {
             int address = getSlot(byteCount);
-            writeBytes(new YapReader(byteCount), address, 0);
+            writeBytes(new Buffer(byteCount), address, 0);
             free(address, byteCount);
         }
     }
@@ -328,7 +328,7 @@ public class YapRandomAccessFile extends YapFile {
             }
             i_timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
-                YapReader lockBytes = new YapWriter(i_systemTrans, YapConst.LONG_LENGTH);
+                Buffer lockBytes = new StatefulBuffer(i_systemTrans, YapConst.LONG_LENGTH);
                 lockBytes.writeLong(time);
                 i_timerFile.write(lockBytes._buffer);
             } else {
@@ -352,7 +352,7 @@ public class YapRandomAccessFile extends YapFile {
     }
     
 
-    public void writeBytes(YapReader a_bytes, int address, int addressOffset) {
+    public void writeBytes(Buffer a_bytes, int address, int addressOffset) {
         if (configImpl().isReadOnly()) {
             return;
         }
@@ -365,8 +365,8 @@ public class YapRandomAccessFile extends YapFile {
             if (Debug.xbytes && Deploy.overwrite) {
                 
                 boolean doCheck = true;
-                if(a_bytes instanceof YapWriter){
-                    YapWriter writer = (YapWriter)a_bytes;
+                if(a_bytes instanceof StatefulBuffer){
+                    StatefulBuffer writer = (StatefulBuffer)a_bytes;
                     if(writer.getID() == YapConst.IGNORE_ID){
                         doCheck = false;
                     }

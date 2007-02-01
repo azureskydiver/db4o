@@ -4,7 +4,7 @@ package com.db4o.inside.classindex;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.Exceptions4;
+import com.db4o.inside.*;
 import com.db4o.inside.slots.Slot;
 
 /**
@@ -52,7 +52,7 @@ import com.db4o.inside.slots.Slot;
         if(Deploy.debug){
             length += YapConst.LEADING_LENGTH;
         }
-        YapReader reader = new YapReader(length);
+        Buffer reader = new Buffer(length);
         reader.readEncrypt(ta.stream(), slot._address);
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
@@ -72,11 +72,11 @@ import com.db4o.inside.slots.Slot;
         return YapConst.OBJECT_LENGTH + byteCount();
     }
 
-    public final Object read(YapReader a_reader) {
+    public final Object read(Buffer a_reader) {
     	throw Exceptions4.virtualException();
     }
 
-    public final void readThis(Transaction a_trans, YapReader a_reader) {
+    public final void readThis(Transaction a_trans, Buffer a_reader) {
     	i_root = (TreeInt)new TreeReader(a_reader, new TreeInt(0)).read();
     }
 
@@ -89,11 +89,11 @@ import com.db4o.inside.slots.Slot;
         a_stream.setDirtyInSystemTransaction(this);
     }
 
-    public void write(YapReader a_writer) {
+    public void write(Buffer a_writer) {
         writeThis(null, a_writer);
     }
 
-    public final void writeThis(Transaction trans, final YapReader a_writer) {
+    public final void writeThis(Transaction trans, final Buffer a_writer) {
     	TreeInt.write(a_writer, i_root);
     }
     

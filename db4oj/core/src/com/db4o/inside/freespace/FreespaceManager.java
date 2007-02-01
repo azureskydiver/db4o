@@ -3,6 +3,7 @@
 package com.db4o.inside.freespace;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 public abstract class FreespaceManager {
     
@@ -51,7 +52,7 @@ public abstract class FreespaceManager {
     }
     
     static void slotEntryToZeroes(YapFile file, int address){
-        YapWriter writer = new YapWriter(file.getSystemTransaction(), address, slotLength());
+        StatefulBuffer writer = new StatefulBuffer(file.getSystemTransaction(), address, slotLength());
         for (int i = 0; i < INTS_IN_SLOT; i++) {
             writer.writeInt(0);
         }

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 /**
  * @exclude
  */
@@ -51,7 +53,7 @@ public class YapStringIO {
 	    }
 	}
 	
-	public String read(YapReader bytes, int a_length){
+	public String read(Buffer bytes, int a_length){
 	    checkBufferLength(a_length);
 		for(int ii = 0; ii < a_length; ii++){
 			chars[ii] = (char)(bytes._buffer[bytes._offset ++]& 0xff);
@@ -79,7 +81,7 @@ public class YapStringIO {
 	}
 	        
 	
-	public void write(YapReader bytes, String string){
+	public void write(Buffer bytes, String string){
 	    final int len = writetoBuffer(string);
 	    for (int i = 0; i < len; i ++){
 			bytes._buffer[bytes._offset++] = (byte) (chars[i] & 0xff);

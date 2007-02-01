@@ -5,6 +5,7 @@ package com.db4o.header;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 /**
@@ -56,7 +57,7 @@ public class FileHeader1 extends FileHeader {
         writeVariablePart(file, 0);
     }
     
-    protected FileHeader newOnSignatureMatch(YapFile file, YapReader reader) {
+    protected FileHeader newOnSignatureMatch(YapFile file, Buffer reader) {
         if(signatureMatches(reader, SIGNATURE, VERSION)){
             return new FileHeader1();
         }
@@ -75,7 +76,7 @@ public class FileHeader1 extends FileHeader {
         return LENGTH;
     }
 
-    protected void readFixedPart(YapFile file, YapReader reader) throws IOException {
+    protected void readFixedPart(YapFile file, Buffer reader) throws IOException {
         commonTasksForNewAndRead(file);
         reader.seek(TRANSACTION_POINTER_OFFSET);
         _interruptedTransaction = Transaction.readInterruptedTransaction(file, reader);
@@ -94,7 +95,7 @@ public class FileHeader1 extends FileHeader {
     }
     
     public void writeFixedPart(
-        YapFile file, boolean shuttingDown, YapWriter writer, int blockSize, int freespaceID) {
+        YapFile file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
         writer.append(SIGNATURE);
         writer.append(VERSION);
         writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));

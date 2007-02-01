@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -41,11 +42,11 @@ public class YLong extends YapJavaClass {
 		return i_primitive;
 	}
 	
-	Object read1(YapReader a_bytes){
+	Object read1(Buffer a_bytes){
 		return new Long(readLong(a_bytes));
 	}
 	
-	public static final long readLong(YapReader a_bytes){
+	public static final long readLong(Buffer a_bytes){
 		long l_return = 0;
 		if (Deploy.debug){
 			a_bytes.readBegin(YapConst.YAPLONG);
@@ -65,11 +66,11 @@ public class YLong extends YapJavaClass {
 		return l_return;
 	}
 
-	public void write(Object a_object, YapReader a_bytes){
+	public void write(Object a_object, Buffer a_bytes){
 	    writeLong(((Long)a_object).longValue(), a_bytes);
 	}
 	
-	public static final void writeLong(long a_long, YapReader a_bytes){
+	public static final void writeLong(long a_long, Buffer a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPLONG);
 			if(Deploy.debugLong){

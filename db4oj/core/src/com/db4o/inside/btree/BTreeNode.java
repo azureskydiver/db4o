@@ -4,6 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 
 /**
@@ -104,7 +105,7 @@ public final class BTreeNode extends YapMeta{
      */
     public BTreeNode add(Transaction trans){
         
-        YapReader reader = prepareRead(trans);
+        Buffer reader = prepareRead(trans);
         
         Searcher s = search(reader);
         
@@ -188,7 +189,7 @@ public final class BTreeNode extends YapMeta{
 	}
     
     BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
-        YapReader reader = prepareRead(trans);
+        Buffer reader = prepareRead(trans);
         Searcher s = search(reader, target);
         if(! _isLeaf){
             return child(reader, s.cursor()).searchLeaf(trans, target);
@@ -214,7 +215,7 @@ public final class BTreeNode extends YapMeta{
 		return findLowestLeafMatch(trans, prepareRead(trans), index);
 	}
 	
-	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, YapReader reader, int index){
+	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, Buffer reader, int index){
         
         if(index >= 0){
             if(!compareEquals(reader, index)){
@@ -231,7 +232,7 @@ public final class BTreeNode extends YapMeta{
         
         final BTreeNode node = previousNode();
         if(node != null){
-        	final YapReader nodeReader = node.prepareRead(trans);
+        	final Buffer nodeReader = node.prepareRead(trans);
             BTreeNodeSearchResult res = node.findLowestLeafMatch(trans, nodeReader, node.lastIndex());
             if(res != null){
                 return res;
@@ -245,14 +246,14 @@ public final class BTreeNode extends YapMeta{
         return createMatchingSearchResult(trans, reader, index);
     }
 
-	private boolean compareEquals(final YapReader reader, int index) {
+	private boolean compareEquals(final Buffer reader, int index) {
 		if(canWrite()){
 			return compareInWriteMode(index) == 0;
 		}
 		return compareInReadMode(reader, index) == 0;
 	}
 
-    private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, YapReader reader, int index) {
+    private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, Buffer reader, int index) {
         return new BTreeNodeSearchResult(trans, reader, btree(), this, index, true);
     }
     
@@ -267,7 +268,7 @@ public final class BTreeNode extends YapMeta{
         return _btree.produceNode(((Integer)_children[index]).intValue());
     }
     
-    BTreeNode child(YapReader reader, int index){
+    BTreeNode child(Buffer reader, int index){
         if( childLoaded(index) ){
             return (BTreeNode)_children[index];
         }
@@ -282,7 +283,7 @@ public final class BTreeNode extends YapMeta{
         return child;
     }
     
-    private int childID(YapReader reader, int index){
+    private int childID(Buffer reader, int index){
         if(_children == null){
             seekChild(reader, index);
             return reader.readInt();
@@ -495,7 +496,7 @@ public final class BTreeNode extends YapMeta{
         return keyHandler().compareTo(key(index));
     }
     
-    private int compareInReadMode(YapReader reader, int index){
+    private int compareInReadMode(Buffer reader, int index){
         seekKey(reader, index);
         return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
     }
@@ -603,7 +604,7 @@ public final class BTreeNode extends YapMeta{
         return obj;
     }
     
-    Object key(Transaction trans, YapReader reader, int index){
+    Object key(Transaction trans, Buffer reader, int index){
         if(canWrite()){
             return key(trans, index);
         }
@@ -667,7 +668,7 @@ public final class BTreeNode extends YapMeta{
           + YapConst.BRACKETS_BYTES;
     }
     
-    YapReader prepareRead(Transaction trans){
+    Buffer prepareRead(Transaction trans){
 
         if(canWrite()){
             return null;
@@ -683,7 +684,7 @@ public final class BTreeNode extends YapMeta{
             return null;
         }
         
-        YapReader reader = trans.i_file.readReaderByID(trans.systemTransaction(), getID());
+        Buffer reader = trans.i_file.readReaderByID(trans.systemTransaction(), getID());
         
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
@@ -728,7 +729,7 @@ public final class BTreeNode extends YapMeta{
         }
     }
     
-    private void readNodeHeader(YapReader reader){
+    private void readNodeHeader(Buffer reader){
         _count = reader.readInt();
         byte leafByte = reader.readByte();
         _isLeaf = (leafByte == 1);
@@ -737,7 +738,7 @@ public final class BTreeNode extends YapMeta{
         _nextID = reader.readInt();
     }
     
-    public void readThis(Transaction trans, YapReader reader) {
+    public void readThis(Transaction trans, Buffer reader) {
         readNodeHeader(reader);
 
         prepareArrays();
@@ -846,11 +847,11 @@ public final class BTreeNode extends YapMeta{
         commitOrRollback(trans, false);
     }
     
-    private Searcher search(YapReader reader){
+    private Searcher search(Buffer reader){
         return search(reader, SearchTarget.ANY);
     }
     
-    private Searcher search(YapReader reader, SearchTarget target){
+    private Searcher search(Buffer reader, SearchTarget target){
         Searcher s = new Searcher(target, _count);
         if(canWrite()){
             while(s.incomplete()){
@@ -864,20 +865,20 @@ public final class BTreeNode extends YapMeta{
         return s;
     }
     
-    private void seekAfterKey(YapReader reader, int ix){
+    private void seekAfterKey(Buffer reader, int ix){
         seekKey(reader, ix);
         reader._offset += keyHandler().linkLength();
     }
     
-    private void seekChild(YapReader reader, int ix){
+    private void seekChild(Buffer reader, int ix){
         seekAfterKey(reader, ix);
     }
     
-    private void seekKey(YapReader reader, int ix){
+    private void seekKey(Buffer reader, int ix){
         reader._offset = SLOT_LEADING_LENGTH + (entryLength() * ix);
     }
     
-    private void seekValue(YapReader reader, int ix){
+    private void seekValue(Buffer reader, int ix){
         if(handlesValues()){
             seekAfterKey(reader, ix);
         }else{
@@ -958,14 +959,14 @@ public final class BTreeNode extends YapMeta{
     }
     
 	BTreePointer firstPointer(Transaction trans) {
-        YapReader reader = prepareRead(trans);
+        Buffer reader = prepareRead(trans);
 		if (_isLeaf) {
             return leafFirstPointer(trans, reader);
 		}
         return branchFirstPointer(trans, reader);
 	}
 
-	private BTreePointer branchFirstPointer(Transaction trans, YapReader reader) {
+	private BTreePointer branchFirstPointer(Transaction trans, Buffer reader) {
 		for (int i = 0; i < _count; i++) {
             BTreePointer childFirstPointer = child(reader, i).firstPointer(trans);
             if(childFirstPointer != null){
@@ -975,7 +976,7 @@ public final class BTreeNode extends YapMeta{
 		return null;
 	}
 
-	private BTreePointer leafFirstPointer(Transaction trans, YapReader reader) {
+	private BTreePointer leafFirstPointer(Transaction trans, Buffer reader) {
 		int index = firstKeyIndex(trans);
 		if(index == -1){
 			return null;
@@ -984,14 +985,14 @@ public final class BTreeNode extends YapMeta{
 	}
 	
 	public BTreePointer lastPointer(Transaction trans) {
-        YapReader reader = prepareRead(trans);
+        Buffer reader = prepareRead(trans);
 		if (_isLeaf) {
             return leafLastPointer(trans, reader);
 		}
         return branchLastPointer(trans, reader);
 	}
 
-	private BTreePointer branchLastPointer(Transaction trans, YapReader reader) {
+	private BTreePointer branchLastPointer(Transaction trans, Buffer reader) {
 		for (int i = _count - 1; i >= 0; i--) {
             BTreePointer childLastPointer = child(reader, i).lastPointer(trans);
             if(childLastPointer != null){
@@ -1001,7 +1002,7 @@ public final class BTreeNode extends YapMeta{
 		return null;
 	}
 
-	private BTreePointer leafLastPointer(Transaction trans, YapReader reader) {
+	private BTreePointer leafLastPointer(Transaction trans, Buffer reader) {
 		int index = lastKeyIndex(trans);
 		if(index == -1){
 			return null;
@@ -1053,7 +1054,7 @@ public final class BTreeNode extends YapMeta{
     }
     
     public void traverseKeys(Transaction trans, Visitor4 visitor){
-        YapReader reader = prepareRead(trans);
+        Buffer reader = prepareRead(trans);
         if(_isLeaf){
             for (int i = 0; i < _count; i++) {
                 Object obj = key(trans,reader, i);
@@ -1073,7 +1074,7 @@ public final class BTreeNode extends YapMeta{
             traverseKeys(trans, visitor);
             return;
         }
-        YapReader reader = prepareRead(trans);
+        Buffer reader = prepareRead(trans);
         if(_isLeaf){
             for (int i = 0; i < _count; i++) {
                 if(key(trans,reader, i) != No4.INSTANCE){
@@ -1091,7 +1092,7 @@ public final class BTreeNode extends YapMeta{
     	return _values[index];
     }
     
-    Object value(YapReader reader, int index){
+    Object value(Buffer reader, int index){
         if( _values != null ){
             return _values[index];
         }
@@ -1115,7 +1116,7 @@ public final class BTreeNode extends YapMeta{
     }
     
     
-    public void writeThis(Transaction trans, YapReader a_writer) {
+    public void writeThis(Transaction trans, Buffer a_writer) {
         
         int count = 0;
         int startOffset = a_writer._offset;
@@ -1245,7 +1246,7 @@ public final class BTreeNode extends YapMeta{
 
     /** This traversal goes over all nodes, not just leafs */
     void traverseAllNodes(Transaction trans, Visitor4 command) {
-        YapReader reader = prepareRead(trans);
+        Buffer reader = prepareRead(trans);
         command.visit(this);
         if(_isLeaf){
             return;

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.replication.*;
 import com.db4o.reflect.*;
@@ -271,7 +272,7 @@ public final class YapHandlers {
         return false;
     }
     
-	final void decrypt(YapReader reader) {
+	public final void decrypt(Buffer reader) {
 	    if(i_encrypt){
 			int encryptorOffSet = i_lastEncryptorByte;
 			byte[] bytes = reader._buffer;
@@ -286,7 +287,7 @@ public final class YapHandlers {
 	    }
 	}
 	
-    final void encrypt(YapReader reader) {
+    public final void encrypt(Buffer reader) {
         if(i_encrypt){
 	        byte[] bytes = reader._buffer;
 	        int encryptorOffSet = i_lastEncryptorByte;

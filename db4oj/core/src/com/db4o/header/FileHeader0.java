@@ -5,6 +5,7 @@ package com.db4o.header;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -46,7 +47,7 @@ public class FileHeader0 extends FileHeader {
         _configBlock.close();
     }
     
-    protected FileHeader newOnSignatureMatch(YapFile file, YapReader reader) {
+    protected FileHeader newOnSignatureMatch(YapFile file, Buffer reader) {
         byte firstFileByte = reader.readByte();
         if (firstFileByte != YapConst.YAPBEGIN) {
             if(firstFileByte != YapConst.YAPFILEVERSION){
@@ -62,13 +63,13 @@ public class FileHeader0 extends FileHeader {
     }
 
     
-    protected void readFixedPart(YapFile file, YapReader reader) throws IOException {
+    protected void readFixedPart(YapFile file, Buffer reader) throws IOException {
         _configBlock = YapConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
         readClassCollectionAndFreeSpace(file, reader);
     }
 
-    private void skipConfigurationLockTime(YapReader reader) {
+    private void skipConfigurationLockTime(Buffer reader) {
         reader.incrementOffset(YapConst.ID_LENGTH);
     }
 
@@ -127,7 +128,7 @@ public class FileHeader0 extends FileHeader {
         return LENGTH;
     }
 
-    public void writeFixedPart(YapFile file, boolean shuttingDown, YapWriter writer, int blockSize_, int freespaceID) {
+    public void writeFixedPart(YapFile file, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());

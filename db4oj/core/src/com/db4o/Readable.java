@@ -2,11 +2,13 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 
 /**
  * @exclude
  */
 public interface Readable {
-	Object read(YapReader a_reader);
+	Object read(Buffer a_reader);
 	int byteCount();
 }

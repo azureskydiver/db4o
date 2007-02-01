@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -13,7 +14,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return false;
     }
     
-    public void deleteEmbedded(YapWriter reader) {
+    public void deleteEmbedded(StatefulBuffer reader) {
         int payLoadOffset = reader.readInt();
         if (payLoadOffset > 0) {
             int linkOffset = reader._offset;
@@ -27,7 +28,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         }
     }
     
-    public Object read(YapWriter reader) throws CorruptionException{
+    public Object read(StatefulBuffer reader) throws CorruptionException{
         
         Object ret = null;
         
@@ -51,7 +52,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return ret;
     }
     
-    public Object readQuery(Transaction trans, YapReader reader, boolean toArray) throws CorruptionException{
+    public Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException{
         
         Object ret = null;
         
@@ -76,7 +77,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
     }
 
     
-    public TypeHandler4 readArrayHandler(Transaction trans, YapReader[] reader) {
+    public TypeHandler4 readArrayHandler(Transaction trans, Buffer[] reader) {
         
         int payLoadOffSet = reader[0].readInt();
         if(payLoadOffSet == 0){
@@ -96,7 +97,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return ret;
     }
     
-    public QCandidate readSubCandidate(YapReader reader, QCandidates candidates, boolean withIndirection) {
+    public QCandidate readSubCandidate(Buffer reader, QCandidates candidates, boolean withIndirection) {
         int payLoadOffSet = reader.readInt();
         if(payLoadOffSet == 0){
             return null;
@@ -119,7 +120,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
     }
 
     
-    public Object writeNew(Object obj, boolean restoreLinkOffset, YapWriter writer) {
+    public Object writeNew(Object obj, boolean restoreLinkOffset, StatefulBuffer writer) {
         if (obj == null) {
             writer.writeInt(0);
             return new Integer(0);

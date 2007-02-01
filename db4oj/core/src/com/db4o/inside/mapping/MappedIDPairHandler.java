@@ -4,6 +4,7 @@ package com.db4o.inside.mapping;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 
 /**
@@ -31,13 +32,13 @@ public class MappedIDPairHandler implements Indexable4 {
 		return _origHandler.linkLength()+_mappedHandler.linkLength();
 	}
 
-	public Object readIndexEntry(YapReader reader) {
+	public Object readIndexEntry(Buffer reader) {
 		int origID=readID(reader);
 		int mappedID=readID(reader);
         return new MappedIDPair(origID,mappedID);
 	}
 
-	public void writeIndexEntry(YapReader reader, Object obj) {
+	public void writeIndexEntry(Buffer reader, Object obj) {
 		MappedIDPair mappedIDs=(MappedIDPair)obj;
 		_origHandler.writeIndexEntry(reader, new Integer(mappedIDs.orig()));
 		_mappedHandler.writeIndexEntry(reader, new Integer(mappedIDs.mapped()));
@@ -70,7 +71,7 @@ public class MappedIDPairHandler implements Indexable4 {
         return this;
 	}
 	
-	private int readID(YapReader a_reader) {
+	private int readID(Buffer a_reader) {
 		return ((Integer)_origHandler.readIndexEntry(a_reader)).intValue();
 	}
 }

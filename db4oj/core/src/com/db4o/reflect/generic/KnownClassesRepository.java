@@ -4,6 +4,7 @@ package com.db4o.reflect.generic;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
@@ -85,7 +86,7 @@ public class KnownClassesRepository {
 			return ret;
 		}
         
-		YapReader classreader=_stream.readWriterByID(_trans,id);
+		Buffer classreader=_stream.readWriterByID(_trans,id);
 
 		ClassMarshaller marshaller = marshallerFamily()._class;
 		RawClassSpec spec=marshaller.readSpec(_trans, classreader);
@@ -111,7 +112,7 @@ public class KnownClassesRepository {
 
 		ReflectClass clazz = lookupByID(id);
 		
-		YapReader classreader=_stream.readWriterByID(_trans,id);
+		Buffer classreader=_stream.readWriterByID(_trans,id);
 
 		ClassMarshaller classMarshaller = marshallerFamily()._class;
 		RawClassSpec classInfo=classMarshaller.readSpec(_trans, classreader);

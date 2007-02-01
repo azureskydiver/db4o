@@ -4,6 +4,7 @@ package com.db4o.inside.query;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
@@ -127,7 +128,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 		
 	}
 
-	public void loadFromIdReader(YapReader reader) {
+	public void loadFromIdReader(Buffer reader) {
 		int size = reader.readInt();
 		for (int i = 0; i < size; i++) {
 			add(reader.readInt());

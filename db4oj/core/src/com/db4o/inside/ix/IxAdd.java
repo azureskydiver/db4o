@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
 
 /**
@@ -34,7 +35,7 @@ public class IxAdd extends IxPatch {
         visitor.visit(_parentID, ((Integer)_value).intValue());
     }
     
-    public int write(Indexable4 a_handler, YapWriter a_writer) {
+    public int write(Indexable4 a_handler, StatefulBuffer a_writer) {
         a_handler.writeIndexEntry(a_writer, _value);
         a_writer.writeInt(_parentID);
         a_writer.writeForward();

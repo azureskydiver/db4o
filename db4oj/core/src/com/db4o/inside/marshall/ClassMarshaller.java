@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -11,7 +12,7 @@ public abstract class ClassMarshaller {
     
     public MarshallerFamily _family;
     
-    public RawClassSpec readSpec(Transaction trans,YapReader reader) {
+    public RawClassSpec readSpec(Transaction trans,Buffer reader) {
 		byte[] nameBytes=readName(trans, reader);
 		String className=trans.stream().stringIO().read(nameBytes);
 		readMetaClassID(reader); // skip
@@ -21,7 +22,7 @@ public abstract class ClassMarshaller {
 		return new RawClassSpec(className,ancestorID,numFields);
     }
 
-    public void write(Transaction trans, YapClass clazz, YapReader writer) {
+    public void write(Transaction trans, YapClass clazz, Buffer writer) {
         
         writer.writeShortString(trans, clazz.nameToWrite());
         
@@ -44,23 +45,23 @@ public abstract class ClassMarshaller {
         }
     }
 
-    protected void writeIndex(Transaction trans, YapClass clazz, YapReader writer) {
+    protected void writeIndex(Transaction trans, YapClass clazz, Buffer writer) {
         int indexID = clazz.index().write(trans);
         writer.writeInt(indexIDForWriting(indexID));
     }
     
     protected abstract int indexIDForWriting(int indexID);
 
-    public byte[] readName(Transaction trans, YapReader reader) {
+    public byte[] readName(Transaction trans, Buffer reader) {
         byte[] name = readName(trans.stream().stringIO(), reader);
         return name;
     }
     
-    public int readMetaClassID(YapReader reader) {
+    public int readMetaClassID(Buffer reader) {
     	return reader.readInt();
     }
     
-    private byte[] readName(YapStringIO sio, YapReader reader) {
+    private byte[] readName(YapStringIO sio, Buffer reader) {
         if (Deploy.debug) {
             reader.readBegin(YapConst.YAPCLASS);
         }
@@ -75,7 +76,7 @@ public abstract class ClassMarshaller {
         return nameBytes;
     }
 
-    public void read(YapStream stream, YapClass clazz, YapReader reader) {
+    public void read(YapStream stream, YapClass clazz, Buffer reader) {
         clazz.i_ancestor = stream.getYapClass(reader.readInt());
         
         if(clazz.i_dontCallConstructors){
@@ -93,7 +94,7 @@ public abstract class ClassMarshaller {
         readFields(stream, reader, clazz.i_fields);        
     }
 
-    protected abstract void readIndex(YapStream stream, YapClass clazz, YapReader reader) ;
+    protected abstract void readIndex(YapStream stream, YapClass clazz, Buffer reader) ;
 
 	private YapField[] createFields(YapClass clazz, final int fieldCount) {
 		final YapField[] fields = new YapField[fieldCount];
@@ -104,7 +105,7 @@ public abstract class ClassMarshaller {
 		return fields;
 	}
 
-	private void readFields(YapStream stream, YapReader reader, final YapField[] fields) {
+	private void readFields(YapStream stream, Buffer reader, final YapField[] fields) {
 		for (int i = 0; i < fields.length; i++) {
             fields[i] = _family._field.read(stream, fields[i], reader);
         }

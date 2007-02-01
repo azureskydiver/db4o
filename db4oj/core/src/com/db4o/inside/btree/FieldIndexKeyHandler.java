@@ -4,6 +4,7 @@ package com.db4o.inside.btree;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 
 
@@ -29,7 +30,7 @@ public class FieldIndexKeyHandler implements Indexable4{
         return _valueHandler.linkLength() + YapConst.INT_LENGTH;
     }
 
-    public Object readIndexEntry(YapReader a_reader) {
+    public Object readIndexEntry(Buffer a_reader) {
         // TODO: could read int directly here with a_reader.readInt()
         int parentID = readParentID(a_reader);
         Object objPart = _valueHandler.readIndexEntry(a_reader);
@@ -40,11 +41,11 @@ public class FieldIndexKeyHandler implements Indexable4{
         return new FieldIndexKey(parentID, objPart);
     }
 
-	private int readParentID(YapReader a_reader) {
+	private int readParentID(Buffer a_reader) {
 		return ((Integer)_parentIdHandler.readIndexEntry(a_reader)).intValue();
 	}
 
-    public void writeIndexEntry(YapReader writer, Object obj) {
+    public void writeIndexEntry(Buffer writer, Object obj) {
         FieldIndexKey composite = (FieldIndexKey)obj;
         int parentID = composite.parentID();
         Object value = composite.value();

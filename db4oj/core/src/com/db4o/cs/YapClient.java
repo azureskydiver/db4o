@@ -243,7 +243,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		}
 
 		MsgObject message = (MsgObject) resp;
-		YapWriter bytes = message.unmarshall();
+		StatefulBuffer bytes = message.unmarshall();
 		if (bytes == null) {
 			return false;
 		}
@@ -282,7 +282,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return _doFinalize;
 	}
 	
-	final YapReader expectedByteResponse(Msg expectedMessage) {
+	final Buffer expectedByteResponse(Msg expectedMessage) {
 		Msg msg = expectedResponse(expectedMessage);
 		if (msg == null) {
 			// TODO: throw Exception to allow
@@ -423,7 +423,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	public Db4oDatabase identity() {
 		if (i_db == null) {
 			writeMsg(Msg.IDENTITY, true);
-			YapReader reader = expectedByteResponse(Msg.ID_LIST);
+			Buffer reader = expectedByteResponse(Msg.ID_LIST);
 			showInternalClasses(true);
 			i_db = (Db4oDatabase) getByID(reader.readInt());
 			activate1(i_systemTrans, i_db, 3);
@@ -450,7 +450,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 			if (!Msg.LOGIN_OK.equals(msg)) {
 				throw new IOException(Messages.get(42));
 			}
-            YapReader payLoad = msg.payLoad();
+            Buffer payLoad = msg.payLoad();
             _blockSize = payLoad.readInt();
             int doEncrypt = payLoad.readInt();
             if(doEncrypt == 0){
@@ -467,7 +467,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	public final int newUserObject() {
 		int prefetchIDCount = config().prefetchIDCount();
 		ensureIDCacheAllocated(prefetchIDCount);
-		YapReader reader = null;
+		Buffer reader = null;
 		if (remainingIDs < 1) {
 			MsgD msg = Msg.PREFETCH_IDS.getWriterForInt(i_trans, prefetchIDCount);
 			writeMsg(msg, true);
@@ -520,7 +520,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 				mso.payLoad(message.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(YapConst.MESSAGE_LENGTH);
-					YapWriter reader = mso.unmarshall(YapConst.MESSAGE_LENGTH);
+					StatefulBuffer reader = mso.unmarshall(YapConst.MESSAGE_LENGTH);
                     Object obj = objectForIDFromCache(idsToGet[i]);
                     if(obj != null){
                         prefetched[position[i]] = obj;
@@ -558,7 +558,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		MsgD msg = Msg.READ_BYTES.getWriterForInts(i_trans, new int[] {
 				a_address, a_length });
 		writeMsg(msg, true);
-		YapReader reader = expectedByteResponse(Msg.READ_BYTES);
+		Buffer reader = expectedByteResponse(Msg.READ_BYTES);
 		System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 	}
 
@@ -567,11 +567,11 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return false;
 	}
 
-	public final YapWriter readWriterByID(Transaction a_ta, int a_id) {
+	public final StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
 		try {
 			MsgD msg = Msg.READ_OBJECT.getWriterForInt(a_ta, a_id);
 			writeMsg(msg, true);
-			YapWriter bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT))
+			StatefulBuffer bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT))
 					.unmarshall();
 			if (bytes == null) {
 				return null;
@@ -583,13 +583,13 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		}
 	}
 
-	public final YapWriter[] readWritersByIDs(Transaction a_ta, int[] ids) {
+	public final StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids) {
 		try {
 			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length);
 			writeMsg(msg, true);
 			MsgD message = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
 			int count = message.readInt();
-			YapWriter[] yapWriters = new YapWriter[count];
+			StatefulBuffer[] yapWriters = new StatefulBuffer[count];
 			for (int i = 0; i < count; i++) {
 				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.clone(getTransaction());
 				mso.payLoad(message.payLoad().readYapBytes());
@@ -608,14 +608,14 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return null;
 	}
 
-	public final YapReader readReaderByID(Transaction a_ta, int a_id) {
+	public final Buffer readReaderByID(Transaction a_ta, int a_id) {
 		// TODO: read lightweight reader instead
 		return readWriterByID(a_ta, a_id);
 	}
 
 	private AbstractQueryResult readQueryResult(Transaction trans) {
 		AbstractQueryResult queryResult = null;
-		YapReader reader = expectedByteResponse(Msg.QUERY_RESULT);
+		Buffer reader = expectedByteResponse(Msg.QUERY_RESULT);
 		int queryResultID = reader.readInt();
 		if(queryResultID > 0){
 			queryResult = new LazyClientQueryResult(trans, this, queryResultID);
@@ -628,7 +628,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 
 	void readThis() {
 		writeMsg(Msg.GET_CLASSES.getWriter(i_systemTrans), true);
-		YapReader bytes = expectedByteResponse(Msg.GET_CLASSES);
+		Buffer bytes = expectedByteResponse(Msg.GET_CLASSES);
 		classCollection().setID(bytes.readInt());
 		createStringIO(bytes.readByte());
 		classCollection().read(i_systemTrans);
@@ -732,7 +732,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		// do nothing
 	}
 
-	public final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
+	public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
 		a_parent.addEmbedded(a_child);
 	}
 
@@ -756,7 +756,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		}
 	}
 
-	public final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
+	public final void writeNew(YapClass a_yapClass, StatefulBuffer aWriter) {
 		MsgD msg = Msg.WRITE_NEW.getWriter(a_yapClass, aWriter);
 		writeMsg(msg, false);
 	}
@@ -765,7 +765,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		// do nothing
 	}
 
-	public final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
+	public final void writeUpdate(YapClass a_yapClass, StatefulBuffer a_bytes) {
 		MsgD msg = Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes);
 		writeMsg(msg, false);
 	}
@@ -822,7 +822,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
     public long[] getIDsForClass(Transaction trans, YapClass clazz){
     	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInt(trans, clazz.getID());
     	writeMsg(msg, true);
-    	YapReader reader = expectedByteResponse(Msg.ID_LIST);
+    	Buffer reader = expectedByteResponse(Msg.ID_LIST);
     	int size = reader.readInt();
     	final long[] ids = new long[size];
     	for (int i = 0; i < size; i++) {

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.*;
 
 
@@ -41,7 +42,7 @@ final class YByte extends YapJavaClass
 		return i_primitive;
 	}
 	
-	Object read1(YapReader a_bytes){
+	Object read1(Buffer a_bytes){
 		if (Deploy.debug){
 			a_bytes.readBegin(YapConst.YAPBYTE);
 		}
@@ -52,7 +53,7 @@ final class YByte extends YapJavaClass
 		return new Byte(ret);
 	}
 	
-	public void write(Object a_object, YapReader a_bytes){
+	public void write(Object a_object, Buffer a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPBYTE);
 		}
@@ -62,7 +63,7 @@ final class YByte extends YapJavaClass
 		}
 	}
 	
-	public boolean readArray(Object array, YapReader reader) {
+	public boolean readArray(Object array, Buffer reader) {
         if(array instanceof byte[]){
             reader.readBytes((byte[])array);
             return true;
@@ -71,7 +72,7 @@ final class YByte extends YapJavaClass
         return false;
 	}
 
-    public boolean writeArray(Object array, YapReader writer) {
+    public boolean writeArray(Object array, Buffer writer) {
         if(array instanceof byte[]){
             writer.append((byte[])array);
             return true;

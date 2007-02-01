@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;
 
@@ -17,19 +18,19 @@ public class YapFieldVersion extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer writer, Slot oldSlot) {
         writer.writeLong(writer.getStream().generateTimeStampId());
     }
     
-    public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
+    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
         a_bytes.incrementOffset(linkLength());
     }
 
-    void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
+    void instantiate1(Transaction a_trans, YapObject a_yapObject, Buffer a_bytes) {
         a_yapObject.virtualAttributes().i_version = a_bytes.readLong();
     }
 
-    void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
+    void marshall1(YapObject a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
         YapStream stream = a_bytes.getStream().i_parent;
         VirtualAttributes va = a_yapObject.virtualAttributes();
         if (! a_migrating) {
@@ -46,7 +47,7 @@ public class YapFieldVersion extends YapFieldVirtual {
         return YapConst.LONG_LENGTH;
     }
     
-    void marshallIgnore(YapReader writer) {
+    void marshallIgnore(Buffer writer) {
         writer.writeLong(0);
     }
 

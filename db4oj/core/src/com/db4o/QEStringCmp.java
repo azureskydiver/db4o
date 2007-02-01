@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 /**
  * @exclude
  */
@@ -15,8 +17,8 @@ public abstract class QEStringCmp extends QEAbstract {
 
 	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
 		if(a_value != null){
-		    if(a_value instanceof YapReader) {
-                a_value = a_candidate._marshallerFamily._string.readFromOwnSlot(a_constraint.i_trans.stream(), ((YapReader)a_value));
+		    if(a_value instanceof Buffer) {
+                a_value = a_candidate._marshallerFamily._string.readFromOwnSlot(a_constraint.i_trans.stream(), ((Buffer)a_value));
 		    }
 		    String candidate=a_value.toString();
 		    String constraint=a_constraint.i_object.toString();

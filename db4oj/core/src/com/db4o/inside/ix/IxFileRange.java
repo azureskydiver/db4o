@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
 
 /**
@@ -53,7 +54,7 @@ class IxFileRange extends IxTree{
         if(! Debug4.prettyToStrings){
             return super.toString();
         }
-        YapReader fileReader = new YapReader(slotLength());
+        Buffer fileReader = new Buffer(slotLength());
         final StringBuffer sb = new StringBuffer();
         sb.append("IxFileRange");
         visitAll(new IntObjectVisitor() {
@@ -78,7 +79,7 @@ class IxFileRange extends IxTree{
         }
         int count = lowerUpper[1] - lowerUpper[0] + 1;
         if (count > 0) {
-            YapReader fileReader = new YapReader(count * frr._slotLength);
+            Buffer fileReader = new Buffer(count * frr._slotLength);
             fileReader.read(stream(), _address, _addressOffset + (lowerUpper[0] * frr._slotLength));
             for (int i = lowerUpper[0]; i <= lowerUpper[1]; i++) {
                 fileReader.incrementOffset(frr._linkLegth);
@@ -87,7 +88,7 @@ class IxFileRange extends IxTree{
         }
     }
 
-    public int write(Indexable4 a_handler, YapWriter a_writer) {
+    public int write(Indexable4 a_handler, StatefulBuffer a_writer) {
         YapFile yf = (YapFile)a_writer.getStream();
         int length = _entries * slotLength();
         yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset(), length);
@@ -98,7 +99,7 @@ class IxFileRange extends IxTree{
     public void visitAll(IntObjectVisitor visitor) {
         YapFile yf = stream();
         Transaction transaction = trans();
-        YapReader fileReader = new YapReader(slotLength());
+        Buffer fileReader = new Buffer(slotLength());
         for (int i = 0; i < _entries; i++) {
             int address = _address + (i * slotLength());
             fileReader.read(yf, address, _addressOffset);
@@ -130,7 +131,7 @@ class IxFileRange extends IxTree{
     
     public void freespaceVisit(FreespaceVisitor visitor, int index){
         IxFileRangeReader frr = reader();
-        YapReader fileReader = new YapReader(frr._slotLength);
+        Buffer fileReader = new Buffer(frr._slotLength);
         fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
         int val = fileReader.readInt();
         int parentID = fileReader.readInt();

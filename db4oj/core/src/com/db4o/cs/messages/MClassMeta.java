@@ -5,6 +5,7 @@ package com.db4o.cs.messages;
 import com.db4o.*;
 import com.db4o.cs.ClassMeta;
 import com.db4o.cs.YapServerThread;
+import com.db4o.inside.*;
 import com.db4o.reflect.generic.GenericClass;
 
 public class MClassMeta extends MsgObject {
@@ -24,7 +25,7 @@ public class MClassMeta extends MsgObject {
 						yapClass.setStateDirty();
 						yapClass.write(trans);
 						trans.commit();
-						YapWriter returnBytes = stream
+						StatefulBuffer returnBytes = stream
 								.readWriterByID(trans, yapClass.getID());
 						serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
 						return true;

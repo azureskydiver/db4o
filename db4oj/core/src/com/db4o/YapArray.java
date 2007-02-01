@@ -65,12 +65,12 @@ public class YapArray extends YapIndependantType {
     	return i_handler.classReflector();
     }
 
-    final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, YapWriter reader){
+    final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader){
         return mf._array.collectIDs(this, tree, reader);
     }
     
     public final TreeInt collectIDs1(Transaction trans, TreeInt tree,
-			YapReader reader) {
+			Buffer reader) {
 		if (reader == null) {
 			return tree;
 		}
@@ -88,7 +88,7 @@ public class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
 
-    public final void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
+    public final void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
         mf._array.deleteEmbedded(this, a_bytes);
     }
 
@@ -99,7 +99,7 @@ public class YapArray extends YapIndependantType {
     //        For now the code simply returns without freeing.
     public final void deletePrimitiveEmbedded(
         
-        YapWriter a_bytes,
+        StatefulBuffer a_bytes,
         YapClassPrimitive a_classPrimitive) {
         
         int address = a_bytes.readInt();
@@ -201,20 +201,20 @@ public class YapArray extends YapIndependantType {
 		return i_handler.primitiveClassReflector();
 	}
 	
-    public final Object read(MarshallerFamily mf, YapWriter a_bytes, boolean redirect) throws CorruptionException{
+    public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
         return mf._array.read(this, a_bytes);
     }
     
-    public Object readIndexEntry(YapReader a_reader) {
+    public Object readIndexEntry(Buffer a_reader) {
         // TODO: implement
         throw Exceptions4.virtualException();
     }
     
-	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException{
         return mf._array.readQuery(this, a_trans, a_reader);
 	}
 	
-	public Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_reader) throws CorruptionException{
+	public Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException{
 
         if(Deploy.debug){
             a_reader.readBegin(identifier());
@@ -234,7 +234,7 @@ public class YapArray extends YapIndependantType {
 		return ret;
 	}
 
-    public Object read1(MarshallerFamily mf, YapWriter reader) throws CorruptionException{
+    public Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException{
         
         if (Deploy.debug) {
             reader.readBegin(identifier());
@@ -258,7 +258,7 @@ public class YapArray extends YapIndependantType {
         return ret;
     }
 
-	private Object readCreate(Transaction a_trans, YapReader a_reader, int[] a_elements) {
+	private Object readCreate(Transaction a_trans, Buffer a_reader, int[] a_elements) {
 		ReflectClass[] clazz = new ReflectClass[1];
 		a_elements[0] = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
@@ -270,15 +270,15 @@ public class YapArray extends YapIndependantType {
 		return null;
 	}
 
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         return this;
     }
 
-    public void readCandidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
+    public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) {
         mf._array.readCandidates(this, reader, candidates);
     }
     
-    public void read1Candidates(MarshallerFamily mf, YapReader reader, QCandidates candidates) {
+    public void read1Candidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) {
         if(Deploy.debug){
             reader.readBegin(identifier());
         }
@@ -295,7 +295,7 @@ public class YapArray extends YapIndependantType {
         }
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         reader.incrementOffset(linkLength());
         
         return null;
@@ -306,7 +306,7 @@ public class YapArray extends YapIndependantType {
         
     }
     
-    final int readElementsAndClass(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz){
+    final int readElementsAndClass(Transaction a_trans, Buffer a_bytes, ReflectClass[] clazz){
         int elements = a_bytes.readInt();
         if (elements < 0) {
             clazz[0]=reflectClassFromElementsEntry(a_trans, elements);
@@ -376,10 +376,10 @@ public class YapArray extends YapIndependantType {
         return new Object[0];
     }
 
-    void writeClass(Object a_object, YapWriter a_bytes){
+    void writeClass(Object a_object, StatefulBuffer a_bytes){
         int yapClassID = 0;
         
-        Reflector reflector = a_bytes.i_trans.reflector();
+        Reflector reflector = a_bytes.getTransaction().reflector();
         
         ReflectClass claxx = _reflectArray.getComponentType(reflector.forObject(a_object));
         
@@ -413,16 +413,16 @@ public class YapArray extends YapIndependantType {
         a_bytes.writeInt(- yapClassID);
     }
     
-    public void writeIndexEntry(YapReader a_writer, Object a_object) {
+    public void writeIndexEntry(Buffer a_writer, Object a_object) {
         // TODO: implement
         throw Exceptions4.virtualException();
     }
     
-    public final Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+    public final Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         return mf._array.writeNew(this, a_object, restoreLinkOffset, a_bytes);
     }
 
-    public void writeNew1(Object obj, YapWriter writer) {
+    public void writeNew1(Object obj, StatefulBuffer writer) {
         
         if (Deploy.debug) {
             writer.writeBegin(identifier());

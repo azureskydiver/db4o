@@ -5,6 +5,7 @@ package com.db4o.inside.query;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.query.*;
 
 
@@ -61,7 +62,7 @@ public class HybridQueryResult extends AbstractQueryResult {
 		_delegate.loadFromClassIndexes(iterator);
 	}
 
-	public void loadFromIdReader(YapReader reader) {
+	public void loadFromIdReader(Buffer reader) {
 		_delegate.loadFromIdReader(reader);
 	}
 

@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * 
@@ -142,7 +143,7 @@ public class Index4 {
     
     private int writeToNewSlot(int slot){
         Tree root = getRoot();
-        final YapWriter writer = new YapWriter(trans(),slot, lengthPerEntry());
+        final StatefulBuffer writer = new StatefulBuffer(trans(),slot, lengthPerEntry());
         final int[] entries = new int[] {0};
         if (root != null) {
             root.traverse(new Visitor4() {

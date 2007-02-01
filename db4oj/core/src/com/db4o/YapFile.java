@@ -149,7 +149,7 @@ public abstract class YapFile extends YapStream {
 
     public final boolean delete4(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
         int id = yo.getID();
-        YapWriter reader = readWriterByID(ta, id);
+        StatefulBuffer reader = readWriterByID(ta, id);
         if (reader != null) {
             Object obj = yo.getObject();
             if (obj != null) {
@@ -331,7 +331,7 @@ public abstract class YapFile extends YapStream {
         if (!Debug.xbytes){
             if(Deploy.overwrite){
                 if(_blockEndAddress > blocksFor(fileLength())){
-                    YapWriter writer = getWriter(i_systemTrans, _blockEndAddress - 1, blockSize());
+                    StatefulBuffer writer = getWriter(i_systemTrans, _blockEndAddress - 1, blockSize());
                     writer.write();
                 }
             }
@@ -407,23 +407,23 @@ public abstract class YapFile extends YapStream {
         }
     }
 
-    public YapWriter readWriterByID(Transaction a_ta, int a_id) {
-        return (YapWriter)readReaderOrWriterByID(a_ta, a_id, false);    
+    public StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
+        return (StatefulBuffer)readReaderOrWriterByID(a_ta, a_id, false);    
     }
     
-    public YapWriter[] readWritersByIDs(Transaction a_ta, int ids[]) {
-		YapWriter[] yapWriters = new YapWriter[ids.length];
+    public StatefulBuffer[] readWritersByIDs(Transaction a_ta, int ids[]) {
+		StatefulBuffer[] yapWriters = new StatefulBuffer[ids.length];
 		for (int i = 0; i < ids.length; ++i) {
-			yapWriters[i] = (YapWriter)readReaderOrWriterByID(a_ta, ids[i], false);
+			yapWriters[i] = (StatefulBuffer)readReaderOrWriterByID(a_ta, ids[i], false);
 		}
 		return yapWriters;
 	}
 
-    public YapReader readReaderByID(Transaction a_ta, int a_id) {
+    public Buffer readReaderByID(Transaction a_ta, int a_id) {
         return readReaderOrWriterByID(a_ta, a_id, true);
     }
     
-    private final YapReader readReaderOrWriterByID(Transaction a_ta, int a_id, boolean useReader) {
+    private final Buffer readReaderOrWriterByID(Transaction a_ta, int a_id, boolean useReader) {
         if (a_id == 0) {
             return null;
         }
@@ -446,12 +446,12 @@ public abstract class YapFile extends YapStream {
                 DTrace.READ_SLOT.logLength(slot._address, slot._length);
             }
             
-            YapReader reader = null;
+            Buffer reader = null;
             if(useReader){
-                reader = new YapReader(slot._length);
+                reader = new Buffer(slot._length);
             }else{
                 reader = getWriter(a_ta, slot._address, slot._length);
-                ((YapWriter)reader).setID(a_id);
+                ((StatefulBuffer)reader).setID(a_id);
             }
 
             reader.readEncrypt(this, slot._address);
@@ -665,7 +665,7 @@ public abstract class YapFile extends YapStream {
 
     public abstract boolean writeAccessTime(int address, int offset, long time) throws IOException;
 
-    public abstract void writeBytes(YapReader a_Bytes, int address, int addressOffset);
+    public abstract void writeBytes(Buffer a_Bytes, int address, int addressOffset);
 
     public final void writeDirty() {        
         writeCachedDirty();
@@ -691,7 +691,7 @@ public abstract class YapFile extends YapStream {
         _timeStampIdGenerator.setClean();
     }
     
-    public final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
+    public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
         int length = a_child.getLength();
         int address = getSlot(length);
         a_child.getTransaction().slotFreeOnRollback(address, address, length);
@@ -716,7 +716,7 @@ public abstract class YapFile extends YapStream {
         }
         
         // FIXME: blocksize should be already valid in FileHeader
-        YapWriter writer = getWriter(i_systemTrans, 0, _fileHeader.length());
+        StatefulBuffer writer = getWriter(i_systemTrans, 0, _fileHeader.length());
         
         _fileHeader.writeFixedPart(this, shuttingDown, writer, blockSize(), freespaceID);
         
@@ -726,7 +726,7 @@ public abstract class YapFile extends YapStream {
         syncFiles();
     }
 
-    public final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
+    public final void writeNew(YapClass a_yapClass, StatefulBuffer aWriter) {
         aWriter.writeEncrypt(this, aWriter.getAddress(), 0);
         if(a_yapClass == null){
             return;
@@ -742,8 +742,8 @@ public abstract class YapFile extends YapStream {
 
     public abstract void debugWriteXBytes(int a_address, int a_length);
 
-    YapReader xBytes(int a_address, int a_length) {
-        YapReader bytes = getWriter(i_systemTrans, a_address, a_length);
+    Buffer xBytes(int a_address, int a_length) {
+        Buffer bytes = getWriter(i_systemTrans, a_address, a_length);
         for (int i = 0; i < a_length; i++) {
             bytes.append(YapConst.XBYTE);
         }
@@ -754,7 +754,7 @@ public abstract class YapFile extends YapStream {
         _fileHeader.writeTransactionPointer(getSystemTransaction(), address);
     }
     
-    public final void getSlotForUpdate(YapWriter forWriter){
+    public final void getSlotForUpdate(StatefulBuffer forWriter){
         Transaction trans = forWriter.getTransaction();
         int id = forWriter.getID();
         int length = forWriter.getLength();
@@ -763,7 +763,7 @@ public abstract class YapFile extends YapStream {
         trans.slotFreeOnRollbackSetPointer(id, address, length);
     }
 
-    public final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
+    public final void writeUpdate(YapClass a_yapClass, StatefulBuffer a_bytes) {
         if(a_bytes.getAddress() == 0){
             getSlotForUpdate(a_bytes);
         }

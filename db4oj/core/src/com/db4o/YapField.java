@@ -5,7 +5,7 @@ package com.db4o;
 import com.db4o.config.ObjectTranslator;
 import com.db4o.ext.StoredField;
 import com.db4o.foundation.*;
-import com.db4o.inside.Exceptions4;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
@@ -84,7 +84,7 @@ public class YapField implements StoredField {
         i_state = AVAILABLE;
     }
 
-    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer writer, Slot oldSlot) {
         if (! hasIndex()) {
             writer.incrementOffset(linkLength());
             return;
@@ -93,7 +93,7 @@ public class YapField implements StoredField {
         addIndexEntry(writer, readIndexEntry(mf, writer));
     }
 
-    protected void addIndexEntry(YapWriter a_bytes, Object indexEntry) {
+    protected void addIndexEntry(StatefulBuffer a_bytes, Object indexEntry) {
         addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), indexEntry);
     }
 
@@ -127,7 +127,7 @@ public class YapField implements StoredField {
     }
     
     // alive() checked
-    public Object readIndexEntry(MarshallerFamily mf, YapWriter writer){
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer){
         try {
             return i_handler.readIndexEntry(mf, writer);
         } catch (CorruptionException e) {
@@ -290,7 +290,7 @@ public class YapField implements StoredField {
         }
     }
 
-    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, YapWriter a_bytes) {
+    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer a_bytes) {
         if (alive()) {
             if (i_handler instanceof YapClass) {
                 tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
@@ -344,7 +344,7 @@ public class YapField implements StoredField {
         }
     }
 
-    public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
+    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
         if (! alive()) {
             incrementOffset(a_bytes);
             return;
@@ -373,7 +373,7 @@ public class YapField implements StoredField {
         }
     }
 
-    private final void removeIndexEntry(MarshallerFamily mf, YapWriter a_bytes) {
+    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) {
         if(! hasIndex()){
             return;
         }
@@ -416,7 +416,7 @@ public class YapField implements StoredField {
                     if (yo != null) {
                         int id = yo.getID();
                         if (id > 0) {
-                            YapWriter writer = stream.readWriterByID(stream
+                            StatefulBuffer writer = stream.readWriterByID(stream
                                 .getTransaction(), id);
                             if (writer != null) {
                                 
@@ -529,7 +529,7 @@ public class YapField implements StoredField {
         return _index != null;
     }
 
-    public final void incrementOffset(YapReader a_bytes) {
+    public final void incrementOffset(Buffer a_bytes) {
         a_bytes.incrementOffset(linkLength());
     }
 
@@ -567,7 +567,7 @@ public class YapField implements StoredField {
         }
     }
 
-    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
+    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, StatefulBuffer a_bytes)
         throws CorruptionException {
         
         if (! alive()) {
@@ -660,7 +660,7 @@ public class YapField implements StoredField {
             YapObject yo, 
             Object obj, 
             MarshallerFamily mf,
-            YapWriter writer,
+            StatefulBuffer writer,
             Config4Class config, 
             boolean isNew) {
         
@@ -711,7 +711,7 @@ public class YapField implements StoredField {
         return new QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
     }
 
-    Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
+    Object read(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException {
         if (!alive()) {
             incrementOffset(a_bytes);
             return null;
@@ -719,12 +719,12 @@ public class YapField implements StoredField {
         return i_handler.read(mf, a_bytes, true);
     }
 
-    Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader)
+    Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader)
         throws CorruptionException {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }
     
-    public void readVirtualAttribute(Transaction a_trans, YapReader a_reader, YapObject a_yapObject) {
+    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, YapObject a_yapObject) {
         a_reader.incrementOffset(i_handler.linkLength());
     }
 
@@ -825,7 +825,7 @@ public class YapField implements StoredField {
         return sb.toString();
     }
 
-    public final String toString(MarshallerFamily mf, YapWriter writer) {
+    public final String toString(MarshallerFamily mf, StatefulBuffer writer) {
         String str = "\n Field " + i_name;
         if (! alive()) {
             incrementOffset(writer);
@@ -928,7 +928,7 @@ public class YapField implements StoredField {
 	}
 
 	protected void rebuildIndexForObject(YapFile stream, final YapClass yapClass, final int objectId) {
-		YapWriter writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
+		StatefulBuffer writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);
 		} else {
@@ -938,13 +938,13 @@ public class YapField implements StoredField {
 		}
 	}
 
-	protected void rebuildIndexForWriter(YapFile stream, YapWriter writer, final int objectId) {
+	protected void rebuildIndexForWriter(YapFile stream, StatefulBuffer writer, final int objectId) {
 		ObjectHeader oh = new ObjectHeader(stream, writer);
 		Object obj = readIndexEntryForRebuild(writer, oh);
 		addIndexEntry(stream.getSystemTransaction(), objectId, obj);
 	}
 
-	private Object readIndexEntryForRebuild(YapWriter writer, ObjectHeader oh) {
+	private Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {
 		return oh.objectMarshaller().readIndexEntry(oh.yapClass(), oh._headerAttributes, this, writer);
 	}
 

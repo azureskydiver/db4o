@@ -5,6 +5,7 @@ package com.db4o.cs.messages;
 import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 
 /**
@@ -17,7 +18,7 @@ public class MObjectSetFetch extends MObjectSet {
 		int fetchSize = readInt();
 		IntIterator4 idIterator = stub(serverThread, queryResultID).idIterator();
 		MsgD message = ID_LIST.getWriterForLength(transaction(), bufferLength(fetchSize));
-		YapWriter writer = message.payLoad();
+		StatefulBuffer writer = message.payLoad();
     	writer.writeIDs(idIterator, fetchSize);
 		serverThread.write(message);
 		return true;

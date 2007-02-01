@@ -4,6 +4,7 @@ package com.db4o.inside.marshall;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -27,7 +28,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         calculateLengths(yo);
     }
     
-    public ObjectHeaderAttributes1(YapReader reader){
+    public ObjectHeaderAttributes1(Buffer reader){
         _fieldCount = reader.readInt();
         _nullBitMap = reader.readBitMap(_fieldCount);
     }
@@ -92,7 +93,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         _payLoadLength =  trans.stream().alignToBlockSize(_payLoadLength);
     }
     
-    public void write(YapWriter writer){
+    public void write(StatefulBuffer writer){
         writer.append(VERSION);
         writer.writeInt(_fieldCount);
         writer.writeBitMap(_nullBitMap);

@@ -4,6 +4,7 @@ package com.db4o.inside.freespace;
 
 import com.db4o.*;
 import com.db4o.foundation.Tree;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -64,17 +65,17 @@ public final class FreeSlotNode extends TreeInt {
 		return a_in;
 	}
 
-	public Object read(YapReader a_reader) {
+	public Object read(Buffer a_reader) {
 		int size = a_reader.readInt();
 		int address = a_reader.readInt();
 		if (size > sizeLimit) {
 			FreeSlotNode node = new FreeSlotNode(size);
 			node.createPeer(address);
 			if (Deploy.debug) {
-				if (a_reader instanceof YapWriter) {
-					Transaction trans = ((YapWriter) a_reader).getTransaction();
+				if (a_reader instanceof StatefulBuffer) {
+					Transaction trans = ((StatefulBuffer) a_reader).getTransaction();
 					if (trans.stream() instanceof YapRandomAccessFile) {
-						YapWriter checker = trans.stream().getWriter(trans,
+						StatefulBuffer checker = trans.stream().getWriter(trans,
 								node._peer._key, node._key);
 						checker.read();
 						for (int i = 0; i < node._key; i++) {
@@ -93,7 +94,7 @@ public final class FreeSlotNode extends TreeInt {
 		return null;
 	}
 
-	public final void write(YapReader a_writer) {
+	public final void write(Buffer a_writer) {
 		// byte order: size, address
 		a_writer.writeInt(_key);
 		a_writer.writeInt(_peer._key);

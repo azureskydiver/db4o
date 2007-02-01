@@ -22,7 +22,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, YapWriter writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer writer, Slot oldSlot) {
         
         boolean isnew = (oldSlot == null);
 
@@ -68,7 +68,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.getAddress(), oldSlot.getLength());
         }
-		YapReader reader = stream.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
+		Buffer reader = stream.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
 		if(checkClass){
             YapClass realClass = YapClass.readClass(stream,reader);
             if(realClass != yapClass){
@@ -81,7 +81,7 @@ public class YapFieldUUID extends YapFieldVirtual {
 		return new DatabaseIdentityIDAndUUID(reader.readInt(), reader.readLong());
 	}
 
-    public void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
+    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
         if(isUpdate){
             a_bytes.incrementOffset(linkLength());
             return;
@@ -133,7 +133,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     	}
 	}
 
-    void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
+    void instantiate1(Transaction a_trans, YapObject a_yapObject, Buffer a_bytes) {
         int dbID = a_bytes.readInt();
         YapStream stream = a_trans.stream();
         stream.showInternalClasses(true);
@@ -151,7 +151,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         return LINK_LENGTH;
     }
     
-    void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
+    void marshall1(YapObject a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
         YapStream stream = a_bytes.getStream();
         Transaction trans = a_bytes.getTransaction();
         boolean indexEntry = a_new && stream.maintainsIndices();
@@ -198,7 +198,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
-    void marshallIgnore(YapReader writer) {
+    void marshallIgnore(Buffer writer) {
         writer.writeInt(0);
         writer.writeLong(0);
     }

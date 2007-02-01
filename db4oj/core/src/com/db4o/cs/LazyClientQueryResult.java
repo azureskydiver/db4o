@@ -5,6 +5,7 @@ package com.db4o.cs;
 import com.db4o.*;
 import com.db4o.cs.messages.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 
 
@@ -69,7 +70,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _queryResultID));
 	}
 	
-	public void loadFromIdReader(YapReader reader) {
+	public void loadFromIdReader(Buffer reader) {
 		_iterator.loadFromIdReader(reader, reader.readInt());
 	}
 
@@ -79,7 +80,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 
 	public void fetchIDs(int batchSize) {
 		_client.writeMsg(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, new int[]{_queryResultID, batchSize }));
-		YapReader reader = _client.expectedByteResponse(Msg.ID_LIST);
+		Buffer reader = _client.expectedByteResponse(Msg.ID_LIST);
 		loadFromIdReader(reader);
 	}
 	

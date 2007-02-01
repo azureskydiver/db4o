@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 
 final class YChar extends YapJavaClass {
 
@@ -33,7 +35,7 @@ final class YChar extends YapJavaClass {
 		return i_primitive;
 	}
 
-	Object read1(YapReader a_bytes) {
+	Object read1(Buffer a_bytes) {
 		if (Deploy.debug) {
 			a_bytes.readBegin(YapConst.YAPCHAR);
 		}
@@ -46,7 +48,7 @@ final class YChar extends YapJavaClass {
 		return new Character(ret);
 	}
 
-	public void write(Object a_object, YapReader a_bytes) {
+	public void write(Object a_object, Buffer a_bytes) {
 		if (Deploy.debug) {
 			a_bytes.writeBegin(YapConst.YAPCHAR);
 		}

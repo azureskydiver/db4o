@@ -120,7 +120,7 @@ public class YapMemoryFile extends YapFile {
         return true;
     }
 
-	public void writeBytes(YapReader bytes, int address, int addressOffset) {
+	public void writeBytes(Buffer bytes, int address, int addressOffset) {
 		int fullAddress = address + addressOffset;
 		int length = bytes.getLength();
 		ensureMemoryFileSize(fullAddress + length);   

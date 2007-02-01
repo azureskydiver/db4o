@@ -42,7 +42,7 @@ public class FileHeaderVariablePart1 extends YapMeta{
         return LENGTH;
     }
 
-    public void readThis(Transaction trans, YapReader reader) {
+    public void readThis(Transaction trans, Buffer reader) {
         _systemData.converterVersion(reader.readInt());
         _systemData.freespaceSystem(reader.readByte());
         _systemData.freespaceAddress(reader.readInt());
@@ -51,7 +51,7 @@ public class FileHeaderVariablePart1 extends YapMeta{
         _systemData.uuidIndexId(reader.readInt());
     }
 
-    public void writeThis(Transaction trans, YapReader writer) {
+    public void writeThis(Transaction trans, Buffer writer) {
         writer.writeInt(_systemData.converterVersion());
         writer.append(_systemData.freespaceSystem());
         writer.writeInt(_systemData.freespaceAddress());

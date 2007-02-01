@@ -3,7 +3,7 @@
 package com.db4o.inside.classindex;
 
 import com.db4o.*;
-import com.db4o.inside.Exceptions4;
+import com.db4o.inside.*;
 
 /**
  * client class index. Largly intended to do nothing or
@@ -31,7 +31,7 @@ final class ClassIndexClient extends ClassIndex {
 		// do nothing
 	}
 
-	public final void writeOwnID(Transaction trans, YapReader a_writer) {
+	public final void writeOwnID(Transaction trans, Buffer a_writer) {
 		a_writer.writeInt(0);
 	}
 	

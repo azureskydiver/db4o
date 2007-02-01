@@ -4,6 +4,7 @@ package com.db4o.cs;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 
 /**
@@ -60,7 +61,7 @@ public class LazyClientIdIterator implements IntIterator4{
 		_current = -1;
 	}
 
-	public void loadFromIdReader(YapReader reader, int count) {
+	public void loadFromIdReader(Buffer reader, int count) {
 		for (int i = 0; i < count; i++) {
 			_ids[i] = reader.readInt();
 		}

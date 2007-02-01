@@ -5,6 +5,7 @@ package com.db4o.inside.query;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.query.*;
 
 
@@ -129,7 +130,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 
-	public void loadFromIdReader(YapReader r) {
+	public void loadFromIdReader(Buffer r) {
 		throw new NotImplementedException();
 	}
 

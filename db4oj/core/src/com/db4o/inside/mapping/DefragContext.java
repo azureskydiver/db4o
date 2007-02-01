@@ -4,6 +4,7 @@ package com.db4o.inside.mapping;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
 
 /**
@@ -13,14 +14,14 @@ import com.db4o.inside.btree.*;
  */
 public interface DefragContext extends IDMapping {
 	
-	YapReader sourceReaderByAddress(int address,int length);
-	YapReader targetReaderByAddress(int address,int length);
+	Buffer sourceReaderByAddress(int address,int length);
+	Buffer targetReaderByAddress(int address,int length);
 
-	YapReader sourceReaderByID(int sourceID);
+	Buffer sourceReaderByID(int sourceID);
 
 	int allocateTargetSlot(int targetLength);
 
-	void targetWriteBytes(YapReader targetPointerReader, int targetID);
+	void targetWriteBytes(Buffer targetPointerReader, int targetID);
 
 	Transaction systemTrans();
 
@@ -30,7 +31,7 @@ public interface DefragContext extends IDMapping {
 	
 	YapClass yapClass(int id);
 
-	YapWriter sourceWriterByID(int sourceID);
+	StatefulBuffer sourceWriterByID(int sourceID);
 	
 	int mappedID(int id,boolean lenient);
 

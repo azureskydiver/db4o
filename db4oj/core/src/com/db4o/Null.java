@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 
 /**
@@ -47,11 +48,11 @@ public class Null implements Indexable4{
 		return this;
 	}
 	
-    public Object readIndexEntry(YapReader a_reader) {
+    public Object readIndexEntry(Buffer a_reader) {
         return null;
     }
 
-    public void writeIndexEntry(YapReader a_writer, Object a_object) {
+    public void writeIndexEntry(Buffer a_writer, Object a_object) {
         // do nothing
     }
 

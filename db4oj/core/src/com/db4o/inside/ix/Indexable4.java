@@ -3,6 +3,7 @@
 package com.db4o.inside.ix;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -13,9 +14,9 @@ public interface Indexable4 extends YapComparable{
 
     int linkLength();
     
-    Object readIndexEntry(YapReader a_reader);
+    Object readIndexEntry(Buffer a_reader);
     
-    void writeIndexEntry(YapReader a_writer, Object a_object);
+    void writeIndexEntry(Buffer a_writer, Object a_object);
     
 	void defragIndexEntry(ReaderPair readers);
 }

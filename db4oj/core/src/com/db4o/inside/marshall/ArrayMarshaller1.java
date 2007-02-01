@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 
 class ArrayMarshaller1 extends ArrayMarshaller{
@@ -28,7 +29,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public void deleteEmbedded(YapArray arrayHandler, YapWriter reader) {
+    public void deleteEmbedded(YapArray arrayHandler, StatefulBuffer reader) {
         
         int address = reader.readInt();
         reader.readInt();  // length
@@ -57,24 +58,24 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public Object read(YapArray arrayHandler,  YapWriter reader) throws CorruptionException{
+    public Object read(YapArray arrayHandler,  StatefulBuffer reader) throws CorruptionException{
         int linkOffSet = reader.preparePayloadRead();
         Object array = arrayHandler.read1(_family, reader);
         reader._offset = linkOffSet;
         return array;
     }
     
-    public void readCandidates(YapArray arrayHandler, YapReader reader, QCandidates candidates) {
+    public void readCandidates(YapArray arrayHandler, Buffer reader, QCandidates candidates) {
         reader._offset = reader.readInt();
         arrayHandler.read1Candidates(_family, reader, candidates);
     }
     
-    public final Object readQuery(YapArray arrayHandler, Transaction trans, YapReader reader) throws CorruptionException{
+    public final Object readQuery(YapArray arrayHandler, Transaction trans, Buffer reader) throws CorruptionException{
         reader._offset = reader.readInt();
         return arrayHandler.read1Query(trans,_family, reader);
     }
     
-    public Object writeNew(YapArray arrayHandler, Object obj, boolean restoreLinkOffset, YapWriter writer) {
+    public Object writeNew(YapArray arrayHandler, Object obj, boolean restoreLinkOffset, StatefulBuffer writer) {
         if (obj == null) {
             writer.writeEmbeddedNull();
             return null;
@@ -88,7 +89,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         return obj;
     }
 
-    protected YapReader prepareIDReader(Transaction trans,YapReader reader) {
+    protected Buffer prepareIDReader(Transaction trans,Buffer reader) {
         reader._offset = reader.readInt();
         return reader;
     }

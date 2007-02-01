@@ -22,8 +22,7 @@ import com.db4o.foundation.List4;
 import com.db4o.foundation.PersistentTimeStampIdGenerator;
 import com.db4o.foundation.Tree;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.Exceptions4;
-import com.db4o.inside.Global4;
+import com.db4o.inside.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.marshall.MarshallerFamily;
 import com.db4o.inside.query.AbstractQueryResult;
@@ -576,7 +575,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if(yo.isActive()){
             child = field[0].get(obj);
         }else{
-            YapReader reader = readReaderByID(trans, yo.getID());
+            Buffer reader = readReaderByID(trans, yo.getID());
             if(reader == null){
                 return null;
             }
@@ -846,11 +845,11 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return arr;
     }
 
-    public final YapWriter getWriter(Transaction a_trans, int a_address, int a_length) {
+    public final StatefulBuffer getWriter(Transaction a_trans, int a_address, int a_length) {
         if (Debug.exceedsMaximumBlockSize(a_length)) {
             return null;
         }
-        return new YapWriter(a_trans, a_address, a_length);
+        return new StatefulBuffer(a_trans, a_address, a_length);
     }
 
     public final Transaction getSystemTransaction() {
@@ -1177,11 +1176,11 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return true;
     }
 
-    protected YapWriter marshall(Transaction ta, Object obj) {
+    protected StatefulBuffer marshall(Transaction ta, Object obj) {
         // TODO: How about reuse of the MemoryFile here?
         int[] id = { 0};
         byte[] bytes = marshall(obj, id);
-        YapWriter yapBytes = new YapWriter(ta, bytes.length);
+        StatefulBuffer yapBytes = new StatefulBuffer(ta, bytes.length);
         yapBytes.append(bytes);
         yapBytes.useSlot(id[0], 0, bytes.length);
         return yapBytes;
@@ -1349,12 +1348,12 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length);
 
-    public final YapReader readReaderByAddress(int a_address, int a_length) {
+    public final Buffer readReaderByAddress(int a_address, int a_length) {
         if (a_address > 0) {
 
             // TODO: possibly load from cache here
 
-            YapReader reader = new YapReader(a_length);
+            Buffer reader = new Buffer(a_length);
             readBytes(reader._buffer, a_address, a_length);
             i_handlers.decrypt(reader);
             return reader;
@@ -1362,23 +1361,23 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return null;
     }
 
-    public final YapWriter readWriterByAddress(Transaction a_trans,
+    public final StatefulBuffer readWriterByAddress(Transaction a_trans,
         int a_address, int a_length) {
         if (a_address > 0) {
             // TODO:
             // load from cache here
-            YapWriter reader = getWriter(a_trans, a_address, a_length);
+            StatefulBuffer reader = getWriter(a_trans, a_address, a_length);
             reader.readEncrypt(_this, a_address);
             return reader;
         }
         return null;
     }
 
-    public abstract YapWriter readWriterByID(Transaction a_ta, int a_id);
+    public abstract StatefulBuffer readWriterByID(Transaction a_ta, int a_id);
 
-    public abstract YapReader readReaderByID(Transaction a_ta, int a_id);
+    public abstract Buffer readReaderByID(Transaction a_ta, int a_id);
     
-    public abstract YapWriter[] readWritersByIDs(Transaction a_ta, int[] ids);
+    public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
 
     private void reboot() {
         commit();
@@ -1961,7 +1960,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     	_topLevelCallId = id;
     }
 
-    public Object unmarshall(YapWriter yapBytes) {
+    public Object unmarshall(StatefulBuffer yapBytes) {
         return unmarshall(yapBytes._buffer, yapBytes.getID());
     }
 
@@ -1984,13 +1983,13 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract void writeDirty();
 
-    public abstract void writeEmbedded(YapWriter a_parent, YapWriter a_child);
+    public abstract void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child);
 
-    public abstract void writeNew(YapClass a_yapClass, YapWriter aWriter);
+    public abstract void writeNew(YapClass a_yapClass, StatefulBuffer aWriter);
 
     public abstract void writeTransactionPointer(int a_address);
 
-    public abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
+    public abstract void writeUpdate(YapClass a_yapClass, StatefulBuffer a_bytes);
 
     public final void removeReference(YapObject ref) {
         if(DTrace.enabled){

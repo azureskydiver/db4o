@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
 
 /**
@@ -122,7 +123,7 @@ public abstract class IxTree extends Tree implements Visitor4{
     
     public abstract void freespaceVisit(FreespaceVisitor visitor, int index);
     
-    public abstract int write(Indexable4 a_handler, YapWriter a_writer);
+    public abstract int write(Indexable4 a_handler, StatefulBuffer a_writer);
     
     public void visitFirst(FreespaceVisitor visitor){
         if(_preceding != null){

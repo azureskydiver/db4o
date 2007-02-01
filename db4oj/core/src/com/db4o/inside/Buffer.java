@@ -1,7 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -10,17 +11,17 @@ import com.db4o.foundation.*;
  * @exclude
  * @renameto Buffer
  */
-public class YapReader implements SlotReader {
+public class Buffer implements SlotReader {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;
 	public int _offset;
 
 	
-	YapReader(){
+	Buffer(){
 	}
 	
-	public YapReader(int a_length){
+	public Buffer(int a_length){
 		_buffer = new byte[a_length];
 	}
 	
@@ -37,7 +38,7 @@ public class YapReader implements SlotReader {
         _offset += a_bytes.length;
     }
     
-	final boolean containsTheSame(YapReader other) {
+	public final boolean containsTheSame(Buffer other) {
 	    if(other != null) {
 	        byte[] otherBytes = other._buffer;
 	        if(_buffer == null) {
@@ -56,7 +57,7 @@ public class YapReader implements SlotReader {
 	    return false;
 	}
 	
-    public void copyTo(YapReader to, int fromOffset, int toOffset, int length) {
+    public void copyTo(Buffer to, int fromOffset, int toOffset, int length) {
         System.arraycopy(_buffer, fromOffset, to._buffer, toOffset, length);
     }
 
@@ -109,13 +110,13 @@ public class YapReader implements SlotReader {
 	    return bytes;
 	}
 	
-	void readBytes(byte[] bytes) {
+	public void readBytes(byte[] bytes) {
 		int length = bytes.length;
 	    System.arraycopy(_buffer, _offset, bytes, 0, length);
 	    _offset += length;
 	}
     
-	public final YapReader readEmbeddedObject(Transaction a_trans) {
+	public final Buffer readEmbeddedObject(Transaction a_trans) {
 		return a_trans.stream().readReaderByAddress(readInt(), readInt());
 	}
 	
@@ -160,8 +161,8 @@ public class YapReader implements SlotReader {
         return YLong.readLong(this);
     }
     
-    public YapReader readPayloadReader(int offset, int length){
-        YapReader payLoad = new YapReader(length);
+    public Buffer readPayloadReader(int offset, int length){
+        Buffer payLoad = new Buffer(length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
         return payLoad;
     }

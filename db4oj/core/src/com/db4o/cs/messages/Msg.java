@@ -7,6 +7,7 @@ import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.inside.*;
 
 /**
  * Messages for Client/Server Communication
@@ -123,7 +124,7 @@ public class Msg implements Cloneable {
 	 * dummy method to allow clean override handling
 	 * without casting
 	 */
-	public YapReader getByteLoad() {
+	public Buffer getByteLoad() {
 		return null;
 	}
 
@@ -164,7 +165,7 @@ public class Msg implements Cloneable {
 	}
 
 	public static final Msg readMessage(Transaction a_trans, YapSocket sock) throws IOException {
-		YapWriter reader = new YapWriter(a_trans, YapConst.MESSAGE_LENGTH);
+		StatefulBuffer reader = new StatefulBuffer(a_trans, YapConst.MESSAGE_LENGTH);
 		if(!reader.read(sock)) {
 			return null;
 		}
@@ -175,13 +176,13 @@ public class Msg implements Cloneable {
 		return message;
 	}
 
-	Msg readPayLoad(Transaction a_trans, YapSocket sock, YapReader reader)
+	Msg readPayLoad(Transaction a_trans, YapSocket sock, Buffer reader)
 		throws IOException {
 	    a_trans = checkParentTransaction(a_trans, reader);
 	    return clone(a_trans);
 	}
 
-	protected Transaction checkParentTransaction(Transaction a_trans, YapReader reader) {
+	protected Transaction checkParentTransaction(Transaction a_trans, Buffer reader) {
 		if(reader.readByte() == YapConst.SYSTEM_TRANS && a_trans.parentTransaction() != null){
 	        return a_trans.parentTransaction();
 	    }
@@ -246,8 +247,8 @@ public class Msg implements Cloneable {
 		}
 	}
 
-	public YapWriter payLoad() {
-		YapWriter writer = new YapWriter(transaction(), YapConst.MESSAGE_LENGTH);
+	public StatefulBuffer payLoad() {
+		StatefulBuffer writer = new StatefulBuffer(transaction(), YapConst.MESSAGE_LENGTH);
 		writer.writeInt(_msgID);
 		return writer;
 	}

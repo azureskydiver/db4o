@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -11,19 +12,19 @@ public abstract class UntypedMarshaller {
     
     MarshallerFamily _family;
     
-    public abstract void deleteEmbedded(YapWriter reader);
+    public abstract void deleteEmbedded(StatefulBuffer reader);
     
-    public abstract Object writeNew(Object obj, boolean restoreLinkOffset, YapWriter writer);
+    public abstract Object writeNew(Object obj, boolean restoreLinkOffset, StatefulBuffer writer);
 
-    public abstract Object read(YapWriter reader) throws CorruptionException;
+    public abstract Object read(StatefulBuffer reader) throws CorruptionException;
     
-    public abstract TypeHandler4 readArrayHandler(Transaction a_trans, YapReader[] a_bytes);
+    public abstract TypeHandler4 readArrayHandler(Transaction a_trans, Buffer[] a_bytes);
 
     public abstract boolean useNormalClassRead();
     
-    public abstract Object readQuery(Transaction trans, YapReader reader, boolean toArray) throws CorruptionException;
+    public abstract Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException;
 
-    public abstract QCandidate readSubCandidate(YapReader reader, QCandidates candidates, boolean withIndirection);
+    public abstract QCandidate readSubCandidate(Buffer reader, QCandidates candidates, boolean withIndirection);
 
 	public abstract void defrag(ReaderPair readers);
 }

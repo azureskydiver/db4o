@@ -47,7 +47,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     public abstract Object defaultValue();
 
-    public void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes) {
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
         a_bytes.incrementOffset(linkLength());
     }
 
@@ -95,31 +95,31 @@ public abstract class YapJavaClass implements TypeHandler4 {
     
     abstract Object primitiveNull();
     
-    public boolean readArray(Object array, YapReader reader) {
+    public boolean readArray(Object array, Buffer reader) {
         return false;
     }
 
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         // virtual and do nothing
         return null;
     }
 
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, YapReader reader, boolean toArray)
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray)
         throws CorruptionException {
         return read1(reader);
     }
 
-    public Object read(MarshallerFamily mf, YapWriter writer, boolean redirect) throws CorruptionException {
+    public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
         return read1(writer);
     }
 
-    abstract Object read1(YapReader reader) throws CorruptionException;
+    abstract Object read1(Buffer reader) throws CorruptionException;
 
-    public void readCandidates(MarshallerFamily mf, YapReader a_bytes, QCandidates a_candidates) {
+    public void readCandidates(MarshallerFamily mf, Buffer a_bytes, QCandidates a_candidates) {
         // do nothing
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, YapReader reader, QCandidates candidates, boolean withIndirection) {
+    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         try {
             Object obj = readQuery(candidates.i_trans, mf, withIndirection, reader, true);
             if(obj != null){
@@ -130,7 +130,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return null;
     } 
 
-    public Object readIndexEntry(YapReader a_reader) {
+    public Object readIndexEntry(Buffer a_reader) {
         try {
             return read1(a_reader);
         } catch (CorruptionException e) {
@@ -138,7 +138,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return null;
     }
     
-    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
         return read(mf, a_writer, true);
     }
     
@@ -167,20 +167,20 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return true;
     }
 
-    public abstract void write(Object a_object, YapReader a_bytes);
+    public abstract void write(Object a_object, Buffer a_bytes);
     
-    public boolean writeArray(Object array, YapReader reader) {
+    public boolean writeArray(Object array, Buffer reader) {
         return false;
     }
 
-    public void writeIndexEntry(YapReader a_writer, Object a_object) {
+    public void writeIndexEntry(Buffer a_writer, Object a_object) {
         if (a_object == null) {
             a_object = primitiveNull();
         }
         write(a_object, a_writer);
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, YapWriter a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
+    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
         if (a_object == null) {
             a_object = primitiveNull();
         }
