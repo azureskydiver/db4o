@@ -259,7 +259,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 	}
 
 	private void sendClassMeta(ReflectClass reflectClass) {
-		ClassMeta classMeta = _classMetaHelper.getClassMeta(reflectClass);
+		ClassInfo classMeta = _classMetaHelper.getClassMeta(reflectClass);
 		writeMsg(Msg.CLASS_META.getWriter(marshall(i_systemTrans, classMeta)), true);
 	}
 	

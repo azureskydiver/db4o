@@ -6,7 +6,7 @@ import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.config.Entry;
 import com.db4o.config.QueryEvaluationMode;
-import com.db4o.cs.ClassMetaHelper;
+import com.db4o.cs.ClassInfoHelper;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oException;
 import com.db4o.ext.Db4oUUID;
@@ -61,7 +61,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     // if (i_classCollection == null) the engine is down.
     protected YapClassCollection      _classCollection;
     
-    protected ClassMetaHelper _classMetaHelper = new ClassMetaHelper();
+    protected ClassInfoHelper _classMetaHelper = new ClassInfoHelper();
 
     // the Configuration context for this ObjectContainer
     protected Config4Impl             i_config;
@@ -2039,7 +2039,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return _classCollection;
     }
     
-    public ClassMetaHelper getClassMetaHelper() {
+    public ClassInfoHelper getClassMetaHelper() {
     	return _classMetaHelper;
     }
     

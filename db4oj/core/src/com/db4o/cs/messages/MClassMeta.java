@@ -3,7 +3,7 @@
 package com.db4o.cs.messages;
 
 import com.db4o.*;
-import com.db4o.cs.ClassMeta;
+import com.db4o.cs.ClassInfo;
 import com.db4o.cs.YapServerThread;
 import com.db4o.inside.*;
 import com.db4o.reflect.generic.GenericClass;
@@ -13,7 +13,7 @@ public class MClassMeta extends MsgObject {
 		YapStream stream = stream();
 		unmarshall();
 		try{
-			ClassMeta classMeta = (ClassMeta) stream().unmarshall(_payLoad);
+			ClassInfo classMeta = (ClassInfo) stream().unmarshall(_payLoad);
 			GenericClass genericClass = stream.getClassMetaHelper().classMetaToGenericClass(stream().reflector(), classMeta);
 			if (genericClass != null) {
 				synchronized (streamLock()) {

@@ -9,20 +9,20 @@ import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.generic.GenericField;
 import com.db4o.reflect.generic.GenericReflector;
 
-public class ClassMetaHelper {
+public class ClassInfoHelper {
 
 	private Hashtable4 _classMetaTable = new Hashtable4();
 
 	private Hashtable4 _genericClassTable = new Hashtable4();
 
-	public ClassMeta getClassMeta(ReflectClass claxx) {
+	public ClassInfo getClassMeta(ReflectClass claxx) {
 
 		String className = claxx.getName();
 		if (isSystemClass(className)) {
-			return ClassMeta.newSystemClass(className);
+			return ClassInfo.newSystemClass(className);
 		}
 
-		ClassMeta existing = lookupClassMeta(className);
+		ClassInfo existing = lookupClassMeta(className);
 		if (existing != null) {
 			return existing;
 		}
@@ -30,9 +30,9 @@ public class ClassMetaHelper {
 		return newUserClassMeta(claxx);
 	}
 
-	private ClassMeta newUserClassMeta(ReflectClass claxx) {
+	private ClassInfo newUserClassMeta(ReflectClass claxx) {
 
-		ClassMeta classMeta = ClassMeta.newUserClass(claxx.getName());
+		ClassInfo classMeta = ClassInfo.newUserClass(claxx.getName());
 		classMeta.setSuperClass(mapSuperclass(claxx));
 
 		registerClassMeta(claxx.getName(), classMeta);
@@ -41,7 +41,7 @@ public class ClassMetaHelper {
 		return classMeta;
 	}
 
-	private ClassMeta mapSuperclass(ReflectClass claxx) {
+	private ClassInfo mapSuperclass(ReflectClass claxx) {
 		ReflectClass superClass = claxx.getSuperclass();
 		if (superClass != null) {
 			return getClassMeta(superClass);
@@ -49,15 +49,15 @@ public class ClassMetaHelper {
 		return null;
 	}
 
-	private FieldMeta[] mapFields(ReflectField[] fields) {
-		FieldMeta[] fieldsMeta = new FieldMeta[fields.length];
+	private FieldInfo[] mapFields(ReflectField[] fields) {
+		FieldInfo[] fieldsMeta = new FieldInfo[fields.length];
 		for (int i = 0; i < fields.length; ++i) {
 			final ReflectField field = fields[i];
 			boolean isArray = field.getFieldType().isArray();
 			ReflectClass fieldClass = isArray ? field.getFieldType().getComponentType() : field.getFieldType();
 			boolean isPrimitive = fieldClass.isPrimitive();
 			// TODO: need to handle NArray, currently it ignores NArray and alway sets NArray flag false.
-			fieldsMeta[i] = new FieldMeta(field.getName(), getClassMeta(fieldClass), isPrimitive, isArray, false);
+			fieldsMeta[i] = new FieldInfo(field.getName(), getClassMeta(fieldClass), isPrimitive, isArray, false);
 		}
 		return fieldsMeta;
 	}
@@ -71,16 +71,16 @@ public class ClassMetaHelper {
 		return className.startsWith("java");
 	}
 
-	private ClassMeta lookupClassMeta(String className) {
-		return (ClassMeta) _classMetaTable.get(className);
+	private ClassInfo lookupClassMeta(String className) {
+		return (ClassInfo) _classMetaTable.get(className);
 	}
 
-	private void registerClassMeta(String className, ClassMeta classMeta) {
+	private void registerClassMeta(String className, ClassInfo classMeta) {
 		_classMetaTable.put(className, classMeta);
 	}
 
 	public GenericClass classMetaToGenericClass(GenericReflector reflector,
-			ClassMeta classMeta) {
+			ClassInfo classMeta) {
 		if (classMeta.isSystemClass()) {
 			return (GenericClass) reflector.forName(classMeta.getClassName());
 		}
@@ -93,7 +93,7 @@ public class ClassMetaHelper {
 		}
 
 		GenericClass genericSuperClass = null;
-		ClassMeta superClassMeta = classMeta.getSuperClass();
+		ClassInfo superClassMeta = classMeta.getSuperClass();
 		if (superClassMeta != null) {
 			genericSuperClass = classMetaToGenericClass(reflector,
 					superClassMeta);
@@ -103,11 +103,11 @@ public class ClassMetaHelper {
 				genericSuperClass);
 		registerGenericClass(className, genericClass);
 
-		FieldMeta[] fields = classMeta.getFields();
+		FieldInfo[] fields = classMeta.getFields();
 		GenericField[] genericFields = new GenericField[fields.length];
 
 		for (int i = 0; i < fields.length; ++i) {
-			ClassMeta fieldClassMeta = fields[i].getFieldClass();
+			ClassInfo fieldClassMeta = fields[i].getFieldClass();
 			String fieldName = fields[i].getFieldName();
 			GenericClass genericFieldClass = classMetaToGenericClass(reflector,
 					fieldClassMeta);

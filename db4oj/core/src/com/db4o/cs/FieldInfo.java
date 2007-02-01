@@ -2,11 +2,11 @@
 
 package com.db4o.cs;
 
-public class FieldMeta {
+public class FieldInfo {
 
 	public String _fieldName;
 
-	public ClassMeta _fieldClass;
+	public ClassInfo _fieldClass;
 
 	public boolean _isPrimitive;
 
@@ -14,10 +14,10 @@ public class FieldMeta {
 
 	public boolean _isNArray;
 
-	public FieldMeta() {
+	public FieldInfo() {
 	}
 
-	public FieldMeta(String fieldName, ClassMeta fieldClass,
+	public FieldInfo(String fieldName, ClassInfo fieldClass,
 			boolean isPrimitive, boolean isArray, boolean isNArray) {
 		_fieldName = fieldName;
 		_fieldClass = fieldClass;
@@ -26,7 +26,7 @@ public class FieldMeta {
 		_isNArray = isNArray;
 	}
 
-	public ClassMeta getFieldClass() {
+	public ClassInfo getFieldClass() {
 		return _fieldClass;
 	}
 
