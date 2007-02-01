@@ -29,7 +29,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	    return getYapField().getIndex(transaction());
 	}
 
-	private YapField getYapField() {
+	private FieldMetadata getYapField() {
 	    return _constraint.getField().getYapField();
 	}
 

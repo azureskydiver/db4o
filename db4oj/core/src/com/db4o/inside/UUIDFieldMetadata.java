@@ -15,11 +15,11 @@ import com.db4o.inside.slots.*;
 /**
  * @exclude
  */
-public class YapFieldUUID extends YapFieldVirtual {
+public class UUIDFieldMetadata extends VirtualFieldMetadata {
     
     private static final int LINK_LENGTH = YapConst.LONG_LENGTH + YapConst.ID_LENGTH;
 
-    YapFieldUUID(ObjectContainerBase stream) {
+    UUIDFieldMetadata(ObjectContainerBase stream) {
         super();
         i_name = YapConst.VIRTUAL_FIELD_PREFIX + "uuid";
         i_handler = new LongHandler(stream);

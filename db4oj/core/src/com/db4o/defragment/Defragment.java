@@ -260,7 +260,7 @@ public class Defragment {
 	private static boolean withFieldIndex(ClassMetadata clazz) {
 		Iterator4 fieldIter = clazz.fields();
 		while (fieldIter.moveNext()) {
-			YapField curField = (YapField) fieldIter.current();
+			FieldMetadata curField = (FieldMetadata) fieldIter.current();
 			if (curField.hasIndex()
 					&& (curField.getHandler() instanceof StringHandler)) {
 				return true;

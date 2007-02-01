@@ -33,7 +33,7 @@ public abstract class ClassMarshaller {
         
         writeIndex(trans, clazz, writer);
         
-        YapField[] fields = clazz.i_fields; 
+        FieldMetadata[] fields = clazz.i_fields; 
         
         if (fields == null) {
             writer.writeInt(0);
@@ -96,16 +96,16 @@ public abstract class ClassMarshaller {
 
     protected abstract void readIndex(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) ;
 
-	private YapField[] createFields(ClassMetadata clazz, final int fieldCount) {
-		final YapField[] fields = new YapField[fieldCount];
+	private FieldMetadata[] createFields(ClassMetadata clazz, final int fieldCount) {
+		final FieldMetadata[] fields = new FieldMetadata[fieldCount];
         for (int i = 0; i < fields.length; i++) {
-            fields[i] = new YapField(clazz);
+            fields[i] = new FieldMetadata(clazz);
             fields[i].setArrayPosition(i);
         }
 		return fields;
 	}
 
-	private void readFields(ObjectContainerBase stream, Buffer reader, final YapField[] fields) {
+	private void readFields(ObjectContainerBase stream, Buffer reader, final FieldMetadata[] fields) {
 		for (int i = 0; i < fields.length; i++) {
             fields[i] = _family._field.read(stream, fields[i], reader);
         }
@@ -142,7 +142,7 @@ public abstract class ClassMarshaller {
 		// field length
 		readers.incrementIntSize();
 		
-		YapField[] fields=yapClass.i_fields;
+		FieldMetadata[] fields=yapClass.i_fields;
 		for(int fieldIdx=0;fieldIdx<fields.length;fieldIdx++) {
 			_family._field.defrag(yapClass,fields[fieldIdx],sio,readers);
 		}

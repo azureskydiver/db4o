@@ -11,14 +11,14 @@ import com.db4o.inside.*;
  */
 public interface FieldMarshaller {
 
-    void write(Transaction trans, ClassMetadata clazz, YapField field, Buffer writer);
+    void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, Buffer writer);
 
     RawFieldSpec readSpec(ObjectContainerBase stream,Buffer reader);
     
-    YapField read(ObjectContainerBase stream, YapField field, Buffer reader);
+    FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, Buffer reader);
 
-    int marshalledLength(ObjectContainerBase stream, YapField field);
+    int marshalledLength(ObjectContainerBase stream, FieldMetadata field);
 
-	void defrag(ClassMetadata yapClass, YapField yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException;
+	void defrag(ClassMetadata yapClass, FieldMetadata yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException;
 
 }

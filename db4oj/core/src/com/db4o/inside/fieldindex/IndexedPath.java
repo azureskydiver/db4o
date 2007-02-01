@@ -17,15 +17,15 @@ public class IndexedPath extends IndexedNodeBase {
 	
 	private static boolean canFollowParent(QCon con) {
 		final QCon parent = con.parent();
-		final YapField parentField = getYapField(parent);
+		final FieldMetadata parentField = getYapField(parent);
 		if (null == parentField) return false;
-		final YapField conField = getYapField(con);
+		final FieldMetadata conField = getYapField(con);
 		if (null == conField) return false;		
 		return parentField.hasIndex()
 			&& parentField.getParentYapClass().isAssignableFrom(conField.getParentYapClass());
 	}
 	
-	private static YapField getYapField(QCon con) {
+	private static FieldMetadata getYapField(QCon con) {
 		QField field = con.getField();
 		if (null == field) return null;
 		return field.getYapField();

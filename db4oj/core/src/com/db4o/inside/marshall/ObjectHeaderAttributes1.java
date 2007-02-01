@@ -55,7 +55,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         _baseLength += YapConst.INT_LENGTH;
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {
-                YapField yf = yc.i_fields[i];
+                FieldMetadata yf = yc.i_fields[i];
                 Object child = yf.getOrCreate(trans, obj);
                 if( child == null && yf.canUseNullBitmap()){
                     _nullBitMap.setTrue(fieldIndex);

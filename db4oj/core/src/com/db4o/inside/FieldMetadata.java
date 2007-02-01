@@ -19,7 +19,7 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public class YapField implements StoredField {
+public class FieldMetadata implements StoredField {
 
     private ClassMetadata         i_yapClass;
 
@@ -54,13 +54,13 @@ public class YapField implements StoredField {
     
     private BTree _index;
 
-    static final YapField[]  EMPTY_ARRAY = new YapField[0];
+    static final FieldMetadata[]  EMPTY_ARRAY = new FieldMetadata[0];
 
-    public YapField(ClassMetadata a_yapClass) {
+    public FieldMetadata(ClassMetadata a_yapClass) {
         i_yapClass = a_yapClass;
     }
 
-    YapField(ClassMetadata a_yapClass, ObjectTranslator a_translator) {
+    FieldMetadata(ClassMetadata a_yapClass, ObjectTranslator a_translator) {
         // for YapFieldTranslator only
     	this(a_yapClass);
         init(a_yapClass, a_translator.getClass().getName());
@@ -70,7 +70,7 @@ public class YapField implements StoredField {
             stream, stream.reflector().forClass(a_translator.storedClass()));
     }
 
-    YapField(ClassMetadata a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
+    FieldMetadata(ClassMetadata a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
     	this(a_yapClass);
         init(a_yapClass, a_field.getName());
         i_javaField = a_field;
@@ -394,8 +394,8 @@ public class YapField implements StoredField {
     }
 
     public boolean equals(Object obj) {
-        if (obj instanceof YapField) {
-            YapField yapField = (YapField) obj;
+        if (obj instanceof FieldMetadata) {
+            FieldMetadata yapField = (FieldMetadata) obj;
             yapField.alive();
             alive();
             return yapField.i_isPrimitive == i_isPrimitive

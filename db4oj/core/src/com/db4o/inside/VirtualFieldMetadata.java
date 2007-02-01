@@ -18,9 +18,9 @@ import com.db4o.inside.slots.*;
  * 
  * @exclude
  */
-public abstract class YapFieldVirtual extends YapField {
+public abstract class VirtualFieldMetadata extends FieldMetadata {
 
-    YapFieldVirtual() {
+    VirtualFieldMetadata() {
         super(null);
     }
     

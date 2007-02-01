@@ -66,7 +66,7 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
             StoredField[] storedFields = storedClass.getStoredFields();
             for (int j = 0; j < storedFields.length; j++) {
                 StoredField storedField = storedFields[j];
-                if(((YapField)storedField).hasIndex()){
+                if(((FieldMetadata)storedField).hasIndex()){
                     counter++;
                 }
             }

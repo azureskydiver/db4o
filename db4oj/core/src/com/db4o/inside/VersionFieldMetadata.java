@@ -12,9 +12,9 @@ import com.db4o.inside.slots.*;
 /**
  * @exclude
  */
-public class YapFieldVersion extends YapFieldVirtual {
+public class VersionFieldMetadata extends VirtualFieldMetadata {
 
-    YapFieldVersion(ObjectContainerBase stream) {
+    VersionFieldMetadata(ObjectContainerBase stream) {
         super();
         i_name = VirtualField.VERSION;
         i_handler = new LongHandler(stream);

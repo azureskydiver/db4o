@@ -9,11 +9,11 @@ import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 
 
-final class YapFieldTranslator extends YapField
+final class TranslatedFieldMetadata extends FieldMetadata
 {
 	private final ObjectTranslator i_translator;
 
-	YapFieldTranslator(ClassMetadata a_yapClass, ObjectTranslator a_translator){
+	TranslatedFieldMetadata(ClassMetadata a_yapClass, ObjectTranslator a_translator){
 	    super(a_yapClass, a_translator);
 		i_translator = a_translator;
 		ObjectContainerBase stream = a_yapClass.getStream();
