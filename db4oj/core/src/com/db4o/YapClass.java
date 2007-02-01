@@ -1023,97 +1023,123 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         storeStaticFieldValues(systemTrans, false);
     }
 
-	Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes, boolean a_addToIDTree) {
+	Object instantiate(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter buffer, boolean a_addToIDTree) {
         
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
+		
+		adjustInstantiationDepth(buffer);
 
-        YapStream stream = a_bytes.getStream();
-        Transaction trans = a_bytes.getTransaction();
-        boolean create = (a_object == null);
+		final YapStream stream = buffer.getStream();
+		final boolean instantiating = (obj == null);
+		if (instantiating) {
+			obj = instantiateObject(buffer, mf);
+			if (obj == null) {
+				return null;
+			}  
+            
+			shareTransaction(obj, buffer.getTransaction());
+			shareYapObject(obj, yapObject);
+            
+			yapObject.setObjectWeak(stream, obj);
+			stream.hcTreeAdd(yapObject);
+		}
+        
+		if(a_addToIDTree){
+			yapObject.addToIDTree(stream);
+		}
+        
+		// when there's a ObjectConstructor configured for a type
+		// the type is marshalled through a lone virtual field
+		// of type YapFieldTranslator which should take care of everything		
+		//final boolean instantiatedByTranslator = instantiating && configInstantiates();
+		final boolean activatingActiveObject = !instantiating && !stream.i_refreshInsteadOfActivate && yapObject.isActive();
+		final boolean doFields = buffer.getInstantiationDepth() > 0 || cascadeOnActivate();
+		if (doFields && !activatingActiveObject /* && !instantiatedByTranslator*/) {
+			if(objectCanActivate(stream, obj)){
+				yapObject.setStateClean();
+				instantiateFields(yapObject, obj, mf, attributes, buffer);
+				objectOnActivate(stream, obj);
+			} else if (instantiating) {
+				yapObject.setStateDeactivated();
+			}
+		} else {
+			if (instantiating) {
+                yapObject.setStateDeactivated();
+            } else {
+                if (buffer.getInstantiationDepth() > 1) {
+                    activateFields(buffer.getTransaction(), obj, buffer.getInstantiationDepth() - 1);
+                }
+            }
+        }
+        return obj;
+    }
+	
+	private Object instantiateObject(YapWriter a_bytes, MarshallerFamily mf) {
+		Object instance = null;
+		if (configInstantiates()) {
+			instance = instantiateFromConfig(a_bytes.getStream(), a_bytes, mf);            	
+		} else {
+			instance = instantiateFromReflector(a_bytes.getStream());
+		}
+		return instance;
+	}
 
-        if (i_config != null) {
+	private Object instantiateFromReflector(YapStream stream) {
+		if (_reflector == null) {
+		    return null;
+		}
+
+		stream.instantiating(true);
+		try {
+		    return _reflector.newInstance();
+		} catch (NoSuchMethodError e) {
+		    stream.logMsg(7, classReflector().getName());
+		    return null;
+		} catch (Exception e) {
+		    // TODO: be more helpful here
+		    return null;
+		} finally {
+			stream.instantiating(false);
+		}
+	}
+
+	private Object instantiateFromConfig(YapStream stream, YapWriter a_bytes, MarshallerFamily mf) {
+		int bytesOffset = a_bytes._offset;
+		a_bytes.incrementOffset(YapConst.INT_LENGTH);
+		// Field length is always 1
+		try {
+		    return i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));                      
+		} catch (Exception e) {
+		    Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
+		    return null;
+		} finally {
+			a_bytes._offset = bytesOffset;
+		}
+	}
+
+	private void adjustInstantiationDepth(YapWriter a_bytes) {
+		if (i_config != null) {
             a_bytes.setInstantiationDepth(
                 i_config.adjustActivationDepth(a_bytes.getInstantiationDepth()));
         }
+	}
 
-        boolean doFields =
-            (a_bytes.getInstantiationDepth() > 0)
-                || (i_config != null && (i_config.cascadeOnActivate() == YapConst.YES));
+	private boolean cascadeOnActivate() {
+		return i_config != null && (i_config.cascadeOnActivate() == YapConst.YES);
+	}
 
-        if (create) {
-            if (configInstantiates()) {
-                int bytesOffset = a_bytes._offset;
-                a_bytes.incrementOffset(YapConst.INT_LENGTH);
-                // Field length is always 1
-                try {
-                    a_object = i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));
-                } catch (Exception e) {
-                    Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
-                    return null;
-                }
-                a_bytes._offset = bytesOffset;
-            } else {
-                if (_reflector == null) {
-                    return null;
-                }
+	private void shareYapObject(Object obj, YapObject yapObj) {
+		if (obj instanceof Db4oTypeImpl) {
+		    ((Db4oTypeImpl)obj).setYapObject(yapObj);
+		}
+	}
 
-                stream.instantiating(true);
-                try {
-                    a_object = _reflector.newInstance();
-                } catch (NoSuchMethodError e) {
-                    stream.logMsg(7, classReflector().getName());
-                    stream.instantiating(false);
-                    return null;
-                } catch (Exception e) {
-                    // TODO: be more helpful here
-                    stream.instantiating(false);
-                    return null;
-                }
-                stream.instantiating(false);
-
-            }
-            if (a_object instanceof TransactionAware) {
-                ((TransactionAware)a_object).setTrans(a_bytes.getTransaction());
-            }
-            if (a_object instanceof Db4oTypeImpl) {
-                ((Db4oTypeImpl)a_object).setYapObject(a_yapObject);
-            }
-            a_yapObject.setObjectWeak(stream, a_object);
-            stream.hcTreeAdd(a_yapObject);
-        } else {
-            if(! stream.i_refreshInsteadOfActivate){
-	            if (a_yapObject.isActive()) {
-	                doFields = false;
-	            }
-            }
-        }
-        
-        if(a_addToIDTree){
-            a_yapObject.addToIDTree(stream);
-        }
-        
-        if (doFields) {
-            if(objectCanActivate(stream, a_object)){
-	            a_yapObject.setStateClean();
-	            instantiateFields(a_yapObject, a_object, mf, attributes, a_bytes);
-	            objectOnActivate(stream, a_object);
-            }else{
-                if (create) {
-                    a_yapObject.setStateDeactivated();
-                }
-            }
-        } else {
-            if (create) {
-                a_yapObject.setStateDeactivated();
-            } else {
-                if (a_bytes.getInstantiationDepth() > 1) {
-                    activateFields(trans, a_object, a_bytes.getInstantiationDepth() - 1);
-                }
-            }
-        }
-        return a_object;
-    }
+	private void shareTransaction(Object obj, Transaction transaction) {
+		if (obj instanceof TransactionAware) {
+		    ((TransactionAware)obj).setTrans(transaction);
+		}
+	}
 
 	private void objectOnActivate(YapStream stream, Object obj) {
 		stream.callbacks().objectOnActivate(obj);
@@ -1125,45 +1151,18 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 			&& dispatchEvent(stream, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter a_bytes) {
+    Object instantiateTransient(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, YapWriter buffer) {
 
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
 
-        YapStream stream = a_bytes.getStream();
-
-        if (configInstantiates()) {
-            int bytesOffset = a_bytes._offset;
-            a_bytes.incrementOffset(YapConst.INT_LENGTH);
-            // Field length is always 1
-            try {
-                a_object = i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));
-            } catch (Exception e) {
-                Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
-                return null;
-            }
-            a_bytes._offset = bytesOffset;
-        } else {
-            if (_reflector == null) {
-                return null;
-            }
-            stream.instantiating(true);
-            try {
-                a_object = _reflector.newInstance();
-            } catch (NoSuchMethodError e) {
-                stream.logMsg(7, classReflector().getName());
-                stream.instantiating(false);
-                return null;
-            } catch (Exception e) {
-                // TODO: be more helpful here
-                stream.instantiating(false);
-                return null;
-            }
-            stream.instantiating(false);
+        obj = instantiateObject(buffer, mf);
+        if (obj == null) {
+        	return null;
         }
-        stream.peeked(a_yapObject.getID(), a_object);
-        instantiateFields(a_yapObject, a_object, mf, attributes, a_bytes);
-        return a_object;
+        buffer.getStream().peeked(yapObject.getID(), obj);
+        instantiateFields(yapObject, obj, mf, attributes, buffer);
+        return obj;
     }
 
     void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, YapWriter a_bytes) {
