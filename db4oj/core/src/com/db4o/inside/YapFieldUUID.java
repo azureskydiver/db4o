@@ -135,7 +135,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     	}
 	}
 
-    void instantiate1(Transaction a_trans, YapObject a_yapObject, Buffer a_bytes) {
+    void instantiate1(Transaction a_trans, ObjectReference a_yapObject, Buffer a_bytes) {
         int dbID = a_bytes.readInt();
         YapStream stream = a_trans.stream();
         stream.showInternalClasses(true);
@@ -153,7 +153,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         return LINK_LENGTH;
     }
     
-    void marshall1(YapObject a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
+    void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
         YapStream stream = a_bytes.getStream();
         Transaction trans = a_bytes.getTransaction();
         boolean indexEntry = a_new && stream.maintainsIndices();
@@ -224,7 +224,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         if (arr[1] == null) {
         	return null;
         }
-        YapObject yod = (YapObject) arr[1];
+        ObjectReference yod = (ObjectReference) arr[1];
         VirtualAttributes vad = yod.virtualAttributes(transaction);
         if (!Arrays4.areEqual(signature, vad.i_database.i_signature)) {
             return null;

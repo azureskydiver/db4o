@@ -22,7 +22,7 @@ public interface Db4oTypeImpl extends TransactionAware {
     
     void replicateFrom(Object obj);
 	
-	void setYapObject(YapObject a_yapObject);
+	void setYapObject(ObjectReference a_yapObject);
 	
 	Object storedTo(Transaction a_trans);
 	

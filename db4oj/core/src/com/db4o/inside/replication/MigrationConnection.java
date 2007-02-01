@@ -24,7 +24,7 @@ public class MigrationConnection {
         _peerB = peerB;
     }
 
-    public void mapReference(Object obj, YapObject ref) {
+    public void mapReference(Object obj, ObjectReference ref) {
         
         // FIXME: Identityhashcode is not unique
         
@@ -44,9 +44,9 @@ public class MigrationConnection {
     }
 
 
-    public YapObject referenceFor(Object obj) {
+    public ObjectReference referenceFor(Object obj) {
         int hcode = System.identityHashCode(obj);
-        YapObject ref = (YapObject) _referenceMap.get(hcode);
+        ObjectReference ref = (ObjectReference) _referenceMap.get(hcode);
         _referenceMap.remove(hcode);
         return ref;
     }

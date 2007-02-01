@@ -71,7 +71,7 @@ public class ReplicationImpl implements ReplicationProcess {
         
 	}
 
-    private int bindAndSet(Transaction trans, YapStream peer, YapObject ref, Object sourceObject){
+    private int bindAndSet(Transaction trans, YapStream peer, ObjectReference ref, Object sourceObject){
         if(sourceObject instanceof Db4oTypeImpl){
             Db4oTypeImpl db4oType = (Db4oTypeImpl)sourceObject;
             if(! db4oType.canBind()){
@@ -125,7 +125,7 @@ public class ReplicationImpl implements ReplicationProcess {
 		_peerB.i_handlers.replication(null);
 	}
     
-    private int idInCaller(YapStream caller, YapObject referenceA, YapObject referenceB){
+    private int idInCaller(YapStream caller, ObjectReference referenceA, ObjectReference referenceB){
         return (caller == _peerA) ? referenceA.getID() : referenceB.getID();
     }
 
@@ -197,7 +197,7 @@ public class ReplicationImpl implements ReplicationProcess {
 		}
 	}
 
-	private void shareBinding(YapObject sourceReference, YapObject referenceA, Object objectA, YapObject referenceB, Object objectB) {
+	private void shareBinding(ObjectReference sourceReference, ObjectReference referenceA, Object objectA, ObjectReference referenceB, Object objectB) {
 		if(sourceReference == null) {
 			return;
 		}
@@ -245,7 +245,7 @@ public class ReplicationImpl implements ReplicationProcess {
         
         int notProcessed = 0;
         YapStream other = null;
-        YapObject sourceReference = null;
+        ObjectReference sourceReference = null;
         
         if(caller == _peerA){
             other = _peerB;
@@ -264,8 +264,8 @@ public class ReplicationImpl implements ReplicationProcess {
 			Object objectA = obj;
 			Object objectB = obj;
 			
-			YapObject referenceA = _peerA.getYapObject(obj);
-			YapObject referenceB = _peerB.getYapObject(obj);
+			ObjectReference referenceA = _peerA.getYapObject(obj);
+			ObjectReference referenceB = _peerB.getYapObject(obj);
 			
 			VirtualAttributes attA = null;
 			VirtualAttributes attB = null;
@@ -288,7 +288,7 @@ public class ReplicationImpl implements ReplicationProcess {
 					return notProcessed;
 				}
 				
-				referenceA = (YapObject) arr[1];
+				referenceA = (ObjectReference) arr[1];
 				objectA = arr[0];
 				
 				attA = referenceA.virtualAttributes(_transA);
@@ -310,7 +310,7 @@ public class ReplicationImpl implements ReplicationProcess {
 						return notProcessed;
 					}
                     
-					referenceB = (YapObject) arr[1];
+					referenceB = (ObjectReference) arr[1];
 					objectB = arr[0];
                     
 				}

@@ -71,20 +71,20 @@ public abstract class YapFieldVirtual extends YapField {
         return false;
     }
 
-    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, StatefulBuffer a_bytes)
+    public void instantiate(MarshallerFamily mf, ObjectReference a_yapObject, Object a_onObject, StatefulBuffer a_bytes)
         throws CorruptionException {
     	a_yapObject.produceVirtualAttributes();
         instantiate1(a_bytes.getTransaction(), a_yapObject, a_bytes);
     }
 
-    abstract void instantiate1(Transaction a_trans, YapObject a_yapObject, Buffer a_bytes);
+    abstract void instantiate1(Transaction a_trans, ObjectReference a_yapObject, Buffer a_bytes);
     
     public void loadHandler(YapStream a_stream){
     	// do nothing
     }
 
     public final void marshall(
-            YapObject a_yapObject, 
+            ObjectReference a_yapObject, 
             Object a_object,
             MarshallerFamily mf, 
             StatefulBuffer a_bytes,
@@ -111,7 +111,7 @@ public abstract class YapFieldVirtual extends YapField {
                 migrating = true;
                 if (a_yapObject.virtualAttributes() == null) {
                     Object obj = a_yapObject.getObject();
-                    YapObject migrateYapObject = null;
+                    ObjectReference migrateYapObject = null;
                     MigrationConnection mgc = handlers.i_migration;
                     if(mgc != null){
                         migrateYapObject = mgc.referenceFor(obj);
@@ -152,12 +152,12 @@ public abstract class YapFieldVirtual extends YapField {
 	    marshall1(a_yapObject, a_bytes, migrating, a_new);
     }
 
-    abstract void marshall1(YapObject a_yapObject, StatefulBuffer a_bytes,
+    abstract void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes,
         boolean a_migrating, boolean a_new);
     
     abstract void marshallIgnore(Buffer writer);
     
-    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, YapObject a_yapObject) {
+    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, ObjectReference a_yapObject) {
         if(! a_trans.supportsVirtualFields()){
             a_reader.incrementOffset(linkLength());
             return;

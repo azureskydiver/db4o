@@ -18,7 +18,7 @@ import com.db4o.inside.replication.Db4oReplicationReference;
  * The hc_xxx variables are used for the sorted tree.
  * The virtualAttributes is used to
  */
-public class Db4oReplicationReferenceImpl extends YapObject implements ReplicationReference, Db4oReplicationReference {
+public class Db4oReplicationReferenceImpl extends ObjectReference implements ReplicationReference, Db4oReplicationReference {
 
 	private Object _counterPart;
 
@@ -26,7 +26,7 @@ public class Db4oReplicationReferenceImpl extends YapObject implements Replicati
 	private boolean _markedForDeleting;
 
 	Db4oReplicationReferenceImpl(ObjectInfo objectInfo) {
-		YapObject yo = (YapObject) objectInfo;
+		ObjectReference yo = (ObjectReference) objectInfo;
 		Transaction trans = yo.getTrans();
 		VirtualAttributes va = yo.virtualAttributes(trans);
 		if (va != null) {

@@ -197,7 +197,7 @@ public abstract class Transaction {
     
     public abstract boolean isDeleted(int id);
 
-    public boolean delete(YapObject ref, int id, int cascade) {
+    public boolean delete(ObjectReference ref, int id, int cascade) {
         checkSynchronization();
         
         if(ref != null){

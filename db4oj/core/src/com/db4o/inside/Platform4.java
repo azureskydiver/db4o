@@ -126,7 +126,7 @@ public final class Platform4 {
     }
 
     static final Object createYapRef(Object a_queue, Object a_yapObject, Object a_object) {
-        return jdk().createYapRef(a_queue, (YapObject) a_yapObject, a_object);
+        return jdk().createYapRef(a_queue, (ObjectReference) a_yapObject, a_object);
     }
     
     static Object deserialize(byte[] bytes) {
