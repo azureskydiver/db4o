@@ -9,7 +9,7 @@ import com.db4o.inside.*;
 /**
  * @exclude
  */
-public final class YBoolean extends YapJavaClass
+public final class BooleanHandler extends PrimitiveHandler
 {
 
     static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
@@ -19,7 +19,7 @@ public final class YBoolean extends YapJavaClass
 	
 	private static final Boolean i_primitive = new Boolean(false);
 	
-    public YBoolean(ObjectContainerBase stream) {
+    public BooleanHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

@@ -22,7 +22,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     YapFieldUUID(ObjectContainerBase stream) {
         super();
         i_name = YapConst.VIRTUAL_FIELD_PREFIX + "uuid";
-        i_handler = new YLong(stream);
+        i_handler = new LongHandler(stream);
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {

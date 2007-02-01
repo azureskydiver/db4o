@@ -202,9 +202,9 @@ public final class Platform4 {
             if (claxx.isArray()) {
                 Object[] objects;
                 if (claxx.getComponentType().isArray()) {
-                    objects = new YapArrayN(stream, null, false).allElements(obj);
+                    objects = new MultidimensionalArrayHandler(stream, null, false).allElements(obj);
                 } else {
-                    objects = new YapArray(stream, null, false).allElements(obj);
+                    objects = new ArrayHandler(stream, null, false).allElements(obj);
                 }
                 for (int i = 0; i < objects.length; i++) {
                     flattenCollection1(stream, objects[i], col);
@@ -628,8 +628,8 @@ public final class Platform4 {
         translate(config, UTIL + className, "TNull");
     }
 
-    static final YapTypeAbstract[] types(ObjectContainerBase stream) {
-        return new YapTypeAbstract[] {
+    static final NetTypeHandler[] types(ObjectContainerBase stream) {
+        return new NetTypeHandler[] {
         		new NetDateTime(stream),
         		new NetDecimal(stream),
         		new NetSByte(stream),

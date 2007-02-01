@@ -271,8 +271,8 @@ public class YapField implements StoredField {
                 if (obj != null) {
                     
                     if (i_isPrimitive) {
-                        if (i_handler instanceof YapJavaClass) {
-                            if (obj.equals(((YapJavaClass) i_handler)
+                        if (i_handler instanceof PrimitiveHandler) {
+                            if (obj.equals(((PrimitiveHandler) i_handler)
                                 .primitiveNull())) {
                                 return;
                             }
@@ -297,8 +297,8 @@ public class YapField implements StoredField {
         if (alive()) {
             if (i_handler instanceof ClassMetadata) {
                 tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
-            } else if (i_handler instanceof YapArray) {
-                tree = ((YapArray) i_handler).collectIDs(mf, tree, a_bytes);
+            } else if (i_handler instanceof ArrayHandler) {
+                tree = ((ArrayHandler) i_handler).collectIDs(mf, tree, a_bytes);
             }
         }
         return tree;
@@ -317,9 +317,9 @@ public class YapField implements StoredField {
                 i_isPrimitive = a_class.isPrimitive();
             }
             if (i_isNArray) {
-                i_handler = new YapArrayN(getStream(), i_handler, i_isPrimitive);
+                i_handler = new MultidimensionalArrayHandler(getStream(), i_handler, i_isPrimitive);
             } else {
-                i_handler = new YapArray(getStream(), i_handler, i_isPrimitive);
+                i_handler = new ArrayHandler(getStream(), i_handler, i_isPrimitive);
             }
         }
     }
@@ -332,7 +332,7 @@ public class YapField implements StoredField {
             boolean isEnumClass = i_yapClass.isEnum();
             if (i_isPrimitive && !i_isArray) {
                 if(!isEnumClass) {
-                    i_javaField.set(a_onObject, ((YapJavaClass) i_handler)
+                    i_javaField.set(a_onObject, ((PrimitiveHandler) i_handler)
                         .primitiveNull());
                 }
                 return;
@@ -809,10 +809,10 @@ public class YapField implements StoredField {
 
     private final TypeHandler4 wrapHandlerToArrays(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
         if (i_isNArray) {
-            a_handler = new YapArrayN(a_stream, a_handler, i_isPrimitive);
+            a_handler = new MultidimensionalArrayHandler(a_stream, a_handler, i_isPrimitive);
         } else {
             if (i_isArray) {
-                a_handler = new YapArray(a_stream, a_handler, i_isPrimitive);
+                a_handler = new ArrayHandler(a_stream, a_handler, i_isPrimitive);
             }
         }
         return a_handler;

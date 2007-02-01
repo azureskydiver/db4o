@@ -12,11 +12,11 @@ import com.db4o.reflect.ReflectClass;
 /**
  * @exclude
  */
-public class YLong extends YapJavaClass {
+public class LongHandler extends PrimitiveHandler {
 
     private static final Long i_primitive = new Long(0);
 
-    public YLong(ObjectContainerBase stream) {
+    public LongHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

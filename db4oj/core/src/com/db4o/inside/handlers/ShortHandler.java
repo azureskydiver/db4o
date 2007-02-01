@@ -9,13 +9,13 @@ import com.db4o.reflect.ReflectClass;
 
 
 
-public final class YShort extends YapJavaClass
+public final class ShortHandler extends PrimitiveHandler
 {
     static final int LENGTH = YapConst.SHORT_BYTES + YapConst.ADDED_LENGTH;
 	
 	private static final Short i_primitive = new Short((short)0);
 	
-    public YShort(ObjectContainerBase stream) {
+    public ShortHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

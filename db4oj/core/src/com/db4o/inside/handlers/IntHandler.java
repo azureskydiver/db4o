@@ -12,11 +12,11 @@ import com.db4o.reflect.ReflectClass;
 /**
  * @exclude
  */
-public class YInt extends YapJavaClass {
+public class IntHandler extends PrimitiveHandler {
     
     private static final Integer i_primitive = new Integer(0);
     
-    public YInt(ObjectContainerBase stream) {
+    public IntHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

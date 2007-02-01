@@ -13,12 +13,12 @@ import com.db4o.inside.ix.*;
  */
 public class MappedIDPairHandler implements Indexable4 {
 
-	private final YInt _origHandler;
-	private final YInt _mappedHandler;
+	private final IntHandler _origHandler;
+	private final IntHandler _mappedHandler;
 	
 	public MappedIDPairHandler(ObjectContainerBase stream) {
-		_origHandler=new YInt(stream);
-		_mappedHandler=new YInt(stream);
+		_origHandler=new IntHandler(stream);
+		_mappedHandler=new IntHandler(stream);
 	}
 
 	public Object comparableObject(Transaction trans, Object indexEntry) {

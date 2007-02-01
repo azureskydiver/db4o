@@ -1367,7 +1367,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         if (isArray()) {
             if (Platform4.isCollectionTranslator(this.i_config)) {
                 a_bytes[0].incrementOffset(YapConst.INT_LENGTH);
-                return new YapArray(i_stream, null, false);
+                return new ArrayHandler(i_stream, null, false);
             }
             incrementFieldsOffset1(a_bytes[0]);
             if (i_ancestor != null) {

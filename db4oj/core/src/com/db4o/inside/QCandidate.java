@@ -459,10 +459,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							.prepareComparison(a_constraint);
 					if (a_stream.reflector().array().isNDimensional(
 							memberClass())) {
-						YapArrayN yan = new YapArrayN(a_stream, ydt, false);
+						MultidimensionalArrayHandler yan = new MultidimensionalArrayHandler(a_stream, ydt, false);
 						return yan;
 					} 
-					YapArray ya = new YapArray(a_stream, ydt, false);
+					ArrayHandler ya = new ArrayHandler(a_stream, ydt, false);
 					return ya;
 					
 				} 

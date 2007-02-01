@@ -12,10 +12,10 @@ import com.db4o.reflect.*;
  * n-dimensional array
  * @exclude
  */
-public final class YapArrayN extends YapArray {
+public final class MultidimensionalArrayHandler extends ArrayHandler {
 	
 	
-    public YapArrayN(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
+    public MultidimensionalArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream, a_handler, a_isPrimitive);
     }
 

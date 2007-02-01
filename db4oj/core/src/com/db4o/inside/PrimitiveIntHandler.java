@@ -11,7 +11,7 @@ import com.db4o.inside.handlers.*;
  * and by doing the comparison with a substraction
  * @exclude
  */
-public class PrimitiveIntHandler extends YInt{
+public class PrimitiveIntHandler extends IntHandler{
 	
 	public PrimitiveIntHandler(ObjectContainerBase stream) {
 		super(stream);

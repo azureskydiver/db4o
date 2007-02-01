@@ -11,7 +11,7 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public abstract class NetSimpleTypeHandler extends YapTypeAbstract implements GenericConverter{
+public abstract class NetSimpleTypeHandler extends NetTypeHandler implements GenericConverter{
 	
 	private final String _name;
 	private final int _typeID;

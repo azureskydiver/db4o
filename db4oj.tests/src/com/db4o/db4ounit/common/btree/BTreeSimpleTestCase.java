@@ -229,7 +229,7 @@ public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements
 
 	private BTree createIntKeyValueBTree(int id) {
 		return new BTree(stream().getSystemTransaction(), id,
-				new YInt(stream()), new YInt(stream()), 7, stream()
+				new IntHandler(stream()), new IntHandler(stream()), 7, stream()
 						.configImpl().bTreeCacheHeight());
 	}
 

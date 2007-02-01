@@ -16,10 +16,10 @@ import com.db4o.reflect.*;
  * 
  * @exclude
  */
-public abstract class YapIndependantType implements TypeHandler4 {
+public abstract class BuiltinTypeHandler implements TypeHandler4 {
     final ObjectContainerBase _stream;
     
-    public YapIndependantType(ObjectContainerBase stream) {
+    public BuiltinTypeHandler(ObjectContainerBase stream) {
         _stream = stream;
     }
     

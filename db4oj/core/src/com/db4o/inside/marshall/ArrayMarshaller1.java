@@ -9,7 +9,7 @@ import com.db4o.inside.handlers.*;
 
 class ArrayMarshaller1 extends ArrayMarshaller{
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, YapArray arrayHandler, Object obj, boolean topLevel){
+    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, ArrayHandler arrayHandler, Object obj, boolean topLevel){
         
         TypeHandler4 typeHandler = arrayHandler.i_handler;
         
@@ -30,7 +30,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public void deleteEmbedded(YapArray arrayHandler, StatefulBuffer reader) {
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) {
         
         int address = reader.readInt();
         reader.readInt();  // length
@@ -59,24 +59,24 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public Object read(YapArray arrayHandler,  StatefulBuffer reader) throws CorruptionException{
+    public Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException{
         int linkOffSet = reader.preparePayloadRead();
         Object array = arrayHandler.read1(_family, reader);
         reader._offset = linkOffSet;
         return array;
     }
     
-    public void readCandidates(YapArray arrayHandler, Buffer reader, QCandidates candidates) {
+    public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) {
         reader._offset = reader.readInt();
         arrayHandler.read1Candidates(_family, reader, candidates);
     }
     
-    public final Object readQuery(YapArray arrayHandler, Transaction trans, Buffer reader) throws CorruptionException{
+    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException{
         reader._offset = reader.readInt();
         return arrayHandler.read1Query(trans,_family, reader);
     }
     
-    public Object writeNew(YapArray arrayHandler, Object obj, boolean restoreLinkOffset, StatefulBuffer writer) {
+    public Object writeNew(ArrayHandler arrayHandler, Object obj, boolean restoreLinkOffset, StatefulBuffer writer) {
         if (obj == null) {
             writer.writeEmbeddedNull();
             return null;
@@ -95,7 +95,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         return reader;
     }
     
-    public void defragIDs(YapArray arrayHandler,ReaderPair readers) {
+    public void defragIDs(ArrayHandler arrayHandler,ReaderPair readers) {
     	int offset=readers.preparePayloadRead();
         arrayHandler.defrag1(_family, readers);
         readers.offset(offset);

@@ -9,9 +9,9 @@ import com.db4o.inside.*;
 /**
  * @exclude
  */
-public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
+public abstract class NetTypeHandler extends PrimitiveHandler implements NetType{
     
-	public YapTypeAbstract(ObjectContainerBase stream) {
+	public NetTypeHandler(ObjectContainerBase stream) {
         super(stream);
     }
 

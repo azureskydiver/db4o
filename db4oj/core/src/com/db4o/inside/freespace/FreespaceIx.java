@@ -20,7 +20,7 @@ abstract class FreespaceIx {
     FreespaceVisitor _visitor;
     
     FreespaceIx(LocalObjectContainer file, MetaIndex metaIndex){
-        _index = new Index4(file.getSystemTransaction(),new YInt(file), metaIndex, false);
+        _index = new Index4(file.getSystemTransaction(),new IntHandler(file), metaIndex, false);
         _indexTrans = _index.globalIndexTransaction();
     }
     

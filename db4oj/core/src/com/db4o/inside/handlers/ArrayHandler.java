@@ -13,13 +13,13 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class YapArray extends YapIndependantType {
+public class ArrayHandler extends BuiltinTypeHandler {
 	
     public final TypeHandler4 i_handler;
     public final boolean i_isPrimitive;
     public final ReflectArray _reflectArray;
 
-    public YapArray(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
+    public ArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
         i_handler = a_handler;
         i_isPrimitive = a_isPrimitive;
@@ -140,9 +140,9 @@ public class YapArray extends YapIndependantType {
     }
 
     public final boolean equals(TypeHandler4 a_dataType) {
-        if (a_dataType instanceof YapArray) {
-            if (((YapArray) a_dataType).identifier() == identifier()) {
-                return (i_handler.equals(((YapArray) a_dataType).i_handler));
+        if (a_dataType instanceof ArrayHandler) {
+            if (((ArrayHandler) a_dataType).identifier() == identifier()) {
+                return (i_handler.equals(((ArrayHandler) a_dataType).i_handler));
             }
         }
         return false;
@@ -364,11 +364,11 @@ public class YapArray extends YapIndependantType {
         if (a_object != null) {
         	ReflectClass claxx = a_stream.reflector().forObject(a_object);
             if (claxx.isArray()) {
-                YapArray ya;
+                ArrayHandler ya;
                 if(a_stream.reflector().array().isNDimensional(claxx)){
-                    ya = new YapArrayN(a_stream, null, false);
+                    ya = new MultidimensionalArrayHandler(a_stream, null, false);
                 } else {
-                    ya = new YapArray(a_stream, null, false);
+                    ya = new ArrayHandler(a_stream, null, false);
                 }
                 return ya.allElements(a_object);
             }

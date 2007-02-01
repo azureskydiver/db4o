@@ -53,7 +53,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
     }
     
     public Date readDate(Buffer a_bytes) {
-		final long longValue = YLong.readLong(a_bytes);
+		final long longValue = LongHandler.readLong(a_bytes);
 		if (longValue == Long.MAX_VALUE) {
 			return null;
 		}
