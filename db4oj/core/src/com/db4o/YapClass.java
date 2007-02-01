@@ -1027,22 +1027,19 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
-
-		YapStream stream = buffer.getStream();
-		boolean create = (obj == null);
-
+		
 		adjustInstantiationDepth(buffer);
 
-		final boolean doFields = buffer.getInstantiationDepth() > 0 || cascadeOnActivate();
-
-		if (create) {
+		final YapStream stream = buffer.getStream();
+		final boolean instantiating = (obj == null);
+		if (instantiating) {
 			obj = instantiateObject(buffer, mf);
 			if (obj == null) {
 				return null;
 			}  
             
 			shareTransaction(obj, buffer.getTransaction());
-			shareYapObject(yapObject, obj);
+			shareYapObject(obj, yapObject);
             
 			yapObject.setObjectWeak(stream, obj);
 			stream.hcTreeAdd(yapObject);
@@ -1055,18 +1052,19 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		// when there's a ObjectConstructor configured for a type
 		// the type is marshalled through a lone virtual field
 		// of type YapFieldTranslator which should take care of everything		
-		boolean createdByTranslator = create && configInstantiates();
-		boolean existingObjectRequiresActivation = !create && !stream.i_refreshInsteadOfActivate && yapObject.isActive();
-		if (doFields && !existingObjectRequiresActivation && !createdByTranslator) {
+		final boolean instantiatedByTranslator = instantiating && configInstantiates();
+		final boolean activatingActiveObject = !instantiating && !stream.i_refreshInsteadOfActivate && yapObject.isActive();
+		final boolean doFields = buffer.getInstantiationDepth() > 0 || cascadeOnActivate();
+		if (doFields && !activatingActiveObject && !instantiatedByTranslator) {
 			if(objectCanActivate(stream, obj)){
 				yapObject.setStateClean();
 				instantiateFields(yapObject, obj, mf, attributes, buffer);
 				objectOnActivate(stream, obj);
-			} else if (create) {
+			} else if (instantiating) {
 				yapObject.setStateDeactivated();
 			}
 		} else {
-			if (create) {
+			if (instantiating) {
                 yapObject.setStateDeactivated();
             } else {
                 if (buffer.getInstantiationDepth() > 1) {
@@ -1131,15 +1129,15 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return i_config != null && (i_config.cascadeOnActivate() == YapConst.YES);
 	}
 
-	private void shareYapObject(YapObject a_yapObject, Object a_object) {
-		if (a_object instanceof Db4oTypeImpl) {
-		    ((Db4oTypeImpl)a_object).setYapObject(a_yapObject);
+	private void shareYapObject(Object obj, YapObject yapObj) {
+		if (obj instanceof Db4oTypeImpl) {
+		    ((Db4oTypeImpl)obj).setYapObject(yapObj);
 		}
 	}
 
-	private void shareTransaction(Object a_object, Transaction transaction) {
-		if (a_object instanceof TransactionAware) {
-		    ((TransactionAware)a_object).setTrans(transaction);
+	private void shareTransaction(Object obj, Transaction transaction) {
+		if (obj instanceof TransactionAware) {
+		    ((TransactionAware)obj).setTrans(transaction);
 		}
 	}
 
