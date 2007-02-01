@@ -32,7 +32,7 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     }
     
     public void checkClassHasFields(ClassMetadata yc){
-        YapField[] fields = yc.i_fields;
+        FieldMetadata[] fields = yc.i_fields;
         if(fields != null && fields.length == 0){
             String name = yc.getName();
             String[] ignoredPackages = new String[]{

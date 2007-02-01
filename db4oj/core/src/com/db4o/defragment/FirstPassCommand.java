@@ -33,7 +33,7 @@ final class FirstPassCommand implements PassCommand {
 	public void processClass(DefragContextImpl context, ClassMetadata yapClass,int id,int classIndexID) {
 		process(context,id, true);
 		for (int fieldIdx = 0; fieldIdx < yapClass.i_fields.length; fieldIdx++) {
-			YapField field=yapClass.i_fields[fieldIdx];
+			FieldMetadata field=yapClass.i_fields[fieldIdx];
 			if(!field.isVirtual()&&field.hasIndex()) {
 				processBTree(context,field.getIndex(context.systemTrans()));
 			}

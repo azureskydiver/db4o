@@ -29,7 +29,7 @@ public class YapClassTestCase extends AbstractDb4oTestCase {
 		ClassMetadata clazz=stream().getYapClass(reflector().forClass(SubClazz.class));
 		Iterator4 fieldIter=clazz.fields();
 		while(fieldIter.moveNext()) {
-			YapField curField=(YapField)fieldIter.current();
+			FieldMetadata curField=(FieldMetadata)fieldIter.current();
 			Assert.isNotNull(expectedNames.remove(curField.getName()));
 		}
 		Assert.isTrue(expectedNames.isEmpty());

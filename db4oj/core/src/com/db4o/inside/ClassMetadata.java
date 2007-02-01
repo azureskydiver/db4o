@@ -26,7 +26,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     Config4Class i_config;
     public int _metaClassID;
     
-    public YapField[] i_fields;
+    public FieldMetadata[] i_fields;
     
     private final ClassIndexStrategy _index;
     
@@ -127,7 +127,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 
             if (null != i_fields) {
             	members.addAll(i_fields);
-            	if(i_fields.length==1&&i_fields[0] instanceof YapFieldTranslator) {
+            	if(i_fields.length==1&&i_fields[0] instanceof TranslatedFieldMetadata) {
             		setStateOK();
             		return;
             	}
@@ -147,14 +147,14 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
             dirty = collectReflectFields(a_stream, members) | dirty;
             if (dirty) {
                 i_stream.setDirtyInSystemTransaction(this);
-                i_fields = new YapField[members.size()];
+                i_fields = new FieldMetadata[members.size()];
                 members.toArray(i_fields);
                 for (int i = 0; i < i_fields.length; i++) {
                     i_fields[i].setArrayPosition(i);
                 }
             } else {
                 if (members.size() == 0) {
-                    i_fields = new YapField[0];
+                    i_fields = new FieldMetadata[0];
                 }
             }
             
@@ -165,7 +165,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
             
         } else {
             if (i_fields == null) {
-                i_fields = new YapField[0];
+                i_fields = new FieldMetadata[0];
             }
         }
         setStateOK();
@@ -180,12 +180,12 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 		        if (wrapper == null) {
 		            continue;
 		        }
-		        YapField field = new YapField(this, fields[i], wrapper);
+		        FieldMetadata field = new FieldMetadata(this, fields[i], wrapper);
 
 		        boolean found = false;
 		        Iterator4 m = collectedFields.iterator();
 		        while (m.moveNext()) {
-		            if (((YapField)m.current()).equals(field)) {
+		            if (((FieldMetadata)m.current()).equals(field)) {
 		                found = true;
 		                break;
 		            }
@@ -229,9 +229,9 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
             fieldCount = 3;
         }
     	
-    	i_fields = new YapField[fieldCount];
+    	i_fields = new FieldMetadata[fieldCount];
         
-        i_fields[0] = new YapFieldTranslator(this, ot);
+        i_fields[0] = new TranslatedFieldMetadata(this, ot);
         
         // Some explanation on the thoughts here:
         
@@ -683,7 +683,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 	// returns null if not successful or if the field value at this offset is null
     // returns MarshallerFamily from the object header if it is successful and
     //         if the value at this offset is not null
-    final MarshallerFamily findOffset(Buffer a_bytes, YapField a_field) {
+    final MarshallerFamily findOffset(Buffer a_bytes, FieldMetadata a_field) {
         if (a_bytes == null) {
             return null;
         }
@@ -842,7 +842,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         if(ancestorHasUUIDField()){
             return true;
         }
-        return Arrays4.containsInstanceOf(i_fields, YapFieldUUID.class);
+        return Arrays4.containsInstanceOf(i_fields, UUIDFieldMetadata.class);
     }
     
     private boolean ancestorHasVersionField(){
@@ -856,7 +856,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         if(ancestorHasVersionField()){
             return true;
         }
-        return Arrays4.containsInstanceOf(i_fields, YapFieldVersion.class);
+        return Arrays4.containsInstanceOf(i_fields, VersionFieldMetadata.class);
     }
 
     public ClassIndexStrategy index() {
@@ -918,12 +918,12 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         return this;
     }
 
-    public YapField getYapField(final String name) {
-        final YapField[] yf = new YapField[1];
+    public FieldMetadata getYapField(final String name) {
+        final FieldMetadata[] yf = new FieldMetadata[1];
         forEachYapField(new Visitor4() {
             public void visit(Object obj) {
-                if (name.equals(((YapField)obj).getName())) {
-                    yf[0] = (YapField)obj;
+                if (name.equals(((FieldMetadata)obj).getName())) {
+                    yf[0] = (FieldMetadata)obj;
                 }
             }
         });
@@ -1008,7 +1008,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         }
         
         for (int i = 0; i < i_fields.length; i++) {
-            YapField curField = i_fields[i];
+            FieldMetadata curField = i_fields[i];
             String fieldName = curField.getName();
 			if(!curField.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
             	curField.initIndex(this,fieldName);

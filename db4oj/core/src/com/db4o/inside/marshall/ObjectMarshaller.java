@@ -25,7 +25,7 @@ public abstract class ObjectMarshaller {
 			_cancelled=true;
 		}
 
-		public abstract void processField(YapField field,boolean isNull, ClassMetadata containingClass);
+		public abstract void processField(FieldMetadata field,boolean isNull, ClassMetadata containingClass);
 	}
 
     protected void traverseFields(ClassMetadata yc,Buffer reader,ObjectHeaderAttributes attributes,TraverseFieldCommand command) {
@@ -97,7 +97,7 @@ public abstract class ObjectMarshaller {
             ClassMetadata yc, 
             ObjectHeaderAttributes attributes, 
             Buffer reader, 
-            YapField field);
+            FieldMetadata field);
     
     public abstract void instantiateFields(
             ClassMetadata yc, 
@@ -140,7 +140,7 @@ public abstract class ObjectMarshaller {
     public abstract Object readIndexEntry(
             ClassMetadata yc, 
             ObjectHeaderAttributes attributes, 
-            YapField yf, 
+            FieldMetadata yf, 
             StatefulBuffer reader);
 
     public abstract ObjectHeaderAttributes readHeaderAttributes(Buffer reader);

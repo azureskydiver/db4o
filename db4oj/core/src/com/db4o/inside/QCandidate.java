@@ -50,7 +50,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	ClassMetadata _yapClass;
 
 	// temporary yapField and member for one field during evaluation
-	YapField _yapField; // null denotes null object
+	FieldMetadata _yapField; // null denotes null object
     
     MarshallerFamily _marshallerFamily;
 
@@ -280,7 +280,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			}
 		}
         
-        if(_yapField == null || _yapField instanceof YapFieldNull){
+        if(_yapField == null || _yapField instanceof NullFieldMetadata){
             return false;
         }
         
@@ -600,7 +600,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			} else {
                 // TODO: And now what does this mean and whats the difference?
 
-				_yapField = new YapFieldNull();
+				_yapField = new NullFieldMetadata();
 			}
 		}
 	}

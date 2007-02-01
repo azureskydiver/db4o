@@ -47,7 +47,7 @@ public final class YapHandlers {
     private static final int        ANY_INDEX          = 10;
     public static final int         ANY_ID        = 11;
     
-    public final YapFieldVirtual[]         i_virtualFields = new YapFieldVirtual[2]; 
+    public final VirtualFieldMetadata[]         i_virtualFields = new VirtualFieldMetadata[2]; 
 
     private final Hashtable4        i_classByClass  = new Hashtable4(32);
     

@@ -7,9 +7,9 @@ import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 
 
-class YapFieldNull extends YapField{
+class NullFieldMetadata extends FieldMetadata{
     
-    public YapFieldNull(){
+    public NullFieldMetadata(){
         super(null);
     }
     

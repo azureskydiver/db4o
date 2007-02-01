@@ -50,7 +50,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     	putThreeValued(INDEXED, flag);
     }
 
-    public void initOnUp(Transaction systemTrans, YapField yapField) {
+    public void initOnUp(Transaction systemTrans, FieldMetadata yapField) {
     	
         ObjectContainerBase anyStream = systemTrans.stream();
         if (!anyStream.maintainsIndices()) {
@@ -81,11 +81,11 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         createIndex(systemTrans, yapField, stream);
     }
 
-	private boolean useExistingIndex(Transaction systemTrans, YapField yapField) {
+	private boolean useExistingIndex(Transaction systemTrans, FieldMetadata yapField) {
 	    return yapField.getIndex(systemTrans) != null;
 	}
 
-	private void createIndex(Transaction systemTrans, YapField yapField, LocalObjectContainer stream) {
+	private void createIndex(Transaction systemTrans, FieldMetadata yapField, LocalObjectContainer stream) {
         if (stream.configImpl().messageLevel() > YapConst.NONE) {
             stream.message("creating index " + yapField.toString());
         }
@@ -94,7 +94,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         reindex(systemTrans, yapField, stream);
 	}
 
-	private void reindex(Transaction systemTrans, YapField yapField, LocalObjectContainer stream) {
+	private void reindex(Transaction systemTrans, FieldMetadata yapField, LocalObjectContainer stream) {
 		ClassMetadata yapClass = yapField.getParentYapClass();		
 		if (yapField.rebuildIndexForClass(stream, yapClass)) {
 		    systemTrans.commit();

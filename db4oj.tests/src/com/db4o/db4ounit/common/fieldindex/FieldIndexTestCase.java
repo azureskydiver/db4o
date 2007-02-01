@@ -84,10 +84,10 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         return start.createIncludingRange(end);
     }
     
-    private YapField yapField() {
+    private FieldMetadata yapField() {
         ReflectClass claxx = stream().reflector().forObject(new FieldIndexItem());
         ClassMetadata yc = stream().getYapClass(claxx);
-        YapField yf = yc.getYapField("foo");
+        FieldMetadata yf = yc.getYapField("foo");
         return yf;
     }
     

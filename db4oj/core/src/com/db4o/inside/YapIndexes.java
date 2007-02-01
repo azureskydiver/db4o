@@ -8,11 +8,11 @@ package com.db4o.inside;
  */
 class YapIndexes {
     
-    final YapFieldVersion i_fieldVersion;
-    final YapFieldUUID i_fieldUUID;
+    final VersionFieldMetadata i_fieldVersion;
+    final UUIDFieldMetadata i_fieldUUID;
     
     YapIndexes(ObjectContainerBase stream){
-        i_fieldVersion = new YapFieldVersion(stream);
-        i_fieldUUID = new YapFieldUUID(stream);
+        i_fieldVersion = new VersionFieldMetadata(stream);
+        i_fieldUUID = new UUIDFieldMetadata(stream);
     }
 }

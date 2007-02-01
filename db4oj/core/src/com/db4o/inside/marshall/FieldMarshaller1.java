@@ -11,11 +11,11 @@ import com.db4o.inside.btree.*;
  */
 public class FieldMarshaller1 extends FieldMarshaller0 {
     
-    private boolean hasBTreeIndex(YapField field){
+    private boolean hasBTreeIndex(FieldMetadata field){
         return ! field.isVirtual();
     }
 
-    public void write(Transaction trans, ClassMetadata clazz, YapField field, Buffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, Buffer writer) {
         super.write(trans, clazz, field, writer);
         if(! hasBTreeIndex(field)){
             return;
@@ -36,8 +36,8 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     	return spec;
     }
     
-    protected YapField fromSpec(RawFieldSpec spec, ObjectContainerBase stream, YapField field) {
-		YapField actualField = super.fromSpec(spec, stream, field);
+    protected FieldMetadata fromSpec(RawFieldSpec spec, ObjectContainerBase stream, FieldMetadata field) {
+		FieldMetadata actualField = super.fromSpec(spec, stream, field);
 		if(spec==null) {
 			return field;
 		}
@@ -47,7 +47,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
 		return actualField;
 	}
     
-    public int marshalledLength(ObjectContainerBase stream, YapField field) {
+    public int marshalledLength(ObjectContainerBase stream, FieldMetadata field) {
         int len = super.marshalledLength(stream, field);
         if(! hasBTreeIndex(field)){
             return len;
@@ -56,7 +56,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return  len + BTREE_ID;
     }
 
-    public void defrag(ClassMetadata yapClass, YapField yapField, YapStringIO sio,
+    public void defrag(ClassMetadata yapClass, FieldMetadata yapField, YapStringIO sio,
     		final ReaderPair readers)
     		throws CorruptionException {
     	super.defrag(yapClass, yapField, sio, readers);

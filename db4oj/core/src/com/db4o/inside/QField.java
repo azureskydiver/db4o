@@ -16,7 +16,7 @@ public class QField implements Visitor4, Unversioned{
 	
 	transient Transaction i_trans;
 	public String i_name;
-	transient YapField i_yapField;
+	transient FieldMetadata i_yapField;
 	public int i_yapClassID;
 	public int i_index;
 	
@@ -24,7 +24,7 @@ public class QField implements Visitor4, Unversioned{
 		// C/S only	
 	}
 	
-	QField(Transaction a_trans, String name, YapField a_yapField, int a_yapClassID, int a_index){
+	QField(Transaction a_trans, String name, FieldMetadata a_yapField, int a_yapClassID, int a_index){
 		i_trans = a_trans;
 		i_name = name;
 		i_yapField = a_yapField;
@@ -69,18 +69,18 @@ public class QField implements Visitor4, Unversioned{
 		return null;
 	}
 	
-	YapField getYapField(ClassMetadata yc){
+	FieldMetadata getYapField(ClassMetadata yc){
 		if(i_yapField != null){
 			return i_yapField;
 		}
-		YapField yf = yc.getYapField(i_name);
+		FieldMetadata yf = yc.getYapField(i_name);
 		if(yf != null){
 		    yf.alive();
 		}
 		return yf;
 	}
 	
-	public YapField getYapField() {
+	public FieldMetadata getYapField() {
 		return i_yapField;
 	}
 	
@@ -104,7 +104,7 @@ public class QField implements Visitor4, Unversioned{
 			return Null.INSTANCE;
 		}
 		ClassMetadata yc = i_trans.stream().produceYapClass(i_trans.reflector().forObject(obj));
-		YapField yf = yc.getYapField(i_name);
+		FieldMetadata yf = yc.getYapField(i_name);
 		if(yf != null){
 			return yf.prepareComparison(obj);
 		}

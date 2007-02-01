@@ -121,11 +121,11 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     	if (yc == null || yc.holdsAnyClass()) {
     		
     		final int[] count = { 0 };
-    		final YapField[] yfs = { null };
+    		final FieldMetadata[] yfs = { null };
     		
     		i_trans.stream().classCollection().attachQueryNode(a_field, new Visitor4() {
     			public void visit(Object obj) {
-    				yfs[0] = (YapField) ((Object[]) obj)[1];
+    				yfs[0] = (FieldMetadata) ((Object[]) obj)[1];
     				count[0]++;
     			}
     		});
@@ -144,7 +144,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 			if(yc.configInstantiates()) {
 				i_trans.stream().i_handlers._diagnosticProcessor.descendIntoTranslator(yc, a_field);
 			}
-			YapField yf = yc.getYapField(a_field);
+			FieldMetadata yf = yc.getYapField(a_field);
 			if (yf != null) {
 				qf = yf.qField(i_trans);
 			}

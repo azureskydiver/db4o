@@ -18,7 +18,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     
     PrimitiveFieldHandler(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
     	super(a_stream, a_handler.classReflector());
-        i_fields = YapField.EMPTY_ARRAY;
+        i_fields = FieldMetadata.EMPTY_ARRAY;
         i_handler = a_handler;
     }
 

@@ -67,7 +67,7 @@ public final class ClassMetadataRepository extends YapMeta {
             if(! yc.isInternal()){
                 yc.forEachYapField(new Visitor4() {
                     public void visit(Object obj) {
-                        YapField yf = (YapField)obj;
+                        FieldMetadata yf = (FieldMetadata)obj;
                         if(yf.canAddToQuery(fieldName)){
                             a_visitor.visit(new Object[] {yc, yf});
                         }

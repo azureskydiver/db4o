@@ -563,10 +563,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return null;
         }
         ClassMetadata yc = yo.getYapClass();
-        final YapField[] field = new YapField[]{null};
+        final FieldMetadata[] field = new FieldMetadata[]{null};
         yc.forEachYapField(new Visitor4() {
             public void visit(Object yf) {
-                YapField yapField = (YapField)yf;
+                FieldMetadata yapField = (FieldMetadata)yf;
                 if(yapField.canAddToQuery(fieldName)){
                     field[0] = yapField;
                 }
@@ -2028,11 +2028,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return i_config;
     }
     
-	public YapFieldUUID getUUIDIndex() {
+	public UUIDFieldMetadata getUUIDIndex() {
 		return i_handlers.i_indexes.i_fieldUUID;
 	}
 	
-	public YapFieldVersion getVersionIndex() {
+	public VersionFieldMetadata getVersionIndex() {
 		return i_handlers.i_indexes.i_fieldVersion;
 	}
 

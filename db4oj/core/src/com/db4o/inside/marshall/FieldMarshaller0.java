@@ -11,7 +11,7 @@ import com.db4o.inside.handlers.*;
  */
 public class FieldMarshaller0 implements FieldMarshaller {
 
-    public int marshalledLength(ObjectContainerBase stream, YapField field) {
+    public int marshalledLength(ObjectContainerBase stream, FieldMetadata field) {
         int len = stream.stringIO().shortLength(field.getName());
         if(field.needsArrayAndPrimitiveInfo()){
             len += 1;
@@ -33,7 +33,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         }
         
         if (name.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
-            YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
+            VirtualFieldMetadata[] virtuals = stream.i_handlers.i_virtualFields;
             for (int i = 0; i < virtuals.length; i++) {
                 if (name.equals(virtuals[i].getName())) {
                     return new RawFieldSpec(name);
@@ -47,18 +47,18 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
     
-    public final YapField read(ObjectContainerBase stream, YapField field, Buffer reader) {
+    public final FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, Buffer reader) {
     	RawFieldSpec spec=readSpec(stream, reader);
     	return fromSpec(spec, stream, field);
     }
     
-    protected YapField fromSpec(RawFieldSpec spec,ObjectContainerBase stream, YapField field) {
+    protected FieldMetadata fromSpec(RawFieldSpec spec,ObjectContainerBase stream, FieldMetadata field) {
     	if(spec==null) {
     		return field;
     	}
     	String name=spec.name();
         if (spec.isVirtual()) {
-            YapFieldVirtual[] virtuals = stream.i_handlers.i_virtualFields;
+            VirtualFieldMetadata[] virtuals = stream.i_handlers.i_virtualFields;
             for (int i = 0; i < virtuals.length; i++) {
                 if (name.equals(virtuals[i].getName())) {
                     return virtuals[i];
@@ -75,7 +75,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-    public void write(Transaction trans, ClassMetadata clazz, YapField field, Buffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, Buffer writer) {
         
         field.alive();
         
@@ -118,7 +118,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-	public void defrag(ClassMetadata yapClass, YapField yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException {
+	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException {
 		readers.readShortString(sio);
         if (yapField.isVirtual()) {
         	return;
