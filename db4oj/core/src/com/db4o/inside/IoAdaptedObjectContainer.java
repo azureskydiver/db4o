@@ -335,7 +335,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 lockBytes.writeLong(time);
                 i_timerFile.write(lockBytes._buffer);
             } else {
-                YLong.writeLong(time, i_timerBytes);
+                LongHandler.writeLong(time, i_timerBytes);
                 i_timerFile.write(i_timerBytes);
             }
             if(i_file == null){

@@ -12,11 +12,11 @@ import com.db4o.reflect.*;
 
 
 
-public final class YDate extends YLong {
+public final class DateHandler extends LongHandler {
 	
 	private static final Date PROTO = new Date(0);
     
-    public YDate(ObjectContainerBase stream) {
+    public DateHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

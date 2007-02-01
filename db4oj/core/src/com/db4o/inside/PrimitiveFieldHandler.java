@@ -64,8 +64,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     
     public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) {
         
-        if(i_handler instanceof YapArray){
-            YapArray ya = (YapArray)i_handler;
+        if(i_handler instanceof ArrayHandler){
+            ArrayHandler ya = (ArrayHandler)i_handler;
             
             // TODO: the following checks, whether the array stores
             // primitives. There is one case that is not covered here:
@@ -102,9 +102,9 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
         if (a_type == YapConst.TYPE_ARRAY) {
-            new YapArray(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
+            new ArrayHandler(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         } else if (a_type == YapConst.TYPE_NARRAY) {
-            new YapArrayN(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
+            new MultidimensionalArrayHandler(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         }
     }
     

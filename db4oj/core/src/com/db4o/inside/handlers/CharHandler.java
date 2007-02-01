@@ -7,13 +7,13 @@ import com.db4o.inside.*;
 
 
 
-public final class YChar extends YapJavaClass {
+public final class CharHandler extends PrimitiveHandler {
 
     static final int LENGTH = YapConst.CHAR_BYTES + YapConst.ADDED_LENGTH;
 	
 	private static final Character i_primitive = new Character((char)0);
 	
-    public YChar(ObjectContainerBase stream) {
+    public CharHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

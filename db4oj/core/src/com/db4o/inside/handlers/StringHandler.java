@@ -16,11 +16,11 @@ import com.db4o.reflect.*;
  * 
  * @exclude
  */
-public final class YapString extends YapIndependantType {
+public final class StringHandler extends BuiltinTypeHandler {
     
     public YapStringIO i_stringIo; 
     
-    public YapString(ObjectContainerBase stream, YapStringIO stringIO) {
+    public StringHandler(ObjectContainerBase stream, YapStringIO stringIO) {
         super(stream);
         i_stringIo = stringIO;
     }

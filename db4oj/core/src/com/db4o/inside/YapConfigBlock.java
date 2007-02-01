@@ -256,21 +256,21 @@ public final class YapConfigBlock {
         addressChanged(_stream.getSlot(LENGTH));
         
 		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), _address,LENGTH);
-		YInt.writeInt(LENGTH, writer);
+		IntHandler.writeInt(LENGTH, writer);
         for (int i = 0; i < 2; i++) {
             writer.writeLong(timerFileLock().openTime());
         }
 		writer.append(systemData().stringEncoding());
-		YInt.writeInt(0, writer);
-		YInt.writeInt(0, writer);
-		YInt.writeInt(_bootRecordID, writer);
-		YInt.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
+		IntHandler.writeInt(0, writer);
+		IntHandler.writeInt(0, writer);
+		IntHandler.writeInt(_bootRecordID, writer);
+		IntHandler.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
         writer.append(systemData().freespaceSystem());
         _stream.ensureFreespaceSlot();
-        YInt.writeInt(systemData().freespaceAddress(), writer);
-        YInt.writeInt(systemData().converterVersion(), writer);
-        YInt.writeInt(systemData().uuidIndexId(), writer);
+        IntHandler.writeInt(systemData().freespaceAddress(), writer);
+        IntHandler.writeInt(systemData().converterVersion(), writer);
+        IntHandler.writeInt(systemData().uuidIndexId(), writer);
 		writer.write();
 		writePointer();
 	}
@@ -284,7 +284,7 @@ public final class YapConfigBlock {
         timerFileLock().checkHeaderLock();
 		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.ID_LENGTH);
 		writer.moveForward(2);
-		YInt.writeInt(_address, writer);
+		IntHandler.writeInt(_address, writer);
         writer.noXByteCheck();
 		writer.write();
 		timerFileLock().writeHeaderLock();

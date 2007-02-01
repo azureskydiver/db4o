@@ -28,7 +28,7 @@ public class TreeString extends Tree {
 	}
 
 	public int compare(Tree a_to) {
-		return YapString
+		return StringHandler
 				.compare(YapConst.stringIO.write(((TreeString) a_to)._key),
 						YapConst.stringIO.write(_key));
 	}

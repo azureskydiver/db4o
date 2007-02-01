@@ -17,7 +17,7 @@ public class YapFieldVersion extends YapFieldVirtual {
     YapFieldVersion(ObjectContainerBase stream) {
         super();
         i_name = VirtualField.VERSION;
-        i_handler = new YLong(stream);
+        i_handler = new LongHandler(stream);
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {

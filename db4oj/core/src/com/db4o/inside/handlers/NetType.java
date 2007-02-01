@@ -3,7 +3,7 @@
 package com.db4o.inside.handlers;
 
 
-interface YapType {
+interface NetType {
 	
 	public Object defaultValue();
 	

@@ -262,7 +262,7 @@ public class Defragment {
 		while (fieldIter.moveNext()) {
 			YapField curField = (YapField) fieldIter.current();
 			if (curField.hasIndex()
-					&& (curField.getHandler() instanceof YapString)) {
+					&& (curField.getHandler() instanceof StringHandler)) {
 				return true;
 			}
 		}

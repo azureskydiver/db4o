@@ -85,7 +85,7 @@ public class QField implements Visitor4, Unversioned{
 	}
 	
 	boolean isArray(){
-		return i_yapField != null && i_yapField.getHandler() instanceof YapArray;
+		return i_yapField != null && i_yapField.getHandler() instanceof ArrayHandler;
 	}
 	
 	boolean isClass(){

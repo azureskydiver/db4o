@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public abstract class YapJavaClass implements TypeHandler4 {
+public abstract class PrimitiveHandler implements TypeHandler4 {
     
     protected final ObjectContainerBase _stream;
     
@@ -20,7 +20,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
     
     private ReflectClass _primitiveClassReflector;
     
-    public YapJavaClass(ObjectContainerBase stream) {
+    public PrimitiveHandler(ObjectContainerBase stream) {
         _stream = stream;
     }
 

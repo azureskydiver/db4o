@@ -111,8 +111,8 @@ public class FieldMarshaller0 implements FieldMarshaller {
         }
         writer.writeInt(handlerID);
         YapBit yb = new YapBit(0);
-        yb.set(handler instanceof YapArrayN); // keep the order
-        yb.set(handler instanceof YapArray);
+        yb.set(handler instanceof MultidimensionalArrayHandler); // keep the order
+        yb.set(handler instanceof ArrayHandler);
         yb.set(field.isPrimitive());
         writer.append(yb.getByte());
     }

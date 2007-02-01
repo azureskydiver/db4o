@@ -17,7 +17,7 @@ public class YDoubleTestCase extends AbstractDb4oTestCase {
 	private TypeHandler4 _handler;
 	
 	protected void db4oSetupBeforeStore() throws Exception {
-		_handler = new YDouble(stream());
+		_handler = new DoubleHandler(stream());
 	}
 	
 	public void testMarshalling() {

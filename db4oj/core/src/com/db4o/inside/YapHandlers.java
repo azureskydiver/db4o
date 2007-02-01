@@ -32,13 +32,13 @@ public final class YapHandlers {
     private ClassMetadata                i_anyArray;
     private ClassMetadata                i_anyArrayN;
 
-    public final YapString          i_stringHandler;
+    public final StringHandler          i_stringHandler;
 
     private TypeHandler4[]           i_handlers;
 
     private int                     i_maxTypeID     = ANY_ARRAY_N_ID + 1;
 
-    private YapTypeAbstract[]       i_platformTypes;
+    private NetTypeHandler[]       i_platformTypes;
     static private final int        PRIMITIVECOUNT  = 8;
 
     ClassMetadata[]                      i_yapClasses;
@@ -96,14 +96,14 @@ public final class YapHandlers {
         i_virtualFields[0] = i_indexes.i_fieldVersion;
         i_virtualFields[1] = i_indexes.i_fieldUUID;
 
-        i_stringHandler = new YapString(a_stream, YapStringIO.forEncoding(stringEncoding));
+        i_stringHandler = new StringHandler(a_stream, YapStringIO.forEncoding(stringEncoding));
 
-        i_handlers = new TypeHandler4[] { new YInt(a_stream), new YLong(a_stream), new YFloat(a_stream),
-            new YBoolean(a_stream), new YDouble(a_stream), new YByte(a_stream), new YChar(a_stream),
-            new YShort(a_stream),
+        i_handlers = new TypeHandler4[] { new IntHandler(a_stream), new LongHandler(a_stream), new FloatHandler(a_stream),
+            new BooleanHandler(a_stream), new DoubleHandler(a_stream), new ByteHandler(a_stream), new CharHandler(a_stream),
+            new ShortHandler(a_stream),
 
             // primitives first
-            i_stringHandler, new YDate(a_stream), new UntypedFieldHandler(a_stream) // Index = 10, ID = 11
+            i_stringHandler, new DateHandler(a_stream), new UntypedFieldHandler(a_stream) // Index = 10, ID = 11
         };
         
         i_platformTypes = Platform4.types(a_stream);
@@ -160,12 +160,12 @@ public final class YapHandlers {
             }
         }
 
-        i_anyArray = new PrimitiveFieldHandler(a_stream, new YapArray(_masterStream,
+        i_anyArray = new PrimitiveFieldHandler(a_stream, new ArrayHandler(_masterStream,
             anyObject(), false));
         i_anyArray.setID(ANY_ARRAY_ID);
         i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
-        i_anyArrayN = new PrimitiveFieldHandler(a_stream, new YapArrayN(_masterStream,
+        i_anyArrayN = new PrimitiveFieldHandler(a_stream, new MultidimensionalArrayHandler(_masterStream,
             anyObject(), false));
         i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
@@ -240,7 +240,7 @@ public final class YapHandlers {
 	                                for (int j = 0; j < parms.length; j++) {
 	                                    for (int k = 0; k < PRIMITIVECOUNT; k++) {
 	                                        if (pTypes[j].equals(handlers[k].primitiveClassReflector())) {
-	                                            parms[j] = ((YapJavaClass) handlers[k])
+	                                            parms[j] = ((PrimitiveHandler) handlers[k])
 	                                                .primitiveNull();
 	                                            break;
 	                                        }

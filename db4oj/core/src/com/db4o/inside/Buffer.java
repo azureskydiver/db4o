@@ -136,7 +136,7 @@ public class Buffer implements SlotReader {
 
     public final int readInt() {
         if (Deploy.debug) {
-            return YInt.readInt(this);
+            return IntHandler.readInt(this);
         }
             
         // if (YapConst.INTEGER_BYTES == 4) {
@@ -159,7 +159,7 @@ public class Buffer implements SlotReader {
     }
     
     public long readLong() {
-        return YLong.readLong(this);
+        return LongHandler.readLong(this);
     }
     
     public Buffer readPayloadReader(int offset, int length){
@@ -221,7 +221,7 @@ public class Buffer implements SlotReader {
     public final void writeInt(int a_int) {
         
         if (Deploy.debug) {
-            YInt.writeInt(a_int, this);
+            IntHandler.writeInt(a_int, this);
         } else {
             
 //            if (YapConst.INTEGER_BYTES == 4) {
@@ -270,7 +270,7 @@ public class Buffer implements SlotReader {
     }
 
     public void writeLong(long l) {
-        YLong.writeLong(l, this);
+        LongHandler.writeLong(l, this);
     }
 
 	public void incrementIntSize() {

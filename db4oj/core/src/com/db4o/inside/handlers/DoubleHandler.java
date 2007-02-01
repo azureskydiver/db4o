@@ -11,11 +11,11 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public final class YDouble extends YLong
+public final class DoubleHandler extends LongHandler
 {
     private static final Double i_primitive = new Double(0);
     
-    public YDouble(ObjectContainerBase stream) {
+    public DoubleHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

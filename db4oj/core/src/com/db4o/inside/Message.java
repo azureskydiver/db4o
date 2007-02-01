@@ -30,7 +30,7 @@ final class Message
 	private void print(String msg, boolean header){
 		if(stream != null){
 			if(header){
-				stream.println("[" + Db4o.version() + "   " + YDate.now() + "] ");
+				stream.println("[" + Db4o.version() + "   " + DateHandler.now() + "] ");
 			}
 			stream.println(" " + msg);
 		}

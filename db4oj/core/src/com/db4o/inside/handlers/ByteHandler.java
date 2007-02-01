@@ -9,14 +9,14 @@ import com.db4o.reflect.*;
 
 
 
-public final class YByte extends YapJavaClass
+public final class ByteHandler extends PrimitiveHandler
 {
 
     static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
 	
 	private static final Byte i_primitive = new Byte((byte)0);
 	
-    public YByte(ObjectContainerBase stream) {
+    public ByteHandler(ObjectContainerBase stream) {
         super(stream);
     }
     

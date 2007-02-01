@@ -1827,7 +1827,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         final ReflectClass clazz = reflector().forObject(obj);
 		if (clazz.isArray()) {
 			if (!clazz.getComponentType().isPrimitive()) {
-                Object[] arr = YapArray.toArray(_this, obj);
+                Object[] arr = ArrayHandler.toArray(_this, obj);
                 for (int i = 0; i < arr.length; i++) {
                     still = stillTo1(still, arr[i],
                         depth, forceUnknownDeactivate);
