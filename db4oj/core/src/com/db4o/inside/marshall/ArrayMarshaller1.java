@@ -43,7 +43,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         Transaction trans = reader.getTransaction();
         TypeHandler4 typeHandler = arrayHandler.i_handler;
         
-        if (reader.cascadeDeletes() > 0 && typeHandler instanceof YapClass) {
+        if (reader.cascadeDeletes() > 0 && typeHandler instanceof ClassMetadata) {
             reader._offset = address;
             if (Deploy.debug) {
                 reader.readBegin(arrayHandler.identifier());

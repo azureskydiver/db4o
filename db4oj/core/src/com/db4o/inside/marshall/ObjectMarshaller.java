@@ -13,7 +13,7 @@ public abstract class ObjectMarshaller {
 	protected abstract static class TraverseFieldCommand {
 		private boolean _cancelled=false;
 		
-		public int fieldCount(YapClass yapClass,Buffer reader) {
+		public int fieldCount(ClassMetadata yapClass,Buffer reader) {
 			return (Debug.atHome ? yapClass.readFieldCountSodaAtHome(reader) : yapClass.readFieldCount(reader));
 		}
 
@@ -25,10 +25,10 @@ public abstract class ObjectMarshaller {
 			_cancelled=true;
 		}
 
-		public abstract void processField(YapField field,boolean isNull, YapClass containingClass);
+		public abstract void processField(YapField field,boolean isNull, ClassMetadata containingClass);
 	}
 
-    protected void traverseFields(YapClass yc,Buffer reader,ObjectHeaderAttributes attributes,TraverseFieldCommand command) {
+    protected void traverseFields(ClassMetadata yc,Buffer reader,ObjectHeaderAttributes attributes,TraverseFieldCommand command) {
     	int fieldIndex=0;
     	while(yc!=null&&!command.cancelled()) {
         	int fieldCount=command.fieldCount(yc, reader);
@@ -43,14 +43,14 @@ public abstract class ObjectMarshaller {
     protected abstract boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex);
 
     public abstract void addFieldIndices(
-            YapClass yc, 
+            ClassMetadata yc, 
             ObjectHeaderAttributes attributes, 
             StatefulBuffer writer, 
             Slot oldSlot) ;
     
     public abstract TreeInt collectFieldIDs(
         TreeInt tree, 
-        YapClass yc, 
+        ClassMetadata yc, 
         ObjectHeaderAttributes attributes, 
         StatefulBuffer reader, String name);
     
@@ -87,20 +87,20 @@ public abstract class ObjectMarshaller {
     }
     
     public abstract void deleteMembers(
-            YapClass yc, 
+            ClassMetadata yc, 
             ObjectHeaderAttributes attributes, 
             StatefulBuffer writer, 
             int a_type, 
             boolean isUpdate);
     
     public abstract boolean findOffset(
-            YapClass yc, 
+            ClassMetadata yc, 
             ObjectHeaderAttributes attributes, 
             Buffer reader, 
             YapField field);
     
     public abstract void instantiateFields(
-            YapClass yc, 
+            ClassMetadata yc, 
             ObjectHeaderAttributes attributes, 
             ObjectReference yo, 
             Object obj, 
@@ -121,7 +121,7 @@ public abstract class ObjectMarshaller {
             Object obj, 
             StatefulBuffer writer) {
         
-        YapClass yc = yo.getYapClass();
+        ClassMetadata yc = yo.getYapClass();
         
         ObjectContainerBase stream = trans.stream();
         stream.writeUpdate(yc, writer);
@@ -132,13 +132,13 @@ public abstract class ObjectMarshaller {
         objectOnUpdate(yc, stream, obj);
     }
 
-	private void objectOnUpdate(YapClass yc, ObjectContainerBase stream, Object obj) {
+	private void objectOnUpdate(ClassMetadata yc, ObjectContainerBase stream, Object obj) {
 		stream.callbacks().objectOnUpdate(obj);
 		yc.dispatchEvent(stream, obj, EventDispatcher.UPDATE);
 	}
     
     public abstract Object readIndexEntry(
-            YapClass yc, 
+            ClassMetadata yc, 
             ObjectHeaderAttributes attributes, 
             YapField yf, 
             StatefulBuffer reader);
@@ -147,12 +147,12 @@ public abstract class ObjectMarshaller {
     
     public abstract void readVirtualAttributes(
             Transaction trans,  
-            YapClass yc, 
+            ClassMetadata yc, 
             ObjectReference yo, 
             ObjectHeaderAttributes attributes, 
             Buffer reader);
 
-	public abstract void defragFields(YapClass yapClass,ObjectHeader header, ReaderPair readers);
+	public abstract void defragFields(ClassMetadata yapClass,ObjectHeader header, ReaderPair readers);
  
 	public abstract void writeObjectClassID(Buffer reader,int id);
 	

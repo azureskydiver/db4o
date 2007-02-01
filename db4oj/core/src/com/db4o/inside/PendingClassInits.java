@@ -22,13 +22,13 @@ class PendingClassInits {
         _systemTransaction = systemTransaction;
 	}
 	
-	void process(YapClass newYapClass) {
+	void process(ClassMetadata newYapClass) {
 		
 		if(_pending.contains(newYapClass)) {
 			return;
 		}
 		
-        YapClass ancestor = newYapClass.getAncestor();
+        ClassMetadata ancestor = newYapClass.getAncestor();
         if (ancestor != null) {
             process(ancestor);
         }
@@ -54,7 +54,7 @@ class PendingClassInits {
 	
 	private void checkMembers() {
 		while(_members.hasNext()) {
-			YapClass yc = (YapClass)_members.next();
+			ClassMetadata yc = (ClassMetadata)_members.next();
 			yc.addMembers(stream());
             _statics.add(yc);
 		}
@@ -67,7 +67,7 @@ class PendingClassInits {
 	private void checkStatics() {
 		checkMembers();
 		while(_statics.hasNext()) {
-			YapClass yc = (YapClass)_statics.next();
+			ClassMetadata yc = (ClassMetadata)_statics.next();
 			yc.storeStaticFieldValues(_systemTransaction, true);
 			_writes.add(yc);
 			checkMembers();
@@ -77,7 +77,7 @@ class PendingClassInits {
 	private void checkWrites() {
 		checkStatics();
 		while(_writes.hasNext()) {
-			YapClass yc = (YapClass)_writes.next();
+			ClassMetadata yc = (ClassMetadata)_writes.next();
 	        yc.setStateDirty();
 	        yc.write(_systemTransaction);
             _inits.add(yc);
@@ -88,7 +88,7 @@ class PendingClassInits {
     private void checkInits() {
         checkWrites();
         while(_inits.hasNext()) {
-            YapClass yc = (YapClass)_inits.next();
+            ClassMetadata yc = (ClassMetadata)_inits.next();
             yc.initConfigOnUp(_systemTransaction);
             checkWrites();
         }

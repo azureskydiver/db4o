@@ -17,7 +17,7 @@ public final class MCreateClass extends MsgD {
             if (claxx != null) {
                 synchronized (streamLock()) {
                     try {
-                        YapClass yapClass = stream.produceYapClass(claxx);
+                        ClassMetadata yapClass = stream.produceYapClass(claxx);
                         if (yapClass != null) {
                             stream.checkStillToSet();
                             yapClass.setStateDirty();

@@ -47,7 +47,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	private QCandidate _root;
 
 	// the YapClass of this object
-	YapClass _yapClass;
+	ClassMetadata _yapClass;
 
 	// temporary yapField and member for one field during evaluation
 	YapField _yapField; // null denotes null object
@@ -297,8 +297,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				TypeHandler4 handler = _yapField.getHandler();
 				if (handler != null
 						&& (handler.getTypeID() == YapConst.TYPE_CLASS)) {
-					YapClass yc = (YapClass) handler;
-					if (yc instanceof YapClassAny) {
+					ClassMetadata yc = (ClassMetadata) handler;
+					if (yc instanceof UntypedFieldHandler) {
 						yc = candidate.readYapClass();
 					}
                     if(yc == null){
@@ -445,7 +445,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		}
 		if (_yapClass == null) {
 
-			YapClass yc = null;
+			ClassMetadata yc = null;
 			if (_bytes != null) {
 				yc = a_stream.produceYapClass(a_stream.reflector().forObject(a_constraint));
 			} else {
@@ -528,7 +528,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		}
 	}
 
-	YapClass readYapClass() {
+	ClassMetadata readYapClass() {
 		if (_yapClass == null) {
 			read();
 			if (_bytes != null) {

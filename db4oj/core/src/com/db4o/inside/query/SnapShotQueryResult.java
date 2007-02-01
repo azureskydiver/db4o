@@ -16,11 +16,11 @@ public class SnapShotQueryResult extends AbstractLateQueryResult {
 		super(transaction);
 	}
 	
-	public void loadFromClassIndex(final YapClass clazz) {
+	public void loadFromClassIndex(final ClassMetadata clazz) {
 		createSnapshot(classIndexIterable(clazz)); 
 	}
 
-	public void loadFromClassIndexes(final YapClassCollectionIterator classCollectionIterator) {
+	public void loadFromClassIndexes(final ClassMetadataIterator classCollectionIterator) {
 		createSnapshot(classIndexesIterable(classCollectionIterator));
 	}
 	

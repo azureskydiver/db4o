@@ -31,7 +31,7 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         _listeners.add(listener);
     }
     
-    public void checkClassHasFields(YapClass yc){
+    public void checkClassHasFields(ClassMetadata yc){
         YapField[] fields = yc.i_fields;
         if(fields != null && fields.length == 0){
             String name = yc.getName();
@@ -70,18 +70,18 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         return _listeners != null;
     }
     
-    private boolean isDb4oClass(YapClass yc){
+    private boolean isDb4oClass(ClassMetadata yc){
         return Platform4.isDb4oClass(yc.getName());
     }
 
-    public void loadedFromClassIndex(YapClass yc) {
+    public void loadedFromClassIndex(ClassMetadata yc) {
         if(isDb4oClass(yc)){
             return;
         }
         onDiagnostic(new LoadedFromClassIndex(yc.getName()));
     }
 
-    public void descendIntoTranslator(YapClass parent,String fieldName) {
+    public void descendIntoTranslator(ClassMetadata parent,String fieldName) {
         onDiagnostic(new DescendIntoTranslator(parent.getName(),fieldName));
     }
     

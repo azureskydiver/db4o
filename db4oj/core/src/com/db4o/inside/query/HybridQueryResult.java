@@ -54,11 +54,11 @@ public class HybridQueryResult extends AbstractQueryResult {
 		return _delegate.iterator();
 	}
 
-	public void loadFromClassIndex(YapClass clazz) {
+	public void loadFromClassIndex(ClassMetadata clazz) {
 		_delegate.loadFromClassIndex(clazz);
 	}
 
-	public void loadFromClassIndexes(YapClassCollectionIterator iterator) {
+	public void loadFromClassIndexes(ClassMetadataIterator iterator) {
 		_delegate.loadFromClassIndexes(iterator);
 	}
 

@@ -30,7 +30,7 @@ public final class QCandidates implements Visitor4 {
     private List4 i_constraints;
 
     // possible class information
-    YapClass i_yapClass;
+    ClassMetadata i_yapClass;
 
     // possible field information
     private QField i_field;
@@ -46,19 +46,19 @@ public final class QCandidates implements Visitor4 {
     
     private IDGenerator _idGenerator;
 
-    QCandidates(Transaction a_trans, YapClass a_yapClass, QField a_field) {
+    QCandidates(Transaction a_trans, ClassMetadata a_yapClass, QField a_field) {
     	i_trans = a_trans;
     	i_yapClass = a_yapClass;
     	i_field = a_field;
    
     	if (a_field == null
     			|| a_field.i_yapField == null
-				|| !(a_field.i_yapField.getHandler() instanceof YapClass)
+				|| !(a_field.i_yapField.getHandler() instanceof ClassMetadata)
     	) {
     		return;
     	}
 
-    	YapClass yc = (YapClass) a_field.i_yapField.getHandler();
+    	ClassMetadata yc = (ClassMetadata) a_field.i_yapField.getHandler();
     	if (i_yapClass == null) {
     		i_yapClass = yc;
     	} else {
@@ -405,7 +405,7 @@ public final class QCandidates implements Visitor4 {
             addConstraint(a_constraint);
             return true;
         }
-        YapClass yc = a_constraint.getYapClass();
+        ClassMetadata yc = a_constraint.getYapClass();
         if (yc != null) {
             yc = i_yapClass.getHigherOrCommonHierarchy(yc);
             if (yc != null) {

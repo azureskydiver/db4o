@@ -15,7 +15,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 	
 	private final Hashtable4 _perTransaction = new Hashtable4();
 	
-	public OldClassIndexStrategy(YapClass yapClass) {
+	public OldClassIndexStrategy(ClassMetadata yapClass) {
 		super(yapClass);
 	}
 
@@ -209,7 +209,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		// nothing to do
 	}
 
-	public void defragReference(YapClass yapClass, ReaderPair readers,int classIndexID) {
+	public void defragReference(ClassMetadata yapClass, ReaderPair readers,int classIndexID) {
 	}
 
 	public int id() {

@@ -13,7 +13,7 @@ final class YapFieldTranslator extends YapField
 {
 	private final ObjectTranslator i_translator;
 
-	YapFieldTranslator(YapClass a_yapClass, ObjectTranslator a_translator){
+	YapFieldTranslator(ClassMetadata a_yapClass, ObjectTranslator a_translator){
 	    super(a_yapClass, a_translator);
 		i_translator = a_translator;
 		ObjectContainerBase stream = a_yapClass.getStream();

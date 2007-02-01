@@ -83,7 +83,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 		});
 	}
 	
-	public void loadFromClassIndex(YapClass clazz) {
+	public void loadFromClassIndex(ClassMetadata clazz) {
 		final ClassIndexStrategy index = clazz.index();
 		if(index instanceof BTreeClassIndexStrategy){
 			BTree btree = ((BTreeClassIndexStrategy)index).btree();
@@ -100,13 +100,13 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 		query.executeLocal(this);
 	}
 	
-	public void loadFromClassIndexes(YapClassCollectionIterator iter){
+	public void loadFromClassIndexes(ClassMetadataIterator iter){
 		
         // duplicates because of inheritance hierarchies
         final Tree.ByRef duplicates = new Tree.ByRef();
 
         while (iter.moveNext()) {
-			final YapClass yapClass = iter.currentClass();
+			final ClassMetadata yapClass = iter.currentClass();
 			if (yapClass.getName() != null) {
 				ReflectClass claxx = yapClass.classReflector();
 				if (claxx == null

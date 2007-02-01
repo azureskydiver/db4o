@@ -113,7 +113,7 @@ public class ClusterQueryResult implements QueryResult {
 		throw new NotSupportedException();
 	}
 
-	public void loadFromClassIndex(YapClass c) {
+	public void loadFromClassIndex(ClassMetadata c) {
         throw new NotSupportedException();
 	}
 
@@ -121,7 +121,7 @@ public class ClusterQueryResult implements QueryResult {
 		throw new NotSupportedException();
 	}
 
-	public void loadFromClassIndexes(YapClassCollectionIterator i) {
+	public void loadFromClassIndexes(ClassMetadataIterator i) {
 		throw new NotSupportedException();
 	}
 

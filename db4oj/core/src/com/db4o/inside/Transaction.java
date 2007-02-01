@@ -237,7 +237,7 @@ public abstract class Transaction {
         // If objects are deleted and rewritten during a cascade
         // on delete, we dont want them to be gone.        
         checkSynchronization();
-        YapClass yapClass = stream().getYapClass(a_yapClassID);
+        ClassMetadata yapClass = stream().getYapClass(a_yapClassID);
         yapClass.index().add(this, a_id);
     }    
     
@@ -361,7 +361,7 @@ public abstract class Transaction {
         i_pointerIo.write();
     }
     
-    public abstract void writeUpdateDeleteMembers(int id, YapClass clazz, int typeInfo, int cascade);
+    public abstract void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade);
 
     public final ObjectContainerBase stream() {
         return i_stream;

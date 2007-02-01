@@ -14,7 +14,7 @@ import com.db4o.inside.convert.conversions.*;
  */
 public class ClassMarshaller0 extends ClassMarshaller{
     
-    protected void readIndex(ObjectContainerBase stream, YapClass clazz, Buffer reader) {
+    protected void readIndex(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
         int indexID = reader.readInt();
         if(! stream.maintainsIndices() || ! (stream instanceof LocalObjectContainer)){
             return;
@@ -29,7 +29,7 @@ public class ClassMarshaller0 extends ClassMarshaller{
         }
     }
 
-    private BTree btree(YapClass clazz) {
+    private BTree btree(ClassMetadata clazz) {
         return BTreeClassIndexStrategy.btree(clazz);
     }
 

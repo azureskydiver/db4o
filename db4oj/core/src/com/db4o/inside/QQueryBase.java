@@ -174,7 +174,7 @@ public abstract class QQueryBase implements Unversioned {
 		Iterator4 i = classes.iterator();
 		Constraint constr = null;
 		while (i.moveNext()) {
-		    YapClass yapClass = (YapClass)i.current();
+		    ClassMetadata yapClass = (ClassMetadata)i.current();
 		    ReflectClass yapClassClaxx = yapClass.classReflector();
 		    if(yapClassClaxx != null){
 		        if(! yapClassClaxx.isInterface()){
@@ -247,13 +247,13 @@ public abstract class QQueryBase implements Unversioned {
                 public void visit(Object obj) {
 
                     Object[] pair = ((Object[]) obj);
-                    YapClass parentYc = (YapClass)pair[0];
+                    ClassMetadata parentYc = (ClassMetadata)pair[0];
                     YapField yf = (YapField)pair[1];
-                    YapClass childYc = yf.getFieldYapClass(stream());
+                    ClassMetadata childYc = yf.getFieldYapClass(stream());
 
                     boolean take = true;
 
-                    if (childYc instanceof YapClassAny) {
+                    if (childYc instanceof UntypedFieldHandler) {
                         if (anyClassCollected[0]) {
                             take = false;
                         } else {
@@ -321,7 +321,7 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
 		QConClass clazzconstr=(QConClass)constr;
-		YapClass clazz=clazzconstr.i_yapClass;
+		ClassMetadata clazz=clazzconstr.i_yapClass;
 		if(clazz==null) {
 			return null;
 		}
@@ -536,7 +536,7 @@ public abstract class QQueryBase implements Unversioned {
                 checkDuplicates = true;
                 topLevel = false;
             }
-            YapClass yc = qcon.getYapClass();
+            ClassMetadata yc = qcon.getYapClass();
             if (yc == null) {
             	break;
             }

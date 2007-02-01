@@ -46,7 +46,7 @@ public class InsideDb4o {
     	return _stream;
     }
     
-    private YapClass yapClass(String name){
+    private ClassMetadata yapClass(String name){
     	return stream().getYapClass(reflectClass(name));
     }
     
@@ -54,7 +54,7 @@ public class InsideDb4o {
     	return stream().reflector().forName(name);
     }
     
-    private BTree index(YapClass yapClass) throws ClassCastException, NullPointerException{
+    private BTree index(ClassMetadata yapClass) throws ClassCastException, NullPointerException{
     	return ((BTreeClassIndexStrategy) yapClass.index()).btree();
     }
     

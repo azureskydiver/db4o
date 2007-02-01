@@ -16,7 +16,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
             return;
         }
         Transaction trans = reader.getTransaction();
-        if (reader.cascadeDeletes() > 0 && arrayHandler.i_handler instanceof YapClass) {
+        if (reader.cascadeDeletes() > 0 && arrayHandler.i_handler instanceof ClassMetadata) {
             StatefulBuffer bytes =
                 reader.getStream().readWriterByAddress(
                     trans,

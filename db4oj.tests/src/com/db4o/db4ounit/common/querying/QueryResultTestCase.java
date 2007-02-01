@@ -60,7 +60,7 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 		return queryResult;
 	}
 
-	private YapClass yapClass() {
+	private ClassMetadata yapClass() {
 		return stream().getYapClass(reflector().forClass(Item.class));
 	}
 

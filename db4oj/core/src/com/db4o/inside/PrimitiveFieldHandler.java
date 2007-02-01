@@ -4,7 +4,6 @@ package com.db4o.inside;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
 import com.db4o.inside.handlers.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
@@ -13,11 +12,11 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class YapClassPrimitive extends YapClass{
+public class PrimitiveFieldHandler extends ClassMetadata{
     
     public final TypeHandler4 i_handler;
     
-    YapClassPrimitive(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
+    PrimitiveFieldHandler(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
     	super(a_stream, a_handler.classReflector());
         i_fields = YapField.EMPTY_ARRAY;
         i_handler = a_handler;
@@ -87,7 +86,7 @@ public class YapClassPrimitive extends YapClass{
             }
         }
         
-       if(i_handler instanceof YapClassAny){
+       if(i_handler instanceof UntypedFieldHandler){
             // Any-In-Any: Ignore delete 
             a_bytes.incrementOffset(i_handler.linkLength());
         }else{

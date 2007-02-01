@@ -111,8 +111,8 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 		return BTreeClassIndexStrategy.btree(yapClass());
 	}
 
-	private YapClass yapClass() {
-		YapClass clazz = fileSession().getYapClass(reflector().forClass(Item.class));
+	private ClassMetadata yapClass() {
+		ClassMetadata clazz = fileSession().getYapClass(reflector().forClass(Item.class));
 		return clazz;
 	}
 

@@ -29,7 +29,7 @@ public class QConClass extends QConObject{
 		if(claxx != null){
 			i_yapClass = a_trans.stream().produceYapClass(claxx);
 			if(claxx.equals(a_trans.stream().i_handlers.ICLASS_OBJECT)){
-				i_yapClass = (YapClass)((YapClassPrimitive)i_yapClass).i_handler;
+				i_yapClass = (ClassMetadata)((PrimitiveFieldHandler)i_yapClass).i_handler;
 			}
 		}
 		_claxx = claxx;

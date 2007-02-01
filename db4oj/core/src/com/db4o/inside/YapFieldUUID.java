@@ -25,7 +25,7 @@ public class YapFieldUUID extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {
         
         boolean isnew = (oldSlot == null);
 
@@ -67,13 +67,13 @@ public class YapFieldUUID extends YapFieldVirtual {
 		}
     }
 
-	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, YapClass yapClass, Slot oldSlot, boolean checkClass) {
+	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata yapClass, Slot oldSlot, boolean checkClass) {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.getAddress(), oldSlot.getLength());
         }
 		Buffer reader = stream.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
 		if(checkClass){
-            YapClass realClass = YapClass.readClass(stream,reader);
+            ClassMetadata realClass = ClassMetadata.readClass(stream,reader);
             if(realClass != yapClass){
                 return null;
             }
@@ -108,7 +108,7 @@ public class YapFieldUUID extends YapFieldVirtual {
     	return super.getIndex(transaction);
     }
     
-    protected void rebuildIndexForObject(LocalObjectContainer stream, YapClass yapClass, int objectId) {
+    protected void rebuildIndexForObject(LocalObjectContainer stream, ClassMetadata yapClass, int objectId) {
     	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((YapFileTransaction)stream.getSystemTransaction()).getCurrentSlotOfID(objectId), true);
     	if (null == data) {
     		return;

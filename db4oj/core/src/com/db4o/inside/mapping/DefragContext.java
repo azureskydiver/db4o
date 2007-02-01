@@ -29,7 +29,7 @@ public interface DefragContext extends IDMapping {
 
 	void traverseAllIndexSlots(BTree tree, Visitor4 visitor4);	
 	
-	YapClass yapClass(int id);
+	ClassMetadata yapClass(int id);
 
 	StatefulBuffer sourceWriterByID(int sourceID);
 	

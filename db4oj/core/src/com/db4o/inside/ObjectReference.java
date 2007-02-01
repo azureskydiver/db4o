@@ -16,7 +16,7 @@ import com.db4o.reflect.*;
  */
 public class ObjectReference extends YapMeta implements ObjectInfo{
     
-	private YapClass _class;
+	private ClassMetadata _class;
 	private Object _object;
 	private VirtualAttributes _virtualAttributes;
 
@@ -38,7 +38,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		i_id = a_id;
 	}
 
-	ObjectReference(YapClass a_yapClass, int a_id) {
+	ObjectReference(ClassMetadata a_yapClass, int a_id) {
 		_class = a_yapClass;
 		i_id = a_id;
 	}
@@ -85,7 +85,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 	}
 
 	final void addToIDTree(ObjectContainerBase a_stream) {
-		if (!(_class instanceof YapClassPrimitive)) {
+		if (!(_class instanceof PrimitiveFieldHandler)) {
 			a_stream.idTreeAdd(this);
 		}
 	}
@@ -191,7 +191,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
     }
 
 
-	public YapClass getYapClass() {
+	public ClassMetadata getYapClass() {
 		return _class;
 	}
 
@@ -311,7 +311,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		_object = a_object;
 	}
 
-	final void store(Transaction trans, YapClass yapClass, Object obj){
+	final void store(Transaction trans, ClassMetadata yapClass, Object obj){
 		_object = obj;
 		_class = yapClass;
 		
@@ -781,7 +781,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		                str += "\nAddress=" + writer.getAddress();
 		            }
                     ObjectHeader oh = new ObjectHeader(stream, writer);
-		            YapClass yc = oh.yapClass();
+		            ClassMetadata yc = oh.yapClass();
 		            if(yc != _class){
 		                str += "\nYapClass corruption";
 		            }else{

@@ -100,7 +100,7 @@ final class TransactionClient extends Transaction {
         clearAll();
     }
 
-    public void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type,
+    public void writeUpdateDeleteMembers(int a_id, ClassMetadata a_yc, int a_type,
         int a_cascade) {
     	MsgD msg = Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
 				new int[] { a_id, a_yc.getID(), a_type, a_cascade });

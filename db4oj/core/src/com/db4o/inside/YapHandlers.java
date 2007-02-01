@@ -29,8 +29,8 @@ public final class YapHandlers {
     // Array Indices in i_YapContainers
     private static final int        CLASSCOUNT      = 11;
 
-    private YapClass                i_anyArray;
-    private YapClass                i_anyArrayN;
+    private ClassMetadata                i_anyArray;
+    private ClassMetadata                i_anyArrayN;
 
     public final YapString          i_stringHandler;
 
@@ -41,7 +41,7 @@ public final class YapHandlers {
     private YapTypeAbstract[]       i_platformTypes;
     static private final int        PRIMITIVECOUNT  = 8;
 
-    YapClass[]                      i_yapClasses;
+    ClassMetadata[]                      i_yapClasses;
 
     // need to keep getID Functions in Sync with ArrayIndex
     private static final int        ANY_INDEX          = 10;
@@ -103,7 +103,7 @@ public final class YapHandlers {
             new YShort(a_stream),
 
             // primitives first
-            i_stringHandler, new YDate(a_stream), new YapClassAny(a_stream) // Index = 10, ID = 11
+            i_stringHandler, new YDate(a_stream), new UntypedFieldHandler(a_stream) // Index = 10, ID = 11
         };
         
         i_platformTypes = Platform4.types(a_stream);
@@ -125,11 +125,11 @@ public final class YapHandlers {
             }
         }
 
-        i_yapClasses = new YapClass[i_maxTypeID + 1];
+        i_yapClasses = new ClassMetadata[i_maxTypeID + 1];
 
         for (int i = 0; i < CLASSCOUNT; i++) {
             int id = i + 1; // note that we avoid 0 here
-            i_yapClasses[i] = new YapClassPrimitive(a_stream, i_handlers[i]);
+            i_yapClasses[i] = new PrimitiveFieldHandler(a_stream, i_handlers[i]);
             i_yapClasses[i].setID(id); 
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if(i < ANY_INDEX){
@@ -147,7 +147,7 @@ public final class YapHandlers {
             GenericConverter converter = (i_platformTypes[i] instanceof GenericConverter) ? (GenericConverter)i_platformTypes[i] : null;  
             reflector.registerPrimitiveClass(id, i_platformTypes[i].getName(), converter);
             i_handlers[idx] = i_platformTypes[i];
-            i_yapClasses[idx] = new YapClassPrimitive(a_stream, i_platformTypes[i]);
+            i_yapClasses[idx] = new PrimitiveFieldHandler(a_stream, i_platformTypes[i]);
             i_yapClasses[idx].setID(id);
             if (id > i_maxTypeID) {
                 i_maxTypeID = idx;
@@ -160,12 +160,12 @@ public final class YapHandlers {
             }
         }
 
-        i_anyArray = new YapClassPrimitive(a_stream, new YapArray(_masterStream,
+        i_anyArray = new PrimitiveFieldHandler(a_stream, new YapArray(_masterStream,
             anyObject(), false));
         i_anyArray.setID(ANY_ARRAY_ID);
         i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
-        i_anyArrayN = new YapClassPrimitive(a_stream, new YapArrayN(_masterStream,
+        i_anyArrayN = new PrimitiveFieldHandler(a_stream, new YapArrayN(_masterStream,
             anyObject(), false));
         i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
@@ -337,9 +337,9 @@ public final class YapHandlers {
         if (a_class.isArray()) {
             return handlerForClass(a_stream, a_class.getComponentType());
         }
-        YapClass yc = getYapClassStatic(a_class);
+        ClassMetadata yc = getYapClassStatic(a_class);
         if (yc != null) {
-            return ((YapClassPrimitive) yc).i_handler;
+            return ((PrimitiveFieldHandler) yc).i_handler;
         }
         return a_stream.produceYapClass(a_class);
     }
@@ -389,14 +389,14 @@ public final class YapHandlers {
         return null;
     }
 
-    public YapClass getYapClassStatic(int a_id) {
+    public ClassMetadata getYapClassStatic(int a_id) {
         if (a_id > 0 && a_id <= i_maxTypeID) {
             return i_yapClasses[a_id - 1];
         }
         return null;
     }
 
-    YapClass getYapClassStatic(ReflectClass a_class) {
+    ClassMetadata getYapClassStatic(ReflectClass a_class) {
         if (a_class == null) {
             return null;
         }
@@ -406,7 +406,7 @@ public final class YapHandlers {
             }
             return i_anyArray;
         }
-        return (YapClass) i_classByClass.get(a_class);
+        return (ClassMetadata) i_classByClass.get(a_class);
     }
     
     public boolean isSecondClass(Object a_object){
@@ -442,7 +442,7 @@ public final class YapHandlers {
 		return i_replication;
 	}
 
-	public YapClass primitiveClassById(int id) {
+	public ClassMetadata primitiveClassById(int id) {
         return i_yapClasses[id - 1];
 	}
 	

@@ -11,7 +11,7 @@ import com.db4o.inside.*;
  */
 final class ClassIndexClient extends ClassIndex {
 
-	ClassIndexClient(YapClass aYapClass) {
+	ClassIndexClient(ClassMetadata aYapClass) {
 		super(aYapClass);
 	}
 

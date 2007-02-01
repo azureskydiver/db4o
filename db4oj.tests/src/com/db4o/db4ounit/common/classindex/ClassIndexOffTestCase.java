@@ -33,7 +33,7 @@ public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOu
 	
 	public void test(){
 		db().set(new Item("1"));
-		YapClass yc = (YapClass)db().storedClass(Item.class);
+		ClassMetadata yc = (ClassMetadata)db().storedClass(Item.class);
 		Assert.isFalse(yc.hasIndex());
 		
 		assertNoItemFound();

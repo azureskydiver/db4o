@@ -38,14 +38,14 @@ public class MsgObject extends MsgD {
 		return getWriter(bytes, null);
 	}
 	
-	public MsgD getWriter(YapClass a_yapClass, StatefulBuffer bytes) {
+	public MsgD getWriter(ClassMetadata a_yapClass, StatefulBuffer bytes) {
         if(a_yapClass == null){
             return getWriter(bytes, new int[]{0});
         }
 		return getWriter(bytes, new int[]{ a_yapClass.getID()});
 	}
 	
-	public MsgD getWriter(YapClass a_yapClass, int a_param, StatefulBuffer bytes) {
+	public MsgD getWriter(ClassMetadata a_yapClass, int a_param, StatefulBuffer bytes) {
 		return getWriter(bytes, new int[]{ a_yapClass.getID(), a_param});
 	}
 	

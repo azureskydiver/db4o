@@ -24,9 +24,9 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
 	
     private void rebuildUUIDIndex(LocalObjectContainer file) {
 		final YapFieldUUID uuid = file.getUUIDIndex();
-		final YapClassCollectionIterator i = file.classCollection().iterator();
+		final ClassMetadataIterator i = file.classCollection().iterator();
 		while (i.moveNext()) {
-			final YapClass clazz = i.currentClass();
+			final ClassMetadata clazz = i.currentClass();
 			if (clazz.generateUUIDs()) {
 				uuid.rebuildIndexForClass(file, clazz);
 			}

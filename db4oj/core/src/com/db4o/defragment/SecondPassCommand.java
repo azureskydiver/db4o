@@ -25,7 +25,7 @@ final class SecondPassCommand implements PassCommand {
 		_objectCommitFrequency = objectCommitFrequency;
 	}
 
-	public void processClass(final DefragContextImpl context, final YapClass yapClass, int id,final int classIndexID) throws CorruptionException {
+	public void processClass(final DefragContextImpl context, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException {
 		if(context.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
@@ -36,10 +36,10 @@ final class SecondPassCommand implements PassCommand {
 		});
 	}
 
-	public void processObjectSlot(final DefragContextImpl context, final YapClass yapClass, int id, boolean registerAddresses) throws CorruptionException {
+	public void processObjectSlot(final DefragContextImpl context, final ClassMetadata yapClass, int id, boolean registerAddresses) throws CorruptionException {
 		ReaderPair.processCopy(context, id, new SlotCopyHandler() {
 			public void processCopy(ReaderPair readers) {
-				YapClass.defragObject(readers);
+				ClassMetadata.defragObject(readers);
 				if(_objectCommitFrequency>0) {
 					_objectCount++;
 					if(_objectCount==_objectCommitFrequency) {
@@ -54,7 +54,7 @@ final class SecondPassCommand implements PassCommand {
 	public void processClassCollection(DefragContextImpl context) throws CorruptionException {
 		ReaderPair.processCopy(context, context.sourceClassCollectionID(), new SlotCopyHandler() {
 			public void processCopy(ReaderPair readers) {
-				YapClassCollection.defrag(readers);
+				ClassMetadataRepository.defrag(readers);
 			}
 		});
 	}

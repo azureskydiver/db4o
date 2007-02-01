@@ -14,7 +14,7 @@ public abstract class PrimitiveMarshaller {
     
     public abstract boolean useNormalClassRead();
     
-    public abstract int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, StatefulBuffer parentWriter, boolean withIndirection, boolean restoreLinkOffset);
+    public abstract int writeNew(Transaction trans, PrimitiveFieldHandler yapClassPrimitive, Object obj, boolean topLevel, StatefulBuffer parentWriter, boolean withIndirection, boolean restoreLinkOffset);
     
     public abstract Date readDate(Buffer bytes);
     

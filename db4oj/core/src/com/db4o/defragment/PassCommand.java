@@ -12,8 +12,8 @@ import com.db4o.inside.btree.*;
  * @exclude
  */
 interface PassCommand {
-	void processObjectSlot(DefragContextImpl context,YapClass yapClass,int id, boolean registerAddresses) throws CorruptionException;
-	void processClass(DefragContextImpl context,YapClass yapClass,int id,int classIndexID) throws CorruptionException;
+	void processObjectSlot(DefragContextImpl context,ClassMetadata yapClass,int id, boolean registerAddresses) throws CorruptionException;
+	void processClass(DefragContextImpl context,ClassMetadata yapClass,int id,int classIndexID) throws CorruptionException;
 	void processClassCollection(DefragContextImpl context) throws CorruptionException;
 	void processBTree(DefragContextImpl context, BTree btree) throws CorruptionException;
 	void flush(DefragContextImpl context);

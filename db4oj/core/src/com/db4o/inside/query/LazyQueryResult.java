@@ -16,11 +16,11 @@ public class LazyQueryResult extends AbstractLateQueryResult {
 		super(trans);
 	}
 
-	public void loadFromClassIndex(final YapClass clazz) {
+	public void loadFromClassIndex(final ClassMetadata clazz) {
 		_iterable = classIndexIterable(clazz);
 	}
 	
-	public void loadFromClassIndexes(final YapClassCollectionIterator classCollectionIterator) {
+	public void loadFromClassIndexes(final ClassMetadataIterator classCollectionIterator) {
 		_iterable = classIndexesIterable(classCollectionIterator);
 	}
 	

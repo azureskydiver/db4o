@@ -47,7 +47,7 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
     	return toIdTree().toIdList();
     }
 
-	public boolean skipClass(YapClass yapClass){
+	public boolean skipClass(ClassMetadata yapClass){
 		if (yapClass.getName() == null) {
 			return true;
 		}
@@ -58,13 +58,13 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
 		return false;
 	}
 	
-	protected Iterable4 classIndexesIterable(final YapClassCollectionIterator classCollectionIterator) {
+	protected Iterable4 classIndexesIterable(final ClassMetadataIterator classCollectionIterator) {
 		return new Iterable4() {
 			public Iterator4 iterator() {
 				return new CompositeIterator4(
 					new MappingIterator(classCollectionIterator) {
 						protected Object map(Object current) {
-							final YapClass yapClass = (YapClass)current;
+							final ClassMetadata yapClass = (ClassMetadata)current;
 							if(skipClass(yapClass)){
 								return MappingIterator.SKIP;
 							}
@@ -76,7 +76,7 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
 		};
 	}
 	
-	protected Iterable4 classIndexIterable(final YapClass clazz) {
+	protected Iterable4 classIndexIterable(final ClassMetadata clazz) {
 		return new Iterable4() {
 			public Iterator4 iterator() {
 				return classIndexIterator(clazz);
@@ -84,7 +84,7 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
 		};
 	}
 	
-	public Iterator4 classIndexIterator(YapClass clazz) {
+	public Iterator4 classIndexIterator(ClassMetadata clazz) {
 		return BTreeClassIndexStrategy.iterate(clazz, transaction());
 	}
 

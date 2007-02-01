@@ -161,7 +161,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             }
             reader.setCascadeDeletes(a_cascade);
             reader.slotDelete();
-            YapClass yc = yo.getYapClass();
+            ClassMetadata yc = yo.getYapClass();
             yc.delete(reader, obj);
 
             // The following will not work with this approach.
@@ -727,7 +727,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         syncFiles();
     }
 
-    public final void writeNew(YapClass a_yapClass, StatefulBuffer aWriter) {
+    public final void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter) {
         aWriter.writeEncrypt(this, aWriter.getAddress(), 0);
         if(a_yapClass == null){
             return;
@@ -764,7 +764,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         trans.slotFreeOnRollbackSetPointer(id, address, length);
     }
 
-    public final void writeUpdate(YapClass a_yapClass, StatefulBuffer a_bytes) {
+    public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {
         if(a_bytes.getAddress() == 0){
             getSlotForUpdate(a_bytes);
         }
@@ -792,7 +792,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return _systemData;
     }
     
-    public long[] getIDsForClass(Transaction trans, YapClass clazz){
+    public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
 		final IntArrayList ids = new IntArrayList();
         clazz.index().traverseAll(trans, new Visitor4() {
         	public void visit(Object obj) {
@@ -802,7 +802,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return ids.asLong();
     }
     
-    public QueryResult classOnlyQuery(Transaction trans, YapClass clazz){
+    public QueryResult classOnlyQuery(Transaction trans, ClassMetadata clazz){
         if (!clazz.hasIndex()) {
         	
         	// TODO: If the class does not have an index, we won't be

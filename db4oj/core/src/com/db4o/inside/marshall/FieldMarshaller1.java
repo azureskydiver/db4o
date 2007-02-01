@@ -15,7 +15,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return ! field.isVirtual();
     }
 
-    public void write(Transaction trans, YapClass clazz, YapField field, Buffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, YapField field, Buffer writer) {
         super.write(trans, clazz, field, writer);
         if(! hasBTreeIndex(field)){
             return;
@@ -56,7 +56,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return  len + BTREE_ID;
     }
 
-    public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,
+    public void defrag(ClassMetadata yapClass, YapField yapField, YapStringIO sio,
     		final ReaderPair readers)
     		throws CorruptionException {
     	super.defrag(yapClass, yapField, sio, readers);

@@ -20,7 +20,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
             int linkOffset = reader._offset;
             reader._offset = payLoadOffset;
             int yapClassID = reader.readInt();
-            YapClass yc = reader.getStream().getYapClass(yapClassID);
+            ClassMetadata yc = reader.getStream().getYapClass(yapClassID);
             if(yc != null){
                 yc.deleteEmbedded(_family, reader);
             }
@@ -42,7 +42,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        YapClass yc = reader.getStream().getYapClass(yapClassID);
+        ClassMetadata yc = reader.getStream().getYapClass(yapClassID);
         if(yc != null){
             ret = yc.read(_family, reader, true);
         }
@@ -66,7 +66,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        YapClass yc = trans.stream().getYapClass(yapClassID);
+        ClassMetadata yc = trans.stream().getYapClass(yapClassID);
         if(yc != null){
             ret = yc.readQuery(trans, _family, false, reader, toArray);
         }
@@ -90,7 +90,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader[0].readInt();
         
-        YapClass yc = trans.stream().getYapClass(yapClassID);
+        ClassMetadata yc = trans.stream().getYapClass(yapClassID);
         if(yc != null){
             ret = yc.readArrayHandler(trans, _family, reader);
         }
@@ -110,7 +110,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        YapClass yc = candidates.i_trans.stream().getYapClass(yapClassID);
+        ClassMetadata yc = candidates.i_trans.stream().getYapClass(yapClassID);
         if(yc != null){
             ret = yc.readSubCandidate(_family, reader, candidates, false);
         }
@@ -126,7 +126,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
             return new Integer(0);
         }
         
-        YapClass yc = YapClass.forObject(writer.getTransaction(), obj, false);
+        ClassMetadata yc = ClassMetadata.forObject(writer.getTransaction(), obj, false);
         
         if(yc == null){
             writer.writeInt(0);
@@ -164,7 +164,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = readers.copyIDAndRetrieveMapping().orig();
         
-        YapClass yc = readers.context().yapClass(yapClassID);
+        ClassMetadata yc = readers.context().yapClass(yapClassID);
         if(yc != null){
             yc.defrag(_family, readers, false);
         }

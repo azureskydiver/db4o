@@ -10,9 +10,9 @@ import com.db4o.inside.*;
  */
 public abstract class AbstractClassIndexStrategy implements ClassIndexStrategy {
 
-	protected final YapClass _yapClass;
+	protected final ClassMetadata _yapClass;
 
-	public AbstractClassIndexStrategy(YapClass yapClass) {
+	public AbstractClassIndexStrategy(ClassMetadata yapClass) {
 		_yapClass = yapClass;
 	}
 
