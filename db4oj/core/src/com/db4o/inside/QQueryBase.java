@@ -307,7 +307,7 @@ public abstract class QQueryBase implements Unversioned {
 	    }
 	}
 
-	protected YapStream stream() {
+	protected ObjectContainerBase stream() {
 		return i_trans.stream();
 	}
 
@@ -450,7 +450,7 @@ public abstract class QQueryBase implements Unversioned {
                 result.checkDuplicates();
             }
 
-            final YapStream stream = stream();
+            final ObjectContainerBase stream = stream();
             i = new Iterator4Impl(candidateCollection);
             while (i.moveNext()) {
                 QCandidates candidates = (QCandidates)i.current();

@@ -14,9 +14,9 @@ import com.db4o.inside.convert.conversions.*;
  */
 public class ClassMarshaller0 extends ClassMarshaller{
     
-    protected void readIndex(YapStream stream, YapClass clazz, Buffer reader) {
+    protected void readIndex(ObjectContainerBase stream, YapClass clazz, Buffer reader) {
         int indexID = reader.readInt();
-        if(! stream.maintainsIndices() || ! (stream instanceof YapFile)){
+        if(! stream.maintainsIndices() || ! (stream instanceof LocalObjectContainer)){
             return;
         }
         if(btree(clazz) != null){
@@ -24,7 +24,7 @@ public class ClassMarshaller0 extends ClassMarshaller{
         }
         clazz.index().read(stream, validIndexId(indexID));
         if(isOldClassIndex(indexID)){
-            new ClassIndexesToBTrees_5_5().convert((YapFile)stream, indexID, btree(clazz));
+            new ClassIndexesToBTrees_5_5().convert((LocalObjectContainer)stream, indexID, btree(clazz));
             stream.setDirtyInSystemTransaction(clazz);
         }
     }

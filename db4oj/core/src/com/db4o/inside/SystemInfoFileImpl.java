@@ -11,9 +11,9 @@ import com.db4o.inside.freespace.*;
  */
 public class SystemInfoFileImpl implements SystemInfo{
     
-    private YapFile _file;
+    private LocalObjectContainer _file;
 
-    public SystemInfoFileImpl(YapFile file){
+    public SystemInfoFileImpl(LocalObjectContainer file){
         _file = file;
     }
 

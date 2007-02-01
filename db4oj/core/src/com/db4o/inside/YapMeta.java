@@ -153,7 +153,7 @@ public abstract class YapMeta {
         	DTrace.YAPMETA_WRITE.log(getID());
         }
             
-        YapFile stream = (YapFile)trans.stream();
+        LocalObjectContainer stream = (LocalObjectContainer)trans.stream();
         
         int address = 0;
         int length = ownLength();

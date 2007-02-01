@@ -15,8 +15,8 @@ public class Unobfuscated {
     static Object random;
     
 	public static boolean createDb4oList(Object a_stream){
-	    ((YapStream)a_stream).checkClosed();
-	    return ! ((YapStream)a_stream).isInstantiating();
+	    ((ObjectContainerBase)a_stream).checkClosed();
+	    return ! ((ObjectContainerBase)a_stream).isInstantiating();
 	}
 	
 	public static byte[] generateSignature() {
@@ -42,7 +42,7 @@ public class Unobfuscated {
 	}
 	
 	static void purgeUnsychronized(Object a_stream, Object a_object){
-	    ((YapStream)a_stream).purge1(a_object);
+	    ((ObjectContainerBase)a_stream).purge1(a_object);
 	}
 	
 	public static long randomLong() {
@@ -57,7 +57,7 @@ public class Unobfuscated {
 	}
 	
 	static void shutDownHookCallback(Object a_stream){
-		((YapStream)a_stream).failedToShutDown();
+		((ObjectContainerBase)a_stream).failedToShutDown();
 	}
 
 

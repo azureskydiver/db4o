@@ -52,7 +52,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 
     public void initOnUp(Transaction systemTrans, YapField yapField) {
     	
-        YapStream anyStream = systemTrans.stream();
+        ObjectContainerBase anyStream = systemTrans.stream();
         if (!anyStream.maintainsIndices()) {
         	return;
         }
@@ -63,7 +63,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
             indexed(false);
         }
         
-    	YapFile stream = (YapFile)anyStream;
+    	LocalObjectContainer stream = (LocalObjectContainer)anyStream;
         int indexedFlag=_config.getAsInt(INDEXED);        
         if (indexedFlag == YapConst.NO) {
             yapField.dropIndex(systemTrans);
@@ -85,7 +85,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	    return yapField.getIndex(systemTrans) != null;
 	}
 
-	private void createIndex(Transaction systemTrans, YapField yapField, YapFile stream) {
+	private void createIndex(Transaction systemTrans, YapField yapField, LocalObjectContainer stream) {
         if (stream.configImpl().messageLevel() > YapConst.NONE) {
             stream.message("creating index " + yapField.toString());
         }
@@ -94,7 +94,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         reindex(systemTrans, yapField, stream);
 	}
 
-	private void reindex(Transaction systemTrans, YapField yapField, YapFile stream) {
+	private void reindex(Transaction systemTrans, YapField yapField, LocalObjectContainer stream) {
 		YapClass yapClass = yapField.getParentYapClass();		
 		if (yapField.rebuildIndexForClass(stream, yapClass)) {
 		    systemTrans.commit();

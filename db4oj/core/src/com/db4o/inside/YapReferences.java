@@ -12,13 +12,13 @@ import com.db4o.foundation.*;
 class YapReferences implements Runnable {
     
     final Object            _queue;
-    private final YapStream _stream;
+    private final ObjectContainerBase _stream;
     private SimpleTimer     _timer;
     public final boolean    _weak;
 
-    YapReferences(YapStream a_stream) {
+    YapReferences(ObjectContainerBase a_stream) {
         _stream = a_stream;
-        _weak = (!(a_stream instanceof YapObjectCarrier)
+        _weak = (!(a_stream instanceof TransportObjectContainer)
             && Platform4.hasWeakReferences() && a_stream.configImpl().weakReferences());
         _queue = _weak ? Platform4.createReferenceQueue() : null;
     }

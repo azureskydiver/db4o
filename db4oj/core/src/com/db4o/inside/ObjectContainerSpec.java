@@ -10,5 +10,5 @@ package com.db4o.inside;
  * 
  * @exclude
  */
-public interface YapStreamSpec {
+public interface ObjectContainerSpec {
 }

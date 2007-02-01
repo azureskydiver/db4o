@@ -9,7 +9,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 import com.db4o.inside.*;
-import com.db4o.inside.YapStream;
+import com.db4o.inside.ObjectContainerBase;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.classindex.*;
 import com.db4o.query.*;
@@ -102,7 +102,7 @@ public class UpdatingDb4oVersions {
     }
 
     private void checkBTreeSize(ExtObjectContainer objectContainer) {
-        YapStream yapStream = (YapStream)objectContainer;
+        ObjectContainerBase yapStream = (ObjectContainerBase)objectContainer;
         StoredClass storedClass = objectContainer.storedClass(this.getClass().getName());
         YapClass yc = (YapClass) storedClass;
         BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) yc.index();

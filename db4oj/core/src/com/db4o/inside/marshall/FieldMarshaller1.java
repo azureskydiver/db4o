@@ -23,7 +23,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         writer.writeIDOf(trans, field.getIndex(trans));
     }
 
-    public RawFieldSpec readSpec(YapStream stream, Buffer reader) {
+    public RawFieldSpec readSpec(ObjectContainerBase stream, Buffer reader) {
     	RawFieldSpec spec=super.readSpec(stream, reader);
     	if(spec==null) {
     		return null;
@@ -36,7 +36,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     	return spec;
     }
     
-    protected YapField fromSpec(RawFieldSpec spec, YapStream stream, YapField field) {
+    protected YapField fromSpec(RawFieldSpec spec, ObjectContainerBase stream, YapField field) {
 		YapField actualField = super.fromSpec(spec, stream, field);
 		if(spec==null) {
 			return field;
@@ -47,7 +47,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
 		return actualField;
 	}
     
-    public int marshalledLength(YapStream stream, YapField field) {
+    public int marshalledLength(ObjectContainerBase stream, YapField field) {
         int len = super.marshalledLength(stream, field);
         if(! hasBTreeIndex(field)){
             return len;

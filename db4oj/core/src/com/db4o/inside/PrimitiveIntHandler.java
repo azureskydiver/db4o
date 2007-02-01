@@ -11,7 +11,7 @@ package com.db4o.inside;
  */
 public class PrimitiveIntHandler extends YInt{
 	
-	public PrimitiveIntHandler(YapStream stream) {
+	public PrimitiveIntHandler(ObjectContainerBase stream) {
 		super(stream);
 	}
 	

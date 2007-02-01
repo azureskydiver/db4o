@@ -47,7 +47,7 @@ public class FileHeader0 extends FileHeader {
         _configBlock.close();
     }
     
-    protected FileHeader newOnSignatureMatch(YapFile file, Buffer reader) {
+    protected FileHeader newOnSignatureMatch(LocalObjectContainer file, Buffer reader) {
         byte firstFileByte = reader.readByte();
         if (firstFileByte != YapConst.YAPBEGIN) {
             if(firstFileByte != YapConst.YAPFILEVERSION){
@@ -63,7 +63,7 @@ public class FileHeader0 extends FileHeader {
     }
 
     
-    protected void readFixedPart(YapFile file, Buffer reader) throws IOException {
+    protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException {
         _configBlock = YapConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
         readClassCollectionAndFreeSpace(file, reader);
@@ -73,7 +73,7 @@ public class FileHeader0 extends FileHeader {
         reader.incrementOffset(YapConst.ID_LENGTH);
     }
 
-    public void readVariablePart(YapFile file){
+    public void readVariablePart(LocalObjectContainer file){
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
@@ -94,12 +94,12 @@ public class FileHeader0 extends FileHeader {
         file.systemData().identity(_bootRecord.i_db);
     }
 
-    public void initNew(YapFile file) throws IOException {
+    public void initNew(LocalObjectContainer file) throws IOException {
         _configBlock = YapConfigBlock.forNewFile(file);
         initBootRecord(file);
     }
     
-    private void initBootRecord(YapFile file){
+    private void initBootRecord(LocalObjectContainer file){
         
         file.showInternalClasses(true);
         
@@ -128,7 +128,7 @@ public class FileHeader0 extends FileHeader {
         return LENGTH;
     }
 
-    public void writeFixedPart(YapFile file, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {
+    public void writeFixedPart(LocalObjectContainer file, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {
         writer.append(YapConst.YAPFILEVERSION);
         writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());
@@ -141,7 +141,7 @@ public class FileHeader0 extends FileHeader {
         writer.write();
     }
     
-    public void writeVariablePart(YapFile file, int part) {
+    public void writeVariablePart(LocalObjectContainer file, int part) {
         if(part == 1){
             _configBlock.write();
         }else if(part == 2){

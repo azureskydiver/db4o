@@ -120,11 +120,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
     }
 
-	protected YapStream stream() {
-	    return (YapStream) db();
+	protected ObjectContainerBase stream() {
+	    return (ObjectContainerBase) db();
 	}
 	
-	protected YapFile fileSession() {
+	protected LocalObjectContainer fileSession() {
 		return fixture().fileSession();
 	}
 

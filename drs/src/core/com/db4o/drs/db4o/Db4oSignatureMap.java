@@ -6,16 +6,16 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
-import com.db4o.inside.YapStream;
+import com.db4o.inside.ObjectContainerBase;
 
 
 class Db4oSignatureMap {
     
-    private final YapStream _stream;
+    private final ObjectContainerBase _stream;
     
     private final Hashtable4 _identities;
     
-    Db4oSignatureMap(YapStream stream){
+    Db4oSignatureMap(ObjectContainerBase stream){
         _stream = stream;
         _identities = new Hashtable4();
     }

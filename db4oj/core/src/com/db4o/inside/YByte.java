@@ -16,7 +16,7 @@ final class YByte extends YapJavaClass
 	
 	private static final Byte i_primitive = new Byte((byte)0);
 	
-    public YByte(YapStream stream) {
+    public YByte(ObjectContainerBase stream) {
         super(stream);
     }
     

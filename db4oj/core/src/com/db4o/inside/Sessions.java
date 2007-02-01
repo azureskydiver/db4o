@@ -53,13 +53,13 @@ public class Sessions extends Collection4{
 					System.out.println("Debug option set NOT to flush file.");
 				}
 				try{
-				    oc = new YapRandomAccessFile(config,newSession);
+				    oc = new IoAdaptedObjectContainer(config,newSession);
 				}catch(Exception e){
 				    e.printStackTrace();
 				}
 			} else {
 				try {
-					oc = new YapRandomAccessFile(config,newSession);				
+					oc = new IoAdaptedObjectContainer(config,newSession);				
 				} catch (DatabaseFileLockedException e) {
 					throw e;
 				} catch (ObjectNotStorableException e) {
@@ -71,7 +71,7 @@ public class Sessions extends Collection4{
 					return null;
 				}
 			}
-			newSession.i_stream = (YapStream) oc;
+			newSession.i_stream = (ObjectContainerBase) oc;
 			add(newSession);
 			Platform4.postOpen(oc);
 			Messages.logMsg(Db4o.configure(), 5, databaseFileName);

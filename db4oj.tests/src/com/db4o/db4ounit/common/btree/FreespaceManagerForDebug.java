@@ -12,7 +12,7 @@ public class FreespaceManagerForDebug extends FreespaceManager {
 
     private final SlotListener _listener;
 
-    public FreespaceManagerForDebug(YapFile file, SlotListener listener) {
+    public FreespaceManagerForDebug(LocalObjectContainer file, SlotListener listener) {
         super(file);
         _listener = listener;
     }
@@ -53,7 +53,7 @@ public class FreespaceManagerForDebug extends FreespaceManager {
 
     }
 
-	public void onNew(YapFile file) {
+	public void onNew(LocalObjectContainer file) {
 		
 	}
 	

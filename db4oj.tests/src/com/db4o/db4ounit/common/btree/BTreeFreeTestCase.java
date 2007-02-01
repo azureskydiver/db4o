@@ -32,7 +32,7 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
             allSlots.add(slot);
         }
         
-        YapFile yapFile = (YapFile)stream();
+        LocalObjectContainer yapFile = (LocalObjectContainer)stream();
         
         
         final Collection4 freedSlots = new Collection4();

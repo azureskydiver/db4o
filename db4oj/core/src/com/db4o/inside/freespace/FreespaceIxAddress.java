@@ -10,7 +10,7 @@ import com.db4o.inside.ix.*;
 
 class FreespaceIxAddress extends FreespaceIx{
     
-    FreespaceIxAddress(YapFile file, MetaIndex metaIndex){
+    FreespaceIxAddress(LocalObjectContainer file, MetaIndex metaIndex){
         super(file, metaIndex);
     }
 

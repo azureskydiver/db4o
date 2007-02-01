@@ -57,6 +57,6 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase implements
 	}
 
 	private long currentVersion() {
-		return ((YapFile) db()).currentVersion();
+		return ((LocalObjectContainer) db()).currentVersion();
 	}
 }

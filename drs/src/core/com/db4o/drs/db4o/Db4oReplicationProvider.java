@@ -7,7 +7,7 @@ import java.util.Iterator;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ReplicationRecord;
-import com.db4o.cs.YapClient;
+import com.db4o.cs.ClientObjectContainer;
 import com.db4o.config.Configuration;
 import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
 import com.db4o.drs.inside.ReplicationReference;
@@ -33,7 +33,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 	private ReadonlyReplicationProviderSignature _mySignature;
 
-	private final YapStream _stream;
+	private final ObjectContainerBase _stream;
 
 	private final Reflector _reflector;
 
@@ -57,7 +57,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		cfg.callbacks(false);
 
 		_name = name;
-		_stream = (YapStream) objectContainer;
+		_stream = (ObjectContainerBase) objectContainer;
 		_reflector = _stream.reflector();
 		_signatureMap = new Db4oSignatureMap(_stream);
 	}
@@ -209,7 +209,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 	private void refresh(Object obj) {
 		//TODO FIXME, fix for C/S, not required in SOLO
-		if (_stream instanceof YapClient)
+		if (_stream instanceof ClientObjectContainer)
 			_stream.refresh(obj, 1);
 	}
 

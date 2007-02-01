@@ -113,7 +113,7 @@ public final class ReaderPair implements SlotReader {
 		_target.writeInt(value);
 	}
 	
-	public void write(YapFile file,int address) {
+	public void write(LocalObjectContainer file,int address) {
 		file.writeBytes(_target,address,0);
 	}
 	

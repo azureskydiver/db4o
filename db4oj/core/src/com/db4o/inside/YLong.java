@@ -16,7 +16,7 @@ public class YLong extends YapJavaClass {
 
     private static final Long i_primitive = new Long(0);
 
-    public YLong(YapStream stream) {
+    public YLong(ObjectContainerBase stream) {
         super(stream);
     }
     

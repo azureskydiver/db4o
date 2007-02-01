@@ -3,7 +3,7 @@
 package com.db4o;
 
 import com.db4o.inside.*;
-import com.db4o.inside.YapStream;
+import com.db4o.inside.ObjectContainerBase;
 import com.db4o.types.*;
 
 /**
@@ -11,9 +11,9 @@ import com.db4o.types.*;
  */
 public class P2Collections implements Db4oCollections{
     
-    final YapStream i_stream;
+    final ObjectContainerBase i_stream;
     
-    public P2Collections(YapStream a_stream){
+    public P2Collections(ObjectContainerBase a_stream){
         i_stream = a_stream;
     }
 

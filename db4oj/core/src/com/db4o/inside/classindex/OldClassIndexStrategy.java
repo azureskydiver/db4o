@@ -19,7 +19,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		super(yapClass);
 	}
 
-	public void read(YapStream stream, int indexID) {
+	public void read(ObjectContainerBase stream, int indexID) {
 		_index = createClassIndex(stream);
 		if (indexID > 0) {
 			_index.setID(indexID);
@@ -41,7 +41,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		return 0;
 	}
 
-	public void initialize(YapStream stream) {
+	public void initialize(ObjectContainerBase stream) {
 		_index = createClassIndex(stream);
 	}
 
@@ -75,7 +75,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
         context.traverseRemoved(new Visitor4() {
             public void visit(Object a_object) {
                 int id = idFromValue(a_object);
-                final YapStream stream = transaction.stream();
+                final ObjectContainerBase stream = transaction.stream();
 				ObjectReference yo = stream.getYapObject(id);
                 if (yo != null) {
                     stream.removeReference(yo);
@@ -181,7 +181,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		return ((TreeInt) value)._key;
 	}
 
-	private ClassIndex createClassIndex(YapStream stream) {
+	private ClassIndex createClassIndex(ObjectContainerBase stream) {
 		if (stream.isClient()) {
 			return new ClassIndexClient(_yapClass);
 		}

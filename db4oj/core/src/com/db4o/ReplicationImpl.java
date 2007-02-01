@@ -13,11 +13,11 @@ import com.db4o.replication.*;
  */
 public class ReplicationImpl implements ReplicationProcess {
 
-    final YapStream _peerA;
+    final ObjectContainerBase _peerA;
 
     final Transaction _transA;
 
-    final YapStream _peerB;
+    final ObjectContainerBase _peerB;
 
     final Transaction _transB;
 
@@ -35,7 +35,7 @@ public class ReplicationImpl implements ReplicationProcess {
 
     private static final int CHECK_CONFLICT = -99;
     
-	public ReplicationImpl(YapStream peerA, ObjectContainer peerB,
+	public ReplicationImpl(ObjectContainerBase peerA, ObjectContainer peerB,
 			ReplicationConflictHandler conflictHandler) {
         
         if(conflictHandler == null){
@@ -50,7 +50,7 @@ public class ReplicationImpl implements ReplicationProcess {
 				_peerA = peerA;
 				_transA = peerA.checkTransaction(null);
 
-				_peerB = (YapStream) peerB;
+				_peerB = (ObjectContainerBase) peerB;
 				_transB = _peerB.checkTransaction(null);
 
 				MigrationConnection mgc = new MigrationConnection(_peerA, _peerB);
@@ -71,7 +71,7 @@ public class ReplicationImpl implements ReplicationProcess {
         
 	}
 
-    private int bindAndSet(Transaction trans, YapStream peer, ObjectReference ref, Object sourceObject){
+    private int bindAndSet(Transaction trans, ObjectContainerBase peer, ObjectReference ref, Object sourceObject){
         if(sourceObject instanceof Db4oTypeImpl){
             Db4oTypeImpl db4oType = (Db4oTypeImpl)sourceObject;
             if(! db4oType.canBind()){
@@ -125,7 +125,7 @@ public class ReplicationImpl implements ReplicationProcess {
 		_peerB.i_handlers.replication(null);
 	}
     
-    private int idInCaller(YapStream caller, ObjectReference referenceA, ObjectReference referenceB){
+    private int idInCaller(ObjectContainerBase caller, ObjectReference referenceA, ObjectReference referenceB){
         return (caller == _peerA) ? referenceA.getID() : referenceB.getID();
     }
 
@@ -170,7 +170,7 @@ public class ReplicationImpl implements ReplicationProcess {
 		// anyway, for members of the replicated object, especially the
 		// prevention of endless loops in case of circular references.
 
-		YapStream stream = _peerB;
+		ObjectContainerBase stream = _peerB;
 
 		if (_peerB.isStored(obj)) {
 			if (!_peerA.isStored(obj)) {
@@ -241,10 +241,10 @@ public class ReplicationImpl implements ReplicationProcess {
      * if #set() should stop processing because of a direction 
      * setting.
 	 */
-	public int tryToHandle(YapStream caller, Object obj) {
+	public int tryToHandle(ObjectContainerBase caller, Object obj) {
         
         int notProcessed = 0;
-        YapStream other = null;
+        ObjectContainerBase other = null;
         ObjectReference sourceReference = null;
         
         if(caller == _peerA){

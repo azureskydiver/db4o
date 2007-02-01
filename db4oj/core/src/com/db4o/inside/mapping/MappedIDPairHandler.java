@@ -15,7 +15,7 @@ public class MappedIDPairHandler implements Indexable4 {
 	private final YInt _origHandler;
 	private final YInt _mappedHandler;
 	
-	public MappedIDPairHandler(YapStream stream) {
+	public MappedIDPairHandler(ObjectContainerBase stream) {
 		_origHandler=new YInt(stream);
 		_mappedHandler=new YInt(stream);
 	}

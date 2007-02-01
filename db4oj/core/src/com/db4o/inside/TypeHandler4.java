@@ -71,7 +71,7 @@ public interface TypeHandler4 extends Indexable4
 	
 	public int getTypeID ();
 	
-	YapClass getYapClass(YapStream a_stream);
+	YapClass getYapClass(ObjectContainerBase a_stream);
     
     /**
      * performance optimized read (only used for byte[] so far) 

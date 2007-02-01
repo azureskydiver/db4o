@@ -31,7 +31,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     
     protected String i_name;
 
-    protected final YapStream i_stream;
+    protected final ObjectContainerBase i_stream;
 
     byte[] i_nameBytes;
     private Buffer i_reader;
@@ -84,7 +84,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return new BTreeClassIndexStrategy(this);
 	}
 
-    YapClass(YapStream stream, ReflectClass reflector){
+    YapClass(ObjectContainerBase stream, ReflectClass reflector){
     	i_stream = stream;
         _reflector = reflector;
         _index = createIndexStrategy();
@@ -113,7 +113,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
     
-    void addMembers(YapStream a_stream) {
+    void addMembers(ObjectContainerBase a_stream) {
         bitTrue(YapConst.CHECKED_CHANGES);
         if (addTranslatorFields(a_stream)) {
         	return;
@@ -170,7 +170,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         setStateOK();
     }
 
-	private boolean collectReflectFields(YapStream stream, Collection4 collectedFields) {
+	private boolean collectReflectFields(ObjectContainerBase stream, Collection4 collectedFields) {
 		boolean dirty=false;
 		ReflectField[] fields = classReflector().getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
@@ -204,7 +204,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return dirty;
 	}
 
-    private boolean addTranslatorFields(YapStream a_stream) {
+    private boolean addTranslatorFields(ObjectContainerBase a_stream) {
         
     	ObjectTranslator ot = getTranslator();
     	if (ot == null) {
@@ -276,13 +276,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		    && i_fields.length > 0;
 	}
 
-    void addToIndex(YapFile a_stream, Transaction a_trans, int a_id) {
+    void addToIndex(LocalObjectContainer a_stream, Transaction a_trans, int a_id) {
         if (a_stream.maintainsIndices()) {
             addToIndex1(a_stream, a_trans, a_id);
         }
     }
 
-    void addToIndex1(YapFile a_stream, Transaction a_trans, int a_id) {
+    void addToIndex1(LocalObjectContainer a_stream, Transaction a_trans, int a_id) {
         if (i_ancestor != null) {
             i_ancestor.addToIndex1(a_stream, a_trans, a_id);
         }
@@ -320,7 +320,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             }
         }
         if (a_depth > 0) {
-            YapStream stream = a_trans.stream();
+            ObjectContainerBase stream = a_trans.stream();
             if (a_activate) {
                 if(isValueType()){
                     activateFields(a_trans, a_object, a_depth - 1);
@@ -394,7 +394,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return depth;
 	}
 
-    int checkUpdateDepthUnspecified(YapStream a_stream) {
+    int checkUpdateDepthUnspecified(ObjectContainerBase a_stream) {
         int depth = a_stream.configImpl().updateDepth() + 1;
         if (i_config != null && i_config.updateDepth() != 0) {
             depth = i_config.updateDepth() + 1;
@@ -449,7 +449,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         // do nothing
     }
 
-    private boolean createConstructor(YapStream a_stream, String a_name) {
+    private boolean createConstructor(ObjectContainerBase a_stream, String a_name) {
         
         ReflectClass claxx;
         try {
@@ -461,7 +461,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return createConstructor(a_stream,claxx , a_name, true);
     }
 
-    public boolean createConstructor(YapStream a_stream, ReflectClass a_class, String a_name, boolean errMessages) {
+    public boolean createConstructor(ObjectContainerBase a_stream, ReflectClass a_class, String a_name, boolean errMessages) {
         
         _reflector = a_class;
         
@@ -517,12 +517,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-	private void objectOnDeactivate(YapStream stream, Object obj) {
+	private void objectOnDeactivate(ObjectContainerBase stream, Object obj) {
 		stream.callbacks().objectOnDeactivate(obj);
 		dispatchEvent(stream, obj, EventDispatcher.DEACTIVATE);
 	}
 
-	private boolean objectCanDeactivate(YapStream stream, Object obj) {
+	private boolean objectCanDeactivate(ObjectContainerBase stream, Object obj) {
 		return stream.callbacks().objectCanDeactivate(obj)
 			&& dispatchEvent(stream, obj, EventDispatcher.CAN_DEACTIVATE);
 	}
@@ -561,7 +561,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) {
         if (a_bytes.cascadeDeletes() > 0) {
         	
-        	YapStream stream = a_bytes.getStream();
+        	ObjectContainerBase stream = a_bytes.getStream();
             
             // short-term reference to prevent WeakReference-gc to hit
             Object obj = stream.getByID2(a_bytes.getTransaction(), a_id);
@@ -613,7 +613,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    public final boolean dispatchEvent(YapStream stream, Object obj, int message) {
+    public final boolean dispatchEvent(ObjectContainerBase stream, Object obj, int message) {
     	if(_eventDispatcher == null || ! stream.dispatchsEvents()){
     		return true;
     	}
@@ -905,7 +905,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
 
-    YapStream getStream() {
+    ObjectContainerBase getStream() {
         return i_stream;
     }
 
@@ -913,7 +913,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return YapConst.TYPE_CLASS;
     }
 
-    public YapClass getYapClass(YapStream a_stream) {
+    public YapClass getYapClass(ObjectContainerBase a_stream) {
         return this;
     }
 
@@ -934,7 +934,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return true;
     }
 
-    public boolean hasField(YapStream a_stream, String a_field) {
+    public boolean hasField(ObjectContainerBase a_stream, String a_field) {
     	if(classReflector().isCollection()){
             return true;
         }
@@ -963,7 +963,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return a_object;
     }
     
-    final boolean init( YapStream a_stream, YapClass a_ancestor,ReflectClass claxx) {
+    final boolean init( ObjectContainerBase a_stream, YapClass a_ancestor,ReflectClass claxx) {
         
         if(DTrace.enabled){
             DTrace.YAPCLASS_INIT.log(getID());
@@ -1031,7 +1031,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		
 		adjustInstantiationDepth(buffer);
 
-		final YapStream stream = buffer.getStream();
+		final ObjectContainerBase stream = buffer.getStream();
 		final boolean instantiating = (obj == null);
 		if (instantiating) {
 			obj = instantiateObject(buffer, mf);
@@ -1086,7 +1086,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return instance;
 	}
 
-	private Object instantiateFromReflector(YapStream stream) {
+	private Object instantiateFromReflector(ObjectContainerBase stream) {
 		if (_reflector == null) {
 		    return null;
 		}
@@ -1105,7 +1105,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		}
 	}
 
-	private Object instantiateFromConfig(YapStream stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
+	private Object instantiateFromConfig(ObjectContainerBase stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
 		int bytesOffset = a_bytes._offset;
 		a_bytes.incrementOffset(YapConst.INT_LENGTH);
 		// Field length is always 1
@@ -1142,12 +1142,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		}
 	}
 
-	private void objectOnActivate(YapStream stream, Object obj) {
+	private void objectOnActivate(ObjectContainerBase stream, Object obj) {
 		stream.callbacks().objectOnActivate(obj);
 		dispatchEvent(stream, obj, EventDispatcher.ACTIVATE);
 	}
 
-	private boolean objectCanActivate(YapStream stream, Object obj) {
+	private boolean objectCanActivate(ObjectContainerBase stream, Object obj) {
 		return stream.callbacks().objectCanActivate(obj)
 			&& dispatchEvent(stream, obj, EventDispatcher.CAN_ACTIVATE);
 	}
@@ -1281,7 +1281,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             int depth = a_bytes.getInstantiationDepth() - 1;
 
             Transaction trans = a_bytes.getTransaction();
-            YapStream stream = trans.stream();
+            ObjectContainerBase stream = trans.stream();
 
             if (a_bytes.getUpdateDepth() == YapConst.TRANSIENT) {
                 return stream.peekPersisted1(trans, id, depth);
@@ -1481,7 +1481,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     
     void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
         int id = a_yapObject.getID();
-        YapStream stream = a_trans.stream();
+        ObjectContainerBase stream = a_trans.stream();
         Buffer reader = stream.readReaderByID(a_trans, id);
         ObjectHeader oh = new ObjectHeader(stream, this, reader);
         oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
@@ -1506,7 +1506,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 
     void createConfigAndConstructor(
         Hashtable4 a_byteHashTable,
-        YapStream a_stream,
+        ObjectContainerBase a_stream,
         ReflectClass a_class) {
         if (a_class == null) {
             if (i_nameBytes != null) {
@@ -1698,7 +1698,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
             || Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
             
             if (store) {
-                YapStream stream = trans.stream();
+                ObjectContainerBase stream = trans.stream();
                 stream.showInternalClasses(true);
                 Query q = stream.query(trans);
                 q.constrain(YapConst.CLASS_STATICCLASS);
@@ -1935,7 +1935,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		mf._class.defrag(this,i_stream.stringIO(), readers, classIndexID);
 	}
 
-    public static YapClass readClass(YapStream stream, Buffer reader) {
+    public static YapClass readClass(ObjectContainerBase stream, Buffer reader) {
         ObjectHeader oh = new ObjectHeader(stream, reader);
         return oh.yapClass();
     }

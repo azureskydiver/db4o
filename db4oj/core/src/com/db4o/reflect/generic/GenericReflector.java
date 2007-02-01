@@ -24,7 +24,7 @@ public class GenericReflector implements Reflector, DeepClone {
     private final Hashtable4 _classByClass = new Hashtable4();
 
 	private Transaction _trans;
-	private YapStream _stream;
+	private ObjectContainerBase _stream;
 	
 	public GenericReflector(Transaction trans, Reflector delegateReflector){
 		_repository=new KnownClassesRepository(new GenericClassBuilder(this,delegateReflector));
@@ -57,7 +57,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		return myClone;
 	}
 	
-	YapStream getStream(){
+	ObjectContainerBase getStream(){
 		return _stream;
 	}
 

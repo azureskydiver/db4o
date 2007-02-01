@@ -16,7 +16,7 @@ public class YapFileTransaction extends Transaction {
 	
 	private Tree _slotChanges;
 
-	public YapFileTransaction(YapStream a_stream, Transaction a_parent) {
+	public YapFileTransaction(ObjectContainerBase a_stream, Transaction a_parent) {
 		super(a_stream, a_parent);
 	}
 	

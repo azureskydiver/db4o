@@ -124,7 +124,7 @@ public class Db4o {
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
 			throws IOException {
 		synchronized(Global4.lock){
-			return new YapClient(config,new YapSocketReal(hostName, port), user, password, true);
+			return new ClientObjectContainer(config,new YapSocketReal(hostName, port), user, password, true);
 		}
 	}
 
@@ -184,14 +184,14 @@ public class Db4o {
 			ObjectContainer oc = null;
 			if (Deploy.debug) {
 				System.out.println("db4o Debug is ON");
-		        oc = new YapMemoryFile(config,memoryFile);
+		        oc = new InMemoryObjectContainer(config,memoryFile);
 	
 				// intentionally no exception handling,
 			    // in order to follow uncaught errors
 			}
 			else {
 			    try {
-			        oc = new YapMemoryFile(config,memoryFile);
+			        oc = new InMemoryObjectContainer(config,memoryFile);
 				}
 			    catch(Throwable t) {
 			        Messages.logErr(i_config, 4, "Memory File", t);
@@ -247,7 +247,7 @@ public class Db4o {
 	 */
 	public static final ObjectServer openServer(Configuration config,String databaseFileName, int port) throws DatabaseFileLockedException {
 		synchronized(Global4.lock){
-			YapFile stream = (YapFile)openFile(config,databaseFileName);
+			LocalObjectContainer stream = (LocalObjectContainer)openFile(config,databaseFileName);
             if(stream == null){
                 return null;
             }

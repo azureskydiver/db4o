@@ -13,14 +13,14 @@ import com.db4o.inside.*;
  */
 public abstract class TimerFileLock implements Runnable{
     
-    public static TimerFileLock forFile(YapFile file){
+    public static TimerFileLock forFile(LocalObjectContainer file){
         if(lockFile(file)){
             return new TimerFileLockEnabled(file);
         }
         return new TimerFileLockDisabled();
     }
     
-    private static boolean lockFile(YapFile file){
+    private static boolean lockFile(LocalObjectContainer file){
         if(! Debug.lockFile){
             return false;
         }

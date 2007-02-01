@@ -34,7 +34,7 @@ public final class YapConfigBlock {
     // int    freespace address
     // int    converter versions
     
-	private final YapFile		_stream;
+	private final LocalObjectContainer		_stream;
     private final TimerFileLock _timerFileLock;
     
 	private int					_address;
@@ -68,15 +68,15 @@ public final class YapConfigBlock {
         + 1;
     
     
-    public static YapConfigBlock forNewFile(YapFile file) throws IOException{
+    public static YapConfigBlock forNewFile(LocalObjectContainer file) throws IOException{
         return new YapConfigBlock(file, true, 0);
     }
     
-    public static YapConfigBlock forExistingFile(YapFile file, int address) throws IOException{
+    public static YapConfigBlock forExistingFile(LocalObjectContainer file, int address) throws IOException{
         return new YapConfigBlock(file, false, address);
     }
     
-	private YapConfigBlock(YapFile stream, boolean isNew, int address) throws IOException{
+	private YapConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws IOException{
 		_stream = stream;
         _timerFileLock = TimerFileLock.forFile(stream);
         timerFileLock().writeHeaderLock();

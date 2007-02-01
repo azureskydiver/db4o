@@ -12,9 +12,9 @@ import com.db4o.ext.*;
  * @sharpen.partial
  * @sharpen.ignore
  */
-public abstract class YapStream extends YapStreamBase implements ExtObjectContainer {
+public abstract class ObjectContainerBase extends PartialObjectContainer implements ExtObjectContainer {
 	
-	public YapStream(Configuration config,YapStream a_parent) {
+	public ObjectContainerBase(Configuration config,ObjectContainerBase a_parent) {
 		super(config,a_parent);
 	}
 

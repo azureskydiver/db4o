@@ -26,7 +26,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
     private transient BlobStatus i_getStatusFrom;
     public int i_length;
     private transient double i_status = Status.UNUSED;
-    private transient YapStream i_stream;
+    private transient ObjectContainerBase i_stream;
     private transient Transaction i_trans;
 
     public int adjustReadDepth(int a_depth) {

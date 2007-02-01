@@ -37,7 +37,7 @@ class IxFileRangeReader {
 
     Tree add(IxFileRange fileRange, final Tree newTree) {
         setFileRange(fileRange);
-        YapFile yf = fileRange.stream();
+        LocalObjectContainer yf = fileRange.stream();
         Transaction trans = fileRange.trans();
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
@@ -119,7 +119,7 @@ class IxFileRangeReader {
     int compare(IxFileRange fileRange, int[] matches) {
 
         setFileRange(fileRange);
-        YapFile yf = fileRange.stream();
+        LocalObjectContainer yf = fileRange.stream();
         Transaction trans = fileRange.trans();
 
         int res = 0;

@@ -18,7 +18,7 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 
 	private String _fileName;
 
-	private YapFile _mappingDb;
+	private LocalObjectContainer _mappingDb;
 
 	private BTree _idTree;
 

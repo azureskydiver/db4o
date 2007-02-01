@@ -16,7 +16,7 @@ final class YapFieldTranslator extends YapField
 	YapFieldTranslator(YapClass a_yapClass, ObjectTranslator a_translator){
 	    super(a_yapClass, a_translator);
 		i_translator = a_translator;
-		YapStream stream = a_yapClass.getStream();
+		ObjectContainerBase stream = a_yapClass.getStream();
 		configure(stream.reflector().forClass(a_translator.storedClass()), false);
 	}
     
@@ -59,7 +59,7 @@ final class YapFieldTranslator extends YapField
 	    // do nothing
 	}
 	
-	private void setOn(YapStream a_stream, Object a_onObject, Object toSet){
+	private void setOn(ObjectContainerBase a_stream, Object a_onObject, Object toSet){
 		try{
 			i_translator.onActivate(a_stream, a_onObject, toSet);
 		}catch(Throwable t){}
@@ -69,7 +69,7 @@ final class YapFieldTranslator extends YapField
 		return indexEntry;
 	}
 	
-	protected Indexable4 indexHandler(YapStream stream) {
+	protected Indexable4 indexHandler(ObjectContainerBase stream) {
 		return i_handler;
 	}
 }

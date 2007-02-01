@@ -22,7 +22,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             
             TypeHandler4 handler = yapClassPrimitive.i_handler;
         
-            YapStream stream = trans.stream();
+            ObjectContainerBase stream = trans.stream();
             id = stream.newUserObject();
             int address = -1;
             int length = objectLength(handler);

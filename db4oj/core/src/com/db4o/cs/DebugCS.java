@@ -12,8 +12,8 @@ import com.db4o.inside.*;
  */
 public class DebugCS {
 
-	public static YapClient clientStream;
-	public static YapFile serverStream;
+	public static ClientObjectContainer clientStream;
+	public static LocalObjectContainer serverStream;
 	public static Queue4 clientMessageQueue;
 	public static Lock4 clientMessageQueueLock;
 

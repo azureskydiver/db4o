@@ -12,7 +12,7 @@ final class YFloat extends YInt {
     
     private static final Float i_primitive = new Float(0);
     
-    public YFloat(YapStream stream) {
+    public YFloat(ObjectContainerBase stream) {
         super(stream);
     }
     

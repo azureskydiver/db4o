@@ -56,8 +56,8 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     	return _server;
     }
     
-	public YapFile fileSession() {
-		return (YapFile)_server.ext().objectContainer();
+	public LocalObjectContainer fileSession() {
+		return (LocalObjectContainer)_server.ext().objectContainer();
 	}
 
 }

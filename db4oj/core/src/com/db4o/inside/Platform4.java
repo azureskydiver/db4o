@@ -110,7 +110,7 @@ public final class Platform4 {
     }
     
     static Db4oCollections collections(Object a_object){
-        return jdk().collections((YapStream)a_object);
+        return jdk().collections((ObjectContainerBase)a_object);
     }
     
     static final Reflector createReflector(Object classLoader){
@@ -155,14 +155,14 @@ public final class Platform4 {
     }
     */
 	
-	public static Object[] collectionToArray(YapStream stream, Object obj){
+	public static Object[] collectionToArray(ObjectContainerBase stream, Object obj){
 		Collection4 col = flattenCollection(stream, obj);
 		Object[] ret = new Object[col.size()];
 		col.toArray(ret);
 		return ret;
 	}
 
-    static final Collection4 flattenCollection(YapStream stream, Object obj) {
+    static final Collection4 flattenCollection(ObjectContainerBase stream, Object obj) {
         Collection4 col = new Collection4();
         flattenCollection1(stream, obj, col);
         return col;
@@ -193,7 +193,7 @@ public final class Platform4 {
     	return jdk().extendConfiguration(clazz, config, classConfig);
     }
     
-    static final void flattenCollection1(YapStream stream, Object obj, Collection4 col) {
+    static final void flattenCollection1(ObjectContainerBase stream, Object obj, Collection4 col) {
         if (obj == null) {
             col.add(null);
         } else {
@@ -214,7 +214,7 @@ public final class Platform4 {
         }
     }
 
-    static final void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
+    static final void flattenCollection2(final ObjectContainerBase a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
         Reflector reflector = a_stream.reflector();
         if (reflector.forObject(a_object).isCollection()) {
             forEachCollectionElement(a_object, new Visitor4() {
@@ -537,7 +537,7 @@ public final class Platform4 {
     }
 
     static final void pollReferenceQueue(Object a_stream, Object a_referenceQueue) {
-        jdk().pollReferenceQueue((YapStream) a_stream, a_referenceQueue);
+        jdk().pollReferenceQueue((ObjectContainerBase) a_stream, a_referenceQueue);
     }
 
     public static void postOpen(ObjectContainer a_oc) {
@@ -627,7 +627,7 @@ public final class Platform4 {
         translate(config, UTIL + className, "TNull");
     }
 
-    static final YapTypeAbstract[] types(YapStream stream) {
+    static final YapTypeAbstract[] types(ObjectContainerBase stream) {
         return new YapTypeAbstract[] {
         		new NetDateTime(stream),
         		new NetDecimal(stream),

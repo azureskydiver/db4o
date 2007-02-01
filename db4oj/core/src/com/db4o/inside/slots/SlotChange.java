@@ -46,13 +46,13 @@ public class SlotChange extends TreeInt {
 		setBit(SET_POINTER_BIT);
 	}
 
-	public void freeDuringCommit(YapFile file) {
+	public void freeDuringCommit(LocalObjectContainer file) {
 		if (isFreeOnCommit()) {
 			file.freeDuringCommit(_shared, _newSlot);
 		}
 	}
 
-	public void freeOnCommit(YapFile file, Slot slot) {
+	public void freeOnCommit(LocalObjectContainer file, Slot slot) {
 
 		if (_shared != null) {
 
@@ -123,7 +123,7 @@ public class SlotChange extends TreeInt {
 		return change;
 	}
 
-	public void rollback(YapFile yapFile) {
+	public void rollback(LocalObjectContainer yapFile) {
 		if (_shared != null) {
 			yapFile.reduceFreeOnCommitReferences(_shared);
 		}

@@ -257,7 +257,7 @@ public final class QCandidates implements Visitor4 {
 		return res;
 	}
     
-	public YapStream stream() {
+	public ObjectContainerBase stream() {
 		return i_trans.stream();
 	}
 

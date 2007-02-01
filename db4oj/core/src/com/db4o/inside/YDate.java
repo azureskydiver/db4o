@@ -16,7 +16,7 @@ final class YDate extends YLong {
 	
 	private static final Date PROTO = new Date(0);
     
-    public YDate(YapStream stream) {
+    public YDate(ObjectContainerBase stream) {
         super(stream);
     }
     

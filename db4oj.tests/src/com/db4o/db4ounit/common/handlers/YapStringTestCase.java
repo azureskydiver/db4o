@@ -11,7 +11,7 @@ public class YapStringTestCase extends AbstractDb4oTestCase {
 
 	public void testIndexMarshalling() {
 		Buffer reader=new Buffer(2*YapConst.INT_LENGTH);
-		YapStream stream=(YapStream)db();
+		ObjectContainerBase stream=(ObjectContainerBase)db();
 		YapString handler=new YapString(stream,stream.stringIO());
 		final Slot original = new Slot(0xdb,0x40);
 		handler.writeIndexEntry(reader,original);

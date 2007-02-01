@@ -71,8 +71,8 @@ class ClientQueryResultIterator implements Iterator4 {
 		return stream().config().prefetchObjectCount();
 	}
 
-	private YapClient stream() {
-		return (YapClient) _client.stream();
+	private ClientObjectContainer stream() {
+		return (ClientObjectContainer) _client.stream();
 	}
 
 	private Object prefetchedCurrent() {

@@ -16,7 +16,7 @@ public class NetULong extends NetSimpleTypeHandler{
     
 	private final static BigInteger FACTOR=new BigInteger("100",16);
 	
-	public NetULong(YapStream stream) {
+	public NetULong(ObjectContainerBase stream) {
 		super(stream, 23, 8);
 	}
 	

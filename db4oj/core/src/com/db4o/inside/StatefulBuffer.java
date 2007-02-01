@@ -167,15 +167,15 @@ public final class StatefulBuffer extends Buffer {
         return i_length;
     }
 
-    public YapStream getStream() {
+    public ObjectContainerBase getStream() {
         return i_trans.stream();
     }
     
-    public YapStream stream(){
+    public ObjectContainerBase stream(){
         return i_trans.stream();
     }
     
-    public YapFile file(){
+    public LocalObjectContainer file(){
         return i_trans.i_file;
     }
 

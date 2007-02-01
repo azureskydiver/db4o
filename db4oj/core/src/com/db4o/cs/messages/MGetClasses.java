@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public final class MGetClasses extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
-	    YapStream stream = stream();
+	    ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
 			try {
 

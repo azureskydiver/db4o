@@ -63,7 +63,7 @@ public class NativeQueryHandler {
 		q.constrain(new PredicateEvaluation(predicate));
 		notifyListeners(predicate,NativeQueryHandler.UNOPTIMIZED,null);
         if(shouldOptimize()){
-            DiagnosticProcessor dp = ((YapStream)_container).i_handlers._diagnosticProcessor;
+            DiagnosticProcessor dp = ((ObjectContainerBase)_container).i_handlers._diagnosticProcessor;
             if(dp.enabled()){
                 dp.nativeQueryUnoptimized(predicate);
             }

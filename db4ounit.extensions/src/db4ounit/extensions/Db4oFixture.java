@@ -19,7 +19,7 @@ public interface Db4oFixture {
     
     void clean();
     
-	YapFile fileSession();
+	LocalObjectContainer fileSession();
 	
 	ExtObjectContainer db();
 	

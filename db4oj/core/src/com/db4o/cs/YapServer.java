@@ -21,11 +21,11 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 
 	private Collection4 i_threads = new Collection4();
 
-	private YapFile i_yapFile;
+	private LocalObjectContainer i_yapFile;
 
 	private final Object _lock=new Object();
 	
-	public YapServer(final YapFile a_yapFile, int a_port) {
+	public YapServer(final LocalObjectContainer a_yapFile, int a_port) {
 		a_yapFile.setServer(true);
 		i_name = "db4o ServerSocket  FILE: " + a_yapFile.toString() + "  PORT:"
 				+ a_port;
@@ -178,7 +178,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 	public ObjectContainer openClient(Configuration config) {
 		checkClosed();
 		try {
-			YapClient client = new YapClient(config, openClientSocket(),
+			ClientObjectContainer client = new ClientObjectContainer(config, openClientSocket(),
 					YapConst.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "",
 					false);
 			client.blockSize(i_yapFile.blockSize());

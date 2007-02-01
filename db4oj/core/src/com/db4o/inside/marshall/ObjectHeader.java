@@ -17,7 +17,7 @@ public final class ObjectHeader {
     
     public final ObjectHeaderAttributes _headerAttributes;
     
-    public ObjectHeader(YapStream stream, Buffer reader){
+    public ObjectHeader(ObjectContainerBase stream, Buffer reader){
     	this(stream,null,reader);
     }
 
@@ -29,7 +29,7 @@ public final class ObjectHeader {
         this(writer.getStream(), writer);
     }
     
-    public ObjectHeader(YapStream stream, YapClass yc, Buffer reader){
+    public ObjectHeader(ObjectContainerBase stream, YapClass yc, Buffer reader){
         if (Deploy.debug) {
             reader.readBegin(YapConst.YAPOBJECT);
         }

@@ -18,7 +18,7 @@ abstract class FreespaceIx {
     
     FreespaceVisitor _visitor;
     
-    FreespaceIx(YapFile file, MetaIndex metaIndex){
+    FreespaceIx(LocalObjectContainer file, MetaIndex metaIndex){
         _index = new Index4(file.getSystemTransaction(),new YInt(file), metaIndex, false);
         _indexTrans = _index.globalIndexTransaction();
     }

@@ -166,7 +166,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 		return _config.getAsBoolean(CLASS_INDEXED);
 	}
 
-    Object instantiate(YapStream a_stream, Object a_toTranslate) {
+    Object instantiate(ObjectContainerBase a_stream, Object a_toTranslate) {
         return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate(a_stream,
             a_toTranslate);
     }

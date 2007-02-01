@@ -64,7 +64,7 @@ public class YapField implements StoredField {
     	this(a_yapClass);
         init(a_yapClass, a_translator.getClass().getName());
         i_state = AVAILABLE;
-        YapStream stream =getStream(); 
+        ObjectContainerBase stream =getStream(); 
         i_handler = stream.i_handlers.handlerForClass(
             stream, stream.reflector().forClass(a_translator.storedClass()));
     }
@@ -410,7 +410,7 @@ public class YapField implements StoredField {
     
     public Object get(Object a_onObject) {
         if (i_yapClass != null) {
-            YapStream stream = i_yapClass.getStream();
+            ObjectContainerBase stream = i_yapClass.getStream();
             if (stream != null) {
                 synchronized (stream.i_lock) {
                     stream.checkClosed();
@@ -446,7 +446,7 @@ public class YapField implements StoredField {
         return i_name;
     }
 
-    YapClass getFieldYapClass(YapStream a_stream) {
+    YapClass getFieldYapClass(ObjectContainerBase a_stream) {
         // alive needs to be checked by all callers: Done
         return i_handler.getYapClass(a_stream);
     }
@@ -515,7 +515,7 @@ public class YapField implements StoredField {
         return i_handler.classReflector();
     }
     
-    public YapStream getStream(){
+    public ObjectContainerBase getStream(){
         if(i_yapClass == null){
             return null;
         }
@@ -621,7 +621,7 @@ public class YapField implements StoredField {
     }
     
 
-    public void loadHandler(YapStream a_stream) {
+    public void loadHandler(ObjectContainerBase a_stream) {
     	i_handler=a_stream.handlerByID(i_handlerID);
     }
 
@@ -635,7 +635,7 @@ public class YapField implements StoredField {
 
     private TypeHandler4 loadJavaField1() {
         try {
-            YapStream stream = i_yapClass.getStream();
+            ObjectContainerBase stream = i_yapClass.getStream();
             ReflectClass claxx = i_yapClass.classReflector();
             if(claxx == null){
                 return null;
@@ -743,7 +743,7 @@ public class YapField implements StoredField {
     }
 
     public void rename(String newName) {
-        YapStream stream = i_yapClass.getStream();
+        ObjectContainerBase stream = i_yapClass.getStream();
         if (! stream.isClient()) {
             i_name = newName;
             i_yapClass.setStateDirty();
@@ -783,7 +783,7 @@ public class YapField implements StoredField {
         
         assertHasIndex();
         
-        YapStream stream = i_yapClass.getStream();
+        ObjectContainerBase stream = i_yapClass.getStream();
         if(stream.isClient()){
             Exceptions4.throwRuntimeException(Messages.CLIENT_SERVER_UNSUPPORTED);
         }
@@ -806,7 +806,7 @@ public class YapField implements StoredField {
 	}
 
 
-    private final TypeHandler4 wrapHandlerToArrays(YapStream a_stream, TypeHandler4 a_handler) {
+    private final TypeHandler4 wrapHandlerToArrays(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
         if (i_isNArray) {
             a_handler = new YapArrayN(a_stream, a_handler, i_isPrimitive);
         } else {
@@ -862,7 +862,7 @@ public class YapField implements StoredField {
     }
 
 	protected final BTree newBTree(Transaction systemTrans, final int id) {
-		YapStream stream = systemTrans.stream();
+		ObjectContainerBase stream = systemTrans.stream();
 		Indexable4 indexHandler = indexHandler(stream);
 		if(indexHandler==null) {
 			if(Debug.atHome) {
@@ -873,7 +873,7 @@ public class YapField implements StoredField {
 		return new BTree(systemTrans, id, new FieldIndexKeyHandler(stream, indexHandler));
 	}
 
-	protected Indexable4 indexHandler(YapStream stream) {
+	protected Indexable4 indexHandler(ObjectContainerBase stream) {
 		ReflectClass indexType =null;
 		if(i_javaField!=null) {
 			indexType=i_javaField.indexType();
@@ -920,7 +920,7 @@ public class YapField implements StoredField {
 	    return getIndex(transaction).searchLeaf(transaction, createFieldIndexKey(parentID, keyPart), SearchTarget.LOWEST);
 	}
 
-	public boolean rebuildIndexForClass(YapFile stream, YapClass yapClass) {
+	public boolean rebuildIndexForClass(LocalObjectContainer stream, YapClass yapClass) {
 		// FIXME: BTree traversal over index here.
 		long[] ids = yapClass.getIDs();		
 		for (int i = 0; i < ids.length; i++) {
@@ -929,7 +929,7 @@ public class YapField implements StoredField {
 		return ids.length > 0;
 	}
 
-	protected void rebuildIndexForObject(YapFile stream, final YapClass yapClass, final int objectId) {
+	protected void rebuildIndexForObject(LocalObjectContainer stream, final YapClass yapClass, final int objectId) {
 		StatefulBuffer writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);
@@ -940,7 +940,7 @@ public class YapField implements StoredField {
 		}
 	}
 
-	protected void rebuildIndexForWriter(YapFile stream, StatefulBuffer writer, final int objectId) {
+	protected void rebuildIndexForWriter(LocalObjectContainer stream, StatefulBuffer writer, final int objectId) {
 		ObjectHeader oh = new ObjectHeader(stream, writer);
 		Object obj = readIndexEntryForRebuild(writer, oh);
 		addIndexEntry(stream.getSystemTransaction(), objectId, obj);
@@ -954,7 +954,7 @@ public class YapField implements StoredField {
         if(_index == null){
             return;
         }
-        YapStream stream = systemTrans.stream(); 
+        ObjectContainerBase stream = systemTrans.stream(); 
         if (stream.configImpl().messageLevel() > YapConst.NONE) {
             stream.message("dropping index " + toString());
         }

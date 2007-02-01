@@ -131,7 +131,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private static final KeySpec MAX_BATCH_QUEUE_SIZE = new KeySpec(Integer.MAX_VALUE);
 
 	//  is null in the global configuration until deepClone is called
-	private YapStream        i_stream;
+	private ObjectContainerBase        i_stream;
 	
 	// The following are very frequently being asked for, so they show up in the profiler. 
 	// Let's keep them out of the Hashtable.
@@ -231,7 +231,7 @@ public final class Config4Impl implements Configuration, DeepClone,
         return ret;
     }
     
-    public void stream(YapStream stream) {
+    public void stream(ObjectContainerBase stream) {
     	i_stream=stream;
     }
 
@@ -419,7 +419,7 @@ public final class Config4Impl implements Configuration, DeepClone,
             Sessions.forEachSession(new Visitor4() {
 
                 public void visit(Object obj) {
-                    YapStream ys = ((Session) obj).i_stream;
+                    ObjectContainerBase ys = ((Session) obj).i_stream;
                     if (!ys.isClosed()) {
                         ys.refreshClasses();
                     }
@@ -458,7 +458,7 @@ public final class Config4Impl implements Configuration, DeepClone,
             Sessions.forEachSession(new Visitor4() {
 
                 public void visit(Object session) {
-                    YapStream ys = ((Session) session).i_stream;
+                    ObjectContainerBase ys = ((Session) session).i_stream;
                     if (!ys.isClosed()) {
                         ys.send(session);
                     }

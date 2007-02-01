@@ -19,7 +19,7 @@ public class FreespaceManagerIx extends FreespaceManager{
     
     private Collection4 _xBytes;
 
-    FreespaceManagerIx(YapFile file){
+    FreespaceManagerIx(LocalObjectContainer file){
         super(file);
     }
     
@@ -200,7 +200,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         });
     }
     
-	public void onNew(YapFile file) {
+	public void onNew(LocalObjectContainer file) {
 		file.ensureFreespaceSlot();
 	}
     

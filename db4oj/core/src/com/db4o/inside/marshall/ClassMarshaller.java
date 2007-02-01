@@ -76,7 +76,7 @@ public abstract class ClassMarshaller {
         return nameBytes;
     }
 
-    public void read(YapStream stream, YapClass clazz, Buffer reader) {
+    public void read(ObjectContainerBase stream, YapClass clazz, Buffer reader) {
         clazz.i_ancestor = stream.getYapClass(reader.readInt());
         
         if(clazz.i_dontCallConstructors){
@@ -94,7 +94,7 @@ public abstract class ClassMarshaller {
         readFields(stream, reader, clazz.i_fields);        
     }
 
-    protected abstract void readIndex(YapStream stream, YapClass clazz, Buffer reader) ;
+    protected abstract void readIndex(ObjectContainerBase stream, YapClass clazz, Buffer reader) ;
 
 	private YapField[] createFields(YapClass clazz, final int fieldCount) {
 		final YapField[] fields = new YapField[fieldCount];
@@ -105,13 +105,13 @@ public abstract class ClassMarshaller {
 		return fields;
 	}
 
-	private void readFields(YapStream stream, Buffer reader, final YapField[] fields) {
+	private void readFields(ObjectContainerBase stream, Buffer reader, final YapField[] fields) {
 		for (int i = 0; i < fields.length; i++) {
             fields[i] = _family._field.read(stream, fields[i], reader);
         }
 	}
 
-    public int marshalledLength(YapStream stream, YapClass clazz) {
+    public int marshalledLength(ObjectContainerBase stream, YapClass clazz) {
         int len = stream.stringIO().shortLength(clazz.nameToWrite())
                 + YapConst.OBJECT_LENGTH
                 + (YapConst.INT_LENGTH * 2)

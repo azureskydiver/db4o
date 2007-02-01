@@ -16,7 +16,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	
 	private static final int SIZE_NOT_SET = -1;
 	
-	private final YapClient _client;
+	private final ClientObjectContainer _client;
 	
 	private final int _queryResultID;
 	
@@ -24,7 +24,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	
 	private final LazyClientIdIterator _iterator;
 
-	public LazyClientQueryResult(Transaction trans, YapClient client, int queryResultID) {
+	public LazyClientQueryResult(Transaction trans, ClientObjectContainer client, int queryResultID) {
 		super(trans);
 		_client = client;
 		_queryResultID = queryResultID;

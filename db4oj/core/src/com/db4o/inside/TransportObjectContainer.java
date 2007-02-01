@@ -18,9 +18,9 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-public class YapObjectCarrier extends YapMemoryFile {
+public class TransportObjectContainer extends InMemoryObjectContainer {
 	
-	YapObjectCarrier (Configuration config,YapStream a_callingStream, MemoryFile memoryFile) {
+	TransportObjectContainer (Configuration config,ObjectContainerBase a_callingStream, MemoryFile memoryFile) {
 	    super(config,a_callingStream, memoryFile);
 	}
 	

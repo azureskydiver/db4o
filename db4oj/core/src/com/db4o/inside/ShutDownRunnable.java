@@ -15,7 +15,7 @@ class ShutDownRunnable extends Collection4 implements Runnable {
 		Collection4 copy=new Collection4(this);
 		Iterator4 i = copy.iterator();
 		while(i.moveNext()){
-			((YapStream)i.current()).failedToShutDown();
+			((ObjectContainerBase)i.current()).failedToShutDown();
 		}
 	}
 	

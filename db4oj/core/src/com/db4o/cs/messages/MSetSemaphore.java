@@ -11,7 +11,7 @@ public final class MSetSemaphore extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		int timeout = readInt();
 		String name = readString();
-		YapFile stream = (YapFile)stream();
+		LocalObjectContainer stream = (LocalObjectContainer)stream();
 		boolean res = stream.setSemaphore(transaction(), name, timeout);
 		if(res){
 			serverThread.write(Msg.SUCCESS);

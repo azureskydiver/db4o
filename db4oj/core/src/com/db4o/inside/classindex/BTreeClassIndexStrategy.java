@@ -28,14 +28,14 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 			: 0;
 	}
 
-	public void initialize(YapStream stream) {
+	public void initialize(ObjectContainerBase stream) {
 		createBTreeIndex(stream, 0);
 	}
 
 	public void purge() {
 	}
 
-	public void read(YapStream stream, int indexID) {
+	public void read(ObjectContainerBase stream, int indexID) {
 		readBTreeIndex(stream, indexID);
 	}
 
@@ -54,11 +54,11 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		}
 	}
 
-	private void createBTreeIndex(final YapStream stream, int btreeID){
+	private void createBTreeIndex(final ObjectContainerBase stream, int btreeID){
         if (stream.isClient()) {
         	return;
         }
-        _btreeIndex = ((YapFile)stream).createBTreeClassIndex(btreeID);
+        _btreeIndex = ((LocalObjectContainer)stream).createBTreeClassIndex(btreeID);
         _btreeIndex.setRemoveListener(new Visitor4() {
             public void visit(Object obj) {
                 int id = ((Integer)obj).intValue();
@@ -70,7 +70,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         });
     }
 	
-	private void readBTreeIndex(YapStream stream, int indexId) {
+	private void readBTreeIndex(ObjectContainerBase stream, int indexId) {
 		if(! stream.isClient() && _btreeIndex == null){
             createBTreeIndex(stream, indexId);
 		}

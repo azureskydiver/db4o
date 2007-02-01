@@ -12,7 +12,7 @@ public abstract class ConversionStage {
 	
 	public final static class ClassCollectionAvailableStage extends ConversionStage {
 		
-		public ClassCollectionAvailableStage(YapFile file) {
+		public ClassCollectionAvailableStage(LocalObjectContainer file) {
 			super(file);
 		}
 
@@ -22,7 +22,7 @@ public abstract class ConversionStage {
 	}
 
 	public final static class SystemUpStage extends ConversionStage {
-		public SystemUpStage(YapFile file) {
+		public SystemUpStage(LocalObjectContainer file) {
 			super(file);
 		}
 		public void accept(Conversion conversion) {
@@ -30,13 +30,13 @@ public abstract class ConversionStage {
 		}
 	}
 
-	private YapFile _file;
+	private LocalObjectContainer _file;
 	
-	protected ConversionStage(YapFile file) {
+	protected ConversionStage(LocalObjectContainer file) {
 		_file = file;
 	}
 
-	public YapFile file() {
+	public LocalObjectContainer file() {
 		return _file;
 	}
 	

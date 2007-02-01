@@ -7,11 +7,11 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 
 class YapClientBlobThread extends Thread{
-	private YapClient			stream;
+	private ClientObjectContainer			stream;
 	private Queue4 				queue = new Queue4();
 	private boolean				terminated = false;
 	
-	YapClientBlobThread(YapClient aStream){
+	YapClientBlobThread(ClientObjectContainer aStream){
 		stream = aStream;
 		setPriority(MIN_PRIORITY);
 	}

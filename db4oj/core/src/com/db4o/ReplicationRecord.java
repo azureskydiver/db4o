@@ -31,7 +31,7 @@ public class ReplicationRecord implements Internal4{
         _version = version;
     }
     
-    public void store(YapStream stream){
+    public void store(ObjectContainerBase stream){
         stream.showInternalClasses(true);
         Transaction ta = stream.checkTransaction(null);
         stream.setAfterReplication(ta, this, 1, false);
@@ -41,8 +41,8 @@ public class ReplicationRecord implements Internal4{
     
     public static ReplicationRecord beginReplication(Transaction transA, Transaction  transB){
         
-        YapStream peerA = transA.stream();
-        YapStream peerB = transB.stream();
+        ObjectContainerBase peerA = transA.stream();
+        ObjectContainerBase peerB = transB.stream();
         
         Db4oDatabase dbA = peerA.identity();
         Db4oDatabase dbB = peerB.identity();
@@ -86,7 +86,7 @@ public class ReplicationRecord implements Internal4{
         return rrA;
     }
     
-    public static ReplicationRecord queryForReplicationRecord(YapStream stream, Db4oDatabase younger, Db4oDatabase older) {
+    public static ReplicationRecord queryForReplicationRecord(ObjectContainerBase stream, Db4oDatabase younger, Db4oDatabase older) {
         ReplicationRecord res = null;
         stream.showInternalClasses(true);
         Query q = stream.query();

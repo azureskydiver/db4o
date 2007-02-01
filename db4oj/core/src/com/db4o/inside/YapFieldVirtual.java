@@ -79,7 +79,7 @@ public abstract class YapFieldVirtual extends YapField {
 
     abstract void instantiate1(Transaction a_trans, ObjectReference a_yapObject, Buffer a_bytes);
     
-    public void loadHandler(YapStream a_stream){
+    public void loadHandler(ObjectContainerBase a_stream){
     	// do nothing
     }
 
@@ -98,7 +98,7 @@ public abstract class YapFieldVirtual extends YapField {
             return;
         }
         
-        YapStream stream = trans.stream();
+        ObjectContainerBase stream = trans.stream();
         YapHandlers handlers = stream.i_handlers;
         boolean migrating = false;
         
@@ -173,7 +173,7 @@ public abstract class YapFieldVirtual extends YapField {
     	return indexEntry;
     }
     
-    protected Indexable4 indexHandler(YapStream stream) {
+    protected Indexable4 indexHandler(ObjectContainerBase stream) {
     	return i_handler;
     }
 }

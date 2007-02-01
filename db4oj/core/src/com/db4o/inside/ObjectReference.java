@@ -53,7 +53,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 	        a_depth = ((Db4oTypeImpl)a_object).adjustReadDepth(a_depth);
 	    }
 		if (a_depth > 0) {
-		    YapStream stream = ta.stream();
+		    ObjectContainerBase stream = ta.stream();
 		    if(a_refresh){
 				logActivation(stream, "refresh");
 		    }else{
@@ -74,17 +74,17 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		}
 	}
 	
-	private void logActivation(YapStream stream, String event) {
+	private void logActivation(ObjectContainerBase stream, String event) {
 		logEvent(stream, event, YapConst.ACTIVATION);
 	}
 
-	private void logEvent(YapStream stream, String event, final int level) {
+	private void logEvent(ObjectContainerBase stream, String event, final int level) {
 		if (stream.configImpl().messageLevel() > level) {
 			stream.message("" + getID() + " " + event + " " + _class.getName());
 		}
 	}
 
-	final void addToIDTree(YapStream a_stream) {
+	final void addToIDTree(ObjectContainerBase a_stream) {
 		if (!(_class instanceof YapClassPrimitive)) {
 			a_stream.idTreeAdd(this);
 		}
@@ -105,7 +105,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
             
             StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
 
-            YapStream stream = a_trans.stream();
+            ObjectContainerBase stream = a_trans.stream();
 			stream.writeNew(_class, writer);
 
             Object obj = _object;
@@ -121,7 +121,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		return true;
 	}
 
-	private void objectOnNew(YapStream stream, Object obj) {
+	private void objectOnNew(ObjectContainerBase stream, Object obj) {
 		stream.callbacks().objectOnNew(obj);
 		_class.dispatchEvent(stream, obj, EventDispatcher.NEW);
 	}
@@ -133,7 +133,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 			    if(obj instanceof Db4oTypeImpl){
 			        ((Db4oTypeImpl)obj).preDeactivate();
 			    }
-			    YapStream stream = a_trans.stream();
+			    ObjectContainerBase stream = a_trans.stream();
 				logActivation(stream, "deactivate");
 				setStateDeactivated();
 				_class.deactivate(a_trans, obj, a_depth);
@@ -156,7 +156,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		return _object;
 	}
     
-    public YapStream getStream(){
+    public ObjectContainerBase getStream(){
         if(_class == null){
             return null;
         }
@@ -167,7 +167,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
     // single ObjectContainers, after the YapClass
     // is set.
     public Transaction getTrans(){
-        YapStream stream = getStream();
+        ObjectContainerBase stream = getStream();
         if(stream != null){
             return stream.getTransaction();
         }
@@ -219,7 +219,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 
 		if (beginProcessing()) {
 		    
-		    YapStream stream = ta.stream();
+		    ObjectContainerBase stream = ta.stream();
 
 			if (a_reader == null) {
 				a_reader = stream.readWriterByID(ta, getID());
@@ -258,7 +258,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		return a_object;
 	}
 
-	public final Object readPrefetch(YapStream a_stream, StatefulBuffer a_reader) {
+	public final Object readPrefetch(ObjectContainerBase a_stream, StatefulBuffer a_reader) {
 
 		Object readObject = null;
 		if (beginProcessing()) {
@@ -296,7 +296,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		}
 	}
 
-	void setObjectWeak(YapStream a_stream, Object a_object) {
+	void setObjectWeak(ObjectContainerBase a_stream, Object a_object) {
 		if (a_stream.i_references._weak) {
 			if(_object != null){
 				Platform4.killYapRef(_object);
@@ -419,7 +419,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		}
 	}
 
-	private boolean objectCanUpdate(YapStream stream, Object obj) {
+	private boolean objectCanUpdate(ObjectContainerBase stream, Object obj) {
 		return stream.callbacks().objectCanUpdate(obj)
 			&& _class.dispatchEvent(stream, obj, EventDispatcher.CAN_UPDATE);
 	}
@@ -774,7 +774,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 		    int id = getID();
 		    String str = "YapObject\nID=" + id;
 		    if(_class != null){
-		        YapStream stream = _class.getStream();
+		        ObjectContainerBase stream = _class.getStream();
 		        if(stream != null && id > 0){
 		            StatefulBuffer writer = stream.readWriterByID(stream.getTransaction(), id);
 		            if(writer != null){

@@ -16,7 +16,7 @@ public class YInt extends YapJavaClass {
     
     private static final Integer i_primitive = new Integer(0);
     
-    public YInt(YapStream stream) {
+    public YInt(ObjectContainerBase stream) {
         super(stream);
     }
     
