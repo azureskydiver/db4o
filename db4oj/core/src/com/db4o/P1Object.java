@@ -13,7 +13,7 @@ import com.db4o.inside.replication.*;
 public class P1Object implements Db4oTypeImpl{
     
     private transient Transaction i_trans;
-    private transient YapObject i_yapObject;
+    private transient ObjectReference i_yapObject;
     
     public P1Object(){
     }
@@ -157,7 +157,7 @@ public class P1Object implements Db4oTypeImpl{
         i_trans = a_trans;
     }
 
-    public void setYapObject(YapObject a_yapObject) {
+    public void setYapObject(ObjectReference a_yapObject) {
         i_yapObject = a_yapObject;
     }
     

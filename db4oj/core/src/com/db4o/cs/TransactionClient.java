@@ -33,7 +33,7 @@ final class TransactionClient extends Transaction {
 		if(i_yapObjectsToGc != null){
             i_yapObjectsToGc.traverse(new Visitor4() {
                 public void visit(Object a_object) {
-                    YapObject yo = (YapObject)((TreeIntObject) a_object)._object;
+                    ObjectReference yo = (ObjectReference)((TreeIntObject) a_object)._object;
                     stream().removeReference(yo);
                 }
             });
@@ -41,7 +41,7 @@ final class TransactionClient extends Transaction {
         i_yapObjectsToGc = null;
 	}
 
-    public boolean delete(YapObject ref, int id, int cascade) {
+    public boolean delete(ObjectReference ref, int id, int cascade) {
         if (! super.delete(ref, id, cascade)){
         	return false;
         }

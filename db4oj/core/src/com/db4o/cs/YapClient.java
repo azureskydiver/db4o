@@ -268,7 +268,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
 		return ((MsgD) expectedResponse(Msg.ID_LIST)).readLong();
 	}
 
-	public final boolean delete4(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
+	public final boolean delete4(Transaction ta, ObjectReference yo, int a_cascade, boolean userCall) {
 		MsgD msg = Msg.DELETE.getWriterForInts(i_trans, new int[] { yo.getID(), userCall ? 1 : 0 });
 		writeMsg(msg, false);
 		return true;
@@ -525,7 +525,7 @@ public class YapClient extends YapStream implements ExtClient, BlobTransport {
                     if(obj != null){
                         prefetched[position[i]] = obj;
                     }else{
-    					prefetched[position[i]] = new YapObject(idsToGet[i]).readPrefetch(this, reader);
+    					prefetched[position[i]] = new ObjectReference(idsToGet[i]).readPrefetch(this, reader);
                     }
 				}
 			}

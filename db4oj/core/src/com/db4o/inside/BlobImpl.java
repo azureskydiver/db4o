@@ -234,7 +234,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         return this;
     }
     
-    public void setYapObject(YapObject a_yapObject) {
+    public void setYapObject(ObjectReference a_yapObject) {
         // not necessary
     }
 

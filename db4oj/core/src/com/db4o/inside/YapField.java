@@ -414,7 +414,7 @@ public class YapField implements StoredField {
             if (stream != null) {
                 synchronized (stream.i_lock) {
                     stream.checkClosed();
-                    YapObject yo = stream.getYapObject(a_onObject);
+                    ObjectReference yo = stream.getYapObject(a_onObject);
                     if (yo != null) {
                         int id = yo.getID();
                         if (id > 0) {
@@ -569,7 +569,7 @@ public class YapField implements StoredField {
         }
     }
 
-    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, StatefulBuffer a_bytes)
+    public void instantiate(MarshallerFamily mf, ObjectReference a_yapObject, Object a_onObject, StatefulBuffer a_bytes)
         throws CorruptionException {
         
         if (! alive()) {
@@ -659,7 +659,7 @@ public class YapField implements StoredField {
     }
 
     public void marshall(
-            YapObject yo, 
+            ObjectReference yo, 
             Object obj, 
             MarshallerFamily mf,
             StatefulBuffer writer,
@@ -726,7 +726,7 @@ public class YapField implements StoredField {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }
     
-    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, YapObject a_yapObject) {
+    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, ObjectReference a_yapObject) {
         a_reader.incrementOffset(i_handler.linkLength());
     }
 

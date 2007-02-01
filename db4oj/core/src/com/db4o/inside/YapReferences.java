@@ -23,7 +23,7 @@ class YapReferences implements Runnable {
         _queue = _weak ? Platform4.createReferenceQueue() : null;
     }
 
-    Object createYapRef(YapObject a_yo, Object obj) {
+    Object createYapRef(ObjectReference a_yo, Object obj) {
         
         if (!_weak) {  
             return obj;

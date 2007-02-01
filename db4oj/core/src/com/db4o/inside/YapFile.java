@@ -149,7 +149,7 @@ public abstract class YapFile extends YapStream {
     	return new HybridQueryResult(trans, mode);
     }
 
-    public final boolean delete4(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
+    public final boolean delete4(Transaction ta, ObjectReference yo, int a_cascade, boolean userCall) {
         int id = yo.getID();
         StatefulBuffer reader = readWriterByID(ta, id);
         if (reader != null) {

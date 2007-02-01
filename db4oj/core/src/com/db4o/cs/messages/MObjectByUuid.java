@@ -20,7 +20,7 @@ public class MObjectByUuid extends MsgD {
 			try {
 			    Object[] arr = trans.objectAndYapObjectBySignature(uuid, signature);
 			    if(arr[1] != null){
-			        YapObject yo = (YapObject)arr[1];
+			        ObjectReference yo = (ObjectReference)arr[1];
 			        id = yo.getID();
 			    }
 			} catch (Exception e) {

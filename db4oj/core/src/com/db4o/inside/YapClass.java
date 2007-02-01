@@ -574,7 +574,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                 }
             }
 
-            YapObject yo = stream.getYapObject(a_id);
+            ObjectReference yo = stream.getYapObject(a_id);
             if (yo != null) {
                 a_bytes.getStream().delete2(a_bytes.getTransaction(), yo, obj,cascade, false);
             }
@@ -1025,7 +1025,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         storeStaticFieldValues(systemTrans, false);
     }
 
-	Object instantiate(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean a_addToIDTree) {
+	Object instantiate(ObjectReference yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean a_addToIDTree) {
         
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1131,7 +1131,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return i_config != null && (i_config.cascadeOnActivate() == YapConst.YES);
 	}
 
-	private void shareYapObject(Object obj, YapObject yapObj) {
+	private void shareYapObject(Object obj, ObjectReference yapObj) {
 		if (obj instanceof Db4oTypeImpl) {
 		    ((Db4oTypeImpl)obj).setYapObject(yapObj);
 		}
@@ -1153,7 +1153,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 			&& dispatchEvent(stream, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
-    Object instantiateTransient(YapObject yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer) {
+    Object instantiateTransient(ObjectReference yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer) {
 
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1167,7 +1167,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return obj;
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
+    void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         mf._object.instantiateFields(this, attributes, a_yapObject, a_onObject, a_bytes);
     }
 
@@ -1304,7 +1304,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                 // them every time ???
 
                 
-                YapObject yo = stream.getYapObject(id);
+                ObjectReference yo = stream.getYapObject(id);
                 if (yo != null) {
                     Object obj = yo.getObject();
                     if(obj == null){
@@ -1315,7 +1315,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
                     }
                 }
                 
-                return new YapObject(id).read(
+                return new ObjectReference(id).read(
                     trans,
                     null,
                     null,
@@ -1480,7 +1480,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return null;
     }
     
-    void readVirtualAttributes(Transaction a_trans, YapObject a_yapObject) {
+    void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
         int id = a_yapObject.getID();
         YapStream stream = a_trans.stream();
         Buffer reader = stream.readReaderByID(a_trans, id);
@@ -1899,7 +1899,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return false;
     }
 
-    public String toString(MarshallerFamily mf, StatefulBuffer writer, YapObject yapObject, int depth, int maxDepth)  {
+    public String toString(MarshallerFamily mf, StatefulBuffer writer, ObjectReference yapObject, int depth, int maxDepth)  {
         int length = readFieldCount(writer);
         String str = "";
         for (int i = 0; i < length; i++) {

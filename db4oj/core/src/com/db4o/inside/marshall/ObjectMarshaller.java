@@ -56,7 +56,7 @@ public abstract class ObjectMarshaller {
     
     protected StatefulBuffer createWriterForNew(
             Transaction trans, 
-            YapObject yo, 
+            ObjectReference yo, 
             int updateDepth, 
             int length) {
         
@@ -102,22 +102,22 @@ public abstract class ObjectMarshaller {
     public abstract void instantiateFields(
             YapClass yc, 
             ObjectHeaderAttributes attributes, 
-            YapObject yo, 
+            ObjectReference yo, 
             Object obj, 
             StatefulBuffer reader);
     
-    public abstract StatefulBuffer marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth);
+    public abstract StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth);
     
     public abstract void marshallUpdate(
         Transaction a_trans,
         int a_updateDepth,
-        YapObject a_yapObject,
+        ObjectReference a_yapObject,
         Object a_object
         );
     
     protected void marshallUpdateWrite(
             Transaction trans, 
-            YapObject yo, 
+            ObjectReference yo, 
             Object obj, 
             StatefulBuffer writer) {
         
@@ -148,7 +148,7 @@ public abstract class ObjectMarshaller {
     public abstract void readVirtualAttributes(
             Transaction trans,  
             YapClass yc, 
-            YapObject yo, 
+            ObjectReference yo, 
             ObjectHeaderAttributes attributes, 
             Buffer reader);
 

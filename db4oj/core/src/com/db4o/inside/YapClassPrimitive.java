@@ -120,7 +120,7 @@ public class YapClassPrimitive extends YapClass{
 	    return false;
 	}
 
-    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, boolean a_addToIDTree) {
+    Object instantiate(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, boolean a_addToIDTree) {
         if (a_object == null) {
             try {
                 a_object = i_handler.read(mf, a_bytes, true);
@@ -133,7 +133,7 @@ public class YapClassPrimitive extends YapClass{
         return a_object;
     }
     
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
+    Object instantiateTransient(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         try {
             return i_handler.read(mf, a_bytes, true);
         } catch (CorruptionException ce) {
@@ -141,7 +141,7 @@ public class YapClassPrimitive extends YapClass{
         }
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
+    void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         Object obj = null;
         try {
             obj = i_handler.read(mf, a_bytes, true);

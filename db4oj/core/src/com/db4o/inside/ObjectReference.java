@@ -14,31 +14,31 @@ import com.db4o.reflect.*;
  * @renameto ObjectReference
  * @exclude
  */
-public class YapObject extends YapMeta implements ObjectInfo{
+public class ObjectReference extends YapMeta implements ObjectInfo{
     
 	private YapClass _class;
 	private Object _object;
 	private VirtualAttributes _virtualAttributes;
 
-	private YapObject id_preceding;
-	private YapObject id_subsequent;
+	private ObjectReference id_preceding;
+	private ObjectReference id_subsequent;
 	private int id_size;
 
-	private YapObject hc_preceding;
-	private YapObject hc_subsequent;
+	private ObjectReference hc_preceding;
+	private ObjectReference hc_subsequent;
 	private int hc_size;
 	private int hc_code; // redundant hashCode
 	
 	private int _lastTopLevelCallId;
     
-    public YapObject(){
+    public ObjectReference(){
     }
 	
-	public YapObject(int a_id) {
+	public ObjectReference(int a_id) {
 		i_id = a_id;
 	}
 
-	YapObject(YapClass a_yapClass, int a_id) {
+	ObjectReference(YapClass a_yapClass, int a_id) {
 		_class = a_yapClass;
 		i_id = a_id;
 	}
@@ -426,7 +426,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 	/***** HCTREE *****/
 
-	public YapObject hc_add(YapObject a_add) {
+	public ObjectReference hc_add(ObjectReference a_add) {
 		Object obj = a_add.getObject();
 		if (obj != null) {
 			a_add.hc_init(obj);
@@ -442,7 +442,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
         hc_code = hc_getCode(obj);
     }
     
-	private YapObject hc_add1(YapObject a_new) {
+	private ObjectReference hc_add1(ObjectReference a_new) {
 		int cmp = hc_compare(a_new);
 		if (cmp < 0) {
 			if (hc_preceding == null) {
@@ -470,7 +470,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return this;
 	}
 
-	private YapObject hc_balance() {
+	private ObjectReference hc_balance() {
 		int cmp = hc_subsequent.hc_size - hc_preceding.hc_size;
 		if (cmp < -2) {
 			return hc_rotateRight();
@@ -498,7 +498,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		}
 	}
 
-	private int hc_compare(YapObject a_to) {
+	private int hc_compare(ObjectReference a_to) {
 	    int cmp = a_to.hc_code - hc_code;
 	    if(cmp == 0){
 	        cmp = a_to.i_id - i_id;
@@ -506,11 +506,11 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return cmp;
 	}
 
-	public YapObject hc_find(Object obj) {
+	public ObjectReference hc_find(Object obj) {
 		return hc_find(hc_getCode(obj), obj);
 	}
 
-	private YapObject hc_find(int a_id, Object obj) {
+	private ObjectReference hc_find(int a_id, Object obj) {
 		int cmp = a_id - hc_code;
 		if (cmp < 0) {
 			if (hc_preceding != null) {
@@ -525,7 +525,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				return this;
 			}
 			if (hc_preceding != null) {
-				YapObject inPreceding = hc_preceding.hc_find(a_id, obj);
+				ObjectReference inPreceding = hc_preceding.hc_find(a_id, obj);
 				if (inPreceding != null) {
 					return inPreceding;
 				}
@@ -545,8 +545,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return hcode;
 	}
 
-	private YapObject hc_rotateLeft() {
-		YapObject tree = hc_subsequent;
+	private ObjectReference hc_rotateLeft() {
+		ObjectReference tree = hc_subsequent;
 		hc_subsequent = tree.hc_preceding;
 		hc_calculateSize();
 		tree.hc_preceding = this;
@@ -558,8 +558,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return tree;
 	}
 
-	private YapObject hc_rotateRight() {
-		YapObject tree = hc_preceding;
+	private ObjectReference hc_rotateRight() {
+		ObjectReference tree = hc_preceding;
 		hc_preceding = tree.hc_subsequent;
 		hc_calculateSize();
 		tree.hc_subsequent = this;
@@ -571,7 +571,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return tree;
 	}
 
-	private YapObject hc_rotateSmallestUp() {
+	private ObjectReference hc_rotateSmallestUp() {
 		if (hc_preceding != null) {
 			hc_preceding = hc_preceding.hc_rotateSmallestUp();
 			return hc_rotateRight();
@@ -579,7 +579,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return this;
 	}
 
-	YapObject hc_remove(YapObject a_find) {
+	ObjectReference hc_remove(ObjectReference a_find) {
 		if (this == a_find) {
 			return hc_remove();
 		}
@@ -608,7 +608,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
         }
     }
 
-	private YapObject hc_remove() {
+	private ObjectReference hc_remove() {
 		if (hc_subsequent != null && hc_preceding != null) {
 			hc_subsequent = hc_subsequent.hc_rotateSmallestUp();
 			hc_subsequent.hc_preceding = hc_preceding;
@@ -623,14 +623,14 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 	/***** IDTREE *****/
 
-	YapObject id_add(YapObject a_add) {
+	ObjectReference id_add(ObjectReference a_add) {
 		a_add.id_preceding = null;
 		a_add.id_subsequent = null;
 		a_add.id_size = 1;
 		return id_add1(a_add);
 	}
 
-	private YapObject id_add1(YapObject a_new) {
+	private ObjectReference id_add1(ObjectReference a_new) {
 		int cmp = a_new.i_id - i_id;
 		if (cmp < 0) {
 			if (id_preceding == null) {
@@ -658,7 +658,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return this;
 	}
 
-	private YapObject id_balance() {
+	private ObjectReference id_balance() {
 		int cmp = id_subsequent.id_size - id_preceding.id_size;
 		if (cmp < -2) {
 			return id_rotateRight();
@@ -686,7 +686,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		}
 	}
 
-	YapObject id_find(int a_id) {
+	ObjectReference id_find(int a_id) {
 		int cmp = a_id - i_id;
 		if (cmp > 0) {
 			if (id_subsequent != null) {
@@ -702,8 +702,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return null;
 	}
 
-	private YapObject id_rotateLeft() {
-		YapObject tree = id_subsequent;
+	private ObjectReference id_rotateLeft() {
+		ObjectReference tree = id_subsequent;
 		id_subsequent = tree.id_preceding;
 		id_calculateSize();
 		tree.id_preceding = this;
@@ -715,8 +715,8 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return tree;
 	}
 
-	private YapObject id_rotateRight() {
-		YapObject tree = id_preceding;
+	private ObjectReference id_rotateRight() {
+		ObjectReference tree = id_preceding;
 		id_preceding = tree.id_subsequent;
 		id_calculateSize();
 		tree.id_subsequent = this;
@@ -728,7 +728,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return tree;
 	}
 
-	private YapObject id_rotateSmallestUp() {
+	private ObjectReference id_rotateSmallestUp() {
 		if (id_preceding != null) {
 			id_preceding = id_preceding.id_rotateSmallestUp();
 			return id_rotateRight();
@@ -736,7 +736,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return this;
 	}
 
-	YapObject id_remove(int a_id) {
+	ObjectReference id_remove(int a_id) {
 		int cmp = a_id - i_id;
 		if (cmp < 0) {
 			if (id_preceding != null) {
@@ -753,7 +753,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return this;
 	}
 
-	private YapObject id_remove() {
+	private ObjectReference id_remove() {
 		if (id_subsequent != null && id_preceding != null) {
 			id_subsequent = id_subsequent.id_rotateSmallestUp();
 			id_subsequent.id_preceding = id_preceding;

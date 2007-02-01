@@ -9,9 +9,9 @@ package com.db4o.inside;
 public class DeleteInfo extends TreeInt{
     
     int _cascade;
-    public YapObject _reference;
+    public ObjectReference _reference;
 
-    public DeleteInfo(int id, YapObject reference, int cascade) {
+    public DeleteInfo(int id, ObjectReference reference, int cascade) {
         super(id);
         _reference = reference;
         _cascade = cascade;

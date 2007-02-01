@@ -64,7 +64,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return YapConst.OBJECT_LENGTH + YapConst.ID_LENGTH;
     }
     
-    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final YapObject yapObject, final Object onObject, final StatefulBuffer writer) {
+    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final ObjectReference yapObject, final Object onObject, final StatefulBuffer writer) {
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
                 try {
@@ -77,7 +77,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yc, writer, attributes, command);
     }
     
-    private int linkLength(YapClass yc, YapObject yo) {
+    private int linkLength(YapClass yc, ObjectReference yo) {
         int length = YapConst.INT_LENGTH;
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {
@@ -90,11 +90,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return length;
     }
     
-    protected int linkLength(YapField yf, YapObject yo){
+    protected int linkLength(YapField yf, ObjectReference yo){
         return yf.linkLength();
     }
     
-    private void marshall(YapClass yapClass, YapObject a_yapObject, Object a_object, StatefulBuffer writer, boolean a_new) {
+    private void marshall(YapClass yapClass, ObjectReference a_yapObject, Object a_object, StatefulBuffer writer, boolean a_new) {
         marshallDeclaredFields(yapClass, a_yapObject, a_object, writer, a_new);
         if (Deploy.debug) {
             writer.writeEnd();
@@ -102,7 +102,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
     }
     
-    private void marshallDeclaredFields(YapClass yapClass, final YapObject yapObject, final Object object, final StatefulBuffer writer, final boolean isNew) {
+    private void marshallDeclaredFields(YapClass yapClass, final ObjectReference yapObject, final Object object, final StatefulBuffer writer, final boolean isNew) {
         final Config4Class config = yapClass.configOrAncestorConfig();
         final Transaction trans=writer.getTransaction();
     	TraverseFieldCommand command=new TraverseFieldCommand() {
@@ -122,11 +122,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yapClass, writer, readHeaderAttributes(writer), command);
     }
     
-    protected int marshalledLength(YapField yf, YapObject yo){
+    protected int marshalledLength(YapField yf, ObjectReference yo){
         return 0;
     }
 
-    public StatefulBuffer marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
+    public StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth){
         
         StatefulBuffer writer = createWriterForNew(a_trans, yo, a_updateDepth, objectLength(yo));
         
@@ -150,7 +150,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     public void marshallUpdate(
         Transaction trans,
         int updateDepth,
-        YapObject yapObject,
+        ObjectReference yapObject,
         Object obj
         ) {
         
@@ -166,7 +166,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         marshallUpdateWrite(trans, yapObject, obj, writer);
     }
 
-    private int objectLength(YapObject yo) {
+    private int objectLength(ObjectReference yo) {
         return headerLength() + linkLength(yo.getYapClass(), yo);
     }
 
@@ -186,7 +186,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return yf.readIndexEntry(_family, reader);
     }
     
-    public void readVirtualAttributes(final Transaction trans,  YapClass yc, final YapObject yo, ObjectHeaderAttributes attributes, final Buffer reader){
+    public void readVirtualAttributes(final Transaction trans,  YapClass yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final Buffer reader){
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 	            field.readVirtualAttribute(trans, reader, yo);

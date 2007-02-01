@@ -75,7 +75,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		return ret[0];
     }
     
-    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final YapObject yapObject, final Object onObject, final StatefulBuffer writer) {
+    public void instantiateFields(YapClass yc, ObjectHeaderAttributes attributes, final ObjectReference yapObject, final Object onObject, final StatefulBuffer writer) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 				if (isNull) {
@@ -92,7 +92,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, writer, attributes, command);
     }
     
-    private void marshall(final YapObject yo, final Object obj,ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
+    private void marshall(final ObjectReference yo, final Object obj,ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
 		YapClass yc = yo.getYapClass();
 		writeObjectClassID(writer,yc.getID());
 		attributes.write(writer);
@@ -124,7 +124,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		}
 	}
 
-    public StatefulBuffer marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
+    public StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth){
         
         ObjectHeaderAttributes1 attributes = new ObjectHeaderAttributes1(yo);
         
@@ -142,7 +142,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     public void marshallUpdate(
         Transaction trans,
         int updateDepth,
-        YapObject yo,
+        ObjectReference yo,
         Object obj
         ) {
         
@@ -182,7 +182,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         return yf.readIndexEntry(_family, reader);
     }
     
-    public void readVirtualAttributes(final Transaction trans, YapClass yc, final YapObject yo, ObjectHeaderAttributes attributes, final Buffer reader) {
+    public void readVirtualAttributes(final Transaction trans, YapClass yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final Buffer reader) {
 		TraverseFieldCommand command = new TraverseFieldCommand() {
 			public void processField(YapField field, boolean isNull, YapClass containingClass) {
 				if (!isNull) {

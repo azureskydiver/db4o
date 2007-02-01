@@ -22,7 +22,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     private int _payLoadLength;
     
     
-    public ObjectHeaderAttributes1(YapObject yo) {
+    public ObjectHeaderAttributes1(ObjectReference yo) {
         _fieldCount = yo.getYapClass().fieldCount();
         _nullBitMap = new BitMap4(_fieldCount);
         calculateLengths(yo);
@@ -41,7 +41,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         _payLoadLength += length;
     }
     
-    private void calculateLengths(YapObject yo) {
+    private void calculateLengths(ObjectReference yo) {
         _baseLength = headerLength() + nullBitMapLength();
         _payLoadLength = 0;
         YapClass yc = yo.getYapClass();

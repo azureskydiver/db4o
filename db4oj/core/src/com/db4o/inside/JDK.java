@@ -40,7 +40,7 @@ public class JDK {
         return obj;
     }
     
-	Object createYapRef(Object queue, YapObject ref, Object obj) {
+	Object createYapRef(Object queue, ObjectReference ref, Object obj) {
 		return null;
 	}
 	

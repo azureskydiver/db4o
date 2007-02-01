@@ -39,7 +39,7 @@ class JDK_1_2 extends JDKReflect {
         return new WeakReference(obj);
     }
     
-    Object createYapRef(Object a_queue, YapObject a_yapObject, Object a_object) {
+    Object createYapRef(Object a_queue, ObjectReference a_yapObject, Object a_object) {
         return new YapRef(a_queue, a_yapObject, a_object);
     }
 
