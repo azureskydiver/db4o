@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 class JavaOnly {
     
 	static final int collectionUpdateDepth(Class a_class) 
