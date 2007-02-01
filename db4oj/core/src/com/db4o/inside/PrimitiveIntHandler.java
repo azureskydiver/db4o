@@ -2,6 +2,8 @@
 
 package com.db4o.inside;
 
+import com.db4o.inside.handlers.*;
+
 
 
 /**

@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.*;
 import com.db4o.inside.*;
@@ -75,7 +75,7 @@ public final class YapString extends YapIndependantType {
     }
 
     public YapClass getYapClass(ObjectContainerBase a_stream) {
-        return a_stream.i_handlers.i_yapClasses[getID() - 1];
+        return a_stream.i_handlers.primitiveClassById(getID());
     }
     
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
@@ -166,7 +166,7 @@ public final class YapString extends YapIndependantType {
 	    return reader;
 	}
     
-    void setStringIo(YapStringIO a_io) {
+    public void setStringIo(YapStringIO a_io) {
         i_stringIo = a_io;
     }
     
@@ -301,7 +301,7 @@ public final class YapString extends YapIndependantType {
         return compare(a_compare._buffer, a_with._buffer);
     }
     
-    static final int compare(byte[] compare, byte[] with){
+    public static final int compare(byte[] compare, byte[] with){
         int min = compare.length < with.length ? compare.length : with.length;
         int start = YapConst.INT_LENGTH;
         if(Deploy.debug) {

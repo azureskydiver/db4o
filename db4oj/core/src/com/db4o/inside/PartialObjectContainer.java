@@ -25,6 +25,7 @@ import com.db4o.foundation.Tree;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.*;
 import com.db4o.inside.callbacks.Callbacks;
+import com.db4o.inside.handlers.*;
 import com.db4o.inside.marshall.MarshallerFamily;
 import com.db4o.inside.query.AbstractQueryResult;
 import com.db4o.inside.query.NativeQueryHandler;
@@ -1849,7 +1850,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return still;
     }
 
-    void stillToActivate(Object a_object, int a_depth) {
+    public void stillToActivate(Object a_object, int a_depth) {
 
         // TODO: We don't want the simple classes to search the hc_tree
         // Kick them out here.
@@ -1864,7 +1865,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         //		}
     }
 
-    void stillToDeactivate(Object a_object, int a_depth,
+    public void stillToDeactivate(Object a_object, int a_depth,
         boolean a_forceUnknownDeactivate) {
         i_stillToDeactivate = stillTo1(i_stillToDeactivate, a_object, a_depth, a_forceUnknownDeactivate);
     }

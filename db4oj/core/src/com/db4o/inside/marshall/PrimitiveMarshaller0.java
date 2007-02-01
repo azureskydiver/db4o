@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.db4o.*;
 import com.db4o.inside.*;
+import com.db4o.inside.handlers.*;
 
 
 public class PrimitiveMarshaller0 extends PrimitiveMarshaller {

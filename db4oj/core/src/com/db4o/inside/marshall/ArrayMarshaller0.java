@@ -4,6 +4,7 @@ package com.db4o.inside.marshall;
 
 import com.db4o.*;
 import com.db4o.inside.*;
+import com.db4o.inside.handlers.*;
 
 
 class ArrayMarshaller0  extends ArrayMarshaller{

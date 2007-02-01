@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
@@ -35,7 +35,7 @@ public final class YDouble extends YLong
 		return double.class;
 	}
 	
-	Object primitiveNull(){
+	public Object primitiveNull(){
 		return i_primitive;
 	}
 	

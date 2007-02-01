@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
@@ -8,7 +8,7 @@ import com.db4o.reflect.ReflectClass;
 
 
 
-final class YFloat extends YInt {
+public final class YFloat extends YInt {
     
     private static final Float i_primitive = new Float(0);
     
@@ -32,7 +32,7 @@ final class YFloat extends YInt {
 		return float.class;
 	}
 
-	Object primitiveNull() {
+	public Object primitiveNull() {
 		return i_primitive;
 	}
 

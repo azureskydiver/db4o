@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
@@ -40,7 +40,7 @@ public class YLong extends YapJavaClass {
 		return YapConst.LONG_LENGTH;
 	}
 	
-	Object primitiveNull(){
+	public Object primitiveNull(){
 		return i_primitive;
 	}
 	
@@ -92,7 +92,7 @@ public class YLong extends YapJavaClass {
 		}
 	}	
 	
-	static final void writeLong(long a_long, byte[] bytes){
+	public static final void writeLong(long a_long, byte[] bytes){
 		for (int i = 0; i < YapConst.LONG_BYTES; i++){
 			bytes[i] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
 		}

@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import java.util.*;
 
@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
 
 
 
-final class YDate extends YLong {
+public final class YDate extends YLong {
 	
 	private static final Date PROTO = new Date(0);
     
@@ -47,7 +47,7 @@ final class YDate extends YLong {
 		return null;
 	}
 	
-	Object primitiveNull(){
+	public Object primitiveNull(){
 		return null;
 	}
 	
@@ -77,7 +77,7 @@ final class YDate extends YLong {
         return new Date(currentLong());
     }
 	
-	static String now(){
+	public static String now(){
 		return Platform4.format(new Date(), true);
 	}
 	
