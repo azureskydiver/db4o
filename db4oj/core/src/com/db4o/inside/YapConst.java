@@ -11,55 +11,55 @@ import com.db4o.*;
  */
 public final class YapConst
 {
-    static final Object initMe = init();
+	public static final Object initMe = init();
 
 	public static final byte   YAPFILEVERSION		= 4;
 
 	public static final byte	YAPBEGIN			= (byte)'{';
 	public static final byte	YAPFILE				= (byte)'Y';
-	static final byte	YAPID				= (byte)'#';
-	static final byte	YAPPOINTER			= (byte)'>';
+	public static final byte	YAPID				= (byte)'#';
+	public static final byte	YAPPOINTER			= (byte)'>';
 	public static final byte	YAPCLASSCOLLECTION	= (byte)'A';
 	public static final byte	YAPCLASS			= (byte)'C';
-	static final byte	YAPFIELD			= (byte)'F';
+	public static final byte	YAPFIELD			= (byte)'F';
 	public static final byte	YAPOBJECT			= (byte)'O';
-	static final byte	YAPARRAY			= (byte)'N';
-	static final byte	YAPARRAYN			= (byte)'Z';
+	public static final byte	YAPARRAY			= (byte)'N';
+	public static final byte	YAPARRAYN			= (byte)'Z';
 	public static final byte	YAPINDEX			= (byte)'X';
 	public static final byte	YAPSTRING			= (byte)'S';
-	static final byte	YAPLONG				= (byte)'l';
-	static final byte	YAPINTEGER			= (byte)'i';
-	static final byte	YAPBOOLEAN			= (byte)'=';
-	static final byte	YAPDOUBLE			= (byte)'d';
-	static final byte	YAPBYTE				= (byte)'b';
-	static final byte	YAPSHORT			= (byte)'s';
-	static final byte	YAPCHAR				= (byte)'c';
-	static final byte	YAPFLOAT			= (byte)'f';
+	public static final byte	YAPLONG				= (byte)'l';
+	public static final byte	YAPINTEGER			= (byte)'i';
+	public static final byte	YAPBOOLEAN			= (byte)'=';
+	public static final byte	YAPDOUBLE			= (byte)'d';
+	public static final byte	YAPBYTE				= (byte)'b';
+	public static final byte	YAPSHORT			= (byte)'s';
+	public static final byte	YAPCHAR				= (byte)'c';
+	public static final byte	YAPFLOAT			= (byte)'f';
 	public static final byte	YAPEND				= (byte)'}';
-	static final byte	YAPNULL				= (byte)'0';
+	public static final byte	YAPNULL				= (byte)'0';
     public static final byte   BTREE               = (byte)'T';               
     public static final byte   BTREE_NODE          = (byte)'B';               
     public static final byte   HEADER          = (byte)'H';               
 	
-	static final int	IDENTIFIER_LENGTH	= (Deploy.debug && Deploy.identifiers)?1:0;
+	public static final int	IDENTIFIER_LENGTH	= (Deploy.debug && Deploy.identifiers)?1:0;
 	public static final int	BRACKETS_BYTES		= (Deploy.debug && Deploy.brackets)?1:0;
-	static final int	BRACKETS_LENGTH		= BRACKETS_BYTES * 2;
+	public static final int	BRACKETS_LENGTH		= BRACKETS_BYTES * 2;
 
 	public static final int	LEADING_LENGTH		= IDENTIFIER_LENGTH + BRACKETS_BYTES;
 	public static final int	ADDED_LENGTH		= IDENTIFIER_LENGTH + BRACKETS_LENGTH;
 
-	static final int	SHORT_BYTES			= 2;
-	static final int	INTEGER_BYTES		= (Deploy.debug && Deploy.debugLong)?11:4;
-	static final int	LONG_BYTES			= (Deploy.debug && Deploy.debugLong)?20:8;
-	static final int	CHAR_BYTES			= 2;
+	public static final int	SHORT_BYTES			= 2;
+	public static final int	INTEGER_BYTES		= (Deploy.debug && Deploy.debugLong)?11:4;
+	public static final int	LONG_BYTES			= (Deploy.debug && Deploy.debugLong)?20:8;
+	public static final int	CHAR_BYTES			= 2;
 
-	static final int	UNSPECIFIED			= Integer.MIN_VALUE + 100; // make sure we don't fall over the -1 cliff
+	public static final int	UNSPECIFIED			= Integer.MIN_VALUE + 100; // make sure we don't fall over the -1 cliff
 
 	public static final int	INT_LENGTH	= INTEGER_BYTES + ADDED_LENGTH;
 	public static final int	ID_LENGTH		= INT_LENGTH;
 	public static final int	LONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
 	
-	static final int	WRITE_LOOP			= (INTEGER_BYTES - 1) * 8;
+	public static final int	WRITE_LOOP			= (INTEGER_BYTES - 1) * 8;
 	
 	public static final int	OBJECT_LENGTH		= ADDED_LENGTH;
 
@@ -71,7 +71,7 @@ public final class YapConst
 	public static final byte   USER_TRANS          = (byte)'u';
 	
 	// debug constants
-	static final byte XBYTE = (byte)'X';
+	public static final byte XBYTE = (byte)'X';
 	
 	// TODO: This one is a terrible low-frequency blunder in YapArray.writeClass!!!
 	// If YapClass-ID == 99999 (not very likely) then we will get IGNORE_ID. Change
@@ -80,65 +80,65 @@ public final class YapConst
 	
 	// This is a hard coded 2 Gig-Limit for YapClass-IDs.
     // TODO: get rid of magic numbers like this one
-	static final int PRIMITIVE = -2000000000;
+	public static final int PRIMITIVE = -2000000000;
 	
 	// optimized type information
-	static final int TYPE_SIMPLE 			= 1;
-	static final int TYPE_CLASS 			= 2;
-	static final int TYPE_ARRAY 			= 3;
-	static final int TYPE_NARRAY 			= 4;
+	public static final int TYPE_SIMPLE 			= 1;
+	public static final int TYPE_CLASS 			= 2;
+	public static final int TYPE_ARRAY 			= 3;
+	public static final int TYPE_NARRAY 			= 4;
 	
 	// message levels
 	public static final int	NONE = 0;  // Use if > NONE: normal messages
-	static final int	STATE = 1; // if > STATE: state messages
-	static final int	ACTIVATION = 2; // if > ACTIVATION: activation messages
+	public static final int	STATE = 1; // if > STATE: state messages
+	public static final int	ACTIVATION = 2; // if > ACTIVATION: activation messages
 	
-	static final int    TRANSIENT = -1;
-	static final int    ADD_MEMBERS_TO_ID_TREE_ONLY = 0;
-	static final int    ADD_TO_ID_TREE = 1;
+	public static final int    TRANSIENT = -1;
+	public static final int    ADD_MEMBERS_TO_ID_TREE_ONLY = 0;
+	public static final int    ADD_TO_ID_TREE = 1;
 	
 	// String Encoding
-	static final byte	ISO8859 = (byte)1;
-	static final byte	UNICODE = (byte)2;
+	public static final byte	ISO8859 = (byte)1;
+	public static final byte	UNICODE = (byte)2;
 
 	// Timings
 	public static final int LOCK_TIME_INTERVAL = 1000;
-	static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 5000;  // jump out of the loop every 5 seconds
-	static final int CLIENT_SOCKET_TIMEOUT = 300000;  // 5 minutes response time at the client side
-	static final int CONNECTION_TIMEOUT = Debug.longTimeOuts ? 1000000: 180000;  // 1 minute until we start pinging dead or blocking clients
+	public static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 5000;  // jump out of the loop every 5 seconds
+	public static final int CLIENT_SOCKET_TIMEOUT = 300000;  // 5 minutes response time at the client side
+	public static final int CONNECTION_TIMEOUT = Debug.longTimeOuts ? 1000000: 180000;  // 1 minute until we start pinging dead or blocking clients
 		
 	// TODO: Consider to make configurable
     public static final int MAXIMUM_BLOCK_SIZE = 70000000; // 70 MB   
 	public static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
 	public static final int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100; // 70 MB for byte arrays
 	
-    static Class CLASS_COMPARE;
-    static Class CLASS_DB4OTYPE;
-    static Class CLASS_DB4OTYPEIMPL;
-    static Class CLASS_INTERNAL;
-    static Class CLASS_UNVERSIONED;
-    static Class CLASS_OBJECT;
-    static Class CLASS_OBJECTCONTAINER;
+	public static Class CLASS_COMPARE;
+	public static Class CLASS_DB4OTYPE;
+	public static Class CLASS_DB4OTYPEIMPL;
+	public static Class CLASS_INTERNAL;
+	public static Class CLASS_UNVERSIONED;
+	public static Class CLASS_OBJECT;
+	public static Class CLASS_OBJECTCONTAINER;
     public static Class CLASS_REPLICATIONRECORD; 
-	static Class CLASS_STATICFIELD;
-	static Class CLASS_STATICCLASS;
-    static Class CLASS_TRANSIENTCLASS;
+	public static Class CLASS_STATICFIELD;
+	public static Class CLASS_STATICCLASS;
+	public static Class CLASS_TRANSIENTCLASS;
     
 	public static final String EMBEDDED_CLIENT_USER = "embedded client";
 	
 	// bits in YapMeta.i_state
 	// and reuse in other classes 
-    static final int CLEAN = 0;
-    static final int ACTIVE = 1;
-    static final int PROCESSING = 2;
-    static final int CACHED_DIRTY = 3;
-    static final int CONTINUE = 4;
-    static final int STATIC_FIELDS_STORED = 5;
-    static final int CHECKED_CHANGES = 6;
-    static final int DEAD = 7;
-    static final int READING = 8;
+	public static final int CLEAN = 0;
+	public static final int ACTIVE = 1;
+	public static final int PROCESSING = 2;
+	public static final int CACHED_DIRTY = 3;
+	public static final int CONTINUE = 4;
+	public static final int STATIC_FIELDS_STORED = 5;
+	public static final int CHECKED_CHANGES = 6;
+	public static final int DEAD = 7;
+	public static final int READING = 8;
     
-    static final int UNCHECKED = 0;
+	public static final int UNCHECKED = 0;
     
     // Universal speaking variables.
     public static final int NO = -1;
@@ -169,7 +169,7 @@ public final class YapConst
 	}
     
 	// system classes that need to get loaded first
-	static final Class[] ESSENTIAL_CLASSES = {
+	public static final Class[] ESSENTIAL_CLASSES = {
 	// StaticClass should load Staticfield
 	
 	// TODO: remove unnecessary

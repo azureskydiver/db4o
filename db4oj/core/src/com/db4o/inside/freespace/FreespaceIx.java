@@ -5,6 +5,7 @@ package com.db4o.inside.freespace;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.handlers.*;
 import com.db4o.inside.ix.*;
 
 

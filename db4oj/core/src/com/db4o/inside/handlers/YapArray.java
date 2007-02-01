@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
@@ -65,7 +65,7 @@ public class YapArray extends YapIndependantType {
     	return i_handler.classReflector();
     }
 
-    final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader){
+    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader){
         return mf._array.collectIDs(this, tree, reader);
     }
     
@@ -360,7 +360,7 @@ public class YapArray extends YapIndependantType {
 		return i_handler.classReflector();
 	}
     
-    static Object[] toArray(ObjectContainerBase a_stream, Object a_object) {
+    public static Object[] toArray(ObjectContainerBase a_stream, Object a_object) {
         if (a_object != null) {
         	ReflectClass claxx = a_stream.reflector().forObject(a_object);
             if (claxx.isArray()) {

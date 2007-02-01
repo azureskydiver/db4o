@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.handlers.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;

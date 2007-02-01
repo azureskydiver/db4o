@@ -5,6 +5,7 @@ import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
+import com.db4o.inside.handlers.*;
 
 import db4ounit.Assert;
 

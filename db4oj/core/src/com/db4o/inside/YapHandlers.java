@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.diagnostic.*;
+import com.db4o.inside.handlers.*;
 import com.db4o.inside.replication.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -77,7 +78,7 @@ public final class YapHandlers {
     ReflectClass ICLASS_OBJECT;
     ReflectClass ICLASS_OBJECTCONTAINER;
 	public ReflectClass ICLASS_STATICCLASS;
-	ReflectClass ICLASS_STRING;
+	public ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
 
     YapHandlers(final ObjectContainerBase a_stream, byte stringEncoding, GenericReflector reflector) {
@@ -441,6 +442,8 @@ public final class YapHandlers {
 		return i_replication;
 	}
 
-	
+	public YapClass primitiveClassById(int id) {
+        return i_yapClasses[id - 1];
+	}
 	
 }

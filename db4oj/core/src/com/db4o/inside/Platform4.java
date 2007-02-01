@@ -9,6 +9,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.handlers.*;
+import com.db4o.inside.handlers.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -133,7 +134,7 @@ public final class Platform4 {
     	return jdk().deserialize(bytes);
     }
     
-    static final long doubleToLong(double a_double) {
+    public static final long doubleToLong(double a_double) {
         return Double.doubleToLongBits(a_double);
     }
 
@@ -231,7 +232,7 @@ public final class Platform4 {
         jdk().forEachCollectionElement(a_object, a_visitor);
     }
 
-    static final String format(Date date, boolean showTime) {
+    public static final String format(Date date, boolean showTime) {
     	return jdk().format(date, showTime);
     }
 
@@ -487,7 +488,7 @@ public final class Platform4 {
         }
     }
 
-    static final double longToDouble(long a_long) {
+    public static final double longToDouble(long a_long) {
         return Double.longBitsToDouble(a_long);
     }
 

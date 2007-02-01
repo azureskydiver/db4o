@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.*;
 import com.db4o.inside.*;
@@ -32,7 +32,7 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	
 	public abstract boolean isEqual(Object compare, Object with);
 
-	void initialize(){
+	public void initialize(){
 		byte[] bytes = new byte[65];
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = 55;  // TODO: Why 55? This is a '7'. Remove.
@@ -65,7 +65,7 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
         return null;
     }
     
-    Object primitiveNull() {
+    public Object primitiveNull() {
         return defaultValue();
     }
 

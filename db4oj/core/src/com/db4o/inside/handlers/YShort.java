@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
@@ -9,7 +9,7 @@ import com.db4o.reflect.ReflectClass;
 
 
 
-final class YShort extends YapJavaClass
+public final class YShort extends YapJavaClass
 {
     static final int LENGTH = YapConst.SHORT_BYTES + YapConst.ADDED_LENGTH;
 	
@@ -38,7 +38,7 @@ final class YShort extends YapJavaClass
 		return short.class;
 	}
 	
-	Object primitiveNull(){
+	public Object primitiveNull(){
 		return i_primitive;
 	}
 	

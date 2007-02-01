@@ -8,6 +8,7 @@ import com.db4o.ext.StoredField;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
+import com.db4o.inside.handlers.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.inside.slots.*;

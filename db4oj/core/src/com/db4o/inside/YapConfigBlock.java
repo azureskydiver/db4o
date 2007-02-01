@@ -9,6 +9,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
 import com.db4o.inside.*;
+import com.db4o.inside.handlers.*;
 
 
 /**

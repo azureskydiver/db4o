@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.inside.handlers;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
@@ -62,7 +62,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
     }
 
     public YapClass getYapClass(ObjectContainerBase a_stream) {
-        return a_stream.i_handlers.i_yapClasses[getID() - 1];
+        return a_stream.i_handlers.primitiveClassById(getID());
     }
 
     public boolean hasFixedLength(){
@@ -95,7 +95,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     protected abstract Class primitiveJavaClass();
     
-    abstract Object primitiveNull();
+    public abstract Object primitiveNull();
     
     public boolean readArray(Object array, Buffer reader) {
         return false;
